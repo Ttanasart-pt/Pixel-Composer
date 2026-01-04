@@ -462,8 +462,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	////- Draw
 	
 	static display_text = function(_x, _y, _text, _w, _m = -1) {
-		draw_set_alpha(0.5 + 0.5 * interactable);
-		
 		var xx = _x + disp_x;
 		var cc = sliding == 2? COLORS._main_accent : color;
 		draw_set_text(font, fa_left, fa_top, cc);
@@ -573,6 +571,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, halign = fa_left, valign = fa_top) {
+		_x = round(_x);
+		_y = round(_y);
+		_w = round(_w);
+		_h = round(_h);
+
 		x = _x;
 		y = _y;
 		w = _w;
@@ -608,8 +611,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var _bx = _x + _w - _bs;
 		var _by = _y + _h / 2 - _bs / 2;
 		
-		var sb1 = (_w - _bs > ui(100) || always_side_button) && side_button;
-		var sb2 = (_w - _bs > ui(100) || always_side_button) && side_button2;
+		var sb1 = (_w - _bs > ui(32) || always_side_button) && side_button;
+		var sb2 = (_w - _bs > ui(32) || always_side_button) && side_button2;
 		var unt = unit != noone && unit.reference != noone;
 		var sbw = _bs * (sb1 + sb2 + unt);
 		
@@ -618,10 +621,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(sbw) draw_sprite_stretched_ext(THEME.textbox, 3, _x + _w - sbw, _y, sbw, _h, CDEF.main_mdwhite, 1);
 		}
 		
-		if(_w - _bs > ui(100) && front_button) {
+		if(_w - _bs > ui(32) && front_button) {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
 			
-			front_button.setFocusHover(active, hover);
+			front_button.setFocusHover(iactive, ihover);
 			front_button.draw(_x, _by, _bs, _bs, _m, THEME.button_hide_fill);
 			
 			_x += _bs;
@@ -1021,10 +1024,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					gpu_set_scissor(_scis);
 				}
 				
-				BLEND_ALPHA
-				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
-				BLEND_NORMAL
-				
+				if(interactable) {
+					BLEND_ALPHA
+					draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
+					BLEND_NORMAL
+				} else 
+					draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha * .5);
 			}
 		}
 		

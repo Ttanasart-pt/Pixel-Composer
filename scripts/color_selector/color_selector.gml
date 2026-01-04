@@ -466,6 +466,8 @@ function colorSelector(_onApply = noone) constructor {
 		var sel_sw = cont_w / 256;
 		var sel_sh = cont_h / 256;
 		
+		var scis = gpu_get_scissor();
+		
 		#region content
 			content_surface = surface_verify(content_surface, cont_w, cont_h);
 			surface_set_target(content_surface);			
@@ -510,6 +512,7 @@ function colorSelector(_onApply = noone) constructor {
 			// draw_sprite_stretched(THEME.ui_panel_bg, 1, cont_x - pd, cont_y - pd, cont_w + pd*2, cont_h + pd*2);
 			// draw_sprite_stretched(THEME.ui_panel_bg, 1, sel_x  - pd, sel_y  - pd, sel_w  + pd*2, sel_h  + pd*2);
 			
+			gpu_set_scissor(scis);
 			draw_surface(content_surface, cont_x, cont_y);
 			draw_surface(side_surface,    sel_x,  sel_y);
 			

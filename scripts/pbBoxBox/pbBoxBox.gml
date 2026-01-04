@@ -1,24 +1,107 @@
 function pbBoxBox(_junction = undefined) : widget() constructor {
-	always_break_line  = true;
-	curr_pbbox = noone;
+	always_break_line = true;
+	curr_pbbox = new __pbBox();
 	node       = _junction? _junction.node : undefined;
 	
 	locked = false;
 	linked = false;
-	var t = TEXTBOX_INPUT.number;
 	
-	trigRender = function() /*=>*/ { if(node) node.triggerRender(); }
-	
-	tb_anchor_w = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_w = v; trigRender(); } }).setLabel("w");
-	tb_anchor_h = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_h = v; trigRender(); } }).setLabel("h");
-	tb_anchor_l = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_l = v; trigRender(); } });
-	tb_anchor_t = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_t = v; trigRender(); } });
-	tb_anchor_r = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_r = v; trigRender(); } });
-	tb_anchor_b = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_b = v; trigRender(); } });
+	#region textboxes
+		setBBOX    = function(b) /*=>*/ { curr_pbbox.setBBOX(b); trigRender(); }
+		trigRender = function( ) /*=>*/ { if(node) node.triggerRender(); }
 		
-	tbs = [ tb_anchor_w, tb_anchor_h, tb_anchor_l, tb_anchor_t, tb_anchor_r, tb_anchor_b ];
-	array_foreach(tbs, function(t) /*=>*/ { t.setFont(f_p3).setAlign(fa_center).setAutoUpdate(); });
-	
+		tb_anchor_w = textBox_Number(function(v) /*=>*/ { curr_pbbox.anchor_w = v; trigRender(); }).setLabel("w");
+		tb_anchor_h = textBox_Number(function(v) /*=>*/ { curr_pbbox.anchor_h = v; trigRender(); }).setLabel("h");
+		tb_anchor_l = textBox_Number(function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_l = v; trigRender(); } });
+		tb_anchor_t = textBox_Number(function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_t = v; trigRender(); } });
+		tb_anchor_r = textBox_Number(function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_r = v; trigRender(); } });
+		tb_anchor_b = textBox_Number(function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_b = v; trigRender(); } });
+		
+		//// L
+		tb_anchor_l.setFrontButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+            curr_pbbox.anchor_x_type ^= 0b10;
+            setBBOX(b);
+            
+		}).setIcon(THEME.lock_12, function() /*=>*/ {return !bool(curr_pbbox.anchor_x_type & 0b10)},
+		                          function() /*=>*/  {return bool(curr_pbbox.anchor_x_type & 0b10)? COLORS._main_accent : c_white}).iconPad());
+		
+		tb_anchor_l.setSideButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX(); 
+	        curr_pbbox.anchor_l_fract = !curr_pbbox.anchor_l_fract;
+	        setBBOX(b);
+	        
+		}).setIcon(THEME.unit_ref, function() /*=>*/ {return curr_pbbox.anchor_l_fract}).iconPad());
+		
+		//// T
+		tb_anchor_t.setFrontButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+            curr_pbbox.anchor_y_type ^= 0b10;
+            setBBOX(b);
+            
+		}).setIcon(THEME.lock_12, function() /*=>*/ {return !bool(curr_pbbox.anchor_y_type & 0b10)},
+		                          function() /*=>*/  {return bool(curr_pbbox.anchor_y_type & 0b10)? COLORS._main_accent : c_white}).iconPad());
+		
+		tb_anchor_t.setSideButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+	        curr_pbbox.anchor_t_fract = !curr_pbbox.anchor_t_fract;
+	        setBBOX(b);
+	        
+		}).setIcon(THEME.unit_ref, function() /*=>*/ {return curr_pbbox.anchor_t_fract}).iconPad());
+		
+		//// R
+		tb_anchor_r.setFrontButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+            curr_pbbox.anchor_x_type ^= 0b01;
+            setBBOX(b);
+            
+		}).setIcon(THEME.lock_12, function() /*=>*/ {return !bool(curr_pbbox.anchor_x_type & 0b01)},
+		                          function() /*=>*/  {return bool(curr_pbbox.anchor_x_type & 0b01)? COLORS._main_accent : c_white}).iconPad());
+		
+		tb_anchor_r.setSideButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+	        curr_pbbox.anchor_r_fract = !curr_pbbox.anchor_r_fract;
+	        setBBOX(b);
+	        
+		}).setIcon(THEME.unit_ref, function() /*=>*/ {return curr_pbbox.anchor_r_fract}).iconPad());
+		
+		//// B
+		tb_anchor_b.setFrontButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+            curr_pbbox.anchor_y_type ^= 0b01;
+            setBBOX(b);
+            
+		}).setIcon(THEME.lock_12, function() /*=>*/ {return !bool(curr_pbbox.anchor_y_type & 0b01)},
+		                          function() /*=>*/  {return bool(curr_pbbox.anchor_y_type & 0b01)? COLORS._main_accent : c_white}).iconPad());
+		
+		tb_anchor_b.setSideButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+	        curr_pbbox.anchor_b_fract = !curr_pbbox.anchor_b_fract;
+	        setBBOX(b);
+	        
+		}).setIcon(THEME.unit_ref, function() /*=>*/ {return curr_pbbox.anchor_b_fract}).iconPad());
+		
+		//// DIM
+		tb_anchor_w.setSideButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+	        curr_pbbox.anchor_w_fract = !curr_pbbox.anchor_w_fract;
+	        setBBOX(b);
+	        
+		}).setIcon(THEME.unit_ref, function() /*=>*/ {return curr_pbbox.anchor_w_fract}).iconPad());
+		
+		tb_anchor_h.setSideButton(button(function() /*=>*/ {
+			var b = curr_pbbox.getBBOX();
+	        curr_pbbox.anchor_h_fract = !curr_pbbox.anchor_h_fract;
+	        setBBOX(b);
+	        
+		}).setIcon(THEME.unit_ref, function() /*=>*/ {return curr_pbbox.anchor_h_fract}).iconPad());
+		
+		tbs = [ tb_anchor_w, tb_anchor_h, tb_anchor_l, tb_anchor_t, tb_anchor_r, tb_anchor_b ];
+		array_foreach(tbs, function(t) /*=>*/ { t.setFont(f_p3).setAlign(fa_center).setAutoUpdate(); });
+		
+		tb_draw = [];
+	#endregion
+		
 	setLinked = function(v) /*=>*/ {
 		curr_pbbox.anchor_l = v;
 		curr_pbbox.anchor_t = v;
@@ -26,9 +109,7 @@ function pbBoxBox(_junction = undefined) : widget() constructor {
 		curr_pbbox.anchor_b = v; 
 		trigRender();
 	}
-	
-	tb_draw = [];
-	
+		
 	static trigger = function() { }
 	
 	static register = function(parent = noone) {
@@ -53,7 +134,7 @@ function pbBoxBox(_junction = undefined) : widget() constructor {
 		x = _x;
 		y = _y + ui(8);
 		w = _w;
-		h = ui(240);
+		h = ui(148);
 		
 		if(!is(_pbbox, __pbBox)) return 0;
 		curr_pbbox = _pbbox;
@@ -66,25 +147,21 @@ function pbBoxBox(_junction = undefined) : widget() constructor {
             var _y0 = _yc - h / 2;
             var _y1 = _yc + h / 2;
             
-            draw_set_color(COLORS._main_icon);
-            draw_rectangle_dashed(_x0, _y0, _x1, _y1, 2, ui(8));
+            draw_sprite_stretched_ext(THEME.ui_panel, 1, _x0, _y0, w, h, COLORS._main_icon, .75);
             
-            var _iw  = ui(128);
-            var _ih  = ui(96);
+            var _bs  = ui(20);
+            var _iw  = ui(96);
+            var _ih  = ui(68);
             var _ix0 = _xc - _iw / 2;
             var _ix1 = _xc + _iw / 2;
             var _iy0 = _yc - _ih / 2;
             var _iy1 = _yc + _ih / 2;
             
-            var _tbcx = _xc - ui(8);
-            var _tbw  = ui(64);
-            var _tbh  = line_get_height(f_p3, 8);
+            var _tbw = ui(96);
+            var _tdw = _iw - ui(16);
+            var _tbh = line_get_height(font, 4);
             
-            var _8  = ui(8);
-            var _bs = ui(20);
-            
-            draw_set_color(COLORS._main_icon_light);
-            draw_rectangle_border(_ix0, _iy0, _ix1, _iy1, 2);
+            draw_sprite_stretched_ext(THEME.ui_panel, 1, _ix0, _iy0, _iw, _ih, COLORS._main_icon_light, .75);
         #endregion
         
         #region link
@@ -99,185 +176,62 @@ function pbBoxBox(_junction = undefined) : widget() constructor {
         
         #region width
             draw_set_color(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.bounded? COLORS._main_icon_light : CDEF.main_dark);
-            draw_line_cap_T(_ix0 + _8, _iy0 + _8, _ix1 - _8, _iy0 + _8, ui(4));
-                
-            if(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.bounded) {
-                tb_anchor_w.setFocusHover(active, hover);
-                tb_anchor_w.draw(_tbcx - _tbw/2, _yc - (_tbh / 2 + ui(4)) - _tbh/2, _tbw, _tbh, _pbbox.anchor_w, _m);
-                array_push(tb_draw, tb_anchor_w);
-                
-                var _bx = _tbcx + _tbw / 2 + ui(8);
-                var _by = _yc - (_tbh / 2 + ui(4));
-                if(buttonInstant(noone, _bx, _by - _bs / 2, _bs, _bs, _m, hover, active, "", THEME.unit_ref, _pbbox.anchor_w_fract, c_white, .8) == 2) {
-                    var _bbox = _pbbox.getBBOX();
-                        _pbbox.anchor_w_fract = !_pbbox.anchor_w_fract;
-                    _pbbox.setBBOX(_bbox);
-                    
-                    trigRender();
-                }
-                    
-            }
+            draw_line(_ix0, _iy0, _ix1, _iy0);
+            
+            tb_anchor_w.setInteract(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.bounded);    
+            tb_anchor_w.setFocusHover(active, hover);
+            tb_anchor_w.draw(_xc - _tdw/2, _yc - (_tbh / 2 + ui(2)) - _tbh/2, _tdw, _tbh, _pbbox.anchor_w, _m);
+            array_push(tb_draw, tb_anchor_w);
         #endregion
         
         #region height
             draw_set_color(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.bounded? COLORS._main_icon_light : CDEF.main_dark);
-            draw_line_cap_T(_ix0 + _8, _iy0 + _8, _ix0 + _8, _iy1 - _8, ui(4));
+            draw_line(_ix0, _iy0, _ix0, _iy1);
             
-            if(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.bounded) {
-                tb_anchor_h.setFocusHover(active, hover);
-                tb_anchor_h.draw(_tbcx - _tbw/2, _yc + (_tbh / 2 + ui(4)) - _tbh/2, _tbw, _tbh, _pbbox.anchor_h, _m);
-                array_push(tb_draw, tb_anchor_h);
-                
-                var _bx = _tbcx + _tbw / 2 + ui(8);
-                var _by = _yc + (_tbh / 2 + ui(4));
-                if(buttonInstant(noone, _bx, _by - _bs / 2, _bs, _bs, _m, hover, active, "", THEME.unit_ref, _pbbox.anchor_h_fract, c_white, .8) == 2) {
-                    var _bbox = _pbbox.getBBOX();
-                        _pbbox.anchor_h_fract = !_pbbox.anchor_h_fract;
-                    _pbbox.setBBOX(_bbox);
-                    
-                    trigRender();
-                }
-            }
+            tb_anchor_h.setInteract(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.bounded);
+            tb_anchor_h.setFocusHover(active, hover);
+            tb_anchor_h.draw(_xc - _tdw/2, _yc + (_tbh / 2 + ui(2)) - _tbh/2, _tdw, _tbh, _pbbox.anchor_h, _m);
+            array_push(tb_draw, tb_anchor_h);
         #endregion
         
         #region top
             draw_set_color(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.maximum? COLORS._main_icon_light : CDEF.main_dark);
-            draw_line_cap_T(_xc, _y0 + _8, _xc, _iy0 - _8, ui(4));
+            draw_line(_xc, _y0, _xc, _iy0);
             
-            if(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.maximum) {
-                tb_anchor_t.setFocusHover(active, hover);
-                tb_anchor_t.draw(_xc - _tbw/2, (_y0 + _iy0) / 2 - _tbh/2, _tbw, _tbh, _pbbox.anchor_t, _m);
-                array_push(tb_draw, tb_anchor_t);
-                
-                ////////////////////////////////////////////////////////////////////////////////
-                
-                var _bx = _xc + _tbw / 2 + ui(8);
-                var _by = (_y0 + _iy0) / 2;
-                if(buttonInstant(noone, _bx, _by - _bs / 2, _bs, _bs, _m, hover, active, "", THEME.unit_ref, _pbbox.anchor_t_fract, c_white, .8) == 2) {
-                    var _bbox = _pbbox.getBBOX();
-                        _pbbox.anchor_t_fract = !_pbbox.anchor_t_fract;
-                    _pbbox.setBBOX(_bbox);
-                    
-                    trigRender();
-                }
-            }
-                
-            var _bx = _xc - _tbw / 2 - ui(8);
-            var _by = (_y0 + _iy0) / 2;
-            var _vv = bool(_pbbox.anchor_y_type & 0b10);
-            if(buttonInstant(noone, _bx - _bs, _by - _bs / 2, _bs, _bs, _m, hover, active, "", THEME.lock_12, !_vv, _vv? COLORS._main_accent : c_white, .8) == 2) {
-                var _bbox = _pbbox.getBBOX();
-                    _pbbox.anchor_y_type ^= 0b10;
-                _pbbox.setBBOX(_bbox);
-                
-                trigRender();
-            }
-            
+            tb_anchor_t.setInteract(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.maximum);
+            tb_anchor_t.setFocusHover(active, hover);
+            tb_anchor_t.draw(_xc - _tbw/2, (_y0 + _iy0) / 2 - _tbh/2, _tbw, _tbh, _pbbox.anchor_t, _m);
+            array_push(tb_draw, tb_anchor_t);
         #endregion
         
         #region left
             draw_set_color(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.maximum? COLORS._main_icon_light : CDEF.main_dark);
-            draw_line_cap_T(_x0 + _8, _yc, _ix0 - _8, _yc, ui(4));
+            draw_line(_x0, _yc, _ix0, _yc);
             
-            if(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.maximum) {
-                tb_anchor_l.setFocusHover(active, hover);
-                tb_anchor_l.draw((_x0 + _ix0) / 2 - _tbw/2, _yc - _tbh/2, _tbw, _tbh, _pbbox.anchor_l, _m);
-                array_push(tb_draw, tb_anchor_l);
-                
-                ////////////////////////////////////////////////////////////////////////////////
-                
-                var _bx = (_x0 + _ix0) / 2;
-                var _by = _yc + _tbh / 2 + ui(4);
-                if(buttonInstant(noone, _bx - _bs / 2, _by, _bs, _bs, _m, hover, active, "", THEME.unit_ref, _pbbox.anchor_l_fract, c_white, .8) == 2) {
-                    var _bbox = _pbbox.getBBOX();
-                        _pbbox.anchor_l_fract = !_pbbox.anchor_l_fract;
-                    _pbbox.setBBOX(_bbox);
-                    
-                    trigRender();
-                }
-            }
-            
-            var _bx = (_x0 + _ix0) / 2;
-            var _by = _yc - _tbh / 2 - ui(4);
-            var _vv = bool(_pbbox.anchor_x_type & 0b10);
-            if(buttonInstant(noone, _bx - _bs / 2, _by - _bs, _bs, _bs, _m, hover, active, "", THEME.lock_12, !_vv, _vv? COLORS._main_accent : c_white, .8) == 2) {
-                var _bbox = _pbbox.getBBOX();
-                    _pbbox.anchor_x_type ^= 0b10;
-                _pbbox.setBBOX(_bbox);
-                
-                trigRender();
-            }
-                
+            tb_anchor_l.setInteract(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.maximum);
+            tb_anchor_l.setFocusHover(active, hover);
+            tb_anchor_l.draw((_x0 + _ix0) / 2 - _tbw/2, _yc - _tbh/2, _tbw, _tbh, _pbbox.anchor_l, _m);
+            array_push(tb_draw, tb_anchor_l);
         #endregion
         
         #region right
             draw_set_color(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.minimum? COLORS._main_icon_light : CDEF.main_dark);
-            draw_line_cap_T(_ix1 + _8, _yc, _x1 - _8, _yc, ui(4));
+            draw_line(_ix1, _yc, _x1, _yc);
             
-            if(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.minimum) {
-                tb_anchor_r.setFocusHover(active, hover);
-                tb_anchor_r.draw((_x1 + _ix1) / 2 - _tbw/2, _yc - _tbh/2, _tbw, _tbh, _pbbox.anchor_r, _m);
-                array_push(tb_draw, tb_anchor_r);
-                
-                ////////////////////////////////////////////////////////////////////////////////
-                
-                var _bx = (_x1 + _ix1) / 2;
-                var _by = _yc + _tbh / 2 + ui(4);
-                if(buttonInstant(noone, _bx - _bs / 2, _by, _bs, _bs, _m, hover, active, "", THEME.unit_ref, _pbbox.anchor_r_fract, c_white, .8) == 2) {
-                    var _bbox = _pbbox.getBBOX();
-                        _pbbox.anchor_r_fract = !_pbbox.anchor_r_fract;
-                    _pbbox.setBBOX(_bbox);
-                    
-                    trigRender();
-                }
-            }
-                
-            var _bx = (_x1 + _ix1) / 2;
-            var _by = _yc - _tbh / 2 - ui(4);
-            var _vv = bool(_pbbox.anchor_x_type & 0b01);
-            if(buttonInstant(noone, _bx - _bs / 2, _by - _bs, _bs, _bs, _m, hover, active, "", THEME.lock_12, !_vv, _vv? COLORS._main_accent : c_white, .8) == 2) {
-                var _bbox = _pbbox.getBBOX();
-                    _pbbox.anchor_x_type ^= 0b01;
-                _pbbox.setBBOX(_bbox);
-                
-                trigRender();
-            }
-            
+        	tb_anchor_r.setInteract(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.minimum);
+            tb_anchor_r.setFocusHover(active, hover);
+            tb_anchor_r.draw((_x1 + _ix1) / 2 - _tbw/2, _yc - _tbh/2, _tbw, _tbh, _pbbox.anchor_r, _m);
+            array_push(tb_draw, tb_anchor_r);
         #endregion
         
         #region bottom
             draw_set_color(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.minimum? COLORS._main_icon_light : CDEF.main_dark);
-            draw_line_cap_T(_xc, _iy1 + _8, _xc, _y1 - _8, ui(4));
+            draw_line(_xc, _iy1, _xc, _y1);
             
-            if(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.minimum) {
-                tb_anchor_b.setFocusHover(active, hover);
-                tb_anchor_b.draw(_xc - _tbw/2, (_y1 + _iy1) / 2 - _tbh/2, _tbw, _tbh, _pbbox.anchor_b, _m);
-                array_push(tb_draw, tb_anchor_b);
-                
-                ////////////////////////////////////////////////////////////////////////////////
-                
-                var _bx = _xc + _tbw / 2 + ui(8);
-                var _by = (_y1 + _iy1) / 2;
-                if(buttonInstant(noone, _bx, _by - _bs / 2, _bs, _bs, _m, hover, active, "", THEME.unit_ref, _pbbox.anchor_b_fract, c_white, .8) == 2) {
-                    var _bbox = _pbbox.getBBOX();
-                        _pbbox.anchor_b_fract = !_pbbox.anchor_b_fract;
-                    _pbbox.setBBOX(_bbox);
-                    
-                    trigRender();
-                }
-            }
-                
-            var _bx = _xc - _tbw / 2 - ui(8);
-            var _by = (_y1 + _iy1) / 2;
-            var _vv = bool(_pbbox.anchor_y_type & 0b01);
-            if(buttonInstant(noone, _bx - _bs, _by - _bs / 2, _bs, _bs, _m, hover, active, "", THEME.lock_12, !_vv, _vv? COLORS._main_accent : c_white, .8) == 2) {
-                var _bbox = _pbbox.getBBOX();
-                    _pbbox.anchor_y_type ^= 0b01;
-                _pbbox.setBBOX(_bbox);
-                
-                trigRender();
-            }
-                
+        	tb_anchor_b.setInteract(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.minimum);
+            tb_anchor_b.setFocusHover(active, hover);
+            tb_anchor_b.draw(_xc - _tbw/2, (_y1 + _iy1) / 2 - _tbh/2, _tbw, _tbh, _pbbox.anchor_b, _m);
+            array_push(tb_draw, tb_anchor_b);
         #endregion
         
 		return h + ui(16);

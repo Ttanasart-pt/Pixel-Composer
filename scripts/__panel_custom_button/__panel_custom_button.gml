@@ -68,6 +68,9 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 		
 		if(hov && mouse_lpress(focus)) {
 			if(input_junc && output_junc) {
+				if(input_junc.type == VALUE_TYPE.trigger)
+					input_junc.setValue(true);
+				
 				if(action_junc) {
 					var _val = input_junc.getValue();
 					action_junc.setValue(_val);

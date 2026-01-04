@@ -3,7 +3,6 @@ function Panel_Custom_Frame_Split(_data) : Panel_Custom_Frame(_data) constructor
 	name = "Split Frame";
 	icon = THEME.panel_icon_element_frame_split;
 	
-	style      = 0;
 	split_dir  = 0;
 	split_amou = .5; split_amou_frac =  true;
 	split_spac =  0; split_spac_frac = false;
@@ -35,6 +34,9 @@ function Panel_Custom_Frame_Split(_data) : Panel_Custom_Frame(_data) constructor
 	]);
 	
 	static setSize = function(_pBbox, _rx, _ry) {
+		rx = _rx;
+		ry = _ry;
+		
 		pbBox.setBase(_pBbox);
 		bbox = pbBox.getBBOX(bbox);
 		x  = bbox[0];
@@ -97,8 +99,6 @@ function Panel_Custom_Frame_Split(_data) : Panel_Custom_Frame(_data) constructor
 		adjust_area[4] = adjust_area[2] - adjust_area[0];
 		adjust_area[5] = adjust_area[3] - adjust_area[1];
 		
-		rx = _rx;
-		ry = _ry;
 	}
 	
 	static drawFrame = function(panel, _m) {

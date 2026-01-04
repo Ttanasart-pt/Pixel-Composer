@@ -152,24 +152,27 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		if(icon) {
 			var ind = icon_index;
+			var bcc = icon_blend;
 			
 			     if(is_array(ind))  ind = ind[0](params);
 			else if(is_method(ind)) ind = ind(params);
+			
+			if(is_method(bcc)) bcc = bcc();
 			
 			gpu_set_tex_filter(true);
 			if(is(icon, sprite_drawer)) {
 				if(icon_size == 0) {
 					var ics = min(1, (_w - icon_padd) / icon_w, (_h - icon_padd) / icon_h);
-					icon.drawScale(bx, _y + _h / 2, ics, icon_blend, aa);
+					icon.drawScale(bx, _y + _h / 2, ics, bcc, aa);
 				} else 
-					icon.draw(bx, _y + _h / 2, icon_size, icon_blend, aa);
+					icon.draw(bx, _y + _h / 2, icon_size, bcc, aa);
 				
 			} else {
 				if(icon_size == 0) {
 					var ics = min(1, (_w - icon_padd) / icon_w, (_h - icon_padd) / icon_h);
-					draw_sprite_ext(icon, ind, bx, _y + _h / 2, ics, ics, 0, icon_blend, aa);
+					draw_sprite_ext(icon, ind, bx, _y + _h / 2, ics, ics, 0, bcc, aa);
 				} else 
-					draw_sprite_ui_uniform(icon, ind, bx, _y + _h / 2, icon_size, icon_blend, aa);
+					draw_sprite_ui_uniform(icon, ind, bx, _y + _h / 2, icon_size, bcc, aa);
 			}
 			
 			gpu_set_tex_filter(false);

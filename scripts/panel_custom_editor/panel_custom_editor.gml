@@ -5,79 +5,6 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	w = min(WIN_W - ui(64), ui(1400));
 	h = min(WIN_H - ui(64), ui(800));
 	
-	elements = [
-		[ "Frames", false ], 
-		{
-			name: "Frame", 
-			fn:   Panel_Custom_Frame, 
-			spr:  THEME.panel_icon_element_frame,  
-			prevsize: [64,64], 
-		}, 
-		{
-			name: "Split Frame", 
-			fn:   Panel_Custom_Frame_Split, 
-			spr:  THEME.panel_icon_element_frame_split,  
-			prevsize: [64,64], 
-		}, 
-		
-		[ "Nodes", false ], 
-		{
-			name: "Node Input", 
-			fn:   Panel_Custom_Node_Input, 
-			spr:  THEME.panel_icon_element_node_input, 
-			prevsize: [80,32], 
-		}, 
-		{
-			name: "Node Output", 
-			fn:   Panel_Custom_Node_Output, 
-			spr:  THEME.panel_icon_element_node_output, 
-			prevsize: [64,64], 
-		}, 
-		[ "Widgets", false ], 
-		{
-			name: "Button", 
-			fn:   Panel_Custom_Button, 
-			spr:  THEME.panel_icon_element_button, 
-			prevsize: [64,64], 
-		}, 
-		// {
-		// 	name: "Choices", 
-		// 	fn:   Panel_Custom_Choices, 
-		// 	spr:  THEME.panel_icon_element_choices, 
-		// 	prevsize: [120,64], 
-		// }, 
-		{
-			name: "Color", 
-			fn:   Panel_Custom_Color, 
-			spr:  THEME.panel_icon_element_color, 
-			prevsize: [160,160], 
-		}, 
-		{
-			name: "Knob", 
-			fn:   Panel_Custom_Knob, 
-			spr:  THEME.panel_icon_element_knob, 
-			prevsize: [64,64], 
-		}, 
-		{
-			name: "Slider", 
-			fn:   Panel_Custom_Slider, 
-			spr:  THEME.panel_icon_element_slider, 
-			prevsize: [120,32], 
-		}, 
-		{
-			name: "Text", 
-			fn:   Panel_Custom_Text, 
-			spr:  THEME.panel_icon_element_text, 
-			prevsize: [80,32], 
-		}, 
-		{
-			name: "Textbox", 
-			fn:   Panel_Custom_Textbox, 
-			spr:  THEME.panel_icon_element_textbox, 
-			prevsize: [80,32], 
-		}, 
-	];
-	
 	b_redir_new = button(function() /*=>*/ { array_push(data.io_redirect, new IO_Redirect(data)) })
 		.setIcon(THEME.add_16, 0, COLORS._main_value_positive).iconPad();
 	
@@ -129,11 +56,16 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	#endregion
 	
 	#region ---- outline ----
-		outline_drag       = undefined;
-		outline_drag_side  = 0;
-		outline_drag_frame = undefined;
+		outline_drag         = undefined;
+		outline_drag_side    = 0;
+		outline_drag_frame   = undefined;
 		
-		outline_hover      = undefined;
+		outline_hover        = undefined;
+		
+		outline_height       = h / 3;
+		outline_height_drag  = false;
+	    outline_height_start = 0;
+	    outline_height_my    = 0;
 	#endregion
 	
 	#region ---- editor ----
@@ -166,6 +98,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		var _h = 0;
 		var ww = sc_add_elements.surface_w;
 		
+		var elements = PANEL_ELEMENT;
 		var hov = sc_add_elements.hover;
 		var foc = sc_add_elements.active;
 		
@@ -217,7 +150,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			}
 			
 			var nam = ele.name;
-			var spr = ele.spr;
+			var spr = ele.spr();
 			
 			var xx = (grs + ui(4)) * col;
 			var hv = hov && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grs, yy + grs);
@@ -265,16 +198,24 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		if(outline_drag && mouse_lrelease()) {
 			if(hovering_element && outline_drag != hovering_element) {
-				var _ind = array_find(hovering_element.parent.contents, hovering_element) + outline_drag_side;
-			    if(outline_drag.parent == hovering_element.parent) {
-			    	var _cind = array_find(hovering_element.parent.contents, outline_drag);
-			    	if(_cind < _ind) _ind--;
-			    }
-			    
-				array_remove(outline_drag.parent.contents, outline_drag);
-				array_insert(hovering_element.parent.contents, _ind, outline_drag);
-				
-				outline_drag.parent = hovering_element.parent;
+				if(outline_drag_frame) {
+					array_remove(outline_drag.parent.contents, outline_drag);
+					array_push(outline_drag_frame.contents, outline_drag);
+					
+					outline_drag.parent = outline_drag_frame;
+					
+				} else {
+					var _ind = array_find(hovering_element.parent.contents, hovering_element) + outline_drag_side;
+				    if(outline_drag.parent == hovering_element.parent) {
+				    	var _cind = array_find(hovering_element.parent.contents, outline_drag);
+				    	if(_cind < _ind) _ind--;
+				    }
+				    
+					array_remove(outline_drag.parent.contents, outline_drag);
+					array_insert(hovering_element.parent.contents, _ind, outline_drag);
+					
+					outline_drag.parent = hovering_element.parent;
+				}
 			}
 			
 			outline_drag = undefined;
@@ -472,37 +413,73 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		hovering_element = undefined;
 		hover_preview    = false;
 		
-		var pd = ui(8);
-		var edt_l = editor_toolbar_width_l;
-		var edt_r = editor_toolbar_width_r;
-		var edt_h = h - pd - pd;
-		
-		var add_x = pd;
-		var add_y = pd;
-		var add_w = edt_l;
-		var add_h = edt_h * 2 / 3;
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, add_x, add_y, add_w, add_h);
-		sc_add_elements.setFocusHover(pFOCUS, pHOVER);
-		sc_add_elements.verify(add_w - ui(8), add_h - ui(8));
-		sc_add_elements.drawOffset(add_x + ui(4), add_y + ui(4), mx, my);
-		
-		var out_x = pd;
-		var out_y = pd + add_h + pd;
-		var out_w = edt_l;
-		var out_h = (edt_h - add_h) - pd;
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, out_x, out_y, out_w, out_h);
-		sc_outline.setFocusHover(pFOCUS, pHOVER);
-		sc_outline.verify(out_w - ui(8), out_h - ui(8));
-		sc_outline.drawOffset(out_x + ui(4), out_y + ui(4), mx, my);
-		
-		var prp_x = w - edt_r - pd;
-		var prp_y = pd;
-		var prp_w = edt_r;
-		var prp_h = edt_h;
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, prp_x, prp_y, prp_w, prp_h);
-		sc_properties.setFocusHover(pFOCUS, pHOVER);
-		sc_properties.verify(prp_w - ui(8), prp_h - ui(8));
-		sc_properties.drawOffset(prp_x + ui(4), prp_y + ui(4), mx, my);
+		#region panels
+			var pd = ui(8);
+			var edt_l = editor_toolbar_width_l;
+			var edt_r = editor_toolbar_width_r;
+			var edt_h = h - pd - pd;
+			
+			var add_x = pd;
+			var add_y = pd;
+			var add_w = edt_l;
+			var add_h = edt_h - outline_height - pd;
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, add_x, add_y, add_w, add_h);
+			sc_add_elements.setFocusHover(pFOCUS, pHOVER);
+			sc_add_elements.verify(add_w - ui(8), add_h - ui(8));
+			sc_add_elements.drawOffset(add_x + ui(4), add_y + ui(4), mx, my);
+			
+			var out_x = pd;
+			var out_y = pd + add_h + pd;
+			var out_w = edt_l;
+			var out_h = outline_height;
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, out_x, out_y, out_w, out_h);
+			sc_outline.setFocusHover(pFOCUS, pHOVER);
+			sc_outline.verify(out_w - ui(8), out_h - ui(8));
+			sc_outline.drawOffset(out_x + ui(4), out_y + ui(4), mx, my);
+			
+			var prp_x = w - edt_r - pd;
+			var prp_y = pd;
+			var prp_w = edt_r;
+			var prp_h = edt_h;
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, prp_x, prp_y, prp_w, prp_h);
+			sc_properties.setFocusHover(pFOCUS, pHOVER);
+			sc_properties.verify(prp_w - ui(8), prp_h - ui(8));
+			sc_properties.drawOffset(prp_x + ui(4), prp_y + ui(4), mx, my);
+			
+			// resize
+			
+			var cc = COLORS._main_icon;
+    		var aa = .5;
+    		
+			var _hov_res_out = pHOVER && point_in_rectangle(mx, my, out_x, out_y - pd, out_x + out_w, out_y);
+			
+	    	if(outline_height_drag) {
+	            CURSOR = cr_size_we;
+	            cc = COLORS._main_icon_light;
+				aa = 1;
+				
+	            outline_height = outline_height_start - (my - outline_height_my);
+	            outline_height = clamp(outline_height, ui(224), h - ui(128));
+	            if(mouse_release(mb_left)) outline_height_drag = false;
+	        }
+	        
+	        if(_hov_res_out) {
+	            CURSOR = cr_size_ns;
+	            aa = 1;
+	            
+	            if(mouse_press(mb_left, pFOCUS)) {
+	                outline_height_drag  = true;
+	                outline_height_start = outline_height;
+	                outline_height_my    = my;
+	            }
+	            
+	        } 
+	        
+	        draw_set_alpha(aa);
+            draw_set_color(cc);
+            draw_line_round(out_x + out_w / 2 - ui(12), out_y - pd / 2, out_x + out_w / 2 + ui(12), out_y - pd / 2, ui(3));
+            draw_set_alpha(1);
+		#endregion
 		
 		#region topbar
 			var _top_x0 = pd + edt_l + pd ;

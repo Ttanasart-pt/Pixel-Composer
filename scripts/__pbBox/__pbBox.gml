@@ -1,42 +1,56 @@
-enum PB_AXIS_ANCHOR {
-	center  = 0b00,
-	minimum = 0b10,
-	maximum = 0b01,
-	bounded = 0b11,
-}
-
-enum PB_DIM_BOUND {
-	unbounded, 
-}
+#region enum
+	enum PB_AXIS_ANCHOR {
+		center  = 0b00,
+		minimum = 0b10,
+		maximum = 0b01,
+		bounded = 0b11,
+	}
+	
+	enum PB_DIM_BOUND {
+		unbounded, 
+	}
+#endregion
 
 function __pbBox() constructor {
 	
-	base_bbox = [ 0, 0, 32, 32 ];
-	fixed_box = 0;
+	#region ---- bbox ----
+		base_bbox = [ 0, 0, 32, 32 ];
+		fixed_box = 0;
+	#endregion
 	
-	anchor_x_type = PB_AXIS_ANCHOR.minimum;
-	anchor_y_type = PB_AXIS_ANCHOR.minimum;
+	#region ---- anchors ----
+		_anchor_x_type = PB_AXIS_ANCHOR.minimum;
+		_anchor_y_type = PB_AXIS_ANCHOR.minimum;
+		
+		anchor_x_type  = PB_AXIS_ANCHOR.minimum;
+		anchor_y_type  = PB_AXIS_ANCHOR.minimum;
+		
+		anchor_l = 0; anchor_l_fract = false;
+		anchor_t = 0; anchor_t_fract = false;
+		
+		anchor_r = 0; anchor_r_fract = false;
+		anchor_b = 0; anchor_b_fract = false;
+		
+		anchor_w = 1; anchor_w_fract =  true;
+		anchor_h = 1; anchor_h_fract =  true;
+		
+		anchor_w_type = PB_DIM_BOUND.unbounded;
+		anchor_h_type = PB_DIM_BOUND.unbounded;
+		
+		anchor_w_min = 0; anchor_w_max = 0;
+		anchor_h_min = 0; anchor_h_max = 0;
+	#endregion
 	
-	anchor_l = 0; anchor_l_fract = false;
-	anchor_t = 0; anchor_t_fract = false;
-	
-	anchor_r = 0; anchor_r_fract = false;
-	anchor_b = 0; anchor_b_fract = false;
-	
-	anchor_w = 1; anchor_w_fract =  true;
-	anchor_h = 1; anchor_h_fract =  true;
-	
-	anchor_w_type = PB_DIM_BOUND.unbounded;
-	anchor_h_type = PB_DIM_BOUND.unbounded;
-	
-	anchor_w_min = 0; anchor_w_max = 0;
-	anchor_h_min = 0; anchor_h_max = 0;
+	////- Setters
 	
 	static set_w = function(v) /*=>*/ { anchor_w = anchor_w_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
 	static set_h = function(v) /*=>*/ { anchor_h = anchor_h_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
 	
 	static set_l = function(v) /*=>*/ { v -= base_bbox[0]; anchor_l = anchor_l_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
 	static set_t = function(v) /*=>*/ { v -= base_bbox[1]; anchor_t = anchor_t_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
+	
+	static _set_l = function(v) /*=>*/ { anchor_l = anchor_l_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
+	static _set_t = function(v) /*=>*/ { anchor_t = anchor_t_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
 	
 	static set_r = function(v) /*=>*/ { anchor_r = anchor_r_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
 	static set_b = function(v) /*=>*/ { anchor_b = anchor_b_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
@@ -60,6 +74,8 @@ function __pbBox() constructor {
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx = 0, _sny = 0, _node = undefined) {
+		static snap_dist = 8;
+		
 		if(fixed_box) return;
 		var _bbox = getBBOX();
 		var _hov  = false;
@@ -99,10 +115,12 @@ function __pbBox() constructor {
 			return _hov || _h0 || _h1 || _h2 || _h3 || _h9;
 		}
 		
-		var _xx = base_bbox[0]; 
-		var _yy = base_bbox[1];
-		var _ww = base_bbox[2] - base_bbox[0];
-		var _hh = base_bbox[3] - base_bbox[1];
+		var xx0 = base_bbox[0], dx0 = _x + xx0 * _s;
+		var yy0 = base_bbox[1], dy0 = _y + yy0 * _s;
+		var xx1 = base_bbox[2], dx1 = _x + xx1 * _s;
+		var yy1 = base_bbox[3], dy1 = _y + yy1 * _s;
+		var _ww = xx1 - xx0;
+		var _hh = yy1 - yy0;
 		
 		var _mdx = (_mx - drag_anchor_mx) / _s;
 		var _mdy = (_my - drag_anchor_my) / _s;
@@ -115,11 +133,51 @@ function __pbBox() constructor {
 			case 9 : draw_anchor_cross(_h9, (_x0 + _x1) / 2, (_y0 + _y1) / 2, ui(8), 1);
 		}
 		
+		draw_set_color(COLORS._main_icon_light);
+		
 		if(drag_anchor == 9) {
+			var _bw = drag_anchor_sv[2] - drag_anchor_sv[0];
+			var _bh = drag_anchor_sv[3] - drag_anchor_sv[1];
+			
 			var _bl = round(drag_anchor_sv[0] + _mdx);
-			var _br = round(drag_anchor_sv[2] + _mdx);
 			var _bt = round(drag_anchor_sv[1] + _mdy);
+			
+			var _br = round(drag_anchor_sv[2] + _mdx);
 			var _bb = round(drag_anchor_sv[3] + _mdy);
+			
+			// snap x
+			if(abs(_bl - xx0) < snap_dist) { 
+				_bl = xx0; _br = _bl + _bw; 
+				draw_line_width(_x + _bl * _s, dy0, _x + _bl * _s, dy1, 1);
+				
+			} else if(abs(_br - xx1) < snap_dist) { 
+				_br = xx1; _bl = _br - _bw; 
+				draw_line_width(_x + _br * _s, dy0, _x + _br * _s, dy1, 1);
+			}
+			
+			// snap y
+			if(abs(_bt - yy0) < snap_dist) { 
+				_bt = yy0; _bb = _bt + _bh; 
+				draw_line_width(dx0, _y + _bt * _s, dx1, _y + _bt * _s, 1);
+				
+			} else if(abs(_bb - yy1) < snap_dist) { 
+				_bb = yy1; _bt = _bb - _bh; 
+				draw_line_width(dx0, _y + _bb * _s, dx1, _y + _bb * _s, 1);
+			}
+			
+			// snap cx
+			var cx = (xx0 + xx1) / 2;
+			if(abs((_bl + _br) / 2 - cx) < snap_dist) { 
+				_bl = round(cx - _bw / 2); _br = _bl + _bw; 
+				draw_line_width(_x + cx * _s, dy0, _x + cx * _s, dy1, 1);
+			}
+			
+			// snap cy
+			var cy = (yy0 + yy1) / 2;
+			if(abs((_bt + _bb) / 2 - cy) < snap_dist) { 
+				_bt = round(cy - _bh / 2); _bb = _bt + _bh; 
+				draw_line_width(dx0, _y + cy * _s, dx1, _y + cy * _s, 1);
+			}
 			
 			setBBOX([ _bl, _bt, _br, _bb ]);
 			
@@ -132,6 +190,7 @@ function __pbBox() constructor {
 					case PB_AXIS_ANCHOR.minimum : set_l(_bx); set_w(_bw); break;
 					case PB_AXIS_ANCHOR.maximum : set_w(_bw);             break;
 					case PB_AXIS_ANCHOR.bounded : set_l(_bx);             break;
+					case PB_AXIS_ANCHOR.center  : set_w(_bw);             break;
 				}
 			}
 			
@@ -143,6 +202,7 @@ function __pbBox() constructor {
 					case PB_AXIS_ANCHOR.minimum : set_t(_by); set_h(_bh); break;
 					case PB_AXIS_ANCHOR.maximum : set_h(_bh);             break;
 					case PB_AXIS_ANCHOR.bounded : set_t(_by);             break;
+					case PB_AXIS_ANCHOR.center  : set_h(_bh);             break;
 				}
 			}
 			
@@ -154,6 +214,7 @@ function __pbBox() constructor {
 					case PB_AXIS_ANCHOR.minimum : set_w(_bw);                   break;
 					case PB_AXIS_ANCHOR.maximum : set_r(_ww - _bx); set_w(_bw); break;
 					case PB_AXIS_ANCHOR.bounded : set_r(_ww - _bx);             break;
+					case PB_AXIS_ANCHOR.center  : set_w(_bw);                   break;
 				}
 			}
 			
@@ -165,6 +226,7 @@ function __pbBox() constructor {
 					case PB_AXIS_ANCHOR.minimum : set_h(_bh);                   break;
 					case PB_AXIS_ANCHOR.maximum : set_b(_hh - _by); set_h(_bh); break;
 					case PB_AXIS_ANCHOR.bounded : set_b(_hh - _by);             break;
+					case PB_AXIS_ANCHOR.center  : set_h(_bh);                   break;
 				}
 			}
 		}
@@ -187,15 +249,23 @@ function __pbBox() constructor {
 	}
 	
 	static setBBOX = function(_bbox) {
-		var _x0 = base_bbox[0]; 
-		var _y0 = base_bbox[1];
-		var _x1 = base_bbox[2];
-		var _y1 = base_bbox[3];
+		var x0 = base_bbox[0]; 
+		var y0 = base_bbox[1];
+		var x1 = base_bbox[2];
+		var y1 = base_bbox[3];
+		var ww = base_bbox[2] - base_bbox[0];
+		var hh = base_bbox[3] - base_bbox[1];
 		
-		var _bl =       _bbox[0];
-		var _br = _x1 - _bbox[2];
-		var _bt =       _bbox[1];
-		var _bb = _y1 - _bbox[3];
+		var _l = anchor_l_fract? ww * anchor_l : anchor_l;
+		var _t = anchor_t_fract? hh * anchor_t : anchor_t;
+		
+		var _r = anchor_r_fract? ww * anchor_r : anchor_r;
+		var _b = anchor_b_fract? hh * anchor_b : anchor_b;
+		
+		var _bl =      _bbox[0];
+		var _br = x1 - _bbox[2];
+		var _bt =      _bbox[1];
+		var _bb = y1 - _bbox[3];
 		var _bw = _bbox[2] - _bbox[0];
 		var _bh = _bbox[3] - _bbox[1];
 		
@@ -203,15 +273,46 @@ function __pbBox() constructor {
 			case PB_AXIS_ANCHOR.minimum : set_l(_bl); set_w(_bw); break;
 			case PB_AXIS_ANCHOR.maximum : set_r(_br); set_w(_bw); break;
 			case PB_AXIS_ANCHOR.bounded : set_l(_bl); set_r(_br); break;
-			case PB_AXIS_ANCHOR.center  : set_w(_bw);             break;
+			case PB_AXIS_ANCHOR.center  : set_w(_bw);
+				var cx  = (_bbox[0] + _bbox[2]) / 2;
+				var px0 = x0 + _l;
+				var px1 = x1 - _r;
+				
+				if(_anchor_x_type == PB_AXIS_ANCHOR.minimum) _set_l((cx - (px1 - cx)) - x0);
+				if(_anchor_x_type == PB_AXIS_ANCHOR.maximum)  set_r(x1 - (cx + (cx - px0)));
+				if(_anchor_x_type == PB_AXIS_ANCHOR.center) {
+					var pxc = (px0 + px1) / 2;
+					var del = cx - pxc;
+					
+					_set_l(_l + del);
+					 set_r(_r - del);
+				}
+				break;
 		}
 		
 		switch(anchor_y_type) {
 			case PB_AXIS_ANCHOR.minimum : set_t(_bt); set_h(_bh); break;
 			case PB_AXIS_ANCHOR.maximum : set_b(_bb); set_h(_bh); break;
 			case PB_AXIS_ANCHOR.bounded : set_t(_bt); set_b(_bb); break;
-			case PB_AXIS_ANCHOR.center  : set_h(_bh);             break;
+			case PB_AXIS_ANCHOR.center  : set_h(_bh); 
+				var cy  = (_bbox[1] + _bbox[3]) / 2;
+				var py0 = y0 + _t;
+				var py1 = y1 - _b;
+				
+				if(_anchor_y_type == PB_AXIS_ANCHOR.minimum) _set_t((cy - (py1 - cy)) - y0);
+				if(_anchor_y_type == PB_AXIS_ANCHOR.maximum)  set_b(y1 - (cy + (cy - py0)));
+				if(_anchor_y_type == PB_AXIS_ANCHOR.center) {
+					var pyc = (py0 + py1) / 2;
+					var del = cy - pyc;
+					
+					_set_t(_t + del);
+					 set_b(_b - del);
+				}
+				break;
 		}
+		
+		_anchor_x_type = anchor_x_type;
+		_anchor_y_type = anchor_y_type;
 		
 		return self;
 	}
@@ -299,8 +400,8 @@ function __pbBox() constructor {
 	
 	////- Actions
 	
-	static serialize   = function(   ) { return variable_clone(self); }
-	static deserialize = function(map) { struct_override(self, map); return self; }
+	static serialize   = function( ) /*=>*/ {return variable_clone(self)};
+	static deserialize = function(m) /*=>*/ { struct_override(self, m); return self; }
 	
 	static uiScale = function(_div = false) {
 		var _sca = _div? 1 / UI_SCALE : UI_SCALE;
