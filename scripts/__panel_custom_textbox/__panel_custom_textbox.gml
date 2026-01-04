@@ -1,4 +1,4 @@
-function Panel_Custom_Textbox() : Panel_Custom_Element() constructor {
+function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 	type = "textbox";
 	name = "Textbox";
 	icon = THEME.panel_icon_element_textbox;
@@ -6,11 +6,11 @@ function Panel_Custom_Textbox() : Panel_Custom_Element() constructor {
 	
 	textbox = textBox_Text(function(t) /*=>*/ { onModify(t); }).setEmpty().setHide(3);
 	
-	bind_input = new JuncLister("Input", CONNECT_TYPE.input);
+	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input);
 	
-	bg_output    = new JuncLister("BG",     CONNECT_TYPE.output);
-	hover_output = new JuncLister("Hover",  CONNECT_TYPE.output);
-	press_output = new JuncLister("Select", CONNECT_TYPE.output);
+	bg_output    = new JuncLister(data, "BG",     CONNECT_TYPE.output);
+	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output);
+	press_output = new JuncLister(data, "Select", CONNECT_TYPE.output);
 	type = 0;
 	
 	halign = fa_left;

@@ -19,7 +19,7 @@ function Panel_Custom_Data() constructor {
 	#region ---- root ----
 		rootData = undefined;
 		
-		root = new Panel_Custom_Frame();
+		root = new Panel_Custom_Frame(self);
 		root.name      = "Home";
 		root.style     = 1;
 		root.draggable = false;
@@ -31,7 +31,8 @@ function Panel_Custom_Data() constructor {
 	#endregion
 	
 	#region ---- io redirect ----
-		io_redirect = {};
+		io_redirect     = [];
+		io_redirect_map = {};
 	#endregion
 	
 	////- Draw
@@ -61,7 +62,7 @@ function Panel_Custom_Data() constructor {
 	static initRoot = function() {
 		if(rootData == undefined) return;
 		
-		root = new Panel_Custom_Element().deserialize(rootData);
+		root = new Panel_Custom_Element(self).deserialize(rootData);
 		root.draggable = false;
 		root.anchor_x_type = PB_AXIS_ANCHOR.bounded;
 		root.anchor_y_type = PB_AXIS_ANCHOR.bounded;
@@ -80,7 +81,8 @@ function Panel_Custom_Data() constructor {
 			open_start, 
 		}
 		
-		_m.root = root.serialize();
+		_m.root    = root.serialize();
+		_m.ioredir = array_map(io_redirect, function(i) /*=>*/ {return i.serialize()});
 		
 		return _m;
 	}
@@ -93,6 +95,9 @@ function Panel_Custom_Data() constructor {
 		preh = (_m[$ "preh"] ?? preh) * UI_SCALE;
 		auto_pin   = _m[$ "auto_pin"] ?? auto_pin;
 		open_start = _m[$ "open_start"] ?? open_start;
+		
+		__self = self;
+		if(has(_m, "ioredir")) io_redirect = array_map(_m.ioredir, function(i) /*=>*/ {return new IO_Redirect(__self).deserialize(i)});
 		
 		rootData = _m.root;
 		initRoot();

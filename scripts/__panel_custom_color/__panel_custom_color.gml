@@ -1,4 +1,4 @@
-function Panel_Custom_Color() : Panel_Custom_Element() constructor {
+function Panel_Custom_Color(_data) : Panel_Custom_Element(_data) constructor {
 	type = "color";
 	name = "Color";
 	icon = THEME.panel_icon_element_color;
@@ -6,8 +6,8 @@ function Panel_Custom_Color() : Panel_Custom_Element() constructor {
 	selector = new colorSelector(function(c) /*=>*/ {return onModify(c)});
 	selector.show_textbox = false;
 	
-	bind_input = new JuncLister("Input", CONNECT_TYPE.input);
-	bg_output  = new JuncLister("BG",    CONNECT_TYPE.output);
+	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input);
+	bg_output  = new JuncLister(data, "BG",    CONNECT_TYPE.output);
 	
 	array_append(editors, [
 		[ "Value Binding", false ], 
@@ -35,7 +35,7 @@ function Panel_Custom_Color() : Panel_Custom_Element() constructor {
 		
 		if(input_junc) {
 			var _currVal = input_junc.showValue();
-			if(_currVal != selector.current_color)
+			if(is_numeric(_currVal) && _currVal != selector.current_color)
 				selector.setColor(_currVal);
 		}
 		

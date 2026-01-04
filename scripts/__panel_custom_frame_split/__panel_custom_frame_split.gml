@@ -1,4 +1,4 @@
-function Panel_Custom_Frame_Split() : Panel_Custom_Frame() constructor {
+function Panel_Custom_Frame_Split(_data) : Panel_Custom_Frame(_data) constructor {
 	type = "framesplit";
 	name = "Split Frame";
 	icon = THEME.panel_icon_element_frame_split;
@@ -146,8 +146,8 @@ function Panel_Custom_Frame_Split() : Panel_Custom_Frame() constructor {
 	
 	static postBuild = function() {
 		contents = [
-			new Panel_Custom_Frame(),
-			new Panel_Custom_Frame(),
+			new Panel_Custom_Frame(data),
+			new Panel_Custom_Frame(data),
 		];
 		
 		for( var i = 0, n = array_length(contents); i < n; i++ ) {

@@ -78,6 +78,36 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		}, 
 	];
 	
+	b_redir_new = button(function() /*=>*/ { array_push(data.io_redirect, new IO_Redirect(data)) })
+		.setIcon(THEME.add_16, 0, COLORS._main_value_positive).iconPad();
+	
+	globalEditors = [
+		[ "Global", false ], 
+		Simple_Editor("Panel Name", textBox_Text( function(t) /*=>*/ { data.name = t; } ), function() /*=>*/ {return data.name}, function(t) /*=>*/ { data.name = t; }),
+		
+		Simple_Editor("Prefered Size", new vectorBox( 2, function(v,i) /*=>*/ { 
+			if(i == 0) data.prew = v; 
+			else       data.preh = v; 
+		} ), function() /*=>*/ {return [data.prew,data.preh]}, function(v) /*=>*/ { data.prew = v[0]; data.preh = v[1] }),
+		
+		Simple_Editor("Minimum Size", new vectorBox( 2, function(v,i) /*=>*/ { 
+			if(i == 0) data.minw = v; 
+			else       data.minh = v; 
+		} ), function() /*=>*/ {return [data.minw,data.minh]}, function(v) /*=>*/ { data.minw = v[0]; data.minh = v[1] }), 
+		
+		Simple_Editor("Auto Pin", new checkBox( function() /*=>*/ { 
+			data.auto_pin = !data.auto_pin;
+		} ), function() /*=>*/ {return data.auto_pin}, function(v) /*=>*/ { data.auto_pin = v; }), 
+		
+		Simple_Editor("Open on Load", new checkBox( function() /*=>*/ { 
+			data.open_start = !data.open_start;
+		} ), function() /*=>*/ {return data.open_start}, function(v) /*=>*/ { data.open_start = v; }), 
+		
+		[ "IO Redirect", false, b_redir_new ], 
+		"redir", 
+		
+	];
+	
 	#region ---- selection ----
 		element_adding    = undefined;
 		element_selecting = undefined;
@@ -112,29 +142,6 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		minw = editor_toolbar_width_l + editor_toolbar_width_r + ui(320);
 		minh = ui(320);
-		
-		globalEditors = [
-			[ "Global", false ], 
-			Simple_Editor("Panel Name", textBox_Text( function(t) /*=>*/ { data.name = t; } ), function() /*=>*/ {return data.name}, function(t) /*=>*/ { data.name = t; }),
-			
-			Simple_Editor("Prefered Size", new vectorBox( 2, function(v,i) /*=>*/ { 
-				if(i == 0) data.prew = v; 
-				else       data.preh = v; 
-			} ), function() /*=>*/ {return [data.prew,data.preh]}, function(v) /*=>*/ { data.prew = v[0]; data.preh = v[1] }),
-			
-			Simple_Editor("Minimum Size", new vectorBox( 2, function(v,i) /*=>*/ { 
-				if(i == 0) data.minw = v; 
-				else       data.minh = v; 
-			} ), function() /*=>*/ {return [data.minw,data.minh]}, function(v) /*=>*/ { data.minw = v[0]; data.minh = v[1] }), 
-			
-			Simple_Editor("Auto Pin", new checkBox( function() /*=>*/ { 
-				data.auto_pin = !data.auto_pin;
-			} ), function() /*=>*/ {return data.auto_pin}, function(v) /*=>*/ { data.auto_pin = v; }), 
-			
-			Simple_Editor("Open on Load", new checkBox( function() /*=>*/ { 
-				data.open_start = !data.open_start;
-			} ), function() /*=>*/ {return data.open_start}, function(v) /*=>*/ { data.open_start = v; }), 
-		];
 	#endregion
 	
 	#region ---- preview ----
@@ -303,6 +310,21 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(_editors); i < n; i++ ) {
 			var _edt = _editors[i];
+			
+			if(_edt == "redir") {
+				for( var j = 0, m = array_length(data.io_redirect); j < m; j++ ) {
+					var io = data.io_redirect[j];
+					var hh = io.drawProp(ui(8), _y, ww - ui(16), _m, hov, foc, rx, ry);
+					
+					_y += hh + ui(4);
+					_h += hh + ui(4);
+				}
+				
+				_y += ui(4);
+				_h += ui(4);
+				continue;
+			}
+			
 			if(_edt == -1) {
 				_y += ui(2);
 				_h += ui(2);
@@ -318,25 +340,43 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			
 			if(is_array(_edt)) {
 				var _txt = _edt[0];
+				var _but = array_safe_get_fast(_edt, 2);
 				
 				_y += ui(2);
 				_h += ui(2);
 				
 				var cc = COLORS.panel_inspector_group_bg;
-	            if(hov && point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + lbh)) {
+				var lw = ww - (_but != 0) * ui(28);
+				
+	            if(hov && point_in_rectangle(_m[0], _m[1], 0, _y, lw, _y + lbh)) {
 	            	cc = COLORS.panel_inspector_group_hover;
-	                
 	                if(foc) {
 	                    	 if(DOUBLE_CLICK) _cAll = _edt[1]? -1 : 1;
 	                    else if(mouse_press(mb_left)) _edt[1] = !_edt[1];
 	                }
 	            }
 	                
-	            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y, ww, lbh, cc, 1);
+	            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y, lw, lbh, cc, 1);
 	            draw_sprite_ui(THEME.arrow, _edt[1]? 0 : 3, ui(16), _y + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
 	            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
-	            
 	            draw_text_add(ui(32), _y + lbh / 2, _txt);
+	            
+	            if(_but) {
+	            	var _bw = ui(24);
+	            	var _bh = lbh;
+	            	var _bx = ww - _bw;
+	            	var _by = _y;
+	            	
+	            	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, _by, _bw, _bh, COLORS.panel_inspector_group_bg, 1);
+	            	
+	            	_bx += ui(2);
+	            	_by += ui(2);
+	            	_bw -= ui(4);
+	            	_bh -= ui(4);
+	            	
+	            	_but.setFocusHover(foc, hov);
+	            	_but.draw(_bx, _by, _bw, _bh, _m, THEME.button_hide_fill);
+	            }
 				
 				_y += lbh + ui(4 + 2 * !_edt[1]);
 				_h += lbh + ui(4 + 2 * !_edt[1]);
@@ -622,7 +662,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			
 			if(mouse_lrelease()) {
 				if(hovering_frame != undefined) {
-					var _item = new element_adding.fn();
+					var _item = new element_adding.fn(data);
 					if(hover_preview) {
 						_item.pbBox.anchor_l = mx - dx0 - hovering_frame.x;
 						_item.pbBox.anchor_t = my - dy0 - hovering_frame.y;

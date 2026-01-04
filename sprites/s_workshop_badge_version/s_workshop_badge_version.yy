@@ -10,7 +10,7 @@
   "collisionTolerance":0,
   "ConfigValues":{
     "Steam":{
-      "textureGroupId":"{\"name\":\"Default\",\"path\":\"texturegroups/Default\"}",
+      "textureGroupId":"{ \"name\":\"workshop\", \"path\":\"texturegroups/workshop\" }",
     },
   },
   "DynamicTexturePage":false,

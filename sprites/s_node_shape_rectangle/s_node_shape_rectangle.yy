@@ -12,6 +12,9 @@
     "Itch":{
       "textureGroupId":"{ \"name\":\"Default\", \"path\":\"texturegroups/Default\" }",
     },
+    "Steam":{
+      "textureGroupId":"{ \"name\":\"nodeIcon\", \"path\":\"texturegroups/nodeIcon\" }",
+    },
   },
   "DynamicTexturePage":false,
   "edgeFiltering":false,

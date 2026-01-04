@@ -1,4 +1,4 @@
-function Panel_Custom_Frame() : Panel_Custom_Element() constructor {
+function Panel_Custom_Frame(_data) : Panel_Custom_Element(_data) constructor {
 	type = "frame";
 	name = "Frame";
 	icon = THEME.panel_icon_element_frame;

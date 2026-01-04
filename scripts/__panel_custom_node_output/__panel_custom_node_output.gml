@@ -1,9 +1,9 @@
-function Panel_Custom_Node_Output() : Panel_Custom_Element() constructor {
+function Panel_Custom_Node_Output(_data) : Panel_Custom_Element(_data) constructor {
 	type = "output";
 	name = "Output";
 	icon = THEME.panel_icon_element_node_output;
 	
-	output = new JuncLister("Output", CONNECT_TYPE.output, true);
+	output = new JuncLister(data, "Output", CONNECT_TYPE.output, true);
 	
 	dataOnly = true;
 	font     = 1;

@@ -1,14 +1,14 @@
-function Panel_Custom_Slider() : Panel_Custom_Element() constructor {
+function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 	type = "slider";
 	name = "Slider";
 	icon = THEME.panel_icon_element_slider;
 	
-	bind_input  = new JuncLister("Input",   CONNECT_TYPE.input);
-	slot_output = new JuncLister("Slot BG", CONNECT_TYPE.output);
+	bind_input  = new JuncLister(data, "Input",   CONNECT_TYPE.input);
+	slot_output = new JuncLister(data, "Slot BG", CONNECT_TYPE.output);
 	
-	knob_output  = new JuncLister("Knob BG", CONNECT_TYPE.output);
-	hover_output = new JuncLister("Hover",   CONNECT_TYPE.output);
-	press_output = new JuncLister("Press",   CONNECT_TYPE.output);
+	knob_output  = new JuncLister(data, "Knob BG", CONNECT_TYPE.output);
+	hover_output = new JuncLister(data, "Hover",   CONNECT_TYPE.output);
+	press_output = new JuncLister(data, "Press",   CONNECT_TYPE.output);
 	
 	slot_pbox = new __pbBox();
 	slot_pbox.anchor_x_type = PB_AXIS_ANCHOR.bounded;

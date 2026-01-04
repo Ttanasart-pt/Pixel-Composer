@@ -1,9 +1,9 @@
-function Panel_Custom_Node_Input() : Panel_Custom_Element() constructor {
+function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructor {
 	type = "input";
 	name = "Input";
 	icon = THEME.panel_icon_element_node_input;
 	
-	input = new JuncLister("Input", CONNECT_TYPE.input, true);
+	input = new JuncLister(data, "Input", CONNECT_TYPE.input, true);
 	
 	font = 1;
 	

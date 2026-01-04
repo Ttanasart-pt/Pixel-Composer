@@ -1,4 +1,5 @@
-function Panel_Custom_Element() constructor {
+function Panel_Custom_Element(_data) constructor {
+	data = _data;
 	type = "element";
 	name = "Element";
 	icon = THEME.panel_icon_element_frame;
@@ -219,6 +220,7 @@ function Panel_Custom_Element() constructor {
 		var _m = {};
 		
 		_m.box  = pbBox.serialize().uiScale(true);
+		_m.name = name;
 		_m.type = type;
 		_m.draggable  = draggable;
 		_m.mouseEvent = mouseEvent;
@@ -233,30 +235,31 @@ function Panel_Custom_Element() constructor {
 	static deserialize   = function(_m) { 
 		var _ele = undefined;
 		switch(_m.type) {
-			case "frame":      _ele = new Panel_Custom_Frame().doDeserialize(_m);       break;
-			case "framesplit": _ele = new Panel_Custom_Frame_Split().doDeserialize(_m); break;
+			case "frame":      _ele = new Panel_Custom_Frame(data).doDeserialize(_m);       break;
+			case "framesplit": _ele = new Panel_Custom_Frame_Split(data).doDeserialize(_m); break;
 			
-			case "input":      _ele = new Panel_Custom_Node_Input().doDeserialize(_m);  break;
-			case "output":     _ele = new Panel_Custom_Node_Output().doDeserialize(_m); break;
+			case "input":      _ele = new Panel_Custom_Node_Input(data).doDeserialize(_m);  break;
+			case "output":     _ele = new Panel_Custom_Node_Output(data).doDeserialize(_m); break;
 			
-			case "button":     _ele = new Panel_Custom_Button().doDeserialize(_m);      break;
-			case "choices":    _ele = new Panel_Custom_Choices().doDeserialize(_m);     break;
-			case "color":      _ele = new Panel_Custom_Color().doDeserialize(_m);       break;
-			case "knob":       _ele = new Panel_Custom_Knob().doDeserialize(_m);        break;
-			case "slider":     _ele = new Panel_Custom_Slider().doDeserialize(_m);      break;
-			case "text":       _ele = new Panel_Custom_Text().doDeserialize(_m);        break;
-			case "textbox":    _ele = new Panel_Custom_Textbox().doDeserialize(_m);     break;
+			case "button":     _ele = new Panel_Custom_Button(data).doDeserialize(_m);      break;
+			case "choices":    _ele = new Panel_Custom_Choices(data).doDeserialize(_m);     break;
+			case "color":      _ele = new Panel_Custom_Color(data).doDeserialize(_m);       break;
+			case "knob":       _ele = new Panel_Custom_Knob(data).doDeserialize(_m);        break;
+			case "slider":     _ele = new Panel_Custom_Slider(data).doDeserialize(_m);      break;
+			case "text":       _ele = new Panel_Custom_Text(data).doDeserialize(_m);        break;
+			case "textbox":    _ele = new Panel_Custom_Textbox(data).doDeserialize(_m);     break;
 		}
 		
 		if(_ele == undefined) return self;
 		
 		_ele.pbBox.deserialize(_m.box).uiScale(false);
+		_ele.name       = _m[$ "name"]       ?? name;
 		_ele.draggable  = _m[$ "draggable"]  ?? draggable;
 		_ele.mouseEvent = _m[$ "mouseEvent"] ?? mouseEvent;
 		
 		if(has(_m, "contents"))
 		for( var i = 0, n = array_length(_m.contents); i < n; i++ )
-			_ele.addContent(new Panel_Custom_Element().deserialize(_m.contents[i]));
+			_ele.addContent(new Panel_Custom_Element(data).deserialize(_m.contents[i]));
 		
 		return _ele;
 	}
@@ -272,9 +275,11 @@ function __Simple_Editor(_name, _widget, _getter, _setter) constructor {
 	setter     = _setter;
 }
 
-function JuncLister(_name, _type = CONNECT_TYPE.input, _widget = false) constructor {
-	name     = _name;
-	type     = _type;
+function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) constructor {
+	data = _data;
+	name = _name;
+	type = _type;
+	mode = "node";
 	
 	node_id  = undefined;
 	junc_id  = undefined;
@@ -289,8 +294,17 @@ function JuncLister(_name, _type = CONNECT_TYPE.input, _widget = false) construc
 	
 	node_selector   = Simple_Editor("Node", new scrollBoxFn(function() /*=>*/ {return getNodeList()}, function(i) /*=>*/ { 
 		node     = nodeList[i]; 
-		node_id  = node? node.node_id : undefined;
+		node_id  = undefined;
 		junction = undefined; 
+		
+		if(is(node, Node)) {
+			mode    = "node"
+			node_id = node.node_id;
+			
+		} else if(is(node, IO_Redirect)) {
+			mode    = "redir"
+			node_id = node.uuid;
+		}
 	} ), 
 		function() /*=>*/ {return node? node.getDisplayName() : ""}, function(n) /*=>*/ { node = n; });
 	
@@ -302,17 +316,30 @@ function JuncLister(_name, _type = CONNECT_TYPE.input, _widget = false) construc
 			function(i) /*=>*/ { setJunction(juncOutList[i]); } ), function() /*=>*/ {return junction? junction.name : ""}, function(n) /*=>*/ { setJunction(n); });
 	
 	static draw = function(wdx, wdy, wdw, wdh, _m, foc, hov, rx, ry) {
-		var scw = wdw / 2 - ui(4);
-		
-		var _data  = node_selector.getter();
-		var _param = new widgetParam(wdx, wdy, scw, wdh, _data, {}, _m, rx, ry).setFont(f_p4);
-		node_selector.editWidget.setFocusHover(foc, hov);
-		node_selector.editWidget.drawParam(_param);
-		
-		var _data  = junc_selector.getter();
-		var _param = new widgetParam(wdx + scw + ui(4), wdy, scw, wdh, _data, {}, _m, rx, ry).setFont(f_p4);
-		junc_selector.editWidget.setFocusHover(foc, hov);
-		junc_selector.editWidget.drawParam(_param);
+		if(mode == "node") {
+			getJunction();
+			
+			var scw = wdw / 2 - ui(4);
+			
+			var _data  = node_selector.getter();
+			var _param = new widgetParam(wdx, wdy, scw, wdh, _data, {}, _m, rx, ry).setFont(f_p4);
+			node_selector.editWidget.setFocusHover(foc, hov);
+			node_selector.editWidget.drawParam(_param);
+			
+			var _data  = junc_selector.getter();
+			var _param = new widgetParam(wdx + scw + ui(4), wdy, scw, wdh, _data, {}, _m, rx, ry).setFont(f_p4);
+			junc_selector.editWidget.setFocusHover(foc, hov);
+			junc_selector.editWidget.drawParam(_param);
+			
+		} else if(mode == "redir") {
+			getNode();
+			
+			var _data  = node_selector.getter();
+			var _param = new widgetParam(wdx, wdy, wdw, wdh, _data, {}, _m, rx, ry).setFont(f_p4);
+			node_selector.editWidget.setFocusHover(foc, hov);
+			node_selector.editWidget.drawParam(_param);
+			
+		}
 		
 		return wdh;
 	}
@@ -324,14 +351,30 @@ function JuncLister(_name, _type = CONNECT_TYPE.input, _widget = false) construc
 	static getNodeList = function() {
 		nodeList     = [];
 		nodeListName = [];
-		for( var i = 0, n = array_length(PROJECT.allNodes); i < n; i++ ) {
-			var _node = PROJECT.allNodes[i];
-			nodeList[i]     = _node;
-			nodeListName[i] = _node.getDisplayName();
+		
+		var _i = 0;
+		
+		nodeList[_i]     = undefined;
+		nodeListName[_i] = "None";
+		_i++;
+		
+		for( var i = 0, n = array_length(data.io_redirect); i < n; i++ ) {
+			var _node = data.io_redirect[i];
+			nodeList[_i]     = _node;
+			nodeListName[_i] = _node.name;
+			_i++;
 		}
 		
-		array_insert(nodeList,     0, undefined);
-		array_insert(nodeListName, 0, "None");
+		nodeList[_i]     = -1;
+		nodeListName[_i] = -1;
+		_i++;
+		
+		for( var i = 0, n = array_length(PROJECT.allNodes); i < n; i++ ) {
+			var _node = PROJECT.allNodes[i];
+			nodeList[_i]     = _node;
+			nodeListName[_i] = _node.getDisplayName();
+			_i++;
+		}
 		
 		return nodeListName;
 	}
@@ -387,13 +430,26 @@ function JuncLister(_name, _type = CONNECT_TYPE.input, _widget = false) construc
 		if(is(node, Node)) return node;
 		if(node_id == undefined) return undefined;
 		
+		if(mode == "redir") {
+			if(node_id == undefined) return junction;
+			var _redir = data.io_redirect_map[$ node_id];
+			if(_redir) node = _redir;
+			return node;
+		}
+		
 		var _node = PROJECT.getNodeFromID(node_id);
 		if(_node) node = _node;
 		return node;
 	} 
 	
-	static getJunction = function() {
+	static getJunction = function(_depth = 0) {
 		if(is(junction, NodeValue)) return junction;
+		
+		if(mode == "redir") {
+			var _redir = getNode();
+			if(!_redir) return junction;
+			return _redir.getJunction(_depth + 1);
+		}
 		
 		var _node = getNode();
 		if(!_node) return junction;
@@ -409,17 +465,28 @@ function JuncLister(_name, _type = CONNECT_TYPE.input, _widget = false) construc
 	static serialize = function() {
 		var _m = {};
 		
-		var _junc = getJunction();
-		_m.node_id = _junc? _junc.node.node_id : "";
-		_m.junc_id = _junc? _junc.index : 0;
+		var _junc  = getJunction();
+		_m.mode    = mode;
+		_m.node_id = "";
+		
+		if(is(node, Node)) {
+			_m.node_id = _junc? _junc.node.node_id : "";
+			_m.junc_id = _junc? _junc.index : 0;
+			
+		} else if(is(node, IO_Redirect)) {
+			_m.node_id = node.uuid;
+		}
 		
 		return _m;
 	}
 	
 	static deserialize = function(_m) { 
-		node_id = _m.node_id;
-		junc_id = _m.junc_id;
+		mode    = _m[$ "mode"]    ?? mode;
+		node_id = _m[$ "node_id"] ?? node_id;
+		junc_id = _m[$ "junc_id"] ?? junc_id;
+		
 		return self;
 	}
 	
+	static toString = function() { return $"{node_id}, {junc_id}" }
 }

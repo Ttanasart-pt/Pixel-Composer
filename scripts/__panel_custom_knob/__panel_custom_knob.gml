@@ -1,14 +1,14 @@
-function Panel_Custom_Knob() : Panel_Custom_Element() constructor {
+function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 	type = "knob";
 	name = "Knob";
 	icon = THEME.panel_icon_element_knob;
 	modifyContent = false;
 	
-	bind_input = new JuncLister("Input", CONNECT_TYPE.input);
+	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input);
 	
-	bg_output    = new JuncLister("Idle",   CONNECT_TYPE.output);
-	hover_output = new JuncLister("Hover",  CONNECT_TYPE.output);
-	press_output = new JuncLister("Press",  CONNECT_TYPE.output);
+	bg_output    = new JuncLister(data, "Idle",   CONNECT_TYPE.output);
+	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output);
+	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output);
 	
 	rotate_surf = true;
 	

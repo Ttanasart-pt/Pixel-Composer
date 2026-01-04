@@ -1,11 +1,11 @@
-function Panel_Custom_Choices() : Panel_Custom_Element() constructor {
+function Panel_Custom_Choices(_data) : Panel_Custom_Element(_data) constructor {
 	type = "choices";
 	name = "Choices";
 	icon = THEME.panel_icon_element_choices;
 	modifyContent = false;
 	
-	bind_input = new JuncLister("Input", CONNECT_TYPE.input);
-	bg_output  = new JuncLister("BG",    CONNECT_TYPE.output);
+	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input);
+	bg_output  = new JuncLister(data, "BG",    CONNECT_TYPE.output);
 	
 	array_append(editors, [
 		[ "Value Binding", false ], 

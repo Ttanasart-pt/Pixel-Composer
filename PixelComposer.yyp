@@ -1933,6 +1933,7 @@
     {"id":{"name":"__panel_custom_frame_split","path":"scripts/__panel_custom_frame_split/__panel_custom_frame_split.yy",},},
     {"id":{"name":"__panel_custom_frame_tab","path":"scripts/__panel_custom_frame_tab/__panel_custom_frame_tab.yy",},},
     {"id":{"name":"__panel_custom_frame","path":"scripts/__panel_custom_frame/__panel_custom_frame.yy",},},
+    {"id":{"name":"__panel_custom_io_redirect","path":"scripts/__panel_custom_io_redirect/__panel_custom_io_redirect.yy",},},
     {"id":{"name":"__panel_custom_knob","path":"scripts/__panel_custom_knob/__panel_custom_knob.yy",},},
     {"id":{"name":"__panel_custom_node_input","path":"scripts/__panel_custom_node_input/__panel_custom_node_input.yy",},},
     {"id":{"name":"__panel_custom_node_output","path":"scripts/__panel_custom_node_output/__panel_custom_node_output.yy",},},
@@ -4920,6 +4921,33 @@
   ],
   "templateType":null,
   "TextureGroups":[
-    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "groupParent":"null",
+          "compressFormat":"bz2",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"nodeIcon","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "groupParent":"null",
+          "compressFormat":"bz2",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"nodeIcon","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"workshop","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "groupParent":"null",
+          "compressFormat":"bz2",
+          "loadType":"dynamicpages",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"workshop","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"profileBadge","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "groupParent":"null",
+          "compressFormat":"bz2",
+          "loadType":"dynamicpages",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"profileBadge","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
   ],
 }

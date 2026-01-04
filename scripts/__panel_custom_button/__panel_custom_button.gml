@@ -1,23 +1,30 @@
-function Panel_Custom_Button() : Panel_Custom_Element() constructor {
+function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 	type = "button";
 	name = "Button";
 	icon = THEME.panel_icon_element_button;
 	
-	bind_input  = new JuncLister("Input",  CONNECT_TYPE.input);
-	bind_action = new JuncLister("Action", CONNECT_TYPE.input);
-	bind_output = new JuncLister("Output", CONNECT_TYPE.output);
+	bind_input  = new JuncLister(data, "Input",  CONNECT_TYPE.input);
+	bind_action = new JuncLister(data, "Action", CONNECT_TYPE.input);
+	bind_output = new JuncLister(data, "Output", CONNECT_TYPE.output);
 	
-	bg_output    = new JuncLister("Idle",   CONNECT_TYPE.output);
-	hover_output = new JuncLister("Hover",  CONNECT_TYPE.output);
-	press_output = new JuncLister("Press",  CONNECT_TYPE.output);
+	bg_output    = new JuncLister(data, "Idle",   CONNECT_TYPE.output);
+	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output);
+	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output);
+	
+	isSetValue = false;
+	setValue   = 0;
 	
 	array_append(editors, [
 		[ "Value Binding", false ], 
 		bind_input,
 		
-		[ "Action", false ], 
+		[ "Node Action", false ], 
 		bind_action,
 		bind_output,
+		
+		[ "Set Value", false ], 
+		Simple_Editor("Set Value", new checkBox( function() /*=>*/ { isSetValue = !isSetValue; } ), function() /*=>*/ {return isSetValue}, function(t) /*=>*/ { isSetValue = t; }), 
+		Simple_Editor("Value", textArea_Number( function(t) /*=>*/ { setValue = t; } ), function() /*=>*/ {return setValue}, function(t) /*=>*/ { setValue = t; }), 
 		
 		[ "Textures", false ], 
 		bg_output,
@@ -59,8 +66,8 @@ function Panel_Custom_Button() : Panel_Custom_Element() constructor {
 			draw_sprite_stretched_add(THEME.box_r2, 1, x, y, w, h, COLORS._main_icon, .2 + .3 * hov);
 		}
 		
-		if(input_junc && output_junc) {
-			if(hov && mouse_lpress(focus)) {
+		if(hov && mouse_lpress(focus)) {
+			if(input_junc && output_junc) {
 				if(action_junc) {
 					var _val = input_junc.getValue();
 					action_junc.setValue(_val);
@@ -70,6 +77,8 @@ function Panel_Custom_Button() : Panel_Custom_Element() constructor {
 				var _res = output_junc.getValue();
 				input_junc.setValue(_res);
 			}
+			
+			if(isSetValue) input_junc.setValue(setValue);
 		}
 		
 	}
@@ -84,6 +93,9 @@ function Panel_Custom_Button() : Panel_Custom_Element() constructor {
 		_m.bg    = bg_output.serialize(_m);
 		_m.hover = hover_output.serialize(_m);
 		_m.press = press_output.serialize(_m);
+		
+		_m.isSetValue = isSetValue;
+		_m.setValue   = setValue;
 		return _m;
 	}
 	
@@ -95,6 +107,9 @@ function Panel_Custom_Button() : Panel_Custom_Element() constructor {
 		if(has(_m, "bg"))    bg_output.deserialize(_m.bg);
 		if(has(_m, "hover")) hover_output.deserialize(_m.hover);
 		if(has(_m, "press")) press_output.deserialize(_m.press);
+		
+		isSetValue = _m[$ "isSetValue"] ?? isSetValue;
+		setValue   = _m[$ "setValue"]   ?? setValue;
 		return self;
 	}
 }

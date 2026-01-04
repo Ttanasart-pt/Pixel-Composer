@@ -1,4 +1,4 @@
-function Panel_Custom_Template() : Panel_Custom_Element() constructor {
+function Panel_Custom_Template(_data) : Panel_Custom_Element(_data) constructor {
 	type = "";
 	name = "";
 	icon = THEME.panel_icon_element_text;
