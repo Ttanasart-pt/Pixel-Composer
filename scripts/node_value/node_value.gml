@@ -2810,6 +2810,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		if(has(_map, "raw_value")) animator.deserialize(_map[$ "raw_value"], scale);
 		if(has(_map, "r"))         animator.deserialize(_map[$ "r"],         scale);
+		if(is_anim) animator.updateKeyMap();
 		
 		setBypass(_map[$ "bypass"] ?? false);
 		
@@ -2818,7 +2819,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _animm = _map.animators;
 			var amo    = min(array_length(_animm), animVector);
 			
-			for( var i = 0; i < amo; i++ ) _anims[i].deserialize(_animm[i], scale);
+			for( var i = 0; i < amo; i++ ) {
+				_anims[i].deserialize(_animm[i], scale);
+				if(is_anim) _anims[i].updateKeyMap();
+			}
 		}
 		
 		if(!preset) {

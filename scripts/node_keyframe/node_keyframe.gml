@@ -779,7 +779,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			array_push(values, vk);
 		}
 		
-		// updateKeyMap();
 	}
 	
 	////- Actions

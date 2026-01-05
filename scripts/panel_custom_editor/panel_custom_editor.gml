@@ -91,6 +91,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				/*4*/ function() /*=>*/ { preview_mode = !preview_mode; }, 
 			]
 		];
+		
+		panel_deleting = false;
 	#endregion
 	
 	sc_add_elements = new scrollPane(1,1, function(_y, _m) /*=>*/ {
@@ -490,6 +492,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var _top_y1 = pd + topbar_height;
 			var _top_yc = (_top_y0 + _top_y1) / 2;
 			
+			var bs = THEME.button_hide_fill;
 			var ts = topbar_height;
 			var tx = _top_xc - (array_length(topbar_buttons) * (ts + ui(2) - ui(2))) / ui(2);
 			var ty = _top_y0;
@@ -502,10 +505,43 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				var _color   = tb[3]();
 				var _onClick = tb[4];
 				
-				if(buttonInstant_Pad(THEME.button_hide, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
+				if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
 					_onClick();
 					
 				tx += ts + ui(2);
+			}
+			
+			var tx = _top_x1 - ts;
+			var ty = _top_y0;
+			
+			if(panel_deleting) {
+				var _tooltip = __txt("Cancel");
+				var _spr     = THEME.cross;
+				var _sind    = 0;
+				var _color   = COLORS._main_icon;
+				
+				if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
+					panel_deleting = false;
+				tx -= ts + ui(2);
+				
+				var _tooltip = __txt("Confirm Deletion");
+				var _spr     = THEME.icon_delete;
+				var _sind    = 0;
+				var _color   = COLORS._main_value_negative;
+				
+				if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2) {
+					array_remove(PROJECT.customPanels, data);
+					close();
+				}
+				
+			} else {
+				var _tooltip = __txt("Delete Panel");
+				var _spr     = THEME.icon_delete;
+				var _sind    = 0;
+				var _color   = [COLORS._main_icon, COLORS._main_value_negative];
+				
+				if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
+					panel_deleting = true;
 			}
 		#endregion
 		
