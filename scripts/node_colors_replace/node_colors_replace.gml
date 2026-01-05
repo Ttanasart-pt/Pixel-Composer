@@ -191,7 +191,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	attributes.auto_refresh = true;
 		
-	array_push(attributeEditors, ["Auto refresh", function() /*=>*/ {return attributes.auto_refresh}, new checkBox(function() /*=>*/ {return toggleAttribute("auto_refresh", true)})]);
+	array_push(attributeEditors, Node_Attribute("Auto refresh", function() /*=>*/ {return attributes.auto_refresh}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("auto_refresh", true)})}));
 		
 	static sortPalette = function(type) {
 		var palFrom = getInputData(1);

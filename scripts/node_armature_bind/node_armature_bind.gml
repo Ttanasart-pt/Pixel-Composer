@@ -738,7 +738,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attributes.select_object = false;
 	array_push(attributeEditors, "Selection");
-	array_push(attributeEditors, ["Content-Based", function() /*=>*/ {return attributes.select_object}, new checkBox(function() /*=>*/ {return toggleAttribute("select_object", true)})]);
+	array_push(attributeEditors, Node_Attribute("Content-Based", function() /*=>*/ {return attributes.select_object}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("select_object", true)})}));
 	
 	static getInputIndex = function(index) {
 		if(index < input_fix_len) return index;

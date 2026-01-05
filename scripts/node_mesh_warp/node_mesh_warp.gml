@@ -259,7 +259,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		array_push(attributeEditors, "Warp");
 		
 		attributes.iteration = 4;
-		array_push(attributeEditors, ["Iteration", function() /*=>*/ {return attributes.iteration}, textBox_Number(function(v) /*=>*/ {return setAttribute("iteration", v, true)})]);
+		array_push(attributeEditors, Node_Attribute("Iteration", function() /*=>*/ {return attributes.iteration}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("iteration", v, true)})}));
 	
 		tools = [];
 	

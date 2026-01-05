@@ -83,7 +83,7 @@ function Node_ORA_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.oversample   = 1;
 	attributes.file_checker = true;
 	
-	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
+	array_push(attributeEditors, Node_Attribute("File Watcher", function() /*=>*/ {return attributes.file_checker}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")})}));
 	
 	edit_time    = 0;
 	content      = noone;

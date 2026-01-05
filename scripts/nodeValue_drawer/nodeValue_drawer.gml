@@ -367,22 +367,23 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					
 					if(b) cHov = true;
 					if(b == 2) {
-						if(jun.expUse)	jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.express_edit, function() /*=>*/ {return context.expression},  jun));
-						else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(wid,              function() /*=>*/ {return context.showValue()}, jun));
+						if(jun.expUse)	jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.getExpresstionEditor(), function() /*=>*/ {return context.expression},  jun));
+						else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(wid, function() /*=>*/ {return context.showValue()}, jun));
 						jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
 					}
 				}
 				
-				if(jun.bypass_junc) {
+				var bypas = jun.getBypassJunc();
+				if(bypas) {
 					bx -= bs + ui(4);
-					var ic_b = jun.bypass_junc.visible? COLORS._main_accent : c_white;
+					var ic_b = jun.bypass_use? COLORS._main_accent : c_white;
 					var t  = __txt("Bypass");
-					var si = jun.bypass_junc.visible;
+					var si = jun.bypass_use;
 					var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.junction_bypass, si, ic_b, .8, ics);
 					
 					if(b) cHov = true;
 					if(b == 2) {
-						jun.setBypass(!jun.bypass_junc.visible); 
+						jun.setBypass(!jun.bypass_use); 
 						jun.node.refreshNodeDisplay();
 					}
 				}
@@ -406,17 +407,18 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		if(jun.expUse) {
 			var expValid = jun.expTree != noone && jun.expTree.validate();
-			jun.express_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
-			jun.express_edit.rx = rx;
-			jun.express_edit.ry = ry;
+			var expEdit  = jun.getExpresstionEditor();
+			expEdit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
+			expEdit.rx = rx;
+			expEdit.ry = ry;
 			
-			jun.express_edit.setFocusHover(_focus, _hover);
-			if(_focus) jun.express_edit.register(_scrollPane);
+			expEdit.setFocusHover(_focus, _hover);
+			if(_focus) expEdit.register(_scrollPane);
 				
-			var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
+			var wd_h = expEdit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 			_widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
 			
-			var hvWid = jun.express_edit.inBBOX(_m);
+			var hvWid = expEdit.inBBOX(_m);
 			cHov  = cHov  || hvWid;
 			lbHov = lbHov && !hvWid;
 			

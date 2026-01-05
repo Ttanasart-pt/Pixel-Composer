@@ -47,7 +47,7 @@
         registerFunction(i, "Toggle Separate Axis",  "",  MOD_KEY.none, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle"          ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.sep_axis;           });
         registerFunction(i, "Toggle Expression",     "",  MOD_KEY.none, panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle"    ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.expUse;             });
         registerFunction(i, "Toggle Array Process",  "",  MOD_KEY.none, panel_inspector_array_toggle           ).setMenu("inspector_toggle_array"         ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.ign_array;          });        
-        registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"        ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.isBypassed();       });
+        registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"        ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.bypass_use;       });
         registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"       ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.visible_manual;     });
         registerFunction(i, "Toggle Mini Timeline",  "",  MOD_KEY.none, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle" ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.inspector_timeline; });
         registerFunction(i, "Extract to Globalvar",  "",  MOD_KEY.none, panel_inspector_extract_global         ).setMenu("inspector_extract_global"       )
@@ -406,10 +406,10 @@ function Panel_Inspector() : PanelContent() constructor {
         
         function junction_bypass_toggle() { 
         	var d = __dialog_junction;
-        	if(d == noone || d.bypass_junc == noone) return; 
+        	if(d == noone) return; 
+            if(d.connect_type != CONNECT_TYPE.input) return;
         	
-            var b = d.bypass_junc; 
-            b.visible = !b.visible; 
+        	d.setBypass(!d.bypass_use);
             d.node.refreshNodeDisplay(); 
         }
         
@@ -577,6 +577,8 @@ function Panel_Inspector() : PanelContent() constructor {
             var _att_h = viewMode == INSP_VIEW_MODE.spacious? hg : line_get_height(_font, 6);
             var _pd    = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(6);
             
+            var _att_name, _att_val, _att_wid, _att_key;
+
             for( var i = 0, n = array_length(_inspecting.attributeEditors); i < n; i++ ) {
                 var edt = _inspecting.attributeEditors[i];
                 
@@ -598,10 +600,18 @@ function Panel_Inspector() : PanelContent() constructor {
                     continue;
                 }
                 
-                var _att_name = __txt(edt[0]);
-                var _att_val  = edt[1]();
-                var _att_wid  = edt[2];
-                var _att_key  = array_safe_get(edt, 3, 0);
+                if(is(edt, __Node_Attribute)) {
+	                _att_name = edt.name;
+	                _att_val  = edt.get();
+	                _att_wid  = edt.getEditWidget();
+	                _att_key  = edt.hotkey;
+                	
+                } else if(is_array(edt)) {
+	                _att_name = __txt(edt[0]);
+	                _att_val  = edt[1]();
+	                _att_wid  = edt[2];
+	                _att_key  = array_safe_get(edt, 3, 0);
+                }
                 
                 _att_wid.font = _font;
                 _att_wid.register(contentPane);

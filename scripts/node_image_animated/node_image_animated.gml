@@ -74,7 +74,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	edit_time    = 0;
 	
 	attributes.file_checker = true;
-	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
+	array_push(attributeEditors, Node_Attribute("File Watcher", function() /*=>*/ {return attributes.file_checker}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")})}));
 	
 	on_drop_file = function(_path) {
 		if(directory_exists(_path)) {

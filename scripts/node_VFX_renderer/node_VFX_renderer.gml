@@ -45,7 +45,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	attributes.cache = true;
 	array_push(attributeEditors, "Cache");
-	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
+	array_push(attributeEditors, Node_Attribute( "Cache Data", function() /*=>*/ {return attributes.cache}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("cache")})} ));
 	
 	static step = function() {
 		var _typ = getInputData(2);

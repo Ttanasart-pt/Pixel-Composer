@@ -158,7 +158,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- Nodes
 	
 	attributes.part_amount = 512;
-	array_push(attributeEditors, [ "Maximum particles", function() /*=>*/ {return attributes.part_amount}, textBox_Number(function(v) /*=>*/ {return setAttribute("part_amount", v)}) ]);
+	array_push(attributeEditors, Node_Attribute( "Maximum particles", function() /*=>*/ {return attributes.part_amount}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("part_amount", v)})} ));
 	
 	_self = self;
 	parts = array_create_ext(attributes.part_amount, function() /*=>*/ {return new __part(_self)});

@@ -30,8 +30,8 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	attributes.network_timeout = 1000;
 	array_push(attributeEditors, "Network");
-	array_push(attributeEditors, [ "Connection timeout", function() /*=>*/ {return attributes.network_timeout}, 
-		textBox_Number(function(val) /*=>*/ { setAttribute("network_timeout", val); network_set_config(network_config_connect_timeout, val); }) ]);
+	array_push(attributeEditors, Node_Attribute( "Connection timeout", function() /*=>*/ {return attributes.network_timeout}, 
+		function() /*=>*/ {return textBox_Number(function(val) /*=>*/ { setAttribute("network_timeout", val); network_set_config(network_config_connect_timeout, val); })}));
 	
 	insp1button = button(function() /*=>*/ {return triggerRender()}).setTooltip(__txt("Resend"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);

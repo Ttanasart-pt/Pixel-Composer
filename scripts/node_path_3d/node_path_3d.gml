@@ -887,11 +887,11 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		attributes.snap_distance= 8;
 		
 		array_push(attributeEditors, "Display");
-		array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
+		array_push(attributeEditors, Node_Attribute("Display name", function() /*=>*/ {return attributes.display_name},  function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})}));
 		
 		array_push(attributeEditors, "Snap");
-		array_push(attributeEditors, ["Snap Enable",  function() /*=>*/ {return attributes.snap_point},    new checkBox(function() /*=>*/ {return toggleAttribute("snap_point")})]);
-		array_push(attributeEditors, ["Snap Distance",function() /*=>*/ {return attributes.snap_distance}, textBox_Number(function(v) /*=>*/ {return setAttribute("snap_distance", v)})]);
+		array_push(attributeEditors, Node_Attribute("Snap Enable",  function() /*=>*/ {return attributes.snap_point},    function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("snap_point")})}));
+		array_push(attributeEditors, Node_Attribute("Snap Distance",function() /*=>*/ {return attributes.snap_distance}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("snap_distance", v)})}));
 	#endregion
 	
 	#region ---- editor ----

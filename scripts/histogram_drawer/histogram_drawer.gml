@@ -2,8 +2,8 @@ function histogramInit() {
 	attributes.preview_resolution = 64;
 	attributes.preview_sample     = 32;
 	
-	array_push(attributeEditors, ["Preview resolution", function() /*=>*/ {return attributes.preview_resolution}, textBox_Number(function(val) /*=>*/ {return setAttribute("preview_resolution", val)})]);
-	array_push(attributeEditors, ["Preview sample",     function() /*=>*/ {return attributes.preview_sample},     textBox_Number(function(val) /*=>*/ {return setAttribute("preview_sample",     val)})]);
+	array_push(attributeEditors, Node_Attribute("Preview resolution", function() /*=>*/ {return attributes.preview_resolution}, function() /*=>*/ {return textBox_Number(function(val) /*=>*/ {return setAttribute("preview_resolution", val)})}));
+	array_push(attributeEditors, Node_Attribute("Preview sample",     function() /*=>*/ {return attributes.preview_sample},     function() /*=>*/ {return textBox_Number(function(val) /*=>*/ {return setAttribute("preview_sample",     val)})}));
 	
 	for( var i = 0; i < 4; i++ ) {
 		hist[i] = array_create(attributes.preview_resolution + 1);

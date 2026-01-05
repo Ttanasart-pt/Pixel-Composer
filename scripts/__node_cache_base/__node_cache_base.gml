@@ -10,7 +10,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	attributes.serialize = true;
 	array_push(attributeEditors, "Cache");
-	array_push(attributeEditors, [ "Serizalize Data", function() /*=>*/ {return attributes.serialize}, new checkBox(function() /*=>*/ {return toggleAttribute("serialize")}) ]);
+	array_push(attributeEditors, Node_Attribute( "Serizalize Data", function() /*=>*/ {return attributes.serialize}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("serialize")})} ));
 	
 	insp1button = button(function() /*=>*/ {
 		PANEL_GRAPH.cache_group_edit = PANEL_GRAPH.cache_group_edit == self? noone : self;

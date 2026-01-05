@@ -63,12 +63,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	draw_input_overlay = true;
 	
 	array_push(attributeEditors, "Group");
-	array_push(attributeEditors, ["Pure Function", function() /*=>*/ {return attributes.pure_function}, new checkBox(function() /*=>*/ {
-		toggleAttribute("pure_function"); checkPureFunction(); }) ]);
+	array_push(attributeEditors, Node_Attribute("Pure Function", function() /*=>*/ {return attributes.pure_function}, function() /*=>*/ {return new checkBox(function() /*=>*/ {
+		toggleAttribute("pure_function"); checkPureFunction(); })}));
 		
-	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input}, new checkBox(function() /*=>*/ {return toggleAttribute("lock_input")})    ]);
-	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() /*=>*/ {return editInput()})  ]);
-	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() /*=>*/ {return editOutput()}) ]);
+	array_push(attributeEditors, Node_Attribute("Lock Input",          function() /*=>*/ {return attributes.lock_input}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("lock_input")})}    ));
+	array_push(attributeEditors, Node_Attribute("Edit Input Display",  function() /*=>*/ {return 0}, function() /*=>*/ {return button(function() /*=>*/ {return editInput()})}  ));
+	array_push(attributeEditors, Node_Attribute("Edit Output Display", function() /*=>*/ {return 0}, function() /*=>*/ {return button(function() /*=>*/ {return editOutput()})} ));
 	
 	function editInput()  { var _self = self; dialogPanelCall(new Panel_Group_IO_Edit(_self, CONNECT_TYPE.input));  }
 	function editOutput() { var _self = self; dialogPanelCall(new Panel_Group_IO_Edit(_self, CONNECT_TYPE.output)); }

@@ -74,7 +74,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	attributes.show_strand = true;
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, [ "Draw Strand", function() /*=>*/ {return attributes.show_strand}, new checkBox(function() /*=>*/ {return toggleAttribute("show_strand")}) ]);
+	array_push(attributeEditors, Node_Attribute( "Draw Strand", function() /*=>*/ {return attributes.show_strand}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_strand")})}));
 	
 	#region ---- tools ----
 		tool_push = new NodeTool( "Push", THEME.strand_push )

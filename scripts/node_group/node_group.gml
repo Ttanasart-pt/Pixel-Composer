@@ -174,7 +174,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 						if(_con_ind >= 1000) { //connect bypass
 							var _inp = array_safe_get_fast(_con_nod.inputs, _con_ind - 1000, noone);
 							if(_inp != noone) {
-								var _set = _cin.setFrom(_inp.bypass_junc, false, true);
+								var _set = _cin.setFrom(_inp.getBypassJunc(), false, true);
 								// if(!_set) print($"Connection failed {_con_nod}");
 							}
 						}

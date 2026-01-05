@@ -25,9 +25,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	attributes.array_process = ARRAY_PROCESS.loop;
 	
 	array_push(attributeEditors, "Array processor");
-	array_push(attributeEditors, ["Array Process", function() /*=>*/ {return attributes.process}, new checkBox(function() /*=>*/ {return setProcess(!attributes.process)})]);
-	array_push(attributeEditors, ["Array Process Type", function() /*=>*/ {return attributes.array_process}, 
-		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(v) /*=>*/ {return setAttribute("array_process", v, true)}, false) ]);
+	array_push(attributeEditors, Node_Attribute("Array Process", function() /*=>*/ {return attributes.process}, 
+		function() /*=>*/ {return new checkBox(function() /*=>*/ {return setProcess(!attributes.process)})}));
+		
+	array_push(attributeEditors, Node_Attribute("Array Process Type", function() /*=>*/ {return attributes.array_process}, 
+		function() /*=>*/ {return new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(v) /*=>*/ {return setAttribute("array_process", v, true)}, false)}));
 	
 	////- Getters
 	
@@ -114,8 +116,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var amo = _in.arrayLength(raw);
 			var val = raw;
 			
+			_in.getBypassJunc().setValue(val);
 			
-			_in.bypass_junc.setValue(val);
 				 if(amo == 0) val = noone;		//empty array
 			else if(amo == 1) val = raw[0];		//spread single array
 			amo = max(1, amo);
@@ -178,7 +180,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for( var i = 0; i < _len; i++ ) {
 			var _inp = inputs[i];
 			if(_inp.isDynamic()) inputs_data[i] = _inp.getValue(frame);
-			if(_inp.bypass_junc.visible) _inp.bypass_junc.setValue(inputs_data[i]);
+			if(_inp.bypass_use) _inp.getBypassJunc().setValue(inputs_data[i]);
 		}
 		
 	}

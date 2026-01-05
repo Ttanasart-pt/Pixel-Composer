@@ -20,10 +20,10 @@ function Node_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attributes.display_mask = true;
 	array_push(attributeEditors,  "Display" );
-	array_push(attributeEditors, ["Display Mask", function() /*=>*/ {return attributes.display_mask}, new checkBox(function() /*=>*/ {
+	array_push(attributeEditors, Node_Attribute("Display Mask", function() /*=>*/ {return attributes.display_mask}, function() /*=>*/ {return new checkBox(function() /*=>*/ {
 		toggleAttribute("display_mask");
 		PANEL_GRAPH.refreshDraw();
-	})]);
+	})}));
 	
 	preview_size = 256;
 	temp_surface = array_create(4, noone);

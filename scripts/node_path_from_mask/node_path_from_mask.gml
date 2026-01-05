@@ -26,7 +26,8 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	attributes.maximum_dim    = 64;
 	attributes.maximum_points = 4096;
-	array_push(attributeEditors, ["Max Points", function() /*=>*/ {return attributes.maximum_points}, textBox_Number(function(v) /*=>*/ {return setAttribute("maximum_points", clamp(v, 8, 10000))})]);
+	array_push(attributeEditors, Node_Attribute("Max Points", function() /*=>*/ {return attributes.maximum_points}, 
+		function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("maximum_points", clamp(v, 8, 10000))})}));
 	
 	static getBoundary		= function() /*=>*/ {return boundary};
 	static getAccuLength	= function() /*=>*/ {return lengthAccs};

@@ -206,26 +206,28 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); project.modified = true; }
 		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); project.modified = true; }
 		
-		attrCacheEdit = ["Cache Output", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ { toggleAttribute("cache", true); checkCache(); }) ];
+		attrCacheEdit = Node_Attribute("Cache Output", function() /*=>*/ {return attributes.cache},  function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("cache", true); checkCache(); })});
 		
 		array_append(attributeEditors, [
 			"Display",  
-			["Annotation",     function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(v) /*=>*/ { setAttribute("annotation", v);          }) ],
-			["Node Width",     function() /*=>*/ {return attributes.node_width},       textBox_Number(function(v) /*=>*/ { setAttribute("node_width", v);       refreshNodeDisplay(); }) ],
-			["Node Height",    function() /*=>*/ {return attributes.node_height},      textBox_Number(function(v) /*=>*/ { setAttribute("node_height", v);      refreshNodeDisplay(); }) ],
-			["Preview Height", function() /*=>*/ {return attributes.preview_size},     textBox_Number(function(v) /*=>*/ { setAttribute("preview_size", max(32, v)); refreshNodeDisplay(); }) ],
-			["Params Width",   function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); }) ],
+			Node_Attribute("Annotation",     function() /*=>*/ {return attributes.annotation},       function() /*=>*/ {return new textArea(TEXTBOX_INPUT.text,  function(v) /*=>*/ { setAttribute("annotation", v);          })} ),
+			Node_Attribute("Node Width",     function() /*=>*/ {return attributes.node_width},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { setAttribute("node_width", v);       refreshNodeDisplay(); })} ),
+			Node_Attribute("Node Height",    function() /*=>*/ {return attributes.node_height},      function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { setAttribute("node_height", v);      refreshNodeDisplay(); })} ),
+			Node_Attribute("Preview Height", function() /*=>*/ {return attributes.preview_size},     function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { setAttribute("preview_size", max(32, v)); refreshNodeDisplay(); })} ),
+			Node_Attribute("Params Width",   function() /*=>*/ {return attributes.node_param_width}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); })} ),
 			
 			"Node",
 			attrCacheEdit,
-			["Auto Update",       function() /*=>*/ {return attributes.update_graph},        new checkBox(function() /*=>*/ { toggleAttribute("update_graph");        refreshNodeDisplay(); }) ],
-			["Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame");   refreshNodeDisplay(); }) ],
-			["Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger"); refreshNodeDisplay(); }) ],
-			["Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta");           refreshNodeDisplay(); }) ],
-			["Show In Timeline",  function() /*=>*/ {return attributes.show_timeline},       new checkBox(function() /*=>*/ { toggleAttribute("show_timeline"); 
-				anim_timeline = attributes.show_timeline;
-				refreshTimeline();
-			})],
+			Node_Attribute("Auto Update",       function() /*=>*/ {return attributes.update_graph},        function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("update_graph");        refreshNodeDisplay(); })} ),
+			Node_Attribute("Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame");   refreshNodeDisplay(); })} ),
+			Node_Attribute("Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger"); refreshNodeDisplay(); })} ),
+			Node_Attribute("Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("outp_meta");           refreshNodeDisplay(); })} ),
+			Node_Attribute("Show In Timeline",  function() /*=>*/ {return attributes.show_timeline},       
+				function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_timeline"); 
+					anim_timeline = attributes.show_timeline;
+					refreshTimeline();
+				})}
+			),
 		]);
 			
 		static attrDepth = function() {
@@ -853,7 +855,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputDisplayList = [];
 		
 		array_foreach(outputs, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); });
-		array_foreach(inputs,  function(jun) /*=>*/ { if(jun.bypass_junc.isVisible()) array_push(outputDisplayList, jun.bypass_junc); });
+		array_foreach(inputs,  function(jun) /*=>*/ { if(jun.bypass_use) array_push(outputDisplayList, jun.getBypassJunc()); });
+		
 		if(attributes.outp_meta) array_foreach(junc_meta, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); });
 		
 	}
@@ -1032,9 +1035,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!is(_inp, NodeValue) || !_inp.isDynamic()) return;
 			
 			var val = _inp.getValue(__frame);
+			if(_inp.bypass_use) _inp.getBypassJunc().setValue(val);
 			
-			if(_inp.bypass_junc.visible) 
-				_inp.bypass_junc.setValue(val);
 			inputs_data[i] = val;
 			input_value_map[$ _inp.internalName] = val;
 		});
@@ -1375,8 +1377,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			var _in = inputs[i].bypass_junc;
-			if(_in == noone || !_in.visible) continue;
+			if(!inputs[i].bypass_use) continue;
+			
+			var _in = inputs[i].getBypassJunc();
+			if(!_in.visible) continue;
 			
 			for( var j = 0, m = array_length(_in.value_to); j < m; j++ ) {
 				var _jto = _in.value_to[j];
@@ -1414,8 +1418,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0; i < array_length(inputs); i++) {
 			var _in = inputs[i];
 			if(!is(_in, NodeValue)) continue;
+			if(!_in.bypass_use)     continue;
 			
-			var _tos = _in.bypass_junc.getJunctionTo();
+			var _tos = _in.getBypassJunc().getJunctionTo();
 			for( var j = 0; j < array_length(_tos); j++ )
 				array_push(nodes, _tos[j].node);
 		}
@@ -1529,7 +1534,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			if(!inputs[i].bypass_junc.visible) continue;
+			if(!inputs[i].bypass_use) continue;
 			
 			if(_p) _ho += junction_outp_hei_y;
 			_p = true;
@@ -1802,8 +1807,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_oy  += junction_outp_hei_y * __vis * __s; 
 		});
 		
-		array_foreach(inputs,    function(jun) /*=>*/ { jun   = jun.bypass_junc; if(!jun.visible) return; 
+		array_foreach(inputs,    function(jun) /*=>*/ { if(!jun.bypass_use) return; jun = jun.getBypassJunc(); if(!jun.visible) return; 
 		                                    jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.visible * __s; });
+		                                    
 		array_foreach(junc_meta, function(jun) /*=>*/ { jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
 		
 		if(SHOW_PARAM) h = h_param;
@@ -2016,8 +2022,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			jun = inputs[i].bypass_junc;
-			if(jun == noone || !jun.visible) continue;
+			if(!jun.bypass_use) continue;
+			
+			jun = inputs[i].getBypassJunc();
+			if(!jun.visible) continue;
 			
 			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
 		}
@@ -2284,7 +2292,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0; i < __draw_inputs_len; i++ ) {
 			var _jun = __draw_inputs[i];
-			if(_jun.bypass_junc.visible) _jun.bypass_junc.drawBypass(params);
+			if(_jun.bypass_use) _jun.getBypassJunc().drawBypass(params);
 			
 			_hov = _jun.drawConnections(params, _draw); 
 			if(_hov) hovering = _hov;
@@ -3186,6 +3194,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- CLEAN UP
 	
 	static cleanUp = function() {
+		onCleanUp();
+		
 		for( var i = 0, n = array_length(inputs); i < n;  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) { outputs[i].cleanUp(); delete outputs[i]; }
 		
@@ -3197,7 +3207,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		surface_array_free(temp_surface);
 		surface_array_free(cache_result);
 		surface_array_free(preview_cache);
-		onCleanUp();
 	}
 	
 	static onCleanUp = function() {}

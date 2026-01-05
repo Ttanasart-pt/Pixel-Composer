@@ -8,58 +8,61 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 	node.dimension_input = index;
 	attributes.use_project_dimension = 1;
 	
-	editProjDim = button(function() /*=>*/ {
-		var ot = attributes.use_project_dimension;
-		var nt = (ot + 1) % (2 + use_mask);
-		attributes.use_project_dimension = nt;
-		
-		var sw;
-		var sh;
-		
-		if(!use_mask) {
-			sw = ot? DEF_SURF_W : 1 / DEF_SURF_W;
-			sh = ot? DEF_SURF_H : 1 / DEF_SURF_H;
+	editProjDim = undefined;
+	static onInitWidget = function() { 
+		editProjDim = button(function() /*=>*/ {
+			var ot = attributes.use_project_dimension;
+			var nt = (ot + 1) % (2 + use_mask);
+			attributes.use_project_dimension = nt;
 			
-		} else {
-			var _msk = mask_input.getValue();
-			var mx = surface_get_width_safe(_msk);
-			var my = surface_get_height_safe(_msk);
+			var sw;
+			var sh;
 			
-			switch(ot) {
-				case 0 : 
-					sw = 1 / DEF_SURF_W;
-					sh = 1 / DEF_SURF_H;
-					break;
+			if(!use_mask) {
+				sw = ot? DEF_SURF_W : 1 / DEF_SURF_W;
+				sh = ot? DEF_SURF_H : 1 / DEF_SURF_H;
 				
-				case 1 : 
-					sw = DEF_SURF_W / mx;
-					sh = DEF_SURF_H / my;
-					break;
+			} else {
+				var _msk = mask_input.getValue();
+				var mx = surface_get_width_safe(_msk);
+				var my = surface_get_height_safe(_msk);
 				
-				case 2 : 
-					sw = mx;
-					sh = my;
-					break;
+				switch(ot) {
+					case 0 : 
+						sw = 1 / DEF_SURF_W;
+						sh = 1 / DEF_SURF_H;
+						break;
+					
+					case 1 : 
+						sw = DEF_SURF_W / mx;
+						sh = DEF_SURF_H / my;
+						break;
+					
+					case 2 : 
+						sw = mx;
+						sh = my;
+						break;
+				}
 			}
-		}
-		
-		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
-			var v = animator.values[i];
-			v.value[0] *= sw;
-			v.value[1] *= sh;
-		}
-		
-		for( var i = 0, n = array_length(animators[0].values); i < n; i++ )
-			animators[0].values[i].value *= sw;
-		
-		for( var i = 0, n = array_length(animators[1].values); i < n; i++ )
-			animators[1].values[i].value *= sh;
-		
-		node.triggerRender();
-		
-	}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip(unitTooltip);
+			
+			for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
+				var v = animator.values[i];
+				v.value[0] *= sw;
+				v.value[1] *= sh;
+			}
+			
+			for( var i = 0, n = array_length(animators[0].values); i < n; i++ )
+				animators[0].values[i].value *= sw;
+			
+			for( var i = 0, n = array_length(animators[1].values); i < n; i++ )
+				animators[1].values[i].value *= sh;
+			
+			node.triggerRender();
+			
+		}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip(unitTooltip);
 	
-	getEditWidget().setSideButton(editProjDim);
+		editWidget.setSideButton(editProjDim); 
+	}
 	
 	/////============== GET =============
 	
@@ -67,7 +70,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		if(__tempValue != undefined) return __tempValue;
 		
 		var _pdim = attributes.use_project_dimension;
-		editProjDim.icon_index = _pdim;
+		if(editProjDim) editProjDim.icon_index = _pdim;
 		unitTooltip.index = attributes.use_project_dimension;
 		getEditWidget().setSuffix(_pdim? "x" : "");
 		

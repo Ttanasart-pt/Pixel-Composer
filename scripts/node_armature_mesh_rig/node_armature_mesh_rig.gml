@@ -49,7 +49,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	attributes.display_mesh_size = 2;
 	
 	__node_bone_attributes();
-	array_push(attributeEditors, ["Vertex size",  function() /*=>*/ {return attributes.display_mesh_size}, textBox_Number(function(i) /*=>*/ {return setAttribute("display_mesh_size", i)})]);
+	array_push(attributeEditors, Node_Attribute("Vertex size",  function() /*=>*/ {return attributes.display_mesh_size}, function() /*=>*/ {return textBox_Number(function(i) /*=>*/ {return setAttribute("display_mesh_size", i)})}));
 	
 	////- Tools
 	

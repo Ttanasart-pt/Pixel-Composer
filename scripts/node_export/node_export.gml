@@ -203,7 +203,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	];
 	
 	attributes.clear_directory = true;
-	array_push(attributeEditors, [ "Delete temp Folder", function() /*=>*/ {return attributes.clear_directory}, new checkBox(function() /*=>*/ {return toggleAttribute("clear_directory")}) ]);
+	array_push(attributeEditors, Node_Attribute("Delete temp Folder", function() /*=>*/ {return attributes.clear_directory}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("clear_directory")})}));
 	
 	////- Paths
 	

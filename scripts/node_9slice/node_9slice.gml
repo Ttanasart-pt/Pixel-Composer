@@ -182,7 +182,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- Clean Up
 	
 	static onCleanUp = function() {
-		var _dyna = inputs[1].getValue();
+		var _dyna = outputs[1].getValue();
 		
 		if(is(_dyna, nineSliceSurf)) _dyna.cleanUp();
 		

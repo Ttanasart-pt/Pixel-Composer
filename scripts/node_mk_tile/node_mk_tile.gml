@@ -69,7 +69,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	attributes.show_tile_index = false;
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Show index", function() /*=>*/ {return attributes.show_tile_index}, new checkBox(function() /*=>*/ {return toggleAttribute("show_tile_index")}) ]);
+	array_push(attributeEditors, Node_Attribute("Show index", function() /*=>*/ {return attributes.show_tile_index}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_tile_index")})}));
 	
 	tile_overlay_select = noone;
 	

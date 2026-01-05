@@ -55,7 +55,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- Nodes
 	
 	array_push(attributeEditors,   "Cache" );
-	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
+	array_push(attributeEditors, Node_Attribute("Cache Data", function() /*=>*/ {return attributes.cache}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("cache")})}));
 	
 	custom_parameter_names       = [];
 	custom_parameter_curves_view = {};

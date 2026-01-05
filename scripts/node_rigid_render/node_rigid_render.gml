@@ -45,7 +45,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	attributes.show_debug = false;
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Debug", function() /*=>*/ {return attributes.show_debug}, new checkBox(function() /*=>*/ {return toggleAttribute("show_debug")})]);
+	array_push(attributeEditors, Node_Attribute("Debug", function() /*=>*/ {return attributes.show_debug}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_debug")})}));
 	
 	////- Nodes
 	

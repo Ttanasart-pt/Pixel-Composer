@@ -76,7 +76,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	spawn_trigger_loop_frame = undefined;
 	
 	attributes.poolSize = 1024;
-	array_push(attributeEditors, [ "Pool Size", function() /*=>*/ {return attributes.poolSize}, textBox_Number(function(v) /*=>*/ {return setAttribute("poolSize", v)}) ]);
+	array_push(attributeEditors, Node_Attribute("Pool Size", function() /*=>*/ {return attributes.poolSize}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("poolSize", v)})}));
 	
 	curve_step = undefined;
 	

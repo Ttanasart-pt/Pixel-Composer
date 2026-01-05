@@ -1,3 +1,22 @@
+#region object
+	function Node_Attribute(_name, _get, _widgetInit, _hotkey = 0) { return new __Node_Attribute(_name, _get, _widgetInit, _hotkey); }
+	function __Node_Attribute(_name, _get, _widgetInit, _hotkey) constructor {
+		name       = _name;
+		get        = _get;
+		hotkey     = _hotkey;
+		
+		widgetInit = _widgetInit;
+		editWidget = undefined;
+		
+		static getEditWidget = function() {
+			if(editWidget) return editWidget;
+			
+			editWidget = widgetInit();
+			return editWidget;
+		}
+	}
+#endregion
+
 #region data
 	global.SURFACE_INTERPOLATION = [
 		new scrollItem("Inherited").setTooltip("Inherit from parent (global if the node is not in any group)."), 
@@ -139,8 +158,8 @@
 		attributes.auto_exe = false;
 		
 		if(label) array_push(attributeEditors, "Node");
-		array_push(attributeEditors, ["Auto execute", function() /*=>*/ {return attributes.auto_exe}, 
-			new checkBox(function() /*=>*/ { attribute_set("auto_exe", !attributes.auto_exe); })]);
+		array_push(attributeEditors, Node_Attribute("Auto execute", function() /*=>*/ {return attributes.auto_exe}, 
+			function() /*=>*/ {return new checkBox(function() /*=>*/ { attribute_set("auto_exe", !attributes.auto_exe); })}));
 	}
 	
 	function attribute_drawOverlay(hover, active) {

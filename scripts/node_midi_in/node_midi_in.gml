@@ -114,7 +114,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	values = {};
 	
 	attributes.live_update = true;
-	array_push(attributeEditors, ["Live update", function() /*=>*/ {return attributes.live_update}, new checkBox(function() /*=>*/ {return toggleAttribute("live_update")})]);
+	array_push(attributeEditors, Node_Attribute("Live update", function() /*=>*/ {return attributes.live_update}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("live_update")})}));
 	
 	static step = function() {
 		LIVE_UPDATE = attributes.live_update;

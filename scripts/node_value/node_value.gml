@@ -92,6 +92,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		setDefValue(_value);
 		def_length    = is_array(def_val)? array_length(def_val) : 0;
 		def_depth     = array_get_depth(def_val);
+		unitUse       = false;
 		unit		  = new nodeValueUnit(self);
 		def_unit      = VALUE_UNIT.constant;
 		
@@ -111,11 +112,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		__curr_get_val = [ 0, 0 ];
 		validator      = noone;
 		
-		bypass_junc    = connect_type == CONNECT_TYPE.input? new __NodeValue_Input_Bypass(self, name, node, type) : noone;
-		
 		ign_array      = false; function toggleArray() { ign_array = !ign_array; node.triggerRender(); return self; }
 		
 		updateOnSet    = false;
+		
+		bypass_use  = false;
+		bypass_junc = undefined;
 	#endregion
 	
 	#region ---- Draw ----
@@ -244,15 +246,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			value       : 0,
 			node_values : node.input_value_map,
 		};
+		express_edit = undefined;
 		
-		express_edit = textArea_Text(function(str) /*=>*/ { expression = str; expressionUpdate(); })
-			.setFont(f_code).setBoxColor(COLORS._main_value_positive);
-		
-		express_edit.format                = TEXT_AREA_FORMAT.codeLUA;
-		express_edit.autocomplete_server   = pxl_autocomplete_server;
-		express_edit.autocomplete_context  = expContext;
-		express_edit.function_guide_server = pxl_function_guide_server;
-		express_edit.parser_server         = pxl_document_parser;
+		function getExpresstionEditor() {
+			if(express_edit) return express_edit;
+			
+			express_edit = textArea_Text(function(str) /*=>*/ { expression = str; expressionUpdate(); })
+				.setFont(f_code).setBoxColor(COLORS._main_value_positive);
+			
+			express_edit.format                = TEXT_AREA_FORMAT.codeLUA;
+			express_edit.autocomplete_server   = pxl_autocomplete_server;
+			express_edit.autocomplete_context  = expContext;
+			express_edit.function_guide_server = pxl_function_guide_server;
+			express_edit.parser_server         = pxl_document_parser;
+			
+			if(unitUse) express_edit.setSideButton(unit.triggerButton);
+		}
 	#endregion
 	
 	#region ---- Serialization ----
@@ -272,7 +281,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			if(connect_type == CONNECT_TYPE.input) {
-				bypass_junc.setIndex(index);
+				if(bypass_use) getBypassJunc().setIndex(index);
 				node.inputs_data[index]  = def_val;
 				
 				if(node.is_dynamic_input) lIndex = (lIndex - node.input_fix_len) % node.data_length;
@@ -399,7 +408,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_junction_index = type;
 		updateColor();
 		
-		if(bypass_junc) bypass_junc.setType(_type);
+		if(bypass_use) getBypassJunc().setType(_type);
 		
 		return true;
 	}
@@ -428,13 +437,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setUnitSimple = function(r=true) { return setUnitRef(function(i) /*=>*/ {return node.getDimension(i)}, r? VALUE_UNIT.reference : VALUE_UNIT.constant); }
 	static setUnitRef    = function(ref, mode = VALUE_UNIT.constant) {
-		express_edit.setSideButton(unit.triggerButton);
+		unitUse = true;
 		display_data.onSurfaceSize = ref;
 		
-		var wid = getEditWidget();
-		if(wid) {
-			wid.unit = unit;
-			wid.onSurfaceSize = ref;
+		if(editWidget) {
+			editWidget.unit = unit;
+			editWidget.onSurfaceSize = unit.reference;
 		}
 		
 		unit.reference  = ref;
@@ -791,6 +799,29 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return is_anim;
 	}
 	
+	////- Bypass
+	
+	static getBypassJunc = function() {
+		if(connect_type != CONNECT_TYPE.input) return;
+		if(bypass_junc) return bypass_junc;
+		
+		bypass_junc = new __NodeValue_Input_Bypass(self, name, node, type);
+		bypass_junc.setIndex(index);
+		
+		return bypass_junc;
+	}
+	
+	static setBypass  = function(v) {
+		bypass_use = v;
+		
+		var _junc = v? getBypassJunc() : bypass_junc;
+		if(_junc) _junc.visible = v;
+		
+		if(v) array_push(   node.input_bypass, _junc );
+		else if(_junc) array_remove( node.input_bypass, _junc );
+		return self;
+	}
+	
 	////- DISPLAY
 	
 	static setVisibleManual = function(v) {
@@ -840,16 +871,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return visible_in_list;
 	}
 	
-	static isBypassed = function( ) { return bypass_junc? bypass_junc.visible : false; }
-	static setBypass  = function(v) {
-		if(bypass_junc == noone) return self;
-		bypass_junc.visible = v;
-		
-		if(v) array_push(   node.input_bypass, bypass_junc );
-		else  array_remove( node.input_bypass, bypass_junc );
-		return self;
-	}
-	
 	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) {
 		display_type = _type;
 		display_data = _data;
@@ -857,10 +878,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidgetSetted = false;
 		setDropKey();
 		
-		// resetDisplay();
 		return self;
 	}
 	
+	static onInitWidget  = undefined;
 	static getEditWidget = function() {
 		if(!editWidgetSetted) {
 			resetDisplay();
@@ -1327,6 +1348,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			default : editWidget = new outputBox(); break;
 		}
 		
+		editWidgetRaw = editWidget;
+		
 		if(has(display_data, "side_button") && editWidget.side_button == noone)
 			editWidget.setSideButton(display_data.side_button);
 		
@@ -1334,11 +1357,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			editWidget.attributes  = attributes;
 			graphWidget    = undefined;
 			timelineWidget = undefined;
+			
+			if(unitUse) {
+				editWidget.unit = unit;
+				editWidget.onSurfaceSize = unit.reference;
+			}
+			
+			if(onInitWidget) onInitWidget();
 		}
 		
-		editWidgetRaw = editWidget;
-		
-		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
+		for( var i = 0, n = array_length(animator.values); i < n; i++ ) { // ??
 			animator.values[i].ease_in_type   = key_inter;
 			animator.values[i].ease_out_type  = key_inter;
 		}
@@ -1357,8 +1385,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			wid.always_break_line = true; 
 		return self; 
 	} 
-	
-	resetDisplay();
 	
 	////- RENDER
 	
@@ -2657,10 +2683,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			_map.animators    = _anims;
 		}
 		
-		if(name_custom)                        _map.name_custom  = name_custom;
+		if(name_custom) _map.name_custom  = name_custom;
+		if(bypass_use)  _map.bypass       = bypass_use;
+		
 		if(struct_has(display_data, "linked")) _map.linked       = display_data.linked;
 		if(struct_has(display_data, "ranged")) _map.ranged       = display_data.ranged;
-		if(bypass_junc && bypass_junc.visible) _map.bypass       = true;
 		
 		#region attributes
 			attri = variable_clone(attributes);
@@ -2739,8 +2766,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		if(has(_map, "raw_value")) animator.deserialize(_map[$ "raw_value"], scale);
 		if(has(_map, "r"))         animator.deserialize(_map[$ "r"],         scale);
-			
-		if(bypass_junc) setBypass(_map[$ "bypass"] ?? false);
+		
+		setBypass(_map[$ "bypass"] ?? false);
 		
 		if(has(_map, "animators")) {
 			var anims = _map.animators;
@@ -2755,7 +2782,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			con_tag   = _map[$ "from_tag"]   ?? 0;
 		}
 		
-		if(connect_type == CONNECT_TYPE.input && index >= 0) {
+		if(index >= 0) {
 			var _value = animator.getValue(0);
 			node.inputs_data[index] = _value;
 			node.input_value_map[$ internalName] = _value;
@@ -2822,7 +2849,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _inp = array_safe_get_fast(_nd.inputs, con_index - 1000, noone);
 			if(_inp == noone) return false;
 			
-			var _set = setFrom(_inp.bypass_junc, false, true, log);
+			var _set = setFrom(_inp.getBypassJunc(), false, true, log);
 			if(_set) return true;
 			
 				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} (bypass) : Not connectable.",        node);
@@ -2973,8 +3000,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var wid = getEditWidget();
 		if(wid) wid.free();
 		
-		if(mapWidget)   mapWidget.free();
-		express_edit.free();
+		if(mapWidget)    mapWidget.free();
+		if(express_edit) express_edit.free();
 		
 		if(bypass_junc) { bypass_junc.cleanUp(); delete bypass_junc; }
 	}
