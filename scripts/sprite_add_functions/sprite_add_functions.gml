@@ -11,10 +11,16 @@ function sprite_add_os(path, imagenumb = 1, removeback = false, smooth = false, 
 
 function sprite_add_map(path, imagenumb = 1, removeback = false, smooth = false, xorig = 0, yorig = 0) {
 	if(!file_exists_empty(path)) return noone;
-	var _path = sprite_path_check_depth(filename_os(path));
-	var _sprs = __sprite_add(filename_os(_path), imagenumb, removeback, smooth, xorig, yorig);
-	SPRITE_PATH_MAP[$ path] = _sprs;
+	var _path = sprite_path_check_format(filename_os(path));
+	var _extx = string_lower(filename_ext(_path));
+	var _sprs = undefined;
 	
+	switch(_extx) {
+		case ".png": _sprs = __sprite_add(_path, imagenumb, removeback, smooth, xorig, yorig); break;
+		case ".bmp": _sprs = sprite_create_from_file(_path, removeback, smooth, xorig, yorig); break;
+	}
+	
+	SPRITE_PATH_MAP[$ path] = _sprs;
 	return _sprs;
 }
 
@@ -42,7 +48,7 @@ function sprite_get_splices(path) {
 	return amo;
 }
 
-function sprite_path_check_depth(_path, noti = true) {
+function sprite_path_check_format(_path, noti = true) {
 	static path_convert = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
 	static path_magick  = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";
 	
@@ -63,6 +69,8 @@ function sprite_path_check_depth(_path, noti = true) {
 			return proxy_path;
 			
 		case ".bmp": 
+			return _path;
+			
 		case ".tga": 
 			if(noti) noti_warning($"Used proxy for {_extx} file.");
 			shell_execute(path_convert, $"\"{_path}\" \"{proxy_path}\"");

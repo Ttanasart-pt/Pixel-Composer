@@ -56,17 +56,12 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 		var _bg_junc = bg_output.getJunction();
 		if(_bg_junc) {
 			var _dat = undefined;
+			var _prs_junc = press_output.getJunction();
+			var _hov_junc = hover_output.getJunction();
 			
-			if(pre) {
-				var _prs_junc = press_output.getJunction();
-				if(_prs_junc) _dat = _prs_junc.showValue();
-				
-			} else if(hov) {
-				var _hov_junc = hover_output.getJunction();
-				if(_hov_junc) _dat = _hov_junc.showValue();
-				
-			} else 
-				_dat = _bg_junc.showValue();
+			     if(pre && _prs_junc) _dat = _prs_junc.showValue();
+			else if(hov && _hov_junc) _dat = _hov_junc.showValue();
+			else                      _dat = _bg_junc.showValue();
 			
 			if(is_surface(_dat)) {
 				if(rotate_surf) {

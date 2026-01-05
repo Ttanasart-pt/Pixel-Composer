@@ -3977,23 +3977,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         return false;
     } 
     
-    function selectDragNode(_node, _add = false) {
-    	nodes_selecting = [ _node ];
-    	node_dragging   = _node;
-    	
-    	_node.x = mouse_graph_x - _node.w / 2;
-		_node.y = mouse_graph_y - _node.h / 2;
-    	
-        node_drag_mx = mouse_graph_x;
-        node_drag_my = mouse_graph_y;
-        node_drag_sx = _node.x;
-        node_drag_sy = _node.y;
-        node_drag_ox = -1;
-        node_drag_oy = -1;
-        
-        node_drag_add = _add;
-    }
-    
     static checkDropItem = function() { //
         var node = noone;
         
@@ -4129,6 +4112,23 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 if(DRAGGING.from.setFrom(node.outputs[i])) break;
         }
     } 
+    
+    function selectDragNode(_node, _add = false) {
+    	nodes_selecting = [ _node ];
+    	node_dragging   = _node;
+    	
+    	_node.x = mouse_graph_x - _node.w / 2;
+		_node.y = mouse_graph_y - _node.h / 2;
+    	
+        node_drag_mx = mouse_graph_x;
+        node_drag_my = mouse_graph_y;
+        node_drag_sx = _node.x;
+        node_drag_sy = _node.y;
+        node_drag_ox = -1;
+        node_drag_oy = -1;
+        
+        node_drag_add = _add;
+    }
     
     static bringNodeToFront = function(node) { //
         if(!array_exists(nodes_list, node)) return;
@@ -4401,9 +4401,10 @@ function load_file_path(path, _x = undefined, _y = undefined) {
         var ext = string_lower(filename_ext(p));
         
         switch(ext) {
-            case ".png"     :
-            case ".jpg"     :
+            case ".png"  :
+            case ".jpg"  :
             case ".jpeg" :
+            case ".bmp"  :
                 type = "image";
                 break;
         }

@@ -65,8 +65,9 @@ function Process_Anim_Track(_node = undefined) constructor {
 	
 	static serialize = function() {
 		var _m = {};
+		getNode();
 		
-		_m.node      = node.node_id;
+		_m.node      = node? node.node_id : "";
 		_m.title     = title;
 		_m.output    = output;
 		_m.values    = variable_clone(values);
