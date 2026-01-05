@@ -32,7 +32,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		var _name     = jun.getName();
 		var dispName  = _name;
-		var wid       = jun.editWidget;
+		var wid       = jun.getEditWidget();
 		
 		if(_ID != undefined) {
 			var _map = jun.editWidgetMap;
@@ -359,7 +359,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
 				}
 				
-				if(jun.expUse || is(jun.editWidget, textArea)) {
+				if(jun.expUse || is(wid, textArea)) {
 					bx -= bs + ui(4);
 					var cc = jun.popup_dialog == noone? c_white : COLORS._main_value_positive;
 					var t  = __txtx("panel_inspector_pop_text", "Pop up Editor");
@@ -368,7 +368,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					if(b) cHov = true;
 					if(b == 2) {
 						if(jun.expUse)	jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.express_edit, function() /*=>*/ {return context.expression},  jun));
-						else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.editWidget,   function() /*=>*/ {return context.showValue()}, jun));
+						else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(wid,              function() /*=>*/ {return context.showValue()}, jun));
 						jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
 					}
 				}

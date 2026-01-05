@@ -12,7 +12,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_scroll, _ch); return self; }
 	
 	static scrollValue = function(_d=1) /*=>*/ { 
-		choicesAmount = array_length(editWidget.data);
+		choicesAmount = array_length(getEditWidget().data);
 		if(choicesAmount == undefined) return self;
 		
 		setValue((getValue() + _d + choicesAmount) % choicesAmount); 
@@ -33,7 +33,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		
 		if(!clamp_range) return val;
 		
-		choicesAmount = array_length(editWidget.data);
+		choicesAmount = array_length(getEditWidget().data);
 		if(choicesAmount == undefined) return val;
 		
 		if(is_real(val)) val = clamp(val, 0, choicesAmount - 1);

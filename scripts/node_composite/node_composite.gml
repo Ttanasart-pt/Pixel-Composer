@@ -509,8 +509,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var jn_bld = inputs[index + 4];
 				var jn_alp = inputs[index + 5];
 				
-				var wd_bld = jn_bld.editWidget;
-				var wd_alp = jn_alp.editWidget;
+				var wd_bld = jn_bld.getEditWidget();
+				var wd_alp = jn_alp.getEditWidget();
 				
 				var _param = new widgetParam(_px + ui(4), _py + ui(4), _pww, _pwh, jn_bld.showValue(), jn_bld.display_data, _m, layer_renderer.rx, layer_renderer.ry);
 				    _param.font = f_p2;

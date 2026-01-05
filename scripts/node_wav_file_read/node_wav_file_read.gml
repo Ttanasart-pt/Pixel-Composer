@@ -113,7 +113,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		printIf(global.FLAG.wav_import, "-- Creating preview buffer...");
 		
 		var frm = ceil(content.duration * project.animator.framerate);
-		inputs[1].editWidget.text = $"Sync ({frm} frames)";
+		inputs[1].getEditWidget().text = $"Sync ({frm} frames)";
 		
 		var bufferId = buffer_create(content.packet * 2, buffer_fixed, 1);
 		buffer_seek(bufferId, buffer_seek_start, 0);

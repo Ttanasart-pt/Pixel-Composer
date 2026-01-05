@@ -19,7 +19,7 @@ event_inherited();
 	paths	      = "";
 	is_dir	      = false;
 	dir_recursive = false;
-	dir_filter    = ".png;.jpg;.jpeg";
+	dir_filter    = FILE_EXT_IMAGE;
 	
 	function setPath(path) {
 		paths	= path;

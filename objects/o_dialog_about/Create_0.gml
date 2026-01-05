@@ -13,8 +13,8 @@ event_inherited();
 		[ "ImageMagick", "ImageMagick Studio LLC" ],
 		[ "WebP", "Google" ],
 		[ "FFmpeg", "FFmpeg team" ],
-		[ "File dialog module", "Samuel Venable" ],
-		[ "gif importer\nWindow commands\nApollow LUA compiler", "YellowAfterLife" ],
+		[ "BMP Importer", "Samuel Venable" ],
+		[ "GIF Importer\nWindow Commands\nApollow LUA Compiler", "YellowAfterLife" ],
 		
 		[ "The Book of Shaders", "Patricio Gonzalez Vivo & Jen Lowe" ],
 		[ "Many noise and shape shaders", "Inigo Quilez" ],

@@ -228,7 +228,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[0].setValue(self);
 		
 		#region display
-			inputs[ 2].editWidget.data_list = curr_coor? eq_type_pol : eq_type_car;
+			inputs[ 2].getEditWidget().data_list = curr_coor? eq_type_pol : eq_type_car;
 			inputs[ 4].setVisible(curr_eqa == 2);
 			
 			switch(curr_coor) {

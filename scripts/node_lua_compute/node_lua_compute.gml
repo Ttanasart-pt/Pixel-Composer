@@ -41,8 +41,8 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		newInput(index + 1, nodeValue_EScroll( "Argument type", 0, { data: lua_dtype, update_hover: false }));
 		newInput(index + 2, nodeValue(         "Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 )).setVisible(true, true);
 		
-		inputs[index + 1].editWidget.interactable = false;
-		inputs[index + 2].editWidget.interactable = false;
+		inputs[index + 1].getEditWidget().interactable = false;
+		inputs[index + 2].getEditWidget().interactable = false;
 		
 		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);
 		return inputs[index + 0];
@@ -72,9 +72,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				array_push(_in, inputs[i + 1]);
 				array_push(_in, inputs[i + 2]);
 				
-				inputs[i + 1].editWidget.interactable = true;
-				if(inputs[i + 2].editWidget != noone)
-					inputs[i + 2].editWidget.interactable = true;
+				inputs[i + 1].getEditWidget().interactable = true;
+				if(inputs[i + 2].getEditWidget() != noone)
+					inputs[i + 2].getEditWidget().interactable = true;
 				
 				array_push(input_display_list, i + 2);
 			} else {

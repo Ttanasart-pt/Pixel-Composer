@@ -33,15 +33,15 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 		}
 		
 		var _junc = input.getJunction();
-		if(_junc && input.editWidget) {
+		if(_junc && input.getEditWidget()) {
 			var _dat   = _junc.showValue();
 			var _param = new widgetParam(x, y, w, h, _dat, _junc.display_data, _m, rx, ry)
 				.setFont(_font);
 			
 			var _inter = is(panel, Panel_Custom);
-			input.editWidget.setInteract(_inter);
-			input.editWidget.setFocusHover(_inter && focus, _inter && elementHover);
-			input.editWidget.drawParam(_param);
+			input.getEditWidget().setInteract(_inter);
+			input.getEditWidget().setFocusHover(_inter && focus, _inter && elementHover);
+			input.getEditWidget().drawParam(_param);
 			
 		} else {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, x, y, w, h);

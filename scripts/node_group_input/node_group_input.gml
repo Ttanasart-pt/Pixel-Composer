@@ -216,7 +216,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		__dsType = _dsType;
 			
 		inputs[0].display_data.data    = _dsList;
-		inputs[0].editWidget.data_list = _dsList;
+		inputs[0].getEditWidget().data_list = _dsList;
 		
 		var _dsType = array_safe_get_fast(_dsList, _dsType);
 		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _inType, VALUE_TYPE.any);

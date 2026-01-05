@@ -64,15 +64,18 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 			else                      _dat = _bg_junc.showValue();
 			
 			if(is_surface(_dat)) {
+				var sw = surface_get_width_safe(_dat);
+				var sh = surface_get_height_safe(_dat);
+				var ss = min(w / sw, h / sh);
+				var ssw = sw * ss;
+				var ssh = sh * ss;
+				
 				if(rotate_surf) {
-					var sw = surface_get_width_safe(_dat);
-					var sh = surface_get_height_safe(_dat);
-					
-					__p = point_rotate(x, y, xc, yc, _currVal, __p);
-					draw_surface_ext_safe(_dat, __p[0], __p[1], w/sw, h/sh, _currVal);
+					__p = point_rotate(xc - ssw/2, yc - ssh/2, xc, yc, _currVal, __p);
+					draw_surface_ext_safe(_dat, __p[0], __p[1], ss, ss, _currVal);
 					
 				} else
-					draw_surface_stretched_safe(_dat, x, y, w, h);
+					draw_surface_ext_safe(_dat, xc - ssw/2, yc - ssh/2, ss, ss);
 			}
 			
 		} else {

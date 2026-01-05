@@ -63,8 +63,8 @@ output.color = surfaceColor;"
 		newInput(index + 1, nodeValue_EScroll( "Argument type",  0, { data: shader_vartype, update_hover: false }));
 		newInput(index + 2, nodeValue(         "Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 )).setVisible(true, true);
 		
-		inputs[index + 1].editWidget.interactable = false;
-		inputs[index + 2].editWidget.interactable = false;
+		inputs[index + 1].getEditWidget().interactable = false;
+		inputs[index + 2].getEditWidget().interactable = false;
 							
 		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);
 	}
@@ -157,9 +157,9 @@ struct PixelShaderOutput {
 			array_push(_in, inp_type);
 			array_push(_in, inp_valu);
 				
-			inp_type.editWidget.interactable = true;
-			if(inp_valu.editWidget != noone)
-				inp_valu.editWidget.interactable = true;
+			inp_type.getEditWidget().interactable = true;
+			if(inp_valu.getEditWidget() != noone)
+				inp_valu.getEditWidget().interactable = true;
 			inp_valu.name = inp_name;
 				
 			var type = inp_type.getValue();
@@ -361,8 +361,8 @@ struct PixelShaderOutput {
 	}
 	
 	static onCodeEdited = function() {
-		var _global_edit = inputs[4].editWidget;
-		var _fsmain_edit = inputs[1].editWidget;
+		var _global_edit = inputs[4].getEditWidget();
+		var _fsmain_edit = inputs[1].getEditWidget();
 		var _globalParams = array_clone(_global_edit.localParams);
 		array_append(_globalParams, libraryParams);
 		

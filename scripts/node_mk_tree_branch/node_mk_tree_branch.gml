@@ -64,7 +64,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}).setIcon(THEME.mk_tree_leaf_unit).iconPad();
 	
 	inputs[5].attributes.unit = VALUE_UNIT.constant;
-	inputs[5].editWidget.setSideButton(amountUnitToggle);
+	inputs[5].getEditWidget().setSideButton(amountUnitToggle);
 	
 	////- Nodes
 	

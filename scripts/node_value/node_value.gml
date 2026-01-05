@@ -21,18 +21,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_initName   = _name;
 		name_custom = false;
 		
+		editWidgetSetted   = false;
 		editWidget         = noone;
 		editWidgetRaw      = noone;
 		editWidgetMap      = {};
 		editable           = true;
 		
-		graphWidget    = noone;
-		graphWidgetH   = 0;
-		graphWidgetP   = new widgetParam(0, 0, 0, 0, 0);
 		mapWidget      = noone;
 		inactive_tooltip = "";
-		
-		timelineWidget = noone;
 		
 		is_dummy       = false;
 		ghost_hover    = noone;
@@ -204,7 +200,38 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		extract_node = "";
 		
+		graphWidget    = undefined;
+		graphWidgetH   = 0;
+		graphWidgetP   = new widgetParam(0, 0, 0, 0, 0);
+		
+		static getGraphWidget = function() {
+			if(is(graphWidget, widget)) return graphWidget;
+			
+			var wid = getEditWidget();
+			if(!is(wid, widget)) return graphWidget;
+			
+			graphWidget = wid.clone();
+			graphWidget.attributes = attributes;
+			
+			return graphWidget;
+		}
+	#endregion
+	
+	#region ---- Animation ----
 		anim_presets = []; static setAnimPreset = function(_pres) /*=>*/ { array_append(anim_presets, _pres); return self; }
+		timelineWidget = undefined;
+		
+		static getTimelineWidget = function() {
+			if(is(timelineWidget, widget)) return timelineWidget;
+			
+			var wid = getEditWidget()
+			if(!is(wid, widget))    return timelineWidget;
+			
+			timelineWidget = wid.clone();
+			timelineWidget.attributes = attributes;
+			
+			return timelineWidget;
+		}
 	#endregion
 	
 	#region ---- Expression ----
@@ -343,7 +370,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		  .setIcon(_icon, function(p) /*=>*/ {return getAttribute(p.key)}, COLORS._main_icon)
 		  .setTooltip(new tooltipSelector(_title, _choices, _val), function(p) /*=>*/ {return getAttribute(p.key)});
 		  
-		editWidget.setSideButton(optionButton);
+		setSideButton(optionButton);
 		return optionButton;
 	}
 	
@@ -404,9 +431,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		express_edit.setSideButton(unit.triggerButton);
 		display_data.onSurfaceSize = ref;
 		
-		if(editWidget) {
-			editWidget.unit = unit;
-			editWidget.onSurfaceSize = ref;
+		var wid = getEditWidget();
+		if(wid) {
+			wid.unit = unit;
+			wid.onSurfaceSize = ref;
 		}
 		
 		unit.reference  = ref;
@@ -449,8 +477,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.pathnode	: drop_key = "Path";   break;
 			case VALUE_TYPE.struct   	: drop_key = "Struct"; break;
 			
-			default: 
-				drop_key = "None";
+			default : drop_key = "None";
 		}
 	} setDropKey();
 	
@@ -533,8 +560,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			                   new rangeBox(function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton);
 		}
 		
-		editWidget.setSideButton(mapButton);
-		
+		setSideButton(mapButton);
 		return self;
 	}
 	
@@ -550,8 +576,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
 			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Map");
 		
-		editWidget.setSideButton(mapButton);
-		
+		setSideButton(mapButton);
 		return self;
 	}
 	
@@ -566,8 +591,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		curveButton = button(function() /*=>*/ { attributes.curved = !attributes.curved; node.triggerRender(); })
 			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Curve");
 		
-		editWidget.setSideButton(curveButton);
-		
+		setSideButton(curveButton);
 		return self;
 	}
 	
@@ -582,7 +606,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		gradeButton = button(function() /*=>*/ { attributes.graded = !attributes.graded; node.triggerRender(); })
 			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.graded} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Curve");
 		
-		editWidget.setSideButton(gradeButton);
+		setSideButton(gradeButton);
 		return self;
 	}
 	
@@ -830,24 +854,33 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		display_type = _type;
 		display_data = _data;
 		type_array   = typeArray(self);
-		resetDisplay();
+		editWidgetSetted = false;
+		setDropKey();
 		
+		// resetDisplay();
 		return self;
 	}
 	
-	static resetDisplay = function() {
+	static getEditWidget = function() {
+		if(!editWidgetSetted) {
+			resetDisplay();
+			editWidgetSetted = true;
+		}
 		
+		return editWidget;
+	}
+	
+	static resetDisplay = function() {
 		editWidget = noone;
-		switch(display_type) {
-			case VALUE_DISPLAY.button :
-				var _onClick = struct_has(display_data, "onClick")? method(node, display_data.onClick) : function() /*=>*/ { setAnim(true, true); setValueDirect(true); };
-				
-				editWidget   = button(_onClick).setText(struct_try_get(display_data, "name", "Trigger"));
-				
-				visible = false;
-				rejectArray();
-				
-				return;
+		
+		if(display_type == VALUE_DISPLAY.button) {
+			var _onClick = struct_has(display_data, "onClick")? method(node, display_data.onClick) : 
+				function() /*=>*/ { setAnim(true, true); setValueDirect(true); };
+			
+			editWidget = button(_onClick).setText(struct_try_get(display_data, "name", "Trigger"));
+			visible    = false;
+			rejectArray();
+			return;
 		}
 		
 		switch(type) {
@@ -1294,31 +1327,36 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			default : editWidget = new outputBox(); break;
 		}
 		
-		if(is_struct(display_data) && struct_has(display_data, "side_button") && editWidget.side_button == noone)
+		if(has(display_data, "side_button") && editWidget.side_button == noone)
 			editWidget.setSideButton(display_data.side_button);
 		
-		editWidgetRaw = editWidget;
 		if(editWidget) {
 			editWidget.attributes  = attributes;
-			
-			graphWidget = editWidget.clone();
-			graphWidget.attributes = attributes;
-			
-			timelineWidget = editWidget.clone();
-			timelineWidget.attributes = attributes;
+			graphWidget    = undefined;
+			timelineWidget = undefined;
 		}
+		
+		editWidgetRaw = editWidget;
 		
 		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
 			animator.values[i].ease_in_type   = key_inter;
 			animator.values[i].ease_out_type  = key_inter;
 		}
 		
-		setDropKey();
 	} 
 	
-	static setSideButton = function(b, s = false) { if(is(editWidget, widget)) editWidget.setSideButton(b, s); return self; } 
+	static setSideButton = function(b, s = false) { 
+		var wid = getEditWidget();
+		if(is(wid, widget)) wid.setSideButton(b, s); 
+		return self; 
+	} 
 	
-	static widgetBreakLine = function() { if(is(editWidget, widget)) editWidget.always_break_line = true; return self; } 
+	static widgetBreakLine = function() { 
+		var wid = getEditWidget();
+		if(is(wid, widget)) 
+			wid.always_break_line = true; 
+		return self; 
+	} 
 	
 	resetDisplay();
 	
@@ -1394,8 +1432,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	////- GET
 	
 	__tempValue = undefined;
-	
-	static getEditWidget = function() /*=>*/ {return editWidget};
 	
 	static valueProcess = function(_value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
@@ -2934,7 +2970,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static cleanUp = function() {
-		if(editWidget)  editWidget.free();
+		var wid = getEditWidget();
+		if(wid) wid.free();
+		
 		if(mapWidget)   mapWidget.free();
 		express_edit.free();
 		

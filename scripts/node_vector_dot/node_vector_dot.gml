@@ -19,15 +19,15 @@ function Node_Vector_Dot(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _pnt2 = _data[1];
 		
 		if(array_length(_pnt1) == 2) {
-			inputs[0].editWidget.size = 2;
-			inputs[1].editWidget.size = 2;
+			inputs[0].getEditWidget().size = 2;
+			inputs[1].getEditWidget().size = 2;
 			
 			return dot_product(array_safe_get_fast(_pnt1, 0), array_safe_get_fast(_pnt1, 1), 
 							   array_safe_get_fast(_pnt2, 0), array_safe_get_fast(_pnt2, 1));
 							   
 		} else if(array_length(_pnt1) == 3) {
-			inputs[0].editWidget.size = 3;
-			inputs[1].editWidget.size = 3;
+			inputs[0].getEditWidget().size = 3;
+			inputs[1].getEditWidget().size = 3;
 			
 			return dot_product_3d(array_safe_get_fast(_pnt1, 0), array_safe_get_fast(_pnt1, 1), array_safe_get_fast(_pnt1, 2), 
 							      array_safe_get_fast(_pnt2, 0), array_safe_get_fast(_pnt2, 1), array_safe_get_fast(_pnt2, 2), );

@@ -39,7 +39,7 @@ function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeVa
 		return true;
 	}
 	
-	static shortenDisplay = function() { editWidget.shorted = true; return self; }
+	static shortenDisplay = function() { getEditWidget().shorted = true; return self; }
 }
 
 function __NodeValue_Input_Bypass(_from, _name, _node, _type) : __NodeValue_Output(_name, _node, _type, 0, "") constructor {

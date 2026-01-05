@@ -4,12 +4,12 @@ function __NodeValue_Bone(_name, _node, _toggleFn) : __NodeValue_Text(_name, _no
 	bSelect = button(_toggleFn).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
 	setSideButton(bSelect);
 	
-	editWidget.autocomplete_context = node;
-	editWidget.autocomplete_server  = armature_autocomplete_server;
+	getEditWidget().autocomplete_context = node;
+	getEditWidget().autocomplete_server  = armature_autocomplete_server;
 	
 	static setSelecting = function(_sel) {
 		bSelect.icon_blend  = _sel? COLORS._main_value_positive : COLORS._main_icon; 
-		editWidget.boxColor = _sel? COLORS._main_value_positive : c_white;
+		getEditWidget().boxColor = _sel? COLORS._main_value_positive : c_white;
 	}
 	
 	/////============== GET =============

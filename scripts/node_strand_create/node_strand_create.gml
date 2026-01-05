@@ -439,8 +439,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static step = function() {
 		var _typ = getInputData(0);
 		
-		inputs[15].editWidget.text  = attributes.use_groom? "Unbake" : "Bake";
-		inputs[15].editWidget.blend = attributes.use_groom? COLORS._main_value_negative : COLORS._main_value_positive;
+		inputs[15].getEditWidget().text  = attributes.use_groom? "Unbake" : "Bake";
+		inputs[15].getEditWidget().blend = attributes.use_groom? COLORS._main_value_negative : COLORS._main_value_positive;
 	}
 	
 	static strandUpdate = function(willReset = false) {

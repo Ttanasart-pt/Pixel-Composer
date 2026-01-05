@@ -981,6 +981,8 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             #region ++++ draw widget ++++
+            	var _wdgt = jun.getEditWidget();
+            	
                 var widg    = drawWidget(_x + ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry);
                 var widH    = widg[0];
                 var mbRight = widg[1];
@@ -1029,9 +1031,9 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             // Selection highlight
-            if(jun.editWidget && jun.editWidget.temp_hovering) {
+            if(_wdgt && _wdgt.temp_hovering) {
             	draw_sprite_stretched_ext(THEME.prop_selecting, 0, _x + ui(4), yy, con_w - ui(8), widH, COLORS._main_accent, 1);
-            	jun.editWidget.temp_hovering = false;
+            	_wdgt.temp_hovering = false;
             }
             
             // Mouse interaction

@@ -136,12 +136,21 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	
 	////- Get Set
 	
+	static getEditWidget = function() {
+		if(is(editWidget, widget)) return editWidget;
+		
+		var junc = getJunction();
+		if(!junc) return editWidget;
+		
+		editWidget = junc.editWidget.clone();
+		return editWidget;
+	}
+	
 	static setJunction = function(_junc) {
 		if(!is(_junc, NodeValue)) return self;
 		
 		node       = _junc.node;
 		junction   = _junc;
-		if(getWidget) editWidget = junction.editWidget.clone();
 		
 		node_id = _junc.node.node_id;
 		junc_id = _junc.index;

@@ -26,7 +26,7 @@ function Project_Randomizer_Value() constructor {
 		if(!is(value, NodeValue)) value = undefined;
 		
 		if(value != undefined) {
-			var _wdg = value.editWidget;
+			var _wdg = value.getEditWidget();
 			
 			if(!is_array(min_val)) {
 				editWmin = _wdg.clone();

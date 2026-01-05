@@ -54,10 +54,10 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			var nor   = inputs[i + 1];
 			
 			var _name = jun.getName();
-			var wid   = jun.editWidget;
+			var wid   = jun.getEditWidget();
 			var shw   = jun.showValue();
 			
-			var nwid  = nor.editWidget;
+			var nwid  = nor.getEditWidget();
 			var nshw  = nor.showValue();
 			
 			var bs = TEXTBOX_HEIGHT;
@@ -99,7 +99,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		newInput(index + 0, nodeValue_Int(  "Index", -1    ));
 		newInput(index + 1, nodeValue_Bool( "Normalize", false ));
-		inputs[index].editWidget.slidable = false;
+		inputs[index].getEditWidget().slidable = false;
 		
 		var _out = nodeValue_Output("Value", VALUE_TYPE.float, -1 );
 		array_push(outputs, _out);

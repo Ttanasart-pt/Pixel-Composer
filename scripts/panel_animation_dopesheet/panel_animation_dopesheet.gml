@@ -484,7 +484,7 @@ function Panel_Animation_Dopesheet() {
     
     function editKeyFrame(keyframe, _x = mouse_mx + ui(8), _y = mouse_my + ui(8)) {
         var _prop = keyframe.anim.prop;
-        var _wid  = _prop.editWidget;
+        var _wid  = _prop.getEditWidget();
         __keyframe_editing = keyframe;
         
         switch(_prop.type) {
@@ -1791,7 +1791,7 @@ function Panel_Animation_Dopesheet() {
         var wh = ui(18);
         
         #region editWidget
-        	var _edt = prop.timelineWidget;
+        	var _edt = prop.getTimelineWidget();
         	var _wdw = wl * .5;
     		var _wh  = undefined;
         	

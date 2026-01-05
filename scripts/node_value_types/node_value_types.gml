@@ -593,7 +593,7 @@ function nodeValueUnit(__nodeValue) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _m) {
-		_nodeValue.editWidget.setSuffix(mode? "x" : "");
+		_nodeValue.getEditWidget().setSuffix(mode? "x" : "");
 		
 		triggerButton.icon_index = mode;
 		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide_fill);

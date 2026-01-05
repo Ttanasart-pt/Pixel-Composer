@@ -166,7 +166,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _atlas  = is(_fore, SurfaceAtlas);
 		
 		inputs[5].setVisible(!_atlas);
-		inputs[6].editWidget.data_list = _atlas? [ "Background", "Forground" ] : [ "Background", "Forground", "Mask", "Maximum", "Constant" ];
+		inputs[6].getEditWidget().data_list = _atlas? [ "Background", "Forground" ] : [ "Background", "Forground", "Mask", "Maximum", "Constant" ];
 		inputs[7].setVisible(_outp == 4);
 		
 		inputs[14].setVisible(_fill == 0 && !_atlas);

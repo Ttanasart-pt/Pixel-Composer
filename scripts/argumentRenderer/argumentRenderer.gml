@@ -22,8 +22,8 @@ function argumentRenderer(_typeArray = []) {
 			var _jTyp = inputs[i + 1];
 			var _jVal = inputs[i + 2];
 			
-			var _wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.editWidget.clone(); _jNam.__inspWidget = _wNam;
-			var _wTyp = has(_jTyp, "__inspWidget")? _jTyp.__inspWidget : _jTyp.editWidget.clone(); _jTyp.__inspWidget = _wTyp;
+			var _wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.getEditWidget().clone(); _jNam.__inspWidget = _wNam;
+			var _wTyp = has(_jTyp, "__inspWidget")? _jTyp.__inspWidget : _jTyp.getEditWidget().clone(); _jTyp.__inspWidget = _wTyp;
 			
 			_wTyp.setFocusHover(_focus, _hover);
 			_wNam.setFocusHover(_focus, _hover);
@@ -40,8 +40,8 @@ function argumentRenderer(_typeArray = []) {
 			ty += _h;
 			
 			var _wVal = _jVal[$ "__inspWidget"];
-			if(_wVal == undefined || instanceof(_wVal) != instanceof(_jVal.editWidget)) {
-				_wVal = _jVal.editWidget.clone();
+			if(_wVal == undefined || instanceof(_wVal) != instanceof(_jVal.getEditWidget())) {
+				_wVal = _jVal.getEditWidget().clone();
 				_jVal.__inspWidget = _wVal;
 			}
 			
@@ -70,10 +70,10 @@ function argumentRenderer(_typeArray = []) {
 	
 	argument_renderer.register = function(parent = noone) {
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			inputs[i + 1].editWidget.register(parent);
-			inputs[i + 0].editWidget.register(parent);
-			if(inputs[i + 2].editWidget != noone)
-				inputs[i + 2].editWidget.register(parent);
+			inputs[i + 1].getEditWidget().register(parent);
+			inputs[i + 0].getEditWidget().register(parent);
+			if(inputs[i + 2].getEditWidget() != noone)
+				inputs[i + 2].getEditWidget().register(parent);
 		}
 	}
 	

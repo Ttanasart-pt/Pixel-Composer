@@ -66,8 +66,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var grup = getInputData( 1);
 		var pack = getInputData( 3);
 		
-		if(pack == 0)	inputs[5].editWidget.data = [ "Top", "Center", "Bottom" ];
-		else			inputs[5].editWidget.data = [ "Left", "Center", "Right" ];
+		if(pack == 0)	inputs[5].getEditWidget().data = [ "Top", "Center", "Bottom" ];
+		else			inputs[5].getEditWidget().data = [ "Left", "Center", "Right" ];
 		
 		inputs[2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
 		inputs[4].setVisible(pack == SPRITE_STACK.grid);
@@ -76,12 +76,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		inputs[9].setVisible(pack == SPRITE_STACK.grid);
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) {
-			inputs[8].editWidget.slide_range[0] = FIRST_FRAME + 1;
-			inputs[8].editWidget.slide_range[1] = LAST_FRAME + 1;
+			inputs[8].getEditWidget().slide_range[0] = FIRST_FRAME + 1;
+			inputs[8].getEditWidget().slide_range[1] = LAST_FRAME + 1;
 			
 		} else {
-			inputs[8].editWidget.slide_range[0] = 0;
-			inputs[8].editWidget.slide_range[1] = array_length(inpt);
+			inputs[8].getEditWidget().slide_range[0] = 0;
+			inputs[8].getEditWidget().slide_range[1] = array_length(inpt);
 		}
 		
 		update_on_frame = grup == 0;

@@ -15,7 +15,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(3, nodeValue_Enum_Scroll( "Filling modes", 0, [ "Scale", "Repeat" ] ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface,     noone ));
-	newOutput(1, nodeValue_Output("DynaSurf",    VALUE_TYPE.dynaSurface, noone ));
+	newOutput(1, nodeValue_Output("DynaSurf",    VALUE_TYPE.dynaSurface, new nineSliceSurf() ));
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -154,9 +154,12 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _fill	= _data[3];
 		
 		if(!surface_exists(_inSurf)) return _outData;
+		
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
 		_outData[0]  = _outSurf;
-		_outData[1]  = new nineSliceSurf(_inSurf, _splice, _fill);
+		
+		if(!is(_outData[1], nineSliceSurf)) _outData[1] = new nineSliceSurf();
+		_outData[1].init(_inSurf, _splice, _fill);
 		
 		var ww   = _dim[0];
 		var hh   = _dim[1];
@@ -164,28 +167,52 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var in_h = surface_get_height_safe(_inSurf);
 		
 		surface_set_shader(_outSurf);
-		shader_set_interpolation(_inSurf);
-		_outData[1].draw(0, 0, ww / in_w, hh / in_h);
+			shader_set_interpolation(_inSurf);
+			_outData[1].draw(0, 0, ww / in_w, hh / in_h);
 		surface_reset_shader();
 		
 		return _outData;
 	}
-
+	
 	static getPreviewValues = function() { 
 		if(isUsingTool("Preview Original")) return inputs[0].getValue();
 		return outputs[0].getValue(); 
 	}
+	
+	////- Clean Up
+	
+	static onCleanUp = function() {
+		var _dyna = inputs[1].getValue();
+		
+		if(is(_dyna, nineSliceSurf)) _dyna.cleanUp();
+		
+		if(is_array(_dyna))
+		for( var i = 0, n = array_length(_dyna); i < n; i++ )
+			if(is(_dyna[i], nineSliceSurf)) _dyna[i].cleanUp();
+	}
+	
 }
 
-function nineSliceSurf(_surf, _splice, _fill) : dynaSurf() constructor {
-	surfaces = [ _surf, noone ];
-	splice   = _splice;
-	fill     = _fill;
-	surfw    = surface_get_width_safe(_surf);
-	surfh    = surface_get_height_safe(_surf);
+function nineSliceSurf() : dynaSurf() constructor {
+	surfaces = [ noone, noone ];
+	splice   = [0,0,0,0];
+	fill     = false;
+	surfw    = 1;
+	surfh    = 1;
+
+	static init = function(_surf, _splice, _fill) /*=>*/ {
+		surfaces[0] = _surf;
+		splice      = _splice;
+		fill        = _fill;
+		surfw       = surface_get_width_safe(_surf);
+		surfh       = surface_get_height_safe(_surf);
+		return self;
+	}
 	
-	static getWidth     = function() /*=>*/ {return surfw};
-	static getHeight    = function() /*=>*/ {return surfh};
+	static getWidth  = function() /*=>*/ {return surfw};
+	static getHeight = function() /*=>*/ {return surfh};
+	
+	////- =Draw
 	
 	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {
 		var ww = surfw * _sx;
@@ -275,5 +302,10 @@ function nineSliceSurf(_surf, _splice, _fill) : dynaSurf() constructor {
 	static drawPart = function(_l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
 		
 	}
-	
+
+	////- =Action
+		
+	static cleanUp = function() {
+		surface_free_safe(surfaces[1]);
+	}
 }

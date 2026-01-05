@@ -56,7 +56,7 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        
 	        var _wx = ui(112);
 	        var _ww = _w - _wx - ui(24 + 8);
-	        var _tb = inputs[_ind + 0].editWidget;
+	        var _tb = inputs[_ind + 0].getEditWidget();
 	        _tb.setFocusHover(_focus, _hover);
 	        _tb.font = f_p2;
 	        _tb.draw(_wx, _yy, _ww, _hg, _tag_name, _m);

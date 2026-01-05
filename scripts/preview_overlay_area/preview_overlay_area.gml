@@ -488,7 +488,7 @@ function preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _
 	var hovering = -1;
 	if(is_array(_val[0])) return hovering;
 	
-	var mode = editWidget.mode;
+	var mode = getEditWidget().mode;
 	
 	__preview_bbox.addArea(_val);
 	__overlay_hover = array_verify(__overlay_hover, 5);

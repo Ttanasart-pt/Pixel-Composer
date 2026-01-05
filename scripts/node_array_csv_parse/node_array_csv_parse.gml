@@ -30,8 +30,8 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		["Output", false], 5, 4,
 	];
 	
-	inputs[0].editWidget.max_height = ui(240);
-	inputs[3].editWidget.mode       = 1;
+	inputs[0].getEditWidget().max_height = ui(240);
+	inputs[3].getEditWidget().mode       = 1;
 	
 	__sortKey = "";
 	
@@ -100,9 +100,9 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		////- SORT
 		
 		if(_hed && _head != noone) {
-			inputs[3].editWidget.data = _head;
-			inputs[5].editWidget.data = _head;
-			inputs[6].editWidget.data = _head;
+			inputs[3].getEditWidget().data = _head;
+			inputs[5].getEditWidget().data = _head;
+			inputs[6].getEditWidget().data = _head;
 		}
 		
 		__sort = [];

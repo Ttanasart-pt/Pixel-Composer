@@ -24,7 +24,7 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Y Axis",  false], 2, 3, 
 		["Display", false], 5, 
 	];
-	curveBox_obj = inputs[0].editWidget;
+	curveBox_obj = inputs[0].getEditWidget();
 	
 	disp_type = 0;
 	disp_prog = 0;

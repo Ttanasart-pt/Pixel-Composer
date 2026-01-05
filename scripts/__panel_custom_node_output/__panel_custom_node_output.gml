@@ -114,14 +114,14 @@ function Panel_Custom_Node_Output(_data) : Panel_Custom_Element(_data) construct
 						draw_set_alpha(1);
 				} 
 				
-			} else if(output.editWidget) {
+			} else if(output.getEditWidget()) {
 				var _param = new widgetParam(x, y, w, h, _dat, _junc.display_data, _m, rx, ry)	
 					.setFont(_font)
 					.setHalign(halign)
 					.setValign(valign)
 					.setColor(color)
 					
-				output.editWidget.drawParam(_param);
+				output.getEditWidget().drawParam(_param);
 			}
 		}
 		

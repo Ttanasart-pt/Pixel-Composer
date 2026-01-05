@@ -10,5 +10,5 @@ function __NodeValue_Struct(_name, _node, _value, _tooltip = "") : __NodeValue_O
 		return self; 
 	}
 	
-	static shortenDisplay = function( ) /*=>*/ { editWidget.shorted = true; return self; }
+	static shortenDisplay = function( ) /*=>*/ { getEditWidget().shorted = true; return self; }
 }

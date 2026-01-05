@@ -94,8 +94,8 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _jNam = inputs[i + 0];
 			var _jVal = inputs[i + 1];
 			
-			var _wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.editWidget.clone(); _jNam.__inspWidget = _wNam;
-			var _wVal = has(_jVal, "__inspWidget")? _jVal.__inspWidget : _jVal.editWidget.clone(); _jVal.__inspWidget = _wVal;
+			var _wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.getEditWidget().clone(); _jNam.__inspWidget = _wNam;
+			var _wVal = has(_jVal, "__inspWidget")? _jVal.__inspWidget : _jVal.getEditWidget().clone(); _jVal.__inspWidget = _wVal;
 			
 			_wNam.setFocusHover(_focus, _hover);
 			_wVal.setFocusHover(_focus, _hover);
@@ -122,7 +122,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	argument_renderer.register = function(parent = noone) {
 		for( var i = input_fix_len; i < array_length(inputs); i++ )
-			inputs[i].editWidget.register(parent);
+			inputs[i].getEditWidget().register(parent);
 	}
 	
 	input_display_list = [ 

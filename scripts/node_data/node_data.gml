@@ -1936,7 +1936,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
-			var wd  = jun.graphWidget;
+			var wd  = jun.getGraphWidget();
 			
 			jun.y = jy;
 			
@@ -1949,7 +1949,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				draw_rectangle(lx, jun.y - 1 * _s, lx + wt, jun.y + 4 * _s, false);
 			}
 			
-			if(jun.value_from || wd == noone) {
+			if(jun.value_from || !is(wd, widget)) {
 				extY += junction_draw_hei_y;
 				jy   += wh;
 				continue;

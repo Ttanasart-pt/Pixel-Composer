@@ -59,7 +59,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		
 	}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip(unitTooltip);
 	
-	editWidget.setSideButton(editProjDim);
+	getEditWidget().setSideButton(editProjDim);
 	
 	/////============== GET =============
 	
@@ -69,7 +69,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		var _pdim = attributes.use_project_dimension;
 		editProjDim.icon_index = _pdim;
 		unitTooltip.index = attributes.use_project_dimension;
-		editWidget.setSuffix(_pdim? "x" : "");
+		getEditWidget().setSuffix(_pdim? "x" : "");
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];

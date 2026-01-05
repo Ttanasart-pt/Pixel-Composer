@@ -309,7 +309,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(is(_layer, GMRoom_Tile)) {
 			_in.setType(VALUE_TYPE.struct);
-			_in.editWidget.shorted = true;
+			_in.getEditWidget().shorted = true;
 			
 			var _tileset = gmRoom.gmBinder.getNodeFromPath(_layer.tileset.key, x - ui(320), y);
 			_tileset.bindTile(_layer.tileset);
@@ -577,7 +577,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     		if(is(_lay, GMRoom_Tile)) {
     			_in.name = _lay.name;
     			_in.setType(VALUE_TYPE.struct);
-    			_in.editWidget.shorted = true;
+    			_in.getEditWidget().shorted = true;
     			
     			var _tw = _lay.tiles.SerialiseWidth;
 				var _th = _lay.tiles.SerialiseHeight;

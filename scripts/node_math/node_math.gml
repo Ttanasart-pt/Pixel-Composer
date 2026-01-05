@@ -258,7 +258,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				inputs[2].setVisible(true, true);
 				inputs[5].setVisible(true, true);
-				inputs[5].editWidget.setSlideRange(0, 1);
+				inputs[5].getEditWidget().setSlideRange(0, 1);
 				break;
 				
 			case MATH_OPERATOR.clamp :
@@ -267,7 +267,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				inputs[2].setVisible(true, true);
 				inputs[5].setVisible(true, true);
-				inputs[5].editWidget.slide_range = noone;
+				inputs[5].getEditWidget().slide_range = noone;
 				break;
 				
 			case MATH_OPERATOR.snap :

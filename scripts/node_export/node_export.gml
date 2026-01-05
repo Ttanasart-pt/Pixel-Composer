@@ -73,8 +73,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(20, nodeValue_Text(    "File name" ));
 	newInput( 4, nodeValue_Int(     "Template guides", 0      ));
 	newInput( 2, nodeValue_Text(    "Template",        "%d%n" )).rejectArray();
-	inputs[2].editWidget.format		 = TEXT_AREA_FORMAT.path_template;
-	inputs[2].editWidget.auto_update = true;
+	inputs[2].getEditWidget().format		 = TEXT_AREA_FORMAT.path_template;
+	inputs[2].getEditWidget().auto_update = true;
 	
 	newInput(16, nodeValue_Bool(    "Export on Save",   false)).setTooltip("Automatically export when saving project.");
 	newInput(22, nodeValue_Bool(    "Export on Update", false));
@@ -909,17 +909,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(is_array(surf)) {
 				inputs[3].display_data.data	   = format_array;
-				inputs[3].editWidget.data_list = format_array;
+				inputs[3].getEditWidget().data_list = format_array;
 			} else {
 				inputs[3].display_data.data    = format_single;
-				inputs[3].editWidget.data_list = format_single;
+				inputs[3].getEditWidget().data_list = format_single;
 			}
 			
 			inputs[11].setVisible(anim == 1);
 			inputs[16].setVisible(anim == 0);
 			
-			inputs[12].editWidget.minn = FIRST_FRAME + 1;
-			inputs[12].editWidget.maxx = LAST_FRAME + 1;
+			inputs[12].getEditWidget().minn = FIRST_FRAME + 1;
+			inputs[12].getEditWidget().maxx = LAST_FRAME + 1;
 			
 			inputs[14].setVisible(anim >  0);
 			
@@ -936,7 +936,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[ 8].setVisible(true);
 			
 				inputs[ 9].display_data.data	= format_animation;
-				inputs[ 9].editWidget.data_list = format_animation;
+				inputs[ 9].getEditWidget().data_list = format_animation;
 				
 				inputs[13].setVisible(false);
 				
@@ -945,8 +945,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					inputs[10].tooltip = "Quality of the output, with 0 being the highest (and largest file size), and 51 being the lowest.";
 					
 					inputs[10].setVisible(true);
-					inputs[10].editWidget.minn =  0;
-					inputs[10].editWidget.maxx = 51;
+					inputs[10].getEditWidget().minn =  0;
+					inputs[10].getEditWidget().maxx = 51;
 				} else 
 					inputs[10].setVisible(false);
 					
@@ -961,7 +961,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[ 8].setVisible(false);
 			
 				inputs[ 9].display_data.data	= format_image;
-				inputs[ 9].editWidget.data_list = format_image;
+				inputs[ 9].getEditWidget().data_list = format_image;
 				
 				inputs[13].setVisible(_fmt == ".png");
 				
@@ -970,8 +970,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					inputs[10].tooltip = "Quality of the output.";
 					
 					inputs[10].setVisible(true);
-					inputs[10].editWidget.minn =   0;
-					inputs[10].editWidget.maxx = 100;
+					inputs[10].getEditWidget().minn =   0;
+					inputs[10].getEditWidget().maxx = 100;
 					
 				} else 
 					inputs[10].setVisible(false);

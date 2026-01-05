@@ -1,5 +1,6 @@
 #region global
 	#macro FILE_SEL_IMAGE "image|*.png;*.jpg;*.bmp"
+	#macro FILE_EXT_IMAGE ".png;.jpg;.jpeg;.bmp"
 #endregion
 
 
@@ -14,6 +15,7 @@ function file_is_image(path) {
 		case ".png"  :
 		case ".jpg"  :
 		case ".jpeg" :
+		case ".bmp"  :
 		case ".gif"  :
 			return true;
 	}

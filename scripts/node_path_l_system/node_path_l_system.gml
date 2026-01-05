@@ -77,8 +77,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for( var i = input_fix_len; i < len; i += data_length ) {
 			var _name  = inputs[i + 0];
 			var _rule  = inputs[i + 1];
-			var _nameW = _name.editWidget;
-			var _ruleW = _rule.editWidget;
+			var _nameW = _name.getEditWidget();
+			var _ruleW = _rule.getEditWidget();
 			
 			var _ind   = (i - input_fix_len) / data_length;
 			var  wh    = th;
@@ -122,8 +122,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var _name = inputs[i + 0];
 			var _rule = inputs[i + 1];
-			var _nameW = _name.editWidget;
-			var _ruleW = _rule.editWidget;
+			var _nameW = _name.getEditWidget();
+			var _ruleW = _rule.getEditWidget();
 			
 			_nameW.register(p);
 			_ruleW.register(p);

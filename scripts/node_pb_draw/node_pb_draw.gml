@@ -14,6 +14,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(0, nodeValue_Pbbox( "Base PBBOX" ));
 	newInput(1, nodeValue_Pbbox( "PBBOX"      ));
+	inputs[0].editWidgetSetted = true;
 	inputs[0].editWidget = noone;
 	
 	newInput(2, nodeValue_Float( "PBBOX Left",   0 ));
