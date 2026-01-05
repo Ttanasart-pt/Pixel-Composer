@@ -280,8 +280,9 @@ function Panel_Animation_Dopesheet() {
             var _cont = timeline_contents[i];
             if(_cont.type != "node") continue;
             
-            for( var j = 0, m = array_length(_cont.animators); j < m; j++ ) {
-                var animator = _cont.animators[j];
+            var _anims = _cont.animations;
+            for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                var animator = _anims[j];
             
 		    	for(var k = 0; k < array_length(animator.values); k++) {
 		            var _key = animator.values[k];
@@ -301,8 +302,9 @@ function Panel_Animation_Dopesheet() {
             var _cont = timeline_contents[i];
             if(_cont.type != "node") continue;
             
-            for( var j = 0, m = array_length(_cont.animators); j < m; j++ ) {
-                var animator = _cont.animators[j];
+            var _anims = _cont.animations;
+            for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                var animator = _anims[j];
             
 		    	for(var k = 0; k < array_length(animator.values); k++) {
 		            var _key = animator.values[k];
@@ -411,9 +413,12 @@ function Panel_Animation_Dopesheet() {
                             t.time = t.ratio * (len - 1);
                         }
                         
-                        for(var k = 0; k < array_length(in.animators); k++ )
-                        for(var j = 0; j < array_length(in.animators[k].values); j++) {
-                            var t = in.animators[k].values[j];
+                        if(!in.sep_axis) continue;
+                        
+                        var _anims = in.getAnimators();
+                        for(var k = 0; k < array_length(_anims); k++ )
+                        for(var j = 0; j < array_length(_anims[k].values); j++) {
+                            var t = _anims[k].values[j];
                             t.time = t.ratio * (len - 1);
                         }
                     }
@@ -455,9 +460,12 @@ function Panel_Animation_Dopesheet() {
 	                        for(var j = 0; j < array_length(in.animator.values); j++)
 	                            in.animator.values[j].calcRatio();
 	                        
-	                        for(var k = 0; k < array_length(in.animators); k++ )
-	                        for(var j = 0; j < array_length(in.animators[k].values); j++)
-	                            in.animators[k].values[j].calcRatio();
+	                        if(!in.sep_axis) continue;
+	                        
+	                        var _anims = in.getAnimators();
+	                        for(var k = 0; k < array_length(_anim); k++ )
+	                        for(var j = 0; j < array_length(_anim[k].values); j++)
+	                            _anim[k].values[j].calcRatio();
 	                    }
 	                }
                 }
@@ -1148,11 +1156,12 @@ function Panel_Animation_Dopesheet() {
             if(prop.sep_axis) {
                 var _min =  999999;
                 var _max = -999999;
+                var _anims = prop.getAnimators();
                 
-                for( var i = 0, n = array_length(prop.animators); i < n; i++ ) {
+                for( var i = 0, n = array_length(_anims); i < n; i++ ) {
                     if(!prop.show_graphs[i]) continue;
                     
-                    var animator = prop.animators[i];
+                    var animator = _anims[i];
                     for(var k = 0, m = array_length(animator.values); k < m; k++) {
                         var key_val = animator.values[k].value;
                         if(is_array(key_val)) {
@@ -1168,11 +1177,11 @@ function Panel_Animation_Dopesheet() {
                     }
                 }
                 
-                for( var i = 0, n = array_length(prop.animators); i < n; i++ ) {
+                for( var i = 0, n = array_length(_anims); i < n; i++ ) {
                     if(!prop.show_graphs[i]) continue;
-                    
-                    drawDopesheet_Graph_Line(prop.animators[i], key_y, msx, msy, _min, _max);
+                    drawDopesheet_Graph_Line(_anims[i], key_y, msx, msy, _min, _max);
                 }
+                
             } else
                 drawDopesheet_Graph_Line(prop.animator, key_y, msx, msy);
         surface_reset_target();
@@ -1352,9 +1361,10 @@ function Panel_Animation_Dopesheet() {
                     if(_graph_show) drawDopesheet_Graph_Prop(_prop, _dy, msx, msy);
                 }
                     
-                for( var k = 0; k < array_length(prop.animators); k++ ) {
-                    var key = drawDopesheet_Graph_BG(prop.animators[k], msx, msy);
-                    _dy = prop.animators[k].y;
+                var _anims = prop.animations;
+                for( var k = 0; k < array_length(_anims); k++ ) {
+                    var key = drawDopesheet_Graph_BG(_anims[k], msx, msy);
+                    _dy = _anims[k].y;
                     if(key != noone) key_hover = key;
                 }
             }
@@ -1934,9 +1944,10 @@ function Panel_Animation_Dopesheet() {
         			var ty   = -infinity;
         			var ah;
         			
-	                for( var j = 0, m = array_length(_cont.animators); j < m; j++ ) {
-	                    ah = drawDopesheet_Label_Animator(_cont, _cont.node, _cont.animators[j], msx, msy);
-	                    ty = max(ty, _cont.animators[j].y - 1);
+        			var _anims = _cont.animations;
+	                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+	                    ah = drawDopesheet_Label_Animator(_cont, _cont.node, _anims[j], msx, msy);
+	                    ty = max(ty, _anims[j].y - 1);
 	                }
 	                
                 }
@@ -2118,9 +2129,10 @@ function Panel_Animation_Dopesheet() {
                     var _prop   = prop.prop;
                          prop.y = key_y;
                     
-                    for( var k = 0, p = array_length(prop.animators); k < p; k++ ) {
-                    	var ph = max(ui(18), prop.animators[k].h);
-                        prop.animators[k].y = key_y;
+                    var _anims = prop.animations;
+                    for( var k = 0, p = array_length(_anims); k < p; k++ ) {
+                    	var ph = max(ui(18), _anims[k].h);
+                        _anims[k].y = key_y;
                         
                         if(_item.color_cur > -1) {
                             draw_set_color(c0);
@@ -2188,8 +2200,9 @@ function Panel_Animation_Dopesheet() {
                 var _cont = timeline_contents[i];
                 if(_cont.type != "node") continue;
                 
-                for( var j = 0, m = array_length(_cont.animators); j < m; j++ ) {
-                    var _anim = _cont.animators[j];
+                var _anims = _cont.animations;
+                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                    var _anim = _anims[j];
                     var _key  = drawDopesheet_AnimatorKeys(_cont, _anim, msx, msy);
                     if(_key != noone) key_hover = _key;
                 }

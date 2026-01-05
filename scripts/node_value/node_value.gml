@@ -2,8 +2,6 @@ function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { retur
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	
-	static DISPLAY_DATA_KEYS = [ "atlas_crop" ];
-	
 	#region ---- Main ----
 		active = true;
 		from   = noone;
@@ -21,14 +19,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_initName   = _name;
 		name_custom = false;
 		
+		inactive_tooltip = "";
+		
 		editWidgetSetted   = false;
 		editWidget         = noone;
 		editWidgetRaw      = noone;
 		editWidgetMap      = {};
 		editable           = true;
-		
-		mapWidget      = noone;
-		inactive_tooltip = "";
 		
 		is_dummy       = false;
 		ghost_hover    = noone;
@@ -44,7 +41,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		tooltipData = {};
 		
 		var _inode = instanceof(node);
-		if(struct_has_ext(LOCALE_NOTE_JUNC, _inode, _initName)) {
+		if(struct_has(LOCALE_NOTE_JUNC, _inode) && struct_has(LOCALE_NOTE_JUNC[$ _inode], _initName)) {
 			var _dat = LOCALE_NOTE_JUNC[$ _inode][$ _initName];
 			
 			if(struct_has(LOCALE_NOTE_DATA, _dat.note)) {
@@ -79,7 +76,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			sepable    = is_array(_value) && array_length(_value) > 1;
 			animVector = array_safe_length(_value, -1);
 			animator   = new valueAnimator(_value, self, false);
-			animators  = animVector? array_create_ext(animVector, function(i) /*=>*/ {return new valueAnimator(def_val[i], self, true).setIndex(i)}) : [];
+			
+			animators      = undefined;
+			animatorSuffix = array_create(max(1, animVector), "");
 		}
 		
 		is_anim		= false;
@@ -106,8 +105,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dynamic_array = false;
 		validateValue = true;
 		
-		attributes    = {};   // serizlized
-		parameters    = {};   // non-serizlized
+		attributes    = {};   // serialized
+		parameters    = {};   // non-serialized
 		
 		__curr_get_val = [ 0, 0 ];
 		validator      = noone;
@@ -204,7 +203,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		graphWidget    = undefined;
 		graphWidgetH   = 0;
-		graphWidgetP   = new widgetParam(0, 0, 0, 0, 0);
+		graphWidgetP   = undefined;
 		
 		static getGraphWidget = function() {
 			if(is(graphWidget, widget)) return graphWidget;
@@ -490,6 +489,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} setDropKey();
 	
 	mapWidget   = noone;
+	mapWidgetF  = noone;
 	mappedJunc  = noone;
 	mapped_vec4 = false;
 	mapped_type = 0;
@@ -564,8 +564,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Map");
 		
 		if(type != VALUE_TYPE.gradient) {
-			mapWidget = _vec4? new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton) : 
-			                   new rangeBox(function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton);
+			mapWidgetF = _vec4? function() /*=>*/ {return new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton)} : 
+			                    function() /*=>*/ {return new rangeBox(function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton)};
 		}
 		
 		setSideButton(mapButton);
@@ -621,7 +621,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static mappableStep = function() {
 		if(has(parameters, "mapped")) {
 			if(mapped_type == 1) {
-				editWidget = (mapWidget && attributes.mapped)? mapWidget : editWidgetRaw;
+				editWidget = editWidgetRaw;
+				
+				if(mapWidgetF && attributes.mapped) {
+					if(mapWidget == noone) mapWidget = mapWidgetF();
+					editWidget = mapWidget;
+				}
+				
 				mapButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
 				
 				setArrayDepth(attributes.mapped);
@@ -680,9 +686,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(sep_axis) return;
 		if(!_setValue) { sep_axis = true; return; }
 		
-		var _vals = animator.values;
+		var _anims = getAnimators();
+		var _vals  = animator.values;
+		
 		for( var i = 0, n = animVector; i < n; i++ ) {
-			var _anim = animators[i];
+			var _anim = _anims[i];
 			_anim.values = [];
 			
 			for( var j = 0, m = array_length(_vals); j < m; j++ ) {
@@ -708,9 +716,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!sep_axis) return;
 		if(!_setValue) { sep_axis = false; return; }
 		
+		var _anims    = getAnimators();
 		var _keyTimes = []; 
+		
 		for( var i = 0, n = animVector; i < n; i++ ) {
-			var _anim = animators[i];
+			var _anim = _anims[i];
 			
 			for( var j = 0, m = array_length(_anim.values); j < m; j++ )
 				array_push(_keyTimes, _anim.values[j].time);
@@ -737,6 +747,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- ANIMATION
 	
+	static getAnimators = function() {
+		if(animators != undefined) return animators;
+		
+		animators = animVector? array_create_ext(animVector, function(i) /*=>*/ {return new valueAnimator(def_val[i], self, true).setIndex(i)}) : [];
+		for( var i = 0, n = array_length(animators); i < n; i++ ) 
+			animators[i].suffix = animatorSuffix[i];
+		
+		return animators;
+	}
+	
 	static setAnimable = function(_anim = false) { animable = _anim; return self; } 
 	
 	static isAnimable = function() {
@@ -748,36 +768,48 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static onSetAnim = undefined;
-	static setAnim = function(anim, record = false) {
-		if(is_anim == anim) return;
+	static setAnim = function(anim, record = false, force = false) {
+		if(!force && is_anim == anim) return;
 		is_modified = true;
 		
 		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"{name} animation status").setRef(node);
 		is_anim = anim;
 		
 		if(is_anim) {
-			if(array_empty(animator.values))
-				array_push(animator.values, new valueKey(NODE_CURRENT_FRAME, animator.getValue(), animator));
-			animator.values[0].time = NODE_CURRENT_FRAME;
-			animator.updateKeyMap();
-			
-			for( var i = 0, n = animVector; i < n; i++ ) {
-				if(array_length(animators[i].values))
-					array_push(animators[i].values, new valueKey(NODE_CURRENT_FRAME, animators[i].getValue(), animators[i]));
-				animators[i].values[0].time = NODE_CURRENT_FRAME;
-				animators[i].updateKeyMap();
+			if(sep_axis) {
+				var _anims = getAnimators();
+				
+				for( var i = 0, n = animVector; i < n; i++ ) {
+					if(array_length(_anims[i].values))
+						array_push(_anims[i].values, new valueKey(NODE_CURRENT_FRAME, _anims[i].getValue(), _anims[i]));
+					_anims[i].values[0].time = NODE_CURRENT_FRAME;
+					_anims[i].updateKeyMap();
+				}
+				
+			} else {
+				if(array_empty(animator.values))
+					array_push(animator.values, new valueKey(NODE_CURRENT_FRAME, animator.getValue(), animator));
+				animator.values[0].time = NODE_CURRENT_FRAME;
+				animator.updateKeyMap();
+				
 			}
-		} else {
-			var _val = animator.getValue();
-			animator.values = [];
-			animator.values[0] = new valueKey(0, _val, animator);
-			animator.updateKeyMap();
 			
-			for( var i = 0, n = animVector; i < n; i++ ) {
-				var _val = animators[i].getValue();
-				animators[i].values = [];
-				animators[i].values[0] = new valueKey(0, _val, animators[i]);
-				animators[i].updateKeyMap();
+		} else {
+			if(sep_axis) {
+				var _anims = getAnimators();
+				
+				for( var i = 0, n = animVector; i < n; i++ ) {
+					var _val = _anims[i].getValue();
+					_anims[i].values = [ new valueKey(0, _val, _anims[i]) ];
+					_anims[i].updateKeyMap();
+				}
+				
+			} else {
+				var _val = animator.getValue();
+				animator.values = [];
+				animator.values[0] = new valueKey(0, _val, animator);
+				animator.updateKeyMap();
+				
 			}
 		}
 		
@@ -802,7 +834,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	////- Bypass
 	
 	static getBypassJunc = function() {
-		if(connect_type != CONNECT_TYPE.input) return;
+		if(connect_type != CONNECT_TYPE.input) return undefined;
 		if(bypass_junc) return bypass_junc;
 		
 		bypass_junc = new __NodeValue_Input_Bypass(self, name, node, type);
@@ -925,7 +957,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
+							animatorSuffix[i] = " " + array_safe_get_fast(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Number";
 						break;
@@ -950,7 +982,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Axis, i)}";
+							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Axis, i)}";
 						
 						break;
 						
@@ -967,8 +999,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						else if(array_length(val) == 4) extract_node = "Node_Vector4";
 							
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_VecRange, i)}";
-						
+							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_VecRange, i)}";
+							
 						break;
 						
 					case VALUE_DISPLAY.rotation :	
@@ -983,7 +1015,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new rotatorRange(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
+							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
 						extract_node = "Node_Rotation_Range_Data";
 						break;
@@ -1015,7 +1047,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new sliderRange(_rstep, type == VALUE_TYPE.integer, [ _range[0], _range[1] ], function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
+							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
 						extract_node = "Node_Vector2";
 						break;
@@ -1027,7 +1059,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.showShape     = struct_try_get(display_data, "useShape", true);
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Area, i, "")}";
+							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Area, i, "")}";
 						
 						extract_node = "Node_Area";
 						break;
@@ -1036,7 +1068,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new paddingBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
+							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
 						extract_node = "Node_Padding";
 						break;
@@ -1045,7 +1077,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new cornerBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
+							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
 						extract_node = "Node_Corner";
 						break;
@@ -1089,7 +1121,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {i}";
+							animatorSuffix[i] = $" {i}";
 						
 						setIcon(THEME.node_junction_matrix);
 						extract_node = "Node_Matrix";
@@ -1100,7 +1132,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
 						
 						for( var i = 0, n = animVector; i < n; i++ )
-							animators[i].suffix = $" {i}";
+							animatorSuffix[i] = $" {i}";
 						
 						extract_node = "";
 						break;
@@ -1677,10 +1709,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
 		var _anim  = animator;
-		var _anims = animators;
 		
 		if(!is_anim) {
 			if(sep_axis) {
+				var _anims = getAnimators();
 				var val = array_create(array_length(_anims));
 				for( var i = 0, n = array_length(_anims); i < n; i++ )
 					val[i] = _anims[i].processType(_anims[i].values[0].value);
@@ -1693,6 +1725,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(sep_axis) {
+			var _anims = getAnimators();
 			var val = [];
 			for( var i = 0, n = array_length(_anims); i < n; i++ )
 				val[i] = _anims[i].getValue(_time);
@@ -1715,18 +1748,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		else if(is_anim) {
 			if(sep_axis) {
-				show_val = array_verify(show_val, animVector);
+				var _anims = getAnimators();
+				show_val   = array_verify(show_val, animVector);
+				
 				for( var i = 0, n = animVector; i < n; i++ )
-					show_val[i] = animators[i].getValue();
+					show_val[i] = _anims[i].getValue();
 				val = show_val;
 				
 			} else
 				val = animator.getValue();
 			
 		} else if(sep_axis) {
-			show_val = array_verify(show_val, animVector);
+			var _anims = getAnimators();
+			show_val   = array_verify(show_val, animVector);
+			
 			for( var i = 0, n = animVector; i < n; i++ )
-				show_val[i] = array_empty(animators[i].values)? 0 : animators[i].processType(animators[i].values[0].value);
+				show_val[i] = array_empty(_anims[i].values)? 0 : _anims[i].processType(_anims[i].values[0].value);
 			val = show_val;
 			
 		} else 
@@ -1853,9 +1890,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		animator.values = [];
 		array_push(animator.values, new valueKey(0, _val, animator));
 		
-		for( var i = 0, n = animVector; i < n; i++ ) {
-			animators[i].values = [];
-			array_push(animators[i].values, new valueKey(0, array_safe_get_fast(_val, i), animators[i]));
+		if(sep_axis) {
+			var _anims = getAnimators();
+			for( var i = 0, n = animVector; i < n; i++ ) {
+				_anims[i].values = [];
+				array_push(_anims[i].values, new valueKey(0, array_safe_get_fast(_val, i), _anims[i]));
+			}
 		}
 	}
 	
@@ -1889,11 +1929,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _rec = record && record_value;
 		
 		if(sep_axis) {
+			var _anims = getAnimators();
 			if(_index == noone) {
 				for( var i = 0, n = animVector; i < n; i++ )
-					_upd = animators[i].setValue(val[i], _rec, time) || _upd; 
+					_upd = _anims[i].setValue(val[i], _rec, time) || _upd; 
 			} else
-				_upd = animators[_index].setValue(val, _rec, time) || _upd;
+				_upd = _anims[_index].setValue(val, _rec, time) || _upd;
 				
 		} else {
 			if(_index != noone) {
@@ -2676,11 +2717,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(is_modified) _map.r  = animator.serialize(scale);
 		
-		if(is_modified && animVector) {
-			var _anims   = array_create(animVector);
+		if(is_modified && sep_axis && animVector) {
+			var _anims = getAnimators();
+			var _animm = array_create(animVector);
+			
 			for( var i = 0; i < animVector; i++ )
-				_anims[i] = animators[i].serialize(scale);
-			_map.animators    = _anims;
+				_animm[i] = _anims[i].serialize(scale);
+				
+			_map.animators    = _animm;
 		}
 		
 		if(name_custom) _map.name_custom  = name_custom;
@@ -2730,7 +2774,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		expUse     = _map[$ "global_use"] ?? false;
 		expression = _map[$ "global_key"] ?? "";
-		expTree    = evaluateFunctionList(expression); 
+		expTree    = expression == ""? noone : evaluateFunctionList(expression); 
 		
 		sep_axis   = _map[$ "sep_axis"]  ?? false;
 		favorited  = _map[$ "favorited"] ?? false;
@@ -2769,11 +2813,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		setBypass(_map[$ "bypass"] ?? false);
 		
-		if(has(_map, "animators")) {
-			var anims = _map.animators;
-			var amo = min(array_length(anims), animVector);
-			for( var i = 0; i < amo; i++ )
-				animators[i].deserialize(anims[i], scale);
+		if(sep_axis && has(_map, "animators")) {
+			var _anims = getAnimators();
+			var _animm = _map.animators;
+			var amo    = min(array_length(_animm), animVector);
+			
+			for( var i = 0; i < amo; i++ ) _anims[i].deserialize(_animm[i], scale);
 		}
 		
 		if(!preset) {
@@ -2783,9 +2828,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(index >= 0) {
-			var _value = animator.getValue(0);
-			node.inputs_data[index] = _value;
-			node.input_value_map[$ internalName] = _value;
+			node.inputs_data[index]              = def_val;
+			node.input_value_map[$ internalName] = def_val;
 		}
 		
 		postApplyDeserialize();

@@ -734,7 +734,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static newActiveInput = function(i) /*=>*/ { newInput(i, nodeValue_Active()); active_index = i; }
 	static newInput = function(i, j) /*=>*/ { 
-		inputs = array_verify_min(inputs, i);
+		if(array_length(inputs) < i) array_resize(inputs, i);
 		
 		inputm[$ j.name] = j;
 		inputs[i] = j; 
@@ -1961,7 +1961,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				continue;
 			}
 			
-			var _param = jun.graphWidgetP;
+			var _param = jun.graphWidgetP ?? new widgetParam(0, 0, 0, 0, 0);
+			jun.graphWidgetP = _param;
 			
 			_param.w    = ww;
 			_param.h    = wh - 4 * _s;

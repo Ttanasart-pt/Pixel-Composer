@@ -38,8 +38,6 @@ function __NodeValue_Float(_name, _node, _value, _tooltip = "") : __NodeValue_Nu
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
 		var _anim  = animator;
-		var _anims = animators;
-		
 		if(getAnim()) return _anim.getValue(_time);
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
@@ -61,8 +59,6 @@ function __NodeValue_Float_Simple(_name, _node, _value, _tooltip = "") : NodeVal
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
 		var _anim  = animator;
-		var _anims = animators;
-		
 		if(getAnim()) return _anim.getValue(_time);
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
@@ -79,4 +75,8 @@ function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") {
 	
 	_val.setDisplay(VALUE_DISPLAY._default, { side_button : button(_rFun).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() });
 	return _val; 
+}
+
+function nodeValue_Slider(_name, _value, _data = {}) { 
+	return new __NodeValue_Float(_name, self, _value, _data).setDisplay(VALUE_DISPLAY.slider, is_array(_data)? { range: _data } : _data);
 }

@@ -54,6 +54,7 @@
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "Draw Shape";
+	inputs = array_create(48);
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(0, DEF_SURF)};
 	
@@ -78,7 +79,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(28, nodeValue_Slider(   "Shape Scale",         1     )).hideLabel();
 	
 	////- =Shape
-	shape_types = [ 
+	static shape_types = [ 
 		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
 		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", "Superellipse", 
 		-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
@@ -133,7 +134,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(29, nodeValue_Curve(    "Curve",            CURVE_DEF_01   ));
 	newInput(20, nodeValue_SliRange( "Level",            [0,1]          ));
 	newInput(37, nodeValue_Bool(     "Opacity",          false          ));
-	
 	// 48
 	
 	/////////////////////////////////////////////
@@ -142,8 +142,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newOutput(1, nodeValue_Output( "Mask",    VALUE_TYPE.surface, noone ));
 	newOutput(2, nodeValue_Output( "Height",  VALUE_TYPE.surface, noone ));
 	
-	b_replace_fast = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Shape_Fast", x, y, group), true); })
-		.setText("Switch to Fast version");
+	b_replace_fast = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Shape_Fast", x, y, group), true); }).setText("Switch to Fast version");
 	
 	input_display_list = [ b_replace_fast, 
 		[ "Output",     false     ],  0, 44, 45, 6, 

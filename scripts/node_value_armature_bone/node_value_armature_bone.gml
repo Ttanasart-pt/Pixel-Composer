@@ -25,7 +25,6 @@ function __NodeValue_Bone(_name, _node, _toggleFn) : __NodeValue_Text(_name, _no
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
 		var _anim  = animator;
-		var _anims = animators;
 		
 		if(getAnim()) return _anim.getValue(_time);
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;

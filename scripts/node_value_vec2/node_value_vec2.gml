@@ -49,6 +49,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	}
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
+		if(sep_axis) getAnimators();
 		
 		if(!getAnim()) {
 			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});

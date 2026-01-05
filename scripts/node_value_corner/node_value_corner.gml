@@ -31,13 +31,14 @@ function __NodeValue_Corner(_name, _node, _value, _tooltip = "") : __NodeValue_A
 	}
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
+		if(sep_axis) var _anims = getAnimators();
 		
 		if(!getAnim()) {
 			if(sep_axis) return [
-				animators[0].processType(animators[0].values[0].value),
-				animators[1].processType(animators[1].values[0].value),
-				animators[2].processType(animators[2].values[0].value),
-				animators[3].processType(animators[3].values[0].value),
+				_anims[0].processType(_anims[0].values[0].value),
+				_anims[1].processType(_anims[1].values[0].value),
+				_anims[2].processType(_anims[2].values[0].value),
+				_anims[3].processType(_anims[3].values[0].value),
 			];
 			
 			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
@@ -46,10 +47,10 @@ function __NodeValue_Corner(_name, _node, _value, _tooltip = "") : __NodeValue_A
 		if(sep_axis) {
 			__temp_time = _time;
 			return [
-				animators[0].getValue(__temp_time),
-				animators[1].getValue(__temp_time),
-				animators[2].getValue(__temp_time),
-				animators[3].getValue(__temp_time),
+				_anims[0].getValue(__temp_time),
+				_anims[1].getValue(__temp_time),
+				_anims[2].getValue(__temp_time),
+				_anims[3].getValue(__temp_time),
 			];
 		} 
 		

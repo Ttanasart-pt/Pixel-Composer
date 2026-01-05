@@ -31,8 +31,6 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) { 
 		var _anim  = animator;
-		var _anims = animators;
-		
 		if(array_empty(_anim.values)) return noone;
 		
 		var _val = _anim.values[0].value;

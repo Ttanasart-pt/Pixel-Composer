@@ -16,8 +16,6 @@ function __NodeValue_Object_Generic(_name, _node, _type, _value, _tooltip = "") 
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) { 
 		var _anim  = animator;
-		var _anims = animators;
-		
 		return array_empty(_anim.values)? noone : _anim.values[0].value; 
 	} 
 	

@@ -1099,7 +1099,7 @@ function Panel_Inspector() : PanelContent() constructor {
             	draw_set_alpha(1);
             	
             	if(jun.sep_axis) {
-            		var _anis = jun.animators;
+            		var _anis = jun.getAnimators();
             		for( var k = 0, p = array_length(_anis); k < p; k++ ) 
             		for( var j = 0, m = array_length(_anis[k].values); j < m; j++ ) {
             			var _keyf = _anis[k].values[j];

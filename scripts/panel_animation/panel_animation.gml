@@ -437,15 +437,15 @@ function Panel_Animation() : PanelContent() constructor {
                     var prop = _node.inputs[j];
                     if(!prop.isTimelineVisible()) continue;
                     
-                    var anim = prop.sep_axis? prop.animators : [ prop.animator ];
+                    var anim = prop.sep_axis? prop.getAnimators() : [ prop.animator ];
                     array_append(_anim, anim);
-                    array_push(_prop, { prop, animators: anim, y: 0 });
+                    array_push(_prop, { prop, animations: anim, y: 0 });
                 }
                 
-                _content.type      = "node";
-                _content.node      = _node;
-                _content.props     = _prop;
-                _content.animators = _anim;
+                _content.type       = "node";
+                _content.node       = _node;
+                _content.props      = _prop;
+                _content.animations = _anim;
                 
                 array_push(timeline_contents, _content);
                 

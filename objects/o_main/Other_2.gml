@@ -182,4 +182,5 @@
 	if(PREFERENCES.video_mode) {
 		APP_SURF_OVERRIDE = true;
 	}
+	
 #endregion

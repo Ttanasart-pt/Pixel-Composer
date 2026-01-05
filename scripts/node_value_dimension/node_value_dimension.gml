@@ -51,17 +51,21 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 				v.value[1] *= sh;
 			}
 			
-			for( var i = 0, n = array_length(animators[0].values); i < n; i++ )
-				animators[0].values[i].value *= sw;
-			
-			for( var i = 0, n = array_length(animators[1].values); i < n; i++ )
-				animators[1].values[i].value *= sh;
+			if(sep_axis) {
+				var _anims = getAnimators();
+				for( var i = 0, n = array_length(_anims[0].values); i < n; i++ )
+					_anims[0].values[i].value *= sw;
+				
+				for( var i = 0, n = array_length(_anims[1].values); i < n; i++ )
+					_anims[1].values[i].value *= sh;
+			}
 			
 			node.triggerRender();
 			
 		}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip(unitTooltip);
 	
 		editWidget.setSideButton(editProjDim); 
+		editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
 	}
 	
 	/////============== GET =============
@@ -72,7 +76,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		var _pdim = attributes.use_project_dimension;
 		if(editProjDim) editProjDim.icon_index = _pdim;
 		unitTooltip.index = attributes.use_project_dimension;
-		getEditWidget().setSuffix(_pdim? "x" : "");
+		if(editWidget) editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
@@ -147,6 +151,8 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 	}
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
+		if(sep_axis) getAnimators();
+		
 		if(!getAnim()) {
 			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
 			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
@@ -168,14 +174,18 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 				v.value[1] /= DEF_SURF_H;
 			}
 			
-			for( var i = 0, n = array_length(animators[0].values); i < n; i++ ) {
-				var v = animators[0].values[i];
-				v.value /= DEF_SURF_W;
-			}
+			if(sep_axis) {
+				var _anims = getAnimators();
 			
-			for( var i = 0, n = array_length(animators[1].values); i < n; i++ ) {
-				var v = animators[1].values[i];
-				v.value /= DEF_SURF_H;
+				for( var i = 0, n = array_length(_anims[0].values); i < n; i++ ) {
+					var v = _anims[0].values[i];
+					v.value /= DEF_SURF_W;
+				}
+				
+				for( var i = 0, n = array_length(_anims[1].values); i < n; i++ ) {
+					var v = _anims[1].values[i];
+					v.value /= DEF_SURF_H;
+				}
 			}
 		}
 	}

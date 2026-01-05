@@ -29,11 +29,13 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : __NodeValue_Numb
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
 		var _anim  = animator;
-		var _anims = animators;
-		
 		if(getAnim()) return _anim.getValue(_time);
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
 	static arrayLength = arrayLengthSimple;
+}
+
+function nodeValue_ISlider(_name, _value, _data = {}) { 
+	return new __NodeValue_Int(_name, self, _value, _data).setDisplay(VALUE_DISPLAY.slider, is_array(_data)? { range: _data } : _data);
 }

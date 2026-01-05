@@ -28,7 +28,8 @@ function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : N
 	}
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
-		
+		if(sep_axis) getAnimators()
+				
 		if(!getAnim()) {
 			if(sep_axis) return array_create_ext(def_length, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
 			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);

@@ -100,18 +100,33 @@
 		clamp
 	}
 	
+	//!#mfunc aGet {"args":["arr"," index"," def"],"order":[0,1,1,0,0,1,2]}
+#macro aGet_mf0  (is_array(
+#macro aGet_mf1 ) && 
+#macro aGet_mf2  >= 0 && 
+#macro aGet_mf3  < array_length(
+#macro aGet_mf4 )? 
+#macro aGet_mf5 [
+#macro aGet_mf6 ] : 
+#macro aGet_mf7 )
+	//!#mfunc AGet {"args":["arr"," index"," def"],"order":[1,1,0,0,1,2]}
+#macro AGet_mf0  (
+#macro AGet_mf1  >= 0 && 
+#macro AGet_mf2  < array_length(
+#macro AGet_mf3 )? 
+#macro AGet_mf4 [
+#macro AGet_mf5 ] : 
+#macro AGet_mf6 )
+	
 	#macro aGetF array_safe_get_fast
 	function array_safe_get_fast(arr, index=0, def=0) {
 		INLINE
-		
 		return is_array(arr) && index >= 0 && index < array_length(arr)? arr[index] : def;
 	}
 	
 	function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {
 		INLINE
-		
-		if(!is_array(arr))  return def;
-		if(is_array(index)) return def;
+		if(!is_array(arr) || !is_numeric(index)) return def;
 		
 		var len = array_length(arr);
 		if(len == 0) return def;
@@ -142,10 +157,10 @@
 		INLINE
 		
 		if(!is_array(arr)) return 0;
-		if(frac(index) == 0) return array_safe_get_fast(arr, index);
+		if(frac(index) == 0) return array_safe_get_fast(arr, index, 0);
 		
-		var v0 = array_safe_get_fast(arr, floor(index));
-		var v1 = array_safe_get_fast(arr, floor(index) + 1);
+		var v0 = array_safe_get_fast(arr, floor(index),   0);
+		var v1 = array_safe_get_fast(arr, floor(index)+1, 0);
 		
 		return color? merge_color(v0, v1, frac(index)) : lerp(v0, v1, frac(index));
 	}
@@ -216,13 +231,6 @@
 		
 		array_set(arr, index, value);
 		return arr;
-	}
-	
-	function array_fill(arr, startIndex, endIndex, value = 0) {
-		INLINE
-		
-		for( var i = max(0, startIndex); i < endIndex; i++ ) 
-			arr[i] = value;
 	}
 	
 	function array_get_sub(arr, startIndex, amount) {

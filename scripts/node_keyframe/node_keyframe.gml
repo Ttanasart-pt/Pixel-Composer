@@ -10,8 +10,8 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		ratio	= 0;
 	
 		ease_y_lock = true;
-		ease_in	    = is_array(_in)? _in : [_in, 1];
-		ease_out    = is_array(_ot)? _ot : [_ot, 0];
+		ease_in	    = [_in, 1];
+		ease_out    = [_ot, 0];
 		
 		var _int = anim? anim.prop.key_inter : CURVE_TYPE.linear;
 		ease_in_type  = _int;
@@ -393,9 +393,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static processValue = function(_val) {
 		INLINE
-		
-		if(is_array(_val))     return _val;
-		if(is_struct(_val))    return _val;
+		if(is_array(_val) || is_struct(_val)) return _val;
 		
 		switch(prop.type) {
 			case VALUE_TYPE.integer : return is_real(_val) && prop.unit.mode == VALUE_UNIT.constant? round(_val) : _val;
@@ -547,11 +545,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		length = array_length(values);
 		
 		if(!prop.is_anim && !LOADING && !APPENDING) return;
-		
-		if(array_empty(values)) { 
-			array_resize(key_map, NODE_TOTAL_FRAMES); 
-			return; 
-		}
+		if(array_empty(values)) { array_resize(key_map, NODE_TOTAL_FRAMES); return; }
 		
 		var _len = max(NODE_TOTAL_FRAMES, array_last(values).time);
 		key_map_mode = prop.on_end;
@@ -560,28 +554,37 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			array_resize(key_map, _len);
 		
 		if(prop.type == VALUE_TYPE.trigger) {
-			array_fill(key_map, 0, _len, 0);
-			for( var i = 0, n = array_length(values); i < n; i++ )
+			for( var i = 0; i < _len; i++ ) 
+				key_map[i] = 0;
+				
+			for( var i = 0, n = length; i < n; i++ )
 				key_map[values[i].time] = true;
 			return;
 		} 
 		
-		if(array_length(values) < 2) {
-			array_fill(key_map, 0, _len, 0);
+		if(length < 2) {
+			for( var i = 0; i < _len; i++ ) 
+				key_map[i] = 0;
 			return;
 		}
 		
 		var _firstKey = values[0].time;
-		array_fill(key_map, 0, _firstKey, -1);
+		for( var i = 0; i < _firstKey; i++ ) 
+			key_map[i] = -1;
+		
 		var _keyIndex = _firstKey;
 		
-		for( var i = 1, n = array_length(values); i < n; i++ ) {
+		for( var i = 1, n = length; i < n; i++ ) {
 			var _k1 = values[i].time;
-			array_fill(key_map, _keyIndex, _k1, i - 1);
+			
+			for( var j = _keyIndex; j < _k1; j++ ) 
+				key_map[j] = i - 1;
+			
 			_keyIndex = _k1;
 		}
 		
-		array_fill(key_map, _keyIndex, _len, infinity);
+		for( var i = _keyIndex; i < _len; i++ ) 
+			key_map[i] = infinity;
 	}
 	
 	static insertKey = function(_key, _index) { array_insert(values, _index, _key); }
@@ -657,7 +660,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var value = _data[0][1];
 			
 			if(is_array(value)) 
-			for(var i = 0; i < array_length(value); i++) {
+			for(var i = 0, n = array_length(value); i < n; i++) {
 				var _keyframe = value[i];
 				var _t = _keyframe[$  "time"] ?? 0;
 				var _v = _keyframe[$ "value"] ?? 0;
@@ -676,20 +679,20 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var base = prop.def_val;
 		var _typ = prop.type;
 		
-		for(var i = 0; i < array_length(_data); i++) {
+		for(var i = 0, n = array_length(_data); i < n; i++) {
 			var _keyframe = _data[i];
-			var _time = array_safe_get_fast(_keyframe, 0);
+			var _klen     = array_length(_keyframe);
+			
+			var _time         = 0 < _klen? _keyframe[0] :  0;
+			var value		  = 1 < _klen? _keyframe[1] :  0;
+			var ease_in		  = 2 < _klen? _keyframe[2] : [0,1];
+			var ease_out	  = 3 < _klen? _keyframe[3] : [0,0];
+			var ease_in_type  = 4 < _klen? _keyframe[4] :  0;
+			var ease_out_type = 5 < _klen? _keyframe[5] :  0;
+			var ease_y_lock   = 6 < _klen? _keyframe[6] :  1;
+			var driver        = 7 < _klen? _keyframe[7] :  0;
 			
 			if(scale) _time = round(_time * (NODE_TOTAL_FRAMES - 1));
-			
-			var value		  = array_safe_get_fast(_keyframe, 1);
-			var ease_in		  = array_safe_get_fast(_keyframe, 2, [0, 1]);
-			var ease_out	  = array_safe_get_fast(_keyframe, 3, [0, 0]);
-			var ease_in_type  = array_safe_get_fast(_keyframe, 4, 0);
-			var ease_out_type = array_safe_get_fast(_keyframe, 5, 0);
-			var ease_y_lock   = array_safe_get_fast(_keyframe, 6, 1);
-			var driver        = array_safe_get_fast(_keyframe, 7, 0);
-			
 			var _val = value;
 			
 			if(_typ == VALUE_TYPE.struct) {
@@ -739,11 +742,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				_val = [];
 				
 				if(is_array(value)) {
-					for(var j = 0; j < array_length(value); j++)
+					for(var j = 0, m = array_length(value); j < m; j++)
 						_val[j] = processValue(value[j]);
 						
 				} else if(is_array(base)) {
-					for(var j = 0; j < array_length(base); j++)
+					for(var j = 0, m = array_length(base); j < m; j++)
 						_val[j] = processValue(value);
 				}
 				
@@ -762,7 +765,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			} 
 			
 			// print($"Deserialize {node.name}:{prop.name} = {_val} ");
-			var vk = new valueKey(_time, _val, self, ease_in, ease_out);
+			var vk = new valueKey(_time, _val, self);
+			vk.ease_in[0]    = ease_in[0];
+			vk.ease_in[1]    = ease_in[1];
+			vk.ease_out[0]   = ease_out[0];
+			vk.ease_out[1]   = ease_out[1];
+			
 			vk.ease_in_type  = ease_in_type;
 			vk.ease_out_type = ease_out_type;
 			vk.ease_y_lock   = ease_y_lock;
@@ -771,7 +779,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			array_push(values, vk);
 		}
 		
-		updateKeyMap();
+		// updateKeyMap();
 	}
 	
 	////- Actions

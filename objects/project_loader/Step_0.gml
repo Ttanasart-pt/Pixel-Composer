@@ -25,10 +25,7 @@ switch(load_process) {
     			if(_node) create_list[node_length++] = _node;
     			
     			var _ts = get_timer() - _t;
-    			if(_ts > load_delay) {
-    			    _skp = true;
-    			    break;
-    			}
+    			if(_ts > load_delay) { _skp = true; break; }
     		}
     		
     	} catch(e) {
@@ -179,7 +176,5 @@ switch(load_process) {
     	
         instance_destroy();
     
-    run_in(1, function() /*=>*/ { 
-    	PANEL_GRAPH.refreshDraw();
-    });
+    run_in(1, function() /*=>*/ { PANEL_GRAPH.refreshDraw(); });
 }
