@@ -211,6 +211,7 @@ function Project() constructor {
 			
 		attributes.autosave            = false;
 		attributes.auto_organize       = false;
+		attributes.render_topo         = false;
 		
 		attributeEditor = [
 			[ "Dimension", "surface_dimension", new vectorBox(2, 
@@ -291,8 +292,9 @@ function Project() constructor {
 				}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
 				) ],
 			
-			[ "Autosave", "autosave",     new checkBox(function() /*=>*/ { attributes.autosave     = !attributes.autosave;     return true; }) ],
-			[ "Layers",   "global_layer", new checkBox(function() /*=>*/ { attributes.global_layer = !attributes.global_layer; return true; }) ],
+			[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ { attributes.autosave     = !attributes.autosave;     return true; }) ],
+			[ "Layers",      "global_layer", new checkBox(function() /*=>*/ { attributes.global_layer = !attributes.global_layer; return true; }) ],
+			// [ "Render Topo", "render_topo",  new checkBox(() => { attributes.render_topo  = !attributes.render_topo;  return true; }) ],
 			
 		];
 		

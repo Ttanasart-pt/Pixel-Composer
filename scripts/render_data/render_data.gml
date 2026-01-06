@@ -141,7 +141,6 @@ enum RENDER_TYPE {
 	}
 	
 	function NodeListSort(_nodeList, _project = PROJECT) { return __topoSort([], _nodeList, {}, _project); }
-	
 #endregion
 
 #region rendering
@@ -187,6 +186,7 @@ enum RENDER_TYPE {
 		project   = _project;
 		partial   = _partial;
 		runAction = _runAction;
+		renderIndex = 0;
 		
 		RENDERING = self;
 		
@@ -207,6 +207,7 @@ enum RENDER_TYPE {
 			leaf_time   = 0;
 			error       = 0;
 			reset_all   = !partial || (project.animator.is_playing && project.animator.isFirstFrame());
+			nodeCounts  = array_length(project.nodeTopo);
 			
 			if(reset_all) {
 				LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(project.nodeTopo)} nodes xxxxxxxxxx");
@@ -250,7 +251,25 @@ enum RENDER_TYPE {
 			LOG_IF(global.FLAG.render == 1,  "================== Start rendering ==================");
 		}
 		
-		static render = function(_maxDuration = PREFERENCES.render_max_time) {
+		// I thought rendering from topo list would be faster. But in reality it's around the same speed. what?
+		static renderList = function(_maxDuration = PREFERENCES.render_max_time) {
+			var _time_frame = get_timer();
+			var _rendered   = 0;
+			
+			try {
+				while( renderIndex < nodeCounts ) {
+					project.nodeTopo[renderIndex++].doUpdate(); 
+					
+					if(_maxDuration != infinity && (get_timer() - _time_frame) / 1_000_000 >= _maxDuration)
+						return false;
+				}
+			} catch(e) noti_warning(exception_print(e));
+			
+			postRender();
+			return true;
+		}
+		
+		static renderGraph = function(_maxDuration = PREFERENCES.render_max_time) {
 			var _time_frame = get_timer();
 			var _rendered   = 0;
 			
@@ -299,10 +318,13 @@ enum RENDER_TYPE {
 					}
 				}
 			
-			} catch(e) {
-				noti_warning(exception_print(e));
-			}
+			} catch(e) noti_warning(exception_print(e));
 			
+			postRender();
+			return true;
+		}
+		
+		static postRender = function() {
 			render_time /= 1000;
 				
 			LOG_IF(global.FLAG.renderTime || global.FLAG.render >= 1, $"=== RENDER FRAME {GLOBAL_CURRENT_FRAME} COMPLETE IN {(get_timer() - t1) / 1000} ms ===\n");
@@ -321,8 +343,6 @@ enum RENDER_TYPE {
 			LOG_END();
 			RENDERING = undefined;
 			PANEL_GRAPH.refreshDraw();
-			
-			return true;
 		}
 		
 		static renderTo = function(_node) {
@@ -374,6 +394,8 @@ enum RENDER_TYPE {
 				PANEL_GRAPH.refreshDraw();
 			}
 		}
+		
+		render = renderGraph;
 		
 		init();
 	}

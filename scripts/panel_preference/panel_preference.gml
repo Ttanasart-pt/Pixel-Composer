@@ -757,7 +757,7 @@ function Panel_Preference() : PanelContent() constructor {
     		_y += _h + ui(8);
     		hh += _h + ui(8);
     		
-    		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(ui(24), _y + _h / 2, __txt("- Bold"));
     		
     		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_bold));
@@ -769,7 +769,7 @@ function Panel_Preference() : PanelContent() constructor {
     		_y += _h + ui(8);
     		hh += _h + ui(8);
     		
-    		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(ui(24), _y + _h / 2, __txt("- Code"));
     		
     		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_code));
