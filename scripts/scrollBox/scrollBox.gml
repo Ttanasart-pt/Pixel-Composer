@@ -139,7 +139,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		if(type == 0 && hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, h);
 		
 		var _arr = h > ui(16);
-		var _sps = min(1, (h - ui(4)) / line_get_height(_f));
+		var _sps =  1;
 		var _ars = .5;
 		var _arw = _arr * (sprite_get_width(arrow_spr) * _ars + ui(8));
 		var _spr = is(_selVal, scrollItem) && _selVal.spr;
@@ -241,7 +241,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			}
 			
 			if(type == 1) {
-				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _tx1, _y, ui(32), h, CDEF.main_mdwhite, 1);
+				// if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _tx1, _y, ui(32), h, CDEF.main_mdwhite, 1);
 				draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, cc, aa);
 			}
 		}

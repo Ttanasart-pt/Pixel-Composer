@@ -34,7 +34,6 @@
 		
 		registerFunction(o, "Toggle Default",    "", n, panel_collection_toggle_default ).setMenu("collection_toggle_default")
 	}
-	
 #endregion
 
 function Panel_Collection() : PanelContent() constructor {
@@ -825,7 +824,7 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	////- Draw
 		
-	function setPage(i) {
+	function setPage(i) { 
 		page    = i;
 		title   = roots[i][0];
 		root    = roots[i][1];
@@ -929,7 +928,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var rootx = _sx;
 		
 		sc_pages.setFocusHover(foc, hov);
-		sc_pages.draw(_sx, _sy, _sw, _sh, pageS, m, x, y);
+		sc_pages.draw(_sx, _sy, _sw, _sh, page, m, x, y);
 		rootx = _sx + _sw + ui(8);
 		
 		var bb = THEME.button_hide_fill;

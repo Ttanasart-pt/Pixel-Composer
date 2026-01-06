@@ -919,7 +919,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[ 7].setVisible(_fmt == ".gif" && !_enc);
 				inputs[18].setVisible(_fmt == ".gif" &&  _enc);
 				inputs[ 8].setVisible(true);
-			
+				inputs[21].setVisible(true);
+				
 				inputs[ 9].display_data.data	= format_animation;
 				inputs[ 9].getEditWidget().data_list = format_animation;
 				
@@ -944,6 +945,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[17].setVisible(false);
 				inputs[18].setVisible(false);
 				inputs[ 8].setVisible(false);
+				inputs[21].setVisible(false);
 			
 				inputs[ 9].display_data.data	= format_image;
 				inputs[ 9].getEditWidget().data_list = format_image;

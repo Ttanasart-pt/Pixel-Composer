@@ -74,7 +74,7 @@ event_inherited();
 		var _dw  = sc_content.surface_w;
 		var _h   = 0;
 		var _ly  = _y;
-		var hov  = noone;
+		var hov  = undefined;
 		
 		if(MOUSE_MOVED) selecting = noone;
 		
@@ -114,7 +114,7 @@ event_inherited();
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
-					hov       = _val;
+					hov       = i;
 				}
 			
 				if(selecting == i) {
@@ -172,7 +172,7 @@ event_inherited();
 		if(update_hover) {
 			UNDO_HOLDING = true;
 			
-			var _val = hov == noone? initVal : array_find(scrollbox.data, hov);
+			var _val = hov ?? initVal;
 			if(_val != -1) scrollbox.onModify(_val);
 			
 			UNDO_HOLDING = false;
