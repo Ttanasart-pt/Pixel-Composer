@@ -22,6 +22,8 @@
 		PREFERENCES.theme_override					= "override";
 		PREFERENCES.local							= "en";
 		PREFERENCES.font_overwrite					= "";
+		PREFERENCES.font_overwrite_bold				= "";
+		PREFERENCES.font_overwrite_code				= "";
 		
 		PREFERENCES.ui_framerate					= 120;
 		PREFERENCES.ui_framerate_non_focus			= 10;

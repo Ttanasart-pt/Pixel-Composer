@@ -28,6 +28,12 @@ global.LINE_HEIGHTS = {};
 	f_sdf  = _f_sdf;
 	f_sdf_medium  = _f_sdf_medium;
 	FONT_ISLOADED = false;
+	
+	enum UI_FONT_TYPE {
+		medium,
+		bold,
+		code
+	}
 #endregion
 
 function __font_add_height(font) {
@@ -97,11 +103,21 @@ function _font_load_default(name, def) {
 	return def;
 }
 
-function _font_load_from_struct(str, name, def, over = true, sizeDelta = 0) {
+function _font_load_from_struct(str, name, def, type = UI_FONT_TYPE.medium) {
 	if(!struct_has(str, name)) { noti_status($"Font data {name} not found. Rollback to default font."); return def; }
 	
 	var _data = str[$ name];
-	var _path = over && file_exists_empty(PREFERENCES.font_overwrite)? PREFERENCES.font_overwrite : _font_path(_data.path);
+	var _path = _font_path(_data.path);
+	
+	switch(type) {
+		case UI_FONT_TYPE.medium : if(file_exists_empty(PREFERENCES.font_overwrite)) _path = PREFERENCES.font_overwrite; break;
+		case UI_FONT_TYPE.bold :   
+			if(file_exists_empty(PREFERENCES.font_overwrite_bold)) _path = PREFERENCES.font_overwrite_bold;
+			else if(file_exists_empty(PREFERENCES.font_overwrite)) _path = PREFERENCES.font_overwrite;
+			break;
+		
+		case UI_FONT_TYPE.code : if(file_exists_empty(PREFERENCES.font_overwrite_code)) _path = PREFERENCES.font_overwrite_code; break;
+	}
 	
 	if(!file_exists_empty(_path)) { noti_status($"Font resource {_path} not found. Rollback to default font."); return def; }
 	
@@ -109,7 +125,7 @@ function _font_load_from_struct(str, name, def, over = true, sizeDelta = 0) {
 	var _aa  = struct_try_get(THEME_VALUE, "font_aa", true);
 	
 	font_add_enable_aa(_aa);
-	var _font = _font_add(_path, round(_data.size * UI_SCALE) + sizeDelta, _sdf);
+	var _font = _font_add(_path, round(_data.size * UI_SCALE), _sdf);
 	
 	FONT_LIST[$ name] = { data: str, font: _font }
 	
@@ -173,26 +189,26 @@ function loadFonts() {
 	var s = file_read_all(path);
 	var fontDef = json_try_parse(s);
 	
-	f_h1  = _font_load_from_struct(fontDef, "h1",    _f_h1,   true  );
-	f_h2  = _font_load_from_struct(fontDef, "h2",    _f_h2,   true  );
-	f_h3  = _font_load_from_struct(fontDef, "h3",    _f_h3,   true  );
-	f_h5  = _font_load_from_struct(fontDef, "h5",    _f_h5,   true  );
+	f_h1  = _font_load_from_struct(fontDef, "h1",    _f_h1,   UI_FONT_TYPE.bold    );
+	f_h2  = _font_load_from_struct(fontDef, "h2",    _f_h2,   UI_FONT_TYPE.bold    );
+	f_h3  = _font_load_from_struct(fontDef, "h3",    _f_h3,   UI_FONT_TYPE.bold    );
+	f_h5  = _font_load_from_struct(fontDef, "h5",    _f_h5,   UI_FONT_TYPE.bold    );
 	
-	f_p0  = _font_load_from_struct(fontDef, "p0",    _f_p0,   true  );
-	f_p0b = _font_load_from_struct(fontDef, "p0b",   _f_p0b,  true  );
+	f_p0  = _font_load_from_struct(fontDef, "p0",    _f_p0,   UI_FONT_TYPE.medium  );
+	f_p0b = _font_load_from_struct(fontDef, "p0b",   _f_p0b,  UI_FONT_TYPE.bold    );
 	
-	f_p1  = _font_load_from_struct(fontDef, "p1",    _f_p1,   true  );
-	f_p1b = _font_load_from_struct(fontDef, "p1b",   _f_p1b,  true  );
+	f_p1  = _font_load_from_struct(fontDef, "p1",    _f_p1,   UI_FONT_TYPE.medium  );
+	f_p1b = _font_load_from_struct(fontDef, "p1b",   _f_p1b,  UI_FONT_TYPE.bold    );
 	
-	f_p2  = _font_load_from_struct(fontDef, "p2",    _f_p2,   true  );
-	f_p2b = _font_load_from_struct(fontDef, "p2b",   _f_p2b,  true  );
+	f_p2  = _font_load_from_struct(fontDef, "p2",    _f_p2,   UI_FONT_TYPE.medium  );
+	f_p2b = _font_load_from_struct(fontDef, "p2b",   _f_p2b,  UI_FONT_TYPE.bold    );
 	
-	f_p3  = _font_load_from_struct(fontDef, "p3",    _f_p3,   true  );
-	f_p4  = _font_load_from_struct(fontDef, "p4",    _f_p4,   true  );
+	f_p3  = _font_load_from_struct(fontDef, "p3",    _f_p3,   UI_FONT_TYPE.medium  );
+	f_p4  = _font_load_from_struct(fontDef, "p4",    _f_p4,   UI_FONT_TYPE.medium  );
 	
-	f_code = _font_load_from_struct(fontDef, "code", _f_code, false );
-	f_sdf  = _font_load_from_struct(fontDef, "sdf",  _f_sdf,  true  );
-	f_sdf_medium = _font_load_from_struct(fontDef, "sdf_medium",  _f_sdf_medium, true);
+	f_code       = _font_load_from_struct(fontDef, "code",        _f_code,       UI_FONT_TYPE.code );
+	f_sdf        = _font_load_from_struct(fontDef, "sdf",         _f_sdf,        UI_FONT_TYPE.bold );
+	f_sdf_medium = _font_load_from_struct(fontDef, "sdf_medium",  _f_sdf_medium, UI_FONT_TYPE.bold );
 	
 	FONT_ISLOADED = true;
 	

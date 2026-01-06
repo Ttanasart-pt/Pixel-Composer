@@ -662,7 +662,8 @@ function Panel_Preference() : PanelContent() constructor {
     		var _path = $"{DIRECTORY}Themes/{f}";
     		f = file_find_next();
     		
-    		if(!directory_exists(_path)) continue;
+    		if(string_starts_with(_file, "__")) continue;
+    		if(!directory_exists(_path))        continue;
     		
     		var _metaPath = $"{_path}/meta.json";
     		
@@ -701,7 +702,9 @@ function Panel_Preference() : PanelContent() constructor {
     	sb_theme.align = fa_left;
     	
     	tb_override = textBox_Text(function(v) /*=>*/ { PREFERENCES.theme_override = v; loadColor(PREFERENCES.theme); should_restart = true; PREF_SAVE(); })
-    	font_override_sb = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite = v; should_restart = true; PREF_SAVE(); });
+    	font_override_sb      = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite = v;      should_restart = true; PREF_SAVE(); });
+    	font_override_sb_bold = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite_bold = v; should_restart = true; PREF_SAVE(); });
+    	font_override_sb_code = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite_code = v; should_restart = true; PREF_SAVE(); });
     	
     	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -746,16 +749,35 @@ function Panel_Preference() : PanelContent() constructor {
     		draw_text_add(ui(8), _y + _h / 2, __txt("Font Override"));
     		
     		font_override_sb.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite));
-    		
     		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
     			PREFERENCES.font_overwrite = "";
     			should_restart = true; 
     			PREF_SAVE();
     		}
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
     		
-    		// var _ovr = PREFERENCES.font_overwrite == ""? "None" : filename_name_only(PREFERENCES.font_overwrite);
-    		// draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
-    		// draw_text_add(ww - _h - ui(4), _y + _h / 2, _ovr);
+    		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+    		draw_text_add(ui(24), _y + _h / 2, __txt("- Bold"));
+    		
+    		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_bold));
+    		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
+    			PREFERENCES.font_overwrite_bold = "";
+    			should_restart = true; 
+    			PREF_SAVE();
+    		}
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
+    		
+    		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+    		draw_text_add(ui(24), _y + _h / 2, __txt("- Code"));
+    		
+    		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_code));
+    		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
+    			PREFERENCES.font_overwrite_code = "";
+    			should_restart = true; 
+    			PREF_SAVE();
+    		}
     		_y += _h + ui(8);
     		hh += _h + ui(8);
     		
