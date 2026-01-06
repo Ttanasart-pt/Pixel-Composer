@@ -1,12 +1,27 @@
 #region global
-	#macro FILE_SEL_IMAGE "image|*.png;*.jpg;*.bmp"
-	#macro FILE_EXT_IMAGE ".png;.jpg;.jpeg;.bmp"
+	#macro FILE_SEL_IMAGE "image|*.png;*.jpg;*.bmp;*.webp"
+	#macro FILE_EXT_IMAGE ".png;.jpg;.jpeg;.bmp;.webp"
 #endregion
-
 
 	////- Verify
 
 function file_exists_empty(path) { return is_string(path) && path != "" && file_exists(path); }
+
+function file_is_graphic(path) {
+	var ext  = string_lower(filename_ext(path));
+		
+	switch(ext) {
+		case ".png"  :
+		case ".jpg"  :
+		case ".jpeg" :
+		case ".bmp"  :
+		case ".webp" :
+		case ".gif"  :
+			return true;
+	}
+	
+	return false;
+}
 
 function file_is_image(path) {
 	var ext  = string_lower(filename_ext(path));
@@ -16,7 +31,7 @@ function file_is_image(path) {
 		case ".jpg"  :
 		case ".jpeg" :
 		case ".bmp"  :
-		case ".gif"  :
+		case ".webp" :
 			return true;
 	}
 	

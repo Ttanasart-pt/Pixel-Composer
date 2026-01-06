@@ -16,8 +16,8 @@ function sprite_add_map(path, imagenumb = 1, removeback = false, smooth = false,
 	var _sprs = undefined;
 	
 	switch(_extx) {
-		case ".png": _sprs = __sprite_add(_path, imagenumb, removeback, smooth, xorig, yorig); break;
 		case ".bmp": _sprs = sprite_create_from_file(_path, removeback, smooth, xorig, yorig); break;
+		default:     _sprs = __sprite_add(_path, imagenumb, removeback, smooth, xorig, yorig); break;
 	}
 	
 	SPRITE_PATH_MAP[$ path] = _sprs;
@@ -68,10 +68,12 @@ function sprite_path_check_format(_path, noti = true) {
 			
 			return proxy_path;
 			
-		case ".bmp": 
-			return _path;
-			
 		case ".tga": 
+			if(noti) noti_warning($"Used proxy for {_extx} file.");
+			shell_execute(path_convert, $"\"{_path}\" \"{proxy_path}\"");
+			return proxy_path;
+			
+		case ".webp": 
 			if(noti) noti_warning($"Used proxy for {_extx} file.");
 			shell_execute(path_convert, $"\"{_path}\" \"{proxy_path}\"");
 			return proxy_path;

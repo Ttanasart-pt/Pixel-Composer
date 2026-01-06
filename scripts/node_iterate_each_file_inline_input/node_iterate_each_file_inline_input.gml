@@ -28,7 +28,7 @@ function Node_Iterate_Each_File_Inline_Input(_x, _y, _group = noone) : Node(_x, 
 		var _path = array_safe_get_fast(val, itr)
 		var _surf = noone;
 		
-		if(file_exists_empty(_path) && file_is_image(_path)) {
+		if(file_exists_empty(_path) && file_is_graphic(_path)) {
 			var _spr = sprite_add_map(_path);
 			var _sw  = sprite_get_width(_spr);
 			var _sh  = sprite_get_height(_spr);

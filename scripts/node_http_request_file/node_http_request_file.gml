@@ -35,7 +35,7 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			    var _form = getInputData(1);
 			    
 				attributes.temp_path = pth;
-				if(_form == 0 && file_exists_empty(pth) && file_is_image(pth)) {
+				if(_form == 0 && file_exists_empty(pth) && file_is_graphic(pth)) {
 				    if(sprite_exists(spr)) sprite_delete(spr);
 				    spr = sprite_add(pth, 0, false, false, 0, 0);
 				}
