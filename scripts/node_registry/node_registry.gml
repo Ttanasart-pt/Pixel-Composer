@@ -74,7 +74,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	license = "";
 	
 	buildFn = registerFunction("_", nodeName, "", 0, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n, true, true) }, nodeName)
-				.setMenuName($"graph_add_{nodeName}", getName(), spr);
+				.setMenuName($"graph_add_{nodeName}", getName(), spr)
+				.setCommandName(getName());
 	buildFn.nodeName = nodeName;
 	
 	static setSpr     = function(_s) /*=>*/ { spr = _s; buildFn.setSpr(_s);                       return self; }

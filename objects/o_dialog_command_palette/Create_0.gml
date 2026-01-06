@@ -22,20 +22,12 @@ event_inherited();
 	hk_editing = noone;
 	edit_block = 0;
 	
-	search_string	= "";
+	selecting_hotkey = noone;
+	search_string	 = "";
 	KEYBOARD_RESET
 	
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-		search_string = string(str); 
-		searchMenu();
-	});
-	
-	selecting_hotkey = noone;
-	tb_search.hide   = 2;
-	tb_search.font	 = f_p2;
-	tb_search.align	 = fa_left;
-	tb_search.auto_update = true;
-	tb_search.activate("");
+	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchMenu(); })
+		.setHide(2).setFont(f_p2).setAlign(fa_left).setAutoupdate().activate("");
 	
 	_prex = mouse_mx;
 	_prey = mouse_my;
@@ -43,10 +35,7 @@ event_inherited();
 	keyboard_trigger = false;
 	
 	function searchMenu() {
-		if(search_string == "") {
-			data = array_clone(RECENT_COMMANDS, 1);
-			return;
-		}
+		if(search_string == "") { data = array_clone(RECENT_COMMANDS, 1); return; }
 		
 		data = [];
 		var pr_list      = ds_priority_create();
@@ -57,7 +46,7 @@ event_inherited();
 			var _menu = FUNCTIONS[$ k];
 			
 			var _cnxt = _menu.context;
-			var _name = _menu.name;
+			var _name = _menu[$ "comName"] ?? _menu.name;
 			var _fname = $"{string_lower(_cnxt)} {string_lower(_name)}"
 			
 			var match = string_partial_match_res(_fname, search_lower)[0];
@@ -109,7 +98,7 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 		var _menu = data[i];
 		
 		var _menuItem = _menu.menu;
-		var _hasKey   = struct_try_get(_menu, "hotkey", noone) != noone;
+		var _hasKey   = is(_menu[$ "hotkey"], Hotkey);
 		var _mhover   = mouse_move && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1); 
 		
 		if(selecting == i) {
@@ -162,7 +151,7 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 		}
 		
 		var _cnxt = _menu.context;
-		var _name = _menu.name;
+		var _name = _menu[$ "comName"] ?? _menu.name;
 		var _tx   = text_pad + ui(32);
 		var _ty   = _ly + hght / 2;
 		
@@ -191,27 +180,24 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 		
 		if(_hasKey) {
 			var _key = _menu.hotkey;
+			var _hx  = _dw - ui(6);
+			var _hy  = _ty + ui(1);
 			
-			if(is_instanceof(_key, Hotkey)) {
-				var _hx = _dw - ui(6);
-				var _hy = _ty + ui(1);
-				
-				draw_set_text(f_p3, fa_right, fa_center, COLORS._main_accent);
-				
-				var _ktxt = key_get_name(_key.key, _key.modi);
-				var _tw = string_width(_ktxt);
-				var _th = line_get_height();
-				
-				var _bx = _hx - _tw - ui(4);
-				var _by = _hy - _th / 2 - ui(2);
-				var _bw = _tw + ui(8);
-				var _bh = _th + ui(2);
-				
-				     if(hk_editing == _key) draw_set_color(COLORS._main_accent);
-				else if(_ktxt != "")        draw_set_color(COLORS._main_text_sub);
-				
-				draw_text_add(_hx, _hy, _ktxt);
-			}
+			draw_set_text(f_p3, fa_right, fa_center, COLORS._main_accent);
+			
+			var _ktxt = key_get_name(_key.key, _key.modi);
+			var _tw = string_width(_ktxt);
+			var _th = line_get_height();
+			
+			var _bx = _hx - _tw - ui(4);
+			var _by = _hy - _th / 2 - ui(2);
+			var _bw = _tw + ui(8);
+			var _bh = _th + ui(2);
+			
+			     if(hk_editing == _key) draw_set_color(COLORS._main_accent);
+			else if(_ktxt != "")        draw_set_color(COLORS._main_text_sub);
+			
+			draw_text_add(_hx, _hy, _ktxt);
 		}
 		
 		_ly += hght;

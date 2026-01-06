@@ -186,6 +186,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
 		
 		if(PEN_USE) keyboard_virtual_show(input == TEXTBOX_INPUT.number? kbv_type_numbers : kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
+		
+		return self;
 	}
 	
 	static deactivate = function() {
