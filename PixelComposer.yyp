@@ -4942,14 +4942,14 @@
         "Steam":{
           "compressFormat":"bz2",
           "groupParent":"null",
-          "loadType":"dynamicpages",
+          "loadType":"default",
         },
       },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"workshop","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
     {"$GMTextureGroup":"","%Name":"profileBadge","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
         "Steam":{
           "compressFormat":"bz2",
           "groupParent":"null",
-          "loadType":"dynamicpages",
+          "loadType":"default",
         },
       },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"profileBadge","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
   ],

@@ -1,4 +1,4 @@
-function generate_patreon_thumbnail() {
+function generate_patreon_thumbnail(_cover = true) {
     var proj = PROJECT.path;
     var prev = PANEL_PREVIEW.getNodePreviewSurface();
     if(!is_just_surface(prev)) return;
@@ -7,6 +7,7 @@ function generate_patreon_thumbnail() {
     steam_ugc_generate_thumbnail(prev, UGC_TYPE.patreon, dest);
     
     /////////////////////////////////////////////////
+    if(!_cover) return;
     
     var dest = filename_combine(filename_dir(proj), filename_name_only(proj) + "_cover.png");
     var sw   = 1920;
@@ -63,7 +64,7 @@ function generate_patreon_thumbnail() {
     
     surface_save(surf, dest);
     
-    surface_free(grph);
     surface_free(surf);
+    surface_free(grph);
     surface_free(surp);
 }

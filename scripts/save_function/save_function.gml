@@ -81,9 +81,6 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 	if(!is(project, Project)) return false;
 	if(DEMO) return false;
 	
-	if(RUN_IDE && string_pos("PROMOTIONAL MATERIALS", path))
-		generate_UGC_patreon();
-	
 	IS_SAVING = true;
 	SAVING    = true;
 	
@@ -176,6 +173,8 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 	
 	log_message("FILE", _param.log_prefix + " " + path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
+	
+	if(RUN_IDE) generate_patreon_thumbnail(false);
 	
 	return true;
 }

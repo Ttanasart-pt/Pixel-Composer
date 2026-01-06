@@ -22,12 +22,6 @@
         }
     }
     
-    function generate_UGC_patreon() {
-        var _proj = PROJECT.path;
-        var _dest = filename_combine(filename_dir(_proj), filename_name_only(_proj) + ".png");
-        steam_ugc_generate_thumbnail(PANEL_PREVIEW.getNodePreviewSurface(), UGC_TYPE.patreon, _dest);
-    }
-    
     function __fnInit_Global() {
         registerFunction("", "New file", "N", MOD_KEY.ctrl, NEW ).setMenu("new_file", THEME.new_file)
         
@@ -101,8 +95,6 @@
             
             return submenuCall(_dat, arr);
         }).setMenu("addon_menu", THEME.addon_icon, true)
-        
-        registerFunction("", "Generate UGC",        "",     MOD_KEY.none, generate_UGC_patreon     ).setMenu("generate_ugc"    )
         
         registerFunction("", "Toggle Recording",   "R", MOD_KEY.shift | MOD_KEY.alt, toggleRecording          ).setMenu("toggle_recording")
     }

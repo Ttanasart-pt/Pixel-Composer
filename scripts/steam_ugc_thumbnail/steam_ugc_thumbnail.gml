@@ -5,7 +5,7 @@ enum UGC_TYPE {
 }
 
 function steam_ugc_generate_thumbnail(_data, _type, _dest_path = TEMPDIR + "steamUGCthumbnail.png") {
-	file_delete(_dest_path);
+	file_delete_safe(_dest_path);
 	
 	var prev_size = 512;
 	var avar_size = 80;
@@ -83,7 +83,6 @@ function steam_ugc_generate_thumbnail(_data, _type, _dest_path = TEMPDIR + "stea
 			
 		}
 		
-		// draw_sprite_stretched_ext(s_workshop_shadow, 0, 0, 0, prev_size, prev_size, COLORS._main_accent);
 		draw_sprite_stretched_ext(s_workshop_frame,  0, 0, 0, prev_size, prev_size, COLORS._main_accent);
 		draw_sprite_stretched_ext(s_workshop_badge,  0, 8, 8, 88, 88, COLORS._main_accent);
 		draw_sprite_ext(_ico, 0, 40, 40, 1 / THEME_SCALE, 1 / THEME_SCALE, 0, COLORS._main_icon_dark, 1);
