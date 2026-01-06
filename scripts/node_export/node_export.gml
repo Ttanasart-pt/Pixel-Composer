@@ -57,7 +57,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	format_single    = [ "Single image",    "Image sequence",  "Animation"  ];
 	format_array     = [ "Multiple images", "Image sequences", "Animations" ];
-	format_image     = [ ".png", ".jpg",  ".webp", ".exr", ".bmp" ];
+	
+	format_image     = [ ".png", ".jpg",  ".webp", ".exr", ".bmp", ".ico", ".txt" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
 	png_format       = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
@@ -264,32 +265,27 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(_index == 1) {
 			var _path = getInputData(1);
-			var _ext  = filename_ext(_path);
-			
-			switch(_ext) {
-				case ".png" :  inputs[9].setValue(0); break;
-				case ".jpg" :  inputs[9].setValue(1); break;
-			
-				case ".gif" :  inputs[9].setValue(0); break;
-				case ".webp" : inputs[9].setValue(1); break;
-			}
+			extensionCheck(filename_ext(_path));
 		}
 	}
 	
 	static extensionCheck = function(_extt) {
 		var _ext  = string_lower(_extt);
-			
-		switch(_ext) {
-			case ".png"  : inputs[3].setValue(0); inputs[9].setValue(0); break;
-			case ".jpg"  : inputs[3].setValue(0); inputs[9].setValue(1); break;
-			case ".webp" : inputs[3].setValue(0); inputs[9].setValue(2); break;
-			case ".exr"  : inputs[3].setValue(0); inputs[9].setValue(3); break;
-			case ".bmp"  : inputs[3].setValue(0); inputs[9].setValue(4); break;
-			
-			case ".gif"  : inputs[3].setValue(2); inputs[9].setValue(0); break;
-			case ".apng" : inputs[3].setValue(2); inputs[9].setValue(2); break;
-			case ".mp4"  : inputs[3].setValue(2); inputs[9].setValue(3); break;
+		
+		var indexImg = array_get_index(format_image,     _ext);
+		if(indexImg > -1) {
+			inputs[3].setValue(0);
+			inputs[9].setValue(indexImg);
+			return;
 		}
+		
+		var indexAni = array_get_index(format_animation, _ext);
+		if(indexAni > -1) {
+			inputs[3].setValue(0);
+			inputs[9].setValue(indexAni);
+			return;
+		}
+		
 	}
 	
 	static pathString = function(dirr, fnam = "", index = 0, _array = false) {
@@ -553,7 +549,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var indx = getInputData(13);
 		var ext  = array_safe_get_fast(format_image, extd, ".png");
 		
-		var _pathOut  = _path;
+		var _pathOut  = filename_change_ext(_path, ext);
 		var _pathTemp = $"{directory}/{irandom_range(10000, 99999)}.png";
 		
 		switch(ext) {
@@ -561,45 +557,34 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				switch(indx) {
 					case 0 : 
 						surface_save_safe(_surf, _pathTemp);
-					
 						var shell_cmd = $"convert {string_quote(_pathTemp)} {string_quote(_pathOut)}";
 						shell_execute_async(magick, shell_cmd, self);
 						break;
 						
 					case 1 : 
 						surface_save_safe(_surf, _pathTemp);
-					
 						var shell_cmd = $"convert {string_quote(_pathTemp)} PNG8:{string_quote(_pathOut)}";
 						shell_execute_async(magick, shell_cmd, self);
 						break;
 						
-					case 2 : 
-						surface_save_safe(_surf, _pathOut);
-						break;
+					case 2 : surface_save_safe(_surf, _pathOut); break;
 				}
-				
-				break;
-				
-			case ".jpg": 
-				surface_save_safe(_surf, _pathTemp);
-					
-				_pathOut = $"{filename_change_ext(_path, ".jpg")}";
-				var shell_cmd = $"{string_quote(_pathTemp)} -quality {qual} {string_quote(_pathOut)}";
-				
-				shell_execute_async(magick, shell_cmd, self);
 				break;
 				
 			case ".webp":
 				surface_save_safe(_surf, _pathTemp);
-				
-				_pathOut = $"{filename_change_ext(_path, ".webp")}";
 				var shell_cmd = $"{string_quote(_pathTemp)} -quality {qual} -define webp:lossless=true {string_quote(_pathOut)}";
-				
 				shell_execute_async(magick, shell_cmd, self);
 				break;
 				
 			case ".exr": surface_exr_encode(_surf, _pathOut); break;
 			case ".bmp": surface_bmp_encode(_surf, _pathOut); break;
+			
+			default: 
+				surface_save_safe(_surf, _pathTemp);
+				var shell_cmd = $"{string_quote(_pathTemp)} -quality {qual} {string_quote(_pathOut)}";
+				shell_execute_async(magick, shell_cmd, self);
+				break;
 		}
 		
 		return _pathOut;

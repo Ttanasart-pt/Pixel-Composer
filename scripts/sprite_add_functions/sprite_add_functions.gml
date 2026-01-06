@@ -65,7 +65,6 @@ function sprite_path_check_format(_path, noti = true) {
 			
 			var shell_cmd = $"convert \"{_path}\" -depth 8 \"{proxy_path}\"";
 			shell_execute(path_magick, shell_cmd, self);
-			
 			return proxy_path;
 			
 		case ".tga": 
