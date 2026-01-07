@@ -28,20 +28,9 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 				var my = surface_get_height_safe(_msk);
 				
 				switch(ot) {
-					case 0 : 
-						sw = 1 / DEF_SURF_W;
-						sh = 1 / DEF_SURF_H;
-						break;
-					
-					case 1 : 
-						sw = DEF_SURF_W / mx;
-						sh = DEF_SURF_H / my;
-						break;
-					
-					case 2 : 
-						sw = mx;
-						sh = my;
-						break;
+					case 0 : sw = 1 / DEF_SURF_W;   sh = 1 / DEF_SURF_H;  break;
+					case 1 : sw = DEF_SURF_W / mx;  sh = DEF_SURF_H / my; break;
+					case 2 : sw = mx;               sh = my;              break;
 				}
 			}
 			
@@ -62,10 +51,11 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 			
 			node.triggerRender();
 			
-		}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip(unitTooltip);
+		}).setIcon(THEME.node_use_project, attributes.use_project_dimension, COLORS._main_icon).iconPad().setTooltip(unitTooltip);
 	
 		editWidget.setSideButton(editProjDim); 
 		editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
+		
 	}
 	
 	/////============== GET =============
@@ -73,17 +63,16 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;
 		
-		var _pdim = attributes.use_project_dimension;
-		if(editProjDim) editProjDim.icon_index = _pdim;
 		unitTooltip.index = attributes.use_project_dimension;
-		if(editWidget) editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
+		if(editProjDim) editProjDim.icon_index = attributes.use_project_dimension;
+		if(editWidget)  editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		
 		if(applyUnit && nod == self) {
-			switch(_pdim) {
+			switch(attributes.use_project_dimension) {
 				case 1 : 
 					val[0] *= DEF_SURF_W;
 					val[1] *= DEF_SURF_H;

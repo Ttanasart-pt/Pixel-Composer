@@ -37,19 +37,24 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	}
 	
 	axis = [ "min", "max" ];
-	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(v,0)};
-	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(v,1)};
-	onModifySingle[2] = function(v) /*=>*/ {return onModifyIndex(v,2)};
-	onModifySingle[3] = function(v) /*=>*/ {return onModifyIndex(v,3)};
-	onModifySingle[4] = function(v) /*=>*/ {return onModifyIndex(v,4)};
-	onModifySingle[5] = function(v) /*=>*/ {return onModifyIndex(v,5)};
-	
 	extras = -1;
 	
-	for(var i = 0; i < size; i++) {
-		tb[i] = new textBox(_type, onModifySingle[i]);
-		tb[i].slidable = true;
-		tb[i].hide     = true;
+	tb[0] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,0)}).setHide(1);
+	tb[1] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,1)}).setHide(1);
+	
+	if(dim >= 2) {
+		tb[2] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,2)}).setHide(1);
+		tb[3] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,3)}).setHide(1);
+	}
+	
+	if(dim >= 3) {
+		tb[4] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,4)}).setHide(1);
+		tb[5] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,5)}).setHide(1);
+	}
+	
+	if(dim >= 4) {
+		tb[6] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,6)}).setHide(1);
+		tb[7] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,7)}).setHide(1);
 	}
 	
 	static setInteract = function(interactable = noone) {

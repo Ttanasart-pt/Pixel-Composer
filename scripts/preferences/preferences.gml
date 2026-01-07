@@ -157,7 +157,7 @@
 		PREFERENCES.save_file_minify				= true;
 		PREFERENCES.save_backup						= 1;
 		PREFERENCES.save_thumbnail					= false;
-		PREFERENCES.save_thumbnail_size             = 64;
+		PREFERENCES.save_thumbnail_size             = 256;
 		PREFERENCES.save_layout						= false;
 		PREFERENCES.save_compress                   = true;
 		PREFERENCES.save_auto                       = false;

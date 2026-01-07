@@ -130,6 +130,9 @@ event_inherited();
 	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
+		var hover = sp_sample.hover;
+		var focus = sp_sample.active;
+		
 		var txt = pages[project_page];
 		var list, _group_label;
 		
@@ -195,7 +198,8 @@ event_inherited();
 		var row = ceil(node_count / col);
 		
 		var grid_width = (ww - col * grid_padd) / col;
-		var grid_heigh = txt == "Workshop"? grid_width : grid_width * 0.75;
+		var grid_heigh = grid_width * 0.75;
+		if(txt == "Workshop") grid_heigh = grid_width;
 		
 		var contentRow = false;
 		
@@ -208,6 +212,7 @@ event_inherited();
 		
 		for(var i = 0; i < node_count; i++) {
 			var _project = list[i];
+			_project.hover_splash = _project[$ "hover_splash"] ?? 0;
 			
 			if(_group_label) {
 				var _coll = array_exists(PREFERENCES.welcome_file_closed, _project.tag);
@@ -238,6 +243,12 @@ event_inherited();
 					continue;
 			}
 			
+			if(txt != "Workshop") {
+				grid_heigh = grid_width;
+				if(_curr_tag == "Getting started" || _curr_tag == "Templates")
+					grid_heigh = grid_width * 0.75;
+			}
+			
 			_nx   = grid_padd + (grid_width + grid_padd) * _cur_col;
 			_boxx = _nx;
 			
@@ -248,6 +259,9 @@ event_inherited();
 				var gridW = grid_width;
 				var gridH = grid_heigh;
 				var ss    = 1;
+				var ghov  = hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh);
+				
+				_project.hover_splash = lerp_float(_project.hover_splash, ghov, 10);
 				
 				if(sprite_exists(spr)) {
 					var gw = grid_width;
@@ -266,7 +280,7 @@ event_inherited();
 				if(_project.path == PROJECT.path)
 					draw_sprite_stretched_add(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 0.25);
 				
-				if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
+				if(ghov) {
 					sp_sample.hover_content = true;
 					
 					if(txt == "Workshop") {
@@ -291,12 +305,13 @@ event_inherited();
 					
 					var ox = sprite_get_xoffset(spr) * ss;
 					var oy = sprite_get_yoffset(spr) * ss;
+					var fh = ui(32 + _project.hover_splash * 32);
 					
 					gpu_set_scissor(gridX + ui(2), gridY + ui(2), gridW - ui(4), gridH - ui(4));
 					gpu_set_tex_filter(_curr_tag == "Getting started");
 					draw_sprite_uniform(spr, 0, _sx + ox, _sy + oy, ss);
 					gpu_set_tex_filter(false);
-					draw_sprite_stretched_ext(s_fade_up, 0, gridX, gridY + gridH - ui(32), gridW, ui(32), COLORS._main_icon_dark, 1);
+					draw_sprite_stretched_ext(s_fade_up, 0, gridX, gridY + gridH - fh, gridW, fh, COLORS._main_icon_dark, 1);
 					gpu_set_scissor(_scis);
 					
 				} else {

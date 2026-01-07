@@ -2726,12 +2726,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- CACHE
 	
-	use_cache          = CACHE_USE.none;
-	cached_output      = [];
-	cache_result       = [];
-	cache_index        = 0;
-	preview_cache      = [];
-	cache_group        = noone;
+	use_cache     = CACHE_USE.none;
+	preview_cache = [];
+	cached_output = [];
+	cache_result  = [];
+	cache_index   = 0;
+	cache_group   = noone;
 	clearCacheOnChange = true;
 	
 	static checkCache = function() {

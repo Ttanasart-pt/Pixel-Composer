@@ -199,6 +199,12 @@ function Panel_Preference() : PanelContent() constructor {
     			new checkBox(function() /*=>*/ {return prefToggle("save_thumbnail")})
     		));
     	
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_save_thumbnail_size", "Thumbnail Size"),
+    			"save_thumbnail_size",
+    			textBox_Number(function(val) /*=>*/ {return prefSet("save_thumbnail_size", max(32, val))})
+    		));
+    		
     	ds_list_add(pref_global, __txt("Crash"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
