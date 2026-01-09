@@ -189,14 +189,12 @@ void main() {
 		hei = mix(height.x, height.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2 pixelStep = 1. / dimension;
+	vec2 tx = 1. / dimension;
     
-    vec4 col = texture2D(gm_BaseTexture, v_vTexcoord);
-	vec4 col1;
+    vec4 col = texture2D(gm_BaseTexture, v_vTexcoord), col1;
 	gl_FragColor = col;
-	bool done = false;
 	
-	vec2 shiftPx         = -shift / dimension;
+	vec2  shiftPx        = -shift / dimension;
 	float b0             = bright(col);
 	float shift_angle    = atan(shiftPx.y, shiftPx.x);
 	float shift_distance = length(shiftPx);
@@ -205,9 +203,7 @@ void main() {
 	
 	if(b0 == 0.) return;
 	
-	float b1 = b0;
-	float added_distance, _b1;
-	vec2  shf, pxs;
+	float b1  = b0;
 	float stp = 1. / 8.;
 	
 	for(float i = 0.; i < heiMax; i += stp) {
@@ -219,17 +215,17 @@ void main() {
 			float ang = top / base * TAU;
 			top += 2.;
 			if(top >= base) {
-				top = 1.;
+				top   = 1.;
 				base *= 2.;
 			}
 			
-			added_distance = 1. + cos(abs(shift_angle - ang)) * shift_distance;
+			float added_distance = 1. + cos(abs(shift_angle - ang)) * shift_distance;
 				
-			shf = vec2( cos(ang),  sin(ang)) * (i * added_distance) / scale;
-			pxs = v_vTexcoord + shf * pixelStep;
+			vec2 shf = vec2( cos(ang),  sin(ang)) * (i * added_distance) / scale;
+			vec2 pxs = v_vTexcoord + shf * tx;
 				
 			col1 = sampleTexture( gm_BaseTexture, pxs );
-			_b1  = bright(col1);
+			float _b1  = bright(col1);
 				
 			if(_b1 < b1) {
 				slope_distance = min(slope_distance, i);

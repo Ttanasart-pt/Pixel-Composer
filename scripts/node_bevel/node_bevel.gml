@@ -50,16 +50,21 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _hei = _data[ 1];
-			var _shf = _data[ 2];
-			var _sca = _data[ 3];
-			var _slp = _data[ 4];
-			var _dim = surface_get_dimension(_data[0]);
-			var _hig = _data[12];
+			var _surf = _data[ 0];
+			
+			var _slp  = _data[ 4];
+			var _hei  = _data[ 1];
+			var _hig  = _data[12];
+			
+			var _shf  = _data[ 2];
+			var _sca  = _data[ 3];
+			
+			var _dim = surface_get_dimension(_surf);
 		#endregion
 		
 		surface_set_shader(_outSurf, _hig? sh_bevel_highp : sh_bevel);
 			shader_set_i("sampleMode", getAttribute("oversample"));
+			
 			shader_set_f("dimension",  _dim);
 			shader_set_f_map("height", _hei, _data[11], inputs[1]);
 			shader_set_2("shift",      _shf);
@@ -67,11 +72,11 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_i("slope",      _slp);
 			shader_set_curve("slope",  _data[13], inputs[4]);
 			
-			draw_surface_safe(_data[0]);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[5], _data[6]);
 		
 		return _outSurf;
 	}
