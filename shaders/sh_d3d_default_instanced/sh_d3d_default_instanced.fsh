@@ -1,6 +1,6 @@
 #pragma use(d3d_default_fragment)
 
-#region -- d3d_default_fragment -- [1761031018.0704248]
+#region -- d3d_default_fragment -- [1767930959.3308232]
 #ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
 #endif
@@ -67,19 +67,31 @@ uniform int use_8bit;
 #region ---- material ----
 	vec4 mat_baseColor;
 	
+	uniform int shader; // 0: Phong, 1: PBR
+	
+	uniform vec2  mat_texScale;
+	uniform vec2  mat_texShift;
+	uniform int   mat_flip;
+	
+	uniform int		  mat_defer_normal;
+	uniform float	  mat_normal_strength;
+	uniform sampler2D mat_normal_map;
+
+	//// Phong ////
 	uniform float mat_diffuse;
 	uniform float mat_specular;
 	uniform float mat_shine;
 	uniform int   mat_metalic;
 	uniform float mat_reflective;
-	uniform vec2  mat_texScale;
-	uniform vec2  mat_texShift;
-	
-	uniform int		  mat_defer_normal;
-	uniform float	  mat_normal_strength;
-	uniform sampler2D mat_normal_map;
-	
-	uniform int		  mat_flip;
+
+	//// PBR ////
+	uniform vec2 mat_pbr_metalic;
+	uniform vec2 mat_pbr_roughness;
+
+	uniform int mat_pbr_metalic_use_map;
+	uniform int mat_pbr_roughness_use_map;
+
+	uniform sampler2D mat_pbr_properties_map; // .r = metalic, .g = roughness
 #endregion
 
 #region ---- rendering ----
@@ -168,7 +180,7 @@ uniform int use_8bit;
 #endregion
 
 #region ++++ Phong shading ++++
-	vec3 phongLight(vec3 normal, vec3 lightVec, vec3 viewVec, vec3 light) {
+	vec3 phongLight(vec3 normal, vec3 lightVec, vec3 viewVec, vec3 lightColor) {
 		vec3 lightDir = normalize(lightVec);
 		vec3 viewDir  = normalize(viewVec);
 		vec3 refcDir  = reflect(-lightDir, normal);
@@ -180,13 +192,72 @@ uniform int use_8bit;
 			kS = mat_specular / (mat_diffuse + mat_specular);
 		}
 		
-		vec3  lLambert = max(0., dot(normal, lightDir)) * light;
+		vec3  lLambert = max(0., dot(normal, lightDir)) * lightColor;
 		
 		float specular  = pow(max(dot(viewDir, refcDir), 0.), max(0.001, mat_shine));
-		vec3  lSpecular = specular * light;
+		vec3  lSpecular = specular * lightColor;
 		if(mat_metalic == 1) lSpecular *= mat_baseColor.rgb;
 		
 		return kD * lLambert + kS * lSpecular;
+	}
+#endregion
+
+#region ++++ PBR shading ++++ // https://learnopengl.com/PBR
+	float DistributionGGX(vec3 N, vec3 H, float roughness) {
+		float a      = roughness * roughness;
+		float a2     = a * a;
+		float NdotH  = max(dot(N, H), 0.0);
+		float NdotH2 = NdotH * NdotH;
+
+		float num   = a2;
+		float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+		denom       = PI * denom * denom;
+
+		return num / denom;
+	}
+
+	float GeometrySchlickGGX(float NdotV, float roughness) {
+		float r = (roughness + 1.0);
+		float k = (r * r) / 8.0;
+
+		float num   = NdotV;
+		float denom = NdotV * (1.0 - k) + k;
+
+		return num / denom;
+	}
+
+	float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
+		float NdotV = max(dot(N, V), 0.0);
+		float NdotL = max(dot(N, L), 0.0);
+		float ggx2  = GeometrySchlickGGX(NdotV, roughness);
+		float ggx1  = GeometrySchlickGGX(NdotL, roughness);
+
+		return ggx1 * ggx2;
+	}
+
+	vec3 fresnelSchlick(float cosTheta, vec3 F0) {
+		return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+	}
+
+	vec3 pbrLight(vec3 N, vec3 V, vec3 L, vec3 lightColor, float mMetalic, float mRoughness) {
+		vec3 H = normalize(V + L);
+		
+		float NDF = DistributionGGX(N, H, mRoughness);
+		float G   = GeometrySmith(N, V, L, mRoughness);
+		vec3  F0  = mix(vec3(0.04), mat_baseColor.rgb, mMetalic);
+		vec3  F   = fresnelSchlick(max(dot(H, V), 0.0), F0);
+		
+		vec3 nominator    = NDF * G * F;
+		float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+		vec3 specular     = nominator / denominator;
+		
+		vec3 kS = F;
+		vec3 kD = vec3(1.0) - kS;
+		kD *= 1.0 - mMetalic;
+		
+		float NdotL = max(dot(N, L), 0.0);
+		
+		return (kD * mat_baseColor.rgb / PI + specular) * lightColor * NdotL;
 	}
 #endregion
 
@@ -220,25 +291,37 @@ void main() {
 	vec2 uv_coord = v_vTexcoord;
 	if(mat_flip == 1) uv_coord.y = -uv_coord.y;
 	
-	uv_coord           = fract(uv_coord * mat_texScale + mat_texShift);
-	mat_baseColor      = texture2D( gm_BaseTexture, uv_coord );
-	mat_baseColor     *= v_vColour;
-	
-	vec4 final_color   = mat_baseColor;
-	vec3 shadow        = vec3(0.);
-	if(show_wireframe == 1 && wireframe_shade == 1) final_color = wireframeCalc(final_color);
-	
-	vec3 viewDirection = normalize(cameraPosition - v_worldPosition.xyz);
-	
-	vec4 viewProjPos   = viewProjMat * vec4(v_worldPosition.xyz, 1.);
-		 viewProjPos  /= viewProjPos.w;
-		 viewProjPos   = viewProjPos * 0.5 + 0.5;
+	#region ++++ base color ++++
+		uv_coord           = fract(uv_coord * mat_texScale + mat_texShift);
+		mat_baseColor      = texture2D( gm_BaseTexture, uv_coord );
+		mat_baseColor     *= v_vColour;
 		
-	vec3 normal        = mat_defer_normal == 1? texture2D(mat_normal_map, viewProjPos.xy).rgb : v_vNormal;
-		 normal        = normalize(normal);
-	bool isBackface    = dot(normal, viewDirection) < 0.0;
-	
-	#region ++++ base color effect ++++
+		vec4 final_color   = mat_baseColor;
+		vec3 shadow        = vec3(0.);
+		if(show_wireframe == 1 && wireframe_shade == 1) final_color = wireframeCalc(final_color);
+	#endregion 
+
+	#region ++++ PBR ++++
+		float mMetalic  = mat_pbr_metalic[0];
+		if(mat_pbr_metalic_use_map == 1)
+			mMetalic = mix(mat_pbr_metalic[0], mat_pbr_metalic[1], texture2D(mat_pbr_properties_map, uv_coord).r);
+		
+		float mRoughness = mat_pbr_roughness[0];
+		if(mat_pbr_roughness_use_map == 1)
+			mRoughness = mix(mat_pbr_roughness[0], mat_pbr_roughness[1], texture2D(mat_pbr_properties_map, uv_coord).g);
+	#endregion
+		
+	#region ++++ vectors ++++
+		vec3 viewDirection = normalize(cameraPosition - v_worldPosition.xyz);
+		
+		vec4 viewProjPos   = viewProjMat * vec4(v_worldPosition.xyz, 1.);
+			viewProjPos  /= viewProjPos.w;
+			viewProjPos   = viewProjPos * 0.5 + 0.5;
+			
+		vec3 normal        = mat_defer_normal == 1? texture2D(mat_normal_map, viewProjPos.xy).rgb : v_vNormal;
+			normal        = normalize(normal);
+		bool isBackface    = dot(normal, viewDirection) < 0.0;
+		
 		if(isBackface) final_color *= backface_blending;
 	#endregion
 	
@@ -284,7 +367,7 @@ void main() {
 		int   shadow_map_index = 0;
 		vec3  light_effect     = light_ambient.rgb;
 		float val = 0.;
-		
+
 		#region ++++ directional ++++
 			float light_map_depth;
 			float lightDistance;
@@ -314,8 +397,11 @@ void main() {
 					}
 				}
 				
-				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_dir_color[i].rgb);
-				light_effect += light_phong * light_dir_intensity[i];
+				vec3 light_shaded;
+				     if(shader == 0) light_shaded = phongLight(normal, lightVector, viewDirection, light_dir_color[i].rgb);
+				else if(shader == 1) light_shaded = pbrLight(normal, viewDirection, lightVector, light_dir_color[i].rgb, mMetalic, mRoughness);
+
+				light_effect += light_shaded * light_dir_intensity[i];
 			}
 		#endregion
 		
@@ -362,8 +448,12 @@ void main() {
 				} 
 				
 				light_attenuation = 1. - pow(light_distance / light_pnt_radius[i], 2.);
-				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_pnt_color[i].rgb * light_attenuation);
-				light_effect += light_phong * light_pnt_intensity[i];
+				
+				vec3 light_shaded;
+				     if(shader == 0) light_shaded = phongLight(normal, lightVector, viewDirection, light_pnt_color[i].rgb * light_attenuation);
+				else if(shader == 1) light_shaded = pbrLight(normal, viewDirection, lightVector, light_pnt_color[i].rgb * light_attenuation, mMetalic, mRoughness);					
+
+				light_effect += light_shaded * light_pnt_intensity[i];
 			}
 		#endregion
 	

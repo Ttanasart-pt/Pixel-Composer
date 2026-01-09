@@ -93,7 +93,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			array_push(ioArray, value_type_to_string(argument[i]));
 		} 
 		return self; 
-	}
+	} 
 	
 	static setVersion = function(version) {
 		INLINE 

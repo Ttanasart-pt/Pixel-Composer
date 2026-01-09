@@ -1851,7 +1851,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(d3_scene_preview == d3_scene) {
                 if(d3_scene_light_enabled) {
                     d3_scene_preview.addLightDirectional(d3_scene_light0);
-                    d3_scene_preview.addLightDirectional(d3_scene_light1);
+                    // d3_scene_preview.addLightDirectional(d3_scene_light1);
                 }
             }
             
@@ -2021,7 +2021,7 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function drawPreviewOverlay() {
-        right_menu_y = toolbar_height - ui(4);
+        right_menu_y = toolbar_height;
         if(PROJECT.previewSetting.show_view_control == 2) {
             if(d3_active) right_menu_y += ui(72);
             else          right_menu_y += ui(40);

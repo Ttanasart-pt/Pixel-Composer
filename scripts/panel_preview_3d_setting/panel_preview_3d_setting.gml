@@ -12,7 +12,7 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 			false,
 		),
 		new __Panel_Linear_Setting_Item( __txt("Wireframe Thickness"),
-			new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { scene.wireframe_width = v; }),
+			textBox_Number(function(v) /*=>*/ { scene.wireframe_width = v; }),
 			function(   ) /*=>*/   {return scene.wireframe_width},
 			function(val) /*=>*/ { scene.wireframe_width = val; },
 			1,
@@ -74,6 +74,12 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		["Render", false],
+		new __Panel_Linear_Setting_Item( __txt("Shader"),
+			new scrollBox([ "Phong", "PBR" ], function(val) /*=>*/ { scene.shader = val; }),
+			function(   ) /*=>*/   {return scene.shader},
+			function(val) /*=>*/ { scene.shader = val; },
+			0,
+		),
 		new __Panel_Linear_Setting_Item( __txt("Shadow"),
 			new checkBox(function() /*=>*/ { preview.d3_scene_light0.shadow_active = !preview.d3_scene_light0.shadow_active; }),
 			function(   ) /*=>*/   {return preview.d3_scene_light0.shadow_active},
@@ -110,11 +116,10 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 		),
 	]
 	
-	var scene_camera = [
+	properties_camera = array_append([
 		new __Panel_Linear_Setting_Label( "Currently using camera node settings", THEME.noti_icon_warning, 1, COLORS._main_accent ),
-	];
+	], properties_default);
 	
-	properties_camera = array_append(scene_camera, properties_default);
 	properties = preview.d3_scene_preview == scene? properties_default : properties_camera;
 	
 	setHeight();

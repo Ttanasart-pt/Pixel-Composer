@@ -29,6 +29,11 @@
 		D3D_GLOBAL_PREVIEW.addLightDirectional(d3_scene_light0);
 		D3D_GLOBAL_PREVIEW.addLightDirectional(d3_scene_light1);
 	}
+	
+	enum D3D_SHADER {
+		phong,
+		PBR
+	}
 #endregion
 
 #macro D3DSCENE_PRESUBMIT  if(!is_struct(o)) return; matrix_stack_clear(); if(apply_transform) custom_transform.submitMatrix(); 
@@ -40,6 +45,8 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	
 	apply_transform     = false;
 	custom_transform    = new __transform();
+	
+	shader = D3D_SHADER.phong;
 	
 	lightAmbient		= cola(c_black, 1);
 	lightDir_max		= 16;
@@ -230,7 +237,8 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		deferData = _deferData;
 		
 		shader_set(_shader);
-		shader_set_i("use_8bit",  OS == os_macosx);
+		shader_set_i("use_8bit",  OS == os_macosx );
+		shader_set_i("shader",    shader );
 			
 			#region ---- background ----
 				shader_set_color("light_ambient",	lightAmbient);
