@@ -41,7 +41,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+1, nodeValue_Vec2(     "Clipping Distance",    [1,10]                                 ));
 	
 	////- =Render
-	newInput(i+32, nodeValue_EButton( "Shader",                0, [ "Phong", "PBR" ]       ));
+	newInput(i+32, nodeValue_EButton( "Shader",                0, [ "Inherited", "Phong", "PBR" ] ));
 	newInput(i+ 5, nodeValue_Color(   "Ambient Light",         cola(c_dkgrey)              ));
 	newInput(i+16, nodeValue_Surface( "Environment Texture"                                ));
 	newInput(i+ 6, nodeValue_Bool(    "Show Background",       false                       ));
@@ -212,7 +212,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _clip   = _data[in_d3d +  1];
 			var _orts   = _data[in_d3d +  8];
 			
-			var _shader = _data[in_d3d + 32];
+			var _shader = _data[in_d3d + 32]; if(_shader == 0) _shader = project.attributes.shader; else _shader--;
 			var _ambt   = _data[in_d3d +  5];
 			var _env    = _data[in_d3d + 16];
 			var _dbg    = _data[in_d3d +  6];

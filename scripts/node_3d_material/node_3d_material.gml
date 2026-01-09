@@ -9,7 +9,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(10, nodeValue_Vec2(    "Shift",         [0,0] ));
 	
 	////- =Properties
-	newInput(11, nodeValue_EButton( "Shader",     0, [ "Phong", "PBR" ] ));
+	newInput(11, nodeValue_EScroll( "Shader",     0, [ "Inherited", "Phong", "PBR" ] ));
 	
 	newInput( 1, nodeValue_Slider(  "Diffuse",    1     ));
 	newInput( 2, nodeValue_Slider(  "Specular",   0     ));
@@ -44,7 +44,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _scal = _data[ 9];
 			var _shft = _data[10];
 			
-			var _shad = _data[11];
+			var _shad = _data[11]; if(_shad == 0) _shad = project.attributes.shader; else _shad--;
 			var _diff = _data[ 1];
 			var _spec = _data[ 2];
 			var _shin = _data[ 3];
@@ -61,6 +61,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			inputs[ 2].setVisible(_shad == 0);
 			inputs[ 3].setVisible(_shad == 0);
 			inputs[ 4].setVisible(_shad == 0);
+			inputs[15].setVisible(_shad == 0);
 			
 			inputs[12].setVisible(_shad == 1);
 			inputs[ 7].setVisible(_shad == 1);

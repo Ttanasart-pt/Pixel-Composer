@@ -13,6 +13,7 @@
 		palette           : [ ca_white, ca_black ],
 		palette_fix       : false,
 		export_dir        : "",
+		shader            : 0, 
 		
 		color_depth       : 1,
 		interpolate       : 0,
@@ -285,6 +286,14 @@ function Project() constructor {
 				
 			}).setUpdateHover(false) ], 
 			
+			[ "Shader", "shader", new scrollBox(["Phong", "PBR"], function(i) /*=>*/ {
+				attributes.shader         = i;
+				PROJECT_ATTRIBUTES.shader = i;
+				RENDER_ALL 
+				return true; 
+				
+			}).setUpdateHover(false) ], 
+			
 			[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
 				.setSideButton( button(function() /*=>*/ { 
 					var _fpath = get_open_directory_compat(attributes.export_dir); key_release();
@@ -294,7 +303,6 @@ function Project() constructor {
 			
 			[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ { attributes.autosave     = !attributes.autosave;     return true; }) ],
 			[ "Layers",      "global_layer", new checkBox(function() /*=>*/ { attributes.global_layer = !attributes.global_layer; return true; }) ],
-			// [ "Render Topo", "render_topo",  new checkBox(() => { attributes.render_topo  = !attributes.render_topo;  return true; }) ],
 			
 		];
 		

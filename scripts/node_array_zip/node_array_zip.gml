@@ -10,28 +10,31 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
-			.setVisible(true, true);
+		newInput(index, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 )).setVisible(true, true);
 							
 		return inputs[index];
 	} setDynamicInput(1);
 	
-	static step = function() {
-		var _amo = getInputAmount();
-		if(_amo == 0) {
-			outputs[0].setType(VALUE_TYPE.any);
-			return;
-		}
-		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length )
-			inputs[i].setType(inputs[i].value_from == noone? VALUE_TYPE.any : inputs[i].value_from.type);
-		
-		outputs[0].setType(inputs[1].type);
-	}
+	////- Nodes
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _spr = getInputData(0);
 		var  amo = getInputAmount();
+		
+		#region type
+			var _outType = undefined;
+			
+			for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+				var _inType = inputs[i].value_from == noone? VALUE_TYPE.any : inputs[i].value_from.type;
+				inputs[i].setType(_inType);
+				
+				if(_outType == undefined)    _outType = _inType;
+				else if(_outType != _inType) _outType = VALUE_TYPE.any;
+			}
+			
+			outputs[0].setType(_outType ?? VALUE_TYPE.any);
+		#endregion
+		
 		if(amo == 0) return;
 		
 		var len = infinity;

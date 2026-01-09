@@ -75,9 +75,9 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 		
 		["Render", false],
 		new __Panel_Linear_Setting_Item( __txt("Shader"),
-			new scrollBox([ "Phong", "PBR" ], function(val) /*=>*/ { scene.shader = val; }),
-			function(   ) /*=>*/   {return scene.shader},
-			function(val) /*=>*/ { scene.shader = val; },
+			new scrollBox([ "Inherited", "Phong", "PBR" ], function(val) /*=>*/ { preview.d3_shader = val; }),
+			function(   ) /*=>*/   {return preview.d3_shader},
+			function(val) /*=>*/ { preview.d3_shader = val; },
 			0,
 		),
 		new __Panel_Linear_Setting_Item( __txt("Shadow"),

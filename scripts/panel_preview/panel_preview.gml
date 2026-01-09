@@ -461,6 +461,7 @@ function Panel_Preview() : PanelContent() constructor {
             d3_scene.lightAmbient  = $404040;
             d3_scene.cull_mode     = cull_counterclockwise;
             d3_scene_preview       = d3_scene;
+            d3_shader              = 0;
             
             d3_scene_light_enabled = true;
             
@@ -1784,7 +1785,7 @@ function Panel_Preview() : PanelContent() constructor {
         surface_depth_disable(false);
         
         _node.previewing = 1;
-        
+        d3_scene.shader  = d3_shader == 0? _node.project.attributes.shader : d3_shader--;
         d3_scene_preview = _node[$ "scene"] ?? d3_scene;
         d3_scene_preview.camera = d3_camera;
         
@@ -1858,14 +1859,13 @@ function Panel_Preview() : PanelContent() constructor {
     			if(_prev[2] == undefined) _prev[2] = _prev[3]();
     			var _obj = _prev[2];
     			
-    			if(is(_data, __d3dMaterial)) {
-    				_obj.materials[0] = _data;
-    				
-    			} else {
-    				d3_preview_material.surface = _data;
-    				_obj.materials[0] = d3_preview_material;
-    			}
+    			var _mat = d3_preview_material;
+    			if(is(_data, __d3dMaterial))
+    				 _mat = _data;
+    			else _mat.surface = _data;
     			
+    			for( var i = 0, n = _obj.object_counts; i < n; i++ ) 
+    				_obj.materials[i] = _mat;
     			_prev_obj = _obj;
     		}
     		
