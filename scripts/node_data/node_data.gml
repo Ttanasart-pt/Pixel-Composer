@@ -446,15 +446,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static triggerInsp = function(i) {
 		var b = undefined;
-		
 		switch(i) {
 			case 1 : b = insp1button;      break;
 			case 2 : b = insp2button;      break;
 			case 3 : b = buttonCacheClear; break;
-			default : return;
 		}
 		
-		if(b.visible) b.onClick();
+		if(b && b.visible) 
+			b.onClick();
 	}
 	
 	static triggerCheck = function() {
