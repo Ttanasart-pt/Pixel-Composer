@@ -53,7 +53,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
     static setContext   = function(_c)         /*=>*/ { contextMenu = _c;        return self; }
     static setScroll    = function()           /*=>*/ { scrollable = true;       return self; }
 	
-	static getSpr       = function() /*=>*/ {return spr};
+	static getSpr       = function() /*=>*/ {return is_callable(spr)? spr() : spr};
 	static getSprInd    = function() /*=>*/ {return 0};
 	static getTooltip   = function() /*=>*/ {
 		if(tooltip == noone) {

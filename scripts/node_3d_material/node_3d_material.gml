@@ -1,6 +1,5 @@
-function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
+function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "3D Material";
-	is_3D = NODE_3D.none;
 	solid_surf = noone;
 	
 	////- =Texture
@@ -10,7 +9,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput(10, nodeValue_Vec2(    "Shift",         [0,0] ));
 	
 	////- =Properties
-	newInput(11, nodeValue_EScroll( "Shader",     0, [ "Phong", "PBR" ] ));
+	newInput(11, nodeValue_EButton( "Shader",     0, [ "Phong", "PBR" ] ));
 	
 	newInput( 1, nodeValue_Slider(  "Diffuse",    1     ));
 	newInput( 2, nodeValue_Slider(  "Specular",   0     ));
@@ -118,6 +117,6 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		return _mat;
 	}
 	
-	static getPreviewValues       = function() /*=>*/ {return inputs[0].getValue()};
+	static getPreviewValues       = function() /*=>*/ {return outputs[0].getValue()};
 	static getGraphPreviewSurface = function() /*=>*/ {return getInputSingle(0)};
 }

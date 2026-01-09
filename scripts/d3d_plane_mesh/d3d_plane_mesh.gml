@@ -1,8 +1,8 @@
-function __3dPlane() : __3dObject() constructor {
+function __3dPlane(_normal = 0) : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	
-	normal   = 0;
+	normal   = _normal;
 	two_side = false;
 	
 	static initModel = function() {

@@ -18,7 +18,8 @@ function __d3dMaterial(s = noone) constructor {
 	normal    = noone;
 	normalStr = 1;
 	
-	static getTexture = function() { return is_surface(surface)? surface_get_texture(surface) : -1; }
+	static getSurface = function() /*=>*/ {return surface};
+	static getTexture = function() /*=>*/ {return is_surface(surface)? surface_get_texture(surface) : -1};
 	
 	static setSurface = function(s) { surface = s; return self; }
 	
