@@ -3,12 +3,12 @@ function Node_String_Length(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Text(    "Text" )).setVisible(true, true);
+	newInput(1, nodeValue_EScroll( "Mode",  0, ["Character", "Word"]));
 	
-	newInput(1, nodeValue_Enum_Scroll("Mode",  0, ["Character", "Word"]));
+	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.integer, 0 ));
 	
-	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
+	////- Node
 	
 	static processData = function(_output, _data, _index = 0) { 
 		if(_data[1] == 0)	return string_length(_data[0]);
