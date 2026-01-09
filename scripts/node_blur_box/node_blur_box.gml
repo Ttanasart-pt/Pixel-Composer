@@ -20,7 +20,7 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Blur
 	newInput( 8, nodeValue_Bool(  "Separate Axis",  false ));
-	newInput( 1, nodeValue_Float( "Size",           .25     )).setMappable(12).setHotkey("S").setUnitSimple();
+	newInput( 1, nodeValue_Float( "Size",           8     )).setMappable(12).setHotkey("S").setUnitSimple(false);
 	newInput( 9, nodeValue_Float( "Size X",         3     )).setMappable(14);
 	newInput(13, nodeValue_Float( "Size Y",         3     )).setMappable(15);
 	newInput(16, nodeValue_Curve( "Intensity Modulation", CURVE_DEF_11 ));

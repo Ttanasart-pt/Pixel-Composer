@@ -19,8 +19,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Blur
-	newInput( 1, nodeValue_Float(    "Strength",         .25     )).setUnitSimple()
-		.setHotkey("S").setMappable(9).setCurvable(16);
+	newInput( 1, nodeValue_Float(    "Strength",         8     )).setUnitSimple(false).setHotkey("S").setMappable(9).setCurvable(16);
 	newInput( 2, nodeValue_Rotation( "Direction",        0     )).setHotkey("R").setMappable(10);
 	newInput(11, nodeValue_Bool(     "Single Direction", false ));
 	newInput(13, nodeValue_Bool(     "Fade Distance",    false ));

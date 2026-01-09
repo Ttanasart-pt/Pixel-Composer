@@ -45,8 +45,14 @@ function Node_Image_Grid_Patreon(_x, _y, _group = undefined) : Node(_x, _y, _gro
 			
 			var _newL = _coli >= _col;
 			if(j && _curG != _g) {
-			    _newL  = true;
-			    _colW += 64;
+				if(_g == "Supporter") {
+				    _newL  = true;
+				    _colW += 64;
+				    
+				} else {
+					_sh += 80;
+					
+				}
 			}
 			_curG = _g;
 			

@@ -2,6 +2,7 @@ function nodeValue_Quaternion(_name, _value, _tooltip = "") { return new __NodeV
 
 function __NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : __NodeValue_Array(_name, _node, _value, _tooltip, 4) constructor {
 	setDisplay(VALUE_DISPLAY.d3quarternion);
+	attributes.angle_display = QUARTERNION_DISPLAY.euler;
 	
 	/////============== GET =============
 	

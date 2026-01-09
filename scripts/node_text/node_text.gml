@@ -6,6 +6,8 @@
 	FN_NODE_TOOL_INVOKE {
 		hotkeyCustom("Node_Text", "Edit Text", "T");
 	});
+	
+	globalvar NODE_FONT_CACHE; NODE_FONT_CACHE = {};
 #endregion
 
 function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -32,7 +34,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(30, nodeValue_Bool(         "Rotate Along Path", true ));
 	
 	////- =Font
-	newInput( 1, nodeValue_Font()).setVisible(true, false);
+	newInput( 1, nodeValue_Font( "Font"          )).setVisible(true, false);
+	newInput(35, nodeValue_Font( "Fallback Font" )).setVisible(true, false);
 	newInput( 4, nodeValue_Vec2(         "Character Range", [32,128] ));
 	newInput( 2, nodeValue_Int(          "Size",             16      ));
 	newInput(15, nodeValue_Bool(         "Scale to Fit",     false   ));
@@ -62,14 +65,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(25, nodeValue_Enum_Button(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
 	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]  ));
 	newInput(26, nodeValue_Bool(         "Use Full Text Size", false ));
-		
-	// inputs 35
+	// inputs 36
 		
 	input_display_list = [ 
 		["Text",	    false    ],  0, 32, 
 		["Output",		 true    ],	 9,  6, 34, 10, 33, 
 		["Alignment",	false    ], 13, 14, 27,  7,  8, 30, 
-		["Font",		false    ],  1,  2, 15,  3, 11, 12, 
+		["Font",		false    ],  1, 35,  2, 15,  3, 11, 12, 
 		["Rendering",	false    ],  5, 31, 
 		["Background",   true, 16], 17, 
 		["Wave",	     true, 18], 22, 19, 20, 21, 
@@ -78,11 +80,15 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Draw Data",   VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
-	 
-	attribute_surface_depth();
 	
-	font = f_p0;
+	////- Preview
+	
+	font           = f_p0;
+	font1          = undefined;
 	_font_current  = "";
+	_font1_current = "";
+	fontData       = font_get_info(font);
+	
 	_size_current  = 0;
 	_aa_current    = false;
 	
@@ -105,43 +111,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		edit_cursor_sel = noone;
 		edit_typing     = false;
 	#endregion
-	
-	////- Nodes
-	
-	static generateFont = function(_path, _size, _aa) {
-		if(PROJECT.animator.is_playing) return;
-		if(font_exists(font) && _path == _font_current && _size == _size_current && _aa == _aa_current) return;
-		
-		_font_current = _path;
-		_size_current = _size;
-		_aa_current   = _aa;
-		
-		if(!file_exists_empty(_path)) return;
-		
-		if(font != f_p0 && font_exists(font)) font_delete(font);
-		font_add_enable_aa(_aa);
-		font = font_add(_path, _size, false, false, 0, 127);
-	}
-	
-	static waveGet = function(_ind) {
-		var _x = __wave_phase + _ind * __wave_scale;
-		
-		var _sine = dsin(_x) * __wave_ampli;
-		
-		var _squr = sign(_sine) * __wave_ampli;
-		    _squr = _squr != 0? _squr : __wave_ampli;
-			
-		var _taup = abs(_x + 90) % 360;
-		var _tria = _taup > 180? 360 - _taup : _taup;
-		    _tria = (_tria / 180 * 2 - 1) * __wave_ampli;
-		
-		     if(__wave_shape < 0) return _sine;
-		else if(__wave_shape < 1) return lerp(_sine, _tria, frac(__wave_shape));
-		else if(__wave_shape < 2) return lerp(_tria, _squr, frac(__wave_shape));
-		else if(__wave_shape < 3) return abs(_x) % 360 > 360 * (0.5 - frac(__wave_shape) / 2)? -__wave_ampli : __wave_ampli;
-		
-		return random_range_seed(-1, 1, _x + seed) * __wave_ampli;
-	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _hov = false;
@@ -292,6 +261,44 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return _hov;
 	}
 	
+	////- Nodes
+	
+	attribute_surface_depth();
+	
+	static generateFont = function(_oldFont, _path, _size, _aa) {
+		if(PROJECT.animator.is_playing) return _oldFont;
+		if(!file_exists_empty(_path))   return _oldFont;
+		
+		var _cKey = $"{_path}|{_size}|{_aa}";
+		if(has(NODE_FONT_CACHE, _cKey)) return NODE_FONT_CACHE[$ _cKey];
+		
+		font_add_enable_aa(_aa);
+		var f = font_add(_path, _size, false, false, 0, 0);
+		NODE_FONT_CACHE[$ _cKey] = f;
+		
+		return f;
+	}
+	
+	static waveGet = function(_ind) {
+		var _x = __wave_phase + _ind * __wave_scale;
+		
+		var _sine = dsin(_x) * __wave_ampli;
+		
+		var _squr = sign(_sine) * __wave_ampli;
+		    _squr = _squr != 0? _squr : __wave_ampli;
+			
+		var _taup = abs(_x + 90) % 360;
+		var _tria = _taup > 180? 360 - _taup : _taup;
+		    _tria = (_tria / 180 * 2 - 1) * __wave_ampli;
+		
+		     if(__wave_shape < 0) return _sine;
+		else if(__wave_shape < 1) return lerp(_sine, _tria, frac(__wave_shape));
+		else if(__wave_shape < 2) return lerp(_tria, _squr, frac(__wave_shape));
+		else if(__wave_shape < 3) return abs(_x) % 360 > 360 * (0.5 - frac(__wave_shape) / 2)? -__wave_ampli : __wave_ampli;
+		
+		return random_range_seed(-1, 1, _x + seed) * __wave_ampli;
+	}
+	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var str    = _data[ 0]; 
@@ -311,6 +318,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			__pthR     = _data[30];
 			
 			var _font  = _data[ 1];
+			var _font1 = _data[35];
 			var _size  = _data[ 2];
 			var _scaF  = _data[15];
 			var _aa    = _data[ 3];
@@ -345,6 +353,44 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			outputs[1].setVisible(_atls);
 		#endregion
 			
+		#region font
+			__f = font;
+			
+			inputs[2].setVisible(false);
+			inputs[3].setVisible(false);
+				
+			var fontChange = _size != _size_current || _aa != _aa_current;
+				
+			if(is_string(_font))   { 
+				inputs[2].setVisible(_font != "");
+				inputs[3].setVisible(_font != "");
+			 	
+			 	if(!font_exists(font) || _font != _font_current || fontChange)
+			 		font = generateFont(font, _font, _size, _aa); 
+				__f  = font; 
+				
+			} else if(font_exists(_font)) 
+				__f  = _font; 
+			
+			if(_font1 != _font1_current || fontChange) 
+				font1 = generateFont(font1, _font1, _size, _aa); 
+			
+			_font_current  = _font;
+			_font1_current = _font1;
+			_size_current  = _size;
+			_aa_current    = _aa;
+				
+			if(font_exists(font1)) { // fallback
+				fontData = font_get_info(font);
+				
+				__glpValid = true;
+				string_foreach(str, function(s, i) /*=>*/ { __glpValid = __glpValid && has(fontData.glyphs, s); });
+				if(!__glpValid) __f = font1; 
+			} // fallback
+			
+			draw_set_font(__f);
+		#endregion
+		
 		#region modify text
 			switch(_case) {
 		        case 1 : str = string_lower(str);     break;
@@ -355,28 +401,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var rawStr = str;
 		#endregion
 			
-		#region font
-			__dwData   = array_create(string_length(str));
-			__dwDataI  = 0;
-			__f        = font;
-			
-			inputs[2].setVisible(false);
-			inputs[3].setVisible(false);
-				
-			if(is_string(_font))   { 
-				inputs[2].setVisible(_font != "");
-				inputs[3].setVisible(_font != "");
-			 	
-			 	generateFont(_font, _size, _aa); 
-			 	__f = font; 
-				
-			} else if(font_exists(_font)) { 
-				__f = _font; 
-			}
-			
-			draw_set_font(__f);
-		#endregion
-		
 		#region trim
 			if(_type) {
 				var _typAmo = 0;
@@ -545,6 +569,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		__offx      = _off[0];
 		__offy      = _off[1];
+		
+		__dwData   = array_create(string_length(str));
+		__dwDataI  = 0;
 		
 		if(_use_path) {
 			var _pthl = _path.getLength(0);
