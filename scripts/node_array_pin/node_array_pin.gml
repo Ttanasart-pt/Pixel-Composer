@@ -5,11 +5,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	auto_height      = false;
 	junction_shift_y = 16;
 	
-	isHovering     = false;
-	hover_scale    = 0;
-	hover_scale_to = 0;
-	hover_alpha    = 0;
-	
+	isHovering = false;
 	bg_spr_add = 0;
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, []));
@@ -24,6 +20,8 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} 
 	
 	setDynamicInput(1);
+	
+	////- Nodes
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var res  = [];
@@ -41,6 +39,8 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		outputs[0].setValue(res);
 	}
+	
+	////- Draw
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx =  x      * _s + _x;
@@ -81,12 +81,19 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _dy = junction_draw_hei_y * _s / 2;
 		var _dx = _fast? 6  * _s : _dy;
 		
-		hover_scale_to = 1;
 		var dval = PANEL_GRAPH.value_dragging;
 		var junc = dval == noone || dval.connect_type == CONNECT_TYPE.input? outputs[0] : dummy_input;
 		
 		if(junc.isHovering(_s, _dx, _dy, _mx, _my)) return junc;
 		return noone;
+	}
+	
+	static drawJunctionsFast = function(_x, _y, _mx, _my, _s) {
+		var s1 = _s * 1.5, s4 = _s * 4.0;
+		var jun = isHovering? inputs[0] : outputs[0];
+		
+		draw_set_color(jun.custom_color == noone? jun.draw_fg : jun.custom_color);
+		draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
@@ -98,29 +105,24 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
-		hover_alpha = 0.5;
 		if(active_draw_index > -1) {
-			hover_alpha		  =  1;
-			hover_scale_to	  =  1;
+			var _r = _s * 16;
+			shader_set(sh_node_circle);
+				shader_set_color("color", COLORS._main_accent, 1);
+				shader_set_f("radius", .5);
+				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
+				shader_set_f("radius", 0);
+			shader_reset();
 			active_draw_index = -1;
 		}
 		
-		if(hover_scale > 0) {
-			var _r = hover_scale * _s * 16;
-			shader_set(sh_node_circle);
-				shader_set_color("color", COLORS._main_accent, hover_alpha);
-				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
-			shader_reset();
-		}
-		
-		hover_scale    = lerp_float(hover_scale, hover_scale_to, 3);
-		hover_scale_to = 0;
-		
 		if(renamed && display_name != "" && display_name != "Array Pin") {
+			var ss = _s * .4 * label_scale;
 			draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
-			draw_text_transformed(xx, yy - 12 * _s, display_name, _s * 0.4, _s * 0.4, 0);
+			draw_text_transformed(xx, yy - 12 * _s, display_name, ss, ss, 0);
 		}
 		
-		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}
+	
+	static drawDimension = undefined;
 }
