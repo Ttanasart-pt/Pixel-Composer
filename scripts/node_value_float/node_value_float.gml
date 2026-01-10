@@ -78,5 +78,5 @@ function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") {
 }
 
 function nodeValue_Slider(_name, _value, _data = {}) { 
-	return new __NodeValue_Float(_name, self, _value, _data).setDisplay(VALUE_DISPLAY.slider, is_array(_data)? { range: _data } : _data);
+	return new __NodeValue_Float(_name, self, _value).setDisplay(VALUE_DISPLAY.slider, is_array(_data)? { range: _data } : _data);
 }

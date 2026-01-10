@@ -5,8 +5,6 @@ function Program_Close() {
 
 function Program_Restart() {
 	var _exePath = program_directory;
-	var _exeFile = filename_combine(_exePath, "PixelComposer.exe");
-	
 	shell_execute("", $"start \"\" /D \"{_exePath}\" \"PixelComposer.exe\"");
 	Program_Close();
 }

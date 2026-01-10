@@ -225,10 +225,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			dtx1 += ui(8);
 		}
 		var _tip = jun.tooltip;
-				
+			
 		if(_tip != "") { // Tooltip
-			var ics = _viewSpac? .75 : .6;
-			var tx  = dtx1 + ui(16) * ics;
+			var tcs = _viewSpac? .75 : .6;
+			var tx  = dtx1 + ui(16) * tcs;
 			var ty  = lb_y;
 			var aa  = .75;
 			
@@ -247,147 +247,109 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				aa = 1;
 			} 
 			
-			draw_sprite_ui(THEME.info_light, 0, tx, ty, ics, ics, 0, COLORS._main_icon_light, aa);
+			draw_sprite_ui(THEME.info_light, 0, tx, ty, tcs, tcs, 0, COLORS._main_icon_light, aa);
 			
-			lb_w += ui(16) * ics;
+			lb_w += ui(16) * tcs;
 		}
 	#endregion
 	
 	#region right buttons
-		if(_input && breakLine) { 
-			var bb = THEME.button_hide_fill;
-			var bx = xx + ww - bs;
-			var by = lb_y - bs/2;
-			
+		var hv = _hover;
+		var fc = _focus;
+		
+		var bb = THEME.button_hide_fill;
+		var bx = xx + ww;
+		var by = lb_y - bs/2;
+		var b;
+		
+		if(_input) { 
 			if(jun.is_anim) { // Keyframe
 				var _anim = jun.animator;
-				
-				var b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.prop_keyframe, 2)
-				if(b) cHov = true;
-				if(b == 2) {
-					for(var j = 0; j < array_length(_anim.values); j++) {
-						var _key = _anim.values[j];
-						if(_key.time > GLOBAL_CURRENT_FRAME) {
-							PROJECT.animator.setFrame(_key.time);
-							break;
-						}
-					}
+				if(breakLine) {
+					bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, "", THEME.prop_keyframe, 2); bx -= ui(4);
+					cHov = cHov || b;
+					if(b == 2) jun.animationGotoAfter();
 				}
 				
-				var cc = COLORS.panel_animation_keyframe_unselected;
-				var kfFocus = false;
-				for(var j = 0; j < array_length(_anim.values); j++) {
-					if(_anim.values[j].time == GLOBAL_CURRENT_FRAME) {
-						cc = COLORS.panel_animation_keyframe_selected;
-						kfFocus = true;
-						break;
-					}
-				}
-				
+				var kfFocus = jun.animationCurrentKey();
+				var  cc  = kfFocus? COLORS._main_accent : COLORS._main_icon;
 				var _tlp = kfFocus? __txtx("panel_inspector_remove_key", "Remove keyframe") : __txtx("panel_inspector_add_key", "Add keyframe");
-				bx -= bs + ui(4);
-				var b    = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, _tlp, THEME.prop_keyframe, 1, cc)
-				if(b) cHov = true;
-				if(b == 2) {
-					var _remv = false;
-					for(var j = 0; j < array_length(_anim.values); j++) {
-						var _key = _anim.values[j];
-						
-						if(_key.time == GLOBAL_CURRENT_FRAME) {
-							_anim.removeKey(_key);
-							_remv = true;
-							break;
-						}
-					}
-					
-					if(!_remv) _anim.setValue(jun.showValue(), true, GLOBAL_CURRENT_FRAME);
-				}
-							
-				bx -= bs + ui(4);
-				var b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.prop_keyframe, 0)
-				if(b) cHov = true;
-				if(b == 2) {
-					var _t = -1;
-					for(var j = 0; j < array_length(_anim.values); j++) {
-						var _key = _anim.values[j];
-						if(_key.time < GLOBAL_CURRENT_FRAME)
-							_t = _key.time;
-					}
-					
-					if(_t > -1) PROJECT.animator.setFrame(_t);
-				}
-							
-				var lhf = lb_h / 2 - 4;
-				draw_set_color(COLORS.panel_inspector_key_separator);
-				draw_line(bx - ui(4), by, bx - ui(4), by + bs);
+				bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_keyframe, 1, cc); bx -= ui(4);
+				cHov = cHov || b;
+				if(b == 2) jun.animationToggleKey();
 				
-				tooltip_loop_type.index = jun.on_end;
-				
-				bx -= bs + ui(8);
-				var b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, tooltip_loop_type, THEME.prop_on_end, jun.on_end)
-				if(b) cHov = true;
-				if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)   
-					jun.on_end = (jun.on_end + sign(MOUSE_WHEEL) + sprite_get_number(THEME.prop_on_end)) % sprite_get_number(THEME.prop_on_end);
-				if(b == 2) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  sprite_get_number(THEME.prop_on_end) mod_inc_mf3;
+				if(breakLine) {
+					bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, "", THEME.prop_keyframe, 0); bx -= ui(4);
+					cHov = cHov || b;
+					if(b == 2) jun.animationGotoBefore();
+					
+					draw_set_color(COLORS.panel_inspector_key_separator);
+					draw_line(bx + ui(2), by, bx + ui(2), by + bs);
+					
+					tooltip_loop_type.index = jun.on_end;
+					
+					_tlp = tooltip_loop_type;
+					bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_on_end, jun.on_end); bx -= ui(4);
+					cHov = cHov || b;
+					
+					var p = sprite_get_number(THEME.prop_on_end);
+					if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)   
+						jun.on_end = (jun.on_end + sign(MOUSE_WHEEL) + p) % p;
+					if(b == 2) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  p mod_inc_mf3;
+				}
 				
 			} else if(!global_var) {
 				var bt = __txtx("panel_inspector_reset", "Reset value");
 				var ba = .4 + jun.is_modified * .4;
 				var bh = jun.is_modified && _hover;
-				var b  = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, c_white, ba, ics);
-				if(b)      cHov = true;
+				
+				bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, c_white, ba, ics); bx -= ui(4);
+				cHov = cHov || b;
 				if(b == 2) jun.resetValue();
 				
-				bx -= bs + ui(4);
-				var ic_b = c_white;
-				var bt = __txtx("panel_inspector_use_expression", "Use expression");
-				var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.node_use_expression, jun.expUse, ic_b, .8, ics)
-				
-				if(b) cHov = true;
-				if(b == 2) {
-					jun.setUseExpression(!jun.expUse);
-					if(!jun.expUse) WIDGET_CURRENT = undefined;
-				}
-					
-				if(jun.expUse) {
-					bx -= bs + ui(4);
-					var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : c_white;
-					var bt = __txtx("panel_inspector_dropper", "Node Dropper");
-					var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.node_dropper, 0, cc, .8, ics);
-					
-					if(b) cHov = true;
-					if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
-				}
-				
-				if(jun.expUse || is(wid, textArea)) {
-					bx -= bs + ui(4);
-					var cc = jun.popup_dialog == noone? c_white : COLORS._main_value_positive;
-					var t  = __txtx("panel_inspector_pop_text", "Pop up Editor");
-					var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.text_popup, 0, cc, .8, ics);
-					
-					if(b) cHov = true;
+				if(breakLine) {
+					var ic_b = c_white;
+					var bt = __txtx("panel_inspector_use_expression", "Use expression");
+					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_use_expression, jun.expUse, ic_b, .8, ics); bx -= ui(4);
+					cHov = cHov || b;
 					if(b == 2) {
-						if(jun.expUse)	jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.getExpresstionEditor(), function() /*=>*/ {return context.expression},  jun));
-						else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(wid, function() /*=>*/ {return context.showValue()}, jun));
-						jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
+						jun.setUseExpression(!jun.expUse);
+						if(!jun.expUse) WIDGET_CURRENT = undefined;
+					}
+						
+					if(jun.expUse) {
+						var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : c_white;
+						var bt = __txtx("panel_inspector_dropper", "Node Dropper");
+						bx  -= bs; b  = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_dropper, 0, cc, .8, ics); bx -= ui(4);
+						cHov = cHov || b;
+						if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
+					}
+					
+					if(jun.expUse || is(wid, textArea)) {
+						var cc = jun.popup_dialog == noone? c_white : COLORS._main_value_positive;
+						var t  = __txtx("panel_inspector_pop_text", "Pop up Editor");
+						bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, t, THEME.text_popup, 0, cc, .8, ics); bx -= ui(4);
+						cHov = cHov || b;
+						if(b == 2) {
+							if(jun.expUse)	jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.getExpresstionEditor(), function() /*=>*/ {return context.expression},  jun));
+							else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(wid, function() /*=>*/ {return context.showValue()}, jun));
+							jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
+						}
+					}
+					
+					var bypas = jun.getBypassJunc();
+					if(bypas) {
+						var ic_b = jun.bypass_use? COLORS._main_accent : c_white;
+						var t  = __txt("Bypass");
+						var si = jun.bypass_use;
+						bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, t, THEME.junction_bypass, si, ic_b, .8, ics); bx -= ui(4);
+						cHov = cHov || b;
+						if(b == 2) {
+							jun.setBypass(!jun.bypass_use); 
+							jun.node.refreshNodeDisplay();
+						}
 					}
 				}
-				
-				var bypas = jun.getBypassJunc();
-				if(bypas) {
-					bx -= bs + ui(4);
-					var ic_b = jun.bypass_use? COLORS._main_accent : c_white;
-					var t  = __txt("Bypass");
-					var si = jun.bypass_use;
-					var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.junction_bypass, si, ic_b, .8, ics);
-					
-					if(b) cHov = true;
-					if(b == 2) {
-						jun.setBypass(!jun.bypass_use); 
-						jun.node.refreshNodeDisplay();
-					}
-				}
-				
 			}
 		}
 	#endregion
@@ -399,9 +361,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		// var labelWidth = min(ww * 0.4, ui(200));
 		
 		var editBoxX   = xx	+ !breakLine * labelWidth;
-		var editBoxY   = breakLine? yy + lb_h + ui(4) : yy;
-		var editBoxW   = (xx + ww) - editBoxX;
-		var editBoxH   = breakLine? TEXTBOX_HEIGHT : lb_h;
+		var editBoxY   =  breakLine? yy + lb_h + ui(4) : yy;
+		var editBoxW   = (breakLine? xx + ww : bx) - editBoxX;
+		var editBoxH   =  breakLine? TEXTBOX_HEIGHT : lb_h;
 		
 		var _widH	   = breakLine? editBoxH : 0;
 		

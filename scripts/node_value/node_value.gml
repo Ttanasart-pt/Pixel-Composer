@@ -2912,6 +2912,57 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
+	////- ACTION
+	
+	static animationCurrentKey = function() {
+		var _anim = animator;
+		for( var i = 0, n = array_length(_anim.values); i < n; i++ ) {
+			if(_anim.values[i].time == NODE_CURRENT_FRAME) 
+				return true;
+		}
+		
+		return false;
+	}
+	
+	static animationToggleKey = function() {
+		var _anim = animator;
+		var _remv = false;
+		
+		for( var i = 0, n = array_length(_anim.values); i < n; i++ ) {
+			var _key = _anim.values[i];
+			
+			if(_key.time == NODE_CURRENT_FRAME) {
+				_anim.removeKey(_key);
+				return;
+			}
+		}
+		
+		_anim.setValue(showValue(), true, GLOBAL_CURRENT_FRAME);
+	}
+	
+	static animationGotoBefore = function() {
+		var _anim = animator;
+		var _t = -1;
+		for( var i = 0, n = array_length(_anim.values); i < n; i++ ) {
+			var _key = _anim.values[i];
+			if(_key.time < NODE_CURRENT_FRAME)
+				_t = _key.time;
+		}
+		
+		if(_t > -1) PROJECT.animator.setFrame(_t);
+	}
+	
+	static animationGotoAfter = function() {
+		var _anim = animator;
+		for( var i = 0, n = array_length(_anim.values); i < n; i++ ) {
+			var _key = _anim.values[i];
+			if(_key.time > NODE_CURRENT_FRAME) {
+				PROJECT.animator.setFrame(_key.time);
+				break;
+			}
+		}
+	}
+	
 	////- MISC
 	
 	static globalExtractable = function() { return array_exists(global.GLOBALVAR_TYPES, type) && struct_find_key(global.GLOBALVAR_DISPLAY_MAP, display_type) != undefined; }
