@@ -22,6 +22,10 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	static setUnclamp  = function( ) /*=>*/ { clamp_range = false;    return self;  }
 	static setHistory  = function(h) /*=>*/ { options_histories = h;  return self;  }
 	
+	/////============== CONNECT =============
+	
+	static isConnectableStrict = function() /*=>*/ {return false};
+	
 	/////============== GET =============
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 

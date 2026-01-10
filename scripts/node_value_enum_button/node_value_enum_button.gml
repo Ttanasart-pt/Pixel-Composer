@@ -8,6 +8,10 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 	
 	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_button, _ch); return self; }
 	
+	/////============== CONNECT =============
+	
+	static isConnectableStrict = function() /*=>*/ {return false};
+	
 	/////============== GET =============
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
