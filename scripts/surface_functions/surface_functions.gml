@@ -351,7 +351,9 @@
 #endregion ==================================== DRAW ====================================
 
 #region ==================================== CHECK ===================================
-
+	
+	function ref_surface(s) { return typeof(s) == "ref" && string_pos("surface", string(s)); }
+	
 	function is_surface(s) {
 		INLINE
 		

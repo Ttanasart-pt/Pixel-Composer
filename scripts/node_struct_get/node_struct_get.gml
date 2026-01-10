@@ -3,9 +3,10 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	always_pad = true;
 	setDimension(96, 48);
 	
+	__type_enum = [ "Auto", "Number", "Text", "Surface", "Buffer", "Struct", "Gradient" ];
 	newInput(0, nodeValue_Struct(  "Struct" )).setVisible(true, true);
 	newInput(1, nodeValue_Text(    "Key"    ));
-	newInput(2, nodeValue_EScroll( "Type", 0, [ "Auto", "Number", "Text", "Surface", "Buffer", "Struct" ] ));
+	newInput(2, nodeValue_EScroll( "Type", 0, __type_enum ));
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, noone ));
 	
@@ -16,37 +17,34 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	////- Node
 	
 	static getStructValue = function(str, keys) {
-		var _pnt = str, val = 0;
-		if(!is_struct(_pnt)) return [ VALUE_TYPE.any, val ];
+		if(!is_struct(str)) return [ VALUE_TYPE.any, 0 ];
 		
-		for( var i = 0, n = array_length(keys); i < n; i++ ) {
-			var k = keys[i];
+		var pnt = str;
+		var val, key;
+		
+		for( var i = 0, n = array_length(keys) - 1; i < n; i++ ) {
+			key = keys[i];
+			val = pnt[$ key];
 			
-			if(!has(_pnt, k)) return [ VALUE_TYPE.float, 0 ];
-				
-			val = _pnt[$ k];
-			if(i == n - 1) {
-				if(is_struct(val)) {
-					if(is(val, Surface))
-						return [ VALUE_TYPE.surface, val.get() ];
-						
-					else if(is(val, Buffer))
-						return [ VALUE_TYPE.buffer, val.buffer ];
-						
-					else 
-						return [ VALUE_TYPE.struct, val ];
-						
-				} else if(is_array(val) && array_length(val))
-					return [ is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float, val ];
-					
-				return [ is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float, val ];
-			}
-				
-			if(is_struct(val))	_pnt = val;
-			else				break;
+			if(is_struct(val)) pnt = val;
+			else return [ VALUE_TYPE.any, 0 ];
 		}
 		
-		return [ VALUE_TYPE.any, val ];
+		key = array_last(keys);
+		val = pnt[$ key];
+		if(val == undefined) return [ VALUE_TYPE.any, 0 ];
+		
+		if(ref_surface(val)) return [ VALUE_TYPE.surface,  val ];
+		if(ref_buffer(val))  return [ VALUE_TYPE.buffer,   val ];
+		if(is_struct(val)) {
+			if(is(val, gradientObject)) return [ VALUE_TYPE.gradient, val ];
+			return [ VALUE_TYPE.struct, val ];
+		} 
+		
+		if(is_array(val) && array_length(val))
+			return [ is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float, val ];
+			
+		return [ is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float, val ];
 	}
 	
 	static update = function() {
@@ -73,16 +71,15 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var v = getStructValue(str, keys);
 			otyp  = v[0];
 			oval  = v[1];
-			
 		}
 		
-		switch(typ) {
-			case 0 : break;
-			case 1 : otyp = VALUE_TYPE.float;   break;
-			case 2 : otyp = VALUE_TYPE.text;    break;
-			case 3 : otyp = VALUE_TYPE.surface; break;
-			case 4 : otyp = VALUE_TYPE.buffer;  break;
-			case 5 : otyp = VALUE_TYPE.struct;  break;
+		switch(__type_enum[typ]) {
+			case "Number"   : otyp = VALUE_TYPE.float;    break;
+			case "Text"     : otyp = VALUE_TYPE.text;     break;
+			case "Surface"  : otyp = VALUE_TYPE.surface;  break;
+			case "Buffer"   : otyp = VALUE_TYPE.buffer;   break;
+			case "Struct"   : otyp = VALUE_TYPE.struct;   break;
+			case "Gradient" : otyp = VALUE_TYPE.gradient; break;
 		}
 		
 		outputs[0].setType(otyp);

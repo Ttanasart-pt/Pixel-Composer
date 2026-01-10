@@ -1,4 +1,6 @@
 
+function ref_buffer(s) { return typeof(s) == "ref" && string_pos("buffer", string(s)); }
+	
 function buffer_verify(buffer, _size, buffer_kind = buffer_fixed, alignment = 1) {
 	if(buffer <= 0)            return buffer_create(_size, buffer_kind, alignment);
 	if(!buffer_exists(buffer)) return buffer_create(_size, buffer_kind, alignment);
