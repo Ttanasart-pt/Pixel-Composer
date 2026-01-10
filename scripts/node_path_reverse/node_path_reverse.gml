@@ -1,7 +1,7 @@
 function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Reverse Path";
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_trim);
+	setDrawIcon(s_node_path_reverse);
 	
 	newInput(0, nodeValue_PathNode("Path"));
 	

@@ -59,7 +59,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	format_array     = [ "Multiple images", "Image sequences", "Animations" ];
 	
 	format_image     = [ ".png", ".jpg",  ".webp", ".exr", ".bmp", ".ico", ".txt" ];
-	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
+	format_animation = [ ".gif", ".apng", ".webp", ".mp4", ".webm" ];
 	
 	png_format       = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	
@@ -89,6 +89,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 7, nodeValue_Slider(      "Color merge",             .02         )).setVisible(false).rejectArray();
 	newInput(10, nodeValue_Slider(      "Quality",                  23, [ 0, 100, 0.1 ] )).rejectArray();
 	newInput(13, nodeValue_Enum_Scroll( "Subformat",                 2, { data: png_format, update_hover: false }));
+	newInput(23, nodeValue_Float(       "Bit Rate (mbps)",           2 )).rejectArray();
 	
 	////- =Post-Process
 	newInput(19, nodeValue_Float( "Scale", 1 ));
@@ -103,8 +104,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(11, nodeValue_Int(  "Sequence begin",    0 ));
 	newInput(14, nodeValue_Int(  "Frame step",        1 ));
 	newInput(21, nodeValue_Int(  "Batch gif",         0 )).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
-	
-	// inputs 23
+	// inputs 24
 	
 	newOutput(0, nodeValue_Output("Preview", VALUE_TYPE.surface, noone));
 	
@@ -197,7 +197,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [
 		["Export",		 false    ],  0,  1, 20,  2, export_template, 16, 22, 
-		["Format",		 false    ],  3,  9, 17, 18,  6,  7, 10, 13, 
+		["Format",		 false    ],  3,  9, 17, 18,  6,  7, 10, 13, 23, 
 		["Post-Process", false    ], 19,
 		["Custom Range",  true, 15], 12, 
 		["Animation",	 false    ],  8,  5, 11, 14, 21, 
@@ -512,6 +512,24 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_target     = target_path;
 	}
 	 
+	static renderWebm = function(temp_path, target_path) {
+		var rate = getInputData( 8); rate = max(1, rate);
+		var qual = getInputData(10);
+		var bitr = getInputData(23);
+		
+		if(file_exists_empty(target_path)) file_delete(target_path);
+		
+		temp_path   = string_replace_all(temp_path, "/", "\\");
+		temp_path   = string_trim(temp_path, ["*.png"]) + "%05d.png";
+		target_path = string_replace_all(target_path, "/", "\\");
+		
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -i \"{temp_path}\" -c:v libvpx-vp9 -pix_fmt yuva420p -b:v {bitr}M -crf {qual} -deadline good -auto-alt-ref 0 {string_quote(target_path)}";
+		
+		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
+		render_type       = "webm";
+		render_target     = target_path;
+	}
+	 
 	static renderApng = function(temp_path, target_path) {
 		var rate = getInputData( 8);
 		if(rate == 0) rate = 1;
@@ -760,6 +778,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					case ".webp" : renderWebp(temp_path, target_path); break;
 					case ".mp4"  : renderMp4( temp_path, target_path); break;
 					case ".apng" : renderApng(temp_path, target_path); break;
+					case ".webm" : renderWebm(temp_path, target_path); break;
 				}
 			}
 		} else {
@@ -778,6 +797,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				case ".webp" : renderWebp(directory + "/",      target_path); break;
 				case ".mp4"  : renderMp4( directory + "/",      target_path); break;
 				case ".apng" : renderApng(directory + "/",      target_path); break;
+				case ".webm" : renderWebm(directory + "/",      target_path); break;
 			}
 		}
 		
@@ -900,31 +920,40 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[3].getEditWidget().data_list = format_single;
 			}
 			
-			inputs[11].setVisible(anim == 1);
 			inputs[16].setVisible(anim == 0);
+			
+			inputs[17].setVisible(false);
+			inputs[18].setVisible(false);
+			inputs[ 6].setVisible(false);
+			inputs[ 7].setVisible(false);
+			inputs[10].setVisible(false);
+			inputs[13].setVisible(false);
+			inputs[23].setVisible(false);
 			
 			inputs[12].getEditWidget().minn = FIRST_FRAME + 1;
 			inputs[12].getEditWidget().maxx = LAST_FRAME + 1;
 			
+			inputs[ 8].setVisible(false);
+			inputs[ 5].setVisible(false);
+			inputs[21].setVisible(false);
+			inputs[11].setVisible(anim == 1);
 			inputs[14].setVisible(anim >  0);
 			
 			if(anim == NODE_EXPORT_FORMAT.animation) {
 				var _enc = getInputData(17);
 				var _fmt = array_safe_get_fast(format_animation, extn);
 				
-				inputs[ 5].setVisible(_fmt == ".gif");
-				
+				inputs[ 9].display_data.data         = format_animation;
+				inputs[ 9].getEditWidget().data_list = format_animation;
 				inputs[17].setVisible(_fmt == ".gif");
+				inputs[18].setVisible(_fmt == ".gif" &&  _enc);
 				inputs[ 6].setVisible(_fmt == ".gif" && !_enc);
 				inputs[ 7].setVisible(_fmt == ".gif" && !_enc);
-				inputs[18].setVisible(_fmt == ".gif" &&  _enc);
+				inputs[23].setVisible(_fmt == ".webm");
+				
 				inputs[ 8].setVisible(true);
+				inputs[ 5].setVisible(_fmt == ".gif");
 				inputs[21].setVisible(true);
-				
-				inputs[ 9].display_data.data	= format_animation;
-				inputs[ 9].getEditWidget().data_list = format_animation;
-				
-				inputs[13].setVisible(false);
 				
 				if(_fmt == ".mp4") {
 					inputs[10].setName("CRF value");
@@ -933,23 +962,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					inputs[10].setVisible(true);
 					inputs[10].getEditWidget().minn =  0;
 					inputs[10].getEditWidget().maxx = 51;
-				} else 
-					inputs[10].setVisible(false);
+					
+				} else if(_fmt == ".webm") {
+					inputs[10].setName("CRF value");
+					inputs[10].tooltip = "Quality of the output, with 0 being the highest (and largest file size), and 63 being the lowest.";
+					
+					inputs[10].setVisible(true);
+					inputs[10].getEditWidget().minn =  0;
+					inputs[10].getEditWidget().maxx = 63;
+					
+				}
 					
 			} else {
 				var _fmt = array_safe_get_fast(format_image, extn);
-				
-				inputs[ 5].setVisible(false);
-				inputs[ 6].setVisible(false);
-				inputs[ 7].setVisible(false);
-				inputs[17].setVisible(false);
-				inputs[18].setVisible(false);
-				inputs[ 8].setVisible(false);
-				inputs[21].setVisible(false);
 			
-				inputs[ 9].display_data.data	= format_image;
+				inputs[ 9].display_data.data	     = format_image;
 				inputs[ 9].getEditWidget().data_list = format_image;
-				
 				inputs[13].setVisible(_fmt == ".png");
 				
 				if(_fmt == ".jpg" || _fmt == ".webp") {
@@ -959,9 +987,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					inputs[10].setVisible(true);
 					inputs[10].getEditWidget().minn =   0;
 					inputs[10].getEditWidget().maxx = 100;
-					
-				} else 
-					inputs[10].setVisible(false);
+				}
 			}
 		#endregion
 		
