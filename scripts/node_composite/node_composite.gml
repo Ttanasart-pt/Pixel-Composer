@@ -337,10 +337,10 @@
 			if(_edit) UNDO_HOLDING = true;
 			
 			draw_set_color(COLORS._main_icon);
-			if(drag_axis == 0) draw_line(_px - lengthdir_x(9999, axis_angle     ), _py - lengthdir_y(9999, axis_angle     ), 
-			                             _px + lengthdir_x(9999, axis_angle     ), _py + lengthdir_y(9999, axis_angle     ));
-			if(drag_axis == 1) draw_line(_px - lengthdir_x(9999, axis_angle + 90), _py - lengthdir_y(9999, axis_angle + 90), 
-			                             _px + lengthdir_x(9999, axis_angle + 90), _py + lengthdir_y(9999, axis_angle + 90));
+			if(drag_axis == 0) draw_line_dashed(_px - lengthdir_x(9999, axis_angle     ), _py - lengthdir_y(9999, axis_angle     ), 
+			                                    _px + lengthdir_x(9999, axis_angle     ), _py + lengthdir_y(9999, axis_angle     ));
+			if(drag_axis == 1) draw_line_dashed(_px - lengthdir_x(9999, axis_angle + 90), _py - lengthdir_y(9999, axis_angle + 90), 
+			                                    _px + lengthdir_x(9999, axis_angle + 90), _py + lengthdir_y(9999, axis_angle + 90));
 			
 			if(key_press(ord("X"))) {
 				drag_axis = drag_axis == 0? -1 : 0;
@@ -927,8 +927,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						
 						var _ddx = _x + dragging_sx * _s;
 						var _ddy = _y + dragging_sy * _s;
-						draw_line(_ddx - lengthdir_x(999, _dirr), _ddy - lengthdir_y(999, _dirr), 
-						          _ddx + lengthdir_x(999, _dirr), _ddy + lengthdir_y(999, _dirr));
+						draw_line_dashed(_ddx - lengthdir_x(999, _dirr), _ddy - lengthdir_y(999, _dirr), 
+						                 _ddx + lengthdir_x(999, _dirr), _ddy + lengthdir_y(999, _dirr));
 					}
 					
 					if(surf_dragging > -1) {

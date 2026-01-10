@@ -974,6 +974,9 @@
             "Node_Move_Point",
             "Node_Point_In_Area",
             "Node_Point_SDF",
+            { "label": "/Quarternion" },
+            "Node_Quarternion_From_Euler", 
+            "Node_Quarternion_To_Euler", 
             
             {"label": "Matrix"},
             {"label": "/Creators"},

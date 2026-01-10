@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_quarternion_to_euler",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_quarternion_to_euler",
+  "parent":{
+    "name":"vector",
+    "path":"folders/nodes/data/value/vector.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
