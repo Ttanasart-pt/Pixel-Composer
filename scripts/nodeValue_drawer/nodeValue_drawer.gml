@@ -24,8 +24,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var breakLine = _viewSpac || jun.expUse;
 		var mbRight   = true;
 		
-		var con_w = ww - ui(4);
-		var xc	  = xx + ww / 2;
 		var lb_h  = line_get_height(_font, 4 + viewMode * 2);
 		var lb_y  = yy + lb_h / 2;
 		var cHov  = false;
@@ -452,4 +450,87 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	
 	return [ lb_h + _widH, mbRight, cHov, lbHov, lb_x ];
+}	
+
+function fetchWidgetH(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0, _ID = undefined) { 
+	#region data
+		var _viewSpac = viewMode == INSP_VIEW_MODE.spacious;
+		var _input    = jun.connect_type == CONNECT_TYPE.input;
+		
+		var _font     = _viewSpac? f_p2 : f_p3;
+		var breakLine = _viewSpac || jun.expUse;
+		
+		var lb_h  = line_get_height(_font, 4 + viewMode * 2);
+		var wid   = jun.getEditWidget();
+		
+		if(is(wid, widget)) {
+			breakLine = breakLine || wid.always_break_line;
+			
+			switch(instanceof(wid)) {
+				case "matrixGrid"      : breakLine = breakLine || wid.size[0] > 5; break;
+				case "outputStructBox" : breakLine = breakLine || wid.expand;      break;
+			}
+		}
+		
+	#endregion
+	
+	if(!is(wid, widget)) return [ lb_h, true, false, false, 0 ];
+	
+	#region draw widget
+		var labelWidth = min(ww * 0.4, ui(200));
+		var editBoxX   = xx	+ !breakLine * labelWidth;
+		var editBoxY   = breakLine? yy + lb_h + ui(4) : yy;
+		var editBoxW   = xx + ww - editBoxX;
+		var editBoxH   = breakLine? TEXTBOX_HEIGHT : lb_h;
+		var _widH	   = breakLine? editBoxH : 0;
+		
+		if(jun.expUse) {
+			var expEdit = jun.getExpresstionEditor();
+			var wd_h    = expEdit.fetchHeight(new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression));
+			_widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
+			
+		} else if(wid && jun.display_type != VALUE_DISPLAY.none) {
+			var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, jun.def_val, jun.display_data, _m, rx, ry)
+				.setFont(_viewSpac? f_p2 : f_p3).setSepAxis(jun.sep_axis);
+			
+			switch(jun.type) {
+				case VALUE_TYPE.float : 
+				case VALUE_TYPE.integer : 
+					switch(jun.display_type) {
+						case VALUE_DISPLAY.puppet_control : 
+						case VALUE_DISPLAY.transform : 
+							param.h = _viewSpac? param.h : lb_h;
+							break;
+					}
+					break;
+				
+				case VALUE_TYPE.boolean : 
+					if(is(wid, checkBoxActive)) break;
+					
+					param.halign = breakLine? fa_left : fa_center;
+					param.s      = editBoxH;
+					
+					if(!breakLine) {
+						param.w = ww - min(ui(80) + ww * 0.2, ui(200));
+						param.x = editBoxX + editBoxW - param.w;
+					}
+					break;
+					
+				case VALUE_TYPE.surface : 
+				case VALUE_TYPE.d3Material : 
+				case VALUE_TYPE.dynaSurface : 
+					param.h = breakLine? ui(96) : ui(48);
+					break;
+				
+			}
+			
+			_widH = wid.fetchHeight(param) ?? 0;
+			if(breakLine) _widH += ui(4);
+			else          _widH -= lb_h;
+			_widH = max(0, _widH);
+			
+		}
+	#endregion
+	
+	return [ lb_h + _widH, true, false, false, 0 ];
 }	

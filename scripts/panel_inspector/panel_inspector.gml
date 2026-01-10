@@ -556,6 +556,8 @@ function Panel_Inspector() : PanelContent() constructor {
     
     static drawNodeProperties = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all) {
         var con_w  = _w - ui(4); 
+        var con_h = contentPane.surface_h;
+        
         var _hover = pHOVER && contentPane.hover;
         var _focus = pFOCUS || PANEL_GRAPH.pFOCUS/* || PANEL_PREVIEW.pFOCUS*/;
         
@@ -713,7 +715,8 @@ function Panel_Inspector() : PanelContent() constructor {
         var rry     = top_bar_h + y;
         
         for(var i = 0; i < amo; i++) {
-            var yy = hh + _y;
+            var yy    = hh + _y;
+            var _draw = yy + ui(8) < con_h && yy > -ui(8);
             
             if(i < amoIn) { // inputs
                 var _dsl = _inspecting.input_display_list;
@@ -993,7 +996,8 @@ function Panel_Inspector() : PanelContent() constructor {
             #region ++++ draw widget ++++
             	var _wdgt = jun.getEditWidget();
             	
-                var widg    = drawWidget(_x + ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry);
+                var widg    = _draw? drawWidget(   _x + ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry ) : 
+                                     fetchWidgetH( _x + ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry );
                 var widH    = widg[0];
                 var mbRight = widg[1];
                 var widHov  = widg[2];

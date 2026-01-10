@@ -60,6 +60,8 @@ function Node_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _surf = _data[0];
 			var _mask = _data[1];
 			var _thr  = _data[2];
+			
+			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
 		surface_set_shader(_outData, sh_separate);
