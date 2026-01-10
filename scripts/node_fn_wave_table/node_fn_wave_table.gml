@@ -1,20 +1,24 @@
-enum WAVETABLE_FN {
-	sine,
-	square,
-	tri,
-	saw,
-}
+#region global
+	enum WAVETABLE_FN {
+		sine,
+		square,
+		tri,
+		saw,
+	}
+#endregion
 
 function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) constructor {
 	name = "WaveTable";
 	
-	newInput(inl + 0, nodeValue_Float("Pattern", 0 ));
-		
-	newInput(inl + 1, nodeValue_Vec2("Range", [ 0, 1 ]));
+	newInput( inl+0, nodeValue_Float(  "Pattern",    0               ));
+	newInput( inl+1, nodeValue_Vec2(   "Range",      [0,1]           ));
 	
-	newInput(inl + 2, nodeValue_Slider("Frequency", 2, [1, 8, 0.01] ));
-	
-	newInput(inl + 3, nodeValue_Float("Phase", 0 ));
+	////- =Progress
+	newInput( inl+4, nodeValue_EButton( "Speed Control", 0, [ "Frequency", "Period" ] ));
+	newInput( inl+2, nodeValue_Slider(  "Frequency",     2, [1, 8, 0.01] ));
+	newInput( inl+5, nodeValue_Float(   "Period",        8               ));
+	newInput( inl+3, nodeValue_Float(   "Phase",         0               ));
+	// inl+6
 	
 	wavetable_apply = function(typ) {
 		if(wavetable_selecting == noone) return; 
@@ -177,8 +181,11 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 	});
 	
 	array_append(input_display_list, [
-		["Wave",	false], wavetable_editor, inl + 0, inl + 1, inl + 2, inl + 3,  
+		[ "Wave",     false ], wavetable_editor, inl+0, inl+1, 
+		[ "Progress", false ], inl+4, inl+2, inl+5, inl+3,  
 	]);
+	
+	////- Node
 	
 	attributes.wavetable = [
 		WAVETABLE_FN.sine,
@@ -192,6 +199,9 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 	wavetable_display_curent    = [];
 	
 	pattern   = 0;
+	
+	speedCtrl = 0;
+	period    = 8;
 	frequency = 0;
 	phase     = 0;
 	
@@ -254,27 +264,37 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 	}
 	
 	static __fnEval = function(_x = 0) {
-		_x = _x * frequency - phase;
+		switch(speedCtrl) {
+			case 0 : _x = _x * frequency - phase;               break;
+			case 1 : _x = (_x * TOTAL_FRAMES - phase) / period; break;
+		}
 		
 		var _lr = __evalRaw(pattern, _x) * .5 + .5;
 		return lerp(range_min, range_max, _lr);
 	}
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
-		pattern     = _data[inl + 0];
-		var ran     = _data[inl + 1];
-		range_min   = array_safe_get_fast(ran, 0);
-		range_max   = array_safe_get_fast(ran, 1);
+		#region data
+			pattern     = _data[inl + 0];
+			range       = _data[inl + 1];
+			range_min   = array_safe_get_fast(range, 0);
+			range_max   = array_safe_get_fast(range, 1);
+			
+			speedCtrl   = _data[inl + 4];
+			period      = _data[inl + 5];
+			frequency   = _data[inl + 2];
+			phase       = _data[inl + 3];
+			
+			inputs[inl + 2].setVisible(speedCtrl == 0);
+			inputs[inl + 5].setVisible(speedCtrl == 1);
+		#endregion
 		
-		frequency   = _data[inl + 2];
-		phase       = _data[inl + 3];
-		
-		var val = __fnEval(CURRENT_FRAME / TOTAL_FRAMES);
+		var val = __fnEval(_frame / TOTAL_FRAMES);
 		text_display = val;
 		
 		wavetable_display_curent = array_verify(wavetable_display_curent, graph_res);
 		for( var j = 0; j < graph_res; j++ )
-			wavetable_display_curent[j] = __evalRaw(pattern, (j / graph_res) * 2);
+			wavetable_display_curent[j] = __evalRaw(pattern, j / graph_res * 2);
 		
 		return val;
 	}
