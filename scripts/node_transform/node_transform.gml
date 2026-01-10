@@ -501,6 +501,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 					pos_x = dragging_sx + lengthdir_x(dist, ang);
 					pos_y = dragging_sy + lengthdir_y(dist, ang);
+					
+					draw_set_color(COLORS._main_accent);
+					draw_line_dashed(_x + dragging_sx * _s + lengthdir_x(9999, ang), _y + dragging_sy * _s + lengthdir_y(9999, ang), 
+					                 _x + dragging_sx * _s - lengthdir_x(9999, ang), _y + dragging_sy * _s - lengthdir_y(9999, ang));
+					
 				} else {
 					pos_x = dragging_sx + px / _s;
 					pos_y = dragging_sy + py / _s;
@@ -522,6 +527,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 					pos_x = dragging_sx + lengthdir_x(dist, ang);
 					pos_y = dragging_sy + lengthdir_y(dist, ang);
+					
+					draw_set_color(COLORS._main_accent);
+					draw_line_dashed(bax + lengthdir_x(9999, ang), bay + lengthdir_y(9999, ang), 
+					                 bax - lengthdir_x(9999, ang), bay - lengthdir_y(9999, ang));
+					
 				} else {
 					pos_x = dragging_sx + px / _s;
 					pos_y = dragging_sy + py / _s;
