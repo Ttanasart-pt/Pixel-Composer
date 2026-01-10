@@ -644,10 +644,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function toCenterNode(_arr = nodes_list, _zoom = true) {
         if(!project.active) return; 
         
-        graph_s    = 1;
-        graph_s_to = 1;
-        
         if(array_empty(_arr)) {
+	        graph_s    = 1;
+	        graph_s_to = 1;
+	        
             graph_x = round(w / 2 / graph_s);
             graph_y = round(h / 2 / graph_s);
             return;
@@ -692,16 +692,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var _w = w;
         var _h = h - toolbar_height - project.graphDisplay.show_topbar * topbar_height;
         
-        var sc = min(_w / ww, _h / hh);
-            sc = clamp(sc, array_first(scale), array_last(scale));
-        if(!_zoom) sc = 1;
-        
-        graph_s    = sc;
-        graph_s_to = sc;
+        if(_zoom) {
+	        var sc = min(_w / ww, _h / hh);
+	            sc = clamp(sc, array_first(scale), array_last(scale));
+	        
+	        graph_s    = sc;
+	        graph_s_to = sc;
+        }
         
         graph_x = (_w / 2) / graph_s - cx;
         graph_y = (_h / 2) / graph_s - cy;
-        
     }
     
     function initSize() { toCenterNode(); }
@@ -1262,8 +1262,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_context = [];
         nodes_list   = project.nodes;
         refreshDraw();
-        
-        toCenterNode();
+        toCenterNode(, false);
     }
     
     function addContext(_node) {
@@ -1275,9 +1274,20 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         selection_block = 1;
         
         setContextFrame(false, _node);
-        toCenterNode();
-        
+        toCenterNode(, false);
         return self;
+    }
+    
+    function exitContext() {
+    	if(getCurrentContext() == noone) return;
+    	
+    	array_pop(node_context);
+    	nodes_list = getNodeList();
+    	
+        node_dragging   = noone;
+        nodes_selecting = [];
+        selection_block = 1;
+        toCenterNode(, false);
     }
     
     function setContextFrame(dirr, node) {
@@ -1298,19 +1308,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         context_frame_sy        = gr_y + node.y * graph_s;
         context_frame_ex        = context_frame_sx + node.w * graph_s;
         context_frame_ey        = context_frame_sy + node.h * graph_s;
-    }
-    
-    function exitContext() {
-    	if(getCurrentContext() == noone) return;
-    	
-    	array_pop(node_context);
-    	nodes_list = getNodeList();
-    	
-        node_dragging   = noone;
-        nodes_selecting = [];
-        selection_block = 1;
-        
-        toCenterNode();
     }
     
     ////- Step
@@ -2614,7 +2611,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     }
                     
                     nodes_selecting = [ _nodeFocus ];
-                    toCenterNode(nodes_selecting);
+                    toCenterNode(nodes_selecting, false);
                     setContextFrame(true, _ctx);
                     break;
                 }
