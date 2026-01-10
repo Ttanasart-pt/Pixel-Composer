@@ -1,9 +1,9 @@
 function readObj_init(_scale = 1, _axis = false) {
+	obj_raw     = noone;
 	obj_reading = true;
 	obj_read_progress = 0;
 	obj_read_prog_sub = 0;
 	obj_read_prog_tot = 3;
-	obj_raw = noone;
 	
 	obj_reading_scale = _scale;
 	obj_reading_axis  = _axis;
@@ -13,15 +13,15 @@ function readObj_init(_scale = 1, _axis = false) {
 	_VBN = [];
 	mats = [];
 	
-	matIndex   = [];
-	tris       = [];
-	mtlPath    = "";
+	matIndex     = [];
+	tris         = [];
+	mtlPath      = "";
 	use_material = false;
 	use_normal   = true;
 	
-	v   = [];
-	vt  = [];
-	vn  = [];
+	v   = [ [0,0,0] ];
+	vt  = [ [0,0  ] ];
+	vn  = [ [0,0,0] ];
 	f   = [];
 	ft  = [];
 	fn  = [];
@@ -32,7 +32,7 @@ function readObj_init(_scale = 1, _axis = false) {
 function readObj_file() {
 	var _time = current_time;
 	
-	while(!file_text_eof(obj_read_file)) { #region reading file
+	while(!file_text_eof(obj_read_file)) { // reading file
 		var l = file_text_readln(obj_read_file);
 		l = string_trim(l);
 		
@@ -85,25 +85,24 @@ function readObj_file() {
 				
 			case "f" :
 				var _len = array_length(sep);
-				var _f   = array_create(_len - 1);
+				var _ff  = array_create(_len - 1);
 				var _ft  = array_create(_len - 1);
 				var _fn  = array_create(_len - 1);
 				
 				for( var i = 1; i < _len; i++ ) {
-					var _sp    = string_split(sep[i], "/");
-					if(array_length(_sp) < 3) continue;
+					var _sp = string_split(sep[i], "/");
+					var _sa = array_length(_sp);
 					
-					_f[i - 1]  = real(_sp[0]) - 1;
-					_ft[i - 1] = real(_sp[1]) - 1;
-					_fn[i - 1] = real(_sp[2]) - 1;
-					
-					use_normal = array_length(_sp) >= 4;
+					_ff[i - 1] = _sa > 0 && _sp[0] != ""? real(_sp[0]) : 0;
+					_ft[i - 1] = _sa > 1 && _sp[1] != ""? real(_sp[1]) : 0;
+					_fn[i - 1] = _sa > 2 && _sp[2] != ""? real(_sp[2]) : 0;
+					use_normal = _sa > 3;
 				}
 				
 				tri += _len - 2;
-				array_push(f,  _f ); //get position
-				array_push(ft, _ft); //get texture map
-				array_push(fn, _fn); //get normal
+				array_push(f,  _ff); // position
+				array_push(ft, _ft); // texture map
+				array_push(fn, _fn); // normal
 				break;
 				
 			case "usemtl" :
@@ -142,7 +141,7 @@ function readObj_file() {
 		}
 		
 		if(current_time - _time > 30) return;
-	} #endregion
+	}
 	
 	if(!array_empty(f)) {
 		array_push(_VB,  f);
@@ -240,10 +239,7 @@ function readObj_buff() {
 				var _fn  = facen[j];
 			
 				var _vlen = array_length(_f);
-				if(_vlen > 4) {
-					noti_warning("N-gon is not supported. Please triangulate faces before importing.")
-					continue;
-				}
+				if(_vlen > 4) { noti_warning("N-gon is not supported. Please triangulate faces before importing.") continue; }
 				
 				var _pf   = array_create(_vlen);
 				var _pft  = array_create(_vlen);

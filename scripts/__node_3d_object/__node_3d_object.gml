@@ -1,33 +1,34 @@
 #region
+	#macro __d3d_input_list_transform ["Transform", false], 0, 3, 1, 2
+	
 	FN_NODE_TOOL_INVOKE {
 		hotkeyCustom("Node_3D_Object", "Transform", "G");
 		hotkeyCustom("Node_3D_Object", "Rotate",    "R");
 		hotkeyCustom("Node_3D_Object", "Scale",     "S");
 	});
-	
 #endregion
 
 function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Object";
 	gizmo = new __3dGizmoAxis(.2, COLORS._main_accent);
 	
-	cached_object = [];
-	object_class  = noone;
-	
+	cached_object   = [];
+	object_class    = noone;
 	preview_channel = 0;
 	apply_anchor    = false;
 	
-	newInput(0, nodeValue_Vec3(       "Position", [0,0,0], { linkable: false }));
-	newInput(3, nodeValue_Vec3(       "Anchor",   [0,0,0], { linkable: false, 
+	////- Inputs
+	
+	newInput( 0, nodeValue_Vec3(       "Position", [0,0,0], { linkable: false }));
+	newInput( 3, nodeValue_Vec3(       "Anchor",   [0,0,0], { linkable: false, 
 			side_button: button(function() /*=>*/ { apply_anchor = !apply_anchor; triggerRender(); })
 				.setIcon(THEME.icon_3d_anchor, [ function() /*=>*/ {return apply_anchor} ], c_white).setTooltip("Apply Position") 
 		}));
-	newInput(1, nodeValue_Quaternion( "Rotation", [0,0,0,1] ));
-	newInput(2, nodeValue_Vec3(       "Scale",    [1,1,1]   ));
-	
+	newInput( 1, nodeValue_Quaternion( "Rotation", [0,0,0,1] ));
+	newInput( 2, nodeValue_Vec3(       "Scale",    [1,1,1]   ));
 	in_d3d = array_length(inputs);
 	
-	#macro __d3d_input_list_transform ["Transform", false], 0, 3, 1, 2
+	////- Tools
 	
 	#region ---- tools ----
 		tool_object_pos = new d3d_transform_tool_position(self);
@@ -48,6 +49,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		static getToolSettings = function() /*=>*/ {return (isUsingTool("Transform") || isUsingTool("Rotate"))? tool_settings : []};
 	#endregion
 	
+	////- Draw
+	
 	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) { 
 		var object = getPreviewObjects();
 		if(object == noone || array_empty(object)) return;
@@ -64,6 +67,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	} 
 	
 	static onDrawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
+	
+	////- Render
 	
 	static setTransform = function(object, _data, _asp = 1) {
 		if(object == noone) return;
@@ -105,6 +110,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		cached_object[index] = _obj;
 		return _obj;
 	}
+	
+	////- Preview
 	
 	static getPreviewObjects		= function() { return [ getPreviewObject(), gizmo ]; }
 	static getPreviewObjectOutline  = function() { return [ getPreviewObject(), gizmo ]; }
