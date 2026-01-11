@@ -1,6 +1,7 @@
 function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Shape Path 3D";
 	is_3D = NODE_3D.polygon;
+	always_pad = true;
 	setDimension(96, 48);
 	
     shape_types = [ 
@@ -22,14 +23,19 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 5, nodeValue_Int(     "Sides",         6 ));
 	newInput( 6, nodeValue_Float(   "Revolution",    4 ));
 	newInput( 7, nodeValue_Float(   "Pitch",        .2 ));
+	newInput( 9, nodeValue_Bool(    "Reverse",   false ));
 	newInput( 8, nodeValue_Slider(  "Inner Radius", .5 ));
-	// input 9
+	
+    ////- =Detail
+	newInput(10, nodeValue_Int(      "Resolution",     64            ));
+	// input 11
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self ));
 	
 	input_display_list = [
-		[ "Transform", false ], 0, 1, 3, 4, 
-		[ "Shape",     false ], 2, 5, 6, 7, 8, 
+		[ "Transform", false ],  0,  1,  3,  4, 
+		[ "Shape",     false ],  2,  5,  6,  7,  9,  8, 
+		[ "Detail",    false ], 10, 
 	];
 	
 	////- Path
@@ -124,23 +130,24 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- Nodes
 	
 	static update = function(frame = CURRENT_FRAME) {
-        var _pos  = getInputData(0);
-        var _sca  = getInputData(1);
-        var _up   = getInputData(3);
-        var _rot  = getInputData(4);
-        
-	    shape = getInputData(2);
-	    posx  = _pos[0]; posy  = _pos[1]; posz  = _pos[2];
-        scax  = _sca[0]; scay  = _sca[1]; scaz  = _sca[2];
-        
-        var ox, oy, oz, nx, ny, nz;
-        var x0, y0, z0;
-        var x1, y1, z1;
-        
-        inputs[5].setVisible(false);
-        inputs[6].setVisible(false);
-        inputs[7].setVisible(false);
-        inputs[8].setVisible(false);
+		#region data
+	        var _pos  = getInputData(0);
+	        var _sca  = getInputData(1);
+	        var _up   = getInputData(3);
+	        var _rot  = getInputData(4);
+	        
+		    shape = getInputData(2);
+		    posx  = _pos[0]; posy  = _pos[1]; posz  = _pos[2];
+	        scax  = _sca[0]; scay  = _sca[1]; scaz  = _sca[2];
+	        
+	        var ox, oy, oz, nx, ny, nz;
+	        var x0, y0, z0;
+	        var x1, y1, z1;
+	        
+	        for( var i = 5, n = array_length(inputs); i < n; i++ )
+	        	inputs[i].setVisible(false);
+	        	
+    	#endregion
         
         switch(shapeScroll[shape].name) {
             case "Rectangle" : 
@@ -256,20 +263,32 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
                 break;
             
             case "Spiral" : 
-                inputs[6].setVisible(true);
-                inputs[7].setVisible(true);
-                var _rev = getInputData(6);
-                var _pit = getInputData(7);
+                inputs[ 6].setVisible(true);
+                inputs[ 7].setVisible(true);
+                inputs[ 9].setVisible(true);
+                inputs[10].setVisible(true);
+                
+                var _rev  = getInputData( 6);
+                var _pit  = getInputData( 7);
+                var _revr = getInputData( 9);
+                var _detl = getInputData(10);
                 
                 loop = false;
-                var _st = 64 * _rev;
-                var _as = 360 / 64;
-                var _pp = 1 / 64 * _pit;
+                var _st = _detl * _rev;
+                var _as = 360 / _detl;
+                if(_revr) {
+                	_pit  = 1 / abs(_rev);
+                	_rot -= _as * _st;
+                }
+                
+                var _pp = 1 / _detl * _pit;
                 points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
-                    nx = posx + lengthdir_x(scax * i * _pp, _as * i);
-                    ny = posy + lengthdir_y(scay * i * _pp, _as * i);
+                	var _rr = _pp * i;
+                	
+                	nx = posx + lengthdir_x(scax * _rr, _as * i);
+                    ny = posy + lengthdir_y(scay * _rr, _as * i);
                     
                     points[i] = [ nx, ny, posz ];
                 }

@@ -1851,9 +1851,8 @@ function Panel_Preview() : PanelContent() constructor {
     		var _prev_objs = [];
     		
     		if(has(_node, "getPreviewObject"))
-    			_prev_obj  = _node.getPreviewObject();
-    		
-    		if(_prev_obj == noone) {
+    			_prev_obj = _node.getPreviewObject();
+    		else {
     			var _data = getNodePreviewData();
     			var _prev = d3_preview_objects[d3_preview_object_index];
     			if(_prev[2] == undefined) _prev[2] = _prev[3]();
@@ -1870,9 +1869,8 @@ function Panel_Preview() : PanelContent() constructor {
     		}
     		
     		if(has(_node, "getPreviewObjects"))
-    			 _prev_objs = _node.getPreviewObjects();
-    		
-    		if(array_empty(_prev_objs))
+    			_prev_objs = _node.getPreviewObjects();
+    		else
     			_prev_objs = [ _prev_obj ];
     	#endregion
     	
