@@ -2,11 +2,10 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	name  = "Canvas Group";
 	color = COLORS.node_blend_canvas;
 	icon  = THEME.icon_canvas;
+	modifiable = false;
 	
 	timeline_item_group = new timelineItemGroup_Canvas(self);
 	PROJECT.timelines.addItem(timeline_item_group);
-	
-	modifiable = false;
 	
 	newInput( 0, nodeValue_Dimension());
 	
