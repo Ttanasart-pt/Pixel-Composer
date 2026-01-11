@@ -809,8 +809,10 @@ function Panel_Inspector() : PanelContent() constructor {
             } else if(is(jun, widget)) {
             	if(!jun.visible) continue;
             	
+                var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, {}, _m, x, y)
+                	.setFont(_font);
+                	
                 jun.setFocusHover(pFOCUS, pHOVER);
-                var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, {}, _m, x, y);
                 var _wdh = jun.drawParam(param);
                 if(!is_undefined(_wdh)) hh += _wdh + padd;
                 continue;

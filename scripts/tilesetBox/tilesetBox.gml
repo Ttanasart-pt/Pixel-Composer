@@ -27,7 +27,7 @@ function tilesetBox(_junction) : widget() constructor {
         
         if(_tileset == noone) {
             b_newTileset.setFocusHover(active, hover);
-            var param = new widgetParam(x, y, w, h, noone, {}, _m, rx, ry);
+            var param = new widgetParam(x, y, w, h, noone, {}, _m, rx, ry).setFont(font);
             b_newTileset.drawParam(param);
             
         } else {
@@ -63,7 +63,7 @@ function tilesetBox(_junction) : widget() constructor {
             var _txt = _tileset.getDisplayName();
             if(ss != undefined) _txt += $" {ss}";
             
-            draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
+            draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
 	        draw_text_add(x + iw + ui(4 + 8), y + h / 2, _txt);
         }
         

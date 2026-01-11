@@ -170,8 +170,12 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
                 break;
                 
             case "Ellipse" : 
+                inputs[10].setVisible(true);
+                
+                var _detl = getInputData(10);
+                
             	loop = true;
-            	var _st = 64;
+            	var _st = _detl;
                 var _as = 360 / _st;
                 points  = array_create(_st);
                 
@@ -216,20 +220,23 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
                 break;
                 
             case "Spring" : 
-                inputs[6].setVisible(true);
-                inputs[7].setVisible(true);
-                var _rev = getInputData(6);
-                var _pit = getInputData(7);
+                inputs[ 6].setVisible(true);
+                inputs[ 7].setVisible(true);
+                inputs[10].setVisible(true);
+                
+                var _rev  = getInputData( 6);
+                var _pit  = getInputData( 7);
+                var _detl = getInputData(10);
                 
                 loop = false;
-                var _st = 64 * _rev;
-                var _as = 360 / 64;
+                var _st = _detl * _rev;
+                var _as = 360 / _detl;
                 points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
                     nx = posx + lengthdir_x(scax, _as * i);
                     ny = posy + lengthdir_y(scay, _as * i);
-                    nz = posz + i / 64 * _pit;
+                    nz = posz + i / _detl * _pit;
                     
                     points[i] = [ nx, ny, nz ];
                 }
@@ -237,15 +244,18 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
                 break;
                 
             case "Spring Sphere" : 
-                inputs[6].setVisible(true);
-                var _rev = getInputData(6);
+                inputs[ 6].setVisible(true);
+                inputs[10].setVisible(true);
+                
+                var _rev  = getInputData( 6);
+                var _detl = getInputData(10);
                 
                 z0 = posz - scaz;
                 z1 = posz + scaz;
                 
                 loop = false;
-                var _st = 64 * _rev;
-                var _as = 360 / 64;
+                var _st = _detl * _rev;
+                var _as = 360 / _detl;
                 points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {

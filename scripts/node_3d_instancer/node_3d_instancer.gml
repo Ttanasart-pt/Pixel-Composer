@@ -4,7 +4,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput( 9, nodeValueSeed());
 	
 	////- =Object
-	newInput( 0, nodeValue_D3Mesh("Mesh"));
+	newInput( 0, nodeValue_D3Mesh( "Mesh" ));
 	
 	////- =Objects
 	newInput(16, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
@@ -17,49 +17,52 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput(20, nodeValue_IVec3(       "Grid",         [2,2,1] ));
 	newInput(21, nodeValue_Float(       "Radius",       1       ));
 	newInput(22, nodeValue_Bool(        "Look At Center", false ));
+	
+	////- =Path
 	newInput(23, nodeValue_PathNode(    "Shift Path"            ));
+	newInput(27, nodeValue_Range(       "Path Range",   [0,1]   ));
 	newInput(24, nodeValue_Bool(        "Follow Path",  false   ));
 	
 	////- =Transform Data
-	newInput(2, nodeValue_Vec3( "Positions", [[0,0,0]] )).setArrayDepth(1);
-	newInput(3, nodeValue_Vec3( "Rotations", [[0,0,0]] )).setArrayDepth(1);
-	newInput(4, nodeValue_Vec3( "Scales",    [[1,1,1]] )).setArrayDepth(1);
-	newInput(5, nodeValue_Vec3( "Normal",    [[0,0,0]] )).setArrayDepth(1);
+	newInput( 2, nodeValue_Vec3(        "Positions", [[0,0,0]] )).setArrayDepth(1);
+	newInput( 3, nodeValue_Vec3(        "Rotations", [[0,0,0]] )).setArrayDepth(1);
+	newInput( 4, nodeValue_Vec3(        "Scales",    [[1,1,1]] )).setArrayDepth(1);
+	newInput( 5, nodeValue_Vec3(        "Normal",    [[0,0,0]] )).setArrayDepth(1);
 	
 	////- =Shift
-	newInput(13, nodeValue_Vec3(       "Shift Position",   [1,0,0]   ));
-	newInput(25, nodeValue_Vec3(       "Shift Position Y", [0,1,0]   ));
-	newInput(26, nodeValue_Vec3(       "Shift Position Z", [0,0,1]   ));
-	newInput(14, nodeValue_Quaternion( "Shift Rotation",   [0,0,0,1] ));
-	newInput(15, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
+	newInput(13, nodeValue_Vec3(        "Shift Position",   [1,0,0]   ));
+	newInput(25, nodeValue_Vec3(        "Shift Position Y", [0,1,0]   ));
+	newInput(26, nodeValue_Vec3(        "Shift Position Z", [0,0,1]   ));
+	newInput(14, nodeValue_Quaternion(  "Shift Rotation",   [0,0,0,1] ));
+	newInput(15, nodeValue_Vec3(        "Shift Scale",      [0,0,0]   ));
 	
 	////- =Scatter
-	newInput( 6, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));
-	newInput( 7, nodeValue_Vec3_Range( "Rotation Scatter", array_create(6,0) ));
-	newInput( 8, nodeValue_Vec3_Range( "Scale Scatter",    array_create(6,0) ));
-	newInput(10, nodeValue_Bool(       "Scale Uniform",    true              ));
+	newInput( 6, nodeValue_Vec3_Range(  "Position Scatter", array_create(6,0) ));
+	newInput( 7, nodeValue_Vec3_Range(  "Rotation Scatter", array_create(6,0) ));
+	newInput( 8, nodeValue_Vec3_Range(  "Scale Scatter",    array_create(6,0) ));
+	newInput(10, nodeValue_Bool(        "Scale Uniform",    true              ));
 	
 	////- =Render
-	newInput(12, nodeValue_Palette(  "Colors Per Index", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(11, nodeValue_Gradient( "Random Colors",    gra_white ));
-	// 27
-	
-	b_centeralize = button(function() /*=>*/ {return centralize()}).setText("Centralize");
-	
-	input_display_list = [ 9, 
-		[ "Object",  false ], 0, 16, 17, 18, b_centeralize, 
-		[ "Repeat",  false ], 19, 1, 20, 21, 22, 23, 24,
-		[ "Transform Data", true ], 2, 3, 4, 5, 
-		[ "Shift",   false ], 13, 25, 26, 14, 15, 
-		[ "Scatter", false ],  6,  7,  8, 10, 
-		[ "Render",  false ], 12, 11, 
-	];
+	newInput(12, nodeValue_Palette(     "Colors Per Index", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(11, nodeValue_Gradient(    "Random Colors",    gra_white  ));
+	// 28
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	
+	b_centeralize = button(function() /*=>*/ {return centralize()}).setText("Centralize");
+	input_display_list = [  9, 
+		[ "Object",        false ],  0, 16, 17, 18, b_centeralize, 
+		[ "Repeat",        false ], 19,  1, 20, 21, 22, 
+		[ "Path",          false ], 23, 27, 24,
+		[ "Transform Data", true ],  2,  3,  4,  5, 
+		[ "Shift",         false ], 13, 25, 26, 14, 15, 
+		[ "Scatter",       false ],  6,  7,  8, 10, 
+		[ "Render",        false ], 12, 11, 
+	];
+	
 	////- Nodes
 	
-	span     = [0, 0, 0, 0, 0, 0];
+	span = [0, 0, 0, 0, 0, 0];
 	
 	static centralize = function() {
 		if(span[0] == infinity) return;
@@ -87,7 +90,9 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			var _grid    = _data[20];
 			var _radius  = _data[21];
 			var _lok_cen = _data[22];
-			var _path    = _data[23];
+			
+			var _path    = _data[23], _upath = is_path(_path); 
+			var _pth_rng = _data[27];
 			var _fol_pth = _data[24];
 			
 			var _poss    = _data[ 2];
@@ -140,7 +145,6 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			var _flat_vb = d3d_flattern(_obj);
 			_res.VB = _flat_vb.VB;
 			_res.materials = _flat_vb.materials;
-			
 		#endregion
 		
 		#region data 
@@ -228,29 +232,29 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 							_py += _Rposy * _i;
 							_pz += _Rposz * _i;
 							
-							if(is_path(_path)) {
-								__p = _path.getPointRatio(_rat, 0, __p);
+							if(!_upath) break;
+							
+							var _prat = lerp(_pth_rng[0], _pth_rng[1], _rat);
+							__p = _path.getPointRatio(_prat, 0, __p);
+							
+							_px += __p.x;
+							_py += __p.y;
+							_pz += __p.z;
+							
+							if(_fol_pth) {
+								__p = _path.getPointRatio(clamp(_prat - _rt/2, 0, 0.999), 0, __p);
+								var __px0 = __p.x;
+								var __py0 = __p.y;
+								var __pz0 = __p.z;
 								
-								_px += __p.x;
-								_py += __p.y;
-								_pz += __p.z;
+								__p = _path.getPointRatio(clamp(_prat + _rt/2, 0, 0.999), 0, __p);
+								var __px1 = __p.x;
+								var __py1 = __p.y;
+								var __pz1 = __p.z;
 								
-								if(_fol_pth) {
-									__p = _path.getPointRatio(clamp(_rat - _rt/2, 0, 0.999), 0, __p);
-									var __px0 = __p.x;
-									var __py0 = __p.y;
-									var __pz0 = __p.z;
-									
-									__p = _path.getPointRatio(clamp(_rat + _rt/2, 0, 0.999), 0, __p);
-									var __px1 = __p.x;
-									var __py1 = __p.y;
-									var __pz1 = __p.z;
-									
-									_nx += __px1 - __px0;
-									_ny += __py1 - __py0;
-									_nz += __pz1 - __pz0;
-								}
-								
+								_nx += __px1 - __px0;
+								_ny += __py1 - __py0;
+								_nz += __pz1 - __pz0;
 							}
 							break;
 						
