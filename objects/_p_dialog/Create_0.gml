@@ -260,7 +260,7 @@
 		if(!DIALOG_CLICK) return;
 		if(init_pressing) return;
 		
-		if(MOUSE_EVENT.lpress || MOUSE_EVENT.rpress) { 
+		if(mouse_press(mb_left) || mouse_press(mb_right)) { 
 			if(!volatile && !isTop()) return;
 			
 			for( var i = 0, n = array_length(children); i < n; i++ )

@@ -29,10 +29,12 @@ PEN_Y = py;
 // print($"{PEN_X} | {PEN_X_DELTA}");
 
 PEN_PRESSURE = pp;
+PEN_RELEASED = false;
+PEN_PRESSED  = false;
 
 var contact = bool(f & 0x4);
-if(PEN_CONTACT && !contact)
-	PEN_RELEASED = true;
+if( PEN_CONTACT && !contact) PEN_RELEASED = true;
+if(!PEN_CONTACT &&  contact) PEN_PRESSED  = true;
 PEN_CONTACT = contact;
 
 var b1 = bool(f & 0x10); // POINTER_FLAG_FIRSTBUTTON

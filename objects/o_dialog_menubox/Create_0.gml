@@ -23,7 +23,7 @@ event_inherited();
 	submenuIt = noone;
 	
 	_hovering_ch = true;
-	init_press_l = MOUSE_EVENT.lpress;
+	init_press_l = mouse_press(mb_left);
 	
 	alarm[0] = -1;
 	setFocus(self.id);

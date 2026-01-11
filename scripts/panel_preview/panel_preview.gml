@@ -1507,15 +1507,11 @@ function Panel_Preview() : PanelContent() constructor {
         var fr = GLOBAL_CURRENT_FRAME;
         var st = min(_rang[0], _rang[1]);
         var ed = max(_rang[0], _rang[1]);
-            
-        st = sign(st) * floor(abs(st) / _step) * _step;
-        ed = sign(ed) * floor(abs(ed) / _step) * _step;
-            
-        st += fr;
-        ed += fr;
-        
         var surf, aa, cc;
             
+        st = floor(fr / _step) * _step - abs(st);
+        ed = floor(fr / _step) * _step + abs(ed);
+        
         if(!_top) {
             draw_surface_ext_safe(_surf, psx, psy, ss, ss);
             BLEND_ADD
@@ -1526,10 +1522,8 @@ function Panel_Preview() : PanelContent() constructor {
             if(!is_surface(surf)) continue;
                 
             aa = power(_alph, abs((i - fr) / _step));
-            cc = c_white;
-            if(i < fr)        cc = _colr[0];
-            else if(i > fr) cc = _colr[1];
-                
+            cc = i < fr? _colr[0] : _colr[1];
+            
             draw_surface_ext_safe(surf, psx, psy, ss, ss, 0, cc, aa);
         }
         

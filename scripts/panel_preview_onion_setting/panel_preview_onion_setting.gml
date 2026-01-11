@@ -20,8 +20,15 @@ function Panel_Preview_Onion_Setting() : Panel_Linear_Setting() constructor {
 			["Preview", "Toggle Onion Skin view"]
 		),
 		new __Panel_Linear_Setting_Item(
+			__txtx("onion_skin_frame_range", "Range"),
+			new vectorBox(2, function(v,i) /*=>*/ { onion.range[i] = v; }).setLinkable(false),
+			function( ) /*=>*/   {return onion.range},
+			function(v) /*=>*/ { onion.range = v; },
+			[-1,1],
+		),
+		new __Panel_Linear_Setting_Item(
 			__txtx("onion_skin_frame_step", "Frame step"),
-			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { onion.step = max(1, round(real(str))); }),
+			textBox_Number(function(str) /*=>*/ { onion.step = max(1, round(real(str))); }),
 			function( ) /*=>*/   {return onion.step},
 			function(v) /*=>*/ { onion.step = v; },
 			1,

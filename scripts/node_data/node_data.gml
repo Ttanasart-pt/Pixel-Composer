@@ -1098,6 +1098,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				catch(e) { log_warning("RENDER", exception_print(e), self); }
 			}
 			
+			if(cache_index < array_length(outputs))
 			if(use_cache == CACHE_USE.auto || project.onion_skin.enabled)
 				cacheCurrentFrame(outputs[cache_index].getValue());
 		}
@@ -1141,6 +1142,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				log_warning("RENDER", exception_print(exception), self);
 			}
 			
+			if(cache_index < array_length(outputs))
 			if(use_cache == CACHE_USE.auto || project.onion_skin.enabled)
 				cacheCurrentFrame(outputs[cache_index].getValue());
 		}
@@ -2804,8 +2806,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!cacheExist(_frame)) return false;
 		
 		var _s = cached_output[CURRENT_FRAME];
-		outputs[cache_index].setValue(_s);
+		if(cache_index >= array_length(outputs)) return false;
 		
+		outputs[cache_index].setValue(_s);
 		return true;
 	}
 	

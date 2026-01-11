@@ -103,8 +103,8 @@ _FILE_DROPPED       = false;
 	
 	if(!IS_CMD) tabletstuff_perform_event(id, ev_other, ev_user10);
 	
-	//print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
-	//print($"{mouse_x}, {mouse_y}");
+	// print($"{PEN_USE} : {PEN_CONTACT} > {PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
+	// print($"{mouse_mxs}, {mouse_mys}");
 #endregion
 
 #region focus

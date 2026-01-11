@@ -109,10 +109,10 @@ function mouse_click(mouse, focus = true, bypass = false) {
 	if(PEN_RIGHT_CLICK)                    return mouse == mb_right;
 	
 	switch(mouse) {
-		case mb_left   : return MOUSE_EVENT.lclick;
+		case mb_left   : return PEN_CONTACT || MOUSE_EVENT.lclick;
 		case mb_middle : return MOUSE_EVENT.mclick;
 		case mb_right  : return MOUSE_EVENT.rclick;
-		case mb_any    : return MOUSE_EVENT.lclick || MOUSE_EVENT.rclick || MOUSE_EVENT.mclick;
+		case mb_any    : return PEN_CONTACT || MOUSE_EVENT.lclick || MOUSE_EVENT.rclick || MOUSE_EVENT.mclick;
 	}
 	
 	return false;
@@ -124,10 +124,10 @@ function mouse_press(mouse, focus = true, bypass = false) {
 	if(PEN_RIGHT_PRESS)                    return mouse == mb_right;
 	
 	switch(mouse) {
-		case mb_left   : return MOUSE_EVENT.lpress;
+		case mb_left   : return PEN_PRESSED || MOUSE_EVENT.lpress;
 		case mb_middle : return MOUSE_EVENT.mpress;
 		case mb_right  : return MOUSE_EVENT.rpress;
-		case mb_any    : return MOUSE_EVENT.lpress || MOUSE_EVENT.rpress || MOUSE_EVENT.mpress;
+		case mb_any    : return PEN_PRESSED || MOUSE_EVENT.lpress || MOUSE_EVENT.rpress || MOUSE_EVENT.mpress;
 	}
 	
 	return false;
@@ -141,10 +141,10 @@ function mouse_release(mouse, focus = true, bypass = false) {
 	
 	var rl = false;
 	switch(mouse) {
-		case mb_left   : rl = MOUSE_EVENT.lrelease; break;
-		case mb_middle : rl = MOUSE_EVENT.mrelease; break;
-		case mb_right  : rl = MOUSE_EVENT.rrelease; break;
-		case mb_any    : rl = MOUSE_EVENT.lrelease || MOUSE_EVENT.rrelease || MOUSE_EVENT.mrelease; break;
+		case mb_left   : rl = PEN_RELEASED || MOUSE_EVENT.lrelease;                                 break;
+		case mb_middle : rl = MOUSE_EVENT.mrelease;                                                 break;
+		case mb_right  : rl = MOUSE_EVENT.rrelease;                                                 break;
+		case mb_any    : rl = PEN_RELEASED || MOUSE_EVENT.lrelease || MOUSE_EVENT.rrelease || MOUSE_EVENT.mrelease; break;
 	}
 	
 	return rl || ((mouse == mb_left || mouse == mb_any) && PEN_RELEASED);
@@ -155,7 +155,7 @@ function mouse_lclick(focus = true, bypass = false) {
 	if((!bypass && MOUSE_BLOCK) || !focus)   return false;
 	if(PEN_RIGHT_CLICK || PEN_RIGHT_RELEASE) return false;
 	
-	return MOUSE_EVENT.lclick;
+	return PEN_CONTACT || MOUSE_EVENT.lclick;
 }
 
 function mouse_lpress(focus = true, bypass = false) {
@@ -163,7 +163,7 @@ function mouse_lpress(focus = true, bypass = false) {
 	if((!bypass && MOUSE_BLOCK) || !focus) return false;
 	if(PEN_RIGHT_PRESS)                    return false;
 	
-	return MOUSE_EVENT.lpress;
+	return PEN_PRESSED || MOUSE_EVENT.lpress;
 }
 
 function mouse_lrelease(focus = true, bypass = false) {
@@ -171,7 +171,7 @@ function mouse_lrelease(focus = true, bypass = false) {
 	if(!focus || PEN_RIGHT_RELEASE) return false;
 	if(PEN_RELEASED)                return true;
 	
-	return MOUSE_EVENT.lrelease;
+	return PEN_RELEASED || MOUSE_EVENT.lrelease;
 }
 
 function mouse_rclick(focus = true, bypass = false) {

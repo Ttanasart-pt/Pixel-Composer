@@ -465,8 +465,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		} else {
 			var _mx = mouse_mxs;
 			var _my = mouse_mys;
+			var  x0 = x + ui(2);
+			var  y0 = y + ui(2);
+			var  x1 = x + w - ui(4);
+			var  y1 = y + h - ui(4);
 			
-			if(con && point_in_rectangle(_mx, _my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
+			if(con && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
 				HOVER = self;
 				
 				if(mouse_press(mb_any))
