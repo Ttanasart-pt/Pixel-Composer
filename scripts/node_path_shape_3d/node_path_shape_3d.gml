@@ -1,44 +1,38 @@
 function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Shape Path 3D";
+	name  = "Shape Path 3D";
 	is_3D = NODE_3D.polygon;
-	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vec3("Position", [ 0, 0, 0 ]));
-	
-	newInput(1, nodeValue_Vec3("Half Size", [ .5, .5, .5 ]));
-	
-	shapeScroll = [ 
-	    new scrollItem("Rectangle",       s_node_path_3d_shape,  0),
-	    new scrollItem("Ellipse",         s_node_path_3d_shape,  1),
-	    new scrollItem("Regular Polygon", s_node_path_3d_shape,  2),
-	    -1, 
-	    new scrollItem("Star",            s_node_path_3d_shape,  3),
-	    -1,
-	    new scrollItem("Spring",          s_node_path_3d_shape,  4),
-	    new scrollItem("Spring Sphere",   s_node_path_3d_shape,  5),
-	    new scrollItem("Spiral",          s_node_path_3d_shape,  6),
+    shape_types = [ 
+	        "Rectangle", "Ellipse", "Regular Polygon",
+	    -1, "Star",
+	    -1, "Spring", "Spring Sphere", "Spiral",
     ];
-	newInput(2, nodeValue_Enum_Scroll("Shape", 0, { data: shapeScroll, horizontal: 1, text_pad: ui(8) }));
+    
+    __ind = 0; shapeScroll = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_path_3d_shape, __ind++)});
+    
+    ////- =Transform
+	newInput( 0, nodeValue_Vec3(     "Position",  [ 0, 0, 0] ));
+	newInput( 1, nodeValue_Vec3(     "Half Size", [.5,.5,.5] ));
+	newInput( 3, nodeValue_EButton(  "Up Axis",     2, [ "X", "Y", "Z" ] ));
+	newInput( 4, nodeValue_Rotation( "Rotation",    0        ));
 	
-	newInput(3, nodeValue_Enum_Button("Up Axis", 2, [ "X", "Y", "Z" ]));
+    ////- =Shape
+	newInput( 2, nodeValue_EScroll( "Shape",         0, { data: shapeScroll, horizontal: 1, text_pad: ui(8) } ));
+	newInput( 5, nodeValue_Int(     "Sides",         6 ));
+	newInput( 6, nodeValue_Float(   "Revolution",    4 ));
+	newInput( 7, nodeValue_Float(   "Pitch",        .2 ));
+	newInput( 8, nodeValue_Slider(  "Inner Radius", .5 ));
+	// input 9
 	
-	newInput(4, nodeValue_Rotation("Rotation", 0));
-	
-	newInput(5, nodeValue_Int("Sides", 6));
-	
-	newInput(6, nodeValue_Float("Revolution", 4));
-	
-	newInput(7, nodeValue_Float("Pitch", .2));
-	
-	newInput(8, nodeValue_Slider("Inner Radius", .5));
-	
-	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self ));
 	
 	input_display_list = [
-		["Transform", false], 0, 1, 3, 4, 
-		["Shape",     false], 2, 5, 6, 7, 8, 
+		[ "Transform", false ], 0, 1, 3, 4, 
+		[ "Shape",     false ], 2, 5, 6, 7, 8, 
 	];
+	
+	////- Path
 	
 	points      = [];
 	lengths		= [];
@@ -94,6 +88,8 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
         return out;
 	}
 	
+	////- Draw
+	
 	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
 	    
 		var _camera = _params.scene.camera;
@@ -119,6 +115,13 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 	}
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		var bbox = draw_bbox;
+		draw_surface_bbox(preview_surf, bbox);
+	}
+	
+	////- Nodes
 	
 	static update = function(frame = CURRENT_FRAME) {
         var _pos  = getInputData(0);
@@ -347,11 +350,6 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
     	}
     	
     	boundary = new BoundingBox(posx - scax, posy - scay, posx + scax, posy + scay);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_surface_bbox(preview_surf, bbox);
 	}
 	
 	static getPreviewObject 		= function() /*=>*/ {return noone};

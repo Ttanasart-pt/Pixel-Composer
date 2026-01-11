@@ -59,11 +59,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Growth",   false ], 22, 
 	];
 	
-	amountUnitToggle = button(function() /*=>*/ {
-		inputs[2].attributes.unit = !inputs[2].attributes.unit;
-		triggerRender();
-	}).setIcon(THEME.mk_tree_leaf_unit).iconPad();
-	
+	amountUnitToggle = button(function() /*=>*/ { inputs[2].attributes.unit = !inputs[2].attributes.unit; triggerRender(); })
+		.setIcon(THEME.mk_tree_leaf_unit).iconPad();
 	inputs[2].attributes.unit = VALUE_UNIT.constant;
 	inputs[2].getEditWidget().setSideButton(amountUnitToggle);
 	

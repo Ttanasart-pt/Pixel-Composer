@@ -74,7 +74,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		icon           = noone;
 		icon_24        = noone;
 		icon_blend     = undefined;
-		node_draw_icon = noone;           function setDrawIcon(s) { node_draw_icon = s; always_pad = true; return self; }
+		node_draw_icon = noone;
 		bg_spr         = THEME.node_bg;
 		bg_spr_add     = .25;
 		bg_spr_add_clr = c_white;
@@ -1480,6 +1480,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				&& (d.node_meta_view == 1 || d.node_meta_view == 2 && previewable)
 				&& (d.show_dimension || d.show_compute); 
 	} 
+	
+	static setDrawIcon = function(s) { node_draw_icon = s; always_pad = true; return self; }
 	
 	static setHeight = function() {
 		w = attributes.node_width? attributes.node_width : min_w;

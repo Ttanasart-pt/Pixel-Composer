@@ -7,6 +7,7 @@
 
 function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Shape";
+	always_pad      = true;
 	dimension_index = -1;
 	setDimension(96, 48);
 	
@@ -25,7 +26,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitSimple();
 	
     ////- =Shape
-	newInput( 3, nodeValue_Enum_Scroll(    "Shape",          0, { data: shapeScroll, horizontal: 1, text_pad: ui(16) } ))
+	newInput( 3, nodeValue_EScroll(  "Shape",          0, { data: shapeScroll, horizontal: 1, text_pad: ui(16) } ))
 		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_19_06_0}, list: global.node_path_shape_keys_195 } ]);
 		
 	newInput( 4, nodeValue_Slider(   "Skew",          .5, [-1,1,.01] ));
@@ -36,15 +37,19 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 9, nodeValue_Corner(   "Corner Radius", [0,0,0,0]      )).setUnitSimple();
 	newInput(12, nodeValue_Rotation( "Angle",          0             ));
 	newInput(10, nodeValue_Float(    "Revolution",     4             ));
-	newInput(11, nodeValue_Float(    "Pitch",         .2             )).setCurvable(13, CURVE_DEF_11);
+	newInput(15, nodeValue_Bool(     "Reverse",        false         ));
+	newInput(11, nodeValue_Float(    "Pitch",         .2             )).setCurvable(13, CURVE_DEF_01);
+	
+    ////- =Detail
 	newInput(14, nodeValue_Int(      "Resolution",     64            ));
-	// input 15
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, noone ));
 		
 	input_display_list = [
-		["Transform", false], 0, 2, 1, 
-		["Shape",     false], 3, 4, 5, 6, 7, 8, 9, 12, 10, 11, 13, 14, 
+		[ "Transform", false ],  0,  2,  1, 
+		[ "Shape",     false ],  3,  4,  5,  6,  7,  8,  9, 12, 10, 15, 11, 13, 
+		[ "Detail",    false ], 14, 
 	];
 	
 	////- Path
@@ -203,20 +208,20 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
-	        var _pos  = getInputData(0);
-	        var _rot  = getInputData(2);
-	        var _sca  = getInputData(1);
+	        var _pos  = getInputData( 0);
+	        var _rot  = getInputData( 2);
+	        var _sca  = getInputData( 1);
 	        
-		    var _shap = getInputData(3);
-	        var _pa1  = getInputData(4);
-	        var _aran = getInputData(5);
-	        var _pa3  = getInputData(6);
-	        var _sid  = getInputData(7);
-	        var _inn  = getInputData(8);
-	        var _c    = getInputData(9);
+		    var _shap = getInputData( 3);
+	        var _pa1  = getInputData( 4);
+	        var _aran = getInputData( 5);
+	        var _pa3  = getInputData( 6);
+	        var _sid  = getInputData( 7);
+	        var _inn  = getInputData( 8);
+	        var _c    = getInputData( 9);
 	        var _rev  = getInputData(10);
 	        
-	        for( var i = 4; i < array_length(inputs); i++ ) 
+	        for( var i = 4, n = array_length(inputs); i < n; i++ ) 
 	        	inputs[i].setVisible(false);
 		#endregion
     	
@@ -561,54 +566,75 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             	break;
         
         	case "Spiral" : 
-                inputs[10].setVisible(true);
-                inputs[11].setVisible(true);
-                inputs[12].setVisible(true);
-                inputs[14].setVisible(true);
-                
                 var _ang  = getInputData(12);
+                var _revr = getInputData(15);
                 var _pit  = getInputData(11);
-                var _pitC = getInputData(13), curve_pit   = inputs[11].attributes.curved? new curveMap(_pitC)  : undefined;
+                var _pitC = getInputData(13), curve_pit = inputs[11].attributes.curved? new curveMap(_pitC) : undefined;
+                
                 var _rst  = getInputData(14);
                 
+                inputs[12].setVisible(true);
+                inputs[10].setVisible(true);
+                inputs[15].setVisible(true);
+                inputs[11].setVisible(true);
+                inputs[13].setVisible(inputs[11].attributes.curved);
+                
+                inputs[14].setVisible(true);
+                
                 _pth.loop = false;
+                
                 var _st = _rst * abs(_rev);
                 var _as = 360 / _rst * sign(_rev);
                 var _is = 1 / (_st - 1);
                 var _rr = 0;
+                if(_revr) {
+                	_pit  = 1 / abs(_rev);
+                	_ang -= _as * _st;
+                }
+                
+            	var _pp = _pit / _rst;
                 _pth.points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
-                	var _pp = _pit / _rst;
-                	if(curve_pit) _pp *= curve_pit.get(i * _is);
+                	if(curve_pit)
+                		 _rr = _rev * _pit * curve_pit.get(i * _is);
+                	else _rr = _pp * i;
                 	
                     nx = _pos[0] + lengthdir_x(_sca[0] * _rr, _ang + _as * i);
                     ny = _pos[1] + lengthdir_y(_sca[1] * _rr, _ang + _as * i);
                     
-                    _rr += _pp;
                     _pth.points[i] = [ nx, ny ];
                 }
                 
                 break;
                 
             case "Spiral Circle" : 
-                inputs[10].setVisible(true);
                 inputs[12].setVisible(true);
+                inputs[10].setVisible(true);
+                inputs[11].setVisible(true);
+                inputs[13].setVisible(inputs[11].attributes.curved);
+                
                 inputs[14].setVisible(true);
                 
-                var _rev = getInputData(10);
-                var _ang = getInputData(12);
-                var _rst = getInputData(14);
+                var _ang  = getInputData(12);
+                var _pit  = getInputData(11); _pit = max(_pit, .01);
+                var _pitC = getInputData(13), curve_pit = inputs[11].attributes.curved? new curveMap(_pitC) : undefined;
+                
+                var _rst  = getInputData(14);
                 
                 _pth.loop = false;
                 var _st = _rst * abs(_rev);
                 var _as = 360 / _rst * sign(_rev);
+                var _is = 1 / (_st - 1);
                 var _pp = 1 / _st;
                 _pth.points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
                 	var prg = i * _pp;
-                	    prg = sqrt(1 - prg * prg);
+                	if(curve_pit) {
+	                	prg  = 1 - prg;
+	                	prg *= curve_pit.get(i * _is);
+                	} else prg = sqrt(1 - power(prg, _pit * 10));
                 	
                     nx = _pos[0] + lengthdir_x(_sca[0] * prg, _ang + _as * i);
                     ny = _pos[1] + lengthdir_y(_sca[1] * prg, _ang + _as * i);

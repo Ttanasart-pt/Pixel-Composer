@@ -1492,8 +1492,12 @@ function Panel_Animation_Dopesheet() {
         var key_hover  = noone;
         
         var _scaling   = key_mod_press(ALT) && array_length(keyframe_selecting) > 1;
+        var valAmo     = array_length(animator.values);
+        var ot = undefined;
         
-        for(var k = 0; k < array_length(animator.values); k++) {
+        var hov = pHOVER;
+        
+        for(var k = 0; k < valAmo; k++) {
             var keyframe = animator.values[k];
             var _select  = array_exists(keyframe_selecting, keyframe);
             var t = keyframe.dopesheet_x;
@@ -1506,32 +1510,40 @@ function Panel_Animation_Dopesheet() {
 	            }
 	            
             	draw_sprite_ui_uniform(THEME.timeline_key_empty, 0, t, node_y + ui(10), 1, COLORS._main_icon);
-            	if(!_cont.show) continue;
+            	if(!_cont.show || !_cont.item.show) continue;
             }
             
-            if(!_cont.item.show && show_nodes) continue;
+        	if(k) { // in-between keys
+        		var ky0 = prop_y - ui(8);
+        		var ky1 = prop_y + ui(8);
+        		
+        		var spa_hov = keyframe_dragging == noone && hov && point_in_rectangle(msx, msy, ot + ui(8), ky0, t - ui(8), ky1); 
+        		if(spa_hov) {
+        			draw_set_color_alpha(CDEF.main_mdblack);
+        			BLEND_MAX
+        			draw_rectangle(ot, ky0 + ui(3), t, ky1 - ui(3), false);
+        			BLEND_NORMAL
+        			draw_set_alpha(1);
+        			
+        		}
+        	}
+            
             var cc = COLORS.panel_animation_keyframe_unselected;
             if(on_end_dragging_anim == animator.prop && msx < t && anim_set) {
-                animator.prop.loop_range = k == 0? -1 : array_length(animator.values) - k;
+                animator.prop.loop_range = k == 0? -1 : valAmo - k;
                 anim_set = false;
             }
             
-            var hc = COLORS._main_accent;
-            var sca_back = noone;
+            var key_hov  = hov && point_in_circle(msx, msy, t, prop_y, ui(8)); 
+            var sca_back = keyframe == keyframe_selecting_f;
             
-            if(pHOVER && point_in_circle(msx, msy, t, prop_y, ui(8))) {
+            if(key_hov) {
                 cc = COLORS.panel_animation_keyframe_selected;
                 key_hover = keyframe;
                 if(!instance_exists(o_dialog_menubox))
                     TOOLTIP = [ keyframe, animator.prop.type ];
                 
-                if(_scaling) {
-                	hc = CDEF.cyan;
-                	sca_back = keyframe.time == keyframe_selecting_f.time;
-                }
-                
                 if(pFOCUS && !key_mod_press(SHIFT)) {
-                	
                     if(DOUBLE_CLICK) {
                         keyframe_dragging  = keyframe;
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_both;
@@ -1545,10 +1557,10 @@ function Panel_Animation_Dopesheet() {
                         	
                         } else {
                             keyframe_dragging  = keyframe;
+                            keyframe_drag_st   = keyframe.time;
                             keyframe_drag_type = _scaling? KEYFRAME_DRAG_TYPE.scale : KEYFRAME_DRAG_TYPE.move;
                             keyframe_drag_mx   = mx;
                             keyframe_drag_my   = my;
-                            keyframe_drag_st   = keyframe.time;
                             
                             keyframe_drag_sv   = sca_back? keyframe_selecting_l : keyframe_selecting_f;
                         }
@@ -1561,10 +1573,7 @@ function Panel_Animation_Dopesheet() {
                 cc = key_hover == keyframe? COLORS.panel_animation_keyframe_selected : COLORS._main_accent;
             
             var ind = keyframe.getDrawIndex();
-            if(!show_value) {
-            	draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
-            	
-        	} else {
+            if(show_value) {
         		draw_set_text(f_p4, fa_center, fa_center, COLORS._main_text_on_accent);
             	
             	switch(animator.prop.type) {
@@ -1593,7 +1602,7 @@ function Panel_Animation_Dopesheet() {
             			break;
             	}
             	
-            } 
+            } else draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
             
             if(_select) {
             	if(_keyframe_selecting_f == noone) _keyframe_selecting_f = keyframe;
@@ -1602,13 +1611,13 @@ function Panel_Animation_Dopesheet() {
             	if(_keyframe_selecting_l == noone) _keyframe_selecting_l = keyframe;
             	else _keyframe_selecting_l = keyframe.time > _keyframe_selecting_l.time? keyframe : _keyframe_selecting_l;
             	
-                if(_scaling && sca_back != noone) {
+                if(_scaling && key_hov) {
                 	if(sca_back) draw_sprite_ui_uniform(THEME.arrow, 2, t - ui(12), prop_y, 1, CDEF.cyan, .5);
                 	else         draw_sprite_ui_uniform(THEME.arrow, 0, t + ui(12), prop_y, 1, CDEF.cyan, .5);
                 }
                 
+                var hc = _scaling? CDEF.cyan : COLORS._main_accent;
                 draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, ind, t, prop_y, 1, hc);
-                
             }
             
             if(keyframe_boxing) {
@@ -1617,12 +1626,14 @@ function Panel_Animation_Dopesheet() {
                 var box_y0 = min(keyframe_box_sy, msy);
                 var box_y1 = max(keyframe_box_sy, msy);
                                     
-                if(pHOVER && !point_in_rectangle(t, prop_y, box_x0, box_y0, box_x1, box_y1) && array_exists(keyframe_selecting, keyframe))
+                if(!point_in_rectangle(t, prop_y, box_x0, box_y0, box_x1, box_y1) && array_exists(keyframe_selecting, keyframe))
                     array_remove(keyframe_selecting, keyframe);
                     
-                if(pHOVER && point_in_rectangle(t, prop_y, box_x0, box_y0, box_x1, box_y1) && !array_exists(keyframe_selecting, keyframe))
+                if(point_in_rectangle(t, prop_y, box_x0, box_y0, box_x1, box_y1) && !array_exists(keyframe_selecting, keyframe))
                     array_push(keyframe_selecting, keyframe);
             }
+            
+            ot = t;
         }
         
         return key_hover;
