@@ -1,5 +1,4 @@
-#region
-	
+#region global
 	FN_NODE_TOOL_INVOKE {
 		hotkeyCustom("Node_Grid_Warp", "Move Selection",      "G");
 		hotkeyCustom("Node_Grid_Warp", "Rotate Selection",    "R");
@@ -352,8 +351,9 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Mesh
-	newInput(2, nodeValue_IVec2( "Grid", [ 2, 2 ] )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
-	newInput(3, nodeValue_Int(   "Subdivision", 4 ));
+	newInput(4, nodeValue_Area(  "Area",       DEF_AREA_REF )).setUnitSimple();
+	newInput(2, nodeValue_IVec2( "Grid",       [2,2]        )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
+	newInput(3, nodeValue_Int(   "Subdivision", 4           ));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -368,21 +368,21 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		array_push(input_display_list, index);
 		inputs[index].overlay_draw_text = false;
 		return inputs[index];
-	}
+	} setDynamicInput(1, false);
 	
-	b_reset = button(function() /*=>*/ {return resetInput(true)}).setIcon(THEME.refresh_16, 0, COLORS._main_value_negative);
+	b_reset = button(function() /*=>*/ {return resetInput(true)}).setIcon(THEME.refresh_16, 0, COLORS._main_value_negative).setTooltip(__txt("Reset All"));
 	
 	input_display_list = [ 1, 0, 
-		["Mesh",    false], 2, 3, 
-		["Anchors",  true, noone, b_reset], 
+		[ "Mesh",    false ], 4, 2, 3, 
+		[ "Anchors",  true, noone, b_reset ], 
 	];
-	
-	setDynamicInput(1, false);
 	
 	////- Nodes
 	
 	#region ---- edit ----
 		tools = [
+			new NodeTool( "Edit Area",           THEME.canvas_resize   ), 
+			-1,
 			new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setVisible(false).setToolObject(new grid_warp_tool_move(self)),
 			new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setVisible(false).setToolObject(new grid_warp_tool_rotate(self)),
 			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setVisible(false).setToolObject(new grid_warp_tool_scale(self)),
@@ -411,20 +411,27 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static resetInput = function(_val = false) {
+		var _dim   = getDimension(0);
+		
+		var _area  = getInputData(4);
 		var _grid  = getInputData(2);
+		
 		var _gridW = _grid[0];
 		var _gridH = _grid[1];
 		var _amo   = (_gridW + 1) * (_gridH + 1);
 		var _ind   = input_fix_len;
-		var _dim   = getDimension(0);
+		
+		var ax0 = _area[0] - _area[2];
+		var ay0 = _area[1] - _area[3];
+		var ax1 = _area[0] + _area[2];
+		var ay1 = _area[1] + _area[3];
 		
 		if(_val && array_length(inputs) - input_fix_len == _amo) {
 			for(var i = 0; i <= _gridH; i++)
 			for(var j = 0; j <= _gridW; j++) {
 				var _inp = inputs[input_fix_len + i * (_gridW + 1) + j];
-				_inp.setValueInspector([ j / _gridW, i / _gridH ]);
+				_inp.setValue([ lerp(ax0, ax1, j / _gridW), lerp(ay0, ay1, i / _gridH) ]);
 			}
-			
 			return;
 		}
 		
@@ -434,13 +441,12 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		for(var i = 0; i <= _gridH; i++)
 		for(var j = 0; j <= _gridW; j++) {
 			var _inp = createNewInput();
-			_inp.setValueInspector([ j / _gridW, i / _gridH ]);
+			_inp.setValue([ lerp(ax0, ax1, j / _gridW), lerp(ay0, ay1, i / _gridH) ]);
 		}
 		
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
@@ -452,7 +458,6 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _aamo = (_gridW + 1) * (_gridH + 1);
 		var _iamo = getInputAmount();
-		
 		if(_iamo != _aamo) return w_hovering;
 		
 		#region draw grid
@@ -466,12 +471,12 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_an[_i][1] = _y + _rawVal[1] * _s;
 			}
 			
-			draw_set_color(COLORS._main_accent);
+			draw_set_color(isUsingTool("Edit Area")? COLORS._main_icon : COLORS._main_accent);
+			
 			for( var i = 0; i <  _gridH; i++ )
 			for( var j = 0; j <= _gridW; j++ ) {
 				var _a0 = _an[(i    ) * (_gridW + 1) + j];
 				var _a1 = _an[(i + 1) * (_gridW + 1) + j];
-				
 				draw_line(_a0[0], _a0[1], _a1[0], _a1[1]);
 			}
 			
@@ -479,10 +484,12 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			for( var j = 0; j <  _gridW; j++ ) {
 				var _a0 = _an[i * (_gridW + 1) + (j    )];
 				var _a1 = _an[i * (_gridW + 1) + (j + 1)];
-				
 				draw_line(_a0[0], _a0[1], _a1[0], _a1[1]);
 			}
 		#endregion
+		
+		if(isUsingTool("Edit Area"))
+			return InputDrawOverlay(inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var hoverIndex = undefined;
 		
@@ -629,19 +636,28 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf  = _data[0];
-		var _grid  = _data[2];
-		var _subd  = _data[3];
-		
-		var _gridW = _grid[0];
-		var _gridH = _grid[1];
-		
-		if(!is_surface(_surf)) return _outSurf;
+		#region data
+			var _surf  = _data[0];
+			
+			var _area  = _data[4];
+			var _grid  = _data[2];
+			var _subd  = _data[3];
+			
+			var _gridW = _grid[0];
+			var _gridH = _grid[1];
+			
+			if(!is_surface(_surf)) return _outSurf;
+		#endregion
 		
 		var _dim  = surface_get_dimension(_surf);
 		var _stW  = _gridW? 1 / _gridW : 1;
 		var _stH  = _gridH? 1 / _gridH : 1;
 		var _imp  = 1 / _subd;
+		
+		var u0 = (_area[0] - _area[2]) / _dim[0];
+		var v0 = (_area[1] - _area[3]) / _dim[1];
+		var u1 = (_area[0] + _area[2]) / _dim[0];
+		var v1 = (_area[1] + _area[3]) / _dim[1];
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -665,10 +681,10 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _a2x = _a2[0], _a2y = _a2[1];
 				var _a3x = _a3[0], _a3y = _a3[1];
 
-				var _u0 =   j * _stW;
-				var _u1 = _u0 + _stW;
-				var _v0 =   i * _stH;
-				var _v1 = _v0 + _stH;
+				var _u0 = lerp(u0, u1,  j    * _stW);
+				var _u1 = lerp(u0, u1, (j+1) * _stW);
+				var _v0 = lerp(v0, v1,  i    * _stH);
+				var _v1 = lerp(v0, v1, (i+1) * _stH);
 				
 				var xx = 0, yy = 0;
 				

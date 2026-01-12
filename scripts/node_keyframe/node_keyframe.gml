@@ -60,10 +60,10 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		if(_anim == noone) _anim = anim;
 		
 		var key = new valueKey(time + shift, value, _anim);
-		key.ease_in			= ease_in;
-		key.ease_out		= ease_out;
-		key.ease_in_type	= ease_in_type;
-		key.ease_out_type	= ease_out_type;
+		key.ease_in       = ease_in;
+		key.ease_out      = ease_out;
+		key.ease_in_type  = ease_in_type;
+		key.ease_out_type = ease_out_type;
 		array_push(_anim.values, key);
 		_anim.setKeyTime(key, time + shift, removeDup);
 		
@@ -111,8 +111,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) return rat;
 		if(rat == 0 || rat == 1) return rat;
 		
-		var eox = clamp(from.ease_out[0], 0, 0.9);
-		var eix = clamp(to.ease_in[0],    0, 0.9);
+		var eox = clamp(from.ease_out[0], 0, .9);
+		var eix = clamp(to.ease_in[0],    0, .9);
 		var eoy = from.ease_out[1];
 		var eiy = to.ease_in[1];
 		
@@ -120,22 +120,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		eiy = 1 - eiy;
 		
 		return eval_curve_segment_x(0, eox, eoy, eix, 1 - eiy, 1, rat);
-	}
-	
-	static interpolateValue = function(from, to, vfrom, vto, rat) {
-		if(rat == 0) return vfrom;
-		if(rat == 1) return vto;
-		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) return lerp(vfrom, vto, rat);
-		
-		var eox = clamp(from.ease_out[0], 0, 0.9);
-		var eix = clamp(to.ease_in[0],    0, 0.9); 
-		var eoy = from.ease_out[1];
-		var eiy = to.ease_in[1];
-		
-		eix = 1 - eix;
-		eiy = 1 - eiy;
-		
-		return eval_curve_segment_x(vfrom, eox, vfrom + eoy, eix, vto - eiy, vto, rat);
 	}
 	
 	static lerpValue = function(from, to, rat) {
@@ -147,60 +131,42 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(to.ease_in_type    == CURVE_TYPE.cut) return processType(__f);
 		if(from.ease_out_type == CURVE_TYPE.cut) return processType(__t);
-		if(struct_has(__f, "lerpTo")) return __f.lerpTo(__t, interpolate(from, to, rat))
+		
+		__i = interpolate(from, to, rat);
+		if(has(__f, "lerpTo")) return __f.lerpTo(__t, __i)
 		
 		switch(prop.type) {
 			case VALUE_TYPE.float : 
 				
 				if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.attributes.angle_display == QUARTERNION_DISPLAY.quarterion)
-					return quarternionArraySlerp(__f, __t, interpolate(from, to, rat));
+					return quarternionArraySlerp(__f, __t, __i);
 				
 				var _af = array_safe_length(__f, -1);
 				var _at = array_safe_length(__t, -1);
 				
 				if(_af ==  0 || _at ==  0) return 0;
-				if(_af == -1 || _at == -1) return interpolateValue(__fr, __to, __f, __t, __r);
+				if(_af == -1 || _at == -1) return lerp(__f, __t, __i);
 				
-				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return interpolateValue(__fr, __to, __f[i], __t[i], __r)});
-				
-				// if(_af == _at)             return array_create_ext(_af, (i) => interpolateValue(__fr, __to, __f[i], __t[i], __r));
-				
-				// if(_af == -1 && _at != -1) return array_create_ext(_at, (i) => interpolateValue(__fr, __to, __f, __t[i], __r));
-				// if(_af != -1 && _at == -1) return array_create_ext(_af, (i) => interpolateValue(__fr, __to, __f[i], __t, __r));
-				
-				// return array_create_ext(max(_af, _at), (i) => interpolateValue(__fr, __to, 
-				//                                                     is_array(__f)? array_safe_get_fast(__f, i, 0) : __f, 
-				// 			                                        is_array(__t)? array_safe_get_fast(__t, i, 0) : __t, __r));
+				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return lerp(__f[i], __t[i], __i)});
 				
 			case VALUE_TYPE.integer : 
 				var _af = array_safe_length(__f, -1);
 				var _at = array_safe_length(__t, -1);
 				
 				if(_af ==  0 || _at ==  0) return 0;
-				if(_af == -1 || _at == -1) return round(interpolateValue(from, to, __f, __t, rat));
+				if(_af == -1 || _at == -1) return round(lerp(__f, __t, __i));
 				
-				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return round(interpolateValue(__fr, __to, __f[i], __t[i], __r))});
+				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return round(lerp(__f[i], __t[i], __i))});
 				
-				// if(_af == _at)             return array_create_ext(_af, (i) => round(interpolateValue(__fr, __to, __f[i], __t[i], __r)));
-				
-				// if(_af == -1 && _at != -1) return array_create_ext(_at, (i) => round(interpolateValue(__fr, __to, __f, __t[i], __r)));
-				// if(_af != -1 && _at == -1) return array_create_ext(_af, (i) => round(interpolateValue(__fr, __to, __f[i], __t, __r)));
-				
-				// return array_create_ext(max(_af, _at), (i) => round(interpolateValue(__fr, __to, 
-				//                                                      is_array(__f)? array_safe_get_fast(__f, i, 0) : __f, 
-				// 			                                         is_array(__t)? array_safe_get_fast(__t, i, 0) : __t, __r)));
-			
 			case VALUE_TYPE.curve : 
 				var _af = array_safe_length(__f, -1);
 				var _at = array_safe_length(__t, -1);
-				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return interpolateValue(__fr, __to, __f[i], __t[i], __r)});
+				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return lerp(__f[i], __t[i], __i)});
 				
 				
 			case VALUE_TYPE.color : 
-				__lrp = interpolate(from, to, rat);
-				
 				if(is_array(__f) && is_array(__t)) {
-					var _len = ceil(lerp(array_length(__f), array_length(__t), __lrp));
+					var _len = ceil(lerp(array_length(__f), array_length(__t), __i));
 					var res  = array_create(_len);
 					
 					for( var i = 0; i < _len; i++ ) {
@@ -212,11 +178,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 						var cf = array_get_decimal(__f, rf, true);
 						var ct = array_get_decimal(__t, rt, true);
 						
-						res[i] = merge_color(cf, ct, __lrp);
+						res[i] = merge_color(cf, ct, __i);
 					}
 					return res;
 				}
-				return processType(merge_color(__f, __t, __lrp));
+				return processType(merge_color(__f, __t, __i));
 		}
 		
 		return processType(__f);
