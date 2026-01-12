@@ -427,13 +427,22 @@ function Panel_Preference() : PanelContent() constructor {
     				resetScale(PREFERENCES._display_scaling, true); should_restart = true;
     			}),
     			
-    			function(   ) /*=>*/ { return PREFERENCES._display_scaling; },
+    			function(   ) /*=>*/ {return PREFERENCES._display_scaling},
     			function(val) /*=>*/ {
     				PREFERENCES._display_scaling = val;
     				resetScale(PREFERENCES._display_scaling, true); should_restart = true;
     			},
     			1,
     		).setKey("ui_scale"));
+    		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_ui_text_scaling", "Text scale"),
+    			"text_scaling",
+    			textBox_Number(function(str) /*=>*/ {
+    				prefSet("text_scaling", clamp(real(str), .5, 4), true);
+    				loadFonts();
+    			})
+    		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_frame_rate", "UI frame rate"),

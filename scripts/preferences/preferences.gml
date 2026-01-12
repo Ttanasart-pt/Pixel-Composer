@@ -9,6 +9,7 @@
 	#region GENERAL UI
 												
 		PREFERENCES.display_scaling					= 1;
+		PREFERENCES.text_scaling					= 1;
 		PREFERENCES.window_width					= 1600;
 		PREFERENCES.window_height					= 800;
 		PREFERENCES.window_maximize					= false;

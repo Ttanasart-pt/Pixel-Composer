@@ -5,7 +5,7 @@ function Node_Quarternion_To_Euler(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	newInput(0, nodeValue_Quaternion("Rotation", [0,0,0,1] ));
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.float, [0,0,0])).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output("Euler Angles", VALUE_TYPE.float, [0,0,0])).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0 ];
 	

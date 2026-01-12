@@ -455,7 +455,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		return _outData;
 	}
 	
-	////- Draw
+	////- Object
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	

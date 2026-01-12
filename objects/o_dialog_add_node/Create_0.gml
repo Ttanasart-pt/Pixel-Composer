@@ -472,10 +472,10 @@ event_inherited();
 			else                   draw_set_text(font,  fa_left, fa_center, cc);
 			
 			var _is_extra = name == "Extra";
-			name = __txt(name);
 			
 			var _tx = ui(8);
 			var _ty = _y + hh + hg / 2;
+			name = __txt(name);
 			draw_text_add(_tx, _ty, name);
 			
 			if(_is_extra) {
@@ -531,7 +531,7 @@ event_inherited();
 			var _c  = i == subgroup_index? COLORS._main_text_accent : _bc;
 			
 			draw_set_text(_f, fa_left, fa_top, _c);
-			draw_text_add(ui(12), yy + ui(2), subgroups[i]);
+			draw_text_add(ui(12), yy + ui(2), __txt(subgroups[i]));
 			
 			yy += hg;
 			hh += hg;
@@ -769,7 +769,7 @@ event_inherited();
 					
 					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, _tc, 1);    
 					draw_set_text(f_p2, fa_left, fa_center, _tc);
-					draw_text_add(ui(16 + 28), _yy + _lbh / 2, _name);
+					draw_text_add(ui(16 + 28), _yy + _lbh / 2, __txt(_name));
 				}
 				
 					 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 0); } 
@@ -799,18 +799,8 @@ event_inherited();
 				
 				if(is_string(_node)) {
 					if(PREFERENCES.dialog_add_node_grouping == 0) continue;
-					if(PREFERENCES.dialog_add_node_grouping == 1 && string_starts_with(_node, "/")) {
-						// var _txt = string_trim_start(__txt(_node), ["/"]);
-						// var _shg = ui(16);
-						
-						// draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub, .5);
-						// draw_text_add(pd + ui(32), yy + _shg / 2, _txt)
-						// draw_set_alpha(1);
-						
-						// hh += _shg;
-						// yy += _shg;
+					if(PREFERENCES.dialog_add_node_grouping == 1 && string_starts_with(_node, "/"))
 						continue;
-					}
 					
 					hh += sec_pd * bool(i);
 					yy += sec_pd * bool(i);
@@ -982,7 +972,7 @@ event_inherited();
 					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, _tc, 1);    
 					
 					draw_set_text(f_p2, fa_left, fa_center, _tc);
-					draw_text_add(ui(16 + 28), _yy + _lbh / 2, _name);
+					draw_text_add(ui(16 + 28), _yy + _lbh / 2, __txt(_name));
 				}
 				
 					 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 0); } 
@@ -1494,9 +1484,9 @@ event_inherited();
 					var sgrp = _path.subgroup;
 					
 					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
-					var _txt = catg;
-					if(grop != "") _txt += "/" + grop;
-					if(sgrp != "") _txt += ""  + sgrp;
+					var _txt = __txt(catg);
+					if(grop != "") _txt += "/" + __txt(grop);
+					if(sgrp != "") _txt += ""  + __txt(sgrp);
 					
 					var tww = string_width(_txt) + ui(10);
 					var thh = list_height - ui(6);

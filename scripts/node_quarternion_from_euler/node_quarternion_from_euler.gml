@@ -5,7 +5,7 @@ function Node_Quarternion_From_Euler(_x, _y, _group = noone) : Node_Processor(_x
 	
 	newInput(0, nodeValue_Vec3("Euler Rotation", [0,0,0] ));
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.float, [0,0,0,1])).setDisplay(VALUE_DISPLAY.d3quarternion);
+	newOutput(0, nodeValue_Output("Rotation", VALUE_TYPE.float, [0,0,0,1])).setDisplay(VALUE_DISPLAY.d3quarternion);
 	
 	input_display_list = [ 0 ];
 	

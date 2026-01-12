@@ -98,10 +98,7 @@ function _font_path(rel) {
 	return defPath;
 }
 
-function _font_load_default(name, def) {
-	FONT_LIST[$ name] = { data: noone, font: def }
-	return def;
-}
+function _font_load_default(name, def) { FONT_LIST[$ name] = { data: noone, font: def }; return def; }
 
 function _font_load_from_struct(str, name, def, type = UI_FONT_TYPE.medium) {
 	if(!struct_has(str, name)) { noti_status($"Font data {name} not found. Rollback to default font."); return def; }
@@ -125,7 +122,7 @@ function _font_load_from_struct(str, name, def, type = UI_FONT_TYPE.medium) {
 	var _aa  = struct_try_get(THEME_VALUE, "font_aa", true);
 	
 	font_add_enable_aa(_aa);
-	var _font = _font_add(_path, round(_data.size * UI_SCALE), _sdf);
+	var _font = _font_add(_path, round(_data.size * UI_SCALE * PREFERENCES.text_scaling), _sdf);
 	
 	FONT_LIST[$ name] = { data: str, font: _font }
 	

@@ -29,28 +29,22 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	w = ui(640);
 	h = ui(64);
 	
+	LOADING  = true;
 	title    = "Dumping node data";
 	auto_pin = true;
 	
-	key = struct_get_names(ALL_NODES);
-	array_sort(key, function(k1, k2) /*=>*/ {return string_compare(ALL_NODES[$ k1].nodeName, ALL_NODES[$ k2].nodeName)});
+	#region key
+		key = struct_get_names(ALL_NODES);
+		array_sort(key, function(k1, k2) /*=>*/ {return string_compare(ALL_NODES[$ k1].nodeName, ALL_NODES[$ k2].nodeName)});
+		
+		amo = array_length(key);
+		cur = 0;
+	#endregion
 	
-	amo = array_length(key);
-	cur = 0;
-	
-	LOADING = true;
-	
-	dir  = DIRECTORY + "Nodes/gen/";
-	directory_verify(dir);
-	
+	dir     = DIRECTORY + "Nodes/gen/";
 	locText = "";
-	
+	directory_verify(dir);
 	game_set_speed(99999, gamespeed_fps);
-	
-	function sanitize(str) {
-		str = json_stringify(str);
-		return str;
-	}
 	
 	function drawContent(panel) {
 		var _n = ALL_NODES[$ key[cur]];
@@ -76,7 +70,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		if(!is(_b, Node) || _b.name == "") { cur++; return; } 
 		
 		var _lCon  = $"\t\t\"name\":\"{_n.name}\",\n";
-		    _lCon += $"\t\t\"tooltip\":{sanitize(_n.tooltip)},\n";
+		    _lCon += $"\t\t\"tooltip\":{json_stringify(_n.tooltip)},\n";
 		
 		var _tIn = "";
 		var _tOt = "";
@@ -88,7 +82,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 			if(!is(_in, NodeValue)) continue;
 			
 			var _ti  = $"\t\t\t\t\"name\":\"{_in._initName}\"";
-		    if(_in.tooltip != "") _ti += $",\n\t\t\t\t\"tooltip\":{sanitize(_in.tooltip)}";
+		    if(_in.tooltip != "") _ti += $",\n\t\t\t\t\"tooltip\":{json_stringify(_in.tooltip)}";
 			
 			switch(_in.display_type) {
 				case VALUE_DISPLAY.enum_button :
@@ -99,7 +93,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 					for( var j = 0, m = array_length(_eData); j < m; j++ ) {
 						var _s = _eData[j];
 						if(struct_has(_s, "name")) _s = _s.name;
-						_sData += $"\t\t\t\t\t{sanitize(_s)}" + (j == m - 1? "\n" : ",\n");
+						_sData += $"\t\t\t\t\t{json_stringify(_s)}" + (j == m - 1? "\n" : ",\n");
 					}
 					
 					_ti += $",\n\t\t\t\t\"display_data\":[\n{_sData}\t\t\t\t]";
@@ -114,7 +108,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 			if(!is(_ot, NodeValue)) continue;
 			
 			var _to  = $"\t\t\t\t\"name\":\"{_ot._initName}\"";
-			if(_ot.tooltip != "") _to += $",\n\t\t\t\t\"tooltip\":{sanitize(_ot.tooltip)}";
+			if(_ot.tooltip != "") _to += $",\n\t\t\t\t\"tooltip\":{json_stringify(_ot.tooltip)}";
 			
 			_tOt += $"\t\t\t\{\n{_to}\n\t\t\t\}" + (i == n - 1? "\n" : ",\n");
 		}

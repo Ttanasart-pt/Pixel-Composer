@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_quarternion_lookat",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_quarternion_lookat",
+  "parent":{
+    "name":"quaternion",
+    "path":"folders/nodes/data/value/quaternion.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

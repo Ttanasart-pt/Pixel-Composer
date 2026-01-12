@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_quarternion_from_euler",
   "parent":{
-    "name":"vector",
-    "path":"folders/nodes/data/value/vector.yy",
+    "name":"quaternion",
+    "path":"folders/nodes/data/value/quaternion.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

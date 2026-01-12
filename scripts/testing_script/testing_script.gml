@@ -259,4 +259,5 @@ function __test_update_theme() {
 	json_save_struct(_p, _d, true);
 	
 	noti_status($"Update theme to version {VERSION_STRING}.", noone, COLORS._main_value_positive);
+	return 0;
 }

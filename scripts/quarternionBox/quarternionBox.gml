@@ -111,7 +111,7 @@ function quarternionBox(_onModify) : widget() constructor {
 				
 			if(tg) {
 				attributes.angle_display = (_disp + 1) % 2;
-				onModify([ 0, 0, 0, 1 ]);
+				onModify(current_value[0], 0);
 				clickable = false;
 			}
 			_w -= bs;
