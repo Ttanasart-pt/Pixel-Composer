@@ -433,11 +433,14 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			new NodeTool( "Anchor add / remove", THEME.path_tools_add         ),
 			new NodeTool( "Edit Control point",  THEME.path_tools_anchor      ),
 			tool_pathDrawer, 
-			new NodeTool( "Arc",                 THEME.path_tools_arc         ),
+			new NodeTool( [ "Line", "Curve", "Arc" ], 
+				[ THEME.path_tools_line,
+				  THEME.path_tools_line_curve,
+				  THEME.path_tools_arc, ] ),
 			new NodeTool( "Rectangle",           THEME.path_tools_rectangle   ),
 			new NodeTool( ["Circle", "Circle Midpoint"], 
 				[ THEME.path_tools_circle, 
-				  THEME.path_tools_circle_mid_point ] ),
+				  THEME.path_tools_circle_mid_point, ] ),
 			
 			new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
 			-1, 
@@ -450,6 +453,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		tool_arc_angle_st = 0;
 		tool_arc_angle_rg = 0;
 		tool_arc_angle_pr = 0;
+		
+		tool_curve_angle  = 0;
+		tool_curve_x0     = 0;
+		tool_curve_y0     = 0;
+		tool_curve_x1     = 0;
+		tool_curve_y1     = 0;
 	#endregion
 	
 	#region ---- attributes ----
@@ -1068,6 +1077,56 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						}
 					}
 					break;
+					
+				case "Line" : 
+					var x0 = (drag_point_mx - _x) / _s;
+					var y0 = (drag_point_my - _y) / _s;
+					var x1 = (_mx - _x) / _s;
+					var y1 = (_my - _y) / _s;
+					
+					edited = inputs[input_fix_len + 0].setValue(newAnchor( x0, y0, 0, 0, 0, 0 )) || edited;
+					edited = inputs[input_fix_len + 1].setValue(newAnchor( x1, y1, 0, 0, 0, 0 )) || edited;
+					break;
+					
+				case "Curve" : 
+					releasable = false;
+					
+					if(drag_point == 0) {
+						var x0 = (drag_point_mx - _x) / _s;
+						var y0 = (drag_point_my - _y) / _s;
+						var x1 = (_mx - _x) / _s;
+						var y1 = (_my - _y) / _s;
+							
+						tool_curve_angle = point_direction(x0, y0, x1, y1);
+						edited = inputs[input_fix_len + 0].setValue(newAnchor( x0, y0, 0, 0, 0, 0 )) || edited;
+						edited = inputs[input_fix_len + 1].setValue(newAnchor( x1, y1, 0, 0, 0, 0 )) || edited;
+						
+						if(mouse_lrelease()) {
+							tool_curve_x0 = x0;
+							tool_curve_y0 = y0;
+							tool_curve_x1 = x1;
+							tool_curve_y1 = y1;
+							
+							drag_point_mx = _mx;
+							drag_point_my = _my;
+							drag_point    = 1;
+						}
+						
+					} else if(drag_point == 1) {
+						var len = point_distance(tool_curve_x0, tool_curve_y0, tool_curve_x1, tool_curve_y1) / 3;
+						var mds = distance_to_line_angle_signed(_mx, _my, drag_point_mx, drag_point_my, tool_curve_angle) / _s;
+						var acx = lengthdir_x(mds, tool_curve_angle + 90);
+						var acy = lengthdir_y(mds, tool_curve_angle + 90);
+						
+						edited = inputs[input_fix_len + 0].setValue(newAnchor( tool_curve_x0, tool_curve_y0, -acx, -acy,  acx,  acy )) || edited;
+						edited = inputs[input_fix_len + 1].setValue(newAnchor( tool_curve_x1, tool_curve_y1,  acx,  acy, -acx, -acy )) || edited;
+						
+						if(mouse_lrelease()) {
+							drag_point   = -1;
+							UNDO_HOLDING = false;
+						}
+					}
+					break;
 			}
 			
 			if(edited) UNDO_HOLDING = true;
@@ -1230,6 +1289,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					draw_circle_prec(rx, ry, ui(4), false);
 					
 				} else {
+					draw_set_alpha(0.5);
+					draw_line(_mx, 0, _mx, WIN_H);
+					draw_line(0, _my, WIN_W, _my);
+					draw_set_alpha(1);
+				}
+				break;
+				
+			case "Line" : 
+			case "Curve" : 
+				if(drag_point == -1 && drag_point == 0) {
 					draw_set_alpha(0.5);
 					draw_line(_mx, 0, _mx, WIN_H);
 					draw_line(0, _my, WIN_W, _my);
@@ -1585,6 +1654,27 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					drag_points   = [ [ (_mx - _x) / _s, (_my - _y) / _s ] ];
 					drag_point_mx = (_mx - _x) / _s;
 					drag_point_my = (_my - _y) / _s;
+				}
+				break;
+				
+			case "Line" :
+			case "Curve" :
+				hovering      = true;
+				anchor_select = [];
+				CURSOR_SPRITE = THEME.cursor_add;
+				
+				if(drag_point == -1 && mouse_press(mb_left, active)) {
+					while(array_length(inputs) > input_fix_len)
+						array_delete(inputs, input_fix_len, 1);
+					resetDisplayList();
+					
+					drag_point    = 0;
+					drag_type     = _tooln;
+					drag_point_mx = _mx;
+					drag_point_my = _my;
+					inputs[1].setValue(false);
+					
+					repeat(2) createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 				}
 				break;
 				
