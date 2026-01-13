@@ -54,7 +54,12 @@ function __d3dMaterial(s = noone) constructor {
 		shader_set_s("mat_pbr_properties_map",    pbr_properties_map );
 	}
 	
-	static clone = function(replaceSurface = surface) { return variable_clone(self, 1); }
+	static clone = function(_surf = surface) { 
+		var mat = variable_clone(self, 1); 
+		mat.surface = _surf;
+		
+		return mat;
+	}
 	
 	static serialize = function() {
 		var s = { 

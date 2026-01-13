@@ -69,8 +69,9 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			inputs[in_mesh + 5].setVisible(true, _back);
 			inputs[in_mesh + 6].setVisible(true, _back);
 			
-			var _surf  = is(_fmat, __d3dMaterial)? _fmat.surface : noone;
-			var _bsurf = is(_bmat, __d3dMaterial)? _bmat.surface : noone;
+			var _surf  = is(_fmat, __d3dMaterial)? _fmat.surface : _fmat;
+			var _bsurf = is(_bmat, __d3dMaterial)? _bmat.surface : _bmat;
+			
 			if(!is_surface(_surf)) return noone;
 		#endregion
 		

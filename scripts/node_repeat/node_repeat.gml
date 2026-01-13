@@ -442,6 +442,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 			
 			_grad.cache();
+			_cran.cache();
+			
 			if(_grad_use_map) { 
 				var _grad_map_w = surface_get_width(_grad_map);
 				var _grad_map_h = surface_get_height(_grad_map);
@@ -609,6 +611,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				cc = grad_sampler.getPixel(_grad_sx, _grad_sy);
 			} else 
 				cc = _grad.evalFast(_prg);
+			cc = colorMultiply(cc, _cran.evalFast(random(1)));
 			
 			minx = min(minx, posx);
 			miny = min(miny, posy);

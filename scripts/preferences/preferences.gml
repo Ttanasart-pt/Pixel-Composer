@@ -407,7 +407,10 @@
 		
 		LOCALE_DEF = PREFERENCES.local == "en";
 		THEME_DEF  = PREFERENCES.theme == "default";
-		FONT_DEF   = PREFERENCES.theme == "default" && PREFERENCES.local == "en" && PREFERENCES.display_scaling == 1 && PREFERENCES.font_overwrite == "";
+		FONT_DEF   = THEME_DEF && LOCALE_DEF && 
+			PREFERENCES.display_scaling == 1 && 
+			PREFERENCES.text_scaling    == 1 && 
+			PREFERENCES.font_overwrite  == "";
 		
 		directory_verify(filepath_resolve(PREFERENCES.temp_path));
 		
