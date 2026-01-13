@@ -10,26 +10,27 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 0, nodeValue_Surface( "Background" ));
 	
 	////- =Particles
-	newInput( 1, nodeValue_Surface( "Sprite" ));
+	newInput( 1, nodeValue_Surface( "Sprite" )).setArrayDepth(1);
 	
 	////- =Spawn
 	newInput( 3, nodeValue_Area( "Area",   DEF_AREA )).setHotkey("A");
 	newInput( 2, nodeValue_Int(  "Amount", 10       ));
 	
 	////- =Movement
-	newInput( 5, nodeValue_Range(           "Speed",         [1,1]          ));
-	newInput( 4, nodeValue_Rotation_Random( "Direction",     [0,45,135,0,0] ));
-	newInput( 9, nodeValue_Range(           "Angular speed", [-45,45]       ));
+	newInput( 5, nodeValue_Range(   "Speed",         [1,1]          ));
+	newInput( 4, nodeValue_RotRand( "Direction",     [0,45,135,0,0] ));
+	newInput( 9, nodeValue_Range(   "Angular speed", [-45,45]       ));
 	
 	////- =Smooth Turn
 	newInput(11, nodeValue_Bool(  "Turn", false ));
-	newInput(10, nodeValue_Range( "Angular acceleration", [-2,2] ));
+	newInput(10, nodeValue_Range( "Angular Acceleration", [-2,2] ));
 	
 	////- =Render
-	newInput(13, nodeValue_Range(    "Size", [ 1, 1 ], { linked : true }   ));
-	newInput( 6, nodeValue_Gradient( "Color", gra_white ));
-	newInput( 7, nodeValue_Curve(    "Alpha", CURVE_DEF_11                 ));
-	// input 14
+	newInput(13, nodeValue_Range(    "Size", [ 1, 1 ], { linked : true } ));
+	newInput( 6, nodeValue_Gradient( "Color", gra_white    ));
+	newInput( 7, nodeValue_Curve(    "Alpha", CURVE_DEF_11 ));
+	newInput(14, nodeValue_Bool(     "Tile",  false        ));
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
@@ -39,7 +40,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		[ "Spawn",      false     ],  3,  2, 
 		[ "Movement",   false     ],  5,  4,  9, 
 		[ "Smooth turn", true, 11 ], 10, 
-		[ "Render",     false     ], 13,  6,  7, 
+		[ "Render",     false     ], 13,  6,  7, 14, 
 	];
 	
 	////- Node
@@ -100,9 +101,20 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _size = _data[13];
 			var _colr = _data[ 6];
 			var _alph = _data[ 7];
+			var _tile = _data[14];
 		#endregion
 		
+		var ww = _dim[0];
+		var hh = _dim[1];
+		
 		var _sed = _seed;
+		var pw = 1, ph = 1;
+		
+		if(_sprt != noone) {
+			var ss = is_array(_sprt)? _sprt[0] : _sprt;
+			pw = surface_get_width_safe(ss);
+			ph = surface_get_height_safe(ss);
+		}
 		
 		surface_set_shader(_outData);
 			draw_surface_safe(_surf);
@@ -112,22 +124,42 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				var _lifs = irandom_seed(TOTAL_FRAMES, _sed);
 				var _lif  = (_lifs + CURRENT_FRAME) % TOTAL_FRAMES;
-					
-				var _pos = getPosition(_sed, _lif, _area, _sped, _dire, _dirs, _turn, _dira);
-				var _cc  = _colr.eval(_lifs / TOTAL_FRAMES);
-				var _aa  = eval_curve_x(_alph, _lif / TOTAL_FRAMES);
 				
+				var _pos  = getPosition(_sed, _lif, _area, _sped, _dire, _dirs, _turn, _dira);
+				var _cc   = _colr.eval(_lifs / TOTAL_FRAMES);
+				var _aa   = eval_curve_x(_alph, _lif / TOTAL_FRAMES);
 				random_set_seed(_sed + 50);
-				var _ss  = random_range(_size[0], _size[1]);
 				
 				if(_sprt == noone) {
-					DYNADRAW_DEFAULT.draw(_pos[0], _pos[1], round(_ss), round(_ss), 0, _cc, _aa);
+					var _ss = irandom_range(_size[0], _size[1]);
+					DYNADRAW_DEFAULT.draw(_pos[0], _pos[1], _ss, _ss, 0, _cc, _aa);
 					
 				} else {
-					var _p = _sprt;
+					var _ss = random_range(_size[0], _size[1]);
+					var _p  = _sprt;
 					if(is_array(_p)) _p = array_safe_get_fast(_p, irandom(array_length(_p) - 1));
 					
-					draw_surface_ext_safe(_p, _pos[0], _pos[1], _ss, _ss, 0, _cc, _aa);
+					var px = _pos[0];
+					var py = _pos[1];
+					draw_surface_ext_safe(_p, px, py, _ss, _ss, 0, _cc, _aa);
+					
+					if(_tile) {
+						var wx = undefined;
+						var wy = undefined;
+						
+						var ppw = pw * _ss;
+						var pph = ph * _ss;
+						
+						     if(px < 0)        wx = px + ww;
+						else if(px > ww - ppw) wx = px - ww;
+						
+						     if(py < 0)        wy = py + hh;
+						else if(py > hh - pph) wy = py - hh;
+						
+						if(wx != undefined) draw_surface_ext_safe(_p, wx, py, _ss, _ss, 0, _cc, _aa);
+						if(wy != undefined) draw_surface_ext_safe(_p, px, wy, _ss, _ss, 0, _cc, _aa);
+						if(wx != undefined && wy != undefined) draw_surface_ext_safe(_p, wx, wy, _ss, _ss, 0, _cc, _aa);
+					}
 				}
 			}
 		surface_reset_shader();
