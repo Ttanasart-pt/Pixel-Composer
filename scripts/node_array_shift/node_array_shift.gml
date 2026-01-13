@@ -1,6 +1,7 @@
 function Node_Array_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Array Shift";
 	setDimension(96, 48);
+	setDrawIcon(s_node_array_shift);
 	
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setArrayDepth(99)
@@ -59,6 +60,5 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			return;
 		}
 		
-		draw_sprite_fit(s_node_array_shift, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

@@ -1616,7 +1616,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		force: false, 
 	};
 	
-	static onPreDraw = undefined; // onPreDraw = function(_x, _y, _s, _iny, _outy)
+	static onPreDraw = undefined; // onPreDraw = function(_x, _y, _s, _iny, _outy) {}
 	static preDraw   = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -1831,7 +1831,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, hh * _s, cc, aa); 
 	}
 	
-	static drawNodeOverlay = undefined; //static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {
+	static drawNodeOverlay = undefined; // static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {}
 	
 	static drawSetBbox = function(xx, yy, _s) {
 		var pad_label = (project.graphDisplay.avoid_label && draw_name) || always_pad;

@@ -356,14 +356,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = draw_bbox;
 		
-		if(array_empty(segments)) {
-			draw_sprite_fit(s_node_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-			
-		} else {
-			gpu_set_tex_filter(true);
-			draw_surface_bbox(path_preview_surface, bbox);
-			gpu_set_tex_filter(false);
-		}
+		gpu_set_tex_filter(true);
+		draw_surface_bbox(path_preview_surface, bbox);
+		gpu_set_tex_filter(false);
 	}
 	
 	static onCleanUp = function() {

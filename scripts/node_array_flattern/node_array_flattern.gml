@@ -1,6 +1,7 @@
 function Node_Array_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Flatten";
 	setDimension(96, 48);
+	setDrawIcon(s_node_array_flattern);
 	
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, [])).setVisible(true, true);
 	
@@ -29,7 +30,5 @@ function Node_Array_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			drawPaletteBBOX(pal, bbox);
 			return;
 		}
-		
-		draw_sprite_fit(s_node_array_flattern, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

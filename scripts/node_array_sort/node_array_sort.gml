@@ -1,6 +1,7 @@
 function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Sort Array";
 	setDimension(96, 48);
+	setDrawIcon(s_node_array_sort);
 	
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
@@ -54,6 +55,5 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			return;
 		}
 		
-		draw_sprite_fit(s_node_array_sort, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

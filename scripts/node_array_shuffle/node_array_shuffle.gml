@@ -1,7 +1,7 @@
 function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Shuffle Array";
-	
 	setDimension(96, 48);
+	setDrawIcon(s_node_array_shuffle);
 	
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
@@ -38,6 +38,5 @@ function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			return;
 		}
 		
-		draw_sprite_fit(s_node_array_shuffle, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

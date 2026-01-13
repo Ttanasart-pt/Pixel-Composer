@@ -1,6 +1,7 @@
 function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Add";
 	setDimension(96, 48);
+	setDrawIcon(s_node_array_add);
 	
 	newInput(1, nodeValue_Bool( "Spread array", false )).rejectArray();
 	newInput(0, nodeValue( "Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(true, true);
@@ -55,6 +56,5 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return;
 		}
 		
-		draw_sprite_fit(s_node_array_add, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

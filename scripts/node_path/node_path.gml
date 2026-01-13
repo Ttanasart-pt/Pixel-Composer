@@ -15,8 +15,8 @@
 		hotkeyCustom("Node_Path", "Anchor add / remove", "A");
 		hotkeyCustom("Node_Path", "Edit Control point",  "C");
 		hotkeyCustom("Node_Path", "Draw path",           "B");
-		hotkeyCustom("Node_Path", "Rectangle path",      "N");
-		hotkeyCustom("Node_Path", "Circle path",         "M");
+		hotkeyCustom("Node_Path", "Rectangle",           "N");
+		hotkeyCustom("Node_Path", "Circle",              "M");
 		hotkeyCustom("Node_Path", "Weight edit",         "W");
 		
 		hotkeyCustom("Node_Path", "Move Selection",      "G");
@@ -386,7 +386,6 @@
 			
 		}
 	}
-	
 #endregion
 
 function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -397,35 +396,32 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setDimension(96, 48);
 	
 	////- =Path
-	
 	newInput(1, nodeValue_Bool( "Loop",         false )).rejectArray();
 	newInput(3, nodeValue_Bool( "Round anchor", false )).rejectArray();
 	
 	////- =Sampling
-	
 	newInput(0, nodeValue_Slider(      "Path progress", 0 )).setTooltip("Sample position from path.");
 	newInput(2, nodeValue_Enum_Scroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
-	
 	// Inputs 4
 	
 	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	newOutput(1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, noone ));
 	newOutput(2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    []    )).setVisible(false).setArrayDepth(1);
 	
-	input_display_list = [
-		["Path",     false], 1, 3, 
-		["Sampling", false], 0, 2, 
-		["Anchors",  false], 
+	input_display_list  = [
+		[ "Path",     false ], 1, 3, 
+		[ "Sampling", false ], 0, 2, 
+		[ "Anchors",  false ], 
 	];
 	
-	output_display_list   = [ 1, 0, 2 ];
+	output_display_list = [ 1, 0, 2 ];
 	
 	setDynamicInput(1, false);
 	
 	////- Nodes
 	
 	_path_preview_surface = noone;
-	path_preview_surface  = noone;
+	 path_preview_surface = noone;
 	
 	#region ---- tool ----
 		tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	
@@ -436,15 +432,24 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			new NodeTool( "Transform",           THEME.path_tools_transform   ),
 			new NodeTool( "Anchor add / remove", THEME.path_tools_add         ),
 			new NodeTool( "Edit Control point",  THEME.path_tools_anchor      ),
-			tool_pathDrawer,
-			new NodeTool( "Rectangle path",      THEME.path_tools_rectangle   ),
-			new NodeTool( "Circle path",         THEME.path_tools_circle      ),
+			tool_pathDrawer, 
+			new NodeTool( "Arc",                 THEME.path_tools_arc         ),
+			new NodeTool( "Rectangle",           THEME.path_tools_rectangle   ),
+			new NodeTool( ["Circle", "Circle Midpoint"], 
+				[ THEME.path_tools_circle, 
+				  THEME.path_tools_circle_mid_point ] ),
+			
 			new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
 			-1, 
 			new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setVisible(false).setToolObject(new path_tool_move(self)),
 			new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setVisible(false).setToolObject(new path_tool_rotate(self)),
 			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setVisible(false).setToolObject(new path_tool_scale(self)),
 		];
+		
+		tool_arc_radius   = 0;
+		tool_arc_angle_st = 0;
+		tool_arc_angle_rg = 0;
+		tool_arc_angle_pr = 0;
 	#endregion
 	
 	#region ---- attributes ----
@@ -743,6 +748,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var dx = mmx - drag_point_px;
 			var dy = mmy - drag_point_py;
+			var releasable = true;
 			
 			drag_point_px = mmx;
 			drag_point_py = mmy;
@@ -833,7 +839,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					if(inp.setValue(anc)) edited = true;
 					break;
 					
-				case 2 :
+				case  2 :
 					var ox, oy, nx, ny;
 					var pxx = (_mx - _x) / _s;
 					var pxy = (_my - _y) / _s;
@@ -931,11 +937,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 								inputs[input_fix_len + i].setValue(anc);
 						}
 					}
-				
 					break;
 				
-				case 3 :
-				case 4 :
+				case "Rectangle" :
+				case "Circle" :
 					var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 					var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 					var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
@@ -971,13 +976,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						maxy = miny + _n;
 					}
 					
-					if(drag_type == 3) {
+					if(drag_type == "Rectangle") {
 						edited = inputs[input_fix_len + 0].setValue(newAnchor(minx, miny)) || edited;
 						edited = inputs[input_fix_len + 1].setValue(newAnchor(maxx, miny)) || edited;
 						edited = inputs[input_fix_len + 2].setValue(newAnchor(maxx, maxy)) || edited;
 						edited = inputs[input_fix_len + 3].setValue(newAnchor(minx, maxy)) || edited;
 						
-					} else if(drag_type == 4) {
+					} else if(drag_type == "Circle") {
 							
 						var _cnx = (maxx + minx) / 2;
 						var _cny = (maxy + miny) / 2;
@@ -992,12 +997,83 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					}
 					break;
 				
+				case "Circle Midpoint" : 
+					var dist = point_distance(drag_point_mx, drag_point_my, _mx, _my) / _s;
+					var dx = dist;
+					var dy = dist;
+					
+					var minx = (drag_point_mx - _x) / _s - dx;
+					var maxx = (drag_point_mx - _x) / _s + dx;
+					var miny = (drag_point_my - _y) / _s - dy;
+					var maxy = (drag_point_my - _y) / _s + dy;
+					
+					minx = value_snap(minx, _snx);
+					maxx = value_snap(maxx, _snx);
+					miny = value_snap(miny, _sny);
+					maxy = value_snap(maxy, _sny);
+					
+					var _cnx = (maxx + minx) / 2;
+					var _cny = (maxy + miny) / 2;
+					var _ccx = (maxx - minx) * 0.27614;
+					var _ccy = (maxy - miny) * 0.27614;
+					
+					edited = inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0)) || edited;
+					edited = inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy)) || edited;
+					edited = inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0)) || edited;
+					edited = inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy)) || edited;
+					break;
+					
+				case "Arc" :
+					releasable = false;
+					
+					if(drag_point == 0) {
+						tool_arc_radius   = point_distance(  drag_point_mx, drag_point_my, _mx, _my );
+						tool_arc_angle_st = point_direction( drag_point_mx, drag_point_my, _mx, _my );
+						tool_arc_angle_rg = 0;
+						tool_arc_angle_pr = undefined;
+						
+						if(mouse_lrelease())
+							drag_point = 1;
+						
+					} else if(drag_point == 1) {
+						var dd = point_direction(drag_point_mx, drag_point_my, _mx, _my);
+						if(tool_arc_angle_pr != undefined)
+							tool_arc_angle_rg += angle_difference(dd, tool_arc_angle_pr);
+						tool_arc_angle_pr = dd;
+						
+						var _stp = ceil(abs(tool_arc_angle_rg) / 90);
+						var _ast = tool_arc_angle_rg / _stp;
+						var _aas = tool_arc_radius / _s * lerp(.0, .5, sqr(dsin(abs(_ast))) );
+						
+						for( var i = 0; i <= _stp; i++ ) {
+							var _ang = tool_arc_angle_st + i * _ast;
+							var _ii  = input_fix_len + i;
+							if(_ii >= array_length(inputs)) createNewInput();
+							
+							var _ax  = (drag_point_mx + lengthdir_x(tool_arc_radius, _ang) - _x) / _s;
+							var _ay  = (drag_point_my + lengthdir_y(tool_arc_radius, _ang) - _y) / _s;
+							
+							var _adx = lengthdir_x(_aas, _ang - 90);
+							var _ady = lengthdir_y(_aas, _ang - 90);
+							
+							edited = inputs[_ii].setValue(newAnchor( _ax, _ay, -_adx, -_ady, _adx, _ady)) || edited;
+						}
+						
+						while(array_length(inputs) > input_fix_len + _stp + 1)
+							array_delete(inputs, input_fix_len, 1);
+						
+						if(mouse_lrelease()) {
+							drag_point   = -1;
+							UNDO_HOLDING = false;
+						}
+					}
+					break;
 			}
 			
 			if(edited) UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
-				drag_point = -1;
+			if(releasable && mouse_lrelease()) {
+				drag_point   = -1;
 				UNDO_HOLDING = false;
 			}
 			
@@ -1037,61 +1113,129 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var minx =  99999, miny =  99999;
 		var maxx = -99999, maxy = -99999;
-				
-		if(_tooln == "Rectangle path" || _tooln == "Circle path") {
-			draw_set_color(COLORS._main_icon);
-			
-			if(drag_point > -1) { 
-				var minx = min(_mx, drag_point_mx);
-				var maxx = max(_mx, drag_point_mx);
-				var miny = min(_my, drag_point_my);
-				var maxy = max(_my, drag_point_my);
-				
-				if(key_mod_press(ALT)) {
-					var _ccx = drag_point_mx;
-					var _ccy = drag_point_my;
+		
+		draw_set_color(COLORS._main_icon);
+		switch(_tooln) {
+			case "Rectangle" :
+			case "Circle" : 
+				if(drag_point > -1) { 
+					var minx = min(_mx, drag_point_mx);
+					var maxx = max(_mx, drag_point_mx);
+					var miny = min(_my, drag_point_my);
+					var maxy = max(_my, drag_point_my);
 					
-					var _ww  = (maxx - minx) / 2;
-					var _hh  = (maxy - miny) / 2;
-					
-					if(key_mod_press(SHIFT)) {
-						var _n = max(_ww, _hh);
-						_ww = _n;
-						_hh = _n;
+					if(key_mod_press(ALT)) {
+						var _ccx = drag_point_mx;
+						var _ccy = drag_point_my;
+						
+						var _ww  = (maxx - minx) / 2;
+						var _hh  = (maxy - miny) / 2;
+						
+						if(key_mod_press(SHIFT)) {
+							var _n = max(_ww, _hh);
+							_ww = _n;
+							_hh = _n;
+						}
+						
+						minx = _ccx - _ww;
+						maxx = _ccx + _ww;
+						
+						miny = _ccy - _hh;
+						maxy = _ccy + _hh;
+						
+						draw_set_alpha(0.75);
+						draw_line(_ccx, 0, _ccx, WIN_H);
+						draw_line(0, _ccy, WIN_W, _ccy);
+						draw_set_alpha(1);
+						
+					} else if(key_mod_press(SHIFT)) {
+						var _n = max(maxx - minx, maxy - miny);
+						maxx = minx + _n;
+						maxy = miny + _n;
 					}
 					
-					minx = _ccx - _ww;
-					maxx = _ccx + _ww;
+					draw_set_alpha(0.5);
+					draw_line(minx, 0, minx, WIN_H);
+					draw_line(0, miny, WIN_W, miny);
 					
-					miny = _ccy - _hh;
-					maxy = _ccy + _hh;
-					
-					draw_set_alpha(0.75);
-					draw_line(_ccx, 0, _ccx, WIN_H);
-					draw_line(0, _ccy, WIN_W, _ccy);
+					draw_line(maxx, 0, maxx, WIN_H);
+					draw_line(0, maxy, WIN_W, maxy);
 					draw_set_alpha(1);
 					
-				} else if(key_mod_press(SHIFT)) {
-					var _n = max(maxx - minx, maxy - miny);
-					maxx = minx + _n;
-					maxy = miny + _n;
+				} else {
+					draw_set_alpha(0.5);
+					draw_line(_mx, 0, _mx, WIN_H);
+					draw_line(0, _my, WIN_W, _my);
+					draw_set_alpha(1);
 				}
+				break;
 				
-				draw_set_alpha(0.5);
-				draw_line(minx, 0, minx, WIN_H);
-				draw_line(0, miny, WIN_W, miny);
-				
-				draw_line(maxx, 0, maxx, WIN_H);
-				draw_line(0, maxy, WIN_W, maxy);
-				draw_set_alpha(1);
-				
-			} else {
-				draw_set_alpha(0.5);
-				draw_line(_mx, 0, _mx, WIN_H);
-				draw_line(0, _my, WIN_W, _my);
-				draw_set_alpha(1);
-			}
+			case "Circle Midpoint" : 
+				if(drag_point > -1) { 
+					var dist = point_distance(drag_point_mx, drag_point_my, _mx, _my) ;
+					var dx = dist;
+					var dy = dist;
+					
+					var minx = drag_point_mx - dx;
+					var maxx = drag_point_mx + dx;
+					var miny = drag_point_my - dy;
+					var maxy = drag_point_my + dy;
+					
+					draw_set_alpha(0.5);
+					draw_line(minx, 0, minx, WIN_H);
+					draw_line(0, miny, WIN_W, miny);
+					
+					draw_line(maxx, 0, maxx, WIN_H);
+					draw_line(0, maxy, WIN_W, maxy);
+					draw_set_alpha(1);
+					
+				} else {
+					draw_set_alpha(0.5);
+					draw_line(_mx, 0, _mx, WIN_H);
+					draw_line(0, _my, WIN_W, _my);
+					draw_set_alpha(1);
+				}
+				break;
 			
+			case "Arc" : 
+				if(drag_point == 0) {
+					draw_set_alpha(.75);
+					draw_circle_prec(drag_point_mx, drag_point_my, tool_arc_radius, true);
+					draw_set_alpha(1);
+					
+					var rx = drag_point_mx + lengthdir_x(tool_arc_radius, tool_arc_angle_st);
+					var ry = drag_point_my + lengthdir_y(tool_arc_radius, tool_arc_angle_st);
+					
+					draw_set_color(COLORS._main_icon_light);
+					draw_line(drag_point_mx, drag_point_my, rx, ry);
+					draw_circle_prec(rx, ry, ui(4), false);
+					
+				} else if(drag_point == 1) {
+					draw_set_alpha(.75);
+					draw_circle_prec(drag_point_mx, drag_point_my, tool_arc_radius, true);
+					draw_set_alpha(1);
+					
+					var rx = drag_point_mx + lengthdir_x(tool_arc_radius, tool_arc_angle_st);
+					var ry = drag_point_my + lengthdir_y(tool_arc_radius, tool_arc_angle_st);
+					
+					draw_set_color(COLORS._main_icon);
+					draw_line(drag_point_mx, drag_point_my, rx, ry);
+					draw_circle_prec(rx, ry, ui(4), false);
+					
+					var rx = drag_point_mx + lengthdir_x(tool_arc_radius, tool_arc_angle_st + tool_arc_angle_rg);
+					var ry = drag_point_my + lengthdir_y(tool_arc_radius, tool_arc_angle_st + tool_arc_angle_rg);
+					
+					draw_set_color(COLORS._main_icon_light);
+					draw_line(drag_point_mx, drag_point_my, rx, ry);
+					draw_circle_prec(rx, ry, ui(4), false);
+					
+				} else {
+					draw_set_alpha(0.5);
+					draw_line(_mx, 0, _mx, WIN_H);
+					draw_line(0, _my, WIN_W, _my);
+					draw_set_alpha(1);
+				}
+				break;
 		}
 				
 		if(!array_empty(_pth.anchors)) {
@@ -1444,8 +1588,27 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 				break;
 				
-			case "Rectangle path" : 
-			case "Circle path" :
+			case "Arc" : 
+				hovering      = true;
+				anchor_select = [];
+				CURSOR_SPRITE = THEME.cursor_add;
+				
+				if(drag_point == -1 && mouse_press(mb_left, active)) {
+					while(array_length(inputs) > input_fix_len)
+						array_delete(inputs, input_fix_len, 1);
+					resetDisplayList();
+					
+					drag_point    = 0;
+					drag_type     = _tooln;
+					drag_point_mx = _mx;
+					drag_point_my = _my;
+					inputs[1].setValue(false);
+				}
+				break;
+				
+			case "Rectangle" : 
+			case "Circle" :
+			case "Circle Midpoint" :
 				hovering      = true;
 				anchor_select = [];
 				CURSOR_SPRITE = THEME.cursor_add;
@@ -1456,7 +1619,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					resetDisplayList();
 					
 					drag_point    = 0;
-					drag_type     = isUsingTool(4)? 3 : 4;
+					drag_type     = _tooln;
 					drag_point_mx = _mx;
 					drag_point_my = _my;
 					inputs[1].setValue(true);
