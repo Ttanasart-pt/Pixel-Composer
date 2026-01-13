@@ -1,5 +1,5 @@
 function Node_Quarternion_Lookat(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
-	name = "Quaternion Lookat";
+	name = "Lookat";
 	setDrawIcon(s_node_quarternion_lookat);
 	setDimension(96, 48);
 	

@@ -4,12 +4,10 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newActiveInput(6);
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(1, nodeValue_Surface( "Mask"));
 	
 	////- =Blink
-	
 	newInput(2, nodeValueSeed());
 	newInput(3, nodeValue_Slider(  "Amount", 0.5));
 	newInput(4, nodeValue_Palette( "Target Colors", [ ca_black ] ));
@@ -17,11 +15,9 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(7, nodeValue_Slider(  "Tolerance", 0.1 ));
 	
 	////- =Glow
-	
 	newInput( 8, nodeValue_Bool(   "Glow", false));
 	newInput( 9, nodeValue_Slider( "Size", 4, [ 1, 8, 0.1 ] ));
 	newInput(10, nodeValue_Slider( "Strength", 0.5 ));
-		
 	// inputs 11
 		
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
@@ -31,7 +27,9 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Surfaces", false], 0, 1, 
 		["Blink",    false], 2, 3, 4, 5, 7, 
 		["Glow",      true, 8], 9, 10, 
-	]
+	];
+	
+	////- Node
 	
 	temp_surface = [ noone, noone, noone ];
 	
