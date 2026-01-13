@@ -4,13 +4,13 @@
     
     function panel_animation_toggle_type()   { PANEL_ANIMATION.timeline_frame = !PANEL_ANIMATION.timeline_frame; }
     
-    function panel_animation_play_pause()              { CALL("play_pause");           if(GLOBAL_IS_RENDERING) return; if(GLOBAL_IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play();                    }
-    function panel_animation_resume()                  { CALL("resume_pause");         if(GLOBAL_IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); }
+    function panel_animation_play_pause()              { CALL("play_pause");           PROJECT.animator.play_pause();   }
+    function panel_animation_resume()                  { CALL("resume_pause");         PROJECT.animator.resume_pause(); }
     
-    function panel_animation_first_frame()             { CALL("first_frame");          if(GLOBAL_IS_RENDERING) return; PROJECT.animator.firstFrame();                                                           }
-    function panel_animation_last_frame()              { CALL("last_frame");           if(GLOBAL_IS_RENDERING) return; PROJECT.animator.lastFrame();                                                            }
-    function panel_animation_prev_frame()              { CALL("previous_frame");       if(GLOBAL_IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                      }
-    function panel_animation_next_frame()              { CALL("next_frame");           if(GLOBAL_IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, GLOBAL_TOTAL_FRAMES - 1));       }
+    function panel_animation_first_frame()             { CALL("first_frame");          if(GLOBAL_IS_RENDERING) return; PROJECT.animator.firstFrame();                                                            }
+    function panel_animation_last_frame()              { CALL("last_frame");           if(GLOBAL_IS_RENDERING) return; PROJECT.animator.lastFrame();                                                             }
+    function panel_animation_prev_frame()              { CALL("previous_frame");       if(GLOBAL_IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                       }
+    function panel_animation_next_frame()              { CALL("next_frame");           if(GLOBAL_IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, GLOBAL_TOTAL_FRAMES - 1)); }
     function panel_animation_prev_keyframe()           { CALL("previous_keyframe");    if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
     function panel_animation_next_keyframe()           { CALL("next_keyframe");        if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
     

@@ -37,150 +37,173 @@
 	#macro IS_LAST_FRAME            project.animator.isLastFrame()
 #endregion
 
-#region animation class
-	function AnimationManager() constructor {
-		frames_total  = PREFERENCES.project_animation_duration;
-		current_frame = 0;
-		real_frame    = 0;
-		real_time     = 0;
-		last_time     = 0;
+function AnimationManager() constructor {
+	frames_total  = PREFERENCES.project_animation_duration;
+	current_frame = 0;
+	real_frame    = 0;
+	real_time     = 0;
+	last_time     = 0;
+	
+	framerate		= PREFERENCES.project_animation_framerate;
+	is_playing		= false;
+	is_rendering	= false;
+	frame_progress	= false;
+	
+	frame_range_start = undefined;
+	frame_range_end   = undefined;
+	
+	play_direction  = 1;
+	is_simulating   = false;
+	
+	__debug_animator_counter = 0;
+	
+	playback  = ANIMATOR_END.loop;
+	
+	static setFrame = function(_frame, _round = true) {
+		var _c        = current_frame;
+		real_frame    = _frame;
+		current_frame = _round? round(_frame) : _frame;
 		
-		framerate		= PREFERENCES.project_animation_framerate;
-		is_playing		= false;
-		is_rendering	= false;
-		frame_progress	= false;
+		frame_progress = _c != current_frame;
 		
-		frame_range_start = undefined;
-		frame_range_end   = undefined;
-		
-		play_direction  = 1;
-		is_simulating   = false;
-		
-		__debug_animator_counter = 0;
-		
-		playback  = ANIMATOR_END.loop;
-		
-		static setFrame = function(_frame, _round = true) {
-			var _c        = current_frame;
-			real_frame    = _frame;
-			current_frame = _round? round(_frame) : _frame;
-			
-			frame_progress = _c != current_frame;
-			
-			if(frame_progress) {
-				last_time = 0;
-				RENDER_ALL
-			}
-		}
-		
-		static getFirstFrame = function(r=true) /*=>*/ {return r && frame_range_start? frame_range_start - 1 : 0};
-		static getLastFrame  = function(r=true) /*=>*/ {return r && frame_range_end?   frame_range_end   - 1 : frames_total - 1};
-		
-		static firstFrame    = function(r=true) /*=>*/ {return setFrame(getFirstFrame(r))};
-		static lastFrame     = function(r=true) /*=>*/ {return setFrame(getLastFrame(r))};
-		
-		static isFirstFrame  = function() /*=>*/ {return current_frame == getFirstFrame()};
-		static isLastFrame   = function() /*=>*/ {return current_frame == getLastFrame()};
-		
-		static animationStart = function() /*=>*/ {return array_foreach(PROJECT.allNodes, function(n) /*=>*/ {return n.onAnimationStart()})};
-		
-		static toggle = function() {
-			is_playing     = !is_playing;
-			frame_progress = true;
-			last_time      = 0;
-		}
-		
-		static pause  = function() {
-			is_playing     = false;
-			frame_progress = true;
-			last_time      = 0;
-		}
-		
-		static play   = function() {
-			if(is_simulating)	setFrame(0);
-			else				firstFrame();
-			
-			animationStart();
-			is_playing     = true;
-			frame_progress = true;
-			last_time      = 0;
-			play_direction = 1;
-			real_time      = 0;
-			
+		if(frame_progress) {
+			last_time = 0;
 			RENDER_ALL
 		}
+	}
+	
+	static getFirstFrame = function(r=true) /*=>*/ {return r && frame_range_start? frame_range_start - 1 : 0};
+	static getLastFrame  = function(r=true) /*=>*/ {return r && frame_range_end?   frame_range_end   - 1 : frames_total - 1};
+	
+	static firstFrame    = function(r=true) /*=>*/ {return setFrame(getFirstFrame(r))};
+	static lastFrame     = function(r=true) /*=>*/ {return setFrame(getLastFrame(r))};
+	
+	static isFirstFrame  = function() /*=>*/ {return current_frame == getFirstFrame()};
+	static isLastFrame   = function() /*=>*/ {return current_frame == getLastFrame()};
+	
+	static animationStart = function() /*=>*/ {return array_foreach(PROJECT.allNodes, function(n) /*=>*/ {return n.onAnimationStart()})};
+	
+	static toggle = function() {
+		is_playing     = !is_playing;
+		frame_progress = true;
+		last_time      = 0;
+	}
+	
+	static pause  = function() {
+		is_playing     = false;
+		frame_progress = true;
+		last_time      = 0;
+	}
+	
+	static play   = function() {
+		if(is_simulating)	setFrame(0);
+		else				firstFrame();
 		
-		static render = function() {
-			if(is_simulating)	setFrame(0);
-			else				firstFrame();
+		animationStart();
+		is_playing     = true;
+		frame_progress = true;
+		last_time      = 0;
+		play_direction = 1;
+		real_time      = 0;
+		
+		RENDER_ALL
+	}
+	
+	static render = function() {
+		if(is_simulating)	setFrame(0);
+		else				firstFrame();
+		
+		is_playing     = true;
+		is_rendering   = true;
+		frame_progress = true;
+		last_time      = 0;
+		real_time      = 0;
+	}
+	
+	static resume = function() {
+		is_playing     = true;
+		frame_progress = true;
+		last_time      = 0;
+	}
+	
+	static stop   = function() {
+		firstFrame();
+		
+		is_playing = false;
+		last_time  = 0;
+	}
+	
+	static step   = function() {
+		if(frame_range_start || frame_range_end) {
+			var fr0 = frame_range_start ?? 0;
+			var fr1 = frame_range_end   ?? frames_total;
 			
-			is_playing     = true;
-			is_rendering   = true;
-			frame_progress = true;
-			last_time      = 0;
-			real_time      = 0;
+			if(fr0 == fr1) {
+				frame_range_start = undefined;
+				frame_range_end   = undefined;
+				
+			} else {
+				frame_range_start = max(min(fr0, fr1), 0);
+				frame_range_end   = min(max(fr0, fr1), frames_total);
+			}
 		}
 		
-		static resume = function() {
-			is_playing     = true;
-			frame_progress = true;
-			last_time      = 0;
-		}
+		if(!is_playing) return;
 		
-		static stop   = function() {
+		var _frTime = 1 / framerate;
+		last_time += DELTA_TIME;
+		real_time += delta_time;
+		
+		if(last_time < _frTime) return;
+		
+		var dt = last_time - _frTime;
+		setFrame(real_frame + play_direction);
+		last_time = dt;
+		
+		var _maxFrame = frame_range_end ?? frames_total;
+		
+		if(current_frame >= _maxFrame) {
 			firstFrame();
 			
-			is_playing = false;
-			last_time  = 0;
-		}
-		
-		static step   = function() {
-			if(frame_range_start || frame_range_end) {
-				var fr0 = frame_range_start ?? 0;
-				var fr1 = frame_range_end   ?? frames_total;
+			if(playback == ANIMATOR_END.stop || is_rendering) {
+				is_playing   = false;
+				is_rendering = false;
+				last_time    = 0;
 				
-				if(fr0 == fr1) {
-					frame_range_start = undefined;
-					frame_range_end   = undefined;
-					
-				} else {
-					frame_range_start = max(min(fr0, fr1), 0);
-					frame_range_end   = min(max(fr0, fr1), frames_total);
-				}
+			} else if(playback == ANIMATOR_END.pingpong) {
+				setFrame(max(0, frames_total - 2));
+				play_direction = -1;
+				
 			}
 			
-			if(!is_playing) return;
-			
-			var _frTime = 1 / framerate;
-			last_time += DELTA_TIME;
-			real_time += delta_time;
-			
-			if(last_time < _frTime) return;
-			
-			var dt = last_time - _frTime;
-			setFrame(real_frame + play_direction);
-			last_time = dt;
-			
-			var _maxFrame = frame_range_end ?? frames_total;
-			
-			if(current_frame >= _maxFrame) {
-				firstFrame();
-				
-				if(playback == ANIMATOR_END.stop || is_rendering) {
-					is_playing   = false;
-					is_rendering = false;
-					last_time    = 0;
-					
-				} else if(playback == ANIMATOR_END.pingpong) {
-					setFrame(max(0, frames_total - 2));
-					play_direction = -1;
-					
-				}
-				
-			} else if(current_frame <= 0) {
-				if(playback == ANIMATOR_END.pingpong)
-					play_direction = 1;
-			}
+		} else if(current_frame <= 0) {
+			if(playback == ANIMATOR_END.pingpong)
+				play_direction = 1;
 		}
 	}
-#endregion
+	
+	////- Actions
+	
+	static play_pause   = function() /*=>*/ { 
+		if(is_rendering) return; 
+		if(frames_total <= 1) { 
+			is_playing = false; 
+			return; 
+		} 
+		
+		if(is_playing) pause();
+		else play();   
+	}
+		
+	static resume_pause = function() /*=>*/ { 
+		if(is_rendering) return; 
+		if(frames_total <= 1) { 
+			is_playing = false; 
+			return; 
+		} 
+		
+		if(is_playing) pause();
+		else resume(); 
+	}
+		
+}

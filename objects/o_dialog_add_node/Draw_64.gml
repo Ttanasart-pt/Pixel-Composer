@@ -35,19 +35,25 @@ if(DIALOG_SHOW_FOCUS) {
 			var _rcs  = ui(20);
 			var _rcx  = _content_x + ui(4);
 			var _rcy  = _content_y + ui(4);
-			var bb = noone;
-			var bc = [COLORS._main_icon_light, c_white];
-			var mm = [mouse_mx, mouse_my];
 			var hv = sHOVER && point_in_rectangle(mouse_mx, mouse_my, _content_x, _content_y, _content_x + _content_w, _content_y + _rcs);
 			
+			gpu_set_tex_filter(true);
 			gpu_set_scissor(_content_x, _content_y, _content_w, _rcs + ui(8));
 			for( var i = 0, n = array_length(recent_nodes); i < n; i++ ) {
 				var _rec = recent_nodes[i];
 				var _nam = _rec.name;
 				var _spr = _rec.spr;
 				
-				if(buttonInstant_Pad(bb, _rcx, _rcy, _rcs, _rcs, mm, hv, sFOCUS, _nam, _spr, 0, bc, .75, ui(4)) == 2)
-					buildNode(_rec);
+				var _hov = hv && point_in_rectangle(mouse_mx, mouse_my, _rcx, _rcy, _rcx + _rcs, _rcy + _rcs);
+				var _cc  = _hov? COLORS._main_icon_light : COLORS._main_icon;
+				var _ss  = (_rcs - ui(4)) / 64;
+				draw_sprite_ext(_spr, 0, _rcx + _rcs / 2, _rcy + _rcs / 2, _ss, _ss, 0, _cc);
+				
+				if(_hov) {
+					TOOLTIP = _nam;
+					if(mouse_lpress(sFOCUS))
+						buildNode(_rec);
+				}
 				
 				_rcx += _rcs + ui(2);
 			}
@@ -55,11 +61,13 @@ if(DIALOG_SHOW_FOCUS) {
 			_content_y += _rcs + ui(4);
 			_content_h -= _rcs + ui(4);
 			gpu_set_scissor(_scis);
+			gpu_set_tex_filter(false);
 			
 			draw_set_color(COLORS._main_icon);
 			draw_set_alpha(.3);
 			draw_line(_content_x + 1, _content_y + ui(2), _content_x + _content_w - 2, _content_y + ui(2))
 			draw_set_alpha(1);
+			
 			
 			_content_y += ui(4);
 			_content_h -= ui(4);
