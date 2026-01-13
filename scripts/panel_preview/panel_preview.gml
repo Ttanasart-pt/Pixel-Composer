@@ -69,6 +69,7 @@
 		function panel_preview_view_control_hide()    { PANEL_PREVIEW.view_control_hide();   }
 		
 		function panel_preview_select_all()           { PANEL_PREVIEW.selectAll();           }
+		function panel_preview_blend_selection()      { PANEL_PREVIEW.blendAtSelection();    }
 		                                                         
 	    function __fnInit_Preview() {
 	    	var p = "Preview";
@@ -190,7 +191,9 @@
 			registerFunction(p, "Toggle View Control",      "", n, panel_preview_view_control_toggle  ).setMenu("preview_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.previewSetting.show_view_control});
 			registerFunction(p, "Show View Control",        "", n, panel_preview_view_control_show    ).setMenu("preview_view_control_show");
 			registerFunction(p, "Hide View Control",        "", n, panel_preview_view_control_hide    ).setMenu("preview_view_control_hide");
+			
 			registerFunction(p, "Select All",               "A", c, panel_preview_select_all          ).setMenu("preview_select_all");
+			registerFunction(p, "Blend at Selection",       "",  n, panel_preview_blend_selection     ).setMenu("preview_blend_selection");
 			
 			registerFunction(p, "Edit Preview Toolbar...",        "", n, function() /*=>*/ {return menuItemEdit("preview_toolbar"        )}).setMenu("preview_edit_toolbar");
 			registerFunction(p, "Edit Preview 3D Toolbar...",     "", n, function() /*=>*/ {return menuItemEdit("preview_toolbar_3d"     )}).setMenu("preview_edit_toolbar_3d");
@@ -596,6 +599,9 @@ function Panel_Preview() : PanelContent() constructor {
             "preview_new_preview_window", 
             -1,
             "preview_focus_content",
+            -1,
+            "preview_select_all",
+            "preview_blend_selection",
             -1,
             "preview_save_current_frame", 
             "preview_save_all_current_frames", 
@@ -3168,6 +3174,42 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     ////- ACTION
+    
+    function blendAtSelection() {
+    	if(!selection_active) return;
+    	
+    	var node  = getNodePreview();
+    	var surf  = getNodePreviewSurface();
+    	if(!node || !is_just_surface(surf)) return;
+    	
+    	var sel_x = selection_x0;
+    	var sel_y = selection_y0;
+    	var sel_w = selection_x1 - selection_x0;
+    	var sel_h = selection_y1 - selection_y0;
+    	
+    	var bx = node.x + node.w + 32;
+    	var by = node.y;
+    	
+    	var sx = node.x;
+    	var sy = node.y + node.h + 32;
+    	
+    	var ori_w = surface_get_width(surf);
+    	var ori_h = surface_get_height(surf);
+    	
+    	var pos_x = (sel_x + sel_w / 2) / ori_w;
+    	var pos_y = (sel_y + sel_h / 2) / ori_h;
+    	
+    	var _blend = nodeBuild("Node_Blend", bx, by).skipDefault();
+    	var _solid = nodeBuild("Node_Solid", sx, sy).skipDefault();
+    	
+    	_blend.inputs[0].setFrom(node.outputs[node.preview_channel]);
+    	_blend.inputs[1].setFrom(_solid.outputs[0]);
+    	
+    	_solid.inputs[0].attributes.use_project_dimension = 0;
+    	_solid.inputs[0].setValue([sel_w, sel_h]);
+    	
+    	_blend.inputs[14].setValue([pos_x, pos_y]);
+    }
     
     function copyCurrentFrame() {
         var prevS = getNodePreviewSurface();

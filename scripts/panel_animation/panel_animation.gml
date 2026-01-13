@@ -826,20 +826,22 @@ function Panel_Animation() : PanelContent() constructor {
             draw_line(px, y0, px, y1);
             
             if(point_in_rectangle(mx, my, ui(8), y0, w - ui(16), y1) && timeline_stretch == 0) {
-                if(mouse_click(mb_left, pFOCUS)) {
+                if(mouse_lclick(pFOCUS)) {
                     var rfrm = (mx - ui(8)) / (w - ui(16)) * GLOBAL_TOTAL_FRAMES;
-                    if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1);                 // clamp to animating region
+                    if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1); // clamp to animating region
                     PROJECT.animator.setFrame(rfrm);
                 }
             }
             
-            var txt = string(GLOBAL_CURRENT_FRAME + 1) + "/" + string(GLOBAL_TOTAL_FRAMES);
+            var txt = $"{GLOBAL_CURRENT_FRAME + 1}/{GLOBAL_TOTAL_FRAMES}";
             
             if(y1 - y0 < ui(40)) {
                 draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
                 draw_text_add(ui(16), cy, __txt("Frame"));
+                
                 draw_set_text(f_p1, fa_right, fa_center, PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_text_sub);
                 draw_text_add(w - ui(16), cy, txt);
+                
             } else {
                 draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
                 draw_text_add(w / 2, cy - ui(12), __txt("Frame"));
