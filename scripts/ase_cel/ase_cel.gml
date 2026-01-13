@@ -6,6 +6,7 @@ function ase_cel(_layer, _data, _file) constructor {
 	static checkSurface = function() {
 		var width  = data[$ "Width"];
 		var height = data[$ "Height"];
+		var __zero = [0,0,0,0];
 		data[$ "Surface"] = surface_verify(data[$ "Surface"], width, height);
 		
 		var color  = file[$ "Color depth"];
@@ -33,10 +34,12 @@ function ase_cel(_layer, _data, _file) constructor {
 			
 			repeat(size) {
 				var _bin = buffer_read(data[$ "Buffer"], buffer_u8);
-				var cc   = array_safe_get_fast(palet, _bin);
+				var cc   = array_safe_get_fast(palet, _bin, __zero);
 				
-				for( var i = 0; i < 4; i++ )
-					buffer_write(buff, buffer_u8, cc[i]);
+				buffer_write(buff, buffer_u8, cc[0]);
+				buffer_write(buff, buffer_u8, cc[1]);
+				buffer_write(buff, buffer_u8, cc[2]);
+				buffer_write(buff, buffer_u8, cc[3]);
 			}
 		}
 		

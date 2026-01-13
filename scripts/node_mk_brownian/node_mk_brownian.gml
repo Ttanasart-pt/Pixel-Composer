@@ -116,7 +116,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			ph = surface_get_height_safe(ss);
 		}
 		
-		surface_set_shader(_outData);
+		surface_set_shader(_outData, sh_sample, true, BLEND.normal);
 			draw_surface_safe(_surf);
 			
 			repeat(_amou) {
