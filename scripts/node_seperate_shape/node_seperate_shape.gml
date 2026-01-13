@@ -6,50 +6,49 @@
 	});
 #endregion
 
-function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Separate Shape";
 	
-	////- Shape
+	////- =Shape
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(5, nodeValue_EButton( "Mode",          0, [ "Greyscale", "Alpha" ] ))
+	newInput(1, nodeValue_Slider(  "Tolerance",    .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release }));
+	newInput(4, nodeValue_Bool(    "Ignore blank", true, "Skip empty shapes."));
 	
-	newInput(0, nodeValue_Surface(     "Surface In" )).rejectArray();
-	newInput(5, nodeValue_Enum_Button( "Mode",          0, [ "Greyscale", "Alpha" ] ))
-	newInput(1, nodeValue_Slider(      "Tolerance",    .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })).rejectArray();
-	newInput(4, nodeValue_Bool(        "Ignore blank", true, "Skip empty shapes.")).rejectArray();
-	
-	////- Output
-	
-	newInput(2, nodeValue_Bool(  "Override color", false)).rejectArray();
-	newInput(3, nodeValue_Color( "Color", ca_white)).rejectArray();
-	newInput(6, nodeValue_Bool(  "Crop", true ))
-	
+	////- =Output
+	newInput(2, nodeValue_Bool(  "Override color", false    ));
+	newInput(3, nodeValue_Color( "Color",          ca_white ));
+	newInput(6, nodeValue_Bool(  "Crop",           true     ))
 	// inputs 7
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
 	newOutput(1, nodeValue_Output("Atlas", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [
-		["Shape",	false], 0, 5, 1, 4,
-		["Output",  false], 2, 3, 6, 
+		[ "Shape",  false ], 0, 5, 1, 4,
+		[ "Output", false ], 2, 3, 6, 
 	]
+	
+	////- Node
 	
 	temp_surface   = [ noone, noone ];
 	
-	insp1button = button(function() /*=>*/ {return separateShape()}).setTooltip(__txt("Separate Shape"))
+	insp1button = button(function() /*=>*/ {return triggerRender()}).setTooltip(__txt("Separate Shape"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	static update = function() { separateShape(); }
-	
-	static separateShape = function() {
-		var _inSurf = getInputData(0);
-		var _thres  = getInputData(1);
-		var _ovr    = getInputData(2);
-		var _ovrclr = getInputData(3);
-		var _ignore = getInputData(4);
-		var _mode   = getInputData(5);
-		var _crop   = getInputData(6);
-		
-		if(!is_surface(_inSurf)) return;
+	static processData = function(_outData, _data, _array_index = 0) { 
+		#region data
+			var _inSurf = _data[0];
+			var _mode   = _data[5];
+			var _thres  = _data[1];
+			var _ignore = _data[4];
+			
+			var _ovr    = _data[2];
+			var _ovrclr = _data[3];
+			var _crop   = _data[6];
+			
+			if(!is_surface(_inSurf)) return _outData;
+		#endregion
 		
 		var ww = surface_get_width_safe(_inSurf);
 		var hh = surface_get_height_safe(_inSurf);
@@ -110,10 +109,9 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		#endregion
 		
 		#region extract region
-			var _outSurf, _val;
-			_val = array_create(px);
+			var _val   = surface_array_verify(_outData[0], px);
+			var _atlas = array_verify(_outData[1], px);
 			
-			var _atlas = array_create(px);
 			var key    = ds_map_keys_to_array(reg);
 			var _ind   = 0;
 			
@@ -131,19 +129,18 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				if(_sw <= 1 || _sh <= 1) continue;
 				
-				_outSurf   = surface_create_valid(_sw, _sh);
-				_val[_ind] = _outSurf;
+				_val[_ind] = surface_verify(_val[_ind], _sw, _sh);
 				
-				surface_set_shader(_outSurf, sh_seperate_shape_sep);
-					shader_set_surface("original", _inSurf);
-					shader_set_f("color",          _cc);
-					shader_set_i("override",       _ovr);
-					shader_set_color("overColor",  _ovrclr);
+				surface_set_shader(_val[_ind], sh_seperate_shape_sep);
+					shader_set_s( "original",  _inSurf );
+					shader_set_f( "color",     _cc     );
+					shader_set_i( "override",  _ovr    );
+					shader_set_c( "overColor", _ovrclr );
 					
 					draw_surface_safe(temp_surface[res_index], -min_x, -min_y);
 				surface_reset_shader();
 				
-				_atlas[_ind] = new SurfaceAtlas(_outSurf, min_x, min_y).setOriginalSurface(_inSurf);
+				_atlas[_ind] = new SurfaceAtlas(_val[_ind], min_x, min_y).setOriginalSurface(_inSurf);
 				_ind++;
 			}
 			
@@ -152,8 +149,11 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			ds_map_destroy(reg);
 			
-			outputs[0].setValue(_val);
-			outputs[1].setValue(_atlas);
 		#endregion
+		
+		_outData[0] = _val;
+		_outData[1] = _atlas;
+		
+		return _outData;
 	}
 }

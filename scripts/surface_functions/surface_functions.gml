@@ -907,7 +907,19 @@
 		if(is_infinity(s)) return 1;
 		return clamp(round(s), 1, 8192);
 	}
-
+	
+	function surface_array_verify(arr, length) {
+		if(!is_array(arr)) return array_create(length, noone);
+		var _len = array_length(arr);
+		
+		if(length < _len)
+		for( var i = length; i < _len; i++ ) 
+			surface_free_safe(arr[i]);
+		
+		array_resize(arr, length);
+		return arr;
+	}
+	
 	function surface_array_free(arr) {
 		INLINE
 		if(!is_array(arr)) { if(is_surface(arr)) surface_free(arr); return; }

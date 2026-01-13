@@ -1,20 +1,23 @@
-function Node_Color_Separate(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Color_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Separate Color";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	////- Surfaces
+	newInput(0, nodeValue_Surface( "Surface In"       ));
 	
-	newInput(1, nodeValue_Bool("All Colors", true));
-	
-	newInput(2, nodeValue_Palette("Colors" ));
-	
-	newInput(3, nodeValue_Bool("Match All", true, "If false, only match pixels with the exact same color."));
-	
-	input_display_list = [ 
-		["Surfaces",  true], 0, 
-		["Colors",   false], 1, 2, 3, 
-	];
+	////- Colors
+	newInput(1, nodeValue_Bool(    "All Colors", true ));
+	newInput(2, nodeValue_Palette( "Colors"           ));
+	newInput(3, nodeValue_Bool(    "Match All",  true, "If false, only match pixels with the exact same color."));
+	// inputs 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	input_display_list = [ 
+		[ "Surfaces",  true ], 0, 
+		[ "Colors",   false ], 1, 2, 3, 
+	];
+	
+	////- Node
 	
 	static extractAll = function(_surf) {
 		var ww = surface_get_width_safe(_surf);
@@ -44,36 +47,37 @@ function Node_Color_Separate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return palette;
 	}
 	
-	static update = function() {
-		var _surf = inputs[0].getValue();
-		var _allc = inputs[1].getValue();
-		var _colr = inputs[2].getValue();
-		var _mata = inputs[3].getValue();
-		
-		inputs[2].setVisible(!_allc);
-		inputs[3].setVisible(!_allc);
-		
-		if(!is_surface(_surf)) return;
+	static processData = function(_outSurf, _data, _array_index = 0) { 
+		#region data
+			var _surf = _data[0];
+			var _allc = _data[1];
+			var _colr = _data[2];
+			var _mata = _data[3];
+			
+			inputs[2].setVisible(!_allc);
+			inputs[3].setVisible(!_allc);
+			
+			if(!is_surface(_surf)) { surface_array_free(_outSurf); return []; }
+		#endregion
 		
 		var _clist = _colr;
 		if(_allc) _clist = extractAll(_surf);
 		
-		var _dim  = surface_get_dimension(_surf);
-		var _outp = outputs[0].getValue();
-		_outp = array_verify(_outp, array_length(_clist));
+		var _dim = surface_get_dimension(_surf);
+		_outSurf = surface_array_verify(_outSurf, array_length(_clist));
 		
 		for( var i = 0, n = array_length(_clist); i < n; i++ ) {
-		    _outp[i] = surface_verify(_outp[i], _dim[0], _dim[1]);
+		    _outSurf[i] = surface_verify(_outSurf[i], _dim[0], _dim[1]);
 		    
-		    surface_set_shader(_outp[i], sh_separate_color);
+		    surface_set_shader(_outSurf[i], sh_separate_color);
 		        shader_set_palette(_clist);
-		        shader_set_color("color",     _clist[i]);
-		        shader_set_i("matchAll",      !_allc && _mata);
+		        shader_set_c("color",    _clist[i]);
+		        shader_set_i("matchAll", !_allc && _mata);
 		        
 		        draw_surface(_surf, 0, 0);
 		    surface_reset_shader();
 		}
 		
-		outputs[0].setValue(_outp);
+		return _outSurf;
 	}
 }
