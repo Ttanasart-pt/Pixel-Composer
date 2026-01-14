@@ -59,6 +59,21 @@ function struct_append(original, append) {
 	return original;
 }
 
+function struct_append_nested(original, append) {
+	var args = variable_struct_get_names(append);
+	
+	for( var i = 0, n = array_length(args); i < n; i++ ) {
+		var _key = array_safe_get(args, i);
+		if(_key == "") continue;
+		
+		if(is_struct(original[$ _key]) && is_struct(append[$ _key]))
+			struct_append_nested(original[$ _key], append[$ _key]);
+		else original[$ _key] = append[$ _key];
+	}
+	
+	return original;
+}
+
 function struct_try_get(struct, key, def = 0) {
 	if(!is_struct(struct)) return def;
 	if(struct[$ key] != undefined) return struct[$ key];

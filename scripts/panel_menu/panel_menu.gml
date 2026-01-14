@@ -344,6 +344,7 @@ function Panel_Menu() : PanelContent() constructor {
                 menuItem(__txt("Nodes Manager"),      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
                 menuItem(__txt("Collection Manager"), function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
                 menuItem(__txt("Projects Manager"),   function() /*=>*/ {return dialogPanelCall(new Panel_Dev_Project_Manager())}),
+                menuItem(__txt("Locale Manager"),     function() /*=>*/ {return dialogPanelCall(new Panel_Locale_Manager())}),
                 menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
                 -1, 
                 menuItem(__txt("Update resource version"), function() /*=>*/ {return __test_update_theme()}),

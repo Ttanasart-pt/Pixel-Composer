@@ -2947,9 +2947,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _map;
 	}
 	
-	static attributeSerialize = function() { return {}; }
-	static doSerialize		  = function(_map) {}
-	static processSerialize   = function(_map) {}
+	static attributeSerialize = function( ) /*=>*/ { return {}; }
+	static doSerialize		  = function(m) /*=>*/ {}
+	static processSerialize   = function(m) /*=>*/ {}
 	
 	////- DESERIALIZE
 	
@@ -3088,9 +3088,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			attributes.color_depth = PREFERENCES.node_default_depth;
 	}
 	
-	static doDeserialize   = function(_map) /*=>*/ {}
-	static preDeserialize  = function() /*=>*/ {}
-	static postDeserialize = function() /*=>*/ {}
+	static doDeserialize   = function(m) /*=>*/ {}
+	static preDeserialize  = function( ) /*=>*/ {}
+	static postDeserialize = function( ) /*=>*/ {}
 	
 	static applyDeserialize = function(preset = false) {
 		preApplyDeserialize();

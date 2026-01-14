@@ -748,9 +748,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	////- ANIMATION
 	
 	static getAnimators = function() {
-		if(animators != undefined) return animators;
+		if(animators == undefined)
+			animators = animVector? array_create_ext(animVector, function(i) /*=>*/ {return new valueAnimator(def_val[i], self, true).setIndex(i)}) : [];
 		
-		animators = animVector? array_create_ext(animVector, function(i) /*=>*/ {return new valueAnimator(def_val[i], self, true).setIndex(i)}) : [];
 		for( var i = 0, n = array_length(animators); i < n; i++ ) 
 			animators[i].suffix = animatorSuffix[i];
 		

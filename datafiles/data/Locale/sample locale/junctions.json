@@ -1,9 +1,15 @@
 {
-    "Node_Path_L_System": {
-        "Starting rule": { "path": "./notes/l_system.md" }
+    
+    "Node_Blend": {
+        "Blend mode": { "note": "Blend modes reference.md" }
     },
 
-    "Node_Blend": {
-        "Blend mode": { "path": "./notes/blendmodes.md" }
-    }
+    "Node_Path_L_System": {
+        "Starting rule": { "note": "Lindenmayer system reference.md" }
+    },
+
+    "Node_MK_Panels": {
+        "Panel Pattern": { "note": "MK Panels reference.md" },
+        "Shape Pattern": { "note": "MK Panels reference.md" }
+    },
 }

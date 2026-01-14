@@ -298,10 +298,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			} else if(!global_var) {
 				var bt = __txtx("panel_inspector_reset", "Reset value");
-				var ba = .4 + jun.is_modified * .4;
+				var ba = .5 + jun.is_modified * .4;
 				var bh = jun.is_modified && _hover;
+				var cc = jun.is_modified? COLORS._main_icon_light : COLORS._main_icon;
 				
-				bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, c_white, ba, ics); bx -= ui(4);
+				bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); bx -= ui(4);
 				cHov = cHov || b;
 				if(b == 2) jun.resetValue();
 				

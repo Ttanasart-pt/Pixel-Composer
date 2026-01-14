@@ -1694,6 +1694,7 @@
     {"name":"panel_image_array_editor","order":1,"path":"scripts/panel_image_array_editor/panel_image_array_editor.yy",},
     {"name":"panel_inspector","order":1,"path":"scripts/panel_inspector/panel_inspector.yy",},
     {"name":"panel_keyframe_driver","order":3,"path":"scripts/panel_keyframe_driver/panel_keyframe_driver.yy",},
+    {"name":"panel_locale_manager","order":21,"path":"scripts/panel_locale_manager/panel_locale_manager.yy",},
     {"name":"panel_lua_reference","order":2,"path":"scripts/panel_lua_reference/panel_lua_reference.yy",},
     {"name":"panel_menu","order":13,"path":"scripts/panel_menu/panel_menu.yy",},
     {"name":"panel_menuitems_editor","order":1,"path":"scripts/panel_menuitems_editor/panel_menuitems_editor.yy",},

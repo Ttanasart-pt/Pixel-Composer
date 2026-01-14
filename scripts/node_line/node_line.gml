@@ -47,10 +47,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(20, nodeValue_Float(    "Segment Length", 4 ));
 	
 	////- =Width
-	newInput(17, nodeValue_Bool(  "1px Mode",             false        )).setTooltip("Render pixel perfect 1px line.");
-	newInput( 3, nodeValue_Range( "Width",               [2,2],   true )).setCurvable(11, CURVE_DEF_11);
-	newInput(12, nodeValue_Bool(  "Span Width over Path", false        )).setTooltip("Apply the full 'width over length' to the trimmed path.");
-	newInput(36, nodeValue_Bool(  "Apply Weight",         true         ));
+	newInput(17, nodeValue_Bool(  "1px Mode",             false      )).setTooltip("Render pixel perfect 1px line.");
+	newInput( 3, nodeValue_Range( "Width",               [2,2], true )).setCurvable(11, CURVE_DEF_11);
+	newInput(12, nodeValue_Bool(  "Span Width over Path", false      )).setTooltip("Apply the full 'width over length' to the trimmed path.");
+	newInput(36, nodeValue_Bool(  "Apply Weight",         true       ));
 	
 	////- =Line settings
 	newInput( 8, nodeValue_Slider_Range( "Range",    [0,1]  )).setTooltip("Range of the path to draw.");

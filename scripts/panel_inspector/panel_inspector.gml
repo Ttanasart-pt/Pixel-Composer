@@ -29,6 +29,8 @@
 		else                          PANEL_INSPECTOR.tb_prop_filter.deactivate();
     }
     
+    #macro INSP_JUNCTION var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : 
+    
     function __fnInit_Inspector() {
     	var i = "Inspector";
     	
@@ -43,18 +45,18 @@
         registerFunction(i, "Search Toggle",        "F",  MOD_KEY.ctrl, panel_inspector_search_toggle          ).setMenu("inspector_search_toggle")
         registerFunction(i, "Reset",                 "",  MOD_KEY.none, panel_inspector_reset                  ).setMenu("inspector_reset")
         
-        registerFunction(i, "Toggle Animation",      "",  MOD_KEY.none, panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle"       ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.is_anim;            });
-        registerFunction(i, "Toggle Separate Axis",  "",  MOD_KEY.none, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle"          ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.sep_axis;           });
-        registerFunction(i, "Toggle Expression",     "",  MOD_KEY.none, panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle"    ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.expUse;             });
-        registerFunction(i, "Toggle Array Process",  "",  MOD_KEY.none, panel_inspector_array_toggle           ).setMenu("inspector_toggle_array"         ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.ign_array;          });        
-        registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"        ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.bypass_use;       });
-        registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"       ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.visible_manual;     });
-        registerFunction(i, "Toggle Mini Timeline",  "",  MOD_KEY.none, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle" ).setToggle(function() /*=>*/ { var j = PANEL_INSPECTOR.__dialog_junction; return j == noone? false : j.inspector_timeline; });
-        registerFunction(i, "Extract to Globalvar",  "",  MOD_KEY.none, panel_inspector_extract_global         ).setMenu("inspector_extract_global"       )
-        registerFunction(i, "Extract Value",         "",  MOD_KEY.none, panel_inspector_extract_single         ).setMenu("inspector_extract_value"        )
-        registerFunction("", "Primary Action",    vk_f2,  MOD_KEY.none, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1"            )
-        registerFunction("", "Secondary Action",  vk_f3,  MOD_KEY.none, panel_inspector_trigger_2              ).setMenu("inspector_trigger_2"            )
-        registerFunction("", "Clear Cache",       vk_f4,  MOD_KEY.none, panel_inspector_trigger_cache          ).setMenu("inspector_trigger_3"            )
+        registerFunction(i, "Toggle Animation",      "",  MOD_KEY.none, panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.is_anim;            });
+        registerFunction(i, "Toggle Separate Axis",  "",  MOD_KEY.none, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle"         ).setToggle(function() /*=>*/ { INSP_JUNCTION j.sep_axis;           });
+        registerFunction(i, "Toggle Expression",     "",  MOD_KEY.none, panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle"   ).setToggle(function() /*=>*/ { INSP_JUNCTION j.expUse;             });
+        registerFunction(i, "Toggle Array Process",  "",  MOD_KEY.none, panel_inspector_array_toggle           ).setMenu("inspector_toggle_array"        ).setToggle(function() /*=>*/ { INSP_JUNCTION j.ign_array;          });   
+        registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"       ).setToggle(function() /*=>*/ { INSP_JUNCTION j.bypass_use;         });
+        registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.visible_manual;     });
+        registerFunction(i, "Toggle Mini Timeline",  "",  MOD_KEY.none, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle").setToggle(function() /*=>*/ { INSP_JUNCTION j.inspector_timeline; });
+        registerFunction(i, "Extract to Globalvar",  "",  MOD_KEY.none, panel_inspector_extract_global         ).setMenu("inspector_extract_global")
+        registerFunction(i, "Extract Value",         "",  MOD_KEY.none, panel_inspector_extract_single         ).setMenu("inspector_extract_value" )
+        registerFunction("", "Primary Action",    vk_f2,  MOD_KEY.none, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1"     )
+        registerFunction("", "Secondary Action",  vk_f3,  MOD_KEY.none, panel_inspector_trigger_2              ).setMenu("inspector_trigger_2"     )
+        registerFunction("", "Clear Cache",       vk_f4,  MOD_KEY.none, panel_inspector_trigger_cache          ).setMenu("inspector_trigger_3"     )
         
         registerFunction("Property", "Extract To...", "",  MOD_KEY.none, function(_dat) /*=>*/ {
         	var jun = PANEL_INSPECTOR.prop_hover;

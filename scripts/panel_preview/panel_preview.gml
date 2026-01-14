@@ -1256,7 +1256,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         tool_y_max = max(0, tool_y_max - h + toolbar_height * 2);            
         if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
-            tool_y_to = clamp(tool_y_to + ui(64) * MOUSE_WHEEL, -tool_y_max, 0);
+            tool_y_to += ui(64) * MOUSE_WHEEL;
+        tool_y_to = clamp(tool_y_to, -tool_y_max, 0);
     }
     
     function drawToolsRight(_node) {
@@ -1416,7 +1417,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         tool_ry_max = max(0, tool_ry_max - h + toolbar_height * 2);            
         if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
-            tool_ry_to = clamp(tool_ry_to + ui(64) * MOUSE_WHEEL, -tool_ry_max, 0);
+            tool_ry_to += ui(64) * MOUSE_WHEEL;
+        tool_ry_to = clamp(tool_ry_to, -tool_ry_max, 0);
     }
     
     function drawToolSettings(_node) {
