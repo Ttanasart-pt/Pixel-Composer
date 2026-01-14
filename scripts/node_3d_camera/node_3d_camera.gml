@@ -253,7 +253,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			inputs[in_d3d + 20].setVisible(_aoEn);
 			
 			inputs[in_d3d + 24].setVisible(_wire != 2);
-			
 		#endregion
 		
 		surface_depth_disable(false);

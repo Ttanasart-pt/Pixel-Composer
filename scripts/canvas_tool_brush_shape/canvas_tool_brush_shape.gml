@@ -136,6 +136,8 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		if(brush.tileMode & 0b10) mouse_cur_ty = safe_mod(mouse_cur_ty, draw_h, MOD_NEG.wrap); 
 		
 		if(mouse_holding) {
+			updated = true;
+			
 			surface_set_shader(drawing_surface, noone, true, BLEND.maximum);
 				draw_shape(false);
 			surface_reset_shader();
@@ -157,7 +159,8 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 			
 			node.tool_pick_color(mouse_cur_x, mouse_cur_y);
 		}
-			
+		
+		pactive     = active;
 	}
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

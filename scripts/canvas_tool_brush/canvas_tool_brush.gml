@@ -18,7 +18,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 	mouse_line_x1 = 0;
 	mouse_line_y1 = 0;
 	
-	brush_warp   = false;
+	brush_warp    = false;
 	warp_block_x  = 0;
 	warp_block_y  = 0;
 	warp_block_px = 0;
@@ -126,7 +126,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 			mouse_line_x1 = max(mouse_cur_x, mouse_pre_draw_x) + 1;
 			mouse_line_y1 = max(mouse_cur_y, mouse_pre_draw_y) + 1;
 		}
-			
+		
 		mouse_cur_tx = mouse_cur_x;
 		mouse_cur_ty = mouse_cur_y;
 		draw_w = surface_get_width(drawing_surface);
@@ -144,8 +144,13 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		
 		brush_warp = warp_block_x != warp_block_px || warp_block_y != warp_block_py;
 		
+		if(brush.draw3D) {
+			brush_warp = brush_warp || abs(mouse_cur_x - mouse_pre_x) >= (draw_w - 2)
+			                        || abs(mouse_cur_y - mouse_pre_y) >= (draw_h - 2)
+			                        || !active || !pactive;
+		}
+		
 		if(mouse_press(mb_left, active)) {
-			
 			surface_set_shader(drawing_surface, noone, true, BLEND.over);
 				draw_point_wrap(true);
 			surface_reset_shader();
@@ -171,21 +176,25 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		}
 			
 		if(mouse_holding) {
-			var _move = mouse_pre_draw_x != mouse_cur_tx || mouse_pre_draw_y != mouse_cur_ty;
-			var _1stp = brush.dist_min == brush.dist_max && brush.dist_min == 1;
+			if(active) {
+				var _move = mouse_pre_draw_x != mouse_cur_tx || mouse_pre_draw_y != mouse_cur_ty;
+				var _1stp = brush.dist_min == brush.dist_max && brush.dist_min == 1;
+					
+				if(_move || !_1stp) {
+					surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
+						if(_1stp) draw_point_wrap(true);
+						draw_line_wrap(true);
+					surface_reset_shader();
+					
+					updated = true;
+				}
 				
-			if(_move || !_1stp) {
-				surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
-					if(_1stp) draw_point_wrap(true);
-					draw_line_wrap(true);
-				surface_reset_shader();
+				mouse_pre_draw_x = mouse_cur_tx;
+				mouse_pre_draw_y = mouse_cur_ty;
+					
+				warp_block_px = warp_block_x;
+				warp_block_py = warp_block_y;
 			}
-			
-			mouse_pre_draw_x = mouse_cur_tx;
-			mouse_pre_draw_y = mouse_cur_ty;
-				
-			warp_block_px = warp_block_x;
-			warp_block_py = warp_block_y;
 			
 			if(mouse_release(mb_left)) {
 				mouse_holding = false;
@@ -195,7 +204,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		
 		mouse_pre_x = mouse_cur_x;
 		mouse_pre_y = mouse_cur_y;
-		
+		pactive     = active;
 	}
 	
 	////- Preview

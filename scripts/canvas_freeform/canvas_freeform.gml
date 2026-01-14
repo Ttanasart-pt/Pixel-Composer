@@ -20,7 +20,6 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) {
 		}
 			
 		if(mouse_release(mb_left)) {
-					
 			surface_set_target(drawing_surface);
 				brush.drawLine(_mmx, _mmy, freeform_shape[0].x, freeform_shape[0].y, true);
 			surface_reset_target();

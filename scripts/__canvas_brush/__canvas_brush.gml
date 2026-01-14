@@ -17,6 +17,7 @@ function canvas_brush() constructor {
 	#endregion
 	
 	#region draw
+		draw3D      = false;
 		next_dist   = 0;
 		dist_min    = 1;
 		dist_max    = 1;

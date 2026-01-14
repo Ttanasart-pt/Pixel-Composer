@@ -32,6 +32,8 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
 		if(editing[0] != noone) {
+			updated = true;
+			
 			var _a  = anchors[editing[0]];
 			var _dx = mouse_cur_x - mouse_edit_mx;
 			var _dy = mouse_cur_y - mouse_edit_my;
@@ -110,6 +112,8 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 		
 		if(key_press(vk_enter))  apply();
 		if(key_press(vk_escape)) disable();
+		
+		pactive     = active;
 	}
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

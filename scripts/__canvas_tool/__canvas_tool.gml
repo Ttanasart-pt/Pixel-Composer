@@ -1,8 +1,10 @@
 function canvas_tool() : ToolObject() constructor { 
 	rightTools = [];
+	brush      = noone;
 	
 	override = false;
 	relative = false;
+	updated  = false;
 	
 	relative_position  = [ 0, 0 ];
 	drawing_surface    = noone;
@@ -16,8 +18,7 @@ function canvas_tool() : ToolObject() constructor {
 	use_color_3d = false;
 	
 	subtool = 0;
-	
-	brush = noone;
+	pactive = true;
 	
 	function setBrush(b) { brush = b;  return self; }
 	function getTool()   { return self; }

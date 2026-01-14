@@ -27,6 +27,8 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 		var _ang = tool_attribute.iso_angle;
 		
 		if(mouse_holding) {
+			updated = true;
+			
 			surface_set_shader(drawing_surface, noone, true, BLEND.maximum);
 			
 					 if(_ang == 0) canvas_draw_iso_cube( brush, mouse_points, subtool);
@@ -90,6 +92,8 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 			mouse_holding = 0;
 			surface_clear(drawing_surface);
 		}
+		
+		pactive     = active;
 	}
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

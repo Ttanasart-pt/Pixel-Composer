@@ -38,6 +38,6 @@ vec4 grid(vec2 pos, float scale) {
 }
 
 void main() {
-    gl_FragColor = grid( v_vTexcoord - 0.5 + shift, scale );
-	gl_FragColor.a *= 1. - length(v_vTexcoord - 0.5) * 2.;
+    gl_FragData[0] = grid( v_vTexcoord - 0.5 + shift, scale );
+	gl_FragData[0].a *= 1. - length(v_vTexcoord - 0.5) * 2.;
 }

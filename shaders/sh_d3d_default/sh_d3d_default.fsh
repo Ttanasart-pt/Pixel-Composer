@@ -1,6 +1,6 @@
 #pragma use(d3d_default_fragment)
 
-#region -- d3d_default_fragment -- [1767930959.3308232]
+#region -- d3d_default_fragment -- [1768354243.4917247]
 #ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
 #endif
@@ -297,7 +297,7 @@ void main() {
 		mat_baseColor     *= v_vColour;
 		
 		vec4 final_color   = mat_baseColor;
-		vec3 shadow        = vec3(0.);
+		float shadow       = 0.;
 		if(show_wireframe == 1 && wireframe_shade == 1) final_color = wireframeCalc(final_color);
 	#endregion 
 
@@ -469,12 +469,14 @@ void main() {
 	#endregion
 	
 	if(show_wireframe == 1 && wireframe_shade == 0) final_color = wireframeCalc(final_color);
-	if(final_color.a == 0.) discard;
 	
-	gl_FragData[0] = final_color;
-	gl_FragData[1] = vec4(0.5 + normal * 0.5, final_color.a);
-	gl_FragData[2] = vec4(vec3(1. - abs(v_cameraDistance)), final_color.a);
-	gl_FragData[3] = vec4(shadow, 1.);
+	if(final_color.a > 0.) {
+		gl_FragData[0] = final_color;
+		gl_FragData[1] = vec4(0.5 + normal * 0.5, final_color.a);
+		gl_FragData[2] = vec4(vec3(1. - abs(v_cameraDistance)), final_color.a);
+	}
+	
+	gl_FragData[3] = vec4(shadow, uv_coord, 1.);
 }
 #endregion -- d3d_default_fragment --
 #pragma use(d3d_default_fragment)

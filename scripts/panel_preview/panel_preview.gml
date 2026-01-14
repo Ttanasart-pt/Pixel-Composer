@@ -426,6 +426,8 @@ function Panel_Preview() : PanelContent() constructor {
         d3_surface           = noone;
         d3_surface_normal    = noone;
         d3_surface_depth     = noone;
+        d3_surface_uv        = noone;
+        
         d3_surface_outline   = noone;
         d3_surface_bg        = noone;
         d3_preview_channel   = 0;
@@ -890,13 +892,13 @@ function Panel_Preview() : PanelContent() constructor {
                 canvas_drag_key = PREFERENCES.pan_mouse_key;
                 
             } else if(mouse_press(mb_left, pFOCUS) && canvas_dragging_key) {
-                
                 _doDragging = true;
                 canvas_drag_key = mb_left;
-            } else if(mouse_press(mb_left, pFOCUS) && canvas_zooming_key) {
                 
+            } else if(mouse_press(mb_left, pFOCUS) && canvas_zooming_key) {
                 _doZooming = true;
                 canvas_drag_key = mb_left;
+                
             }
             
             if(_doDragging) {
@@ -910,7 +912,8 @@ function Panel_Preview() : PanelContent() constructor {
                 canvas_zoom_m   = my;
             }
             
-            if(MOUSE_WHEEL != 0) d3_camera.focus_dist = clamp(d3_camera.focus_dist * (1 - d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
+            if(!key_mod_press_any() && MOUSE_WHEEL != 0)
+            	d3_camera.focus_dist = clamp(d3_camera.focus_dist * (1 - d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
         }
         
         canvas_dragging_key = false;
@@ -1002,6 +1005,15 @@ function Panel_Preview() : PanelContent() constructor {
     	
     	if(prevN.selectAll != undefined) prevN.selectAll();
     	
+    }
+    
+    function d3dGetUVFromMouse(_mx, _my) {
+    	if(d3_active != NODE_3D.polygon)             return undefined;
+    	if(!is_just_surface(d3_surface_uv))          return undefined;
+    	if(_mx < 0 || _mx > w || _my < 0 || _my > h) return undefined;
+    	
+    	var _data = surface_getpixel_ext(d3_surface_uv, _mx, _my);
+    	return is_array(_data) && _data[3] > 0? [ _data[1], _data[2] ] : undefined;
     }
     
     static onFullScreen = function() { run_in(1, fullView); }
@@ -1792,6 +1804,7 @@ function Panel_Preview() : PanelContent() constructor {
         d3_surface         = surface_verify(d3_surface,         w, h);
         d3_surface_normal  = surface_verify(d3_surface_normal,  w, h);
         d3_surface_depth   = surface_verify(d3_surface_depth,   w, h);
+        d3_surface_uv      = surface_verify(d3_surface_uv,      w, h, surface_rgba16float);
         d3_surface_outline = surface_verify(d3_surface_outline, w, h);
         
         #region view
@@ -1888,12 +1901,16 @@ function Panel_Preview() : PanelContent() constructor {
             	d3_deferData  = d3_scene_preview.deferPass(_prev_obj, w, h, d3_deferData);
         #endregion
         
-        #region grid
+        #region render
+        	surface_clear( d3_surface, bg_color );
+        	surface_clear( d3_surface_normal    );
+        	surface_clear( d3_surface_depth     );
+        	surface_clear( d3_surface_uv        );
+        	
             surface_set_target_ext(0, d3_surface);
             surface_set_target_ext(1, d3_surface_normal);
             surface_set_target_ext(2, d3_surface_depth);
-            
-            draw_clear_alpha(bg_color, 0);
+            surface_set_target_ext(3, d3_surface_uv);
             
             d3_camera_preview.applyCamera();
             
@@ -1916,9 +1933,7 @@ function Panel_Preview() : PanelContent() constructor {
             shader_reset();
             
             gpu_set_zwriteenable(true);
-        #endregion
-        
-        #region draw
+            
             d3_scene_preview.reset();
             d3_scene_preview.setRendering();
             
@@ -1944,7 +1959,9 @@ function Panel_Preview() : PanelContent() constructor {
             
             d3_scene_preview.resetRendering();
             surface_reset_target();
-            
+        #endregion
+        
+        #region draw
             draw_clear(bg_color);
             
             switch(d3_preview_channel) {
@@ -1963,6 +1980,7 @@ function Panel_Preview() : PanelContent() constructor {
                 case 1 : draw_surface_safe(d3_surface_normal); break;
                 case 2 : draw_surface_safe(d3_surface_depth);  break;
             }
+            
         #endregion
         
         #region outline

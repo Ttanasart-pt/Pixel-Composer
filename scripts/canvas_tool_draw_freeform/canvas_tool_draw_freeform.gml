@@ -15,10 +15,14 @@ function canvas_tool_draw_freeform() : canvas_tool() constructor {
 		
 		attributes = node.attributes;
 		
+		if(mouse_holding) updated = true;
+		
 		canvas_freeform_step(active, _x, _y, _s, _mx, _my, true);
 			
 		if(mouse_release(mb_left))
 			apply_draw_surface();
+		
+		pactive     = active;
 	}
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

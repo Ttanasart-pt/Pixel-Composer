@@ -1071,6 +1071,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		project.setModified();
 	}
 	
+	function apply_draw_surface_light(_bg) {
+		draw_surface_safe(_bg);
+		
+		var sub = isUsingTool("Eraser");
+		if(sub) BLEND_SUBTRACT
+		else    BLEND_NORMAL
+		draw_surface_safe(drawing_surface);
+		BLEND_NORMAL
+	}
+	
 	static storeAction = function() {
 		
 		var action = recordAction(ACTION_TYPE.custom, function(data) { 
@@ -1092,13 +1102,39 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		preview_surface_sample = isNotUsingTool();
 		
-		#region hotkey
-			array_foreach(hotkeys, function(h, i) /*=>*/ { 
-				if(HOTKEYS_CUSTOM[$ "Node_Canvas"][$ h[0]].isPressing()) {
-					PANEL_PREVIEW.setActionTooltip(h[0]);
-					h[1](); 
+		array_foreach(hotkeys, function(h, i) /*=>*/ { // hotkey
+			if(HOTKEYS_CUSTOM[$ "Node_Canvas"][$ h[0]].isPressing()) {
+				PANEL_PREVIEW.setActionTooltip(h[0]);
+				h[1](); 
+			}
+		}); // hotkey
+		
+		#region parameters
+			var hovering = isUsingTool();
+			var _panel   = _params[$ "panel"] ?? noone;
+			var _dim     = attributes.dimension;
+			var __3d     = _panel && _panel.d3_active == NODE_3D.polygon;
+			
+			if(palette_picking) {
+				hover  = false; 
+				active = false; 
+			}
+			
+			if(__3d) {
+				var _uv = _panel.d3dGetUVFromMouse(_mx, _my);
+				
+				if(_uv == undefined) {
+					hover  = false; 
+					active = false; 
+					
+				} else {
+					_mx = _x + _uv[0] * _dim[0] * _s;
+					_my = _y + _uv[1] * _dim[1] * _s;
 				}
-			});
+			}
+			
+			mouse_cur_x = round((_mx - _x) / _s - 0.5);
+			mouse_cur_y = round((_my - _y) / _s - 0.5);
 		#endregion
 		
 		#region color picker
@@ -1108,22 +1144,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(color_picking) return pickColor(_x, _y, _s, _mx, _my);
 		#endregion
 		
-		#region parameters
-			var hovering = isUsingTool();
-			var _panel   = _params[$ "panel"] ?? noone;
-			
-			if(palette_picking) {
-				hover  = false; 
-				active = false; 
-			}
-			
-			mouse_cur_x = round((_mx - _x) / _s - 0.5);
-			mouse_cur_y = round((_my - _y) / _s - 0.5);
-		#endregion
-		
 		#region brush
 			current_brush.node     = self;
-			current_brush.tileMode = _panel.tileMode
+			current_brush.tileMode = __3d? 0b11 : _panel.tileMode;
+			current_brush.draw3D   = __3d;
 			current_brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
 			tool_size_edit.setInteract(!is_surface(current_brush.surface));
@@ -1132,8 +1156,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#region surfaces
 			var _canvas_surface = getCanvasSurface();
 			if(!surface_exists(_canvas_surface)) return hovering;
-		
-			var _dim = attributes.dimension;
+			
 			_drawing_surface = surface_verify(_drawing_surface, _dim[0], _dim[1]);
 			drawing_surface  = surface_verify( drawing_surface, _dim[0], _dim[1], attrDepth());
 			
@@ -1201,7 +1224,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				array_append(rightTools, rightTools_selection);
 			} else
 				array_append(rightTools, rightTools_not_selection);
-				
 		#endregion
 		
 		#region tool draw override
@@ -1221,7 +1243,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				surface_reset_shader();
 				
-				drawToolOutline();
+				if(hover) drawToolOutline();
 				
 				_tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				return hovering;
@@ -1249,6 +1271,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_set_color_alpha(isUsingTool("Eraser")? c_white : CURRENT_COLOR, 1);
 				
 				_tool.step(hover, active, _tx, _ty, _s, _mx, _my, _snx, _sny);
+				if(_tool.updated) {
+					_tool.updated = false;
+					triggerRender();
+				}
 				
 				if(_tool.brush_resizable) { 
 					if(_panel.pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
@@ -1301,6 +1327,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _pcc = isUsingTool("Eraser")? c_red : c_white;
 			var _paa = isUsingTool("Eraser")? .2 : _color_get_alpha(CURRENT_COLOR);
 			
+			if(!__3d)
 			switch(_panel.tileMode) {
 				case 0 : 
 					draw_surface_ext_safe(getPreviewValues(_drawToolPreview), _x, _y, _s, _s, 0, c_white, 1); 
@@ -1349,7 +1376,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			surface_reset_target();
 			
-			drawToolOutline();
+			if(hover) drawToolOutline();
 			
 			draw_set_color(COLORS._main_accent);
 			if(selection.is_selected) {
@@ -1547,9 +1574,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region surface
-			apply_surfaces();
-			
-			var _frames  = attributes.frames;
+			if(isNotUsingTool()) apply_surfaces();
+			var _frames = attributes.frames;
 			
 			if(!is_array(output_surface)) output_surface = array_create(_frames);
 			else if(array_length(output_surface) != _frames)
@@ -1566,11 +1592,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							if(is_surface(_bgSrf)) 
 								draw_surface_stretched_safe(_bgSrf, 0, 0, _dim[0], _dim[1], c_white, _bgAlp);
 							
-						} else if(_bgTyp == 1) {
+						} else if(_bgTyp == 1)
 							draw_clear_alpha(_bgCol, _bgAlp);
-						}
 					}
-					draw_surface_safe(_canvas_surface);
+					
+					if(isUsingTool()) apply_draw_surface_light(_canvas_surface);
+					else draw_surface_safe(_canvas_surface);
 				surface_reset_shader();
 				
 			} else {
@@ -1585,11 +1612,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 								if(is_surface(_bgArray))
 									draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bgAlp);
 								
-							} else if(_bgTyp == 1) {
+							} else if(_bgTyp == 1)
 								draw_clear_alpha(_bgCol, _bgAlp);
-							}
 						}
-						draw_surface_safe(_canvas_surface);
+						
+						if(isUsingTool() && i == preview_index) apply_draw_surface_light(_canvas_surface);
+						else draw_surface_safe(_canvas_surface);
 					surface_reset_shader();
 				}
 				
