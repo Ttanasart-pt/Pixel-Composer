@@ -104,6 +104,8 @@ function canvas_selection() : canvas_tool() constructor {
 		selection_position = [ sel_x0, sel_y0 ];
 		selection_size     = [ sel_w,  sel_h  ];
 		is_selected        = true;
+		
+		updateSelection();
 	}
 	
 	function createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) {

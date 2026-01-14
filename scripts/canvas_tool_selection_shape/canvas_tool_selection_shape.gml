@@ -2,6 +2,7 @@ function canvas_tool_selection_shape(_selector, _shape) : canvas_tool_selection(
 	shape = _shape;
 	
 	function onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		
 		if(is_selecting) {
 			var sel_x0, sel_y0, sel_x1, sel_y1;
 			var sel_w = 1, sel_h = 1;

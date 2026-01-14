@@ -1887,6 +1887,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		selection.selection_position = [ _sel_x, _sel_y ];
+		tools[0].toggle(0);
 	}
 }
 
