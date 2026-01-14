@@ -366,6 +366,8 @@ function Panel_Preference() : PanelContent() constructor {
     #endregion
     
     #region Language
+    	locale_manager = "Locale Manager...";
+    	
     	var _localLink = "https://gist.githubusercontent.com/Ttanasart-pt/abe375c929fe8eb7e8463a66c3bde389/raw/locale";
     	asyncCall(http_get(_localLink), function(param, data) /*=>*/ {
 			var sta = data[? "status"];
@@ -374,6 +376,7 @@ function Panel_Preference() : PanelContent() constructor {
     		var _arr = json_try_parse(res, -1);
     		if(!is_array(_arr) || array_empty(_arr)) return;
     		
+    		array_delete(locals, array_length(locals) - 2, 2);
     		array_push(locals, -1);
     		
     		for( var i = 0, n = array_length(_arr); i < n; i++ ) {
@@ -384,6 +387,8 @@ function Panel_Preference() : PanelContent() constructor {
     			
     			array_push(locals, _sc);
     		}
+    		
+    		array_push(locals, -1, locale_manager);
     	});
     	
     	locals = [];
@@ -393,12 +398,18 @@ function Panel_Preference() : PanelContent() constructor {
 			f = file_find_next();
 		}
 		file_find_close();
+		array_push(locals, -1, locale_manager);
 		
 		item_locale = new __Panel_Linear_Setting_Item_Preference(
 			__txtx("pref_interface_language", "Interface Language*"),
 			"local",
 			new scrollBox(locals, function(_idx) /*=>*/ { 
 				var _l = array_safe_get(locals, _idx, "en");
+				
+				if(_l == locale_manager) {
+					dialogPanelCall(new Panel_Locale_Manager());
+					return;
+				}
 				
 				if(is_string(_l)) {
 					prefSet("local", _l, true); 

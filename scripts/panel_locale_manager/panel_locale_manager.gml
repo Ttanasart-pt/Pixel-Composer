@@ -44,6 +44,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 	#endregion
 	
 	#region current local
+		current_local    = undefined;
 		current_index    = 0;
 		current_progress = [0, 0, 0];
 		
@@ -53,6 +54,8 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		file_base    = undefined;
 		
 		static setLocal = function(_l) {
+			if(current_local == _l) return;
+			
 			current_local = _l;
 			current_index = array_find(locals, _l);
 			
@@ -303,8 +306,8 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 			var _file = file_lists[i];
 			var _path = $"{dirr}/{_file}";
 			
-			var hov = pHOVER && point_in_rectangle(mx, my, fx, fy, fx + fw, fy + fh);
 			var fh  = i? ui(48) + bh : ui(28);
+			var hov = pHOVER && point_in_rectangle(mx, my, fx, fy, fx + fw, fy + fh);
 			
 			draw_sprite_stretched_ext(THEME.box_r2_clr, 0, fx, fy, fw, fh, COLORS._main_icon_light);
 			
