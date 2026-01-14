@@ -19,10 +19,10 @@
 		hotkeyCustom("Node_Canvas", "Corner",          "C", MOD_KEY.alt);
 		
 		hotkeyCustom("Node_Canvas", "Resize Canvas",   "");
-		// hotkeyCustom("Node_Canvas", "Rotate 90 CW",    "");
-		// hotkeyCustom("Node_Canvas", "Rotate 90 CCW",   "");
-		// hotkeyCustom("Node_Canvas", "Flip H",          "");
-		// hotkeyCustom("Node_Canvas", "Flip V",          "");
+	 // hotkeyCustom("Node_Canvas", "Rotate 90 CW",    "");
+	 // hotkeyCustom("Node_Canvas", "Rotate 90 CCW",   "");
+	 // hotkeyCustom("Node_Canvas", "Flip H",          "");
+	 // hotkeyCustom("Node_Canvas", "Flip V",          "");
 		
 		hotkeyCustom("Node_Canvas", "New Frame",       "N", MOD_KEY.alt);
 		hotkeyCustom("Node_Canvas", "Select All",      "A", MOD_KEY.ctrl);
@@ -709,7 +709,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	#region ++++ hotkey ++++
 		hotkeys = [
-			[ "New Frame",  function() /*=>*/ { addFrame(); } ], 
+			[ "New Frame",       function() /*=>*/ { addFrame(); } ], 
 			
 			[ "Select All",      function() /*=>*/ { selection.selectAll();                        } ], 
 			[ "Copy Selection",  function() /*=>*/ { selection.copySelection(); selection.apply(); } ], 
@@ -1093,7 +1093,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		preview_surface_sample = isNotUsingTool();
 		
 		#region hotkey
-			array_foreach(hotkeys, function(h) /*=>*/ { if(HOTKEYS_CUSTOM[$ "Node_Canvas"][$ h[0]].isPressing()) h[1](); });
+			array_foreach(hotkeys, function(h, i) /*=>*/ { 
+				if(HOTKEYS_CUSTOM[$ "Node_Canvas"][$ h[0]].isPressing()) {
+					PANEL_PREVIEW.setActionTooltip(h[0]);
+					h[1](); 
+				}
+			});
 		#endregion
 		
 		#region color picker
@@ -1850,14 +1855,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static pasteSurface = function(_cursor = false) {
-		var _str = json_try_parse(clipboard_get_text(), noone);
-		if(!struct_has(_str, "buffer")) return;
+		var _str  = undefined;
+		var _surf = clipboard_get_surface();
 		
-		var _surf = surface_decode(_str);
-		if(!surface_exists(_surf)) return;
+		if(_surf != noone) {
+			buffer_delete_safe(_surf.buffer);
+			_surf = _surf.surface;
+		}
+		
+		if(!is_surface(_surf)) {
+			_str = json_try_parse(clipboard_get_text(), noone);
+			if(has(_str, "buffer")) _surf = surface_decode(_str);
+		}
+		
+		if(!is_surface(_surf)) return;
 		
 		selection.createSelectionFromSurface(_surf);
-		surface_free_safe(_surf);
+		surface_free(_surf);
 		
 		var _sel_x = 0;
 		var _sel_y = 0;
