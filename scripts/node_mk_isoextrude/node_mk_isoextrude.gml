@@ -2,11 +2,11 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "MK Isoextrude";
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface( "Surface Base" ));
-	newInput( 6, nodeValue_Surface( "Surface Side" ));
-	newInput( 3, nodeValue_Surface( "Surface Top"  ));
-	newInput( 5, nodeValue_Surface( "Height Map"   ));
-	newInput(14, nodeValue_Surface( "Bottom Map"   ));
+	newInput( 0, nodeValue_Surface( "Surface Base" )).setDrawGroup(0);
+	newInput( 6, nodeValue_Surface( "Surface Side" )).setDrawGroup(0);
+	newInput( 3, nodeValue_Surface( "Surface Top"  )).setDrawGroup(0);
+	newInput( 5, nodeValue_Surface( "Height Map"   )).setDrawGroup(1).setBW();
+	newInput(14, nodeValue_Surface( "Bottom Map"   )).setDrawGroup(1).setBW();
 	
 	////- =Isoextrude
 	newInput( 4, nodeValue_EButton( "Side",      0, [ "Top", "Left", "Right" ] ));
@@ -23,9 +23,13 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(10, nodeValue_Surface( "Hole Map 1"       ));
 	newInput(11, nodeValue_Surface( "Hole Map 2"       ));
 	
+	////- =Profile
+	newInput(15, nodeValue_Bool(    "Use Profile", false        ));
+	newInput(16, nodeValue_Curve(   "Profile",     CURVE_DEF_11 ));
+	
 	////- =Rendering
 	newInput( 2, nodeValue_Color( "Blending", ca_white ));
-	// input 15
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
@@ -36,6 +40,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		[ "Depth",       false     ],  4,  1,  9, 
 		[ "Transform",   false     ],  7,  8, 
 		[ "Hole",         true, 13 ], 12, 10, 11, 
+		[ "Profile",      true, 15 ], 16, 
 		[ "Rendering",   false     ],  2, 
 	];
 	
@@ -43,41 +48,51 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	temp_surface = [ noone, noone, noone, noone, noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+		var _dim = getDimension();
 		
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[7].drawOverlay(hover, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-			var _surf  = _data[ 0]; 
-			var _surfS = _data[ 6], _surfSu = is_surface(_surfS);
-			var _surfT = _data[ 3], _surfTu = is_surface(_surfT);
-			var _surfH = _data[ 5], _surfHu = is_surface(_surfH);
-			var _surfB = _data[14], _surfBu = is_surface(_surfB);
+			var _surf    = _data[ 0]; 
+			var _surfS   = _data[ 6], _surfSu = is_surface(_surfS);
+			var _surfT   = _data[ 3], _surfTu = is_surface(_surfT);
+			var _surfH   = _data[ 5], _surfHu = is_surface(_surfH);
+			var _surfB   = _data[14], _surfBu = is_surface(_surfB);
 			
 			var _side    = _data[ 4]; 
 			var _dept    = _data[ 1]; 
 			var _deptRef = _data[ 9]; if(_deptRef == 0) _deptRef = _dept;
 			
-			var _rota  = _data[ 7]; 
-			var _scal  = _data[ 8]; 
+			var _rota    = _data[ 7]; 
+			var _scal    = _data[ 8]; 
 			
-			var _hUse   = _data[13]; 
-			var _hType  = _data[12]; 
-			var _surfO1 = _data[10], _surfO1u = _hUse && is_surface(_surfO1);
-			var _surfO2 = _data[11], _surfO2u = _hUse && is_surface(_surfO2);
+			var _hUse    = _data[13]; 
+			var _hType   = _data[12]; 
+			var _surfO1  = _data[10], _surfO1u = _hUse && is_surface(_surfO1);
+			var _surfO2  = _data[11], _surfO2u = _hUse && is_surface(_surfO2);
 			
-			var _colr  = _data[ 2]; 
+			var _pUse    = _data[15]; 
+			var _profile = _data[16], _pCurve = undefined; 
+			
+			var _colr    = _data[ 2]; 
 			
 			inputs[10].setVisible(_hUse, _hUse);
 			inputs[11].setVisible(_hUse, _hUse);
-
+			
+			if(_pUse) _pCurve = new curveMap(_profile);
+			
 			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
 		var sw = surface_get_width_safe(  _surf );
 		var sh = surface_get_height_safe( _surf );
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
 			temp_surface[i] = surface_verify(temp_surface[i], sw, sh);
 		
 		#region geometry
@@ -215,7 +230,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var ii = 0;
 			repeat(_dept) {
-				shader_set_f("curDepth",   ii);
+				shader_set_f("curDepth", ii);
+				shader_set_f("scale",    _pUse? _pCurve.get(ii / (_dept - 1)) : 1);
 				draw_surface_ext(temp_surface[0], xx, yy, 1, 1, 0, _colr, 1);
 				
 				xx += dx;

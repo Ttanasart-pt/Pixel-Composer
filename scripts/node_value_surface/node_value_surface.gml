@@ -10,6 +10,14 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 		}
 	}
 	
+	/////============== VALUE =============
+	
+	static setBW = function() { 
+		// draw_junction_index = VALUE_TYPE.rigid;
+		// custom_color = #ff6b97;
+		return self; 
+	}
+	
 	/////============== GET =============
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
@@ -18,10 +26,6 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
-		
-		draw_junction_index = VALUE_TYPE.surface;
-		if(is(val, SurfaceAtlas) || (array_valid(val) && is_instanceof(val[0], SurfaceAtlas))) 
-			draw_junction_index = VALUE_TYPE.atlas;
 		
 		if(is(val, dynaDraw)) val.node = node;
 		

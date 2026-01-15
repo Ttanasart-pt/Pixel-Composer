@@ -5,6 +5,7 @@ uniform float maxDepth;
 uniform float curDepth;
 
 uniform float rotation;
+uniform float scale;
 
 uniform int useHeight;
 uniform sampler2D heightmap;
@@ -26,8 +27,16 @@ uniform int useHole2;
 uniform sampler2D holeTexture2;
 
 void main() {
-	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord) * v_vColour;
-	vec4 cord = texture2D(coordMap, v_vTexcoord);
+	if(scale == 0.) { 
+		gl_FragData[0] = vec4(0.); 
+		gl_FragData[1] = vec4(0.); 
+		return; 
+	}
+		
+	vec2 tx   = .5 + (v_vTexcoord - .5) / scale;
+	
+	vec4 base = texture2D(gm_BaseTexture, tx) * v_vColour;
+	vec4 cord = texture2D(coordMap, tx) - .5;
 	float rh  = curDepth / maxDepth;
 	float hh  = 1.;
 	
@@ -36,12 +45,12 @@ void main() {
 	
 	if(useHeight == 0) {
 		if(curDepth == maxDepth)
-			gl_FragData[0] = texture2D(topmap, v_vTexcoord);
+			gl_FragData[0] = texture2D(topmap, tx);
 		
 		if(base.a > 0.) gl_FragData[1] = vec4(vec3(rh), 1.);
 		
 	} else {
-		vec4 heig = texture2D(heightmap, v_vTexcoord);
+		vec4 heig = texture2D(heightmap, tx);
 		hh  = (heig.r + heig.g + heig.b) / 3. * heig.a;
 		
 		if(rh > hh) { 
@@ -54,7 +63,7 @@ void main() {
 	}
 	
 	if(useBottom == 1) {
-		vec4 heig = texture2D(bottommap, v_vTexcoord);
+		vec4 heig = texture2D(bottommap, tx);
 		float bb  = 1. - (heig.r + heig.g + heig.b) / 3. * heig.a;
 		
 		if(rh < bb) { 
@@ -67,14 +76,14 @@ void main() {
 	}
 	
 	if(useSide == 1) {
-		vec2 sdUV = vec2(fract(fract(v_vTexcoord.x - rotation) + 1.), 1. - rh);
+		vec2 sdUV = vec2(fract(fract(tx.x - rotation) + 1.), 1. - rh);
 		vec4 sCol = texture2D(sideTexture, sdUV) * v_vColour;
 		gl_FragData[0].rgb = sCol.rgb;
 		gl_FragData[0].a  *= sCol.a;
 	}
 	
 	float nh  = (curDepth + 1.) / maxDepth;
-	if(nh > hh) gl_FragData[0] = texture2D(topmap, v_vTexcoord);
+	if(nh > hh) gl_FragData[0] = texture2D(topmap, tx);
 	
 	bool h1 = false;
 	bool h2 = false;

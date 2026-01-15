@@ -311,24 +311,24 @@ function value_bit(i) {
 function value_type_directional(f, t) {
 	INLINE
 	
-	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.integer)	return true;
-	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.float)	return true;
+	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.integer)      return true;
+	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.float)        return true;
 	
-	if(f == VALUE_TYPE.integer && t == VALUE_TYPE.text) return true;
-	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.text) return true;
-	if(f == VALUE_TYPE.boolean && t == VALUE_TYPE.text) return true;
+	if(f == VALUE_TYPE.integer && t == VALUE_TYPE.text)         return true;
+	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.text)         return true;
+	if(f == VALUE_TYPE.boolean && t == VALUE_TYPE.text)         return true;
 	
-	if(f == VALUE_TYPE.integer && t == VALUE_TYPE.color)	return true;
-	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.color)	return true;
-	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.integer)	return true;
-	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.float  )	return true;
-	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.gradient) return true;
+	if(f == VALUE_TYPE.integer && t == VALUE_TYPE.color)        return true;
+	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.color)        return true;
+	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.integer)      return true;
+	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.float  )      return true;
+	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.gradient)     return true;
 	
-	if(f == VALUE_TYPE.strands && t == VALUE_TYPE.pathnode ) return true;
+	if(f == VALUE_TYPE.strands && t == VALUE_TYPE.pathnode )    return true;
 	
-	if(f == VALUE_TYPE.color    && t == VALUE_TYPE.struct ) return true;
-	if(f == VALUE_TYPE.mesh     && t == VALUE_TYPE.struct ) return true;
-	if(f == VALUE_TYPE.particle && t == VALUE_TYPE.struct ) return true;
+	if(f == VALUE_TYPE.color    && t == VALUE_TYPE.struct )     return true;
+	if(f == VALUE_TYPE.mesh     && t == VALUE_TYPE.struct )     return true;
+	if(f == VALUE_TYPE.particle && t == VALUE_TYPE.struct )     return true;
 	
 	if(f == VALUE_TYPE.surface  && t == VALUE_TYPE.d3Material ) return true;
 	

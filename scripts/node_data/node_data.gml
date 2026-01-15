@@ -2091,7 +2091,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		repeat(n) {
 			jun = inputDisplayList[i++];
 			
-			draw_set_color(jun.custom_color == noone? jun.draw_fg : jun.custom_color);
+			draw_set_color(jun.custom_color ?? jun.draw_fg);
 			draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
 		}
 		
@@ -2100,7 +2100,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		repeat(n) {
 			jun = outputDisplayList[i++];
 			
-			draw_set_color(jun.custom_color == noone? jun.draw_fg : jun.custom_color);
+			draw_set_color(jun.custom_color ?? jun.draw_fg);
 			draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
 		}
 		

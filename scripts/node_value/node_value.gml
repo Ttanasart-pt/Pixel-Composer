@@ -162,8 +162,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		graph_selecting   = false;
 		
-		custom_icon  = noone;
-		custom_color = noone;
+		custom_icon  = undefined;
+		custom_color = undefined;
 		
 		drawValue    = false;
 	#endregion
@@ -356,7 +356,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setTooltip = function(_tip) { tooltip = _tip; return self; }
 	
-	static setIcon = function(_ico, _colr = noone) { custom_icon = _ico; custom_color = _colr; return self; }
+	static setIcon = function(_ico, _colr = undefined) { custom_icon = _ico; custom_color = _colr; return self; }
 	
 	static setCustomData = function(param) {
 		custom_icon  = param.icon(); 
@@ -2418,7 +2418,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static drawJunctionFast = function(_s, _mx, _my) { 
-		draw_set_color(custom_color == noone? draw_fg : custom_color);
+		draw_set_color(custom_color ?? draw_fg);
 		if(index == -1) draw_rectangle( x - _s * 4.0, y - _s * 1.5, x + _s * 4.0, y + _s * 1.5, false);
 		else            draw_rectangle( x - _s * 1.5, y - _s * 4.0, x + _s * 1.5, y + _s * 4.0, false);
 		return;
@@ -2428,7 +2428,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _hov = hover_in_graph;
 		_s /= 2 * THEME_SCALE;
 		
-		if(custom_icon != noone) {
+		if(custom_icon != undefined) {
 			__draw_sprite_ext(custom_icon, _hov, x, y, _s, _s, 0, c_white, 1);
 			
 		} else if(is_dummy) {
@@ -2445,7 +2445,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		} else {
 			var _cbg = draw_bg;
-			var _cfg = draw_fg;
+			var _cfg = custom_color ?? draw_fg;
 			
 			if(draw_blend != -1) {
 				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
@@ -2578,7 +2578,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_my *= aa;
 		
 		var _fade = node.project.graphConnection.line_highlight_fade;
-		var  col  = custom_color == noone? merge_color(_fade, color_display, .5) : custom_color;
+		var  col  = custom_color ?? merge_color(_fade, color_display, .5);
 		draw_set_color(col);
 		
 		var _action = type == VALUE_TYPE.action;
@@ -2633,7 +2633,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var _sprs = ss / 2 / THEME_SCALE;
 		
-		if(custom_icon != noone) {
+		if(custom_icon != undefined) {
 			__draw_sprite_ext(custom_icon, draw_junction_index, _mx, _my, _sprs, _sprs, 0, c_white, 1);
 			return;
 		}
@@ -3246,15 +3246,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _fade = PROJECT.graphConnection.line_highlight_fade;
 				var _colr = _selc? 1 : _fade;
 				
-				c0 = merge_color(bg, from.custom_color == noone? from.color_display : from.custom_color, _colr);
-				c1 = merge_color(bg,   to.custom_color == noone?   to.color_display :   to.custom_color, _colr);
+				c0 = merge_color(bg, from.custom_color ?? from.color_display, _colr);
+				c1 = merge_color(bg,   to.custom_color ??   to.color_display, _colr);
 				
 				to.draw_blend_color = bg;
 				to.draw_blend       = _colr;
 				from.draw_blend     = max(from.draw_blend, _colr);
 			} else {
-				c0 = from.custom_color == noone? from.color_display : from.custom_color;
-				c1 =   to.custom_color == noone?   to.color_display :   to.custom_color;
+				c0 = from.custom_color ?? from.color_display;
+				c1 =   to.custom_color ??   to.color_display;
 				
 				to.draw_blend_color = bg;
 				to.draw_blend       = -1;
