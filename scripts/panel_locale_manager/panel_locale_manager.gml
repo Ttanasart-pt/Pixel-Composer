@@ -27,6 +27,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		
 		base_node   = json_load_struct($"{DIRECTORY}Locale/en/nodes.json");
 		base_config = json_load_struct($"{DIRECTORY}Locale/en/config.json");
+		base_notes  = directory_listdir($"{DIRECTORY}Locale/en/notes", fa_none);
 		
 		base_text_key = struct_get_names(base_text);
 		base_node_key = struct_get_names(base_node);
@@ -44,27 +45,36 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 	#endregion
 	
 	#region current local
+		pages = [ "config", "fonts", "words", "nodes", "notes" ];
+		page  = 0;
+		
 		current_local    = undefined;
 		current_index    = 0;
-		current_progress = [0, 0, 0];
+		current_progress = {
+			words: 0, 
+			nodes: 0, 
+			notes: 0, 
+		};
 		
-		file_lists   = [ "config.json", "words.json", "nodes.json" ];
-		file_select  = "";
-		file_current = undefined;
-		file_base    = undefined;
+		current_fonts = [];
+		fonts_data = undefined;
 		
 		static setLocal = function(_l) {
 			if(current_local == _l) return;
 			
 			current_local = _l;
 			current_index = array_find(locals, _l);
+			page = 0;
 			
 			if(current_local == "en") {
-				data_text   = base_text;
-				data_node   = base_node;
 				data_config = base_config;
 				
-				setFile(file_lists[0]);
+				data_text   = base_text;
+				data_node   = base_node;
+				data_notes  = base_notes;
+				
+				current_fonts = [];
+				fonts_data = undefined;
 				return;
 			}
 			
@@ -74,11 +84,22 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 			var _ui     = json_load_struct($"{dirr}/UI.json");
 			data_text   = struct_append(_word, _ui);
 			
-			data_node   = json_load_struct($"{dirr}/nodes.json");
-			data_config = json_load_struct($"{dirr}/config.json");
+			data_node     = json_load_struct($"{dirr}/nodes.json");
+			data_config   = json_load_struct($"{dirr}/config.json");
+			data_notes    = directory_listdir($"{dirr}/notes", fa_none);
+			current_fonts = directory_listdir($"{dirr}/fonts", fa_none);
 			
 			data_text_key = struct_get_names(data_text);
 			data_node_key = struct_get_names(data_node);
+			
+			for( var i = 0, n = array_length(current_fonts); i < n; i++ ) {
+				var _font = current_fonts[i];
+				if(filename_ext(_font) == ".json") {
+					array_delete(current_fonts, i, 1);
+					fonts_data = json_load_struct(_font);
+					break;
+				}
+			}
 			
 			var _text_translated = 0;
 			for( var i = 0, n = text_total; i < n; i++ ) {
@@ -98,27 +119,15 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 				_node_translated += array_length(_data.outputs);
 			}
 			
-			current_progress[0] = 0;
-			current_progress[1] = _text_translated / text_total;
-			current_progress[2] = _node_translated / node_total;
-			
-			setFile(file_lists[0]);
+			current_progress.words = _text_translated / text_total;
+			current_progress.nodes = _node_translated / node_total;
+			current_progress.notes = array_length(data_notes) / array_length(base_notes);
 			
 		} setLocal(PREFERENCES.local);
 		
-		static setFile = function(_f) {
-			file_select = _f;
-			
-			switch(_f) {
-				case "config.json": file_current = data_config; file_base = base_config; break;
-				case "words.json":  file_current = data_text;   file_base = base_text;   break;
-				case "nodes.json":  file_current = data_node;   file_base = base_node;   break;
-			}
-		}
-		
 		static exportMissing = function(_file) {
 			switch(_file) {
-				case "words.json" :
+				case "words" :
 					var _path = get_save_filename_compat("JSON|*.json", "words_missing.json");
 					if(_path == "") return;
 					
@@ -133,7 +142,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 					json_save_struct(_path, _missings, true);
 					break;
 				
-				case "nodes.json" :
+				case "nodes" :
 					var _path = get_save_filename_compat("JSON|*.json", "nodes_missing.json");
 					if(_path == "") return;
 					
@@ -172,7 +181,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		
 		static importMissing = function(_file) {
 			switch(_file) {
-				case "words.json" :
+				case "words" :
 					var _path = get_open_filename_compat("JSON|*.json", "words_missing.json");
 					if(_path == "") return;
 					
@@ -188,10 +197,10 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 						if(_base_key == "" || has(data_text, _base_key))
 							_text_translated++;
 					}
-					current_progress[1] = _text_translated / text_total;
+					current_progress.words = _text_translated / text_total;
 					break;
 				
-				case "nodes.json" :
+				case "nodes" :
 					var _path = get_open_filename_compat("JSON|*.json", "nodes_missing.json");
 					if(_path == "") return;
 					
@@ -212,7 +221,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 						_node_translated += array_length(_data.outputs);
 					}
 					
-					current_progress[2] = _node_translated / node_total;
+					current_progress.notes = _node_translated / node_total;
 					break;
 				
 			}
@@ -230,12 +239,13 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 			if(_key == "") continue;
 			
 			var _hh   = hg;
-			var _valB = _base[$ _key];
-			var _valC = _curr[$ _key];
+			var _valB = _base == undefined? undefined : _base[$ _key];
+			var _valC = _curr == undefined? undefined : _curr[$ _key];
 			var _draw = _y > -hg - ui(8) && _y < _h + ui(8);
+			var _miss = _curr != undefined && _valC == undefined;
 			
 			if(_draw) {
-				draw_set_text(f_p3, fa_left, fa_top, _valC == undefined? COLORS._main_value_negative : COLORS._main_text_sub);
+				draw_set_text(f_p3, fa_left, fa_top, _miss? COLORS._main_value_negative : COLORS._main_text_sub);
 				draw_text(_x + ui(8), _y, _key);
 			}
 			
@@ -266,8 +276,63 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		var hov = sc_content.hover;
 		var foc = sc_content.active;
 		
+		var _h = 0;
+		var hg = ui(20);
+		
+		switch(pages[page]) {
+			case "config" : file_current = data_config; file_base = base_config; break;
+			case "words"  : file_current = data_text;   file_base = base_text;   break;
+			case "nodes"  : file_current = data_node;   file_base = base_node;   break;
+		}
+		
 		BLEND_ADD
-		var _h  = drawStruct(file_base, file_current, 0, _y, ww, hh, _m, hov, foc);
+		switch(pages[page]) {
+			case "config" : case "words" : case "nodes" :
+				_h  = drawStruct(file_base, file_current, 0, _y, ww, hh, _m, hov, foc);
+				break;
+				
+			case "notes" : 
+				for( var i = 0, n = array_length(base_notes); i < n; i++ ) {
+					var _note = base_notes[i];
+					var _fnam = filename_name(_note);
+					var _tnam = $"{DIRECTORY}Locale/{current_local}/notes/{_fnam}";
+					var _fhas = file_exists(_tnam);
+					
+					draw_set_text(f_p3, fa_left, fa_top, _fhas? COLORS._main_text_sub : COLORS._main_value_negative);
+					draw_text(ui(8), _y, filename_name_only(_note));
+				
+					if(i % 2) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, _y, ww, hg, COLORS._main_icon, .05);
+					
+					_y += hg;
+					_h += hg;
+				}
+				break;
+				
+			case "fonts":
+				var lw = ww / 3;
+				
+				var yy = 0;
+				for( var i = 0, n = array_length(current_fonts); i < n; i++ ) {
+					var _font = current_fonts[i];
+					var _fnam = filename_name(_font);
+					
+					draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+					draw_text(ui(8), yy, _fnam);
+					
+					if(i % 2) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, yy, lw - ui(8), hg, COLORS._main_icon, .05);
+					
+					yy += hg;
+					_h += hg;
+				}
+				
+				draw_sprite_stretched_ext(THEME.box_r2, 0, lw - ui(2), 0, ui(4), hh, CDEF.main_dkblack, .25);
+				
+				var yy = _y;
+				if(fonts_data != undefined) {
+					_h = drawStruct(fonts_data, fonts_data, lw + ui(8), yy, ww - lw - ui(8), hh, _m, hov, foc);
+				}
+				break;
+		}
 		BLEND_NORMAL
 		
 		return _h;
@@ -302,56 +367,61 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		var fh = ui(48);
 		var bh = ui(24);
 		
-		for( var i = 0, n = array_length(file_lists); i < n; i++ ) {
-			var _file = file_lists[i];
-			var _path = $"{dirr}/{_file}";
+		for( var i = 0, n = array_length(pages); i < n; i++ ) {
+			var _page = pages[i];
 			
-			var fh  = i? ui(48) + bh : ui(28);
+			switch(_page) {
+				case "config" : 
+				case "fonts"  : fh = ui(28); break;
+				
+				case "words"  : 
+				case "nodes"  : 
+				case "notes"  : fh = ui(48) + bh; break;
+			}
+			
 			var hov = pHOVER && point_in_rectangle(mx, my, fx, fy, fx + fw, fy + fh);
 			
 			draw_sprite_stretched_ext(THEME.box_r2_clr, 0, fx, fy, fw, fh, COLORS._main_icon_light);
 			
 			if(hov && mouse_lpress(pFOCUS))
-				setFile(_file);
+				page = i;
 			
 			draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text);
-			draw_text(fx + ui(8), fy + ui(24), _file);
+			draw_text(fx + ui(8), fy + ui(24), _page);
 			
-			if(i == 0) { 
-				if(file_select == _file) 
-				     draw_sprite_stretched_ext(THEME.box_r2, 1, fx, fy, fw, fh, COLORS._main_accent, 1);
-				else draw_sprite_stretched_add(THEME.box_r2, 1, fx, fy, fw, fh, COLORS._main_icon,  .1 + hov * .2);
-				fy += fh + ui(4); 
-				continue; 
+			switch(_page) {
+				case "words"  : 
+				case "nodes"  : 
+				case "notes"  : 
+					var _prg = current_progress[$ _page] ?? 0;
+					var _pw = fw - ui(16);
+					var _ph = ui(8);
+					
+					var _px = fx + ui(8);
+					var _py = fy + ui(40) - _ph;
+					
+					draw_sprite_stretched(THEME.progress_bar, 0, _px, _py, _pw, _ph);
+					draw_sprite_stretched(THEME.progress_bar, 1, _px, _py, _pw * _prg, _ph);
+					
+					draw_set_text(f_p3, fa_right, fa_bottom, _prg >= 1? COLORS._main_value_positive : COLORS._main_text_sub);
+					draw_text(fx + fw - ui(8), fy + ui(24), $"{_prg * 100}%");
+					
+					var bw = fw / 2;
+					var bx = fx;
+					var by = fy + ui(48);
+					
+					var bt = __txt("Export Missing Text");
+					if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, pHOVER, pFOCUS, bt, THEME.dFile_save) == 2) 
+						exportMissing(_page);
+					
+					bx += bw + 1;
+					var bt = __txt("Import Missing Text");
+					if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, pHOVER, pFOCUS, bt, THEME.dFile_load) == 2) 
+						importMissing(_page);
+					break;
 			}
 			
-			var _prg = current_progress[i];
-			var _pw = fw - ui(16);
-			var _ph = ui(8);
-			
-			var _px = fx + ui(8);
-			var _py = fy + ui(40) - _ph;
-			
-			draw_sprite_stretched(THEME.progress_bar, 0, _px, _py, _pw, _ph);
-			draw_sprite_stretched(THEME.progress_bar, 1, _px, _py, _pw * _prg, _ph);
-			
-			draw_set_text(f_p3, fa_right, fa_bottom, _prg >= 1? COLORS._main_value_positive : COLORS._main_text_sub);
-			draw_text(fx + fw - ui(8), fy + ui(24), $"{_prg * 100}%");
-			
-			var bw = fw / 2;
-			var bx = fx;
-			var by = fy + ui(48);
-			
-			var bt = __txt("Export Missing Text");
-			if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, pHOVER, pFOCUS, bt, THEME.dFile_save) == 2) 
-				exportMissing(_file);
-			
-			bx += bw + 1;
-			var bt = __txt("Import Missing Text");
-			if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, pHOVER, pFOCUS, bt, THEME.dFile_load) == 2) 
-				importMissing(_file);
-			
-			if(file_select == _file) 
+			if(page == i) 
 			     draw_sprite_stretched_ext(THEME.box_r2, 1, fx, fy, fw, fh, COLORS._main_accent, 1);
 			else draw_sprite_stretched_add(THEME.box_r2, 1, fx, fy, fw, fh, COLORS._main_icon,  .1 + hov * .2);
 			
