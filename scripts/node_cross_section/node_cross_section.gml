@@ -29,6 +29,8 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Output",	 false], 4, 3, 
 	];
 	
+	////- Node
+	
 	attribute_surface_depth();
 		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
@@ -63,16 +65,19 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _iaxs = _data[1];
-		var _posi = _data[2];
-		var _aa   = _data[3];
-		var _mode = _data[4];
+		#region data
+			var _surf = _data[0];
+			var _iaxs = _data[1];
+			var _posi = _data[2];
+			var _aa   = _data[3];
+			var _mode = _data[4];
+		#endregion
 		
 		var _dim  = surface_get_dimension(_surf);
 		_outSurf  = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_shader(_outSurf, sh_cross_section);
+			gpu_set_tex_filter(_aa);
 			shader_set_f("dimension", _dim);
 			shader_set_i("iAxis",	  _iaxs);
 			shader_set_f("position",  _posi);
@@ -80,6 +85,7 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_i("mode",	  _mode);
 			
 			draw_surface_safe(_surf);
+			gpu_set_tex_filter(false);
 		surface_reset_shader();
 		
 		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
