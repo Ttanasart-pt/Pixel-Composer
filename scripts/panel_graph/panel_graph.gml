@@ -34,6 +34,7 @@
     function panel_graph_uninstance()              { CALL("graph_uninstance");          PANEL_GRAPH.doGroupRemoveInstance();  }
     function panel_graph_update()                  { CALL("graph_update");              PANEL_GRAPH.doGroupUpdate();          }
 	
+    function panel_graph_canvas_send()             { CALL("graph_canvas_send");         PANEL_GRAPH.setCurrentCanvasSend();   }
     function panel_graph_canvas_copy()             { CALL("graph_canvas_copy");         PANEL_GRAPH.setCurrentCanvas();       }
     function panel_graph_canvas_blend()            { CALL("graph_canvas_blend");        PANEL_GRAPH.setCurrentCanvasBlend();  }
     
@@ -163,10 +164,15 @@
         registerFunction(g, "Toggle Control",        "",  n, panel_graph_toggle_control      ).setMenu("graph_toggle_control")
         registerFunction(g, "Toggle Avoid Label",    "",  n, panel_graph_toggle_avoid_label  ).setMenu("graph_toggle_avoid_label")
         
-        registerFunction(g, "Copy to Canvas",        "C", c|s, panel_graph_canvas_copy       ).setMenu("graph_canvas_copy")
+        registerFunction(g, "Send to Canvas",        "C", c|s, panel_graph_canvas_send       ).setMenu("graph_canvas_send")
+        registerFunction(g, "Copy to Canvas",        "",  n,   panel_graph_canvas_copy       ).setMenu("graph_canvas_copy")
         registerFunction(g, "Blend Canvas",          "C", c|a, panel_graph_canvas_blend      ).setMenu("graph_canvas_blend")
         registerFunction(g, "Canvas",                "",  n,                    
-        	function(d) /*=>*/ {return submenuCall(d, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ])}).setMenu("graph_canvas", noone, true)
+        	function(d) /*=>*/ {return submenuCall(d, [ 
+        		MENU_ITEMS.graph_canvas_send, 
+        		MENU_ITEMS.graph_canvas_copy, 
+        		MENU_ITEMS.graph_canvas_blend 
+    		])}).setMenu("graph_canvas", noone, true)
 		
         registerFunction(g, "Rename",                vk_f2,     n, panel_graph_rename        ).setMenu("graph_rename")
         registerFunction(g, "Delete (break)",        vk_delete, s, panel_graph_delete_break  ).setMenu("graph_delete_break",    THEME.cross)
@@ -831,12 +837,39 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y).skipDefault();
         var _dim    = surface_get_dimension(surf[0]);
         
+        _canvas.inputs[0].attributes.use_project_dimension = false;
         _canvas.inputs[0].setValue(_dim);
         _canvas.attributes.dimension = _dim;
         _canvas.attributes.frames    = array_length(surf);
         _canvas.canvas_surface       = surface_array_clone(surf);
         
         _canvas.apply_surfaces();
+    }
+
+    function setCurrentCanvasSend(_node = getFocusingNode()) {
+        if(!_node) return;
+    		
+        var _outp = -1;
+        var surf  = -1;
+        
+        for( var i = 0; i < array_length(_node.outputs); i++ ) {
+            if(_node.outputs[i].type != VALUE_TYPE.surface) continue;
+            
+            _outp = _node.outputs[i];
+             surf = _outp.getValue();
+            break;
+        }
+    	
+        if(_outp == -1) return;
+        if(!is_array(surf)) surf = [ surf ];
+        
+        var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y).skipDefault();
+        var _dim    = surface_get_dimension(surf[0]);
+        
+        _canvas.inputs[0].attributes.use_project_dimension = false;
+        _canvas.inputs[0].setValue(_dim);
+        _canvas.inputs[8].setFrom(_outp);
+        _canvas.attributes.dimension = _dim;
     }
 
     function setCurrentCanvasBlend(_node = getFocusingNode()) {
@@ -861,7 +894,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
         var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64).skipDefault();
     
-        _canvas.inputs[0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
+        _canvas.inputs[0].attributes.use_project_dimension = false;
+        _canvas.inputs[0].setValue(surface_get_dimension(surf));
         _canvas.inputs[5].setValue(true);
     
         var _blend = nodeBuild("Node_Blend", _node.x + _node.w + 64, _node.y).skipDefault();

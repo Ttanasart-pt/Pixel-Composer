@@ -335,6 +335,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.mirror        = [ false, false, false ];
 		tool_attribute.drawLayer     = 0;
 		tool_attribute.pickColor     = c_white;
+		tool_attribute.stamp         = false;
 		
 		tool_attribute.size          = 1;
 		tool_attribute.pressure      = false;
@@ -413,6 +414,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 										.setTooltip("Pen Pressure Settings...")
 										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon), true);
 		
+		tool_stamp_bg       = new checkBox( function() /*=>*/ { tool_attribute.stamp = !tool_attribute.stamp; });
+		
 		tool_thrs_edit      = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.thres = clamp(v, 0, 1); })
 									.setSlideRange(0, 1)
 									.setVAlign(fa_center)
@@ -441,6 +444,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						      [ "",                   tool_drawLayer_edit, "drawLayer", tool_attribute ],
 						      [ "",                   tool_mirror_edit,    "mirror",    tool_attribute ] ];
 		tool_size         =   [ "",                   tool_size_edit,      "size",      tool_attribute, "Brush Size" ];
+		tool_bg_stamp     =   [ THEME.stamp_16,       tool_stamp_bg,       "stamp",     tool_attribute, "Stamp BG"   ];
 		tool_thrs         =   [ THEME.tool_threshold, tool_thrs_edit,      "thres",     tool_attribute, "Threshold"  ];
 		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",  tool_attribute, "Fill Type"  ];
 		tool_fill_bg      =   [ THEME.tool_bg,        tool_fill_use_bg,    "useBG",     tool_attribute, "Use BG"     ];
@@ -477,6 +481,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
 				.setSettings(tool_settings)
 				.setSetting(tool_size)
+				.setSetting(tool_bg_stamp)
 				.setToolObject(tool_brush),
 			
 			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser)
@@ -988,7 +993,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _can = getCanvasSurface();
 		var _drw = drawing_surface;
 		var _dim = attributes.dimension;
+		var _sub = isUsingTool("Eraser");
 		var _tmp;
+		
+		if(!_sub && tool_attribute.stamp) {
+			var _bgSrf = getInputData( 8);
+			if(is_just_surface(_bgSrf)) {
+				surface_set_target(_drw);
+					BLEND_MULTIPLY
+					draw_surface(_bgSrf, 0, 0);
+					BLEND_NORMAL
+				surface_reset_target();
+			}
+		}
 		
 		if(selection.is_selected) {
 			var _tmp = surface_create(surface_get_width_safe(selection.selection_mask), surface_get_height_safe(selection.selection_mask));
@@ -1044,7 +1061,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		surface_set_shader(_drawnSurface, sh_canvas_apply_draw);
 			shader_set_i("drawLayer", tool_attribute.drawLayer);
-			shader_set_i("eraser",    isUsingTool("Eraser"));
+			shader_set_i("eraser",    _sub);
 			shader_set_f("channels",  tool_attribute.channel);
 			shader_set_f("alpha",     _applyAlpha? _color_get_alpha(CURRENT_COLOR) : 1);
 			shader_set_f("mirror",    tool_attribute.mirror);
