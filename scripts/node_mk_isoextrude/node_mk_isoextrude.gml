@@ -154,9 +154,12 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(_surfTu) {
 			surface_set_shader(temp_surface[1], sh_mk_isoextrude_transform);
 				draw_rectangle_pr_surf(x0, y0, x1, y1, x2, y2, x3, y3, _surfT);
+				
+				gpu_set_colorwriteenable(0,0,0,1); 
 				BLEND_MULTIPLY
 				draw_rectangle_pr_surf(x0, y0, x1, y1, x2, y2, x3, y3, _surf);
 				BLEND_NORMAL
+				gpu_set_colorwriteenable(1,1,1,1);
 			surface_reset_shader();
 			
 		} else {
