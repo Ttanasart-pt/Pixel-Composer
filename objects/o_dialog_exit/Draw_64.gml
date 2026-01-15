@@ -1,5 +1,6 @@
 /// @description init
 if !ready exit;
+WIDGET_TAB_BLOCK = true;
 
 #region base UI
 	var lowest = true;

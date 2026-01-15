@@ -3,7 +3,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	setDimension(96, 48);
 	setDrawIcon(s_node_mesh_create_path);
 	
-	newInput(0, nodeValue_PathNode(    "Path" ));
+	newInput(0, nodeValue_PathNode(    "Path"         ));
 	newInput(1, nodeValue_Int(         "Sample",    8 ));
 	newInput(2, nodeValue_Enum_Scroll( "Algorithm", 0, [ "Ear Clipping", "Convex Fan", "Delaunay" ] ));
 	

@@ -83,7 +83,7 @@
 						continue;
 					
 					draw_set_color(COLORS.axis[i]);
-					if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < 5)
+					if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < ui(6))
 						draw_line_round(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
 					else 
 						draw_line_round_arrow(cx, cy, cx + ga[i].X, cy + ga[i].Y, th, 3);
@@ -593,7 +593,7 @@
 						continue;
 					
 					draw_set_color(COLORS.axis[i]);
-					if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < 5)
+					if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < ui(6))
 						draw_line_round(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
 					else 
 						draw_line_round_arrow_block(cx, cy, cx + ga[i].X, cy + ga[i].Y, th, 3);
@@ -797,6 +797,222 @@
 						
 					drag_val = [ _sca[0], _sca[1], _sca[2] ];
 					drag_original = new __vec3(_sca);
+				}
+			}
+		}
+	}
+
+	function d3d_transform_tool_side(_node) : ToolObject() constructor {
+		activeKeyboard = false;
+		setNode(_node);
+		
+		drag_axis  = noone;
+		drag_sv    = 0;
+		drag_delta = 0;
+		drag_dist  = 0;
+		
+		drag_ppos  = 0; drag_cpos  = 0; drag_opos = 0;
+		drag_psca  = 0; drag_csca  = 0; drag_osca = 0;
+		
+		drag_mx = 0; drag_my = 0;
+		drag_px = 0; drag_py = 0;
+		drag_cx = 0; drag_cy = 0;
+		drag_rot_axis = new BBMOD_Quaternion();
+		axis_hover    = noone;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			activeKeyboard = true;
+		}
+		
+		function drawOverlay3D(object, active, _mx, _my, _snx, _sny, _params) {
+			#region ---- main ----
+				var _pos  = node.getInputData(0);
+				var _sca  = node.getInputData(2);
+				
+				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
+				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
+			
+				var _camera = _params.scene.camera;
+				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
+				var _axis   = node.tool_attribute.context;
+				
+				var _hover     = noone;
+				var _hoverDist = 10;
+				var th;
+				
+				var hover_cx = 0;
+				var hover_cy = 0;
+				
+				var ga   = [];
+				var size = 64;
+				var hs = size / 2;
+				var sq = 8;
+			#endregion
+				
+			#region display
+				ga[0] = new BBMOD_Vec3(-size, 0, 0);
+				ga[1] = new BBMOD_Vec3(0, -size, 0);
+				ga[2] = new BBMOD_Vec3(0, 0, -size);
+				ga[3] = new BBMOD_Vec3( size, 0, 0);
+				ga[4] = new BBMOD_Vec3(0,  size, 0);
+				ga[5] = new BBMOD_Vec3(0, 0,  size);
+				
+				for( var i = 0; i < 6; i++ ) {
+					     if(_axis == 0) ga[i] = _qview.Rotate(_qinv.Rotate(_qrot.Rotate(ga[i])));
+					else if(_axis == 1) ga[i] = _qview.Rotate(_qinv.Rotate(ga[i]));
+					
+					th = 2 + (axis_hover == i || drag_axis == i);
+					if(drag_axis != noone && drag_axis != i) continue;
+					
+					var _pp = [_pos[0], _pos[1], _pos[2]];
+					if(i < 3) _pp[i%3] += _sca[i%3] / 2;
+					else      _pp[i%3] -= _sca[i%3] / 2;
+					
+					var _vpos    = new __vec3( _pp[0], _pp[1], _pp[2] );
+					var _posView = _camera.worldPointToViewPoint(_vpos);
+					var cx = _posView.x;
+					var cy = _posView.y;
+					
+					draw_set_color(COLORS.axis[i%3]);
+					if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < ui(6))
+						draw_line_round(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
+					else 
+						draw_line_round_arrow_block(cx, cy, cx + ga[i].X, cy + ga[i].Y, th, 3);
+					
+					var _d = distance_to_line(_mx, _my, cx, cy, cx + ga[i].X, cy + ga[i].Y);
+					if(_d < _hoverDist) {
+						_hover     = i;
+						_hoverDist = _d;
+						
+						hover_cx = cx;
+						hover_cy = cy;
+					}
+				}
+				
+				axis_hover = _hover;
+			#endregion display
+			
+			if(drag_axis != noone) { // editing
+				var mAdj, nor, prj, pln;
+				
+				if(!MOUSE_WRAPPING) {
+					if(KEYBOARD_NUMBER == undefined) {
+						drag_mx += _mx - drag_px;
+						drag_my += _my - drag_py;
+							
+						var ray = _camera.viewPointToWorldRay(drag_mx, drag_my);
+						var pos = [ drag_cpos[0], drag_cpos[1], drag_cpos[2] ];
+						var sca = [ drag_csca[0], drag_csca[1], drag_csca[2] ];
+						
+						switch(drag_axis) {
+							case 0 : nor = new __vec3(0, 1, 0); prj = new __vec3(1, 0, 0); break;
+							case 1 : nor = new __vec3(0, 0, 1); prj = new __vec3(0, 1, 0); break;
+							case 2 : nor = new __vec3(1, 0, 0); prj = new __vec3(0, 0, 1); break;
+							
+							case 3 : nor = new __vec3(0, -1, 0); prj = new __vec3(1, 0, 0); break;
+							case 4 : nor = new __vec3(0, 0, -1); prj = new __vec3(0, 1, 0); break;
+							case 5 : nor = new __vec3(-1, 0, 0); prj = new __vec3(0, 0, 1); break;
+						}
+							
+						if(_axis == 0) {
+							nor = _qrot.Rotate(nor);
+							prj = _qrot.Rotate(prj);
+						}
+							
+						pln  = new __plane(drag_opos, nor);
+						mAdj = d3d_intersect_ray_plane(ray, pln);
+						
+						if(drag_ppos != undefined) {
+							var _diff = mAdj.subtract(drag_ppos);
+							var _dist = _diff.dot(prj);
+							
+							if(drag_axis < 3) {
+								pos[0] += prj.x * _dist / 2;
+								pos[1] += prj.y * _dist / 2;
+								pos[2] += prj.z * _dist / 2;
+								
+								sca[0] += prj.x * _dist;
+								sca[1] += prj.y * _dist;
+								sca[2] += prj.z * _dist;
+								
+							} else {
+								pos[0] += prj.x * _dist / 2;
+								pos[1] += prj.y * _dist / 2;
+								pos[2] += prj.z * _dist / 2;
+								
+								sca[0] -= prj.x * _dist;
+								sca[1] -= prj.y * _dist;
+								sca[2] -= prj.z * _dist;
+								
+							}
+							
+							if(node.inputs[0].setValue(value_snap(pos, _snx))) UNDO_HOLDING = true;
+							if(node.inputs[2].setValue(value_snap(sca, _snx))) UNDO_HOLDING = true;
+						}
+						
+						drag_cpos = [ pos[0], pos[1], pos[2] ];
+						drag_csca = [ sca[0], sca[1], sca[2] ];
+						drag_ppos = mAdj;
+						
+					} else {
+						var pos = [ drag_opos.x, drag_opos.y, drag_opos.z ];
+						var sca = [ drag_osca.x, drag_osca.y, drag_osca.z ];
+						var _dist = KEYBOARD_NUMBER;
+						
+						if(drag_axis < 3) {
+							pos[drag_axis] += _dist / 2;
+							sca[drag_axis] += _dist;
+							
+						} else {
+							pos[drag_axis] += _dist / 2;
+							sca[drag_axis] -= _dist;
+							
+						}
+						
+						if(node.inputs[0].setValue(pos)) UNDO_HOLDING = true;
+						if(node.inputs[2].setValue(sca)) UNDO_HOLDING = true;
+					}
+				}
+					
+				setMouseWrap();
+				drag_px = _mx;
+				drag_py = _my;
+				
+				if(mouse_release(mb_left)) {
+					drag_axis    = noone;
+					UNDO_HOLDING = false;
+				}
+				
+				var _tooltipText = "Dragging";
+				switch(drag_axis) {
+					case 0 : _tooltipText += " X"; break;
+					case 1 : _tooltipText += " Y"; break;
+					case 2 : _tooltipText += " Z"; break;
+				}
+				
+				if(KEYBOARD_NUMBER != undefined)
+					_tooltipText += $" [{KEYBOARD_NUMBER}]";
+				
+				PANEL_PREVIEW.setActionTooltip(_tooltipText);
+				
+			} else {
+				if((_hover != noone && mouse_press(mb_left))) {
+					drag_axis = _hover;
+					drag_mx	= _mx; drag_my = _my;
+					drag_px = _mx; drag_py = _my;
+					
+					drag_cx = hover_cx; 
+					drag_cy = hover_cy;
+					
+					drag_cpos = _pos; drag_ppos = undefined; drag_opos = new __vec3(_pos);
+					drag_csca = _sca; drag_psca = undefined; drag_osca = new __vec3(_sca);
 				}
 			}
 		}

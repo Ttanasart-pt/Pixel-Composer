@@ -1487,8 +1487,8 @@ function Panel_Preview() : PanelContent() constructor {
             var _tool_font = f_p3;
             
             switch(instanceof(wdg)) {
-                case "textBox"       : tolw = max(wdg.minWidth, ui(32)) + (wdg.side_button != noone) * (tolh + ui(8));          break;
-                case "vectorBox"     : tolw = max(wdg.minWidth, ui(32)) * wdg.size;                                             break;
+                case "textBox"       : tolw = max(wdg.minWidth, ui(40)) + (wdg.side_button != noone) * (tolh + ui(8));          break;
+                case "vectorBox"     : tolw = max(wdg.minWidth, ui(40)) * wdg.size;                                             break;
                 case "buttonGroup"   : 
                 case "checkBoxGroup" : tolw = tolh * wdg.size;                                                                  break;
                 case "checkBox"      : tolw = tolh;                                                                             break;
@@ -1497,6 +1497,9 @@ function Panel_Preview() : PanelContent() constructor {
                 case "buttonAnchor"  : tolw = ui(28);                                                                           break;
             }
             
+            if(ttip != "" && pHOVER && point_in_rectangle(mx, my, tolx, toly, tolx + tolw, toly + tolh))
+    			TOOLTIP = ttip;
+            			
             var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key], {}, [ mx, my ], x, y)
             				.setS(tolh)
             				.setFont(_tool_font);
@@ -2106,8 +2109,8 @@ function Panel_Preview() : PanelContent() constructor {
         if(_node == noone) return;
         
         switch(d3_active) {
-            case NODE_3D.polygon :    draw3DPolygon(_node);    break;
-            case NODE_3D.sdf :        draw3DSdf(_node);        break;
+            case NODE_3D.polygon : draw3DPolygon(_node); break;
+            case NODE_3D.sdf :     draw3DSdf(_node);     break;
         }
     }
     
@@ -2522,12 +2525,23 @@ function Panel_Preview() : PanelContent() constructor {
 	            var _ovy = cy;
 	            var _ovs = canvas_s;
 	            
-	            var _prevNode = getNodePreview();
-	            if(_prevNode != _node && is(_prevNode, Node)) {
-	            	var _trans = _prevNode.drawOverlayChainTransform(_node);
-	            	_ovx += _trans[0] * _ovs;
-					_ovy += _trans[1] * _ovs;
-					_ovs *= _trans[2];
+	            if(d3_active == NODE_3D.polygon) {
+	            	var _node_prev = _node.getPreviewValues();
+	            	var _node_pw   = surface_get_width_safe(_node_prev);
+	            	var _node_ph   = surface_get_height_safe(_node_prev);
+	            	
+					_ovs = ui(128) / max(_node_pw, _node_ph);
+	            	_ovx = w - tool_side_draw_r * toolbar_width - ui(8) - _node_pw * _ovs;
+					_ovy = h - toolbar_height                   - ui(8) - _node_ph * _ovs;
+	            	
+	            } else {
+		            var _prevNode = getNodePreview();
+		            if(_prevNode != _node && is(_prevNode, Node)) {
+		            	var _trans = _prevNode.drawOverlayChainTransform(_node);
+		            	_ovx += _trans[0] * _ovs;
+						_ovy += _trans[1] * _ovs;
+						_ovs *= _trans[2];
+		            }
 	            }
 	            
 	            hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, _params);

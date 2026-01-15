@@ -169,7 +169,6 @@ function mouse_lpress(focus = true, bypass = false) {
 function mouse_lrelease(focus = true, bypass = false) {
 	INLINE
 	if(!focus || PEN_RIGHT_RELEASE) return false;
-	if(PEN_RELEASED)                return true;
 	
 	return PEN_RELEASED || MOUSE_EVENT.lrelease;
 }

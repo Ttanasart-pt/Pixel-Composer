@@ -21,8 +21,10 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	input_display_list = [
 		__d3d_input_list_mesh,      i+9, i+7, i+8, 
 		__d3d_input_list_transform, 
-		["Material", false],        i+0, i+1, i+2, i+3, i+4, i+5, i+6, 
-	]
+		[ "Material", false ],      i+0, i+1, i+2, i+3, i+4, i+5, i+6, 
+	];
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { 
 		var i = in_mesh;

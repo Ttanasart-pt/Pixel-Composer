@@ -21,6 +21,7 @@ function canvas_brush() constructor {
 		next_dist   = 0;
 		dist_min    = 1;
 		dist_max    = 1;
+		smooth      = false;
 		
 		direction   = 0;
 		auto_rotate = false;

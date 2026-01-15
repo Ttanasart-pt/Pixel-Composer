@@ -3,8 +3,8 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 	
 	brush_resizable = true;
 	
-	mouse_cur_x  = 0;
-	mouse_cur_y  = 0;
+	mouse_cur_x  = 0; mouse_cur_x_raw = undefined;
+	mouse_cur_y  = 0; mouse_cur_y_raw = undefined;
 	mouse_cur_tx = 0;
 	mouse_cur_ty = 0;
 	mouse_pre_x  = 0;
@@ -99,8 +99,24 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 	}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		mouse_cur_x = round((_mx - _x) / _s - 0.5);
-		mouse_cur_y = round((_my - _y) / _s - 0.5);
+		var mx = round((_mx - _x) / _s - 0.5);
+		var my = round((_my - _y) / _s - 0.5);
+		
+		if(mouse_holding && brush.smooth > 0) {
+			mouse_cur_x_raw = mouse_cur_x_raw == undefined? mx : lerp_float(mouse_cur_x_raw, mx, 1 + brush.smooth);
+			mouse_cur_y_raw = mouse_cur_y_raw == undefined? my : lerp_float(mouse_cur_y_raw, my, 1 + brush.smooth);
+			
+			mouse_cur_x = round(mouse_cur_x_raw);
+			mouse_cur_y = round(mouse_cur_y_raw);
+			
+		} else {
+			mouse_cur_x_raw = undefined;
+			mouse_cur_y_raw = undefined;
+				
+			mouse_cur_x = round(mx);
+			mouse_cur_y = round(my);
+		}
+		
 		mouse_line_drawing = false;
 		
 		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) {
@@ -145,8 +161,8 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		brush_warp = warp_block_x != warp_block_px || warp_block_y != warp_block_py;
 		
 		if(brush.draw3D) {
-			brush_warp = brush_warp || abs(mouse_cur_x - mouse_pre_x) >= (draw_w - 2)
-			                        || abs(mouse_cur_y - mouse_pre_y) >= (draw_h - 2)
+			brush_warp = brush_warp || abs(mouse_cur_x - mouse_pre_x) >= draw_w * .5
+			                        || abs(mouse_cur_y - mouse_pre_y) >= draw_h * .5
 			                        || !active || !pactive;
 		}
 		

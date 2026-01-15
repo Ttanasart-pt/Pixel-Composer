@@ -34,11 +34,13 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		tool_object_pos = new d3d_transform_tool_position(self);
 		tool_object_rot = new d3d_transform_tool_rotation(self);
 		tool_object_sca = new d3d_transform_tool_scale(self);
-		
-		tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform, "Node_3D_Object" ).setToolObject(tool_object_pos);
-		tool_rot = new NodeTool( "Rotate",    THEME.tools_3d_rotate,    "Node_3D_Object" ).setToolObject(tool_object_rot);
-		tool_sca = new NodeTool( "Scale",     THEME.tools_3d_scale,     "Node_3D_Object" ).setToolObject(tool_object_sca);
-		tools    = [ tool_pos, tool_rot, tool_sca ];
+		tool_object_sid = new d3d_transform_tool_side(self);
+	
+		tool_pos  = new NodeTool( "Transform",   THEME.tools_3d_transform, "Node_3D_Object" ).setToolObject(tool_object_pos);
+		tool_rot  = new NodeTool( "Rotate",      THEME.tools_3d_rotate,    "Node_3D_Object" ).setToolObject(tool_object_rot);
+		tool_sca  = new NodeTool( "Scale",       THEME.tools_3d_scale,     "Node_3D_Object" ).setToolObject(tool_object_sca);
+		tool_side = new NodeTool( "Side Adjust", THEME.tools_3d_side,      "Node_3D_Object" ).setToolObject(tool_object_sid);
+		tools = [ tool_pos, tool_rot, tool_sca, -1, tool_side ];
 		
 		tool_attribute.context = 0;
 		tool_axis_edit = new scrollBox([ "local", "global" ], function(val) /*=>*/ { tool_attribute.context = val; });
@@ -59,9 +61,10 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		var _rpos = inputs[0].getValue();
 		var _vpos = new __vec3( _rpos[0], _rpos[1], _rpos[2] );
 		
-		if(isUsingTool("Transform")) tool_object_pos.drawOverlay3D(0, object, _vpos, active, _mx, _my, _snx, _sny, _params);
-		if(isUsingTool("Rotate"))    tool_object_rot.drawOverlay3D(1, object, _vpos, active, _mx, _my, _snx, _sny, _params);
-		if(isUsingTool("Scale"))     tool_object_sca.drawOverlay3D(2, object, _vpos, active, _mx, _my, _snx, _sny, _params);
+		if(isUsingTool("Transform"))   tool_object_pos.drawOverlay3D(0, object, _vpos, active, _mx, _my, _snx, _sny, _params);
+		if(isUsingTool("Rotate"))      tool_object_rot.drawOverlay3D(1, object, _vpos, active, _mx, _my, _snx, _sny, _params);
+		if(isUsingTool("Scale"))       tool_object_sca.drawOverlay3D(2, object, _vpos, active, _mx, _my, _snx, _sny, _params);
+		if(isUsingTool("Side Adjust")) tool_object_sid.drawOverlay3D(object, active, _mx, _my, _snx, _sny, _params);
 		
 		onDrawOverlay3D(active, _mx, _my, _snx, _sny, _params);
 	} 

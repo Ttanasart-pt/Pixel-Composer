@@ -24,14 +24,6 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 			cola(c_black, 1),
 		),
 		
-		["Passes", false],
-		new __Panel_Linear_Setting_Item( __txt("Preview Pass"),
-			new scrollBox([ "Rendered", "Normal", "Depth" ], function(index) /*=>*/ { preview.d3_preview_channel = index; }),
-			function(   ) /*=>*/   {return preview.d3_preview_channel},
-			function(val) /*=>*/ { preview.d3_preview_channel = val; },
-			0,
-		),
-		
 		["Lighting", false],
 		new __Panel_Linear_Setting_Item( __txt("Preview Light"),
 			new checkBox(function() /*=>*/ { preview.d3_scene_light_enabled = !preview.d3_scene_light_enabled; }),
@@ -86,6 +78,27 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 			function(val) /*=>*/ { preview.d3_scene_light0.shadow_active = val; },
 			false,
 		),
+		new __Panel_Linear_Setting_Item( __txt("Gamma Correct"),
+			new checkBox(function() /*=>*/ { scene.gammaCorrection = !scene.gammaCorrection; }),
+			function(   ) /*=>*/   {return scene.gammaCorrection},
+			function(val) /*=>*/ { scene.gammaCorrection = val; },
+			true,
+		),
+		
+		["Camera", false],
+		new __Panel_Linear_Setting_Item( __txt("Projection"),
+			new scrollBox([ "Perspective", "Orthographic" ], function(val) /*=>*/ { 
+				preview.d3_camera.projection   = val; 
+				preview.d3_cam_projection_lock = val; 
+			}),
+			
+			function(   ) /*=>*/ {return preview.d3_camera.projection},
+			function(val) /*=>*/ { 
+				preview.d3_camera.projection   = val; 
+				preview.d3_cam_projection_lock = val; 
+			},
+			0,
+		),
 		new __Panel_Linear_Setting_Item( __txt("View Plane"),
 			new vectorBox(2, function(value, index) /*=>*/ { 
 				if(index == 0)		preview.d3_camera.view_near = value;
@@ -101,11 +114,13 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 			function(val) /*=>*/ { scene.cull_mode = val; },
 			2,
 		),
-		new __Panel_Linear_Setting_Item( __txt("Gamma Correct"),
-			new checkBox(function() /*=>*/ { scene.gammaCorrection = !scene.gammaCorrection; }),
-			function(   ) /*=>*/   {return scene.gammaCorrection},
-			function(val) /*=>*/ { scene.gammaCorrection = val; },
-			true,
+		
+		["Passes", false],
+		new __Panel_Linear_Setting_Item( __txt("Preview Pass"),
+			new scrollBox([ "Rendered", "Normal", "Depth" ], function(index) /*=>*/ { preview.d3_preview_channel = index; }),
+			function(   ) /*=>*/   {return preview.d3_preview_channel},
+			function(val) /*=>*/ { preview.d3_preview_channel = val; },
+			0,
 		),
 		
 		new __Panel_Linear_Setting_Item( __txt("Normal"),

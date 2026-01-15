@@ -414,6 +414,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 										.setTooltip("Pen Pressure Settings...")
 										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon), true);
 		
+		tool_smooth_edit    = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { brush.smooth = max(0, v); })
+									.setSlideType(true)
+									.setVAlign(fa_center)
+									.setFont(f_p3)
+		
 		tool_stamp_bg       = new checkBox( function() /*=>*/ { tool_attribute.stamp = !tool_attribute.stamp; });
 		
 		tool_thrs_edit      = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.thres = clamp(v, 0, 1); })
@@ -444,6 +449,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						      [ "",                   tool_drawLayer_edit, "drawLayer", tool_attribute ],
 						      [ "",                   tool_mirror_edit,    "mirror",    tool_attribute ] ];
 		tool_size         =   [ "",                   tool_size_edit,      "size",      tool_attribute, "Brush Size" ];
+		tool_smooth       =   [ "",                   tool_smooth_edit,    "smooth",    brush,          "Smoothness" ];
 		tool_bg_stamp     =   [ THEME.stamp_16,       tool_stamp_bg,       "stamp",     tool_attribute, "Stamp BG"   ];
 		tool_thrs         =   [ THEME.tool_threshold, tool_thrs_edit,      "thres",     tool_attribute, "Threshold"  ];
 		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",  tool_attribute, "Fill Type"  ];
@@ -481,6 +487,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
 				.setSettings(tool_settings)
 				.setSetting(tool_size)
+				.setSetting(tool_smooth)
 				.setSetting(tool_bg_stamp)
 				.setToolObject(tool_brush),
 			
