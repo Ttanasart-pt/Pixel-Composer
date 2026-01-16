@@ -307,15 +307,17 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) {
 		}
 	}
 	
-	if(cx != -1) {
-		var _pd = 5;
-		draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy - _pd, _gw + _pd * 2, _gs + _pd * 2);
-	}
+	if(cx != -1) draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - 5, cy - 5, _gw + 5 * 2, _gs + 5 * 2);
 	
 	return {
-		height: _h,
-		hoverIndex: _hov,
-		hoverColor: _hcc,
-		hoverBBOX: [ hvx, hvy, hvw, hvh ],
+		height     : _h,
+		hoverIndex : _hov,
+		hoverColor : _hcc,
+		hoverBBOX  : [ hvx, hvy, hvw, hvh ],
+		
+		gridColumn : col, 
+		gridRow    : row, 
+		gridWidth  : _gw,
+		gridHeight : _gs,
 	};
 }

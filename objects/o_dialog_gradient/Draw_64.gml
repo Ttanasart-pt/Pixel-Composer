@@ -106,10 +106,14 @@ draggable = true;
 #endregion
 
 #region palette
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, palette_x + pal_padding, dialog_y + ui(48), ui(240) - pal_padding * 2, dialog_h - ui(48) - pal_padding);
+	var _palx = palette_x + pal_padding;
+	var _paly = dialog_y + ui(48);
+	var _palw = presets_w - pal_padding * 2;
+	var _palh = dialog_h - ui(48) - pal_padding;
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, _palx, _paly, _palw, _palh);
 	
-	var _px = palette_x + pal_padding + ui(4);
-	var _py = dialog_y + ui(48 + 4);
+	var _px = _palx + ui(4);
+	var _py = _paly + ui(4);
 	var _pw = sp_palette_w;
 	
 	draw_sprite_stretched_ext(THEME.textbox, 1, _px, _py, _pw, ui(24), COLORS._main_icon);
@@ -140,6 +144,19 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
+	// tooltips
+	var _ttx = palette_x;
+	var _tty = dialog_y + dialog_h + ui(8);
+	var _ttw = presets_w;
+	var _tth = ui(32);
+	draw_sprite_stretched(THEME.ui_panel_bg,  1, _ttx, _tty, _ttw, _tth);
+	draw_sprite_stretched_add(THEME.ui_panel, 1, _ttx, _tty, _ttw, _tth, COLORS._main_icon, .6);
+	
+	draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+	draw_text(_ttx + ui(8), _tty + _tth / 2, __txt("Ctrl+Drag"));
+	
+	draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+	draw_text(_ttx + ui(8 + 64), _tty + _tth / 2, __txt("Partial Gradient"));
 #endregion
 
 #region gradient tools

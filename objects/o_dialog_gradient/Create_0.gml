@@ -392,11 +392,38 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		var _hoverIndex = noone;
 		
 		if(_exp) {
-			_palRes = drawPaletteGrid(_palt, _x + pd, _y + nh, _ww, _gs, { color : selector.current_color, mx : _m[0], my : _m[1] });
+			var _sel = palette_spread == _path? undefined : selector.current_color;
+			
+			_palRes = drawPaletteGrid(_palt, _x + pd, _y + nh, _ww, _gs, { color : _sel, mx : _m[0], my : _m[1] });
 			_hoverColor = _palRes.hoverIndex > noone? _palRes.hoverColor : noone;
 			_hoverIndex = _palRes.hoverIndex;
-		} else
-			drawPalette(_palt, _x + pd, _y + nh, _ww, _gs);
+			
+			if(palette_spread == _path) {
+				var _sgn = sign(_hoverIndex - palette_spread_index);
+				var _amo = abs(_hoverIndex - palette_spread_index) + 1;
+				var _ind = palette_spread_index;
+				
+				var gd_c = _palRes.gridColumn;
+				var gd_r = _palRes.gridRow;
+				var gd_w = _palRes.gridWidth;
+				var gd_h = _palRes.gridHeight;
+				
+				draw_set_color(c_white);
+				repeat(_amo) {
+					var _c  = _ind % gd_c;
+					var _r  = floor(_ind / gd_c);
+					var _x0 = _x + pd + _c * gd_w;
+					var _y0 = _y + nh + _r * gd_h;
+					
+					if(_ind == palette_spread_index || _ind == _hoverIndex)
+						draw_sprite_stretched_ext(THEME.palette_selecting, 0, _x0 - 5, _y0 - 5, gd_w + 5 * 2, gd_h + 5 * 2);
+					else 
+						draw_line_width(_x0, _y0 + gd_h / 2, _x0 + gd_w, _y0 + gd_h / 2, ui(3));
+					_ind += _sgn;
+				}
+			}
+			
+		} else drawPalette(_palt, _x + pd, _y + nh, _ww, _gs);
 		
 		if(_hoverColor != noone) {
 			var _box = _palRes.hoverBBOX;
