@@ -28,13 +28,17 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Scale",    false], 4, 
 	];
 	
+	////- Node
+	
+	static getDimension = function() /*=>*/ {return DEF_SURF};
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _anc = getInputSingle(1);
 		var _px  = _x + _anc[0] * _s;
 		var _py  = _y + _anc[1] * _s;
 		
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny, 1));
 		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;

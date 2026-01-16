@@ -1961,7 +1961,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 			node_drag_clone = false;
                 	}
                 	
-                	if(mouse_press(mb_left, _focus)) {
+                	if(mouse_lpress(_focus)) {
 						node_drag_clone = true;
 						node_drag_nx = mouse_graph_x;
 						node_drag_ny = mouse_graph_y;
