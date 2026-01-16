@@ -485,7 +485,8 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			if(mouse_click(mb_right)) {
 				if(_hoverColor != noone) {
 					menuCall("palette_window_preset_menu", [
-						menuItem(__txtx("palette_mix_color", "Mix Color"), function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
+						menuItem(__txtx("gradient_set_single", "Set Single"), function(c) /*=>*/ { gradient = new gradientObject(c); }).setParam(_hoverColor),
+						menuItem(__txtx("palette_mix_color", "Mix Color"),    function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
 					]);
 					
 				} else if(isHover) {
