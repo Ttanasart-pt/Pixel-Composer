@@ -3128,6 +3128,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         canvas_mx = (mx - canvas_x) / canvas_s;
         canvas_my = (my - canvas_y) / canvas_s;
+        drawSelection();
         
         if(tool_always_l) {
         	tool_side_draw_l = true;
@@ -3165,7 +3166,6 @@ function Panel_Preview() : PanelContent() constructor {
         if(d3_active == NODE_3D.none)
         	drawSplitView();
         
-    	drawSelection();
         drawTopbar(toolNode);
         drawToolBar(toolNode);
         
