@@ -1569,12 +1569,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static setVisible = function(vis) { visible = vis; return self; }
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) {
+	static pointIn = function(_x, _y, _mx, _my, _s, _panel) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
-		var hh = h + showMeta() * 16;
 		
-		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + hh * _s);
+		var hh = h + showMeta() * 16;
+		var x1 = xx + w  * _s;
+		var y1 = yy + hh * _s;
+		
+		var _hov = point_in_rectangle(_mx, _my, xx, yy, x1, y1);
+		if(key_mod_press(ALT) && point_in_rectangle(_mx, _my, x1 - 24, y1 - 24, x1 + 24, y1 + 24)) { 
+			_panel.node_hover_type = 1;
+			_hov = true;
+		}
+		
+		return _hov;
 	}
 	
 	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) {
@@ -2530,6 +2539,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, hh * _s, cc, 1);
 			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, hh * _s, COLORS._main_accent, 0.5);
+			
+			if(key_mod_press(ALT)) { 
+				var x1 = xx +  w * _s;
+				var y1 = yy + hh * _s;
+				var hv = point_in_rectangle(_mx, _my, x1 - 24, y1 - 24, x1 + 24, y1 + 24) && 
+						!point_in_rectangle(_mx, _my, xx, yy, x1, y1);
+				var cc = hv? COLORS._main_accent : COLORS._main_icon;
+				var ss = 1 / THEME_SCALE;
+				
+				draw_sprite_ext(THEME.node_resize_corner, hv, x1 + 8, y1 + 8, ss, ss, 0, cc, 1);
+			}
 			
 			active_draw_anchor = false;
 			active_draw_index  = -1;
