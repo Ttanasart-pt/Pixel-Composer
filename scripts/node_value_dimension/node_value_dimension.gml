@@ -83,7 +83,6 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 					val[0] *= surface_get_width_safe(_msk);
 					val[1] *= surface_get_height_safe(_msk);
 					return val;
-						
 			}
 			
 		}

@@ -31,7 +31,7 @@
 	global.EQUATION_PRES[? "≤"]  =  0;
 	global.EQUATION_PRES[? "≥"]  =  0;
 	
-	global.EQUATION_PRES[? "◘"] = 2; // .. // array creator
+	global.EQUATION_PRES[? "◘"] = 9; // .. // array creator
 	
 	global.EQUATION_PRES[? "@"] = 5; //array accerssor symbol
 	

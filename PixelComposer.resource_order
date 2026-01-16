@@ -3089,6 +3089,7 @@
     {"name":"s_node_surface_replace","order":42,"path":"sprites/s_node_surface_replace/s_node_surface_replace.yy",},
     {"name":"s_node_surface_tag","order":27,"path":"sprites/s_node_surface_tag/s_node_surface_tag.yy",},
     {"name":"s_node_surface_to_buffer","order":2,"path":"sprites/s_node_surface_to_buffer/s_node_surface_to_buffer.yy",},
+    {"name":"s_node_surface_to_points","order":19,"path":"sprites/s_node_surface_to_points/s_node_surface_to_points.yy",},
     {"name":"s_node_svg","order":38,"path":"sprites/s_node_svg/s_node_svg.yy",},
     {"name":"s_node_switch","order":20,"path":"sprites/s_node_switch/s_node_switch.yy",},
     {"name":"s_node_terminal_trigger","order":41,"path":"sprites/s_node_terminal_trigger/s_node_terminal_trigger.yy",},
