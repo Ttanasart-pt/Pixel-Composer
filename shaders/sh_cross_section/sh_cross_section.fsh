@@ -18,14 +18,9 @@ void main() {
     float bw = iAxis == 0? v_vTexcoord.y : 1. - v_vTexcoord.x;
     float fa = iAxis == 0? tx.x : tx.y;
     
-    float res = aa == 0? step(br, bw) : smoothstep(br - fa, br + fa, bw);
+    float res = step(br, bw);
     
-    if(mode == 0) {
-        gl_FragColor = vec4(vec3(res), 1.);
+         if(mode == 0) gl_FragColor = vec4(vec3(res), 1.);
+    else if(mode == 1) gl_FragColor = cc;
         
-    } else if(mode == 1) {
-        gl_FragColor = vec4(0.);
-        if(res > 0.) gl_FragColor = vec4(cc.rgb, cc.a * res);
-        
-    }
 }

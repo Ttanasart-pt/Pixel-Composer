@@ -35,7 +35,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(50, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max" ] ));
 	
 	////- =Line data
-	newInput(27, nodeValue_EScroll(  "Data Type", 1, [ "None", "Path", "Segments", "Two points" ]));
+	newInput(27, nodeValue_EScroll(  "Data Type", 1, [ "Line", "Path", "Segments", "Two points" ]));
 	newInput( 6, nodeValue_Rotation( "Rotation",  0 ));
 	newInput( 7, nodeValue_PathNode( "Path"    ));
 	newInput(28, nodeValue_Vector(   "Segment" )).setArrayDepth(2);

@@ -90,8 +90,8 @@
 	        registerFunction(p, "Preview Window",           "P", c, panel_preview_preview_window           ).setMenu("preview_preview_window")
 	        registerFunction(p, "Cycle Channel",            vk_tab, n, panel_preview_cycle_channel         ).setMenu("preview_cycle_channel")
 	    
-	        registerFunction(p, "Pan",                      "", c,     panel_preview_pan                   ).setMenu("preview_pan")
-	        registerFunction(p, "Zoom",                     "", a | c, panel_preview_zoom                  ).setMenu("preview_zoom")
+	        registerFunction("", "Preview Pan",             "", c,     panel_preview_pan                   ).setMenu("preview_pan")
+	        registerFunction("", "Preview Zoom",            "", a | c, panel_preview_zoom                  ).setMenu("preview_zoom")
 	        
 	        registerFunction(p, "3D Front View",            vk_numpad1, n, panel_preview_3d_view_front     ).setMenu("preview_3d_front_view")
 	        registerFunction(p, "3D Back View",             vk_numpad1, a, panel_preview_3d_view_back      ).setMenu("preview_3d_back_view")
@@ -655,8 +655,8 @@ function Panel_Preview() : PanelContent() constructor {
             return noone;
         }
         
-        if(is_instanceof(_node, Node)) 
-            _node = _node.getPreviewingNode();
+        if(is(_node, Node)) 
+        	_node = _node.getPreviewingNode();
             
         return _node;
     }
@@ -776,19 +776,21 @@ function Panel_Preview() : PanelContent() constructor {
             }
         }
         
-        if(pHOVER && canvas_hover) {
+        if(pHOVER && pFOCUS && canvas_hover) {
             var _doDragging = false;
             var _doZooming  = false;
             
-            if(mouse_press(PREFERENCES.pan_mouse_key, pFOCUS)) {
+            if(canvas_dragging_key) CURSOR = cr_size_all;
+            
+            if(mouse_press(PREFERENCES.pan_mouse_key)) {
                 _doDragging = true;
                 canvas_drag_key = PREFERENCES.pan_mouse_key;
                 
-            } else if(mouse_press(mb_left, pFOCUS) && canvas_dragging_key) {
+            } else if(mouse_lpress() && canvas_dragging_key) {
                 _doDragging = true;
                 canvas_drag_key = mb_left;
                 
-            } else if(mouse_press(mb_left, pFOCUS) && canvas_zooming_key) {
+            } else if(mouse_lpress() && canvas_zooming_key) {
                 _doZooming = true;
                 canvas_drag_key = mb_left;
             }

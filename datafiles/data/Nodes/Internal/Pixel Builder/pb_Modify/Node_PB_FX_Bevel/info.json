@@ -3,5 +3,6 @@
     "spr":           "s_node_pb_fx_bevel",
     "baseNode":      "Node_PB_FX_Bevel",
     "pxc_version":    118090,
-    "show_in_recent": false,
+    "show_in_recent": true,
+    "allow_outside":  true
 }

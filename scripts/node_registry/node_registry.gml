@@ -43,6 +43,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	icon = noone;
 	nodekey = "";
 	context = noone;
+	allow_outside = false;
 	
 	nodeName     = script_get_name(node);
 	usecreateFn  = false;
@@ -153,7 +154,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	}
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}, _skip_context = false) {
-		if(!_skip_context && NOT_LOAD && context != noone && !array_exists(context, instanceof(_group))) {
+		if(!allow_outside && !_skip_context && NOT_LOAD && context != noone && !array_exists(context, instanceof(_group))) {
 			noti_warning($"Cannot create node outside context.");
 			return noone;
 		}
@@ -367,10 +368,11 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		if(struct_has(_data, "params"))
 			setParam(_data.params);
-			
-		testable = _data[$ "testable"] ?? testable;
-		author   = _data[$ "author"]   ?? author;
-		license  = _data[$ "license"]  ?? license;
+		
+    	allow_outside = _data[$ "allow_outside"] ?? allow_outside;
+		testable      = _data[$ "testable"] ?? testable;
+		author        = _data[$ "author"]   ?? author;
+		license       = _data[$ "license"]  ?? license;
 			
 		if(struct_has(_data, "position")) {
 			for( var i = 0, n = array_length(_data.position); i < n; i++ ) {

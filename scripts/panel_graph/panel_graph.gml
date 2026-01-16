@@ -184,8 +184,8 @@
         registerFunction(g, "Paste",                 "V", c, panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
         registerFunction(g, "Mass Connect",          "",  n, panel_graph_mass_connect        ).setMenu("graph_mass_connect",    THEME.obj_auto_organize)
         
-        registerFunction(g, "Pan",                   "", c,  panel_graph_pan                 ).setMenu("graph_pan")
-        registerFunction(g, "Zoom",                  "", a|c,panel_graph_zoom                ).setMenu("graph_zoom")
+        registerFunction("", "Graph Pan",            "", c,  panel_graph_pan                 ).setMenu("graph_pan")
+        registerFunction("", "Graph Zoom",           "", a|c,panel_graph_zoom                ).setMenu("graph_zoom")
         
         registerFunction(g, "Auto Align",            "L", n, panel_graph_auto_align          ).setMenu("graph_auto_align", THEME.obj_auto_align)
         registerFunction(g, "Auto Organize...",      "L", c, function() /*=>*/ { 
@@ -1152,15 +1152,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             var _doDragging = false;
             var _doZooming  = false;
             
+            if(graph_dragging_key) CURSOR = cr_size_all;
+            
             if(mouse_press(PREFERENCES.pan_mouse_key)) {
                 _doDragging = true;
                 drag_key = PREFERENCES.pan_mouse_key;
                 
-            } else if(mouse_press(mb_left) && graph_dragging_key) {
+            } else if(mouse_lpress() && graph_dragging_key) {
                 _doDragging = true;
                 drag_key = mb_left;
                 
-            } else if(mouse_press(mb_left) && graph_zooming_key) {
+            } else if(mouse_lpress() && graph_zooming_key) {
                 _doZooming = true;
                 drag_key = mb_left;
             }

@@ -422,7 +422,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			setDisplayName(_name, false);
 		}, { name : display_name, tooltip : $"Rename node" }).setRef(self);
 		
-		renamed      = true;
+		renamed      =  true;
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
 		refreshNodeMap();
@@ -1181,7 +1181,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static onValueUpdate     = function(index = noone) {}
 	static onValueFromUpdate = function(index = noone) {}
 	
-	static getDimension = function() /*=>*/ {return dimension_index >= 0? inputs[dimension_index].getValue() : DEF_SURF};
+	static getDimension      = function() /*=>*/ {return dimension_index >= 0? inputs[dimension_index].getValue() : DEF_SURF};
 	
 	////- RENDER
 	

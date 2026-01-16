@@ -167,7 +167,7 @@ function string_partial_match(str, key) {
 }
 
 function string_partial_match_res(str, key) {
-	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ];
+	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ]; // ++ Perfect match
 	
 	var lenn = string_length(str);
 	var lenm = string_length(key);
@@ -184,23 +184,28 @@ function string_partial_match_res(str, key) {
 		
 		var matc = -1;
 		var matW =  0;
+		var on = "";
 		
 		repeat(lenn) {
 			var n = string_char_at(str, runn);
 			if(_mated[runn] == 0 && m == n) {
-				 matc     = runn;
-				_matchw  += lenn - matW + (matW == 0) * runC * 5;
-				
+				 matc    = runn;
+				_matchw += lenn - matW           // ++ Match near the beginning (key** > **key)
+					    + (matW == 0) * runC * 5 // ++ Longer consecutive match at the beginnning (key** > k*e*y)
+					    + (on == " ") * 10;      // ++ Match word beginning (** key* > ** *key)
+				    
 				_mated[runn]  = 1;
 				_matRng[runn] = 1;
 				
 				runC = matW == 0? runC + 1 : 0;
 				if(++runn > lenn) runn = 1;
+				on = n;
 				break;
 			}
 			
 			matW++;
 			if(++runn > lenn) runn = 1;
+			on = n;
 		}
 		
 		if(matc == -1) { _matchw = -9999; break; }
