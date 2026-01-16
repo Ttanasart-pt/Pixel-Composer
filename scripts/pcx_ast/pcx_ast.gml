@@ -184,7 +184,7 @@
                 if(cond_arr == noone || !cond_arr.validate()) return false;
             } else {
                 if(cond_init == noone || !cond_init.validate()) return false;
-                if(cond_term == noone || !cond_term.validate())    return false;
+                if(cond_term == noone || !cond_term.validate()) return false;
             }
             
             if(action != noone && !action.validate())        return false;
@@ -511,6 +511,16 @@
                 case "≥": return (is_real(v1) && is_real(v2))? v1 >= v2      : 0;
                 case ">": return (is_real(v1) && is_real(v2))? v1 > v2       : 0;
                 case "<": return (is_real(v1) && is_real(v2))? v1 < v2       : 0;
+                
+                case "◘": 
+                	if(!is_real(v1) || !is_real(v2)) return [];
+                	
+            		var amo = abs(  v2 - v1 ) + 1;
+            		var sgn = sign( v2 - v1 );
+            		var arr = array_create(amo);
+            		for( var i = 0; i < amo; i++ ) 
+            			arr[i] = v1 + sgn * i;
+            		return arr;
             }
             
             return v1;
@@ -523,4 +533,5 @@
         if(isNumber(fx)) return toNumber(fx);
         return evaluateFunctionList(fx).eval(params);
     }
+    
 #endregion

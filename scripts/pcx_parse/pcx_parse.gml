@@ -24,12 +24,14 @@
 	global.EQUATION_PRES[? "⊗"]  = -99; //*=
 	global.EQUATION_PRES[? "⊘"]  = -99; ///=
 	
-	global.EQUATION_PRES[? "⩵"] = -1; //==
-	global.EQUATION_PRES[? "≠"]  = -1; //!=
+	global.EQUATION_PRES[? "⩵"] = -1; // ==
+	global.EQUATION_PRES[? "≠"]  = -1; // !=
 	global.EQUATION_PRES[? "<"]  =  0;
 	global.EQUATION_PRES[? ">"]  =  0;
 	global.EQUATION_PRES[? "≤"]  =  0;
 	global.EQUATION_PRES[? "≥"]  =  0;
+	
+	global.EQUATION_PRES[? "◘"] = 2; // .. // array creator
 	
 	global.EQUATION_PRES[? "@"] = 5; //array accerssor symbol
 	
@@ -68,6 +70,7 @@
 		fx = _fx;
 		
 		fx = string_replace_all(fx, "\n", "");
+		fx = string_replace_all(fx, "..", "◘");
 		fx = string_replace_all(fx, "**", "$");
 		fx = string_replace_all(fx, "<<", "«");
 		fx = string_replace_all(fx, ">>", "»");
@@ -86,7 +89,7 @@
 		fx = string_replace_all(fx, "*=", "⊗");
 		fx = string_replace_all(fx, "/=", "⊘");
 		
-		fx = string_replace_all(fx, "]", ",］");
+		fx = string_replace_all(fx, "]", ",］"); // U+FF3D
 	
 		fx = string_trim(fx);
 	
@@ -437,7 +440,8 @@
 			case "⊖": 
 			case "⊗": 
 			case "⊘": 
-				
+			
+			case "◘": 
 				if(ds_stack_size(vl) >= 2) {
 					var _v1 = ds_stack_pop(vl);
 					var _v2 = ds_stack_pop(vl);
