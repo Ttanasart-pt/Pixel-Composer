@@ -36,22 +36,33 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _rest = _data[4];
 			
 			inputs[0].setVisible( _mode == 0 );
-			inputs[2].setVisible(!_asyn);
 			inputs[4].setVisible( true, _asyn);
 		#endregion
 		
 		if(_asyn) {
-			if(IS_FIRST_FRAME || _rest) return _star;
-			return _output + _sped;
+			if(IS_FIRST_FRAME || _rest) {
+				switch(_mode) {
+					case 0 : return _star;
+					case 1 : return 0;
+				}
+				
+				return _star;
+			}
+			
+			switch(_mode) {
+				case 0 : return _output + _sped;
+				case 1 : return _output + _sped / (TOTAL_FRAMES - 1);
+			}
+			
+			return 0;
 		}
 		
-		var val = 0;
 		switch(_mode) {
-			case 0 : val = _star + _time * _sped;              break;
-			case 1 : val = _time / (TOTAL_FRAMES - 1) * _sped; break;
+			case 0 : return _star + _time * _sped;
+			case 1 : return _time / (TOTAL_FRAMES - 1) * _sped;
 		}
 		
-		return val;
+		return 0;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
