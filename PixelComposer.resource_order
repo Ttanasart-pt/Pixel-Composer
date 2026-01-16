@@ -1494,6 +1494,7 @@
     {"name":"node_surface_replace","order":19,"path":"scripts/node_surface_replace/node_surface_replace.yy",},
     {"name":"node_surface_tag","order":12,"path":"scripts/node_surface_tag/node_surface_tag.yy",},
     {"name":"node_surface_to_color","order":1,"path":"scripts/node_surface_to_color/node_surface_to_color.yy",},
+    {"name":"node_surface_to_points","order":12,"path":"scripts/node_surface_to_points/node_surface_to_points.yy",},
     {"name":"node_svg","order":8,"path":"scripts/node_svg/node_svg.yy",},
     {"name":"node_switch","order":10,"path":"scripts/node_switch/node_switch.yy",},
     {"name":"node_terminal_trigger","order":29,"path":"scripts/node_terminal_trigger/node_terminal_trigger.yy",},

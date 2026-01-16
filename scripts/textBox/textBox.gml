@@ -34,7 +34,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		text_surface  = noone;
 		password_show = false;
 		
-		clearable = false;
+		clearable    = false;
+		refresh_text = false;
 	#endregion
 	
 	#region slide
@@ -147,8 +148,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setSlideRange = function(_min = 0, _max = 1) /*=>*/ { slide_range = [_min, _max]; return self; }
 	static setRange      = function(_rng_min, _rng_max) /*=>*/ { use_range   = true; range_min = _rng_min; range_max = _rng_max; return self; }
 	
-	static setPrefix     = function(_v) /*=>*/ { prefix      = _v;    return self; }
-	static setSuffix     = function(_v) /*=>*/ { suffix      = _v;    return self; }
+	static setPrefix     = function(_v) /*=>*/ { refresh_text = prefix != _v; prefix = _v; return self; }
+	static setSuffix     = function(_v) /*=>*/ { refresh_text = suffix != _v; suffix = _v; return self; }
 	
 	static setAlign      = function(_v) /*=>*/ { align       = _v;    return self; }
 	static setVAlign     = function(_v) /*=>*/ { yalign      = _v;    return self; }
@@ -591,7 +592,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		var drawText = selecting || _h >= line_get_height(font);
-		var _update  = false;
+		var _update  = refresh_text;
+		refresh_text = false;
 		
 		////- Positions
 		

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_surface_to_points",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_surface_to_points",
+  "parent":{
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
