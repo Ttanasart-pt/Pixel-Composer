@@ -2960,9 +2960,10 @@ function Panel_Preview() : PanelContent() constructor {
     } 
     
     function drawSelection() {
-    	var prevN = getNodePreview();
-    	var prevS = is(prevN, Node) && prevN.preview_select_surface && 
-    	            !array_empty(prevN.outputs) && prevN.outputs[0].type == VALUE_TYPE.surface;
+    	var prevN = PANEL_INSPECTOR.getInspecting();
+    	var prevS = is(prevN, Node)
+			    		&& prevN.preview_select_surface 
+			    		&& !array_empty(prevN.outputs) && prevN.outputs[0].type == VALUE_TYPE.surface;
     	
     	if(!prevS) selection_active = false;
     	

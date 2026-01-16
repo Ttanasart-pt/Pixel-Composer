@@ -558,6 +558,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	node_drag_remove     = [];
     	frame_draggings      = [];
     	
+    	node_drag_clone      = false;
+		node_drag_nx         = undefined;
+		node_drag_ny         = undefined;
+
     	node_resize          = noone;
     	node_resize_mx       = 0;
     	node_resize_my       = 0;
@@ -1940,14 +1944,28 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         	array_append(nodes_selecting, node_hovering.__nodes);
                         }
                         
-                        if(key_mod_press(ALT) && node_hover_type == 0 && !array_empty(nodes_selecting)) { // Alt copy
-	                    	var cln = nodeClone(nodes_selecting);
-                    		nodes_selecting = array_clone(cln, 1);
-	                    } 
                     }
                     
                     if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
                     if(array_valid(nodes_selecting)) array_foreach(nodes_selecting, function(n) /*=>*/ { bringNodeToFront(n) });
+                }
+                
+                if(key_mod_press(ALT) && node_hover_type == 0 && !array_empty(nodes_selecting)) { // Alt copy
+                	if(node_drag_clone) {
+                		if(mouse_graph_x != node_drag_nx || mouse_graph_y != node_drag_ny) {
+                			node_drag_clone = false;
+                			nodes_selecting = array_clone(nodeClone(nodes_selecting), 1);
+                		}
+                		
+                		if(mouse_release(node_drag_clone))
+                			node_drag_clone = false;
+                	}
+                	
+                	if(mouse_press(mb_left, _focus)) {
+						node_drag_clone = true;
+						node_drag_nx = mouse_graph_x;
+						node_drag_ny = mouse_graph_y;
+                	}
                 }
                 
                 nodes_select_anchor = _anc;

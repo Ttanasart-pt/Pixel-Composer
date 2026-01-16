@@ -1578,7 +1578,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var y1 = yy + hh * _s;
 		
 		var _hov = point_in_rectangle(_mx, _my, xx, yy, x1, y1);
-		if(key_mod_press(ALT) && point_in_rectangle(_mx, _my, x1 - 24, y1 - 24, x1 + 24, y1 + 24)) { 
+		if(key_mod_press(ALT) && !_hov && point_in_rectangle(_mx, _my, x1 - 24, y1 - 24, x1 + 24, y1 + 24)) { 
 			_panel.node_hover_type = 1;
 			_hov = true;
 		}
