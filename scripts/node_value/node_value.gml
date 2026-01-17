@@ -1030,7 +1030,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var _range = struct_try_get(display_data, "range", [0,1,.01]);
 						var _rstep = array_safe_get(_range, 2, .01);
 						
-						editWidget = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return setValueInspector(toNumber(val))})
+						editWidget = textBox_Number(function(val) /*=>*/ {return setValueInspector(val)})
 										.setSlideRange( _range[0], _range[1] )
 										.setSlideStep(  _rstep );
 						

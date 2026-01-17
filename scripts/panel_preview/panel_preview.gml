@@ -649,16 +649,9 @@ function Panel_Preview() : PanelContent() constructor {
     function   getNodePreview() { 
         var _node = __getNodePreview();
         if(_node == noone) return noone;
+        if(!_node.project.active) { resetNodePreview(); return noone; }
         
-        if(!_node.project.active) {
-            resetNodePreview();
-            return noone;
-        }
-        
-        if(is(_node, Node)) 
-        	_node = _node.getPreviewingNode();
-            
-        return _node;
+        return is(_node, Node)? _node.getPreviewingNode() : _node;
     }
     
     function getNodePreviewData()     { return preview_data[     splitView? splitSelection : 0 ]; }
