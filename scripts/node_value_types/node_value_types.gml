@@ -618,7 +618,7 @@ function nodeValueUnit(__nodeValue) constructor {
 		var base = reference(index);
 		var inv  = unitTo == VALUE_UNIT.reference;
 		
-		if(!is_array(base)) {
+		if(is_numeric(base)) {
 			if(inv) base = base == 0? 0 : 1 / base;
 			
 			if(!is_array(value)) 
@@ -630,10 +630,10 @@ function nodeValueUnit(__nodeValue) constructor {
 			return _val;
 		}
 		
-		if(is_array(value)) {
+		if(array_get_depth(value) == 1) {
 			base = [
-				array_safe_get(base, 0),
-				array_safe_get(base, 1)
+				toNumber(array_safe_get(base, 0)),
+				toNumber(array_safe_get(base, 1))
 			];
 			
 			if(inv) {

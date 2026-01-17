@@ -63,17 +63,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(dimension_index == -1) return DEF_SURF;
 		
 		var _ip = array_safe_get(inputs, dimension_index, noone);
-		if(_ip == noone) return DEF_SURF;
 		
-		var _in = getInputSingle(dimension_index, arr);
+		     if(is(_ip, nodeValue_Surface))   return surface_get_dimension(getInputSingle(dimension_index, arr));
+		else if(is(_ip, nodeValue_Dimension)) return getInputSingle(dimension_index, arr);
 		
-		if(_ip.type == VALUE_TYPE.surface && is_surface(_in))
-			return surface_get_dimension(_in);
-		
-		if(is_array(_in) && array_length(_in) == 2)
-			return _in;
-			
-		return [1, 1];
+		return DEF_SURF;
 	} 
 	
 	////- Process

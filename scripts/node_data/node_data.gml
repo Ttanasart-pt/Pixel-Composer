@@ -1181,7 +1181,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static onValueUpdate     = function(index = noone) {}
 	static onValueFromUpdate = function(index = noone) {}
 	
-	static getDimension      = function() /*=>*/ {return dimension_index >= 0? inputs[dimension_index].getValue() : DEF_SURF};
+	static getDimension      = function() /*=>*/ {
+		if(dimension_index < 0) return DEF_SURF;
+		var _inp = inputs[dimension_index];
+		
+		if(is(_inp, nodeValue_Surface))   return surface_get_dimension(_inp.getValue());
+		if(is(_inp, nodeValue_Dimension)) return _inp.getValue();
+		return DEF_SURF;
+	}
 	
 	////- RENDER
 	
