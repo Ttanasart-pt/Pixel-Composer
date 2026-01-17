@@ -38,7 +38,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
 	
-	newInput( 6, nodeValue_EScroll(  "Distribution",  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ] ));
+	newInput( 6, nodeValue_EScroll(  "Distribution",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image + Tile" ] ));
 	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
 	newInput(13, nodeValue_Surface(  "Distribution Map"      ));
 	newInput(14, nodeValue_Vector(   "Distribution Data", [] )).setArrayDepth(1);

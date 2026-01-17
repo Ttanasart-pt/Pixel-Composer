@@ -126,7 +126,7 @@ function rangeBox(_onModify) : widget() constructor {
 			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);
 			tb[0].setLabel("value");
 			
-		} else if(is_array(_data) && array_length(_data) >= 2) {
+		} else if(array_safe_length(_data) >= 2) {
 			for(var i = 0; i < 2; i++) {
 				tb[i].setFocusHover(active, hover);
 				tb[i].setLabel(labels[i]);

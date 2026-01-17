@@ -1590,6 +1590,7 @@
     {"name":"node_vector_direction","order":10,"path":"scripts/node_vector_direction/node_vector_direction.yy",},
     {"name":"node_vector_dot","order":2,"path":"scripts/node_vector_dot/node_vector_dot.yy",},
     {"name":"node_vector_magnitude","order":7,"path":"scripts/node_vector_magnitude/node_vector_magnitude.yy",},
+    {"name":"node_vector_math","order":11,"path":"scripts/node_vector_math/node_vector_math.yy",},
     {"name":"node_vector_normalize","order":9,"path":"scripts/node_vector_normalize/node_vector_normalize.yy",},
     {"name":"node_vector_split","order":3,"path":"scripts/node_vector_split/node_vector_split.yy",},
     {"name":"node_vector_swizzle","order":8,"path":"scripts/node_vector_swizzle/node_vector_swizzle.yy",},

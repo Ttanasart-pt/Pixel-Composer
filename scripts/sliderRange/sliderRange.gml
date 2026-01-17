@@ -9,9 +9,6 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	tb_value_min = textBox_Number(function(val) /*=>*/ {return onModify(val, 0)}).setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
 	tb_value_max = textBox_Number(function(val) /*=>*/ {return onModify(val, 1)}).setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
 	
-	tb_value_min.hide = true;
-	tb_value_max.hide = true;
-	
 	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		tb_value_min.interactable = interactable;
@@ -39,10 +36,14 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		w = _w;
 		h = _h;
 		
-		if(!is_array(_data))   return h;
-		if(!is_real(_data[0])) return h;
-		if(!is_real(_data[1])) return h;
+		if(!is_array(_data) || !is_real(_data[0]) || !is_real(_data[1])) {
+			tb_value_min.hide = false;
+			tb_value_min.setFocusHover(active, hover);
+			tb_value_min.draw(_x, _y, _w, _h, _data, _m);
+			return h;
+		}
 		
+		tb_value_min.hide = true;
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 		
 		var _minn = slide_range[0];

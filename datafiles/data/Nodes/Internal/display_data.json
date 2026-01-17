@@ -963,6 +963,7 @@
             "Node_Vector_Split",
             "Node_Vector_Swizzle",
             { "label": "/Operators" },
+            "Node_Vector_Math",
             "Node_Vector_Magnitude",
             "Node_Vector_Direction",
             "Node_Vector_Normalize",

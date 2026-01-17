@@ -41,7 +41,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			tb_value.setHide(0);
 			tb_value.setFocusHover(active, hover);
 			tb_value.draw(_x, _y, _w, _h, _data, _m);
-			return;
+			return h;
 		}
 		
 		tb_value.setHide(1);
