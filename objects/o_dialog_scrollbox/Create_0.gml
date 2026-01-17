@@ -161,7 +161,7 @@ event_inherited();
 				var _ss = _sca? (hght - ui(8)) / sprite_get_height(_val.spr) : 1;
 				
 				gpu_set_tex_filter(true);
-				draw_sprite_uniform(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, _ss, _val.spr_blend);
+				draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, _ss, _ss, 0, _val.spr_blend);
 				gpu_set_tex_filter(false);
 			}
 			

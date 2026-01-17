@@ -2512,6 +2512,7 @@ function Panel_Preview() : PanelContent() constructor {
             _params.panel = self;
             _params.scene = d3_scene;
         
+        hoveringGizmo = false;
         if(gizmo_show && !CAPTURING) {
 	        if(_node.is_3D == NODE_3D.none) {
 	            if(key_mod_press(CTRL)) {
@@ -2547,7 +2548,7 @@ function Panel_Preview() : PanelContent() constructor {
 	            }
 	            
 	            hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, _params);
-		    	 
+		    	
 	        } else {
 	            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
 	                _snx = PROJECT.previewSetting.d3_tool_snap_position;
@@ -3122,7 +3123,6 @@ function Panel_Preview() : PanelContent() constructor {
         drawPreviewOverlay();
         drawViewController();
         
-        hoveringGizmo    = false;
         tool_side_draw_l = false;
         tool_side_draw_r = false;
         

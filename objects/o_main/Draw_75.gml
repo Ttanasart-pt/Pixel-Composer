@@ -183,3 +183,17 @@ if(winMan_isMinimized()) exit;
 	draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.95));
 	draw_rectangle(1, 1, WIN_W - 2, WIN_H - 2, true);
 #endregion
+
+#region system debug
+	// var tt = "";
+	// tt += $"\nOperating system: {os_type_sting()} ({os_version})"
+	// tt += $"\nCPU: {cpu_processor()} [{cpu_core_count()} cores]"
+	// tt += $"\nGPU: {gpu_renderer()}"
+	// tt += $"\nRAM: {memory_usedram(true)}/{memory_totalram(true)}"
+	// tt += $"\nVRAM: {memory_totalvram(true)}"
+	// print(tt);
+	
+	// var _dpi_x = display_get_dpi_x();
+	// var _dpi_y = display_get_dpi_y();
+	// print($"{_dpi_x}, {_dpi_y}");
+#endregion

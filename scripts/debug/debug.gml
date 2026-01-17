@@ -138,6 +138,10 @@ function setException() {
 		tt += "\n\n\n\n-------------------------- Device Info --------------------------\n";
 		tt += $"\nVersion: {VERSION_STRING} ({VERSION})";
 		tt += $"\nOperating system: {os_type_sting()} ({os_version})"
+		tt += $"\nCPU: {cpu_processor()} [{cpu_core_count()} cores]"
+		tt += $"\nGPU: {gpu_renderer()}"
+		tt += $"\nRAM: {memory_usedram(true)}/{memory_totalram(true)}"
+		tt += $"\nVRAM: {memory_totalvram(true)}"
 		tt += "\n\n---------------------------- :( ----------------------------\n";
 		
 		var path_pro = $"{env_user()}log/program_path.txt";

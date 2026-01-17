@@ -48,9 +48,9 @@ function Node_Surface_To_Points(_x, _y, _group = noone) : Node_Processor(_x, _y,
 			case surface_r16float    : btype = buffer_f16; offset = false; _pixs /= 2; break;
 			case surface_r32float    : btype = buffer_f32; offset = false; _pixs /= 2; break;
 			
-			case surface_rgba8unorm  : btype = buffer_u8;  offset =  true; _r = 255; break;
-			case surface_rgba16float : btype = buffer_f16; offset =  true; break;
-			case surface_rgba32float : btype = buffer_f32; offset =  true; break;
+			case surface_rgba8unorm  : btype = buffer_u8;  offset =  true; _r = 255;   break;
+			case surface_rgba16float : btype = buffer_f16; offset =  true;             break;
+			case surface_rgba32float : btype = buffer_f32; offset =  true;             break;
 		}
 		
 		var _amo = _maxx? min(_maxx, _pixs) : _pixs;

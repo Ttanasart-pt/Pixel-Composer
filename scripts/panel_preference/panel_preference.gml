@@ -696,7 +696,6 @@ function Panel_Preference() : PanelContent() constructor {
     		if(!file_exists_empty(_metaPath)) {
     			var _item = new scrollItem(_file, THEME.circle, 0, COLORS._main_accent)
     							.setTooltip("Theme made for earlier version.")
-    							.setSpriteScale();
     			array_push(themes, _item);
     			continue;
     		} 
@@ -784,7 +783,7 @@ function Panel_Preference() : PanelContent() constructor {
     		hh += _h + ui(8);
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(ui(24), _y + _h / 2, __txt("- Bold"));
+    		draw_text_add(ui(24), _y + _h / 2, __txt("Bold"));
     		
     		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_bold));
     		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
@@ -796,7 +795,7 @@ function Panel_Preference() : PanelContent() constructor {
     		hh += _h + ui(8);
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(ui(24), _y + _h / 2, __txt("- Code"));
+    		draw_text_add(ui(24), _y + _h / 2, __txt("Code"));
     		
     		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_code));
     		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
