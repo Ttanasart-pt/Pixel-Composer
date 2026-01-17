@@ -37,9 +37,16 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		w = _w;
 		h = _h;
 		
-		if(!is_real(_data)) return;
-		 
-		var _r  = _h;
+		if(!is_real(_data)) {
+			tb_value.setHide(0);
+			tb_value.setFocusHover(active, hover);
+			tb_value.draw(_x, _y, _w, _h, _data, _m);
+			return;
+		}
+		
+		tb_value.setHide(1);
+		
+		var _r = _h;
 		var _bs      = min(_h, ui(32));
 		var _drawRot = _w - _r > ui(64);
 		
