@@ -3,18 +3,15 @@ function Node_Array_Boolean_Opr(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array 1", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue("Array 2", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
-		
-	newInput(2, nodeValue_Enum_Scroll("Operation", 0, [ "Union", "Subtract", "Intersect", "XOR" ]))
-		.setVisible(true, true);
+	newInput(2, nodeValue_Enum_Scroll("Operation", 0, [ "Union", "Subtract", "Intersect", "XOR" ]));
+	newInput(0, nodeValue("Array 1", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setVisible(true, true);
+	newInput(1, nodeValue("Array 2", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Array out", VALUE_TYPE.any, []));
 	
 	input_display_list = [ 2, 0, 1 ];
+	
+	////- Node
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;

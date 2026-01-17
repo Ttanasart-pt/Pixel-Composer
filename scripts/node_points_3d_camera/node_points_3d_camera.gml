@@ -39,10 +39,10 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	
 	////- =Remap Range
 	
-	newInput(i+13, nodeValue_Vec2( "Range From",  [0,1] ));
-	newInput(i+14, nodeValue_Vec2( "Range To",    [0,1] ));
-	newInput(i+11, nodeValue_Vec2( "Depth From",  [0,1] ));
-	newInput(i+12, nodeValue_Vec2( "Depth To",    [0,1] ));
+	newInput(i+13, nodeValue_Vec2( "Range From",  [-1,1] )).setUnitSimple(false);
+	newInput(i+14, nodeValue_Vec2( "Range To",    [ 0,1] )).setUnitSimple();
+	newInput(i+11, nodeValue_Vec2( "Depth From",  [ 0,1] )).setUnitSimple(false);
+	newInput(i+12, nodeValue_Vec2( "Depth To",    [ 0,1] )).setUnitSimple();
 	
 	// input i+16
 	
@@ -50,13 +50,33 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	
 	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
 	
+	b_remap = button(function() /*=>*/ {return remapPoints(true)}).setIcon(THEME.refresh_16, 0, COLORS._main_value_positive).setTooltip(__txt("Map to Output Range"));
+	
 	input_display_list = [ i+2, i+10,
-		["Transform",   false], i+4, 0, 1, i+5, i+6, i+7, i+8, i+9, 
-		["Camera",      false], i+1, i+0, i+3, 
-		["Remap Range", false], i+13, i+14, i+11, i+12,
+		[ "Transform",   false ], i+4, 0, 1, i+5, i+6, i+7, i+8, i+9, 
+		[ "Camera",      false ], i+1, i+0, i+3, 
+		[ "Remap Range", false, noone, b_remap], i+13, i+14, i+11, i+12,
 	];
 	
 	tool_lookat  = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
+	
+	point_range_x0 = 0; point_range_y0 = 0; point_range_z0 = 0;
+	point_range_x1 = 0; point_range_y1 = 0; point_range_z1 = 0;
+	
+	static remapPoints = function() {
+		var rx = point_range_x1 - point_range_x0;
+		var ry = point_range_y1 - point_range_y0;
+		var rz = point_range_z1 - point_range_z0;
+		
+		var ryx = max(rx, ry);
+		var x0  = (point_range_x1 + point_range_x0) / 2 - ryx / 2;
+		var x1  = (point_range_x1 + point_range_x0) / 2 + ryx / 2;
+		var y0  = (point_range_y1 + point_range_y0) / 2 - ryx / 2;
+		var y1  = (point_range_y1 + point_range_y0) / 2 + ryx / 2;
+		
+		inputs[in_d3d + 13].setValue([min(x0, y0), max(x1, y1)]);
+		inputs[in_d3d + 11].setValue([point_range_z0,point_range_z1]);
+	}
 	
 	////- Preview
 	
@@ -217,6 +237,9 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 		var _rngFs  = _rngF[1] - _rngF[0];
 		var _depFs  = _depF[1] - _depF[0];
 		
+		point_range_x0 =  infinity; point_range_y0 =  infinity; point_range_z0 =  infinity;
+		point_range_x1 = -infinity; point_range_y1 = -infinity; point_range_z1 = -infinity;
+		
 		for( var i = 0; i < _amo; i++ ) {
 			var _point = _pnts[i];
 			if(!is_array(_point)) continue;
@@ -224,6 +247,13 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 			_p.x = _point[0];
 			_p.y = _point[1];
 			_p.z = _point[2];
+			
+			point_range_x0 = min(point_range_x0, _p.x);
+			point_range_y0 = min(point_range_y0, _p.y);
+			point_range_z0 = min(point_range_z0, _p.z);
+			point_range_x1 = max(point_range_x1, _p.x);
+			point_range_y1 = max(point_range_y1, _p.y);
+			point_range_z1 = max(point_range_z1, _p.z);
 			
 			var _v = camera.worldPointToViewPoint(_p);
 			

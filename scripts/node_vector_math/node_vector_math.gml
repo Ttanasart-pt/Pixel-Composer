@@ -45,7 +45,7 @@ function Node_Vector_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(0, nodeValue_Enum_Scroll("Type", 0, global.node_vmath_scroll)).rejectArray();
 	
 	////- =Values
-	newInput(5, nodeValue_Int(   "Length", 2 ));
+	newInput(5, nodeValue_Int(   "Dimension", 2 ));
 	newInput(1, nodeValue_Float( "a", 0 )).setVisible(true, true);
 	newInput(2, nodeValue_Float( "b", 0 )).setVisible(true, true);
 	
