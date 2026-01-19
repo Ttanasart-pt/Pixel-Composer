@@ -1936,6 +1936,7 @@
     {"name":"sh_channel_B","order":1,"path":"shaders/sh_channel_B/sh_channel_B.yy",},
     {"name":"sh_channel_G_grey","order":8,"path":"shaders/sh_channel_G_grey/sh_channel_G_grey.yy",},
     {"name":"sh_channel_G","order":2,"path":"shaders/sh_channel_G/sh_channel_G.yy",},
+    {"name":"sh_channel_L","order":3,"path":"shaders/sh_channel_L/sh_channel_L.yy",},
     {"name":"sh_channel_R_grey","order":7,"path":"shaders/sh_channel_R_grey/sh_channel_R_grey.yy",},
     {"name":"sh_channel_R","order":4,"path":"shaders/sh_channel_R/sh_channel_R.yy",},
     {"name":"sh_channel_R2A","order":13,"path":"shaders/sh_channel_R2A/sh_channel_R2A.yy",},
