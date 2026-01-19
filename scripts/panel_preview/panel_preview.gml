@@ -2543,6 +2543,12 @@ function Panel_Preview() : PanelContent() constructor {
 	            	_ovx = w - tool_side_draw_r * toolbar_width - ui(8) - _node_pw * _ovs;
 					_ovy = h - toolbar_height                   - ui(8) - _node_ph * _ovs;
 	            	
+	            	draw_surface_ext_safe(_node_prev, _ovx, _ovy, _ovs, _ovs);
+	            	
+					draw_set_color(COLORS.panel_preview_surface_outline);
+					draw_rectangle(_ovx, _ovy, _ovx + _node_pw * _ovs - 1, _ovy + _node_ph * _ovs - 1, true);
+					draw_set_alpha(1);
+					
 	            } else {
 		            var _prevNode = getNodePreview();
 		            if(_prevNode != _node && is(_prevNode, Node)) {

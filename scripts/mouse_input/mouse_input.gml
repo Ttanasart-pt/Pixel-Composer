@@ -65,15 +65,15 @@ function mouse_step() {
 	if(OS == os_windows) {
 		MOUSE_EVENT.lclick   = _mouse && global_mouse_left_is_pressing();
 		MOUSE_EVENT.lpress   = _mouse && global_mouse_left_is_pressed();
-		MOUSE_EVENT.lrelease = _mouse && global_mouse_left_is_released();
+		MOUSE_EVENT.lrelease = global_mouse_left_is_released();
 		
 		MOUSE_EVENT.rclick   = _mouse && global_mouse_right_is_pressing();
 		MOUSE_EVENT.rpress   = _mouse && global_mouse_right_is_pressed();
-		MOUSE_EVENT.rrelease = _mouse && global_mouse_right_is_released();
+		MOUSE_EVENT.rrelease = global_mouse_right_is_released();
 		
 		MOUSE_EVENT.mclick   = _mouse && global_mouse_middle_is_pressing();
 		MOUSE_EVENT.mpress   = _mouse && global_mouse_middle_is_pressed();
-		MOUSE_EVENT.mrelease = _mouse && global_mouse_middle_is_released();
+		MOUSE_EVENT.mrelease = global_mouse_middle_is_released();
 		
 	} else {
 		MOUSE_EVENT.lclick   = mouse_check_button(mb_left);
@@ -100,7 +100,6 @@ function mouse_step() {
 	
 	if(MOUSE_EVENT.toPress) MOUSE_EVENT.toPress--;
 	else MOUSE_EVENT.toPress = _fclick;
-	
 }
 
 function mouse_click(mouse, focus = true, bypass = false) {
