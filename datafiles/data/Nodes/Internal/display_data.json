@@ -1173,6 +1173,7 @@
             "Node_Color_to_HSV",
             "Node_Color_to_OKLCH",
             { "label": "/Operators" },
+            "Node_Color_Math",
             "Node_Color_Mix",
             { "label": "/Surfaces" },
             "Node_Sampler",
