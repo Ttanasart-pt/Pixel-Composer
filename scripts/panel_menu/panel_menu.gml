@@ -356,6 +356,7 @@ function Panel_Menu() : PanelContent() constructor {
             menuItem(__txt("Capture Project"), function() /*=>*/ { dialogPanelCall(new Panel_Capture_Project());  }),
             -1,
             menuItemShelf(__txt("Misc."), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
+                menuItem("Video Intro",        function() /*=>*/ {return dialogCall(o_dialog_video_intro)}       ), 
                 menuItem("Timer",              function() /*=>*/ {return dialogPanelCall(new Panel_Timer())}     ), 
                 menuItem("Node credit dialog", function() /*=>*/ {return dialogPanelCall(new Panel_Node_Cost())} ), 
             ])}),

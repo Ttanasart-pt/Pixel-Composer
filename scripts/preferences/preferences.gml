@@ -261,8 +261,9 @@
 	#endregion
 	
 	#region VIDEO
-		PREFERENCES.video_mode  = false;
-		PREFERENCES.video_title = "";
+		PREFERENCES.video_mode   = false;
+		PREFERENCES.video_title  = "";
+		PREFERENCES.video_topics = [];
 	#endregion
 		
 	PREFERENCES_DEF = variable_clone(PREFERENCES);

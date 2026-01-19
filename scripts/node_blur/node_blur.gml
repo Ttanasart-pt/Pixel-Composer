@@ -20,7 +20,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Blur
 	newInput( 1, nodeValue_Float(   "Size",       8 )).setHotkey("S").setMappable(16).setUnitSimple(false).setValidator(VV_min(0))
-	newInput( 2, nodeValue_EScroll( "Intensity",  0, [ "Gaussian", "Custom" ]));
+	newInput( 2, nodeValue_EScroll( "Intensity",  0, [ "Gaussian", "Custom" ] ));
 	newInput(17, nodeValue_Curve(   "Intensity Modulation", CURVE_DEF_11 ));
 	newInput( 3, nodeValue_Bool(    "Override color",       false        )).setTooltip("Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
 	newInput( 4, nodeValue_Color(   "Color",                ca_black     ));
@@ -119,19 +119,19 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			shader_set(sh_blur_gaussian);
 			shader_set_uv(_uvm, _uvmx);
-			shader_set_f("dimension", [ _sw, _sh ]);
-			shader_set_f("weight",    _kern);
+			shader_set_f("dimension",  [_sw,_sh] );
+			shader_set_f("weight",     _kern     );
 			
-			shader_set_i("sampleMode", _clamp);
-			shader_set_f_map("size",   _size, _data[16], inputs[1]);
-			shader_set_i("horizontal", 1);
-			shader_set_i("gamma",      _gam);
+			shader_set_i("sampleMode", _clamp    );
+			shader_set_f_map("size",   _size, _data[16], inputs[1] );
+			shader_set_i("horizontal", 1         );
+			shader_set_i("gamma",      _gam      );
 			
-			shader_set_i("overrideColor", _overc != noone);
-			shader_set_c("overColor",     _overc);
-			shader_set_f("angle",         degtorad(_dirr));
+			shader_set_i("overrideColor", _overc != noone );
+			shader_set_c("overColor",     _overc          );
+			shader_set_f("angle",         degtorad(_dirr) );
 			
-			shader_set_f("sizeModulate",  1);
+			shader_set_f("sizeModulate",  1      );
 			
 			draw_surface_safe(_surf);
 			shader_reset();

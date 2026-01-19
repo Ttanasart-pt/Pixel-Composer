@@ -3,31 +3,36 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Start", 0))
-		.rejectArray();
-	
-	newInput(1, nodeValue_Float("End", 10))
-		.rejectArray();
-	
-	newInput(2, nodeValue_Float("Step", 1))
-		.rejectArray();
+	newInput( 0, nodeValue_Float( "Start",         0 ));
+	newInput( 1, nodeValue_Float( "End",          10 ));
+	newInput( 2, nodeValue_Float( "Step",          1 ));
+	newInput( 3, nodeValue_Bool(  "Inclusive", false ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, []));
 	
-	static processData = function(_outSurf, _data, _array_index) {
-		var st  = _data[0];
-		var ed  = _data[1];
-		var stp = _data[2];
-		
-		if(st == ed)
-			return array_create(abs(stp), st);
+	input_display_list = [
+		[ "Range", false ], 0, 1, 2, 3,
+	];
+	
+	////- Node
+	
+	static processData = function(_outData, _data, _array_index) {
+		#region data
+			var st  = _data[0];
+			var ed  = _data[1];
+			var stp = _data[2];
+			var inE = _data[3];
+			
+			if(st == ed) return array_create(abs(stp), st);
+		#endregion
 		
 		stp = abs(stp) * sign(ed - st);
 		
-		var _amo = floor(abs((ed - st) / stp));
-		var  arr = array_create(_amo);
+		var amo = floor(abs((ed - st + inE) / stp));
+		var arr = array_verify(_outData, amo);
 		
-		for( var i = 0; i < _amo; i++ )
+		for( var i = 0; i < amo; i++ )
 			arr[i] = st + i * stp;
 		
 		return arr;

@@ -1185,8 +1185,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(dimension_index < 0) return DEF_SURF;
 		var _inp = inputs[dimension_index];
 		
-		if(is(_inp, nodeValue_Surface))   return surface_get_dimension(_inp.getValue());
-		if(is(_inp, nodeValue_Dimension)) return _inp.getValue();
+		if(is(_inp, __NodeValue_Surface))   return surface_get_dimension(_inp.getValue());
+		if(is(_inp, __NodeValue_Dimension)) return _inp.getValue();
 		return DEF_SURF;
 	}
 	

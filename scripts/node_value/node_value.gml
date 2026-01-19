@@ -2289,7 +2289,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return -1;
 	}
 	
-	static drawPreviewOverlay = function(_x, _y, _s, _panel) {
+	static drawPreviewOverlay = function(_x, _y, _s, _panel = undefined) {
 		var _raw = getValue();
 		var _txt = _raw;
 		
@@ -2300,27 +2300,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _x1 = _x + _sw;
 		var _y1 = _y + _sh;
 		
-		var _bbox = BBOX().fromPoints(_x0 + ui(16), _y0 + ui(16), _x1 - ui(16), _y1 - ui(16));
-		var _tc   = COLORS._main_text;
+		var _bbox = BBOX().fromPoints(_x0 + ui(32), _y0 + ui(32), _x1 - ui(32), _y1 - ui(32));
+		if(_panel) {
+			var pw = _panel.w;
+			var ph = _panel.h;
+			_bbox = BBOX().fromPoints(ui(32), ui(32), pw - ui(32), ph - ui(32));
+		}
+		
+		var _tc   = COLORS._main_icon_light;
+		draw_clear(COLORS.panel_bg_clear_inner);
 		draw_set_text(f_sdf, fa_center, fa_center, _tc);
 		
 		switch(type) {
 			case VALUE_TYPE.integer : 
-			case VALUE_TYPE.float  : 
+			case VALUE_TYPE.float   : 
 				if(display_type == VALUE_DISPLAY.matrix) {
 					if(!is(_raw, Matrix)) return;
 					var _siz = _raw.size;
-					var _mw = _sw / _siz[0];
-					var _mh = _sh / _siz[1];
+					var _mw = _bbox.w / _siz[0];
+					var _mh = _bbox.h / _siz[1];
 					
 					for( var i = 0; i < _siz[1]; i++ )
 					for( var j = 0; j < _siz[0]; j++ ) {
 						var _ind = i * _siz[0] + j;
 						var _val = _raw.raw[_ind];
 						
-						var xx0 = _x + j * _mw;
+						var xx0 = _bbox.x0 + j * _mw;
 						var xx1 = xx0 + _mw;
-						var yy0 = _y + i * _mh;
+						var yy0 = _bbox.y0 + i * _mh;
 						var yy1 = yy0 + _mh;
 						
 						draw_text_bbox(BBOX().fromPoints(xx0, yy0, xx1, yy1), _val);
@@ -2367,9 +2374,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					var _d = array_get_depth(_raw);
 					if(_d == 1) {
 						var _amo = array_length(_raw);
+						var _x0  = _bbox.x0 - ui(32);
+						var _x1  = _bbox.x1 + ui(32);
+						var _y0  = _bbox.y0 - ui(32);
+						var _y1  = _bbox.y1 + ui(32);
 						var _w   = (_x1 - _x0) / _amo;
 						
-						for( var i = 0, n = array_length(_raw); i < n; i++ ) {
+						for( var i = 0; i < _amo; i++ ) {
 							draw_set_color(_raw[i]);
 							draw_rectangle(_x0 + _w * i, _y0, _x0 + _w * (i + 1), _y1, false);
 						}
@@ -2377,10 +2388,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					return;
 				} 
 				
-				draw_set_color(_raw);
-				draw_rectangle(_x0, _y0, _x1, _y1, false);
+				draw_clear(_raw);
 				
-				if(colorBrightness(_raw) > .8) _tc = c_black;
+				if(colorBrightness(_raw) > .8) _tc = COLORS._main_icon_dark;
 				_txt = $"#{color_get_hex(_raw)}";
 				break;
 			
@@ -3303,5 +3313,4 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 		} 
 	}
-
 #endregion

@@ -31,7 +31,7 @@
 function Project() constructor {
 	active	= true;
 	
-	seed        = irandom_range(100000, 999999);
+	seed        = seed_random(6);
 	meta        = __getdefaultMetaData();	
 	path	    = "";
 	thumbnail   = "";													

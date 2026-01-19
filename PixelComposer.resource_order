@@ -450,6 +450,7 @@
     {"name":"o_dialog_textbox_function_guide","order":6,"path":"objects/o_dialog_textbox_function_guide/o_dialog_textbox_function_guide.yy",},
     {"name":"o_dialog_textbox","order":3,"path":"objects/o_dialog_textbox/o_dialog_textbox.yy",},
     {"name":"o_dialog_value_editor","order":7,"path":"objects/o_dialog_value_editor/o_dialog_value_editor.yy",},
+    {"name":"o_dialog_video_intro","order":5,"path":"objects/o_dialog_video_intro/o_dialog_video_intro.yy",},
     {"name":"o_dialog_warning","order":6,"path":"objects/o_dialog_warning/o_dialog_warning.yy",},
     {"name":"o_pie_menu","order":4,"path":"objects/o_pie_menu/o_pie_menu.yy",},
     {"name":"Obj_Debug_FallText_Firestore","order":6,"path":"objects/Obj_Debug_FallText_Firestore/Obj_Debug_FallText_Firestore.yy",},
