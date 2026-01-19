@@ -17,6 +17,8 @@ event_inherited();
 	recent_width = PREFERENCES.splash_expand_recent? ui(576) : ui(288);
 	
 	clip_surf = noone;
+	
+	welcome_editing = false;
 #endregion
 
 #region crashed
@@ -215,7 +217,7 @@ event_inherited();
 			_project.hover_splash = _project[$ "hover_splash"] ?? 0;
 			
 			if(_group_label) {
-				var _coll = array_exists(PREFERENCES.welcome_file_closed, _project.tag);
+				var _coll = welcome_editing || array_exists(PREFERENCES.welcome_file_closed, _project.tag);
 				
 				if(_curr_tag != _project.tag) {
 					if(contentRow) {
@@ -373,8 +375,10 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.box_r5_clr, _hov, pd, _yy, ww - pd, label_h, c_white, 0.3 + _hov * 0.2);
 				BLEND_NORMAL
 				
-				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
-				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, CDEF.main_ltgrey, 1);	
+				if(!welcome_editing) {
+					var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, CDEF.main_ltgrey, 1);
+				}
 				
 				if(_hov) {
 					sp_sample.hover_content = true;

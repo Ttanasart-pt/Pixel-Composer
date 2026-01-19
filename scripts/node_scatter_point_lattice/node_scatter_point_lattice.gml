@@ -61,8 +61,8 @@ function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x,
 		
 		random_set_seed(_seed);
 		
-		var subx = max(_subd[0] + 1, 2);
-		var suby = max(_subd[1] + 1, 2);
+		var subx = max(_subd[0] + 1, 0);
+		var suby = max(_subd[1] + 1, 0);
 		
 		var amo = subx * suby;
 		var pos = array_create(amo);
@@ -80,8 +80,8 @@ function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x,
 			    _i  -= _row * subx;
 			var _col = _i;
 			
-			var _x = lerp(x0, x1, _col / (subx - 1));
-			var _y = lerp(y0, y1, _row / (suby - 1));
+			var _x = lerp(x0, x1, subx <= 1? .5 : _col / (subx - 1));
+			var _y = lerp(y0, y1, suby <= 1? .5 : _row / (suby - 1));
 			
 			pos[i] = [ _x, _y ];
 		}

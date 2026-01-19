@@ -216,9 +216,15 @@ if !ready exit;
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
 			
-			var _txt = __txt("Open Welcome files Folder...");
+			var _txt = __txt("Open Welcome Folder...");
 			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.dPath_open) == 2)
 				shellOpenExplorer($"{DIRECTORY}Welcome files");
+			
+			// bx -= bs + ui(4);
+			// var _txt = __txt("Edit Welcome Folders");
+			// var _bc  = welcome_editing? COLORS._main_value_positive : COLORS._main_icon;
+			// if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.gear, 0, _bc) == 2)
+			// 	welcome_editing = !welcome_editing;
 				
 			if(STEAM_ENABLED) {
 				bx -= bs + ui(4);

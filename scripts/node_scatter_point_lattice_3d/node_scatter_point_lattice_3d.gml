@@ -12,11 +12,9 @@ function Node_Scatter_Point_Lattice_3D(_x, _y, _group = noone) : Node_Processor(
 	setDimension(96, 48);
 	
 	////- =Base
-	
 	newInput(0, nodeValueSeed()).rejectArray();
 	
 	////- =Lattice
-	
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
 	newInput( 1, nodeValue_Vec3(  "Center",      [0,0,0] ));
 	newInput( 2, nodeValue_Vec3(  "Half-Size",   [1,1,1] ));
@@ -124,9 +122,9 @@ function Node_Scatter_Point_Lattice_3D(_x, _y, _group = noone) : Node_Processor(
 		
 		random_set_seed(_seed);
 		
-		var subx = max(_subd[0] + 1, 2);
-		var suby = max(_subd[1] + 1, 2);
-		var subz = max(_subd[2] + 1, 2);
+		var subx = max(_subd[0] + 1, 0);
+		var suby = max(_subd[1] + 1, 0);
+		var subz = max(_subd[2] + 1, 0);
 		
 		var amo = subx * suby * subz;
 		var pos = array_create(amo);
@@ -151,9 +149,9 @@ function Node_Scatter_Point_Lattice_3D(_x, _y, _group = noone) : Node_Processor(
 			    _i  -= _row * subx;
 			var _col = _i;
 			
-			var _x = lerp(x0, x1, _col / (subx - 1));
-			var _y = lerp(y0, y1, _row / (suby - 1));
-			var _z = lerp(z0, z1, _dep / (subz - 1));
+			var _x = lerp(x0, x1, subx <= 1? .5 : _col / (subx - 1));
+			var _y = lerp(y0, y1, suby <= 1? .5 : _row / (suby - 1));
+			var _z = lerp(z0, z1, subz <= 1? .5 : _dep / (subz - 1));
 			
 			pos[i] = [ _x, _y, _z ];
 		}
