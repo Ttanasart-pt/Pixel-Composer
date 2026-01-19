@@ -515,9 +515,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor {
 		var _v2 = _v.Sub(_proj);
 
 		if (_v2.Length() <= 0.0)
-		{
 			return false;
-		}
 
 		_v1.Copy(self);
 		_v2.Normalize().Copy(_v);

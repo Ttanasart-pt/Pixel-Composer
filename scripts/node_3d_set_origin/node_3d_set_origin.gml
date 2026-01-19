@@ -1,5 +1,6 @@
 function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
-	name = "3D Set Origin";
+	name  = "3D Set Origin";
+	gizmo = new __3dGizmoAxis(.2, COLORS._main_accent);
 	
 	newInput(0, nodeValue_D3Mesh( "Mesh" ));
 	
@@ -23,7 +24,7 @@ function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) co
 			inputs[2].setVisible(_type == 0);
 		#endregion
 		
-		if(!is(_mesh, __3dObject)) return _output;
+		if(!is(_mesh, __3dInstance)) return _output;
 		if(!is(_output, __3dTransformed)) 
 			_output = new __3dTransformed();
 		_output.object = _mesh;
@@ -102,6 +103,16 @@ function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) co
 		_output.transform.anchor.set(	ox,    oy,    oz    );
 		_output.transform.applyMatrix();
 		
+		if(_array_index == preview_index) {
+			gizmo.transform.position.set(	ox-px, oy-py, oz-pz );
+			gizmo.transform.applyMatrix();
+		}
+		
 		return _output;
 	}
+	
+	////- Preview
+	
+	static getPreviewObjects		= function() { return [ getPreviewObject(), gizmo ]; }
+	static getPreviewObjectOutline  = function() { return [ getPreviewObject(), gizmo ]; }
 }

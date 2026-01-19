@@ -722,6 +722,7 @@
             "Node_3D_Displace",
             "Node_3D_Set_Origin",
             "Node_3D_Subdivide",
+            "Node_3D_Get_Data",
             { "label": "/Instances" },
             "Node_3D_Repeat",
             { "label": "/Materials" },

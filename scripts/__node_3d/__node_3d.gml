@@ -1030,6 +1030,8 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
+	////- Preview Objects
+	
 	static getPreviewObject = function() {
 		if(array_empty(outputs)) return noone;
 		
@@ -1048,9 +1050,9 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		return _obj;
 	}
 	
-	static getPreviewObjects = function() { return [ getPreviewObject() ]; }
-	
-	static getPreviewObjectOutline = function() { return getPreviewObjects() }
+	static getPreviewValues        = function() /*=>*/ {return array_empty(outputs)? [] : outputs[0].getValue()};
+	static getPreviewObjects       = function() /*=>*/ {return [ getPreviewObject() ]};
+	static getPreviewObjectOutline = function() /*=>*/ {return getPreviewObjects()};
 	
 	static refreshPreview = function() { 
 		var _prev_obj = getPreviewObjects();
@@ -1079,9 +1081,11 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		D3D_GLOBAL_PREVIEW.camera.resetCamera();
 	}
 	
-	static postProcess = function() /*=>*/ { if(!IS_PLAYING) refreshPreview(); }
-	
 	static getGraphPreviewSurface = function() { return mesh_prev_surface; }
+	
+	////- 
+	
+	static postProcess = function() /*=>*/ { if(!IS_PLAYING) refreshPreview(); }
 	
 	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) { }
 }

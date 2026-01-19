@@ -1898,6 +1898,7 @@ function Panel_Preview() : PanelContent() constructor {
     			_prev_objs = _node.getPreviewObjects();
     		else
     			_prev_objs = [ _prev_obj ];
+    			
     	#endregion
     	
         #region shadow

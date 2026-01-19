@@ -255,12 +255,46 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor {
 
 		var _right = _up.Cross(_forward);
 		var _w = sqrt(abs(1.0 + _right.X + _up.Y + _forward.Z)) * 0.5;
-		var _w4Recip = _w == 0? 0 : 1.0 / (4.0 * _w);
 		
-		X = (_up.Z - _forward.Y) * _w4Recip;
-		Y = (_forward.X - _right.Z) * _w4Recip;
-		Z = (_right.Y - _up.X) * _w4Recip;
-		W = _w;
+	    // Handle 180-degree rotation case
+	    if (_w < 0.0001) {
+	        // Find largest diagonal element to maintain numerical stability
+	        if (_right.X > _up.Y && _right.X > _forward.Z) {
+	            // X is largest
+	            var _x = sqrt(abs(1.0 + _right.X - _up.Y - _forward.Z)) * 0.5;
+	            var _x4Recip = 1.0 / (4.0 * _x);
+	            X = _x;
+	            Y = (_right.Y + _up.X) * _x4Recip;
+	            Z = (_forward.X + _right.Z) * _x4Recip;
+	            W = (_up.Z - _forward.Y) * _x4Recip;
+	            
+	        } else if (_up.Y > _forward.Z) {
+	            // Y is largest
+	            var _y = sqrt(abs(1.0 + _up.Y - _right.X - _forward.Z)) * 0.5;
+	            var _y4Recip = 1.0 / (4.0 * _y);
+	            X = (_right.Y + _up.X) * _y4Recip;
+	            Y = _y;
+	            Z = (_up.Z + _forward.Y) * _y4Recip;
+	            W = (_forward.X - _right.Z) * _y4Recip;
+	            
+	        } else {
+	            // Z is largest
+	            var _z = sqrt(abs(1.0 + _forward.Z - _right.X - _up.Y)) * 0.5;
+	            var _z4Recip = 1.0 / (4.0 * _z);
+	            X = (_forward.X + _right.Z) * _z4Recip;
+	            Y = (_up.Z + _forward.Y) * _z4Recip;
+	            Z = _z;
+	            W = (_right.Y - _up.X) * _z4Recip;
+	        }
+	        
+	    } else {
+	        // Standard case
+	        var _w4Recip = 1.0 / (4.0 * _w);
+	        X = (_up.Z - _forward.Y)    * _w4Recip;
+	        Y = (_forward.X - _right.Z) * _w4Recip;
+	        Z = (_right.Y - _up.X)      * _w4Recip;
+	        W = _w;
+	    }
 		return self;
 	};
 	

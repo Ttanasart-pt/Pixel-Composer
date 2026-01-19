@@ -389,6 +389,21 @@
 	}
 	
 	function PREF_LOAD() {
+		try {
+			__PREF_LOAD();
+			
+		} catch(e) {
+			var _dir = $"{DIRECTORY}Preferences";
+			
+			print($"Loading preference failed. Backup and delete {DIRECTORY} folder and re-start the software.")
+			PREFERENCES = variable_clone(PREFERENCES_DEF);
+			LOCALE_DEF  = true;
+			THEME_DEF   = true;
+			FONT_DEF    = true;
+		}
+	}
+	
+	function __PREF_LOAD() {
 		directory_verify($"{DIRECTORY}Preferences");
 		if(!directory_exists(PREFERENCES_DIR)) PREF_UPDATE();
 		
@@ -431,7 +446,7 @@
 			PREFERENCES_MENUITEMS = _map;
 		}
 		
-		var fsPath = PREFERENCES_DIR +$"fs.json";
+		var fsPath = PREFERENCES_DIR + $"fs.json";
 		if(file_exists(fsPath)) {
 			var fsPref = json_load_struct(fsPath);
 			fsPref.ui_scale = UI_SCALE;
@@ -442,11 +457,9 @@
 			ADD_NODE_PAGE    = PREFERENCES.add_node_page;
 			ADD_NODE_SUBPAGE = PREFERENCES.add_node_subpage;
 		}
-		
 	}
 	
 	function PREF_APPLY() {
-		
 		if(PREFERENCES.double_click_delay > 1)
 			PREFERENCES.double_click_delay /= 60;
 		
