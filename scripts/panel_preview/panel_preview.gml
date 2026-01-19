@@ -82,11 +82,11 @@
 	        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         ).setMenu("preview_focus_content");
 	        
 	        registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content",      THEME.icon_center_canvas)
-	        registerFunction(p, "Save Current Frame",       "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame", THEME.icon_preview_export)
-	        registerFunction(p, "Save All Current Frames",  "",  n, panel_preview_saveAllCurrentFrames     ).setMenu("preview_save_all_current_frames")
+	        registerFunction(p, "Save Current Frame...",    "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame", THEME.icon_preview_export)
+	        registerFunction(p, "Save All Current Frames...","", n, panel_preview_saveAllCurrentFrames     ).setMenu("preview_save_all_current_frames")
 	        registerFunction(p, "Save to Focused File",     "",  n, panel_preview_saveCurrentFrameToFocus  ).setMenu("preview_save_to_focused_file")
 	        registerFunction(p, "Save to Project",          "",  n, panel_preview_saveCurrentFrameProject  ).setMenu("preview_save_to_project")
-	        registerFunction(p, "Save all Current Frames",  "",  n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
+	        registerFunction(p, "Save all Current Frames...","", n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
 	        registerFunction(p, "Preview Window",           "P", c, panel_preview_preview_window           ).setMenu("preview_preview_window")
 	        registerFunction(p, "Cycle Channel",            vk_tab, n, panel_preview_cycle_channel         ).setMenu("preview_cycle_channel")
 	    
@@ -111,7 +111,9 @@
 	        registerFunction(p, "Tile Vertical",            "", n, panel_preview_set_tile_vertical         ).setMenu("preview_set_tile_vertical")
 	        registerFunction(p, "Tile Both",                "", n, panel_preview_set_tile_both             ).setMenu("preview_set_tile_both")
 	        registerFunction(p, "Toggle Tile",              "", n, panel_preview_set_tile_toggle           )
-	        	.setMenu("preview_toggle_tile", THEME.icon_tile_view).setSpriteInd(function() /*=>*/ {return PANEL_PREVIEW.tileMode} )
+	        	.setMenu("preview_toggle_tile", THEME.icon_tile_view)
+	        	.setSpriteInd( function() /*=>*/ {return PANEL_PREVIEW.tileMode} )
+	        	.setColorFn(   function() /*=>*/ {return PANEL_PREVIEW.tileMode? COLORS._main_accent : COLORS._main_icon} )
 	        	.setTooltip(new tooltipSelector(__txt("Tiling"), [ __txt("Off"), __txt("Horizontal"), __txt("Vertical"), __txt("Both") ]))
 	        	.setContext([ 
 	                 MENU_ITEMS.preview_set_tile_off,
@@ -130,7 +132,9 @@
 	        registerFunction(p, "Split View Horizontal",    "", n, panel_preview_set_split_horizontal      ).setMenu("preview_set_split_horizontal")
 	        registerFunction(p, "Split View Vertical",      "", n, panel_preview_set_split_vertical        ).setMenu("preview_set_split_vertical")
 	        registerFunction(p, "Toggle Split View",        "", n, panel_preview_toggle_split_view         )
-	        	.setMenu("preview_toggle_split_view", THEME.icon_split_view).setSpriteInd(function() /*=>*/ {return PANEL_PREVIEW.splitView} )
+	        	.setMenu("preview_toggle_split_view", THEME.icon_split_view)
+	        	.setSpriteInd( function() /*=>*/ {return PANEL_PREVIEW.splitView} )
+	        	.setColorFn(   function() /*=>*/ {return PANEL_PREVIEW.splitView? COLORS._main_accent : COLORS._main_icon} )
 	        	.setTooltip(new tooltipSelector(__txt("Split view"), [ __txt("Off"), __txt("Horizontal"), __txt("Vertical"), ]))
 	        	.setContext([ 
 	                 MENU_ITEMS.preview_set_split_off,
@@ -147,7 +151,7 @@
 	        registerFunction(p, "Set Reset View On",        "", n, panel_preview_set_reset_view_on         ).setMenu("preview_set_reset_view_on")
 	        registerFunction(p, "Toggle Reset View",        "", n, panel_preview_toggle_reset_view         )
 	        	.setMenu("preview_toggle_reset_view", THEME.icon_reset_when_preview).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.resetViewOnDoubleClick} )
-	        	.setTooltip(new tooltipSelector(__txtx("panel_preview_on_preview", "On preview"), [ __txt("Center view"), __txt("Keep view") ]))
+	        	.setTooltip(new tooltipSelector(__txtx("panel_preview_on_preview", "On Preview Changed"), [ __txt("Center view"), __txt("Keep view") ]))
 	                                                               
 	        registerFunction(p, "Set Mode 2D",  "", n, panel_preview_set_mode_2d ).setMenu("preview_set_mode_2d")
 	        registerFunction(p, "Set Mode 3D",  "", n, panel_preview_set_mode_3d ).setMenu("preview_set_mode_3d")
@@ -174,7 +178,10 @@
 	        
 	        registerFunction(p, "Toggle Onion Skin",        "", n, panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
 	        registerFunction(p, "Toggle Onion Skin view",   "", n, panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
-	        registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               ).setMenu("preview_toggle_lock",   THEME.lock         ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.locked}       )
+	        registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               )
+	        	.setMenu("preview_toggle_lock", THEME.lock )
+	        	.setSpriteInd( function() /*=>*/ {return !PANEL_PREVIEW.locked} )
+	        	.setColorFn(   function() /*=>*/ {return PANEL_PREVIEW.locked? COLORS._main_accent : COLORS._main_icon} )
 	        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini",   THEME.icon_minimap ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.minimap_show} )
 	        registerFunction(p, "Toggle Gizmo",             "", n, panel_preview_toggle_gizmo              ).setMenu("preview_toggle_gizmo",  THEME.icon_gizmo   ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.gizmo_show}   )
 	        registerFunction(p, "Lock Left Toolbar",        "", n, panel_preview_toggle_tool_lock_l        ).setMenu("preview_toggle_tool_l", THEME.lock         ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always_l} )

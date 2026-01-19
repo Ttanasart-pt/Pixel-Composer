@@ -73,6 +73,8 @@ function searchCollectionData(pr_list, _search_str) {
 			var match = string_partial_match_res(string_lower(_nd.name), search_lower);
 			if(match[0] == -9999) continue;
 			
+			match[0] -= 10;
+			
 			var searchData = { 
 				search : true, 
 				name   : _nd.name, 

@@ -21,7 +21,9 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	hotkey	= _hotkey;
 	toggle	= _toggle;
 	params	= _params;
-	color	= c_white;
+	
+	color    = c_white;
+	getColor = undefined;
 	
 	tooltip      = noone;
 	tooltipName  = new tooltipHotkey(name, undefined);
@@ -69,7 +71,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 		var _tool = getTooltip();
 		var _spr  = getSpr();
 		var _spri = getSprInd();
-		var _cc   = COLORS._main_icon;
+		var _cc   = is_callable(getColor)? getColor() : COLORS._main_icon;
 		
 		var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, hov, foc, _tool, _spr, _spri, _cc, 1, ui(4));
 		
