@@ -36,16 +36,18 @@ WIDGET_TAB_BLOCK = true;
 	draw_text_ext(dialog_x + padding + ui(8), py, txt, -1, dialog_w - ui(48));
 	_dialog_h = ui(118) + string_height_ext(txt, -1, dialog_w - ui(48));
 	
-	var bw = ui(96), bh = line_get_height(f_p2, 10);
+	var amo = array_length(buttons);
+	var bw  = (dialog_w - padding * 2 - ui(8 * (amo - 1))) / amo;
+	var bh  = line_get_height(f_p2, 10);
 	var bx1 = dialog_x + dialog_w - padding;
 	var by1 = dialog_y + dialog_h - padding;
 	var bx0 = bx1 - bw;
 	var by0 = by1 - bh;
 	
 	var _des = false;
-	if(keyboard_check_pressed(vk_tab)) buttonIndex = (buttonIndex + 1) % array_length(buttons);
+	if(keyboard_check_pressed(vk_tab)) buttonIndex = (buttonIndex + 1) % amo;
 	
-	for( var i = array_length(buttons) - 1; i >= 0; i-- ) {
+	for( var i = amo - 1; i >= 0; i-- ) {
 		var _b   = buttons[i];
 		var _txt = _b[0];
 		var _fn  = _b[1];

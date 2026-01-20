@@ -206,10 +206,10 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 		var hh = 0;
 		
 		var _h = drawPaletteFile(projectPal, 0, _y, _m);
-		_y += _h; hh += hh;
+		_y += _h; hh += _h;
 		
 		var _h = drawPaletteDirectory(PALETTES_FOLDER,  0, _y, _m);
-		_y += _h; hh += hh;
+		_y += _h; hh += _h;
 		
 		if(mouse_release(mb_left)) click_block = false;
 		

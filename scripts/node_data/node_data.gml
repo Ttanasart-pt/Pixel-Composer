@@ -2692,7 +2692,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return val;
 	}
 	
-	__preview_bbox = BBOX();
 	static getPreviewBoundingBox = function() {
 		var _surf = getPreviewValues();
 		if(is_array(_surf)) 
@@ -2703,6 +2702,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 	}
 	
+	__preview_bbox = BBOX();
 	static getPreviewBoundingBoxExpanded = function() /*=>*/ {return __preview_bbox};
 	
 	static getGraphPreviewSurface = function() { 
