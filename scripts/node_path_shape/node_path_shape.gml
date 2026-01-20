@@ -1,7 +1,35 @@
 #region
+	global.node_path_shape_types = [ 
+		    "Rectangle", "Trapezoid", "Parallelogram",
+	    -1, "Ellipse", "Arc", "Squircle", "Hypocycloid", "Epitrochoid", 
+	    -1, "Polygon", "Star", "Star Draw", "Twist", 
+	    -1, "Line", "Curve", "Spiral", "Spiral Circle",
+	];
+	
+	global.Node_Path_Shape_alias = array_merge(global.node_path_shape_types, []);
+	
+	__ind = 0; 
+	global.node_path_shape_types_map = {};
+	for( var i = 0, n = array_length(global.node_path_shape_types); i < n; i++ ) {
+		var _s = global.node_path_shape_types[i];
+		if(_s == -1) continue;
+		global.node_path_shape_types_map[$ _s] = new scrollItem(_s, s_node_shape_path_type, __ind++);
+	}
+	
+	function Node_create_Path_Shape(_x, _y, _group = noone, _param = {}) {
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Path_Shape(_x, _y, _group);
+		var ind   = string_titlecase(query);
+		
+		if(has(global.node_path_shape_types_map, ind)) 
+			node.inputs[3].skipDefault().setValue(ind);
+		
+		return node;
+	}
+	
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Path_Shape", "Shape > Rectangle", "R", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue(0); });
-		addHotkey("Node_Path_Shape", "Shape > Ellipse",   "E", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue(4); });
+		addHotkey("Node_Path_Shape", "Shape > Rectangle", "R", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue("Rectangle"); });
+		addHotkey("Node_Path_Shape", "Shape > Ellipse",   "E", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue("Ellipse");   });
 	});
 #endregion
 
@@ -11,23 +39,22 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	dimension_index = -1;
 	setDimension(96, 48);
 	
-	shape_types = [ 
-	        "Rectangle", "Trapezoid", "Parallelogram",
-	    -1, "Ellipse", "Arc", "Squircle", "Hypocycloid", "Epitrochoid", 
-	    -1, "Polygon", "Star", "Twist", 
-	    -1, "Line", "Curve", "Spiral", "Spiral Circle",
-    ];
-    
-    __ind = 0; shapeScroll = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_path_type, __ind++)});
-    
     ////- =Transform
 	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 2, nodeValue_Rotation( "Rotation",    0     )).setHotkey("R");
 	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitSimple();
 	
     ////- =Shape
-	newInput( 3, nodeValue_EScroll(  "Shape",          0, { data: shapeScroll, horizontal: 1, text_pad: ui(16) } ))
-		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_19_06_0}, list: global.node_path_shape_keys_195 } ]);
+	newInput( 3, nodeValue_EString(  "Shape", "Rectangle", { 
+			data       : global.node_path_shape_types, 
+			display    : global.node_path_shape_types_map,
+			horizontal : 1, 
+			text_pad   : ui(16) 
+			
+		})).setHistory([ global.node_path_shape_types, 
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_19_06_0}, list: global.node_path_shape_keys_195 },
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_04_1}, list: global.node_path_shape_keys_204 },
+		]);
 		
 	newInput( 4, nodeValue_Slider(   "Skew",          .5, [-1,1,.01] ));
 	newInput( 5, nodeValue_RotRange( "Angle Range",   [0,90]         ));
@@ -65,7 +92,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		cached_pos  = ds_map_create();
 		
 		loop  = true;
-		shape = 0;
+		shape = "";
 		posx  = 0; posy  = 0;
 		scax  = 1; scay  = 1;
 		rot   = 0;
@@ -84,7 +111,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		    out ??= new __vec2P();
 		    _rat = frac(_rat);
 		    
-			switch(node.shape_types[shape]) {
+			switch(shape) {
 	            case "Ellipse" : 
 	                var a = 360 * _rat;
 	                out.x = posx + lengthdir_x(scax, a);
@@ -245,7 +272,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         var ox, oy, nx, ny, x0, y0;
         var cind = [ 0, 1, 3, 2 ];
           
-        switch(shape_types[_shap]) {
+        switch(_shap) {
             case "Rectangle" : 
             	inputs[9].setVisible(true);
             	
@@ -515,6 +542,24 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 }
                 break;
                 
+            case "Star Draw" :
+                inputs[7].setVisible(true);
+                
+            	_pth.loop = true;
+                
+                var _st = _sid;
+                var _as = 360 / _st;
+                var _aa = 0;
+                _pth.points  = array_create(_st);
+                
+                for( var i = 0; i < _st; i++ ) {
+                    nx = _pos[0] + lengthdir_x(_sca[0], _aa);
+                    ny = _pos[1] + lengthdir_y(_sca[1], _aa);
+                    _pth.points[i] = [ nx, ny ];
+                    _aa += _as * 2;
+                }
+                break;
+                
             case "Twist" :
                 inputs[6].setVisible(true);
                 
@@ -722,5 +767,12 @@ global.node_path_shape_keys_195 = [
         "Rectangle", "Trapezoid", "Parallelogram",
     -1, "Ellipse", "Arc", "Squircle", 
     -1, "Polygon", "Star", 
+    -1, "Line", "Curve", "Spiral", "Spiral Circle",
+];
+
+global.node_path_shape_keys_204 = [
+        "Rectangle", "Trapezoid", "Parallelogram",
+    -1, "Ellipse", "Arc", "Squircle", "Hypocycloid", "Epitrochoid", 
+    -1, "Polygon", "Star", "Twist", 
     -1, "Line", "Curve", "Spiral", "Spiral Circle",
 ];

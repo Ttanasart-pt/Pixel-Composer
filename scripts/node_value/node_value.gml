@@ -1341,7 +1341,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.enum_string :
-						editWidget = new scrollBox(display_data.data, function(val) /*=>*/ {return setValueInspector(isNumber(val)? display_data.data[val] : val)} )
+						editWidget = new scrollBox(display_data.data, function(val) /*=>*/ {return setValueInspector(is_numeric(val)? display_data.data[val] : val)} )
 							.setStruct(display_data.display);
 						
 						if(has(display_data, "update_hover")) editWidget.update_hover = display_data.update_hover;

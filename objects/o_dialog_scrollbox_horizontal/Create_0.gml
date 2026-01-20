@@ -22,7 +22,7 @@ event_inherited();
 	selecting	  = -1;
 	scrollbox	  = noone;
 	data		  = [];
-	initVal		  = 0;
+	initVal		  = undefined;
 	update_hover  = true;
 	search_string = "";
 	

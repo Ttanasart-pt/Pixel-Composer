@@ -7,7 +7,7 @@
 		-1, "Teardrop", "Leaf", "Heart", "Gear", 
 	];
 	
-	global.Node_Shape_alias = array_append(global.node_shape_types, [
+	global.Node_Shape_alias = array_merge(global.node_shape_types, [
 		"square", 
 		"circle", "ring", 
 		"triangle", "pentagon", "hexagon",
@@ -37,7 +37,7 @@
 			default : ind = string_titlecase(query);
 		}
 		
-		if(ind != undefined) 
+		if(has(global.node_shape_types_map, ind)) 
 			node.inputs[2].skipDefault().setValue(ind);
 		
 		return node;
@@ -99,7 +99,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	// 		{ cond: () => LOADING_VERSION < 1_20_01_0, list: global.node_shape_keys_20 }, 
 	// 	]);
 	
-	newInput( 2, nodeValue_EString(  "Shape",  global.node_shape_types[0], { 
+	newInput( 2, nodeValue_EString(  "Shape",  "Rectangle", { 
 			data       : global.node_shape_types, 
 			display    : global.node_shape_types_map, 
 			horizontal : 1, 
@@ -281,12 +281,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_clear_alpha(0, _bg);
 			if(!_bg) BLEND_OVERRIDE
 			
-			var _shp = _shape;
-			if(is_struct(_shp)) _shp = _shp.data;
+			if(is_struct(_shape)) _shape = _shape.data;
 			
 			shader_set_uv(_data[44], _data[45]);
 			
-			switch(_shp) {
+			switch(_shape) {
 				case "Rectangle" :
 					inputs[ 9].setVisible( true);
 					inputs[18].setVisible(false);
@@ -617,9 +616,8 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 	var _shaSca  = current_data[28]; if(_shaSca <= 0) return;
 	var _pos     = [ 0, 0 ];
 	var _sca     = [ 1, 1 ];
-	var _shp     = _shape;
 	
-	switch(_shp) {
+	switch(_shape) {
 		case "Line" : 
 		case "Arrow" : _shaSca = 1; break;
 	}
@@ -654,7 +652,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 	var _x1 = _px + _sca[0] * _s;
 	var _y1 = _py + _sca[1] * _s;
 	
-	switch(_shp) {
+	switch(_shape) {
 		case "Arrow" :
 		case "Line"	 :
 			var _p0 = current_data[32];
@@ -669,7 +667,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			
 			var _paa = point_direction(_p0x, _p0y, _p1x, _p1y);
 			
-			if(_shp == "Arrow") {
+			if(_shape == "Arrow") {
 				var _ars = current_data[23];
 				var _arh = current_data[24];
 				
@@ -702,7 +700,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			
 			InputDrawOverlay(inputs[34].drawOverlay(w_hoverable, active, _pcx, _pcy, _s * _sca[0] * 2, _mx, _my, _snx, _sny, _paa + 90, 1, 1));
 			
-			if(_shp == "Arrow") {
+			if(_shape == "Arrow") {
 				draw_set_color(COLORS._main_accent);
 				draw_line_dashed(_phx, _phy, _pex, _pey);
 			
