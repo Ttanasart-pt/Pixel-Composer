@@ -1,40 +1,53 @@
 #region create
-	global.node_shape_keys = [ 
-		"rectangle", "square", "diamond", "trapezoid", "parallelogram", "half", 
-		"circle", "ellipse", "arc", "donut", "crescent", "ring", "squircle", 
-		"regular polygon", "triangle", "pentagon", "hexagon", "star", "cross", 
-		"line", "arrow", 
-		"teardrop", "leaf", "heart", "gear", 
+	global.node_shape_types = [ 
+		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
+		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", "Superellipse", 
+		-1, "Regular Polygon", "Star", "Cross", "Rounded Cross",  
+		-1, "Line", "Arrow", 
+		-1, "Teardrop", "Leaf", "Heart", "Gear", 
 	];
-
+	
+	global.Node_Shape_alias = array_append(global.node_shape_types, [
+		"square", 
+		"circle", "ring", 
+		"triangle", "pentagon", "hexagon",
+	]);
+	
+	__ind = 0; 
+	global.node_shape_types_map = {};
+	for( var i = 0, n = array_length(global.node_shape_types); i < n; i++ ) {
+		var _s = global.node_shape_types[i];
+		if(_s == -1) continue;
+		global.node_shape_types_map[$ _s] = new scrollItem(_s, s_node_shape_type, __ind++);
+	}
+	
 	function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
 		var node  = new Node_Shape(_x, _y, _group);
-		var ind   = -1;
+		var ind   = undefined;
 		
 		switch(query) {
-			case "square" :   ind = array_find_string(node.shape_types, "rectangle");	break;
-			case "circle" :   ind = array_find_string(node.shape_types, "ellipse"); 	break;
-			case "ring" :     ind = array_find_string(node.shape_types, "donut");		break;
-			case "triangle" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(3); break;
-			case "pentagon" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(5); break;
-			case "hexagon" :  ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(6); break;
+			case "square" :   ind = "Rectangle" break;
+			case "circle" :   ind = "Ellipse"   break;
+			case "ring" :     ind = "Donut"     break;
+			case "triangle" : ind = "Regular Polygon"; node.inputs[4].setValue(3); break;
+			case "pentagon" : ind = "Regular Polygon"; node.inputs[4].setValue(5); break;
+			case "hexagon" :  ind = "Regular Polygon"; node.inputs[4].setValue(6); break;
 			
-			default : ind = array_find_string(node.shape_types, query);
+			default : ind = string_titlecase(query);
 		}
 		
-		if(ind >= 0) node.inputs[2].skipDefault().setValue(ind);
+		if(ind != undefined) 
+			node.inputs[2].skipDefault().setValue(ind);
 		
 		return node;
 	}
 	
-	function __Node_Shape_Hotkeys_set_shape(_n, _key) { _n.inputs[2].setValue(array_find(_n.shape_types, _key)); }
-	
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Shape", "Shape > Rectangle",       "R", 0, function() /*=>*/ { GRAPH_FOCUS __Node_Shape_Hotkeys_set_shape(_n, "Rectangle");       });
-		addHotkey("Node_Shape", "Shape > Ellipse",         "E", 0, function() /*=>*/ { GRAPH_FOCUS __Node_Shape_Hotkeys_set_shape(_n, "Ellipse");         });
-		addHotkey("Node_Shape", "Shape > Regular polygon", "P", 0, function() /*=>*/ { GRAPH_FOCUS __Node_Shape_Hotkeys_set_shape(_n, "Regular polygon"); });
-		addHotkey("Node_Shape", "Shape > Star",            "S", 0, function() /*=>*/ { GRAPH_FOCUS __Node_Shape_Hotkeys_set_shape(_n, "Star");            });
+		addHotkey("Node_Shape", "Shape > Rectangle",       "R", 0, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue("Rectangle");       });
+		addHotkey("Node_Shape", "Shape > Ellipse",         "E", 0, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue("Ellipse");         });
+		addHotkey("Node_Shape", "Shape > Regular Polygon", "P", 0, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue("Regular Polygon"); });
+		addHotkey("Node_Shape", "Shape > Star",            "S", 0, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue("Star");            });
 		addHotkey("Node_Shape", "Anti-aliasing > Toggle",  "A", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 6]; i.setValue(!i.getValue());        });
 		addHotkey("Node_Shape", "Height Render > Toggle",  "H", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[12]; i.setValue(!i.getValue());        });
 		addHotkey("Node_Shape", "Background > Toggle",     "B", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 1]; i.setValue(!i.getValue());        });
@@ -79,19 +92,22 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(28, nodeValue_Slider(   "Shape Scale",         1     )).hideLabel();
 	
 	////- =Shape
-	static shape_types = [ 
-		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
-		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", "Superellipse", 
-		-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
-		-1, "Line", "Arrow", 
-		-1, "Teardrop", "Leaf", "Heart", "Gear", 
-	];
-	__ind = 0; shape_types_str = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_type, __ind++)});
 	
-	newInput( 2, nodeValue_EScroll(    "Shape",  0, { data: shape_types_str, horizontal: 1, text_pad: ui(16) }))
-		.setHistory([ shape_types, 
-			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 }, 
-			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_01_0}, list: global.node_shape_keys_20 }, 
+	// newInput( 2, nodeValue_EScroll(  "Shape",  0, { data: shape_types_str, horizontal: 1, text_pad: ui(16) }))
+	// 	.setHistory([ shape_types, 
+	// 		{ cond: () => LOADING_VERSION < 1_18_00_0, list: global.node_shape_keys_18 }, 
+	// 		{ cond: () => LOADING_VERSION < 1_20_01_0, list: global.node_shape_keys_20 }, 
+	// 	]);
+	
+	newInput( 2, nodeValue_EString(  "Shape",  global.node_shape_types[0], { 
+			data       : global.node_shape_types, 
+			display    : global.node_shape_types_map, 
+			horizontal : 1, 
+			text_pad   : ui(16) 
+		})).setHistory([ global.node_shape_types, 
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18  }, 
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_01_0}, list: global.node_shape_keys_20  }, 
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_04_1}, list: global.node_shape_keys_204 }, 
 		]);
 		
 	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitSimple();
@@ -144,7 +160,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	b_replace_fast = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Shape_Fast", x, y, group), true); }).setText("Switch to Fast version");
 	
-	input_display_list = [ b_replace_fast, 
+	input_display_list = [ 
 		[ "Output",     false     ],  0, 44, 45, 6, 
 		[ "Background", false     ],  1, 11, 46, 47, 
 		[ "Transform",  false     ], 15,  3, 16, 17, 19, 28, 
@@ -252,8 +268,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[27].setVisible(false);
 			
 			inputs[11].setVisible(_bg == 1);
-			inputs[46].setVisible(_bg == 2);
+			inputs[46].setVisible(_bg == 2, _bg == 2);
 			inputs[47].setVisible(_bg == 2);
+			
+			if(_bg == 2 && !is_just_surface(_bgSurf)) _bg = 0;
 		#endregion
 		
 		for( var i = 0, n = array_length(_outData); i < n; i++ ) 
@@ -263,7 +281,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_clear_alpha(0, _bg);
 			if(!_bg) BLEND_OVERRIDE
 			
-			var _shp = array_safe_get(shape_types, _shape, "");
+			var _shp = _shape;
 			if(is_struct(_shp)) _shp = _shp.data;
 			
 			shader_set_uv(_data[44], _data[45]);
@@ -394,7 +412,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-				case "Regular polygon" :
+				case "Regular Polygon" :
 					inputs[ 4].setVisible(true);
 					inputs[ 7].setVisible(true);
 					inputs[ 9].setVisible(true);
@@ -569,14 +587,22 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 global.node_shape_keys_18 = [ 
 	    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
 	-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
-	-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
+	-1, "Regular Polygon", "Star", "Cross", "Rounded Cross",  
 	-1, "Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
 ];
 
 global.node_shape_keys_20 = [ 
     "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
 	-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
-	-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
+	-1, "Regular Polygon", "Star", "Cross", "Rounded Cross",  
+	-1, "Line", "Arrow", 
+	-1, "Teardrop", "Leaf", "Heart", "Gear", 
+];
+
+global.node_shape_keys_204 = [ 
+    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
+	-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", "Superellipse", 
+	-1, "Regular Polygon", "Star", "Cross", "Rounded Cross",  
 	-1, "Line", "Arrow", 
 	-1, "Teardrop", "Leaf", "Heart", "Gear", 
 ];
@@ -591,8 +617,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 	var _shaSca  = current_data[28]; if(_shaSca <= 0) return;
 	var _pos     = [ 0, 0 ];
 	var _sca     = [ 1, 1 ];
-	
-	var _shp = array_safe_get(shape_types, _shape, "");
+	var _shp     = _shape;
 	
 	switch(_shp) {
 		case "Line" : 
@@ -756,7 +781,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			InputDrawOverlay(inputs[31].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0] / 4, _mx, _my, _snx, _sny, 0, 1, 1));
 			break;
 			
-		case "Regular polygon" : 
+		case "Regular Polygon" : 
 			var _side = current_data[4];
 			
 			var _iy = _py - _side * _s * _sca[1] / 12;

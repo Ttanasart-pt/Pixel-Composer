@@ -73,6 +73,7 @@ enum VALUE_DISPLAY {
 	//Number
 	enum_scroll,
 	enum_button,
+	enum_string,
 	rotation,
 	rotation_range,
 	rotation_random,

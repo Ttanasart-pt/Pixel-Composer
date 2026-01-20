@@ -35,6 +35,7 @@ event_inherited();
 	function initScroll(scroll) {
 		scrollbox	= scroll;
 		data		= scroll.data;
+		displayStr  = scroll.displayStr;
 		setSize();
 	}
 	
@@ -78,6 +79,9 @@ event_inherited();
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
 			var _val = data[i];
+			if(has(displayStr, _val))
+				_val = displayStr[$ _val];
+			
 			var  txt = is(_val, scrollItem)? _val.name : _val;
 			var _spr = is(_val, scrollItem) && _val.spr;
 			
@@ -173,7 +177,7 @@ event_inherited();
 		var _lh  = 0;
 		var _h   = 0;
 		var _col = 0;
-		var hovering  = "";
+		var hovering  = undefined;
 		var _hori     = horizon && search_string == "";
 		var _tpad     = _hori? text_pad : ui(8);
 		
@@ -185,6 +189,9 @@ event_inherited();
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
 			var _val = data[i];
+			if(has(displayStr, _val))
+				_val = displayStr[$ _val];
+				
 			_dw  = max(_dw, _hori? widths[_col] : _ww);
 			
 			if(_hori) {
@@ -241,9 +248,9 @@ event_inherited();
 			if(_act) {
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], _lx, _ly, _lx + _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
-					_hov = true;
+					_hov      = true;
 					selecting = i;
-					hovering  = data[i];
+					hovering  = i;
 					
 					if(_tol) TOOLTIP = _val.tooltip;
 				}
@@ -252,7 +259,7 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.textbox, 3, _lx, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 					if(sc_content.active && (mouse_press(mb_left, _hov) || KEYBOARD_ENTER)) {
-						initVal = array_find(scrollbox.data, _val);
+						initVal = i;
 						instance_destroy();
 					}
 				}
@@ -289,8 +296,8 @@ event_inherited();
 		if(update_hover) {
 			UNDO_HOLDING = true;
 			
-			var _val = hovering == noone? initVal : array_find(scrollbox.data, hovering);
-			if(_val != -1) scrollbox.onModify(_val);
+			var _hval = hovering ?? initVal;
+			if(_hval != -1) scrollbox.onModify(_hval);
 				
 			UNDO_HOLDING = false;
 		}

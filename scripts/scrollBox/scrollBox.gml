@@ -53,7 +53,9 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	minWidth = 0;
 	type     = 0;
 	hide     = 0;
+	displayStr = undefined;
 	
+	static setStruct        = function(l) /*=>*/ { displayStr     = l; return self; }
 	static setType          = function(l) /*=>*/ { type           = l; return self; }
 	static setHorizontal    = function(l) /*=>*/ { horizontal     = l; return self; }
 	static setAlign         = function(l) /*=>*/ { align          = l; return self; }
@@ -111,7 +113,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		if(horizontal == 2) h = ui(80);
 		
 		data = is_method(data_list)? data_list() : data_list;
-		if(array_empty(data)) {
+		
+		if(is_array(data) && array_empty(data)) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, h);
 			
 			if(type == 0) {
@@ -123,9 +126,10 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		}
 		
 		var _selVal = _val;
-		
 		if(is_array(_val)) return 0;
-		if(is_numeric(_val)) _selVal = array_safe_get_fast(data, _val);
+		
+		if(is_array(data) && is_numeric(_val)) _selVal = array_safe_get_fast(data, _val);
+		if(has(displayStr, _val))              _selVal = displayStr[$ _val];
 		curr_val = _val;
 		
 		var _text = is(_selVal, scrollItem)? _selVal.name : _selVal;
@@ -257,10 +261,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		return h;
 	}
 	
-	static clone = function() {
-		var cln = new scrollBox(data, onModify, update_hover);
-		return cln;
-	}
+	static clone = function() /*=>*/ {return new scrollBox(data, onModify, update_hover)};
 }
 
 function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructor {

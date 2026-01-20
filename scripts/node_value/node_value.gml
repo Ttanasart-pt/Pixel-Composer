@@ -857,6 +857,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	////- DISPLAY
 	
 	static setVisibleManual = function(v) {
+		if(visible_manual == v) return self;
 		visible_manual = v;
 		node.toRefreshNodeDisplay = true;
 		return self;
@@ -1092,7 +1093,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(!is_struct(display_data)) display_data = { data: display_data };
 						var choices = __txt_junction_data(instanceof(node), connect_type, index, display_data.data);
 						
-						editWidget = new scrollBox(choices, function(val) /*=>*/ { return val == -1? undefined : setValueInspector(toNumber(val)); } );
+						editWidget = new scrollBox(choices, function(val) /*=>*/ {return val == -1? undefined : setValueInspector(toNumber(val))} );
 						
 						if(struct_has(display_data, "update_hover")) editWidget.update_hover = display_data.update_hover;
 						if(struct_has(display_data, "horizontal"))   editWidget.horizontal   = display_data.horizontal;
@@ -1337,6 +1338,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.text_array :
 						editWidget = new textArrayBox(function() /*=>*/ {return animator.values[0].value}, display_data.data, function() /*=>*/ {return node.doUpdate()});
+						break;
+						
+					case VALUE_DISPLAY.enum_string :
+						editWidget = new scrollBox(display_data.data, function(val) /*=>*/ {return setValueInspector(isNumber(val)? display_data.data[val] : val)} )
+							.setStruct(display_data.display);
+						
+						if(has(display_data, "update_hover")) editWidget.update_hover = display_data.update_hover;
+						if(has(display_data, "horizontal"))   editWidget.horizontal   = display_data.horizontal;
+						if(has(display_data, "item_pad"))     editWidget.item_pad     = display_data.item_pad;
+						if(has(display_data, "text_pad"))     editWidget.text_pad     = display_data.text_pad;
+						if(has(display_data, "show_icon"))    editWidget.show_icon    = display_data.show_icon;
+						
+						rejectConnect();
+						key_inter    = CURVE_TYPE.cut;
+						extract_node = "";
 						break;
 				}
 				

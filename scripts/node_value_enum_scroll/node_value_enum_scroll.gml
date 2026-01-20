@@ -20,7 +20,6 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	}
 		
 	static setUnclamp  = function( ) /*=>*/ { clamp_range = false;    return self;  }
-	static setHistory  = function(h) /*=>*/ { options_histories = h;  return self;  }
 	
 	/////============== CONNECT =============
 	
@@ -56,6 +55,8 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	/////============ Serialize ===========
 	
 	options_histories = [];
+	
+	static setHistory  = function(h) /*=>*/ { options_histories = h;  return self;  }
 	
 	static postApplyDeserialize = function() {
 		if(getAnim()) return;

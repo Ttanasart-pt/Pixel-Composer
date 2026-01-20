@@ -52,6 +52,14 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 
 	sourceDir    = "";
 	tags         = struct_try_get(NODE_ALIAS, nodeName, []);
+	if(variable_global_exists($"{nodeName}_alias")) {
+		tags = array_append(tags, variable_global_get($"{nodeName}_alias"));
+		tags = array_filter(tags, function(t,i) /*=>*/ {return is_string(t)});
+		tags = array_unique(tags);
+		
+		array_map_ext(tags, function(t,i) /*=>*/ {return string_lower(t)});
+	}
+	
 	tooltip      = _tooltip;
 	tooltip_spr  = undefined;
 	

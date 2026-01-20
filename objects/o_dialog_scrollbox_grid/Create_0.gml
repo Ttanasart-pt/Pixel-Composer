@@ -35,6 +35,7 @@ event_inherited();
 		scrollbox	= scroll;
 		dialog_w	= max(ui(200), scroll.w);
 		data		= scroll.data;
+		displayStr  = scroll.displayStr;
 		
 		grid_width  = ui(80);
 		grid_height = ui(88);
@@ -92,7 +93,7 @@ event_inherited();
 		
 		var hght = line_get_height(font) + item_pad;
 		var _dw  = sc_content.surface_w;
-		var hov  = noone;
+		var hov  = undefined;
 		var gw   = grid_width;
 		var gh   = grid_height;
 		
@@ -105,6 +106,8 @@ event_inherited();
 		
 		for( var i = 0; i < len; i++ ) {
 			var _val = data[i];
+			if(has(displayStr, _val))
+				_val = displayStr[$ _val];
 			
 			var _act = _val.active;
 			var _txt = _val.name;
@@ -121,14 +124,14 @@ event_inherited();
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], _xx, _yy, _xx + gw, _yy + gh)) {
 					sc_content.hover_content = true;
 					selecting = i;
-					hov       = _val;
+					hov       = i;
 				}
 			
 				if(selecting == i) {
 					draw_sprite_stretched_ext(THEME.textbox, 3, _xx, _yy, gw, gh, COLORS.dialog_menubox_highlight, 1);
 					
 					if(sc_content.active && (mouse_press(mb_left) || KEYBOARD_ENTER)) {
-						initVal = array_find(scrollbox.data, _val);
+						initVal = i;
 						instance_destroy();
 					}
 				}
@@ -165,8 +168,8 @@ event_inherited();
 		if(update_hover) {
 			UNDO_HOLDING = true;
 			
-			var _val = hov == noone? initVal : array_find(scrollbox.data, hov);
-			if(_val != -1) scrollbox.onModify(_val);
+			var _hval = hov ?? initVal;
+			if(_hval != -1) scrollbox.onModify(_hval);
 			
 			UNDO_HOLDING = false;
 		}

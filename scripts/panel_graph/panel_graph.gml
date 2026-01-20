@@ -70,14 +70,15 @@
     
     function panel_graph_send_to_preview()         { CALL("graph_send_to_preview");     PANEL_GRAPH.send_to_preview();                        }
     function panel_graph_preview_window()          { CALL("graph_preview_window");      create_preview_window(PANEL_GRAPH.getFocusingNode()); }
-    function panel_graph_inspector_panel()         { CALL("graph_inspector_panel");     PANEL_GRAPH.inspector_panel();                        }
-    function panel_graph_send_to_export()          { CALL("graph_send_to_export");      PANEL_GRAPH.send_hover_to_export();                   }
-    function panel_graph_toggle_preview()          { CALL("graph_toggle_preview");      PANEL_GRAPH.setTriggerPreview();                      }
-    function panel_graph_toggle_render()           { CALL("graph_toggle_render");       PANEL_GRAPH.setTriggerRender();                       }
-    function panel_graph_toggle_parameter()        { CALL("graph_toggle_parameter");    PANEL_GRAPH.setTriggerParameter();                    }
-    function panel_graph_enter_group()             { CALL("graph_enter_group");         PANEL_GRAPH.enter_group();                            }
-    function panel_graph_exit_group()              { CALL("graph_exit_group");          PANEL_GRAPH.exitContext();                            }
-    function panel_graph_hide_disconnected()       { CALL("graph_hide_disconnected");   PANEL_GRAPH.hide_disconnected();                      }
+    function panel_graph_inspector_panel()         { CALL("graph_inspector_panel");     PANEL_GRAPH.inspector_panel();      }
+    function panel_graph_send_to_export()          { CALL("graph_send_to_export");      PANEL_GRAPH.send_hover_to_export(); }
+    function panel_graph_toggle_preview()          { CALL("graph_toggle_preview");      PANEL_GRAPH.setTriggerPreview();    }
+    function panel_graph_toggle_render()           { CALL("graph_toggle_render");       PANEL_GRAPH.setTriggerRender();     }
+    function panel_graph_toggle_parameter()        { CALL("graph_toggle_parameter");    PANEL_GRAPH.setTriggerParameter();  }
+    function panel_graph_enter_group()             { CALL("graph_enter_group");         PANEL_GRAPH.enter_group();          }
+    function panel_graph_exit_group()              { CALL("graph_exit_group");          PANEL_GRAPH.exitContext();          }
+    function panel_graph_hide_disconnected()       { CALL("graph_hide_disconnected");   PANEL_GRAPH.hideDisconnected();     }
+    function panel_graph_hide_selecting()          { CALL("graph_hide_selecting");      PANEL_GRAPH.hideSelecting();        }
     
     function panel_graph_open_group_tab()          { CALL("graph_open_group_tab");      PANEL_GRAPH.open_group_tab();                         }
     function panel_graph_set_as_tool()             { CALL("graph_open_set_as_tool");    PANEL_GRAPH.set_as_tool();                            }
@@ -226,6 +227,7 @@
     	])}).setMenu("graph_node_display", noone, true)
         
         registerFunction(g, "Hide Disconnected",     "",  n, panel_graph_hide_disconnected   ).setMenu("graph_hide_disconnected")
+        registerFunction(g, "Hide Junction",         "",  n, panel_graph_hide_selecting      ).setMenu("graph_hide_selecting",  THEME.junc_visible)
         
         registerFunction(g, "Enter Group",           "",  n, panel_graph_enter_group         ).setMenu("graph_enter_group",     THEME.group)
         registerFunction(g, "Exit Group",           192,  n, panel_graph_exit_group          ).setMenu("graph_exit_group",      THEME.group)
@@ -944,8 +946,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         function send_hover_to_export()  { doExport(node_hover); }
         function enter_group()           { PANEL_GRAPH.addContext(node_hover); }
-        function hide_disconnected()     { hideDisconnected(); }
-        
         
         function open_group_tab(group = node_hover) {
             if(group == noone) return;
@@ -1030,6 +1030,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
 	    global.menuItems_graph_junction_select = [
 	    	"graph_group_junction_color",
+	    	"graph_hide_selecting",
     	];
     	
 	    global.menuItems_graph_connection_select = [
@@ -4279,6 +4280,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             
             _node.refreshNodeDisplay();
         }
+    }
+    
+    function hideSelecting() {
+    	if(!__junction_hovering) return;
+    	__junction_hovering.setVisibleManual(-1);
     }
     
     function createTunnel() {

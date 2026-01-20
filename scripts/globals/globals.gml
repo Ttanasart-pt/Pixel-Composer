@@ -34,7 +34,7 @@ gml_pragma("UnityBuild", "true");
 	
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_20_00_0;
 	globalvar VERSION; VERSION        = 1_20_04_0;
-	globalvar SAVE_VERSION; SAVE_VERSION   = 1_20_04_0;
+	globalvar SAVE_VERSION; SAVE_VERSION   = 1_20_04_1;
 	globalvar VERSION_STRING; VERSION_STRING = "1.20.4.010";
 	globalvar RELEASE_STRING; RELEASE_STRING = "1.20.4";
 	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_04_0.010;

@@ -28,9 +28,10 @@ event_inherited();
 	anchor = ANCHOR.top | ANCHOR.left;
 	
 	function initScroll(scroll) {
-		scrollbox	= scroll;
-		dialog_w	= max(ui(200), scroll.w);
-		data		= scroll.data;
+		scrollbox  = scroll;
+		dialog_w   = max(ui(200), scroll.w);
+		data       = scroll.data;
+		displayStr = scroll.displayStr;
 		setSize();
 	}
 	
@@ -80,6 +81,9 @@ event_inherited();
 		
 		for(var i = 0; i < array_length(data); i++) {
 			var _val = data[i];
+			if(has(displayStr, _val))
+				_val = displayStr[$ _val];
+			
 			var _txt = _val, _spr = noone;
 			var _tol = false;
 			var _act = true;
@@ -104,7 +108,6 @@ event_inherited();
 				draw_line_width(ui(8), _ly + ui(3), _dw - ui(8), _ly + ui(3), 2);
 				_ly += ui(8);
 				_h  += ui(8);
-				
 				continue;
 			}
 			
@@ -121,7 +124,7 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 					if(sc_content.active && (mouse_press(mb_left) || KEYBOARD_ENTER)) {
-						initVal = array_find(scrollbox.data, _val);
+						initVal = i;
 						instance_destroy();
 					}
 				}
