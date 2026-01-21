@@ -83,13 +83,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	// outputs 7
 	
 	input_display_list = [ i+4,
-		["Output",		     false],       i+ 2,
-		["Transform",	     false],       i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, i+ 8, 
-		["Camera",		      true],       i+ 3, i+ 0, i+ 1, 
-		["Render",		      true], i+32, i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
-		["Wireframe",         true], i+23, i+24, i+25, i+26, i+27, i+28, 
-		["Ambient Occlusion", true,  i+17],i+20, i+18, i+19, i+31, 
-		["Effects",			  true],       i+21, i+29, i+30, 
+		[ "Output",    false ], i+ 2,
+		[ "Transform", false ], i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, i+ 8, 
+		[ "Camera",     true ], i+ 3, i+ 0, i+ 1, 
+		[ "Render",     true ], i+32, i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
+		[ "Wireframe",  true ], i+23, i+24, i+25, i+26, i+27, i+28, 
+		[ "Ambient Occlusion",  true, i+17],i+20, i+18, i+19, i+31, 
+		[ "Effects",    true ], i+21, i+29, i+30, 
 	];
 	
 	output_display_list = [ 0, 5, 1, 6, 2, 3, 4 ];

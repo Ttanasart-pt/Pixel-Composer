@@ -233,7 +233,7 @@ enum RENDER_TYPE {
 				
 				profile_log(2, $"Leaf: {n.getFullName()}");
 				RENDER_QUEUE.enqueue(n);
-				if(n.passiveDynamic) n.forwardPassiveDynamic();
+				n.forwardPassiveDynamic();
 			});
 			
 			if(PROFILER_STAT) {
