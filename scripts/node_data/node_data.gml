@@ -1228,6 +1228,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static forwardPassiveDynamic = function() {
+		// if(!active || !renderActive) return;
 		rendered = false;
 		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
@@ -1249,7 +1250,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static resetRender = function(_clearCache = false) { setRenderStatus(false); if(_clearCache) clearInputCache(); }
 	
-	static isLeaf = function(frame = CURRENT_FRAME) { return array_all(inputs, function(inp) /*=>*/ {return inp.value_from == noone}); }
+	static isLeaf = function(frame = CURRENT_FRAME) { return array_all(inputs, function(inp, i) /*=>*/ {return inp.value_from == noone}); }
 	
 	static isLeafList = function(list = noone) {
 		INLINE 

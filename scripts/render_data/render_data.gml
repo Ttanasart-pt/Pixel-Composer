@@ -211,7 +211,7 @@ enum RENDER_TYPE {
 			
 			if(reset_all) {
 				LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(project.nodeTopo)} nodes xxxxxxxxxx");
-				array_foreach(project.allNodes, function(n) /*=>*/ {return n.setRenderStatus(false)});
+				array_foreach(project.allNodes, function(n,i) /*=>*/ {return n.setRenderStatus(false)});
 			}
 			
 			// get leaf node
@@ -233,7 +233,7 @@ enum RENDER_TYPE {
 				
 				profile_log(2, $"Leaf: {n.getFullName()}");
 				RENDER_QUEUE.enqueue(n);
-				n.forwardPassiveDynamic();
+				if(n.passiveDynamic) n.forwardPassiveDynamic();
 			});
 			
 			if(PROFILER_STAT) {

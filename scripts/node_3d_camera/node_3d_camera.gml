@@ -68,10 +68,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+21, nodeValue_Int(     "Round Normal",          0        )).setWindows();
 	newInput(i+29, nodeValue_Color(   "Backface Blending",     ca_white ));
 	newInput(i+30, nodeValue_Bool(    "Swap View Normal X",    false    ));
-	// inputs i+32
+	// inputs i+33
 	
 	in_cam = array_length(inputs);
 	
+	////- =Outputs
 	newOutput(0, nodeValue_Output( "Rendered",          VALUE_TYPE.surface, noone ));
 	newOutput(5, nodeValue_Output( "Diffuse",           VALUE_TYPE.surface, noone )).setVisible(false);
 	newOutput(1, nodeValue_Output( "Normal",            VALUE_TYPE.surface, noone )).setVisible(false);
@@ -85,7 +86,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		["Output",		     false],       i+ 2,
 		["Transform",	     false],       i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, i+ 8, 
 		["Camera",		      true],       i+ 3, i+ 0, i+ 1, 
-		["Render",		      true],       i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
+		["Render",		      true], i+32, i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
 		["Wireframe",         true], i+23, i+24, i+25, i+26, i+27, i+28, 
 		["Ambient Occlusion", true,  i+17],i+20, i+18, i+19, i+31, 
 		["Effects",			  true],       i+21, i+29, i+30, 

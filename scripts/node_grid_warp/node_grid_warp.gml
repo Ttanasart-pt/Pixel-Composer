@@ -359,6 +359,13 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
+	b_reset = button(function() /*=>*/ {return resetInput(true)}).setIcon(THEME.refresh_16, 0, COLORS._main_value_negative).setTooltip(__txt("Reset All"));
+	
+	input_display_list = [ 1, 0, 
+		[ "Mesh",    false ], 4, 2, 3, 
+		[ "Anchors",  true, noone, b_reset ], 
+	];
+	
 	function createNewInput() {
 		var index = array_length(inputs);
 		var i = index - input_fix_len;
@@ -369,13 +376,6 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[index].overlay_draw_text = false;
 		return inputs[index];
 	} setDynamicInput(1, false);
-	
-	b_reset = button(function() /*=>*/ {return resetInput(true)}).setIcon(THEME.refresh_16, 0, COLORS._main_value_negative).setTooltip(__txt("Reset All"));
-	
-	input_display_list = [ 1, 0, 
-		[ "Mesh",    false ], 4, 2, 3, 
-		[ "Anchors",  true, noone, b_reset ], 
-	];
 	
 	////- Nodes
 	

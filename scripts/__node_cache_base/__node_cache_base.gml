@@ -16,9 +16,9 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		PANEL_GRAPH.cache_group_edit = PANEL_GRAPH.cache_group_edit == self? noone : self;
 		PANEL_GRAPH.refreshDraw();
 	}).setTooltip(__txt("Edit Group"))
-		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		.setIcon(THEME.cache_group, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	if(NOT_LOAD) run_in(1, function() /*=>*/ {return generateGroup()});
+	// if(NOT_LOAD) run_in(1, () => generateGroup());
 	
 	////- Group
 	

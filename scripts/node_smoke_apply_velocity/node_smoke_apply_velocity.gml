@@ -41,6 +41,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 			var sw = _sca[0] * _s;
 			var sh = _sca[1] * _s;
 			
+			draw_set_circle_precision(32);
 			draw_set_color(c_white);
 			draw_set_alpha(.5);
 			draw_ellipse(_px - sw, _py - sh, _px + sw, _py + sh, false);
