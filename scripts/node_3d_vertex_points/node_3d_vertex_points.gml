@@ -6,12 +6,18 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_D3Mesh( "Mesh" ));
-	newInput(1, nodeValue_Bool(   "Apply Transform", false ));
+	
+	////- =Processing
+	newInput(2, nodeValue_Bool( "Remove Overlap",  false ));
+	newInput(1, nodeValue_Bool( "Apply Transform", false ));
+	// 3
 	
 	newOutput(0, nodeValue_Output( "Positions", VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
 	newOutput(1, nodeValue_Output( "Normals",   VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
 	
-	input_display_list = [ 0, 1 ];
+	input_display_list = [ 0, 
+		[ "Processing", false ], 2, 1, 
+	];
 	
 	////- Draw
 	
@@ -27,8 +33,6 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 		
 		////////////////////////////////////////////////// DRAW POINTS //////////////////////////////////////////////////
 		
-		var _center = getInputSingle(1);
-		var _hsize  = getInputSingle(2);
 		var _points = getInputSingle(0, preview_index, true);
 		
 		var _v3 = new __vec3();
@@ -55,10 +59,12 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	
 	static processData = function(_outData, _data, _array_index) {
 		var _mesh = _data[0];
+		var _remp = _data[2];
 		var _appy = _data[1];
 		
 		var pos = _outData[0];
 		var nor = _outData[1];
+		var dat = [];
 		
 		if(!is(_mesh, __3dObject)) return _outData;
 		
@@ -69,11 +75,14 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 		if(!array_empty(_mesh.vertex)) {
 			for( var i = 0, n = array_length(_mesh.vertex); i < n; i++ ) {
 				var _vs = _mesh.vertex[i];
-				var for( var j = 0, m = array_length(_vs); j < m; j++ ) {
+				
+				for( var j = 0, m = array_length(_vs); j < m; j++ ) {
 					var _v = _vs[j];
 					
-					pos[_ind] = [ _v.x,  _v.y,  _v.z  ];
-					nor[_ind] = [ _v.nx, _v.ny, _v.nz ];
+					// pos[_ind] = [ _v.x,  _v.y,  _v.z  ];
+					// nor[_ind] = [ _v.nx, _v.ny, _v.nz ];
+					
+					dat[_ind] = [ _v.x,  _v.y,  _v.z, _v.nx, _v.ny, _v.nz ]
 					_ind++;
 				}
 			}
@@ -109,7 +118,8 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 							var _b  = buffer_read(vb, buffer_s8);
 							var _a  = buffer_read(vb, buffer_s8);
 							
-							pos[_ind] = [_px, _py, _pz];
+							// pos[_ind] = [_px, _py, _pz];
+							dat[_ind] = [_px, _py, _pz, 1, 0, 0];
 							_ind++;
 						}
 						break;
@@ -136,13 +146,30 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 							var _by = buffer_read(vb, buffer_f32);
 							var _bz = buffer_read(vb, buffer_f32);
 							
-							pos[_ind] = [_px, _py, _pz];
+							// pos[_ind] = [_px, _py, _pz];
+							// nor[_ind] = [_nx, _ny, _nz];
+							dat[_ind] = [_px, _py, _pz, _nx, _ny, _nz];
 							_ind++;
 						}
 						break;
 				}
 			}
 			
+		}
+		
+		var _umap = {};
+		var _ind  = 0;
+		
+		for( var i = 0, n = array_length(dat); i < n; i++ ) {
+			var d = dat[i];
+			var h = _remp? string([ d[0], d[1], d[2] ]) : string(d);
+			if(struct_has(_umap, h)) continue;
+				
+			_umap[$ h] = 1;
+			pos[_ind]  = [ d[0], d[1], d[2] ];
+			nor[_ind]  = [ d[3], d[4], d[5] ];
+			
+			_ind++;
 		}
 		
 		array_resize(pos, _ind);
