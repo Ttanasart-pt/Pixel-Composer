@@ -3,9 +3,11 @@ function ase_layer(_name, _data, _type = 0, _node = undefined) constructor {
 	data = _data;
 	type = _type;
 	node = _node;
-	cels = [];
-	anim = false;
-	tag	 = noone;
+	
+	alpha = (data[$ "Opacity"] ?? 255) / 255;
+	cels  = [];
+	anim  = false;
+	tag	  = noone;
 	
 	static setFrameCel = function(index, cel) { 
 		cels[index] = cel; 

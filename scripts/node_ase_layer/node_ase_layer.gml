@@ -3,12 +3,14 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(0, nodeValue("ASE data", self, CONNECT_TYPE.input, VALUE_TYPE.object, undefined ))
 		.setIcon(THEME.junc_aseprite, c_white).setVisible(false, true).rejectArray();
+		
 	newInput(2, nodeValue_Text( "Layer Name"         )).rejectArray();
 	newInput(1, nodeValue_Bool( "Crop Output", false )).rejectArray();
 	newInput(3, nodeValue_Bool( "Loop",        false )).rejectArray();
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output("Layer name",  VALUE_TYPE.text,    ""    ));
+	newOutput(1, nodeValue_Output("Layer Name",  VALUE_TYPE.text,    ""    ));
+	newOutput(2, nodeValue_Output("Opacity",     VALUE_TYPE.float,   1     ));
 	
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(ase_data == undefined) {
@@ -59,6 +61,8 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		0, layer_renderer, 2, 1, 3, 
 	];
 	
+	////- Node
+	
 	ase_data     = undefined;
 	layer_object = undefined;
 	
@@ -86,6 +90,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		findLayer();
 		if(!update_on_frame) frame = 0;
 		if(layer_object == undefined) { logNode($"Layer name {_lname} not found."); return; }
+		outputs[2].setValue(layer_object.alpha);
 		
 		var cel = layer_object.getCel(frame - data._tag_delay, _loop);
 		var ww  = data.content[$ "Width"];

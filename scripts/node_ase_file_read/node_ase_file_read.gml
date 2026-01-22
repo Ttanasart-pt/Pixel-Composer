@@ -86,7 +86,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						triggerRender();
 					}
 				} else 
-					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
+					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, COLORS._main_icon, .5 + .5 * vis);
 				_bx += bs + ui(4);
 				
 				var lop = array_safe_get_fast(_lop, _index, true);
@@ -101,7 +101,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						triggerRender();
 					}
 				} else 
-					draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _yy + hh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * lop);
+					draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _yy + hh / 2, 1, COLORS._main_icon, .5 + .5 * lop);
 				_bx += bs + ui(4);
 				
 			} else if(_layer.type == 1) {
@@ -546,24 +546,27 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		blend_temp_surface = temp_surface[2];
 		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
-			_layerNames[i] = layers[i].name;
-			layers[i].tag = tag;
+			var _layer = layers[i];
+			
+			_layerNames[i] = _layer.name;
+			_layer.tag = tag;
 			
 			var _v  = array_safe_get_fast(vis, i, true);
 			var _l  = array_safe_get_fast(lop, i, false);
 			if(!_v) continue;
 			
-			var cel = layers[i].getCel(frame - _tag_delay, _l);
+			var cel = _layer.getCel(frame - _tag_delay, _l);
+			var alp = _layer.alpha;
 			if(!cel) continue;
 		
 			var _inSurf = cel.getSurface();
 			if(!is_surface(_inSurf)) continue;
 			
-			var xx = cel.data[$ "X"];
-			var yy = cel.data[$ "Y"];
+			var xx = cel.data[$ "X"] ?? 0;
+			var yy = cel.data[$ "Y"] ?? 0;
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
-				draw_surface_blend_ext(temp_surface[!_bg], _inSurf, xx, yy);
+				draw_surface_blend_ext(temp_surface[!_bg], _inSurf, xx, yy, 1, 1, 0, c_white, alp);
 			surface_reset_shader();
 			
 			_bg = !_bg;
