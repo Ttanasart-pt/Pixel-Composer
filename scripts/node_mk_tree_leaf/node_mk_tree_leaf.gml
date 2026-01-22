@@ -274,17 +274,26 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						}
 					}
 					
-					array_push(_br.leaves, _l);
-					
 					var _whorr = random_range(_whor[0], _whor[1]) * (curve_whorl? curve_whorl.get(_cPos) : 1);
 					_whorr = round(_whorr);
 					
-					if(_whorr > 0) {
-						var _whrla = _whra * (curve_whorla? curve_whorla.get(_cPos) : 1);
-						var _astep = _spra * 4 / (2 + (_whorr - 1) * _whrla);
+					if(_whorr <= 0) {
+						array_push(_br.leaves, _l);
 						
-						for( var k = 0; k < _whorr; k++ ) {
-							var _d2 = brnDir - _astep * (k + 1) + _spra;
+					} else if(_whorr == 1) {
+						var _d2 = brnDir - _spra;
+					        _d2 = lerp_angle_direct(_d2, _gDir, _grv);
+						var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
+						
+						array_push(_br.leaves, _l);
+						array_push(_br.leaves, _l2);
+						
+					} else {
+						var _whrla = _whra * (curve_whorla? curve_whorla.get(_cPos) : 1);
+						var _astep = 360 / (_whorr + 1);
+						
+						for( var k = 0; k <= _whorr; k++ ) {
+							var _d2 = brnDir + _whrla + _astep * k;
 							    _d2 = lerp_angle_direct(_d2, _gDir, _grv);
 							
 							var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);

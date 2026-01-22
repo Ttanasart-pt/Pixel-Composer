@@ -1,182 +1,212 @@
 function Panel_Nodes_Manager() : PanelContent() constructor {
-	w = ui(1200);
-	h = ui(900);
-	
-	edit_w = ui(400);
-	
-	title      = "Nodes Manager";
-	auto_pin   = true;
-	stack      = ds_stack_create();
-	selectDir  = noone;
-	selectNode = noone; static update = function() /*=>*/ {return selectNode.updateInfo()};
-	
-	toSelectDir  = "";
-	toSelectNode = "";
-	searchText   = "";
-	
-	static setRootDir = function(d) /*=>*/ { 
-		internalDir = new DirectoryObject(d).scan(["NodeObject"]); 
-		rootDir     = d;
-	} setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal");
-	
-	sourceDir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/scripts";
-	
-	parseArray = function(t) /*=>*/ {return (t != "" && !string_pos(",", t))? [ t ] : json_try_parse(t, [])};
-	
-	tb_root   = textBox_Text(function(t) /*=>*/ { setRootDir(t);    }).setFont(f_p2);
-	tb_search = textBox_Text(function(t) /*=>*/ { searchContent(t); }).setFont(f_p2);
-	
-	tb_inode = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "baseNode"]         = t;  update(); });
-	tb_name  = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "name"]             = t;  update(); });
-	tb_tips  = textArea_Text(  function(t) /*=>*/ { selectNode.info[$ "tooltip"]          = t;  update(); });
-	tb_spr   = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "spr"]              = t;  update(); });
-	tb_vers  = textBox_Number( function(t) /*=>*/ { selectNode.info[$ "pxc_version"]      = t;  update(); });
-	tb_io    = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "io"]    = parseArray(t); update(); }).setEmpty();
-	tb_alias = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "alias"] = parseArray(t); update(); }).setEmpty();
-	
-	cb_recent = new checkBox(function(t) /*=>*/ { selectNode.info[$ "show_in_recent"] = !(selectNode.info[$ "show_in_recent"] ?? true); update(); });
-	cb_dep    = new checkBox(function(t) /*=>*/ { selectNode.info[$ "deprecated"]     = !(selectNode.info[$ "deprecated"] ?? false);    update(); });
-	
-	editWidgets = [ 
-		[ "inode",      tb_inode,  function() /*=>*/ {return selectNode.info[$ "baseNode"]       ?? ""}    ], 
-		[ "name",       tb_name,   function() /*=>*/ {return selectNode.info[$ "name"]           ?? ""}    ], 
-		[ "tips",       tb_tips,   function() /*=>*/ {return selectNode.info[$ "tooltip"]        ?? ""}    ], 
-		[ "spr",        tb_spr,    function() /*=>*/ {return selectNode.info[$ "spr"]            ?? ""}    ], 
-		[ "version",    tb_vers,   function() /*=>*/ {return selectNode.info[$ "pxc_version"]    ?? 0}     ], 
-		[ "recent",     cb_recent, function() /*=>*/ {return selectNode.info[$ "show_in_recent"] ?? true}  ], 
-		[ "io",         tb_io,     function() /*=>*/ {return selectNode.info[$ "io"]             ?? []}    ], 
-		[ "alias",      tb_alias,  function() /*=>*/ {return selectNode.info[$ "alias"]          ?? []}    ], 
-		[ "deprecated", cb_dep,    function() /*=>*/ {return selectNode.info[$ "deprecated"]     ?? false} ], 
-	];
-	font = f_p3;
-	
-	array_foreach(editWidgets, function(e) /*=>*/ {return e[1].setFont(f_p2)});
-	
-	function drawDirectory(_ind, _dir, yy, _m) {
+	#region data
+		w = ui(1200);
+		h = ui(900);
 		
-		var _hover = sc_folder.hover;
-		var _focus = sc_folder.active;
+		edit_w = ui(400);
 		
-		var _list = _dir.subDir;
+		title      = "Nodes Manager";
+		auto_pin   = true;
+		stack      = ds_stack_create();
+		selectDir  = noone;
+		selectNode = noone; 
 		
-		var col = 1;
-		var cl  = 0;
+		static update = function() /*=>*/ {return selectNode.updateInfo()};
+	#endregion
 		
-		var sw = sc_folder.surface_w;
-		var ww = sw / col;
-		var hg = line_get_height(font, 2);
-		var hh = hg;
+	#region directories
+		toSelectDir  = "";
+		toSelectNode = "";
 		
-	    for( var i = 0, n = array_length(_list); i < n; i++ ) {
-	        var dr = _list[i];
-	        
-	        if(!array_empty(dr.subDir) && cl) {
-	        	cl  = 0;
-            	hh += hg;
-		    	yy += hg;
-	        }
-	        
-		    var xx = ww * cl;
-		    var _h = hg;
-		    
-	        var cc = COLORS._main_text_sub;
-	        if(_hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg - 1)) {
-	            cc = COLORS._main_text;
+		static setRootDir = function(d) /*=>*/ { 
+			internalDir = new DirectoryObject(d).scan(["NodeObject"]); 
+			rootDir     = d;
+		} setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal");
+		
+		sourceDir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/scripts";
+	#endregion
+	
+	#region editors
+		parseArray = function(t) /*=>*/ {return (t != "" && !string_pos(",", t))? [ t ] : json_try_parse(t, [])};
+		
+		tb_root   = textBox_Text(function(t) /*=>*/ { setRootDir(t);    }).setFont(f_p2);
+		tb_search = textBox_Text(function(t) /*=>*/ { searchContent(t); }).setFont(f_p2).setEmpty().setAutoupdate();
+		
+		tb_inode = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "baseNode"]         = t;  update(); });
+		tb_name  = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "name"]             = t;  update(); });
+		tb_tips  = textArea_Text(  function(t) /*=>*/ { selectNode.info[$ "tooltip"]          = t;  update(); });
+		tb_spr   = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "spr"]              = t;  update(); });
+		tb_vers  = textBox_Number( function(t) /*=>*/ { selectNode.info[$ "pxc_version"]      = t;  update(); });
+		tb_io    = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "io"]    = parseArray(t); update(); }).setEmpty();
+		tb_alias = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "alias"] = parseArray(t); update(); }).setEmpty();
+		
+		cb_recent = new checkBox(function(t) /*=>*/ { selectNode.info[$ "show_in_recent"] = !(selectNode.info[$ "show_in_recent"] ?? true); update(); });
+		cb_dep    = new checkBox(function(t) /*=>*/ { selectNode.info[$ "deprecated"]     = !(selectNode.info[$ "deprecated"] ?? false);    update(); });
+		
+		editWidgets = [ 
+			[ "inode",      tb_inode,  function() /*=>*/ {return selectNode.info[$ "baseNode"]       ?? ""}    ], 
+			[ "name",       tb_name,   function() /*=>*/ {return selectNode.info[$ "name"]           ?? ""}    ], 
+			[ "tips",       tb_tips,   function() /*=>*/ {return selectNode.info[$ "tooltip"]        ?? ""}    ], 
+			[ "spr",        tb_spr,    function() /*=>*/ {return selectNode.info[$ "spr"]            ?? ""}    ], 
+			[ "version",    tb_vers,   function() /*=>*/ {return selectNode.info[$ "pxc_version"]    ?? 0}     ], 
+			[ "recent",     cb_recent, function() /*=>*/ {return selectNode.info[$ "show_in_recent"] ?? true}  ], 
+			[ "io",         tb_io,     function() /*=>*/ {return selectNode.info[$ "io"]             ?? []}    ], 
+			[ "alias",      tb_alias,  function() /*=>*/ {return selectNode.info[$ "alias"]          ?? []}    ], 
+			[ "deprecated", cb_dep,    function() /*=>*/ {return selectNode.info[$ "deprecated"]     ?? false} ], 
+		];
+		font = f_p3;
+		
+		array_foreach(editWidgets, function(e) /*=>*/ {return e[1].setFont(f_p2)});
+	#endregion
+	
+	#region search
+		searching    = false;
+		searchText   = "";
+		searchTextL  = "";
+		
+		function searchContent(_str) {
+			searching   = _str != "";
+			searchText  = _str;
+			searchTextL = string_lower(_str);
+		}
+	#endregion
+	
+	#region draw
+		function drawDirectory(_ind, _dir, yy, _m) {
+			var _hover = sc_folder.hover;
+			var _focus = sc_folder.active;
+			
+			var _list = _dir.subDir;
+			
+			var col = 1;
+			var cl  = 0;
+			
+			var sw = sc_folder.surface_w;
+			var ww = sw / col;
+			var hg = line_get_height(font, 2);
+			var hh = hg;
+			
+		    for( var i = 0, n = array_length(_list); i < n; i++ ) {
+		        var dr = _list[i];
+		        
+		        if(!array_empty(dr.subDir) && cl) {
+		        	cl  = 0;
+	            	hh += hg;
+			    	yy += hg;
+		        }
+		        
+			    var xx = ww * cl;
+			    var _h = hg;
+			    
+		        var cc = COLORS._main_text_sub;
+		        if(_hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg - 1)) {
+		            cc = COLORS._main_text;
+		            
+		            if(mouse_press(mb_left, _focus)) {
+		            	selectDir  = selectDir == dr? noone : dr;
+		            	selectNode = noone;
+		            }
+		        }
+		        
+		        if(searching) {
+		        	var _contain = string_pos(searchTextL, string_lower(dr.name));
+		        	for( var j = 0, m = array_length(dr.content); j < m; j++ ) {
+		        		var _con = dr.content[j];
+				        if(string_pos(searchTextL, string_lower(_con.name)))  
+				        	_contain = true;
+		        	}
+		        	
+		        	if(_contain) cc = COLORS._main_text;
+		        }
+		        	
+		        if(toSelectDir == dr.path) selectDir = dr;
+		        if(selectDir == dr) cc = COLORS._main_accent;
+			    
+			    draw_set_text(font, fa_left, fa_center, cc);
+	    		draw_text_add(xx + ui(8 + 8 * _ind), yy + hg / 2, dr.name);
 	            
-	            if(mouse_press(mb_left, _focus)) {
-	            	selectDir  = selectDir == dr? noone : dr;
-	            	selectNode = noone;
-	            }
-	        }
-	        
-	        if(toSelectDir == dr.path) selectDir = dr;
-	        if(selectDir == dr) cc = COLORS._main_accent;
-		    
-		    draw_set_text(font, fa_left, fa_center, cc);
-    		draw_text_add(xx + ui(8 + 8 * _ind), yy + hg / 2, dr.name);
-            
-            if(!array_empty(dr.subDir)) {
-	        	hh += _h;
-		    	yy += _h;
-	            
-            	var sh = drawDirectory(_ind + 1, dr, yy, _m);
-            	// draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, yy - _h + ui(2), sw, sh + _h - ui(2), COLORS._main_icon, .5);
-            	
-            	cl  = 0;
-            	hh += sh;
-		    	yy += sh;
-		    	
-            } else {
-            	cl++;
-	            if(cl >= col) {
-	            	cl = 0;
+	            if(!array_empty(dr.subDir)) {
 		        	hh += _h;
 			    	yy += _h;
+		            
+	            	var sh = drawDirectory(_ind + 1, dr, yy, _m);
+	            	// draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, yy - _h + ui(2), sw, sh + _h - ui(2), COLORS._main_icon, .5);
+	            	
+	            	cl  = 0;
+	            	hh += sh;
+			    	yy += sh;
+			    	
+	            } else {
+	            	cl++;
+		            if(cl >= col) {
+		            	cl = 0;
+			        	hh += _h;
+				    	yy += _h;
+		            }
+		            
 	            }
 	            
-            }
-            
+			}
+			
+			if(cl == 0) {
+				hh -= hg;
+			}
+			
+			return hh;
 		}
 		
-		if(cl == 0) {
-			hh -= hg;
-		}
+		sc_folder  = new scrollPane(ui(8), h, function(_y, _m) /*=>*/ {
+			draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+			
+			var hh = drawDirectory(0, internalDir, _y, _m);
+			toSelectDir = "";
+			
+			return hh;
+		});
 		
-		return hh;
-	}
-	
-	sc_folder = new scrollPane(ui(8), h, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		
-		var hh = drawDirectory(0, internalDir, _y, _m);
-		toSelectDir = "";
-		
-		return hh;
-	});
-	
-	sc_content = new scrollPane(ui(8), h, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		if(selectDir == noone) return 0;
-		
-		var ww = sc_content.surface_w;
-		var _h = 0;
-		var hg = line_get_height(font, 2);
-		var yy = _y;
-		var xx = 0;
-		
-		var _hover = sc_content.hover;
-		var _focus = sc_content.active;
-		
-		var _list = selectDir.content;
-		
-		for( var i = 0, n = array_length(_list); i < n; i++ ) {
-		    var _con = _list[i];
-		    
-		    var cc = COLORS._main_text_sub;
-		    if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - 1)) {
-	            cc = COLORS._main_text;
-	            
-	            if(mouse_press(mb_left, _focus))
-	            	selectNode = selectNode == _con? noone : _con;
-	        }
-	        
-	        if(toSelectNode == _con.path) selectNode = _con;
-	        if(selectNode == _con) cc = COLORS._main_accent;
+		sc_content = new scrollPane(ui(8), h, function(_y, _m) /*=>*/ {
+			draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+			if(selectDir == noone) return 0;
+			
+			var ww = sc_content.surface_w;
+			var _h = 0;
+			var hg = line_get_height(font, 2);
+			var yy = _y;
+			var xx = 0;
+			
+			var _hover = sc_content.hover;
+			var _focus = sc_content.active;
+			
+			var _list = selectDir.content;
+			
+			for( var i = 0, n = array_length(_list); i < n; i++ ) {
+			    var _con = _list[i];
+			    
+			    var cc = COLORS._main_text_sub;
+			    if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - 1)) {
+		            cc = COLORS._main_text;
+		            
+		            if(mouse_press(mb_left, _focus))
+		            	selectNode = selectNode == _con? noone : _con;
+		        }
 		        
-		    draw_set_text(font, fa_left, fa_center, cc);
-		    draw_text_add(xx, yy + hg / 2, _con.name);
-		    
-		    _h += hg;
-		    yy += hg;
-		}
-		
-		toSelectNode = "";
-		return _h;
-	});
-	
-	function searchContent(_str) {
-		searchText = _str;
-	}
+		        if(searching && string_pos(searchTextL, string_lower(_con.name)))  
+		        	cc = COLORS._main_text;
+		        
+		        if(toSelectNode == _con.path) selectNode = _con;
+		        if(selectNode == _con) cc = COLORS._main_accent;
+		        
+			    draw_set_text(font, fa_left, fa_center, cc);
+			    draw_text_add(xx, yy + hg / 2, _con.name);
+			    
+			    _h += hg;
+			    yy += hg;
+			}
+			
+			toSelectNode = "";
+			return _h;
+		});
+	#endregion
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);

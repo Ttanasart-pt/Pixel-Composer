@@ -25,6 +25,9 @@ function NodeFileObject(_path) : FileObject(_path) constructor {
     	if(struct_has(info, "pxc_version"))
 		_str += $"    \"pxc_version\":    {info.pxc_version},\n";
     	
+    	if(struct_has(info, "alias") && !array_empty(info.alias))
+		_str += $"    \"alias\":             {json_stringify(info.alias)},\n";
+    		
     	if(struct_has(info, "io") && !array_empty(info.io))
 		_str += $"    \"io\":             {json_stringify(info.io)},\n";
     		

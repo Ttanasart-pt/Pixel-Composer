@@ -1790,7 +1790,7 @@ function Panel_Preference() : PanelContent() constructor {
     	var pw = w - padding * 2 - page_width;
     	var ph = h - padding * 2;
     	
-    	if(PREF_SAVABLE) {
+    	if(!PREF_SAVABLE) {
     		var bw = ui(128);
     		
     		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
