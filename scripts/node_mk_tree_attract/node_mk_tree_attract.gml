@@ -27,7 +27,7 @@ function Node_MK_Tree_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- Nodes
 	
-	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.dimension : [1,1]};
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.getDimension() : [1,1]};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _resT = outputs[0].getValue();

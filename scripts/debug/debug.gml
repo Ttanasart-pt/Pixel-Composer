@@ -140,7 +140,7 @@ function setException() {
 		tt += $"\nOperating system: {os_type_sting()} ({os_version})"
 		tt += $"\nCPU: {cpu_processor()} [{cpu_core_count()} cores]"
 		tt += $"\nGPU: {gpu_renderer()}"
-		tt += $"\nRAM: {memory_usedram(true)}/{memory_totalram(true)}"
+		tt += $"\nRAM: {string_byte_format(getMemoryUsage(ProcIdFromSelf()))}/{memory_totalram(true)}"
 		tt += $"\nVRAM: {memory_totalvram(true)}"
 		tt += "\n\n---------------------------- :( ----------------------------\n";
 		

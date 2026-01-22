@@ -288,16 +288,21 @@ function Panel_Inspector() : PanelContent() constructor {
     #endregion
     
     #region ---- Metadata ----
-        current_meta = -1; 
-        meta_tb[0] = textArea_Text( function(s) /*=>*/ { current_meta.description = s; PROJECT.setModified(); } ).setVAlign(ui(4));
-        meta_tb[1] = textArea_Text( function(s) /*=>*/ { current_meta.author      = s; PROJECT.setModified(); } ).setVAlign(ui(4));
-        meta_tb[2] = textArea_Text( function(s) /*=>*/ { current_meta.contact     = s; PROJECT.setModified(); } ).setVAlign(ui(4));
-        meta_tb[3] = textArea_Text( function(s) /*=>*/ { current_meta.alias       = s; PROJECT.setModified(); } ).setVAlign(ui(4));
-        meta_tb[4] = new textArrayBox(noone, META_TAGS).setAddable(true);
+        current_meta   = -1; 
+        tb_meta_desc   = textArea_Text( function(s) /*=>*/ { current_meta.description = s; PROJECT.setModified(); } ).setVAlign(ui(4));
+        tb_meta_author = textArea_Text( function(s) /*=>*/ { current_meta.author      = s; PROJECT.setModified(); } ).setVAlign(ui(4));
         
-        if(STEAM_ENABLED) meta_tb[1].setSideButton(button(function() /*=>*/ { current_meta.author = STEAM_USERNAME; })
-        								.setIcon(THEME.steam, 0, COLORS._main_icon).iconPad(ui(12))
-        								.setTooltip("Use Steam username"));
+        meta_edit[0] = tb_meta_desc
+        meta_edit[1] = tb_meta_author;
+        meta_edit[2] = textArea_Text( function(s) /*=>*/ { current_meta.contact     = s; PROJECT.setModified(); } ).setVAlign(ui(4));
+        meta_edit[3] = textArea_Text( function(s) /*=>*/ { current_meta.alias       = s; PROJECT.setModified(); } ).setVAlign(ui(4));
+        meta_edit[4] = new textArrayBox(noone, META_TAGS).setAddable(true);
+        
+        if(STEAM_ENABLED) {
+        	tb_meta_author.setSideButton(button(function() /*=>*/ { current_meta.author = STEAM_USERNAME; })
+				.setIcon(THEME.steam, 0, COLORS._main_icon).iconPad(ui(12))
+				.setTooltip("Use Steam username"));
+        }
         
         meta_display = [ 
             [ __txt("Project Settings"),     false, "settings"   ], 
@@ -1439,12 +1444,12 @@ function Panel_Inspector() : PanelContent() constructor {
                 case "metadata" :
                     var _wdx = spac? ui(16) : ui(140);
                     var _wdw = w - ui(48) - _wdx;
-                    var _whh = line_get_height(_font);
+                    var _whh = TEXTBOX_HEIGHT;
                     var _edt = PROJECT.meta.file_id == 0 || PROJECT.meta.author_steam_id == STEAM_USER_ID;
                         
                     for( var j = 0; j < array_length(meta.displays); j++ ) {
                         var display = meta.displays[j];
-                        var _wdgt   = meta_tb[j];
+                        var _wdgt   = meta_edit[j];
                         
                         draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
                         draw_text_add(ui(16), spac? yy : yy + ui(3), __txt(display[0]));

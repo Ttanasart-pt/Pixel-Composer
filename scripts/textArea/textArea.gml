@@ -770,7 +770,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var c_h = line_get_height();
 		
 		w  = _w;
-		var bs = _h;
+		var bs = min(_h, ui(32));
 		var _drawB = is(side_button, buttonClass)  && _w - bs > ui(100);
 		var _drawF = is(front_button, buttonClass) && _w - bs > ui(100);
 		_w -= bs * (_drawB + _drawF);

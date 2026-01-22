@@ -4,6 +4,10 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	icon  = THEME.mkTree;
 	is_simulation = true;
 	
+	seed       = 0;
+	gravityDir = -90;
+	dimension  = undefined;
+	
 	input_node_types   = [ Node_MK_Tree_Root,   Node_MK_Tree_Path_Root      ];
 	output_node_types  = [ Node_MK_Tree_Render, Node_MK_Tree_Branch_To_Path ];
 	
@@ -17,9 +21,7 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		addNode(_render);
 	}
 	
-	seed       = 0;
-	gravityDir = -90;
-	dimension  = [1,1];
+	////- =Inputs
 	
 	newInput(0, nodeValueSeed(  VALUE_TYPE.integer ));
 	newInput(1, nodeValue_Rotation( "Gravity", -90 ));
@@ -28,6 +30,13 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 2, 
 		[ "Physics", false ], 1, 
 	];
+	
+	////- Nodes
+	
+	static getDimension = function() /*=>*/ {
+		dimension = dimension ?? inputs[2].getValue();
+		return dimension;
+	}
 	
 	static update = function() {
 		seed       = inputs[0].getValue();
