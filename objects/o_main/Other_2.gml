@@ -103,13 +103,25 @@
     
     directory_verify(PREFERENCES_DIR);
 #endregion
+	pid  = ProcIdFromSelf();
 	
-	var t = get_timer();
+	__t = get_timer();
+	__r = getMemoryUsage(pid); 
+	_r0 = __r;
+	function __log_tr() {
+		var _t = get_timer();
+		var _r = getMemoryUsage(pid); 
+		var _txt = $"complete in {_t-__t} [{string_byte_format(_r-__r)}]";
+		
+		__t = _t;
+		__r = _r; 
+		return _txt;
+	}
 	
 	printDebug($"> Setup");
-	              PREF_LOAD();            printDebug($"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
-	if(!IS_CMD) { __initLocale();         printDebug($"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initHotKey();         printDebug($"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
+	              PREF_LOAD();            printDebug($"> init Preferences   | {__log_tr()}");
+	if(!IS_CMD) { __initLocale();         printDebug($"> init Locale        | {__log_tr()}"); }
+	if(!IS_CMD) { __initHotKey();         printDebug($"> init Hotkeys       | {__log_tr()}"); }
 	
 	log_clear();
 	log_newline();
@@ -121,33 +133,33 @@
 	var t    = get_timer();
 	var _lua = PROGRAM_ARGUMENTS._lua;
 	
-				  __initSurfaceFormat();  printDebug($"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
-				  __initUser();           printDebug($"> init User          | complete in {get_timer() - t}");    t = get_timer();
-	if(!IS_CMD) { __initTheme();          printDebug($"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { loadFonts();            printDebug($"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initProject();        printDebug($"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initSurfaceFormat();  printDebug($"> init SurfaceFormat | {__log_tr()}"); 
+				  __initUser();           printDebug($"> init User          | {__log_tr()}"); 
+	if(!IS_CMD) { __initTheme();          printDebug($"> init Theme         | {__log_tr()}");  }
+	if(!IS_CMD) { loadFonts();            printDebug($"> init Font          | {__log_tr()}");  }
+	if(!IS_CMD) { __initProject();        printDebug($"> init Project       | {__log_tr()}");  }
 	              __fnInit();
 	
-	if(!IS_CMD) { __initAction();         printDebug($"> init Action        | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initCollection();     printDebug($"> init Collection    | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initAssets();         printDebug($"> init Assets        | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initAction();         printDebug($"> init Action        | {__log_tr()}"); }
+	if(!IS_CMD) { __initCollection();     printDebug($"> init Collection    | {__log_tr()}"); }
+	if(!IS_CMD) { __initAssets();         printDebug($"> init Assets        | {__log_tr()}"); }
 	
-	if(!IS_CMD) { __initPresets();        printDebug($"> init Presets       | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initFontFolder();     printDebug($"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer(); }
-	if(_lua)    { __initLua();            printDebug($"> init Lua           | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initNodeData();       printDebug($"> init NodeData      | complete in {get_timer() - t}");    t = get_timer(); }
-				  __initNodes();          printDebug($"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
-	if(!IS_CMD) { __initSteamUGC();       printDebug($"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initAddon();          printDebug($"> init Addon         | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initPen();            printDebug($"> init Pen           | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initPresets();        printDebug($"> init Presets       | {__log_tr()}"); }
+	if(!IS_CMD) { __initFontFolder();     printDebug($"> init FontFolder    | {__log_tr()}"); }
+	if(_lua)    { __initLua();            printDebug($"> init Lua           | {__log_tr()}"); }
+	if(!IS_CMD) { __initNodeData();       printDebug($"> init NodeData      | {__log_tr()}"); }
+				  __initNodes();          printDebug($"> init Nodes         | {__log_tr()}");
+	if(!IS_CMD) { __initSteamUGC();       printDebug($"> init SteamUGC      | {__log_tr()}"); }
+	if(!IS_CMD) { __initAddon();          printDebug($"> init Addon         | {__log_tr()}"); }
+	if(!IS_CMD) { __initPen();            printDebug($"> init Pen           | {__log_tr()}"); }
 	
-	if(!IS_CMD) { loadAddon();            printDebug($"> init Addons        | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { loadAddon();            printDebug($"> init Addons        | {__log_tr()}"); }
 	
-	if(!IS_CMD) { LOAD_SAMPLE();          printDebug($"> init sample        | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { INIT_FOLDERS();         printDebug($"> init folders       | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { RECENT_LOAD();          printDebug($"> init recents       | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { LOAD_SAMPLE();          printDebug($"> init sample        | {__log_tr()}"); }
+	if(!IS_CMD) { INIT_FOLDERS();         printDebug($"> init folders       | {__log_tr()}"); }
+	if(!IS_CMD) { RECENT_LOAD();          printDebug($"> init recents       | {__log_tr()}"); }
 	
-	printDebug($">> Initialization complete in {get_timer() - t0}");
+	printDebug($">> Initialization complete in {get_timer() - t0} [{string_byte_format(getMemoryUsage(pid) - _r0)}]");
 	
 	if(!IS_CMD) { 
 		__initPanel();

@@ -25,7 +25,6 @@ function __initTheme() {
 	var t    = get_timer();
 	
 	directory_verify(root);
-	
 	if(check_version($"{root}/version")) {
 		zip_unzip($"{working_directory}data/theme.zip", root);	
 		printDebug($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
@@ -96,8 +95,8 @@ function loadGraphic(theme = "default") {
 			noti_warning($"Init Theme: Loading theme made for older version [{_meta[$ "version"]} < {VERSION}].");
 	}
 	
-	printDebug($"Loading theme {theme}");
-	if(!file_exists_empty(path)) { print($"Theme not defined at {path}, rollback to default theme."); return; }
+	printDebug($"     > Loading theme {theme}");
+	if(!file_exists_empty(path)) { print($"     > Theme not defined at {path}, rollback to default theme."); return; }
 	
 	var sprStr   = json_load_struct(path);
 	var graphics = variable_struct_get_names(sprStr);

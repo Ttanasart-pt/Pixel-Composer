@@ -37,6 +37,7 @@
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_pressed","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_pressed","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_pressed","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_pressing","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_pressing","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_pressing","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_released","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_released","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_released","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+        {"$GMExtensionFunction":"","%Name":"getMemoryUsage","argCount":0,"args":[2,],"documentation":"","externalName":"getMemoryUsage","help":"","hidden":false,"kind":1,"name":"getMemoryUsage","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","order":[
         {"name":"winMan_is_minimized_ext","path":"extensions/winMan/winMan.yy",},
         {"name":"winMan_minimize_ext","path":"extensions/winMan/winMan.yy",},

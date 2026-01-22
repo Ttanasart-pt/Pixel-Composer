@@ -12,8 +12,11 @@ function string_lead_zero(val, digit, _pad = "0") {
 function string_byte_format(bytes) {
 	static suffix = [ "B", "KB", "MB", "GB", "TB" ];
 	
+	var _neg = bytes < 0;
+	bytes = abs(bytes);
+	
 	var lv  = clamp(floor(log2(bytes) / 10), 0, array_length(suffix) - 1);
 	var amo = bytes / power(2, lv * 10);
 	
-	return $"{amo} {suffix[lv]}"
+	return $"{_neg? "-":""}{amo} {suffix[lv]}"
 }

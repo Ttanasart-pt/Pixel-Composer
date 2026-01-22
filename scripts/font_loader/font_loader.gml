@@ -160,6 +160,7 @@ function loadFonts() {
 	FONT_LIST = {};
 	
 	if(FONT_DEF) {
+		printDebug($"     > Using Build-in fonts");
 		f_h1   = _font_load_default("h1",  _f_h1);
 		f_h2   = _font_load_default("h2",  _f_h2);
 		f_h3   = _font_load_default("h3",  _f_h3);
