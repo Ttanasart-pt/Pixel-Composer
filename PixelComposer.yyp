@@ -4886,6 +4886,7 @@
     {"id":{"name":"s_node_vfx_wind","path":"sprites/s_node_vfx_wind/s_node_vfx_wind.yy",},},
     {"id":{"name":"s_node_vfx","path":"sprites/s_node_vfx/s_node_vfx.yy",},},
     {"id":{"name":"s_node_vignette","path":"sprites/s_node_vignette/s_node_vignette.yy",},},
+    {"id":{"name":"s_node_vmath_operators","path":"sprites/s_node_vmath_operators/s_node_vmath_operators.yy",},},
     {"id":{"name":"s_node_voronoi_extra","path":"sprites/s_node_voronoi_extra/s_node_voronoi_extra.yy",},},
     {"id":{"name":"s_node_warp","path":"sprites/s_node_warp/s_node_warp.yy",},},
     {"id":{"name":"s_node_wav_file_read","path":"sprites/s_node_wav_file_read/s_node_wav_file_read.yy",},},

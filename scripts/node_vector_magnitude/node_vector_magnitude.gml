@@ -4,11 +4,11 @@ function Node_Vector_Magnitude(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Vector", self, CONNECT_TYPE.input, VALUE_TYPE.float, []))
-		.setArrayDepth(1)
-		.setVisible(true, true);
+	newInput(0, nodeValue_Float("Vector", [])).setArrayDepth(1).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Magnitude", VALUE_TYPE.float, 0 ));
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 		var _vec = _data[0];
@@ -22,7 +22,7 @@ function Node_Vector_Magnitude(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			case 4 : return sqrt(sqr(_vec[0]) + sqr(_vec[1]) + sqr(_vec[2]) + sqr(_vec[3]));
 			
 			default : 
-				var _red = array_reduce(_vec, function(_p, _c) { return _p + _c * _c; }, 0);
+				var _red = array_reduce(_vec, function(_p,_c) /*=>*/ {return _p + _c * _c}, 0);
 				return sqrt(_red);
 		}
 		

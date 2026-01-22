@@ -6,17 +6,22 @@
 		divide,   //  3
 		power,    //  4
 		root,     //  5
+		
+		length,   //  6
+		distance, //  7
 	}
 	
-	global.node_vmath_keys     = [	"add", "subtract", "multiply", "divide", "power", "root", ];
+	global.node_vmath_keys        = [ "add", "subtract", "multiply", "divide", "power", "root", "length", "distance" ];
+	global.Node_Vector_Math_alias = global.node_vmath_keys;
 	              
-	global.node_vmath_keys_map = [	VMATH_OPERATOR.add,     VMATH_OPERATOR.subtract, VMATH_OPERATOR.multiply, VMATH_OPERATOR.divide, VMATH_OPERATOR.power, VMATH_OPERATOR.root, ];
+	global.node_vmath_keys_map = [	VMATH_OPERATOR.add,   VMATH_OPERATOR.subtract, VMATH_OPERATOR.multiply, VMATH_OPERATOR.divide, 
+	                                VMATH_OPERATOR.power, VMATH_OPERATOR.root,     VMATH_OPERATOR.length,   VMATH_OPERATOR.distance, ];
 	
-	global.node_vmath_names    = [  /* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", ];
+	global.node_vmath_names    = [  /* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Length", "Distance" ];
 	
-	global.node_vmath_scroll   = array_create_ext(array_length(global.node_vmath_names), function(i) /*=>*/ {return new scrollItem(global.node_vmath_names[i], s_node_math_operators, i)});
+	global.node_vmath_scroll   = array_create_ext(array_length(global.node_vmath_names), function(i) /*=>*/ {return new scrollItem(global.node_vmath_names[i], s_node_vmath_operators, i)});
 	
-	function Node_create_VMath(_x, _y, _group = noone, _param = {}) {
+	function Node_create_Vector_Math(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
 		var node  = new Node_Vector_Math(_x, _y, _group).skipDefault();
 		
@@ -76,35 +81,54 @@ function Node_Vector_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static eval = function(a, b) {
 		var vecl = array_length(a);
 		var ress = array_create(vecl);
+		var accc = 0;
 		
 		for( var i = 0; i < vecl; i++ ) {
 			var _a = a[i];
 			var _b = b[i];
 			
 			switch(use_mod) {
-				case VMATH_OPERATOR.add :		ress[i] = _a + _b;              break;
-				case VMATH_OPERATOR.subtract :	ress[i] = _a - _b;              break;
-				case VMATH_OPERATOR.multiply :	ress[i] = _a * _b;              break;
-				case VMATH_OPERATOR.divide :	ress[i] = _b == 0? 0 : _a / _b; break;
+				case VMATH_OPERATOR.add :      ress[i] = _a + _b;              break;
+				case VMATH_OPERATOR.subtract : ress[i] = _a - _b;              break;
+				case VMATH_OPERATOR.multiply : ress[i] = _a * _b;              break;
+				case VMATH_OPERATOR.divide :   ress[i] = _b == 0? 0 : _a / _b; break;
 				
-				case MATH_OPERATOR.power :		ress[i] = _b >= 0? power(_a, _b) : 1 / power(_a, -_b); break;
-				case MATH_OPERATOR.root :		ress[i] = _b <= 0? 0 : power(_a, 1 / _b);              break;
-		
+				case VMATH_OPERATOR.power :    ress[i] = _b >= 0? power(_a, _b) : 1 / power(_a, -_b); break;
+				case VMATH_OPERATOR.root :     ress[i] = _b <= 0? 0 : power(_a, 1 / _b);              break;
+				
+				case VMATH_OPERATOR.length :   accc += sqr(_a);      break;
+				case VMATH_OPERATOR.distance:  accc += sqr(_a - _b); break;
 			}
+		}
+		
+		switch(use_mod) {
+			case VMATH_OPERATOR.length :   
+			case VMATH_OPERATOR.distance:  return sqrt(accc);
 		}
 		
 		return ress;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) { 
-		use_mod = inputs[0].getValue();
-		use_deg = inputs[3].getValue();
-		
-		var l   = inputs[5].getValue();
-		var a   = inputs[1].getValue();
-		var b   = inputs[2].getValue();
-		
-		var sb  = inputs[4].getValue();
+		#region data
+			use_mod = inputs[0].getValue();
+			use_deg = inputs[3].getValue();
+			
+			var l   = inputs[5].getValue();
+			var a   = inputs[1].getValue();
+			var b   = inputs[2].getValue();
+			
+			var sb  = inputs[4].getValue();
+			
+			
+			var _vis2 = true;
+			
+			switch(use_mod) {
+				case VMATH_OPERATOR.length :  _vis2 = false; break;
+			}
+			
+			inputs[2].setVisible(_vis2, _vis2);
+		#endregion
 		
 		var da = array_get_depth(a);
 		     if(da == 0) a = [array_create(l, a)];
