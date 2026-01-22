@@ -1004,6 +1004,8 @@ function Panel_Inspector() : PanelContent() constructor {
             
             #region ++++ draw widget ++++
             	var _wdgt = jun.getEditWidget();
+            	if(jun.latest_height != undefined)
+            		_draw = yy + ui(8) < con_h && yy + jun.latest_height > -ui(8);
             	
                 var widg    = _draw? drawWidget(   _x + ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry ) : 
                                      fetchWidgetH( _x + ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry );
@@ -1012,6 +1014,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 var widHov  = widg[2];
                 var lbHov   = widg[3];
                 var lb_x    = widg[4];
+                
+                jun.latest_height = widH;
                 
                 if(widHov || lbHov) contentPane.hover_content = true;
                 hh += widH + padd;

@@ -274,7 +274,7 @@ function buttonInstant_Pad(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 		gpu_set_tex_filter(true);
 	    if(is(_icon, sprite_drawer)) {
 	    	var ics = min((_w - _icon_padding) / sprite_get_width(_icon.spr), (_h - _icon_padding) / sprite_get_height(_icon.spr));
-	    	_icon.draw(icx, icy, ics, cc, ica);
+	    	_icon.drawScale(icx, icy, ics, cc, ica);
 	    	
 		} else if(sprite_exists(_icon)) {
 			var ics = min((_w - _icon_padding) / sprite_get_width(_icon), (_h - _icon_padding) / sprite_get_height(_icon));

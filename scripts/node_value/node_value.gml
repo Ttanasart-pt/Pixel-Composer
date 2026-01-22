@@ -187,7 +187,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		popup_dialog = noone;
 		type_array   = typeArray(self);
 		
-		favorited    = false;
+		favorited     = false;
+		latest_height = undefined;
 	#endregion
 	
 	#region ---- Graph ----
