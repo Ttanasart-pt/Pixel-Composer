@@ -1747,10 +1747,6 @@ function Panel_Preference() : PanelContent() constructor {
 	function onResize() {
 	    panel_width   = w - padding * 2 - page_width;
 		panel_height  = h - padding * 2;
-		hotkey_height = panel_height - hotkey_cont_h - ui(32);
-		
-		sp_pref.resize(  panel_width, panel_height - 1);
-		sp_hotkey.resize(panel_width, hotkey_height);
 	}
 	
 	function drawContent(panel) {
@@ -1792,25 +1788,52 @@ function Panel_Preference() : PanelContent() constructor {
     	var px = padding + page_width;
     	var py = padding;
     	var pw = w - padding * 2 - page_width;
-    	var ph = h - padding - padding;
+    	var ph = h - padding * 2;
+    	
+    	if(PREF_SAVABLE) {
+    		var bw = ui(128);
+    		
+    		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+    		var _lt = __txt("Startup error causes preference value to be resetted. Preference is now read-only. Backup the current Preference files and restart.");
+    		var _tw = pw - bw - ui(8);
+    		var _th = string_height_ext(_lt, -1, _tw);
+    		
+    		var _lh = _th + ui(8);
+    		var  bh = _lh - ui(8);
+    		var  bx = px + ui(4) + pw - bw;
+    		var  by = py + ui(4);
+    		
+    		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, px - ui(8), py, pw + ui(16), _lh, COLORS._main_value_negative);
+    		draw_sprite_stretched_add(THEME.box_r2,     1, px - ui(8), py, pw + ui(16), _lh, COLORS._main_value_negative, .2);
+    		draw_text_ext_add(px, py + _lh / 2, _lt, -1, _tw);
+    		
+    		if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, [mx,my], pFOCUS, pHOVER, "", "Open Directory") == 2)
+    			shellOpenExplorer($"{DIRECTORY}Preferences");
+    		
+    		py += _lh + ui(12);
+    		ph -= _lh + ui(12);
+    	}
     	
     	draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
     	
     	switch(page_current) {
         	case 0 : //General
         		current_list = pref_global;
+        		sp_pref.verify(panel_width, ph);
         		sp_pref.setFocusHover(pFOCUS, pHOVER);
         		sp_pref.drawOffset(px, py, mx, my);
     		    break;
     		    
     	    case 1 : //Interface
         		current_list = pref_appr;
+        		sp_pref.verify(panel_width, ph);
         		sp_pref.setFocusHover(pFOCUS, pHOVER);
         		sp_pref.drawOffset(px, py, mx, my);
     		    break;
     		
     	    case 2 : //Nodes
         		current_list = pref_node;
+        		sp_pref.verify(panel_width, ph);
         		sp_pref.setFocusHover(pFOCUS, pHOVER);
         		sp_pref.drawOffset(px, py, mx, my);
     		    break;
@@ -1820,7 +1843,7 @@ function Panel_Preference() : PanelContent() constructor {
         		var _sp_y = ui(28);
         		
         		var x1 = px + _sp_x - ui(8);
-        		sp_theme.verify(_sp_x - ui(8), panel_height);
+        		sp_theme.verify(_sp_x - ui(8), ph);
         		sp_theme.setFocusHover(pFOCUS, pHOVER);
         		sp_theme.drawOffset(px, py, mx, my);
         		
@@ -1830,7 +1853,7 @@ function Panel_Preference() : PanelContent() constructor {
                 tab_resources.draw(px + _sp_x + ui(32), py, _res_w - ui(64), ui(24), theme_page, [ mx, my ]);
         		
         		var sp = theme_pages[theme_page];
-        		sp.verify(_res_w, panel_height - _sp_y);
+        		sp.verify(_res_w, ph - _sp_y);
         		sp.setFocusHover(pFOCUS, pHOVER);
         		sp.drawOffset(px + _sp_x, py + _sp_y, mx, my);
     		    break;
@@ -2020,6 +2043,8 @@ function Panel_Preference() : PanelContent() constructor {
         		hk_scroll.setFocusHover(pFOCUS, pHOVER);
         		hk_scroll.draw(px, _ppy, ui(200), ui(24), hk_page, [ mx, my ], x, y);
         		
+        		hotkey_height = ph - hotkey_cont_h - ui(32);
+        		sp_hotkey.verify(panel_width, hotkey_height);
         		sp_hotkey.setFocusHover(pFOCUS, pHOVER);
         		sp_hotkey.drawOffset(px, _ppy + ui(32), mx, my);
     	    break;

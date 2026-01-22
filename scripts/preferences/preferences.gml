@@ -1,10 +1,10 @@
 #region preference
-	globalvar PREFERENCES, PREFERENCES_DEF, PREFERENCES_DIR;
-	globalvar PREFERENCES_MENUITEMS;
+	globalvar PREFERENCES_DEF, PREFERENCES_DIR;
 	
-	PREFERENCES  = {};
-	HOTKEYS_DATA = {};
-	PREFERENCES_MENUITEMS = {};
+	globalvar PREF_SAVABLE; PREF_SAVABLE = true;
+	globalvar PREFERENCES; PREFERENCES  = {};
+	globalvar HOTKEYS_DATA; HOTKEYS_DATA = {};
+	globalvar PREFERENCES_MENUITEMS; PREFERENCES_MENUITEMS = {};
 	
 	#region GENERAL UI
 												
@@ -366,6 +366,7 @@
 	}
 	
 	function PREF_SAVE() {
+		if(!PREF_SAVABLE) return;
 		if(IS_CMD) return;
 		
 		directory_verify($"{DIRECTORY}Preferences");
@@ -390,7 +391,55 @@
 	
 	function PREF_LOAD() {
 		try {
-			__PREF_LOAD();
+			directory_verify($"{DIRECTORY}Preferences");
+			if(!directory_exists(PREFERENCES_DIR)) PREF_UPDATE();
+			
+			var path = filename_combine(PREFERENCES_DIR, "keys.json");
+			if(file_exists(path)) {
+				var _map = json_load_struct(path);
+				var _prf = struct_has(_map, "preferences")? _map.preferences : _map;
+				
+				struct_override(PREFERENCES, _prf);
+				print($"Loaded theme: {PREFERENCES.theme}")
+				
+			} else print($"Pref key not found.")
+			
+			if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
+				PREFERENCES.theme = "default";
+			
+			LOCALE_DEF = PREFERENCES.local == "en";
+			THEME_DEF  = PREFERENCES.theme == "default";
+			FONT_DEF   = THEME_DEF && LOCALE_DEF && 
+				PREFERENCES.display_scaling == 1 && 
+				PREFERENCES.text_scaling    == 1 && 
+				PREFERENCES.font_overwrite  == "";
+			
+			directory_verify(filepath_resolve(PREFERENCES.temp_path));
+			
+			if(PREFERENCES.move_directory) directory_set_current_working(DIRECTORY);
+			
+			__initProjectAttr();
+			hotkey_deserialize();
+			
+			TESTING = PREFERENCES[$ "test_mode"] ?? false;
+			
+			var path = filename_combine(PREFERENCES_DIR, "menu_items.json");
+			if(file_exists(path)) {
+				var _map = json_load_struct(path);
+				PREFERENCES_MENUITEMS = _map;
+			}
+			
+			var fsPath = filename_combine(PREFERENCES_DIR, "fs.json");
+			if(file_exists(fsPath)) {
+				var fsPref = json_load_struct(fsPath);
+				fsPref.ui_scale = UI_SCALE;
+				json_save_struct(fsPath, fsPref);
+			}
+			
+			if(RUN_IDE) {
+				ADD_NODE_PAGE    = PREFERENCES.add_node_page;
+				ADD_NODE_SUBPAGE = PREFERENCES.add_node_subpage;
+			}
 			
 		} catch(e) {
 			var _dir = $"{DIRECTORY}Preferences";
@@ -400,63 +449,10 @@
 			LOCALE_DEF  = true;
 			THEME_DEF   = true;
 			FONT_DEF    = true;
-		}
-	}
-	
-	function __PREF_LOAD() {
-		directory_verify($"{DIRECTORY}Preferences");
-		if(!directory_exists(PREFERENCES_DIR)) PREF_UPDATE();
-		
-		var path = PREFERENCES_DIR + "keys.json";
-		if(file_exists(path)) {
-			should_restart = true;
-			var _map = json_load_struct(path);
-			var _prf = struct_has(_map, "preferences")? _map.preferences : _map;
 			
-			struct_override(PREFERENCES, _prf);
-			print($"Loaded theme: {PREFERENCES.theme}")
-		} else 
-			print($"Pref key not found.")
-		
-		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
-			PREFERENCES.theme = "default";
-		
-		LOCALE_DEF = PREFERENCES.local == "en";
-		THEME_DEF  = PREFERENCES.theme == "default";
-		FONT_DEF   = THEME_DEF && LOCALE_DEF && 
-			PREFERENCES.display_scaling == 1 && 
-			PREFERENCES.text_scaling    == 1 && 
-			PREFERENCES.font_overwrite  == "";
-		
-		directory_verify(filepath_resolve(PREFERENCES.temp_path));
-		
-		if(PREFERENCES.move_directory) directory_set_current_working(DIRECTORY);
-		
-		var f = json_load_struct(PREFERENCES_DIR + "default_project.json");
-		struct_override(PROJECT_ATTRIBUTES, f);
-		PROJECT_ATTRIBUTES.surface_dimension = array_verify(PROJECT_ATTRIBUTES.surface_dimension, 2);
-		
-		hotkey_deserialize();
-		
-		TESTING = struct_try_get(PREFERENCES, "test_mode", false);
-		
-		var path = PREFERENCES_DIR + "menu_items.json";
-		if(file_exists(path)) {
-			var _map = json_load_struct(path);
-			PREFERENCES_MENUITEMS = _map;
+			PREF_SAVABLE = false;
 		}
 		
-		var fsPath = PREFERENCES_DIR + $"fs.json";
-		if(file_exists(fsPath)) {
-			var fsPref = json_load_struct(fsPath);
-			fsPref.ui_scale = UI_SCALE;
-			json_save_struct(fsPath, fsPref);
-		}
-	
-		if(RUN_IDE) {
-			ADD_NODE_PAGE    = PREFERENCES.add_node_page;
-			ADD_NODE_SUBPAGE = PREFERENCES.add_node_subpage;
-		}
 	}
 	
 	function PREF_APPLY() {

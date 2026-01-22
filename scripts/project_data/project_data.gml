@@ -2,6 +2,11 @@
 	globalvar PROJECTS;
 	globalvar PROJECT; PROJECT = noone;
 	
+	#macro DEF_SURF_W  PROJECT.attributes.surface_dimension[0]
+	#macro DEF_SURF_H  PROJECT.attributes.surface_dimension[1]
+	#macro DEF_SURF    PROJECT.attributes.surface_dimension
+	#macro DEF_PALETTE PROJECT.attributes.palette
+	
 	function Layer() constructor {
 		name  = "New Layer";
 		nodes = [];
@@ -22,10 +27,11 @@
 		global_layer      : false, 
 	}
 	
-	#macro DEF_SURF_W  PROJECT.attributes.surface_dimension[0]
-	#macro DEF_SURF_H  PROJECT.attributes.surface_dimension[1]
-	#macro DEF_SURF    PROJECT.attributes.surface_dimension
-	#macro DEF_PALETTE PROJECT.attributes.palette
+	function __initProjectAttr() {
+		var f = json_load_struct(PREFERENCES_DIR + "default_project.json");
+		struct_override(PROJECT_ATTRIBUTES, f);
+		PROJECT_ATTRIBUTES.surface_dimension = array_verify(PROJECT_ATTRIBUTES.surface_dimension, 2);
+	}
 #endregion
 
 function Project() constructor {
