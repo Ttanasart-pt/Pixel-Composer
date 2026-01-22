@@ -68,8 +68,6 @@ function __font_refresh() {
 
 function _font_add(path, size, sdf = false, custom = false) {
 	var _cache = custom? FONT_CUST_CACHE : FONT_CACHE;
-	var font_cache_dir = DIRECTORY + "font_cache";
-	directory_verify(font_cache_dir);
 	
 	var _key = $"{filename_name_only(path)}_{size}_{sdf}";
 	if(struct_has(_cache, _key) && font_exists(_cache[$ _key]))
@@ -212,29 +210,3 @@ function loadFonts() {
 	
 	__font_refresh();
 }
-
-#region unused font cache
-	//function __fontCache() { 
-	//	var _f = font_add("LXGWWenKaiMonoLite-Bold.ttf", 16, false, false, 0, 0);
-	//	var _fInfo  = font_get_info(_f);
-	//	var _gMap   = _fInfo.glyphs;
-	//	var _glyphs = variable_struct_get_names(_gMap);
-	
-	//	draw_set_text(_f, fa_left, fa_top, c_white);
-	
-	//	for( var i = 0, n = array_length(_glyphs); i < n; i++ ) {
-	//		var _g     = _glyphs[i];
-	//		var _glyph = _gMap[$ _g];
-		
-	//		if(_glyph.w == 0 || _glyph.h == 0) continue;
-		
-	//		var _s = surface_create(_glyph.w, _glyph.h);
-	//		surface_set_target(_s); DRAW_CLEAR
-	//			draw_text(0, 0, chr(_glyph.char));
-	//		surface_reset_target();
-		
-	//		surface_save(_s, $"{DIRECTORY}Locale/extend/cache/{_glyph.char}.png");
-	//		surface_clear(_s);
-	//	}
-	//} run_in(1, __fontCache); 
-#endregion

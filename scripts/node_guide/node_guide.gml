@@ -49,6 +49,8 @@ function __initNodeReleated() {
 }
 
 function __initNodeData() {
+	__initAction();
+	
 	var nodeDir = DIRECTORY + "Nodes/";
 	directory_verify(nodeDir);
 	

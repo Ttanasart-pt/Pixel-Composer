@@ -132,28 +132,26 @@
 	var t0   = get_timer();
 	var t    = get_timer();
 	var _lua = PROGRAM_ARGUMENTS._lua;
+	__r = getMemoryUsage(pid); 
 	
 				  __initSurfaceFormat();  printDebug($"> init SurfaceFormat | {__log_tr()}"); 
 				  __initUser();           printDebug($"> init User          | {__log_tr()}"); 
 	if(!IS_CMD) { __initTheme();          printDebug($"> init Theme         | {__log_tr()}");  }
 	if(!IS_CMD) { loadFonts();            printDebug($"> init Font          | {__log_tr()}");  }
 	if(!IS_CMD) { __initProject();        printDebug($"> init Project       | {__log_tr()}");  }
-	              __fnInit();
+	              __fnInit();             printDebug($"> init Functions     | {__log_tr()}"); 
 	
-	if(!IS_CMD) { __initAction();         printDebug($"> init Action        | {__log_tr()}"); }
 	if(!IS_CMD) { __initCollection();     printDebug($"> init Collection    | {__log_tr()}"); }
 	if(!IS_CMD) { __initAssets();         printDebug($"> init Assets        | {__log_tr()}"); }
-	
 	if(!IS_CMD) { __initPresets();        printDebug($"> init Presets       | {__log_tr()}"); }
 	if(!IS_CMD) { __initFontFolder();     printDebug($"> init FontFolder    | {__log_tr()}"); }
+	
 	if(_lua)    { __initLua();            printDebug($"> init Lua           | {__log_tr()}"); }
 	if(!IS_CMD) { __initNodeData();       printDebug($"> init NodeData      | {__log_tr()}"); }
-				  __initNodes();          printDebug($"> init Nodes         | {__log_tr()}");
+				  __initNodes();          printDebug($"> init Node Registry | {__log_tr()}");
 	if(!IS_CMD) { __initSteamUGC();       printDebug($"> init SteamUGC      | {__log_tr()}"); }
-	if(!IS_CMD) { __initAddon();          printDebug($"> init Addon         | {__log_tr()}"); }
 	if(!IS_CMD) { __initPen();            printDebug($"> init Pen           | {__log_tr()}"); }
-	
-	if(!IS_CMD) { loadAddon();            printDebug($"> init Addons        | {__log_tr()}"); }
+	if(!IS_CMD) { __initAddon();          printDebug($"> init Addon         | {__log_tr()}"); }
 	
 	if(!IS_CMD) { LOAD_SAMPLE();          printDebug($"> init sample        | {__log_tr()}"); }
 	if(!IS_CMD) { INIT_FOLDERS();         printDebug($"> init folders       | {__log_tr()}"); }

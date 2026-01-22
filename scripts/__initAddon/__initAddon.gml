@@ -41,6 +41,8 @@ function __initAddon() {
 	}
 	
 	file_find_close();
+	
+	loadAddon();
 }
 
 function loadAddon() {
