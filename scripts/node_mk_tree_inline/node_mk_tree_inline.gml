@@ -33,10 +33,7 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	////- Nodes
 	
-	static getDimension = function() /*=>*/ {
-		dimension = dimension ?? inputs[2].getValue();
-		return dimension;
-	}
+	static getDimension = function() /*=>*/ { dimension = dimension ?? inputs[2].getValue(); return dimension; }
 	
 	static update = function() {
 		seed       = inputs[0].getValue();

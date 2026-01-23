@@ -19,7 +19,7 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var _tree = getInputData(0);
 		var _dim  = getDimension();
-		if(array_empty(_tree)) return;
+		if(!is_array(_tree) || array_empty(_tree)) return;
 		
 		var _outSurf = outputs[0].getValue();
 		

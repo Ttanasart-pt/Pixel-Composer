@@ -148,12 +148,10 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var  rat, j = 0;
 			
 			repeat(_amo) {
-				if(_dist == 0)
-					rat = random_range(_oriR[0], _oriR[1]);
-				else if(_dist == 1)	
-					rat = lerp(_oriR[0], _oriR[1], j / _amo);
+				     if(_dist == 0) rat = random_range(_oriR[0], _oriR[1]);
+				else if(_dist == 1) rat = lerp(_oriR[0], _oriR[1], j / _amo);
 				
-				var ori = [0,0,0];
+				var ori  = [0,0,0];
 				
 				_tr.getPosition(rat, ori);
 				

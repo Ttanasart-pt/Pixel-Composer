@@ -26,6 +26,7 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Node
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	temp_surface = [ noone, noone ];
 	
@@ -60,6 +61,8 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		repeat(_itr) {
 			surface_set_shader(temp_surface[_bg], sh_de_corner);
+				shader_set_i( "sampleMode", getAttribute("oversample"));
+				
 				shader_set_f("dimension", _sw, _sh);
 				shader_set_f_map("tolerance", _tol, _data[10], inputs[2]);
 				shader_set_i("strict",    _str);
