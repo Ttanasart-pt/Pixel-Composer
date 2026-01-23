@@ -15,14 +15,14 @@ function draw_tooltip_text(txt) {
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + pd * 2, th + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + pd * 2, th + pd * 2);
+	var _rect = gpu_get_scissor();
+	gpu_set_scissor(mx + pd, my + pd, tw, th);
 	draw_text_line(mx + pd, my + pd, txt, -1, tw);
+	gpu_set_scissor(_rect);
 }
 
 function draw_tooltip_color(clr) {
-	if(is_array(clr)) {
-		draw_tooltip_palette(clr);
-		return;
-	}
+	if(is_array(clr)) { draw_tooltip_palette(clr); return; }
 	
 	var ww = ui(32);
 	var hh = ui(32);
