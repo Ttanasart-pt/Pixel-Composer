@@ -106,9 +106,12 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
 			
+			var _scis = gpu_get_scissor();
+			gpu_set_scissor(_x, _y, _w, _h);
 			draw_set_text(font, fa_center, fa_center, COLORS._main_text, .5);
 			draw_text(_x + _w / 2, _y + _h / 2, _data);
 			draw_set_alpha(1);
+			gpu_set_scissor(_scis);
 			return _h;
 		}
 		

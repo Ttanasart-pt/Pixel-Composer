@@ -25,7 +25,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 1, nodeValue_EButton( "Distribution", 0, [ "Area", "Border", "Map" ]  )).rejectArray();
 	newInput( 4, nodeValue_Surface( "Distribution Map" ));
 	
-	newInput( 2, nodeValue_EButton( "Scatter",  1, [ "Uniform", "Random", "Poisson" ] )).rejectArray();
+	newInput( 2, nodeValue_EButton( "Scatter",  1, [ "Uniform", "Random", "Poisson", "Golden Spiral" ] )).rejectArray();
 	newInput( 3, nodeValue_Int(     "Amount",   2 ));
 	newInput(12, nodeValue_Float(   "Distance", 8 )).setValidator(VV_min(0));
 	
@@ -76,6 +76,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			inputs[12].setVisible(_scat == 2);
 		#endregion
 		
+		if(_amo <= 0) return [];
+		
 		random_set_seed(_seed);
 		
 		var aBox = area_get_bbox(_area);
@@ -85,31 +87,54 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	                     _fixRef[0] / 2, _fixRef[1] / 2, 0 ];
 	                 
 		if(_dist != 2) {
-			if(_scat == 2) {
-				if(_fix) {
-					var pnts = area_get_random_point_poisson_c(_fixArea, poisDist, _seed);
+			switch(_scat) {
+				case 0 :
+				case 1 :
+					if(_fix) {
+						for( var i = 0; i < _amo; i++ ) {
+							var p = area_get_random_point(_fixArea, _dist, _scat, i, _amo, _seed + i * pi);
+							if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
+								array_push(pos, p);
+						} 
+						
+					} else {
+						for( var i = 0; i < _amo; i++ )
+							pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo, _seed + i * pi);
+					}
+					break;
 					
-					for( var i = 0, n = array_length(pnts); i < n; i++ ) {
-						var p = pnts[i];
-						if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
-							array_push(pos, p);
-					} 
+				case 2 :
+					if(_fix) {
+						var pnts = area_get_random_point_poisson_c(_fixArea, poisDist, _seed);
+						
+						for( var i = 0, n = array_length(pnts); i < n; i++ ) {
+							var p = pnts[i];
+							if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
+								array_push(pos, p);
+						} 
+						
+					} else 
+						pos = area_get_random_point_poisson_c(_area, poisDist, _seed);
+					break;
 					
-				} else 
-					pos = area_get_random_point_poisson_c(_area, poisDist, _seed);
-				
-			} else {
-				if(_fix) {
+				case 3 : 
+					pos = array_create(_amo);
+					var phi = (1 + sqrt(5)) / 2; // golden ratio
+					var cx  = _area[0];
+					var cy  = _area[1];
+					var cw  = _area[2];
+					var ch  = _area[3];
+					
 					for( var i = 0; i < _amo; i++ ) {
-						var p = area_get_random_point(_fixArea, _dist, _scat, i, _amo, _seed + i * pi);
-						if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
-							array_push(pos, p);
-					} 
-					
-				} else {
-					for( var i = 0; i < _amo; i++ )
-						pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo, _seed + i * pi);
-				}
+        				var _r = sqrt(i / (_amo - 1));
+						var _a = radtodeg(2 * pi * i / phi);
+						
+						var _x = cx + lengthdir_x(_r * cw, _a);
+						var _y = cy + lengthdir_y(_r * ch, _a);
+						
+						pos[i] = [_x, _y];
+					}
+					break;
 			}
 			
 		} else {

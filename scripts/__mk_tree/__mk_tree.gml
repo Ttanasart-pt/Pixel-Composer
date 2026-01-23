@@ -131,8 +131,8 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 						ns = g1 == undefined? g0.get(_t) : random_range(g0.get(_t), g1.get(_t));
 						nx = ox + lengthdir_x(ds, nd);
 						ny = oy + lengthdir_y(ds, nd);
-						nd = lerp_angle_direct(nd, gravity, gg) + geoTwist;
-						nc = colorLeaf.evalFast(i/_samp);
+						nd = lerp_angle_direct(nd, gravity, gg) + geoTwist / _samp;
+						nc = colorLeaf.evalFast(i / _samp);
 						
 						var _odx = lengthdir_x(sy, od + 90);
 						var _ody = lengthdir_y(sy, od + 90);
