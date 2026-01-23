@@ -32,7 +32,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 9, nodeValue_Surface(     "Texture",       noone        ));
 	newInput(21, nodeValue_Slider(      "Leaf Span",     .5           ));
 	newInput(29, nodeValue_Curve(       "Geometry",      CURVE_DEF_01 ));
-	newInput(31, nodeValue_Float(       "Shape Gravity", .1           )).setCurvable(37, CURVE_DEF_11, "Over Branch");;
+	newInput(31, nodeValue_Float(       "Shape Gravity", .1           )).setCurvable(37, CURVE_DEF_11, "Over Branch");
 	newInput(30, nodeValue_Int(         "Resolution",     6           ));
 	
 	////- =Color
@@ -52,6 +52,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	// input 38
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
+	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
 		[ "Leaf",     false ],  1, 35, 19,  2,  7, 16, 27, 28, 10, 17, 
@@ -61,8 +62,11 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Growth",   false ], 22, 
 	];
 	
-	amountUnitToggle = button(function() /*=>*/ { inputs[2].attributes.unit = !inputs[2].attributes.unit; triggerRender(); })
-		.setIcon(THEME.mk_tree_leaf_unit).iconPad();
+	amountUnitTooltip = new tooltipSelector("Unit", [ "Fixed Amount", "Leaf Distance" ]);
+	amountUnitToggle  = button(function() /*=>*/ { inputs[2].attributes.unit = !inputs[2].attributes.unit; triggerRender(); })
+		.setIcon(THEME.mk_tree_leaf_unit).iconPad()
+		.setTooltip(amountUnitTooltip, function() /*=>*/ {return inputs[2].attributes.unit});
+		
 	inputs[2].attributes.unit = VALUE_UNIT.constant;
 	inputs[2].getEditWidget().setSideButton(amountUnitToggle);
 	
@@ -168,9 +172,12 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var ox, oy, nx, ny;
 		var __p0 = min(_pos[0], _pos[1]);
 		var __p1 = max(_pos[0], _pos[1]);
+		var _leaves = [];
 		
 		_tree = variable_clone(_tree);
 		outputs[0].setValue(_tree);
+		outputs[1].setValue(_leaves);
+		
 		if(__p1 <= __p0) return;
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
@@ -283,15 +290,15 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					_whorr = round(_whorr);
 					
 					if(_whorr <= 0) {
-						array_push(_br.leaves, _l);
+						array_push(_br.leaves, _l);  array_push(_leaves, _l);
 						
 					} else if(_whorr == 1) {
 						var _d2 = brnDir - _spra;
 					        _d2 = lerp_angle_direct(_d2, _gDir, _grv);
 						var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
 						
-						array_push(_br.leaves, _l);
-						array_push(_br.leaves, _l2);
+						array_push(_br.leaves, _l);  array_push(_leaves, _l);
+						array_push(_br.leaves, _l2); array_push(_leaves, _l2);
 						
 					} else {
 						var _whrla = _whra * (curve_whorla? curve_whorla.get(_cPos) : 1);
@@ -302,7 +309,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							    _d2 = lerp_angle_direct(_d2, _gDir, _grv);
 							
 							var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
-							array_push(_br.leaves, _l2);
+							array_push(_br.leaves, _l2);  array_push(_leaves, _l2);
 						}
 					}
 					

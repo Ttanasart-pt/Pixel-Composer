@@ -58,10 +58,10 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Growth",    false ], 20, 
 	];
 	
-	amountUnitToggle = button(function() /*=>*/ {
-		inputs[5].attributes.unit = !inputs[5].attributes.unit;
-		triggerRender();
-	}).setIcon(THEME.mk_tree_leaf_unit).iconPad();
+	amountUnitTooltip = new tooltipSelector("Unit", [ "Fixed Amount", "Branch Distance" ]);
+	amountUnitToggle  = button(function() /*=>*/ { inputs[5].attributes.unit = !inputs[5].attributes.unit; triggerRender(); })
+		.setIcon(THEME.mk_tree_leaf_unit).iconPad()
+		.setTooltip(amountUnitTooltip, function() /*=>*/ {return inputs[5].attributes.unit});
 	
 	inputs[5].attributes.unit = VALUE_UNIT.constant;
 	inputs[5].getEditWidget().setSideButton(amountUnitToggle);

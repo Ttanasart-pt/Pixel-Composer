@@ -95,7 +95,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		unit		  = new nodeValueUnit(self);
 		def_unit      = VALUE_UNIT.constant;
 		
-		is_modified   = false;
+		is_modified     = false;
+		always_modified = false;
+		
 		cache_value   = [ false, false, undefined, undefined ];
 		cache_array   = [ false, false ];
 		use_cache     = true;
@@ -431,7 +433,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		unit.mode = def_unit;
 		setValue(unit.apply(variable_clone(def_val))); 
-		is_modified       = false;
+		is_modified       = always_modified;
 		attributes.mapped = false;
 	}
 	
@@ -2733,7 +2735,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(draw_line_shift_x !=  0) _map.shift_x = draw_line_shift_x;
 		if(draw_line_shift_y !=  0) _map.shift_y = draw_line_shift_y;
 		if(draw_line_shift_e != -1) _map.shift_e = draw_line_shift_e;
-		if(is_modified == true)     _map.m       = 1;
+		if(always_modified || is_modified == true) _map.m = 1;
 		
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
@@ -2746,16 +2748,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim)          _map.anim       = is_anim;
 		if(ign_array)        _map.ign_array  = ign_array;
 		
-		if(is_modified) _map.r  = animator.serialize(scale);
-		
-		if(is_modified && sep_axis && animVector) {
-			var _anims = getAnimators();
-			var _animm = array_create(animVector);
+		if(always_modified || is_modified) {
+			_map.r = animator.serialize(scale);
 			
-			for( var i = 0; i < animVector; i++ )
-				_animm[i] = _anims[i].serialize(scale);
+			if(sep_axis && animVector) {
+				var _anims = getAnimators();
+				var _animm = array_create(animVector);
 				
-			_map.animators    = _animm;
+				for( var i = 0; i < animVector; i++ )
+					_animm[i] = _anims[i].serialize(scale);
+					
+				_map.animators    = _animm;
+			}
 		}
 		
 		if(name_custom) _map.name_custom  = name_custom;
@@ -2814,9 +2818,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_x = _map[$ "shift_x"]     ??  0;
 		draw_line_shift_y = _map[$ "shift_y"]     ??  0;
 		draw_line_shift_e = _map[$ "shift_e"]     ?? -1;
-		is_modified       = false;
+		
 		if(has(_map, "m"))           is_modified = bool(_map.m);
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
+		if(always_modified) is_modifed = true;
 		
 		#region attributes
 			if(has(_map, "attri")) struct_append(attributes, _map.attri);

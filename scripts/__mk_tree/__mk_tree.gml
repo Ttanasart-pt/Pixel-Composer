@@ -5,6 +5,12 @@
 		widg:  function() /*=>*/ {return new mktreeBox()},
 	}
 	
+	global.MKTREE_LEAVES_JUNC = {
+		icon:  function() /*=>*/ {return THEME.node_junction_mktree_leaves},
+		color: function() /*=>*/ {return COLORS.node_blend_mktree},
+		widg:  function() /*=>*/ {return new mktreeBox()},
+	}
+	
 	enum MKLEAF_TYPE {
 		Leaf, 
 		Complex_Leaf, 
@@ -15,6 +21,7 @@
 #endregion
 
 function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
+	root = undefined;
 	rootPosition = _pos;
 	shape        = _shp;
 	

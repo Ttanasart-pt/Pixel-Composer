@@ -1,8 +1,9 @@
 function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Lua Compute";
 	update_on_frame = true;
+	lua_state = lua_create();
 	
-	newInput(3, nodeValue(      "Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone )).setVisible(false, true);
+	newInput(3, nodeValue(      "Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, lua_state )).setVisible(false, true);
 	newInput(4, nodeValue_Bool( "Execute on frame", true ));
 	
 	////- =Function
@@ -13,8 +14,8 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(2, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA).setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())})
 	// 5
 	
-	newOutput(0, nodeValue_Output( "Execution thread", VALUE_TYPE.node, noone ));
-	newOutput(1, nodeValue_Output( "Return value",     VALUE_TYPE.any,  noone ));
+	newOutput(0, nodeValue_Output( "Execution thread", VALUE_TYPE.node, lua_state ));
+	newOutput(1, nodeValue_Output( "Return value",     VALUE_TYPE.any,  noone     ));
 	
 	argumentRenderer(global.lua_arguments);
 	
@@ -31,7 +32,6 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	argument_name = [];
 	argument_val  = [];
 	
-	lua_state = lua_create();
 	lua_dtype = [ "Number", "String", "Surface", "Struct" ];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -53,10 +53,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Nodes
 	
-	static getState = function() {
-		if(inputs[3].value_from == noone) return lua_state;
-		return inputs[3].value_from.node.getState();
-	}
+	static getState = function() /*=>*/ {return inputs[3].getValue()};
 	
 	static refreshDynamicInput = function() {
 		var _in = [];
@@ -137,17 +134,20 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _exec = getInputData(4);
 		update_on_frame = _exec;
 		
+		var stat = getState();
+		
 		argument_val = [];
 		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length )
 			array_push(argument_val, getInputData(i + 2));
 		
-		lua_projectData(getState());
+		lua_projectData(stat);
 		addCode();
 		
 		var res = 0;
-		try	     { res = lua_call_w(getState(), _func, argument_val); } 
-		catch(e) { noti_warning(exception_print(e), noone, self);           }
+		try	     { res = lua_call_w(stat, _func, argument_val);   } 
+		catch(e) { noti_warning(exception_print(e), noone, self); }
 		
+		outputs[0].setValue(stat);
 		outputs[1].setValue(res);
 	}
 	
@@ -194,6 +194,6 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	}
 	
-	static onDestroy = function() { lua_state_destroy(lua_state); }
-	static onRestore = function() { lua_state = lua_create();     }
+	static onDestroy = function() /*=>*/ { lua_state_destroy(lua_state); }
+	static onRestore = function() /*=>*/ { lua_state = lua_create(); inputs[3].setValue(lua_state); }
 }
