@@ -56,6 +56,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	geometry   = undefined;
 	geometry1  = undefined;
 	geoGrav    = .1;
+	geoTwist   = .1;
 	resolution = 0;
 	
 	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
@@ -130,7 +131,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 						ns = g1 == undefined? g0.get(_t) : random_range(g0.get(_t), g1.get(_t));
 						nx = ox + lengthdir_x(ds, nd);
 						ny = oy + lengthdir_y(ds, nd);
-						nd = lerp_angle_direct(nd, gravity, gg);
+						nd = lerp_angle_direct(nd, gravity, gg) + geoTwist;
 						nc = colorLeaf.evalFast(i/_samp);
 						
 						var _odx = lengthdir_x(sy, od + 90);
@@ -230,10 +231,12 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		colorU     = _l.colorU;
 		colorLeaf  = _l.colorLeaf;
 		
-		growShift  = _l.growShift;
-		geoGrav    = _l.geoGrav;
 		geometry   = _l.geometry;
 		geometry1  = _l.geometry1;
+		
+		growShift  = _l.growShift;
+		geoGrav    = _l.geoGrav;
+		geoTwist   = _l.geoTwist;
 		
 		resolution = _l.resolution;
 		return self;

@@ -35,6 +35,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(29, nodeValue_Curve(      "Geometry",      CURVE_DEF_01 ));
 	newInput(38, nodeValue_Curve(      "Geometry2",     CURVE_DEF_01 ));
 	newInput(31, nodeValue_Float(      "Shape Gravity", .1           )).setCurvable(37, CURVE_DEF_11, "Over Branch");
+	newInput(40, nodeValue_Range(      "Twist",         [0,0], true  ));
 	newInput(30, nodeValue_Int(        "Resolution",     6           ));
 	
 	////- =Color
@@ -51,7 +52,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 40
+	// input 41
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
@@ -59,7 +60,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
 		[ "Leaf",     false ],  1, 35, 19,  2,  7, 16, 27, 28, 10, 17, 
 		[ "Grouping", false ], 15, 36, 32, 33, 
-		[ "Shape",    false ],  8,  3, 18,  9, 21, 39, 29, 38, 31, 37, 30, 
+		[ "Shape",    false ],  8,  3, 18,  9, 21, 39, 29, 38, 31, 37, 40, 30, 
 		[ "Color",    false ],  4, 20, 12,  6, 13, 34, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
 		[ "Growth",   false ], 22, 
 	];
@@ -128,6 +129,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _geoG = getInputData(31);
 			var _geGC = getInputData(37), curve_geog   = inputs[31].attributes.curved? new curveMap(_geGC)  : undefined;
+			var _gtws = getInputData(40);
 			var _lres = getInputData(30);
 			
 			var _cBra     = getInputData( 4);
@@ -164,6 +166,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			inputs[31].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf);
 			inputs[30].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf || _shap == MKLEAF_TYPE.Line); 
 			inputs[31].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf || _shap == MKLEAF_TYPE.Line); 
+			inputs[40].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf);
 			
 			inputs[ 9].setVisible(_shap == MKLEAF_TYPE.Surface, _shap == MKLEAF_TYPE.Surface);
 			inputs[11].setVisible(_shap != MKLEAF_TYPE.Surface && _edg);
@@ -246,7 +249,6 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					var _ggv  = random_range(_grav[0], _grav[1]);
 					var _grv  = _ggv * (curve_garvit? curve_garvit.get(_cPos) : 1);
-					    _grv  = clamp(_grv, 0, 1);
 					_dr = lerp_angle_direct(_dr, _gDir, _grv);
 					
 					var _sh = random_range(_offs[0], _offs[1]) * (curve_offset? curve_offset.get(_cPos) : 1);
@@ -268,6 +270,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					    _l.colorLeaf  = _cLefAlo;
 					    _l.growShift  = random_range(_grow[0], _grow[1]);
 					    _l.geoGrav    = _geg;
+					    _l.geoTwist   = random_range(_gtws[0], _gtws[1]);
 					    _l.resolution = _lres;
 					     
 				   if(_shap == MKLEAF_TYPE.Complex_Leaf) {
@@ -311,6 +314,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						var _d2 = brnDir - _spra;
 					        _d2 = lerp_angle_direct(_d2, _gDir, _grv);
 						var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
+						    _l2.geoTwist = random_range(_gtws[0], _gtws[1]);
 						
 						array_push(_br.leaves, _l);  array_push(_leaves, _l);
 						array_push(_br.leaves, _l2); array_push(_leaves, _l2);
@@ -324,6 +328,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							    _d2 = lerp_angle_direct(_d2, _gDir, _grv);
 							
 							var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
+							    _l2.geoTwist = random_range(_gtws[0], _gtws[1]);
+							    
 							array_push(_br.leaves, _l2);  array_push(_leaves, _l2);
 						}
 					}
