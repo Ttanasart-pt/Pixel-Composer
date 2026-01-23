@@ -16,7 +16,8 @@
 		Complex_Leaf, 
 		Line, 
 		Circle, 
-		Surface
+		Surface,
+		Mesh, 
 	}
 #endregion
 
@@ -58,6 +59,8 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	geoGrav    = .1;
 	geoTwist   = .1;
 	resolution = 0;
+	
+	mesh = undefined;
 	
 	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
 	
@@ -220,6 +223,48 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				draw_surface_ext_safe(surface, x, y, sx * scale, sy * scale, dir, color); 
 				break;
 			
+			case MKLEAF_TYPE.Mesh : 
+				if(mesh == undefined) break;
+				
+				draw_set_color(colorMultiply(color, colorLeaf.evalFast(0)));
+				draw_primitive_begin(pr_trianglelist);
+				var _vtx = 0;
+				var tris = mesh.triangles;
+				var pnts = mesh.points;
+				
+				var _x = x;
+				var _y = y;
+				
+				var _d  = dir;
+				var _dc = dcos(_d);
+				var _ds = dsin(_d);
+				
+				for( var i = 0, n = array_length(tris); i < n; i++ ) {
+					var t  = tris[i];
+					var p0 = pnts[t[0]];
+					var p1 = pnts[t[1]];
+					var p2 = pnts[t[2]];
+						
+				    var _x0 = p0.x * sx, _y0 = p0.y * sy;
+				    var _x1 = p1.x * sx, _y1 = p1.y * sy;
+				    var _x2 = p2.x * sx, _y2 = p2.y * sy;
+					
+				    var x0 = _x + (_x0 * _dc - _y0 * _ds), y0 = _y + (_x0 * _ds + _y0 * _dc);
+				    var x1 = _x + (_x1 * _dc - _y1 * _ds), y1 = _y + (_x1 * _ds + _y1 * _dc);
+				    var x2 = _x + (_x2 * _dc - _y2 * _ds), y2 = _y + (_x2 * _ds + _y2 * _dc);
+				    
+					draw_vertex(x0, y0);
+					draw_vertex(x1, y1);
+					draw_vertex(x2, y2);
+					
+					if(++_vtx > 64) {
+						draw_primitive_end();
+						draw_primitive_begin(pr_trianglelist);
+					}
+				}
+				
+				draw_primitive_end();
+				break;
 		}
 	}
 	
@@ -237,8 +282,9 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		growShift  = _l.growShift;
 		geoGrav    = _l.geoGrav;
 		geoTwist   = _l.geoTwist;
-		
 		resolution = _l.resolution;
+		
+		mesh       = _l.mesh;
 		return self;
 	}
 }

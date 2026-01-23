@@ -2960,7 +2960,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_trigger[4] = frameInput.serialize(scale, preset);
 		
 		var _outMeta = [];
-		for(var i = 0; i < array_length(junc_meta); i++)
+		for(var i = 0, n = array_length(junc_meta); i < n; i++)
 			_outData[i] = junc_meta[i].serialize(scale, preset);
 		
 		_map.inspectInputs = _trigger;

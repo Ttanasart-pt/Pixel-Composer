@@ -118,6 +118,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					break;
 					
 				case 3 : 
+					if(_amo <= 1) break;
+					
 					pos = array_create(_amo);
 					var phi = (1 + sqrt(5)) / 2; // golden ratio
 					var cx  = _area[0];
