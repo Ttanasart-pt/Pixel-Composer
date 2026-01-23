@@ -53,7 +53,8 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	growShift = 0;
 	growSpeed = 1;
 	
-	geometry   = [];
+	geometry   = undefined;
+	geometry1  = undefined;
 	geoGrav    = .1;
 	resolution = 0;
 	
@@ -106,11 +107,15 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				break;
 				
 			case MKLEAF_TYPE.Complex_Leaf : 
-				if(array_empty(geometry)) break;
+				if(geometry == undefined) break;
 				
-				var _samp = array_length(geometry);
+				var g0 = geometry;
+				var g1 = geometry1;
+				
+				var _samp = resolution;
 				var ds = sx / _samp;
-				var os = geometry[0], ns = os;
+				var os = g1 == undefined? g0.get(0) : random_range(g0.get(0), g1.get(0));
+				var ns = os;
 				var od = dir,         nd = od;
 				var ox = x0,          nx = ox;
 				var oy = y0,          ny = oy;
@@ -119,8 +124,10 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				var rr;
 				
 				draw_primitive_begin(pr_trianglelist);
-					for( var i = 1; i < _samp; i++ ) {
-						ns = geometry[i];
+					for( var i = 1; i <= _samp; i++ ) {
+						var _t = i / _samp;
+						
+						ns = g1 == undefined? g0.get(_t) : random_range(g0.get(_t), g1.get(_t));
 						nx = ox + lengthdir_x(ds, nd);
 						ny = oy + lengthdir_y(ds, nd);
 						nd = lerp_angle_direct(nd, gravity, gg);
@@ -224,8 +231,9 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		colorLeaf  = _l.colorLeaf;
 		
 		growShift  = _l.growShift;
-		geometry   = _l.geometry;
 		geoGrav    = _l.geoGrav;
+		geometry   = _l.geometry;
+		geometry1  = _l.geometry1;
 		
 		resolution = _l.resolution;
 		return self;

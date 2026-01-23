@@ -339,12 +339,12 @@ function curveMap(_bz = undefined, _prec = 32, _tolr = 0.00001) constructor {
 	prec = _prec;
 	size = 1 / _prec;
 	tolr = _tolr;
-	map  = array_create(prec);
+	map  = array_create(prec + 1);
 	
 	static get = function(i) {
 		INLINE
 		
-		var _ind  = clamp(i, 0, 1) * (prec - 1);
+		var _ind  = clamp(i, 0, 1) * prec;
 		var _indL = floor(_ind);
 		var _indH = ceil(_ind);
 		var _indF = frac(_ind);
@@ -358,7 +358,7 @@ function curveMap(_bz = undefined, _prec = 32, _tolr = 0.00001) constructor {
 		if(array_equals(bz, _bz)) return;
 		
 		bz = array_clone(_bz, 1);
-		for( var i = 0; i < prec; i++ ) 
+		for( var i = 0; i < prec + 1; i++ ) 
 			map[i] = eval_curve_x(bz, i * size, tolr);
 		
 	}

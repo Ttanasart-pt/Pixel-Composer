@@ -28,10 +28,12 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setHistory([ shape_types, 
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_02_0}, list: [ "Leaf", "Circle", "Surface", "Line" ] }, 
 		]);
+	newInput(39, nodeValue_EButton(     "Geometry Type",  0, [ "Single", "Range" ] ));
 	newInput( 3, nodeValue_Vec2_Range(  "Size",          [4,4,2,2]    )).setCurvable(18, CURVE_DEF_11, "Over Branch");
 	newInput( 9, nodeValue_Surface(     "Texture",       noone        ));
 	newInput(21, nodeValue_Slider(      "Leaf Span",     .5           ));
 	newInput(29, nodeValue_Curve(       "Geometry",      CURVE_DEF_01 ));
+	newInput(38, nodeValue_Curve(       "Geometry2",     CURVE_DEF_01 ));
 	newInput(31, nodeValue_Float(       "Shape Gravity", .1           )).setCurvable(37, CURVE_DEF_11, "Over Branch");
 	newInput(30, nodeValue_Int(         "Resolution",     6           ));
 	
@@ -49,7 +51,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 38
+	// input 40
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
@@ -57,7 +59,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
 		[ "Leaf",     false ],  1, 35, 19,  2,  7, 16, 27, 28, 10, 17, 
 		[ "Grouping", false ], 15, 36, 32, 33, 
-		[ "Shape",    false ],  8,  3, 18,  9, 21, 29, 31, 37, 30, 
+		[ "Shape",    false ],  8, 39,  3, 18,  9, 21, 29, 38, 31, 37, 30, 
 		[ "Color",    false ],  4, 20, 12,  6, 13, 34, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
 		[ "Growth",   false ], 22, 
 	];
@@ -119,7 +121,11 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _sizC = getInputData(18), curve_size   = inputs[ 3].attributes.curved? new curveMap(_sizC)  : undefined;
 			var _tex  = getInputData( 9);
 			var _lspn = getInputData(21);
-			var _lgeo = getInputData(29);
+			
+			var _geoSc = getInputData(39);
+			var _lgeo  = getInputData(29);
+			var _lgeo2 = getInputData(38);
+			
 			var _geoG = getInputData(31);
 			var _geGC = getInputData(37), curve_geog   = inputs[31].attributes.curved? new curveMap(_geGC)  : undefined;
 			var _lres = getInputData(30);
@@ -152,6 +158,9 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			inputs[24].setVisible(_shap == MKLEAF_TYPE.Leaf && _edt);
 			
 			inputs[29].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf);
+			inputs[39].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf);
+			inputs[38].setVisible(_geoSc && _shap == MKLEAF_TYPE.Complex_Leaf);
+			
 			inputs[31].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf);
 			inputs[30].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf || _shap == MKLEAF_TYPE.Line); 
 			inputs[31].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf || _shap == MKLEAF_TYPE.Line); 
@@ -159,11 +168,12 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			inputs[ 9].setVisible(_shap == MKLEAF_TYPE.Surface, _shap == MKLEAF_TYPE.Surface);
 			inputs[11].setVisible(_shap != MKLEAF_TYPE.Surface && _edg);
 			
-			var _geo = [];
+			var _geo  = undefined;
+			var _geo2 = undefined;
+			
 			if(_shap == MKLEAF_TYPE.Complex_Leaf) {
-				_geo = array_create(_lres + 1);
-				for( var i = 0; i <= _lres; i++ )
-					_geo[i] = eval_curve_x(_lgeo, i/_lres);
+				_geo = new curveMap(_lgeo, _lres + 1);
+				if(_geoSc) _geo2 = new curveMap(_lgeo2, _lres + 1);
 			}
 			
 			_cLefAlo.cache();
@@ -256,9 +266,13 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					    _l.color      = colorMultiply(cc, lc);
 					    _l.colorLeaf  = _cLefAlo;
 					    _l.growShift  = random_range(_grow[0], _grow[1]);
-					    _l.geometry   = _geo;
 					    _l.geoGrav    = _geg;
 					    _l.resolution = _lres;
+					     
+				   if(_shap == MKLEAF_TYPE.Complex_Leaf) {
+					    _l.geometry   = _geo;
+					    _l.geometry1  = _geo2;
+				   }
 					
 					if(_edg == 0) {
 						_l.colorE = _l.color;
