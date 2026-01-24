@@ -226,6 +226,8 @@ function canvas_selection() : canvas_tool() constructor {
 	////- Step
 	
 	function apply(targetSurface = canvas_surface) {
+		if(!is_selected) return;
+		
 		var _drawLay = node.tool_attribute.drawLayer;
 		var _sw = surface_get_width(targetSurface);
 		var _sh = surface_get_height(targetSurface);
@@ -493,6 +495,8 @@ function canvas_selection() : canvas_tool() constructor {
 	////- Actions
 	
 	function copySelection() {
+		if(!is_selected) return;
+		
 		var s = surface_encode(selection_surface, false);
 	    s.position = selection_position;
 		clipboard_set_text(json_stringify(s));

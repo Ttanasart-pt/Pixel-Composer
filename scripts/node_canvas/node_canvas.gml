@@ -71,9 +71,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- =Data Transfer
 	newInput(19, nodeValue_Surface( "Data Source"               ));
 	newInput(20, nodeValue_Bool(    "Transfer Dimension", true  ));
-	 
 	/* deprecated */ newInput(11, nodeValue_Slider(  "Alpha", 1 ));
-	
 	// input 23
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -1126,6 +1124,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		preview_surface_sample = isNotUsingTool();
 		
+		if(active)
 		array_foreach(hotkeys, function(h, i) /*=>*/ { // hotkey
 			if(HOTKEYS_CUSTOM[$ "Node_Canvas"][$ h[0]].isPressing()) {
 				PANEL_PREVIEW.setActionTooltip(h[0]);

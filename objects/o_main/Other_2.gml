@@ -189,8 +189,7 @@
 	
 	// if(RUN_IDE) __test_update_theme();
 	
-	if(PREFERENCES.video_mode) {
+	if(PREFERENCES.video_mode)
 		APP_SURF_OVERRIDE = true;
-	}
 	
 #endregion
