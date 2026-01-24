@@ -195,6 +195,9 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var __p1 = max(_pos[0], _pos[1]);
 		var _leaves = [];
 		
+		var tw = surface_get_width_safe(_tex);
+		var th = surface_get_height_safe(_tex);
+		
 		_tree = variable_clone(_tree);
 		outputs[0].setValue(_tree);
 		outputs[1].setValue(_leaves);
@@ -276,6 +279,9 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _l = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _dr, lsx, lsy, _lspn);
 					    _l.gravity    = _gDir;
 					    _l.surface    = _tex;
+					    _l.surf_w     =  tw;
+					    _l.surf_h     =  th;
+					    
 					    _l.color      = lwc;
 					    _l.colorLeaf  = _cLefAlo;
 					    _l.growShift  = random_range(_grow[0], _grow[1]);

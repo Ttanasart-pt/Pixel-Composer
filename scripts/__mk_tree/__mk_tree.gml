@@ -46,6 +46,8 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	dsy = lengthdir_y(sy, dir + 90);
 	
 	surface   = noone;
+	surf_w    = 1;
+	surf_h    = 1;
 	color     = c_white;
 	colorE    = c_white;
 	colorU    = undefined;
@@ -220,7 +222,10 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				break;
 				
 			case MKLEAF_TYPE.Surface : 
-				draw_surface_ext_safe(surface, x, y, sx * scale, sy * scale, dir, color); 
+				var _xx = x + lengthdir_x(surf_h * sy * scale / 2, 90 + dir);
+				var _yy = y + lengthdir_y(surf_h * sy * scale / 2, 90 + dir);
+				
+				draw_surface_ext_safe(surface, _xx, _yy, sx * scale, sy * scale, dir, color); 
 				break;
 			
 			case MKLEAF_TYPE.Mesh : 
@@ -271,6 +276,9 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	static copy = function(_l) {
 		gravity    = _l.gravity;
 		surface    = _l.surface;
+		surf_w     = _l.surf_w;
+		surf_h     = _l.surf_h;
+		
 		color      = _l.color;
 		colorE     = _l.colorE;
 		colorU     = _l.colorU;

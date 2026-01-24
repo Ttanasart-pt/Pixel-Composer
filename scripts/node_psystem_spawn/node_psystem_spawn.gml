@@ -274,10 +274,9 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					break;
 					
 				case 4 : // map
-					if(array_empty(point_dist_cache)) break;
+					if(array_empty(point_dist_cache)) return;
 					
 					var _dat = point_dist_cache[spawn_index];
-					
 					_px = _dat[0] * point_dist_map_sw;
 					_py = _dat[1] * point_dist_map_sh;
 					break;
