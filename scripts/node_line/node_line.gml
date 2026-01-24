@@ -267,12 +267,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _surfDim = [ _dim[0], _dim[1] ];
 			var __debug_timer = get_timer();
 			
-			var _rangeMin = min(_ratio[0], _ratio[1]);
-			var _rangeMax = max(_ratio[0], _ratio[1]);
-			if(_rangeMax == 1) _rangeMax = 0.99999;
+			// var _rangeMin = min(_ratio[0], _ratio[1]);
+			// var _rangeMax = max(_ratio[0], _ratio[1]);
+			// if(_rangeMax == 1) _rangeMax = 0.99999;
 			
-			var _rtStr = min(_rangeMin, _rangeMax);
-			var _rtMax = max(_rangeMin, _rangeMax);
+			var _rtStr = min(_ratio[0], _ratio[1]);
+			var _rtMax = max(_ratio[0], _ratio[1]);
 			var _rtRng = _rtMax - _rtStr;
 			
 			var _useTex = !_1px && is_surface(_tex);
@@ -710,6 +710,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _surfDim[0] * _aa, _surfDim[1] * _aa, attrDepth());
 		var _cPassAA = temp_surface[0];
+		var _capEnd  = undefined;
 		
 		surface_set_target(_cPassAA);
 			DRAW_CLEAR
@@ -790,14 +791,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
 					}
 					
-					if(_capE && j == m - 1) {
-						_d = _dir;
-						
-						draw_primitive_end();
-						drawCaps( _capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP );
-						drawCaps( _capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP );
-						if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
-					}
+					_d = _dir;
+					_capEnd = [
+						[_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP],
+						[_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP],
+					];
 					
 					if(_1px) { 
 						if(j) {
@@ -866,6 +864,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 				draw_primitive_end();
+				
+				if(_capE && _capEnd != undefined) {
+					var c = _capEnd[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
+					var c = _capEnd[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
+				}
+				
 				if(_useTex) shader_reset();
 				
 				if(!array_empty(points)) {
