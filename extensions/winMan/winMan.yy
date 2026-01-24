@@ -24,7 +24,11 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"winMan.dll","final":"","functions":[
+    {"$GMExtensionFile":"","%Name":"","ConfigValues":{
+        "Steam":{
+          "copyToTargets":"64",
+        },
+      },"constants":[],"copyToTargets":-1,"filename":"winMan.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"winMan_minimize_ext","argCount":0,"args":[1,],"documentation":"","externalName":"window_minimize","help":"","hidden":false,"kind":1,"name":"winMan_minimize_ext","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"winMan_is_minimized_ext","argCount":0,"args":[1,],"documentation":"","externalName":"window_is_minimized","help":"","hidden":false,"kind":1,"name":"winMan_is_minimized_ext","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_step","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_step","help":"","hidden":false,"kind":1,"name":"global_mouse_step","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -37,7 +41,6 @@
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_pressed","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_pressed","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_pressed","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_pressing","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_pressing","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_pressing","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_released","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_released","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_released","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-        {"$GMExtensionFunction":"","%Name":"getMemoryUsage","argCount":0,"args":[2,],"documentation":"","externalName":"getMemoryUsage","help":"","hidden":false,"kind":1,"name":"getMemoryUsage","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","order":[
         {"name":"winMan_is_minimized_ext","path":"extensions/winMan/winMan.yy",},
         {"name":"winMan_minimize_ext","path":"extensions/winMan/winMan.yy",},
@@ -67,8 +70,8 @@
   "optionsFile":"options.json",
   "packageId":"",
   "parent":{
-    "name":"WinMan",
-    "path":"folders/__extensions/WinMan.yy",
+    "name":"Windows Manager",
+    "path":"folders/__extensions/Windows Manager.yy",
   },
   "productId":"",
   "resourceType":"GMExtension",

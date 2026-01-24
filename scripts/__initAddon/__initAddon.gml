@@ -1,6 +1,6 @@
 function __addonDefault(root) {
 	if(check_version($"{root}/version")) {
-		printDebug("unzipping default addon to DIRECTORY.");
+		printDebug("  - unzipping default addon to DIRECTORY.");
 		zip_unzip($"{working_directory}data/addons.zip", root);
 	}
 }

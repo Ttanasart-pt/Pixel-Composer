@@ -96,8 +96,8 @@
   "optionsFile":"options.json",
   "packageId":"",
   "parent":{
-    "name":"WinMan",
-    "path":"folders/__extensions/WinMan.yy",
+    "name":"Windows Manager",
+    "path":"folders/__extensions/Windows Manager.yy",
   },
   "productId":"",
   "resourceType":"GMExtension",

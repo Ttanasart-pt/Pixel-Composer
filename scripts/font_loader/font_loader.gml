@@ -36,34 +36,29 @@ global.LINE_HEIGHTS = {};
 	}
 #endregion
 
-function __font_add_height(font) {
-	INLINE 
-	
-	draw_set_font(font);
-	global.LINE_HEIGHTS[$ font] = string_height("l");
-}
+function __font_cache_height(font) { INLINE  draw_set_font(font); global.LINE_HEIGHTS[$ font] = string_height("l"); }
 
 function __font_refresh() {
-	__font_add_height(f_h1);
-	__font_add_height(f_h2);
-	__font_add_height(f_h3);
-	__font_add_height(f_h5);
+	__font_cache_height(f_h1);
+	__font_cache_height(f_h2);
+	__font_cache_height(f_h3);
+	__font_cache_height(f_h5);
 					
-	__font_add_height(f_p0);
-	__font_add_height(f_p0b);
+	__font_cache_height(f_p0);
+	__font_cache_height(f_p0b);
 		
-	__font_add_height(f_p1);
-	__font_add_height(f_p1b);
+	__font_cache_height(f_p1);
+	__font_cache_height(f_p1b);
 	
-	__font_add_height(f_p2);
-	__font_add_height(f_p2b);
+	__font_cache_height(f_p2);
+	__font_cache_height(f_p2b);
 	
-	__font_add_height(f_p3);
-	__font_add_height(f_p4);
+	__font_cache_height(f_p3);
+	__font_cache_height(f_p4);
 		
-	__font_add_height(f_code);
-	__font_add_height(f_sdf);
-	__font_add_height(f_sdf_medium);
+	__font_cache_height(f_code);
+	__font_cache_height(f_sdf);
+	__font_cache_height(f_sdf_medium);
 }
 
 function _font_add(path, size, sdf = false, custom = false) {
@@ -158,7 +153,7 @@ function loadFonts() {
 	FONT_LIST = {};
 	
 	if(FONT_DEF) {
-		printDebug($"     > Using Build-in fonts");
+		printDebug($"  - Using Build-in fonts");
 		f_h1   = _font_load_default("h1",  _f_h1);
 		f_h2   = _font_load_default("h2",  _f_h2);
 		f_h3   = _font_load_default("h3",  _f_h3);

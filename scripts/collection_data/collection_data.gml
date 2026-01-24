@@ -1,6 +1,4 @@
 function __initCollection() {
-	printDebug("COLLECTION: init");
-	
 	globalvar COLLECTIONS;
 	COLLECTIONS = -1;
 	
@@ -19,8 +17,6 @@ function __initCollection() {
 }
 
 function refreshCollections() {
-	printDebug("COLLECTION: refreshing collection base folder.");
-	
 	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
 	COLLECTIONS.scan([".json", ".pxcc", ".pxz"]);
 	COLLECTIONS.open = true;
