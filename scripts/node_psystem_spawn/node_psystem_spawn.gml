@@ -79,7 +79,10 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	__p = new __vec2P();
 	cache_grad = undefined;
-	point_dist_cache = [];
+	
+	point_dist_cache  = [];
+	point_dist_map_sw = 1;
+	point_dist_map_sh = 1;
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
 	
@@ -271,10 +274,12 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					break;
 					
 				case 4 : // map
+					if(array_empty(point_dist_cache)) break;
+					
 					var _dat = point_dist_cache[spawn_index];
 					
-					_px = _dat[0];
-					_py = _dat[1];
+					_px = _dat[0] * point_dist_map_sw;
+					_py = _dat[1] * point_dist_map_sh;
 					break;
 					
 				case 5 : // data
@@ -587,7 +592,11 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _sh_type = getInputData( 6);
 		var _seed    = getInputData(13);
 		var _sh_mapp = getInputData(11);
-		if(_sh_type == 4) point_dist_cache = get_points_from_dist(_sh_mapp, 1024, _seed);
+		if(_sh_type == 4) {
+			point_dist_cache  = get_points_from_dist(_sh_mapp, 1024, _seed);
+			point_dist_map_sw = surface_get_width_safe(_sh_mapp);
+			point_dist_map_sh = surface_get_height_safe(_sh_mapp);
+		}
 		
 		spawnTrig   = buffer_verify(spawnTrig,   4 + attributes.poolSize * global.pSystem_trig_length);
 		stepTrig    = buffer_verify(stepTrig,    4 + attributes.poolSize * global.pSystem_trig_length);

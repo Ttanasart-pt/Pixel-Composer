@@ -49,7 +49,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Width
 	newInput(17, nodeValue_Bool(  "1px Mode",             false      )).setTooltip("Render pixel perfect 1px line.");
 	newInput( 3, nodeValue_Range( "Width",               [2,2], true )).setCurvable(11, CURVE_DEF_11);
-	newInput(12, nodeValue_Bool(  "Span Width over Path", false      )).setTooltip("Apply the full 'width over length' to the trimmed path.");
+	newInput(12, nodeValue_Bool(  "Span Width over Path", false      )).setTooltip("Apply the full 'Width Curve' to the trimmed path.");
 	newInput(36, nodeValue_Bool(  "Apply Weight",         true       ));
 	
 	////- =Line settings
@@ -69,7 +69,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Wiggle
 	newInput(47, nodeValue_Bool(   "Use Wiggle",  false                ));
 	newInput( 4, nodeValue_Slider( "Wiggle",          0, [0, 16, 0.01] ));
-	newInput( 5, nodeValue_Float(  "Random Seed",     0                ));
+	newInput( 5, nodeValueSeed(,   "Wiggle Seed"                       ));
 	
 	////- =Color
 	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white ));
@@ -272,10 +272,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _rtRng = _rtEnd - _rtStr;
 			
 			var _useTex = !_1px && is_surface(_tex);
+			
 			if(_useTex) { 
 				_capS = false; 
 				_capE = false; 
 				_1px  = false; 
+			}
+			
+			if(_1px) {
+				_capS = false; 
+				_capE = false; 
 			}
 			
 			random_set_seed(_sed);
@@ -407,8 +413,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							wmin = min(wmin, _nw); wmax = max(wmax, _nw);
 						}
 						
-						// trim
-						if(_rtStr != 0 || _rtEnd != 1) {
+						if(_wigUse) { // wiggle
+							for( var j = 0, m = array_length(points); j < m; j++ ) {
+								p0 = points[j];
+								
+								p0.x += random_range_seed(-_wig, _wig, _seed + _sed + j * 2 + 0);
+								p0.y += random_range_seed(-_wig, _wig, _seed + _sed + j * 2 + 1);
+							}
+						} // wiggle
+						
+						if(_rtStr != 0 || _rtEnd != 1) { // trim
 							var pointCrop = [];
 							p0 = points[0];
 							
@@ -447,8 +461,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								p0 = p1;
 							}
 							
+							for( var j = 0, m = array_length(pointCrop); j < m; j++ )
+								pointCrop[j].prog = (pointCrop[j].prog - _rtStr) / _rtRng;
+							
 							points = pointCrop;
-						}
+						} // trim
 						
 						if(array_empty(points)) continue;
 						if(_loop)   array_push(points, points[0]);
