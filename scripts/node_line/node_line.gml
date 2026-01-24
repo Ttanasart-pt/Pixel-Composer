@@ -5,14 +5,14 @@
 		addHotkey("Node_Line", "1px Mode > Toggle",   "1", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[17].setValue((_n.inputs[17].getValue() + 1) % 2); });
 	});
 	
-	function __LinePoint(x, y, prog, progCrop, weight = 1) constructor {
-		self.x        = x;
-		self.y        = y;
-		self.prog     = prog;
-		self.progCrop = progCrop;
-		self.weight   = weight;
+	function __LinePoint(_x, _y, _prog, _progCrop, _weight = 1) constructor {
+		x        = _x;
+		y        = _y;
+		prog     = _prog;
+		progCrop = _progCrop;
+		weight   = _weight;
 		
-		function toString() { return $"({x},{y})"; }
+		function toString() { return $"[{prog}]({x},{y})"; }
 	}
 	
 #endregion
@@ -267,13 +267,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _surfDim = [ _dim[0], _dim[1] ];
 			var __debug_timer = get_timer();
 			
-			// var _rangeMin = min(_ratio[0], _ratio[1]);
-			// var _rangeMax = max(_ratio[0], _ratio[1]);
-			// if(_rangeMax == 1) _rangeMax = 0.99999;
-			
-			var _rtStr = min(_ratio[0], _ratio[1]);
-			var _rtMax = max(_ratio[0], _ratio[1]);
-			var _rtRng = _rtMax - _rtStr;
+			var _rtStr = min(_ratio[0], _ratio[1]) + _shift;
+			var _rtEnd = max(_ratio[0], _ratio[1]) + _shift;
+			var _rtRng = _rtEnd - _rtStr;
 			
 			var _useTex = !_1px && is_surface(_tex);
 			if(_useTex) { 
@@ -291,7 +287,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _ox, _nx, _nx1, _oy, _ny, _ny1;
 			var _ow, _nw, _oa, _na, _oc, _nc, _owg, _nwg;
 			var _op, _np;
-			var _wmin = 0, _wmax = 1;
+			var wmin = 0, wmax = 1;
 			
 			switch(_dtype) {
 				case 0 :
@@ -347,7 +343,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_ny += lengthdir_y(wgLen, _d + 90);
 						}
 							
-						array_push(points, new __LinePoint(_nx, _ny, _prog_total / _rtMax, _prog_curr));
+						array_push(points, new __LinePoint(_nx, _ny, _prog_total / _rtEnd, _prog_curr));
 						
 						if(_prog_curr == 1) {
 							_prog_curr = 0;
@@ -367,144 +363,96 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					break;
 					
 				case 1 :
-					var lineLen = 1;
-					if(struct_has(_pat, "getLineCount")) lineLen  = _pat.getLineCount();
-					if(struct_has(_pat, "getPathData")) _pathData = _pat.getPathData();
+					var lineCount = 1; 
+					if(struct_has(_pat, "getLineCount")) lineCount = _pat.getLineCount();
+					if(struct_has(_pat, "getPathData"))  _pathData = _pat.getPathData();
 					
-					lines = array_verify(lines, lineLen);
-					var _lineAmo = 0;
-					var _wmin =  infinity;
-					var _wmax = -infinity;
+					lines = array_verify(lines, lineCount);
 					
-					if(_rtMax > 0) 
-					for( var i = 0; i < lineLen; i++ ) {
-						var _useDistance = _fixL && struct_has(_pat, "getLength");
-						var _pathLength  = _useDistance? _pat.getLength(i) : 1;
-						if(_pathLength == 0) continue;
+					var _useDistance = _fixL && struct_has(_pat, "getLength");
+					var _lineAmo     =  0;
+					var wmin =  infinity;
+					var wmax = -infinity;
+					
+					var _nx, _ny, _nw, _pl;
+					var _pathLength, _prog;
+					var points;
+					
+					for( var i = 0; i < lineCount; i++ ) {
+						_pathLength = _useDistance? _pat.getLength(i) : 1;
+						if(_pathLength <= 0) continue;
 						
-						var _pathStr = _rtStr;
-						var _pathEnd = _rtMax;
-							
-						var _stepLen = min(_pathEnd, 1 / _seg);               // Distance to move per step
-						if(_stepLen <= 0.00001) continue;
-							
-						var _total		= _pathEnd;                           // Length remaining
-						var _total_prev = _total;                             // Use to prevent infinite loop
-						var _freeze		= 0;                                  // Use to prevent infinite loop
-							
-						var _sh         = _shift;
-						var _prog_curr	= _clamp? _sh : frac(frac(_sh) + 1);  // Pointer to the current position
-						var _prog_next  = 0;
-						var _prog_total	= 0;                                  // Record the distance the pointer has moved so far
-						var points		= [];
-						var pointAmo    = 0;
-						var wght;
-						var _pathPng;
+						var _pamo = _useDistance? ceil(_pathLength / _segL) + 1 : _seg;
+						points = array_create(_pamo);
 						
-						if(_useDistance) {						
-							_pathStr   *= _pathLength;
-							_pathEnd   *= _pathLength;
-							_stepLen    = min(_segL, _pathEnd);
-								
-							_total	   *= _pathLength;
-							_total_prev = _total;
-								
-							_prog_curr *= _pathLength;
-						}
-						
-						var _segLength    = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
-						var _segLengthAmo = array_length(_segLength);
-						var _segIndex     = 0;
-						var _segIndexPrev = 0;
-						
-						if(_segLengthAmo)
-						while(_prog_curr > _segLength[_segIndex]) {
-							_segIndex++;
-							if(_segIndex == _segLengthAmo) { _segIndex = 0; break; }
-						}
-						
-						// print($"===== {_prog_curr} [{_pathStr},{_pathEnd}] / {_segLength} : {_segIndex} - {_pathLength} =====");
-						
-						while(true) {
-							var _pp = 0;
-							wght = 1;
-							_segIndexPrev = _segIndex;
-							
-							var segmentLength = array_safe_get_fast(_segLength, _segIndex, _pathLength);
-								
+						for( var i = 0; i < _pamo; i++ ) {
 							if(_useDistance) {
-								var _next_step = _prog_curr + _stepLen;
-								if(_next_step > _pathLength)   _next_step = _next_step - _pathLength;
+								_pl   = min(i * _segL, _pathLength);
+								 p    = _pat.getPointDistance(_pl, i, p);
+								_prog = _pl / _pathLength; 
 								
-								_prog_next = min(_next_step, segmentLength);
-								_pathPng   = _ratInv? _pathLength - _prog_curr : _prog_curr;
-								
-								// print($"{segmentLength}/{_pathLength} = {_prog_next}");
-								if(_prog_next == segmentLength) _segIndex++;
-								
-								_pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng;
-								
-								p = _pat.getPointDistance(_pp, i, p);
-								wght = p[$ "weight"] ?? 1;
-								// print($"_pp = {_pp}, total = {_total}, p = {p}");
-									
 							} else {
-								_prog_next = min(_prog_curr + _stepLen, 1); // Move forward _stepLen or _total (if less) stop at 1
-								_pathPng   = _ratInv? 1 - _prog_curr : _prog_curr;
-								
-								_pp = _clamp? clamp(_pathPng, 0, 1) : _pathPng
-								
-								p = _pat.getPointRatio(_pp, i, p);
-								wght = p[$ "weight"] ?? 1;
+								_prog = i / (_pamo - 1);
+								 p    = _pat.getPointRatio(_prog, i, p);
 							}
 							
 							_nx = p.x;
 							_ny = p.y;
+							_nw = p[$ "weight"] ?? 1;
 							
-							_wmin = min(_wmin, wght);
-							_wmax = max(_wmax, wght);
+							points[i] = new __LinePoint( _nx, _ny, _prog, _prog, _nw );
 							
-							if(_wigUse && _total < _pathEnd && _wig != 0) { // Do not wiggle the last point.
-								var _d = point_direction(_ox, _oy, _nx, _ny);
-								_nx   += lengthdir_x(random1D(_sed + segmentLength * _prog_curr, -_wig, _wig), _d + 90);
-								_ny   += lengthdir_y(random1D(_sed + segmentLength * _prog_curr, -_wig, _wig), _d + 90);
-							}
-								
-							if(_prog_total >= _pathStr) { // Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
-								points[pointAmo++] = new __LinePoint(
-									_nx, _ny, 
-									(_prog_total - _pathStr) / (_pathEnd - _pathStr), 
-									_prog_curr / _pathLength, 
-									wght,
-								);
-								
-								minx = min(minx, _nx);
-								miny = min(miny, _ny);
-								maxx = max(maxx, _nx);
-								maxy = max(maxy, _ny);
-							}
-							
-							if(_total <= 0) break;
-							
-							if(_prog_next == _prog_curr && _segIndexPrev == _segIndex) break;
-							else if(_prog_next > _prog_curr) {
-								_prog_total += _prog_next - _prog_curr;
-								_total      -= _prog_next - _prog_curr;
-							}
-							_stepLen = min(_stepLen, _total);
-								
-							_prog_curr = _prog_next;
-							_ox		   = _nx;
-							_oy		   = _ny;
-								
-							if(_total_prev == _total && _segIndexPrev == _segIndex && ++_freeze > 16) break;
-							_total_prev = _total;
-							
-							if(_segIndex >= _segLengthAmo) break;
+							minx = min(minx, _nx); miny = min(miny, _ny);
+							maxx = max(maxx, _nx); maxy = max(maxy, _ny);
+							wmin = min(wmin, _nw); wmax = max(wmax, _nw);
 						}
 						
-						array_resize(points, pointAmo);
-						if(_loop) points[pointAmo] = points[0];
+						// trim
+						if(_rtStr != 0 || _rtEnd != 1) {
+							var pointCrop = [];
+							p0 = points[0];
+							
+							if(_rtStr <= 0) array_push(pointCrop, p0);
+									
+							for( var j = 1, m = array_length(points); j < m; j++ ) {
+								p1 = points[j];
+								var _p0 = p0.prog;
+								var _p1 = p1.prog;
+								
+								if(_rtStr > _p0 && _rtStr < _p1) {
+									var _midProg = (_rtStr - _p0) / (_p1 - _p0);
+									array_push(pointCrop, new __LinePoint( 
+										lerp(p0.x,      p1.x,      _midProg), 
+										lerp(p0.y,      p1.y,      _midProg), 
+										lerp(p0.prog,   p1.prog,   _midProg), 
+										lerp(p0.prog,   p1.prog,   _midProg), 
+										lerp(p0.weight, p1.weight, _midProg), 
+									));
+								}
+								
+								if(_rtEnd > _p0 && _rtEnd < _p1) {
+									var _midProg = (_rtEnd - _p0) / (_p1 - _p0);
+									array_push(pointCrop, new __LinePoint( 
+										lerp(p0.x,      p1.x,      _midProg), 
+										lerp(p0.y,      p1.y,      _midProg), 
+										lerp(p0.prog,   p1.prog,   _midProg), 
+										lerp(p0.prog,   p1.prog,   _midProg), 
+										lerp(p0.weight, p1.weight, _midProg), 
+									));
+								}
+								
+								if(_rtStr <= _p1 && _rtEnd >= _p1)
+									array_push(pointCrop, p1);
+								
+								p0 = p1;
+							}
+							
+							points = pointCrop;
+						}
+						
+						if(array_empty(points)) continue;
+						if(_loop)   array_push(points, points[0]);
+						if(_ratInv) array_reverse_ext(points);
 						
 						lines[_lineAmo]     = points;
 						line_data[_lineAmo] = { length: _pathLength };
@@ -515,7 +463,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					array_resize(lines,     _lineAmo);
 					array_resize(line_data, _lineAmo);
 					
-					if(_wmax == _wmin) { _wmin = 0; _wmax = 1; }
+					if(wmax == wmin) { wmin = 0; wmax = 1; }
 					
 					if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
 					
@@ -710,6 +658,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _surfDim[0] * _aa, _surfDim[1] * _aa, attrDepth());
 		var _cPassAA = temp_surface[0];
+		var _capSta  = undefined;
 		var _capEnd  = undefined;
 		
 		surface_set_target(_cPassAA);
@@ -752,20 +701,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _nx  = p0.x - 0.5 * _1px + _padx;
 					var _ny  = p0.y - 0.5 * _1px + _pady;
 					
-					if(j && point_distance(_ox, _oy, _nx, _ny) < 1) continue;
-					
 					var prog = p0.prog;
 					var prgc = p0.progCrop;
 					var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 
 					              point_direction(_nx, _ny, points[j+1].x + _padx, points[j+1].y + _pady);
 					
-					     if(j ==     0) { _stx = _nx; _sty = _ny;              }
-					else if(j ==     1) { _sta = _dir;                         }
-					else if(j == m - 1) { _edx = _nx; _edy = _ny; _eda = _dir; }
+					     if(j ==   0) { _stx = _nx; _sty = _ny;              }
+					else if(j ==   1) { _sta = _dir;                         }
+					else if(j == m-1) { _edx = _nx; _edy = _ny; _eda = _dir; }
 					
 					var widProg = value_snap_real(_widap? prog : prgc, 0.01);
-					
-					_nw  = random_range(_wid[0], _wid[1]);
+					_nw = random_range(_wid[0], _wid[1]);
 					
 					if(_widcUse) {
 						if(!ds_map_exists(widthMap, widProg))
@@ -773,7 +719,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_nw *= widthMap[? widProg];
 					}
 					
-					var _ww = lerp_invert(p0.weight, _wmin, _wmax);
+					var _ww = lerp_invert(p0.weight, wmin, wmax);
+					if(is_nan(_ww)) _ww = 1;
 					if(_wg2wid) _nw *= _ww / 2;
 					
 					_np = _colP? prog : prgc;
@@ -782,13 +729,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_nc = colorMultiply(_nc, gradientEval(_wg2clr, (_ww - _wg2clrR[0]) / _wg2clrRng));
 					_nd = _dir;
 					
-					if(_capS && j == 1) {
+					if(j && _capSta == undefined) {
 						_d = _dir + 180;
-						
-						draw_primitive_end();
-						drawCaps( _capS, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP );
-						drawCaps( _capS, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP );
-						if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
+						_capSta = [
+							[_capS, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP],
+							[_capS, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP],
+						];
 					}
 					
 					_d = _dir;
@@ -797,55 +743,52 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						[_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP],
 					];
 					
+					if(j)
 					if(_1px) { 
-						if(j) {
-							var dst = point_distance(_ox, _oy, _nx, _ny);
-							if(dst <= 1 && i < m - 1) continue;
-							draw_line_color(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _oc, _nc);
-						}
-					
+						var dst = point_distance(_ox, _oy, _nx, _ny);
+						if(dst <= 1 && i < m - 1) continue;
+						draw_line_color(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _oc, _nc);
+						
 					} else { 
-						if(j) {
-							var _nd0 = _dir;
-							var _nd1 = _nd0;
+						var _nd0 = _dir;
+						var _nd1 = _nd0;
+						
+						if(j < m - 1) {
+							var p2 = points[j + 1];
+							var _nnx = p2.x + _padx;
+							var _nny = p2.y + _pady;
 							
-							if(j < m - 1) {
-								var p2 = points[j + 1];
-								var _nnx = p2.x + _padx;
-								var _nny = p2.y + _pady;
-								
-								_nd1 = point_direction(_nx, _ny, _nnx, _nny);
-								_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
-							} else 
-								_nd = _nd0;
+							_nd1 = point_direction(_nx, _ny, _nnx, _nny);
+							_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
+						} else 
+							_nd = _nd0;
+						
+						if(_useTex) {
+							var _len = m - 1;
 							
-							if(_useTex) {
-								var _len = m - 1;
-								
-								var ox0 = _ox + lengthdir_x(_ow / 2, _od + 90);
-								var oy0 = _oy + lengthdir_y(_ow / 2, _od + 90);
-								var nx0 = _nx + lengthdir_x(_nw / 2, _nd + 90);
-								var ny0 = _ny + lengthdir_y(_nw / 2, _nd + 90);
-	
-								var ox1 = _ox + lengthdir_x(_ow / 2, _od + 90 + 180);
-								var oy1 = _oy + lengthdir_y(_ow / 2, _od + 90 + 180);
-								var nx1 = _nx + lengthdir_x(_nw / 2, _nd + 90 + 180);
-								var ny1 = _ny + lengthdir_y(_nw / 2, _nd + 90 + 180);
-								
-								var _u0 = 0;
-								var _u1 = 1;
-								var _v0 = _op;
-								var _v1 = _np;
-								
-								draw_vertex_texture_color(ox0 * _aa, oy0 * _aa, _u0, _v0, _oc, 1);
-								draw_vertex_texture_color(ox1 * _aa, oy1 * _aa, _u1, _v0, _oc, 1);
-								draw_vertex_texture_color(nx0 * _aa, ny0 * _aa, _u0, _v1, _nc, 1);
-								draw_vertex_texture_color(nx1 * _aa, ny1 * _aa, _u1, _v1, _nc, 1);
-								
-							} else {
-								draw_line_width2_angle(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, 
-								                       _ow * _aa, _nw * _aa, _od +  90, _nd +  90, _oc, _nc);
-							}
+							var ox0 = _ox + lengthdir_x(_ow / 2, _od + 90);
+							var oy0 = _oy + lengthdir_y(_ow / 2, _od + 90);
+							var nx0 = _nx + lengthdir_x(_nw / 2, _nd + 90);
+							var ny0 = _ny + lengthdir_y(_nw / 2, _nd + 90);
+
+							var ox1 = _ox + lengthdir_x(_ow / 2, _od + 90 + 180);
+							var oy1 = _oy + lengthdir_y(_ow / 2, _od + 90 + 180);
+							var nx1 = _nx + lengthdir_x(_nw / 2, _nd + 90 + 180);
+							var ny1 = _ny + lengthdir_y(_nw / 2, _nd + 90 + 180);
+							
+							var _u0 = 0;
+							var _u1 = 1;
+							var _v0 = _op;
+							var _v1 = _np;
+							
+							draw_vertex_texture_color(ox0 * _aa, oy0 * _aa, _u0, _v0, _oc, 1);
+							draw_vertex_texture_color(ox1 * _aa, oy1 * _aa, _u1, _v0, _oc, 1);
+							draw_vertex_texture_color(nx0 * _aa, ny0 * _aa, _u0, _v1, _nc, 1);
+							draw_vertex_texture_color(nx1 * _aa, ny1 * _aa, _u1, _v1, _nc, 1);
+							
+						} else {
+							draw_line_width2_angle(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, 
+							                       _ow * _aa, _nw * _aa, _od +  90, _nd +  90, _oc, _nc);
 						}
 					}
 					
@@ -864,6 +807,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 				draw_primitive_end();
+				
+				if(_capS && _capSta != undefined) {
+					var c = _capSta[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
+					var c = _capSta[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
+				}
 				
 				if(_capE && _capEnd != undefined) {
 					var c = _capEnd[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
@@ -950,16 +898,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _nx  = p0.x - 0.5 * _1px + _padx;
 						var _ny  = p0.y - 0.5 * _1px + _pady;
 						
-						if(j && point_distance(_ox, _oy, _nx, _ny) < 1) continue;
-					
 						var prog = p0.prog;
 						var prgc = p0.progCrop;
 						var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
 						
 						var widProg = value_snap_real(_widap? prog : prgc, 0.01);
-						var _ww = lerp_invert(p0.weight, _wmin, _wmax);
-						
-						_nw  = random_range(_wid[0], _wid[1]);
+						_ww = lerp_invert(p0.weight, wmin, wmax);
+						_nw = random_range(_wid[0], _wid[1]);
 						
 						if(_widcUse) {
 							if(!ds_map_exists(widthMap, widProg))
@@ -968,24 +913,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						}
 						
 						if(_wg2wid) _nw *= _ww / 2;
-						
-						if(_capS && j == 1) {
-							_d = _dir + 180;
-							
-							draw_primitive_end();
-							drawCaps( _capS, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP, true );
-							drawCaps( _capS, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP, true );
-							draw_primitive_begin(pr_trianglestrip);
-						}
-						
-						if(_capE && j == m - 1) {
-							_d = _dir;
-							
-							draw_primitive_end();
-							drawCaps( _capE, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP, true );
-							drawCaps( _capE, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP, true );
-							draw_primitive_begin(pr_trianglestrip);
-						}
 						
 						if(j) {
 							var _nd0 = _dir;
@@ -1019,6 +946,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 					draw_primitive_end();
+					
+					if(_capS && _capSta != undefined) {
+						var c = _capSta[0]; drawCaps( c[0], c_grey, c[2], c[3], c[4], c[5], c[6], true );
+						var c = _capSta[1]; drawCaps( c[0], c_grey, c[2], c[3], c[4], c[5], c[6], true );
+					}
+					
+					if(_capE && _capEnd != undefined) {
+						var c = _capEnd[0]; drawCaps( c[0], c_grey, c[2], c[3], c[4], c[5], c[6], true );
+						var c = _capEnd[1]; drawCaps( c[0], c_grey, c[2], c[3], c[4], c[5], c[6], true );
+					}
+					
 				}
 				
 			surface_reset_target();
