@@ -157,7 +157,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			     if(is_array(ind))  ind = ind[0](params);
 			else if(is_method(ind)) ind = ind(params);
 			
-			if(is_method(bcc)) bcc = bcc();
+			if(is_method(bcc)) bcc = bcc(params);
 			
 			gpu_set_tex_filter(true);
 			if(is(icon, sprite_drawer)) {

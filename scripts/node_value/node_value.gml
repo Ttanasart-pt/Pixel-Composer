@@ -564,7 +564,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			node.triggerRender(); 
-		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Map");
+		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} ).iconPad()
+			.setTooltip("Toggle Map");
 		
 		if(type != VALUE_TYPE.gradient) {
 			mapWidgetF = _vec4? function() /*=>*/ {return new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton)} : 
@@ -584,23 +585,39 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		with(node) { newInput(_index, nodeValue_Surface( $"{other.name} {_suf}" )).setVisible(false, false); }
 		
-		mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
-			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Map");
+		var mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
+			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} ).iconPad()
+			.setTooltip("Toggle Map");
 		
 		setSideButton(mapButton);
 		return self;
 	}
 	
-	static setCurvable = function(_index, _val = CURVE_DEF_11, _suf = "Curve") {
-		attributes.curved    = false;
-		parameters.curved    = true;
-		parameters.cur_index = _index;
+	static setCurvable = function(_index, _val = CURVE_DEF_11, _suf = "Curve", _key = "curved", _icon = THEME.curvable) {
+		attributes[$ _key] = false;
+		parameters[$ _key] = true;
+		parameters.curve_array = false;
+		
+		if(!has(parameters, "cur_index"))
+			parameters.cur_index = _index;
+			
+		else if(is_array(parameters.cur_index)) {
+			array_push(parameters.cur_index, [_key, _index]);
+			parameters.curve_array = true;
+			
+		} else {
+			parameters.cur_index = [["curved", parameters.cur_index], [_key, _index]];
+			parameters.curve_array = true;
+		}
+		
 		array_push(node.inputMappable, self);
 		
 		with(node) { newInput(_index, nodeValue_Curve( $"{other.name} {_suf}", _val )).setVisible(false, false); }
 		
-		curveButton = button(function() /*=>*/ { attributes.curved = !attributes.curved; node.triggerRender(); })
-			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Curve");
+		var curveButton = button(function(_key) /*=>*/ { attributes[$ _key] = !attributes[$ _key]; node.triggerRender(); })
+			.setIcon( _icon, function(_key) /*=>*/ {return attributes[$ _key]}, function(_key) /*=>*/ {return attributes[$ _key]? c_white : COLORS._main_icon} ).iconPad()
+			.setTooltip(_suf == "Curve"? $"Toggle Curve" : $"Toggle {_suf} Curve")
+			.setParams(_key);
 		
 		setSideButton(curveButton);
 		return self;
@@ -614,8 +631,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		with(node) { newInput(_index, nodeValue_Gradient( $"{other.name} {_suf}", _val )).setVisible(false, false); }
 		
-		gradeButton = button(function() /*=>*/ { attributes.graded = !attributes.graded; node.triggerRender(); })
-			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.graded} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Curve");
+		var gradeButton = button(function() /*=>*/ { attributes.graded = !attributes.graded; node.triggerRender(); })
+			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.graded} ], function() /*=>*/ {return attributes.graded? c_white : COLORS._main_icon} ).iconPad()
+			.setTooltip("Toggle Curve");
 		
 		setSideButton(gradeButton);
 		return self;
@@ -631,8 +649,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					editWidget = mapWidget;
 				}
 				
-				mapButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
-				
 				setArrayDepth(attributes.mapped);
 				
 				var inp = node.inputs[parameters.map_index];
@@ -640,43 +656,59 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				if(inp.visible != vis) {
 					inp.visible = vis;
-					node.refreshNodeDisplay();
+					node.toRefreshNodeDisplay = true;
 				}
 				
 			} else {
-				mapButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
-				
 				var inp = node.inputs[parameters.map_index];
 				var vis = attributes.mapped && show_in_inspector;
 				
+				if(inp.visible != vis) {
+					inp.visible = vis;
+					node.toRefreshNodeDisplay = true;
+				}
+				
 				if(inp.show_in_inspector != vis) {
 					inp.show_in_inspector = vis;
-					node.refreshNodeDisplay();
+					node.toRefreshNodeDisplay = true;
 				}
 			}
 		}
 		
 		if(has(parameters, "curved")) {
-			curveButton.icon_blend = attributes.curved? c_white : COLORS._main_icon;
+			if(parameters.curve_array) {
+				for( var i = 0, n = array_length(parameters.cur_index); i < n; i++ ) {
+					var _cdata = parameters.cur_index[i];
+					var _ckey  = _cdata[0];
+					var _cind  = _cdata[1];
+					
+					var inp = node.inputs[_cind];
+					var vis = attributes[$ _ckey] && show_in_inspector;
+					
+					if(inp.show_in_inspector != vis) {
+						inp.show_in_inspector = vis;
+						node.toRefreshNodeDisplay = true;
+					}
+				}
 				
-			var inp = node.inputs[parameters.cur_index];
-			var vis = attributes.curved && show_in_inspector;
-			
-			if(inp.show_in_inspector != vis) {
-				inp.show_in_inspector = vis;
-				node.refreshNodeDisplay();
+			} else {
+				var inp = node.inputs[parameters.cur_index];
+				var vis = attributes.curved && show_in_inspector;
+				
+				if(inp.show_in_inspector != vis) {
+					inp.show_in_inspector = vis;
+					node.toRefreshNodeDisplay = true;
+				}
 			}
 		}
 		
 		if(has(parameters, "graded")) {
-			gradeButton.icon_blend = attributes.graded? c_white : COLORS._main_icon;
-				
 			var inp = node.inputs[parameters.gra_index];
 			var vis = attributes.graded && show_in_inspector;
 			
 			if(inp.show_in_inspector != vis) {
 				inp.show_in_inspector = vis;
-				node.refreshNodeDisplay();
+				node.toRefreshNodeDisplay = true;
 			}
 		}
 	}

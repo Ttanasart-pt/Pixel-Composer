@@ -722,10 +722,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
 		
 		} else if(label != "") {
-			draw_set_text(font, fa_left, fa_center, labelColor);
+			draw_set_text(f_p4, fa_left, fa_center, labelColor);
 			
 			draw_set_alpha(0.5);
-			draw_text_add(_x + padding, _y + _h / 2, label);
+			draw_text_add(_x + ui(4), _y + _h / 2, label);
 			draw_set_alpha(1);
 			
 		} else if(labelSpr != noone) {

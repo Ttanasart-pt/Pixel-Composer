@@ -39,12 +39,6 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	dir = _dir;
 	sp  = _span;
 	
-	dx = lengthdir_x(sx, dir);
-	dy = lengthdir_y(sx, dir);
-	
-	dsx = lengthdir_x(sy, dir + 90);
-	dsy = lengthdir_y(sy, dir + 90);
-	
 	surface   = noone;
 	surf_w    = 1;
 	surf_h    = 1;
@@ -63,6 +57,15 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	resolution = 0;
 	
 	mesh = undefined;
+	
+	static recalDir = function() {
+		dx = lengthdir_x(sx, dir);
+		dy = lengthdir_y(sx, dir);
+		
+		dsx = lengthdir_x(sy, dir + 90);
+		dsy = lengthdir_y(sy, dir + 90);
+		
+	} recalDir();
 	
 	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
 	
@@ -295,6 +298,8 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		mesh       = _l.mesh;
 		return self;
 	}
+	
+	static clone = function() { return variable_clone(self, 1); }
 }
 
 function __MK_Tree_Segment(_x, _y, _t) constructor {
@@ -314,6 +319,7 @@ function __MK_Tree() constructor {
 	y = 0;
 	
 	rootPosition   = 0;
+	curvPosition   = 0;
 	amount         = 1;
 	segments       = [];
 	segmentLengths = [];
@@ -331,7 +337,7 @@ function __MK_Tree() constructor {
 	////- Get
 	
 	static getPosition = function(rat, res) {
-		if(array_empty(segments)) {
+		if(array_length(segments) < 2) {
 			res[0] = x;
 			res[1] = y;
 			return res;
@@ -412,7 +418,9 @@ function __MK_Tree() constructor {
 	static grow = function(_param) {
 		var _length = _param.length;
 		var _angle  = _param.angle;
-		var _angleW = _param.angleW;
+		
+		var _angleW  = _param.angleW;
+		var _angleWC = _param.angleWC;
 		
 		var _grav   = _param.grav;
 		var _gravC  = _param.gravC;
@@ -462,7 +470,7 @@ function __MK_Tree() constructor {
 			if(i) {
 				var t  = _thick * (_thickC? _thickC.get(p) : 1);
 				
-				var aa = _a + random_range(_angleW[0], _angleW[1]) * choose(-1, 1);
+				var aa = _a + random_range(_angleW[0], _angleW[1]) * choose(-1, 1) * (_angleWC? _angleWC.get(p) : 1);
 				var dx = lengthdir_x(ll, aa);
 				var dy = lengthdir_y(ll, aa);
 				

@@ -1056,7 +1056,8 @@ event_inherited();
 					if(string_starts_with(_node, "/")) 
 						curr_subgroup = _node;
 					else {
-						curr_group = _node;
+						curr_group    = _node;
+						curr_subgroup = "";
 						curr_groupi++;
 					}
 					continue;

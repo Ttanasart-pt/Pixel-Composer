@@ -94,6 +94,15 @@ function rangeBox(_onModify) : widget() constructor {
 				_w -= bs;
 			}
 			
+			if(side_button2) {
+				var bx = _x + _w - bs;
+				
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+				side_button2.setFocusHover(active, hover);
+				side_button2.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+				_w -= bs;
+			}
+			
 			var bx = _x;
 			var by = _y + _h / 2 - bs / 2;
 			

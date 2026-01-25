@@ -19,7 +19,7 @@ function __PaletteColor(_color = c_black) constructor {
 	paletteObject   = [];
 	
 	index_sel_start = 0;
-	index_selecting = [ 0, 0 ];
+	index_selecting = [0,0];
 	index_dragging  = noone;
 	interactable    = true;
 	drop_target     = noone; setDrop = function(d) /*=>*/ { drop_target = d; return self; }

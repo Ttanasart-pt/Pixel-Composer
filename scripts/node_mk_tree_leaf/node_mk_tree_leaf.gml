@@ -14,13 +14,13 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(19, nodeValue_Enum_Button(  "Distribution",     0, [ "Random", "Uniform" ] ));
 	
 	newInput( 2, nodeValue_Range( "Amount",  [8,16]        ));
-	newInput( 7, nodeValue_Range( "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch");
-	newInput(27, nodeValue_Range( "Gravity", [0,0],   true )).setCurvable(28, CURVE_DEF_11, "Over Branch");
-	newInput(10, nodeValue_Range( "Offset",  [0,0],   true )).setCurvable(17, CURVE_DEF_11, "Over Branch");
+	newInput( 7, nodeValue_Range( "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(27, nodeValue_Range( "Gravity", [0,0],   true )).setCurvable(28, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(10, nodeValue_Range( "Offset",  [0,0],   true )).setCurvable(17, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	
 	////- =Grouping
-	newInput(15, nodeValue_Range( "Whorled", [0,0],   true )).setCurvable(36, CURVE_DEF_11, "Over Branch");
-	newInput(32, nodeValue_Float( "Whorled Angle",  0.1    )).setCurvable(33, CURVE_DEF_11, "Over Branch");
+	newInput(15, nodeValue_Range( "Whorled", [0,0],   true )).setCurvable(36, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(32, nodeValue_Float( "Whorled Angle",  0.1    )).setCurvable(33, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	
 	////- =Shape
 	shape_types = [ "Leaf", "Complex Leaf", "Line", "Circle", "Surface", "Mesh" ];
@@ -28,13 +28,13 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setHistory([ shape_types, 
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_02_0}, list: [ "Leaf", "Circle", "Surface", "Line" ] }, 
 		]);
-	newInput( 3, nodeValue_Vec2_Range( "Size",          [4,4,2,2]    )).setCurvable(18, CURVE_DEF_11, "Over Branch");
+	newInput( 3, nodeValue_Vec2_Range( "Size",          [4,4,2,2]    )).setCurvable(18, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	newInput( 9, nodeValue_Surface(    "Texture",       noone        ));
 	newInput(21, nodeValue_Slider(     "Leaf Span",     .5           ));
 	newInput(39, nodeValue_EButton(    "Geometry Type",  0, [ "Single", "Range" ] ));
 	newInput(29, nodeValue_Curve(      "Geometry",      CURVE_DEF_01 ));
 	newInput(38, nodeValue_Curve(      "Geometry2",     CURVE_DEF_01 ));
-	newInput(31, nodeValue_Float(      "Shape Gravity", .1           )).setCurvable(37, CURVE_DEF_11, "Over Branch");
+	newInput(31, nodeValue_Float(      "Shape Gravity", .1           )).setCurvable(37, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	newInput(40, nodeValue_Range(      "Twist",         [0,0], true  ));
 	newInput(41, nodeValue_Mesh(       "Mesh"                        ));
 	newInput(30, nodeValue_Int(        "Resolution",     6           ));
