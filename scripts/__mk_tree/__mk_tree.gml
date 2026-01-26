@@ -50,11 +50,13 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	growShift = 0;
 	growSpeed = 1;
 	
+	resolution =  0;
 	geometry   = undefined;
 	geometry1  = undefined;
 	geoGrav    = .1;
-	geoTwist   = .1;
-	resolution = 0;
+	geoTwist   =  0;
+	geoWigg    =  0;
+	geoWiggC   = undefined;
 	
 	mesh = undefined;
 	
@@ -131,14 +133,17 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				var oc = colorLeaf.evalFast(0), nc = oc;
 				var gg = geoGrav / _samp;
 				var rr;
+				var wd;
 				
 				draw_primitive_begin(pr_trianglelist);
 					for( var i = 1; i <= _samp; i++ ) {
 						var _t = i / _samp;
 						
 						ns = g1 == undefined? g0.get(_t) : random_range(g0.get(_t), g1.get(_t));
-						nx = ox + lengthdir_x(ds, nd);
-						ny = oy + lengthdir_y(ds, nd);
+						
+						wd = random_range(-geoWigg, geoWigg) * (geoWiggC? geoWiggC.get(_t) : 1) * sign(geoWigg);
+						nx = ox + lengthdir_x(ds, nd) + lengthdir_x(wd, nd + 90);
+						ny = oy + lengthdir_y(ds, nd) + lengthdir_y(wd, nd + 90);
 						nd = lerp_angle_direct(nd, gravity, gg) + geoTwist / _samp;
 						nc = colorLeaf.evalFast(i / _samp);
 						
@@ -290,10 +295,12 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		geometry   = _l.geometry;
 		geometry1  = _l.geometry1;
 		
+		resolution = _l.resolution;
 		growShift  = _l.growShift;
 		geoGrav    = _l.geoGrav;
 		geoTwist   = _l.geoTwist;
-		resolution = _l.resolution;
+		geoWigg    = _l.geoWigg;
+		geoWiggC   = _l.geoWiggC;
 		
 		mesh       = _l.mesh;
 		return self;
