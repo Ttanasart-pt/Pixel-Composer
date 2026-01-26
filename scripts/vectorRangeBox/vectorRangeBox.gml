@@ -100,9 +100,18 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			if(side_button) {
 				var bx = _x + _w - bs;
 				
-				side_button.setFocusHover(active, hover);
 				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
+				side_button.setFocusHover(active, hover);
 				side_button.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+				_w -= bs;
+			}
+			
+			if(side_button2) {
+				var bx = _x + _w - bs;
+				
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
+				side_button2.setFocusHover(active, hover);
+				side_button2.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 				_w -= bs;
 			}
 			

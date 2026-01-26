@@ -96,7 +96,7 @@ draggable = true;
 	bx -= bs + ui(2);
 	
 	var bt = __txtx("graident_editor_open_folder", "Open gradient folder");
-	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.dPath_open_20, 0, bc, 1, 0);
+	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.dPath_open_20, 0, bc);
 	if(b == 2) {
 		var _realpath = DIRECTORY + "Gradients";
 		shellOpenExplorer(_realpath)
@@ -175,7 +175,7 @@ draggable = true;
 	bx -= bs + ui(4);
 	
 	// var t = __txtx("gradient_editor_key_blend", "Key blending...");
-	// var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_blend, 0, bc, 1, 0);
+	// var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_blend, 0, bc);
 	// draggable = draggable && !b;
 	
 	// if(b == 2) {
@@ -189,7 +189,7 @@ draggable = true;
 	// bx -= bs + ui(2);
 	
 	var t = __txtx("gradient_editor_reverse", "Reverse");
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_reverse, 0, bc, 1, 0);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_reverse, 0, bc);
 	draggable = draggable && !b;
 	
 	if(b == 2) {
@@ -201,7 +201,7 @@ draggable = true;
 	bx -= bs + ui(2);
 	
 	var t = __txt("Distribute");
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_distribute, 0, bc, 1, 0);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_distribute, 0, bc);
 	draggable = draggable && !b;
 	
 	if(b == 2) {

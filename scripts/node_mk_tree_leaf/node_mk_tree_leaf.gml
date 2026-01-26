@@ -10,8 +10,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Leaf
 	newInput( 1, nodeValue_Slider_Range( "Leaf Position",   [.5,1] ));
-	newInput(35, nodeValue_Bool( "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Leaf Position' range or total range.");
-	newInput(19, nodeValue_Enum_Button(  "Distribution",     0, [ "Random", "Uniform" ] ));
+	newInput(35, nodeValue_Bool(    "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Leaf Position' range or total range.");
+	newInput(19, nodeValue_EButton( "Distribution",     0, [ "Random", "Uniform" ] ));
 	
 	newInput( 2, nodeValue_Range( "Amount",  [8,16]        ));
 	newInput( 7, nodeValue_Range( "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
@@ -28,33 +28,43 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setHistory([ shape_types, 
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_02_0}, list: [ "Leaf", "Circle", "Surface", "Line" ] }, 
 		]);
-	newInput( 3, nodeValue_Vec2_Range( "Size",          [4,4,2,2]    )).setCurvable(18, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
-	newInput( 9, nodeValue_Surface(    "Texture",       noone        ));
-	newInput(21, nodeValue_Slider(     "Leaf Span",     .5           ));
+	newInput( 3, nodeValue_Vec2_Range( "Size",          [4,4,2,2]     ))
+		.setCurvable(18, CURVE_DEF_11, "Over Branch",  "curved",         THEME.mk_tree_curve_branch  )
+		.setCurvable(43, CURVE_DEF_11, "Over Whorled", "curved_whorled", THEME.mk_tree_curve_whorled )
+		
+	newInput( 9, nodeValue_Surface(    "Texture",       noone         ));
+	newInput(21, nodeValue_Slider(     "Leaf Span",     .5            ));
 	newInput(39, nodeValue_EButton(    "Geometry Type",  0, [ "Single", "Range" ] ));
-	newInput(29, nodeValue_Curve(      "Geometry",      CURVE_DEF_01 ));
-	newInput(38, nodeValue_Curve(      "Geometry2",     CURVE_DEF_01 ));
-	newInput(31, nodeValue_Float(      "Shape Gravity", .1           )).setCurvable(37, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
-	newInput(40, nodeValue_Range(      "Twist",         [0,0], true  ));
+	newInput(29, nodeValue_Curve(      "Geometry",      CURVE_DEF_01  ));
+	newInput(38, nodeValue_Curve(      "Geometry2",     CURVE_DEF_01  ));
+	newInput(31, nodeValue_Range(      "Shape Gravity", [.1,.1], true ))
+		.setCurvable(37, CURVE_DEF_11, "Over Branch",  "curved",         THEME.mk_tree_curve_branch  )
+		.setCurvable(44, CURVE_DEF_11, "Over Whorled", "curved_whorled", THEME.mk_tree_curve_whorled )
+		
+	newInput(40, nodeValue_Range(      "Twist",         [0,0], true  ))
+		.setCurvable(45, CURVE_DEF_11, "Over Branch",  "curved",         THEME.mk_tree_curve_branch  )
+		.setCurvable(46, CURVE_DEF_11, "Over Whorled", "curved_whorled", THEME.mk_tree_curve_whorled )
+		
 	newInput(41, nodeValue_Mesh(       "Mesh"                        ));
 	newInput(30, nodeValue_Int(        "Resolution",     6           ));
 	
 	////- =Color
-	newInput( 4, nodeValue_Gradient( "Per Branch",     gra_white )).setMappableConst(12);
-	newInput(20, nodeValue_Gradient( "Over Branch",    gra_white ));
-	newInput( 6, nodeValue_Gradient( "Per Leaf",       gra_white )).setMappableConst(13);
-	newInput(34, nodeValue_Gradient( "Along Leaf",     gra_white ));
-	newInput(42, nodeValue_Gradient( "Random Whorled", gra_white ));
+	newInput( 4, nodeValue_Gradient( "Random Branch",   gra_white )).setMappableConst(12);
+	newInput(20, nodeValue_Gradient( "Along Branch",    gra_white ));
+	newInput( 6, nodeValue_Gradient( "Random Leaf",     gra_white )).setMappableConst(13);
+	newInput(34, nodeValue_Gradient( "Along Leaf",      gra_white ));
+	newInput(42, nodeValue_Gradient( "Random Whorled",  gra_white ));
+	newInput(47, nodeValue_Gradient( "Along Whorled",   gra_white ));
 	
 	////- =Edge
-	newInput(14, nodeValue_Enum_Button( "Render Edge",       0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(11, nodeValue_Gradient(    "Edge Color",        gra_white )).setMappableConst(25);
-	newInput(23, nodeValue_Enum_Button( "Render Top Edge",   0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(24, nodeValue_Gradient(    "Top Edge Color",    gra_white )).setMappableConst(26);
+	newInput(14, nodeValue_EButton(  "Render Edge",     0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput(11, nodeValue_Gradient( "Edge Color",      gra_white )).setMappableConst(25);
+	newInput(23, nodeValue_EButton(  "Render Top Edge", 0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput(24, nodeValue_Gradient( "Top Edge Color",  gra_white )).setMappableConst(26);
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 43
+	// input 48
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
@@ -62,16 +72,15 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
 		[ "Leaf",     false ],  1, 35, 19,  2,  7, 16, 27, 28, 10, 17, 
 		[ "Grouping", false ], 15, 36, 32, 33, 
-		[ "Shape",    false ],  8,  3, 18,  9, 21, 39, 29, 38, 31, 37, 40, 41, 30, 
-		[ "Color",    false ],  4, 20, 12,  6, 13, 34, 42, 
+		[ "Shape",    false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 41, 30, 
+		[ "Color",    false ],  4, 20, 12,  6, 13, 34, 42, 47, 
 			new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
 		[ "Growth",   false ], 22, 
 	];
 	
-	amountUnitTooltip = new tooltipSelector("Unit", [ "Fixed Amount", "Leaf Distance" ]);
 	amountUnitToggle  = button(function() /*=>*/ { inputs[2].attributes.unit = !inputs[2].attributes.unit; triggerRender(); })
 		.setIcon(THEME.mk_tree_leaf_unit).iconPad()
-		.setTooltip(amountUnitTooltip, function() /*=>*/ {return inputs[2].attributes.unit});
+		.setTooltip(new tooltipSelector("Unit", [ "Fixed Amount", "Leaf Distance" ]), function() /*=>*/ {return inputs[2].attributes.unit});
 	
 	inputs[2].attributes.unit = VALUE_UNIT.constant;
 	inputs[2].getEditWidget().setSideButton(amountUnitToggle);
@@ -122,7 +131,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _shap = getInputData( 8);
 			var _siz  = getInputData( 3);
-			var _sizC = getInputData(18), curve_size   = inputs[ 3].attributes.curved? new curveMap(_sizC)  : undefined;
+			var _sizC = getInputData(18), curve_size   = inputs[ 3].attributes.curved?         new curveMap(_sizC)  : undefined;
+			var _sizW = getInputData(43), curve_sizeW  = inputs[ 3].attributes.curved_whorled? new curveMap(_sizW)  : undefined;
 			var _tex  = getInputData( 9);
 			var _lspn = getInputData(21);
 			
@@ -131,8 +141,13 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _lgeo2 = getInputData(38);
 			
 			var _geoG = getInputData(31);
-			var _geGC = getInputData(37), curve_geog   = inputs[31].attributes.curved? new curveMap(_geGC)  : undefined;
+			var _geGC = getInputData(37), curve_geog   = inputs[31].attributes.curved?         new curveMap(_geGC)  : undefined;
+			var _geGW = getInputData(44), curve_geogW  = inputs[31].attributes.curved_whorled? new curveMap(_geGW)  : undefined;
+			
 			var _gtws = getInputData(40);
+			var _gtwC = getInputData(45), curve_geot   = inputs[40].attributes.curved?         new curveMap(_gtwC)  : undefined;
+			var _gtwW = getInputData(46), curve_geotW  = inputs[40].attributes.curved_whorled? new curveMap(_gtwW)  : undefined;
+			
 			var _mesh = getInputData(41); if(!is(_mesh, Mesh)) _mesh = undefined;
 			var _lres = getInputData(30);
 			
@@ -145,8 +160,9 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _cLef     = getInputData( 6);
 			var _cLefMap  = getInputData(13);
 			var _cLefM    = inputs[ 6].attributes.mapped && is_surface(_cLefMap), _cLefSamp = _cLefM? new Surface_sampler(_cLefMap) : undefined;
-			var _cLefAlo  = getInputData(34);
-			var _cWhor    = getInputData(42);
+			var _cLefAlo  = getInputData(34); _cLefAlo.cache();
+			var _cWhor    = getInputData(42); _cWhor.cache();
+			var _cWhorAlo = getInputData(47); _cWhorAlo.cache();
 			
 			var _edg      = getInputData(14);
 			var _edgC     = getInputData(11);
@@ -186,8 +202,6 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				if(_geoSc) _geo2 = new curveMap(_lgeo2, _lres + 1);
 			}
 			
-			_cLefAlo.cache();
-			_cWhor.cache();
 		#endregion
 		
 		var ox, oy, nx, ny;
@@ -274,7 +288,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					    lc  = colorMultiply(lc, cc);
 					var lwc = colorMultiply(lc, _cWhor.evalFast(random(1)));
 					    
-					var _geg = _geoG * (curve_geog? curve_geog.get(_cPos) : 1);
+					var _geg = random_range(_geoG[0], _geoG[1]) * (curve_geog? curve_geog.get(_cPos) : 1);
+					var _get = random_range(_gtws[0], _gtws[1]) * (curve_geot? curve_geot.get(_cPos) : 1);
 					
 					var _l = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _dr, lsx, lsy, _lspn);
 					    _l.gravity    = _gDir;
@@ -286,7 +301,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					    _l.colorLeaf  = _cLefAlo;
 					    _l.growShift  = random_range(_grow[0], _grow[1]);
 					    _l.geoGrav    = _geg;
-					    _l.geoTwist   = random_range(_gtws[0], _gtws[1]);
+					    _l.geoTwist   = _get;
 					    _l.resolution = _lres;
 					    _l.mesh       = _mesh;
 					     
@@ -330,11 +345,18 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					} else if(_whorr == 1) {
 						var _d2 = brnDir - _spra;
 					        _d2 = lerp_angle_direct(_d2, _gDir, _grv);
-				        var lwc = colorMultiply(lc, _cWhor.evalFast(random(1)));
-				        
-						var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
+				        var lwc = colorMultiply(lc,  _cWhor.evalFast(random(1)));
+				            lwc = colorMultiply(lwc, _cWhorAlo.evalFast(1));
+				            
+				        var lsw  = curve_sizeW? curve_sizeW.get(1) : 1;
+				        var gegW = _geg * (curve_geogW? curve_geogW.get(1) : 1);
+				        var getW = _get * (curve_geotW? curve_geotW.get(1) : 1);
+					    
+						var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx * lsw, lsy * lsw, _lspn).copy(_l);
 						    _l2.color    = lwc;
 						    _l2.geoTwist = random_range(_gtws[0], _gtws[1]);
+						    _l2.geoGrav  = gegW;
+					    	_l2.geoTwist = getW;
 						
 						array_push(_br.leaves, _l);  array_push(_leaves, _l);
 						array_push(_br.leaves, _l2); array_push(_leaves, _l2);
@@ -344,13 +366,22 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						var _astep = 360 / (_whorr + 1);
 						
 						for( var k = 0; k <= _whorr; k++ ) {
+							var _kprog = k / _whorr;
+							
 							var _d2 = brnDir + _whrla + _astep * k;
 							    _d2 = lerp_angle_direct(_d2, _gDir, _grv);
-							var lwc = colorMultiply(lc, _cWhor.evalFast(random(1)));
+							var lwc = colorMultiply(lc,  _cWhor.evalFast(random(1)));
+				            	lwc = colorMultiply(lwc, _cWhorAlo.evalFast(_kprog));
+				            
+							var lsw  =         curve_sizeW? curve_sizeW.get(_kprog) : 1;
+							var gegW = _geg * (curve_geogW? curve_geogW.get(_kprog) : 1);
+				        	var getW = _get * (curve_geotW? curve_geotW.get(_kprog) : 1);
 							
-							var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
+							var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx * lsw, lsy * lsw, _lspn).copy(_l);
 								_l2.color    = lwc;
 							    _l2.geoTwist = random_range(_gtws[0], _gtws[1]);
+							    _l2.geoGrav  = gegW;
+							    _l2.geoTwist = getW;
 							    
 							array_push(_br.leaves, _l2);  array_push(_leaves, _l2);
 						}
