@@ -1076,6 +1076,7 @@
             "Node_Array_Rearrange",
             "Node_Array_Zip",
             "Node_Array_Copy",
+            "Node_Array_Partition",
             "Node_Array_Convolute",
             "Node_Array_Composite",
             "Node_Array_Shuffle",

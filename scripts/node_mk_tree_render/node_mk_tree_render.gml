@@ -1,9 +1,9 @@
-function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Tree Render";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	
-	newInput(0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	newInput(0, nodeValue_Struct("Tree", noone)).setArrayDepth(1).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -14,14 +14,12 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.getDimension() : [1,1]};
 	
-	static update = function() {
-		if(!is(inline_context, Node_MK_Tree_Inline)) return;
+	static processData = function(_outSurf, _data, _array_index = 0) { 
+		if(!is(inline_context, Node_MK_Tree_Inline)) return _outSurf;
 		
-		var _tree = getInputData(0);
+		var _tree = _data[0];
 		var _dim  = getDimension();
-		if(!is_array(_tree) || array_empty(_tree)) return;
-		
-		var _outSurf = outputs[0].getValue();
+		if(!is_array(_tree) || array_empty(_tree)) return _outSurf;
 		
 		array_foreach(_tree, function(t,i) /*=>*/ { if(t.root) t.root.drawn = false; })
 		
@@ -42,7 +40,7 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			}
 		surface_reset_target();
 		
-		outputs[0].setValue(_outSurf);
+		return _outSurf;
 	}
 	
 	

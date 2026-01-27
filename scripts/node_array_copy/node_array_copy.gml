@@ -1,17 +1,15 @@
 function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Copy";
+	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setArrayDepth(1)
-		.setVisible(true, true);
+	newInput(0, nodeValue(     "Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setArrayDepth(1).setVisible(true, true);
+	newInput(1, nodeValue_Int( "Starting Index", 0 ));
+	newInput(2, nodeValue_Int( "Size",           1 ));
 	
-	newInput(1, nodeValue_Int("Starting Index", 0));
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0)).setArrayDepth(1);
 	
-	newInput(2, nodeValue_Int("Size", 1));
-	
-	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
-		.setArrayDepth(1);
+	////- Node
 		
 	static update = function(frame = CURRENT_FRAME) {
 		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
@@ -44,6 +42,13 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(is_array(pal[0])) pal = pal[0];
 			
 			drawPaletteBBOX(pal, bbox);
+			return;
 		}
+		
+		var _st = getInputData(1);
+		var _sz = getInputData(2);
+		
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
+		draw_text_bbox(bbox, $"{_st}...{_st + _sz - 1}");
 	}
 }

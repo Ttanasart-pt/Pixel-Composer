@@ -3,30 +3,29 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	setDrawIcon(s_node_array_sample);
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
+	newInput( 0, nodeValue( "Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(true, true);
+	newInput( 4, nodeValueSeed());
 	
-	newInput(1, nodeValue_Float("Step", 1));
+	////- =Sampling
+	newInput( 2, nodeValue_EScroll( "Mode",      0, [ "Uniform", "Random" ] ));
+	newInput( 6, nodeValue_Int(     "Dimension", 0 ));
+	newInput( 1, nodeValue_Float(   "Step",      1 ));
+	newInput( 3, nodeValue_Int(     "Shift",     0 ));
 	
-	newInput(2, nodeValue_Enum_Scroll("Mode", 0, [ "Uniform", "Random" ]))
-	
-	newInput(3, nodeValue_Int("Shift", 0))
-	
-	newInput(4, nodeValueSeed());
-	
-	newInput(5, nodeValue_Int("Amount", 4))
-	
-	newInput(6, nodeValue_Int("Dimension", 0))
-	
-	newInput(7, nodeValue_Enum_Scroll("Amount Type", 0, [ "Input Range", "Custom" ]))
+	////- =Amount
+	newInput( 7, nodeValue_EScroll( "Amount Type", 0, [ "Input Range", "Custom" ] ));
+	newInput( 5, nodeValue_Int(     "Amount",      4 ));
+	// 8
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
 		
 	input_display_list = [ 0, 4, 
-		["Sampling", false], 2, 6, 1, 3, 
-		["Amount",   false], 7, 5, 
+		[ "Sampling", false ], 2, 6, 1, 3, 
+		[ "Amount",   false ], 7, 5, 
 	];
+	
+	////- Node
 	
 	static sample = function(_arr) {
 		__temp_arr = _arr;
