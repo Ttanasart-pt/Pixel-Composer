@@ -9,11 +9,8 @@ function Krita_File() constructor {
 	
 	static destroy = function() {
 		sprite_delete_safe(preview_sprite);
-		
-		for( var i = 0, n = array_length(layerDat); i < n; i++ ) {
-			var _l = layerDat[i];
-			buffer_delete_safe(_l[2]);
-		}
+		if(!array_empty(layerDat))
+			array_foreach(layerDat, function(l) /*=>*/ {return buffer_delete_safe(l.data)});
 	}
 }
 

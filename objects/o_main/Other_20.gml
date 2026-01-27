@@ -26,24 +26,28 @@ PEN_Y_DELTA = py - PEN_Y;
 PEN_X = px;
 PEN_Y = py;
 
-// print($"{PEN_X} | {PEN_X_DELTA}");
-
 PEN_PRESSURE = pp;
 PEN_RELEASED = false;
 PEN_PRESSED  = false;
 
 var contact = bool(f & 0x4);
-if( PEN_CONTACT && !contact) PEN_RELEASED = true;
-if(!PEN_CONTACT &&  contact) PEN_PRESSED  = true;
-PEN_CONTACT = contact;
-
-var b1 = bool(f & 0x10); // POINTER_FLAG_FIRSTBUTTON
-var b2 = bool(f & 0x20); // POINTER_FLAG_SECONDBUTTON
-
-if(!PEN_RIGHT_CLICK && b2) PEN_RIGHT_PRESS   = true;
-if(PEN_RIGHT_CLICK && !b2) PEN_RIGHT_RELEASE = true;
-
-PEN_RIGHT_CLICK = b2;
+var bt1     = bool(f & 0x10); // POINTER_FLAG_FIRSTBUTTON
+var bt2     = bool(f & 0x20); // POINTER_FLAG_SECONDBUTTON
+	
+if(PREFERENCES.video_mode) {
+	VIDEO_PEN         = contact;
+	VIDEO_RIGHT_CLICK = bt2;
+	
+} else {
+	if( PEN_CONTACT && !contact) PEN_RELEASED      = true;
+	if(!PEN_CONTACT &&  contact) PEN_PRESSED       = true;
+	PEN_CONTACT = contact;
+	
+	if(!PEN_RIGHT_CLICK &&  bt2) PEN_RIGHT_PRESS   = true;
+	if( PEN_RIGHT_CLICK && !bt2) PEN_RIGHT_RELEASE = true;
+	PEN_RIGHT_CLICK = b2;
+	
+}
 
 //print($"{PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
 if(f & 0x2) {

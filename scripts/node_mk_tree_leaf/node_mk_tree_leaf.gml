@@ -319,11 +319,11 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					    _l.geoWiggC   = curve_geowL;
 					    _l.mesh       = _mesh;
 					     
-				   if(_shap == MKLEAF_TYPE.Complex_Leaf) {
+					if(_shap == MKLEAF_TYPE.Complex_Leaf) {
 					    _l.geometry   = _geo;
 					    _l.geometry1  = _geo2;
-				   }
-					
+					}
+				
 					if(_edg == 0) {
 						_l.colorE = _l.color;
 						

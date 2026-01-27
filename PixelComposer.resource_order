@@ -1845,6 +1845,7 @@
     {"name":"vectorBox","order":10,"path":"scripts/vectorBox/vectorBox.yy",},
     {"name":"vectorRangeBox","order":11,"path":"scripts/vectorRangeBox/vectorRangeBox.yy",},
     {"name":"version_checker","order":11,"path":"scripts/version_checker/version_checker.yy",},
+    {"name":"video_pen_overlay","order":4,"path":"scripts/video_pen_overlay/video_pen_overlay.yy",},
     {"name":"wav_file_object","order":2,"path":"scripts/wav_file_object/wav_file_object.yy",},
     {"name":"widget","order":11,"path":"scripts/widget/widget.yy",},
     {"name":"window_functions","order":2,"path":"scripts/window_functions/window_functions.yy",},

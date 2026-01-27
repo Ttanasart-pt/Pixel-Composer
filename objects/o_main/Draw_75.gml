@@ -184,6 +184,14 @@ if(winMan_isMinimized()) exit;
 	draw_rectangle(1, 1, WIN_W - 2, WIN_H - 2, true);
 #endregion
 
+#region zoom area
+	if(PREFERENCES.video_mode) {
+		zoom_area_draw();
+		zoom_area_draw_gui();
+		video_pen_overlay();
+	}
+#endregion
+
 #region system debug
 	// var tt = "";
 	// tt += $"\nOperating system: {os_type_sting()} ({os_version})"

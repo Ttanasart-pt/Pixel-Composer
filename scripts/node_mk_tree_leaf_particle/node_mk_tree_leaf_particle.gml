@@ -29,10 +29,10 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newInput(15, nodeValue_Gradient( "Color Over Life [fall]", gra_white ));
 	
 	////- =Physics
-	newInput( 6, nodeValue_Range(    "Gravity",         [.25,.25], true ));
-	newInput( 7, nodeValue_Rotation( "Grav. Direction", -90             ));
-	newInput(16, nodeValue_Range(    "Swing Speed",     [0,0],     true ));
-	newInput(17, nodeValue_Range(    "Swing Amplitude", [0,0],     true ));
+	newInput( 6, nodeValue_Range(    "Gravity",         [.25,.25], true  ));
+	newInput( 7, nodeValue_Rotation( "Grav. Direction", -90              ));
+	newInput(16, nodeValue_Range(    "Swing Speed",     [0,0],     true  ));
+	newInput(17, nodeValue_Range(    "Swing Amplitude", [0,0],     true  ));
 	
 	////- =Ground
 	newInput( 8, nodeValue_Bool(  "Ground",       false  ));

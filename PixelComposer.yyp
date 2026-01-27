@@ -3430,6 +3430,7 @@
     {"id":{"name":"vectorBox","path":"scripts/vectorBox/vectorBox.yy",},},
     {"id":{"name":"vectorRangeBox","path":"scripts/vectorRangeBox/vectorRangeBox.yy",},},
     {"id":{"name":"version_checker","path":"scripts/version_checker/version_checker.yy",},},
+    {"id":{"name":"video_pen_overlay","path":"scripts/video_pen_overlay/video_pen_overlay.yy",},},
     {"id":{"name":"wav_file_object","path":"scripts/wav_file_object/wav_file_object.yy",},},
     {"id":{"name":"wav_file_read","path":"scripts/wav_file_read/wav_file_read.yy",},},
     {"id":{"name":"widget","path":"scripts/widget/widget.yy",},},

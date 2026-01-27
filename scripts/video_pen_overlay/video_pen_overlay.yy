@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"video_pen_overlay",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"video_pen_overlay",
+  "parent":{
+    "name":"debug",
+    "path":"folders/functions/debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
