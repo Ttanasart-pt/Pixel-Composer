@@ -510,7 +510,7 @@ function __MK_Tree() constructor {
 				ox += dx;
 				oy += dy;
 				
-				var _wav = _wave * (_waveC? _waveC.get(p) : 1);
+				var _wav = _wave * (_waveC? _waveC.get(p) : 1) / amount;
 				if(_wav != 0) {
 					var _wLen = cos(_spirP + p * pi * _spirS) * _wav;
 					ox += lengthdir_x(_wLen, aa + 90);
