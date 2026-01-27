@@ -12,17 +12,21 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 2, nodeValue_Int(      "Sample", 8     ));
 	
 	////- =Direction
-	newInput( 8, nodeValue_Range(  "Wiggle",   [0,0] )).setCurvable(10, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+	newInput( 8, nodeValue_Range(  "Wiggle",   [0,0] ))
+		.setCurvable(10, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 	newInput( 9, nodeValue_Range(  "Gravity",  [0,0] ));
 	
 	////- =Spiral
 	newInput(11, nodeValue_Range(  "Frequency", [4,4], true ));
 	newInput(12, nodeValue_Range(  "Phase",     [0,0], true ));
-	newInput(13, nodeValue_Range(  "Wave",      [0,0], true )).setCurvable(14, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
-	newInput(15, nodeValue_Range(  "Curl",      [0,0], true )).setCurvable(16, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+	newInput(13, nodeValue_Range(  "Wave",      [0,0], true ))
+		.setCurvable(14, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+	newInput(15, nodeValue_Range(  "Curl",      [0,0], true ))
+		.setCurvable(16, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 	
 	////- =Rendering
-	newInput( 3, nodeValue_Range(       "Thickness",       [4,4], true )).setCurvable(4, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+	newInput( 3, nodeValue_Range(       "Thickness",       [4,4], true ))
+		.setCurvable(4, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 	newInput( 5, nodeValue_Gradient(    "Base Color",      gra_white ));
 	newInput(17, nodeValue_Enum_Button( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(18, nodeValue_Gradient(    "Length Color",    gra_white ));

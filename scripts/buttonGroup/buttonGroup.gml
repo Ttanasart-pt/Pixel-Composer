@@ -75,6 +75,16 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			current_selecting = array_safe_get_fast(current_selecting, 0);
 		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
+		var bs = min(h, ui(32));
+		if(side_button != noone) {
+			var bx = _x + _w - bs;
+			
+			// if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx - _arw, _y, bs + _arw, _h, CDEF.main_mdwhite, 1);
+			side_button.setFocusHover(active, hover);
+			side_button.draw(bx, _y + h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+			_w -= bs + ui(2);
+		}
+		
 		var amo  = array_length(data);
 		var _tw  = _w;
 		var _mx  = false, _t = 0;

@@ -22,16 +22,20 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- =Direction
 	newInput( 4, nodeValue_RotRand( "Direction", [0,80,100,0,0]       ));
 	newInput(10, nodeValue_Range(   "Direction Wiggle",   [0,0], true ));
-	newInput( 9, nodeValue_Range(   "Gravity",            [0,0], true )).setCurvable(15, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+	newInput( 9, nodeValue_Range(   "Gravity",            [0,0], true ))
+		.setCurvable(15, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	
 	////- =Spiral
 	newInput(22, nodeValue_Range(  "Frequency", [4,4], true ));
 	newInput(23, nodeValue_Range(  "Phase",     [0,0], true ));
-	newInput(18, nodeValue_Range(  "Wave",      [0,0], true )).setCurvable(19, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
-	newInput(20, nodeValue_Range(  "Curl",      [0,0], true )).setCurvable(21, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+	newInput(18, nodeValue_Range(  "Wave",      [0,0], true ))
+		.setCurvable(19, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
+	newInput(20, nodeValue_Range(  "Curl",      [0,0], true ))
+		.setCurvable(21, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	
 	////- =Rendering
-	newInput( 6, nodeValue_Range(    "Thickness",       [4,4], true )).setCurvable(11, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+	newInput( 6, nodeValue_Range(    "Thickness",       [4,4], true ))
+		.setCurvable(11, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	newInput(12, nodeValue_Gradient( "Base Color",      gra_white   ));
 	newInput(24, nodeValue_EButton(  "Length Blending", 0           )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(25, nodeValue_Gradient( "Length Color",    gra_white   ));
