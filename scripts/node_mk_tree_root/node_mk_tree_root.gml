@@ -141,6 +141,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _wave   = random_range(_wav[0], _wav[1]);
 			var _curl   = random_range(_cur[0], _cur[1]);
 			
+			var _colBase = _baseGrad.evalFast(random(1));
+			
 			var _growParam = {
 				length : _length,
 				angle  : _angle,   angleW : _angW,         angleWC : undefined, 
@@ -151,7 +153,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				wave   : _wave,    waveC  : curve_wave, 
 				curl   : _curl,    curlC  : curve_curl, 
 			
-				cBase  : _baseGrad,
+				cBase  : _colBase,
 				cLen   : _lenc,     cLenG  : _lencGrad,
 				cEdg   : _edge,     cEdgL  : _edgeLGrd,    cEdgR  : _edgeRGrd
 			}

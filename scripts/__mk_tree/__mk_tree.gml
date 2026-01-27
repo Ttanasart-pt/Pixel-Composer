@@ -389,6 +389,34 @@ function __MK_Tree() constructor {
 		return res;
 	}
 	
+	static getColor = function(rat) {
+		if(array_empty(segments))       return c_black;
+		if(array_length(segments) == 1) return segments[0].color;
+		
+		rat = clamp(rat, 0, 1);
+		
+		var amo  = array_length(segmentRatio);
+		var low  = 0;
+		var high = amo - 1;
+		
+		while(low < high) {
+			var mid = (low + high) >> 1;
+			if(segmentRatio[mid] < rat)
+				low = mid + 1;
+			else
+				high = mid;
+		}
+		
+		if(low == 0)   return segments[0].color;
+		if(low >= amo) return segments[amo - 1].color;
+		
+		var ox = segments[low - 1];
+		var nx = segments[low];
+		var rr = (rat - segmentRatio[low - 1]) / (segmentRatio[low] - segmentRatio[low - 1]);
+		
+		return merge_color(ox.color, nx.color, rr);
+	}
+	
 	////- Build
 	
 	static getLength = function() {
@@ -445,7 +473,7 @@ function __MK_Tree() constructor {
 		var _curl   = _param.curl;
 		var _curlC  = _param.curlC;
 		
-		var _cBase   = _param.cBase;
+		var _cBase   = _param.cBase, _cc = _cBase;
 		var _cLen    = _param.cLen;
 		var _cLenG   = _param.cLenG;
 		var _cEdg    = _param.cEdg;
@@ -468,8 +496,6 @@ function __MK_Tree() constructor {
 		var _gx = lengthdir_x(1, _gravD);
 		var _gy = lengthdir_y(1, _gravD);
 		var _gg;
-		
-		var _cc = _cBase.evalFast(random(1));
 		
 		for( var i = 0; i <= amount; i++ ) {
 			var p = i / amount;

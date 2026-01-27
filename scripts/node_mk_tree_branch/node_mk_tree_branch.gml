@@ -44,6 +44,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setCurvable( 11, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 36, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
 		
+	newInput(37, nodeValue_Slider(   "Inherit Parent Color", 0      ));
 	newInput(12, nodeValue_Gradient( "Base Color",      gra_white   ));
 	newInput(27, nodeValue_EButton(  "Length Blending", 0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(28, nodeValue_Gradient( "Length Color",    gra_white   ));
@@ -54,7 +55,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 37
+	// input 38
 	
 	newOutput(0, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -64,7 +65,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Segment",   false ],  7,  3, 13, 
 		[ "Direction", false ], 31,  4, 10, 34, 35, 15,  9, 16, 33, 
 		[ "Spiral",    false ], 25, 26, 21, 22, 23, 24, 
-		[ "Rendering", false ],  6, 11, 36, 12, 27, 28, 17, 18, 29, 30, 
+		[ "Rendering", false ],  6, 11, 36, 37, 12, 27, 28, 17, 18, 29, 30, 
 		[ "Growth",    false ], 20, 
 	];
 	
@@ -134,6 +135,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _thkC  = getInputData(11),     curve_thick   = inputs[ 6].attributes.curved?        new curveMap(_thkC)  : undefined;
 			var _thkCR = getInputData(36),     curve_thick_r = inputs[ 6].attributes.curved_branch? new curveMap(_thkCR) : undefined;
 			
+			var _inhColor = getInputData(37);
 			var _baseGrad = getInputData(12);
 			var _lenc     = getInputData(27);
 			var _lencGrad = getInputData(28); inputs[28].setVisible(_lenc > 0);
@@ -208,6 +210,12 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _wave   = random_range(_wav[0], _wav[1]);
 				var _curl   = random_range(_cur[0], _cur[1]);
 				
+				var _colBase = _baseGrad.evalFast(random(1));
+				if(_inhColor > 0) {
+					var _rootColor = _tr.getColor(rat);
+					_colBase = merge_color(_colBase, colorMultiply(_colBase, _rootColor), _inhColor);
+				}
+				
 				var _growParam = {
 					length : _length,
 					angle  : _angle,   angleW : _angw,         angleWC : curve_angw,
@@ -218,7 +226,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					wave   : _wave,    waveC  : curve_wave, 
 					curl   : _curl,    curlC  : curve_curl,
 					
-					cBase  : _baseGrad,
+					cBase  : _colBase,
 					cLen   : _lenc,     cLenG  : _lencGrad,
 					cEdg   : _edge,     cEdgL  : _edgeLGrd,    cEdgR  : _edgeRGrd
 				}
