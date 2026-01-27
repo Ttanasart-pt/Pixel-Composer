@@ -21,10 +21,11 @@
 	}
 #endregion
 
-function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
-	root = undefined;
+function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
+	root         = _root;
 	rootPosition = _pos;
 	shape        = _shp;
+	whorlIndex   = 0;
 	
 	x  = _x;
 	y  = _y;
@@ -123,8 +124,11 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				var g0 = geometry;
 				var g1 = geometry1;
 				
+				var ssx = sx * scale;
+				var ssy = sy * scale;
+				
 				var _samp = resolution;
-				var ds = sx / _samp;
+				var ds = ssx / _samp;
 				var os = g1 == undefined? g0.get(0) : random_range(g0.get(0), g1.get(0));
 				var ns = os;
 				var od = dir,         nd = od;
@@ -147,11 +151,11 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 						nd = lerp_angle_direct(nd, gravity, gg) + geoTwist / _samp;
 						nc = colorLeaf.evalFast(i / _samp);
 						
-						var _odx = lengthdir_x(sy, od + 90);
-						var _ody = lengthdir_y(sy, od + 90);
+						var _odx = lengthdir_x(ssy, od + 90);
+						var _ody = lengthdir_y(ssy, od + 90);
 						
-						var _ndx = lengthdir_x(sy, nd + 90);
-						var _ndy = lengthdir_y(sy, nd + 90);
+						var _ndx = lengthdir_x(ssy, nd + 90);
+						var _ndy = lengthdir_y(ssy, nd + 90);
 						
 						var x00 = ox + _odx * os;
 						var y00 = oy + _ody * os;
@@ -465,6 +469,7 @@ function __MK_Tree() constructor {
 		var _thickC = _param.thickC;
 		
 		var _spirS  = _param.spirS;
+		var _spirSC = _param.spirSC;
 		var _spirP  = _param.spirP;
 		
 		var _wave   = _param.wave;
@@ -510,16 +515,18 @@ function __MK_Tree() constructor {
 				ox += dx;
 				oy += dy;
 				
-				var _wav = _wave * (_waveC? _waveC.get(p) : 1) / amount;
+				var _sps = _spirS * (_spirSC? _spirSC.get(p) : 1);
+				var _wav = _wave  * (_waveC? _waveC.get(p) : 1) / amount * _sps;
+				
 				if(_wav != 0) {
-					var _wLen = cos(_spirP + p * pi * _spirS) * _wav;
+					var _wLen = cos(_spirP + p * pi * _sps) * _wav;
 					ox += lengthdir_x(_wLen, aa + 90);
 					oy += lengthdir_y(_wLen, aa + 90);
 				}
 				
 				var _crl = _curl * (_curlC? _curlC.get(p) : 1);
 				if(_crl != 0) {
-					var _cLen = sin(_spirP + p * pi * _spirS) * _crl;
+					var _cLen = sin(_spirP + p * pi * _sps) * _crl;
 					ox += lengthdir_x(_cLen, aa);
 					oy += lengthdir_y(_cLen, aa);
 				}

@@ -8,22 +8,25 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput( 1, nodeValueSeed());
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
-	
-	////- =Grow
 	newInput( 2, nodeValue_Slider( "Progress",         1.5, [-1, 4, .001] ));
+	
+	////- =Branch
 	newInput( 5, nodeValue_Range(  "Branch Speed",     [1,1], true ));
 	newInput( 3, nodeValue_Range(  "Thickness Effect", [0,0], true ));
 	
-	////- =Leaf
-	newInput( 6, nodeValue_Range(  "Leaf Delay",       [0,0], true ));
-	newInput( 4, nodeValue_Range(  "Leaf Falloff",     [4,4], true ));
-	// input 7
+	////- =Leaves
+	newInput( 6, nodeValue_Range(  "Leaves Delay",     [0,0], true ));
+	newInput( 4, nodeValue_Range(  "Leaves Falloff",   [4,4], true ))
+		.setCurvable( 7, CURVE_DEF_01, "Falloff" );
+	newInput( 8, nodeValue_Range(  "Whorled Delay",    [0,0], true ))
+		.setCurvable( 9, CURVE_DEF_01, "Falloff" );
+	// input 10
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
-		[ "Grow", false ], 2, 5, 3, 
-		[ "Leaf", false ], 6, 4, 
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 2, 
+		[ "Branch", false ], 5, 3, 
+		[ "Leaves", false ], 6, 4, 7, 8, 9, 
 	];
 	
 	////- Nodes
@@ -43,22 +46,47 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
-		var _seed = inline_context.seed + getInputData(1);
-		random_set_seed(_seed);
-		
-		var _tree = getInputData(0);
-		
-		var _grow = getInputData(2);
-		var _rtSc = getInputData(5);
-		var _falB = getInputData(3);
-		
-		var _delL = getInputData(6);
-		var _falL = getInputData(4);
-		
+		#region data
+			var _seed  = getInputData( 1) + inline_context.seed;
+			random_set_seed(_seed);
+			
+			var _tree  = getInputData( 0);
+			var _grow  = getInputData( 2);
+			
+			var _rtSc  = getInputData( 5);
+			var _falB  = getInputData( 3);
+			
+			var _delL  = getInputData( 6);
+			
+			var _falL  = getInputData( 4);
+			var _falLC = getInputData( 7), curve_fallL = inputs[ 4].attributes.curved? new curveMap(_falLC) : undefined;
+			
+			var _whoL  = getInputData( 8);
+			var _whoLC = getInputData( 9), curve_whorl = inputs[ 8].attributes.curved? new curveMap(_whoLC) : undefined;
+		#endregion
+			
 		var _ntree = variable_clone(_tree);
 		
 		for( var i = 0, n = array_length(_ntree); i < n; i++ ) {
-			var _tr   = _ntree[i];
+			var _tr = _ntree[i];
+			
+			var _tdelL = random_range(_delL[0], _delL[1]);
+			var _tfalL = random_range(_falL[0], _falL[1]);
+			var _twhoL = random_range(_whoL[0], _whoL[1]);
+			
+			if(is(_tr, __MK_Tree_Leaf)) { 
+				var sc  = (_grow - _tr.rootPosition + _tr.growShift) * _tr.root.totalLength / _tfalL;
+				    sc += _tdelL;
+				    sc += _twhoL * (curve_whorl? curve_whorl.get(_tr.whorlIndex) : _tr.whorlIndex);
+				    sc  = curve_fallL? curve_fallL.get(sc) : sc;
+				    sc  = clamp(sc, 0, 1);
+				    
+				_tr.scale = sc;
+				continue; 
+			}
+			
+			var _tfalB = random_range(_falB[0], _falB[1]);
+			
 			var _segs = _tr.segments;
 			var _rats = _tr.segmentRatio;
 			var _lens = _tr.segmentLengths;
@@ -69,10 +97,6 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _tgro  = _grow - _tr.rootPosition * _baseSpeed + _growShift;
 			    _tgro  = max(0, _tgro);
-			
-			var _tfalB = random_range(_falB[0], _falB[1]);
-			var _tfalL = random_range(_falL[0], _falL[1]);
-			var _tdelL = random_range(_delL[0], _delL[1]);
 			
 			var _len  = _tlen * _tgro;
 			var _rem  = undefined;
@@ -100,9 +124,12 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			for( var j = 0, m = array_length(_tr.leaves); j < m; j++ ) {
 				var _l  = _tr.leaves[j];
-				var _dr = (_lgro - _l.rootPosition + _l.growShift) * _tlen / _tfalL;
-				    _dr = clamp(_dr, 0, 1);
-				_l.scale = _dr;
+				var sc = (_lgro - _l.rootPosition + _l.growShift) * _tlen / _tfalL;
+				    sc += _twhoL * (curve_whorl? curve_whorl.get(_l.whorlIndex) : _l.whorlIndex);
+					sc = curve_fallL? curve_fallL.get(sc) : sc;
+				    sc = clamp(sc, 0, 1);
+				    
+				_l.scale = sc;
 			}
 		}
 		

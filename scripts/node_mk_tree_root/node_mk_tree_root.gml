@@ -26,7 +26,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setCurvable(15, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	
 	////- =Spiral
-	newInput(22, nodeValue_Range(  "Frequency", [4,4], true ));
+	newInput(22, nodeValue_Range(  "Frequency", [4,4], true ))
+		.setCurvable(28, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	newInput(23, nodeValue_Range(  "Phase",     [0,0], true ));
 	newInput(18, nodeValue_Range(  "Wave",      [0,0], true ))
 		.setCurvable(19, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
@@ -43,7 +44,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(17, nodeValue_Gradient( "L Edge Color",    gra_white   ));
 	newInput(26, nodeValue_Gradient( "R Edge Color",    gra_white   ));
 	newInput(27, nodeValue_Surface(  "Texture" ));
-	// input 28
+	// input 29
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -51,7 +52,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Origin",    false ], 5, 1, 2, 
 		[ "Segment",   false ], 7, 3, 
 		[ "Direction", false ], 4, 10, 9, 15, 
-		[ "Spiral",    false ], 22, 23, 18, 19, 20, 21, 
+		[ "Spiral",    false ], 22, 28, 23, 18, 19, 20, 21, 
 		[ "Render",    false ], 6, 11, 12, 24, 25, 16, 17, 26, 27, 
 	];
 	
@@ -85,6 +86,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _len  = getInputData( 3);
 			
 			var _sprS = getInputData(22);
+			var _spsC = getInputData(28),     curve_spis  = inputs[22].attributes.curved? new curveMap(_spsC)  : undefined;
 			var _sprP = getInputData(23);
 			var _wav  = getInputData(18);
 			var _wavC = getInputData(19),     curve_wave  = inputs[18].attributes.curved? new curveMap(_wavC)  : undefined;
@@ -149,7 +151,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				grav   : _grav,    gravC  : curve_grav,    gravD   : _gDir, 
 				thick  : _thick,   thickC : curve_thick,
 				
-				spirS  : _spirS,   spirP  : _spirP,
+				spirS  : _spirS,   spirSC : curve_spis, 
+				spirP  : _spirP,
 				wave   : _wave,    waveC  : curve_wave, 
 				curl   : _curl,    curlC  : curve_curl, 
 			
