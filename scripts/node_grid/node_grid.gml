@@ -102,11 +102,9 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var _dim  = surface_get_dimension(_outSurf);
-			var _pos  = _data[ 1];
 			var _sam  = _data[ 7];
 			var _mode = _data[10];
 			
-			var _col_gap  = _data[6];
 			var _tex_mode = _mode == 3 || _mode == 4;
 			
 			inputs[ 5].setVisible(_mode == 0 || _mode == 1);
@@ -127,31 +125,33 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_uv(_data[37], _data[38]);
 		    shader_set_interpolation(_sam);
 		    
-			shader_set_f("position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("dimension", _dim[0], _dim[1]);
 			
-			shader_set_f_map("scale", _data[ 2], _data[13], inputs[2]);
-			shader_set_f_map("width", _data[ 3], _data[14], inputs[3]);
-			shader_set_f_map("angle", _data[ 4], _data[15], inputs[4]);
-			shader_set_f_map("shift", _data[ 8], _data[16], inputs[8]);
+			shader_set_f("position",          _data[ 1] );
+			shader_set_f_map("angle",         _data[ 4], _data[15], inputs[4]);
+			shader_set_f_map("scale",         _data[ 2], _data[13], inputs[2]);
+			shader_set_i( "scaleMode",        _data[36] );
+			shader_set_i( "uniformSize",      _data[28] );
+			shader_set_f( "gapAcc",           _data[26] );
+			shader_set_i( "diagonal",         _data[27] );
+			shader_set_f_map("gap",           _data[ 3], _data[14], inputs[3]);
 			
-			shader_set_i( "mode",           _mode     );
-			shader_set_i( "scaleMode",      _data[36] );
-			shader_set_f( "seed",           _data[11] );
-			shader_set_i( "shiftAxis",      _data[ 9] );
-			shader_set_i( "aa",             _data[12] );
+			shader_set_i( "shiftAxis",        _data[ 9] );
+			shader_set_f_map("shift",         _data[ 8], _data[16], inputs[8]);
+			shader_set_f( "randShift",        _data[31] );
+			shader_set_f( "randShiftSeed",    _data[32] );
+			shader_set_f( "secShift",         _data[30] );
 			
-			shader_set_2( "level",          _data[24] );
-			shader_set_f( "gapAcc",         _data[26] );
-			shader_set_i( "diagonal",       _data[27] );
-			shader_set_i( "uniformSize",    _data[28] );
-			shader_set_f( "secScale",       _data[29] );
-			shader_set_f( "secShift",       _data[30] );
+			shader_set_f( "randScale",        _data[33] );
+			shader_set_f( "randScaleSeed",    _data[34] );
+			shader_set_f( "secScale",         _data[29] );
 			
-			shader_set_f( "randShift",      _data[31] );
-			shader_set_f( "randShiftSeed",  _data[32] );
-			shader_set_f( "randScale",      _data[33] );
-			shader_set_f( "randScaleSeed",  _data[34] );
+			shader_set_i( "mode",             _mode     );
+			shader_set_f( "seed",             _data[11] );
+			shader_set_gradient(              _data[ 5], _data[20], _data[21], inputs[5]);
+			shader_set_c("gapCol",            _data[ 6] );
+			shader_set_i( "aa",               _data[12] );
+			shader_set_2( "level",            _data[24] );
 			
 			shader_set_i( "textureTransform", _data[17] );
 			shader_set_f( "textureSeed",      _data[18] );
@@ -160,10 +160,6 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_4( "textureScale",     _data[40] );
 			shader_set_f( "textureThresX",    _data[19] );
 			shader_set_f( "textureThresY",    _data[22] );
-			
-			shader_set_color("gapCol", _col_gap);
-			
-			shader_set_gradient(_data[5], _data[20], _data[21], inputs[5]);
 			
 			if(is_surface(_sam))	draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
 			else					draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);

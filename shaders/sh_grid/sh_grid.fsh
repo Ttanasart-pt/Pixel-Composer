@@ -196,9 +196,9 @@ uniform vec2      angle;
 uniform int       angleUseSurf;
 uniform sampler2D angleSurf;
 
-uniform vec2      width;
-uniform int       widthUseSurf;
-uniform sampler2D widthSurf;
+uniform vec2      gap;
+uniform int       gapUseSurf;
+uniform sampler2D gapSurf;
 
 uniform vec2      shift;
 uniform int       shiftUseSurf;
@@ -246,10 +246,10 @@ void main() {
 		}
 		ang = radians(ang);
 		
-		float wid = width.x;
-		if(widthUseSurf == 1) {
-			vec4 _vMap = texture2D( widthSurf, v_vTexcoord );
-			wid = mix(width.x, width.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		float gpp = gap.x;
+		if(gapUseSurf == 1) {
+			vec4 _vMap = texture2D( gapSurf, v_vTexcoord );
+			gpp = mix(gap.x, gap.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
 		
 		float shf = shift.x;
@@ -266,7 +266,7 @@ void main() {
 	ntx *= asp;
 	
 	if(mode == 1) {
-		vec2 px = floor((ntx - position * asp) * dimension);
+		vec2 px = floor((ntx - position / dimension * asp) * dimension);
 		
 		sca = floor(sca);
 		vec2 scaG = sca - (gapAcc + 1.);
@@ -300,42 +300,49 @@ void main() {
 	
 	sca = dimension / sca;
 	
-	vec2  pos = ntx - position * asp, _pos;
-	
+	vec2  pos = ntx - position / dimension * asp, _pos;
 	_pos.x = pos.x * cos(ang) - pos.y * sin(ang);
 	_pos.y = pos.x * sin(ang) + pos.y * cos(ang);
 	
 	shf /= sca[shiftAxis];
-	int antiAxis = shiftAxis == 0? 1 : 0;
 	
-	float cell  = floor(_pos[antiAxis] * sca[antiAxis]);
+	int invAxis = shiftAxis == 0? 1 : 0;
+	float  cell = floor(_pos[invAxis] * sca[invAxis]);
 	float _sec  = mod(cell, 2.);
 	float _shft = (_sec * secShift) + (cell * shf);
 	float _rdsh = randShift * (random(randShiftSeed / 1000. + vec2(cell / dimension.x)) * 2. - 1.);
 	_shft += _rdsh;
 	
-	float _scas = (_sec * secScale) + (1.);
-	float _rdsc = randScale * (random(randScaleSeed / 1000. + vec2(cell / dimension.x)) * 2. - 1.);
-	_scas += _rdsc;
+	float _scas  = (_sec * secScale) + 1.;
+	float _rdsc  = randScale * (random(randScaleSeed / 1000. + vec2(cell / dimension.x)) * 2. - 1.);
+	      _scas += _rdsc;
 	
-		 if(shiftAxis == 0) { _pos.x += _shft; sca.x *= _scas; } 
+		 if(shiftAxis == 0) { _pos.x += _shft; sca.x *= _scas; }
 	else if(shiftAxis == 1) { _pos.y += _shft; sca.y *= _scas; }
-		 
+	
+	float rat = 1.;
+	if(uniformSize == 1) {
+			 if(shiftAxis == 0) { rat = sca.y / sca.x; }
+		else if(shiftAxis == 1) { rat = sca.x / sca.y; }
+	}
+	
 	vec2 sqSt  = floor(_pos * sca) / sca;
 	vec2 sqStW = fract(fract(sqSt) + 1.);
 	
 	vec2 _dist = _pos - sqSt;
-	vec2 nPos  = abs(_dist * sca - vec2(0.5)) * 2.; //distance in x, y axis
-	float rat  = uniformSize == 1? sca.y / sca.x : 1.;
+	vec2  nPos = abs(_dist * sca - vec2(0.5)) * 2.; //distance in x, y axis
 	float dist = 1. - max((nPos.x - 1.) * rat + 1., nPos.y);
 	
-	vec4 colr;
+		 if(shiftAxis == 0) { dist = 1. - max((nPos.x - 1.) * rat + 1., nPos.y); }
+	else if(shiftAxis == 1) { dist = 1. - max((nPos.y - 1.) * rat + 1., nPos.x); }
 	
 	if(mode == 2) {
 		dist = (dist - level.x) / (level.y - level.x);
 		gl_FragColor = vec4(vec3(dist), 1.);
 		return;
 	}
+	
+	vec4 colr;
 	
 	if(mode == 0) {
 		colr = gradientEval(random(sqStW));
@@ -374,5 +381,5 @@ void main() {
 	}
 	
 	float _aa = 4. / max(dimension.x, dimension.y);
-	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid - _aa, wid, dist) : step(wid, dist));
+	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(gpp - _aa, gpp, dist) : step(gpp, dist));
 }

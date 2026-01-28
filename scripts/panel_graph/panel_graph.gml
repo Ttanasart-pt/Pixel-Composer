@@ -1483,11 +1483,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            var  nx  = node_drag_sx + (_mgx - node_drag_mx);
 	            var  ny  = node_drag_sy + (_mgy - node_drag_my);
 	            var  sn  = !key_mod_press(CTRL) && project.graphGrid.snap;
-	            
-	            if(sn) {
-	                nx = value_snap(nx, _grd);
-	                ny = value_snap(ny, _grd);
-	            }
+	            if(sn) { nx = value_snap(nx, _grd); ny = value_snap(ny, _grd); }
 	            
 	            if(node_drag_ox == -1 || node_drag_oy == -1) {
 	                node_drag_ox = nx;
@@ -1547,11 +1543,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            var  nw  = node_drag_sw + (_mgx - node_drag_mx);
 	            var  nh  = node_drag_sh + (_mgy - node_drag_my);
 	            var  sn  = !key_mod_press(CTRL) && project.graphGrid.snap;
-	            
-	            if(sn) {
-	            	nw  = value_snap(nw, _grd);
-					nh  = value_snap(nh, _grd);
-	            }
+	            if(sn) { nw = value_snap(nw, _grd); nh = value_snap(nh, _grd); }
 	            
 	            node_dragging.attributes.node_width   = nw;
 	            node_dragging.attributes.node_height  = nh;
