@@ -35,6 +35,25 @@ function random_range_seed(from, to, seed) {
 	return lerp(from, to, lerp(s0, s1, frac(seed)));
 }
 
+function randomFractal(seed, _prog, _fre, _itr) {
+	random_set_seed(seed);
+	
+    var prog = _prog;
+    var fre  = _fre;
+    var itr  = _itr;
+	
+    var value = 0;
+    var amp   = 1;
+
+    repeat (itr) {
+        value += sin(random_range(-pi, pi) + (prog * fre));
+        fre   *= 2;
+    }
+    
+    value /= itr;
+    return value;
+}
+
 function random1D(seed, startRange = 0, endRange = 1) {
 	if(startRange == endRange) return startRange;
 	
