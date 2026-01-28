@@ -1470,20 +1470,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	_node.groupCheck(gr_x, gr_y, graph_s, mx, my);
         }
         
+        var _mgx = mouse_graph_x;
+        var _mgy = mouse_graph_y;
+        var _grd = project.graphGrid.size;
+        
         if(node_dragging)
     	switch(node_drag_type) {
-    		case 0 : 
+    		case 0 : // DRAG
 	            addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
 	            refreshDraw(2);
-	            
-	            var _mgx = mouse_graph_x;
-	            var _mgy = mouse_graph_y;
-	            var _grd = project.graphGrid.size;
-	            
-	            var nx = node_drag_sx + (_mgx - node_drag_mx);
-	            var ny = node_drag_sy + (_mgy - node_drag_my);
-	            
-	            var sn = !key_mod_press(CTRL) && project.graphGrid.snap;
+        		
+	            var  nx  = node_drag_sx + (_mgx - node_drag_mx);
+	            var  ny  = node_drag_sy + (_mgy - node_drag_my);
+	            var  sn  = !key_mod_press(CTRL) && project.graphGrid.snap;
 	            
 	            if(sn) {
 	                nx = value_snap(nx, _grd);
@@ -1541,16 +1540,22 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            }
     			break;
     		
-    		case 1 : 
-    			var _mgx = mouse_graph_x;
-	            var _mgy = mouse_graph_y;
-	            var _grd = project.graphGrid.size;
+    		case 1 : // RESIZE
+	            addKeyOverlay("Resizing node(s)", [[ "Ctrl", "Disable snapping" ]]);
+	            refreshDraw(2);
+        		
+	            var  nw  = node_drag_sw + (_mgx - node_drag_mx);
+	            var  nh  = node_drag_sh + (_mgy - node_drag_my);
+	            var  sn  = !key_mod_press(CTRL) && project.graphGrid.snap;
 	            
-	            var nw = value_snap(node_drag_sw + (_mgx - node_drag_mx), _grd);
-	            var nh = value_snap(node_drag_sh + (_mgy - node_drag_my), _grd);
+	            if(sn) {
+	            	nw  = value_snap(nw, _grd);
+					nh  = value_snap(nh, _grd);
+	            }
 	            
-	            node_dragging.attributes.node_width  = nw;
-	            node_dragging.attributes.node_height = nh;
+	            node_dragging.attributes.node_width   = nw;
+	            node_dragging.attributes.node_height  = nh;
+	            node_dragging.attributes.preview_size = nh;
 	            node_dragging.setHeight();
 	            
 	            if(mouse_release(mb_left)) {

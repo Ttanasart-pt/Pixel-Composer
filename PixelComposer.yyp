@@ -11,6 +11,7 @@
         ],"name":"Steam",},
       {"children":[
           {"children":[],"name":"ItchDemo",},
+          {"children":[],"name":"TestExtension",},
         ],"name":"Itch",},
       {"children":[],"name":"GX",},
     ],

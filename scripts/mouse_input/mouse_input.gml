@@ -8,7 +8,8 @@
 	globalvar MOUSE_ZOOM_X, MOUSE_ZOOM_Y;
 	globalvar MOUSE_PAN;
 	
-	globalvar MOUSE_EVENT; MOUSE_EVENT = {
+	globalvar MOUSE_GLOBAL; MOUSE_GLOBAL = extension_exists("winMan");
+	globalvar MOUSE_EVENT; MOUSE_EVENT  = {
 		wfocus: window_has_focus(),
 		lclick: false, lpress: false, lrelease: false, toPress: false, 
 		rclick: false, rpress: false, rrelease: false,

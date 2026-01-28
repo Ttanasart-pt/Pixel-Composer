@@ -18,6 +18,9 @@
     "Itch":{
       "copyToTargets":"64",
     },
+    "TestExtension":{
+      "copyToTargets":"0",
+    },
   },
   "copyToTargets":-1,
   "description":"",

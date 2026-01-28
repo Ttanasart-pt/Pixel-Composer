@@ -6,6 +6,7 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 	setDrawIcon(s_node_mk_tree_leaf_particle);
 	setDimension(96, 48);
 	
+	newInput(18, nodeValue_Bool( "Active", true ));
 	newInput( 1, nodeValueSeed());
 	
 	////- =Leaves
@@ -22,6 +23,7 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newInput( 5, nodeValue_Bool(  "Random Direction", false       ));
 	
 	////- =Scale
+	newInput(19, nodeValue_Curve( "Scale Over Life", CURVE_DEF_11 ));
 	
 	////- =Colors
 	newInput(14, nodeValue_EScroll(  "Blendmode", 1, [ "Override", "Multiply", "Screen" ] ));
@@ -37,15 +39,15 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 	////- =Ground
 	newInput( 8, nodeValue_Bool(  "Ground",       false  ));
 	newInput( 9, nodeValue_Range( "Ground Range", [.9,1] ));
-	// 18
+	// 20
 	
 	newOutput(0, nodeValue_Output("Leaves", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
-	input_display_list = [ 1, 
+	input_display_list = [ 18, 1, 
 		[ "Leaves",   false ],  0, 13, 
 		[ "Fall",     false ],  2,  3, 10, 11, 
 		[ "Rotation", false ],  4,  5, 
-		// [ "Scale",    false ], 
+		[ "Scale",    false ], 19, 
 		[ "Colors",   false ], 14, 12, 15, 
 		[ "Physics",  false ],  6,  7, 16, 17, 
 		[ "Ground",   false, 8 ],   9, 
@@ -53,7 +55,8 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	////- Nodes
 	
-	leaves = undefined;
+	leaves   = undefined;
+	__prevac = false;
 	
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.getDimension() : [1,1]};
 	
@@ -88,9 +91,16 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 		}
 	}
 	
+	static onAnimationStart = function() {
+		if(use_cache == CACHE_USE.auto && !isAllCached()) clearCache();
+		__prevac = false;
+	}
+	
 	static update = function(_frame = CURRENT_FRAME) {
 		#region data
 			var _dim  = getDimension();
+			
+			var _actv = getInputData(18);
 			var _seed = getInputData( 1);
 			
 			var _leav = getInputData( 0);
@@ -105,6 +115,8 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 			var _dirr = getInputData( 4);
 			var _dirf = getInputData( 5);
 			
+			var _scal = getInputData(19), curve_scal = new curveMap(_scal);
+			
 			var _blnd = getInputData(14);
 			var _clif = getInputData(12); _clif.cache();
 			var _cfal = getInputData(15); _cfal.cache();
@@ -118,7 +130,16 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 			var _grrn = getInputData( 9);
 		#endregion
 		
-		if(IS_FIRST_FRAME) reset(); 
+		// if(_actv && IS_FIRST_FRAME) reset(); 
+		if(!__prevac && _actv)
+			reset();
+		__prevac = _actv;
+		
+		if(!_actv) {
+			outputs[0].setValue(_leav);
+			return;
+		}
+		
 		if(leaves == undefined) return;
 		outputs[0].setValue(leaves);
 		
@@ -180,6 +201,9 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 					_l.ground = _l.ground || _l.y >= _grny;
 					_l.y = min(_l.y, _grny);
 				}
+				
+				var _sca  = curve_scal.get(_prg);
+				_l.scale = _sca;
 				
 				_blendColor = _cfal.evalFast(clamp(_prg, 0, 1));
 				
