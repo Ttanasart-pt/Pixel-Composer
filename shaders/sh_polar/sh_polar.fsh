@@ -134,6 +134,10 @@ uniform int   swap;
 uniform vec2  tile;
 uniform vec2  range;
 
+uniform vec2      angle;
+uniform int       angleUseSurf;
+uniform sampler2D angleSurf;
+
 uniform vec2      blend;
 uniform int       blendUseSurf;
 uniform sampler2D blendSurf;
@@ -147,6 +151,12 @@ void main() {
 	vec2 coord;
 	vec2 til   = tile/* * vec2(1., PI * 2.)*/;
 	vec2 _tile = swap == 1? til.yx : til;
+	
+	float ang = angle.x;
+	if(angleUseSurf == 1) {
+		vec4 _vMap = texture2Dintp( angleSurf, v_vTexcoord );
+		ang = mix(angle.x, angle.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	} ang = radians(ang);
 	
 	float bld = blend.x;
 	if(blendUseSurf == 1) {
@@ -177,6 +187,7 @@ void main() {
 		angle = (angle - rad0) / radr;
 		if(angle < rad0 || angle > rad1) return;
 		
+		angle -= ang;
 		angle += tws * dist;
 		angle /= PI * 2.;
 		coord = fract(vec2(dist, angle) * _tile);
@@ -191,6 +202,7 @@ void main() {
 		angle = (angle - rad0) / radr;
 		if(angle < rad0 || angle > rad1) return;
 		
+		angle -= ang;
 		angle += tws * dist;
 		coord = fract(center + vec2(cos(angle), sin(angle)) * dist * _tile);
 	}

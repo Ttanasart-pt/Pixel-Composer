@@ -18,6 +18,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(12, nodeValue_Vec2("Tile", [ 1, 1 ] ));
 	
 	////- =Polar
+	newInput(16, nodeValue_Rotation(    "Angle",        0 )).setMappable(17);
 	newInput( 5, nodeValue_Bool(        "Invert",       0 ))
 	newInput(10, nodeValue_Bool(        "Swap Axis",    0 ));
 	newInput( 6, nodeValue_Slider(      "Blend",        1 )).setMappable(11);
@@ -28,13 +29,13 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Twist
 	newInput(14, nodeValue_Float( "Twist", 0 )).setMappable(15);
-	// input 16
+	// input 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 4,
 		[ "Surfaces", false ],  0,  1,  2,  7,  8, 12, 
-		[ "Polar",    false ],  5, 10,  6, 11,  9, 13, 
+		[ "Polar",    false ], 16, 17,  5, 10,  6, 11,  9, 13, 
 		[ "Twist",    false ], 14, 15, 
 	];
 	
@@ -48,6 +49,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _surf = _data[ 0];
 			var _tile = _data[12];
 			
+			var _angl = _data[16];
 			var _invt = _data[ 5];
 			var _swap = _data[10];
 			var _blnd = _data[ 6];
@@ -63,7 +65,8 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			shader_set_i("invert",    _invt );
 			shader_set_i("swap",      _swap );
-			shader_set_f_map("blend", _blnd, _data[11], inputs[6]);
+			shader_set_f_map("angle", _angl, _data[17], inputs[16]);
+			shader_set_f_map("blend", _blnd, _data[11], inputs[ 6]);
 			shader_set_i("distMode",  _radd );
 			shader_set_2("range",     _rang );
 			
