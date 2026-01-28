@@ -72,6 +72,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 4, nodeValue_Float(   "Wig. Amplitude", 4                )).setCurvable(53, CURVE_DEF_11);
 	newInput(51, nodeValue_Slider(  "Wig. Frequency", 8, [0, 32, 0.01] )).setCurvable(54, CURVE_DEF_11);
 	newInput(52, nodeValue_ISlider( "Wig. Detail",    4, [0,  8, 1]    ));
+	newInput(55, nodeValue_Float(   "Wig. Phase",     0                ));
+	newInput(56, nodeValue_Bool(    "Wig. Trim Range",      false      ));
+	newInput(57, nodeValue_Bool(    "Wig. Trim Curve",      false      ));
 	
 	////- =Color
 	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white ));
@@ -94,7 +97,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 55
+	// Inputs 58
 	
 	input_display_list = [ 39, 
 		[ "Output",         true     ],  0, 30, 31, 16, 
@@ -103,7 +106,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Width",         false     ], 17,  3, 11, 12, 36, 
 		[ "Line Settings", false     ],  8, 25,  9, 26, 13, 43, 14, 
 		[ "Dash",          false, 46 ], 44, 45, 
-		[ "Wiggle",        false, 47 ],  5,  4, 53, 51, 54, 52, 
+		[ "Wiggle",        false, 47 ],  5,  4, 53, 51, 54, 52, 55, 56, 57, 
 		[ "Color",         false     ], 10, 24, 15, 37, 38, 
 		[ "Texture",       false     ], 18, 21, 22, 23, 29, 
 		[ "Textured Cap",  false     ], 40, 41, 42, 
@@ -208,6 +211,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _wigFC    = getInputData(54), curve_wigF = inputs[ 4].attributes.curved? new curveMap(_wigFC)  : undefined;
 			
 			var _wigI     = _data[52];
+			var _wigP     = _data[55];
+			var _wigTrmR  = _data[56];
+			var _wigTrmC  = _data[57];
 			
 			var _color    = _data[10];
 			var _colb     = _data[24];
@@ -278,6 +284,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _rtStr = min(_ratio[0], _ratio[1]) + _shift;
 			var _rtEnd = max(_ratio[0], _ratio[1]) + _shift;
 			var _rtRng = _rtEnd - _rtStr;
+			if(_rtRng <= 0) return _outData;
 			
 			var _useTex = !_1px && is_surface(_tex);
 			
@@ -354,7 +361,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(_wigUse) {
 							var wgAmp = _wigA * (curve_wigA? curve_wigA.get(_prog_curr) : 1);
 							var wgFre = _wigF * (curve_wigF? curve_wigF.get(_prog_curr) : 1);
-							var wgLen = randomFractal(_sed, _prog_curr, wgFre, _wigI) * wgAmp;
+							var wgLen = randomFractal(_sed, _prog_curr + _wigP, wgFre, _wigI) * wgAmp;
 							_nx += lengthdir_x(wgLen, _d + 90); 
 							_ny += lengthdir_y(wgLen, _d + 90);
 						}
@@ -423,28 +430,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							wmin = min(wmin, _nw); wmax = max(wmax, _nw);
 						}
 						
-						if(_wigUse) { // wiggle
-							for( var j = 0, m = array_length(points); j < m; j++ ) {
-								var p0 = points[clamp(j-1, 0, m-1)];
-								var p  = points[j];
-								var p1 = points[clamp(j+1, 0, m-1)];
-								
-								p.dirr = point_direction(p0.x, p0.y, p1.x, p1.y); 
-							}
-							
-							for( var j = 0, m = array_length(points); j < m; j++ ) {
-								var p  = points[j];
-								
-								var wgAmp = _wigA * (curve_wigA? curve_wigA.get(p.prog) : 1);
-								var wgFre = _wigF * (curve_wigF? curve_wigF.get(p.prog) : 1);
-								var wgDis = randomFractal(_seed,   p.prog, wgFre, _wigI) * wgAmp;
-								var wgDir = p.dirr + 90; 
-								
-								p.x += lengthdir_x(wgDis, wgDir);
-								p.y += lengthdir_y(wgDis, wgDir);
-							}
-						} // wiggle
-						
 						if(_rtStr != 0 || _rtEnd != 1) { // trim
 							var pointCrop = [];
 							p0 = points[0];
@@ -489,6 +474,30 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							
 							points = pointCrop;
 						} // trim
+						
+						if(_wigUse) { // wiggle
+							for( var j = 0, m = array_length(points); j < m; j++ ) {
+								var p0 = points[clamp(j-1, 0, m-1)];
+								var p  = points[j];
+								var p1 = points[clamp(j+1, 0, m-1)];
+								
+								p.dirr = point_direction(p0.x, p0.y, p1.x, p1.y); 
+							}
+							
+							for( var j = 0, m = array_length(points); j < m; j++ ) {
+								var p   = points[j];
+								var pgr = _wigTrmR? p.progCrop : p.prog;
+								var pgc = _wigTrmC? p.progCrop : p.prog;
+								
+								var wgAmp = _wigA * (curve_wigA? curve_wigA.get(pgc) : 1);
+								var wgFre = _wigF * (curve_wigF? curve_wigF.get(pgc) : 1);
+								var wgDis = randomFractal(_seed, pgr + _wigP, wgFre, _wigI) * wgAmp;
+								var wgDir = p.dirr + 90; 
+								
+								p.x += lengthdir_x(wgDis, wgDir);
+								p.y += lengthdir_y(wgDis, wgDir);
+							}
+						} // wiggle
 						
 						if(array_empty(points)) continue;
 						if(_loop)   array_push(points, points[0]);

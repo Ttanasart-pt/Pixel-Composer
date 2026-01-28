@@ -924,13 +924,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		__p = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot, __p);
 		
-		var draw_x = __p[0];
-		var draw_y = __p[1];
-				
-		if(pos_exact) {
-			draw_x = round(draw_x);
-			draw_y = round(draw_y);
-		}
+		var draw_x = pos_exact? round(__p[0]) : __p[0];
+		var draw_y = pos_exact? round(__p[1]) : __p[1];
 			
 		if(mode == 1) { // Tile
 			surface_set_shader(_outSurf);
@@ -954,12 +949,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						var _sx = lerp(1,     sca[0],     rat);
 						var _sy = lerp(1,     sca[1],     rat);
 						
-						var ax = anc_raw[0] * ww * _sx;
-						var ay = anc_raw[1] * hh * _sy;
+						var  ax = lerp(.5, anc_raw[0], rat) * ww * _sx;
+						var  ay = lerp(.5, anc_raw[1], rat) * hh * _sy;
 						
 						_px -= ax;
 						_py -= ay;
-						__p = point_rotate(_px, _px, _px + ax, _px + ay, _rt, __p);
+						__p = point_rotate(_px, _py, _px + ax, _py + ay, _rt, __p);
 						
 						_px = pos_exact? round(__p[0]) : __p[0];
 						_py = pos_exact? round(__p[1]) : __p[1];
