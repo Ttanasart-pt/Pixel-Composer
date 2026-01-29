@@ -24,7 +24,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(8, nodeValue_Bool("Tile", false));
-	//// inputs 11
+	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -32,7 +32,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Surfaces", false], 0, 10, 6, 7, 9, 
 		["Warp",	 false], 1, 2, 3, 4, 
 		["Render",	 false], 8, 
-	]
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -321,7 +323,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				     sh = _sdim[1] * surface_get_height_safe(_surfF); break;
 		}
 		
-		_outSurf = surface_verify(_outSurf, sw, sh);
+		_outSurf = surface_verify(_outSurf, sw, sh, attrDepth());
 		_outSurf = warpSurface(_outSurf, _surfF, _surfB, sw, sh, tl, tr, bl, br, tile);
 		
 		return _outSurf;
