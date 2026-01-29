@@ -129,15 +129,36 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform sampler2D backSurface;
+uniform vec2 dimension;
+uniform vec2 surfaceSize;
+
 uniform vec2 p0;
 uniform vec2 p1;
 uniform vec2 p2;
 uniform vec2 p3;
-uniform vec2 dimension;
 uniform int  tile;
+uniform int  flip;
 
 float unmix( float st, float ed, float val) { return (val - st) / (ed - st); }
+
+vec2 perspectiveUV(vec2 p, vec2 _p0, vec2 _p1, vec2 _p2, vec2 _p3) {
+	vec2 A = (_p3 - _p0) - (_p2 - _p1);
+    vec2 B = (_p0 - _p1);
+    vec2 C = (_p2 - _p1);
+    vec2 D =  _p1;
+
+	float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
+    float c2 = (B.y * D.x) - (B.x * D.y);
+
+	float _A = (A.y * C.x) - (A.x * C.y);
+	float _B = (A.x * p.y) + c1 - (A.y * p.x);
+	float _C = (B.x * p.y) + c2 - (B.y * p.x);
+	
+	float u =  A == vec2(0.)?        0. : (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
+	float v = (u * A.x + B.x) == 0.? 0. : (p.x - (u * C.x) - D.x) / (u * A.x + B.x);
+	
+	return vec2(u, v);
+}
 
 // 2 1
 // 3 0
@@ -148,79 +169,59 @@ void main() {
 	float u, v;
 	vec2 uv, _p;
 	
-	vec2  tx = 1. / dimension;
-	vec2 _p0 = p0;
-	vec2 _p1 = p1;
-	vec2 _p2 = p2;
-	vec2 _p3 = p3;
+	vec2 _p0 = p0 / surfaceSize;
+	vec2 _p1 = p1 / surfaceSize;
+	vec2 _p2 = p2 / surfaceSize;
+	vec2 _p3 = p3 / surfaceSize;
 	
-	bool invX = p2.x > p1.x && p3.x > p0.x;
-	bool invY = p3.y < p2.y && p0.y < p1.y;
-	
-	bool aliX = abs(p2.x - p3.x) < tx.x && abs(p1.x - p0.x) < tx.x;
-	bool aliY = abs(p3.y - p0.y) < tx.y && abs(p2.y - p1.y) < tx.y; 
+	bool aliX = abs(p2.x - p3.x) < 1. && abs(p1.x - p0.x) < 1.;
+	bool aliY = abs(p3.y - p0.y) < 1. && abs(p2.y - p1.y) < 1.;
+	gl_FragColor = vec4(0.);
 	
 	#region linear interpolation
 		if(aliX && aliY) {
-			float tx = (px - p2.x) / (p1.x - p2.x);
-			float ty = (py - p2.y) / (p3.y - p2.y);
+			float tx = (px - _p2.x) / (_p1.x - _p2.x);
+			float ty = (py - _p2.y) / (_p3.y - _p2.y);
 				
 			uv = vec2(tx, ty);
 				
 		} else if(aliX) { // trapezoid edge case
-			float t = (px - p2.x) / (p1.x - p2.x);
-		
+			float t  = (px - _p2.x) / (_p1.x - _p2.x);
+			
+			float y0 = mix(_p1.y, _p2.y, 1. - t);
+			float y1 = mix(_p0.y, _p3.y, 1. - t);
+			
 			u = t;
-			v = unmix(mix(p1.y, p2.y, 1. - t), mix(p0.y, p3.y, 1. - t), py);
+			v = unmix(y0, y1, py);
 	        uv = vec2(u, v);
 	        
+	        int side = y0 > y1? 1 : 0;
+	        // if(flip != side) return;
+	        if(side == 1) return;
+	        
 	    } else if (aliY) { // trapezoid edge case
-	        float t = (py - p2.y) / (p3.y - p2.y);
-		
-			u = unmix(mix(p3.x, p2.x, 1. - t), mix(p0.x, p1.x, 1. - t), px);
+	        float t = (py - _p2.y) / (_p3.y - _p2.y);
+			
+			float x0 = mix(_p3.x, _p2.x, 1. - t);
+			float x1 = mix(_p0.x, _p1.x, 1. - t);
+			
+			u = unmix(x0, x1, px);
 			v = t;
 	        uv = vec2(u, v);
 	        
+	        int side = x0 > x1? 1 : 0;
+	        if(flip != side) return;
+	        
 		} else {
-	    	
-	    	if(invX) {
-	    		_p = _p2; _p2 = _p1; _p1 = _p;
-	    		_p = _p3; _p3 = _p0; _p0 = _p;
-	    	}
-	    	
-	    	if(invY) {
-	    		_p = _p2; _p2 = _p3; _p3 = _p;
-	    		_p = _p1; _p1 = _p0; _p0 = _p;
-	    	}
-	    	
-			vec2 A = (_p3 - _p0) - (_p2 - _p1);
-		    vec2 B = (_p0 - _p1);
-		    vec2 C = (_p2 - _p1);
-		    vec2 D =  _p1;
-		
-			float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
-		    float c2 = (B.y * D.x) - (B.x * D.y);
-
-			float _A = (A.y * C.x) - (A.x * C.y);
-			float _B = (A.x * py) + c1 - (A.y * px);
-			float _C = (B.x * py) + c2 - (B.y * px);
-
-			u =  A == vec2(0.)?        0. : (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
-			v = (u * A.x + B.x) == 0.? 0. : (px - (u * C.x) - D.x) / (u * A.x + B.x);
-			uv = vec2(1. - u, v);
-			
-			if(invX) uv.x = 1. - uv.x;
-			if(invY) uv.y = 1. - uv.y;
+			uv = perspectiveUV(v_vTexcoord, _p0, _p1, _p2, _p3);
+			uv = 1. - uv;
 		}
 	#endregion
 	
 	if(tile == 1) uv = fract(1. + fract(uv));
 	
-	bool flip = (invX && !invY) || (!invX && invY);
-	gl_FragColor = vec4(0.);
-	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
-		gl_FragColor = flip? texture2Dintp( backSurface, uv ) : texture2Dintp( gm_BaseTexture, uv );
+		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );
 		
-	gl_FragColor = vec4(uv, flip? 1. : 0., 1.);
+	// gl_FragColor = vec4(uv, 0., 1.);
 }

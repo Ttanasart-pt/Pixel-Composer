@@ -226,7 +226,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
 					w_hovering = true;
 					
-					if(mouse_press(mb_left)) {
+					if(mouse_lpress()) {
 						drag_side = 0;
 						drag_mx = _mx;
 						drag_my = _my;
@@ -237,7 +237,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
 					w_hovering = true;
 					
-					if(mouse_press(mb_left)) {
+					if(mouse_lpress()) {
 						drag_side = 1;
 						drag_mx = _mx;
 						drag_my = _my;
@@ -248,7 +248,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_line_width(br[0], br[1], tr[0], tr[1], 3);
 					w_hovering = true;
 					
-					if(mouse_press(mb_left)) {
+					if(mouse_lpress()) {
 						drag_side = 2;
 						drag_mx = _mx;
 						drag_my = _my;
@@ -259,7 +259,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_line_width(br[0], br[1], bl[0], bl[1], 3);
 					w_hovering = true;
 					
-					if(mouse_press(mb_left)) {
+					if(mouse_lpress()) {
 						drag_side = 3;
 						drag_mx = _mx;
 						drag_my = _my;
@@ -273,7 +273,6 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-			
 		#endregion
 		
 		return w_hovering;
@@ -285,16 +284,24 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_set_shader(surfBase, sh_warp_4points);
 		shader_set_interpolation(surfWarp);
 		
-			shader_set_f("dimension", _wdim);
-			shader_set_surface("backSurface", surfBack);
+			shader_set_f( "dimension",   _wdim   );
+			shader_set_f( "surfaceSize", [sw,sh] );
+			shader_set_i( "tile",        tile    );
 			
-			shader_set_f("p0", br[0] / sw, br[1] / sh);
-			shader_set_f("p1", tr[0] / sw, tr[1] / sh);
-			shader_set_f("p2", tl[0] / sw, tl[1] / sh);
-			shader_set_f("p3", bl[0] / sw, bl[1] / sh);
-			shader_set_i("tile", tile);
-		
+			shader_set_f("p0",  tr );
+			shader_set_f("p1",  br );
+			shader_set_f("p2",  bl );
+			shader_set_f("p3",  tl );
+			shader_set_i("flip", 1 );
+			draw_surface_stretched(surfBack, 0, 0, sw, sh);
+			
+			shader_set_f("p0",  br );
+			shader_set_f("p1",  tr );
+			shader_set_f("p2",  tl );
+			shader_set_f("p3",  bl );
+			shader_set_i("flip", 0 );
 			draw_surface_stretched(surfWarp, 0, 0, sw, sh);
+			
 		surface_reset_shader();
 		
 		return surfBase;
