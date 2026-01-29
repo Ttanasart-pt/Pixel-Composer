@@ -649,6 +649,7 @@
             "Node_Dither_Diffuse",
             "Node_Bit_Reduce",
             "Node_Palette_Shift",
+            "Node_Multiply_Alpha",
             { "label": "/Conversions" },
             "Node_BW",
             "Node_Greyscale",

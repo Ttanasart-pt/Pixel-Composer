@@ -193,10 +193,8 @@ function Project() constructor {
 		};
 		
 		static getOutputSurface = function() {
-			if(outputNode == noone)       return globalLayer_surface;
-			if(!outputNode.active)        return globalLayer_surface;
-			if(!outputNode.renderActive)  return globalLayer_surface;
-			
+			if(outputNode == noone || !outputNode.active || !outputNode.renderActive)  
+				return globalLayer_surface;
 			return outputNode.outputSurface;
 		}
 	#endregion

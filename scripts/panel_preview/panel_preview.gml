@@ -1615,7 +1615,8 @@ function Panel_Preview() : PanelContent() constructor {
     		}
     	
 	        if(!_ps0 && !_ps1) {
-				draw_surface_ext_safe(PROJECT.getOutputSurface(), canvas_x, canvas_y, canvas_s, canvas_s); 
+	        	var _prevS = PROJECT.getOutputSurface();
+				draw_surface_ext_safe(_prevS, canvas_x, canvas_y, canvas_s, canvas_s); 
 				draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
 				draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
 				draw_set_alpha(1);
