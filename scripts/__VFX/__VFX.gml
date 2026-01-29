@@ -175,6 +175,8 @@ function __part(_node) : __particleObject() constructor {
 		surf   = noone;
 		prevx  = undefined;
 		prevy  = undefined;
+		
+		return self;
 	}
 	
 	static create = function(_surf, _x, _y, _life, _wx = false, _wy = false) {
@@ -208,6 +210,17 @@ function __part(_node) : __particleObject() constructor {
 		scy_history   = array_create(life);
 		blend_history = array_create(life);
 		alp_history   = array_create(life);
+		
+		return self;
+	}
+	
+	static setSpriteAnimation = function(_anim_speed, _anim_stre, _anim_end, _arr_type) {
+		anim_speed   = _anim_speed;
+		anim_stre    = _anim_stre;
+		anim_end     = _anim_end;
+		arr_type     = _arr_type;
+		
+		return self;
 	}
 	
 	static setPhysic = function(_use_phy, _sx, _sy, _st, _ac, _fr, _g, _gDir, _turn, _turnSpd) {
@@ -232,6 +245,8 @@ function __part(_node) : __particleObject() constructor {
 	
 		spVec[0] = point_distance(0, 0, speedx, speedy);
 		spVec[1] = point_direction(0, 0, speedx, speedy);
+		
+		return self;
 	}
 	
 	static setWiggle = function(_use_wig, wiggle_maps) {
@@ -244,6 +259,8 @@ function __part(_node) : __particleObject() constructor {
 		wig_scx = wiggle_maps.wig_scx;
 		wig_scy = wiggle_maps.wig_scy;
 		wig_dir = wiggle_maps.wig_dir;
+		
+		return self;
 	}
 	
 	static setGround = function(_ground, _ground_offtyp, _ground_offset, _ground_bounce, _ground_frict) {
@@ -253,6 +270,8 @@ function __part(_node) : __particleObject() constructor {
 		ground_y		= _ground_offtyp == 1? _ground_offset : y + _ground_offset;
 		ground_bounce	= _ground_bounce;
 		ground_friction	= clamp(1 - _ground_frict, 0, 1);
+		
+		return self;
 	}
 	
 	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _rott, _rot_snap, _follow) {
@@ -268,6 +287,8 @@ function __part(_node) : __particleObject() constructor {
 		rot_snap = _rot_snap;
 		rot_s    = _rots;
 		follow   = _follow;
+		
+		return self;
 	}
 	
 	static setDraw = function(_col, _blend, _alp, _fade) {
@@ -278,6 +299,8 @@ function __part(_node) : __particleObject() constructor {
 		alp      = _alp;
 		alp_draw = _alp;
 		alp_fade = _fade;
+		
+		return self;
 	}
 	
 	static setPath = function(_path, _pathRange, _pathDiv) {
@@ -286,6 +309,8 @@ function __part(_node) : __particleObject() constructor {
 		path      = _path;
 		pathRange = _pathRange;
 		pathDiv   = _pathDiv;
+		
+		return self;
 	}
 	
 	////- Actions

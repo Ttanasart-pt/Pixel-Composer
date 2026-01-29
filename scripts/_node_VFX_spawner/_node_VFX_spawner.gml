@@ -375,12 +375,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _path_range = [ random_range(_pathRange[0], _pathRange[1]), random_range(_pathRange[2], _pathRange[3]) ];
 			
 			part.create(_spr, xx, yy, _lif, _warp & 0b01, _warp & 0b10);
+			part.seed = irandom_range(100000, 999999);
 			
-			part.seed       = irandom_range(100000, 999999);
-			part.anim_speed = random_range(_anim_speed[0], _anim_speed[1]);
-			part.anim_stre  = _anim_stre;
-			part.anim_end   = _anim_end;
-			part.arr_type   = _arr_type;
+			part.setSpriteAnimation(random_range(_anim_speed[0], _anim_speed[1]), _anim_stre, _anim_end, _arr_type);
 				
 			var _trn = random_range(_turn[0], _turn[1]);
 			if(_turnBi) _trn *= choose(-1, 1);
