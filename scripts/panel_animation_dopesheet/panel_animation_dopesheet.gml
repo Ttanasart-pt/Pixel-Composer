@@ -2220,7 +2220,7 @@ function Panel_Animation_Dopesheet() {
             if(mouse_release(mb_left)) keyframe_boxing = false;
         }
         
-        #region Draw Keyframes
+        #region Draw & Edit Keyframes 
         	_keyframe_selecting_f = noone;
         	_keyframe_selecting_l = noone;
         	region_hovering       = noone;

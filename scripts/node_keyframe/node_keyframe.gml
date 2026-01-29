@@ -381,6 +381,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(_key.time == _time && !_replace)	return 0;
 		
 		if(!LOADING) node.project.setModified();
+		node.triggerRender();
 		
 		var _prevTime = _key.time;
 		_time = max(_time, 0);

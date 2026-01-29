@@ -1201,6 +1201,7 @@
     {"name":"node_mk_pile","order":33,"path":"scripts/node_mk_pile/node_mk_pile.yy",},
     {"name":"node_mk_rain","order":3,"path":"scripts/node_mk_rain/node_mk_rain.yy",},
     {"name":"node_mk_saber","order":6,"path":"scripts/node_mk_saber/node_mk_saber.yy",},
+    {"name":"node_mk_smoke","order":39,"path":"scripts/node_mk_smoke/node_mk_smoke.yy",},
     {"name":"node_mk_sparkle","order":22,"path":"scripts/node_mk_sparkle/node_mk_sparkle.yy",},
     {"name":"node_mk_subpixel","order":25,"path":"scripts/node_mk_subpixel/node_mk_subpixel.yy",},
     {"name":"node_mk_tile","order":11,"path":"scripts/node_mk_tile/node_mk_tile.yy",},

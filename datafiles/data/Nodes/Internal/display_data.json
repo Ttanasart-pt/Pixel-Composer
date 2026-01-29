@@ -894,6 +894,7 @@
             "Node_MK_Parallax", 
             "Node_MK_Dialog", 
             "Node_MK_Pile", 
+            // "Node_MK_Smoke", 
             "Node_MK_Panels", 
             "Node_MK_IsoCube", 
             "Node_MK_Isoextrude", 
