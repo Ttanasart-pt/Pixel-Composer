@@ -222,5 +222,5 @@ void main() {
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
 		gl_FragColor = flip? texture2Dintp( backSurface, uv ) : texture2Dintp( gm_BaseTexture, uv );
 		
-	gl_FragColor = vec4(uv, 0., 1.);
+	gl_FragColor = vec4(uv, flip? 1. : 0., 1.);
 }
