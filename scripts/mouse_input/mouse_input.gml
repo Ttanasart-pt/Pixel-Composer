@@ -8,7 +8,7 @@
 	globalvar MOUSE_ZOOM_X, MOUSE_ZOOM_Y;
 	globalvar MOUSE_PAN;
 	
-	globalvar MOUSE_GLOBAL; MOUSE_GLOBAL = extension_exists("winMan");
+	globalvar MOUSE_GLOBAL; MOUSE_GLOBAL = extension_exists("winMan"); show_debug_message($"winMan Stat: {MOUSE_GLOBAL}");
 	globalvar MOUSE_EVENT; MOUSE_EVENT  = {
 		wfocus: window_has_focus(),
 		lclick: false, lpress: false, lrelease: false, toPress: false, 
@@ -45,7 +45,7 @@ function mouse_step() {
 	if(mouse_wheel_up())   MOUSE_WHEEL =  1;
 	if(mouse_wheel_down()) MOUSE_WHEEL = -1;
 	
-	MOUSE_WHEEL_H    = 0;//mouse_wheel_get_h();
+	MOUSE_WHEEL_H    = 0; // mouse_wheel_get_h();
 	
 	// MOUSE_PAN_X   = mouse_pan_x();
 	// MOUSE_PAN_Y   = mouse_pan_y();
