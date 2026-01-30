@@ -39,7 +39,7 @@
 #endregion
 
 function mouse_step() {
-	global_mouse_step();
+	if(MOUSE_GLOBAL) global_mouse_step();
 	
 	MOUSE_WHEEL      = 0;
 	if(mouse_wheel_up())   MOUSE_WHEEL =  1;
@@ -63,7 +63,7 @@ function mouse_step() {
 	
 	MOUSE_EVENT.wfocus   = _focus;
 	
-	if(OS == os_windows) {
+	if(OS == os_windows && MOUSE_GLOBAL) {
 		MOUSE_EVENT.lclick   = _mouse && global_mouse_left_is_pressing();
 		MOUSE_EVENT.lpress   = _mouse && global_mouse_left_is_pressed();
 		MOUSE_EVENT.lrelease = global_mouse_left_is_released();
