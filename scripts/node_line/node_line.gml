@@ -408,14 +408,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _pamo = _useDistance? ceil(_pathLength / _segL) + 1 : _seg;
 						points = array_create(_pamo);
 						
-						for( var i = 0; i < _pamo; i++ ) {
+						for( var j = 0; j < _pamo; j++ ) {
 							if(_useDistance) {
-								_pl   = min(i * _segL, _pathLength);
+								_pl   = min(j * _segL, _pathLength);
 								 p    = _pat.getPointDistance(_pl, i, p);
 								_prog = _pl / _pathLength; 
 								
 							} else {
-								_prog = i / (_pamo - 1);
+								_prog = j / (_pamo - 1);
 								 p    = _pat.getPointRatio(_prog, i, p);
 							}
 							
@@ -423,7 +423,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_ny = p.y;
 							_nw = p[$ "weight"] ?? 1;
 							
-							points[i] = new __LinePoint( _nx, _ny, _prog, _prog, _nw );
+							points[j] = new __LinePoint( _nx, _ny, _prog, _prog, _nw );
 							
 							minx = min(minx, _nx); miny = min(miny, _ny);
 							maxx = max(maxx, _nx); maxy = max(maxy, _ny);

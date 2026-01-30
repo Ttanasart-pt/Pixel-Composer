@@ -107,8 +107,8 @@ function Process_Anim() constructor {
 	outputNode   = undefined;
 	outputNodeID = -1;
 	
-	intro_duration = 60;  intro_animation_speed = 1;
-	outro_duration = 120; outro_animation_speed = 1;
+	intro_duration = 60; intro_animation_speed = 1;
+	outro_duration = 60; outro_animation_speed = 1;
 		
 	audio_intro   = "";
 	audio_loop    = "";
