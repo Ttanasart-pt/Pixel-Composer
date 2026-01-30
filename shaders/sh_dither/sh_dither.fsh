@@ -27,6 +27,7 @@ uniform vec2  dimension;
 uniform vec4  palette[PALETTE_LIMIT];
 uniform int   keys;
 uniform float seed;
+uniform float scale;
 
 uniform int   usePalette;
 uniform float colors;
@@ -138,26 +139,22 @@ void main() {
 		vec2 px = floor(v_vTexcoord * dimension);
 		
 		if(useMap == 0) {
-			float col = px.x - floor(px.x / ditherSize) * ditherSize;
-			float row = px.y - floor(px.y / ditherSize) * ditherSize;
+			float col = mod(px.x * scale, ditherSize);
+			float row = mod(px.y * scale, ditherSize);
 			float ditherVal = dither[int(row * ditherSize + col)] / (ditherSize * ditherSize - 1.);
 	
-			if(rat < ditherVal) 
-				gl_FragColor = col1;
-			else
-				gl_FragColor = col2;	
+			if(rat < ditherVal) gl_FragColor = col1;
+			else                gl_FragColor = col2;	
 				
 		} else if(useMap == 1) {
-			float col = px.x - floor(px.x / mapDimension.x) * mapDimension.x;
-			float row = px.y - floor(px.y / mapDimension.y) * mapDimension.y;
+			float col = mod(px.x * scale, mapDimension.x);
+			float row = mod(px.y * scale, mapDimension.y);
 			vec4 map_data = texture2D( map, vec2(col, row) / mapDimension );
-		
+			
 			float ditherVal = dot(map_data.rgb, vec3(0.2126, 0.7152, 0.0722));
-		
-			if(rat < ditherVal) 
-				gl_FragColor = col1;
-			else
-				gl_FragColor = col2;
+			
+			if(rat < ditherVal) gl_FragColor = col1;
+			else                gl_FragColor = col2;
 				
 		} else if(useMap == 2) {
 			gl_FragColor = rat < random(v_vTexcoord, seed)? col1 : col2;

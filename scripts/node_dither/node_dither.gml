@@ -29,32 +29,33 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(13, nodeValueSeed());
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(7, nodeValue_Surface( "Mask"       ));
-	newInput(8, nodeValue_Slider(  "Mix",     1 ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 7, nodeValue_Surface( "Mask"       ));
+	newInput( 8, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(7, 11); // inputs 11, 12, 
 	
 	////- =Pattern
-	newInput(2, nodeValue_Enum_Scroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
-	newInput(3, nodeValue_Surface(     "Dither map" )).setVisible(false);
+	newInput( 2, nodeValue_Enum_Scroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
+	newInput( 3, nodeValue_Surface(     "Dither map" )).setVisible(false);
+	newInput(16, nodeValue_Float(       "Dither Scale", 1 ));
 	
 	////- =Dither
-	newInput(6, nodeValue_Enum_Button( "Mode",     0, [ "Color", "Alpha" ] ));
-	newInput(4, nodeValue_Slider(      "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C");
+	newInput( 6, nodeValue_Enum_Button( "Mode",     0, [ "Color", "Alpha" ] ));
+	newInput( 4, nodeValue_Slider(      "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C");
 	
 	////- =Palette
 	newInput( 1, nodeValue_Palette( "Palette" ));
 	newInput(14, nodeValue_Bool(    "Use palette", true ));
 	newInput(15, nodeValue_ISlider( "Steps",       4, [2, 16, 0.1] ));
-	// input 16
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  9, 10, 13, 
-		["Surfaces", true], 0,  7,  8, 11, 12, 
-		["Pattern",	false], 2,  3, 
-		["Dither",	false], 6,  4,  5, 
-		["Palette", false, 14], 1, 15, 
+		[ "Surfaces",  true ], 0,  7,  8, 11, 12, 
+		[ "Pattern",  false ], 2,  3, 16, 
+		[ "Dither",   false ], 6,  4,  5, 
+		[ "Palette",  false, 14 ], 1, 15, 
 	];
 	
 	////- Nodes
@@ -79,6 +80,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _typ    = _data[ 2];
 			var _map    = _data[ 3];
+			var _sca    = _data[16];
 			
 			var _mode   = _data[ 6];
 			var _con    = _data[ 4];
@@ -133,10 +135,11 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			if(_mode == 0) {
 				shader_set_f_map("contrast",   _con, _data[5], inputs[4]);
 				
-				shader_set_i("usePalette", _usepal);
-				shader_set_f("colors",     _step);
-				shader_set_f("palette",    paletteToArray(_pal));
-				shader_set_i("keys",       array_length(_pal));
+				shader_set_i("usePalette", _usepal );
+				shader_set_f("colors",     _step   );
+				shader_set_f("scale",      _sca    );
+				shader_set_f("palette",    paletteToArray(_pal) );
+				shader_set_i("keys",       array_length(_pal)   );
 			}
 			
 			draw_surface_safe(_data[0]);

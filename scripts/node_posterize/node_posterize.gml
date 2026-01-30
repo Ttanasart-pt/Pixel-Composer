@@ -169,7 +169,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var  un    = _pname != "";
 		
 		var ww = 480
-		var hh = lerp(16 + un * 42, 60 + un * 42, clamp(_prog * 3, 0, 1));
+		var hh = lerp(16 + un * 42, 60 + un * 42, clamp(_prog * 8, 0, 1));
 		
 		var x0 = cx - ww / 2;
 		var y0 = cy + ch / 2 + 32 - hh;

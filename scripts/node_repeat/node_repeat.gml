@@ -11,13 +11,12 @@
 			case "repeat polar" : 
 			case "repeat circular" : 
 				node.inputs[3].skipDefault().setValue(2);
-				node.inputs[9].skipDefault().unit.setMode(VALUE_UNIT.reference);
-				node.inputs[9].skipDefault().setValueDirect([ 0.5, 0.5 ]);
+				node.inputs[5].skipDefault().setValue([0,360]);
 				break;
 		}
 		
 		return node;
-	} 
+	}
 	
 	FN_NODE_CONTEXT_INVOKE {
 		addHotkey("Node_Repeat", "Pattern > Toggle", "P", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 3); });
@@ -32,10 +31,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface(     "Surface In" ));
 	newInput(35, nodeValue_EScroll(     "Output Dimension Type", OUTPUT_SCALING.constant, [
-        new scrollItem("Same as input"),
-        new scrollItem("Constant"),
-        new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
-        new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
+        new scrollItem( "Same as input"),
+        new scrollItem( "Constant"),
+        new scrollItem( "Relative to input").setTooltip("Set dimension as a multiple of input surface."),
+        new scrollItem( "Fit content").setTooltip("Automatically set dimension to fit content."),
     ]));
     
 	newInput(36, nodeValue_Vec2(        "Relative Dimension", [1,1]     ));
@@ -287,7 +286,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_set_color(COLORS._main_accent);
 		
 		switch(_pat) {
-			case 0 :
+			case 0 : // Linear
 				var _rpos = current_data[4];
 				var _rx = px + _rpos[0] * _s;
 				var _ry = py + _rpos[1] * _s;
@@ -297,7 +296,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 				break;
 				
-			case 1 :
+			case 1 : // Grid
 				var _rpos = current_data[ 4];
 				var _cls  = current_data[19];
 				var _rx   = px + _rpos[0] * _s;
@@ -313,15 +312,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 				break;
 				
-			case 2 :
+			case 2 : // Circular
 				var _arad = current_data[ 8];
 				var _srot = current_data[32];
 				var _rx = px + lengthdir_x(_arad * _s, _srot);
 				var _ry = py + lengthdir_y(_arad * _s, _srot);
 				
 				draw_line_dashed(px, py, _rx, _ry);
+				draw_circle_dash(px, py, _arad * _s);
 				
-				InputDrawOverlay(inputs[ 8].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, _srot));
+				InputDrawOverlay(inputs[ 8].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, _srot, 1, 1));
 				InputDrawOverlay(inputs[32].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active,_rx,_ry, _s, _mx, _my, _snx, _sny));
 				break;
