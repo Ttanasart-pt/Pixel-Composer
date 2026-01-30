@@ -2,8 +2,8 @@
 	globalvar GRAPH_ADD_NODE_KEYS, GRAPH_ADD_NODE_MAPS;
 	
     #macro PANEL_GRAPH_PROJECT_CHECK if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
-	#macro GRAPH_FOCUS var _n = PANEL_GRAPH.getFocusStr(); if(_n == noone) return;
-	#macro GRAPH_FOCUS_NUMBER var _n = PANEL_GRAPH.getFocusStr(); if(_n == noone || KEYBOARD_NUMBER == undefined) return;
+	#macro GRAPH_FOCUS        var _n = array_safe_get_fast(PANEL_GRAPH.nodes_selecting, 0, noone); if(_n == noone) return;
+	#macro GRAPH_FOCUS_NUMBER var _n = array_safe_get_fast(PANEL_GRAPH.nodes_selecting, 0, noone); if(_n == noone || KEYBOARD_NUMBER == undefined) return;
 	
 	#macro FN_NODE_CONTEXT_INVOKE if(!variable_global_exists("__FN_NODE_CONTEXT") || variable_global_get("__FN_NODE_CONTEXT") == undefined) variable_global_set("__FN_NODE_CONTEXT", []); \
 	array_push(global.__FN_NODE_CONTEXT, function()
@@ -3197,7 +3197,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			_ty -= line_get_height() + ui(8);
     	}
     	
-    	if(getFocusStr() != noone) {
+    	if(getFocusNode() != noone) {
     		var _list = HOTKEYS[$ FOCUS_STR];
     		var _node = ALL_NODES[$ FOCUS_STR];
     		
@@ -3793,7 +3793,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         return node;
 	}
 	
-    function getFocusStr() {
+    function getFocusNode() {
     	var _n = array_safe_get(nodes_selecting, 0);
     	return instanceof(_n) == FOCUS_STR? _n : noone;
     }

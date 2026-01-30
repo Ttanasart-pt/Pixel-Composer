@@ -214,7 +214,7 @@ void main() {
 	        
 		} else {
 			uv = perspectiveUV(v_vTexcoord, _p0, _p1, _p2, _p3);
-			uv = 1. - uv;
+			uv = vec2(1. - uv.x, uv.y);
 		}
 	#endregion
 	
