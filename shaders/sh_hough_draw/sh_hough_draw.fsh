@@ -12,6 +12,7 @@ uniform float intensity;
 uniform vec4  lineColor;
 uniform float lineDist;
 uniform float fadeDistance;
+uniform float angleSnap;
 
 #define PI 3.14159265359
 #define SQRT2 1.414
@@ -24,6 +25,8 @@ void main() {
     vec2  px  = v_vTexcoord * dimension;
     float thr = threshold;
     float rad = float(scanRadius) / dimension.x;
+    float angSnap = radians(angleSnap);
+    float snapSiz = 1.;
     
     for(int t = 0; t < int(dimension.x); t++)
     for(int r = 0; r < int(dimension.y); r++) {
@@ -32,8 +35,15 @@ void main() {
         if(votes <= thr) continue;
         
     	if(type == 0) {
-            float theta = houghPos.x * PI;
+            float theta =  houghPos.x * PI;
             float rho   = (houghPos.y * 2.0 - 1.0) * SQRT2;
+            if(angSnap > 0.) {
+                float snapTheta = floor(theta / angSnap + .5) * angSnap;
+                if(abs(theta - snapTheta) > snapSiz) continue;
+                
+                theta = snapTheta;
+            }
+            
             float dist  = abs(normPos.x * cos(theta) + normPos.y * sin(theta) - rho);
             float fade  = distance(v_vTexcoord, houghPos);
             

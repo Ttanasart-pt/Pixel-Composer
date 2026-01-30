@@ -3207,6 +3207,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				_tw = max(_tw, string_width(_list[i].getName()));
     		
 			var _ttx = _tx + _tw + ui(16);
+			BLEND_ADD
 			
     		for(var i = array_length(_list) - 1; i >= 0; i--) {
 				var hotkey = _list[i];
@@ -3215,7 +3216,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				
 				draw_set_font(f_p2b);
 				draw_set_color(CDEF.main_mdwhite);
-				draw_text_add(_tx, _ty, _key);
+				draw_text(_tx, _ty, _key);
 				
 				draw_set_font(f_p2);
 				var _ttxx = _ttx;
@@ -3223,34 +3224,28 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     				var _sp = string_split(_title, ">");
     				
 	    			draw_set_color(COLORS._main_text);
-	    			draw_text_add(_ttxx, _ty, _sp[1]);
+	    			draw_text(_ttxx, _ty, _sp[1]);
 	    			_ttxx += string_width(_sp[1]) + ui(4);
 	    			
 	    			draw_set_color(CDEF.main_mdwhite);
-    				draw_text_add(_ttxx, _ty, _sp[0]);
+    				draw_text(_ttxx, _ty, _sp[0]);
     				_ttxx += string_width(_sp[0]) + ui(4);
     				
     			} else {
 	    			draw_set_color(COLORS._main_text);
-	    			draw_text_add(_ttxx, _ty, _title);
+	    			draw_text(_ttxx, _ty, _title);
 	    			_ttxx += string_width(_title) + ui(4);
     			}
     			
-    			if(hotkey.key == KEY_GROUP.numeric) {
-    				var _curr_val = KEYBOARD_NUMBER == undefined? "[-]" : $"[{KEYBOARD_NUMBER}]";
-    				
-    				draw_set_color(CDEF.main_mdwhite);
-	    			draw_text_add(_ttxx, _ty, _curr_val);
-    			}
-				
 				_ty -= line_get_height();
 			}
 			
 			_ty -= ui(4);
 			draw_set_text(f_p1b, fa_left, fa_bottom, COLORS._main_text, .75);
-			draw_text_add(_tx, _ty, _node? _node.name : string_replace_all(FOCUS_STR, "_", " "));
+			draw_text(_tx, _ty, _node? _node.name : string_replace_all(FOCUS_STR, "_", " "));
 			
 			_ty -= line_get_height() + ui(8);
+			BLEND_NORMAL
 			
 			if(pHOVER) {
 				if(key_press(vk_space) || key_press(vk_enter) || key_press(vk_escape)) 
