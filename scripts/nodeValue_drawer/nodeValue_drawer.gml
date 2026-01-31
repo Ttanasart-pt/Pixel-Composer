@@ -369,6 +369,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(jun.expUse) {
 			var expValid = jun.expTree != noone && jun.expTree.validate();
 			var expEdit  = jun.getExpresstionEditor();
+			if(!is(expEdit, widget)) return [ lb_h, true, cHov, lbHov, lb_x ];
+			
 			expEdit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 			expEdit.rx = rx;
 			expEdit.ry = ry;

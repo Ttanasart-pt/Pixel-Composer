@@ -116,7 +116,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _lenC = getInputData(13),     curve_length = inputs[ 3].attributes.curved? new curveMap(_lenC)  : undefined;
 			
 			var _sprS = getInputData(25);
-			var _spsC = getInputData(38),     curve_spis   = inputs[28].attributes.curved? new curveMap(_spsC)  : undefined;
+			var _spsC = getInputData(38),     curve_spis   = inputs[25].attributes.curved? new curveMap(_spsC)  : undefined;
 			var _sprP = getInputData(26);
 			var _wav  = getInputData(21);
 			var _wavC = getInputData(22),     curve_wave  = inputs[21].attributes.curved? new curveMap(_wavC)  : undefined;

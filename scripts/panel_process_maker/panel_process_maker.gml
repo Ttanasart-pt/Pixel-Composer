@@ -1,6 +1,9 @@
 function Process_Anim_Track(_node = undefined) constructor {
-	node    = _node;
-	node_id = "";
+	node        = _node;
+	node_id     = "";
+	node_out    = undefined;
+	node_out_id = "";
+	
 	output  = 0;
 	values  = [];
 	title   = "";
@@ -26,6 +29,14 @@ function Process_Anim_Track(_node = undefined) constructor {
 		if(node != undefined) return node;
 		node = PROJECT.nodeMap[? node_id];
 		return node;
+	}
+	
+	static getOutputNode = function() /*=>*/ {
+		if(node_out_id == "") return getNode();
+		
+		if(node_out != undefined) return node_out;
+		node_out = PROJECT.nodeMap[? node_out_id];
+		return node_out;
 	}
 	
 	static apply = function(_t) {
@@ -68,7 +79,9 @@ function Process_Anim_Track(_node = undefined) constructor {
 		var _m = {};
 		getNode();
 		
-		_m.node      = node? node.node_id : "";
+		_m.node      = node?     node.node_id     : "";
+		_m.onode     = node_out? node_out.node_id : "";
+		
 		_m.title     = title;
 		_m.output    = output;
 		_m.values    = variable_clone(values);
@@ -83,7 +96,9 @@ function Process_Anim_Track(_node = undefined) constructor {
 	}
 	
 	static deserialize = function(_m) {
-		node_id  = _m.node;
+		node_id      = _m[$  "node"] ?? node_id;
+		node_out_id  = _m[$ "onode"] ?? node_out_id;
+		
 		values   = variable_clone(_m.values);
 		
 		title    = _m[$ "title"]    ?? title;
@@ -766,13 +781,13 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					
 				case 1 : // Node - Main Content
 					if(_data == noone) break;
-					var _node = _data.getNode();
+					var _node = _data.getOutputNode();
 					if(!is(_node, Node)) break;
 					
 					var _outp = _node.outputs[_data.output];
 					var _outv = undefined;
 					
-					if(_outp.type == VALUE_TYPE.surface)
+					if(_outp.type == VALUE_TYPE.surface || is(_node, Node_Array))
 						 _outv = _outp.getValue();
 					else _outv = _node.getGraphPreviewSurface();
 					
@@ -819,7 +834,16 @@ function Panel_Process_Maker() : PanelContent() constructor {
 								if(_index >= _amo) break;
 								
 								var _outvD = _outv[_index];
-								if(!is_surface(_outvD)) continue;
+								if(!is_surface(_outvD)) {
+									if(is(_node, Node_Array)) {
+										var _inp = _node.inputs[_node.input_fix_len + _index];
+										var _frn = _inp.value_from;
+										if(_frn) _outvD = _frn.node.getGraphPreviewSurface();
+									}
+									
+									if(!is_surface(_outvD))
+										continue;
+								}
 								
 								var sw = surface_get_width(_outvD);
 								var sh = surface_get_height(_outvD);
@@ -843,7 +867,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					} else if(is_surface(_outv)) {
 						var sw = surface_get_width(_outv);
 						var sh = surface_get_height(_outv);
-						var ss = min((output_width - 192) / sw, (output_height - 192) / sh);
+						var ss = min((output_width - 192) / sw, (output_width - 192) / sh);
 						
 						var x0 = cx - sw * ss / 2;
 						var y0 = cy - sh * ss / 2;
@@ -1480,14 +1504,22 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			} bx -= bs + ui(4); tw -= bs + ui(4); 
 			
 			if(is(track_sel, Process_Anim_Track)) {
+				var cc = track_sel.node_out_id == ""? COLORS._main_icon : COLORS._main_value_positive;
+				if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Set Proxy Node", THEME.panel_preview_icon, 0, cc, 1, .75) == 2) {
+					var _n = PANEL_INSPECTOR.getInspecting(); 
+					track_sel.node_out_id = _n? _n.node_id : "";
+					track_sel.node_out    = undefined;
+					
+				} bx -= bs + ui(4); tw -= bs + ui(4); 
+				
 				var cc = track_sel.store? COLORS._main_value_positive : COLORS._main_icon;
 				if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Store Output", THEME.save, 0, cc, 1, .75) == 2) {
 					track_sel.store = !track_sel.store;
 				} bx -= bs + ui(4); tw -= bs + ui(4); 
 				
 				var spr = THEME.node_junction_selecting;
-				var aa  = track_sel.shadow? 1 : .5;
-				if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Shadow", spr, 0, COLORS._main_icon, aa, .75) == 2) {
+				var cc  = track_sel.shadow? COLORS._main_icon : COLORS._main_icon_light;
+				if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Shadow", spr, 0, cc, 1, .75) == 2) {
 					track_sel.shadow = !track_sel.shadow;
 				} bx -= bs + ui(4); tw -= bs + ui(4); 
 				

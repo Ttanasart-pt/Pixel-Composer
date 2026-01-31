@@ -978,7 +978,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						
 						draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
 					}
-				}
+				} else 
+					draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 					
 			} else 
 				draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
