@@ -402,8 +402,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var points;
 					
 					for( var i = 0; i < lineCount; i++ ) {
-						_pathLength = _useDistance? _pat.getLength(i) : 1;
-						if(_pathLength <= 0) continue;
+						var _pathRaw = _pat.getLength(i);
+						_pathLength  = _useDistance? _pathRaw : 1;
+						if(_pathRaw <= 0) continue;
 						
 						var _pamo = _useDistance? ceil(_pathLength / _segL) + 1 : _seg;
 						points = array_create(_pamo);

@@ -258,8 +258,9 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	#endregion
 	
 	#region audio
-		audio_loop_curr = "";
-		audio_loop_dura = 0;
+		audio_data_path = undefined;
+		audio_data      = undefined;
+		audio_gain      = 1;
 	#endregion
 	
 	#region widgets
@@ -526,6 +527,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(PROJECT.trackAnim.tracks); i < n; i++ )
 			PROJECT.trackAnim.tracks[i].reset();
+			
+		audio_stop_all();
 	}
 	
 	function trackStart(_t) {
@@ -567,7 +570,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		
 		refreshTracks();
 		
-		if(!playing) resetTracks();
+		if(playing) {
+			if(!exporting && audio_data) 
+				audio_play_sound(audio_data, 0, true, audio_gain);
+		} else {
+			resetTracks();
+		}
 	}
 	
 	function Player() {
@@ -702,7 +710,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		    
 		if(PROJECT.trackAnim.audio_loop != "") {
 			var _aloop = string_quote(PROJECT.trackAnim.audio_loop);
-			shell_cmd += $"-stream_loop -1 -i {_aloop} -shortest -map 0:v:0 -map 1:a:0 ";
+			shell_cmd += $"-stream_loop -1 -i {_aloop} \"volume={audio_gain}\" -shortest -map 0:v:0 -map 1:a:0 ";
 		}
 		
 		    shell_cmd += $"-c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} ";
@@ -1179,9 +1187,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		
 		#region audio
 			var _aud = PROJECT.trackAnim.audio_loop;
-			if(audio_loop_curr != _aud) {
-				audio_loop_dura = file_exists(_aud)? WAV_get_length(_aud) : 0;
-				audio_loop_curr = _aud;
+			if(_aud != "" && file_exists_empty(_aud) && audio_data_path != _aud) {
+				audio_data      = audio_create_stream(_aud);
+				audio_data_path = _aud;
+				
+				var _dirr  = filename_name_only(filename_dir(_aud));
+				audio_gain = _dirr == "Pizza Doggy"? 4 : 1;
 			}
 		#endregion
 		
@@ -1243,7 +1254,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			var b  = buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Set Audio", THEME.play_sound, ii, cc, 1, .75)
 			if(b == 3) PROJECT.trackAnim.audio_loop = "";
 			if(b == 2) {
-				var _path  = get_open_filename_compat("WAV Audio|*.wav", "");
+				var _path  = get_open_filename_compat("Audio Files|*.wav;*.ogg;*.mp3", "");
 				if(_path != "") PROJECT.trackAnim.audio_loop = _path;
 			} bx += bs + ui(2);
 			
@@ -1323,12 +1334,6 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	        var del = undefined;
 	        var hover = pHOVER && point_in_rectangle(mx, my, _trx, _try, _trx + _trw, _try + _trh);
 	        var trw = 0;
-	        
-	        // if(audio_loop_dura > 0) {
-	        // 	var _audF = audio_loop_dura * 30;
-	        // 	var _audW = _audF * tss;
-	        // 	draw_sprite_stretched_ext(THEME.ui_panel, 0, tsx, _try + ui(1), _audW, _tlh - ui(2), COLORS._main_accent, .25);
-	        // }
 	        
 	    	for( var i = 0; i <= track_w; i += 30 ) {
 	    		var lx = tsx + i * tss;
