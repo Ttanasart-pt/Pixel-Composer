@@ -187,7 +187,8 @@ void main() {
 	
 	//hsv
 	vec3 _hsv = rgb2hsv(col_cb.rgb);
-	_hsv.x = clamp(_hsv.x + hhe, -1., 1.);
+	// _hsv.x = clamp(_hsv.x + hhe, -1., 1.);
+	_hsv.x = fract(fract(_hsv.x + hhe) + 1.);
 	_hsv.z = clamp((_hsv.z + vvl) * (1. + sst * _hsv.y * .5), 0., 1.);
 	_hsv.y = clamp(_hsv.y * (sst + 1.), 0., 1.);
 	

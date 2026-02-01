@@ -377,7 +377,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			expEdit.setFocusHover(_focus, _hover);
 			if(_focus) expEdit.register(_scrollPane);
-				
+			
 			var wd_h = expEdit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 			_widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
 			
