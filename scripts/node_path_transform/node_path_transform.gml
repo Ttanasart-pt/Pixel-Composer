@@ -54,15 +54,15 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				
 			var b = path.getBoundary(ind).clone();
 			
-			b.minx	= _anc[0] + (b.minx - _anc[0]) * sca[0]; 
-			b.miny	= _anc[1] + (b.miny - _anc[1]) * sca[1];
-			var _pp = point_rotate(b.minx, b.miny, _anc[0], _anc[1], rot);
+			b.minx	= anc[0] + (b.minx - anc[0]) * sca[0]; 
+			b.miny	= anc[1] + (b.miny - anc[1]) * sca[1];
+			var _pp = point_rotate(b.minx, b.miny, anc[0], anc[1], rot);
 			b.minx	= _pp[0] + pos[0]; 
 			b.miny	= _pp[1] + pos[1];
 			
-			b.maxx	= _anc[0] + (b.maxx - _anc[0]) * sca[0]; 
-			b.maxy	= _anc[1] + (b.maxy - _anc[1]) * sca[1];
-			var _pp = point_rotate(b.maxx, b.maxy, _anc[0], _anc[1], rot);
+			b.maxx	= anc[0] + (b.maxx - anc[0]) * sca[0]; 
+			b.maxy	= anc[1] + (b.maxy - anc[1]) * sca[1];
+			var _pp = point_rotate(b.maxx, b.maxy, anc[0], anc[1], rot);
 			b.maxx	= _pp[0] + pos[0]; 
 			b.maxy	= _pp[1] + pos[1];
 			
