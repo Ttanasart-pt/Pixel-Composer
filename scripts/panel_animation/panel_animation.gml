@@ -133,7 +133,7 @@
         	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_nodes}     )
         	
         registerFunction(an, "Override Keyframe", "", n, panel_animation_toggle_KeyframeOverride)
-        	.setMenu("animation_toggle_KeyframeOverride", THEME.keyframe_override ).setSpriteInd(function() /*=>*/ {return global.FLAG.keyframe_override}  )
+        	.setMenu("animation_toggle_KeyframeOverride", THEME.keyframe_override ).setSpriteInd(function() /*=>*/ {return PREFERENCES.panel_animation_key_override} )
         	
         registerFunction(an, "Onion Skin",        "", n, panel_animation_toggle_OnionSkin       )
         	.setMenu("animation_toggle_OnionSkin",        THEME.onion_skin        ).setSpriteInd(function() /*=>*/ {return PROJECT.onion_skin.enabled}     )
@@ -920,6 +920,6 @@ function Panel_Animation() : PanelContent() constructor {
     
     function toggleNodeNameType(_d=1) { node_name_type = (node_name_type + _d + 3) % 3; }
     function toggleNodeLabel()        { show_nodes = !show_nodes; }
-    function toggleKeyframeOverride() { global.FLAG.keyframe_override = !global.FLAG.keyframe_override; }
+    function toggleKeyframeOverride() { PREFERENCES.panel_animation_key_override = !PREFERENCES.panel_animation_key_override; }
     function toggleOnionSkin()        { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
 }

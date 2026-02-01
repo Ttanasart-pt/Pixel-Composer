@@ -130,6 +130,8 @@
 		
 		PREFERENCES.panel_animation_separate        = 5;
 		PREFERENCES.panel_animation_frame			= true;
+		PREFERENCES.panel_animation_quan_scale		= false;
+		PREFERENCES.panel_animation_key_override	= true;
 	#endregion
 	
 	#region WIDGET

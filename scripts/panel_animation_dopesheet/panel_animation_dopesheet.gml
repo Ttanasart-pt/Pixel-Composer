@@ -410,29 +410,69 @@ function Panel_Animation_Dopesheet() {
                     var _node = PROJECT.allNodes[m];
                     if(!_node || !_node.active) continue;
                     
-                    for(var i = 0; i < array_length(_node.inputs); i++) {
+                    for(var i = 0, o = array_length(_node.inputs); i < o; i++) {
                         var in = _node.inputs[i];
                         if(!in.is_anim) continue;
                         
-                        for(var j = 0; j < array_length(in.animator.values); j++) {
+                        for(var j = 0, p = array_length(in.animator.values); j < p; j++) {
                             var t = in.animator.values[j];
                             t.time = t.ratio * (len - 1);
+                            if(PREFERENCES.panel_animation_quan_scale)
+                            	t.time = round(t.time);
                         }
                         
                         if(!in.sep_axis) continue;
                         
                         var _anims = in.getAnimators();
-                        for(var k = 0; k < array_length(_anims); k++ )
-                        for(var j = 0; j < array_length(_anims[k].values); j++) {
+                        for(var k = 0, p = array_length(_anims); k < p; k++ )
+                        for(var j = 0, q = array_length(_anims[k].values); j < q; j++) {
                             var t = _anims[k].values[j];
                             t.time = t.ratio * (len - 1);
+                            if(PREFERENCES.panel_animation_quan_scale)
+                            	t.time = round(t.time);
                         }
                     }
                 }
             }
             
             timeline_draggable = false;
-            if(mouse_release(mb_left) && !timeline_frame_typing) timeline_stretch = 0;
+            if(mouse_release(mb_left) && !timeline_frame_typing) {
+            	timeline_stretch = 0;
+            	
+            	if(PREFERENCES.panel_animation_key_override) {
+            		for (var m = 0, n = array_length(PROJECT.allNodes); m < n; m++) {
+	                    var _node = PROJECT.allNodes[m];
+	                    if(!_node || !_node.active) continue;
+	                    
+	                    for(var i = 0, o = array_length(_node.inputs); i < o; i++) {
+	                        var in = _node.inputs[i];
+	                        if(!in.is_anim) continue;
+	                        
+	                        for(var j = array_length(in.animator.values) - 1; j >= 1; j--) {
+	                            var t0 = in.animator.values[j-1];
+	                            var t1 = in.animator.values[j  ];
+	                            
+	                            if(t0.time == t1.time) array_delete(in.animator.values, j, 1);
+	                        }
+	                        
+	                        in.animator.updateKeyMap();
+	                        
+	                        if(!in.sep_axis) continue;
+	                        var _anims = in.getAnimators();
+	                        for(var k = 0, p = array_length(_anims); k < p; k++ ) {
+		                        for(var j = array_length(_anims[k].values) - 1; j >= 1; j--) {
+		                            var t0 = _anims[k].values[j-1];
+		                            var t1 = _anims[k].values[j  ];
+		                            
+	                            	if(t0.time == t1.time) array_delete(_anims[k].values, j, 1);
+		                        }
+		                        
+		                        _anims[k].updateKeyMap();
+	                        }
+	                    }
+	                }
+            	}
+            }
             return;
         } 
         

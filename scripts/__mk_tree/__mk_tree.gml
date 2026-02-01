@@ -43,6 +43,7 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 	surface   = noone;
 	surf_w    = 1;
 	surf_h    = 1;
+	
 	color     = c_white;
 	colorE    = c_white;
 	colorU    = undefined;
@@ -296,11 +297,12 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 		colorU     = _l.colorU;
 		colorLeaf  = _l.colorLeaf;
 		
-		geometry   = _l.geometry;
-		geometry1  = _l.geometry1;
+		growShift  = _l.growShift;
+		growSpeed  = _l.growSpeed;
 		
 		resolution = _l.resolution;
-		growShift  = _l.growShift;
+		geometry   = _l.geometry;
+		geometry1  = _l.geometry1;
 		geoGrav    = _l.geoGrav;
 		geoTwist   = _l.geoTwist;
 		geoWigg    = _l.geoWigg;
@@ -310,7 +312,10 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 		return self;
 	}
 	
-	static clone = function() { return variable_clone(self, 1); }
+	static clone = function() { 
+		var _l = new __MK_Tree_Leaf(root, rootPosition, shape, x, y, dir, sx, sy, sp).copy(self);
+		return _l;
+	}
 }
 
 function __MK_Tree_Segment(_x, _y, _t) constructor {

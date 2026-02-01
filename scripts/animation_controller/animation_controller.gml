@@ -48,6 +48,7 @@ function AnimationManager() constructor {
 	is_playing		= false;
 	is_rendering	= false;
 	frame_progress	= false;
+	force_progress	= false;
 	
 	frame_range_start = undefined;
 	frame_range_end   = undefined;
@@ -174,7 +175,8 @@ function AnimationManager() constructor {
 				setFrame(max(0, frames_total - 2));
 				play_direction = -1;
 				
-			}
+			} else
+				animationStart();
 			
 		} else if(current_frame <= 0) {
 			if(playback == ANIMATOR_END.pingpong)

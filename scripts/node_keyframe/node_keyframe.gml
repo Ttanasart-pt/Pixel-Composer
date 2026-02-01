@@ -443,7 +443,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			for(var i = 0; i < array_length(values); i++) { //Find trigger
 				var _key = values[i];
 				if(_key.time == _time)  {
-					if(!global.FLAG.keyframe_override) return false;
+					if(!PREFERENCES.panel_animation_key_override) return false;
 					
 					_key.value = _val;
 					return false;
@@ -481,7 +481,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		for(var i = 0; i < array_length(values); i++) {
 			var _key = values[i];
 			if(_key.time == _time) {
-				if(!global.FLAG.keyframe_override) return false;
+				if(!PREFERENCES.panel_animation_key_override) return false;
 				
 				if(_key.value != _val) {
 					if(_record) recordAction_variable_change(_key, "value", _key.value, $"{prop.name}", onUndo).setRef(node);

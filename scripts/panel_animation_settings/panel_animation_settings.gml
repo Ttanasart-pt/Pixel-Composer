@@ -52,6 +52,19 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 			function( ) /*=>*/   {return PROJECT.animator.playback},
 			function(v) /*=>*/ { PROJECT.animator.playback = v; },
 		),
+		
+		-1, 
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Quantize on Scale"),
+			new checkBox(function() /*=>*/ { PREFERENCES.panel_animation_quan_scale = !PREFERENCES.panel_animation_quan_scale; }),
+			function( ) /*=>*/   {return PREFERENCES.panel_animation_quan_scale},
+			function(v) /*=>*/ { PREFERENCES.panel_animation_quan_scale = v; },
+			false,
+			noone,
+			"panel_animation_quan_scale", 
+		),
+		
 	];
 	
 	setHeight();

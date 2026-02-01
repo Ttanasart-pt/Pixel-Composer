@@ -69,8 +69,10 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(!is_array(_leav) || array_empty(_leav)) return;
 		if(!is(_leav[0], __MK_Tree_Leaf))          return;
 		
-		leaves = array_create(array_length(_leav));
-		for( var i = 0, n = array_length(_leav); i < n; i++ ) {
+		var len = array_length(_leav);
+		leaves = array_create(len);
+		
+		for( var i = 0, n = len; i < n; i++ ) {
 			var _l = _leav[i].clone();
 			leaves[i] = _l;
 			
@@ -107,7 +109,7 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 			var _life = getInputData(13);
 			
 			var _fall  = getInputData( 2), _fallMap = getInputData( 3);
-			var _fallM = inputs[2].attributes.mapped && is_surface(_fallMap), _fallSamp = _fallM? new Surface_Sampler_Grey(_fallMap) : undefined;
+			var _fallM = inputs[2].attributes.mapped && is_surface(_fallMap);
 			
 			var _flsp = getInputData(10);
 			var _fldr = getInputData(11);
@@ -130,19 +132,15 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 			var _grrn = getInputData( 9);
 		#endregion
 		
-		// if(_actv && IS_FIRST_FRAME) reset(); 
-		if(!__prevac && _actv)
+		if((!__prevac && _actv) || (!inputs[18].is_anim && IS_FIRST_FRAME))
 			reset();
 		__prevac = _actv;
 		
-		if(!_actv) {
-			outputs[0].setValue(_leav);
-			return;
-		}
-		
+		if(!_actv) { outputs[0].setValue(_leav); return; }
 		if(leaves == undefined) return;
 		outputs[0].setValue(leaves);
 		
+		var _fallSamp  = _fallM? new Surface_Sampler_Grey(_fallMap) : undefined;
 		var _blendColor = undefined;
 		var _gx = lengthdir_x(1, _gdir);
 		var _gy = lengthdir_y(1, _gdir);

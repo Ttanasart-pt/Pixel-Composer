@@ -65,7 +65,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	static updateValue = function() {
 		if(!loop_active) return;
-		if(!IS_PLAYING && CURRENT_FRAME != 0 && CURRENT_FRAME != buffered_frame + 1) return;
+		if(!IS_PLAYING && !project.animator.force_progress && CURRENT_FRAME != 0 && CURRENT_FRAME != buffered_frame + 1) return;
 		
 		var type = junc_out.type;
 		var val  = junc_out.getValue();

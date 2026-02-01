@@ -1,6 +1,6 @@
 function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() constructor {
 	size     = _size;
-	dim      = _size / 2;
+	dim      = ceil(_size / 2);
 	type     = _type;
 	onModify = _onModify;
 	unit	 = _unit;

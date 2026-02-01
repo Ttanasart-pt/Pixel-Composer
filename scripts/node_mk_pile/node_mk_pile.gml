@@ -73,7 +73,7 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _sw   = surface_get_width_safe(fSurf);
 		var _sh   = surface_get_height_safe(fSurf);
 		var _grid = sqrt(_amou * 2);
-	    var pile_height = array_create(_grid * _grid);
+	    var pile_height = array_create(max(1, _grid * _grid));
 		
 		var _outSurf = _outData[0];
 		var _outPoin = _outData[1];
