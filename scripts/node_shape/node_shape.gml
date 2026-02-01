@@ -268,10 +268,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[27].setVisible(false);
 			
 			inputs[11].setVisible(_bg == 1);
-			inputs[46].setVisible(_bg == 2, _bg == 2);
-			inputs[47].setVisible(_bg == 2);
 			
-			if(_bg == 2 && !is_just_surface(_bgSurf)) _bg = 0;
+			     if(_bg == 0 &&  is_surface(_bgSurf)) _bg = 2;
+			else if(_bg == 2 && !is_surface(_bgSurf)) _bg = 0;
 		#endregion
 		
 		for( var i = 0, n = array_length(_outData); i < n; i++ ) 
@@ -279,7 +278,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_shader(_outData, sh_shape);
 			draw_clear_alpha(0, _bg);
-			if(!_bg) BLEND_OVERRIDE
+			BLEND_OVERRIDE
 			
 			if(is_struct(_shape)) _shape = _shape.data;
 			

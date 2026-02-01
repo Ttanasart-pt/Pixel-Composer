@@ -557,12 +557,14 @@ void main() {
 	else if(drawOpacity == 0) gl_FragData[2] = vec4(baseColor.rgb * intensity, baseColor.a * cc);
 	else                      gl_FragData[2] = vec4(baseColor.rgb, baseColor.a * intensity);
 	
-	vec4 bgPixel = drawBG == 2? texture2D(bgSurf, v_vTexcoord) : bgColor;
-	vec4 fgPixel = drawDF == 1? gl_FragData[2] : baseColor;
-	
+	vec4 bgPixel   = drawBG == 2? texture2D(bgSurf, v_vTexcoord) : bgColor;
+	vec4 fgPixel   = drawDF == 1? gl_FragData[2] : baseColor;
+	     
 	     if(drawBG  == 0) gl_FragData[0] = vec4(fgPixel.rgb, fgPixel.a * cc);
-	else if(bgBlend == 0) gl_FragData[0] = mix(bgPixel, fgPixel, cc);
+	else if(bgBlend == 0) gl_FragData[0] = mix(bgPixel, fgPixel,  cc);
 	else if(bgBlend == 1) gl_FragData[0] = max(bgPixel, fgPixel * cc);
 	
 	gl_FragData[1] = vec4(cc, cc, cc, 1.);
+	
+	if(bgBlend == 2) gl_FragData[0] = bgPixel;
 }

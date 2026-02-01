@@ -8,6 +8,11 @@
 		icon:  function() /*=>*/ {return THEME.node_junction_surface_ext},
 		color: function() /*=>*/ {return #ff6b97},
 	}
+	
+	global.SURFACE_GREY_JUNC = {
+		icon:  function() /*=>*/ {return THEME.node_junction_surface_ext},
+		color: function() /*=>*/ {return #ff6b97},
+	}
 #endregion
 
 function nodeValue_Surface(_name, _value = noone, _tooltip = "") { return new __NodeValue_Surface(_name, self, _value, _tooltip); }
