@@ -368,6 +368,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				else              _vals[_ind] = noone;
 			}
 			
+			if(_inp.is_modified) _name += "*";
 			draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
 			draw_text_add(ui(32), yy, _name);
 			
@@ -447,6 +448,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				else              _vals[_ind] = noone;
 			}
 			
+			if(_inp.is_modified) _name += "*";
 			draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
 			draw_text_add(ui(32), yy, _name);
 			
@@ -705,12 +707,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var target_name = filename_name_only(export_dir);
 		var target_path = string_quote(filename_combine(parent_path, $"{target_name}.mp4"));
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} ";
+		var	shell_cmd  = $"-hide_banner -y -loglevel quiet -framerate {rate} ";
 		    shell_cmd += $"-i {temp_path} ";
 		    
 		if(PROJECT.trackAnim.audio_loop != "") {
 			var _aloop = string_quote(PROJECT.trackAnim.audio_loop);
-			shell_cmd += $"-stream_loop -1 -i {_aloop} \"volume={audio_gain}\" -shortest -map 0:v:0 -map 1:a:0 ";
+			shell_cmd += $"-stream_loop -1 -i {_aloop} -af \"volume={string_format(audio_gain, 0, 1)}\" -shortest -map 0:v:0 -map 1:a:0 ";
 		}
 		
 		    shell_cmd += $"-c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} ";
@@ -1188,6 +1190,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		#region audio
 			var _aud = PROJECT.trackAnim.audio_loop;
 			if(_aud != "" && file_exists_empty(_aud) && audio_data_path != _aud) {
+				if(audio_data) audio_destroy_stream(audio_data);
 				audio_data      = audio_create_stream(_aud);
 				audio_data_path = _aud;
 				
@@ -1222,10 +1225,10 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			var cc = playing && play_speed == 3? COLORS._main_value_positive : COLORS._main_icon;
 			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "", THEME.save, 0, cc, 1, .75) == 2) {
 				var tt = PROJECT.trackAnim.title == ""? filename_name_only(PROJECT.path) : PROJECT.trackAnim.title;
-				var path   = get_open_directory_compat(tt);
+				var path   = get_save_filename_compat("Mp4|*.mp4", tt);
 				if(path != "") {
 					play_speed = infinity;
-					export_dir = path;
+					export_dir = string_replace(path, ".mp4", "");
 					
 					if(directory_exists(export_dir)) directory_destroy(export_dir);
 					togglePlay(true, 5, true);

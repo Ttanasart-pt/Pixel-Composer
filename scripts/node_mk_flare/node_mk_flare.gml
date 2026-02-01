@@ -807,13 +807,15 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				shader_set_2("dimension",     [_sw,_sh] );
 				shader_set_f("resolution",    64        );
+				shader_set_i("iteration",     1         );
+				shader_set_i("s_curve_use",   0         );
+				
 				shader_set_i("type",          1         );
 				shader_set_2("center",        _focus    );
 				shader_set_f_map("strength",  _abbrS    );
 				shader_set_f_map("intensity", _abbrI    );
 				shader_set_f_map("chromaShf", _abbrShf  );
 				shader_set_f_map("chromaSca", _abbrSca  );
-				shader_set_i("s_curve_use",   0         );
 				
 				draw_surface_safe(flareSurf);
 				gpu_set_tex_filter(false);
