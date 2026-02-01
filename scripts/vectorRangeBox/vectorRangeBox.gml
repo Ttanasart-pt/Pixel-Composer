@@ -171,7 +171,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 					
 					if(i == 0) tb[ind].label = axis[j];
 					tb[ind].setFocusHover(active, hover);
-					tb[ind].draw(bx, by, ww, _h, _data[ind], _m);
+					tb[ind].draw(bx, by, ww, _h, array_safe_get_fast(_data, ind), _m);
 				}
 			}
 		} else {
@@ -182,7 +182,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 				
 				tb[ind].label = "";
 				tb[ind].setFocusHover(active, hover);
-				tb[ind].draw(bx, by, ww, _h, _data[ind], _m);
+				tb[ind].draw(bx, by, ww, _h, array_safe_get_fast(_data, ind), _m);
 			}
 		}
 		
