@@ -365,7 +365,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setCustomData = function(param) {
 		custom_icon  = param.icon(); 
 		custom_color = param.color(); 
-		editWidget   = param.widg(); 
+		
+		if(has(param, "widg")) editWidget = param.widg(); 
 		return self;
 	}
 	

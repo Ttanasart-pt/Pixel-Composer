@@ -154,10 +154,10 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		#region param
 			var sw = surface_get_width_safe(_baseSurf);
 			var sh = surface_get_height_safe(_baseSurf);
-		
+			
 			temp_surface[0] = surface_verify(temp_surface[0], sw * 2, sh * 2);
 			temp_surface[1] = surface_verify(temp_surface[1], sw * 2, sh * 2);
-		
+			
 			surface_set_target(temp_surface[0]);
 				DRAW_CLEAR
 				

@@ -1,7 +1,21 @@
+#region global
+	global.SURFACE_MASK_JUNC = {
+		icon:  function() /*=>*/ {return THEME.node_junction_surface_ext},
+		color: function() /*=>*/ {return #ff6b97},
+	}
+	
+	global.SURFACE_UV_JUNC = {
+		icon:  function() /*=>*/ {return THEME.node_junction_surface_ext},
+		color: function() /*=>*/ {return #ff6b97},
+	}
+#endregion
+
 function nodeValue_Surface(_name, _value = noone, _tooltip = "") { return new __NodeValue_Surface(_name, self, _value, _tooltip); }
 function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, _value, _tooltip) constructor {
 	animable = false;
 	if(_name == "Mask") {
+		setCustomData(global.SURFACE_MASK_JUNC);
+		
 		var _dimTarget = array_safe_get(node.inputs, node.dimension_input);
 		if(is(_dimTarget, __NodeValue_Dimension)) {
 			_dimTarget.use_mask   = true;
@@ -9,6 +23,9 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 			array_push(_dimTarget.unitTooltip.data, "Mask");
 		}
 	}
+	
+	if(_name == "UV Map") 
+		setCustomData(global.SURFACE_UV_JUNC);
 	
 	/////============== VALUE =============
 	
