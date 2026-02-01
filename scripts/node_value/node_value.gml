@@ -263,6 +263,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			express_edit.parser_server         = pxl_document_parser;
 			
 			if(unitUse) express_edit.setSideButton(unit.triggerButton);
+			return express_edit;
 		}
 	#endregion
 	
