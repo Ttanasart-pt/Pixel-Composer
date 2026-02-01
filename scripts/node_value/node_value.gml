@@ -2132,7 +2132,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static triggerSetFrom = function() { node.valueUpdate(index); }
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { //// Set from
-		
 		if(is_dummy && dummy_get != noone) {
 			var conn = isConnectable(_valueFrom, checkRecur, log);
 			if(conn < 0) return conn;

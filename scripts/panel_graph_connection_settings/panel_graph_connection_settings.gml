@@ -77,12 +77,25 @@ function Panel_Graph_Connection_Setting() : Panel_Linear_Setting() constructor {
 		new __Panel_Linear_Setting_Item(
 			__txtx("pref_connection_highlight_all", "Highlight all"),
 			new checkBox(function() /*=>*/ { graphConnection.line_highlight_all = !graphConnection.line_highlight_all; }),
-			function( ) /*=>*/   {return graphConnection.line_highlight_fade},
-			function(v) /*=>*/ { graphConnection.line_highlight_fade = v; },
-			PREFERENCES.project_graphConnection.line_highlight_fade,
+			function( ) /*=>*/   {return graphConnection.line_highlight_all},
+			function(v) /*=>*/ { graphConnection.line_highlight_all = v; },
+			PREFERENCES.project_graphConnection.line_highlight_all,
 			noone,
-			"project_graphConnection.line_highlight_fade",
+			"project_graphConnection.line_highlight_all",
 		),
+		
+		-1, 
+		
+		new __Panel_Linear_Setting_Item(
+			__txtx("pref_connection_auto_connect", "Auto Connect"),
+			new checkBox(function() /*=>*/ { graphConnection.connect_on_create = !graphConnection.connect_on_create; }),
+			function( ) /*=>*/   {return graphConnection.connect_on_create},
+			function(v) /*=>*/ { graphConnection.connect_on_create = v; },
+			PREFERENCES.project_graphConnection.connect_on_create,
+			noone,
+			"project_graphConnection.connect_on_create",
+		),
+		
 	];
 	
 	setHeight();

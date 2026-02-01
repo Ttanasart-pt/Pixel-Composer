@@ -258,6 +258,8 @@
 			line_highlight_fade	: 0.75,
 			line_highlight_all	: false,
 			line_extend			: 16,
+			
+			connect_on_create   : false, 
 		}
 		
 	#endregion

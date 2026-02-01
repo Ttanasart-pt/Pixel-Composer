@@ -3450,6 +3450,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	var node  = noone;
         var _drag = false;
+        __willconnect = true;
         
     	switch(_nodeType) {
 	    	case "Node_Blend" :     node = doBlend();                   break;
@@ -3499,7 +3500,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	_drag = false;
         }
         
-        if(_drag) selectDragNode(node, true);
+        if(_drag) selectDragNode(node, __willconnect);
         connect_related = noone;
         return node;
     }
@@ -3772,12 +3773,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        return node;
         }
         
-        if(array_length(nodes_selecting) == 1) {
+        if(project.graphConnection.connect_on_create && array_length(nodes_selecting) == 1) {
         	var sNode = nodes_selecting[0];
         	var _jOut = sNode.getOutput();
         	var _jIn  = node.getInput();
         	
         	if(_jOut != noone && _jIn != noone && _jIn.setFrom(_jOut)) {
+        		__willconnect = false;
         		node.x = sNode.x + sNode.w + 64;
         		node.y = sNode.y;
         	}
