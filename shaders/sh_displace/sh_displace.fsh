@@ -386,14 +386,12 @@ void main() {
 	}
 	
 	if(iterate == 1) {
-		float _t = 1. / (iteration - 1.);
+		float _t = 1. / iteration;
 		float str;
 		vec4  c;
 		
-		stren /= iteration;
-		
 		for(float i = 0.; i < iteration; i++) {
-			str    = stren * (i * _t);
+			str    = stren * (i + 1.) * _t;
 			samPos = shiftMap(reposition == 1? samPos : v_vTexcoord, str);
 			c      = sampleTexture( gm_BaseTexture, samPos );
 			if(fadeDist == 1) c.rgb *= 1. - i * _t;

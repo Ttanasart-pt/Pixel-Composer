@@ -5,7 +5,9 @@
     vec2 getUV(in vec2 uv) {
         if(useUvMap == 0) return uv;
 
-        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
-        vtx.y = 1.0 - vtx.y;
+        vec2 vuv   = texture2D( uvMap, uv ).xy;
+             vuv.y = 1.0 - vuv.y;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
         return vtx;
     }

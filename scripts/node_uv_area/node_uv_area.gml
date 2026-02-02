@@ -11,17 +11,18 @@ function Node_UV_Area(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	newInput( 4, nodeValue_Area(     "Area",     DEF_AREA_REF, { useShape : false } )).setUnitSimple().setShaderProp("area");
 	newInput( 5, nodeValue_Rotation( "Rotation",    0    )).setShaderProp("rotation");
 	newInput( 6, nodeValue_Vec2(     "Tile Scale", [1,1] )).setShaderProp("tile");
-	newInput( 7, nodeValue_Bool(     "Repeat",     true  )).setShaderProp("repeat");
+	newInput( 7, nodeValue_EScroll(  "Repeat",      1, ["Empty", "Tile", "Clamp", "Ping Pong"]  )).setShaderProp("repeat");
+	newInput(11, nodeValue_Bool(     "Invert",     false )).setShaderProp("invert");
 	
 	////- =Channels
 	newInput( 8, nodeValue_Slider_Range( "X",   [0,1] )).setShaderProp("xRange");
 	newInput( 9, nodeValue_Slider_Range( "Y",   [1,0] )).setShaderProp("yRange");
 	newInput(10, nodeValue_Slider(     "Blue",   0    )).setShaderProp("blue");
-	// 11
+	// 12
 	
 	input_display_list = [
 		[ "Output",    true ],  0,  1,  2,  3, 
-		[ "UV",       false ],  4,  5,  6,  7, 
+		[ "UV",       false ],  4,  5,  6,  7, 11, 
 		[ "Channels", false ],  8,  9, 10, 
 	];
 	

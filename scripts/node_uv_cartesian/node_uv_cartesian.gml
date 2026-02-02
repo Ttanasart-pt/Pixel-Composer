@@ -12,7 +12,7 @@ function Node_UV_Cartesian(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(10, nodeValue_Anchor(   "Anchor",     [0,0] )).setShaderProp("anchor");
 	newInput( 5, nodeValue_Rotation( "Rotation",    0    )).setShaderProp("rotation");
 	newInput( 6, nodeValue_Vec2(     "Tile Scale", [1,1] )).setShaderProp("tile");
-	newInput(11, nodeValue_Bool(     "Repeat",     true  )).setShaderProp("repeat");
+	newInput(11, nodeValue_EScroll(  "Repeat",      1, ["Empty", "Tile", "Clamp", "Ping Pong"]  )).setShaderProp("repeat");
 	
 	////- =Channels
 	newInput( 7, nodeValue_Slider_Range( "X",   [0,1] )).setShaderProp("xRange");
