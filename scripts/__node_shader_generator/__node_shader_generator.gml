@@ -1,5 +1,6 @@
 function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _group) constructor {
 	name = "";
+	shader_interpolate = false;
 	
 	newInput(0, nodeValue_Dimension()).setShaderProp("dimension");
 	
@@ -10,6 +11,7 @@ function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, shader);
+			gpu_set_tex_filter(shader_interpolate);
 			if(input_uvmap_index != -1)
 				shader_set_uv(_data[input_uvmap_index], _data[input_uvmix_index]);
 			setShader(_data);

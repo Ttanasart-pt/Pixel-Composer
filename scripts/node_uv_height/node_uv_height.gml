@@ -1,6 +1,7 @@
 function Node_UV_Height(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
 	name   = "UV Height";
 	shader = sh_uv_height;
+	shader_interpolate = true;
 	
 	////- =Output
 	newInput( 1, nodeValue_Surface( "UV Map"     ));

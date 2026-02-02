@@ -28,11 +28,12 @@ uniform float intensity;
 uniform float blue;
 
 void main() {
-	vec2  tx = getUV(fract(v_vTexcoord - position / dimension));
-    float hg = texture2D(heightMap, tx).x;
+	vec2  tx  = 1. / dimension;
+	vec2  ttx = v_vTexcoord - position / dimension;
+	float hg  = texture2D(heightMap, getUV(fract(ttx))).x;
 	
-    float dx = dFdx(hg);
-    float dy = dFdy(hg);
+    float dx = texture2D(heightMap, getUV(fract(ttx + vec2(tx.x, 0.)))).x - texture2D(heightMap, getUV(fract(ttx - vec2(tx.x, 0.)))).x;
+    float dy = texture2D(heightMap, getUV(fract(ttx + vec2(0., tx.y)))).x - texture2D(heightMap, getUV(fract(ttx - vec2(0., tx.y)))).x;
     vec2  uv = vec2(v_vTexcoord.x, 1. - v_vTexcoord.y) + vec2(dx, dy) * intensity;
 
     gl_FragColor = vec4(uv, blue, 1.);
