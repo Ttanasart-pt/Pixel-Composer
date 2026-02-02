@@ -50,5 +50,5 @@ void main() {
 	float x = mix(xRange[0], xRange[1], vtx.x);
 	float y = mix(yRange[0], yRange[1], vtx.y);
 	
-	gl_FragColor = vec4(x, y, blue, 1.);
+	gl_FragColor = vec4(x, 1. - y, blue, 1.);
 }
