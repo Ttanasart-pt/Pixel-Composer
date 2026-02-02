@@ -557,6 +557,7 @@
             "Node_Combine_RGB",
             "Node_Combine_HSV",
             "Node_Override_Channel",
+            "Node_UV_Blend", 
             
             { "label": "Blurs" },
             { "label": "/Kernel-based" },
@@ -870,8 +871,13 @@
             "Node_Flood_Fill",
             
             { "label": "UV" },
+            { "label": "/Create" },
             "Node_UV_Cartesian", 
             "Node_UV_Polar", 
+            "Node_UV_Area", 
+            "Node_UV_Height", 
+            { "label": "/Modify" },
+            "Node_UV_Blend", 
             
             { "label": "MK Effects" },
             "Node_MK_Rain",
@@ -907,6 +913,7 @@
             "Node_Blend",
             "Node_Composite",
             "Node_Camera",
+            "Node_UV_Blend", 
             { "label": "/Align" },
             "Node_Stack",
             "Node_Image_Grid",

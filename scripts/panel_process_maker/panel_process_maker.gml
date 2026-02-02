@@ -487,6 +487,13 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var _track = new Process_Anim_Track(_node);
 		array_push(PROJECT.trackAnim.tracks, _track);
 		track_sel = _track;
+		
+		switch(instanceof(_node)) {
+			case "Node_Shape" : if(!_node.inputs[28].is_anim) _track.values[28] = { valueStart : 0,       valueEnd : _node.inputs[28].getValue() }; break;
+			case "Node_Line"  : if(!_node.inputs[ 8].is_anim) _track.values[ 8] = { valueStart : [0,.01], valueEnd : _node.inputs[ 8].getValue() }; break;
+		}
+		
+		refreshTracks();
 	}
 	
 	function insertNodeTrack(_pos, _node) {
@@ -495,6 +502,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		track_sel = _track;
 		
 		refreshTracks(false);
+		refreshTracks();
 	}
 	
 	////- Tracks

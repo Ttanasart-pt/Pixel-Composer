@@ -158,7 +158,7 @@ float iq_noise( in vec2 p ) {
 	
     vec3  h = max( 0.5 - vec3(dot(a, a), dot(b, b), dot(c, c) ), 0.0 );
 	vec3  n = h * h * h * h * vec3( dot(a, iq_hash(i + 0.0)), dot(b, iq_hash(i + o)), dot(c, iq_hash(i + 1.0)));
-    return dot( n, vec3(70.0) ) * .75 + .65;
+    return dot( n, vec3(70.0) ) * .7 + .6;
 }
 
 float simplex(in vec2 st) {
