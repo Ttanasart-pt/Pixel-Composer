@@ -70,7 +70,6 @@ function Node_MK_Tree_Add_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				if(is_array(lf)) array_append(_tr.leaves, lf);
 			}
 		}
-		
 	}
 	
 }
