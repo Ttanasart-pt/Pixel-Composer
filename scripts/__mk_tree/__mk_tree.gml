@@ -531,9 +531,9 @@ function __MK_Tree() constructor {
 				
 				var _crl = _curl * (_curlC? _curlC.get(p) : 1);
 				if(_crl != 0) {
-					var _cLen = sin(_spirP + p * pi * _sps) * _crl;
-					ox += lengthdir_x(_cLen, aa);
-					oy += lengthdir_y(_cLen, aa);
+					var _crLen = sin(_spirP + p * pi * _sps) * _crl;
+					ox += lengthdir_x(_crLen, aa);
+					oy += lengthdir_y(_crLen, aa);
 				}
 				
 				_sg = new __MK_Tree_Segment(ox, oy, t);

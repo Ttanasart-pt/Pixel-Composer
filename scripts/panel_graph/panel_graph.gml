@@ -3451,7 +3451,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	var node  = noone;
         var _drag = false;
-        __willconnect = true;
+        var _conn = false;
         
     	switch(_nodeType) {
 	    	case "Node_Blend" :     node = doBlend();                   break;
@@ -3474,15 +3474,29 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    		}
 	    		
 	    		node  = doNewNode(_nodeType);
+	    		_conn = true;
 	    		break;
 	    	
 	    	default : 
 	    		node  = doNewNode(_nodeType); 
 	    		_drag = _select; 
+	    		_conn = true;
 	    		break;
     	}
     	
         if(!is(node, Node)) return undefined;
+        
+        if(_conn && array_length(nodes_selecting) == 1) {
+        	var sNode = nodes_selecting[0];
+        	var _jOut = sNode.getOutput();
+        	var _jIn  = node.getInput();
+        	
+        	if(_jOut != noone && _jIn != noone && _jIn.setFrom(_jOut)) {
+        		node.x = sNode.x + sNode.w + 64;
+        		node.y = sNode.y;
+        		_drag  = false;
+        	}
+        }
         
         if(_preset != "") {
         	node.skipDefault();
@@ -3501,7 +3515,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	_drag = false;
         }
         
-        if(_drag) selectDragNode(node, __willconnect);
+        if(_select) selectDragNode(node, _drag);
         connect_related = noone;
         return node;
     }
@@ -3772,20 +3786,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        value_dragging = noone;
 	        return node;
-        }
-        
-        if(project.graphConnection.connect_on_create && array_length(nodes_selecting) == 1) {
-        	var sNode = nodes_selecting[0];
-        	var _jOut = sNode.getOutput();
-        	var _jIn  = node.getInput();
-        	
-        	if(_jOut != noone && _jIn != noone && _jIn.setFrom(_jOut)) {
-        		__willconnect = false;
-        		node.x = sNode.x + sNode.w + 64;
-        		node.y = sNode.y;
-        	}
-        	
-        	return node;
         }
         
         return node;

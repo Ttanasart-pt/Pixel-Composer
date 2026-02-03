@@ -640,6 +640,7 @@
 	function surface_create_empty(w, h, format = surface_rgba8unorm) {
 		INLINE
 	
+		if(!surface_format_is_supported(format)) format = surface_rgba8unorm;
 		var s = surface_create(w, h, format);
 		surface_clear(s);
 		return s;
@@ -647,13 +648,13 @@
 
 	function surface_create_size(surface, format = surface_rgba8unorm) {
 		INLINE
-	
+		if(!surface_format_is_supported(format)) format = surface_rgba8unorm;
 		return surface_create_valid(surface_get_width_safe(surface), surface_get_height_safe(surface), format);
 	}
 
 	function surface_create_valid(w, h, format = surface_rgba8unorm) {
 		INLINE
-	
+		if(!surface_format_is_supported(format)) format = surface_rgba8unorm;
 		return surface_create_empty(surface_valid_size(w), surface_valid_size(h), format);
 	}
 
@@ -661,6 +662,7 @@
 		INLINE
 	
 		if(buff < 0) return;
+		if(!surface_format_is_supported(format)) format = surface_rgba8unorm;
 		var s = surface_create_valid(surface_valid_size(w), surface_valid_size(h), format);
 		buffer_set_surface(buff, s, 0);
 		return s;
@@ -705,7 +707,8 @@
 		if(!sprite_exists(spr)) return noone;
 		var sw = sprite_get_width(spr);
 		var sh = sprite_get_height(spr);
-	
+		if(!surface_format_is_supported(format)) format = surface_rgba8unorm;
+		
 		var s = surface_create_valid(sw, sh, format);
 		surface_set_target(s);
 			BLEND_OVERRIDE
@@ -736,6 +739,7 @@
 		if(!skipCheck && !is_surface(surface))			return surface;
 		if(!is_numeric(width) || !is_numeric(height))	return surface;
 		if(width < 1 && height < 1)						return surface;
+		if(!surface_format_is_supported(format)) format = surface_rgba8unorm;
 		
 		if(format != noone && format != surface_get_format(surface)) {
 			surface_free(surface);
@@ -781,7 +785,8 @@
 		if(is(surface, dynaSurf)) 
 			return surface.clone();
 		if(!is_surface(surface)) return noone;
-	
+		
+		if(format != noone && !surface_format_is_supported(format)) format = surface_rgba8unorm;
 		destination = surface_verify(destination, surface_get_width_safe(surface), surface_get_height_safe(surface), format == noone? surface_get_format(surface) : format);
 	
 		surface_set_target(destination);

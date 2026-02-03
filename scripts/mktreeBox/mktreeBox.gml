@@ -78,14 +78,16 @@ function mktreeBox() : widget() constructor {
         var x0 = x + iw + ui(4 + 8);
         var y0 = y + ui(4);
 		var ww = w - iw - ui(4);
-        		
-        if(expanded) {
-        	expanded_h = TEXTBOX_HEIGHT;
-    		var _h = 0;
-    		var _l = "";
+		var _l = "";
+		expanded_h = TEXTBOX_HEIGHT;
+		
+    	if(_isLeaf) {
+    		_l = $"Leaves [{array_length(_tree)}]"
     		
-    		if(_isLeaf) _l = $"Leaves [{array_length(_tree)}]"
-        	else if(is_array(_tree) && array_length(_tree)) {
+    	} else if(expanded) {
+    		var _h = 0;
+    		
+        	if(is_array(_tree) && array_length(_tree)) {
         		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
         			if(!is(_tree[i], __MK_Tree)) continue;
     				var hh = drawTree(_tree[i], x0, y0, ww);
@@ -96,16 +98,13 @@ function mktreeBox() : widget() constructor {
         	} else if(is(_tree, __MK_Tree))
         		_h += drawTree(_tree, x0, y0, ww);
         	
-	        draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-	        draw_text_add(x0, y + TEXTBOX_HEIGHT / 2, _l);
-	        
     		expanded_h = max(expanded_h, ui(8) + _h);
         	
-        } else {
-	        draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-	        draw_text_add(x0, y + h / 2, "Tree");
-	        
-        }
+        } else
+        	_l = "Tree"
+        
+        draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
+        draw_text_add(x0, y + h / 2, _l);
         
 		return h;
 	}

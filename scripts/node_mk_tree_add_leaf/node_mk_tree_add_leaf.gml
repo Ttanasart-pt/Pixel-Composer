@@ -50,13 +50,17 @@ function Node_MK_Tree_Add_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _tree  = getInputData(0);
 			var _ordr  = getInputData(1);
 			var _ntree = variable_clone(_tree);
+			
+			outputs[0].setValue(_ntree);
 		#endregion
 		
+		if(array_empty(_ntree)) return;
 		array_foreach(_ntree, function(t,i) /*=>*/ { if(t.root) t.root.drawn = false; })
 		
 		var _tr = _ntree;
 		if(is_array(_tr)) { 
 			var _len = array_length(_tr);
+			if(_ordr < 0) _ordr = _len + _ordr;
 			_tr = array_safe_get(_tr, clamp(_ordr, 0, _len - 1));
 		}
 			
@@ -67,7 +71,6 @@ function Node_MK_Tree_Add_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			}
 		}
 		
-		outputs[0].setValue(_ntree);
 	}
 	
 }

@@ -200,6 +200,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		for(var i = 0; i < amo; i++) {
 			var _spr = _sprs[i];
+			if(!sprite_exists(_spr)) continue;
 			
 			switch(can) {
 				case CANVAS_SIZE.individual :

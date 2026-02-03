@@ -49,11 +49,11 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14,
-		[ "Origin",    false ], 5, 1, 2, 
-		[ "Segment",   false ], 7, 3, 
-		[ "Direction", false ], 4, 10, 9, 15, 
+		[ "Origin",    false ],  5,  1,  2, 
+		[ "Segment",   false ],  7,  3, 
+		[ "Direction", false ],  4, 10,  9, 15, 
 		[ "Spiral",    false ], 22, 28, 23, 18, 19, 20, 21, 
-		[ "Render",    false ], 6, 11, 12, 24, 25, 16, 17, 26, 27, 
+		[ "Render",    false ],  6, 11, 12, 24, 25, 16, 17, 26, 27, 
 	];
 	
 	////- Nodes

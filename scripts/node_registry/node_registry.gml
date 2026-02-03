@@ -82,8 +82,11 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	author  = "";
 	license = "";
 	
-	buildFn = registerFunction("_", nodeName, "", 0, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n, true, true) }, nodeName)
-				.setMenuName($"graph_add_{nodeName}", getName(), spr)
+	buildFn = registerFunction("_", nodeName, "", 0, function(n) /*=>*/ { 
+		var _node = PANEL_GRAPH.doNewNode(n); 
+		if(_node) PANEL_GRAPH.selectDragNode(_node, true);
+		
+	}, nodeName).setMenuName($"graph_add_{nodeName}", getName(), spr)
 				.setCommandName(getName());
 	buildFn.nodeName = nodeName;
 	
