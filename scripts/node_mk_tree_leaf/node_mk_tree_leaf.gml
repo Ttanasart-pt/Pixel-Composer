@@ -298,9 +298,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _grv  = _ggv * (curve_garvit? curve_garvit.get(_cPos) : 1);
 					_dr = lerp_angle_direct(_dr, _gDir, _grv);
 					
-					var _sh = random_range(_offs[0], _offs[1]) * (curve_offset? curve_offset.get(_cPos) : 1);
-					_lx += lengthdir_x(_sh, brnDir + 90);
-					_ly += lengthdir_y(_sh, brnDir + 90);
+					var _sh  = random_range(_offs[0], _offs[1]) * (curve_offset? curve_offset.get(_cPos) : 1);
 					
 					var lss = curve_size? curve_size.get(_cPos) : 1;
 					var lsx = random_range(_siz[0], _siz[1]) * lss;
@@ -314,7 +312,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _get = random_range(_gtws[0], _gtws[1]) * (curve_geot? curve_geot.get(_cPos) : 1);
 					var _gew = random_range(_gwig[0], _gwig[1]) * (curve_geow? curve_geow.get(_cPos) : 1);
 					
-					var _l = new __MK_Tree_Leaf(_br, _rPos, _shap, _lx, _ly, _dr, lsx, lsy, _lspn);
+					var _llx = _lx + lengthdir_x(_sh, _dr);
+					var _lly = _ly + lengthdir_y(_sh, _dr);
+					
+					var _l = new __MK_Tree_Leaf(_br, _rPos, _shap, _llx, _lly, _dr, lsx, lsy, _lspn);
 					    _l.gravity    = _gDir;
 					    _l.surface    = _tex;
 					    _l.surf_w     =  tw;
@@ -379,7 +380,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				        var getW = _get * (curve_geotW? curve_geotW.get(1) : 1);
 				        var gewW = _gew;
 					    
-						var _l2 = new __MK_Tree_Leaf(_br, _rPos, _shap, _lx, _ly, _d2, lsx * lsw, lsy * lsw, _lspn).copy(_l);
+						var _llx = _lx + lengthdir_x(_sh, _d2);
+						var _lly = _ly + lengthdir_y(_sh, _d2);
+					
+						var _l2 = new __MK_Tree_Leaf(_br, _rPos, _shap, _llx, _lly, _d2, lsx * lsw, lsy * lsw, _lspn).copy(_l);
 						    _l2.color      = lwc;
 						    _l2.geoTwist   = random_range(_gtws[0], _gtws[1]);
 						    _l2.geoGrav    = gegW;
@@ -407,7 +411,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				        	var getW = _get * (curve_geotW? curve_geotW.get(_kprog) : 1);
 							var gewW = _gew;
 							
-							var _l2 = new __MK_Tree_Leaf(_br, _rPos, _shap, _lx, _ly, _d2, lsx * lsw, lsy * lsw, _lspn).copy(_l);
+							var _llx = _lx + lengthdir_x(_sh, _d2);
+							var _lly = _ly + lengthdir_y(_sh, _d2);
+					
+							var _l2 = new __MK_Tree_Leaf(_br, _rPos, _shap, _llx, _lly, _d2, lsx * lsw, lsy * lsw, _lspn).copy(_l);
 								_l2.color      = lwc;
 							    _l2.geoTwist   = random_range(_gtws[0], _gtws[1]);
 							    _l2.geoGrav    = gegW;

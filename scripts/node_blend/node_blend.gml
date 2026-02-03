@@ -145,6 +145,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				drag_mx  = _mx;
 				drag_my  = _my;
 			}
+			
 		} else 
 			draw_rectangle(_rx, _ry, _rx + _rw, _ry + _rh, true);
 			

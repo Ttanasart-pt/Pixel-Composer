@@ -54,7 +54,7 @@ function Node_MK_Tree_Add_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			outputs[0].setValue(_ntree);
 		#endregion
 		
-		if(array_empty(_ntree)) return;
+		if(!is_array(_ntree) || array_empty(_ntree)) return;
 		array_foreach(_ntree, function(t,i) /*=>*/ { if(t.root) t.root.drawn = false; })
 		
 		var _tr = _ntree;
