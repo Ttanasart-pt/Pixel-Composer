@@ -138,19 +138,20 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_surface("map",  _map);
 				shader_set_surface("map2", _data[17]);
 				
-				shader_set_f("dimension",     [ww, hh]);
-				shader_set_f("map_dimension", [mw, mh]);
-				shader_set_f("displace",      _data[ 2]);
-				shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3], _data[25]);
-				shader_set_f_map("middle",    _data[ 4], _data[24], inputs[4]);
-				shader_set_i("mode",          _data[ 5]);
-				shader_set_i("sepAxis",       _data[16]);
+				shader_set_f("dimension",     [ww,hh]   );
+				shader_set_f("map_dimension", [mw,mh]   );
+				shader_set_f("displace",      _data[ 2] );
+				shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3], _data[25] );
+				shader_set_f_map("middle",    _data[ 4], _data[24], inputs[4]            );
+				shader_set_i("mode",          _data[ 5] );
+				shader_set_i("sepAxis",       _data[16] );
 				
-				shader_set_i("iterate",       _data[ 6]);
-				shader_set_f("iteration",     _data[18]);
-				shader_set_i("blendMode",     _data[11]);
-				shader_set_i("fadeDist",      _data[19]);
-				shader_set_i("reposition",    _data[20]);
+				shader_set_i("iterate",       _data[ 6] );
+				shader_set_f("iteration",     _data[18] );
+				shader_set_i("blendMode",     _data[11] );
+				shader_set_i("fadeDist",      _data[19] );
+				shader_set_i("reposition",    _data[20] );
+				
 				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();
 			

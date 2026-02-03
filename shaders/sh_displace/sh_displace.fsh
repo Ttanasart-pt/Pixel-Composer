@@ -319,7 +319,7 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		if(sepAxis == 0) {
 			_ang = disP.r * PI * 2.;
 			
-			_str  = disP.g - mid;
+			_str = disP.g - mid;
 			if(strength_curve_use == 1) 
 				_str = curveEval(strength_curve, strength_amount, _str);
 			_str *= str;
@@ -329,7 +329,7 @@ vec2 shiftMap(in vec2 pos, in float str) {
 			
 			_ang = bright(disP) * PI * 2.;
 			
-			_str  = bright(disP2) - mid;
+			_str = bright(disP2) - mid;
 			if(strength_curve_use == 1) 
 				_str = curveEval(strength_curve, strength_amount, _str);
 			_str *= str;

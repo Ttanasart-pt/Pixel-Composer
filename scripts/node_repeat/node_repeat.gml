@@ -52,7 +52,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 2, nodeValue_Int(      "Amount",           2      ));
 	newInput(18, nodeValue_Int(      "Column",           4      ));
 	newInput( 7, nodeValue_RotRange( "Angle Range",     [0,360] ));
-	newInput( 8, nodeValue_Float(    "Radius",           8      ));
+	newInput( 8, nodeValue_Float(    "Radius",          .25     )).setUnitSimple();
 	
 	////- =Path
 	newInput(11, nodeValue_PathNode( "Path",            noone   )).setTooltip("Make each copy follow along path.");

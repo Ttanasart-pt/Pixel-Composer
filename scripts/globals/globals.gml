@@ -35,25 +35,25 @@ gml_pragma("UnityBuild", "true");
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_20_00_0;
 	globalvar VERSION; VERSION        = 1_20_05_0;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_20_04_1;
-	globalvar VERSION_STRING; VERSION_STRING = "1.20.5.009";
+	globalvar VERSION_STRING; VERSION_STRING = "1.20.5.010";
 	globalvar RELEASE_STRING; RELEASE_STRING = "1.20.5";
-	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_05_0.009;
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_05_0.010;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;
 	
 	var _versions = string_split(VERSION_STRING, ".");
-	globalvar VERSION_MAJOR; VERSION_MAJOR  = toNumber(_versions[1]);
-	globalvar NIGHTLY; NIGHTLY        = string_length(array_last(_versions)) == 3;
+	globalvar VERSION_MAJOR; VERSION_MAJOR       = toNumber(_versions[1]);
+	globalvar NIGHTLY; NIGHTLY             = string_length(array_last(_versions)) == 3;
 	globalvar VERSION_STRING_BETA; VERSION_STRING_BETA = NIGHTLY? string_join(".", _versions[0], _versions[1], _versions[2]) : VERSION_STRING;
 	
-	globalvar HOTKEYS; HOTKEYS            = {};
-	globalvar HOTKEY_CONTEXT; HOTKEY_CONTEXT     = [0];
+	globalvar HOTKEYS; HOTKEYS             = {};
+	globalvar HOTKEY_CONTEXT; HOTKEY_CONTEXT      = [0];
 	
-	globalvar TOOLTIP; TOOLTIP            = "";
-	globalvar DRAGGING; DRAGGING           = noone;
-	globalvar DIALOG_DEPTH_HOVER; DIALOG_DEPTH_HOVER = 0;
-	globalvar DOWNLOAD_LINKS; DOWNLOAD_LINKS     = "";
+	globalvar TOOLTIP; TOOLTIP             = "";
+	globalvar DRAGGING; DRAGGING            = noone;
+	globalvar DIALOG_DEPTH_HOVER; DIALOG_DEPTH_HOVER  = 0;
+	globalvar DOWNLOAD_LINKS; DOWNLOAD_LINKS      = "";
 	
-	globalvar CURRENT_COLOR; CURRENT_COLOR = ca_white;
+	globalvar CURRENT_COLOR; CURRENT_COLOR       = ca_white;
 #endregion
 
 #region input
