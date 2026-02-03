@@ -139,6 +139,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		junction_drawing = [ THEME.node_junctions_single, type ];
 		hover_in_graph   = false;
+		highlight_name   = false;
 		
 		drag_type = 0;
 		drag_mx   = 0;
@@ -366,7 +367,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		custom_icon  = param.icon(); 
 		custom_color = param.color(); 
 		
-		if(has(param, "widg")) editWidget = param.widg(); 
+		if(has(param, "widg")) {
+			editWidget = param.widg();
+			editWidgetSetted = true;
+		}
+		
 		return self;
 	}
 	
@@ -2495,10 +2500,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_s /= 2 * THEME_SCALE;
 		
 		if(custom_icon != undefined) {
-			__draw_sprite_ext(custom_icon, _hov, x, y, _s, _s, 0, c_white, 1);
+			__draw_sprite_ext(custom_icon, _hov, x, y, _s, _s, 0, c_white, 1 - is_dummy * .3);
 			
 		} else if(is_dummy) {
-			if(ghost_hover == noone) __draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, 0.5 + 0.5 * _hov);
+			if(ghost_hover == noone) __draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, .5 + .5 * _hov);
 			else {
 				__draw_sprite_ext(THEME.node_junctions_bg,      ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_bg, 1);
 				__draw_sprite_ext(THEME.node_junctions_outline, ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_fg, 1);
@@ -2586,13 +2591,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static drawName = function(_s, _mx, _my) {
+		var _draw_hg = hover_in_graph || highlight_name;
 		var _draw_cc = COLORS._main_text;
-		var _draw_aa = 0.6 + hover_in_graph * 0.4;
+		var _draw_aa = .6 + _draw_hg * .4;
+		highlight_name = false;
 		
 		var _f = node.previewable? f_p2 : f_p3;
-		
-		draw_set_text(_f, fa_left, fa_center, _draw_cc);
-		draw_set_alpha(_draw_aa);
+		draw_set_text(_f, fa_left, fa_center, _draw_cc, _draw_aa);
 		
 		if(type == VALUE_TYPE.action) {
 			var tx = x;

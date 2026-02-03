@@ -32,11 +32,17 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			for( var i = 0, n = array_length(_tree); i < n; i++ ) {
 				var _t = _tree[i];
-				if(is(_t, __MK_Tree_Leaf)) { _t.draw(); continue; }
 				
-				if(_t.root.drawn) continue
-				_t.root.drawn = true;
-				_t.root.draw();
+				if(is(_t, __MK_Tree_Leaf)) { 
+					_t.draw(); 
+					continue; 
+				}
+				
+				if(is(_t, __MK_Tree)) { 
+					if(_t.root.drawn) continue
+					_t.root.drawn = true;
+					_t.root.draw();
+				}
 			}
 		surface_reset_target();
 		

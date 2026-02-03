@@ -2504,6 +2504,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             
             connection_draw_mouse  = [ _mmx, _mmy ];
             connection_draw_target = target;
+            if(target) target.highlight_name = true;
 			
             value_dragging.drawJunction(graph_s, value_dragging.x, value_dragging.y);
             if(target) {

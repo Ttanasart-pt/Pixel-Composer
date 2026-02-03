@@ -368,6 +368,7 @@
             
             { "label": "/Leaves" },
             "Node_MK_Tree_Leaf",
+            "Node_MK_Tree_Add_Leaf", 
             
             { "label": "Modify" },
             { "label": "/Length" },
