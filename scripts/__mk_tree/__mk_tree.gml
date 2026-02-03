@@ -521,17 +521,17 @@ function __MK_Tree() constructor {
 				oy += dy;
 				
 				var _sps = _spirS * (_spirSC? _spirSC.get(p) : 1);
-				var _wav = _wave  * (_waveC? _waveC.get(p) : 1) / amount * _sps;
+				var _wav = _wave  * (_waveC? _waveC.get(p) : 1);
 				
 				if(_wav != 0) {
-					var _wLen = cos(_spirP + p * pi * _sps) * _wav;
+					var _wLen = cos(_spirP + p * pi * _sps) * _wav * _sps / amount;
 					ox += lengthdir_x(_wLen, aa + 90);
 					oy += lengthdir_y(_wLen, aa + 90);
 				}
 				
 				var _crl = _curl * (_curlC? _curlC.get(p) : 1);
 				if(_crl != 0) {
-					var _crLen = sin(_spirP + p * pi * _sps) * _crl;
+					var _crLen = sin(_spirP + p * pi * _sps) * _wav * _crl / amount;
 					ox += lengthdir_x(_crLen, aa);
 					oy += lengthdir_y(_crLen, aa);
 				}
