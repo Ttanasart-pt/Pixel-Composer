@@ -16,9 +16,22 @@ function mktreeBox() : widget() constructor {
 		
 		var isRoot = _tree.root == _tree;
 		var _name  = isRoot? "Root" : "Branch";
+		var _txt   = _suff == ""? _name : $"{_name} [{_suff}]";
 		
 		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
-        draw_text_add(_x, _y + hh / 2, _suff == ""? _name : $"{_name} [{_suff}]");
+        draw_text_add(_x, _y + hh / 2, _txt);
+        
+        if(!array_empty(_tree.leaves)) {
+        	var _tw = string_width(_txt);
+        	var _tx = _x + _tw + ui(4);
+        	
+        	draw_sprite_ext(THEME.mkTree_leaf, 0, _tx + ui(8), _y + hh / 2, .5, .5, 0, COLORS._main_text_sub);
+        	_tx += ui(16);
+        	
+        	draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+        	draw_text_add(_tx, _y + hh / 2, $"{array_length(_tree.leaves)}");
+        }
+        	
         _y += hh;
         
         if(array_empty(_tree.children)) return _h;
@@ -45,7 +58,7 @@ function mktreeBox() : widget() constructor {
         
         var _isLeaf = is_array(_tree) && array_length(_tree) && is(_tree[0], __MK_Tree_Leaf);
         
-    	var ic = _isLeaf? THEME.mkTree_leaf : THEME.mkTree;
+    	var ic = _isLeaf?  THEME.mkTree_leaf : THEME.mkTree;
     	var cc = expanded? COLORS._main_icon_light : COLORS.node_blend_mktree; 
     	var iw = TEXTBOX_HEIGHT;
     	var _s = (iw - ui(8)) / max(sprite_get_width(ic), sprite_get_height(ic));

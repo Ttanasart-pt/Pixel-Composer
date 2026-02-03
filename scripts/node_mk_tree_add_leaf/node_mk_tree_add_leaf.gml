@@ -7,12 +7,13 @@ function Node_MK_Tree_Add_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	setDimension(96, 48);
 	
 	////- =Leaves
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
-	// 1
+	newInput( 0, nodeValue_Struct( "Tree",  noone )).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	newInput( 1, nodeValue_Int(    "Order", 0     ));
+	// 2
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 1, 
 		[ "Leaves", false ], 
 	];
 	
@@ -45,16 +46,24 @@ function Node_MK_Tree_Add_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
-		var _tree  = getInputData(0);
-		var _ntree = variable_clone(_tree);
+		#region data
+			var _tree  = getInputData(0);
+			var _ordr  = getInputData(1);
+			var _ntree = variable_clone(_tree);
+		#endregion
 		
-		for( var i = 0, n = array_length(_ntree); i < n; i++ ) {
-			var _tr = _ntree[i];
+		array_foreach(_ntree, function(t,i) /*=>*/ { if(t.root) t.root.drawn = false; })
+		
+		var _tr = _ntree;
+		if(is_array(_tr)) { 
+			var _len = array_length(_tr);
+			_tr = array_safe_get(_tr, clamp(_ordr, 0, _len - 1));
+		}
 			
+		if(is(_tr, __MK_Tree)) {
 			for( var j = data_length, m = array_length(inputs); j < m; j++ ) {
 				var lf = getInputData(j);
-				if(is_array(lf)) 
-					array_append(_tr.leaves, lf);
+				if(is_array(lf)) array_append(_tr.leaves, lf);
 			}
 		}
 		
