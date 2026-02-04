@@ -27,40 +27,40 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 	shape        = _shp;
 	whorlIndex   = 0;
 	
-	x  = _x;
-	y  = _y;
-	gravity = -90;
+	x            = _x;
+	y            = _y;
+	gravity      = -90;
 	
-	startx = _x;
-	starty = _y;
+	startx       = _x;
+	starty       = _y;
 	
-	scale = 1;
-	sx  = _sx;
-	sy  = _sy;
-	dir = _dir;
-	sp  = _span;
+	scale        = 1;
+	sx           = _sx;
+	sy           = _sy;
+	dir          = _dir;
+	sp           = _span;
 	
-	surface   = noone;
-	surf_w    = 1;
-	surf_h    = 1;
+	surface      = noone;
+	surf_w       = 1;
+	surf_h       = 1;
 	
-	color     = c_white;
-	colorE    = c_white;
-	colorU    = undefined;
-	colorLeaf = undefined;
+	color        = c_white;
+	colorE       = undefined;
+	colorU       = undefined;
+	colorLeaf    = undefined;
 	
-	growShift = 0;
-	growSpeed = 1;
+	growShift    = 0;
+	growSpeed    = 1;
 	
-	resolution =  0;
-	geometry   = undefined;
-	geometry1  = undefined;
-	geoGrav    = .1;
-	geoTwist   =  0;
-	geoWigg    =  0;
-	geoWiggC   = undefined;
+	resolution   =  0;
+	geometry     = undefined;
+	geometry1    = undefined;
+	geoGrav      = .1;
+	geoTwist     =  0;
+	geoWigg      =  0;
+	geoWiggC     = undefined;
 	
-	mesh = undefined;
+	mesh         = undefined;
 	
 	static recalDir = function() {
 		dx = lengthdir_x(sx, dir);
@@ -85,8 +85,9 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 		var x2 = x + dx * sp * scale;
 		var y2 = y + dy * sp * scale;
 		
-		var _cTop = colorU? colorU : colorE;
-		var _cBot = colorE;
+		var _cE   = colorE? colorE : color;
+		var _cTop = colorU? colorU : _cE;
+		var _cBot = _cE;
 						
 		switch(shape) {
 			case MKLEAF_TYPE.Leaf : 
@@ -231,7 +232,7 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 				
 			case MKLEAF_TYPE.Circle : 
 				draw_set_circle_precision(16)
-				draw_circle_color(x2, y2, sx * scale, color, colorE, false);
+				draw_circle_color(x2, y2, sx * scale, color, _cE, false);
 				break;
 				
 			case MKLEAF_TYPE.Surface : 
@@ -349,6 +350,7 @@ function __MK_Tree() constructor {
 	growSpeed = 1;
 	
 	texture   = noone;
+	drawLine  = false;
 	
 	////- Get
 	
@@ -607,6 +609,34 @@ function __MK_Tree() constructor {
 		array_foreach(children, function(c) /*=>*/ {return c.drawOverlay(__x, __y, __s)});
 	}
 	
+	static drawBranchLine = function() {
+		var ox, oy, ot, oc;
+		var nx, ny, nt, nc;
+		var tid = is_surface(texture)? surface_get_texture(texture) : -1;
+		
+		draw_set_circle_precision(16);
+		
+		var len = array_length(segments);
+		
+		for( var i = 0; i < len; i++ ) {
+			var _seg = segments[i];
+			
+			nx  = _seg.x;
+			ny  = _seg.y;
+			nt  = _seg.thickness;
+			nc  = _seg.color;
+			
+			if(i) draw_line_width2(ox, oy, nx, ny, ot, nt, true, oc, nc);
+			
+			ox = nx;
+			oy = ny;
+			ot = nt;
+			
+			oc  = nc;
+		}
+		
+	}
+	
 	static drawBranch = function() {
 		var ox, oy, ot, oa, oc, ocl, ocr, orat;
 		var nx, ny, nt, na, nc, ncl, ncr, nrat;
@@ -687,7 +717,10 @@ function __MK_Tree() constructor {
 	}
 	
 	static draw = function() {
-		if(array_length(segments) >= 2) drawBranch();
+		if(array_length(segments) >= 2) {
+			if(drawLine) drawBranchLine();
+			else         drawBranch();
+		}
 		
 		array_foreach(leaves,   function(l) /*=>*/ { if(is(l, __MK_Tree_Leaf)) l.draw(); });
 		array_foreach(children, function(c) /*=>*/ { if(is(c, __MK_Tree))      c.draw(); });

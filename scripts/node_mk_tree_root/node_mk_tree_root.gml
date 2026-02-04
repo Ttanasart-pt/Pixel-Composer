@@ -35,6 +35,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setCurvable(21, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	
 	////- =Rendering
+	newInput(29, nodeValue_Bool(     "Draw Line",       false       ));
 	newInput( 6, nodeValue_Range(    "Thickness",       [4,4], true ))
 		.setCurvable(11, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	newInput(12, nodeValue_Gradient( "Base Color",      gra_white   ));
@@ -44,7 +45,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(17, nodeValue_Gradient( "L Edge Color",    gra_white   ));
 	newInput(26, nodeValue_Gradient( "R Edge Color",    gra_white   ));
 	newInput(27, nodeValue_Surface(  "Texture" ));
-	// input 29
+	// input 30
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -53,7 +54,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Segment",   false ],  7,  3, 
 		[ "Direction", false ],  4, 10,  9, 15, 
 		[ "Spiral",    false ], 22, 28, 23, 18, 19, 20, 21, 
-		[ "Render",    false ],  6, 11, 12, 24, 25, 16, 17, 26, 27, 
+		[ "Render",    false ], 29,  6, 11, 12, 24, 25, 16, 17, 26, 27, 
 	];
 	
 	////- Nodes
@@ -99,8 +100,9 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _grv  = getInputData( 9);
 			var _grvC = getInputData(15),     curve_grav  = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
 			
-			var _thk      = getInputData( 6);
-			var _thkC     = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
+			var _line  = getInputData(29);
+			var _thk   = getInputData( 6);
+			var _thkC  = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
 			
 			var _baseGrad = getInputData(12);
 			var _lenc     = getInputData(24);
@@ -109,6 +111,13 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _edgeLGrd = getInputData(17); inputs[17].setVisible(_edge > 0);
 			var _edgeRGrd = getInputData(26); inputs[26].setVisible(_edge > 0);
 			var _tex      = getInputData(27);
+				
+			inputs[24].setVisible(!_line);
+			inputs[25].setVisible(!_line);
+			inputs[16].setVisible(!_line);
+			inputs[17].setVisible(!_line);
+			inputs[26].setVisible(!_line);
+			inputs[27].setVisible(!_line);
 				
 			_baseGrad.cache();
 			_lencGrad.cache();
@@ -129,8 +138,9 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			_t.x = ox;
 			_t.y = oy;
-			_t.amount  = random_range(_segs[0], _segs[1]);
-			_t.texture = _tex;
+			_t.amount   = random_range(_segs[0], _segs[1]);
+			_t.texture  = _tex;
+			_t.drawLine = _line;
 			
 			var _length = random_range(_len[0], _len[1]);
 			var _angle  = rotation_random_eval(_ang);

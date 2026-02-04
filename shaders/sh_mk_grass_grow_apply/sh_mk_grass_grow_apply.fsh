@@ -147,6 +147,7 @@ uniform float density;
 uniform int  groundFill;
 uniform vec4 groundColor;
 uniform int  renderType;
+uniform int  drawBG;
 
 float random (in vec2  st) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.989248, 78.6923453))) * 437.9854123); }
 
@@ -156,7 +157,7 @@ void main() {
 	vec4  grassBase = texture2D(grassMask,      v_vTexcoord);
 	vec4  grasCol   = texture2D(grassTexture,   v_vTexcoord);
 	
-	gl_FragColor = baseCol;
+	gl_FragColor = drawBG == 1? baseCol : vec4(0.);
 	if(groundFill == 1 && grassBase.r > 0.)
 		gl_FragColor = groundColor;
 	

@@ -30,6 +30,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(15, nodeValue_Int(    "Noise Detail",  1 ));
 	
 	////- =Render
+	newInput(23, nodeValue_Bool(        "Draw Original", true ));
 	newInput(12, nodeValue_Enum_Scroll( "Render Type",    0, [ "Gradient", "Sample Multiply", "Sample Add" ] ));
 	newInput(13, nodeValue_Gradient(    "Colors",         gra_black_white ));
 	newInput(16, nodeValue_Slider(      "Color Variance", 0 ));
@@ -37,14 +38,13 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Ground
 	newInput(18, nodeValue_Bool(  "Fill Ground", false));
 	newInput(19, nodeValue_Color( "Ground",      ca_black));
-	
-	// input 23
+	// input 24
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
 		["Source",  false    ],  2,  3,  4,  5,  6, 
 		["Shape",   false    ],  7, 22,  8, 17, 20, 21, 
 		["Scatter", false    ],  9, 11, 14, 15,
-		["Render",  false    ], 12, 13, 16, 
+		["Render",  false    ], 23, 12, 13, 16, 
 		["Ground",  false, 18], 19, 
 	];
 	
@@ -95,6 +95,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _sizeSca  = _data[14];
 			var _sizeItr  = _data[15];
 			
+			var _drawBg   = _data[23];
 			var _rtype    = _data[12];
 			var _color    = _data[13];
 			var _color_vr = _data[16];
@@ -112,6 +113,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[4].setVisible(_src == 1,   _src == 1);
 			inputs[5].setVisible(_src == 2 || _src == 3);
 			inputs[6].setVisible(_src == 2 || _src == 3);
+			
+			if(!is_surface(_surf)) return _outSurf;
 		#endregion
 			
 		random_set_seed(_seed);
@@ -217,6 +220,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_f("expand",        _expand);
 				
 				shader_set_i("renderType",    _rtype);
+				shader_set_i("drawBG",        _drawBg);
 				shader_set_i("groundFill",    _gnd_fil);
 				shader_set_c("groundColor",   _gnd_clr);
 				
@@ -305,11 +309,12 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_f("expand",        _expand);
 					
 					shader_set_i("renderType",    _rtype);
+					shader_set_i("drawBG",        _drawBg);
 					shader_set_i("groundFill",    _gnd_fil);
 					shader_set_c("groundColor",   _gnd_clr);
 				
 					_color.shader_submit();
-				
+					
 					draw_surface_safe(_surf);
 				surface_reset_shader();
 			}

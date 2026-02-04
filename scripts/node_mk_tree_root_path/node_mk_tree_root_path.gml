@@ -25,6 +25,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		.setCurvable(16, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 	
 	////- =Rendering
+	newInput(21, nodeValue_Bool(     "Draw Line", false       ));
 	newInput( 3, nodeValue_Range(       "Thickness",       [4,4], true ))
 		.setCurvable(4, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 	newInput( 5, nodeValue_Gradient(    "Base Color",      gra_white ));
@@ -34,15 +35,15 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 7, nodeValue_Gradient(    "L Edge Color",    gra_white ));
 	newInput(19, nodeValue_Gradient(    "R Edge Color",    gra_white ));
 	newInput(20, nodeValue_Surface(     "Texture" ));
-	// input 21
+	// input 22
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
-		[ "Path",      false ], 1, 2, 
-		[ "Direction", false ], 8, 10, 
+		[ "Path",      false ],  1,  2, 
+		[ "Direction", false ],  8, 10, 
 		[ "Spiral",    false ], 11, 12, 13, 14, 15, 16, 
-		[ "Render",    false ], 3, 4, 5, 17, 18, 6, 7, 19, 20, 
+		[ "Render",    false ], 21,  3,  4,  5, 17, 18,  6,  7, 19, 20, 
 	];
 	
 	////- Nodes
@@ -80,6 +81,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _cur  = getInputData(15);
 			var _curC = getInputData(16),    curve_curl  = inputs[15].attributes.curved? new curveMap(_curC)  : undefined;
 			
+			var _line     = getInputData(21);
 			var _thck     = getInputData( 3);
 			var _thckC    = getInputData( 4), curve_thick  = inputs[ 3].attributes.curved? new curveMap(_thckC)  : undefined;
 			var _baseGrad = getInputData( 5);
@@ -90,6 +92,12 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _edgeRGrd = getInputData(19); inputs[19].setVisible(_edge > 0);
 			var _tex      = getInputData(20);
 			
+			inputs[17].setVisible(!_line);
+			inputs[18].setVisible(!_line);
+			inputs[ 6].setVisible(!_line);
+			inputs[ 7].setVisible(!_line);
+			inputs[19].setVisible(!_line);
+			inputs[20].setVisible(!_line);
 		#endregion
 		
 		if(!is_path(_path)) return;
@@ -101,6 +109,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		for( var t = 0; t < pamo; t++ ) {
 			var _t = new __MK_Tree();
+			_t.drawLine = _line;
 			
 			_p = _path.getPointRatio(0, t, _p);
 			var nx, ny, dx, dy;

@@ -147,6 +147,7 @@ uniform float distribution;
 uniform int  groundFill;
 uniform vec4 groundColor;
 uniform int  renderType;
+uniform int  drawBG;
 
 uniform float expand;
 
@@ -195,7 +196,7 @@ void main() {
 	vec4  baseCol   = texture2D(gm_BaseTexture, v_vTexcoord);
 	vec4  grassBase = texture2D(grassMask, v_vTexcoord);
 	
-	gl_FragColor = baseCol;
+	gl_FragColor = drawBG == 1? baseCol : vec4(0.);
 	if(groundFill == 1 && grassBase.r > 0.)
 		gl_FragColor = groundColor;
 	

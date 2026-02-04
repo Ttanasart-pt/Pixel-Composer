@@ -826,6 +826,9 @@ function Panel_Process_Maker() : PanelContent() constructor {
 						curr_track  = _data;
 					}
 					
+					var prevW = output_width - 192;
+					var prevH = output_width - 192;
+						
 					if(is_array(_outv)) {
 						BLEND_NORMAL
 						
@@ -894,6 +897,9 @@ function Panel_Process_Maker() : PanelContent() constructor {
 						var sh = surface_get_height(_outv);
 						var ss = min((output_width - 192) / sw, (output_width - 192) / sh);
 						
+						prevW = sw * ss;
+						prevH = sh * ss;
+
 						var x0 = cx - sw * ss / 2;
 						var y0 = cy - sh * ss / 2;
 						
@@ -944,9 +950,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					}
 					
 					if(_rawnode.drawProcessShort != undefined) {
-						var size = output_width - 192;
-						var cush = _rawnode.drawProcessShort(cx, cy, size, size, _trans);
-						
+						var cush = _rawnode.drawProcessShort(cx, cy, prevW, prevH, _trans);
 						if(cush != undefined) ny = cy + cush / 2 + 64;
 					}
 					
