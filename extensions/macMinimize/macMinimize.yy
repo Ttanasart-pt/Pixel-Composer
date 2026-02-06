@@ -16,9 +16,9 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"macMinimize.ext","constants":[],"copyToTargets":2882303765812084974,"filename":"macMinimize.ext","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"macMinimize.ext","constants":[],"copyToTargets":2882303765812084974,"filename":"macMinimize.ext","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"mac_minimize_to_dock","argCount":0,"args":[1,],"documentation":"","externalName":"macMinimize","help":"","hidden":false,"kind":4,"name":"mac_minimize_to_dock","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":4,"name":"macMinimize.ext","order":[],"origname":"","ProxyFiles":[
+      ],"init":"","kind":4,"name":"macMinimize.ext","origname":"","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"libmacMinimize.dylib","name":"libmacMinimize.dylib","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":1,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],

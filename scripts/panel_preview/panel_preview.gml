@@ -534,7 +534,7 @@ function Panel_Preview() : PanelContent() constructor {
     #region ++++ Toolbars & Actions ++++
     	MENUITEM_CONDITIONS[$ "preview_3d_is_unlock"] = function() /*=>*/ {return !preview_lock};
     	
-    	function subDialogCall(_dia) {
+    	static subDialogCall = function(_dia) {
 	    	dialogPanelCall(_dia, x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
 	    }
 	     
@@ -633,7 +633,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- DATA
     
-    function setNodePreview(_node, _lock = locked, _view = true) {
+    static setNodePreview = function(_node, _lock = locked, _view = true) {
         if(locked) return self;
         
         if(_view && resetViewOnDoubleClick)
@@ -646,20 +646,20 @@ function Panel_Preview() : PanelContent() constructor {
         return self;
     }
     
-    function removeNodePreview(_node) {
+    static removeNodePreview = function(_node) {
         if(locked) return;
         
         if(preview_node[0] == _node) preview_node[0] = noone;
         if(preview_node[1] == _node) preview_node[1] = noone;
     }
     
-    function resetNodePreview() {
+    static resetNodePreview = function() {
         preview_node = [ noone, noone ]; 
         locked = false;
     }
     
-    function __getNodePreview() { return preview_node[splitView? splitSelection : 0]; }
-    function   getNodePreview() { 
+    static __getNodePreview = function() { return preview_node[splitView? splitSelection : 0]; }
+    static   getNodePreview = function() { 
         var _node = __getNodePreview();
         if(_node == noone) return noone;
         if(!_node.project.active) { resetNodePreview(); return noone; }
@@ -667,11 +667,11 @@ function Panel_Preview() : PanelContent() constructor {
         return is(_node, Node)? _node.getPreviewingNode() : _node;
     }
     
-    function getNodePreviewData()     { return preview_data[     splitView? splitSelection : 0 ]; }
-    function getNodePreviewSurface()  { return preview_surfaces[ splitView? splitSelection : 0 ]; }
-    function getNodePreviewSequence() { return preview_sequence[ splitView? splitSelection : 0 ]; }
+    static getNodePreviewData     = function() { return preview_data[     splitView? splitSelection : 0 ]; }
+    static getNodePreviewSurface  = function() { return preview_surfaces[ splitView? splitSelection : 0 ]; }
+    static getNodePreviewSequence = function() { return preview_sequence[ splitView? splitSelection : 0 ]; }
     
-    function getPreviewData() {
+    static getPreviewData = function() {
     	preview_junction = noone;
     	
         var _prevNode = preview_node[0];
@@ -713,9 +713,9 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function onFocusBegin() { PANEL_PREVIEW = self; }
+    static onFocusBegin = function() { PANEL_PREVIEW = self; }
     
-    function cyclePreviewChannel(_forward = true) {
+    static cyclePreviewChannel = function(_forward = true) {
     	var node = __getNodePreview();
         if(node == noone) return;
         
@@ -735,7 +735,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- VIEW
     
-    function dragCanvas() {
+    static dragCanvas = function() {
         if(canvas_dragging) {
             if(!MOUSE_WRAPPING) {
                 var dx = mx - canvas_drag_mx;
@@ -842,7 +842,7 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
     }
     
-    function dragCanvas3D() {
+    static dragCanvas3D = function() {
         if(d3_camLerp) {
             d3_camera.focus_angle_x = lerp_float(d3_camera.focus_angle_x, d3_camLerp_x, 3, 1);
             d3_camera.focus_angle_y = lerp_float(d3_camera.focus_angle_y, d3_camLerp_y, 3, 1);
@@ -929,7 +929,7 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
     }
     
-    function fullView(scale = 0, gizmo = false) {
+    static fullView = function(scale = 0, gizmo = false) {
         var bbox = noone;
         
         var node = getNodePreview();
@@ -955,12 +955,12 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_y = h / 2 - _h * canvas_s / 2 - _y * canvas_s;
     }
     
-    function fullViewNoTool(scale = 0) {
+    static fullViewNoTool = function(scale = 0) {
     	if(tool_current == noone || tool_current.getToolObject() == noone)
     		fullView(scale);
     }
     
-    function drawNodeChannel(_node, _x, _y) {
+    static drawNodeChannel = function(_node, _x, _y) {
     	var _chAmo = _node.getOutputChannelAmount();
     	_node.preview_channel = min(_node.preview_channel, _chAmo - 1);
     	if(_chAmo <= 1) return 0;
@@ -994,7 +994,7 @@ function Panel_Preview() : PanelContent() constructor {
         return ww + ui(4);
     }
     
-    function selectAll() {
+    static selectAll = function() {
     	var prevN = getNodePreview();
     	if(!is(prevN, Node)) return;
     	
@@ -1015,7 +1015,7 @@ function Panel_Preview() : PanelContent() constructor {
     	
     }
     
-    function d3dGetUVFromMouse(_mx, _my) {
+    static d3dGetUVFromMouse = function(_mx, _my) {
     	if(d3_active != NODE_3D.polygon)             return undefined;
     	if(!is_just_surface(d3_surface_uv))          return undefined;
     	if(_mx < 0 || _mx > w || _my < 0 || _my > h) return undefined;
@@ -1024,17 +1024,17 @@ function Panel_Preview() : PanelContent() constructor {
     	return is_array(_data) && _data[3] > 0? [ _data[1], _data[2] ] : undefined;
     }
     
-    static onFullScreen = function() { run_in(1, fullView); }
+    static onFullScreen = function() { fullView(); }
     
     ////- TOOL
     
-    function clearSelection() {
+    static clearSelection = function() {
     	selection_active = false;
         var prevN = getNodePreview();
         if(is(prevN, Node) && prevN.selectClear != undefined) prevN.selectClear();
     }
     
-    function resetTool() {
+    static resetTool = function() {
     	if(tool_current == noone) return;
     	var _tobj = tool_current.getToolObject();
     	
@@ -1046,12 +1046,12 @@ function Panel_Preview() : PanelContent() constructor {
         tool_current = noone;
     }
     
-    function clearTool(_bypass_clearable = false) { 
+    static clearTool = function(_bypass_clearable = false) { 
     	if(!tool_clearable && !_bypass_clearable) return;
     	resetTool();
     }
     
-    function drawToolsLeft(_node) {
+    static drawToolsLeft = function(_node) {
     	var _tool = tool_hovering;
         var  ts   = ui(32);
         var  ts2  = ts / 2;
@@ -1268,7 +1268,7 @@ function Panel_Preview() : PanelContent() constructor {
         tool_y_to = clamp(tool_y_to, -tool_y_max, 0);
     }
     
-    function drawToolsRight(_node) {
+    static drawToolsRight = function(_node) {
         var _tool = tool_hovering;
     	var  ts   = ui(32);
         var  ts2  = ts / 2;
@@ -1429,7 +1429,7 @@ function Panel_Preview() : PanelContent() constructor {
         tool_ry_to = clamp(tool_ry_to, -tool_ry_max, 0);
     }
     
-    function drawToolSettings(_node) {
+    static drawToolSettings = function(_node) {
     	var settings = array_merge(_node.getToolSettings(), tool_current.settings);
     	
     	var _toolObj = tool_current.getToolObject();
@@ -1525,7 +1525,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- DRAW
     
-    function drawOnionSkin(node, psx, psy, ss) {
+    static drawOnionSkin = function(node, psx, psy, ss) {
         var _surf = preview_surfaces[0];
         var _rang = PROJECT.onion_skin.range;
         
@@ -1567,7 +1567,7 @@ function Panel_Preview() : PanelContent() constructor {
     preview_surface_width  = 0;
     preview_surface_height = 0;
     
-    function drawNodePreview() {
+    static drawNodePreview = function() {
         var ss   = canvas_s;
         var psx  = 0, psy  = 0;
         var psw  = 0, psh  = 0;
@@ -1779,7 +1779,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(!struct_try_get(_node, "bypass_grid", false)) drawNodeGrid();
     }
     
-    function drawNodeGrid() {
+    static drawNodeGrid = function() {
         if(!PROJECT.previewGrid.show) return;
         
         var _gw = PROJECT.previewGrid.size[0] * canvas_s;
@@ -1807,7 +1807,7 @@ function Panel_Preview() : PanelContent() constructor {
         draw_set_alpha(1);
     }
     
-    function draw3DPolygon(_node) {
+    static draw3DPolygon = function(_node) {
         surface_depth_disable(false);
         
         _node.previewing = 1;
@@ -2029,7 +2029,7 @@ function Panel_Preview() : PanelContent() constructor {
         surface_depth_disable(true);
     }
     
-    function draw3DSdf(_node) {
+    static draw3DSdf = function(_node) {
         _node.previewing = 1;
         
         var _env = _node.environ; 
@@ -2114,7 +2114,7 @@ function Panel_Preview() : PanelContent() constructor {
         gpu_set_texfilter(false);
     }
     
-    function draw3D() {
+    static draw3D = function() {
         var _node = getNodePreview();
         if(_node == noone) return;
         
@@ -2124,7 +2124,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function drawPreviewOverlay() {
+    static drawPreviewOverlay = function() {
         right_menu_y = toolbar_height;
         if(PROJECT.previewSetting.show_view_control == 2) {
             if(d3_active) right_menu_y += ui(72);
@@ -2230,7 +2230,7 @@ function Panel_Preview() : PanelContent() constructor {
         drawDataArray();
     }
     
-    function drawDataArray() {
+    static drawDataArray = function() {
         if(mouse_release(mb_left)) preview_selecting = false;
         var _preview_x_max = preview_x_max;
         preview_x_max = 0;
@@ -2309,7 +2309,7 @@ function Panel_Preview() : PanelContent() constructor {
         preview_x_max = max((siz + ui(8)) * pseql - ui(100), 0);
     }
     
-    function drawViewController() {
+    static drawViewController = function() {
         if(!PROJECT.previewSetting.show_view_control) return;
         if(CAPTURING) return;
         
@@ -2447,7 +2447,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function drawAllNodeGizmo(active) {
+    static drawAllNodeGizmo = function(active) {
     	var _mx = mx;
         var _my = my;
         var overHover = pHOVER && mouse_on_preview == 1;
@@ -2492,7 +2492,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function drawNodeActions(active, _node) {
+    static drawNodeActions = function(active, _node) {
         var _mx = mx;
         var _my = my;
         var overHover = pHOVER && mouse_on_preview == 1, overActive;
@@ -2593,7 +2593,7 @@ function Panel_Preview() : PanelContent() constructor {
         drawToolsRight(_node);
     }
     
-    function drawTopbar(_node) {
+    static drawTopbar = function(_node) {
     	var aa = d3_active? 0.8 : 1;
     	
     	draw_sprite_stretched_ext(THEME.toolbar, 1, 0,  0, w, topbar_height, c_white, aa);
@@ -2681,7 +2681,7 @@ function Panel_Preview() : PanelContent() constructor {
         
     }
     
-    function drawToolBar(_node) {
+    static drawToolBar = function(_node) {
         var ty = h - toolbar_height;
         var aa = d3_active? 0.8 : 1;
         
@@ -2770,7 +2770,7 @@ function Panel_Preview() : PanelContent() constructor {
         draw_line_width(_lx, _ly - _lh, _lx, _ly + _lh, 2);
     }
     
-    function drawSplitView() {
+    static drawSplitView = function() {
         if(splitView == 0) return;
         
         draw_set_color(COLORS.panel_preview_split_line);
@@ -2832,8 +2832,8 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function setActionTooltip(txt, time = 1) { tooltip_action = txt; tooltip_action_time = time; return self; }
-    function drawActionTooltip() {
+    static setActionTooltip  = function(txt, time = 1) { tooltip_action = txt; tooltip_action_time = time; return self; }
+    static drawActionTooltip = function() {
     	if(tooltip_action_time <= 0) return;
     	
     	tooltip_action_time -= DELTA_TIME;
@@ -2855,7 +2855,7 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_set_alpha(1);
     }
     
-    function drawMinimap() { //
+    static drawMinimap = function() { //
         if(!minimap_show) return;
         
         var mx1 = w - ui(8);
@@ -2974,7 +2974,7 @@ function Panel_Preview() : PanelContent() constructor {
             draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(4), my0 + ui(4), 0.5, 0.5, 180, c_white, 0.3);
     } 
     
-    function drawSelection() {
+    static drawSelection = function() {
     	var prevN = PANEL_INSPECTOR.getInspecting();
     	var prevS = is(prevN, Node)
 			    		&& prevN.preview_select_surface 
@@ -3062,7 +3062,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function drawTemp() {
+    static drawTemp = function() {
     	draw_clear(c_black);
     	
     	var surf = __temp_preview;
@@ -3078,7 +3078,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- DRAW MAIN
     
-    function drawContent(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    static drawContent = function(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     	if(__temp_preview != undefined) { 
     		drawTemp(); 
     		if(pHOVER && pFOCUS && mouse_lpress()) __temp_preview = undefined; 
@@ -3087,7 +3087,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
     	mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
         
-        if(do_fullView) run_in(1, fullView);
+        if(do_fullView) fullView();
         do_fullView = false;
         
         var _prev_node = getNodePreview();
@@ -3226,7 +3226,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- ACTION
     
-    function blendAtSelection() {
+    static blendAtSelection = function() {
     	if(!selection_active) return;
     	
     	var node  = getNodePreview();
@@ -3262,7 +3262,7 @@ function Panel_Preview() : PanelContent() constructor {
     	_blend.inputs[14].setValue([pos_x, pos_y]);
     }
     
-    function copyCurrentFrame() {
+    static copyCurrentFrame = function() {
         var prevS = getNodePreviewSurface();
         if(!is_surface(prevS)) return;
         
@@ -3286,7 +3286,7 @@ function Panel_Preview() : PanelContent() constructor {
         	clipboard_set_surface(prevS);
     }
     
-    function saveCurrentFrameToFocus() {
+    static saveCurrentFrameToFocus = function() {
         var prevS = getNodePreviewSurface();
         if(!is_surface(prevS))     return;
         if(!is_struct(PANEL_FILE)) return;
@@ -3303,7 +3303,7 @@ function Panel_Preview() : PanelContent() constructor {
         _fileO.refreshThumbnail();
     }
     
-    function saveCurrentFrameProject(_max_size = undefined, _path = undefined) {
+    static saveCurrentFrameProject = function(_max_size = undefined, _path = undefined) {
     	var prevS = getNodePreviewSurface();
         if(!is_surface(prevS)) return;
         
@@ -3329,7 +3329,7 @@ function Panel_Preview() : PanelContent() constructor {
         surface_free(_surf);
     }
     
-    function saveCurrentFrame() {
+    static saveCurrentFrame = function() {
         var prevS = getNodePreviewSurface();
         var _node = getNodePreview();
         if(_node == noone || !is_surface(prevS)) return;
@@ -3343,7 +3343,7 @@ function Panel_Preview() : PanelContent() constructor {
         surface_save_safe(prevS, path);
     }
     
-    function saveAllCurrentFrames() {
+    static saveAllCurrentFrames = function() {
         var _node = getNodePreview();
         
         if(_node == noone) return;
@@ -3368,14 +3368,14 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function callAddDialog() {
+    static callAddDialog = function() {
     	var  ctx = PANEL_GRAPH.getCurrentContext();
     	var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
     	
     	_dia.buildCallback = addNodeCallback;
     }
     
-    function addNodeCallback(_node) {
+    static addNodeCallback = function(_node) {
     	if(!is(_node, Node)) return;
     	
     	var _baseNode = getNodePreview();
@@ -3412,7 +3412,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         locked   = struct_try_get(data, "locked", locked);
         
-        run_in(1, fullView)
+        fullView();
         return self; 
     }
     

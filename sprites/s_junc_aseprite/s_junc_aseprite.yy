@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"s_junc_aseprite",
   "bboxMode":0,
   "bbox_bottom":20,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"ba2fd5bf-123d-4001-8ec8-ae32bd57ec0b","name":"ba2fd5bf-123d-4001-8ec8-ae32bd57ec0b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"ba2fd5bf-123d-4001-8ec8-ae32bd57ec0b","name":"ba2fd5bf-123d-4001-8ec8-ae32bd57ec0b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -32,7 +32,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"s_junc_aseprite",
     "autoRecord":true,
     "backdropHeight":768,

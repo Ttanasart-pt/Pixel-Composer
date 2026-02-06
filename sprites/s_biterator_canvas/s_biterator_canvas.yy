@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"s_biterator_canvas",
   "bboxMode":0,
   "bbox_bottom":85,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"f1b1e5ca-79ee-47d2-99ac-21343c1acc7e","name":"f1b1e5ca-79ee-47d2-99ac-21343c1acc7e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"f1b1e5ca-79ee-47d2-99ac-21343c1acc7e","name":"f1b1e5ca-79ee-47d2-99ac-21343c1acc7e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -32,7 +32,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"s_biterator_canvas",
     "autoRecord":true,
     "backdropHeight":768,

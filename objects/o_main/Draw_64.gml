@@ -1,5 +1,6 @@
 /// @description init
 if(winMan_isMinimized()) exit;
+if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_loading) exit;
 
 _MOUSE_BLOCK = MOUSE_BLOCK;
 if(MOUSE_BLOCK) MOUSE_BLOCK--;

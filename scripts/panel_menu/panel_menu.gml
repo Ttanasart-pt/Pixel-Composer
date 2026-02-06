@@ -333,9 +333,9 @@ function Panel_Menu() : PanelContent() constructor {
                 menuItem(__txt("Render Profiler"), function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
                 menuItem(__txt("Tester"),          function() /*=>*/ { dialogPanelCall(new Panel_Test());             }),
                 -1,
-                menuItem(__txtx("panel_menu_test_warning", "Display Warning"),        function() /*=>*/ {return noti_warning("Error message")}),
-                menuItem(__txtx("panel_menu_test_error", "Display Error"),            function() /*=>*/ {return noti_error("Error message")}),
-                menuItem(__txtx("panel_menu_test_crash", "Force crash"),              function() /*=>*/ {return print(1 + "a")}),
+                menuItem(__txtx("panel_menu_test_warning", "Display Warning"), function() /*=>*/ {return noti_warning("Error message")}),
+                menuItem(__txtx("panel_menu_test_error", "Display Error"),     function() /*=>*/ {return noti_error("Error message")}),
+                menuItem(__txtx("panel_menu_test_crash", "Force crash"),       function() /*=>*/ {return print(1 + "a")}),
             ])}),
             
             menuItemShelf(__txt("Tools"), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
@@ -347,8 +347,9 @@ function Panel_Menu() : PanelContent() constructor {
                 menuItem(__txt("Locale Manager"),     function() /*=>*/ {return dialogPanelCall(new Panel_Locale_Manager())}),
                 menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
                 -1, 
-                menuItem(__txt("Update resource version"), function() /*=>*/ {return __test_update_theme()}),
-                menuItem(__txt("Generate UGC Thumbnail"),  function() /*=>*/ {return generate_patreon_thumbnail()}),
+                menuItem(__txt("Update Theme version"),   function() /*=>*/ {return __test_update_theme()}),
+                menuItem(__txt("Generate Texture Group"), function() /*=>*/ {return __generate_texturegroup()}),
+                menuItem(__txt("Generate UGC Thumbnail"), function() /*=>*/ {return generate_patreon_thumbnail()}),
             ])}),
             
             -1,

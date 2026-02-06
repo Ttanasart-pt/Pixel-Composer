@@ -24,24 +24,17 @@
   "exportToGame":true,
   "extensionVersion":"1.0.0",
   "files":[
-    {"$GMExtensionFile":"","%Name":"display_screenshot.dll","constants":[],"copyToTargets":9223372036854775807,"filename":"display_screenshot.dll","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"display_screenshot.dll","constants":[],"copyToTargets":9223372036854775807,"filename":"display_screenshot.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"display_capture_mode","argCount":1,"args":[2,],"documentation":"","externalName":"display_capture_mode","help":"display_capture_mode(all_screens)","hidden":false,"kind":1,"name":"display_capture_mode","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_capture_measure_raw","argCount":1,"args":[1,],"documentation":"","externalName":"display_capture_measure_raw","help":"","hidden":true,"kind":11,"name":"display_capture_measure_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_capture_measure_all_start_raw","argCount":0,"args":[],"documentation":"","externalName":"display_capture_measure_all_start_raw","help":"","hidden":true,"kind":11,"name":"display_capture_measure_all_start_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_capture_measure_all_next_raw","argCount":2,"args":[2,1,],"documentation":"","externalName":"display_capture_measure_all_next_raw","help":"","hidden":true,"kind":11,"name":"display_capture_measure_all_next_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_capture_buffer_raw","argCount":2,"args":[1,1,],"documentation":"","externalName":"display_capture_buffer_raw","help":"","hidden":true,"kind":11,"name":"display_capture_buffer_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_capture_init_raw","argCount":0,"args":[],"documentation":"","externalName":"display_capture_init_raw","help":"","hidden":true,"kind":11,"name":"display_capture_init_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":1,"name":"display_screenshot.dll","order":[
-        {"name":"display_capture_mode","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_measure_raw","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_measure_all_start_raw","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_measure_all_next_raw","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_buffer_raw","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_init_raw","path":"extensions/display_screenshot/display_screenshot.yy",},
-      ],"origname":"extensions\\display_screenshot.dll","ProxyFiles":[
+      ],"init":"","kind":1,"name":"display_screenshot.dll","origname":"extensions\\display_screenshot.dll","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"display_screenshot_x64.dll","name":"display_screenshot_x64.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"display_screenshot.gml","constants":[
+    {"$GMExtensionFile":"v1","%Name":"display_screenshot.gml","constants":[
         {"$GMExtensionConstant":"","%Name":"display_capture_rect","hidden":false,"name":"display_capture_rect","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"global.g_display_capture_rect",},
         {"$GMExtensionConstant":"","%Name":"display_capture_is_available","hidden":false,"name":"display_capture_is_available","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"global.g_display_capture_is_available",},
       ],"copyToTargets":105554163798254,"filename":"display_screenshot.gml","final":"","functions":[
@@ -57,20 +50,7 @@
         {"$GMExtensionFunction":"","%Name":"display_capture_surface_part","argCount":-1,"args":[],"documentation":"","externalName":"display_capture_surface_part","help":"display_capture_surface_part(x, y, w, h, ?out_surface)","hidden":false,"kind":2,"name":"display_capture_surface_part","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_capture_combined","argCount":-1,"args":[],"documentation":"","externalName":"display_capture_combined","help":"display_capture_combined(out_buffer, ?out_surface)","hidden":false,"kind":2,"name":"display_capture_combined","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_capture_combined_part","argCount":-1,"args":[],"documentation":"","externalName":"display_capture_combined_part","help":"display_capture_combined_part(x, y, w, h, out_buffer, ?out_surface)","hidden":false,"kind":2,"name":"display_capture_combined_part","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"display_capture_init","kind":2,"name":"display_screenshot.gml","order":[
-        {"name":"display_capture_init","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_measure","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_measure_all","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_rect_set","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_buffer_impl","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_buffer","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_buffer_part","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_surface_impl","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_surface","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_surface_part","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_combined","path":"extensions/display_screenshot/display_screenshot.yy",},
-        {"name":"display_capture_combined_part","path":"extensions/display_screenshot/display_screenshot.yy",},
-      ],"origname":"extensions\\gml.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"display_capture_init","kind":2,"name":"display_screenshot.gml","origname":"extensions\\gml.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

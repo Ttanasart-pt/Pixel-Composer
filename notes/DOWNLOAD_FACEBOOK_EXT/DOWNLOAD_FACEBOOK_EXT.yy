@@ -1,5 +1,5 @@
 {
-  "$GMNotes":"",
+  "$GMNotes":"v1",
   "%Name":"DOWNLOAD_FACEBOOK_EXT",
   "name":"DOWNLOAD_FACEBOOK_EXT",
   "parent":{

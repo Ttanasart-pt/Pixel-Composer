@@ -4,14 +4,20 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_vfx;
 	setCacheAuto();
 	
-	newInput(2, nodeValueSeed());
+	newInput( 2, nodeValueSeed());
 	
 	////- =Particles
-	newInput(0, nodeValue_Particle( "Particles" ));
-	newInput(1, nodeValue_Buffer(   "Mask"      ));
+	newInput( 0, nodeValue_Particle( "Particles" ));
+	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
-	////- =Texture
-	newInput(3, nodeValue_Surface( "Surfaces" ));
+	////- =Surface
+	newInput( 3, nodeValue_Surface( "Surfaces" ));
+	
+	newInput( 4, nodeValue_EScroll(  "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]));
+	newInput( 5, nodeValue_Range(    "Animation Speed",      [1,1], { linked : true } ));
+	newInput( 6, nodeValue_Bool(     "Stretch Animation",    false                    ));
+	newInput( 7, nodeValue_EButton(  "On Animation End",     ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
+	
 	// 4
 	
 	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
@@ -49,7 +55,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [ 2, 
 		[ "Particles", false ], 0, 1, 
-		[ "Texture",   false ], 3, dynaDraw_parameter, 
+		[ "Texture",   false ], 3, dynaDraw_parameter, __inspc(ui(6), true), 4, 5, 6, 7, 
 	];
 	
 	////- Nodes
@@ -73,36 +79,43 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static update = function(_frame = CURRENT_FRAME) {
 		if(!is(inline_context, Node_pSystem_Inline) || inline_context.prerendering) return;
-		if(use_cache) {
-			var surf = getCacheFrame(_frame);
-			if(is_surface(surf)) {
-				outputs[0].setValue(surf);
-				return;
-			}
-		}
 		
-		var _dim   = getDimension();
-		var _sw    = _dim[0];
-		var _sh    = _dim[1];
-		var _parts = getInputData(0);
-		var _masks = getInputData(1), use_mask = _masks != noone;
-		
-		var _outSurf = outputs[0].getValue();
-		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		outputs[0].setValue(_outSurf);
-		
-		if(!is(_parts, pSystem_Particles)) return;
-		if(use_mask) buffer_to_start(_masks);
-		
-		var _seed = getInputData(2);
-		var _surf = getInputData(3);
+		#region data
+			var _dim   = getDimension();
+			var _sw    = _dim[0];
+			var _sh    = _dim[1];
+			
+			var _seed  = getInputData( 2);
+			
+			var _parts = getInputData( 0);
+			if(!is(_parts, pSystem_Particles)) return;
+			
+			var _masks = getInputData( 1), use_mask = _masks != noone;
+			
+			var _surf  = getInputData( 3);
+			var _arrT  = getInputData( 4);
+			var _anSp  = getInputData( 5);
+			var _anSt  = getInputData( 6);
+			var _oend  = getInputData( 7);
+			
+			var _outSurf = outputs[0].getValue();
+			var _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+			outputs[0].setValue(_outSurf);
+			
+			if(use_mask) buffer_to_start(_masks);
+			
+			inputs[5].setVisible(_arrT == 2);
+			inputs[6].setVisible(_arrT == 2);
+			inputs[7].setVisible(_arrT == 2 && !_anSt);
+		#endregion
 		
 		var _surf_use = 0;
 		var _surf_w   = 1;
 		var _surf_h   = 1;
+		var _surf_len = 1;
 		
 		if(is(_surf, dynaDraw)) {
-			_surf_use = 2;
+			_surf_use = 3;
 			_surf_w   = _surf.getWidth();
 			_surf_h   = _surf.getHeight();
 			
@@ -128,6 +141,10 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_surf_use = 1;
 			_surf_w   = surface_get_width(_surf);
 			_surf_h   = surface_get_height(_surf);
+			
+		} else if(is_array(_surf) && !array_empty(_surf)) {
+			_surf_use = 2;
+			_surf_len = array_length(_surf);
 		}
 		
 		var __p = [0,0];
@@ -168,6 +185,8 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
 				    rat = clamp(rat, 0, 1);
 				
+				random_set_seed(_seed + _spwnId);
+				
 				switch(_surf_use) {
 					case 0 : 
 						draw_set_color_alpha(_cc, _draw_a);
@@ -182,8 +201,54 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						
 						draw_surface_ext(_surf, _surf_x, _surf_y, _draw_sx, _draw_sy, _draw_rot, _cc, _draw_a);
 						break;
-					
+						
 					case 2 : 
+						var _surfI  = 0;
+						
+						switch(_arrT) {
+							case 0 : _surfI = irandom(_surf_len - 1); break; // Random
+							case 1 : _surfI = _spwnId % _surf_len;    break; // Order
+							case 2 :                                         // Animation
+								if(_anSt) _surfI = rat * (_surf_len - 1);
+								else {
+									var _animSpeed = random_range(_anSp[0], _anSp[1]);
+									var _aFrame    = floor(_lif * _animSpeed);
+									
+									switch(_oend) {
+										case 0 : _surfI = _aFrame % _surf_len; break; // Loop
+										case 1 :                                      // Pingpong
+											_surfI = _aFrame % (_surf_len * 2 - 1); 
+											_surfI = _surfI >= _surf_len? (_surf_len * 2 - 1) - _surfI : _surfI;
+											break;
+											
+										case 2 : 
+											_surfI = _aFrame; 
+											if(_surfI >= _surf_len) {
+												_surfI = 0;
+												_act   = false;
+											}
+											break; // Hide
+									}
+								}
+								break;
+								
+							case 3 : _surfI = abs(_draw_sx) % _surf_len; break; // Scale
+						}
+						
+						var _surfA  = _surf[_surfI];
+						if(!_act || !is_surface(_surfA)) break;
+						
+					    _surf_w = surface_get_width(_surfA);
+					    _surf_h = surface_get_height(_surfA);
+						
+						__p = point_rotate_origin(-_surf_w/2 * _draw_sx, -_surf_h/2 * _draw_sy, _draw_rot, __p);
+						var _surf_x = _draw_x + __p[0];
+						var _surf_y = _draw_y + __p[1];
+						
+						draw_surface_ext(_surfA, _surf_x, _surf_y, _draw_sx, _draw_sy, _draw_rot, _cc, _draw_a);
+						break;
+					
+					case 3 : 
 						for( var i = 0, n = array_length(custom_parameter_names); i < n; i++ ) {
 								var _param = custom_parameter_names[i]
 								var _parcv = custom_parameter_map[$ _param];
@@ -201,8 +266,6 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			draw_set_alpha(1);
 		surface_reset_target();
-		
-		if(use_cache) cacheCurrentFrame(_outSurf);
 	}
 	
 	static reset = function() {

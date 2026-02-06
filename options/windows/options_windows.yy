@@ -1,25 +1,25 @@
 {
-  "$GMWindowsOptions":"",
+  "$GMWindowsOptions":"v1",
   "%Name":"Windows",
   "ConfigValues":{
     "Itch":{
-      "option_windows_version":"1.20.5.0",
-      "option_windows_display_name":"Pixel Composer 1.20.5.0 itch",
       "option_windows_copyright_info":"(c) 2025 MakhamDev",
+      "option_windows_display_name":"Pixel Composer 1.20.6.0 itch",
       "option_windows_sleep_margin":"10",
-      "option_windows_texture_page":"8192x8192",
-    },
-    "Steam":{
-      "option_windows_version":"1.20.5.0",
-      "option_windows_display_name":"Pixel Composer 1.20.5.012 steam",
-      "option_windows_copyright_info":"(c) 2025 MakhamDev",
-      "option_windows_save_location":"1",
-      "option_windows_texture_page":"8192x8192",
-    },
-    "SteamDemo":{
-      "option_windows_display_name":"Pixel Composer 1.17 demo",
+      "option_windows_texture_page":"2048x2048",
+      "option_windows_version":"1.20.6.0",
     },
     "ItchDemo":{
+      "option_windows_display_name":"Pixel Composer 1.17 demo",
+    },
+    "Steam":{
+      "option_windows_copyright_info":"(c) 2025 MakhamDev",
+      "option_windows_display_name":"Pixel Composer 1.20.6 steam",
+      "option_windows_save_location":"1",
+      "option_windows_texture_page":"8192x8192",
+      "option_windows_version":"1.20.6.0",
+    },
+    "SteamDemo":{
       "option_windows_display_name":"Pixel Composer 1.17 demo",
     },
   },
@@ -29,6 +29,7 @@
   "option_windows_company_info":"MakhamDev",
   "option_windows_copyright_info":"(c) 2023 MakhamDev",
   "option_windows_copy_exe_to_dest":false,
+  "option_windows_d3dswapeffectdiscard":false,
   "option_windows_description_info":"Pixel Composer",
   "option_windows_disable_sandbox":true,
   "option_windows_display_cursor":true,

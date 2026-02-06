@@ -102,19 +102,10 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 
 #region notification
 	if(!ds_list_empty(WARNING)) {
-		var rem = ds_stack_create();
-		
-		for( var i = 0; i < ds_list_size(WARNING); i++ ) {
+		for( var i = ds_list_size(WARNING) - 1; i >= 0; i-- ) {
 			var w = WARNING[| i];
-			if(--w.life <= 0)
-				ds_stack_push(rem, w);
+			if(--w.life <= 0) ds_list_delete(WARNING, i);	
 		}
-		
-		while(!ds_stack_empty(rem)) {
-			ds_list_delete(WARNING, ds_stack_pop(rem));	
-		}
-		
-		ds_stack_destroy(rem);
 	}
 #endregion
 

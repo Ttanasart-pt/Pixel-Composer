@@ -16,7 +16,7 @@
   "exportToGame":true,
   "extensionVersion":"1.0.0",
   "files":[
-    {"$GMExtensionFile":"","%Name":"","constants":[
+    {"$GMExtensionFile":"v1","%Name":"","constants":[
         {"$GMExtensionConstant":"","%Name":"file_dropper_mk_lbutton","hidden":false,"name":"file_dropper_mk_lbutton","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"1",},
         {"$GMExtensionConstant":"","%Name":"file_dropper_mk_rbutton","hidden":false,"name":"file_dropper_mk_rbutton","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"2",},
         {"$GMExtensionConstant":"","%Name":"file_dropper_mk_shift","hidden":false,"name":"file_dropper_mk_shift","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"4",},
@@ -34,34 +34,19 @@
         {"$GMExtensionFunction":"","%Name":"file_dropper_set_default_allow_raw","argCount":2,"args":[1,1,],"documentation":"","externalName":"file_dropper_set_default_allow_raw","help":"","hidden":true,"kind":11,"name":"file_dropper_set_default_allow_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"file_dropper_set_default_effect_raw","argCount":2,"args":[1,1,],"documentation":"","externalName":"file_dropper_set_default_effect_raw","help":"","hidden":true,"kind":11,"name":"file_dropper_set_default_effect_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"RegisterCallbacks","argCount":4,"args":[1,1,1,1,],"documentation":"","externalName":"RegisterCallbacks","help":"","hidden":true,"kind":11,"name":"RegisterCallbacks","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":1,"name":"","order":[
-        {"name":"file_dropper_init_raw","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"file_dropper_set_allow_raw","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"file_dropper_set_effect_raw","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"file_dropper_set_default_allow_raw","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"file_dropper_set_default_effect_raw","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"RegisterCallbacks","path":"extensions/file_dropper/file_dropper.yy",},
-      ],"origname":"extensions\\file_dropper.dll","ProxyFiles":[
+      ],"init":"","kind":1,"name":"","origname":"extensions\\file_dropper.dll","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"file_dropper_x64.dll","name":"file_dropper_x64.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":9223372036854775807,"filename":"file_dropper.gml","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":9223372036854775807,"filename":"file_dropper.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"file_dropper_prepare_buffer","argCount":1,"args":[2,],"documentation":"","externalName":"file_dropper_prepare_buffer","help":"","hidden":true,"kind":11,"name":"file_dropper_prepare_buffer","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":2,"name":"","order":[
-        {"name":"file_dropper_prepare_buffer","path":"extensions/file_dropper/file_dropper.yy",},
-      ],"origname":"extensions\\gml.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"autogen.gml","final":"","functions":[
+      ],"init":"","kind":2,"name":"","origname":"extensions\\gml.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"autogen.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"file_dropper_init","argCount":0,"args":[],"documentation":"","externalName":"file_dropper_init","help":"file_dropper_init()->bool","hidden":false,"kind":2,"name":"file_dropper_init","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"file_dropper_set_allow","argCount":1,"args":[2,],"documentation":"","externalName":"file_dropper_set_allow","help":"file_dropper_set_allow(allow:bool)","hidden":false,"kind":2,"name":"file_dropper_set_allow","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"file_dropper_set_effect","argCount":1,"args":[2,],"documentation":"","externalName":"file_dropper_set_effect","help":"file_dropper_set_effect(effect:int)->number","hidden":false,"kind":2,"name":"file_dropper_set_effect","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"file_dropper_set_default_allow","argCount":1,"args":[2,],"documentation":"","externalName":"file_dropper_set_default_allow","help":"file_dropper_set_default_allow(allow:bool)","hidden":false,"kind":2,"name":"file_dropper_set_default_allow","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"file_dropper_set_default_effect","argCount":1,"args":[2,],"documentation":"","externalName":"file_dropper_set_default_effect","help":"file_dropper_set_default_effect(effect:int)->number","hidden":false,"kind":2,"name":"file_dropper_set_default_effect","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":2,"name":"","order":[
-        {"name":"file_dropper_init","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"file_dropper_set_allow","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"file_dropper_set_effect","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"file_dropper_set_default_allow","path":"extensions/file_dropper/file_dropper.yy",},
-        {"name":"file_dropper_set_default_effect","path":"extensions/file_dropper/file_dropper.yy",},
-      ],"origname":"extensions\\autogen.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"","kind":2,"name":"","origname":"extensions\\autogen.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

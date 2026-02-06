@@ -58,7 +58,9 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 				var node = topoList[j];
 				if(!node.active) continue;
 				
-				node.doUpdate(i);
+				if(node.preUpdate) node.preUpdate(i);
+				node.getInputs(i);
+				node.update(i);
 			}
 		}
 		

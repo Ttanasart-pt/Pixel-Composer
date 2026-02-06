@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"spr_gameframe_buttons",
   "bboxMode":0,
   "bbox_bottom":18,
@@ -12,10 +12,10 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"77b76f69-e8f6-49ae-a6c9-d7492ba7f393","name":"77b76f69-e8f6-49ae-a6c9-d7492ba7f393","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"41e22246-bca6-470f-8c8c-899f6c1cae98","name":"41e22246-bca6-470f-8c8c-899f6c1cae98","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"94a12f8d-1f81-4794-ae1f-73a082e7badb","name":"94a12f8d-1f81-4794-ae1f-73a082e7badb","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"293e47d5-5a93-4013-9423-2bd3f9993fe0","name":"293e47d5-5a93-4013-9423-2bd3f9993fe0","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"77b76f69-e8f6-49ae-a6c9-d7492ba7f393","name":"77b76f69-e8f6-49ae-a6c9-d7492ba7f393","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"41e22246-bca6-470f-8c8c-899f6c1cae98","name":"41e22246-bca6-470f-8c8c-899f6c1cae98","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"94a12f8d-1f81-4794-ae1f-73a082e7badb","name":"94a12f8d-1f81-4794-ae1f-73a082e7badb","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"293e47d5-5a93-4013-9423-2bd3f9993fe0","name":"293e47d5-5a93-4013-9423-2bd3f9993fe0","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -35,7 +35,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"spr_gameframe_buttons",
     "autoRecord":true,
     "backdropHeight":768,

@@ -16,7 +16,7 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"gmlBox2D.dll","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"gmlBox2D.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_test_init","argCount":0,"args":[],"documentation":"","externalName":"test_init","help":"gmlBox2D_test_init()","hidden":false,"kind":1,"name":"gmlBox2D_test_init","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_test_step","argCount":0,"args":[],"documentation":"","externalName":"test_step","help":"gmlBox2D_test_step()","hidden":false,"kind":1,"name":"gmlBox2D_test_step","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_test_destroy","argCount":0,"args":[],"documentation":"","externalName":"test_destroy","help":"gmlBox2D_test_destroy()","hidden":false,"kind":1,"name":"gmlBox2D_test_destroy","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -94,7 +94,7 @@
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_Sensor_Get_Overlap","argCount":0,"args":[2,1,2,],"documentation":"","externalName":"Sensor_Get_Overlap","help":"gmlBox2D_Sensor_Get_Overlap(sensorIndex,outputBuffer,capacity)","hidden":false,"kind":1,"name":"gmlBox2D_Sensor_Get_Overlap","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_Joint_Weld_Create","argCount":0,"args":[1,],"documentation":"","externalName":"Joint_Weld_Create","help":"gmlBox2D_Joint_Weld_Create(data)","hidden":false,"kind":1,"name":"gmlBox2D_Joint_Weld_Create","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_Joint_Motor_Create","argCount":0,"args":[1,],"documentation":"","externalName":"Joint_Motor_Create","help":"gmlBox2D_Joint_Motor_Create(data)","hidden":false,"kind":1,"name":"gmlBox2D_Joint_Motor_Create","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":1,"name":"","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"","kind":1,"name":"","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,
   "hasConvertedCodeInjection":true,

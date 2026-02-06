@@ -4213,7 +4213,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         array_push(nodes_list, node);
     } 
     
-    static onFullScreen = function() { run_in(1, fullView); }
+    static onFullScreen = function() { fullView(); }
     
     function searchNodes() {
         nodes_selecting = [];

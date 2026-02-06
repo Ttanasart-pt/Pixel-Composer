@@ -1,5 +1,5 @@
 {
-  "$GMNotes":"",
+  "$GMNotes":"v1",
   "%Name":"DOWNLOAD_GAMECENTER_EXT",
   "name":"DOWNLOAD_GAMECENTER_EXT",
   "parent":{

@@ -1,0 +1,1 @@
+call D:\Project\MakhamDev\LTS-PixelComposer\PixelComposer\extensions\inlineC\inlineCompiler.bat

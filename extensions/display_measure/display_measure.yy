@@ -12,11 +12,11 @@
   "author":"",
   "classname":"",
   "ConfigValues":{
-    "Steam":{
-      "copyToTargets":"224",
-    },
     "Itch":{
       "copyToTargets":"64",
+    },
+    "Steam":{
+      "copyToTargets":"224",
     },
   },
   "copyToTargets":194,
@@ -24,33 +24,23 @@
   "exportToGame":true,
   "extensionVersion":"1.0.0",
   "files":[
-    {"$GMExtensionFile":"","%Name":"display_measure.dll","constants":[],"copyToTargets":9223372036854775807,"filename":"display_measure.dll","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"display_measure.dll","constants":[],"copyToTargets":9223372036854775807,"filename":"display_measure.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"display_measure_all_raw","argCount":2,"args":[1,2,],"documentation":"","externalName":"display_measure_all_raw","help":"","hidden":true,"kind":11,"name":"display_measure_all_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_measure_all_raw_post","argCount":2,"args":[1,2,],"documentation":"","externalName":"display_measure_all_raw_post","help":"","hidden":true,"kind":11,"name":"display_measure_all_raw_post","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_measure_is_available_raw","argCount":0,"args":[],"documentation":"","externalName":"display_measure_is_available_raw","help":"","hidden":true,"kind":11,"name":"display_measure_is_available_raw","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":1,"name":"display_measure.dll","order":[
-        {"name":"display_measure_all_raw","path":"extensions/display_measure/display_measure.yy",},
-        {"name":"display_measure_all_raw_post","path":"extensions/display_measure/display_measure.yy",},
-        {"name":"display_measure_is_available_raw","path":"extensions/display_measure/display_measure.yy",},
-      ],"origname":"extensions\\display_measure.dll","ProxyFiles":[
+      ],"init":"","kind":1,"name":"display_measure.dll","origname":"extensions\\display_measure.dll","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"display_measure_x64.dll","name":"display_measure_x64.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"display_measure.gml","constants":[
+    {"$GMExtensionFile":"v1","%Name":"display_measure.gml","constants":[
         {"$GMExtensionConstant":"","%Name":"display_measure_is_available","hidden":false,"name":"display_measure_is_available","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"global.g_display_measure_is_available",},
       ],"copyToTargets":9223372036854775807,"filename":"display_measure.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"display_measure_init","argCount":0,"args":[],"documentation":"","externalName":"display_measure_init","help":"","hidden":true,"kind":11,"name":"display_measure_init","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_measure_prepare_buffer","argCount":1,"args":[2,],"documentation":"","externalName":"display_measure_prepare_buffer","help":"","hidden":true,"kind":11,"name":"display_measure_prepare_buffer","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"display_measure_read_chars","argCount":2,"args":[2,2,],"documentation":"","externalName":"display_measure_read_chars","help":"","hidden":true,"kind":11,"name":"display_measure_read_chars","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"display_measure_init","kind":2,"name":"display_measure.gml","order":[
-        {"name":"display_measure_init","path":"extensions/display_measure/display_measure.yy",},
-        {"name":"display_measure_prepare_buffer","path":"extensions/display_measure/display_measure.yy",},
-        {"name":"display_measure_read_chars","path":"extensions/display_measure/display_measure.yy",},
-      ],"origname":"extensions\\gml.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"autogen.gml","constants":[],"copyToTargets":-1,"filename":"autogen.gml","final":"","functions":[
+      ],"init":"display_measure_init","kind":2,"name":"display_measure.gml","origname":"extensions\\gml.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"v1","%Name":"autogen.gml","constants":[],"copyToTargets":-1,"filename":"autogen.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"display_measure_all","argCount":0,"args":[],"documentation":"","externalName":"display_measure_all","help":"display_measure_all()->array<any>","hidden":false,"kind":2,"name":"display_measure_all","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":2,"name":"autogen.gml","order":[
-        {"name":"display_measure_all","path":"extensions/display_measure/display_measure.yy",},
-      ],"origname":"extensions\\autogen.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"","kind":2,"name":"autogen.gml","origname":"extensions\\autogen.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

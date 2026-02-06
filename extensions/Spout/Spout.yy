@@ -16,11 +16,11 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"SpoutLibrary.dll","constants":[],"copyToTargets":-1,"filename":"SpoutLibrary.dll","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"SpoutLibrary.dll","constants":[],"copyToTargets":-1,"filename":"SpoutLibrary.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"spoutSenderInit","argCount":0,"args":[],"documentation":"","externalName":"init","help":"","hidden":false,"kind":1,"name":"spoutSenderInit","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"spoutSendPixels","argCount":0,"args":[2,1,2,2,],"documentation":"","externalName":"sendPixels","help":"","hidden":false,"kind":1,"name":"spoutSendPixels","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"spoutSetSenderName","argCount":0,"args":[2,1,],"documentation":"","externalName":"SetSenderName","help":"","hidden":false,"kind":1,"name":"spoutSetSenderName","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":1,"name":"SpoutLibrary.dll","order":[],"origname":"","ProxyFiles":[
+      ],"init":"","kind":1,"name":"SpoutLibrary.dll","origname":"","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"SpoutLibrary.dll","name":"SpoutLibrary.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],

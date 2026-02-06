@@ -12,10 +12,10 @@
   "author":"",
   "classname":"",
   "ConfigValues":{
-    "Steam":{
+    "Itch":{
       "copyToTargets":"194",
     },
-    "Itch":{
+    "Steam":{
       "copyToTargets":"194",
     },
   },
@@ -24,9 +24,9 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"PRIVATE_KEYS.gml","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"PRIVATE_KEYS.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"init_private_keys","argCount":0,"args":[],"documentation":"","externalName":"__init_private_keys","help":"","hidden":true,"kind":2,"name":"init_private_keys","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
-      ],"init":"init_private_keys","kind":2,"name":"","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"init_private_keys","kind":2,"name":"","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,
   "hasConvertedCodeInjection":true,

@@ -21,6 +21,7 @@
 		
 		PREFERENCES.theme							= "default";
 		PREFERENCES.theme_override					= "override";
+		PREFERENCES.theme_load_unpack				= false;
 		PREFERENCES.local							= "en";
 		PREFERENCES.font_overwrite					= "";
 		PREFERENCES.font_overwrite_bold				= "";
@@ -417,6 +418,8 @@
 				PREFERENCES.display_scaling == 1 && 
 				PREFERENCES.text_scaling    == 1 && 
 				PREFERENCES.font_overwrite  == "";
+			
+			// FONT_DEF = true;
 			
 			directory_verify(filepath_resolve(PREFERENCES.temp_path));
 			

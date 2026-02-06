@@ -7,57 +7,57 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- =Sprite
 	newInput( 0, nodeValue_Surface("Particle Sprite"));
 	
-	newInput(22, nodeValue_Enum_Scroll("Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]))
+	newInput(22, nodeValue_EScroll(  "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.");
 	
-	newInput(23, nodeValue_Range(       "Animation Speed",      [1,1], { linked : true } ));
-	newInput(49, nodeValue_Bool(        "Stretch Animation",    false                    ));
-	newInput(26, nodeValue_Enum_Button( "On Animation End",     ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
+	newInput(23, nodeValue_Range(    "Animation Speed",      [1,1], { linked : true } ));
+	newInput(49, nodeValue_Bool(     "Stretch Animation",    false                    ));
+	newInput(26, nodeValue_EButton(  "On Animation End",     ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
 	
 	////- =Spawn
-	newInput(27, nodeValue_Bool(        "Spawn",                true          ));
-	newInput(16, nodeValue_Enum_Button( "Spawn Type",           0             )).setChoices([ "Stream", "Burst", "Trigger" ]);
-	newInput(44, nodeValue_Trigger(     "Spawn"                               ));
-	newInput( 1, nodeValue_Int(         "Spawn Delay",          4             )).setTooltip("Frames delay between each particle spawn.");
-	newInput(51, nodeValue_Int(         "Burst Duration",       1             ));
-	newInput( 2, nodeValue_Range(       "Spawn Amount",        [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
-	newInput( 5, nodeValue_Range(       "Lifespan",            [20,30]        ));
+	newInput(27, nodeValue_Bool(     "Spawn",                true          ));
+	newInput(16, nodeValue_EButton(  "Spawn Type",           0             )).setChoices([ "Stream", "Burst", "Trigger" ]);
+	newInput(44, nodeValue_Trigger(  "Spawn"                               ));
+	newInput( 1, nodeValue_Int(      "Spawn Delay",          4             )).setTooltip("Frames delay between each particle spawn.");
+	newInput(51, nodeValue_Int(      "Burst Duration",       1             ));
+	newInput( 2, nodeValue_Range(    "Spawn Amount",        [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
+	newInput( 5, nodeValue_Range(    "Lifespan",            [20,30]        ));
 	
 	////- =Spawn Source
-	newInput( 4, nodeValue_Enum_Scroll( "Spawn Source",         0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
-	newInput( 3, nodeValue_Area(        "Spawn Area",           DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
-	newInput(30, nodeValue_Surface(     "Distribution Map"                    ));
-	newInput(55, nodeValue_PathNode(    "Spawn Path"                          ));
-	newInput(62, nodeValue_Vector(      "Spawn Data"                          )).setArrayDepth(1);
-	newInput(24, nodeValue_Enum_Button( "Distribution",         1             )).setChoices([ "Uniform", "Random" ]);
-	newInput(52, nodeValue_Float(       "Uniform Period",       4             ));
+	newInput( 4, nodeValue_EScroll(  "Spawn Source",         0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
+	newInput( 3, nodeValue_Area(     "Spawn Area",           DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
+	newInput(30, nodeValue_Surface(  "Distribution Map"                    ));
+	newInput(55, nodeValue_PathNode( "Spawn Path"                          ));
+	newInput(62, nodeValue_Vector(   "Spawn Data"                          )).setArrayDepth(1);
+	newInput(24, nodeValue_EButton(  "Distribution",         1             )).setChoices([ "Uniform", "Random" ]);
+	newInput(52, nodeValue_Float(    "Uniform Period",       4             ));
 	
 	////- =Movement
-	newInput(64, nodeValue_Enum_Button(     "Direction Type",              0, [ "Random", "Uniform" ] ));
-	newInput( 6, nodeValue_Rotation_Random( "Initial Direction",          [0,45,135,0,0]     )); 
-	newInput(18, nodeValue_Range(           "Speed",                      [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
+	newInput(64, nodeValue_EButton(  "Direction Type",              0, [ "Random", "Uniform" ] ));
+	newInput( 6, nodeValue_RotRand(  "Initial Direction",          [0,45,135,0,0]     )); 
+	newInput(18, nodeValue_Range(    "Speed",                      [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
 	inputs[60].setTooltip("Speed may conflict with physics-based properties.");
 	
-	newInput(29, nodeValue_Bool(            "Directed From Center",       false              )).setTooltip("Make particle move away from the spawn center.");
-	newInput(53, nodeValue_Rotation_Range(  "Angle Range",                [0,360]            ));
-	newInput(67, nodeValue_Toggle(          "Wrap",                       0, [ "X", "Y" ]    ))
+	newInput(29, nodeValue_Bool(     "Directed From Center",       false              )).setTooltip("Make particle move away from the spawn center.");
+	newInput(53, nodeValue_RotRange( "Angle Range",                [0,360]            ));
+	newInput(67, nodeValue_Toggle(   "Wrap",                       0, [ "X", "Y" ]    ))
 	
 	////- =Rotation
-	newInput(15, nodeValue_Bool(            "Rotate by Direction",        false              )).setTooltip("Make the particle rotates to follow its movement.");
-	newInput( 8, nodeValue_Rotation_Random( "Initial Rotation",           [0,0,0,0,0]        ));
-	newInput( 9, nodeValue_Rotation_Random( "Rotational Speed",           [0,0,0,0,0]        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
-	newInput(61, nodeValue_Float(           "Snap Rotation",              0                  ));
+	newInput(15, nodeValue_Bool(     "Rotate by Direction",        false              )).setTooltip("Make the particle rotates to follow its movement.");
+	newInput( 8, nodeValue_RotRand(  "Initial Rotation",           [0,0,0,0,0]        ));
+	newInput( 9, nodeValue_RotRand(  "Rotational Speed",           [0,0,0,0,0]        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
+	newInput(61, nodeValue_Float(    "Snap Rotation",              0                  ));
 	
 	////- =Scale
 	newInput(10, nodeValue_Vec2_Range( "Scale",        [1,1,1,1], { linked : true }  ));
 	newInput(17, nodeValue_Range(      "Size",         [1,1],     { linked : true }  )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
 	
 	////- =Color
-	newInput(28, nodeValue_Gradient( "Color on Spawn",         gra_white  ));
-	newInput(50, nodeValue_Palette(  "Color by Index",         [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(12, nodeValue_Gradient( "Color Over Lifetime",    gra_white  ));
-	newInput(13, nodeValue_Range(    "Alpha",                  [1,1], { linked : true }      )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
-	newInput(56, nodeValue_Surface(  "Sample Surface"                                        ));
+	newInput(28, nodeValue_Gradient(  "Color on Spawn",         gra_white  ));
+	newInput(50, nodeValue_Palette(   "Color by Index",         [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(12, nodeValue_Gradient(  "Color Over Lifetime",    gra_white  ));
+	newInput(13, nodeValue_Range(     "Alpha",                  [1,1], { linked : true }      )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
+	newInput(56, nodeValue_Surface(   "Sample Surface"                                        ));
 	
 	////- =Path
 	newInput(45, nodeValue_Bool(       "Follow Path",          false                         ));
@@ -78,7 +78,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- =Ground
 	newInput(37, nodeValue_Bool(        "Collide Ground",      false                         ));
-	newInput(63, nodeValue_Enum_Button( "Ground Offset Type",  0, [ "Relative", "Absolute" ] ));
+	newInput(63, nodeValue_EButton( "Ground Offset Type",  0, [ "Relative", "Absolute" ] ));
 	newInput(38, nodeValue_Range(       "Ground Offset",       [0,0], { linked : true }      ));
 	newInput(39, nodeValue_Slider(      "Bounce Amount",       .5                            ));
 	newInput(40, nodeValue_Slider(      "Bounce Friction",     .1                            )).setTooltip("Apply horizontal friction once particle stop bouncing.");

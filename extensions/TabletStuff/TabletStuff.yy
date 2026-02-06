@@ -21,7 +21,7 @@
   "exportToGame":true,
   "extensionVersion":"1.0.0",
   "files":[
-    {"$GMExtensionFile":"","%Name":"tabletstuff.dll","constants":[
+    {"$GMExtensionFile":"v1","%Name":"tabletstuff.dll","constants":[
         {"$GMExtensionConstant":"","%Name":"tabletstuff_error_none","hidden":false,"name":"tabletstuff_error_none","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"1",},
         {"$GMExtensionConstant":"","%Name":"tabletstuff_error_invalid","hidden":false,"name":"tabletstuff_error_invalid","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"0",},
         {"$GMExtensionConstant":"","%Name":"tabletstuff_error_window_handle_is_null","hidden":false,"name":"tabletstuff_error_window_handle_is_null","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"-1",},
@@ -42,28 +42,16 @@
         {"$GMExtensionFunction":"","%Name":"tabletstuff_is_in_focus","argCount":0,"args":[],"documentation":"","externalName":"tabletstuff_is_in_focus","help":"tabletstuff_is_in_focus()","hidden":false,"kind":12,"name":"tabletstuff_is_in_focus","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"__tabletstuff_is_present","argCount":-1,"args":[],"documentation":"","externalName":"tabletstuff_is_present","help":"__tabletstuff_is_present()","hidden":false,"kind":12,"name":"__tabletstuff_is_present","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"tabletstuff_error_to_string","argCount":1,"args":[2,],"documentation":"","externalName":"tabletstuff_error_to_string","help":"tabletstuff_error_to_string(tabletstuff_error_code)","hidden":false,"kind":12,"name":"tabletstuff_error_to_string","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
-      ],"init":"__tabletstuff_is_present","kind":1,"name":"tabletstuff.dll","order":[
-        {"name":"__tabletstuff_event_begin","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"__tabletstuff_event_length","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"__tabletstuff_event_get_type","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"__tabletstuff_event_get_name","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"__tabletstuff_event_get_number","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"__tabletstuff_event_get_string","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"__tabletstuff_event_next","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"__tabletstuff_init","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"tabletstuff_is_in_focus","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"__tabletstuff_is_present","path":"extensions/TabletStuff/TabletStuff.yy",},
-        {"name":"tabletstuff_error_to_string","path":"extensions/TabletStuff/TabletStuff.yy",},
-      ],"origname":"extensions\\tabletstuff.dll","ProxyFiles":[
+      ],"init":"__tabletstuff_is_present","kind":1,"name":"tabletstuff.dll","origname":"extensions\\tabletstuff.dll","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"tabletstuff_x64.dll","name":"tabletstuff_x64.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"tabletstuff.gml","constants":[],"copyToTargets":105695629279470,"filename":"tabletstuff.gml","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"tabletstuff.gml","constants":[],"copyToTargets":105695629279470,"filename":"tabletstuff.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"__tabletstuff_init_gml","argCount":0,"args":[],"documentation":"","externalName":"__tabletstuff_init_gml","help":"__tabletstuff_init_gml()","hidden":false,"kind":12,"name":"__tabletstuff_init_gml","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"tabletstuff_get_init_error_code","argCount":0,"args":[],"documentation":"","externalName":"tabletstuff_get_init_error_code","help":"tabletstuff_get_init_error_code()","hidden":false,"kind":12,"name":"tabletstuff_get_init_error_code","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"tabletstuff_perform_event","argCount":3,"args":[2,2,2,],"documentation":"","externalName":"tabletstuff_perform_event","help":"tabletstuff_perform_event(instance,evtype,evnumb)","hidden":false,"kind":12,"name":"tabletstuff_perform_event","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"tabletstuff_get_event_data","argCount":0,"args":[],"documentation":"","externalName":"tabletstuff_get_event_data","help":"tabletstuff_get_event_data()","hidden":false,"kind":12,"name":"tabletstuff_get_event_data","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"tabletstuff_perform_script","argCount":1,"args":[2,],"documentation":"","externalName":"tabletstuff_perform_script","help":"tabletstuff_perform_script(script)","hidden":false,"kind":12,"name":"tabletstuff_perform_script","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"__tabletstuff_init_gml","kind":2,"name":"tabletstuff.gml","order":[],"origname":"extensions\\tabletstuff.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"__tabletstuff_init_gml","kind":2,"name":"tabletstuff.gml","origname":"extensions\\tabletstuff.gml","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

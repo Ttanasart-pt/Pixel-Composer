@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"s_filter_log_level",
   "bboxMode":0,
   "bbox_bottom":22,
@@ -12,11 +12,11 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"204b2af5-98ba-41c0-a048-31a6c27a2bc8","name":"204b2af5-98ba-41c0-a048-31a6c27a2bc8","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"cf1dc556-3204-4e51-9b1f-a0b14645b396","name":"cf1dc556-3204-4e51-9b1f-a0b14645b396","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"c4b81ac1-ea57-4139-8756-4fcb0672aae4","name":"c4b81ac1-ea57-4139-8756-4fcb0672aae4","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"97a3a987-c024-4fcd-a6de-947ef9331813","name":"97a3a987-c024-4fcd-a6de-947ef9331813","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"8b2c5fe8-1e90-48b7-a134-f46aed28f3ce","name":"8b2c5fe8-1e90-48b7-a134-f46aed28f3ce","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"204b2af5-98ba-41c0-a048-31a6c27a2bc8","name":"204b2af5-98ba-41c0-a048-31a6c27a2bc8","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"cf1dc556-3204-4e51-9b1f-a0b14645b396","name":"cf1dc556-3204-4e51-9b1f-a0b14645b396","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"c4b81ac1-ea57-4139-8756-4fcb0672aae4","name":"c4b81ac1-ea57-4139-8756-4fcb0672aae4","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"97a3a987-c024-4fcd-a6de-947ef9331813","name":"97a3a987-c024-4fcd-a6de-947ef9331813","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"8b2c5fe8-1e90-48b7-a134-f46aed28f3ce","name":"8b2c5fe8-1e90-48b7-a134-f46aed28f3ce","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -36,7 +36,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"s_filter_log_level",
     "autoRecord":true,
     "backdropHeight":768,

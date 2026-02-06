@@ -235,29 +235,3 @@ function __test_zip_collection(dir = COLLECTIONS) {
 	print("---------- ZIP COLLECTION ENDED ----------");
 	noti_status("ZIP collection complete", noone, COLORS._main_value_positive);
 }
-	
-function __test_generate_theme() {
-	var _txt = "function Theme() constructor {\n";
-	var _spr = struct_get_names(THEME);
-	
-	for( var i = 0, n = array_length(_spr); i < n; i++ )
-		_txt += $"\t{_spr[i]} = noone;\n";
-	_txt += "}";
-	
-	clipboard_set_text(_txt);
-}
-
-function __test_update_theme() {
-	var _p = "D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default/meta.json"
-	var _d = json_load_struct(_p);
-	_d.version = BUILD_NUMBER;
-	json_save_struct(_p, _d, true);
-	
-	var _p = "D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default HQ/meta.json"
-	var _d = json_load_struct(_p);
-	_d.version = BUILD_NUMBER;
-	json_save_struct(_p, _d, true);
-	
-	noti_status($"Update theme to version {VERSION_STRING}.", noone, COLORS._main_value_positive);
-	return 0;
-}

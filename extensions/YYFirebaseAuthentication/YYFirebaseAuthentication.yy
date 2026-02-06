@@ -16,7 +16,7 @@
   "exportToGame":true,
   "extensionVersion":"3.0.0",
   "files":[
-    {"$GMExtensionFile":"","%Name":"FirebaseAuthentication.ext","constants":[],"copyToTargets":44,"filename":"FirebaseAuthentication.ext","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"FirebaseAuthentication.ext","constants":[],"copyToTargets":44,"filename":"FirebaseAuthentication.ext","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"SDKFirebaseAuthentication_SignInWithCustomToken","argCount":0,"args":[1,],"documentation":"","externalName":"SDKFirebaseAuthentication_SignInWithCustomToken","help":"SDKFirebaseAuthentication_SignInWithCustomToken(token)","hidden":false,"kind":4,"name":"SDKFirebaseAuthentication_SignInWithCustomToken","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"SDKFirebaseAuthentication_SignIn_Email","argCount":0,"args":[1,1,],"documentation":"","externalName":"SDKFirebaseAuthentication_SignIn_Email","help":"SDKFirebaseAuthentication_SignIn_Email(email,password)","hidden":false,"kind":4,"name":"SDKFirebaseAuthentication_SignIn_Email","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"SDKFirebaseAuthentication_SignUp_Email","argCount":0,"args":[1,1,],"documentation":"","externalName":"SDKFirebaseAuthentication_SignUp_Email","help":"SDKFirebaseAuthentication_SignUp_Email(email,password)","hidden":false,"kind":4,"name":"SDKFirebaseAuthentication_SignUp_Email","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -50,7 +50,7 @@
         {"$GMExtensionFunction":"","%Name":"SDKFirebaseAuthentication_ReauthenticateWithGameCenter","argCount":0,"args":[],"documentation":"","externalName":"SDKFirebaseAuthentication_ReauthenticateWithGameCenter","help":"SDKFirebaseAuthentication_ReauthenticateWithGameCenter()","hidden":false,"kind":4,"name":"SDKFirebaseAuthentication_ReauthenticateWithGameCenter","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"SDKFirebaseAuthentication_IdTokenListener","argCount":0,"args":[],"documentation":"","externalName":"SDKFirebaseAuthentication_IdTokenListener","help":"SDKFirebaseAuthentication_IdTokenListener()","hidden":false,"kind":4,"name":"SDKFirebaseAuthentication_IdTokenListener","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"SDKFirebaseAuthentication_IdTokenListener_Remove","argCount":0,"args":[],"documentation":"","externalName":"SDKFirebaseAuthentication_IdTokenListener_Remove","help":"SDKFirebaseAuthentication_IdTokenListener_Remove()","hidden":false,"kind":4,"name":"SDKFirebaseAuthentication_IdTokenListener_Remove","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":4,"name":"FirebaseAuthentication.ext","order":[],"origname":"","ProxyFiles":[
+      ],"init":"","kind":4,"name":"FirebaseAuthentication.ext","origname":"","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"FirebaseAuthentication.js","name":"FirebaseAuthentication.js","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":5,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],

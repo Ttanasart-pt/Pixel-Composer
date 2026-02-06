@@ -477,6 +477,12 @@ function Panel_Preference() : PanelContent() constructor {
     				.setFont(f_p2).setEmpty()
     		));
     		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_theme_unpack", "Load unpacked UI."),
+    			"theme_load_unpack",
+    			new checkBox(function() /*=>*/ {return prefToggle("theme_load_unpack")})
+    		));
+    		
     		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_windows_control", "Right align window controls."),

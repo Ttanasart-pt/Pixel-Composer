@@ -1,5 +1,5 @@
 {
-  "$GMMainOptions":"v3",
+  "$GMMainOptions":"v5",
   "%Name":"Main",
   "ConfigValues":{
     "Itch":{
@@ -11,6 +11,7 @@
     },
   },
   "name":"Main",
+  "option_allow_instance_change":true,
   "option_audio_error_behaviour":true,
   "option_author":"",
   "option_collision_compatibility":true,
@@ -22,6 +23,7 @@
   "option_legacy_json_parsing":true,
   "option_legacy_number_conversion":true,
   "option_legacy_other_behaviour":true,
+  "option_legacy_primitive_drawing":true,
   "option_mips_for_3d_textures":false,
   "option_remove_unused_assets":false,
   "option_sci_usesci":true,

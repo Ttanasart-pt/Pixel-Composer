@@ -158,6 +158,7 @@
 	if(!IS_CMD) { RECENT_LOAD();          printDebug($"- init Recents       | {__log_tr()}"); }
 	
 	printDebug($"-- Initialization complete in {(get_timer()-t0)/1000}ms [{string_byte_format(getMemoryUsage(pid) - _r0)}]");
+	display_set_timing_method(tm_countvsyncs);
 	
 	if(!IS_CMD) { 
 		__initPanel();

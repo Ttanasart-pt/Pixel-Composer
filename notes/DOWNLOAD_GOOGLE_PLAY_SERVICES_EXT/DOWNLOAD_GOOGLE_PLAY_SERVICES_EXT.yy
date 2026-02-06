@@ -1,5 +1,5 @@
 {
-  "$GMNotes":"",
+  "$GMNotes":"v1",
   "%Name":"DOWNLOAD_GOOGLE_PLAY_SERVICES_EXT",
   "name":"DOWNLOAD_GOOGLE_PLAY_SERVICES_EXT",
   "parent":{

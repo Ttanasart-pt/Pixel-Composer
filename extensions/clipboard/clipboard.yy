@@ -24,21 +24,14 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"Clipboard.dll","constants":[],"copyToTargets":-1,"filename":"Clipboard.dll","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"Clipboard.dll","constants":[],"copyToTargets":-1,"filename":"Clipboard.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"clipboard_set_bitmap","argCount":0,"args":[1,2,2,],"documentation":"","externalName":"setClipboardBitmap","help":"clipboard_set_bitmap(bitmap, width, height)","hidden":false,"kind":1,"name":"clipboard_set_bitmap","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"clipboard_get_bitmap","argCount":0,"args":[1,1,],"documentation":"","externalName":"getClipboardBitmap","help":"","hidden":false,"kind":1,"name":"clipboard_get_bitmap","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"clipboard_get_bitmap_size","argCount":0,"args":[1,],"documentation":"","externalName":"getClipboardBitmapSize","help":"","hidden":false,"kind":1,"name":"clipboard_get_bitmap_size","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"clipboard_get_bitmap_width","argCount":0,"args":[1,],"documentation":"","externalName":"getClipboardBitmapWidth","help":"","hidden":false,"kind":1,"name":"clipboard_get_bitmap_width","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"getLastError","argCount":0,"args":[],"documentation":"","externalName":"getLastError","help":"","hidden":false,"kind":1,"name":"getLastError","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
         {"$GMExtensionFunction":"","%Name":"clipboard_get_file","argCount":0,"args":[1,],"documentation":"","externalName":"getClipboardFileName","help":"","hidden":false,"kind":1,"name":"clipboard_get_file","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
-      ],"init":"","kind":1,"name":"Clipboard.dll","order":[
-        {"name":"clipboard_set_bitmap","path":"extensions/clipboard/clipboard.yy",},
-        {"name":"clipboard_get_bitmap","path":"extensions/clipboard/clipboard.yy",},
-        {"name":"clipboard_get_bitmap_size","path":"extensions/clipboard/clipboard.yy",},
-        {"name":"clipboard_get_bitmap_width","path":"extensions/clipboard/clipboard.yy",},
-        {"name":"clipboard_get_file","path":"extensions/clipboard/clipboard.yy",},
-        {"name":"getLastError","path":"extensions/clipboard/clipboard.yy",},
-      ],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"","kind":1,"name":"Clipboard.dll","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

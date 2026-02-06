@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"s_patreon_banner",
   "bboxMode":0,
   "bbox_bottom":83,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"1a3a40e5-919e-4acd-a964-f7dea30b5690","name":"1a3a40e5-919e-4acd-a964-f7dea30b5690","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"1a3a40e5-919e-4acd-a964-f7dea30b5690","name":"1a3a40e5-919e-4acd-a964-f7dea30b5690","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -32,7 +32,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"s_patreon_banner",
     "autoRecord":true,
     "backdropHeight":768,

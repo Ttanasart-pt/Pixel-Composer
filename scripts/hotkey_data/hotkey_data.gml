@@ -93,8 +93,8 @@ function hotkeyCustom(_context, _name, _key = "", _mod = MOD_KEY.none) {
 
 	////- Actions
 
-function addHotkey(_context, _name, _key, _mod, _action) {
-	var key = new Hotkey(_context, _name, _key, _mod, _action);
+function addHotkey(_context, _name, _key, _mod, _action, _param = noone) {
+	var key = new Hotkey(_context, _name, _key, _mod, _action, _param);
 	
 	if(!struct_has(HOTKEYS, _context)) {
 		HOTKEYS[$ _context] = [];

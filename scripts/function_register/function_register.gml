@@ -54,7 +54,7 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
 	
-	function action(_dat = undefined) {
+	static action = function(_dat = undefined) {
 		var _res;
 		
 		if(!is_undefined(_dat))  _res = fn(_dat);
@@ -74,7 +74,7 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	static setArg = function(_args = []) /*=>*/ { CMD_FUNCTIONS[$ fnName] = { action, args: _args }; return self; }
 	
 	static setMenuAlt = function(_name, _id, _spr = noone, shelf = false) { 
-		menu = menuItem(__txt(_name), action, _spr, [ context, name ], noone, params);
+		menu = menuItem(__txt(_name), method(self, action), _spr, [ context, name ], noone, params);
 		menu.hoykeyObject = hotkey;
 		if(shelf) menu.setIsShelf();
 		MENU_ITEMS[$ _id] = menu;
@@ -87,7 +87,7 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	}
 	
 	static setMenuName = function(_id, _name, _spr = noone, shelf = false, toggle = undefined) { 
-		menu = menuItem(_name, action, _spr, [ context, name ], noone, params);
+		menu = menuItem(_name, method(self, action), _spr, [ context, name ], noone, params);
 		menu.hoykeyObject = hotkey;
 		
 		if(shelf) menu.setIsShelf();

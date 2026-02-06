@@ -125,6 +125,8 @@ function _font_load_from_struct(str, name, def, type = UI_FONT_TYPE.medium) {
 function font_clear(font) { if(font_exists(font)) font_delete(font); }
 
 function loadFonts() {
+	// font_texture_page_size = 256;
+	
 	if(FONT_ISLOADED) {
 		font_clear(f_h1);
 		font_clear(f_h2);
@@ -204,4 +206,6 @@ function loadFonts() {
 	FONT_ISLOADED = true;
 	
 	__font_refresh();
+	
+	// font_texture_page_size = 1024;
 }

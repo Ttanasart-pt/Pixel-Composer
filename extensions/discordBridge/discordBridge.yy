@@ -21,9 +21,9 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"discordBridge.gml","constants":[],"copyToTargets":-1,"filename":"discordBridge.gml","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"discordBridge.gml","constants":[],"copyToTargets":-1,"filename":"discordBridge.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"get_discord_bot_token","argCount":0,"args":[],"documentation":"","externalName":"get_discord_bot_token","help":"","hidden":false,"kind":2,"name":"get_discord_bot_token","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
-      ],"init":"","kind":2,"name":"discordBridge.gml","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"","kind":2,"name":"discordBridge.gml","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

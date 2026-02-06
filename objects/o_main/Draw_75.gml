@@ -1,5 +1,9 @@
 /// @description tooltip filedrop
 if(winMan_isMinimized()) exit;
+if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_loading) {
+	DRAW_CLEAR;
+	exit;
+}
 
 #region tooltip
 	

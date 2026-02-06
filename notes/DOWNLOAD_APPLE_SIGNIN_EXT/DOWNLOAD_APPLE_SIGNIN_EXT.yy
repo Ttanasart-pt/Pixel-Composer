@@ -1,5 +1,5 @@
 {
-  "$GMNotes":"",
+  "$GMNotes":"v1",
   "%Name":"DOWNLOAD_APPLE_SIGNIN_EXT",
   "name":"DOWNLOAD_APPLE_SIGNIN_EXT",
   "parent":{

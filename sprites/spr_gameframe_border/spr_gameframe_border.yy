@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"spr_gameframe_border",
   "bboxMode":0,
   "bbox_bottom":31,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"46c9d8f3-d66d-4d8d-a95a-84bf7a85fcb4","name":"46c9d8f3-d66d-4d8d-a95a-84bf7a85fcb4","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"46c9d8f3-d66d-4d8d-a95a-84bf7a85fcb4","name":"46c9d8f3-d66d-4d8d-a95a-84bf7a85fcb4","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -45,7 +45,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"spr_gameframe_border",
     "autoRecord":true,
     "backdropHeight":768,

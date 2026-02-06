@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"s_biterator_b_shape_press",
   "bboxMode":0,
   "bbox_bottom":16,
@@ -12,11 +12,11 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"d4b71b31-8a94-4c51-a28a-7f4fe0bab6f3","name":"d4b71b31-8a94-4c51-a28a-7f4fe0bab6f3","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"da25398a-0f65-473f-8b51-6ebf770f0581","name":"da25398a-0f65-473f-8b51-6ebf770f0581","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"405fe942-c18d-43df-b480-37a35a4eca21","name":"405fe942-c18d-43df-b480-37a35a4eca21","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"f5d46f9f-363a-485e-aed5-b029bf5262cd","name":"f5d46f9f-363a-485e-aed5-b029bf5262cd","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"718994d9-4bca-49d5-adf0-76cde4479797","name":"718994d9-4bca-49d5-adf0-76cde4479797","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"d4b71b31-8a94-4c51-a28a-7f4fe0bab6f3","name":"d4b71b31-8a94-4c51-a28a-7f4fe0bab6f3","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"da25398a-0f65-473f-8b51-6ebf770f0581","name":"da25398a-0f65-473f-8b51-6ebf770f0581","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"405fe942-c18d-43df-b480-37a35a4eca21","name":"405fe942-c18d-43df-b480-37a35a4eca21","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"f5d46f9f-363a-485e-aed5-b029bf5262cd","name":"f5d46f9f-363a-485e-aed5-b029bf5262cd","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"718994d9-4bca-49d5-adf0-76cde4479797","name":"718994d9-4bca-49d5-adf0-76cde4479797","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -36,7 +36,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"s_biterator_b_shape_press",
     "autoRecord":true,
     "backdropHeight":768,

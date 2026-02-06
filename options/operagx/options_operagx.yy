@@ -1,5 +1,5 @@
 {
-  "$GMOperaGXOptions":"",
+  "$GMOperaGXOptions":"v1",
   "%Name":"operagx",
   "ConfigValues":{
     "GX":{
@@ -33,6 +33,7 @@
   "option_operagx_team_id":"",
   "option_operagx_team_name":"",
   "option_operagx_texture_page":"2048x2048",
+  "option_operagx_transparent_background":false,
   "option_operagx_version":"1.0.0.0",
   "resourceType":"GMOperaGXOptions",
   "resourceVersion":"2.0",

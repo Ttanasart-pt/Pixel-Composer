@@ -1094,7 +1094,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_foreach(input_bypass, function(i) /*=>*/ {return i.setValue(i.from_junc.getValue(__frame))});
 			
 			if(attributes.update_graph) {
-				try      { update(frame);   } 
+				try      { update(frame); } 
 				catch(e) { log_warning("RENDER", exception_print(e), self); }
 			}
 			
@@ -1130,9 +1130,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var sBase = surface_get_target();
 			
 			try { 
-				if(attributes.update_graph) { 
+				if(attributes.update_graph)
 					update(frame); 
-				} 
 				
 			} catch(exception) {
 				var sCurr = surface_get_target();

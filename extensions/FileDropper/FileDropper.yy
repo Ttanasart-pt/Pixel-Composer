@@ -16,7 +16,7 @@
   "exportToGame":true,
   "extensionVersion":"1.0.0",
   "files":[
-    {"$GMExtensionFile":"","%Name":"FileDropper.dll","constants":[
+    {"$GMExtensionFile":"v1","%Name":"FileDropper.dll","constants":[
         {"$GMExtensionConstant":"","%Name":"hwnd_main","hidden":false,"name":"hwnd_main","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"window_handle()",},
         {"$GMExtensionConstant":"","%Name":"hwnd_default","hidden":false,"name":"hwnd_default","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"pointer_null",},
       ],"copyToTargets":66,"filename":"FileDropper.dll","final":"","functions":[
@@ -26,18 +26,11 @@
         {"$GMExtensionFunction":"","%Name":"file_dnd_set_files","argCount":4,"args":[1,2,2,2,],"documentation":"","externalName":"file_dnd_set_files","help":"file_dnd_set_files(pattern,allowfiles,allowdirs,allowmulti)","hidden":false,"kind":12,"name":"file_dnd_set_files","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"file_dnd_get_hwnd","argCount":0,"args":[],"documentation":"","externalName":"file_dnd_get_hwnd","help":"file_dnd_get_hwnd()","hidden":false,"kind":1,"name":"file_dnd_get_hwnd","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
         {"$GMExtensionFunction":"","%Name":"file_dnd_set_hwnd","argCount":0,"args":[1,],"documentation":"","externalName":"file_dnd_set_hwnd","help":"file_dnd_set_hwnd(hwnd)","hidden":false,"kind":1,"name":"file_dnd_set_hwnd","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":1,"name":"FileDropper.dll","order":[
-        {"name":"file_dnd_get_enabled","path":"extensions/FileDropper/FileDropper.yy",},
-        {"name":"file_dnd_set_enabled","path":"extensions/FileDropper/FileDropper.yy",},
-        {"name":"file_dnd_get_files","path":"extensions/FileDropper/FileDropper.yy",},
-        {"name":"file_dnd_set_files","path":"extensions/FileDropper/FileDropper.yy",},
-        {"name":"file_dnd_get_hwnd","path":"extensions/FileDropper/FileDropper.yy",},
-        {"name":"file_dnd_set_hwnd","path":"extensions/FileDropper/FileDropper.yy",},
-      ],"origname":"extensions\\FileDropper.dll","ProxyFiles":[
+      ],"init":"","kind":1,"name":"FileDropper.dll","origname":"extensions\\FileDropper.dll","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"FileDropper.dylib","name":"FileDropper.dylib","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":1,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"FileDropper.dll.zip","constants":[],"copyToTargets":0,"filename":"FileDropper.dll.zip","final":"","functions":[],"init":"","kind":4,"name":"FileDropper.dll.zip","order":[],"origname":"extensions\\FileDropper.dll.zip","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"FileDropper.dylib.zip","constants":[],"copyToTargets":0,"filename":"FileDropper.dylib.zip","final":"","functions":[],"init":"","kind":4,"name":"FileDropper.dylib.zip","order":[],"origname":"extensions\\FileDropper.dylib.zip","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"v1","%Name":"FileDropper.dll.zip","constants":[],"copyToTargets":0,"filename":"FileDropper.dll.zip","final":"","functions":[],"init":"","kind":4,"name":"FileDropper.dll.zip","origname":"extensions\\FileDropper.dll.zip","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"v1","%Name":"FileDropper.dylib.zip","constants":[],"copyToTargets":0,"filename":"FileDropper.dylib.zip","final":"","functions":[],"init":"","kind":4,"name":"FileDropper.dylib.zip","origname":"extensions\\FileDropper.dylib.zip","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

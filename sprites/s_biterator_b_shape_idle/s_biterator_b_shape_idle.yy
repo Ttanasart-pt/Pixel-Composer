@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"s_biterator_b_shape_idle",
   "bboxMode":0,
   "bbox_bottom":16,
@@ -12,11 +12,11 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"397dc64f-6b4f-4c90-bfd1-932b8e18a256","name":"397dc64f-6b4f-4c90-bfd1-932b8e18a256","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"8e5f7f1b-5560-40c7-b382-5ad9472ea43e","name":"8e5f7f1b-5560-40c7-b382-5ad9472ea43e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"880b8ed2-b434-4aeb-82d1-e9cf11bcd1b7","name":"880b8ed2-b434-4aeb-82d1-e9cf11bcd1b7","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"d4160ac6-0f0f-49e9-9d0a-458d9f8c1acd","name":"d4160ac6-0f0f-49e9-9d0a-458d9f8c1acd","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"4d242e1f-820a-44b4-9ee3-6921de233082","name":"4d242e1f-820a-44b4-9ee3-6921de233082","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"397dc64f-6b4f-4c90-bfd1-932b8e18a256","name":"397dc64f-6b4f-4c90-bfd1-932b8e18a256","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"8e5f7f1b-5560-40c7-b382-5ad9472ea43e","name":"8e5f7f1b-5560-40c7-b382-5ad9472ea43e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"880b8ed2-b434-4aeb-82d1-e9cf11bcd1b7","name":"880b8ed2-b434-4aeb-82d1-e9cf11bcd1b7","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"d4160ac6-0f0f-49e9-9d0a-458d9f8c1acd","name":"d4160ac6-0f0f-49e9-9d0a-458d9f8c1acd","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"4d242e1f-820a-44b4-9ee3-6921de233082","name":"4d242e1f-820a-44b4-9ee3-6921de233082","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -36,7 +36,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"s_biterator_b_shape_idle",
     "autoRecord":true,
     "backdropHeight":768,
