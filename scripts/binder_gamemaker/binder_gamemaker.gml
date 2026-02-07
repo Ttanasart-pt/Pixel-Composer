@@ -226,12 +226,8 @@ function __Binder_Gamemaker(_path) constructor {
         var _batAmo = ceil(array_length(resourcesRaw) / batchSize);
         refreshing  = true;
         
-        for( var i = 0; i < _batAmo; i++ ) {
-        	run_in(i, function(i) /*=>*/ {
-        		var _i = i * batchSize;
-        		readLoop(_i, min(_i + batchSize, array_length(resourcesRaw)));
-        	}, [i]);
-        }
+        for( var i = 0; i < _batAmo; i++ )
+        	run_in(i, function(i) /*=>*/ { readLoop(i * batchSize, min(i * batchSize + batchSize, array_length(resourcesRaw))); }, [i]);
         
         run_in(_batAmo, function() /*=>*/ {
         	array_resize(resourceList, resListInd);

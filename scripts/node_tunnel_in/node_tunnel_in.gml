@@ -184,8 +184,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var amo   = ds_map_size(project.tunnels_out);
 		var k     = ds_map_find_first(project.tunnels_out);
 		
-		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {getInternalName()}");
+		LOG_BLOCK_START
+		if(global.FLAG.render == 1) LOG($"→→→→→ Call get next node from: {getInternalName()}");
 		
 		repeat(amo) {
 			if(project.tunnels_out[? k] == _key)
@@ -194,7 +194,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			k = ds_map_find_next(project.tunnels_out, k);
 		}
 		
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 		return nodes;
 	}
 	

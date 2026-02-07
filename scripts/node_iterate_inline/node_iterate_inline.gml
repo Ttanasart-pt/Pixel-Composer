@@ -29,15 +29,15 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	static bypassNextNode    = function() /*=>*/ {return iterated < getIterationCount()};
 	
 	static getNextNodes = function(checkLoop = false) {
-		LOG_BLOCK_START();	
-		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
+		LOG_BLOCK_START	
+		if(global.FLAG.render == 1) LOG("[outputNextNode] Get next node from inline iterate");
 		
 		resetRender();
 		var _nodes = __nodeLeafList(nodes);
 		array_push_unique(_nodes, junc_in.node);
 		iterated++;
 		
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 		logNodeDebug($"Loop [{getDisplayName()}] restart: iteration {iterated}", 1, icon);
 		
 		return _nodes;

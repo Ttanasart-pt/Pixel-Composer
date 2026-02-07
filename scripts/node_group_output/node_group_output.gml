@@ -18,7 +18,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static setRenderStatus = function(result) {
 		if(rendered == result) return;
-		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {getInternalName()} : {result}");
+		if(global.FLAG.render == 1) LOG_LINE($"Set render status for {getInternalName()} : {result}");
 		
 		rendered = result;
 		if(result && group) {
@@ -52,7 +52,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			return _to.getNextNodes();
 		}
 		
-		LOG_BLOCK_START();
+		LOG_BLOCK_START
 		var nodes = [];
 		for(var j = 0, m = array_length(outParent.value_to); j < m; j++) {
 			var _to = outParent.value_to[j];
@@ -62,9 +62,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(_to.value_from.node != group)				continue;
 			
 			array_push(nodes, _to.node);
-			LOG_IF(global.FLAG.render == 1, $"Check complete, push {_to.node.internalName} to queue.");
+			if(global.FLAG.render == 1) LOG($"Check complete, push {_to.node.internalName} to queue.");
 		}
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 		
 		return nodes;
 	}

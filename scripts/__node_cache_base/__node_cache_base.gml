@@ -18,8 +18,6 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}).setTooltip(__txt("Edit Group"))
 		.setIcon(THEME.cache_group, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	// if(NOT_LOAD) run_in(1, () => generateGroup());
-	
 	////- Group
 	
 	static containNode = function(_node) {

@@ -379,7 +379,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		static logNodeDebug = function(text, level = 1, _icon = THEME.noti_icon_log) { 
-			LOG_IF(global.FLAG.render >= level, text);
+			if(global.FLAG.render >= level) LOG(text);
 			if(PROFILER_STAT == 0) return undefined;
 			
 			var _report = new profile_message(level, text)
@@ -1124,8 +1124,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
 			getInputs(frame);
 			
-			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {getInternalName()} <<<<<<<<<<");
+			LOG_BLOCK_START
+			if(global.FLAG.render == 1) LOG($">>>>>>>>>> DoUpdate called from {getInternalName()} <<<<<<<<<<");
 			
 			var sBase = surface_get_target();
 			
@@ -1158,7 +1158,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(!is(self, Node_Collection)) render_time = get_timer() - render_timer;
 		
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 	}
 	
 	doUpdate     = doUpdateFull;
@@ -1207,8 +1207,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static triggerRender = function(resetSelf = true) {
-		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"Trigger render for {getFullName()}");
+		LOG_BLOCK_START
+		if(global.FLAG.render == 1) LOG($"Trigger render for {getFullName()}");
 		
 		if(resetSelf) resetRender(false);
 		if(renderAll) RENDER_ALL
@@ -1223,7 +1223,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				inputs[i].__init_dynamic = true;
 		}
 		
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 	}
 	
 	static forwardPassiveDynamic = function() {
@@ -1273,7 +1273,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0, n = array_length(inputs); i < n; i++) {
 			if(inputs[i].isRendered()) continue;
 			
-			LOG_IF(global.FLAG.render == 1, $"→→ x Node {internalName} {inputs[i]} not rendered.");
+			if(global.FLAG.render == 1) LOG($"→→ x Node {internalName} {inputs[i]} not rendered.");
 			return false;
 		}
 		
@@ -3433,7 +3433,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_report.logs  = array_clone(messages_dbg);
 		
 		_report.nextn = nextn;
-		_report.queue = array_clone(RENDER_QUEUE.data, 1);
+		_report.queue = array_clone(RENDER_QUEUE, 1);
 		
 		nextn = [];
 		

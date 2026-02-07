@@ -1,7 +1,9 @@
 #region globals
 	global.LOG_LEVEL = 0;
 	
-	function LOG_BLOCK_START() { INLINE global.LOG_LEVEL++; }
+	#macro LOG_BLOCK_START global.LOG_LEVEL++;
+	#macro LOG_BLOCK_END   global.LOG_LEVEL--;
+	#macro LOG_END         global.LOG_LEVEL = 0;
 	
 	function LOG(text) {
 		INLINE
@@ -9,20 +11,14 @@
 		repeat(global.LOG_LEVEL - 1)
 			s += "   ";
 		s += "├ ";
-		
-		print(s + string(text));
+		print($"{s}{text}");
 	}
 	
 	function LOG_LINE(text) {
 		INLINE
-		LOG_BLOCK_START();
+		LOG_BLOCK_START
 		LOG(text);
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 	}
 	
-	function LOG_IF(cond, text)      { INLINE if(cond) LOG(text);      }
-	function LOG_LINE_IF(cond, text) { INLINE if(cond) LOG_LINE(text); }
-	
-	function LOG_BLOCK_END() { INLINE global.LOG_LEVEL--;   }
-	function LOG_END()       { INLINE global.LOG_LEVEL = 0; }
 #endregion

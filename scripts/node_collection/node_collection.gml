@@ -251,8 +251,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getNextNodes = function(checkLoop = false) { return isPure? getNextNodesExternal(checkLoop) : getNextNodesInternal(checkLoop); } 
 	
 	static getNextNodesInternal = function(checkLoop = false) { //get node inside the group
-		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group: {getInternalName()}");
+		LOG_BLOCK_START
+		if(global.FLAG.render == 1) LOG($"→→→→→ Call get next node from group: {getInternalName()}");
 		
 		var _nodes = [];
 		if(isRenderActive()) {
@@ -262,8 +262,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				if(!_in.isRenderActive()) continue;
 			
 				if(!_in.isRenderable()) {
-					LOG_IF(global.FLAG.render == 1, $"Node {_in.internalName} not ready, group skip.");
-					LOG_BLOCK_END();
+					if(global.FLAG.render == 1) LOG($"Node {_in.internalName} not ready, group skip.");
+					LOG_BLOCK_END
 					return [];
 				}
 			}
@@ -271,14 +271,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			_nodes = __nodeLeafList(getNodeList());
 		}
 		
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 		return _nodes;
 	}
 	
 	static getNextNodesExternal = function(checkLoop = false) { //get node connected to the parent object
 		if(!rendered) return [];
-		LOG_IF(global.FLAG.render == 1, $"Checking next node external for {getInternalName()}");
-		LOG_BLOCK_START();
+		if(global.FLAG.render == 1) LOG($"Checking next node external for {getInternalName()}");
+		LOG_BLOCK_START
 		
 		if(checkLoop) { 
 			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) 
@@ -312,23 +312,23 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				var _to   = _tos[j];
 				var _node = _to.node;
 				
-				LOG_IF(global.FLAG.render == 1, $"Checking node {_node.internalName} : {_node.isRenderable()}");
+				if(global.FLAG.render == 1) LOG($"Checking node {_node.internalName} : {_node.isRenderable()}");
 				if(!_node.isRenderable()) continue;
 				
 				array_push(nextNodes, _to.node);
 			}
 		}
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 		
 		return nextNodes;
 	}
 	
 	static setRenderStatus = function(result) {
-		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"Set render status for {getInternalName()} : {result}");
+		LOG_BLOCK_START
+		if(global.FLAG.render == 1) LOG($"Set render status for {getInternalName()} : {result}");
 		rendered = result;
 		if(rendered == result) {
-			LOG_BLOCK_END();
+			LOG_BLOCK_END
 			return;
 		}
 		
@@ -337,7 +337,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _o = outputs[i];
 			if(_o.from.rendered) continue;
 				
-			LOG_IF(global.FLAG.render == 1, $"Set fail because {_o.from.internalName} is not rendered.");
+			if(global.FLAG.render == 1) LOG($"Set fail because {_o.from.internalName} is not rendered.");
 			rendered = false;
 			break;
 		}
@@ -346,7 +346,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(!result && group != noone) 
 			group.setRenderStatus(result);
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 	}
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) {
@@ -360,7 +360,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static resetRender = function(_clearCache = false) {
-		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for group {getInternalName()}");
+		if(global.FLAG.render == 1) LOG_LINE($"Reset Render for group {getInternalName()}");
 		
 		setRenderStatus(false);
 		if(_clearCache) clearInputCache();

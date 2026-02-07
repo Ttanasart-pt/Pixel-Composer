@@ -46,8 +46,8 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	}
 	
 	static getNextNodes = function(checkLoop = false) {
-		LOG_BLOCK_START();	
-		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
+		LOG_BLOCK_START	
+		if(global.FLAG.render == 1) LOG("[outputNextNode] Get next node from inline iterate");
 		
 		resetRender();
 		var _nodes = __nodeLeafList(nodes);
@@ -56,7 +56,7 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		array_push_unique(_nodes, input_node);
 		iterated++;
 		
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 		
 		return _nodes;
 	}

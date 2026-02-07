@@ -114,7 +114,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		RenderList(topoList);
 		
 		var res = outputNode.getValue();
-		LOG_IF(global.FLAG.render == 1, $"Iterating | Comparing {val1}, {val2} = {res}");
+		if(global.FLAG.render == 1) LOG($"Iterating | Comparing {val1}, {val2} = {res}");
 		return res;
 	}
 	

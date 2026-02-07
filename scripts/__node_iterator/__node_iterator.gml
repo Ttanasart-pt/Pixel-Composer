@@ -37,7 +37,7 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		}
 		
 		doInitLoop();
-		LOG_LINE_IF(global.FLAG.render, "------------------< Loop begin >------------------");
+		if(global.FLAG.render) LOG_LINE("------------------< Loop begin >------------------");
 	}
 	
 	static doInitLoop = function() {}
@@ -45,21 +45,21 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	static update = function(frame = CURRENT_FRAME) { initLoop(); }
 	
 	static outputNextNode = function() {
-		LOG_BLOCK_START();	
-		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from Loop output");
+		LOG_BLOCK_START	
+		if(global.FLAG.render == 1) LOG("[outputNextNode] Get next node from Loop output");
 		
 		var _nodes = [];
 		
 		for( var i = 0; i < array_length(nodes); i++ ) { // check if every node is updated
 			if(!nodes[i].rendered) {
-				LOG_IF(global.FLAG.render == 1, $"Skipped due to node {nodes[i].internalName} not rendered.");
-				LOG_BLOCK_END();
+				if(global.FLAG.render == 1) LOG($"Skipped due to node {nodes[i].internalName} not rendered.");
+				LOG_BLOCK_END
 				return _nodes;
 			}
 		}
 		
 		if(willRestart) {
-			LOG_IF(global.FLAG.render == 1, $"Restart");
+			if(global.FLAG.render == 1) LOG($"Restart");
 			resetRender();
 			willRestart = false;
 		}
@@ -67,16 +67,16 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		var _ren = iterationStatus();
 		
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
-			LOG_IF(global.FLAG.render == 1, $"Loop restart: iteration {iterated}");
+			if(global.FLAG.render == 1) LOG($"Loop restart: iteration {iterated}");
 			_nodes = array_append(_nodes, __nodeLeafList(getNodeList()));
 			
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
-			LOG_IF(global.FLAG.render == 1, "Loop completed get next node external");
+			if(global.FLAG.render == 1) LOG("Loop completed get next node external");
 			setRenderStatus(true);
 			_nodes = getNextNodesExternal();
 		} 
 		
-		LOG_BLOCK_END();
+		LOG_BLOCK_END
 		return _nodes;
 	}
 	
@@ -93,7 +93,7 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		
 		for( var i = 0; i < array_length(nodes); i++ ) // check if every node is updated
 			if(!nodes[i].rendered) {
-				LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [RENDER FAILED by {nodes[i]}] >------------------");
+				if(global.FLAG.render) LOG_LINE($"------------------< Iteration update: {iterated} / {maxIter} [RENDER FAILED by {nodes[i]}] >------------------");
 				return;
 			}
 		
@@ -103,10 +103,10 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 			nodes[i].clearInputCache();
 		
 		if(iterated == maxIter) {
-			LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [COMPLETE] >------------------");
+			if(global.FLAG.render) LOG_LINE($"------------------< Iteration update: {iterated} / {maxIter} [COMPLETE] >------------------");
 			render_time = get_timer() - loop_start_time;
 		} else if(iterated < maxIter) {
-			LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [RESTART] >------------------");
+			if(global.FLAG.render) LOG_LINE($"------------------< Iteration update: {iterated} / {maxIter} [RESTART] >------------------");
 			willRestart = true;
 		}
 	}

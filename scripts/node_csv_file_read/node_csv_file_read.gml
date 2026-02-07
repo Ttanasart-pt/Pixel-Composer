@@ -106,7 +106,7 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(_modi > edit_time) {
 				edit_time = _modi;
 				
-				run_in(2, function() { updatePaths(); triggerRender(); });
+				run_in(2, function() /*=>*/ { updatePaths(); triggerRender(); });
 			}
 		}
 	}

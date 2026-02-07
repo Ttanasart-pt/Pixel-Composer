@@ -65,10 +65,11 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 			var _x1 = lengthdir_x(1, a1);
 			var _y1 = lengthdir_y(1, a1);
 			
-			var nx0 = smooth? lengthdir_x(1, a0) : lengthdir_x(1, (a0 + a1) / 2);
-			var ny0 = smooth? lengthdir_y(1, a0) : lengthdir_y(1, (a0 + a1) / 2);
-			var nx1 = smooth? lengthdir_x(1, a1) : lengthdir_x(1, (a0 + a1) / 2);
-			var ny1 = smooth? lengthdir_y(1, a1) : lengthdir_y(1, (a0 + a1) / 2);
+			var nx0 = smooth? _x0 : lengthdir_x(1, (a0 + a1) / 2);
+			var ny0 = smooth? _y0 : lengthdir_y(1, (a0 + a1) / 2);
+			
+			var nx1 = smooth? _x1 : lengthdir_x(1, (a0 + a1) / 2);
+			var ny1 = smooth? _y1 : lengthdir_y(1, (a0 + a1) / 2);
 			
 			var ux0 = (i + 0) / sides;
 			var ux1 = (i + 1) / sides;
@@ -88,13 +89,37 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 				var _h0 = -_h + _j0 * _h * 2;
 				var _h1 = -_h + _j1 * _h * 2;
 				
-				vs[_ix++] = new __vertex(x2, y2, _h1).setNormal(nx0, ny0, 0).setUV(ux0, _j1);
-				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nx0, ny0, 0).setUV(ux0, _j0);
-				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nx1, ny1, 0).setUV(ux1, _j1);
+				var _dr = _r1 - _r0;
+				var _dh = _h;
+				
+				var nz0 = _dr / _dh;
+				var nz1 = _dr / _dh;
+				
+				if(smooth) {
+					var nz00 = j > 0?           (radius * profiles[j  ] - radius * profiles[j-1]) / _dh : nz0;
+					var nz11 = j < segment - 1? (radius * profiles[j+2] - radius * profiles[j+1]) / _dh : nz1;
+					
+					nz0 = (nz0 + nz00) / 2;
+					nz1 = (nz1 + nz11) / 2;
+				}
+				
+				var len  = sqrt(nx0 * nx0 + ny0 * ny0 + nz0 * nz0);
+				var nnx0 = nx0 / len;
+				var nny0 = ny0 / len;
+				var nnz0 = nz0 / len;
+			
+				var len  = sqrt(nx1 * nx1 + ny1 * ny1 + nz1 * nz1);
+				var nnx1 = nx1 / len;
+				var nny1 = ny1 / len;
+				var nnz1 = nz1 / len;
+			
+				vs[_ix++] = new __vertex(x2, y2, _h1).setNormal(nnx0, nny0, nnz1).setUV(ux0, _j1);
+				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nnx0, nny0, nnz0).setUV(ux0, _j0);
+				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nnx1, nny1, nnz1).setUV(ux1, _j1);
 															  					  
-				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nx0, ny0, 0).setUV(ux0, _j0);
-				vs[_ix++] = new __vertex(x1, y1, _h0).setNormal(nx1, ny1, 0).setUV(ux1, _j0);
-				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nx1, ny1, 0).setUV(ux1, _j1);
+				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nnx0, nny0, nnz0).setUV(ux0, _j0);
+				vs[_ix++] = new __vertex(x1, y1, _h0).setNormal(nnx1, nny1, nnz0).setUV(ux1, _j0);
+				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nnx1, nny1, nnz1).setUV(ux1, _j1);
 				
 				edges[eid++] = new __3dObject_Edge([x0, y0, _h0], [x2, y2, _h1]);
 				edges[eid++] = new __3dObject_Edge([x1, y1, _h0], [x3, y3, _h1]);
