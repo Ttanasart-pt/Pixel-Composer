@@ -1034,6 +1034,9 @@ function Panel_Preview() : PanelContent() constructor {
         if(is(prevN, Node) && prevN.selectClear != undefined) prevN.selectClear();
     }
     
+    static getTool = function( ) { return tool_current; }
+    static setTool = function(t) { tool_current = t; return self; }
+    
     static resetTool = function() {
     	if(tool_current == noone) return;
     	var _tobj = tool_current.getToolObject();
@@ -2975,7 +2978,7 @@ function Panel_Preview() : PanelContent() constructor {
     } 
     
     static drawSelection = function() {
-    	var prevN = PANEL_INSPECTOR.getInspecting();
+    	var prevN = getNodePreview();
     	var prevS = is(prevN, Node)
 			    		&& !array_empty(prevN.outputs) 
 			    		&& prevN.preview_select_surface 

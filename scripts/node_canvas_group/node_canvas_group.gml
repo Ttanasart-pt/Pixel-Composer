@@ -3,6 +3,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	color = COLORS.node_blend_canvas;
 	icon  = THEME.icon_canvas;
 	modifiable = false;
+	preview_select_surface = false;
 	
 	timeline_item_group = new timelineItemGroup_Canvas(self);
 	PROJECT.timelines.addItem(timeline_item_group);
@@ -26,7 +27,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		frame_renderer_x_to  = 0;
 		frame_renderer_x_max = 0;
 		
-		b_layer_add = button(function() /*=>*/ {return layerAdd()}).setIcon(THEME.add_16, 0, COLORS._main_value_positive);
+		b_layer_add = button(function() /*=>*/ {return layerAdd(true)}).setIcon(THEME.add_16, 0, COLORS._main_value_positive);
 		
 		layer_height = 0;
 		layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -158,7 +159,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		onLayerChanged();
 	}
 	
-	static layerAdd = function() {
+	static layerAdd = function(_select = false) {
 		var _l = undefined;
 		var _b = undefined;
 		
@@ -178,10 +179,14 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		var _canvas = nodeBuild("Node_Canvas", _l, _b);
 		_canvas.setDisplayName($"Layer {array_length(canvases)}", false);
 		_canvas.inputs[12].setValue(true);
-		
 		composite.dummy_input.setFrom(_canvas.outputs[0]);
-		
 		add(_canvas);
+		
+		if(_select) {
+			composite.dynamic_input_inspecting = composite.getInputAmount() - 1;
+			focusCanvas(_canvas);
+		}
+		
 		return _canvas;
 	}
 	
@@ -238,6 +243,20 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	
 	////- Draw
 	
+	static focusCanvas = function(_canvas) {
+		if(_canvas == canvas_sel) return;
+		
+		canvas_sel = _canvas;
+		
+		// var _tool = PANEL_PREVIEW.tool_current;
+		// if(_tool) _tool = _tool.getToolObject();
+		
+		// if(_tool) {
+		// 	_tool.node = canvas_sel;
+		// 	_tool.init();
+		// }
+	}
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
 		if(composite  != noone) draw_surface_ext_safe(composite.outputs[0].getValue(), _x, _y, _s, _s);
 		if(canvas_sel == noone) return false;
@@ -259,10 +278,9 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	static step = function() {
 		tools      = -1;
 		rightTools = -1;
-		canvas_sel = noone;
+		var _csel  = undefined;
 		
 		if(composite == noone) return;
-		
 		if(composite.getInputAmount()) {
 			var _ind = composite.dynamic_input_inspecting;
 			
@@ -272,9 +290,11 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 				var _inp = composite.inputs[_ind];
 				var _can = _inp? _inp.value_from : noone;
 				if(_can && has(layers, _can.node.node_id))
-					canvas_sel = layers[$ _can.node.node_id].canvas;
+					_csel = layers[$ _can.node.node_id].canvas;
 			}
 		}
+		
+		if(_csel) focusCanvas(_csel);
 		
 		if(canvas_sel) {
 			tools      = canvas_sel.tools;

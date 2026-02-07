@@ -270,19 +270,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		attributes.useBGDim  = false;
 		attributes.dimension = [ 1, 1 ];
 	
-		output_surface   = [ surface_create_empty(1, 1) ];
-		canvas_surface   = [ surface_create_empty(1, 1) ];
-		canvas_buffer    = [ buffer_create(1 * 1 * 4, buffer_fixed, 2) ];
+		output_surface   = [];
+		canvas_surface   = [];
+		canvas_buffer    = [];
 	
-		drawing_surface  = surface_create_empty(1, 1);
-		_drawing_surface = surface_create_empty(1, 1);
+		 drawing_surface = undefined;
+		_drawing_surface = undefined;
 		surface_w = 1;
 		surface_h = 1;
 	
-		prev_surface		  = surface_create_empty(1, 1);
-		preview_draw_surface  = surface_create_empty(1, 1);
-		preview_draw_tile     = surface_create_empty(1, 1);
-		preview_draw_mask     = surface_create_empty(1, 1);
+		prev_surface		  = undefined;
+		preview_draw_surface  = undefined;
+		preview_draw_tile     = undefined;
+		preview_draw_mask     = undefined;
 		preview_draw_final    = [ 0, 0 ];
 		
 		draw_stack = ds_list_create();
@@ -905,8 +905,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			setFrame(max(preview_index - 1, 0));
 		attributes.frames--;
 		
-		surface_free_safe(canvas_surface[index]);
-		buffer_delete(canvas_buffer[index]);
+		surface_free_safe(array_safe_get_fast(canvas_surface, index, -1));
+		buffer_delete_safe(array_safe_get_fast(canvas_buffer, index, -1));
 			
 		array_delete(canvas_surface, index, 1);
 		array_delete(canvas_buffer,  index, 1);
@@ -944,7 +944,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static getCanvasSurface = function(i = preview_index) { INLINE return array_safe_get_fast(canvas_surface, i); }
 	static getOutputSurface = function(i = preview_index) { INLINE return array_safe_get_fast(output_surface, i); }
 	
-	static setCanvasSurface = function(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
+	static setCanvasSurface = function(surface, index = preview_index) { canvas_surface[index] = surface; }
 	
 	static apply_surfaces = function() { for( var i = 0; i < attributes.frames; i++ ) apply_surface(i); }
 	static apply_surface  = function(index = preview_index) {
@@ -954,10 +954,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _canvas_surface = getCanvasSurface(index);
 		
 		if(!surface_exists(_canvas_surface)) { // recover surface from bufffer in case of VRAM refresh
-			setCanvasSurface(surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[index]), index);
+			var _cbuff = array_safe_get_fast(canvas_buffer, index, -1);
+			
+			if(buffer_exists(_cbuff))
+				setCanvasSurface(surface_create_from_buffer(_dim[0], _dim[1], _cbuff), index);
+			else 
+				setCanvasSurface(surface_create(_dim[0], _dim[1]), index);
 			
 		} else if(surface_get_width_safe(_canvas_surface) != _dim[0] || surface_get_height_safe(_canvas_surface) != _dim[1]) { // resize surface
-			var _cbuff = array_safe_get_fast(canvas_buffer, index);
+			var _cbuff = array_safe_get_fast(canvas_buffer, index, -1);
 			buffer_delete_safe(_cbuff);
 			
 			canvas_buffer[index] = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
@@ -980,7 +985,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static surface_store_buffer  = function(index = preview_index) {
 		if(index >= attributes.frames) return;
 		
-		buffer_delete_safe(canvas_buffer[index]);
+		var _cbuff = array_safe_get_fast(canvas_buffer, index, -1);
+		buffer_delete_safe(_cbuff);
 		
 		var _canvas_surface = getCanvasSurface(index);
 		if(!surface_exists(_canvas_surface)) return;
@@ -995,6 +1001,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static apply_draw_surface = function(_applyAlpha = true) {
+		
 		var _can = getCanvasSurface();
 		var _drw = drawing_surface;
 		var _dim = attributes.dimension;
@@ -1053,16 +1060,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], 1, 1, 180);
 					}
 			surface_reset_shader();
-			
 		}
 		
-		var _tw = surface_get_width_safe(_tmp);
-		var _th = surface_get_height_safe(_tmp);
-		
-		var _sw = surface_get_width_safe(_can);
-		var _sh = surface_get_height_safe(_can);
-		
-		var _drawnSurface = surface_create(_sw, _sh);
+		var _drawnSurface = surface_create(_dim[0], _dim[1]);
 		
 		surface_set_shader(_drawnSurface, sh_canvas_apply_draw);
 			shader_set_i("drawLayer", tool_attribute.drawLayer);
@@ -1179,10 +1179,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		#region surfaces
 			var _canvas_surface = getCanvasSurface();
+			if(!surface_exists(_canvas_surface)) {
+				refreshFrames();
+				_canvas_surface = getCanvasSurface();
+			}
+			
 			if(!surface_exists(_canvas_surface)) return hovering;
 			
 			_drawing_surface = surface_verify(_drawing_surface, _dim[0], _dim[1]);
-			drawing_surface  = surface_verify( drawing_surface, _dim[0], _dim[1], attrDepth());
+			 drawing_surface = surface_verify( drawing_surface, _dim[0], _dim[1], attrDepth());
 			
 			surface_set_shader(_drawing_surface, noone); 
 				draw_surface_safe(drawing_surface); 
@@ -1230,7 +1235,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(is(_tool, canvas_tool)) _tool.setBrush(current_brush);
 			tool_mirror_edit.sprs = tool_attribute.mirror[0]? THEME.canvas_mirror_diag : THEME.canvas_mirror;
-			
 		#endregion
 			
 		#region selection

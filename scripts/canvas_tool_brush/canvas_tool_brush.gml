@@ -30,6 +30,8 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 	temp_surf = noone;
 	mixx_surf = noone;
 	
+	////- Init
+	
 	static init = function() {
 		mouse_holding      = false;
 		mouse_line_drawing = false;
@@ -44,6 +46,8 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		surface_free_safe(temp_surf); 
 		surface_free_safe(mixx_surf); 
 	}
+	
+	////- Drawing
 	
 	static draw_point_wrap = function(_draw = true) {
 		var _oxn = mouse_cur_tx - brush.range < 0;

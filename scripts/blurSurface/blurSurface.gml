@@ -41,8 +41,8 @@ function blur_gauss_args(_surface, _size, _sampleMode = 1) constructor {
 	overColor  = noone;        static setOver  = function(c) /*=>*/ { overColor = c;    return self; }
 	gamma      = false;        static setGamma = function(g) /*=>*/ { gamma = g;        return self; }
 	
-	ratio      = 1;            static setRatio = function(r) /*=>*/ { ratio = r; return self; }
-	angle      = 0;            static setAngle = function(r) /*=>*/ { angle = r; return self; }
+	ratio      = 1;            static setRatio = function(r) /*=>*/ { ratio = r;        return self; }
+	angle      = 0;            static setAngle = function(r) /*=>*/ { angle = r;        return self; }
 }
 
 function surface_apply_gaussian(args) {

@@ -20,6 +20,8 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 	temp_surf = noone;
 	mixx_surf = noone;
 	
+	////- Init
+	
 	static init = function() {
 		mouse_holding = false;
 		surface_free_safe(temp_surf); 
@@ -27,6 +29,8 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		
 		surface_clear(node.drawing_surface);
 	}
+	
+	////- Drawing
 	
 	static draw_point_wrap = function(_draw = true) {
 		var _oxn = mouse_cur_tx - brush.range < 0;
@@ -162,6 +166,8 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		
 		pactive     = active;
 	}
+	
+	////- Draw
 	
 	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		BLEND_MAX
