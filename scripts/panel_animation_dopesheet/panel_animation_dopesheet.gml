@@ -1711,16 +1711,33 @@ function Panel_Animation_Dopesheet() {
         var hov  = item_dragging == noone && dopesheet_name_hover && point_in_rectangle(msx, msy, 0, ty0, w - ui(64), ty1);
         var foc  = pFOCUS;
         
-        //// Draw Name
+        ////- =Draw Name
         
         var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_sub;
         if(hov) cc = COLORS._main_text_accent;
         
         draw_set_color(CDEF.main_mdblack);
-        draw_rectangle(ui(32), ty - ui(8), tool_width, ty + ui(8), false);
+        draw_rectangle(0, ty - ui(8), tool_width, ty + ui(8), false);
         
         if(drw) {
-	        var _title_x = ui(32);
+	        var tw = ui(15);
+	        var th = ui(17);
+	        
+	        var _gx = ui(8);
+	        var _gy = ty - ui(9);
+	        var  bc = [COLORS._main_icon, COLORS._main_icon_on_inner];
+	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, "", THEME.animate_prop_go, 0, bc, .75) == 2) {
+	            graphFocusNode(_node);
+	            PANEL_INSPECTOR.highlightProp(prop);
+	        }
+	        _gx += tw + 1;
+	        
+	        var ii = prop.attributes.timeline_hide;
+	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, "", THEME.timeline_hide, ii, bc, .75, .75) == 2)
+	            prop.attributes.timeline_hide = !prop.attributes.timeline_hide;
+	        _gx += tw + 1;
+	        
+	        var _title_x = _gx + ui(4);
 	        draw_set_text(f_p4, fa_left, fa_center, cc);
 	        
         	if(!show_nodes) {
@@ -1748,17 +1765,6 @@ function Panel_Animation_Dopesheet() {
                 context_selecting_prop = prop;
                 context_selecting_item = _item;
             }
-        }
-        
-        var tw = ui(15);
-        var th = ui(17);
-        
-        var _gx = ui(20);
-        var _gy = ty;
-        var  bc = [COLORS._main_icon, COLORS._main_icon_on_inner];
-        if(drw && buttonInstant(noone, _gx - ui(10), _gy - ui(9), tw, th, m, hov, foc, "", THEME.animate_prop_go, 0, bc, 0.75) == 2) {
-            graphFocusNode(_node);
-            PANEL_INSPECTOR.highlightProp(prop);
         }
         
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

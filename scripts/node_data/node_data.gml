@@ -346,6 +346,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		timeline_item    = new timelineItemNode(self);
 		anim_priority    = array_length(project.allNodes);
 		is_anim_timeline = false;
+		
+		attributes.timeline_hide = false;
 	#endregion
 	
 	#region ---- Notification ----

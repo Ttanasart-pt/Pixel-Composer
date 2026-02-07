@@ -67,13 +67,13 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 		return tooltip;
 	}
 	
-	static draw = function(bx, by, bw, bh, m, hov, foc, con = "") {
+	static draw = function(bx, by, bw, bh, m, hov, foc, con = "", pd = ui(4)) {
 		var _tool = getTooltip();
 		var _spr  = getSpr();
 		var _spri = getSprInd();
 		var _cc   = is_callable(getColor)? getColor() : COLORS._main_icon;
 		
-		var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, hov, foc, _tool, _spr, _spri, _cc, 1, ui(4));
+		var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, hov, foc, _tool, _spr, _spri, _cc, 1, pd);
 		
 		if(b == 2) toggleFunction();
 		if(b == 3) {

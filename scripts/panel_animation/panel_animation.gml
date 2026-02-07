@@ -19,7 +19,8 @@
     function panel_animation_duplicate()               { CALL("animation_duplicate");               PANEL_ANIMATION.doDuplicate();                                                                       }
     function panel_animation_copy()                    { CALL("animation_copy");                    PANEL_ANIMATION.doCopy();                                                                            }
     function panel_animation_paste()                   { CALL("animation_paste");     if(PANEL_ANIMATION.value_focusing != noone) PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing.prop);          }
-    function panel_animation_show_nodes()              { CALL("animation_toggle_nodes");            PANEL_ANIMATION.show_nodes = !PANEL_ANIMATION.show_nodes;                                            }
+    function panel_animation_show_nodes()              { CALL("animation_toggle_nodes");            PANEL_ANIMATION.show_nodes  = !PANEL_ANIMATION.show_nodes;                                           }
+    function panel_animation_show_hidden()             { CALL("animation_toggle_hidden");           PANEL_ANIMATION.show_hidden = !PANEL_ANIMATION.show_hidden;                                          }
     function panel_animation_quantize()                { CALL("animation_quantize");                PANEL_ANIMATION.doQuantize();                                                                        }
     
     function panel_animation_edit_keyframe_value()     { CALL("animation_edit_keyframe_value");     PANEL_ANIMATION.edit_keyframe_value();   }
@@ -120,6 +121,9 @@
         registerFunction(an, "Reset Range",           "", n, panel_animation_range_reset          ).setMenu("animation_reset_range",         )
         registerFunction(an, "Reset View",           "F", n, panel_animation_reset_view           ).setMenu("animation_reset_view",          )
         
+        registerFunction(an, "Toggle Hidden",      "S",        n,  panel_animation_show_hidden    )
+        	.setMenu("animation_toggle_hidden", THEME.timeline_hide).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
+        	.setColorFn(function() /*=>*/ {return PANEL_ANIMATION.show_hidden? COLORS._main_icon : COLORS._main_accent} )
         
         registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType    )
         	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.node_name_type} )
@@ -201,6 +205,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    expands_h  = ui(240);
 	    
 	    tool_width = ui(224);
+	    side_width = ui(44);
 	    timeline_w = w - tool_width - ui(68);
 	    timeline_h = ui(28);
 	    
@@ -239,7 +244,9 @@ function Panel_Animation() : PanelContent() constructor {
         node_name_type      = 0;
         do_resetView        = true;
     
-    	timeline_frame       = true;
+    	timeline_frame      = true;
+    	
+    	show_hidden         = 0;
     #endregion
     
     #region ++++ Control Buttons ++++
@@ -302,6 +309,7 @@ function Panel_Animation() : PanelContent() constructor {
     	
     	global.menuItems_animation_sidebar = [
     		"animation_new_folder",
+			"animation_toggle_hidden",
 			"animation_toggle_NodeNameType",
 			"animation_toggle_NodeLabel",
 			"animation_toggle_KeyframeOverride",
@@ -400,10 +408,10 @@ function Panel_Animation() : PanelContent() constructor {
         }
     }
     
-    ////- Draw
+    ////- Content
     
     function setDimension() {
-    	timeline_w = w - tool_width - ui(64);
+    	timeline_w = w - tool_width - side_width - ui(16);
     	// timeline_h = ui(28);
     }
     
@@ -427,15 +435,17 @@ function Panel_Animation() : PanelContent() constructor {
             
             if(is(_cont, timelineItemNode)) {
                 var _node = _cont.node;
-                if(!is_struct(_node)) continue;
-                if(_node.instanceBase != undefined) continue;
+                if(!is_struct(_node))                              continue;
+                if(_node.instanceBase != undefined)                continue;
+                if(!show_hidden && _node.attributes.timeline_hide) continue;
                 
                 var _anim = [];
                 var _prop = [];
                 
                 for( var j = 0, m = array_length(_node.inputs); j < m; j++ ) {
                     var prop = _node.inputs[j];
-                    if(!prop.isTimelineVisible()) continue;
+                    if(!prop.isTimelineVisible())                     continue;
+                    if(!show_hidden && prop.attributes.timeline_hide) continue;
                     
                     var anim = prop.sep_axis? prop.getAnimators() : [ prop.animator ];
                     array_append(_anim, anim);
@@ -453,6 +463,8 @@ function Panel_Animation() : PanelContent() constructor {
                     array_append(timeline_keys, _anim[j].values);
                 
             } else if(is(_cont, timelineItemGroup)) {
+            	if(!show_hidden && _cont.timeline_hide) continue;
+            	
                 _content.type = "folder";
                 array_push(timeline_contents, _content);
                 
@@ -479,6 +491,8 @@ function Panel_Animation() : PanelContent() constructor {
         
         array_foreach(timeline_keys, function(k) /*=>*/ { k.dopesheet_x = (k.time + 1) * timeline_scale + timeline_shift; });
     }
+    
+    ////- Draw
     
     function drawTimeline() {
     	var padd   = dopesheet_show? ui(10) : ui(6);
@@ -701,27 +715,18 @@ function Panel_Animation() : PanelContent() constructor {
 		var foc = pFOCUS;
 		var hov = pHOVER;
         
+        var bs = ui(24);
+    	var by = h - bs - ui(8);
+        var bx = w - bs - ui(8);
+        
         var bt = __txtx("panel_animation_animation_settings", "Animation settings");
-        if(!dopesheet_show) {
-	        var bw = ui(32);
-	        var bh = h - ui(12);
-	        var bx = w - (bw + ui(6));
-	    	var by = h - (bh + ui(6));
-	        
-        	var b  = buttonInstant(bSpr, bx, by, bw, bh, m, hov, foc, bt, THEME.gear, 2, bc, 1, .9);
-        	if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bw, y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
-        	return;
-        }
-        
-        var bs = ui(28);
-    	var by = h - (bs + ui(8));
-        var bx = w - (bs + ui(8));
-        
-        var b  = buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, bt, THEME.gear, 2, bc, 1, .9);
+        var b  = buttonInstant_Pad(bSpr, bx, by, bs, bs, m, hov, foc, bt, THEME.gear, 2, bc, 1, ui(6));
         if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bs, y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
         
+        if(!dopesheet_show) return;
+        
         by -= bs + ui(4); if(by < 8) return;
-        var b = buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, __txt("Animation Tools"), THEME.animation_timing, 2, bc, 1, .9);
+        var b = buttonInstant_Pad(bSpr, bx, by, bs, bs, m, hov, foc, __txt("Animation Tools"), THEME.animation_timing, 2, bc, 1, ui(6));
         if(b == 2) {
         	var _dx = x + bx + ui(32);
         	var _dy = y + by - ui(8);
@@ -758,7 +763,7 @@ function Panel_Animation() : PanelContent() constructor {
 				continue;
 			} 
 			
-			_menu.draw(bx, by, bs, bs, m, hov, foc);
+			_menu.draw(bx, by, bs, bs, m, hov, foc, "", ui(6));
 			by += bs + ui(2);
 		}
 		

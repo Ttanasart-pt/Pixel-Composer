@@ -223,8 +223,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Animation ----
-		anim_presets = []; static setAnimPreset = function(_pres) /*=>*/ { array_append(anim_presets, _pres); return self; }
-		timelineWidget = undefined;
+		anim_presets             = [];          static setAnimPreset = function(_pres) /*=>*/ { array_append(anim_presets, _pres); return self; }
+		timelineWidget           = undefined;
+		attributes.timeline_hide = false;
 		
 		static getTimelineWidget = function() {
 			if(is(timelineWidget, widget)) return timelineWidget;
