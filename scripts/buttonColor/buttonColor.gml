@@ -1,7 +1,6 @@
 function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	onApply       = _onApply;
 	parentDialog  = dialog;
-	current_value = 0;
 	triggered     = false;
 	show_alpha    = true;
 	simple        = false;
@@ -29,15 +28,8 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	
 	b_quick_pick.activate_on_press = true;
 	
-	function apply(value) {
-		if(!interactable) return;
-		current_value = value;
-		triggered     = true;
-		onApply(value);
-	}
-	
-	static isSimple  = function() /*=>*/ { simple = true; show_alpha = false; return self; };
-	static hideAlpha = function() /*=>*/ { show_alpha = false; return self; };
+	static isSimple  = function() /*=>*/ { show_alpha = false; simple = true; return self; };
+	static hideAlpha = function() /*=>*/ { show_alpha = false;                return self; };
 	
 	static isTriggered = function() {
 		var t = triggered;
@@ -48,7 +40,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	static trigger = function() { 
 		var dialog = dialogCall(o_dialog_color_selector)
 						.setDefault(is_array(current_color)? array_safe_get(current_color, 0, 0) : current_color)
-						.setApply(apply);
+						.setApply(onApply);
 		
 		dialog.interactable     = interactable;
 		dialog.drop_target      = self;

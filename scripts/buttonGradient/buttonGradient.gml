@@ -13,12 +13,10 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	
 	hover_index = 0;
 	
-	function apply(value) { if(!interactable) return; onApply(value); }
-	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2)
 						.setDefault(current_gradient.clone());
-		dialog.onApply      = apply;
+		dialog.onApply      = onApply;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
 		
@@ -35,11 +33,11 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		dialog.interactable = interactable;
 	}
 	
-	function editColor(col) {
+	static editColor = function(col) {
 		if(edit_color_index == -1) return;
 		
 		edit_color_index.value = col;
-		apply(current_gradient);
+		onApply(current_gradient);
 	}
 	
 	static fetchHeight = function(params) { return params.h + expanded * ui(22); }
@@ -176,7 +174,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 						draw_sprite_stretched_ext(THEME.box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_value_positive, 1);
 						if(mouse_release(mb_left)) {
 							_k.value = DRAGGING.data;
-							apply(current_gradient);
+							onApply(current_gradient);
 						}
 						
 					} else {
@@ -192,7 +190,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 					if(array_length(_gradient.keys) > 1 && mouse_press(mb_right, active)) {
 						array_remove(_gradient.keys, _hv);
 						_gradient.refresh();
-						apply(_gradient);
+						onApply(_gradient);
 					}
 					
 				} else if(point_in_rectangle(_m[0], _m[1], _ggx, _cy, _ggx + _ggw, _cy + _ch)) {
@@ -224,7 +222,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				if(mouse_release(mb_left)) {
 					drag_color_index = -1;
 					_gradient.refresh();
-					apply(_gradient);
+					onApply(_gradient);
 				}
 			}
 			

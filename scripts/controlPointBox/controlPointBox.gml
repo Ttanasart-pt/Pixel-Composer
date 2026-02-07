@@ -34,30 +34,17 @@ function controlPointBox(_onModify) : widget() constructor {
 	rot    = new rotator(    function(val) /*=>*/ {return onModify(toNumber(val),         PUPPET_CONTROL.fy     )})//.setHide(1);
 	scMode = new scrollBox( sMode, function(val) /*=>*/ {return onModify(toNumber(val),   PUPPET_CONTROL.mode   )});
 	
-	widgets = [ scMode, tbCx, tbCy, tbFx, tbFy, tbW, tbH, rot, sW ];
+	widgets   = [ scMode, tbCx, tbCy, tbFx, tbFy, tbW, tbH, rot, sW ];
+	widgetLen = array_length(widgets);
 	
-	static setInteract = function(_i = noone) { 
-		interactable = _i;
-		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
-			widgets[i].setInteract(_i);
-	}
+	static setInteract = function(n = noone) /*=>*/ { interactable = n; for( var i = 0; i < widgetLen; i++ ) widgets[i].setInteract(n); }
+	static register    = function(p = noone) /*=>*/ {                   for( var i = 0; i < widgetLen; i++ ) widgets[i].register(p);    }
+	static isHovering  = function() /*=>*/ {return array_any(widgets, function(w) /*=>*/ {return w.isHovering()})};
 	
-	static register = function(parent = noone) {
-		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
-			widgets[i].register(parent); 
-	}
-	
-	static isHovering = function() { 
-		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
-			if(widgets[i].isHovering()) return true;
-		return false;
-	}
-	
-	static fetchHeight = function(params) { return params.h + ui(4) + params.h * (1 + (params.data[0] != PUPPET_FORCE_MODE.puppet)); }
+	static fetchHeight = function(params) { return params.h + ui(4) + params.h * 2; }
 	static drawParam   = function(params) {
 		setParam(params);
-		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
-			widgets[i].setParam(params);
+		for( var i = 0; i < widgetLen; i++ ) widgets[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry); 
 	}
@@ -82,7 +69,7 @@ function controlPointBox(_onModify) : widget() constructor {
 		var lh = _h;
 		h = _h + ui(4) + lh;
 		
-		for( var i = 0, n = array_length(widgets); i < n; i++ )
+		for( var i = 0; i < widgetLen; i++ )
 			widgets[i].setFocusHover(active, hover);
 		
 		scMode.draw(_x, yy, w2 - ui(2), _h, sMode[_mode], _m, _rx, _ry);
@@ -134,7 +121,7 @@ function controlPointBox(_onModify) : widget() constructor {
 	static clone = function() { return new controlPointBox(onModify); }
 
 	static free = function() {
-		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
+		for( var i = 0, n = widgetLen; i < n; i++ ) 
 			widgets[i].free();
 	}
 }

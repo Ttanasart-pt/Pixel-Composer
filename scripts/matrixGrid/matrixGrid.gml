@@ -51,16 +51,15 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		return self;
 	} setSize(1);
 	
-	static setInteract = function(interactable = false) { 
-		self.interactable   = interactable;
-		b_link.interactable = interactable;
-		tbsize.interactable = interactable;
+	static setInteract = function(_in = false) { 
+		self.interactable   = _in;
+		b_link.interactable = _in;
+		tbsize.interactable = _in;
 		
 		for( var i = 0; i < vsize; i++ )
-			tb[i].interactable = interactable;
+			tb[i].interactable = _in;
 		
-		if(extras) 
-			extras.interactable = interactable;
+		if(extras) extras.interactable = _in;
 	}
 	
 	static register = function(parent = noone) {
@@ -81,7 +80,13 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		return false;
 	}
 	
-	static fetchHeight = function(params) { if(is(params.data, Matrix)) setSize(params.data.size); return params.h * size[1]; }
+	static fetchHeight = function(params) { 
+		if(is(params.data, Matrix)) setSize(params.data.size); 
+		var resize = params.display_data[$ "resizeable"] ?? true;
+		    resize = resize && interactable;
+		    
+		return resize * (params.h + ui(4)) + params.h * size[1]; 
+	}
 	
 	static onSetParam = function(params) {
 		tbsize.setParam(params);

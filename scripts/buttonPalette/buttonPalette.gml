@@ -8,15 +8,10 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	expanded         = false;
 	edit_color_index = -1;
 	
-	function apply(value) {
-		if(!interactable) return;
-		onApply(value);
-	}
-	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
 		dialog.setDefault(current_palette);
-		dialog.onApply      = apply;
+		dialog.onApply      = onApply;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
 		
@@ -30,20 +25,19 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		
 		var dialog = dialogCall(o_dialog_color_selector)
 							.setDefault(current_palette[edit_color_index])
-							.setApply(editColor);
+							.setApply(method(self, editColor));
 		
 		dialog.interactable = interactable;
 	}
 	
-	function editColor(col) {
+	static editColor = function(col) {
 		if(edit_color_index == -1) return;
 		current_palette[edit_color_index] = col;
-		apply(current_palette);
+		onApply(current_palette);
 	}
 	
-	static fetchHeight = function(params) { return params.h + expanded * (array_length(params.data) * ui(16) + ui(2)); }
+	static fetchHeight = function(params) { return params.h + expanded * (array_length(params.data) * ui(16) + ui(2));  }
 	static drawParam   = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
-	
 	static draw = function(_x, _y, _w, _h, _color, _m) {
 		x = _x;
 		y = _y;
@@ -74,9 +68,9 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 			
 			h = ui(4) + array_length(_color) * _ph;
 			current_palette = _color[0];
-		} else {
+			
+		} else
 			h = _h;
-		}
 		
 		if(!is_array(current_palette) || array_empty(current_palette) || is_array(current_palette[0]))
 			return 0;
@@ -146,7 +140,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 							draw_sprite_stretched_ext(THEME.box_r2, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, COLORS._main_value_positive, 1);
 							if(mouse_release(mb_left)) {
 								current_palette[i] = DRAGGING.data;
-								apply(current_palette);
+								onApply(current_palette);
 							}
 							
 						} else {

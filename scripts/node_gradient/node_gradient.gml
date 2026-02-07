@@ -12,8 +12,6 @@
 			_grad.keys = _k;
 			_grad.refresh();
 			_n.inputs[1].setValue(_grad);
-			
-			_n.triggerRender();
 		});
 	});
 #endregion
