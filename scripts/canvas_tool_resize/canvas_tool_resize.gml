@@ -15,7 +15,7 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	__hover_anim = array_create(4);
 	overlay_surface = noone;
 	
-	function init()   { 
+	static init = function() { 
 		if(node.attributes.useBGDim) {
 			noti_warning($"Canvas: Cannot resize canvas with 'Use Background Dimension' on.")
 			cancel();
@@ -29,7 +29,7 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		dimension = [ _sw, _sh ];
 	}
 	
-	function apply()  { 
+	static apply = function() { 
 		applySize(); 
 		disable(); 
 		
@@ -38,9 +38,9 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		p.canvas_y += points[1] * p.canvas_s;
 	}
 	
-	function cancel() { disable(); }
+	static cancel = function() { disable(); }
 	
-	function applySize() {
+	static applySize = function() {
 		var x0 = points[0];
 		var y0 = points[1];
 		var x1 = points[2];
@@ -75,7 +75,7 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		node.triggerRender();
 	}
 	
-	function setAnchor(a) {
+	static setAnchor = function(a) {
 		var _r = floor(a / 3);
 		var _c =      (a % 3);
 		
@@ -133,14 +133,14 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		}
 	}
 	
-	function setSize(_s, i) {
+	static setSize = function(_s, i) {
 		dimension[i] = _s;
 		
 		points[2] = points[0] + dimension[0];
 		points[3] = points[1] + dimension[1];
 	}
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		var _sw = points[2] - points[0];
 		var _sh = points[3] - points[1];

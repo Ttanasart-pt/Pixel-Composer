@@ -3,14 +3,14 @@ function canvas_tool_inset() : canvas_tool_shader() constructor {
 	mouse_sx   = 0;
 	mouse_sy   = 0;
 	
-	function init() { mouse_init = true; }
+	static init = function() { mouse_init = true; }
 	
-	function onInit(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		mouse_sx   = _mx;
 		mouse_sy   = _my;
 	}
 	
-	function stepEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _dim  = node.attributes.dimension;
 		
 		var _dx = (_mx - mouse_sx) / _s;

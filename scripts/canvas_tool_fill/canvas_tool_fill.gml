@@ -5,7 +5,7 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 	mouse_cur_x = 0;
 	mouse_cur_y = 0;
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _thr		= tool_attribute.thres;
 		var _fill_type	= tool_attribute.fillType;
 		var _use_output	= tool_attribute.useBG;

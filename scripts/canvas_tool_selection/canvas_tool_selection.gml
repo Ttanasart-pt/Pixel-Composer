@@ -1,4 +1,4 @@
-function canvas_selection() : canvas_tool() constructor {
+function canvas_selection_data() : canvas_tool() constructor {
 	selection_surface	   = noone;
 	selection_mask		   = noone;
 	selection_surface_base = noone;
@@ -23,13 +23,13 @@ function canvas_selection() : canvas_tool() constructor {
 	
 	mouse_cur_x  = 0; mouse_cur_y  = 0;
 	
-	function init() {
+	static init = function() {
 		is_select_drag = false;
 	}
 	
 	////- Create Selection
 	
-	function createSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) {
+	static createSelection = function(_mask, sel_x0, sel_y0, sel_w, sel_h) {
 		if(!is_selected) { createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h); updateSelection(); return; }
 		
 		apply();
@@ -41,7 +41,7 @@ function canvas_selection() : canvas_tool() constructor {
 		updateSelection();
 	}
 	
-	function trimSelection() {
+	static trimSelection = function() {
 		if(!is_surface(selection_mask)) return;
 		
 		var _bbox = surface_get_bbox(selection_mask);
@@ -69,7 +69,7 @@ function canvas_selection() : canvas_tool() constructor {
 		selection_mask    = _temp_mask;
 	}
 	
-	function updateSelection() {
+	static updateSelection = function() {
 		selection_aa = 0;
 		selection_sampler.setSurface(selection_mask);
 		
@@ -84,7 +84,7 @@ function canvas_selection() : canvas_tool() constructor {
 		
 	}
 	
-	function createSelectionFromSurface(surface, sel_x0 = 0, sel_y0 = 0) {
+	static createSelectionFromSurface = function(surface, sel_x0 = 0, sel_y0 = 0) {
 		if(!surface_exists(surface)) return;
 		
 		var sel_w = surface_get_width(surface);
@@ -108,7 +108,7 @@ function canvas_selection() : canvas_tool() constructor {
 		updateSelection();
 	}
 	
-	function createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) {
+	static createNewSelection = function(_mask, sel_x0, sel_y0, sel_w, sel_h) {
 		if(sel_w == 1 && sel_h == 1) return;
 		
 		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
@@ -137,7 +137,7 @@ function canvas_selection() : canvas_tool() constructor {
 		is_selected = true;
 	}
 	
-	function modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, _add) {
+	static modifySelection = function(_mask, sel_x0, sel_y0, sel_w, sel_h, _add) {
 		if(sel_w == 1 && sel_h == 1) return;
 		
 		var _x0, _y0, _x1, _y1;
@@ -196,7 +196,7 @@ function canvas_selection() : canvas_tool() constructor {
 		surface_free(_selection_mask);
 	}
 	
-	function selectAll() {
+	static selectAll = function() {
 		if(is_selected) apply();
 		
 		var sel_w = surface_get_width(canvas_surface);
@@ -225,7 +225,7 @@ function canvas_selection() : canvas_tool() constructor {
 	
 	////- Step
 	
-	function apply(targetSurface = canvas_surface) {
+	static apply = function(targetSurface = canvas_surface) {
 		if(!is_selected) return;
 		
 		var _drawLay = node.tool_attribute.drawLayer;
@@ -262,7 +262,7 @@ function canvas_selection() : canvas_tool() constructor {
 		return _drawnSurface;
 	}
 	
-	function onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onSelected = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!is_surface(selection_surface)) { is_selected = false; return; } 
 		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
 		if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
@@ -445,7 +445,7 @@ function canvas_selection() : canvas_tool() constructor {
 		}
 	}
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		mouse_cur_x  = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y  = round((_my - _y) / _s - 0.5);
 		
@@ -462,7 +462,7 @@ function canvas_selection() : canvas_tool() constructor {
 	
 	////- Draws
 	
-	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var sel_x0 = selection_position[0];
 		var sel_y0 = selection_position[1];
 		
@@ -472,7 +472,7 @@ function canvas_selection() : canvas_tool() constructor {
 		draw_surface_ext_safe(selection_mask, _dx, _dy, _s, _s);
 	}
 	
-	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(is_select_drag || is_select_rota || is_select_scal) return;
 		
 		var pos_x = _x + selection_position[0] * _s;
@@ -494,7 +494,7 @@ function canvas_selection() : canvas_tool() constructor {
 	
 	////- Actions
 	
-	function copySelection() {
+	static copySelection = function() {
 		if(!is_selected) return;
 		
 		var s = surface_encode(selection_surface, false);
@@ -502,7 +502,7 @@ function canvas_selection() : canvas_tool() constructor {
 		clipboard_set_text(json_stringify(s));
 	}
 	
-	function rotate90cw() {
+	static rotate90cw = function() {
 		var _sw = surface_get_width(selection_surface);
 		var _sh = surface_get_height(selection_surface);
 		
@@ -515,7 +515,7 @@ function canvas_selection() : canvas_tool() constructor {
 		selection_surface = _newS;
 	}
 	
-	function rotate90ccw() {
+	static rotate90ccw = function() {
 		var _sw = surface_get_width(selection_surface);
 		var _sh = surface_get_height(selection_surface);
 		
@@ -528,7 +528,7 @@ function canvas_selection() : canvas_tool() constructor {
 		selection_surface = _newS;
 	}
 	
-	function flipH() {
+	static flipH = function() {
 		var _sw = surface_get_width(selection_surface);
 		var _sh = surface_get_height(selection_surface);
 		
@@ -541,7 +541,7 @@ function canvas_selection() : canvas_tool() constructor {
 		selection_surface = _newS;
 	}
 	
-	function flipV() {
+	static flipV = function() {
 		var _sw = surface_get_width(selection_surface);
 		var _sh = surface_get_height(selection_surface);
 		
@@ -556,7 +556,7 @@ function canvas_selection() : canvas_tool() constructor {
 	
 }
 
-function canvas_tool_selection(_selector) : canvas_tool() constructor {
+function canvas_selection_tool(_selector) : canvas_tool() constructor {
 	selector = _selector;
 	
 	selection_mask		= noone;
@@ -571,13 +571,13 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 	mouse_cur_x  = 0; mouse_cur_y  = 0;
 	mouse_pre_x  = 0; mouse_pre_y  = 0;
 	
-	function init() {}
+	static init = function() {}
 	
 	////- Step
 	
-	function onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static onStep = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -585,9 +585,9 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 	
 	////- Draws
 	
-	function onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static onDrawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
-	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		if(!is_selecting) return;
@@ -601,7 +601,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		draw_surface_ext_safe(selection_mask, _dx, _dy, _s, _s);
 	}
 	
-	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	static escapable = function() /*=>*/ {return !selector.was_selected};
 }

@@ -7,14 +7,14 @@ function canvas_tool_pattern(toolAttr) : canvas_tool_shader() constructor {
 	
 	prev_surface = surface_create(8, 8);
 			   
-	function init() { mouse_init = true; }
+	static init = function() { mouse_init = true; }
 	
-	function onInit(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		mouse_sx = _mx;
 		mouse_sy = _my;
 	}
 	
-	function stepEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _dim = node.attributes.dimension;
 		
 		var px = round((mouse_sx - _x) / _s);
@@ -38,7 +38,7 @@ function canvas_tool_pattern(toolAttr) : canvas_tool_shader() constructor {
 		
 	}
 	
-	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
 		var _dim = node.attributes.dimension;
 		
 		var px = round((_mx - _x) / _s);

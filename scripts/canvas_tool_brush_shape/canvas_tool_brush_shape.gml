@@ -20,7 +20,7 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 	temp_surf = noone;
 	mixx_surf = noone;
 	
-	function init() {
+	static init = function() {
 		mouse_holding = false;
 		surface_free_safe(temp_surf); 
 		surface_free_safe(mixx_surf); 
@@ -28,7 +28,7 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		surface_clear(node.drawing_surface);
 	}
 	
-	function draw_point_wrap(_draw = true) {
+	static draw_point_wrap = function(_draw = true) {
 		var _oxn = mouse_cur_tx - brush.range < 0;
 		var _oxp = mouse_cur_tx + brush.range > draw_w;
 		var _oyn = mouse_cur_ty - brush.range < 0;
@@ -55,7 +55,7 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		brush.drawPoint(mouse_cur_tx, mouse_cur_ty, _draw);
 	}
 	
-	function draw_shape(_draw = false) {
+	static draw_shape = function(_draw = false) {
 		var _x0 = min(mouse_pre_x, mouse_cur_x);
 		var _x1 = max(mouse_pre_x, mouse_cur_x);
 		var _y0 = min(mouse_pre_y, mouse_cur_y);
@@ -114,7 +114,7 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		}
 	}
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
@@ -163,14 +163,14 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		pactive     = active;
 	}
 	
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		BLEND_MAX
 		if(mouse_holding) draw_shape(false);
 		else              draw_point_wrap(false);
 		BLEND_NORMAL
 	}
 	
-	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!mouse_holding)      return;
 		if(brush.sizing)  return;
 		if(!node.attributes.show_slope_check)  return;

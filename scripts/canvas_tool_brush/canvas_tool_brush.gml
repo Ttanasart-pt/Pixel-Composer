@@ -30,7 +30,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 	temp_surf = noone;
 	mixx_surf = noone;
 	
-	function init() {
+	static init = function() {
 		mouse_holding      = false;
 		mouse_line_drawing = false;
 		
@@ -40,12 +40,12 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		surface_clear(node.drawing_surface);
 	}
 	
-	function onDisable() { 
+	static onDisable = function() { 
 		surface_free_safe(temp_surf); 
 		surface_free_safe(mixx_surf); 
 	}
 	
-	function draw_point_wrap(_draw = true) {
+	static draw_point_wrap = function(_draw = true) {
 		var _oxn = mouse_cur_tx - brush.range < 0;
 		var _oxp = mouse_cur_tx + brush.range > draw_w;
 		var _oyn = mouse_cur_ty - brush.range < 0;
@@ -72,7 +72,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		brush.drawPoint(mouse_cur_tx, mouse_cur_ty, _draw);
 	}
 	
-	function draw_line_wrap(_draw = true) {
+	static draw_line_wrap = function(_draw = true) {
 		if(!brush_warp) brush.drawLine(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_tx, mouse_cur_ty, _draw);
 		else {
 			if(warp_block_x > warp_block_px) {
@@ -98,7 +98,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		}
 	}
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var mx = round((_mx - _x) / _s - 0.5);
 		var my = round((_my - _y) / _s - 0.5);
 		
@@ -225,7 +225,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 	
 	////- Preview
 	
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(isEraser) draw_set_color(c_white);
 		
 		BLEND_MAX
@@ -236,7 +236,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		BLEND_NORMAL
 	}
 	
-	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(brush.sizing)  return;
 		if(!mouse_line_drawing) return;
 		if(!node.attributes.show_slope_check)  return;

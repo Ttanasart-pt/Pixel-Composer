@@ -2977,10 +2977,11 @@ function Panel_Preview() : PanelContent() constructor {
     static drawSelection = function() {
     	var prevN = PANEL_INSPECTOR.getInspecting();
     	var prevS = is(prevN, Node)
+			    		&& !array_empty(prevN.outputs) 
 			    		&& prevN.preview_select_surface 
-			    		&& !array_empty(prevN.outputs) && prevN.outputs[0].type == VALUE_TYPE.surface;
+			    		&& prevN.outputs[0].type == VALUE_TYPE.surface;
     	
-    	if(!prevS) selection_active = false;
+    	if(!prevS) { selection_active = false; return; }
     	
     	var mmx = mx;
     	var mmy = my;

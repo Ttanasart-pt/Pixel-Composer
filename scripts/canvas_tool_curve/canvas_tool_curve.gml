@@ -15,18 +15,18 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 	mouse_hovering = [ noone, 0 ];
 	draw_hovering  = [];
 		
-	function clear() {
+	static clear = function() {
 		anchors = [];
 		editing = [ noone, 0 ];
 		surface_clear(drawing_surface);
 	}
 	
-	function init()      { clear();   }
-	function apply()     { apply_draw_surface(); disable(); }
-	function cancel()    { disable(); }
-	function onDisable() { clear();   }
+	static init = function()      { clear();   }
+	static apply = function()     { apply_draw_surface(); disable(); }
+	static cancel = function()    { disable(); }
+	static onDisable = function() { clear();   }
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
@@ -116,7 +116,7 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 		pactive     = active;
 	}
 	
-	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var ox, oy, nx, ny, ax0, ay0, ax1, ay1;
 		var oax1, oay1, nax0, nay0;
 		

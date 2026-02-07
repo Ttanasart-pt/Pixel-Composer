@@ -27,16 +27,16 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 					   15, 47,  7, 39, 13, 45,  5, 37,
 					   63, 31, 55, 23, 61, 29, 53, 21];
 					   
-	function init() { 
+	static init = function() { 
 		mouse_init = true; 
 	}
 	
-	function onInit(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		mouse_sx = _mx;
 		mouse_sy = _my;
 	}
 	
-	function stepEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _dim = node.attributes.dimension;
 		var _dit = tool_attribute.dither;
 		
@@ -88,7 +88,7 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 		dragging = true;
 	}
 	
-	function drawOverlay( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+	static drawOverlay = function( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
 	    if(!dragging) return;
 	    
 	    var _fx = _x + fx * _s;

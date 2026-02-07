@@ -46,7 +46,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		UNDO_HOLDING = false;
 	}
 	
-	function init() {
+	static init = function() {
 		
 		applySelection = canvas.selection.is_selected;
 		sourceSurface  = applySelection? canvas.selection.selection_surface : canvas.getCanvasSurface();
@@ -99,7 +99,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	function apply(_repl = true) {
+	static apply = function(_repl = true) {
 		var _surf = surface_create(sw, sh);
 		
 		if(applySelection) {
@@ -151,11 +151,11 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		cleanUp();
 	}
 	
-	function cancel() { 
+	static cancel = function() { 
 		destroy(); 
 	}
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		var _px, _py, _pw, _ph;
 		

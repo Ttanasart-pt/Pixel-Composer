@@ -43,6 +43,7 @@ event_inherited();
 	}
 	
 	function setMenu(_menu, _align = fa_left) {
+		mouse_init_r_pressed = mouse_click(mb_right); 
 		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
 		
 		title    = menu_id;

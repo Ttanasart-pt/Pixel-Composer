@@ -10,9 +10,9 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 	anchors        = [];
 	anchorsRounded = [];
 	
-	function init() { mouse_init = true; }
+	static init = function() { mouse_init = true; }
 	
-	function onInit(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		mouse_sx   = _mx;
 		mouse_sy   = _my;
 		
@@ -278,7 +278,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		// print(anchors);
 	}
 	
-	function stepEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		modifying = true;
 		var _dim = node.attributes.dimension;
 		var _suf = node.getCanvasSurface();
@@ -380,7 +380,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		surface_reset_shader();
 	}
 	
-	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!modifying) return;
 		
 		if(array_length(anchorsRounded) >= 3) {

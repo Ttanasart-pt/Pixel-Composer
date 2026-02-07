@@ -9,21 +9,19 @@ function canvas_tool_shader() : canvas_tool() constructor {
 	
 	preview_surface = [ noone, noone ];
 	
-	function init() { mouse_init = true; }
+	////- Init
 	
-	function onInit(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static init = function() { mouse_init = true; }
 	
-	function stepEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
-	function stepMaskEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
-	doForceStep = false;
-	function forceStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	////- Step
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(mouse_press(mb_right)) {
-			PANEL_PREVIEW.tool_current = noone;
-			return;
-		}
+	static stepEffect = function(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	static stepMaskEffect = function( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(mouse_press(mb_right)) { PANEL_PREVIEW.tool_current = noone; return; }
 				
 		var _dim  = node.attributes.dimension;
 		var _sel  = node.selection;
@@ -49,15 +47,10 @@ function canvas_tool_shader() : canvas_tool() constructor {
 			draw_surface(_surf, _pos[0], _pos[1]);
 		surface_reset_shader();
 		
-		if(doForceStep) {
-			forceStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			return;
-		}
-		
 		if(mask) {
 			stepMaskEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				var _newSurf = surface_create(mask_boundary[2], mask_boundary[3]);
 				surface_set_shader(_newSurf, noone);
 					draw_surface(preview_surface[1], -mask_boundary[0], -mask_boundary[1]);
@@ -73,7 +66,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 			stepEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			draw_surface_ext(preview_surface[1], _x, _y, _s, _s, 0, c_white, 1);
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				var _newSurf = surface_create(_dim[0], _dim[1]);
 				surface_set_shader(_newSurf, noone);
 					draw_surface(preview_surface[1], 0, 0);
@@ -92,7 +85,9 @@ function canvas_tool_shader() : canvas_tool() constructor {
 		}
 	}
 	
-	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	////- Draw
+	
+	static drawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!mask) return;
 		draw_surface_ext_safe(preview_surface[1], _x, _y, _s, _s);
 	}

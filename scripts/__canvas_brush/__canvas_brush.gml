@@ -99,7 +99,7 @@ function canvas_brush() constructor {
 	
 	////- Draw
 	
-	function drawPixel(_x, _y, _draw = false) {
+	static drawPixel = function(_x, _y, _draw = false) {
 		if(use_surface) {
 			var _r  = direction + rotation_random_eval(random_dir, seed);
 			var _p  = point_rotate(-surface_w / 2, -surface_h / 2, 0, 0, _r);
@@ -120,7 +120,7 @@ function canvas_brush() constructor {
 			draw_circle_prec(_x, _y, size / 2, 0);
 	}
 	
-	function drawPoint(_x, _y, _draw = false) {
+	static drawPoint = function(_x, _y, _draw = false) {
 		if(_draw) seed = irandom_range(100000, 999999);
 		random_set_seed(seed);
 		
@@ -137,7 +137,7 @@ function canvas_brush() constructor {
 		}
 	}
 	
-	function drawPointExt(_x, _y, _s = 1, _draw = false) {
+	static drawPointExt = function(_x, _y, _s = 1, _draw = false) {
 		if(use_surface) {
 			var _sw = surface_get_width_safe(surface);
 			var _sh = surface_get_height_safe(surface);
@@ -166,7 +166,7 @@ function canvas_brush() constructor {
 		
 	}
 	
-	function drawLine(_x0, _y0, _x1, _y1, _draw = false, _cap = false) { 
+	static drawLine = function(_x0, _y0, _x1, _y1, _draw = false, _cap = false) { 
 		if(use_surface || draw_type == 1) {
 			var diss  = point_distance(_x0, _y0, _x1, _y1);
 			var dirr  = point_direction(_x0, _y0, _x1, _y1);
@@ -224,7 +224,7 @@ function canvas_brush() constructor {
 		}
 	}
 			
-	function drawRect(_x0, _y0, _x1, _y1, _fill, _draw = false) {
+	static drawRect = function(_x0, _y0, _x1, _y1, _fill, _draw = false) {
 		if(_x0 == _x1 && _y0 == _y1) {
 			drawPoint(_x0, _y0, _draw);
 			return;
@@ -259,7 +259,7 @@ function canvas_brush() constructor {
 		}
 	}
 		
-	function drawEllipse(_x0, _y0, _x1, _y1, _fill, _draw = false) {
+	static drawEllipse = function(_x0, _y0, _x1, _y1, _fill, _draw = false) {
 		if(_x0 == _x1 && _y0 == _y1) {
 			drawPoint(_x0, _y0, _draw);
 			return;
@@ -322,7 +322,7 @@ function canvas_brush() constructor {
 		}
 	}
 	
-	function drawCurve(x0, y0, cx0, cy0, cx1, cy1, x1, y1, _draw = false, prec = 32) { 
+	static drawCurve = function(x0, y0, cx0, cy0, cx1, cy1, x1, y1, _draw = false, prec = 32) { 
 		var ox, oy, nx, ny;
 		
 		var _st = 1 / prec;

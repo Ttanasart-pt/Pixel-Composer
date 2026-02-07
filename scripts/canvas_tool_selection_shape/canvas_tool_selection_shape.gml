@@ -1,8 +1,7 @@
-function canvas_tool_selection_shape(_selector, _shape) : canvas_tool_selection(_selector) constructor {
+function canvas_tool_selection_shape(_selector, _shape) : canvas_selection_tool(_selector) constructor {
 	shape = _shape;
 	
-	function onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
+	static onStep = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(is_selecting) {
 			var sel_x0, sel_y0, sel_x1, sel_y1;
 			var sel_w = 1, sel_h = 1;
@@ -21,14 +20,8 @@ function canvas_tool_selection_shape(_selector, _shape) : canvas_tool_selection(
 				draw_set_color(c_white);
 				
 				switch(shape) {
-					case CANVAS_TOOL_SHAPE.rectangle : 
-						draw_rectangle(0, 0, sel_w, sel_h, false); 
-						break;
-						
-					case CANVAS_TOOL_SHAPE.ellipse   : 
-						draw_set_circle_precision(32);
-						draw_ellipse(-1, -1, sel_w - 1, sel_h - 1, false);
-						break;
+					case CANVAS_TOOL_SHAPE.rectangle : draw_rectangle(0, 0, sel_w, sel_h, false);              break;
+					case CANVAS_TOOL_SHAPE.ellipse   : draw_ellipse_prec(-1, -1, sel_w - 1, sel_h - 1, false); break;
 				}
 			surface_reset_target();
 			

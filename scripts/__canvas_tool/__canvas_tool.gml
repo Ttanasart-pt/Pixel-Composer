@@ -20,16 +20,16 @@ function canvas_tool() : ToolObject() constructor {
 	subtool = 0;
 	pactive = true;
 	
-	function setBrush(b) { brush = b;  return self; }
-	function getTool()   { return self; }
+	static setBrush = function(b) { brush = b;  return self; }
+	static getTool = function()   { return self; }
 	
-	function disable() { 
+	static disable = function() { 
 		PANEL_PREVIEW.tool_current = noone; 
 		onDisable(); 
 		return self; 
 	}
 	
-	function drawPreview(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
-	function drawPostOverlay( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
-	function drawMask(        hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	static drawPreview = function(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	static drawPostOverlay = function( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	static drawMask = function(        hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
 }

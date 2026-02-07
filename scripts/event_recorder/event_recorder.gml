@@ -34,13 +34,13 @@ enum DS_TYPE {
 	list,
 }
 
-function Action(_type, _object, _data, _trigger = 0) constructor {
+function Action(_type, _object, _data) constructor {
 	name    = "";
 	ref     = undefined;
 	type    = _type;
 	obj     = _object;
 	data    = _data;
-	trigger = _trigger;
+	trigger = undefined;
 	
 	extra_data   = 0;
 	clear_action = noone;
@@ -48,8 +48,9 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 	prev_action  = noone;
 	next_actions = [];
 	
-	static setName  = function(n) /*=>*/ { name = n; return self; }
-	static setRef   = function(r) /*=>*/ { if(type == undefined) return self; 
+	static setName    = function(n) /*=>*/ { name    = n; return self; }
+	static setTrigger = function(t) /*=>*/ { trigger = t; return self; }
+	static setRef     = function(r) /*=>*/ { if(type == undefined) return self; 
 		ref = r; 
 		if(is(ref, Node)) ref.logNode(toString(), false);
 		
@@ -294,20 +295,13 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 	}
 }
 
-function recordAction(_type, _object, _data = -1, _trigger = 0) {
-	var _action = __recordAction(_type, _object, _data, _trigger);
-	if(_action == noone) _action = new Action(undefined, undefined, undefined);
-	
-	return _action;
-}
-
-function __recordAction(_type, _object, _data = -1, _trigger = 0) {
-	if(IS_UNDOING || LOADING || UNDO_HOLDING) return noone;
+function recordAction(_type, _object, _data = -1) {
+	if(IS_UNDOING || LOADING || UNDO_HOLDING) return new Action(undefined, undefined, undefined);
 	
 	if(_type == ACTION_TYPE.struct_modify && _data == -1 && struct_has(_object, "serialize"))
 		_data = _object.serialize();
 	
-	var act = new Action(_type, _object, _data, _trigger);
+	var act = new Action(_type, _object, _data);
 	array_push(o_main.action_last_frame, act);
 	
 	while(!ds_stack_empty(REDO_STACK)) {
@@ -319,9 +313,9 @@ function __recordAction(_type, _object, _data = -1, _trigger = 0) {
 	return act;
 }
 
-function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "", _trigger = 0) {
-	return recordAction(ACTION_TYPE.var_modify, object, undo_label == ""? [ variable_old_value, variable_name ] : 
-	                                                                      [ variable_old_value, variable_name, undo_label ], _trigger);
+function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "") {
+	return recordAction( ACTION_TYPE.var_modify, object, 
+	                     undo_label == ""? [ variable_old_value, variable_name ] : [ variable_old_value, variable_name, undo_label ]);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
