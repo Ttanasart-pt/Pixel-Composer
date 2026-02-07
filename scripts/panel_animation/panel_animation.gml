@@ -122,10 +122,10 @@
         registerFunction(an, "Reset View",           "F", n, panel_animation_reset_view           ).setMenu("animation_reset_view",          )
         
         registerFunction(an, "Toggle Hidden",      "S",        n,  panel_animation_show_hidden    )
-        	.setMenu("animation_toggle_hidden", THEME.timeline_hide).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
+        	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
         	.setColorFn(function() /*=>*/ {return PANEL_ANIMATION.show_hidden? COLORS._main_icon : COLORS._main_accent} )
         
-        registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType    )
+        registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType      )
         	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.node_name_type} )
         	.setTooltip(new tooltipSelector("Name Display", [
 	            __txtx("panel_animation_name_full", "Full name"),
