@@ -21,6 +21,9 @@ event_inherited();
 	node_selecting    =  0;
 	node_focusing     = -1;
 	
+	pie_menus = PREFERENCES.dialog_add_node_pie;
+	pie_open  = false;
+	
 	recent_nodes = [];
 	if(is_array(global.RECENT_NODES))
 	for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
@@ -1068,6 +1071,13 @@ event_inherited();
 				var match  = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
 				var fmatch = match;
 								
+				// Tooltip
+				var _tooltip = string_lower(_node.getTooltip());
+				var  mat     = string_partial_match_res(_tooltip, search_lower);
+				     mat[0] -= 50;
+				if(mat[0] > match[0])
+					match = mat;
+				
 				// Fav
 				if(is(_node, NodeObject)) {
 					if(_node.deprecated) continue;

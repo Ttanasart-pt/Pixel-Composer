@@ -287,6 +287,38 @@ function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) {
 	draw_primitive_end();
 }
 
+function draw_donut(_x, _y, _ri, _ro) {
+    var step = 64;
+    var angle_step = 360 / step;
+    
+    var pxI, pyI, pxO, pyO;
+    var _pxI, _pyI, _pxO, _pyO;
+    
+    draw_primitive_begin(pr_trianglestrip);
+    for(var i = 0; i <= step; i++){
+        pxI = _x + lengthdir_x(_ri, i * angle_step);
+        pyI = _y + lengthdir_y(_ri, i * angle_step);
+        pxO = _x + lengthdir_x(_ro, i * angle_step);
+        pyO = _y + lengthdir_y(_ro, i * angle_step);
+        
+        if(i) {
+            draw_vertex(_pxI, _pyI);
+            draw_vertex(_pxO, _pyO);
+            draw_vertex(pxI, pyI);
+            
+            draw_vertex(_pxO, _pyO);
+            draw_vertex(pxI, pyI);
+            draw_vertex(pxO, pyO);
+        }
+        
+        _pxI = pxI;
+        _pyI = pyI;
+        _pxO = pxO;
+        _pyO = pyO;
+    }
+    draw_primitive_end();
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function draw_circle_ui(_x, _y, _r, _th = 0, _c = c_white, _a = 1) {

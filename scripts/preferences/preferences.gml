@@ -21,7 +21,7 @@
 		
 		PREFERENCES.theme							= "default";
 		PREFERENCES.theme_override					= "override";
-		PREFERENCES.theme_load_unpack				= false;
+		PREFERENCES.theme_load_unpack				= true;
 		PREFERENCES.local							= "en";
 		PREFERENCES.font_overwrite					= "";
 		PREFERENCES.font_overwrite_bold				= "";
@@ -78,7 +78,8 @@
 		PREFERENCES.dialog_add_node_w           = 600;
 		PREFERENCES.dialog_add_node_h           = 400;
 		PREFERENCES.dialog_add_node_search_high = true;
-		PREFERENCES.dialog_add_node_search_fav  = true;
+		PREFERENCES.dialog_add_node_search_fav  = false;
+		PREFERENCES.dialog_add_node_pie         = [ "Node_Shape", "Node_Canvas" ];
 		
 		PREFERENCES.add_node_page               = 0;
 		PREFERENCES.add_node_subpage            = 0;

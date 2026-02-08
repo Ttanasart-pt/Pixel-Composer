@@ -47,7 +47,8 @@
 	destroy_on_escape    = true;
 	destroy_on_click_out = false;
 	
-	init_pressing = mouse_click(mb_left);
+	init_pressing = mouse_lclick();
+	init_rclick   = mouse_rclick();
 #endregion
 
 #region windows
