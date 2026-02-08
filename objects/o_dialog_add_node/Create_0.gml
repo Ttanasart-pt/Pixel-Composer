@@ -1070,7 +1070,7 @@ event_inherited();
 				
 				var match  = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
 				var fmatch = match;
-								
+				
 				// Tooltip
 				var _tooltip = string_lower(_node.getTooltip());
 				var  mat     = string_partial_match_res(_tooltip, search_lower);

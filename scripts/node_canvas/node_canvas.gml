@@ -734,9 +734,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static setToolColor = function(color) { 
+		if(!is_int64(color)) color = cola(color);
+		
 		if(!use_color_3d || color_3d_selected == 0) CURRENT_COLOR = color;
 		else          current_brush.colors[color_3d_selected - 1] = color;
-	}
+		color_picking = false;
+		
+	} setToolColor = method(self, setToolColor);
 	
 	static drawTools = function(_mx, _my, xx, yy, _tool_size, hover, focus) {
 		var _sx0 = xx - _tool_size / 2;
@@ -1163,10 +1167,22 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region color picker
-			if(!selection.is_selected && active && key_mod_press(ALT)) 
+			if(!selection.is_selected && active && key_mod_press(ALT)) {
 				color_picking = true;
+				with(dialogCall(o_dialog_color_selector)) {
+					setApply(other.setToolColor);
+					selector.dropper_active = true;
+					selector.dropper_close  = true;
+					
+					drop_target = other;
+					refocus     = true;
+				}
+			}
 			
-			if(color_picking) return pickColor(_x, _y, _s, _mx, _my);
+			if(color_picking && !key_mod_press(ALT))
+				color_picking = false;
+			
+			if(color_picking) return;
 		#endregion
 		
 		#region brush
