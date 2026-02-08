@@ -46,6 +46,7 @@ uniform sampler2D iterationSurf;
 
 uniform float itrScaling;
 uniform float itrAmplitude;
+uniform int   tiled;
 
 uniform int  colored;
 uniform vec2 colorRanR;
@@ -182,6 +183,27 @@ float simplex(in vec2 st) {
 	return n;
 }
 
+float simplexTiled(vec2 pos, float ang, vec2 sca, vec2 ntx) { // That's... not how it works.
+	mat2 rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	vec2 ptx = ntx - pos;
+	
+	vec2  st00 = (ptx + vec2(0., 0.)) * rot * sca;
+	float s00  = simplex(st00);
+	
+	if(tiled == 0) return s00;
+	
+	vec2  st01 = (ptx + vec2(0., 1.)) * rot * sca;
+	float s01  = simplex(st01);
+	
+	vec2  st10 = (ptx + vec2(1., 0.)) * rot * sca;
+	float s10  = simplex(st10);
+	
+	vec2  st11 = (ptx + vec2(1., 1.)) * rot * sca;
+	float s11  = simplex(st11);
+	
+	return mix(mix(s00, s10, 1. - ntx.x), mix(s01, s11, 1. - ntx.x), 1. - ntx.y);
+}
+
 void main() {
 	vec2 vtx = getUV(v_vTexcoord);
 	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
@@ -202,22 +224,21 @@ void main() {
 	
 	vec2  pos = position / dimension;
 	float ang = rotation;
-	vec2  st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	
 	if(colored == 0) {
-		gl_FragColor = vec4(vec3(simplex(st)), 1.0);
+		gl_FragColor = vec4(vec3(simplexTiled(pos, ang, sca, ntx)), 1.0);
 		
 	} else if(colored == 1) {
-		float randR = colorRanR[0] + simplex(st) * (colorRanR[1] - colorRanR[0]);
-		float randG = colorRanG[0] + simplex(st + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
-		float randB = colorRanB[0] + simplex(st + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		float randR = colorRanR[0] + simplexTiled(pos, ang, sca, ntx) * (colorRanR[1] - colorRanR[0]);
+		float randG = colorRanG[0] + simplexTiled(pos, ang, sca, ntx + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+		float randB = colorRanB[0] + simplexTiled(pos, ang, sca, ntx + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(randR, randG, randB, 1.0);
 		
 	} else if(colored == 2) {
-		float randH = colorRanR[0] + simplex(st) * (colorRanR[1] - colorRanR[0]);
-		float randS = colorRanG[0] + simplex(st + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
-		float randV = colorRanB[0] + simplex(st + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		float randH = colorRanR[0] + simplexTiled(pos, ang, sca, ntx) * (colorRanR[1] - colorRanR[0]);
+		float randS = colorRanG[0] + simplexTiled(pos, ang, sca, ntx + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+		float randV = colorRanB[0] + simplexTiled(pos, ang, sca, ntx + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
 	}
