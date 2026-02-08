@@ -246,7 +246,7 @@ function Panel_Animation() : PanelContent() constructor {
     
     	timeline_frame      = true;
     	
-    	show_hidden         = 0;
+    	show_hidden         = 1;
     #endregion
     
     #region ++++ Control Buttons ++++

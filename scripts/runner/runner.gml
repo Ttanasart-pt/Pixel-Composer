@@ -56,7 +56,7 @@ function Runner() constructor {
 		if(array_length(project.nodes) != 1) return self;
 		
 		var _grp = project.nodes[0];
-		if(is(_grp, Node_Collection)) {
+		if(is(_grp, Node_Collection) && !array_empty(_grp.inputs) && !array_empty(_grp.outputs)) {
 			io_node = _grp;
 			io_node.checkPureFunction();
 			

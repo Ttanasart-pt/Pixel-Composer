@@ -230,8 +230,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		static getTimelineWidget = function() {
 			if(is(timelineWidget, widget)) return timelineWidget;
 			
-			var wid = getEditWidget()
-			if(!is(wid, widget))    return timelineWidget;
+			var wid = getEditWidget();
+			if(!is(wid, widget)) return timelineWidget;
 			
 			timelineWidget = wid.clone();
 			timelineWidget.attributes = attributes;
