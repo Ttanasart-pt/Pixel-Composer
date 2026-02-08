@@ -1062,7 +1062,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_reset_shader();
 		}
 		
-		var _drawnSurface = surface_create(_dim[0], _dim[1]);
+		var _drawnSurface = surface_create(surface_get_width(_can), surface_get_height(_can));
 		
 		surface_set_shader(_drawnSurface, sh_canvas_apply_draw);
 			shader_set_i("drawLayer", tool_attribute.drawLayer);
@@ -1091,6 +1091,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		project.setModified();
+		triggerRender();
 		
 	} apply_draw_surface = method(self, apply_draw_surface);
 	
