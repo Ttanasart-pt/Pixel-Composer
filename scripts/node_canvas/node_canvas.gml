@@ -1272,7 +1272,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				surface_reset_shader();
 				
-				if(hover) drawToolOutline();
+				drawToolOutline();
 				
 				_tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				return hovering;
@@ -1405,7 +1405,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			surface_reset_target();
 			
-			if(hover) drawToolOutline();
+			drawToolOutline();
 			
 			draw_set_color(COLORS._main_accent);
 			if(selection.is_selected) {
