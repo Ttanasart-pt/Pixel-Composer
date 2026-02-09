@@ -21,17 +21,21 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 5, nodeValue_Bool(    "Activate Physics", true ));
 	newInput( 2, nodeValue_Vec2(    "Position",  [0,0] )).setUnitSimple().setHotkey("G");
 	newInput( 3, nodeValue_Float(   "Range",     .5    )).setUnitSimple().setHotkey("S");
-	newInput( 4, nodeValue_Slider(  "Strength",   1, [0,16,.01] ));
-	// inputs 6
+	newInput( 4, nodeValue_Slider(  "Strength",   1, [ 0,16,.01] ));
+	newInput( 6, nodeValue_Slider(  "Torqe",      0, [-4, 4,.01] ));
+	// inputs 7
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [ 0,
 		[ "Timing",    false ], 1, 
-		[ "Explosion", false ], 5, 2, 3, 4, 
+		[ "Explosion", false ], 5, 2, 3, 4, 6, 
 	];
 	
 	////- Node
+	
+	__phy = false;
+	__tor = 0;
 	
 	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
@@ -57,8 +61,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return w_hovering;
 	}
 	
-	static applyForce = function(_objId, _position, _radius, _strength, _physics) {
-		
+	static applyForce = function(_objId, _position, _radius, _strength) {
 		var px = _position[0];
 		var py = _position[1];
 		
@@ -68,15 +71,22 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var dis = point_distance(px, py, cx, cy);
 		
 		if(dis < _radius) {
-			if(_physics) gmlBox2D_Object_Set_Enable(_objId, true);
+			if(__phy) gmlBox2D_Object_Set_Enable(_objId, true);
 			
 			var dir = point_direction(px, py, cx, cy);
 			
 			var str = _strength * sqr(1 - dis / _radius);
 			var fx  = lengthdir_x(str, dir);
 			var fy  = lengthdir_y(str, dir);
+			
 			gmlBox2D_Object_Apply_Impulse(_objId, fx / worldScale, fy / worldScale, px, py);
+			
+			if(__tor != 0) {
+				var tq  = str * __tor * dsin(dir) * dcos(dir);
+				gmlBox2D_Object_Apply_Torque(_objId, tq);
+			}
 		}
+		
 	}
 	
 	static getForceData = function() {
@@ -108,6 +118,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			__pos  = getInputData(2);
 			__rad  = getInputData(3);
 			__str  = getInputData(4);
+			__tor  = getInputData(6);
 			
 			if(!is_array(_obj)) return;
 			if(!__trig)         return;
@@ -118,7 +129,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(process_amount == 0) {
 			__ppos = [ __pos[0] / worldScale, __pos[1] / worldScale ];
 			
-			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __ppos, __rad, __str, __phy) });
+			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __ppos, __rad, __str) });
 			return;
 		}
 		
@@ -128,7 +139,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			__ppos = [ _pos[0] / worldScale, _pos[1] / worldScale ];
 			
-			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __ppos, __rad, _str, __phy) });
+			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __ppos, __rad, _str) });
 		}
 	}
 }
