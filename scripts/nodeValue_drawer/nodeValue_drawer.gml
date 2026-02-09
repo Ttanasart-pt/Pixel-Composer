@@ -110,7 +110,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
 			}
 			
-		} // Animation
+		} else { // Animation
+			draw_sprite_ui_uniform(THEME.animate_clock, 0, butx, lb_y, ics, COLORS._main_icon, .3);
+			
+		}
 		
 		lb_w += bs;
 		

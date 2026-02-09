@@ -560,7 +560,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _gravSca  = inputs[22].getValue();
 		
 		gmlBox2D_Object_Set_Enable(       objId, _activate);
-		gmlBox2D_Object_Set_Rotation(     objId, _srot);
+		gmlBox2D_Object_Set_Rotation(     objId, degtorad(_srot));
 		gmlBox2D_Object_Set_Fixed_Angle(  objId, false);
 		gmlBox2D_Object_Set_Body_Type(    objId, _mov? 2 : 0);
 		gmlBox2D_Object_Set_Damping(      objId, _air_res, _rot_frc);
@@ -582,7 +582,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static update = function(_frame = CURRENT_FRAME) {
 		#region data
-			var _shp  = inputs[5].getValue();
+			var _shp  = inputs[ 5].getValue();
 			var _tex  = inputs[ 6].getValue();
 			var _spwn = inputs[ 8].getValue();
 			var _spfr = inputs[20].getValue();

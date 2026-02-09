@@ -2573,7 +2573,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static drawNameBG = function(_s) {
 		var _p = THEME.node_junction_name_bg; 
 		    // _p = THEME.box_r2_clr;
-		var _f = node.previewable? f_p1 : f_p3;
+		var _f = node.previewable? f_p2 : f_p3;
 		draw_set_text(_f, fa_left, fa_center);
 		
 		var tw = string_width(name)  + 24;
@@ -2581,15 +2581,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(type == VALUE_TYPE.action) {
 			var tx = x;
-			draw_sprite_stretched_ext(_p, 0, tx - tw / 2, y - th, tw, th, c_white, .5);
+			draw_sprite_stretched_ext(_p, 0, tx - tw / 2, y - th, tw, th, c_white, .75);
 			
 		} else if(connect_type == CONNECT_TYPE.input) {
 			var tx = x - 12 * _s;
-			draw_sprite_stretched_ext(_p, 0, tx - tw + 12, y - th / 2, tw, th, c_white, .5);
+			draw_sprite_stretched_ext(_p, 0, tx - tw + 12, y - th / 2, tw, th, c_white, .75);
 			
 		} else {
 			var tx = x + 12 * _s;
-			draw_sprite_stretched_ext(_p, 0, tx - 12, y - th / 2, tw, th, c_white, .5);
+			draw_sprite_stretched_ext(_p, 0, tx - 12, y - th / 2, tw, th, c_white, .75);
 		}
 	}
 	
