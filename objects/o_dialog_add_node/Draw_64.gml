@@ -5,12 +5,8 @@ if !ready exit;
 	var _maa = point_direction(dialog_x, dialog_y, mouse_mx, mouse_my);
 	var _mdd = point_distance(dialog_x, dialog_y, mouse_mx, mouse_my);
 
-	if(init_rclick) {
+	if(init_rclick)
 		pie_open = pie_open || mouse_my < dialog_y - ui(16);
-		
-		if(mouse_rrelease())
-			init_rclick = false;
-	}
 	
 	var _amo = array_length(pie_menus);
 	if(pie_open && _amo > 0) {
@@ -107,7 +103,7 @@ if(DIALOG_SHOW_FOCUS) {
 				
 				if(_hov) {
 					TOOLTIP = _nam;
-					if(mouse_lpress(sFOCUS))
+					if(mouse_lpress(sFOCUS) || (init_rclick && mouse_rrelease()))
 						buildNode(_rec);
 				}
 				
@@ -323,7 +319,7 @@ if(DIALOG_SHOW_FOCUS) {
 	}
 	
 	ADD_NODE_SCROLL = content_pane.scroll_y_to;
-	if(mouse_release(mb_right)) right_free = true;
+	if(mouse_rrelease()) right_free = true;
 #endregion
 
 #region hotkey
@@ -334,4 +330,6 @@ if(DIALOG_SHOW_FOCUS) {
 			
 		if(keyboard_check_pressed(vk_escape)) { hk_editing = noone; keyboard_string = ""; search_string = ""; KEYBOARD_PRESSED_STRING = ""; }
 	}
+	
+	if(mouse_rrelease()) init_rclick = false;
 #endregion

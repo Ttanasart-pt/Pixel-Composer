@@ -6,6 +6,7 @@
 	}
 	
 	#macro GLOBAL_IS_PLAYING        PROJECT.animator.is_playing
+	#macro GLOBAL_IS_PROGRESS       PROJECT.animator.frame_progress
 	#macro GLOBAL_IS_RENDERING      PROJECT.animator.is_rendering
 	#macro GLOBAL_CURRENT_FRAME     PROJECT.animator.current_frame
 	

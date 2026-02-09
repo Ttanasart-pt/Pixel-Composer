@@ -1,4 +1,4 @@
-date_set_timezone(timezone_utc);
+date_set_timezone(timezone_local);
 
 function measure(func, header = "") {
 	var t = current_time;
@@ -38,6 +38,21 @@ function unix_time_to_string(_time, _format = "") {
 	var day = days_since_epoch + 1;
 	
 	return $"{day} {month_names[month]} {year}";
+}
+
+function current_time_to_string() { 
+	return $"{current_year} {current_month} {current_day} {current_hour} {current_minute} {current_second}";
+}
+
+function get_seconds() { 
+	var _y = current_year;
+	var _m = current_month;
+	var _d = current_day;
+	var _h = current_hour;
+	var _n = current_minute;
+	var _s = current_second;
+	
+	return ((((_y * 12 + _m) * 31 + _d) * 24 + _h) * 60 + _n) * 60 + _s;
 }
 
 function get_unix_time() { return date_second_span( date_create_datetime(1970, 1, 1, 0, 0, 0), date_current_datetime() ); }

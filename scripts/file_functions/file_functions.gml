@@ -40,6 +40,10 @@ function file_is_image(path) {
 	
 	////- Get
 	
+function file_get_modify_string(path) {
+	return $"{file_datetime_modified_year(path)} {file_datetime_modified_month(path)} {file_datetime_modified_day(path)} {file_datetime_modified_hour(path)} {file_datetime_modified_minute(path)} {file_datetime_modified_second(path)}";
+}
+
 function file_get_modify_s(path) {
 	INLINE
 	

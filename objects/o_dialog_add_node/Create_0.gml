@@ -446,7 +446,7 @@ event_inherited();
 				
 				_hov = true;
 				
-				if(i != ADD_NODE_PAGE && mouse_click(mb_left, sFOCUS)) {
+				if(i != ADD_NODE_PAGE && (mouse_lclick(sFOCUS) || init_rclick)) {
 					setPage(i);
 					content_pane.scroll_y		= 0;
 					content_pane.scroll_y_raw	= 0;
@@ -526,7 +526,7 @@ event_inherited();
 			
 			if(_hv) {
 				draw_sprite_stretched_add(THEME.ui_panel_bg, 0, ui(4), yy, ww - ui(4), hg, CDEF.main_white, .2);
-				if(mouse_click(mb_left, _active)) setSubgroup(i);
+				if(mouse_lclick(_active) || init_rclick) setSubgroup(i);
 			}
 			
 			var _f  = i == subgroup_index? fontS : font;
@@ -658,8 +658,11 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
 					
 					if(sFOCUS) {
-						if(mouse_release(mb_left,  left_free))  buildNode(_node);
-						if(mouse_release(mb_right, right_free)) rightClick(_node);
+						if(mouse_lrelease(left_free) || (init_rclick && mouse_rrelease())) 
+							buildNode(_node);
+							
+						if(mouse_rrelease(right_free)) 
+							rightClick(_node);
 					}
 				}
 				
@@ -847,8 +850,11 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
 					
 					if(sFOCUS) {
-						if(mouse_release(mb_left,  left_free))  buildNode(_node);
-						if(mouse_release(mb_right, right_free)) rightClick(_node);
+						if(mouse_lrelease(left_free) || (init_rclick && mouse_rrelease()))
+							buildNode(_node);
+							
+						if(mouse_rrelease(right_free)) 
+							rightClick(_node);
 					}
 				}
 				
@@ -987,7 +993,7 @@ event_inherited();
 			display_list_size = lerp_float(display_list_size, display_list_size_to, 3);
 		}
 		
-		if(mouse_release(mb_left)) left_free = true;
+		if(mouse_lrelease()) left_free = true;
 		
 		return hh;
 	});
@@ -1240,10 +1246,10 @@ event_inherited();
 						search_pane.hover_content = true;
 						node_selecting = i;
 						
-						if(mouse_release(mb_left, sFOCUS))
+						if(mouse_lrelease(sFOCUS))
 							buildNode(_node, _param);
 							
-						else if(has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
+						else if(has(_node, "node") && mouse_rrelease(right_free && sFOCUS))
 							rightClick(_node, _path);
 					}
 					
@@ -1392,10 +1398,10 @@ event_inherited();
 					node_selecting = i;
 					
 					if(sFOCUS) {
-						if(mouse_release(mb_left))
+						if(mouse_lrelease())
 							buildNode(_node, _param);
 							
-						if(has(_node, "node") && mouse_release(mb_right, right_free))
+						if(has(_node, "node") && mouse_rrelease(right_free))
 							rightClick(_node, _path);
 					}
 				}

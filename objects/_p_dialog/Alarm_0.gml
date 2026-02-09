@@ -5,4 +5,5 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 	exit;
 }
 
+if(sHOVER) init_rclick = false;
 ready = true;

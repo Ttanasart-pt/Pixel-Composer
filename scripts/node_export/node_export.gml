@@ -77,8 +77,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[2].getEditWidget().format		 = TEXT_AREA_FORMAT.path_template;
 	inputs[2].getEditWidget().auto_update = true;
 	
-	newInput(16, nodeValue_Bool(    "Export on Save",   false)).setTooltip("Automatically export when saving project.");
-	newInput(22, nodeValue_Bool(    "Export on Update", false));
+	newInput(16, nodeValue_Bool(    "Export on Save",   false )).setTooltip("Automatically export when saving project.");
+	newInput(22, nodeValue_Bool(    "Export on Update", false ));
 	
 	////- =Format
 	newInput( 3, nodeValue_Enum_Scroll( "Type",   0, { data: format_single, update_hover: false } )).rejectArray();
@@ -164,10 +164,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			for( var j = 1; j <= string_length(_txt); j++ ) {
 				var ch = string_char_at(_txt, j);
 				var ww = string_width(ch);
-			
+				
 				if(lw + ww > _tw - ui(16)) {
-					lw = 0;
-					lx = _tx + ui(8);
+					lw  = 0;
+					lx  = _tx + ui(8);
 					ly += string_height("M");
 				}
 			
@@ -585,7 +585,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						shell_execute_async(magick, shell_cmd, self);
 						break;
 						
-					case 2 : surface_save_safe(_surf, _pathOut); break;
+					case 2 : 
+						surface_save_safe(_surf, _pathOut); 
+						break;
 				}
 				break;
 				
@@ -613,7 +615,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		// printCallStack();
 		
 		randomize();
-		exportLog = log;
+		exportLog = log && !IS_CMD;
 		
 		var surf = getSurface();
 		var path = getInputData( 1);
@@ -662,7 +664,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		if(is_array(surf)) {
+			var succ = true;
 			var p = "";
+			
 			for(var i = 0; i < array_length(surf); i++) {
 				var _surf = surf[i];
 				if(!is_surface(_surf)) continue;
@@ -679,9 +683,20 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 					
 				p = save_surface(_surf, p);
+				var _delt = get_seconds() - file_get_modify_s(p);
+				if(file_attributes(p, fa_readonly) || _delt > 2) // check if saved file is actually modified (+- 2 seconds)
+					succ = false;
+				
 			}
 			
-			if(exportLog && form != NODE_EXPORT_FORMAT.animation && !IS_CMD) {
+			if(!succ) {
+				if(exportLog)
+					log_warning("EXPORT", $"Export failed, file is read-only.")
+						.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, filename_dir(p));
+				return;
+			}
+			
+			if(exportLog && form != NODE_EXPORT_FORMAT.animation) {
 				var _txt = $"Export {array_length(surf)} images complete.";
 				logNode(_txt);
 				
@@ -711,14 +726,20 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			p = save_surface(surf, p);
+			var _delt = get_seconds() - file_get_modify_s(p);
+			if(file_attributes(p, fa_readonly) || _delt > 2) { // check if saved file is actually modified (+- 2 seconds)
+				if(exportLog)
+					log_warning("EXPORT", $"Export failed, file is read-only.")
+						.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, filename_dir(p));
+				return;
+			}
 			
-			if(exportLog && form != NODE_EXPORT_FORMAT.animation && !IS_CMD) {
+			if(exportLog && form != NODE_EXPORT_FORMAT.animation) {
 				var _txt = $"Export image as {p}";
 				logNode(_txt);
 				
-				var path = filename_dir(p);
 				var noti = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
-								.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, path);
+								.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, filename_dir(p));
 					
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 			}
