@@ -32,33 +32,33 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(17, nodeValue_Rotation( "Spawn Rotation",   0     )).setHotkey("R");
 	
 	////- =Initial Velocity
-	newInput(18, nodeValue_Bool( "Use Initial Velocity", false ));
-	newInput(19, nodeValue_Vec2( "Initial Velocity",     [0,0] ));
+	newInput(18, nodeValue_Bool(     "Use Initial Velocity", false ));
+	newInput(19, nodeValue_Vec2(     "Initial Velocity",     [0,0] ));
 	
 	////- =Shape
-	newInput( 6, nodeValue_Surface( "Texture" ));
-	newInput( 5, nodeValue_EScroll( "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
-	                                               new scrollItem("Circle", s_node_shape_circle,    0), 
-	                                               new scrollItem("Custom", s_node_shape_misc,      1) ] ));
-	newInput( 9, nodeValue_Trigger( "Generate Mesh" ));
-	newInput(10, nodeValue_Slider(  "Mesh Expansion",      0, [-2,2,.1] ));
-	newInput(11, nodeValue_Bool(    "Add Pixel for Empty", true         ));
+	newInput( 6, nodeValue_Surface(  "Texture" ));
+	newInput( 5, nodeValue_EScroll(  "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
+	                                                new scrollItem("Circle", s_node_shape_circle,    0), 
+	                                                new scrollItem("Custom", s_node_shape_misc,      1) ] ));
+	newInput( 9, nodeValue_Trigger(  "Generate Mesh" ));
+	newInput(10, nodeValue_Slider(   "Mesh Expansion",      0, [-2,2,.1] ));
+	newInput(11, nodeValue_Bool(     "Add Pixel for Empty", true         ));
 	
 	////- =Physics
-	newInput(12, nodeValue_Int(    "Collision Group",     1    ));
-	newInput( 0, nodeValue_Bool(   "Affect by Force",     true ));
-	newInput( 1, nodeValue_Float(  "Mass",                10   ));
-	newInput( 2, nodeValue_Slider( "Friction",            .2   ));
-	newInput( 3, nodeValue_Slider( "Air Resistance",      .0   ));
-	newInput( 4, nodeValue_Slider( "Rotation Resistance", .1   ));
-	newInput(13, nodeValue_Slider( "Bounciness",          .2   ));
-	newInput(22, nodeValue_Float(  "Gravity Scale",        1   ));
+	newInput(12, nodeValue_Int(      "Collision Group",     1    ));
+	newInput( 0, nodeValue_Bool(     "Affect by Force",     true ));
+	newInput( 1, nodeValue_Float(    "Mass",                10   ));
+	newInput( 2, nodeValue_Slider(   "Friction",            .2   ));
+	newInput( 3, nodeValue_Slider(   "Air Resistance",      .0   ));
+	newInput( 4, nodeValue_Slider(   "Rotation Resistance", .1   ));
+	newInput(13, nodeValue_Slider(   "Bounciness",          .2   ));
+	newInput(22, nodeValue_Float(    "Gravity Scale",        1   ));
 	
 	////- =Simulation
-	newInput(14, nodeValue_Bool( "Continuous",        false ));
-	newInput(15, nodeValue_Bool( "Fix Rotation",      false ));
-	newInput(16, nodeValue_Bool( "Sleepable",          true ));
-	newInput(21, nodeValue_Bool( "Activate on Spawn",  true ));
+	newInput(14, nodeValue_Bool(     "Continuous",         false ));
+	newInput(15, nodeValue_Bool(     "Fix Rotation",       false ));
+	newInput(16, nodeValue_Bool(     "Sleepable",           true ));
+	newInput(21, nodeValue_Bool(     "Activate on Spawn",   true ));
 	// inputs 23
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));

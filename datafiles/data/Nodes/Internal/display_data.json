@@ -228,10 +228,6 @@
     }, //pSystem 3D
     {
         "name": "RigidSim", "nodes": [
-            { "label": "Groups" },
-            "Node_Group_Input",
-            "Node_Group_Output",
-            
             { "label": "Objects" },
             { "label": "/Surface" },
             "Node_Rigid_Object",
@@ -272,8 +268,6 @@
     {
         "name": "SmokeSim", "nodes": [
             { "label": "Groups" },
-            "Node_Group_Input",
-            "Node_Group_Output",
             "Node_Smoke_Render_Output",
             
             { "label": "Domain" },
