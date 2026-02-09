@@ -18,7 +18,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue_Bool("Round Position", false ));
 	// inputs 4
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Atlas Out",   VALUE_TYPE.atlas,   []    ));
 	
 	inputs[1].getEditWidget().setSuffix("ms");
 	
@@ -35,9 +36,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		array_push(input_display_list, inAmo);
 		return inputs[index];
-	} 
-	
-	setDynamicInput(1, true, VALUE_TYPE.rigid);
+	} setDynamicInput(1, true, VALUE_TYPE.rigid);
 	
 	////- Node
 	
@@ -82,16 +81,20 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		worldScale = struct_try_get(inline_context, "worldScale", 100);
 		if(worldIndex == undefined) return;
 		
-		var _dim    = inline_context.dimension;
-		var _rnd    = getInputData(0);
-		var _timStp = getInputData(1);
-		var _subStp = getInputData(2);
-		var _simula = getInputData(3);
-		
-		var _outSurf    = outputs[0].getValue();
-		    _outSurf    = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
-		outputs[0].setValue(_outSurf);
+		#region data
+			var _dim    = inline_context.dimension;
+			var _rnd    = getInputData(0);
+			var _timStp = getInputData(1);
+			var _subStp = getInputData(2);
+			var _simula = getInputData(3);
+			
+			var _outSurf    = outputs[0].getValue();
+			    _outSurf    = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+			preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
+			outputs[0].setValue(_outSurf);
+			
+			var _outAtlas   = outputs[1].getValue();
+		#endregion
 		
 		if(_simula && IS_PLAYING) {
 			gmlBox2D_World_Step(worldIndex, _timStp / 1000, _subStp);
@@ -102,6 +105,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		DRAW_CLEAR
 		
 		var _p = [0,0];
+		var _l = 0;
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
 			var _objects = getInputData(i);
@@ -144,6 +148,10 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				draw_surface_ext_safe(_texture, dx, dy, xscale, yscale, rr, blend, alpha);
 				
+				var _atlas = new SurfaceAtlas(_texture, dx, dy, rr, xscale, yscale, blend, alpha);
+				_outAtlas[_l] = _atlas;
+				_l++;
+				
 				if(attributes.show_debug) {
 					var _awa = gmlBox2D_Object_Get_Awake(_objId);
 					
@@ -173,6 +181,9 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		surface_reset_target();
+		
+		array_resize(_outAtlas, _l);
+		outputs[1].setValue(_outAtlas);
 	} 
 	
 	static getPreviewValues = function() { 

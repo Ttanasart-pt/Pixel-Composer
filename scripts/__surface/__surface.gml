@@ -15,6 +15,7 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 	
 	static getSurface = function() /*=>*/ {return surface};
 	
+	onSet = undefined;
 	static set = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
 		surface  = _surface;
 		x        = _x;
@@ -24,6 +25,7 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 		sy       = _sy;
 		blend    = _blend;
 		alpha    = _alpha;
+		if(onSet) onSet(_surface, _x, _y, _rot, _sx, _sy, _blend, _alpha, setDim);
 		
 		return self;
 	}
@@ -51,9 +53,7 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 	
 	static getSurface = function() /*=>*/ {return surface.get()};
 	
-	__base_set = set;
-	static set = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
-		__base_set(_surface, _x, _y, _rot, _sx, _sy, _blend, _alpha);
+	static onSet = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
 		surface  = new Surface(_surface);
 		
 		w = setDim? surface_get_width_safe(surface.surface)  : 1;
