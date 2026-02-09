@@ -105,7 +105,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		DRAW_CLEAR
 		
 		var _p = [0,0];
-		var _l = 0;
+		var _l =  0;
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
 			var _objects = getInputData(i);

@@ -6,6 +6,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDrawIcon(s_node_rigid_activate);
 	manual_ungroupable	 = false;
 	
+	////- =Object
 	newInput(0, nodeValue(      "Object",    self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	newInput(1, nodeValue_Bool( "Activated", true)).rejectArray();
 	
@@ -14,6 +15,10 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	input_display_list = [ 0,
 		["Activate", false], 1,
 	]
+	
+	////- Node
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _obj = getInputData(0);

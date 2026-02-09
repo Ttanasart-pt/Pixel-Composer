@@ -11,20 +11,17 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	newInput(7, nodeValueSeed());
 	
-	////- Spawn
+	////- =Spawn
+	newInput(6, nodeValue_Bool(    "Spawn",        true         ));
+	newInput(1, nodeValue_Area(    "Spawn Area",   DEF_AREA_REF )).setHotkey("A").setUnitSimple();
+	newInput(2, nodeValue_EButton( "Spawn Type",   0, [ "Stream", "Burst" ] ));
+	newInput(3, nodeValue_Int(     "Spawn Delay",  4 ));
+	newInput(5, nodeValue_Int(     "Spawn Frame",  0 ));
+	newInput(4, nodeValue_Int(     "Spawn Amount", 1 ));
 	
-	newInput(6, nodeValue_Bool( "Spawn", true));
-	newInput(1, nodeValue_Area( "Spawn area", DEF_AREA)).setHotkey("A");
-	newInput(2, nodeValue_Enum_Button(   "Spawn type", 0, [ "Stream", "Burst" ]));
-	newInput(3, nodeValue_Int(  "Spawn delay", 4));
-	newInput(5, nodeValue_Int(  "Spawn frame", 0));
-	newInput(4, nodeValue_Int(  "Spawn amount", 1));
-	
-	////- Color
-	
+	////- =Color
 	newInput(8, nodeValue_Gradient( "Random Color", gra_white));
 	newInput(9, nodeValue_Range(    "Alpha", [ 1, 1 ], { linked : true }));
-	
 	// inputs 10
 	
 	for( var i = 1, n = array_length(inputs); i < n; i++ ) inputs[i].rejectArray();
@@ -35,6 +32,10 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		["Spawn", false], 6, 1, 2, 3, 5, 4,
 		["Color", false], 8, 9, 
 	];
+	
+	////- Nodes
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	spawn_index = 0;
 	

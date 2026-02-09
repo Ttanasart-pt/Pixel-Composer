@@ -12,19 +12,23 @@ function Node_Rigid_Joint_Fix(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput(0, nodeValue( "Object A", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	newInput(1, nodeValue( "Object B", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	
-	////- Joint
-	
-	newInput(2, nodeValue_Bool(   "Custom Anchor", false)).setTooltip("Use custom anchor point. Off to use center of mass.");
-	newInput(3, nodeValue_Vec2(   "Anchor", [ 0, 0 ])).setTooltip("Anchor point in world scope.");
-	newInput(4, nodeValue_Float(  "Stiffness", 10 ));
-	newInput(5, nodeValue_Slider( "Damping", .5 ));
-	newInput(6, nodeValue_Float(  "Breaking Force", 0 )).setTooltip("Amount of force to break the joint, zero for unbreakable.");
+	////- =Joint
+	newInput(2, nodeValue_Bool(   "Custom Anchor", false )).setTooltip("Use custom anchor point. Off to use center of mass.");
+	newInput(3, nodeValue_Vec2(   "Anchor",        [0,0] )).setUnitSimple().setTooltip("Anchor point in world scope.");
+	newInput(4, nodeValue_Float(  "Stiffness",      10   ));
+	newInput(5, nodeValue_Slider( "Damping",        .5   ));
+	newInput(6, nodeValue_Float(  "Breaking Force",  0   )).setTooltip("Amount of force to break the joint, zero for unbreakable.");
+	// 7
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [ 0, 1, 
-		["Joint", false], 2, 3, 4, 5, 6, 
-	]
+		[ "Joint", false ], 2, 3, 4, 5, 6, 
+	];
+	
+	////- Node
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static update = function(frame = CURRENT_FRAME) {
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);

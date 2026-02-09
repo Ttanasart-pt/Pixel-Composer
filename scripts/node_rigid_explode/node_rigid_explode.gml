@@ -12,15 +12,13 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	process_amount  = 0;
 	inputs_data_len = [];
 	
-	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
+	newInput( 0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	
-	////- Explosion
-	
-	newInput(1, nodeValue_Trigger( "Trigger"));
-	newInput(2, nodeValue_Vec2(    "Position", [ 0, 0 ] )).setHotkey("G");
-	newInput(3, nodeValue_Float(   "Range",      8      )).setHotkey("S");
-	newInput(4, nodeValue_Slider(  "Strength",   1, [0, 16, 0.01] ));
-	
+	////- =Explosion
+	newInput( 1, nodeValue_Trigger( "Trigger" ));
+	newInput( 2, nodeValue_Vec2(    "Position",  [0,0] )).setUnitSimple().setHotkey("G");
+	newInput( 3, nodeValue_Float(   "Range",      8    )).setUnitSimple().setHotkey("S");
+	newInput( 4, nodeValue_Slider(  "Strength",   1, [0,16,.01] ));
 	// inputs 5
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
@@ -28,6 +26,10 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	input_display_list = [ 0,
 		["Explosion",  false], 1, 2, 3, 4, 
 	];
+	
+	////- Node
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(process_amount > 0) return;

@@ -381,12 +381,13 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		draw_set_color(COLORS._main_accent);
 		switch(_shp) {
-			case 0 : draw_rectangle(_x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return false;
-			case 1 : draw_ellipse(  _x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return false;
+			case 0 : draw_rectangle(    _x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return false;
+			case 1 : draw_ellipse_prec( _x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return false;
 		}
 		
 		var meshes = attributes.mesh;
-		var _hover = -1, _side = 0;
+		var _hover = -1;
+		var _side  =  0;
 		draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
 		
 		var mesh = meshes[preview_index];
@@ -428,7 +429,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _dy = _y + _py * _s;
 			
 			if(isNotUsingTool())
-				draw_circle_prec(_dx, _dy, 4, false)
+				draw_circle_prec(_dx, _dy, 4, false);
+				
 			else {
 				draw_sprite_colored(THEME.anchor_selector, hover_index == i, _dx, _dy);
 				if(point_distance(_mx, _my, _dx, _dy) < 8)
@@ -493,9 +495,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static spawn = function(_index = 0, _position = undefined) {
 		if(worldIndex == undefined) return undefined;
 		
-		var _shp  = inputs[ 5].getValue();
-		var _spos = inputs[ 7].getValue();
-		var _srot = inputs[17].getValue();
+		var _shp  = getInputData( 5);
+		var _spos = getInputData( 7);
+		var _srot = getInputData(17);
 		var _spx, _spy;
 		
 		if(_position == undefined) {
@@ -509,8 +511,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		gmlBox2D_Object_Create_Begin(worldIndex, _spx, _spy, false);
 		
-		_index   = safe_mod(_index, array_length(textures)); 
-		var _tex = array_safe_get_fast(textures, _index); 
+		_index   = safe_mod(_index, array_length(textures));
+		var _tex = array_safe_get_fast(textures, _index);
 		if(is(_tex, SurfaceAtlas)) _tex = _tex.getSurface();
 		if(!is_surface(_tex)) return undefined;
 		
@@ -546,18 +548,18 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var objId  = gmlBox2D_Object_Create_Complete(); 
 		var boxObj = new __Box2DObject(objId, _tex);
 		
-		var _mov	  = inputs[ 0].getValue();
-		var _weig     = inputs[ 1].getValue();
-		var _cnt_frc  = inputs[ 2].getValue();
-		var _air_res  = inputs[ 3].getValue();
-		var _rot_frc  = inputs[ 4].getValue();
-		var _bouncy   = inputs[13].getValue();
-		var collIndex = inputs[12].getValue();
-		var _conti    = inputs[14].getValue();
-		var _fixRot   = inputs[15].getValue();
-		var _sleep    = inputs[16].getValue();
-		var _activate = inputs[21].getValue();
-		var _gravSca  = inputs[22].getValue();
+		var _mov	  = getInputData( 0);
+		var _weig     = getInputData( 1);
+		var _cnt_frc  = getInputData( 2);
+		var _air_res  = getInputData( 3);
+		var _rot_frc  = getInputData( 4);
+		var _bouncy   = getInputData(13);
+		var collIndex = getInputData(12);
+		var _conti    = getInputData(14);
+		var _fixRot   = getInputData(15);
+		var _sleep    = getInputData(16);
+		var _activate = getInputData(21);
+		var _gravSca  = getInputData(22);
 		
 		gmlBox2D_Object_Set_Enable(       objId, _activate);
 		gmlBox2D_Object_Set_Rotation(     objId, degtorad(_srot));
@@ -572,8 +574,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		gmlBox2D_Shape_Set_Friction(     objId, _cnt_frc);
 		gmlBox2D_Shape_Set_Restitution(  objId, _bouncy);
 		
-		var _useInitV = inputs[18].getValue();
-		var _initV    = inputs[19].getValue();
+		var _useInitV = getInputData(18);
+		var _initV    = getInputData(19);
 		
 		if(_useInitV) gmlBox2D_Object_Set_Velocity(objId, _initV[0], _initV[1]);
 		
@@ -582,10 +584,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static update = function(_frame = CURRENT_FRAME) {
 		#region data
-			var _shp  = inputs[ 5].getValue();
-			var _tex  = inputs[ 6].getValue();
-			var _spwn = inputs[ 8].getValue();
-			var _spfr = inputs[20].getValue();
+			var _shp  = getInputData( 5);
+			var _tex  = getInputData( 6);
+			var _spwn = getInputData( 8);
+			var _spfr = getInputData(20);
 			
 			inputs[ 9].setVisible(_shp == 2);
 			inputs[10].setVisible(_shp == 2);

@@ -13,47 +13,44 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput( 0, nodeValue_Surface( "Base Texture"));
 	
-	////- Fracture
+	////- =Fracture
+	newInput( 1, nodeValue_Surface( "Fracture Map"                      ));
+	newInput( 2, nodeValue_Slider(  "Fracture Threshold", .1            ));
+	newInput( 3, nodeValue_Slider(  "Mesh Expansion",      0, [-2,2,.1] ));
 	
-	newInput( 1, nodeValue_Surface( "Fracture Map"));
-	newInput( 2, nodeValue_Slider(  "Fracture Threshold", .1));
-	newInput( 3, nodeValue_Slider(  "Mesh Expansion", 0, [ -2, 2, 0.1 ]));
+	////- =Physics
+	newInput(14, nodeValue_Bool(   "Activate on Spawn", true ));
+	newInput( 4, nodeValue_Float(  "Density",              1 ));
+	newInput( 5, nodeValue_Slider( "Friction",            .2 ));
+	newInput( 6, nodeValue_Slider( "Air Resistance",       0 ));
+	newInput( 7, nodeValue_Slider( "Rotation Resistance", .1 ));
+	newInput( 8, nodeValue_Slider( "Bounciness",          .2 ));
+	newInput(15, nodeValue_Float(  "Gravity Scale",        1 ));
 	
-	////- Physics
+	////- =Transform
+	newInput( 9, nodeValue_Vec2( "Position", [.5,.5] )).setUnitSimple();
 	
-	newInput( 4, nodeValue_Float(  "Density", 1));
-	newInput( 5, nodeValue_Slider( "Friction", 0.2));
-	newInput( 6, nodeValue_Slider( "Air Resistance", 0.0));
-	newInput( 7, nodeValue_Slider( "Rotation Resistance", 0.1));
-	newInput( 8, nodeValue_Slider( "Bounciness", 0.2));
-	newInput(15, nodeValue_Float(  "Gravity Scale", 1));
-	newInput(14, nodeValue_Bool(   "Activate on Spawn", true));
-	
-	////- Transform
-	
-	newInput( 9, nodeValue_Vec2( "Position", [ 0, 0 ] ));
-	
-	////- Joint
-	
-	newInput(10, nodeValue_Bool(   "Use Joint", false ));
-	newInput(11, nodeValue_Float(  "Stiffness", 10 ));
-	newInput(12, nodeValue_Slider( "Damping", .5 ));
+	////- =Joint
+	newInput(10, nodeValue_Bool(   "Use Joint",  false ));
+	newInput(11, nodeValue_Float(  "Stiffness",     10 ));
+	newInput(12, nodeValue_Slider( "Damping",       .5 ));
 	newInput(13, nodeValue_Float(  "Breaking Force", 0 )).setTooltip("Amount of force to break the joint, zero for unbreakable.");
-	
 	// input 16
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
 	input_display_list = [ 0,  
-		["Fracture",  false], 1, button(function() /*=>*/ {return fracture()}).setText("Fracture"), 2, 3, 
-		["Physics",   false], 4, 5, 6, 7, 8, 15, 14, 
-		["Transform", false], 9, 
-		["Joint",     false, 10], 11, 12, 13, 
+		[ "Fracture",  false     ], 1, button(function() /*=>*/ {return fracture()}).setText("Fracture"), 2, 3, 
+		[ "Physics",   false     ], 14, 4, 5, 6, 7, 8, 15, 
+		[ "Transform", false     ], 9, 
+		[ "Joint",     false, 10 ], 11, 12, 13, 
 	];
 	
 	temp_surface   = [ noone, noone ];
 	
 	////- Mesh
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static generateMesh = function(_texture) {
 		if(!is_surface(_texture)) return [];

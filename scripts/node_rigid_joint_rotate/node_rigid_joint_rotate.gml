@@ -12,20 +12,22 @@ function Node_Rigid_Joint_Rotate(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput(0, nodeValue( "Object A", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	newInput(1, nodeValue( "Object B", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	
-	////- Joint
-	
-	newInput(2, nodeValue_Vec2(  "Offset", [ 0, 0 ]));
-	newInput(3, nodeValue_Float( "Max Force", 100 ));
-	newInput(4, nodeValue_Float( "Max Torque", 100 ));
-	newInput(5, nodeValue_Float( "Breaking Force", 0 )).setTooltip("Amount of force to break the joint, zero for unbreakable.");
-	
+	////- =Joint
+	newInput(2, nodeValue_Vec2(  "Offset",        [0,0] )).setUnitSimple();
+	newInput(3, nodeValue_Float( "Max Force",      100  ));
+	newInput(4, nodeValue_Float( "Max Torque",     100  ));
+	newInput(5, nodeValue_Float( "Breaking Force", 0    )).setTooltip("Amount of force to break the joint, zero for unbreakable.");
 	// inputs 6
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [ 0, 1, 
-		["Joint", false], 2, 3, 4, 5, 
-	]
+		[ "Joint", false ], 2, 3, 4, 5, 
+	];
+	
+	////- Node
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static update = function(frame = CURRENT_FRAME) {
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);

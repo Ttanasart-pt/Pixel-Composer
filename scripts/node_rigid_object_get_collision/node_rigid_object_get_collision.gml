@@ -6,21 +6,19 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 	setDrawIcon(s_node_rigid_object_get_collision);
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
+	newInput(0, nodeValue( "Objects",       self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
 	
-	////- Filter
-	
-	newInput(1, nodeValue("Filter Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
-	
+	////- =Filter
+	newInput(1, nodeValue( "Filter Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
 	// inputs 2
 	
-	newOutput(0, nodeValue_Output("Collision Data", VALUE_TYPE.struct,  []));
-	newOutput(1, nodeValue_Output("Collision Points", VALUE_TYPE.float,   [0, 0])).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(4, nodeValue_Output("Collision Normals", VALUE_TYPE.float,   [0, 0])).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output( "Collision Data",        VALUE_TYPE.struct,  []    ));
+	newOutput(1, nodeValue_Output( "Collision Points",      VALUE_TYPE.float,   [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(4, nodeValue_Output( "Collision Normals",     VALUE_TYPE.float,   [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
-	newOutput(2, nodeValue_Output("New Collision Trigger", VALUE_TYPE.trigger, false)).setVisible(false);
-	newOutput(3, nodeValue_Output("New Collision Points", VALUE_TYPE.float,   [0, 0])).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
-	newOutput(5, nodeValue_Output("New Collision Normals", VALUE_TYPE.float,   [0, 0])).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
+	newOutput(2, nodeValue_Output( "New Collision Trigger", VALUE_TYPE.trigger, false )).setVisible(false);
+	newOutput(3, nodeValue_Output( "New Collision Points",  VALUE_TYPE.float,   [0,0] )).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
+	newOutput(5, nodeValue_Output( "New Collision Normals", VALUE_TYPE.float,   [0,0] )).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
 	
 	input_display_list = [ 0,
 		["Filter", false], 1, 
@@ -29,6 +27,8 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 	output_display_list = [
 		0, 1, 4, 2, 3, 5, 
 	]
+	
+	////- Nodes
 	
 	coll_map = {};
 	

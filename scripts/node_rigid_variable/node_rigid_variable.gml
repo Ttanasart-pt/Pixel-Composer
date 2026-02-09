@@ -25,6 +25,8 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	array_foreach(outputs, function(i) /*=>*/ {return i.setVisible(false)});
 	
+	////- Nodes
+	
 	static update = function(frame = CURRENT_FRAME) {
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
 		worldScale = struct_try_get(inline_context, "worldScale", 100);

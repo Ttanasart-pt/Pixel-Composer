@@ -10,16 +10,13 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 	worldScale = 100;
 	objects    = [];
 	
-	////- Segment
+	////- =Segment
+	newInput(0, nodeValue_Vec2( "Segment Start",   [0,0] )).setUnitSimple();
+	newInput(1, nodeValue_Vec2( "Segment End",     [1,0] )).setUnitSimple();
 		
-	newInput(0, nodeValue_Vec2( "Segment Start", [  0, 0 ]));
-	newInput(1, nodeValue_Vec2( "Segment End", [ 16, 0 ]));
-		
-	////- Physics
-		
-	newInput(2, nodeValue_Float(  "Contact Friction", 0.2));
-	newInput(3, nodeValue_Slider( "Bounciness", 0.2));
-		
+	////- =Physics
+	newInput(2, nodeValue_Float(  "Contact Friction", .2 ));
+	newInput(3, nodeValue_Slider( "Bounciness",       .2 ));
 	// inputs 4
 		
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
@@ -28,6 +25,10 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 		["Segment", false], 0, 1, 
 		["Physics",	false],	2, 3, 
 	];
+	
+	////- Node
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pst = getInputData(0);

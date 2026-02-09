@@ -10,16 +10,13 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 	worldScale = 100;
 	objects    = [];
 	
-	////- Path
+	////- =Path
+	newInput(0, nodeValue_PathNode( "Path" ));
+	newInput(3, nodeValue_Int(      "Samples", 8 ));
 		
-	newInput(0, nodeValue_PathNode( "Path"));
-	newInput(3, nodeValue_Int(      "Samples", 8));
-		
-	////- Physics
-		
-	newInput(1, nodeValue_Float(  "Contact Friction", 0.2));
-	newInput(2, nodeValue_Slider( "Bounciness", 0.2));
-		
+	////- =Physics
+	newInput(1, nodeValue_Float(  "Contact Friction", .2 ));
+	newInput(2, nodeValue_Slider( "Bounciness",       .2 ));
 	// inputs 4
 		
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
@@ -29,7 +26,11 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 		["Physics",	false],	1, 2, 
 	];
 	
+	////- Node
+	
 	paths = [];
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(array_empty(paths)) return;

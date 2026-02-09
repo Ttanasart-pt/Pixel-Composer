@@ -11,22 +11,19 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	worldScale  = 100;
 	sensorIndex = undefined;
 	
-	////- Objects
-	
+	////- =Objects
 	newInput(0, nodeValue("Detect Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
 		
-	////- Segment
-		
-	newInput(1, nodeValue_Enum_Scroll( "Shape", AREA_SHAPE.rectangle, [ 
+	////- =Segment
+	newInput(1, nodeValue_EScroll( "Shape", AREA_SHAPE.rectangle, [ 
 		new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
 		new scrollItem("Elipse",	s_node_shape_circle,	0) 
-	]));
+	])); 
 	
-	newInput(2, nodeValue_Vec2(  "Position", [  0,  0 ] )).setHotkey("G");
-	newInput(3, nodeValue_Vec2(  "Span",     [ 16, 16 ] ));
-	newInput(4, nodeValue_Float( "Radius",     16       ));
-	
-	// inputs 2
+	newInput(2, nodeValue_Vec2(  "Position", [ 0, 0] )).setUnitSimple().setHotkey("G");
+	newInput(3, nodeValue_Vec2(  "Span",     [.5,.5] )).setUnitSimple();
+	newInput(4, nodeValue_Float( "Radius",    .5     )).setUnitSimple();
+	// inputs 5
 		
 	newOutput(0, nodeValue_Output("Detected Objects", VALUE_TYPE.rigid, []));
 	
@@ -34,8 +31,12 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Sensor", false], 1, 2, 3, 4, 
 	];
 	
+	////- Node
+	
 	detectCapacity = 1024;
 	detectBuffer   = buffer_create(4 * detectCapacity, buffer_fixed, 4);
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));

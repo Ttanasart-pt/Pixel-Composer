@@ -11,14 +11,12 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	objects    = [];
 	
 	newInput(2, nodeValue_Dimension());
-	newInput(3, nodeValue_Int("Collision Group", 1));
-	newInput(0, nodeValue_Toggle("Sides", 0b0010, { data : [ "T", "B", "L", "R" ] }));
+	newInput(3, nodeValue_Int(    "Collision Group", 1 ));
+	newInput(0, nodeValue_Toggle( "Sides", 0b0010, { data : [ "T", "B", "L", "R" ] }));
 		
-	////- Physics
-		
-	newInput(1, nodeValue_Float(  "Contact Friction", 0.2));
-	newInput(4, nodeValue_Slider( "Bounciness", 0.2));
-		
+	////- =Physics
+	newInput(1, nodeValue_Float(  "Contact Friction", .2 ));
+	newInput(4, nodeValue_Slider( "Bounciness",       .2 ));
 	// input 5
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
@@ -26,6 +24,10 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	input_display_list = [ 0, 
 		["Physics",	false],	1, 4, 
 	];
+	
+	////- Node
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(!is(inline_context, Node_Rigid_Group_Inline)) return;

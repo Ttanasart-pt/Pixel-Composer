@@ -15,21 +15,18 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	
-	////- Type
+	////- =Type
+	newInput(1, nodeValue_EScroll( "Force type", 0, [ "Constant", "Impulse", "Torque", "Torque Impulse", "Explode" ] ));
+	newInput(6, nodeValue_EButton( "Scope",      0, [ "Global", "Local" ] ));
+	newInput(4, nodeValue_Bool(    "Apply",      true ));
+	newInput(9, nodeValue_Trigger( "Trigger" ));
 	
-	newInput(1, nodeValue_Enum_Scroll( "Force type", 0, [ "Constant", "Impulse", "Torque", "Torque Impulse", "Explode" ]));
-	newInput(6, nodeValue_Enum_Button( "Scope", 0, [ "Global", "Local" ]));
-	newInput(4, nodeValue_Bool(        "Apply",  true));
-	newInput(9, nodeValue_Trigger(     "Trigger"));
-	
-	////- Force
-	
-	newInput(2, nodeValue_Vec2(   "Position",  [ 0, 0 ] )).setHotkey("G");
+	////- =Force
+	newInput(2, nodeValue_Vec2(   "Position",  [ 0, 0 ] )).setUnitSimple().setHotkey("G");
 	newInput(3, nodeValue_Float(  "Torque",      0      ));
 	newInput(5, nodeValue_Vec2(   "Force",     [.1, 0 ] ));
-	newInput(8, nodeValue_Float(  "Range",       8      ));
+	newInput(8, nodeValue_Float(  "Range",      .25     )).setUnitSimple();
 	newInput(7, nodeValue_Slider( "Strength",    1, [0, 16, 0.01] ));
-	
 	// inputs 10
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
@@ -39,6 +36,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		["Force", false], 2, 3, 5, 8, 7, 
 	];
 	
+	////- Nodes
+	
 	array_push(attributeEditors, "Display");
 	
 	attributes.show_objects  = true;
@@ -46,6 +45,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	array_push(attributeEditors, Node_Attribute("Show objects",  function() /*=>*/ {return attributes.show_objects},  function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})}));
 	array_push(attributeEditors, Node_Attribute("Display scale", function() /*=>*/ {return attributes.display_scale}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("display_scale", v)})}));
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(process_amount > 0) return;
