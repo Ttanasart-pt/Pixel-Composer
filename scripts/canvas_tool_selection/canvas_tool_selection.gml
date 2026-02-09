@@ -118,10 +118,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 			else createNewSelection(data.mask, data.sel_x0, data.sel_y0, data.sel_w, data.sel_h);
 		}, { 
 			mask     : surface_clone(_mask), 
-			sel_x0   : sel_x0,
-			sel_y0   : sel_y0,
-			sel_w    : sel_w,
-			sel_h    : sel_h,
+			sel_x0   : sel_x0, sel_y0   : sel_y0,
+			sel_w    : sel_w,  sel_h    : sel_h,
 			tooltip  : $"Create Selection", 
 		});
 		
@@ -153,6 +151,28 @@ function canvas_selection_data() : canvas_tool() constructor {
 	
 	static modifySelection = function(_mask, sel_x0, sel_y0, sel_w, sel_h, _add) {
 		if(sel_w == 1 && sel_h == 1) return;
+		
+		recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
+			apply();
+			
+			var _mask   = surface_clone(selection_mask);
+			var _sel_x0 = data.sel_x0;
+			var _sel_y0 = data.sel_y0;
+			var _sel_w  = data.sel_w;
+			var _sel_h  = data.sel_h;
+			
+			createNewSelection(data.mask, data.sel_x0, data.sel_y0, data.sel_w, data.sel_h);
+			
+			data.mask   = _mask;
+			data.sel_x0 = _sel_x0; data.sel_y0 = _sel_y0;
+			data.sel_w  = _sel_w;  data.sel_h  = _sel_h;
+			
+		}, { 
+			mask     : surface_clone(selection_mask), 
+			sel_x0   : selection_position[0], sel_y0   : selection_position[1],
+			sel_w    : selection_size[0],     sel_h    : selection_size[1],
+			tooltip  : $"Modify Selection", 
+		});
 		
 		var _x0, _y0, _x1, _y1;
 		
@@ -247,10 +267,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 			else apply();
 		}, { 
 			mask     : surface_clone(selection_mask), 
-			sel_x0   : selection_position[0],
-			sel_y0   : selection_position[1],
-			sel_w    : selection_size[0],
-			sel_h    : selection_size[1],
+			sel_x0   : selection_position[0], sel_y0   : selection_position[1],
+			sel_w    : selection_size[0],     sel_h    : selection_size[1],
 			tooltip  : $"Apply Selection", 
 		});
 		
