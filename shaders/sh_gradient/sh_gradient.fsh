@@ -358,15 +358,11 @@ void main() {
 	} 
 	
 	prog = (prog + shf - 0.5) / sca + 0.5;
-	if(pCurve_curve_use == 1) prog = curveEval(pCurve_curve, pCurve_amount, prog);
 	
-	if(gradient_loop == 1) {
-		prog = fract(prog < 0.? 1. - abs(prog) : prog);
-		
-	} else if(gradient_loop == 2) {
-		prog = mod(abs(prog), 2.);
-		if(prog >= 1.) prog = 2. - prog;
-	}
+	     if(gradient_loop == 1) prog = fract(fract(prog) + 1.);
+	else if(gradient_loop == 2) prog = 1. - abs(mod(prog, 2.) - 1.);
+	
+	if(pCurve_curve_use == 1) prog = curveEval(pCurve_curve, pCurve_amount, prog);
 	
 	vec4 col = gradientEval(prog);
 	gl_FragColor = vec4(col.rgb, col.a * texture2D( gm_BaseTexture, vtx ).a);
