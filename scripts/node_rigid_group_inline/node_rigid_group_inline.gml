@@ -82,10 +82,10 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		gmlBox2D_Object_Create_Begin(worldIndex, 0, 0, false);
 		
 		switch(side) {
-			case 0 : gmlBox2D_Object_Create_Shape_Segment(  0,  0, ww,  0 ); break;
-			case 1 : gmlBox2D_Object_Create_Shape_Segment(  0, hh, ww, hh ); break;
-			case 2 : gmlBox2D_Object_Create_Shape_Segment(  0,  0,  0, hh ); break;
-			case 3 : gmlBox2D_Object_Create_Shape_Segment( ww,  0, ww, hh ); break;
+			case 0 : gmlBox2D_Object_Create_Shape_Segment(-ww,   0, ww*2,  0 ); break;
+			case 1 : gmlBox2D_Object_Create_Shape_Segment(-ww,  hh, ww*2, hh ); break;
+			case 2 : gmlBox2D_Object_Create_Shape_Segment(  0, -hh,  0, hh*2 ); break;
+			case 3 : gmlBox2D_Object_Create_Shape_Segment( ww, -hh, ww, hh*2 ); break;
 		}
 		
 		var objId  = gmlBox2D_Object_Create_Complete();
