@@ -46,7 +46,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Joint",     false, 10 ], 11, 12, 13, 
 	];
 	
-	temp_surface   = [ noone, noone ];
+	temp_surface   = [ noone, noone, noone ];
 	
 	////- Mesh
 	
@@ -381,10 +381,21 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		meshes = [];
+		var _baseSurf = getInputData(0);
 		var _fracSurf = getInputData(1);
-		if(!is_surface(_fracSurf)) return;
+		if(!is_surface(_baseSurf) || !is_surface(_fracSurf)) return;
 		
-		var _atlases = separateShape(_fracSurf);
+		var _sw = surface_get_width(_baseSurf);
+		var _sh = surface_get_height(_baseSurf);
+		temp_surface[2] = surface_verify(temp_surface[2], _sw, _sh);
+		surface_set_target(temp_surface[2]);
+			DRAW_CLEAR
+			BLEND_OVERRIDE
+			draw_surface_stretched(_fracSurf, 0, 0, _sw, _sh);
+			BLEND_NORMAL
+		surface_reset_target();
+		
+		var _atlases = separateShape(temp_surface[2]);
 		
 		for( var i = 0, n = array_length(_atlases); i < n; i++ ) {
 			var _atlas = _atlases[i];
@@ -563,6 +574,9 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
 		worldScale = struct_try_get(inline_context, "worldScale", 100);
 		if(worldIndex == undefined) return;
+		
+		var _baseSurf = getInputData(0);
+		if(!is_surface(_baseSurf)) return;
 		
 		if(IS_FIRST_FRAME) {
 			fracture();
