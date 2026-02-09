@@ -30,14 +30,16 @@ function canvas_selection_data() : canvas_tool() constructor {
 	////- Create Selection
 	
 	static createSelection = function(_mask, sel_x0, sel_y0, sel_w, sel_h) {
-		if(!is_selected) { createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h); updateSelection(); return; }
+		if(!is_selected) { 
+			createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h); 
+			updateSelection(); 
+			return; 
+		}
 		
 		apply();
-		
 		     if(key_mod_press(SHIFT)) modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, true);
 		else if(key_mod_press(ALT))   modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, false);
 		else                          createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
-		
 		updateSelection();
 	}
 	
@@ -110,6 +112,18 @@ function canvas_selection_data() : canvas_tool() constructor {
 	
 	static createNewSelection = function(_mask, sel_x0, sel_y0, sel_w, sel_h) {
 		if(sel_w == 1 && sel_h == 1) return;
+		
+		recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
+			if(_undo) apply();
+			else createNewSelection(data.mask, data.sel_x0, data.sel_y0, data.sel_w, data.sel_h);
+		}, { 
+			mask     : surface_clone(_mask), 
+			sel_x0   : sel_x0,
+			sel_y0   : sel_y0,
+			sel_w    : sel_w,
+			sel_h    : sel_h,
+			tooltip  : $"Create Selection", 
+		});
 		
 		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
 		selection_mask    = surface_verify(selection_mask,    sel_w, sel_h);
@@ -227,6 +241,18 @@ function canvas_selection_data() : canvas_tool() constructor {
 	
 	static apply = function(targetSurface = canvas_surface) {
 		if(!is_selected) return;
+		
+		recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
+			if(_undo) createNewSelection(data.mask, data.sel_x0, data.sel_y0, data.sel_w, data.sel_h);
+			else apply();
+		}, { 
+			mask     : surface_clone(selection_mask), 
+			sel_x0   : selection_position[0],
+			sel_y0   : selection_position[1],
+			sel_w    : selection_size[0],
+			sel_h    : selection_size[1],
+			tooltip  : $"Apply Selection", 
+		});
 		
 		var _drawLay = node.tool_attribute.drawLayer;
 		var _sw = surface_get_width(targetSurface);

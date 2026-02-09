@@ -1023,12 +1023,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		}
 		
+		storeAction();
+		
 		if(selection.is_selected) {
-			var _tmp = surface_create(surface_get_width_safe(selection.selection_mask), surface_get_height_safe(selection.selection_mask));
 			var _spx = selection.selection_position[0];
 			var _spy = selection.selection_position[1];
 			var _spw = selection.selection_size[0];
 			var _sph = selection.selection_size[1];
+			
+			temp_surface[0] = surface_verify(temp_surface[0], _spw, _sph);
+			_tmp = temp_surface[0];
 			
 			surface_set_shader(_tmp, noone, true, BLEND.over);
 				draw_surface(drawing_surface, -_spx, -_spy);
@@ -1045,9 +1049,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_can = selection.selection_surface;
 			
 		} else {
-			storeAction();
-			
-			var _tmp = surface_create(_dim[0], _dim[1]);
+			_tmp = surface_create(_dim[0], _dim[1]);
 			
 			surface_set_shader(_tmp, noone, true, BLEND.over);
 				draw_surface_safe(drawing_surface);
@@ -1101,27 +1103,58 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static apply_draw_surface_light = function(_bg) {
 		draw_surface_safe(_bg);
-		
 		var sub = isUsingTool("Eraser");
-		if(sub) BLEND_SUBTRACT
-		else    BLEND_NORMAL
-		draw_surface_safe(drawing_surface);
-		BLEND_NORMAL
+		
+		if(selection.is_selected) {
+			if(sub) BLEND_SUBTRACT
+			else    BLEND_NORMAL
+			draw_surface_safe(drawing_surface);
+			BLEND_NORMAL
+			
+		} else {
+			if(sub) BLEND_SUBTRACT
+			else    BLEND_NORMAL
+			draw_surface_safe(drawing_surface);
+			BLEND_NORMAL
+		}
 	}
 	
 	static storeAction = function() {
-		
-		var action = recordAction(ACTION_TYPE.custom, function(data) { 
-			if(selection.is_selected) selection.apply();
+		if(selection.is_selected) {
+			recordAction(ACTION_TYPE.custom, function(data) /*=>*/ { 
+				// if(selection.is_selected) selection.apply();
+				
+				var _surface = surface_clone(selection.selection_surface);
+				var _mask    = surface_clone(selection.selection_mask);
+				
+				selection.selection_surface = data.surface;
+				selection.selection_mask    = data.mask;
+				
+				data.surface = _surface;
+				data.mask    = _mask;
+				
+			}, { 
+				surface : surface_clone(selection.selection_surface), 
+				mask    : surface_clone(selection.selection_mask), 
+				tooltip : $"Modify canvas", 
+			});
 			
-			var _canvas = surface_clone(getCanvasSurface(data.index));
-			
-			if(is_surface(data.surface))
-				setCanvasSurface(data.surface, data.index); 
-			surface_store_buffer(data.index); 
-			
-			data.surface = _canvas;
-		}, { surface: surface_clone(getCanvasSurface(preview_index)), tooltip: $"Modify canvas {preview_index}", index: preview_index });
+		} else {
+			recordAction(ACTION_TYPE.custom, function(data) /*=>*/ { 
+				// if(selection.is_selected) selection.apply();
+				
+				var _canvas = surface_clone(getCanvasSurface(data.index));
+				if(is_surface(data.surface))
+					setCanvasSurface(data.surface, data.index); 
+				surface_store_buffer(data.index); 
+				
+				data.surface = _canvas;
+			}, { 
+				surface : surface_clone(getCanvasSurface(preview_index)), 
+				tooltip : $"Modify canvas {preview_index}", 
+				index   : preview_index
+			});
+		}
 		
 	}
 	
@@ -1667,8 +1700,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					surface_reset_shader();
 				}
 				
-				temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], cDep);
-				surface_clear(temp_surface[1]);
+				temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], cDep);
+				surface_clear(temp_surface[0]);
 			}
 		#endregion
 		
@@ -1696,7 +1729,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					}
 					
 					outputs[0].setName("Surface Out");
-					outputs[0].setValue(_fr_index == noone? temp_surface[1] : output_surface[_fr_index]);
+					outputs[0].setValue(_fr_index == noone? temp_surface[0] : output_surface[_fr_index]);
 					
 					if(array_length(outputs) != 1) {
 						array_resize(outputs, 1);
