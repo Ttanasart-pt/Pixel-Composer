@@ -656,6 +656,12 @@ function Panel_Preference() : PanelContent() constructor {
 				"node_param_width",
 				textBox_Number(function(val) /*=>*/ {return prefSet("node_param_width", val)})
 			));
+			
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_dim_unit", "Default Dimension unit"),
+				"node_def_dim_unit",
+				new scrollBox([ "Pixel", "Global" ], function(val) /*=>*/ {return prefSet("node_def_dim_unit", val)})
+			));
 				
 		ds_list_add(pref_node, __txt("Display"));
 		

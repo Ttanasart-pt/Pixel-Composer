@@ -151,6 +151,7 @@
 		PREFERENCES.node_param_width       = 192;
 		PREFERENCES.node_3d_preview_size   = 256;
 		
+		PREFERENCES.node_def_dim_unit      = 1;
 		PREFERENCES.node_def_depth         = 1;
 		PREFERENCES.node_def_oversample    = 0;
 		PREFERENCES.node_def_interpolation = 0;

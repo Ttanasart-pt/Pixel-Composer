@@ -631,7 +631,15 @@ function nodeValueUnit(__nodeValue) constructor {
 			return _val;
 		}
 		
-		if(array_get_depth(value) == 1) {
+		var _d = array_get_depth(value);
+		
+		if(_d == 0) {
+			base = array_safe_get(base, 0, 1);
+			if(inv) base = base == 0? 0 : 1 / base;
+			return value * base;
+		}
+		
+		if(_d == 1) {
 			base = [
 				toNumber(array_safe_get(base, 0)),
 				toNumber(array_safe_get(base, 1))
@@ -678,10 +686,6 @@ function nodeValueUnit(__nodeValue) constructor {
 					return _val;
 			}
 			
-		} else if(!is_array(value)) {
-			base = array_safe_get(base, 0, 1);
-			if(inv) base = base == 0? 0 : 1 / base;
-			return value * base;
 		}
 		
 		return value;

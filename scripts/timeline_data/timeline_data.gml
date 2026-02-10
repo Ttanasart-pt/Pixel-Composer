@@ -89,7 +89,6 @@ function timelineItemNode(_node) : timelineItem() constructor {
 				else graphFocusNode(node, false);
 			}
 			
-			if(focus && DOUBLE_CLICK) show = !show;
 			res = 1;
 		}
 		
@@ -266,7 +265,11 @@ function timelineItemGroup() : timelineItem() constructor {
 		var aa = 0.75;
 		if(hover && point_in_rectangle(_msx, _msy, bx, by, bx + bs, by + lh)) {
 			aa = 1;
-			if(mouse_press(mb_left, focus)) show = !show;
+			if(DOUBLE_CLICK) {
+				if(show) panel_animation_dopesheet_expand();
+				else     panel_animation_dopesheet_collapse();
+				
+			} else if(mouse_press(mb_left, focus)) show = !show;
 		}
 		draw_sprite_ui_uniform(THEME.folder_16, show, bx + bs / 2, by + lh / 2, 1, col == -1? CDEF.main_grey : col, aa);
 		bx += bs + 1;
@@ -283,9 +286,14 @@ function timelineItemGroup() : timelineItem() constructor {
 		
 		var txx = bx + ui(2);
 		
+		if(hover && point_in_rectangle(_msx, _msy, txx, _y, _x + _w, _y + lh - 1)) { // rename
+			if(focus && DOUBLE_CLICK)
+				rename();
+		}
+		
 		draw_set_text(f_p3, fa_left, fa_center);
 		if(renaming) {
-			var _param = new widgetParam(txx + ui(6), _y + 1, _w - ui(24), lh - ui(4), name,, [ _msx, _msy ]);
+			var _param = new widgetParam(txx - ui(4), _y + ui(2), _w - ui(24), lh - ui(4), name,, [ _msx, _msy ]);
 			    _param.font = f_p3;
 			
 			tb_name.highlight_color = cc;

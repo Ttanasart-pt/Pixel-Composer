@@ -1,4 +1,10 @@
-function nodeValue_Dimension(name = "Dimension") { return new __NodeValue_Dimension(self, [1,1], name); }
+function nodeValue_Dimension(name = "Dimension") { 
+	var _unit = PREFERENCES.node_def_dim_unit;
+	var _val  = _unit? [1,1] : DEF_SURF;
+	
+	return new __NodeValue_Dimension(self, _val, name); 
+}
+
 function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_Vec2("Dimension", _node, value, { linked: true }) constructor {
 	def_length = 2;
 	
@@ -6,7 +12,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 	mask_input  = undefined;
 	unitTooltip = new tooltipSelector("Unit", ["Pixel", "Global"]);
 	node.dimension_input = index;
-	attributes.use_project_dimension = 1;
+	attributes.use_project_dimension = PREFERENCES.node_def_dim_unit;
 	
 	editProjDim = undefined;
 	static onInitWidget = function() { 

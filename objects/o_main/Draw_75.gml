@@ -172,7 +172,7 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 	panelDisplayDraw();
 	dialogGUIDraw();
 	
-	// if(PREFERENCES.video_mode && !ZOOM_AREA && !_cursor_lock) draw_sprite(THEME.cursor_video, 0, mouse_mx, mouse_my);
+	if(PREFERENCES.video_mode && !ZOOM_AREA && !_cursor_lock) draw_sprite(THEME.cursor_video, 0, mouse_mx, mouse_my);
 #endregion
 
 #region debug
