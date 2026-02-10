@@ -76,7 +76,10 @@ function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") {
 	    _rFun = method(_val, _rFun);
 	
 	_val.always_modified = true;
-	_val.setDisplay(VALUE_DISPLAY._default, { side_button : button(_rFun).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() });
+	_val.setDisplay(VALUE_DISPLAY._default, { 
+		side_button : button(_rFun).setTooltip(__txt("Randomize")).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() 
+	});
+		
 	return _val; 
 }
 

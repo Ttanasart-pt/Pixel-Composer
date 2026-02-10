@@ -9,6 +9,11 @@
 		color: function() /*=>*/ {return #ff6b97},
 	}
 	
+	global.SURFACE_MAP_JUNC = {
+		icon:  function() /*=>*/ {return THEME.node_junction_surface_map},
+		color: function() /*=>*/ {return #ff6b97},
+	}
+	
 	global.SURFACE_GREY_JUNC = {
 		icon:  function() /*=>*/ {return THEME.node_junction_surface_ext},
 		color: function() /*=>*/ {return #ff6b97},
