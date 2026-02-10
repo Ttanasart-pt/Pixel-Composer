@@ -678,7 +678,7 @@ function nodeValueUnit(__nodeValue) constructor {
 					return _val;
 			}
 			
-		} else {
+		} else if(!is_array(value)) {
 			base = array_safe_get(base, 0, 1);
 			if(inv) base = base == 0? 0 : 1 / base;
 			return value * base;

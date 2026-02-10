@@ -1355,9 +1355,30 @@ function Panel_Inspector() : PanelContent() constructor {
             		break;
             		
             	case "favorites": 
-            		var amo = array_length(PROJECT.favoritedValues);
-            		if(amo == 0) break;
+            		var  amo  = 0;
+            		var _favs = PROJECT.favoritedValues;
             		
+            		for( var j = 0, m = array_length(_favs); j < m; j++ ) {
+						var _fv = _favs[j];
+            			if(is_array(_fv)) {
+							var _nid = _fv[0];
+							var _ind = _fv[1];
+							
+							var _nod = PROJECT.nodeMap[? _nid];
+							if(!is(_nod, Node) || !_nod.active) continue;
+							
+							var _inp = array_safe_get_fast(_nod.inputs, _ind);
+							if(is(_inp, NodeValue))
+								_favs[j] = _inp;
+            			}
+            			
+						var _fv = _favs[j];
+						if(!is(_fv, NodeValue) || !_fv.node.active) continue;
+						
+						amo++;
+            		}
+            		
+            		if(amo == 0) break;
             		draw_text_add(tx, yy + lbh / 2, $"[{amo}]");
             		break;
             		
@@ -1581,7 +1602,7 @@ function Panel_Inspector() : PanelContent() constructor {
 							var _ind = _fv[1];
 							
 							var _nod = PROJECT.nodeMap[? _nid];
-							if(!is(_nod, Node)) continue;
+							if(!is(_nod, Node) || !_nod.active) continue;
 							
 							var _inp = array_safe_get_fast(_nod.inputs, _ind);
 							if(is(_inp, NodeValue))
@@ -1589,7 +1610,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						}
 						
 						var _fv = _favs[j];
-						if(!is(_fv, NodeValue)) continue;
+						if(!is(_fv, NodeValue) || !_fv.node.active) continue;
 						
 						var widg = drawWidget(ui(16), yy, con_ww, _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
                 		var widH = widg[0];

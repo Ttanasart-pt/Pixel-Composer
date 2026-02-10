@@ -19,8 +19,8 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- =Explosion
 	newInput( 5, nodeValue_Bool(    "Activate Physics", true ));
-	newInput( 2, nodeValue_Vec2(    "Position",  [0,0] )).setUnitSimple().setHotkey("G");
-	newInput( 3, nodeValue_Float(   "Range",     .5    )).setUnitSimple().setHotkey("S");
+	newInput( 2, nodeValue_Vec2(    "Position",  [.5,.5] )).setUnitSimple().setHotkey("G");
+	newInput( 3, nodeValue_Float(   "Range",     .25     )).setUnitSimple().setHotkey("S");
 	newInput( 4, nodeValue_Slider(  "Strength",   1, [ 0,16,.01] ));
 	newInput( 6, nodeValue_Slider(  "Torqe",      0, [-1, 1,.01] ));
 	// inputs 7

@@ -502,7 +502,7 @@ function Project() constructor {
 				var _ind = _fa[1];
 				
 				var _nod = PROJECT.nodeMap[? _nid];
-				if(!is(_nod, Node)) continue;
+				if(!is(_nod, Node) || !_nod.active) continue;
 				
 				var _inp = array_safe_get_fast(_nod.inputs, _ind);
 				if(is(_inp, NodeValue))
