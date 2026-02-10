@@ -33,8 +33,16 @@ if !ready exit;
 			if(mouse_press(mb_left, sFOCUS)) {
 				
 				switch(_node.node) {
-					case Node_Json_File_Read : Node_create_Json_File_Read_path(nx, ny, path).skipDefault(); break;
-					case Node_3D_Mesh_Json   : Node_create_3D_Json_path(nx, ny, path).skipDefault();        break;
+					case Node_Json_File_Read : 
+						var _n = Node_create_Json_File_Read_path(nx, ny, path);
+						    _n.skipDefault();
+						break;
+						
+					case Node_3D_Mesh_Json   : 
+						var _n = Node_create_3D_Json_path(nx, ny, path);
+						    _n.skipDefault();
+						break;
+						
 				}
 				instance_destroy();
 			}

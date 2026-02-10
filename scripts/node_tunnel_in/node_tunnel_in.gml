@@ -63,7 +63,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _nx = x + 160;
 		var _ny = PANEL_GRAPH.getFreeY(_nx, y);
 		    
-		var _node = nodeBuild("Node_Tunnel_Out", _nx, _ny).skipDefault();
+		var _node = nodeBuild("Node_Tunnel_Out", _nx, _ny);
+		    _node.skipDefault();
 		if(!is(_node, Node)) return;
 		
 		var _key = inputs[0].getValue();

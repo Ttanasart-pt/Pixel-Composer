@@ -1288,8 +1288,8 @@ function Panel_Inspector() : PanelContent() constructor {
             if(_tag == "layers" && !PROJECT.attributes.global_layer)             continue;
             // if(_tag == "panels" && array_empty(PROJECT.customPanels))            continue;
              
-            var _x1    = con_w;
-            var _y1    = yy + ui(2);
+            var _x1 = con_w;
+            var _y1 = yy + ui(2);
             
             /// Buttons
             

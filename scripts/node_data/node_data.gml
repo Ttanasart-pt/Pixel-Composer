@@ -3367,7 +3367,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static clone = function(_group = PANEL_GRAPH.getCurrentContext()) {
 		CLONING = true;
 		var _type = instanceof(self);
-		var _node = nodeBuild(_type, x, y, _group).skipDefault();
+		var _node = nodeBuild(_type, x, y, _group);
+		    _node.skipDefault();
+		    
 		CLONING = false;
 		
 		LOADING_VERSION = SAVE_VERSION;

@@ -119,7 +119,10 @@ function Node_ORA_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				}
 			}
 			
-			if(_node == noone) _node = nodeBuild("Node_ORA_layer", nx, ny + i * _nh).skipDefault();
+			if(_node == noone) {
+				_node = nodeBuild("Node_ORA_layer", nx, ny + i * _nh);
+				_node.skipDefault();
+			}
 			
 			_node.inputs[0].setFrom(outputs[1]);
 			_node.inputs[1].setValue(_name);

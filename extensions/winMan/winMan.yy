@@ -27,8 +27,12 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"v1","%Name":"","ConfigValues":{"Steam":{"copyToTargets":"64",},},"constants":[],"copyToTargets":-1,"filename":"winMan.dll","final":"","functions":[
-        {"$GMExtensionFunction":"","%Name":"winMan_minimize_ext","argCount":0,"args":[1,],"documentation":"","externalName":"window_minimize","help":"","hidden":false,"kind":1,"name":"winMan_minimize_ext","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+    {"$GMExtensionFile":"v1","%Name":"","ConfigValues":{
+        "Steam":{
+          "copyToTargets":"64",
+        },
+      },"constants":[],"copyToTargets":-1,"filename":"winMan.dll","final":"","functions":[
+        {"$GMExtensionFunction":"","%Name":"winMan_minimize_ext","argCount":0,"args":[1,],"documentation":"","externalName":"window_minimize_ext","help":"","hidden":false,"kind":1,"name":"winMan_minimize_ext","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"winMan_is_minimized_ext","argCount":0,"args":[1,],"documentation":"","externalName":"window_is_minimized","help":"","hidden":false,"kind":1,"name":"winMan_is_minimized_ext","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_step","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_step","help":"","hidden":false,"kind":1,"name":"global_mouse_step","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_left_is_pressed","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_left_is_pressed","help":"","hidden":false,"kind":1,"name":"global_mouse_left_is_pressed","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},

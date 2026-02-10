@@ -3254,8 +3254,11 @@ function Panel_Preview() : PanelContent() constructor {
     	var pos_x = (sel_x + sel_w / 2) / ori_w;
     	var pos_y = (sel_y + sel_h / 2) / ori_h;
     	
-    	var _blend = nodeBuild("Node_Blend", bx, by).skipDefault();
-    	var _solid = nodeBuild("Node_Solid", sx, sy).skipDefault();
+    	var _blend = nodeBuild("Node_Blend", bx, by); 
+    	    _blend.skipDefault();
+    	    
+    	var _solid = nodeBuild("Node_Solid", sx, sy); 
+    	    _solid.skipDefault();
     	
     	_blend.inputs[0].setFrom(node.outputs[node.preview_channel]);
     	_blend.inputs[1].setFrom(_solid.outputs[0]);

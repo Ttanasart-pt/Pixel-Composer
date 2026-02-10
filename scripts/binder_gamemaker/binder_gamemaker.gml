@@ -172,7 +172,8 @@ function __Binder_Gamemaker(_path) constructor {
     static getNodeFromPath = function(p, _x, _y) {
         if(struct_has(nodeMap, p)) return nodeMap[$ p];
         
-        var _n = nodeBuild("Node_Tile_Tileset", _x, _y).skipDefault();
+        var _n = nodeBuild("Node_Tile_Tileset", _x, _y);
+            _n.skipDefault();
 	    nodeMap[$ p] = _n;
 	    
 	    return _n;

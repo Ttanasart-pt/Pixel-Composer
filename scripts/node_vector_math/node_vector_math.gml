@@ -23,7 +23,8 @@
 	
 	function Node_create_Vector_Math(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
-		var node  = new Node_Vector_Math(_x, _y, _group).skipDefault();
+		var node  = new Node_Vector_Math(_x, _y, _group);
+		    node.skipDefault();
 		
 		var ind = array_find(global.node_vmath_keys, query);
 		if(ind != -1) node.inputs[0].skipDefault().setValue(global.node_vmath_keys_map[ind]);

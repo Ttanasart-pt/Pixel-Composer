@@ -735,10 +735,7 @@ function Panel_Menu() : PanelContent() constructor {
                             var bc = [ COLORS._main_icon, CDEF.yellow ];
                             var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_minimize_icon, 0, bc);
                             if(b) _draggable = false;
-                            if(b == -2) {
-                                     if(OS == os_windows) winMan_Minimize();
-                                else if(OS == os_macosx)  mac_window_dock();
-                            }
+                            if(b == -2) winMan_Minimize();
                             break;
                             
                         case WINDOW_ACTION.Fullscreen:

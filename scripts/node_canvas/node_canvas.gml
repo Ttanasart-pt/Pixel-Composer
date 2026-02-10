@@ -345,7 +345,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _sw = _s? selection.selection_size[0] : attributes.dimension[0];
 			var _sh = _s? selection.selection_size[1] : attributes.dimension[1];
 			
-			var _nc = nodeBuild("Node_Canvas", x, y + h + 16).skipDefault();
+			var _nc = nodeBuild("Node_Canvas", x, y + h + 16);
+			_nc.skipDefault();
 			_nc.inputs[0].setValue([_sw, _sh]);
 			
 			var _comp = noone; 
@@ -355,7 +356,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			if(_comp == noone) {
-				_comp = nodeBuild("Node_Composite", x + w + 32, y).skipDefault();
+				_comp = nodeBuild("Node_Composite", x + w + 32, y);
+				_comp.skipDefault();
 				_comp.addInput(outputs[0]);
 				
 			} else {

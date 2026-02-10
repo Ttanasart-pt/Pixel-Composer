@@ -33,9 +33,20 @@ if !ready exit;
 			if(mouse_press(mb_left, sFOCUS)) {
 				
 				switch(_node.node) {
-					case Node_Image          : Node_create_Image_path(nx, ny, path).skipDefault();                 break;
-					case Node_Image_Sequence : Node_create_Image_Sequence_path(nx, ny, [ path ]).skipDefault();	   break;
-					case Node_Canvas         : nodeBuild("Node_Canvas", nx, ny).skipDefault().loadImagePath(path); break;
+					case Node_Image          : 
+						var _n = Node_create_Image_path(nx, ny, path);
+						    _n.skipDefault();
+						break;
+						
+					case Node_Image_Sequence : 
+						var _n = Node_create_Image_Sequence_path(nx, ny, [ path ]);
+						    _n.skipDefault();
+						break;
+						
+					case Node_Canvas         : 
+						var _n = nodeBuild("Node_Canvas", nx, ny);
+						    _n.skipDefault().loadImagePath(path); 
+						break;
 				}
 				instance_destroy();
 			}

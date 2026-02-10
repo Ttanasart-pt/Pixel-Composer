@@ -94,9 +94,10 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 			var _bas_inp = array_safe_get(inputs, i, noone);
 			var _inp     = noone;
 			
-			if(_bas_inp == noone) 
-				_inp = nodeBuild("Node_Group_Input", _inp_nod.x, _inp_nod.y, self).skipDefault();
-			else 
+			if(_bas_inp == noone) {
+				_inp = nodeBuild("Node_Group_Input", _inp_nod.x, _inp_nod.y, self);
+				_inp.skipDefault();
+			} else 
 				_inp = _bas_inp.from;
 			
 			_inp.instanceBase = _inp_nod;
@@ -119,9 +120,10 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 			var _bas_inp = array_safe_get(outputs, i, noone);
 			var _inp     = noone;
 			
-			if(_bas_inp == noone)
-				_inp = nodeBuild("Node_Group_Output", _inp_nod.x, _inp_nod.y, self).skipDefault();
-			else
+			if(_bas_inp == noone) {
+				_inp = nodeBuild("Node_Group_Output", _inp_nod.x, _inp_nod.y, self);
+				_inp.skipDefault();
+			} else
 				_inp = _bas_inp.from;
 			
 			_inp.instanceBase = _inp_nod;

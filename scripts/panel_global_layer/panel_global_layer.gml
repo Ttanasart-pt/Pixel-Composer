@@ -60,13 +60,17 @@ function Panel_Global_Layer_Drawer() constructor {
 		var _nodes = PROJECT.globalLayer_node_disp;
 		
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "New Layer", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
-			var _lnode = nodeBuild("Node_Project_Layer", 0, 0).skipDefault();
+			var _lnode = nodeBuild("Node_Project_Layer", 0, 0);
+			    _lnode.skipDefault();
+			
 			if(!array_empty(_nodes)) _lnode.inputs[1].setValue(_nodes[0].inputs[1].getValue() - 100);
 		}
 		
 		bx += bs + ui(4);
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "New Canvas Layer", THEME.icon_canvas, 0, COLORS._main_value_positive) == 2) {
-			var _lnode = nodeBuild("Node_Project_Layer", 0, 0).skipDefault();
+			var _lnode = nodeBuild("Node_Project_Layer", 0, 0);
+			    _lnode.skipDefault();
+			
 			if(!array_empty(_nodes)) _lnode.inputs[1].setValue(_nodes[0].inputs[1].getValue() - 100);
 			
 			var _canvas = nodeBuild("Node_Canvas", 0, 0);
@@ -91,15 +95,20 @@ function Panel_Global_Layer_Drawer() constructor {
 				if(is(_n, Node_Export)) _export = _n;
 			}
 			
-			if(_export == noone) nodeBuild("Node_Export", 0, 0).skipDefault();
-			else panelFocusNode(_export);
+			if(_export == noone) {
+				var _node = nodeBuild("Node_Export", 0, 0);
+				    _node.skipDefault();
+				
+			} else panelFocusNode(_export);
 		}
 			
 		bx -= bs + ui(4);
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Add Output", THEME.add_16, 0, COLORS._main_value_negative, .75) == 2) {
-			var _lout = nodeBuild("Node_Layer_Output",     0, 0).skipDefault();
-			var _proj = nodeBuild("Node_Project_Output", 160, 0).skipDefault();
+			var _lout = nodeBuild("Node_Layer_Output",     0, 0);
+			var _proj = nodeBuild("Node_Project_Output", 160, 0);
 			
+			_lout.skipDefault();
+			_proj.skipDefault();
 			_proj.inputs[0].setFrom(_lout.outputs[0]);
 		}
 		

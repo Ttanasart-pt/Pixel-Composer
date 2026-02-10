@@ -844,9 +844,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(_outp == -1) return;
         if(!is_array(surf)) surf = [ surf ];
         
-        var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y).skipDefault();
+        var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
         var _dim    = surface_get_dimension(surf[0]);
         
+        _canvas.skipDefault();
         _canvas.inputs[0].attributes.use_project_dimension = false;
         _canvas.inputs[0].setValue(_dim);
         _canvas.attributes.dimension = _dim;
@@ -873,9 +874,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(_outp == -1) return;
         if(!is_array(surf)) surf = [ surf ];
         
-        var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y).skipDefault();
+        var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
         var _dim    = surface_get_dimension(surf[0]);
         
+        _canvas.skipDefault();
         _canvas.inputs[0].attributes.use_project_dimension = false;
         _canvas.inputs[0].setValue(_dim);
         _canvas.inputs[8].setFrom(_outp);
@@ -902,13 +904,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
         if(_outp == -1) return;
     
-        var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64).skipDefault();
-    
+        var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64);
+        _canvas.skipDefault();
         _canvas.inputs[0].attributes.use_project_dimension = false;
         _canvas.inputs[0].setValue(surface_get_dimension(surf));
         _canvas.inputs[5].setValue(true);
     
-        var _blend = nodeBuild("Node_Blend", _node.x + _node.w + 64, _node.y).skipDefault();
+        var _blend = nodeBuild("Node_Blend", _node.x + _node.w + 64, _node.y);
+        _blend.skipDefault();
         _blend.inputs[0].setFrom(_outp);
         _blend.inputs[1].setFrom(_canvas.outputs[0]);
     }
@@ -2071,8 +2074,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 var _mx = value_snap(mouse_graph_x,   project.graphGrid.size);
                 var _my = value_snap(mouse_graph_y-8, project.graphGrid.size);
                 
-                var _pin = nodeBuild("Node_Pin", _mx, _my).skipDefault();
-                _pin.inputs[0].setFrom(junction_hovering.value_from);
+                var _pin = nodeBuild("Node_Pin", _mx, _my);
+                    _pin.skipDefault();
+                    _pin.inputs[0].setFrom(junction_hovering.value_from);
+                    
                 junction_hovering.setFrom(_pin.outputs[0]);
 	        } 
         #endregion
@@ -2428,11 +2433,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
             var menu = [
                 menuItem("Feedback", function(d) /*=>*/ { 
-                    nodeBuild("Node_Feedback_Inline", 0, 0).skipDefault().connectJunctions(d.junc_in, d.junc_out);
+                    var _n = nodeBuild("Node_Feedback_Inline", 0, 0);
+                        _n.skipDefault().connectJunctions(d.junc_in, d.junc_out);
                 }, THEME.feedback_24, noone, noone, { junc_in : _connect[1], junc_out : _connect[2] }),
                 
                 menuItem("Loop", function(d) /*=>*/ {
-                    nodeBuild("Node_Iterate_Inline", 0, 0).skipDefault().connectJunctions(d.junc_in, d.junc_out);
+                    var _n = nodeBuild("Node_Iterate_Inline", 0, 0);
+                        _n.skipDefault().connectJunctions(d.junc_in, d.junc_out);
                 }, THEME.loop_24, noone, noone, { junc_in : _connect[1], junc_out : _connect[2] }),
             ];
             
@@ -3523,8 +3530,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function doBlend(_base = "") {
     	var _ty = _base == ""? "Node_Blend" : _base;
     	
-        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs))
-        	return nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
+        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs)) {
+        	var _node = nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext());
+        	    _node.skipDefault();
+        	return _node;
+        }
     	
     	var _jj = nodes_selecting[0].outputs[0];
     	var _ty = _base;
@@ -3542,7 +3552,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(array_length(nodes_selecting) == 1) {
 	        var _nodex = nodes_selecting[0].x + 160;
 	        var _nodey = nodes_selecting[0].y;
-	        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
+	        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext());
+	            _blend.skipDefault();
             
             switch(_ty) {
             	case "Node_Blend" : _blend.inputs[0].setFrom(_jj); break;
@@ -3557,7 +3568,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         var _nodex = max(_n0.x, _n1.x) + 160;
         var _nodey = round((_n0.y + _n1.y) / 2 / 32) * 32;
-        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
+        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext());
+            _blend.skipDefault();
         
         if(array_empty(_n0.outputs)) return _blend;
         if(array_empty(_n1.outputs)) return _blend;
@@ -3594,7 +3606,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var _ty = _base == ""? "Node_Composite" : _base;
     	
         if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs)) {
-        	var _compose = nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
+        	var _compose = nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext());
+        	    _compose.skipDefault();
+        	    
         	nodes_selecting = [];
         	return _compose;
         }
@@ -3643,7 +3657,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         cx = cx + 160;
         cy = value_snap(cy / len, 16);
         
-        var _compose = nodeBuild(_ty, cx, cy, getCurrentContext()).skipDefault();
+        var _compose = nodeBuild(_ty, cx, cy, getCurrentContext());
+            _compose.skipDefault();
         
         repeat(len) {
             var _outp = ds_priority_delete_min(pr);
@@ -3657,8 +3672,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     } 
 
     function doArray() { //
-        if(array_empty(nodes_selecting)) 
-        	return nodeBuild("Node_Array", mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
+        if(array_empty(nodes_selecting)) {
+        	var _node = nodeBuild("Node_Array", mouse_grid_x, mouse_grid_y, getCurrentContext());
+        	    _node.skipDefault();
+        	return _node;
+        }
     	
         var cx  = nodes_selecting[0].x;
         var cy  = 0;
@@ -3680,7 +3698,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         cx = cx + 160;
         cy = round(cy / len / 32) * 32;
     
-        var _array = nodeBuild("Node_Array", cx, cy).skipDefault();
+        var _array = nodeBuild("Node_Array", cx, cy);
+            _array.skipDefault();
         
         repeat(len) {
             var _node = ds_priority_delete_min(pr);
@@ -3709,7 +3728,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         x1 += 32;
         y1 += 32;
     
-        var _frame = nodeBuild("Node_Frame", x0, y0, getCurrentContext()).skipDefault();
+        var _frame = nodeBuild("Node_Frame", x0, y0, getCurrentContext());
+        _frame.skipDefault();
         _frame.inputs[0].setValue([x1 - x0, y1 - y0]);
         _frame.tb_name.activate("Frame");
         
@@ -3864,7 +3884,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var s = clipboard_get_surface();
     	if(s == noone) return false;
     	
-    	var n = nodeBuild("Node_Image_Buffer", mouse_grid_x, mouse_grid_y).skipDefault();
+    	var n = nodeBuild("Node_Image_Buffer", mouse_grid_x, mouse_grid_y);
+    	n.skipDefault();
     	n.attributes.data   = s.buffer;
 		n.attributes.width  = s.w;
 		n.attributes.height = s.h;
@@ -4066,52 +4087,62 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         switch(DRAGGING.type) {
             case "Color":
-                node = nodeBuild("Node_Color", mouse_grid_x, mouse_grid_y).skipDefault();
+                node = nodeBuild("Node_Color", mouse_grid_x, mouse_grid_y);
+                node.skipDefault();
                 node.inputs[0].setValue(DRAGGING.data);
                 break;
                 
             case "Palette":
-                node = nodeBuild("Node_Palette", mouse_grid_x, mouse_grid_y).skipDefault();
+                node = nodeBuild("Node_Palette", mouse_grid_x, mouse_grid_y);
+                node.skipDefault();
                 node.inputs[0].setValue(DRAGGING.data);
                 break;
                 
             case "Gradient":
-                node = nodeBuild("Node_Gradient_Out", mouse_grid_x, mouse_grid_y).skipDefault();
+                node = nodeBuild("Node_Gradient_Out", mouse_grid_x, mouse_grid_y);
+                node.skipDefault();
                 node.inputs[0].setValue(DRAGGING.data);
                 break;
             
             case "Number":
                 if(is_array(DRAGGING.data) && array_length(DRAGGING.data) <= 4) {
                     switch(array_length(DRAGGING.data)) {
-                        case 2 : node = nodeBuild("Node_Vector2", mouse_grid_x, mouse_grid_y).skipDefault(); break;
-                        case 3 : node = nodeBuild("Node_Vector3", mouse_grid_x, mouse_grid_y).skipDefault(); break;
-                        case 4 : node = nodeBuild("Node_Vector4", mouse_grid_x, mouse_grid_y).skipDefault(); break;
+                        case 2 : node = nodeBuild("Node_Vector2", mouse_grid_x, mouse_grid_y); break;
+                        case 3 : node = nodeBuild("Node_Vector3", mouse_grid_x, mouse_grid_y); break;
+                        case 4 : node = nodeBuild("Node_Vector4", mouse_grid_x, mouse_grid_y); break;
                     }
                     
+                	node.skipDefault();
                     for( var i = 0, n = array_length(DRAGGING.data); i < n; i++ )
                         node.inputs[i].setValue(DRAGGING.data[i]);
+                
                 } else {
-                    node = nodeBuild("Node_Number", mouse_grid_x, mouse_grid_y).skipDefault();
+                    node = nodeBuild("Node_Number", mouse_grid_x, mouse_grid_y);
+                	node.skipDefault();
                     node.inputs[0].setValue(DRAGGING.data);
                 }
                 break;
                 
             case "Bool":
-                node = nodeBuild("Node_Boolean", mouse_grid_x, mouse_grid_y).skipDefault();
+                node = nodeBuild("Node_Boolean", mouse_grid_x, mouse_grid_y);
+                node.skipDefault();
                 node.inputs[0].setValue(DRAGGING.data);
                 break;
                 
             case "Text":
-                node = nodeBuild("Node_String", mouse_grid_x, mouse_grid_y).skipDefault();
+                node = nodeBuild("Node_String", mouse_grid_x, mouse_grid_y);
+                node.skipDefault();
                 node.inputs[0].setValue(DRAGGING.data);
                 break;
                 
             case "Path":
-                node = nodeBuild("Node_Path", mouse_grid_x, mouse_grid_y).skipDefault();
+                node = nodeBuild("Node_Path", mouse_grid_x, mouse_grid_y);
+                node.skipDefault();
                 break;
                 
             case "Struct":
-                node = nodeBuild("Node_Struct", mouse_grid_x, mouse_grid_y).skipDefault();
+                node = nodeBuild("Node_Struct", mouse_grid_x, mouse_grid_y);
+                node.skipDefault();
                 break;
                 
             case "Asset":
@@ -4173,12 +4204,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				break;
 				
             case "GMTileSet" :
-				node = nodeBuild("Node_Tile_Tileset", mouse_grid_x, mouse_grid_y).skipDefault();
+				node = nodeBuild("Node_Tile_Tileset", mouse_grid_x, mouse_grid_y);
+				node.skipDefault();
 				node.bindTile(DRAGGING.data);
 				break;
 				
             case "GMRoom" :
-				node = nodeBuild("Node_GMRoom", mouse_grid_x, mouse_grid_y).skipDefault();
+				node = nodeBuild("Node_GMRoom", mouse_grid_x, mouse_grid_y);
+				node.skipDefault();
 				node.bindRoom(DRAGGING.data);
 				break;
         }
@@ -4291,8 +4324,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         var _key = $"{__junction_hovering.name} {seed_random(3)}";
         
-        var _ti = nodeBuild("Node_Tunnel_In",  _jo.rx + 32, _jo.ry - 8).skipDefault();
-        var _to = nodeBuild("Node_Tunnel_Out", _ji.rx - 32, _ji.ry - 8).skipDefault();
+        var _ti = nodeBuild("Node_Tunnel_In",  _jo.rx + 32, _jo.ry - 8); 
+            _ti.skipDefault();
+            
+        var _to = nodeBuild("Node_Tunnel_Out", _ji.rx - 32, _ji.ry - 8); 
+            _to.skipDefault();
         
         _to.inputs[0].setValue(_key);
         _ti.inputs[0].setValue(_key);

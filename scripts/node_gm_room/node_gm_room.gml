@@ -314,7 +314,8 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _tileset = gmRoom.gmBinder.getNodeFromPath(_layer.tileset.key, x - ui(320), y);
 			_tileset.bindTile(_layer.tileset);
 			
-			var _tiler = nodeBuild("Node_Tile_Drawer", x - ui(160), y).skipDefault();
+			var _tiler = nodeBuild("Node_Tile_Drawer", x - ui(160), y);
+			_tiler.skipDefault();
 			_tiler.bindTile(_layer);
 			
 			_tiler.inputs[0].setFrom(_tileset.outputs[0]);

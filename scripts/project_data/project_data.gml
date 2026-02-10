@@ -225,7 +225,8 @@ function Project() constructor {
 					PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);
 					RENDER_ALL 
 					return true; 
-				}), 
+					
+				}).setLink(), 
 				
 				function(junc) /*=>*/ {
 					if(!is(junc, NodeValue)) return;

@@ -1,6 +1,8 @@
 #region
 	function Node_create_Color_Math(_x, _y, _group = noone, _param = {}) {
-		var node  = new Node_Color_Math(_x, _y, _group).skipDefault();
+		var node  = new Node_Color_Math(_x, _y, _group);
+		    node.skipDefault();
+		    
 		var query = struct_try_get(_param, "query", "");
 		var ind   = array_find(global.node_blend_keys, query);
 		

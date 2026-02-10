@@ -3072,7 +3072,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_array(_type)) _type = _type[0];
 		if(_type == "") return noone;
 		
-		var ext = nodeBuild(_type, _x ?? node.x, _y ?? node.y).skipDefault();
+		var ext = nodeBuild(_type, _x ?? node.x, _y ?? node.y);
+		    ext.skipDefault();
+		    
 		if(_x == undefined) ext.x -= ext.w + 32;
 		
 		for( var i = 0; i < array_length(ext.outputs); i++ )

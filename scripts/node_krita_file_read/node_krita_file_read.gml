@@ -117,7 +117,10 @@ function Node_Krita_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) con
 				}
 			}
 			
-			if(_node == noone) _node = nodeBuild("Node_Krita_layer", nx, ny + i * _nh).skipDefault();
+			if(_node == noone) {
+				_node = nodeBuild("Node_Krita_layer", nx, ny + i * _nh);
+				_node.skipDefault();
+			}
 			
 			_node.inputs[0].setFrom(outputs[1]);
 			_node.inputs[1].setValue(_name);
