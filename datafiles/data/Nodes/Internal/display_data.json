@@ -829,6 +829,7 @@
             "Node_Grid_Tri",
             "Node_Grid_Hex",
             "Node_Grid_Pentagonal",
+            "Node_Kisrhombille",
             { "label": "/Tiles" },
             "Node_Pytagorean_Tile",
             "Node_Herringbone_Tile",

@@ -1,0 +1,6 @@
+{
+    "name":          "Kisrhombille",
+    "spr":           "s_node_kisrhombille",
+    "baseNode":      "Node_Kisrhombille",
+    "pxc_version":    120060,
+}

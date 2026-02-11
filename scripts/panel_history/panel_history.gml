@@ -94,7 +94,7 @@ function Panel_History() : PanelContent() constructor {
 				if(_include) {
 					if(_skip) {
 						draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
-						draw_text_add(ui(32), yy + ui(7), $"Skip {_skip} event{_skip > 1? "s" : ""}");
+						draw_text_add(ui(32), yy + ui(6), $"Skip {_skip} event{_skip > 1? "s" : ""}");
 						
 						_h += ui(16) + spc;
 						yy += ui(16) + spc;
@@ -157,7 +157,7 @@ function Panel_History() : PanelContent() constructor {
 		
 		if(_skip) {
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
-			draw_text_add(ui(32), yy + ui(7), $"Skip {_skip} events");
+			draw_text_add(ui(32), yy + ui(6), $"Skip {_skip} events");
 			
 			_h += ui(16);
 			yy += ui(16);

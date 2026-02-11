@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_grid_kisrhombille",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_grid_kisrhombille",
+  "parent":{
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
