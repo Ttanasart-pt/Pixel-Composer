@@ -34,7 +34,7 @@
 		
 	} else if(OS == os_macosx) {
 		APP_DIRECTORY = working_directory;
-		DIRECTORY     = working_directory;
+		DIRECTORY     = game_save_id;
 	    APP_LOCATION  = working_directory;
 	    
 		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
