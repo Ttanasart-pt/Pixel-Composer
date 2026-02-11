@@ -1,0 +1,4 @@
+# Ignore all files in this directory
+# This directory is populated by the datasrc/update_datafile_packs script
+*
+!.gitignore
