@@ -11,12 +11,14 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	__init_mask_modifier(1, 5); // inputs 5, 6, 
 	// input 7
 	
-	input_display_list = [ 3, 4, 
-		["Surfaces", false], 0, 1, 2, 5, 6, 
-	]
-	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput(1, nodeValue_Output( "Color",       VALUE_TYPE.color, ca_black ));
+	
+	input_display_list = [ 3, 4, 
+		["Surfaces", false], 0, 1, 2, 5, 6, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	

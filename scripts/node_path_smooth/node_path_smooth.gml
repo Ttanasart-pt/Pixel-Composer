@@ -8,22 +8,22 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Smooth Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Bool("Loop", false))
-		.rejectArray();
-	
-	newInput(1, nodeValue_Bool("Round anchor", false))
-		.rejectArray();
-	
-	newInput(2, nodeValue_Slider("Smoothness", 3, [ 1, 5, 0.01 ] ));
+	////- =Path
+	newInput( 0, nodeValue_Bool(   "Loop",         false )).rejectArray();
+	newInput( 1, nodeValue_Bool(   "Round anchor", false )).rejectArray();
+	newInput( 2, nodeValue_Slider( "Smoothness",   3, [ 1, 5, 0.01 ] ));
+	// 3
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
-		["Path",	false], 0, 1, 2, 
-		["Anchors",	false], 
+		[ "Path",    false ], 0, 1, 2, 
+		[ "Anchors", false ], 
 	];
 	
 	setDynamicInput(1, false);
+	
+	////- Data
 	
 	tools = [
 		new NodeTool( "Anchor add / remove", THEME.path_tools_add ),
@@ -75,75 +75,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return inputs[index];
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var sample = PREFERENCES.path_resolution;
-		var loop   = getInputData(0);
-		var rond   = getInputData(1);
-		var hovering = false;
-		
-		var _line_hover   = -1;
-		var _anchor_hover = -1;
-		
-		if(!array_empty(anchors)) {
-			draw_set_color(COLORS._main_accent);
-			
-			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
-			
-			for( var i = 0, n = array_length(segments); i < n; i++ ) { // draw path
-				var _seg = segments[i];
-					
-				for( var j = 0, m = array_length(_seg); j < m; j += 2 ) {
-					_nx = _x + _seg[j + 0] * _s;
-					_ny = _y + _seg[j + 1] * _s;
-						
-					if(i || j) {
-						if((key_mod_press(CTRL) || isUsingTool(0)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
-							_line_hover = i;
-						draw_line_width(_ox, _oy, _nx, _ny, 1 + 2 * (line_hover == i));
-					}
-					
-					_ox = _nx;
-					_oy = _ny;
-				}
-			}
-			
-			var _act = active && !isUsingTool(0);
-			
-			for(var i = input_fix_len; i < array_length(inputs); i++) {
-				var hv = InputDrawOverlay(inputs[i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny));
-				if(hv) _anchor_hover = i;
-			}
-		}
-		
-		line_hover = _line_hover;
-		
-		if(key_mod_press(CTRL) || isUsingTool(0)) {	// anchor edit
-			CURSOR_SPRITE = _anchor_hover == -1? THEME.cursor_add : THEME.cursor_remove;
-			hovering = true;
-			
-			if(mouse_press(mb_left, active)) {
-				if(_anchor_hover == -1) {
-					var anc = createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
-					UNDO_HOLDING = true;
-				
-					if(_line_hover != -1) {
-						array_remove(inputs, anc);
-						array_insert(inputs, input_fix_len + _line_hover + 1, anc);
-					}
-					
-				} else {
-					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_anchor_hover], _anchor_hover, "remove path anchor point" ])
-						.setRef(self);
-					array_delete(inputs, _anchor_hover, 1);
-					resetDisplayList();
-				}
-				
-				RENDER_ALL
-			}
-		}
-		
-		return hovering || w_hovering;
-	}
+	////- Path
 	
 	static updateLength = function() {
 		var loop    = getInputData(0);
@@ -281,9 +213,17 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(_c0[2] == 0 && _c0[3] == 0 && _c1[0] == 0 && _c1[1] == 0) {
 				out.x = lerp(_a0[0], _a1[0], _t);
 				out.y = lerp(_a0[1], _a1[1], _t);
+				
 			} else {
-				out.x = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
-				out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				out.x = eval_bezier_x(_t, _a0[0],          _a0[1], 
+				                          _a1[0],          _a1[1], 
+				                          _a0[0] + _c0[2], _a0[1] + _c0[3], 
+				                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				                          
+				out.y = eval_bezier_y(_t, _a0[0],          _a0[1], 
+				                          _a1[0],          _a1[1], 
+				                          _a0[0] + _c0[2], _a0[1] + _c0[3], 
+				                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
 			}
 			
 			cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
@@ -297,6 +237,78 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return getPointDistance(frac(_rat) * lengthTotal, _ind, out);
 	}
 	
+	////- Node
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var sample = PREFERENCES.path_resolution;
+		var loop   = getInputData(0);
+		var rond   = getInputData(1);
+		var hovering = false;
+		
+		var _line_hover   = -1;
+		var _anchor_hover = -1;
+		
+		if(!array_empty(anchors)) {
+			draw_set_color(COLORS._main_accent);
+			
+			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+			
+			for( var i = 0, n = array_length(segments); i < n; i++ ) { // draw path
+				var _seg = segments[i];
+					
+				for( var j = 0, m = array_length(_seg); j < m; j += 2 ) {
+					_nx = _x + _seg[j + 0] * _s;
+					_ny = _y + _seg[j + 1] * _s;
+						
+					if(i || j) {
+						if((key_mod_press(CTRL) || isUsingTool(0)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
+							_line_hover = i;
+						draw_line_width(_ox, _oy, _nx, _ny, 1 + 2 * (line_hover == i));
+					}
+					
+					_ox = _nx;
+					_oy = _ny;
+				}
+			}
+			
+			var _act = active && !isUsingTool(0);
+			
+			for(var i = input_fix_len; i < array_length(inputs); i++) {
+				var hv = InputDrawOverlay(inputs[i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny));
+				if(hv) _anchor_hover = i;
+			}
+		}
+		
+		line_hover = _line_hover;
+		
+		if(key_mod_press(CTRL) || isUsingTool(0)) {	// anchor edit
+			CURSOR_SPRITE = _anchor_hover == -1? THEME.cursor_add : THEME.cursor_remove;
+			hovering = true;
+			
+			if(mouse_press(mb_left, active)) {
+				if(_anchor_hover == -1) {
+					var anc = createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+					UNDO_HOLDING = true;
+				
+					if(_line_hover != -1) {
+						array_remove(inputs, anc);
+						array_insert(inputs, input_fix_len + _line_hover + 1, anc);
+					}
+					
+				} else {
+					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_anchor_hover], _anchor_hover, "remove path anchor point" ])
+						.setRef(self);
+					array_delete(inputs, _anchor_hover, 1);
+					resetDisplayList();
+				}
+				
+				RENDER_ALL
+			}
+		}
+		
+		return hovering || w_hovering;
+	}
+	
 	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
 		
@@ -305,7 +317,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var smot = getInputData(2);
 		
 		var _a = [];
-		for(var i = input_fix_len; i < array_length(inputs); i++) {
+		for(var i = input_fix_len, n = array_length(inputs); i < n; i++) {
 			var _dat = getInputData(i);
 			var _dep = array_get_depth(_dat);
 			
@@ -322,7 +334,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		anchors    = _a;
 		controls   = array_create(anchorSize);
 		
-		if(rond)
+		if(rond) 
 		for( var i = 0; i < anchorSize; i++ ) {
 			_a[i][0] = round(_a[i][0]);
 			_a[i][1] = round(_a[i][1]);
@@ -348,7 +360,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			}
 			
 			if(!loop && anchorSize) {
-				controls[0]       = [ 0, 0, 0, 0 ];
+				controls[0] = [ 0, 0, 0, 0 ];
 				controls[anchorSize - 1] = [ 0, 0, 0, 0 ];
 			}
 		}

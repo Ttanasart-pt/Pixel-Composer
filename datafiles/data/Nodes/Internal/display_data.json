@@ -917,6 +917,7 @@
             "Node_Composite",
             "Node_Camera",
             "Node_UV_Blend", 
+            "Node_Weld", 
             { "label": "/Align" },
             "Node_Stack",
             "Node_Image_Grid",
