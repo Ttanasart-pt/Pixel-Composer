@@ -1,0 +1,6 @@
+{
+    "name":          "Armature Subdivide",
+    "spr":           "s_node_armature_subdivide",
+    "baseNode":      "Node_Armature_Subdivide",
+    "pxc_version":    119043,
+}

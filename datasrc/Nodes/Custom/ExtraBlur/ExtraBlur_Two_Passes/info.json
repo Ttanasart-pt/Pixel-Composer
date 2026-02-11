@@ -1,0 +1,17 @@
+{
+  "name":"Two Passes Blur",
+  "author":"MakhamDev",
+  "license":"",
+  
+  "iname":"extrablur_two_passes",
+  "tooltip":"",
+  "custom":true,
+  "alias":[],
+  "baseNode":"Node_Custom_Shader",
+  "io":[
+    "surface"
+  ],
+  "params": {
+    "data": "node.json" 
+  },
+}

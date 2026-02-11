@@ -1,0 +1,8 @@
+{
+    "name":          "Transform Point",
+    "tooltip":       "Translate array of points.",
+    "spr":           "s_node_move_point",
+    "baseNode":      "Node_Move_Point",
+    "pxc_version":    1141,
+    "io":             ["float"],
+}

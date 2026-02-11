@@ -1,0 +1,8 @@
+{
+    "name":          "Export Tilemap",
+    "tooltip":       "Export tilemap data to a file.",
+    "spr":           "s_node_tile_tilemap_export",
+    "baseNode":      "Node_Tile_Tilemap_Export",
+    "pxc_version":    118030,
+    "io":             ["surface"],
+}

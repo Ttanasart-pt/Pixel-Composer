@@ -1,0 +1,10 @@
+{
+  "tooltip":"Create path from parametric equations.",
+  "spr":"s_node_path_plot",
+  "pxc_version":1138.0,
+  "baseNode":"Node_Path_Plot",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Plot Path"
+}

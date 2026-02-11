@@ -1,0 +1,6 @@
+{
+    "name":          "Path Flatten",
+    "spr":           "s_node_path_flattern",
+    "baseNode":      "Node_Path_Flattern",
+    "pxc_version":    119030,
+}

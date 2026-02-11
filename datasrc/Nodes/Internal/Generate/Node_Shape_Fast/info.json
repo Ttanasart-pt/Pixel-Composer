@@ -1,0 +1,6 @@
+{
+    "name":          "Draw Shape Fast",
+    "spr":           "s_node_shape",
+    "baseNode":      "Node_Shape_Fast",
+    "pxc_version":    119104,
+}

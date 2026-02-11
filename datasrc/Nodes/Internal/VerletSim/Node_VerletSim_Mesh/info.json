@@ -1,0 +1,6 @@
+{
+    "name":          "Verlet Mesh",
+    "spr":           "s_node_verletsim_mesh",
+    "baseNode":      "Node_VerletSim_Mesh",
+    "pxc_version":    119041,
+}

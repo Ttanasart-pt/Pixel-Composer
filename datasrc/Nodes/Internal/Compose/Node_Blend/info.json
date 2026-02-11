@@ -1,0 +1,41 @@
+{
+  "name":"Blend",
+  "tooltip":"Combine 2 images using different blend modes.",
+  "alias":[
+    "normal",
+    "replace",
+    "-1",
+    "multiply",
+    "color burn",
+    "linear burn",
+    "minimum",
+    "-1",
+    "add",
+    "screen",
+    "color dodge",
+    "maximum",
+    "-1",
+    "overlay",
+    "soft light",
+    "hard light",
+    "vivid light",
+    "linear light",
+    "pin light",
+    "-1",
+    "difference",
+    "exclusion",
+    "subtract",
+    "divide",
+    "-1",
+    "hue",
+    "saturation",
+    "luminosity"
+  ],
+  "spr":"s_node_blend",
+  "baseNode":"Node_Blend",
+  "io":[
+    "surface",
+    "surface"
+  ],
+  "build":"Node_create_Blend"
+}

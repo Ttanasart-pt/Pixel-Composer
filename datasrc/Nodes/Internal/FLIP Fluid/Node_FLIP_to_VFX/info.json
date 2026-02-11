@@ -1,0 +1,11 @@
+{
+  "name":"FLIP to VFX",
+  "baseNode":"Node_FLIP_to_VFX",
+  "spr":"s_node_flip_to_VFX",
+  "pxc_version":11680.0,
+  "show_in_recent":false,
+  "io":[
+    "fDomain",
+    "particle"
+  ],
+}

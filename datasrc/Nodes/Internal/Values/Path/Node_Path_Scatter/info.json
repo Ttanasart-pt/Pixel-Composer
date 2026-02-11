@@ -1,0 +1,10 @@
+{
+  "tooltip":"Scatter paths along another path.",
+  "spr":"s_node_path_scatter",
+  "pxc_version":11740.0,
+  "baseNode":"Node_Path_Scatter",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Scatter Path"
+}

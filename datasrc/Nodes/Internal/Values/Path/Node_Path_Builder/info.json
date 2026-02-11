@@ -1,0 +1,10 @@
+{
+  "tooltip":"Create path from array of vec2 points.",
+  "spr":"s_node_path_builder",
+  "pxc_version":1137.0,
+  "baseNode":"Node_Path_Builder",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Path Builder"
+}

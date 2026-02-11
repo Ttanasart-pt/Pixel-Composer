@@ -1,0 +1,10 @@
+{
+  "tooltip":"Store current animation. Cache persisted between save.",
+  "spr":"s_node_cache",
+  "pxc_version":1134.0,
+  "baseNode":"Node_Cache",
+  "io":[
+    "any"
+  ],
+  "name":"Cache"
+}

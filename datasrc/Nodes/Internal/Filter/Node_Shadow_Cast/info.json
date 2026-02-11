@@ -1,0 +1,13 @@
+{
+  "tooltip":"Apply light that casts shadow.",
+  "alias":[
+    "raycast"
+  ],
+  "spr":"s_node_shadow_cast",
+  "pxc_version":1100.0,
+  "baseNode":"Node_Shadow_Cast",
+  "io":[
+    "surface"
+  ],
+  "name":"Cast Shadow"
+}

@@ -1,0 +1,10 @@
+{
+  "tooltip":"Generate game engines-ready tileset.",
+  "spr":"s_node_mk_tile",
+  "pxc_version":11600.0,
+  "baseNode":"Node_MK_Tile",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Tile"
+}

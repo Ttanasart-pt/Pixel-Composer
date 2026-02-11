@@ -1,0 +1,8 @@
+{
+  "name":"Format Text",
+  "tooltip":"Replace string with {var} format with a proper variable.",
+  "spr":"s_node_string_format",
+  "pxc_version":118090,
+  "baseNode":"Node_String_Format",
+  "io":[ "text" ],
+}

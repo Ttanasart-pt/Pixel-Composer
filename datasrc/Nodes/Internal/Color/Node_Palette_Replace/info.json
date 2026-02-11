@@ -1,0 +1,10 @@
+{
+  "tooltip":"Replace colors in a palette with new one.",
+  "spr":"s_node_palette_replace",
+  "pxc_version":1120.0,
+  "baseNode":"Node_Palette_Replace",
+  "io":[
+    "color"
+  ],
+  "name":"Palette Replace"
+}

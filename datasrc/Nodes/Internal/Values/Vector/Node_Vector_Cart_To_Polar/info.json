@@ -1,0 +1,13 @@
+{
+  "name":"Cart. to Polar",
+  "tooltip":"Convert cartesian coordinates to polar coordinates",
+  "alias":[
+    "cartesian to polar",
+  ],
+  "spr":"s_node_cart_to_polar",
+  "pxc_version":118068,
+  "baseNode":"Node_Vector_Cart_To_Polar",
+  "io":[
+    "float"
+  ],
+}

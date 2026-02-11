@@ -1,0 +1,10 @@
+{
+  "tooltip":"Evaluate string of equation. With an option for setting variables.",
+  "spr":"s_node_equation",
+  "baseNode":"Node_Equation",
+  "io":[
+    "float"
+  ],
+  "build":"Node_create_Equation",
+  "name":"Equation"
+}

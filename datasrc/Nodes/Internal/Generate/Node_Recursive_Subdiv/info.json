@@ -1,0 +1,6 @@
+{
+    "name":          "Recursive Subdivision",
+    "spr":           "s_node_recursive_subdiv",
+    "baseNode":      "Node_Recursive_Subdiv",
+    "pxc_version":    119010,
+}

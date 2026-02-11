@@ -1,0 +1,6 @@
+{
+    "name":          "Array Transpose",
+    "spr":           "s_node_array_transpose",
+    "baseNode":      "Node_Array_Transpose",
+    "pxc_version":    118090,
+}

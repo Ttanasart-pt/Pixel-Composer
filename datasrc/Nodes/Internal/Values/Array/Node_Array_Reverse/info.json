@@ -1,0 +1,10 @@
+{
+  "tooltip":"Reverse array order",
+  "spr":"s_node_array_reverse",
+  "pxc_version":1120.0,
+  "baseNode":"Node_Array_Reverse",
+  "io":[
+    "any"
+  ],
+  "name":"Array Reverse"
+}

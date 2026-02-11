@@ -1,0 +1,8 @@
+{
+    "name":          "Padding",
+    "tooltip":       "Make image bigger by adding space in 4 directions.",
+    "spr":           "s_node_padding",
+    "baseNode":      "Node_Padding",
+    "alias":             ["filling"],
+    "io":             ["surface"],
+}

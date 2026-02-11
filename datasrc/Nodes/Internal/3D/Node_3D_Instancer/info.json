@@ -1,0 +1,6 @@
+{
+    "name":          "3D Instancer",
+    "spr":           "s_node_3d_instancer",
+    "baseNode":      "Node_3D_Instancer",
+    "pxc_version":    119071,
+}

@@ -1,0 +1,10 @@
+{
+  "tooltip":"Load Aseprite project file",
+  "spr":"s_node_ase_layer",
+  "pxc_version":1100.0,
+  "baseNode":"Node_ASE_layer",
+  "io":[
+    "surface"
+  ],
+  "name":"ASE Layer"
+}

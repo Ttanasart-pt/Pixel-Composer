@@ -1,0 +1,11 @@
+{
+  "tooltip":"Add solid object that smoke can collides to.",
+  "spr":"s_node_smoke_add_collider",
+  "pxc_version":1120.0,
+  "show_in_recent":false,
+  "baseNode":"Node_Smoke_Add_Collider",
+  "io":[
+    "sdomain"
+  ],
+  "name":"Add Collider"
+}

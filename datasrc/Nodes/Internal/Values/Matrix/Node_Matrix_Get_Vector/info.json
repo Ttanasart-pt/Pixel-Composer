@@ -1,0 +1,7 @@
+{
+    "name":          "Matrix Get Vector",
+    "tooltip":       "Get an entire row or column of a matrix as an array.",
+    "spr":           "s_node_matrix_get_vector",
+    "baseNode":      "Node_Matrix_Get_Vector",
+    "pxc_version":    120031,
+}

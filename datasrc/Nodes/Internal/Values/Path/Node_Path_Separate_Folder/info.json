@@ -1,0 +1,10 @@
+{
+  "tooltip":"Separate path string into a pair of directory and filename.",
+  "spr":"s_node_path_separate_folder",
+  "pxc_version":1145.0,
+  "baseNode":"Node_Path_Separate_Folder",
+  "io":[
+    "text"
+  ],
+  "name":"Separate File Path"
+}

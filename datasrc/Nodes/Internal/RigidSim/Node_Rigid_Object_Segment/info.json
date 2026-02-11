@@ -1,0 +1,8 @@
+{
+    "name":          "Segment",
+    "tooltip":       "",
+    "spr":           "s_node_rigid_object_segment",
+    "baseNode":      "Node_Rigid_Object_Segment",
+    "pxc_version":    119010,
+    "show_in_recent": false,
+}

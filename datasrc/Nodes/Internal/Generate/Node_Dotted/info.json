@@ -1,0 +1,6 @@
+{
+    "name":          "Dotted",
+    "spr":           "s_node_dotted",
+    "baseNode":      "Node_Dotted",
+    "pxc_version":    118090,
+}

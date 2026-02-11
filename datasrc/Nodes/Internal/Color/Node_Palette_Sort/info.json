@@ -1,0 +1,10 @@
+{
+  "tooltip":"Sort palette with specified order.",
+  "spr":"s_node_palette_sort",
+  "pxc_version":1130.0,
+  "baseNode":"Node_Palette_Sort",
+  "io":[
+    "color"
+  ],
+  "name":"Sort Palette"
+}

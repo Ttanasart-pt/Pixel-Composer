@@ -1,0 +1,7 @@
+{
+    "name":          "Number Simple",
+    "tooltip":       "Generate number data with less control for better performance.",
+    "spr":           "s_node_number",
+    "baseNode":      "Node_Number_Simple",
+    "pxc_version":    119104,
+}

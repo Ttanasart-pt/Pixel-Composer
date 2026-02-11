@@ -1,0 +1,10 @@
+{
+  "tooltip":"Replace mesh material with a new one.",
+  "spr":"s_node_3d_set_material",
+  "pxc_version":11560.0,
+  "baseNode":"Node_3D_Set_Material",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"Set Material"
+}

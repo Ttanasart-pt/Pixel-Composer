@@ -1,0 +1,10 @@
+{
+  "tooltip":"Modify atlas data.",
+  "spr":"s_node_atlas_set",
+  "pxc_version":1141.0,
+  "baseNode":"Node_Atlas_Set",
+  "io":[
+    "surface"
+  ],
+  "name":"Atlas Set"
+}

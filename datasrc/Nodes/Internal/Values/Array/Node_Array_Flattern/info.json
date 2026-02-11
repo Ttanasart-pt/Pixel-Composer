@@ -1,0 +1,8 @@
+{
+    "name":          "Array Flatten",
+    "tooltip":       "Flattern higher dimension array into 1 dimension linear array.",
+    "spr":           "s_node_array_flattern",
+    "baseNode":      "Node_Array_Flattern",
+    "pxc_version":    118090,
+    "io":             ["float"],
+}

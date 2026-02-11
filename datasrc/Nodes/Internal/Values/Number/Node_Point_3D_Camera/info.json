@@ -1,0 +1,6 @@
+{
+    "name":          "3D Point Camera",
+    "spr":           "s_node_point_3d_camera",
+    "baseNode":      "Node_Point_3D_Camera",
+    "pxc_version":    119030,
+}

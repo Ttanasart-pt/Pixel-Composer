@@ -1,0 +1,8 @@
+{
+  "spr":"s_node_gui_out",
+  "baseNode":"Node_Application_Out",
+  "io":[
+    "any"
+  ],
+  "name":"GUI Out"
+}

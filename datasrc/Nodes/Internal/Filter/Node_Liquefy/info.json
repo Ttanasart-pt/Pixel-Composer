@@ -1,0 +1,10 @@
+{
+  "tooltip":"Distort image using variety of tools.",
+  "spr":"s_node_liquefy",
+  "pxc_version":118020.0,
+  "baseNode":"Node_Liquefy",
+  "io":[
+    "surface"
+  ],
+  "name":"Liquefy"
+}

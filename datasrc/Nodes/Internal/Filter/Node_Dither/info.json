@@ -1,0 +1,9 @@
+{
+  "tooltip":"Reduce color and use dithering to preserve original color.",
+  "spr":"s_node_dither",
+  "baseNode":"Node_Dither",
+  "io":[
+    "surface"
+  ],
+  "name":"Dither"
+}

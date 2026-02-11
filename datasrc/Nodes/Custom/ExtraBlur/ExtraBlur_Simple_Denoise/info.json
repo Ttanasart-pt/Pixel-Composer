@@ -1,0 +1,17 @@
+{
+  "name":"Simple Denoise",
+  "author":"luckyballa",
+  "license":"",
+  
+  "iname":"extrablur_simple_denoise",
+  "tooltip":"a bit glitchy, but quite fast and easy",
+  "custom":true,
+  "alias":[],
+  "baseNode":"Node_Custom_Shader",
+  "io":[
+    "surface"
+  ],
+  "params": {
+    "data": "node.json" 
+  },
+}

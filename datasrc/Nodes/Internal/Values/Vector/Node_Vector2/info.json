@@ -1,0 +1,9 @@
+{
+  "tooltip":"Generate vector composite of 2 members.",
+  "spr":"s_node_vector2",
+  "baseNode":"Node_Vector2",
+  "io":[
+    "float"
+  ],
+  "name":"Vector2"
+}

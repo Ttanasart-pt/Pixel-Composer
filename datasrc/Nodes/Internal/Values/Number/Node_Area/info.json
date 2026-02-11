@@ -1,0 +1,9 @@
+{
+  "tooltip":"Generate area data.",
+  "spr":"s_node_area",
+  "baseNode":"Node_Area",
+  "io":[
+    "float"
+  ],
+  "name":"Area"
+}

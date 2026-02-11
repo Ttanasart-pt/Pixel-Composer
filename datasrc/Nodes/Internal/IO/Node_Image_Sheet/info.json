@@ -1,0 +1,9 @@
+{
+  "tooltip":"Cut up spritesheet into animation or image array.",
+  "spr":"s_node_image_sheet",
+  "baseNode":"Node_Image_Sheet",
+  "io":[
+    "surface"
+  ],
+  "name":"Splice Spritesheet"
+}

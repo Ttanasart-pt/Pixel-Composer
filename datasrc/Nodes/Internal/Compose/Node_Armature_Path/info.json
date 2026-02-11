@@ -1,0 +1,14 @@
+{
+  "tooltip":"Generate path from armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "spr":"s_node_armature_path",
+  "pxc_version":1146.0,
+  "baseNode":"Node_Armature_Path",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Path"
+}

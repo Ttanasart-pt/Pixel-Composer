@@ -1,0 +1,6 @@
+{
+    "name":          "Blend Depth",
+    "spr":           "s_node_blend_depth",
+    "baseNode":      "Node_Blend_Depth",
+    "pxc_version":    119090,
+}

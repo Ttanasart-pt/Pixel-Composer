@@ -1,0 +1,10 @@
+{
+  "tooltip":"Extract HSVA channel on an image, each channel becomes its own image.",
+  "spr":"s_node_hsv_channel",
+  "pxc_version":1070.0,
+  "baseNode":"Node_HSV_Channel",
+  "io":[
+    "surface"
+  ],
+  "name":"HSV Extract"
+}

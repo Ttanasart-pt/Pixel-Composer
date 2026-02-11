@@ -1,0 +1,8 @@
+{
+    "name":          "Shine",
+    "spr":           "s_node_pb_fx_shine",
+    "baseNode":      "Node_PB_FX_Shine",
+    "pxc_version":    118090,
+    "show_in_recent": true,
+    "allow_outside":  true
+}

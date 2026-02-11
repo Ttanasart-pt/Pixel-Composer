@@ -1,0 +1,36 @@
+{
+  "tooltip":"Apply mathematical function to number(s).",
+  "alias":[
+    "add",
+    "subtract",
+    "multiply",
+    "divide",
+    "power",
+    "root",
+    "+",
+    "-",
+    "*",
+    "\/",
+    "^",
+    "sin",
+    "cos",
+    "tan",
+    "modulo",
+    "round",
+    "ceiling",
+    "floor",
+    "lerp",
+    "abs",
+    "fract",
+    "clamp",
+    "snap",
+    "map",
+  ],
+  "spr":"s_node_math",
+  "baseNode":"Node_Math",
+  "io":[
+    "float"
+  ],
+  "build":"Node_create_Math",
+  "name":"Math"
+}

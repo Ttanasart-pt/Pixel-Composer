@@ -1,0 +1,7 @@
+{
+  "name":"Tag Surface",
+  "tooltip":"",
+  "baseNode":"Node_Surface_Tag",
+  "pxc_version":118080,
+  "io":[ "surface" ],
+}

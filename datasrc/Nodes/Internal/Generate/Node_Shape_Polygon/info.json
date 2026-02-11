@@ -1,0 +1,13 @@
+{
+  "name":"Draw Shape Polygon",
+  "tooltip":"Draw polygonal shapes.",
+  "spr":"s_node_shape_polygon",
+  "pxc_version":1130.0,
+  "baseNode":"Node_Shape_Polygon",
+  "io":[
+    "surface"
+  ],
+  "alias":[
+    "mesh"
+  ],
+}

@@ -1,0 +1,7 @@
+{
+    "name":          "Align Velocity",
+    "spr":           "s_node_psystem_3d_align_to_velocity",
+    "baseNode":      "Node_pSystem_3D_Align_to_Velocity",
+    "pxc_version":    119080,
+    "show_in_recent": false,
+}

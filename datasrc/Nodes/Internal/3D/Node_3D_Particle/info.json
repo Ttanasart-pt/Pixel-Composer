@@ -1,0 +1,6 @@
+{
+    "name":          "3D Particle",
+    "spr":           "s_node_3d_particle",
+    "baseNode":      "Node_3D_Particle",
+    "pxc_version":    119071,
+}

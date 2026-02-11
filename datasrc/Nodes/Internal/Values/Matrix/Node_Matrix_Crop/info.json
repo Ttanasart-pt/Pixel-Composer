@@ -1,0 +1,7 @@
+{
+    "name":          "Matrix Crop",
+    "tooltip":       "Crop matrix into a smaller matrix.",
+    "spr":           "s_node_matrix_crop",
+    "baseNode":      "Node_Matrix_Crop",
+    "pxc_version":    120031,
+}

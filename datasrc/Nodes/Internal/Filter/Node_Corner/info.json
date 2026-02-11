@@ -1,0 +1,10 @@
+{
+  "tooltip":"Round out sharp corner of the image.",
+  "spr":"s_node_corner",
+  "pxc_version":1110.0,
+  "baseNode":"Node_Corner",
+  "io":[
+    "surface"
+  ],
+  "name":"Round Corner"
+}

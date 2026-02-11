@@ -1,0 +1,7 @@
+{
+    "name":          "Image Sequence",
+    "tooltip":       "Load multiple images from your computer as animation.",
+    "spr":           "s_node_image_animated",
+    "baseNode":      "Node_Image_Animated",
+    "io":             ["surface"],
+}

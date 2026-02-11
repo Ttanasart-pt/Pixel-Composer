@@ -1,0 +1,17 @@
+{
+  "name":"Hash Blur",
+  "author":"David Hoskins",
+  "license":"Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License",
+  
+  "iname":"extrablur_hash",
+  "tooltip":"Samples evenly in a circular area.",
+  "custom":true,
+  "alias":[],
+  "baseNode":"Node_Custom_Shader",
+  "io":[
+    "surface"
+  ],
+  "params": {
+    "data": "node.json" 
+  },
+}

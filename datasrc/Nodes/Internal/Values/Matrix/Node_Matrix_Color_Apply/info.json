@@ -1,0 +1,11 @@
+{
+  "name":"Matrix Color Apply",
+  "baseNode":"Node_Matrix_Color_Apply",
+  "tooltip":"Apply matrix linear combination to RGB color",
+  "spr":"s_node_matrix_color_apply",
+  "io":[
+    "float",
+    "surface"
+  ],
+  "pxc_version":118069,
+}

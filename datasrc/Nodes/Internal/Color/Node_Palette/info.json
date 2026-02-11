@@ -1,0 +1,9 @@
+{
+  "tooltip":"Create palette value. Note that palette is simple an array of colors.",
+  "spr":"s_node_palette",
+  "baseNode":"Node_Palette",
+  "io":[
+    "color"
+  ],
+  "name":"Palette"
+}

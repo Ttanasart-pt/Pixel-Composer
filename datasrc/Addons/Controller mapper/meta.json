@@ -1,0 +1,25 @@
+{
+    "meta": {
+        "author": "MakhamDev",
+        "version": "1.0.0",
+        "description": "Control value using controller."
+    },
+
+    "scripts": [ "./script.lua", "./draw.lua" ],
+
+    "panels": {
+        "panel_controller": {
+            "main": true,
+            "w": 800,
+            "h": 508,
+
+            "drawFn": "draw",
+            "drawUIFn": "drawUI",
+            "closeFn": "closePanel"
+        }
+    },
+    
+    "context_menu_callbacks": {
+        "inspector_value_menu": "node_value_inspector_callback"
+    }
+}

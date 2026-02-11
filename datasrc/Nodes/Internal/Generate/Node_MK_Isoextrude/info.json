@@ -1,0 +1,6 @@
+{
+    "name":          "MK Isoextrude",
+    "spr":           "s_node_mk_isoextrude",
+    "baseNode":      "Node_MK_Isoextrude",
+    "pxc_version":    120008,
+}

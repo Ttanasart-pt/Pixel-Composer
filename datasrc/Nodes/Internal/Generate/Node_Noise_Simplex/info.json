@@ -1,0 +1,13 @@
+{
+  "tooltip":"Generate simplex noise, similiar to perlin noise with better fidelity but non-tilable.",
+  "alias":[
+    "perlin"
+  ],
+  "spr":"s_node_noise_simplex",
+  "pxc_version":1080.0,
+  "baseNode":"Node_Noise_Simplex",
+  "io":[
+    "surface"
+  ],
+  "name":"Simplex Noise"
+}

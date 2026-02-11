@@ -1,0 +1,9 @@
+{
+  "spr":"s_node_argument",
+  "pxc_version":11660.0,
+  "baseNode":"Node_Argument",
+  "io":[
+    "any"
+  ],
+  "name":"Argument"
+}

@@ -1,0 +1,6 @@
+{
+    "name":          "Quaternion From Euler",
+    "spr":           "s_node_quarternion_from_euler",
+    "baseNode":      "Node_Quarternion_From_Euler",
+    "pxc_version":    120040,
+}

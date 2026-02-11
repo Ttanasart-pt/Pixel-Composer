@@ -1,0 +1,9 @@
+{
+  "tooltip":"Receive MIDI message.",
+  "spr":"s_node_midi_in",
+  "pxc_version":11630.0,
+  "baseNode":"Node_MIDI_In",
+  "io":[
+  ],
+  "name":"MIDI In"
+}

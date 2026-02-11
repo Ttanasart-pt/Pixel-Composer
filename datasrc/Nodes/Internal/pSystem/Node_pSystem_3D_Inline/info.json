@@ -1,0 +1,6 @@
+{
+    "name":          "3D Particle System",
+    "spr":           "s_node_psystem_3d_inline",
+    "baseNode":      "Node_pSystem_3D_Inline",
+    "pxc_version":    119080,
+}

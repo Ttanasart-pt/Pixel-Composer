@@ -1,0 +1,10 @@
+{
+  "name":"Matrix to Array",
+  "baseNode":"Node_Matrix_To_Array",
+  "tooltip":"Convert matrix to 1d array.",
+  "spr":"s_node_matrix_to_array",
+  "io":[
+    "float",
+  ],
+  "pxc_version":118069,
+}

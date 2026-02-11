@@ -1,0 +1,11 @@
+{
+  "tooltip":"Render line between particles.",
+  "spr":"s_node_vfx_triangulate",
+  "pxc_version":11670.0,
+  "show_in_recent":false,
+  "baseNode":"Node_VFX_Triangulate",
+  "io":[
+    "particle"
+  ],
+  "name":"VFX Triangulate"
+}

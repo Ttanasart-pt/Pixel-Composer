@@ -1,0 +1,10 @@
+{
+  "tooltip":"Apply Kuwahara filter. Creating a watercolor-like effect.",
+  "spr":"s_node_kuwahara",
+  "pxc_version":11660.0,
+  "baseNode":"Node_Kuwahara",
+  "io":[
+    "surface"
+  ],
+  "name":"Kuwahara"
+}

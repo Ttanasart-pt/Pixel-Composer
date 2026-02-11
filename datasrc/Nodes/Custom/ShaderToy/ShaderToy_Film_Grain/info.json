@@ -1,0 +1,17 @@
+{
+  "name":"Film Grain",
+  "author":"luluco250",
+  "license":"MIT",
+  
+  "iname":"shadertoy_film_grain",
+  "tooltip":"Generate file grain texture.",
+  "custom":true,
+  "alias":[],
+  "baseNode":"Node_Custom_Shader",
+  "io":[
+    "surface"
+  ],
+  "params": {
+    "data": "node.json" 
+  },
+}

@@ -1,0 +1,6 @@
+{
+    "name":          "Path Length",
+    "spr":           "s_node_path_length",
+    "baseNode":      "Node_Path_Length",
+    "pxc_version":    119071,
+}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Blur image by zooming in\/out from a mid point.",
+  "spr":"s_node_blur_zoom",
+  "baseNode":"Node_Blur_Zoom",
+  "io":[
+    "surface"
+  ],
+  "name":"Zoom Blur"
+}

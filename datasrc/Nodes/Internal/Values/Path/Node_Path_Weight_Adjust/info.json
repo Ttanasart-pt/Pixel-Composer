@@ -1,0 +1,11 @@
+{
+  "name":"Path Weight Adjust",
+  "baseNode":"Node_Path_Weight_Adjust",
+  "tooltip":"Adjust path weight.",
+  "alias":[],
+  "spr":"s_node_path_weight_adjust",
+  "pxc_version":118069,
+  "io":[
+    "pathnode"
+  ],
+}

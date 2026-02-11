@@ -1,0 +1,6 @@
+{
+    "name":          "Blend Height",
+    "spr":           "s_node_blend_height",
+    "baseNode":      "Node_Blend_Height",
+    "pxc_version":    119030,
+}

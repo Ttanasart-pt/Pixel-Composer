@@ -1,0 +1,16 @@
+{
+    "name": "Armature Build",
+    "tags": ["bone", "rigging"],
+    "tooltip": "",
+    "location": ["Compose", "Armature"],
+    "sprPath": "./Armature Build.png",
+    "nodes": [
+        { "node": "Node_Armature" }, 
+        { "node": "Node_Armature_Pose" }, 
+        { "node": "Node_Armature_Bind" }
+    ],
+    "connections": [
+        { "from": 0, "fromIndex": 0, "to": 1, "toIndex": 0 }, 
+        { "from": 1, "fromIndex": 0, "to": 2, "toIndex": 1 }
+    ]
+}

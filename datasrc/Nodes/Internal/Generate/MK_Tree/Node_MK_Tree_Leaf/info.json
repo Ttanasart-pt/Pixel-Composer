@@ -1,0 +1,7 @@
+{
+    "name":          "Tree Leaves",
+    "spr":           "s_node_mk_tree_leaf",
+    "baseNode":      "Node_MK_Tree_Leaf",
+    "pxc_version":    119051,
+    "alias":             ["leaf","leaves"],
+}

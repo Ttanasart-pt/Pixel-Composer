@@ -1,0 +1,9 @@
+{
+  "spr":"s_node_array",
+  "baseNode":"Node_PCX_Condition",
+  "io":[
+    "pbBox"
+  ],
+  "name":"Condition",
+  "show_in_recent":false
+}

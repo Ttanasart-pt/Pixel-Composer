@@ -1,0 +1,6 @@
+{
+    "name":          "Slider Range",
+    "spr":           "s_node_slider_range_data",
+    "baseNode":      "Node_Slider_Range_Data",
+    "pxc_version":    119010,
+}

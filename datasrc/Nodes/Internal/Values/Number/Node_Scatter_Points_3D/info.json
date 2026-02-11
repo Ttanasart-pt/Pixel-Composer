@@ -1,0 +1,6 @@
+{
+    "name":          "Scatter Points 3D",
+    "spr":           "s_node_scatter_points_3d",
+    "baseNode":      "Node_Scatter_Points_3D",
+    "pxc_version":    119030,
+}

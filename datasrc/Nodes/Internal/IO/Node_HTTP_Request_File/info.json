@@ -1,0 +1,8 @@
+{
+  "name":"HTTP Download",
+  "tooltip":"Download a file from the internet.",
+  "spr":"s_node_http_request_file",
+  "pxc_version":118090,
+  "baseNode":"Node_HTTP_Request_File",
+  "io":[],
+}

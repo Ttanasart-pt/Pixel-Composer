@@ -1,0 +1,6 @@
+{
+    "name":          "Cache Mesh",
+    "spr":           "s_node_verletsim_mesh_cache",
+    "baseNode":      "Node_VerletSim_Mesh_Cache",
+    "pxc_version":    119041,
+}

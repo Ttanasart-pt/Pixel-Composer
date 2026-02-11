@@ -1,0 +1,11 @@
+{
+  "tooltip":"Return number of character in a string.",
+  "spr":"s_node_string_length",
+  "pxc_version":1138.0,
+  "baseNode":"Node_String_Length",
+  "io":[
+    "text",
+    "float"
+  ],
+  "name":"Text Length"
+}

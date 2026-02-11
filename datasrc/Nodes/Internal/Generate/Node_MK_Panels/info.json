@@ -1,0 +1,6 @@
+{
+    "name":          "MK Panels",
+    "spr":           "s_node_mk_panels",
+    "baseNode":      "Node_MK_Panels",
+    "pxc_version":    119090,
+}

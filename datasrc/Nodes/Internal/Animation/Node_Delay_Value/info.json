@@ -1,0 +1,8 @@
+{
+  "name":"Delay Value",
+  "spr":"s_node_delay_value",
+  "tooltip":"Delay value by fix amount of frames.",
+  "pxc_version":118080,
+  "baseNode":"Node_Delay_Value",
+  "io":[],
+}

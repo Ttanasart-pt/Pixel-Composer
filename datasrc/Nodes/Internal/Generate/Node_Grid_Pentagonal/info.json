@@ -1,0 +1,9 @@
+{
+  "tooltip":"Generate Pentagonal grid pattern.",
+  "spr":"s_node_grid_pentagonal",
+  "baseNode":"Node_Grid_Pentagonal",
+  "io":[
+    "surface"
+  ],
+  "name":"Pentagonal Grid"
+}
