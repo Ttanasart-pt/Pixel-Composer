@@ -302,6 +302,7 @@ function recordAction(_type, _object, _data = -1) {
 		_data = _object.serialize();
 	
 	var act = new Action(_type, _object, _data);
+	if(is(self, Node)) act.setRef(self)
 	array_push(o_main.action_last_frame, act);
 	
 	while(!ds_stack_empty(REDO_STACK)) {

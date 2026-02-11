@@ -118,7 +118,8 @@ function canvas_brush() constructor {
 					
 		} else
 			draw_circle_prec(_x, _y, size / 2, 0);
-	}
+			
+	} drawPixel = method(self, drawPixel);
 	
 	static drawPoint = function(_x, _y, _draw = false) {
 		if(_draw) seed = irandom_range(100000, 999999);
@@ -135,7 +136,8 @@ function canvas_brush() constructor {
 			
 			drawPixel(_xx, _yy, _draw);
 		}
-	}
+	
+	} drawPoint = method(self, drawPoint);
 	
 	static drawPointExt = function(_x, _y, _s = 1, _draw = false) {
 		if(use_surface) {
@@ -164,7 +166,7 @@ function canvas_brush() constructor {
 		} else
 			draw_circle_prec(_x, _y, size / 2 * _s, 0);
 		
-	}
+	} drawPointExt = method(self, drawPointExt);
 	
 	static drawLine = function(_x0, _y0, _x1, _y1, _draw = false, _cap = false) { 
 		if(use_surface || draw_type == 1) {
@@ -222,7 +224,8 @@ function canvas_brush() constructor {
 				drawPoint(_x1, _y1, true);
 			}
 		}
-	}
+	
+	} drawLine = method(self, drawLine);
 			
 	static drawRect = function(_x0, _y0, _x1, _y1, _fill, _draw = false) {
 		if(_x0 == _x1 && _y0 == _y1) {
@@ -257,7 +260,8 @@ function canvas_brush() constructor {
 			drawLine(_max_x, _may_y, _max_x, _min_y, _draw);
 			drawLine(_max_x, _may_y, _min_x, _may_y, _draw);
 		}
-	}
+	
+	} drawRect = method(self, drawRect);
 		
 	static drawEllipse = function(_x0, _y0, _x1, _y1, _fill, _draw = false) {
 		if(_x0 == _x1 && _y0 == _y1) {
@@ -320,7 +324,8 @@ function canvas_brush() constructor {
 			ox = nx;
 			oy = ny;
 		}
-	}
+	
+	} drawEllipse = method(self, drawEllipse);
 	
 	static drawCurve = function(x0, y0, cx0, cy0, cx1, cy1, x1, y1, _draw = false, prec = 32) { 
 		var ox, oy, nx, ny;
@@ -346,6 +351,7 @@ function canvas_brush() constructor {
 			ox = nx;
 			oy = ny;
 		}
-	}
+	
+	} drawCurve = method(self, drawCurve);
 
 }

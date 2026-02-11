@@ -513,7 +513,6 @@
 	function call_panel_Collection_Runner() { dialogPanelCall(new Panel_Collection_Runner());   }
 	
 	function __fnInit_Panels() {
-		
         registerFunction("", "Preferences",               "", MOD_KEY.none, call_dialog_preference            ).setMenu("preference",      THEME.gear)
         registerFunction("", "Splash screen",             "", MOD_KEY.none, call_dialog_splash                ).setMenu("splash_screen")
         registerFunction("", "Release note",              "", MOD_KEY.none, call_dialog_release_note          ).setMenu("release_note")
@@ -521,7 +520,7 @@
         registerFunction("", "Open Autosave Folder",      "", MOD_KEY.none, open_autosave_folder              ).setMenu("autosave_folder", THEME.save_auto)
         
         registerFunction("", "Addons",                    "", MOD_KEY.none, call_panel_addon                  ).setMenu("addons")
-        registerFunction("", "History",                   "", MOD_KEY.none, call_panel_history                ).setMenu("history")
+        registerFunction("", "History",   "Z", MOD_KEY.ctrl | MOD_KEY.alt,  call_panel_history                ).setMenu("history")
         
         registerFunction("", "Notification Panel",    vk_f12, MOD_KEY.none, call_panel_Notification           ).setMenuAlt("Notification", "notification_panel")
         registerFunction("", "Collections Panel",         "", MOD_KEY.none, call_panel_Collection             ).setMenuAlt("Collections",  "collections_panel")

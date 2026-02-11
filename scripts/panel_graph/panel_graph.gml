@@ -1528,8 +1528,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
 	                    var _n = nodes_selecting[i];
 	                    if(_n == noone) continue;
-	                    recordAction(ACTION_TYPE.var_modify, _n, [ _n.x + shfx, "x", "node x position" ]);
-	                    recordAction(ACTION_TYPE.var_modify, _n, [ _n.y + shfy, "y", "node y position" ]);
+	                    
+	                    if(shfx != 0) recordAction(ACTION_TYPE.var_modify, _n, [ _n.x + shfx, "x", "node x position" ]);
+	                    if(shfy != 0) recordAction(ACTION_TYPE.var_modify, _n, [ _n.y + shfy, "y", "node y position" ]);
 	                }
 	            }
 	            

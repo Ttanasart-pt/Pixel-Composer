@@ -49,7 +49,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	#endregion
 	
 	static resetDisplayList = function() {
-		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
+		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ])
+			.setRef(self);
 		
 		input_display_list = [
 			["Path",	false], 0, 1, 2, 
@@ -67,7 +68,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		newInput(index, nodeValue_Vec2("Anchor", [ _x, _y ]));
 		
-		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, "add path anchor point" ]);
+		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, "add path anchor point" ])
+			.setRef(self);
 		resetDisplayList();
 		
 		return inputs[index];
@@ -130,7 +132,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					}
 					
 				} else {
-					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_anchor_hover], _anchor_hover, "remove path anchor point" ]);
+					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_anchor_hover], _anchor_hover, "remove path anchor point" ])
+						.setRef(self);
 					array_delete(inputs, _anchor_hover, 1);
 					resetDisplayList();
 				}

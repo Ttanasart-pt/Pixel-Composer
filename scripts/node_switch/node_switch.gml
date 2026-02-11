@@ -67,7 +67,8 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			recordAction(ACTION_TYPE.custom, function(data, undo) {
 				if(undo) deleteInput(data.index);
 				else     insertInput(data.index, data.inputs);
-			}, { index, inputs : _inputs });
+				
+			}, { index, inputs : _inputs }).setRef(self);
 		}
 		
 		onInputResize();
@@ -82,7 +83,8 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			recordAction(ACTION_TYPE.custom, function(data, undo) {
 				if(undo) insertInput(data.index, data.inputs);
 				else     deleteInput(data.index);
-			}, { index, inputs : _inputs });
+				
+			}, { index, inputs : _inputs }).setRef(self);
 		}
 		
 		attributes.size--;

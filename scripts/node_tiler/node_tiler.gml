@@ -161,7 +161,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			data.surface   = _canvas;
 			triggerRender();
 			
-		}, { surface: surface_clone(canvas_surface), tooltip: "Modify tilemap" });
+		}, { surface: surface_clone(canvas_surface), tooltip: "Modify tilemap" }).setRef(self);
 	}
 	
 	function reset_surface(surface) {

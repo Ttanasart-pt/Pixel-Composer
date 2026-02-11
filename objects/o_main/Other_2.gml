@@ -103,7 +103,7 @@
     
     directory_verify(PREFERENCES_DIR);
 #endregion
-	pid  = ProcIdFromSelf();
+	pid = ProcIdFromSelf();
 	
 	__t = get_timer();
 	__r = getMemoryUsage(pid); 

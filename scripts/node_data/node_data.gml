@@ -391,6 +391,45 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	#endregion
 	
+	#region ---- History ----
+		undo_stack = ds_stack_create();
+		redo_stack = ds_stack_create();
+		
+		static nodeUndo = function() {
+			if(ds_stack_empty(undo_stack)) return;
+			
+			IS_UNDOING = true;
+			var _act = ds_stack_pop(undo_stack);
+			    _act.undo();
+			IS_UNDOING = false;
+			    
+			ds_stack_push(redo_stack, _act);
+			return self;
+		}
+		
+		static nodeRedo = function() {
+			if(ds_stack_empty(redo_stack)) return;
+			
+			IS_UNDOING = true;
+			var _act = ds_stack_pop(redo_stack);
+			    _act.redo();
+			IS_UNDOING = false;
+			    
+			ds_stack_push(undo_stack, _act);
+			return self;
+		}
+		
+		static nodeRecordAction = function(_action) {
+			if(IS_UNDOING) return self;
+			
+			ds_stack_push(undo_stack, _action);
+			ds_stack_clear(redo_stack);
+			return self;
+		} 
+		
+		nodeRecordAction = method(self, nodeRecordAction);
+	#endregion
+	
 	#region ---- Serialization ----
 		load_scale  = false;
 		load_map    = -1;
@@ -970,14 +1009,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_io.map[$ _ind] = _in.value_from;
 			
 			if(!struct_has(_io.inputs, _ind))
-				_io.inputs[$ _ind ] = [];
-			array_push(_io.inputs[$ _ind ], _in);
+				_io.inputs[$ _ind] = [];
+			array_push(_io.inputs[$ _ind], _in);
 		}
 		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ou = outputs[i];
 			
-			for(var j = 0; j < array_length(_ou.value_to); j++) {
+			for(var j = 0, m = array_length(_ou.value_to); j < m; j++) {
 				var _to = _ou.value_to[j];
 				if(_to.value_from != _ou)   continue;
 				if(!_to.node.active)        continue;
@@ -988,7 +1027,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 				if(!struct_has(_io.outputs, _ind))
 					_io.outputs[$ _ind] = [];
-				array_push(_io.outputs[$ _ind ], _to);
+				array_push(_io.outputs[$ _ind], _to);
 			}
 		}
 	}
@@ -3365,14 +3404,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static dropPath = noone;  
 	 
 	static clone = function(_group = PANEL_GRAPH.getCurrentContext()) {
+		LOADING_VERSION = SAVE_VERSION;
+		
 		CLONING = true;
 		var _type = instanceof(self);
 		var _node = nodeBuild(_type, x, y, _group);
 		    _node.skipDefault();
-		    
 		CLONING = false;
-		
-		LOADING_VERSION = SAVE_VERSION;
 		
 		if(!_node) return undefined;
 		
@@ -3388,8 +3426,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		CLONING = false;
 		refreshTimeline();
 		
-		if(instanceBase != undefined) _node.setInstance(instanceBase);
-		if(onClone != undefined) onClone(_node, _group);
+		if( instanceBase != undefined ) _node.setInstance(instanceBase);
+		if( onClone      != undefined ) onClone(_node, _group);
 		
 		return _node;
 	}

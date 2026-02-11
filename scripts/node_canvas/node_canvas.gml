@@ -1139,7 +1139,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface : surface_clone(selection.selection_surface), 
 				mask    : surface_clone(selection.selection_mask), 
 				tooltip : $"Modify canvas", 
-			});
+			}).setRef(self);
 			
 		} else {
 			recordAction(ACTION_TYPE.custom, function(data) /*=>*/ { 
@@ -1155,7 +1155,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface : surface_clone(getCanvasSurface(preview_index)), 
 				tooltip : $"Modify canvas {preview_index}", 
 				index   : preview_index
-			});
+			}).setRef(self);
 		}
 		
 	}
@@ -1842,7 +1842,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _buff = array_create(attributes.frames);
 		
 		for( var i = 0; i < attributes.frames; i++ ) {
-			var comp = buffer_compress(canvas_buffer[i], 0, buffer_get_size(canvas_buffer[i]));
+			var buff = array_safe_get(canvas_buffer, i, noone);
+			if(buff == noone) continue;
+			
+			var comp = buffer_compress(buff, 0, buffer_get_size(buff));
 			_buff[i] = buffer_base64_encode(comp, 0, buffer_get_size(comp));
 		}
 			

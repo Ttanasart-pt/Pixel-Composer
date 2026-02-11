@@ -511,7 +511,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- Anchor
 	
 	static resetDisplayList = function() {
-		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
+		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ])
+			.setRef(self);
 		
 		input_display_list = array_clone(input_display_list_raw);
 		
@@ -530,7 +531,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			.setValue(newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy ));
 		
 		if(rec) {
-			recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]);
+			recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ])
+				.setRef(self);
 			resetDisplayList();
 		}
 		
@@ -1536,7 +1538,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 					if(mouse_press(mb_left, active)) {
 						var _indx = input_fix_len + anchor_hover;
-						recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ]);
+						recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ])
+							.setRef(self);
 						
 						array_delete(inputs, _indx, 1);
 						resetDisplayList();
@@ -1619,7 +1622,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							ind        = input_fix_len + _line_hover + 1;
 						}
 						
-						recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[ind], ind, $"add path anchor point {ind}" ]);
+						recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[ind], ind, $"add path anchor point {ind}" ])
+							.setRef(self);
 						resetDisplayList();
 						UNDO_HOLDING = true;
 						
@@ -1802,7 +1806,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 					if(mouse_press(mb_left, active)) {
 						var _indx = input_fix_len + anchor_hover;
-						recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ]);
+						recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ])
+							.setRef(self);
 						
 						array_delete(inputs, _indx, 1);
 						resetDisplayList();

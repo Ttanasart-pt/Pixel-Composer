@@ -1,35 +1,44 @@
 function Panel_History() : PanelContent() constructor {
-	title = __txt("History");
-	w     = ui(320);
-	h     = ui(480);
-	w_min = 320;
-	h_min = 320;
-	auto_pin = true;
-	
-	hold     = false;
-	hovering = -1;
+	#region data
+		title = __txt("History");
+		w     = ui(320);
+		h     = ui(480);
+		w_min = 320;
+		h_min = 320;
+		auto_pin = true;
+	#endregion
 		
-	redo_list  = [];
-	undo_list  = [];
-	click_hold = noone;
+	#region undo
+		hold       = false;
+		hovering   = -1;
+			
+		redo_list  = [];
+		undo_list  = [];
+		click_hold = noone;
+		
+		sep_y      = 0;
+		sep_y_to   = 0;
+		
+		font = f_p4;
+	#endregion
 	
-	sep_y    = 0;
-	sep_y_to = 0;
-	
-	font = f_p4;
+	#region filter
+		filter_node = undefined;
+		
+		filter_focus_node = false;
+	#endregion
 	
 	function refreshList() {
 		redo_list = ds_stack_to_array(REDO_STACK);
 		undo_list = array_reverse(ds_stack_to_array(UNDO_STACK));
-	}
-	refreshList();
-
-	sc_history = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
-		draw_clear_alpha(COLORS._main_text, 0);
 		
+	} refreshList();
+	
+	sc_history = new scrollPane(1, 1, function(_y, _m) {
+		draw_clear_alpha(COLORS._main_text, 0);
 		if((array_length(redo_list) != ds_stack_size(REDO_STACK)) || (array_length(undo_list) != ds_stack_size(UNDO_STACK)))
 			refreshList();
-		
+			
 		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 		
 		var _h = 0, hh;
@@ -51,6 +60,8 @@ function Panel_History() : PanelContent() constructor {
 		draw_set_color(COLORS._main_icon);
 		draw_line_round(0, sep_y, sc_history.surface_w, sep_y, 2);
 		
+		var _skip = 0;
+		
 		for( var i = 0; i < amo; i++ ) {
 			if(i == red) {
 				sep_y_to = yy;
@@ -71,6 +82,31 @@ function Panel_History() : PanelContent() constructor {
 				itamo   = 3;
 				amoDisp = 4;
 			}
+			
+			if(filter_node != undefined) {
+				var _include = false;
+				
+				for( var j = 0; j < amoDisp; j++ ) {
+					if(item[j].ref == filter_node)
+						_include = true;
+				}
+				
+				if(_include) {
+					if(_skip) {
+						draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
+						draw_text_add(ui(32), yy + ui(7), $"Skip {_skip} event{_skip > 1? "s" : ""}");
+						
+						_h += ui(16) + spc;
+						yy += ui(16) + spc;
+						_skip = 0;
+					}
+					
+				} else {
+					_skip++;
+					continue;
+				}
+			}
+			
 			hh = amoDisp * lh + pad;
 			
 			BLEND_OVERRIDE
@@ -102,19 +138,30 @@ function Panel_History() : PanelContent() constructor {
 			
 			for( var j = 0; j < amoDisp; j++ ) {
 				var _ty = yy + lh * (j + 0.5);
+				
 				if(j == 3) {
 					draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub, .5);
 					draw_text_add(ui(32 + 12), _ty, string(array_length(item) - 3) + __txtx("more_actions", " more actions..."));
 					draw_set_alpha(1);
 					
 				} else {
-					draw_set_text(font, fa_left, fa_center, i == hovering? COLORS._main_text : COLORS._main_text_sub);
+					draw_set_text(font, fa_left, fa_center, COLORS._main_text, .75 + .25 * (i == hovering));
 					draw_text_add(ui(32 + 12), _ty, item[j].toString());
+					draw_set_alpha(1);
 				}
 			}
 			
 			_h += hh + spc;
 			yy += hh + spc;
+		}
+		
+		if(_skip) {
+			draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text_add(ui(32), yy + ui(7), $"Skip {_skip} events");
+			
+			_h += ui(16);
+			yy += ui(16);
+			_skip = 0;
 		}
 		
 		if(hovering > -1) {
@@ -162,35 +209,56 @@ function Panel_History() : PanelContent() constructor {
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		filter_node = filter_focus_node? PANEL_INSPECTOR.getInspecting() : undefined;
+		if(!is(filter_node, Node)) filter_node = undefined;
 		
-		var sp = padding - ui(8);
-		var bw = w - sp * 2;
-		var bh = ui(24);
+		#region history
+			var pad = padding;
+			
+			var sp = pad - ui(8);
+			var bw = w - sp * 2;
+			var bh = ui(24);
+			
+			var px = pad, py = pad;
+			var pw = w - px - pad;
+			var ph = h - py - pad - bh - ui(4);
+			
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+			sc_history.verify(pw, ph);
+			sc_history.setToolRect(1)
+			sc_history.setFocusHover(pFOCUS, pHOVER);
+			sc_history.draw(px, py, mx - px, my - py);
+		#endregion
 		
-		var px = padding;
-		var py = padding;
-		var pw = w - px - padding;
-		var ph = h - py - padding - bh - ui(4);
+		#region tools
+			var bs = ui(24);
+			var bx = px + pw + ui(8) - bs;
+			var by = py - ui(8);
+			
+			var bc = filter_focus_node? COLORS._main_accent : COLORS._main_icon;
+			var bt = __txt("Filter Selecting Node");
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, bt, THEME.filter, 0, bc, 1, .75) == 2) {
+				filter_focus_node = !filter_focus_node;
+			}
+			
+		#endregion
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
-		
-		sc_history.verify(pw, ph);
-		sc_history.setFocusHover(pFOCUS, pHOVER);
-		sc_history.draw(px, py, mx - px, my - py);
-		
-		var _bx  = sp;
-		var _by  = h - bh - sp;
-		var _hov = pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + bw, _by + bh);
-		
-		draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, _by, bw, bh, _hov? COLORS._main_value_negative : COLORS._main_icon, .3 + _hov * .1);
-		draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, bw, bh, _hov? COLORS._main_value_negative : COLORS._main_icon, .6 + _hov * .25);
-		draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_negative : COLORS._main_icon);
-		draw_text_add(_bx + bw / 2, _by + bh / 2, __txt("Clear History"));
-		
-		if(mouse_press(mb_left, pFOCUS && _hov)) {
-			ds_stack_clear(REDO_STACK);
-			ds_stack_clear(UNDO_STACK);
-		}
-		
+		#region clear history
+			var _bx  = sp;
+			var _by  = h - bh - sp;
+			var _hov = pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + bw, _by + bh);
+			var  cc  = _hov? COLORS._main_value_negative : COLORS._main_icon;
+			
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, _by, bw, bh, cc, .3 + _hov * .1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, bw, bh, cc, .6 + _hov * .25);
+			
+			draw_set_text(f_p2, fa_center, fa_center, cc);
+			draw_text_add(_bx + bw / 2, _by + bh / 2, __txt("Clear History"));
+			
+			if(mouse_lpress(pFOCUS && _hov)) {
+				ds_stack_clear(REDO_STACK);
+				ds_stack_clear(UNDO_STACK);
+			}
+		#endregion
 	}
 }

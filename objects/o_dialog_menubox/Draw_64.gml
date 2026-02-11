@@ -10,8 +10,8 @@ DIALOG_WINCLEAR1
 	var yy = dialog_y;
 	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left))
 								|| (KEYBOARD_ENTER && hk_editing == noone)
-								|| (mouse_init_r_pressed && mouse_release(mb_right));
-	var _rclick = sFOCUS && !mouse_init_inside && !mouse_init_r_pressed && mouse_release(mb_right);
+								|| (init_rclick && mouse_release(mb_right));
+	var _rclick = sFOCUS && !mouse_init_inside && !init_rclick && mouse_release(mb_right);
 	
 	if(!mouse_init_inside && mouse_press(mb_right) && item_sel_submenu) {
 		if(instance_exists(item_sel_submenu))
@@ -330,7 +330,7 @@ DIALOG_WINCLEAR1
 		mouse_init_inside = false;
 		
 	if(mouse_release(mb_right)) 
-		mouse_init_r_pressed = false;
+		init_rclick = false;
 #endregion
 
 #region debug

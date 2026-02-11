@@ -5,7 +5,6 @@ event_inherited();
 	destroy_on_click_out = false;
 	draggable   		 = false;
 	mouse_init_inside	 = false;
-	mouse_init_r_pressed = mouse_click(mb_right);
 	selecting   		 = -1;
 	parentPanel          = noone; 
 	context              = noone;
@@ -43,7 +42,7 @@ event_inherited();
 	}
 	
 	function setMenu(_menu, _align = fa_left) {
-		mouse_init_r_pressed = mouse_click(mb_right); 
+		if(!sHOVER) init_rclick = mouse_rclick();
 		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
 		
 		title    = menu_id;

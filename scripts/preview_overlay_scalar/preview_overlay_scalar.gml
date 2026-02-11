@@ -1,12 +1,12 @@
 function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _type = 0) {
-	var _val  = getValue();
-	var hover = -1;
-	if(!is_real(_val)) return hover;
+	var _val   = getValue();
+	var _hover = -1;
+	if(!is_real(_val)) return _hover;
 	
 	////- Hotkey
 	
 	if(preview_hotkey_active) {
-		hover = 1;
+		_hover = 1;
 		var _mmx = preview_hotkey_mx;
 		var _mmy = preview_hotkey_my;
 		
@@ -69,8 +69,8 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	}
 	
 	if(interact && point_in_circle(_mx, _my, _ax, _ay, _r)) {
-		hover = 1;
-		index = 1;
+		_hover = 1;
+		 index = 1;
 		
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
@@ -100,5 +100,5 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	}
 	
-	return hover;
+	return _hover;
 }

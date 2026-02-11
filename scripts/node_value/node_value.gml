@@ -2340,7 +2340,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.area :
 						var _flag = argument_count > argc + 0? argument[argc + 0] : 0b0011;
 						return preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"));
-								
+						
 					case VALUE_DISPLAY.puppet_control :
 						return preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				}
