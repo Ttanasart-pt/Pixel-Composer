@@ -191,7 +191,7 @@
 	globalvar CURVES_FAV, CURVES_FAV_DIR;
 	
 	function __initCurve() {
-		var path = $"{working_directory}data/Curves.zip";
+		var path = $"{working_directory}packs/Curves.zip";
 		var root = DIRECTORY + "Curves/"
 		directory_verify(root);
 		

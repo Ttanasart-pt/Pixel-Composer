@@ -22,13 +22,13 @@ function __locale_file(file) {
 }
 
 function __initLocale() {
-	var root  = $"{DIRECTORY}Locale";
+	var root  = $"{DIRECTORY}Locale/en";
 	
 	directory_verify(root);
 	if(check_version($"{root}/version")) {
-		var lfile = $"{working_directory}data/locale/en.zip";
+		var lfile = $"{working_directory}packs/locale/en.zip";
 		zip_unzip(lfile, root);
-		file_copy($"{working_directory}data/locale/LOCALIZATION GUIDES.txt", $"{DIRECTORY}Locale/LOCALIZATION GUIDES.txt");
+		file_copy($"{working_directory}data/locale/localization_guides.txt", $"{DIRECTORY}Locale/LOCALIZATION GUIDES.txt");
 	}
 	
 	if(!LOCALE_DEF || TEST_LOCALE) loadLocale();

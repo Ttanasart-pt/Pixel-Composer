@@ -25,7 +25,7 @@ function LOAD_FOLDER(list, path) {
 function LOAD_SAMPLE() {
 	SAMPLE_PROJECTS = [];
 	
-	var zzip = $"{working_directory}data/Welcome files/Welcome files.zip";
+	var zzip = $"{working_directory}packs/Welcome files.zip";
 	var targ = $"{DIRECTORY}Welcome files";
 	directory_verify(targ);
 	

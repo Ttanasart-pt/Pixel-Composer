@@ -156,5 +156,5 @@ function __initAction() {
 	
 	directory_verify($"{DIRECTORY}Nodes");
 	if(check_version($"{DIRECTORY}Nodes/version"))
-		zip_unzip($"{working_directory}data/nodes/actions.zip", $"{DIRECTORY}Nodes");
+		zip_unzip($"{working_directory}packs/nodes/actions.zip", $"{DIRECTORY}Nodes/Actions");
 }

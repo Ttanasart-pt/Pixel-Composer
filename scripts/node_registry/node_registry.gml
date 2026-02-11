@@ -594,9 +594,9 @@ function __initNodes(unzip = true) {
 	if(unzip) {
 		directory_verify($"{DIRECTORY}Nodes");
 		
-		var zpath = $"{working_directory}data/nodes/internal.zip";
+		var zpath = $"{working_directory}packs/nodes/internal.zip";
 		if(check_version($"{DIRECTORY}Nodes/version", "internal")) 
-			zip_unzip(zpath, $"{DIRECTORY}Nodes");
+			zip_unzip(zpath, $"{DIRECTORY}Nodes/Internal");
 	}
 	
 	__read_node_directory($"{DIRECTORY}Nodes");

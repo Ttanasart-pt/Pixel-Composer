@@ -32,7 +32,7 @@ function __initTheme() {
 	
 	directory_verify(root);
 	if(check_version($"{root}/version")) {
-		zip_unzip($"{working_directory}data/theme.zip", root);	
+		zip_unzip($"{working_directory}packs/theme.zip", root);	
 		printDebug($"  - Unzip theme  | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
 	}
 	

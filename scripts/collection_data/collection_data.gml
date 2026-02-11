@@ -9,7 +9,7 @@ function __initCollection() {
 		// clearDefaultCollection();
 		COLLECTIONS.free();
 		
-		zip_unzip($"{working_directory}data/collections.zip", root);
+		zip_unzip($"{working_directory}packs/collections.zip", root);
 	}
 	
 	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
