@@ -1,8 +1,0 @@
-{
-    "name":          "Matrix Math",
-    "tooltip":       "Apply math operation to a matrix.",
-    "spr":           "s_node_matrix_math",
-    "baseNode":      "Node_Matrix_Math",
-    "pxc_version":    118069,
-    "io":             ["float"],
-}

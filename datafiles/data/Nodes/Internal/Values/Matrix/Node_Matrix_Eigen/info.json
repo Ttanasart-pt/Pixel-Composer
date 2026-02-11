@@ -1,7 +1,0 @@
-{
-    "name":          "Matrix Eigen",
-    "tooltip":       "Calculate eigenvalues and eigenvectors of a matrix.",
-    "spr":           "s_node_matrix_eigen",
-    "baseNode":      "Node_Matrix_Eigen",
-    "pxc_version":    120031,
-}

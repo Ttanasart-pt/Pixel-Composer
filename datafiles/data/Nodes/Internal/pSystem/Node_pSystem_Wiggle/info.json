@@ -1,7 +1,0 @@
-{
-    "name":          "Wiggle",
-    "spr":           "s_node_psystem_wiggle",
-    "baseNode":      "Node_pSystem_Wiggle",
-    "pxc_version":    119080,
-    "show_in_recent": false,
-}

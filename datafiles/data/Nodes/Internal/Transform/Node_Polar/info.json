@@ -1,9 +1,0 @@
-{
-  "tooltip":"Convert image to polar coordinate.",
-  "spr":"s_node_polar",
-  "baseNode":"Node_Polar",
-  "io":[
-    "surface"
-  ],
-  "name":"Polar"
-}

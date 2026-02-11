@@ -1,9 +1,0 @@
-{
-  "tooltip":"Split vector (up to 4) into individual components.",
-  "spr":"s_node_vector_split",
-  "baseNode":"Node_Vector_Split",
-  "io":[
-    "float"
-  ],
-  "name":"Vector Split"
-}

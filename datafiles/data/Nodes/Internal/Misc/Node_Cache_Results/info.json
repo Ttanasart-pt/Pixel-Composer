@@ -1,6 +1,0 @@
-{
-    "name":          "Cache Results",
-    "spr":           "s_node_cache",
-    "baseNode":      "Node_Cache_Results",
-    "pxc_version":    120020,
-}

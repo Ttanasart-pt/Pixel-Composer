@@ -1,6 +1,0 @@
-{
-    "name":          "MK IsoCube",
-    "spr":           "s_node_mk_isocube",
-    "baseNode":      "Node_MK_IsoCube",
-    "pxc_version":    120008,
-}

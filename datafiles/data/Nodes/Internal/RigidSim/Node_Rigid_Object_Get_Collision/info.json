@@ -1,7 +1,0 @@
-{
-    "name":          "Get Collisions",
-    "spr":           "s_node_rigid_object_get_collision",
-    "baseNode":      "Node_Rigid_Object_Get_Collision",
-    "pxc_version":    119010,
-    "show_in_recent": false,
-}

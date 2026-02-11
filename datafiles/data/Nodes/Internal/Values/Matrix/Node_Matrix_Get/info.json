@@ -1,7 +1,0 @@
-{
-    "name":          "Matrix Get",
-    "tooltip":       "Get value(s) from a matrix at a given position. ",
-    "spr":           "s_node_matrix_get",
-    "baseNode":      "Node_Matrix_Get",
-    "pxc_version":    120031,
-}

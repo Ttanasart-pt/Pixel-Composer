@@ -1,6 +1,0 @@
-{
-    "name":          "Draw Ribbon",
-    "spr":           "s_node_ribbon",
-    "baseNode":      "Node_Ribbon",
-    "pxc_version":    119010,
-}

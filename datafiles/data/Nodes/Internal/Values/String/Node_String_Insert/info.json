@@ -1,8 +1,0 @@
-{
-  "name":"Insert Text",
-  "tooltip":"Insert subtext into another text.",
-  "spr":"s_node_string_insert",
-  "pxc_version":118090,
-  "baseNode":"Node_String_Insert",
-  "io":[ "text" ],
-}

@@ -1,6 +1,0 @@
-{
-    "name":          "Vector Direction",
-    "spr":           "s_node_vector_direction",
-    "baseNode":      "Node_Vector_Direction",
-    "pxc_version":    119010,
-}

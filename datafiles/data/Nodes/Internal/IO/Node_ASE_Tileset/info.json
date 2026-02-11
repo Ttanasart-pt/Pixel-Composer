@@ -1,6 +1,0 @@
-{
-    "name":          "ASE Tileset",
-    "spr":           "s_node_ase_tileset",
-    "baseNode":      "Node_ASE_Tileset",
-    "pxc_version":    120031,
-}

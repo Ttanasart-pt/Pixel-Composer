@@ -1,7 +1,0 @@
-{
-    "name":          "2D Transform Matrix",
-    "tooltip":       "Create a 2d transformation matrix.",
-    "spr":           "s_node_matrix_transform_2d",
-    "baseNode":      "Node_Matrix_Transform_2D",
-    "pxc_version":    120031,
-}

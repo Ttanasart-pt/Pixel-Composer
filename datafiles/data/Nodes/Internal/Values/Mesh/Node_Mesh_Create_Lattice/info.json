@@ -1,6 +1,0 @@
-{
-    "name":          "Lattice Mesh",
-    "spr":           "s_node_mesh_create_lattice",
-    "baseNode":      "Node_Mesh_Create_Lattice",
-    "pxc_version":    119041,
-}

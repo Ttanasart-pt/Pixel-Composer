@@ -1,9 +1,0 @@
-{
-  "tooltip":"Crop out empty pixel from the image.",
-  "spr":"s_node_crop_content",
-  "baseNode":"Node_Crop_Content",
-  "io":[
-    "surface"
-  ],
-  "name":"Crop Content"
-}

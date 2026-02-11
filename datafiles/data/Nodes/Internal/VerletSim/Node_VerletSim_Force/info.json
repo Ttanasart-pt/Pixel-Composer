@@ -1,6 +1,0 @@
-{
-    "name":          "Push Mesh",
-    "spr":           "s_node_verletsim_force",
-    "baseNode":      "Node_VerletSim_Force",
-    "pxc_version":    119041,
-}

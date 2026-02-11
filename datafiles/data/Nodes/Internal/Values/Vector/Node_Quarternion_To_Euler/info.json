@@ -1,6 +1,0 @@
-{
-    "name":          "Quaternion To Euler",
-    "spr":           "s_node_quarternion_to_euler",
-    "baseNode":      "Node_Quarternion_To_Euler",
-    "pxc_version":    120040,
-}

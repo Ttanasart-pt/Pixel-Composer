@@ -1,9 +1,0 @@
-{
-  "spr":"s_node_loop_input",
-  "baseNode":"Node_Iterator_Input",
-  "io":[
-    "any"
-  ],
-  "name":"Loop Input",
-  "show_in_recent":false
-}

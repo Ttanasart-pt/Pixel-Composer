@@ -1,8 +1,0 @@
-{
-    "name":          "Render Tilemap",
-    "tooltip":       "Render raw tilemap data to an image.",
-    "spr":           "s_node_tile_render",
-    "baseNode":      "Node_Tile_Render",
-    "pxc_version":    118030,
-    "io":             ["surface"],
-}

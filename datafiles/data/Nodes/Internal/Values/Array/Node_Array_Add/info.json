@@ -1,9 +1,0 @@
-{
-  "tooltip":"Add elements into an array.",
-  "spr":"s_node_array_add",
-  "baseNode":"Node_Array_Add",
-  "io":[
-    "any"
-  ],
-  "name":"Array Add"
-}

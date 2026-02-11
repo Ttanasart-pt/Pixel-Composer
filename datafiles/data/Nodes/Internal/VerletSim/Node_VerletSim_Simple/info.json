@@ -1,6 +1,0 @@
-{
-    "name":          "Verlet",
-    "spr":           "s_node_verletsim_simple",
-    "baseNode":      "Node_VerletSim_Simple",
-    "pxc_version":    119041,
-}

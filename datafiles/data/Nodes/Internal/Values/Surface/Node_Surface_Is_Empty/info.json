@@ -1,6 +1,0 @@
-{
-    "name":          "Surface is Empty",
-    "spr":           "s_node_surface_is_empty",
-    "baseNode":      "Node_Surface_Is_Empty",
-    "pxc_version":    119010,
-}

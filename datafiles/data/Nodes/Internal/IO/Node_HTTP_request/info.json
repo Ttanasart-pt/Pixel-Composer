@@ -1,9 +1,0 @@
-{
-  "tooltip":"Request data from the internet.",
-  "spr":"s_node_http_request",
-  "pxc_version":11780.0,
-  "baseNode":"Node_HTTP_request",
-  "io":[
-  ],
-  "name":"HTTP"
-}

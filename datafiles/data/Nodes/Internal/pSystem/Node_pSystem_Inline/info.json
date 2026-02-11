@@ -1,6 +1,0 @@
-{
-    "name":          "Particle System",
-    "spr":           "s_node_psystem_inline",
-    "baseNode":      "Node_pSystem_Inline",
-    "pxc_version":    119080,
-}

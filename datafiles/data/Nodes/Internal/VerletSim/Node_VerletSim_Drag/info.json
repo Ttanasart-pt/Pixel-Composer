@@ -1,6 +1,0 @@
-{
-    "name":          "Drag Mesh",
-    "spr":           "s_node_verletsim_drag",
-    "baseNode":      "Node_VerletSim_Drag",
-    "pxc_version":    119043,
-}

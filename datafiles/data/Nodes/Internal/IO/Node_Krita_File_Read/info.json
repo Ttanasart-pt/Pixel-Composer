@@ -1,6 +1,0 @@
-{
-    "name":          "Krita File In",
-    "spr":           "s_node_krita_file_read",
-    "baseNode":      "Node_Krita_File_Read",
-    "pxc_version":    119080,
-}

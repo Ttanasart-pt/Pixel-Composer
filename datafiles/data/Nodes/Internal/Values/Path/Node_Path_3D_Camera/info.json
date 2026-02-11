@@ -1,8 +1,0 @@
-{
-  "name":"3D Path Camera",
-  "tooltip":"Render a 3D path into 2d space",
-  "baseNode":"Node_Path_3D_Camera",
-  "spr":"s_node_path_3d_camera",
-  "pxc_version":118080,
-  "io":[ "pathnode" ],
-}

@@ -1,9 +1,0 @@
-{
-  "tooltip":"Isolate part of the image that falls in the selected brightness range.",
-  "spr":"s_node_level_selector",
-  "baseNode":"Node_Level_Selector",
-  "io":[
-    "surface"
-  ],
-  "name":"Level Selector"
-}

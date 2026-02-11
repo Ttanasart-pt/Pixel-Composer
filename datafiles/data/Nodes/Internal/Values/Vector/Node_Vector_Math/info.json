@@ -1,6 +1,0 @@
-{
-    "name":          "Vector Math",
-    "spr":           "s_node_math",
-    "baseNode":      "Node_Vector_Math",
-    "pxc_version":    120040,
-}

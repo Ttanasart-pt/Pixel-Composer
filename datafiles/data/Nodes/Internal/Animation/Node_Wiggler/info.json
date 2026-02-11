@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create random value smoothly changing over time.",
-  "spr":"s_node_wiggler",
-  "baseNode":"Node_Wiggler",
-  "io":[
-    "float"
-  ],
-  "name":"Wiggler"
-}

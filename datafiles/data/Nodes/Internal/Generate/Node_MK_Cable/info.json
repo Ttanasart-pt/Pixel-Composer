@@ -1,6 +1,0 @@
-{
-    "name":          "MK Cables",
-    "spr":           "s_node_mk_cable",
-    "baseNode":      "Node_MK_Cable",
-    "pxc_version":    119010,
-}

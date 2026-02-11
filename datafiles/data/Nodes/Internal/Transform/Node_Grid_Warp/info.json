@@ -1,6 +1,0 @@
-{
-    "name":          "Grid Warp",
-    "spr":           "s_node_grid_warp",
-    "baseNode":      "Node_Grid_Warp",
-    "pxc_version":    119051,
-}

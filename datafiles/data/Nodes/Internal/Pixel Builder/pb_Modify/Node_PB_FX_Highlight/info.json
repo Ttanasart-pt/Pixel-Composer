@@ -1,7 +1,0 @@
-{
-    "name":          "Highlight",
-    "spr":           "s_node_pb_fx_highlight",
-    "baseNode":      "Node_PB_FX_Highlight",
-    "pxc_version":    118090,
-    "show_in_recent": true,
-}

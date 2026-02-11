@@ -1,7 +1,0 @@
-{
-    "name":          "Clone",
-    "spr":           "s_node_psystem_clone",
-    "baseNode":      "Node_pSystem_Clone",
-    "pxc_version":    119080,
-    "show_in_recent": false,
-}

@@ -1,7 +1,0 @@
-{
-  "name":"Composite Tag",
-  "tooltip":"",
-  "baseNode":"Node_Composite_Tag",
-  "pxc_version":118080,
-  "io":[ "surface" ],
-}

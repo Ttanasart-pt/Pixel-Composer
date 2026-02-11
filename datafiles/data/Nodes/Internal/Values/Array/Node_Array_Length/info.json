@@ -1,9 +1,0 @@
-{
-  "tooltip":"Returns number of members in an array.",
-  "spr":"s_node_array_length",
-  "baseNode":"Node_Array_Length",
-  "io":[
-    "any"
-  ],
-  "name":"Array Length"
-}

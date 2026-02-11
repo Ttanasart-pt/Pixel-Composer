@@ -1,6 +1,0 @@
-{
-    "name":          "2D Extrude",
-    "spr":           "s_node_2d_extrude",
-    "baseNode":      "Node_2D_Extrude",
-    "pxc_version":    119010,
-}

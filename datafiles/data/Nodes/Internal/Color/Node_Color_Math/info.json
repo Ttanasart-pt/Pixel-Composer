@@ -1,6 +1,0 @@
-{
-    "name":          "Blend Color",
-    "spr":           "s_node_color_math",
-    "baseNode":      "Node_Color_Math",
-    "pxc_version":    120040,
-}

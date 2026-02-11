@@ -1,6 +1,0 @@
-{
-    "name":          "MK Smoke",
-    "spr":           "s_node_mk_sparkle",
-    "baseNode":      "Node_MK_Smoke",
-    "pxc_version":    120050,
-}

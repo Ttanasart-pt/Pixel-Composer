@@ -1,6 +1,0 @@
-{
-    "name":          "Point to SDF",
-    "spr":           "s_node_point_sdf",
-    "baseNode":      "Node_Point_SDF",
-    "pxc_version":    119051,
-}

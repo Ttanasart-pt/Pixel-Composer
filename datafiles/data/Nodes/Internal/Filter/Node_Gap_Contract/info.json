@@ -1,6 +1,0 @@
-{
-    "name":          "Gap Contract",
-    "spr":           "s_node_gap_contract",
-    "baseNode":      "Node_Gap_Contract",
-    "pxc_version":    118090,
-}

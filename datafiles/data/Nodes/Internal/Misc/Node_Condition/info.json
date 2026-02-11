@@ -1,9 +1,0 @@
-{
-  "tooltip":"Output value based on conditions.",
-  "spr":"s_node_condition",
-  "baseNode":"Node_Condition",
-  "io":[
-    "any"
-  ],
-  "name":"Condition"
-}

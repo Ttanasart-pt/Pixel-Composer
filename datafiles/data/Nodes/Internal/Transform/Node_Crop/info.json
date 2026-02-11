@@ -1,9 +1,0 @@
-{
-  "tooltip":"Crop out image to create smaller ones.",
-  "spr":"s_node_crop",
-  "baseNode":"Node_Crop",
-  "io":[
-    "surface"
-  ],
-  "name":"Crop"
-}

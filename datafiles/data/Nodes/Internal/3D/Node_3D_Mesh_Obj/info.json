@@ -1,8 +1,0 @@
-{
-    "name":          "3D Object",
-    "tooltip":       "Load .obj file from your computer as a 3D object.",
-    "spr":           "s_node_3d_mesh_obj",
-    "baseNode":      "Node_3D_Mesh_Obj",
-    "pxc_version":    11510,
-    "io":             ["d3Mesh"],
-}

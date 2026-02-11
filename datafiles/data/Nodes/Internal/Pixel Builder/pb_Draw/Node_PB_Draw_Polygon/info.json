@@ -1,7 +1,0 @@
-{
-    "name":          "Polygon",
-    "spr":           "s_node_pb_draw_polygon",
-    "baseNode":      "Node_PB_Draw_Polygon",
-    "pxc_version":    118090,
-    "show_in_recent": false,
-}

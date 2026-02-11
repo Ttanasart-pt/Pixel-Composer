@@ -1,6 +1,0 @@
-{
-    "name":          "Armature Bone",
-    "spr":           "s_node_armature_bone",
-    "baseNode":      "Node_Armature_Bone",
-    "pxc_version":    119051,
-}

@@ -1,6 +1,0 @@
-{
-    "name":          "Draw Cos Gradient",
-    "spr":           "s_node_gradient_cos",
-    "baseNode":      "Node_Gradient_Cos",
-    "pxc_version":    119051,
-}

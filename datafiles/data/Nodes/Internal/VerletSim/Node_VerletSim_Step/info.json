@@ -1,6 +1,0 @@
-{
-    "name":          "Step",
-    "spr":           "s_node_verletsim_step",
-    "baseNode":      "Node_VerletSim_Step",
-    "pxc_version":    119041,
-}

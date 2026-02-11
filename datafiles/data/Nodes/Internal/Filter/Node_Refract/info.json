@@ -1,6 +1,0 @@
-{
-    "name":          "Refract",
-    "spr":           "s_node_refract",
-    "baseNode":      "Node_Refract",
-    "pxc_version":    119051,
-}

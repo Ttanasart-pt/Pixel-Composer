@@ -1,6 +1,0 @@
-{
-    "name":          "MK Pile",
-    "spr":           "s_node_mk_pile",
-    "baseNode":      "Node_MK_Pile",
-    "pxc_version":    119071,
-}

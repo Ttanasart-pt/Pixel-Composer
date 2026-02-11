@@ -1,6 +1,0 @@
-{
-    "name":          "Image Buffer",
-    "spr":           "s_node_image_buffer",
-    "baseNode":      "Node_Image_Buffer",
-    "pxc_version":    118110,
-}

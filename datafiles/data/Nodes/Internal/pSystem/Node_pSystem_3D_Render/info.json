@@ -1,7 +1,0 @@
-{
-    "name":          "Render",
-    "spr":           "s_node_psystem_render",
-    "baseNode":      "Node_pSystem_3D_Render",
-    "pxc_version":    119080,
-    "show_in_recent": false,
-}
