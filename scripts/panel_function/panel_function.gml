@@ -165,10 +165,11 @@
 	}
 	
 	function __initPanel() {
-		directory_verify($"{DIRECTORY}layouts");
+		var root = $"{DIRECTORY}layouts";
+		directory_verify(root);
 		
-		if(check_version($"{DIRECTORY}layouts/version"))
-			zip_unzip($"{working_directory}data/layouts.zip", DIRECTORY);
+		if(check_version($"{root}/version"))
+			zip_unzip($"{working_directory}pack/layouts.zip", root);
 		
 		setPanel();
 		panelDisplayInit();

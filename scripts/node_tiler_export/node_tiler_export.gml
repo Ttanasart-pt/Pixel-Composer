@@ -114,7 +114,7 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
             	    _tile_arr[ind++] = _data[i][j];
         	    }
         		
-        		var _templateDir = filepath_resolve("%APP%/data/TemplateStrings/");
+        		var _templateDir = filepath_resolve("%APP%/TemplateStrings/");
     			
         		if(gmType == 0) {
 	    			var _template_str = file_read_all(_templateDir + "tileset_gamemaker2_room.yy");

@@ -25,11 +25,8 @@ function __initLocale() {
 	var root  = $"{DIRECTORY}Locale";
 	
 	directory_verify(root);
-	if(check_version($"{root}/version")) {
-		var lfile = $"{working_directory}data/locale/en.zip";
-		zip_unzip(lfile, root);
-		file_copy($"{working_directory}data/locale/LOCALIZATION GUIDES.txt", $"{DIRECTORY}Locale/LOCALIZATION GUIDES.txt");
-	}
+	if(check_version($"{root}/version"))
+		zip_unzip($"{working_directory}pack/locale.zip", root);
 	
 	if(!LOCALE_DEF || TEST_LOCALE) loadLocale();
 	loadLocaleNotes();

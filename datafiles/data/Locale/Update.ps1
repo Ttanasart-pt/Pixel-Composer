@@ -1,1 +1,0 @@
-Compress-Archive -Path 'D:\Project\MakhamDev\LTS-PixelComposer\PixelComposer\datafiles\data\Locale\en' -DestinationPath 'D:\Project\MakhamDev\LTS-PixelComposer\PixelComposer\datafiles\data\Locale\en.zip' -Update

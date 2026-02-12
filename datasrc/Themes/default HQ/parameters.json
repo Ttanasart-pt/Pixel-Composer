@@ -1,0 +1,15 @@
+{
+    "icon_scale": 2,
+    "highlight_corner_radius": 8,
+    "selection_corner_radius": 6,
+    
+    "panel_padding": 2,
+    "panel_margin": 2,
+    "panel_corner_radius": 8,
+    "panel_notification_padding": 0,
+    "panel_tab_extend": 4,
+
+    "minimap_corner_radius": 2,
+    "slider_type": "stem",
+    "font_aa": true
+}

@@ -25,13 +25,12 @@ function LOAD_FOLDER(list, path) {
 function LOAD_SAMPLE() {
 	SAMPLE_PROJECTS = [];
 	
-	var zzip = $"{working_directory}data/Welcome files/Welcome files.zip";
 	var targ = $"{DIRECTORY}Welcome files";
 	directory_verify(targ);
 	
 	if(check_version($"{targ}/version")) {
 		directory_destroy($"{targ}/Sample Projects")
-		zip_unzip(zzip, targ);
+		zip_unzip($"{working_directory}pack/welcome_files.zip", targ);
 	}
 	
 	var path = $"{DIRECTORY}Welcome files";

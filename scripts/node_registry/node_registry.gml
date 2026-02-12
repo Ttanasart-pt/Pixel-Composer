@@ -432,7 +432,7 @@ function __read_node_folder(dir) {
 	var _data   = json_load_struct(_info);
 	var _name   = _data[$ "name"];
 	var _base   = _data[$ "baseNode"];
-	var _inme   = _data[$ "iname"] ?? _base;
+	var _inme   = _data[$ "iname"]  ?? _base;
 	var _custom = _data[$ "custom"] ?? false;
 	
 	if(is_undefined(_base)) {
@@ -592,15 +592,16 @@ function __initNodes(unzip = true) {
 	
 	////- DATA
 	
+	var root  = $"{DIRECTORY}Nodes";
+	var iroot = $"{root}/Internal";
 	if(unzip) {
-		directory_verify($"{DIRECTORY}Nodes");
+		directory_verify(iroot);
 		
-		var zpath = $"{working_directory}data/nodes/internal.zip";
-		if(check_version($"{DIRECTORY}Nodes/version", "internal")) 
-			zip_unzip(zpath, $"{DIRECTORY}Nodes");
+		if(check_version($"{root}/version", "internal")) 
+			zip_unzip($"{working_directory}pack/nodes.zip", root);
 	}
 	
-	__read_node_directory($"{DIRECTORY}Nodes");
+	__read_node_directory(root);
 	
 	if(IS_CMD) return;
 	
@@ -609,7 +610,7 @@ function __initNodes(unzip = true) {
 	var _relOld = $"{DIRECTORY}Nodes/display_data.json";
 	file_delete_safe(_relOld);
 	
-	__read_node_display_folder($"{DIRECTORY}Nodes");
+	__read_node_display_folder(root);
 	
 	__initNodeActions();           array_push(NODE_CATEGORY, { name : "Action", list : NODE_ACTION_LIST });
 	if(IS_PATREON)                 array_push(NODE_CATEGORY, { name : "Extra",  list : SUPPORTER_NODES  });

@@ -2,14 +2,14 @@ function __initCollection() {
 	globalvar COLLECTIONS;
 	COLLECTIONS = -1;
 	
-	var root = DIRECTORY + "Collections"; directory_verify(root);
+	var root = DIRECTORY + "Collections"; 
+	directory_verify(root);
 	
 	if(check_version($"{root}/version")) {
 		COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
-		// clearDefaultCollection();
 		COLLECTIONS.free();
 		
-		zip_unzip($"{working_directory}data/collections.zip", root);
+		zip_unzip($"{working_directory}pack/collections.zip", root);
 	}
 	
 	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");

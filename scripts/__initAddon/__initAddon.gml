@@ -1,12 +1,12 @@
 function __addonDefault(root) {
 	if(check_version($"{root}/version")) {
 		printDebug("  - unzipping default addon to DIRECTORY.");
-		zip_unzip($"{working_directory}data/addons.zip", root);
+		zip_unzip($"{working_directory}pack/addons.zip", root);
 	}
 }
 
 function __initAddon() { 
-	var dirPath = DIRECTORY + "Addons";
+	var dirPath = $"{DIRECTORY}Addons";
 	globalvar ADDONS, ADDONS_ON_START;
 	ADDONS = [];
 	ADDONS_ON_START = [];

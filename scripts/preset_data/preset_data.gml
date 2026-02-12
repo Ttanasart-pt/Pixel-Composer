@@ -4,7 +4,7 @@
 	function __initPresets() {
 		PRESETS_MAP = {};
 		
-		var path = $"{working_directory}data/Preset.zip";
+		var path = $"{working_directory}pack/preset.zip";
 		var root = DIRECTORY + "Presets";
 		
 		directory_verify(root);
@@ -191,11 +191,11 @@
 	globalvar CURVES_FAV, CURVES_FAV_DIR;
 	
 	function __initCurve() {
-		var path = $"{working_directory}data/Curves.zip";
-		var root = DIRECTORY + "Curves/"
+		var path = $"{working_directory}pack/curves.zip";
+		var root = $"{DIRECTORY}Curves"
 		directory_verify(root);
 		
-		if(check_version($"{root}/version") && file_exists_empty(path))
+		if(check_version($"{root}version") && file_exists_empty(path))
 			zip_unzip(path, root);
 			
 		CURVES_FOLDER = new DirectoryObject(root).scan([".json"]);

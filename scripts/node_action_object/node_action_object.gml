@@ -150,11 +150,3 @@ function __initNodeActions(_update = false) {
 	}
 	
 }
-
-function __initAction() {
-	global.ACTIONS = [];
-	
-	directory_verify($"{DIRECTORY}Nodes");
-	if(check_version($"{DIRECTORY}Nodes/version"))
-		zip_unzip($"{working_directory}data/nodes/actions.zip", $"{DIRECTORY}Nodes");
-}

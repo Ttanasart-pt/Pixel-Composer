@@ -35,7 +35,7 @@ function __loadNodeReleated(path) {
 function __initNodeReleated() {
 	global.NODE_RELATION = {};
 	
-	var _dir = DIRECTORY + "Nodes/Related";
+	var _dir = $"{DIRECTORY}Nodes/Related";
 	directory_verify(_dir);
 	
 	var f = file_find_first(_dir + "/*.json", fa_none);
@@ -49,20 +49,14 @@ function __initNodeReleated() {
 }
 
 function __initNodeData() {
-	__initAction();
+	global.ACTIONS = [];
 	
-	var nodeDir = DIRECTORY + "Nodes/";
-	directory_verify(nodeDir);
+	var root  = $"{DIRECTORY}Nodes";
+	var aroot = $"{root}/Actions";
 	
-	var dir = $"{nodeDir}Related/";
-	directory_verify(dir);
-	
-	if(check_version($"{dir}version")) {
-		var _relFrom = $"{working_directory}data/nodes/related_node.json";
-		var _relTo   = $"{dir}default.json";
-		
-		file_copy_override(_relFrom, _relTo);
-	}
+	directory_verify(aroot);
+	if(check_version($"{root}/version", "action"))
+		zip_unzip($"{working_directory}pack/actions.zip", aroot);
 	
 	__initNodeReleated();
 }
