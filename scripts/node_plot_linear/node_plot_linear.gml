@@ -5,7 +5,7 @@
 		var node  = new Node_Plot_Linear(_x, _y, _group);
 		node.skipDefault();
 	
-		var query = struct_try_get(_param, "query", "");
+		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		
 		switch(query) {
 			case "waveform" : 

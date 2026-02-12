@@ -737,6 +737,7 @@
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Compose/Node_Stack","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"tooltip_spr.png","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Compose/Node_Stack","name":"tooltip_spr.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Compose/Node_Surface_Tag","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Compose/Node_Weld","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"display_data.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal","name":"display_data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Feedback/Node_Feedback_Input","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Feedback/Node_Feedback_Output","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

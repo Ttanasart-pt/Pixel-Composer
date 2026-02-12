@@ -75,7 +75,7 @@ function searchCollectionData(pr_list, _search_str) {
 				search : true, 
 				name   : _nd.name, 
 				node   : _nd, 
-				param  : "", 
+				param  : undefined, 
 				match  : match, 
 				weight : match[0], 
 				path   : undefined, 

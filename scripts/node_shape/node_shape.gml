@@ -22,7 +22,7 @@
 	}
 	
 	function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
-		var query = struct_try_get(_param, "query", "");
+		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		var node  = new Node_Shape(_x, _y, _group);
 		var ind   = undefined;
 		

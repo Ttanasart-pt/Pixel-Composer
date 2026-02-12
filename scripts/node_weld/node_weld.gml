@@ -14,13 +14,19 @@ function Node_Weld(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Weld
 	newInput( 8, nodeValue_Float(  "Radius",  8 )).setMappable(9).setUnitSimple(false);
 	newInput(10, nodeValue_Float(  "Factor",  2 ));
-	// input 10
+	
+	////- =Rendering
+	newInput(11, nodeValue_EButton( "Weld Color",  0, [ "Blended", "Closest" ]  ));
+	newInput(12, nodeValue_EButton( "Blending",    0, [ "Multiply", "Screen", "Override" ] ));
+	newInput(13, nodeValue_Color(   "Blend Color", ca_white ));
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 4, 
-		[ "Surfaces", false ],  0,  1,  7,  2,  5,  6, 
-		[ "Weld",     false ],  8,  9, 10, 
+		[ "Surfaces",  false ],  0,  1,  7,  2,  5,  6, 
+		[ "Weld",      false ],  8,  9, 10, 
+		[ "Rendering", false ], 11, 12, 13, 
 	];
 	
 	////- Nodes
@@ -40,6 +46,10 @@ function Node_Weld(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _rad   = _data[ 8];
 			var _fac   = _data[10];
 			
+			var _cTyp  = _data[11];
+			var _blend = _data[12];
+			var _bclr  = _data[13];
+			
 			if(!is_surface(_surf1)) return _outSurf;
 		#endregion
 		
@@ -52,6 +62,10 @@ function Node_Weld(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			shader_set_f_map("radius", _rad, _data[9], inputs[8] );
 			shader_set_f("factor",     _fac   );
+			
+			shader_set_i("blendType",  _cTyp  );
+			shader_set_i("blendMode",  _blend );
+			shader_set_c("blendColor", _bclr  );
 			
 			draw_empty();
 		surface_reset_shader();

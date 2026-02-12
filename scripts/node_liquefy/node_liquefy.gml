@@ -2,7 +2,7 @@
 	global.Liquefy_alias = array_map([ "Push", "Twirl", "Pinch", "Bloat" ], function(t) /*=>*/ {return string_lower(t)});
 	function Node_create_Liquefy(_x, _y, _group = noone, _param = {}) {
 		var node  = new Node_Liquefy(_x, _y, _group);
-		var query = struct_try_get(_param, "query", "");
+		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		
 		if(query != "") {
 			var inp  = node.input_fix_len;

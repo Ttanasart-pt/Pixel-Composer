@@ -1037,7 +1037,6 @@ event_inherited();
 		var pr_list = ds_priority_create();
 		
 		var search_lower = string_lower(search_string);
-		var search_split = string_split(search_lower, " ", true);
 		var search_map	 = ds_map_create();
 		
 		var curr_group    = "";
@@ -1074,36 +1073,64 @@ event_inherited();
 				
 				if(ds_map_exists(search_map, _node)) continue;
 				
-				var match  = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
-				var fmatch = match;
+				var _name  = string_lower(_node.getName());
+				var _match = string_partial_match_res(_name, search_lower);
+				var fmatch = _match;
 				
 				// Tooltip
 				var _tooltip = string_lower(_node.getTooltip());
 				var  mat     = string_partial_match_res(_tooltip, search_lower);
 				     mat[0] -= 50;
-				if(mat[0] > match[0])
-					match = mat;
+				if(mat[0] > _match[0])
+					_match = mat;
 				
 				// Fav
 				if(is(_node, NodeObject)) {
 					if(_node.deprecated) continue;
 					
-					if(match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
-						match[0] += 10000;
+					if(_match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
+						_match[0] += 10000;
 				}
 				
-				var param = "";
+				// Alias
+				var _param = "";
 				for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
-					var mat = string_partial_match_res(_node.tags[k], search_lower, search_split);
+					var mat = string_partial_match_res(_node.tags[k], search_lower);
 					mat[0] -= 50;
 					
-					if(mat[0] > match[0]) {
-						match = mat;
-						param = _node.tags[k];
+					if(mat[0] > _match[0]) {
+						_match = mat;
+						_param = {
+							type  : "alias",
+							value : _node.tags[k]
+						};
 					}
 				}
 				
-				if(match[0] == -9999) continue;
+				// Preset 
+				if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
+					var pres = PRESETS_MAP[$ _node.nodeName];
+					var keys = struct_get_names(pres);
+					
+					for( var k = 0, p = array_length(keys); k < p; k++ ) {
+						var _fname = $"{_name} {keys[k]}"
+						
+						var mat = string_partial_match_res(_fname, search_lower);
+						mat[0] -= 50;
+						
+						if(mat[0] > _match[0]) {
+							mat[1] = array_copy_trim_start(mat[1], string_length(_name) + 1);
+							
+							_match = mat;
+							_param = {
+								type  : "preset",
+								value : keys[k]
+							};
+						}
+					}
+				}
+				
+				if(_match[0] == -9999) continue;
 				
 				var _path = {
 					node       : _node, 
@@ -1118,13 +1145,13 @@ event_inherited();
 					search : true, 
 					name   : _node.name, 
 					node   : _node, 
-					param  : param, 
-					match  : match, 
-					weight : match[0], 
+					param  : _param, 
+					match  : _match, 
+					weight : _match[0], 
 					path   : _path, 
 				};
 				
-				ds_priority_add(pr_list, searchData, match[0]);
+				ds_priority_add(pr_list, searchData, _match[0]);
 				search_map[? _node] = 1;
 			}
 		}
@@ -1304,9 +1331,10 @@ event_inherited();
 				var _nmy  = yy + grid_size + 4, _nmh = 0;
 				var _drw  = _nmy > -grid_size && _nmy < search_pane.h;
 				
-				if(_query != "") {
+				var _qstr  = _query != ""? _query[$ "value"] : "";
+				if(_qstr != "") {
 					draw_set_font(f_p3);
-					_query = string_title(_query);
+					_qstr = string_title(_qstr);
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_sub);
 					_nmh = string_height_ext(_name, -1, grid_width);
@@ -1314,10 +1342,10 @@ event_inherited();
 					_nmy += _nmh - ui(2);
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
-					var _qhh = string_height_ext(_query, -1, grid_width);
+					var _qhh = string_height_ext(_qstr, -1, grid_width);
 					if(_drw) {
-						if(highlight && _mrng != noone) _qhh = draw_text_match_range_ext(_boxx + grid_size / 2, _nmy, _query, grid_width, _mrng); 
-						else draw_text_ext(_boxx + grid_size / 2, _nmy, _query, -1, grid_width); 
+						if(highlight && _mrng != noone) _qhh = draw_text_match_range_ext(_boxx + grid_size / 2, _nmy, _qstr, grid_width, _mrng); 
+						else draw_text_ext(_boxx + grid_size / 2, _nmy, _qstr, -1, grid_width); 
 					}
 					
 					_nmy += _qhh;

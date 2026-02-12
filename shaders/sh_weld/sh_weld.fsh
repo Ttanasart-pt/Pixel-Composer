@@ -57,9 +57,13 @@ uniform vec2      radius;
 uniform int       radiusUseSurf;
 uniform sampler2D radiusSurf;
 
+uniform int  blendType;
+uniform int  blendMode;
+uniform vec4 blendColor;
+
 void main() {
 	float rad    = radius.x;
-	float radMax = max(radius.x, radius.y);
+	float radMax = floor(max(radius.x, radius.y));
 	if(radiusUseSurf == 1) {
 		vec4 _vMap = texture2D( radiusSurf, v_vTexcoord );
 		rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
@@ -103,10 +107,21 @@ void main() {
 	float wr = pow(mrad,  fact);
 	
 	bool weld = w1 + w2 < wr;
+	if(!weld) return;
 	
-	if(weld) {
+	vec4 colr;
+	
+	if(blendType == 0) {
 		float mixx = (minD1) / max(minD1 + minD2, 0.00001);
+		colr = mix(colw1, colw2, mixx);
 		
-		gl_FragColor = mix(colw1, colw2, mixx);
+	} else {
+		colr = minD1 < minD2? colw1 : colw2;
 	}
+	
+	     if(blendMode == 0) colr = colr * blendColor;
+	else if(blendMode == 1) colr = 1. - (1. - colr) * (1. - blendColor);
+	else if(blendMode == 2) colr = blendColor;
+		
+	gl_FragColor = colr;
 }

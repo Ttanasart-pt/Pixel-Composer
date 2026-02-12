@@ -215,56 +215,6 @@ function string_partial_match_res(str, key) {
 	return [ _matchw, _matRng ];
 }
 
-function __string_partial_match_res(str, key, keys) {
-	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ];
-	
-	var _minmat = 9999;
-	var _matRng = array_create(string_length(str) + 1, 0);
-	
-	for( var i = 0, n = array_length(keys); i < n; i++ ) {
-		var _mat = string_partial_match_ext(str, keys[i], _matRng);
-		_minmat = min(_minmat, _mat);
-	}
-	
-	return [ _minmat, _matRng ];
-}
-
-function string_partial_match_ext(str, key, _matRng) {
-	var amo      = string_length(str);
-	var keyAmo   = string_length(key);
-	var run      = 1;
-	var consec   = 0;
-	var conMax   = 0;
-	var misMatch = 0;
-	var kchr     = string_char_at(key, 1);
-	var matRng   = array_create(string_length(str) + 1, 0);
-	var ch;
-	
-	for( var i = 1; i <= amo; i++ ) {
-		ch = string_char_at(str, i);
-		
-		if(ch == kchr) {
-			matRng[i] = 1;
-			consec++;
-			conMax = max(conMax, consec);
-			if(++run > keyAmo) {
-				for( var j = 1; j <= amo; j++ )
-					_matRng[j] = _matRng[j] || matRng[j];
-				
-				return conMax - misMatch - (amo - i);
-			}
-			kchr = string_char_at(key, run);
-			
-		} else {
-			consec    = 0;
-			misMatch += amo - i;
-		}
-		
-	}
-	
-	return -9999;
-}
-
 function draw_text_match(_x, _y, _text, _search, _scale = 1) {
 	INLINE
 	_x = round(_x);

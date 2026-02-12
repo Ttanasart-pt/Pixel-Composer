@@ -3,7 +3,7 @@
 		var node  = new Node_Color_Math(_x, _y, _group);
 		    node.skipDefault();
 		    
-		var query = struct_try_get(_param, "query", "");
+		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		var ind   = array_find(global.node_blend_keys, query);
 		
 		if(ind >= 0) node.inputs[0].skipDefault().setValue(ind);

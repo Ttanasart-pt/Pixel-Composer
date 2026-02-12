@@ -25,7 +25,7 @@
 				pre[$ fil.name] = fil;
 			}
 		}
-	
+		
 		__initPalette();
 		__initGradient();
 		__initCurve();

@@ -261,19 +261,21 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var _txt   = getName();
 		var _query = struct_try_get(_param, "query", "");
 		var _range = struct_try_get(_param, "range", 0);
+		var _qstr  = _query != ""? _query[$ "value"] : "";
 		
-		if(_query != "") {
+		if(_qstr != "") {
+			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 			draw_text_add(tx, ty, _txt);
 			tx += string_width(_txt);
 			draw_sprite_ui(THEME.arrow, 0, tx + ui(12), ty, 1, 1, 0, COLORS._main_icon, 1);
 			tx += ui(24);
 			
-			_query = string_title(_query);
+			_qstr = string_title(_qstr);
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			if(_range == 0) draw_text_add(tx, ty, _query);
-			else            draw_text_match_range(tx, ty, _query, _range);
-			tx += string_width(_query);
+			if(_range == 0) draw_text_add(tx, ty, _qstr);
+			else            draw_text_match_range(tx, ty, _qstr, _range);
+			tx += string_width(_qstr);
 			
 		} else {
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);

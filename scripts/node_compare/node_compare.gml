@@ -13,7 +13,7 @@
 	global.node_compare_keys = ["equal", "not equal", "greater", "greater equal", "lesser", "lesser equal"];
 
 	function Node_create_Compare(_x, _y, _group = noone, _param = {}) {
-		var query = struct_try_get(_param, "query", "");
+		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		var node  = new Node_Compare(_x, _y, _group);
 		var ind   = array_find(global.node_compare_keys, query);
 		
