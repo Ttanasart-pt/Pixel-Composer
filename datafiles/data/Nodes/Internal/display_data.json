@@ -637,6 +637,8 @@
             "Node_Interlaced",
             "Node_Trail",
             { "label": "/Analyze" },
+            "Node_Edge_Detect",
+            "Node_Curvature",
             "Node_Hough_Transform",
             
             { "label": "Colors" },

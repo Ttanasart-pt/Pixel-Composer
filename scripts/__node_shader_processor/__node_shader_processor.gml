@@ -1,5 +1,6 @@
 function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _group) constructor {
 	name = "";
+	texFilter = false;
 	
 	newActiveInput(5);
 	newInput(6, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
@@ -30,6 +31,7 @@ function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		
 		surface_set_shader(_outSurf, shader);
+			gpu_set_tex_filter(texFilter);
 			shader_set_f("dimension", _sw, _sh);
 			setShader(_data);
 			

@@ -355,9 +355,6 @@ void main() {
     vec2 wIndex = floor(tx);
     vec2 wUV    = tx - wIndex;
 	
-	// vec2  sm  = (wIndex + .5) * (scale / dimension) * mat2(cos(-ang), -sin(-ang), sin(-ang), cos(-ang)) + position / dimension;
-	// gl_FragColor = vec4(sm, 0., 1.); return;
-	
 	float wx = wwidth.x / 2.;
 	float wy = wwidth.y / 2.;
 	
