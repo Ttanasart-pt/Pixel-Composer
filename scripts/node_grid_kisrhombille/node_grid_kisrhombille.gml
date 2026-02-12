@@ -2,6 +2,8 @@ function Node_Kisrhombille(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Kisrhombille";
 	shader = sh_kisrhombille;
 	
+	newInput(12, nodeValueSeed()).setShaderProp("seed");
+	
 	////- =Output
 	newInput( 1, nodeValue_Surface( "UV Map"     ));
 	newInput( 2, nodeValue_Slider(  "UV Mix", 1  ));
@@ -17,14 +19,13 @@ function Node_Kisrhombille(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 9, nodeValue_EScroll(  "Render Type",  0, [ "Checker", "Random Color" ])).setShaderProp("type");
 	newInput( 7, nodeValue_Color(    "Color 1", ca_black )).setShaderProp("color1");
 	newInput( 8, nodeValue_Color(    "Color 2", ca_white )).setShaderProp("color2");
-	newInput(12, nodeValueSeed()).setShaderProp("seed");
 	newInput(11, nodeValue_Gradient( "Colors",  gra_black_white )).setShaderProp("gradient");
 	// 13
 	
-	input_display_list = [
+	input_display_list = [ 12, 
 		[ "Output",     true ],  0,  1,  2,  3, 
 		[ "Transform", false ],  4,  6,  5, 
-		[ "Render",    false ], 10,  9,  7,  8, 12, 11, 
+		[ "Render",    false ], 10,  9,  7,  8, 11, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 

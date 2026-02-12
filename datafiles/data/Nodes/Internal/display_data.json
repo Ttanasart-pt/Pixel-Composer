@@ -841,6 +841,7 @@
             "Node_Pixel_Sampler",
             "Node_Julia_Set",
             "Node_Maze_Pattern",
+            "Node_Weave",
             
             { "label": "Populate" },
             { "label": "/Repeat" },

@@ -195,7 +195,6 @@ uniform vec4 color2;
 #define s3 1.73205080757
 
 float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
-
 float frandom (in vec2 st) {
     float n0 = random(st, floor(seed) / 5000.);
 	float n1 = random(st, (floor(seed) + 1.) / 5000.);

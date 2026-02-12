@@ -21,10 +21,13 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _ind = _inp.index;
 			var _val = _data[_ind];
 			
-			if(struct_has(_inp.attributes, "mapped") && _inp.attributes.mapped) {
+			if(_inp.attributes[$ "mapped"]) {
 				shader_set_f_map(_key, _val, _data[_inp.parameters.map_index], _inp);
 				continue;
 			}
+			
+			if(_inp.parameters[$ "curved"])
+				shader_set_curve(_key, _data[_inp.parameters.cur_index]);
 			
 			switch(instanceof(_inp)) {
 				case "__NodeValue_Float": 

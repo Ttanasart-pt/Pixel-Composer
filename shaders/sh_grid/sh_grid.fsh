@@ -308,6 +308,7 @@ void main() {
 	
 	int invAxis = shiftAxis == 0? 1 : 0;
 	float  cell = floor(_pos[invAxis] * sca[invAxis]);
+	
 	float _sec  = mod(cell, 2.);
 	float _shft = (_sec * secShift) + (cell * shf);
 	float _rdsh = randShift * (random(randShiftSeed / 1000. + vec2(cell / dimension.x)) * 2. - 1.);
