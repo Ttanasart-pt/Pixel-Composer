@@ -99,11 +99,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(12, nodeValue_Slider_Range( "Frame range", [0,-1], { range: [0, TOTAL_FRAMES, 0.1] }));
 	
 	////- =Animation
-	newInput( 8, nodeValue_Int(  "Framerate",        30 )).rejectArray();
-	newInput( 5, nodeValue_Bool( "Loop",           true )).setVisible(false).rejectArray();
-	newInput(11, nodeValue_Int(  "Sequence begin",    0 ));
-	newInput(14, nodeValue_Int(  "Frame step",        1 ));
-	newInput(21, nodeValue_Int(  "Batch gif",         0 )).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
+	newInput( 8, nodeValue_Float( "Framerate",         1 )).rejectArray();
+	newInput( 5, nodeValue_Bool(  "Loop",           true )).setVisible(false).rejectArray();
+	newInput(11, nodeValue_Int(   "Sequence begin",    0 ));
+	newInput(14, nodeValue_Int(   "Frame step",        1 ));
+	newInput(21, nodeValue_Int(   "Batch gif",         0 )).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
 	// inputs 24
 	
 	newOutput(0, nodeValue_Output("Preview", VALUE_TYPE.surface, noone));
@@ -205,6 +205,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	attributes.clear_directory = true;
 	array_push(attributeEditors, Node_Attribute("Delete temp Folder", function() /*=>*/ {return attributes.clear_directory}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("clear_directory")})}));
+	
+	framerateUnitToggle  = button(function() /*=>*/ { 
+		var _gfr = project.animator.framerate;
+		var _cfr = inputs[8].getValue();
+		
+		if(inputs[8].attributes.unit == VALUE_UNIT.constant)	
+			inputs[8].setValue(_cfr / _gfr);
+		else 
+			inputs[8].setValue(round(_cfr * _gfr));
+			
+		inputs[8].attributes.unit = !inputs[8].attributes.unit; 
+	}).setIcon(THEME.unit_fps, function() /*=>*/ {return inputs[8].attributes.unit}).iconPad()
+	  .setTooltip(new tooltipSelector("Unit", [ "Frame Per Secound", "Relative to Preview rate" ]), function() /*=>*/ {return inputs[8].attributes.unit});
+	
+	inputs[8].attributes.unit = VALUE_UNIT.reference;
+	inputs[8].getEditWidget().setSideButton(framerateUnitToggle);
 	
 	////- Paths
 	
@@ -436,7 +452,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		var rate = getInputData(8);
-		if(rate == 0) rate = 1;
+		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
+		rate = max(1, rate);
 		
 		var framerate = round(1 / rate * 1000);
 		var cmd = "";
@@ -456,14 +473,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var loop = getInputData( 5);
 		var opti = getInputData( 6);
 		var fuzz = getInputData( 7);
-		var rate = max(1, getInputData( 8));
+		var rate = getInputData( 8);
 		var qual = getInputData(10);
 		var bsiz = getInputData(21);
+		
+		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
+		rate = max(1, rate);
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var framerate  = 100 / rate;
+		var framerate  = 100 / rate; framerate = $"1x{rate}";
 		var loop_str   = loop? 0 : 1;
 		var use_gifski = false;
 		
@@ -497,7 +517,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static renderMp4 = function(temp_path, target_path) {
 		var rate = getInputData( 8);
 		var qual = getInputData(10); qual = clamp(qual, 0, 51);
-		if(rate == 0) rate = 1;
+		
+		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
+		rate = max(1, rate);
 		
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
@@ -513,9 +535,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	 
 	static renderWebm = function(temp_path, target_path) {
-		var rate = getInputData( 8); rate = max(1, rate);
+		var rate = getInputData( 8);
 		var qual = getInputData(10);
 		var bitr = getInputData(23);
+		
+		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
+		rate = max(1, rate);
 		
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
@@ -532,7 +557,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	 
 	static renderApng = function(temp_path, target_path) {
 		var rate = getInputData( 8);
-		if(rate == 0) rate = 1;
+		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
+		rate = max(1, rate);
 		
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
@@ -644,6 +670,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var rate = getInputData( 8);
 			var quan = getInputData(18);
 			
+			if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
+			rate = max(1, rate);
+		
 			if(!is_array(surf)) surf = [ surf ];
 			for( var i = 0, n = array_length(surf); i < n; i++ ) {
 				var _s = surf[i];
@@ -924,11 +953,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		
-		var surf = getSurface();
-		var anim = getInputData( 3);
-		var extn = getInputData( 9);
-		var expt = getInputData(22);
+		#region data
+			var surf = getSurface();
+			var anim = getInputData( 3);
+			var extn = getInputData( 9);
+			var expt = getInputData(22);
+			
+			if(inputs[8].editWidget) inputs[8].editWidget.setSuffix(inputs[8].attributes.unit? "x" : "");
+		#endregion
 		
 		#region visiblity
 			outputs[0].setValue(surf);

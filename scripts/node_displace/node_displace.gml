@@ -46,18 +46,19 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Iterate
 	newInput( 6, nodeValue_Bool(    "Iterate",       false ));
-	newInput(11, nodeValue_EScroll( "Blend Mode",    0, [ "Overwrite", "Min", "Max" ]));
+	newInput(11, nodeValue_EScroll( "Blend Mode",    0, [ "Overwrite", "Min", "Max", "Mix" ]));
 	newInput(18, nodeValue_Int(     "Iteration",     16    ));
+	newInput(27, nodeValue_Slider(  "Mix Ratio",    .5     ));
 	newInput(19, nodeValue_Bool(    "Fade Distance", false ));
 	newInput(20, nodeValue_Bool(    "Reposition",    false ));
 	newInput(21, nodeValue_Int(     "Repeat",        1     ));
-	// inputs 27
+	// inputs 28
 	
 	input_display_list = [ 10, 12, 
 		[ "Surfaces",      true    ],  0, 22, 23,  8,  9, 13, 14, 
 		[ "Strength",     false    ],  1, 17,  3, 15, 25,  4, 24, 
 		[ "Displacement", false    ],  5, 16,  2, 26, 
-		[ "Iterate",       true, 6 ], 11, 18, 19, 20, 21, 
+		[ "Iterate",       true, 6 ], 11, 18, 27, 19, 20, 21, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -97,6 +98,8 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _sep  = _data[16];
 			var _midp = _data[26];
 			
+			var _blend = _data[11];
+			
 			var _rept = _data[21]; _rept = max(1, _rept);
 		#endregion
 		
@@ -107,6 +110,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[16].setVisible(_mode == 1 || _mode == 2);
 			inputs[17].setVisible(_dsp2, _dsp2);
 			inputs[26].setVisible(_mode == 5 || _mode == 6);
+			inputs[27].setVisible(_blend == 3);
 			
 			if(_mode == 1 && _sep) {
 				inputs[ 1].setName("Displace X");
@@ -160,7 +164,8 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				shader_set_i("iterate",       _data[ 6] );
 				shader_set_f("iteration",     _data[18] );
-				shader_set_i("blendMode",     _data[11] );
+				shader_set_i("blendMode",     _blend );
+				shader_set_f("mixAmount",     _data[27] );
 				shader_set_i("fadeDist",      _data[19] );
 				shader_set_i("reposition",    _data[20] );
 				

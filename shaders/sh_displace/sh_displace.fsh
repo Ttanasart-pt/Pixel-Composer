@@ -257,7 +257,10 @@ uniform int   sepAxis;
 
 uniform int   iterate;
 uniform float iteration;
+
 uniform int   blendMode;
+uniform float mixAmount;
+
 uniform int   fadeDist;
 uniform int   reposition;
 
@@ -384,6 +387,8 @@ vec4 blend(in vec4 c0, in vec4 c1) {
 		float b1 = bright(c1);
 		return b0 > b1? c0 : c1;
 	}
+	
+	if(blendMode == 3) return mix(c0, c1, mixAmount);
 	
 	return c1;
 }
