@@ -1,0 +1,6 @@
+{
+    "name":          "Symmetric NN",
+    "spr":           "s_node_symmetric_nn",
+    "baseNode":      "Node_Symmetric_NN",
+    "pxc_version":    120060,
+}

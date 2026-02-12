@@ -48,8 +48,14 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform float intensity;
-uniform float radius;
+
+uniform vec2      intensity;
+uniform int       intensityUseSurf;
+uniform sampler2D intensitySurf;
+
+uniform vec2      radius;
+uniform int       radiusUseSurf;
+uniform sampler2D radiusSurf;
 
 uniform int absolute;
 
@@ -97,10 +103,23 @@ float calculateCurvature(sampler2D texture, vec2 uv, vec2 texelSize, float rad, 
 }
 
 void main() {
+	float rad    = radius.x;
+	float radMax = floor(max(radius.x, radius.y));
+	if(radiusUseSurf == 1) {
+		vec4 _vMap = texture2D( radiusSurf, v_vTexcoord );
+		rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	float itn    = intensity.x;
+	if(intensityUseSurf == 1) {
+		vec4 _vMap = texture2D( intensitySurf, v_vTexcoord );
+		itn = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
     vec2 tx = 1. / dimension;
     vec2 uv = getUV(v_vTexcoord);
 
-    float grey = calculateCurvature(gm_BaseTexture, uv, tx, radius, intensity);
+    float grey = calculateCurvature(gm_BaseTexture, uv, tx, rad, itn);
     
     // Remap to visible range
     grey = grey * 0.5 + 0.5;

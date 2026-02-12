@@ -581,6 +581,7 @@
             "Node_Blur_Bokeh",
             "Node_Average",
             "Node_Kuwahara",
+            "Node_Symmetric_NN",
             "Node_Brush_Linear",
             
             { "label": "Warps" },
