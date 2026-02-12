@@ -31,7 +31,9 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 4, nodeValue_Slider(  "Mid Value", .5  )).setMappable(24).setTooltip("Brightness value to be use as a basis for 'no displacement'.");
 	
 	////- =Displacement
-	newInput( 5, nodeValue_EButton( "Mode", 0, [ "Linear", "Vector", "Angle", "Gradient" ]))
+	dispModeEnum = [ "Linear", "Vector", "Angle", "Gradient", -1, "Radial", "Zoom" ];
+	
+	newInput( 5, nodeValue_EButton( "Mode", 0, dispModeEnum))
 		.setTooltip(@"Use color data for extra information.
     - Linear: Displace along a single line (defined by the position value).
     - Vector: Use red as X displacement, green as Y displacement.
@@ -40,6 +42,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
     
 	newInput(16, nodeValue_Bool( "Separate Axis", false ));
 	newInput( 2, nodeValue_Vec2( "Position",      [1,0] )).setTooltip("Vector to displace the pixel by.").setUnitSimple();
+	newInput(26, nodeValue_Vec2( "Mid Point",   [.5,.5] )).setUnitSimple();
 	
 	////- =Iterate
 	newInput( 6, nodeValue_Bool(    "Iterate",       false ));
@@ -48,12 +51,12 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_Bool(    "Fade Distance", false ));
 	newInput(20, nodeValue_Bool(    "Reposition",    false ));
 	newInput(21, nodeValue_Int(     "Repeat",        1     ));
-	// inputs 26
+	// inputs 27
 	
 	input_display_list = [ 10, 12, 
 		[ "Surfaces",      true    ],  0, 22, 23,  8,  9, 13, 14, 
 		[ "Strength",     false    ],  1, 17,  3, 15, 25,  4, 24, 
-		[ "Displacement", false    ],  5, 16,  2, 
+		[ "Displacement", false    ],  5, 16,  2, 26, 
 		[ "Iterate",       true, 6 ], 11, 18, 19, 20, 21, 
 	];
 	
@@ -69,6 +72,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
+		var _mode = getInputSingle(5);
 		
 		var _dim = getDimension();
 		var _cx = _x + _dim[0] / 2 * _s;
@@ -76,19 +80,25 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
 		
+		if(_mode == 5 || _mode == 5)
+			InputDrawOverlay(inputs[26].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		
 		return w_hovering;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[ 0];
-		
-		var _map  = _data[ 1];
-		var _map2 = _data[17];
-		
-		var _mode = _data[ 5];
-		var _sep  = _data[16];
-		
-		var _rept = _data[21]; _rept = max(1, _rept);
+		#region data
+			var _surf = _data[ 0];
+			
+			var _map  = _data[ 1];
+			var _map2 = _data[17];
+			
+			var _mode = _data[ 5];
+			var _sep  = _data[16];
+			var _midp = _data[26];
+			
+			var _rept = _data[21]; _rept = max(1, _rept);
+		#endregion
 		
 		#region visible
 			var _dsp2 = (_mode == 1 || _mode == 2) && _sep;
@@ -96,6 +106,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[ 2].setVisible(_mode == 0);
 			inputs[16].setVisible(_mode == 1 || _mode == 2);
 			inputs[17].setVisible(_dsp2, _dsp2);
+			inputs[26].setVisible(_mode == 5 || _mode == 6);
 			
 			if(_mode == 1 && _sep) {
 				inputs[ 1].setName("Displace X");
@@ -135,16 +146,17 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_interpolation(_surf);
 				shader_set_uv(_data[22], _data[23]);
 				
-				shader_set_surface("map",  _map);
-				shader_set_surface("map2", _data[17]);
+				shader_set_s( "map",  _map  );
+				shader_set_s( "map2", _map2 );
 				
 				shader_set_f("dimension",     [ww,hh]   );
 				shader_set_f("map_dimension", [mw,mh]   );
 				shader_set_f("displace",      _data[ 2] );
 				shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3], _data[25] );
 				shader_set_f_map("middle",    _data[ 4], _data[24], inputs[4]            );
-				shader_set_i("mode",          _data[ 5] );
-				shader_set_i("sepAxis",       _data[16] );
+				shader_set_2("midPoint",      _midp     );
+				shader_set_i("mode",          _mode     );
+				shader_set_i("sepAxis",       _sep      );
 				
 				shader_set_i("iterate",       _data[ 6] );
 				shader_set_f("iteration",     _data[18] );

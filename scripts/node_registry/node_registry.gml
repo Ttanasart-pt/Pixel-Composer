@@ -235,8 +235,9 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var fav = struct_exists(NODE_FAV_MAP, nodeName);
 		if(fav) draw_sprite_ui_uniform(THEME.favorite, 1, _x + ui(16), _y + _h / 2, .8, CDEF.yellow, 1.);
 		
-		var spr_x = _x + ui(32) + _h / 2;
-		var spr_y = _y + _h / 2;
+		var _query = struct_try_get(_param, "query", "");
+		var spr_x  = _x + ui(32) + _h / 2;
+		var spr_y  = _y + _h / 2;
 				
 		var ss = (_h - ui(8)) / max(sprite_get_width(spr), sprite_get_height(spr));
 		gpu_set_tex_filter(true);
@@ -259,12 +260,10 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		}	
 		
 		var _txt   = getName();
-		var _query = struct_try_get(_param, "query", "");
 		var _range = struct_try_get(_param, "range", 0);
-		var _qstr  = _query != ""? _query[$ "value"] : "";
+		var _qstr  = is_struct(_query)? _query[$ "value"] : "";
 		
 		if(_qstr != "") {
-			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 			draw_text_add(tx, ty, _txt);
 			tx += string_width(_txt);

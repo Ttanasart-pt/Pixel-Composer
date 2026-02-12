@@ -291,6 +291,12 @@ event_inherited();
 			
 			if(buildCallback != undefined) buildCallback(_new_node);
 			
+			var _query = _param[$ "query"];
+			if(is_struct(_query) && _query[$ "type"] == "preset") {
+				_new_node.skipDefault();
+				_new_node.setPreset(_query[$ "value"]);
+			}
+			
 		} else if(is(_node, NodeAction)) {  // NOT IMPLEMENTED
 			var _dat = _node.build(node_target_x, node_target_y,, _param);
 			if(_dat == noone) return;
@@ -1077,6 +1083,15 @@ event_inherited();
 				var _match = string_partial_match_res(_name, search_lower);
 				var fmatch = _match;
 				
+				var _path = {
+					node       : _node, 
+					category   : cat,
+					categoryId : i, 
+					group      : curr_group, 
+					groupId    : curr_groupi - 1, 
+					subgroup   : curr_subgroup, 
+				};
+				
 				// Tooltip
 				var _tooltip = string_lower(_node.getTooltip());
 				var  mat     = string_partial_match_res(_tooltip, search_lower);
@@ -1098,7 +1113,7 @@ event_inherited();
 					var mat = string_partial_match_res(_node.tags[k], search_lower);
 					mat[0] -= 50;
 					
-					if(mat[0] > _match[0]) {
+					if(mat[0] >= _match[0]) {
 						_match = mat;
 						_param = {
 							type  : "alias",
@@ -1107,39 +1122,41 @@ event_inherited();
 					}
 				}
 				
+				if(_match[0] == -9999) continue;
+				
 				// Preset 
 				if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
 					var pres = PRESETS_MAP[$ _node.nodeName];
 					var keys = struct_get_names(pres);
 					
 					for( var k = 0, p = array_length(keys); k < p; k++ ) {
+						if(keys[k] == "_default") continue;
 						var _fname = $"{_name} {keys[k]}"
 						
 						var mat = string_partial_match_res(_fname, search_lower);
-						mat[0] -= 50;
+						mat[0] -= 10;
 						
-						if(mat[0] > _match[0]) {
+						if(mat[0] > -9999) {
 							mat[1] = array_copy_trim_start(mat[1], string_length(_name) + 1);
 							
-							_match = mat;
-							_param = {
-								type  : "preset",
-								value : keys[k]
+							var searchData = { 
+								search : true, 
+								name   : _node.name, 
+								node   : _node, 
+								param  : {
+									type  : "preset",
+									value : keys[k]
+								}, 
+								
+								match  : mat, 
+								weight : mat[0], 
+								path   : _path, 
 							};
+							
+							ds_priority_add(pr_list, searchData, mat[0]);
 						}
 					}
 				}
-				
-				if(_match[0] == -9999) continue;
-				
-				var _path = {
-					node       : _node, 
-					category   : cat,
-					categoryId : i, 
-					group      : curr_group, 
-					groupId    : curr_groupi - 1, 
-					subgroup   : curr_subgroup, 
-				};
 				
 				var searchData = { 
 					search : true, 

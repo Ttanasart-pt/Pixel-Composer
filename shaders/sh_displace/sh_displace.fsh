@@ -251,6 +251,7 @@ uniform sampler2D map2;
 uniform vec2  dimension;
 uniform vec2  map_dimension;
 uniform vec2  displace;
+uniform vec2  midPoint;
 uniform int   mode;
 uniform int   sepAxis;
 
@@ -286,14 +287,14 @@ vec2 shiftMap(in vec2 pos, in float str) {
 	float _str;
 	vec2  _disp;
 	
-	if(mode == 0) {
+	if(mode == 0) { // Linear
 		_str  = bright(disP) - mid;
 		if(strength_curve_use == 1) 
 			_str = curveEval(strength_curve, strength_amount, _str);
 		_disp = _str * str * raw_displace;
 		sam_pos = pos + _disp;
 		
-	} else if(mode == 1) {
+	} else if(mode == 1) { // Vector
 		if(sepAxis == 0)
 			_disp = vec2(disP.r - mid, disP.g - mid) * vec2((disP.r + disP.g + disP.b) / 3. - mid) * str;
 			
@@ -313,7 +314,7 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		
 		sam_pos = pos + _disp;
 		
-	} else if(mode == 2) {
+	} else if(mode == 2) { // Angle
 		float _ang;
 		
 		if(sepAxis == 0) {
@@ -337,7 +338,7 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		
 		sam_pos = pos + _str * vec2(cos(_ang), sin(_ang));
 		
-	} else if(mode == 3) {
+	} else if(mode == 3) { // Gradient
 		vec4  d0 = texture2Dintp( map, pos + vec2( tx.x, 0.) ); float h0 = (d0.r + d0.g + d0.b) / 3.;
 		vec4  d1 = texture2Dintp( map, pos - vec2( 0., tx.y) ); float h1 = (d1.r + d1.g + d1.b) / 3.;
 		vec4  d2 = texture2Dintp( map, pos - vec2( tx.x, 0.) ); float h2 = (d2.r + d2.g + d2.b) / 3.;
@@ -345,7 +346,26 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		
 		vec2 grad = vec2( h0 - h2, h3 - h1 ) - mid;
 		sam_pos = pos + grad * str;
-	}
+		
+	} else if(mode == 5) { // Radial
+		_str  = bright(disP) - mid;
+		if(strength_curve_use == 1) 
+			_str = curveEval(strength_curve, strength_amount, _str);
+		
+		float ang = PI * _str * str;
+		vec2 midP = midPoint / dimension;
+		sam_pos = (pos - midP) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) + midP;
+		
+	} else if(mode == 6) { // Zoom
+		_str  = bright(disP) - mid;
+		if(strength_curve_use == 1) 
+			_str = curveEval(strength_curve, strength_amount, _str);
+		
+		float sca = _str * str;
+		vec2 midP = midPoint / dimension;
+		sam_pos = (pos - midP) * sca + midP;
+		
+	} 
 	
 	return sam_pos;
 }
