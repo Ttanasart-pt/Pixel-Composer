@@ -38,7 +38,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		
 		edit_color_index.value = col;
 		onApply(current_gradient);
-	}
+		
+	} editColor = method(self, editColor);
 	
 	static fetchHeight = function(params) { return params.h + expanded * ui(22); }
 	static drawParam   = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }

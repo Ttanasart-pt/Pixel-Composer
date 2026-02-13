@@ -449,7 +449,6 @@
     {"link":"io.gamemaker.sdfshaders-1.0.0","name":"io.gamemaker.sdfshaders-1.0.0","path":"io.gamemaker.sdfshaders-1.0.0.yyp",},
   ],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"tileset_gamemaker2_room.yy","CopyToMask":-1,"filePath":"datafiles/data/TemplateStrings","name":"tileset_gamemaker2_room.yy","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
         "Itch":{
           "CopyToMask":"0",
@@ -485,6 +484,7 @@
     {"$GMIncludedFile":"","%Name":".gitignore","CopyToMask":-1,"filePath":"datafiles/pack","name":".gitignore","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"actions.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"actions.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"addons.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"addons.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"assets.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"assets.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"collections.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"collections.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"curves.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"curves.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"layouts.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"layouts.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -516,6 +516,7 @@
     {"$GMIncludedFile":"","%Name":"shader_replace.py","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"shader_replace.py","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"uv.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"uv.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"snap_license.txt","CopyToMask":-1,"filePath":"datafiles","name":"snap_license.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"tileset_gamemaker2_room.yy","CopyToMask":-1,"filePath":"datafiles/TemplateStrings","name":"tileset_gamemaker2_room.yy","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ucrtbased.dll","ConfigValues":{},"CopyToMask":-1,"filePath":"datafiles","name":"ucrtbased.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"webpmux.exe","CopyToMask":-1,"filePath":"datafiles/webp","name":"webpmux.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"winwin.html","CopyToMask":-1,"filePath":"datafiles","name":"winwin.html","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

@@ -64,44 +64,6 @@ float sampleG( sampler2D texture, vec2 pos) {
     return (col.r + col.g + col.b) / 3. * col.a;
 }
 
-//// Hm... what in chatGPT is this?
-float calculateCurvature(sampler2D texture, vec2 uv, vec2 texelSize, float rad, float intens) {
-    vec2 offset = texelSize * rad;
-    
-    // Sample at radius distance
-    float c = sampleG(texture, uv);
-    float l = sampleG(texture, uv + vec2(-offset.x, 0.0));
-    float r = sampleG(texture, uv + vec2( offset.x, 0.0));
-    float t = sampleG(texture, uv + vec2(0.0,  offset.y));
-    float b = sampleG(texture, uv + vec2(0.0, -offset.y));
-    
-    // Diagonal samples for smoother result
-    float tl = sampleG(texture, uv + vec2(-offset.x,  offset.y));
-    float tr = sampleG(texture, uv + vec2( offset.x,  offset.y));
-    float bl = sampleG(texture, uv + vec2(-offset.x, -offset.y));
-    float br = sampleG(texture, uv + vec2( offset.x, -offset.y));
-    
-    // Second derivatives with averaging
-    float dxx = (r - 2.0 * c + l) / (rad * rad);
-    float dyy = (t - 2.0 * c + b) / (rad * rad);
-    
-    // Diagonal contributions for smoothness
-    float d1 = (tr - 2.0 * c + bl) / (rad * rad * 2.0);
-    float d2 = (tl - 2.0 * c + br) / (rad * rad * 2.0);
-    
-    if(absolute == 1) {
-    	dxx = abs(dxx);
-		dyy = abs(dyy);
-		d1  = abs(d1);
-		d2  = abs(d2);
-    }
-    
-    // Mean curvature with diagonal blending
-    float curvature = (dxx + dyy + d1 + d2) * 0.5;
-    
-    return curvature * intens;
-}
-
 void main() {
 	float rad    = radius.x;
 	float radMax = floor(max(radius.x, radius.y));
@@ -118,11 +80,35 @@ void main() {
 	
     vec2 tx = 1. / dimension;
     vec2 uv = getUV(v_vTexcoord);
-
-    float grey = calculateCurvature(gm_BaseTexture, uv, tx, rad, itn);
+	
+    vec2 offset = rad * tx;
     
-    // Remap to visible range
-    grey = grey * 0.5 + 0.5;
+    float c = sampleG(gm_BaseTexture, uv);
+    float l = sampleG(gm_BaseTexture, uv + vec2(-offset.x, 0.0));
+    float r = sampleG(gm_BaseTexture, uv + vec2( offset.x, 0.0));
+    float t = sampleG(gm_BaseTexture, uv + vec2(0.0,  offset.y));
+    float b = sampleG(gm_BaseTexture, uv + vec2(0.0, -offset.y));
+    
+    float tl = sampleG(gm_BaseTexture, uv + vec2(-offset.x,  offset.y));
+    float tr = sampleG(gm_BaseTexture, uv + vec2( offset.x,  offset.y));
+    float bl = sampleG(gm_BaseTexture, uv + vec2(-offset.x, -offset.y));
+    float br = sampleG(gm_BaseTexture, uv + vec2( offset.x, -offset.y));
+    
+    float dxx = (r - 2.0 * c + l) / (rad * rad);
+    float dyy = (t - 2.0 * c + b) / (rad * rad);
+    
+    float d1 = (tr - 2.0 * c + bl) / (rad * rad * 2.0);
+    float d2 = (tl - 2.0 * c + br) / (rad * rad * 2.0);
+    
+    if(absolute == 1) {
+    	dxx = abs(dxx);
+		dyy = abs(dyy);
+		d1  = abs(d1);
+		d2  = abs(d2);
+    }
+    
+    float curv = (dxx + dyy + d1 + d2) * 0.5;
+    float grey = .5 + .5 * curv * itn;
     
 	gl_FragColor = vec4(vec3(grey), 1.0);
 }
