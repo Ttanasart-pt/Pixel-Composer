@@ -1305,6 +1305,7 @@ event_inherited();
 					
 					if(is(_node, NodeObject)) {
 						_node.drawGrid(_nx, yy, _m[0], _m[1], grid_width, grid_size, _param);
+						
 					} else {
 						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 						if(sprite_exists(_node.spr)) {

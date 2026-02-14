@@ -9,8 +9,8 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "Kuwahara";
 	
 	newActiveInput(1);
-	newActiveInput(5);
-	newInput( 6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput( 5, nodeValue_Float(  "Unused",  8  ));
+	newInput( 6, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
