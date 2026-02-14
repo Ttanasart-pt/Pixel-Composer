@@ -101,9 +101,9 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	drawOverlay = method(self, Node_Shape_drawOverlay);
 	
-	static getDimension = function() { return getInputData(0, DEF_SURF); }
+	static getDimension = function() /*=>*/ {return inputs[0].getValue()};
 	
-	static update = function() {
+	static update = function() { 
 		#region data
 			var _amo = array_length(inputs);
 			current_data = array_verify(current_data, _amo);
