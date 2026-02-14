@@ -1,0 +1,6 @@
+{
+    "name":          "Smoothen Path",
+    "spr":           "s_node_path_smoothen",
+    "baseNode":      "Node_Path_Smoothen",
+    "pxc_version":    120060,
+}
