@@ -19,7 +19,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(4, 8); // inputs 8, 9, 
 	
 	////- =Erode
-	newInput( 1, nodeValue_Int(  "Width", 1)).setHotkey("S").setValidator(VV_min(0)).setMappable(10);
+	newInput( 1, nodeValue_Int(  "Width", 1)).setHotkey("S").setMappable(10);
 	newInput( 2, nodeValue_Bool( "Preserve Border", false ));
 	newInput( 3, nodeValue_Bool( "Use Alpha",        true ));
 	// input 11

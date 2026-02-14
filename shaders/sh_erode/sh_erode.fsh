@@ -59,34 +59,33 @@ uniform sampler2D sizeSurf;
 
 float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
-bool isEmpty(in vec4 col) {
-	if(alpha == 0 && length(col.rgb) <= 0.)  return true;
-	if(alpha == 1 && col.a <= 0.)            return true;
+bool isSolid(in vec4 col) {
+	if(alpha == 0 && length(col.rgb) <= 0.)  return false;
+	if(alpha == 1 && col.a <= 0.)            return false;
 	
-	return false;
+	return true;
 }
 
 void main() {
 	float siz    = size.x;
-	float sizMax = siz;
+	float sizMax = abs(siz);
 	
 	if(sizeUseSurf == 1) {
-		sizMax = max(size.x, size.y);
+		sizMax = max(abs(size.x), abs(size.y));
 		vec4 _vMap = texture2D( sizeSurf, v_vTexcoord );
 		siz = mix(size.x, size.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
 	bool ero = siz > 0.;
+	     siz = abs(siz);
 	
 	vec2 tx = 1. / dimension;
-	vec2 px = v_vTexcoord * dimension;
 	vec4 bc = texture2D( gm_BaseTexture, v_vTexcoord );
 	
 	gl_FragColor = bc;
-	if( !(ero ^^ isEmpty(bc)) ) return;
+	if(ero ^^ isSolid(bc)) return;
 	
-	vec4 fill = vec4(0.);
-	if(ero && alpha == 0) fill.a = 1.;
+	vec4 fill = ero? vec4(0., 0., 0., alpha == 0? 1. : 0.) : vec4(1., 1., 1., 1.);
 	
 	for(float i = 1.; i <= sizMax; i++) {
 		if(i > siz) break;
@@ -101,13 +100,14 @@ void main() {
 				base *= 2.;
 			}
 			
-			vec2 pxs = (px + vec2( cos(ang) * i,  sin(ang) * i)) * tx;
+			vec2 pxs = v_vTexcoord + vec2(cos(ang), sin(ang)) * i * tx;
 			vec4 sam = sampleTexture( gm_BaseTexture, pxs );
+			bool sol = isSolid(sam);
 			
-			bool emp = isEmpty(sam);
-			if(ero ^^ emp) {
+			if(!ero && sol) fill = sam;
+			if(ero ^^ isSolid(sam)) {
 				gl_FragColor = fill;
-				break;
+				return;
 			}
 		}
 	}
