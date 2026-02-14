@@ -342,6 +342,7 @@ function curveMap(_bz = undefined, _prec = 32, _tolr = 0.00001) constructor {
 	map  = array_create(prec + 1);
 	
 	static get = function(i) {
+		if(is_nan(i)) return 0;
 		INLINE
 		
 		var _ind  = clamp(i, 0, 1) * prec;

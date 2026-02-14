@@ -12,36 +12,36 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(5, nodeValueSeed());
 	
 	////- =Path
-	
-	newInput(0, nodeValue_PathNode("Path"));
+	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput(11, nodeValue_Range(    "Range", [0,1] ));
 	
 	////- =Wave
+	newInput( 1, nodeValue_Range( "Frequency", [4,4], { linked : true }));
+	newInput( 2, nodeValue_Range( "Amplitude", [4,4], { linked : true })).setCurvable(9);
+	newInput( 3, nodeValue_Range( "Shift",     [0,0], { linked : true }));
 	
-	newInput( 1, nodeValue_Range( "Frequency",             [4,4], { linked : true }));
-	newInput( 2, nodeValue_Range( "Amplitude",             [4,4], { linked : true }));
-	newInput( 9, nodeValue_Curve( "Amplitude Over Length",  CURVE_DEF_11));
-	newInput( 3, nodeValue_Range( "Shift",                 [0,0], { linked : true }));
-	
-	newInput( 4, nodeValue_Enum_Button( "Mode",    0, [ "Zigzag", "Sine", "Square" ]));
-	newInput(10, nodeValue_Enum_Button( "Post Fn", 0, [ "None", "Absolute", "Clamp" ]));
+	newInput( 4, nodeValue_EButton( "Mode",    0, [ "Zigzag", "Sine", "Square" ]  ));
+	newInput(10, nodeValue_EButton( "Post Fn", 0, [ "None", "Absolute", "Clamp" ] ));
 	
 	////- =Wiggle
-	
-	newInput(6, nodeValue_Bool(  "Wiggle",           false));
-	newInput(7, nodeValue_Range( "Wiggle Amplitude", [-2,2]));
-	newInput(8, nodeValue_Float( "Wiggle Frequency", 8));
-	
-	// input 11
+	newInput( 6, nodeValue_Bool(  "Wiggle",           false  ));
+	newInput( 7, nodeValue_Range( "Wiggle Amplitude", [-2,2] ));
+	newInput( 8, nodeValue_Float( "Wiggle Frequency",  8     ));
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
-		["Path",	 true], 0,
-		["Wave",	false], 1, 2, 9, 3, 4, 10, 
-		["Wiggle",	 true, 6], 7, 8, 
+		[ "Path",    true    ],  0, 11, 
+		[ "Wave",   false    ],  1,  2,  9,  3,  4, 10, 
+		[ "Wiggle",  true, 6 ],  7,  8, 
 	];
 	
+	////- Node
+	
 	function _wavePath(_node) : Path(_node) constructor {
+		range = [0,1];
+		
 		fre  = 0; 
 		amp  = 0;
 		shf  = 0;
@@ -106,7 +106,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			return _lln; 
 		}
-			
+		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 			
@@ -122,6 +122,17 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _path = curr_path;
 			var _fre  = fre; 
+			
+			if(_rat < range[0] || _rat > range[1]) {
+				p = _path.getPointRatio(_rat, ind, p);
+				out.x = p.x;
+				out.y = p.y;
+				out.weight = p.weight;
+				
+				cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+				return out;
+			}
+			
 			var _amp  = amp;
 			var _shf  = shf;
 			var _seed = seed + ind;
@@ -183,25 +194,25 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
-		
 		if(!is(_outData, _wavePath)) 
 			_outData = new _wavePath(self);
 		
 		_outData.cached_pos = {};
-		_outData.curr_path  = _data[0];
+		_outData.seed       = _data[ 5] + _array_index;
+		_outData.curr_path  = _data[ 0];
+		_outData.range      = _data[11];
 		
 		_outData.fre  = _data[1];
-		_outData.amp  = _data[2];
+		_outData.amp  = _data[2]; _outData.amp_curve = new curveMap(_data[9], 128);
 		_outData.shf  = _data[3];
-		_outData.mode = _data[4];
-		_outData.seed = _data[5] + _array_index;
+		
+		_outData.mode = _data[ 4];
+		_outData.post = _data[10];
 		
 		_outData.wig  = _data[6];
 		_outData.wigs = _data[7];
 		_outData.wigf = _data[8];
-		_outData.amp_curve = new curveMap(_data[9], 128);
 		
-		_outData.post = _data[10];
 		
 		return _outData;
 	}
