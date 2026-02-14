@@ -543,6 +543,7 @@
             "Node_Grid_Warp",
             "Node_Polar",
             "Node_Wrap_Area",
+            "Node_Stretch",
             
             { "label": "Others" },
             "Node_Composite",

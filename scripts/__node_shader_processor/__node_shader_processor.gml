@@ -31,7 +31,8 @@ function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		
 		surface_set_shader(_outSurf, shader);
-			gpu_set_tex_filter(texFilter);
+			shader_set_interpolation(_surf);
+			shader_set_i( "sampleMode", getAttribute("oversample"));
 			shader_set_f("dimension", _sw, _sh);
 			setShader(_data);
 			
