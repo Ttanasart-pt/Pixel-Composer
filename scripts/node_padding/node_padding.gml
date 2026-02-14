@@ -15,31 +15,29 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newActiveInput(4);
 	
 	////- =Surfaces
-	
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Padding
-	
-	newInput(1, nodeValue_Padding(     "Padding",             [0,0,0,0] )).setUnitSimple();
-	newInput(5, nodeValue_Enum_Button( "Pad Mode",             0, [ "Pad out", "Pad to size" ] ));
-	newInput(6, nodeValue_Vec2(        "Target Dimension",     DEF_SURF ));
-	newInput(7, nodeValue_Enum_Button( "Horizontal Alignment", 0, array_create(3, THEME.inspector_surface_halign) ));
-	newInput(8, nodeValue_Enum_Button( "Vertical Alignment",   0, array_create(3, THEME.inspector_surface_valign) ));
+	newInput( 1, nodeValue_Padding(     "Padding",             [0,0,0,0] )).setUnitSimple();
+	newInput( 5, nodeValue_Enum_Button( "Pad Mode",             0, [ "Pad out", "Pad to size" ] ));
+	newInput( 6, nodeValue_Vec2(        "Target Dimension",     DEF_SURF ));
+	newInput( 7, nodeValue_Enum_Button( "Horizontal Alignment", 0, array_create(3, THEME.inspector_surface_halign) ));
+	newInput( 8, nodeValue_Enum_Button( "Vertical Alignment",   0, array_create(3, THEME.inspector_surface_valign) ));
 	
 	////- =Filling
-	
-	newInput(2, nodeValue_Enum_Scroll( "Fill Method", 0, [ "Empty", "Solid", "Pixel Expand" ] ));
-	newInput(3, nodeValue_Color(       "Fill Color",  ca_black ));
-		
+	newInput( 2, nodeValue_Enum_Scroll( "Fill Method", 0, [ "Empty", "Solid", "Pixel Expand" ] ));
+	newInput( 3, nodeValue_Color(       "Fill Color",  ca_black ));
 	// input 9
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 4, 
-		["Surfaces", true], 0, 
-		["Padding", false], 5, 1, 6, 7, 8, 
-		["Filling", false], 2, 3, 
+	input_display_list = [  4, 
+		[ "Surfaces", true ],  0, 
+		[ "Padding", false ],  5,  1,  6,  7,  8, 
+		[ "Filling", false ],  2,  3, 
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	

@@ -135,7 +135,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_value_map  = {};
 		dimension_index  = 0;
 		dimension_input  = -1;
+		
 		active_index     = -1;
+		active_value     = true;
 		
 		use_display_list		= true;
 		input_display_list		= -1;
@@ -1951,9 +1953,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(icon) {
 			var _icx = tx + 6 * _s;
 			var _ics = _s / THEME_SCALE * .8;
+			var _icc = icon_blend ?? getColor();
+			if(active_index != -1 && !active_value)
+				_icc = COLORS._main_value_negative;
+			
 			BLEND_ALPHA_MULP
 			gpu_set_texfilter(true);
-			draw_sprite_ext(icon, 0, _icx, ty, _ics, _ics, 0, icon_blend ?? getColor(), .75);
+			draw_sprite_ext(icon, 0, _icx, ty, _ics, _ics, 0, _icc, .75);
 			if(sprite_get_number(icon) > 1) draw_sprite_ext(icon, 1, _icx, ty, _ics, _ics, 0, c_white, .8);
 			BLEND_NORMAL
 			gpu_set_texfilter(false);

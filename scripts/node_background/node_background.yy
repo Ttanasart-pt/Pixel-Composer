@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_background",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_background",
+  "parent":{
+    "name":"combine",
+    "path":"folders/nodes/data/filter/combine.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

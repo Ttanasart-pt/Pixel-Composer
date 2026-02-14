@@ -22,17 +22,31 @@ function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name
 	static arrayLength = arrayLengthSimple;
 }
 
-function   nodeValue_Bool_single(_name, _value, _tooltip = "") { return new __NodeValue_Bool_single(_name, self, _value, _tooltip); }
-function __NodeValue_Bool_single(_name, _node, _value, _tooltip = "") : __NodeValue_Bool(_name, _node, _value, _tooltip) constructor {
+function   nodeValue_Active() { return new __NodeValue_Active(self); }
+function __NodeValue_Active(_node) : NodeValue("Active", _node, CONNECT_TYPE.input, VALUE_TYPE.boolean, true) constructor {
 	rejectArray();
 	
 	/////============== GET =============
 	
-	function toBool(a) { return bool(a) };
-}
-
-function   nodeValue_Active() { return new __NodeValue_Active(self); }
-function __NodeValue_Active(_node) : __NodeValue_Bool_single("Active", _node, true) constructor {
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
+		if(__tempValue != undefined) return __tempValue;
+		
+		getValueRecursive(self.__curr_get_val, _time);
+		var val = bool(__curr_get_val[0]);
+		node.active_value = val;
+		
+		return val;
+	}
+	
+	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
+		var _anim  = animator;
+		if(getAnim()) return _anim.getValue(_time);
+		return array_empty(_anim.values)? 0 : _anim.values[0].value;
+	}
+	
+	static arrayLength = arrayLengthSimple;
+	
+	/////============== SET =============
 	
 	static setAnim = function(anim, record = false) {
 		if(is_anim == anim) return;

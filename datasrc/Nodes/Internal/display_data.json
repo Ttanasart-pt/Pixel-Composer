@@ -525,6 +525,7 @@
             "Node_Scale_Algo",
             "Node_Offset",
             "Node_Align_Content",
+            "Node_Background",
             { "label": "/Mirror" },
             "Node_Flip",
             "Node_Mirror",

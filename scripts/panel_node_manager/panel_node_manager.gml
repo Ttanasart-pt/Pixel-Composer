@@ -21,7 +21,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		static setRootDir = function(d) /*=>*/ { 
 			internalDir = new DirectoryObject(d).scan(["NodeObject"]); 
 			rootDir     = d;
-		} setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal");
+		} setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Nodes/Internal");
 		
 		sourceDir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/scripts";
 	#endregion

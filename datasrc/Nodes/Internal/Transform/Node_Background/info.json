@@ -1,0 +1,7 @@
+{
+    "name":          "Background",
+    "spr":           "s_node_solid",
+    "baseNode":      "Node_Background",
+    "pxc_version":    120060,
+    "alias":             ["bg"],
+}

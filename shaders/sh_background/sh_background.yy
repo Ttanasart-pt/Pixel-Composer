@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_background",
+  "name":"sh_background",
+  "parent":{
+    "name":"combine",
+    "path":"folders/nodes/data/filter/combine.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
