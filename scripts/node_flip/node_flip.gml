@@ -7,18 +7,19 @@
 function Node_Flip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Flip";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Enum_Button("Axis",  0, [ "X", "Y" ]));
-	
 	newActiveInput(2);
-		
-	input_display_list = [ 2, 
-		["Surfaces", true],	0, 
-		["Flip",	false],	1,
-	]
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 1, nodeValue_Toggle(  "Axis",  1, [ "X", "Y" ] ));
+	// 3
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+		
+	input_display_list = [ 2, 
+		[ "Surfaces", true ], 0, 
+		[ "Flip",    false ], 1,
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
