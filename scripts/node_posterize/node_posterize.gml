@@ -40,23 +40,25 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	temp_surface = array_create(4);
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf    = _data[ 0];
-		var _pal     = _data[ 1];
-		var _use_pal = _data[ 2];
-		var _alp     = _data[ 6];
-		var _spce    = _data[ 8];
-		var _glob    = _data[ 9];
-		
-		var _hbas    = _data[10];
-		var _href    = _data[11];
-		
-		inputs[ 1].setVisible( _use_pal);
-		inputs[ 8].setVisible( _use_pal);
-		inputs[10].setVisible( _use_pal);
-		
-		inputs[ 3].setVisible(!_use_pal);
-		inputs[ 4].setVisible(!_use_pal);
-		inputs[ 9].setVisible(!_use_pal);
+		#region data
+			var _surf    = _data[ 0];
+			var _pal     = _data[ 1];
+			var _use_pal = _data[ 2];
+			var _alp     = _data[ 6];
+			var _spce    = _data[ 8];
+			var _glob    = _data[ 9];
+			
+			var _hbas    = _data[10];
+			var _href    = _data[11];
+			
+			inputs[ 1].setVisible( _use_pal);
+			inputs[ 8].setVisible( _use_pal);
+			inputs[10].setVisible( _use_pal);
+			
+			inputs[ 3].setVisible(!_use_pal);
+			inputs[ 4].setVisible(!_use_pal);
+			inputs[ 9].setVisible(!_use_pal);
+		#endregion
 		
 		if(_use_pal) {
 			surface_set_shader(_outSurf, sh_posterize_palette);

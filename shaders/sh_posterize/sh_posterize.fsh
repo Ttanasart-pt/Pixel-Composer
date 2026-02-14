@@ -110,15 +110,17 @@ void main() {
 	
 	vec3 cRan = cMax - cMin;
 	vec4 _col = texture2D( gm_BaseTexture, v_vTexcoord );
-    _col.rgb  = clamp((_col.rgb - cMin) / cRan, 0., 1.);
+	vec4  col = _col;
 	
-	vec3 c = _col.rgb;
+    col.rgb  = clamp((_col.rgb - cMin) / cRan, 0., 1.);
+	
+	vec3 c = col.rgb;
 	     c = pow(c, vec3(gam));
 	     c = floor(c * colors) / (colors - 1.);
 	     c = pow(c, vec3(1.0 / gam));
-	_col = vec4(cMin + c * cRan, 1.);
+	col = vec4(cMin + c * cRan, 1.);
 	
-	_col.a = alpha == 1? 1. : _col.a;
+	col.a = alpha == 1? 1. : _col.a;
 	
-	gl_FragColor = _col;
+	gl_FragColor = col;
 }
