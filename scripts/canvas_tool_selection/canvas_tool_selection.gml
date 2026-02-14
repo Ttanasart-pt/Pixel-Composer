@@ -639,6 +639,9 @@ function canvas_selection_tool(_selector) : canvas_tool() constructor {
 		var sel_x0 = min(selection_sx, mouse_cur_x);
 		var sel_y0 = min(selection_sy, mouse_cur_y);
 		
+		var sel_x0 = selection_position[0];
+		var sel_y0 = selection_position[1];
+		
 		var _dx = _x + sel_x0 * _s;
 		var _dy = _y + sel_y0 * _s;
 		

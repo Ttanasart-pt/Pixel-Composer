@@ -288,6 +288,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     #region ---- selection ----
     	selection_selecting = 0;
+    	selection_snap_grid = false;
     	selection_mx = 0;
     	selection_my = 0;
     	selection_sx = 0;
@@ -3001,6 +3002,8 @@ function Panel_Preview() : PanelContent() constructor {
         	if(mouse_lpress(pFOCUS)) {
         		selection_active    = false;
         		selection_selecting = 1;
+        		selection_snap_grid = DOUBLE_CLICK && PROJECT.previewGrid.show;
+        		
         		selection_sx = mmx;
         		selection_sy = mmy;
         	}
@@ -3019,14 +3022,21 @@ function Panel_Preview() : PanelContent() constructor {
 			var _py0 = min(_y0, _y1);
 			var _px1 = max(_x0, _x1);
 			var _py1 = max(_y0, _y1);
-
-    		if(prevS) {
-    			_px0 = floor( _px0 );
-    			_py0 = floor( _py0 );
-				_px1 = ceil(  _px1 );
-				_py1 = ceil(  _py1 );
-    		}
+			
+			_px0 = floor( _px0 );
+			_py0 = floor( _py0 );
+			_px1 = ceil(  _px1 );
+			_py1 = ceil(  _py1 );
     		
+    		if(selection_snap_grid) {
+        		var _gridSize = PROJECT.previewGrid.size;
+        		
+        		_px0 = floor( _px0 / _gridSize[0] ) * _gridSize[0];
+				_py0 = floor( _py0 / _gridSize[1] ) * _gridSize[1];
+				_px1 = ceil(  _px1 / _gridSize[0] ) * _gridSize[0];
+				_py1 = ceil(  _py1 / _gridSize[1] ) * _gridSize[1];
+    		}
+        		
     		var _xx0 = canvas_x + _px0 * canvas_s;
         	var _yy0 = canvas_y + _py0 * canvas_s;
         	var _xx1 = canvas_x + _px1 * canvas_s;
