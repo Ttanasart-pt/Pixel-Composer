@@ -2,20 +2,21 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	onApply      = _onApply;
 	parentDialog = dialog;
 	
-	current_gradient = noone;
-	side_button      = noone;
+	current_gradient = undefined;
+	edit_gradient    = undefined;
 	
 	expanded         = false;
 	drag_color_index = -1;
 	edit_color_index = -1;
-	edit_color_mx    = 0;
-	edit_color_sx    = 0;
+	edit_color_mx    =  0;
+	edit_color_sx    =  0;
 	
 	hover_index = 0;
 	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2)
 						.setDefault(current_gradient.clone());
+						
 		dialog.onApply      = onApply;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
@@ -24,11 +25,12 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	}
 	
 	static triggerSingle = function(_index) {
+		edit_gradient    = current_gradient.clone();
 		edit_color_index = _index;
 		
 		var dialog = dialogCall(o_dialog_color_selector)
-						.setDefault(edit_color_index.value)
-						.setApply(editColor);
+						.setDefault(edit_gradient.keys[edit_color_index].value)
+						.setApply(editColor)
 		
 		dialog.interactable = interactable;
 	}
@@ -36,10 +38,12 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	static editColor = function(col) {
 		if(edit_color_index == -1) return;
 		
-		edit_color_index.value = col;
-		onApply(current_gradient);
+		edit_gradient.keys[edit_color_index].value = col;
+		onApply(edit_gradient);
 		
 	} editColor = method(self, editColor);
+	
+	////- Widget
 	
 	static fetchHeight = function(params) { return params.h + expanded * ui(22); }
 	static drawParam   = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
@@ -93,14 +97,15 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			h = _h + ui(22);
 		
 		if(hoverRect) {
-			if(mouse_press(mb_left, iactive)) 
+			if(mouse_lpress(iactive)) 
 				trigger();
 			
-			if(mouse_click(mb_left, iactive)) {
+			if(mouse_lclick(iactive)) {
 				draw_sprite_stretched_ext(THEME.button_def, 2, _x, _y, _w, h, boxColor);	
 				draw_sprite_stretched_ext(THEME.button_def, 3, _x, _y, _w, h, COLORS._main_accent, 1);	
 			}
-		} else if(mouse_press(mb_left)) deactivate();
+			
+		} else if(mouse_lpress()) deactivate();
 		
 		if(_drawSingle) { 
 			var _ggh = _gh;
@@ -115,14 +120,15 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bbw, _y + _ggh)) {
 				_bbc = COLORS._main_icon_light;
 				
-				if(mouse_press(mb_left))
+				if(mouse_lpress())
 					expanded = !expanded;
 			}
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
 			draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
 			
-			_gradient.draw(_ggx, _ggy, _ggw, _ggh);
+			var _display_gradient = current_gradient;
+			_display_gradient.draw(_ggx, _ggy, _ggw, _ggh);
 			
 			if(expanded) {
 				var _cx = _x + ui(2);
@@ -136,18 +142,16 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				
 				draw_sprite_stretched_ext(THEME.box_r2, 0, _ggx, _cy, _ggw, _ch, CDEF.main_mdblack, 1);	
 				
-				for (var i = 0, n = array_length(_gradient.keys); i < n; i++) {
-					var _k  = _gradient.keys[i];
+				for (var i = 0, n = array_length(_display_gradient.keys); i < n; i++) {
+					var _k  = _display_gradient.keys[i];
 					var _kx = _ggx + _k.time * _ggw;
 					var _ky = _ggy + _ggh + _ks - ui(4);
 					
-					if(drag_color_index == _k || edit_color_index == _k) {
+					if(drag_color_index == _k || edit_color_index == i)
 						draw_set_color(COLORS._main_accent);
-					} else {
-						draw_set_color(c_white);
-						draw_set_alpha(0.5);
-					}
-						
+					else
+						draw_set_color_alpha(c_white, .5);
+					
 					draw_line_round(_kx, _ggy + _ggh - ui(8), _kx, _ky, 1);
 					draw_set_alpha(1);
 					
@@ -161,50 +165,57 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 						_hv = _k;
 						_hi = i;
 						
-						if(mouse_press(mb_left, active)) {
-							drag_color_index = _k;
+						if(mouse_lpress(active)) {
+							edit_gradient    = current_gradient.clone();
+							
+							drag_color_index = edit_gradient.keys[i];
 							edit_color_mx    = _m[0];
 							edit_color_sx    = _k.time;
 						}
 						
-						if(DOUBLE_CLICK) 
-							triggerSingle(_k);
+						if(DOUBLE_CLICK) triggerSingle(i);
 					}
 					
-					if(_hover_index == i && DRAGGING && DRAGGING.type == "Color") {
+					if(_hover_index == i && DRAGGING && DRAGGING.type == "Color") { // drag color to grad key
 						draw_sprite_stretched_ext(THEME.box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_value_positive, 1);
-						if(mouse_release(mb_left)) {
-							_k.value = DRAGGING.data;
-							onApply(current_gradient);
+						if(mouse_lrelease()) {
+							var apply_gradient = current_gradient.clone();
+							apply_gradient.keys[i].value = DRAGGING.data;
+							
+							onApply(apply_gradient);
 						}
 						
 					} else {
-						if(drag_color_index == _k || edit_color_index == _k)
-							draw_sprite_stretched_ext(THEME.box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_accent, 1);
-						else
-							draw_sprite_stretched_add(THEME.box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, c_white, _ka);
+						var cc = drag_color_index == _k || edit_color_index == i? COLORS._main_accent : c_white;
+						var aa = drag_color_index == _k || edit_color_index == i? 1 : _ka;
+						draw_sprite_stretched_ext(THEME.box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, cc, aa);
 					}
 				}
 				
-				if(_hv != noone) {
+				if(_hi != noone) {
 					right_click_block = false;
-					if(array_length(_gradient.keys) > 1 && mouse_press(mb_right, active)) {
-						array_remove(_gradient.keys, _hv);
-						_gradient.refresh();
-						onApply(_gradient);
+					
+					var apply_gradient = current_gradient.clone();
+					if(array_length(apply_gradient.keys) > 1 && mouse_press(mb_right, active)) {
+						array_delete(apply_gradient.keys, _hi, 1);
+						apply_gradient.refresh();
+						onApply(apply_gradient);
 					}
 					
 				} else if(point_in_rectangle(_m[0], _m[1], _ggx, _cy, _ggx + _ggw, _cy + _ch)) {
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
+						edit_gradient = current_gradient.clone();
+						
 						var _ti = clamp((_m[0] - _ggx) / _ggw, 0, 1);
 						var _va = _gradient.eval(_ti);
 						var _nk = new gradientKey(_ti, _va);
 						
-						_gradient.add(_nk);
-						
+						edit_gradient.add(_nk);
 						drag_color_index = _nk;
 						edit_color_mx    = _m[0];
 						edit_color_sx    = _ti;
+						
+						onApply(edit_gradient);
 					}
 				}
 				
@@ -217,14 +228,12 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				
 				if(drag_color_index.time != _val) {
 					drag_color_index.time = _val;
-					_gradient.refresh();
+					edit_gradient.refresh();
+					onApply(edit_gradient);
 				}
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease())
 					drag_color_index = -1;
-					_gradient.refresh();
-					onApply(_gradient);
-				}
 			}
 			
 		} else {
@@ -248,7 +257,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		
 		if(DRAGGING && DRAGGING.type == "Gradient" && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, h, COLORS._main_value_positive, 1);	
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				onApply(DRAGGING.data);
 		}
 		

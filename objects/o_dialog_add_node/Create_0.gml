@@ -291,8 +291,8 @@ event_inherited();
 			
 			if(buildCallback != undefined) buildCallback(_new_node);
 			
-			var _query = _param[$ "query"];
-			if(is_struct(_query) && _query[$ "type"] == "preset") {
+			var _query = struct_try_get(_param, "query");
+			if(struct_try_get(_query, "type") == "preset") {
 				_new_node.skipDefault();
 				_new_node.setPreset(_query[$ "value"]);
 			}
@@ -1348,7 +1348,7 @@ event_inherited();
 				var _nmy  = yy + grid_size + 4, _nmh = 0;
 				var _drw  = _nmy > -grid_size && _nmy < search_pane.h;
 				
-				var _qstr  = _query != ""? _query[$ "value"] : "";
+				var _qstr  = struct_try_get(_query, "value", "");
 				if(_qstr != "") {
 					draw_set_font(f_p3);
 					_qstr = string_title(_qstr);

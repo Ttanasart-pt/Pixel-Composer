@@ -15,7 +15,10 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 	selector       = new colorSelector();
 	drop_target    = noone;
 	
+	onClose = undefined;
+	
 	function setApply(_onApply) { onApply = _onApply; selector.onApply = _onApply; return self; }
+	function setClose(_onClose) { onClose = _onClose;                              return self; }
 	function setDefault(color) { selector.setColor(color); previous_color = color; return self; }
 	
 	b_cancel = button(function() /*=>*/ { onApply(previous_color); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)

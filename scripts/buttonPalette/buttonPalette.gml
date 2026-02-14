@@ -9,8 +9,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	edit_color_index = -1;
 	
 	static trigger = function() {
-		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
-		dialog.setDefault(current_palette);
+		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2)
+						.setDefault(current_palette);
 		dialog.onApply      = onApply;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
@@ -24,8 +24,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		current_palette  = array_clone(current_palette);
 		
 		var dialog = dialogCall(o_dialog_color_selector)
-							.setDefault(current_palette[edit_color_index])
-							.setApply(method(self, editColor));
+						.setDefault(current_palette[edit_color_index])
+						.setApply(editColor);
 		
 		dialog.interactable = interactable;
 	}
@@ -34,10 +34,11 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		if(edit_color_index == -1) return;
 		current_palette[edit_color_index] = col;
 		onApply(current_palette);
-	}
+		
+	} editColor = method(self, editColor);
 	
-	static fetchHeight = function(params) { return params.h + expanded * (array_length(params.data) * ui(16) + ui(2));  }
-	static drawParam   = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
+	static fetchHeight = function(params) /*=>*/ {return params.h + expanded * (array_length(params.data) * ui(16) + ui(2))};
+	static drawParam   = function(params) /*=>*/ {return draw(params.x, params.y, params.w, params.h, params.data, params.m)};
 	static draw = function(_x, _y, _w, _h, _color, _m) {
 		x = _x;
 		y = _y;

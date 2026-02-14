@@ -43,7 +43,7 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 			return;
 		}
 		
-		if(is_struct(_dat)) {
+		if(is_struct(_dat)) { // cast random struct to gradient [???]
 			static_set(_dat, static_get(gradientObject));
 			setValue(_dat);
 			return;
