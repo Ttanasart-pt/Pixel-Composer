@@ -199,9 +199,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(length == 0 || !prop.is_anim) return false;
 			
-			if(array_length(key_map) != NODE_TOTAL_FRAMES) updateKeyMap();
+			if(array_length(key_map) < NODE_TOTAL_FRAMES) 
+				updateKeyMap();
 			
-			return key_map[_time];
+			return array_safe_get_fast(key_map, _time);
 		}
 		
 		///////////////////////////////////////////////////////////// OPTIMIZATION /////////////////////////////////////////////////////////////
@@ -516,9 +517,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var _len = max(NODE_TOTAL_FRAMES, array_last(values).time);
 		key_map_mode = prop.on_end;
-		
-		if(array_length(key_map) != _len)
-			array_resize(key_map, _len);
+		key_map      = array_verify(key_map, _len);
 		
 		if(prop.type == VALUE_TYPE.trigger) {
 			for( var i = 0; i < _len; i++ ) 

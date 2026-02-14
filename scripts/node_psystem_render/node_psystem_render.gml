@@ -60,7 +60,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Nodes
 	
-	array_push(attributeEditors,   "Cache" );
+	array_push(attributeEditors, "Cache" );
 	array_push(attributeEditors, Node_Attribute("Cache Data", function() /*=>*/ {return attributes.cache}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("cache")})}));
 	
 	custom_parameter_names       = [];
@@ -78,7 +78,15 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
 	
 	static update = function(_frame = CURRENT_FRAME) {
-		if(!is(inline_context, Node_pSystem_Inline) || inline_context.prerendering) return;
+		#region render check
+			var _update = true;
+			
+			if(!is(inline_context, Node_pSystem_Inline)) _update = false;
+			if(inline_context.prerendering)              _update = false;
+			if(!IS_PLAYING)                              _update = false;
+			
+			if(!_update) return;
+		#endregion
 		
 		#region data
 			var _dim   = getDimension();
