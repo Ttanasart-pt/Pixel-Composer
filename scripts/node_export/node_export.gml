@@ -297,7 +297,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var indexAni = array_get_index(format_animation, _ext);
 		if(indexAni > -1) {
-			inputs[3].setValue(0);
+			inputs[3].setValue(2);
 			inputs[9].setValue(indexAni);
 			return;
 		}
