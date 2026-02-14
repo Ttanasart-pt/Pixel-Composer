@@ -4,30 +4,32 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDrawIcon(s_node_path_spiral);
 	
 	////- =Path
-	
-	newInput(0, nodeValue_PathNode("Path"));
+	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 6, nodeValue_Range(    "Range",       [0,1] ));
+	newInput( 7, nodeValue_Bool(     "Clamp Curve", false ));
 	
 	////- =Spiral
-	
 	newInput( 1, nodeValue_Float( "Frequency",  4));
 	newInput( 2, nodeValue_Float( "Amplitude",  4));
 	newInput( 5, nodeValue_Curve( "Amplitude Over Length",  CURVE_DEF_11));
 	
 	newInput( 3, nodeValue_Slider(   "Spiral",    .75, [-2,2,.01]));
 	newInput( 4, nodeValue_Rotation( "Phase",      0));
-	
-	// input 6
+	// input 8
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 
-		["Path",    true], 0,
-		["Spiral", false], 1, 2, 5, 3, 4, 
+		[ "Path",    true ], 0, 6, 7, 
+		[ "Spiral", false ], 1, 2, 5, 3, 4, 
 	];
 	
 	////- Nodes
 	
 	function _spiralPath(_node) : Path(_node) constructor {
+		range     = [ 0,1 ];
+		range_clamp = false;
+		
 		freq      = 0; 
 		amplitude = 0;
 		amp_curve = noone;
@@ -100,9 +102,23 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			}
 			
 			var _path = curr_path;
+			
+			if(_rat < range[0] || _rat > range[1]) {
+				p = _path.getPointRatio(_rat, ind, p);
+				out.x = p.x;
+				out.y = p.y;
+				out.weight = p.weight;
+				
+				cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+				return out;
+			}
+			
 			var _fre  = freq;
 			var _amp  = amplitude;
-			if(amp_curve) _amp *= amp_curve.get(_rat);
+			if(amp_curve) {
+				var _crat = range_clamp? (_rat - range[0]) / (range[1] - range[0]) : _rat;
+				_amp *= amp_curve.get(_crat);
+			}
 			
 			var _pha  = phase / 360;
 			var _spi  = spiral;
@@ -151,6 +167,8 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		_outData.cached_pos = {};
 		_outData.curr_path  = _data[0];
+		_outData.range      = _data[6];
+		_outData.range_clamp= _data[7];
 		
 		_outData.freq      = _data[1];
 		_outData.amplitude = _data[2];

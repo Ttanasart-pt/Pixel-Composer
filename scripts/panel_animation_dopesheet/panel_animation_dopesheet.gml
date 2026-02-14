@@ -1719,10 +1719,10 @@ function Panel_Animation_Dopesheet() {
         draw_set_color(CDEF.main_mdblack);
         draw_rectangle(0, ty - ui(8), tool_width, ty + ui(8), false);
         
+        var tw = ui(15);
+        var th = ui(17);
+        
         if(drw) {
-	        var tw = ui(15);
-	        var th = ui(17);
-	        
 	        var _gx = ui(8);
 	        var _gy = ty - ui(9);
 	        var  bc = [COLORS._main_icon, COLORS._main_icon_on_inner];

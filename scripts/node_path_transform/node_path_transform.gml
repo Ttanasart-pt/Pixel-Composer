@@ -4,30 +4,35 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	dimension_index = -1;
 	setDrawIcon(s_node_path_transform);
 	
-	newInput(0, nodeValue_PathNode( "Path" ));
+	////- =Path
+	newInput( 0, nodeValue_PathNode( "Path" ));
 	
-	newInput(1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitSimple();
-	newInput(2, nodeValue_Rotation( "Rotation",  0    )).setHotkey("R");
-	newInput(3, nodeValue_Vec2(     "Scale",    [1,1] ));
-	newInput(4, nodeValue_Vec2(     "Anchor",   [0,0] )).setUnitSimple();
+	////- =Transform
+	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitSimple();
+	newInput( 2, nodeValue_Rotation( "Rotation",  0    )).setHotkey("R");
+	newInput( 3, nodeValue_Vec2(     "Scale",    [1,1] ));
+	newInput( 4, nodeValue_Vec2(     "Anchor",   [0,0] )).setUnitSimple();
 	//input 5
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	b_center = button(function() /*=>*/ {return setCenter()}).setIcon(THEME.icon_center_canvas, 0, COLORS._main_icon, .5).setText("Center");
 	
-	input_display_list = [ 0, 
+	input_display_list = [ 
+		[ "Path",      false ], 0,  
 		[ "Transform", false ], 1, 2, 3, 4, b_center, 
 	]
+	
+	////- Node
 	
 	function _transformedPath(_node) : Path(_node) constructor {
 		path       = noone;
 		cached_pos = {};
 		
-		pos  = [ 0, 0 ];
-		rot  = 0;
-		sca  = [ 1, 1 ];
-		anc  = [ 0, 0 ];
+		pos  = [0,0];
+		rot  =  0;
+		sca  = [1,1];
+		anc  = [0,0];
 		p    = new __vec2P();
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
@@ -56,12 +61,14 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			b.minx	= anc[0] + (b.minx - anc[0]) * sca[0]; 
 			b.miny	= anc[1] + (b.miny - anc[1]) * sca[1];
+			
 			var _pp = point_rotate(b.minx, b.miny, anc[0], anc[1], rot);
 			b.minx	= _pp[0] + pos[0]; 
 			b.miny	= _pp[1] + pos[1];
 			
 			b.maxx	= anc[0] + (b.maxx - anc[0]) * sca[0]; 
 			b.maxy	= anc[1] + (b.maxy - anc[1]) * sca[1];
+			
 			var _pp = point_rotate(b.maxx, b.maxy, anc[0], anc[1], rot);
 			b.maxx	= _pp[0] + pos[0]; 
 			b.maxy	= _pp[1] + pos[1];
@@ -146,17 +153,25 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
-		var _path = _data[0];
+		#region data
+			var _path = _data[0];
+			
+			var _posi = _data[1];
+			var _rota = _data[2];
+			var _scal = _data[3];
+			var _anch = _data[4];
+			
+		#endregion
 		
 		if(!is(_outData, _transformedPath)) 
 			_outData = new _transformedPath(self);
 		
 		_outData.cached_pos = {};
 		_outData.path = _path;
-		_outData.pos  = _data[1];
-		_outData.rot  = _data[2];
-		_outData.sca  = _data[3];
-		_outData.anc  = _data[4];
+		_outData.pos  = _posi;
+		_outData.rot  = _rota;
+		_outData.sca  = _scal;
+		_outData.anc  = _anch;
 		
 		return _outData
 		

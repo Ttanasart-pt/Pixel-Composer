@@ -13,7 +13,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Path
 	newInput( 0, nodeValue_PathNode( "Path" ));
-	newInput(11, nodeValue_Range(    "Range", [0,1] ));
+	newInput(11, nodeValue_Range(    "Range",       [0,1] ));
+	newInput(12, nodeValue_Bool(     "Clamp Curve", false ));
 	
 	////- =Wave
 	newInput( 1, nodeValue_Range( "Frequency", [4,4], { linked : true }));
@@ -27,12 +28,12 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 6, nodeValue_Bool(  "Wiggle",           false  ));
 	newInput( 7, nodeValue_Range( "Wiggle Amplitude", [-2,2] ));
 	newInput( 8, nodeValue_Float( "Wiggle Frequency",  8     ));
-	// input 12
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
-		[ "Path",    true    ],  0, 11, 
+		[ "Path",    true    ],  0, 11, 12, 
 		[ "Wave",   false    ],  1,  2,  9,  3,  4, 10, 
 		[ "Wiggle",  true, 6 ],  7,  8, 
 	];
@@ -41,6 +42,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function _wavePath(_node) : Path(_node) constructor {
 		range = [0,1];
+		range_clamp = false;
 		
 		fre  = 0; 
 		amp  = 0;
@@ -173,7 +175,10 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				case 2 : prg = max(prg, 0); break;
 			}
 			
-			if(amp_curve) prg *= amp_curve.get(_rat);
+			if(amp_curve) {
+				var _crat = range_clamp? (_rat - range[0]) / (range[1] - range[0]) : _rat;
+				prg *= amp_curve.get(_crat);
+			}
 			
 			out.x = p.x + lengthdir_x(_amp * prg, dir);
 			out.y = p.y + lengthdir_y(_amp * prg, dir);
@@ -201,6 +206,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData.seed       = _data[ 5] + _array_index;
 		_outData.curr_path  = _data[ 0];
 		_outData.range      = _data[11];
+		_outData.range_clamp= _data[12];
 		
 		_outData.fre  = _data[1];
 		_outData.amp  = _data[2]; _outData.amp_curve = new curveMap(_data[9], 128);
