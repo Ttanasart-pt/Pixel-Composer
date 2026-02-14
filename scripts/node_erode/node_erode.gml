@@ -19,6 +19,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(4, 8); // inputs 8, 9, 
 	
 	////- =Erode
+	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "Radial", "Box", "Diamond", "Cross" ] ));
 	newInput( 1, nodeValue_Int(  "Width", 1)).setHotkey("S").setMappable(10);
 	newInput( 2, nodeValue_Bool( "Preserve Border", false ));
 	newInput( 3, nodeValue_Bool( "Use Alpha",        true ));
@@ -26,7 +27,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	input_display_list = [  6,  7,
 		[ "Surfaces", true ],  0,  4,  5,  8,  9, 
-		[ "Erode",   false ],  1, 10,  3, 
+		[ "Erode",   false ], 11,  1, 10,  3, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -52,17 +53,18 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		#region data
 			var _surf = _data[0];
 			
-			var _wid = _data[1];
-			var _bor = _data[2];
-			var _alp = _data[3];
-			
-			var _dim = surface_get_dimension(_surf);
+			var _mod = _data[11];
+			var _wid = _data[ 1];
+			var _bor = _data[ 2];
+			var _alp = _data[ 3];
 		#endregion
 		
+		var _dim = surface_get_dimension(_surf);
 		surface_set_shader(_outSurf, sh_erode);
 			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_2("dimension", _dim );
 			
+			shader_set_i("mode",      _mod );
 			shader_set_f_map("size",  _wid, _data[10], inputs[1]);
 			shader_set_i("border",    _bor );
 			shader_set_i("alpha",     _alp );
