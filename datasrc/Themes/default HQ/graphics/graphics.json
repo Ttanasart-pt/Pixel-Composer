@@ -3,6 +3,7 @@
     "icon_24":                            { "path": "./meta/s_icon_24.png",                                 "s": 1, "x": 12, "y": 12 },
     "icon_24_grey":                       { "path": "./meta/s_icon_24_grey.png",                            "s": 1, "x": 12, "y": 12 },
     "icon_64":                            { "path": "./meta/s_icon_64.png",                                 "s": 1, "x": 32, "y": 32 },
+    "forum_grey":                         { "path": "./meta/s_forum_grey.png",                              "s": 1, "x": 32, "y": 32 },
     
     "dialog":                             { "path": "./dialog/s_dialog.png",                                "s": 2, "x":  0, "y":  0, "slice": 15 },
     

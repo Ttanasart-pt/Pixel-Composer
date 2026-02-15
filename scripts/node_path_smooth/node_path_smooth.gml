@@ -38,6 +38,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lengthAccs	= [];
 		lengthTotal	= 0;
 		boundary    = new BoundingBox();
+		loop        = false;
 		
 		cached_pos  = ds_map_create();
 		 path_preview_surface = noone;
@@ -78,8 +79,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	////- Path
 	
 	static updateLength = function() {
-		var loop    = getInputData(0);
-		
 		segments    = [];
 		lengths	    = [];
 		lengthAccs  = [];
@@ -192,7 +191,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			return out;
 		}
 		
-		var loop = getInputData(1);
 		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
 		
 		if(anchorSize == 0) return out;
@@ -241,7 +239,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var sample = PREFERENCES.path_resolution;
-		var loop   = getInputData(0);
 		var rond   = getInputData(1);
 		var hovering = false;
 		
@@ -312,7 +309,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
 		
-		var loop = getInputData(0);
+		loop = getInputData(0);
 		var rond = getInputData(1);
 		var smot = getInputData(2);
 		

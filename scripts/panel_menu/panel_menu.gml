@@ -308,8 +308,8 @@ function Panel_Menu() : PanelContent() constructor {
         ]];
         
         menu_help = [ __txt("Help"), [
-            menuItem(__txtx("panel_menu_help_video", "Tutorial videos"),                       function() /*=>*/ {return url_open("https://www.youtube.com/@makhamdev")}, THEME.youtube),
-            menuItem(__txtx("panel_menu_help_wiki", "Community Wiki"),                         function() /*=>*/ {return url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki")}, THEME.wiki),
+            menuItem(__txtx("panel_menu_help_forum", "Pixel Composer Forum"), function() /*=>*/ {return url_open("https://forum.pixel-composer.com")}, THEME.forum_grey),
+            menuItem(__txtx("panel_menu_help_wiki",  "Documentation"), function() /*=>*/ {return url_open("https://docs.pixel-composer.com")}),
             -1, 
             menuItem(__txtx("panel_menu_local_directory", "Open local directory"),             function() /*=>*/ {return shellOpenExplorer(DIRECTORY)},               THEME.folder),
             menuItem(__txtx("panel_menu_autosave_directory", "Open autosave directory"),       function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave/")}, THEME.folder),

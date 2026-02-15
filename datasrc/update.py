@@ -22,6 +22,10 @@ def packFolder(src, trg):
     print(f" > Packing {src} into {trg}...")
     lzipData[src] = lastEditTime
     
+    if(src == "Themes"):
+        shutil.copy(f"{srcDir}/default/values.json", f"{srcDir}/default HQ/values.json")
+        shutil.copy(f"{srcDir}/default/graphics/graphics.json", f"{srcDir}/default HQ/graphics/graphics.json")
+
     shutil.make_archive(trgZip, 'zip', srcDir)
 
 packFolder("Actions", "actions")

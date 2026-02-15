@@ -87,17 +87,20 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			p  = _path.getPointRatio(_rat, ind, p);
 			
+			var t0;
 			var sx = 0, sy = 0;
 			var amp = 1;
 			var wei = 0;
 			var spn = span;
 			
 			repeat(sstep) {
-				p0  = _path.getPointRatio(frac(frac(_rat - spn) + 1), ind, p0);
+				t0  = loop? frac(frac(_rat - spn) + 1) : clamp(_rat - spn, 0, 0.99999);
+				p0  = _path.getPointRatio(t0, ind, p0);
 				sx += p0.x * amp;
 				sy += p0.y * amp;
 				
-				p0  = _path.getPointRatio(frac(frac(_rat + spn) + 1), ind, p0);
+				t0  = loop? frac(frac(_rat + spn) + 1) : clamp(_rat + spn, 0, 0.99999);
+				p0  = _path.getPointRatio(t0, ind, p0);
 				sx += p0.x * amp;
 				sy += p0.y * amp;
 				
@@ -131,10 +134,14 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(!is(_outData, _smoothenPath)) 
 			_outData = new _smoothenPath(self);
 		
+		if(!is_path(_data[ 0])) return _outData;
+		
 		_outData.cached_pos = {};
 		_outData.curr_path  = _data[ 0];
 		_outData.range      = _data[ 1];
 		_outData.range_clamp= _data[ 2];
+		
+		_outData.loop       = _data[ 0];
 		
 		_outData.span  = _data[ 3];
 		_outData.blend = _data[ 4];
