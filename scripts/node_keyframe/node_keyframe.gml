@@ -78,7 +78,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		return 0;
 	}
 	
-	static toString = function() { return $"[Keyframe] {time}: {value}"; }
+	static toString = function() { return $"[key] {time}: {value} <{ease_in_type}, {ease_out_type}>"; }
 }
 
 function valueAnimator(_val, _prop, _sep_axis = false) constructor {
@@ -567,7 +567,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var _data = [];
 		var _comp = array_length(values) == 1;
 		
-		for(var i = 0; i < array_length(values); i++) {
+		for(var i = 0, n = array_length(values); i < n; i++) {
 			var _value_list = [];
 			_value_list[0] = scale? values[i].time / (NODE_TOTAL_FRAMES - 1) : values[i].time;
 			
@@ -644,7 +644,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var base = prop.def_val;
 		var _typ = prop.type;
-		
+			
 		for(var i = 0, n = array_length(_data); i < n; i++) {
 			var _keyframe = _data[i];
 			var _klen     = array_length(_keyframe);

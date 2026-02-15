@@ -1466,11 +1466,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(onInitWidget) onInitWidget();
 		}
 		
-		for( var i = 0, n = array_length(animator.values); i < n; i++ ) { // ??
-			animator.values[i].ease_in_type   = key_inter;
-			animator.values[i].ease_out_type  = key_inter;
-		}
-		
 	} 
 	
 	static setSideButton = function(b, s = false) { 

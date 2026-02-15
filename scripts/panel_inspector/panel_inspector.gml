@@ -561,12 +561,12 @@ function Panel_Inspector() : PanelContent() constructor {
         return drawContentNode(_y, _m);
     });
     
-    static drawNodeProperties = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all) {
+    static drawNodeProperties = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all) { 
         var con_w  = _w - ui(4); 
         var con_h = contentPane.surface_h;
         
         var _hover = pHOVER && contentPane.hover;
-        var _focus = pFOCUS || PANEL_GRAPH.pFOCUS/* || PANEL_PREVIEW.pFOCUS*/;
+        var _focus = pFOCUS || PANEL_GRAPH.pFOCUS;
         
         _inspecting.inspecting       = true;
         _inspecting.inspector_scroll = contentPane.scroll_y_to;

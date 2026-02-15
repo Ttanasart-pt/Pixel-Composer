@@ -1328,7 +1328,7 @@ function Panel_Animation_Dopesheet() {
         for( var k = 0, n = array_length(key_list); k < n; k++ ) { //draw easing
             var key = key_list[k];
             var t   = key.dopesheet_x;
-                        
+        	
             if(key.ease_in_type == CURVE_TYPE.bezier) {
                 draw_set_color(COLORS.panel_animation_keyframe_ease_line);
                 var _tx = t - key.ease_in[0] * timeline_scale * 2;
