@@ -319,14 +319,15 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(14, nodeValue_Slider( "Alpha", 1 ));
 	
 	////- =Stretch
-	newInput(17, nodeValue_Bool(   "Stretch",           false ));
-	newInput(18, nodeValue_Slider( "Stretch Intensity", 1     ));
+	newInput(17, nodeValue_Bool(  "Stretch",           false ));
+	newInput(18, nodeValue_Float( "Stretch Intensity", 4     ));
+	newInput(19, nodeValue_Float( "Inv Stretch",       0     )).setTooltip("Contract the other axis when stretching to preserve volume.");
 	
 	////- =Echo
 	newInput(12, nodeValue_Bool(    "Echo",        false ));
 	newInput(16, nodeValue_EButton( "Echo Type",   0, [ "Static", "Animated" ] ));
 	newInput(13, nodeValue_Int(     "Echo Amount", 8     ));
-	// input 19
+	// input 20
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone    ));
 	newOutput(2, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []       ));
@@ -338,7 +339,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		[ "Rotation", false    ], 5, 8, 
 		[ "Scale",    false    ], 6, 
 		[ "Render",   false    ], 14, 
-		[ "Stretch",  true, 17 ], 18, 
+		[ "Stretch",  true, 17 ], 18, 19, 
 		[ "Echo",     true, 12 ], 16, 13, 
 	];
 	
@@ -360,9 +361,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	vel        = 0;
-	prev_pos   = [ 0, 0 ];
-	prev_data  = noone;
+	transformData = noone;
 	
 	__p0 = [ 0, 0 ];
 	__p1 = [ 0, 0 ];
@@ -752,9 +751,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 
 	static drawOverlayTransform = function(_node) { 
 		if(_node != inputs[0].getNodeFrom()) return noone;
+		if(transformData == noone) return;
 		
-		var _tr = array_safe_get(prev_data, preview_index, noone);
-		return _tr == noone? noone : [ _tr[0][0], _tr[0][1], _tr[2][0], _tr[2][1], _tr[1] ];
+		var _fr = array_safe_get(transformData, CURRENT_FRAME);
+		return array_safe_get(_fr, preview_index, noone);
 	}
 	
 	////- Nodes
@@ -825,24 +825,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[2].setValue([ surface_get_width_safe(_surf) / 2, surface_get_height_safe(_surf) / 2 ]);
 	}
 	
-	static step = function() {
-		
-		if(!PROJECT.animator.frame_progress) return;
-		var pos = getInputSingle(2);
-		
-		if(IS_FIRST_FRAME) {
-			vel = 0;
-			prev_pos[0] = pos[0];
-			prev_pos[1] = pos[1];
-			
-		} else {
-			vel = point_direction(prev_pos[0], prev_pos[1], pos[0], pos[1]);
-				
-			prev_pos[0] = pos[0];
-			prev_pos[1] = pos[1];
-		}
-	}
-	
 	static processData = function(_outData, _data, _array_index) {
 		
 		#region data
@@ -866,6 +848,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var strt      = _data[17];
 			var strt_amo  = _data[18];
+			var strt_inv  = _data[19];
 			
 			var echo      = _data[12];
 			var echo_typ  = _data[16];
@@ -873,9 +856,19 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var cDep = attrDepth();
 			
+			transformData[CURRENT_FRAME] = noone;
 		#endregion
+		
+		#region frames data
+			var _prevData = array_safe_get(transformData, CURRENT_FRAME - 1, noone);
+			    _prevData = array_safe_get(_prevData, _array_index, noone);
 			
-		rot += rot_vel * vel;
+			if(_prevData != noone) {
+				var dirr = point_direction( _prevData[5], _prevData[6], pos_raw[0], pos_raw[1] );
+				rot += rot_vel * dirr;
+			}
+			
+		#endregion
 		
 		var  ww = surface_get_width_safe(surf);
 		var  hh = surface_get_height_safe(surf);
@@ -944,7 +937,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var draw_x = pos_exact? round(__p[0]) : __p[0];
 		var draw_y = pos_exact? round(__p[1]) : __p[1];
 		
-		prev_data[_array_index] = [ [ draw_x, draw_y ], rot, [ sca[0], sca[1] ] ];
 		_outData[2] = new SurfaceAtlas(surf, pos[0], pos[1], rot, sca[0], sca[1]);
 		
 		if(mode == 1) { // Tile
@@ -952,6 +944,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_interpolation(surf);
 			draw_surface_tiled_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 			surface_reset_shader();
+			
+			transformData[CURRENT_FRAME][_array_index] = [ draw_x, draw_y, sca[0], sca[1], rot, pos_raw[0], pos_raw[1] ];
 			return _outData;
 		} 
 		
@@ -982,16 +976,16 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
 				}
 				
-			} else if(echo_typ == 1 && CURRENT_FRAME && prev_data != noone) {
-				var _pre = prev_data[_array_index];
+			} else if(echo_typ == 1 && array_safe_get(transformData, CURRENT_FRAME - 1, noone) != noone) {
+				var _pre = transformData[CURRENT_FRAME - 1][_array_index];
 				
 				for( var i = 0; i <= echo_amo; i++ ) {
 					var rat = i / echo_amo;
-					var _px = lerp(_pre[0][0], draw_x, rat);
-					var _py = lerp(_pre[0][1], draw_y, rat);
-					var _rt = lerp(_pre[1],    rot,    rat);
-					var _sx = lerp(_pre[2][0], sca[0], rat);
-					var _sy = lerp(_pre[2][1], sca[1], rat);
+					var _px = lerp(_pre[0], draw_x, rat);
+					var _py = lerp(_pre[1], draw_y, rat);
+					var _sx = lerp(_pre[2], sca[0], rat);
+					var _sy = lerp(_pre[3], sca[1], rat);
+					var _rt = lerp(_pre[4], rot,    rat);
 					
 					_px = pos_exact? round(_px) : _px;
 					_py = pos_exact? round(_py) : _py;
@@ -1000,7 +994,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 			} else 
 				draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
-				
+			
 		} else 
 			draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 		
@@ -1018,15 +1012,32 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		surface_reset_shader();
 		
-		if(!strt) return _outData;
+		if(!strt || _prevData == noone) {
+			transformData[CURRENT_FRAME][_array_index] = [ draw_x, draw_y, sca[0], sca[1], rot, pos_raw[0], pos_raw[1] ];
+			return _outData;
+		}
+		
+		var ox = _prevData[5];
+		var oy = _prevData[6];
+		
+		var dirr  = point_direction( ox, oy, pos_raw[0], pos_raw[1] );
+		var diss  = point_distance(  ox, oy, pos_raw[0], pos_raw[1] ) / _ww;
+		    diss *= strt_amo;
+		
+		var _stAnc = [ (pos[0] + anc[0]) / _ww, 
+		               (pos[1] + anc[1]) / _hh ];
+		var _stDir = dirr;
+		var _stStr = [1 + diss, 1 - diss * strt_inv];
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _ww, _hh, cDep);
 		surface_set_shader(temp_surface[0], sh_stretch);
+			shader_set_interpolation(surf);
+			shader_set_i("sampleMode", 0);
 			shader_set_2("dimension", [_ww, _hh]);
 			
-			shader_set_2("anchor",    anc_raw  );
-			shader_set_f("direction", rot      );
-			shader_set_2("strength",  strt_amo );
+			shader_set_2("anchor",    _stAnc );
+			shader_set_f("direction", _stDir );
+			shader_set_2("strength",  _stStr );
 
 			draw_surface(_outSurf, 0, 0);
 		surface_reset_shader();
@@ -1035,6 +1046,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface(temp_surface[0], 0, 0);
 		surface_reset_shader();
 		
+		transformData[CURRENT_FRAME][_array_index] = [ draw_x, draw_y, sca[0], sca[1], rot, pos_raw[0], pos_raw[1] ];
 		return _outData;
 	}
 	
