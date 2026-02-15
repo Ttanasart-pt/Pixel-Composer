@@ -7,30 +7,37 @@
 function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Nine Slice";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	////- =Surface
+	newInput( 0, nodeValue_Surface("Surface In"));
 	
 	////- =Slices
-	newInput(1, nodeValue_Dimension());
-	newInput(2, nodeValue_Padding(     "Splice",       [0,0,0,0] )).setUnitSimple();
-	newInput(3, nodeValue_Enum_Scroll( "Filling modes", 0, [ "Scale", "Repeat" ] ));
+	newInput( 1, nodeValue_Dimension());
+	newInput( 2, nodeValue_Padding(     "Splice",       [0,0,0,0] )).setUnitSimple();
+	newInput( 3, nodeValue_Enum_Scroll( "Filling modes", 0, [ "Scale", "Repeat" ] ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface,     noone ));
 	newOutput(1, nodeValue_Output("DynaSurf",    VALUE_TYPE.dynaSurface, new nineSliceSurf() ));
 	
-	attribute_surface_depth();
-	attribute_interpolation();
-	
 	input_display_list = [
-		["Surface", false], 0, 
-		["Slices",  false], 1, 2, 3, 
-	]
+		[ "Surface", false ], 0, 
+		[ "Slices",  false ], 1, 2, 3, 
+	];
 	
 	////- Node
+	
+	attribute_surface_depth();
+	attribute_interpolation();
 	
 	drag_side = -1;
 	drag_mx   = 0;
 	drag_my   = 0;
 	drag_sv   = 0;
+	
+	drag_dim    = false;
+	drag_dim_sx = 0;
+	drag_dim_sy = 0;
+	drag_dim_mx = 0;
+	drag_dim_my = 0;
 	
 	tools = [ new NodeTool( "Preview Original", THEME.bone_tool_scale ) ];
 	
@@ -95,7 +102,49 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 		}
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		#region edit dimension
+			var _ddim = inputs[1].getValue();
+			var _dx = _x + _ddim[0] * _s;
+			var _dy = _y + _ddim[1] * _s;
+			var _ah = hover && point_in_circle(_mx, _my, _dx, _dy, ui(10));
+			
+			draw_anchor(_ah || drag_dim, _dx, _dy, ui(10), 0);
+			
+			if(drag_dim) {
+				var vx = drag_dim_sx + (_mx - drag_dim_mx) / _s;
+				var vy = drag_dim_sy + (_my - drag_dim_my) / _s;
+				
+				vx = value_snap(round(vx), _snx);
+				vy = value_snap(round(vy), _sny);
+				
+				if(inputs[1].attributes.use_project_dimension) {
+					vx /= DEF_SURF_W;
+					vy /= DEF_SURF_H;
+				}
+				
+				if(inputs[1].setValue([vx, vy])) 
+					UNDO_HOLDING = true;
+					
+				if(mouse_lrelease()) {
+					drag_dim     = false;
+					UNDO_HOLDING = false;
+				}
+				
+				return true;
+			}
+			
+			if(_ah) {
+				if(mouse_lpress(active)) {
+					drag_dim = true;
+					drag_dim_sx = _ddim[0];
+					drag_dim_sy = _ddim[1];
+					drag_dim_mx = _mx;
+					drag_dim_my = _my;
+				}
+				
+				return true;
+			}
+		#endregion
 		
 		if(drag_side > -1) return w_hovering;
 		
