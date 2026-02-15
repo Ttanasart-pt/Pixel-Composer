@@ -335,7 +335,24 @@
 			mx = max(mx, arr[i]);
 		return mx;
 	}
-
+	
+	function array_find_sorted(arr, val) {
+	    var l = 0;
+	    var h = array_length(arr) - 1;
+	    
+	    while (l <= h) {
+	        var m = floor((l + h) / 2);
+	        var a = arr[m];
+	        
+	        if (a == val) return m; 
+	        
+	        if (a < val) l = m + 1; 
+	        else         h = m - 1; 
+	    }
+	    
+	    return l;
+	}
+	
 #endregion
 
 #region modify

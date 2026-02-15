@@ -9,15 +9,16 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 2, nodeValue_Bool(     "Clamp Curve", false ));
 	
 	////- =Smoothen
-	newInput( 3, nodeValue_Float(  "Span",  .02 ));
+	newInput( 3, nodeValue_Slider( "Span",  .02, [0,.1,.001] ));
 	newInput( 4, nodeValue_Slider( "Blend",   1 ));
-	// input 5
+	newInput( 5, nodeValue_Int(    "Step",    1 ));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 
 		[ "Path",      true ],  0,  1,  2, 
-		[ "Smoothen", false ],  3,  4, 
+		[ "Smoothen", false ],  3,  4,  5, 
 	];
 	
 	////- Node
@@ -28,6 +29,7 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		span  = 0; 
 		blend = 0;
+		sstep = 1;
 		
 		cached_pos = {};
 		curr_path  = noone;
@@ -86,15 +88,27 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			p  = _path.getPointRatio(_rat, ind, p);
 			
 			var sx = 0, sy = 0;
+			var amp = 1;
+			var wei = 0;
+			var spn = span;
 			
-			p0  = _path.getPointRatio(frac(frac(_rat - span) + 1), ind, p0);
-			sx += p0.x * .5;
-			sy += p0.y * .5;
+			repeat(sstep) {
+				p0  = _path.getPointRatio(frac(frac(_rat - spn) + 1), ind, p0);
+				sx += p0.x * amp;
+				sy += p0.y * amp;
+				
+				p0  = _path.getPointRatio(frac(frac(_rat + spn) + 1), ind, p0);
+				sx += p0.x * amp;
+				sy += p0.y * amp;
+				
+				wei += amp * 2;
+				spn += span;
+				amp *= .5;
+			}
 			
-			p0  = _path.getPointRatio(frac(frac(_rat + span) + 1), ind, p0);
-			sx += p0.x * .5;
-			sy += p0.y * .5;
-			
+			sx /= wei;
+			sy /= wei;
+
 			out.x = lerp(p.x, sx, blend);
 			out.y = lerp(p.y, sy, blend);
 			out.weight = p.weight;
@@ -124,6 +138,7 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		_outData.span  = _data[ 3];
 		_outData.blend = _data[ 4];
+		_outData.sstep = _data[ 5];
 		
 		return _outData;
 	}
