@@ -15,13 +15,14 @@ function Node_Number_Text_Format(_x, _y, _group = noone) : Node_Processor(_x, _y
 	newInput( 4, nodeValue_Bool( "Pad Decimal",   false ));
 	newInput( 5, nodeValue_Int(  "Minimum Digit", 2     ));
 	newInput( 6, nodeValue_Text( "Pad Letter",    "0"   ));
-	// 8
+	newInput( 8, nodeValue_Text( "Decimal Sep",   "."   ));
+	// 9
 	
 	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	input_display_list = [ 0, 
 		[ "Pad Integer", false, 1 ], 2, 3, 7, 
-		[ "Pad Decimal", false, 4 ], 5, 6, 
+		[ "Pad Decimal", false, 4 ], 5, 6, 8, 
 	];
 	
 	////- Node
@@ -38,6 +39,7 @@ function Node_Number_Text_Format(_x, _y, _group = noone) : Node_Processor(_x, _y
 			var _pdec     = _data[4];
 			var _pdec_dig = _data[5];
 			var _pdec_txt = _data[6];
+			var _pdec_sep = _data[8];
 		#endregion
 		
 		var s    = string_format(_val, 0, _pdec_dig);
@@ -57,7 +59,7 @@ function Node_Number_Text_Format(_x, _y, _group = noone) : Node_Processor(_x, _y
 			var _amo = floor((_len - 1) / 3);
 			
 			repeat(_amo) {
-				_sint = string_insert(_thou_sep, _sint, _len - 2);
+				_sint = string_insert(_thou_sep, _sint, _len - 3 + 1);
 				_len -= 3;
 			}
 		}
@@ -68,7 +70,7 @@ function Node_Number_Text_Format(_x, _y, _group = noone) : Node_Processor(_x, _y
 		}
 		
 		var _ss = _sint;
-		if(_sdec != "") _ss += $".{_sdec}";
+		if(_sdec != "") _ss += $"{_pdec_sep}{_sdec}";
 		
 		return _ss;
 	}
