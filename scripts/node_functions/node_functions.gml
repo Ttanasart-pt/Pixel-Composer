@@ -11,7 +11,7 @@
 		rot_anc_y = 0;	
 	}
 	
-	function node_draw_transform_box(active, _x, _y, _s, _mx, _my, _snx, _sny, _posInd, _rotInd, _scaInd, _scaUnit = false) {
+	function node_draw_transform_box(active, _x, _y, _s, _mx, _my, _posInd, _rotInd, _scaInd, _scaUnit = false) {
 		var _pos = getInputData(_posInd);
 		var _rot = getInputData(_rotInd);
 		var _sca = getInputData(_scaInd);
@@ -34,8 +34,8 @@
 					}
 				}
 				
-				_pos[0] = value_snap(dragging_sx + _dx, _snx);
-				_pos[1] = value_snap(dragging_sy + _dy, _sny);
+				_pos[0] = PANEL_PREVIEW.snapX(dragging_sx + _dx);
+				_pos[1] = PANEL_PREVIEW.snapY(dragging_sy + _dy);
 				
 				if(inputs[_posInd].setValue(_pos))
 					UNDO_HOLDING = true;

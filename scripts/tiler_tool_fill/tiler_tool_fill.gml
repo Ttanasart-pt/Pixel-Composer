@@ -7,7 +7,7 @@ function tiler_tool_fill(_node, _brush, toolAttr) : tiler_tool(_node) constructo
 	mouse_pre_x = -1;
 	mouse_pre_y = -1;
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function step(hover, active, _x, _y, _s, _mx, _my) {
 		
 		mouse_cur_x = floor(round((_mx - _x) / _s - 0.5) / tile_size[0]);
 		mouse_cur_y = floor(round((_my - _y) / _s - 0.5) / tile_size[1]);

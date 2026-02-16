@@ -151,7 +151,7 @@ function ToolObject() constructor {
 	
 	////- Actions
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {}
+	static step = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {}
 	
 	static init         = function() /*=>*/ {}
 	static initKeyboard = function() /*=>*/ {}

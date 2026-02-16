@@ -126,10 +126,10 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _my0 = min(_my, drag_my);
 					var _my1 = max(_my, drag_my);
 					
-					_mx0 = value_snap(round((_mx0 - _x) / _s), _snx);
-					_mx1 = value_snap(round((_mx1 - _x) / _s), _snx);
-					_my0 = value_snap(round((_my0 - _y) / _s), _sny);
-					_my1 = value_snap(round((_my1 - _y) / _s), _sny);
+					_mx0 = PANEL_PREVIEW.snapX(round((_mx0 - _x) / _s));
+					_mx1 = PANEL_PREVIEW.snapX(round((_mx1 - _x) / _s));
+					_my0 = PANEL_PREVIEW.snapY(round((_my0 - _y) / _s));
+					_my1 = PANEL_PREVIEW.snapY(round((_my1 - _y) / _s));
 					
 					if(inputs[1].setValue([dim[0] - _mx1, _my0, _mx0, dim[1] - _my1]))
 						UNDO_HOLDING = true;
@@ -148,8 +148,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 				} else {
-					var _mxs = _x + value_snap(round((_mx - _x) / _s), _snx) * _s;
-					var _mys = _y + value_snap(round((_my - _y) / _s), _sny) * _s;
+					var _mxs = _x + PANEL_PREVIEW.snapX(round((_mx - _x) / _s)) * _s;
+					var _mys = _y + PANEL_PREVIEW.snapY(round((_my - _y) / _s)) * _s;
 					
 					draw_set_color(COLORS._main_accent);
 					draw_set_alpha(0.50);
@@ -191,35 +191,35 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var vv;
 				
 				if(drag_side < 4) {
-					     if(drag_side == 0)	vv = value_snap(drag_sv - (_mx - drag_mx) / _s, _snx);
-					else if(drag_side == 1)	vv = value_snap(drag_sv + (_my - drag_my) / _s, _sny);
-					else if(drag_side == 2)	vv = value_snap(drag_sv + (_mx - drag_mx) / _s, _snx);
-					else if(drag_side == 3)	vv = value_snap(drag_sv - (_my - drag_my) / _s, _sny);
+					     if(drag_side == 0)	vv = PANEL_PREVIEW.snapX(drag_sv - (_mx - drag_mx) / _s);
+					else if(drag_side == 1)	vv = PANEL_PREVIEW.snapY(drag_sv + (_my - drag_my) / _s);
+					else if(drag_side == 2)	vv = PANEL_PREVIEW.snapX(drag_sv + (_mx - drag_mx) / _s);
+					else if(drag_side == 3)	vv = PANEL_PREVIEW.snapY(drag_sv - (_my - drag_my) / _s);
 					
 					_splice[drag_side] = vv;
 					
 				} else if(drag_side < 8) {
 					if(drag_side == 4)	{
-						_splice[2] = value_snap(drag_sv[2] + (_mx - drag_mx) / _s, _snx);
-						_splice[1] = value_snap(drag_sv[1] + (_my - drag_my) / _s, _sny);
+						_splice[2] = PANEL_PREVIEW.snapX(drag_sv[2] + (_mx - drag_mx) / _s);
+						_splice[1] = PANEL_PREVIEW.snapY(drag_sv[1] + (_my - drag_my) / _s);
 					
 					} else if(drag_side == 5)	{
-						_splice[0] = value_snap(drag_sv[0] - (_mx - drag_mx) / _s, _snx);
-						_splice[1] = value_snap(drag_sv[1] + (_my - drag_my) / _s, _sny);
+						_splice[0] = PANEL_PREVIEW.snapX(drag_sv[0] - (_mx - drag_mx) / _s);
+						_splice[1] = PANEL_PREVIEW.snapY(drag_sv[1] + (_my - drag_my) / _s);
 					
 					} else if(drag_side == 6)	{
-						_splice[2] = value_snap(drag_sv[2] + (_mx - drag_mx) / _s, _snx);
-						_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
+						_splice[2] = PANEL_PREVIEW.snapX(drag_sv[2] + (_mx - drag_mx) / _s);
+						_splice[3] = PANEL_PREVIEW.snapY(drag_sv[3] - (_my - drag_my) / _s);
 					
 					} else if(drag_side == 7)	{
-						_splice[0] = value_snap(drag_sv[0] - (_mx - drag_mx) / _s, _snx);
-						_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
+						_splice[0] = PANEL_PREVIEW.snapX(drag_sv[0] - (_mx - drag_mx) / _s);
+						_splice[3] = PANEL_PREVIEW.snapY(drag_sv[3] - (_my - drag_my) / _s);
 					}
 				} else if(drag_side == 8) {
-					_splice[0] = value_snap(drag_sv[0] - (_mx - drag_mx) / _s, _snx);
-					_splice[1] = value_snap(drag_sv[1] + (_my - drag_my) / _s, _sny);
-					_splice[2] = value_snap(drag_sv[2] + (_mx - drag_mx) / _s, _snx);
-					_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
+					_splice[0] = PANEL_PREVIEW.snapX(drag_sv[0] - (_mx - drag_mx) / _s);
+					_splice[1] = PANEL_PREVIEW.snapY(drag_sv[1] + (_my - drag_my) / _s);
+					_splice[2] = PANEL_PREVIEW.snapX(drag_sv[2] + (_mx - drag_mx) / _s);
+					_splice[3] = PANEL_PREVIEW.snapY(drag_sv[3] - (_my - drag_my) / _s);
 				}
 				
 				if(inputs[1].setValue(_splice))

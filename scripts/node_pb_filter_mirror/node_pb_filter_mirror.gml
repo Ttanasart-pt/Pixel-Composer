@@ -20,7 +20,7 @@ function Node_PB_Filter_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon);
-			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
+			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, self);
 			
 			var _basebox = _pbase.getBBOX();
 			if(_axis & 0b01) {

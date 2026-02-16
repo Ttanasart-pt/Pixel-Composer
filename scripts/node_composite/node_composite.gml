@@ -932,8 +932,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					}
 					
 					if(surf_dragging > -1) {
-						var pos_x = value_snap(dragging_sx + _dx, _snx);
-						var pos_y = value_snap(dragging_sy + _dy, _sny);
+						var pos_x = PANEL_PREVIEW.snapX(dragging_sx + _dx);
+						var pos_y = PANEL_PREVIEW.snapY(dragging_sy + _dy);
 						
 						if(key_mod_press(ALT)) {
 							var _sind = surf_dragging;
@@ -1006,8 +1006,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 							var _surf_dragging = surface_selecting[i];
 							var _surf_position = surface_predrag[_surf_dragging + 1];
 							
-							var pos_x = value_snap(_surf_position[0] + _dx, _snx);
-							var pos_y = value_snap(_surf_position[1] + _dy, _sny);
+							var pos_x = PANEL_PREVIEW.snapX(_surf_position[0] + _dx);
+							var pos_y = PANEL_PREVIEW.snapY(_surf_position[1] + _dy);
 							
 							if(inputs[_surf_dragging + 1].setValue([ pos_x, pos_y ])) _edit = true;
 						}

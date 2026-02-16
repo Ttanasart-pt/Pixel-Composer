@@ -100,44 +100,44 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		if(drag_side == tool * 4 + 2) {
 			draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
 			
-			var _tlx = value_snap(drag_s[0][0] + dx, _snx);
-			var _tly = value_snap(drag_s[0][1] + dy, _sny);
+			var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
+			var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
 			
-			var _trx = value_snap(drag_s[1][0] + dx, _snx);
-			var _try = value_snap(drag_s[1][1] + dy, _sny);
+			var _trx = PANEL_PREVIEW.snapX(drag_s[1][0] + dx);
+			var _try = PANEL_PREVIEW.snapY(drag_s[1][1] + dy);
 			
 			   inputs[tool * 4 + 2].setValue([ _tlx, _tly ])
 			if(inputs[tool * 4 + 3].setValue([ _trx, _try ])) UNDO_HOLDING = true;
 		} else if(drag_side == tool * 4 + 3) {
 			draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
 			
-			var _tlx = value_snap(drag_s[0][0] + dx, _snx);
-			var _tly = value_snap(drag_s[0][1] + dy, _sny);
+			var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
+			var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
 								  
-			var _blx = value_snap(drag_s[1][0] + dx, _snx);
-			var _bly = value_snap(drag_s[1][1] + dy, _sny);
+			var _blx = PANEL_PREVIEW.snapX(drag_s[1][0] + dx);
+			var _bly = PANEL_PREVIEW.snapY(drag_s[1][1] + dy);
 			
 			   inputs[tool * 4 + 2].setValue([ _tlx, _tly ]);
 			if(inputs[tool * 4 + 4].setValue([ _blx, _bly ])) UNDO_HOLDING = true;
 		} else if(drag_side == tool * 4 + 4) {
 			draw_line_width(br[0], br[1], tr[0], tr[1], 3);
 			
-			var _brx = value_snap(drag_s[0][0] + dx, _snx);
-			var _bry = value_snap(drag_s[0][1] + dy, _sny);
+			var _brx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
+			var _bry = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
 								  
-			var _trx = value_snap(drag_s[1][0] + dx, _snx);
-			var _try = value_snap(drag_s[1][1] + dy, _sny);
+			var _trx = PANEL_PREVIEW.snapX(drag_s[1][0] + dx);
+			var _try = PANEL_PREVIEW.snapY(drag_s[1][1] + dy);
 			
 			   inputs[tool * 4 + 5].setValue([ _brx, _bry ]);
 			if(inputs[tool * 4 + 3].setValue([ _trx, _try ])) UNDO_HOLDING = true;
 		} else if(drag_side == tool * 4 + 5) {
 			draw_line_width(br[0], br[1], bl[0], bl[1], 3);
 			
-			var _brx = value_snap(drag_s[0][0] + dx, _snx);
-			var _bry = value_snap(drag_s[0][1] + dy, _sny);
+			var _brx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
+			var _bry = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
 								  
-			var _blx = value_snap(drag_s[1][0] + dx, _snx);
-			var _bly = value_snap(drag_s[1][1] + dy, _sny);
+			var _blx = PANEL_PREVIEW.snapX(drag_s[1][0] + dx);
+			var _bly = PANEL_PREVIEW.snapY(drag_s[1][1] + dy);
 			
 			   inputs[tool * 4 + 5].setValue([ _brx, _bry ]);
 			if(inputs[tool * 4 + 4].setValue([ _blx, _bly ])) UNDO_HOLDING = true;

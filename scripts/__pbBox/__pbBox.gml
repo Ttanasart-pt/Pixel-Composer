@@ -62,7 +62,7 @@ function __pbBox() constructor {
 	drag_anchor_mx = 0;
 	drag_anchor_my = 0;
 	
-	static drawOverlayBBOX = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _node) {
+	static drawOverlayBBOX = function(hover, active, _x, _y, _s, _mx, _my, _node) {
 		var _bbox = getBBOX();
 		
 		var _x0 = _x + _bbox[0] * _s;
@@ -73,7 +73,7 @@ function __pbBox() constructor {
 		draw_rectangle(_x0, _y0, _x1, _y1, true);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx = 0, _sny = 0, _node = undefined) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _node = undefined) {
 		static snap_dist = 8;
 		
 		if(fixed_box) return;

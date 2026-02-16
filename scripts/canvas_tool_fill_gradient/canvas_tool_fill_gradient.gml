@@ -31,12 +31,12 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 		mouse_init = true; 
 	}
 	
-	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my) {
 		mouse_sx = _mx;
 		mouse_sy = _my;
 	}
 	
-	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my) {
 		var _dim = node.attributes.dimension;
 		var _dit = tool_attribute.dither;
 		

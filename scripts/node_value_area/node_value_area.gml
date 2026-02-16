@@ -163,7 +163,7 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		if(active && preview_hotkey && preview_hotkey.isPressing()) 
 			drawOverlayToggle();
 		
-		_hovering = _hovering || preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"))
+		_hovering = _hovering || preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _flag, struct_try_get(display_data, "onSurfaceSize"))
 		return _hovering;
 	}
 	

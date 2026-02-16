@@ -13,14 +13,14 @@ function canvas_tool_shader() : canvas_tool() constructor {
 	
 	static init = function() { mouse_init = true; }
 	
-	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my) {}
 	
 	////- Step
 	
-	static stepEffect = function(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
-	static stepMaskEffect = function( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	static stepEffect = function(     hover, active, _x, _y, _s, _mx, _my ) {}
+	static stepMaskEffect = function( hover, active, _x, _y, _s, _mx, _my ) {}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(mouse_press(mb_right)) { PANEL_PREVIEW.tool_current = noone; return; }
 				
 		var _dim  = node.attributes.dimension;
@@ -35,7 +35,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 			mask_boundary      = [ _sel.selection_position[0], _sel.selection_position[1], _sel.selection_size[0], _sel.selection_size[1] ];
 			if(mask) _sel.apply();
 			
-			onInit(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			onInit(hover, active, _x, _y, _s, _mx, _my);
 			mouse_init = false;
 			return;
 		}
@@ -48,7 +48,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 		surface_reset_shader();
 		
 		if(mask) {
-			stepMaskEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			stepMaskEffect(hover, active, _x, _y, _s, _mx, _my);
 			
 			if(mouse_lrelease()) {
 				var _newSurf = surface_create(mask_boundary[2], mask_boundary[3]);
@@ -63,7 +63,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 			}
 			
 		} else {
-			stepEffect(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			stepEffect(hover, active, _x, _y, _s, _mx, _my);
 			draw_surface_ext(preview_surface[1], _x, _y, _s, _s, 0, c_white, 1);
 			
 			if(mouse_lrelease()) {
@@ -87,7 +87,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 	
 	////- Draw
 	
-	static drawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawMask = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(!mask) return;
 		draw_surface_ext_safe(preview_surface[1], _x, _y, _s, _s);
 	}

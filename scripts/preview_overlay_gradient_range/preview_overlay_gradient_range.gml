@@ -1,4 +1,4 @@
-function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _dim) {
+function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, _dim) {
 	var _val   = array_clone(getValue());
 	var _targI = node.inputs[mappedJunc.parameters.map_index];
 	var _surf  = _targI.getValue();
@@ -61,8 +61,8 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 		if(drag_type == 1) { d0 = true; }
 		if(drag_type == 2) { d1 = true; }
 		
-		var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
-		var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
+		var _nx = PANEL_PREVIEW.snapX((drag_sx + (_mx - drag_mx) - _x) / _s);
+		var _ny = PANEL_PREVIEW.snapY((drag_sy + (_my - drag_my) - _y) / _s);
 		
 		if(key_mod_press(CTRL)) {
 			_nx = round(_nx);

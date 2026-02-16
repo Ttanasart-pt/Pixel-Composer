@@ -26,7 +26,7 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 	static cancel = function()    { disable(); }
 	static onDisable = function() { clear();   }
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
@@ -116,7 +116,7 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 		pactive     = active;
 	}
 	
-	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my) {
 		var ox, oy, nx, ny, ax0, ay0, ax1, ay1;
 		var oax1, oay1, nax0, nay0;
 		

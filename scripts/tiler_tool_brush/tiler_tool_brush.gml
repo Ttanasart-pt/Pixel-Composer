@@ -18,7 +18,7 @@ function tiler_tool_brush(_node, _brush, eraser = false) : tiler_tool(_node) con
 	mouse_line_x1 = 0;
 	mouse_line_y1 = 0;
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function step(hover, active, _x, _y, _s, _mx, _my) {
 		brush.brush_erase = isEraser;
 		
 		mouse_cur_x = floor(round((_mx - _x) / _s - 0.5) / tile_size[0]);

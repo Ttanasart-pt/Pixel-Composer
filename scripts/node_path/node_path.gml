@@ -733,8 +733,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 		} else if(drag_point > -1) { 
-			var mmx = value_snap(drag_point_sx + (_mx - drag_point_mx) / _s, _snx);
-			var mmy = value_snap(drag_point_sy + (_my - drag_point_my) / _s, _sny);
+			var mmx = PANEL_PREVIEW.snapX(drag_point_sx + (_mx - drag_point_mx) / _s);
+			var mmy = PANEL_PREVIEW.snapY(drag_point_sy + (_my - drag_point_my) / _s);
 			
 			if(attributes.snap_point)
 			for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
@@ -957,10 +957,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
 					var maxy = max((_my - _y) / _s, (drag_point_my - _y) / _s);
 					
-					minx = value_snap(minx, _snx);
-					maxx = value_snap(maxx, _snx);
-					miny = value_snap(miny, _sny);
-					maxy = value_snap(maxy, _sny);
+					minx = PANEL_PREVIEW.snapX(minx);
+					maxx = PANEL_PREVIEW.snapX(maxx);
+					miny = PANEL_PREVIEW.snapY(miny);
+					maxy = PANEL_PREVIEW.snapY(maxy);
 					
 					if(key_mod_press(ALT)) {
 						var _ccx = (drag_point_mx - _x) / _s;
@@ -1018,10 +1018,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var miny = (drag_point_my - _y) / _s - dy;
 					var maxy = (drag_point_my - _y) / _s + dy;
 					
-					minx = value_snap(minx, _snx);
-					maxx = value_snap(maxx, _snx);
-					miny = value_snap(miny, _sny);
-					maxy = value_snap(maxy, _sny);
+					minx = PANEL_PREVIEW.snapX(minx);
+					maxx = PANEL_PREVIEW.snapX(maxx);
+					miny = PANEL_PREVIEW.snapY(miny);
+					maxy = PANEL_PREVIEW.snapY(maxy);
 					
 					var _cnx = (maxx + minx) / 2;
 					var _cny = (maxy + miny) / 2;
@@ -1597,8 +1597,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						}
 					}
 					
-					var _msx = value_snap((_mmx - _x) / _s, _snx);
-					var _msy = value_snap((_mmy - _y) / _s, _sny);
+					var _msx = PANEL_PREVIEW.snapX((_mmx - _x) / _s);
+					var _msy = PANEL_PREVIEW.snapY((_mmy - _y) / _s);
 					
 					if(mouse_press(mb_left, active)) {
 						var ind = array_length(inputs);
@@ -1678,7 +1678,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					drag_point_my = _my;
 					inputs[1].setValue(false);
 					
-					repeat(2) createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+					repeat(2) createNewInput(, PANEL_PREVIEW.snapX((_mx - _x) / _s), PANEL_PREVIEW.snapY((_my - _y) / _s));
 				}
 				break;
 				
@@ -1718,7 +1718,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					drag_point_my = _my;
 					inputs[1].setValue(true);
 					
-					repeat(4) createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+					repeat(4) createNewInput(, PANEL_PREVIEW.snapX((_mx - _x) / _s), PANEL_PREVIEW.snapY((_my - _y) / _s));
 				}
 				break;
 				
@@ -1845,8 +1845,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						drag_point_sy = _a[_ANCHOR.y];
 						drag_point_mx = _mx;
 						drag_point_my = _my;
-						drag_point_px = value_snap(drag_point_sx, _snx);
-						drag_point_py = value_snap(drag_point_sy, _sny);
+						drag_point_px = PANEL_PREVIEW.snapX(drag_point_sx);
+						drag_point_py = PANEL_PREVIEW.snapY(drag_point_sy);
 						
 						if(hover_type == 1) {
 							drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c1x];

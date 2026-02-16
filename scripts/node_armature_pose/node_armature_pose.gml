@@ -577,8 +577,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
-		var smx = value_snap(mx, _snx);
-		var smy = value_snap(my, _sny);
+		var smx = PANEL_PREVIEW.snapX(mx);
+		var smy = PANEL_PREVIEW.snapY(my);
 		
 		if(posing_bone) {
 			gpu_set_texfilter(true);

@@ -3602,7 +3602,7 @@ function Panel_Preview() : PanelContent() constructor {
     		_baseNode.addInput(_outp);
     }
     
-    static snapRulerX = function(v) {
+    static snapX = function(v) {
         if(!PROJECT.previewSetting.show_ruler) return;
     	var r = PROJECT.previewRuler;
     	var _snx = 0;
@@ -3621,7 +3621,7 @@ function Panel_Preview() : PanelContent() constructor {
         return v;
     }
     
-    static snapRulerY = function(v) {
+    static snapY = function(v) {
         if(!PROJECT.previewSetting.show_ruler) return;
     	var r = PROJECT.previewRuler;
     	var _sny = 0;

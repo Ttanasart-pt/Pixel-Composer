@@ -16,7 +16,7 @@ function tiler_brush(node) constructor {
 	
 	self.node = node;
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function step(hover, active, _x, _y, _s, _mx, _my) {
 		var attr = node.tool_attribute;
 		var _siz = attr.size;
 		
@@ -26,7 +26,7 @@ function tiler_brush(node) constructor {
 			brush_size = round(lerp(attr.pressure_size[0], attr.pressure_size[1], power(PEN_PRESSURE / 1024, 2)));
 	}
 	
-	function sizing(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function sizing(hover, active, _x, _y, _s, _mx, _my) {
 		var attr = node.tool_attribute;
 		var _siz = attr.size;
 		

@@ -519,8 +519,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					pos_y = dragging_sy + py / _s;
 				}
 				
-				pos_x = value_snap(pos_x, _snx);
-				pos_y = value_snap(pos_y, _sny);
+				pos_x = PANEL_PREVIEW.snapX(pos_x);
+				pos_y = PANEL_PREVIEW.snapY(pos_y);
 				
 				if(inputs[2].setValue([ pos_x, pos_y ])) UNDO_HOLDING = true;
 			
@@ -545,8 +545,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					pos_y = dragging_sy + py / _s;
 				}
 				
-				var nanx = value_snap(pos_x, _snx) / ww;
-				var nany = value_snap(pos_y, _sny) / hh;
+				var nanx = PANEL_PREVIEW.snapX(pos_x) / ww;
+				var nany = PANEL_PREVIEW.snapY(pos_y) / hh;
 				
 				if(key_mod_press(ALT)) {
 					var a0 = inputs[3].setValue([ nanx, nany ]);

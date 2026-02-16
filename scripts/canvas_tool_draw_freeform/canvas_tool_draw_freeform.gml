@@ -8,7 +8,7 @@ function canvas_tool_draw_freeform() : canvas_tool() constructor {
 	
 	freeform_shape = [];
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
@@ -25,7 +25,7 @@ function canvas_tool_draw_freeform() : canvas_tool() constructor {
 		pactive     = active;
 	}
 	
-	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my) {
 		brush.drawPoint(mouse_cur_x, mouse_cur_y);
 	}
 	

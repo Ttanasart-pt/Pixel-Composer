@@ -1,4 +1,4 @@
-function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _type = 0, _scale = [ 1, 1 ], _angle = 0) {
+function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _type = 0, _scale = [ 1, 1 ], _angle = 0) {
 	static __p = [0,0];
 	
 	var _val  = array_clone(getValue());
@@ -31,8 +31,8 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		var _nx = __p[0];
 		var _ny = __p[1];
 
-		_nx = value_snap(_nx, _snx);
-		_ny = value_snap(_ny, _sny);
+		_nx = PANEL_PREVIEW.snapX(_nx);
+		_ny = PANEL_PREVIEW.snapY(_ny);
 		
 		if(key_mod_press(SHIFT)) {
 			if(abs(_mx - drag_mx) > abs(_my - drag_my)) 

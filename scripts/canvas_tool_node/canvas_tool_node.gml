@@ -155,7 +155,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		destroy(); 
 	}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		
 		var _px, _py, _pw, _ph;
 		

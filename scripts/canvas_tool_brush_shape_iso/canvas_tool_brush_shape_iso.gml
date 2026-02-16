@@ -19,7 +19,7 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 		mouse_holding = 0;
 	}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
@@ -96,19 +96,19 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 		pactive     = active;
 	}
 	
-	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(mouse_holding == 0) { brush.drawPoint(mouse_cur_x, mouse_cur_y); return; }
 		
 	}
 	
-	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(mouse_holding == 0)  return;
 		if(brush.sizing)        return;
 		if(!node.attributes.show_slope_check)  return;
 		
 	}
 
-	static drawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+	static drawMask = function(hover, active, _x, _y, _s, _mx, _my ) {
 		draw_surface_ext_safe(drawing_surface, _x, _y, _s, _s);
 	}
 }

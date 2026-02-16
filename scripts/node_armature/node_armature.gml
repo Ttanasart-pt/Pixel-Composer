@@ -726,7 +726,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static selectClear = function() { bone_select = []; }
 	static selectAll   = function() { bone_select = array_create_ext(array_length(bone_points), function(i) /*=>*/ {return i}); }
 	
-	static drawOverlay_Transform = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay_Transform = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		var _b = _params.bone;
@@ -870,8 +870,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
-		var smx = value_snap(mx, _snx);
-		var smy = value_snap(my, _sny);
+		var smx = PANEL_PREVIEW.snapX(mx);
+		var smy = PANEL_PREVIEW.snapY(my);
 		var panel = _params[$ "panel"] ?? noone;
 		
 		var _b = bones;
@@ -984,7 +984,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		switch(_tool) {
 			case "Transform" : 
-				drawOverlay_Transform(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+				drawOverlay_Transform(hover, active, _x, _y, _s, _mx, _my, _params);
 				return true;
 				
 			case "Add Bone" : 

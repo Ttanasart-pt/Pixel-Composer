@@ -118,7 +118,7 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		}
 	}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
@@ -169,14 +169,14 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 	
 	////- Draw
 	
-	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my) {
 		BLEND_MAX
 		if(mouse_holding) draw_shape(false);
 		else              draw_point_wrap(false);
 		BLEND_NORMAL
 	}
 	
-	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(!mouse_holding)      return;
 		if(brush.sizing)  return;
 		if(!node.attributes.show_slope_check)  return;

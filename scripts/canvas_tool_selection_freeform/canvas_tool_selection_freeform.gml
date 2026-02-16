@@ -3,7 +3,7 @@ function canvas_tool_selection_freeform(_selector) : canvas_selection_tool(_sele
 	mouse_pre_y = 0;
 	freeform_shape = [];
 	
-	static onStep = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
 		
@@ -45,7 +45,7 @@ function canvas_tool_selection_freeform(_selector) : canvas_selection_tool(_sele
 		}
 	}
 	
-	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(!is_selecting) return;
 		
 		var ox, oy, nx, ny;

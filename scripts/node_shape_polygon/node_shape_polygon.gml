@@ -96,7 +96,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		draw_set_color(c_grey);
 		mesh.draw(_x, _y, _s);
-		node_draw_transform_box(active, _x, _y, _s, _mx, _my, _snx, _sny, 5, 6, 7, true);
+		node_draw_transform_box(active, _x, _y, _s, _mx, _my, 5, 6, 7, true);
 		
 		draw_set_color(COLORS._main_accent);
 		path.draw(_x, _y, _s);

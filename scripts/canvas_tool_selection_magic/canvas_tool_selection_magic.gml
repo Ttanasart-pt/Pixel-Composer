@@ -1,7 +1,7 @@
 function canvas_tool_selection_magic(_selector, _toolAttr) : canvas_selection_tool(_selector) constructor {
 	tool_attribute = _toolAttr;
 	
-	static onStep = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(selector.is_select_drag) return;
 		
 		var _thr		= tool_attribute.thres;

@@ -102,7 +102,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		}
 	}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		var mx = round((_mx - _x) / _s - 0.5);
 		var my = round((_my - _y) / _s - 0.5);
 		
@@ -229,7 +229,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 	
 	////- Preview
 	
-	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(isEraser) draw_set_color(c_white);
 		
 		BLEND_MAX
@@ -240,7 +240,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		BLEND_NORMAL
 	}
 	
-	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(brush.sizing)  return;
 		if(!mouse_line_drawing) return;
 		if(!node.attributes.show_slope_check)  return;

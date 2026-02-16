@@ -140,7 +140,7 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		points[3] = points[1] + dimension[1];
 	}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		
 		var _sw = points[2] - points[0];
 		var _sh = points[3] - points[1];

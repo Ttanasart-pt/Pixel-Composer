@@ -1,4 +1,4 @@
-function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad, _type = 0) {
+function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _rad, _type = 0) {
 	var _val  = getValue();
 	var hover = -1;
 	if(is_array(_val)) return hover;
@@ -103,7 +103,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	return hover;
 }
 
-function preview_overlay_rotation_range(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad, _type = 0) {
+function preview_overlay_rotation_range(interact, active, _x, _y, _s, _mx, _my, _rad, _type = 0) {
 	var _val  = getValue();
 	var hover = -1;
 	

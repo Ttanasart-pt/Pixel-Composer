@@ -449,8 +449,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var dx = anchor_drag_sx + (_mx - anchor_drag_mx) / _s;
 			var dy = anchor_drag_sy + (_my - anchor_drag_my) / _s;
 			
-			dx = value_snap(dx, _snx);
-			dy = value_snap(dy, _sny);
+			dx = PANEL_PREVIEW.snapX(dx);
+			dy = PANEL_PREVIEW.snapY(dy);
 			
 			mesh[anchor_dragging][0] = dx;
 			mesh[anchor_dragging][1] = dy;

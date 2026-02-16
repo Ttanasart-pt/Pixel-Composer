@@ -176,7 +176,7 @@
 								val[1] += prj.y * _dist;
 								val[2] += prj.z * _dist;
 								
-								if(node.inputs[index].setValue(value_snap(val, _snx)))
+								if(node.inputs[index].setValue(val))
 									UNDO_HOLDING = true;
 							}
 						} else {
@@ -198,7 +198,7 @@
 								val[1] += _diff.y;
 								val[2] += _diff.z;
 								
-								if(node.inputs[index].setValue(value_snap(val, _snx))) 
+								if(node.inputs[index].setValue(val)) 
 									UNDO_HOLDING = true;
 							}
 						}
@@ -394,7 +394,7 @@
 					if(drag_prev != undefined) {
 						var _rd    = (mAng - drag_prev) * (_nv.Z > 0? 1 : -1);
 						drag_dist += _rd;
-						var _dist  = value_snap(drag_dist, _sny);
+						var _dist  = drag_dist;
 						
 						var _currR = new BBMOD_Quaternion().FromAxisAngle(drag_rot_axis, _dist);
 						var _val   = _currR.Mul(drag_val);
@@ -683,7 +683,7 @@
 									
 								drag_val[drag_axis] += _dist;
 									
-								if(node.inputs[index].setValue(value_snap(drag_val, _snx))) 
+								if(node.inputs[index].setValue(drag_val)) 
 									UNDO_HOLDING = true;
 							}
 							
@@ -707,7 +707,7 @@
 								for( var i = 0; i < 3; i++ ) 
 									drag_val[i] += _diff.getIndex(i);
 									
-								if(node.inputs[index].setValue(value_snap(drag_val, _snx))) 
+								if(node.inputs[index].setValue(drag_val)) 
 									UNDO_HOLDING = true;
 							}
 							
@@ -953,8 +953,8 @@
 								
 							}
 							
-							if(node.inputs[0].setValue(value_snap(pos, _snx))) UNDO_HOLDING = true;
-							if(node.inputs[2].setValue(value_snap(sca, _snx))) UNDO_HOLDING = true;
+							if(node.inputs[0].setValue(pos)) UNDO_HOLDING = true;
+							if(node.inputs[2].setValue(sca)) UNDO_HOLDING = true;
 						}
 						
 						drag_cpos = [ pos[0], pos[1], pos[2] ];

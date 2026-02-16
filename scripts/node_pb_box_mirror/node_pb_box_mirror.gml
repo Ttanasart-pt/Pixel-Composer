@@ -23,7 +23,7 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon);
-			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
+			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, self);
 			
 			var _basebox = _pbase.getBBOX();
 			if(_axis & 0b01) {
@@ -50,7 +50,7 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		if(is(_pbbox, __pbBox)) {
 			draw_set_color(COLORS._main_icon_light);
-			_pbbox.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
+			_pbbox.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, self);
 		}
 		
 		var _pbres = getInputSingle(0,, true);

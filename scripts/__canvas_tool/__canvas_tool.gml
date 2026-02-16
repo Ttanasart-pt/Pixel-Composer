@@ -29,7 +29,7 @@ function canvas_tool() : ToolObject() constructor {
 		return self; 
 	}
 	
-	static drawPreview = function(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
-	static drawPostOverlay = function( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
-	static drawMask = function(        hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	static drawPreview = function(     hover, active, _x, _y, _s, _mx, _my ) {}
+	static drawPostOverlay = function( hover, active, _x, _y, _s, _mx, _my ) {}
+	static drawMask = function(        hover, active, _x, _y, _s, _mx, _my ) {}
 }

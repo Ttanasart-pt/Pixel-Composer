@@ -1224,7 +1224,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			current_brush.node     = self;
 			current_brush.tileMode = __3d? 0b11 : _panel.tileMode;
 			current_brush.draw3D   = __3d;
-			current_brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			current_brush.step(hover, active, _x, _y, _s, _mx, _my);
 			
 			tool_size_edit.setInteract(!is_surface(current_brush.surface));
 		#endregion
@@ -1297,9 +1297,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			selection.selection_hovering = false;
 			
 			if(selection.is_selected) {
-				selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				selection.step(hover, active, _x, _y, _s, _mx, _my);
 				if(_tool_sel == noone && is(_tool, canvas_selection_tool))
-					selection.onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					selection.onSelected(hover, active, _x, _y, _s, _mx, _my);
 					
 				array_append(rightTools, rightTools_selection);
 				
@@ -1310,23 +1310,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#region tool override
 			if(_tool && _tool.override) {
 				_tool.node = self;
-				_tool.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tool.step(hover, active, _x, _y, _s, _mx, _my);
 				
 				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 				
 				surface_set_shader(preview_draw_surface, noone);
-					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my);
 				surface_reset_shader();
 				
 				draw_surface_ext_safe(preview_draw_surface, _x, _y, _s);
 				
 				surface_set_shader(preview_draw_mask, noone);
-					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my);
 				surface_reset_shader();
 				
 				drawToolOutline();
 				
-				_tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my);
 				return hovering;
 			}
 		#endregion
@@ -1351,7 +1351,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				draw_set_color_alpha(isUsingTool("Eraser")? c_white : CURRENT_COLOR, 1);
 				
-				_tool.step(hover, active, _tx, _ty, _s, _mx, _my, _snx, _sny);
+				_tool.step(hover, active, _tx, _ty, _s, _mx, _my);
 				if(_tool.updated) {
 					_tool.updated = false;
 					triggerRender();
@@ -1361,7 +1361,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(_panel.pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
 						tool_attribute.size = clamp(tool_attribute.size + sign(MOUSE_WHEEL), 1, 64);
 					
-					current_brush.doResize(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					current_brush.doResize(hover, active, _x, _y, _s, _mx, _my);
 				} 
 			}
 		#endregion
@@ -1400,7 +1400,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_set_color(CURRENT_COLOR);
 				
 				if(current_brush.sizing) current_brush.drawPoint(current_brush.sizing_dx, current_brush.sizing_dy);
-				if(_tool) _tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				if(_tool) _tool.drawPreview(hover, active, _x, _y, _s, _mx, _my);
 					
 				draw_set_alpha(1);
 			surface_reset_shader();
@@ -1447,9 +1447,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			surface_set_target(preview_draw_mask);
 				DRAW_CLEAR
-				if(selection.is_selected) selection.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				if(selection.is_selected) selection.drawMask(hover, active, _x, _y, _s, _mx, _my);
 				if(_tool) {
-					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my);
 					
 					var _dx = _x + (mouse_cur_x - floor(bs/2)) * _s;
 					var _dy = _y + (mouse_cur_y - floor(bs/2)) * _s;
@@ -1495,7 +1495,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			}
 			
-			if(_tool) _tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(_tool) _tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my);
 			
 			var _x0 = _x;
 			var _y0 = _y;

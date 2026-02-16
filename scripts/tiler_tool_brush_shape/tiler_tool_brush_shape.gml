@@ -10,7 +10,7 @@ function tiler_tool_shape(_node, _brush, _shape) : tiler_tool(_node) constructor
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function step(hover, active, _x, _y, _s, _mx, _my) {
 		
 		mouse_cur_x = floor(round((_mx - _x) / _s - 0.5) / tile_size[0]);
 		mouse_cur_y = floor(round((_my - _y) / _s - 0.5) / tile_size[1]);
@@ -60,7 +60,7 @@ function tiler_tool_shape(_node, _brush, _shape) : tiler_tool(_node) constructor
 			
 	}
 	
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function drawPreview(hover, active, _x, _y, _s, _mx, _my) {
 		
 		if(!mouse_holding) {
 			tiler_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);

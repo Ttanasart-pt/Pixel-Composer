@@ -73,8 +73,8 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		var _hovering = preview_hotkey_active;
 		
 		if(preview_hotkey_active) {
-			var _mmx = value_snap(_mx, _snx);
-			var _mmy = value_snap(_my, _sny);
+			var _mmx = PANEL_PREVIEW.snapX(_mx);
+			var _mmy = PANEL_PREVIEW.snapY(_my);
 			
 			var _dx = KEYBOARD_NUMBER == undefined? (_mmx - preview_hotkey_mx) / _s / _sca[0] : KEYBOARD_NUMBER;
 			var _dy = KEYBOARD_NUMBER == undefined? (_mmy - preview_hotkey_my) / _s / _sca[1] : KEYBOARD_NUMBER;
@@ -162,7 +162,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			
 		}
 		
-		_hovering = _hovering || preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca, _rot);
+		_hovering = _hovering || preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _typ, _sca, _rot);
 		return _hovering;
 	}
 	

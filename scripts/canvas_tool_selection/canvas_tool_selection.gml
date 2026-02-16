@@ -306,7 +306,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 		return _drawnSurface;
 	}
 	
-	static onSelected = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onSelected = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(!is_surface(selection_surface)) { is_selected = false; return; } 
 		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
 		if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
@@ -489,7 +489,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 		}
 	}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		mouse_cur_x  = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y  = round((_my - _y) / _s - 0.5);
 		
@@ -506,7 +506,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 	
 	////- Draws
 	
-	static drawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawMask = function(hover, active, _x, _y, _s, _mx, _my) {
 		var sel_x0 = selection_position[0];
 		var sel_y0 = selection_position[1];
 		
@@ -619,20 +619,20 @@ function canvas_selection_tool(_selector) : canvas_tool() constructor {
 	
 	////- Step
 	
-	static onStep = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
-		onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		onStep(hover, active, _x, _y, _s, _mx, _my);
 	}
 	
 	////- Draws
 	
-	static onDrawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static onDrawMask = function(hover, active, _x, _y, _s, _mx, _my) {}
 	
-	static drawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawMask = function(hover, active, _x, _y, _s, _mx, _my) {
+		onDrawMask(hover, active, _x, _y, _s, _mx, _my);
 		
 		if(!is_selecting) return;
 		

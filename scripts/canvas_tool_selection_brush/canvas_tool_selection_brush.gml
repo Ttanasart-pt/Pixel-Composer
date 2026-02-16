@@ -8,7 +8,7 @@ function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selecto
 	mouse_pre_draw_x = undefined;
 	mouse_pre_draw_y = undefined;
 	
-	static onStep = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
 		
@@ -67,7 +67,7 @@ function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selecto
 			
 	}
 		
-	static onDrawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onDrawMask = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(selector.selection_hovering) return;
 		
 		var _dx = _x + mouse_cur_x * _s;

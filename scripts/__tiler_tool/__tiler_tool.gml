@@ -11,7 +11,7 @@ function tiler_tool(_node) : ToolObject() constructor {
     
     static init    = function() {}
     static disable = function() {}
-    static step    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+    static step    = function(hover, active, _x, _y, _s, _mx, _my) {}
     
     static drawPreview = function() {}
     static drawMask    = function() {}

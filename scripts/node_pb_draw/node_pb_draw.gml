@@ -226,7 +226,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon);
-			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
+			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, self);
 		}
 		
 		if(is(_pbbox, __pbBox)) _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self);

@@ -86,8 +86,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _nx, _ny;
 				
 		if(gz_dragging) {
-			_nx = value_snap(gz_drag_sx + (_mx - gz_drag_mx) / _s, _snx);
-			_ny = value_snap(gz_drag_sy + (_my - gz_drag_my) / _s, _sny);
+			_nx = PANEL_PREVIEW.snapX(gz_drag_sx + (_mx - gz_drag_mx) / _s);
+			_ny = PANEL_PREVIEW.snapY(gz_drag_sy + (_my - gz_drag_my) / _s);
 			_vx = key_mod_press(CTRL)? round(_nx) : _nx;
 			_vy = key_mod_press(CTRL)? round(_ny) : _ny;
 			

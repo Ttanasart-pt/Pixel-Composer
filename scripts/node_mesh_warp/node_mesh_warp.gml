@@ -345,8 +345,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var dx = anchor_drag_sx + (_mx - anchor_drag_mx) / _s;
 				var dy = anchor_drag_sy + (_my - anchor_drag_my) / _s;
 			
-				dx = value_snap(dx, _snx);
-				dy = value_snap(dy, _sny);
+				dx = PANEL_PREVIEW.snapX(dx);
+				dy = PANEL_PREVIEW.snapY(dy);
 			
 				attributes.mesh_bound[anchor_dragging][0] = dx;
 				attributes.mesh_bound[anchor_dragging][1] = dy;
@@ -400,7 +400,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(mouse_press(mb_left, active)) {
 				if(_hover == -1) {
 					var i = createControl();
-					i.setValue( [ PUPPET_FORCE_MODE.move, value_snap(_mx - _x, _snx) / _s, value_snap(_my - _y, _sny) / _s, 0, 0, 8, 8 ] );
+					i.setValue( [ PUPPET_FORCE_MODE.move, PANEL_PREVIEW.snapX(_mx - _x) / _s, PANEL_PREVIEW.snapY(_my - _y) / _s, 0, 0, 8, 8 ] );
 					i.drag_type = 2;
 					i.drag_sx   = 0;
 					i.drag_sy   = 0;

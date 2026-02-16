@@ -284,7 +284,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			if(mouse_press(mb_left, active)) {
 				if(_anchor_hover == -1) {
-					var anc = createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+					var anc = createNewInput(, PANEL_PREVIEW.snapX((_mx - _x) / _s), PANEL_PREVIEW.snapY((_my - _y) / _s));
 					UNDO_HOLDING = true;
 				
 					if(_line_hover != -1) {

@@ -605,7 +605,7 @@ global.node_shape_keys_204 = [
 	-1, "Teardrop", "Leaf", "Heart", "Gear", 
 ];
 
-function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params) { 
 	PROCESSOR_OVERLAY_CHECK
 	
 	var _dim     = current_data[ 0];

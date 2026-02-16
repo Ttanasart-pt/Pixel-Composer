@@ -28,7 +28,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon_light);
-			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
+			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, self);
 		}
 		
 		var _pbres = getInputSingle(0,, true);

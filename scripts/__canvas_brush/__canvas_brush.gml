@@ -52,7 +52,7 @@ function canvas_brush() constructor {
 		range = use_surface? max(surface_w, surface_h) / 2 : ceil(size / 2);
 	}
 	
-	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		var attr = node.tool_attribute;
 		size = attr.size;
 		
@@ -74,7 +74,7 @@ function canvas_brush() constructor {
 		
 	}
 	
-	static doResize = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static doResize = function(hover, active, _x, _y, _s, _mx, _my) {
 		var attr = node.tool_attribute;
 		var _siz = attr.size;
 		

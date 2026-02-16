@@ -114,8 +114,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var vx = drag_dim_sx + (_mx - drag_dim_mx) / _s;
 				var vy = drag_dim_sy + (_my - drag_dim_my) / _s;
 				
-				vx = value_snap(round(vx), _snx);
-				vy = value_snap(round(vy), _sny);
+				vx = PANEL_PREVIEW.snapX(round(vx));
+				vy = PANEL_PREVIEW.snapY(round(vy));
 				
 				if(inputs[1].attributes.use_project_dimension) {
 					vx /= DEF_SURF_W;

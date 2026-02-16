@@ -529,8 +529,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_mmy = round(_my);
 			}
 			
-			var _mmx = value_snap(_mx, _snx);
-			var _mmy = value_snap(_my, _sny);
+			var _mmx = PANEL_PREVIEW.snapX(_mx);
+			var _mmy = PANEL_PREVIEW.snapY(_my);
 			
 			var vx = dragging_sx + (_mmx - dragging_mx) / _s;
 			var vy = dragging_sy + (_mmy - dragging_my) / _s;

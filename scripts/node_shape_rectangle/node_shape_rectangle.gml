@@ -28,7 +28,7 @@ function Node_Shape_Rectangle(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		draw_set_color(c_grey);
-		node_draw_transform_box(active, _x, _y, _s, _mx, _my, _snx, _sny, 1, 2, 3, true);
+		node_draw_transform_box(active, _x, _y, _s, _mx, _my, 1, 2, 3, true);
 	}
 	
 	static update = function() {

@@ -224,8 +224,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _ah = __dim[1] * _s;
 		
 		if(drag_type == 1) {
-			var _xx = value_snap(round(drag_sx + (_mx - drag_mx) / _s), _snx);
-			var _yy = value_snap(round(drag_sy + (_my - drag_my) / _s), _sny);
+			var _xx = PANEL_PREVIEW.snapX(round(drag_sx + (_mx - drag_mx) / _s));
+			var _yy = PANEL_PREVIEW.snapY(round(drag_sy + (_my - drag_my) / _s));
 						
 			var off = [ _xx, _yy ];
 			curr_off = off;
@@ -234,8 +234,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(mouse_release(mb_left)) drag_type = 0;
 			
 		} else if(drag_type == 2) {
-			var _dx = value_snap(round(abs((_mx - drag_mx) / _s)), _snx);
-			var _dy = value_snap(round(abs((_my - drag_my) / _s)), _sny);
+			var _dx = PANEL_PREVIEW.snapX(round(abs((_mx - drag_mx) / _s)));
+			var _dy = PANEL_PREVIEW.snapY(round(abs((_my - drag_my) / _s)));
 			
 			var dim = [_dx, _dy];
 			curr_dim = dim;

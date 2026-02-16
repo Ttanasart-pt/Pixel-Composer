@@ -1,4 +1,4 @@
-function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	if(is_array(_val[0])) return hover;
@@ -109,32 +109,32 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	if(drag_type == 1) {
 		draw_sprite_colored(THEME.anchor_selector, 1, _ax, _ay);
-		var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+		var _nx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+		var _ny = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 		
 		_val[PUPPET_CONTROL.cx] = _rnd? round(_nx) : _nx;
 		_val[PUPPET_CONTROL.cy] = _rnd? round(_ny) : _ny;
 			
 	} else if(drag_type == 2) {
 		draw_anchor(0, _ax1, _ay1, ui(12), 2);
-		var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+		var _nx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+		var _ny = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 		
 		_val[PUPPET_CONTROL.fx] = _rnd? round(_nx) : _nx;
 		_val[PUPPET_CONTROL.fy] = _rnd? round(_ny) : _ny;
 		
 	} else if(drag_type == 3) {
-		var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+		var _nx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
 			
 		_val[PUPPET_CONTROL.width] = _rnd? round(_nx) : _nx;
 			
 	} else if(drag_type == 4) {
-		var _nx = value_snap(point_distance(_mx, _my, drag_sx, drag_sy) / _s, _snx);
+		var _nx = PANEL_PREVIEW.snapX(point_distance(_mx, _my, drag_sx, drag_sy) / _s);
 			
 		_val[PUPPET_CONTROL.width] = _rnd? round(_nx) : _nx;
 			
 	} else if(drag_type == 5) {
-		var _nx = value_snap(point_distance(_mx, _my, drag_sx, drag_sy) / _s, _snx);
+		var _nx = PANEL_PREVIEW.snapX(point_distance(_mx, _my, drag_sx, drag_sy) / _s);
 			
 		_val[PUPPET_CONTROL.fx] = _rnd? round(_nx) : _nx;
 			

@@ -204,7 +204,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		axis_hover = noone;
 	#endregion
 	
-	static drawGizmoPosition = function(index, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
+	static drawGizmoPosition = function(index, _vpos, active, params, _mx, _my, _panel) { #region
 		#region ---- main ----
 			var _pos  = inputs[index].getValue(,,, true);
 			    // _pos  = [ -_pos[0], _pos[2], -_pos[1] ];
@@ -357,7 +357,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 				
 				drag_pre0 = mAdj;
 				
-				if(inputs[index].setValue(value_snap(val, _snx)))
+				if(inputs[index].setValue(val)
 					UNDO_HOLDING = true;
 				
 				drag_val  = [ val[0], val[1], val[2] ];
@@ -389,7 +389,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		var _camera = _params.scene.camera;
 		var _vpos   = new __vec3( -_pos[0], _pos[2], -_pos[1] );
 		
-		if(isUsingTool("Transform"))	drawGizmoPosition(2, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
+		if(isUsingTool("Transform"))	drawGizmoPosition(2, _vpos, active, params, _mx, _my, _panel);
 		
 		if(drag_axis != noone && mouse_release(mb_left)) {
 			drag_axis = noone;

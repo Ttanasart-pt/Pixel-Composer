@@ -110,8 +110,8 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		#endregion
 		
 		if(overlay_dragging && overlay_dragging < 3) {
-			var px = value_snap(_mx - overlay_drag_mx, _snx);
-			var py = value_snap(_my - overlay_drag_my, _sny);
+			var px = PANEL_PREVIEW.snapX(_mx - overlay_drag_mx);
+			var py = PANEL_PREVIEW.snapY(_my - overlay_drag_my);
 			var pos_x, pos_y;
 			
 			if(key_mod_press(SHIFT)) {

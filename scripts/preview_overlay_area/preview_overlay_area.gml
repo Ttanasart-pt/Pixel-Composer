@@ -1,4 +1,4 @@
-function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {
+function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag, display_data) {
 	var _val  = array_clone(getValue());
 	var hovering = -1;
 	
@@ -47,10 +47,10 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _snx,
 	
 	var _hov = [ 0, 0, 0, 0 ], _hovPos = 0;
 	
-	     if(drag_type == 1) _r = value_snap(drag_sx - (_mx - drag_mx) / _s, _snx);
-	else if(drag_type == 2) _t = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-	else if(drag_type == 3) _l = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-	else if(drag_type == 4) _b = value_snap(drag_sy - (_my - drag_my) / _s, _sny);
+	     if(drag_type == 1) _r = PANEL_PREVIEW.snapX(drag_sx - (_mx - drag_mx) / _s);
+	else if(drag_type == 2) _t = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
+	else if(drag_type == 3) _l = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+	else if(drag_type == 4) _b = PANEL_PREVIEW.snapY(drag_sy - (_my - drag_my) / _s);
 	
 	if(drag_type) {
 		var _sval = array_clone(showValue());
@@ -130,7 +130,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _snx,
 	return hovering;
 }
 
-function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
+function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _flag) {
 	var _val  = array_clone(getValue());
 	var hovering = -1;
 	
@@ -179,8 +179,8 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _sn
 	}
 	
 	if(drag_type == 1) {
-		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+		var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+		var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 		
 		_sval[0]  = _xx;
 		_sval[1]  = _yy;
@@ -193,8 +193,8 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _sn
 			UNDO_HOLDING = false;
 		}
 	} else if(drag_type == 2) {
-		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+		var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+		var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 		
 		_sval[2]  = _xx;
 		_sval[3]  = _yy;
@@ -207,10 +207,10 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _sn
 			UNDO_HOLDING = false;
 		}
 	} else if(drag_type == 3) {
-		var __x0 = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var __y0 = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-		var __x1 = value_snap(_x1 + (__x0 - _x0), _snx);
-		var __y1 = value_snap(_y1 + (__y0 - _y0), _sny);
+		var __x0 = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+		var __y0 = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
+		var __x1 = PANEL_PREVIEW.snapX(_x1 + (__x0 - _x0));
+		var __y1 = PANEL_PREVIEW.snapY(_y1 + (__y0 - _y0));
 		
 		_val[0] = __x0;
 		_val[1] = __y0;
@@ -278,7 +278,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _sn
 	return hovering;
 }
 
-function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
+function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 	var _val = array_clone(getValue());
 	var _ref = unit.mode == VALUE_UNIT.reference? unit.reference() : [ 1, 1 ];
 
@@ -340,8 +340,8 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 	
 	switch(drag_type) {
 		case 1: // Move
-			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 								
 			if(key_mod_press(CTRL)) {
 				_val[0] = round(_xx);
@@ -354,8 +354,8 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 			break;
 			
 		case 2: // Scale
-			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 								
 			if(key_mod_press(CTRL)) {
 				_val[2] = round(_xx);
@@ -373,8 +373,8 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 			break;
 			
 		case 3 : // top-left
-			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 			
 			if(key_mod_press(CTRL)) {
 				_xx = round(_xx);
@@ -388,8 +388,8 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 			break;
 			
 		case 4 : // top-right
-			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 			
 			if(key_mod_press(CTRL)) {
 				_xx = round(_xx);
@@ -403,8 +403,8 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 			break;
 			
 		case 5 : // bottom-left
-			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 			
 			if(key_mod_press(CTRL)) {
 				_xx = round(_xx);
@@ -418,8 +418,8 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 			break;
 			
 		case 6 : // bottom-right
-			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
+			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 			
 			if(key_mod_press(CTRL)) {
 				_xx = round(_xx);
@@ -483,7 +483,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 	return _hov;
 }
 
-function preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {
+function preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _flag, display_data) {
 	var _val  = array_clone(getValue());
 	var hovering = -1;
 	if(is_array(_val[0])) return hovering;
@@ -494,9 +494,9 @@ function preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _
 	__overlay_hover = array_verify(__overlay_hover, 5);
 	
 	switch(mode) {
-		case AREA_MODE.area :	   return preview_overlay_area_span(      hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
-		case AREA_MODE.padding :   return preview_overlay_area_padding(   hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data);
-		case AREA_MODE.two_point : return preview_overlay_area_two_point( hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+		case AREA_MODE.area :	   return preview_overlay_area_span(      hover, active, _x, _y, _s, _mx, _my, _flag);
+		case AREA_MODE.padding :   return preview_overlay_area_padding(   hover, active, _x, _y, _s, _mx, _my, _flag, display_data);
+		case AREA_MODE.two_point : return preview_overlay_area_two_point( hover, active, _x, _y, _s, _mx, _my, _flag);
 	}
 	
 	return hovering;

@@ -291,7 +291,7 @@ enum CAMERA_PROJ {
 		];
 	}
 	
-	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function _3d_gizmo(active, _x, _y, _s, _mx, _my) {
 		var _gpos = getInputData(global_pos);
 		var _gsca = getInputData(global_sca);
 		

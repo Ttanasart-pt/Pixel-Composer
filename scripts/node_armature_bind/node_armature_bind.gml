@@ -802,8 +802,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
-		var smx = value_snap(mx, _snx);
-		var smy = value_snap(my, _sny);
+		var smx = PANEL_PREVIEW.snapX(mx);
+		var smy = PANEL_PREVIEW.snapY(my);
 		
 		var ww  = dim[0];
 		var hh  = dim[1];
@@ -900,8 +900,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					_mmy = _aay + _scd * _p[1];
 				}
 				
-				_mmx = value_snap((_mmx - _x) / _s, _snx);
-				_mmy = value_snap((_mmy - _y) / _s, _sny);
+				_mmx = PANEL_PREVIEW.snapX((_mmx - _x) / _s);
+				_mmy = PANEL_PREVIEW.snapY((_mmy - _y) / _s);
 		
 				var _dmx  = _mmx - dragging_mx;
 				var _dmy  = _mmy - dragging_my;

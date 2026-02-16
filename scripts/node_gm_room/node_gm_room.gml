@@ -480,32 +480,32 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     		
     		switch(room_resizing_t) {
     			case 0 : 
-    				_area[0] = value_snap(round(_arss[0] + _dx), _snx);
-    				_area[1] = value_snap(round(_arss[1] + _dy), _sny);
+    				_area[0] = PANEL_PREVIEW.snapX(round(_arss[0] + _dx));
+    				_area[1] = PANEL_PREVIEW.snapY(round(_arss[1] + _dy));
     				
     				if(abs(_area[0]) < _sn)       { _area[0] = 0;  _dgx =  0; }
     				if(abs(_area[1]) < _sn)       { _area[1] = 0;  _dgy =  0; }
     				break;
     				
     			case 1 : 
-    				_area[2] = value_snap(round(_arss[2] + _dx), _snx);
-    				_area[1] = value_snap(round(_arss[1] + _dy), _sny);
+    				_area[2] = PANEL_PREVIEW.snapX(round(_arss[2] + _dx));
+    				_area[1] = PANEL_PREVIEW.snapY(round(_arss[1] + _dy));
     				
     				if(abs(_area[2] - rw) < _sn)  { _area[2] = rw; _dgx = rw; }
     				if(abs(_area[1]) < _sn)       { _area[1] = 0;  _dgy =  0; }
     				break;
     				
     			case 2 : 
-    				_area[0] = value_snap(round(_arss[0] + _dx), _snx);
-    				_area[3] = value_snap(round(_arss[3] + _dy), _sny);
+    				_area[0] = PANEL_PREVIEW.snapX(round(_arss[0] + _dx));
+    				_area[3] = PANEL_PREVIEW.snapY(round(_arss[3] + _dy));
     				
     				if(abs(_area[0]) < _sn)       { _area[0] = 0;  _dgx =  0; }
     				if(abs(_area[3] - rh) < _sn)  { _area[3] = rh; _dgy = rh; }
     				break;
     				
     			case 3 : 
-    				_area[2] = value_snap(round(_arss[2] + _dx), _snx);
-    				_area[3] = value_snap(round(_arss[3] + _dy), _sny);
+    				_area[2] = PANEL_PREVIEW.snapX(round(_arss[2] + _dx));
+    				_area[3] = PANEL_PREVIEW.snapY(round(_arss[3] + _dy));
     				
     				if(abs(_area[2] - rw) < _sn)  { _area[2] = rw; _dgx = rw; }
     				if(abs(_area[3] - rh) < _sn)  { _area[3] = rh; _dgy = rh; }
@@ -515,10 +515,10 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     				var _ww = _area[2] - _area[0];
     				var _hh = _area[3] - _area[1];
     				
-    				_area[0] = value_snap(round(_arss[0] + _dx), _snx);
-    				_area[1] = value_snap(round(_arss[1] + _dy), _sny);
-    				_area[2] = value_snap(round(_arss[2] + _dx), _snx);
-    				_area[3] = value_snap(round(_arss[3] + _dy), _sny);
+    				_area[0] = PANEL_PREVIEW.snapX(round(_arss[0] + _dx));
+    				_area[1] = PANEL_PREVIEW.snapY(round(_arss[1] + _dy));
+    				_area[2] = PANEL_PREVIEW.snapX(round(_arss[2] + _dx));
+    				_area[3] = PANEL_PREVIEW.snapY(round(_arss[3] + _dy));
     				
     				if(abs(_area[0]) < _sn) {
     					_area[0] = 0;

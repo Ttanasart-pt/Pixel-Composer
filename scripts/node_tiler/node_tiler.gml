@@ -216,16 +216,16 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			_tool.tile_size          = _tileSiz;
 			
 			if(!tool_tile_picker) {
-				_tool.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tool.step(hover, active, _x, _y, _s, _mx, _my);
 			
 				surface_set_target(preview_draw_overlay);
 					DRAW_CLEAR
-					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my);
 				surface_reset_target();
 				
 				surface_set_target(_preview_draw_mask);
 					DRAW_CLEAR
-					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my);
 				surface_reset_target();
 				
 				surface_set_target(preview_draw_mask);
@@ -237,7 +237,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					if(hover && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
 						tool_attribute.size = clamp(tool_attribute.size + sign(MOUSE_WHEEL), 1, 64);
 					
-					brush.sizing(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					brush.sizing(hover, active, _x, _y, _s, _mx, _my);
 				} 
 				
 			    surface_set_shader(preview_draw_overlay_tile, sh_draw_tile_map, true, BLEND.over);

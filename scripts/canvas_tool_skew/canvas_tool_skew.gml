@@ -15,7 +15,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 	
 	static init = function() { mouse_init = true; }
 	
-	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my) {
 		var _sel = node.selection;
 		if(!_sel.is_selected) {
 			PANEL_PREVIEW.tool_current = noone;
@@ -33,7 +33,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		skew_h   = _sel.selection_size[1];
 	}
 	
-	static forceStep = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static forceStep = function(hover, active, _x, _y, _s, _mx, _my) {
 		
 		var x0 = _x + skew_bbox[0] * _s;
 		var y0 = _y + skew_bbox[1] * _s;
@@ -87,7 +87,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		}
 	}
 	
-	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my) {
 		var _dim  = node.attributes.dimension;
 		
 		var _dx  = (_mx - mouse_sx) / _s;
@@ -112,7 +112,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		
 	}
 	
-	static drawMask = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+	static drawMask = function(hover, active, _x, _y, _s, _mx, _my ) {
 		draw_surface_ext_safe(preview_surface[1], _x, _y, _s, _s);
 	}
 }

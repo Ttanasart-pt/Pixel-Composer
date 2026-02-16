@@ -6,13 +6,13 @@ function canvas_tool_outline() : canvas_tool_shader() constructor {
 	
 	static init = function() { mouse_init = true; }
 	
-	static onInit = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static onInit = function(hover, active, _x, _y, _s, _mx, _my) {
 		mouse_sx = _mx;
 	}
 	
 	////- Step
 	
-	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my) {
 		var _dim  = node.attributes.dimension;
 		
 		var _thck = abs(round((_mx - mouse_sx) / _s));
@@ -29,7 +29,7 @@ function canvas_tool_outline() : canvas_tool_shader() constructor {
 		surface_reset_shader();
 	}
 	
-	static stepMaskEffect = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static stepMaskEffect = function(hover, active, _x, _y, _s, _mx, _my) {
 		var _dim  = node.attributes.dimension;
 		
 		var _thck = abs(round((_mx - mouse_sx) / _s));

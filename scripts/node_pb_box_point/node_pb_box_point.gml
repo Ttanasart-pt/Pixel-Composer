@@ -18,7 +18,7 @@ function Node_PB_Box_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _pbbox = getInputSingle(0);
 		if(is(_pbbox, __pbBox)) {
 			draw_set_color(COLORS._main_icon);
-			_pbbox.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
+			_pbbox.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, self);
 		}
 	}
 	
