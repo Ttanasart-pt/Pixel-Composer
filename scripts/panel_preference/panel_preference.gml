@@ -652,6 +652,12 @@ function Panel_Preference() : PanelContent() constructor {
 				
 		ds_list_add(pref_node, __txt("Defaults"));
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_height", "Default node height"),
+				"node_def_height",
+				textBox_Number(function(val) /*=>*/ {return prefSet("node_def_height", val)})
+			));
+			
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_param_width", "Default param width"),
 				"node_param_width",
 				textBox_Number(function(val) /*=>*/ {return prefSet("node_param_width", val)})

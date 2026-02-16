@@ -85,8 +85,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		renamed        = false;
 		tooltip        = "";
 		
-		w = 128; min_w   = w;
-		h = 128; h_param = h;
+		w       = 128; 
+		min_w   = w;
+		h       = PREFERENCES.node_def_height;
+		h_param = h;
 		
 		preserve_height_for_preview = false;
 		name_height    = 16;
@@ -193,12 +195,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Attributes ----
+		attributes.preview_size      = PREFERENCES.node_def_height;
 		attributes.node_param_width  = PREFERENCES.node_param_width;
 		attributes.node_width        = 0;
 		attributes.node_height       = 0;
 		attributes.outp_meta         = false;
 		attributes.show_render_frame = false;
-		attributes.preview_size      = 128;
 		attributes.cache             = false;
 		
 		attributes.annotation        = "";

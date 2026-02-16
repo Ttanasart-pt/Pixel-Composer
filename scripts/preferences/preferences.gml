@@ -155,6 +155,8 @@
 		PREFERENCES.node_def_depth         = 1;
 		PREFERENCES.node_def_oversample    = 0;
 		PREFERENCES.node_def_interpolation = 0;
+		
+		PREFERENCES.node_def_height        = 128;
 	
 	#endregion
 	
