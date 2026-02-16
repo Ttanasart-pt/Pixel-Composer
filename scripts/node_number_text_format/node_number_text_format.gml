@@ -52,13 +52,23 @@ function Node_Number_Text_Format(_x, _y, _group = noone) : Node_Processor(_x, _y
 			repeat(_pp) _sint = _pint_txt + _sint; 
 		}
 		
+		if(_thou_sep != "") {
+			var _len = string_length(_sint);
+			var _amo = floor((_len - 1) / 3);
+			
+			repeat(_amo) {
+				_sint = string_insert(_thou_sep, _sint, _len - 2);
+				_len -= 3;
+			}
+		}
+		
 		if(_pdec) {
 			var _pp = _pdec_dig - string_length(_sdec);
 			repeat(_pp) _sdec = _sdec + _pdec_txt;  
 		}
 		
-		var _ss = _pint;
-		if(_pdec != "") _ss += $".{_pdec}";
+		var _ss = _sint;
+		if(_sdec != "") _ss += $".{_sdec}";
 		
 		return _ss;
 	}
