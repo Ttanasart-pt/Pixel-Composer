@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_selector",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_selector",
+  "parent":{
+    "name":"nodes",
+    "path":"folders/functions/nodes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

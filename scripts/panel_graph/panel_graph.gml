@@ -195,6 +195,7 @@
         } ).setMenu("graph_auto_organize", THEME.obj_auto_organize);
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
+        registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); } ).setMenu("graph_node_selector", THEME.node_selector);
         registerFunction(g, "Node Multiplier...",    "",  n, function() /*=>*/ { 
         	if(array_empty(PANEL_GRAPH.nodes_selecting)) return;
         	dialogPanelCall(new Panel_Graph_Node_Multiplier(PANEL_GRAPH.nodes_selecting[0]));
@@ -538,6 +539,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         mouse_glow_rad    = 0;
         mouse_glow_rad_to = 0;
+        
+        dropper_active   = false;
+		dropper_callback = undefined;
     #endregion
     
     #region // ---- nodes ----
@@ -738,6 +742,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	"graph_connection_settings",
         	"graph_grid_settings",
         	"graph_view_settings",
+        	"graph_node_selector",
         	{ cond : "graph_select_multiple", items : [ 
         		-1, 
         		"graph_halign_right",
@@ -1897,7 +1902,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 	if(array_valid(frame_hovering)) array_foreach(frame_hovering, function(f) /*=>*/ {return f.getCoveringNodes(nodes_list)});
                 	if(is(node_hovering, Node_Frame)) node_hovering.getCoveringNodes(nodes_list);
                 	
-                    if(key_mod_press(SHIFT)) { // Select Multiple
+                	if(dropper_active) {
+			    		dropper_callback(node_hovering);
+			    		dropper_active = false;
+			    		
+			    	} else if(key_mod_press(SHIFT)) { // Select Multiple
                         if(node_hovering) array_toggle(nodes_selecting, node_hovering);
                         else nodes_selecting = [];
                             
@@ -1910,7 +1919,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         	if(!PANEL_INSPECTOR.locked) PANEL_INSPECTOR.inspecting = _ctx; 
                         	if(_ctx || !array_empty(project.globalLayer_nodes)) PANEL_PREVIEW.setNodePreview(_ctx);
                         }
-                    
+                    	
                     } else if(cache_group_edit != noone) { // Edit Cache Group
                     	var _cache = cache_group_edit;
                     	if(node_hovering == _cache) {
@@ -1945,7 +1954,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         	nodes_selecting = [ node_hovering ];
                         	array_append(nodes_selecting, node_hovering.__nodes);
                         }
-                        
                     }
                     
                     if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
@@ -2081,6 +2089,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     
                 junction_hovering.setFrom(_pin.outputs[0]);
 	        } 
+	        
+	        if(dropper_active && node_hovering)
+	        	TOOLTIP = $"Select {node_hovering}";
         #endregion
         
         #region drawActive
@@ -3362,6 +3373,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         drawSearch()
         
+        if(dropper_active) CURSOR_SPRITE = THEME.node_dropper;
+        
         if(LIVE_UPDATE) {
             draw_set_text(f_p0b, fa_right, fa_bottom, COLORS._main_value_negative);
             draw_text(w - 8, h - toolbar_height, "Live Update");
@@ -3444,6 +3457,47 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	gpu_set_tex_filter(false);
         }
     } 
+    
+    ////- Selection
+    
+    function selectNode(_node, _add = false) { 
+    	if(_add) {
+    		array_push(nodes_selecting, _node);
+    		nodes_selecting = array_unique(nodes_selecting);
+    		
+    	} else nodes_selecting = [ _node ]; 
+    	
+    	refreshDraw(1); 
+    	return self; 
+    }
+    
+    function selectNodes(_nodes, _add = false) { 
+    	if(_add) {
+    		array_append(nodes_selecting, _nodes);
+    		nodes_selecting = array_unique(nodes_selecting);
+    		
+    	} else nodes_selecting = _nodes;
+    	
+    	refreshDraw(1); 
+    	return self; 
+    }
+    
+    function selectDragNode(_node, _add = false) {
+    	nodes_selecting = [ _node ];
+    	node_dragging   = _node;
+    	
+    	_node.x = mouse_graph_x - _node.w / 2;
+		_node.y = mouse_graph_y - _node.h / 2;
+    	
+        node_drag_mx = mouse_graph_x;
+        node_drag_my = mouse_graph_y;
+        node_drag_sx = _node.x;
+        node_drag_sy = _node.y;
+        node_drag_ox = -1;
+        node_drag_oy = -1;
+        
+        node_drag_add = _add;
+    }
     
     ////- Action
     
@@ -4223,23 +4277,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
     } 
     
-    function selectDragNode(_node, _add = false) {
-    	nodes_selecting = [ _node ];
-    	node_dragging   = _node;
-    	
-    	_node.x = mouse_graph_x - _node.w / 2;
-		_node.y = mouse_graph_y - _node.h / 2;
-    	
-        node_drag_mx = mouse_graph_x;
-        node_drag_my = mouse_graph_y;
-        node_drag_sx = _node.x;
-        node_drag_sy = _node.y;
-        node_drag_ox = -1;
-        node_drag_oy = -1;
-        
-        node_drag_add = _add;
-    }
-    
     static bringNodeToFront = function(node) { //
         if(!array_exists(nodes_list, node)) return;
         
@@ -4441,6 +4478,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		     if(array_exists(_n1.getNodeFrom(), _n0)) transferJunction(_n0, _n1);
 		else if(array_exists(_n0.getNodeFrom(), _n1)) transferJunction(_n1, _n0);
 		else transferJunction(_n0, _n1);
+    }
+    
+    function dropperActive(_callback) {
+    	dropper_active   = true;
+    	dropper_callback = _callback;
     }
     
     ////- Serialize

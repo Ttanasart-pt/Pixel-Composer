@@ -59,7 +59,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		if(shift_height && in_dialog) {
 			panel.dialog_y -= _h - h; 
 			panel.dialog_h  = _h 
-			h = _h; 
+			h = _h;
 			panel.contentResize();
 		}
 		

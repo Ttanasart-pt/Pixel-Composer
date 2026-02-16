@@ -161,6 +161,10 @@ gml_pragma("UnityBuild", "true");
 #macro returnNull_mf2 ; if(is_undefined(
 #macro returnNull_mf3 ) || 
 #macro returnNull_mf4  == noone) return;
+	//!#mfunc mself {"args":["m"],"order":[0,0]}
+#macro mself_mf0  //
+#macro mself_mf1  = method(self, 
+#macro mself_mf2 );
 #endregion
 
 #region presets

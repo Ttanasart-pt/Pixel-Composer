@@ -984,7 +984,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_append(_nodes, _cnodes[i].getAllNodeFrom(_nodes));
 		}
 		
-		return _nodes;
+		return array_unique(_nodes);
 	}
 	
 	static getNodeTo = function() {
@@ -996,6 +996,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			for( var j = 0, m = array_length(_to); j < m; j++ )
 				array_push(_nodes, _to[j].node);
 		}
+		
+		return array_unique(_nodes);
+	}
+	
+	static getAllNodeTo = function(_nodes = []) {
+		var _cnodes = getNodeTo();
+		array_append(_nodes, _cnodes);
+		
+		for( var i = 0, n = array_length(_cnodes); i < n; i++ )
+			array_append(_nodes, _cnodes[i].getAllNodeTo(_nodes));
 		
 		return array_unique(_nodes);
 	}
