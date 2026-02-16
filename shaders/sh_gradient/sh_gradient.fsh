@@ -351,25 +351,27 @@ void main() {
 	float invp = 0.;
 	mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
+	vec2 _asp = uniAsp == 0? vec2(1.) : asp;
+	vec2  _p  = vtx - cent;
+	float _a  = atan(_p.y, _p.x) + ang;
+	
+	if(uniAsp == 1) _p *= asp;
+	
 	if(type == 0) { // linear
-		prog = .5 + (vtx.x - cent.x) * cos(ang) - (vtx.y - cent.y) * sin(ang);
+		prog = .5 + (vtx.x - cent.x) * cos(ang           ) - (vtx.y - cent.y) * sin(ang           );
 		invp = .5 + (vtx.x - cent.x) * cos(ang + TAU / 4.) - (vtx.y - cent.y) * sin(ang + TAU / 4.);
 		
 	} else if(type == 1) { // circular
-		vec2 _asp = uniAsp == 0? vec2(1.) : asp;
 		prog = length((vtx - cent) * _asp / cirScale) / rad;
+		invp = (_a - floor(_a / TAU) * TAU) / TAU;
 		
 	} else if(type == 2) { // radial
-		vec2  _p = vtx - cent;
-		if(uniAsp == 1) _p *= asp;
-		
-		float _a = atan(_p.y, _p.x) + ang;
 		prog = (_a - floor(_a / TAU) * TAU) / TAU;
+		invp = length((vtx - cent) * _asp / cirScale) / rad;
 		
 	} else if(type == 3) { // diamond
-		vec2 _asp = uniAsp == 0? vec2(1.) : asp;
 		prog = dLength((vtx - cent) * rot * _asp / cirScale) / rad;
-		
+		invp = max(abs(vtx.x - cent.x), abs(vtx.y - cent.y));
 	} 
 	
 	if(useAxis != 0.) prog += curveEval(iCurve_curve, iCurve_amount, invp) * useAxis;
