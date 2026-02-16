@@ -3615,7 +3615,7 @@ function Panel_Preview() : PanelContent() constructor {
     	v = value_snap(v, _snx);
     	for( var i = 0, n = array_length(r); i < n; i++ ) {
     		var _r = r[i];
-    		if(_r[0] == 1 && abs(v - _r[1]) < 8) v = _r[1];
+    		if(_r[0] == 1 && abs(v - _r[1]) < 8 / canvas_s) v = _r[1];
     	}
         
         return v;
@@ -3634,7 +3634,7 @@ function Panel_Preview() : PanelContent() constructor {
         v = value_snap(v, _sny);
     	for( var i = 0, n = array_length(r); i < n; i++ ) {
     		var _r = r[i];
-    		if(_r[0] == 0 && abs(v - _r[1]) < 8) v = _r[1];
+    		if(_r[0] == 0 && abs(v - _r[1]) < 8 / canvas_s) v = _r[1];
     	}
         
         return v;
