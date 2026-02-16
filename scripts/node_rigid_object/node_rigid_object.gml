@@ -69,10 +69,13 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(ind != 6) inp.rejectArray();
 	})
 	
+	bMesh = button(function() /*=>*/ {return generateAllMesh()}).setTooltip(__txt("Generate Mesh"))
+		.setIcon(THEME.mesh, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
 	input_display_list = [ 
 		[ "Spawn",            false,  8 ], 20,  7, 17, 23, 
 		[ "Initial Velocity", false, 18 ], 19, 
-		[ "Shape",            false     ],  6,  5, 10, 11, 
+		[ "Shape",            false, noone, bMesh], 6,  5, 10, 11, 
 		[ "Physics",          false     ],  0,  1,  2,  3,  4, 13, 
 		[ "Simulation",       true      ], 14, 15, 16, 21, 
 	];

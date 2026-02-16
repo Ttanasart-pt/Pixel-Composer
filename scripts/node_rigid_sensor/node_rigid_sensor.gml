@@ -20,7 +20,7 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		new scrollItem("Elipse",	s_node_shape_circle,	0) 
 	])); 
 	
-	newInput(2, nodeValue_Vec2(  "Position", [ 0, 0] )).setUnitSimple().setHotkey("G");
+	newInput(2, nodeValue_Vec2(  "Position", [.5,.5] )).setUnitSimple().setHotkey("G");
 	newInput(3, nodeValue_Vec2(  "Span",     [.5,.5] )).setUnitSimple();
 	newInput(4, nodeValue_Float( "Radius",    .5     )).setUnitSimple();
 	// inputs 5

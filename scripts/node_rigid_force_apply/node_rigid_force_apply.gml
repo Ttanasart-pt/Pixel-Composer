@@ -94,8 +94,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var px = _position[0];
 		var py = _position[1];
 		
-		var fx = _force[0];
-		var fy = _force[1];
+		var fx = _force[0] / worldScale;
+		var fy = _force[1] / worldScale;
 		
 		switch(_type) {
 			case 0 : 
@@ -124,7 +124,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					var str = _strength * sqr(1 - dis / _radius);
 					var fx  = lengthdir_x(str, dir);
 					var fy  = lengthdir_y(str, dir);
-					gmlBox2D_Object_Apply_Impulse(_objId, fx / worldScale, fy / worldScale, px, py);
+					gmlBox2D_Object_Apply_Impulse(_objId, fx, fy, px, py);
 				}
 				break;
 		}
