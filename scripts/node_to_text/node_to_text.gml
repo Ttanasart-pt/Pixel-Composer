@@ -54,7 +54,7 @@ function Node_To_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _ss = "";
 		for( var i = 0, n = array_length(sSpl); i < n; i++ )
-			_ss += (i? "." : "") + sSpl[i];
+			if(sSpl[i] != "") _ss += (i? "." : "") + sSpl[i];
 		
 		return _ss;
 	}
