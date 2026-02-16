@@ -1067,6 +1067,7 @@
             { "label": "/Creators" },
             "Node_String",
             "Node_To_Text",
+            "Node_Number_Text_Format", 
             "Node_Unicode",
             "Node_Font_Bitmap",
             { "label": "/Info" },

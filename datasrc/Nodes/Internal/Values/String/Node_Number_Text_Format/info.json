@@ -1,0 +1,6 @@
+{
+    "name":          "Format Number",
+    "spr":           "s_node_number_text_format",
+    "baseNode":      "Node_Number_Text_Format",
+    "pxc_version":    120060,
+}
