@@ -16,13 +16,18 @@ function Node_Number_Text_Format(_x, _y, _group = noone) : Node_Processor(_x, _y
 	newInput( 5, nodeValue_Int(  "Minimum Digit", 2     ));
 	newInput( 6, nodeValue_Text( "Pad Letter",    "0"   ));
 	newInput( 8, nodeValue_Text( "Decimal Sep",   "."   ));
-	// 9
+	
+	////- =Decoration
+	newInput( 9, nodeValue_Text( "Prefix", "" ));
+	newInput(10, nodeValue_Text( "Suffix", "" ));
+	// 11
 	
 	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	input_display_list = [ 0, 
-		[ "Pad Integer", false, 1 ], 2, 3, 7, 
-		[ "Pad Decimal", false, 4 ], 5, 6, 8, 
+		[ "Pad Integer", false, 1 ],  2,  3,  7, 
+		[ "Pad Decimal", false, 4 ],  5,  6,  8, 
+		[ "Decoration",  false    ],  9, 10, 
 	];
 	
 	////- Node
@@ -31,15 +36,18 @@ function Node_Number_Text_Format(_x, _y, _group = noone) : Node_Processor(_x, _y
 		#region data
 			var _val = _data[0];
 			
-			var _pint     = _data[1];
-			var _pint_dig = _data[2];
-			var _pint_txt = _data[3];
-			var _thou_sep = _data[7];
+			var _pint     = _data[ 1];
+			var _pint_dig = _data[ 2];
+			var _pint_txt = _data[ 3];
+			var _thou_sep = _data[ 7];
 			
-			var _pdec     = _data[4];
-			var _pdec_dig = _data[5];
-			var _pdec_txt = _data[6];
-			var _pdec_sep = _data[8];
+			var _pdec     = _data[ 4];
+			var _pdec_dig = _data[ 5];
+			var _pdec_txt = _data[ 6];
+			var _pdec_sep = _data[ 8];
+			
+			var _pref = _data[ 9];
+			var _suff = _data[10];
 		#endregion
 		
 		var s    = string_format(_val, 0, _pdec_dig);
@@ -71,6 +79,8 @@ function Node_Number_Text_Format(_x, _y, _group = noone) : Node_Processor(_x, _y
 		
 		var _ss = _sint;
 		if(_sdec != "") _ss += $"{_pdec_sep}{_sdec}";
+		
+		_ss = $"{_pref}{_ss}{_suff}";
 		
 		return _ss;
 	}
