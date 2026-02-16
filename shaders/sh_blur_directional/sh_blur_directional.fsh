@@ -133,7 +133,7 @@
 #endregion -- gradient --
 #pragma use(curve)
 
-#region -- curve -- [1765334869.6409068]
+#region -- curve -- [1771218718.8737755]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -182,7 +182,7 @@
         return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t);
     }
 
-    float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
+    float _curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
         
         int   _segs  = (amo - curve_offset) / 6 - 1;
         float _shift = curve[0];
@@ -244,6 +244,14 @@
         }
 
         return curve[amo - 3];
+    }
+    
+    float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
+        float _min   = curve[3];
+        float _max   = curve[4];
+
+        float _y = _curveEval(curve, amo, _x);
+        return mix(_min, _max, _y);
     }
 
 #endregion -- curve --

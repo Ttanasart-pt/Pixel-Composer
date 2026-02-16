@@ -17,7 +17,7 @@
 #endregion -- uv --
 #pragma use(curve)
 
-#region -- curve -- [1765334869.6409068]
+#region -- curve -- [1771218718.8737755]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -66,7 +66,7 @@
         return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t);
     }
 
-    float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
+    float _curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
         
         int   _segs  = (amo - curve_offset) / 6 - 1;
         float _shift = curve[0];
@@ -128,6 +128,14 @@
         }
 
         return curve[amo - 3];
+    }
+    
+    float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
+        float _min   = curve[3];
+        float _max   = curve[4];
+
+        float _y = _curveEval(curve, amo, _x);
+        return mix(_min, _max, _y);
     }
 
 #endregion -- curve --
@@ -291,6 +299,11 @@ uniform float     pCurve_curve[CURVE_MAX];
 uniform int       pCurve_curve_use;
 uniform int       pCurve_amount;
 
+uniform float     useAxis;
+uniform float     iCurve_curve[CURVE_MAX];
+uniform int       iCurve_curve_use;
+uniform int       iCurve_amount;
+
 uniform int type;
 uniform int gradient_loop;
 uniform int uniAsp;
@@ -335,10 +348,12 @@ void main() {
 	vec2  asp  = dimension / dimension.y;
 	vec2  cent = center / dimension;
 	float prog = 0.;
+	float invp = 0.;
 	mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
 	if(type == 0) { // linear
 		prog = .5 + (vtx.x - cent.x) * cos(ang) - (vtx.y - cent.y) * sin(ang);
+		invp = .5 + (vtx.x - cent.x) * cos(ang + TAU / 4.) - (vtx.y - cent.y) * sin(ang + TAU / 4.);
 		
 	} else if(type == 1) { // circular
 		vec2 _asp = uniAsp == 0? vec2(1.) : asp;
@@ -357,7 +372,8 @@ void main() {
 		
 	} 
 	
-	prog = (prog + shf - 0.5) / sca + 0.5;
+	if(useAxis != 0.) prog += curveEval(iCurve_curve, iCurve_amount, invp) * useAxis;
+	prog  = (prog + shf - 0.5) / sca + 0.5;
 	
 	     if(gradient_loop == 1) prog = fract(fract(prog) + 1.);
 	else if(gradient_loop == 2) prog = 1. - abs(mod(prog, 2.) - 1.);

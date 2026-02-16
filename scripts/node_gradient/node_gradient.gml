@@ -30,7 +30,11 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 5, nodeValue_Slider(   "Shift",    0, [-2,2,.01]   )).setMappable(12);
 	newInput( 9, nodeValue_Slider(   "Scale",    1, [ 0,5,.01]   )).setHotkey("S").setMappable(13);
 	newInput( 7, nodeValue_EButton(  "Loop",     0, [ "None", "Loop", "Pingpong" ] ));
-	newInput(20, nodeValue_Curve(    "Progress Remap", CURVE_DEF_01 ));
+	
+	////- Remap
+	newInput(20, nodeValue_Curve( "Progress Remap", CURVE_DEF_01 ));
+	newInput(21, nodeValue_Float( "Inverse Axis",   0 ));
+	newInput(22, nodeValue_Curve( "Inverse Curve",  CURVE_DEF_00 ));
 	
 	////- Shape
 	__gradTypes = __enum_array_gen(["Linear", "Circular", "Radial", "Diamond"], s_node_gradient_type);
@@ -40,13 +44,14 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 6, nodeValue_Vec2(     "Center",        [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(17, nodeValue_Vec2(     "Shape",         [1,1]   ));
 	newInput(14, nodeValue_Bool(     "Uniform ratio",  true   ));
-	// inputs 21
+	// inputs 23
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		[ "Output",   true  ],  0, 18, 19,  8, 
-		[ "Gradient", false ],  1, 15,  5, 12,  9, 13,  7, 20, 
+		[ "Gradient", false ],  1, 15,  5, 12,  9, 13,  7, 
+		[ "Remapper", true  ], 20, 21, 22, 
 		[ "Shape",    false ],  2,  3, 10,  4, 11,  6, 17, 14, 
 	];
 	
@@ -80,7 +85,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _msk  = _data[ 8];
 			
 			var _lop  = _data[ 7];
+			
 			var _crv  = _data[20];
+			var _inv  = _data[21];
+			var _invC = _data[22];
 			
 			var _typ  = _data[ 2];
 			var _cnt  = _data[ 6];
@@ -104,7 +112,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			shader_set_2("dimension",  _dim);
 			
-			shader_set_curve("pCurve",     _crv);
+			shader_set_curve("pCurve",  _crv);
+			shader_set_f("useAxis",     _inv);
+			shader_set_curve("iCurve",  _invC);
+			
 			shader_set_i("gradient_loop",  _lop);
 			shader_set_2("center",   _cnt);
 			shader_set_i("type",     _typ);
