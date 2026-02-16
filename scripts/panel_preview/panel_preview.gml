@@ -2278,6 +2278,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(is(prev, __3dObject))    prev = array_safe_get(prev.materials, 0);
             if(is(prev, __d3dMaterial)) prev = prev.surface;
+            if(is(prev, Atlas))         prev = prev.getSurface();
         	
         	draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS.panel_preview_surface_outline, .5);
     		var hov = hoverable && point_in_rectangle(mx, my, xx, yy, xx + siz, yy + siz);

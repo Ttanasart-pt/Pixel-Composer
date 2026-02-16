@@ -64,8 +64,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if(_typ == 0 || _typ == 1) {
 			var _for = getInputData(5);
 			
-			var fx = px + _for[0] * attributes.display_scale * _s;
-			var fy = py + _for[1] * attributes.display_scale * _s;
+			var fx = px + _for[0] * attributes.display_scale * _s / worldScale;
+			var fy = py + _for[1] * attributes.display_scale * _s / worldScale;
 			
 			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(0.5);
