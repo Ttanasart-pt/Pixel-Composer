@@ -18,7 +18,7 @@
 
 #pragma use(curve)
 
-#region -- curve -- [1771218718.8737755]
+#region -- curve -- [1771220003.6022823]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512

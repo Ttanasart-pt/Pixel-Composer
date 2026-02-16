@@ -30,6 +30,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(20, nodeValue_Int(      "Spawn Frame",      0     ));
 	newInput( 7, nodeValue_Vec2(     "Spawn Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(17, nodeValue_Rotation( "Spawn Rotation",   0     )).setHotkey("R");
+	newInput(23, nodeValue_Bool(     "Offset Atlas",     true  ));
 	
 	////- =Initial Velocity
 	newInput(18, nodeValue_Bool(     "Use Initial Velocity", false ));
@@ -59,7 +60,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(15, nodeValue_Bool(     "Fix Rotation",       false ));
 	newInput(16, nodeValue_Bool(     "Sleepable",           true ));
 	newInput(21, nodeValue_Bool(     "Activate on Spawn",   true ));
-	// inputs 23
+	// inputs 24
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
@@ -69,7 +70,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	})
 	
 	input_display_list = [ 
-		[ "Spawn",            false,  8 ], 20,  7, 17, 
+		[ "Spawn",            false,  8 ], 20,  7, 17, 23, 
 		[ "Initial Velocity", false, 18 ], 19, 
 		[ "Shape",            false     ],  6,  5, 10, 11, 
 		[ "Physics",          false     ],  0,  1,  2,  3,  4, 13, 
@@ -509,11 +510,20 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_spy = _position[1] / worldScale;
 		}
 		
-		gmlBox2D_Object_Create_Begin(worldIndex, _spx, _spy, false);
-		
 		_index   = safe_mod(_index, array_length(textures));
 		var _tex = array_safe_get_fast(textures, _index);
-		if(is(_tex, SurfaceAtlas)) _tex = _tex.getSurface();
+		if(is(_tex, Atlas)) {
+			var _offs = getInputData(23);
+			if(_offs) {
+				_spx += _tex.x / worldScale;
+				_spy += _tex.y / worldScale;
+			}
+			
+			_tex  = _tex.getSurface();
+		}
+		
+		gmlBox2D_Object_Create_Begin(worldIndex, _spx, _spy, false);
+		
 		if(!is_surface(_tex)) return undefined;
 		
 		var ww = surface_get_width_safe(_tex);
