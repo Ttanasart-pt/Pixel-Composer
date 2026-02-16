@@ -67,7 +67,7 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var  dim = getInputSingle( 0);
@@ -75,14 +75,14 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var  rot = getInputSingle(15);
 		var  pos = getInputSingle(17);
 		
-		InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		var _px = _x + pos[0] * _s;
 		var _py = _y + pos[1] * _s;
-		InputDrawOverlay(inputs[21].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, typ == 0? rot : 0, dim[0] / 2, 1));
+		InputDrawOverlay(inputs[21].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, typ == 0? rot : 0, dim[0] / 2, 1));
 		
-		if(typ != 1) InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
-		else         InputDrawOverlay(inputs[18].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [ dim[0] / 2, dim[1] / 2 ]));
+		if(typ != 1) InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+		else         InputDrawOverlay(inputs[18].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [ dim[0] / 2, dim[1] / 2 ]));
 		
 		return w_hovering;
 	}

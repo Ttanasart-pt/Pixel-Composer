@@ -26,11 +26,11 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	cached_pos = ds_map_create();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {  
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {  
 		var _toType = getInputSingle(4);
 		
 		switch(_toType) {
-			case 0 : InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny)); break;
+			case 0 : InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 			
 			case 1 : 
 				var _tdim = getInputSingle(5);
@@ -59,7 +59,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		PathDrawOverlay(outputs[0].getValue(), _x, _y, _s);
-		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
 		
 		return w_hovering;
 	}

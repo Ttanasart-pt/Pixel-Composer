@@ -61,10 +61,10 @@ function Node_pSystem_3D_Boids(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	tool_ori     = new NodeTool( "Move Target", THEME.tools_3d_transform, "Node_pSystem_3D_Boids" ).setToolObject(tool_ori_obj);
 	tools = [ tool_ori ];
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay3D = function(active, _mx, _my, _params) { 
 		var _ori = new __vec3(inputs[13].getValue(,,, true));
 		
-		if(isUsingTool("Move Target")) tool_ori_obj.drawOverlay3D(13, noone, _ori, active, _mx, _my, _snx, _sny, _params);
+		if(isUsingTool("Move Target")) tool_ori_obj.drawOverlay3D(13, noone, _ori, active, _mx, _my, _params);
 	} 
 	
 	////- Nodes

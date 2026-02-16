@@ -2692,14 +2692,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hv;
 	}
 	
-	static doDrawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) { 
+	static doDrawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params = {}) { 
 		w_hovering     = false; 
 		w_hoverable    = hover;
 		w_active       = active;
 		__preview_bbox = getPreviewBoundingBox();
 		
 		try {
-			var _hv = drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+			var _hv = drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 			if(_hv != undefined) w_hovering = w_hovering || _hv;
 		} catch(e) { log_warning($"{toString()}, drawOverlay", exception_print(e)); }
 		
@@ -2708,7 +2708,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return w_hovering;
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params = {}) {}
 	
 	static drawOverlayTransform = undefined; // function(_node) { return noone; }
 	static drawOverlayChainTransform = function(_node) {

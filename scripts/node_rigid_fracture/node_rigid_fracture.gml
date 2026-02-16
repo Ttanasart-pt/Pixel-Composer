@@ -523,7 +523,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Update
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(worldIndex == undefined) return;
 		
 		var _baseSurf = getInputData(0);
@@ -567,7 +567,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			draw_line(fx, fy, ox, oy);
 		}
 		
-		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static update = function(_frame = CURRENT_FRAME) {

@@ -71,7 +71,7 @@
 			origin_y /= n;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
@@ -191,7 +191,7 @@
 			origin_y /= n;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
@@ -302,7 +302,7 @@
 			origin_y /= n;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
@@ -559,7 +559,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static drawPreview = function(_x, _y, _s) {}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pth  = outputs[1].getValue();
 		if(!is(_pth, _pathObject)) return;
 		
@@ -1868,7 +1868,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _tool     = _currTool.getToolObject();
 			
 			if(_tool != noone) {
-				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 				if(mouse_lclick()) anchor_freeze = 1;
 				_show_selecting = true;
 			}

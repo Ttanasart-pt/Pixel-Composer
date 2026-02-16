@@ -35,7 +35,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		segmentCounts = [];
 		boundary      = [];
 		
-		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 			var hovering = false;
 			PathDrawOverlay(self, _x, _y, _s);
 			return hovering;
@@ -124,8 +124,8 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		
 		var _segs = outputs[0].getValue();
 		var ox, oy, nx, ny;

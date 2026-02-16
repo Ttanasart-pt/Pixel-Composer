@@ -38,8 +38,8 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		var _typ = getInputData(1);
 		var _pos = getInputData(2);
@@ -54,14 +54,14 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var _ph  = _siz[1] * _s;
 	    	
 	    	draw_rectangle(_px - _pw, _py - _ph, _px + _pw, _py + _ph, true);
-	    	InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+	    	InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 	    	
 	    } else if(_typ == 1) {
 	    	var _rad = getInputData(4);
 	    	var _pr  = _rad * _s;
 	    	
 	    	draw_circle_prec(_px, _py, _pr, true);
-			InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 		}
 		
 		return w_hovering;

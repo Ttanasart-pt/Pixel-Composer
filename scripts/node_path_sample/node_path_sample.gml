@@ -11,8 +11,8 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(1, nodeValue_Output( "Direction", VALUE_TYPE.float, 0 ));
 	newOutput(2, nodeValue_Output( "Weight",    VALUE_TYPE.float, 0 ));
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		
 		var _pnt = outputs[0].getValue();
 		if(array_get_depth(_pnt) == 1) _pnt = [ _pnt ];

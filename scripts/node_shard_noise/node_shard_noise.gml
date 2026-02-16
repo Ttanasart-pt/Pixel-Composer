@@ -24,14 +24,14 @@ function Node_Shard_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		["Transform",  false], 1, 9, 2, 6, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pos = getInputSingle(1);
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 		
 		return w_hovering;
 	}

@@ -1162,7 +1162,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Draw Overlay
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		preview_surface_sample = isNotUsingTool();
 		
 		if(active)
@@ -1312,7 +1312,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				_tool.node = self;
 				_tool.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				
-				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 				
 				surface_set_shader(preview_draw_surface, noone);
 					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -1367,8 +1367,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region preview
-			if(_tool_sel) _tool_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			if(_tool)     _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(_tool_sel) _tool_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
+			if(_tool)     _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 			
 			var _drawToolPreview = _params[$ "drawToolPreview"] ?? true;
 			
@@ -1507,7 +1507,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_set_alpha(1);
 			
 			if(selection.is_selected && _tool_sel == noone && is(_tool, canvas_selection_tool))
-				selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 		#endregion
 		
 		#region color picker 

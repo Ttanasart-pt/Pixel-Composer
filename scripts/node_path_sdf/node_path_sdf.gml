@@ -24,8 +24,8 @@ function Node_Path_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	temp_surface = [ noone, noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

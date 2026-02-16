@@ -103,15 +103,15 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[25].setValue([_minn, _maxx]);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _use_path = current_data[20] != noone;
-		if(!_use_path) InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		if(!_use_path) InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
-		InputDrawOverlay(inputs[20].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
-		InputDrawOverlay(inputs[28].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]));
-		InputDrawOverlay(inputs[30].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]));
+		InputDrawOverlay(inputs[20].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
+		InputDrawOverlay(inputs[28].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[0]));
+		InputDrawOverlay(inputs[30].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[0]));
 		
 		return w_hovering;
 	}

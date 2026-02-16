@@ -35,7 +35,7 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
 	static step = function() {}
 	

@@ -5,7 +5,7 @@ function Node_3D_Simple(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	mesh_prev_surface = noone;
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
+	static drawOverlay3D = function(active, _mx, _my, _params) {}
 	
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	

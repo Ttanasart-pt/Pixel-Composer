@@ -25,7 +25,7 @@ function Node_VerletSim_Wind(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _msh = getInputData(0);
 		
 		if(is(_msh, Mesh)) {
@@ -41,8 +41,8 @@ function Node_VerletSim_Wind(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _ox = _x + _inf_wori[0] * _s;
 		var _oy = _y + _inf_wori[1] * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _ox, _oy, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _ox, _oy, _s, _mx, _my));
 		
 		var _ox0 = _ox + lengthdir_x(_inf_wwid, _inf_wrot - 90);
 		var _oy0 = _oy + lengthdir_y(_inf_wwid, _inf_wrot - 90);

@@ -67,7 +67,7 @@
 			}
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard) { PANEL_PREVIEW.resetTool(); return; }
 			
 			if(drag_pmx == undefined) drag_pmx = _mx;
@@ -183,7 +183,7 @@
 			
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard) { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _px = _x + rotation_anchor[0] * _s;
@@ -293,7 +293,7 @@
 			}
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard) { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _px = _x + scale_anchor[0] * _s;
@@ -397,7 +397,7 @@
 			drag_pmy = undefined;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard || surf_dragging == noone) { PANEL_PREVIEW.resetTool(); return; }
 			
 			if(mouse_press(mb_left) || key_press(vk_enter)) {
@@ -893,7 +893,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 
 	////- Overlay
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pad   = current_data[0];
@@ -1410,7 +1410,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _tool     = _currTool.getToolObject();
 			
 			if(_tool != noone) {
-				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 				if(mouse_lclick()) select_freeze = 1;
 				_show_selecting = true;
 			}

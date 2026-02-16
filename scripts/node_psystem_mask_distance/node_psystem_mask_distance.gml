@@ -33,11 +33,11 @@ function Node_pSystem_Mask_Distance(_x, _y, _group = noone) : Node(_x, _y, _grou
 	mask_buffer  = undefined;
 	curve_modi   = undefined;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _pos   = getInputData(2);
 		var _dists = getInputData(3);
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
@@ -50,7 +50,7 @@ function Node_pSystem_Mask_Distance(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		var _parts = getInputData(0);
 		if(!is(_parts, pSystem_Particles)) return;
-		_parts.drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		_parts.drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params);
 	}
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }

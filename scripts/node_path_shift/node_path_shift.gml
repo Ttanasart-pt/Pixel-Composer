@@ -29,16 +29,16 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	p0 = new __vec2P();
 	p1 = new __vec2P();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var hovering = false;
 		
 		if(has(curr_path, "drawOverlay")) {
-			var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+			var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 			hovering = hovering || hv;
 		}
 		
 		PathDrawOverlay(self, _x, _y, _s);
-		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		
 		return hovering;
 	}

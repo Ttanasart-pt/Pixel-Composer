@@ -28,7 +28,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		return [ domain.width, domain.height ];
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _velo  = getInputData(3);
@@ -54,7 +54,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		draw_line_width2(_px, _py, _vx, _vy, 6, 2);
 		draw_set_alpha(1);
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

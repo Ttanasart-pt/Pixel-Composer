@@ -51,7 +51,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	preview_custom_x_to    = 0;
 	preview_custom_x_max   = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var dim = getDimension()
@@ -69,9 +69,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		draw_set_color(COLORS._main_accent);
 		draw_line(px, py, sx, sy);
 		
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, px, py, _s * 4, _mx, _my, _snx, _sny, 1));
-		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, cx, cy, _s,     _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, px, py, _s,     _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, px, py, _s * 4, _mx, _my, 1));
+		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, cx, cy, _s,     _mx, _my));
+		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, px, py, _s,     _mx, _my));
 		
 		return w_hovering;
 	}

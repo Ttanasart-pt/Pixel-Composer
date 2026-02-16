@@ -96,7 +96,7 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Draw
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay3D = function(active, _mx, _my, _params) {
 	    
 		var _camera = _params.scene.camera;
 		var _v3 = new __vec3();

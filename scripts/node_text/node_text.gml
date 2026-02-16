@@ -112,11 +112,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		edit_typing     = false;
 	#endregion
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _hov = false;
 		
-		InputDrawOverlay(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
-		InputDrawOverlay(inputs[34].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		InputDrawOverlay(inputs[34].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		
 		if(isNotUsingTool()) return _hov;
 		

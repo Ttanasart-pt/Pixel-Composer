@@ -694,36 +694,36 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
 			draw_line_dashed(_pcx, _pcy, _tx, _ty);
 			
-			InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 2));
-			InputDrawOverlay(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 2));
+			InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 2));
+			InputDrawOverlay(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 2));
 			
-			InputDrawOverlay(inputs[34].drawOverlay(w_hoverable, active, _pcx, _pcy, _s * _sca[0] * 2, _mx, _my, _snx, _sny, _paa + 90, 1, 1));
+			InputDrawOverlay(inputs[34].drawOverlay(w_hoverable, active, _pcx, _pcy, _s * _sca[0] * 2, _mx, _my, _paa + 90, 1, 1));
 			
 			if(_shape == "Arrow") {
 				draw_set_color(COLORS._main_accent);
 				draw_line_dashed(_phx, _phy, _pex, _pey);
 			
-				InputDrawOverlay(inputs[23].drawOverlay(w_hoverable, active, _p1x, _p1y, _pds, _mx, _my, _snx, _sny, _paa + 180, 1, 1));
-				InputDrawOverlay(inputs[24].drawOverlay(w_hoverable, active, _phx, _phy, _phs, _mx, _my, _snx, _sny, _paa -  90, 1, 1));
+				InputDrawOverlay(inputs[23].drawOverlay(w_hoverable, active, _p1x, _p1y, _pds, _mx, _my, _paa + 180, 1, 1));
+				InputDrawOverlay(inputs[24].drawOverlay(w_hoverable, active, _phx, _phy, _phs, _mx, _my, _paa -  90, 1, 1));
 			}
 			
 			return w_hovering;
 			
 		case "Half"	:
-			InputDrawOverlay(inputs[40].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1));
+			InputDrawOverlay(inputs[40].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 			return w_hovering;
 			
 		case "Trapezoid" : 
-			InputDrawOverlay(inputs[38].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
-			InputDrawOverlay(inputs[39].drawOverlay(w_hoverable, active, _px, _y1, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+			InputDrawOverlay(inputs[38].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[0], _mx, _my, 0, 1, 1));
+			InputDrawOverlay(inputs[39].drawOverlay(w_hoverable, active, _px, _y1, _s * _sca[0], _mx, _my, 0, 1, 1));
 			break;
 			
 		case "Parallelogram" : 
-			InputDrawOverlay(inputs[22].drawOverlay(w_hoverable, active, _x0, _y1, _s * _sca[0] * 2, _mx, _my, _snx, _sny, 0, 1, 1));
+			InputDrawOverlay(inputs[22].drawOverlay(w_hoverable, active, _x0, _y1, _s * _sca[0] * 2, _mx, _my, 0, 1, 1));
 			break;
 			
 		case "Pie" : 
-			InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 			break;
 			
 		case "Arc" : 
@@ -734,8 +734,8 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed(_x1, _py, _ix, _iy);
 			
-			InputDrawOverlay(inputs[ 8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
-			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, _snx, _sny, 180, 1, 1));
+			InputDrawOverlay(inputs[ 8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, 180, 1, 1));
 			break;
 			
 		case "Donut" : 
@@ -746,7 +746,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed(_x1, _py, _ix, _iy);
 			
-			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, _snx, _sny, 180, 1, 1));
+			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, 180, 1, 1));
 			break;
 			
 		case "Crescent" : 
@@ -759,12 +759,12 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed(_px, _py, _px, _iy);
 			
-			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0] * _inn, _mx, _my, _snx, _sny, 180, 1, 1));
-			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1], _mx, _my, _snx, _sny,  90, 1, 1));
+			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0] * _inn, _mx, _my, 180, 1, 1));
+			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1], _mx, _my,  90, 1, 1));
 			break;
 			
 		case "Disk Segment" : 
-			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[1] * 2, _mx, _my, _snx, _sny, -90, 1, 1));
+			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[1] * 2, _mx, _my, -90, 1, 1));
 			break;
 			
 		case "Squircle" : 
@@ -775,7 +775,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed(_px, _py, _ix, _py);
 			
-			InputDrawOverlay(inputs[31].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0] / 4, _mx, _my, _snx, _sny, 0, 1, 1));
+			InputDrawOverlay(inputs[31].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0] / 4, _mx, _my, 0, 1, 1));
 			break;
 			
 		case "Regular Polygon" : 
@@ -786,7 +786,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed(_px, _py, _px, _iy);
 			
-			InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, _snx, _sny, 90, 1, 1));
+			InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1));
 			break;
 			
 		case "Star" : 
@@ -802,12 +802,12 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_line_dashed(_px, _py, _ix, _iy);
 			draw_line_dashed(_px, _py, _px, _sy);
 			
-			InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, _snx, _sny, 90, 1, 1));
-			InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+			InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1));
+			InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, 0, 1, 1));
 			break;
 			
 		case "Cross" : 
-			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, 0, 1, 1));
 			break;
 			
 		case "Teardrop" : 
@@ -821,8 +821,8 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_circle_dash(_px, _ty1, _r0 * _s * _sca[0]);
 			draw_circle_dash(_px, _ty0, _r1 * _s * _sca[0]);
 			
-			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
-			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, 0, 1, 1));
+			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, 0, 1, 1));
 			break;
 			
 		case "Leaf" : 
@@ -836,8 +836,8 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_line_dashed(_px, _ty0, _px + _r0 * _s * _sca[0], _ty0);
 			draw_line_dashed(_px, _ty1, _px + _r1 * _s * _sca[0], _ty1);
 			
-			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
-			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+			InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, 0, 1, 1));
+			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, 0, 1, 1));
 			break;
 			
 		case "Gear" : 
@@ -851,14 +851,14 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 			draw_line_dashed(_px, _py, _px, _sy);
 			draw_line_dashed(_px, _py, _sx, _py);
 			
-			InputDrawOverlay(inputs[25].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, _snx, _sny, 90, 1, 1 ));
-			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my, _snx, _sny,  0, 1, 1 ));
-			InputDrawOverlay(inputs[27].drawOverlay(w_hoverable, active, _px, _py, _s,                _mx, _my, _snx, _sny           ));
-			InputDrawOverlay(inputs[26].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my, _snx, _sny,  1       ));
+			InputDrawOverlay(inputs[25].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1 ));
+			InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my,  0, 1, 1 ));
+			InputDrawOverlay(inputs[27].drawOverlay(w_hoverable, active, _px, _py, _s,                _mx, _my           ));
+			InputDrawOverlay(inputs[26].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my,  1       ));
 			break;
 	}
 	
-	if(inputs[7].show_in_inspector) InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+	if(inputs[7].show_in_inspector) InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 	
 	if(inputs[9].show_in_inspector) { // corner
 		var aa = -45;
@@ -878,17 +878,17 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 		draw_set_color(COLORS._main_accent);
 		draw_arc(cx, cy, _cor, ar, ar + 90);
 		
-		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 2));
+		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, aa, _max_s, 2));
 	} // corner
 	
 	switch(_posMode) {
 		case 0 : 
-			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 			break;
 		
 		case 1 : 
-			InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-			InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+			InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 			break;
 	}
 	
@@ -897,7 +897,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 		var _ry1 = _py + _rsca[1] * _s;
 		var _ll  = point_distance(_px, _py, _rx1, _ry1) / _s;
 	
-		InputDrawOverlay(inputs[28].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, -45, _ll, 0));
+		InputDrawOverlay(inputs[28].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, -45, _ll, 0));
 	#endregion
 	
 	return w_hovering;

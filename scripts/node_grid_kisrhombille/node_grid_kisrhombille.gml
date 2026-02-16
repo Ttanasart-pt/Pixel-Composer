@@ -28,14 +28,14 @@ function Node_Kisrhombille(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		[ "Render",    false ], 10,  9,  7,  8, 11, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pos = inputs[4].getValue();
 	    var _px  = _x + _pos[0] * _s;
 	    var _py  = _y + _pos[1] * _s;
 	    
-	    InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-	    InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
-	    InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [ 1 + sqrt(3), sqrt(3) ] ));
+	    InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+	    InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+	    InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [ 1 + sqrt(3), sqrt(3) ] ));
 	    
 	    return w_hovering;
 	}

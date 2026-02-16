@@ -72,7 +72,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	gz_drag_sx  = 0;
 	gz_drag_sy  = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {  
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {  
 		PROCESSOR_OVERLAY_CHECK
 		if(process_amount > 1) return;
 		

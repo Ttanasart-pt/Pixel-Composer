@@ -11,7 +11,7 @@ function Node_Surface_Is_Empty(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
 	static step = function() {}
 	

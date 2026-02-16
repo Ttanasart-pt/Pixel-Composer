@@ -25,13 +25,13 @@ function Node_UV_Polar(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _
 		[ "Channels", false ],  7,  8,  9, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pos = inputs[4].getValue();
 	    var _px  = _x + _pos[0] * _s;
 	    var _py  = _y + _pos[1] * _s;
 	    
-	    InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-	    InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+	    InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+	    InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 	    
 	    return w_hovering;
 	}

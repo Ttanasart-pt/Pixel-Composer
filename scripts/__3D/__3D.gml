@@ -486,7 +486,7 @@ enum CAMERA_PROJ {
 			drag_my		= _my;
 		}
 		
-		InputDrawOverlay(inputs[global_pos].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[global_pos].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
 	
 	function _3d_local_transform(_lpos, _lrot, _lsca) {

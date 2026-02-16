@@ -84,7 +84,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	draw_seed_dig = 5;
 	draw_knob_rng = [ 0, 360 ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _val = draw_raw;
 		if(is_array(_val)) return false;
 		
@@ -99,8 +99,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			switch(draw_disp) {
 				case 0 : 
-				case 1 : InputDrawOverlay(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, _snx, _sny, 0,   gs, gt)); break;
-				case 2 : InputDrawOverlay(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, _snx, _sny, 64 * gs, gt)); break;
+				case 1 : InputDrawOverlay(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, 0,   gs, gt)); break;
+				case 2 : InputDrawOverlay(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, 64 * gs, gt)); break;
 			}
 			
 		} else {

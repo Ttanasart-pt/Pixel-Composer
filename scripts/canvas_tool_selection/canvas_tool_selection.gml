@@ -516,7 +516,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 		draw_surface_ext_safe(selection_mask, _dx, _dy, _s, _s);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(is_select_drag || is_select_rota || is_select_scal) return;
 		
 		var pos_x = _x + selection_position[0] * _s;
@@ -648,7 +648,7 @@ function canvas_selection_tool(_selector) : canvas_tool() constructor {
 		draw_surface_ext_safe(selection_mask, _dx, _dy, _s, _s);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my) {}
 	
 	static escapable = function() /*=>*/ {return !selector.was_selected};
 }

@@ -32,7 +32,7 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _dim = getDimension();
@@ -47,9 +47,9 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_set_color(COLORS._main_accent);
 		if(is_real(rad)) draw_circle_dash(px, py, rad * _s);
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 90, _dim[0] / 2, 2));
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active,  px,  py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, 90, _dim[0] / 2, 2));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active,  px,  py, _s, _mx, _my));
 		
 		return w_hovering;
 	}

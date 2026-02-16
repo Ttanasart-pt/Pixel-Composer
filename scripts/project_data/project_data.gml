@@ -71,6 +71,7 @@ function Project() constructor {
 	
 	previewGrid     = variable_clone(PREFERENCES.project_previewGrid);
 	previewSetting  = variable_clone(PREFERENCES.project_previewSetting);
+	previewRuler    = [];
 	
 	graphGrid       = variable_clone(PREFERENCES.project_graphGrid);
 	graphDisplay    = variable_clone(PREFERENCES.project_graphDisplay);
@@ -478,6 +479,8 @@ function Project() constructor {
 		_map.inspectingNode = _insp_node? _insp_node.node_id : noone;
 		
 		_map.previewGrid     = variable_clone(previewGrid);
+		_map.previewRuler    = array_clone(previewRuler);
+		
 		_map.graphGrid       = variable_clone(graphGrid);
 		_map.graphConnection = variable_clone(graphConnection);
 		_map.attributes      = variable_clone(attributes);
@@ -564,6 +567,8 @@ function Project() constructor {
 		
 		if(has(_map, "onion_skin"))      struct_override(onion_skin,      _map.onion_skin);
 		if(has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);
+		if(has(_map, "previewRuler"))    previewRuler = _map.previewRuler;
+		
 		if(has(_map, "graphGrid"))       struct_override(graphGrid,       _map.graphGrid);
 		if(has(_map, "graphConnection")) struct_override(graphConnection, _map.graphConnection);
 		if(has(_map, "attributes"))      struct_override(attributes,      _map.attributes);

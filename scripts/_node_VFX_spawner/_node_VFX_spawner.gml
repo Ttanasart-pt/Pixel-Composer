@@ -542,12 +542,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Draw
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _spr = getInputData(0);
 		var _src = getInputData(4);
 		
 		if(_src == 3) {
-			InputDrawOverlay(inputs[55].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+			InputDrawOverlay(inputs[55].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
 			
 		} else if(_src == 4) {
 			
@@ -557,7 +557,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			if(is_array(_spr)) _spr = _spr[0];
 			
 			var _flag = is(_spr, SurfaceAtlas)? 0b0001 : 0b0011;
-			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag));
+			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _flag));
 		}
 		
 		if(onDrawOverlay != -1) onDrawOverlay(active, _x, _y, _s, _mx, _my);

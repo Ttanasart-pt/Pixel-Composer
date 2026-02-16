@@ -44,7 +44,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	
 	attribute_interpolation();
 	
-	static onDrawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
+	static onDrawOverlay3D = function(active, _mx, _my, _params) {
 		var _outSurf = outputs[1].getValue();
 		if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, preview_index);
 		if(!is_surface(_outSurf)) return;

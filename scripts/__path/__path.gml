@@ -9,10 +9,10 @@ function Path(_node) constructor {
 	
 	__temp_p    = new __vec2P();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(!is(node, Node)) return false;
 		
-		var hv = node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		var hv = node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		return (hv ?? false) || node.w_hovering;
 	}
 	

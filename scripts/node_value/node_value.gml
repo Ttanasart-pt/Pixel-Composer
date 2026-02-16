@@ -2291,7 +2291,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	__preview_bbox = noone;
 	static drawOverlayToggle = noone;
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my) { 
 		if(expUse) return -1;
 		
 		var argc = 9;
@@ -2344,7 +2344,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.pathnode :
 				var _path   = getValue();
 				var _params = argument_count > argc + 0? argument[argc + 0] : {};
-				if(has(_path, "drawOverlay")) return _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+				if(has(_path, "drawOverlay")) return _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 				break;
 		}
 		

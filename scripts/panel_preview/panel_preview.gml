@@ -382,6 +382,19 @@ function Panel_Preview() : PanelContent() constructor {
     	
     	sb_shader = new scrollBox(preview_shaders, function(i) /*=>*/ { preview_shader = i; }).setFont(f_p3);
     	bb_shader = new buttonGroup(array_create(8, THEME.preview_channels), function(i) /*=>*/ { preview_shader = i; }).setFont(f_p3);
+    	
+    	ruler_width   = ui(12);
+    	ruler_hover   = noone;
+    	
+    	ruler_edit_h  = false;
+    	ruler_edit_hi = 0;
+    	ruler_edit_hs = 0;
+    	ruler_edit_hm = 0;
+    	
+    	ruler_edit_v  = false;
+    	ruler_edit_vi = 0;
+    	ruler_edit_vs = 0;
+    	ruler_edit_vm = 0;
     #endregion
     
     #region ---- tool ----
@@ -564,6 +577,10 @@ function Panel_Preview() : PanelContent() constructor {
 		function view_control_toggle() { PROJECT.previewSetting.show_view_control = !PROJECT.previewSetting.show_view_control; }
 		function view_control_show()   { PROJECT.previewSetting.show_view_control =  true; }
 		function view_control_hide()   { PROJECT.previewSetting.show_view_control = false; }
+		
+		function ruler_toggle() { PROJECT.previewSetting.show_ruler = !PROJECT.previewSetting.show_ruler; }
+		function ruler_show()   { PROJECT.previewSetting.show_ruler =  true; }
+		function ruler_hide()   { PROJECT.previewSetting.show_ruler = false; }
 		
         hk_editing     = noone;
         hk_selecting   = noone;
@@ -949,6 +966,12 @@ function Panel_Preview() : PanelContent() constructor {
         
         var tl = tool_side_draw_l * ui(40);
         var tr = tool_side_draw_r * ui(40);
+        
+        if(PROJECT.previewSetting.show_ruler && !d3_active) {
+        	tl += ruler_width;
+        	tr += ruler_width;
+        }
+        
         var ss = scale == 0? min((w - ui(32) - tl - tr) / _w, (h - ui(32) - toolbar_height * 2) / _h) : scale;
         
         canvas_s = ss;
@@ -2135,6 +2158,9 @@ function Panel_Preview() : PanelContent() constructor {
             else          right_menu_y += ui(40);
         } 
         
+        if(PROJECT.previewSetting.show_ruler && !d3_active)
+        	right_menu_y += ruler_width;
+        	
         toolbar_draw = false;
         var _node = getNodePreview();
         
@@ -2318,14 +2344,20 @@ function Panel_Preview() : PanelContent() constructor {
         if(!PROJECT.previewSetting.show_view_control) return;
         if(CAPTURING) return;
         
-        var _side   = PROJECT.previewSetting.show_view_control == 1? 1 : -1;
-        var _view_x = PROJECT.previewSetting.show_view_control == 1? 
-                tool_side_draw_l * toolbar_width + ui(8) : 
-            w - tool_side_draw_r * toolbar_width - ui(8);
+        var _left = PROJECT.previewSetting.show_view_control == 1;
+        
+        var _side   = _left? 1 : -1;
+        var _view_x = _left? tool_side_draw_l * toolbar_width + ui(8) : 
+                         w - tool_side_draw_r * toolbar_width - ui(8);
             
         var _view_y = topbar_height + ui(8);
         var _hab    = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
         view_hovering = false;
+        
+        if(PROJECT.previewSetting.show_ruler && !d3_active) {
+        	if(_left) _view_x += ruler_width;
+        	_view_y += ruler_width;
+        }
         
         if(d3_active) { 
             var d3_view_wr = ui(32);
@@ -2488,7 +2520,7 @@ function Panel_Preview() : PanelContent() constructor {
         	if(!is(_n, Node))     continue;
         	if(!_n.isGizmoGlobal) continue;
         	
-        	var _h = _n.doDrawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+        	var _h = _n.doDrawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, params);
         	
         	if(_h == true) {
         		overHover  = false;
@@ -2566,7 +2598,7 @@ function Panel_Preview() : PanelContent() constructor {
 		            }
 	            }
 	            
-	            hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, _params);
+	            hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _params);
 		    	
 	        } else {
 	            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
@@ -2574,7 +2606,7 @@ function Panel_Preview() : PanelContent() constructor {
 	                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
 	            }
 	            
-	            hoveringGizmo = _node.drawOverlay3D(overActive, _mx, _my, _snx, _sny, _params) ?? true;
+	            hoveringGizmo = _node.drawOverlay3D(overActive, _mx, _my, _params) ?? true;
 	        }
         }
         
@@ -2594,8 +2626,6 @@ function Panel_Preview() : PanelContent() constructor {
 	        }
         }
         
-        drawToolsLeft(_node);
-        drawToolsRight(_node);
     }
     
     static drawTopbar = function(_node) {
@@ -3091,6 +3121,161 @@ function Panel_Preview() : PanelContent() constructor {
     	draw_surface_ext(surf, x0, y0, ss, ss, 0, c_white, 1);
     }
     
+    static drawRuler = function() {
+    	var x0 =     tool_side_draw_l * toolbar_width;
+        var x1 = w - tool_side_draw_r * toolbar_width;
+        
+        var y0 =     topbar_height;
+        var y1 = h - toolbar_height;
+        
+        #region draw
+	        
+	    	var hov_h = _mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y0 + ruler_width);
+	    	var hov_v = _mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x0 + ruler_width, y1);
+	    	if(hov_h || hov_v) _mouse_on_preview = false;
+			
+	        draw_set_color(hov_h? CDEF.main_black : CDEF.main_mdblack); draw_rectangle(0, 0, w, y0 + ruler_width, false);
+	        draw_set_color(hov_v? CDEF.main_black : CDEF.main_mdblack); draw_rectangle(0, 0, x0 + ruler_width, h, false);
+	        
+			var prevSurf = is_surface(preview_surfaces[0]);
+	        var sw = prevSurf? surface_get_width( preview_surfaces[0]) : DEF_SURF_W;
+	        var sh = prevSurf? surface_get_height(preview_surfaces[0]) : DEF_SURF_H;
+	        
+	    	var cx0 = canvas_x;
+	    	var cy0 = canvas_y;
+	    	var cx1 = canvas_x + sw * canvas_s - 1;
+	    	var cy1 = canvas_y + sh * canvas_s - 1;
+	    	
+	        draw_set_color(CDEF.main_ltgrey);
+	    	draw_line(cx0, y0, cx0, y0 + ruler_width);
+	    	draw_line(cx1, y0, cx1, y0 + ruler_width);
+	    	
+	    	draw_line(x0, cy0, x0 + ruler_width, cy0);
+	    	draw_line(x0, cy1, x0 + ruler_width, cy1);
+		#endregion
+        
+        #region lines
+        	var cc = PROJECT.previewSetting.ruler_color > -1? PROJECT.previewSetting.ruler_color : COLORS._main_accent;
+        	draw_set_color(cc);
+        	var hv = noone;
+        	
+        	for( var i = 0, n = array_length(PROJECT.previewRuler); i < n; i++ ) {
+        		var _r = PROJECT.previewRuler[i];
+        		var  a = _r[0];
+        		var  v = _r[1] * canvas_s;
+        		var _h = false;
+        		
+        		if(a == 0) {
+        			var _line_y = canvas_y + v;
+        			_h = pHOVER && point_in_rectangle(mx, my, x0, _line_y - 2, x0 + ruler_width, _line_y + 2);
+        			draw_line_width(0, _line_y, w, _line_y, 1 + (ruler_hover == i) * 2);
+        		}
+        		
+        		if(a == 1) {
+        			var _line_x = canvas_x + v;
+        			_h = pHOVER && point_in_rectangle(mx, my, _line_x - 2, y0, _line_x + 2, y0 + ruler_width);
+        			draw_line_width(_line_x, 0, _line_x, h, 1 + (ruler_hover == i) * 2);
+        		}
+        		
+        		if(_h) hv = i;
+        	}
+        	
+        	ruler_hover = hv;
+        	
+        	if(pHOVER && hv == noone) {
+		    	var mpx = floor((mx - canvas_x) / canvas_s);
+		        var mpy = floor((my - canvas_y) / canvas_s);
+		        
+		        draw_set_color(cc);
+		        draw_line(mx, y0, mx, y0 + ruler_width);
+		    	draw_line(x0, my, x0 + ruler_width, my);
+	        }
+        #endregion
+        
+        #region edit
+        	var _snap = PROJECT.previewGrid.snap;
+        	var _size = PROJECT.previewGrid.size;
+        	
+        	if(ruler_edit_h) {
+        		var v = ruler_edit_hs + (my - ruler_edit_hm) / canvas_s;
+        		if(abs(v -  0) < 8 / canvas_s) v =  0;
+        		if(abs(v - sh) < 8 / canvas_s) v = sh;
+        		if(_snap) v = value_snap(v, _size[1]);
+        		
+        		ruler_edit_hi[1] = round(v);
+        		
+        		if(mouse_lrelease()) {
+        			ruler_edit_h = false;
+        			if(hov_h) array_remove(PROJECT.previewRuler, ruler_edit_hi);
+        		}
+        	}
+        	
+        	if(ruler_edit_v) {
+        		var v = ruler_edit_vs + (mx - ruler_edit_vm) / canvas_s;
+        		if(abs(v -  0) < 8 / canvas_s) v =  0;
+        		if(abs(v - sw) < 8 / canvas_s) v = sw;
+        		if(_snap) v = value_snap(v, _size[0]);
+        		
+        		ruler_edit_vi[1] = round(v);
+        		
+        		if(mouse_lrelease()) {
+        			ruler_edit_v = false;
+        			if(hov_v) array_remove(PROJECT.previewRuler, ruler_edit_vi);
+        		}
+        	}
+        	
+        	if(mouse_lpress(pFOCUS)) {
+	        	if(ruler_hover == noone) {
+			        if(hov_h) {
+			        	ruler_edit_h  = true;
+			        	ruler_edit_hi = [0, 0];
+			        	ruler_edit_hs = (my - canvas_y) / canvas_s;
+			        	ruler_edit_hm = my;
+			        	
+			        	array_push(PROJECT.previewRuler, ruler_edit_hi);
+			        } 
+			    	
+			    	if(hov_v) {
+			        	ruler_edit_v  = true;
+			        	ruler_edit_vi = [1, 0];
+			        	ruler_edit_vs = (mx - canvas_x) / canvas_s;
+			        	ruler_edit_vm = mx;
+			        	
+			        	array_push(PROJECT.previewRuler, ruler_edit_vi);
+			        } 
+			        
+	        	} else {
+	        		var _r = PROJECT.previewRuler[ruler_hover];
+	        		
+	        		if(_r[0] == 0) {
+			        	ruler_edit_h  = true;
+			        	ruler_edit_hi = _r;
+			        	ruler_edit_hs = _r[1];
+			        	ruler_edit_hm = my;
+			        } 
+			    	
+			    	if(_r[0] == 1) {
+			        	ruler_edit_v  = true;
+			        	ruler_edit_vi = _r;
+			        	ruler_edit_vs = _r[1];
+			        	ruler_edit_vm = mx;
+			        } 
+			        
+	        	}
+        	}
+        #endregion
+        
+    	/// Post outline
+    	
+    	draw_set_color(CDEF.main_black);
+        draw_rectangle(x0, y0, x0 + ruler_width, y0 + ruler_width, false);
+        
+        draw_set_color(CDEF.main_dkgrey);
+    	draw_line(0, y0 + ruler_width, w, y0 + ruler_width);
+    	draw_line(x0 + ruler_width, 0, x0 + ruler_width, h);
+    	
+    }
+    
     ////- DRAW MAIN
     
     static drawContent = function(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -3100,7 +3285,8 @@ function Panel_Preview() : PanelContent() constructor {
     		return; 
     	}
 		
-    	mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
+    	mouse_on_preview  = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height) && _mouse_on_preview;
+        _mouse_on_preview = true;
         
         if(do_fullView) fullView();
         do_fullView = false;
@@ -3174,12 +3360,20 @@ function Panel_Preview() : PanelContent() constructor {
         	var aa = d3_active? .8 : 1;
         	draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), tw, th, c_white, aa);
         }
-        
+        	
         if(PANEL_PREVIEW == self) { //only draw overlay once
             if(inspect_node) {
                 toolNode = inspect_node; 
                 if(inspect_node.getTool) toolNode = inspect_node.getTool();
-                if(toolNode) drawNodeActions(pFOCUS, toolNode);
+                if(toolNode) {
+                	drawNodeActions(pFOCUS, toolNode);
+                	
+                	if(PROJECT.previewSetting.show_ruler)
+        				drawRuler();
+        	
+			        drawToolsLeft(toolNode);
+			        drawToolsRight(toolNode);
+                }
                 
             } else {
             	if(tool_current != noone) {
@@ -3189,6 +3383,9 @@ function Panel_Preview() : PanelContent() constructor {
             	}
 	        	
                 drawAllNodeGizmo(pFOCUS);
+                
+                if(PROJECT.previewSetting.show_ruler)
+        			drawRuler();
             }
         }
         
@@ -3403,6 +3600,44 @@ function Panel_Preview() : PanelContent() constructor {
 		
     	if(is(_baseNode, Node_Composite) && _outp.type == VALUE_TYPE.surface)
     		_baseNode.addInput(_outp);
+    }
+    
+    static snapRulerX = function(v) {
+        if(!PROJECT.previewSetting.show_ruler) return;
+    	var r = PROJECT.previewRuler;
+    	var _snx = 0;
+    	
+    	if(key_mod_press(CTRL))
+            _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
+        else if(PROJECT.previewGrid.snap)
+            _snx = PROJECT.previewGrid.size[0];
+        
+    	v = value_snap(v, _snx);
+    	for( var i = 0, n = array_length(r); i < n; i++ ) {
+    		var _r = r[i];
+    		if(_r[0] == 1 && abs(v - _r[1]) < 8) v = _r[1];
+    	}
+        
+        return v;
+    }
+    
+    static snapRulerY = function(v) {
+        if(!PROJECT.previewSetting.show_ruler) return;
+    	var r = PROJECT.previewRuler;
+    	var _sny = 0;
+    	
+    	if(key_mod_press(CTRL))
+            _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
+        else if(PROJECT.previewGrid.snap)
+            _sny = PROJECT.previewGrid.size[1];
+        
+        v = value_snap(v, _sny);
+    	for( var i = 0, n = array_length(r); i < n; i++ ) {
+    		var _r = r[i];
+    		if(_r[0] == 0 && abs(v - _r[1]) < 8) v = _r[1];
+    	}
+        
+        return v;
     }
     
     ////- Serialize

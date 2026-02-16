@@ -62,7 +62,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Shape",		false], 1, 2, 3, 4, 5, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 
 		var _typ = getInputData(1);
 		var _pos = getInputData(2);
@@ -132,9 +132,9 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			draw_line_dashed(px0, py0, px1, py1);
 		}
 		
-		InputDrawOverlay(inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+		InputDrawOverlay(inputs[4].drawOverlay(hover, active, px, py, _s, _mx, _my));
+		InputDrawOverlay(inputs[3].drawOverlay(hover, active, px, py, _s, _mx, _my));
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

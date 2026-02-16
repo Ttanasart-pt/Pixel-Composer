@@ -387,7 +387,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     ////- Update
     
     _preview_scale = 1;
-    static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+    static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
     	preview_alpha = room_resizing? .5 : 1;
     	if(!room_resizing) return;
     	

@@ -47,7 +47,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? [_dom.width, _dom.height] : [1,1]; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		
 		var _typ = getInputData(8);
 		var _mat = getInputData(1);
@@ -67,7 +67,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			draw_ellipse(_px - sw, _py - sh, _px + sw, _py + sh, false);
 			draw_set_alpha(1);
 			
-			InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 			
 		} else if(_typ == 1) {
 			if(is_surface(_mat)) {
@@ -80,7 +80,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			}
 		}
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

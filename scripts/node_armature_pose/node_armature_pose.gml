@@ -68,7 +68,7 @@
 			params.lock_unselected = true;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
@@ -210,7 +210,7 @@
 			params.lock_unselected = true;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
@@ -340,7 +340,7 @@
 			params.lock_unselected = true;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
@@ -530,7 +530,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Draw
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _b = inputs[0].getValue();
 		if(!is(_b, __Bone) || !is(bonePose, __Bone)) return;
 		
@@ -803,7 +803,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _tool     = _currTool.getToolObject();
 				
 				if(_tool != noone) {
-					_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 					if(mouse_lclick()) bone_freeze = 1;
 					_show_selecting = true;
 				}

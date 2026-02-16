@@ -47,7 +47,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var rot = current_data[2];
@@ -55,10 +55,10 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny ));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny ));
-		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, rot, 1, 2       ));
-		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0] ));
+		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my ));
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, rot, 1, 2       ));
+		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[0] ));
 		
 		return w_hovering;
 	}

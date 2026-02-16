@@ -171,7 +171,7 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(index == 0) refreshPalette();
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, params) {
 	    
 	}
 	

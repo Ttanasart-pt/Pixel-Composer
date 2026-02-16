@@ -32,7 +32,7 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 	
 	coll_map = {};
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
 	static step = function() {}
 	

@@ -92,7 +92,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[6].setVisible(_asp >  0 && _fit == 0);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, params) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _inSurf	= current_data[0];
@@ -326,8 +326,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _px = _x + _cent[0] * _s;
 			var _py = _y + _cent[1] * _s;
 			
-			InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-			InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s / 2, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+			InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s / 2, _mx, _my));
 			
 		} else {
 			var _idim = surface_get_dimension(_inSurf);

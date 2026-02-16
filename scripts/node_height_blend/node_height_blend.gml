@@ -17,7 +17,7 @@ function Node_Blend_Height(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		var _bg = _data[0];

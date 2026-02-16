@@ -28,7 +28,7 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _snx, _sny, _params) {
+		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _params) {
 			#region ---- main ----
 				var _pos  = node.inputs[index].getValue(,,, true);
 				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
@@ -308,7 +308,7 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _snx, _sny, _params) {
+		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _params) {
 			#region ---- main ----
 				var _rot  = node.inputs[index].getValue();
 				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
@@ -537,7 +537,7 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _snx, _sny, _params) {
+		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _params) {
 			
 			#region ---- main ----
 				var _sca  = node.inputs[index].getValue(,,, true);
@@ -831,7 +831,7 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(object, active, _mx, _my, _snx, _sny, _params) {
+		function drawOverlay3D(object, active, _mx, _my, _params) {
 			#region ---- main ----
 				var _pos  = node.getInputData(0);
 				var _sca  = node.getInputData(2);
@@ -1026,7 +1026,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	mesh_prev_surface = noone;
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
+	static drawOverlay3D = function(active, _mx, _my, _params) {}
 	
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	

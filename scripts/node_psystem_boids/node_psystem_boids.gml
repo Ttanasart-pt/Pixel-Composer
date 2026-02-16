@@ -47,15 +47,15 @@ function Node_pSystem_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _parts = getInputData( 0);
 		var _fol   = getInputData(12);
 		if(!is(_parts, pSystem_Particles)) return;
 		
-		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		
 		if(_fol) {
-			InputDrawOverlay(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		}
 	}
 	

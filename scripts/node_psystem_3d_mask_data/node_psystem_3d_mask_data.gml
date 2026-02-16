@@ -54,10 +54,10 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	mask_buffer  = undefined;
 	curve_modi   = undefined;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _parts = getInputData(0);
 		if(!is(_parts, pSystem_Particles)) return;
-		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 	}
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }

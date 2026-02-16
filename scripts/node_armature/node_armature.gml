@@ -84,7 +84,7 @@
 			}
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
@@ -204,7 +204,7 @@
 			
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
@@ -310,7 +310,7 @@
 			}
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
@@ -866,7 +866,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		}
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
@@ -1334,7 +1334,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				var _tool     = _currTool.getToolObject();
 				
 				if(_tool != noone) {
-					_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 					if(mouse_lclick()) bone_freeze = 1;
 					_show_selecting = true;
 				}

@@ -133,7 +133,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	temp_surface = [ noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		if(getInputAmount() == 0) return;
 		
@@ -169,7 +169,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		
-		InputDrawOverlay(inputs[_ind+3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1));
+		InputDrawOverlay(inputs[_ind+3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 		
 		var _type = current_data[_ind+0];
 		if(_type == 0) {
@@ -181,7 +181,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			draw_set_color(COLORS._main_accent);
 			draw_circle_dash(px, py, rr/2);
-			InputDrawOverlay(inputs[_ind+4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1/2, 1));
+			InputDrawOverlay(inputs[_ind+4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 0, 1/2, 1));
 		}
 		
 		if(hvAny) w_hoverable = false;

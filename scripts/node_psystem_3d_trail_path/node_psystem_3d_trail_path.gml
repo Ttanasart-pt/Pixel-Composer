@@ -149,7 +149,7 @@ function Node_pSystem_3D_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Draw
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay3D = function(active, _mx, _my, _params) {
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		

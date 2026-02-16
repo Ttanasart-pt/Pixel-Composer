@@ -26,12 +26,12 @@ function Node_Quarternion_Lookat(_x, _y, _group = noone) : Node_3D_Object(_x, _y
 	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
 	tools       = [ tool_lookat ]; 
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay3D = function(active, _mx, _my, _params) {
 		var _targ = isUsingTool("Move Target")? 1 : 0;
 		var _posi = getInputSingle(_targ);
 		var _vpos = new __vec3( _posi[0], _posi[1], _posi[2] );
 		
-		tool_object_pos.drawOverlay3D(_targ, noone, _vpos, active, _mx, _my, _snx, _sny, _params);
+		tool_object_pos.drawOverlay3D(_targ, noone, _vpos, active, _mx, _my, _params);
 	}
 	
 	////- Nodes

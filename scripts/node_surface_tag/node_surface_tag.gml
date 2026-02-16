@@ -105,7 +105,7 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	tag_dragging_mx = 0;
 	tag_dragging_my = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _tagged_surfaces = outputs[0].getValue();
 		var _tagged_surface  = is_array(_tagged_surfaces)? array_safe_get_fast(_tagged_surfaces, preview_index) : _tagged_surfaces;
 		

@@ -86,7 +86,7 @@
 			return self;
 		}
 		
-		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 			var _partBuff = buffer;
 			var _partAmo  = maxCursor;
 			var _off = 0;

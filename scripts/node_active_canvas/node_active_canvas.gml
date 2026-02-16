@@ -54,7 +54,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	temp_surface = [ noone, noone, noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _bpos = getInputData(2);
 		var _brot = brush_prev.rot;
 		
@@ -68,7 +68,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		draw_line(_bx - _rx, _by - _ry, _bx + _rx, _by + _ry);
 		draw_circle(_bx, _by, ui(4), false);
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static brush_draw_surface = function(_bg, _surf, _x, _y, _sx, _sy, _rot, _clr, _alp) {

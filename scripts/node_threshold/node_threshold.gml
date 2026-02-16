@@ -46,7 +46,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _b = current_data[1];
@@ -56,8 +56,8 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		if(_b) InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _cy - ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0]));
-		if(_a) InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _x, _cy + ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0]));
+		if(_b) InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _cy - ui(16), _s, _mx, _my, 0, _dim[0]));
+		if(_a) InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _x, _cy + ui(16), _s, _mx, _my, 0, _dim[0]));
 		
 		return w_hovering;
 	}

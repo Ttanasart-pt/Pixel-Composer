@@ -36,10 +36,10 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		draw_set_color(COLORS._main_accent);
 		
-		InputDrawOverlay(inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static processData = function(_outData, _data, _array_index) {

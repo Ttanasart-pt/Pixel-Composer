@@ -104,7 +104,7 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		preview_hotkey_step   =  0;
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag = 0b0011) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _flag = 0b0011) { 
 		if(expUse) return -1;
 		__preview_bbox = node.__preview_bbox;
 		

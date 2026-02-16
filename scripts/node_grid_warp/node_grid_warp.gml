@@ -52,7 +52,7 @@
 			origin_y /= n;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
@@ -172,7 +172,7 @@
 			origin_y /= n;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
@@ -271,7 +271,7 @@
 			origin_y /= n;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
@@ -446,7 +446,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
@@ -489,7 +489,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		#endregion
 		
 		if(isUsingTool("Edit Area"))
-			return InputDrawOverlay(inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			return InputDrawOverlay(inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		
 		var hoverIndex = undefined;
 		
@@ -573,7 +573,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _tool     = _currTool.getToolObject();
 			
 			if(_tool != noone) {
-				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 				if(mouse_lclick()) anchor_freeze = 1;
 				_show_selecting = true;
 			}

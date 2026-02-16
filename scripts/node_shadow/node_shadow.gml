@@ -39,7 +39,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	temp_surface = [ noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _dim = getDimension();
 		var ww   = _s * _dim[0];
 		var hh   = _s * _dim[1];
@@ -56,7 +56,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed(cx, cy, sx, sy);
 			
-	 		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _snx, _sny, 1));
+	 		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, 1));
 	 		
 		} else if(_typ == 1) {
 			var shf = getInputSingle(12);
@@ -66,10 +66,10 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed(cx, cy, sx, sy);
 			
-			InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1));
+			InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 		}
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s * _dim[0], _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s * _dim[0], _mx, _my));
 		
 		return w_hovering;
 	}

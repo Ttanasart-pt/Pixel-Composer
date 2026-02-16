@@ -198,7 +198,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		
 		draw_surface_ext_safe(maskedSurface, _dx, _dy, _s, _s);
 		
-		nodeObject.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		nodeObject.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 		
 		if(WIDGET_CURRENT == undefined) {
 			if(key_press(vk_enter))  apply();

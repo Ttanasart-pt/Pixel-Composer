@@ -60,7 +60,7 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(active, _mx, _my, _snx, _sny, _params) {
+		function drawOverlay3D(active, _mx, _my, _params) {
 			if(array_empty(node.anchor_select)) { PANEL_PREVIEW.resetTool(); return; }
 			
 			#region ---- main ----
@@ -379,7 +379,7 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(active, _mx, _my, _snx, _sny, _params) {
+		function drawOverlay3D(active, _mx, _my, _params) {
 			if(array_empty(node.anchor_select)) { PANEL_PREVIEW.resetTool(); return; }
 			
 			#region ---- main ----
@@ -606,7 +606,7 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(active, _mx, _my, _snx, _sny, _params) {
+		function drawOverlay3D(active, _mx, _my, _params) {
 			if(array_empty(node.anchor_select)) { PANEL_PREVIEW.resetTool(); return; }
 			
 			#region ---- main ----
@@ -965,9 +965,9 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	////- Draw
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {}
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay3D = function(active, _mx, _my, _params) {
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		
@@ -1335,7 +1335,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			var _tool     = _currTool.getToolObject();
 			
 			if(_tool != noone) {
-				_tool.drawOverlay3D(active, _mx, _my, _snx, _sny, _params);
+				_tool.drawOverlay3D(active, _mx, _my, _params);
 				if(mouse_lclick()) anchor_freeze = 1;
 				_show_selecting = true;
 			}

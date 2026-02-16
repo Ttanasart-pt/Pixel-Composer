@@ -46,13 +46,13 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	insp1button = button(function() /*=>*/ { readFile(path_get(getInputData(0))); triggerRender(); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(!is(content, SVG)) return;
 		
 		var _stype = getInputData(2);
 		if(_stype == 0) {
 			var _scale = getInputData(1);
-			content.drawOverlay(hover, active, _x, _y, _s * _scale, _mx, _my, _snx, _sny);
+			content.drawOverlay(hover, active, _x, _y, _s * _scale, _mx, _my);
 		}
 	}
 	

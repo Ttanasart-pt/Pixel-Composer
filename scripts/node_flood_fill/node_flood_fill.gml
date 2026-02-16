@@ -32,8 +32,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	array_push(attributeEditors, "Algorithm");
 	array_push(attributeEditors, Node_Attribute("Fill iteration", function() /*=>*/ {return attributes.fill_iteration}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("fill_iteration", v, true)} )}));
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

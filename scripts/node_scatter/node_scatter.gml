@@ -132,15 +132,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static getDimension = function() { return getInputData(1, DEF_SURF); }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _distType = current_data[6];
 		
-		if(_distType <  3) InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		if(_distType == 4) InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		if(_distType <  3) InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		if(_distType == 4) InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
 		
-		InputDrawOverlay(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
+		InputDrawOverlay(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[1]));
 		
 		return w_hovering;
 	}

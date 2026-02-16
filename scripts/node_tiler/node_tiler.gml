@@ -170,7 +170,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_reset_shader();
 	}
 	
-    static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { 
+    static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, params) { 
         if(tileset == noone) return;
         
         var hovering = isUsingTool();

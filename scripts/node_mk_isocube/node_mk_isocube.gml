@@ -58,7 +58,7 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	function X(_x) { return __x + _x * __s; }
 	function Y(_y) { return __y + _y * __s; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		draw_set_color(COLORS._main_accent);
 		
 		var _base  = getInputSingle(0);

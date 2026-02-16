@@ -40,7 +40,7 @@ function Node_Project_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	draw_transforms = [0,0,1,1,0];
 	static drawOverlayTransform = function(_n) /*=>*/ {return draw_transforms};
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(!is_surface(layer_surf)) return;
 		
 		var _dim = project.attributes.surface_dimension;

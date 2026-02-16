@@ -257,12 +257,12 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		// }
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		if(composite  != noone) draw_surface_ext_safe(composite.outputs[0].getValue(), _x, _y, _s, _s);
 		if(canvas_sel == noone) return false;
 		
 		_params.drawToolPreview = false;
-		var _draw = canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		var _draw = canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		canvas_sel.drawToolOutline();
 		
 		return _draw;

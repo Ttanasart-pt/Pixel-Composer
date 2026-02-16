@@ -203,7 +203,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	current_bone = noone;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _bones = inputs[0].getValue();
 		var _mesh  = inputs[1].getValue();
 		var _rdata = attributes.baked? attributes.bakeData : rigdata;

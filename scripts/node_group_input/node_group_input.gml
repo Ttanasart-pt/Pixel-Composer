@@ -512,7 +512,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 
 	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(inParent.isArray(inParent.getValue())) return false;
 		
 		var _vis = inputs[ 6].getValue();
@@ -534,15 +534,15 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				switch(inParent.display_type) {
 					case VALUE_DISPLAY._default :
 					case VALUE_DISPLAY.slider :
-						return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, _rot);
+						return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _rot);
 
 					case VALUE_DISPLAY.vector :
-						return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [1,1], _rot);
+						return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, 0, [1,1], _rot);
 				}
 				
 		}
 		
-		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
+		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my);
 	}
 	
 	static drawNodeDef = drawNode;

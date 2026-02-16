@@ -58,7 +58,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	static toggleBoneTarget = function() /*=>*/ { bone_targeting = !bone_targeting; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		inputs[1].setSelecting(bone_targeting);
 		
 		var _b = inputs[0].getValue();

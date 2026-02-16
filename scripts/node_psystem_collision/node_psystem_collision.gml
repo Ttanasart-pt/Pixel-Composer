@@ -41,7 +41,7 @@ function Node_pSystem_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	mask_buffer = undefined;
 	collideTrig = undefined; collideCount = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _parts = getInputData(0);
 		var _shap = getInputData( 3);
 		var _posi = getInputData( 4);
@@ -50,7 +50,7 @@ function Node_pSystem_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		if(!is(_parts, pSystem_Particles)) return;
 		
-		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		
 		var _px = _x + _posi[0] * _s;
 		var _py = _y + _posi[1] * _s;
@@ -62,23 +62,23 @@ function Node_pSystem_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				draw_line_angle(_px, _py, _rota);
 				draw_arrow(_px, _py, _px + lengthdir_x(64, _rota + 90), _py + lengthdir_y(64, _rota + 90), 16);
 				
-				InputDrawOverlay(inputs[4].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[6].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[4].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my));
+				InputDrawOverlay(inputs[6].drawOverlay(hover, active, _px, _py, _s, _mx, _my));
 				break;
 				
 			case 1 : // rectangle
 				draw_rectangle(_px - _size[0] * _s, _py - _size[1] * _s, _px + _size[0] * _s, _py + _size[1] * _s, true);
 				
-				InputDrawOverlay(inputs[4].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[5].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[4].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my));
+				InputDrawOverlay(inputs[5].drawOverlay(hover, active, _px, _py, _s, _mx, _my));
 				break;
 				
 			case 2 : // ellipse
 				draw_set_circle_precision(32);
 				draw_ellipse(_px - _size[0] * _s, _py - _size[1] * _s, _px + _size[0] * _s, _py + _size[1] * _s, true);
 				
-				InputDrawOverlay(inputs[4].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[5].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[4].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my));
+				InputDrawOverlay(inputs[5].drawOverlay(hover, active, _px, _py, _s, _mx, _my));
 				break;
 		}
 		

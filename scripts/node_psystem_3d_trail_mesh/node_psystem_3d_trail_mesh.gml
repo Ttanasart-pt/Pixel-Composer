@@ -36,7 +36,7 @@ function Node_pSystem_3D_Trail_Mesh(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 	trail_buffer     = undefined;
 	buffer_data_size = 8*3 + 4; // px, py, pz, cr, cg, cb
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay3D = function(active, _mx, _my, _params) {
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		

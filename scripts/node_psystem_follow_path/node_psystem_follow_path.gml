@@ -39,17 +39,17 @@ function Node_pSystem_Follow_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 	curve_spri = undefined;
 	__p = new __vec2P();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _parts = getInputData(0);
 		var _path  = getInputData(3);
 		
 		if(!is_path(_path)) return;
 		if(!is(_parts, pSystem_Particles)) return;
 		
-		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		
 		if(has(_path, "drawOverlay"))
-			InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+			InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 	}
 	
 	static reset = function() {

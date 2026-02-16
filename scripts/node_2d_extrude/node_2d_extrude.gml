@@ -39,7 +39,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	anchor_drag_mx  = 0;
 	anchor_drag_my  = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _dim = getDimension();
 		var _px  = _x + _dim[0] / 2 * _s;
 		var _py  = _y + _dim[1] / 2 * _s;

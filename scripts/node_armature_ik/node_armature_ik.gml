@@ -30,7 +30,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static toggleBoneTarget = function(i) /*=>*/ { bone_targeting = bone_targeting == i? 0 : i; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		inputs[1].setSelecting(bone_targeting == 1);
 		inputs[2].setSelecting(bone_targeting == 2);
 		

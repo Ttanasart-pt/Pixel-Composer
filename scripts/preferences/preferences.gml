@@ -220,6 +220,9 @@
 			show_info             : true,
 			show_view_control     : 1,
 			
+			show_ruler            : false, 
+			ruler_color           : -1, 
+			
 			d3_tool_snap          : false,
             d3_tool_snap_position : 1,
             d3_tool_snap_rotation : 15,

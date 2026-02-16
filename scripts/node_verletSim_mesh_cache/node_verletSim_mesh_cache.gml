@@ -38,7 +38,7 @@ function Node_VerletSim_Mesh_Cache(_x, _y, _group = noone) : Node(_x, _y, _group
 		}
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _msh = getInputData(0);
 		
 		if(is(_msh, Mesh)) {

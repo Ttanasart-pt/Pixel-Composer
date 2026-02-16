@@ -39,10 +39,10 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	mask_buffer  = undefined;
 	mask_sampler = undefined;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _parts = getInputData(0);
 		if(!is(_parts, pSystem_Particles)) return;
-		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		
 		var _type = getInputData(3);
 		var _fall = getInputData(5) * _s;
@@ -85,7 +85,7 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				draw_set_alpha(1);
 			}
 			
-			InputDrawOverlay(inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 			
 		} else if(_type == 1) {
 			var _cent = getInputData(7);
@@ -102,8 +102,8 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_line_dashed_angle(_cx + _dx, _cy + _dy, _rota);
 			draw_line_dashed_angle(_cx - _dx, _cy - _dy, _rota);
 			
-			InputDrawOverlay(inputs[7].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-			InputDrawOverlay(inputs[8].drawOverlay(hover, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[7].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my));
+			InputDrawOverlay(inputs[8].drawOverlay(hover, active, _cx, _cy, _s, _mx, _my));
 		}
 	}
 	

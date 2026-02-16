@@ -150,7 +150,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	temp_surface = [ noone, noone ];
 	disp_path = [];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		if(getInputAmount() == 0) return w_hovering;
 		
@@ -180,9 +180,9 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					draw_circle(px, py, rad,  true);
 					draw_circle(qx, qy, rad2, true);
 					
-					InputDrawOverlay(inputs[_ind +  2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-					InputDrawOverlay(inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, qx, qy, _s, _mx, _my, _snx, _sny, 0, 1, 1));
+					InputDrawOverlay(inputs[_ind +  2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+					InputDrawOverlay(inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, qx, qy, _s, _mx, _my, 0, 1, 1));
 					
 				} else if(!array_empty(disp_path)) {
 					var ox, oy, nx, ny;
@@ -208,7 +208,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					
 					draw_circle(ox, oy, rad2, true);
 					
-					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my, _snx, _sny));
+					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my));
 				}
 				break;
 			
@@ -224,21 +224,21 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						draw_circle_dash(px, py, rad - fal);
 					draw_circle_dash(px, py, rad + fal);
 					
-					InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, fx, py, _s, _mx, _my, _snx, _sny, 0, 1, 2));
+					InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, fx, py, _s, _mx, _my, 0, 1, 2));
 				} else 
-					InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, fx + ui(6), py, _s, _mx, _my, _snx, _sny, 0, 1, 2));
+					InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, fx + ui(6), py, _s, _mx, _my, 0, 1, 2));
 					
-				InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 			
 			default:
-				InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 		}
 		
 		draw_set_color(COLORS._main_accent);
 		draw_circle(px, py, rad, true);
-		InputDrawOverlay(inputs[_ind + 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, 1));
+		InputDrawOverlay(inputs[_ind + 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 0, 1, 1));
 		return w_hovering;
 	}
 	

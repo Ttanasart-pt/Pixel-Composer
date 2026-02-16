@@ -34,7 +34,7 @@ function Node_Armature_Connect(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static toggleBoneTarget = function(i) /*=>*/ { bone_targeting = !bone_targeting; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _arma = getInputData(5);
 		var _par  = getInputData(7);
 		var _con  = getInputData(8);
@@ -68,8 +68,8 @@ function Node_Armature_Connect(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		if( is( bone, __Bone)) bone.draw(attributes, false, _x, _y, _s, _mx, _my);
 		
-		if(!_con)     InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my, _snx, _sny));
-		if(_typ == 1) InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my, _snx, _sny));
+		if(!_con)     InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my));
+		if(_typ == 1) InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my));
 	}
 	
 	////- Update

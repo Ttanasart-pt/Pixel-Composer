@@ -39,12 +39,12 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	temp_surface = [ noone, noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _dim = getDimension();
 		var ww   = _s * _dim[0];
 		var hh   = _s * _dim[1];
 		
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, ww, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, ww, _mx, _my));
 		
 		return w_hovering;
 	}

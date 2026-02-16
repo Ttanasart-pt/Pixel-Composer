@@ -86,11 +86,11 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	static getToolSettings = function() { return curr_posm == 0? tool_settings : []; }
 	
-	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay3D = function(active, _mx, _my, _params) {
 		if(is_path(curr_path)) {
 			var _nodeFrom = inputs[in_d3d + 2].value_from.node;
 			if(struct_has(_nodeFrom, "drawOverlay3D"))
-				_nodeFrom.drawOverlay3D(active, _mx, _my, _snx, _sny, _params);
+				_nodeFrom.drawOverlay3D(active, _mx, _my, _params);
 		}
 		
 		var preObj = getPreviewObjects();
@@ -100,13 +100,13 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 		var _pos  = inputs[0].getValue(,,, true);
 		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
 		
-		if(isUsingTool("Transform"))	tool_object_pos.drawOverlay3D(0, preObj, _vpos, active, _mx, _my, _snx, _sny, _params);
-		else if(isUsingTool("Rotate"))	tool_object_rot.drawOverlay3D(1, preObj, _vpos, active, _mx, _my, _snx, _sny, _params);
+		if(isUsingTool("Transform"))	tool_object_pos.drawOverlay3D(0, preObj, _vpos, active, _mx, _my, _params);
+		else if(isUsingTool("Rotate"))	tool_object_rot.drawOverlay3D(1, preObj, _vpos, active, _mx, _my, _params);
 		else if(isUsingTool("Move Target")) {
 			var _lkpos  = inputs[in_d3d + 5].getValue(,,, true);
 			var _lkvpos = new __vec3( _lkpos[0], _lkpos[1], _lkpos[2] );
 			
-			tool_object_pos.drawOverlay3D(in_d3d + 5, noone, _lkvpos, active, _mx, _my, _snx, _sny, _params);
+			tool_object_pos.drawOverlay3D(in_d3d + 5, noone, _lkvpos, active, _mx, _my, _params);
 		}
 		
 	}

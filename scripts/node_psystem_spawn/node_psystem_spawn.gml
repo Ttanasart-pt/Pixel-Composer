@@ -86,10 +86,10 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		if(!is(partPool, pSystem_Particles)) return;
 		
-		partPool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		partPool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		var _sh_type = getInputData(6);
 		var _sh_area = getInputData(8);
 		
@@ -105,7 +105,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			case 0 : 
 				var _sh_shap = getInputData(7);
 				if(_sh_shap == 1) draw_ellipse(_area_x - _area_w, _area_y - _area_h, _area_x + _area_w, _area_y + _area_h, true);
-				InputDrawOverlay(inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)); 
+				InputDrawOverlay(inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my)); 
 				break;
 				
 			case 1 :
@@ -114,7 +114,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					case 0 : 
 					case 1 : 
 						if(_sh_bord == 1) draw_ellipse(_area_x - _area_w, _area_y - _area_h, _area_x + _area_w, _area_y + _area_h, true);
-						InputDrawOverlay(inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)); 
+						InputDrawOverlay(inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my)); 
 						break;
 					
 					case 2 : 
@@ -128,8 +128,8 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						
 						draw_line(_lx0, _ly0, _lx1, _ly1);
 						
-						InputDrawOverlay(inputs[26].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
-						InputDrawOverlay(inputs[27].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+						InputDrawOverlay(inputs[26].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+						InputDrawOverlay(inputs[27].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 						break;
 				}
 		}

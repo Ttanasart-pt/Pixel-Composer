@@ -32,7 +32,7 @@ function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	anchor_drag_mx  = 0;
 	anchor_drag_my  = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _surf = getInputSingle(0);
 		if(!is_surface(_surf)) return;
 		

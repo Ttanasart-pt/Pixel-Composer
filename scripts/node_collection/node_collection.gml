@@ -372,13 +372,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- DRAW
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(!draw_input_overlay) return;
 		
 		var hovering = false;
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
 			var _in = inputs[i];
-			var _hv = _in.from.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+			var _hv = _in.from.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 			if(_hv != undefined) {
 				active   = active && !_hv;
 				hovering = hovering || _hv;

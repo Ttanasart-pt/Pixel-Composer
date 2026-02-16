@@ -40,7 +40,7 @@
 			drag_axis  = -1;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var  val  = array_clone(drag_trans);
@@ -128,7 +128,7 @@
 			rotate_acc = 0;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var  val  = array_clone(drag_trans);
@@ -205,7 +205,7 @@
 			drag_axis  = -1;
 		}
 		
-		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var  val  = array_clone(drag_trans);
@@ -770,7 +770,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- Draw
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var dim   = getInputData(0);
 		var panel = _params[$ "panel"] ?? noone;
 		
@@ -785,7 +785,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_set_alpha(1);
 			
 			var _arm = inputs[1].value_from;
-			return _arm != noone? _arm.node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) : false;
+			return _arm != noone? _arm.node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params) : false;
 		}
 		
 		if(!is(bone, __Bone)) return;
@@ -795,7 +795,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _dsca = getInputData(4);
 		
 		bone.draw(attributes, false, _x + _dpos[0] * _s, _y + _dpos[1] * _s, _s * _dsca, _mx, _my, anchor_selecting);
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		if(_bind != noone) return w_hovering;
 			
@@ -1127,7 +1127,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _tool     = _currTool.getToolObject();
 			
 			if(_tool != noone) {
-				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
 				if(mouse_lclick()) selection_freeze = 1;
 			}
 		}

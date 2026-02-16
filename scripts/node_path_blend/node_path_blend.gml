@@ -38,16 +38,16 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		accu_lengths = [];
 		total_length = [];
 		
-		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 			var hovering = false;
 			
 			if(has(curr_path1, "drawOverlay")) {
-				var _hv = curr_path1.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+				var _hv = curr_path1.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 				hovering = hovering || _hv;
 			}
 			
 			if(has(curr_path2, "drawOverlay")) {
-				var _hv = curr_path2.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+				var _hv = curr_path2.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 				hovering = hovering || _hv;
 			}
 			
@@ -186,8 +186,8 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		return w_hovering;
 	}
 	

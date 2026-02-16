@@ -36,11 +36,11 @@ function Node_pSystem_Sample_Color(_x, _y, _group = noone) : Node(_x, _y, _group
 	samp_w = 1;
 	samp_h = 1;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _parts = getInputData(0);
 		if(!is(_parts, pSystem_Particles)) return;
 		
-		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 	}
 	
 	static update = function(_frame = CURRENT_FRAME) {

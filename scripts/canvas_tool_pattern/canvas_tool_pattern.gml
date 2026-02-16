@@ -38,7 +38,7 @@ function canvas_tool_pattern(toolAttr) : canvas_tool_shader() constructor {
 		
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my ) {
 		var _dim = node.attributes.dimension;
 		
 		var px = round((_mx - _x) / _s);

@@ -88,7 +88,7 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 		dragging = true;
 	}
 	
-	static drawOverlay = function( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+	static drawOverlay = function( hover, active, _x, _y, _s, _mx, _my ) {
 	    if(!dragging) return;
 	    
 	    var _fx = _x + fx * _s;

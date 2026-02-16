@@ -28,7 +28,7 @@ function Node_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	preview_size = 256;
 	temp_surface = array_create(4, noone);
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _mask = getInputSingle(1);
 		var _thr  = getInputSingle(2);
 		
