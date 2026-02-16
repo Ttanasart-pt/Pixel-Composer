@@ -3155,8 +3155,7 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
         
         #region lines
-        	var cc = PROJECT.previewSetting.ruler_color > -1? PROJECT.previewSetting.ruler_color : COLORS._main_accent;
-        	draw_set_color(cc);
+        	var cc = PROJECT.previewSetting.ruler_color > -1? PROJECT.previewSetting.ruler_color : CDEF.main_ltgrey;
         	var hv = noone;
         	
         	for( var i = 0, n = array_length(PROJECT.previewRuler); i < n; i++ ) {
@@ -3165,13 +3164,17 @@ function Panel_Preview() : PanelContent() constructor {
         		var  v = _r[1] * canvas_s;
         		var _h = false;
         		
+        		draw_set_color(cc);
+        		
         		if(a == 0) {
+        			if(ruler_edit_hi == _r && hov_h) draw_set_color(COLORS._main_value_negative);
         			var _line_y = canvas_y + v;
         			_h = pHOVER && point_in_rectangle(mx, my, x0, _line_y - 2, x0 + ruler_width, _line_y + 2);
         			draw_line_width(0, _line_y, w, _line_y, 1 + (ruler_hover == i) * 2);
         		}
         		
         		if(a == 1) {
+        			if(ruler_edit_vi == _r && hov_v) draw_set_color(COLORS._main_value_negative);
         			var _line_x = canvas_x + v;
         			_h = pHOVER && point_in_rectangle(mx, my, _line_x - 2, y0, _line_x + 2, y0 + ruler_width);
         			draw_line_width(_line_x, 0, _line_x, h, 1 + (ruler_hover == i) * 2);
@@ -3186,7 +3189,7 @@ function Panel_Preview() : PanelContent() constructor {
 		    	var mpx = floor((mx - canvas_x) / canvas_s);
 		        var mpy = floor((my - canvas_y) / canvas_s);
 		        
-		        draw_set_color(cc);
+		        draw_set_color(COLORS._main_accent);
 		        draw_line(mx, y0, mx, y0 + ruler_width);
 		    	draw_line(x0, my, x0 + ruler_width, my);
 	        }
@@ -3200,13 +3203,16 @@ function Panel_Preview() : PanelContent() constructor {
         		var v = ruler_edit_hs + (my - ruler_edit_hm) / canvas_s;
         		if(abs(v -  0) < 8 / canvas_s) v =  0;
         		if(abs(v - sh) < 8 / canvas_s) v = sh;
-        		if(_snap) v = value_snap(v, _size[1]);
         		
-        		ruler_edit_hi[1] = round(v);
+        		if(_snap) v = value_snap(v, _size[1]);
+        		if(key_mod_press(CTRL)) v = round(v);
+        		
+        		ruler_edit_hi[1] = v;
         		
         		if(mouse_lrelease()) {
-        			ruler_edit_h = false;
         			if(hov_h) array_remove(PROJECT.previewRuler, ruler_edit_hi);
+        			ruler_edit_hi = noone;
+        			ruler_edit_h  = false;
         		}
         	}
         	
@@ -3214,13 +3220,17 @@ function Panel_Preview() : PanelContent() constructor {
         		var v = ruler_edit_vs + (mx - ruler_edit_vm) / canvas_s;
         		if(abs(v -  0) < 8 / canvas_s) v =  0;
         		if(abs(v - sw) < 8 / canvas_s) v = sw;
-        		if(_snap) v = value_snap(v, _size[0]);
         		
-        		ruler_edit_vi[1] = round(v);
+        		if(_snap) v = value_snap(v, _size[0]);
+        		if(key_mod_press(CTRL)) v = round(v);
+        		
+        		ruler_edit_vi[1] = v;
         		
         		if(mouse_lrelease()) {
-        			ruler_edit_v = false;
         			if(hov_v) array_remove(PROJECT.previewRuler, ruler_edit_vi);
+        			
+        			ruler_edit_vi = noone;
+        			ruler_edit_v  = false;
         		}
         	}
         	
@@ -3368,9 +3378,7 @@ function Panel_Preview() : PanelContent() constructor {
                 if(toolNode) {
                 	drawNodeActions(pFOCUS, toolNode);
                 	
-                	if(PROJECT.previewSetting.show_ruler)
-        				drawRuler();
-        	
+                	if(PROJECT.previewSetting.show_ruler && !d3_active) drawRuler();
 			        drawToolsLeft(toolNode);
 			        drawToolsRight(toolNode);
                 }
@@ -3384,8 +3392,7 @@ function Panel_Preview() : PanelContent() constructor {
 	        	
                 drawAllNodeGizmo(pFOCUS);
                 
-                if(PROJECT.previewSetting.show_ruler)
-        			drawRuler();
+                if(PROJECT.previewSetting.show_ruler && !d3_active) drawRuler();
             }
         }
         

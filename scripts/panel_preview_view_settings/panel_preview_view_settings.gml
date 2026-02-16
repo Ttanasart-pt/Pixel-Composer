@@ -35,7 +35,7 @@ function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
 			"project_previewSetting.show_ruler",
 		),
 		new __Panel_Linear_Setting_Item(
-			__txt("Ruler Color"),
+			__txt("Ruler Line Color"),
 			new buttonColor(function(c) /*=>*/ { previewPanel.ruler_color = c; }),
 			function()    /*=>*/   {return previewPanel.ruler_color},
 			function(val) /*=>*/ { previewPanel.ruler_color = val; },
