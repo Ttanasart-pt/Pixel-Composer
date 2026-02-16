@@ -329,9 +329,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(13, nodeValue_Int(     "Echo Amount", 8     ));
 	// input 20
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone    ));
-	newOutput(2, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []       ));
-	newOutput(1, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [ 1, 1 ] )).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(2, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
+	newOutput(1, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
+	newOutput(3, nodeValue_Output( "Velocity",    VALUE_TYPE.float,   [0,0] )).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
+	newOutput(4, nodeValue_Output( "Direction",   VALUE_TYPE.float,    0    )).setVisible(false);
+	newOutput(5, nodeValue_Output( "Speed",       VALUE_TYPE.float,    0    )).setVisible(false);
 	
 	input_display_list = [ 11, 0,  
 		[ "Output",   true     ], 9, 1, 15, 7,
@@ -343,7 +346,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		[ "Echo",     true, 12 ], 16, 13, 
 	];
 	
-	output_display_list = [ 0, 2, 1 ];
+	output_display_list = [ 0, 2, 1, 3, 4, 5 ];
 	
 	////- Tool
 	
@@ -865,9 +868,18 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(_prevData != noone) {
 				var dirr = point_direction( _prevData[5], _prevData[6], pos_raw[0], pos_raw[1] );
+				var diss = point_distance(  _prevData[5], _prevData[6], pos_raw[0], pos_raw[1] );
+				
 				rot += rot_vel * dirr;
+				
+				_outData[3] = [
+					pos_raw[0] - _prevData[5], 
+					pos_raw[1] - _prevData[6]
+				];
+				
+				_outData[4] = dirr;
+				_outData[5] = diss;
 			}
-			
 		#endregion
 		
 		var  ww = surface_get_width_safe(surf);
