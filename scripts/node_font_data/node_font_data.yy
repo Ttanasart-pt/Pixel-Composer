@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_font_data",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_font_data",
+  "parent":{
+    "name":"text",
+    "path":"folders/nodes/data/value/text.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
