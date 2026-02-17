@@ -2285,12 +2285,30 @@ function Panel_Preview() : PanelContent() constructor {
                 rx -= tw + ui(2); 
             	
             	if(d3_active == NODE_3D.none) {
-                	var tw = string_width($"x{canvas_s}") + ui(8);
-                	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
-            		draw_text_add(rx, ry, $"x{canvas_s}"); 
-            		rx -= tw + ui(2); 
-            		draw_set_color(CDEF.main_mdwhite);
+                	if(WIDGET_CURRENT == tb_zoom_level) {
+                		var tw = ui(40);
+                		draw_sprite_stretched_ext(ls, 1, rx-tw+ui(4), ry, tw, lh, lc, 1);
+                		
+                		mouse_on_preview = false;
+                		tb_zoom_level.setFont(f_p4);
+                		tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
+	                	tb_zoom_level.draw(rx, ry, tw, lh, string(canvas_s), [mx,my], fa_right);
+	                	
+                	} else {
+                		var tw = string_width($"x{canvas_s}") + ui(8);
+	                	var hv = pHOVER && point_in_rectangle(mx, my, rx-tw+ui(4), ry, rx+ui(4), ry+lh);
+	        			if(hv) mouse_on_preview = false;
+	        			
+	                	draw_sprite_stretched_ext(ls, hv, rx-tw+ui(4), ry, tw, lh, hv? CDEF.main_mdwhite : lc, .8 + hv * .2);
+	                	draw_text_add(rx, ry, $"x{canvas_s}"); 
+            			
+            			if(hv && mouse_lpress(pFOCUS))
+            				tb_zoom_level.activate(canvas_s);
+                	}
                 	
+            		rx -= tw + ui(2); 
+            		draw_set_text(f_p4, fa_right, fa_top, CDEF.main_mdwhite);
+            		
 	            	rx  = right_menu_x;
 	            	ry += lh + ui(2);
 	            	

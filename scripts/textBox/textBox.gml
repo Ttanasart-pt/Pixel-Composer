@@ -165,7 +165,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	////- Actives
 	
-	static activate = function(_def_str = _current_text) {
+	static activate = function(_def_str = _current_text) { 
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
