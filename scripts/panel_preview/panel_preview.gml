@@ -800,7 +800,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
         }
         
-        if(pHOVER && pFOCUS && canvas_hover) {
+        if(pHOVER && canvas_hover) {
             var _doDragging = false;
             var _doZooming  = false;
             
@@ -836,17 +836,17 @@ function Panel_Preview() : PanelContent() constructor {
             }
             
             var _canvas_s = canvas_s;
-            var inc = 0.1;
-            if(canvas_s > 16)        inc = 2;
-            else if(canvas_s > 8)    inc = 1;
-            else if(canvas_s > 3)    inc = 0.5;
-            else if(canvas_s > 1)    inc = 0.25;
+            var inc = .1;
+                 if(canvas_s > 16) inc =  2;
+            else if(canvas_s >  8) inc =  1;
+            else if(canvas_s >  3) inc = .50;
+            else if(canvas_s >  1) inc = .25;
             
             if(!key_mod_press_any() && MOUSE_WHEEL != 0) {
             	if(frac(MOUSE_WHEEL) == 0) canvas_s = clamp(value_snap(canvas_s + MOUSE_WHEEL * inc, inc), 0.10, 1024);
             	else                       canvas_s = clamp(canvas_s + MOUSE_WHEEL * inc, 0.10, 1024);
             }
-            	
+            
             if(_canvas_s != canvas_s) {
                 var dx = (canvas_s - _canvas_s) * ((mx - canvas_x) / _canvas_s);
                 var dy = (canvas_s - _canvas_s) * ((my - canvas_y) / _canvas_s);
@@ -2182,7 +2182,7 @@ function Panel_Preview() : PanelContent() constructor {
 	            var _txt_ses = $"[{selection_x1 - selection_x0}, {selection_y1 - selection_y0}]";
 			#endregion
             
-        	if(PROJECT.previewSetting.status_display == 0) {
+        	if(PROJECT.previewSetting.status_display == 1) {
             	draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text);
             	var _lh = line_get_height();
                 if(_active) {
@@ -2252,7 +2252,7 @@ function Panel_Preview() : PanelContent() constructor {
                     }
                 }
                 
-            } else if(PROJECT.previewSetting.status_display == 1) {
+            } else if(PROJECT.previewSetting.status_display == 2) {
             	draw_set_text(f_p4, fa_right, fa_top, CDEF.main_mdwhite);
             	right_menu_y += ui(2);
             	

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_extends",
+  "name":"sh_extends",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

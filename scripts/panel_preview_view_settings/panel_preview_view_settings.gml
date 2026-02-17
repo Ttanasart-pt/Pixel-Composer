@@ -5,12 +5,12 @@ function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
 	properties = [
 		new __Panel_Linear_Setting_Item(
 			__txt("Info"),
-			new checkBox(function() /*=>*/ { previewPanel.show_info = !previewPanel.show_info; }),
-			function()    /*=>*/   {return previewPanel.show_info},
-			function(val) /*=>*/ { previewPanel.show_info = val; },
-			PREFERENCES.project_previewSetting.show_info,
-			["Preview", "Toggle Show Info"],
-			"project_previewSetting.show_info",
+			new buttonGroup(__txts([ "None", "Stacked", "Compact" ]), function(val) /*=>*/ { previewPanel.status_display = val; }),
+			function()    /*=>*/   {return previewPanel.status_display},
+			function(val) /*=>*/ { previewPanel.status_display = val; },
+			PREFERENCES.project_previewSetting.status_display,
+			noone,
+			"project_previewSetting.status_display",
 		),
 		
 		new __Panel_Linear_Setting_Item(
@@ -21,16 +21,6 @@ function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
 			PREFERENCES.project_previewSetting.show_view_control,
 			noone,
 			"project_previewSetting.show_view_control",
-		),
-		
-		new __Panel_Linear_Setting_Item(
-			__txt("Info"),
-			new buttonGroup(__txts([ "Stacked", "Compact" ]), function(val) /*=>*/ { previewPanel.status_display = val; }),
-			function()    /*=>*/   {return previewPanel.status_display},
-			function(val) /*=>*/ { previewPanel.status_display = val; },
-			PREFERENCES.project_previewSetting.status_display,
-			noone,
-			"project_previewSetting.status_display",
 		),
 		
 		-1,
