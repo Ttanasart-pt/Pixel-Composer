@@ -135,7 +135,7 @@
 	}
 	
 	function shader_set_uniform_f_array_safe(uniform, array, max_length = 4096) {
-		// if(!is_array(array)) return;
+		if(!is_array(array)) return;
 		
 		var _len = array_length(array);
 		if(_len == 0) return;

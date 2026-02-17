@@ -90,16 +90,26 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			colArr = array_append(colArr, colorToArray(array_safe_get_fast(_pal, 2, c_black), 1));
 			colArr = array_append(colArr, colorToArray(array_safe_get_fast(_pal, 3, c_black), 1));
 			
-		} else
-			colArr = array_merge(colorToArray(_1col, 1), colorToArray(_2col, 1), colorToArray(_3col, 1), colorToArray(_4col, 1))
+		} else {
+			colArr = array_append(colArr, colorToArray(_1col, 1));
+			colArr = array_append(colArr, colorToArray(_2col, 1));
+			colArr = array_append(colArr, colorToArray(_3col, 1));
+			colArr = array_append(colArr, colorToArray(_4col, 1));
+		}
 		
 		surface_set_shader(_outSurf, sh_gradient_points);
 			shader_set_uv(_data[17], _data[18]);
 			
 			shader_set_f("dimension", _dim);
-			shader_set_f("center",    array_merge(_1cen, _2cen, _3cen, _4cen));
+			shader_set_f("center",    [
+				_1cen[0], _1cen[1], 
+				_2cen[0], _2cen[1], 
+				_3cen[0], _3cen[1], 
+				_4cen[0], _4cen[1]
+			]);
+			
+			shader_set_f("strength",  [ _1str, _2str, _3str, _4str ]);
 			shader_set_f("color",     colArr);
-			shader_set_f("strength",  _1str, _2str, _3str, _4str);
 			shader_set_i("blend",     _blnd);
 			shader_set_i("cspace",    _cspc);
 			
