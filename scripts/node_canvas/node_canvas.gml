@@ -602,12 +602,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			new NodeTool( [ "Gradient", "Pattern" ],     [ THEME.canvas_tools_gradient, THEME.canvas_tools_pattern ] )
 				.setContext(self)
-				.setToolObject( [ new canvas_tool_with_selector(tool_fill_grad_obj), new canvas_tool_with_selector(tool_pattern_obj) ]),
+				.setToolObject( [ new canvas_tool_with_selector(tool_fill_grad_obj, tool_sel_magic), new canvas_tool_with_selector(tool_pattern_obj, tool_sel_magic) ]),
 			
 		];
 	#endregion
 	
-	#region ++++ right tools ++++
+	#region ++++ right tools/ actions ++++
 		__action_rotate_90_cw  = method(self, function( ) /*=>*/ { if(selection.is_selected) selection.rotate90cw()  else canvas_action_rotate(-90); });
 		__action_rotate_90_ccw = method(self, function( ) /*=>*/ { if(selection.is_selected) selection.rotate90ccw() else canvas_action_rotate( 90); });
 		__action_flip_h        = method(self, function( ) /*=>*/ { if(selection.is_selected) selection.flipH()       else canvas_action_flip(1);     });
@@ -700,11 +700,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		rightTools_not_selection = [ 
 			-1,
-			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_outline) ).setSettings(tool_settings),
-			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_extrude) ).setSettings(tool_settings),
-			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_inset)   ).setSettings(tool_settings),
-			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_skew)    ).setSettings(tool_settings),
-			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_corner)  ).setSettings(tool_settings),
+			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_outline, tool_sel_magic) ).setSettings(tool_settings),
+			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_extrude, tool_sel_magic) ).setSettings(tool_settings),
+			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_inset,   tool_sel_magic)   ).setSettings(tool_settings),
+			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_skew,    tool_sel_magic)    ).setSettings(tool_settings),
+			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_corner,  tool_sel_magic)  ).setSettings(tool_settings),
 		];
 		
 		rightTools_empty = [  ];
@@ -715,8 +715,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_eraser.rightTools    = rightTools_empty;
 		tool_rectangle.rightTools = rightTools_empty;
 		tool_ellipse.rightTools   = rightTools_empty;
-		
-		selection_tool_after = noone;
 	#endregion
 	
 	#region ++++ hotkey ++++
@@ -1121,7 +1119,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static storeAction = function() {
+	static storeAction = function(_title = "Modify canvas") {
 		if(selection.is_selected) {
 			recordAction(ACTION_TYPE.custom, function(data) /*=>*/ { 
 				// if(selection.is_selected) selection.apply();
@@ -1138,7 +1136,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}, { 
 				surface : surface_clone(selection.selection_surface), 
 				mask    : surface_clone(selection.selection_mask), 
-				tooltip : $"Modify canvas", 
+				tooltip : _title, 
 			}).setRef(self);
 			
 		} else {
@@ -1153,7 +1151,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				data.surface = _canvas;
 			}, { 
 				surface : surface_clone(getCanvasSurface(preview_index)), 
-				tooltip : $"Modify canvas {preview_index}", 
+				tooltip : $"{_title} {preview_index}", 
 				index   : preview_index
 			}).setRef(self);
 		}

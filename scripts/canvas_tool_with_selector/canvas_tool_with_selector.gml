@@ -1,11 +1,12 @@
-function canvas_tool_with_selector(_tool) : canvas_tool() constructor {
-	tool = _tool;
+function canvas_tool_with_selector(_tool, _sel) : canvas_tool() constructor {
+	tool     = _tool;
+	selector = _sel;
 	
 	static init = function(_node) {
-		_node.selection_tool_after  = tool;
+		selector.tool_after = tool;
 	}
 	
-	static getTool = function() { return node.tool_sel_magic; }
+	static getTool = function() /*=>*/ {return selector};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my ) {
 		var _tObj = tool.getToolObject();

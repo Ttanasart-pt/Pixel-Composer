@@ -48,12 +48,18 @@ function canvas_tool_selection_magic(_selector, _toolAttr) : canvas_selection_to
 				surface_reset_target();
 				surface_free(_temp_surface);
 				
+				if(tool_after != noone) {
+					node.storeAction();
+					UNDO_HOLDING = true;
+				}
+				
 				selector.createSelection(selection_mask, sel_x0, sel_y0, sel_w, sel_h);
 				surface_free_safe(selection_mask);
 				
-				if(node.selection_tool_after != noone) {
-					node.selection_tool_after.toggle();
-					node.selection_tool_after  = noone;
+				if(tool_after != noone) {
+					tool_after.toggle();
+					tool_after   = noone;
+					UNDO_HOLDING = false;
 				}
 			}
 		}

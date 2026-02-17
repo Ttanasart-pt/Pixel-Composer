@@ -75,7 +75,10 @@ function canvas_tool_shader() : canvas_tool() constructor {
 				surface_free(_sel.selection_surface);
 				_sel.selection_surface  = _newSurf;
 				_sel.selection_position = [ 0, 0 ];
+				
+				UNDO_HOLDING = true;
 				_sel.apply();
+				UNDO_HOLDING = false;
 			
 				surface_free(_surf);
 			
