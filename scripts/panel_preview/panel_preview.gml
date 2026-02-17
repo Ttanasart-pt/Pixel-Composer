@@ -3721,16 +3721,15 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static snapX = function(v) {
-        if(!PROJECT.previewSetting.show_ruler) return;
-    	var r = PROJECT.previewRuler;
     	var _snx = 0;
-    	
-    	if(key_mod_press(CTRL))
-            _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
-        else if(PROJECT.previewGrid.snap)
-            _snx = PROJECT.previewGrid.size[0];
-        
+    	     if(key_mod_press(CTRL))      _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
+        else if(PROJECT.previewGrid.snap) _snx = PROJECT.previewGrid.size[0];
     	v = value_snap(v, _snx);
+        
+        if(!PROJECT.previewSetting.show_ruler) 
+        	return v;
+        
+    	var r = PROJECT.previewRuler;
     	for( var i = 0, n = array_length(r); i < n; i++ ) {
     		var _r = r[i];
     		if(_r[0] == 1 && abs(v - _r[1]) < 8 / canvas_s) v = _r[1];
@@ -3740,16 +3739,15 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static snapY = function(v) {
-        if(!PROJECT.previewSetting.show_ruler) return;
-    	var r = PROJECT.previewRuler;
-    	var _sny = 0;
-    	
-    	if(key_mod_press(CTRL))
-            _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
-        else if(PROJECT.previewGrid.snap)
-            _sny = PROJECT.previewGrid.size[1];
-        
+        var _sny = 0;
+    	     if(key_mod_press(CTRL))      _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
+        else if(PROJECT.previewGrid.snap) _sny = PROJECT.previewGrid.size[1];
         v = value_snap(v, _sny);
+        
+        if(!PROJECT.previewSetting.show_ruler) 
+        	return v;
+    	
+    	var r = PROJECT.previewRuler;
     	for( var i = 0, n = array_length(r); i < n; i++ ) {
     		var _r = r[i];
     		if(_r[0] == 0 && abs(v - _r[1]) < 8 / canvas_s) v = _r[1];
