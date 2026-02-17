@@ -23,6 +23,16 @@ function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
 			"project_previewSetting.show_view_control",
 		),
 		
+		new __Panel_Linear_Setting_Item(
+			__txt("Info"),
+			new buttonGroup(__txts([ "Stacked", "Compact" ]), function(val) /*=>*/ { previewPanel.status_display = val; }),
+			function()    /*=>*/   {return previewPanel.status_display},
+			function(val) /*=>*/ { previewPanel.status_display = val; },
+			PREFERENCES.project_previewSetting.status_display,
+			noone,
+			"project_previewSetting.status_display",
+		),
+		
 		-1,
 		
 		new __Panel_Linear_Setting_Item(

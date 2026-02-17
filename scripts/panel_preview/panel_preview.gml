@@ -2164,33 +2164,38 @@ function Panel_Preview() : PanelContent() constructor {
         toolbar_draw = false;
         var _node = getNodePreview();
         
-        #region status texts (top right)
-            draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text);
-            var _lh = line_get_height();
+        if(right_menu_x == 0) right_menu_x = w - ui(8);
+        
+        if(PROJECT.previewSetting.show_info && !CAPTURING) { // status texts (top right)
+        	#region data
+	        	var _active = PANEL_PREVIEW == self;
+	        	
+	            var _cc_fps = fps >= PROJECT.animator.framerate? CDEF.main_mdwhite : COLORS._main_value_negative;
+	            if(!window_has_focus()) _cc_fps = CDEF.main_mdwhite; 
+	            
+	            var _cc_fra  = frac(GLOBAL_CURRENT_FRAME) == 0? CDEF.main_mdwhite : COLORS._main_value_negative; 
+	            
+	            var mpx = floor((mx - canvas_x) / canvas_s);
+	            var mpy = floor((my - canvas_y) / canvas_s);
+	            var _txt_mou = $"[{mpx}, {mpy}]";
+	            var _txt_sel = $"[{selecting_w}, {selecting_h}]";
+	            var _txt_ses = $"[{selection_x1 - selection_x0}, {selection_y1 - selection_y0}]";
+			#endregion
             
-            if(right_menu_x == 0) right_menu_x = w - ui(8);
-            
-            if(PROJECT.previewSetting.show_info && !CAPTURING) {
-                if(PANEL_PREVIEW == self) {
+        	if(PROJECT.previewSetting.status_display == 0) {
+            	draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text);
+            	var _lh = line_get_height();
+                if(_active) {
                     draw_set_color(COLORS._main_text_accent);
                     draw_text(right_menu_x, right_menu_y, __txt("Active"));
                     right_menu_y += _lh;
                 }
+                var _txt_fps = $"{__txt("fps")} {fps}";
+	            if(PREFERENCES.panel_preview_show_real_fps) _txt_fps += $" / {FPS_REAL}";
+                var _txt_fra = $"{__txt("Frame")} {GLOBAL_CURRENT_FRAME + 1}/{GLOBAL_TOTAL_FRAMES}";
                 
-                var txt = $"{__txt("fps")} {fps}";
-                if(PREFERENCES.panel_preview_show_real_fps)
-                    txt += $" / {FPS_REAL}";
-                
-                var cc = fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative;
-                if(!window_has_focus()) cc = COLORS._main_text_sub; 
-                
-                draw_set_color(cc);
-                draw_text(right_menu_x, right_menu_y, txt);
-                right_menu_y += _lh;
-            
-                var _cur_frame = GLOBAL_CURRENT_FRAME + 1;
-                draw_set_color(frac(_cur_frame) == 0? COLORS._main_text_sub : COLORS._main_value_negative);
-                draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {_cur_frame}/{GLOBAL_TOTAL_FRAMES}");
+                draw_set_color(_cc_fps); draw_text(right_menu_x, right_menu_y, _txt_fps); right_menu_y += _lh; 
+                draw_set_color(_cc_fra); draw_text(right_menu_x, right_menu_y, _txt_fra);
             	
                 if(d3_active == NODE_3D.none) {
                     right_menu_y += _lh;
@@ -2199,7 +2204,7 @@ function Panel_Preview() : PanelContent() constructor {
                     var _zms  = $"x{canvas_s}";
                     var _zmw  = string_width(_zms) + ui(16);
                     var _zmx  = right_menu_x + ui(8);
-                    var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
+                    var _zmc  = _zmsl? COLORS._main_text : CDEF.main_mdwhite;
                     
                     if(_zmsl) draw_sprite_stretched(THEME.textbox, 3, _zmx - _zmw + ui(4), right_menu_y + ui(2), _zmw - ui(10), _lh - ui(2));
                     
@@ -2215,47 +2220,122 @@ function Panel_Preview() : PanelContent() constructor {
                     if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
 	                	draw_text(_zmx - _zmw + ui(14), right_menu_y, "x");
                     
-                	draw_set_color(COLORS._main_text_sub);
+                	draw_set_color(CDEF.main_mdwhite);
                 	
                     if(pHOVER) {
-                        right_menu_y += _lh;
-                        var mpx = floor((mx - canvas_x) / canvas_s);
-                        var mpy = floor((my - canvas_y) / canvas_s);
-                        draw_text(right_menu_x, right_menu_y, $"[{mpx}, {mpy}]");
+                        right_menu_y += _lh; 
+                        draw_text(right_menu_x, right_menu_y, _txt_mou);
                         
                         if(selection_selecting) {
-                        	right_menu_y += _lh;
-				        	draw_text(right_menu_x, right_menu_y, $"[{selecting_w}, {selecting_h}]");
+                        	right_menu_y += _lh; 
+				        	draw_text(right_menu_x, right_menu_y, _txt_sel);
 				        	
                         } else if(selection_active) {
-                        	right_menu_y += _lh;
-				        	draw_text(right_menu_x, right_menu_y, $"[{selection_x1 - selection_x0}, {selection_y1 - selection_y0}]");
+                        	right_menu_y += _lh; 
+				        	draw_text(right_menu_x, right_menu_y, _txt_ses);
                         }
                         
                         if(mouse_pos_string != "") {
-                            right_menu_y += _lh;
-                            draw_text(right_menu_x, right_menu_y, $"{mouse_pos_string}");
+                            right_menu_y += _lh; 
+                            draw_text(right_menu_x, right_menu_y, mouse_pos_string);
                         }
-                        
                     }
                     
                     if(_node != noone) {
-                        right_menu_y += _lh;
-                        var txt = $"{canvas_w} x {canvas_h}px";
-                        if(canvas_a) txt = $"{canvas_a} x {txt}";
-                        
-                        draw_text(right_menu_x, right_menu_y, txt);
-                    
-                        right_menu_x = w - ui(8);
+                    	var _txt_surf = $"{canvas_w} x {canvas_h}px";
+	            		if(canvas_a) _txt_surf = $"{canvas_a} x {_txt_surf}";
+	            
+                        right_menu_y += _lh; 
+                        draw_text(right_menu_x, right_menu_y, _txt_surf);
+                    	
                         right_menu_y += _lh;
                     }
                 }
                 
-                mouse_pos_string = "";
+            } else if(PROJECT.previewSetting.status_display == 1) {
+            	draw_set_text(f_p4, fa_right, fa_top, CDEF.main_mdwhite);
+            	right_menu_y += ui(2);
+            	
+            	var ls = THEME.box_r5_clr;
+            	var lh = ui(16);
+            	var lc = CDEF.main_dark;
+            	
+            	var rx = right_menu_x;
+            	var ry = right_menu_y;
+            	
+            	if(_active) {
+            		var tw = ui(40);
+            		draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+                    draw_set_color(COLORS._main_text_accent);
+                    draw_text(rx, ry, __txt("Active"));
+                    rx -= tw + ui(2);
+                }
+                
+                var _txt_fps = $"{fps}f";
+                var _txt_fra = $"{GLOBAL_CURRENT_FRAME + 1}/{GLOBAL_TOTAL_FRAMES}";
+                
+                var tw = string_width(_txt_fps) + ui(8);
+                draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+                draw_set_color(_cc_fps); draw_text_add(rx, ry, _txt_fps); 
+                rx -= tw + ui(2); 
+                
+                var tw = string_width(_txt_fra) + ui(8);
+                draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+                draw_set_color(_cc_fra); draw_text_add(rx, ry, _txt_fra); 
+                rx -= tw + ui(2); 
+            	
+            	if(d3_active == NODE_3D.none) {
+                	var tw = string_width($"x{canvas_s}") + ui(8);
+                	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+            		draw_text_add(rx, ry, $"x{canvas_s}"); 
+            		rx -= tw + ui(2); 
+            		draw_set_color(CDEF.main_mdwhite);
+                	
+	            	rx  = right_menu_x;
+	            	ry += lh + ui(2);
+	            	
+                    if(pHOVER) {
+                		var tw = string_width(_txt_mou) + ui(8);
+                    	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+                        draw_text_add(rx, ry, _txt_mou); 
+                        rx -= tw + ui(2); 
+                        
+                        if(selection_selecting) {
+                    		var tw = string_width(_txt_sel) + ui(8);
+                        	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+				        	draw_text_add(rx, ry, _txt_sel); 
+				        	rx -= tw + ui(2); 
+				        	
+                        } else if(selection_active) {
+                        	var tw = string_width(_txt_ses) + ui(8);
+                        	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+				        	draw_text_add(rx, ry, _txt_ses); 
+				        	rx -= tw + ui(2); 
+                        }
+                        
+                        if(mouse_pos_string != "") {
+                        	var tw = string_width(mouse_pos_string) + ui(8);
+                        	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+                            draw_text_add(rx, ry, mouse_pos_string); 
+                            rx -= tw + ui(2); 
+                        }
+                    }
+                    
+                    if(_node != noone) {
+                    	var _txt_surf = $"{canvas_w} x {canvas_h}";
+	            		if(canvas_a) _txt_surf = $"{canvas_a} x {_txt_surf}";
+	            		
+	            		var tw = string_width(_txt_surf) + ui(8);
+                    	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+                        draw_text_add(rx, ry, _txt_surf); 
+                        rx -= tw + ui(2); 
+                    }
+            	}
             }
-            
-            right_menu_x = w - ui(8);
-        #endregion
+        }
+        
+        mouse_pos_string = "";
+        right_menu_x = w - ui(8);
         
         drawDataArray();
     }

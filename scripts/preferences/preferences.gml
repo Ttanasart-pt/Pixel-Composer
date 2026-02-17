@@ -219,6 +219,7 @@
 		PREFERENCES.project_previewSetting = {
 			show_info         : true,
 			show_view_control : 1,
+			status_display    : 0,
 			
 			show_ruler    : false, 
 			ruler_color   : -1, 
