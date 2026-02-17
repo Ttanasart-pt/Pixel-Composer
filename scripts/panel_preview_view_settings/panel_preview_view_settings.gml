@@ -35,6 +35,15 @@ function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
 			"project_previewSetting.show_ruler",
 		),
 		new __Panel_Linear_Setting_Item(
+			__txt("Ruler Spacing"),
+			textBox_Number(function(n) /*=>*/ { previewPanel.ruler_spacing = max(1, n); }),
+			function()    /*=>*/   {return previewPanel.ruler_spacing},
+			function(val) /*=>*/ { previewPanel.ruler_spacing = val; },
+			PREFERENCES.project_previewSetting.ruler_spacing,
+			noone,
+			"project_previewSetting.ruler_spacing",
+		),
+		new __Panel_Linear_Setting_Item(
 			__txt("Ruler Line Color"),
 			new buttonColor(function(c) /*=>*/ { previewPanel.ruler_color = c; }),
 			function()    /*=>*/   {return previewPanel.ruler_color},

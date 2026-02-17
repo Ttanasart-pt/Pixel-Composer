@@ -383,7 +383,7 @@ function Panel_Preview() : PanelContent() constructor {
     	sb_shader = new scrollBox(preview_shaders, function(i) /*=>*/ { preview_shader = i; }).setFont(f_p3);
     	bb_shader = new buttonGroup(array_create(8, THEME.preview_channels), function(i) /*=>*/ { preview_shader = i; }).setFont(f_p3);
     	
-    	ruler_width   = ui(12);
+    	ruler_width   = ui(16);
     	ruler_hover   = noone;
     	
     	ruler_edit_h  = false;
@@ -3128,19 +3128,32 @@ function Panel_Preview() : PanelContent() constructor {
         var y0 =     topbar_height;
         var y1 = h - toolbar_height;
         
+		var prevSurf = is_surface(preview_surfaces[0]);
+        var sw = prevSurf? surface_get_width( preview_surfaces[0]) : DEF_SURF_W;
+        var sh = prevSurf? surface_get_height(preview_surfaces[0]) : DEF_SURF_H;
+        
+    	var hov_h = _mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y0 + ruler_width);
+    	var hov_v = _mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x0 + ruler_width, y1);
+    	if(hov_h || hov_v) _mouse_on_preview = false;
+		
         #region draw
-	        
-	    	var hov_h = _mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y0 + ruler_width);
-	    	var hov_v = _mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x0 + ruler_width, y1);
-	    	if(hov_h || hov_v) _mouse_on_preview = false;
-			
 	        draw_set_color(hov_h? CDEF.main_black : CDEF.main_mdblack); draw_rectangle(0, 0, w, y0 + ruler_width, false);
 	        draw_set_color(hov_v? CDEF.main_black : CDEF.main_mdblack); draw_rectangle(0, 0, x0 + ruler_width, h, false);
 	        
-			var prevSurf = is_surface(preview_surfaces[0]);
-	        var sw = prevSurf? surface_get_width( preview_surfaces[0]) : DEF_SURF_W;
-	        var sh = prevSurf? surface_get_height(preview_surfaces[0]) : DEF_SURF_H;
+	        var _spac = PROJECT.previewSetting.ruler_spacing;
+	        while(_spac * canvas_s < 6) _spac *= 2;
+	        draw_set_color(CDEF.main_dark);
 	        
+        	for( var i = _spac; i < sw; i += _spac ) {
+        		var spx = canvas_x + i * canvas_s;
+		        draw_line(spx, y0 + ruler_width / 2, spx, y0 + ruler_width);
+        	}
+        	
+        	for( var i = _spac; i < sh; i += _spac ) {
+        		var spy = canvas_y + i * canvas_s;
+		        draw_line(x0 + ruler_width / 2, spy, x0 + ruler_width, spy);
+        	}
+        	
 	    	var cx0 = canvas_x;
 	    	var cy0 = canvas_y;
 	    	var cx1 = canvas_x + sw * canvas_s - 1;

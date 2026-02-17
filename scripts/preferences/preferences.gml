@@ -217,11 +217,12 @@
 		}
 		
 		PREFERENCES.project_previewSetting = {
-			show_info             : true,
-			show_view_control     : 1,
+			show_info         : true,
+			show_view_control : 1,
 			
-			show_ruler            : false, 
-			ruler_color           : -1, 
+			show_ruler    : false, 
+			ruler_color   : -1, 
+			ruler_spacing :  8, 
 			
 			d3_tool_snap          : false,
             d3_tool_snap_position : 1,
