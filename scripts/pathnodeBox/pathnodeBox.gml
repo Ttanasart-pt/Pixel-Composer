@@ -1,17 +1,12 @@
 function pathnodeBox(_junction) : widget() constructor {
-	self.junction = _junction;
+	junction = _junction;
 	
     b_newPath = button(function() /*=>*/ { 
     	var b = nodeBuild("Node_Path", junction.node.x - 128, junction.ry - 32);
     	junction.setFrom(b.outputs[1]);
-	});
-	
-	b_newPath.text       = __txt("New path");
-	b_newPath.icon       = THEME.add_16;
-	b_newPath.icon_size  = .75;
-	b_newPath.icon_blend = COLORS._main_value_positive;
-    
-	static trigger = function() { }
+    	
+	}).setText(__txt("New path"))
+	  .setIcon(THEME.add_16, 0, COLORS._main_value_positive, .75);
 	
 	static fetchHeight = function(params) { return TEXTBOX_HEIGHT; }
 	static drawParam   = function(params) {
@@ -64,5 +59,5 @@ function pathnodeBox(_junction) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new pathnodeBox(); }
+	static clone = function() /*=>*/ {return new pathnodeBox(junction)};
 }
