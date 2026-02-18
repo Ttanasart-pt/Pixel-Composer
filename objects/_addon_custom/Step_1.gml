@@ -1,3 +1,4 @@
 /// @description 
 if(!ready) exit;
-var runResult = lua_call(thread, "step");
+try { var runResult = lua_call(thread, "step"); }
+catch(e) exception_print(e);

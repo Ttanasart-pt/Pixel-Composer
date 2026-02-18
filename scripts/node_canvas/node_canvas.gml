@@ -42,11 +42,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Output
-	newInput(12, nodeValue_EScroll( "Output Type",      1, ["Array", "Animation", "Outputs"] ));
-	newInput( 5, nodeValue_Bool(    "Auto Frame",       true                                 ));
-	newInput( 7, nodeValue_Int(     "Frame Index",      0                                    ));
-	newInput(13, nodeValue_Float(   "Animation Speed",  1                                    ));
-	newInput(18, nodeValue_EScroll( "On End",           0, ["Loop", "Hold", "Clear"]         ));
+	newInput(12, nodeValue_EScroll( "Output Type",      1, ["Array", "Animation", "Outputs"]  ));
+	newInput( 5, nodeValue_Bool(    "Auto Frame",       true                                  ));
+	newInput( 7, nodeValue_Int(     "Frame Index",      0                                     ));
+	newInput(13, nodeValue_Float(   "Animation Speed",  1                                     ));
+	newInput(18, nodeValue_EScroll( "On End",           0, ["Loop", "Hold", "Clear"]          ));
 	
 	////- =Background
 	newInput(10, nodeValue_Bool(    "Render Background",        true                          ));

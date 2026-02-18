@@ -1,6 +1,7 @@
 /// @description 
 if(!ready) exit;
-var runResult = lua_call(thread, "destroy");
+try { var runResult = lua_call(thread, "destroy"); }
+catch(e) exception_print(e);
 
 array_remove(ANIMATION_PRE,  animationPreStep);
 array_remove(ANIMATION_POST, animationPostStep);
