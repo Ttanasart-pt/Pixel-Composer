@@ -138,7 +138,10 @@ function __addon_lua_setup_constants(lua, context) {
 	
 	var _sprs = variable_struct_get_names(THEME);
 	for( var i = 0, n = array_length(_sprs); i < n; i++ ) {
-		var txt = $"s_{_sprs[i]} = {real(THEME[$ _sprs[i]])}";
+		var spr = THEME[$ _sprs[i]];
+		if(is_struct(spr)) continue;
+		
+		var txt = $"s_{_sprs[i]} = {real(spr)}";
 		lua_add_code(lua, txt);
 	}
 }
