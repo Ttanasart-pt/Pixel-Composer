@@ -866,7 +866,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _prevData = array_safe_get(transformData, CURRENT_FRAME - 1, noone);
 			    _prevData = array_safe_get(_prevData, _array_index, noone);
 			
-			if(_prevData != noone) {
+			if(is_array(_prevData)) {
 				var dirr = point_direction( _prevData[5], _prevData[6], pos_raw[0], pos_raw[1] );
 				var diss = point_distance(  _prevData[5], _prevData[6], pos_raw[0], pos_raw[1] );
 				

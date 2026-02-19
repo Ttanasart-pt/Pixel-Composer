@@ -2710,7 +2710,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params = {}) {}
 	
-	static drawOverlayTransform = undefined; // function(_node) { return noone; }
+	static drawOverlayTransform   = undefined; // function(_node) { return noone; }
 	static drawOverlayChainTransform = function(_node) {
 		var _ch = getNodeChildList(_node);
 		var _tr = [ 0, 0, 1, 1, 0 ];

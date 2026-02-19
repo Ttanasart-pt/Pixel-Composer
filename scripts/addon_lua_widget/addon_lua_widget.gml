@@ -23,9 +23,7 @@
 			if(_addon == noone) return noone;
 			
 			var wd  = new textBox(type, noone);
-			wd.setLua(_addon.thread, onModify, function(txt) { 
-				return lua_call(lua_thread, lua_thread_key, txt); 
-			});
+			wd.setLua(_addon.thread, onModify, function(txt) /*=>*/ {return lua_call(lua_thread, lua_thread_key, txt)});
 			
 			var key = UUID_generate();
 			global.ADDON_WIDGET[? key] = wd;
@@ -60,9 +58,7 @@ end",
 			if(_addon == noone) return noone;
 			
 			var wd  = new vectorBox(size, noone);
-			wd.setLua(_addon.thread, onModify, function(v, i) { 
-				return lua_call(lua_thread, lua_thread_key, i + 1, v); 
-			});
+			wd.setLua(_addon.thread, onModify, function(v, i) /*=>*/ {return lua_call(lua_thread, lua_thread_key, i + 1, v)});
 			
 			var key = UUID_generate();
 			global.ADDON_WIDGET[? key] = wd;
@@ -98,9 +94,7 @@ end",
 			if(_addon == noone) return noone;
 			
 			var wd  = new checkBox(onModify);
-			wd.setLua(_addon.thread, onModify, function() { 
-				return lua_call(lua_thread, lua_thread_key); 
-			});
+			wd.setLua(_addon.thread, onModify, function() /*=>*/ {return lua_call(lua_thread, lua_thread_key)});
 			
 			var key = UUID_generate();
 			global.ADDON_WIDGET[? key] = wd;
@@ -136,9 +130,7 @@ end",
 			if(_addon == noone) return noone;
 			
 			var wd  = button(onModify).setText(txt);
-			wd.setLua(_addon.thread, onModify, function() { 
-				return lua_call(lua_thread, lua_thread_key); 
-			});
+			wd.setLua(_addon.thread, onModify, function() /*=>*/ {return lua_call(lua_thread, lua_thread_key)});
 			
 			var key = UUID_generate();
 			global.ADDON_WIDGET[? key] = wd;

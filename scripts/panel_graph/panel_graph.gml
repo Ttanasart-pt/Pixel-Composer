@@ -3382,15 +3382,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         drawSlideShow();
         drawActionTooltip();
+        drawTooltipHints();
         
         if(project.safeMode) {
 			draw_set_text(f_sdf, fa_right, fa_bottom, COLORS._main_text_sub);
 			draw_text_transform_add(w - ui(8), h - toolbar_height, __txtx("safe_mode", "SAFE MODE"), .5);
 		}
 		
-        ///////////////////////////////////// File drop /////////////////////////////////////
-        
-        if(pHOVER) {
+        if(pHOVER) { // File Drop
             var gr_x = graph_x * graph_s;
             var gr_y = graph_y * graph_s;
             var _gx  = mx / graph_s - graph_x;
@@ -3442,11 +3441,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
             
             if(_tip != "") TOOLTIP = _tip;
-        }
+            
+        } // File Drop
         
-        drawTooltipHints();
-        
-        if(LOADING) {
+        if(LOADING) { // Loading overlay
         	draw_set_color(CDEF.main_dkblack);
         	draw_set_alpha(0.3);
         	draw_rectangle(0, 0, w, h, false);
@@ -3455,7 +3453,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	gpu_set_tex_filter(true);
         	draw_sprite_ui(THEME.loading, 0, w / 2, h / 2, 1, 1, current_time / 2, COLORS._main_icon);
         	gpu_set_tex_filter(false);
-        }
+        	
+        } // Loading overlay
     } 
     
     ////- Selection

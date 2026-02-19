@@ -168,12 +168,12 @@ function __test_generate_theme() {
 }
 
 function __test_update_theme() {
-	var _p = "D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default/meta.json"
+	var _p = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Themes/default/meta.json"
 	var _d = json_load_struct(_p);
 	_d.version = BUILD_NUMBER;
 	json_save_struct(_p, _d, true);
 	
-	var _p = "D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default HQ/meta.json"
+	var _p = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Themes/default HQ/meta.json"
 	var _d = json_load_struct(_p);
 	_d.version = BUILD_NUMBER;
 	json_save_struct(_p, _d, true);
@@ -268,8 +268,6 @@ function __generate_texturegroup_dir(_f) {
 }
 
 function __generate_texturegroup() {
-	__generate_texturegroup_dir($"D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/{PREFERENCES.theme}");
+	__generate_texturegroup_dir($"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Themes/{PREFERENCES.theme}");
 	__test_update_theme();
-	
-	file_delete_safe("D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/latest_zip_time.txt");
 }
