@@ -113,6 +113,10 @@
     float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
         float _min   = curve[3];
         float _max   = curve[4];
+        if(_min == 0. && _max == 0.) {
+            _min = 0.;
+            _max = 1.;
+        }
 
         float _y = _curveEval(curve, amo, _x);
         return mix(_min, _max, _y);

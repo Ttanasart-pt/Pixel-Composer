@@ -4,7 +4,7 @@
 
 #pragma use(curve)
 
-#region -- curve -- [1771220003.6022823]
+#region -- curve -- [1771561909.403563]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -120,6 +120,10 @@
     float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
         float _min   = curve[3];
         float _max   = curve[4];
+        if(_min == 0. && _max == 0.) {
+            _min = 0.;
+            _max = 1.;
+        }
 
         float _y = _curveEval(curve, amo, _x);
         return mix(_min, _max, _y);
