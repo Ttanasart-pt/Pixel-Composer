@@ -11,27 +11,27 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(13, nodeValueSeed());
 	
 	////- =Spawn
-	newInput( 0, nodeValue_Enum_Scroll( "Spawn Type", 0, [ "Stream", "Burst", "Trigger" ] ));
-	newInput( 1, nodeValue_Trigger(     "Spawn Trigger",                ));
-	newInput( 2, nodeValue_Int(         "Spawn Delay",       4          )).setTooltip("Frames delay between each particle spawn.");
-	newInput( 3, nodeValue_Int(         "Burst Duration",    1          ));
-	newInput( 4, nodeValue_Range(       "Spawn Amount",     [2,2], true )).setTooltip("Amount of particle spawn in that frame.");
-	newInput( 5, nodeValue_Range(       "Lifespan",         [20,30]     ));
+	newInput( 0, nodeValue_EScroll( "Spawn Type", 0, [ "Stream", "Burst", "Trigger" ] ));
+	newInput( 1, nodeValue_Trigger( "Spawn Trigger",                ));
+	newInput( 2, nodeValue_Int(     "Spawn Delay",       4          )).setTooltip("Frames delay between each particle spawn.");
+	newInput( 3, nodeValue_Int(     "Burst Duration",    1          ));
+	newInput( 4, nodeValue_Range(   "Spawn Amount",     [2,2], true )).setTooltip("Amount of particle spawn in that frame.");
+	newInput( 5, nodeValue_Range(   "Lifespan",         [20,30]     ));
 	
 	////- =Source
-	newInput( 6, nodeValue_Enum_Scroll( "Type",         0, [ "Area", "Border", "Path", "Mesh", "Map", "Data" ] ));
-	newInput( 7, nodeValue_Enum_Scroll( "Shape",        0, [ "Rectangle", "Ellipse" ] ));
-	newInput(25, nodeValue_Enum_Scroll( "Border Shape", 0, [ "Rectangle", "Ellipse", "Line" ] ));
-	newInput(23, nodeValue_Enum_Scroll( "Distribution", 0, [ "Random", "Uniform Burst", "Uniform Period" ] ));
-	newInput(28, nodeValue_Int(         "Period",       4 ));
-	newInput(29, nodeValue_Slider(      "Shift",        0 ));
-	newInput( 8, nodeValue_Area(        "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
-	newInput(26, nodeValue_Vec2(        "Line Start", [0,0] )).setUnitSimple();
-	newInput(27, nodeValue_Vec2(        "Line End",   [1,1] )).setUnitSimple();
-	newInput( 9, nodeValue_PathNode(    "Path"       ));
-	newInput(10, nodeValue_Mesh(        "Mesh"       ));
-	newInput(11, nodeValue_Surface(     "Spawn Map"  ));
-	newInput(12, nodeValue_Vector(      "Spawn Data" )).setArrayDepth(1);
+	newInput( 6, nodeValue_EScroll( "Type",         0, [ "Area", "Border", "Path", "Mesh", "Map", "Data" ] ));
+	newInput( 7, nodeValue_EScroll( "Shape",        0, [ "Rectangle", "Ellipse" ] ));
+	newInput(25, nodeValue_EScroll( "Border Shape", 0, [ "Rectangle", "Ellipse", "Line" ] ));
+	newInput(23, nodeValue_EScroll( "Distribution", 0, [ "Random", "Uniform Burst", "Uniform Period" ] ));
+	newInput(28, nodeValue_Int(     "Period",       4 ));
+	newInput(29, nodeValue_Slider(  "Shift",        0 ));
+	newInput( 8, nodeValue_Area(    "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
+	newInput(26, nodeValue_Vec2(    "Line Start", [0,0] )).setUnitSimple();
+	newInput(27, nodeValue_Vec2(    "Line End",   [1,1] )).setUnitSimple();
+	newInput( 9, nodeValue_PathNode("Path"       ));
+	newInput(10, nodeValue_Mesh(    "Mesh"       ));
+	newInput(11, nodeValue_Surface( "Spawn Map"  ));
+	newInput(12, nodeValue_Vector(  "Spawn Data" )).setArrayDepth(1);
 	
 	////- =Transform
 	newInput(24, nodeValue_Range(           "Inherit Velocity", [0,0], true               ));
@@ -412,8 +412,14 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _px  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
 			var _py  = buffer_read(    _partBuff,                              buffer_f64  );
 			
+			var _ppx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64  );
+			var _ppy = buffer_read(    _partBuff,                              buffer_f64  );
+			
 			var _vx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
 			var _vy  = buffer_read(    _partBuff,                              buffer_f64  );
+			
+			// var _vx = _px - _ppx;
+			// var _vy = _py - _ppy;
 			
 			var rat = _lif / (_lifMax - 1);
 			random_set_seed(_seed + _spwnId);
@@ -447,8 +453,11 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				continue;
 			}
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64,  _px + _vx);
-			buffer_write(    _partBuff,                              buffer_f64,  _py + _vy);
+			var px1 = _px + _vx;
+			var py1 = _py + _vy;
+			
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64,  px1);
+			buffer_write(    _partBuff,                              buffer_f64,  py1);
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64,  _px);
 			buffer_write(    _partBuff,                              buffer_f64,  _py);
