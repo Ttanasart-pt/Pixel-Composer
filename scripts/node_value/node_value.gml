@@ -2815,8 +2815,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		#region attributes
 			attri = variable_clone(attributes);
-			if(struct_try_get(attri, "mapped") == 0)    					struct_remove(attri, "mapped");
-			if(struct_try_get(attri, "use_project_dimension") == true)		struct_remove(attri, "use_project_dimension");
+			if(struct_try_get(attri, "mapped") == 0)                   struct_remove(attri, "mapped");
+			if(struct_try_get(attri, "use_project_dimension") == true) struct_remove(attri, "use_project_dimension");
+			if(struct_try_get(attri, "timeline_hide") == false)        struct_remove(attri, "timeline_hide");
 			
 			if(struct_names_count(attri)) _map.attri = attri;
 		#endregion

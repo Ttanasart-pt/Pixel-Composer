@@ -103,10 +103,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		process_running = array_verify(process_running,	_len);
 		
 		array_foreach(inputs, function(_in, i) /*=>*/ {
-			if(_in.isDynamic()) 
-				inputs_data[i] = _in.getValue(__frame);
+			if(!_in.isDynamic()) return;
 			
-			var raw = inputs_data[i];
+			var raw = _in.getValue(__frame);
 			var amo = _in.arrayLength(raw);
 			var val = raw;
 			
@@ -118,6 +117,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			inputs_is_array[i] = amo > 1;
 			input_value_map[$ _in.internalName] = val;
+			inputs_data[i] = val;
 			
 			if(!_in.ign_array)
 			switch(attributes.array_process) {

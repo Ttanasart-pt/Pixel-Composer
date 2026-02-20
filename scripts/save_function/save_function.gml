@@ -131,6 +131,9 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 			_thumbData = buffer_compress(_thumbData, 0, buffer_get_size(_thumbData));
 			_thumbLeng = buffer_get_size(_thumbData);
 			
+			// print("Thumbnail buffer size", _thumbLeng, _thumbSize, _thumbDrawSurf);
+			// printSurface($"Thumbnail_{string_replace_all(filename_name_only(path), " ", "_")}", _thumbDrawSurf)
+			
 			surface_free(_thumbDrawSurf);
 		}
 	#endregion
