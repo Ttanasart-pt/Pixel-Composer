@@ -50,9 +50,6 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 		var _partBuff = _parts.buffer;
 		var _off = 0;
 		
-		print("Running", _frame);
-		printCallStack();
-		
 		repeat(_partAmo) {
 			var _start = _off;
 			buffer_seek(_partBuff, buffer_seek_start, _start);
@@ -76,9 +73,11 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
 			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
 			
-			var _vx = _px - _ppx;
-			var _vy = _py - _ppy;
-
+			var _vpx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velpx,  buffer_f64  );
+			var _vpy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velpy,  buffer_f64  );
+			
+			if(_lif <= 1) continue;
+			
 			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
 			    rat = clamp(rat, 0, 1);
 			random_set_seed(_seed + _spwnId);
@@ -86,22 +85,16 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 			var _acel_mod = _acel_curved? curve_acel.get(rat) : 1;
 			var _acel_cur = random_range(_acel[0], _acel[1]) * _acel_mod;
 			
-			var _ds = point_distance(0, 0, _vx, _vy);
+			var _ds = point_distance(  0, 0, _vpx, _vpy );
+			var _dr = point_direction( 0, 0, _vpx, _vpy );
+			
 			if(_ds == 0) continue;
 			
-			// print("  ", _spwnId);
-			var _dr = point_direction(0, 0, _vx, _vy);
-			// _vx += lengthdir_x(_acel_cur * _mask, _dr);
-			// _vy += lengthdir_y(_acel_cur * _mask, _dr);
+			_vx += lengthdir_x(_acel_cur * _mask, _dr);
+			_vy += lengthdir_y(_acel_cur * _mask, _dr);
 			
-			// buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-			// buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
-			
-			_px += lengthdir_x(_acel_cur * _mask, _dr);
-			_py += lengthdir_y(_acel_cur * _mask, _dr);
-			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
+			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
 			
 		}
 		

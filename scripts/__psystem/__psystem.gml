@@ -56,7 +56,11 @@
 	PSYSTEM_OFF.droty  = 240;   // buffer_f64  : Draw Rotation Y    : 8
 	PSYSTEM_OFF.drotz  = 248;   // buffer_f64  : Draw Rotation Z    : 8
 	
-	global.pSystem_data_length = 256;
+	PSYSTEM_OFF.velpx  = 256;   // buffer_f64  : Velocity Previous X : 8
+	PSYSTEM_OFF.velpy  = 264;   // buffer_f64  : Velocity Previous Y : 8
+	PSYSTEM_OFF.velpz  = 272;   // buffer_f64  : Velocity Previous Z : 8
+
+	global.pSystem_data_length = 280;
 	global.pSystem_trig_length = 8*3 + 8*3; // px, py, pz, vx, vy, vz
 #endregion
 
