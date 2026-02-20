@@ -932,6 +932,7 @@ function Panel_Menu() : PanelContent() constructor {
                 tx0 = ui(8);
                 tx1 = w < vertical_break? w - ui(16) : w - ui(144);
                 ty0 = w < vertical_break? ui(36) : ui(6);
+                ty1 = h;
                 
                 tcx = tx0;
                 if(!_right && w >= vertical_break) {
