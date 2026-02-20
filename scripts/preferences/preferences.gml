@@ -219,7 +219,7 @@
 		PREFERENCES.project_previewSetting = {
 			show_info         : true,
 			show_view_control : 1,
-			status_display    : 1,
+			status_display    : 2,
 			
 			show_ruler    : false, 
 			ruler_color   : -1, 
@@ -360,6 +360,23 @@
 		},
 	];
 	
+	function PREF_INIT() {
+		var xdpi = display_get_dpi_x();
+		var disp = clamp(xdpi / 72, 1, 2);
+		
+		PREFERENCES.display_scaling = disp;
+		
+		PREFERENCES.window_width    = min(display_get_width(),  PREFERENCES.window_width  * disp);
+		PREFERENCES.window_height   = min(display_get_height(), PREFERENCES.window_height * disp);
+		
+		PREFERENCES.window_fix_width  = PREFERENCES.window_width;
+		PREFERENCES.window_fix_height = PREFERENCES.window_height;
+		
+		if(disp > 1) PREFERENCES.theme = "default HQ";
+		
+		print($"Init with theme {PREFERENCES.theme}")
+	}
+	
 	function PREF_UPDATE() {
 		directory_verify(PREFERENCES_DIR);
 		var _oldest = -1;
@@ -416,10 +433,11 @@
 				struct_override(PREFERENCES, _prf);
 				print($"Loaded theme: {PREFERENCES.theme}")
 				
-			} else print($"Pref key not found.")
-			
-			if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
-				PREFERENCES.theme = "default";
+				if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
+					PREFERENCES.theme = "default";
+				
+			} else
+				PREF_INIT();
 			
 			LOCALE_DEF = PREFERENCES.local == "en";
 			THEME_DEF  = PREFERENCES.theme == "default";
