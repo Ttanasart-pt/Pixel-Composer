@@ -418,9 +418,6 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _vx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
 			var _vy  = buffer_read(    _partBuff,                              buffer_f64  );
 			
-			// var _vx = _px - _ppx;
-			// var _vy = _py - _ppy;
-			
 			var rat = _lif / (_lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
@@ -453,11 +450,8 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				continue;
 			}
 			
-			var px1 = _px + _vx;
-			var py1 = _py + _vy;
-			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64,  px1);
-			buffer_write(    _partBuff,                              buffer_f64,  py1);
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64,  _px + _vx);
+			buffer_write(    _partBuff,                              buffer_f64,  _py + _vy);
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64,  _px);
 			buffer_write(    _partBuff,                              buffer_f64,  _py);

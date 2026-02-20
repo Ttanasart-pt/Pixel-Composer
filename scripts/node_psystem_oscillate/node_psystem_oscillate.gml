@@ -107,11 +107,11 @@ function Node_pSystem_Oscillate(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _ox = lengthdir_x(_osc, _dir + 90);
 			var _oy = lengthdir_y(_osc, _dir + 90);
 			
-			_dpx = _px + _ox;
-			_dpy = _py + _oy;
+			_vx += _ox;
+			_vy += _oy;
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64, _dpx );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64, _dpy );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64, _vx );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64, _vy );
 		}
 		
 	}

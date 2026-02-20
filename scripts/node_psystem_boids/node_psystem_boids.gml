@@ -32,7 +32,6 @@ function Node_pSystem_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(12, nodeValue_Bool(   "Follow point", false ));
 	newInput(13, nodeValue_Vec2(   "Point",        [0,0] )).setUnitSimple();
 	newInput(14, nodeValue_Slider( "Influence",    .1    )).setInternalName("fol_influence");
-	
 	// 15
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));

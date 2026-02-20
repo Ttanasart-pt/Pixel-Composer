@@ -100,6 +100,10 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
 			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			
+			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+			
 			var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
 			var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
 			var _rot    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,   buffer_f64  );
@@ -161,6 +165,10 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
+			
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64, _sx );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64, _sy );
 			

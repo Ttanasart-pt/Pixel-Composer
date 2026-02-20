@@ -271,6 +271,8 @@ enum RENDER_TYPE {
 			var _time_frame = get_timer();
 			var _rendered   = 0;
 			
+			// print($"➤➤➤➤➤➤  RENDER {GLOBAL_CURRENT_FRAME}");
+			
 			try {
 				while(array_length(RENDER_QUEUE)) {
 					LOG_BLOCK_START
