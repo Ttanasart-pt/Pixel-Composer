@@ -79,13 +79,12 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- Draw
 	
 	static draw_text_style = function(_x, _y, txt, _s, _mx, _my) {
-		var _ss = _s * fsize;
-		
 		if(draw_simple) {
-			draw_text_add_float(_x, _y, txt, _ss);
+			draw_text_add_float(_x, _y, txt, _s * fsize);
 			return string_width(txt) * fsize;
 		}
 		
+		var _ss   = _s * fsize;
 		var _tx   = _x;
 		var index = 1;
 		var _len  = string_length(txt);
@@ -439,8 +438,6 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(draw_graph_culled) return;
 		PANEL_GRAPH.refreshDraw(2);
 		
-		_s /= UI_SCALE;
-		
 		var color  = inputs[0].getValue();
 		var txt    = inputs[1].getValue();
 		if(txt == "") txt = "..."
@@ -465,8 +462,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var ww = 0;
 		var hh = 0;
 			
-		var tx = xx + 4;
-		var ty = yy + 4;
+		var tx = xx + 4 * _s;
+		var ty = yy + 4 * _s;
 			
 		if(WIDGET_CURRENT == ta_editor) {
 			switch(sty) {
@@ -498,7 +495,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_set_alpha(1);
 			
 			if(inputs[1].value_from == noone && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.getFocusingNode() == self) {
-				if(point_in_rectangle(mx, my, xx, yy, xx + ww + 8, yy + hh * _s + 8) && DOUBLE_CLICK) {
+				if(point_in_rectangle(mx, my, xx, yy, xx + ww * _s, yy + hh * _s) && DOUBLE_CLICK) {
 					ta_editor._current_text = txt;
 					ta_editor.activate();
 				}

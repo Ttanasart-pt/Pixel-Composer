@@ -596,7 +596,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         add_node_draw_x      = 0;
         add_node_draw_y      = 0;
         
-        draw_refresh           = true;   static refreshDraw = function(t=1) /*=>*/ { draw_refresh = max(draw_refresh, t); }
+        draw_refresh           = true;
         node_surface           = noone;
         node_surface_update    = true;
         
@@ -1071,6 +1071,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     ////- Views
     
+    static refreshDraw = function(t=1) /*=>*/ { draw_refresh = max(draw_refresh, t); }
+    
     function onFocusBegin() {
         PANEL_GRAPH = self; 
         if(applyGlobal)
@@ -1095,15 +1097,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function dragGraph() {
         if(graph_autopan) {
-            graph_x = lerp_float(graph_x, graph_pan_x_to, graph_pan_speed, 1);
-            graph_y = lerp_float(graph_y, graph_pan_y_to, graph_pan_speed, 1);
+        	refreshDraw(1);
+        	
+            graph_x = lerp_float(graph_x, graph_pan_x_to, graph_pan_speed / 2, 4);
+            graph_y = lerp_float(graph_y, graph_pan_y_to, graph_pan_speed / 2, 4);
             
             if(graph_pan_s_to > 0) {
             	var _s = graph_s;
             	var cx = w/2;
             	var cy = h/2;
             	
-            	graph_s  = lerp_float(graph_s, graph_pan_s_to, graph_pan_speed);
+            	graph_s  = lerp_float(graph_s, graph_pan_s_to, graph_pan_speed / 2);
             	graph_x += (cx - graph_x * graph_s) / graph_s - (cx - graph_x * _s) / _s;
             	graph_y += (cy - graph_y * graph_s) / graph_s - (cy - graph_y * _s) / _s;
             	
