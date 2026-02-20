@@ -327,3 +327,4 @@ function SAVE_PXZ_COLLECTION(_node, _path, _prev_surface = noone, metadata = noo
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
+
