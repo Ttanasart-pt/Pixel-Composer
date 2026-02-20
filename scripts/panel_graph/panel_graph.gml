@@ -4135,7 +4135,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     static checkDropItem = function() { //
         var node = noone;
         
-        if(is(DRAGGING.from, NodeValue)) {
+        if(is(DRAGGING[$ "from"], NodeValue)) {
         	var _j = DRAGGING.from;
         	if(_j.extract_node != "") { 
         		_j.extractNode(_j.extract_node, mouse_grid_x, mouse_grid_y); 

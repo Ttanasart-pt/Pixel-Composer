@@ -79,11 +79,6 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- Draw
 	
 	static draw_text_style = function(_x, _y, txt, _s, _mx, _my) {
-		if(draw_simple) {
-			draw_text_add_float(_x, _y, txt, _s * fsize);
-			return string_width(txt) * fsize;
-		}
-		
 		var _ss   = _s * fsize;
 		var _tx   = _x;
 		var index = 1;
@@ -101,6 +96,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _ff = draw_get_font();
 		var _cc = draw_get_color();
 		var _aa = draw_get_alpha();
+		var  pd = 4 * _s;
 		
 		repeat(_len) {
 			_ch = string_char_at(txt, index);
@@ -120,20 +116,21 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									_bch += i > 1? " " + _c[i] : _c[i];
 								
 								var _bw = string_width(_bch);
+								var _bh = string_height(_bch);
 								
-								_tx += 4 * _s;
+								_tx +=  pd;
 								_tw  = _bw * _ss;
-								_th  = string_height(_bch) * _ss;
+								_th  = _bh * _ss;
 								
-								draw_sprite_stretched_points(THEME.ui_panel_bg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_icon_light);
-								draw_sprite_stretched_points(THEME.ui_panel, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, CDEF.main_dkgrey);
+								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_icon);
+								draw_sprite_stretched_points(THEME.box_r5,     1, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, CDEF.main_dkgrey);
 									
 								draw_set_color(_cc);
 								draw_text_add_float(_tx, _y, _bch, _ss);
 								
 								var _reac = button_reactive(string_to_var(_bch));
 								if(_reac > 0) {
-									draw_sprite_stretched_points(THEME.ui_panel_bg, 4, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_accent, _reac);
+									draw_sprite_stretched_points(THEME.box_r5, 4, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_accent, _reac);
 									
 									draw_set_color(merge_color(0, COLORS.panel_bg_clear_inner, 0.5));
 									draw_set_alpha(_reac);
@@ -142,7 +139,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									draw_set_color(_cc);
 								} 
 								
-								_tx   += _tw + 4 * _s;
+								_tx   += _tw + pd;
 								width += _bw * fsize + 8;
 								break;
 							
@@ -152,34 +149,36 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									_bch += i > 1? " " + _c[i] : _c[i];
 								
 								var _bw = string_width(_bch);
+								var _bh = string_height(_bch);
 								
-								_tx += 4 * _s;
+								_tx +=  pd;
 								_tw  = _bw * _ss;
-								_th  = string_height(_bch) * _ss;
+								_th  = _bh * _ss;
 								
-								draw_sprite_stretched_ext(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, COLORS.node_base_bg, .75);
-								draw_sprite_stretched_add(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, COLORS.node_base_bg, .10);
+								draw_sprite_stretched_ext(THEME.node_bg, 0, _tx - pd, _y - pd, _tw + pd*2, _th + pd*2, COLORS.node_base_bg, .75);
+								draw_sprite_stretched_add(THEME.node_bg, 0, _tx - pd, _y - pd, _tw + pd*2, _th + pd*2, COLORS.node_base_bg, .10);
 								
 								draw_set_color(_cc);
 								draw_text_add_float(_tx, _y, _bch, _ss);
 								
-								_tx   += _tw + 4 * _s;
+								_tx   += _tw + pd;
 								width += _bw * fsize + 8;
 								break;
 								
 							case "panel" :
 								var _key = _c[1] + " panel";
-								var _tss = 11 / 32;
-								draw_set_color(_cc);
-								draw_set_font(f_sdf);
 								
-								_tw = string_width(_key)  * _s * _tss;
-								_th = string_height(_key) * _s * _tss;
+								var _bw = string_width(_key);
+								var _bh = string_height(_key);
 								
-								draw_set_color(COLORS._main_accent);
+								_tx +=  pd;
+								_tw  = _bw * _ss;
+								_th  = _bh * _ss;
 								
-								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4)) {
-									draw_sprite_stretched_points(THEME.ui_panel, 1, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, COLORS._main_accent, 1);
+								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_icon);
+								
+								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd)) {
+									draw_sprite_stretched_points(THEME.box_r5, 1, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_accent, 1);
 									
 									switch(string_lower(_c[1])) {
 										case "graph" :      FOCUSING_PANEL = PANEL_GRAPH;      break;
@@ -190,10 +189,11 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									}
 								}
 								
-								draw_text_add_float(_tx, _y, _key, _s * _tss);
+								draw_set_color(COLORS._main_accent);
+								draw_text_add_float(_tx, _y, _key, _ss);
 								
-								_tx   += _tw;
-								width += string_width(_key) * _tss;
+								_tx   += _tw + pd;
+								width += _bw * fsize + 8;
 								
 								draw_set_font(_ff);
 								draw_set_color(_cc);
@@ -207,6 +207,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								
 								var _spr_i = array_length(_c) > 2? real(_c[2]) : 0;
 								var _spr_s = array_length(_c) > 3? _s * real(_c[3]) : _s;
+								    _spr_s /= THEME_SCALE;
 								
 								_tw = sprite_get_width(_spr);
 								_th = sprite_get_height(_spr) * _spr_s;
@@ -459,6 +460,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			case 2 : font = f_sdf_medium; fsize  = 0.5;     break;
 		}
 		
+		fsize /= UI_SCALE * PREFERENCES.text_scaling;
+		
 		var ww = 0;
 		var hh = 0;
 			
@@ -482,9 +485,16 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			for( var i = 0, n = array_length(_lines); i < n; i++ ) {
 				var _line = _lines[i];
+				var _w;
 				if(_line == "/") { hh += 8; ty += 8 * _s; continue; }
 				
-				var _w = draw_text_style(tx, ty, _line, _s, mx, my);
+				if(draw_simple) {
+					draw_text_add_float(tx, ty, _line, _s * fsize);
+					_w = string_width(txt) * fsize;
+					
+				} else {
+					_w = draw_text_style(tx, ty, _line, _s, mx, my);
+				}
 				
 				ww = max(ww, _w);
 				hh += _lh;
