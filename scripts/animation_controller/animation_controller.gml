@@ -165,9 +165,10 @@ function AnimationManager() constructor {
 		var _maxFrame = frame_range_end ?? frames_total;
 		
 		if(current_frame >= _maxFrame) {
-			firstFrame();
+			// firstFrame();
 			
 			if(playback == ANIMATOR_END.stop || is_rendering) {
+				setFrame(max(0, frames_total - 1));
 				is_playing   = false;
 				is_rendering = false;
 				last_time    = 0;
@@ -176,8 +177,10 @@ function AnimationManager() constructor {
 				setFrame(max(0, frames_total - 2));
 				play_direction = -1;
 				
-			} else
+			} else {
+				firstFrame();
 				animationStart();
+			}
 			
 		} else if(current_frame <= 0) {
 			if(playback == ANIMATOR_END.pingpong)
