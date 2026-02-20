@@ -2,61 +2,75 @@ function curveBox(_onModify) : widget() constructor {
 	always_break_line  = true;
 	h = ui(200);
 	
-	onModify    = _onModify;
-	curr_data   = [];
-	anc_mirror  = [];
-	linear_mode = false;
+	#region curve
+		onModify    = _onModify;
+		curr_data   = [];
+		anc_mirror  = [];
+		linear_mode = false;
+	#endregion
 	
-	curve_surface   = noone;
-	node_dragging   = -1;
-	node_drag_typ   = -1;
-	node_drag_break = false;
+	#region preview surface
+		curve_surface   = noone;
+		node_dragging   = -1;
+		node_drag_typ   = -1;
+		node_drag_break = false;
+		
+		height_drag     = false;
+		height_my       = 0;
+		height_ss       = 0;
+		show_coord      = false;
+		show_coord_side = 0;
+		
+		minx = 0; maxx = 1; irangex = 1;
+		miny = 0; maxy = 1; irangey = 1;
+		
+		display_pos_x  = 0;
+		display_pos_y  = 0;
+		display_sel    = 0;
+		
+		grid_snap      = false;
+		grid_step      = 0.10;
+		grid_show      = true;
+		
+		scale_control  = true;
+		control_zoom   = 64;
+		
+		range_display_data = {};
+		show_x_control     = false;
+		
+	#endregion
 	
-	height_drag     = false;
-	height_my       = 0;
-	height_ss       = 0;
-	show_coord      = false;
-	show_coord_side = 0;
+	#region modify
+		dragging       = 0;
+		drag_m         = 0;
+		drag_s         = 0;
+		drag_h         = 0;
+		progress_draw  = -1;
 	
-	minx = 0; maxx = 1; irangex = 1;
-	miny = 0; maxy = 1; irangey = 1;
+		selecting      = noone;
+		select_type    = 0;
+		
+		display_val    = 0;
+		display_min    = 0;
+		display_max    = 1;
+		
+		curve_y_min    = 0;
+		curve_y_max    = 0;
+			
+		cw = 0;
+		ch = 0;
+		
+	#endregion
 	
-	dragging       = 0;
-	drag_m         = 0;
-	drag_s         = 0;
-	drag_h         = 0;
-	progress_draw  = -1;
-	
-	display_pos_x  = 0;
-	display_pos_y  = 0;
-	display_sel    = 0;
-	
-	grid_snap      = false;
-	grid_step      = 0.10;
-	grid_show      = true;
-	
-	scale_control  = true;
-	control_zoom   = 64;
-	
-	selecting      = noone;
-	select_type    = 0;
-	
-	display_val    = 0;
-	display_min    = 0;
-	display_max    = 1;
-	
-	curve_y_min    = 0;
-	curve_y_max    = 0;
-	
-	range_display_data = {};
-	show_x_control     = false;
-	
-	cw = 0;
-	ch = 0;
-	
-	tb_shift = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[0] = v; onModify(_data); }).setLabel("Shift");
-	tb_scale = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); }).setLabel("Scale");
-	tb_range = new rangeBox(function(v,i) /*=>*/ { var _data = array_clone(curr_data); _data[3+i] = v; onModify(_data); }).setFont(f_p3);
+	#region textboxes
+		tb_shift = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[0] = v; onModify(_data); }).setLabel("Shift");
+		tb_scale = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); }).setLabel("Scale");
+		tb_range = new rangeBox(function(v,i) /*=>*/ { 
+			var _data = array_clone(curr_data); 
+			_data[3+i] = v; 
+			onModify(_data); 
+		}).setFont(f_p3);
+	#endregion
 	
 	static get_x = function(v) /*=>*/ {return cw * (    (v - minx) * irangex)};
 	static get_y = function(v) /*=>*/ {return ch * (1 - (v - miny) * irangey)};

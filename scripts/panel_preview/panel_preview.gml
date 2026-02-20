@@ -247,7 +247,10 @@ function Panel_Preview() : PanelContent() constructor {
     
     #region ---- canvas control & sample ----
         initSize = function() /*=>*/ { canvas_x = w / 2; canvas_y = h / 2; }
-        run_in(1, function() /*=>*/ {return initSize()});
+        run_in(1, function() /*=>*/ {
+        	initSize();
+        	fullView();
+    	});
         
         canvas_x    = 0;
         canvas_y    = 0;
