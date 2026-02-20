@@ -102,10 +102,7 @@ event_inherited();
 	function isTop() { return true; }
 	
 	function trigger_favourite(nodeName = undefined) {
-		if(nodeName == undefined) {
-			if(node_menu_selecting == noone) return;
-			nodeName = node_menu_selecting.nodeName;
-		}
+		if(!is_string(nodeName)) return;
 		
 		array_toggle(NODE_FAV, nodeName);
 		refreshNodeFavourite();
@@ -120,7 +117,7 @@ event_inherited();
 		var fvt = fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite");
 		hk_selecting = struct_try_get(GRAPH_ADD_NODE_MAPS, node.nodeName, noone);
 		
-		var menu = [ menuItem(fvt, trigger_favourite, THEME.star) ];
+		var menu = [ menuItem(fvt, trigger_favourite, THEME.star, noone, noone, node.nodeName) ];
 		if(path != undefined)
 			array_push(menu, menuItem("View original path", function(p) /*=>*/ {
 				search_string           = "";
