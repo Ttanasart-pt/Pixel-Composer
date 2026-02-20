@@ -324,6 +324,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	#region ---- Inspector ----
 		inspector_draw_height = 0;
+		inspector_pad_label   = undefined;
 	#endregion
 	
 	#region ---- Rendering ------

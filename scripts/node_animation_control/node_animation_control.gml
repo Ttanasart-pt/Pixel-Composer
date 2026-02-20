@@ -1,22 +1,29 @@
 function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Animation Control";
+	always_pad = true;
+	inspector_pad_label = ui(128);
 	setDimension(96, 96);
 	
-	newInput(0, nodeValue_Trigger("Toggle Play / Pause" ));
+	////- =Play/Pause
+	newInput( 0, nodeValue_Trigger( "Play / Pause"     ));
+	newInput( 1, nodeValue_Trigger( "Pause"            ));
+	newInput( 2, nodeValue_Trigger( "Resume"           ));
+	newInput( 3, nodeValue_Trigger( "Play From Start"  ));
+	newInput( 4, nodeValue_Trigger( "Play Once"        ));
 	
-	newInput(1, nodeValue_Trigger("Pause" ));
+	////- =Skip Frame
+	newInput( 5, nodeValue_Trigger( "Skip Frames"      ));
+	newInput( 6, nodeValue_Int(     "Skip Frames Count", 1 ));
+	// 7
 	
-	newInput(2, nodeValue_Trigger("Resume" ));
+	input_display_list = [
+		[ "Play/Pause", false ], 0, 1, 2, 3, 4, 
+		[ "Skip Frame", false ], 5, 6, 
+	]
 	
-	newInput(3, nodeValue_Trigger("Play From Beginning" ));
-	
-	newInput(4, nodeValue_Trigger("Play once" ));
-	
-	newInput(5, nodeValue_Trigger("Skip Frames" ));
-	
-	newInput(6, nodeValue_Int("Skip Frames Count", 1));
-	
-	static step = function() { 
+	static step = function() { // Hm... putting this in step is not ideal.
+		if(IS_RENDERING) return;
+		
 		if(getInputData(0))
 			PROJECT.animator.toggle();
 		

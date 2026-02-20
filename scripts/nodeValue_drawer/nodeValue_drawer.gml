@@ -59,7 +59,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var lb_x = xx + bs;
 		
 		draw_set_font(_font);
-		var ds_w = string_width(dispName);
+		var ds_w = jun.node.inspector_pad_label ?? string_width(dispName);
 		var lb_w = ui(8) + ds_w;
 		var fr   = _input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
 		
