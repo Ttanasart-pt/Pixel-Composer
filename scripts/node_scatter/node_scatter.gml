@@ -418,7 +418,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_x = 0;
 				_y = 0;
 				
-				if(_atl != 0) {
+				if(is_struct(_atl)) {
 					_x = _atl.x;
 					_y = _atl.y;
 				}

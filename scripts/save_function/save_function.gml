@@ -174,7 +174,7 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 	log_message("FILE", _param.log_prefix + " " + path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 	
-	if(RUN_IDE) generate_patreon_thumbnail(false);
+	// if(RUN_IDE) generate_patreon_thumbnail(false);
 	
 	return true;
 }
