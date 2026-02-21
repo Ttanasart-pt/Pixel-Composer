@@ -730,7 +730,8 @@ event_inherited();
 		link      = $"https://forum.pixel-composer.com/t/{data[$ "slug"]}/{data[$ "id"]}";
 		
 		thumbnail  = undefined;
-		posters    = data[$ "posters"] ?? 0;
+		thumbPath  = data[$ "image_url"] ?? "";
+		posters    = data[$ "posters"]   ?? 0;
 		poster     = array_safe_length(posters)? posters[0] : undefined;
 		posterId   = poster[$ "user_id"] ?? -1;
 		
@@ -774,16 +775,8 @@ event_inherited();
 		}
 		
 		static getThumbnail = function() {
-			if(thumbnail != undefined) return thumbnail;
-			
-			var _url = data[$ "image_url"];
-			if(_url == undefined) {
-				thumbnail = -1;
-				return thumbnail;
-			}
-			
-			thumbnail = http_get_sprite(_url);
-			return thumbnail;
+			if(thumbPath == "") return -1;
+			return http_get_sprite(thumbPath);
 		}
 	}
 	
@@ -834,7 +827,7 @@ event_inherited();
 		var hover = sp_news.hover;
 		var focus = sp_news.active;
 		
-		var thw = ui(196);
+		var thw = ww / 4;
 		var thh = thw;
 		
 		var col = floor(ww / thw);
@@ -873,15 +866,15 @@ event_inherited();
 			var _ity = _y + thh * rrow;
 			
 			var _px0 = _itx + ui(4);
-			var _py0 = _ity + ui(8);
+			var _py0 = _ity + ui(4);
 			
 			var _px1 = _itx + thw - ui(4);
-			var _py1 = _ity + thh - ui(8);
+			var _py1 = _ity + thh - ui(4);
 			
 			if(sprite_exists(_thm)) {
 				var _sw = sprite_get_width(_thm);
 				var _sh = sprite_get_height(_thm);
-				var _ss = min((thw - ui(8)) / _sw, (thh - ui(16)) / _sh);
+				var _ss = min((thw - ui(8)) / _sw, (thh - ui(8)) / _sh);
 				
 				var _thx = _itx + thw / 2 - _sw * _ss / 2;
 				var _thy = _ity + thh / 2 - _sh * _ss / 2;
@@ -895,28 +888,35 @@ event_inherited();
 				_py1 = _py0 + _sh * _ss;
 			}
 			
-			var fh = lerp(ui(72), ui(96), _art.hoverPrg);
-			draw_sprite_stretched_ext(s_fade_up, 0, _px0, _py1 - fh, _px1 - _px0, fh, COLORS._main_icon_dark, 1);
+			var _pw = _px1 - _px0;
+			var _ph = _py1 - _py0;
 			
+			var fh = lerp(ui(72), ui(96), _art.hoverPrg);
+			draw_sprite_stretched_ext(s_fade_up, 0, _px0, _py1 - fh, _pw, fh, COLORS._main_icon_dark, 1);
+			
+			var scis = gpu_get_scissor();
+			gpu_set_scissor(_px0, _py0, _pw, _ph);
 			var _poser = _art.getPoster();
 			if(is_struct(_poser)) {
 				var pid   = _poser.ID;
 				var pname = _poser.name;
 				
-				draw_set_text(f_p4, fa_left, fa_bottom, COLORS._main_text);
+				draw_set_text(f_p4, fa_left, fa_bottom, COLORS._main_text, .75);
 				draw_text_add(_px0 + ui(4), _py1 - ui(4), pname);
+				draw_set_alpha(1);
 			}
 			
-			draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text);
-			draw_text_ext_add(_px0 + ui(4), _py1 - ui(18), _art.title, -1, _px1 - _px0 - ui(8));
+			draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text);
+			draw_text_ext_add(_px0 + ui(4), _py1 - ui(18), string_trim(_art.title), -1, _pw - ui(8));
+			gpu_set_scissor(scis);
 			
 			var _hov = hover && point_in_rectangle(_m[0], _m[1], _px0, _py0, _px1, _py1); 
 			_art.hoverPrg = lerp_float(_art.hoverPrg, _hov, 5);
 			
-			draw_sprite_stretched_add(THEME.node_bg, 1, _px0, _py0, _px1 - _px0, _py1 - _py0, COLORS._main_icon, .5);
+			draw_sprite_stretched_add(THEME.node_bg, 1, _px0, _py0, _pw, _ph, COLORS._main_icon, .5);
 			
 			if(_hov) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, _px0, _py0, _px1 - _px0, _py1 - _py0, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, _px0, _py0, _pw, _ph, COLORS._main_accent, 1);
 				TOOLTIP = "Open in browser"
 				
 				if(mouse_lpress(focus))

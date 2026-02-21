@@ -176,5 +176,8 @@ switch(load_process) {
     	
         instance_destroy();
     
-    run_in(1, function() /*=>*/ { PANEL_GRAPH.refreshDraw(); });
+    run_in(2, function() /*=>*/ { 
+    	PANEL_PREVIEW.fullView();
+    	PANEL_GRAPH.refreshDraw(); 
+    });
 }

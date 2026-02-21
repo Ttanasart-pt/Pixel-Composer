@@ -366,11 +366,14 @@
 		
 		PREFERENCES.display_scaling = disp;
 		
-		PREFERENCES.window_width    = min(display_get_width(),  PREFERENCES.window_width  * disp);
-		PREFERENCES.window_height   = min(display_get_height(), PREFERENCES.window_height * disp);
+		PREFERENCES.window_width       = min(display_get_width(),  PREFERENCES.window_width  * disp);
+		PREFERENCES.window_height      = min(display_get_height(), PREFERENCES.window_height * disp);
 		
-		PREFERENCES.window_fix_width  = PREFERENCES.window_width;
-		PREFERENCES.window_fix_height = PREFERENCES.window_height;
+		PREFERENCES.window_fix_width   = PREFERENCES.window_width;
+		PREFERENCES.window_fix_height  = PREFERENCES.window_height;
+		
+		PREFERENCES.dialog_add_node_w *= disp;
+		PREFERENCES.dialog_add_node_h *= disp;
 		
 		if(disp > 1) PREFERENCES.theme = "default HQ";
 		

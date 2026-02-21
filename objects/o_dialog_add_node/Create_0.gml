@@ -197,9 +197,7 @@ event_inherited();
 				}
 			}
 			
-			array_push(node_list, "Favourites");
 			var _fvnd = [];
-			
 			for( var i = 0, n = array_length(NODE_FAV); i < n; i++ ) {
 				var _nodeFav = NODE_FAV[i];
 				if(!has(ALL_NODES, _nodeFav)) continue;
@@ -210,12 +208,30 @@ event_inherited();
 				array_push(_fvnd, _node);
 			}
 			array_sort(_fvnd, function(v1, v2) /*=>*/ {return string_compare(v1.name, v2.name)});
-			for( var i = 0, n = array_length(_fvnd); i < n; i++ ) array_push(node_list, _fvnd[i]);
 			
-			array_push(node_list, "Recents");
-			for( var i = 0, n = array_length(recent_nodes); i < n; i++ )
-				array_push(node_list, recent_nodes[i]);
-				
+			if(!array_empty(_fvnd)) {
+				array_push(node_list, "Favourites");
+				for( var i = 0, n = array_length(_fvnd); i < n; i++ ) array_push(node_list, _fvnd[i]);
+			}
+			
+			if(!array_empty(recent_nodes)) {
+				array_push(node_list, "Recents");
+				for( var i = 0, n = array_length(recent_nodes); i < n; i++ )
+					array_push(node_list, recent_nodes[i]);
+			}
+			
+			if(!array_empty(NODE_COMMONS)) {
+				array_push(node_list, "Commons");
+				for( var i = 0, n = array_length(NODE_COMMONS); i < n; i++ ) {
+					var _nodeIndex = NODE_COMMONS[i];
+					if(!has(ALL_NODES, _nodeIndex)) continue;
+					
+					var _node = ALL_NODES[$ _nodeIndex];
+					array_push(node_list, _node);
+				}
+					
+			}
+			
 		} else {
 			var _l = category[ADD_NODE_PAGE].list;
 			for( var i = 0, n = array_length(_l); i < n; i++ ) 

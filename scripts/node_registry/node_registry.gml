@@ -13,6 +13,8 @@
 	globalvar NODE_FAV; NODE_FAV     = [];
 	globalvar NODE_FAV_MAP; NODE_FAV_MAP = {};
 	
+	globalvar NODE_COMMONS; NODE_COMMONS = [];
+	
 	global.PATREON_NODES = [
 		Node_Brush_Linear, 
 		Node_Ambient_Occlusion, 
@@ -627,6 +629,13 @@ function __initNodes(unzip = true) {
 	var recPath = $"{DIRECTORY}Nodes/recent.json";
 	global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];
 	if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
+	
+	////- COMMON
+	
+	var comPath  = $"{DIRECTORY}Nodes/common.json";
+	NODE_COMMONS = [];
+	if(file_exists_empty(comPath)) 
+		NODE_COMMONS = json_load_struct(comPath, NODE_COMMONS);
 	
 	////- HLSL
 	
