@@ -794,6 +794,7 @@
     {"name":"histogram_drawer","order":2,"path":"scripts/histogram_drawer/histogram_drawer.yy",},
     {"name":"hlsl_server","order":2,"path":"scripts/hlsl_server/hlsl_server.yy",},
     {"name":"hotkey_data","order":16,"path":"scripts/hotkey_data/hotkey_data.yy",},
+    {"name":"http_functions","order":1,"path":"scripts/http_functions/http_functions.yy",},
     {"name":"hyperbolic_function","order":13,"path":"scripts/hyperbolic_function/hyperbolic_function.yy",},
     {"name":"instance_create","order":2,"path":"scripts/instance_create/instance_create.yy",},
     {"name":"json_compare","order":21,"path":"scripts/json_compare/json_compare.yy",},

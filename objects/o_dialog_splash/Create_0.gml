@@ -719,10 +719,225 @@ event_inherited();
 	if(os_is_network_connected())
 		news_req = http_get($"https://gist.githubusercontent.com/Ttanasart-pt/ae0701295a897a3f61f43a9af07b430b/raw/pxc_info");
 	
-	sp_news = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) { 
+	art_req  = false;
+	artworks = [];
+	global.discourseUsers = {};
+	
+	function discourseArtwork(_data) constructor {
+		data      = _data;
+		title     = data[$ "title"] ?? "";
+		likes     = data[$ "like_count"]  ?? 0;
+		link      = $"https://forum.pixel-composer.com/t/{data[$ "slug"]}/{data[$ "id"]}";
+		
+		thumbnail  = undefined;
+		posters    = data[$ "posters"] ?? 0;
+		poster     = array_safe_length(posters)? posters[0] : undefined;
+		posterId   = poster[$ "user_id"] ?? -1;
+		
+		hoverPrg   = 0;
+		
+		static getPoster = function() {
+			if(posterId < 0) return 0;
+			
+			if(has(global.discourseUsers, posterId)) return global.discourseUsers[$ posterId];
+			global.discourseUsers[$ posterId] = 0;
+			
+			var url = $"https://forum.pixel-composer.com/admin/users/{posterId}.json";
+			var api = global.DISCOURSE_API;
+			
+			var headers = ds_map_create();
+	        ds_map_add(headers, "Api-Key", api);
+	        ds_map_add(headers, "Api-Username", "PXCclient");
+	        
+	        asyncCall(http_request(url, "GET", headers, ""), function(_param, _res) /*=>*/ {
+	        	var _stat = _res[? "status"];
+	        	if(_stat < 0) { print("Fetch Artwork failed"); return 0; }
+	        	if(_stat != 0) return;
+	        	
+	    		var _ret = _res[? "result"];
+	    		var _map = json_try_parse(_ret, -1);
+	    		if(!is_struct(_map)) return;
+	    		
+	    		var _userID   = _map[$ "id"]    ?? 0;
+	    		var _userName = _map[$ "username"] ?? "";
+	    		
+	    		global.discourseUsers[$ posterId] = {
+	    			ID   : _userID,
+					name : _userName,
+	    		}
+	    		
+	        }, {
+	        	userId : posterId,
+	        });
+	        
+	        return global.discourseUsers[$ posterId];
+		}
+		
+		static getThumbnail = function() {
+			if(thumbnail != undefined) return thumbnail;
+			
+			var _url = data[$ "image_url"];
+			if(_url == undefined) {
+				thumbnail = -1;
+				return thumbnail;
+			}
+			
+			thumbnail = http_get_sprite(_url);
+			return thumbnail;
+		}
+	}
+	
+	function getDiscourseArtworks() {
+		art_req  = true;
+		artworks = [];
+		
+		var url = "https://forum.pixel-composer.com/c/showcase/7.json";
+		var api = global.DISCOURSE_API;
+		
+		var headers = ds_map_create();
+        ds_map_add(headers, "Api-Key", api);
+        ds_map_add(headers, "Api-Username", "PXCclient");
+        // ds_map_add(headers, "Content-Type", "application/json");
+        
+        asyncCall(http_request(url, "GET", headers, ""), function(_param, _res) /*=>*/ {
+        	var _stat = _res[? "status"];
+        	if(_stat < 0) { print("Fetch Artwork failed"); return 0; }
+        	if(_stat != 0) return;
+        	
+    		var _ret = _res[? "result"];
+    		var _map = json_try_parse(_ret, -1);
+    		if(!is_struct(_map)) return;
+    		
+    		var _topic_list = _map[$ "topic_list"];
+    		var _topics     = _topic_list[$ "topics"];
+    		
+    		if(!is_array(_topics)) return;
+    		
+    		for( var i = 0, n = array_length(_topics); i < n; i++ ) {
+    			var _topic = _topics[i];
+    			var _tpid  = _topic.id;
+    			
+    			if(_tpid == 11)     continue; // about
+    			if(!_topic.visible) continue;
+    			
+    			array_push(artworks, new discourseArtwork(_topic));
+    		}
+        });
+	}
+	
+	sp_news = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) /*=>*/ { 
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		if(!art_req) getDiscourseArtworks();
+		
 		var hh = ui(16);
 		var ww = sp_news.surface_w;
+		var hover = sp_news.hover;
+		var focus = sp_news.active;
+		
+		var thw = ui(196);
+		var thh = thw;
+		
+		var col = floor(ww / thw);
+		var row = ceil(array_length(artworks) / col);
+		
+		thw = ww / col;
+		
+		_y += ui(16);
+		hh += ui(16);
+		
+		var _txt = __txt("Showcases");
+		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_sub);
+		draw_text(ui(8), _y, _txt);
+		
+		var _icx = ui(8) + string_width(_txt);
+		var _icy = _y;
+		var _ics = ui(32);
+		
+		if(buttonInstant(noone, _icx, _icy, _ics, _ics, _m, hover, focus, "Open in Browser", THEME.globe, 0, COLORS._main_icon, .5) == 2)
+			URL_open("https://forum.pixel-composer.com/c/showcase/7");
+		
+		_y += ui(32);
+		hh += ui(32);
+		
+		if(art_req && array_empty(artworks))
+			draw_sprite_ui(THEME.loading, 0, ww / 2, _y - ui(16), .5, .5, current_time / 2, COLORS._main_icon, 1);
+		
+		for( var i = 0, n = array_length(artworks); i < n; i++ ) {
+			var _art = artworks[i];
+			
+			var _thm = _art.getThumbnail();
+			var ccol = i % col;
+			var rrow = floor(i / col);
+			
+			var _itx =      thw * ccol;
+			var _ity = _y + thh * rrow;
+			
+			var _px0 = _itx + ui(4);
+			var _py0 = _ity + ui(8);
+			
+			var _px1 = _itx + thw - ui(4);
+			var _py1 = _ity + thh - ui(8);
+			
+			if(sprite_exists(_thm)) {
+				var _sw = sprite_get_width(_thm);
+				var _sh = sprite_get_height(_thm);
+				var _ss = min((thw - ui(8)) / _sw, (thh - ui(16)) / _sh);
+				
+				var _thx = _itx + thw / 2 - _sw * _ss / 2;
+				var _thy = _ity + thh / 2 - _sh * _ss / 2;
+				
+				draw_sprite_ext(_thm, 0, _thx, _thy, _ss, _ss);
+				
+				_px0 = _thx;
+				_py0 = _thy;
+				
+				_px1 = _px0 + _sw * _ss;
+				_py1 = _py0 + _sh * _ss;
+			}
+			
+			var fh = lerp(ui(72), ui(96), _art.hoverPrg);
+			draw_sprite_stretched_ext(s_fade_up, 0, _px0, _py1 - fh, _px1 - _px0, fh, COLORS._main_icon_dark, 1);
+			
+			var _poser = _art.getPoster();
+			if(is_struct(_poser)) {
+				var pid   = _poser.ID;
+				var pname = _poser.name;
+				
+				draw_set_text(f_p4, fa_left, fa_bottom, COLORS._main_text);
+				draw_text_add(_px0 + ui(4), _py1 - ui(4), pname);
+			}
+			
+			draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text);
+			draw_text_ext_add(_px0 + ui(4), _py1 - ui(18), _art.title, -1, _px1 - _px0 - ui(8));
+			
+			var _hov = hover && point_in_rectangle(_m[0], _m[1], _px0, _py0, _px1, _py1); 
+			_art.hoverPrg = lerp_float(_art.hoverPrg, _hov, 5);
+			
+			draw_sprite_stretched_add(THEME.node_bg, 1, _px0, _py0, _px1 - _px0, _py1 - _py0, COLORS._main_icon, .5);
+			
+			if(_hov) {
+				draw_sprite_stretched_ext(THEME.node_bg, 1, _px0, _py0, _px1 - _px0, _py1 - _py0, COLORS._main_accent, 1);
+				TOOLTIP = "Open in browser"
+				
+				if(mouse_lpress(focus))
+					URL_open(_art.link);
+			}
+		}
+		
+		_y += row * thh + ui(8);
+		hh += row * thh + ui(8);
+		
+		draw_set_color(CDEF.main_mdblack);
+		draw_line_round(ui(16), _y, ww - ui(16), _y, 2);
+		
+		_y += ui(8);
+		hh += ui(8);
+		
+		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_sub);
+		draw_text(ui(8), _y, __txt("News"));
+		
+		_y += ui(32);
+		hh += ui(32);
 		
 		for (var i = 0, n = array_length(news_content); i < n; i++) {
 			var _inf = news_content[i];
@@ -732,7 +947,7 @@ event_inherited();
 			var _sh = sprite_get_height(_inf.img);
 			var _hg = _sh;
 			var _sx = ww / 2 - _sw / 2;
-			var _sy = ui(16) + _y;
+			var _sy = _y;
 			
 			draw_sprite(_inf.img, 0, _sx, _sy);
 			
