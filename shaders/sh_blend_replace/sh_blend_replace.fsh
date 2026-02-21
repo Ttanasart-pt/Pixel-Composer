@@ -30,5 +30,8 @@ void main() {
 	}
 	
 	vec4 _col1 = texture2D( fore, fore_tex );
-    gl_FragColor = mix(_col0, _col1, opacity * sampleMask());
+	vec4  res  = mix(_col0, _col1, opacity * sampleMask());
+	res.a = preserveAlpha == 1? _col0.a : res.a;
+	
+    gl_FragColor = res;
 }

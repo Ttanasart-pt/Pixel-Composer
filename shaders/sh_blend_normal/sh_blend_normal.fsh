@@ -28,7 +28,7 @@ void main() {
 	
 	float al = _cFg.a + _cBg.a * (1. - _cFg.a);
 	vec4 res = ((_cFg * _cFg.a) + (_cBg * _cBg.a * (1. - _cFg.a))) / al;
-	res.a = al;
+	res.a = preserveAlpha == 1? _cBg.a : al;
 	
     gl_FragColor = res;
 }

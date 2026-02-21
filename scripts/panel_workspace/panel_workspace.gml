@@ -18,6 +18,7 @@ function Panel_Workspace() : PanelContent() constructor {
 	scroll     = 0;
 	scroll_to  = 0;
 	scroll_max = 0;
+	scroll_ini = true;
 	
 	layout_selecting = "";
 	
@@ -161,6 +162,7 @@ function Panel_Workspace() : PanelContent() constructor {
 		scroll_max = max(ww - w + ui(16), 0);
 		if(pHOVER && MOUSE_WHEEL != 0)
 			scroll_to = clamp(scroll_to + ui(128) * MOUSE_WHEEL, -scroll_max, 0);
+		scroll_ini = false;
 			
 	}
 }
