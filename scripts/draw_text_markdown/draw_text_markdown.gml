@@ -127,6 +127,7 @@ function markdown_parse(md) {
 	for( var i = 0, n = array_length(_lines); i < n; i++ ) {
 		var line = _lines[i];
 		var trim = string_trim(line);
+		    trim = string_replace_all(trim, "**", ""); // Remove bold because that's no support for it anyway
 		
 		if(string_starts_with(trim, "{") && string_ends_with(trim, "}")) {
 			var _gName = string_copy(trim, 2, string_length(trim) - 2);

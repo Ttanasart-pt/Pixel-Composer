@@ -35,6 +35,8 @@ function Panel_Release_Note() : PanelContent() constructor {
 			var ww = sp_note.surface_w - ui(16);
 			var hh = 0;
 			
+			gpu_set_colorwriteenable(1,1,1,0);
+			
 			if(note_issues != "") {
 				var _h = markdown_draw(note_issuesMd, xx, yy, ww);
 				hh += _h + ui(16);
@@ -43,6 +45,8 @@ function Panel_Release_Note() : PanelContent() constructor {
 			
 			var _h = markdown_draw(noteMd, xx, yy, ww);
 			hh += _h;
+			
+			gpu_set_colorwriteenable(1,1,1,1);
 			
 			return hh + ui(64);
 		})

@@ -362,7 +362,7 @@
 	
 	function PREF_INIT() {
 		var xdpi = display_get_dpi_x();
-		var disp = clamp(xdpi / 64, 1, 2);
+		var disp = clamp(xdpi / 72, 1, 2);
 		
 		PREFERENCES.display_scaling = disp;
 		
