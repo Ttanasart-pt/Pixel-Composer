@@ -459,8 +459,6 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _vpx = _px + _vx - _ppx;
 			var _vpy = _py + _vy - _ppy;
 			
-			// print(_vpy);
-			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velpx,  buffer_f64,  _vpx);
 			buffer_write(    _partBuff,                              buffer_f64,  _vpy);
 			

@@ -1,4 +1,6 @@
 #region function
+	globalvar PANEL_MODIFIED; PANEL_MODIFIED = false;
+	
 	#macro CHECK_PANEL_WORKSPACE if(!is_instanceof(FOCUS_CONTENT, Panel_Workspace)) return;
 	
 	function panel_workspace_apply()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_apply");		FOCUS_CONTENT.apply_space();   }
@@ -74,7 +76,10 @@ function Panel_Workspace() : PanelContent() constructor {
 		var amo = array_length(workspaces);
 		
 		draw_set_font(font);
-		var currW = string_width(PREFERENCES.panel_layout_file) + ui(24)
+		var currT = PREFERENCES.panel_layout_file;
+		if(PANEL_MODIFIED) currT += "*";
+		
+		var currW = string_width(currT) + ui(24)
 		x0 += currW;
 		ww += currW;
 		
@@ -135,8 +140,19 @@ function Panel_Workspace() : PanelContent() constructor {
 		draw_set_color(COLORS.panel_bg_clear);
 		draw_rectangle(0, 0, currW, h, false);
 		
+		var _hov = pHOVER && point_in_rectangle(mx, my, 0, 0, currW, h);
+		if(_hov) {
+			draw_sprite_stretched(THEME.button_hide_fill, 1, ui(8), ui(8), currW - ui(16), h - ui(16));
+				
+			if(mouse_press(mb_right, pFOCUS)) {
+				menuCall("workspace_current_menu", [
+					menuItem(__txt("Reset"), function() /*=>*/ {return setPanel()}),
+				]);
+			}
+		}
+		
 		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(ui(12), cy, PREFERENCES.panel_layout_file);
+		draw_text_add(ui(12), cy, currT);
 		
 		draw_set_color(COLORS._main_icon_dark);
 		draw_line_round(currW - ui(4), ui(8), currW - ui(4), h - ui(8), 3);

@@ -95,7 +95,7 @@ function Node_pSystem_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
 			buffer_write(    _partBuff,                            buffer_f64, _vy );
-				
+			
 			if(_aply) {
 				_px += _vx;
 				_py += _vy;

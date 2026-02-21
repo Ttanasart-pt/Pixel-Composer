@@ -113,14 +113,14 @@ function Node_pSystem_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			var _dis = point_distance( _px, _py, _targ[0], _targ[1]);
 			    _dis = min(_dis, _strn_cur);
 			    
-			_vx += lengthdir_x(_dis, _dir);
-			_vy += lengthdir_y(_dis, _dir);
+			_px += lengthdir_x(_dis, _dir);
+			_py += lengthdir_y(_dis, _dir);
 			
-			_vx += lengthdir_x(_dis * _vort_cur, _dir + _vang_cur);
-			_vy += lengthdir_y(_dis * _vort_cur, _dir + _vang_cur);
+			_px += lengthdir_x(_dis * _vort_cur, _dir + _vang_cur);
+			_py += lengthdir_y(_dis * _vort_cur, _dir + _vang_cur);
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _vx );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _vy );
+			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
+			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
 		}
 		
 	}

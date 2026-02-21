@@ -79,6 +79,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 		if(_switch) switchContent(_content);
 		refresh();
+		
+		PANEL_MODIFIED = true;
 	}
 	
 	function switchContent(_content) {
@@ -137,6 +139,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			content[i].x = x;
 			content[i].y = y;
 		}
+	
+		PANEL_MODIFIED = true;
 	}
 	
 	function setTabSize() {
@@ -261,6 +265,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		h = max(round(h + dh), min_h);
 		
 		refreshSize(false);
+		PANEL_MODIFIED = true;
 	}
 	
 	function split_h(_w) {
@@ -295,6 +300,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		parent	= _panelParent;
 		anchor	= ANCHOR.left;
 		content = [];
+		PANEL_MODIFIED = true;
 		
 		return [ _panelL, _panelR ];
 	}
@@ -330,6 +336,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		parent	= _panelParent;
 		anchor	= ANCHOR.top;
 		content = [];
+		PANEL_MODIFIED = true;
 		
 		return [_panelT, _panelB];
 	}
@@ -410,6 +417,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						case ANCHOR.left:
 							_panel.resize(dw, 0, ANCHOR.left);
 							break;
+							
 						case ANCHOR.right:
 							_panel.resize(-dw, 0, ANCHOR.right);
 							_panel.move(dw, 0);

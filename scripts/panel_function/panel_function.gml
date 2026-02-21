@@ -75,12 +75,12 @@
 		return noone;
 	}
 	
-	function LoadPanelStruct(struct) { 
+	function loadPanelStruct(_str) { 
 		PANEL_MAIN = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
-		loadPanelStruct(PANEL_MAIN, struct); 
+		__loadPanelStruct(PANEL_MAIN, _str); 
 	}
 	
-	function loadPanelStruct(panel, str) {
+	function __loadPanelStruct(panel, str) {
 		var cont = str.content;
 		
 		panel.tab_align     = str[$ "tab_align"]     ?? 0;
@@ -92,8 +92,8 @@
 			else if(str.split == "h") pan = panel.split_h(ui(str.width));
 			
 			if(pan != noone) {
-				loadPanelStruct(pan[0], cont[0]);
-				loadPanelStruct(pan[1], cont[1]);
+				__loadPanelStruct(pan[0], cont[0]);
+				__loadPanelStruct(pan[1], cont[1]);
 			}
 			
 		} else {
@@ -111,11 +111,13 @@
 					_pnCont.deserialize(_content);
 			}
 		}
+		
+		PANEL_MODIFIED = false;
 	}
 	
 	function loadPanel(path) {
 		CURRENT_PANEL = json_load_struct(path);
-		LoadPanelStruct(CURRENT_PANEL.panel);
+		loadPanelStruct(CURRENT_PANEL.panel);
 	}
 	
 	function checkPanelValid() {
@@ -158,7 +160,7 @@
 	function resetPanel(check = true) {
 		clearPanel();
 		panelObjectInit();
-		loadPanelStruct(PANEL_MAIN, CURRENT_PANEL.panel);
+		__loadPanelStruct(PANEL_MAIN, CURRENT_PANEL.panel);
 		PANEL_MAIN.refresh();
 		
 		if(check) checkPanelValid();

@@ -75,8 +75,11 @@ function Node_pSystem_Wrap(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				if(_py > by) _py -= by;
 			}
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,  buffer_f64, _px );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy,  buffer_f64, _py );
+			
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospx, buffer_f64, _px );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospy, buffer_f64, _py );
 		}
 		
 	}

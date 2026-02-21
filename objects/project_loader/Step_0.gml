@@ -169,7 +169,7 @@ switch(load_process) {
         printIf(log, $"========== Load {array_length(PROJECT.allNodes)} nodes completed in {(get_timer() - t0) / 1000} ms ==========");
         
         if((PROJECT.load_layout || PREFERENCES.save_layout) && struct_has(content, "layout"))
-        	LoadPanelStruct(content.layout.panel);
+        	loadPanelStruct(content.layout.panel);
         
         array_remove(STATS_PROGRESS, load_noti);
     	PROJECT.postDeserialize(content);
