@@ -2,7 +2,7 @@
 	globalvar META_TAGS; META_TAGS = [ "3D", "Animation", "Disappear", "Effect", "Filter", "Generator", "Transform", "Transition", "Utility" ];
 	globalvar VERSIONS; VERSIONS  = [];
 	
-	for( var i = 14; i <= VERSION_MAJOR; i++ )
+	for( var i = 14; i <= VERSION_MAJOR_INT; i++ )
 		array_insert(VERSIONS, 0, i);
 	
 	enum FILE_TYPE {

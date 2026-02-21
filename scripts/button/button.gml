@@ -353,6 +353,7 @@ function buttonTextInstant(active, spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "
 
 function buttonInstantGlass(hover, focus, mx, my, bx, by, bw, bh, txt = "", aa = .3, cc = COLORS._main_value_positive) {
 	var _hov = hover && point_in_rectangle(mx, my, bx, by, bx + bw, by + bh);
+	var _col = _hov? cc : COLORS._main_icon;
 	var _res = _hov;
 	var _clk = false;
 	
@@ -362,8 +363,8 @@ function buttonInstantGlass(hover, focus, mx, my, bx, by, bw, bh, txt = "", aa =
 	if(mouse_press(mb_left, focus && _hov))
 		_res = 2;
 	
-	draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, _hov? cc : COLORS._main_icon, aa     + _hov * .1);
-	draw_sprite_stretched_ext(THEME.ui_panel, _clk? 0 : 1, bx, by, bw, bh, _hov? cc : COLORS._main_icon, aa * 2 + _hov * .25);
+	draw_sprite_stretched_ext(THEME.ui_panel, 0,           bx, by, bw, bh, _col, aa     + _hov * .10);
+	draw_sprite_stretched_ext(THEME.ui_panel, _clk? 0 : 1, bx, by, bw, bh, _col, aa * 2 + _hov * .25);
 	
 	draw_set_text(f_p2, fa_center, fa_center, _hov? cc : COLORS._main_icon_light);
 	draw_text_add(bx + bw / 2, by + bh / 2, txt);

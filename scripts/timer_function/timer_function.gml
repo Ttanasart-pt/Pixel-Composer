@@ -7,6 +7,7 @@ function measure(func, header = "") {
 }
 
 function unix_time_to_string(_time, _format = "") {
+	date_set_timezone(timezone_utc);
 	static month_names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 	
 	var _datetime = date_inc_second(date_create_datetime(1970, 1, 1, 0, 0, 0), _time);
@@ -55,7 +56,10 @@ function get_seconds() {
 	return ((((_y * 12 + _m) * 31 + _d) * 24 + _h) * 60 + _n) * 60 + _s;
 }
 
-function get_unix_time() { return date_second_span( date_create_datetime(1970, 1, 1, 0, 0, 0), date_current_datetime() ); }
+function get_unix_time() { 
+	date_set_timezone(timezone_utc);
+	return date_second_span( date_create_datetime(1970, 1, 1, 0, 0, 0), date_current_datetime() ); 
+}
 
 function unix_time_get_string(_time) {
 	var _secSince = get_unix_time() - _time;

@@ -2885,6 +2885,21 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				bx += bw + ui(4);
 			}
 			
+			if(contentPage == 3) {
+				var bw = ui(128);
+				
+				if(buttonInstantGlass(pHOVER, pFOCUS, mx, my, bx, by, bw, bs, __txt("Download All"), .2) == 2) {
+					var _pat = struct_get_names(PATREON_PROJECTS);
+					for( var i = 0, n = array_length(_pat); i < n; i++ ) {
+						var _p = PATREON_PROJECTS[$ _pat[i]];
+						if(!file_exists_empty(_p.content_fpath))
+							_p.downloadContent();
+					}
+				}
+				
+				bx += bw + ui(4);
+			}
+			
 			if(RUN_IDE) {
 				if(buttonInstant(noone, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Update DB"), THEME.refresh_16, 0, bc) == 2)
 					PXC_Patreon_Update();

@@ -27,14 +27,16 @@
 			if(_ext != ".pxc") continue;
 			
 			var _d = {
-				pack:        4, 
-				name:        filename_name_only(_f), 
-				version:     json_stringify([ VERSION ]),
-				create_time: file_get_create_s(_f), 
+				pack :        4, 
+				path :        _f,
+				name :        filename_name_only(_f), 
+				version :     json_stringify([ VERSION_MAJOR ]),
+				create_time : file_get_create_s(_f), 
 			};
 			
 			debug_promofiles[$ _d.name] = _d;
 		}
+		
 	}
 	
 	function PXC_Patreon_Update() {
@@ -42,7 +44,7 @@
 		
 		for( var i = 0, n = array_length(_names); i < n; i++ ) {
 			var _n = _names[i];
-			if(has(PATREON_PROJECTS, _n)) continue;
+			// if(has(PATREON_PROJECTS, _n)) continue;
 			
 			var _d = debug_promofiles[$ _n];
 			var _j = json_stringify(_d);
@@ -51,6 +53,7 @@
 			asyncCallGroup("social", FirebaseFirestore($"patreon_projects/{_n}").Update(_j), function(_params, _data) /*=>*/ {
 				if (_data[? "status"] != 200) { print(_data[? "errorMessage"]); return; }
 		    });
+		    
 		}
 	}
 #endregion
@@ -133,14 +136,22 @@ function Patreon_project_item(_file) constructor {
 		    
 	        var _res = _data[? "result"];
 	        var _dat = json_try_parse(_res, undefined);
-	        if(_dat == undefined || !has(_dat, "downloadTokens")) { preview_sprite = -4; return; }
+	        if(_dat == undefined || !has(_dat, "downloadTokens")) { 
+	        	print($"Thumbnail url not found {title}");
+	        	preview_sprite = -4; 
+	        	return; 
+	        }
 	        
 	        var _dlToken = _dat.downloadTokens;
 	        var _dlUrl   = preview_path + $"?alt=media&token={_dlToken}";
 	        
 	        asyncCallGroup("http", http_get_file(_dlUrl, preview_fpath), function(_params, _data) /*=>*/ {
 	        	var _status = _data[? "status"];
-		    	if (_status < 0) { preview_sprite = -4; return; }
+		    	if (_status < 0) { 
+		    		print($"Thumbnail sprite not found {title}");
+		    		preview_sprite = -4; 
+		    		return;
+	    		}
 		    	
 	        	preview_sprite = sprite_add(preview_fpath);
 	        });
@@ -210,6 +221,7 @@ function Patreon_project_item(_file) constructor {
 			
 		} else 
 			drawThumbnail(_rx, _ry, _x0, _y0, _cw, _ch, 0);
+			
 		if(_hov) draw_sprite_stretched_add(THEME.box_r5, 1, _x0, _y0, _cw, _ch, c_white, .5);
 		
 		#region badges
