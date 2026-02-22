@@ -16,7 +16,7 @@
                     "content": "Panel_Animation"
                 }],
                 "split": "v",
-                "width": -300
+                "width": -250
             }, {
                 "content": [{
                     "content": "Panel_Workspace"

@@ -17,7 +17,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	palette_selecting = noone;
 	palette_select    = [ -1, -1 ];
 	
-	function setColor(colr) {
+	static setColor = function(colr) {
 		palette_selecting = noone;
 		
 		var _to = array_clone(getInputData(2));
@@ -25,8 +25,9 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		for (var i = palette_select[0]; i <= palette_select[1]; i++)
 			_to[i] = colr;
 		
-		inputs[2].setValue(_to);			// Not necessary due to array reference
-	}
+		inputs[2].setValue(_to); // Not necessary due to array reference
+		
+	} setColor = method(self, setColor);
 		
 	sort_menu = [
 		new MenuItem("Sort Brightness", function() /*=>*/ { sortPalette(0) }),
