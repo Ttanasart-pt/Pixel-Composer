@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -16,34 +13,34 @@ void main() {
 	
 	gl_FragColor = vec4(0.);
 	
-	if(point.a == 0.0) {
-		for(float i = 1.; i < 16.; i++) {
-			if(i > borderSize) {
+	if(point.a > 0.) {
+		gl_FragColor = borderColor;
+		return;
+	}
+	
+	for(float i = 1.; i < 16.; i++) {
+		if(i > borderSize)
+			break;
+		
+		float base = 1.;
+		float top  = 0.;
+		for(float j = 0.; j <= 64.; j++) {
+			float ang = top / base * TAU;
+			top += 2.;
+			if(top >= base) {
+				top = 1.;
+				base *= 2.;
+			}
+	
+			vec2 pxs = (pixelPosition + vec2( cos(ang) * i,  sin(ang) * i)) / dimension;
+			if(pxs.x < 0. || pxs.y < 0. || pxs.x > 1. || pxs.y > 1.) 
+				continue;
+				
+			vec4 sam = texture2D( gm_BaseTexture, pxs );
+			if(sam.a > 0.) {
+				gl_FragColor = vec4(borderColor.rgb, sam.a);
 				break;
 			}
-			
-			float base = 1.;
-			float top  = 0.;
-			for(float j = 0.; j <= 64.; j++) {
-				float ang = top / base * TAU;
-				top += 2.;
-				if(top >= base) {
-					top = 1.;
-					base *= 2.;
-				}
-		
-				vec2 pxs = (pixelPosition + vec2( cos(ang) * i,  sin(ang) * i)) / dimension;
-				if(pxs.x < 0. || pxs.y < 0. || pxs.x > 1. || pxs.y > 1.) 
-					continue;
-					
-				vec4 sam = v_vColour * texture2D( gm_BaseTexture, pxs );
-				if(sam.a > 0.) {
-					gl_FragColor = borderColor;
-					break;
-				}
-			}
 		}
-	} else {
-		gl_FragColor = borderColor;
 	}
 }

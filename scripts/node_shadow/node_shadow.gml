@@ -17,13 +17,13 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(6, 9); // inputs 9, 10
 	
 	////- =Shadow
-	newInput( 1, nodeValue_Color(       "Color",           ca_black ));
-	newInput( 2, nodeValue_Slider(      "Strength",       .5, [ 0, 2, 0.01] )).setCurvable(13).setHotkey("S").hideLabel();
-	newInput(11, nodeValue_Enum_Button( "Positioning",     0, [ "Shift", "Light" ] ));
-	newInput( 3, nodeValue_Vec2(        "Shift",          [.25,.25] )).setUnitSimple().hideLabel();
-	newInput(12, nodeValue_Vec2(        "Light Position", [0,0] )).setUnitSimple().hideLabel();
-	newInput( 4, nodeValue_ISlider(     "Grow", 3, [0, 16, 0.1] ));
-	newInput( 5, nodeValue_ISlider(     "Blur", 3, [0, 16, 0.1] ));
+	newInput( 1, nodeValue_Color(   "Color",           ca_black ));
+	newInput( 2, nodeValue_Slider(  "Strength",       .5, [ 0, 2, 0.01] )).setCurvable(13).setHotkey("S").hideLabel();
+	newInput(11, nodeValue_EButton( "Positioning",     0, [ "Shift", "Light" ] ));
+	newInput( 3, nodeValue_Vec2(    "Shift",          [.25,.25] )).setUnitSimple().hideLabel();
+	newInput(12, nodeValue_Vec2(    "Light Position", [0,0] )).setUnitSimple().hideLabel();
+	newInput( 4, nodeValue_ISlider( "Grow", 3, [0, 16, 0.1] ));
+	newInput( 5, nodeValue_ISlider( "Blur", 3, [0, 16, 0.1] ));
 	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -102,13 +102,20 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			_shay = _dim[1] / 2 - _lgh[1];
 		}
 		
-		surface_set_shader(_outShad, sh_outline_only, true, BLEND.over);
-			shader_set_f("dimension",   _dim);
-			shader_set_f("borderSize",  _border);
-			shader_set_f("borderColor", [ 1., 1., 1., 1. ]);
+		if(_border > 0) {
+			surface_set_shader(_outShad, sh_outline_only, true, BLEND.over);
+				shader_set_f("dimension",   _dim);
+				shader_set_f("borderSize",  _border);
+				shader_set_f("borderColor", [ 1., 1., 1., 1. ]);
+				
+				draw_surface_safe(_surf, _shax, _shay);
+			surface_reset_shader();
 			
-			draw_surface_safe(_surf, _shax, _shay);
-		surface_reset_shader();
+		} else {
+			surface_set_shader(_outShad, noone, true, BLEND.over);
+				draw_surface_safe(_surf, _shax, _shay);
+			surface_reset_shader();
+		}
 		
 		var args = new blur_gauss_args(_outShad, _size + 1, 3).setBG(false, cl).setOver(cl);
 		if(inputs[2].attributes.curved) args.setSizeCurve(_data[13]);
