@@ -203,19 +203,19 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					_sPosZ += _Rposz * i;
 					
 					if(is_path(_ppth)) {
-						__p = _ppth.getPointRatio(_rat, 0, __p);
+						__p = _ppth.getPointRatio(clamp(_rat, 0, .9999), 0, __p);
 						
 						_sPosX += __p.x;
 						_sPosY += __p.y;
 						_sPosZ += __p.z;
 						
 						if(_rpth > 0) {
-							__p = _ppth.getPointRatio(clamp(_rat - _rt/2, 0, 0.999), 0, __p);
+							__p = _ppth.getPointRatio(clamp(_rat - _rt/2, 0, .9999), 0, __p);
 							var __px0 = __p.x;
 							var __py0 = __p.y;
 							var __pz0 = __p.z;
 							
-							__p = _ppth.getPointRatio(clamp(_rat + _rt/2, 0, 0.999), 0, __p);
+							__p = _ppth.getPointRatio(clamp(_rat + _rt/2, 0, .9999), 0, __p);
 							var __px1 = __p.x;
 							var __py1 = __p.y;
 							var __pz1 = __p.z;
