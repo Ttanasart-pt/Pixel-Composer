@@ -546,17 +546,17 @@ function Panel_Animation_Dopesheet() {
                 switch(_prop.display_type) {
                 	
                     case VALUE_DISPLAY.palette : 
-                        dialogCall(o_dialog_palette)
-	        				.setDefault(keyframe.value)
-	        				.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; })
-	        				.setDrop(_wid);
+                        var dia = dialogCall(o_dialog_palette);
+	        			dia.setDefault(keyframe.value);
+	        			dia.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; __keyframe_editing.node.triggerRender(); });
+	        			dia.setDrop(_wid);
                         break;
                     
                     default :
-                        dialogCall(o_dialog_color_selector)
-                        	.setDefault(keyframe.value)
-                        	.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; })
-                        	.setDrop(_wid);
+                    	var dia = dialogCall(o_dialog_color_selector);
+                        dia.setDefault(keyframe.value);
+                        dia.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; __keyframe_editing.node.triggerRender(); });
+                        dia.setDrop(_wid);
                         break;
                 }
                 break;
