@@ -107,11 +107,12 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 		return self;
 	}
 	
-	function setColor(clr) {
+	static setColor = function(clr) {
 		if(node_selecting == noone) return;
 		node_selecting.color = clr;
 		CURRENT_COLOR = clr;
-	} 
+		
+	} mself_mf0 setColor mself_mf1 setColor mself_mf2;
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);

@@ -548,14 +548,20 @@ function Panel_Animation_Dopesheet() {
                     case VALUE_DISPLAY.palette : 
                         var dia = dialogCall(o_dialog_palette);
 	        			dia.setDefault(keyframe.value);
-	        			dia.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; __keyframe_editing.node.triggerRender(); });
+	        			dia.setApply(function(val) /*=>*/ { 
+	        				__keyframe_editing.value = val; 
+	        				__keyframe_editing.anim.node.triggerRender(); 
+	        			});
 	        			dia.setDrop(_wid);
                         break;
                     
                     default :
                     	var dia = dialogCall(o_dialog_color_selector);
                         dia.setDefault(keyframe.value);
-                        dia.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; __keyframe_editing.node.triggerRender(); });
+                        dia.setApply(function(val) /*=>*/ { 
+                        	__keyframe_editing.value = val; 
+                        	__keyframe_editing.anim.node.triggerRender(); 
+                        });
                         dia.setDrop(_wid);
                         break;
                 }
