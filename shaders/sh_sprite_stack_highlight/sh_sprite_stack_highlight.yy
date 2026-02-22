@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_replace_color",
-  "name":"sh_replace_color",
+  "%Name":"sh_sprite_stack_highlight",
+  "name":"sh_sprite_stack_highlight",
   "parent":{
     "name":"2d_effects",
     "path":"folders/nodes/data/3D/2d_effects.yy",

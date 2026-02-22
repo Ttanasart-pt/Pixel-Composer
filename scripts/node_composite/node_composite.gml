@@ -491,7 +491,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var vis = array_safe_get_fast(_vis, ind);
 			var sel = array_safe_get_fast(_sel, ind);
 			
-			var _exp = properties_expand[i];
+			var _exp = properties_expand[i] ?? 0;
 			var _lh  = lh + ui(4) + _exp * eh;
 			_h += _lh;
 			

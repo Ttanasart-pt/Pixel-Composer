@@ -15,6 +15,7 @@ void main() {
 	
 	if(type == 1) {
 		ca = v_vColour;
+		
 	} else if(type == 2) {
 		vec2 tx  = 1. / dimension;
 		mat2 rot = mat2(cos(angle), -sin(angle), 

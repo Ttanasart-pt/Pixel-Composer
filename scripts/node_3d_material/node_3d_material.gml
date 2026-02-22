@@ -35,7 +35,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- Nodes
 	
-	temp_surfaces = [noone];
+	temp_surface = [noone];
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
@@ -93,8 +93,8 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _prop_w = max(32, surface_get_width_safe(_met_map),  surface_get_width_safe(_rog_map));
 			var _prop_h = max(32, surface_get_height_safe(_met_map), surface_get_height_safe(_rog_map));
 			
-			temp_surfaces[0] = surface_verify(temp_surfaces[0], _prop_w, _prop_h);
-			surface_set_target(temp_surfaces[0]);
+			temp_surface[0] = surface_verify(temp_surface[0], _prop_w, _prop_h);
+			surface_set_target(temp_surface[0]);
 				draw_clear(c_black);
 				BLEND_ADD_ONE
 				
@@ -113,7 +113,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_mat.pbr_roughness_map  = inputs[ 7].attributes.mapped;
 		_mat.pbr_metalic        = _mat.pbr_metalic_map?   _mett : [_mett,_mett]; 
 		_mat.pbr_roughness      = _mat.pbr_roughness_map? _roug : [_roug,_roug]; 
-		_mat.pbr_properties_map = temp_surfaces[0];
+		_mat.pbr_properties_map = temp_surface[0];
 	
 		return _mat;
 	}

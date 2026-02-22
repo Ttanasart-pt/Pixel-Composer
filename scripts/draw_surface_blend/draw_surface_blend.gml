@@ -88,7 +88,9 @@ function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, a
 	var surf_w  = surface_get_width_safe(surf);
 	var surf_h  = surface_get_height_safe(surf);
 	
-	if(is_surface(foreground)) {
+	var fg_use  = is_surface(foreground);
+	
+	if(fg_use) {
 		var bgw = surface_get_width_safe(background);
 		var bgh = surface_get_height_safe(background);
 		
@@ -108,7 +110,8 @@ function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, a
 	BLEND_OVERRIDE
 	draw_surface_stretched_safe(background, 0, 0, surf_w, surf_h);
 	BLEND_NORMAL
-	shader_reset();
+	
+	if(fg_use) shader_reset();
 }
 
 function draw_surface_blend_ext(bg, fg, _x, _y, _sx = 1, _sy = 1, _rot = 0, _col = c_white, _alpha = 1, _blend = BLEND_MODE.normal, _pre_alp = false, _tile = 0) {

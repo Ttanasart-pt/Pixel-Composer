@@ -34,9 +34,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Surface",	false],	0, 13, 1, 14, 12, 
-		["Stack",	false], 2, 3, 8, 4, 5, 
-		["Render",  false], 6, 7, 9, 10, 
+		[ "Surface", false ],  0, 13,  1, 14, 12, 
+		[ "Stack",   false ],  2,  3,  8,  4,  5, 
+		[ "Render",  false ],  6,  7,  9, 10, 
 	];
 	
 	////- Node
@@ -50,6 +50,8 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	preview_custom_x       = 0;
 	preview_custom_x_to    = 0;
 	preview_custom_x_max   = 0;
+	
+	temp_surface       = array_create(4);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -205,113 +207,149 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _dimc = _data[1];
-		var _amo  = _data[2];
-		var _shf  = _data[3];
+		#region data
+			var _surf = _data[ 0];
+			var _dimc = _data[ 1];
+			var _amo  = _data[ 2];
+			var _shf  = _data[ 3];
+			
+			var _pos  = _data[ 4];
+			var _rot  = _data[ 5];
+			var _col  = _data[ 6];
+			var _alp  = _data[ 7];
+			var _mov  = _data[ 8];
+			
+			var _hig  = _data[ 9];
+			var _hiC  = _data[10];
+			var _hiA  = _data[11];
+			var _arr  = _data[12];
+			
+			var _dimt = _data[13];
+			var _dims = _data[14];
+		#endregion
 		
-		var _pos = _data[4];
-		var _rot = _data[5];
-		var _col = _data[6];
-		var _alp = _data[7];
-		var _mov = _data[8];
+		#region dimension
+			var _sdim = surface_get_dimension(is_array(_surf)? _surf[0] : _surf);
+			var _dim = _sdim;
+			
+			inputs[ 1].setVisible(false);
+			inputs[14].setVisible(false);
+			
+			switch(_dimt) {
+				case OUTPUT_SCALING.same_as_input :
+					_dim = _sdim;
+					break;
+					
+				case OUTPUT_SCALING.constant :
+					inputs[ 1].setVisible(true);
+					
+					_dim = _dimc;
+					break;
+					
+				case OUTPUT_SCALING.relative :
+					inputs[14].setVisible(true);
+					
+					_dim = [ _sdim[0] * _dims[0], _sdim[1] * _dims[1] ];
+					break;
+					
+			}
+			
+			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		#endregion
 		
-		var _hig = _data[ 9];
-		var _hiC = _data[10];
-		var _hiA = _data[11];
-		var _arr = _data[12];
-		
-		var _dimt = _data[13];
-		var _dims = _data[14];
-		
-		/////////////////////////////////////// ===== DIMENSION
-		
-		var _sdim = surface_get_dimension(is_array(_surf)? _surf[0] : _surf);
-		var _dim = _sdim;
-		
-		inputs[ 1].setVisible(false);
-		inputs[14].setVisible(false);
-		
-		switch(_dimt) {
-			case OUTPUT_SCALING.same_as_input :
-				_dim = _sdim;
-				break;
-				
-			case OUTPUT_SCALING.constant :
-				inputs[ 1].setVisible(true);
-				
-				_dim = _dimc;
-				break;
-				
-			case OUTPUT_SCALING.relative :
-				inputs[14].setVisible(true);
-				
-				_dim = [ _sdim[0] * _dims[0], _sdim[1] * _dims[1] ];
-				break;
-				
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
+			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1], attrDepth());
+			surface_clear(temp_surface[i]);
 		}
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		var _x, _y;
-		
-		///////////////////////////////////////
-		
-		_pos     = [ _pos[0], _pos[1] ];
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		
+		blend_temp_surface = temp_surface[2];
 		if(is_array(_surf) && _arr) _amo = array_length(_surf);
 		
+		_pos = [ _pos[0], _pos[1] ];
 		if(_mov) {
 			_pos[0] -= _shf[0] * _amo;
 			_pos[1] -= _shf[1] * _amo;
 		}
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-			if(is_surface(_surf)) {
-				var _ww = surface_get_width_safe(_surf);
-				var _hh = surface_get_height_safe(_surf);
-				var _po = point_rotate(0, 0, _ww / 2, _hh / 2, _rot);
-				var aa  = _alp;
-				var aa_delta = (1 - aa) / _amo;
+		var _bg = 0;
+		
+		if(is_surface(_surf)) {
+			var _ww = surface_get_width_safe(_surf);
+			var _hh = surface_get_height_safe(_surf);
+			var _po = point_rotate(0, 0, _ww / 2, _hh / 2, _rot);
+			var aa  = _alp;
+			var aa_delta = (1 - aa) / _amo;
+			
+			_pos[0] += _shf[0] * _amo;
+			_pos[1] += _shf[1] * _amo;
+			
+			for( var i = 0; i < _amo; i++ ) {
+				_bg = !_bg;
 				
-				_pos[0] += _shf[0] * _amo;
-				_pos[1] += _shf[1] * _amo;
-					
-				for( var i = 0; i < _amo; i++ ) {
-					if(_hig && i == _amo - 1) {
-						shader_set(sh_replace_color);
+				var px = _po[0] + _pos[0];
+				var py = _po[1] + _pos[1];
+				
+				if(_hig && i == _amo - 1) {
+					surface_set_shader(temp_surface[3], sh_sprite_stack_highlight, true, BLEND.over);
 						shader_set_i("type",      _hig);
 						shader_set_f("dimension", _ww, _hh);
 						shader_set_f("shift",     _shf[0] / _ww, _shf[1] / _hh);
 						shader_set_f("angle",     degtorad(_rot));
-						draw_surface_ext_safe(_surf, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _hiC, _color_get_alpha(_hiC));
-						shader_reset();
-					} else
-						draw_surface_ext_safe(_surf, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _col, _color_get_alpha(_col) * aa);
-					_pos[0] -= _shf[0];
-					_pos[1] -= _shf[1];
 						
-					aa += aa_delta;
-				}
-				
-				draw_surface_ext_safe(_surf, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, c_white, aa);
-				
-			} else if(is_array(_surf)) {
-				for(var i = 0; i < _amo; i++) {
-					var index = clamp(i, 0, array_length(_surf) - 1);
-					var _s    = _surf[index];
-					if(!is_surface(_s)) continue;
+						draw_surface_ext_safe(_surf, px, py, 1, 1, _rot, _hiC, _color_get_alpha(_hiC));
+					surface_reset_shader();
 					
-					var _ww = surface_get_width_safe(_s);
-					var _hh = surface_get_height_safe(_s);
-					var _po = point_rotate(0, 0, _ww / 2, _hh / 2, _rot);
+					surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
+						draw_surface_blend(temp_surface[!_bg], temp_surface[3]);
+					surface_reset_shader();
 					
-					draw_surface_ext_safe(_s, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _col, _color_get_alpha(_col));
-					_pos[0] += _shf[0];
-					_pos[1] += _shf[1];
+				} else {
+					surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
+						draw_surface_blend_ext(temp_surface[!_bg], _surf, px, py, 1, 1, _rot, _col, _color_get_alpha(_col) * aa);
+					surface_reset_shader();
 				}
+					
+				_pos[0] -= _shf[0];
+				_pos[1] -= _shf[1];
+					
+				aa += aa_delta;
 			}
+			
+			var px = _po[0] + _pos[0];
+			var py = _po[1] + _pos[1];
+			
+			_bg = !_bg;
+			surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
+				draw_surface_blend_ext(temp_surface[!_bg], _surf, px, py, 1, 1, _rot, c_white, aa);
+			surface_reset_shader();
+			
+		} else if(is_array(_surf)) {
+			for(var i = 0; i < _amo; i++) {
+				var index = clamp(i, 0, array_length(_surf) - 1);
+				var _s    = _surf[index];
+				if(!is_surface(_s)) continue;
+				
+				_bg = !_bg;
+				var _ww = surface_get_width_safe(_s);
+				var _hh = surface_get_height_safe(_s);
+				var _po = point_rotate(0, 0, _ww / 2, _hh / 2, _rot);
+				
+				var px = _po[0] + _pos[0];
+				var py = _po[1] + _pos[1];
+				
+				surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
+					draw_surface_blend_ext(temp_surface[!_bg], _s, px, py, 1, 1, _rot, _col, _color_get_alpha(_col));
+				surface_reset_shader();
+				
+				_pos[0] += _shf[0];
+				_pos[1] += _shf[1];
+			}
+		}
+		
+		surface_set_target(_outSurf);
+			DRAW_CLEAR
+			draw_surface(temp_surface[_bg], 0, 0);
 		surface_reset_target();
 		
 		return _outSurf;
