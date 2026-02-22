@@ -58,7 +58,7 @@ uniform sampler2D sizeSurf;
 
 #define TAU 6.283185307179586
 
-vec4 fillColor;
+float fillAlpha;
 
 float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
@@ -69,18 +69,19 @@ bool isSolid(in vec4 col) {
 	return true;
 }
 
-bool checkOffset(in bool ero, in vec2 ofs) {
+void checkOffset(in bool ero, in vec2 ofs) {
 	vec2 pxs = v_vTexcoord + ofs / dimension;
 	vec4 sam = sampleTexture( gm_BaseTexture, pxs );
 	bool sol = isSolid(sam);
 	
-	if(!ero && sol) fillColor = sam;
-	if(ero ^^ isSolid(sam)) {
-		gl_FragColor = fillColor;
-		return true;
+	if(ero && sam.a < fillAlpha) {
+		fillAlpha      = sam.a;
+		gl_FragColor.a = fillAlpha;
+		
+	} else if(!ero && sam.a > fillAlpha) {
+		fillAlpha = sam.a;
+		gl_FragColor = vec4(sam.rgb, fillAlpha);
 	}
-	
-	return false;
 }
 
 void main() {
@@ -99,9 +100,7 @@ void main() {
 	vec4 bc = texture2D( gm_BaseTexture, v_vTexcoord );
 	
 	gl_FragColor = bc;
-	if(ero ^^ isSolid(bc)) return;
-	
-	fillColor = ero? vec4(0., 0., 0., alpha == 0? 1. : 0.) : vec4(1., 1., 1., 1.);
+	fillAlpha = ero? bc.a : 0.;
 	
 	if(mode == 0) {
 		for(float i = 1.; i <= sizMax; i++) {
@@ -117,8 +116,7 @@ void main() {
 					base *= 2.;
 				}
 				
-				if(checkOffset(ero, vec2(cos(ang), sin(ang)) * i))
-					return;
+				checkOffset(ero, vec2(cos(ang), sin(ang)) * i);
 			}
 		}
 		
@@ -131,7 +129,7 @@ void main() {
 				if(j < -siz) continue;
 				if(j >  siz) break;
 				
-				if(checkOffset( ero, vec2( i,  j) )) return;
+				checkOffset( ero, vec2( i,  j) );
 			}
 		}
 		
@@ -145,15 +143,15 @@ void main() {
 				if(j >  siz) break;
 				
 				if(abs(i) + abs(j) > siz) continue;
-				if(checkOffset( ero, vec2( i,  j) )) return;
+				checkOffset( ero, vec2( i,  j) );
 			}
 		}
 		
 	} else if(mode == 3) {
-		for(float i = 1.; i <= sizMax; i++) { if(i > siz) break; if(checkOffset( ero, vec2( i, 0.) )) return; }
-		for(float i = 1.; i <= sizMax; i++) { if(i > siz) break; if(checkOffset( ero, vec2(-i, 0.) )) return; }
-		for(float i = 1.; i <= sizMax; i++) { if(i > siz) break; if(checkOffset( ero, vec2(0.,  i) )) return; }
-		for(float i = 1.; i <= sizMax; i++) { if(i > siz) break; if(checkOffset( ero, vec2(0., -i) )) return; }
+		for(float i = 1.; i <= sizMax; i++) { if(i > siz) break; checkOffset( ero, vec2( i, 0.) ); }
+		for(float i = 1.; i <= sizMax; i++) { if(i > siz) break; checkOffset( ero, vec2(-i, 0.) ); }
+		for(float i = 1.; i <= sizMax; i++) { if(i > siz) break; checkOffset( ero, vec2(0.,  i) ); }
+		for(float i = 1.; i <= sizMax; i++) { if(i > siz) break; checkOffset( ero, vec2(0., -i) ); }
 	}
 	
 }
