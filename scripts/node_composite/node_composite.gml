@@ -1735,18 +1735,18 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var vis  = _vis[i];
 			if(!vis) continue;
 			
-			var _ind = input_fix_len + i * data_length;
-			var _s   = _data[_ind + 0];
-			var _pos = _data[_ind + 1];
-			var _rot = _data[_ind + 2];
-			var _sca = _data[_ind + 3];
-			var _bld = _data[_ind + 4];
-			var _alp = _data[_ind + 5];
-			var _anc = _data[_ind + 6];
+			var _ind  = input_fix_len + i * data_length;
+			var _surf = _data[_ind + 0];
+			var _pos  = _data[_ind + 1];
+			var _rot  = _data[_ind + 2];
+			var _sca  = _data[_ind + 3];
+			var _bld  = _data[_ind + 4];
+			var _alp  = _data[_ind + 5];
+			var _anc  = _data[_ind + 6];
 			
-			if(!is_surface(_s)) continue;
-			var _ww = surface_get_width_safe(_s);
-			var _hh = surface_get_height_safe(_s);
+			if(!is_surface(_surf)) continue;
+			var _ww = surface_get_width_safe(_surf);
+			var _hh = surface_get_height_safe(_surf);
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
@@ -1759,17 +1759,17 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _d0 = point_rotate(_cx - _ax, _cy - _ay, _cx, _cy, _rot);
 			// _d0[0] = round(_d0[0]); _d0[1] = round(_d0[1]);
 			
-			array_push(_atlas, new SurfaceAtlas(_s, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
+			array_push(_atlas, new SurfaceAtlas(_surf, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
 			_trans[i] = [ _d0[0], _d0[1], _sca[0], _sca[1], _rot ];
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
-				try { draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, true); }
+				try { draw_surface_blend_ext(temp_surface[!_bg], _surf, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, false); }
 				catch(e) { noti_warning(e, noone, self); }
 			surface_reset_shader();
 			
 			surface_set_shader(selection_surf, sh_selection_mask, false, BLEND.maximum);
 				shader_set_f("index", i + 1);
-				draw_surface_ext_safe(_s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, 1);
+				draw_surface_ext_safe(_surf, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, 1);
 			surface_reset_shader();
 			
 			_bg = !_bg;

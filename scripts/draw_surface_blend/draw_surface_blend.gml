@@ -46,7 +46,7 @@ enum BLEND_MODE {
 
 global.node_blend_keys = array_create_ext(array_length(BLEND_TYPES), function(i) /*=>*/ {return string_lower(BLEND_TYPES[i])});
 
-function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, alpha = 1, _pre_alp = true, _mask = 0, tile = 0) {
+function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, alpha = 1, _pre_alp = false, _mask = 0, tile = 0) {
 	if(!is_surface(background)) return;
 	
 	var sh = sh_blend_normal;
