@@ -1,5 +1,6 @@
 function nodeValue_Bone(_name = "Bone", _toggleFn) { return new __NodeValue_Bone(_name, self, _toggleFn); }
 function __NodeValue_Bone(_name, _node, _toggleFn) : __NodeValue_Text(_name, _node, "") constructor {
+	setDisplay(VALUE_DISPLAY.text_box);
 	
 	bSelect = button(_toggleFn).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
 	setSideButton(bSelect);

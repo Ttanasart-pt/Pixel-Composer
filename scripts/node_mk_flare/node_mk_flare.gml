@@ -158,11 +158,12 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			}
 		]);
 			
-		function edit_flare_color(color) {
+		static edit_flare_color = function(color) {
 			var _flares = inputs[5].getValue();
 			_flares[flare_color_editing].blend = color;
 			triggerRender();
-		}
+			
+		} mself_mf0 edit_flare_color mself_mf1 edit_flare_color mself_mf2;
 		
 		flare_builder = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 			var _flares = inputs[5].getValue();
