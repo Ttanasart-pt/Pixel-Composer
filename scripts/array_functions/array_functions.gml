@@ -319,10 +319,12 @@
 		if(!is_array(arr))         return arr;
 		if(array_length(arr) == 0) return 0;
 		
-		var mn = arr[0];
-		for( var i = 0, n = array_length(arr); i < n; i++ )
-			mn = min(mn, arr[i]);
-		return mn;
+		return script_execute_ext(min, arr);
+		
+		// var mn = arr[0];
+		// for( var i = 0, n = array_length(arr); i < n; i++ )
+		// 	mn = min(mn, arr[i]);
+		// return mn;
 	}
 	
 	function array_max(arr) {
@@ -330,10 +332,12 @@
 		if(!is_array(arr))         return arr;
 		if(array_length(arr) == 0) return 0;
 		
-		var mx = arr[0];
-		for( var i = 0, n = array_length(arr); i < n; i++ )
-			mx = max(mx, arr[i]);
-		return mx;
+		return script_execute_ext(max, arr);
+		
+		// var mx = arr[0];
+		// for( var i = 0, n = array_length(arr); i < n; i++ )
+		// 	mx = max(mx, arr[i]);
+		// return mx;
 	}
 	
 	function array_find_sorted(arr, val) {

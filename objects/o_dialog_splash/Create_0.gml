@@ -810,8 +810,8 @@ event_inherited();
     			var _topic = _topics[i];
     			var _tpid  = _topic.id;
     			
-    			if(_tpid == 11)     continue; // about
-    			if(!_topic.visible) continue;
+    			if(_tpid == 11) continue; // about
+    			if(!_topic.visible ||_topic.closed) continue;
     			
     			array_push(artworks, new discourseArtwork(_topic));
     		}
