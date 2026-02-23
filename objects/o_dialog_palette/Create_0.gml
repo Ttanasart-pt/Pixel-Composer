@@ -35,11 +35,6 @@ function __PaletteColor(_color = c_black) constructor {
 	index_drag_w = 0; index_drag_w_to = 0;
 	index_drag_h = 0; index_drag_h_to = 0;
 	
-	onApply  = noone;
-	selector = new colorSelector(setColor);
-	selector.dropper_close  = false;
-	selector.discretize_pal = false;
-	
 	setApply = function(a) /*=>*/ { onApply = a; selector.onApply = a; return self; }
 	setDrop  = function(d) /*=>*/ { drop_target = d;                   return self; }
 	setColor = function(c) /*=>*/ {
@@ -52,6 +47,11 @@ function __PaletteColor(_color = c_black) constructor {
 		if(onApply != noone) onApply(palette);
 		return self;
 	};
+	
+	onApply  = noone;
+	selector = new colorSelector(setColor);
+	selector.dropper_close  = false;
+	selector.discretize_pal = false;
 	
 	previous_palette  = c_black;
 	selection_surface = noone;

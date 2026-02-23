@@ -36,9 +36,9 @@ function colorSelector(_onApply = noone) constructor {
 		palette = PROJECT.attributes.palette;
 		discretize_pal = true;
 		
-		tt_view = new tooltipSelector("Display Type", [ "Hue", "Value" ]);
-		tt_barr = new tooltipSelector("Slider Type",  [ "Smooth", "Quantized" ]);
-		tt_rang = new tooltipSelector("Slider Range", [ "All", "Around" ]);
+		tt_view = new tooltipSelector( "Display Type", [ "Hue",    "Value"     ] );
+		tt_barr = new tooltipSelector( "Slider Type",  [ "Smooth", "Quantized" ] );
+		tt_rang = new tooltipSelector( "Slider Range", [ "All",    "Around"    ] );
 	#endregion
 	
 	#region surfaces

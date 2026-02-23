@@ -28,7 +28,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		inputs[2].setValue(_to); // Not necessary due to array reference
 		
 	} setColor = method(self, setColor);
-		
+	
 	sort_menu = [
 		new MenuItem("Sort Brightness", function() /*=>*/ { sortPalette(0) }),
 		new MenuItem("Sort Dark",		function() /*=>*/ { sortPalette(1) }),
