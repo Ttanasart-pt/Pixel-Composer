@@ -15,7 +15,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(3, nodeValue_Slider(  "Threshold",    .1 ));
 	
 	palette_selecting = noone;
-	palette_select    = [ -1, -1 ];
+	palette_select    = [-1,-1];
 	
 	static setColor = function(colr) {
 		palette_selecting = noone;

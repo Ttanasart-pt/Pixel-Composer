@@ -954,8 +954,12 @@ function Panel_Preference() : PanelContent() constructor {
     				color_selector_key = key;
     				
     				var clrSelect = dialogCall(o_dialog_color_selector)
-    									.setDefault(val)
-    									.setApply(function(color) /*=>*/ { CDEF[$ color_selector_key] = color; overrideColor(color_selector_key, color); refreshThemePalette(); });
+						.setDefault(val)
+						.setApply(function(color) /*=>*/ { 
+							CDEF[$ color_selector_key] = color; 
+							overrideColor(color_selector_key, color); 
+							refreshThemePalette(); 
+						});
     			}
     			
     			var _bs = ui(24);
