@@ -21,8 +21,8 @@ function Panel_Color() : PanelContent() constructor {
 	
 	colors = [];
 	
-	hex_tb       = new textBox(TEXTBOX_INPUT.text, function(_hx) { setColor(colorFromHex(_hx)); })
-	alpha_slider = slider(0, 1, 0.01, function(_a) { alp = _a; setHSV(); })
+	hex_tb       = textBox_Text(function(_hx) /*=>*/ { print(_hx); setColor(colorFromHex(_hx)); });
+	alpha_slider = slider(0, 1, 0.01, function(_a) /*=>*/ { alp = _a; setHSV(); }).setLabel(__txt("Alpha"));
 	show_alpha   = true;
 	show_palette = false;
 	show_hex     = true;
@@ -161,6 +161,8 @@ function Panel_Color() : PanelContent() constructor {
 			
 			alpha_slider.setFocusHover(pFOCUS, pHOVER);
 			alpha_slider.setFont(f_p1);
+			alpha_slider.rx = x;
+			alpha_slider.ry = y;
 			alpha_slider.draw(alp_x, alp_y, alp_w, alp_h, alp, [ mx, my ]);
 			
 			_y1 = alp_y - ui(8);

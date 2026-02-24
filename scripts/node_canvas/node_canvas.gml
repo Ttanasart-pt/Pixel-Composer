@@ -1649,7 +1649,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				output_surface[0] = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
 				
 				surface_set_shader(output_surface[0], sh_canvas_apply_canvas, true, BLEND.over);
-					shader_set_2( "dimension",  _dim );
+					shader_set_2( "dimension",  _dim                 );
 					
 					shader_set_i( "bgUse",      _bgr                 );
 					shader_set_i( "bgType",     _bgTyp               );
@@ -1669,7 +1669,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var _bgArray = is_array(_bgSrf)? array_safe_get_fast(_bgSrf, i, 0) : _bgSrf;
 					
 					surface_set_shader(output_surface[i], sh_canvas_apply_canvas, true, BLEND.over);
-						shader_set_2( "dimension",  _dim );
+						shader_set_2( "dimension",  _dim                 );
 						
 						shader_set_i( "bgUse",      _bgr                 );
 						shader_set_i( "bgType",     _bgTyp               );
@@ -1766,23 +1766,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static getPreviewValues = function(_drawBG = true) {
-		var _dim = attributes.dimension;
-		
-		preview_draw_final = surface_verify(preview_draw_final, _dim[0], _dim[1]);
-		surface_clear(preview_draw_final);
-		
 		if(nodeTool != noone && !nodeTool.applySelection)
-			return preview_draw_final;
+			return getOutputSurface();
 		
-		var val = getOutputSurface();
-		if(color_picking) return val;
+		if(color_picking) 
+			return getOutputSurface();
 		
-		var _bgSrf = getInputData( 8);
+		var _dim = attributes.dimension;
+		preview_draw_final = surface_verify(preview_draw_final, _dim[0], _dim[1]);
 		
 		surface_set_shader(preview_draw_final, sh_canvas_preview_canvas, true, BLEND.over);
 			shader_set_2("dimension",     _dim                         );
-			shader_set_s("background",    _bgSrf                       );
-			shader_set_s("outputSurf",    val                          );
+			shader_set_s("background",    getInputData(8)              );
+			shader_set_s("outputSurf",    getOutputSurface()           );
 			shader_set_s("canvas",        preview_draw_surface         );
 			
 			shader_set_i("bgDraw",        _drawBG                      );
