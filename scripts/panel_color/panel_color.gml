@@ -70,6 +70,7 @@ function Panel_Color() : PanelContent() constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		var _y1 = h - padding;
+		var sp  = ui(6);
 		
 		if(show_palette) {
 			var amo = min(array_length(colors) + 1, floor((w - padding * 2) / ui(24 + 4)));
@@ -121,16 +122,16 @@ function Panel_Color() : PanelContent() constructor {
 		}
 		
 		if(show_hex) {
-			var alp_h = ui(20);
-			var alp_w = w - padding * 2 - alp_h - padding;
+			var hex_h = ui(20);
+			var hex_w = w - padding * 2 - hex_h - sp;
 			
-			var alp_x = alp_h + padding * 2;
-			var alp_y = _y1 - alp_h;
+			var hex_x = hex_h + padding + sp;
+			var hex_y = _y1 - hex_h;
 			
-			draw_sprite_stretched_ext(THEME.box_r2, 0, padding, alp_y, alp_h, alp_h, CURRENT_COLOR, alp);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, padding, hex_y, hex_h, hex_h, CURRENT_COLOR, alp);
 			
 			aa = 0.3;
-			if(point_in_rectangle(mx, my, padding, alp_y, padding + alp_h, alp_y + alp_h)) {
+			if(point_in_rectangle(mx, my, padding, hex_y, padding + hex_h, hex_y + hex_h)) {
 				aa = 0.5;
 				if(mouse_press(mb_left, pFOCUS)) {
 					DRAGGING = {
@@ -141,15 +142,15 @@ function Panel_Color() : PanelContent() constructor {
 				}
 			}
 			
-			draw_sprite_stretched_add(THEME.box_r2, 1, padding, alp_y, alp_h, alp_h, c_white, aa);
+			draw_sprite_stretched_add(THEME.box_r2, 1, padding, hex_y, hex_h, hex_h, c_white, aa);
 			
 			hex_tb.setFocusHover(pFOCUS, pHOVER);
 			hex_tb.setFont(f_p2);
 			
 			hex_tb.align = fa_center;
-			hex_tb.draw(alp_x, alp_y, alp_w, alp_h, color_get_hex(CURRENT_COLOR, show_alpha), [ mx, my ]);
+			hex_tb.draw(hex_x, hex_y, hex_w, hex_h, color_get_hex(CURRENT_COLOR, show_alpha), [ mx, my ]);
 			
-			_y1 = alp_y - ui(8);
+			_y1 = hex_y - sp;
 		}
 		
 		if(show_alpha) {
@@ -165,7 +166,7 @@ function Panel_Color() : PanelContent() constructor {
 			alpha_slider.ry = y;
 			alpha_slider.draw(alp_x, alp_y, alp_w, alp_h, alp, [ mx, my ]);
 			
-			_y1 = alp_y - ui(8);
+			_y1 = alp_y - sp;
 		}
 		
 		var sel_w  = ui(16);
@@ -328,15 +329,15 @@ function Panel_Color() : PanelContent() constructor {
 		
 		if(mouse_press(mb_right, pFOCUS)) {
 			menuCall("color_window_menu", [
-				menuItem(__txt("Hue"),  		function() { mode = 0; } ),
-				menuItem(__txt("Value"),		function() { mode = 1; } ),
-				menuItem(__txt("Saturation"),	function() { mode = 2; } ),
+				menuItem(__txt("Hue"),  		  function() /*=>*/ { mode = 0; } ),
+				menuItem(__txt("Value"),		  function() /*=>*/ { mode = 1; } ),
+				menuItem(__txt("Saturation"),	  function() /*=>*/ { mode = 2; } ),
 				-1,
-				menuItem(__txt("Toggle Alpha"),   function() { show_alpha   = !show_alpha;   }, noone, noone, function() /*=>*/ {return show_alpha}   ),
-				menuItem(__txt("Toggle Palette"), function() { show_palette = !show_palette; }, noone, noone, function() /*=>*/ {return show_palette} ),
-				menuItem(__txt("Toggle Hex"),     function() { show_hex     = !show_hex;     }, noone, noone, function() /*=>*/ {return show_hex}     ),
+				menuItem(__txt("Toggle Alpha"),   function() /*=>*/ { show_alpha     = !show_alpha;     }, noone, noone, function() /*=>*/ {return show_alpha}   ),
+				menuItem(__txt("Toggle Palette"), function() /*=>*/ { show_palette   = !show_palette;   }, noone, noone, function() /*=>*/ {return show_palette} ),
+				menuItem(__txt("Toggle Hex"),     function() /*=>*/ { show_hex       = !show_hex;       }, noone, noone, function() /*=>*/ {return show_hex}     ),
 				-1,
-				menuItem(__txt("Discretize"),     function() { discretize_pal = !discretize_pal; }, noone, noone, function() /*=>*/ {return discretize_pal} ),
+				menuItem(__txt("Discretize"),     function() /*=>*/ { discretize_pal = !discretize_pal; }, noone, noone, function() /*=>*/ {return discretize_pal} ),
 			]);
 		}
 		

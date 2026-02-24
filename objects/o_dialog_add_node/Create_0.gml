@@ -1114,7 +1114,7 @@ event_inherited();
 				
 				// Fav
 				if(is(_node, NodeObject)) {
-					if(_node.deprecated) continue;
+					if(_node.deprecated) continue; // ???
 					
 					if(_match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
 						_match[0] += 10000;

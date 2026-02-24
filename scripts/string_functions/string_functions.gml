@@ -184,7 +184,7 @@ function string_partial_match_res(str, key) {
 		
 		var matc = -1;
 		var matW =  0;
-		var on = "";
+		var on = " ";
 		
 		repeat(lenn) {
 			var n = string_char_at(str, runn);

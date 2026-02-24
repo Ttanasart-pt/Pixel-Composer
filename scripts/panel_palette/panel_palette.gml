@@ -47,35 +47,34 @@ function Panel_Palette() : PanelContent() constructor {
 		var ww  = sp_palettes.surface_w - _x;
 		var _gs = grid_size;
 		var hh  = 0;
-		var nh  = ui(20);
+		var nh  = ui(18);
 		var pd  = ui(2);
+		
 		var _ww = ww - pd * 2;
 		var _bh = nh + _gs + pd;
 		var col = max(1, floor(_ww / _gs)), row, _exp;
 		var _height, pre_amo, _palRes;
-		
-		var lbh = ui(20);
 		
 		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
 			var _sub  = _dir.subDir[i];
 			var _open = _sub[$ "expanded"] ?? true;
 			if(_sub.name == "Mixer") continue;
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
-			if(_hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, nh);
+			if(_hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + nh)) {
+				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, nh, COLORS._main_icon, 1);
 				if(mouse_lpress(_foc)) {
 					_open = !_open;
 					_sub[$ "expanded"] = _open;
 				}
 			}
 			
-			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + lbh/2, .8, COLORS._main_icon);
+			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + nh/2, .8, COLORS._main_icon);
 			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_x + ui(24), _y + lbh/2, _sub.name);
+			draw_text_add(_x + ui(24), _y + nh/2, _sub.name);
 			
-			hh += lbh + ui(4);
-			_y += lbh + ui(4);
+			hh += nh + ui(4);
+			_y += nh + ui(4);
 			
 			if(!_open) continue;
 			var _sh  = drawPaletteDirectory(_sub, _x + ui(8), _y, _m);
@@ -108,10 +107,10 @@ function Panel_Palette() : PanelContent() constructor {
 				sp_palettes.hover_content = true;
 			}
 			
-			var cc = COLORS._main_text_sub;
+			var cc = CDEF.main_mdwhite;
 			draw_sprite_ui(THEME.arrow, _exp * 3, _x + ui(8), _y + nh / 2, .75, .75, 0, COLORS._main_text_sub);
 			draw_set_text(f_p4, fa_left, fa_center, cc);
-			draw_text_add(_x + ui(16), _y + nh / 2, _name);
+			draw_text_add(_x + ui(16), _y + nh / 2 - ui(1), _name);
 			
 			if(i == -1) { draw_set_color(cc); draw_circle_prec(_x + ww - ui(10), _y + ui(10), ui(4), false); }
 			
