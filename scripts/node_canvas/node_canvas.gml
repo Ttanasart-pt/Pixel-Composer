@@ -1767,53 +1767,56 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static getPreviewValues = function(_drawBG = true) {
 		var _dim = attributes.dimension;
-		preview_draw_final[0] = surface_verify(preview_draw_final[0], _dim[0], _dim[1]);
-		preview_draw_final[1] = surface_verify(preview_draw_final[1], _dim[0], _dim[1]);
 		
-		if(nodeTool != noone && !nodeTool.applySelection) {
-			for( var i = 0, n = array_length(preview_draw_final); i < n; i++ )
-				surface_clear(preview_draw_final[i]);
-			return preview_draw_final[0];
+		for( var i = 0; i < 2; i++ ) {
+			preview_draw_final[i] = surface_verify(preview_draw_final[i], _dim[0], _dim[1]);
+			surface_clear(preview_draw_final[i]);
 		}
+			
+		if(nodeTool != noone && !nodeTool.applySelection)
+			return preview_draw_final[0];
 		
 		var val = getOutputSurface();
-		var bg  = 0;
+		if(color_picking) return val;
 		
-		surface_set_shader(preview_draw_final[!bg], noone, true, BLEND.over);
-			if(_drawBG) draw_surface_safe(val);
-		surface_reset_shader();
+		var bg  = preview_draw_final[0];
+		var fg  = preview_draw_final[1];
 		
-		if(nodeTool == noone && selection.is_selected) {
-			var _fore = selection.selection_surface;
-			var _pos  = selection.selection_position;
-			
-			surface_set_shader(preview_draw_final[bg], sh_blend_normal_ext);
-				shader_set_s("fore",          _fore);
-				shader_set_2("dimension",     surface_get_dimension(preview_draw_final[bg]));
-				shader_set_2("foreDimension", surface_get_dimension(_fore));
-				shader_set_2("position",      _pos);
+		if(_drawBG) {
+			if(selection.is_selected) {
+				var _fore = selection.selection_surface;
+				var _pos  = selection.selection_position;
 				
-				draw_surface_safe(preview_draw_final[!bg]);
-			surface_reset_shader();
-			bg = !bg;
+				surface_set_shader(bg, sh_blend_normal_ext);
+					shader_set_s("fore",          _fore                        );
+					shader_set_2("dimension",     surface_get_dimension(bg)    );
+					shader_set_2("foreDimension", surface_get_dimension(_fore) );
+					shader_set_2("position",      _pos                         );
+					
+					draw_surface_safe(val);
+				surface_reset_shader();
+				
+			} else {
+				surface_set_shader(bg, noone, true, BLEND.over);
+					draw_surface_safe(val);
+				surface_reset_shader();
+				
+			}
 		}
-		
-		if(color_picking) return preview_draw_final[!bg];
 		
 		var _bgSrf = getInputData( 8);
 		
-		surface_set_shader(preview_draw_final[bg], sh_canvas_preview_canvas, true, BLEND.over);
-			shader_set_s("background",  _bgSrf);
-			shader_set_s("outputSurf",  preview_draw_final[!bg]);
-			shader_set_s("canvas",      preview_draw_surface);
+		surface_set_shader(fg, sh_canvas_preview_canvas, true, BLEND.over);
+			shader_set_s("background",  _bgSrf                );
+			shader_set_s("outputSurf",  bg                    );
+			shader_set_s("canvas",      preview_draw_surface  );
 			
-			shader_set_i("eraser", isUsingTool("Eraser"));
+			shader_set_i("eraser",      isUsingTool("Eraser") );
 			
 			draw_empty();
 		surface_reset_shader();
-		bg = !bg;
 		
-		return preview_draw_final[!bg];
+		return fg;
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return getPreviewValues()};
