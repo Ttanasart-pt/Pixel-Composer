@@ -1947,6 +1947,7 @@
     {"name":"sh_brush_outline","order":7,"path":"shaders/sh_brush_outline/sh_brush_outline.yy",},
     {"name":"sh_bw","order":1,"path":"shaders/sh_bw/sh_bw.yy",},
     {"name":"sh_camera","order":3,"path":"shaders/sh_camera/sh_camera.yy",},
+    {"name":"sh_canvas_apply_canvas","order":13,"path":"shaders/sh_canvas_apply_canvas/sh_canvas_apply_canvas.yy",},
     {"name":"sh_canvas_apply_draw","order":3,"path":"shaders/sh_canvas_apply_draw/sh_canvas_apply_draw.yy",},
     {"name":"sh_canvas_corner","order":5,"path":"shaders/sh_canvas_corner/sh_canvas_corner.yy",},
     {"name":"sh_canvas_extrude","order":1,"path":"shaders/sh_canvas_extrude/sh_canvas_extrude.yy",},

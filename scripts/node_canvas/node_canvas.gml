@@ -1084,6 +1084,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_empty();
 		surface_reset_shader();
 		
+		// printSurface("_can", _can)
+		// printSurface("_tmp", _tmp)
+		// printSurface("_drawnSurface", _drawnSurface)
+		
 		surface_free(_can);
 		surface_free(_tmp);
 		surface_clear(drawing_surface);
@@ -1655,28 +1659,32 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#region surface
 			if(isNotUsingTool()) apply_surfaces();
 			var _frames = attributes.frames;
+			if(_frames == 0) return;
+			
+			var _still = _frames == 1;
+			var  sub   = isUsingTool("Eraser");
 			
 			if(!is_array(output_surface)) output_surface = array_create(_frames);
 			else if(array_length(output_surface) != _frames)
 				array_resize(output_surface, _frames);
 			
-			if(_frames == 1) {
+			if(_still) {
 				var _canvas_surface = getCanvasSurface(0);
+				if(is_array(_bgSrf) && !array_empty(_bgSrf)) _bgSrf = _bgSrf[0];
+				
 				output_surface[0] = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
 				
-				surface_set_shader(output_surface[0], noone,, BLEND.alpha);
-					if(_bgr) {
-						if(_bgTyp == 0) {
-							if(is_array(_bgSrf) && !array_empty(_bgSrf)) _bgSrf = _bgSrf[0];
-							if(is_surface(_bgSrf)) 
-								draw_surface_stretched_safe(_bgSrf, 0, 0, _dim[0], _dim[1], c_white, _bgAlp);
-							
-						} else if(_bgTyp == 1)
-							draw_clear_alpha(_bgCol, _bgAlp);
-					}
+				surface_set_shader(output_surface[0], sh_canvas_apply_canvas, true, BLEND.over);
+					shader_set_2( "dimension",  _dim );
 					
-					if(isUsingTool()) apply_draw_surface_light(_canvas_surface);
-					else draw_surface_safe(_canvas_surface);
+					shader_set_i( "bgUse",      _bgr                 );
+					shader_set_i( "bgType",     _bgTyp               );
+					shader_set_c( "bgColor",    cola(_bgCol, _bgAlp) );
+					shader_set_s( "bgSurface",  _bgSrf               );
+					
+					shader_set_s( "canvas",     _canvas_surface      );
+					
+					draw_empty();
 				surface_reset_shader();
 				
 			} else {
@@ -1684,19 +1692,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var _canvas_surface = getCanvasSurface(i);
 					output_surface[i]   = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
 					
-					surface_set_shader(output_surface[i], noone,, BLEND.alpha);
-						if(_bgr) {
-							if(_bgTyp == 0) {
-								var _bgArray = is_array(_bgSrf)? array_safe_get_fast(_bgSrf, i, 0) : _bgSrf;
-								if(is_surface(_bgArray))
-									draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bgAlp);
-								
-							} else if(_bgTyp == 1)
-								draw_clear_alpha(_bgCol, _bgAlp);
-						}
+					var _bgArray = is_array(_bgSrf)? array_safe_get_fast(_bgSrf, i, 0) : _bgSrf;
+					
+					surface_set_shader(output_surface[i], sh_canvas_apply_canvas, true, BLEND.over);
+						shader_set_2( "dimension",  _dim );
+					
+						shader_set_i( "bgUse",      _bgr                 );
+						shader_set_i( "bgType",     _bgTyp               );
+						shader_set_c( "bgColor",    cola(_bgCol, _bgAlp) );
+						shader_set_s( "bgSurface",  _bgSrf               );
 						
-						if(isUsingTool() && i == preview_index) apply_draw_surface_light(_canvas_surface);
-						else draw_surface_safe(_canvas_surface);
+						shader_set_s( "canvas",     _canvas_surface      );
+						
+						draw_empty();
 					surface_reset_shader();
 				}
 				
@@ -1710,8 +1718,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				case 0 : 
 					outputs[0].setName("Surface Out");
 					
-					if(_frames == 1) outputs[0].setValue(output_surface[0]);
-					else outputs[0].setValue(output_surface); 
+					if(_still) outputs[0].setValue(output_surface[0]);
+					else       outputs[0].setValue(output_surface); 
 					
 					if(array_length(outputs) != 1) {
 						array_resize(outputs, 1);
