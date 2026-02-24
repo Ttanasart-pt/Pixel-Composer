@@ -45,7 +45,7 @@ if(PREFERENCES.video_mode) {
 	
 	if(!PEN_RIGHT_CLICK &&  bt2) PEN_RIGHT_PRESS   = true;
 	if( PEN_RIGHT_CLICK && !bt2) PEN_RIGHT_RELEASE = true;
-	PEN_RIGHT_CLICK = b2;
+	PEN_RIGHT_CLICK = bt2;
 	
 }
 

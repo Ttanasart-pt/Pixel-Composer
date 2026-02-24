@@ -818,7 +818,7 @@ event_inherited();
         });
 	}
 	
-	sp_news = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) /*=>*/ { 
+	sp_news = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		if(!art_req) getDiscourseArtworks();
 		

@@ -2154,7 +2154,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    static drawPreviewOverlay = function() {
+    static drawPreviewInfo = function() {
         right_menu_y = toolbar_height;
         if(PROJECT.previewSetting.show_view_control == 2) {
             if(d3_active) right_menu_y += ui(72);
@@ -2357,8 +2357,6 @@ function Panel_Preview() : PanelContent() constructor {
         
         mouse_pos_string = "";
         right_menu_x = w - ui(8);
-        
-        drawDataArray();
     }
     
     static drawDataArray = function() {
@@ -3459,8 +3457,8 @@ function Panel_Preview() : PanelContent() constructor {
         var inspect_node = PANEL_INSPECTOR.getInspecting();
         var toolNode = noone;
         
-        drawPreviewOverlay();
         drawViewController();
+        drawDataArray();
         
         tool_side_draw_l = false;
         tool_side_draw_r = false;
@@ -3522,6 +3520,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(key_press(vk_escape)) hk_editing = noone;
 		}
 		
+        drawPreviewInfo();
         drawMinimap();
         drawActionTooltip();
         
