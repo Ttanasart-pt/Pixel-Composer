@@ -2339,6 +2339,7 @@
     {"id":{"name":"sh_canvas_mask","path":"shaders/sh_canvas_mask/sh_canvas_mask.yy",},},
     {"id":{"name":"sh_canvas_outline","path":"shaders/sh_canvas_outline/sh_canvas_outline.yy",},},
     {"id":{"name":"sh_canvas_pattern","path":"shaders/sh_canvas_pattern/sh_canvas_pattern.yy",},},
+    {"id":{"name":"sh_canvas_preview_canvas","path":"shaders/sh_canvas_preview_canvas/sh_canvas_preview_canvas.yy",},},
     {"id":{"name":"sh_canvas_skew","path":"shaders/sh_canvas_skew/sh_canvas_skew.yy",},},
     {"id":{"name":"sh_cell_noise_crystal","path":"shaders/sh_cell_noise_crystal/sh_cell_noise_crystal.yy",},},
     {"id":{"name":"sh_cell_noise_edge","path":"shaders/sh_cell_noise_edge/sh_cell_noise_edge.yy",},},

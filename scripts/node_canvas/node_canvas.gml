@@ -1005,7 +1005,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static apply_draw_surface = function(_applyAlpha = true) {
-		
 		var _can = getCanvasSurface();
 		var _drw = drawing_surface;
 		var _dim = attributes.dimension;
@@ -1084,10 +1083,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_empty();
 		surface_reset_shader();
 		
-		// printSurface("_can", _can)
-		// printSurface("_tmp", _tmp)
-		// printSurface("_drawnSurface", _drawnSurface)
-		
 		surface_free(_can);
 		surface_free(_tmp);
 		surface_clear(drawing_surface);
@@ -1103,25 +1098,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		project.setModified();
 		triggerRender();
 		
-	} apply_draw_surface = method(self, apply_draw_surface);
-	
-	static apply_draw_surface_light = function(_bg) {
-		draw_surface_safe(_bg);
-		var sub = isUsingTool("Eraser");
-		
-		if(selection.is_selected) {
-			if(sub) BLEND_SUBTRACT
-			else    BLEND_NORMAL
-			draw_surface_safe(drawing_surface);
-			BLEND_NORMAL
-			
-		} else {
-			if(sub) BLEND_SUBTRACT
-			else    BLEND_NORMAL
-			draw_surface_safe(drawing_surface);
-			BLEND_NORMAL
-		}
-	}
+	} mself_mf0 apply_draw_surface mself_mf1 apply_draw_surface mself_mf2;
 	
 	static storeAction = function(_title = "Modify canvas") {
 		if(selection.is_selected) {
@@ -1354,10 +1331,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_set_color_alpha(isUsingTool("Eraser")? c_white : CURRENT_COLOR, 1);
 				
 				_tool.step(hover, active, _tx, _ty, _s, _mx, _my);
-				if(_tool.updated) {
-					_tool.updated = false;
-					triggerRender();
-				}
+				// if(_tool.updated) { _tool.updated = false; triggerRender(); }
 				
 				if(_tool.brush_resizable) { 
 					if(_panel.pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
@@ -1696,7 +1670,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					
 					surface_set_shader(output_surface[i], sh_canvas_apply_canvas, true, BLEND.over);
 						shader_set_2( "dimension",  _dim );
-					
+						
 						shader_set_i( "bgUse",      _bgr                 );
 						shader_set_i( "bgType",     _bgTyp               );
 						shader_set_c( "bgColor",    cola(_bgCol, _bgAlp) );
@@ -1814,7 +1788,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _pos  = selection.selection_position;
 			
 			surface_set_shader(preview_draw_final[bg], sh_blend_normal_ext);
-				shader_set_surface("fore",    _fore);
+				shader_set_s("fore",          _fore);
 				shader_set_2("dimension",     surface_get_dimension(preview_draw_final[bg]));
 				shader_set_2("foreDimension", surface_get_dimension(_fore));
 				shader_set_2("position",      _pos);
@@ -1826,13 +1800,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(color_picking) return preview_draw_final[!bg];
 		
-		surface_set_shader(preview_draw_final[bg], isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
-			shader_set_surface("fore",    preview_draw_surface);
-			shader_set_i("useMask",       false);
-			shader_set_i("preserveAlpha", false);
-			shader_set_f("opacity",       1);
+		var _bgSrf = getInputData( 8);
+		
+		surface_set_shader(preview_draw_final[bg], sh_canvas_preview_canvas, true, BLEND.over);
+			shader_set_s("background",  _bgSrf);
+			shader_set_s("outputSurf",  preview_draw_final[!bg]);
+			shader_set_s("canvas",      preview_draw_surface);
 			
-			draw_surface_safe(preview_draw_final[!bg]);
+			shader_set_i("eraser", isUsingTool("Eraser"));
+			
+			draw_empty();
 		surface_reset_shader();
 		bg = !bg;
 		
