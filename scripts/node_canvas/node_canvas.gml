@@ -283,7 +283,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		preview_draw_surface  = undefined;
 		preview_draw_tile     = undefined;
 		preview_draw_mask     = undefined;
-		preview_draw_final    = [ 0, 0 ];
+		preview_draw_final    = 0;
 		
 		draw_stack = ds_list_create();
 		
@@ -1768,55 +1768,36 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static getPreviewValues = function(_drawBG = true) {
 		var _dim = attributes.dimension;
 		
-		for( var i = 0; i < 2; i++ ) {
-			preview_draw_final[i] = surface_verify(preview_draw_final[i], _dim[0], _dim[1]);
-			surface_clear(preview_draw_final[i]);
-		}
-			
+		preview_draw_final = surface_verify(preview_draw_final, _dim[0], _dim[1]);
+		surface_clear(preview_draw_final);
+		
 		if(nodeTool != noone && !nodeTool.applySelection)
-			return preview_draw_final[0];
+			return preview_draw_final;
 		
 		var val = getOutputSurface();
 		if(color_picking) return val;
 		
-		var bg  = preview_draw_final[0];
-		var fg  = preview_draw_final[1];
-		
-		if(_drawBG) {
-			if(selection.is_selected) {
-				var _fore = selection.selection_surface;
-				var _pos  = selection.selection_position;
-				
-				surface_set_shader(bg, sh_blend_normal_ext);
-					shader_set_s("fore",          _fore                        );
-					shader_set_2("dimension",     surface_get_dimension(bg)    );
-					shader_set_2("foreDimension", surface_get_dimension(_fore) );
-					shader_set_2("position",      _pos                         );
-					
-					draw_surface_safe(val);
-				surface_reset_shader();
-				
-			} else {
-				surface_set_shader(bg, noone, true, BLEND.over);
-					draw_surface_safe(val);
-				surface_reset_shader();
-				
-			}
-		}
-		
 		var _bgSrf = getInputData( 8);
 		
-		surface_set_shader(fg, sh_canvas_preview_canvas, true, BLEND.over);
-			shader_set_s("background",  _bgSrf                );
-			shader_set_s("outputSurf",  bg                    );
-			shader_set_s("canvas",      preview_draw_surface  );
+		surface_set_shader(preview_draw_final, sh_canvas_preview_canvas, true, BLEND.over);
+			shader_set_2("dimension",     _dim                         );
+			shader_set_s("background",    _bgSrf                       );
+			shader_set_s("outputSurf",    val                          );
+			shader_set_s("canvas",        preview_draw_surface         );
 			
-			shader_set_i("eraser",      isUsingTool("Eraser") );
+			shader_set_i("bgDraw",        _drawBG                      );
+			shader_set_i("eraser",        isUsingTool("Eraser")        );
+			
+			shader_set_i("isSelected",    selection.is_selected        );
+			shader_set_s("selSurface",    selection.selection_surface  );
+			shader_set_s("selMask",       selection.selection_mask     );
+			shader_set_2("selSize",       selection.selection_size     );
+			shader_set_2("selPosition",   selection.selection_position );
 			
 			draw_empty();
 		surface_reset_shader();
 		
-		return fg;
+		return preview_draw_final;
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return getPreviewValues()};
