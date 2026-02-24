@@ -21,7 +21,7 @@ function Panel_Color() : PanelContent() constructor {
 	
 	colors = [];
 	
-	hex_tb       = textBox_Text(function(_hx) /*=>*/ { print(_hx); setColor(colorFromHex(_hx)); });
+	hex_tb       = textBox_Text(function(_hx) /*=>*/ { setColor(colorFromHex(_hx)); });
 	alpha_slider = slider(0, 1, 0.01, function(_a) /*=>*/ { alp = _a; setHSV(); }).setLabel(__txt("Alpha"));
 	show_alpha   = true;
 	show_palette = false;

@@ -110,8 +110,8 @@ function Panel_Palette() : PanelContent() constructor {
 			
 			var cc = COLORS._main_text_sub;
 			draw_sprite_ui(THEME.arrow, _exp * 3, _x + ui(8), _y + nh / 2, .75, .75, 0, COLORS._main_text_sub);
-			draw_set_text(f_p3, fa_left, fa_top, cc);
-			draw_text_add(_x + ui(16), _y + ui(2), _name);
+			draw_set_text(f_p4, fa_left, fa_center, cc);
+			draw_text_add(_x + ui(16), _y + nh / 2, _name);
 			
 			if(i == -1) { draw_set_color(cc); draw_circle_prec(_x + ww - ui(10), _y + ui(10), ui(4), false); }
 			
@@ -127,9 +127,11 @@ function Panel_Palette() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.box_r2, 1, _box[0], _box[1], _box[2], _box[3], c_white);
 			}
 			
-			if(mouse_click(mb_left, _foc)) {
-				//
-			}
+			if(_hoverColor != noone && mouse_lclick(_foc))
+				CURRENT_COLOR = _hoverColor;
+				
+			else if(isHover && mouse_lpress(_foc))
+				preset_expands[$ _path] = !_exp;
 			
 			_y += _height + ui(4);
 			hh += _height + ui(4);
