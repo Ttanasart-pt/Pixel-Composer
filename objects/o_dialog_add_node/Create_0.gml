@@ -1045,6 +1045,7 @@ event_inherited();
 #region search
 	search_string = "";
 	search_list   = [];
+	march_array   = [0,0];
 	KEYBOARD_RESET
 	
 	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchNodes(); })
@@ -1094,7 +1095,6 @@ event_inherited();
 				
 				var _name  = string_lower(_node.getName());
 				var _match = string_partial_match_res(_name, search_lower);
-				var fmatch = _match;
 				
 				var _path = {
 					node       : _node, 

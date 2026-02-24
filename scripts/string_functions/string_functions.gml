@@ -166,8 +166,12 @@ function string_partial_match(str, key) {
 	return -9999;
 }
 
-function string_partial_match_res(str, key) {
-	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ]; // ++ Perfect match
+function string_partial_match_res(str, key, _arr = [0,0]) {
+	if(str == key) {
+		_arr[0] = 9999;
+		_arr[1] = array_create(string_length(str) + 1, 1);
+		return _arr; // ++ Perfect match
+	}
 	
 	var lenn = string_length(str);
 	var lenm = string_length(key);
@@ -212,7 +216,9 @@ function string_partial_match_res(str, key) {
 		runm++
 	}
 	
-	return [ _matchw, _matRng ];
+	_arr[0] = _matchw;
+	_arr[1] = _matRng;
+	return _arr;
 }
 
 function draw_text_match(_x, _y, _text, _search, _scale = 1) {

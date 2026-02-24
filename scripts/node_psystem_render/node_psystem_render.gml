@@ -197,9 +197,12 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				switch(_surf_use) {
 					case 0 : 
+						_draw_x = round(_draw_x);
+						_draw_y = round(_draw_y);
+						
 						draw_set_color_alpha(_cc, _draw_a);
-						draw_ellipse(round(_draw_x - _draw_sx), round(_draw_y - _draw_sy), 
-						             round(_draw_x + _draw_sx), round(_draw_y + _draw_sy), false);
+						draw_ellipse(_draw_x - _draw_sx, _draw_y - _draw_sy, 
+						             _draw_x + _draw_sx, _draw_y + _draw_sy, false);
 						break;
 						
 					case 1 : 

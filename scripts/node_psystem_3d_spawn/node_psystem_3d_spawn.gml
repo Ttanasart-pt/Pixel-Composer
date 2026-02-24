@@ -41,11 +41,16 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	newInput(14, nodeValue_Vector(      "Data"                  )).setArrayDepth(1);
 	
 	////- =Transform
-	newInput(15, nodeValue_Range(      "Inherit Velocity", [0,0], true   ));
-	newInput(16, nodeValue_Vec3_Range( "Velocity",         [0,0,0,0,0,0] ));
-	newInput(24, nodeValue_Range(       "Follow Spawn Shape",   [0,0], true   ));
-	newInput(17, nodeValue_Vec3_Range( "Rotation",         [0,0,0,0,0,0] ));
-	newInput(18, nodeValue_Vec3_Range( "Scale",            [1,1,1,1,1,1] ));
+	newInput(15, nodeValue_Range(      "Inherit Velocity",    [0,0], true   ));
+	newInput(16, nodeValue_Vec3_Range( "Velocity",            [0,0,0,0,0,0] ));
+	newInput(24, nodeValue_Range(       "Follow Spawn Shape", [0,0], true   ));
+	
+	////- =Rotation
+	newInput(17, nodeValue_Vec3_Range( "Rotation", [0,0,0,0,0,0] ));
+	
+	////- =Scale
+	newInput(18, nodeValue_Vec3_Range( "Scale", [1,1,1,1,1,1] ));
+	newInput(25, nodeValue_Range(      "Size",  [1,1],   true ));
 	
 	////- =Render
 	newInput(19, nodeValue_Gradient( "Base Color",     gra_white  ));
@@ -54,17 +59,19 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	
 	////- =Events
 	newInput(22, nodeValue_Range(   "Step Period", [1,1], true )).setCurvable(23, CURVE_DEF_11, "Over Lifespan");
-	// input 25
+	// input 26
 	
 	newOutput(0, nodeValue_Output("Particles",  VALUE_TYPE.particle, noone ));
 	newOutput(1, nodeValue_Output("On Spawn",   VALUE_TYPE.trigger,  false )).setVisible(false);
 	newOutput(2, nodeValue_Output("On Step",    VALUE_TYPE.trigger,  false )).setVisible(false);
 	newOutput(3, nodeValue_Output("On Destroy", VALUE_TYPE.trigger,  false )).setVisible(false);
 	
-	input_display_list = [ 6, 
-		[ "Spawn",     false ], 0, 1, 2, 3, 4, 5, 
-		[ "Source",    false ], 7, 8, 9, 10, 11, 12, 13, 14, 
-		[ "Transform", false ], 15, 16, 24, 17, 18, 
+	input_display_list = [  6, 
+		[ "Spawn",     false ],  0,  1,  2,  3,  4,  5, 
+		[ "Source",    false ],  7,  8,  9, 10, 11, 12, 13, 14, 
+		[ "Transform", false ], 15, 16, 24, 
+		[ "Rotation",  false ], 17, 
+		[ "Scale",     false ], 18, 25, 
 		[ "Render",    false ], 19, 20, 21, 
 		[ "Events",    false ], 22, 23, 
 	];
@@ -109,32 +116,37 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	static spawn = function(_frame = CURRENT_FRAME, _ox = 0, _oy = 0, _oz = 0, _ovx = undefined, _ovy = undefined, _ovz = undefined) {
 		if(!is(partPool, pSystem_Particles)) return;
 		
-		var _seed    = getInputData( 6);
-		
-		var _sp_amou = getInputData( 4);
-		var _sp_life = getInputData( 5);
-		
-		var _sh_type = getInputData( 7);
-		var _sh_shap = getInputData( 8);
-		var _sh_orig = getInputData( 9);
-		var _sh_span = getInputData(10);
-		var _sh_rota = getInputData(11);
-		
-		var _sh_path = getInputData(12);
-		var _sh_mesh = getInputData(13);
-		var _sh_data = getInputData(14);
-		
-		var _ih_velo = getInputData(15), _inherit_velo = _ovx != undefined && _ovy != undefined && _ovz != undefined;
-		var _in_velo = getInputData(16);
-		var _sh_velo = getInputData(24);
-		var _in_rota = getInputData(17);
-		var _in_size = getInputData(18);
-		
-		var _in_grad = getInputData(19);
-		var _in_colr = getInputData(20), _in_colr_len  = array_length(_in_colr), _in_colr_typ = inputs[20].attributes.array_select;
-		var _in_alph = getInputData(21);
-		
-		var _partBuff = partPool.buffer;
+		#region data
+			var _seed    = getInputData( 6);
+			
+			var _sp_amou = getInputData( 4);
+			var _sp_life = getInputData( 5);
+			
+			var _sh_type = getInputData( 7);
+			var _sh_shap = getInputData( 8);
+			var _sh_orig = getInputData( 9);
+			var _sh_span = getInputData(10);
+			var _sh_rota = getInputData(11);
+			
+			var _sh_path = getInputData(12);
+			var _sh_mesh = getInputData(13);
+			var _sh_data = getInputData(14);
+			
+			var _ih_velo = getInputData(15), _inherit_velo = _ovx != undefined && _ovy != undefined && _ovz != undefined;
+			var _in_velo = getInputData(16);
+			var _sh_velo = getInputData(24);
+			
+			var _in_rota = getInputData(17);
+			
+			var _in_scal = getInputData(18);
+			var _in_size = getInputData(25);
+			
+			var _in_grad = getInputData(19);
+			var _in_colr = getInputData(20), _in_colr_len  = array_length(_in_colr), _in_colr_typ = inputs[20].attributes.array_select;
+			var _in_alph = getInputData(21);
+			
+			var _partBuff = partPool.buffer;
+		#endregion
 		
 		random_set_seed(_seed + _frame);
 		var _spawn_amount = irandom_range(_sp_amou[0], _sp_amou[1]);
@@ -149,9 +161,14 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			random_set_seed(_seed + spawn_index * 128);
 			
 			var _px = 0, _py = 0, _pz = 0;
-			var _sx = random_range(_in_size[0], _in_size[1]);
-			var _sy = random_range(_in_size[2], _in_size[3]);
-			var _sz = random_range(_in_size[4], _in_size[5]);
+			var _sx = random_range(_in_scal[0], _in_scal[1]);
+			var _sy = random_range(_in_scal[2], _in_scal[3]);
+			var _sz = random_range(_in_scal[4], _in_scal[5]);
+			var _ss = random_range(_in_size[0], _in_size[1]);
+			
+			_sx *= _ss;
+			_sy *= _ss;
+			_sz *= _ss;
 			
 			var _rx = random_range(_in_rota[0], _in_rota[1]);
 			var _ry = random_range(_in_rota[2], _in_rota[3]);
