@@ -55,85 +55,118 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	hold_visibility = true;
 	hold_loop       = true;
 	
-	layer_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
+	static drawLayer = function(_layer, _x, _y, _m, _hover, _focus, _depth = 0) {
 		var _vis = attributes.layer_visible;
 		var _lop = attributes.layer_loop;
-		var _amo = array_length(layers);
-		var hh   = ui(24);
-		var _h   = hh * _amo + ui(16);
 		
-		var bs = ui(16);
+		var  hh = ui(24);
+		var  bs = ui(16);
+		var _bx = _x + ui(24);
+		var _tx = _bx + ui(16 * 2 + 4);
+		var _index = _layer.index;
+		
+		if(_layer.type == 0) {
+			var vis = array_safe_get_fast(_vis, _index, true);
+			if(point_in_circle(_m[0], _m[1], _bx, _y + hh / 2, ui(8))) {
+				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _y + hh / 2, 1, c_white);
+				
+				if(mouse_lpress(_focus))
+					hold_visibility = !_vis[_index];
+					
+				if(mouse_click(mb_left, _focus) && _vis[_index] != hold_visibility) {
+					_vis[@ _index] = hold_visibility;
+					triggerRender();
+				}
+			} else 
+				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _y + hh / 2, 1, COLORS._main_icon, .5 + .5 * vis);
+			_bx += bs + ui(4);
+			
+			var lop = array_safe_get_fast(_lop, _index, true);
+			if(point_in_circle(_m[0], _m[1], _bx, _y + hh / 2, ui(8))) {
+				draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _y + hh / 2, 1, c_white);
+				
+				if(mouse_lpress(_focus))
+					hold_loop = !_lop[_index];
+					
+				if(mouse_click(mb_left, _focus) && _lop[_index] != hold_loop) {
+					_lop[@ _index] = hold_loop;
+					triggerRender();
+				}
+			} else 
+				draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _y + hh / 2, 1, COLORS._main_icon, .5 + .5 * lop);
+			_bx += bs + ui(4);
+			
+		} else if(_layer.type == 1) {
+			_bx += bs + ui(4);
+			
+			if(point_in_circle(_m[0], _m[1], _bx, _y + hh / 2, ui(8))) {
+				draw_sprite_ui_uniform(THEME.folder_16, _layer.expand, _bx, _y + hh / 2, 1, c_white, 1);
+				
+				if(mouse_lpress(_focus))
+					_layer.expand = !_layer.expand;
+					
+			} else 
+				draw_sprite_ui_uniform(THEME.folder_16, _layer.expand, _bx, _y + hh / 2, 1, COLORS._main_icon, 1);
+			_bx += bs + ui(4);
+			
+		} else if(_layer.type == 2) {
+			var vis = array_safe_get_fast(_vis, _index, true);
+			if(point_in_circle(_m[0], _m[1], _bx, _y + hh / 2, ui(8))) {
+				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _y + hh / 2, 1, c_white);
+				
+				if(mouse_lpress(_focus))
+					hold_visibility = !_vis[_index];
+					
+				if(mouse_click(mb_left, _focus) && _vis[_index] != hold_visibility) {
+					_vis[@ _index] = hold_visibility;
+					triggerRender();
+				}
+			} else 
+				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _y + hh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
+			_bx += bs + ui(4);
+			
+			draw_sprite_ui_uniform(THEME.tileset, 0, _bx, _y + hh / 2, .75, COLORS._main_icon, .5);
+			_bx += bs + ui(4);
+			
+		}
+		
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(_tx + _depth * ui(16), _y + hh / 2, _layer.name);
+		
+		var ch  = hh;
+		    _y += hh;
+		
+		if(_layer.expand)
+		for( var i = array_length(_layer.contents) - 1; i >= 0; i-- ) {
+			var ly = _layer.contents[i];
+			var lh = drawLayer(ly, _x, _y, _m, _hover, _focus, _depth + 1);
+			
+			_y += lh;
+			ch += lh;
+		}
+		
+		return ch;
+	}
+	
+	layer_renderer_height = undefined;
+	layer_renderer        = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
+		var _amo = array_length(layers);
+		
+		var _h  = layer_renderer_height ?? 0;
+		var _yy = _y + ui(8);
+		var _hh = ui(16);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
-		for( var i = 0, n = array_length(layers); i < n; i++ ) {
-			var _yy = _y + ui(8) + i * hh;
-			var _bx = _x + ui(24);
-			var _tx = _bx + ui(16 * 2 + 4);
+		
+		for( var i = array_length(layerGraph.contents) - 1; i >= 0; i-- ) {
+			var _layer = layerGraph.contents[i];
+			var lh = drawLayer(_layer, _x, _yy, _m, _hover, _focus);
 			
-			var _index = n - i - 1;
-			var _layer = layers[_index];
-			
-			if(_layer.type == 0) {
-				var vis = array_safe_get_fast(_vis, _index, true);
-				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(8))) {
-					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
-					
-					if(mouse_press(mb_left, _focus))
-						hold_visibility = !_vis[_index];
-						
-					if(mouse_click(mb_left, _focus) && _vis[_index] != hold_visibility) {
-						_vis[@ _index] = hold_visibility;
-						triggerRender();
-					}
-				} else 
-					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, COLORS._main_icon, .5 + .5 * vis);
-				_bx += bs + ui(4);
-				
-				var lop = array_safe_get_fast(_lop, _index, true);
-				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(8))) {
-					draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _yy + hh / 2, 1, c_white);
-					
-					if(mouse_press(mb_left, _focus))
-						hold_loop = !_lop[_index];
-						
-					if(mouse_click(mb_left, _focus) && _lop[_index] != hold_loop) {
-						_lop[@ _index] = hold_loop;
-						triggerRender();
-					}
-				} else 
-					draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _yy + hh / 2, 1, COLORS._main_icon, .5 + .5 * lop);
-				_bx += bs + ui(4);
-				
-			} else if(_layer.type == 1) {
-				_bx += bs + ui(4);
-				
-				draw_sprite_ui_uniform(THEME.folder_16, 0, _bx, _yy + hh / 2, 1, COLORS._main_icon, .5);
-				_bx += bs + ui(4);
-				
-			} else if(_layer.type == 2) {
-				var vis = array_safe_get_fast(_vis, _index, true);
-				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(8))) {
-					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
-					
-					if(mouse_press(mb_left, _focus))
-						hold_visibility = !_vis[_index];
-						
-					if(mouse_click(mb_left, _focus) && _vis[_index] != hold_visibility) {
-						_vis[@ _index] = hold_visibility;
-						triggerRender();
-					}
-				} else 
-					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
-				_bx += bs + ui(4);
-				
-				draw_sprite_ui_uniform(THEME.tileset, 0, _bx, _yy + hh / 2, .75, COLORS._main_icon, .5);
-				_bx += bs + ui(4);
-				
-			}
-			
-			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_tx, _yy + hh / 2, _layer.name);
+			_yy += lh;
+			_hh += lh;
 		}
+		
+		layer_renderer_height = _hh;
 		
 		return _h;
 	}); 
@@ -187,7 +220,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x1, _yy, _x + _w - ui(8), _yy + hh)) {
 				draw_sprite_stretched_add(THEME.ui_panel, 0, _x1, _tgy, _tw, _tgh, c_white, 0.1);
 				
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					inputs[2].setValue(current_tag == _tagName? "" : _tagName);
 			}
 			
@@ -294,6 +327,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	_tag_delay   = 0;
 	
 	layers       = [];
+	layerGraph   = new ase_layer("global", {});
 	layerMap     = {};
 	
 	tilesets     = [];
@@ -367,6 +401,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tags       = [];
 		
 		layers     = [];
+		layerGraph = new ase_layer("global", {});
 		layerMap   = {};
 		
 		tilesets   = [];
@@ -413,10 +448,16 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					case 0x2004: //layer
 						var name = chunk[$ "Name"];
 						var type = chunk[$ "Layer type"];
+						var chid = chunk[$ "Child level"];
 						
 						var _layer = new ase_layer(name, chunk, type, self);
+						_layer.index = array_length(layers);
 						array_push(layers, _layer);
 						layerMap[$ name] = _layer;
+						
+						var _group = layerGraph;
+						repeat(chid) _group = array_empty(_group.contents)? _group : array_last(_group.contents);
+						array_push(_group.contents, _layer);
 						
 						array_push(vis, true);
 						array_push(lop, true);

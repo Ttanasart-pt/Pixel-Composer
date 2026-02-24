@@ -4,33 +4,38 @@ function ase_layer(_name, _data, _type = 0, _node = undefined) constructor {
 	type = _type;
 	node = _node;
 	
+	index = 0;
+	
 	alpha = (data[$ "Opacity"] ?? 255) / 255;
 	cels  = [];
 	anim  = false;
 	tag	  = noone;
 	
-	static setFrameCel = function(index, cel) { 
-		cels[index] = cel; 
+	contents = [];
+	expand   = true;
+	
+	static setFrameCel = function(i, cel) { 
+		cels[i] = cel; 
 		anim = array_length(cels) > 1;
 	}
 	
-	static getCelRaw = function(index = GLOBAL_CURRENT_FRAME, _loop = false) {
-		ind = _loop? safe_mod(index, array_length(cels)) : index;
+	static getCelRaw = function(i = GLOBAL_CURRENT_FRAME, _loop = false) {
+		ind = _loop? safe_mod(i, array_length(cels)) : i;
 		return array_safe_get_fast(cels, ind);
 	}
 	
-	static getCel = function(index = GLOBAL_CURRENT_FRAME, _loop = false) {
-		if(tag == noone) return getCelRaw(index, _loop);
+	static getCel = function(i = GLOBAL_CURRENT_FRAME, _loop = false) {
+		if(tag == noone) return getCelRaw(i, _loop);
 			
 		var st  = tag[$ "Frame start"];
 		var ed  = tag[$ "Frame end"];
 		if(_loop) {
-			var ind = st + safe_mod(index, ed - st + 1);
+			var ind = st + safe_mod(i, ed - st + 1);
 			return array_safe_get_fast(cels, ind);
 		}
 		
-		if(index < st || index > ed) return 0;
-		return array_safe_get_fast(cels, index);
+		if(i < st || i > ed) return 0;
+		return array_safe_get_fast(cels, i);
 	}
 	
 	static getTileSet = function() {
