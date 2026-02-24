@@ -3,6 +3,8 @@ function ase_cel(_layer, _data, _file) constructor {
 	data = _data;
 	file = _file;
 	
+	alpha = (data[$ "Opacity"] ?? 255) / 255;
+	
 	static checkSurface = function() {
 		var width  = data[$ "Width"];
 		var height = data[$ "Height"];

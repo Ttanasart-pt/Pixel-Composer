@@ -596,9 +596,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(!_v) continue;
 			
 			var cel = _layer.getCel(frame - _tag_delay, _l);
-			var alp = _layer.alpha;
 			if(!cel) continue;
-		
+			
+			var alp = _layer.alpha * cel.alpha;
 			var _inSurf = cel.getSurface();
 			if(!is_surface(_inSurf)) continue;
 			

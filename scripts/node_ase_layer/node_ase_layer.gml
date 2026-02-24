@@ -7,6 +7,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(2, nodeValue_Text( "Layer Name"         )).rejectArray();
 	newInput(1, nodeValue_Bool( "Crop Output", false )).rejectArray();
 	newInput(3, nodeValue_Bool( "Loop",        false )).rejectArray();
+	// 4
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output("Layer Name",  VALUE_TYPE.text,    ""    ));
@@ -111,7 +112,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var cs = c.getSurface();
 			var xx = c.data[$ "X"];
 			var yy = c.data[$ "Y"];
-			var aa = _l.alpha;
+			var aa = _l.alpha * c.alpha;
 			
 			surface_set_shader(temp_surface[blend_index], sh_sample, true, BLEND.over);
 				draw_surface_blend_ext(temp_surface[!blend_index], cs, xx, yy, 1, 1, 0, c_white, aa);
@@ -171,14 +172,18 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			else		surf = surface_verify(surf, ww, hh);
 			outputs[0].setValue(surf);
 			
-			if(cel == 0) { surface_clear(surf); return; }
+			if(!is(cel, ase_cel)) { 
+				surface_clear(surf); 
+				return;
+			}
 			
 			var _inSurf = cel.getSurface();
 			var xx = celDim? 0 : cel.data[$ "X"];
 			var yy = celDim? 0 : cel.data[$ "Y"];
+			var aa = layer_object.alpha * cel.alpha;
 			
 			surface_set_shader(surf, noone);
-				draw_surface_safe(_inSurf, xx, yy);
+				draw_surface_ext_safe(_inSurf, xx, yy, 1, 1, 0, c_white, aa);
 			surface_reset_shader();
 		}
 	}

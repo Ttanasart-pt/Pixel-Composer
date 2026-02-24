@@ -1,10 +1,10 @@
 function ase_layer(_name, _data, _type = 0, _node = undefined) constructor {
+	index = 0;
+	
 	name = _name;
 	data = _data;
 	type = _type;
 	node = _node;
-	
-	index = 0;
 	
 	alpha = (data[$ "Opacity"] ?? 255) / 255;
 	cels  = [];
