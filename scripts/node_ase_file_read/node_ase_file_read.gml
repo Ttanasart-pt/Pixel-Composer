@@ -150,8 +150,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	layer_renderer_height = undefined;
 	layer_renderer        = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
-		var _amo = array_length(layers);
-		
 		var _h  = layer_renderer_height ?? 0;
 		var _yy = _y + ui(8);
 		var _hh = ui(16);
@@ -167,8 +165,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		layer_renderer_height = _hh;
-		
-		return _h;
+		return _hh;
 	}); 
 	
 	tag_renderer    = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
