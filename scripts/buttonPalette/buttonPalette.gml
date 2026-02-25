@@ -24,18 +24,16 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		current_palette  = array_clone(current_palette);
 		
 		var dialog = dialogCall(o_dialog_color_selector)
-						.setDefault(current_palette[edit_color_index])
-						.setApply(editColor);
+			.setDefault(current_palette[edit_color_index])
+			.setApply(function(c) /*=>*/ {
+				if(edit_color_index == -1) return;
+				current_palette[edit_color_index] = c;
+				onApply(current_palette);		
+			})
+			.setClose(function() /*=>*/ { edit_color_index = -1; })
 		
 		dialog.interactable = interactable;
 	}
-	
-	static editColor = function(col) {
-		if(edit_color_index == -1) return;
-		current_palette[edit_color_index] = col;
-		onApply(current_palette);
-		
-	} editColor = method(self, editColor);
 	
 	static fetchHeight = function(params) /*=>*/ {return params.h + expanded * (array_length(params.data) * ui(16) + ui(2))};
 	static drawParam   = function(params) /*=>*/ {return draw(params.x, params.y, params.w, params.h, params.data, params.m)};

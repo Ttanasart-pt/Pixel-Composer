@@ -22,11 +22,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 	setClose   = function(c) /*=>*/ { onClose = c;                              return self; }
 	setDefault = function(c) /*=>*/ { selector.setColor(c); previous_color = c; return self; }
 	
-	function setApply(a) { 
-		selector.onApply = a;
-		onApply = a; 
-		return self; 
-	}
+	function setApply(a) { selector.onApply = a; onApply = a;       return self; }
 	
 	b_cancel = button(function() /*=>*/ { onApply(previous_color); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
 	                                                                         .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
