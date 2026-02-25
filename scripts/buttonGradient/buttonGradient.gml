@@ -28,20 +28,17 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		edit_gradient    = current_gradient.clone();
 		edit_color_index = _index;
 		
+		var _key   = edit_gradient.keys[edit_color_index];
 		var dialog = dialogCall(o_dialog_color_selector)
-						.setDefault(edit_gradient.keys[edit_color_index].value)
-						.setApply(editColor)
+			.setDefault(_key.value)
+			.setApply(function(c) /*=>*/ { 
+				edit_gradient.keys[edit_color_index].value = c;
+				onApply(edit_gradient);
+			})
+			.setClose(function() /*=>*/ { edit_color_index = -1; })
 		
 		dialog.interactable = interactable;
 	}
-	
-	static editColor = function(col) {
-		if(edit_color_index == -1) return;
-		
-		edit_gradient.keys[edit_color_index].value = col;
-		onApply(edit_gradient);
-		
-	} editColor = method(self, editColor);
 	
 	////- Widget
 	
@@ -185,11 +182,14 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 							onApply(apply_gradient);
 						}
 						
-					} else {
-						var cc = drag_color_index == _k || edit_color_index == i? COLORS._main_accent : c_white;
-						var aa = drag_color_index == _k || edit_color_index == i? 1 : _ka;
-						draw_sprite_stretched_ext(THEME.box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, cc, aa);
-					}
+					} else if(drag_color_index == _k || edit_color_index == i) {
+						
+						draw_sprite_stretched_ext(THEME.ui_panel, 2, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, CDEF.main_mdblack,   1);
+						draw_sprite_stretched_ext(THEME.ui_panel, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, COLORS._main_accent, 1);
+						
+					} else
+						draw_sprite_stretched_ext(THEME.box_r2, 1, _kx - _ks / 2, _ky - _ks / 2, _ks, _ks, c_white, _ka);
+					
 				}
 				
 				if(_hi != noone) {

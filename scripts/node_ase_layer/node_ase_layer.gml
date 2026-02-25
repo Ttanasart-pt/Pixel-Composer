@@ -4,9 +4,10 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue("ASE data", self, CONNECT_TYPE.input, VALUE_TYPE.object, undefined ))
 		.setIcon(THEME.junc_aseprite, c_white).setVisible(false, true).rejectArray();
 		
-	newInput(2, nodeValue_Text( "Layer Name"         )).rejectArray();
-	newInput(1, nodeValue_Bool( "Crop Output", false )).rejectArray();
-	newInput(3, nodeValue_Bool( "Loop",        false )).rejectArray();
+	newInput(2, nodeValue_Text( "Layer Name"          )).rejectArray();
+	newInput(1, nodeValue_Bool( "Crop Output",  false )).rejectArray();
+	newInput(3, nodeValue_Bool( "Loop",         false )).rejectArray();
+	newInput(4, nodeValue_Bool( "Apply Opacity", true )).rejectArray();
 	// 4
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
@@ -82,16 +83,18 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}); 
 	
 	input_display_list = [
-		0, layer_renderer, 2, 1, 3, 
+		0, layer_renderer, 2, 1, 3, 4, 
 	];
 	
 	////- Node
 	
 	ase_data     = undefined;
 	layer_object = undefined;
+	
 	temp_surface = [ noone, noone, noone ];
 	blend_index  = 0;
 	target_surf  = noone;
+	apply_alpha  = true;
 	
 	static findLayer = function() {
 		var _data  = inputs[0].getValue();
@@ -112,7 +115,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var cs = c.getSurface();
 			var xx = c.data[$ "X"];
 			var yy = c.data[$ "Y"];
-			var aa = _l.alpha * c.alpha;
+			var aa = apply_alpha? _l.alpha * c.alpha : 1;
 			
 			surface_set_shader(temp_surface[blend_index], sh_sample, true, BLEND.over);
 				draw_surface_blend_ext(temp_surface[!blend_index], cs, xx, yy, 1, 1, 0, c_white, aa);
@@ -126,10 +129,11 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
-			var data   = getInputData(0);
-			var celDim = getInputData(1);
-			var _lname = getInputData(2);
-			var _loop  = getInputData(3);
+			var data    = getInputData(0);
+			var celDim  = getInputData(1);
+			var _lname  = getInputData(2);
+			var _loop   = getInputData(3);
+			apply_alpha = getInputData(4);
 		#endregion
 		
 		ase_data = data;
@@ -180,7 +184,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _inSurf = cel.getSurface();
 			var xx = celDim? 0 : cel.data[$ "X"];
 			var yy = celDim? 0 : cel.data[$ "Y"];
-			var aa = layer_object.alpha * cel.alpha;
+			var aa = apply_alpha? layer_object.alpha * cel.alpha : 1;
 			
 			surface_set_shader(surf, noone);
 				draw_surface_ext_safe(_inSurf, xx, yy, 1, 1, 0, c_white, aa);
