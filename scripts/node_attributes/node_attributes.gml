@@ -113,10 +113,12 @@
 	}
 	
 	function attribute_surface_depth(label = true) {
-		attributes.color_depth = PREFERENCES.node_def_depth;
+		var _useInput = !array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface;
+		
+		attributes.color_depth = _useInput? 0 : PREFERENCES.node_def_depth;
 		
 		attr_depth_array = variable_clone(global.SURFACE_FORMAT_NAME);
-		attr_depth_array[0].setActive(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface);
+		attr_depth_array[0].setActive(_useInput);
 		
 		color_depth_selector = new scrollBox(attr_depth_array, function(val) /*=>*/ { attribute_set("color_depth", val); }, false);
 		color_depth_editor   = [ "Color Depth", function() /*=>*/ {return attributes.color_depth}, color_depth_selector ];
