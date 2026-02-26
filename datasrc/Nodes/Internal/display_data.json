@@ -598,6 +598,7 @@
             "Node_Flow_Path",
             "Node_Refract",
             "Node_Fluffify",
+            "Node_Extends",
             { "label": "/Mappers" },
             "Node_Texture_Remap",
             "Node_Time_Remap",

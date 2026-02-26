@@ -1,0 +1,6 @@
+{
+    "name":          "Extends",
+    "spr":           "s_node_extends",
+    "baseNode":      "Node_Extends",
+    "pxc_version":    120076,
+}

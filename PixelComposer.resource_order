@@ -2632,6 +2632,7 @@
     {"name":"s_node_edge_detect","order":33,"path":"sprites/s_node_edge_detect/s_node_edge_detect.yy",},
     {"name":"s_node_equation","order":3,"path":"sprites/s_node_equation/s_node_equation.yy",},
     {"name":"s_node_erode","order":34,"path":"sprites/s_node_erode/s_node_erode.yy",},
+    {"name":"s_node_extends","order":102,"path":"sprites/s_node_extends/s_node_extends.yy",},
     {"name":"s_node_feedback_input","order":10,"path":"sprites/s_node_feedback_input/s_node_feedback_input.yy",},
     {"name":"s_node_feedback_output","order":9,"path":"sprites/s_node_feedback_output/s_node_feedback_output.yy",},
     {"name":"s_node_feedback","order":3,"path":"sprites/s_node_feedback/s_node_feedback.yy",},

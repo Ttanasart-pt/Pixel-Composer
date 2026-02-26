@@ -3115,6 +3115,7 @@
     {"id":{"name":"s_node_equation","path":"sprites/s_node_equation/s_node_equation.yy",},},
     {"id":{"name":"s_node_erode","path":"sprites/s_node_erode/s_node_erode.yy",},},
     {"id":{"name":"s_node_export","path":"sprites/s_node_export/s_node_export.yy",},},
+    {"id":{"name":"s_node_extends","path":"sprites/s_node_extends/s_node_extends.yy",},},
     {"id":{"name":"s_node_feedback_input","path":"sprites/s_node_feedback_input/s_node_feedback_input.yy",},},
     {"id":{"name":"s_node_feedback_output","path":"sprites/s_node_feedback_output/s_node_feedback_output.yy",},},
     {"id":{"name":"s_node_feedback","path":"sprites/s_node_feedback/s_node_feedback.yy",},},
