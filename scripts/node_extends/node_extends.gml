@@ -22,14 +22,15 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(15, nodeValue_Bool(     "Use normal", false ));
 	newInput(11, nodeValue_Rotation( "Direction",   0    ));
 	newInput(12, nodeValue_Bool(     "Extends",    true  ));
-	// input 16
+	newInput(16, nodeValue_Bool(     "Both Side",  false ));
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 2,
 		[ "Surfaces", false ],  0,  3,  4,  5,  6, 
 		[ "Select",   false ],  7,  8,  9, 13, 14, 
-		[ "Extends",  false ], 10, 15, 11, 12, 
+		[ "Extends",  false ], 10, 15, 11, 12, 16, 
 	];
 	
 	////- Nodes
@@ -96,6 +97,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _norm = _data[15];
 			var _dirr = _data[11];
 			var _extn = _data[12];
+			var _both = _data[16];
 			
 			inputs[ 8].setVisible(_type == 0 || _type == 1);
 			inputs[ 9].setVisible(_type == 0);
@@ -143,6 +145,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f( "direction",  _dirr );
 			shader_set_i( "useNormal",  _norm );
 			shader_set_i( "extends",    _extn );
+			shader_set_i( "bothSide",   _both );
 			
 			draw_surface( _surf, 0, 0 );
 		surface_reset_shader();

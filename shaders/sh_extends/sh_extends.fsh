@@ -5,6 +5,7 @@ uniform vec2  dimension;
 			
 uniform int   type;
 uniform int   extends;
+uniform int   bothSide;
 
 uniform vec2  point1;
 uniform vec2  point2;
@@ -105,11 +106,23 @@ void main() {
 		rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1, _point2, _hit) : 
 		                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1, _point2, _hit);
 		
+		if(!_hit && bothSide == 1) {
+			_exDir -= PI;
+			rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1, _point2, _hit) : 
+			                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1, _point2, _hit);
+		}
+
 	} else if(type == 1) {
 		vec2 ddir = vec2(cos(_exDir + PI / 2.), -sin(_exDir + PI / 2.));
 		rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit) : 
 		                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit);
 		
+		if(!_hit && bothSide == 1) {
+			_exDir -= PI;
+			rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit) : 
+			                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit);
+		}
+
 	} else if(type == 2) {
 		float minDist = 1e10;
 		vec2  hitp0   = vec2(0.0);
