@@ -49,6 +49,10 @@ function Panel_Animation_Dopesheet() {
     	
     	scroll_s = sprite_get_width(THEME.ui_scrollbar);
         scroll_w = scroll_s;
+        
+        timeline_content_dragging = undefined;
+        timeline_content_drag_dx  = 0;
+		timeline_content_drag_mx  = 0;
 	#endregion
 	
     #region ---- Keyframes ----
@@ -1300,8 +1304,8 @@ function Panel_Animation_Dopesheet() {
 	            _nx = key.dopesheet_x;
 	            _nv = key.value;
 	            
-	            if(k && _ov)          draw_line_width(_ox, _cy, _nx, _cy, ui(8));
-	            if(k == n - 1 && _nv) draw_line_width(_nx, _cy, _y1, _cy, ui(8));
+	            if(k && _ov)          draw_line_width(_ox, _cy, _nx, _cy, ui(4));
+	            if(k == n - 1 && _nv) draw_line_width(_nx, _cy, _y1, _cy, ui(4));
 	            
 	            _ox = _nx;
 	            _ov = _nv;
@@ -1547,10 +1551,10 @@ function Panel_Animation_Dopesheet() {
         
         var _scaling   = key_mod_press(ALT) && array_length(keyframe_selecting) > 1;
         var valAmo     = array_length(animator.values);
-        var ot = undefined;
         
         var hov   = pHOVER;
         var toSel = undefined;
+        var ot    = undefined;
         
         for(var k = 0; k < valAmo; k++) {
             var keyframe = animator.values[k];
@@ -2267,26 +2271,83 @@ function Panel_Animation_Dopesheet() {
         
         var key_hover = drawDopesheet_Graph();
         
-        if(keyframe_boxing) {
-            draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, keyframe_box_sx, keyframe_box_sy, msx, msy, COLORS._main_accent);
-            if(mouse_release(mb_left)) keyframe_boxing = false;
-        }
-        
         #region Draw & Edit Keyframes 
         	_keyframe_selecting_f = noone;
         	_keyframe_selecting_l = noone;
         	region_hovering       = noone;
-        
+        	
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
                 var _cont = timeline_contents[i];
                 if(_cont.type != "node") continue;
                 
+                var _node  = _cont.node;
                 var _anims = _cont.animations;
+                
+                _cont.keyFirst   =  infinity;
+        		_cont.keyLast    = -infinity;
+                
+                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                    var _anim  = _anims[j];
+			        
+			        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
+			            _cont.keyFirst = min(_cont.keyFirst, _anim.values[k].dopesheet_x);
+			    		_cont.keyLast  = max(_cont.keyLast,  _anim.values[k].dopesheet_x);
+			        }
+                }
+                
+                if(_cont.keyFirst != infinity) {
+                	var _ex0 = _cont.keyFirst;
+                	var _ex1 = _cont.keyLast;
+                	var _ey0 = _cont.y + ui(10) - ui(8);
+                	var _ey1 = _cont.y + ui(10) + ui(8);
+                	
+                	var _ew = _ex1 - _ex0;
+                	var _eh = _ey1 - _ey0;
+                	
+                	var _hov = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
+                	
+                	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, CDEF.main_ltgrey, .2 + _hov * .3);
+                	draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, CDEF.main_ltgrey, .5);
+                	
+                	if(_hov) {
+                		keyframe_boxable = false;
+                		if(mouse_lpress(pFOCUS)) {
+                			timeline_content_dragging = _cont;
+                			timeline_content_drag_dx  = 0;
+                			timeline_content_drag_mx  = msx;
+                		}
+                	}
+                }
+                
                 for( var j = 0, m = array_length(_anims); j < m; j++ ) {
                     var _anim = _anims[j];
                     var _key  = drawDopesheet_AnimatorKeys(_cont, _anim, msx, msy);
                     if(_key != noone) key_hover = _key;
                 }
+                
+            }
+            
+            if(timeline_content_dragging != undefined) {
+            	timeline_content_drag_dx += (msx - timeline_content_drag_mx) / timeline_scale;
+            	timeline_content_drag_mx  = msx;
+            	
+            	var _delta = floor(timeline_content_drag_dx);
+            	var _anims = timeline_content_dragging.animations;
+            	
+                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                    var _anim  = _anims[j];
+			        for(var k = 0, p = array_length(_anim.values); k < p; k++)
+			            _anim.values[k].time += _delta;
+                }
+                
+            	timeline_content_drag_dx -= _delta;
+            	
+            	if(mouse_lrelease()) {
+            		for( var j = 0, m = array_length(_anims); j < m; j++ )
+                    	_anims[j].updateKeyMap();
+                    	
+            		timeline_content_dragging = undefined;
+            	}
             }
             
             keyframe_selecting_f = _keyframe_selecting_f;
@@ -2641,6 +2702,11 @@ function Panel_Animation_Dopesheet() {
 	        
             if(drw) drawFrameLine(GLOBAL_TOTAL_FRAMES, sty - ui(10), sty + ui(10), _cc);
         #endregion
+        
+        if(keyframe_boxing) {
+            draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, keyframe_box_sx, keyframe_box_sy, msx, msy, COLORS._main_accent);
+            if(mouse_release(mb_left)) keyframe_boxing = false;
+        }
         
         BLEND_SUBTRACT
         draw_surface_safe(dopesheet_mask);

@@ -13,11 +13,17 @@ uniform vec2  point2;
 uniform float pathData[1024];
 uniform float pathSample;
 
-uniform float exLength;
 uniform int   useNormal;
 uniform float direction;
 
+uniform vec2      exLength;
+uniform int       exLengthUseSurf;
+uniform sampler2D exLengthSurf;
+
+uniform vec4  blendColor;
+
 #define PI 3.1415926535897932384626433832795
+float extendLength;
 
 float cross(in vec2 a, in vec2 b) {
 	return a.x * b.y - a.y * b.x;
@@ -63,7 +69,7 @@ vec2 rayHitLineExtends(in vec2 rayOrigin, in float rayAng, in vec2 p0, in vec2 p
 	float lineLen = length(lineDir);
 	float projLen = dot(hitPoint - p0, lineDir) / lineLen;
 	
-	if (projLen < -exLength || projLen > lineLen + exLength) {
+	if (projLen < -extendLength || projLen > lineLen + extendLength) {
 		hit = false;
 		return vec2(0.0);
 	}
@@ -87,9 +93,16 @@ int imod(int x, int y) {
 }
 
 void main() {
+	extendLength = exLength.x;
+	
+	if(exLengthUseSurf == 1) {
+		vec4 _vMap = texture2D( exLengthSurf, v_vTexcoord );
+		extendLength = mix(exLength.x, exLength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 tx = 1. / dimension;
 	
-	float _exLength = exLength * tx.x;
+	float _exLength = extendLength * tx.x;
 	float _exDir    = radians(direction);
 	
 	vec2  _point1   = point1 * tx;
@@ -180,19 +193,22 @@ void main() {
 	}
 	
 	if(!_hit) {
-		gl_FragColor = texture2D(gm_BaseTexture, v_vTexcoord);
+		gl_FragData[0] = texture2D(gm_BaseTexture, v_vTexcoord);
+		gl_FragData[1] = vec4(0., 0., 0., 1.);
 		return;
 	}
 	
 	float dist = distance(v_vTexcoord, rayHit);
 
 	if(dist < _exLength) {
-		gl_FragColor = texture2D(gm_BaseTexture, rayHit);
+		gl_FragData[0] = texture2D(gm_BaseTexture, rayHit) * blendColor;
+		gl_FragData[1] = vec4(1., 1., 1., 1.);
 		return;
 	} 
 	
 	vec2 dir = vec2(cos(_exDir), -sin(_exDir));
 	vec2 pos = rayHit + (dist - _exLength) * dir;
 
-	gl_FragColor = texture2D(gm_BaseTexture, pos);
+	gl_FragData[0] = texture2D(gm_BaseTexture, pos);
+	gl_FragData[1] = vec4(0., 0., 0., 1.);
 }

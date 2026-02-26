@@ -543,13 +543,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		for( var i = 1, n = length; i < n; i++ ) {
 			var _k1 = values[i].time;
 			
-			for( var j = _keyIndex; j < _k1; j++ ) 
+			for( var j = max(0, _keyIndex); j < _k1; j++ ) 
 				key_map[j] = i - 1;
 			
 			_keyIndex = _k1;
 		}
 		
-		for( var i = _keyIndex; i < _len; i++ ) 
+		for( var i = max(0, _keyIndex); i < _len; i++ ) 
 			key_map[i] = infinity;
 	}
 	

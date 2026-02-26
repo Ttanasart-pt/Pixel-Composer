@@ -18,19 +18,24 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(14, nodeValue_Int(      "Path Sample", 16   ));
 	
 	////- =Extends
-	newInput(10, nodeValue_Float(    "Length",    .25    )).setUnitSimple();
+	newInput(10, nodeValue_Float(    "Length",    .25    )).setUnitSimple().setMappable(17);
 	newInput(15, nodeValue_Bool(     "Use normal", false ));
 	newInput(11, nodeValue_Rotation( "Direction",   0    ));
 	newInput(12, nodeValue_Bool(     "Extends",    true  ));
 	newInput(16, nodeValue_Bool(     "Both Side",  false ));
-	// input 17
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- =Effects
+	newInput(18, nodeValue_Color( "Blend Color", ca_white ));
+	// input 19
+	
+	newOutput(0, nodeValue_Output("Surface Out",  VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Extends Mask", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 2,
 		[ "Surfaces", false ],  0,  3,  4,  5,  6, 
 		[ "Select",   false ],  7,  8,  9, 13, 14, 
-		[ "Extends",  false ], 10, 15, 11, 12, 16, 
+		[ "Extends",  false ], 10, 17, 15, 11, 12, 16, 
+		[ "Effects",  false ], 18, 
 	];
 	
 	////- Nodes
@@ -83,7 +88,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 	}
 	
-	static processData = function(_outSurf, _data, _array_index = 0) { 
+	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 			var _surf = _data[ 0];
 			
@@ -99,6 +104,8 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _extn = _data[12];
 			var _both = _data[16];
 			
+			var _colr = _data[18];
+			
 			inputs[ 8].setVisible(_type == 0 || _type == 1);
 			inputs[ 9].setVisible(_type == 0);
 			inputs[13].setVisible(_type == 2);
@@ -108,7 +115,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			// inputs[12].setVisible(_type == 0);
 		#endregion
 		
-		if(!is_surface(_surf)) return _outSurf;
+		if(!is_surface(_surf)) return _outData;
 		
 		var _dim  = surface_get_dimension(_surf);
 		var _pnts = [];
@@ -132,7 +139,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 		}
 		
-		surface_set_shader( _outSurf, sh_extends );
+		surface_set_shader( _outData, sh_extends );
 			shader_set_2( "dimension",  _dim  );
 			
 			shader_set_i( "type",       _type );
@@ -141,18 +148,21 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f( "pathData",   _pnts );
 			shader_set_f( "pathSample", _psam );
 			
-			shader_set_f( "exLength",   _leng );
+			shader_set_f_map( "exLength",   _leng, _data[17], inputs[10] );
 			shader_set_f( "direction",  _dirr );
 			shader_set_i( "useNormal",  _norm );
 			shader_set_i( "extends",    _extn );
 			shader_set_i( "bothSide",   _both );
 			
+			shader_set_c( "blendColor", _colr );
+			
 			draw_surface( _surf, 0, 0 );
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_surf, _outSurf, _data[3], _data[4]);
-		_outSurf = channel_apply(_surf, _outSurf, _data[2]);
-		return _outSurf; 
+		_outData[0] = mask_apply(_surf, _outData[0], _data[3], _data[4]);
+		_outData[0] = channel_apply(_surf, _outData[0], _data[2]);
+		
+		return _outData; 
 	}
 }

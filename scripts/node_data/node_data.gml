@@ -2545,12 +2545,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static drawPreviewBackground = undefined; //static drawPreviewBackground = function(_x, _y, _mx, _my, _s) {
-	static drawNodeBehind        = undefined; //static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
-	static onDrawNode  = undefined; //static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-	static onDrawHover = undefined; //static onDrawHover = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
-	static drawNodeBG  = undefined; //static drawNodeBG = function(_x, _y, _mx, _my, _s) {
-	static drawNodeFG  = undefined; //static drawNodeFG = function(_x, _y, _mx, _my, _s, _panel = noone) {
+	static drawPreviewBackground = undefined; //static drawPreviewBackground = function(_x, _y, _mx, _my, _s) {}
+	static drawNodeBehind        = undefined; //static drawNodeBehind = function(_x, _y, _mx, _my, _s) {}
+	static onDrawNode  = undefined; //static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
+	static onDrawHover = undefined; //static onDrawHover = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {}
+	static drawNodeBG  = undefined; //static drawNodeBG = function(_x, _y, _mx, _my, _s) {}
+	static drawNodeFG  = undefined; //static drawNodeFG = function(_x, _y, _mx, _my, _s, _panel = noone) {}
 	
 	static drawNode    = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
 		var xx = x * _s + _x + 1;
