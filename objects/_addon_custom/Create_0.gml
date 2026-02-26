@@ -3,6 +3,7 @@ event_inherited();
 
 #region init
 	alarm[0] = 1;
+	ready    = false;
 	
 	function init(_directory, _openDialog = true) {
 		ID = UUID_generate();
@@ -76,7 +77,7 @@ event_inherited();
 	function animationPreStep() {
 		INLINE
 		if(!ready) return;
-		
+				
 		try { var runResult = lua_call(thread, "animationPreStep"); }
 		catch(e) exception_print(e);
 	}
