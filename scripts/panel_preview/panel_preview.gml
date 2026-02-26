@@ -1665,7 +1665,9 @@ function Panel_Preview() : PanelContent() constructor {
                         tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surfaces[0]) * ss);
                         surface_set_target(tile_surface);
                             DRAW_CLEAR
+                            BLEND_OVERRIDE
                             draw_surface_tiled_ext_safe(preview_surfaces[0], psx, 0, ss, ss, 0, c_white, 1); 
+                            BLEND_NORMAL
                         surface_reset_target();
                         draw_surface_safe(tile_surface, 0, psy);
                         break;
@@ -1674,7 +1676,9 @@ function Panel_Preview() : PanelContent() constructor {
                         tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surfaces[0]) * ss, h);
                         surface_set_target(tile_surface);
                             DRAW_CLEAR
+                            BLEND_OVERRIDE
                             draw_surface_tiled_ext_safe(preview_surfaces[0], 0, psy, ss, ss, 0, c_white, 1); 
+                            BLEND_NORMAL
                         surface_reset_target();
                         draw_surface_safe(tile_surface, psx, 0);
                         break;
