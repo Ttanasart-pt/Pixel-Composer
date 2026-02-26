@@ -457,9 +457,6 @@ function Panel_Animation() : PanelContent() constructor {
                 _content.props      = _prop;
                 _content.animations = _anim;
                 
-                _content.keyFirst   =  infinity;
-        		_content.keyLast    = -infinity;
-                
                 array_push(timeline_contents, _content);
                 
                 for( var j = 0, m = array_length(_anim); j < m; j++ )

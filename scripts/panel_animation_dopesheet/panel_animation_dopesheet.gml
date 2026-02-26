@@ -50,9 +50,11 @@ function Panel_Animation_Dopesheet() {
     	scroll_s = sprite_get_width(THEME.ui_scrollbar);
         scroll_w = scroll_s;
         
-        timeline_content_dragging = undefined;
-        timeline_content_drag_dx  = 0;
-		timeline_content_drag_mx  = 0;
+        timeline_content_dragging   = undefined;
+        timeline_content_drag_type  = 0;
+        timeline_content_drag_dx    = 0;
+		timeline_content_drag_mx    = 0;
+		timeline_content_drag_range = [0,0];
 	#endregion
 	
     #region ---- Keyframes ----
@@ -2283,38 +2285,69 @@ function Panel_Animation_Dopesheet() {
                 var _node  = _cont.node;
                 var _anims = _cont.animations;
                 
-                _cont.keyFirst   =  infinity;
-        		_cont.keyLast    = -infinity;
+                var _keyFirst   =  infinity;
+        		var _keyLast    = -infinity;
                 
                 for( var j = 0, m = array_length(_anims); j < m; j++ ) {
                     var _anim  = _anims[j];
 			        
 			        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
-			            _cont.keyFirst = min(_cont.keyFirst, _anim.values[k].dopesheet_x);
-			    		_cont.keyLast  = max(_cont.keyLast,  _anim.values[k].dopesheet_x);
+			            _keyFirst = min(_keyFirst, _anim.values[k].dopesheet_x);
+			    		_keyLast  = max(_keyLast,  _anim.values[k].dopesheet_x);
 			        }
                 }
                 
-                if(_cont.keyFirst != infinity) {
-                	var _ex0 = _cont.keyFirst;
-                	var _ex1 = _cont.keyLast;
+                if(_keyFirst != infinity && _keyFirst != _keyLast) {
+                	var _ex0 = _keyFirst;
+                	var _ex1 = _keyLast;
                 	var _ey0 = _cont.y + ui(10) - ui(8);
                 	var _ey1 = _cont.y + ui(10) + ui(8);
                 	
                 	var _ew = _ex1 - _ex0;
                 	var _eh = _ey1 - _ey0;
+                	var _es = ui(6);
                 	
-                	var _hov = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
+                	var _hovF = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex0 + _es, _ey1);
+                	var _hovL = pHOVER && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1, _ey1);
+                	var _hovC = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
                 	
-                	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, CDEF.main_ltgrey, .2 + _hov * .3);
+                	var _hov = 0;
+                	if(_hovC) _hov = 1;
+                	if(_hovF) _hov = 2;
+                	if(_hovL) _hov = 3;
+                	
+                	var _drg = timeline_content_dragging != undefined && timeline_content_dragging.node == _cont.node;
+                	var _hlg = _hov || _drg;
+                	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, CDEF.main_ltgrey, .2 + _hlg * .3);
+                	
+                	var _hlg = _hovF || (_drg && timeline_content_drag_type == 2);
+                	if(_hlg) {
+                		var cc = _drg && timeline_content_drag_type == 2? COLORS._main_accent : CDEF.main_ltgrey;
+                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _es, _eh, cc, 1);
+                	}
+                	
+                	var _hlg = _hovL || (_drg && timeline_content_drag_type == 3);
+                	if(_hlg) {
+                		var cc = _drg && timeline_content_drag_type == 3? COLORS._main_accent : CDEF.main_ltgrey;
+                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex1 - _es, _ey0, _es, _eh, cc, 1);
+                	}
+                	
                 	draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, CDEF.main_ltgrey, .5);
+                	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
                 	
                 	if(_hov) {
                 		keyframe_boxable = false;
+                		
                 		if(mouse_lpress(pFOCUS)) {
-                			timeline_content_dragging = _cont;
-                			timeline_content_drag_dx  = 0;
-                			timeline_content_drag_mx  = msx;
+                			timeline_content_dragging   = _cont;
+                			timeline_content_drag_type  = _hov;
+                			
+                			timeline_content_drag_dx    = 0;
+                			timeline_content_drag_mx    = msx;
+                			timeline_content_drag_range = [
+                				(_keyFirst - timeline_shift) / timeline_scale, 
+                				(_keyLast  - timeline_shift) / timeline_scale
+            				];
                 		}
                 	}
                 }
@@ -2334,13 +2367,34 @@ function Panel_Animation_Dopesheet() {
             	var _delta = floor(timeline_content_drag_dx);
             	var _anims = timeline_content_dragging.animations;
             	
-                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
-                    var _anim  = _anims[j];
-			        for(var k = 0, p = array_length(_anim.values); k < p; k++)
-			            _anim.values[k].time += _delta;
-                }
-                
-            	timeline_content_drag_dx -= _delta;
+            	if(_delta != 0) {
+	            	if(timeline_content_drag_type == 1) {
+		                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+		                    var _anim  = _anims[j];
+					        for(var k = 0, p = array_length(_anim.values); k < p; k++)
+					            _anim.values[k].time += _delta;
+		                }
+		                
+	            	} else if(timeline_content_drag_type == 2 || timeline_content_drag_type == 3) {
+	            		var _os = timeline_content_drag_range[0] - 1;
+	            		var _oe = timeline_content_drag_range[1] - 1;
+	            		
+	            		timeline_content_drag_range[timeline_content_drag_type - 2] += _delta;
+	            		
+	            		var _ns = timeline_content_drag_range[0] - 1;
+	            		var _ne = timeline_content_drag_range[1] - 1;
+	            		
+	            		for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+		                    var _anim  = _anims[j];
+					        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
+					            _anim.values[k].time = lerp(_ns, _ne, (_anim.values[k].time - _os) / (_oe - _os));
+					        }
+		                }
+		                
+	            	}
+	                
+	            	timeline_content_drag_dx -= _delta;
+            	}
             	
             	if(mouse_lrelease()) {
             		for( var j = 0, m = array_length(_anims); j < m; j++ )
