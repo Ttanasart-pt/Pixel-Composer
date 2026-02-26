@@ -185,6 +185,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	curve_scale    = noone;
 	curve_alpha    = noone;
 	curve_path_div = noone;
+	dist_map_cache = [];
 	
 	custom_parameter_names       = [];
 	custom_parameter_curves_view = {};
@@ -255,14 +256,18 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		//////////////////////////////////////////////////////////////////////////////
 		
-		var _posDist = [];
 		
 		if(array_empty(_inSurf)) return;
 		
 		random_set_seed(seed); seed += 1000;
+		var _posDist = undefined;
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
 		
-		if(_distrib == 2) _posDist = get_points_from_dist(_dist_map, _amo, seed);
+		if(_distrib == 2) {
+			dist_map_cache = get_points_from_dist(_dist_map, _amo, seed, 8, dist_map_cache);
+			_posDist       = dist_map_cache;
+		}
+		
 		if(_distrib == 4) _amo     = array_length(_dist_data);
 		
 		for( var i = 0; i < _amo; i++ ) {
@@ -304,7 +309,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					
 				} else if(_distrib == 2) {
 					var sp = array_safe_get_fast(_posDist, i);
-					if(!is_array(sp)) continue;
+					if(!is_array(sp) || sp[0] == undefined) continue;
 						
 					xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
 					yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);

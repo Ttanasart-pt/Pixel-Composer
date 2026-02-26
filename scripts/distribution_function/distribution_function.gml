@@ -23,8 +23,11 @@ function get_point_from_dist(distMap, attempt = 4) {
 }
 
 function get_points_from_dist(distMap, amount, seed = 0, attempt = 8, result = []) {
-	if(amount < 1)           return result;
-	if(!is_surface(distMap)) return result;
+	if(amount < 1 || !is_surface(distMap)) {
+		for( var i = 0, n = array_length(result); i < n; i++ ) 
+			if(is_array(result[i])) result[i][0] = undefined;
+		return result;
+	}
 	
 	//print($"===== Get points from dist {amount} =====");
 	

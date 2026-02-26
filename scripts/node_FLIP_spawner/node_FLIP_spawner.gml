@@ -9,7 +9,12 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
 	
 	////- =Spawner
-	spawner_shapes = [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ];
+	spawner_shapes = [ 
+		new scrollItem("Circle", s_node_shape_circle, 0), 
+		new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
+		"Surface" 
+	];
+	
 	newInput( 1, nodeValue_Enum_Scroll( "Spawn Shape",  0 , spawner_shapes));
 	newInput( 7, nodeValue_Surface(     "Spawn Surface" ));
 	newInput( 8, nodeValue_Slider(      "Spawn Radius",    2, [1, 16, 0.1] ));
@@ -19,23 +24,27 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 4, nodeValue_Int(         "Spawn Frame",     0 ));
 	newInput(12, nodeValue_Int(         "Spawn Duration",  1 ));
 	newInput( 5, nodeValue_Float(       "Spawn Amount",    8 ));
+	newInput(14, nodeValue_Int(         "Attempt",         8 ));
 	
 	////- =Physics
 	newInput(10, nodeValue_Rotation_Random( "Spawn Direction",  [0,45,135,0,0 ] ));
 	newInput( 6, nodeValue_Range(           "Spawn Velocity",   [0,0] ));
 	newInput(11, nodeValue_Slider(          "Inherit Velocity",  0    ));
-	// input 14
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 	
 	input_display_list = [ 0, 9, 
-		["Spawner",	false], 1, 7, 8, 13, 2, 3, 4, 12, 5, 
-		["Physics", false], 10, 6, 11, 
-	]
+		[ "Spawner", false ],  1,  7,  8, 13,  2,  3,  4, 12,  5, 14, 
+		[ "Physics", false ], 10,  6, 11, 
+	];
+	
+	////- Node
 	
 	spawn_amo     = 0;
 	prev_position = [ 0, 0 ];
 	toReset       = true;
+	point_cache   = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _shp   = getInputData(1);
@@ -79,31 +88,36 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var domain = getInputData(0);
-		outputs[0].setValue(domain);
-		
-		var _shape = getInputData(1);
-		var _posit = getInputData(2);
-		var _type  = getInputData(3);
-		var _fra   = getInputData(4);
-		var _amo   = getInputData(5);
-		var _surf  = getInputData(7);
-		var _rad   = getInputData(8);
-		var _seed  = getInputData(9);
-		
-		var _vel   = getInputData( 6);
-		var _dirr  = getInputData(10);
-		var _ivel  = getInputData(11);
-		var _sdur  = getInputData(12);
-		var _siz   = getInputData(13);
-		
-		inputs[ 4].setVisible(_type == 1);
-		inputs[12].setVisible(_type == 1);
-		
-		inputs[ 7].setVisible(_shape == 2, _shape == 2);
-		inputs[ 8].setVisible(_shape == 0);
-		inputs[13].setVisible(_shape == 1);
-		
+		#region data
+			var domain = getInputData(0);
+			outputs[0].setValue(domain);
+			
+			var _seed  = getInputData( 9);
+			
+			var _shape = getInputData( 1);
+			var _surf  = getInputData( 7);
+			var _rad   = getInputData( 8);
+			var _siz   = getInputData(13);
+			var _posit = getInputData( 2);
+			var _type  = getInputData( 3);
+			var _fra   = getInputData( 4);
+			var _sdur  = getInputData(12);
+			var _amo   = getInputData( 5);
+			var _attp  = getInputData(14);
+			
+			var _dirr  = getInputData(10);
+			var _vel   = getInputData( 6);
+			var _ivel  = getInputData(11);
+			
+			inputs[ 4].setVisible(_type == 1);
+			inputs[12].setVisible(_type == 1);
+			
+			inputs[ 7].setVisible(_shape == 2, _shape == 2);
+			inputs[ 8].setVisible(_shape == 0);
+			inputs[13].setVisible(_shape == 1);
+			inputs[14].setVisible(_shape == 2);
+		#endregion
+			
 		if(!instance_exists(domain)) return;
 		
 		if(IS_FIRST_FRAME || toReset) spawn_amo = 0;
@@ -119,19 +133,16 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _samo  = floor(spawn_amo);
 		spawn_amo -= _samo;
 		
-		var _points = [];
-		
 		if(_shape == 2) {
 			var _sw = surface_get_width(_surf);
 			var _sh = surface_get_height(_surf);
 			
-			_points = get_points_from_dist(_surf, _samo, _seed + ceil(_amo) * frame);
-			_points = array_filter(_points, function(a) { return is_array(a); });
-			_samo   = array_length(_points);
-			
-			if(_samo == 0) return;
+			point_cache = get_points_from_dist(_surf, _samo, _seed + ceil(_amo) * frame, _attp, point_cache);
+			var _points = array_filter(point_cache, function(a,i) /*=>*/ {return is_array(a) && a[0] != undefined});
+			_samo = array_length(_points);
 		}
 		
+		if(_samo == 0) return;
 		domain.numParticles += _samo;
 		
 		var _buffP = buffer_create(_samo * 2 * 8, buffer_fixed, 8);

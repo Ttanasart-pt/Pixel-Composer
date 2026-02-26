@@ -28,23 +28,26 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 2, nodeValue_EButton( "Scatter",  1, [ "Uniform", "Random", "Poisson", "Golden Spiral" ] )).rejectArray();
 	newInput( 3, nodeValue_Int(     "Amount",   2 ));
 	newInput(12, nodeValue_Float(   "Distance", 8 )).setValidator(VV_min(0));
+	newInput(13, nodeValue_Int(     "Attempt",  8 ));
 	
 	////- =3D
 	newInput( 8, nodeValue_Surface( "Reference Value"       ));
 	newInput( 9, nodeValue_Bool(    "Output 3D",      false ));
 	newInput(10, nodeValue_EButton( "Normal",         0, [ "X", "Y", "Z" ] ));
 	newInput(11, nodeValue_Float(   "Plane Position", 0 ));
-	// inputs 13
+	// inputs 14
 	
 	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
 		[ "Base",    false    ],  5,  6,  7, 
-		[ "Scatter", false    ],  0,  1,  4,  2,  3, 12, 
+		[ "Scatter", false    ],  0,  1,  4,  2,  3, 12, 13, 
 		[ "3D",       true, 9 ], 10, 11
 	];
 	
 	////- Nodes
+	
+	point_cache = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
@@ -63,6 +66,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _scat	 = _data[ 2];
 			var _amo	 = _data[ 3];
 			var poisDist = _data[12];
+			var _samAtp  = _data[13];
 			
 			var _3d       = _data[ 9];
 			__temp_3dNorm = _data[10];
@@ -70,6 +74,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			inputs[ 2].setVisible(_dist != 2);
 			inputs[ 4].setVisible(_dist == 2, _dist == 2);
+			inputs[13].setVisible(_dist == 2);
 			inputs[ 7].setVisible(_fix);
 			
 			inputs[ 3].setVisible(_scat != 2);
@@ -140,20 +145,23 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			}
 			
 		} else {
-			var p = get_points_from_dist(_distMap, _amo, _seed, 8);
+			point_cache = get_points_from_dist(_distMap, _amo, _seed, _samAtp, point_cache);
+			var p = point_cache;
 			
 			for( var i = 0, n = array_length(p); i < n; i++ ) {
-				if(p[i] == 0) continue;
+				var _p = p[i]; 
+				if(!is_array(_p) || _p[0] == undefined) continue;
+				
 				if(_fix) {
-					p[i][0] *= _fixRef[0];
-					p[i][1] *= _fixRef[1];
+					_p[0] *= _fixRef[0];
+					_p[1] *= _fixRef[1];
 					
 				} else {
-					p[i][0] = _area[0] + _area[2] * (p[i][0] * 2 - 1);
-					p[i][1] = _area[1] + _area[3] * (p[i][1] * 2 - 1);
+					_p[0] = _area[0] + _area[2] * (_p[0] * 2 - 1);
+					_p[1] = _area[1] + _area[3] * (_p[1] * 2 - 1);
 				}
 				
-				array_push(pos, p[i]);
+				array_push(pos, _p);
 			}
 		}
 		

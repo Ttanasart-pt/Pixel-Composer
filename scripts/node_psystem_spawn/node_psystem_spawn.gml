@@ -20,18 +20,19 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- =Source
 	newInput( 6, nodeValue_EScroll( "Type",         0, [ "Area", "Border", "Path", "Mesh", "Map", "Data" ] ));
-	newInput( 7, nodeValue_EScroll( "Shape",        0, [ "Rectangle", "Ellipse" ] ));
-	newInput(25, nodeValue_EScroll( "Border Shape", 0, [ "Rectangle", "Ellipse", "Line" ] ));
-	newInput(23, nodeValue_EScroll( "Distribution", 0, [ "Random", "Uniform Burst", "Uniform Period" ] ));
-	newInput(28, nodeValue_Int(     "Period",       4 ));
-	newInput(29, nodeValue_Slider(  "Shift",        0 ));
+	newInput( 7, nodeValue_EScroll( "Shape",        0, [ "Rectangle", "Ellipse" ]                          ));
+	newInput(25, nodeValue_EScroll( "Border Shape", 0, [ "Rectangle", "Ellipse", "Line" ]                  ));
+	newInput(23, nodeValue_EScroll( "Distribution", 0, [ "Random", "Uniform Burst", "Uniform Period" ]     ));
+	newInput(28, nodeValue_Int(     "Period",       4   ));
+	newInput(29, nodeValue_Slider(  "Shift",        0   ));
 	newInput( 8, nodeValue_Area(    "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
 	newInput(26, nodeValue_Vec2(    "Line Start", [0,0] )).setUnitSimple();
 	newInput(27, nodeValue_Vec2(    "Line End",   [1,1] )).setUnitSimple();
-	newInput( 9, nodeValue_PathNode("Path"       ));
-	newInput(10, nodeValue_Mesh(    "Mesh"       ));
-	newInput(11, nodeValue_Surface( "Spawn Map"  ));
-	newInput(12, nodeValue_Vector(  "Spawn Data" )).setArrayDepth(1);
+	newInput( 9, nodeValue_PathNode("Path"              ));
+	newInput(10, nodeValue_Mesh(    "Mesh"              ));
+	newInput(11, nodeValue_Surface( "Spawn Map"         ));
+	newInput(12, nodeValue_Vector(  "Spawn Data"        )).setArrayDepth(1);
+	newInput(31, nodeValue_Int(     "Attempt",      8   ));
 	
 	////- =Transform
 	newInput(24, nodeValue_Range(   "Inherit Velocity", [0,0], true    ));
@@ -52,7 +53,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- =Events
 	newInput(21, nodeValue_Range(   "Step Period", [1,1], true )).setCurvable(22, CURVE_DEF_11, "Over Lifespan");
-	// input 31
+	// input 32
 	
 	newOutput(0, nodeValue_Output("Particles",  VALUE_TYPE.particle, noone ));
 	newOutput(1, nodeValue_Output("On Spawn",   VALUE_TYPE.trigger,  false )).setVisible(false);
@@ -61,7 +62,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	input_display_list = [ 13, 
 		[ "Spawn",     false ],  0,  1,  2,  3,  4,  5, 
-		[ "Source",    false ],  6,  7, 25, 23, 28, 29,  8, 26, 27,  9, 10, 11, 12, 
+		[ "Source",    false ],  6,  7, 25, 23, 28, 29,  8, 26, 27,  9, 10, 11, 12, 31, 
 		[ "Transform", false ], 24, 19, 20, 
 		[ "Rotation",  false ], 14, 
 		[ "Scale",     false ], 15, 30, 
@@ -542,6 +543,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			inputs[ 9].setVisible(_sh_type == 2, _sh_type == 2);
 			inputs[10].setVisible(_sh_type == 3);
 			inputs[11].setVisible(_sh_type == 4, _sh_type == 4);
+			inputs[31].setVisible(_sh_type == 4);
 			inputs[12].setVisible(_sh_type == 5);
 			
 			inputs[24].setVisible(_sp_type == 2);
@@ -628,8 +630,10 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _sh_type = getInputData( 6);
 		var _seed    = getInputData(13);
 		var _sh_mapp = getInputData(11);
+		var _attemp  = getInputData(31);
+		
 		if(_sh_type == 4) {
-			point_dist_cache  = get_points_from_dist(_sh_mapp, 1024, _seed, 8, point_dist_cache);
+			point_dist_cache  = get_points_from_dist(_sh_mapp, 1024, _seed, _attemp, point_dist_cache);
 			point_dist_map_sw = surface_get_width_safe(_sh_mapp);
 			point_dist_map_sh = surface_get_height_safe(_sh_mapp);
 		}

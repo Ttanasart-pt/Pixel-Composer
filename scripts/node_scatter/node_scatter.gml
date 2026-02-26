@@ -52,6 +52,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(30, nodeValue_Vec2(     "Uniform Amount", [4,4]   ));
 	newInput(35, nodeValue_RotRange( "Angle Range",    [0,360] ));
 	newInput(44, nodeValue_Float(    "Distance",        8      )).setValidator(VV_min(0));
+	newInput(46, nodeValue_Int(      "Attempt",         8      ));
 	
 	////- =Path
 	newInput(19, nodeValue_PathNode( "Path" ));
@@ -90,7 +91,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	
-	// inputs: 46
+	// inputs: 47
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -102,7 +103,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	input_display_list = [ 10, 
 		["Surfaces",  true],  0,  1, 15, 24, 25, 26, 27, 
-		["Scatter",  false],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 
+		["Scatter",  false],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
 		["Path",     false], 19, 38, 20, 45, 21, 22, 
 		["Position", false], 40, 33, 36, 37, 39, 
 		["Rotation", false],  7,  4, 32, 
@@ -179,6 +180,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var uniAmo     = _data[30];
 			var cirRng     = _data[35];
 			var poisDist   = _data[44];
+			var attmp      = _data[46];
 			
 			var path       = _data[19];
 			var pthSpac    = _data[38];
@@ -229,6 +231,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			inputs[21].setVisible(_dist == 4 && pthSpac == 0);
 			inputs[22].setVisible(_dist == 4);
 			inputs[38].setVisible(_dist == 4 && _scat == 0);
+			inputs[46].setVisible(_dist == 2);
 			
 			inputs[24].setVisible(_arr == 3,    _arr  == 3);
 			inputs[25].setVisible(_arr == 4,    _arr  == 4);
@@ -302,7 +305,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(!is_surface(_distMap))
 					return _outData;
 				
-				scatter_mapp = get_points_from_dist(_distMap, _amount, seed);
+				scatter_mapp = get_points_from_dist(_distMap, _amount, seed, attmp, scatter_mapp);
 				scatter_map  = _distMap;
 				scatter_maps = seed;
 				scatter_mapa = _amount;
