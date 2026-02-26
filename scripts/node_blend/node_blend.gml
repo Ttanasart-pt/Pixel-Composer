@@ -69,7 +69,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(10, nodeValue_Enum_Button( "Horizontal Align",  0, array_create(3, THEME.inspector_surface_halign)));
 	newInput(11, nodeValue_Enum_Button( "Vertical Align",    0, array_create(3, THEME.inspector_surface_valign)));
 	// inputs 15
-		
+	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 

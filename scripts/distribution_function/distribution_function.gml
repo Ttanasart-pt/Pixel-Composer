@@ -22,13 +22,13 @@ function get_point_from_dist(distMap, attempt = 4) {
 	return res;
 }
 
-function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
-	if(amount < 1) return [];
-	if(!is_surface(distMap)) return [];
+function get_points_from_dist(distMap, amount, seed = 0, attempt = 8, result = []) {
+	if(amount < 1)           return result;
+	if(!is_surface(distMap)) return result;
 	
 	//print($"===== Get points from dist {amount} =====");
 	
-	if(!struct_has(self, "__dist_surf"))
+	if(!has(self, "__dist_surf"))
 		__dist_surf = surface_create_valid(amount, 1);
 	else 
 		__dist_surf = surface_verify(__dist_surf, amount, 1);
@@ -48,22 +48,30 @@ function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 	buffer_get_surface(b, __dist_surf, 0);
 	buffer_seek(b, buffer_seek_start, 0);
 	
-	var pos = array_create(amount);
+	result = array_verify(result, amount);
+	var _x, _y, _v;
+	var i = 0; 
 	
-	for( var i = 0; i < amount; i++ ) {
-		//print($"    Reading buffer {i}");
+	repeat(amount) {
 		var cc = buffer_read(b, buffer_u32);
+		if(!is_array(result[i])) result[i] = [0,0,0];
 		
-		if(cc == 0) pos[i] = 0;
-		else {
-			var _x = _color_get_red(cc);
-			var _y = _color_get_green(cc);
-			var _v = _color_get_blue(cc);
-			pos[i] = [_x, _y, _v];
+		if(cc == 0) {
+			_x = undefined;
+			_y = 0;
+			_v = 0;
+			
+		} else {
+			_x = _color_get_red(cc);
+			_y = _color_get_green(cc);
+			_v = _color_get_blue(cc);
 		}
+		
+		result[i] = [_x, _y, _v];
+		i++;
 	}
 	
 	buffer_delete(b);
 	
-	return pos;
+	return result;
 }

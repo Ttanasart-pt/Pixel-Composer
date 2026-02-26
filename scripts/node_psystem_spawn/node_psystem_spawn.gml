@@ -219,6 +219,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			var _px = 0;
 			var _py = 0;
+			var _free = true;
 			
 			switch(_sh_type) {
 				case 0 : // area
@@ -293,9 +294,12 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					break;
 					
 				case 4 : // map
-					if(array_invalid(point_dist_cache)) return;
+					var _dat = array_safe_get_fast(point_dist_cache, spawn_index);
+					if(!is_array(_dat) || _dat[0] == undefined) {
+						_free = false;
+						break;
+					}
 					
-					var _dat = point_dist_cache[spawn_index];
 					_px = _dat[0] * point_dist_map_sw;
 					_py = _dat[1] * point_dist_map_sh;
 					break;
@@ -306,6 +310,11 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					_px = _dat[0];
 					_py = _dat[1];
 					break;
+			}
+			
+			if(!_free) {
+				spawn_index++;
+				continue;
 			}
 			
 			_px += _ox;
@@ -620,7 +629,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _seed    = getInputData(13);
 		var _sh_mapp = getInputData(11);
 		if(_sh_type == 4) {
-			point_dist_cache  = get_points_from_dist(_sh_mapp, 1024, _seed);
+			point_dist_cache  = get_points_from_dist(_sh_mapp, 1024, _seed, 8, point_dist_cache);
 			point_dist_map_sw = surface_get_width_safe(_sh_mapp);
 			point_dist_map_sh = surface_get_height_safe(_sh_mapp);
 		}
