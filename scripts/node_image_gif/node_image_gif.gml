@@ -46,13 +46,13 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		PROJECT.animator.framerate = 12;
 	}).setText("Match Length");
 	
-	newInput(3, nodeValue_Enum_Scroll( "Loop modes",  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
-	newInput(4, nodeValue_Int(         "Start frame",        0     ));
-	newInput(7, nodeValue_Float(       "Animation speed",    1     ));
+	newInput(3, nodeValue_Enum_Scroll( "Loop modes",      0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
+	newInput(4, nodeValue_Int(         "Start frame",     1 ));
+	newInput(7, nodeValue_Float(       "Animation speed", 1 ));
 	
 	////- =Custom Order
-	newInput(5, nodeValue_Bool(        "Custom frame order", false ));
-	newInput(6, nodeValue_Int(         "Frame",              0     ));
+	newInput(5, nodeValue_Bool( "Custom frame order", false ));
+	newInput(6, nodeValue_Int(  "Frame",              0     ));
 	// input 8
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
@@ -171,17 +171,26 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var path = path_get(getInputData(0));
-		if(path_current != path) updatePaths(path);
-		
-		var _arr = getInputData(2);
-		var _lop = getInputData(3);
-		var _cus = getInputData(5);
-		
-		inputs[3].setVisible(!_arr);
-		inputs[4].setVisible(!_cus);
-		inputs[6].setVisible( _cus);
-		inputs[7].setVisible(!_cus);
+		#region data
+			var path = path_get(getInputData(0));
+			if(path_current != path) updatePaths(path);
+			
+			var _arr  = getInputData(2);
+			var _lop  = getInputData(3);
+			var _cus  = getInputData(5);
+			
+			var _loop = getInputData(3);
+			var _strt = getInputData(4);
+			var _spd  = getInputData(7);
+			
+			var _cust = getInputData(5);
+			var _cfrm = getInputData(6);
+			
+			inputs[3].setVisible(!_arr);
+			inputs[4].setVisible(!_cus);
+			inputs[6].setVisible( _cus);
+			inputs[7].setVisible(!_cus);
+		#endregion
 		
 		if(!spr || !sprite_exists(spr)) return;
 		
@@ -189,9 +198,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var hh = sprite_get_height(spr);
 		
 		var _outsurf = outputs[0].getValue();
-		var array = getInputData(2);
 		
-		if(array) {
+		if(_arr) {
 			var amo = sprite_get_number(spr);
 			if(array_length(surfaces) == amo && is_surface(surfaces[0])) {
 				outputs[0].setValue(surfaces);
@@ -213,14 +221,9 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return;
 		}
 		
-		var _loop = getInputData(3);
-		var _strt = getInputData(4);
-		var _cust = getInputData(5);
-		var _spd  = getInputData(7);
-		var _frm  = _cust? getInputData(6) : CURRENT_FRAME * _spd - _strt;
-		
 		var _len = sprite_get_number(spr);
 		var _drw = true;
+		var _frm = _cust? _cfrm : CURRENT_FRAME * _spd - (_strt - 1);
 		
 		switch(_loop) {
 			case ANIMATION_END.loop : 
@@ -265,6 +268,18 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!file_exists_empty(path)) return;
 		
 		inputs[0].setValue(path);
+	
+	}
+		
+	////- Serialize
+	
+	static postDeserialize = function( ) /*=>*/ {
+		if(LOADING_VERSION < 1_20_07_5) {
+			var _dat = load_map.inputs[4];
+			
+			if(has(_dat, "r") && has(_dat.r, "d"))
+				_dat.r.d++;
+		}
 	}
 }
 
@@ -275,6 +290,8 @@ function timelineItemNode_Image_gif(_node) : timelineItemNode(_node) constructor
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is(node, Node_Image_gif))      return;
 		if(!node.attributes.show_timeline) return;
+		
+		return;
 		
 		var _spr = node.spr;
 		if(!sprite_exists(_spr)) return;

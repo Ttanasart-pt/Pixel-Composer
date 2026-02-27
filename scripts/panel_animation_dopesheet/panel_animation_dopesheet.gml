@@ -2305,10 +2305,10 @@ function Panel_Animation_Dopesheet() {
                 	
                 	var _ew = _ex1 - _ex0;
                 	var _eh = _ey1 - _ey0;
-                	var _es = ui(6);
+                	var _es = ui(4);
                 	
-                	var _hovF = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex0 + _es, _ey1);
-                	var _hovL = pHOVER && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1, _ey1);
+                	var _hovF = pHOVER && point_in_rectangle(msx, msy, _ex0 - _es, _ey0, _ex0 + _es, _ey1);
+                	var _hovL = pHOVER && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1 + _es, _ey1);
                 	var _hovC = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
                 	
                 	var _hov = 0;
@@ -2316,24 +2316,27 @@ function Panel_Animation_Dopesheet() {
                 	if(_hovF) _hov = 2;
                 	if(_hovL) _hov = 3;
                 	
+                	var baseC = _cont.item.getColor();
+                	if(baseC == -1) baseC = CDEF.main_ltgrey;
+                	
                 	var _drg = timeline_content_dragging != undefined && timeline_content_dragging.node == _cont.node;
                 	var _hlg = _hov || _drg;
-                	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, CDEF.main_ltgrey, .2 + _hlg * .3);
+                	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, baseC, .2 + _hlg * .3);
+                	draw_sprite_stretched_add(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, baseC, .2);
+                	
+                	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
                 	
                 	var _hlg = _hovF || (_drg && timeline_content_drag_type == 2);
                 	if(_hlg) {
-                		var cc = _drg && timeline_content_drag_type == 2? COLORS._main_accent : CDEF.main_ltgrey;
-                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _es, _eh, cc, 1);
+                		var cc = _drg && timeline_content_drag_type == 2? COLORS._main_accent : baseC;
+                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0 - _es, _ey0, _es*2, _eh, cc, 1);
                 	}
                 	
                 	var _hlg = _hovL || (_drg && timeline_content_drag_type == 3);
                 	if(_hlg) {
-                		var cc = _drg && timeline_content_drag_type == 3? COLORS._main_accent : CDEF.main_ltgrey;
-                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex1 - _es, _ey0, _es, _eh, cc, 1);
+                		var cc = _drg && timeline_content_drag_type == 3? COLORS._main_accent : baseC;
+                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex1 - _es, _ey0, _es*2, _eh, cc, 1);
                 	}
-                	
-                	draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, CDEF.main_ltgrey, .5);
-                	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
                 	
                 	if(_hov) {
                 		keyframe_boxable = false;

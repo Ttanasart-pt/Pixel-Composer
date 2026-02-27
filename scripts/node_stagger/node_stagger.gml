@@ -40,8 +40,7 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _frtm = _time - eval_curve_x(_curv, floor(_aind / _step) / _stps) * _amnt * _stps;
 		    _frtm = round(_frtm);
 			
-		if(_ovfl == 1)
-			_frtm = clamp(_frtm, 0, TOTAL_FRAMES - 1);
+		if(_ovfl == 1) _frtm = clamp(_frtm, 1, TOTAL_FRAMES - 1);
 			
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);

@@ -24,9 +24,13 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(12, nodeValue_Bool(     "Extends",    true  ));
 	newInput(16, nodeValue_Bool(     "Both Side",  false ));
 	
-	////- =Effects
+	////- =Repeat
+	newInput(19, nodeValue_EScroll( "Repeat",         0, [ "None", "Loop", "Pingpong" ] ));
+	newInput(20, nodeValue_Float(   "Repeat Length", .1 )).setUnitSimple();
+	
+	////- =Render
 	newInput(18, nodeValue_Color( "Blend Color", ca_white ));
-	// input 19
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out",  VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Extends Mask", VALUE_TYPE.surface, noone));
@@ -35,7 +39,8 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Surfaces", false ],  0,  3,  4,  5,  6, 
 		[ "Select",   false ],  7,  8,  9, 13, 14, 
 		[ "Extends",  false ], 10, 17, 15, 11, 12, 16, 
-		[ "Effects",  false ], 18, 
+		[ "Repeat",   false ], 19, 20, 
+		[ "Render",   false ], 18, 
 	];
 	
 	////- Nodes
@@ -104,6 +109,9 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _extn = _data[12];
 			var _both = _data[16];
 			
+			var _rpTyp = _data[19];
+			var _rpLen = _data[20];
+			
 			var _colr = _data[18];
 			
 			inputs[ 8].setVisible(_type == 0 || _type == 1);
@@ -153,6 +161,9 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_i( "useNormal",  _norm );
 			shader_set_i( "extends",    _extn );
 			shader_set_i( "bothSide",   _both );
+			
+			shader_set_i( "repeatType",   _rpTyp );
+			shader_set_f( "repeatLength", _rpLen );
 			
 			shader_set_c( "blendColor", _colr );
 			

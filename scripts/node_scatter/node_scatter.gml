@@ -488,7 +488,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						
 					case NODE_SCATTER_DIST.map : 
 						sp = array_safe_get_fast(_posDist, i);
-						if(!is_array(sp) || sp[0] == undefined) continue;
+						if(array_invalid(sp) || sp[0] == undefined) continue;
 						
 						_x = _area[0] + _area[2] * (sp[0] * 2 - 1.);
 						_y = _area[1] + _area[3] * (sp[1] * 2 - 1.);

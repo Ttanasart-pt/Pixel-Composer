@@ -4,6 +4,7 @@ event_inherited();
 #region init
 	alarm[0] = 1;
 	ready    = false;
+	thread   = undefined;
 	
 	function init(_directory, _openDialog = true) {
 		ID = UUID_generate();

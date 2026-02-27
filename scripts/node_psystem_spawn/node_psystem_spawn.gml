@@ -296,7 +296,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					
 				case 4 : // map
 					var _dat = array_safe_get_fast(point_dist_cache, spawn_index);
-					if(!is_array(_dat) || _dat[0] == undefined) {
+					if(array_invalid(_dat) || _dat[0] == undefined) {
 						_free = false;
 						break;
 					}

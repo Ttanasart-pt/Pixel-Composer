@@ -309,7 +309,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					
 				} else if(_distrib == 2) {
 					var sp = array_safe_get_fast(_posDist, i);
-					if(!is_array(sp) || sp[0] == undefined) continue;
+					if(array_invalid(sp) || sp[0] == undefined) continue;
 						
 					xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
 					yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);

@@ -160,6 +160,7 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _thr = getInputData(i + 0);
 			var _val = getInputData(i + 1);
+			if(_thr == "") continue;
 			
 			if(_sel > _thr) {
 				input_selecting = inputs[i + 1];

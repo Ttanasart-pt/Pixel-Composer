@@ -16,6 +16,9 @@ uniform float pathSample;
 uniform int   useNormal;
 uniform float direction;
 
+uniform int   repeatType;
+uniform float repeatLength;
+
 uniform vec2      exLength;
 uniform int       exLengthUseSurf;
 uniform sampler2D exLengthSurf;
@@ -194,21 +197,29 @@ void main() {
 	
 	if(!_hit) {
 		gl_FragData[0] = texture2D(gm_BaseTexture, v_vTexcoord);
-		gl_FragData[1] = vec4(0., 0., 0., 1.);
+		gl_FragData[1] = vec4(0.);
 		return;
 	}
 	
 	float dist = distance(v_vTexcoord, rayHit);
+	vec2  dir  = vec2(cos(_exDir), -sin(_exDir));
 
 	if(dist < _exLength) {
-		gl_FragData[0] = texture2D(gm_BaseTexture, rayHit) * blendColor;
-		gl_FragData[1] = vec4(1., 1., 1., 1.);
+		vec2 samPos = rayHit;
+		float repl  = repeatLength * tx.x;
+		
+		     if(repeatType == 1) samPos = rayHit + mod(dist, repl) * dir;
+		else if(repeatType == 2) samPos = rayHit + (repl - abs(mod(dist, repl * 2.) - repl)) * dir;
+		
+		gl_FragData[0] = texture2D(gm_BaseTexture, samPos) * blendColor;
+		
+		float _disNorm = dist / _exLength;
+		gl_FragData[1] = vec4(vec3(_disNorm), 1.);
 		return;
 	} 
 	
-	vec2 dir = vec2(cos(_exDir), -sin(_exDir));
 	vec2 pos = rayHit + (dist - _exLength) * dir;
-
+	
 	gl_FragData[0] = texture2D(gm_BaseTexture, pos);
-	gl_FragData[1] = vec4(0., 0., 0., 1.);
+	gl_FragData[1] = vec4(0.);
 }

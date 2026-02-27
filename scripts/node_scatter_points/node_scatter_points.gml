@@ -150,7 +150,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			for( var i = 0, n = array_length(p); i < n; i++ ) {
 				var _p = p[i]; 
-				if(!is_array(_p) || _p[0] == undefined) continue;
+				if(array_invalid(_p) || _p[0] == undefined) continue;
 				
 				if(_fix) {
 					_p[0] *= _fixRef[0];
