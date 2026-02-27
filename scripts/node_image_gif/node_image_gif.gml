@@ -39,7 +39,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 2, nodeValue_Bool( "Output as Array",    false ));
 	newInput( 8, nodeValue_Bool( "Edit in Timeline",   true  ));
 	
-	////- =Anhimation
+	////- =Animation
 	newInput( 1, nodeValue_Trigger("Set animation length to gif" ));
 	b_match_len = button(function() /*=>*/ { 
 		if(!spr || !sprite_exists(spr)) return;
@@ -47,24 +47,25 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		PROJECT.animator.framerate = 12;
 	}).setText("Match Length");
 	
-	newInput( 3, nodeValue_Enum_Scroll( "Loop modes",      0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
-	newInput( 4, nodeValue_Int(         "Start frame",     1 ));
-	newInput( 7, nodeValue_Float(       "Animation speed", 1 ));
+	newInput( 3, nodeValue_EScroll( "Loop Mode",         0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
+	newInput( 4, nodeValue_Int(     "Start Frame",       1    ));
+	newInput( 7, nodeValue_Float(   "Animation Speed",   1    ));
+	newInput( 9, nodeValue_Bool(    "Draw Before Start", true ));
 	
 	////- =Custom Order
 	newInput( 5, nodeValue_Bool( "Custom frame order", false ));
 	newInput( 6, nodeValue_Int(  "Frame",              0     ));
-	// input 9
+	// input 10
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
 	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
-		[ "Image",     false ], 0, detail, 
-		[ "Output",    false ], 2, 8, 
-		[ "Animation", false ], b_match_len, 3, 4, 7, 
-		[ "Custom Frame Order", false, 5 ], 6,
+		[ "Image",     false ],  0, detail, 
+		[ "Output",    false ],  2,  8, 
+		[ "Animation", false ], b_match_len,  3,  4,  7,  9, 
+		[ "Custom Frame Order", false, 5 ],  6,
 	];
 	
 	////- Node
@@ -194,6 +195,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _loop = getInputData( 3);
 			var _strt = getInputData( 4);
 			var _spd  = getInputData( 7);
+			var _pbef = getInputData( 9);
 			
 			var _cust = getInputData( 5);
 			var _cfrm = getInputData( 6);
@@ -238,6 +240,11 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _len = sprite_get_number(spr);
 		var _drw = true;
 		var _frm = _cust? _cfrm : CURRENT_FRAME * _spd - (_strt - 1);
+		
+		if(!_pbef && _frm < 0) {
+			surface_clear(_outsurf);
+			return;
+		}
 		
 		switch(_loop) {
 			case ANIMATION_END.loop : 
