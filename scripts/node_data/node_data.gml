@@ -353,7 +353,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		anim_priority    = array_length(project.allNodes);
 		is_anim_timeline = false;
 		
-		attributes.timeline_hide = false;
+		attributes.timeline_hide     = false;
+		attributes.timeline_override = false;
 	#endregion
 	
 	#region ---- Notification ----
@@ -2737,6 +2738,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawPreviewToolOverlay = undefined; // function(hover, active, _mx, _my, _panel) { return false; }
 	static drawAnimationTimeline  = undefined; // function(_w, _h, _s) {}
+	static drawTimeline           = undefined; // function(_x, _y, _s, _mx, _my, _panel) {}
+	
 	static drawProcessShort       = undefined; // function(cx, cy, cw, ch, _prog) {}
 	
 	////- PREVIEW

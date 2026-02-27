@@ -1,5 +1,6 @@
-
 #region format.gif
+	globalvar GIF_READING; GIF_READING = false;
+
 	function gifBlockFrame(_frame)         constructor { static __enumIndex__ = 0; frame     = _frame;        }
 	function gifBlockExtension(_extension) constructor { static __enumIndex__ = 1; extension = _extension;    }
 	globalvar gifBlockEOF; gifBlockEOF = { __enumIndex__: 2 };

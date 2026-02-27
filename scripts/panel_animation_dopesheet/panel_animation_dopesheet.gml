@@ -2285,76 +2285,86 @@ function Panel_Animation_Dopesheet() {
                 var _node  = _cont.node;
                 var _anims = _cont.animations;
                 
-                var _keyFirst   =  infinity;
-        		var _keyLast    = -infinity;
-                
-                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
-                    var _anim  = _anims[j];
-			        
-			        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
-			            _keyFirst = min(_keyFirst, _anim.values[k].dopesheet_x);
-			    		_keyLast  = max(_keyLast,  _anim.values[k].dopesheet_x);
-			        }
+                if(_node.attributes.timeline_override) {
+                	var _x = timeline_shift;
+                	var _y = _cont.y;
+                	var _s = timeline_scale;
+                	
+                	var _hovering = _node.drawTimeline(_x, _y, _s, msx, msy, self);
+                	if(_hovering) keyframe_boxable = false;
+                	
+                } else {
+	                var _keyFirst   =  infinity;
+	        		var _keyLast    = -infinity;
+	                
+	                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+	                    var _anim  = _anims[j];
+				        
+				        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
+				            _keyFirst = min(_keyFirst, _anim.values[k].dopesheet_x);
+				    		_keyLast  = max(_keyLast,  _anim.values[k].dopesheet_x);
+				        }
+	                }
+	                
+	                if(_keyFirst != infinity && _keyFirst != _keyLast) {
+	                	var _ex0 = _keyFirst;
+	                	var _ex1 = _keyLast;
+	                	var _ey0 = _cont.y + ui(10) - ui(8);
+	                	var _ey1 = _cont.y + ui(10) + ui(8);
+	                	
+	                	var _ew = _ex1 - _ex0;
+	                	var _eh = _ey1 - _ey0;
+	                	var _es = ui(4);
+	                	
+	                	var _hovF = pHOVER && point_in_rectangle(msx, msy, _ex0 - _es, _ey0, _ex0 + _es, _ey1);
+	                	var _hovL = pHOVER && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1 + _es, _ey1);
+	                	var _hovC = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
+	                	
+	                	var _hov = 0;
+	                	if(_hovC) _hov = 1;
+	                	if(_hovF) _hov = 2;
+	                	if(_hovL) _hov = 3;
+	                	
+	                	var baseC = _cont.item.getColor();
+	                	if(baseC == -1) baseC = CDEF.main_ltgrey;
+	                	
+	                	var _drg = timeline_content_dragging != undefined && timeline_content_dragging.node == _cont.node;
+	                	var _hlg = _hov || _drg;
+	                	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, baseC, .2 + _hlg * .3);
+	                	draw_sprite_stretched_add(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, baseC, .2);
+	                	
+	                	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
+	                	
+	                	var _hlg = _hovF || (_drg && timeline_content_drag_type == 2);
+	                	if(_hlg) {
+	                		var cc = _drg && timeline_content_drag_type == 2? COLORS._main_accent : baseC;
+	                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0 - _es, _ey0, _es*2, _eh, cc, 1);
+	                	}
+	                	
+	                	var _hlg = _hovL || (_drg && timeline_content_drag_type == 3);
+	                	if(_hlg) {
+	                		var cc = _drg && timeline_content_drag_type == 3? COLORS._main_accent : baseC;
+	                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex1 - _es, _ey0, _es*2, _eh, cc, 1);
+	                	}
+	                	
+	                	if(_hov) {
+	                		keyframe_boxable = false;
+	                		
+	                		if(mouse_lpress(pFOCUS)) {
+	                			timeline_content_dragging   = _cont;
+	                			timeline_content_drag_type  = _hov;
+	                			
+	                			timeline_content_drag_dx    = 0;
+	                			timeline_content_drag_mx    = msx;
+	                			timeline_content_drag_range = [
+	                				(_keyFirst - timeline_shift) / timeline_scale, 
+	                				(_keyLast  - timeline_shift) / timeline_scale
+	            				];
+	                		}
+	                	}
+	                }
                 }
-                
-                if(_keyFirst != infinity && _keyFirst != _keyLast) {
-                	var _ex0 = _keyFirst;
-                	var _ex1 = _keyLast;
-                	var _ey0 = _cont.y + ui(10) - ui(8);
-                	var _ey1 = _cont.y + ui(10) + ui(8);
-                	
-                	var _ew = _ex1 - _ex0;
-                	var _eh = _ey1 - _ey0;
-                	var _es = ui(4);
-                	
-                	var _hovF = pHOVER && point_in_rectangle(msx, msy, _ex0 - _es, _ey0, _ex0 + _es, _ey1);
-                	var _hovL = pHOVER && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1 + _es, _ey1);
-                	var _hovC = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
-                	
-                	var _hov = 0;
-                	if(_hovC) _hov = 1;
-                	if(_hovF) _hov = 2;
-                	if(_hovL) _hov = 3;
-                	
-                	var baseC = _cont.item.getColor();
-                	if(baseC == -1) baseC = CDEF.main_ltgrey;
-                	
-                	var _drg = timeline_content_dragging != undefined && timeline_content_dragging.node == _cont.node;
-                	var _hlg = _hov || _drg;
-                	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, baseC, .2 + _hlg * .3);
-                	draw_sprite_stretched_add(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, baseC, .2);
-                	
-                	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
-                	
-                	var _hlg = _hovF || (_drg && timeline_content_drag_type == 2);
-                	if(_hlg) {
-                		var cc = _drg && timeline_content_drag_type == 2? COLORS._main_accent : baseC;
-                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0 - _es, _ey0, _es*2, _eh, cc, 1);
-                	}
-                	
-                	var _hlg = _hovL || (_drg && timeline_content_drag_type == 3);
-                	if(_hlg) {
-                		var cc = _drg && timeline_content_drag_type == 3? COLORS._main_accent : baseC;
-                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex1 - _es, _ey0, _es*2, _eh, cc, 1);
-                	}
-                	
-                	if(_hov) {
-                		keyframe_boxable = false;
-                		
-                		if(mouse_lpress(pFOCUS)) {
-                			timeline_content_dragging   = _cont;
-                			timeline_content_drag_type  = _hov;
-                			
-                			timeline_content_drag_dx    = 0;
-                			timeline_content_drag_mx    = msx;
-                			timeline_content_drag_range = [
-                				(_keyFirst - timeline_shift) / timeline_scale, 
-                				(_keyLast  - timeline_shift) / timeline_scale
-            				];
-                		}
-                	}
-                }
-                
+	                
                 for( var j = 0, m = array_length(_anims); j < m; j++ ) {
                     var _anim = _anims[j];
                     var _key  = drawDopesheet_AnimatorKeys(_cont, _anim, msx, msy);

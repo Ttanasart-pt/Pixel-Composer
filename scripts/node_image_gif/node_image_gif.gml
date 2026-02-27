@@ -36,35 +36,38 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	detail = new Inspector_Label("Gif file");
 	
 	////- =Output
-	newInput(2, nodeValue_Bool(        "Output as array",    false ));
+	newInput( 2, nodeValue_Bool( "Output as Array",    false ));
+	newInput( 8, nodeValue_Bool( "Edit in Timeline",   true  ));
 	
 	////- =Anhimation
-	newInput(1, nodeValue_Trigger("Set animation length to gif" ));
+	newInput( 1, nodeValue_Trigger("Set animation length to gif" ));
 	b_match_len = button(function() /*=>*/ { 
 		if(!spr || !sprite_exists(spr)) return;
 		TOTAL_FRAMES = sprite_get_number(spr);
 		PROJECT.animator.framerate = 12;
 	}).setText("Match Length");
 	
-	newInput(3, nodeValue_Enum_Scroll( "Loop modes",      0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
-	newInput(4, nodeValue_Int(         "Start frame",     1 ));
-	newInput(7, nodeValue_Float(       "Animation speed", 1 ));
+	newInput( 3, nodeValue_Enum_Scroll( "Loop modes",      0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
+	newInput( 4, nodeValue_Int(         "Start frame",     1 ));
+	newInput( 7, nodeValue_Float(       "Animation speed", 1 ));
 	
 	////- =Custom Order
-	newInput(5, nodeValue_Bool( "Custom frame order", false ));
-	newInput(6, nodeValue_Int(  "Frame",              0     ));
-	// input 8
+	newInput( 5, nodeValue_Bool( "Custom frame order", false ));
+	newInput( 6, nodeValue_Int(  "Frame",              0     ));
+	// input 9
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
 	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
-		["Image",	  false], 0, detail, 
-		["Output",	  false], 2, 
-		["Animation", false], b_match_len, 3, 4, 7, 
-		["Custom Frame Order", false, 5], 6,
+		[ "Image",     false ], 0, detail, 
+		[ "Output",    false ], 2, 8, 
+		[ "Animation", false ], b_match_len, 3, 4, 7, 
+		[ "Custom Frame Order", false, 5 ], 6,
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -90,58 +93,65 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
-	
-	function read_gif_init(path) {
-		spr_buffer  = buffer_load(path);
-		spr_builder = new Gif(spr_buffer);
 		
-		loading = 1;
-		load_start_t = get_timer();
-	}
-	
-	function read_gif_reading() {
-		var _readComplete = spr_builder.reading();
-		if(_readComplete) {
-			spr_builder = new __gif_sprite_builder(spr_builder);
-			loading = 2;
-		}
-	}
-	
-	function read_gif_building() {
-		var _buildComplete = spr_builder.building();
-		
-		if(_buildComplete)
-			read_gif_completed();
-	}
-	
-	function read_gif_completed() {
-		surface_array_free(surfaces);
+	#region git reader
+		function read_gif_init(path) {
+			spr_buffer  = buffer_load(path);
+			spr_builder = new Gif(spr_buffer);
 			
-		surfaces = [];
-		spr = spr_builder._spr;
-		detail.text = $"{filename_name(path_current)}\n{sprite_get_number(spr)} frames";
-		print($"Load gif finish in {(get_timer() - load_start_t) / 1_000}ms");
+			loading = 1;
+			load_start_t = get_timer();
+			
+			GIF_READING = true;
+		}
 		
-		triggerRender();
-		loading = 0;
+		function read_gif_reading() {
+			var _readComplete = spr_builder.reading();
+			if(_readComplete) {
+				spr_builder = new __gif_sprite_builder(spr_builder);
+				loading = 2;
+			}
+		}
 		
-		gc_collect();
+		function read_gif_building() {
+			var _buildComplete = spr_builder.building();
+			
+			if(_buildComplete)
+				read_gif_completed();
+		}
 		
-		buffer_delete(spr_buffer);
-		delete spr_builder;
-	}
+		function read_gif_completed() {
+			surface_array_free(surfaces);
+				
+			surfaces = [];
+			spr = spr_builder._spr;
+			detail.text = $"{filename_name(path_current)}\n{sprite_get_number(spr)} frames";
+			print($"Load gif finish in {(get_timer() - load_start_t) / 1_000}ms");
+			
+			triggerRender();
+			loading = 0;
+			
+			gc_collect();
+			
+			buffer_delete(spr_buffer);
+			GIF_READING = false;
+			
+			delete spr_builder;
+		}
+	#endregion
 	
 	function updatePaths(path = path_current) {
 		if(path == -1) return false;
 		
 		var ext   = string_lower(filename_ext(path));
-		var _name = string_replace(filename_name(path), filename_ext(path), "");
+		if(ext != ".gif") return false;
 		
-		if(ext != ".gif")
-			return false;
+		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		setDisplayName(_name, false);
 		outputs[1].setValue(path);
+		
+		if(GIF_READING) return false;
 		
 		if(spr && sprite_exists(spr)) sprite_delete(spr);
 		read_gif_init(path);
@@ -175,21 +185,25 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var path = path_get(getInputData(0));
 			if(path_current != path) updatePaths(path);
 			
-			var _arr  = getInputData(2);
-			var _lop  = getInputData(3);
-			var _cus  = getInputData(5);
+			var _arr  = getInputData( 2);
+			var _edit = getInputData( 8);
 			
-			var _loop = getInputData(3);
-			var _strt = getInputData(4);
-			var _spd  = getInputData(7);
+			var _lop  = getInputData( 3);
+			var _cus  = getInputData( 5);
 			
-			var _cust = getInputData(5);
-			var _cfrm = getInputData(6);
+			var _loop = getInputData( 3);
+			var _strt = getInputData( 4);
+			var _spd  = getInputData( 7);
+			
+			var _cust = getInputData( 5);
+			var _cfrm = getInputData( 6);
 			
 			inputs[3].setVisible(!_arr);
 			inputs[4].setVisible(!_cus);
 			inputs[6].setVisible( _cus);
 			inputs[7].setVisible(!_cus);
+			
+			attributes.timeline_override = _edit;
 		#endregion
 		
 		if(!spr || !sprite_exists(spr)) return;
@@ -269,6 +283,76 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		inputs[0].setValue(path);
 	
+	}
+	
+	timeline_content_dragging  = false;
+	timeline_content_drag_type = 0;
+	timeline_content_drag_dx   = 0;
+	timeline_content_drag_mx   = 0;
+	
+	static drawTimeline = function(_x, _y, _s, _mx, _my, _panel) {
+		if(!spr || !sprite_exists(spr)) return false;
+		
+		var _cust = getInputData( 5);
+		if(_cust) return false;
+		
+		var _loop = getInputData( 3);
+		var _strt = getInputData( 4);
+		var _spd  = getInputData( 7);
+		
+		var _slen = sprite_get_number(spr);
+		var _plen = _slen / _spd;
+		
+		var _ex0 = _x   + _strt * _s;
+    	var _ex1 = _ex0 + _plen * _s;
+    	var _ey0 = _y + ui(10) - ui(8);
+    	var _ey1 = _y + ui(10) + ui(8);
+    	
+    	var _ew = _ex1 - _ex0;
+    	var _eh = _ey1 - _ey0;
+    	var _es = ui(4);
+    	
+    	var _hovC = _panel.pHOVER && point_in_rectangle(_mx, _my, _ex0, _ey0, _ex1, _ey1);
+    	
+    	var _hov = 0;
+    	if(_hovC) _hov = 1;
+    	
+    	var baseC = getColor();
+    	if(baseC == -1) baseC = CDEF.main_ltgrey;
+    	
+    	var _drg = timeline_content_dragging;
+    	var _hlg = _hov || _drg;
+    	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, baseC, .2 + _hlg * .3);
+    	draw_sprite_stretched_add(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, baseC, .2);
+    	
+    	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
+    	
+    	draw_sprite_ui(THEME.gif_loop_type, _loop, _ex1 + ui(12), _y + ui(10), .7, .7, 0, COLORS._main_icon, .75);
+    		
+    	if(_hov) {
+    		if(mouse_lpress(_panel.pFOCUS)) {
+    			timeline_content_dragging   = true;
+    			
+    			timeline_content_drag_dx    = 0;
+    			timeline_content_drag_mx    = _mx;
+    		}
+    	}
+    	
+    	if(timeline_content_dragging) {
+    		timeline_content_drag_dx += (_mx - timeline_content_drag_mx) / _s;
+        	timeline_content_drag_mx  = _mx;
+        	
+        	var _delta = floor(timeline_content_drag_dx);
+        	if(_delta != 0) {
+        		inputs[4].setValue(_strt + _delta);
+            	timeline_content_drag_dx -= _delta;
+        	}
+        	
+        	if(mouse_lrelease())
+        		timeline_content_dragging = false;
+    	}
+    	
+    	return _hov;
 	}
 		
 	////- Serialize

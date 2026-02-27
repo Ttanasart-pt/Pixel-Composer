@@ -103,6 +103,7 @@
     "folder_content":                     { "path": "./icon/s_folder_content.png",                          "s": 2, "x": 12, "y": 12 },
     "folder":                             { "path": "./icon/s_folder_24.png",                               "s": 1, "x": 12, "y": 12 },
     "frame_range":                        { "path": "./icon/s_frame_range.png",                             "s": 2, "x": 12, "y": 12 },
+    "gif_loop_type":                      { "path": "./icon/s_gif_loop_type.png",                           "s": 4, "x": 12, "y": 12 },
     "gear":                               { "path": "./icon/s_gear_24.png",                                 "s": 1, "x": 12, "y": 12 },
     "gear_16":                            { "path": "./icon/s_gear_16.png",                                 "s": 1, "x":  8, "y":  8 },
     "generate_layers":                    { "path": "./icon/s_generate_layers.png",                         "s": 1, "x": 12, "y": 12 },
