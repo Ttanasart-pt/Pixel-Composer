@@ -41,31 +41,35 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	update_on_frame = true;
 	
+	newInput(11, nodeValue_Bool( "Edit in Timeline",   true  ));
+	
 	////- =Image
-	newInput(0, nodeValue_Path(        "Path",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
-	newInput(1, nodeValue_Padding(     "Padding",     [0,0,0,0] )).rejectArray();
-	newInput(8, nodeValue_Enum_Scroll( "Canvas Size", 2, [ "First", "Minimum", "Maximum" ])).rejectArray();
+	newInput( 0, nodeValue_Path(        "Path",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
+	newInput( 1, nodeValue_Padding(     "Padding",     [0,0,0,0] )).rejectArray();
+	newInput( 8, nodeValue_Enum_Scroll( "Canvas Size", 2, [ "First", "Minimum", "Maximum" ])).rejectArray();
 	
 	////- =Animation
-	newInput(5, nodeValue_Trigger( "Set animation length to match" ));
+	newInput( 5, nodeValue_Trigger( "Set animation length to match" ));
 	b_match_len = button(function() /*=>*/ { if(array_empty(spr)) return; TOTAL_FRAMES = array_length(spr); }).setText("Match Length");
 	
-	newInput(4, nodeValue_Enum_Scroll( "Loop Modes",      0, ["Loop", "Ping pong", "Hold last frame", "Hide"]       )).rejectArray();
-	newInput(2, nodeValue_Bool(        "Stretch Frame",   false, "Stretch animation speed to match project length." )).rejectArray();
-	newInput(3, nodeValue_Float(       "Animation Speed", 1 )).rejectArray();
+	newInput( 4, nodeValue_EScroll( "Loop Modes",        0, ["Loop", "Ping pong", "Hold last frame", "Hide"]       )).rejectArray();
+	newInput( 2, nodeValue_Bool(    "Stretch Frame",     false, "Stretch animation speed to match project length." )).rejectArray();
+	newInput( 9, nodeValue_Int(     "Start Frame",       1    ));
+	newInput( 3, nodeValue_Float(   "Animation Speed",   1    )).rejectArray();
+	newInput(10, nodeValue_Bool(    "Draw Before Start", true ));
 		
 	////- =Custom Order
-	newInput(6, nodeValue_Bool( "Custom Frame Order", false ));
-	newInput(7, nodeValue_Int(  "Frame", 0 ));
-	// input 9	
+	newInput( 6, nodeValue_Bool( "Custom Frame Order", false ));
+	newInput( 7, nodeValue_Int(  "Frame", 0 ));
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
-	input_display_list = [
-		[ "Image",     false ], 0, 1, 8, 
-		[ "Animation", false ], b_match_len, 4, 2, 3, 
-		[ "Custom Frame Order", false, 6 ], 7, 
+	input_display_list = [ 11, 
+		[ "Image",     false ],  0,  1,  8, 
+		[ "Animation", false ], b_match_len,  4,  2,  9,  3, 10, 
+		[ "Custom Frame Order", false, 6 ],  7, 
 	];
 	
 	attribute_surface_depth();
@@ -130,13 +134,6 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static step = function() {
-		var str  = getInputData(2);
-		var _cus = getInputData(6);
-		
-		inputs[2].setVisible(!_cus);
-		inputs[3].setVisible(!_cus && !str);
-		inputs[4].setVisible(!_cus && !str);
-		
 		if(attributes.file_checker)
 		for( var i = 0, n = array_length(path_current); i < n; i++ ) {
 			if(file_get_modify_s(path_current[i]) > edit_time) {
@@ -148,31 +145,49 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		insp2button.tooltip = attributes.cache_use? __txt("Remove Cache") : __txt("Cache");
-		insp2button.icon = attributes.cache_use? THEME.dCache_clear : THEME.cache_group;
+		insp2button.tooltip    = attributes.cache_use? __txt("Remove Cache") : __txt("Cache");
+		insp2button.icon       = attributes.cache_use? THEME.dCache_clear : THEME.cache_group;
 		insp2button.icon_blend = attributes.cache_use? c_white : COLORS._main_icon;
 		
-		var path = path_get(getInputData(0));
-		if(!array_equals(path_current, path)) 
-			updatePaths(path);
+		#region data
+			var path = getInputData(0);
+			    path = path_get(path);
+			if(!array_equals(path_current, path)) 
+				updatePaths(path);
+				
+			var _sprs = attributes.cache_use? cache_spr : spr;
+			if(array_length(_sprs) == 0) return;
+			if(!sprite_exists(_sprs[0])) return;
 			
-		var _sprs = attributes.cache_use? cache_spr : spr;
-		if(array_length(_sprs) == 0) return;
-		if(!sprite_exists(_sprs[0])) return;
+			var _pad   = getInputData( 1);
+			var _siz   = getInputData( 8); 
+			
+			var _stret = getInputData( 2);
+			var _loop  = getInputData( 4);
+			var _start = getInputData( 9);
+			var _rawsp = getInputData( 3);
+			var _drawb = getInputData(10);
+			
+			var _cusor = getInputData( 6);
+			var _cusfr = getInputData( 7);
+			
+			var _edit = getInputData(11);
+			attributes.timeline_override = _edit;
+			
+			inputs[2].setVisible(!_cusor);
+			inputs[3].setVisible(!_cusor && !_stret);
+			inputs[4].setVisible(!_cusor && !_stret);
+			
+		#endregion
 		
-		var _pad = getInputData(1);
+		var _speed = _stret? (TOTAL_FRAMES + 1) / array_length(_sprs) : 1 / _rawsp;
+		if(_speed == 0) _speed = 1;
 		
-		var _cus = getInputData(6);
-		var _str = getInputData(2);
-		var _end = getInputData(4);
-		var _spd = _str? (TOTAL_FRAMES + 1) / array_length(_sprs) : 1 / getInputData(3);
-		if(_spd == 0) _spd = 1;
-		var _frame = _cus? getInputData(7) : floor(CURRENT_FRAME / _spd);
+		var _frame = _cusor? _cusfr : floor(CURRENT_FRAME / _speed) - (_start - 1);
 		
 		var _len = array_length(_sprs);
 		var _drw = true;
 		
-		var _siz = getInputData(8); 
 		var sw = sprite_get_width(_sprs[0]); 
 		var sh = sprite_get_height(_sprs[0]);
 		
@@ -202,7 +217,12 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[0].setValue(surfs);
 		outputs[1].setValue([ww, hh]);
 		
-		switch(_end) {
+		if(!_drawb && _frame < 0) {
+			surface_clear(surfs);
+			return;
+		}
+		
+		switch(_loop) {
 			case ANIMATION_END.loop : _frame = safe_mod(_frame, _len); break;
 				
 			case ANIMATION_END.ping :
@@ -215,7 +235,10 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		var _spr = array_safe_get_fast(_sprs, _frame, noone);
-		if(_spr == noone) return;
+		if(_spr == noone) {
+			surface_clear(surfs);
+			return;
+		}
 		
 		var curr_w = sprite_get_width(_spr);
 		var curr_h = sprite_get_height(_spr);
@@ -225,6 +248,78 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		surface_set_shader(surfs);
 			if(_drw) draw_sprite(_spr, 0, curr_x, curr_y);
 		surface_reset_shader();
+	}
+	
+	timeline_content_dragging  = false;
+	timeline_content_drag_type = 0;
+	timeline_content_drag_dx   = 0;
+	timeline_content_drag_mx   = 0;
+	
+	static drawTimeline = function(_x, _y, _s, _mx, _my, _panel) {
+		var _sprs = attributes.cache_use? cache_spr : spr;
+		if(array_length(_sprs) == 0) return false;
+		if(!sprite_exists(_sprs[0])) return false;
+		
+		var _cust = getInputData( 6);
+		if(_cust) return false;
+		
+		var _loop = getInputData( 4);
+		var _strt = getInputData( 9);
+		var _spd  = getInputData( 3);
+		
+		var _slen = array_length(_sprs);
+		var _plen = _slen / _spd;
+		
+		var _ex0 = _x   + _strt * _s;
+    	var _ex1 = _ex0 + _plen * _s;
+    	var _ey0 = _y + ui(10) - ui(8);
+    	var _ey1 = _y + ui(10) + ui(8);
+    	
+    	var _ew = _ex1 - _ex0;
+    	var _eh = _ey1 - _ey0;
+    	var _es = ui(4);
+    	
+    	var _hovC = _panel.pHOVER && point_in_rectangle(_mx, _my, _ex0, _ey0, _ex1, _ey1);
+    	
+    	var _hov = 0;
+    	if(_hovC) _hov = 1;
+    	
+    	var baseC = getColor();
+    	if(baseC == -1) baseC = CDEF.main_ltgrey;
+    	
+    	var _drg = timeline_content_dragging;
+    	var _hlg = _hov || _drg;
+    	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, baseC, .2 + _hlg * .3);
+    	draw_sprite_stretched_add(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, baseC, .2);
+    	
+    	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
+    	
+    	draw_sprite_ui(THEME.gif_loop_type, _loop, _ex1 + ui(12), _y + ui(10), .7, .7, 0, COLORS._main_icon, .75);
+    		
+    	if(_hov) {
+    		if(mouse_lpress(_panel.pFOCUS)) {
+    			timeline_content_dragging   = true;
+    			
+    			timeline_content_drag_dx    = 0;
+    			timeline_content_drag_mx    = _mx;
+    		}
+    	}
+    	
+    	if(timeline_content_dragging) {
+    		timeline_content_drag_dx += (_mx - timeline_content_drag_mx) / _s;
+        	timeline_content_drag_mx  = _mx;
+        	
+        	var _delta = floor(timeline_content_drag_dx);
+        	if(_delta != 0) {
+        		inputs[9].setValue(_strt + _delta);
+            	timeline_content_drag_dx -= _delta;
+        	}
+        	
+        	if(mouse_lrelease())
+        		timeline_content_dragging = false;
+    	}
+    	
+    	return _hov;
 	}
 	
 	////- Cache
@@ -249,7 +344,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setIcon(THEME.cache_group, 0, COLORS._main_icon).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	////- Serialize
-
+	
 	static postDeserialize = function() {
 		if(!attributes[$ "cache_use"] ?? 0) return;
 		cache_spr = sprite_array_deserialize(attributes[$ "cache_data"] ?? "");
@@ -263,6 +358,7 @@ function timelineItemNode_Image_Animated(_node) : timelineItemNode(_node) constr
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is(node, Node_Image_Animated)) return;
 		if(!node.attributes.show_timeline) return;
+		return;
 		
 		var _sprs = node.spr;
 		var _spr, _rx, _ry;

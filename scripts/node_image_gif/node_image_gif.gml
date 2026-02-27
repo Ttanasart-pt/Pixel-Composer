@@ -31,13 +31,14 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Image_gif(self));
 	
+	newInput( 8, nodeValue_Bool( "Edit in Timeline",   true  ));
+	
 	////- =Image
-	newInput(0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
+	newInput( 0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
 	detail = new Inspector_Label("Gif file");
 	
 	////- =Output
 	newInput( 2, nodeValue_Bool( "Output as Array",    false ));
-	newInput( 8, nodeValue_Bool( "Edit in Timeline",   true  ));
 	
 	////- =Animation
 	newInput( 1, nodeValue_Trigger("Set animation length to gif" ));
@@ -61,9 +62,9 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newOutput(1, nodeValue_Output( "Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
 	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
-	input_display_list = [ 
+	input_display_list = [ 8, 
 		[ "Image",     false ],  0, detail, 
-		[ "Output",    false ],  2,  8, 
+		[ "Output",    false ],  2, 
 		[ "Animation", false ], b_match_len,  3,  4,  7,  9, 
 		[ "Custom Frame Order", false, 5 ],  6,
 	];
@@ -186,8 +187,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var path = path_get(getInputData(0));
 			if(path_current != path) updatePaths(path);
 			
-			var _arr  = getInputData( 2);
 			var _edit = getInputData( 8);
+			var _arr  = getInputData( 2);
 			
 			var _lop  = getInputData( 3);
 			var _cus  = getInputData( 5);
@@ -361,7 +362,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
     	
     	return _hov;
 	}
-		
+	
 	////- Serialize
 	
 	static postDeserialize = function( ) /*=>*/ {
@@ -381,7 +382,6 @@ function timelineItemNode_Image_gif(_node) : timelineItemNode(_node) constructor
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is(node, Node_Image_gif))      return;
 		if(!node.attributes.show_timeline) return;
-		
 		return;
 		
 		var _spr = node.spr;
