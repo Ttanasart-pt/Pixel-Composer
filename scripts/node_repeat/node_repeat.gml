@@ -66,6 +66,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(19, nodeValue_Vec2(       "Shift Column",     [0,.5]    )).setUnitSimple();
 	newInput(39, nodeValue_Anchor(     "Anchor"                      ));
 	newInput(15, nodeValue_Vec2_Range( "Random Position", [0,0,0,0]  ));
+	newInput(44, nodeValue_Float(     "Use Shift as Endpoint", false ));
 	
 	////- =Rotation
 	newInput(33, nodeValue_Rotation( "Base Rotation",     0          ));
@@ -79,6 +80,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(21, nodeValue_Vec2_Range( "Random Scale",  [1,1,1,1] ));
 	
 	////- =Render
+	newInput(43, nodeValue_Bool(     "Inverse Draw Order", false  ));
 	newInput(34, nodeValue_EScroll(  "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput(14, nodeValue_Gradient( "Color Over Copy",   gra_white           )).setMappable(30);
 	newInput(23, nodeValue_Gradient( "Random Color",      gra_white           ));
@@ -88,7 +90,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	/* deprecated */ newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10      ));
 	/* deprecated */ newInput(27, nodeValue_Color(    "Animator blend",     ca_white          ));
 	/* deprecated */ newInput(28, nodeValue_Slider(   "Animator alpha",     1                 ));
-	// input 43
+	// input 45
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -194,13 +196,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	b_gridFill = button(function() /*=>*/ {return gridFill()}).setIcon(THEME.fill, 0, COLORS._main_icon).setTooltip("Fill");
 	
 	input_display_list = [
-		["Surfaces",  true],  0, 35, 36, 37,  1, 16, 17,
-		["Pattern",	 false],  3,  9, 22, 32,  2, 18,  7,  8, 
-		["Path",	  true], 11, 12, 13, 40, 
-		["Position", false],  4, 38, 26, 19, 39, 15, 
-		["Rotation", false], 33,  5, 20, 
-		["Scale",	 false], 29,  6, 10, 41, 42, 21, 
-		["Render",	 false], 34, 14, 30, 23, 
+		[ "Surfaces",  true ],  0, 35, 36, 37,  1, 16, 17,
+		[ "Pattern",  false ],  3,  9, 22, 32,  2, 18,  7,  8, 
+		[ "Path",      true ], 11, 12, 13, 40, 
+		[ "Position", false ],  4, 38, 26, 19, 39, 15, 44, 
+		[ "Rotation", false ], 33,  5, 20, 
+		[ "Scale",    false ], 29,  6, 10, 41, 42, 21, 
+		[ "Render",   false ], 43, 34, 14, 30, 23, 
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
 		animator_renderer, 
@@ -378,6 +380,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _rpos = _data[ 4], _rpos_curved = inputs[4].attributes.curved; shift_curve.set(_data[38]);
 			var _panc = _data[39];
 			var _pran = _data[15];
+			var _pshf = _data[44];
 			
 			var _rsta = _data[26];
 			var _rrot = _data[ 5];
@@ -408,6 +411,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _col    = _data[18];
 			var _cls    = _data[19];
+			var _invers = _data[43];
 			var _bld_md = _data[34];
 			
 			inputs[3].getEditWidget().setSideButton(_pat == 1? b_gridFill : noone);
@@ -507,9 +511,12 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _rposx = 0;
 		var _rposy = 0;
 		
-		var _prg;
+		var _divis = _pshf? 1 / _amo : 1;
 		var _st = 1 / _amo;
-		var ii = 0, _i = 0;
+		var  ii = 0;
+		var _i  = 0;
+		
+		var _prg;
 		var cc;
 		
 		repeat(_amo) {
@@ -547,8 +554,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 						posy += _spos[1] + _rposy;
 						
 						var _rpos_sca = _rpos_curved? shift_curve.get(_prg) : 1;
-						_rposx += _rpos[0] * _rpos_sca;
-						_rposy += _rpos[1] * _rpos_sca;
+						
+						_rposx += _rpos[0] * _rpos_sca * _divis;
+						_rposy += _rpos[1] * _rpos_sca * _divis;
 					}
 					break;
 				
@@ -814,15 +822,12 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			shader_set_interpolation(_baseSurface);
 			
-			var _i = 0;
-			repeat( atlas_i ) {
+			for( var i = 0; i < atlas_i; i++ ) {
+				var _ind = _invers? atlas_i - i - 1 : i;
+				var _i   = _ind * ATLAS_ARRAY.length;
+				
 				var _x = atlases[_i + ATLAS_ARRAY.x] + _offset_x;
 				var _y = atlases[_i + ATLAS_ARRAY.y] + _offset_y;
-				
-				if(_dimt == OUTPUT_SCALING.scale) {
-					_x += _padd[2] - minx;
-					_y += _padd[1] - miny;
-				}
 				
 				var _surf = atlases[_i + ATLAS_ARRAY.surface];
 				var _sx   = atlases[_i + ATLAS_ARRAY.sx];
@@ -831,9 +836,12 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _col  = atlases[_i + ATLAS_ARRAY.color];
 				var _alp  = atlases[_i + ATLAS_ARRAY.alpha];
 				
-				draw_surface_ext(_surf, _x, _y, _sx, _sy, _rot, _col, _alp);
+				if(_dimt == OUTPUT_SCALING.scale) {
+					_x += _padd[2] - minx;
+					_y += _padd[1] - miny;
+				}
 				
-				_i += ATLAS_ARRAY.length;
+				draw_surface_ext(_surf, _x, _y, _sx, _sy, _rot, _col, _alp);
 			}
 			
 			BLEND_NORMAL
