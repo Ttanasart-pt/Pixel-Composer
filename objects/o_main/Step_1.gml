@@ -146,8 +146,11 @@ _FILE_DROPPED       = false;
 #endregion
 
 #region animation & RENDER
-	if(RENDERING != undefined) RENDERING.render();
-	else if(WILL_RENDERING != undefined) Render(WILL_RENDERING.project, WILL_RENDERING.partial);
+	if(RENDERING != undefined) {
+		if(RENDERING.render())
+			RENDERING = undefined;
+		
+	} else if(WILL_RENDERING != undefined) Render(WILL_RENDERING.project, WILL_RENDERING.partial);
 	
 	if(!surface_exists(watcher_surface)) {
 		RENDER_ALL

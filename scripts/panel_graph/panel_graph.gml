@@ -4577,7 +4577,8 @@ function load_file_path(path, _x = undefined, _y = undefined) {
             else node = Node_create_Image_path(_x, _y, p);
             
         } else if(string_starts_with(ext, "pxc")) { //backups pxc___ 
-        	LOAD_PATH(p);
+        	if(keyboard_check_direct(vk_shift)) dialogCall(o_dialog_add_pxc).setPath(p);
+        	else LOAD_PATH(p);
         	
         } else {
 	        switch(ext) {

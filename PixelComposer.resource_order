@@ -420,6 +420,7 @@
     {"name":"o_dialog_add_image","order":3,"path":"objects/o_dialog_add_image/o_dialog_add_image.yy",},
     {"name":"o_dialog_add_json","order":4,"path":"objects/o_dialog_add_json/o_dialog_add_json.yy",},
     {"name":"o_dialog_add_node","order":1,"path":"objects/o_dialog_add_node/o_dialog_add_node.yy",},
+    {"name":"o_dialog_add_pxc","order":5,"path":"objects/o_dialog_add_pxc/o_dialog_add_pxc.yy",},
     {"name":"o_dialog_assetbox","order":1,"path":"objects/o_dialog_assetbox/o_dialog_assetbox.yy",},
     {"name":"o_dialog_color_picker","order":6,"path":"objects/o_dialog_color_picker/o_dialog_color_picker.yy",},
     {"name":"o_dialog_color_quick_pick","order":5,"path":"objects/o_dialog_color_quick_pick/o_dialog_color_quick_pick.yy",},

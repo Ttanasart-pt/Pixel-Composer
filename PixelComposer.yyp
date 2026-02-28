@@ -595,6 +595,7 @@
     {"id":{"name":"o_dialog_add_json","path":"objects/o_dialog_add_json/o_dialog_add_json.yy",},},
     {"id":{"name":"o_dialog_add_multiple_images","path":"objects/o_dialog_add_multiple_images/o_dialog_add_multiple_images.yy",},},
     {"id":{"name":"o_dialog_add_node","path":"objects/o_dialog_add_node/o_dialog_add_node.yy",},},
+    {"id":{"name":"o_dialog_add_pxc","path":"objects/o_dialog_add_pxc/o_dialog_add_pxc.yy",},},
     {"id":{"name":"o_dialog_arrayBox","path":"objects/o_dialog_arrayBox/o_dialog_arrayBox.yy",},},
     {"id":{"name":"o_dialog_assetbox","path":"objects/o_dialog_assetbox/o_dialog_assetbox.yy",},},
     {"id":{"name":"o_dialog_color_picker","path":"objects/o_dialog_color_picker/o_dialog_color_picker.yy",},},

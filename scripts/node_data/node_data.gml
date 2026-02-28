@@ -3471,7 +3471,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	nextn = [];
-	static generateNodeRenderReport = function() {
+	static generateNodeRenderReport = function(_queue) {
 		var _report = {};
 		
 		_report.search_res = true;
@@ -3498,15 +3498,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_report.logs  = array_clone(messages_dbg);
 		
 		_report.nextn = nextn;
-		_report.queue = array_clone(RENDER_QUEUE, 1);
+		_report.queue = array_clone(_queue, 1);
 		
 		nextn = [];
 		
 		return _report;
 	}
-	static summarizeReport = function(_startTime) {
+	static summarizeReport = function(_startTime, _queue) {
 		var _srcstr = $"{getFullName()}";
-		var _report = generateNodeRenderReport();
+		var _report = generateNodeRenderReport(_queue);
 		
 		for( var i = 0, n = array_length(_report.nextn); i < n; i++ ) _srcstr += $"{_report.nextn[i].getFullName()}";
 		for( var i = 0, n = array_length(_report.queue); i < n; i++ ) _srcstr += $"{_report.queue[i].getFullName()}";

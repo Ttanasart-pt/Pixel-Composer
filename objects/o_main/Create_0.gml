@@ -36,9 +36,6 @@
 	DRAGGING           = noone;
 	KEYBOARD_RESET
 	
-	RENDER_QUEUE = [];
-	RENDER_ORDER = [];
-	
 	globalvar AUTO_SAVE_TIMER;
 	AUTO_SAVE_TIMER = 0;
 	

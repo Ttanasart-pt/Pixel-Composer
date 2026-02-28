@@ -5,7 +5,7 @@ enum RENDER_TYPE {
 }
 
 #region globalvar
-	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER;
+	globalvar UPDATE;
 	
 	globalvar UPDATE_RENDER_ORDER; UPDATE_RENDER_ORDER = false;
 	globalvar LIVE_UPDATE; LIVE_UPDATE         = false;
@@ -183,12 +183,11 @@ enum RENDER_TYPE {
 	}
 	
 	function RenderObject(_project = PROJECT, _partial = false, _runAction = false) constructor {
-		project   = _project;
-		partial   = _partial;
-		runAction = _runAction;
+		project     = _project;
+		partial     = _partial;
+		runAction   = _runAction;
 		renderIndex = 0;
-		
-		RENDERING = self;
+		renderQueue = [];
 		
 		static init = function() {
 			// node_auto_organize(_project.nodes);
@@ -216,7 +215,7 @@ enum RENDER_TYPE {
 			
 			// get leaf node
 			if(global.FLAG.render == 1) LOG($"----- Finding leaf from {array_length(project.nodeTopo)} nodes -----");
-			RENDER_QUEUE = [];
+			
 			array_foreach(project.nodeTopo, function(n) /*=>*/ { 
 				n.passiveDynamic = false;
 				n.render_time    = 0;
@@ -232,20 +231,20 @@ enum RENDER_TYPE {
 				}
 				
 				profile_log(2, $"Leaf: {n.getFullName()}");
-				array_push(RENDER_QUEUE, n);
+				array_push(renderQueue, n);
 				n.forwardPassiveDynamic();
 			});
 			
 			if(PROFILER_STAT) {
 				var ll = "";
-				for( var i = 0, n = array_length(RENDER_QUEUE); i < n; i++ )
-					ll += $"{RENDER_QUEUE[i].getFullName()}\n";
+				for( var i = 0, n = array_length(renderQueue); i < n; i++ )
+					ll += $"{renderQueue[i].getFullName()}\n";
 				
-				profile_log(1, $"Found {array_length(RENDER_QUEUE)} leaves", ll);
+				profile_log(1, $"Found {array_length(renderQueue)} leaves", ll);
 			}
 			
 			leaf_time = get_timer() - t;
-			if(global.FLAG.render >= 1) LOG($"Get leaf complete: found {array_length(RENDER_QUEUE)} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();
+			if(global.FLAG.render >= 1) LOG($"Get leaf complete: found {array_length(renderQueue)} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();
 			if(global.FLAG.render == 1) LOG("================== Start rendering ==================");
 		}
 		
@@ -274,11 +273,11 @@ enum RENDER_TYPE {
 			// print($"➤➤➤➤➤➤  RENDER {GLOBAL_CURRENT_FRAME}");
 			
 			try {
-				while(array_length(RENDER_QUEUE)) {
+				while(array_length(renderQueue)) {
 					LOG_BLOCK_START
-					// if(global.FLAG.render == 1) LOG($"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE}");
+					// if(global.FLAG.render == 1) LOG($"➤➤➤➤➤➤ CURRENT RENDER QUEUE {renderQueue}");
 					
-					var rendering  = array_shift(RENDER_QUEUE);
+					var rendering  = array_shift(renderQueue);
 					var renderable = rendering.isRenderable();
 					
 					// if(global.FLAG.render == 1) LOG($"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
@@ -298,17 +297,17 @@ enum RENDER_TYPE {
 							if(!is(nextNode, __Node_Base) || !nextNode.isRenderable()) continue;
 							
 							// if(global.FLAG.render == 1) LOG($"→→ Push {nextNode.internalName} to queue.");
-							array_push(RENDER_QUEUE, nextNode);
+							array_push(renderQueue, nextNode);
 							
 							if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
 						}
 						
 						// if(runAction && rendering.insp1Update) rendering.insp1button.onClick();
 							
-						if(PROFILER_STAT) rendering.summarizeReport(render_pt);
+						if(PROFILER_STAT) rendering.summarizeReport(render_pt, renderQueue);
 						
 					} else if(rendering.force_requeue)
-						array_push(RENDER_QUEUE, rendering);
+						array_push(renderQueue, rendering);
 					
 					LOG_BLOCK_END
 					
@@ -341,7 +340,6 @@ enum RENDER_TYPE {
 			project.postRender();
 			
 			LOG_END
-			RENDERING = undefined;
 			PANEL_GRAPH.refreshDraw();
 		}
 		
@@ -351,8 +349,8 @@ enum RENDER_TYPE {
 			var _completed  = false;
 			
 			try {
-				while(array_length(RENDER_QUEUE)) {
-					var rendering  = array_shift(RENDER_QUEUE);
+				while(array_length(renderQueue)) {
+					var rendering  = array_shift(renderQueue);
 					var renderable = rendering.isRenderable();
 					
 					if(renderable) {
@@ -367,11 +365,11 @@ enum RENDER_TYPE {
 							var nextNode = nextNodes[i];
 							if(!is(nextNode, __Node_Base) || !nextNode.isRenderable()) continue;
 							
-							array_push(RENDER_QUEUE, nextNode);
+							array_push(renderQueue, nextNode);
 							if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
 						}
 						
-						if(PROFILER_STAT) rendering.summarizeReport(render_pt);
+						if(PROFILER_STAT) rendering.summarizeReport(render_pt, renderQueue);
 						
 						if(rendering == _node) {
 							_completed = true;
@@ -379,7 +377,7 @@ enum RENDER_TYPE {
 						}
 						
 					} else if(rendering.force_requeue)
-						array_push(RENDER_QUEUE, rendering);
+						array_push(renderQueue, rendering);
 				}
 			
 			} catch(e) {
@@ -390,7 +388,6 @@ enum RENDER_TYPE {
 				render_time /= 1000;
 				project.postRender();
 				
-				RENDERING = undefined;
 				PANEL_GRAPH.refreshDraw();
 			}
 		}
@@ -403,9 +400,10 @@ enum RENDER_TYPE {
 	function Render(_project = PROJECT, _partial = false, _runAction = false) { 
 		if(RENDERING == undefined) {
 			WILL_RENDERING = undefined;
-			var _renderObj = new RenderObject(_project, _partial, _runAction);
-			    _renderObj.render(PREFERENCES.render_max_time);
-			return _renderObj;
+			RENDERING = new RenderObject(_project, _partial, _runAction);
+			RENDERING.render(PREFERENCES.render_max_time);
+			
+			return RENDERING;
 		}
 		
 		WILL_RENDERING = { project: _project, partial: _partial };

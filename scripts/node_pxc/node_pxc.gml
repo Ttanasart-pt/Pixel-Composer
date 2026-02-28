@@ -17,7 +17,7 @@ function Node_create_PXC(_x, _y, _group = noone) {
 function Node_create_PXC_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
-	var node = new Node_Image(_x, _y, PANEL_GRAPH.getCurrentContext());
+	var node = new Node_PXC(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.skipDefault();
 	node.inputs[0].setValue(path);
 	node.doUpdate();
@@ -48,6 +48,8 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	input_display_list = [ 
 		[ "Project",   false ],  0, 
 		[ "Animation", false ],  1,  4,  2,  3,  5,  6, 
+		[ "Settings",  false ], 
+		[ "Globalvar", false ], 
 	];
 	
 	////- Nodes
@@ -61,14 +63,21 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attributes.timeline_override = true;
 	attributes.file_checker      = true;
+	attributes.project_length    = 0;
 	array_push(attributeEditors, Node_Attribute("File Watcher", function() /*=>*/ {return attributes.file_checker}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")})}));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
 	static updatePaths = function(_path, _force = false) {
+		// if(LOADING || APPENDING) return;
+		
 		if(filename_ext(_path) != ".pxc") return;
 		if(!_force && curr_path == _path) return;
 		curr_path = _path;
+		edit_time = file_get_modify_s(_path);
+		
+		// print($"Update Path", _path);
+		// printCallStack();
 		
 		var _name = filename_name_only(_path);
 		setDisplayName(_name, false);
@@ -89,7 +98,6 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!file_exists_empty(path)) return;
 		
 		if(attributes.file_checker && file_get_modify_s(path) > edit_time) {
-			edit_time = file_get_modify_s(path);
 			updatePaths(path, true);
 			triggerRender();
 		}
@@ -98,6 +106,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static update = function() {
 		#region data
 			var path = path_get(getInputData(0));
+			// print("update", path);
 			
 			var  anim  = getInputData( 1);
 			var _loop  = getInputData( 4);
@@ -106,8 +115,12 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _pbef  = getInputData( 5);
 			var _frac  = getInputData( 6);
 		#endregion
-		
-		update_on_frame = anim;
+			
+		var _outSurf = outputs[0].getValue();
+		surface_clear(_outSurf);
+		outputs[0].setValue(_outSurf);
+			
+		update_on_frame = true;
 		if(is_array(path)) return;
 		
 		outputs[1].setValue(path);
@@ -115,17 +128,15 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(project_object == undefined) return;
 		
-		var _outSurf = outputs[0].getValue();
 		var _outp    = project_runner.output_junc;
 		if(!is(_outp, NodeValue)) return;
 		
 		var _frame = CURRENT_FRAME * _spd - (_strt - 1);
 		if(!_frac) _frame = round(_frame);
 		var _len   = project_object.animator.frames_total;
-		if(!_pbef && _frame < 0) {
-			surface_clear(_outSurf);
-			return;
-		}
+		attributes.project_length = _len;
+		
+		if(!_pbef && _frame < 0) return;
 		
 		switch(_loop) {
 			case ANIMATION_END.loop : 
@@ -139,16 +150,13 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 				
 			case ANIMATION_END.hold :
-				if(_frame >= _len) return;
-				
+				// if(_frame >= _len) return;
 				_frame = clamp(_frame, -_len, _len - 1);
 				break;
 				
 			case ANIMATION_END.hide :	
-				if(_frame < 0 || _frame >= _len) {
-					surface_clear(_outSurf);
+				if(_frame < 0 || _frame >= _len)
 					return;
-				}
 		}
 		
 		if(_frame < 0) return;
@@ -193,7 +201,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _strt = getInputData( 2);
 		var _spd  = getInputData( 3);
 		
-		var _slen = project_object.animator.frames_total;
+		var _slen = attributes.project_length;
 		var _plen = _slen / _spd;
 		
 		var _ex0 = _x   + _strt * _s;
