@@ -21,7 +21,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDimension(96, 48);
 	
 	////- =Origin
-	newInput( 2, nodeValue_Vec2(     "Starting position", [DEF_SURF_W/2,DEF_SURF_H/2] )).setHotkey("G");
+	newInput( 2, nodeValue_Vec2(     "Starting position", [PROJ_SURF_W/2,PROJ_SURF_H/2] )).setHotkey("G");
 	newInput(10, nodeValue_Vec3(     "Starting position", [0,0,0] ));
 	newInput( 6, nodeValue_Rotation( "Starting Angle",     90     ));
 	

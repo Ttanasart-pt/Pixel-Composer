@@ -18,7 +18,7 @@
 		shape
 	}
 	
-	#macro DEF_AREA [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle, AREA_MODE.area ]
+	#macro DEF_AREA [ NPROJ_SURF_W / 2, NPROJ_SURF_H / 2, NPROJ_SURF_W / 2, NPROJ_SURF_H / 2, AREA_SHAPE.rectangle, AREA_MODE.area ]
 	#macro DEF_AREA_REF [ 0.5, 0.5, 0.5, 0.5, AREA_SHAPE.rectangle, AREA_MODE.area ]
 	#macro AREA_ARRAY_LENGTH 6
 #endregion

@@ -45,7 +45,7 @@ function Node_pSystem_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		InputDrawOverlay(inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 	}
 	
-	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
+	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
 	
 	static reset = function() {
 		var _strn_curve = getInputData( 4);

@@ -34,7 +34,7 @@ function Node_pSystem_Align_to_Velocity(_x, _y, _group = noone) : Node(_x, _y, _
 		
 	}
 	
-	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
+	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
 	
 	static reset = function() {
 		

@@ -32,7 +32,7 @@ function Node_pSystem_3D_Oscillate(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	curve_ampl = undefined;
 	curve_freq = undefined;
 	
-	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
+	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
 	
 	static update = function(_frame = CURRENT_FRAME) { 
 		var _data = inputs_data;

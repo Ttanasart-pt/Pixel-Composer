@@ -2355,8 +2355,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _raw = getValue();
 		var _txt = _raw;
 		
-		var _sw = DEF_SURF_W * _s;
-		var _sh = DEF_SURF_H * _s;
+		var _sw = NPROJ_SURF_W * _s;
+		var _sh = NPROJ_SURF_H * _s;
 		var _x0 = _x;
 		var _y0 = _y;
 		var _x1 = _x + _sw;

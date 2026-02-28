@@ -22,7 +22,7 @@ function Node_Surface_To_Points(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	
 	temp_buffer = undefined;
 	
-	static getDimension = function() /*=>*/ {return DEF_SURF};
+	static getDimension = function() /*=>*/ {return PROJ_SURF};
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data

@@ -23,7 +23,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	loopable     = true;
 	prerendering = false;
-	dimension    = DEF_SURF;
+	dimension    = PROJ_SURF;
 	
 	if(NODE_NEW_MANUAL) {
 		var input  = nodeBuild("Node_pSystem_Spawn",  x,       y, self);

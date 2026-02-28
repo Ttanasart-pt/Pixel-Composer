@@ -11,6 +11,11 @@
   "androidsourcedir":"",
   "author":"",
   "classname":"YYFirebaseAuthentication",
+  "ConfigValues":{
+    "Steam":{
+      "copyToTargets":"96",
+    },
+  },
   "copyToTargets":108,
   "description":"",
   "exportToGame":true,

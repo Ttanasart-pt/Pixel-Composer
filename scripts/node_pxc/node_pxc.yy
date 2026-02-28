@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_pxc",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pxc",
+  "parent":{
+    "name":"pxc",
+    "path":"folders/nodes/data/io/pxc.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

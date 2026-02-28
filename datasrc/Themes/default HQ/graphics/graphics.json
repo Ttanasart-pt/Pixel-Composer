@@ -183,6 +183,7 @@
     "node_goto_thin":                     { "path": "./icon/s_node_goto_thin.png",                          "s": 1, "x": 12, "y": 12 },
     "node_name_type":                     { "path": "./icon/s_node_name_type.png",                          "s": 3, "x": 12, "y": 12 },
     "node_processor_icon":                { "path": "./icon/s_node_processor.png",                          "s": 1, "x":  8, "y":  8 },
+    "node_pxc":                           { "path": "./icon/s_node_pxc.png",                                "s": 1, "x":  8, "y":  8 },
     "node_resize":                        { "path": "./icon/s_node_resize.png",                             "s": 1, "x": 16, "y": 16 },
     "node_selector":                      { "path": "./icon/s_node_selector.png",                           "s": 1, "x": 12, "y": 12 },
     "node_use_expression":                { "path": "./icon/s_node_use_experssion.png",                     "s": 3, "x":  8, "y":  8 },

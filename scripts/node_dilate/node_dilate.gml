@@ -55,24 +55,34 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var sam    = getAttribute("oversample");
+		#region data
+			var sam = getAttribute("oversample");
+			
+			var _surf = _data[0];
+			
+			var _cent = _data[1];
+			var _stre = _data[2];
+			var _radi = _data[3];
+		#endregion
+		
+		var _dim = surface_get_dimension(_surf);
 		
 		surface_set_shader(_outSurf, sh_dilate);
-			shader_set_interpolation(_data[0]);
+			shader_set_interpolation(_surf);
 			shader_set_uv(_data[13], _data[14]);
-			
-			shader_set_f("dimension", [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
-			shader_set_2("center",         _data[1]);
-			shader_set_f_map("strength",   _data[2], _data[11], inputs[2], _data[15]);
-			shader_set_f_map("radius",     _data[3], _data[12], inputs[3]);
-			
 			shader_set_i("sampleMode", sam);
-			draw_surface_safe(_data[0]);
+			
+			shader_set_f("dimension",      _dim  );
+			shader_set_2("center",         _cent );
+			shader_set_f_map("strength",   _stre, _data[11], inputs[2], _data[15] );
+			shader_set_f_map("radius",     _radi, _data[12], inputs[3]            );
+			
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[8]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[5], _data[6]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[8]);
 		
 		return _outSurf;
 	}

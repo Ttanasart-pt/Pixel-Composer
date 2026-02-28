@@ -487,6 +487,9 @@
             "Node_Byte_File_Write",
             "Node_Directory_Search",
             
+            { "label": "PXC" },
+            "Node_PXC",
+
             { "label": "Aseprite" },
             "Node_ASE_File_Read",
             "Node_ASE_layer",

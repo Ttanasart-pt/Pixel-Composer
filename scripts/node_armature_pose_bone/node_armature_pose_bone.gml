@@ -100,7 +100,7 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		var _scal_mode = getInputData(7);
 		var _scal      = getInputData(4);
 		
-		bone_bbox = [ 0, 0, DEF_SURF_W, DEF_SURF_H, DEF_SURF_W, DEF_SURF_H ];
+		bone_bbox = [ 0, 0, PROJ_SURF_W, PROJ_SURF_H, PROJ_SURF_W, PROJ_SURF_H ];
 		if(!is(_b, __Bone)) return;
 		
 		bonePose.resetPose().setPosition();

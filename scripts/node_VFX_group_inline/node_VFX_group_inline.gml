@@ -21,7 +21,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	update_on_frame    = true;
 	loopable           = true;
 	
-	dimension  = DEF_SURF;
+	dimension  = PROJ_SURF;
 	
 	if(NODE_NEW_MANUAL) {
 		var input  = nodeBuild("Node_VFX_Spawner",  x,       y, self);

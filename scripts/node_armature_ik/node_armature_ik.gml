@@ -65,7 +65,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _b_origin = getInputData(1);
 		var _b_target = getInputData(2);
 		
-		bone_bbox = [ 0, 0, DEF_SURF_W, DEF_SURF_H, DEF_SURF_W, DEF_SURF_H ];
+		bone_bbox = [ 0, 0, PROJ_SURF_W, PROJ_SURF_H, PROJ_SURF_W, PROJ_SURF_H ];
 		if(!is(_b, __Bone)) return;
 		
 		bone = _b.clone();

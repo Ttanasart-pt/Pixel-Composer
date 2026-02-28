@@ -1,4 +1,4 @@
-function nodeValue_Palette(_name, _value = array_clone(DEF_PALETTE), _tooltip = "") { return new __NodeValue_Palette(_name, self, _value, _tooltip); }
+function nodeValue_Palette(_name, _value = array_clone(PROJ_PALETTE), _tooltip = "") { return new __NodeValue_Palette(_name, self, _value, _tooltip); }
 function __NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.color, _value, _tooltip) constructor {
 	
 	setDisplay(VALUE_DISPLAY.palette);

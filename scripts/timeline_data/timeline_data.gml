@@ -41,6 +41,7 @@ function timelineItem() constructor {
 			case "timelineItemNode_Sequence_Anim" : 	return new timelineItemNode_Sequence_Anim(noone).deserialize(_map);
 			case "timelineItemNode_Image_gif" : 		return new timelineItemNode_Image_gif(noone).deserialize(_map);
 			case "timelineItemNode_MKDialog" : 		    return new timelineItemNode_MKDialog(noone).deserialize(_map);
+			case "timelineItemNode_PXC" : 		        return new timelineItemNode_PXC(noone).deserialize(_map);
 		}
 		
 		return self;

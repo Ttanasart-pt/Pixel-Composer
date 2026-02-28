@@ -810,8 +810,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _scrollTarget = noone;
 		if(focus && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) _scroll = -sign(MOUSE_WHEEL);
 		
-		for( var i = 0, n = array_length(DEF_PALETTE); i < n; i++ ) {
-			var _c = DEF_PALETTE[i];
+		for( var i = 0, n = array_length(PROJ_PALETTE); i < n; i++ ) {
+			var _c = PROJ_PALETTE[i];
 			
 			var ii = 0;
 			if(i == 0)     ii = 4;
@@ -835,7 +835,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		if(_scrollTarget != noone)
-			setToolColor(DEF_PALETTE[_scrollTarget]);
+			setToolColor(PROJ_PALETTE[_scrollTarget]);
 		
 		if(_sel != noone) 
 			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _sel[0] - _pd, _sel[1] - _pd, _cw + _pd * 2, _ch + _pd * 2 - 1, c_white, 1);

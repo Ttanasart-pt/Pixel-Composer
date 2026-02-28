@@ -7,7 +7,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	manual_ungroupable = false;
 	previewable = true;
 	
-	newInput(0, nodeValue_Vec2("Output dimension", DEF_SURF));
+	newInput(0, nodeValue_Vec2("Output dimension", PROJ_SURF));
 	newInput(1, nodeValue_Bool("Round position", true, "Round position to the closest integer value to avoid jittering.")).rejectArray();
 	newInput(2, nodeValue_Enum_Button("Render Type",  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ])).rejectArray();
 	newInput(3, nodeValue_Int("Line life", 4 )).rejectArray();

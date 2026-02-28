@@ -38,7 +38,7 @@ function Node_pSystem_3D_Trigger_Event(_x, _y, _group = noone) : Node_3D(_x, _y,
 		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 	}
 	
-	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
+	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
 	
 	static update = function(_frame = CURRENT_FRAME) { 
 		var _data = inputs_data;

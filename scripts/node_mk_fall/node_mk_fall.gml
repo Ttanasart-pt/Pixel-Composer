@@ -45,7 +45,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	////- =Ground
 	newInput(15, nodeValue_Bool(  "Ground",        false ));
-	newInput(16, nodeValue_Range( "Ground levels", [ DEF_SURF_H / 2, DEF_SURF_H ] ));
+	newInput(16, nodeValue_Range( "Ground levels", [ PROJ_SURF_H / 2, PROJ_SURF_H ] ));
 	
 	////- =Twist
 	newInput(18, nodeValue_Bool(   "Twist",        false  ));

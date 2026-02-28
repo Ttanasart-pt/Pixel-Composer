@@ -573,7 +573,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Update
 	
-	static getDimension = function() /*=>*/ {return DEF_SURF};
+	static getDimension = function() /*=>*/ {return PROJ_SURF};
 	
 	static update = function(frame = NODE_CURRENT_FRAME) {
 		

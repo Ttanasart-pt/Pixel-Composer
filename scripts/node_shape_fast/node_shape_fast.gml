@@ -2,7 +2,7 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name     = "Draw Shape";
 	doUpdate = doUpdateLite;
 	
-	onSurfaceSize = function() /*=>*/ {return getInputData(0, DEF_SURF)};
+	onSurfaceSize = function() /*=>*/ {return getInputData(0, PROJ_SURF)};
 	
 	////- =Output
 	newInput(0, nodeValue_Dimension());

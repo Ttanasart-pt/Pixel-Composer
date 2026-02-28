@@ -1,6 +1,6 @@
 function nodeValue_Dimension(name = "Dimension") { 
 	var _unit = PREFERENCES.node_def_dim_unit;
-	var _val  = _unit? [1,1] : DEF_SURF;
+	var _val  = _unit? [1,1] : NPROJ_SURF;
 	
 	return new __NodeValue_Dimension(self, _val, name); 
 }
@@ -25,8 +25,8 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 			var sh;
 			
 			if(!use_mask) {
-				sw = ot? DEF_SURF_W : 1 / DEF_SURF_W;
-				sh = ot? DEF_SURF_H : 1 / DEF_SURF_H;
+				sw = ot? NPROJ_SURF_W : 1 / NPROJ_SURF_W;
+				sh = ot? NPROJ_SURF_H : 1 / NPROJ_SURF_H;
 				
 			} else {
 				var _msk = mask_input.getValue();
@@ -34,8 +34,8 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 				var my = surface_get_height_safe(_msk);
 				
 				switch(ot) {
-					case 0 : sw = 1 / DEF_SURF_W;   sh = 1 / DEF_SURF_H;  break;
-					case 1 : sw = DEF_SURF_W / mx;  sh = DEF_SURF_H / my; break;
+					case 0 : sw = 1 / NPROJ_SURF_W;   sh = 1 / NPROJ_SURF_H;  break;
+					case 1 : sw = NPROJ_SURF_W / mx;  sh = NPROJ_SURF_H / my; break;
 					case 2 : sw = mx;               sh = my;              break;
 				}
 			}
@@ -78,8 +78,8 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		if(applyUnit && nod == self) {
 			switch(attributes.use_project_dimension) {
 				case 1 : 
-					val[0] *= DEF_SURF_W;
-					val[1] *= DEF_SURF_H;
+					val[0] *= NPROJ_SURF_W;
+					val[1] *= NPROJ_SURF_H;
 					return val;
 				
 				case 2 : 
@@ -162,8 +162,8 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		if(LOADING_VERSION < 1_20_01_3 && attributes.use_project_dimension && is_modified) {
 			for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
 				var v = animator.values[i];
-				v.value[0] /= DEF_SURF_W;
-				v.value[1] /= DEF_SURF_H;
+				v.value[0] /= NPROJ_SURF_W;
+				v.value[1] /= NPROJ_SURF_H;
 			}
 			
 			if(sep_axis) {
@@ -171,12 +171,12 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 			
 				for( var i = 0, n = array_length(_anims[0].values); i < n; i++ ) {
 					var v = _anims[0].values[i];
-					v.value /= DEF_SURF_W;
+					v.value /= NPROJ_SURF_W;
 				}
 				
 				for( var i = 0, n = array_length(_anims[1].values); i < n; i++ ) {
 					var v = _anims[1].values[i];
-					v.value /= DEF_SURF_H;
+					v.value /= NPROJ_SURF_H;
 				}
 			}
 		}

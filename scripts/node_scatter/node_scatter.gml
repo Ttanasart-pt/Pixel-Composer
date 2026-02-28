@@ -36,7 +36,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(27, nodeValue_Enum_Scroll( "Animated Array End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
 	
 	////- =Scatter
-	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
+	onSurfaceSize = function() /*=>*/ {return getInputData(1, PROJ_SURF)}; 
 	
 	newInput( 6, nodeValue_EScroll(  "Distribution",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image + Tile" ] ));
 	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
@@ -131,7 +131,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- Nodes
 	
-	static getDimension = function() { return getInputData(1, DEF_SURF); }
+	static getDimension = function() { return getInputData(1, PROJ_SURF); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK

@@ -644,7 +644,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var base = prop.def_val;
 		var _typ = prop.type;
-			
+		
 		for(var i = 0, n = array_length(_data); i < n; i++) {
 			var _keyframe = _data[i];
 			var _klen     = array_length(_keyframe);

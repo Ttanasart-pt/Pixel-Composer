@@ -350,6 +350,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		attributes.timeline_hide     = false;
 		attributes.timeline_override = false;
+		
+		timeline_content_snap      = { points: [] }
+		timeline_content_snap.node = self;
 	#endregion
 	
 	#region ---- Notification ----
@@ -1236,12 +1239,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static onValueFromUpdate = function(index = noone) {}
 	
 	static getDimension      = function() /*=>*/ {
-		if(dimension_index < 0) return DEF_SURF;
+		if(dimension_index < 0) return PROJ_SURF;
 		var _inp = inputs[dimension_index];
 		
 		if(is(_inp, __NodeValue_Surface))   return surface_get_dimension(_inp.getValue());
 		if(is(_inp, __NodeValue_Dimension)) return _inp.getValue();
-		return DEF_SURF;
+		return PROJ_SURF;
 	}
 	
 	////- RENDER
@@ -2721,7 +2724,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_nod.drawOverlayTransform == undefined) continue;
 			
 			var _trn = _nod.drawOverlayTransform(_ch[i]);
-			if(_trn == noone) continue;
+			if(!is_array(_trn)) continue;
 			
 			_tr[0]  = (_trn[0] + _tr[0]) * _tr[2];
 			_tr[1]  = (_trn[1] + _tr[1]) * _tr[2];
@@ -2757,7 +2760,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(is_array(_surf)) 
 			_surf = array_safe_get_fast(_surf, preview_index, noone);
 		
-		if(!is_surface(_surf)) return BBOX().fromWH(0, 0, DEF_SURF_W, DEF_SURF_H);
+		if(!is_surface(_surf)) return BBOX().fromWH(0, 0, PROJ_SURF_W, PROJ_SURF_H);
 			
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 	}

@@ -9,7 +9,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- =Function
 	newInput(0, nodeValue_Text( "Function name", $"render{irandom_range(100000, 999999)}" ));
-	newInput(1, nodeValue_Vec2( "Output dimension", DEF_SURF ));
+	newInput(1, nodeValue_Vec2( "Output dimension", PROJ_SURF ));
 	
 	////- =Script
 	newInput(2, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA).setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())});

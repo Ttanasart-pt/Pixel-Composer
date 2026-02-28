@@ -14,7 +14,7 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Repeat
-	newInput(1, nodeValue_Vec2("Target dimension", DEF_SURF));
+	newInput(1, nodeValue_Vec2("Target dimension", PROJ_SURF));
 	newInput(2, nodeValue_Enum_Scroll("Type",  1, [ "Tile", "Scatter", "Cell" ]));
 	// 4
 	

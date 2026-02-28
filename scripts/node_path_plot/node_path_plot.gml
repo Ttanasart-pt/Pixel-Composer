@@ -8,7 +8,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	eq_type_pol = [ "r function", "O function", "parametric" ];
 	
 	////- =Variable
-	newInput( 5, nodeValue_Vec2( "Origin",       [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )).setHotkey("G");
+	newInput( 5, nodeValue_Vec2( "Origin",       [ PROJ_SURF_W / 2, PROJ_SURF_H / 2 ] )).setHotkey("G");
 	newInput( 7, nodeValue_Vec2( "Input Scale",  [ 1, 1 ] ));
 	newInput( 8, nodeValue_Vec2( "Input Shift",  [ 0, 0 ] ));
 	newInput( 0, nodeValue_Vec2( "Output scale", [ 8, 8 ] ));

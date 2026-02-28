@@ -50,6 +50,9 @@ function Panel_Animation_Dopesheet() {
     	scroll_s = sprite_get_width(THEME.ui_scrollbar);
         scroll_w = scroll_s;
         
+        timeline_snap_points  = [];
+        timeline_snap_line    = undefined;
+        
         timeline_content_dragging   = undefined;
         timeline_content_drag_type  = 0;
         timeline_content_drag_dx    = 0;
@@ -2278,12 +2281,26 @@ function Panel_Animation_Dopesheet() {
         	_keyframe_selecting_l = noone;
         	region_hovering       = noone;
         	
-            for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
+        	var _len = array_length(timeline_contents);
+        	timeline_snap_points = array_verify(timeline_snap_points, _len);
+        	timeline_snap_line   = [];
+        	
+            for( var i = 0; i < _len; i++ ) {
                 var _cont = timeline_contents[i];
                 if(_cont.type != "node") continue;
                 
                 var _node  = _cont.node;
                 var _anims = _cont.animations;
+                
+                if(!is_struct(timeline_snap_points[i])) {
+	                timeline_snap_points[i] = {
+	                	node   : _node,
+	                	points : [],
+	                }
+                } else {
+                	timeline_snap_points[i].node   = _node;
+                	timeline_snap_points[i].points = [];
+                }
                 
                 if(_node.attributes.timeline_override) {
                 	var _x = timeline_shift;
@@ -2292,6 +2309,7 @@ function Panel_Animation_Dopesheet() {
                 	
                 	var _hovering = _node.drawTimeline(_x, _y, _s, msx, msy, self);
                 	if(_hovering) keyframe_boxable = false;
+                	timeline_snap_points[i] = _node.timeline_content_snap;
                 	
                 } else {
 	                var _keyFirst   =  infinity;
@@ -2311,6 +2329,9 @@ function Panel_Animation_Dopesheet() {
 	                	var _ex1 = _keyLast;
 	                	var _ey0 = _cont.y + ui(10) - ui(8);
 	                	var _ey1 = _cont.y + ui(10) + ui(8);
+	                	
+	                	var frameFirst = (_keyFirst - timeline_shift) / timeline_scale;
+	                	var frameLast  = (_keyLast  - timeline_shift) / timeline_scale;
 	                	
 	                	var _ew = _ex1 - _ex0;
 	                	var _eh = _ey1 - _ey0;
@@ -2354,17 +2375,17 @@ function Panel_Animation_Dopesheet() {
 	                			timeline_content_dragging   = _cont;
 	                			timeline_content_drag_type  = _hov;
 	                			
-	                			timeline_content_drag_dx    = 0;
-	                			timeline_content_drag_mx    = msx;
-	                			timeline_content_drag_range = [
-	                				(_keyFirst - timeline_shift) / timeline_scale, 
-	                				(_keyLast  - timeline_shift) / timeline_scale
-	            				];
+	                			timeline_content_drag_dx       = 0;
+	                			timeline_content_drag_mx       = msx;
+	                			timeline_content_drag_range[0] = frameFirst;
+	                			timeline_content_drag_range[1] = frameLast;
 	                		}
 	                	}
+	                	
+	                	timeline_snap_points[i].points = [ frameFirst, frameLast ];
 	                }
                 }
-	                
+	            
                 for( var j = 0, m = array_length(_anims); j < m; j++ ) {
                     var _anim = _anims[j];
                     var _key  = drawDopesheet_AnimatorKeys(_cont, _anim, msx, msy);
@@ -2372,6 +2393,13 @@ function Panel_Animation_Dopesheet() {
                 }
                 
             }
+            
+        	for( var i = 0, n = array_length(timeline_snap_line); i < n; i++ ) {
+            	var _snapx = timeline_shift + timeline_snap_line[i] * timeline_scale;
+            	
+            	draw_set_color(COLORS._main_icon);
+            	draw_line(_snapx, 0, _snapx, h);
+        	}
             
             if(timeline_content_dragging != undefined) {
             	timeline_content_drag_dx += (msx - timeline_content_drag_mx) / timeline_scale;

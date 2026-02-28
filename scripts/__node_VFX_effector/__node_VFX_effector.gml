@@ -63,7 +63,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	seed      = 1;
 	
-	static getDimension = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.dimension : DEF_SURF; }
+	static getDimension = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.dimension : PROJ_SURF; }
 	
 	static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));

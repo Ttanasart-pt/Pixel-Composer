@@ -20,7 +20,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Output
 	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
-	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",  DEF_SURF  )).setVisible(true, false);
+	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",  PROJ_SURF  )).setVisible(true, false);
 	newInput(34, nodeValue_Vec2(         "Offset",           [0,0]     ));
 	newInput(10, nodeValue_Padding(      "Padding",          [0,0,0,0] ));
 	newInput(33, nodeValue_Bool(         "Atlas",            false     ));

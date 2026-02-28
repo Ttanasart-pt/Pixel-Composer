@@ -204,8 +204,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!is(_pth, _pathShapeObject)) return undefined;
 	    if(array_empty(_pth.points))    return undefined;
 		
-		var rw = DEF_SURF_W;
-		var rh = DEF_SURF_H;
+		var rw = PROJ_SURF_W;
+		var rh = PROJ_SURF_H;
 		var ss = min(cw / rw, ch / rh);
 		var _x = cx - rw * ss / 2;
 		var _y = cy - rh * ss / 2;
@@ -759,7 +759,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getPreviewBoundingBox = function() { 
 		var _pth = outputs[0].getValue();
-		return is_path(_pth)? BBOX().fromBoundingBox(_pth.boundary) : BBOX().fromWH(0, 0, DEF_SURF_W, DEF_SURF_H); 
+		return is_path(_pth)? BBOX().fromBoundingBox(_pth.boundary) : BBOX().fromWH(0, 0, PROJ_SURF_W, PROJ_SURF_H); 
 	}
 }
 

@@ -8,7 +8,7 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	inputs = array_create(9);
 	
-	newInput( 0, nodeValue_Vec2("Output dimension", DEF_SURF ));
+	newInput( 0, nodeValue_Vec2("Output dimension", PROJ_SURF ));
 	newInput( 1, nodeValue_Particle()).setVisible(true, true);
 		
 	newInput( 2, nodeValue_Float(  "Thickness", 1            ));

@@ -115,9 +115,9 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		insp2button.icon_blend = attributes.cache_use? c_white : COLORS._main_icon;
 		
 		var path = path_get(getInputData(0));
+		var pad  = getInputData(1);
 		if(is_array(path)) return;
 		
-		var pad  = getInputData(1);
 		outputs[1].setValue(path);
 		updatePaths(path);
 		

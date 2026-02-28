@@ -118,8 +118,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				vy = PANEL_PREVIEW.snapY(round(vy));
 				
 				if(inputs[1].attributes.use_project_dimension) {
-					vx /= DEF_SURF_W;
-					vy /= DEF_SURF_H;
+					vx /= PROJ_SURF_W;
+					vy /= PROJ_SURF_H;
 				}
 				
 				if(inputs[1].setValue([vx, vy])) 

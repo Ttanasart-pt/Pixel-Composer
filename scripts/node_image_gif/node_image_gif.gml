@@ -305,7 +305,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	timeline_content_dragging  = false;
 	timeline_content_drag_type = 0;
-	timeline_content_drag_dx   = 0;
+	timeline_content_drag_sx   = 0;
 	timeline_content_drag_mx   = 0;
 	
 	static drawTimeline = function(_x, _y, _s, _mx, _my, _panel) {
@@ -325,6 +325,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
     	var _ex1 = _ex0 + _plen * _s;
     	var _ey0 = _y + ui(10) - ui(8);
     	var _ey1 = _y + ui(10) + ui(8);
+    	
+    	timeline_content_snap.points = [ _strt, _strt + _plen ];
     	
     	var _ew = _ex1 - _ex0;
     	var _eh = _ey1 - _ey0;
@@ -347,27 +349,42 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
     	
     	draw_sprite_ui(THEME.gif_loop_type, _loop, _ex1 + ui(12), _y + ui(10), .7, .7, 0, COLORS._main_icon, .75);
     		
-    	if(_hov) {
-    		if(mouse_lpress(_panel.pFOCUS)) {
-    			timeline_content_dragging   = true;
-    			
-    			timeline_content_drag_dx    = 0;
-    			timeline_content_drag_mx    = _mx;
-    		}
+    	if(_hov && mouse_lpress(_panel.pFOCUS)) {
+			timeline_content_dragging = true;
+			
+			timeline_content_drag_sx = _strt;
+			timeline_content_drag_mx = _mx;
     	}
     	
     	if(timeline_content_dragging) {
-    		timeline_content_drag_dx += (_mx - timeline_content_drag_mx) / _s;
-        	timeline_content_drag_mx  = _mx;
-        	
-        	var _delta = floor(timeline_content_drag_dx);
-        	if(_delta != 0) {
-        		inputs[4].setValue(_strt + _delta);
-            	timeline_content_drag_dx -= _delta;
-        	}
-        	
-        	if(mouse_lrelease())
+    		var _shft = (_mx - timeline_content_drag_mx) / _s;
+    		var _targ = round(timeline_content_drag_sx + _shft);
+    		var _st   = _targ;
+    		var _ed   = _targ + _plen;
+    		
+    		if(!key_mod_press(CTRL)) {
+	    		var _snaps  = _panel.timeline_snap_points;
+	    		for( var i = 0, n = array_length(_snaps); i < n; i++ ) {
+	    			var _sn = _snaps[i];
+	    			if(!is_struct(_sn))  continue;
+	    			if(_sn.node == self) continue;
+	    			
+	    			for( var j = 0, m = array_length(_sn.points); j < m; j++ ) {
+	    				var _p = _sn.points[j];
+	    				
+	    				if(abs(_p - _st) < 4) { _targ = _p;         array_push(_panel.timeline_snap_line, _p); }
+	    				if(abs(_p - _ed) < 4) { _targ = _p - _plen; array_push(_panel.timeline_snap_line, _p); }
+	    			}
+	    		}
+    		}
+    		
+    		if(inputs[4].setValue(_targ))
+    			UNDO_HOLDING = true;
+    		
+        	if(mouse_lrelease()) {
         		timeline_content_dragging = false;
+        		UNDO_HOLDING = false;
+        	}
     	}
     	
     	return _hov;

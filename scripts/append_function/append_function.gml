@@ -14,7 +14,7 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 	return node_create;
 }
 
-function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_list = [], _connect_outside = false) {
+function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_list = [], _connect_outside = false, _scale = true) {
 	static log   = false;
 	UNDO_HOLDING = true;
 	
@@ -42,10 +42,10 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	for(var i = 0; i < array_length(_node_list); i++) {
 		var ex = ds_map_exists(APPEND_MAP, _node_list[i].id);
 		
-		var _node = nodeLoad(_node_list[i], true, context);
+		var _node = nodeLoad(_node_list[i], _scale, context);
 		if(_node == noone) continue;
 		
-		_node.load_scale = !CLONING;
+		if(_scale) _node.load_scale = !CLONING;
 		if(!ex) array_push(appended_list, _node);
 	}
 	printIf(log, $"Load time: {current_time - t}"); t = current_time;

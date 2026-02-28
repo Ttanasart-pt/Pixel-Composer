@@ -22,7 +22,7 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	////- Nodes
 	
-	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
+	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _parts = outputs[0].getValue();

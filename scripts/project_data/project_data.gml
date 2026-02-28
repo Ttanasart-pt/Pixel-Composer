@@ -7,6 +7,16 @@
 	#macro DEF_SURF    PROJECT.attributes.surface_dimension
 	#macro DEF_PALETTE PROJECT.attributes.palette
 	
+	#macro PROJ_SURF_W  project.attributes.surface_dimension[0]
+	#macro PROJ_SURF_H  project.attributes.surface_dimension[1]
+	#macro PROJ_SURF    project.attributes.surface_dimension
+	#macro PROJ_PALETTE project.attributes.palette
+	
+	#macro NPROJ_SURF_W  node.project.attributes.surface_dimension[0]
+	#macro NPROJ_SURF_H  node.project.attributes.surface_dimension[1]
+	#macro NPROJ_SURF    node.project.attributes.surface_dimension
+	#macro NPROJ_PALETTE node.project.attributes.palette
+	
 	function Layer() constructor {
 		name  = "New Layer";
 		nodes = [];

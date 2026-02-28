@@ -15,7 +15,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 0, nodeValue_Surface(     "Surface In" ));
 	newInput( 7, nodeValue_Enum_Scroll( "Output Dimension",     0, [ "Same as input", "Relative", "Constant" ] ));
 	newInput( 8, nodeValue_Vec2(        "Relative Dimension",  [1,1]    ));
-	newInput( 9, nodeValue_Vec2(        "Constant Dimension",  DEF_SURF ));
+	newInput( 9, nodeValue_Vec2(        "Constant Dimension",  PROJ_SURF ));
 	
 	////- =Mirror
 	newInput( 1, nodeValue_Vec2(        "Position",    [.5,.5] )).setHotkey("G").setUnitSimple();
