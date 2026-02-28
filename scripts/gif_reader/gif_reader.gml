@@ -31,6 +31,26 @@
 #endregion
 
 #region Gif
+	function GifReadCache(_path) {
+		var _filemod = file_get_modify_s(_path);
+		var _hash = md5_string_unicode($"{_path}{_filemod}");
+		var _dirr = $"{DIRECTORY}Cache/{_hash}";
+		if(!directory_exists(_dirr)) return undefined;
+		
+		var _files = directory_listdir(_dirr, 0, false);
+		for( var i = 0, n = array_length(_files); i < n; i++ ) {
+			var _f = _files[i];
+			if(string_starts_with(_f, "strip")) {
+				var _amo = toNumber(string_replace(filename_name_only(_f), "strip", ""));
+				var _spr = sprite_add($"{_dirr}/{_f}", _amo, false, false, 0, 0);
+				return _spr;
+			}
+			
+		}
+		
+		return undefined;
+	}
+	
 	function Gif(_buff) constructor {
 		buffer = _buff;
 		loops  = -1;
@@ -289,6 +309,14 @@
 		}
 		
 		static reading = function(_gif) {
+			var _b;
+			
+			do {
+				_b = readBlock();
+				blocks[block_index++] = _b;
+			} until(_b == gifBlockEOF);
+			return true;
+			
 			var _b = readBlock();
 			blocks[block_index++] = _b;
 			
@@ -350,14 +378,15 @@
 			var _codeSize      = _minCodeSize + 1;
 			var _codeSizeLimit = (1 << _codeSize);
 			var _codeMask      = _codeSizeLimit - 1;
-			var _baseDict      = [];
 			
+			var _i = 0;
+			var _baseDict = array_create(_clearCode);
+			repeat(_clearCode) { _baseDict[_i] = [_i]; _i++; }
 			
-			for (var _i = 0; _i < _clearCode; _i++)
-				_baseDict[_i] = [_i];
-			
-			var _dict    = [];
+			var _dict    = array_create(4098);
 			var _dictLen = _clearCode + 2;
+			
+			array_copy(_dict, 0, _baseDict, 0, _clearCode);
 			var _code    = 0;
 			var _i       = 0;
 			var _newRecord;
@@ -365,8 +394,7 @@
 			
 			while (_i < _pixelsCount) {
 				_last = _code;
-				while (_bitsCount < _codeSize) {
-					if (_blockSize == 0) break;
+				while (_bitsCount < _codeSize && _blockSize > 0) {
 					_bits |= (buffer_read(_data, buffer_u8) << _bitsCount);
 					_bitsCount += 8;
 					_blockSize--;
@@ -378,7 +406,7 @@
 				_bits = _bits >> _codeSize;
 				_bitsCount -= _codeSize;
 				if (_code == _clearCode) {
-					_dict     = variable_clone(_baseDict, 1);
+					array_copy(_dict, 0, _baseDict, 0, _clearCode);
 					_dictLen  = _clearCode + 2;
 					_codeSize = _minCodeSize + 1;
 					
@@ -390,15 +418,21 @@
 				if (_code == _eoiCode) break;
 				if (_code < _dictLen) {
 					if (_last != _clearCode) {
-						_newRecord = variable_clone(_dict[_last], 1);
-						array_push(_newRecord, _dict[_code][0]);
+						var _lastSeq = _dict[_last];
+						var _lastLen = array_length(_lastSeq);
+						_newRecord = array_create(_lastLen + 1);
+						array_copy(_newRecord, 0, _lastSeq, 0, _lastLen);
+						_newRecord[_lastLen] = _dict[_code][0];
 						_dict[_dictLen++] = _newRecord;
 					}
 				} else {
 					if (_code != _dictLen) throw string($"Invalid LZW code. Excepted: {_dictLen}, got: {_code}");
 					
-					_newRecord = variable_clone(_dict[_last], 1);
-					array_push(_newRecord, _newRecord[0]);
+					var _lastSeq = _dict[_last];
+					var _lastLen = array_length(_lastSeq);
+					_newRecord = array_create(_lastLen + 1);
+					array_copy(_newRecord, 0, _lastSeq, 0, _lastLen);
+					_newRecord[_lastLen] = _newRecord[0];
 					_dict[_dictLen++] = _newRecord;
 				}
 				
@@ -443,8 +477,11 @@
 		}
 		
 		static deinterlace = function(_input, _output, _step, _y, _offset, _width, _height) {
+			// Optimized deinterlacing with pre-calculated offsets
+			var _destOffset;
 			while (_y < _height) {
-				buffer_copy(_input, _offset, _width, _output, _y * _width);
+				_destOffset = _y * _width;
+				buffer_copy(_input, _offset, _width, _output, _destOffset);
 				_offset += _width;
 				_y      += _step;
 			}
@@ -571,21 +608,31 @@
 		static readColorTable = function(_size) {
 			var _output = array_create(_size, 0);
 			var _data   = data;
-			var _c = 0, _r, _g, _b;
+			var _c = 0;
 			var _a = 255;
-			var col;
 			
+			// Optimized color reading
 			repeat(_size) {
-				_r = buffer_read(_data, buffer_u8) & 255;
-				_g = buffer_read(_data, buffer_u8) & 255;
-				_b = buffer_read(_data, buffer_u8) & 255;
+				var _r = buffer_read(_data, buffer_u8);
+				var _g = buffer_read(_data, buffer_u8);
+				var _b = buffer_read(_data, buffer_u8);
 				
-				_output[_c++] = ((((_a << 24) | (_b << 16)) | (_g << 8)) | _r);
+				_output[_c++] = (_a << 24) | (_b << 16) | (_g << 8) | _r;
 			}
 			
 			return _output;
 		}
 		
+	}
+	
+	function GifCache(_path, _spr) {
+		var _filemod = file_get_modify_s(_path);
+		var _hash = md5_string_unicode($"{_path}{_filemod}");
+		var _dirr = $"{DIRECTORY}/Cache/{_hash}";
+		directory_clear(_dirr);
+		
+		var len = sprite_get_number(_spr);
+		sprite_save_strip(_spr, $"{_dirr}/strip{len}.png");
 	}
 #endregion
 

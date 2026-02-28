@@ -98,11 +98,20 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 	#region git reader
 		function read_gif_init(path) {
+			load_start_t = get_timer();
+			
+			var _gifCache = GifReadCache(path);
+			if(_gifCache != undefined) {
+				surface_array_free(surfaces);
+				surfaces = [];
+				spr      = _gifCache;
+				print($"Load gif from cache finished in {(get_timer() - load_start_t) / 1000} ms.")
+				return;
+			}
+			
 			spr_buffer  = buffer_load(path);
 			spr_builder = new Gif(spr_buffer);
-			
-			loading = 1;
-			load_start_t = get_timer();
+			loading     = 1;
 			
 			GIF_READING = true;
 		}
@@ -125,9 +134,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		function read_gif_completed() {
 			surface_array_free(surfaces);
 				
-			surfaces = [];
-			spr = spr_builder._spr;
+			surfaces    = [];
+			spr         = spr_builder._spr;
 			detail.text = $"{filename_name(path_current)}\n{sprite_get_number(spr)} frames";
+			GifCache(path_current, spr);
 			print($"Load gif finish in {(get_timer() - load_start_t) / 1_000}ms");
 			
 			triggerRender();
