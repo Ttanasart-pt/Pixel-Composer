@@ -339,20 +339,23 @@ void main() {
         px.x = v_vTexcoord.x - mix(points_x[i0], points_x[i1], frc); 
         px.y = v_vTexcoord.y - mix(points_y[i0], points_y[i1], frc);
         
-        ss = sampleTexture(gm_BaseTexture, px, i/float(resolution));
+        ss = sampleTexture(gm_BaseTexture, px, i / float(resolution));
         pg = i / x; 
         
+        intn = curveEval(i_curve, i_amount, pg);
+        
         if(mode == 0) {
-	        intn = curveEval(i_curve, i_amount, pg);
-	        ss *= intn * intensity;
-	        
-	        p += ss;
-	        a += ss.a;
+        	ss *= intn * intensity;
+	        p  += ss;
+	        a  += ss.a;
 	        
         } else if(mode == 1) {
-        	if(ss.a > 0.)
-        		p = ss * gradientEval(pg);
-        	
+        	if(ss.a > 0.) {
+	        	vec4  fg = ss * gradientEval(pg);
+	        	float al = fg.a + p.a * (1. - fg.a);
+				p   = ((fg * fg.a) + (p * p.a * (1. - fg.a))) / al;
+				p.a = al;
+        	}
         }
     }
     

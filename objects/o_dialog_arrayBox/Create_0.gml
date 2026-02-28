@@ -24,7 +24,7 @@ event_inherited();
 	
 	addable  = false;
 	adding   = false;
-	WIDGET_CURRENT = self;
+	widget_set(self);
 #endregion
 
 sc_content = new scrollPane(0, 0, function(_y, _m) {

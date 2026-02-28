@@ -28,7 +28,7 @@ event_inherited();
 	
 	KEYBOARD_RESET
 	tb_search = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); }).setFont(f_p2).setAutoUpdate().setAlign(fa_left);
-	WIDGET_CURRENT = tb_search;
+	tb_search.activate();
 	
 	anchor = ANCHOR.top | ANCHOR.left;
 	

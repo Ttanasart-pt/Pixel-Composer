@@ -128,9 +128,10 @@ function widget() constructor {
 	static isHovering = function() { return hovering; }
 	
 	static activate = function() {
+		if(WIDGET_CURRENT == self) return;
 		if(!interactable) return;
 		
-		WIDGET_CURRENT        = self;
+		widget_set(self);
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
 	}

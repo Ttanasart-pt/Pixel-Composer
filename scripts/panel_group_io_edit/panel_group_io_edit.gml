@@ -98,7 +98,7 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 					draw_sprite_stretched_ext(THEME.button_def, 0, ed_x, _y, secw - ed_x, hg, COLORS._main_icon_light, seca);
 				
 				if(sep_editing == i) {
-					WIDGET_CURRENT = tb_edit;
+					tb_edit.activate();
 					tb_edit.setFocusHover(foc, hov);
 					tb_edit.draw(ed_x, _y, secw - ed_x, hg, disp[0], _m);
 					

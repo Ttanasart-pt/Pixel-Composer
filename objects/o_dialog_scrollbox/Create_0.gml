@@ -23,7 +23,7 @@ event_inherited();
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
 					.setFont(f_p2).setAutoUpdate().setEmpty().setAlign(fa_left);
 	
-	WIDGET_CURRENT  = tb_search;
+	tb_search.activate();
 	
 	anchor = ANCHOR.top | ANCHOR.left;
 	

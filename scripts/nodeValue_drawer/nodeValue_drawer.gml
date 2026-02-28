@@ -317,7 +317,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					cHov = cHov || b;
 					if(b == 2) {
 						jun.setUseExpression(!jun.expUse);
-						if(!jun.expUse) WIDGET_CURRENT = undefined;
+						if(!jun.expUse) widget_reset();
 					}
 						
 					if(jun.expUse) {

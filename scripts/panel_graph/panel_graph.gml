@@ -4320,7 +4320,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         if(is_searching) {
             search_string  = "";
-            WIDGET_CURRENT = tb_search;
+            tb_search.activate();
             KEYBOARD_RESET
         }
     }

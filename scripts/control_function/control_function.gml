@@ -232,14 +232,15 @@
 	}
 	
 	function widget_set(_widget) {
-		if(array_length(WIDGET_ACTIVE) == 0) return;
-		
-		if(WIDGET_CURRENT) {
-			var ind = array_find(WIDGET_ACTIVE, WIDGET_CURRENT);
+		if(WIDGET_CURRENT)
 			WIDGET_CURRENT.deactivate();
-		}
-		
-		_widget.activate();
+		WIDGET_CURRENT = _widget;
+	}
+	
+	function widget_reset() {
+		if(WIDGET_CURRENT)
+			WIDGET_CURRENT.deactivate();
+		WIDGET_CURRENT = undefined;
 	}
 	
 	function widget_clear() {

@@ -97,7 +97,7 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.button_def, 0, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
 				
 				if(sep_editing == i) {
-					WIDGET_CURRENT = tb_edit;
+					tb_edit.activate();
 					tb_edit.setFocusHover(sFOCUS, sHOVER);
 					tb_edit.draw(ed_x, _y, con_w - ed_x, hg, disp[0], _m);
 					

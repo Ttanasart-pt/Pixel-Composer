@@ -10,7 +10,7 @@
 	var tbw = dialog_w - ui(16);
 	if(search_string == "") tbw -= ui(24 + 4);
 	
-	WIDGET_CURRENT = tb_search;
+	tb_search.activate();
 	tb_search.setFocusHover(true, true);
 	tb_search.draw(tbx, tby, tbw, ui(24), search_string);
 	tb_search.sprite_index = 0;

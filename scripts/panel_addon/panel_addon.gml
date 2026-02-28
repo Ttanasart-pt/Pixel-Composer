@@ -18,7 +18,7 @@ function Panel_Addon() : PanelContent() constructor {
 		tb_search.align			= fa_left;
 		tb_search.auto_update	= true;
 		tb_search.boxColor		= COLORS._main_icon_light;
-		WIDGET_CURRENT			= tb_search;
+		tb_search.activate();
 		
 		function searchAddons() {
 			search_res = [];
@@ -167,7 +167,7 @@ function Panel_Addon() : PanelContent() constructor {
 		var ph = h - padding * 2;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
-		if(pFOCUS) WIDGET_CURRENT = tb_search;
+		if(pFOCUS) tb_search.activate();
 		tb_search.draw(px, py, pw, ui(32), search_string, [mx, my]);
 		if(search_string == "") tb_search.sprite_index = 1;
 		

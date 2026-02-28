@@ -1,6 +1,6 @@
 /// @description 
 event_inherited();
 
-WIDGET_CURRENT = undefined;
+widget_reset();
 if(prefocus != noone) FOCUS = prefocus;
 // instance_destroy(_p_dialog);

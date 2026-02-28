@@ -1047,7 +1047,7 @@ event_inherited();
 	
 	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchNodes(); })
 		.setAlign(fa_left).setAutoupdate().setHide(2);
-	WIDGET_CURRENT = tb_search;
+	tb_search.activate();
 	
 	function searchNodes() { 
 		search_list = [];

@@ -22,7 +22,7 @@
 	}
 	_tw -= _th + ui(4);
 	
-	WIDGET_CURRENT = tb_search;
+	tb_search.activate();
 	tb_search.setFocusHover(true, true);
 	tb_search.draw(_tx, _ty, _tw, _th, search_string);
 	tb_search.sprite_index = 0;

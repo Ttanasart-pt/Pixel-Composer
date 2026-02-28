@@ -1075,7 +1075,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	////- Actions
 	
 	static activate = function() {
-		WIDGET_CURRENT = self;
+		widget_set(self);
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
 		

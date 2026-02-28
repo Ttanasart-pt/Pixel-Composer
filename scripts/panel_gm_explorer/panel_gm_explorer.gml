@@ -15,8 +15,8 @@ function Panel_GM_Explore(_gmBinder) : PanelContent() constructor {
 	
 	search_res = [];
 	tb_search  = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchResource(); })
-					.setAutoupdate().setAlign(fa_left).setBoxColor(COLORS._main_icon_light);
-	WIDGET_CURRENT = tb_search;
+					.setAutoupdate().setAlign(fa_left).setBoxColor(COLORS._main_icon_light)
+					.activate();
 	
 	function searchResource() {
 		search_res = [];

@@ -19,10 +19,9 @@ function Panel_Tunnels() : PanelContent() constructor {
 		
 		search_res = [];
 		tb_search  = textBox_Text(function(s) /*=>*/ { search_string = string(s); searchNodes(); }).setFont(f_p3)
-						.setEmpty().setAlign(fa_left).setBoxColor(COLORS._main_icon_light).setAutoUpdate();
+						.setEmpty().setAlign(fa_left).setBoxColor(COLORS._main_icon_light).setAutoUpdate()
+						.activate();
 		
-		WIDGET_CURRENT = tb_search;
-	
 		function searchNodes() {
 			search_res = [];
 			

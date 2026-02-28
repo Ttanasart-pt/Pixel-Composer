@@ -60,7 +60,7 @@ if(DIALOG_SHOW_FOCUS) {
 }
 
 #region content
-	WIDGET_CURRENT = tb_search;
+	tb_search.activate();
 	
 	var pd = ui(10);
 	
