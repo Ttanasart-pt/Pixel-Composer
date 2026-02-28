@@ -230,8 +230,8 @@ void main() {
 			if(side == 0 && crop_border == 1 && (pxs.x < 0. || pxs.x > 1. || pxs.y < 0. || pxs.y > 1.)) continue;
 			
 			vec4 sam = sampleTexture( gm_BaseTexture, pxs );
-				
-			if((side == 0 && sam.a == 0.) || (side == 1 && sam.a > 0.)) {
+			
+			if((side == 0 && sam.a < alphaThers) || (side == 1 && sam.a >= alphaThers)) {
 				isOutline = true;
 				if(!closetCollected) {
 					closetCollected = true;
