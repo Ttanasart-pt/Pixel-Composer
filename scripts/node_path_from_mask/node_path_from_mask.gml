@@ -55,7 +55,6 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(_dist == lengthAccs[i]) {
 				out.x = anchors[i + 1][0];
 				out.y = anchors[i + 1][1];
-				
 				return out;
 			}
 				
@@ -66,8 +65,9 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			}
 		}
 		
-		var _a0  = anchors[i];
-		var _a1  = anchors[i + 1];
+		var _ll  = array_length(anchors);
+		var _a0  = anchors[ (i  ) % _ll ];
+		var _a1  = anchors[ (i+1) % _ll ];
 		var _rat = _dst / lengths[_aid];
 		
 		out.x = lerp(_a0[0], _a1[0], _rat);

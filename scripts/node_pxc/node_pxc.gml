@@ -183,7 +183,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _graph = new Panel_Graph(project_object);
 		    _graph.setSize(ui(800), ui(480));
 		    _graph.setTitle(display_name);
-		    _graph.noGlobal();
+		    // _graph.noGlobal();
 		var _dia = dialogPanelCall(_graph);
 		
 		return true;
