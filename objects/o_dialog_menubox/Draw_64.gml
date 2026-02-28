@@ -33,6 +33,27 @@ DIALOG_WINCLEAR1
 			continue;
 		}
 		
+		if(is(_menuItem, MenuWidget)) {
+			var _txt = _menuItem.name;
+			var _edt = _menuItem.editWidget;
+			var _val = _menuItem.getter();
+			
+			var _wx = dialog_x + ui(4 + 64);
+			var _wy = yy       + ui(4);
+			var _ww = dialog_w - ui(8 + 64);
+			var _wh = ui(32)   - ui(8);
+			
+			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text_add(dialog_x + ui(8), yy + ui(32) / 2, _txt)
+			
+			var _param = new widgetParam(_wx, _wy, _ww, _wh, _val).setFont(f_p3);
+			_edt.setFocusHover(sFOCUS, sHOVER);
+			_edt.drawParam(_param);
+			
+			yy += ui(32);
+			continue;
+		}
+		
 		if(is(_menuItem, MenuItem) && _menuItem.shiftMenu != noone && key_mod_press(SHIFT))
 			_menuItem = _menuItem.shiftMenu;
 			

@@ -11,7 +11,27 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	edit_color_mx    =  0;
 	edit_color_sx    =  0;
 	
-	hover_index = 0;
+	hover_index      = 0;
+	rightclick_index = undefined;
+	
+	context_menu = [
+		menuWidget(__txt("Position"), textBox_Number(function(_t) /*=>*/ {
+			var _grad = current_gradient.clone();
+			_grad.keys[rightclick_index].time = clamp(_t, 0, 1);
+			_grad.refresh();
+			onApply(_grad);
+			
+		}).setFont(f_p4), function() /*=>*/ {return current_gradient.keys[rightclick_index].time}),
+		
+		menuItem(__txt("Delete Anchor"), function() /*=>*/ {
+			var _grad = current_gradient.clone();
+			if(array_length(_grad.keys) > 1) {
+				array_delete(_grad.keys, rightclick_index, 1);
+				_grad.refresh();
+				onApply(_grad);
+			}
+		})
+	]
 	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2)
@@ -168,7 +188,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 							drag_color_index = edit_gradient.keys[i];
 							edit_color_mx    = _m[0];
 							edit_color_sx    = _k.time;
-						}
+						} 
 						
 						if(DOUBLE_CLICK) triggerSingle(i);
 					}
@@ -195,11 +215,16 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				if(_hi != noone) {
 					right_click_block = false;
 					
-					var apply_gradient = current_gradient.clone();
-					if(array_length(apply_gradient.keys) > 1 && mouse_press(mb_right, active)) {
-						array_delete(apply_gradient.keys, _hi, 1);
-						apply_gradient.refresh();
-						onApply(apply_gradient);
+					if(mouse_press(mb_right, active)) {
+						rightclick_index = _hi;
+						menuCall("", context_menu);
+						
+						// var apply_gradient = current_gradient.clone();
+						// if(array_length(apply_gradient.keys) > 1) {
+						// 	array_delete(apply_gradient.keys, _hi, 1);
+						// 	apply_gradient.refresh();
+						// 	onApply(apply_gradient);
+						// }
 					}
 					
 				} else if(point_in_rectangle(_m[0], _m[1], _ggx, _cy, _ggx + _ggw, _cy + _ch)) {

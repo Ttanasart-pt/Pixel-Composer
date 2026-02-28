@@ -48,8 +48,8 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	input_display_list = [ 
 		[ "Project",   false ],  0, 
 		[ "Animation", false ],  1,  4,  2,  3,  5,  6, 
-		[ "Settings",  false ], 
-		[ "Globalvar", false ], 
+		// [ "Settings",  false ], 
+		// [ "Globalvar", false ], 
 	];
 	
 	////- Nodes

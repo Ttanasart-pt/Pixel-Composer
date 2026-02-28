@@ -75,6 +75,12 @@ event_inherited();
 				continue;
 			}
 			
+			if(is(_menuItem, MenuWidget)) {
+				dialog_w =  max(dialog_w, ui(64 + 160));
+				dialog_h += ui(32);
+				continue;
+			}
+			
 			draw_set_font(font);
 			var ww   = string_width(_menuItem.name) + ui(64);
 			var _key = _menuItem.hoykeyObject;

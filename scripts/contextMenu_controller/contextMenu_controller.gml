@@ -108,6 +108,13 @@ function MenuItemGroup(_name, _group, _hotkey = noone) constructor {
 	static setSpacing = function(_spacing) { spacing = _spacing; return self; }
 }
 
+function menuWidget(_name, _widget, _getter) { return new MenuWidget(_name, _widget, _getter); }
+function MenuWidget(_name, _widget, _getter) constructor {
+	name       = _name;
+	editWidget = _widget;
+	getter     = _getter;
+}
+
 function menuButton(_spr, _onClick, _tooltip = "", _step = noone) constructor {
 	spr     = _spr;
 	onClick = _onClick;
