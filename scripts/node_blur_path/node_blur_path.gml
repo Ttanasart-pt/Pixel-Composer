@@ -18,16 +18,18 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(11, nodeValue_Slider_Range( "Range", [ 0, 1 ] ));
 	
 	////- =Blur
-	newInput( 2, nodeValue_Int(   "Resolution",   32 ));
-	newInput( 9, nodeValue_Float( "Intensity",    1  )).setCurvable(10, CURVE_DEF_11);
-	// input 15
+	newInput(15, nodeValue_EScroll(  "Mode",       0, [ "Blur", "Blend" ] ));
+	newInput( 2, nodeValue_Int(      "Resolution", 32 ));
+	newInput( 9, nodeValue_Float(    "Intensity",  1  )).setCurvable(10, CURVE_DEF_11);
+	newInput(16, nodeValue_Gradient( "Color", gra_black_white ));
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true],	0, 13, 14, 3, 4, 7, 8, 
-		["Path",	false],	1, 12, 11, 
-		["Blur",	false],	2, 9, 10, 
+		[ "Surfaces", true ],  0, 13, 14,  3,  4,  7,  8, 
+		[ "Path",    false ],  1, 12, 11, 
+		[ "Blur",    false ], 15,  2, 9, 10, 16, 
 	];
 	
 	////- Node
@@ -41,20 +43,26 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		if(!is_surface(_data[0])) return _outSurf;
+		#region data 
+			var _surf = _data[ 0];
+			
+			var _path = _data[ 1];
+			var _orig = _data[12];
+			var _rang = _data[11];
+			
+			var _mode = _data[15];
+			var _reso = _data[ 2];
+			var _intn = _data[ 9];
+			var _curv = _data[10];
+			var _grad = _data[16];
+			
+			inputs[16].setVisible(_mode == 1);
+		#endregion
 		
-		var _surf = _data[ 0];
-		var _path = _data[ 1];
-		var _reso = _data[ 2];
-		var _intn = _data[ 9];
-		var _curv = _data[10];
-		var _rang = _data[11];
-		var _orig = _data[12];
+		if(!is_surface(_surf) || !is_path(_path)) return _outSurf;
 		
+		var _dim  = surface_get_dimension(_surf)
 		var _pntc = clamp(_reso, 2, 128);
-		if(!is_struct(_path)) return _outSurf;
-		
-		var _dim = surface_get_dimension(_surf)
 		var _points_x = array_create(_pntc);
 		var _points_y = array_create(_pntc);
 		var _p = new __vec2P();
@@ -86,8 +94,10 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_f("points_x",    _points_x);
 			shader_set_f("points_y",    _points_y);
 			
-			shader_set_f("intensity", _intn);
-			shader_set_curve("i",     _curv);
+			shader_set_i("mode",        _mode);
+			shader_set_f("intensity",   _intn);
+			shader_set_curve("i",       _curv);
+			shader_set_gradient(_grad);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
