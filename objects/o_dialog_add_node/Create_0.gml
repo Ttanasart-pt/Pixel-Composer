@@ -36,7 +36,6 @@ event_inherited();
 		array_push(recent_nodes, _node);
 	}
 	
-	node_show_connectable = false;
 	node_tooltip   = noone;
 	node_tooltip_x = 0;
 	node_tooltip_y = 0;
@@ -148,10 +147,8 @@ event_inherited();
 		if(!is(node, NodeObject))             return true;
 		if(node.patreon && !IS_PATREON)       return false;
 		if(!node.show_in_global && is_global) return false;
-		if(skipConnect || junction_called == noone || !node_show_connectable) return true;
 		
-		var _b = junction_called.connect == CONNECT_TYPE.input? node.output_type_mask : node.input_type_mask;
-		return bool(_b & value_bit(junction_called.type));
+		return true;
 	}
 	
 	function setPage(pageIndex, subPageIndex = 0) {
@@ -1112,14 +1109,6 @@ event_inherited();
 				if(mat[0] > _match[0])
 					_match = mat;
 				
-				// Fav
-				if(is(_node, NodeObject)) {
-					if(_node.deprecated) continue; // ???
-					
-					if(_match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
-						_match[0] += 10000;
-				}
-				
 				// Alias
 				var _param = "";
 				for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
@@ -1135,7 +1124,21 @@ event_inherited();
 					}
 				}
 				
-				if(_match[0] == -9999) continue;
+				if(_match[0] <= -9999) continue;
+				
+				// Fav
+				if(is(_node, NodeObject)) {
+					if(_node.deprecated) continue; // ???
+					
+					if(_match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
+						_match[0] += 10000;
+					
+					if(PREFERENCES.dialog_add_node_search_typ && is(junction_called, NodeValue)) {
+						var _b = junction_called.connect == CONNECT_TYPE.input? _node.output_type_mask : _node.input_type_mask;
+						_match[0] += bool(_b & value_bit(junction_called.type)) * 100;
+					}
+					
+				}
 				
 				// Preset 
 				if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {

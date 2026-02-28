@@ -79,6 +79,7 @@
 		PREFERENCES.dialog_add_node_h           = 400;
 		PREFERENCES.dialog_add_node_search_high = true;
 		PREFERENCES.dialog_add_node_search_fav  = false;
+		PREFERENCES.dialog_add_node_search_typ  = true;
 		PREFERENCES.dialog_add_node_pie         = [ "Node_Shape", "Node_Canvas" ];
 		
 		PREFERENCES.add_node_page               = 0;

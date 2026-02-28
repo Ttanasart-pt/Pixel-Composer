@@ -186,17 +186,18 @@ if(DIALOG_SHOW_FOCUS) {
 			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, bt, THEME.favorite, bi, bc, 1, ui(12));
 			if(b == 2) PREFERENCES.dialog_add_node_search_fav = !PREFERENCES.dialog_add_node_search_fav;
 			tw -= bs + ui(4);
-		}
-		
-		if(junction_called != noone) {
-			var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : 
-			                                 __txtx("add_node_show_all", "Showing all");
-			var cc  = node_show_connectable? COLORS._main_accent : COLORS._main_icon;
 			
-			bx -= bs + ui(4);
-			var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, txt, THEME.filter_type, node_show_connectable, cc, 1, ui(8));
-			if(b == 2) node_show_connectable = !node_show_connectable;
-			tw -= bs + ui(4);
+			if(junction_called != noone) {
+				var txt = __txtx("Prioritize Connection");
+				var bi  = PREFERENCES.dialog_add_node_search_typ;
+				var cc  = bi? COLORS._main_accent : COLORS._main_icon;
+				
+				bx -= bs + ui(4);
+				var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, txt, THEME.filter_type, bi, cc, 1, ui(8));
+				if(b == 2) PREFERENCES.dialog_add_node_search_typ = !PREFERENCES.dialog_add_node_search_typ;
+				tw -= bs + ui(4);
+			}
+			
 		}
 		
 		tw -= ui(4);

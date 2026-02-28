@@ -398,6 +398,15 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			}
 		}
 		
+		var ddir = filename_name_only(filename_dir(sourceDir));
+		switch(ddir) {
+			case "pSystem"   : input_type_mask |= value_bit(VALUE_TYPE.particle); break;
+			case "RigidSim"  : input_type_mask |= value_bit(VALUE_TYPE.rigid);    break;
+			case "SmokeSim"  : input_type_mask |= value_bit(VALUE_TYPE.sdomain);  break;
+			case "StrandSim" : input_type_mask |= value_bit(VALUE_TYPE.strands);  break;
+			case "VerletSim" : input_type_mask |= value_bit(VALUE_TYPE.mesh);     break;
+		}
+		
 		return self;
 	}
 	

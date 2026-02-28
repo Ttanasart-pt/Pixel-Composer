@@ -218,13 +218,6 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 					if(mouse_press(mb_right, active)) {
 						rightclick_index = _hi;
 						menuCall("", context_menu);
-						
-						// var apply_gradient = current_gradient.clone();
-						// if(array_length(apply_gradient.keys) > 1) {
-						// 	array_delete(apply_gradient.keys, _hi, 1);
-						// 	apply_gradient.refresh();
-						// 	onApply(apply_gradient);
-						// }
 					}
 					
 				} else if(point_in_rectangle(_m[0], _m[1], _ggx, _cy, _ggx + _ggw, _cy + _ch)) {
