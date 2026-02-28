@@ -1,3 +1,15 @@
+#region create
+	function Node_create_Tunnel_Out(_x, _y, _group = noone, _param = {}) {
+		var node = new Node_Tunnel_Out(_x, _y, _group);
+		var quer = _param[$ "query"]; 
+		var query = (is_struct(quer) && quer[$ "type"] == "value"? quer[$ "value"] : "") ?? "";
+		
+		if(query != "") node.inputs[0].skipDefault().setValue(query);
+		return node;
+	}
+	
+#endregion
+
 function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel Receiver";
 	color = COLORS.node_blend_tunnel;

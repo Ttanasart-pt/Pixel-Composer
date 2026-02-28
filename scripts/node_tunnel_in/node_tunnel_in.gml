@@ -61,7 +61,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	insp2button = button(function() /*=>*/ { 
 		var _nx = x + 160;
-		var _ny = PANEL_GRAPH.getFreeY(_nx, y);
+		var _ny = y;//PANEL_GRAPH.getFreeY(_nx, y);
 		    
 		var _node = nodeBuild("Node_Tunnel_Out", _nx, _ny);
 		    _node.skipDefault();
@@ -71,10 +71,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		_node.inputs[0].setValue(_key);
 		
 	}).setTooltip(__txt("Create Receiver"))
-		.setIcon(THEME.tunnel, 0, COLORS.node_blend_tunnel).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		.setIcon(THEME.tunnel, 0, COLORS.node_blend_tunnel).iconPad(ui(6))
+		.setBaseSprite(THEME.button_hide_fill);
 	
 	static update = function(frame = CURRENT_FRAME) {
-		
 		var _key = inputs[0].getValue();
 		var _frm = inputs[1].value_from;
 		

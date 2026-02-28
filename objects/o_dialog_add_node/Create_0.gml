@@ -1193,6 +1193,38 @@ event_inherited();
 		
 		searchCollectionData(pr_list, search_string);
 		
+		var _match   = string_partial_match_res("tunnel", search_lower);
+		
+		if(_match[0] > -9999) {
+			var _tunnels = ds_map_keys_to_array(PROJECT.tunnels_in);
+			var _node    = ALL_NODES[$ "Node_Tunnel_Out"];
+			
+			for( var i = 0, n = array_length(_tunnels); i < n; i++ ) {
+				var _tun = _tunnels[i];
+				if(_tun == "") continue;
+				
+				var _match = string_partial_match_res("tunnel " + string_lower(_tun), search_lower);
+				
+				if(_match[0] <= -9999) continue;
+				_match[0] -= 100;
+				
+				var searchData = { 
+					search : true, 
+					name   : _node.name, 
+					node   : _node, 
+					param  : {
+						type  : "value",
+						value : _tun
+					}, 
+					match  : _match, 
+					weight : _match[0], 
+					path   : undefined, 
+				};
+				
+				ds_priority_add(pr_list, searchData, _match[0]);
+			}
+		}
+		
 		var _curr_weight = undefined;
 		var _curr_arr    = [];
 		
