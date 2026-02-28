@@ -105,7 +105,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				surface_array_free(surfaces);
 				surfaces = [];
 				spr      = _gifCache;
-				print($"Load gif from cache finished in {(get_timer() - load_start_t) / 1000} ms.")
+				print($"Load gif from cache finished in {(get_timer() - load_start_t) / 1_000} ms.")
 				return;
 			}
 			
@@ -138,7 +138,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			spr         = spr_builder._spr;
 			detail.text = $"{filename_name(path_current)}\n{sprite_get_number(spr)} frames";
 			GifCache(path_current, spr);
-			print($"Load gif finish in {(get_timer() - load_start_t) / 1_000}ms");
+			print($"Load gif finished in {(get_timer() - load_start_t) / 1_000} ms");
 			
 			triggerRender();
 			loading = 0;

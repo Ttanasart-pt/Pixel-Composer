@@ -163,8 +163,8 @@ function GlobalVarDrawer() constructor {
 			if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + widH))
 				_HOVERING_ELEMENT = _inp;
 			
-			yy += lb_h + widH + _padd;
-			hh += lb_h + widH + _padd;
+			yy += widH + _padd;
+			hh += widH + _padd;
 		}
 		
 		return [ hh, chov ];

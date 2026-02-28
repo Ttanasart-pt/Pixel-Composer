@@ -309,13 +309,13 @@
 		}
 		
 		static reading = function(_gif) {
-			var _b;
+			// var _b;
 			
-			do {
-				_b = readBlock();
-				blocks[block_index++] = _b;
-			} until(_b == gifBlockEOF);
-			return true;
+			// do {
+			// 	_b = readBlock();
+			// 	blocks[block_index++] = _b;
+			// } until(_b == gifBlockEOF);
+			// return true;
 			
 			var _b = readBlock();
 			blocks[block_index++] = _b;

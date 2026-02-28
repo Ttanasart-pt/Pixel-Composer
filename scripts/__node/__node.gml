@@ -16,7 +16,12 @@ function __Node_Base(_x, _y) constructor {
 	preview_index	= 0;
 	anim_priority	= -999;
 	
-	#region --- attributes ----
+	#region ---- Inspector ----
+		inspector_draw_height = 0;
+		inspector_pad_label   = undefined;
+	#endregion
+	
+	#region ---- Attributes ----
 		attributes = {
 			update_graph:        true,
 			show_update_trigger: false,
@@ -28,7 +33,7 @@ function __Node_Base(_x, _y) constructor {
 		attributeEditors      = [];
 	#endregion
 	
-	#region ---- timeline ----
+	#region ---- Timeline ----
 		timeline_item    = new timelineItemNode(self);
 		anim_priority    = 0;
 		anim_timeline    = false;
