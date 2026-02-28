@@ -66,7 +66,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(19, nodeValue_Vec2(       "Shift Column",     [0,.5]    )).setUnitSimple();
 	newInput(39, nodeValue_Anchor(     "Anchor"                      ));
 	newInput(15, nodeValue_Vec2_Range( "Random Position", [0,0,0,0]  ));
-	newInput(44, nodeValue_Float(     "Use Shift as Endpoint", false ));
+	newInput(44, nodeValue_Bool(      "Use Shift as Endpoint", false ));
 	
 	////- =Rotation
 	newInput(33, nodeValue_Rotation( "Base Rotation",     0          ));
