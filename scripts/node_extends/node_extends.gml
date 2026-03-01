@@ -23,6 +23,8 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(11, nodeValue_Rotation( "Direction",   0    ));
 	newInput(12, nodeValue_Bool(     "Extends",    true  ));
 	newInput(16, nodeValue_Bool(     "Both Side",  false ));
+	newInput(21, nodeValue_PathNode( "Follow Path"       ));
+	newInput(22, nodeValue_Int(      "Follow Res", 32    ));
 	
 	////- =Repeat
 	newInput(19, nodeValue_EScroll( "Repeat",         0, [ "None", "Loop", "Pingpong" ] ));
@@ -30,7 +32,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Render
 	newInput(18, nodeValue_Color( "Blend Color", ca_white ));
-	// input 21
+	// input 23
 	
 	newOutput(0, nodeValue_Output("Surface Out",  VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Extends Mask", VALUE_TYPE.surface, noone));
@@ -38,7 +40,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_list = [ 1, 2,
 		[ "Surfaces", false ],  0,  3,  4,  5,  6, 
 		[ "Select",   false ],  7,  8,  9, 13, 14, 
-		[ "Extends",  false ], 10, 17, 15, 11, 12, 16, 
+		[ "Extends",  false ], 10, 17, 15, 11, 12, 16,// 21, 22, 
 		[ "Repeat",   false ], 19, 20, 
 		[ "Render",   false ], 18, 
 	];
@@ -108,6 +110,8 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _dirr = _data[11];
 			var _extn = _data[12];
 			var _both = _data[16];
+			var _epth = _data[21];
+			var _spth = _data[22];
 			
 			var _rpTyp = _data[19];
 			var _rpLen = _data[20];
@@ -116,8 +120,11 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			inputs[ 8].setVisible(_type == 0 || _type == 1);
 			inputs[ 9].setVisible(_type == 0);
-			inputs[13].setVisible(_type == 2);
+			inputs[13].setVisible(_type == 2,   _type == 2);
 			inputs[14].setVisible(_type == 2);
+			
+			inputs[21].setVisible(_type != 2);
+			inputs[22].setVisible(_type != 2);
 			
 			inputs[15].setVisible(_type == 0 || _type == 2);
 			// inputs[12].setVisible(_type == 0);
@@ -127,6 +134,9 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _dim  = surface_get_dimension(_surf);
 		var _pnts = [];
+		
+		var _usePath = is_path(_epth);
+		var _extPath = [];
 		
 		if(_type == 2) {
 			_pnts = array_create((_psam + 1) * 2);
@@ -145,6 +155,24 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_pnts[i++] = _p.y;
 				}
 			}
+		} else if(_usePath) {
+			_extPath = array_create((_spth + 1) * 2);
+			var _astep = 1 / _spth;
+			var _prg   = 0;
+			var _p     = new __vec2P();
+			var i = 0;
+			
+			_p    = _epth.getPointRatio(0.99999, 0, _p);
+			var ofx = _p.x;
+			var ofy = _p.y;
+			
+			repeat(_spth + 1) {
+				_p    = _epth.getPointRatio(_prg, 0, _p);
+				_prg += _astep;
+				
+				_extPath[i++] = (_p.x - ofx) / _dim[0];
+				_extPath[i++] = (_p.y - ofy) / _dim[1];
+			}
 		}
 		
 		surface_set_shader( _outData, sh_extends );
@@ -154,7 +182,11 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_2( "point1",     _pnt1 );
 			shader_set_2( "point2",     _pnt2 );
 			shader_set_f( "pathData",   _pnts );
-			shader_set_f( "pathSample", _psam );
+			shader_set_i( "pathSample", _psam );
+			
+			shader_set_i( "useExpath",    _usePath );
+			shader_set_f( "expathData",   _extPath );
+			shader_set_i( "expathSample", _spth    );
 			
 			shader_set_f_map( "exLength",   _leng, _data[17], inputs[10] );
 			shader_set_f( "direction",  _dirr );

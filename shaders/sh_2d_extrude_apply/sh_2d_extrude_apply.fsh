@@ -147,6 +147,7 @@ uniform int   cloneColor;
 uniform int   wrap;
 
 uniform int   highlight;
+uniform float highlightWidth;
 uniform vec4  highlightColor;
 
 uniform sampler2D mask;
@@ -172,17 +173,26 @@ void main() {
 	gl_FragData[0]  = baseColor;
 	gl_FragData[1]  = vec4(vec3(extrude == -1.? 0. : 1.), 1.);
 	
-	if(extrude == -1. && highlight == 1) {
-	    vec2 hgc = vec2(shf.x > 0.? 1. : -1., shf.y > 0.? 1. : -1.) * tx;
-	    
-	    float e1 = texture2D(extrudeMap, v_vTexcoord + vec2(hgc.x, 0.)).r;
-	    float e2 = texture2D(extrudeMap, v_vTexcoord + vec2(0., hgc.y)).r;
-	    
-	    if(e1 > 0. || e2 > 0.) {
-	        gl_FragData[0] = mix(gl_FragData[0], vec4(highlightColor.rgb, gl_FragData[0].a), highlightColor.a);
+	if(highlight == 1) {
+		if(highlightWidth > 0. && extrude == -1.) {
+		    vec2 hgc = vec2(shf.x > 0.? 1. : -1., shf.y > 0.? 1. : -1.) * tx;
+		    
+		    float e1 = texture2D(extrudeMap, v_vTexcoord + vec2(hgc.x, 0.)).r;
+		    float e2 = texture2D(extrudeMap, v_vTexcoord + vec2(0., hgc.y)).r;
+		    
+		    if(e1 > 0. || e2 > 0.) {
+		        gl_FragData[0] = mix(gl_FragData[0], vec4(highlightColor.rgb, gl_FragData[0].a), highlightColor.a);
+		        gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, 0.)), 1.);
+	    		return;
+		    }
+	    	
+		} 
+		
+		if(highlightWidth > 1. && extrude > 0. && extrude < highlightWidth) {
+	        gl_FragData[0] = vec4(highlightColor.rgb, highlightColor.a);
 	        gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, 0.)), 1.);
-	    }
-	    return;
+		    return;
+		}
 	}
 	
 	if(extrude <= 0.) return;

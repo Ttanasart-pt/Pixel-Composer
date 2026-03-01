@@ -310,6 +310,7 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform int  mode;
+uniform int  inverted;
 
 uniform int   resolution;
 uniform int   pointAmount;
@@ -320,28 +321,40 @@ uniform float intensity;
 uniform float i_curve[CURVE_MAX];
 uniform int   i_amount;
 
+uniform vec2  anchor;
+uniform vec2  rotations;
+uniform float scale_curve[CURVE_MAX];
+uniform int   scale_amount;
+
 void main() {
     vec4  p  = vec4(0.);
     float a  = 0.;
     float x  = float(pointAmount);
-    float sg = float(pointAmount) / float(resolution);
+    float s  = float(resolution);
+    float sg = float(pointAmount) / s;
     float ind, frc, pg, intn;
     int   i0, i1;
     vec2  px, p0, p1;
     vec4  ss;
 	
-    for(float i = 0.; i < float(resolution); i++) {
-        ind = sg * i;
+    for(float i = 0.; i < s; i++) {
+    	float _i = inverted == 1? s - i - 1. : i;
+    	
+        ind = sg * _i;
         i0  = int(floor(ind));
         i1  = i0 + 1;
         frc = fract(ind);
+        pg  = _i / x; 
         
         px.x = v_vTexcoord.x - mix(points_x[i0], points_x[i1], frc); 
         px.y = v_vTexcoord.y - mix(points_y[i0], points_y[i1], frc);
         
-        ss = sampleTexture(gm_BaseTexture, px, i / float(resolution));
-        pg = i / x; 
+        float scal = curveEval(scale_curve, scale_amount, pg);
+        float ang  = radians(mix(rotations.x, rotations.y, pg));
+        mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+        px = anchor + (px - anchor) / scal * rot;
         
+        ss   = sampleTexture(gm_BaseTexture, px, _i / s);
         intn = curveEval(i_curve, i_amount, pg);
         
         if(mode == 0) {
@@ -350,21 +363,19 @@ void main() {
 	        a  += ss.a;
 	        
         } else if(mode == 1) {
-        	if(ss.a > 0.) {
-	        	vec4  fg = ss * gradientEval(pg);
-	        	float al = fg.a + p.a * (1. - fg.a);
-				p   = ((fg * fg.a) + (p * p.a * (1. - fg.a))) / al;
-				p.a = al;
-        	}
+        	if(ss.a <= 0.) continue;
+        	
+        	vec4  fg = ss * gradientEval(pg);
+        	float al = fg.a + p.a * (1. - fg.a);
+			p   = ((fg * fg.a) + (p * p.a * (1. - fg.a))) / al;
+			p.a = al;
+			
         }
     }
     
     if(mode == 0) {
 	    p.rgb /= a;
 	    p.a   /= x;
-	    
-    } else if(mode == 1) {
-    	
     }
     
     gl_FragColor = p;

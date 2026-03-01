@@ -11,6 +11,11 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 8, nodeValue_Slider(   "Shift",     0, [-1,1,.01] )).setUnitSimple();
 	newInput( 7, nodeValue_Bool(     "Wrap",      false         ));
 	
+	////- =Transform
+	newInput(11, nodeValue_Anchor(   "Anchor"                          ));
+	newInput(12, nodeValue_RotRange( "Rotation Modulate", [ 0, 0 ]     ));
+	newInput(13, nodeValue_Curve(    "Scale Modulate",    CURVE_DEF_11 ));
+	
 	////- =Render
 	newInput( 3, nodeValue_Gradient(    "Color",        gra_white          ));
 	newInput( 4, nodeValue_Enum_Scroll( "Clone Color",  0, [ "None", "Multiply", "Additive" ] ));
@@ -18,17 +23,19 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Highlight
 	newInput( 5, nodeValue_Bool(  "Highlight",       false    ));
+	newInput(14, nodeValue_Float( "Highlight Width", 1        ));
 	newInput( 6, nodeValue_Color( "Highlight Color", ca_white ));
-	// input 11
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	
 	input_display_list = [
-	    [ "Surface",    false    ], 0, 9, 
-	    [ "Extrude",    false    ], 1, 2, 8, 7, 
-	    [ "Render",     false    ], 3, 4, 10, 
-	    [ "Highlight",  false, 5 ], 6, 
+	    [ "Surface",   false    ],  0,  9, 
+	    [ "Extrude",   false    ],  1,  2,  8,  7, 
+		[ "Transform", false    ], 11, 12, 13, 
+	    [ "Render",    false    ],  3,  4, 10, 
+	    [ "Highlight", false, 5 ], 14,  6, 
     ];
 	
     ////- Nodes
@@ -101,11 +108,16 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		    var _shft = _data[ 8];
 		    var _wrap = _data[ 7];
 		    
+			var _anch = _data[11];
+			var _rota = _data[12];
+			var _scal = _data[13];
+			
 		    var _grad = _data[ 3];
 		    var _clne = _data[ 4];
 		    var _deth = _data[10];
 		    
 		    var _high = _data[ 5];
+		    var _hgwd = _data[14];
 		    var _hgcl = _data[ 6];
 		    
 		    var _dim  = surface_get_dimension(_surf);
@@ -122,6 +134,10 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_f(   "angle",       degtorad(_ang)  );
 			shader_set_f(   "extDistance", _dist           );
 			shader_set_i(   "wrap",        _wrap           );
+			
+			shader_set_2( "anchor",      _anch );
+			shader_set_2( "rotations",   _rota );
+			shader_set_curve( "scale",   _scal );
 			
 	        draw_surface_safe(_surf);
 	    surface_reset_shader();
@@ -141,6 +157,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			_grad.shader_submit();
 			shader_set_i( "cloneColor",     _clne );
 	        shader_set_i( "highlight",      _high );
+	        shader_set_f( "highlightWidth", _hgwd );
 	        shader_set_c( "highlightColor", _hgcl );
 	        
 	    	draw_surface_safe(_surf);

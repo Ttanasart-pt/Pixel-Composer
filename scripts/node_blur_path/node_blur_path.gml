@@ -20,16 +20,26 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- =Blur
 	newInput(15, nodeValue_EScroll(  "Mode",       0, [ "Blur", "Blend" ] ));
 	newInput( 2, nodeValue_Int(      "Resolution", 32 ));
+	
+	////- =Transform
+	newInput(18, nodeValue_Anchor(   "Anchor"                          ));
+	newInput(19, nodeValue_RotRange( "Rotation Modulate", [ 0, 0 ]     ));
+	newInput(20, nodeValue_Curve(    "Scale Modulate",    CURVE_DEF_11 ));
+	
+	////- =Render
 	newInput( 9, nodeValue_Float(    "Intensity",  1  )).setCurvable(10, CURVE_DEF_11);
-	newInput(16, nodeValue_Gradient( "Color", gra_black_white ));
-	// input 17
+	newInput(16, nodeValue_Gradient( "Color",      gra_black_white ));
+	newInput(17, nodeValue_Bool(     "Inverted",   false ));
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 6, 
-		[ "Surfaces", true ],  0, 13, 14,  3,  4,  7,  8, 
-		[ "Path",    false ],  1, 12, 11, 
-		[ "Blur",    false ], 15,  2, 9, 10, 16, 
+		[ "Surfaces",   true ],  0, 13, 14,  3,  4,  7,  8, 
+		[ "Path",      false ],  1, 12, 11, 
+		[ "Blur",      false ], 15,  2, 
+		[ "Transform", false ], 18, 19, 20, 
+		[ "Render",    false ],  9, 10, 16, 17, 
 	];
 	
 	////- Node
@@ -52,9 +62,15 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _mode = _data[15];
 			var _reso = _data[ 2];
+			
+			var _anch = _data[18];
+			var _rota = _data[19];
+			var _scal = _data[20];
+			
 			var _intn = _data[ 9];
 			var _curv = _data[10];
 			var _grad = _data[16];
+			var _invs = _data[17];
 			
 			inputs[16].setVisible(_mode == 1);
 		#endregion
@@ -85,18 +101,23 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		surface_set_shader(_outSurf, sh_blur_path);
-			shader_set_uv(_data[13], _data[14]);
-			shader_set_i("sampleMode", getAttribute("oversample"));
-			shader_set_f("dimension",  _dim);
+			shader_set_uv( _data[13], _data[14] );
+			shader_set_i(  "sampleMode", getAttribute("oversample") );
+			shader_set_f(  "dimension",  _dim );
 			
-			shader_set_i("resolution",  _pntc);
-			shader_set_i("pointAmount", _pntc);
-			shader_set_f("points_x",    _points_x);
-			shader_set_f("points_y",    _points_y);
+			shader_set_i( "inverted",    _invs     );
+			shader_set_i( "resolution",  _pntc     );
+			shader_set_i( "pointAmount", _pntc     );
+			shader_set_f( "points_x",    _points_x );
+			shader_set_f( "points_y",    _points_y );
 			
-			shader_set_i("mode",        _mode);
-			shader_set_f("intensity",   _intn);
-			shader_set_curve("i",       _curv);
+			shader_set_2( "anchor",      _anch );
+			shader_set_2( "rotations",   _rota );
+			shader_set_curve( "scale",   _scal );
+			
+			shader_set_i( "mode",        _mode     );
+			shader_set_f( "intensity",   _intn     );
+			shader_set_curve( "i",       _curv     );
 			shader_set_gradient(_grad);
 			
 			draw_surface_safe(_surf);

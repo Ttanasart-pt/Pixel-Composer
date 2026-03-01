@@ -11,7 +11,11 @@ uniform vec2  point1;
 uniform vec2  point2;
 
 uniform float pathData[1024];
-uniform float pathSample;
+uniform int   pathSample;
+
+uniform int   useExpath;
+uniform float expathData[1024];
+uniform int   expathSample;
 
 uniform int   useNormal;
 uniform float direction;
@@ -30,6 +34,58 @@ float extendLength;
 
 float cross(in vec2 a, in vec2 b) {
 	return a.x * b.y - a.y * b.x;
+}
+
+float distanceToSegment(in vec2 p, in vec2 a, in vec2 b) {
+	vec2 ab = b - a;
+	vec2 ap = p - a;
+	float t = dot(ap, ab) / dot(ab, ab);
+	t = clamp(t, 0.0, 1.0);
+	vec2 closest = a + t * ab;
+	return distance(p, closest);
+}
+
+int imod(int x, int y) {
+	int r = x - (x / y) * y;
+	return r < 0 ? r + y : r;
+}
+
+vec2 segmentIntersect(in vec2 p0, in vec2 p1, in vec2 q0, in vec2 q1, out bool hit) {
+	vec2 r = p1 - p0;
+	vec2 s = q1 - q0;
+	vec2 qp = q0 - p0;
+	
+	float rxs = cross(r, s);
+	float qpxr = cross(qp, r);
+	
+	if (abs(rxs) < 1e-6) {
+		hit = false;
+		return vec2(0.0);
+	}
+	
+	float t = cross(qp, s) / rxs;
+	float u = qpxr / rxs;
+	
+	hit = t >= 0.0 && t <= 1.0 && u >= 0.0 && u <= 1.0;
+	return p0 + t * r;
+}
+
+vec2 lineIntersect(in vec2 p0, in vec2 p1, in vec2 q0, in vec2 q1, out bool hit) {
+	vec2 r = p1 - p0;
+	vec2 s = q1 - q0;
+	vec2 qp = q0 - p0;
+	
+	float rxs = cross(r, s);
+	float qpxr = cross(qp, r);
+	
+	if (abs(rxs) < 1e-6) {
+		hit = false;
+		return vec2(0.0);
+	}
+	
+	float t = cross(qp, s) / rxs;
+	hit = t >= 0.0 && t <= 1.0;
+	return p0 + t * r;
 }
 
 vec2 rayHitLine(in vec2 rayOrigin, in float rayAng, in vec2 p0, in vec2 p1, out bool hit) {
@@ -81,18 +137,44 @@ vec2 rayHitLineExtends(in vec2 rayOrigin, in float rayAng, in vec2 p0, in vec2 p
 	return hitPoint;
 }
 
-float distanceToSegment(in vec2 p, in vec2 a, in vec2 b) {
-	vec2 ab = b - a;
-	vec2 ap = p - a;
-	float t = dot(ap, ab) / dot(ab, ab);
-	t = clamp(t, 0.0, 1.0);
-	vec2 closest = a + t * ab;
-	return distance(p, closest);
+vec2 rayHitPath(in vec2 rayOrigin, in vec2 p0, in vec2 p1, out bool hit) {
+	bool hitt;
+	vec2 hitPoint;
+
+	for(int i = expathSample - 1; i >= 1; i--) {
+		vec2 q0 = rayOrigin + vec2(expathData[ i    * 2 + 0], expathData[ i    * 2 + 1]);
+		vec2 q1 = rayOrigin + vec2(expathData[(i-1) * 2 + 0], expathData[(i-1) * 2 + 1]);
+
+		vec2 _hitPoint = segmentIntersect(p0, p1, q0, q1, hitt);
+		if(hitt) {
+			hit      = true;
+			hitPoint = _hitPoint;
+			return hitPoint;
+		}
+	}
+
+	hit = false;
+	return vec2(0.0);
 }
 
-int imod(int x, int y) {
-	int r = x - (x / y) * y;
-	return r < 0 ? r + y : r;
+vec2 rayHitPathExtends(in vec2 rayOrigin, in vec2 p0, in vec2 p1, out bool hit) {
+	bool hitt;
+	vec2 hitPoint;
+
+	for(int i = expathSample - 1; i >= 1; i--) {
+		vec2 q0 = rayOrigin + vec2(expathData[ i    * 2 + 0], expathData[ i    * 2 + 1]);
+		vec2 q1 = rayOrigin + vec2(expathData[(i-1) * 2 + 0], expathData[(i-1) * 2 + 1]);
+
+		vec2 _hitPoint = lineIntersect(p0, p1, q0, q1, hitt);
+		if(hitt) {
+			hit      = true;
+			hitPoint = _hitPoint;
+			return hitPoint;
+		}
+	}
+
+	hit = false;
+	return vec2(0.0);
 }
 
 void main() {
@@ -118,27 +200,52 @@ void main() {
 			vec2 lineDir = _point2 - _point1;
 			_exDir += atan(lineDir.x, lineDir.y);
 		}
-
-		rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1, _point2, _hit) : 
-		                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1, _point2, _hit);
 		
-		if(!_hit && bothSide == 1) {
-			_exDir -= PI;
+		if(useExpath == 0) {
 			rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1, _point2, _hit) : 
 			                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1, _point2, _hit);
-		}
+			                
+			if(!_hit && bothSide == 1) {
+				_exDir -= PI;
+				rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1, _point2, _hit) : 
+				                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1, _point2, _hit);
+			}
 
+		} else {
+			rayHit = extends == 0? rayHitPath(v_vTexcoord, _point1, _point2, _hit) : 
+			                rayHitPathExtends(v_vTexcoord, _point1, _point2, _hit);
+			                
+			if(!_hit && bothSide == 1) {
+				rayHit = extends == 0? rayHitPath(v_vTexcoord, _point1, _point2, _hit) : 
+				                rayHitPathExtends(v_vTexcoord, _point1, _point2, _hit);
+			}
+
+		}
+		
 	} else if(type == 1) {
 		vec2 ddir = vec2(cos(_exDir + PI / 2.), -sin(_exDir + PI / 2.));
-		rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit) : 
-		                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit);
 		
-		if(!_hit && bothSide == 1) {
-			_exDir -= PI;
+		if(useExpath == 0) {
 			rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit) : 
 			                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit);
-		}
+			                
+			if(!_hit && bothSide == 1) {
+				_exDir -= PI;
+				rayHit = extends == 0? rayHitLine(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit) : 
+				                rayHitLineExtends(v_vTexcoord, _exDir + PI, _point1 - ddir, _point1 + ddir, _hit);
+			}
 
+		} else if(useExpath == 1) {
+			rayHit = extends == 0? rayHitPath(v_vTexcoord, _point1 - ddir, _point1 + ddir, _hit) : 
+			                rayHitPathExtends(v_vTexcoord, _point1 - ddir, _point1 + ddir, _hit);
+			                
+			if(!_hit && bothSide == 1) {
+				rayHit = extends == 0? rayHitPath(v_vTexcoord, _point1 - ddir, _point1 + ddir, _hit) : 
+				                rayHitPathExtends(v_vTexcoord, _point1 - ddir, _point1 + ddir, _hit);
+			}
+
+		}
+		
 	} else if(type == 2) {
 		float minDist = 1e10;
 		vec2  hitp0   = vec2(0.0);
@@ -147,13 +254,11 @@ void main() {
 		bool  _hitt;
 		bool  hitAny = false;
 		
-		for(int i = 0; i < int(pathSample); i++) {
+		for(int i = 0; i < pathSample; i++) {
 			vec2 p0 = vec2(pathData[i * 2 + 0], pathData[i * 2 + 1]) * tx;
 			vec2 p1 = vec2(pathData[i * 2 + 2], pathData[i * 2 + 3]) * tx;
 			
 			float _dirr   = useNormal == 1? _exDir + atan(p1.x - p0.x, p1.y - p0.y) : _exDir;
-			// vec2  _rayHit = extends == 0? rayHitLine(v_vTexcoord, _dirr + PI, p0, p1, _hitt) : 
-			//                        rayHitLineExtends(v_vTexcoord, _dirr + PI, p0, p1, _hitt);
 			vec2  _rayHit = rayHitLine(v_vTexcoord, _dirr + PI, p0, p1, _hitt);
 
 			if(!_hitt) continue;
@@ -170,7 +275,7 @@ void main() {
 
 		if(extends == 1 && !hitAny) { // find closet point
 			float minDist = 1e10;
-			int pathLen = int(pathSample);
+			int pathLen = pathSample;
 
 			for(int i = 0; i < pathLen; i++) {
 				int i0 = i;
