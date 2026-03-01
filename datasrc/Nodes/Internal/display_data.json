@@ -688,6 +688,7 @@
             { "label": "Fixes" },
             "Node_De_Corner",
             "Node_De_Stray",
+            "Node_Deblur",
             "Node_Gap_Contract",
         ]
     }, //Filter
