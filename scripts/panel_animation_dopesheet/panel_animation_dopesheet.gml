@@ -253,6 +253,10 @@ function Panel_Animation_Dopesheet() {
 	    
 	    global.menuItems_animation_keyframe_empty = [
 	        "animation_paste",
+			-1,
+			"animation_marker_add",
+			"animation_marker_remove",
+			"animation_marker_clear",
 	    ];
 	    
 	    // global.menuItems_animation_region = [
@@ -2305,7 +2309,8 @@ function Panel_Animation_Dopesheet() {
         	region_hovering       = noone;
         	
         	var _len = array_length(timeline_contents);
-        	timeline_snap_points = array_verify(timeline_snap_points, _len);
+        	
+        	timeline_snap_points = array_verify(timeline_snap_points, _len + 1);
         	timeline_snap_line   = [];
         	
             for( var i = 0; i < _len; i++ ) {
@@ -2415,6 +2420,12 @@ function Panel_Animation_Dopesheet() {
                     if(_key != noone) key_hover = _key;
                 }
                 
+            }
+            
+            var _markers = PROJECT.timelineMarkers;
+            timeline_snap_points[_len] = {
+            	node   : undefined,
+            	points : PROJECT.timelineMarkersArray,
             }
             
         	for( var i = 0, n = array_length(timeline_snap_line); i < n; i++ ) {
@@ -2685,36 +2696,53 @@ function Panel_Animation_Dopesheet() {
             
             draw_set_color(COLORS.panel_animation_timeline_top);
             draw_rectangle(0, 0, bar_w, hh, false);
-            
-            var _stW = timeline_separate * timeline_scale;
-            var _st  = ceil(-timeline_shift / _stW);
-            var _fr  = _st + ceil(bar_w / _stW);
-            
-            for(var i = _st; i <= _fr; i++) {
-                var bar_frame = i * timeline_separate;
-                var ln_x = bar_frame * timeline_scale + timeline_shift;
-                var ln_a = (bar_frame < 0 || bar_frame > GLOBAL_TOTAL_FRAMES)? .5 : 1;
-                
-                draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub, ln_a);
-                draw_text_add(ln_x, PANEL_PAD, bar_frame);
-            }
-            
-            draw_set_alpha(1);
-            draw_set_text(f_p2, fa_center, fa_top, CDEF.main_mdwhite);
-            var end_x = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
-            draw_text_add(end_x, PANEL_PAD, GLOBAL_TOTAL_FRAMES);
-            
-            var end_x = 0 * timeline_scale + timeline_shift;
-            draw_text_add(end_x, PANEL_PAD, 0);
-            
-            if(pHOVER && point_in_rectangle(mx, my, 0, 0, w, h)) {
-            	var _frame_hover   = round((msx - timeline_shift) / timeline_scale);
-            	var _frame_hover_x = _frame_hover * timeline_scale + timeline_shift;
-            	
-	            draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub, .5);
-	            draw_text_add(_frame_hover_x, PANEL_PAD, _frame_hover);
+	            
+			#region Markers
+				var _markers = PROJECT.timelineMarkers;
+				var _s = .4;
+				var _y = sprite_get_height(THEME.timeline_marker) * .5 * _s - ui(2);
+				
+				for( var i = 0, n = array_length(_markers); i < n; i++ ) {
+					var _m = _markers[i];
+					var _f = _m.frame;
+					var _l = _m.label;
+					
+					var _x = timeline_shift + _f * timeline_scale;
+					draw_sprite_ui(THEME.timeline_marker, 1, _x, _y, _s, _s, 0, COLORS._main_icon,  .7);
+				}
+			#endregion
+			
+			#region Frame number
+	            var _stW = timeline_separate * timeline_scale;
+	            var _st  = ceil(-timeline_shift / _stW);
+	            var _fr  = _st + ceil(bar_w / _stW);
+	            
+	            for(var i = _st; i <= _fr; i++) {
+	                var bar_frame = i * timeline_separate;
+	                var ln_x = bar_frame * timeline_scale + timeline_shift;
+	                var ln_a = (bar_frame < 0 || bar_frame > GLOBAL_TOTAL_FRAMES)? .5 : 1;
+	                
+	                draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub, ln_a);
+	                draw_text_add(ln_x, PANEL_PAD, bar_frame);
+	            }
+	            
 	            draw_set_alpha(1);
-            }
+	            draw_set_text(f_p2, fa_center, fa_top, CDEF.main_mdwhite);
+	            var end_x = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
+	            draw_text_add(end_x, PANEL_PAD, GLOBAL_TOTAL_FRAMES);
+            
+	            var end_x = 0 * timeline_scale + timeline_shift;
+	            draw_text_add(end_x, PANEL_PAD, 0);
+	            
+	            if(pHOVER && point_in_rectangle(mx, my, 0, 0, w, h)) {
+	            	var _frame_hover   = round((msx - timeline_shift) / timeline_scale);
+	            	var _frame_hover_x = _frame_hover * timeline_scale + timeline_shift;
+	            	
+		            draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub, .5);
+		            draw_text_add(_frame_hover_x, PANEL_PAD, _frame_hover);
+		            draw_set_alpha(1);
+	            }
+            #endregion
             
             if(PROJECT.onion_skin.enabled) { // ONION SKIN
                 var rang = PROJECT.onion_skin.range;
@@ -2805,6 +2833,24 @@ function Panel_Animation_Dopesheet() {
 	            draw_set_text(f_p2, fa_center, fa_top, cc);
 	            draw_text_add(bar_end_x, PANEL_PAD, cf);
             }
+            
+			#region Markers
+				var _markers = PROJECT.timelineMarkers;
+				var _s = .4;
+				var _y = sprite_get_height(THEME.timeline_marker) * .5 * _s - ui(2);
+				
+				for( var i = 0, n = array_length(_markers); i < n; i++ ) {
+					var _m = _markers[i];
+					var _f = _m.frame;
+					var _l = _m.label;
+					
+					if(_f - 1 != GLOBAL_CURRENT_FRAME) continue;
+					
+					var _x = timeline_shift + _f * timeline_scale;
+					draw_sprite_ui(THEME.timeline_marker, 1, _x, _y, _s, _s, 0, COLORS._main_icon_dark, 1);
+				}
+			#endregion
+			
         #endregion
         
         #region End Line
@@ -2834,6 +2880,8 @@ function Panel_Animation_Dopesheet() {
         drawDopesheet_Label();
         
         if(keyframe_boxable && mouse_rpress(pFOCUS)) { // context menu
+        	__selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, GLOBAL_TOTAL_FRAMES - 1);
+        	
             if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + dopesheet_w, ui(8) + dopesheet_h)) {
             	// if(region_hovering != noone)             menuCallGen("animation_region");
                 if(array_empty(keyframe_selecting)) menuCallGen("animation_keyframe_empty");

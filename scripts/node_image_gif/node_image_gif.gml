@@ -363,7 +363,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
     		var _ed   = _targ + _plen;
     		
     		if(!key_mod_press(CTRL)) {
-	    		var _snaps  = _panel.timeline_snap_points;
+	    		var _snaps = _panel.timeline_snap_points;
+	    		var _sntr  = undefined;
+	    		var _sntrP = undefined;
+	    		
 	    		for( var i = 0, n = array_length(_snaps); i < n; i++ ) {
 	    			var _sn = _snaps[i];
 	    			if(!is_struct(_sn))  continue;
@@ -372,9 +375,14 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	    			for( var j = 0, m = array_length(_sn.points); j < m; j++ ) {
 	    				var _p = _sn.points[j];
 	    				
-	    				if(abs(_p - _st) < 4) { _targ = _p;         array_push(_panel.timeline_snap_line, _p); }
-	    				if(abs(_p - _ed) < 4) { _targ = _p - _plen; array_push(_panel.timeline_snap_line, _p); }
+	    				if(abs(_p - _st) < 4/_s) { _sntr = _p;         _sntrP = _p; }
+	    				if(abs(_p - _ed) < 4/_s) { _sntr = _p - _plen; _sntrP = _p; }
 	    			}
+	    		}
+	    		
+	    		if(_sntr != undefined) {
+	    			_targ = _sntr;
+	    			array_push(_panel.timeline_snap_line, _sntrP);
 	    		}
     		}
     		

@@ -14,7 +14,7 @@ function Panel_Preference() : PanelContent() constructor {
 	auto_pin = true;
 	font     = f_p3;
 	
-	page_width     = ui(128);
+	page_width     = ui(160);
 	should_restart = false;
 	
 	panel_width   = w - padding * 2 - page_width;

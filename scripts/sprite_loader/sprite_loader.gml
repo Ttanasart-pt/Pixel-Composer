@@ -107,8 +107,8 @@ function loadGraphic(theme = "default") {
 	
 	var packPath = $"{DIRECTORY}Themes/{theme}/packed";
 	var packed   = !PREFERENCES.theme_load_unpack && file_exists($"{packPath}/struct.json");
+	    packed   = false;
 	
-	if(TESTING) packed = false;
 	USE_TEXTUREGROUP = packed;
 	
 	if(packed) {

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__timeline_marker",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__timeline_marker",
+  "parent":{
+    "name":"animation",
+    "path":"folders/panels/animation.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

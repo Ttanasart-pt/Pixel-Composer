@@ -567,6 +567,7 @@
     {"name":"__tiler_brush","order":3,"path":"scripts/__tiler_brush/__tiler_brush.yy",},
     {"name":"__tiler_rule","order":4,"path":"scripts/__tiler_rule/__tiler_rule.yy",},
     {"name":"__tiler_tool","order":2,"path":"scripts/__tiler_tool/__tiler_tool.yy",},
+    {"name":"__timeline_marker","order":6,"path":"scripts/__timeline_marker/__timeline_marker.yy",},
     {"name":"__vec2","order":7,"path":"scripts/__vec2/__vec2.yy",},
     {"name":"__vec3","order":8,"path":"scripts/__vec3/__vec3.yy",},
     {"name":"__vec4","order":9,"path":"scripts/__vec4/__vec4.yy",},

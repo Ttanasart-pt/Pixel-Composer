@@ -54,11 +54,15 @@
     
     function panel_animation_reset_view()              { CALL("animation_view_reset");              PANEL_ANIMATION.resetView();             }
     
-    function panel_animation_new_folder()               { CALL("animation_new_folder");               PANEL_ANIMATION.newFolder();              }
-    function panel_animation_toggle_NodeNameType(d=1)   { CALL("animation_toggle_NodeNameType");      PANEL_ANIMATION.toggleNodeNameType(d);    }
-    function panel_animation_toggle_NodeLabel()         { CALL("animation_toggle_NodeLabel");         PANEL_ANIMATION.toggleNodeLabel();        }
-    function panel_animation_toggle_KeyframeOverride()  { CALL("animation_toggle_KeyframeOverride");  PANEL_ANIMATION.toggleKeyframeOverride(); }
-    function panel_animation_toggle_OnionSkin()         { CALL("animation_toggle_OnionSkin");         PANEL_ANIMATION.toggleOnionSkin();        }
+    function panel_animation_new_folder()              { CALL("animation_new_folder");              PANEL_ANIMATION.newFolder();              }
+    function panel_animation_toggle_NodeNameType(d=1)  { CALL("animation_toggle_NodeNameType");     PANEL_ANIMATION.toggleNodeNameType(d);    }
+    function panel_animation_toggle_NodeLabel()        { CALL("animation_toggle_NodeLabel");        PANEL_ANIMATION.toggleNodeLabel();        }
+    function panel_animation_toggle_KeyframeOverride() { CALL("animation_toggle_KeyframeOverride"); PANEL_ANIMATION.toggleKeyframeOverride(); }
+    function panel_animation_toggle_OnionSkin()        { CALL("animation_toggle_OnionSkin");        PANEL_ANIMATION.toggleOnionSkin();        }
+    
+    function panel_animation_marker_add()              { CALL("animation_marker_add");              PANEL_ANIMATION.addMarker();    }
+    function panel_animation_marker_remove()           { CALL("animation_marker_remove");           PANEL_ANIMATION.removeMarker(); }
+    function panel_animation_marker_clear()            { CALL("animation_marker_clear");            PANEL_ANIMATION.clearMarker();  }
     
 	function __fnInit_Animation() {
 		var an = "Animation";
@@ -120,6 +124,10 @@
         registerFunction(an, "Set Range End",         "", n, panel_animation_range_set_end        ).setMenu("animation_set_range_end",       [ THEME.frame_range, 1 ])
         registerFunction(an, "Reset Range",           "", n, panel_animation_range_reset          ).setMenu("animation_reset_range",         )
         registerFunction(an, "Reset View",           "F", n, panel_animation_reset_view           ).setMenu("animation_reset_view",          )
+        
+        registerFunction(an, "Add Marker",            "", n, panel_animation_marker_add           ).setMenu("animation_marker_add", [ THEME.timeline_marker, 2 ] )
+        registerFunction(an, "Remove Marker",         "", n, panel_animation_marker_remove        ).setMenu("animation_marker_remove" )
+        registerFunction(an, "Clear Markers",         "", n, panel_animation_marker_clear         ).setMenu("animation_marker_clear" )
         
         registerFunction(an, "Toggle Hidden",      "S",        n,  panel_animation_show_hidden    )
         	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
@@ -305,6 +313,10 @@ function Panel_Animation() : PanelContent() constructor {
     		"animation_set_range_start",
 			"animation_set_range_end",
 			"animation_reset_range",
+			-1,
+			"animation_marker_add",
+			"animation_marker_remove",
+			"animation_marker_clear",
 		];
     	
     	global.menuItems_animation_sidebar = [
@@ -492,6 +504,25 @@ function Panel_Animation() : PanelContent() constructor {
         array_foreach(timeline_keys, function(k) /*=>*/ { k.dopesheet_x = (k.time + 1) * timeline_scale + timeline_shift; });
     }
     
+    function addMarker(_frame = __selecting_frame) {
+    	var _ma = new timelineMarker(_frame);
+    	array_push(PROJECT.timelineMarkers, _ma);
+    	PROJECT.markerUpdate();
+    }
+    
+    function removeMarker(_frame = __selecting_frame) {
+    	for( var i = array_length(PROJECT.timelineMarkers) - 1; i >= 0; i-- ) {
+    		if(PROJECT.timelineMarkers[i].frame == _frame)
+    			array_delete(PROJECT.timelineMarkers, i, 1);
+    	}
+    	PROJECT.markerUpdate();
+    }
+    
+    function clearMarker() {
+    	PROJECT.timelineMarkers = [];
+    	PROJECT.markerUpdate();
+    }
+    
     ////- Draw
     
     function drawTimeline() {
@@ -577,6 +608,23 @@ function Panel_Animation() : PanelContent() constructor {
         }
         #endregion
         
+		#region Markers
+			var _markers = PROJECT.timelineMarkers;
+			var _s = .4;
+			var _y = timeline_h - sprite_get_height(THEME.timeline_marker) * .5 * _s + ui(2);
+			
+			for( var i = 0, n = array_length(_markers); i < n; i++ ) {
+				var _m = _markers[i];
+				var _f = _m.frame;
+				var _l = _m.label;
+				
+				var _x = timeline_shift + _f * timeline_scale + 1;
+				if(_f - 1 == GLOBAL_CURRENT_FRAME)
+					 draw_sprite_ui(THEME.timeline_marker, 0, _x, _y, _s, _s, 0, COLORS._main_accent, 1);
+				else draw_sprite_ui(THEME.timeline_marker, 0, _x, _y, _s, _s, 0, COLORS._main_icon,  .7);
+			}
+		#endregion
+           
         #region Hovering
         if(pHOVER && point_in_rectangle(mx, my, 0, 0, w, h)) {
         	var _frame_hover   = round((msx - timeline_shift) / timeline_scale);

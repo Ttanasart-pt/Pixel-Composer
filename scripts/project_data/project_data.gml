@@ -111,6 +111,9 @@ function Project() constructor {
 	favoritedValues = [];
 	customPanels    = [];
 	
+	timelineMarkers      = [];
+	timelineMarkersArray = [];
+	
 	#region ===================== GLOBAL LAYER ====================
 		globalLayer_surface   = noone;
 		globalLayer_nodes     = [];
@@ -459,6 +462,13 @@ function Project() constructor {
 		return "";
 	}
 	
+	static markerUpdate = function() {
+		var _len = array_length(timelineMarkers);
+		timelineMarkersArray = array_verify(timelineMarkersArray, _len);
+		for( var i = 0; i < _len; i++ )
+			timelineMarkersArray[i] = timelineMarkers[i].frame;
+	}
+	
 	////- Serialize
 
 	static serialize = function(_addon = true) {
@@ -531,7 +541,8 @@ function Project() constructor {
 			array_push(_map.favVal, [_fa.node.node_id, _fa.index]);
 		}
 		
-		_map.cPanels = array_map(customPanels, function(p) /*=>*/ {return p.serialize()});
+		_map.cPanels = array_map(customPanels,    function(p) /*=>*/ {return p.serialize()});
+		_map.tMarks  = array_map(timelineMarkers, function(p) /*=>*/ {return p.serialize()});
 		
 		__node_list = [];
 		array_foreach(allNodes, function(node) /*=>*/ { if(node.active) array_push(__node_list, node.serialize()); })
@@ -626,6 +637,13 @@ function Project() constructor {
 			customPanels = array_create(array_length(_map.cPanels));
 			for( var i = 0, n = array_length(_map.cPanels); i < n; i++ )
 				customPanels[i] = new Panel_Custom_Data().deserialize(_map.cPanels[i]);
+		}
+		
+		if(has(_map, "tMarks")) {
+			timelineMarkers = array_create(array_length(_map.tMarks));
+			for( var i = 0, n = array_length(_map.tMarks); i < n; i++ )
+				timelineMarkers[i] = new timelineMarker().deserialize(_map.tMarks[i]);
+			markerUpdate();
 		}
 		
 		bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);
