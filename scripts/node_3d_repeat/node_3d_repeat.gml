@@ -6,7 +6,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	////- =Objects
 	newInput( 0, nodeValue_D3Mesh(      "Objects" )).setArrayDepth(1);
 	newInput( 3, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
-	newInput( 4, nodeValue_Quaternion(  "Starting Rotation", [0,0,0,1 ] ));
+	newInput( 4, nodeValue_Quaternion(  "Starting Rotation" ));
 	newInput( 5, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
 	
 	////- =Repeat
@@ -28,7 +28,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput( 6, nodeValue_Vec3(       "Shift Position",   [1,0,0]   ));
 	newInput(15, nodeValue_Vec3(       "Shift Position Y", [0,1,0]   ));
 	newInput(16, nodeValue_Vec3(       "Shift Position Z", [0,0,1]   ));
-	newInput( 7, nodeValue_Quaternion( "Shift Rotation",   [0,0,0,1] ));
+	newInput( 7, nodeValue_Quaternion( "Shift Rotation" ));
 	newInput( 8, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
 	newInput(25, nodeValue_Bool(       "Scale Uniform",    true              ));
 	/* UNUSED */ newInput(12, nodeValue_Bool( "Use Instance", true ))

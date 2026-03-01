@@ -1,15 +1,17 @@
-function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObject() constructor {
+function __3dCylinder(_radius = 0.5, _height = 1, _sides = 8, _smooth = false) : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	
-	self.radius = radius;
-	self.height = height;
-	self.sides  = sides;
-	self.smooth = smooth;
+	radius = _radius;
+	height = _height;
+	sides  = _sides;
+	smooth = _smooth;
 	
 	caps     = true;
 	segment  = 1;
 	profiles = [ 1, 1 ];
+	
+	uvScale_side = 1;
 	
 	static initModel = function() {
 		edges   = [];
@@ -71,8 +73,8 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 			var nx1 = smooth? _x1 : lengthdir_x(1, (a0 + a1) / 2);
 			var ny1 = smooth? _y1 : lengthdir_y(1, (a0 + a1) / 2);
 			
-			var ux0 = (i + 0) / sides;
-			var ux1 = (i + 1) / sides;
+			var ux0 = (i + 0) / sides * uvScale_side;
+			var ux1 = (i + 1) / sides * uvScale_side;
 			
 			for( var j = 0; j < segment; j++ ) {
 				var _j0 = j * _sg;

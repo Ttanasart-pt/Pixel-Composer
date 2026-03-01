@@ -3,7 +3,7 @@ function Node_Quarternion_To_Euler(_x, _y, _group = noone) : Node_Processor(_x, 
 	setDrawIcon(s_node_quarternion_to_euler);
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Quaternion("Rotation", [0,0,0,1] )).setVisible(true, true);
+	newInput(0, nodeValue_Quaternion("Rotation" )).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Euler Angles", VALUE_TYPE.float, [0,0,0])).setDisplay(VALUE_DISPLAY.vector);
 	

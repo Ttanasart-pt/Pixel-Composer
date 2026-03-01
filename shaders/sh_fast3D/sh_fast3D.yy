@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_fast3D",
+  "name":"sh_fast3D",
+  "parent":{
+    "name":"fast3d",
+    "path":"folders/nodes/data/3D/fast3d.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

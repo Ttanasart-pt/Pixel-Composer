@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_fast3D_cube",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_fast3D_cube",
+  "parent":{
+    "name":"fast3d",
+    "path":"folders/nodes/data/3D/fast3d.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

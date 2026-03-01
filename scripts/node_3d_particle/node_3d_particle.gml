@@ -33,7 +33,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput(30, nodeValue_Enum_Scroll( "Spawn Shape",       0,         )).setChoices(__enum_array_gen([ "Box", "Sphere", "Circle" ], s_node_particle_3d_spawn_shape));
 	newInput( 9, nodeValue_Vec3(        "Spawn Origin",     [0,0,0]     ));
 	newInput(27, nodeValue_Vec3(        "Spawn Span",       [1,1,1]     ));
-	newInput(57, nodeValue_Quaternion(  "Spawn Rotation",   [0,0,0,1]   ));
+	newInput(57, nodeValue_Quaternion(  "Spawn Rotation"   ));
 	newInput(10, nodeValue_PathNode(    "Spawn Path"                    ));
 	newInput(29, nodeValue_D3Mesh(      "Spawn Mesh"                    ));
 	newInput(11, nodeValue_Vector(      "Spawn Data"                    )).setArrayDepth(1);

@@ -290,52 +290,6 @@ function Panel_Animation_Dopesheet() {
 	    
     #endregion ++++ context menu ++++
     
-    ////- Navigation
-    
-    function toPrevKeyframe() {
-    	var _t = -infinity;
-    	
-    	for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
-            var _cont = timeline_contents[i];
-            if(_cont.type != "node") continue;
-            
-            var _anims = _cont.animations;
-            for( var j = 0, m = array_length(_anims); j < m; j++ ) {
-                var animator = _anims[j];
-            
-		    	for(var k = 0; k < array_length(animator.values); k++) {
-		            var _key = animator.values[k];
-		            if(_key.time < GLOBAL_CURRENT_FRAME)
-                        _t = max(_t, _key.time);
-		        }
-    		}
-    	}
-    	
-    	if(_t != -infinity) PROJECT.animator.setFrame(_t);
-    }
-    
-    function toNextKeyframe() {
-    	var _t = infinity;
-    	
-    	for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
-            var _cont = timeline_contents[i];
-            if(_cont.type != "node") continue;
-            
-            var _anims = _cont.animations;
-            for( var j = 0, m = array_length(_anims); j < m; j++ ) {
-                var animator = _anims[j];
-            
-		    	for(var k = 0; k < array_length(animator.values); k++) {
-		            var _key = animator.values[k];
-		            if(_key.time > GLOBAL_CURRENT_FRAME)
-		            	_t = min(_t, _key.time);
-		        }
-    		}
-    	}
-    	
-    	if(_t != infinity) PROJECT.animator.setFrame(_t); 
-    }
-    
     ////- Interaction
     
     __collapse = false;

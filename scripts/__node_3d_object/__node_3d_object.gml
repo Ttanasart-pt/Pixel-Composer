@@ -24,7 +24,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			side_button: button(function() /*=>*/ { apply_anchor = !apply_anchor; triggerRender(); })
 				.setIcon(THEME.icon_3d_anchor, [ function() /*=>*/ {return apply_anchor} ], c_white).setTooltip("Apply Position") 
 		}));
-	newInput( 1, nodeValue_Quaternion( "Rotation", [0,0,0,1] ));
+	newInput( 1, nodeValue_Quaternion( "Rotation" ));
 	newInput( 2, nodeValue_Vec3(       "Scale",    [1,1,1]   ));
 	in_d3d = array_length(inputs);
 	

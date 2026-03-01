@@ -7,6 +7,8 @@ function __3dCone() : __3dObject() constructor {
 	height =  1;
 	sides  =  8;
 	smooth = false;
+	
+	uvScale_side = 1;
 		
 	static initModel = function() {
 		edges   = [];
@@ -57,8 +59,8 @@ function __3dCone() : __3dObject() constructor {
 			var h2  = height * height;
 			var nz  = r2 / (r2 + h2);
 			
-			var ux0 = (i + 0) / sides;
-			var ux1 = (i + 1) / sides;
+			var ux0 = (i + 0) / sides * uvScale_side;
+			var ux1 = (i + 1) / sides * uvScale_side;
 			
 			vs[i * 3 + 0] = new __vertex( 0,  0,  _h).setNormal(nxc, nyc, nz).setUV((ux0 + ux1) / 2, 0);
 			vs[i * 3 + 1] = new __vertex(x0, y0, -_h).setNormal(nx0, ny0, nz).setUV(ux0, 1);

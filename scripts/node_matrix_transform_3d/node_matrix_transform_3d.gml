@@ -8,7 +8,7 @@ function Node_Matrix_Transform_3D(_x, _y, _group = noone) : Node_Processor(_x, _
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec3(       "Position", [0,0,0]   ));
-	newInput( 2, nodeValue_Quaternion( "Rotation", [0,0,0,1] ));
+	newInput( 2, nodeValue_Quaternion( "Rotation" ));
 	newInput( 3, nodeValue_Vec3(       "Scale",    [1,1,1]   ));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

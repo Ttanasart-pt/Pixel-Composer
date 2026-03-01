@@ -1,12 +1,14 @@
-function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObject() constructor {
+function __3dUVSphere(_radius = 0.5, _hori = 16, _vert = 8, _smt = false) : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	
-	self.radius = radius;
-	self.hori   = hori;
-	self.vert   = vert;
-	self.smooth = smt;
-	projection  = 0;
+	radius = _radius;
+	hori   = _hori;
+	vert   = _vert;
+	smooth = _smt;
+	
+	uvsca  = 1;
+	projection = 0;
 	
 	static initModel = function() { // swap H, V because fuck me
 		var amo = 0;
@@ -44,10 +46,10 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 			var hy3 = dsin(ha1) * r1;
 			var hz3 = h1;
 			
-			var u0 = ha0 / 360, v0;
-			var u1 = ha1 / 360, v1;
-			var u2 = ha0 / 360, v2;
-			var u3 = ha1 / 360, v3;
+			var u0 = ha0 / 360 * uvsca, v0;
+			var u1 = ha1 / 360 * uvsca, v1;
+			var u2 = ha0 / 360 * uvsca, v2;
+			var u3 = ha1 / 360 * uvsca, v3;
 			
 			var ind = (i * hori + j) * 6;
 			

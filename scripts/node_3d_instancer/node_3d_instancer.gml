@@ -8,7 +8,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	
 	////- =Objects
 	newInput(16, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
-	newInput(17, nodeValue_Quaternion(  "Starting Rotation", [0,0,0,1 ] ));
+	newInput(17, nodeValue_Quaternion(  "Starting Rotation" ));
 	newInput(18, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
 	
 	////- =Repeat
@@ -33,7 +33,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput(13, nodeValue_Vec3(        "Shift Position",   [1,0,0]   ));
 	newInput(25, nodeValue_Vec3(        "Shift Position Y", [0,1,0]   ));
 	newInput(26, nodeValue_Vec3(        "Shift Position Z", [0,0,1]   ));
-	newInput(14, nodeValue_Quaternion(  "Shift Rotation",   [0,0,0,1] ));
+	newInput(14, nodeValue_Quaternion(  "Shift Rotation" ));
 	newInput(15, nodeValue_Vec3(        "Shift Scale",      [0,0,0]   ));
 	
 	////- =Scatter

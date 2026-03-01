@@ -151,6 +151,7 @@
     {"$GMFolder":"","%Name":"cylinder","folderPath":"folders/nodes/data/3D/d3d_mesh/cylinder.yy","name":"cylinder","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"d3d_modifier","folderPath":"folders/nodes/data/3D/d3d_modifier.yy","name":"d3d_modifier","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"d3d_particle","folderPath":"folders/nodes/data/3D/d3d_particle.yy","name":"d3d_particle","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"fast3d","folderPath":"folders/nodes/data/3D/fast3d.yy","name":"fast3d","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"raymarching","folderPath":"folders/nodes/data/3D/raymarching.yy","name":"raymarching","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"animation","folderPath":"folders/nodes/data/animation.yy","name":"animation","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"fn","folderPath":"folders/nodes/data/animation/fn.yy","name":"fn","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -450,7 +451,11 @@
     {"link":"io.gamemaker.sdfshaders-1.0.0","name":"io.gamemaker.sdfshaders-1.0.0","path":"io.gamemaker.sdfshaders-1.0.0.yyp",},
   ],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"0",
+        },
+      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dlltest1.dll","CopyToMask":-1,"filePath":"datafiles","name":"dlltest1.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ffmpeg.exe","CopyToMask":-1,"filePath":"datafiles/ffmpeg/bin","name":"ffmpeg.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"LICENSE","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -489,7 +494,11 @@
     {"$GMIncludedFile":"","%Name":"nodes.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"nodes.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"themes.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"themes.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"welcome_files.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"welcome_files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{"Itch":{"CopyToMask":"2",},},"CopyToMask":2,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"2",
+        },
+      },"CopyToMask":2,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1311,6 +1320,12 @@
     {"id":{"name":"node_erode","path":"scripts/node_erode/node_erode.yy",},},
     {"id":{"name":"node_export","path":"scripts/node_export/node_export.yy",},},
     {"id":{"name":"node_extends","path":"scripts/node_extends/node_extends.yy",},},
+    {"id":{"name":"node_fast3D_cone","path":"scripts/node_fast3D_cone/node_fast3D_cone.yy",},},
+    {"id":{"name":"node_fast3D_cube","path":"scripts/node_fast3D_cube/node_fast3D_cube.yy",},},
+    {"id":{"name":"node_fast3D_cylinder","path":"scripts/node_fast3D_cylinder/node_fast3D_cylinder.yy",},},
+    {"id":{"name":"node_fast3D_sphere","path":"scripts/node_fast3D_sphere/node_fast3D_sphere.yy",},},
+    {"id":{"name":"node_fast3D_torus","path":"scripts/node_fast3D_torus/node_fast3D_torus.yy",},},
+    {"id":{"name":"node_fast3D","path":"scripts/node_fast3D/node_fast3D.yy",},},
     {"id":{"name":"node_feedback_inline","path":"scripts/node_feedback_inline/node_feedback_inline.yy",},},
     {"id":{"name":"node_feedback_input","path":"scripts/node_feedback_input/node_feedback_input.yy",},},
     {"id":{"name":"node_feedback_output","path":"scripts/node_feedback_output/node_feedback_output.yy",},},
@@ -2465,6 +2480,7 @@
     {"id":{"name":"sh_edge_shade_extract","path":"shaders/sh_edge_shade_extract/sh_edge_shade_extract.yy",},},
     {"id":{"name":"sh_erode","path":"shaders/sh_erode/sh_erode.yy",},},
     {"id":{"name":"sh_extends","path":"shaders/sh_extends/sh_extends.yy",},},
+    {"id":{"name":"sh_fast3D","path":"shaders/sh_fast3D/sh_fast3D.yy",},},
     {"id":{"name":"sh_fd_add_velocity","path":"shaders/sh_fd_add_velocity/sh_fd_add_velocity.yy",},},
     {"id":{"name":"sh_fd_advect_material","path":"shaders/sh_fd_advect_material/sh_fd_advect_material.yy",},},
     {"id":{"name":"sh_fd_advect_velocity","path":"shaders/sh_fd_advect_velocity/sh_fd_advect_velocity.yy",},},
@@ -3115,6 +3131,11 @@
     {"id":{"name":"s_node_erode","path":"sprites/s_node_erode/s_node_erode.yy",},},
     {"id":{"name":"s_node_export","path":"sprites/s_node_export/s_node_export.yy",},},
     {"id":{"name":"s_node_extends","path":"sprites/s_node_extends/s_node_extends.yy",},},
+    {"id":{"name":"s_node_fast3d_cone","path":"sprites/s_node_fast3d_cone/s_node_fast3d_cone.yy",},},
+    {"id":{"name":"s_node_fast3d_cube","path":"sprites/s_node_fast3d_cube/s_node_fast3d_cube.yy",},},
+    {"id":{"name":"s_node_fast3d_cylinder","path":"sprites/s_node_fast3d_cylinder/s_node_fast3d_cylinder.yy",},},
+    {"id":{"name":"s_node_fast3d_sphere","path":"sprites/s_node_fast3d_sphere/s_node_fast3d_sphere.yy",},},
+    {"id":{"name":"s_node_fast3d_torus","path":"sprites/s_node_fast3d_torus/s_node_fast3d_torus.yy",},},
     {"id":{"name":"s_node_feedback_input","path":"sprites/s_node_feedback_input/s_node_feedback_input.yy",},},
     {"id":{"name":"s_node_feedback_output","path":"sprites/s_node_feedback_output/s_node_feedback_output.yy",},},
     {"id":{"name":"s_node_feedback","path":"sprites/s_node_feedback/s_node_feedback.yy",},},
@@ -3807,9 +3828,33 @@
   ],
   "templateType":null,
   "TextureGroups":[
-    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{"Steam":{"compressFormat":"bz2","groupParent":"null","loadType":"default",},},"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
-    {"$GMTextureGroup":"","%Name":"nodeIcon","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{"Steam":{"compressFormat":"bz2","groupParent":"null","loadType":"default",},},"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"nodeIcon","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
-    {"$GMTextureGroup":"","%Name":"workshop","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{"Steam":{"compressFormat":"bz2","groupParent":"null","loadType":"default",},},"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"workshop","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
-    {"$GMTextureGroup":"","%Name":"profileBadge","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{"Steam":{"compressFormat":"bz2","groupParent":"null","loadType":"default",},},"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"profileBadge","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "compressFormat":"bz2",
+          "groupParent":"null",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"nodeIcon","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "compressFormat":"bz2",
+          "groupParent":"null",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"nodeIcon","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"workshop","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "compressFormat":"bz2",
+          "groupParent":"null",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"workshop","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"profileBadge","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "compressFormat":"bz2",
+          "groupParent":"null",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"profileBadge","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
   ],
 }

@@ -4,15 +4,17 @@
     
     function panel_animation_toggle_type()   { PANEL_ANIMATION.timeline_frame = !PANEL_ANIMATION.timeline_frame; }
     
-    function panel_animation_play_pause()              { CALL("play_pause");           PROJECT.animator.play_pause();   }
-    function panel_animation_resume()                  { CALL("resume_pause");         PROJECT.animator.resume_pause(); }
+    function panel_animation_play_pause()    { CALL("play_pause");           PROJECT.animator.play_pause();   }
+    function panel_animation_resume()        { CALL("resume_pause");         PROJECT.animator.resume_pause(); }
     
-    function panel_animation_first_frame()             { CALL("first_frame");          if(GLOBAL_IS_RENDERING) return; PROJECT.animator.firstFrame();                                                            }
-    function panel_animation_last_frame()              { CALL("last_frame");           if(GLOBAL_IS_RENDERING) return; PROJECT.animator.lastFrame();                                                             }
-    function panel_animation_prev_frame()              { CALL("previous_frame");       if(GLOBAL_IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                       }
-    function panel_animation_next_frame()              { CALL("next_frame");           if(GLOBAL_IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, GLOBAL_TOTAL_FRAMES - 1)); }
-    function panel_animation_prev_keyframe()           { CALL("previous_keyframe");    if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
-    function panel_animation_next_keyframe()           { CALL("next_keyframe");        if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
+    function panel_animation_first_frame()   { CALL("first_frame");        if(GLOBAL_IS_RENDERING) return; PROJECT.animator.firstFrame();    }
+    function panel_animation_last_frame()    { CALL("last_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.lastFrame();     }
+    function panel_animation_prev_frame()    { CALL("previous_frame");     if(GLOBAL_IS_RENDERING) return; PROJECT.animator.nextFrame();     }
+    function panel_animation_next_frame()    { CALL("next_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.previousFrame(); }
+    function panel_animation_prev_keyframe() { CALL("previous_keyframe");  if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
+    function panel_animation_next_keyframe() { CALL("next_keyframe");      if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
+    function panel_animation_prev_marker()   { CALL("previous_marker");    if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevMarker(); }
+    function panel_animation_next_marker()   { CALL("next_marker");        if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextMarker(); }
     
     function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
     function panel_animation_delete_key()              { CALL("animation_delete_key");              PANEL_ANIMATION.deleteKeys();                                                                        }
@@ -81,6 +83,8 @@
         registerFunction("", "Next Frame",         vk_right,   n,  panel_animation_next_frame     ).setMenu("next_frame")
         registerFunction("", "Previous Keyframe",  vk_pageup,  n,  panel_animation_prev_keyframe  ).setMenu("previous_keyframe")
         registerFunction("", "Next Keyframe",      vk_pagedown,n,  panel_animation_next_keyframe  ).setMenu("next_keyframe")
+    	registerFunction("", "Previous Marker",    vk_left,    c,  panel_animation_prev_marker    ).setMenu("previous_marker")
+        registerFunction("", "Next Marker",        vk_right,   c,  panel_animation_next_marker    ).setMenu("next_marker")
     
         registerFunction(an, "Toggle Frame View",  "",         n,  panel_animation_toggle_type    ).setMenu("animation_toggle_view_type")
         registerFunction(an, "Delete keys",        vk_delete,  n,  panel_animation_delete_key     ).setMenu("animation_delete_keys")
@@ -335,6 +339,78 @@ function Panel_Animation() : PanelContent() constructor {
     #endregion
     
     function onFocusBegin() { PANEL_ANIMATION = self; }
+    
+    ////- Navigation
+    
+    function toPrevKeyframe() {
+    	var _t = -infinity;
+    	
+    	for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
+            var _cont = timeline_contents[i];
+            if(_cont.type != "node") continue;
+            
+            var _anims = _cont.animations;
+            for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                var animator = _anims[j];
+            
+		    	for(var k = 0; k < array_length(animator.values); k++) {
+		            var _key = animator.values[k];
+		            if(_key.time < GLOBAL_CURRENT_FRAME)
+                        _t = max(_t, _key.time);
+		        }
+    		}
+    	}
+    	
+    	if(_t != -infinity) PROJECT.animator.setFrame(_t);
+    }
+    
+    function toNextKeyframe() {
+    	var _t = infinity;
+    	
+    	for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
+            var _cont = timeline_contents[i];
+            if(_cont.type != "node") continue;
+            
+            var _anims = _cont.animations;
+            for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                var animator = _anims[j];
+            
+		    	for(var k = 0; k < array_length(animator.values); k++) {
+		            var _key = animator.values[k];
+		            if(_key.time > GLOBAL_CURRENT_FRAME)
+		            	_t = min(_t, _key.time);
+		        }
+    		}
+    	}
+    	
+    	if(_t != infinity) PROJECT.animator.setFrame(_t); 
+    }
+    
+    function toPrevMarker() {
+    	var _m = PROJECT.timelineMarkers;
+    	var _t = -infinity;
+    	
+    	for( var i = 0, n = array_length(_m); i < n; i++ ) {
+    		var _f = _m[i].frame - 1;
+            if(_f < GLOBAL_CURRENT_FRAME)
+                _t = max(_t, _f);
+    	}
+    	
+    	if(_t != -infinity) PROJECT.animator.setFrame(_t);
+    }
+    
+    function toNextMarker() {
+    	var _m = PROJECT.timelineMarkers;
+    	var _t = infinity;
+    	
+    	for( var i = 0, n = array_length(_m); i < n; i++ ) {
+    		var _f = _m[i].frame - 1;
+            if(_f > GLOBAL_CURRENT_FRAME)
+            	_t = min(_t, _f);
+    	}
+    	
+    	if(_t != infinity) PROJECT.animator.setFrame(_t); 
+    }
     
     ////- Interaction
     

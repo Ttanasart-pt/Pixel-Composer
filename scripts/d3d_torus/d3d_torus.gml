@@ -11,6 +11,8 @@ function __3dTorus(_radT = 1, _radP = .2, _sideT = 16, _sideP = 8, _smooth = fal
 	twist  = 0;
 	angT   = 0;
 	angP   = 0;
+	
+	uvsca  = 1;
 		
 	static initModel = function() {
 		edges   = [];
@@ -64,6 +66,9 @@ function __3dTorus(_radT = 1, _radP = .2, _sideT = 16, _sideP = 8, _smooth = fal
 				var ux1 = 1 - (i + 1) / sideT;
 				var uy0 = 1 - (j + 0) / sideP;
 				var uy1 = 1 - (j + 1) / sideP;
+				
+				ux0 *= uvsca;
+				ux1 *= uvsca;
 				
 				if(smooth) {
 					var nx0 = x0 - xT0;
