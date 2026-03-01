@@ -10,20 +10,15 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	worldScale = 100;
 	
 	////- =Simulation
-	
 	newInput(3, nodeValue_Bool(  "Simulate",      false ));
 	newInput(1, nodeValue_Float( "Timestep (ms)", 20    ));
 	newInput(2, nodeValue_Int(   "Quality",       8     ));
 	
 	////- =Outputs
-	
 	newInput(0, nodeValue_Bool("Round Position", false));
-	
 	// inputs 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	attribute_surface_depth();
 	
 	input_display_list = [ 
 		["Simulation", false, 3], 1, 2, 
@@ -55,8 +50,7 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _simula = getInputData(3);
 		
 		var _outSurf    = outputs[0].getValue();
-		    _outSurf    = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
+		    _outSurf    = surface_verify(_outSurf, _dim[0], _dim[1], surface_r16float);
 		outputs[0].setValue(_outSurf);
 		
 		if(_simula && IS_PLAYING) {
@@ -64,8 +58,9 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			gmlBox2D_World_Step_Joint(worldIndex);
 		}
 		
-		var _p   = [0,0];
-		var _ind = 999;
+		var _p     = [0,0];
+		var _ind   = 999;
+		var _index = 1;
 		
 		surface_set_shader(_outSurf, sh_rigid_draw_color);
 		
@@ -109,6 +104,7 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 					dy = round(dy);
 				}
 				
+				shader_set_f("index", _index++);
 				draw_surface_ext_safe(_texture, dx, dy, xscale, yscale, rr, blend, alpha);
 			}
 		}
@@ -116,8 +112,4 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		surface_reset_shader();
 	} 
 	
-	static getPreviewValues = function() { 
-		var _surf = outputs[0].getValue();
-		return is_surface(_surf)? _surf : preview_surface;
-	} 
 }
