@@ -260,7 +260,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(form == -1) { // input
 				var _s = getInputData(0);
 				while(is_array(_s) && array_length(_s)) _s = _s[0];
-				if(is_surface(_s)) return surface_get_format(_s);
+				return surface_get_format_safe(_s);
 			}
 			
 			if(form == -2) {

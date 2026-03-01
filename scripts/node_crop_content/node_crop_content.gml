@@ -160,7 +160,15 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				draw_surface_safe(_surf, _sx, _sy);
 			surface_reset_shader();
 			
-			atls[i] = new SurfaceAtlas(resl[i], minx[_ind], miny[_ind]);
+			var _mx = minx[_ind];
+			var _my = miny[_ind];
+			
+			if(is(_surf, SurfaceAtlas)) {
+				_mx += _surf.x;
+				_my += _surf.y;
+			}
+			
+			atls[i] = new SurfaceAtlas(resl[i], _mx, _my);
 			draw_transforms[i] = [_sx, _sy, 1, 1, 0];
 		}
 		

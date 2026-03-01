@@ -6,6 +6,7 @@ uniform float index;
 void main() {
 	vec4 c = texture2D(gm_BaseTexture, v_vTexcoord);
 	
-	vec4 res = vec4(index * c.a, 0., 0., 1.);
+	float ind = index * c.a;
+	vec4  res = vec4(ind, ind, ind, c.a);
 	gl_FragColor = res;
 }

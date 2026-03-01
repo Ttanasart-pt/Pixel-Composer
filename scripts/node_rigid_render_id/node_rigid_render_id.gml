@@ -15,14 +15,16 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput(2, nodeValue_Int(   "Quality",       8     ));
 	
 	////- =Outputs
-	newInput(0, nodeValue_Bool("Round Position", false));
-	// inputs 4
+	newInput( 0, nodeValue_Bool("Round Position",   false ));
+	newInput( 4, nodeValue_Bool("Normalize Output", true  ));
+	// inputs 5
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output("Amounts",     VALUE_TYPE.integer, 0     ));
 	
 	input_display_list = [ 
-		["Simulation", false, 3], 1, 2, 
-		["Rendering",  false], 0,
+		[ "Simulation", false, 3 ], 1, 2, 
+		[ "Rendering",  false    ], 0, 4, 
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -48,9 +50,10 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _timStp = getInputData(1);
 		var _subStp = getInputData(2);
 		var _simula = getInputData(3);
+		var _norm   = getInputData(4);
 		
 		var _outSurf    = outputs[0].getValue();
-		    _outSurf    = surface_verify(_outSurf, _dim[0], _dim[1], surface_r16float);
+		    _outSurf    = surface_verify(_outSurf, _dim[0], _dim[1], _norm? surface_rgba8unorm : surface_r16float);
 		outputs[0].setValue(_outSurf);
 		
 		if(_simula && IS_PLAYING) {
@@ -104,12 +107,16 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 					dy = round(dy);
 				}
 				
-				shader_set_f("index", _index++);
+				var _in = _norm? _index / m : _index;
+				shader_set_f("index", _in);
 				draw_surface_ext_safe(_texture, dx, dy, xscale, yscale, rr, blend, alpha);
+				_index++;
 			}
 		}
 		
 		surface_reset_shader();
+		
+		outputs[1].setValue(_index);
 	} 
 	
 }
