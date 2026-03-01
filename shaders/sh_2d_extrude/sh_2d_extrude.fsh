@@ -144,6 +144,10 @@ uniform vec2  rotations;
 uniform float scale_curve[CURVE_MAX];
 uniform int   scale_amount;
 
+uniform int   useExpath;
+uniform float expathData[1024];
+uniform int   expathSample;
+
 void main() {
 	vec2 tx  = 1. / dimension;
 	vec2 shf = vec2(cos(angle), -sin(angle)) * tx;
@@ -155,24 +159,47 @@ void main() {
 		dist = floor(dist * ms + .5);
 	}
 	
-	vec2 vt  = v_vTexcoord - shift * shf * dist;
-	vec4 cc  = texture2D(gm_BaseTexture, vt);
-	
-	gl_FragColor = vec4(0.);
-	if(cc.a != 0.) { gl_FragColor = vec4(-1.); return; }
-	
-	for(float i = 1.; i <= dist; i++) {
-		vec2 px = vt - shf * i;
-		if(wrap == 1) px = fract(fract(px) + 1.);
+	if(useExpath == 0) {
+		vec2 vt  = v_vTexcoord - shift * shf * dist;
+		vec4 cc  = texture2D(gm_BaseTexture, vt);
 		
-		float pg   = i / dist;
-        float scal = curveEval(scale_curve, scale_amount, pg);
-        float ang  = radians(mix(rotations.x, rotations.y, pg));
-        mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-        px = anchor + (px - anchor) / scal * rot;
-        
-		vec4 sp = texture2D(gm_BaseTexture, px);
-		if(sp.a != 0.) { gl_FragColor = vec4(i, px, 1.); return; }
+		gl_FragColor = vec4(0.);
+		if(cc.a != 0.) { gl_FragColor = vec4(-1.); return; }
+		
+		for(float i = 1.; i <= dist; i++) {
+			vec2 px = vt - shf * i;
+			if(wrap == 1) px = fract(fract(px) + 1.);
+			
+			float pg   = i / dist;
+	        float scal = curveEval(scale_curve, scale_amount, pg);
+	        float ang  = radians(mix(rotations.x, rotations.y, pg));
+	        mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	        px = anchor + (px - anchor) / scal * rot;
+	        
+			vec4 sp = texture2D(gm_BaseTexture, px);
+			if(sp.a != 0.) { gl_FragColor = vec4(i, px, 1.); return; }
+		}
+		
+	} else {
+		vec2 vt  = v_vTexcoord - shift * shf * dist;
+		vec4 cc  = texture2D(gm_BaseTexture, vt);
+		
+		gl_FragColor = vec4(0.);
+		if(cc.a != 0.) { gl_FragColor = vec4(-1.); return; }
+		
+		for(int i = 0; i < expathSample; i++) {
+			vec2 px = vt - vec2(expathData[i * 2 + 0], expathData[i * 2 + 1]);
+			
+			float pg   = float(i) / float(expathSample);
+	        float scal = curveEval(scale_curve, scale_amount, pg);
+	        float ang  = radians(mix(rotations.x, rotations.y, pg));
+	        mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	        px = anchor + (px - anchor) / scal * rot;
+	        
+			vec4 sp = texture2D(gm_BaseTexture, px);
+			if(sp.a != 0.) { gl_FragColor = vec4(i, px, 1.); return; }
+			
+		}
+		
 	}
-	
 }

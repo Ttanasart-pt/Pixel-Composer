@@ -88,7 +88,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Growth",   false ], 22, 
 	];
 	
-	amountUnitToggle  = button(function() /*=>*/ { inputs[2].attributes.unit = !inputs[2].attributes.unit; triggerRender(); })
+	amountUnitToggle  = button(function() /*=>*/ { inputs[2].toggleAttribute("unit"); })
 		.setIcon(THEME.mk_tree_leaf_unit).iconPad()
 		.setTooltip(new tooltipSelector("Unit", [ "Fixed Amount", "Leaf Distance" ]), function() /*=>*/ {return inputs[2].attributes.unit});
 	

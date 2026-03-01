@@ -107,9 +107,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dynamic_array = false;
 		validateValue = true;
 		
-		attributes    = {};   // serialized
-		parameters    = {};   // non-serialized
-		
 		__curr_get_val = [ 0, 0 ];
 		validator      = noone;
 		
@@ -119,6 +116,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		bypass_use  = false;
 		bypass_junc = undefined;
+	#endregion
+	
+	#region ---- attributes ----
+		attributes    = {};   // serialized
+		parameters    = {};   // non-serialized
+		
+		setAttribute    = function(k, v, r = false) /*=>*/ { 
+			attributes[$ k] = v;
+			if(r) node.triggerRender(); 
+			node.project.modified = true; 
+			return self;
+		}
+		
+		toggleAttribute = function(k, r = false) /*=>*/ { 
+			attributes[$ k] = !attributes[$ k]; 
+			if(r) node.triggerRender(); 
+			node.project.modified = true; 
+			return self;
+		}
+		
+		static getAttribute = function(k) /*=>*/ {return attributes[$ k] ?? 0};
+		static isMapped     = function( ) /*=>*/ {return attributes.mapped};
 	#endregion
 	
 	#region ---- Draw ----
@@ -538,7 +557,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(arrayLength == arrayLengthSimple) arrayLength = __arrayLength;
 		
 		mapButton = button(function() /*=>*/ { 
-			attributes.mapped = !attributes.mapped;
+			toggleAttribute("mapped");
 			
 			if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
 				var _currValue = getValue();
@@ -602,7 +621,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				.setVisible(false, false)
 		}
 		
-		var mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
+		var mapButton = button(function() /*=>*/ { toggleAttribute("mapped"); })
 			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} ).iconPad()
 			.setTooltip("Toggle Map");
 		
@@ -648,7 +667,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		with(node) { newInput(_index, nodeValue_Gradient( $"{other.name} {_suf}", _val )).setVisible(false, false); }
 		
-		var gradeButton = button(function() /*=>*/ { attributes.graded = !attributes.graded; node.triggerRender(); })
+		var gradeButton = button(function() /*=>*/ { toggleAttribute("graded"); })
 			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.graded} ], function() /*=>*/ {return attributes.graded? c_white : COLORS._main_icon} ).iconPad()
 			.setTooltip("Toggle Curve");
 		
@@ -2743,14 +2762,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		resetCache();
 		node.triggerRender();
 	}
-	
-	////- ATTRIBUTES
-	
-	static setAttribute = function(k,v) { attributes[$ k] = v; node.triggerRender(); return self; }
-	
-	static getAttribute = function(k) { return attributes[$ k] ?? 0; }
-	
-	static isMapped = function() /*=>*/ {return attributes.mapped};
 	
 	////- SERIALIZE
 	

@@ -118,7 +118,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		var cc = ii? COLORS._main_icon : COLORS._main_icon_light;
 		
 		if(buttonInstant(noone, bx, by, bs, lh, _m, hover, focus, tt, THEME.timeline_hide, ii, cc, .5, .75) == 2)
-			node.attributes.timeline_hide = !node.attributes.timeline_hide;
+			node.toggleAttribute("timeline_hide");
 		bx += bs + 1;
 		
 		////- =Name
@@ -170,7 +170,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		// draw_sprite_stretched_ext(THEME.box_r2, 1, _rx - h / 2, _ry - h / 2, h, h, CDEF.main_dkgrey);
 	}
 	
-	static setColor = function(color) { node.attributes.color = color; }
+	static setColor = function(color) { node.setAttribute("color", color); }
 	static getColor = function()      { return node.attributes.color; }
 	
 	static serialize   = function() {

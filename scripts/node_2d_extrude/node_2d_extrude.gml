@@ -10,6 +10,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 2, nodeValue_Float(    "Distance", .5             )).setUnitSimple();
 	newInput( 8, nodeValue_Slider(   "Shift",     0, [-1,1,.01] )).setUnitSimple();
 	newInput( 7, nodeValue_Bool(     "Wrap",      false         ));
+	newInput(15, nodeValue_PathNode( "Path"                     ));
+	newInput(16, nodeValue_Int(      "Path Resolution", 32      ));
 	
 	////- =Transform
 	newInput(11, nodeValue_Anchor(   "Anchor"                          ));
@@ -25,14 +27,14 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 5, nodeValue_Bool(  "Highlight",       false    ));
 	newInput(14, nodeValue_Float( "Highlight Width", 1        ));
 	newInput( 6, nodeValue_Color( "Highlight Color", ca_white ));
-	// input 15
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	
 	input_display_list = [
 	    [ "Surface",   false    ],  0,  9, 
-	    [ "Extrude",   false    ],  1,  2,  8,  7, 
+	    [ "Extrude",   false    ],  1,  2,  8,  7, 15, 16, 
 		[ "Transform", false    ], 11, 12, 13, 
 	    [ "Render",    false    ],  3,  4, 10, 
 	    [ "Highlight", false, 5 ], 14,  6, 
@@ -47,12 +49,18 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	anchor_drag_my  = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		var _path = getInputSingle(15);
+		if(is_path(_path)) {
+			InputDrawOverlay(inputs[15].drawOverlay( w_hoverable, active, _x, _y, _s, _mx, _my, _params ));
+			return;
+		}
+		
 		var _dim = getDimension();
 		var _px  = _x + _dim[0] / 2 * _s;
 		var _py  = _y + _dim[1] / 2 * _s;
 		
-		var _ang  = getInputSingle(1);
-		var _dist = getInputSingle(2);
+		var _ang  = getInputSingle( 1);
+		var _dist = getInputSingle( 2);
 		
 		var _dx = lengthdir_x(_dist, _ang) * _s;
 		var _dy = lengthdir_y(_dist, _ang) * _s;
@@ -95,6 +103,9 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			anchor_drag_my  = _my;
 		}
 		
+		InputDrawOverlay(inputs[11].drawOverlay( w_hoverable, active,  _x,  _y, _s, _mx, _my, 1, _dim ));
+		InputDrawOverlay(inputs[12].drawOverlay( w_hoverable, active, _ax, _ay, _s, _mx, _my          ));
+		
 		return _hov;
 	}
 	
@@ -107,6 +118,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		    var _dist = _data[ 2];
 		    var _shft = _data[ 8];
 		    var _wrap = _data[ 7];
+		    var _path = _data[15];
+		    var _pthr = _data[16];
 		    
 			var _anch = _data[11];
 			var _rota = _data[12];
@@ -123,6 +136,28 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		    var _dim  = surface_get_dimension(_surf);
 	    #endregion
 	    
+	    var _usePath = is_path(_path);
+	    var _points  = [];
+	    if(_usePath) {
+	    	_points = array_create((_pthr + 1) * 2);
+			var _astep = 1 / _pthr;
+			var _prg   = 0;
+			var _p     = new __vec2P();
+			var i = 0;
+			
+			_p    = _path.getPointRatio(0, 0, _p);
+			var ofx = _p.x;
+			var ofy = _p.y;
+			
+			repeat(_pthr + 1) {
+				_p    = _path.getPointRatio(_prg, 0, _p);
+				_prg += _astep;
+				
+				_points[i++] = (_p.x - ofx) / _dim[0];
+				_points[i++] = (_p.y - ofy) / _dim[1];
+			}
+	    }
+	    
 	    temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r16float);
 	    
 	    surface_set_shader(temp_surface[0], sh_2d_extrude);
@@ -134,6 +169,10 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_f(   "angle",       degtorad(_ang)  );
 			shader_set_f(   "extDistance", _dist           );
 			shader_set_i(   "wrap",        _wrap           );
+			
+			shader_set_i( "useExpath",    _usePath );
+			shader_set_f( "expathData",   _points  );
+			shader_set_i( "expathSample", _pthr    );
 			
 			shader_set_2( "anchor",      _anch );
 			shader_set_2( "rotations",   _rota );

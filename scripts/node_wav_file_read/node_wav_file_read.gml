@@ -142,7 +142,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}).setTooltip(__txt("Refresh"))
 			.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 		
-		insp2button = button(function() /*=>*/ { attributes.play = !attributes.play; }).setTooltip(__txtx("play_with_timeline", "Play with timeline"))
+		insp2button = button(function() /*=>*/ { toggleAttribute("play"); }).setTooltip(__txtx("play_with_timeline", "Play with timeline"))
 			.setIcon(THEME.play_sound, 1, COLORS._main_icon_light).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	#endregion
 	

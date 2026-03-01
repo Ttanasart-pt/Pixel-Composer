@@ -208,8 +208,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.annotation_size   = .4;
 		attributes.annotation_color  = COLORS._main_text_sub;
 		
-		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); project.modified = true; }
-		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); project.modified = true; }
+		setAttribute    = function(k, v, r = false) /*=>*/ { 
+			recordAction_variable_change(attributes, k, attributes[$ k], "Modify Attribute");
+			
+			attributes[$ k] = v;
+			if(r) triggerRender(); 
+			project.modified = true; 
+			return self;
+		}
+		
+		toggleAttribute = function(k, r = false) /*=>*/ { 
+			recordAction_variable_change(attributes, k, attributes[$ k], "Modify Attribute");
+			
+			attributes[$ k] = !attributes[$ k]; 
+			if(r) triggerRender(); 
+			project.modified = true; 
+			return self;
+		}
 		
 		attrCacheEdit = Node_Attribute("Cache Output", function() /*=>*/ {return attributes.cache},  function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("cache", true); checkCache(); })});
 		

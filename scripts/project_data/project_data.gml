@@ -317,8 +317,8 @@ function Project() constructor {
 				}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
 				) ],
 			
-			[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ { attributes.autosave     = !attributes.autosave;     return true; }) ],
-			[ "Layers",      "global_layer", new checkBox(function() /*=>*/ { attributes.global_layer = !attributes.global_layer; return true; }) ],
+			[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ { toggleAttribute("autosave"); return true; }) ],
+			[ "Layers",      "global_layer", new checkBox(function() /*=>*/ { toggleAttribute("global_layer"); return true; }) ],
 			
 		];
 		

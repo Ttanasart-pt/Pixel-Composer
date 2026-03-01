@@ -215,7 +215,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		else 
 			inputs[8].setValue(round(_cfr * _gfr));
 			
-		inputs[8].attributes.unit = !inputs[8].attributes.unit; 
+		inputs[8].toggleAttribute("unit"); 
 	}).setIcon(THEME.unit_fps, function() /*=>*/ {return inputs[8].attributes.unit}).iconPad()
 	  .setTooltip(new tooltipSelector("Unit", [ "Frame Per Secound", "Relative to Preview rate" ]), function() /*=>*/ {return inputs[8].attributes.unit});
 	

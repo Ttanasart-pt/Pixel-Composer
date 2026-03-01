@@ -32,7 +32,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(15, nodeValue_Trigger(     "Bake hair", "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."));
 	
 	b_bake = button(function() /*=>*/ { 
-		attributes.use_groom = !attributes.use_groom; 
+		toggleAttribute("use_groom"); 
 		if(attributes.use_groom) groomed = strands.clone();
 		strandUpdate(true);
 	}).setText("Bake Strand");

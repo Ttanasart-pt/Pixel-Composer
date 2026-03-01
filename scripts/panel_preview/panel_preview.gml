@@ -3595,7 +3595,7 @@ function Panel_Preview() : PanelContent() constructor {
     	_blend.inputs[0].setFrom(node.outputs[node.preview_channel]);
     	_blend.inputs[1].setFrom(_solid.outputs[0]);
     	
-    	_solid.inputs[0].attributes.use_project_dimension = 0;
+    	_solid.inputs[0].setAttribute("use_project_dimension", 0);
     	_solid.inputs[0].setValue([sel_w, sel_h]);
     	
     	_blend.inputs[14].setValue([pos_x, pos_y]);

@@ -981,8 +981,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         function setSelectingNodeColor(c) { 
             __temp_color = c;
             
-            if(node_hover) node_hover.attributes.color = __temp_color;
-            array_foreach(nodes_selecting, function(node) /*=>*/ { node.attributes.color = __temp_color; });
+            if(node_hover) node_hover.setAttribute("color", __temp_color);
+            array_foreach(nodes_selecting, function(node) /*=>*/ { node.setAttribute("color", __temp_color); });
             
             refreshDraw();
         }

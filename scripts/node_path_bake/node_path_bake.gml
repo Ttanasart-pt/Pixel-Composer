@@ -35,6 +35,8 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		segmentCounts = [];
 		boundary      = [];
 		
+		cached_pos  = {};
+		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 			var hovering = false;
 			PathDrawOverlay(self, _x, _y, _s);
@@ -50,6 +52,8 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			segmentCounts = array_create(lineCount);
 			boundary      = array_create(lineCount);
 			
+			cached_pos  = {};
+		
 			for( var i = 0; i < lineCount; i++ ) {
 				var _ps = points[i];
 				var _pl = array_length(_ps);
@@ -106,9 +110,20 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			// var _cKey  = $"{_dist}/{ind}";
+			
+			// if(struct_has(cached_pos, _cKey)) {
+			// 	var _cachep = cached_pos[$ _cKey];
+			// 	out.x = _cachep.x;
+			// 	out.y = _cachep.y;
+			// 	out.weight = _cachep.weight;
+			// 	return out;
+			// }
 			
 			var _pp = points[ind];
 			var _ll = getLength(ind);
+			if(_ll <= 0) return out;
+			
 			var _la = getAccuLength(ind);
 			_dist   = _dist % _ll;
 			
@@ -119,6 +134,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			out.x = lerp(_pp[i0][0], _pp[i1][0], _rat);
 			out.y = lerp(_pp[i0][1], _pp[i1][1], _rat);
+			// cached_pos[$ _cKey] = new __vec2P(out.x, out.y);
 			
 			return out; 
 		}
