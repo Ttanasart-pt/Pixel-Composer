@@ -4,6 +4,8 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	#region ---- main ----
+		type    = 0;
+		
 		time	= _time;
 		value	= _value;
 		anim	= _anim;
@@ -36,6 +38,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	static clone = function(target = noone) {
 		var val = has(value, "clone")? value.clone() : value;
 		var key = new valueKey(time, val, target);
+		key.type          = type;
 		key.ease_in       = [ ease_in[0],  ease_in[1]  ];
 		key.ease_out      = [ ease_out[0], ease_out[1] ];
 		key.ease_in_type  = ease_in_type;
@@ -60,6 +63,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		if(_anim == noone) _anim = anim;
 		
 		var key = new valueKey(time + shift, value, _anim);
+		key.type          = type;
 		key.ease_in       = ease_in;
 		key.ease_out      = ease_out;
 		key.ease_in_type  = ease_in_type;
@@ -569,8 +573,20 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		for(var i = 0, n = array_length(values); i < n; i++) {
 			var _value_list = [];
-			_value_list[0] = scale? values[i].time / (NODE_TOTAL_FRAMES - 1) : values[i].time;
+			var _frame = scale? values[i].time / (NODE_TOTAL_FRAMES - 1) : values[i].time;
+			var _time  = [];
 			
+			switch(values[i].type) {
+				case 0 : 
+					_time = [ 0, _frame ];
+					break;
+					
+				case 1 : 
+					_time = [ values[i].type, _frame, 0 ];
+					break;
+			}
+			
+			_value_list[0] = _time;
 			var _v  = values[i];
 			var val = _v.value;
 			
@@ -644,12 +660,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var base = prop.def_val;
 		var _typ = prop.type;
+		var _time;
 		
 		for(var i = 0, n = array_length(_data); i < n; i++) {
 			var _keyframe = _data[i];
 			var _klen     = array_length(_keyframe);
+			var _type     = 0;
 			
-			var _time         = 0 < _klen? _keyframe[0] :  0;
+			var timeData      = 0 < _klen? _keyframe[0] :  0;
 			var value		  = 1 < _klen? _keyframe[1] :  0;
 			var ease_in		  = 2 < _klen? _keyframe[2] : [0,1];
 			var ease_out	  = 3 < _klen? _keyframe[3] : [0,0];
@@ -657,6 +675,15 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var ease_out_type = 5 < _klen? _keyframe[5] :  0;
 			var ease_y_lock   = 6 < _klen? _keyframe[6] :  1;
 			var driver        = 7 < _klen? _keyframe[7] :  0;
+			
+			if(is_array(timeData)) {
+				_type = timeData[0];
+				_time = timeData[1];
+				
+			} else {
+				_type = 0;
+				_time = timeData;
+			}
 			
 			if(scale) _time = round(_time * (NODE_TOTAL_FRAMES - 1));
 			var _val = value;
@@ -732,6 +759,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			// print($"Deserialize {node.name}:{prop.name} = {_val} ");
 			var vk = new valueKey(_time, _val, self);
+			vk.type          = _type;
 			vk.ease_in[0]    = ease_in[0];
 			vk.ease_in[1]    = ease_in[1];
 			vk.ease_out[0]   = ease_out[0];

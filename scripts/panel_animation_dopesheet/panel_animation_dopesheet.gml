@@ -1554,7 +1554,7 @@ function Panel_Animation_Dopesheet() {
         var anim_set   = true;
         var key_hover  = noone;
         
-        var _scaling   = key_mod_press(ALT) && array_length(keyframe_selecting) > 1;
+        var _scaling   = key_mod_check(MOD_KEY.ctrl | MOD_KEY.alt) && array_length(keyframe_selecting) > 1;
         var valAmo     = array_length(animator.values);
         
         var hov   = pHOVER;
@@ -1619,12 +1619,18 @@ function Panel_Animation_Dopesheet() {
                         keyframe_drag_my   = my;
                         
                     } else if(mouse_press(mb_left)) {
-                        if(key_mod_press(CTRL)) {
+                        if(key_mod_check(MOD_KEY.ctrl)) {
                             editKeyFrame(keyframe);
                         	
                         } else {
-                            keyframe_dragging  = keyframe;
-                            keyframe_drag_st   = keyframe.time;
+                        	if(key_mod_check(MOD_KEY.alt)) {
+                        		keyframe_dragging  = keyframe.cloneAnimator(0, animator, false);
+                        		key_hover          = keyframe_dragging;
+                        		
+                        	} else 
+                            	keyframe_dragging  = keyframe;
+                        	
+                            keyframe_drag_st   = keyframe_dragging.time;
                             keyframe_drag_type = _scaling? KEYFRAME_DRAG_TYPE.scale : KEYFRAME_DRAG_TYPE.move;
                             keyframe_drag_mx   = mx;
                             keyframe_drag_my   = my;

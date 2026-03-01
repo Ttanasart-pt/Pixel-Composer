@@ -277,6 +277,13 @@
 	function array_get_random(arr) {
 		return array_length(arr) == 0? 0 : arr[irandom(array_length(arr) - 1)];
 	}
+	
+	function array_replace(arr, val, rep) {
+		var ind = array_find(arr, val);
+		if(ind < 0) return;
+		
+		arr[ind] = rep;
+	}
 #endregion
 
 #region find
