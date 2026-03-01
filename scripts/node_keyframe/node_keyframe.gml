@@ -20,6 +20,8 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		ease_out_type = _int;
 		dopesheet_x   = 0;
 		
+		freeze  = false;
+		
 		drivers = {
 			seed      : seed_random(6),
 			type      : DRIVER_TYPE.none,
@@ -518,6 +520,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(!prop.is_anim && !LOADING && !APPENDING) return;
 		if(array_empty(values)) { array_resize(key_map, NODE_TOTAL_FRAMES); return; }
+		
+		for( var i = 0, n = array_length(values) - 1; i < n; i++ ) {
+    		var _v0 = values[i  ].value;
+    		var _v1 = values[i+1].value;
+    		values[i].freeze = isEqual(_v0, _v1);
+		}
 		
 		var _len = max(NODE_TOTAL_FRAMES, array_last(values).time);
 		key_map_mode = prop.on_end;

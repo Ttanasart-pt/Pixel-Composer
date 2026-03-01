@@ -1330,11 +1330,28 @@ function Panel_Animation_Dopesheet() {
 	            _nx = key.dopesheet_x;
 	            _nv = key.value;
 	            
-	            if(k == 0 && _nv || k && _ov) draw_line_width(_ox, _cy, _nx, _cy, 2);
-	            if(k == n - 1 && _nv)         draw_line_width(_nx, _cy, _y1, _cy, 2);
+	            if(k == 0 && _nv || k && _ov) draw_line_width(_ox, _cy, _nx, _cy, ui(3));
+	            if(k == n - 1 && _nv)         draw_line_width(_nx, _cy, _y1, _cy, ui(3));
 	            
 	            _ox = _nx;
 	            _ov = _nv;
+        	}
+        	
+        	draw_set_alpha(1);
+        } else {
+        	var _ox = timeline_shift, _nx;
+        	var _ok;
+        	
+        	draw_set_color_alpha(CDEF.blue, .3);
+        	
+        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
+	            var key = key_list[k];
+	            _nx = key.dopesheet_x;
+	            
+	            if(k && _ok.freeze) draw_line_width(_ox, _cy, _nx, _cy, ui(3));
+	            
+	            _ok = key;
+	            _ox = _nx;
         	}
         	
         	draw_set_alpha(1);
