@@ -83,6 +83,7 @@ function Panel_Animation_Dopesheet() {
         
         keyframe_boxable       = true;
         keyframe_boxing        = false;
+        keyframe_box_sel       = undefined;
         keyframe_box_sx        = -1;
         keyframe_box_sy        = -1;
         
@@ -1675,7 +1676,7 @@ function Panel_Animation_Dopesheet() {
                 var hc = _scaling? CDEF.cyan : COLORS._main_accent;
                 draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, ind, t, prop_y, 1, hc);
             }
-            
+            	
             if(keyframe_boxing) {
                 var box_x0 = min(keyframe_box_sx, msx);
                 var box_x1 = max(keyframe_box_sx, msx);
@@ -2451,7 +2452,12 @@ function Panel_Animation_Dopesheet() {
                 }
                 
             }
-            	
+        	
+        	if(keyframe_boxing) {
+            	array_append(keyframe_selecting, keyframe_box_sel);
+            	array_unique(keyframe_selecting);
+            }
+            
             var _markers = PROJECT.timelineMarkers;
             timeline_snap_points[_len] = {
             	node   : undefined,
@@ -2512,11 +2518,14 @@ function Panel_Animation_Dopesheet() {
             keyframe_selecting_f = _keyframe_selecting_f;
         	keyframe_selecting_l = _keyframe_selecting_l;
         	
-	        if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dopesheet_w, dopesheet_h) && timeline_stretch == 0) { // selection & stagger
+        	////- =Selection & Stagger
+	        if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dopesheet_w, dopesheet_h) && timeline_stretch == 0) { 
 	            if(mouse_rpress(pFOCUS) && key_hover == noone)
 	                keyframe_selecting = [];
 	            
-	            if(key_mod_press(CTRL)) {
+	            var _ctrl = key_mod_press(CTRL);
+	            
+	            if(_ctrl) {
 	                var _fr = round((mx - bar_x - timeline_shift) / timeline_scale) - 1;
 	                
 	            	if(value_hovering != noone && key_hover == noone) {
@@ -2543,13 +2552,31 @@ function Panel_Animation_Dopesheet() {
             		}
 	            	
 	            	if(value_hovering == noone && mouse_click(mb_left, pFOCUS)) PROJECT.animator.setFrame(_fr);
-	            	
-	            } else if(mouse_lpress(pFOCUS)) {
-	            	
-		                 if(_toSel != undefined)  keyframe_selecting = _toSel;
-	                else if(key_hover == noone)   keyframe_selecting = [];
-	                else if(key_mod_press(SHIFT)) array_toggle(keyframe_selecting, key_hover);
-	                else if(!array_exists(keyframe_selecting, key_hover)) keyframe_selecting = [ key_hover ];
+	            } 
+	            
+	            if(!_ctrl && mouse_lpress(pFOCUS)) {
+		            
+	                if(_toSel != undefined)  keyframe_selecting = _toSel;
+	                else if(key_hover == noone) {
+		                if(!stagger_mode && keyframe_boxable) {
+	                		if(!key_mod_press(SHIFT))
+	                			keyframe_selecting = [];
+		                    
+		                    keyframe_box_sel = array_clone(keyframe_selecting, 1);
+		                    keyframe_boxing  = true;
+		                    keyframe_box_sx  = msx;
+		                    keyframe_box_sy  = msy;
+		                    
+		                } else {
+		                	keyframe_selecting = [];
+		                }
+		                
+	                } else if(key_mod_press(SHIFT)) {
+	                	array_toggle(keyframe_selecting, key_hover);
+	                	
+	                } else if(!array_exists(keyframe_selecting, key_hover)) {
+	                	keyframe_selecting = [ key_hover ];
+	                }
 	                
 	                if(stagger_mode == 1) {
 	                    if(key_hover == noone || !array_exists(keyframe_selecting, key_hover)) 
@@ -2564,11 +2591,7 @@ function Panel_Animation_Dopesheet() {
 	                    stagger_mode = 0;
 	                    UNDO_HOLDING = false;
 	                    
-	                } else if(key_hover == noone && keyframe_boxable) {
-	                    keyframe_boxing = true;
-	                    keyframe_box_sx = msx;
-	                    keyframe_box_sy = msy;
-	                }
+	                } 
 	            }
 	            
 	            keyframe_boxable = true;

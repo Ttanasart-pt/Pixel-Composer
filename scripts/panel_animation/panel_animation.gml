@@ -78,7 +78,7 @@
         registerFunction("", "Toggle Dopesheet",   vk_tab,     c,  function() /*=>*/ { PANEL_ANIMATION.toggleDopesheet(); } ).setMenu("animation_dopesheet_toggle")
         registerFunction("", "Play/Pause",         vk_space,   n,  panel_animation_play_pause     ).setMenu("play_pause")
         registerFunction("", "Resume",             vk_space,   s,  panel_animation_resume         ).setMenu("resume")
-                                
+		
         registerFunction("", "First Frame",        vk_home,    n,  panel_animation_first_frame    ).setMenu("first_frame")
         registerFunction("", "Last Frame",         vk_end,     n,  panel_animation_last_frame     ).setMenu("last_frame")
         registerFunction("", "Previous Frame",     vk_left,    n,  panel_animation_prev_frame     ).setMenu("previous_frame")
@@ -88,7 +88,7 @@
     	registerFunction("", "Previous Marker",    vk_left,    c,  panel_animation_prev_marker    ).setMenu("previous_marker")
         registerFunction("", "Next Marker",        vk_right,   c,  panel_animation_next_marker    ).setMenu("next_marker")
         registerFunction(an, "Toggle Marker",      "M",        n,  panel_animation_toggle_marker  ).setMenu("toggle_marker")
-    
+    	
         registerFunction(an, "Toggle Frame View",  "",         n,  panel_animation_toggle_type    ).setMenu("animation_toggle_view_type")
         registerFunction(an, "Delete keys",        vk_delete,  n,  panel_animation_delete_key     ).setMenu("animation_delete_keys")
         registerFunction(an, "Duplicate",          "D",        c,  panel_animation_duplicate      ).setMenu("animation_duplicate", THEME.duplicate)
