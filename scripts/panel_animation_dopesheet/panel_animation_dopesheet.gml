@@ -582,6 +582,7 @@ function Panel_Animation_Dopesheet() {
     	}
     	
     	array_unique_ext(transform_anim);
+    	KEYBOARD_RESET
     }
     
     function transformKeys_Scale() {
@@ -603,6 +604,7 @@ function Panel_Animation_Dopesheet() {
     	
     	transform_start_x /= n;
     	array_unique_ext(transform_anim);
+    	KEYBOARD_RESET
     }
     
     function transformKeys() {
@@ -611,6 +613,8 @@ function Panel_Animation_Dopesheet() {
     	switch(transform_modes) {
     		case "move" :
     			var dx = (mx - transform_mouse_x) / timeline_scale;
+    			if(KEYBOARD_NUMBER != undefined) 
+    				dx = KEYBOARD_NUMBER;
     			
     			for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
     				var _time = transform_key_time[i] + dx;
@@ -623,7 +627,9 @@ function Panel_Animation_Dopesheet() {
     		case "scale" :
     			var sx = timeline_shift + transform_start_x * timeline_scale;
     			var dx = (mx - sx) / (transform_mouse_x - sx);
-    			
+    			if(KEYBOARD_NUMBER != undefined) 
+    				dx = KEYBOARD_NUMBER;
+    				
     			for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
     				var _time = transform_start_x + (transform_key_time[i] - transform_start_x) * dx;
     				    _time = round(_time);
@@ -2176,7 +2182,8 @@ function Panel_Animation_Dopesheet() {
     	
     	tb_frame.rx = x;
     	tb_frame.ry = y;
-    	tb_frame.setColor(GLOBAL_IS_PLAYING? COLORS._main_value_positive : COLORS._main_accent);
+    	// tb_frame.setColor(GLOBAL_IS_PLAYING? COLORS._main_value_positive : COLORS._main_accent);
+    	tb_frame.setColor(COLORS._main_accent);
     	tb_frame.draw(bx, by, tw, bs, GLOBAL_CURRENT_FRAME, mm);
     	bx += tw + ui(4);
     	
@@ -3197,7 +3204,7 @@ function Panel_Animation_Dopesheet() {
     	_anim.prop.node.triggerRender();
     }
     function distributeKeys() {
-        if(array_empty(keyframe_selecting)) return;
+        if(array_length(keyframe_selecting) <= 2) return;
         
         var _anims = array_create_ext(array_length(keyframe_selecting), function(i) /*=>*/ {return keyframe_selecting[i].anim});
             _anims = array_unique(_anims);
@@ -3205,7 +3212,16 @@ function Panel_Animation_Dopesheet() {
     	__kFirst = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
     	__kLast  = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
     	
-        array_foreach(_anims, function(a) /*=>*/ {return distributeKeys_anim(a, __kFirst, __kLast)});
+        // array_foreach(_anims, (a) => distributeKeys_anim(a, __kFirst, __kLast));
+        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+        	var _k = keyframe_selecting[i];
+        	var _t = lerp(__kFirst, __kLast, i / (n - 1));
+        	    // _t = round(_t);
+        	    
+        	_k.time = _t;
+        }
+        
+        array_foreach(_anims, function(a) /*=>*/ {return a.updateKeyMap()});
     }
     
     function alignKeys(halign = fa_left) {
