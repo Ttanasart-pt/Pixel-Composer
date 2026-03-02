@@ -166,6 +166,13 @@ function Panel_Animation_Dopesheet() {
 	    
 	    modulate_drag    = 0;
 	    modulate_drag_mx = 0;
+	    
+	    transform_modes    = noone;
+	    transform_anim     = [];
+	    transform_keys     = [];
+	    transform_key_time = [];
+	    transform_mouse_x  = 0;
+	    transform_start_x  = 0;
 	#endregion
 	
 	#region ---- Draw ----
@@ -558,6 +565,80 @@ function Panel_Animation_Dopesheet() {
     function deleteKeys() {
     	array_foreach(keyframe_selecting, function(k) /*=>*/ { k.anim.removeKey(k); });
         keyframe_selecting = [];
+    }
+    
+    function transformKeys_Move() {
+    	if(transform_modes != noone || array_empty(keyframe_selecting)) return;
+    	
+    	transform_modes    = "move";
+    	transform_keys     = array_clone(keyframe_selecting, 1);
+    	transform_anim     = [];
+    	transform_key_time = [];
+    	transform_mouse_x  = mx;
+    	
+    	for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
+    		transform_key_time[i] = transform_keys[i].time;
+    		array_push(transform_anim, transform_keys[i].anim)
+    	}
+    	
+    	array_unique_ext(transform_anim);
+    }
+    
+    function transformKeys_Scale() {
+    	if(transform_modes != noone || array_empty(keyframe_selecting)) return;
+    	
+    	transform_modes    = "scale";
+    	transform_keys     = array_clone(keyframe_selecting, 1);
+    	transform_anim     = [];
+    	transform_key_time = [];
+    	transform_mouse_x  = mx;
+    	transform_start_x  = 0;
+    	
+    	for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
+    		transform_key_time[i] = transform_keys[i].time;
+    		array_push(transform_anim, transform_keys[i].anim)
+    		
+    		transform_start_x += transform_keys[i].time;
+    	}
+    	
+    	transform_start_x /= n;
+    	array_unique_ext(transform_anim);
+    }
+    
+    function transformKeys() {
+    	if(transform_modes == noone) return;
+    	
+    	switch(transform_modes) {
+    		case "move" :
+    			var dx = (mx - transform_mouse_x) / timeline_scale;
+    			
+    			for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
+    				var _time = transform_key_time[i] + dx;
+    				    _time = round(_time);
+    				    
+		    		transform_keys[i].time = _time;
+		    	}
+    			break;
+    		
+    		case "scale" :
+    			var sx = timeline_shift + transform_start_x * timeline_scale;
+    			var dx = (mx - sx) / (transform_mouse_x - sx);
+    			
+    			for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
+    				var _time = transform_start_x + (transform_key_time[i] - transform_start_x) * dx;
+    				    _time = round(_time);
+    				    
+		    		transform_keys[i].time = _time;
+		    	}
+    			break;
+    			
+    	}
+    	
+    	if(mouse_press(mb_any) || key_press(vk_enter)) {
+    		run_in(1, function() /*=>*/ { transform_modes = noone; });
+    		for( var i = 0, n = array_length(transform_anim); i < n; i++ )
+	    		transform_anim[i].updateKeyMap();
+    	}
     }
     
     ////- Draw Functions
@@ -2567,7 +2648,7 @@ function Panel_Animation_Dopesheet() {
 		                    keyframe_box_sx  = msx;
 		                    keyframe_box_sy  = msy;
 		                    
-		                } else {
+		                } else if(transform_modes == noone) {
 		                	keyframe_selecting = [];
 		                }
 		                
@@ -2967,6 +3048,8 @@ function Panel_Animation_Dopesheet() {
     	dopeSheet_LabelHeader();
     	dopeSheet_TimelineScrub();
     	dopeSheet_TimelineStretch();
+    	
+        transformKeys();
     }
     
     ////- Actions

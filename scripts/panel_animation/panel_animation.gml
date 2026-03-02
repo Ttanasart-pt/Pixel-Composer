@@ -68,6 +68,9 @@
     function panel_animation_marker_remove()           { CALL("animation_marker_remove");           PANEL_ANIMATION.removeMarker(); }
     function panel_animation_marker_clear()            { CALL("animation_marker_clear");            PANEL_ANIMATION.clearMarker();  }
     
+    function panel_animation_keys_move()   { CALL("animation_keys_move");  PANEL_ANIMATION.transformKeys_Move();  }
+    function panel_animation_keys_scale()  { CALL("animation_keys_scale"); PANEL_ANIMATION.transformKeys_Scale(); }
+    
 	function __fnInit_Animation() {
 		var an = "Animation";
 		var n  = MOD_KEY.none;
@@ -136,7 +139,10 @@
         registerFunction(an, "Remove Marker",         "", n, panel_animation_marker_remove        ).setMenu("animation_marker_remove" )
         registerFunction(an, "Clear Markers",         "", n, panel_animation_marker_clear         ).setMenu("animation_marker_clear" )
         
-        registerFunction(an, "Toggle Hidden",      "S",        n,  panel_animation_show_hidden    )
+        registerFunction(an, "Move Keys",            "G", n, panel_animation_keys_move            ).setMenu("animation_keys_move"  )
+        registerFunction(an, "Scale Keys",           "S", n, panel_animation_keys_scale           ).setMenu("animation_keys_scale" )
+        
+        registerFunction(an, "Toggle Hidden",      "S", s,  panel_animation_show_hidden    )
         	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
         	.setColorFn(function() /*=>*/ {return PANEL_ANIMATION.show_hidden? COLORS._main_icon : COLORS._main_accent} )
         
