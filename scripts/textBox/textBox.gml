@@ -155,6 +155,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setVAlign     = function(_v) /*=>*/ { yalign      = _v;    return self; }
 	static setFont       = function(_v) /*=>*/ { font        = _v;    return self; }
 	static setLabel      = function(_v) /*=>*/ { label       = _v;    return self; }
+	static setLabelColor = function(_v) /*=>*/ { labelColor  = _v;    return self; }
+	static setLabelAlign = function(_v) /*=>*/ { labelAlign  = _v;    return self; }
+	
 	static setPrecision  = function(_v) /*=>*/ { precision   = _v;    return self; }
 	static setPadding    = function(_v) /*=>*/ { padding     = _v;    return self; }
 	static setEmpty      = function(  ) /*=>*/ { no_empty    = false; return self; }
@@ -724,10 +727,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
 		
 		} else if(label != "") {
-			draw_set_text(f_p4, fa_left, fa_center, labelColor);
+			
+			draw_set_text(f_p4, labelAlign, fa_center, labelColor);
 			
 			draw_set_alpha(0.5);
-			draw_text_add(_x + ui(4), _y + _h / 2, label);
+			draw_text_add(labelAlign == fa_left? _x + ui(4) : _x + _w - ui(4), _y + _h / 2, label);
 			draw_set_alpha(1);
 			
 		} else if(labelSpr != noone) {
@@ -744,8 +748,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		if(sliding > 0) { 
-			slide_delta += PEN_USE? PEN_X_DELTA : window_mouse_get_delta_x();
-			slide_delta += PEN_USE? PEN_Y_DELTA : window_mouse_get_delta_y();
+			slide_delta += PEN_USE? PEN_X_DELTA + PEN_Y_DELTA : window_mouse_get_delta_x() + window_mouse_get_delta_y();
 			
 			if(sliding == 1 && abs(slide_delta) > 8) {
 				deactivate();

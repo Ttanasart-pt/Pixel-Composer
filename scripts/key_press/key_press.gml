@@ -188,6 +188,13 @@ function key_press(_key, _mod = MOD_KEY.none, _hold = false) {
 			_keyPress = _keyPress ||  keyboard_key == vk_backspace;
 			break;
 		
+		case vk_left  : 
+		case vk_right : 
+		case vk_up    : 
+		case vk_down  : 
+			_keyPress = _key == KEYBOARD_PRESSED; 
+			break;
+		
 		case noone : _keyPress = true; break;
 		default :    _keyPress = _hold? keyboard_check(_key) : keyboard_check_pressed(_key); break;
 	}

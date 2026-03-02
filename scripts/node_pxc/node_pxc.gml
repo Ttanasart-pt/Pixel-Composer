@@ -180,6 +180,10 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(project_object == undefined) return;
 		if(PREFERENCES.panel_graph_group_require_shift && !key_mod_press(SHIFT)) return false;
 		
+		if(curr_path != "")
+			run_in(1, function(p) /*=>*/ {return LOAD_PATH(p)}, [curr_path]);
+		return true;
+		
 		var _graph = new Panel_Graph(project_object);
 		    _graph.setSize(ui(800), ui(480));
 		    _graph.setTitle(display_name);

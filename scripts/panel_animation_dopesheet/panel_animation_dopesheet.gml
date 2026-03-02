@@ -41,6 +41,10 @@ function Panel_Animation_Dopesheet() {
     #endregion
 	
 	#region ---- Timeline ----
+		tb_frame = textBox_Number(function(t) /*=>*/ {return PROJECT.animator.setFrame(round(t))})
+			.setFont(f_p4).setBoxColor(CDEF.main_mdwhite)
+			.setLabelAlign(fa_right).setLabelColor(CDEF.main_mdwhite);
+		
 		timeline_stretch      = 0;
         timeline_stretch_sx   = 0;
         timeline_stretch_mx   = 0;
@@ -2082,6 +2086,18 @@ function Panel_Animation_Dopesheet() {
     	var bx = xx + ui(2);
     	var by = yy + ui(2);
     	
+    	// Frame
+    	
+    	var tw = ui(64);
+    	tb_frame.setFocusHover(pFOCUS, pHOVER);
+    	tb_frame.setLabel($"/{GLOBAL_TOTAL_FRAMES}");
+    	
+    	tb_frame.rx = x;
+    	tb_frame.ry = y;
+    	tb_frame.setColor(GLOBAL_IS_PLAYING? COLORS._main_value_positive : COLORS._main_accent);
+    	tb_frame.draw(bx, by, tw, bs, GLOBAL_CURRENT_FRAME, mm);
+    	bx += tw + ui(4);
+    	
     	// Left
     	
     	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Goto Previous Marker", THEME.marker_goto, 1) == 2) {
@@ -2914,7 +2930,8 @@ function Panel_Animation_Dopesheet() {
             }
         }
             
-        draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), ui(8), tool_width, dopesheet_h);
+        draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, ui(8), ui(8), tool_width, dopesheet_h);
+        draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, ui(8), ui(8), tool_width, top_frame_height, COLORS._main_icon);
         draw_surface_safe(dopesheet_name_surface, ui(8), ui(8) + top_frame_height);
         
         draw_sprite_stretched(THEME.ui_panel_bg, 1, bar_x, ui(8), bar_w, dopesheet_h);
