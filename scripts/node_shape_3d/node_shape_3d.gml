@@ -88,7 +88,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	d3dCamera = camera_create();
 	viewMat   = matrix_build_lookat(0, 1, 0, /**/ 0, 0, 0, /**/ 0, 0, -1);
-	projMat   = matrix_build_projection_ortho(1, 1, 0, 10);
+	projMat   = matrix_build_projection_ortho(1, 1, 0, 2);
 	
 	objectCache = {};
 	
@@ -168,7 +168,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					}
 					break;
 				
-				case "Octahedron" : if(vbObject == undefined) vbObject = new __3dOctahedron(); 
+				case "Octahedron" : if(vbObject == undefined) vbObject = new __3dOctahedron(true); 
 					break;
 					
 				case "Cylinder" : if(vbObject == undefined) vbObject = new __3dCylinder(); 
@@ -277,12 +277,25 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		objectCache[$ _shape] = vbObject;
 		var VB = vbObject.VB;
 		
+		surface_depth_disable(false);
+		
+		var d = surface_has_depth(_outData[0])
+		if(!d) {
+			for( var i = 0, n = array_length(_outData); i < n; i++ ) {
+				surface_free(_outData[i]);
+				_outData[i] = surface_create(_dim[0], _dim[1]);
+			}
+		}
+		
 		surface_set_shader(_outData, sh_fast3D);
 			camera_set_view_mat(d3dCamera, viewMat);
 			camera_set_proj_mat(d3dCamera, projMat);
 			camera_apply(d3dCamera);
 			
+			gpu_set_ztestenable(true);
+	        gpu_set_zwriteenable(true);
 			gpu_set_cullmode(cull_counterclockwise);
+	        
 			matrix_set(matrix_world, matrix_stack_top());
 			
 			shader_set_2("viewRange", _depth);
@@ -303,6 +316,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		matrix_set(matrix_world, MATRIX_IDENTITY);
 		matrix_stack_clear();
+		surface_depth_disable(true);
 		
 		return _outData; 
 	}

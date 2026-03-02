@@ -329,6 +329,26 @@ uniform int   s_amount;
 uniform int   spectralUse;
 uniform float spectralIntensity;
 uniform float spectralShift;
+uniform float spectralScale;
+
+vec3 bump3y(vec3 x, vec3 yoffset) {
+	vec3 y = vec3(1.) - x * x;
+	     y = clamp(y - yoffset, 0., 1.);
+	return y;
+}
+
+vec3 spectral_zucconi6(float x) {
+	const vec3 c1 = vec3(3.54585104, 2.93225262, 2.41593945);
+	const vec3 x1 = vec3(0.69549072, 0.49228336, 0.27699880);
+	const vec3 y1 = vec3(0.02312639, 0.15225084, 0.52607955);
+
+	const vec3 c2 = vec3(3.90307140, 3.21182957, 3.96587128);
+	const vec3 x2 = vec3(0.11748627, 0.86755042, 0.66077860);
+	const vec3 y2 = vec3(0.84897130, 0.88445281, 0.73949448);
+
+	return bump3y(c1 * (x - x1), y1) +
+		   bump3y(c2 * (x - x2), y2) ;
+}
 
 #region ==== PARAM DRIVER ====
 	#define PARAM_COUNT 1
@@ -383,6 +403,11 @@ void main() {
 		vec2 pos    = uv * scale + center;
 		
 		vec4 col = sampleTexture( gm_BaseTexture, pos, i/itr );
+		
+		float specOffs = fract((i / itr) * spectralScale + spectralShift);
+		if(spectralUse == 1) col.rgb *= spectral_zucconi6(specOffs);
+		if(spectralUse == 2) col     *= gradientEval(specOffs);
+		
 		if(col.a > 0.) { color = col; break; }
     }
     

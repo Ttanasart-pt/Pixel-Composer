@@ -79,8 +79,8 @@ function __3dCapsule(_radius = 0.5, _height = 1, _sides = 8, _smooth = false) : 
 				v0[ind + 2].setNormal(hx1, hy1, hz1);
 											 
 				v0[ind + 3].setNormal(hx1, hy1, hz1);
-				v0[ind + 3].setNormal(hx2, hy2, hz2);
-				v0[ind + 4].setNormal(hx3, hy3, hz3);
+				v0[ind + 4].setNormal(hx2, hy2, hz2);
+				v0[ind + 5].setNormal(hx3, hy3, hz3);
 				
 				v1[ind + 0].setNormal(hx0, hy0, -hz0);
 				v1[ind + 1].setNormal(hx1, hy1, -hz1);
@@ -128,13 +128,13 @@ function __3dCapsule(_radius = 0.5, _height = 1, _sides = 8, _smooth = false) : 
 			v0[ind + 4].setUV(_u2, _v2);
 			v0[ind + 5].setUV(_u3, _v3);
 			
-			v1[ind + 0].setUV(_u0, _v0);
-			v1[ind + 1].setUV(_u1, _v1);
-			v1[ind + 2].setUV(_u2, _v2);
+			v1[ind + 0].setUV(_u0, 1 - _v0);
+			v1[ind + 1].setUV(_u1, 1 - _v1);
+			v1[ind + 2].setUV(_u2, 1 - _v2);
 			
-			v1[ind + 3].setUV(_u1, _v1);
-			v1[ind + 4].setUV(_u3, _v3);
-			v1[ind + 5].setUV(_u2, _v2);
+			v1[ind + 3].setUV(_u1, 1 - _v1);
+			v1[ind + 4].setUV(_u3, 1 - _v3);
+			v1[ind + 5].setUV(_u2, 1 - _v2);
 		}
 		
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
