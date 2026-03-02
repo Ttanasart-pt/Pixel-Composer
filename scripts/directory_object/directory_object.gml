@@ -183,11 +183,14 @@ function DirectoryObject(_path) constructor {
 	
 	static getName = function() /*=>*/ {return name};
 	
-	static scan = function(file_type = scanType, _subDir = true) {
+	static scan = function(file_type = scanType, _subDir = true, _recur = true) {
 		if(path == "") return;
 		
 		scanned  = true;
 		scanType = file_type;
+		
+		if(_subDir) subDir = [];
+		content = [];
 		
 		var _temp_name = [];
 		var _file      = file_find_first(path + "/*", fa_directory);
@@ -196,9 +199,6 @@ function DirectoryObject(_path) constructor {
 			_file = file_find_next();
 		}
 		file_find_close();
-		
-		if(_subDir) subDir = [];
-		content = [];
 		
 		array_sort(_temp_name, true);
 		for( var i = 0; i < array_length(_temp_name); i++ ) {
@@ -221,7 +221,7 @@ function DirectoryObject(_path) constructor {
 			}
 		}
 		
-		if(!_subDir) {
+		if(!_subDir && _recur) {
 			for( var i = 0, n = array_length(subDir); i < n; i++ ) 
 				subDir[i].scan(file_type, false);
 		}

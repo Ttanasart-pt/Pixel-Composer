@@ -87,20 +87,14 @@ function __3dUVSphere(_radius = 0.5, _hori = 16, _vert = 8, _smt = false) : __3d
 			}
 			
 			switch(projection) {
-				case 0 :
-					v0 = dsin(va0);
-					v2 = dsin(va1);
-					break;
+				case 0 : v0 = dsin(va0);
+					     v2 = dsin(va1); break;
 					
-				case 1 :
-					v0 = va0 / 90;
-					v2 = va1 / 90;
-					break;
+				case 1 : v0 = va0 / 90;
+					     v2 = va1 / 90; break;
 					
-				case 2 :
-					v0 = (2 * arctan(exp(degtorad(va0))) - pi / 2) / (pi / 2); 
-					v2 = (2 * arctan(exp(degtorad(va1))) - pi / 2) / (pi / 2); 
-					break;
+				case 2 : v0 = (2 * arctan(exp(degtorad(va0))) - pi / 2) / (pi / 2); 
+					     v2 = (2 * arctan(exp(degtorad(va1))) - pi / 2) / (pi / 2); break;
 			}
 			
 			v0 = 0.5 - 0.5 * v0;

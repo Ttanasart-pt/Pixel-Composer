@@ -1,9 +1,9 @@
-function __3dCube() : __3dObject() constructor {
+function __3dCube(_sep = false) : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type   = pr_trianglelist;
 	object_counts = 1;
 	
-	separate_faces = false;
+	separate_faces = _sep;
 	taper_amount = 0;
 	taper_axis   = 0;
 	

@@ -19,7 +19,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		toSelectNode = "";
 		
 		static setRootDir = function(d) /*=>*/ { 
-			internalDir = new DirectoryObject(d).scan(["NodeObject"]); 
+			internalDir = new DirectoryObject(d).scan(["NodeObject"], true, false); 
 			rootDir     = d;
 		} setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Nodes/Internal");
 		
@@ -120,7 +120,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		        }
 		        	
 		        if(toSelectDir == dr.path) selectDir = dr;
-		        if(selectDir == dr) cc = COLORS._main_accent;
+		        if(selectDir   == dr) cc = COLORS._main_accent;
 			    
 			    draw_set_text(font, fa_left, fa_center, cc);
 	    		draw_text_add(xx + ui(8 + 8 * _ind), yy + hg / 2, dr.name);
@@ -167,6 +167,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		sc_content = new scrollPane(ui(8), h, function(_y, _m) /*=>*/ {
 			draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 			if(selectDir == noone) return 0;
+			if(!selectDir.scanned) selectDir.scan(["NodeObject"]); 
 			
 			var ww = sc_content.surface_w;
 			var _h = 0;

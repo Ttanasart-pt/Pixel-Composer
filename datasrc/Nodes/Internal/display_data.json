@@ -695,6 +695,7 @@
     {
         "name": "3D", "nodes": [
             { "label": "2D Operations" },
+            "Node_Shape_3D",
             "Node_3D_Transform_Image",
             "Node_Normal",
             "Node_Normal_Light",
@@ -702,13 +703,6 @@
             "Node_PB_FX_Bevel", 
             "Node_Sprite_Stack",
             "Node_Ambient_Occlusion",
-            
-            { "label": "Fast3D" },
-            "Node_Fast3D_Cube",
-            "Node_Fast3D_Sphere",
-            "Node_Fast3D_Cylinder",
-            "Node_Fast3D_Cone",
-            "Node_Fast3D_Torus",
 
             { "label": "Scenes" },
             "Node_3D_Camera",

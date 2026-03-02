@@ -43,7 +43,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	var _ind = 0;
 	for( var i = 0, n = array_length(shape_types); i < n; i++ )
-		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_3d, _ind++, COLORS._main_icon_light);
+		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_sdf, _ind++, COLORS._main_icon_light);
 	
 	newInput(1, nodeValue_Enum_Scroll("Shape",  1, { data: shape_types_str, horizontal: 1, text_pad: ui(16) }));
 	
