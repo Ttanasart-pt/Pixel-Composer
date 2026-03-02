@@ -1,0 +1,6 @@
+{
+    "name":          "Seconds Convert",
+    "spr":           "s_node_sec_convert",
+    "baseNode":      "Node_Sec_Convert",
+    "pxc_version":    120075,
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_sec_convert",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_sec_convert",
+  "parent":{
+    "name":"text",
+    "path":"folders/nodes/data/value/text.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

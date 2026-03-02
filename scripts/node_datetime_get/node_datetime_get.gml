@@ -3,11 +3,10 @@ function Node_Datetime_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Format", "%y-%m-%dT%h:%n:%s"));
+	newInput( 0, nodeValue_Text("Format", "%y-%m-%dT%h:%n:%s"));
+	newInput( 1, nodeValue_Bool("Update", true));
 	
-	newInput(1, nodeValue_Bool("Update", true));
-	
-	newOutput(0, nodeValue_Output("Data", VALUE_TYPE.text, ""));
+	newOutput( 0, nodeValue_Output("Data", VALUE_TYPE.text, ""));
 	
 	template_guide = [
 		["%s", "Second",   function() /*=>*/ {return string_lead_zero(current_second,  2)} ],
@@ -56,6 +55,8 @@ function Node_Datetime_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	    export_template,
 	    1,
     ]
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 	    update_on_frame = _data[1];
