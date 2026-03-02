@@ -13,8 +13,10 @@
     function panel_animation_next_frame()    { CALL("next_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.previousFrame(); }
     function panel_animation_prev_keyframe() { CALL("previous_keyframe");  if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
     function panel_animation_next_keyframe() { CALL("next_keyframe");      if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
+    
     function panel_animation_prev_marker()   { CALL("previous_marker");    if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevMarker(); }
     function panel_animation_next_marker()   { CALL("next_marker");        if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextMarker(); }
+    function panel_animation_toggle_marker() { CALL("toggle_marker");      if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toggleMarker(GLOBAL_CURRENT_FRAME + 1); }
     
     function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
     function panel_animation_delete_key()              { CALL("animation_delete_key");              PANEL_ANIMATION.deleteKeys();                                                                        }
@@ -85,6 +87,7 @@
         registerFunction("", "Next Keyframe",      vk_pagedown,n,  panel_animation_next_keyframe  ).setMenu("next_keyframe")
     	registerFunction("", "Previous Marker",    vk_left,    c,  panel_animation_prev_marker    ).setMenu("previous_marker")
         registerFunction("", "Next Marker",        vk_right,   c,  panel_animation_next_marker    ).setMenu("next_marker")
+        registerFunction(an, "Toggle Marker",      "M",        n,  panel_animation_toggle_marker  ).setMenu("toggle_marker")
     
         registerFunction(an, "Toggle Frame View",  "",         n,  panel_animation_toggle_type    ).setMenu("animation_toggle_view_type")
         registerFunction(an, "Delete keys",        vk_delete,  n,  panel_animation_delete_key     ).setMenu("animation_delete_keys")
@@ -580,9 +583,22 @@ function Panel_Animation() : PanelContent() constructor {
         array_foreach(timeline_keys, function(k) /*=>*/ { k.dopesheet_x = (k.time + 1) * timeline_scale + timeline_shift; });
     }
     
+    function toggleMarker(_frame = __selecting_frame) {
+    	var _del = false;
+    	
+    	for( var i = array_length(PROJECT.timelineMarkers) - 1; i >= 0; i-- ) {
+    		if(PROJECT.timelineMarkers[i].frame == _frame) {
+    			array_delete(PROJECT.timelineMarkers, i, 1);
+    			_del = true;
+    		}
+    	}
+    	
+    	if(_del) return;
+    	array_push(PROJECT.timelineMarkers, new timelineMarker(_frame));
+    }
+    
     function addMarker(_frame = __selecting_frame) {
-    	var _ma = new timelineMarker(_frame);
-    	array_push(PROJECT.timelineMarkers, _ma);
+    	array_push(PROJECT.timelineMarkers, new timelineMarker(_frame));
     	PROJECT.markerUpdate();
     }
     

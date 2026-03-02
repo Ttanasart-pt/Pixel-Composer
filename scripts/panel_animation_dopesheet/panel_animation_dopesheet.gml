@@ -36,6 +36,8 @@ function Panel_Animation_Dopesheet() {
         dopesheet_name_mask    = noone;
         dopesheet_name_surface = noone;
         dopesheet_name_hover   = false;
+        
+        mouse_on_timeline      = false;
     #endregion
 	
 	#region ---- Timeline ----
@@ -168,6 +170,8 @@ function Panel_Animation_Dopesheet() {
         bar_h = 1;
         bar_total_w     = 1;
         bar_total_shift = 1;
+        
+        top_frame_height = ui(20);
 	#endregion
 	
     #region ++++ Context Menu ++++
@@ -574,7 +578,7 @@ function Panel_Animation_Dopesheet() {
         dopesheet_surface      = surface_verify(dopesheet_surface, dopesheet_w, dopesheet_h);
         
         dopesheet_name_mask    = surface_verify(dopesheet_name_mask,    tool_width, dopesheet_h);
-        dopesheet_name_surface = surface_verify(dopesheet_name_surface, tool_width, dopesheet_h);
+        dopesheet_name_surface = surface_verify(dopesheet_name_surface, tool_width, dopesheet_h - ui(20));
         
         BLEND_SUBTRACT
         
@@ -1532,7 +1536,7 @@ function Panel_Animation_Dopesheet() {
         var _scaling   = key_mod_check(MOD_KEY.ctrl | MOD_KEY.alt) && array_length(keyframe_selecting) > 1;
         var valAmo     = array_length(animator.values);
         
-        var hov   = pHOVER;
+        var hov   = mouse_on_timeline;
         var toSel = undefined;
         var ot    = undefined;
         
@@ -1698,7 +1702,7 @@ function Panel_Animation_Dopesheet() {
         var prop = animator.prop;
         var aa   = _node.group == PANEL_GRAPH.getCurrentContext()? 1 : 0.9;
         var tx   = tool_width;
-        var ty   = animator.y - 1;
+        var ty   = animator.y - 1 - top_frame_height;
         var ty0  = ty - ui(8);
         var ty1  = ty0 + animator.h;
         var m    = [msx, msy];
@@ -1928,12 +1932,18 @@ function Panel_Animation_Dopesheet() {
     }
 	    
     function drawDopesheet_Label() { 
-    	dopesheet_name_hover = pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), ui(8) + tool_width, ui(8) + dopesheet_h);
+    	var xx = ui(8);
+    	var yy = ui(8) + top_frame_height;
+    	var ww = ui(8) + tool_width;
+    	var hh = ui(8) + dopesheet_h - top_frame_height;
+    	var oy = top_frame_height;
+    	
+    	dopesheet_name_hover = pHOVER && point_in_rectangle(mx, my, xx, yy, ww, hh);
     	
         surface_set_target(dopesheet_name_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
-        var msx = mx - ui(8);
-        var msy = my - ui(8);
+        var msx = mx - xx;
+        var msy = my - yy;
         
         draw_set_text(f_p2, fa_left, fa_center);
         
@@ -1957,7 +1967,7 @@ function Panel_Animation_Dopesheet() {
                 var _cont = timeline_contents[i];
                 if(!_cont.show && show_nodes) continue;
                 
-                var _y = _cont.y;
+                var _y = _cont.y - oy;
                 var _h = _cont.h;
                 
                 if(item_dragging != noone && item_dragging.item == _cont.item) continue;
@@ -1998,7 +2008,7 @@ function Panel_Animation_Dopesheet() {
                 
                 if(item_dragging != noone && item_dragging.item == _cont.item) {
                     _itx = _cont.depth * ui(20);
-                    _ity = _cont.y;
+                    _ity = _cont.y - oy;
                     _itw = tool_width - _cont.depth * ui(20);
                     continue;
                 }
@@ -2006,7 +2016,7 @@ function Panel_Animation_Dopesheet() {
                 if(_y + _h < 0) continue;
                 if(_y > h) break;
                 
-                if(show_nodes) drawDopesheet_Label_Item(_cont, 0, _cont.y, msx, msy);
+                if(show_nodes) drawDopesheet_Label_Item(_cont, 0, _cont.y - oy, msx, msy);
                 
                 if(_cont.type == "node" && (_cont.item.show || !show_nodes)) {
                 	var prop = _cont.item;
@@ -2061,6 +2071,46 @@ function Panel_Animation_Dopesheet() {
         if(on_end_dragging_anim != noone && mouse_release(mb_left)) on_end_dragging_anim = noone;
     }
     
+    function dopeSheet_LabelHeader() {
+    	var xx = ui(8);
+    	var yy = ui(8);
+    	var ww = ui(8) + tool_width;
+    	var hh = top_frame_height;
+    	var mm = [mx, my];
+    	
+    	var bs = hh - ui(4);
+    	var bx = xx + ui(2);
+    	var by = yy + ui(2);
+    	
+    	// Left
+    	
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Goto Previous Marker", THEME.marker_goto, 1) == 2) {
+    		toPrevMarker();
+    	} bx += bs + ui(1);
+    	
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Toggle Marker", THEME.marker) == 2) {
+    		toggleMarker(GLOBAL_CURRENT_FRAME + 1);
+    	} bx += bs + ui(1);
+    	
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Goto Next Marker", THEME.marker_goto, 0) == 2) {
+    		toNextMarker();
+    	} bx += bs + ui(1);
+    	
+    	draw_set_color(CDEF.main_dkblack);
+    	bx += ui(1); draw_line_width(bx, by + ui(2), bx, by + bs - ui(2), 2); bx += ui(1);
+    	
+    	// Right
+    	
+    	bx = ww - bs - ui(2);
+    	var spr = THEME.timeline_hide;
+    	var sid = show_hidden;
+    	var scc = show_hidden? COLORS._main_icon : COLORS._main_accent;
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Toggle Hidden", spr, sid, scc) == 2) {
+    		show_hidden = !show_hidden;
+    	} bx -= bs + ui(1);
+    	
+    }
+    
     ////- Draw
     
     function drawDopesheet() { 
@@ -2108,6 +2158,8 @@ function Panel_Animation_Dopesheet() {
         bar_total_shift = bar_total_w + timeline_shift;
         if(pFOCUS && key_mod_double(ALT)) show_value = !show_value;
         
+        mouse_on_timeline = pHOVER && my > ui(8) + top_frame_height;
+        
         #region Scroll
             dopesheet_y = lerp_float(dopesheet_y, dopesheet_y_to, 4);
                 
@@ -2151,7 +2203,8 @@ function Panel_Animation_Dopesheet() {
 		
         var msx = mx - bar_x;
         var msy = my - ui(8);
-        
+        var _toSel = undefined;
+    	
         surface_set_target(dopesheet_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
                 
@@ -2262,7 +2315,7 @@ function Panel_Animation_Dopesheet() {
         	_keyframe_selecting_l = noone;
         	region_hovering       = noone;
         	
-        	var _len = array_length(timeline_contents);
+        	var _len   = array_length(timeline_contents);
         	
         	timeline_snap_points = array_verify(timeline_snap_points, _len + 1);
         	timeline_snap_line   = [];
@@ -2319,9 +2372,9 @@ function Panel_Animation_Dopesheet() {
 	                	var _eh = _ey1 - _ey0;
 	                	var _es = ui(4);
 	                	
-	                	var _hovF = pHOVER && point_in_rectangle(msx, msy, _ex0 - _es, _ey0, _ex0 + _es, _ey1);
-	                	var _hovL = pHOVER && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1 + _es, _ey1);
-	                	var _hovC = pHOVER && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
+	                	var _hovF = show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex0 - _es, _ey0, _ex0 + _es, _ey1);
+	                	var _hovL = show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1 + _es, _ey1);
+	                	var _hovC = show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
 	                	
 	                	var _hov = 0;
 	                	if(_hovC) _hov = 1;
@@ -2353,7 +2406,14 @@ function Panel_Animation_Dopesheet() {
 	                	if(_hov) {
 	                		keyframe_boxable = false;
 	                		
-	                		if(mouse_lpress(pFOCUS)) {
+	                		if(DOUBLE_CLICK) {
+	                			var _allKeys = [];
+	                			for( var j = 0, m = array_length(_anims); j < m; j++ )
+				                    array_append(_allKeys, _anims[j].values);
+				                
+				                _toSel = _allKeys;
+				                
+	                		} else if(mouse_lpress(pFOCUS)) {
 	                			timeline_content_dragging   = _cont;
 	                			timeline_content_drag_type  = _hov;
 	                			
@@ -2375,7 +2435,7 @@ function Panel_Animation_Dopesheet() {
                 }
                 
             }
-            
+            	
             var _markers = PROJECT.timelineMarkers;
             timeline_snap_points[_len] = {
             	node   : undefined,
@@ -2469,8 +2529,10 @@ function Panel_Animation_Dopesheet() {
 	            	if(value_hovering == noone && mouse_click(mb_left, pFOCUS)) PROJECT.animator.setFrame(_fr);
 	            	
 	            } else if(mouse_lpress(pFOCUS)) {
-	                     if(key_hover == noone)                           keyframe_selecting = [];
-	                else if(key_mod_press(SHIFT))                         array_toggle(keyframe_selecting, key_hover);
+	            	
+		                 if(_toSel != undefined)  keyframe_selecting = _toSel;
+	                else if(key_hover == noone)   keyframe_selecting = [];
+	                else if(key_mod_press(SHIFT)) array_toggle(keyframe_selecting, key_hover);
 	                else if(!array_exists(keyframe_selecting, key_hover)) keyframe_selecting = [ key_hover ];
 	                
 	                if(stagger_mode == 1) {
@@ -2853,7 +2915,7 @@ function Panel_Animation_Dopesheet() {
         }
             
         draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), ui(8), tool_width, dopesheet_h);
-        draw_surface_safe(dopesheet_name_surface, ui(8), ui(8));
+        draw_surface_safe(dopesheet_name_surface, ui(8), ui(8) + top_frame_height);
         
         draw_sprite_stretched(THEME.ui_panel_bg, 1, bar_x, ui(8), bar_w, dopesheet_h);
         draw_surface_safe(dopesheet_surface, bar_x, ui(8));
@@ -2862,6 +2924,7 @@ function Panel_Animation_Dopesheet() {
         
         if(item_dragging != noone) drawDopesheet_Label_Item(item_dragging, mx - item_dragging_dx, my - item_dragging_dy,,, 0.5);
     
+    	dopeSheet_LabelHeader();
     	dopeSheet_TimelineScrub();
     	dopeSheet_TimelineStretch();
     }

@@ -53,7 +53,7 @@ function Node_Sec_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	});
 	
 	input_display_list = [ 0, 
-		[ "Format", false ], 1, export_template,
+		[ "Format", false ], 1, export_template, 2, 
 	];
 	
 	////- Node
