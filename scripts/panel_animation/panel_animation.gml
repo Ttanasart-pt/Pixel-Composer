@@ -769,6 +769,7 @@ function Panel_Animation() : PanelContent() constructor {
         surface_reset_target();
         
         draw_surface_safe(timeline_surface, bar_x, bar_y);
+        draw_sprite_stretched_ext( THEME.ui_panel, 1, bar_x, bar_y, bar_w, bar_h, CDEF.black );
         
     }
     

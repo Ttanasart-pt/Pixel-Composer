@@ -40,7 +40,9 @@
 function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Shape 3D";
 	
+	////- =Output
 	newInput( 0, nodeValue_Dimension());
+	newInput(16, nodeValue_Surface( "Background" ));
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2( "Position", [.5,.5]    )).setUnitSimple();
@@ -70,14 +72,14 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Rendering
 	newInput( 4, nodeValue_Range( "Depth Range", [.0,.25] ));
-	// 16
+	// 17
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	newOutput( 2, nodeValue_Output("Rim Normal",  VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		[ "Output",    false ],  0,
+		[ "Output",    false ],  0, 16, 
 		[ "Transform", false ],  1,  2,  3, 
 		[ "Shape",     false ],  7,  8,  9, 13, 12, 14, 15, 
 		[ "Texturing", false ],  5,  6, 10, 11, 
@@ -90,7 +92,8 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	viewMat   = matrix_build_lookat(0, 1, 0, /**/ 0, 0, 0, /**/ 0, 0, -1);
 	projMat   = matrix_build_projection_ortho(1, 1, 0, 2);
 	
-	objectCache = {};
+	objectCache  = {};
+	temp_surface = [ 0 ];
 	
 	////- Nodes
 	
@@ -101,6 +104,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 			var _dim   = _data[ 0];
+			var _bg    = _data[16];
 			
 			var _pos   = _data[ 1];
 			var _rot   = _data[ 2];
@@ -288,6 +292,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		surface_set_shader(_outData, sh_fast3D);
+
 			camera_set_view_mat(d3dCamera, viewMat);
 			camera_set_proj_mat(d3dCamera, projMat);
 			camera_apply(d3dCamera);
@@ -318,6 +323,16 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		matrix_stack_clear();
 		surface_depth_disable(true);
 		
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1])
+		surface_set_shader(temp_surface[0], noone, true, BLEND.over);
+			draw_surface(_outData[0], 0, 0);
+		surface_reset_shader();
+		
+		surface_set_shader(_outData[0]);
+			draw_surface_safe(_bg);
+			draw_surface(temp_surface[0], 0, 0);
+		surface_reset_shader();
+				
 		return _outData; 
 	}
 }

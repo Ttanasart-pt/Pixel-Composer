@@ -3057,12 +3057,14 @@ function Panel_Animation_Dopesheet() {
             }
         }
             
-        draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, ui(8), ui(8), tool_width, dopesheet_h);
-        draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, ui(8), ui(8), tool_width, top_frame_height, COLORS._main_icon);
+        draw_sprite_stretched_ext( THEME.ui_panel_bg,        1, ui(8), ui(8), tool_width, dopesheet_h);
+        draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, ui(8), ui(8), tool_width, top_frame_height, COLORS._main_icon );
         draw_surface_safe(dopesheet_name_surface, ui(8), ui(8) + top_frame_height);
+        draw_sprite_stretched_ext( THEME.ui_panel,           1, ui(8), ui(8), tool_width, dopesheet_h,      CDEF.black );
         
-        draw_sprite_stretched(THEME.ui_panel_bg, 1, bar_x, ui(8), bar_w, dopesheet_h);
+        draw_sprite_stretched(     THEME.ui_panel_bg, 1, bar_x, ui(8), bar_w, dopesheet_h );
         draw_surface_safe(dopesheet_surface, bar_x, ui(8));
+        draw_sprite_stretched_ext( THEME.ui_panel,    1, bar_x, ui(8), bar_w, dopesheet_h, CDEF.black );
         
         draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, ui(8), bar_w, dopesheet_h);
         
