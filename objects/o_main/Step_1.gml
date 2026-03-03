@@ -159,8 +159,10 @@ _FILE_DROPPED       = false;
 	
 	DEF_SURFACE_RESET();
 	
-	if(!PROJECT.safeMode && UPDATE_RENDER_ORDER)
-		NodeTopoSort();
+	if(!PROJECT.safeMode && UPDATE_RENDER_ORDER) {
+		try { NodeTopoSort(); } 
+		catch(e) { exception_print(e); }
+	}
 	
 	if(!LOADING) {
 		if(!PROJECT.safeMode) PROJECT.stepBegin();

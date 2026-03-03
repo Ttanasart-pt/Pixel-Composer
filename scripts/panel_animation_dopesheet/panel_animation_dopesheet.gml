@@ -887,6 +887,8 @@ function Panel_Animation_Dopesheet() {
         var nx  = 0;
         var ny  = noone;
         
+        var baseC = CDEF.main_white;
+        
         var _kv, _kn, sy;
         
         var _oy = animator.values[0].value;
@@ -918,7 +920,7 @@ function Panel_Animation_Dopesheet() {
                         if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                         else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                         
-                        cc = colorMultiplyRGB(cc, CDEF.main_ltgrey); 
+                        cc = colorMultiplyRGB(cc, baseC); 
                         draw_set_color(cc);
                         draw_set_alpha(aa);
                         
@@ -953,7 +955,7 @@ function Panel_Animation_Dopesheet() {
                     if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                     else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                     
-                    cc = colorMultiplyRGB(cc, CDEF.main_ltgrey); 
+                    cc = colorMultiplyRGB(cc, baseC); 
                     draw_set_color(cc);
                     draw_set_alpha(aa);
                     
@@ -988,7 +990,7 @@ function Panel_Animation_Dopesheet() {
                     if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                     else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                     
-                    cc = colorMultiplyRGB(cc, CDEF.main_ltgrey); 
+                    cc = colorMultiplyRGB(cc, baseC); 
                     draw_set_color(cc);
                     draw_set_alpha(aa);
                     
@@ -1024,7 +1026,7 @@ function Panel_Animation_Dopesheet() {
                         if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                         else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                         
-                        cc = colorMultiplyRGB(cc, CDEF.main_ltgrey); 
+                        cc = colorMultiplyRGB(cc, baseC); 
                         draw_set_color(cc);
                         draw_set_alpha(aa);
                         
@@ -1053,7 +1055,7 @@ function Panel_Animation_Dopesheet() {
                 if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                 else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                     
-                cc = colorMultiplyRGB(cc, CDEF.main_ltgrey); 
+                cc = colorMultiplyRGB(cc, baseC); 
                 draw_set_color(cc);
                 draw_set_alpha(aa);
                 
@@ -1081,7 +1083,7 @@ function Panel_Animation_Dopesheet() {
                             if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                             else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                             
-                            cc = colorMultiplyRGB(cc, CDEF.main_ltgrey);
+                            cc = colorMultiplyRGB(cc, baseC);
                             draw_set_color(cc);
                             draw_set_alpha(aa);
                             
@@ -1106,7 +1108,7 @@ function Panel_Animation_Dopesheet() {
                         if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                         else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                         
-                        cc = colorMultiplyRGB(cc, CDEF.main_ltgrey); 
+                        cc = colorMultiplyRGB(cc, baseC); 
                         draw_set_color(cc);
                         draw_set_alpha(aa);
                         
@@ -1257,7 +1259,7 @@ function Panel_Animation_Dopesheet() {
         
         keyframe_graph_surface = surface_verify(keyframe_graph_surface, w, _gh);
         surface_set_target(keyframe_graph_surface);
-            draw_clear(COLORS.panel_animation_timeline_top);
+            DRAW_CLEAR
             
             for(var i = _st; i <= _fr; i++) {
                 var bar_frame  = i * timeline_separate;
@@ -1808,8 +1810,8 @@ function Panel_Animation_Dopesheet() {
         var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_sub;
         if(hov) cc = COLORS._main_text_accent;
         
-        draw_set_color(CDEF.main_mdblack);
-        draw_rectangle(0, ty - ui(8), tool_width, ty + ui(8), false);
+        // draw_set_color(CDEF.main_mdblack);
+        // draw_rectangle(0, ty - ui(8), tool_width, ty + ui(8), false);
         
         var tw = ui(15);
         var th = ui(17);
@@ -1866,10 +1868,10 @@ function Panel_Animation_Dopesheet() {
         if(drw) {
 	        var _tool_x0 = tool_width - ui(20 + 16 * 4.5 + 12);
 	        var _tool_x1 = tool_width;
-	        draw_set_color(c_white);
-	        BLEND_SUBTRACT
-	        draw_rectangle(_tool_x0, ty - ui(8), _tool_x1, ty + ui(8), false);
-	        BLEND_NORMAL
+	        // draw_set_color(c_white);
+	        // BLEND_SUBTRACT
+	        // draw_rectangle(_tool_x0, ty - ui(8), _tool_x1, ty + ui(8), false);
+	        // BLEND_NORMAL
         }
         
         var _graph_show = prop.sep_axis? prop.show_graphs[animator.index] : prop.show_graph;
@@ -2108,6 +2110,22 @@ function Panel_Animation_Dopesheet() {
                 if(_y + _h < 0) continue;
                 if(_y > h) break;
                 
+                if(_cont.type == "node") {
+	                var _node = _cont.node;
+	                var _lx = ui(4);
+	                var _ly = _cont.y - oy;
+	                var _lw = tool_width - ui(8);
+	                var _lh = _cont.h;
+	                var _lc = _node.attributes.color;
+	                
+	                if(_lc != -1) {
+	                	_lc = colorMultiply(_lc, CDEF.main_mdblack);
+						draw_sprite_stretched_ext(THEME.box_r2, 0, _lx, _ly, _lw, _lh, _lc);
+	                } else 
+						draw_sprite_stretched_ext(THEME.box_r2, 0, _lx, _ly, _lw, _lh, CDEF.main_mdblack);
+					// if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, lh, COLORS._main_accent, 1);
+                }
+				
                 if(show_nodes) drawDopesheet_Label_Item(_cont, 0, _cont.y - oy, msx, msy);
                 
                 if(_cont.type == "node" && (_cont.item.show || !show_nodes)) {
@@ -2381,10 +2399,8 @@ function Panel_Animation_Dopesheet() {
                     var _graph_show = _prop.sep_axis? array_any(_prop.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.show_graph;
                     
                     if(_graph_show && _prop.type != VALUE_TYPE.color) {
-                        if(_item.color_cur > -1) {
-                            draw_set_color(c1);
-                            draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(_prop.graph_h) - ui(2), false);
-                        }
+                        draw_set_color(c1);
+                        draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(_prop.graph_h) - ui(2), false);
                         
                         var _gr_h = ui(_prop.graph_h);
                         key_y   += _gr_h + ui(8);

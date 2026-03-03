@@ -122,9 +122,14 @@ function exception_print(e) {
 function setException() {
 	if(OS == os_macosx) return noone;
 	
-	exception_unhandled_handler(function(ex) {
+	var path_log = $"{env_user()}log/crash_log.txt";
+	file_delete_safe(path_log);
+	
+	exception_unhandled_handler(function(ex) /*=>*/ {
 		var path = $"{DIRECTORY}prev_crash.pxc";
-		if(!SAVING && !TESTING && !IS_CMD) SAVE_AT(PROJECT, path);
+		if(!SAVING && !TESTING && !IS_CMD) {
+			try { SAVE_AT(PROJECT, path); } catch(e) { /* ignore crash here */ }
+		}
 		
 		var tt = "";
 		tt += $"\n-------------------------- Pixel Composer {VERSION_STRING} Crashed --------------------------\n";
@@ -144,13 +149,13 @@ function setException() {
 		tt += $"\nVRAM: {memory_totalvram(true)}"
 		tt += "\n\n---------------------------- :( ----------------------------\n";
 		
-		var path_pro = $"{env_user()}log/program_path.txt";
-		var path_log = $"{env_user()}log/crash_log.txt";
+		var path_pro     = $"{env_user()}log/program_path.txt";
+		var path_log     = $"{env_user()}log/crash_log.txt";
 		var path_crashed = $"{env_user()}log/crashed.txt";
 		
 		file_text_write_all(path_pro, program_directory);
-		file_text_write_all(path_log, tt);
 		file_text_write_all(path_crashed, "");
+		file_text_write_append(path_log,  tt);
 		clipboard_set_text(tt);
 		
 		if(IS_CMD) {
@@ -162,6 +167,7 @@ function setException() {
 		var pid = shell_execute(rep, DIRECTORY);
 		print($"{rep} [{file_exists(rep)}]: {pid}");
 		
+		game_end(); 
 	    return 0;
 	});
 }

@@ -127,7 +127,7 @@
         "panel_animation_node_outline": "main_black",
         "panel_animation_dope_bg_hover": [ "main_black", "main_mdblack", 0.5 ],
         "panel_animation_dope_bg": "main_black",
-        "panel_animation_dope_key_bg_hover": "main_mdblack",
+        "panel_animation_dope_key_bg_hover": "main_dkblack",
         "panel_animation_dope_key_bg": "main_black",
         "panel_animation_graph_bg": "main_dkblack",
         "panel_animation_graph_select": "main_mdblack",

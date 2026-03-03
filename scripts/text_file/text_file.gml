@@ -35,3 +35,13 @@ function file_text_write_all(path, str) {
 	file_text_write_string(f, str);
 	file_text_close(f);
 }
+
+function file_text_write_append(path, str) {
+	INLINE
+	
+	var f = file_text_open_append(path);
+	if(!f) return "";
+	
+	file_text_write_string(f, str);
+	file_text_close(f);
+}
