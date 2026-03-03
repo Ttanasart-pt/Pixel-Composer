@@ -67,7 +67,7 @@
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "Draw Shape";
-	inputs = array_create(48);
+	inputs = array_create(50);
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(0, PROJ_SURF)};
 	
@@ -136,6 +136,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(30, nodeValue_Bool(     "Caps",             false  )).hideLabel();
 	newInput(31, nodeValue_Float(    "Factor",           2.5    )).hideLabel();
 	newInput(36, nodeValue_EButton(  "Corner Shape",     0, [ "Round", "Cut" ] ))
+	newInput(49, nodeValue_Bool(     "Uniform Corner",  true      ))
+	newInput(48, nodeValue_Vec4(     "Custom Corner",   [0,0,0,0] ))
 	
 	////- =Deform
 	newInput(41, nodeValue_Slider(   "Twist",            0, [-1,1,.01 ] ))
@@ -150,7 +152,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(29, nodeValue_Curve(    "Curve",            CURVE_DEF_01   ));
 	newInput(20, nodeValue_SliRange( "Level",            [0,1]          ));
 	newInput(37, nodeValue_Bool(     "Opacity",          false          ));
-	// 48
+	// 50
 	
 	/////////////////////////////////////////////
 	
@@ -164,7 +166,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		[ "Output",     false     ],  0, 44, 45, 6, 
 		[ "Background", false     ],  1, 11, 46, 47, 
 		[ "Transform",  false     ], 15,  3, 16, 17, 19, 28, 
-		[ "Shape",	    false     ],  2, 32, 33, 35, 40, 34, 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
+		[ "Shape",	    false     ],  2, 32, 33, 35, 40, 34, 49, 48,  9,  4, 13, 5,  7,  8, 
+		                             38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
 		[ "Deform",	     true     ], 41, 42, 
 		[ "Render",	     true     ], 10, 18,
 		[ "Height",	     true, 12 ], 29, 20, 37,  
@@ -193,8 +196,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _curve  = _data[29];
 			var _shpSca = _data[28];
 			
-			var _crnPro = _data[36];
-			var _draOpa = _data[37];
+			var _crnPro  = _data[36];
+			var _draOpa  = _data[37];
+			var _cornerU = _data[49];
+			var _corner4 = _data[48];
 			
 			var _twst   = _data[41];
 			var _sher   = _data[42];
@@ -266,6 +271,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[25].setVisible(false);
 			inputs[26].setVisible(false);
 			inputs[27].setVisible(false);
+			inputs[48].setVisible(false);
+			inputs[49].setVisible(false);
 			
 			inputs[11].setVisible(_bg == 1);
 			
@@ -286,11 +293,17 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			switch(_shape) {
 				case "Rectangle" :
-					inputs[ 9].setVisible( true);
+					inputs[49].setVisible( true);
+					inputs[48].setVisible(!_cornerU);
+					inputs[ 9].setVisible( _cornerU);
+					
 					inputs[18].setVisible(false);
 					inputs[36].setVisible( true);
 					
-					shader_set_i("shape", 0);
+					var c4 = _cornerU? array_create(4, _corner) : _corner4;
+					
+					shader_set_i("shape",   0  );
+					shader_set_4("corner4", c4 );
 					break;
 					
 				case "Diamond" :

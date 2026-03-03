@@ -172,6 +172,7 @@ uniform float angle;
 uniform float inner;
 uniform float outer;
 uniform float corner;
+uniform vec4  corner4;
 
 uniform float stRad;
 uniform float edRad;
@@ -301,11 +302,20 @@ float sdSuperEllipse(in vec2 p, float f, float s) {
     return length(p) - rad;
 }
 
-float sdBox( in vec2 p, in vec2 b ) {
-    vec2  d = abs(p) - b;
-    float c = cornerShape == 0? length(max(d, 0.)) : max(d.x, 0.) + max(d.y, 0.);
+float sdBox( in vec2 p, in vec2 s, in vec4 c4 ) {
+	float c = 0.;
+	
+	     if(p.x > .0 && p.y < 0.) c = c4[0];
+	else if(p.x < .0 && p.y < 0.) c = c4[1];
+	else if(p.x > .0 && p.y > 0.) c = c4[2];
+	else if(p.x < .0 && p.y > 0.) c = c4[3];
+	
+	vec2 b = s - c;
+	
+    vec2  d  = abs(p) - b;
+    float ds = cornerShape == 0? length(max(d, 0.)) : max(d.x, 0.) + max(d.y, 0.);
     
-    return c + min(max(d.x, d.y), 0.);
+    return ds + min(max(d.x, d.y), 0.) - c;
 }
 
 float sdTearDrop( vec2 p, float r1, float r2, float h ) {
@@ -531,7 +541,7 @@ void main() {
 	coord.x += coord.y * shear.x;
 	coord.y += coord.x * shear.y;
 	
-		 if(shape ==  0) { d = sdBox(           coord, (scale * ratio - corner)) - corner;                                               }  
+		 if(shape ==  0) { d = sdBox(           coord, scale * ratio, corner4);                                                          }  
 	else if(shape ==  1) { d = sdCircle(        coord);                                                                                  } 
 	else if(shape ==  2) { d = sdRegularPolygon(coord, 0.9 - corner, sides, angle ) - corner;                                            } 
 	else if(shape ==  3) { d = sdStar(          coord, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle ) - corner;          } 

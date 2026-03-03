@@ -284,7 +284,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _rtStr = min(_ratio[0], _ratio[1]) + _shift;
 			var _rtEnd = max(_ratio[0], _ratio[1]) + _shift;
 			var _rtRng = _rtEnd - _rtStr;
-			if(_rtRng <= 0) return _outData;
+			if(_rtRng <= 0) {
+				for( var i = 0, n = array_length(_outData); i < n; i++ ) 
+					surface_clear(_outData[i]);
+				return _outData;
+			}
 			
 			var _useTex = !_1px && is_surface(_tex);
 			
