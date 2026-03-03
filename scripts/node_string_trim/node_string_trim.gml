@@ -9,8 +9,8 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Trim
 	newInput(3, nodeValue_EScroll( "Trim", 0, [ "Character", "Word", "White-Space" ] ));
 	newInput(4, nodeValue_EScroll( "Mode", 0, [ "Counter", "Progress" ] )).setTooltip("Set to progress to use ratio, where 0 means no change and 1 means the entire length of the text.");
-	newInput(1, nodeValue_Int(     "Head", 0  ));
-	newInput(2, nodeValue_Int(     "Tail", 0  ));
+	newInput(1, nodeValue_Float(   "Head", 0  ));
+	newInput(2, nodeValue_Float(   "Tail", 0  ));
 	newInput(5, nodeValue_Text(    "Text", "" ));
 	// 6
 	
@@ -37,23 +37,21 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			inputs[1].setVisible(trim != 2);
 			inputs[2].setVisible(trim != 2);
 			inputs[5].setVisible(trim == 2);
-			
-			inputs[1].setType(mode? VALUE_TYPE.float : VALUE_TYPE.integer);
-			inputs[2].setType(mode? VALUE_TYPE.float : VALUE_TYPE.integer);
 		#endregion
 		
-		var _str = str;
+		var _str  = str;
+		var _slen = string_length(str);
 		
 		switch(trim) {
 			case 0 :
 				if(mode == 0)
-					_str = string_copy(str, 1 + hed, string_length(str) - hed - tal);
+					_str = string_copy(str, 1 + hed, _slen - hed - tal);
 					
 				else if(mode == 1) {
-					var h = hed * string_length(str);
-					var t = tal * string_length(str);
+					var h = round(hed * _slen);
+					var t = round(tal * _slen);
 					
-					_str = string_copy(str, 1 + h, string_length(str) - hed - t);
+					_str = string_copy(str, 1 + h, _slen - h - t);
 				}
 				break;
 				
