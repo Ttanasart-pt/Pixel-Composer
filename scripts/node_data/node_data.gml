@@ -1338,9 +1338,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return true;
 	}
 	
-	static isRenderActive = function() { return !is_instancer && (renderActive || (PREFERENCES.render_all_export && IS_RENDERING)); }
+	static isRenderActive = function() { return !is_instancer && renderActive; }
 	
-	static isRenderable = function(log = false) { //Check if every input is ready (updated)
+	static isRenderable = function(log = false) { // Check if every input is ready (updated)
 		if(!active || !isRenderActive()) return false;
 		
 		for(var i = 0, n = array_length(inputs); i < n; i++) {

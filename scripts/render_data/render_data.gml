@@ -270,22 +270,24 @@ enum RENDER_TYPE {
 			var _time_frame = get_timer();
 			var _rendered   = 0;
 			
-			// print($"➤➤➤➤➤➤  RENDER {GLOBAL_CURRENT_FRAME}");
+			// print($"\n>>>>>> RENDER {GLOBAL_CURRENT_FRAME} [{partial}]");  
 			
 			try {
 				while(array_length(renderQueue)) {
 					LOG_BLOCK_START
-					// if(global.FLAG.render == 1) LOG($"➤➤➤➤➤➤ CURRENT RENDER QUEUE {renderQueue}");
+					// if(global.FLAG.render == 1) print($"➤➤➤➤➤➤ CURRENT RENDER QUEUE {renderQueue}");
 					
 					var rendering  = array_shift(renderQueue);
 					var renderable = rendering.isRenderable();
 					
-					// if(global.FLAG.render == 1) LOG($"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
+					// print($"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
+					// if(rendering.display_name == "Check") print($" >>> Check: {renderable}");
 					
 					if(renderable) {
 						var render_pt = get_timer();
 						
-						// print($" >>> Rendering: {rendering.name}");
+						// if(rendering.name == "Export") print($" >>> Rendering: {rendering.name}");
+						
 						rendering.doUpdate(); 
 						render_time += get_timer() - render_pt;
 						_rendered++;
@@ -296,7 +298,7 @@ enum RENDER_TYPE {
 							var nextNode = nextNodes[i];
 							if(!is(nextNode, __Node_Base) || !nextNode.isRenderable()) continue;
 							
-							// if(global.FLAG.render == 1) LOG($"→→ Push {nextNode.internalName} to queue.");
+							// print($"→→ Push {nextNode.internalName} to queue.");
 							array_push(renderQueue, nextNode);
 							
 							if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
@@ -311,8 +313,9 @@ enum RENDER_TYPE {
 					
 					LOG_BLOCK_END
 					
-					if(_maxDuration != infinity && (get_timer() - _time_frame) / 1_000_000 >= _maxDuration) {
-						// print($"Break rendering midframe after {_rendered} nodes.")
+					var _timer = (get_timer() - _time_frame) / 1_000_000;
+					if(_maxDuration != infinity && _timer >= _maxDuration) {
+						// print($"Break rendering midframe after {_timer}s [{_rendered} nodes].")
 						return false;
 					}
 				}
@@ -400,8 +403,10 @@ enum RENDER_TYPE {
 	function Render(_project = PROJECT, _partial = false, _runAction = false) { 
 		if(RENDERING == undefined) {
 			WILL_RENDERING = undefined;
-			RENDERING = new RenderObject(_project, _partial, _runAction);
-			RENDERING.render(PREFERENCES.render_max_time);
+			
+			var _ren = new RenderObject(_project, _partial, _runAction);
+			var _fin = _ren.render(PREFERENCES.render_max_time);
+			RENDERING = _fin? undefined : _ren;
 			
 			return RENDERING;
 		}

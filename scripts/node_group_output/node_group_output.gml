@@ -1,7 +1,7 @@
 function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Group Output";
 	color		= COLORS.node_blend_collection;
-	is_group_io = true;
+	// is_group_io = true;
 	destroy_when_upgroup = true;
 	
 	skipDefault();
@@ -125,6 +125,23 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(group && _pty != _typ) group.setHeight();
 		
 		outParent.setValue(inputs[0].getValue());
+	}
+	
+	static forwardPassiveDynamic = function() {
+		rendered = false;
+		
+		var _outp = outParent;
+		array_foreach(_outp.getJunctionTo(), function(_t) /*=>*/ {
+			if(has(_t, "from") && is(_t.from, Node_Group_Input)) {
+				profile_log(3, $"Propagate passive dynamic to group io {_t.from}");
+				_t.from.passiveDynamic = true;
+				_t.from.rendered       = false;
+			}
+			
+			profile_log(3, $"Propagate passive dynamic to {_t.node}");
+			_t.node.passiveDynamic = true;
+			_t.node.rendered       = false;
+		});
 	}
 	
 	////- Draw

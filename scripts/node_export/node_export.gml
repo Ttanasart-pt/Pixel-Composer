@@ -1052,8 +1052,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(!PROJECT.animator.is_playing) { playing = false; return; }
 		if(!playing) return;
 		
-		export();
-		
 		if(IS_LAST_FRAME && anim == NODE_EXPORT_FORMAT.animation) {
 			renderCompleted();
 		}
