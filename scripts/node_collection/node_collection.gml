@@ -658,6 +658,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		#region check inline
 			var _ctx_nodes = [];
+			var _lop_nodes = [];
 			var _idmap     = {};
 			var _selIO     = false;
 			
@@ -667,10 +668,21 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				_idmap[$ _n.node_id] = _n;
 				array_push(_ctx_nodes, _n.inline_context);
 				
+				for( var j = 0, m = array_length(_n.inputs); j < m; j++ ) {
+					var ji = _n.inputs[j].value_from_loop;
+					if(ji) array_push(_lop_nodes, ji);
+				}
+				
+				for( var j = 0, m = array_length(_n.outputs); j < m; j++ ) {
+					var ji = _n.outputs[j].value_to_loop;
+					array_append(_lop_nodes, ji);
+				}
+				
 				_selIO = _selIO || !_n.inline_input || !_n.inline_output;
 			}
 			
 			_ctx_nodes = array_unique(_ctx_nodes);
+			_lop_nodes = array_unique(_lop_nodes);
 			
 			var _ctx_all = true;
 			var _ctx_amo = array_length(_ctx_nodes);
@@ -698,6 +710,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				noti_warning("Grouping incomplete inline group IO is not allowed.");
 				return;
 			}
+			
+			nodeArray = array_append(array_clone(nodeArray, 1), _lop_nodes);
+			amo       = array_length(nodeArray);
 		#endregion
 		
 		UNDO_HOLDING = true;

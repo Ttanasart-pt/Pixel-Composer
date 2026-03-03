@@ -1052,9 +1052,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(!PROJECT.animator.is_playing) { playing = false; return; }
 		if(!playing) return;
 		
-		if(IS_LAST_FRAME && anim == NODE_EXPORT_FORMAT.animation) {
+		export();
+		
+		if(IS_LAST_FRAME && anim == NODE_EXPORT_FORMAT.animation)
 			renderCompleted();
-		}
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
