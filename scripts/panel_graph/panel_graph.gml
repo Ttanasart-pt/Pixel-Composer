@@ -2111,7 +2111,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        connection_surface_cc = surface_verify(connection_surface_cc, w * aa, h * aa);
 	        connection_surface_aa = surface_verify(connection_surface_aa, w,      h     );
 	        
-	        __hov = noone;
+	        __hov     = noone;
+	        __context = getCurrentContext();
 	        
 	        connection_param.setPos(gr_x, gr_y, graph_s, mx, my);
 	        connection_param.setBoundary(-64, -64, w + 64, h + 64);
@@ -2126,6 +2127,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        	if(connection_draw_update) DRAW_CLEAR
 			    	
 			        array_foreach(_node_active, function(n) /*=>*/ {
+			        	if(n.group != __context) return;
+			        	
 			        	var _hov = n.drawConnections(connection_param, connection_draw_update);
 			            if(is_struct(_hov)) __hov = _hov;
 			        });

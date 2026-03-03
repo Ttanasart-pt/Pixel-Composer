@@ -352,7 +352,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			outputs[1].setVisible(_atls);
 		#endregion
-			
+		
 		#region font
 			__f = font;
 			
@@ -380,7 +380,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			_size_current  = _size;
 			_aa_current    = _aa;
 				
-			if(font_exists(font1)) { // fallback
+			if(str != "" && font_exists(font1)) { // fallback
 				fontData = font_get_info(font);
 				
 				__glpValid = true;
@@ -390,6 +390,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			draw_set_font(__f);
 		#endregion
+		
+		if(str == "") {
+			_outData[0] = surface_verify(_outData[0], 1, 1);
+			surface_clear(_outData[0]);
+			
+			return _outData;
+		}
 		
 		#region modify text
 			switch(_case) {
