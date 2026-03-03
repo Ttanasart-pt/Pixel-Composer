@@ -211,6 +211,8 @@ uniform int  cornerShape;
 #define PI  3.14159265359
 #define TAU 6.283185307179586
 
+vec2 ratio;
+
 float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
 float dot2(in vec2 v ) { return dot(v,v); }
 
@@ -274,9 +276,15 @@ float sdArc( in vec2 p, in vec2 sca, in vec2 scb, in float ra, in float rb ) {
 }
 
 float sdSegment( in vec2 p, in vec2 a, in vec2 b ) {
-    vec2  pa = p - a, ba = b - a;
-    float h  = clamp( dot(pa, ba) / dot(ba, ba), 0.0, 1.0 );
+	p *= ratio;
+	a *= ratio;
+	b *= ratio;
+	
+    vec2  pa  = p - a, ba = b - a;
+    float h   = clamp( dot(pa, ba) / dot(ba, ba), 0.0, 1.0 );
     vec2  p2  = pa - ba * h;
+          //p2 /= ratio;
+    
     if(cornerShape == 0) return length(p2);
     
     float rr = atan(ba.x, ba.y) + PI / 4.;
@@ -527,8 +535,9 @@ void main() {
 	vec2 vtx      = getUV(v_vTexcoord);
 	vec2 coordUni = (vtx - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
 	vec2 coord    = coordUni / scale;
-	vec2 ratio    = dimension / dimension.y;
 	float d;
+	
+	ratio = dimension / dimension.y;
 	
 	vec2 p1 = point1 / dimension;
 	vec2 p2 = point2 / dimension;
