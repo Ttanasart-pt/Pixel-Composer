@@ -353,6 +353,9 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(1, nodeValue_IVec2( "Grid",       [2,2]        )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
 	newInput(2, nodeValue_Int(   "Subdivision", 4           ));
 	
+	////- =Gradient
+	newInput(3, nodeValue_Slider( "Smooth", 0.5 ));
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -360,8 +363,9 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	b_reset = button(function() /*=>*/ {return resetInput(true)}).setIcon(THEME.refresh_16, 0, COLORS._main_value_negative).setTooltip(__txt("Reset All"));
 	
 	input_display_list = [ 0, 
-		[ "Mesh",    false ], 1, 2, 3, 
-		[ "Anchors",  true, noone, b_reset ], 
+		[ "Mesh",     false ], 1, 2, 
+		[ "Gradient", false ], 3, 
+		[ "Anchors",   true, noone, b_reset ], 
 	];
 	
 	function createNewInput() {
@@ -401,6 +405,9 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attribute_surface_depth();
 	attribute_interpolation();
+	
+	gridData  = [];
+	editIndex = undefined;
 	
 	static selectClear = function() { anchor_select = []; }
 	static selectAll   = function() { 
@@ -453,6 +460,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		#region draw grid
 			var _an = array_create(_iamo);
+			draw_set_color(COLORS._main_icon);
 			
 			for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length) {
 				var _i = (i - input_fix_len) / data_length;
@@ -479,13 +487,21 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var hoverIndex = undefined;
 		
+		draw_set_circle_precision(32);
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
-			var anc = getInputData(i);
+			var anc = getInputData(i+0);
+			var col = getInputData(i+1);
+			
 			var ax  = _x + anc[0] * _s;
 			var ay  = _y + anc[1] * _s;
 			
 			var _hv = hover && point_in_circle(_mx, _my, ax, ay, ui(8));
-			draw_anchor(_hv, ax, ay, ui(8), 1);
+			
+			draw_set_color(col);
+			draw_circle(ax, ay, ui(4 + _hv), false);
+			
+			draw_set_color(c_white);
+			draw_circle(ax, ay, ui(4 + _hv), true);
 			
 			if(_hv) hoverIndex = i;
 		}
@@ -493,7 +509,20 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(hoverIndex != undefined) {
 			w_hovering = true;
 			
-			if(mouse_lpress(active)) {
+			if(DOUBLE_CLICK) {
+				var col   = getInputData(hoverIndex + 1);
+				editIndex = hoverIndex + 1;
+				
+				var dialog = dialogCall(o_dialog_color_selector).setDefault(col)
+								.setApply(function(c) /*=>*/ { 
+									if(array_empty(anchor_select))
+										inputs[editIndex].setValue(c); 
+									else 
+										for( var i = 0, n = array_length(anchor_select); i < n; i++ )
+											inputs[anchor_select[i] + 1].setValue(c); 
+								});
+								
+			} if(mouse_lpress(active)) {
 				var anc = getInputData(hoverIndex);
 				
 				dragging_anchor = hoverIndex;
@@ -566,7 +595,6 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		if(_show_selecting) {
-			
 			if(anchor_freeze == 0 && panel.selection_selecting && !w_hovering) {
 				var sx0 = panel.selection_x0;
 				var sy0 = panel.selection_y0;
@@ -595,6 +623,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(mouse_lrelease())
 				anchor_freeze = 0;
 			
+			draw_set_color(COLORS._main_accent);
 			for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
 				var _a   = anchor_select[i];
 				var _anc = getInputData(_a);
@@ -602,7 +631,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var ax = _x + _anc[0] * _s;
 				var ay = _y + _anc[1] * _s;
 				
-				draw_anchor(0, ax, ay, ui(8), 2);
+				draw_circle(ax, ay, ui(4 + (hoverIndex == _a)), true);
 			}
 			
 		}
@@ -626,20 +655,137 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var _grid  = _data[1];
 			var _subd  = _data[2];
+			var _smth  = _data[3];
 			
 			var _gridW = _grid[0];
 			var _gridH = _grid[1];
 		#endregion
 		
+		var _gridWs = _gridW * _subd;
+		var _gridHs = _gridH * _subd;
+		
 		var _stW  = _gridW? 1 / _gridW : 1;
 		var _stH  = _gridH? 1 / _gridH : 1;
 		var _imp  = 1 / _subd;
 		
-		var u0 = 0, v0 = 0;
-		var u1 = 1, v1 = 1;
+		var ix0, ix1, iy0, iy1;
+		gridData = array_verify(gridData, (_gridWs + 1) * (_gridHs + 1));
 		
-		// var vb = vertex_create_buffer();
-		// vertex_begin(vb, global.VF_POS2_COL);
+		for( var i = 0; i < _gridH; i++ )
+		for( var j = 0; j < _gridW; j++ ) {
+			var _a0 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j  )) * data_length];
+			var _a1 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j+1)) * data_length];
+			var _a2 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j  )) * data_length];
+			var _a3 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j+1)) * data_length];
+			
+			var _c0 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j  )) * data_length + 1];
+			var _c1 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j+1)) * data_length + 1];
+			var _c2 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j  )) * data_length + 1];
+			var _c3 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j+1)) * data_length + 1];
+			
+			var _al0 = _color_get_a(_c0);
+			var _al1 = _color_get_a(_c1);
+			var _al2 = _color_get_a(_c2);
+			var _al3 = _color_get_a(_c3);
+			
+			var _a0x = _a0[0], _a0y = _a0[1];
+			var _a1x = _a1[0], _a1y = _a1[1];
+			var _a2x = _a2[0], _a2y = _a2[1];
+			var _a3x = _a3[0], _a3y = _a3[1];
+			
+			var xx = 0, yy = 0;
+			
+			repeat( _subd ) {
+				xx = 0;
+				repeat( _subd ) {
+					ix0 = xx * _imp;
+					iy0 = yy * _imp;
+					
+					ix1 = ix0 + _imp;
+					iy1 = iy0 + _imp;
+
+					var _aa0x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy0);
+					var _aa0y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix0);
+					
+					var _cc0  = merge_color(merge_color(_c0, _c1, ix0), merge_color(_c2, _c3, ix0), iy0);
+					var _aal0 = lerp(lerp(_al0, _al1, ix0), lerp(_al2, _al3, ix0), iy0);
+					
+					var _subI = (i * _subd + yy) * (_subd * _gridW + 1) + (j * _subd + xx);
+					gridData[_subI] = [ _aa0x, _aa0y, _cc0, _aal0 ];
+					
+					if(j == _gridW - 1) {
+						var _aa1x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy0);
+						var _aa1y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix1);
+						
+						var _cc1  = merge_color(merge_color(_c0, _c1, ix1), merge_color(_c2, _c3, ix1), iy0);
+						var _aal1 = lerp(lerp(_al0, _al1, ix1), lerp(_al2, _al3, ix1), iy0);
+						
+						var _subI = (i * _subd + yy) * (_subd * _gridW + 1) + (j * _subd + xx + 1);
+						gridData[_subI] = [ _aa1x, _aa1y, _cc1, _aal1 ];
+					}
+					
+					if(i == _gridH - 1) {
+						var _aa2x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy1);
+						var _aa2y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix0);
+						
+						var _cc2  = merge_color(merge_color(_c0, _c1, ix0), merge_color(_c2, _c3, ix0), iy1);
+						var _aal2 = lerp(lerp(_al0, _al1, ix0), lerp(_al2, _al3, ix0), iy1);
+						
+						var _subI = (i * _subd + yy + 1) * (_subd * _gridW + 1) + (j * _subd + xx);
+						gridData[_subI] = [ _aa2x, _aa2y, _cc2, _aal2 ];
+					}
+					
+					if(j == _gridW - 1 && i == _gridH - 1) {
+						var _aa3x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy1);
+						var _aa3y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix1);
+						
+						var _cc3  = merge_color(merge_color(_c0, _c1, ix1), merge_color(_c2, _c3, ix1), iy1);
+						var _aal3 = lerp(lerp(_al0, _al1, ix1), lerp(_al2, _al3, ix1), iy1);
+						
+						var _subI = (i * _subd + yy + 1) * (_subd * _gridW + 1) + (j * _subd + xx + 1);
+						gridData[_subI] = [ _aa3x, _aa3y, _cc3, _aal3 ];
+					}
+					
+					xx++;
+				}
+				yy++;
+			}
+			
+		}
+		
+		if(_smth > 0) {
+			repeat(ceil(_smth)) {
+				var smt = min(_smth, 1);
+				for( var i = 1; i < _gridHs; i++ )
+				for( var j = 1; j < _gridWs; j++ ) {
+					var _a0 = gridData[(i-1) * (_gridWs + 1) + (j-1)];
+					var _a1 = gridData[(i  ) * (_gridWs + 1) + (j-1)];
+					var _a2 = gridData[(i+1) * (_gridWs + 1) + (j-1)];
+					
+					var _a3 = gridData[(i-1) * (_gridWs + 1) + (j  )];
+					var _a4 = gridData[(i  ) * (_gridWs + 1) + (j  )];
+					var _a5 = gridData[(i+1) * (_gridWs + 1) + (j  )];
+					
+					var _a6 = gridData[(i-1) * (_gridWs + 1) + (j+1)];
+					var _a7 = gridData[(i  ) * (_gridWs + 1) + (j+1)];
+					var _a8 = gridData[(i+1) * (_gridWs + 1) + (j+1)];
+					
+					_a4[0] = lerp(_a4[0], (
+						_a0[0] + _a1[0] + _a2[0] + 
+						_a3[0] + _a4[0] + _a5[0] + 
+						_a6[0] + _a7[0] + _a8[0]  
+					) / 9, smt);
+					
+					_a4[1] = lerp(_a4[1], (
+						_a0[1] + _a1[1] + _a2[1] + 
+						_a3[1] + _a4[1] + _a5[1] + 
+						_a6[1] + _a7[1] + _a8[1]  
+					) / 9, smt);
+				}
+				
+				_smth--;
+			}
+		}
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -649,95 +795,27 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			draw_primitive_begin(pr_trianglelist);
 			var _itr = 0;
-			var ix0, ix1, iy0, iy1;
 			
-			for( var i = 0; i < _gridH; i++ )
-			for( var j = 0; j < _gridW; j++ ) {
-				var _a0 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j  )) * data_length];
-				var _a1 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j+1)) * data_length];
-				var _a2 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j  )) * data_length];
-				var _a3 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j+1)) * data_length];
+			for( var i = 0; i < _gridHs; i++ )
+			for( var j = 0; j < _gridWs; j++ ) {
+				var _a0 = gridData[(i  ) * (_gridWs + 1) + (j  )];
+				var _a1 = gridData[(i  ) * (_gridWs + 1) + (j+1)];
+				var _a2 = gridData[(i+1) * (_gridWs + 1) + (j  )];
+				var _a3 = gridData[(i+1) * (_gridWs + 1) + (j+1)];
 				
-				var _c0 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j  )) * data_length + 1];
-				var _c1 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j+1)) * data_length + 1];
-				var _c2 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j  )) * data_length + 1];
-				var _c3 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j+1)) * data_length + 1];
+				draw_vertex_color(_a0[0], _a0[1], _a0[2], _a0[3]);
+				draw_vertex_color(_a1[0], _a1[1], _a1[2], _a1[3]);
+				draw_vertex_color(_a2[0], _a2[1], _a2[2], _a2[3]);
 				
-				var _al0 = _color_get_a(_c0);
-				var _al1 = _color_get_a(_c1);
-				var _al2 = _color_get_a(_c2);
-				var _al3 = _color_get_a(_c3);
+				draw_vertex_color(_a1[0], _a1[1], _a1[2], _a1[3]);
+				draw_vertex_color(_a2[0], _a2[1], _a2[2], _a2[3]);
+				draw_vertex_color(_a3[0], _a3[1], _a3[2], _a3[3]);
 				
-				var _a0x = _a0[0], _a0y = _a0[1];
-				var _a1x = _a1[0], _a1y = _a1[1];
-				var _a2x = _a2[0], _a2y = _a2[1];
-				var _a3x = _a3[0], _a3y = _a3[1];
-
-				var _u0 = lerp(u0, u1,  j    * _stW);
-				var _u1 = lerp(u0, u1, (j+1) * _stW);
-				var _v0 = lerp(v0, v1,  i    * _stH);
-				var _v1 = lerp(v0, v1, (i+1) * _stH);
-				
-				var xx = 0, yy = 0;
-				
-				repeat( _subd ) {
-					xx = 0;
-					repeat( _subd ) {
-						
-						ix0 = xx  * _imp;
-						ix1 = ix0 + _imp;
-						
-						ix0 = smoothstep(ix0);
-						ix1 = smoothstep(ix1);
-						
-						iy0 = yy  * _imp;
-						iy1 = iy0 + _imp;
-						
-						iy0 = smoothstep(iy0);
-						iy1 = smoothstep(iy1);
-						
-						var _aa0x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy0);
-						var _aa0y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix0);
-						var _cc0  = merge_color(merge_color(_c0, _c1, ix0), merge_color(_c2, _c3, ix0), iy0);
-						var _aal0 = lerp(lerp(_al0, _al1, ix0), lerp(_al2, _al3, ix0), iy0);
-						
-						var _aa1x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy0);
-						var _aa1y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix1);
-						var _cc1  = merge_color(merge_color(_c0, _c1, ix1), merge_color(_c2, _c3, ix1), iy0);
-						var _aal1 = lerp(lerp(_al0, _al1, ix1), lerp(_al2, _al3, ix1), iy0);
-						
-						var _aa2x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy1);
-						var _aa2y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix0);
-						var _cc2  = merge_color(merge_color(_c0, _c1, ix0), merge_color(_c2, _c3, ix0), iy1);
-						var _aal2 = lerp(lerp(_al0, _al1, ix0), lerp(_al2, _al3, ix0), iy1);
-						
-						var _aa3x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy1);
-						var _aa3y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix1);
-						var _cc3  = merge_color(merge_color(_c0, _c1, ix1), merge_color(_c2, _c3, ix1), iy1);
-						var _aal3 = lerp(lerp(_al0, _al1, ix1), lerp(_al2, _al3, ix1), iy1);
-						
-						var _uu0  = lerp(_u0, _u1, ix0);
-						var _uu1  = lerp(_u0, _u1, ix1);
-						var _vv0  = lerp(_v0, _v1, iy0);
-						var _vv1  = lerp(_v0, _v1, iy1);
-						
-						draw_vertex_color(_aa0x, _aa0y, _cc0, _aal0);
-						draw_vertex_color(_aa1x, _aa1y, _cc1, _aal1);
-						draw_vertex_color(_aa2x, _aa2y, _cc2, _aal2);
-						
-						draw_vertex_color(_aa1x, _aa1y, _cc1, _aal1);
-						draw_vertex_color(_aa2x, _aa2y, _cc2, _aal2);
-						draw_vertex_color(_aa3x, _aa3y, _cc3, _aal3);
-						
-						if(++_itr > 32) {
-							draw_primitive_end();
-							draw_primitive_begin(pr_trianglelist);
-						}
-						xx++;
-					}
-					yy++;
+				if(++_itr > 64) {
+					draw_primitive_end();
+					draw_primitive_begin(pr_trianglelist);
+					_itr = 0;
 				}
-				
 			}
 			
 			draw_primitive_end();
