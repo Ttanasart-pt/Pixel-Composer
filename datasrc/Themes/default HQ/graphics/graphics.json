@@ -519,6 +519,7 @@
     "canvas_tools_selection_rectangle":   { "path": "./tool/s_canvas_selection_rectangle.png",              "s": 2, "x":  9, "y":  9 },
     "canvas_tools_skew":                  { "path": "./tool/s_canvas_tools_skew.png",                       "s": 2, "x":  9, "y":  9 },
     "control_add":                        { "path": "./tool/s_control_add.png",                             "s": 2, "x":  9, "y":  9 },
+    "control_subtract":                   { "path": "./tool/s_control_subtract.png",                        "s": 2, "x":  9, "y":  9 },
     "control_pin":                        { "path": "./tool/s_control_pin.png",                             "s": 2, "x":  9, "y":  9 },
     "crop_fit_height":                    { "path": "./tool/s_crop_fit_height.png",                         "s": 2, "x":  9, "y":  9 },
     "crop_fit_width":                     { "path": "./tool/s_crop_fit_width.png",                          "s": 2, "x":  9, "y":  9 },

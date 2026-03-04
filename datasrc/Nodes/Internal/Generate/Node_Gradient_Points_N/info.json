@@ -1,0 +1,6 @@
+{
+    "name":          "Draw Points Gradient",
+    "spr":           "s_node_gradient_points_n",
+    "baseNode":      "Node_Gradient_Points_N",
+    "pxc_version":    120075,
+}

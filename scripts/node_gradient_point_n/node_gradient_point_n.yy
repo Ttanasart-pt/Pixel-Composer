@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_gradient_point_n",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_gradient_point_n",
+  "parent":{
+    "name":"gradient",
+    "path":"folders/nodes/data/generator/drawer/gradient.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

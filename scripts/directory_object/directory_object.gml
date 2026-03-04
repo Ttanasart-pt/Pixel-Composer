@@ -199,7 +199,7 @@ function DirectoryObject(_path) constructor {
 		return self;
 	}
 	
-	static scan = function(file_type = scanType, _subDir = true, _recur = true) {
+	static scan = function(file_type = scanType, _subDir = true) {
 		if(path == "") return;
 		
 		scanned  = true;
@@ -237,10 +237,8 @@ function DirectoryObject(_path) constructor {
 			}
 		}
 		
-		if(!_subDir && _recur) {
-			for( var i = 0, n = array_length(subDir); i < n; i++ ) 
-				subDir[i].scan(file_type, false);
-		}
+		for( var i = 0, n = array_length(subDir); i < n; i++ ) 
+			subDir[i].scan(file_type, _subDir);
 		
 		return self;
 	}

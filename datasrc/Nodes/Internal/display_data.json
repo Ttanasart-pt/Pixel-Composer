@@ -782,6 +782,7 @@
             "Node_Gradient",
             "Node_Gradient_Cos",
             "Node_Gradient_Points",
+            "Node_Gradient_Points_N",
             "Node_Gradient_Grid",
             { "label": "/Texture" },
             "Node_Sky",

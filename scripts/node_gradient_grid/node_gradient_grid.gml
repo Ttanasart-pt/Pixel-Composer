@@ -347,14 +347,15 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Draw Grid Gradient";
 	preview_select_surface = false;
 	
-	newInput(0, nodeValue_Dimension());
+	newInput( 0, nodeValue_Dimension());
 	
 	////- =Mesh
-	newInput(1, nodeValue_IVec2( "Grid",       [2,2]        )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
-	newInput(2, nodeValue_Int(   "Subdivision", 4           ));
+	newInput( 1, nodeValue_IVec2( "Grid",       [2,2] )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
+	newInput( 2, nodeValue_Int(   "Subdivision", 4    ));
 	
 	////- =Gradient
-	newInput(3, nodeValue_Slider( "Smooth", 0.5 ));
+	newInput( 3, nodeValue_Slider( "Smooth Mesh",  .5 ));
+	newInput( 4, nodeValue_Slider( "Smooth Color",  1 ));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -364,7 +365,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	input_display_list = [ 0, 
 		[ "Mesh",     false ], 1, 2, 
-		[ "Gradient", false ], 3, 
+		[ "Gradient", false ], 3, 4, 
 		[ "Anchors",   true, noone, b_reset ], 
 	];
 	
@@ -497,11 +498,14 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var _hv = hover && point_in_circle(_mx, _my, ax, ay, ui(8));
 			
+			draw_set_color(c_black);
+			draw_circle(ax, ay, ui(6 + _hv), false);
+			
 			draw_set_color(col);
-			draw_circle(ax, ay, ui(4 + _hv), false);
+			draw_circle(ax, ay, ui(5 + _hv), false);
 			
 			draw_set_color(c_white);
-			draw_circle(ax, ay, ui(4 + _hv), true);
+			draw_circle(ax, ay, ui(5 + _hv), true);
 			
 			if(_hv) hoverIndex = i;
 		}
@@ -513,16 +517,14 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var col   = getInputData(hoverIndex + 1);
 				editIndex = hoverIndex + 1;
 				
-				var dialog = dialogCall(o_dialog_color_selector).setDefault(col)
-								.setApply(function(c) /*=>*/ { 
-									if(array_empty(anchor_select))
-										inputs[editIndex].setValue(c); 
-									else 
-										for( var i = 0, n = array_length(anchor_select); i < n; i++ )
-											inputs[anchor_select[i] + 1].setValue(c); 
-								});
+				var dialog = dialogCall(o_dialog_color_selector).setDefault(col).setApply(function(c) /*=>*/ { 
+					if(array_empty(anchor_select))
+						inputs[editIndex].setValue(c); 
+					else for( var i = 0, n = array_length(anchor_select); i < n; i++ )
+						inputs[anchor_select[i] + 1].setValue(c); 
+				});
 								
-			} if(mouse_lpress(active)) {
+			} else if(mouse_lpress(active)) {
 				var anc = getInputData(hoverIndex);
 				
 				dragging_anchor = hoverIndex;
@@ -656,6 +658,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _grid  = _data[1];
 			var _subd  = _data[2];
 			var _smth  = _data[3];
+			var _csmt  = _data[4]; _csmt = max(_csmt, 0.0001);
 			
 			var _gridW = _grid[0];
 			var _gridH = _grid[1];
@@ -668,7 +671,6 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _stH  = _gridH? 1 / _gridH : 1;
 		var _imp  = 1 / _subd;
 		
-		var ix0, ix1, iy0, iy1;
 		gridData = array_verify(gridData, (_gridWs + 1) * (_gridHs + 1));
 		
 		for( var i = 0; i < _gridH; i++ )
@@ -698,17 +700,23 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			repeat( _subd ) {
 				xx = 0;
 				repeat( _subd ) {
-					ix0 = xx * _imp;
-					iy0 = yy * _imp;
+					var ix0 = xx * _imp;  
+					var iy0 = yy * _imp;  
 					
-					ix1 = ix0 + _imp;
-					iy1 = iy0 + _imp;
-
+					var cx0 = clamp(.5 + (ix0 - .5) / _csmt, 0, 1);
+					var cy0 = clamp(.5 + (iy0 - .5) / _csmt, 0, 1);
+					
+					var ix1 = ix0 + _imp; 
+					var iy1 = iy0 + _imp; 
+					
+					var cx1 = clamp(.5 + (ix1 - .5) / _csmt, 0, 1);
+					var cy1 = clamp(.5 + (iy1 - .5) / _csmt, 0, 1);
+					
 					var _aa0x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy0);
 					var _aa0y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix0);
 					
-					var _cc0  = merge_color(merge_color(_c0, _c1, ix0), merge_color(_c2, _c3, ix0), iy0);
-					var _aal0 = lerp(lerp(_al0, _al1, ix0), lerp(_al2, _al3, ix0), iy0);
+					var _cc0  = merge_color(merge_color(_c0, _c1, cx0), merge_color(_c2, _c3, cx0), cy0);
+					var _aal0 = lerp(lerp(_al0, _al1, cx0), lerp(_al2, _al3, cx0), cy0);
 					
 					var _subI = (i * _subd + yy) * (_subd * _gridW + 1) + (j * _subd + xx);
 					gridData[_subI] = [ _aa0x, _aa0y, _cc0, _aal0 ];
@@ -717,8 +725,8 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						var _aa1x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy0);
 						var _aa1y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix1);
 						
-						var _cc1  = merge_color(merge_color(_c0, _c1, ix1), merge_color(_c2, _c3, ix1), iy0);
-						var _aal1 = lerp(lerp(_al0, _al1, ix1), lerp(_al2, _al3, ix1), iy0);
+						var _cc1  = merge_color(merge_color(_c0, _c1, cx1), merge_color(_c2, _c3, cx1), cy0);
+						var _aal1 = lerp(lerp(_al0, _al1, cx1), lerp(_al2, _al3, cx1), cy0);
 						
 						var _subI = (i * _subd + yy) * (_subd * _gridW + 1) + (j * _subd + xx + 1);
 						gridData[_subI] = [ _aa1x, _aa1y, _cc1, _aal1 ];
@@ -728,19 +736,19 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						var _aa2x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy1);
 						var _aa2y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix0);
 						
-						var _cc2  = merge_color(merge_color(_c0, _c1, ix0), merge_color(_c2, _c3, ix0), iy1);
-						var _aal2 = lerp(lerp(_al0, _al1, ix0), lerp(_al2, _al3, ix0), iy1);
+						var _cc2  = merge_color(merge_color(_c0, _c1, cx0), merge_color(_c2, _c3, cx0), cy1);
+						var _aal2 = lerp(lerp(_al0, _al1, cx0), lerp(_al2, _al3, cx0), cy1);
 						
 						var _subI = (i * _subd + yy + 1) * (_subd * _gridW + 1) + (j * _subd + xx);
 						gridData[_subI] = [ _aa2x, _aa2y, _cc2, _aal2 ];
 					}
 					
 					if(j == _gridW - 1 && i == _gridH - 1) {
-						var _aa3x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy1);
-						var _aa3y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix1);
+						var _aa3x = lerp(lerp(_a0x, _a1x, cx1), lerp(_a2x, _a3x, cx1), iy1);
+						var _aa3y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), cx1);
 						
-						var _cc3  = merge_color(merge_color(_c0, _c1, ix1), merge_color(_c2, _c3, ix1), iy1);
-						var _aal3 = lerp(lerp(_al0, _al1, ix1), lerp(_al2, _al3, ix1), iy1);
+						var _cc3  = merge_color(merge_color(_c0, _c1, cx1), merge_color(_c2, _c3, cx1), cy1);
+						var _aal3 = lerp(lerp(_al0, _al1, cx1), lerp(_al2, _al3, cx1), cy1);
 						
 						var _subI = (i * _subd + yy + 1) * (_subd * _gridW + 1) + (j * _subd + xx + 1);
 						gridData[_subI] = [ _aa3x, _aa3y, _cc3, _aal3 ];
