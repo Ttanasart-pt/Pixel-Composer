@@ -191,8 +191,7 @@
 	}
 	
 	function graphFocusNode(node, _moveView = true) {
-		PANEL_INSPECTOR.setInspecting(node);
-		PANEL_GRAPH.nodes_selecting = [ node ];
+		PANEL_GRAPH.focusNode(node);
 		if(_moveView) PANEL_GRAPH.fullView();
 	}
 	
