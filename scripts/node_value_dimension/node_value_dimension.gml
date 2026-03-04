@@ -1,6 +1,6 @@
 function nodeValue_Dimension(name = "Dimension") { 
 	var _unit = PREFERENCES.node_def_dim_unit;
-	var _val  = _unit? [1,1] : NPROJ_SURF;
+	var _val  = _unit? [1,1] : DEF_SURF;
 	
 	return new __NodeValue_Dimension(self, _val, name); 
 }
