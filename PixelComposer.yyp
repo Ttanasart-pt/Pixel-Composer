@@ -1375,6 +1375,7 @@
     {"id":{"name":"node_gm_room","path":"scripts/node_gm_room/node_gm_room.yy",},},
     {"id":{"name":"node_gradient_cos","path":"scripts/node_gradient_cos/node_gradient_cos.yy",},},
     {"id":{"name":"node_gradient_extract","path":"scripts/node_gradient_extract/node_gradient_extract.yy",},},
+    {"id":{"name":"node_gradient_grid","path":"scripts/node_gradient_grid/node_gradient_grid.yy",},},
     {"id":{"name":"node_gradient_out","path":"scripts/node_gradient_out/node_gradient_out.yy",},},
     {"id":{"name":"node_gradient_palette","path":"scripts/node_gradient_palette/node_gradient_palette.yy",},},
     {"id":{"name":"node_gradient_points","path":"scripts/node_gradient_points/node_gradient_points.yy",},},

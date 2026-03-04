@@ -1095,6 +1095,7 @@
     {"name":"node_gm_room","order":4,"path":"scripts/node_gm_room/node_gm_room.yy",},
     {"name":"node_gradient_cos","order":2,"path":"scripts/node_gradient_cos/node_gradient_cos.yy",},
     {"name":"node_gradient_extract","order":4,"path":"scripts/node_gradient_extract/node_gradient_extract.yy",},
+    {"name":"node_gradient_grid","order":6,"path":"scripts/node_gradient_grid/node_gradient_grid.yy",},
     {"name":"node_gradient_palette","order":2,"path":"scripts/node_gradient_palette/node_gradient_palette.yy",},
     {"name":"node_gradient_points","order":4,"path":"scripts/node_gradient_points/node_gradient_points.yy",},
     {"name":"node_gradient_replace_color","order":3,"path":"scripts/node_gradient_replace_color/node_gradient_replace_color.yy",},

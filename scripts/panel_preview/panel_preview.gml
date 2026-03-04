@@ -3116,7 +3116,6 @@ function Panel_Preview() : PanelContent() constructor {
     	var prevN = getNodePreview();
     	var prevS = is(prevN, Node)
 			    		&& !array_empty(prevN.outputs) 
-			    		&& prevN.preview_select_surface 
 			    		&& prevN.outputs[0].type == VALUE_TYPE.surface;
     	
     	if(!prevS) { selection_active = false; return; }
@@ -3191,7 +3190,8 @@ function Panel_Preview() : PanelContent() constructor {
     			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
         	
     		if(mouse_lrelease()) {
-    			if(prevS && selection_selecting > 1) selection_active = true;
+    			if(prevS && prevN.preview_select_surface && selection_selecting > 1) 
+    				selection_active = true;
     			selection_selecting = 0;
     		}
         }

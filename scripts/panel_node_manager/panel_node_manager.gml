@@ -17,12 +17,13 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	#region directories
 		toSelectDir  = "";
 		toSelectNode = "";
-		
+			
 		static setRootDir = function(d) /*=>*/ { 
-			internalDir = new DirectoryObject(d).scan(["NodeObject"], true, false); 
+			internalDir = new DirectoryObject(d).scanDir(true); 
 			rootDir     = d;
-		} setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Nodes/Internal");
+		} 
 		
+		setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Nodes/Internal");
 		sourceDir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/scripts";
 	#endregion
 	

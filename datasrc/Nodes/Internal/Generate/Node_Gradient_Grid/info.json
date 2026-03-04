@@ -1,0 +1,6 @@
+{
+    "name":          "Draw Grid Gradient",
+    "spr":           "s_node_gradient_grid",
+    "baseNode":      "Node_Gradient_Grid",
+    "pxc_version":    120075,
+}

@@ -1,11 +1,11 @@
 #region global
 	FN_NODE_TOOL_INVOKE {
-		hotkeyCustom("Node_Grid_Warp", "Move Selection",      "G");
-		hotkeyCustom("Node_Grid_Warp", "Rotate Selection",    "R");
-		hotkeyCustom("Node_Grid_Warp", "Scale Selection",     "S");
+		hotkeyCustom("Node_Gradient_Grid", "Move Selection",      "G");
+		hotkeyCustom("Node_Gradient_Grid", "Rotate Selection",    "R");
+		hotkeyCustom("Node_Gradient_Grid", "Scale Selection",     "S");
 	});
 	
-	function grid_warp_tool_move(_node) : ToolObject() constructor {
+	function grid_grad_tool_move(_node) : ToolObject() constructor {
 		setNode(_node);
 		activeKeyboard = false;
 		
@@ -126,7 +126,7 @@
 		}
 	}
 	
-	function grid_warp_tool_rotate(_node) : ToolObject() constructor {
+	function grid_grad_tool_rotate(_node) : ToolObject() constructor {
 		setNode(_node);
 		activeKeyboard = false;
 		
@@ -223,7 +223,7 @@
 		}
 	}
 	
-	function grid_warp_tool_scale(_node) : ToolObject() constructor {
+	function grid_grad_tool_scale(_node) : ToolObject() constructor {
 		setNode(_node);
 		activeKeyboard = false;
 		
@@ -343,15 +343,14 @@
 	
 #endregion
 
-function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Grid Warp";
+function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+	name = "Draw Grid Gradient";
 	preview_select_surface = false;
 	
-	newActiveInput(1);
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(0, nodeValue_Dimension());
 	
 	////- =Mesh
-	newInput(4, nodeValue_Area(  "Area",       DEF_AREA_REF )).setUnitSimple();
+	newInput(1, nodeValue_Area(  "Area",       DEF_AREA_REF )).setUnitSimple();
 	newInput(2, nodeValue_IVec2( "Grid",       [2,2]        )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
 	newInput(3, nodeValue_Int(   "Subdivision", 4           ));
 	
@@ -361,21 +360,24 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	b_reset = button(function() /*=>*/ {return resetInput(true)}).setIcon(THEME.refresh_16, 0, COLORS._main_value_negative).setTooltip(__txt("Reset All"));
 	
-	input_display_list = [ 1, 0, 
-		[ "Mesh",    false ], 4, 2, 3, 
+	input_display_list = [ 0, 
+		[ "Mesh",    false ], 1, 2, 3, 
 		[ "Anchors",  true, noone, b_reset ], 
 	];
 	
 	function createNewInput() {
 		var index = array_length(inputs);
-		var i = index - input_fix_len;
+		var i = (index - input_fix_len) / data_length;
 		
-		newInput(index, nodeValue_Vec2($"Anchor {i}", [ 0, 0 ])).setUnitSimple();
+		newInput(index+0, nodeValue_Vec2(  $"Anchor {i}", [ 0, 0 ])).setUnitSimple();
+		newInput(index+1, nodeValue_Color( $"Color {i}",  ca_white));
 		
-		array_push(input_display_list, index);
+		array_push(input_display_list, index+0, index+1);
+		
 		inputs[index].overlay_draw_text = false;
 		return inputs[index];
-	} setDynamicInput(1, false);
+		
+	} setDynamicInput(2, false);
 	
 	////- Nodes
 	
@@ -383,9 +385,9 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		tools = [
 			new NodeTool( "Edit Area",     THEME.canvas_resize   ), 
 			-1,
-			new NodeTool( "Move Points",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new grid_warp_tool_move(self)),
-			new NodeTool( "Rotate Points", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new grid_warp_tool_rotate(self)),
-			new NodeTool( "Scale Points",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new grid_warp_tool_scale(self)),
+			new NodeTool( "Move Points",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new grid_grad_tool_move(self)),
+			new NodeTool( "Rotate Points", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new grid_grad_tool_rotate(self)),
+			new NodeTool( "Scale Points",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new grid_grad_tool_scale(self)),
 		];
 		
 		anchor_select = [];
@@ -405,15 +407,15 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static selectClear = function() { anchor_select = []; }
 	static selectAll   = function() { 
-		anchor_select = array_create(array_length(inputs) - input_fix_len);
-		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
-			anchor_select[i - input_fix_len] = i;
+		anchor_select = array_create((array_length(inputs) - input_fix_len) / data_length);
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length )
+			anchor_select[(i - input_fix_len) / data_length] = i;
 	}
 	
 	static resetInput = function(_val = false) {
-		var _dim   = getDimension(0);
+		var _dim   = getInputData(0);
 		
-		var _area  = getInputData(4);
+		var _area  = getInputData(1);
 		var _grid  = getInputData(2);
 		
 		var _gridW = _grid[0];
@@ -426,10 +428,10 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var ax1 = _area[0] + _area[2];
 		var ay1 = _area[1] + _area[3];
 		
-		if(_val && array_length(inputs) - input_fix_len == _amo) {
+		if(_val && (array_length(inputs) - input_fix_len) / data_length == _amo) {
 			for(var i = 0; i <= _gridH; i++)
 			for(var j = 0; j <= _gridW; j++) {
-				var _inp = inputs[input_fix_len + i * (_gridW + 1) + j];
+				var _inp = inputs[input_fix_len + (i * (_gridW + 1) + j) * data_length];
 				_inp.setValue([ lerp(ax0, ax1, j / _gridW), lerp(ay0, ay1, i / _gridH) ]);
 			}
 			return;
@@ -450,7 +452,6 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
-		var _surf  = getInputData(0);
 		var _grid  = getInputData(2);
 		var _gridW = _grid[0];
 		var _gridH = _grid[1];
@@ -463,8 +464,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		#region draw grid
 			var _an = array_create(_iamo);
 			
-			for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
-				var _i = i - input_fix_len;
+			for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length) {
+				var _i = (i - input_fix_len) / data_length;
 				
 				var _rawVal = getInputData(i);
 				_an[_i][0] = _x + _rawVal[0] * _s;
@@ -489,11 +490,11 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		#endregion
 		
 		if(isUsingTool("Edit Area"))
-			return InputDrawOverlay(inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+			return InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		
 		var hoverIndex = undefined;
 		
-		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var anc = getInputData(i);
 			var ax  = _x + anc[0] * _s;
 			var ay  = _y + anc[1] * _s;
@@ -587,14 +588,13 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var sx1 = panel.selection_x1;
 				var sy1 = panel.selection_y1;
 				
-				var amo = array_length(inputs);
-				var anchor_select_map = array_create(amo);
+				var anchor_select_map = array_length(inputs);
 				
 				if(key_mod_press(SHIFT)) 
 				for( var i = 0, n = array_length(anchor_select); i < n; i++ ) 
 					anchor_select_map[anchor_select[i]] = 1;
 				
-				for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+				for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length) {
 					var _anc = getInputData(i);
 					
 					if(point_in_rectangle(_anc[0], _anc[1], sx0, sy0, sx1, sy1)) 
@@ -637,19 +637,16 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _surf  = _data[0];
+			var _dim   = _data[0];
 			
-			var _area  = _data[4];
+			var _area  = _data[1];
 			var _grid  = _data[2];
 			var _subd  = _data[3];
 			
 			var _gridW = _grid[0];
 			var _gridH = _grid[1];
-			
-			if(!is_surface(_surf)) return _outSurf;
 		#endregion
 		
-		var _dim  = surface_get_dimension(_surf);
 		var _stW  = _gridW? 1 / _gridW : 1;
 		var _stH  = _gridH? 1 / _gridH : 1;
 		var _imp  = 1 / _subd;
@@ -665,16 +662,16 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_set_color_alpha(c_white, 1);
 			gpu_set_tex_filter(attributes.interpolate > 1);
 			
-			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+			draw_primitive_begin(pr_trianglelist);
 			var _itr = 0;
 			var ix0, ix1, iy0, iy1;
 			
 			for( var i = 0; i < _gridH; i++ )
 			for( var j = 0; j < _gridW; j++ ) {
-				var _a0 = _data[input_fix_len + (i  ) * (_gridW+1) + (j  )];
-				var _a1 = _data[input_fix_len + (i  ) * (_gridW+1) + (j+1)];
-				var _a2 = _data[input_fix_len + (i+1) * (_gridW+1) + (j  )];
-				var _a3 = _data[input_fix_len + (i+1) * (_gridW+1) + (j+1)];
+				var _a0 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j  )) * data_length];
+				var _a1 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j+1)) * data_length];
+				var _a2 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j  )) * data_length];
+				var _a3 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j+1)) * data_length];
 				
 				var _a0x = _a0[0], _a0y = _a0[1];
 				var _a1x = _a1[0], _a1y = _a1[1];
@@ -725,7 +722,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						
 						if(++_itr > 32) {
 							draw_primitive_end();
-							draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+							draw_primitive_begin(pr_trianglelist);
 						}
 						xx++;
 					}
