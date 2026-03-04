@@ -1192,7 +1192,8 @@ function PanelContent() constructor {
 	showHeader  = true;
 	
 	title_actions = [];
-	pause_when_rendering = false;
+	title_actions_override = true;
+	pause_when_rendering   = false;
 	
 	////- Size
 	

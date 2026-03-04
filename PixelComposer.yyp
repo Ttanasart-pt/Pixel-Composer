@@ -2877,6 +2877,7 @@
     {"id":{"name":"s_biterator_toggler","path":"sprites/s_biterator_toggler/s_biterator_toggler.yy",},},
     {"id":{"name":"s_bone_constrain","path":"sprites/s_bone_constrain/s_bone_constrain.yy",},},
     {"id":{"name":"s_contest_banner","path":"sprites/s_contest_banner/s_contest_banner.yy",},},
+    {"id":{"name":"s_driver_type","path":"sprites/s_driver_type/s_driver_type.yy",},},
     {"id":{"name":"s_empty","path":"sprites/s_empty/s_empty.yy",},},
     {"id":{"name":"s_fade_up","path":"sprites/s_fade_up/s_fade_up.yy",},},
     {"id":{"name":"s_filter_log_level","path":"sprites/s_filter_log_level/s_filter_log_level.yy",},},

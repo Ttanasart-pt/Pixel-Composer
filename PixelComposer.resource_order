@@ -2411,6 +2411,7 @@
     {"name":"s_biterator_tab_inactive","order":11,"path":"sprites/s_biterator_tab_inactive/s_biterator_tab_inactive.yy",},
     {"name":"s_biterator_toggler","order":13,"path":"sprites/s_biterator_toggler/s_biterator_toggler.yy",},
     {"name":"s_bone_constrain","order":26,"path":"sprites/s_bone_constrain/s_bone_constrain.yy",},
+    {"name":"s_driver_type","order":30,"path":"sprites/s_driver_type/s_driver_type.yy",},
     {"name":"s_fade_up","order":2,"path":"sprites/s_fade_up/s_fade_up.yy",},
     {"name":"s_filter_log_level","order":5,"path":"sprites/s_filter_log_level/s_filter_log_level.yy",},
     {"name":"s_filter_node_inspector","order":4,"path":"sprites/s_filter_node_inspector/s_filter_node_inspector.yy",},

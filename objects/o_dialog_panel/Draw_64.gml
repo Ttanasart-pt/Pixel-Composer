@@ -61,8 +61,9 @@ if(content.showHeader) {
 	var _bx = dialog_x + dialog_w - ui(8);
 	var _by = dialog_y + ui(6);
 	var _bs = ui(20);
+	var overBut = content.title_actions_override && !array_empty(content.title_actions);
 	
-	if(instanceof(content) != "Panel_Menu" && array_empty(content.title_actions)) {
+	if(instanceof(content) != "Panel_Menu" && !overBut) {
 		var bb = THEME.button_hide_fill;
 		
 		if(buttonInstant(bb, _bx-_bs, _by, _bs, _bs, mouse_ui, sHOVER, sFOCUS, "", THEME.window_exit_icon, 0, CARRAY.button_negative) == 2) {
