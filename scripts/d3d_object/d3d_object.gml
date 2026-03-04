@@ -18,6 +18,12 @@
 	global.VF_POS_NORM_TEX_COL = vertex_format_end();
 	global.VF_POS_NORM_TEX_COL_size = 48;
 	
+	vertex_format_begin();
+	vertex_format_add_position();    // x y      // 8
+	vertex_format_add_color();       // r g b a  // 4
+	global.VF_POS2_COL = vertex_format_end();
+	global.VF_POS2_COL_size = 12;
+	
 	#macro vertex_pos3 vertex_position_3d
 	#macro vertex_norm vertex_normal
 	#macro vertex_texc vertex_texcoord

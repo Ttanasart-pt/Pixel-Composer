@@ -366,7 +366,9 @@ event_inherited();
 			
 			if(PANEL_GRAPH && PANEL_GRAPH.panel == prefocus) {
 				if(PREFERENCES.node_add_select && node_replace == noone) {
-					PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
+					run_in(1, function(_n, _j) /*=>*/ {return PANEL_GRAPH.selectDragNode(_n, _j)}, [_new_node, junction_called == noone]);
+					
+					// PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
 					var _ins = instanceof(_new_node);
 					if(has(HOTKEYS, _ins)) FOCUS_STR = _ins;
 				}

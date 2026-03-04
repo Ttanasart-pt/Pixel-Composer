@@ -350,9 +350,8 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(0, nodeValue_Dimension());
 	
 	////- =Mesh
-	newInput(1, nodeValue_Area(  "Area",       DEF_AREA_REF )).setUnitSimple();
-	newInput(2, nodeValue_IVec2( "Grid",       [2,2]        )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
-	newInput(3, nodeValue_Int(   "Subdivision", 4           ));
+	newInput(1, nodeValue_IVec2( "Grid",       [2,2]        )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
+	newInput(2, nodeValue_Int(   "Subdivision", 4           ));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -383,8 +382,6 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	#region ---- edit ----
 		tools = [
-			new NodeTool( "Edit Area",     THEME.canvas_resize   ), 
-			-1,
 			new NodeTool( "Move Points",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new grid_grad_tool_move(self)),
 			new NodeTool( "Rotate Points", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new grid_grad_tool_rotate(self)),
 			new NodeTool( "Scale Points",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new grid_grad_tool_scale(self)),
@@ -414,25 +411,18 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static resetInput = function(_val = false) {
 		var _dim   = getInputData(0);
-		
-		var _area  = getInputData(1);
-		var _grid  = getInputData(2);
+		var _grid  = getInputData(1);
 		
 		var _gridW = _grid[0];
 		var _gridH = _grid[1];
 		var _amo   = (_gridW + 1) * (_gridH + 1);
 		var _ind   = input_fix_len;
 		
-		var ax0 = _area[0] - _area[2];
-		var ay0 = _area[1] - _area[3];
-		var ax1 = _area[0] + _area[2];
-		var ay1 = _area[1] + _area[3];
-		
 		if(_val && (array_length(inputs) - input_fix_len) / data_length == _amo) {
 			for(var i = 0; i <= _gridH; i++)
 			for(var j = 0; j <= _gridW; j++) {
 				var _inp = inputs[input_fix_len + (i * (_gridW + 1) + j) * data_length];
-				_inp.setValue([ lerp(ax0, ax1, j / _gridW), lerp(ay0, ay1, i / _gridH) ]);
+				_inp.setValue([ _dim[0] * j / _gridW, _dim[1] * i / _gridH ]);
 			}
 			return;
 		}
@@ -443,7 +433,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for(var i = 0; i <= _gridH; i++)
 		for(var j = 0; j <= _gridW; j++) {
 			var _inp = createNewInput();
-			_inp.setValue([ lerp(ax0, ax1, j / _gridW), lerp(ay0, ay1, i / _gridH) ]);
+			_inp.setValue([ _dim[0] * j / _gridW, _dim[1] * i / _gridH ]);
 		}
 		
 	}
@@ -452,7 +442,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
-		var _grid  = getInputData(2);
+		var _grid  = getInputData(1);
 		var _gridW = _grid[0];
 		var _gridH = _grid[1];
 		var panel  = _params[$ "panel"] ?? noone;
@@ -472,8 +462,6 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				_an[_i][1] = _y + _rawVal[1] * _s;
 			}
 			
-			draw_set_color(isUsingTool("Edit Area")? COLORS._main_icon : COLORS._main_accent);
-			
 			for( var i = 0; i <  _gridH; i++ )
 			for( var j = 0; j <= _gridW; j++ ) {
 				var _a0 = _an[(i    ) * (_gridW + 1) + j];
@@ -488,9 +476,6 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_line(_a0[0], _a0[1], _a1[0], _a1[1]);
 			}
 		#endregion
-		
-		if(isUsingTool("Edit Area"))
-			return InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		
 		var hoverIndex = undefined;
 		
@@ -626,7 +611,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static preGetInputs  = function() {
-		var _grid  = inputs[2].getValue();
+		var _grid  = inputs[1].getValue();
 		var _gridW = _grid[0];
 		var _gridH = _grid[1];
 		
@@ -639,9 +624,8 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		#region data
 			var _dim   = _data[0];
 			
-			var _area  = _data[1];
-			var _grid  = _data[2];
-			var _subd  = _data[3];
+			var _grid  = _data[1];
+			var _subd  = _data[2];
 			
 			var _gridW = _grid[0];
 			var _gridH = _grid[1];
@@ -651,10 +635,11 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _stH  = _gridH? 1 / _gridH : 1;
 		var _imp  = 1 / _subd;
 		
-		var u0 = (_area[0] - _area[2]) / _dim[0];
-		var v0 = (_area[1] - _area[3]) / _dim[1];
-		var u1 = (_area[0] + _area[2]) / _dim[0];
-		var v1 = (_area[1] + _area[3]) / _dim[1];
+		var u0 = 0, v0 = 0;
+		var u1 = 1, v1 = 1;
+		
+		// var vb = vertex_create_buffer();
+		// vertex_begin(vb, global.VF_POS2_COL);
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -673,6 +658,16 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var _a2 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j  )) * data_length];
 				var _a3 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j+1)) * data_length];
 				
+				var _c0 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j  )) * data_length + 1];
+				var _c1 = _data[input_fix_len + ((i  ) * (_gridW+1) + (j+1)) * data_length + 1];
+				var _c2 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j  )) * data_length + 1];
+				var _c3 = _data[input_fix_len + ((i+1) * (_gridW+1) + (j+1)) * data_length + 1];
+				
+				var _al0 = _color_get_a(_c0);
+				var _al1 = _color_get_a(_c1);
+				var _al2 = _color_get_a(_c2);
+				var _al3 = _color_get_a(_c3);
+				
 				var _a0x = _a0[0], _a0y = _a0[1];
 				var _a1x = _a1[0], _a1y = _a1[1];
 				var _a2x = _a2[0], _a2y = _a2[1];
@@ -689,36 +684,50 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					xx = 0;
 					repeat( _subd ) {
 						
-						iy0 = yy  * _imp;
-						iy1 = iy0 + _imp;
-						
 						ix0 = xx  * _imp;
 						ix1 = ix0 + _imp;
 						
+						ix0 = smoothstep(ix0);
+						ix1 = smoothstep(ix1);
+						
+						iy0 = yy  * _imp;
+						iy1 = iy0 + _imp;
+						
+						iy0 = smoothstep(iy0);
+						iy1 = smoothstep(iy1);
+						
 						var _aa0x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy0);
 						var _aa0y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix0);
+						var _cc0  = merge_color(merge_color(_c0, _c1, ix0), merge_color(_c2, _c3, ix0), iy0);
+						var _aal0 = lerp(lerp(_al0, _al1, ix0), lerp(_al2, _al3, ix0), iy0);
 						
 						var _aa1x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy0);
 						var _aa1y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix1);
+						var _cc1  = merge_color(merge_color(_c0, _c1, ix1), merge_color(_c2, _c3, ix1), iy0);
+						var _aal1 = lerp(lerp(_al0, _al1, ix1), lerp(_al2, _al3, ix1), iy0);
 						
 						var _aa2x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy1);
 						var _aa2y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix0);
+						var _cc2  = merge_color(merge_color(_c0, _c1, ix0), merge_color(_c2, _c3, ix0), iy1);
+						var _aal2 = lerp(lerp(_al0, _al1, ix0), lerp(_al2, _al3, ix0), iy1);
 						
 						var _aa3x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy1);
 						var _aa3y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix1);
+						var _cc3  = merge_color(merge_color(_c0, _c1, ix1), merge_color(_c2, _c3, ix1), iy1);
+						var _aal3 = lerp(lerp(_al0, _al1, ix1), lerp(_al2, _al3, ix1), iy1);
 						
 						var _uu0  = lerp(_u0, _u1, ix0);
 						var _uu1  = lerp(_u0, _u1, ix1);
 						var _vv0  = lerp(_v0, _v1, iy0);
 						var _vv1  = lerp(_v0, _v1, iy1);
 						
-						draw_vertex_texture(_aa0x, _aa0y, _uu0, _vv0);
-						draw_vertex_texture(_aa1x, _aa1y, _uu1, _vv0);
-						draw_vertex_texture(_aa2x, _aa2y, _uu0, _vv1);
+						draw_vertex_color(_aa0x, _aa0y, _cc0, _aal0);
+						draw_vertex_color(_aa1x, _aa1y, _cc1, _aal1);
+						draw_vertex_color(_aa2x, _aa2y, _cc2, _aal2);
 						
-						draw_vertex_texture(_aa1x, _aa1y, _uu1, _vv0);
-						draw_vertex_texture(_aa2x, _aa2y, _uu0, _vv1);
-						draw_vertex_texture(_aa3x, _aa3y, _uu1, _vv1);
+						draw_vertex_color(_aa1x, _aa1y, _cc1, _aal1);
+						draw_vertex_color(_aa2x, _aa2y, _cc2, _aal2);
+						draw_vertex_color(_aa3x, _aa3y, _cc3, _aal3);
 						
 						if(++_itr > 32) {
 							draw_primitive_end();
