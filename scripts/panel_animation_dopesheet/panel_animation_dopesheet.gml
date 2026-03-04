@@ -1197,7 +1197,7 @@ function Panel_Animation_Dopesheet() {
                     }
                 }
                 
-                if(eo[0] != 0 && key.ease_in_type == CURVE_TYPE.bezier) {
+                if(eo[0] != 0 && key.ease_out_type == CURVE_TYPE.bezier) {
                     var _hv = (graph_key_hover == key && (graph_key_hover_index == KEYFRAME_DRAG_TYPE.ease_out || graph_key_hover_index == KEYFRAME_DRAG_TYPE.ease_both)) || 
                               (graph_key_drag  == key && (graph_key_drag_index  == KEYFRAME_DRAG_TYPE.ease_out || graph_key_drag_index  == KEYFRAME_DRAG_TYPE.ease_both));
                     

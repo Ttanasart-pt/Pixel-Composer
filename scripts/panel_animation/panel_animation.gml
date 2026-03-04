@@ -9,8 +9,8 @@
     
     function panel_animation_first_frame()   { CALL("first_frame");        if(GLOBAL_IS_RENDERING) return; PROJECT.animator.firstFrame();    }
     function panel_animation_last_frame()    { CALL("last_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.lastFrame();     }
-    function panel_animation_prev_frame()    { CALL("previous_frame");     if(GLOBAL_IS_RENDERING) return; PROJECT.animator.nextFrame();     }
-    function panel_animation_next_frame()    { CALL("next_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.previousFrame(); }
+    function panel_animation_prev_frame()    { CALL("previous_frame");     if(GLOBAL_IS_RENDERING) return; PROJECT.animator.previousFrame(); }
+    function panel_animation_next_frame()    { CALL("next_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.nextFrame();     }
     function panel_animation_prev_keyframe() { CALL("previous_keyframe");  if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
     function panel_animation_next_keyframe() { CALL("next_keyframe");      if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
     
