@@ -176,6 +176,17 @@ function Panel_Animation_Dopesheet() {
 	    transform_key_time = [];
 	    transform_mouse_x  = 0;
 	    transform_start_x  = 0;
+	    
+	    rename_object  = undefined;
+	    tb_rename = textBox_Text(function(t) /*=>*/ { 
+	    	if(rename_object == undefined) return; 
+	    	rename_object.doRename(t);
+	    	
+	    	rename_object.renaming  = false; 
+	    	rename_object.tb_rename = undefined; 
+	    	rename_object = undefined; 
+	    	
+	    }).setFont(f_p3).setHide(2);
 	#endregion
 	
 	#region ---- Draw ----
@@ -523,6 +534,13 @@ function Panel_Animation_Dopesheet() {
                 }
             }
         }
+    }
+    
+    function renameObject(obj) { 
+    	rename_object = obj; 
+    	rename_object.renaming = true;
+    	
+    	return tb_rename; 
     }
     
     ////- Editing

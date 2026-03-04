@@ -1,13 +1,18 @@
 function timelineItem() constructor { 
 	h = ui(20);
 	
-	show   = true;
-	active = true;
+	renaming  = false;
+	tb_rename = undefined;
+	
+	show      = true;
+	active    = true;
 	
 	color     = -1;
 	color_cur = CDEF.main_grey;
 	color_dsp = -1;
 	parent    = noone;
+	
+	static doRename  = function() {}
 	
 	static setColor  = function(c) /*=>*/ { color  = c; return self; }
 	static setParent = function(p) /*=>*/ { parent = p; return self; }
@@ -51,6 +56,8 @@ function timelineItem() constructor {
 function timelineItemNode(_node) : timelineItem() constructor {
 	node = _node;
 	
+	static doRename = function(txt) { node.setDisplayName(txt); }
+	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
 		var _sel = node.is_selecting;
 		var _m = [ _msx, _msy ];
@@ -58,7 +65,6 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		var lx = _x + _item.depth * ui(12) + ui(2);
 		var lw = _w - _item.depth * ui(12) - ui(4);
 		
-		var lh  = ui(20);
 		var res = 0;
 		var col = getColor();
 		var cxt = _item.contexts;
@@ -80,14 +86,18 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		
 		////- =Draw BG
 		
-		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, _w, lh, cc, alpha);
-		if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, lh, COLORS._main_accent, 1);
+		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, _w, h, cc, alpha);
+		if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, h, COLORS._main_accent, 1);
 		
-		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
-			draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, lh, col, 0.3);
-			if(mouse_press(mb_left, focus)) {
+		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + h - 1)) {
+			draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, h, col, 0.3);
+			
+			if(focus && DOUBLE_CLICK)
+				tb_rename = PANEL_ANIMATION.renameObject(self).activate(node.display_name);
+				
+			else if(mouse_press(mb_left, focus)) {
 				if(key_mod_press(SHIFT)) array_toggle(PANEL_GRAPH.nodes_selecting, node);
-				else graphFocusNode(node, false);
+				else graphSelectNode(node, false);
 			}
 			
 			res = 1;
@@ -100,7 +110,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		var bs = ui(16);
 		
 		var aa = 0.75;
-		if(hover && point_in_rectangle(_msx, _msy, bx, by, bx + bs, by + lh)) {
+		if(hover && point_in_rectangle(_msx, _msy, bx, by, bx + bs, by + h)) {
 			aa = 1;
 			if(DOUBLE_CLICK) {
 				if(show) panel_animation_dopesheet_expand();
@@ -110,43 +120,61 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		}
 		
 		if(node.isActiveDynamic())
-			draw_sprite_ui_uniform(THEME.arrow, show? 3 : 0, bx + bs / 2, by + lh / 2, 1, col == -1? CDEF.main_grey : col, aa);
+			draw_sprite_ui_uniform(THEME.arrow, show? 3 : 0, bx + bs / 2, by + h / 2, 1, col == -1? CDEF.main_grey : col, aa);
 		bx += bs + 1;
 		
 		var ii = node.attributes.timeline_hide;
 		var tt = __txt("Hide");
 		var cc = ii? COLORS._main_icon : COLORS._main_icon_light;
 		
-		if(buttonInstant(noone, bx, by, bs, lh, _m, hover, focus, tt, THEME.timeline_hide, ii, cc, .5, .75) == 2)
+		if(buttonInstant(noone, bx, by, bs, h, _m, hover, focus, tt, THEME.timeline_hide, ii, cc, .5, .75) == 2)
 			node.toggleAttribute("timeline_hide");
 		bx += bs + 1;
 		
 		////- =Name
 		
-		draw_set_text(f_p3, fa_left, fa_center);
-		var nodeName = $"[{node.name}] ";
-		var tw = string_width(nodeName);
-		
-		draw_set_color(itHover == self? COLORS._main_text_accent : COLORS._main_text);
 		var txx = bx + ui(2);
+				
+		if(renaming && tb_rename != undefined) {
+			var _param = new widgetParam(txx - ui(4), _y + ui(2), _w - ui(24), h - ui(4), node.display_name,, [ _msx, _msy ]);
+			    _param.font = f_p3;
 			
-		if(nameType == 0 || nameType == 1 || !node.renamed) {
-			draw_set_alpha(0.6);
-			draw_text_add(txx, _y + lh / 2 - ui(2), nodeName);
-			txx += tw;
+			tb_rename.highlight_color = cc;
+			tb_rename.highlight_alpha = .5;
+			
+			tb_rename.setFocusHover(focus, hover);
+			tb_rename.drawParam(_param);
+			
+		} else {
+			draw_set_text(f_p3, fa_left, fa_center);
+			var nodeName = $"[{node.name}] ";
+			var tw = string_width(nodeName);
+			
+			draw_set_color(itHover == self? COLORS._main_text_accent : COLORS._main_text);
+			
+			if(nameType == 0 || nameType == 1 || !node.renamed) {
+				draw_set_alpha(0.6);
+				draw_text_add(txx, _y + h / 2 - ui(2), nodeName);
+				txx += tw;
+			}
+			
+			draw_set_font(f_p3);
+			draw_set_alpha(1);
+			if(nameType == 0 || nameType == 2) 
+				draw_text_add(txx, _y + h / 2 - ui(2), node.display_name);
 		}
-		
-		draw_set_font(f_p3);
-		draw_set_alpha(1);
-		if(nameType == 0 || nameType == 2) 
-			draw_text_add(txx, _y + lh / 2 - ui(2), node.display_name);
 		
 		////- =Right Buttons
 		
 		var tx = lx + lw - ui(7);
 		var tt = __txtx("panel_animation_goto", "Go to node");
+
+		var bx = tx - ui(9);
+		var by = _y + ui(1);
+		var bs = ui(18);
+		var bc = col == -1? COLORS._main_icon_light : col;
 		
-		if(buttonInstant(noone, tx - ui(9), _y + ui(1), ui(18), ui(18), _m, hover, focus, tt, THEME.animate_node_go, 0, col == -1? COLORS._main_icon_light : col, 0.4) == 2)
+		if(buttonInstant(noone, bx, by, bs, bs, _m, hover, focus, tt, THEME.animate_node_go, 0, bc, 0.4) == 2)
 			graphFocusNode(node);
 			
 		return res;
@@ -205,27 +233,16 @@ function timelineItemNode(_node) : timelineItem() constructor {
 
 function timelineItemGroup() : timelineItem() constructor {
 	name          = "";
-	renaming      = false;
 	timeline_hide = false;
+	contents      = [];
 	
-	tb_name         = new textBox(TEXTBOX_INPUT.text, function(val) /*=>*/ { name = val; renaming = false; });
-	tb_name.padding = ui(4);
-	tb_name.hide    = 2;
-	
-	contents = [];
-	
-	static rename = function() {
-		renaming = true;
-		tb_name.setFocusHover(true, true);
-		run_in(1, function() /*=>*/ { tb_name._current_text = name; tb_name.activate(); });
-	}
+	static doRename = function(txt) { name = txt; }
 	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
 		var lx = _x + _item.depth * ui(12) + ui(2);
 		var lw = _w - _item.depth * ui(12) - ui(4);
 		var _m = [ _msx, _msy ];
 		
-		var lh  = ui(20);
 		var res = 0;
 		var hig = true;
 		var col = getColor();
@@ -246,16 +263,16 @@ function timelineItemGroup() : timelineItem() constructor {
 		var bnd = hig? merge_color(c_white, COLORS.panel_animation_dope_bg, .9) : COLORS.panel_animation_dope_bg_hover;
 		var cc  = colorMultiply(col, bnd);
 		color_dsp = cc;
-		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, _w, lh, cc, alpha);
+		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, _w, h, cc, alpha);
 		
-		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
-			draw_sprite_stretched_add(THEME.box_r2, 0, _x, _y, _w, lh, col, 0.05);
+		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + h - 1)) {
+			draw_sprite_stretched_add(THEME.box_r2, 0, _x, _y, _w, h, col, 0.05);
 			res = 1;
 		}
 		
-		draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, lh, c_white, 0.15);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, h, c_white, 0.15);
 		if(fdHover == self)
-			draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y + 1, _w, lh - 2, col == -1? COLORS._main_accent : col, 1);
+			draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y + 1, _w, h - 2, col == -1? COLORS._main_accent : col, 1);
 		
 		////- =Left Buttons
 		
@@ -264,7 +281,7 @@ function timelineItemGroup() : timelineItem() constructor {
 		var bs = ui(16);
 		
 		var aa = 0.75;
-		if(hover && point_in_rectangle(_msx, _msy, bx, by, bx + bs, by + lh)) {
+		if(hover && point_in_rectangle(_msx, _msy, bx, by, bx + bs, by + h)) {
 			aa = 1;
 			if(DOUBLE_CLICK) {
 				if(show) panel_animation_dopesheet_expand();
@@ -272,14 +289,14 @@ function timelineItemGroup() : timelineItem() constructor {
 				
 			} else if(mouse_press(mb_left, focus)) show = !show;
 		}
-		draw_sprite_ui_uniform(THEME.folder_16, show, bx + bs / 2, by + lh / 2, 1, col == -1? CDEF.main_grey : col, aa);
+		draw_sprite_ui_uniform(THEME.folder_16, show, bx + bs / 2, by + h / 2, 1, col == -1? CDEF.main_grey : col, aa);
 		bx += bs + 1;
 		
 		var ii = timeline_hide;
 		var tt = __txt("Hide");
 		var cc = ii? COLORS._main_icon : COLORS._main_icon_light;
 		
-		if(buttonInstant(noone, bx, by, bs, lh, _m, hover, focus, tt, THEME.timeline_hide, ii, cc, .5, .75) == 2)
+		if(buttonInstant(noone, bx, by, bs, h, _m, hover, focus, tt, THEME.timeline_hide, ii, cc, .5, .75) == 2)
 			timeline_hide = !timeline_hide;
 		bx += bs + 1;
 		
@@ -287,24 +304,25 @@ function timelineItemGroup() : timelineItem() constructor {
 		
 		var txx = bx + ui(2);
 		
-		if(hover && point_in_rectangle(_msx, _msy, txx, _y, _x + _w, _y + lh - 1)) { // rename
+		if(hover && point_in_rectangle(_msx, _msy, txx, _y, _x + _w, _y + h - 1)) { // rename
 			if(focus && DOUBLE_CLICK)
-				rename();
+				tb_rename = PANEL_ANIMATION.renameObject(self).activate(name);
 		}
 		
 		draw_set_text(f_p3, fa_left, fa_center);
-		if(renaming) {
-			var _param = new widgetParam(txx - ui(4), _y + ui(2), _w - ui(24), lh - ui(4), name,, [ _msx, _msy ]);
+		if(renaming && tb_rename != undefined) {
+			var _param = new widgetParam(txx - ui(4), _y + ui(2), _w - ui(24), h - ui(4), name,, [ _msx, _msy ]);
 			    _param.font = f_p3;
 			
-			tb_name.highlight_color = cc;
-			tb_name.highlight_alpha = .5;
+			tb_rename.highlight_color = cc;
+			tb_rename.highlight_alpha = .5;
 			
-			tb_name.setFocusHover(focus, hover);
-			tb_name.drawParam(_param);
+			tb_rename.setFocusHover(focus, hover);
+			tb_rename.drawParam(_param);
+			
 		} else {
 			draw_set_color(itHover == self? COLORS._main_text_accent : COLORS._main_text);
-			draw_text_add(txx, _y + lh / 2, name);
+			draw_text_add(txx, _y + h / 2, name);
 		}
 		
 		return res;
