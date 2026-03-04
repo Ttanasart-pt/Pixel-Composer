@@ -91,9 +91,10 @@
         registerFunction("", "Next Frame",         vk_right,   n,  panel_animation_next_frame     ).setMenu("next_frame")
         registerFunction("", "Previous Keyframe",  vk_pageup,  n,  panel_animation_prev_keyframe  ).setMenu("previous_keyframe")
         registerFunction("", "Next Keyframe",      vk_pagedown,n,  panel_animation_next_keyframe  ).setMenu("next_keyframe")
+        
+        registerFunction(an, "Toggle Marker",      "M",        n,  panel_animation_toggle_marker  ).setMenu("toggle_marker")
     	registerFunction("", "Previous Marker",    vk_left,    c,  panel_animation_prev_marker    ).setMenu("previous_marker")
         registerFunction("", "Next Marker",        vk_right,   c,  panel_animation_next_marker    ).setMenu("next_marker")
-        registerFunction(an, "Toggle Marker",      "M",        n,  panel_animation_toggle_marker  ).setMenu("toggle_marker")
         
         registerFunction("", "Move Left Again",    vk_left,    a,  panel_animation_move_again_left  ).setMenu("frame_again_left")
         registerFunction("", "Move Right Again",   vk_right,   a,  panel_animation_move_again_right ).setMenu("frame_again_right")
@@ -287,42 +288,12 @@ function Panel_Animation() : PanelContent() constructor {
         tooltip_fr_next      = new tooltipHotkey(__txtx("panel_animation_next_frame", "Next frame"),                "", "Next Frame");
     
         control_buttons = [ 
-            [ 
-              function() /*=>*/ {return __txt("Stop")},
-              function() /*=>*/ {return 4},
-              function() /*=>*/ {return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon},
-              function() /*=>*/ { PROJECT.animator.stop(); }  
-            ],
-            [ 
-              function() /*=>*/ {return PROJECT.animator.is_playing? tooltip_pause : tooltip_resume},
-              function() /*=>*/ {return !PROJECT.animator.is_playing},
-              function() /*=>*/ {return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon},
-              function() /*=>*/ { if(PROJECT.animator.is_playing) PROJECT.animator.pause(); else PROJECT.animator.resume(); } 
-            ],
-            [ 
-              function() /*=>*/ {return tooltip_fr_first},
-              function() /*=>*/ {return 3},
-              function() /*=>*/ {return COLORS._main_icon},
-              function() /*=>*/ { PROJECT.animator.firstFrame(); } 
-            ],
-            [ 
-              function() /*=>*/ {return tooltip_fr_last},
-              function() /*=>*/ {return 2},
-              function() /*=>*/ {return COLORS._main_icon},
-              function() /*=>*/ { PROJECT.animator.lastFrame(); } 
-            ],
-            [ 
-              function() /*=>*/ {return tooltip_fr_prev},
-              function() /*=>*/ {return 5},
-              function() /*=>*/ {return COLORS._main_icon},
-              function() /*=>*/ { PROJECT.animator.setFrame(PROJECT.animator.real_frame - 1); } 
-            ],
-            [ 
-              function() /*=>*/ {return tooltip_fr_next},
-              function() /*=>*/ {return 6},
-              function() /*=>*/ {return COLORS._main_icon},
-              function() /*=>*/ { PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1); } 
-            ],
+            [ __txt("Stop"),     4, -1,                function() /*=>*/ {return PROJECT.animator.stop()}          ],
+            [ -1,               -1, -1,                function() /*=>*/ {return PROJECT.animator.resume_pause()}  ],
+            [ tooltip_fr_first,  3, COLORS._main_icon, function() /*=>*/ {return PROJECT.animator.firstFrame()}    ],
+            [ tooltip_fr_last,   2, COLORS._main_icon, function() /*=>*/ {return PROJECT.animator.lastFrame()}     ],
+            [ tooltip_fr_prev,   5, COLORS._main_icon, function() /*=>*/ {return PROJECT.animator.previousFrame()} ],
+            [ tooltip_fr_next,   6, COLORS._main_icon, function() /*=>*/ {return PROJECT.animator.nextFrame()}     ],
         ];
     #endregion
     
@@ -341,7 +312,6 @@ function Panel_Animation() : PanelContent() constructor {
     	
     	global.menuItems_animation_sidebar = [
     		"animation_new_folder",
-			"animation_toggle_hidden",
 			"animation_toggle_NodeNameType",
 			"animation_toggle_NodeLabel",
 			"animation_toggle_KeyframeOverride",
@@ -634,7 +604,7 @@ function Panel_Animation() : PanelContent() constructor {
     ////- Draw
     
     function drawTimeline() {
-    	var padd   = dopesheet_show? ui(10) : ui(6);
+    	var padd   = dopesheet_show? ui(8) : ui(6);
     	timeline_h = dopesheet_show? ui(28) : h - padd * 2;
     
     	var bar_x       = tool_width + ui(16);
@@ -931,19 +901,23 @@ function Panel_Animation() : PanelContent() constructor {
         var mini = w < ui(348);
         
         var amo = array_length(control_buttons);
-        var col = floor((w - ui(8)) / ui(36));
-        var row = ceil(amo / col);
-        if(col < 1) return;
+        var bx, by;
+    	var bs = ui(28);
         
-        var bx = tool_width / 2 - ui(36) * amo / 2 + ui(8);
-        var by = h - ui(40);
-        var bw = ui(32);
-        var bh = ui(32);
-        
-        if(!dopesheet_show) {
-        	bh = h - ui(12);
-        	by = h - (bh + ui(6));
+        if(dopesheet_show) {
+        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + ui(8);
+        	by = h - ui(8) - timeline_h + (timeline_h - bs) / 2;
+        	
+        } else {
+        	// bs = h - ui(12);
+        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + ui(8);
+        	by = h - ui(6) - timeline_h + (timeline_h - bs) / 2;
         }
+        
+        var col = floor((w - ui(8)) / (bs + ui(4)));
+    	var row = ceil(amo / col);
+    	
+        if(col < 1) return;
         
         var ss = THEME.button_hide_fill;
         var m  = [mx, my];
@@ -953,29 +927,34 @@ function Panel_Animation() : PanelContent() constructor {
         
         for( var i = 0; i < row; i++ ) {
             var colAmo = min(amo - i * col, col);
-            if(mini) bx = w / 2 - ui(36) * colAmo / 2;
+            if(mini) bx = w / 2 - (bs + ui(4)) * colAmo / 2;
             
             for( var j = 0; j < colAmo; j++ ) {
                 var ind = i * col + j;
                 if(ind >= amo) return;
+                
                 var but = control_buttons[ind];
-                var txt = but[0]();
-                var ind = but[1]();
-                var cc  = GLOBAL_IS_RENDERING? COLORS._main_icon_dark : but[2]();
-                var fnc = but[3];
+                var txt = but[0];
+                if(txt == -1) txt = PROJECT.animator.is_playing? tooltip_pause : tooltip_resume;
+                
+                var sid = but[1];
+                if(sid == -1) sid = !PROJECT.animator.is_playing;
+                
+                var bcc = GLOBAL_IS_RENDERING? COLORS._main_icon_dark : but[2];
+                if(bcc == -1) bcc = PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon;
             	
-                if(buttonInstant(ss, bx, by, bw, bh, m, hover, focus, txt, THEME.sequence_control, ind, cc) == 2)
-                    fnc();
+                if(buttonInstant_Pad(ss, bx, by, bs, bs, m, hover, focus, txt, THEME.sequence_control, sid, bcc, 1, ui(8)) == 2)
+                    but[3]();
             
-                bx += ui(36);
+                bx += bs + ui(4);
             }
             
-            by -= ui(36);
+            by -= bs + ui(4);
         }
         
         if(mini) {
             var y0 = ui(8);
-            var y1 = by + ui(36) - ui(8);
+            var y1 = by + bs - ui(4);
             var cy = (y0 + y1) / 2;
             
             if(y1 - y0 < 12) return;

@@ -81,8 +81,8 @@ function AnimationManager() constructor {
 	static firstFrame    = function(r=true) /*=>*/ {return setFrame(getFirstFrame(r))};
 	static lastFrame     = function(r=true) /*=>*/ {return setFrame(getLastFrame(r))};
 	
-	static nextFrame     = function() /*=>*/ {return setFrame( max(real_frame - 1, 0)                )};
-	static previousFrame = function() /*=>*/ {return setFrame( min(real_frame + 1, frames_total - 1) )}; 
+	static previousFrame = function() /*=>*/ {return setFrame( max(real_frame - 1, 0)                )};
+	static nextFrame     = function() /*=>*/ {return setFrame( min(real_frame + 1, frames_total - 1) )}; 
 	
 	static isFirstFrame  = function() /*=>*/ {return current_frame == getFirstFrame()};
 	static isLastFrame   = function() /*=>*/ {return current_frame == getLastFrame()};

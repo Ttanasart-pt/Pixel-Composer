@@ -187,6 +187,12 @@ function Panel_Animation_Dopesheet() {
 	    	rename_object = undefined; 
 	    	
 	    }).setFont(f_p3).setHide(2);
+	    
+	    tooltip_hidden = new tooltipHotkey(__txt("Toggle Hidden"), "Animation", "Toggle Hidden");
+	    
+	    tooltip_mark_togg = new tooltipHotkey(__txt( "Toggle Marker"        ), "Animation", "Toggle Marker"   );
+	    tooltip_mark_prev = new tooltipHotkey(__txt( "Goto Previous Marker" ), "",          "Previous Marker" );
+	    tooltip_mark_next = new tooltipHotkey(__txt( "Goto Next Marker"     ), "",          "Next Marker"     );
 	#endregion
 	
 	#region ---- Draw ----
@@ -2233,15 +2239,15 @@ function Panel_Animation_Dopesheet() {
     	
     	// Left
     	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Goto Previous Marker", THEME.marker_goto, 1) == 2) {
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_prev, THEME.marker_goto, 1) == 2) {
     		toPrevMarker();
     	} bx += bs + ui(1);
     	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Toggle Marker", THEME.marker) == 2) {
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_togg, THEME.marker) == 2) {
     		toggleMarker(GLOBAL_CURRENT_FRAME + 1);
     	} bx += bs + ui(1);
     	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Goto Next Marker", THEME.marker_goto, 0) == 2) {
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_next, THEME.marker_goto, 0) == 2) {
     		toNextMarker();
     	} bx += bs + ui(1);
     	
@@ -2254,7 +2260,7 @@ function Panel_Animation_Dopesheet() {
     	var spr = THEME.timeline_hide;
     	var sid = show_hidden;
     	var scc = show_hidden? COLORS._main_icon : COLORS._main_accent;
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, "Toggle Hidden", spr, sid, scc) == 2) {
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_hidden, spr, sid, scc) == 2) {
     		show_hidden = !show_hidden;
     	} bx -= bs + ui(1);
     	
@@ -2307,7 +2313,8 @@ function Panel_Animation_Dopesheet() {
         bar_total_shift = bar_total_w + timeline_shift;
         if(pFOCUS && key_mod_double(ALT)) show_value = !show_value;
         
-        mouse_on_timeline = pHOVER && my > ui(8) + top_frame_height;
+        mouse_on_timeline = pHOVER && point_in_rectangle(mx, my, bar_x,         ui(8) + top_frame_height, 
+                                                                 bar_x + bar_w, ui(8) + dopesheet_h );
         
         #region Scroll
             dopesheet_y = lerp_float(dopesheet_y, dopesheet_y_to, 4);

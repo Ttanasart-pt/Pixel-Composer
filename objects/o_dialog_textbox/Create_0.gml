@@ -6,16 +6,23 @@ event_inherited();
 	
 	font     = f_p2;
 	dialog_w = ui(240);
-	dialog_h = line_get_height(font, 8+8);
+	dialog_h = line_get_height(font, 16);
 	anchor   = ANCHOR.left | ANCHOR.top;
 	
 	text  = "";
 	label = "";
 	
+	wait     = true;
+	alarm[1] = 1;
+	
 	refocus  = true;
 	onModify = -1;
 	params   = undefined;
-	tb_name  = textBox_Text(function(txt) /*=>*/ { onModify(txt, params); instance_destroy(); }).setEmpty();
+	tb_name  = textBox_Text(function(txt) /*=>*/ { 
+		if(wait) return;
+		onModify(txt, params); 
+		instance_destroy(); 
+	}).setEmpty();
 	
 	function setLabel(l)  { label    = l; return self; }
 	function setParam(p)  { params   = p; return self; }
