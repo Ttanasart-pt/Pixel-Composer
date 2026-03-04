@@ -6,7 +6,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	padding  = ui(8);
 	
 	key   = noone;
-	wdgw  = ui(128);
+	wdgw  = ui(64);
 	
 	title_actions_show_graph = [ THEME.timeline_graph, 0, COLORS._main_icon ];
 	
@@ -95,7 +95,10 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		if(key == noone) return 0;
+		if(key == noone) {
+			bg_y = -1;
+			return 0;
+		}
 		
 		var props = [];
 		switch(key.drivers.type) {
@@ -110,11 +113,14 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		var _w = sc_content.surface_w;
 		var ww = max(wdgw, _w * 0.5); 
 		var wh = prop_height - ui(6);
-	
+		
+		var _hover = sc_content.hover;
+		var _focus = sc_content.active;
+		
 		var _bs = ui(32);
 		
 		var _hov = false;
-		if(bg_y) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), bg_y, _w - ui(8), th, CDEF.main_mdwhite, 1);
+		if(bg_y && _hover) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), bg_y, _w - ui(8), th, CDEF.main_mdwhite, 1);
 		
 		for( var i = 0, n = array_length(props); i < n; i++ ) {
 			var _prop = props[i];
@@ -139,9 +145,9 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
                 var lbh = th - ui(4);
                 var lbw = _w - ui(8);
                 
-                if(pHOVER && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
+                if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
-                	if(mouse_press(mb_left, pFOCUS)) _prop[@ 1] = !coll;
+                	if(mouse_press(mb_left, _focus)) _prop[@ 1] = !coll;
                 	
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
@@ -188,11 +194,11 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				var _widg = _prop.editWidget;
 				if(is_callable(_data)) _data = _data();
 				
-				_widg.setFocusHover(pFOCUS, pHOVER);
+				_widg.setFocusHover(_focus, _hover);
 				_widg.register();
 				
 				var _whover = false;
-				if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + th)) {
+				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + th)) {
 					bg_y_to = yy;
 					_hov    = true;
 					_whover = true;
@@ -243,7 +249,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		var pw = w - padding * 2;
 		var ph = h - padding * 2;
 		
-		var tw = max(wdgw, pw * 0.5); 
+		var tw = max(wdgw, pw * 0.5 + ui(12)); 
 		var th = prop_height - ui(6);
 		
 		if(key) {

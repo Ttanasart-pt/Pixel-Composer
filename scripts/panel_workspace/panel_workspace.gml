@@ -28,26 +28,26 @@ function Panel_Workspace() : PanelContent() constructor {
 	
 	////- Workspace
 	
-	function apply_space() {
+	static apply_space = function() {
 		if(layout_selecting == "") return;
 		PREFERENCES.panel_layout_file = layout_selecting;
 		PREF_SAVE();
 		setPanel();
 	}
 	
-	function replace_space() { 
+	static replace_space = function() { 
 		if(layout_selecting == "") return;
 		var cont = panelSerialize();
 		json_save_struct(DIRECTORY + "layouts/" + layout_selecting + ".json", cont);
 	}
 	
-	function delete_space() { 
+	static delete_space = function() { 
 		if(layout_selecting == "") return;
 		file_delete(DIRECTORY + "layouts/" + layout_selecting + ".json");
 		refreshContent();
 	}
 	
-	function refreshContent() {
+	static refreshContent = function() {
 		workspaces = [];
 		
 		var f   = file_find_first(DIRECTORY + "layouts/*", 0);
@@ -121,9 +121,9 @@ function Panel_Workspace() : PanelContent() constructor {
 				if(mouse_press(mb_right, pFOCUS)) {
 					layout_selecting = str;
 					menuCall("workspace_menu", [
-						menuItem(__txt("Select"), apply_space),
-						menuItem(__txtx("workspace_replace_current", "Replace with current"), replace_space),
-						menuItem(__txt("Delete"), delete_space, THEME.cross),
+						menuItem( __txt("Select"), function() /*=>*/ {return apply_space()} ),
+						menuItem( __txtx("workspace_replace_current", "Replace with current"), function() /*=>*/ {return replace_space()} ),
+						menuItem( __txt("Delete"), function() /*=>*/ {return delete_space()}, THEME.cross),
 					]);
 				}
 			}
