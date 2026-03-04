@@ -18,6 +18,9 @@
     function panel_animation_next_marker()   { CALL("next_marker");        if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextMarker(); }
     function panel_animation_toggle_marker() { CALL("toggle_marker");      if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toggleMarker(GLOBAL_CURRENT_FRAME + 1); }
     
+    function panel_animation_move_again_left()  { CALL("again_left");      if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.moveAgainLeft();  }
+    function panel_animation_move_again_right() { CALL("again_right");     if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.moveAgainRight(); }
+    
     function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
     function panel_animation_delete_key()              { CALL("animation_delete_key");              PANEL_ANIMATION.deleteKeys();                                                                        }
     function panel_animation_duplicate()               { CALL("animation_duplicate");               PANEL_ANIMATION.doDuplicate();                                                                       }
@@ -91,6 +94,9 @@
     	registerFunction("", "Previous Marker",    vk_left,    c,  panel_animation_prev_marker    ).setMenu("previous_marker")
         registerFunction("", "Next Marker",        vk_right,   c,  panel_animation_next_marker    ).setMenu("next_marker")
         registerFunction(an, "Toggle Marker",      "M",        n,  panel_animation_toggle_marker  ).setMenu("toggle_marker")
+        
+        registerFunction("", "Move Left Again",    vk_left,    a,  panel_animation_move_again_left  ).setMenu("frame_again_left")
+        registerFunction("", "Move Right Again",   vk_right,   a,  panel_animation_move_again_right ).setMenu("frame_again_right")
     	
         registerFunction(an, "Toggle Frame View",  "",         n,  panel_animation_toggle_type    ).setMenu("animation_toggle_view_type")
         registerFunction(an, "Delete keys",        vk_delete,  n,  panel_animation_delete_key     ).setMenu("animation_delete_keys")
@@ -268,6 +274,7 @@ function Panel_Animation() : PanelContent() constructor {
     	timeline_frame      = true;
     	
     	show_hidden         = 1;
+    	previous_move       = 1;
     #endregion
     
     #region ++++ Control Buttons ++++
@@ -420,6 +427,9 @@ function Panel_Animation() : PanelContent() constructor {
     	
     	if(_t != infinity) PROJECT.animator.setFrame(_t); 
     }
+    
+    function moveAgainLeft()  { PROJECT.animator.setFrame(GLOBAL_CURRENT_FRAME - abs(previous_move)); }
+    function moveAgainRight() { PROJECT.animator.setFrame(GLOBAL_CURRENT_FRAME + abs(previous_move)); }
     
     ////- Interaction
     

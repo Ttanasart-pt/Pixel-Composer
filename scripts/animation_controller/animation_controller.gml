@@ -69,6 +69,7 @@ function AnimationManager() constructor {
 		frame_progress = _c != current_frame;
 		
 		if(frame_progress) {
+			PANEL_ANIMATION.previous_move = current_frame - _c;
 			last_time = 0;
 			RENDER_ALL
 		}

@@ -197,7 +197,7 @@ function Panel_Animation_Dopesheet() {
 	        
 	        function edit_keyframe_stagger() { stagger_mode = 1; }
 	        function edit_keyframe_driver()  { 
-	        	var panel = new Panel_Keyframe_Driver(keyframe_selecting[0]);
+	        	var panel = new Panel_Keyframe_Driver();
 	        	var dx = x;
 	        	var dy = y - ui(8);
         		dialogPanelCall(panel, dx, dy, { anchor: ANCHOR.bottom | ANCHOR.left }); 
