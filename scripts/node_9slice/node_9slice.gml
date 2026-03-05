@@ -108,7 +108,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _dy = _y + _ddim[1] * _s;
 			var _ah = hover && point_in_circle(_mx, _my, _dx, _dy, ui(10));
 			
-			draw_anchor(_ah || drag_dim, _dx, _dy, ui(10), 0);
+			draw_anchor(_ah || drag_dim, _dx, _dy, ui(8), 0);
 			
 			if(drag_dim) {
 				var vx = drag_dim_sx + (_mx - drag_dim_mx) / _s;

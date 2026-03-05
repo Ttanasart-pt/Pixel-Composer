@@ -846,7 +846,7 @@ function Panel_Animation_Dopesheet() {
     	
     }
     
-    function drawDopesheet_Graph_Line(animator, key_y, msx, msy, _gy_val_min = infinity, _gy_val_max = -infinity) { 
+    function drawDopesheet_Graph_Line(animator, key_y, msx, msy) { 
     	if(modulate_animator != noone && modulate_animator != animator) return noone;
         var hovering = noone;
         
@@ -859,71 +859,22 @@ function Panel_Animation_Dopesheet() {
         var mmx = msx;
         var mmy = msy - (key_y + ui(8));
         
-        #region get range
-            var _prevDelt = [ 0, 0 ];
+        var _gy_val_min = animator.prop.graph_range[0];
+		var _gy_val_max = animator.prop.graph_range[1];
+        var _range      = animator.prop.prev_graph_range;
             
-            for(var k = 0; k < kamo; k++) { 
-                var key     = animator.values[k];
-                var key_val = key.value;
-                
-                var _minn = _gy_val_min;
-                var _maxx = _gy_val_max;
-                
-                if(is_array(key_val)) {
-                    for( var ki = 0; ki < array_length(key_val); ki++ ) {
-                        _minn = min(_minn, key_val[ki]);
-                        _maxx = max(_maxx, key_val[ki]);
-                    }
-                } else {
-                    _minn = min(_minn, key_val);
-                    _maxx = max(_maxx, key_val);
-                }
-                
-                _minn += _prevDelt[0];
-                _maxx += _prevDelt[1];
-                _prevDelt = [ 0, 0 ];
-                
-                switch(key.drivers.type) {
-                    case DRIVER_TYPE.linear :
-                        var nk = k + 1 < kamo? animator.values[k + 1].time : GLOBAL_TOTAL_FRAMES;
-                    
-                        var spd = key.drivers.speed * (nk - key.time);
-                        _minn += min(spd, 0);
-                        _maxx += max(spd, 0);
-                        _prevDelt = [ min(spd, 0), max(spd, 0) ];
-                        break;
-                        
-                    case DRIVER_TYPE.wiggle :
-                    case DRIVER_TYPE.sine   :
-                        _minn -= abs(key.drivers.amplitude);
-                        _maxx += abs(key.drivers.amplitude);
-                        _prevDelt = [ -key.drivers.amplitude, key.drivers.amplitude ];
-                        break;
-                }
-                
-                _gy_val_min = min(_minn, _gy_val_min);
-                _gy_val_max = max(_maxx, _gy_val_max);
-            }
-            
-            animator.prop.graph_range[0] = _gy_val_min;
-            animator.prop.graph_range[1] = _gy_val_max;
-            
-            animator.prop.graph_draw_y[0] = _gy0 + (key_y + ui(8));
-            animator.prop.graph_draw_y[1] = _gy1 + (key_y + ui(8));
-            
-        #endregion
+        animator.prop.graph_draw_y[0] = _gy0 + (key_y + ui(8));
+        animator.prop.graph_draw_y[1] = _gy1 + (key_y + ui(8));
         
         var val_rng  = (_gy_val_max - _gy_val_min) / (_gy1 - _gy0);
         var valArray = is_array(animator.values[0].value);
         var ox  = 0;
         var nx  = 0;
         var ny  = noone;
-        
-        var baseC = CDEF.main_white;
-        
         var _kv, _kn, sy;
         
-        var _oy = animator.values[0].value;
+        var baseC = CDEF.main_white;
+        var _oy   = animator.values[0].value;
         if(!valArray) _oy = [ _oy ];
         
         var ss = array_length(_oy);
@@ -937,13 +888,13 @@ function Panel_Animation_Dopesheet() {
             var t  = key.dopesheet_x;
             var dx = key_next.time - key.time;
             
-            if(key.drivers.type) { // driver
+            if(key.driverObject != undefined) { // driver
                 nx = (key.time + 1) * timeline_scale + timeline_shift;
                     
                 for( var _time = key.time; _time <= key_next.time; _time++ ) {
                     var rat = (_time - key.time) / (key_next.time - key.time);
                     
-                    _kv = animator.processDriver(_time, key, animator.lerpValue(key, key_next, rat), rat);
+                    _kv = key.driverObject.apply(_time, key, animator.lerpValue(key, key_next, rat), rat);
                     
                     if(!valArray) _kv = [ _kv ];
                         
@@ -962,6 +913,9 @@ function Panel_Animation_Dopesheet() {
                         else                  draw_line(ox, oy[ki], nx, ny[ki]);
                             
                         oy[ki] = ny[ki];
+                        
+	                    _range[0] = min(_range[0], _kv[ki]);
+	                    _range[1] = max(_range[1], _kv[ki]);
                     }
                     
                     ox  = nx;
@@ -1000,6 +954,9 @@ function Panel_Animation_Dopesheet() {
                     draw_line( t, oy[ki], nx, oy[ki]);
                     draw_line(nx, oy[ki], nx, ny[ki]);
                     oy[ki] = ny[ki];
+                    
+                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
                 }
                 
                 ox = nx;
@@ -1034,6 +991,9 @@ function Panel_Animation_Dopesheet() {
                     ny[ki] = value_map(_kn[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
                     draw_line(t, oy[ki], nx, ny[ki]);
                     oy[ki] = ny[ki];
+                    
+                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
                 }
                 
                 ox = nx;
@@ -1067,10 +1027,14 @@ function Panel_Animation_Dopesheet() {
                         if(array_length(oy) > ki) draw_line(ox, oy[ki], nx, ny[ki]);
                             
                         oy[ki] = ny[ki];
+                        
+	                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+	                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
                     }
                     
                     ox = nx;
                     draw_set_alpha(1);
+                    
                 }
             }
         } // draw line in between
@@ -1103,11 +1067,11 @@ function Panel_Animation_Dopesheet() {
             var t_last = (key_last.time + 1) * timeline_scale + timeline_shift;
                 
             if(key_last.time < GLOBAL_TOTAL_FRAMES) {
-                if(key_last.drivers.type) {
+                if(key_last.driverObject != undefined) {
                     nx = t_last;
                     
                     for( var _time = key_last.time; _time < GLOBAL_TOTAL_FRAMES; _time++ ) {
-                        _kv = animator.processDriver(_time, key_last);
+                        _kv = key_last.driverObject.apply(_time, key_last);
                         if(!valArray) _kv = [ _kv ];
                         
                         for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
@@ -1126,6 +1090,9 @@ function Panel_Animation_Dopesheet() {
                                 draw_line(ox, oy[ki], nx, ny[ki]);
                             
                             oy[ki] = ny[ki];
+                            
+		                    _range[0] = min(_range[0], _kv[ki]);
+		                    _range[1] = max(_range[1], _kv[ki]);
                         }
                         
                         ox  = nx;
@@ -1147,6 +1114,9 @@ function Panel_Animation_Dopesheet() {
                         ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
                         draw_line(t_last, oy[ki], t_last, ny[ki]);
                         draw_line(t_last, ny[ki], bar_total_shift, ny[ki]);
+                        
+	                    _range[0] = min(_range[0], _kv[ki]);
+	                    _range[1] = max(_range[1], _kv[ki]);
                     }
                 }
             }
@@ -1303,10 +1273,13 @@ function Panel_Animation_Dopesheet() {
             
             drawFrameLine(GLOBAL_TOTAL_FRAMES, 0, _gh, COLORS.panel_animation_end_line, .5);
             drawFrameLine(0, 0, _gh, COLORS.panel_animation_end_line, .5);
-                
+            
+            prop.prev_graph_range[0] =  infinity;
+            prop.prev_graph_range[1] = -infinity;
+            
             if(prop.sep_axis) {
-                var _min =  999999;
-                var _max = -999999;
+                var _min =  infinity;
+                var _max = -infinity;
                 var _anims = prop.getAnimators();
                 
                 for( var i = 0, n = array_length(_anims); i < n; i++ ) {
@@ -1330,11 +1303,15 @@ function Panel_Animation_Dopesheet() {
                 
                 for( var i = 0, n = array_length(_anims); i < n; i++ ) {
                     if(!prop.show_graphs[i]) continue;
-                    drawDopesheet_Graph_Line(_anims[i], key_y, msx, msy, _min, _max);
+                    drawDopesheet_Graph_Line(_anims[i], key_y, msx, msy);
                 }
                 
             } else
                 drawDopesheet_Graph_Line(prop.animator, key_y, msx, msy);
+                
+            prop.graph_range[0] = prop.prev_graph_range[0];
+            prop.graph_range[1] = prop.prev_graph_range[1];
+            
         surface_reset_target();
         
         draw_surface(keyframe_graph_surface, 0, _gy0);

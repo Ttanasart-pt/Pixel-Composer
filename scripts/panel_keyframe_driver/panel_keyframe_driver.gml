@@ -31,65 +31,35 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	
 	#region properties
 		var __enum_driver = __enum_array_gen([ "None", "Linear", "Wiggle", "Sine" ], s_driver_type);
-		sb_type = new scrollBox(__enum_driver, function(val) /*=>*/ { key.drivers.type = val; }, false);
+		sb_type = new scrollBox(__enum_driver, function(val) /*=>*/ { 
+			var _drv = undefined;
+			switch(val) {
+				case 1 : _drv = new KeyDriver_Linear(); break;
+				case 2 : _drv = new KeyDriver_Wiggle(); break;
+				case 3 : _drv = new KeyDriver_Sine();   break;
+			}
+			
+			key.driverObject = _drv;
+		}, false);
+		
+		var item = __Panel_Linear_Setting_Item;
+		var tNum = textBox_Number;
 		
 		prop_linear = [
-			new __Panel_Linear_Setting_Item(
-				__txt("Speed"),
-				textBox_Number(function(val) /*=>*/ { key.drivers.speed = val; }),
-				function() /*=>*/ {return key.drivers.speed}
-			),
+			new item(  __txt("Speed"),    tNum(function(v) /*=>*/ { key.driverObject.speed     = v; }), function() /*=>*/ {return key.driverObject.speed}     ),
 		];
 		
 		prop_wiggle = [
-			new __Panel_Linear_Setting_Item(
-				__txt("Seed"),
-				textBox_Number(function(val) /*=>*/ { key.drivers.seed = val; }),
-				function() /*=>*/ {return key.drivers.seed}
-			),
-			new __Panel_Linear_Setting_Item(
-				__txt("Sync axis"),
-				new checkBox( function() /*=>*/ { key.drivers.axis_sync = !key.drivers.axis_sync; }),
-				function() /*=>*/ {return key.drivers.axis_sync}
-			),
-			new __Panel_Linear_Setting_Item(
-				__txt("Frequency"),
-				textBox_Number(function(val) /*=>*/ { key.drivers.frequency = val; }),
-				function() /*=>*/ {return key.drivers.frequency}
-			),
-			new __Panel_Linear_Setting_Item(
-				__txt("Amplitude"),
-				textBox_Number(function(val) /*=>*/ { key.drivers.amplitude = val; }),
-				function() /*=>*/ {return key.drivers.amplitude}
-			),
-			new __Panel_Linear_Setting_Item(
-				__txt("Octave"),
-				textBox_Number(function(val) /*=>*/ { key.drivers.octave = val; }),
-				function() /*=>*/ {return key.drivers.octave}
-			),
+			new item( __txt("Seed"),      tNum(function(v) /*=>*/ { key.driverObject.seed      = v; }), function() /*=>*/ {return key.driverObject.seed}      ),
+			new item( __txt("Frequency"), tNum(function(v) /*=>*/ { key.driverObject.frequency = v; }), function() /*=>*/ {return key.driverObject.frequency} ),
+			new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { key.driverObject.amplitude = v; }), function() /*=>*/ {return key.driverObject.amplitude} ),
+			new item( __txt("Octave"),    tNum(function(v) /*=>*/ { key.driverObject.octave    = v; }), function() /*=>*/ {return key.driverObject.octave}    ),
 		];
 		
 		prop_sine = [
-			new __Panel_Linear_Setting_Item(
-				__txt("Sync axis"),
-				new checkBox( function() /*=>*/ { key.drivers.axis_sync = !key.drivers.axis_sync; }),
-				function() /*=>*/ {return key.drivers.axis_sync}
-			),
-			new __Panel_Linear_Setting_Item(
-				__txt("Frequency"),
-				textBox_Number(function(val) /*=>*/ { key.drivers.frequency = val; }),
-				function() /*=>*/ {return key.drivers.frequency}
-			),
-			new __Panel_Linear_Setting_Item(
-				__txt("Amplitude"),
-				textBox_Number(function(val) /*=>*/ { key.drivers.amplitude = val; }),
-				function() /*=>*/ {return key.drivers.amplitude}
-			),
-			new __Panel_Linear_Setting_Item(
-				__txt("Phase"),
-				textBox_Number(function(val) /*=>*/ { key.drivers.phase = val; }),
-				function() /*=>*/ {return key.drivers.phase}
-			),
+			new item( __txt("Frequency"), tNum(function(v) /*=>*/ { key.driverObject.frequency = v; }), function() /*=>*/ {return key.driverObject.frequency} ),
+			new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { key.driverObject.amplitude = v; }), function() /*=>*/ {return key.driverObject.amplitude} ),
+			new item( __txt("Phase"),     tNum(function(v) /*=>*/ { key.driverObject.phase     = v; }), function() /*=>*/ {return key.driverObject.phase}     ),
 		];
 	#endregion
 	
@@ -101,10 +71,11 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		}
 		
 		var props = [];
-		switch(key.drivers.type) {
-			case DRIVER_TYPE.linear : props = prop_linear; break;
-			case DRIVER_TYPE.wiggle : props = prop_wiggle; break;
-			case DRIVER_TYPE.sine   : props = prop_sine;   break;
+		if(key.driverObject != undefined)
+		switch(instanceof(key.driverObject)) {
+			case "KeyDriver_Linear" : props = prop_linear; break;
+			case "KeyDriver_Wiggle" : props = prop_wiggle; break;
+			case "KeyDriver_Sine"   : props = prop_sine;   break;
 		}
 		
 		var yy = ui(4) + _y;
@@ -258,7 +229,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 			
 			var tx   = w - padding - tw;
 			var ty   = py;
-			var _typ = key.drivers.type;
+			var _typ = key.driverObject == undefined? 0 : key.driverObject.index;
 			sb_type.setFocusHover(pFOCUS, pHOVER);
 			sb_type.register();
 			

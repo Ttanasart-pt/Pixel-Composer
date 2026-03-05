@@ -101,7 +101,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			if(preview_hotkey_axis == 0) draw_line_dashed(0, _vdy, 9999, _vdy);
 			if(preview_hotkey_axis == 1) draw_line_dashed(_vdx, 0, _vdx, 9999);
 			
-			draw_anchor(0, _vdx, _vdy, ui(10), 2);
+			draw_anchor(0, _vdx, _vdy, ui(8), 2);
 			
 			if(mouse_lpress() || key_press(vk_enter) || preview_hotkey.isPressing()) {
 				preview_hotkey_active = false;

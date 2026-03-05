@@ -29,13 +29,13 @@ void main() {
 	vec4  c = vec4(0.);
 	
 	if(type == 0) { 
-		a = smoothstep(.0, .1, dist);
+		a = smoothstep(.00, .10, dist);
 		c = mix(c, vec4(0., 0., 0., 1.), a);      
 		
-		a = smoothstep(.15, .2, dist);
+		a = smoothstep(.15, .20, dist);
 		c = mix(c, vec4(1., 1., 1., 1.), a);
 		
-		a = smoothstep(.3, .4, dist);
+		a = smoothstep(.25, .30, dist);
 		c = mix(c, color, a);
 		
 	} else if(type == 1) { 

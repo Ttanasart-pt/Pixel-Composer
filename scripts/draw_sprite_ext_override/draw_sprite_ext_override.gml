@@ -100,16 +100,17 @@ function draw_cross(_x, _y, _r) {
 	draw_line(_x, _y - _r, _x, _y + _r);
 }
 
-function draw_anchor(_index, _x, _y, _r = ui(10), _type = 0) {
+function draw_anchor(_index, _x, _y, _r = ui(8), _type = 0, _color = COLORS._main_accent, _border = c_white) {
 	shader_set(sh_node_widget_scalar);
-		shader_set_color("color", COLORS._main_accent);
-		shader_set_f("index",     _index);
-		shader_set_i("type",      _type);
+		shader_set_c( "color",  _color  );
+		shader_set_c( "border", _border );
+		shader_set_f( "index",  _index  );
+		shader_set_i( "type",   _type   );
 		
 		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
 	shader_reset();
 }
-	
+
 function draw_anchor_cross(_index, _x, _y, _r, _type = 0, _a = 0) {
 	shader_set(sh_node_widget_scalar_cross);
 		shader_set_color("color", COLORS._main_accent);

@@ -21,7 +21,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var _ay1 = __y1 * _s + _y;
 	
 	var cc = COLORS.labels[2];
-	var _r = ui(10);
+	var _r = ui(8);
 	
 	__overlay_hover = array_verify(__overlay_hover, 2);
 	if(surface_exists(_surf) && (__overlay_hover[0] > 0 || __overlay_hover[1] > 0))

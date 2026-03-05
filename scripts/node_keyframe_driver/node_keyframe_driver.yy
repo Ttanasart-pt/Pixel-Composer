@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_keyframe_driver",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_keyframe_driver",
+  "parent":{
+    "name":"__base__",
+    "path":"folders/nodes/__base__.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

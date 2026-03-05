@@ -402,16 +402,18 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		dragging_my = 0;
 		dragging_px = 0;
 		dragging_py = 0;
+		
+		gridData  = [];
+		editIndex = undefined;
+		
+		selection_filter = [];
 	#endregion
 	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	gridData  = [];
-	editIndex = undefined;
-	
-	static selectClear = function() { anchor_select = []; }
-	static selectAll   = function() { 
+	static selectClear = function() /*=>*/ { anchor_select = []; }
+	static selectAll   = function() /*=>*/ { 
 		anchor_select = array_create((array_length(inputs) - input_fix_len) / data_length);
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length )
 			anchor_select[(i - input_fix_len) / data_length] = i;
@@ -458,6 +460,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _aamo = (_gridW + 1) * (_gridH + 1);
 		var _iamo = getInputAmount();
 		if(_iamo != _aamo) return w_hovering;
+		selection_filter = array_verify(selection_filter, array_length(inputs));
 		
 		#region draw grid
 			var _an = array_create(_iamo);
@@ -497,15 +500,8 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var ay  = _y + anc[1] * _s;
 			
 			var _hv = hover && point_in_circle(_mx, _my, ax, ay, ui(8));
-			
-			draw_set_color(c_black);
-			draw_circle(ax, ay, ui(6 + _hv), false);
-			
-			draw_set_color(col);
-			draw_circle(ax, ay, ui(5 + _hv), false);
-			
-			draw_set_color(c_white);
-			draw_circle(ax, ay, ui(5 + _hv), true);
+			draw_anchor(_hv, ax, ay, ui(8), 0, col, selection_filter[i]? COLORS._main_accent : c_white);
+			selection_filter[i] = false;
 			
 			if(_hv) hoverIndex = i;
 		}
@@ -625,16 +621,8 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(mouse_lrelease())
 				anchor_freeze = 0;
 			
-			draw_set_color(COLORS._main_accent);
-			for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
-				var _a   = anchor_select[i];
-				var _anc = getInputData(_a);
-				
-				var ax = _x + _anc[0] * _s;
-				var ay = _y + _anc[1] * _s;
-				
-				draw_circle(ax, ay, ui(4 + (hoverIndex == _a)), true);
-			}
+			for( var i = 0, n = array_length(anchor_select); i < n; i++ )
+				selection_filter[anchor_select[i]] = true;
 			
 		}
 		

@@ -151,7 +151,7 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		x1 = _x + points[2] * _s;
 		y1 = _y + points[3] * _s;
 		
-		var _r = ui(10);
+		var _r = ui(8);
 		
 		var _sr  = surface_get_target();
 		var _srw = surface_get_width(_sr);

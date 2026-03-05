@@ -23,7 +23,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 			draw_circle_prec(_ax, _ay, __wd * _s, true);
 			
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
-			draw_anchor(0, _ax1, _ay1,, 2);
+			draw_anchor(0, _ax1, _ay1, ui(8), 2);
 			
 			if(point_in_circle(_mx, _my, _ax + __wd * _s, _ay, ui(8))) {
 				hover = 3;
@@ -101,7 +101,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
 			
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
-			draw_anchor(0, _ax1, _ay1,, 2);
+			draw_anchor(0, _ax1, _ay1, ui(8), 2);
 			break;
 	}
 		
@@ -116,7 +116,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 		_val[PUPPET_CONTROL.cy] = _rnd? round(_ny) : _ny;
 			
 	} else if(drag_type == 2) {
-		draw_anchor(0, _ax1, _ay1, ui(12), 2);
+		draw_anchor(0, _ax1, _ay1, ui(10), 2);
 		var _nx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
 		var _ny = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 		
@@ -171,7 +171,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 	if(interact && active && (_mode == PUPPET_FORCE_MODE.move || _mode == PUPPET_FORCE_MODE.puppet) && point_in_circle(_mx, _my, _ax1, _ay1, ui(8))) {
 		
 		hover = 2;
-		draw_anchor(0, _ax1, _ay1, ui(12), 2);
+		draw_anchor(0, _ax1, _ay1, ui(10), 2);
 		if(mouse_press(mb_left, active)) {
 			drag_type = 2;
 			drag_mx   = _mx;

@@ -2,6 +2,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec4  color;
+uniform vec4  border;
 uniform float index;
 uniform int   type;
 
@@ -13,13 +14,13 @@ void main() {
 	vec4  c = vec4(0.);
 	
 	if(type == 0) { 
-		a = smoothstep(.0, .1, dist);
+		a = smoothstep(.00, .10, dist);
 		c = mix(c, vec4(0., 0., 0., 1.), a);      
 		
-		a = smoothstep(.15, .3, dist);
-		c = mix(c, vec4(1., 1., 1., 1.), a);
+		a = smoothstep(.15, .20, dist);
+		c = mix(c, border, a);
 		
-		a = smoothstep(.4, .5, dist);
+		a = smoothstep(.25, .30, dist);
 		c = mix(c, color, a);
 		
 	} else if(type == 1) { 
@@ -31,7 +32,7 @@ void main() {
 		c = mix(c, color, a);
 		
 		a = smoothstep(.35, .45, dist);
-		c = mix(c, vec4(1., 1., 1., 1.), a);
+		c = mix(c, border, a);
 	} 
 	
 	gl_FragColor = c;

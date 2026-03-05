@@ -18,18 +18,20 @@ void main() {
 		  p *= mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * 2.;
 		  p += vec2(.0, .7);
 	
-	float dist = 1. - sdArc(p, mix(.3, .6, index), 1., .0) * 2. - .4;
+	float dist = 1. - sdArc(p, mix(.3, .6, index), 1., .0) * 4.;
 	float a;
 	vec4  c = vec4(0.);
 	
+	// gl_FragColor = vec4(dist, dist, dist, 1.); return;
+	
 	if(type == 0) { 
-		a = smoothstep(.0, .1, dist);
+		a = smoothstep(.00, .10, dist);
 		c = mix(c, vec4(0., 0., 0., 1.), a);
 		
-		a = smoothstep(.15, .2, dist);
+		a = smoothstep(.20, .30, dist);
 		c = mix(c, vec4(1., 1., 1., 1.), a);
 		
-		a = smoothstep(.3, .4, dist);
+		a = smoothstep(.40, .50, dist);
 		c = mix(c, color, a);
 		
 	} else if(type == 1) { 

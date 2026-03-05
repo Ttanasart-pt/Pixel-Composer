@@ -214,10 +214,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Graph ----
-		show_graph	= false;
-		show_graphs = array_create(array_safe_length(_value));
-		graph_h		= 96;
-		graph_range = [ 0, 1 ];
+		show_graph	     = false;
+		show_graphs      = array_create(array_safe_length(_value));
+		graph_h		     = 96;
+		graph_range      = [ 0, 1 ];
+		prev_graph_range = [ 0, 1 ];
 		
 		value_validation   = VALIDATION.pass;
 		error_notification = noone;

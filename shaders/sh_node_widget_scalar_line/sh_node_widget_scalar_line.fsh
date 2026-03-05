@@ -20,18 +20,18 @@ void main() {
 	vec2  p0 = vec2(0.5, 0.5) - vec2(cos(angle), sin(angle)) * a;
 	vec2  p1 = vec2(0.5, 0.5) + vec2(cos(angle), sin(angle)) * a;
 	
-	dist = line_segment(p0, p1) * 3.;
+	dist = line_segment(p0, p1) * 4.;
 	dist = 1. - dist - 0.5;
 	
 	vec4  c = vec4(0.);
 	
-	a = smoothstep(.0, .1, dist);
+	a = smoothstep(.00, .10, dist);
 	c = mix(c, vec4(0., 0., 0., 1.), a);      
 	
-	a = smoothstep(.15, .2, dist);
+	a = smoothstep(.15, .20, dist);
 	c = mix(c, vec4(1., 1., 1., 1.), a);
 	
-	a = smoothstep(.3, .4, dist);
+	a = smoothstep(.25, .30, dist);
 	c = mix(c, color, a);
 	
 	gl_FragColor = c;

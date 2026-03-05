@@ -8,7 +8,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _type = 
 	
 	var __ax = _val[0];
 	var __ay = _val[1];
-	var _r   = ui(10);
+	var _r   = ui(8);
 						
 	var _ax = __ax * _s * _scale[0] + _x;
 	var _ay = __ay * _s * _scale[1] + _y;

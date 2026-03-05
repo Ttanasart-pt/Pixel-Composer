@@ -165,7 +165,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 	}
 	
 	var _hov = [ 0, 0, 0 ];
-	var _r   = ui(10);
+	var _r   = ui(8);
 	
 	if(drag_type) {
 		var _sval = array_clone(showValue());
@@ -266,7 +266,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 	for( var i = 0; i < 3; i++ ) 
 		__overlay_hover[i] = lerp_float(__overlay_hover[i], _hov[i], 4);
 		
-	if(drawPos && (drag_type == 0 || drag_type == 3)) draw_anchor_cross(__overlay_hover[0], xc, yc, _r + ui(4));
+	if(drawPos && (drag_type == 0 || drag_type == 3)) draw_anchor_cross(__overlay_hover[0], xc, yc, _r + ui(4), 1);
 	if(drawSize) {
 		if(drag_type == 0 || drag_type == 1) draw_anchor(__overlay_hover[1], x0, y0, _r);
 		if(drag_type == 0 || drag_type == 2) draw_anchor(__overlay_hover[2], x1, y1, _r);
