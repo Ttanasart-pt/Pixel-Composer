@@ -58,6 +58,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	attributes.lock_input    = false;
 	attributes.pure_function =  true;
+	attributes.always_topo   = false;
 	
 	tool_node = noone;
 	draw_input_overlay = true;
@@ -103,10 +104,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		icon_blend = p? COLORS._main_value_positive : undefined;
+		isPure     = p;
 		
-		if(updateTopo || !isPure && p) nodeTopo = NodeListSort(nodes, project);
-		isPure = p;
+		if(attributes.always_topo || updateTopo || p) nodeTopo = NodeListSort(nodes, project);
 		
+		// print(isPure)
 		// if(group) group.checkPureFunction(updateTopo);
 	}
 	

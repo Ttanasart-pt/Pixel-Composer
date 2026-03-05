@@ -2,18 +2,23 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	name  = "Pixel Builder";
 	color = COLORS.node_blend_feedback;
 	icon  = THEME.pixel_builder;
+	attributes.always_topo = true;
 	
+	dynamicBuilder  = new PBSurf(self);
 	reset_all_child = true;
-	attributes.pure_function = false;
 	layers = [];
 	
+	////- =Layers
 	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Bool("Outline", false));
-	newInput(2, nodeValue_Int("Thickness", 0));
-	newInput(3, nodeValue_Color("Color", ca_white)).setInternalName("Outline Color");
+	////- =Border
+	newInput( 1, nodeValue_Bool(  "Outline",   false    ));
+	newInput( 2, nodeValue_Int(   "Thickness", 0        ));
+	newInput( 3, nodeValue_Color( "Color",     ca_white )).setInternalName("Outline Color");
+	// 4
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output("Surface Out",     VALUE_TYPE.surface,     noone          ));
+	newOutput( 1, nodeValue_Output("Dynamic Builder", VALUE_TYPE.dynaSurface, dynamicBuilder ));
 	
 	layer_colors = [
 		CDEF.main_dark,
@@ -80,13 +85,15 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	});
 	
 	group_input_display_list  = [ 0, 
-		["Layers",  false], layer_renderer, 
-		["Border", false, 1], 2, 3, new Inspector_Spacer(ui(4), true, false, ui(4)) 
+		[ "Layers", false    ], layer_renderer, 
+		[ "Border", false, 1 ], 2, 3, new Inspector_Spacer(ui(4), true, false, ui(4)) 
 	];
-	group_output_display_list = [ 0 ];
+	group_output_display_list = [ 0, 1 ];
 	
 	custom_input_index  = array_length(inputs);
 	custom_output_index = array_length(outputs);
+	
+	////- Node
 	
 	dimension    = [ 1, 1 ];
 	temp_surface = [ noone ];
@@ -168,14 +175,32 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		
 		outputs[0].setValue(_outSurf);
 	}
-
+	
 	static update = function() {
 		dimension = inputs[0].getValue();
-	}
-	
-	static checkPureFunction = function() {
-		isPure = false;
+		outputs[1].setValue(dynamicBuilder);
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return outputs[0].getValue()};
+}
+
+function PBSurf(_node) : dynaSurf() constructor {
+	node = _node;
+	_p   = [0,0];
+	
+	static getWidth  = function() /*=>*/ {return node.dimension[0]};
+	static getHeight = function() /*=>*/ {return node.dimension[1]};
+	
+	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {
+		var _baseDim = node.dimension;
+		var _sw   = node.dimension[0] * _sx;
+		var _sh   = node.dimension[1] * _sy;
+		
+		node.dimension = [_sw, _sh];
+		node.renderTopo();
+		node.dimension = _baseDim;
+		
+		var _surf = node.outputs[0].getValue();
+		draw_surface_ext(_surf, _x, _y, 1, 1, _ang, _col, _alp);
+	}
 }

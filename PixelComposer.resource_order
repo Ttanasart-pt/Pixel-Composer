@@ -2703,6 +2703,7 @@
     {"name":"s_node_gap_contract","order":88,"path":"sprites/s_node_gap_contract/s_node_gap_contract.yy",},
     {"name":"s_node_glow","order":37,"path":"sprites/s_node_glow/s_node_glow.yy",},
     {"name":"s_node_gradient_cos","order":63,"path":"sprites/s_node_gradient_cos/s_node_gradient_cos.yy",},
+    {"name":"s_node_gradient_grid","order":77,"path":"sprites/s_node_gradient_grid/s_node_gradient_grid.yy",},
     {"name":"s_node_gradient_out","order":1,"path":"sprites/s_node_gradient_out/s_node_gradient_out.yy",},
     {"name":"s_node_gradient_palette","order":2,"path":"sprites/s_node_gradient_palette/s_node_gradient_palette.yy",},
     {"name":"s_node_gradient_points_n","order":76,"path":"sprites/s_node_gradient_points_n/s_node_gradient_points_n.yy",},

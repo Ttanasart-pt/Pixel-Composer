@@ -37,19 +37,21 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var surf  = _data[0]; 
-		
-		var mode  = _data[2];
-		var fmode = _data[6];
-		var scale = _data[1];
-		var targ  = _data[3];
-		var _atlS = _data[5];
-		var cDep  = attrDepth();
-		
-		inputs[1].setVisible(mode == 0);
-		inputs[3].setVisible(mode == 1);
-		inputs[5].setVisible(is(surf, SurfaceAtlas));
-		inputs[6].setVisible(mode == 1);
+		#region data
+			var surf  = _data[0]; 
+			
+			var mode  = _data[2];
+			var fmode = _data[6];
+			var scale = _data[1];
+			var targ  = _data[3];
+			var _atlS = _data[5];
+			var cDep  = attrDepth();
+			
+			inputs[1].setVisible(mode == 0);
+			inputs[3].setVisible(mode == 1);
+			inputs[5].setVisible(is(surf, SurfaceAtlas));
+			inputs[6].setVisible(mode == 1);
+		#endregion
 		
 		var isAtlas = is(surf, SurfaceAtlas);
 		if(isAtlas && !is(_outSurf, SurfaceAtlas))

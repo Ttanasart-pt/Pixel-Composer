@@ -3191,6 +3191,7 @@
     {"id":{"name":"s_node_glow","path":"sprites/s_node_glow/s_node_glow.yy",},},
     {"id":{"name":"s_node_gradient_cos","path":"sprites/s_node_gradient_cos/s_node_gradient_cos.yy",},},
     {"id":{"name":"s_node_gradient_extract","path":"sprites/s_node_gradient_extract/s_node_gradient_extract.yy",},},
+    {"id":{"name":"s_node_gradient_grid","path":"sprites/s_node_gradient_grid/s_node_gradient_grid.yy",},},
     {"id":{"name":"s_node_gradient_out","path":"sprites/s_node_gradient_out/s_node_gradient_out.yy",},},
     {"id":{"name":"s_node_gradient_palette","path":"sprites/s_node_gradient_palette/s_node_gradient_palette.yy",},},
     {"id":{"name":"s_node_gradient_points_n","path":"sprites/s_node_gradient_points_n/s_node_gradient_points_n.yy",},},
