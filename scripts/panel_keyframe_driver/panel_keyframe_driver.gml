@@ -27,55 +27,66 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		prop_height   = line_get_height(font, 12);
 		curr_height   = 0;
 		shift_height  = true;
+		
+		driver = undefined;
 	#endregion
 	
 	#region properties
-		var __enum_driver = __enum_array_gen([ "None", "Linear", "Wiggle", "Sine" ], s_driver_type);
+		__enum_driver = __enum_array_gen([ "None", "Linear", "Wiggle", "Sine", "Snap" ], s_driver_type);
 		sb_type = new scrollBox(__enum_driver, function(val) /*=>*/ { 
-			var _drv = undefined;
-			switch(val) {
-				case 1 : _drv = new KeyDriver_Linear(); break;
-				case 2 : _drv = new KeyDriver_Wiggle(); break;
-				case 3 : _drv = new KeyDriver_Sine();   break;
-			}
-			
+			var _drv = new KeyDriver().build(string_lower(__enum_driver[val].name));
 			key.driverObject = _drv;
+			driver = _drv;
 		}, false);
 		
 		var item = __Panel_Linear_Setting_Item;
 		var tNum = textBox_Number;
 		
-		prop_linear = [
-			new item(  __txt("Speed"),    tNum(function(v) /*=>*/ { key.driverObject.speed     = v; }), function() /*=>*/ {return key.driverObject.speed}     ),
-		];
-		
-		prop_wiggle = [
-			new item( __txt("Seed"),      tNum(function(v) /*=>*/ { key.driverObject.seed      = v; }), function() /*=>*/ {return key.driverObject.seed}      ),
-			new item( __txt("Frequency"), tNum(function(v) /*=>*/ { key.driverObject.frequency = v; }), function() /*=>*/ {return key.driverObject.frequency} ),
-			new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { key.driverObject.amplitude = v; }), function() /*=>*/ {return key.driverObject.amplitude} ),
-			new item( __txt("Octave"),    tNum(function(v) /*=>*/ { key.driverObject.octave    = v; }), function() /*=>*/ {return key.driverObject.octave}    ),
-		];
-		
-		prop_sine = [
-			new item( __txt("Frequency"), tNum(function(v) /*=>*/ { key.driverObject.frequency = v; }), function() /*=>*/ {return key.driverObject.frequency} ),
-			new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { key.driverObject.amplitude = v; }), function() /*=>*/ {return key.driverObject.amplitude} ),
-			new item( __txt("Phase"),     tNum(function(v) /*=>*/ { key.driverObject.phase     = v; }), function() /*=>*/ {return key.driverObject.phase}     ),
-		];
+		driverProp = {
+			KeyDriver_Linear : [
+				new item(  __txt("Speed"),    tNum(function(v) /*=>*/ { driver.speed = v; }), function() /*=>*/ {return driver.speed} ),
+			],
+			
+			KeyDriver_Wiggle : [
+				new item( __txt("Seed"),      tNum(function(v) /*=>*/ { driver.seed = v; })
+					.setSideButton(button(function() /*=>*/ { randomize(); driver.seed = seed_random(6); })
+						.setTooltip(__txt("Randomize"))
+						.setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad()
+					),
+					function() /*=>*/ {return driver.seed} 
+				),
+				new item( __txt("Sep Axis"),  new checkBox(function(v) /*=>*/ { driver.sep_axis = !driver.sep_axis; }), function() /*=>*/ {return driver.sep_axis} ),
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { driver.frequency = v; }), function() /*=>*/ {return driver.frequency}  ),
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { driver.amplitude = v; }), function() /*=>*/ {return driver.amplitude}  ),
+				new item( __txt("Octave"),    tNum(function(v) /*=>*/ { driver.octave = round(v); }),     function() /*=>*/ {return driver.octave} ),
+				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { driver.smooth = clamp(v,0,1); }), function() /*=>*/ {return driver.smooth} ),
+			],
+			
+			KeyDriver_Sine   : [
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { driver.frequency = v; }), function() /*=>*/ {return driver.frequency}  ),
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { driver.amplitude = v; }), function() /*=>*/ {return driver.amplitude}  ),
+				new item( __txt("Phase"),     tNum(function(v) /*=>*/ { driver.phase     = v; }), function() /*=>*/ {return driver.phase}      ),
+				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { driver.smooth = clamp(v,0,1); }), function() /*=>*/ {return driver.smooth} ),
+			],
+			
+			KeyDriver_Snap   : [
+				new item( __txt("Snap"), tNum(function(v) /*=>*/ { driver.snapSize = v; }), function() /*=>*/ {return driver.snapSize}  ),
+			],
+		}
 	#endregion
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		if(key == noone) {
+		if(key == noone || key.driverObject == undefined) {
 			bg_y = -1;
 			return 0;
 		}
 		
-		var props = [];
-		if(key.driverObject != undefined)
-		switch(instanceof(key.driverObject)) {
-			case "KeyDriver_Linear" : props = prop_linear; break;
-			case "KeyDriver_Wiggle" : props = prop_wiggle; break;
-			case "KeyDriver_Sine"   : props = prop_sine;   break;
+		driver = key.driverObject;
+		var props = driverProp[$ instanceof(key.driverObject)];
+		if(props == undefined) {
+			bg_y = -1;
+			return 0;
 		}
 		
 		var yy = ui(4) + _y;
@@ -87,6 +98,8 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		
 		var _hover = sc_content.hover;
 		var _focus = sc_content.active;
+		var _rx = x + sc_content.x;
+		var _ry = y + sc_content.y;
 		
 		var _bs = ui(32);
 		
@@ -181,7 +194,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				var _x1  = _w - ui(4);
 				var _wdw = ww - ui(4);
 				
-				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, {}, _m, x, y).setFont(font);
+				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, {}, _m, _rx, _ry).setFont(font);
 				if(is(_widg, checkBox)) { 
 					params.s = wh;
 					params.halign = fa_center; 
