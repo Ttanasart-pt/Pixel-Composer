@@ -217,7 +217,8 @@
 					var _pp = point_rotate(_opos[0], _opos[1], rotation_anchor[0], rotation_anchor[1], _rr);
 					
 					if(node.inputs[_suri + 1].setValue(_pp)) _edit = true;
-					if(node.inputs[_suri + 2].setValue(_rr)) _edit = true;
+					if(!node.tool_attribute.moveOnly)
+						if(node.inputs[_suri + 2].setValue(_rr)) _edit = true;
 				}
 				
 			}
@@ -268,6 +269,8 @@
 			drag_pmx  = undefined;
 			drag_pmy  = undefined;
 			
+			var _amo = array_length(node.inputs);
+			
 			if(array_empty(node.surface_selecting)) {
 				surf_dragging  = node.input_fix_len + node.dynamic_input_inspecting * node.data_length;
 				var _val = node.inputs[surf_dragging + 3].getValue();
@@ -281,9 +284,7 @@
 				axis_angle = node.inputs[surf_dragging + 2].getValue();
 				
 			} else {
-				var _amo = array_length(node.inputs);
 				drag_scales = array_verify(drag_scales, _amo);
-				
 				for( var i = 0; i < _amo; i++ ) drag_scales[i] = node.inputs[i].getValue();
 				
 				scale_anchor[0] = node.selection_bbox[4];
@@ -309,8 +310,8 @@
 			
 			if(array_empty(node.surface_selecting)) {
 				var val = [drag_scale[0], drag_scale[1]];
-				if(drag_axis == -1 || drag_axis == 0) val[0] = KEYBOARD_NUMBER == undefined? drag_scale[0] * _sx : drag_scale[0] + KEYBOARD_NUMBER;
-				if(drag_axis == -1 || drag_axis == 1) val[1] = KEYBOARD_NUMBER == undefined? drag_scale[1] * _sy : drag_scale[1] + KEYBOARD_NUMBER;
+				if(drag_axis == -1 || drag_axis == 0) val[0] = KEYBOARD_NUMBER == undefined? drag_scale[0] * _sx : drag_scale[0] * KEYBOARD_NUMBER;
+				if(drag_axis == -1 || drag_axis == 1) val[1] = KEYBOARD_NUMBER == undefined? drag_scale[1] * _sy : drag_scale[1] * KEYBOARD_NUMBER;
 				
 				if(node.inputs[surf_dragging + 3].setValue(val)) _edit = true;
 				
@@ -321,15 +322,16 @@
 					var _osca = drag_scales[_suri + 3];
 					
 					var _ss = [_osca[0], _osca[1]];
-					if(drag_axis == -1 || drag_axis == 0) _ss[0] = KEYBOARD_NUMBER == undefined? _osca[0] * _sx : _osca[0] + KEYBOARD_NUMBER;
-					if(drag_axis == -1 || drag_axis == 1) _ss[1] = KEYBOARD_NUMBER == undefined? _osca[1] * _sy : _osca[1] + KEYBOARD_NUMBER;
+					if(drag_axis == -1 || drag_axis == 0) _ss[0] = KEYBOARD_NUMBER == undefined? _osca[0] * _sx : _osca[0] * KEYBOARD_NUMBER;
+					if(drag_axis == -1 || drag_axis == 1) _ss[1] = KEYBOARD_NUMBER == undefined? _osca[1] * _sy : _osca[1] * KEYBOARD_NUMBER;
 					
 					var _pp = [_opos[0], _opos[1]];
 					_pp[0] = scale_anchor[0] + (_opos[0] - scale_anchor[0]) / _osca[0] * _ss[0];
 					_pp[1] = scale_anchor[1] + (_opos[1] - scale_anchor[1]) / _osca[1] * _ss[1];
 				
 					if(node.inputs[_suri + 1].setValue(_pp)) _edit = true;
-					if(node.inputs[_suri + 3].setValue(_ss)) _edit = true;
+					if(!node.tool_attribute.moveOnly)
+						if(node.inputs[_suri + 3].setValue(_ss)) _edit = true;
 				}
 				
 			}
@@ -430,6 +432,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_interpolation();
 	attributes.layer_visible    = [];
 	attributes.layer_selectable = [];
+	attributes.layer_order      = [];
 	properties_expand           = [];
 	
 	attributes.select_object = false;
@@ -863,6 +866,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	tool_sca = new NodeTool( "Scale",  THEME.tools_2d_scale  ).setToolObject(tool_object_sca);
 	tools    = [ tool_pos, tool_rot, tool_sca ];
 	
+	tool_attribute.moveOnly = false;
+	
+	tool_settings	= [
+		[ "Move Only", new checkBox(function() /*=>*/ { tool_attribute.moveOnly = !tool_attribute.moveOnly; }), "moveOnly", tool_attribute ],
+	];
+		
 	////- Nodes
 	
 	temp_surface       = array_create(3, noone);
@@ -874,12 +883,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	select_freeze     = 0;
 	selection_bbox    = [0, 0, 1, 1, 0, 0];
 	
-	drag_type   = 0; drag_anchor = 0;
-	dragging_sx = 0; dragging_sy = 0;
-	dragging_px = 0; dragging_py = 0;
-	dragging_mx = 0; dragging_my = 0;
-	dragging_ax = 0; dragging_ay = 0;
-	rot_anc_x   = 0; rot_anc_y   = 0;
+	drag_type     = 0; drag_anchor = 0;
+	dragging_sx   = 0; dragging_sy = 0;
+	dragging_px   = 0; dragging_py = 0;
+	dragging_mx   = 0; dragging_my = 0;
+	dragging_ax   = 0; dragging_ay = 0;
+	rot_anc_x     = 0; rot_anc_y   = 0;
 	dragging_bbox = [0, 0, 1, 1, 0, 0];
 	
 	draw_transforms    = [];
@@ -1718,6 +1727,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			attributes.layer_visible    = array_verify(attributes.layer_visible,    imageAmo);
 			attributes.layer_selectable = array_verify(attributes.layer_selectable, imageAmo);
+			
+			for( var i = array_length(attributes.layer_order); i < imageAmo; i++ )
+				attributes.layer_order[i] = i;
 		#endregion
 		
 		var res_index = 0;

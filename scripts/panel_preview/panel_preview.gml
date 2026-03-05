@@ -1025,7 +1025,10 @@ function Panel_Preview() : PanelContent() constructor {
     	var prevN = getNodePreview();
     	if(!is(prevN, Node)) return;
     	
-    	var prevS = prevN.preview_select_surface && !array_empty(prevN.outputs) && prevN.outputs[0].type == VALUE_TYPE.surface;
+    	var inspN = PANEL_INSPECTOR.getInspecting();
+    	var applS = inspN == noone || inspN.preview_select_surface;
+    	
+    	var prevS =  applS && !array_empty(prevN.outputs) && prevN.outputs[0].type == VALUE_TYPE.surface;
     	if(prevS) {
     		var surf = prevN.outputs[0].getValue();
     		
@@ -1460,11 +1463,15 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawToolSettings = function(_node) {
-    	var settings = array_merge(_node.getToolSettings(), tool_current.settings);
+    	var settings = _node.getToolSettings();
     	
-    	var _toolObj = tool_current.getToolObject();
-    	if(is(_toolObj, canvas_tool_with_selector))
-    		array_append(settings, _toolObj.tool.settings);
+    	if(tool_current) {
+    		array_append(settings, tool_current.settings);
+    		
+	    	var _toolObj = tool_current.getToolObject();
+	    	if(is(_toolObj, canvas_tool_with_selector))
+	    		array_append(settings, _toolObj.tool.settings);
+    	}
     	
         tool_x = lerp_float(tool_x, tool_x_to, 5);
         
@@ -1539,8 +1546,7 @@ function Panel_Preview() : PanelContent() constructor {
     			TOOLTIP = ttip;
             			
             var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key], {}, [ mx, my ], x, y)
-            				.setS(tolh)
-            				.setFont(_tool_font);
+            				.setFont(_tool_font).setS(tolh)
             
             wdg.drawParam(params);
             
@@ -2780,10 +2786,8 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_text(tx, cy + ch / 2, $"Tile {_in}");
             }
             
-        } else if(_node && tool_current) {
-            drawToolSettings(_node);
-            
-		} else {
+        } else {
+			if(_node) drawToolSettings(_node);
 			var m  = [mx,my];
 			
 			var cw = ui(120);
@@ -2794,14 +2798,6 @@ function Panel_Preview() : PanelContent() constructor {
 			sb_shader.setFocusHover(pFOCUS, pHOVER);
 			sb_shader.setTextColor(preview_shader? COLORS._main_accent : COLORS._main_text);
 			sb_shader.draw(cx, cy, cw, ch, preview_shader, m, x, y);
-			
-			// var cw = ui(240);
-			// var ch = topbar_height - ui(11);
-			// var cx = w - ui(6) - cw;
-			// var cy = ui(6);
-
-   //         bb_shader.setFocusHover(pFOCUS, pHOVER);
-			// bb_shader.draw(cx, cy, cw, ch, preview_shader, m, x, y);
 			
 			if(preview_shader) {
 				var bs = ch;
@@ -3114,6 +3110,9 @@ function Panel_Preview() : PanelContent() constructor {
     
     static drawSelection = function() {
     	var prevN = getNodePreview();
+    	var inspN = PANEL_INSPECTOR.getInspecting();
+    	var applS = inspN == noone || inspN.preview_select_surface;
+    	
     	var prevS = is(prevN, Node)
 			    		&& !array_empty(prevN.outputs) 
 			    		&& prevN.outputs[0].type == VALUE_TYPE.surface;
@@ -3190,7 +3189,7 @@ function Panel_Preview() : PanelContent() constructor {
     			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
         	
     		if(mouse_lrelease()) {
-    			if(prevS && prevN.preview_select_surface && selection_selecting > 1) 
+    			if(prevS && applS && selection_selecting > 1) 
     				selection_active = true;
     			selection_selecting = 0;
     		}

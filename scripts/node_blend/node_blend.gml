@@ -45,6 +45,7 @@
 function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend";
 	manage_atlas = false;
+	preview_select_surface = false;
 	
 	newActiveInput(8);
 	
@@ -150,8 +151,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		} else 
 			draw_rectangle(_rx, _ry, _rx + _rw, _ry + _rh, true);
 			
-		return hovering;
-	}
+		return hovering || dragging;
+	} 
 	
 	static drawOverlayTransform = function(_node) { 
 		if(_node == inputs[1].getNodeFrom())

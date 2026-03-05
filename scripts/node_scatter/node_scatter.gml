@@ -23,17 +23,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(10, nodeValueSeed());
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface(     "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
 	newInput( 1, nodeValue_Dimension());
-	newInput(15, nodeValue_Int(         "Array", 0, @"What to do when input array of surface.
+	newInput(15, nodeValue_Int(     "Array", 0, @"What to do when input array of surface.
 - Spread: Create Array of output each scattering single surface.
 - Mixed: Create single output scattering multiple images."))
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
 		
-	newInput(24, nodeValue_Int(         "Array Indices", [] )).setArrayDepth(1);
-	newInput(25, nodeValue_Surface(     "Array Texture"     ));
-	newInput(26, nodeValue_Range(       "Animated Array",    [0,0], { linked : true } ));
-	newInput(27, nodeValue_Enum_Scroll( "Animated Array End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
+	newInput(24, nodeValue_Int(     "Array Indices", [] )).setArrayDepth(1);
+	newInput(25, nodeValue_Surface( "Array Texture"     ));
+	newInput(26, nodeValue_Range(   "Animated Array",    [0,0], { linked : true } ));
+	newInput(27, nodeValue_EScroll( "Animated Array End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
 	
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, PROJ_SURF)}; 
@@ -75,23 +75,24 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(32, nodeValue_Rotation(   "Rotate per Radius",  0          ));
 	
 	////- =Scale
-	newInput( 3, nodeValue_Vec2_Range( "Scale",             [1,1,1,1] , { linked : true }));
+	newInput( 3, nodeValue_Vec2_Range( "Scale",             [1,1,1,1], { linked : true } ));
 	newInput( 8, nodeValue_Bool(       "Uniform Scaling",    true ));
 	newInput(34, nodeValue_Vec2(       "Scale per Radius",  [0,0] ));
-	newInput(43, nodeValue_Surface(    "Scale Surface" ));
+	newInput(43, nodeValue_Surface(    "Scale Surface"            ));
 	
 	////- =Color
 	newInput(11, nodeValue_Gradient(     "Random Blend",    gra_white )).setMappable(28);
-	newInput(12, nodeValue_Slider_Range( "Alpha",             [1,1] ));
-	newInput(16, nodeValue_Bool(         "Multiply Alpha",     true ));
-	newInput(41, nodeValue_Surface(      "Sample Surface" ));
-	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle",     [0,0,0,0] ));
+	newInput(12, nodeValue_Slider_Range( "Alpha",           [1,1]     ));
+	newInput(16, nodeValue_Bool(         "Multiply Alpha",   true     ));
+	newInput(41, nodeValue_Surface(      "Sample Surface"             ));
+	newInput(47, nodeValue_Anchor(       "Sample Anchor"              ));
+	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle",   [0,0,0,0] ));
 	
 	////- =Render
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	
-	// inputs: 47
+	// inputs: 48
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -108,7 +109,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Position", false], 40, 33, 36, 37, 39, 
 		["Rotation", false],  7,  4, 32, 
 		["Scale",    false],  3,  8, 34, 43, 
-		["Color",    false], 11, 28, 12, 16, 41, 42, 
+		["Color",    false], 11, 28, 12, 16, 41, 47, 42, 
 		["Render",   false], 18, 23, 
 	];
 	
@@ -210,6 +211,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var alpha      = _data[12];
 			var mulpA      = _data[16];
 			var sampSrf    = _data[41]; surfSamp.setSurface(sampSrf);
+			var sampAnc    = _data[47];
 			var sampWig    = _data[42];
 			
 			var blend      = _data[18];
@@ -668,8 +670,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					clr = colorMultiply(clr, array_safe_get_fast(_v, iCol, cola(c_white, 1)));
 				
 				if(surfSamp.active) {
-					var _samC = surfSamp.getPixel(_x + random_range_seed(sampWig[0], sampWig[1], _csed++), 
-					                              _y + random_range_seed(sampWig[2], sampWig[3], _csed++));
+					var _samx = _x + random_range_seed(sampWig[0], sampWig[1], _csed++);
+					var _samy = _y + random_range_seed(sampWig[2], sampWig[3], _csed++);
+					_samx += sampAnc[0] * _shf_x * 2;
+					_samy += sampAnc[1] * _shf_y * 2;
+					
+					var _samC = surfSamp.getPixel(_samx, _samy);
 					clr =  colorMultiply(clr, _samC);
 					alp *= color_get_alpha(_samC);
 				}
