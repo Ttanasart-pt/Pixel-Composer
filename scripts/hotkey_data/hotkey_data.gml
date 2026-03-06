@@ -51,8 +51,9 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 		
 		if(key)
 		switch(context) {
-			case "Graph":   PANEL_GRAPH.setActionTooltip(name);   break;
-			case "Preview": PANEL_PREVIEW.setActionTooltip(name); break;
+			case "Graph":     PANEL_GRAPH.setActionTooltip(name);     break;
+			case "Preview":   PANEL_PREVIEW.setActionTooltip(name);   break;
+			case "Animation": PANEL_ANIMATION.setActionTooltip(name); break;
 		}
 	}
 	

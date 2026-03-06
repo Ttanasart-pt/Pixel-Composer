@@ -93,8 +93,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	#endregion
 	
 	#region interact
-		click_block   = 0;
-		mouse_lhold   = false;
+		click_block = 0;
+		mouse_lhold = false;
+		quickedit   = 0;
 		
 		shake_amount  = 0;
 	#endregion
@@ -873,23 +874,36 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 			
 			if(_w > ui(80) && input == TEXTBOX_INPUT.number) { // multiplier
-				draw_set_alpha(0.5);
-			
-				if(hover && point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y, _x + _w, _y + _h)) {
-					draw_set_alpha(1);
+				var  aa  = .5;
+				var _inv = key_mod_press(ALT);
+				var _lab, _mul = 1, _add = 0;
 				
+				switch(quickedit) {
+					case 0 : 
+						_lab = _inv? "/2" : "x2";
+						_mul = _inv? .5 : 2;
+						break;
+					
+					case 1 : 
+						_lab = _inv? "CW" : "CCW";
+						_add = _inv? -90 : 90;
+						break;
+						
+				}
+				
+				if(hover && point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y, _x + _w, _y + _h)) {
+					aa = 1;
+					
 					if(mouse_press(mb_left, active)) {
-						if(key_mod_press(ALT))	_input_text	= string_real(toNumber(_input_text) / 2);
-						else					_input_text	= string_real(toNumber(_input_text) * 2);
+						_input_text = string_real(toNumber(_input_text) * _mul + _add);
 						apply();
 						
 						if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake;
 					}
 				}
 				
-				draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
-				if(key_mod_press(ALT)) draw_text_add(_x + _w - ui(16), _y + _h / 2, "/2");
-				else                   draw_text_add(_x + _w - ui(16), _y + _h / 2, "x2");
+				draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub, aa);
+				draw_text_add(_x + _w - ui(6), _y + _h / 2 - ui(1), _lab);
 				draw_set_alpha(1);
 			}
 			

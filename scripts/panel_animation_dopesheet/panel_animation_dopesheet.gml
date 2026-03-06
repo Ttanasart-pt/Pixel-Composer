@@ -128,6 +128,9 @@ function Panel_Animation_Dopesheet() {
         
         tooltip_loop_prop = noone;
         tooltip_loop_type = new tooltipSelector(__txtx("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
+        
+        tooltip_action      = "";
+        tooltip_action_time = 0;
     #endregion
     
     #region ---- Graph ----
@@ -3080,6 +3083,7 @@ function Panel_Animation_Dopesheet() {
         draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, ui(8), bar_w, dopesheet_h);
         
         if(item_dragging != noone) drawDopesheet_Label_Item(item_dragging, mx - item_dragging_dx, my - item_dragging_dy,,, 0.5);
+    	drawActionTooltip();
 		
     	////- =Actions
     	
@@ -3107,6 +3111,29 @@ function Panel_Animation_Dopesheet() {
     	dopeSheet_TimelineStretch();
     	
         transformKeys();
+    }
+    
+    function setActionTooltip(txt, time = 1) { tooltip_action = txt; tooltip_action_time = time; return self; }
+    function drawActionTooltip() {
+    	if(tooltip_action_time <= 0) return;
+    	
+    	tooltip_action_time -= DELTA_TIME;
+    	var aa = clamp(tooltip_action_time * 2, 0, 1);
+    	
+    	draw_set_text(f_p3, fa_right, fa_bottom, COLORS._main_text_sub);
+    	var txt = tooltip_action;
+    	var tw  = string_width(txt)  + ui(6 * 2);
+    	var th  = string_height(txt) + ui(3 * 2);
+    	
+    	var tx1 = bar_x + bar_w - ui(4);
+    	var ty1 = ui(8) + dopesheet_h - ui(4);
+    	var tx0 = tx1 - tw;
+		var ty0 = ty1 - th;
+		
+		draw_sprite_stretched_ext(THEME.textbox, 3, tx0, ty0, tw, th, CDEF.main_white, aa);
+		draw_set_alpha(aa);
+		draw_text(tx1 - ui(6), ty1 - ui(3), txt);
+		draw_set_alpha(1);
     }
     
     ////- Actions

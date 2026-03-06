@@ -1,6 +1,6 @@
 function rotator(_onModify, _step = -1) : widget() constructor {
-	onModify = _onModify;
-	valStep	 = _step;
+	onModify    = _onModify;
+	valStep	    = _step;
 	side_button = noone;
 	
 	scale    = 1;
@@ -10,23 +10,14 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	halign   = fa_center;
 	
 	tb_value = textBox_Number(function(v) /*=>*/ {return onModify(v)}).setHide(1);
+	tb_value.quickedit = 1;
 	
-	static setInteract = function(interactable = noone) {
-		self.interactable = interactable;
-		tb_value.interactable = interactable;
-	}
+	static setInteract = function(i=noone) /*=>*/ { interactable = i; tb_value.interactable = i; }
+	static register    = function(p=noone) /*=>*/ { tb_value.register(p); }
+	static isHovering  = function() /*=>*/ {return hoverRot || tb_value.hovering};
 	
-	static register = function(parent = noone) {
-		tb_value.register(parent);
-	}
-	
-	static isHovering = function() { return hoverRot || tb_value.hovering; }
-	
-	static setParam = function(params) {
-		tb_value.setParam(params);
-	}
-	
-	static drawParam = function(params) {
+	static setParam  = function(params) /*=>*/ { tb_value.setParam(params); }
+	static drawParam = function(params) /*=>*/ { 
 		setParam(params);
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
@@ -46,8 +37,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		
 		tb_value.setHide(1);
 		
-		var _r = _h;
-		var _bs      = min(_h, ui(32));
+		var _r  = _h;
+		var _bs = min(_h, ui(32));
 		var _drawRot = _w - _r > ui(64);
 		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
@@ -145,12 +136,6 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() {
-		var cln = new rotator(onModify, valStep);
-		return cln;
-	}
-	
-	static free = function() {
-		tb_value.free();
-	}
+	static clone = function() /*=>*/ {return new rotator(onModify, valStep)};
+	static free  = function() /*=>*/ { tb_value.free(); }
 }

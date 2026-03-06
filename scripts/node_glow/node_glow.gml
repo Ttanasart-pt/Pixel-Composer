@@ -24,12 +24,12 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 1, nodeValue_Slider( "Border",     0,  [0,  4, .1 ] )).setHotkey("B");
 	newInput( 2, nodeValue_Slider( "Size",       3,  [1, 16, .1 ] )).setHotkey("S").setMappable(16);
 	newInput( 3, nodeValue_Slider( "Strength",   1,  [0,  4, .01] )).setHotkey("T").setMappable(17).setCurvable(15);
+	newInput(14, nodeValue_Bool(   "Pixel Distance", true     ));
 	
 	////- =Render
 	newInput(13, nodeValue_EButton( "Blend Mode",  3, [ "Normal", "Replace", -1, "Lighten", "Screen", -1, "Darken", "Multiply" ]));
 	newInput( 4, nodeValue_Color(   "Color",          ca_white ));
 	newInput(18, nodeValue_Surface( "Texture"                  ));
-	newInput(14, nodeValue_Bool(    "Pixel Distance", true     ));
 	newInput(11, nodeValue_Bool(    "Draw Original",  true     ));
 	newInput(19, nodeValue_Slider(  "Blend Color",    0        ));
 	// input 20
@@ -38,8 +38,8 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	input_display_list = [  7, 
 		[ "Surfaces", true ],  0,  5,  6,  8,  9, 
-		[ "Glow",    false ], 10, 12,  2, 16,  3, 17, 15, 
-		[ "Render",  false ], 13,  4, 18, 14, 11, 19, 
+		[ "Glow",    false ], 10, 12,  2, 16,  3, 17, 15, 14, 
+		[ "Render",  false ], 13,  4, 18, 11, 19, 
 	]
 	
 	////- Node
@@ -68,12 +68,12 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _border   = _data[ 1];
 			var _size     = _data[ 2];
 			var _strn     = _data[ 3];
+			var _pxDist   = _data[14];
 			
 			var _blend    = _data[13];
 			var _color    = _data[ 4];
 			var _csurf    = _data[18];
 			var _render   = _data[11];
-			var _pxDist   = _data[14];
 			var _blndC    = _data[19];
 		#endregion
 		

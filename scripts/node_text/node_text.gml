@@ -34,14 +34,15 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(30, nodeValue_Bool(         "Rotate Along Path", true ));
 	
 	////- =Font
-	newInput( 1, nodeValue_Font( "Font"          )).setVisible(true, false);
-	newInput(35, nodeValue_Font( "Fallback Font" )).setVisible(true, false);
-	newInput( 4, nodeValue_Vec2(         "Character Range", [32,128] ));
-	newInput( 2, nodeValue_Int(          "Size",             16      ));
-	newInput(15, nodeValue_Bool(         "Scale to Fit",     false   ));
-	newInput( 3, nodeValue_Bool(         "Anti-aliasing ",   false   ));
-	newInput(11, nodeValue_Float(        "Letter Spacing",   0       ));
-	newInput(12, nodeValue_Float(        "Line Height",      0       ));
+	newInput( 1, nodeValue_Font(  "Font"                      )).setVisible(true, false);
+	newInput(35, nodeValue_Font(  "Fallback Font"             )).setVisible(true, false);
+	newInput( 4, nodeValue_Vec2(  "Character Range", [32,128] ));
+	newInput( 2, nodeValue_Int(   "Size",             16      ));
+	newInput(15, nodeValue_Bool(  "Scale to Fit",     false   ));
+	newInput( 3, nodeValue_Bool(  "Anti-aliasing ",   false   ));
+	newInput(11, nodeValue_Float( "Letter Spacing",   0       ));
+	newInput(12, nodeValue_Float( "Line Height",      0       ));
+	newInput(36, nodeValue_Bool(  "Monospaced",       false   ));
 	
 	////- =Rendering
 	newInput(28, nodeValue_Bool(         "Round Position",   true     ));
@@ -65,13 +66,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(25, nodeValue_Enum_Button(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
 	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]  ));
 	newInput(26, nodeValue_Bool(         "Use Full Text Size", false ));
-	// inputs 36
+	// inputs 37
 		
 	input_display_list = [ 
 		["Text",	    false    ],  0, 32, 
 		["Output",		 true    ],	 9,  6, 34, 10, 33, 
 		["Alignment",	false    ], 13, 14, 27,  7,  8, 30, 
-		["Font",		false    ],  1, 35,  2, 15,  3, 11, 12, 
+		["Font",		false    ],  1, 35,  2, 15,  3, 11, 12, 36, 
 		["Rendering",	false    ],  5, 31, 
 		["Background",   true, 16], 17, 
 		["Wave",	     true, 18], 22, 19, 20, 21, 
@@ -324,6 +325,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _aa    = _data[ 3];
 			var _trck  = _data[11];
 			var _line  = _data[12];
+			var _mono  = _data[36];
 			
 			var _col   = _data[ 5];
 			var _colLt = _data[31];
@@ -389,6 +391,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			} // fallback
 			
 			draw_set_font(__f);
+			
+			__mono  = _mono;
+			__monoW = string_width("W");
 		#endregion
 		
 		if(str == "") {
@@ -450,8 +455,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _str_line = _cut_lines[i];
 				
 				if(_lineW == 0) {
-					_str_lines[_ind]   = _str_line;
-					_line_widths[_ind] = string_width(_str_line) + _trck * (string_length(_str_line) - 1);
+					_str_lines[_ind]    = _str_line;
+					_line_widths[_ind]  = __mono? __monoW * string_length(_str_line) : string_width(_str_line)
+					_line_widths[_ind] += _trck * (string_length(_str_line) - 1);
 					_ind++;
 					
 				} else {
@@ -460,7 +466,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					for( var j = 1; j <= string_length(_str_line); j++ ) {
 						var _chr = string_char_at(_str_line, j);
-						var _chw = string_width(_chr) + _trck;
+						var _chw = (__mono? __monoW : string_width(_chr)) + _trck;
 						
 						if(_lw + _chw >= _lineW) {
 							_str_lines[_ind]   = _lne;
@@ -494,7 +500,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			} else {
 				if(_lineW == 0) {
-					_max_ww = string_width(  rawStr );
+					_max_ww = __mono? __monoW * string_length(rawStr) : string_width(  rawStr );
 					_max_hh = string_height( rawStr );
 					
 				} else {
@@ -655,7 +661,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						valign: va, 
 					});
 					
-					__temp_tx += string_width(_chr) + __temp_trck;
+					__temp_tx += (__mono? __monoW : string_width(_chr)) + __temp_trck;
 				});
 				
 				ty -= string_height(_str_line) + _line;
@@ -699,6 +705,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					_tx += __offx;
 					_ty += __offy;
+					var chw = string_width(_chr);
+					if(__mono) _tx += (__monoW - chw) / 2;
 					
 					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 					__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
@@ -716,7 +724,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						valign: fa_top, 
 					});
 					
-					__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
+					__temp_tx += ((__mono? __monoW : chw) + __temp_trck) * __temp_ss;
 				});
 			
 				ty += (string_height(_str_line) + _line) * _ss;
@@ -744,7 +752,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _sx = _a.sx;
 				var _sy = _a.sy;
 				
-				var _ww = string_width(_ch)  * _sx;
+				var _ww = (__mono? __monoW : string_width(_ch)) * _sx;
 				var _hh = string_height(_ch) * _sy;
 				
 				var _ss = surface_create(max(1, _ww), max(1, _hh));
