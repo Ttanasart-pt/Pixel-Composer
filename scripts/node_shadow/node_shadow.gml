@@ -17,22 +17,28 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(6, 9); // inputs 9, 10
 	
 	////- =Shadow
-	newInput( 1, nodeValue_Color(   "Color",           ca_black ));
-	newInput( 2, nodeValue_Slider(  "Strength",       .5, [ 0, 2, 0.01] )).setCurvable(13).setHotkey("S").hideLabel();
+	newInput(14, nodeValue_EButton( "Type",      0, [ "Outside", "Inside" ] ));
+	newInput( 1, nodeValue_Color(   "Color",     ca_black        ));
+	newInput( 2, nodeValue_Slider(  "Strength", .5, [0, 2, 0.01] )).setCurvable(13).setHotkey("S").hideLabel();
+	newInput( 4, nodeValue_ISlider( "Grow",      3, [0, 16, 0.1] ));
+	newInput( 5, nodeValue_ISlider( "Blur",      3, [0, 16, 0.1] ));
+	
+	////- =Position
 	newInput(11, nodeValue_EButton( "Positioning",     0, [ "Shift", "Light" ] ));
 	newInput( 3, nodeValue_Vec2(    "Shift",          [.25,.25] )).setUnitSimple().hideLabel();
 	newInput(12, nodeValue_Vec2(    "Light Position", [0,0] )).setUnitSimple().hideLabel();
-	newInput( 4, nodeValue_ISlider( "Grow", 3, [0, 16, 0.1] ));
-	newInput( 5, nodeValue_ISlider( "Blur", 3, [0, 16, 0.1] ));
-	// input 16
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Shadow Only", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 
 		[ "Surfaces",  true ],  0,  6,  7,  9, 10, 
-		[ "Shadow",   false ],  1,  2, 13, 11,  3, 12,  4,  5, 
+		[ "Shadow",   false ], 14,  1,  2, 13,  4,  5, 
+		[ "Position", false ], 11,  3, 12, 
 	];
+	
+	////- Node
 	
 	surface_blur_init();
 	attribute_surface_depth();
@@ -44,7 +50,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var ww   = _s * _dim[0];
 		var hh   = _s * _dim[1];
 		var cx   = _x + ww / 2;
-		var cy   = _y + ww / 2;
+		var cy   = _y + hh / 2;
 		
 		var _typ = getInputSingle(11);
 		
@@ -76,11 +82,13 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _surf   = _data[0];
-			var cl      = _data[1];
-			var _stre   = _data[2];
-			var _border = _data[4];
-			var _size   = _data[5];
+			var _surf   = _data[ 0];
+			
+			var _type   = _data[14];
+			var _colr   = _data[ 1];
+			var _stre   = _data[ 2];
+			var _border = _data[ 4];
+			var _size   = _data[ 5];
 			
 			var _posi   = _data[11];
 			var _shf    = _data[ 3];
@@ -94,13 +102,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _outShad = _outData[1];
 		#endregion
 		
-		var _shax = _shf[0]; 
-		var _shay = _shf[1];
-		
-		if(_posi == 1) {
-			_shax = _dim[0] / 2 - _lgh[0];
-			_shay = _dim[1] / 2 - _lgh[1];
-		}
+		var _shax = _posi == 0? _shf[0] : _dim[0] / 2 - _lgh[0];
+		var _shay = _posi == 0? _shf[1] : _dim[1] / 2 - _lgh[1];
 		
 		if(_border > 0) {
 			surface_set_shader(_outShad, sh_outline_only, true, BLEND.over);
@@ -117,7 +120,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			surface_reset_shader();
 		}
 		
-		var args = new blur_gauss_args(_outShad, _size + 1, 3).setBG(false, cl).setOver(cl);
+		var args = new blur_gauss_args(_outShad, _size + 1, 3).setBG(false, _colr).setOver(_colr);
 		if(inputs[2].attributes.curved) args.setSizeCurve(_data[13]);
 		
 		var _s = surface_apply_gaussian(args);
@@ -125,10 +128,11 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			draw_surface(_s, 0, 0);
 		surface_reset_shader();
 		
-		surface_set_shader(_outSurf, noone, true, BLEND.over);
-			draw_surface_ext_safe(_outShad, 0, 0, 1, 1, 0, c_white, _stre * _color_get_alpha(cl));
+		surface_set_shader(_outSurf, sh_shadow_apply, true, BLEND.over);
+			shader_set_s("shadowTex", _outShad );
+			shader_set_i("type",      _type    );
+			shader_set_f("strength",  _stre * _color_get_alpha(_colr) );
 			
-			BLEND_ALPHA_MULP
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		

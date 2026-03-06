@@ -1,0 +1,6 @@
+{
+    "name":          "UV Project",
+    "spr":           "s_node_uv_cartesian",
+    "baseNode":      "Node_UV_Project",
+    "pxc_version":    120075,
+}

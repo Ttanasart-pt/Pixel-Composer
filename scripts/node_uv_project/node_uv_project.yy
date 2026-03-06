@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_uv_project",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_uv_project",
+  "parent":{
+    "name":"uv",
+    "path":"folders/nodes/data/generator/uv.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
