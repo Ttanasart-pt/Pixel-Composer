@@ -146,6 +146,7 @@ uniform int   blend;
 uniform int   side;
 uniform int   render;
 uniform int   pixelDist;
+uniform float blendColor;
 
 uniform vec2      size;
 uniform int       sizeUseSurf;
@@ -199,6 +200,7 @@ void main() {
 	
 	float dist = 0.;
 	float astp = max(64., siz * 4.);
+	vec2  pos  = v_vTexcoord;
 	
     for(float i = 1.; i <  siz; i++)
 	for(float j = 0.; j <= astp; j++) {
@@ -213,14 +215,16 @@ void main() {
 		if(side == 0) {
 			if((mode == 0 && bright(samp) > bright(base)) || (mode == 1 && samp.a > base.a)) {
 				dist = pixelDist == 1? i : pxDist;
-				i = siz;
+				pos  = smPos;
+				i    = siz;
 				break;
 			}
 			
 		} else if(side == 1) {
 			if((mode == 0 && bright(samp) < bright(base)) || (mode == 1 && samp.a < base.a)) {
 				dist = pixelDist == 1? i : pxDist;
-				i = siz;
+				pos  = smPos;
+				i    = siz;
 				break;
 			}
 		}
@@ -230,7 +234,9 @@ void main() {
 	
 	vec4  cc   = color;
 	if(colorUseSurf == 1)
-		cc *= texture2D( colorSurf, v_vTexcoord );	
+		cc *= texture2D( colorSurf, v_vTexcoord );
+	if(blendColor > 0.)
+		cc = mix(cc, cc * texture2D( gm_BaseTexture, pos ), blendColor);	
 	
 	float str  = 1. - dist / siz;
 	if(strength_curve_use == 1) str  = curveEval(strength_curve, strength_amount, str);
