@@ -471,6 +471,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static display_text = function(_x, _y, _text, _w, _m = -1) {
 		var xx = _x + disp_x;
+		var sx = xx;
 		var cc = sliding == 2? COLORS._main_accent : color;
 		draw_set_text(font, fa_left, fa_top, cc);
 		
@@ -487,6 +488,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var _tx = xx;
 				if(sliding == 2) 
 					_tx = _w / 2 - _wh_w - padding;
+				sx = _tx;
 				
 				var _inv = _wh == "0" ||_wh == "-0";
 				
@@ -499,7 +501,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				xx = _tx + string_width(_dc); 
 				
 			} else {
-				draw_text_add(xx, _y, _text);
+				draw_text_add(sx, _y, _text);
 				xx += string_width(_text); 
 			}
 			
@@ -521,8 +523,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			draw_text_add(xx, _y, prefix);
 			xx += string_width(prefix);
 			
+			sx = xx;
 			draw_set_color(cc);
-			draw_text_add(xx, _y, _text);
+			draw_text_add(sx, _y, _text);
 			xx += string_width(_text); 
 		}
 		
@@ -543,20 +546,20 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var _ch  = string_char_at(_text, i);
 				var _chw = string_width(_ch);
 						
-				if(_mm < xx + _chw / 2) {
+				if(_mm < sx + _chw / 2) {
 					target = i - 1;
 					break;
 				} 
 				
-				if(_mm < xx + _chw) {
+				if(_mm < sx + _chw) {
 					target = i;
 					break;
 				}
 				
-				if(_mm > xx + _chw)
+				if(_mm > sx + _chw)
 					target = i + 1;
 				
-				xx += _chw;
+				sx += _chw;
 			}
 			
 			if(target != -999 && !click_block) {
