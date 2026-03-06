@@ -409,7 +409,6 @@
 			}
 		}
 	}
-	
 #endregion
 
 function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -917,7 +916,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var y1 = _y + (hh - pad[3]) * _s;
 		var snap = 4;
 		
-		if(surf_dragging > noone) {
+		if(surf_dragging > noone) { // Editing
 			var _edit = false;
 			
 			switch(drag_type) {
@@ -1208,7 +1207,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				surf_dragging = noone;
 				UNDO_HOLDING  = false;
 			}
-		}
+		} // Editing
 		
 		var w_hover       = false;
 		var hovering      = noone;
@@ -1217,118 +1216,120 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var hovering_ianc = noone;
 		var hovering_ai   = noone;
 		
-		var hovering_con  = noone;
-		
-		var amo     = getInputAmount();
-		var anchors = array_create(array_length(inputs));
-		if(amo == 0) { dynamic_input_inspecting = noone; return; }
-		
-		var _vis = attributes.layer_visible;
-		var _sel = attributes.layer_selectable;
-		dynamic_input_inspecting = min(dynamic_input_inspecting, amo - 1);
-		
-		if(attributes.select_object && selection_sampler.active) {
-			var _msx = floor((_mx - _x) / _s);
-			var _msy = floor((_my - _y) / _s);
-			var _ind = selection_sampler.getPixel(_msx, _msy);
+		#region Hovering & Selection
+			var hovering_con  = noone;
 			
-			if(_ind) {
-				hovering_type = NODE_COMPOSE_DRAG.move;
-				hovering_con  = _ind - 1;
-			}
-		}
-		
-		for(var i = 0; i < amo; i++) {
-			var index = input_fix_len + i * data_length;
-			var _surf = current_data[index + 0];
+			var amo     = getInputAmount();
+			var anchors = array_create(array_length(inputs));
+			if(amo == 0) { dynamic_input_inspecting = noone; return; }
 			
-			if(!is_surface(_surf) || !_vis[i]) continue;
+			var _vis = attributes.layer_visible;
+			var _sel = attributes.layer_selectable;
+			dynamic_input_inspecting = min(dynamic_input_inspecting, amo - 1);
 			
-			var _pos  = current_data[index + 1];
-			var _rot  = current_data[index + 2];
-			var _sca  = current_data[index + 3];
-			var _anc  = current_data[index + 6];
-			
-			var _ww = surface_get_width_safe(_surf);
-			var _hh = surface_get_height_safe(_surf);
-			var _sw = _ww * _sca[0];
-			var _sh = _hh * _sca[1];
-			
-			var _ax = _sw *      _anc[0];
-			var _ay = _sh *      _anc[1];
-			var iax = _sw * (1 - _anc[0]);
-			var iay = _sh * (1 - _anc[1]);
-			
-			var _siz = [ _sw * _s, _sh * _s ];
-			var _cx = _pos[0];
-			var _cy = _pos[1];
-			
-			var _c0x = _cx - _ax;
-			var _c0y = _cy - _ay;
-			var _c1x = _cx + iax;
-			var _c1y = _cy + iay;
-			
-			point_rotate(_cx, _cy, _cx, _cy, _rot, __p);
-			var _aa = [ _x + __p[0] * _s, _y + __p[1] * _s ];
-			
-			point_rotate(_c0x, _c0y, _cx, _cy, _rot, __p);
-			var _d0 = [ _x + __p[0] * _s, _y + __p[1] * _s ];
-			
-			point_rotate(_c0x, _c1y, _cx, _cy, _rot, __p);
-			var _d1 = [ _x + __p[0] * _s, _y + __p[1] * _s ];
-			
-			point_rotate(_c1x, _c0y, _cx, _cy, _rot, __p);
-			var _d2 = [ _x + __p[0] * _s, _y + __p[1] * _s ];
-			
-			point_rotate(_c1x, _c1y, _cx, _cy, _rot, __p);
-			var _d3 = [ _x + __p[0] * _s, _y + __p[1] * _s ];
-			
-			point_rotate(_cx + _sw / 2 - _ax, _c0y - (24 / _s) * sign(_sca[1]), _cx, _cy, _rot, __p);
-			var _rr = [ _x + __p[0] * _s, _y + __p[1] * _s ];
-			
-			point_rotate(_cx + _sw / 2 - _ax, _c0y, _cx, _cy, _rot, __p);
-			var _rc = [ _x + __p[0] * _s, _y + __p[1] * _s ];
-			
-			point_rotate(_c1x + (16 / _s) * sign(_sca[0]), _c1y + (16 / _s) * sign(_sca[1]), _cx, _cy, _rot, __p);
-			var _ss = [ _x + __p[0] * _s, _y + __p[1] * _s ];
-			
-			anchors[index] = {
-				d0: _d0, d1: _d1, d2: _d2, d3: _d3,
-				cx: _cx, cy: _cy,
-				rr: _rr, ss: _ss, rc: _rc, 
+			if(attributes.select_object && selection_sampler.active) {
+				var _msx = floor((_mx - _x) / _s);
+				var _msy = floor((_my - _y) / _s);
+				var _ind = selection_sampler.getPixel(_msx, _msy);
 				
-				anc: _aa, 
-				siz: _siz,
-				
-				raw_pos: _pos,
-				raw_rot: _rot,
-				raw_sca: _sca,
-				raw_anc: _anc,
-			}
-			
-			if(!_sel[i]) continue;
-			
-			var _hov = point_in_rectangle_points(_mx, _my, _d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
-			
-			if(_hov) {
-				if(isNotUsingTool() || isUsingTool("Move"))
+				if(_ind) {
 					hovering_type = NODE_COMPOSE_DRAG.move;
-				hovering = i;
+					hovering_con  = _ind - 1;
+				}
 			}
-		}
-		
-		if(attributes.select_object && selection_sampler.active)
-			hovering = hovering_con;
-		
-		var _a = noone;
-		
-		if(dynamic_input_inspecting >= 0) {
-			var _index = dynamic_input_inspecting;
-			var _ancid = input_fix_len + dynamic_input_inspecting * data_length;
-			_a = anchors[_ancid];
-		}
 			
-		if(is_struct(_a)) {
+			for(var i = 0; i < amo; i++) {
+				var index = input_fix_len + i * data_length;
+				var _surf = current_data[index + 0];
+				
+				if(!is_surface(_surf) || !_vis[i]) continue;
+				
+				var _pos  = current_data[index + 1];
+				var _rot  = current_data[index + 2];
+				var _sca  = current_data[index + 3];
+				var _anc  = current_data[index + 6];
+				
+				var _ww = surface_get_width_safe(_surf);
+				var _hh = surface_get_height_safe(_surf);
+				var _sw = _ww * _sca[0];
+				var _sh = _hh * _sca[1];
+				
+				var _ax = _sw *      _anc[0];
+				var _ay = _sh *      _anc[1];
+				var iax = _sw * (1 - _anc[0]);
+				var iay = _sh * (1 - _anc[1]);
+				
+				var _siz = [ _sw * _s, _sh * _s ];
+				var _cx = _pos[0];
+				var _cy = _pos[1];
+				
+				var _c0x = _cx - _ax;
+				var _c0y = _cy - _ay;
+				var _c1x = _cx + iax;
+				var _c1y = _cy + iay;
+				
+				point_rotate(_cx, _cy, _cx, _cy, _rot, __p);
+				var _aa = [ _x + __p[0] * _s, _y + __p[1] * _s ];
+				
+				point_rotate(_c0x, _c0y, _cx, _cy, _rot, __p);
+				var _d0 = [ _x + __p[0] * _s, _y + __p[1] * _s ];
+				
+				point_rotate(_c0x, _c1y, _cx, _cy, _rot, __p);
+				var _d1 = [ _x + __p[0] * _s, _y + __p[1] * _s ];
+				
+				point_rotate(_c1x, _c0y, _cx, _cy, _rot, __p);
+				var _d2 = [ _x + __p[0] * _s, _y + __p[1] * _s ];
+				
+				point_rotate(_c1x, _c1y, _cx, _cy, _rot, __p);
+				var _d3 = [ _x + __p[0] * _s, _y + __p[1] * _s ];
+				
+				point_rotate(_cx + _sw / 2 - _ax, _c0y - (24 / _s) * sign(_sca[1]), _cx, _cy, _rot, __p);
+				var _rr = [ _x + __p[0] * _s, _y + __p[1] * _s ];
+				
+				point_rotate(_cx + _sw / 2 - _ax, _c0y, _cx, _cy, _rot, __p);
+				var _rc = [ _x + __p[0] * _s, _y + __p[1] * _s ];
+				
+				point_rotate(_c1x + (16 / _s) * sign(_sca[0]), _c1y + (16 / _s) * sign(_sca[1]), _cx, _cy, _rot, __p);
+				var _ss = [ _x + __p[0] * _s, _y + __p[1] * _s ];
+				
+				anchors[index] = {
+					d0: _d0, d1: _d1, d2: _d2, d3: _d3,
+					cx: _cx, cy: _cy,
+					rr: _rr, ss: _ss, rc: _rc, 
+					
+					anc: _aa, 
+					siz: _siz,
+					
+					raw_pos: _pos,
+					raw_rot: _rot,
+					raw_sca: _sca,
+					raw_anc: _anc,
+				}
+				
+				if(!_sel[i]) continue;
+				
+				var _hov = point_in_rectangle_points(_mx, _my, _d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
+				
+				if(_hov) {
+					if(isNotUsingTool() || isUsingTool("Move"))
+						hovering_type = NODE_COMPOSE_DRAG.move;
+					hovering = i;
+				}
+			}
+			
+			if(attributes.select_object && selection_sampler.active)
+				hovering = hovering_con;
+				
+			var _a = noone;
+			
+			if(dynamic_input_inspecting >= 0) {
+				var _index = dynamic_input_inspecting;
+				var _ancid = input_fix_len + dynamic_input_inspecting * data_length;
+				_a = anchors[_ancid];
+			}
+		#endregion
+				
+		if(is_struct(_a)) { // Draw Gizmo
 			var p0x = _a.d0[0], p0y = _a.d0[1];
 			var p1x = _a.d1[0], p1y = _a.d1[1];
 			var p2x = _a.d2[0], p2y = _a.d2[1];
@@ -1408,12 +1409,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(isNotUsingTool() || isUsingTool("Anchor"))
 				draw_anchor_cross(_ai * .5, ax, ay, ui(8), 1, _rot);
 			
-		}
+		} // Draw Gizmo
 		
 		if(hovering != noone) hovering_ianc = array_safe_get_fast(anchors, input_fix_len + hovering * data_length);
 		
 		var _show_selecting = true;
-		if(isUsingTool()) {
+		if(isUsingTool()) { // Draw Tool Overlay
 			_show_selecting = false;
 			var _currTool = PANEL_PREVIEW.tool_current;
 			var _tool     = _currTool.getToolObject();
@@ -1423,9 +1424,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(mouse_lclick()) select_freeze = 1;
 				_show_selecting = true;
 			}
-		}
+		} // Draw Tool Overlay
 		
-		if(_show_selecting) { // Multi Selections
+		if(_show_selecting) { // Draw Gizmo for Multiple Selections
 			if(select_freeze == 0 && panel.selection_selecting && surf_dragging == noone) {
 				var sx0 = _x + panel.selection_x0 * _s;
 				var sy0 = _y + panel.selection_y0 * _s;
@@ -1564,89 +1565,92 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				// draw_anchor(_bi == 3, _selx1, _sely1, ui(8), 2);
 				
 			}
-		}
+		} // Draw Gizmo for Multiple Selections
 		
-		if(select_freeze == 0 && mouse_lpress(active)) { 
-			dynamic_input_inspecting = hovering; 
-			if(hovering != -1) surface_selecting = [];
+		if(select_freeze == 0 && mouse_lpress(active)) { // Left Click
+			if(hovering != -1) {
+				if(key_mod_press(SHIFT)) {
+					if(array_empty(surface_selecting) && dynamic_input_inspecting > -1)
+						surface_selecting = [ input_fix_len + dynamic_input_inspecting * data_length ];
+					array_toggle(surface_selecting, input_fix_len + hovering * data_length);
+					
+				} else 
+					surface_selecting = [];
+			}
 			
+			dynamic_input_inspecting = hovering; 
 			refreshDynamicDisplay(); 
-		}
+		} // Left Click
 		
 		if(mouse_lrelease()) select_freeze = 0;
 		
-		if(hovering != noone) {
-			w_hover = true;
-			var a   = hovering_ianc;
+		if(hovering != noone && is_struct(hovering_ianc)) { // Start Transform Action
+			var a = hovering_ianc;
+			if(hovering > -1 && hovering != dynamic_input_inspecting) {
+				draw_set_color(COLORS.node_composite_overlay_border);
+				draw_rectangle_border_points(a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]);
+			}
 			
-			if(is_struct(a)) {
-				if(hovering > -1 && hovering != dynamic_input_inspecting) {
-					draw_set_color(COLORS.node_composite_overlay_border);
-					draw_rectangle_border_points(a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]);
-				}
+			if(mouse_lpress(active)) {
+				surf_dragging	= hovering > -1? input_fix_len + hovering * data_length : -1;
+				drag_type		= hovering_type;
 				
-				if(mouse_lpress(active)) {
-					
-					surf_dragging	= hovering > -1? input_fix_len + hovering * data_length : -1;
-					drag_type		= hovering_type;
-					
-					surface_predrag = array_verify(surface_predrag, array_length(inputs));
-					for( var i = 0, n = array_length(inputs); i < n; i++ ) surface_predrag[i] = inputs[i].getValue();
-					
-					dragging_bbox = array_clone(selection_bbox);
-					
-					switch(hovering_type) {
-						case NODE_COMPOSE_DRAG.move : 
-							dragging_sx		= a.raw_pos[0];
-							dragging_sy		= a.raw_pos[1];
-							dragging_mx		= _mx;
-							dragging_my		= _my;
-							break;
-							
-						case NODE_COMPOSE_DRAG.rotate : 
-							dragging_sx		= a.raw_rot;
-							rot_anc_x		= overlay_x(a.cx, _x, _s);
-							rot_anc_y		= overlay_y(a.cy, _y, _s);
-							dragging_mx		= point_direction(rot_anc_x, rot_anc_y, _mx, _my);
-							break;
-							
-						case NODE_COMPOSE_DRAG.scale : 
-							dragging_sx		= a.siz[0];
-							dragging_sy		= a.siz[1];
-							dragging_ax		= a.d0[0];
-							dragging_ay		= a.d0[1];
-							dragging_mx		= _mx;
-							dragging_my		= _my;
-							rot_anc_x		= overlay_x(a.cx, _x, _s);
-							rot_anc_y		= overlay_y(a.cy, _y, _s);
-							break;
-							
-						case NODE_COMPOSE_DRAG.box : 
-							drag_anchor     = hovering_ai;
-							dragging_sx		= a.siz[0];
-							dragging_sy		= a.siz[1];
-							dragging_px		= a.raw_pos[0];
-							dragging_py		= a.raw_pos[1];
-							dragging_ax		= hovering_oanc[0];
-							dragging_ay		= hovering_oanc[1];
-							dragging_mx		= _mx;
-							dragging_my		= _my;
-							break;
-							
-						case NODE_COMPOSE_DRAG.anchor : 
-							dragging_sx		= a.raw_anc[0];
-							dragging_sy		= a.raw_anc[1];
-							dragging_px		= a.raw_pos[0];
-							dragging_py		= a.raw_pos[1];
-							dragging_mx		= _mx;
-							dragging_my		= _my;
-							break;
-					}
+				surface_predrag = array_verify(surface_predrag, array_length(inputs));
+				for( var i = 0, n = array_length(inputs); i < n; i++ ) surface_predrag[i] = inputs[i].getValue();
+				
+				dragging_bbox = array_clone(selection_bbox);
+				
+				switch(hovering_type) {
+					case NODE_COMPOSE_DRAG.move : 
+						dragging_sx		= a.raw_pos[0];
+						dragging_sy		= a.raw_pos[1];
+						dragging_mx		= _mx;
+						dragging_my		= _my;
+						break;
+						
+					case NODE_COMPOSE_DRAG.rotate : 
+						dragging_sx		= a.raw_rot;
+						rot_anc_x		= overlay_x(a.cx, _x, _s);
+						rot_anc_y		= overlay_y(a.cy, _y, _s);
+						dragging_mx		= point_direction(rot_anc_x, rot_anc_y, _mx, _my);
+						break;
+						
+					case NODE_COMPOSE_DRAG.scale : 
+						dragging_sx		= a.siz[0];
+						dragging_sy		= a.siz[1];
+						dragging_ax		= a.d0[0];
+						dragging_ay		= a.d0[1];
+						dragging_mx		= _mx;
+						dragging_my		= _my;
+						rot_anc_x		= overlay_x(a.cx, _x, _s);
+						rot_anc_y		= overlay_y(a.cy, _y, _s);
+						break;
+						
+					case NODE_COMPOSE_DRAG.box : 
+						drag_anchor     = hovering_ai;
+						dragging_sx		= a.siz[0];
+						dragging_sy		= a.siz[1];
+						dragging_px		= a.raw_pos[0];
+						dragging_py		= a.raw_pos[1];
+						dragging_ax		= hovering_oanc[0];
+						dragging_ay		= hovering_oanc[1];
+						dragging_mx		= _mx;
+						dragging_my		= _my;
+						break;
+						
+					case NODE_COMPOSE_DRAG.anchor : 
+						dragging_sx		= a.raw_anc[0];
+						dragging_sy		= a.raw_anc[1];
+						dragging_px		= a.raw_pos[0];
+						dragging_py		= a.raw_pos[1];
+						dragging_mx		= _mx;
+						dragging_my		= _my;
+						break;
 				}
 			}
-		}
+		} // Start Transform Action
 		
-		return w_hover;
+		return w_hover || hovering != noone;
 	}
 	
 	static drawOverlayTransform = function(_node) { 
