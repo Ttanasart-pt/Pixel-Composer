@@ -20,6 +20,7 @@ function Panel_Animation_Dopesheet() {
 		tool_width_drag  = false;
 	    tool_width_start = 0;
 	    tool_width_mx    = 0;
+	    tool_width_exp   = ui(320);
 	    
 	    is_scrolling = false;
 	    scroll_my    = 0;
@@ -2259,14 +2260,22 @@ function Panel_Animation_Dopesheet() {
 				
 	            tool_width = tool_width_start + (mx - tool_width_mx);
 	            tool_width = clamp(tool_width, ui(224), w - ui(128));
-	            if(mouse_release(mb_left)) tool_width_drag = false;
+	            
+	            if(mouse_release(mb_left)) {
+	            	if(tool_width > ui(224))
+	            		tool_width_exp  = tool_width;
+	            	tool_width_drag = false;
+	            }
 	        }
 	        
 	        if(pHOVER && point_in_rectangle(mx, my, tool_width + ui(8), ui(8), tool_width + ui(16), ui(8) + dopesheet_h)) {
 	            CURSOR = cr_size_we;
 	            aa = 1;
 	            
-	            if(mouse_press(mb_left, pFOCUS)) {
+	            if(DOUBLE_CLICK) {
+	            	tool_width = tool_width == ui(224)? tool_width_exp : ui(224);
+	            	
+	            } else if(mouse_press(mb_left, pFOCUS)) {
 	                tool_width_drag  = true;
 	                tool_width_start = tool_width;
 	                tool_width_mx    = mx;

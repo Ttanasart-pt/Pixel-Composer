@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_tile",
-  "name":"sh_tile",
+  "%Name":"sh_tile_ext",
+  "name":"sh_tile_ext",
   "parent":{
     "name":"tile",
     "path":"folders/nodes/data/compose/tile.yy",
