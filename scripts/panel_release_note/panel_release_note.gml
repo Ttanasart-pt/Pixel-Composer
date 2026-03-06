@@ -379,6 +379,12 @@ function Panel_Release_Note() : PanelContent() constructor {
 			draw_set_font(i == page? f_p1b : f_p1);
 			draw_set_color(i == page? COLORS._main_text : COLORS._main_text_sub);
 			draw_text(_x, _y, r);
+			
+			if(i == 1 && NEW_VERSION) {
+				var _x1 = _x + string_width(r);
+				var _y1 = _y + ui(3);
+				draw_sprite_ui(THEME.circle_16, 0, _x1, _y1, .4, .4, 0, COLORS._main_value_positive);
+			}
 				
 			_y += hg;
 		}

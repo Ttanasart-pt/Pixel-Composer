@@ -123,6 +123,7 @@ function Panel_Menu() : PanelContent() constructor {
     noti_icon_show    = 0;
     noti_icon_time    = 0;
     
+    new_version       = false;
     vertical_break    = ui(240);
     version_name_copy = 0;
     
@@ -400,35 +401,8 @@ function Panel_Menu() : PanelContent() constructor {
             }
         }
     #endregion
-        
+    
     function onFocusBegin() { PANEL_MENU = self; }
-    
-    function setNotiIcon(icon) {
-        noti_icon = icon;
-        noti_icon_time = 90;
-    }
-    
-    function undoUpdate() {
-        var txt = __txt("Undo");
-        if(!ds_stack_empty(UNDO_STACK)) {
-            var act = ds_stack_top(UNDO_STACK);
-            if(array_length(act) > 1) txt = $"{__txt("Undo")} {array_length(act)} {__txt("Actions")}";
-            else                      txt = $"{__txt("Undo")} {act[0]}";
-        }
-        
-        MENU_ITEMS.undo.active = !ds_stack_empty(UNDO_STACK);
-        MENU_ITEMS.undo.name = txt;
-        
-        txt = __txt("Redo");
-        if(!ds_stack_empty(REDO_STACK)) {
-            var act = ds_stack_top(REDO_STACK);
-            if(array_length(act) > 1) txt = $"{__txt("Redo")} {array_length(act)} {__txt("Actions")}";
-            else                      txt = $"{__txt("Redo")} {act[0]}";
-        }
-        
-        MENU_ITEMS.redo.active = !ds_stack_empty(REDO_STACK);
-        MENU_ITEMS.redo.name = txt;
-    }
     
     function drawContent(panel) {
         var _right     = PREFERENCES.panel_menu_right_control// || OS != os_windows;
@@ -868,6 +842,7 @@ function Panel_Menu() : PanelContent() constructor {
                     if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
                         _draggable = false;
                         draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
+                        if(NEW_VERSION) TOOLTIP = __txt("New Version Available");
                         
                         if(mouse_press(mb_left, pFOCUS))
                             dialogPanelCall(new Panel_Release_Note()); 
@@ -881,6 +856,8 @@ function Panel_Menu() : PanelContent() constructor {
                     var _ty  = (_y0 + _y1) / 2;
                     var _tx1 = _x1 - ui(6) - ui(20) * STEAM_ENABLED;
                     draw_text_add(_tx1, _ty - ui(1), txt);
+                    
+                    if(NEW_VERSION)   draw_sprite_ui(THEME.circle_16, 0, _tx1, _ty - ui(8), .4, .4, 0, COLORS._main_value_positive);
                     if(NIGHTLY)       draw_sprite_ext(s_nightly,  0, _x0  + ui(16), _ty,   1,   1, 0, COLORS._main_icon);
                     if(STEAM_ENABLED) draw_sprite_ui(THEME.steam, 0, _tx1 + ui(10), _ty, .75, .75, 0, COLORS._main_icon);
                     
@@ -893,9 +870,11 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 draw_set_text(fnt, fa_left, fa_center, tc);
                 var ww = string_width(txt) + ui(12);
+                
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
                     _draggable = false;
                     draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(16), ww, ui(32), sc, 1);
+                    if(NEW_VERSION) TOOLTIP = __txt("New Version Available");
                     
                     if(mouse_press(mb_left, pFOCUS))
                         dialogCall(o_dialog_release_note); 
@@ -906,7 +885,9 @@ function Panel_Menu() : PanelContent() constructor {
                     }
                 }
                 
-                draw_text_int(_xx1 + ui(6), y1, txt);
+                draw_text_add(_xx1 + ui(6), y1, txt);
+                var _xx2 = _xx1 + ww - ui(6);
+                if(NEW_VERSION)   draw_sprite_ui(THEME.circle_16, 0, _xx2, y1 - ui(8), .4, .4, 0, COLORS._main_value_positive);
             }
         #endregion
         
@@ -1101,4 +1082,58 @@ function Panel_Menu() : PanelContent() constructor {
             }
         #endregion
     }
+    
+    ////- Action
+    
+    function checkVersion() {
+        if(!os_is_network_connected()) return;
+        
+        version_get = asyncCall(http_get(DOWNLOAD_LINKS), function(_param, _data) /*=>*/ {
+            var res  = _data[? "result"];
+			var vers = json_try_parse(res, []);
+			
+			if(array_empty(vers)) return;
+			
+			var  d  = vers[0];
+			var _v  = d.version;
+			var _vs = string_splice(_v, ".");
+			if(array_length(_vs) < 2) return;
+			
+			var _one = toNumber(array_safe_get_fast(_vs, 0)); // 1
+			var _maj = toNumber(array_safe_get_fast(_vs, 1));
+			var _min = toNumber(array_safe_get_fast(_vs, 2));
+			
+			if((_maj == VERSION_MAJOR_INT && _min > VERSION_MINOR_INT) || _maj > VERSION_MAJOR_INT)
+			    NEW_VERSION = true;
+        });
+    }
+    
+    function setNotiIcon(icon) {
+        noti_icon = icon;
+        noti_icon_time = 90;
+    }
+    
+    function undoUpdate() {
+        var txt = __txt("Undo");
+        if(!ds_stack_empty(UNDO_STACK)) {
+            var act = ds_stack_top(UNDO_STACK);
+            if(array_length(act) > 1) txt = $"{__txt("Undo")} {array_length(act)} {__txt("Actions")}";
+            else                      txt = $"{__txt("Undo")} {act[0]}";
+        }
+        
+        MENU_ITEMS.undo.active = !ds_stack_empty(UNDO_STACK);
+        MENU_ITEMS.undo.name = txt;
+        
+        txt = __txt("Redo");
+        if(!ds_stack_empty(REDO_STACK)) {
+            var act = ds_stack_top(REDO_STACK);
+            if(array_length(act) > 1) txt = $"{__txt("Redo")} {array_length(act)} {__txt("Actions")}";
+            else                      txt = $"{__txt("Redo")} {act[0]}";
+        }
+        
+        MENU_ITEMS.redo.active = !ds_stack_empty(REDO_STACK);
+        MENU_ITEMS.redo.name = txt;
+    }
+    
+    checkVersion();
 }

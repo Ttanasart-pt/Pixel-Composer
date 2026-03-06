@@ -39,11 +39,14 @@ gml_pragma("UnityBuild", "true");
 	globalvar RELEASE_STRING; RELEASE_STRING = "1.20.7";
 	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_07_5.08;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1; //
+	globalvar NEW_VERSION; NEW_VERSION    = false;
 	
 	globalvar VERSION_MAJOR; VERSION_MAJOR  = floor(VERSION / 1000) * 1000;
 	
 	var _versions = string_split(VERSION_STRING, ".");
 	globalvar VERSION_MAJOR_INT; VERSION_MAJOR_INT   = toNumber(_versions[1]);
+	globalvar VERSION_MINOR_INT; VERSION_MINOR_INT   = toNumber(_versions[2]);
+	
 	globalvar NIGHTLY; NIGHTLY             = string_length(array_last(_versions)) == 3;
 	globalvar VERSION_STRING_BETA; VERSION_STRING_BETA = NIGHTLY? string_join(".", _versions[0], _versions[1], _versions[2]) : VERSION_STRING;
 	
