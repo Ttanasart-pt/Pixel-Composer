@@ -137,7 +137,10 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform int   mode;
 uniform float border;
-uniform vec4  color;
+
+uniform vec4      color;
+uniform int       colorUseSurf;
+uniform sampler2D colorSurf;
 
 uniform int   blend;
 uniform int   side;
@@ -160,7 +163,6 @@ float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * 
 vec4  sample(vec2    pos) { return texture2D( gm_BaseTexture, pos ); }
 
 void main() {
-	
 	float siz = size.x;
 	if(sizeUseSurf == 1) {
 		vec4 _vMap = texture2D( sizeSurf, v_vTexcoord );
@@ -179,6 +181,7 @@ void main() {
 	
 	if(render == 1) {
 		gl_FragColor = base;
+		
 	} else {
 		if(mode == 0) gl_FragColor = vec4(0., 0., 0., 1.);
 		if(mode == 1) gl_FragColor = vec4(0., 0., 0., 0.);
@@ -226,6 +229,9 @@ void main() {
 	if(dist <= 0.) return;
 	
 	vec4  cc   = color;
+	if(colorUseSurf == 1)
+		cc *= texture2D( colorSurf, v_vTexcoord );	
+	
 	float str  = 1. - dist / siz;
 	if(strength_curve_use == 1) str  = curveEval(strength_curve, strength_amount, str);
     

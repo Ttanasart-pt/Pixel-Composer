@@ -213,16 +213,21 @@ function blur_directional_args(_surface, _size, _angle) constructor {
 	size    = _size;
 	angle   = _angle;
 	
-	sizeCurve    = noone; static setSizeCurve    = function(i) /*=>*/ { sizeCurve    = i; return self; }
-	resolution   = 1;     static setResolution   = function(i) /*=>*/ { resolution   = i; return self; }
+	sizeCurve    = noone;   static setSizeCurve    = function(i) /*=>*/ { sizeCurve    = i; return self; }
+	resolution   = 1;       static setResolution   = function(i) /*=>*/ { resolution   = i; return self; }
 	
 	UVmap        = noone;
-	UVmapMix     = 0;     static setUVMap        = function(s,m) /*=>*/ { UVmap = s; UVmapMix = m; return self; }
+	UVmapMix     = 0;       static setUVMap        = function(s,m) /*=>*/ { UVmap = s; UVmapMix = m; return self; }
 	
-	singleDirect = false; static setSingleDirect = function(i) /*=>*/ { singleDirect = i; return self; }
-	fadeDistance = false; static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
-	gamma        = false; static setGamma        = function(i) /*=>*/ { gamma        = i; return self; }
-	sampleMode   = 2;     static setSampleMode   = function(i) /*=>*/ { sampleMode   = i; return self; }
+	singleDirect = false;   static setSingleDirect = function(i) /*=>*/ { singleDirect = i; return self; }
+	fadeDistance = false;   static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
+	sampleMode   = 2;       static setSampleMode   = function(i) /*=>*/ { sampleMode   = i; return self; }
+	
+	bg           = false;
+	bg_c         = c_black; static setBG  = function(b,c) /*=>*/ { bg = b; bg_c = c; return self; }
+	
+	overColor    = noone;   static setOver  = function(c) /*=>*/ { overColor = c;    return self; }
+	gamma        = false;   static setGamma = function(g) /*=>*/ { gamma = g;        return self; }
 	
 	spectralUse       = false;
 	spectralIntensity = 0;

@@ -17,7 +17,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(6, 9); // inputs 9, 10
 	
 	////- =Shadow
-	newInput(14, nodeValue_EButton( "Type",      0, [ "Outside", "Inside" ] ));
+	newInput(14, nodeValue_EButton( "Side",      0, [ "Outside", "Inside" ] ));
 	newInput( 1, nodeValue_Color(   "Color",     ca_black        ));
 	newInput( 2, nodeValue_Slider(  "Strength", .5, [0, 2, 0.01] )).setCurvable(13).setHotkey("S").hideLabel();
 	newInput( 4, nodeValue_ISlider( "Grow",      3, [0, 16, 0.1] ));
@@ -84,12 +84,13 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		#region data
 			var _surf   = _data[ 0];
 			
-			var _type   = _data[14];
+			var _side   = _data[14];
 			var _colr   = _data[ 1];
 			var _stre   = _data[ 2];
 			var _border = _data[ 4];
 			var _size   = _data[ 5];
 			
+			var _type   = 1;
 			var _posi   = _data[11];
 			var _shf    = _data[ 3];
 			var _lgh    = _data[12];
@@ -120,17 +121,20 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			surface_reset_shader();
 		}
 		
+		var _blurSurf = noone;
+		
 		var args = new blur_gauss_args(_outShad, _size + 1, 3).setBG(false, _colr).setOver(_colr);
 		if(inputs[2].attributes.curved) args.setSizeCurve(_data[13]);
+		_blurSurf = surface_apply_gaussian(args);
 		
-		var _s = surface_apply_gaussian(args);
 		surface_set_shader(_outShad, noone, true, BLEND.over);
-			draw_surface(_s, 0, 0);
+			if(_blurSurf != noone)
+				draw_surface(_blurSurf, 0, 0);
 		surface_reset_shader();
 		
 		surface_set_shader(_outSurf, sh_shadow_apply, true, BLEND.over);
 			shader_set_s("shadowTex", _outShad );
-			shader_set_i("type",      _type    );
+			shader_set_i("side",      _side    );
 			shader_set_f("strength",  _stre * _color_get_alpha(_colr) );
 			
 			draw_surface_safe(_surf);

@@ -27,18 +27,21 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(13, nodeValue_Enum_Button( "Blend Mode",  3, [ "Normal", "Replace", -1, "Lighten", "Screen", -1, "Darken", "Multiply" ]));
-	newInput( 4, nodeValue_Color( "Color",          ca_white ));
-	newInput(14, nodeValue_Bool(  "Pixel Distance", true     ));
-	newInput(11, nodeValue_Bool(  "Draw Original",  true     ));
-	// input 18
+	newInput( 4, nodeValue_Color(   "Color",          ca_white ));
+	newInput(18, nodeValue_Surface( "Texture"                  ));
+	newInput(14, nodeValue_Bool(    "Pixel Distance", true     ));
+	newInput(11, nodeValue_Bool(    "Draw Original",  true     ));
+	// input 19
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 		
-	input_display_list = [ 7, 
-		[ "Surfaces", true ], 0, 5, 6, 8, 9, 
-		[ "Glow",    false ], 10, 12, 2, 16, 3, 17, 15, 
-		[ "Render",  false ], 13, 4, 14, 11, 
+	input_display_list = [  7, 
+		[ "Surfaces", true ],  0,  5,  6,  8,  9, 
+		[ "Glow",    false ], 10, 12,  2, 16,  3, 17, 15, 
+		[ "Render",  false ], 13,  4, 18, 14, 11, 
 	]
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -56,32 +59,37 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf     = _data[ 0];
-		
-		var _mode     = _data[10];
-		var _side     = _data[12];
-		var _border   = _data[ 1];
-		var _size     = _data[ 2];
-		var _strn     = _data[ 3];
-		
-		var _blend    = _data[13];
-		var _color    = _data[ 4];
-		var _render   = _data[11];
-		var _pxDist   = _data[14];
+		#region data
+			var _surf     = _data[ 0];
+			
+			var _mode     = _data[10];
+			var _side     = _data[12];
+			var _border   = _data[ 1];
+			var _size     = _data[ 2];
+			var _strn     = _data[ 3];
+			
+			var _blend    = _data[13];
+			var _color    = _data[ 4];
+			var _csurf    = _data[18];
+			var _render   = _data[11];
+			var _pxDist   = _data[14];
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_glow);
 			shader_set_dim("dimension", _surf);
 			
-			shader_set_i("mode",      _mode);
-			shader_set_i("side",      _side);
-			shader_set_f("border",    _border);
-			shader_set_f_map("size",      _size, _data[16], inputs[2] );
-			shader_set_f_map("strength",  _strn, _data[17], inputs[3], _data[15] );
+			shader_set_i( "mode",         _mode   );
+			shader_set_i( "side",         _side   );
+			shader_set_f( "border",       _border );
+			shader_set_f_map( "size",     _size, _data[16], inputs[2]            );
+			shader_set_f_map( "strength", _strn, _data[17], inputs[3], _data[15] );
 			
-			shader_set_i("blend",     _blend);
-			shader_set_color("color", _color);
-			shader_set_i("render",    _render);
-			shader_set_i("pixelDist", _pxDist);
+			shader_set_i( "colorUseSurf", is_surface(_csurf) );
+			shader_set_s( "colorSurf",    _csurf  );
+			shader_set_c( "color",        _color  );
+			shader_set_i( "blend",        _blend  );
+			shader_set_i( "render",       _render );
+			shader_set_i( "pixelDist",    _pxDist );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
