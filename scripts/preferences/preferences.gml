@@ -44,6 +44,8 @@
 	
 		PREFERENCES.textbox_shake					= 0;
 		PREFERENCES.textbox_particle				= 0;
+		
+		PREFERENCES.check_update				    = 1;
 	
 	#endregion
 			
@@ -531,6 +533,8 @@
 		window_set_rectangle(cx - ww / 2, cy - hh / 2, ww, hh);
 		if(PREFERENCES.window_maximize) winMan_Maximize();
 		window_refresh();
+		
+		if(PREFERENCES.check_update) checkVersion();
 	}
 #endregion
 
@@ -562,6 +566,32 @@
 		
 		PREF_SAVE();
 	}
+#endregion
+
+#region version check
+    function checkVersion() {
+        if(!os_is_network_connected()) return;
+        NEW_VERSION = false;
+        
+        asyncCall(http_get(DOWNLOAD_LINKS), function(_param, _data) /*=>*/ {
+            var res  = _data[? "result"];
+			var vers = json_try_parse(res, []);
+			
+			if(array_empty(vers)) return;
+			
+			var  d  = vers[0];
+			var _v  = d.version;
+			var _vs = string_splice(_v, ".");
+			if(array_length(_vs) < 2) return;
+			
+			var _one = toNumber(array_safe_get_fast(_vs, 0)); // 1
+			var _maj = toNumber(array_safe_get_fast(_vs, 1));
+			var _min = toNumber(array_safe_get_fast(_vs, 2));
+			
+			if((_maj == VERSION_MAJOR_INT && _min > VERSION_MINOR_INT) || _maj > VERSION_MAJOR_INT)
+			    NEW_VERSION = true;
+        });
+    }
 #endregion
 
 #region command palette

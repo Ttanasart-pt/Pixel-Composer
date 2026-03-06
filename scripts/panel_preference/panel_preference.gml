@@ -57,7 +57,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		var yl = _y;
     		var hg = line_get_height(f_p1, 8);
-    		var hs = line_get_height(f_p2, 8);
+    		var hs = line_get_height(f_p2, 6);
     		
     		for(var i = 0, n = array_length(page); i < n; i++) {
     			
@@ -78,35 +78,42 @@ function Panel_Preference() : PanelContent() constructor {
     			yl += hg;
     			hh += hg;
     			
-    			if(i == page_current && sections[i] != 0) {
-    				for( var j = 0, m = array_length(sections[i]); j < m; j++ ) {
-    					var sect = sections[i][j];
-    				
-    					draw_set_text(f_p2, fa_left, fa_center, section_current == sect[0]? COLORS._main_text : COLORS._main_text_sub);
-    				
-    					if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hs - 1)) {
-    						sp_page.hover_content = true;
-    						if(mouse_press(mb_left, pFOCUS))
-    							sect[1].scroll_y_to = -sect[2];
-    					
-    						draw_set_color(COLORS._main_text);
-    					}
-    				
-    					var _xx = ui(8 + 16);
-    					var sect_title = sect[0];
-    					var sp = string_split(sect_title, " ");
-    					if(sp[0] == "-") {
-    						_xx += ui(16);
-    						sect_title = string_replace(sect_title, "- ", "");
-    					}
-    					
-    					draw_text_add(_xx, yl + hs / 2, __txt(sect_title));
-    				
-    					yl += hs;
-    					hh += hs;
-    				}
-    			}
-    		}
+    			var _sect = sections[i];
+    			
+    			if(i == page_current && _sect != 0)
+				for( var j = 0, m = array_length(_sect); j < m; j++ ) {
+					var sect = _sect[j]; 
+					var name =  sect[0];
+					var scrl =  sect[1];
+					var scrh =  sect[2];
+					
+					var sell = section_current == name;
+					var colr = sell? COLORS._main_text : COLORS._main_text_sub;
+					
+					draw_set_text(f_p2, fa_left, fa_center, colr);
+					
+					if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hs - 1)) {
+						sp_page.hover_content = true;
+						if(mouse_press(mb_left, pFOCUS))
+							scrl.scroll_y_to = -scrh;
+					
+						draw_set_color(COLORS._main_text);
+					}
+				
+					var _xx = ui(8 + 16);
+					var  sp = string_split(name, " ");
+					
+					if(sp[0] == "-") {
+						_xx += ui(16);
+						name = string_replace(name, "- ", "");
+					}
+					
+					draw_text_add(_xx, yl + hs / 2, __txt(name));
+				
+					yl += hs;
+					hh += hs;
+				}
+			}
     		
     		return hh;
     	});
@@ -477,25 +484,29 @@ function Panel_Preference() : PanelContent() constructor {
     				.setFont(f_p2).setEmpty()
     		));
     		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_theme_unpack", "Load unpacked UI."),
-    			"theme_load_unpack",
-    			new checkBox(function() /*=>*/ {return prefToggle("theme_load_unpack")})
-    		));
-    		
     		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_windows_control", "Right align window controls."),
-    			"panel_menu_right_control",
-    			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_right_control")})
+    			__txtx("pref_ui_native_file_selector", "Use native file selector"),
+    			"use_native_file_browser",
+    			new checkBox(function() /*=>*/ {return prefToggle("use_native_file_browser")})
     		));
     		
+    		if(TESTING)
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_menu_profile", "Show online account."),
-    			"panel_menu_show_profile",
-    			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_show_profile")})
+    			__txtx("pref_ui_window_shadow", "Shadow"),
+    			"window_shadow",
+    			new checkBox(function() /*=>*/ {return prefToggle("window_shadow", true)})
     		));
     		
+    		if(IS_PATREON)
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_supporter_icon", "Show supporter icon"),
+    			"show_supporter_icon",
+    			new checkBox(function() /*=>*/ {return prefToggle("show_supporter_icon")})
+    		));
+    	
+    	ds_list_add(pref_appr, __txt("Window")); // Window
+    	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_fix_window_size", "Fix Window size on start"),
     			"window_fix",
@@ -513,31 +524,28 @@ function Panel_Preference() : PanelContent() constructor {
     			"window_fix_height",
     			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_height", max(1, round(real(str))))})
     		));
-    		
+    	
+    	ds_list_add(pref_appr, __txt("Menu Bar")); // Menubar
+    	
     		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_native_file_selector", "Use native file selector"),
-    			"use_native_file_browser",
-    			new checkBox(function() /*=>*/ {return prefToggle("use_native_file_browser")})
+    			__txtx("pref_windows_control", "Right align window controls."),
+    			"panel_menu_right_control",
+    			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_right_control")})
     		));
     		
-    		if(TESTING) {
-	    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-	    			__txtx("pref_ui_window_shadow", "Shadow"),
-	    			"window_shadow",
-	    			new checkBox(function() /*=>*/ {return prefToggle("window_shadow", true)})
-	    		));
-    		}
-    		
-    	ds_list_add(pref_appr, __txt("Splash"));
-    		
-    		if(IS_PATREON)
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_supporter_icon", "Show supporter icon"),
-    			"show_supporter_icon",
-    			new checkBox(function() /*=>*/ {return prefToggle("show_supporter_icon")})
+    			__txtx("pref_menu_profile", "Show online account."),
+    			"panel_menu_show_profile",
+    			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_show_profile")})
     		));
-    	
+    		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_check_update", "Check for update on start."),
+    			"check_update",
+    			new checkBox(function() /*=>*/ {return prefToggle("check_update")})
+    		));
+    		
     	ds_list_add(pref_appr, __txt("Graph")); // Graph
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
@@ -749,29 +757,34 @@ function Panel_Preference() : PanelContent() constructor {
     	font_override_sb_bold = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite_bold = v; should_restart = true; PREF_SAVE(); });
     	font_override_sb_code = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite_code = v; should_restart = true; PREF_SAVE(); });
     	
+    	cb_load_unpack = new checkBox(function() /*=>*/ {return prefToggle("theme_load_unpack")});
+    	
     	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
     		
     		var _hover = sp_theme.hover;
     		var _focus = sp_theme.active;
+    		var  ww    = sp_theme.surface_w;
+    		var  hh    = sp_theme.surface_h;
     		var _rx    = x + sp_theme.x;
     		var _ry    = y + sp_theme.y;
     		
-    		var ww     = sp_theme.surface_w;
-    		var hh     = sp_theme.surface_h;
+    		var bb = THEME.button_hide_fill;
+    		var br = THEME.refresh_16;
     		
     		var hh  = ui(8);
     		    _y += ui(8);
     		
     		var _h = ui(24);
-    		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset colors"), THEME.refresh_16) == 2) {
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset colors"), br) == 2) {
     			var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/{PREFERENCES.theme_override}.json";
     			if(file_exists_empty(path)) file_delete(path);
     			loadColor(PREFERENCES.theme);
     		}
     		
     		var _wdw  = ui(128);
-    		var _wpar = new widgetParam(ww - _h - ui(4) - _wdw, _y, _wdw, _h, 0, 0, _m, _rx, _ry).setFont(f_p3).setFocusHover(_focus, _hover);
+    		var _wpar = new widgetParam(ww - _h - ui(4) - _wdw, _y, _wdw, _h, 0, 0, _m, _rx, _ry)
+    			.setFont(f_p3).setFocusHover(_focus, _hover);
     		
     		var thName = themeCurrent == noone? PREFERENCES.theme : themeCurrent.name;
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
@@ -792,7 +805,7 @@ function Panel_Preference() : PanelContent() constructor {
     		draw_text_add(ui(8), _y + _h / 2, __txt("Font Override"));
     		
     		font_override_sb.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite));
-    		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
     			PREFERENCES.font_overwrite = "";
     			should_restart = true; 
     			PREF_SAVE();
@@ -804,7 +817,7 @@ function Panel_Preference() : PanelContent() constructor {
     		draw_text_add(ui(24), _y + _h / 2, __txt("Bold"));
     		
     		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_bold));
-    		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
     			PREFERENCES.font_overwrite_bold = "";
     			should_restart = true; 
     			PREF_SAVE();
@@ -816,7 +829,7 @@ function Panel_Preference() : PanelContent() constructor {
     		draw_text_add(ui(24), _y + _h / 2, __txt("Code"));
     		
     		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_code));
-    		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
     			PREFERENCES.font_overwrite_code = "";
     			should_restart = true; 
     			PREF_SAVE();
@@ -865,6 +878,18 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		_y += _mh + ui(8 + 4);
     		hh += _mh + ui(8 + 4);
+    		
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(ui(8), _y + _h / 2, __txtx("pref_theme_unpack", "Load unpacked UI"));
+    		
+    		cb_load_unpack.drawParam(_wpar.setHalign(fa_center).setY(_y).setData(PREFERENCES.theme_load_unpack));
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
+    			PREFERENCES.theme_load_unpack = true;
+    			should_restart = true; 
+    			PREF_SAVE();
+    		}
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
     		
     		return hh;
     	});
@@ -926,7 +951,7 @@ function Panel_Preference() : PanelContent() constructor {
     				var _sect = string_title(category);
     				var _coll = struct_try_get(collapsed, cat, 0);
     				
-    				array_push(sect, [ _sect, sp_theme_colors, hh + ui(12) ]);
+    				array_push(sect, [ _sect, sp_theme_colors, hh + ui(12), yy ]);
     				array_push(group_labels, { y: yy, text: _sect, key: cat });
     				
     				if(yy >= 0 && section_current == "") section_current = psect;
@@ -1130,7 +1155,7 @@ function Panel_Preference() : PanelContent() constructor {
     				 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 0); } 
     			else if(_cAll == -1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 1); }
     			
-    			// sections[page_current] = sect;
+    			sections[page_current] = sect;
     		#endregion
     		
     		return hh + ui(16);
@@ -1164,6 +1189,7 @@ function Panel_Preference() : PanelContent() constructor {
     	sp_theme_sprites = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
     		
+    		sections[page_current] = [];
     		var _hover = sp_theme_sprites.hover;
     		var _focus = sp_theme_sprites.active;
     		var _rx    = sp_theme_sprites.x;
@@ -1232,6 +1258,7 @@ function Panel_Preference() : PanelContent() constructor {
     	sp_theme_fonts = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
     		
+    		sections[page_current] = [];
     		var _hover = sp_theme_fonts.hover;
     		var _focus = sp_theme_fonts.active;
     		var _rx    = x + sp_theme_fonts.x;
@@ -1395,41 +1422,91 @@ function Panel_Preference() : PanelContent() constructor {
 	    		array_push(hotkeyArray, _title);
 	    	}
 	    	
-	    	hk_page   = 0;
-	    	hk_scroll = new scrollBox(hotkeyArray, function(val) /*=>*/ { hk_page = val; sp_hotkey.scroll_y_to = 0; })
-	    					.setFont(f_p2)
-	    					.setHorizontal(true)
-	    					.setAlign(fa_left)
-	    					.setMinWidth(ui(128))
-	    	
+	    	hk_page = 0;
     	}
     	
-    	sp_hotkey = new scrollPane(panel_width, hotkey_height, function(_y, _m) {
+    	sp_hotkey_menu = new scrollPane(0, 0, function(_y, _m) {
+    		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+    		
+    		var hover  = sp_hotkey_menu.hover;
+    		var focus  = sp_hotkey_menu.active;
+    		
+    		var ww = sp_hotkey.surface_w;
+    		var sh = sp_hotkey.surface_h;
+    		
+    		var yy = _y;
+    		var hh = 0;
+    		
+    		var font = f_p3;
+    		var hg = line_get_height(font, 4);
+    		
+    		for( var i = 0, n = array_length(hotkeyArray); i < n; i++ ) {
+    			var _title = hotkeyArray[i];
+    			if(_title == -1) {
+    				draw_set_color(CDEF.main_dkblack);
+    				draw_line_round(ui(8), yy + ui(4), ww - ui(8), yy + ui(4), ui(2));
+    				
+	    			yy += ui(8);
+	    			hh += ui(8);
+    				continue;
+    			}
+    			
+    			var _draw = yy > -hg && yy < sh;
+    			if(!_draw) {
+	    			yy += hg;
+	    			hh += hg;
+    				continue;
+    			}
+    			
+    			var cc = hk_page == i? COLORS._main_text : COLORS._main_text_sub;
+    			var hv = hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - 1);
+    			
+    			if(hv) {
+    				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy, ww, hg, CDEF.main_ltgrey, 1);
+    				if(mouse_lpress(focus)) {
+    					sp_hotkey.scroll_y_to = 0;
+    					hk_page = i; 
+    				}
+    			}
+    			
+    			draw_set_text(font, fa_left, fa_center, cc);
+    			draw_text_add(ui(8), yy + hg / 2, _title);
+    			
+    			yy += hg;
+    			hh += hg;
+    		}
+    		
+    		return hh;
+    	});
+    	
+    	sp_hotkey = new scrollPane(0, 0, function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
     		draw_set_text(f_p2, fa_left, fa_top);
     		
-    		var padd	  = ui(6);
-    		var hh		  = 0;
-    		var currGroup = noone;
+    		var hover  = sp_hotkey.hover;
+    		var focus  = sp_hotkey.active;
     		
-    		var _ww       = sp_hotkey.surface_w;
-    		var key_x1    = _ww - ui(32);
-    		var yy        = _y + ui(8);
+    		var padd = ui(6);
+    		var yy   = _y + ui(8);
+    		var hh   = 0;
+    		
+    		var _ww    = sp_hotkey.surface_w;
+    		var key_x1 = _ww - ui(32);
     		
     		var ind       = 0;
     		var sect      = [];
     		var psect     = "";
     		var th        = line_get_height();
-    		var _hov      = pHOVER && sp_hotkey.hover;
     		var modified  = false;
     		
     		var _ctxObj   = hotkeyContext[hk_page];
     		var _list     = _ctxObj.list;
     		var _yy       = yy + hh;
     		
+    		var currGroup = noone;
     		var _addnode  = _list == GRAPH_ADD_NODE_KEYS;
-    		var _search   = string_lower(search_text);
     		var _hoverAny = false;
+    		var _search   = string_lower(search_text);
     		
     		var key, name;
     		
@@ -1492,7 +1569,7 @@ function Panel_Preference() : PanelContent() constructor {
     			var bh = th + ui(6);
     			var cc = c_white;
     			
-    			var hv = _hov && point_in_rectangle(_m[0], _m[1], _ww / 2, by, bx + bw, by + bh);
+    			var hv = hover && point_in_rectangle(_m[0], _m[1], _ww / 2, by, bx + bw, by + bh);
     			_hoverAny = _hoverAny || hv;
     			
     			if(hk_editing == key) {
@@ -1511,7 +1588,7 @@ function Panel_Preference() : PanelContent() constructor {
     					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
     					sp_hotkey.hover_content = true;
     					cc = CDEF.main_white;
-    					if(mouse_press(mb_left, pFOCUS)) hk_editing = key.modify();
+    					if(mouse_press(mb_left, focus)) hk_editing = key.modify();
     				} 
     			}
     			
@@ -1522,7 +1599,7 @@ function Panel_Preference() : PanelContent() constructor {
     				modified = true;
     				var bx   = _ww - ui(32);
     				var by   = _yy + th / 2 - ui(12);
-    				var b    = buttonInstant(THEME.button_hide_fill, bx, by, ui(24), ui(24), _m, _hov, pFOCUS, __txt("Reset"), THEME.refresh_16);
+    				var b    = buttonInstant(THEME.button_hide_fill, bx, by, ui(24), ui(24), _m, hover, focus, __txt("Reset"), THEME.refresh_16);
     				
     				if(b) sp_hotkey.hover_content = true;
     				if(b == 2) key.reset(true);
@@ -1531,7 +1608,7 @@ function Panel_Preference() : PanelContent() constructor {
     			hh += th + padd * 2;
     		}
     		
-    		if(!_hoverAny && hk_editing && mouse_press(mb_left, pFOCUS)) hk_editing = noone;
+    		if(!_hoverAny && hk_editing && mouse_press(mb_left, focus)) hk_editing = noone;
     		
     		hotkey_focus         = noone;
     		hotkey_focus_high_bg = lerp_linear(hotkey_focus_high_bg, 0, DELTA_TIME);
@@ -1540,7 +1617,8 @@ function Panel_Preference() : PanelContent() constructor {
     		if(hk_editing != noone) hotkey_editing(hk_editing);
     		
     		return hh + ui(32);
-    	})
+    	});
+    	
     #endregion
     
     #region Scrollpane
@@ -1583,7 +1661,7 @@ function Panel_Preference() : PanelContent() constructor {
     			if(is_string(_pref)) {
     				var _coll = struct_try_get(collapsed, _pref, 0);
     				
-    				array_push(sect, [ _pref, sp_pref, hh + ui(12) ]);
+    				array_push(sect, [ _pref, sp_pref, hh + ui(12), yy ]);
     				array_push(group_labels, { y: yy, text: _pref, key: _pref });
     				
     				if(yy >= 0 && section_current == "") section_current = psect;
@@ -2062,13 +2140,17 @@ function Panel_Preference() : PanelContent() constructor {
         		
         		var _ppy = py + hotkey_cont_h;
         		
-        		hk_scroll.setFocusHover(pFOCUS, pHOVER);
-        		hk_scroll.draw(px, _ppy, ui(200), ui(24), hk_page, [ mx, my ], x, y);
+        		hotkey_height = ph - hotkey_cont_h;
         		
-        		hotkey_height = ph - hotkey_cont_h - ui(32);
-        		sp_hotkey.verify(panel_width, hotkey_height);
+        		var mWidth = ui(200);
+        		
+        		sp_hotkey_menu.verify(mWidth, hotkey_height);
+        		sp_hotkey_menu.setFocusHover(pFOCUS, pHOVER);
+        		sp_hotkey_menu.drawOffset(px, _ppy, mx, my);
+        		
+        		sp_hotkey.verify(panel_width - (ui(6) + mWidth), hotkey_height);
         		sp_hotkey.setFocusHover(pFOCUS, pHOVER);
-        		sp_hotkey.drawOffset(px, _ppy + ui(32), mx, my);
+        		sp_hotkey.drawOffset(px + ui(6) + mWidth, _ppy, mx, my);
     	    break;
     	}
     	

@@ -1085,29 +1085,6 @@ function Panel_Menu() : PanelContent() constructor {
     
     ////- Action
     
-    function checkVersion() {
-        if(!os_is_network_connected()) return;
-        
-        version_get = asyncCall(http_get(DOWNLOAD_LINKS), function(_param, _data) /*=>*/ {
-            var res  = _data[? "result"];
-			var vers = json_try_parse(res, []);
-			
-			if(array_empty(vers)) return;
-			
-			var  d  = vers[0];
-			var _v  = d.version;
-			var _vs = string_splice(_v, ".");
-			if(array_length(_vs) < 2) return;
-			
-			var _one = toNumber(array_safe_get_fast(_vs, 0)); // 1
-			var _maj = toNumber(array_safe_get_fast(_vs, 1));
-			var _min = toNumber(array_safe_get_fast(_vs, 2));
-			
-			if((_maj == VERSION_MAJOR_INT && _min > VERSION_MINOR_INT) || _maj > VERSION_MAJOR_INT)
-			    NEW_VERSION = true;
-        });
-    }
-    
     function setNotiIcon(icon) {
         noti_icon = icon;
         noti_icon_time = 90;
@@ -1134,6 +1111,4 @@ function Panel_Menu() : PanelContent() constructor {
         MENU_ITEMS.redo.active = !ds_stack_empty(REDO_STACK);
         MENU_ITEMS.redo.name = txt;
     }
-    
-    checkVersion();
 }
