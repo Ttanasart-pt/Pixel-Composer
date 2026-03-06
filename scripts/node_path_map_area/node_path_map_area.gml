@@ -3,26 +3,28 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDimension(96, 48);
 	setDrawIcon(s_node_path_map_area);
 	
-	newInput(0, nodeValue_PathNode("Path"));
+	newInput( 0, nodeValue_PathNode("Path"));
 	
 	////- =From
-	newInput(2, nodeValue_Enum_Scroll( "Map From", 0, [ "Path Boundary", "Fix Dimension", "BBOX" ]));
-	newInput(3, nodeValue_Dimension(   "Dimension From"         ));
-	newInput(6, nodeValue_Vec4(        "BBOX From",   [0,0,1,1] ));
+	newInput( 2, nodeValue_Enum_Scroll( "Map From", 0, [ "Path Boundary", "Fix Dimension", "BBOX" ]));
+	newInput( 3, nodeValue_Dimension(   "Dimension From"         ));
+	newInput( 6, nodeValue_Vec4(        "BBOX From",   [0,0,1,1] ));
 	
 	////- =To
-	newInput(4, nodeValue_Enum_Scroll( "Map To",      0, [ "Area", "Fix Dimension", "BBOX" ]));
-	newInput(1, nodeValue_Area(        "Area",        DEF_AREA, { useShape : false })).setHotkey("A");
-	newInput(5, nodeValue_Dimension(   "Dimension To"           ));
-	newInput(7, nodeValue_Vec4(        "BBOX To",     [0,0,1,1] ));
+	newInput( 4, nodeValue_Enum_Scroll( "Map To",      0, [ "Area", "Fix Dimension", "BBOX" ]));
+	newInput( 1, nodeValue_Area(        "Area",        DEF_AREA, { useShape : false })).setHotkey("A");
+	newInput( 5, nodeValue_Dimension(   "Dimension To"           ));
+	newInput( 7, nodeValue_Vec4(        "BBOX To",     [0,0,1,1] ));
 	// input 8
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 0, 
-		["From", false], 2, 3, 6, 
-		["To",   false], 4, 1, 5, 7, 
-	]
+		[ "From", false ], 2, 3, 6, 
+		[ "To",   false ], 4, 1, 5, 7, 
+	];
+	
+	////- Node
 	
 	cached_pos = ds_map_create();
 	

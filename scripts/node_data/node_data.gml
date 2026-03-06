@@ -928,7 +928,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		value_validation[VALIDATION.warning] = 0;
 		value_validation[VALIDATION.error]   = 0;
 		
-		array_foreach(inputs, function(jun) /*=>*/ { value_validation[jun.value_validation] += (is(jun, NodeValue) && jun.value_validation); });
+		array_foreach(inputs, function(jun) /*=>*/ { 
+			if(!is(jun, NodeValue)) return;
+			value_validation[jun.value_validation] += jun.value_validation; 
+		});
 	}
 	
 	static onIOValidate = function() {
