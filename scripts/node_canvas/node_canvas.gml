@@ -1908,7 +1908,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static transferData = function() {
 		var _dat = inputs[19].getValue();
 		var _dim = inputs[20].getValue();
-		if(!is_surface(_dat)) return;
+		
+		if(!is_surface(_dat))
+			_dat = inputs[8].getValue();
+			
+		if(!is_surface(_dat))
+			return;
 		
 		var _canSurf = getCanvasSurface();
 		var _sw = surface_get_width_safe(_dat);
