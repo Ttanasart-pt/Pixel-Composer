@@ -45,7 +45,7 @@ function Panel_Animation_Dopesheet() {
     #endregion
 	
 	#region ---- Timeline ----
-		tb_frame = textBox_Number(function(t) /*=>*/ {return PROJECT.animator.setFrame(round(t))})
+		tb_frame = textBox_Number(function(t) /*=>*/ {return PROJECT.animator.setFrame(round(t) -1)})
 			.setFont(f_p4).setBoxColor(CDEF.main_mdwhite)
 			.setLabelAlign(fa_right).setLabelColor(CDEF.main_mdwhite);
 		
@@ -2215,7 +2215,7 @@ function Panel_Animation_Dopesheet() {
     	tb_frame.ry = y;
     	// tb_frame.setColor(GLOBAL_IS_PLAYING? COLORS._main_value_positive : COLORS._main_accent);
     	tb_frame.setColor(COLORS._main_accent);
-    	tb_frame.draw(bx, by, tw, bs, GLOBAL_CURRENT_FRAME, mm);
+    	tb_frame.draw(bx, by, tw, bs, GLOBAL_CURRENT_FRAME + 1, mm);
     	bx += tw + ui(4);
     	
     	// Left

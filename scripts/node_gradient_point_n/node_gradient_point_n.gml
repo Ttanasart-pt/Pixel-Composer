@@ -144,6 +144,7 @@ function Node_Gradient_Points_N(_x, _y, _group = noone) : Node_Processor(_x, _y,
 				point_dragging = _newP.index;
 				point_drag_s   = [msx, msy];
 				point_drag_m   = [msx, msy];
+				point_drag_p   = [_mx, _my];
 			}
 			
 		} else if(isUsingTool("Remove Point")) {

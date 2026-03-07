@@ -957,7 +957,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			for( var j = 0, m = array_length(_t); j < m; j++ ) {
 				var _n = _t[j].node;
 				if(_n.inline_context == noone) continue;
-			
+				
 				if(_inline_output != noone && _inline_output != _n.inline_context)
 					noti_warning($"Node {getDisplayName()} connected to multiple inline loop outputs, this can cause render error.", noone, self);
 					
