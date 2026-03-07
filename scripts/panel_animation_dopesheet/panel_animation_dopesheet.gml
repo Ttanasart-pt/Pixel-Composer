@@ -661,8 +661,9 @@ function Panel_Animation_Dopesheet() {
     			break;
     		
     		case "scale" :
-    			var sx = timeline_shift + transform_start_x * timeline_scale;
+    			var sx = bar_x + timeline_shift + transform_start_x * timeline_scale;
     			var dx = (mx - sx) / (transform_mouse_x - sx);
+    			
     			if(KEYBOARD_NUMBER != undefined) 
     				dx = KEYBOARD_NUMBER;
     				
