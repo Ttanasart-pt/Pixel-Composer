@@ -14,26 +14,29 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	for( var i = 0; i < inps; i++ ) 
 		_miniNames[i] = rtmidi_name_in(i);
 	
-	newInput(0, nodeValue_Enum_Scroll("Input",  0, { data: _miniNames, update_hover: false }))
-		.rejectArray();
-		
-	newOutput(0, nodeValue_Output("Raw Message", VALUE_TYPE.float, []));
+	newInput( 0, nodeValue_EScroll("Input",  0, { data: _miniNames, update_hover: false })).rejectArray();
 	
-	newOutput(1, nodeValue_Output("Pressing notes", VALUE_TYPE.float, []));
-	
-	newOutput(2, nodeValue_Output("Direct values", VALUE_TYPE.struct, {}));
+	newOutput( 0, nodeValue_Output("Raw Message", VALUE_TYPE.float, []));
+	newOutput( 1, nodeValue_Output("Pressing notes", VALUE_TYPE.float, []));
+	newOutput( 2, nodeValue_Output("Direct values", VALUE_TYPE.struct, {}));
 	
 	watcher_controllers = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, _y + ui(8), bw, bh, _m, _hover, _focus, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
-			createNewInput();
-		}
+		var bs = THEME.button_hide_fill;
 		
+		var by = _y + ui(8);
+		var bt = __txt("Add");
+		var bc = COLORS._main_value_positive;
+		if(buttonTextIconInstant(true, bs, _x, by, bw, bh, _m, _hover, _focus, "", THEME.add, bt, bc) == 2)
+			createNewInput();
+		
+		var bt = __txt("Remove");
+		var bc = COLORS._main_value_negative;
 		var amo = array_length(inputs);
-		if(buttonTextIconInstant(amo > 1, THEME.button_hide_fill, _x + _w - bw, _y + ui(8), bw, bh, _m, _hover, _focus, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
+		if(buttonTextIconInstant(amo > 1, bs, _x + _w - bw, by, bw, bh, _m, _hover, _focus, "", THEME.minus, bt, bc) == 2) {
 			var _out = array_last(outputs);
 			for( var i = 0, n = array_length(_out.value_to); i < n; i++ )
 				_out.value_to[i].removeFrom();
@@ -107,17 +110,49 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		return inputs[index];
 	} setDynamicInput(2, false);
 	
+	////- Node
+	
 	index_watching = noone;
 	disp_value     = 0;
-	
-	notesPressing = [];
-	values = {};
+	midi_data      = [];
+	notesPressing  = [];
+	keyWatching    = {};
+	values         = {};
 	
 	attributes.live_update = true;
 	array_push(attributeEditors, Node_Attribute("Live update", function() /*=>*/ {return attributes.live_update}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("live_update")})}));
 	
 	static step = function() {
 		LIVE_UPDATE = attributes.live_update;
+		
+		var b = rtmidi_check_message();
+		if(b < 3) return;
+		
+		midi_data = array_create(b);
+		for (var i = 0; i < b; i += 3) {
+			var _typ = rtmidi_get_message(i+0);
+			var vkey = rtmidi_get_message(i+1);
+			var vval = rtmidi_get_message(i+2);
+				
+			midi_data[i+0] = _typ;
+			midi_data[i+1] = vkey;
+			midi_data[i+2] = vval;
+			
+			if (_typ <= 159) {
+				if (_typ <= 143) array_remove(notesPressing, vkey);			//note off
+				else			 array_push_unique(notesPressing, vkey);	//note on
+			}
+			
+			values[$ vkey] = vval;
+			disp_value     = vval;
+			
+			if(index_watching != noone) {
+				inputs[index_watching].setValue(vkey);
+				index_watching = noone;
+			}
+			
+			if(keyWatching[$ vkey] == 1) triggerRender();
+		}
 	}
 	
 	static update = function() {
@@ -127,33 +162,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			MIDI_INPORT = _inport;
 		}
 		
-		var b = rtmidi_check_message();
-		var a = [];
-
-		for (var i = 0; i < b; i++) {
-			a[i]  = rtmidi_get_message(i);
-		}
-		
-		if(array_length(a) >= 3) {
-			var _typ = a[0];
-			var vkey = a[1];
-			var vval = a[2];
-				
-			if (_typ <= 159) {
-				if (_typ <= 143) array_remove(notesPressing, vkey);			//note off
-				else			 array_push_unique(notesPressing, vkey);	//note on
-			}
-			
-			values[$ vkey] = vval;
-			disp_value = vval;
-			
-			if(index_watching != noone) {
-				inputs[index_watching].setValue(vkey);
-				index_watching = noone;
-			}
-		}
-		
-		outputs[0].setValue(a);
+		outputs[0].setValue(midi_data);
 		outputs[1].setValue(notesPressing);
 		outputs[2].setValue(values);
 		
@@ -165,6 +174,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			var _val = struct_try_get(values, _ikey, 0);
 			if(_inor) _val /= 127;
 			
+			keyWatching[$ _ikey] = 1;
 			outputs[2 + _ind].setName($"{_ikey} Value");
 			outputs[2 + _ind].setValue(_val);
 			_ind++;
