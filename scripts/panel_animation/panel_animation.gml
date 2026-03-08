@@ -225,6 +225,7 @@ function Panel_Animation() : PanelContent() constructor {
     title        = __txt("Animation");
     context_str  = "Animation";
     icon         = THEME.panel_animation_icon;
+    project      = undefined;
     
 	#region ---- Dimension ----
 	    min_w = ui(40);
@@ -997,6 +998,8 @@ function Panel_Animation() : PanelContent() constructor {
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         if(!PROJECT.active) return;
         
+        if(project != PROJECT) keyframe_selecting = [];
+        project = PROJECT;
         setDimension();
         drawDopesheet_setDimension();
         getTimelineContent();

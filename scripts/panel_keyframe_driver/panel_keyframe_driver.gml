@@ -4,6 +4,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	h     = ui(240);
 	auto_pin = true;
 	padding  = ui(8);
+	project  = undefined;
 	
 	key   = noone;
 	wdgw  = ui(64);
