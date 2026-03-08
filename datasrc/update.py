@@ -16,7 +16,7 @@ def packFolder(src, trg, forced = False):
     lastEditTime = max(os.path.getmtime(r) if os.path.basename(r) != "last_zip.txt" else 0 for r,_,_ in os.walk(srcDir))
 
     if lastEditTime <= lastZipTime and not forced:
-        print(f" > Skipping {src}, no changes detected.")
+        print(f" x Skipping {src}, no changes detected.")
         return
     
     print(f" > Packing {src} into {trg}...")

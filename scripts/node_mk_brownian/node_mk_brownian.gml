@@ -11,10 +11,11 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Particles
 	newInput( 1, nodeValue_Surface( "Sprite" )).setArrayDepth(1);
+	newInput(15, nodeValue_Bool(    "Offset Lifespan", false ));
 	
 	////- =Spawn
-	newInput( 3, nodeValue_Area( "Area",   DEF_AREA )).setHotkey("A");
-	newInput( 2, nodeValue_Int(  "Amount", 10       ));
+	newInput( 3, nodeValue_Area( "Area",   DEF_AREA_REF )).setUnitSimple().setHotkey("A");
+	newInput( 2, nodeValue_Int(  "Amount", 10           ));
 	
 	////- =Movement
 	newInput( 5, nodeValue_Range(   "Speed",         [1,1]          ));
@@ -32,11 +33,12 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(14, nodeValue_Bool(     "Tile",  false        ));
 	// input 15
 	
-	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Output",    VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Positions", VALUE_TYPE.float,   []    ));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 8, 
 		[ "Dimension",  false     ], 12,  0, 
-		[ "Particles",  false     ],  1, 
+		[ "Particles",  false     ],  1, 15, 
 		[ "Spawn",      false     ],  3,  2, 
 		[ "Movement",   false     ],  5,  4,  9, 
 		[ "Smooth turn", true, 11 ], 10, 
@@ -45,17 +47,22 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- Node
 	
+	area_x0 = 0; area_y0 = 0;
+	area_x1 = 0; area_y1 = 0;
+	
+	static getDimension = function() /*=>*/ {return inputs[12].getValue()};
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}
 	
-	static getPosition = function(ind, t, _area, _sped, _dire, _dirs, _turn, _dira) {
+	static getPosition = function(ind, t, _sped, _dire, _dirs, _turn, _dira) {
 		random_set_seed(ind);
 		
-		var _px = irandom_range(_area[0] - _area[2], _area[0] + _area[2]);
-		var _py = irandom_range(_area[1] - _area[3], _area[1] + _area[3]);
+		var _px = irandom_range( area_x0, area_x1 );
+		var _py = irandom_range( area_y0, area_y1 );
 		
 		var spd = random_range(_sped[0], _sped[1]);
 		var dir = rotation_random_eval(_dire);
@@ -66,12 +73,8 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			_px += lengthdir_x(spd, dir);
 			_py += lengthdir_y(spd, dir);
 			
-			if(_turn) {
-				var a = random_range(_dira[0], _dira[1]);
-				dis += a;
-				
-			} else
-				dis = random_range(_dirs[0], _dirs[1]);
+			if(_turn) dis += random_range(_dira[0], _dira[1]);
+			else      dis  = random_range(_dirs[0], _dirs[1]);
 			
 			dir += dis;
 		}
@@ -84,9 +87,10 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _seed = _data[ 8];
 			
 			var _dim  = _data[12];
-			var _surf = _data[ 0];
+			var _bg   = _data[ 0];
 			
 			var _sprt = _data[ 1];
+			var _offs = _data[15];
 			
 			var _area = _data[ 3];
 			var _amou = _data[ 2];
@@ -108,7 +112,8 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var hh = _dim[1];
 		
 		var _sed = _seed;
-		var pw = 1, ph = 1;
+		var  pw = 1;
+		var  ph = 1;
 		
 		if(_sprt != noone) {
 			var ss = is_array(_sprt)? _sprt[0] : _sprt;
@@ -116,19 +121,33 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			ph = surface_get_height_safe(ss);
 		}
 		
-		surface_set_shader(_outData, sh_sample, true, BLEND.normal);
-			draw_surface_safe(_surf);
+		var ind = 0;
+		_outData[1] = array_verify(_outData[1], _amou);
+		
+		var _frame_total = TOTAL_FRAMES;
+		var _frame_curr  = CURRENT_FRAME;
+		
+		area_x0 = _area[0] - _area[2]; 
+		area_y0 = _area[1] - _area[3];
+		
+		area_x1 = _area[0] + _area[2]; 
+		area_y1 = _area[1] + _area[3];
+		
+		surface_set_shader(_outData[0], noone, true, BLEND.normal);
+			draw_surface_safe(_bg);
 			
 			repeat(_amou) {
 				_sed += 100;
 				
-				var _lifs = irandom_seed(TOTAL_FRAMES, _sed);
-				var _lif  = (_lifs + CURRENT_FRAME) % TOTAL_FRAMES;
+				var _ofs = irandom_seed(_frame_total, _sed);
+				var _lif = (_frame_curr + (_offs * _ofs)) % _frame_total;
 				
-				var _pos  = getPosition(_sed, _lif, _area, _sped, _dire, _dirs, _turn, _dira);
-				var _cc   = _colr.eval(_lifs / TOTAL_FRAMES);
-				var _aa   = eval_curve_x(_alph, _lif / TOTAL_FRAMES);
+				var _pos  = getPosition(_sed, _lif, _sped, _dire, _dirs, _turn, _dira);
+				var _cc   = _colr.eval(_ofs / _frame_total);
+				var _aa   = eval_curve_x(_alph, _lif / _frame_total);
 				random_set_seed(_sed + 50);
+				
+				_outData[1][ind] = [ _pos[0], _pos[1] ];
 				
 				if(_sprt == noone) {
 					var _ss = irandom_range(_size[0], _size[1]);
@@ -161,6 +180,8 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 						if(wx != undefined && wy != undefined) draw_surface_ext_safe(_p, wx, wy, _ss, _ss, 0, _cc, _aa);
 					}
 				}
+				
+				ind++;
 			}
 		surface_reset_shader();
 		
