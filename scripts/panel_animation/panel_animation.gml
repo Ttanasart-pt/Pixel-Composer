@@ -626,7 +626,7 @@ function Panel_Animation() : PanelContent() constructor {
         draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, bar_w, bar_h, COLORS.panel_animation_timeline_blend, 1);
         if(IS_RENDERING) {
         	var _prg = CURRENT_FRAME / TOTAL_FRAMES;
-        	draw_sprite_stretched_add(THEME.ui_panel_bg, 4, 0, 0, bar_w * _prg, bar_h, COLORS._main_value_positive, .4);
+        	draw_sprite_stretched_add(THEME.ui_panel_bg, 4, 0, 0, bar_w * _prg, bar_h, COLORS._main_value_positive, .35);
         }
         
         if(inspecting && inspecting.use_cache) { // cache
@@ -737,7 +737,7 @@ function Panel_Animation() : PanelContent() constructor {
         	
             draw_text_add(bar_line_x, ui(16), cf);
         #endregion
-           
+        
         if(inspecting && inspecting.drawAnimationTimeline != undefined) 
         	inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
         

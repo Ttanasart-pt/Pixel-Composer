@@ -36,11 +36,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 8, nodeValue_SliRange( "Range",        [0,0] )).setTooltip("Starting/ending frames, set end to 0 to default to last frame.");
 	// inputs 12
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output("Atlas Data",  VALUE_TYPE.atlas,   []    ));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output("Atlas Data",  VALUE_TYPE.atlas,   []    ));
+	
+	b_clear = button(function() /*=>*/ { initSurface(true); triggerRender(); }).setText(__txt("Clear Surface"));
 	
 	input_display_list = [
-		[ "Surfaces",     false    ],  0,  1,  2, 12, 
+		[ "Surfaces",     false    ],  0,  1,  2, 12, b_clear, 
 		[ "Packing",      false    ],  3,  4,  5,  6,  9,  7, 
 		[ "Custom Range", true, 11 ],  8, 
 	]
@@ -54,7 +56,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	////- Nodes
 	
 	attribute_surface_depth();
-
+	
 	static step = function() {
 		var inpt = getInputData( 0);
 		var grup = getInputData( 1);
