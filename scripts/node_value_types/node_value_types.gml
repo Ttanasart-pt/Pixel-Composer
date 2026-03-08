@@ -569,12 +569,12 @@ function nodeValueUnit(__nodeValue) constructor {
 	
 	mode      = VALUE_UNIT.constant;
 	reference = noone;
-	modeTrigger = function() /*=>*/ { 
+	modeTrigger = function(upd = true) /*=>*/ { 
 		mode = !mode; 
 		
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
-		_nodeValue.node.doUpdate();
+		if(upd) _nodeValue.node.doUpdate();
 	}
 	
 	tooltip       = new tooltipSelector("Unit", ["Pixel", "Fraction"]);

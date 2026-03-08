@@ -465,20 +465,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		attributes.mapped = false;
 	}
 	
-	static setUnitSimple = function(r=true) { return setUnitRef(function(i) /*=>*/ {return node.getDimension(i)}, r? VALUE_UNIT.reference : VALUE_UNIT.constant); }
-	static setUnitRef    = function(ref, mode = VALUE_UNIT.constant) {
+	static setUnitSimple = function(r = true) { 
+		var _mode = r? VALUE_UNIT.reference : VALUE_UNIT.constant;
+		var _ref  = function(i) /*=>*/ {return node.getDimension(i)};
+		
 		unitUse = true;
-		display_data.onSurfaceSize = ref;
+		display_data.onSurfaceSize = _ref;
 		
 		if(editWidget) {
 			editWidget.unit = unit;
 			editWidget.onSurfaceSize = unit.reference;
 		}
 		
-		unit.reference  = ref;
-		unit.mode		= mode;
-		def_unit        = mode;
+		unit.reference  = _ref;
+		unit.mode		= _mode;
+		def_unit        = _mode;
 		cache_value[0]  = false;
+		
+		if(NODE_NEW_MANUAL && _mode == VALUE_UNIT.reference && PREFERENCES.node_def_dim_unit == 0) 
+			run_in(1, function() /*=>*/ { unit.modeTrigger(); });
 		
 		return self;
 	}

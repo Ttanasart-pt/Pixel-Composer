@@ -4,8 +4,7 @@
 // 	newInput(0, nodeValue_Surface("Surface In"));
 	
 // 	newInput(1, nodeValue_Int("Size", 3))
-// 		.setValidator(VV_min(0))
-// 		.setUnitRef((index) => getDimension(index));
+// 		.setValidator(VV_min(0));
 	
 // 	newInput(2, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]))
 // 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
