@@ -49,7 +49,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 9, nodeValue_Vec2(     "Start Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(22, nodeValue_Anchor(   "Global Anchor",   [ 0, 0] ));
 	newInput(32, nodeValue_Rotation( "Start Rotation",   0      )).setHotkey("R");
-	newInput( 2, nodeValue_Int(      "Amount",           2      ));
+	newInput( 2, nodeValue_Int(      "Amount",           4      ));
 	newInput(18, nodeValue_Int(      "Column",           4      ));
 	newInput( 7, nodeValue_RotRange( "Angle Range",     [0,360] ));
 	newInput( 8, nodeValue_Float(    "Radius",          .25     )).setUnitSimple();
@@ -86,10 +86,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(23, nodeValue_Gradient( "Random Color",      gra_white           ));
 	
 	////- =Deprecated
+	newInput(28, nodeValue_Bool(     "Wrap Index", true ));
 	/* deprecated */ newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]             ));
 	/* deprecated */ newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10      ));
 	/* deprecated */ newInput(27, nodeValue_Color(    "Animator blend",     ca_white          ));
-	/* deprecated */ newInput(28, nodeValue_Slider(   "Animator alpha",     1                 ));
 	// input 45
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -103,7 +103,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		dynamic_input_inspecting = getInputAmount();
 		
 		////- =Selection
-		
 		newInput(i+ 1, nodeValue_EScroll(  "Select mode",             0, enum_select_mode ));
 		newInput(i+ 9, nodeValue_Area(     "Selection area",          DEF_AREA_REF        )).setUnitSimple();
 		newInput(i+10, nodeValue_Float(    "Selection i",             0                   ));
@@ -113,7 +112,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		newInput(i+14, nodeValue_Surface(  "Selection surface" ));
 		
 		////- =Effects
-		
 		newInput(i+ 0, nodeValue_EScroll(  "Animator type",     0, typeList               ));
 		newInput(i+ 2, nodeValue_Vec2(     "Position",         [0,0]                      ));
 		newInput(i+ 3, nodeValue_Rotation( "Rotation",          0                         ));
@@ -205,7 +203,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Render",   false ], 43, 34, 14, 30, 23, 
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
-		animator_renderer, 
+		animator_renderer, 28, 
 	];
 	
 	setDynamicInput(16, false);
@@ -413,6 +411,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _cls    = _data[19];
 			var _invers = _data[43];
 			var _bld_md = _data[34];
+			
+			var _ani_wr = _data[28];
 			
 			inputs[3].getEditWidget().setSideButton(_pat == 1? b_gridFill : noone);
 			
@@ -689,10 +689,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _ax = 0, _ay = 0;
 				
 				if(_an_selt == 0) { // index
-					if(i < _an_sind - _an_srng - _an_sfal || i > _an_sind + _an_srng + _an_sfal)
+					var _dist = abs(i - posi_mod(_an_sind, _amo));
+					if(_ani_wr) _dist = min(_dist, abs(_amo - _dist));
+					
+					if(_dist > _an_srng + _an_sfal)
 						_inf = 1;
-					else if (_an_sfal > 0 && (i < _an_sind - _an_srng || i > _an_sind + _an_srng))
-						_inf = clamp(min(abs(i - (_an_sind - _an_srng)), abs(i - (_an_sind + _an_srng))) / _an_sfal, 0, 1);
+					else if (_an_sfal > 0 && _dist > _an_srng)
+						_inf = clamp((_dist - _an_srng) / _an_sfal, 0, 1);
 					else 
 						_inf = 0;
 					

@@ -5,6 +5,8 @@ enum MOD_NEG {
 
 function safe_div(numb, divv) { return divv == 0? 0 : numb / divv; }
 
+function posi_mod(numb, modd) { return ((numb % modd) + modd) % modd; }
+
 function safe_mod(numb, modd, _neg = MOD_NEG._default) {
 	INLINE
 	
