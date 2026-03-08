@@ -962,66 +962,66 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		} 
 		
 		// Normal or wrap
-		surface_set_shader(_outSurf);
-		shader_set_interpolation(surf);
-		
-		if(echo) {
-			if(echo_typ == 0) {
-				for( var i = 0; i <= echo_amo; i++ ) {
-					var rat = i / echo_amo;
-					var _px = lerp(_ww/2, pos_raw[0], rat);
-					var _py = lerp(_hh/2, pos_raw[1], rat);
-					var _rt = lerp(0,     rot,        rat);
-					var _sx = lerp(1,     sca[0],     rat);
-					var _sy = lerp(1,     sca[1],     rat);
+		surface_set_shader(_outSurf, noone, true, BLEND.normal);
+			shader_set_interpolation(surf);
+			
+			if(echo) {
+				if(echo_typ == 0) {
+					for( var i = 0; i <= echo_amo; i++ ) {
+						var rat = i / echo_amo;
+						var _px = lerp(_ww/2, pos_raw[0], rat);
+						var _py = lerp(_hh/2, pos_raw[1], rat);
+						var _rt = lerp(0,     rot,        rat);
+						var _sx = lerp(1,     sca[0],     rat);
+						var _sy = lerp(1,     sca[1],     rat);
+						
+						var  ax = lerp(.5, anc_raw[0], rat) * ww * _sx;
+						var  ay = lerp(.5, anc_raw[1], rat) * hh * _sy;
+						
+						_px -= ax;
+						_py -= ay;
+						__p = point_rotate(_px, _py, _px + ax, _py + ay, _rt, __p);
+						
+						_px = pos_exact? round(__p[0]) : __p[0];
+						_py = pos_exact? round(__p[1]) : __p[1];
+						
+						draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
+					}
 					
-					var  ax = lerp(.5, anc_raw[0], rat) * ww * _sx;
-					var  ay = lerp(.5, anc_raw[1], rat) * hh * _sy;
+				} else if(echo_typ == 1 && array_safe_get(transformData, CURRENT_FRAME - 1, noone) != noone) {
+					var _pre = transformData[CURRENT_FRAME - 1][_array_index];
 					
-					_px -= ax;
-					_py -= ay;
-					__p = point_rotate(_px, _py, _px + ax, _py + ay, _rt, __p);
-					
-					_px = pos_exact? round(__p[0]) : __p[0];
-					_py = pos_exact? round(__p[1]) : __p[1];
-					
-					draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
-				}
+					for( var i = 0; i <= echo_amo; i++ ) {
+						var rat = i / echo_amo;
+						var _px = lerp(_pre[0], draw_x, rat);
+						var _py = lerp(_pre[1], draw_y, rat);
+						var _sx = lerp(_pre[2], sca[0], rat);
+						var _sy = lerp(_pre[3], sca[1], rat);
+						var _rt = lerp(_pre[4], rot,    rat);
+						
+						_px = pos_exact? round(_px) : _px;
+						_py = pos_exact? round(_py) : _py;
+						
+						draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
+					}
+				} else 
+					draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 				
-			} else if(echo_typ == 1 && array_safe_get(transformData, CURRENT_FRAME - 1, noone) != noone) {
-				var _pre = transformData[CURRENT_FRAME - 1][_array_index];
-				
-				for( var i = 0; i <= echo_amo; i++ ) {
-					var rat = i / echo_amo;
-					var _px = lerp(_pre[0], draw_x, rat);
-					var _py = lerp(_pre[1], draw_y, rat);
-					var _sx = lerp(_pre[2], sca[0], rat);
-					var _sy = lerp(_pre[3], sca[1], rat);
-					var _rt = lerp(_pre[4], rot,    rat);
-					
-					_px = pos_exact? round(_px) : _px;
-					_py = pos_exact? round(_py) : _py;
-					
-					draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
-				}
 			} else 
 				draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 			
-		} else 
-			draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
-		
-		if(mode == 2) {
-			draw_surface_ext_safe(surf, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
-			draw_surface_ext_safe(surf, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
-			draw_surface_ext_safe(surf, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
-			
-			draw_surface_ext_safe(surf, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
-			draw_surface_ext_safe(surf, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
-			
-			draw_surface_ext_safe(surf, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
-			draw_surface_ext_safe(surf, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
-			draw_surface_ext_safe(surf, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
-		}
+			if(mode == 2) {
+				draw_surface_ext_safe(surf, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				
+				draw_surface_ext_safe(surf, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
+				
+				draw_surface_ext_safe(surf, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+			}
 		surface_reset_shader();
 		
 		if(!strt || _prevData == noone) {
