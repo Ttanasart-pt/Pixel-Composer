@@ -15,52 +15,46 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	anim_drawn	= array_create(TOTAL_FRAMES + 1, false);
 	
 	////- =Surfaces
-	
-	newInput( 0, nodeValue_Surface(     "Sprites"));
-	newInput( 1, nodeValue_Enum_Scroll( "Sprite set", 0, [ "Animation", "Sprite array" ])).rejectArray();
-	newInput( 2, nodeValue_Int(         "Frame step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
-	newInput(12, nodeValue_Bool(        "Skip Empty", false ));
+	newInput( 0, nodeValue_Surface( "Sprites" ));
+	newInput( 1, nodeValue_EScroll( "Sprite set", 0, [ "Animation", "Sprite array" ])).rejectArray();
+	newInput( 2, nodeValue_Int(     "Frame step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
+	newInput(12, nodeValue_Bool(    "Skip Empty", false ));
 	
 	////- =Packing
-	
-	newInput(3, nodeValue_Enum_Scroll( "Packing type", 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
-	newInput(4, nodeValue_Int(         "Grid column",  4        )).rejectArray();
-	newInput(5, nodeValue_Enum_Button( "Alignment",    0, [ "First", "Middle", "Last" ])).rejectArray();
-	newInput(6, nodeValue_Int(         "Spacing",      0        ));
-	newInput(9, nodeValue_Vec2(        "Spacing",     [0,0]     ));
-	newInput(7, nodeValue_Padding(     "Padding",     [0,0,0,0] ));
+	newInput( 3, nodeValue_EScroll( "Packing type", 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
+	newInput( 4, nodeValue_Int(     "Grid column",  4        )).rejectArray();
+	newInput( 5, nodeValue_EButton( "Alignment",    0, [ "First", "Middle", "Last" ])).rejectArray();
+	newInput( 6, nodeValue_Int(     "Spacing",      0        ));
+	newInput( 9, nodeValue_Vec2(    "Spacing",     [0,0]     ));
+	newInput( 7, nodeValue_Padding( "Padding",     [0,0,0,0] ));
 	
 	////- =Rendering
-	
 	/*UNUSED*/ newInput(10, nodeValue_Bool( "Overlappable", false ));
 	
 	////- =Range
-	
-	newInput(11, nodeValue_Bool(         "Custom Range", false ));
-	newInput( 8, nodeValue_Slider_Range( "Range",        [0,0] )).setTooltip("Starting/ending frames, set end to 0 to default to last frame.");
-	
+	newInput(11, nodeValue_Bool(     "Custom Range", false ));
+	newInput( 8, nodeValue_SliRange( "Range",        [0,0] )).setTooltip("Starting/ending frames, set end to 0 to default to last frame.");
 	// inputs 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output("Atlas Data",  VALUE_TYPE.atlas,   []    ));
 	
 	input_display_list = [
-		["Surfaces",  false], 0, 1, 2, 12, 
-		["Packing",	  false], 3, 4, 5, 6, 9, 7, 
-		//["Rendering", false], 10, 
-		["Custom Range", true, 11], 8, 
+		[ "Surfaces",     false    ],  0,  1,  2, 12, 
+		[ "Packing",      false    ],  3,  4,  5,  6,  9,  7, 
+		[ "Custom Range", true, 11 ],  8, 
 	]
 	
 	atlases = [];
 	noti_dimension_txt = "Spritesheet node does not support different surfaces size. Use Stack, Image grid, or Pack sprite node.";
 	
-	attribute_surface_depth();
-
 	insp1button = button(function() /*=>*/ { initSurface(true); PROJECT.animator.render(); anim_rendering = false; }).setTooltip(__txt("Render"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	////- Nodes
 	
+	attribute_surface_depth();
+
 	static step = function() {
 		var inpt = getInputData( 0);
 		var grup = getInputData( 1);

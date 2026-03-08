@@ -310,9 +310,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var strt = getInputData(11);
 		
 		dirr = string_replace_all(dirr, "\\", "/");
-		if(dirr != "" && !string_ends_with(dirr, "/")) dirr += "/";
+		if(fnam != "") {
+			fnam = filename_name_only(fnam);
+			
+		} else {
+			fnam = filename_name_only(dirr);
+			dirr = filename_dir(dirr);
+		}
 		
-		if(fnam != "") fnam = filename_name_only(fnam);
+		if(dirr != "" && !string_ends_with(dirr, "/")) dirr += "/";
 		
 		var s = _array? [] : "";
 		var i = 1;

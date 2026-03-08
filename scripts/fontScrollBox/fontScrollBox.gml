@@ -3,8 +3,8 @@ function fontScrollBox(_onModify) : widget() constructor {
 	open     = false;
 	open_rx  = 0;
 	open_ry  = 0;
+	align    = fa_center;
 	
-	align = fa_center;
 	setSideButton(button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
 						.setTooltip(__txtx("widget_font_open_folder", "Open font folder"))
 						.setIcon(THEME.folder_content, 0, COLORS._main_icon).iconPad());
