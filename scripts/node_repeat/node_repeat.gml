@@ -95,7 +95,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	typeList = [ "Linear Transform", "Blending" ];
-	enum_select_mode = __enum_array_gen(["Index", "Area", "Surface"], s_node_repeat_selection_types);
+	enum_select_mode = __enum_array_gen( [ "Index", "Area", "Linear", "Surface" ], s_node_repeat_selection_types);
 	
 	function createNewInput(i = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -103,13 +103,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		dynamic_input_inspecting = getInputAmount();
 		
 		////- =Selection
-		newInput(i+ 1, nodeValue_EScroll(  "Select mode",             0, enum_select_mode ));
-		newInput(i+ 9, nodeValue_Area(     "Selection area",          DEF_AREA_REF        )).setUnitSimple();
-		newInput(i+10, nodeValue_Float(    "Selection i",             0                   ));
-		newInput(i+11, nodeValue_Float(    "Selection range",         2                   ));
-		newInput(i+12, nodeValue_Float(    "Selection falloff",       0                   ));
-		newInput(i+13, nodeValue_Curve(    "Selection falloff curve", CURVE_DEF_10        ));
-		newInput(i+14, nodeValue_Surface(  "Selection surface" ));
+		newInput(i+ 1, nodeValue_EScroll(  "Select Mode",    0, enum_select_mode ));
+		newInput(i+ 9, nodeValue_Area(     "Select Area",    DEF_AREA_REF        )).setUnitSimple();
+		newInput(i+10, nodeValue_Float(    "Select Index",   0      ));
+		newInput(i+11, nodeValue_Float(    "Select Range",   2      ));
+		newInput(i+14, nodeValue_Surface(  "Select Surface"         ));
+		newInput(i+16, nodeValue_Vec2(     "Select Position", [0,0] )).setUnitSimple();
+		newInput(i+17, nodeValue_Rotation( "Select Rotation",  0    ));
+		
+		newInput(i+12, nodeValue_Float(    "Select Falloff", 0                   ));
+		newInput(i+13, nodeValue_Curve(    "Select Falloff Curve", CURVE_DEF_10  ));
 		
 		////- =Effects
 		newInput(i+ 0, nodeValue_EScroll(  "Animator type",     0, typeList               ));
@@ -127,8 +130,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	} 
 	
 	input_display_dynamic = [ 
-		["Selection", false], 1, 9, 10, 11, 12, 13, 14, 
-		["Effects",   false], 0, 2, 3, 4, 5, 6, 7, 8, 15, 
+		[ "Selection", false ],  1,  9, 10, 11, 14, 16, 17, 12, 13, 
+		[ "Effects",   false ],  0,  2,  3,  4,  5,  6,  7,  8, 15, 
 	];
 	
 	animator_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -206,7 +209,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		animator_renderer, 28, 
 	];
 	
-	setDynamicInput(16, false);
+	setDynamicInput(18, false);
 	
 	////- Nodes
 	
@@ -339,7 +342,29 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _prop = current_data[_ind + 0];
 		var _selc = current_data[_ind + 1];
 		
-		if(_selc == 1) InputDrawOverlay(inputs[_ind + 9].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		switch(_selc) {
+			case 1 : 
+				InputDrawOverlay(inputs[_ind + 9].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				break;
+				
+			case 2 :
+				var _cpos = current_data[_ind + 16];
+				var _crot = current_data[_ind + 17];
+				var cx = _x + _cpos[0] * _s;
+				var cy = _y + _cpos[1] * _s;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(
+					cx - lengthdir_x(9999, _crot), 
+					cy - lengthdir_y(9999, _crot), 
+					cx + lengthdir_x(9999, _crot), 
+					cy + lengthdir_y(9999, _crot), 
+				)
+				
+				InputDrawOverlay(inputs[_ind + 16].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				InputDrawOverlay(inputs[_ind + 17].hideLabel().drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my));
+				break;
+		}
 		
 		return w_hovering;
 	}
@@ -436,13 +461,15 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				inputs[_ind +  6].setVisible(_prop == 0);
 				inputs[_ind +  7].setVisible(_prop == 1);
 				inputs[_ind +  8].setVisible(_prop == 1);
-				// inputs[_ind + 15].setVisible(_prop == 2);
 				
-				inputs[_ind +  9].setVisible(_selc == 1);
+				inputs[_ind + 10].setVisible(_selc == 0);
 				inputs[_ind + 11].setVisible(_selc == 0);
-				inputs[_ind + 12].setVisible(_selc != 2);
-				inputs[_ind + 13].setVisible(_selc != 2);
-				inputs[_ind + 14].setVisible(_selc == 2, _selc == 2);
+				inputs[_ind +  9].setVisible(_selc == 1);
+				inputs[_ind + 16].setVisible(_selc == 2);
+				inputs[_ind + 17].setVisible(_selc == 2);
+				inputs[_ind + 12].setVisible(_selc != 3);
+				inputs[_ind + 13].setVisible(_selc != 3);
+				inputs[_ind + 14].setVisible(_selc == 3, _selc == 3);
 			}
 			
 			_grad.cache();
@@ -666,45 +693,56 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			for( var j = 0; j < _ani_amo; j++ ) {
 				var _ii = input_fix_len + j * data_length;
 				
-				var _an_prop = _data[_ii + 0];
-				var _an_selt = _data[_ii + 1];
-				
-				var _an_posi = _data[_ii + 2];
-				var _an_rota = _data[_ii + 3];
-				var _an_scal = _data[_ii + 4];
-				var _an_anct = _data[_ii + 5];
-				var _an_ancp = _data[_ii + 6];
-				var _an_colr = _data[_ii + 7];
-				var _an_alph = _data[_ii + 8];
-				
+				var _an_selt = _data[_ii +  1];
 				var _an_sare = _data[_ii +  9];
 				var _an_sind = _data[_ii + 10];
 				var _an_srng = _data[_ii + 11];
+				var _an_ssrf = _data[_ii + 14];
+				var _an_spos = _data[_ii + 16];
+				var _an_srot = _data[_ii + 17];
 				var _an_sfal = _data[_ii + 12];
 				var _an_sfcr = _data[_ii + 13];
-				var _an_ssrf = _data[_ii + 14];
-				// var _an_strn = _data[_ii + 15];
+				
+				var _an_prop = _data[_ii +  0];
+				var _an_posi = _data[_ii +  2];
+				var _an_rota = _data[_ii +  3];
+				var _an_scal = _data[_ii +  4];
+				var _an_anct = _data[_ii +  5];
+				var _an_ancp = _data[_ii +  6];
+				var _an_colr = _data[_ii +  7];
+				var _an_alph = _data[_ii +  8];
+				var _an_strn = _data[_ii + 15];
 				
 				var _inf = 0;
 				var _ax = 0, _ay = 0;
 				
-				if(_an_selt == 0) { // index
-					var _dist = abs(i - posi_mod(_an_sind, _amo));
-					if(_ani_wr) _dist = min(_dist, abs(_amo - _dist));
-					
-					if(_dist > _an_srng + _an_sfal)
-						_inf = 1;
-					else if (_an_sfal > 0 && _dist > _an_srng)
-						_inf = clamp((_dist - _an_srng) / _an_sfal, 0, 1);
-					else 
-						_inf = 0;
-					
-				} else if(_an_selt == 1) { // area
-					_inf = 1 - area_point_in_fallout(_an_sare, _x, _y, _an_sfal);
-					
-				} else if(_an_selt == 2) { // surface
-					if(anim_sampler[j].active) 
-						_inf = 1 - anim_sampler[j].getPixel(round(_x), round(_y));
+				switch(_an_selt) {
+					case 0 :
+						var _dist = abs(i - posi_mod(_an_sind, _amo));
+						if(_ani_wr) _dist = min(_dist, abs(_amo - _dist));
+						
+						if(_dist > _an_srng + _an_sfal)
+							_inf = 1;
+						else if (_an_sfal > 0 && _dist > _an_srng)
+							_inf = clamp((_dist - _an_srng) / _an_sfal, 0, 1);
+						break;
+						
+					case 1 : _inf = 1 - area_point_in_fallout(_an_sare, _x, _y, _an_sfal); break;
+						
+					case 2 :
+						var _dist = distance_to_line_angle_signed(_x, _y, _an_spos[0], _an_spos[1], _an_srot);
+						
+						if(_dist > _an_srng + _an_sfal)
+							_inf = 1;
+						else if (_an_sfal > 0 && _dist > _an_srng)
+							_inf = clamp((_dist - _an_srng) / _an_sfal, 0, 1);
+						break;
+						
+					case 3 :
+						if(anim_sampler[j].active) 
+							_inf = 1 - anim_sampler[j].getPixel(round(_x), round(_y));
+						break;
+						
 				}
 				
 				_inf = anim_fall_curves[j].get(_inf);
