@@ -1796,7 +1796,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return preview_draw_final;
 	}
 	
-	static getGraphPreviewSurface = function() /*=>*/ {return getPreviewValues()};
+	static getGraphPreviewSurface = function() /*=>*/ {return inspecting? getPreviewValues() : outputs[0].getValue()};
 	
 	////- Serialize
 	
