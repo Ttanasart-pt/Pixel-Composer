@@ -160,7 +160,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
-		setDisplayName(_name, false);
+		if(!renamedManual) setDisplayName(_name, false, false);
 		outputs[1].setValue(path);
 		
 		if(GIF_READING) return false;

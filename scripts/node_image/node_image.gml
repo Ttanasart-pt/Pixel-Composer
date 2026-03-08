@@ -58,7 +58,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var _name = filename_name_only(_path);
 		var _spr  = sprite_add_map(_path);	
-		setDisplayName(_name, false);
+		if(!renamedManual) setDisplayName(_name, false, false);
 		
 		if(_spr == -1) { noti_warning($"Image node: File not a valid image.", noone, self); return noone; }
 		

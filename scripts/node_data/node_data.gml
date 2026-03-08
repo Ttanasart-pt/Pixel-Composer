@@ -59,7 +59,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		run_in(1, function() /*=>*/ { 
 			resetInternalName();
-			if(renamed) return;
+			if(renamed || renamedManual) return;
 			
 			display_name = __txt_node_name(instanceof(self), name);
 			if(!LOCALE_DEF || TESTING) renamed = true;
@@ -83,6 +83,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		display_name   = "";
 		internalName   = "";
 		renamed        = false;
+		renamedManual  = false;
 		tooltip        = "";
 		
 		w       = 128; 
@@ -475,7 +476,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static onSetDisplayName  = noone;
-	static setDisplayName    = function(_name, _rec = true) {
+	static setDisplayName    = function(_name, _rec = true, _rename = true) {
 		if(NOT_LOAD && _rec && display_name != _name) 
 			recordAction(ACTION_TYPE.custom, function(data) /*=>*/ { 
 			var _name = data.name;
@@ -483,6 +484,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			setDisplayName(_name, false);
 		}, { name : display_name, tooltip : $"Rename node" }).setRef(self);
 		
+		if(_rename) renamedManual = true;
 		renamed      =  true;
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
@@ -3046,7 +3048,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		_map.inspectInputs = _trigger;
 		if(!array_empty(_outMeta)) _map.outputMeta = _outMeta;
-		if(renamed)                _map.renamed    = renamed;
+		if(renamed)       _map.renamed       = renamed;
+		if(renamedManual) _map.renamedManual = renamedManual;
 		
 		if(instanceBase)  _map.instanceBase = instanceBase.node_id;
 		
@@ -3074,7 +3077,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			else		  node_id = load_map.id;
 			
 			project.nodeMap[? node_id] = self;
-			renamed    = load_map[$ "renamed"] ?? false;
+			renamed       = load_map[$ "renamed"]       ?? false;
+			renamedManual = load_map[$ "renamedManual"] ?? false;
 			
 			if(struct_has(load_map, "name")) setDisplayName(load_map.name);
 			internalName = load_map[$ "iname"] ?? internalName;

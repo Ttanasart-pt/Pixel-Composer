@@ -40,7 +40,7 @@ function Node_Color_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		if(index != 0) return;
 		
 		var _type = inputs[0].getValue();
-		setDisplayName(array_safe_get(BLEND_TYPES, _type, ""), false);
+		if(!renamedManual) setDisplayName(array_safe_get(BLEND_TYPES, _type, ""), false, false);
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

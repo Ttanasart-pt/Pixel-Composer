@@ -67,7 +67,7 @@ function Node_Krita_layer(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!is(content, Krita_File)) return;
 		
 		var _lname = getInputData(1);
-		setDisplayName(_lname, false);
+		if(!renamedManual) setDisplayName(_lname, false, false);
 		
 		for( var i = 0, n = array_length(data.layerDat); i < n; i++ ) {
 			if(data.layerDat[i].name == _lname) 

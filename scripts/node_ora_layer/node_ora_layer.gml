@@ -66,7 +66,7 @@ function Node_ORA_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!is(content, ORA_File)) return;
 		
 		var _lname = getInputData(1);
-		setDisplayName(_lname, false);
+		if(!renamedManual) setDisplayName(_lname, false, false);
 		
 		for( var i = 0, n = array_length(data.layerData); i < n; i++ ) {
 			if(data.layerData[i].name == _lname) 

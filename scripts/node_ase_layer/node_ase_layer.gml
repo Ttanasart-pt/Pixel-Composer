@@ -99,8 +99,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static findLayer = function() {
 		var _data  = inputs[0].getValue();
 		var _lname = inputs[2].getValue();
-		if(_lname != "")
-			setDisplayName(_lname, false);
+		if(_lname != "" && !renamedManual) setDisplayName(_lname, false, false);
 		
 		if(!is(_data, Node)) return;
 		

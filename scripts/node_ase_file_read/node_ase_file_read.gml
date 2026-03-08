@@ -368,7 +368,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_node.inputs[1].setValue(use_cel);
 			_node.inputs[2].setValue(_name);
 			_node.inputs[3].setValue(attributes.layer_loop[i]);
-			_node.setDisplayName(_name, false);
+			if(!_node.renamedManual) _node.setDisplayName(_name, false, false);
 			
 			lvs[i] = _node;
 		}

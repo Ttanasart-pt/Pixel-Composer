@@ -126,7 +126,7 @@ function Node_ORA_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			_node.inputs[0].setFrom(outputs[1]);
 			_node.inputs[1].setValue(_name);
-			_node.setDisplayName(_name, false);
+			if(!_node.renamedManual) _node.setDisplayName(_name, false, false);
 			
 			lvs[i] = _node;
 		}

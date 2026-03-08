@@ -80,7 +80,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		// printCallStack();
 		
 		var _name = filename_name_only(_path);
-		setDisplayName(_name, false);
+		if(!renamedManual) setDisplayName(_name, false, false);
 		
 		project_content = readProjectFileContent(_path);
 		project_runner  = new Runner().loadProject(project_content).fetchIO();

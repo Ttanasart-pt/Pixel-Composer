@@ -112,7 +112,7 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		var _p = string_trim_end(path, ["/", "\\"]);
-		setDisplayName(filename_name_only(_p), false);
+		if(!renamedManual) setDisplayName(filename_name_only(_p), false, false);
 	}
 	
 	insp1button = button(function() /*=>*/ { updatePaths(); triggerRender(); }).setTooltip(__txt("Refresh"))

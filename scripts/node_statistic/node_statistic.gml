@@ -61,7 +61,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(index != 0) return;
 		
 		var _type = inputs[0].getValue();
-		setDisplayName(array_safe_get(_type_arr, _type), false);
+		if(!renamedManual) setDisplayName(array_safe_get(_type_arr, _type), false, false);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

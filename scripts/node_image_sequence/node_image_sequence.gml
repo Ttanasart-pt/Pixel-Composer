@@ -45,14 +45,14 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path(    "Paths",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
-	newInput(1, nodeValue_Padding( "Padding",      [0,0,0,0] )).rejectArray();
-	newInput(2, nodeValue_EScroll( "Canvas size",   0, [ "Individual", "Minimum", "Maximum" ] )).rejectArray();
-	newInput(3, nodeValue_EScroll( "Sizing method", 0, [ "Padding / Crop", "Scale" ]          )).rejectArray();
+	newInput( 0, nodeValue_Path(    "Paths",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
+	newInput( 1, nodeValue_Padding( "Padding",      [0,0,0,0] )).rejectArray();
+	newInput( 2, nodeValue_EScroll( "Canvas size",   0, [ "Individual", "Minimum", "Maximum" ] )).rejectArray();
+	newInput( 3, nodeValue_EScroll( "Sizing method", 0, [ "Padding / Crop", "Scale" ]          )).rejectArray();
 	
-	newOutput(0, nodeValue_Output( "Surfaces Out", VALUE_TYPE.surface, []      ));
-	newOutput(1, nodeValue_Output( "Paths",        VALUE_TYPE.path,    []      )).setVisible(true, true);
-	newOutput(2, nodeValue_Output( "Dimensions",   VALUE_TYPE.integer, [[1,1]] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput( 0, nodeValue_Output( "Surfaces Out", VALUE_TYPE.surface, []      ));
+	newOutput( 1, nodeValue_Output( "Paths",        VALUE_TYPE.path,    []      )).setVisible(true, true);
+	newOutput( 2, nodeValue_Output( "Dimensions",   VALUE_TYPE.integer, [[1,1]] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [
 		["Array settings", false], 0, 1, 2, 3
@@ -106,7 +106,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(path == -1) continue;
 			
 			var ext = string_lower(filename_ext(path));
-			if(file_exists_empty(path)) setDisplayName(filename_name_only(path), false);
+			if(!renamedManual && file_exists_empty(path)) setDisplayName(filename_name_only(path), false, false);
 			edit_time = max(edit_time, file_get_modify_s(path));
 			
 			var _spr = sprite_add_map(path);

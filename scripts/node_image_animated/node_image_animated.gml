@@ -117,7 +117,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(_path == -1) continue;
 			
 			array_push(path_current, _path);
-			if(file_exists_empty(_path)) setDisplayName(filename_name_only(_path), false);
+			if(!renamedManual && file_exists_empty(_path)) setDisplayName(filename_name_only(_path), false, false);
 			
 			var _spr = sprite_add_map(_path);
 			if(_spr == -1) { noti_warning($"Image node: File not a valid image.", noone, self); continue; }
