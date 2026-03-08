@@ -44,11 +44,12 @@ enum RENDER_TYPE {
 		
 		var _parents = [];
 		var _prev    = _node.getPreviousNodes();
-			
+		
+		// Get list of nodes to the left (previous nodes)
 		for( var i = 0, n = array_length(_prev); i < n; i++ ) {
 			var _in = _prev[i];
-			if(_in == noone || struct_has(_sorted, _in.node_id))            continue;
-			if(_nodeMap != undefined && !struct_has(_nodeMap, _in.node_id)) continue;
+			if(_in == noone || struct_has(_sorted, _in.node_id))            continue; // node already sorted
+			if(_nodeMap != undefined && !struct_has(_nodeMap, _in.node_id)) continue; // not part of node map
 			
 			array_push(_parents, _in);
 		}
@@ -96,13 +97,18 @@ enum RENDER_TYPE {
 					
 					if(!_isLeaf) break;
 				}
+				
+				if(is(_node, Node_Tunnel_In)) {
+					if(!array_empty(_node.getNextNodes())) 
+						_isLeaf = false;
+				}
 			}
 			
 			if(_isLeaf) array_push(_leaf, _node);
 		}
 		
 		// print(">>>> TOPO <<<<")
-		// print("Leaves", _nodeArr, "->", _leaf);
+		// print("LEAF", _leaf);
 		
 		for( var i = 0, n = array_length(_leaf); i < n; i++ ) 
 			__sortNode(_arr, _leaf[i], _sorted, _nodeMap, _project);
@@ -135,7 +141,7 @@ enum RENDER_TYPE {
 		array_foreach(_project.allNodes, function(n) /*=>*/ { if(is(n, Node_Group)) n.updateInstance(); });
 		
 		_project.nodeTopoID = UUID_generate();
-		if(global.FLAG.render == 1) LOG($"+++++++ Topo Sort Completed: {array_length(_project.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
+		// print($"+++++++ Topo Sort Completed: {array_length(_project.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 		
 		NodeTreeSort(_project);
 	}

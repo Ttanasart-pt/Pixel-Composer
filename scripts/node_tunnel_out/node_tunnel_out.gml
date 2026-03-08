@@ -107,8 +107,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static resetMap = function() {
-		var _key = inputs[0].getValue();
-		project.tunnels_out[? node_id] = _key;
+		__key = inputs[0].getValue();
+		project.tunnels_out[? node_id] = __key;
 	}
 	
 	static isRenderable = function() {
@@ -119,6 +119,10 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { return false; }
+	
+	static onGetPreviousNodes = function(p) /*=>*/ { 
+		if(ds_map_exists(project.tunnels_in, __key)) array_push(p, project.tunnels_in[? __key].node); 
+	}
 	
 	////- Draw
 	
@@ -268,7 +272,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- Actions
 	
-	static postConnect = function() { onValueUpdate(0); }
+	static postConnect = function() { resetMap(); }
 	
 	static onRestore = function() {
 		resetMap();

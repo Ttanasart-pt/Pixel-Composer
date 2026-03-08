@@ -21,6 +21,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    title      = __txt("Render Profiler");
 		showHeader = true;
 		auto_pin   = true;
+		project    = undefined;
 		
 		w = ui(800);
 		h = ui(500);
@@ -180,6 +181,8 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	
 	sc_profile_list   = new scrollPane(1,1, function(_y, _m) {
 	    draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		if(project == undefined || !project.active) return 0;
+		
 	    var _h  = ui(8);
 	    var yy  = _y;
 	    var _ww = sc_profile_list.surface_w;
@@ -259,6 +262,8 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	
 	sc_profile_detail = new scrollPane(1,1, function(_y, _m) {
 	    draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		if(project == undefined || !project.active) return 0;
+		
 	    var _h   = 0;
 	    var _ww  = sc_profile_detail.surface_w;
 	    var _hh  = sc_profile_detail.surface_h;
@@ -657,7 +662,8 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _m  = [ mx, my ];
 		
 		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render all", s_run, 1, _bc, 1, UI_SCALE) == 2) {
-				
+			project = PROJECT;
+			
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];
 		    setReport(noone);
@@ -673,6 +679,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		_bx += _bs + ui(2);
 		
 		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render partial", s_run_partial, 1, _bc, 1, UI_SCALE) == 2) {
+			project = PROJECT;
 				
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];
@@ -689,6 +696,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		_bx += _bs + ui(4);
 		
 		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render from selection", s_run_partial, 1, _bc, 1, UI_SCALE) == 2) {
+			project = PROJECT;
 			
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];

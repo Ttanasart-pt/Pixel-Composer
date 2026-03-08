@@ -147,7 +147,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static checkKey = function() {
-		var _key = inputs[0].getValue();
+		__key = inputs[0].getValue();
 		resetMap();
 		
 		var amo = ds_map_size(project.tunnels_in_map);
@@ -197,6 +197,16 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		LOG_BLOCK_END
 		return nodes;
+	}
+	
+	static forwardPassiveDynamic = function() {
+		rendered = false;
+		var nextNodes = getNextNodes();
+		
+		for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
+			nextNodes[i].passiveDynamic = true;
+			nextNodes[i].rendered       = false;
+		}
 	}
 	
 	////- Draw
@@ -354,10 +364,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- Actions
 	
-	static postConnect = function() { 
-		onValueUpdate(0); 
-		onValueFromUpdate(0);
-	}
+	static preConnect = function() { checkKey(); }
 	
 	static onDestroy = function() {
 		if(error_notification != noone)
