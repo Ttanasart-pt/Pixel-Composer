@@ -204,6 +204,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.outp_meta         = false;
 		attributes.show_render_frame = false;
 		attributes.cache             = false;
+		attributes.resizeManual      = false;
 		
 		attributes.annotation        = "";
 		attributes.annotation_size   = .4;
@@ -231,11 +232,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		array_append(attributeEditors, [
 			"Display",  
-			Node_Attribute("Annotation",     function() /*=>*/ {return attributes.annotation},       function() /*=>*/ {return textArea_Text( function(v) /*=>*/ { setAttribute("annotation", v);                             })} ),
-			Node_Attribute("Node Width",     function() /*=>*/ {return attributes.node_width},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { setAttribute("node_width", v);       refreshNodeDisplay(); })} ),
-			Node_Attribute("Node Height",    function() /*=>*/ {return attributes.node_height},      function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { setAttribute("node_height", v);      refreshNodeDisplay(); })} ),
-			Node_Attribute("Preview Height", function() /*=>*/ {return attributes.preview_size},     function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { setAttribute("preview_size", max(32, v)); refreshNodeDisplay(); })} ),
-			Node_Attribute("Params Width",   function() /*=>*/ {return attributes.node_param_width}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); })} ),
+			Node_Attribute("Annotation",     function() /*=>*/ {return attributes.annotation},       function() /*=>*/ {return textArea_Text( function(v) /*=>*/ { setAttribute("annotation", v); })} ),
+			Node_Attribute("Node Width",     function() /*=>*/ {return attributes.node_width},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_width", v);            refreshNodeDisplay(); })} ),
+			Node_Attribute("Node Height",    function() /*=>*/ {return attributes.node_height},      function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_height", v);           refreshNodeDisplay(); })} ),
+			Node_Attribute("Preview Height", function() /*=>*/ {return attributes.preview_size},     function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("preview_size", max(32, v)); refreshNodeDisplay(); })} ),
+			Node_Attribute("Params Width",   function() /*=>*/ {return attributes.node_param_width}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_param_width", v);      refreshNodeDisplay(); })} ),
 			
 			"Node",
 			attrCacheEdit,
@@ -3331,6 +3332,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- ACTION
 	
 	static setDimension = function(_w = 128, _h = undefined, _apply = undefined) {
+		if(attributes.resizeManual) return;
 		INLINE
 		
 		min_w = _w;

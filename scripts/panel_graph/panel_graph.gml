@@ -1561,6 +1561,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            node_dragging.attributes.node_width   = nw;
 	            node_dragging.attributes.node_height  = nh;
 	            node_dragging.attributes.preview_size = nh;
+	            node_dragging.attributes.resizeManual = true;
 	            node_dragging.setHeight();
 	            
 	            if(mouse_release(mb_left)) {

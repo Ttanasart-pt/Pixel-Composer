@@ -2,16 +2,16 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Palette";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Palette("Palette" ));
+	newInput(0, nodeValue_Palette(      "Palette"           ));
+	newInput(1, nodeValue_Slider_Range( "Trim range", [0,1] ));
 	
-	newInput(1, nodeValue_Slider_Range("Trim range", [ 0, 1 ]));
-	
-	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, []))
-		.setDisplay(VALUE_DISPLAY.palette);
+	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [])).setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [0, 
 		["Trim",	true],	1
 	];
+	
+	////- Nodes
 	
 	static processData_prebatch = function() {
 		setDimension(96, 16 + process_length[0] * 32);
