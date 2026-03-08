@@ -724,8 +724,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 								_ay = _an_ancp[1];
 								
 							} else if(_an_anct == 1) { // local
-								_ax = _x + _an_ancp[0] * _sw;
-								_ay = _y + _an_ancp[1] * _sh;
+								_ax = _x + (_an_ancp[0] - .5) * _sw;
+								_ay = _y + (_an_ancp[1] - .5) * _sh;
 								
 							}
 							
