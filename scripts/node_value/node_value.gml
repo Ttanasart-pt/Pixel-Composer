@@ -2513,7 +2513,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static isHovering = function(_s, _dx, _dy, _mx, _my) { 
-		INLINE
 		hover_in_graph = point_in_rectangle(_mx, _my, x - _dx, y - _dy, x + _dx - 1, y + _dy - 1);
 		return hover_in_graph;
 	}

@@ -2103,11 +2103,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var hover = noone;
 		
 		var _dy = junction_draw_hei_y * _s / 2;
+		var _oy = 16 * _s / 2;
 		var _dx = _fast? 6  * _s : _dy;
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			jun = inputDisplayList[i];
-			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
+			
+			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
+			if(jun.hover_in_graph) hover = jun;
 		}
 		
 		preview_channel_temp = undefined;
@@ -2115,7 +2118,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun = outputs[i];
 			if(!jun.isVisible()) continue;
 			
-			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) {
+			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _oy, jun.x + _dx - 1, jun.y + _oy - 1);
+			if(jun.hover_in_graph) {
 				hover = jun;
 				
 				if(jun.type == VALUE_TYPE.surface)
@@ -2129,22 +2133,39 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun = inputs[i].getBypassJunc();
 			if(!jun.visible) continue;
 			
-			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
+			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
+			if(jun.hover_in_graph) hover = jun;
 		}
 		
-		if(insp1button && insp1button.visible && inspectInput1.isHovering(_s, _dx, _dy, _mx, _my)) hover = inspectInput1;
-		if(insp2button && insp2button.visible && inspectInput2.isHovering(_s, _dx, _dy, _mx, _my)) hover = inspectInput2;
+		if(insp1button && insp1button.visible) {
+			jun = inspectInput1;
+			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
+			if(jun.hover_in_graph) hover = jun;
+		}
+		
+		if(insp2button && insp2button.visible) {
+			jun = inspectInput2;
+			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
+			if(jun.hover_in_graph) hover = jun;
+		}
 		
 		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.isHovering(_s, _dx, _dy, _mx, _my))  hover = updatedInTrigger;
-			if(updatedOutTrigger.isHovering(_s, _dx, _dy, _mx, _my)) hover = updatedOutTrigger;
+			jun = updatedInTrigger;
+			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
+			if(jun.hover_in_graph) hover = jun;
+			
+			jun = updatedOutTrigger;
+			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
+			if(jun.hover_in_graph) hover = jun;
 		}
 		
 		if(attributes.outp_meta) {
 			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
 				jun = junc_meta[i];
 				if(!jun.isVisible()) continue;
-				if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
+				
+				jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
+				if(jun.hover_in_graph) hover = jun;
 			}
 		}
 		
