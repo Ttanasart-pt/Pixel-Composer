@@ -899,7 +899,7 @@ function Panel_Animation_Dopesheet() {
                 for( var _time = key.time; _time <= key_next.time; _time++ ) {
                     var rat = (_time - key.time) / (key_next.time - key.time);
                     
-                    _kv = key.driverObject.apply(_time, key, animator.lerpValue(key, key_next, rat), rat);
+                    _kv = key.driverObject.apply(_time, key, key_next, animator.lerpValue(key, key_next, rat), rat, animator);
                     
                     if(!valArray) _kv = [ _kv ];
                         

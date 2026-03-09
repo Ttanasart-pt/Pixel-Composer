@@ -292,7 +292,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var rat  = (_time - from.time) / (to.time - from.time);
 		
 		if(from.driverObject)
-			return from.driverObject.apply(_time, from, lerpValue(from, to, rat), rat);
+			return from.driverObject.apply(_time, from, to, lerpValue(from, to, rat), rat, self);
 			
 		return lerpValue(from, to, rat);
 		

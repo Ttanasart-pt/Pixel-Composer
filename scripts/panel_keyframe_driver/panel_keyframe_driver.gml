@@ -33,7 +33,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	#endregion
 	
 	#region properties
-		__enum_driver = __enum_array_gen([ "None", "Linear", "Wiggle", "Sine", "Snap" ], s_driver_type);
+		__enum_driver = __enum_array_gen(global.DRIVER_TYPES, s_driver_type);
 		sb_type = new scrollBox(__enum_driver, function(val) /*=>*/ { 
 			var _drv = new KeyDriver().build(string_lower(__enum_driver[val].name));
 			key.driverObject = _drv;
@@ -57,21 +57,27 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 					function() /*=>*/ {return driver.seed} 
 				),
 				new item( __txt("Sep Axis"),  new checkBox(function(v) /*=>*/ { driver.sep_axis = !driver.sep_axis; }), function() /*=>*/ {return driver.sep_axis} ),
-				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { driver.frequency = v; }), function() /*=>*/ {return driver.frequency}  ),
-				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { driver.amplitude = v; }), function() /*=>*/ {return driver.amplitude}  ),
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { driver.frequency = v; }), function() /*=>*/ {return driver.frequency}      ),
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { driver.amplitude = v; }), function() /*=>*/ {return driver.amplitude}      ),
 				new item( __txt("Octave"),    tNum(function(v) /*=>*/ { driver.octave = round(v); }),     function() /*=>*/ {return driver.octave} ),
 				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { driver.smooth = clamp(v,0,1); }), function() /*=>*/ {return driver.smooth} ),
 			],
 			
 			KeyDriver_Sine   : [
-				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { driver.frequency = v; }), function() /*=>*/ {return driver.frequency}  ),
-				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { driver.amplitude = v; }), function() /*=>*/ {return driver.amplitude}  ),
-				new item( __txt("Phase"),     tNum(function(v) /*=>*/ { driver.phase     = v; }), function() /*=>*/ {return driver.phase}      ),
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { driver.frequency = v; }), function() /*=>*/ {return driver.frequency}      ),
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { driver.amplitude = v; }), function() /*=>*/ {return driver.amplitude}      ),
+				new item( __txt("Phase"),     tNum(function(v) /*=>*/ { driver.phase     = v; }), function() /*=>*/ {return driver.phase}          ),
 				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { driver.smooth = clamp(v,0,1); }), function() /*=>*/ {return driver.smooth} ),
 			],
 			
 			KeyDriver_Snap   : [
 				new item( __txt("Snap"), tNum(function(v) /*=>*/ { driver.snapSize = v; }), function() /*=>*/ {return driver.snapSize}  ),
+			],
+			
+			KeyDriver_Bounce : [
+				new item( __txt("Amount"),  tNum(function(v) /*=>*/ { driver.amount = round(v); driver.init(); }), function() /*=>*/ {return driver.amount}     ),
+				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { driver.amplitude = v;     driver.init(); }), function() /*=>*/ {return driver.amplitude}  ),
+				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { driver.steepness = v;     driver.init(); }), function() /*=>*/ {return driver.steepness}  ),
 			],
 		}
 	#endregion
