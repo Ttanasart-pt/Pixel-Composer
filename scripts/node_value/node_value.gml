@@ -543,19 +543,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				.setVisible(false, false)
 				.setMapped(other);
 			newInput(_index + 0, vmap);
-			
-			if(other.type != VALUE_TYPE.gradient) break;
-			
-			var vmap = new NodeValue($"{other.name} Map Range", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
-				.setDisplay(VALUE_DISPLAY.gradient_range)
-				.setVisible(false, false)
-				.setMapped(other);
-			newInput(_index + 1, vmap);
 		}
 		
 		attributes.mapped     = false;
 		parameters.mapped     = true;
-		parameters.map_index  = _index;
+		parameters.map_index  = node.inputs[_index];
+		
+		if(type != VALUE_TYPE.gradient) {
+			with(node) {
+				var vmap = new NodeValue($"{other.name} Map Range", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
+					.setDisplay(VALUE_DISPLAY.gradient_range)
+					.setVisible(false, false)
+					.setMapped(other);
+				newInput(_index + 1, vmap);
+			}
+			
+			parameters.map_grad_index  = node.inputs[_index + 1];
+		}
+		
 		mapped_vec4 = _vec4;
 		mapped_type = 1;
 		array_push(node.inputMappable, self);
@@ -617,7 +622,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setMappableConst = function(_index, _suf = "Map") {
 		attributes.mapped    = false;
 		parameters.mapped    = true;
-		parameters.map_index = _index;
 		mapped_type = 2;
 		array_push(node.inputMappable, self);
 		
@@ -626,6 +630,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				.setCustomData(global.SURFACE_MAP_JUNC)
 				.setVisible(false, false)
 		}
+		
+		parameters.map_index = node.inputs[_index];
 		
 		var mapButton = button(function() /*=>*/ { toggleAttribute("mapped"); })
 			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} ).iconPad()
@@ -640,21 +646,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		parameters[$ _key] = true;
 		parameters.curve_array = false;
 		
+		with(node) { newInput(_index, nodeValue_Curve( $"{other.name} {_suf}", _val )).setVisible(false, false); }
+		
 		if(!has(parameters, "cur_index"))
-			parameters.cur_index = _index;
+			parameters.cur_index = node.inputs[_index];
 			
 		else if(is_array(parameters.cur_index)) {
-			array_push(parameters.cur_index, [_key, _index]);
+			array_push(parameters.cur_index, [_key, node.inputs[_index]]);
 			parameters.curve_array = true;
 			
 		} else {
-			parameters.cur_index = [["curved", parameters.cur_index], [_key, _index]];
+			parameters.cur_index = [["curved", parameters.cur_index], [_key, node.inputs[_index]]];
 			parameters.curve_array = true;
 		}
 		
 		array_push(node.inputMappable, self);
-		
-		with(node) { newInput(_index, nodeValue_Curve( $"{other.name} {_suf}", _val )).setVisible(false, false); }
 		
 		var curveButton = button(function(_key) /*=>*/ { attributes[$ _key] = !attributes[$ _key]; node.triggerRender(); })
 			.setIcon( _icon, function(_key) /*=>*/ {return attributes[$ _key]}, function(_key) /*=>*/ {return attributes[$ _key]? c_white : COLORS._main_icon} ).iconPad()
@@ -668,10 +674,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setGradable = function(_index, _val = gra_white, _suf = "Curve") {
 		attributes.graded    = false;
 		parameters.graded    = true;
-		parameters.gra_index = _index;
-		array_push(node.inputMappable, self);
 		
 		with(node) { newInput(_index, nodeValue_Gradient( $"{other.name} {_suf}", _val )).setVisible(false, false); }
+		
+		parameters.gra_index = node.inputs[_index];
+		array_push(node.inputMappable, self);
 		
 		var gradeButton = button(function() /*=>*/ { toggleAttribute("graded"); })
 			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.graded} ], function() /*=>*/ {return attributes.graded? c_white : COLORS._main_icon} ).iconPad()
@@ -693,7 +700,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				setArrayDepth(attributes.mapped);
 				
-				var inp = node.inputs[parameters.map_index];
+				var inp = parameters.map_index;
 				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.visible != vis) {
@@ -702,7 +709,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				}
 				
 			} else {
-				var inp = node.inputs[parameters.map_index];
+				var inp = parameters.map_index;
 				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.visible != vis) {
@@ -724,7 +731,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					var _ckey  = _cdata[0];
 					var _cind  = _cdata[1];
 					
-					var inp = node.inputs[_cind];
+					var inp = _cind;
 					var vis = attributes[$ _ckey] && show_in_inspector;
 					
 					if(inp.show_in_inspector != vis) {
@@ -734,7 +741,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				}
 				
 			} else {
-				var inp = node.inputs[parameters.cur_index];
+				var inp = parameters.cur_index;
 				var vis = attributes.curved && show_in_inspector;
 				
 				if(inp.show_in_inspector != vis) {
@@ -745,7 +752,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(has(parameters, "graded")) {
-			var inp = node.inputs[parameters.gra_index];
+			var inp = parameters.gra_index;
 			var vis = attributes.graded && show_in_inspector;
 			
 			if(inp.show_in_inspector != vis) {
@@ -890,8 +897,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
-		if(type == VALUE_TYPE.gradient && struct_has(attributes, "map_index")) 
-			node.inputs[parameters.map_index + 1].setAnim(anim);
+		if(type == VALUE_TYPE.gradient && has(parameters, "map_grad_index")) 
+			parameters.map_grad_index.setAnim(anim);
 		
 		node.refreshTimeline();
 		if(NOT_LOAD && node.group) node.group.checkPureFunction();

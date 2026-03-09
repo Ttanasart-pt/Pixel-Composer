@@ -143,6 +143,8 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	setDynamicInput(11, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
+	////- Node
+	
 	attribute_surface_depth();
 	attribute_oversample();
 	attribute_interpolation();

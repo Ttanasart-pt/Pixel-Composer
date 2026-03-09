@@ -79,6 +79,12 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { driver.amplitude = v;     driver.init(); }), function() /*=>*/ {return driver.amplitude}  ),
 				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { driver.steepness = v;     driver.init(); }), function() /*=>*/ {return driver.steepness}  ),
 			],
+			
+			KeyDriver_Elastic : [
+				new item( __txt("Amount"),  tNum(function(v) /*=>*/ { driver.amount = round(v); driver.init(); }), function() /*=>*/ {return driver.amount}     ),
+				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { driver.amplitude = v;     driver.init(); }), function() /*=>*/ {return driver.amplitude}  ),
+				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { driver.steepness = v;     driver.init(); }), function() /*=>*/ {return driver.steepness}  ),
+			],
 		}
 	#endregion
 	
