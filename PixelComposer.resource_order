@@ -1208,6 +1208,7 @@
     {"name":"node_mk_blinker","order":16,"path":"scripts/node_mk_blinker/node_mk_blinker.yy",},
     {"name":"node_mk_brownian","order":14,"path":"scripts/node_mk_brownian/node_mk_brownian.yy",},
     {"name":"node_mk_cable","order":8,"path":"scripts/node_mk_cable/node_mk_cable.yy",},
+    {"name":"node_mk_circuit","order":41,"path":"scripts/node_mk_circuit/node_mk_circuit.yy",},
     {"name":"node_mk_delay_machine","order":18,"path":"scripts/node_mk_delay_machine/node_mk_delay_machine.yy",},
     {"name":"node_mk_dialog","order":32,"path":"scripts/node_mk_dialog/node_mk_dialog.yy",},
     {"name":"node_mk_fall","order":15,"path":"scripts/node_mk_fall/node_mk_fall.yy",},

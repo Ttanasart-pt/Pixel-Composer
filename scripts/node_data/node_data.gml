@@ -674,7 +674,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(input_display_dynamic == -1) input_display_list = _input_display_list;
 	}
-
+	
 	static refreshDynamicDisplay = function() {
 		if(input_display_dynamic == -1) return;
 		array_resize(input_display_list, array_length(input_display_list_raw));
