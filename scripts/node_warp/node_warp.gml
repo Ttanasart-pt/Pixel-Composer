@@ -10,9 +10,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newActiveInput(5, nodeValue_Bool("Active", true));
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface(     "Surface In"   ));
-	newInput(10, nodeValue_Surface(     "Back Surface" ));
-	newInput( 6, nodeValue_Enum_Scroll( "Dimension Type", 0, [ "Input", "Absolute", "Relative" ]));
+	newInput( 0, nodeValue_Surface( "Surface In"   ));
+	newInput(10, nodeValue_Surface( "Back Surface" ));
+	newInput( 6, nodeValue_EScroll( "Dimension Type", 0, [ "Input", "Absolute", "Relative" ]));
 	newInput( 7, nodeValue_Dimension());
 	newInput( 9, nodeValue_Vec2( "Relative Dimension", [ 1, 1 ] ));
 	
@@ -28,10 +28,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 5,
-		["Surfaces", false], 0, 10, 6, 7, 9, 
-		["Warp",	 false], 1, 2, 3, 4, 
-		["Render",	 false], 8, 
+	input_display_list = [  5,
+		[ "Surfaces", false ],  0, 10,  6,  7,  9, 
+		[ "Warp",     false ],  1,  2,  3,  4, 
+		[ "Render",   false ],  8, 
 	];
 	
 	////- Node
@@ -54,18 +54,24 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _dim    = getInputSingle(7);
 		var _sdim   = getInputSingle(9);
 			
-		var sw = 1;
-		var sh = 1;
+		var sw = DEF_SURF_W;
+		var sh = DEF_SURF_H;
 		
 		switch(_dimTyp) {
-			case 0 : sw = surface_get_width_safe(_surfF);
-				     sh = surface_get_height_safe(_surfF); break;
+			case 0 : 
+				sw = surface_get_width_safe(_surfF);
+				sh = surface_get_height_safe(_surfF); 
+				break;
 				
-			case 1 : sw = _dim[0];
-				     sh = _dim[1]; break;
+			case 1 : 
+				sw = _dim[0];
+				sh = _dim[1]; 
+				break;
 				
-			case 2 : sw = _sdim[0] * surface_get_width_safe(_surfF);
-				     sh = _sdim[1] * surface_get_height_safe(_surfF); break;
+			case 2 : 
+				sw = _sdim[0] * surface_get_width_safe(_surfF);
+				sh = _sdim[1] * surface_get_height_safe(_surfF); 
+				break;
 				
 		}
 		
