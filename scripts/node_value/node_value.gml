@@ -539,9 +539,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setMappable = function(_index, _vec4 = false) {
 		with(node) {
 			var vmap = nodeValue_Surface($"{other.name} Map")
-				.setCustomData(global.SURFACE_MAP_JUNC)
-				.setVisible(false, false)
-				.setMapped(other);
+				.setCustomData(global.SURFACE_MAP_JUNC).setVisible(false, false).setMapped(other);
 			newInput(_index + 0, vmap);
 		}
 		
@@ -549,12 +547,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		parameters.mapped     = true;
 		parameters.map_index  = node.inputs[_index];
 		
-		if(type != VALUE_TYPE.gradient) {
+		if(type == VALUE_TYPE.gradient) {
 			with(node) {
 				var vmap = new NodeValue($"{other.name} Map Range", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
-					.setDisplay(VALUE_DISPLAY.gradient_range)
-					.setVisible(false, false)
-					.setMapped(other);
+					.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(other);
 				newInput(_index + 1, vmap);
 			}
 			

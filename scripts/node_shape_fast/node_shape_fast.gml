@@ -458,6 +458,7 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			shader_set_2("dfLevel",     _level  );
 			shader_set_i("tile",        _tile   );
 			shader_set_f("corner",      _corner );
+			shader_set_f("corner4",     [_corner,_corner,_corner,_corner] );
 			shader_set_curve("w",       _curve  );
 			shader_set_i("cornerShape", _crnPro );
 			
