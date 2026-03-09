@@ -3110,12 +3110,10 @@ function Panel_Preview() : PanelContent() constructor {
     
     static drawSelection = function() {
     	var prevN = getNodePreview();
+    	if(!is(prevN, Node)) { selection_active = false; return; }
+    	
     	var inspN = PANEL_INSPECTOR.getInspecting();
-    	
     	var applS = inspN == noone || inspN.preview_select_surface;
-    	var prevS = is(prevN, Node);
-    	
-    	if(!prevS) { selection_active = false; return; }
     	
     	var mmx = mx;
     	var mmy = my;
@@ -3187,7 +3185,7 @@ function Panel_Preview() : PanelContent() constructor {
     			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
         	
     		if(mouse_lrelease()) {
-    			if(prevS && applS && selection_selecting > 1) 
+    			if(applS && selection_selecting > 1) 
     				selection_active = true;
     			selection_selecting = 0;
     		}

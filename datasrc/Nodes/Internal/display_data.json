@@ -921,6 +921,7 @@
             "Node_MK_Panels", 
             "Node_MK_IsoCube", 
             "Node_MK_Isoextrude", 
+            "Node_MK_WireFrame", 
         ]
     }, //Generate
     {

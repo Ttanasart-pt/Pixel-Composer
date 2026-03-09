@@ -35,6 +35,7 @@
 		Node_Random_Tile, 
 		Node_MK_Fracture, 
 		Node_MK_Sparkle, 
+		Node_MK_WireFrame, 
 	];
 #endregion
 
