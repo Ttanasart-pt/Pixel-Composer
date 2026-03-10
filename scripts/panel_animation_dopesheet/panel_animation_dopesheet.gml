@@ -208,77 +208,92 @@ function Panel_Animation_Dopesheet() {
         
         top_frame_height = ui(20);
 	#endregion
-	
-    #region ++++ Context Menu ++++
+
+    #region ---- Actions ----
+        function edit_keyframe_value()   { if(array_empty(keyframe_selecting)) return; editKeyFrame(keyframe_selecting[0]); }
+        function edit_keyframe_lock_y()  { array_foreach(keyframe_selecting, function(k) /*=>*/ { k.ease_y_lock = !k.ease_y_lock; });   }
+        
+        function edit_keyframe_stagger() { stagger_mode = 1; }
+        function edit_keyframe_driver()  { 
+        	var panel = new Panel_Keyframe_Driver();
+        	var dx = x;
+        	var dy = y - ui(8);
+    		dialogPanelCall(panel, dx, dy, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+        }
+        
+        function dopesheet_new_folder()        { var _dir = new timelineItemGroup(); PROJECT.timelines.addItem(_dir); }
+        
+        function dopesheet_new_folder_select() { 
+        	var _dir = new timelineItemGroup(); 
+        	PROJECT.timelines.addItem(_dir); 
+        	
+        	var _nodes = PANEL_GRAPH.nodes_selecting;
+        	
+        	for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
+        		var _item = _nodes[i].timeline_item;
+        		
+	        	_item.removeSelf();
+                array_push(_dir.contents, _item);
+                _item.parent = _dir;
+        	}
+        }
+        
+        function dopesheet_expand()      { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = true;  }
+        function dopesheet_collapse()    { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = false; }
+        
+        function group_rename()  { run_in(1, function() /*=>*/ { context_selecting_item.item.rename(); }); }
+        function group_remove()  { context_selecting_item.item.destroy();                      }
+        
+        function toggle_axis()   { context_selecting_prop.toggleAxisSeparation(); }
+        function separate_axis() { context_selecting_prop.separateAxis();         }
+        function combine_axis()  { context_selecting_prop.combineAxis();          }
+        
+        function range_reset()     { 
+        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+        	PROJECT.animator.frame_range_start = undefined; 
+        	PROJECT.animator.frame_range_end   = undefined;
+        }
+        
+        function range_set_start() { 
+        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+        	PROJECT.animator.frame_range_start = __selecting_frame; 
+        	PROJECT.animator.frame_range_end   = PROJECT.animator.frame_range_end ?? PROJECT.animator.frames_total;
+        }
+        
+        function range_set_end()   { 
+        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+        	PROJECT.animator.frame_range_start = PROJECT.animator.frame_range_start ?? 0; 
+        	PROJECT.animator.frame_range_end   = __selecting_frame; 
+        }
+        
+	    context_selecting_item = noone;
+	    context_selecting_prop = noone;
 	    
-	    #region actions
-	        function edit_keyframe_value()   { if(array_empty(keyframe_selecting)) return; editKeyFrame(keyframe_selecting[0]); }
-	        function edit_keyframe_lock_y()  { array_foreach(keyframe_selecting, function(k) /*=>*/ { k.ease_y_lock = !k.ease_y_lock; });   }
-	        
-	        function edit_keyframe_stagger() { stagger_mode = 1; }
-	        function edit_keyframe_driver()  { 
-	        	var panel = new Panel_Keyframe_Driver();
-	        	var dx = x;
-	        	var dy = y - ui(8);
-        		dialogPanelCall(panel, dx, dy, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-	        }
-	        
-	        function dopesheet_new_folder()        { var _dir = new timelineItemGroup(); PROJECT.timelines.addItem(_dir); }
-	        
-	        function dopesheet_new_folder_select() { 
-	        	var _dir = new timelineItemGroup(); 
-	        	PROJECT.timelines.addItem(_dir); 
-	        	
-	        	var _nodes = PANEL_GRAPH.nodes_selecting;
-	        	
-	        	for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
-	        		var _item = _nodes[i].timeline_item;
-	        		
-		        	_item.removeSelf();
-	                array_push(_dir.contents, _item);
-	                _item.parent = _dir;
-	        	}
-	        }
-	        
-	        function dopesheet_expand()      { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = true;  }
-	        function dopesheet_collapse()    { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = false; }
-	        
-	        function group_rename()  { run_in(1, function() /*=>*/ { context_selecting_item.item.rename(); }); }
-	        function group_remove()  { context_selecting_item.item.destroy();                      }
-	        
-	        function toggle_axis()   { context_selecting_prop.toggleAxisSeparation(); }
-	        function separate_axis() { context_selecting_prop.separateAxis();         }
-	        function combine_axis()  { context_selecting_prop.combineAxis();          }
-	        
-	        function range_reset()     { 
-            	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
-            	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
-	        	PROJECT.animator.frame_range_start = undefined; 
-            	PROJECT.animator.frame_range_end   = undefined;
-	        }
-	        
-	        function range_set_start() { 
-	        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
-	        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
-	        	PROJECT.animator.frame_range_start = __selecting_frame; 
-	        	PROJECT.animator.frame_range_end   = PROJECT.animator.frame_range_end ?? PROJECT.animator.frames_total;
-	        }
-	        
-	        function range_set_end()   { 
-	        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
-	        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
-	        	PROJECT.animator.frame_range_start = PROJECT.animator.frame_range_start ?? 0; 
-	        	PROJECT.animator.frame_range_end   = __selecting_frame; 
-	        }
-	        
-		    context_selecting_item = noone;
-		    context_selecting_prop = noone;
-		    
-		    function setSelectingItemColor(color) { if(context_selecting_item == noone) return; context_selecting_item.item.setColor(color); }
-	    	
-	    	function selectAllKeys() {}
-	    	
-	    #endregion
+	    function setSelectingItemColor(color) { if(context_selecting_item == noone) return; context_selecting_item.item.setColor(color); }
+    	
+    	function selectAllKeys() {
+    		keyframe_selecting = [];
+    		
+    		for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
+	            var _cont = timeline_contents[i];
+	            if( _cont.type != "node") continue;
+	            
+	            var _node  = _cont.node;
+	            var _anims = _cont.animations;
+	            
+	            for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                    var _anim = _anims[j];
+                    array_append(keyframe_selecting, _anim.values);
+	            }
+    		}
+    	}
+    	
+    #endregion
+    
+    #region ++++ Context Menu ++++
 	    
 	    global.menuItems_animation_keyframe = [
 	        "animation_edit_keyframe_value",

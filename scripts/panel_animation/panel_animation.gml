@@ -30,6 +30,7 @@
     function panel_animation_show_hidden()             { CALL("animation_toggle_hidden");           PANEL_ANIMATION.show_hidden = !PANEL_ANIMATION.show_hidden;                                          }
     function panel_animation_quantize()                { CALL("animation_quantize");                PANEL_ANIMATION.doQuantize();                                                                        }
     
+    function panel_animation_select_all()              { CALL("animation_select_all");              PANEL_ANIMATION.selectAllKeys();         }
     function panel_animation_edit_keyframe_value()     { CALL("animation_edit_keyframe_value");     PANEL_ANIMATION.edit_keyframe_value();   }
     function panel_animation_edit_keyframe_lock_y()    { CALL("animation_edit_lock_keyframe_y");    PANEL_ANIMATION.edit_keyframe_lock_y();  }
     function panel_animation_edit_keyframe_stagger()   { CALL("animation_stagger");                 PANEL_ANIMATION.edit_keyframe_stagger(); }
@@ -110,6 +111,7 @@
         registerFunction(an, "Animation Settings...", "S",    c|s, panel_animation_settings_call  ).setMenu("animation_settings", THEME.animation_setting )
         registerFunction(an, "Animation Scaler...",   "",     n,   panel_animation_scale_call     ).setMenu("animation_scaler",   THEME.animation_timing  )
         
+        registerFunction(an, "Select All Keys",    "A", c, panel_animation_select_all             ).setMenu("animation_select_all",          )
         registerFunction(an, "Edit Keyframe Value","",  n, panel_animation_edit_keyframe_value    ).setMenu("animation_edit_keyframe_value", )
         registerFunction(an, "Toggle Keyframe Y",  "",  n, panel_animation_edit_keyframe_lock_y   ).setMenu("animation_lock_keyframe_y",     )
         registerFunction(an, "Driver...",          "",  n, panel_animation_keyframe_driver        ).setMenu("animation_driver",              )
