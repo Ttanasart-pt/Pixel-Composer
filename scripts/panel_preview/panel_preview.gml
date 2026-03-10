@@ -1475,6 +1475,8 @@ function Panel_Preview() : PanelContent() constructor {
     	
         tool_x = lerp_float(tool_x, tool_x_to, 5);
         
+        var pd = ui(6);
+        
         var tolx  = tool_x + ui(8);
         var toly  = ui(5);
         var tolw  = ui(48);
@@ -1504,8 +1506,8 @@ function Panel_Preview() : PanelContent() constructor {
             	
             	draw_surface_ext(_data, tolx, ui(8), _ss, _ss, 0, c_white, 1);
             	
-            	tolx      += _sw * _ss + ui(8);
-            	tol_max_w += _sw * _ss + ui(8);
+            	tolx      += _sw * _ss + pd;
+            	tol_max_w += _sw * _ss + pd;
             	continue;
             }
             
@@ -1514,6 +1516,31 @@ function Panel_Preview() : PanelContent() constructor {
             var key  = array_safe_get_fast(sett, 2);
             var atr  = array_safe_get_fast(sett, 3, {});
             var ttip = array_safe_get_fast(sett, 4, "");
+            
+            if(is(wdg, checkBox) && sprite_exists(nme)) {
+            	var cbw = tolh;
+            	var val = atr[$ key];
+            	var hov = _hover && point_in_rectangle(mx, my, tolx, 0, tolx + cbw, topbar_height);
+            	
+            	var spr = THEME.button_def;
+            	var spi = val? 2 : 0;
+            	draw_sprite_stretched(spr, spi, tolx, ui(5), cbw, tolh);
+            	draw_sprite_stretched_ext(spr, 3, tolx, ui(5), cbw, tolh, val? COLORS._main_accent : CDEF.main_dark);
+            	
+            	if(hov) {
+            		draw_sprite_stretched_add(spr, 3, tolx, ui(5), cbw, tolh, COLORS._main_icon, .5);
+            		if(mouse_lpress(_focus)) wdg.onClick();
+            	}
+            	
+            	var cc = val? COLORS._main_accent : COLORS._main_icon_light;
+            	var ss = (cbw - ui(8)) / max(sprite_get_width(nme), sprite_get_height(nme));
+            	draw_sprite_ext(nme, 0, tolx + cbw / 2, topbar_height / 2, ss, ss, 0, cc);
+        		if(hov && ttip != "") TOOLTIP = ttip;
+        		
+	            tolx      += cbw + pd;
+	            tol_max_w += cbw + pd;
+	            continue;
+            }
             
             draw_set_text(f_p3, fa_left, fa_center, COLORS._main_icon_light);
             if(nme != "") {
@@ -1542,14 +1569,14 @@ function Panel_Preview() : PanelContent() constructor {
             var _tool_font = f_p3;
             
             switch(instanceof(wdg)) {
-                case "textBox"       : tolw = max(wdg.minWidth, ui(40)) + (wdg.side_button != noone) * (tolh + ui(8));          break;
-                case "vectorBox"     : tolw = max(wdg.minWidth, ui(40)) * wdg.size;                                             break;
+                case "textBox"       : tolw = max(wdg.minWidth, ui(32)) + (wdg.side_button != noone) * (tolh + ui(8)); break;
+                case "vectorBox"     : tolw = max(wdg.minWidth, ui(32)) * wdg.size;                                    break;
                 case "buttonGroup"   : 
-                case "checkBoxGroup" : tolw = tolh * wdg.size;                                                                  break;
-                case "checkBox"      : tolw = tolh;                                                                             break;
-                case "scrollBox"     : tolw = max(wdg.minWidth, ui(96)); _tool_font = f_p3;                                     break;
-                case "buttonClass"   : tolw = wdg.text == ""? tolh : tolw;                                                      break;
-                case "buttonAnchor"  : tolw = ui(28);                                                                           break;
+                case "checkBoxGroup" : tolw = tolh * wdg.size;                              break;
+                case "checkBox"      : tolw = tolh;                                         break;
+                case "scrollBox"     : tolw = max(wdg.minWidth, ui(96)); _tool_font = f_p3; break;
+                case "buttonClass"   : tolw = wdg.text == ""? tolh : tolw;                  break;
+                case "buttonAnchor"  : tolw = ui(28);                                       break;
             }
             
             if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, toly, tolx + tolw, toly + tolh))
@@ -1560,8 +1587,8 @@ function Panel_Preview() : PanelContent() constructor {
             
             wdg.drawParam(params);
             
-            tolx      += tolw + ui(8);
-            tol_max_w += tolw + ui(8);
+            tolx      += tolw + pd;
+            tol_max_w += tolw + pd;
         }
         
         gpu_set_scissor(_scis);

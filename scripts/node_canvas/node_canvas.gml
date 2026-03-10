@@ -325,81 +325,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		mouse_cur_y = 0;
 	#endregion
 	
-	#region ++++ custom node tool ++++
-		__action_add_node = method(self, function(c) /*=>*/ { with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: c })) canvas = true; });
-		
-		tool_node_buttons = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) nodeTool.apply(); else nodeTool.destroy(); })
-								.setCollape(false);
-		
-		nodeTool        = noone;
-		nodeToolPreview = new NodeTool( "Apply Node", THEME.canvas_tools_node, self )
-								.setSettings(tool_settings)
-								.setToolFn(__action_add_node)
-								.setContext(self);
-								
-		
-		selectionExtract = function() /*=>*/ {
-			var _s  = selection.is_selected;
-			var _sx = _s? selection.selection_position[0] : 0;
-			var _sy = _s? selection.selection_position[1] : 0;
-			var _sw = _s? selection.selection_size[0] : attributes.dimension[0];
-			var _sh = _s? selection.selection_size[1] : attributes.dimension[1];
-			
-			var _nc = nodeBuild("Node_Canvas", x, y + h + 16);
-			_nc.skipDefault();
-			_nc.inputs[0].setValue([_sw, _sh]);
-			
-			var _comp = noone; 
-			var _o = outputs[0].getJunctionTo();
-			for( var i = 0, n = array_length(_o); i < n; i++ ) {
-				if(is(_o[i].node, Node_Composite)) _comp = _o[i].node;
-			}
-			
-			if(_comp == noone) {
-				_comp = nodeBuild("Node_Composite", x + w + 32, y);
-				_comp.skipDefault();
-				_comp.addInput(outputs[0]);
-				
-			} else {
-				var _yy = y + h + 16;
-				for( var i = 0, n = array_length(_comp.inputs); i < n; i++ ) {
-					var _in = _comp.inputs[i].value_from;
-					if(_in == noone) continue;
-					_yy = max(_yy, _in.node.y + _in.node.h + 16);
-				}
-					
-				_nc.move(x, _yy);
-			}
-			
-			var _j = _comp.addInput(_nc.outputs[0]);
-			var _o = _nc.outputs[0].getJunctionTo();
-			var _i = _o[0].index;
-			
-			_comp.inputs[_i+1].unit.mode = VALUE_UNIT.constant;
-			_comp.inputs[_i+1].setValue([_sx,_sy]);
-			_comp.inputs[_i+6].setValue([0,0]);
-			
-			PANEL_PREVIEW.setNodePreview(_comp, false, false);
-			PANEL_INSPECTOR.setInspecting(_nc);
-			PANEL_GRAPH.nodes_selecting = [ _nc ];
-			
-			if(_s) {
-				selection.apply();
-				PANEL_PREVIEW.clearTool();
-			}
-		}
-		
-		selectionExtractButton = new NodeTool( "Extract Selection", THEME.canvas_tools_extract, self )
-								.setToolFn(selectionExtract)
-								.setContext(self);
-		
-		static addNodeTool = function(_node) {
-			UNDO_HOLDING = true;
-			nodeTool = new canvas_tool_node(self, _node).init();
-			UNDO_HOLDING = false;
-		}
-	#endregion
-	
 	#region ++++ tools ++++
 		palette_picking = false;
 		color_picking   = false;
@@ -487,7 +412,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setSideButton(button(function() /*=>*/ { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
 										.setTooltip("Pen Pressure Settings...")
 										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon), true);
-		
+										
 		tool_smooth_edit    = textBox_Number(function(v) /*=>*/ { brush.smooth = max(0, v); })
 									.setSlideType(true)
 									.setVAlign(fa_center)
@@ -521,16 +446,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		tool_settings     = [ [ "",                   tool_channel_edit,   "channel",      tool_attribute ], 
-						      [ "",                   tool_drawLayer_edit, "drawLayer",    tool_attribute ],
-						      [ "",                   tool_mirror_edit,    "mirror",       tool_attribute ] ];
-		tool_size         =   [ "",                   tool_size_edit,      "size",         tool_attribute, "Brush Size" ];
-		tool_smooth       =   [ "",                   tool_smooth_edit,    "smooth",       brush,          "Smoothness" ];
-		tool_bg_stamp     =   [ THEME.stamp_16,       tool_stamp_bg,       "stamp",        tool_attribute, "Stamp BG"   ];
-		tool_pixelp       =   [ THEME.pixel_diag,     tool_pixel_perfect,  "pixelPerfect", tool_attribute, "Px"         ];
-		tool_thrs         =   [ THEME.tool_threshold, tool_thrs_edit,      "thres",        tool_attribute, "Threshold"  ];
-		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",     tool_attribute, "Fill Type"  ];
-		tool_fill_bg      =   [ THEME.tool_bg,        tool_fill_use_bg,    "useBG",        tool_attribute, "Use BG"     ];
+		tool_channel      =   [ "",                   tool_channel_edit,   "channel",      tool_attribute ];
+		tool_layer        =   [ "",                   tool_drawLayer_edit, "drawLayer",    tool_attribute ];
+		tool_mirror       =   [ "",                   tool_mirror_edit,    "mirror",       tool_attribute ];
+		tool_size         =   [ "",                   tool_size_edit,      "size",         tool_attribute, "Brush Size"    ];
+		tool_smooth       =   [ "",                   tool_smooth_edit,    "smooth",       brush,          "Smoothness"    ];
+		tool_bg_stamp     =   [ THEME.stamp,          tool_stamp_bg,       "stamp",        tool_attribute, "Stamp BG"      ];
+		tool_pixelp       =   [ THEME.pixel_diag,     tool_pixel_perfect,  "pixelPerfect", tool_attribute, "Pixel Perfect" ];
+		tool_thrs         =   [ THEME.tool_threshold, tool_thrs_edit,      "thres",        tool_attribute, "Threshold"     ];
+		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",     tool_attribute, "Fill Type"     ];
+		tool_fill_bg      =   [ THEME.tool_bg,        tool_fill_use_bg,    "useBG",        tool_attribute, "Use BG"        ];
 		tool_iso_settings =   [ "",                   tool_isoangle,       "iso_angle",    tool_attribute ];
 		tool_dithering    =   [ "",                   tool_dither,         "dither",       tool_attribute ];
 		
@@ -553,52 +478,70 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tools = [
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]),
 			
 			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
 				.setSettings(tool_fill_settings)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setToolObject(tool_sel_magic),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
 				.setSetting(tool_size)
 				.setSetting(tool_smooth)
 				.setSetting(tool_pixelp)
 				.setSetting(tool_bg_stamp)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setToolObject(tool_brush),
 			
 			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser)
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
 				.setSetting(tool_size)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setToolObject(tool_eraser),
 					
 			new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect,  THEME.canvas_tools_rect_fill  ])
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
 				.setSetting(tool_size)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setToolObject(tool_rectangle),
 					
 			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ])
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
 				.setSetting(tool_size)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setToolObject(tool_ellipse),
 			
 			new NodeTool( "Iso Cube",	[ THEME.canvas_tools_iso_cube, THEME.canvas_tools_iso_cube_wire, THEME.canvas_tools_iso_cube_fill ])
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
 				.setSetting(tool_size)
 				.setSetting(tool_iso_settings)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setToolObject(tool_iso_cube),
 			
 			new NodeTool( "Curve",		  THEME.canvas_tool_curve_icon)
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
 				.setSetting(tool_size)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setSetting([ "", tool_curve_buttons, 0, tool_attribute ])
 				.setToolObject(tool_curve_bez),
 			
 			new NodeTool( "Freeform",	  THEME.canvas_tools_freeform)
-				.setSettings(tool_settings)
+				.setSetting(tool_channel)
 				.setSetting(tool_size)
+				.setSetting(tool_layer)
+				.setSetting(tool_mirror)
 				.setToolObject(tool_freeform),
 					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
@@ -610,6 +553,80 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setToolObject( [ new canvas_tool_with_selector(tool_fill_grad_obj, tool_sel_magic), new canvas_tool_with_selector(tool_pattern_obj, tool_sel_magic) ]),
 			
 		];
+	#endregion
+	
+	#region ++++ custom node tool ++++
+		__action_add_node = method(self, function(c) /*=>*/ { with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: c })) canvas = true; });
+		
+		tool_node_buttons = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) nodeTool.apply(); else nodeTool.destroy(); })
+								.setCollape(false);
+		
+		nodeTool        = noone;
+		nodeToolPreview = new NodeTool( "Apply Node", THEME.canvas_tools_node, self )
+								.setSettings([tool_channel, tool_layer])
+								.setToolFn(__action_add_node)
+								.setContext(self);
+								
+		selectionExtract = function() /*=>*/ {
+			var _s  = selection.is_selected;
+			var _sx = _s? selection.selection_position[0] : 0;
+			var _sy = _s? selection.selection_position[1] : 0;
+			var _sw = _s? selection.selection_size[0] : attributes.dimension[0];
+			var _sh = _s? selection.selection_size[1] : attributes.dimension[1];
+			
+			var _nc = nodeBuild("Node_Canvas", x, y + h + 16);
+			_nc.skipDefault();
+			_nc.inputs[0].setValue([_sw, _sh]);
+			
+			var _comp = noone; 
+			var _o = outputs[0].getJunctionTo();
+			for( var i = 0, n = array_length(_o); i < n; i++ ) {
+				if(is(_o[i].node, Node_Composite)) _comp = _o[i].node;
+			}
+			
+			if(_comp == noone) {
+				_comp = nodeBuild("Node_Composite", x + w + 32, y);
+				_comp.skipDefault();
+				_comp.addInput(outputs[0]);
+				
+			} else {
+				var _yy = y + h + 16;
+				for( var i = 0, n = array_length(_comp.inputs); i < n; i++ ) {
+					var _in = _comp.inputs[i].value_from;
+					if(_in == noone) continue;
+					_yy = max(_yy, _in.node.y + _in.node.h + 16);
+				}
+					
+				_nc.move(x, _yy);
+			}
+			
+			var _j = _comp.addInput(_nc.outputs[0]);
+			var _o = _nc.outputs[0].getJunctionTo();
+			var _i = _o[0].index;
+			
+			_comp.inputs[_i+1].unit.mode = VALUE_UNIT.constant;
+			_comp.inputs[_i+1].setValue([_sx,_sy]);
+			_comp.inputs[_i+6].setValue([0,0]);
+			
+			PANEL_PREVIEW.setNodePreview(_comp, false, false);
+			PANEL_INSPECTOR.setInspecting(_nc);
+			PANEL_GRAPH.nodes_selecting = [ _nc ];
+			
+			if(_s) {
+				selection.apply();
+				PANEL_PREVIEW.clearTool();
+			}
+		}
+		
+		selectionExtractButton = new NodeTool( "Extract Selection", THEME.canvas_tools_extract, self )
+								.setToolFn(selectionExtract)
+								.setContext(self);
+		
+		static addNodeTool = function(_node) {
+			UNDO_HOLDING = true;
+			nodeTool = new canvas_tool_node(self, _node).init();
+			UNDO_HOLDING = false;
+		}
 	#endregion
 	
 	#region ++++ right tools/ actions ++++
@@ -705,11 +722,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		rightTools_not_selection = [ 
 			-1,
-			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_outline, tool_sel_magic) ).setSettings(tool_settings),
-			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_extrude, tool_sel_magic) ).setSettings(tool_settings),
-			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_inset,   tool_sel_magic)   ).setSettings(tool_settings),
-			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_skew,    tool_sel_magic)    ).setSettings(tool_settings),
-			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_corner,  tool_sel_magic)  ).setSettings(tool_settings),
+			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_outline, tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
+			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_extrude, tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
+			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_inset,   tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
+			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_skew,    tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
+			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_corner,  tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
 		];
 		
 		rightTools_empty = [  ];

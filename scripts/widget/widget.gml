@@ -53,7 +53,7 @@ function widget() constructor {
 		}
 		
 		static setSideButton = function(b,s=false) /*=>*/ { 
-			if(is(b, buttonClass)) b.iconPad(ui(4));
+			if(is(b, buttonClass)) b.iconPad(ui(6));
 			
 			if(side_button) side_button2 = b; 
 			else            side_button  = b; 
@@ -63,7 +63,7 @@ function widget() constructor {
 		} 
 		
 		static setFrontButton = function(b) /*=>*/ { 
-			if(is(b, buttonClass)) b.iconPad(ui(8));
+			if(is(b, buttonClass)) b.iconPad(ui(6));
 			front_button = b; 
 			return self; 
 		} 

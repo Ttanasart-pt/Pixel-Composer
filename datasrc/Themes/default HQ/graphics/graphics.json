@@ -240,6 +240,7 @@
     "sort":                               { "path": "./icon/s_sort_24.png",                                 "s": 1, "x": 12, "y": 12 },
     "sort_v":                             { "path": "./icon/s_sort_24_vert.png",                            "s": 1, "x": 12, "y": 12 },
     "stamp_16":                           { "path": "./icon/s_stamp_16.png",                                "s": 1, "x":  8, "y":  8 },
+    "stamp":                              { "path": "./icon/s_stamp.png",                                   "s": 1, "x": 12, "y": 12 },
     "splash_thumbnail":                   { "path": "./icon/s_icon_splash_thumbnail.png",                   "s": 2, "x": 12, "y": 12 },
     "star":                               { "path": "./icon/s_star.png",                                    "s": 1, "x":  8, "y":  8 },
     "steam_creator":                      { "path": "./icon/s_steam_creator.png",                           "s": 1, "x":  8, "y":  8 },
