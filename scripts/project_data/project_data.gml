@@ -239,6 +239,14 @@ function Project() constructor {
 			return true;
 		}
 		
+		static toggleAttribute = function(_k) /*=>*/ {
+			var _v = !attributes[$ _k];
+			attributes[$ _k]         = _v;
+			PROJECT_ATTRIBUTES[$ _k] = _v;
+			RENDER_ALL 
+			return true;
+		}
+		
 		attributeEditor = [
 			[ "Dimension", "surface_dimension", new vectorBox(2, 
 				function(val, index) /*=>*/ { 
@@ -331,8 +339,8 @@ function Project() constructor {
 				}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
 				) ],
 			
-			[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ { toggleAttribute("autosave"); return true; }) ],
-			[ "Layers",      "global_layer", new checkBox(function() /*=>*/ { toggleAttribute("global_layer"); return true; }) ],
+			[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ {return toggleAttribute("autosave")})     ],
+			[ "Layers",      "global_layer", new checkBox(function() /*=>*/ {return toggleAttribute("global_layer")}) ],
 			
 		];
 		
