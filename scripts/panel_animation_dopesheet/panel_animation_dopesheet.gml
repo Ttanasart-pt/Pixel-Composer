@@ -332,6 +332,10 @@ function Panel_Animation_Dopesheet() {
 	        "animation_toggle_axis",
 	    ];
 	    
+	    global.menuItems_animation_header_shy = [
+	        "animation_toggle_hidden",
+	    ];
+	    
     #endregion ++++ context menu ++++
     
     ////- Interaction
@@ -2201,6 +2205,7 @@ function Panel_Animation_Dopesheet() {
     	var hh = top_frame_height;
     	var mm = [mx, my];
     	
+    	var bb = THEME.button_hide_fill;
     	var bs = hh - ui(4);
     	var bx = xx + ui(2);
     	var by = yy + ui(2);
@@ -2220,17 +2225,17 @@ function Panel_Animation_Dopesheet() {
     	
     	// Left
     	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_prev, THEME.marker_goto, 1) == 2) {
-    		toPrevMarker();
-    	} bx += bs + ui(1);
+    	var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_prev, THEME.marker_goto, 1);
+    	if(b == 2) toPrevMarker();
+    	bx += bs + ui(1);
     	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_togg, THEME.marker) == 2) {
-    		toggleMarker(GLOBAL_CURRENT_FRAME + 1);
-    	} bx += bs + ui(1);
+    	var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_togg, THEME.marker);
+    	if(b == 2) toggleMarker(GLOBAL_CURRENT_FRAME + 1);
+    	bx += bs + ui(1);
     	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_next, THEME.marker_goto, 0) == 2) {
-    		toNextMarker();
-    	} bx += bs + ui(1);
+    	var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_mark_next, THEME.marker_goto, 0);
+    	if(b == 2) toNextMarker();
+    	bx += bs + ui(1);
     	
     	draw_set_color(CDEF.main_dkblack);
     	bx += ui(1); draw_line_width(bx, by + ui(2), bx, by + bs - ui(2), 2); bx += ui(1);
@@ -2241,9 +2246,10 @@ function Panel_Animation_Dopesheet() {
     	var spr = THEME.timeline_hide;
     	var sid = show_hidden;
     	var scc = show_hidden? COLORS._main_icon : COLORS._main_accent;
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_hidden, spr, sid, scc) == 2) {
-    		show_hidden = !show_hidden;
-    	} bx -= bs + ui(1);
+    	var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_hidden, spr, sid, scc);
+    	if(b == 2) show_hidden = !show_hidden;
+    	if(b == 3) menuCallGen("animation_header_shy");
+    	bx -= bs + ui(1);
     	
     }
     
@@ -3070,17 +3076,18 @@ function Panel_Animation_Dopesheet() {
     	////- =Draw
     	
         drawDopesheet_Label();
+        var pd = ui(8);
         
-        draw_sprite_stretched_ext( THEME.ui_panel_bg,        1, ui(8), ui(8), tool_width, dopesheet_h);
-        draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, ui(8), ui(8), tool_width, top_frame_height, COLORS._main_icon );
-        draw_surface_safe(dopesheet_name_surface, ui(8), ui(8) + top_frame_height);
-        draw_sprite_stretched_ext( THEME.ui_panel,           1, ui(8), ui(8), tool_width, dopesheet_h,      CDEF.black );
+        draw_sprite_stretched_ext( THEME.ui_panel_bg,        1, pd, pd, tool_width, dopesheet_h);
+        draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, pd, pd, tool_width, top_frame_height, COLORS._main_icon );
+        draw_surface_safe(dopesheet_name_surface, pd, pd + top_frame_height);
+        draw_sprite_stretched_ext( THEME.ui_panel,           1, pd, pd, tool_width, dopesheet_h,      CDEF.black );
         
-        draw_sprite_stretched(     THEME.ui_panel_bg, 1, bar_x, ui(8), bar_w, dopesheet_h );
-        draw_surface_safe(dopesheet_surface, bar_x, ui(8));
-        draw_sprite_stretched_ext( THEME.ui_panel,    1, bar_x, ui(8), bar_w, dopesheet_h, CDEF.black );
+        draw_sprite_stretched(     THEME.ui_panel_bg, 1, bar_x, pd, bar_w, dopesheet_h );
+        draw_surface_safe(dopesheet_surface, bar_x, pd);
+        draw_sprite_stretched_ext( THEME.ui_panel,    1, bar_x, pd, bar_w, dopesheet_h, CDEF.black );
         
-        draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, ui(8), bar_w, dopesheet_h);
+        draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, pd, bar_w, dopesheet_h);
         
         if(item_dragging != noone) drawDopesheet_Label_Item(item_dragging, mx - item_dragging_dx, my - item_dragging_dy,,, 0.5);
     	drawActionTooltip();
@@ -3090,12 +3097,11 @@ function Panel_Animation_Dopesheet() {
         if(keyframe_boxable && mouse_rpress(pFOCUS)) { // context menu
         	__selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, GLOBAL_TOTAL_FRAMES - 1);
         	
-            if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + dopesheet_w, ui(8) + dopesheet_h)) {
-            	// if(region_hovering != noone)             menuCallGen("animation_region");
+            if(point_in_rectangle(mx, my, bar_x, pd, bar_x + dopesheet_w, pd + dopesheet_h)) {
                 if(array_empty(keyframe_selecting)) menuCallGen("animation_keyframe_empty");
                 else                                menuCallGen("animation_keyframe");
                 
-            } else if(point_in_rectangle(mx, my, ui(8), ui(8), ui(8) + tool_width, ui(8) + dopesheet_h)) {
+            } else if(point_in_rectangle(mx, my, pd, pd + top_frame_height, pd + tool_width, pd + dopesheet_h)) {
                 if(context_selecting_prop != noone) {
                     if(context_selecting_prop.sepable) menuCallGen("animation_name_prop_axis");
                     else                               menuCallGen("animation_name_empty");

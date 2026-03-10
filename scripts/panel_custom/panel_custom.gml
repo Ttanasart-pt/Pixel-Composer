@@ -4,7 +4,8 @@ function Panel_Custom(_data = undefined) : PanelContent() constructor {
 	h = ui(480);
 	auto_pin = true;
 	
-	data = undefined;
+	project = undefined;
+	data    = undefined;
 	
 	_hovering_frame = undefined;
 	 hovering_frame = undefined;
@@ -14,7 +15,8 @@ function Panel_Custom(_data = undefined) : PanelContent() constructor {
 	
 	function setData(_data) {
 		if(_data == undefined) return;
-		data = _data;
+		project = PROJECT;
+		data    = _data;
 		
 		w = min(WIN_W - ui(64), data.prew);
 		h = min(WIN_H - ui(64), data.preh);
@@ -30,6 +32,7 @@ function Panel_Custom(_data = undefined) : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		if(!data) return;
+		if(!project || !project.active) { close(); return; }
 		
 		_hovering_frame    = hovering_frame;
 		_hovering_element  = hovering_element;
