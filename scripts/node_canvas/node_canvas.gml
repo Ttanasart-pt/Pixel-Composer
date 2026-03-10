@@ -300,7 +300,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		selection = new canvas_selection_data().setNode(self);
 		
-		tool_brush          = new canvas_tool_brush(false).setNode(self);
+		tool_brush          = new canvas_tool_brush(false, tool_attribute).setNode(self);
 		tool_eraser         = new canvas_tool_brush(true).setNode(self);
 		tool_rectangle      = new canvas_tool_shape(CANVAS_TOOL_SHAPE.rectangle).setNode(self);
 		tool_ellipse        = new canvas_tool_shape(CANVAS_TOOL_SHAPE.ellipse).setNode(self);
@@ -409,6 +409,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.drawLayer     = 0;
 		tool_attribute.pickColor     = c_white;
 		tool_attribute.stamp         = false;
+		tool_attribute.pixelPerfect  = false;
 		
 		tool_attribute.size          = 1;
 		tool_attribute.pressure      = false;
@@ -453,12 +454,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 								.setHorizontal(true)
 								.setMinWidth(ui(128));
 								
-		tool_pattern_intn = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.pattern_inten = clamp(v, 0, 1); })
+		tool_pattern_intn = textBox_Number(function(v) /*=>*/ { tool_attribute.pattern_inten = clamp(v, 0, 1); })
 									.setSlideRange(0, 1)
 									
 		tool_pattern_scal = new vectorBox(2, function(v,i) /*=>*/ { tool_attribute.pattern_scale[i] = round(v); });
 		
-		tool_pattern_modi = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.pattern_mod = round(v); });
+		tool_pattern_modi = textBox_Number(function(v) /*=>*/ { tool_attribute.pattern_mod = round(v); });
 		
 		tool_pattern_settings = [
 			// () => tool_pattern.prev_surface,
@@ -479,7 +480,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_mirror_edit    = new checkBoxGroup( THEME.canvas_mirror, function(v,i) /*=>*/ { tool_attribute.mirror[i] = v; })
 									.setTooltips( [ "Mirror diagonal", "Mirror", "Mirror" ] );
 		
-		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.size = max(1, round(v)); })
+		tool_size_edit      = textBox_Number(function(v) /*=>*/ { tool_attribute.size = max(1, round(v)); })
 									.setSlideType(true)
 									.setVAlign(fa_center)
 									.setFont(f_p3)
@@ -487,14 +488,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 										.setTooltip("Pen Pressure Settings...")
 										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon), true);
 		
-		tool_smooth_edit    = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { brush.smooth = max(0, v); })
+		tool_smooth_edit    = textBox_Number(function(v) /*=>*/ { brush.smooth = max(0, v); })
 									.setSlideType(true)
 									.setVAlign(fa_center)
 									.setFont(f_p3)
 		
 		tool_stamp_bg       = new checkBox( function() /*=>*/ { tool_attribute.stamp = !tool_attribute.stamp; });
 		
-		tool_thrs_edit      = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.thres = clamp(v, 0, 1); })
+		tool_pixel_perfect  = new checkBox( function() /*=>*/ { tool_attribute.pixelPerfect = !tool_attribute.pixelPerfect; });
+		
+		tool_thrs_edit      = textBox_Number(function(v) /*=>*/ { tool_attribute.thres = clamp(v, 0, 1); })
 									.setSlideRange(0, 1)
 									.setVAlign(fa_center)
 									.setFont(f_p3);
@@ -518,17 +521,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		tool_settings     = [ [ "",                   tool_channel_edit,   "channel",   tool_attribute ], 
-						      [ "",                   tool_drawLayer_edit, "drawLayer", tool_attribute ],
-						      [ "",                   tool_mirror_edit,    "mirror",    tool_attribute ] ];
-		tool_size         =   [ "",                   tool_size_edit,      "size",      tool_attribute, "Brush Size" ];
-		tool_smooth       =   [ "",                   tool_smooth_edit,    "smooth",    brush,          "Smoothness" ];
-		tool_bg_stamp     =   [ THEME.stamp_16,       tool_stamp_bg,       "stamp",     tool_attribute, "Stamp BG"   ];
-		tool_thrs         =   [ THEME.tool_threshold, tool_thrs_edit,      "thres",     tool_attribute, "Threshold"  ];
-		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",  tool_attribute, "Fill Type"  ];
-		tool_fill_bg      =   [ THEME.tool_bg,        tool_fill_use_bg,    "useBG",     tool_attribute, "Use BG"     ];
-		tool_iso_settings =   [ "",                   tool_isoangle,       "iso_angle", tool_attribute ];
-		tool_dithering    =   [ "",                   tool_dither,         "dither",    tool_attribute ];
+		tool_settings     = [ [ "",                   tool_channel_edit,   "channel",      tool_attribute ], 
+						      [ "",                   tool_drawLayer_edit, "drawLayer",    tool_attribute ],
+						      [ "",                   tool_mirror_edit,    "mirror",       tool_attribute ] ];
+		tool_size         =   [ "",                   tool_size_edit,      "size",         tool_attribute, "Brush Size" ];
+		tool_smooth       =   [ "",                   tool_smooth_edit,    "smooth",       brush,          "Smoothness" ];
+		tool_bg_stamp     =   [ THEME.stamp_16,       tool_stamp_bg,       "stamp",        tool_attribute, "Stamp BG"   ];
+		tool_pixelp       =   [ THEME.pixel_diag,     tool_pixel_perfect,  "pixelPerfect", tool_attribute, "Px"         ];
+		tool_thrs         =   [ THEME.tool_threshold, tool_thrs_edit,      "thres",        tool_attribute, "Threshold"  ];
+		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",     tool_attribute, "Fill Type"  ];
+		tool_fill_bg      =   [ THEME.tool_bg,        tool_fill_use_bg,    "useBG",        tool_attribute, "Use BG"     ];
+		tool_iso_settings =   [ "",                   tool_isoangle,       "iso_angle",    tool_attribute ];
+		tool_dithering    =   [ "",                   tool_dither,         "dither",       tool_attribute ];
 		
 		tool_fill_settings = [
 			tool_thrs,
@@ -561,6 +565,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSettings(tool_settings)
 				.setSetting(tool_size)
 				.setSetting(tool_smooth)
+				.setSetting(tool_pixelp)
 				.setSetting(tool_bg_stamp)
 				.setToolObject(tool_brush),
 			

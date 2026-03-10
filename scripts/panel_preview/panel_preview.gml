@@ -1481,6 +1481,16 @@ function Panel_Preview() : PanelContent() constructor {
         var tolh  = topbar_height - ui(10);
         var tol_max_w = ui(16);
         
+        var tbarX = 0;
+        var tbarY = 0;
+        var tbarW = w - ui(120 + 12);
+        var tbarH = topbar_height;
+        
+        var _hover = pHOVER && point_in_rectangle(mx, my, tbarX, tbarY, tbarX + tbarW, tbarY + tbarH);
+        var _focus = pFOCUS;
+        var _scis  = gpu_get_scissor();
+        gpu_set_scissor(tbarX, tbarY, tbarW, tbarH);
+        
         for( var i = 0, n = array_length(settings); i < n; i++ ) {
             var sett = settings[i];
             
@@ -1517,7 +1527,7 @@ function Panel_Preview() : PanelContent() constructor {
 	                
             	} else if(sprite_exists(nme)) {
             		draw_sprite_ui(nme, 0, tolx + ui(8), topbar_height / 2, 1, 1, 0, COLORS._main_icon_light);
-            		if(ttip != "" && pHOVER && point_in_rectangle(mx, my, tolx, 0, tolx + ui(20), topbar_height))
+            		if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, 0, tolx + ui(20), topbar_height))
             			TOOLTIP = ttip;
             		
 	                tolx      += ui(20);
@@ -1527,7 +1537,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
             
             wdg.register();
-            wdg.setFocusHover(pFOCUS, pHOVER);
+            wdg.setFocusHover(_focus, _hover);
             
             var _tool_font = f_p3;
             
@@ -1542,7 +1552,7 @@ function Panel_Preview() : PanelContent() constructor {
                 case "buttonAnchor"  : tolw = ui(28);                                                                           break;
             }
             
-            if(ttip != "" && pHOVER && point_in_rectangle(mx, my, tolx, toly, tolx + tolw, toly + tolh))
+            if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, toly, tolx + tolw, toly + tolh))
     			TOOLTIP = ttip;
             			
             var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key], {}, [ mx, my ], x, y)
@@ -1554,7 +1564,8 @@ function Panel_Preview() : PanelContent() constructor {
             tol_max_w += tolw + ui(8);
         }
         
-        tol_max_w = max(0, tol_max_w - w);            
+        gpu_set_scissor(_scis);
+        tol_max_w = max(0, tol_max_w - tbarW);            
         if(point_in_rectangle(mx, my, 0, 0, w, topbar_height) && !key_mod_press_any() && MOUSE_WHEEL != 0)
             tool_x_to = clamp(tool_x_to + ui(64) * MOUSE_WHEEL, -tol_max_w, 0);
     }
