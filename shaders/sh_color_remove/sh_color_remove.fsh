@@ -3,15 +3,14 @@
 #else 
 	#define PALETTE_LIMIT 256 
 #endif
-//
-// Simple passthrough fragment shader
-//
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec4	colorFrom[PALETTE_LIMIT];
-uniform int		colorFrom_amo;
-uniform int		invert;
+uniform vec4 colorFrom[PALETTE_LIMIT];
+uniform int  colorFrom_amo;
+uniform int  invert;
+uniform int  colorSpace;
 
 uniform vec2      treshold;
 uniform int       tresholdUseSurf;
@@ -52,19 +51,17 @@ void main() {
     vec4 col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4 baseColor;
 	baseColor = col;
-		
-	vec3 lab = rgb2lab(col.rgb);
 	
-	float min_df = 999.;
+	vec3 base = colorSpace == 0? col.rgb : rgb2lab(col.rgb);
+	
+	float min_df = 99999.;
 	for(int i = 0; i < colorFrom_amo; i++) {
-		vec3 labFrom = rgb2lab(colorFrom[i].rgb);
-	
-		float df = length(lab - labFrom);
-		min_df = min(min_df, df);
+		vec3 comp = colorSpace == 0? colorFrom[i].rgb : rgb2lab(colorFrom[i].rgb);
+		min_df = min(min_df, distance(base, comp));
 	}
 	
-	if((invert == 0 && min_df <= trh) || (invert == 1 && min_df > trh))
-		gl_FragColor = vec4(0.);
-	else	
-		gl_FragColor = baseColor;
+	gl_FragColor = baseColor;
+	
+	if(invert == 0 && min_df <= trh) gl_FragColor = vec4(0.);
+	if(invert == 1 && min_df >  trh) gl_FragColor = vec4(0.);
 }

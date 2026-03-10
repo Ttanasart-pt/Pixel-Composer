@@ -17,16 +17,17 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	__init_mask_modifier(3, 8); // inputs 8, 9, 
 	
 	////- =Remove
-	newInput(1, nodeValue_Palette( "Colors",    [ ca_black ] ));
-	newInput(2, nodeValue_Slider(  "Threshold", .1 )).setMappable(10);
-	newInput(6, nodeValue_Bool(    "Invert",    false, "Keep the selected colors and remove the rest."));
-	// input 11
+	newInput(11, nodeValue_EButton( "Color Space", 0, [ "RGB", "LAB" ] ));
+	newInput( 1, nodeValue_Palette( "Colors",    [ ca_black ] ));
+	newInput( 2, nodeValue_Slider(  "Threshold", .1 )).setMappable(10);
+	newInput( 6, nodeValue_Bool(    "Invert",    false, "Keep the selected colors and remove the rest."));
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 5, 7, 
-		["Surfaces", true], 0, 3, 4, 8, 9, 
-		["Remove",	false], 1, 2, 10, 6, 
+	input_display_list = [  5,  7, 
+		[ "Surfaces",  true ],  0,  3,  4,  8,  9, 
+		[ "Remove",   false ], 11,  1,  2, 10,  6, 
 	];
 	
 	////- Node
@@ -34,24 +35,33 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	attribute_surface_depth();
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var frm = _data[1];
+		#region data
+			var _surf = _data[ 0];
+			
+			var _spac = _data[11];
+			var _colr = _data[ 1];
+			var _thrs = _data[ 2];
+			var _invt = _data[ 6];
+		#endregion
 		
 		var _colors = [];
-		for(var i = 0; i < array_length(frm); i++)
-			array_append(_colors, colToVec4(frm[i]));
+		for(var i = 0; i < array_length(_colr); i++)
+			array_append(_colors, colToVec4(_colr[i]));
 		
 		surface_set_shader(_outSurf, sh_color_remove);
-			shader_set_f("colorFrom",     _colors);
-			shader_set_i("colorFrom_amo", array_length(frm));
-			shader_set_f_map("treshold",  _data[2], _data[10], inputs[2]);
-			shader_set_i("invert",        _data[6]);
+			shader_set_i("colorSpace",    _spac   );
+			shader_set_f("colorFrom",     _colors );
+			shader_set_i("colorFrom_amo", array_length(_colr));
 			
-			draw_surface_safe(_data[0]);
+			shader_set_f_map("treshold",  _thrs, _data[10], inputs[2]);
+			shader_set_i("invert",        _invt );
+			
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[3], _data[4]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[7]);
 		
 		return _outSurf;
 	}
