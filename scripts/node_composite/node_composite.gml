@@ -485,6 +485,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var index = input_fix_len + ind * data_length;
 			var _surf = current_data[index + 0];
 			var _pos  = current_data[index + 1];
+			var _dep  = current_data[index + 7];
 			var _inp  = inputs[index];
 			var _junc = _inp.value_from? _inp.value_from.node : noone;
 			
@@ -601,7 +602,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var tc = ind == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 				var tf = ind == dynamic_input_inspecting? f_p2b : f_p2;
 				if(hover) tc = COLORS._main_text;
-					
+				
 				draw_set_text(tf, fa_left, fa_center, tc);
 				
 				if(canvas_draw != noone && _junc_canvas)
@@ -640,6 +641,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						draw_set_alpha(1);
 					}
 				}
+				
+				var _tx = _x + _w - ui(24 * 2);
+				draw_set_text(tf, fa_right, fa_center, COLORS._main_text_sub);
+				draw_text_add(_tx, _txy, _dep);
 			#endregion
 			
 			if(_jun_layer) { // modifiers

@@ -135,7 +135,12 @@
 		
 		attr_interpolate_array = variable_clone(global.SURFACE_INTERPOLATION);
 		
-		interpolate_selector   = new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false);
+		interpolate_selector   = new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false)
+			.setFrontButton(button(function() /*=>*/ {
+				var i = !bool(attributes.interpolate - 1) + 1;
+				return attribute_set("interpolate", i);
+			}).setIcon(s_attr_interpolate, function() /*=>*/ {return bool(attributes.interpolate - 1)}, COLORS._main_icon_light));
+			
 		interpolate_editor     = [ "Interpolation", function() /*=>*/ {return attributes.interpolate}, interpolate_selector, new KeyCombination("I", MOD_KEY.alt) ];
 		
 		if(label) array_push(attributeEditors, "Surface");
@@ -148,7 +153,12 @@
 		attributes.oversample  = PREFERENCES.node_def_oversample;
 		
 		attr_oversample_array  = variable_clone(global.SURFACE_OVERSAMPLE);
-		oversample_selector    = new scrollBox(attr_oversample_array, function(val) /*=>*/ { attribute_set("oversample", val); }, false);
+		oversample_selector    = new scrollBox(attr_oversample_array, function(val) /*=>*/ { attribute_set("oversample", val); }, false)
+			.setFrontButton(button(function() /*=>*/ {
+				var i = attributes.oversample <= 1? 4 : 1;
+				return attribute_set("oversample", i);
+			}).setIcon(s_attr_oversample, function() /*=>*/ {return bool(attributes.oversample - 1)}, COLORS._main_icon_light));
+			
 		oversample_editor      = [ "Oversample", function() /*=>*/ {return attributes.oversample}, oversample_selector, new KeyCombination("O", MOD_KEY.alt) ];
 		
 		if(label) array_push(attributeEditors, "Surface");

@@ -1804,7 +1804,7 @@ function Panel_Inspector() : PanelContent() constructor {
         
         if(inspectGroup == 0) {
         	var bc = locked? COLORS._main_accent : COLORS._main_icon;
-            if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Lock"), THEME.lock_12, !locked, bc, 1, ui(8)) == 2)
+            if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Lock"), THEME.lock, !locked, bc, 1, ui(8)) == 2)
                 locked = !locked;
             
             by += bs + ui(2);

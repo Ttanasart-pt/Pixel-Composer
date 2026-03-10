@@ -232,6 +232,13 @@ function Project() constructor {
 		attributes.auto_organize       = false;
 		attributes.render_topo         = false;
 		
+		static setAttribute = function(_k,_v) /*=>*/ {
+			attributes[$ _k]         = _v;
+			PROJECT_ATTRIBUTES[$ _k] = _v;
+			RENDER_ALL 
+			return true;
+		}
+		
 		attributeEditor = [
 			[ "Dimension", "surface_dimension", new vectorBox(2, 
 				function(val, index) /*=>*/ { 
@@ -282,36 +289,36 @@ function Project() constructor {
 			],
 			
 			[ "Color Depth", "color_depth", new scrollBox(array_copy_trim_start(global.SURFACE_FORMAT_NAME, 2), function(i) /*=>*/ {
-				attributes.color_depth         = i;
-				PROJECT_ATTRIBUTES.color_depth = i;
-				RENDER_ALL 
-				return true; 
+				return setAttribute("color_depth", i);
 				
 			}).setUpdateHover(false) ], 
 			
 			[ "Interpolation", "interpolate", new scrollBox(array_copy_trim_start(global.SURFACE_INTERPOLATION, 1), function(i) /*=>*/ {
-				attributes.interpolate         = i;
-				PROJECT_ATTRIBUTES.interpolate = i;
-				RENDER_ALL 
-				return true; 
+				return setAttribute("interpolate", i);
 				
-			}).setUpdateHover(false) ], 
+			}).setFrontButton(button(function() /*=>*/ {
+				var i = !bool(attributes.interpolate);
+				return setAttribute("interpolate", i);
+				
+			}).setIcon(s_attr_interpolate, function() /*=>*/ {return bool(attributes.interpolate)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
 			
 			[ "Oversample", "oversample", new scrollBox(array_copy_trim_start(global.SURFACE_OVERSAMPLE, 1), function(i) /*=>*/ {
-				attributes.oversample         = i;
-				PROJECT_ATTRIBUTES.oversample = i;
-				RENDER_ALL 
-				return true; 
+				return setAttribute("oversample", i);
 				
-			}).setUpdateHover(false) ], 
+			}).setFrontButton(button(function() /*=>*/ {
+				var i = !bool(attributes.oversample) * 3;
+				return setAttribute("oversample", i);
+				
+			}).setIcon(s_attr_oversample, function() /*=>*/ {return bool(attributes.oversample)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
 			
 			[ "Shader", "shader", new scrollBox(["Phong", "PBR"], function(i) /*=>*/ {
-				attributes.shader         = i;
-				PROJECT_ATTRIBUTES.shader = i;
-				RENDER_ALL 
-				return true; 
+				return setAttribute("shader", i);
 				
-			}).setUpdateHover(false) ], 
+			}).setFrontButton(button(function() /*=>*/ {
+				var i = !bool(attributes.shader);
+				return setAttribute("shader", i);
+				
+			}).setIcon(s_attr_shader, function() /*=>*/ {return bool(attributes.shader)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
 			
 			[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
 				.setSideButton( button(function() /*=>*/ { 

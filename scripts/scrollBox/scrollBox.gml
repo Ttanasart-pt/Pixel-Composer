@@ -251,7 +251,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		}
 		
 		gpu_set_scissor(_sci);
-		if(hide == 0 && type == 0) draw_sprite_stretched_ext(THEME.textbox, _hovering, _x, _y, w, h, boxColor, .5 + .5 * interactable);
+		if(hide == 0 && type == 0) draw_sprite_stretched_ext(THEME.textbox, _hovering, x, y, w, h, boxColor, .5 + .5 * interactable);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), h + ui(6), COLORS._main_accent, 1);	
