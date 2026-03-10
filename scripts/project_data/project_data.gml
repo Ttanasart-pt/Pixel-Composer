@@ -356,7 +356,8 @@ function Project() constructor {
 			immediate_render = undefined;
 		}
 		
-		array_foreach(allNodes, function(n) /*=>*/ { if(n.active) n.stepBegin(); });
+		animator.is_simulating = array_any(allNodes, function(a,i) /*=>*/ {return a.is_simulation});
+		array_foreach(allNodes, function(n,i) /*=>*/ { if(n.active) n.stepBegin(); });
 	}
 	
 	static step = function() {

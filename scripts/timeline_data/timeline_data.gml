@@ -91,20 +91,9 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, _w, h, cc, alpha);
 		if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, h, COLORS._main_accent, 1);
 		
-		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + h - 1)) {
+		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + h - 1))
 			draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, h, col, 0.3);
 			
-			if(focus && DOUBLE_CLICK)
-				rename();
-				
-			else if(mouse_press(mb_left, focus)) {
-				if(key_mod_press(SHIFT)) array_toggle(PANEL_GRAPH.nodes_selecting, node);
-				else graphSelectNode(node, false);
-			}
-			
-			res = 1;
-		}
-		
 		////- =Left Buttons
 		
 		var bx = lx;
@@ -137,6 +126,18 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		
 		var txx = bx + ui(2);
 				
+		if(hover && point_in_rectangle(_msx, _msy, txx, _y, _x + _w, _y + h - 1)) {
+			if(focus && DOUBLE_CLICK)
+				rename();
+				
+			else if(mouse_press(mb_left, focus)) {
+				if(key_mod_press(SHIFT)) array_toggle(PANEL_GRAPH.nodes_selecting, node);
+				else graphSelectNode(node, false);
+			}
+			
+			res = 1;
+		}
+		
 		if(renaming && tb_rename != undefined) {
 			var _param = new widgetParam(txx - ui(4), _y + ui(2), _w - ui(24), h - ui(4), node.display_name,, [ _msx, _msy ]);
 			    _param.font = f_p3;

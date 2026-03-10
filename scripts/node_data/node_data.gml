@@ -552,8 +552,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			updatedOutTrigger.setValue(false);
 		}
 		
-		if(is_simulation) project.animator.is_simulating = true;
-		
 		if(attributes.outp_meta) {
 			junc_meta[0].setValue(getDisplayName());
 			junc_meta[1].setValue([ x, y ]);
