@@ -275,7 +275,9 @@ function Panel_Animation_Dopesheet() {
 		    context_selecting_prop = noone;
 		    
 		    function setSelectingItemColor(color) { if(context_selecting_item == noone) return; context_selecting_item.item.setColor(color); }
-	    
+	    	
+	    	function selectAllKeys() {}
+	    	
 	    #endregion
 	    
 	    global.menuItems_animation_keyframe = [

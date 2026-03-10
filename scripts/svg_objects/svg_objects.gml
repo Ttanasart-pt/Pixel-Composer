@@ -90,7 +90,7 @@ function SVG(svgObj = noone) : SVGElement(svgObj) constructor {
 		if(struct_has(attr, "viewBox")) {
 			var _bbox = attr.viewBox;
 			_bbox = string_splice(_bbox);
-			for (var i = 0, n = array_length(_bbox); i < n; i++)
+			for (var i = 0, n = min(array_length(_bbox), 4); i < n; i++)
 				bbox[i] = attrReal(_bbox[i]);
 		}
 	}
@@ -217,44 +217,100 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 		}
 	}
 	
-	static arcToBezier = function(anchors, _x1, _y1, _x2, _y2, _rx, _ry, _a, _fa, _fs) /*=>*/ {
+	// use Claude for this one.
+	static ellipticalArcApprox = function(anchors, _x1, _y1, _x2, _y2, _rx, _ry, _a, _fa, _fs) /*=>*/ {
+		// Handle degenerate cases
+		if (_rx == 0 || _ry == 0) {
+			array_push(anchors, [parent.mapX(_x2), parent.mapY(_y2)]);
+			return;
+		}
 		
-		// var x1p = (_x1 - _x2) / 2 *   dcos(_a)  + (_y1 - _y2) / 2 * dsin(_a);
-		// var y1p = (_x1 - _x2) / 2 * (-dsin(_a)) + (_y1 - _y2) / 2 * dcos(_a);
+		// Ensure radii are positive
+		_rx = abs(_rx);
+		_ry = abs(_ry);
 		
-		// var _rr = sqrt((_rx * _rx * _ry * _ry - _rx * _rx * y1p * y1p - _ry * _ry * x1p * x1p) / (_rx * _rx * y1p * y1p + _ry * _ry * x1p * x1p));
-		// // if(_fa == _fs) _rr *= -1;
+		// Convert angle to radians
+		var cos_phi = dcos(_a);
+		var sin_phi = dsin(_a);
 		
-		// var _cxp =  _rr * _rx * y1p / _ry;
-		// var _cyp = -_rr * _ry * x1p / _rx;
+		// Step 1: Compute (x1', y1')
+		var dx = (_x1 - _x2) / 2;
+		var dy = (_y1 - _y2) / 2;
+		var x1_prime =  cos_phi * dx + sin_phi * dy;
+		var y1_prime = -sin_phi * dx + cos_phi * dy;
 		
-		// var _cx = _cxp * dcos(_a) + _cyp * (-dsin(_a)) + (_x1 + _x2) / 2;
-		// var _cy = _cxp * dsin(_a) + _cyp *   dcos(_a)  + (_y1 + _y2) / 2;
+		// Step 2: Compute (cx', cy')
+		var rx_sq = _rx * _rx;
+		var ry_sq = _ry * _ry;
+		var x1_prime_sq = x1_prime * x1_prime;
+		var y1_prime_sq = y1_prime * y1_prime;
 		
-		// var _a1  = point_direction(_cx, _cy, _x1, _y1);
-		// var _a2  = point_direction(_cx, _cy, _x2, _y2);
-		// var _dif = angle_difference(_a1, _a2);
-		// // if(!_fs && _dif > 0) _dif -= 360;
-		// // if( _fs && _dif < 0) _dif += 360;
+		// Correct radii if they're too small
+		var lambda = x1_prime_sq / rx_sq + y1_prime_sq / ry_sq;
+		if (lambda > 1) {
+			_rx *= sqrt(lambda);
+			_ry *= sqrt(lambda);
+			rx_sq = _rx * _rx;
+			ry_sq = _ry * _ry;
+		}
 		
-		// var _ang = _a1 + _dif / 2;
-		// var _px  = dcos(_ang) * _rx;
-		// var _py  = dsin(_ang) * _ry;
-		// var _p   = point_rotate(_px, _py, 0, 0, _a);
+		var coeff = sqrt(max(0, (rx_sq * ry_sq - rx_sq * y1_prime_sq - ry_sq * x1_prime_sq) / (rx_sq * y1_prime_sq + ry_sq * x1_prime_sq)));
+		if (_fa == _fs) coeff = -coeff;
 		
-		// array_push(anchors, [ parent.mapX(_cx + _p[0]), parent.mapY(_cy + _p[1]) ]);
-		array_push(anchors, [ parent.mapX(_x2),         parent.mapY(_y2) ]);
+		var cx_prime = coeff * ((_rx * y1_prime) / _ry);
+		var cy_prime = coeff * -((_ry * x1_prime) / _rx);
 		
-		// var _stp = abs(_dif) * (_rx + _ry) / 360;
-		// for(var i = 1; i <= _stp; i++) {
-		// 	var _ang = lerp_angle_linear(_a1, _a2, i / _stp);
+		// Step 3: Compute (cx, cy) from (cx', cy')
+		var cx = cos_phi * cx_prime - sin_phi * cy_prime + (_x1 + _x2) / 2;
+		var cy = sin_phi * cx_prime + cos_phi * cy_prime + (_y1 + _y2) / 2;
+		
+		// Step 4: Compute angles
+		var ux = (x1_prime - cx_prime) / _rx;
+		var uy = (y1_prime - cy_prime) / _ry;
+		var vx = (-x1_prime - cx_prime) / _rx;
+		var vy = (-y1_prime - cy_prime) / _ry;
+		
+		// Calculate angle1
+		var n = sqrt(ux * ux + uy * uy);
+		var p = ux; // Vector (1, 0)
+		var angle1 = arccos(clamp(p / n, -1, 1));
+		if (uy < 0) angle1 = -angle1;
+		
+		// Calculate dtheta
+		n = sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
+		p = ux * vx + uy * vy;
+		var dtheta = arccos(clamp(p / n, -1, 1));
+		if (ux * vy - uy * vx < 0) dtheta = -dtheta;
+		
+		// Adjust for sweep direction
+		if (_fs == 0 && dtheta > 0)
+			dtheta -= 2 * pi;
+		else if (_fs != 0 && dtheta < 0)
+			dtheta += 2 * pi;
+		
+		// Step 5: Generate approximation points
+		var segments = max(1, ceil(abs(dtheta) / (pi / 4))); // Use pi/4 for good approximation
+		var step = dtheta / segments;
+		
+		for (var i = 1; i <= segments; i++) {
+			var theta = angle1 + step * i;
+			var cos_theta = cos(theta);
+			var sin_theta = sin(theta);
 			
-		// 	var _px  = dcos(_ang) * _rx;
-		// 	var _py  = dsin(_ang) * _ry;
-		// 	var _p   = point_rotate(_px, _py, 0, 0, _a);
+			// Point on unit circle
+			var ex = cos_theta;
+			var ey = sin_theta;
 			
-		// 	array_push(anchors, [ parent.mapX(_cx + _p[0]), parent.mapY(_cy + _p[1]) ]);
-		// }
+			// Scale to ellipse
+			ex *= _rx;
+			ey *= _ry;
+			
+			// Rotate by phi
+			var _x = cos_phi * ex - sin_phi * ey + cx;
+			var _y = sin_phi * ex + cos_phi * ey + cy;
+			
+			array_push(anchors, [parent.mapX(_x), parent.mapY(_y)]);
+		}
 	}
 	
 	static onSetAttr = function(attr) /*=>*/ {
@@ -431,13 +487,6 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 							_cy = _y2 - _ty;
 							
 							bezierCubicApprox(anchors, _x0, _y0, _x1, _y1, _x2, _y2, _tx, _ty);
-							
-							// array_push(anchors, [ parent.mapX(_tx), 
-							// 					  parent.mapY(_ty), 
-							// 					  parent.mapX(_x1), 
-							// 					  parent.mapY(_y1), 
-							// 					  parent.mapX(_x2), 
-							// 					  parent.mapY(_y2) ]);
 							_par = [];
 						}
 						break;
@@ -457,13 +506,6 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 							_cy = _y2 - _ty;
 							
 							bezierCubicApprox(anchors, _x0, _y0, _x1, _y1, _x2, _y2, _tx, _ty);
-							
-							// array_push(anchors, [ parent.mapX(_tx), 
-							// 					  parent.mapY(_ty), 
-							// 					  parent.mapX(_x1), 
-							// 					  parent.mapY(_y1), 
-							// 					  parent.mapX(_x2), 
-							// 					  parent.mapY(_y2) ]);
 							_par = [];
 						}
 						break;
@@ -596,10 +638,8 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 							    _tx = _par[5];
 							    _ty = _par[6];
 							
-							arcToBezier(anchors, _x0, _y0, _tx, _ty, _rx, _ry, _a, _la, _sw);
+							ellipticalArcApprox(anchors, _x0, _y0, _tx, _ty, _rx, _ry, _a, _la, _sw);
 							_par = [];
-							
-							noti_warning("SVG 2.0 feature detected [Elliptical arc] : Reimport file to SVG 1.1 to prevent draw error.")
 						}
 						break;
 						
@@ -615,10 +655,8 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 							    _tx += _par[5];
 							    _ty += _par[6];
 							
-							arcToBezier(anchors, _x0, _y0, _tx, _ty, _rx, _ry, _a, _la, _sw);
+							ellipticalArcApprox(anchors, _x0, _y0, _tx, _ty, _rx, _ry, _a, _la, _sw);
 							_par = [];
-							
-							noti_warning("SVG 2.0 feature detected [Elliptical arc] : Reimport file to SVG 1.1 to prevent draw error.")
 						}
 						break;
 						
@@ -1018,28 +1056,56 @@ function SVG_polygon(svgObj = noone) : SVGElement(svgObj) constructor {
 	}
 	
 	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
-		if(!is_undefined(stroke)) 			draw_set_color(stroke);
+		var _ox, _oy, _nx, _ny, _fx, _fy;
+		var point_count = floor(array_length(points) / 2);
 		
-		if(is_undefined(stroke) && is_undefined(stroke_width)) 
-			return;
+		if(point_count < 3) return; // Need at least 3 points for a polygon
 		
-		var _ox, _oy, _nx, _ny;
-		
-		for (var i = 0, n = floor(array_length(points) / 2); i < n; i++) {
-			_nx = dx + points[i * 2 + 0] * sx;
-			_ny = dy + points[i * 2 + 1] * sy;
+		// Handle fill
+		if(!is_undefined(fill)) {
+			draw_set_color(fill);
+			if(!is_undefined(fill_opacity)) draw_set_alpha(fill_opacity);
 			
-			if(i) {
-				if(is_undefined(stroke_width) || stroke_width == 1)
-					draw_line(_ox, _oy, _nx, _ny);
-				else 
-					draw_line_width(_ox, _oy, _nx, _ny, stroke_width);
+			draw_primitive_begin(pr_trianglefan);
+			for (var i = 0; i < point_count; i++) {
+				_nx = dx + points[i * 2 + 0] * sx;
+				_ny = dy + points[i * 2 + 1] * sy;
+				draw_vertex(_nx, _ny);
 			}
-			
-			_ox = _nx;
-			_oy = _ny;
+			draw_primitive_end();
 		}
 		
+		// Handle stroke
+		if(!is_undefined(stroke)) {
+			draw_set_color(stroke);
+			if(!is_undefined(fill_opacity)) draw_set_alpha(1.0); // Reset alpha for stroke
+			
+			for (var i = 0; i < point_count; i++) {
+				_nx = dx + points[i * 2 + 0] * sx;
+				_ny = dy + points[i * 2 + 1] * sy;
+				
+				if(i == 0) {
+					_fx = _nx;  // Store first point
+					_fy = _ny;
+				} else {
+					if(is_undefined(stroke_width) || stroke_width == 1)
+						draw_line(_ox, _oy, _nx, _ny);
+					else 
+						draw_line_width(_ox, _oy, _nx, _ny, stroke_width);
+				}
+				
+				_ox = _nx;
+				_oy = _ny;
+			}
+			
+			// Close the polygon by connecting last point to first point
+			if(point_count > 2) {
+				if(is_undefined(stroke_width) || stroke_width == 1)
+					draw_line(_ox, _oy, _fx, _fy);
+				else 
+					draw_line_width(_ox, _oy, _fx, _fy, stroke_width);
+			}
+		}
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

@@ -48,9 +48,8 @@ void main() {
 		trh = mix(treshold.x, treshold.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-    vec4 col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
-	vec4 baseColor;
-	baseColor = col;
+    vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
+	gl_FragColor = col;
 	
 	vec3 base = colorSpace == 0? col.rgb : rgb2lab(col.rgb);
 	
@@ -59,8 +58,6 @@ void main() {
 		vec3 comp = colorSpace == 0? colorFrom[i].rgb : rgb2lab(colorFrom[i].rgb);
 		min_df = min(min_df, distance(base, comp));
 	}
-	
-	gl_FragColor = baseColor;
 	
 	if(invert == 0 && min_df <= trh) gl_FragColor = vec4(0.);
 	if(invert == 1 && min_df >  trh) gl_FragColor = vec4(0.);

@@ -22,12 +22,12 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _val = _data[_ind];
 			
 			if(_inp.attributes[$ "mapped"]) {
-				shader_set_f_map(_key, _val, _data[_inp.parameters.map_index], _inp);
+				shader_set_f_map(_key, _val, _data[_inp.parameters.map_index.index], _inp);
 				continue;
 			}
 			
 			if(_inp.parameters[$ "curved"])
-				shader_set_curve(_key, _data[_inp.parameters.cur_index]);
+				shader_set_curve(_key, _data[_inp.parameters.cur_index.index]);
 			
 			switch(instanceof(_inp)) {
 				case "__NodeValue_Float": 
