@@ -694,7 +694,7 @@ function Panel_Animation() : PanelContent() constructor {
 		#region Markers
 			var _markers = PROJECT.timelineMarkers;
 			var _s = .4;
-			var _y = timeline_h - sprite_get_height(THEME.timeline_marker) * .5 * _s + ui(2);
+			var _y = timeline_h - sprite_get_height(THEME.timeline_marker) * .5 * _s;
 			
 			for( var i = 0, n = array_length(_markers); i < n; i++ ) {
 				var _m = _markers[i];
