@@ -182,7 +182,8 @@
 		
 		if(array_length(WIDGET_ACTIVE) == 0) {
 			if(WIDGET_CURRENT != undefined) {
-				WIDGET_CURRENT.deactivate();
+				if(is(WIDGET_CURRENT, widget)) 
+					WIDGET_CURRENT.deactivate();
 				WIDGET_CURRENT = undefined;
 			}
 			return;
@@ -194,7 +195,7 @@
 		}
 		
 		var ind = array_find(WIDGET_ACTIVE, WIDGET_CURRENT);
-		WIDGET_CURRENT.deactivate();
+		if(is(WIDGET_CURRENT, widget)) WIDGET_CURRENT.deactivate();
 		
 		var wid = noone;
 		if(ind + 1 == array_length(WIDGET_ACTIVE))
@@ -208,7 +209,8 @@
 	function widget_previous() {
 		if(array_length(WIDGET_ACTIVE) == 0) {
 			if(WIDGET_CURRENT != undefined) {
-				WIDGET_CURRENT.deactivate();
+				if(is(WIDGET_CURRENT, widget)) 
+					WIDGET_CURRENT.deactivate();
 				WIDGET_CURRENT = undefined;
 			}
 			return;
@@ -220,7 +222,7 @@
 		}
 		
 		var ind = array_find(WIDGET_ACTIVE, WIDGET_CURRENT);
-		WIDGET_CURRENT.deactivate();
+		if(is(WIDGET_CURRENT, widget)) WIDGET_CURRENT.deactivate();
 		
 		var wid = noone;
 		if(ind == 0)
@@ -232,21 +234,19 @@
 	}
 	
 	function widget_set(_widget) {
-		if(WIDGET_CURRENT)
-			WIDGET_CURRENT.deactivate();
+		if(is(WIDGET_CURRENT, widget)) WIDGET_CURRENT.deactivate();
 		WIDGET_CURRENT = _widget;
 	}
 	
 	function widget_reset() {
-		if(WIDGET_CURRENT)
-			WIDGET_CURRENT.deactivate();
+		if(is(WIDGET_CURRENT, widget)) WIDGET_CURRENT.deactivate();
 		WIDGET_CURRENT = undefined;
 	}
 	
 	function widget_clear() {
 		if(WIDGET_CURRENT == undefined) return;
 		
-		WIDGET_CURRENT.deactivate();
+		if(is(WIDGET_CURRENT, widget)) WIDGET_CURRENT.deactivate();
 		WIDGET_CURRENT = undefined;
 	}
 	

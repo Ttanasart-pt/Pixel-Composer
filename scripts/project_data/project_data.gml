@@ -291,7 +291,11 @@ function Project() constructor {
 			[ "Color Depth", "color_depth", new scrollBox(array_copy_trim_start(global.SURFACE_FORMAT_NAME, 2), function(i) /*=>*/ {
 				return setAttribute("color_depth", i);
 				
-			}).setUpdateHover(false) ], 
+			}).setFrontButton(button(function() /*=>*/ {
+				var i = attributes.color_depth == 1? 4 : 1;
+				return setAttribute("color_depth", i);
+				
+			}).setIcon(s_attr_colordepth, function() /*=>*/ {return attributes.color_depth >= 4}, COLORS._main_icon_light)).setUpdateHover(false) ], 
 			
 			[ "Interpolation", "interpolate", new scrollBox(array_copy_trim_start(global.SURFACE_INTERPOLATION, 1), function(i) /*=>*/ {
 				return setAttribute("interpolate", i);

@@ -2374,6 +2374,7 @@
     {"name":"credit_badge_value","order":1,"path":"sprites/credit_badge_value/credit_badge_value.yy",},
     {"name":"mk_tile_edge_sprite","order":4,"path":"sprites/mk_tile_edge_sprite/mk_tile_edge_sprite.yy",},
     {"name":"s_action_add","order":1,"path":"sprites/s_action_add/s_action_add.yy",},
+    {"name":"s_attr_colordepth","order":34,"path":"sprites/s_attr_colordepth/s_attr_colordepth.yy",},
     {"name":"s_attr_interpolate","order":31,"path":"sprites/s_attr_interpolate/s_attr_interpolate.yy",},
     {"name":"s_attr_oversample","order":32,"path":"sprites/s_attr_oversample/s_attr_oversample.yy",},
     {"name":"s_attr_shader","order":33,"path":"sprites/s_attr_shader/s_attr_shader.yy",},

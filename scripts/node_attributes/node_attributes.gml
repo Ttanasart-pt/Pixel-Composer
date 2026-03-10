@@ -120,7 +120,12 @@
 		attr_depth_array = variable_clone(global.SURFACE_FORMAT_NAME);
 		attr_depth_array[0].setActive(_useInput);
 		
-		color_depth_selector = new scrollBox(attr_depth_array, function(val) /*=>*/ { attribute_set("color_depth", val); }, false);
+		color_depth_selector = new scrollBox(attr_depth_array, function(val) /*=>*/ { attribute_set("color_depth", val); }, false)
+			.setFrontButton(button(function() /*=>*/ {
+				var i = attributes.color_depth == 3? 6 : 3;
+				return attribute_set("color_depth", i);
+			}).setIcon(s_attr_colordepth, function() /*=>*/ {return attributes.color_depth >= 6}, COLORS._main_icon_light)).setUpdateHover(false); 
+			
 		color_depth_editor   = [ "Color Depth", function() /*=>*/ {return attributes.color_depth}, color_depth_selector ];
 		
 		if(label) array_push(attributeEditors, "Surface");
