@@ -12,12 +12,14 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 3, nodeValue_Vec2(    "Clamp Distance", [-1,-1] ));
 	newInput(15, nodeValue_Bool(    "Diagonal",       false   ));
 	newInput(16, nodeValue_Bool(    "Round Corner",   true    ));
+	newInput(18, nodeValue_Slider(  "Trim",           1       ));
 	
 	////- =Render
 	newInput( 4, nodeValue_Surface(  "Bg Surface"                ));
-	newInput( 5, nodeValue_Color(    "Bg Color",       ca_black  ));
-	newInput( 6, nodeValue_Float(    "Line Thickness", 1         ));
-	newInput( 7, nodeValue_Gradient( "Line Color",     gra_white ));
+	newInput( 5, nodeValue_Color(    "Bg Color",        ca_black  ));
+	newInput( 6, nodeValue_Float(    "Wire Thickness",  1         ));
+	newInput( 7, nodeValue_Gradient( "Wire Color",      gra_white ));
+	newInput(17, nodeValue_Gradient( "Color Over Wire", gra_white ));
 	
 	////- =Connection
 	newInput( 9, nodeValue_Bool(    "Connection",   true  ));
@@ -28,14 +30,14 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Algorithm
 	newInput(13, nodeValue_Int( "Max Attempt",  8 ));
-	// 17
+	// 19
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2, 
 		[ "Output",     false    ],  0,  8, 
-		[ "Circuit",    false    ],  1,  3, 15, 16, 
-		[ "Render",     false    ],  4,  5,  6,  7, 
+		[ "Circuit",    false    ],  1,  3, 15, 16, 18, 
+		[ "Render",     false    ],  4,  5,  6,  7, 17, 
 		[ "Connection", false, 9 ], 11, 10, 14, 12, 
 		[ "Algorithm",  false    ], 13, 
 	];
@@ -45,8 +47,6 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
-	
-	static step = function() {}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
@@ -58,11 +58,13 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _dist = _data[ 3];
 			var _diag = _data[15];
 			var _roun = _data[16];
+			var _trim = _data[18];
 			
 			var _bgSurf = _data[ 4];
 			var _bgColr = _data[ 5];
 			var _lThck  = _data[ 6];
 			var _lColr  = _data[ 7]; _lColr.cache();
+			var _lColl  = _data[17]; _lColl.cache();
 			
 			var _conn  = _data[ 9];
 			var _cShp  = _data[11];
@@ -79,8 +81,8 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _rad = _cRad / 2;
 		var _cSurfW  = surface_get_width_safe(_cSurf);
 		var _cSurfH  = surface_get_height_safe(_cSurf);
-		var _cSurfSW = _rad / _cSurfW;
-		var _cSurfSH = _rad / _cSurfH;
+		var _cSurfSW = _cRad / _cSurfW;
+		var _cSurfSH = _cRad / _cSurfH;
 		
 		random_set_seed(_seed);
 		
@@ -93,10 +95,11 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _path  = path_add();
 		var failed = 0;
 		
+		var d;
 		var _csx, _csy, _cex, _cey;
 		var _psx, _psy, _pex, _pey;
-		var minDist = _dist[0] == -1? -infinity : _dist[0];
-		var maxDist = _dist[1] == -1?  infinity : _dist[1];
+		var minDist = _dist[0] == -1? 0 : max(0, _dist[0]);
+		var maxDist = _dist[1] == -1? infinity : _dist[1];
 		
 		if(is_surface(_mask)) {
 			var _maskSamp = new Surface_Sampler_Grey(_mask);
@@ -115,36 +118,41 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 		
+		var cx = _dim[0] / 2;
+		var cy = _dim[1] / 2;
+		
 		surface_set_target(temp_surface[0]);
 			DRAW_CLEAR
 			while(failed < _atmp) {
 				var _pointMiss = 0, _noPoint = false;
 				
 				do {
-					if(++_pointMiss > 16) { _noPoint = true; break; }
-					
 					_csx = irandom(_cellX - 1);
 					_csy = irandom(_cellY - 1);
+					
 					_cex = irandom(_cellX - 1);
 					_cey = irandom(_cellY - 1);
+					
+					if(mp_grid_get_cell(_grid, _csx, _csy) || mp_grid_get_cell(_grid, _cex, _cey)) {
+						if(++_pointMiss > 16) { _noPoint = true; break; }
+						continue;
+					}
 					
 					_psx = floor((_csx + .5) * _cellW);
 					_psy = floor((_csy + .5) * _cellH);
 					_pex = floor((_cex + .5) * _cellW);
 					_pey = floor((_cey + .5) * _cellH);
 					
-					if(mp_grid_get_cell(_grid, _csx, _csy) || mp_grid_get_cell(_grid, _cex, _cey))
-						continue;
-					
-					var d = point_distance(_psx, _psy, _pex, _pey);
-				} until(d > 0 && d > minDist && d < maxDist);
+					d = point_distance(_psx, _psy, _pex, _pey);
+				} until(d > minDist && d < maxDist);
 				
 				if(_noPoint) break;
 				
 			    if(mp_grid_path(_grid, _path, _psx, _psy, _pex, _pey, _diag)) {
 			    	var _pnum = path_get_number(_path);
 			    	var _parr = array_create(_pnum + 1);
-			    	var ox, oy, nx, ny, _px, _py;
+			    	var _px, _py;
+			    	var ox, oy, nx, ny, oc, nc;
 			    	
 			    	var cc = _lColr.evalFast(random(1));
 			    	
@@ -173,16 +181,29 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				    	_pnum++;
 			    	}
 			    	
+			    	var _ptrim = _trim * _pnum;
 			    	for( var i = 0; i < _pnum; i++ ) {
 			    		if(_parr[i][0] == 0) continue;
 			    		
 			    		nx = _parr[i][1];
 			    		ny = _parr[i][2];
+			    		nc = colorMultiply(cc, _lColl.evalFast(i / _pnum));
 			    		
-			    		if(i) draw_line_round(ox, oy, nx, ny, _lThck);
+			    		var _strim = _ptrim - i;
+			    		if(_strim <= 0) break;
+			    		
+			    		if(i) {
+				    		if(_strim < 1) {
+					    		nx = lerp(ox, nx, _strim);
+								ny = lerp(oy, ny, _strim);
+				    		}
+
+			    			draw_line_round_color(ox, oy, nx, ny, _lThck, oc, nc);
+			    		}
 			    		
 			    		ox = nx;
 			    		oy = ny;
+			    		oc = nc;
 			    	}
 			    	
 			    	if(_conn)
@@ -194,8 +215,10 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					    	draw_circle(_pex, _pey, _rad, 0);
 					    	
 					    	BLEND_NORMAL
-					    	draw_set_color(cc);
+					    	draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
 					    	draw_circle(_psx, _psy, _rad, !_cFil);
+					    	
+					    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
 					    	draw_circle(_pex, _pey, _rad, !_cFil);
 			    		break;
 			    		
@@ -206,14 +229,20 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					    	draw_rectangle(_pex - _rad, _pey - _rad, _pex + _rad, _pey + _rad, 0);
 					    	
 					    	BLEND_NORMAL
-					    	draw_set_color(cc);
+					    	draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
 					    	draw_rectangle(_psx - _rad, _psy - _rad, _psx + _rad, _psy + _rad, !_cFil);
+					    	
+					    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
 					    	draw_rectangle(_pex - _rad, _pey - _rad, _pex + _rad, _pey + _rad, !_cFil);
 			    		break;
 			    		
 			    		case 2: if(!use_cSurf) break;
-			    			draw_surface_ext(_cSurf, _psx - _rad, _psy - _rad, _cSurfSW, _cSurfSH, 0, c_white, 1);
-			    			draw_surface_ext(_cSurf, _pex - _rad, _pey - _rad, _cSurfSW, _cSurfSH, 0, c_white, 1);
+			    			
+					    	var c0 = colorMultiply(cc, _lColl.evalFast(0));
+			    			draw_surface_ext(_cSurf, _psx - _rad + 1, _psy - _rad + 1, _cSurfSW, _cSurfSH, 0, c0, 1);
+			    			
+					    	var c1 = colorMultiply(cc, _lColl.evalFast(1));
+			    			draw_surface_ext(_cSurf, _pex - _rad + 1, _pey - _rad + 1, _cSurfSW, _cSurfSH, 0, c1, 1);
 		    			break;
 		    		}
 			    	

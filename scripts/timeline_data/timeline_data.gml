@@ -12,6 +12,7 @@ function timelineItem() constructor {
 	color_dsp = -1;
 	parent    = noone;
 	
+	static rename    = function() {}
 	static doRename  = function() {}
 	
 	static setColor  = function(c) /*=>*/ { color  = c; return self; }
@@ -56,7 +57,8 @@ function timelineItem() constructor {
 function timelineItemNode(_node) : timelineItem() constructor {
 	node = _node;
 	
-	static doRename = function(txt) { node.setDisplayName(txt); }
+	static rename   = function(   ) /*=>*/ { tb_rename = PANEL_ANIMATION.renameObject(self).activate(node.display_name); }
+	static doRename = function(txt) /*=>*/ { node.setDisplayName(txt); }
 	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
 		var _sel = node.is_selecting;
@@ -93,7 +95,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, h, col, 0.3);
 			
 			if(focus && DOUBLE_CLICK)
-				tb_rename = PANEL_ANIMATION.renameObject(self).activate(node.display_name);
+				rename();
 				
 			else if(mouse_press(mb_left, focus)) {
 				if(key_mod_press(SHIFT)) array_toggle(PANEL_GRAPH.nodes_selecting, node);
@@ -236,7 +238,8 @@ function timelineItemGroup() : timelineItem() constructor {
 	timeline_hide = false;
 	contents      = [];
 	
-	static doRename = function(txt) { name = txt; }
+	static rename   = function(   ) /*=>*/ { tb_rename = PANEL_ANIMATION.renameObject(self).activate(name); }
+	static doRename = function(txt) /*=>*/ { name = txt; }
 	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
 		var lx = _x + _item.depth * ui(12) + ui(2);
@@ -306,7 +309,7 @@ function timelineItemGroup() : timelineItem() constructor {
 		
 		if(hover && point_in_rectangle(_msx, _msy, txx, _y, _x + _w, _y + h - 1)) { // rename
 			if(focus && DOUBLE_CLICK)
-				tb_rename = PANEL_ANIMATION.renameObject(self).activate(name);
+				rename();
 		}
 		
 		draw_set_text(f_p3, fa_left, fa_center);

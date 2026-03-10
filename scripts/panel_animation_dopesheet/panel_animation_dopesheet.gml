@@ -181,7 +181,7 @@ function Panel_Animation_Dopesheet() {
 	    transform_mouse_x  = 0;
 	    transform_start_x  = 0;
 	    
-	    rename_object  = undefined;
+	    rename_object   = undefined;
 	    tb_rename = textBox_Text(function(t) /*=>*/ { 
 	    	if(rename_object == undefined) return; 
 	    	rename_object.doRename(t);
@@ -189,7 +189,6 @@ function Panel_Animation_Dopesheet() {
 	    	rename_object.renaming  = false; 
 	    	rename_object.tb_rename = undefined; 
 	    	rename_object = undefined; 
-	    	
 	    }).setFont(f_p3).setHide(2);
 	    
 	    tooltip_hidden = new tooltipHotkey(__txt("Toggle Hidden"), "Animation", "Toggle Hidden");
@@ -244,12 +243,12 @@ function Panel_Animation_Dopesheet() {
 	        function dopesheet_expand()      { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = true;  }
 	        function dopesheet_collapse()    { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = false; }
 	        
-	        function group_rename()          { context_selecting_item.item.rename();  }
-	        function group_remove()          { context_selecting_item.item.destroy(); }
+	        function group_rename()  { run_in(1, function() /*=>*/ { context_selecting_item.item.rename(); }); }
+	        function group_remove()  { context_selecting_item.item.destroy();                      }
 	        
-	        function toggle_axis()           { context_selecting_prop.toggleAxisSeparation(); }
-	        function separate_axis()         { context_selecting_prop.separateAxis();         }
-	        function combine_axis()          { context_selecting_prop.combineAxis();          }
+	        function toggle_axis()   { context_selecting_prop.toggleAxisSeparation(); }
+	        function separate_axis() { context_selecting_prop.separateAxis();         }
+	        function combine_axis()  { context_selecting_prop.combineAxis();          }
 	        
 	        function range_reset()     { 
             	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);

@@ -796,6 +796,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		dynamic_input_inspecting = min(dynamic_input_inspecting, getInputAmount() - 1);
 		refreshDynamicDisplay();
 		triggerRender();
+
 	}
 	
 	////- JUNCTIONS
