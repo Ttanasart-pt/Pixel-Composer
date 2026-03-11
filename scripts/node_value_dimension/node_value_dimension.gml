@@ -158,6 +158,13 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		return animator.getValue(_time);
 	}
 	
+	static onSetFrom = function() {
+		attributes.use_project_dimension = 0;
+		unitTooltip.index = attributes.use_project_dimension;
+		if(editProjDim) editProjDim.icon_index = attributes.use_project_dimension;
+		if(editWidget)  editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
+	}
+	
 	static postApplyDeserialize = function() {
 		if(LOADING_VERSION < 1_20_01_3 && attributes.use_project_dimension && is_modified) {
 			for( var i = 0, n = array_length(animator.values); i < n; i++ ) {

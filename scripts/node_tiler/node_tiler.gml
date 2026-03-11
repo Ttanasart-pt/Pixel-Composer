@@ -83,17 +83,18 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	#region ++++ tools ++++
 		tool_attribute.size = 1;
-		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { tool_attribute.size = max(1, round(val)); }).setSlideType(true)
-									.setFont(f_p3)
-									.setSideButton(button(function() /*=>*/ { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
-										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon));
-		tool_size           = [ "Size", tool_size_edit, "size", tool_attribute ];
+		tool_size_edit = textBox_Number(function(val) /*=>*/ { tool_attribute.size = max(1, round(val)); }).setSlideType(true)
+			.setFont(f_p3)
+			.setSideButton(button(function() /*=>*/ { 
+				var an = { anchor: ANCHOR.top | ANCHOR.left };
+				dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, an) 
+			}).setIcon(THEME.pen_pressure, 0, COLORS._main_icon));
+		tool_size = [ "", tool_size_edit, "size", tool_attribute, "Brush Size" ];
 		
 		tool_attribute.fillType = 0;
-		tool_fil8_edit      	= new buttonGroup( [ THEME.canvas_fill_type, THEME.canvas_fill_type, THEME.canvas_fill_type ], function(val) /*=>*/ { tool_attribute.fillType = val; })
-									.setTooltips( [ "Edge", "Edge + Corner" ] )
-									.setCollape(false);
-		tool_fil8           	= [ "Fill", tool_fil8_edit, "fillType", tool_attribute ];
+		tool_fil8_edit = new buttonGroup( array_create(3, THEME.canvas_fill_type), function(val) /*=>*/ { tool_attribute.fillType = val; })
+			.setTooltips( [ "Edge", "Edge + Corner" ] ).setCollape(false);
+		tool_fil8 = [ "", tool_fil8_edit, "fillType", tool_attribute ];
 		
 		tool_varient_rotate  = [ "", new buttonGroup( [ THEME.canvas_rotate, THEME.canvas_rotate ], function(v) /*=>*/ { if(tileset != noone) tileset.brush_action_rotate(v) } )
 			.setCollape(0)

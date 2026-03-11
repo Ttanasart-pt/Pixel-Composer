@@ -1466,7 +1466,8 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawToolSettings = function(_node) {
-    	var settings = _node.getToolSettings();
+    	var settings = [];
+    	array_append(settings, _node.getToolSettings());
     	
     	if(tool_current) {
     		array_append(settings, tool_current.settings);

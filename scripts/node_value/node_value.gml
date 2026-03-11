@@ -65,7 +65,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		auto_connect      = true;
 		setFrom_condition = -1;
 		
-		onSetFrom = noone;
 		onSetTo   = noone;
 	#endregion
 	
@@ -2169,6 +2168,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static triggerSetFrom = function() { node.valueUpdate(index); }
 	
+	onSetFrom = noone;
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { //// Set from
 		if(is_dummy && dummy_get != noone) {
 			var conn = isConnectable(_valueFrom, checkRecur, log);

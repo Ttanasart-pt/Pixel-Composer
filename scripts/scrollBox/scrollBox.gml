@@ -67,6 +67,18 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	static setPaddingItem   = function(l) /*=>*/ { item_pad       = l; return self; }
 	static setPaddingScroll = function(l) /*=>*/ { padding_scroll = l; return self; }
 	
+	static scroll = function(dir) /*=>*/ {
+		if(!is_array(data_list) || array_empty(data_list)) return;
+		
+		var len = array_length(data_list);
+		var ind = curr_val;
+		
+		do ind = safe_mod(ind - dir + len, len);
+		until(data_list[ind] != -1 || ind == curr_val);
+		
+		onModify(ind);
+	}
+	
 	static trigger = function() {
 		data = is_method(data_list)? data_list() : data_list;
 		
@@ -173,17 +185,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			if(mouse_press(mb_left, active))
 				trigger();
 				
-			if(is_array(data_list) && !array_empty(data_list) && MOUSE_WHEEL != 0 && key_mod_press(SHIFT)) {
-				var len = array_length(data_list);
-				var dir = sign(MOUSE_WHEEL);
-				var ind = _val;
-				
-				do {
-					ind = safe_mod(ind - dir + len, len);
-				} until(data_list[ind] != -1 || ind == _val);
-				
-				onModify(ind);
-			}
+			if(MOUSE_WHEEL != 0 && key_mod_press(SHIFT)) 
+				scroll(sign(MOUSE_WHEEL));
 		}
 		
 		var _x0  = _x;
