@@ -851,8 +851,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	]; }
 	
 	input_display_list = [
-		["Output",	 true],	0, 1, 2,
-		["Layers",	false],	layer_renderer,
+		[ "Output",  true ],  1,  2,  0, 
+		[ "Layers", false ], layer_renderer,
 	];
 	
 	setDynamicInput(8, true, VALUE_TYPE.surface);
@@ -908,6 +908,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		PROCESSOR_OVERLAY_CHECK
+		if(dynamic_input_inspecting >= 0) {
+			var ind = input_fix_len + dynamic_input_inspecting * data_length + 1;
+			if(ind < array_length(inputs)) inputs[ind].drawPath(_x, _y, _s);
+		}
 		
 		var pad   = current_data[0];
 		var outs  = getInputSingle(0, preview_index, true);

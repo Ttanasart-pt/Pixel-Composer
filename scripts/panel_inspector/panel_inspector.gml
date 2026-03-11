@@ -231,10 +231,11 @@ function Panel_Inspector() : PanelContent() constructor {
         static initSize = function() {
             content_w = w - ui(32);
             content_h = h - top_bar_h - ui(12);
-        }
-        initSize();
+        } initSize();
         
         view_mode_tooltip = new tooltipSelector("View", [ "Compact", "Spacious" ])
+        
+    	drawWidgetInit();
     #endregion
     
     #region ---- Properties ----
@@ -259,8 +260,6 @@ function Panel_Inspector() : PanelContent() constructor {
         renaming  = undefined;
 		tb_rename = textBox_Text(function(_n) /*=>*/ { if(renaming != undefined) renaming.setName(_n, false); renaming = undefined; });
     #endregion
-    
-    drawWidgetInit();
     
     #region ---- Header Tabs ----
         tb_node_name = textBox_Text(function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); })

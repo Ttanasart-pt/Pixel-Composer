@@ -3322,13 +3322,11 @@ function Panel_Animation_Dopesheet() {
         
     	__kFirst = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
     	__kLast  = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	array_sort(keyframe_selecting, function(a,b) /*=>*/ {return sign(a.time - b.time)});
     	
-        // array_foreach(_anims, (a) => distributeKeys_anim(a, __kFirst, __kLast));
         for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
         	var _k = keyframe_selecting[i];
         	var _t = lerp(__kFirst, __kLast, i / (n - 1));
-        	    // _t = round(_t);
-        	    
         	_k.time = _t;
         }
         

@@ -879,7 +879,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				ds_stack_clear(redo_stack);
 			}
 			
-			if(_w > ui(80) && input == TEXTBOX_INPUT.number) { // multiplier
+			if(input == TEXTBOX_INPUT.number && _w > ui(64)) { // multiplier
 				var  aa  = .5;
 				var _inv = key_mod_press(ALT);
 				var _lab, _mul = 1, _add = 0;

@@ -1521,7 +1521,7 @@ function Panel_Preview() : PanelContent() constructor {
             var atr  = array_safe_get_fast(sett, 3, {});
             var ttip = array_safe_get_fast(sett, 4, "");
             
-            if(is(wdg, checkBox) && sprite_exists(nme)) {
+            if(is(wdg, checkBox) && (is_numeric(nme) && sprite_exists(nme))) {
             	var cbw = tolh;
             	var val = atr[$ key];
             	var hov = _hover && point_in_rectangle(mx, my, tolx, 0, tolx + cbw, topbar_height);

@@ -66,6 +66,36 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 
 	////- DRAW
 	
+	static drawPath = function(_x, _y, _s) {
+		if(!is_anim || value_from != noone || sep_axis) return;
+		
+		var allPos = animator.values;
+		var ox, oy, nx, ny;
+		
+		draw_set_color(COLORS._main_accent);
+		
+		for( var i = 0, n = array_length(allPos); i < n; i++ ) {
+			var val = allPos[i].value;
+			var pos = unit.apply(val);
+			
+			nx = _x + pos[0] * _s;
+			ny = _y + pos[1] * _s;
+			
+			draw_set_alpha(1);
+			draw_circle_prec(nx, ny, 4, false);
+			
+			if(i) {
+				draw_set_alpha(0.5);
+				draw_line_dashed(ox, oy, nx, ny);
+			}
+		
+			ox = nx;
+			oy = ny;
+		}
+	
+		draw_set_alpha(1);
+	}
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
 		if(expUse || value_from != noone) return false;
 		
