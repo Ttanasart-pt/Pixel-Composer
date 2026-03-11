@@ -144,7 +144,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		];
 	#endregion
 	
-	function apply_draw_surface() { 
+	static apply_draw_surface = function() { 
 		if(!is_surface(canvas_surface) || !is_surface(drawing_surface)) return;
 		
 		surface_set_shader(canvas_surface, sh_draw_tile_apply, true, BLEND.over);
@@ -152,7 +152,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_reset_shader();
 		
 		triggerRender();
-	}
+		
+	} mself_mf0 apply_draw_surface mself_mf1 apply_draw_surface mself_mf2;
 	
 	static storeAction = function() {
 		var action = recordAction(ACTION_TYPE.custom, function(data) { 

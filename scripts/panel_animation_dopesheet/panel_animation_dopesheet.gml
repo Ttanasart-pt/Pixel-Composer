@@ -46,8 +46,13 @@ function Panel_Animation_Dopesheet() {
 	
 	#region ---- Timeline ----
 		tb_frame = textBox_Number(function(t) /*=>*/ {return PROJECT.animator.setFrame(round(t) -1)})
+			.setFont(f_p4).setAlign(fa_left).setBoxColor(CDEF.main_mdwhite)
+			.setLabelAlign(fa_right).setLabelColor(CDEF.main_mdwhite)
+			.setTooltip(__txt("Frame"));
+		
+		tb_framerate = textBox_Number(function(t) /*=>*/ { PROJECT.animator.framerate = t; })
 			.setFont(f_p4).setBoxColor(CDEF.main_mdwhite)
-			.setLabelAlign(fa_right).setLabelColor(CDEF.main_mdwhite);
+			.setTooltip(__txt("Framerate"));
 		
 		timeline_stretch      = 0;
         timeline_stretch_sx   = 0;
@@ -2229,15 +2234,21 @@ function Panel_Animation_Dopesheet() {
     	
     	// Frame
     	
-    	var tw = ui(64);
-    	tb_frame.setFocusHover(pFOCUS, pHOVER);
-    	tb_frame.setLabel($"/{GLOBAL_TOTAL_FRAMES}");
-    	
+    	var tw = ui(48);
     	tb_frame.rx = x;
     	tb_frame.ry = y;
-    	// tb_frame.setColor(GLOBAL_IS_PLAYING? COLORS._main_value_positive : COLORS._main_accent);
+    	tb_frame.setFocusHover(pFOCUS, pHOVER);
+    	tb_frame.setLabel($"/{GLOBAL_TOTAL_FRAMES}");
     	tb_frame.setColor(COLORS._main_accent);
     	tb_frame.draw(bx, by, tw, bs, GLOBAL_CURRENT_FRAME + 1, mm);
+    	bx += tw + ui(4);
+    	
+    	tw = ui(32);
+    	tb_framerate.rx = x;
+    	tb_framerate.ry = y;
+    	tb_framerate.setColor(COLORS._main_text_sub);
+    	tb_framerate.setFocusHover(pFOCUS, pHOVER);
+    	tb_framerate.draw(bx, by, tw, bs, PROJECT.animator.framerate, mm);
     	bx += tw + ui(4);
     	
     	// Left

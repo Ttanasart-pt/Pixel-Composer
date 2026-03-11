@@ -42,6 +42,9 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	curr_height   = 0;
 	shift_height  = true;
 	
+	button_pref_set = false;
+	button_pref_res = false;
+	
 	static setHeight   = function() { 
 		h = ui(16) + hpad; 
 		
@@ -231,8 +234,12 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 						draw_sprite_ui(THEME.icon_default, 0, _bx + ui(24) / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 						
 					else {
-						if(buttonInstant(noone, _bx, _by, ui(24), _bs, _mm, pHOVER, pFOCUS, __txt("Set default"), THEME.icon_default, 0, _cc, .75) == 2)
-							setPreference(_prop.prefKey, _data);
+						var bt = __txt("Set default");
+						var bs = THEME.icon_default;
+						var b  = buttonInstant(noone, _bx, _by, ui(24), _bs, _mm, pHOVER, pFOCUS, bt, bs, 0, _cc, .75);
+						
+						if(b == 2) button_pref_set = true;
+						if(b == 1 && button_pref_set) setPreference(_prop.prefKey, _data);
 					}
 					
 					_bx -= ui(2);
@@ -249,14 +256,23 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					if(isEqual(_data, _defVal))
 						draw_sprite_ui(THEME.refresh_16, 0, _bx + ui(24) / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 					else {
-						if(buttonInstant(noone, _bx, _by, ui(24), _bs, _mm, pHOVER, pFOCUS, __txt("Reset"), THEME.refresh_16, 0, _cc, .75) == 2)
-							_prop.onEdit(_defVal);
+						var bt = __txt("Reset");
+						var bs = THEME.refresh_16;
+						var b  = buttonInstant(noone, _bx, _by, ui(24), _bs, _mm, pHOVER, pFOCUS, bt, bs, 0, _cc, .75);
+						
+						if(b == 2) button_pref_res = true;
+						if(b == 1 && button_pref_res) _prop.onEdit(_defVal);
 					}
 				}
 				
 				yy += th;
 				continue;
 			}
+		}
+		
+		if(mouse_lrelease()) {
+			button_pref_set = false;
+			button_pref_res = false;
 		}
 		
 		bg_a = lerp_float(bg_a, _hov, 2);

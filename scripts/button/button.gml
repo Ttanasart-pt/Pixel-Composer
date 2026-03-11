@@ -217,16 +217,17 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 		if(spr) draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, _button_blend);
 		if(_tip != "") TOOLTIP = _tip;
 			
-		if(mouse_press(mb_left, _act))		res = 2;
-		if(mouse_press(mb_right, _act))		res = 3;
+		if(mouse_lpress(_act))   res = 2;
+		if(mouse_rpress(_act))   res = 3;
 			
-		if(mouse_release(mb_left, _act))	res = -2;
-		if(mouse_release(mb_right, _act))	res = -3;
+		if(mouse_lrelease(_act)) res = -2;
+		if(mouse_rrelease(_act)) res = -3;
 			
-		if(spr && mouse_click(mb_left, _act)) {
+		if(spr && mouse_lclick(_act)) {
 			draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, _button_blend);	
 			draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);	
 		}
+		
 	} else if(spr)
 		draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, _button_blend);
 	

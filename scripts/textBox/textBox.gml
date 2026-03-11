@@ -36,6 +36,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		clearable    = false;
 		refresh_text = false;
+		
+		tooltip = "";
 	#endregion
 	
 	#region slide
@@ -158,6 +160,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setLabel      = function(_v) /*=>*/ { label       = _v;    return self; }
 	static setLabelColor = function(_v) /*=>*/ { labelColor  = _v;    return self; }
 	static setLabelAlign = function(_v) /*=>*/ { labelAlign  = _v;    return self; }
+	static setTooltip    = function(_t) /*=>*/ { tooltip     = _t;    return self; }
 	
 	static setPrecision  = function(_v) /*=>*/ { precision   = _v;    return self; }
 	static setPadding    = function(_v) /*=>*/ { padding     = _v;    return self; }
@@ -860,6 +863,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		////- Main Draw
 		
+		if(hover && hoverRect && tooltip != "")
+			TOOLTIP = tooltip;
+				
 		if(selecting) { 
 			if(hide < 2) {
 				if(sprite_index == -1) draw_sprite_stretched_ext(THEME.textbox, 2, x, y, w, h, COLORS._main_accent, 1);

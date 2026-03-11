@@ -447,6 +447,9 @@ function Panel_Preview() : PanelContent() constructor {
         sbChannelIndex  = [];
         sbChannel.font  = f_p2;
         sbChannel.align = fa_left;
+        
+        pen_scroll   = 0;
+		pen_scroll_x = 0;
     #endregion
     
     #region ---- 3d ----
@@ -1593,8 +1596,27 @@ function Panel_Preview() : PanelContent() constructor {
         
         gpu_set_scissor(_scis);
         tol_max_w = max(0, tol_max_w - tbarW);            
-        if(point_in_rectangle(mx, my, 0, 0, w, topbar_height) && !key_mod_press_any() && MOUSE_WHEEL != 0)
+        if(_hover && !key_mod_press_any() && MOUSE_WHEEL != 0)
             tool_x_to = clamp(tool_x_to + ui(64) * MOUSE_WHEEL, -tol_max_w, 0);
+            
+        if(PEN_USE) { // pen scroll
+        	if(_hover && mouse_lpress(_focus) && WIDGET_CURRENT == undefined) {
+        		pen_scroll   = 1;
+        		pen_scroll_x = PEN_X;
+        	}
+        	
+        	if(pen_scroll == 1) {
+        		if(abs(pen_scroll_x - PEN_X) > 8)
+        			pen_scroll = 2;
+        		
+        	} else if(pen_scroll == 2) 
+        		tool_x_to = clamp(tool_x_to + PEN_X - pen_scroll_x, -tol_max_w, 0);
+        		
+        	if(pen_scroll && !PEN_CONTACT) 
+        		pen_scroll = 0;
+        	
+        } else 
+        	pen_scroll = 0;
     }
     
     ////- DRAW
@@ -2322,7 +2344,8 @@ function Panel_Preview() : PanelContent() constructor {
                     rx -= tw + ui(2);
                 }
                 
-                var _txt_fps = $"{fps}f";
+                var _prj_frm = PROJECT.animator.framerate;
+                var _txt_fps = $"{_prj_frm}/{fps}f";
                 var _txt_fra = $"{GLOBAL_CURRENT_FRAME + 1}/{GLOBAL_TOTAL_FRAMES}";
                 
                 var tw = string_width(_txt_fps) + ui(8);

@@ -301,7 +301,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		selection = new canvas_selection_data().setNode(self);
 		
 		tool_brush          = new canvas_tool_brush(false, tool_attribute).setNode(self);
-		tool_eraser         = new canvas_tool_brush(true).setNode(self);
+		tool_eraser         = new canvas_tool_brush(true, tool_attribute).setNode(self);
 		tool_rectangle      = new canvas_tool_shape(CANVAS_TOOL_SHAPE.rectangle).setNode(self);
 		tool_ellipse        = new canvas_tool_shape(CANVAS_TOOL_SHAPE.ellipse).setNode(self);
 		tool_iso_cube       = new canvas_tool_shape_iso(CANVAS_TOOL_SHAPE_ISO.cube, tool_attribute).setNode(self);
@@ -1799,11 +1799,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _dim = attributes.dimension;
 		preview_draw_final = surface_verify(preview_draw_final, _dim[0], _dim[1]);
 		
+		var _bg    = getInputData( 8);
+		var _bgUse = getInputData(10) && is_surface(_bg);
+		
 		surface_set_shader(preview_draw_final, sh_canvas_preview_canvas, true, BLEND.over);
-			shader_set_2("dimension",     _dim                         );
-			shader_set_s("background",    getInputData(8)              );
-			shader_set_s("outputSurf",    getOutputSurface()           );
-			shader_set_s("canvas",        preview_draw_surface         );
+			shader_set_2("dimension",     _dim                 );
+			shader_set_s("background",    _bg                  );
+			shader_set_i("useBackground", _bgUse               );
+			shader_set_s("outputSurf",    getOutputSurface()   );
+			shader_set_s("canvas",        preview_draw_surface );
 			
 			shader_set_i("bgDraw",        _drawBG                      );
 			shader_set_i("eraser",        isUsingTool("Eraser")        );

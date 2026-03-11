@@ -6,6 +6,7 @@ uniform sampler2D outputSurf;
 uniform sampler2D background;
 uniform sampler2D canvas;
 
+uniform int useBackground;
 uniform int bgDraw;
 uniform int eraser;
 
@@ -17,8 +18,8 @@ uniform vec2 selPosition;
 
 void main() {
 	vec4 og = vec4(0.);
-	vec4 bg = texture2D(background, v_vTexcoord);
-	vec4 fg = texture2D(canvas,     v_vTexcoord);
+	vec4 bg = useBackground == 1? texture2D(background, v_vTexcoord) : vec4(0.);
+	vec4 fg = texture2D(canvas, v_vTexcoord);
 	vec4 res;
 	
 	bool sel = true;
