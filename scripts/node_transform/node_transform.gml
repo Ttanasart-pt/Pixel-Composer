@@ -728,41 +728,44 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Nodes
 	
 	static getDimension = function(arr = 0) {
-		var _surf     = getInputSingle( 0, arr);
-		var _out_type = getInputSingle( 9, arr);
-		var _dim      = getInputSingle( 1, arr);
-		var _dimScal  = getInputSingle(15, arr);
-		var _rotate   = getInputSingle( 5, arr);
-		var _scale    = getInputSingle( 6, arr);
-		var ww, hh;
-		
-		var sw  = surface_get_width_safe(_surf);
-		var sh  = surface_get_height_safe(_surf);
+		var _out_type = inputs[9].getValue();
+		var ww = 1, hh = 1;
 		
 		switch(_out_type) {
 			case OUTPUT_SCALING.same_as_input :
-				ww = sw;
-				hh = sh;
+				var surf = getInputSingle( 0, arr);
+				
+				ww = surface_get_width_safe(surf);
+				hh = surface_get_height_safe(surf);
 				break;
 				
-			case OUTPUT_SCALING.relative : 
-				ww = sw * _dimScal[0];
-				hh = sh * _dimScal[1];
+			case OUTPUT_SCALING.relative :
+				var surf = getInputSingle( 0, arr);
+				var dSca = getInputSingle(15, arr);
+				
+				ww = surface_get_width_safe(surf)  * dSca[0];
+				hh = surface_get_height_safe(surf) * dSca[1];
 				break;
 				
 			case OUTPUT_SCALING.constant :	
+				var _dim = inputs[1].getValue();
+				
 				ww = _dim[0];
 				hh = _dim[1];
 				break;
 				
 			case OUTPUT_SCALING.scale :	
-				ww = sw * _scale[0];
-				hh = sh * _scale[1];
+				var surf = getInputSingle( 0, arr);
+				var rot  = getInputSingle( 5, arr);
+				var sca  = getInputSingle( 6, arr);
 				
-				var p0 = point_rotate( 0,  0, ww / 2, hh / 2, _rotate, __p0);
-				var p1 = point_rotate(ww,  0, ww / 2, hh / 2, _rotate, __p1);
-				var p2 = point_rotate( 0, hh, ww / 2, hh / 2, _rotate, __p2);
-				var p3 = point_rotate(ww, hh, ww / 2, hh / 2, _rotate, __p3);
+				ww = surface_get_width_safe(surf)  * sca[0];
+				hh = surface_get_height_safe(surf) * sca[1];
+				
+				var p0 = point_rotate( 0,  0, ww / 2, hh / 2, rot, __p0);
+				var p1 = point_rotate(ww,  0, ww / 2, hh / 2, rot, __p1);
+				var p2 = point_rotate( 0, hh, ww / 2, hh / 2, rot, __p2);
+				var p3 = point_rotate(ww, hh, ww / 2, hh / 2, rot, __p3);
 				
 				var minx = min(p0[0], p1[0], p2[0], p3[0]);
 				var maxx = max(p0[0], p1[0], p2[0], p3[0]);

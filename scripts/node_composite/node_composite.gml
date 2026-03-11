@@ -932,6 +932,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				case NODE_COMPOSE_DRAG.move : 
 					var _dx = (_mx - dragging_mx) / _s;
 					var _dy = (_my - dragging_my) / _s;
+					if(_dx == 0 && _dy == 0) break;
 					
 					if(key_mod_press(SHIFT)) {
 						draw_set_color(COLORS._main_icon);
