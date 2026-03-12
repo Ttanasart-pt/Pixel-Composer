@@ -2244,6 +2244,8 @@ function Panel_Preference() : PanelContent() constructor {
     	    break;
     	}
     	
+    	if(key_press(ord("F"), MOD_KEY.ctrl))
+    		tb_search.activate();
 	}
 	
 	static onClose = function() {
