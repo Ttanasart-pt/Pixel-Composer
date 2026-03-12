@@ -566,24 +566,6 @@ function Panel_Preference() : PanelContent() constructor {
     			textBox_Number(function(str) /*=>*/ {return prefSet("graph_zoom_smoooth", max(1, round(real(str))))})
     		));
     		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("panel_graph_group_require_shift", "Hold Shift to enter group"),
-    			"panel_graph_group_require_shift",
-    			new checkBox(function() /*=>*/ {return prefToggle("panel_graph_group_require_shift")})
-    		));
-    		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_use_alt", "Use ALT for"),
-    			"alt_picker",
-    			new buttonGroup(__txts([ "Pan", "Color Picker" ]), function(val) /*=>*/ {return prefSet("alt_picker", val)})
-    		));
-    		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_pan_key", "Panning key"),
-    			new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ {return prefSet("pan_mouse_key", val + 3)}),
-    			function() /*=>*/ {return PREFERENCES.pan_mouse_key - 3},
-    		).setKey("panning_key"));
-    		
 			ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_add_select", "Select node on add"),
 				"node_add_select",
@@ -1362,19 +1344,33 @@ function Panel_Preference() : PanelContent() constructor {
 					
 					PREF_SAVE();
 				} ), 
-				function() /*=>*/ {
+				function( ) /*=>*/ {
 					if(hotkey_play.getName()   == "Space") return 0;
 					if(hotkey_resume.getName() == "Space") return 1;
 					return 2;
 				} 
 			], 
 			
-			[ __txt("Force Close on Escape"), new checkBox(function() /*=>*/ {
-					PREFERENCES.panel_force_on_escape = !PREFERENCES.panel_force_on_escape;
-					PREF_SAVE();
-				}), 
+			[ __txt("Force Close on Escape"), 
+				new checkBox(function() /*=>*/ {return prefToggle("panel_force_on_escape")}), 
 				function() /*=>*/ {return PREFERENCES.panel_force_on_escape}
 			],
+			
+			[ __txtx("panel_graph_group_require_shift", "Hold Shift to enter group"),
+				new checkBox(function() /*=>*/ {return prefToggle("panel_graph_group_require_shift")}), 
+				function() /*=>*/ {return PREFERENCES.panel_graph_group_require_shift}
+			],
+			
+			[ __txtx("pref_use_alt", "Use ALT for"),
+				new buttonGroup(__txts([ "Pan", "Color Picker" ]), function(val) /*=>*/ {return prefSet("alt_picker", val)}),
+				function() /*=>*/ {return PREFERENCES.alt_picker}
+			],
+			
+			[ __txtx("pref_pan_key", "Panning key"),
+				new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ {return prefSet("pan_mouse_key", val + 3)}),
+    			function() /*=>*/ {return PREFERENCES.pan_mouse_key - 3},
+			],
+			
 		];
     	
     	function initHK() {
