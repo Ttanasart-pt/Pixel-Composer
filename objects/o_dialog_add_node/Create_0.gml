@@ -596,7 +596,9 @@ event_inherited();
 		var node_count    = array_length(_list);
 		var group_labels  = [];
 		var _hoverContent = _hover;
-		var _lbh = PREFERENCES.dialog_add_node_grouping == 1? ui(24) : ui(16);
+		var _lbh    = PREFERENCES.dialog_add_node_grouping == 1? ui(24) : ui(16);
+		var _repeat = PREFERENCES.dialog_add_node_grouping == 2;
+		var _shown  = {};
 		
 		if(!content_hoverable) _hoverContent = false;
 		content_hoverable = true;
@@ -621,6 +623,9 @@ event_inherited();
 				if(is(_node, NodeObject)) {
 					if(_node.patreon && !IS_PATREON)       continue;
 					if(is_global && !_node.show_in_global) continue;
+					if(!_repeat && has(_shown, _node))     continue;
+					
+					_shown[$ _node] = 1;
 				}
 				
 				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
@@ -853,6 +858,9 @@ event_inherited();
 				if(is(_node, NodeObject)) {
 					if(_node.patreon && !IS_PATREON)       continue;
 					if(is_global && !_node.show_in_global) continue;
+					if(!_repeat && has(_shown, _node))     continue;
+					
+					_shown[$ _node] = 1;
 				}
 				
 				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
