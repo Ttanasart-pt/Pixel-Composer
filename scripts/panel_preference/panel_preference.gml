@@ -1342,6 +1342,9 @@ function Panel_Preference() : PanelContent() constructor {
     	key_node_index = [];
     	
     	function initHK() {
+    		hotkeyContext = [ { context: -1, list: [] } ];
+    		hotkeyArray   = [ "General" ];
+    		
     		hk_init = true;
 	    	
 	    	for( var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++ ) {

@@ -7,7 +7,7 @@
 	globalvar PREFERENCES_MENUITEMS; PREFERENCES_MENUITEMS = {};
 	
 	#region GENERAL UI
-												
+		
 		PREFERENCES.display_scaling					= 1;
 		PREFERENCES.text_scaling					= 1;
 		PREFERENCES.window_width					= 1600;
@@ -46,7 +46,7 @@
 		PREFERENCES.textbox_particle				= 0;
 		
 		PREFERENCES.check_update				    = 1;
-	
+		
 	#endregion
 			
 	#region IO

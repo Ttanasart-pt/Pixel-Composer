@@ -19,9 +19,9 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(13, nodeValue_Curve(    "Scale Modulate",    CURVE_DEF_11 ));
 	
 	////- =Render
-	newInput( 3, nodeValue_Gradient(    "Color",        gra_white          ));
-	newInput( 4, nodeValue_Enum_Scroll( "Clone Color",  0, [ "None", "Multiply", "Additive" ] ));
-	newInput(10, nodeValue_Range(       "Depth Range", [0,1]  ));
+	newInput( 3, nodeValue_Gradient( "Color",        gra_white ));
+	newInput( 4, nodeValue_EScroll(  "Clone Color",  0, [ "None", "Multiply", "Additive" ] ));
+	newInput(10, nodeValue_Range(    "Depth Range", [0,1]      ));
 	
 	////- =Highlight
 	newInput( 5, nodeValue_Bool(  "Highlight",       false    ));

@@ -153,6 +153,14 @@ uniform vec4  highlightColor;
 uniform sampler2D mask;
 uniform int    useMask;
 
+vec4 blendColor(vec4 bg, vec4 fg) { 
+	float aa = bg.a + fg.a * (1. - bg.a);
+	vec4  cc = (bg * bg.a) + (fg * fg.a * (1. - bg.a));
+	cc.rgb /= aa;
+	
+	return cc;
+}
+
 void main() {
 	vec2 tx  = 1. / dimension;
 	vec2 shf = vec2(cos(angle), -sin(angle)) * tx;
@@ -169,6 +177,8 @@ void main() {
 	vec4  baseColor = texture2D(gm_BaseTexture, vt);
 	vec4  extData   = texture2D(extrudeMap, v_vTexcoord);
 	float extrude   = extData.r;
+	
+	baseColor.a = baseColor.a > 0.? 1. : 0.;
 	
 	gl_FragData[0]  = baseColor;
 	gl_FragData[1]  = vec4(vec3(extrude == -1.? 0. : 1.), 1.);
@@ -195,10 +205,14 @@ void main() {
 		}
 	}
 	
-	if(extrude <= 0.) return;
+	if(extrude <= 0.) {
+		if(extrude == -1.)
+			gl_FragData[0] = blendColor(gl_FragData[0], gradientEval(0.));
+		return;
+	}
 	
 	float prog = extrude / dist;
-	gl_FragData[0] = gradientEval(prog);
+	gl_FragData[0] = blendColor(gl_FragData[0], gradientEval(prog));
 	gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, prog)), 1.);
 	
 	if(cloneColor == 0) return;

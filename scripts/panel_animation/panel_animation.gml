@@ -4,8 +4,8 @@
     
     function panel_animation_toggle_type()   { PANEL_ANIMATION.timeline_frame = !PANEL_ANIMATION.timeline_frame; }
     
-    function panel_animation_play_pause()    { CALL("play_pause");           PROJECT.animator.play_pause();   }
-    function panel_animation_resume()        { CALL("resume_pause");         PROJECT.animator.resume_pause(); }
+    function panel_animation_play_pause()    { CALL("play_pause");         PROJECT.animator.play_pause();   }
+    function panel_animation_resume()        { CALL("resume_pause");       PROJECT.animator.resume_pause(); }
     
     function panel_animation_first_frame()   { CALL("first_frame");        if(GLOBAL_IS_RENDERING) return; PROJECT.animator.firstFrame();    }
     function panel_animation_last_frame()    { CALL("last_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.lastFrame();     }
