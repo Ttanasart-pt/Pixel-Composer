@@ -112,10 +112,16 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var eix = to.ease_in[0];
 		var eiy = to.ease_in[1];
 		
-		if(eix > 1) eoy += min(eix - 1, 1);
-		if(eox > 1) eiy -= min(eox - 1, 1);
+		if(eox > 1 && eix > 1) {
+			var _total = min(eox, eix);
+			eox /= _total;
+			eix /= _total;
+		}
 		
+		if(eox > 1) eiy -= min(eox - 1, 1);
 		eox = clamp(eox, 0, .9);
+		
+		if(eix > 1) eoy += min(eix - 1, 1);
 	    eix = clamp(eix, 0, .9);
 	    
 		eix = 1 - eix;
