@@ -351,17 +351,7 @@ function Panel_Preview() : PanelContent() constructor {
         resetViewOnDoubleClick = true;
         
 	    tb_framerate  = textBox_Number(function(v) /*=>*/ { preview_rate = real(v); });
-        tb_zoom_level = textBox_Number(function(z) /*=>*/ { 
-        	var _s = canvas_s;
-        	canvas_s = clamp(z, 0.10, 64);
-            if(_s == canvas_s) return;
-        	
-            var dx = (canvas_s - _s) * ((w / 2 - canvas_x) / _s);
-            var dy = (canvas_s - _s) * ((h / 2 - canvas_y) / _s);
-            canvas_x -= dx;
-            canvas_y -= dy;   
-            
-        }).setColor(c_white).setAlign(fa_right).setHide(3).setFont(f_p2);
+        tb_zoom_level = textBox_Number(function(z) /*=>*/ { setZoom(z); }).setColor(c_white).setAlign(fa_right).setHide(3).setFont(f_p2);
         
 	    mouse_pos_string    = "";
 	    tooltip_action      = "";
@@ -398,6 +388,10 @@ function Panel_Preview() : PanelContent() constructor {
     	ruler_edit_vi = 0;
     	ruler_edit_vs = 0;
     	ruler_edit_vm = 0;
+    	
+        zoom_slide = false;
+        zoom_mx    = 0;
+        zoom_sx    = 0;
     #endregion
     
     #region ---- tool ----
@@ -758,6 +752,18 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     ////- VIEW
+    
+    function setZoom(z = graph_s) {
+    	var _s = canvas_s;
+    	canvas_s = clamp(z, 0.10, 64);
+        if(_s == canvas_s) return;
+    	
+        var dx = (canvas_s - _s) * ((w / 2 - canvas_x) / _s);
+        var dy = (canvas_s - _s) * ((h / 2 - canvas_y) / _s);
+        canvas_x -= dx;
+        canvas_y -= dy;   
+        
+    }
     
     static dragCanvas = function() {
         if(canvas_dragging) {
@@ -2225,7 +2231,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    static drawPreviewInfo = function() {
+    static drawInfo = function() {
         right_menu_y = toolbar_height;
         if(PROJECT.previewSetting.show_view_control == 2) {
             if(d3_active) right_menu_y += ui(72);
@@ -2240,7 +2246,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(right_menu_x == 0) right_menu_x = w - ui(8);
         
-        if(PROJECT.previewSetting.show_info && !CAPTURING) { // status texts (top right)
+        if(PROJECT.previewSetting.show_info) { // status texts (top right)
         	#region data
 	        	var _active = PANEL_PREVIEW == self;
 	        	
@@ -2377,10 +2383,27 @@ function Panel_Preview() : PanelContent() constructor {
 	                	draw_sprite_stretched_ext(ls, hv, rx-tw+ui(4), ry, tw, lh, hv? CDEF.main_mdwhite : lc, .8 + hv * .2);
 	                	draw_text_add(rx, ry, $"x{canvas_s}"); 
             			
-            			if(hv && mouse_lpress(pFOCUS))
+            			if(hv && mouse_lpress(pFOCUS)) {
             				tb_zoom_level.activate(canvas_s);
+            				zoom_slide = 1;
+					        zoom_mx    = mx;
+					        zoom_sx    = canvas_s;
+            			}
                 	}
-                	
+		                	
+			        if(zoom_slide == 1 && abs(zoom_mx - mx) > 4) {
+			        	tb_zoom_level.deactivate();
+			        	zoom_slide = 2;
+			        	zoom_mx    = mx;
+				        zoom_sx    = canvas_s;
+			        }
+			        
+			        if(zoom_slide == 2)
+			        	setZoom(zoom_sx + (mx - zoom_mx) / ui(32));
+			        
+			        if(zoom_slide && mouse_lrelease())
+		        		zoom_slide = 0;
+        		
             		rx -= tw + ui(2); 
             		draw_set_text(f_p4, fa_right, fa_top, CDEF.main_mdwhite);
             		
@@ -2513,7 +2536,6 @@ function Panel_Preview() : PanelContent() constructor {
     
     static drawViewController = function() {
         if(!PROJECT.previewSetting.show_view_control) return;
-        if(CAPTURING) return;
         
         var _left = PROJECT.previewSetting.show_view_control == 1;
         
@@ -2685,7 +2707,7 @@ function Panel_Preview() : PanelContent() constructor {
         params.panel = self;
         
         var _nlist = PANEL_GRAPH.nodes_list;
-        if(gizmo_show && !CAPTURING)
+        if(gizmo_show)
         for( var i = 0, n = array_length(_nlist); i < n; i++ ) {
         	var _n = _nlist[i];
         	if(!is(_n, Node))     continue;
@@ -2729,7 +2751,7 @@ function Panel_Preview() : PanelContent() constructor {
             _params.scene = d3_scene;
         
         hoveringGizmo = false;
-        if(gizmo_show && !CAPTURING) {
+        if(gizmo_show) {
 	        if(_node.is_3D == NODE_3D.none) {
 	            if(key_mod_press(CTRL)) {
 	                _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
@@ -3581,7 +3603,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(key_press(vk_escape)) hk_editing = noone;
 		}
 		
-        drawPreviewInfo();
+        drawInfo();
         drawMinimap();
         drawActionTooltip();
         

@@ -1,10 +1,11 @@
 function Node_Array_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Trim";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue(     "Array",      self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setArrayDepth(1).setVisible(true, true);
-	newInput(1, nodeValue_Int( "Trim Start", 0));
-	newInput(2, nodeValue_Int( "Trim End", 0));
+	newInput(1, nodeValue_Int( "Trim Start", 0 ));
+	newInput(2, nodeValue_Int( "Trim End",   0 ));
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
@@ -39,6 +40,10 @@ function Node_Array_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(is_array(pal[0])) pal = pal[0];
 			
 			drawPaletteBBOX(pal, bbox);
+			return;
 		}
+		
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
+		draw_text_bbox(bbox, $"{getInputData(1)}..{getInputData(2)}");
 	}
 }

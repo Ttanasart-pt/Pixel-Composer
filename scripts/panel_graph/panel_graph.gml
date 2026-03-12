@@ -464,18 +464,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	tooltip_overlay[$ _title] = _keys;
         }
         
-        tb_zoom_level = new textBox(TEXTBOX_INPUT.number, function(z) /*=>*/ { 
-        	var _s = graph_s;
-                
-            graph_s_to = clamp(z, 0.01, 4); 
-        	graph_s    = graph_s_to; 
-            
-            if(_s != graph_s) {
-				graph_x += w / 2 * ((1 / graph_s) - (1 / _s));
-				graph_y += h / 2 * ((1 / graph_s) - (1 / _s));
-            }
-            
-        }).setColor(c_white).setAlign(fa_right).setHide(3).setFont(f_p2);
+        tb_zoom_level = textBox_Number(function(z) /*=>*/ { setZoom(z); }).setColor(c_white)
+        	.setAlign(fa_right).setHide(3).setFont(f_p2);
         
         tooltip_action      = "";
         tooltip_action_time = 0;
@@ -519,6 +509,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         drag_key       = PREFERENCES.pan_mouse_key;
         drag_locking   = false;
+        
+        zoom_slide = false;
+        zoom_mx    = 0;
+        zoom_sx    = 0;
     #endregion
     
     #region // ---- mouse ----
@@ -1072,6 +1066,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     ////- Views
     
     static refreshDraw = function(t=1) /*=>*/ { draw_refresh = max(draw_refresh, t); }
+    
+    function setZoom(z = graph_s) {
+    	var _s = graph_s;
+                
+        graph_s_to = clamp(z, array_first(scale), array_last(scale)); 
+    	graph_s    = graph_s_to; 
+        
+        if(_s != graph_s) {
+			graph_x += w / 2 * ((1 / graph_s) - (1 / _s));
+			graph_y += h / 2 * ((1 / graph_s) - (1 / _s));
+        }
+        
+    }
     
     function onFocusBegin() {
         PANEL_GRAPH = self; 
@@ -1668,7 +1675,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function drawViewController() { //
         if(h < ui(96)) return;
-        if(CAPTURING)  return;
     	
         view_hovering = false;
         if(!project.graphDisplay.show_view_control) return;
@@ -2252,7 +2258,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                
 		                gpu_set_texfilter(false);
 		                
-		                if(CAPTURING) return;
 						if(_n.drawDimension) _n.drawDimension(_n.x * __gr_s + __gr_x, _n.y * __gr_s + __gr_y, __gr_s);
 		            }
 		            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
@@ -3190,7 +3195,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function drawTooltipHints() {
     	if(!project.graphDisplay.show_tooltip) { tooltip_overlay = {}; return; }
-		if(CAPTURING) return;
 		
         var _over = variable_struct_get_names(tooltip_overlay);
     	var _tx   = ui(16);
@@ -3310,6 +3314,86 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		draw_set_alpha(1);
     }
     
+    static drawInfo = function() {
+        
+        var ovy = ui(2);
+        if(project.graphDisplay.show_view_control == 2) ovy += ui(36);
+        if(project.graphDisplay.show_topbar)            ovy += topbar_height;
+        
+        if(PROJECT.previewSetting.status_display == 1) {
+	    	draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
+	        var _zmsl = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding;
+	        var _zms  = $"x{graph_s_to}";
+	        var _zmw  = string_width(_zms) + ui(16);
+	        var _zmh  = string_height(_zms);
+	        var _zmx  = w;
+	        var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
+	        if(tb_zoom_level.hovering) mouse_on_graph = false;
+	        
+	        if(_zmsl) draw_sprite_stretched(THEME.textbox, 3, _zmx - _zmw + ui(4), ovy + ui(2), _zmw - ui(10), _zmh - ui(2));
+	                
+	        tb_zoom_level.rx = x;
+	        tb_zoom_level.ry = y;
+	        tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
+	        tb_zoom_level.postBlend = _zmc;
+	        tb_zoom_level.draw(_zmx, ovy, _zmw, _zmh, string(graph_s_to), [ mx, my ], fa_right);
+	        if(tb_zoom_level.hovering) mouse_on_graph = false;
+	        
+	    	draw_set_text(f_p2, fa_right, fa_top, _zmc);
+	        if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
+		    	draw_text(_zmx - _zmw + ui(14), ovy, "x");
+		    	
+        } else if(PROJECT.previewSetting.status_display == 2) {
+        	var ls = THEME.box_r5_clr;
+        	var lc = CDEF.main_grey;
+        	
+	    	draw_set_text(f_p4, fa_right, fa_top, COLORS._main_text_sub);
+	        var _zms  = $"x{graph_s_to}";
+	        var _zmw  = string_width(_zms) + ui(8);
+	        var _zmh  = string_height(_zms);
+	        var _zmx  = w - ui(4);
+	        var _zmy  = ovy;
+	        
+	        if(WIDGET_CURRENT == tb_zoom_level) {
+	        	draw_sprite_stretched_ext(ls, 1, _zmx - _zmw, _zmy, _zmw, _zmh, lc, 1);
+		        tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
+		        tb_zoom_level.setFont(f_p4);
+		        tb_zoom_level.draw(_zmx, _zmy, _zmw, _zmh, string(graph_s_to), [ mx, my ], fa_right);
+		        mouse_on_graph = false;
+		        	
+	        } else {
+	        	var hv = pHOVER && point_in_rectangle(mx, my, _zmx - _zmw, _zmy, _zmx, _zmy + _zmh);
+    			if(hv) mouse_on_graph = false;
+	        			
+	        	draw_sprite_stretched_ext(ls, hv, _zmx - _zmw, _zmy, _zmw, _zmh, hv? CDEF.main_mdwhite : lc, .8 + hv * .2);
+	        	draw_set_text(f_p4, fa_right, fa_center, CDEF.main_mdwhite);
+		        draw_text_add(_zmx - ui(4), _zmy + _zmh/2, _zms);
+		        
+    			if(hv && mouse_lpress(pFOCUS)) {
+    				tb_zoom_level.activate(graph_s);
+			        zoom_slide = 1;
+			        zoom_mx    = mx;
+			        zoom_sx    = graph_s;
+    			}
+	        }
+	        
+	        if(zoom_slide == 1 && abs(zoom_mx - mx) > 4) {
+	        	tb_zoom_level.deactivate();
+	        	zoom_slide = 2;
+	        	zoom_mx    = mx;
+		        zoom_sx    = graph_s;
+	        }
+	        
+	        if(zoom_slide == 2)
+	        	setZoom(zoom_sx + (mx - zoom_mx) / ui(32));
+	        
+	        if(zoom_slide && mouse_lrelease())
+        		zoom_slide = 0;
+        }
+        
+        
+    }
+    
     ////- Main Draw
     
     function drawContent(panel) { 
@@ -3334,43 +3418,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         node_bg_hovering = drawBasePreview();
         
-        var ovy = ui(2);
-        if(project.graphDisplay.show_view_control == 2) ovy += ui(36);
-        if(project.graphDisplay.show_topbar)            ovy += topbar_height;
-        
         drawNodes();
         drawJunctionConnect();
         drawContextFrame();
         mouse_on_graph = true;
         
-        if(!CAPTURING) {
-	        draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
-	        
-	        var _zmsl = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding;
-	        var _zms  = $"x{graph_s_to}";
-	        var _zmw  = string_width(_zms) + ui(16);
-	        var _zmh  = string_height(_zms);
-	        var _zmx  = w;
-	        var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
-	        if(tb_zoom_level.hovering) mouse_on_graph = false;
-	        
-            if(_zmsl) draw_sprite_stretched(THEME.textbox, 3, _zmx - _zmw + ui(4), ovy + ui(2), _zmw - ui(10), _zmh - ui(2));
-                    
-	        tb_zoom_level.rx = x;
-	        tb_zoom_level.ry = y;
-	        tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
-	        tb_zoom_level.postBlend = _zmc;
-	        tb_zoom_level.draw(_zmx, ovy, _zmw, _zmh, string(graph_s_to), [ mx, my ], fa_right);
-	        if(tb_zoom_level.hovering) {
-            	mouse_on_graph = false;
-            	CURSOR_SPRITE  = THEME.view_zoom;
-            }
-            
-	    	draw_set_text(f_p2, fa_right, fa_top, _zmc);
-	        if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
-		    	draw_text(_zmx - _zmw + ui(14), ovy, "x");
-        }
-    	
+        drawInfo();
         drawToolBar();
         drawTopbar();
         drawMinimap();

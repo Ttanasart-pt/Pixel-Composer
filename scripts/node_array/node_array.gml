@@ -199,8 +199,8 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					break;
 				
 				case VALUE_TYPE.color :
-					if(is_array(key))	drawPalette(key, x0, val.y - jh / 2, ww, jh);
-					else				drawColor(key, x0, val.y - jh / 2, ww, jh);
+					if(is_array(key)) drawPalette(key, x0, val.y - jh / 2, ww, jh);
+					else              drawColor(key, x0, val.y - jh / 2, ww, jh);
 					break;
 					
 				case VALUE_TYPE.gradient :

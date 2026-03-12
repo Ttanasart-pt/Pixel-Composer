@@ -125,6 +125,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			
 			key.value    = pos;
 			UNDO_HOLDING = true;
+			node.triggerRender();
 			
 			if(mouse_lrelease()) {
 				path_point_drag = undefined;

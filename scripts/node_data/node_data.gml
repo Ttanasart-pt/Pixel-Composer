@@ -584,14 +584,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	_dummy_add_index = noone;
 	_dummy_start     = 0;
 	
+	createNewInput     = -1;
+	dynamic_visibility = -1;
+	
 	auto_input                 = false;
 	dyna_input_check_shift     =  0;
 	input_display_dynamic      = -1;
 	input_display_dynamic_full = undefined;
 	dynamic_input_inspecting   =  0;
-	
-	createNewInput      = -1;
-	dynamic_visibility  = -1;
 	
     static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
 		is_dynamic_input	= true;						

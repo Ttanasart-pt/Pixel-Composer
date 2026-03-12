@@ -18,17 +18,17 @@ function Panel_Capture_Project() : PanelContent() constructor {
 	gif    = noone;
 	
 	gif_scal = .5;
-	tb_scale = textBox_Number(function(v) /*=>*/ { gif_scal = v; }).setLabel("Scale");
+	tb_scale = textBox_Number(function(v) /*=>*/ { gif_scal = v; }).setHide(1).setLabel("Scale");
 	
 	gif_step = 1;
-	tb_step  = textBox_Number(function(v) /*=>*/ { gif_step = round(v); }).setLabel("Step");
+	tb_step  = textBox_Number(function(v) /*=>*/ { gif_step = round(v); }).setHide(1).setLabel("Step");
 	
 	gif_fps  = 30;
-	tb_fps   = textBox_Number(function(v) /*=>*/ { gif_fps  = v; }).setLabel("FPS");
+	tb_fps   = textBox_Number(function(v) /*=>*/ { gif_fps  = v; }).setHide(1).setLabel("FPS");
 	
-	tb_ver   = textBox_Text(  function(v) /*=>*/ { cap_vers = v; }).setLabel("vers.").setAlign(fa_right);
+	tb_ver   = textBox_Text(  function(v) /*=>*/ { cap_vers = v; }).setHide(1).setLabel("vers.").setAlign(fa_right);
 	
-	show_text = true;
+	show_text = false;
 	cb_show_text = new checkBox(function() /*=>*/ { show_text = !show_text; } );
 	
 	function doCapture() {
@@ -37,9 +37,8 @@ function Panel_Capture_Project() : PanelContent() constructor {
 			gif_save(gif, cap_path);
 			return;
 		} 
-		
 		if(!PROJECT.animator.frame_progress) return;
-			
+		
 		if(CAPTURING > 1 && GLOBAL_CURRENT_FRAME % gif_step == 0) {
 			gif_s  = surface_verify(gif_s, gif_w, gif_h);
 			
@@ -87,6 +86,13 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		if(CAPTURING) doCapture();
 		
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2 - ui(28);
+		
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		
 		var _pd = padding;
 		
 		var tx = _pd;
@@ -95,11 +101,13 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		var th = ui(28);
 		
 		// ty += th + ui(6);
+		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
 		var param = new widgetParam(tx, ty, tw, th, gif_scal, {}, [ mx, my ]);
 		tb_scale.setFocusHover(pHOVER, pFOCUS);
 		tb_scale.drawParam(param);
 		
 		ty += th + ui(6);
+		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
 		var param = new widgetParam(tx, ty, tw / 2, th, gif_step, {}, [ mx, my ]);
 		tb_step.setFocusHover(pHOVER, pFOCUS);
 		tb_step.drawParam(param);
@@ -109,19 +117,26 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		tb_fps.drawParam(param);
 		
 		ty += th + ui(6);
+		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
 		var param = new widgetParam(tx, ty, tw, th, cap_vers, {}, [ mx, my ]);
 		tb_ver.setFocusHover(pHOVER, pFOCUS);
 		tb_ver.drawParam(param);
 		
 		ty += th + ui(6);
-		var param = new widgetParam(tx, ty, tw, th, show_text, {}, [ mx, my ]);
+		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
+		var param = new widgetParam(tx + ui(64), ty, tw - ui(64), th, show_text, {}, [ mx, my ]).setS(ui(20))
+			.setHalign(fa_center).setValign(fa_center);
 		cb_show_text.setFocusHover(pHOVER, pFOCUS);
 		cb_show_text.drawParam(param);
 		
-		var bw = w - _pd - _pd;
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(tx + ui(8), ty + th / 2, "Text");
+		
+		var pp = ui(4);
+		var bw = w - pp * 2;
 		var bh = ui(24);
-		var bx = _pd;
-		var by = h - _pd - bh;
+		var bx = pp;
+		var by = h - pp - bh;
 		
 		if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2) {
 			var _p = get_save_filename_compat("GIF|*.gif", string_replace(PROJECT.path, ".pxc", ""));

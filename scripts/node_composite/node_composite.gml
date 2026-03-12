@@ -914,6 +914,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var hov = inputs[ind].drawPath(hover, active, _x, _y, _s, _mx, _my);
 				hover &= !hov; w_hovering |= hov;
 			}
+			
+			if(inputs[ind].path_point_drag != undefined) 
+				return;
 		}
 		
 		var pad   = current_data[0];
