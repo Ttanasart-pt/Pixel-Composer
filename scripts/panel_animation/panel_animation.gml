@@ -4,8 +4,9 @@
     
     function panel_animation_toggle_type()   { PANEL_ANIMATION.timeline_frame = !PANEL_ANIMATION.timeline_frame; }
     
-    function panel_animation_play_pause()    { CALL("play_pause");         PROJECT.animator.play_pause();   }
-    function panel_animation_resume()        { CALL("resume_pause");       PROJECT.animator.resume_pause(); }
+    function panel_animation_play_pause()    { CALL("play_pause");    PROJECT.animator.play_pause();   }
+    function panel_animation_resume()        { CALL("resume_pause");  PROJECT.animator.resume_pause(); }
+    function panel_animation_stop()          { CALL("stop");          PROJECT.animator.stop();         }
     
     function panel_animation_first_frame()   { CALL("first_frame");        if(GLOBAL_IS_RENDERING) return; PROJECT.animator.firstFrame();    }
     function panel_animation_last_frame()    { CALL("last_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.lastFrame();     }
@@ -85,6 +86,7 @@
         registerFunction("", "Toggle Dopesheet",   vk_tab,     c,  function() /*=>*/ { PANEL_ANIMATION.toggleDopesheet(); } ).setMenu("animation_dopesheet_toggle")
         registerFunction("", "Play/Pause",         vk_space,   n,  panel_animation_play_pause     ).setMenu("play_pause")
         registerFunction("", "Resume",             vk_space,   s,  panel_animation_resume         ).setMenu("resume")
+        registerFunction("", "Stop",               "",         n,  panel_animation_stop           ).setMenu("stop")
 		
         registerFunction("", "First Frame",        vk_home,    n,  panel_animation_first_frame    ).setMenu("first_frame")
         registerFunction("", "Last Frame",         vk_end,     n,  panel_animation_last_frame     ).setMenu("last_frame")
@@ -283,15 +285,16 @@ function Panel_Animation() : PanelContent() constructor {
     
     #region ++++ Control Buttons ++++
         tooltip_toggle_nodes = new tooltipHotkey(__txtx("panel_animation_show_node", "Toggle node label"), "Animation", "Toggle Nodes");
-        tooltip_resume       = new tooltipHotkey(__txt("Resume"), "", "Resume/Pause");
-        tooltip_pause        = new tooltipHotkey(__txt("Pause"),  "", "Resume/Pause");
+        tooltip_resume       = new tooltipHotkey(__txt("Resume"), "", "Resume" );
+        tooltip_pause        = new tooltipHotkey(__txt("Pause"),  "", "Resume" );
+        tooltip_stop         = new tooltipHotkey(__txt("Stop"),   "", "Stop"   );
         tooltip_fr_first     = new tooltipHotkey(__txtx("panel_animation_go_to_first_frame", "Go to first frame"),  "", "First Frame");
         tooltip_fr_last      = new tooltipHotkey(__txtx("panel_animation_go_to_last_frame", "Go to last frame"),    "", "Last Frame");
         tooltip_fr_prev      = new tooltipHotkey(__txtx("panel_animation_previous_frame", "Previous frame"),        "", "Previous Frame");
         tooltip_fr_next      = new tooltipHotkey(__txtx("panel_animation_next_frame", "Next frame"),                "", "Next Frame");
     
         control_buttons = [ 
-            [ __txt("Stop"),     4, -1,                function() /*=>*/ {return PROJECT.animator.stop()}          ],
+            [ tooltip_stop,      4, -1,                function() /*=>*/ {return PROJECT.animator.stop()}          ],
             [ -1,               -1, -1,                function() /*=>*/ {return PROJECT.animator.resume_pause()}  ],
             [ tooltip_fr_first,  3, COLORS._main_icon, function() /*=>*/ {return PROJECT.animator.firstFrame()}    ],
             [ tooltip_fr_last,   2, COLORS._main_icon, function() /*=>*/ {return PROJECT.animator.lastFrame()}     ],

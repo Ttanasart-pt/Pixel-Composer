@@ -1341,12 +1341,51 @@ function Panel_Preference() : PanelContent() constructor {
     	keyboards_display = new KeyboardDisplay();
     	key_node_index = [];
     	
+    	hotkey_play   = find_hotkey("", "Play/Pause");
+    	hotkey_resume = find_hotkey("", "Resume");
+    	
+		hk_general_list = [
+			[ __txt("Spacebar Action"), new buttonGroup( [ "Stop", "Resume", "Other" ], 
+				function(i) /*=>*/ {
+					switch(i) {
+						case 0 : 
+							hotkey_play.modi   = MOD_KEY.none;  hotkey_play.key   = vk_space;
+							hotkey_resume.modi = MOD_KEY.shift; hotkey_resume.key = vk_space;
+							break;
+						
+						case 1 : 
+							hotkey_play.modi   = MOD_KEY.shift; hotkey_play.key   = vk_space;
+							hotkey_resume.modi = MOD_KEY.none;  hotkey_resume.key = vk_space;
+							break;
+							
+					}
+					
+					PREF_SAVE();
+				} ), 
+				function() /*=>*/ {
+					if(hotkey_play.getName()   == "Space") return 0;
+					if(hotkey_resume.getName() == "Space") return 1;
+					return 2;
+				} 
+			], 
+			
+			[ __txt("Force Close on Escape"), new checkBox(function() /*=>*/ {
+					PREFERENCES.panel_force_on_escape = !PREFERENCES.panel_force_on_escape;
+					PREF_SAVE();
+				}), 
+				function() /*=>*/ {return PREFERENCES.panel_force_on_escape}
+			],
+		];
+    	
     	function initHK() {
-    		hotkeyContext = [ { context: -1, list: [] } ];
-    		hotkeyArray   = [ "General" ];
-    		
     		hk_init = true;
-	    	
+    		
+    		hotkeyContext = [];
+    		hotkeyArray   = [];
+    		
+    		array_push(hotkeyContext, { context: -1, list: hk_general_list } );
+    		array_push(hotkeyArray,   "Settings" );
+    		
 	    	for( var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++ ) {
 	    		var ctx  = HOTKEY_CONTEXT[i];
 	    		if(ctx == "_") continue;
@@ -1434,8 +1473,8 @@ function Panel_Preference() : PanelContent() constructor {
     		var hover  = sp_hotkey_menu.hover;
     		var focus  = sp_hotkey_menu.active;
     		
-    		var ww = sp_hotkey.surface_w;
-    		var sh = sp_hotkey.surface_h;
+    		var ww = sp_hotkey_menu.surface_w;
+    		var sh = sp_hotkey_menu.surface_h;
     		
     		var yy = _y;
     		var hh = 0;
@@ -1482,6 +1521,52 @@ function Panel_Preference() : PanelContent() constructor {
     		return hh;
     	});
     	
+    	sp_hotkey_general = new scrollPane(0, 0, function(_y, _m) {
+    		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+    		
+    		var hover  = sp_hotkey_general.hover;
+    		var focus  = sp_hotkey_general.active;
+    		var _ww    = sp_hotkey_general.surface_w;
+    		
+    		var _rx = x + sp_hotkey_general.x;
+    		var _ry = y + sp_hotkey_general.y;
+    		
+    		var pd = ui(6);
+    		var yy = _y + ui(8);
+    		var hh = 0;
+    		var x1 = _ww - ui(32);
+    		
+    		var hg = line_get_height(f_p2, 6);
+    		
+    		for( var i = 0, n = array_length(hk_general_list); i < n; i++ ) {
+    			var _l = hk_general_list[i];
+    			
+    			var _name = _l[0];
+    			var _wdgt = _l[1];
+    			var _gett = _l[2];
+    			
+				if(i % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - pd, _ww, hg + pd * 2, COLORS.dialog_preference_prop_bg, 1);
+    			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    			draw_text_add(ui(24), yy + hg / 2, _name);
+    			
+    			var wdw = ui(240);
+    			var wdh = hg;
+    			var wdx = x1 - wdw;
+    			var wdy = yy;
+    			
+    			var val = _gett();
+    			var par = new widgetParam(wdx, wdy, wdw, wdh, val, {}, _m, _rx, _ry)
+    				.setFont(f_p3).setFocusHover(focus, hover);
+    			if(is(_wdgt, checkBox)) par.setHalign(fa_center);
+    			_wdgt.drawParam(par);
+    			
+    			yy += hg + pd;
+    			hh += hg + pd;
+    		}
+    		
+    		return hh;
+    	});
+    	
     	sp_hotkey = new scrollPane(0, 0, function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
     		draw_set_text(f_p2, fa_left, fa_top);
@@ -1489,9 +1574,9 @@ function Panel_Preference() : PanelContent() constructor {
     		var hover  = sp_hotkey.hover;
     		var focus  = sp_hotkey.active;
     		
-    		var padd = ui(6);
-    		var yy   = _y + ui(8);
-    		var hh   = 0;
+    		var pd = ui(6);
+    		var yy = _y + ui(8);
+    		var hh = 0;
     		
     		var _ww    = sp_hotkey.surface_w;
     		var key_x1 = _ww - ui(32);
@@ -1544,8 +1629,8 @@ function Panel_Preference() : PanelContent() constructor {
     			
     			if(hotkey_focus == key) sp_hotkey.scroll_y_to = -hh;
     			
-    			if(ind++ % 2 == 0)				  draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, _ww, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
-    			if(hotkey_focus_highlight == key) draw_sprite_stretched_add(THEME.ui_panel,    0, 0, _yy - padd, _ww, th + padd * 2, COLORS._main_accent, min(1, hotkey_focus_high_bg) * .5);
+    			if(ind++ % 2 == 0)				  draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - pd, _ww, th + pd * 2, COLORS.dialog_preference_prop_bg, 1);
+    			if(hotkey_focus_highlight == key) draw_sprite_stretched_add(THEME.ui_panel,    0, 0, _yy - pd, _ww, th + pd * 2, COLORS._main_accent, min(1, hotkey_focus_high_bg) * .5);
     			
     			if(string_pos(">", name)) {
     				var _sp = string_split(name, ">");
@@ -1608,7 +1693,7 @@ function Panel_Preference() : PanelContent() constructor {
     				if(b == 2) key.reset(true);
     			}
     			
-    			hh += th + padd * 2;
+    			hh += th + pd * 2;
     		}
     		
     		if(!_hoverAny && hk_editing && mouse_press(mb_left, focus)) hk_editing = noone;
@@ -1980,7 +2065,8 @@ function Panel_Preference() : PanelContent() constructor {
         		var _keyUsing = {};
         		var _ctxObj   = hotkeyContext[hk_page];
         		var _list     = _ctxObj.list;
-        		
+	        		
+        		if(hk_page)
         		for (var j = 0, m = array_length(_list); j < m; j++) {
         			
         			var _ky   = _list[j];
@@ -2151,9 +2237,10 @@ function Panel_Preference() : PanelContent() constructor {
         		sp_hotkey_menu.setFocusHover(pFOCUS, pHOVER);
         		sp_hotkey_menu.drawOffset(px, _ppy, mx, my);
         		
-        		sp_hotkey.verify(panel_width - (ui(6) + mWidth), hotkey_height);
-        		sp_hotkey.setFocusHover(pFOCUS, pHOVER);
-        		sp_hotkey.drawOffset(px + ui(6) + mWidth, _ppy, mx, my);
+        		var _sp = hk_page == 0? sp_hotkey_general : sp_hotkey;
+        		_sp.verify(panel_width - (ui(6) + mWidth), hotkey_height);
+        		_sp.setFocusHover(pFOCUS, pHOVER);
+        		_sp.drawOffset(px + ui(6) + mWidth, _ppy, mx, my);
     	    break;
     	}
     	

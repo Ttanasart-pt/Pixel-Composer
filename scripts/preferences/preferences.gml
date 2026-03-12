@@ -137,6 +137,8 @@
 		PREFERENCES.panel_animation_frame			= true;
 		PREFERENCES.panel_animation_quan_scale		= false;
 		PREFERENCES.panel_animation_key_override	= true;
+		
+		PREFERENCES.panel_force_on_escape           = false;
 	#endregion
 	
 	#region WIDGET

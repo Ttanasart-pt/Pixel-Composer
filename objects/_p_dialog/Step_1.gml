@@ -6,8 +6,8 @@ if !ready  exit;
 if !active exit;
 
 #region window control
-	if(sFOCUS) {
-		if(destroy_on_escape && keyboard_check_pressed(vk_escape) && checkClosable())
+	if(sFOCUS && keyboard_check_pressed(vk_escape)) {
+		if(PREFERENCES.panel_force_on_escape || (destroy_on_escape && checkClosable()))
 			instance_destroy();
 	}
 #endregion
