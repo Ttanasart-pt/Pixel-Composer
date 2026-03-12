@@ -153,6 +153,7 @@ if(DIALOG_SHOW_FOCUS) {
 		var bb = THEME.button_hide_fill;
 		var bc = COLORS._main_icon;
 		var bs = ui(28);
+		var sp = ui(2);
 		
 		var bx = dialog_x + dialog_w - ui(44);
 		var by = ty;
@@ -166,9 +167,9 @@ if(DIALOG_SHOW_FOCUS) {
 			if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
 		}
 		if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
-		tw -= bs + ui(4);
+		tw -= bs + sp;
 		
-		bx -= bs + ui(4);
+		bx -= bs + sp;
 		group_tooltip.index = PREFERENCES.dialog_add_node_grouping;
 		var bi = PREFERENCES.dialog_add_node_grouping;
 		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, group_tooltip, THEME.view_group, bi, bc, 1, ui(4));
@@ -177,27 +178,33 @@ if(DIALOG_SHOW_FOCUS) {
 			if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
 		}
 		if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
-		tw -= bs + ui(4);
+		tw -= bs + sp;
 		
 		if(search_string != "") {
-			bx -= bs + ui(4);
+			bx -= bs + sp;
 			var bt = __txt("Prioritize Favourite");
 			var bi = PREFERENCES.dialog_add_node_search_fav;
 			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, bt, THEME.favorite, bi, bc, 1, ui(12));
 			if(b == 2) PREFERENCES.dialog_add_node_search_fav = !PREFERENCES.dialog_add_node_search_fav;
-			tw -= bs + ui(4);
+			tw -= bs + sp;
 			
 			if(junction_called != noone) {
 				var txt = __txtx("Prioritize Connection");
 				var bi  = PREFERENCES.dialog_add_node_search_typ;
 				var cc  = bi? COLORS._main_accent : COLORS._main_icon;
 				
-				bx -= bs + ui(4);
+				bx -= bs + sp;
 				var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, txt, THEME.filter_type, bi, cc, 1, ui(8));
 				if(b == 2) PREFERENCES.dialog_add_node_search_typ = !PREFERENCES.dialog_add_node_search_typ;
-				tw -= bs + ui(4);
+				tw -= bs + sp;
 			}
 			
+			bx -= bs + sp;
+			var bt = __txt("Include Collection");
+			var bi = PREFERENCES.dialog_add_node_collection;
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, bt, THEME.group, bi, bc, 1, ui(12));
+			if(b == 2) PREFERENCES.dialog_add_node_collection = !PREFERENCES.dialog_add_node_collection;
+			tw -= bs + sp;
 		}
 		
 		tw -= ui(4);

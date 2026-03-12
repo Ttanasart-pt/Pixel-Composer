@@ -1201,7 +1201,8 @@ event_inherited();
 		
 		ds_map_destroy(search_map);
 		
-		searchCollectionData(pr_list, search_string);
+		if(PREFERENCES.dialog_add_node_collection)
+			searchCollectionData(pr_list, search_string);
 		
 		var _match   = string_partial_match_res("tunnel", search_lower);
 		
