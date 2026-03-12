@@ -2,20 +2,16 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	name = "Transform Image 3D";
 	
 	preview_channel = 1;
-	object          = new __3dPlane();
-	objectPreview   = new __3dPlane();
-	materialPreview = new __d3dMaterial();
-	
-	object.checkParameter({ normal: 2 });
-	objectPreview.checkParameter({ normal: 2 });
-	objectPreview.materials[0] = materialPreview;
+	object          = new __3dPlane(2, true);
+	objectPreview   = new __3dPlane(2, true);
 	
 	camGizmo  = new __3dCamera_object();
 	d3_camera = new __3dCamera();
 	
 	////- =Material
 	var i = in_mesh;
-	newInput(i+0, nodeValue_Surface( "Surface" )).setVisible(true, true);
+	newInput(i+0, nodeValue_Surface( "Surface"      )).setVisible(true, true);
+	newInput(i+6, nodeValue_Surface( "Back Surface" )).setVisible(true, true);
 	newInput(i+3, nodeValue_Vec2(    "Texture Tiling", [1,1] ));
 	
 	////- =Camera
@@ -32,7 +28,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	newOutput(2, nodeValue_Output("Depth",    VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
-		["Material", false], i+0, i+3, 
+		["Material", false], i+0, i+6, i+3, 
 		__d3d_input_list_transform,
 		["Camera",	 false], i+1, i+2, i+4, 
 		["Render",	 false], i+5, 
@@ -70,7 +66,9 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	static processData = function(_outData, _data, _array_index = 0) {
 		#region data
 			var i = in_mesh;
-			var _surf = _data[i+0];
+			var _surf  = _data[i+0];
+			var _bsurf = _data[i+6];
+			
 			var _proj = _data[i+1];
 			var _fov  = _data[i+2];
 			var _tile = _data[i+3];
@@ -78,6 +76,8 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 			var _dept = _data[i+5];
 			
 			inputs[i+2].setVisible(_proj == 0);
+			
+			_bsurf = is_surface(_bsurf)? _bsurf : _surf;
 		#endregion
 		
 		if(!is_surface(_surf)) return noone;
@@ -98,11 +98,13 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		#endregion
 		
 		var _tAsp = _proj == CAMERA_PROJECTION.perspective? _asp : 1;
-		object.materials = [ new __d3dMaterial(_surf) ];
+		object.materials = [ new __d3dMaterial(_surf), new __d3dMaterial(_bsurf) ];
 		setTransform(object, _data, _tAsp);
 		
 		if(_array_index == preview_index) {
-			materialPreview.surface = _surf;
+			objectPreview.materials[0] = new __d3dMaterial(_surf);
+			objectPreview.materials[1] = new __d3dMaterial(_bsurf);
+			
 			setTransform(objectPreview, _data, _asp);
 		}
 		

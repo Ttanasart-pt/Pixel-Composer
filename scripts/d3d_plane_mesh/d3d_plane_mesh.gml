@@ -1,9 +1,9 @@
-function __3dPlane(_normal = 0) : __3dObject() constructor {
+function __3dPlane(_normal = 0, _two_side = false) : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	
 	normal   = _normal;
-	two_side = false;
+	two_side = _two_side;
 	
 	static initModel = function() {
 		edges   = [];
