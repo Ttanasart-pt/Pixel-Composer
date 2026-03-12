@@ -1738,6 +1738,10 @@ function Panel_Preference() : PanelContent() constructor {
     		var sectH = ui(24);
     		var sect  = [];
     		var psect = "";
+    		var lbh   = sectH + ui(8 + 4);
+    		
+    		var _focus = sp_pref.active;
+    		var _hover = sp_pref.hover && _m[1] > lbh;
     		
     		for(var i = 0; i < ds_list_size(current_list); i++) {
     			var _pref = current_list[| i];
@@ -1798,7 +1802,7 @@ function Panel_Preference() : PanelContent() constructor {
     			}
     			
     			widg.setFont(font);
-    			widg.setFocusHover(pFOCUS, pHOVER && sp_pref.hover); 
+    			widg.setFocusHover(_focus, _hover); 
     			
     			var widget_w = ui(260);
     			var widget_h = th;
@@ -1846,7 +1850,7 @@ function Panel_Preference() : PanelContent() constructor {
     			if(len && group_labels[0].y < 0) {
     				gpu_set_blendmode(bm_subtract);
     				draw_set_color(c_white);
-    				draw_rectangle(0, 0, ww, sectH + ui(8 + 4), false);
+    				draw_rectangle(0, 0, ww, lbh, false);
     				gpu_set_blendmode(bm_normal);
     			}
     			
