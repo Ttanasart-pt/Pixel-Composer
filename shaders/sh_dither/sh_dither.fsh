@@ -130,6 +130,7 @@ void main() {
 		
 		if(useConMap == 0) {
 			rat = (rat - 0.5) * con + 0.5;
+			
 		} else {
 			vec4 con_map_data = texture2D( conMap, v_vTexcoord );
 			float _cont = .1 + con * dot(con_map_data.rgb, vec3(0.2126, 0.7152, 0.0722));

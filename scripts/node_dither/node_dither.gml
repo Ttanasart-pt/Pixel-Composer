@@ -35,13 +35,13 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(7, 11); // inputs 11, 12, 
 	
 	////- =Pattern
-	newInput( 2, nodeValue_Enum_Scroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
-	newInput( 3, nodeValue_Surface(     "Dither map" )).setVisible(false);
-	newInput(16, nodeValue_Float(       "Dither Scale", 1 ));
+	newInput( 2, nodeValue_EScroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
+	newInput( 3, nodeValue_Surface( "Dither map" )).setVisible(false);
+	newInput(16, nodeValue_Float(   "Dither Scale", 1 ));
 	
 	////- =Dither
-	newInput( 6, nodeValue_Enum_Button( "Mode",     0, [ "Color", "Alpha" ] ));
-	newInput( 4, nodeValue_Slider(      "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C");
+	newInput( 6, nodeValue_EButton( "Mode",     0, [ "Color", "Alpha" ] ));
+	newInput( 4, nodeValue_Slider(  "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C");
 	
 	////- =Palette
 	newInput( 1, nodeValue_Palette( "Palette" ));

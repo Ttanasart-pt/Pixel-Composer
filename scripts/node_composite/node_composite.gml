@@ -910,7 +910,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		PROCESSOR_OVERLAY_CHECK
 		if(dynamic_input_inspecting >= 0) {
 			var ind = input_fix_len + dynamic_input_inspecting * data_length + 1;
-			if(ind < array_length(inputs)) inputs[ind].drawPath(_x, _y, _s);
+			if(ind < array_length(inputs)) {
+				var hov = inputs[ind].drawPath(hover, active, _x, _y, _s, _mx, _my);
+				hover &= !hov; w_hovering |= hov;
+			}
 		}
 		
 		var pad   = current_data[0];

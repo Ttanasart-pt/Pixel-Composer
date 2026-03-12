@@ -66,10 +66,18 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 
 	////- DRAW
 	
-	static drawPath = function(_x, _y, _s) {
-		if(!is_anim || value_from != noone || sep_axis) return;
+	path_point_drag = undefined;
+	path_point_sx   = 0;
+	path_point_sy   = 0;
+	path_point_mx   = 0;
+	path_point_my   = 0;
+	
+	static drawPath = function(hover, active, _x, _y, _s, _mx, _my) {
+		if(!is_anim || value_from != noone || sep_axis) return false;
 		
 		var allPos = animator.values;
+		var pointHover = undefined;
+		var pointPos   = undefined;
 		var ox, oy, nx, ny;
 		
 		draw_set_color(COLORS._main_accent);
@@ -81,8 +89,13 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			nx = _x + pos[0] * _s;
 			ny = _y + pos[1] * _s;
 			
+			var hv = hover && point_in_circle(_mx, _my, nx, ny, 6);
 			draw_set_alpha(1);
-			draw_circle_prec(nx, ny, 4, false);
+			draw_circle_prec(nx, ny, 4 + hv * 2, false);
+			if(hv) {
+				pointHover = i;
+				pointPos   = pos;
+			}
 			
 			if(i) {
 				draw_set_alpha(0.5);
@@ -92,8 +105,34 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			ox = nx;
 			oy = ny;
 		}
-	
 		draw_set_alpha(1);
+		
+		if(pointHover != undefined && mouse_lpress(active)) {
+			path_point_drag = pointHover;
+			path_point_sx   = pointPos[0];
+			path_point_sy   = pointPos[1];
+			path_point_mx   = _mx;
+			path_point_my   = _my;
+			
+		}
+		
+		if(path_point_drag != undefined) {
+			var vx = path_point_sx + (_mx - path_point_mx) / _s;
+			var vy = path_point_sy + (_my - path_point_my) / _s;
+			
+			var key = allPos[path_point_drag];
+			var pos = unit.invApply([vx,vy]);
+			
+			key.value    = pos;
+			UNDO_HOLDING = true;
+			
+			if(mouse_lrelease()) {
+				path_point_drag = undefined;
+				UNDO_HOLDING    = false;
+			}
+		}
+		
+		return pointHover != undefined || path_point_drag != undefined;
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
