@@ -31,7 +31,6 @@ function shell_execute(path, command, ref = noone, _log = true) {
 
 function shell_execute_async(path, command, ref = noone, _log = true) {
 	INLINE
-	
 	if(IS_CMD) return shell_execute(path, command, ref);
 	
 	if(OS == os_macosx) {

@@ -440,6 +440,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Renderers
 	
+	static notify = function(_txt = "", _complete = true, _path = "") {
+		var _spr = _complete? THEME.noti_icon_tick : THEME.cross_16;
+		var _cc  = _complete? COLORS._main_value_positive : COLORS._main_value_negative;
+		var noti = log_message("EXPORT", _txt, _spr, _cc, false)
+		
+		if(_path != "")
+			noti.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, filename_dir(_path));
+			
+		PANEL_MENU.setNotiIcon(_spr);
+	}
+	
 	static getSurface = function() { return inputs[0].value_from == noone? PROJECT.getOutputSurface() : getInputData(0); }
 	
 	static renderWebp = function(temp_path, target_path) {
@@ -734,12 +745,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(exportLog && form != NODE_EXPORT_FORMAT.animation) {
 				var _txt = $"Export {array_length(surf)} images complete.";
 				logNode(_txt);
-				
-				var path = filename_dir(p);
-				var noti = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
-								.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, path);
-				
-				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+				notify(_txt, true, p);
 			}
 			
 		} else if(is_surface(surf)) {
@@ -770,13 +776,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			if(exportLog && form != NODE_EXPORT_FORMAT.animation) {
-				var _txt = $"Export image as {p}";
+				var _txt = $"Export image at {p}";
 				logNode(_txt);
-				
-				var noti = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
-								.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, filename_dir(p));
-					
-				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+				notify(_txt, true, p);
 			}
 		}
 		
@@ -827,8 +829,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				switch(format_animation[extd]) {
 					case ".gif" :
-						if(use_gif_encoder) gif_save(gif_encoder[i], target_path);
-						else                renderGif(temp_path, target_path);
+						if(!use_gif_encoder) { renderGif(temp_path, target_path); break; }
+						
+						gif_save(gif_encoder[i], target_path);
+						notify($"Export gif at {target_path}", true, target_path);
 						break;
 						
 					case ".webp" : renderWebp(temp_path, target_path); break;
@@ -846,8 +850,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			switch(format_animation[extd]) {
 				case ".gif"  : 
-					if(use_gif_encoder) gif_save(gif_encoder[0], target_path);
-					else                renderGif(directory + "/*.png", target_path); 
+					if(!use_gif_encoder) { renderGif(directory + "/*.png", target_path); break; }
+					
+					gif_save(gif_encoder[0], target_path);
+					notify($"Export gif at {target_path}", true, target_path);
 				break;
 				
 				case ".webp" : renderWebp(directory + "/",      target_path); break;
@@ -926,16 +932,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var msg = ExecutedProcessReadFromStandardOutput(render_process_id);
 				
 				if(!IS_CMD) {
-					if(msg == "") {
-						var noti = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
-						var path = filename_dir(render_target);
-						noti.setOnClick(function(p) /*=>*/ { shellOpenExplorer(p); }, "Open in explorer", THEME.explorer, path);
-						PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
-						
-					} else {
-						var noti  = log_message("EXPORT", $"Export error: {msg}", THEME.cross_16, COLORS._main_value_negative, false);
-						PANEL_MENU.setNotiIcon(THEME.cross_16);
-					}
+					var suc = msg == "";
+					if(suc) notify($"Export {render_type} at {render_target}", true, render_target);
+					else    notify($"Export error: {msg}", false);
 				}
 				
 				render_process_id = 0;

@@ -106,11 +106,18 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) return rat;
 		if(rat == 0 || rat == 1) return rat;
 		
-		var eox = clamp(from.ease_out[0], 0, .9);
-		var eix = clamp(to.ease_in[0],    0, .9);
+		var eox = from.ease_out[0];
 		var eoy = from.ease_out[1];
+		    
+		var eix = to.ease_in[0];
 		var eiy = to.ease_in[1];
 		
+		if(eix > 1) eoy += min(eix - 1, 1);
+		if(eox > 1) eiy -= min(eox - 1, 1);
+		
+		eox = clamp(eox, 0, .9);
+	    eix = clamp(eix, 0, .9);
+	    
 		eix = 1 - eix;
 		eiy = 1 - eiy;
 		

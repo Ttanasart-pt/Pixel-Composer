@@ -1457,10 +1457,17 @@ function Panel_Animation_Dopesheet() {
             var t   = key.dopesheet_x;
         	
             if(key.ease_in_type == CURVE_TYPE.bezier) {
-                draw_set_color(COLORS.panel_animation_keyframe_ease_line);
                 var _tx = t - key.ease_in[0] * timeline_scale * 2;
+                draw_set_color(COLORS.panel_animation_keyframe_ease_line);
                 draw_line_width(_tx, _cy, t, _cy, 2);
-                                            
+                
+                if(key.ease_in[0] > 1) {
+                	var _ttx = t - timeline_scale * 2;
+                	draw_set_color_alpha(CDEF.red, .75);
+                	draw_line_width(_tx, _cy, _ttx, _cy, 2);
+                	draw_set_alpha(1);
+                }
+                
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
                     key_hover = key;
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, CDEF.main_grey);
@@ -1474,10 +1481,17 @@ function Panel_Animation_Dopesheet() {
             } 
                         
             if(key.ease_out_type == CURVE_TYPE.bezier) {
-                draw_set_color(COLORS.panel_animation_keyframe_ease_line);
                 var _tx = t + key.ease_out[0] * timeline_scale * 2;
+            	draw_set_color(COLORS.panel_animation_keyframe_ease_line);
                 draw_line_width(t, _cy, _tx, _cy, 2);
-                                        
+                                    
+                if(key.ease_out[0] > 1) {
+                	var _ttx = t + timeline_scale * 2;
+                	draw_set_color_alpha(CDEF.red, .75);
+                	draw_line_width(_tx, _cy, _ttx, _cy, 2);
+                	draw_set_alpha(1);
+                }
+                    
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
                     key_hover = key;
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, CDEF.main_grey);
@@ -1589,7 +1603,7 @@ function Panel_Animation_Dopesheet() {
             	
                 switch(graph_key_drag_index) {
                     case KEYFRAME_DRAG_TYPE.ease_in :
-                    	_dx = clamp(_dx, 0, 1);
+                    	_dx = clamp(_dx, 0, 2);
                     	
                         k.ease_in_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]   = _dx;
@@ -1597,7 +1611,7 @@ function Panel_Animation_Dopesheet() {
                         break;
                          
                     case KEYFRAME_DRAG_TYPE.ease_out :
-                    	_dx = clamp(-_dx, 0, 1);
+                    	_dx = clamp(-_dx, 0, 2);
                         
                         k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_out[0]   = _dx;
@@ -1605,8 +1619,8 @@ function Panel_Animation_Dopesheet() {
                         break;
                         
                     case KEYFRAME_DRAG_TYPE.ease_both :
-                        _dx = clamp(abs(_dx), 0, 1);
-                        if(_dx < .1) _dx = 0;
+                        _dx = clamp(abs(_dx), 0, 2);
+                        if(abs(_dx) < .1) _dx = 0;
                         
                         k.ease_in_type  = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]    = _dx;
@@ -2847,7 +2861,7 @@ function Panel_Animation_Dopesheet() {
 	            	
 	                switch(keyframe_drag_type) {
 	                    case KEYFRAME_DRAG_TYPE.ease_in :
-	                    	_dx = clamp(_dx, 0, 1);
+	                    	_dx = clamp(_dx, 0, 2);
 	                    	
 	                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 	                            var k = keyframe_selecting[i];
@@ -2859,7 +2873,7 @@ function Panel_Animation_Dopesheet() {
 	                    
 	                        break;
 	                    case KEYFRAME_DRAG_TYPE.ease_out :
-	                    	_dx = clamp(-_dx, 0, 1);
+	                    	_dx = clamp(-_dx, 0, 2);
 	                    	
 	                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 	                            var k = keyframe_selecting[i];
@@ -2871,9 +2885,10 @@ function Panel_Animation_Dopesheet() {
 	                        break;
 	                        
 	                    case KEYFRAME_DRAG_TYPE.ease_both :
-                            _dx = clamp(abs(_dx), 0, 1);
+	                    	_dx = abs(_dx);
+                            _dx = clamp(_dx, 0, 2);
                     		if(_dx < .1) _dx = 0;
-                    		
+                            
 	                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 	                            var k  = keyframe_selecting[i];
 	                            
