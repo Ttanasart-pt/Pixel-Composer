@@ -1,5 +1,7 @@
 function pathAnchorBox(_onModify) : widget() constructor {
 	onModify = _onModify;
+	unit	 = noone;
+	animated = false;
 	
 	onModifySingle[0] = function(val) /*=>*/ {return onModify(toNumber(val), 0)};
 	onModifySingle[1] = function(val) /*=>*/ {return onModify(toNumber(val), 1)};
@@ -24,6 +26,9 @@ function pathAnchorBox(_onModify) : widget() constructor {
 	static register = function(parent = noone) {
 		for( var i = 0, n = array_length(tb); i < n; i++ )
 			tb[i].register(parent);
+			
+		if(unit != noone && unit.reference != noone)
+			unit.triggerButton.register(parent);
 	}
 	
 	static isHovering = function() { 
@@ -44,15 +49,41 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h * 2 + 6;
+		h = animated? _h : _h * 2 + 6;
 		
 		for( var i = 0, n = array_length(tb); i < n; i++ ) 
 			tb[i].setFocusHover(active, hover);
 		
-		
 		var _tx, _ty, _tw, _th, _w2;
-		var _bw = ui(28);
+		var _bw = min(_h, ui(28));
 		var _li = 6;
+		
+		if(animated) {
+			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
+			
+			if(unit != noone && unit.reference != noone) {
+				var bx = _x + _w - _bw;
+				var by = _y;
+				
+				unit.triggerButton.setFocusHover(iactive, ihover);
+				unit.draw(bx, by, _bw, _bw, _m);
+				bx -= _bw;
+				_w -= _bw;
+			}
+		
+			tb[0].setLabel("x");
+			tb[1].setLabel("y");
+			
+			_tx = _x;
+			_ty = _y;
+			_tw = _w / 2;
+			_th = _h;
+			
+			tb[0].draw(_tx,       _ty, _tw, _th, _data[0], _m);
+			tb[1].draw(_tx + _tw, _ty, _tw, _th, _data[1], _m);
+			
+			return h;
+		}
 		
 		if(array_length(_data) < 9) {
 			tb[0].setLabel("x");
@@ -62,6 +93,11 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			tb[3].setLabel("dy0");
 			tb[4].setLabel("dx1");
 			tb[5].setLabel("dy1");
+			
+			var dx0 = array_safe_get_fast(_data, 2);
+			var dy0 = array_safe_get_fast(_data, 3);
+			var dx1 = array_safe_get_fast(_data, 4);
+			var dy1 = array_safe_get_fast(_data, 5);
 				
 			_tx = _x;
 			_ty = _y;
@@ -77,14 +113,14 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_tw = _w2 / 2;
 			
 			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
-			tb[2].draw(_tx + _tw * 0, _ty, _tw, _th, _data[2], _m);
-			tb[3].draw(_tx + _tw * 1, _ty, _tw, _th, _data[3], _m);
+			tb[2].draw(_tx + _tw * 0, _ty, _tw, _th, dx0, _m);
+			tb[3].draw(_tx + _tw * 1, _ty, _tw, _th, dy0, _m);
 			
 			_tx = _x + _w - _w2;
 			
 			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
-			tb[4].draw(_tx + _tw * 0, _ty, _tw, _th, _data[4], _m);
-			tb[5].draw(_tx + _tw * 1, _ty, _tw, _th, _data[5], _m);
+			tb[4].draw(_tx + _tw * 0, _ty, _tw, _th, dx1, _m);
+			tb[5].draw(_tx + _tw * 1, _ty, _tw, _th, dy1, _m);
 			
 		} else {
 			tb[0].setLabel("x");
@@ -140,6 +176,11 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new pathAnchorBox(onModify); }
+	static clone = function() { 
+		var _n = new pathAnchorBox(onModify, unit); 
+		    _n.animated = animated;
+		return _n; 
+	}
+	
 	static free  = function() { array_foreach(tb, function(t) /*=>*/ {return t.free()}); }
 }

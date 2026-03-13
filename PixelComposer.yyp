@@ -1970,6 +1970,7 @@
     {"id":{"name":"node_value_trigger","path":"scripts/node_value_trigger/node_value_trigger.yy",},},
     {"id":{"name":"node_value_types","path":"scripts/node_value_types/node_value_types.yy",},},
     {"id":{"name":"node_value_validators","path":"scripts/node_value_validators/node_value_validators.yy",},},
+    {"id":{"name":"node_value_vec2_path","path":"scripts/node_value_vec2_path/node_value_vec2_path.yy",},},
     {"id":{"name":"node_value_vec2_range","path":"scripts/node_value_vec2_range/node_value_vec2_range.yy",},},
     {"id":{"name":"node_value_vec2","path":"scripts/node_value_vec2/node_value_vec2.yy",},},
     {"id":{"name":"node_value_vec3_range","path":"scripts/node_value_vec3_range/node_value_vec3_range.yy",},},

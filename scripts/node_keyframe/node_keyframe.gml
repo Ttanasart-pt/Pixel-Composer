@@ -308,6 +308,113 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return from.driverObject.apply(_time, from, to, lerpValue(from, to, rat), rat, self);
 			
 		return lerpValue(from, to, rat);
+	}
+	
+	static getInterpolateKeys = function(_time = NODE_CURRENT_FRAME, _arr = [ undefined, undefined, 0 ]) {
+		length = array_length(values);
+		
+		_arr[0] = undefined; 
+		_arr[1] = undefined; 
+		_arr[2] = 0; 
+		
+		///////////////////////////////////////////////////////////// OPTIMIZATION /////////////////////////////////////////////////////////////
+		
+		if(length == 0) return _arr;
+		
+		_arr[0] = values[0]; 
+		if(length == 1) return _arr;
+		
+		if(prop.type == VALUE_TYPE.path) return _arr;
+		if(!prop.is_anim)				 return _arr;
+		var _len = max(NODE_TOTAL_FRAMES, values[length - 1].time);
+		if(array_length(key_map) != _len) updateKeyMap();
+		
+		var _time_first = prop.loop_range == -1? values[0].time : values[length - 1 - prop.loop_range].time;
+		var _time_last  = values[length - 1].time;
+		var _time_dura  = _time_last - _time_first;
+			
+		////////////////////////////////////////////////////////// LOOP TIME ///////////////////////////////////////////////////////////
+		
+		if(_time > _time_last) {
+			switch(prop.on_end) {
+				case KEYFRAME_END.loop : 
+					_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
+					break;
+					
+				case KEYFRAME_END.ping :
+					var time_in_loop = safe_mod(_time - _time_first, _time_dura * 2);
+					if(time_in_loop < _time_dura) 
+						_time = _time_first + time_in_loop;
+					else
+						_time = _time_first + _time_dura * 2 - time_in_loop;
+					break;
+			}
+		}
+		
+		var _keyIndex;
+		     if(_time >= _len) _keyIndex = infinity;
+		else if(_time <= 0)	   _keyIndex = -1;
+		else                   _keyIndex = array_safe_get_fast(key_map, _time);
+		
+		//////////////////////////////////////////////////////// BEFORE FIRST //////////////////////////////////////////////////////////
+		
+		if(_keyIndex < 0) {
+			if(is(prop, __NodeValue_Active)) return _arr;
+			
+			if(prop.on_end == KEYFRAME_END.wrap) {
+				var from = values[length - 1];
+				var to   = values[0];
+				
+				var fTime = from.time;
+				var tTime = to.time;
+				
+				var prog = NODE_TOTAL_FRAMES - fTime + _time;
+				var totl = NODE_TOTAL_FRAMES - fTime + tTime;
+				
+				_arr[0] = from;
+				_arr[1] = to;
+				_arr[2] = prog / totl;
+				
+				return _arr;
+			}
+			
+			return _arr; // First Frame
+		}
+		
+		///////////////////////////////////////////////////////// AFTER LAST ///////////////////////////////////////////////////////////
+		
+		if(_keyIndex >= length) {
+			var _lstKey = values[length - 1];
+			_arr[0] = _lstKey;
+			_arr[2] = 0;
+			
+			if(prop.on_end == KEYFRAME_END.wrap) {
+				var from = _lstKey;
+				var to   = values[0];
+				var prog = _time - from.time;
+				var totl = NODE_TOTAL_FRAMES - from.time + to.time;
+				
+				_arr[0] = from;
+				_arr[1] = to;
+				_arr[2] = prog / totl;
+				
+				return _arr;
+			}
+			
+			return _arr; //Last frame
+		}
+		
+		///////////////////////////////////////////////////////// INBETWEEN ////////////////////////////////////////////////////////////
+		
+		var from = values[_keyIndex];
+		var to   = values[_keyIndex + 1];
+		var rat  = (_time - from.time) / (to.time - from.time);
+		
+		_arr[0] = from;
+		_arr[1] = to;
+		_arr[2] = interpolate(from, to, rat);
+		
+		return _arr;
 		
 	}
 	

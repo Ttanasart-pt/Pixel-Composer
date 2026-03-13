@@ -315,6 +315,8 @@ function value_type_directional(f, t) {
 	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.integer)      return true;
 	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.float)        return true;
 	
+	// if(f == VALUE_TYPE.pathnode && t == VALUE_TYPE.float)       return true;
+	
 	if(f == VALUE_TYPE.integer && t == VALUE_TYPE.text)         return true;
 	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.text)         return true;
 	if(f == VALUE_TYPE.boolean && t == VALUE_TYPE.text)         return true;
@@ -525,7 +527,7 @@ function typeCompatible(fromType, toType, directional_cast = true) {
 		
 	if(!directional_cast) 
 		return false;
-		
+	
 	return value_type_directional(fromType, toType);
 }
 
@@ -653,9 +655,10 @@ function nodeValueUnit(__nodeValue) constructor {
 			var _len = array_length(value);
 			
 			switch(disp) {
-				case VALUE_DISPLAY.padding :
-				case VALUE_DISPLAY.vector :
+				case VALUE_DISPLAY.padding      :
+				case VALUE_DISPLAY.vector       :
 				case VALUE_DISPLAY.vector_range :
+				case VALUE_DISPLAY.path_anchor  :
 					var _val = array_clone(_len, 1);
 					
 					if(_len % 2 == 0) {

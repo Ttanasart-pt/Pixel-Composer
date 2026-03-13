@@ -2354,7 +2354,8 @@ function Panel_Animation_Dopesheet() {
                                                                  bar_x + bar_w, ui(8) + dopesheet_h );
         
         #region Scroll
-            dopesheet_y = lerp_float(dopesheet_y, dopesheet_y_to, 4);
+            dopesheet_y    = lerp_float(dopesheet_y, dopesheet_y_to, 4);
+            dopesheet_y_to = clamp(dopesheet_y_to, -dopesheet_y_max, 0);
             
             if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), bar_x, ui(8) + dopesheet_h) && MOUSE_WHEEL != 0)
                 dopesheet_y_to = clamp(dopesheet_y_to + ui(32) * MOUSE_WHEEL, -dopesheet_y_max, 0);

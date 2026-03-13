@@ -261,8 +261,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			childs[ind].resize(dw, dh, oppose);
 		}
 		
-		w = max(round(w + dw), min_w);
-		h = max(round(h + dh), min_h);
+		w = round(w + dw);
+		h = round(h + dh);
+		
+		w = max(w, min_w);
+		h = max(h, min_h);
 		
 		refreshSize(false);
 		PANEL_MODIFIED = true;

@@ -1,7 +1,7 @@
 globalvar CAPTURING; CAPTURING = false;
 
 function Panel_Capture_Project() : PanelContent() constructor {
-	w = ui(320);
+	w = ui(240);
 	h = ui(56 + (28 + 6) * 4);
 	
 	title      = "Capture Project";
@@ -17,19 +17,16 @@ function Panel_Capture_Project() : PanelContent() constructor {
 	gif_s  = noone;
 	gif    = noone;
 	
-	gif_scal = .5;
-	tb_scale = textBox_Number(function(v) /*=>*/ { gif_scal = v; }).setHide(1).setLabel("Scale");
-	
-	gif_step = 1;
-	tb_step  = textBox_Number(function(v) /*=>*/ { gif_step = round(v); }).setHide(1).setLabel("Step");
-	
-	gif_fps  = 30;
-	tb_fps   = textBox_Number(function(v) /*=>*/ { gif_fps  = v; }).setHide(1).setLabel("FPS");
-	
-	tb_ver   = textBox_Text(  function(v) /*=>*/ { cap_vers = v; }).setHide(1).setLabel("vers.").setAlign(fa_right);
-	
+	gif_scal  = .5;
+	gif_step  =  1;
+	gif_fps   = 30;
 	show_text = false;
-	cb_show_text = new checkBox(function() /*=>*/ { show_text = !show_text; } );
+	
+	tb_scale = textBox_Number( function(v) /*=>*/ { gif_scal = v;           } ).setHide(1).setLabel("Scale");
+	tb_step  = textBox_Number( function(v) /*=>*/ { gif_step = round(v);    } ).setHide(1).setLabel("Step");
+	tb_fps   = textBox_Number( function(v) /*=>*/ { gif_fps  = v;           } ).setHide(1).setLabel("FPS");
+	tb_ver   = textBox_Text(   function(v) /*=>*/ { cap_vers = v;           } ).setHide(1).setLabel("vers.").setAlign(fa_right);
+	cb_text  = new checkBox(   function( ) /*=>*/ { show_text = !show_text; } );
 	
 	function doCapture() {
 		if(!PROJECT.animator.is_playing) {
@@ -126,11 +123,11 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
 		var param = new widgetParam(tx + ui(64), ty, tw - ui(64), th, show_text, {}, [ mx, my ]).setS(ui(20))
 			.setHalign(fa_center).setValign(fa_center);
-		cb_show_text.setFocusHover(pHOVER, pFOCUS);
-		cb_show_text.drawParam(param);
+		cb_text.setFocusHover(pHOVER, pFOCUS);
+		cb_text.drawParam(param);
 		
-		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(tx + ui(8), ty + th / 2, "Text");
+		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+		draw_text_add(tx + ui(8), ty + th / 2, "Title");
 		
 		var pp = ui(4);
 		var bw = w - pp * 2;

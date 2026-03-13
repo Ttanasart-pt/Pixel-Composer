@@ -2483,6 +2483,9 @@ function Panel_Preview() : PanelContent() constructor {
         
         var siz = array_preview_size;
         var _xx = tool_side_draw_l * ui(40);
+        if(PROJECT.previewSetting.show_ruler && !d3_active)
+        	_xx += ruler_width;
+        
         var sx  = _xx + preview_x + ui(8);
         var yy  = h - toolbar_height - siz - ui(8);
     	
@@ -2532,6 +2535,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         preview_x_max = max((siz + ui(8)) * pseql - ui(100), 0);
+        preview_x_to  = clamp(preview_x_to, -preview_x_max, 0);
     }
     
     static drawViewController = function() {

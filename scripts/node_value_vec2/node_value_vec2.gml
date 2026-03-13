@@ -13,6 +13,8 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	
 	////- GET
 	
+	__temp_path_sampler = new __vec2P();
+	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
 		
@@ -31,6 +33,13 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		var typ = nod.type;
 		
 		if(typ == VALUE_TYPE.surface) return surface_get_dimension(val);
+		
+		if(is_path(val)) {
+			var _rat = __getAnimValue(_time)[0];
+			val.getPointRatio(_rat, 0, __temp_path_sampler);
+			return [ __temp_path_sampler.x, __temp_path_sampler.y ];
+		}
+		
 		if(array_empty(val)) return val;
 		
 		var _d = array_get_depth(val);
@@ -89,9 +98,9 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			nx = _x + pos[0] * _s;
 			ny = _y + pos[1] * _s;
 			
-			var hv = hover && point_in_circle(_mx, _my, nx, ny, 6);
-			draw_set_alpha(1);
-			draw_circle_prec(nx, ny, 4 + hv * 2, false);
+			var hv = hover && point_in_circle(_mx, _my, nx, ny, ui(8));
+			draw_anchor(0, nx, ny, ui(8 + hv * 4), 1);
+			
 			if(hv) {
 				pointHover = i;
 				pointPos   = pos;

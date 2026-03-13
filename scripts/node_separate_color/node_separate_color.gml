@@ -20,31 +20,32 @@ function Node_Color_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- Node
 	
 	static extractAll = function(_surf) {
-		var ww = surface_get_width_safe(_surf);
-		var hh = surface_get_height_safe(_surf);
+		var ww = surface_get_width(_surf);
+		var hh = surface_get_height(_surf);
+		var cb = buffer_create(ww * hh * 4, buffer_fixed, 4);
 		
-		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 4);
+		buffer_get_surface(cb, _surf, 0);
+		buffer_seek(cb, buffer_seek_start, 0);
 		
-		buffer_get_surface(c_buffer, _surf, 0);
-		buffer_seek(c_buffer, buffer_seek_start, 0);
+		var amo = ww * hh;
+		var pal = array_create(amo), ind = 0;
+		var alm = 0b11111111 << 24;
 		
-		var amo     = ww * hh;
-		var palette = array_create(amo), ind = 0;
-		var bm      = 0b11111111 << 24;
-		
-		for( var i = 0; i < amo; i++ ) {
-			var c = buffer_read(c_buffer, buffer_u32);
-			if(c & bm == 0) continue;
-			palette[ind++] = c;
+		repeat( amo ) {
+			var c = buffer_read(cb, buffer_u32);
+			if(c & alm == 0) continue;
+			
+			pal[ind++] = c;
 		}
 		
-		buffer_delete(c_buffer);
+		buffer_delete(cb);
+		if(array_empty(pal)) return pal;
 		
-		var _len = array_unique_ext(palette, 0, ind);
-		array_resize(palette, _len);
-		array_sort(palette, __sortHue);
+		var _len = array_unique_ext(pal, 0, ind);
+		array_resize(pal, _len);
+		array_sort(pal, __sortHue);
 		
-		return palette;
+		return pal;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
@@ -57,21 +58,23 @@ function Node_Color_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			inputs[2].setVisible(!_allc);
 			inputs[3].setVisible(!_allc);
 			
-			if(!is_surface(_surf)) { surface_array_free(_outSurf); return []; }
+			if(!is_surface(_surf)) { 
+				surface_array_free(_outSurf); 
+				return []; 
+			}
 		#endregion
 		
-		var _clist = _colr;
-		if(_allc) _clist = extractAll(_surf);
-		
+		var _clist = _allc? extractAll(_surf) : _colr;
+		var _amo = array_length(_clist);
 		var _dim = surface_get_dimension(_surf);
-		_outSurf = surface_array_verify(_outSurf, array_length(_clist));
+		_outSurf = surface_array_verify(_outSurf, _amo);
 		
-		for( var i = 0, n = array_length(_clist); i < n; i++ ) {
+		for( var i = 0; i < _amo; i++ ) {
 		    _outSurf[i] = surface_verify(_outSurf[i], _dim[0], _dim[1]);
 		    
 		    surface_set_shader(_outSurf[i], sh_separate_color);
 		        shader_set_palette(_clist);
-		        shader_set_c("color",    _clist[i]);
+		        shader_set_c("color",    _clist[i] );
 		        shader_set_i("matchAll", !_allc && _mata);
 		        
 		        draw_surface(_surf, 0, 0);

@@ -139,7 +139,7 @@ void main() {
 	vec2 pos = map.rg;
 	
 	gl_FragColor = vec4(0.);
-	if(useIndex == 1 && map.z != index) return;
+	if(useIndex == 1 && map.b != index) return;
 	
 	pos.x = 1. - pos.x;
 	pos   = 1. - pos;

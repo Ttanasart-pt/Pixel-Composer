@@ -4,22 +4,27 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newActiveInput(1);
 	newInput(0, nodeValue_Surface("Surface In"));
 	newInput(2, nodeValue_Enum_Scroll("Method", 0, [ "Radial", "Scan" ]));
-	
 	// input 3
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 0, 2 ];
 	
+	////- Node
+	
 	temp_surface = array_create(2);
 	
 	attribute_surface_depth();
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _meth = _data[2];
-		var _dim  = surface_get_dimension(_data[0]);
+		#region data
+			var _surf = _data[0];
+			var _meth = _data[2];
+			
+			if(!is_surface(_surf)) return _outSurf;
+		#endregion
 		
+		var _dim = surface_get_dimension(_surf);
 		for( var i = 0; i < 2; i++ ) temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 		
 		if(_meth == 0) {

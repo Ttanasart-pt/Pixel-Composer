@@ -1239,7 +1239,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.path_anchor :
-						editWidget = new pathAnchorBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
+						editWidget = new pathAnchorBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						extract_node = "Node_Path_Anchor";
 						break;
 						

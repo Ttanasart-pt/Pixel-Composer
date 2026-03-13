@@ -3334,6 +3334,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                
 	        tb_zoom_level.rx = x;
 	        tb_zoom_level.ry = y;
+	        tb_zoom_level.setFont(f_p2);
 	        tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
 	        tb_zoom_level.postBlend = _zmc;
 	        tb_zoom_level.draw(_zmx, ovy, _zmw, _zmh, string(graph_s_to), [ mx, my ], fa_right);
