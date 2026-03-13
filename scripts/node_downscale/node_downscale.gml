@@ -20,7 +20,10 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Scale",	false], 2, 1, 
 	];
 	
+	////- Nodes
+	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
@@ -49,6 +52,7 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		surface_set_shader(_outSurf, sh_downscale);
 			shader_set_interpolation(surf);
+			shader_set_i( "sampleMode", getAttribute("oversample"));
 			
 			shader_set_2("baseDimension", [ww,hh] );
 			shader_set_2("surfDimension", [sw,sh] );

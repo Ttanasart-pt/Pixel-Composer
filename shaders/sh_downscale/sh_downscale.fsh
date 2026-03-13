@@ -143,6 +143,7 @@ void main() {
 	if(mode == 2) cc = vec4(1.);
 	
 	float aa = 0.;
+	float ii = 0.;
 	
 	for(float i = 0.; i < scale; i++)
 	for(float j = 0.; j < scale; j++) {
@@ -150,6 +151,7 @@ void main() {
 		if(sx.x < 0. || sx.x > 1. || sx.y < 0. || sx.y > 1.) continue;
 		
 		vec4 c = sampleTexture(gm_BaseTexture, sx);
+		ii++;
 		
 		if(mode == 0) {
 			cc += c * c.a;
@@ -163,8 +165,12 @@ void main() {
 		}
 	}
 	
-	if(mode == 0 && aa > 0.) cc /= aa;
+	if(mode == 0 && aa > 0.) {
+		cc.rgb /= aa;
+		cc.a   /= ii;
+	}
+	
 	if(mode == 2) cc.a = bc.a;
-		
+	
 	gl_FragColor = cc;
 }

@@ -90,8 +90,8 @@ function Node_String_Format(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	explain_tooltip = new Inspector_Label(@"Key need to be wrapped by curly bracklet, e.g. a key 'name' will replace 'Hello {name}'");
 	
 	input_display_list = [ 
-		[ "Function",  false ], 0, explain_tooltip, 
-		[ "Arguments", false ], argument_renderer,
+		[ "Function",  false ], 0, 
+		[ "Arguments", false ], explain_tooltip, argument_renderer,
 		[ "Inputs",     true ], 
 	];
 	
