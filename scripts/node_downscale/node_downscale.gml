@@ -26,15 +26,18 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var surf  = _data[0]; 
-		
-		var mode  = _data[2];
-		var scale = _data[1];
-		var cDep  = attrDepth();
+		#region data
+			var surf  = _data[0]; 
+			
+			var mode  = _data[2];
+			var scale = _data[1];
+			
+			var cDep  = attrDepth();
+		#endregion
 		
 		var isAtlas = is(surf, SurfaceAtlas);
 		if(isAtlas && !is(_outSurf, SurfaceAtlas)) 
-			_outSurf = _data[0].clone(true);
+			_outSurf = surf.clone(true);
 		
 		var sw = surface_get_width_safe(surf);
 		var sh = surface_get_height_safe(surf);
@@ -47,10 +50,10 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		surface_set_shader(_outSurf, sh_downscale);
 			shader_set_interpolation(surf);
 			
-			shader_set_2("baseDimension", [ww, hh]);
-			shader_set_2("surfDimension", [sw, sh]);
-			shader_set_f("scale", scale);
-			shader_set_i("mode",  mode);
+			shader_set_2("baseDimension", [ww,hh] );
+			shader_set_2("surfDimension", [sw,sh] );
+			shader_set_f("scale",          scale  );
+			shader_set_i("mode",           mode   );
 			
 			draw_surface_stretched_safe(surf, 0, 0, ww, hh);
 		surface_reset_shader();

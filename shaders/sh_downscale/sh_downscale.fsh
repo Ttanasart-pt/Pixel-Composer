@@ -152,7 +152,7 @@ void main() {
 		vec4 c = sampleTexture(gm_BaseTexture, sx);
 		
 		if(mode == 0) {
-			cc += c;
+			cc += c * c.a;
 			aa += c.a;
 			
 		} else if(mode == 1) {

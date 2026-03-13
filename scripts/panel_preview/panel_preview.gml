@@ -2895,7 +2895,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var sid = preview_shader_alpha;
 			var cc  = preview_shader_alpha? COLORS._main_icon : COLORS._main_accent;
 			
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Apply Alpha", spr, sid, cc) == 2)
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, __txt("Apply Alpha"), spr, sid, cc) == 2)
 				preview_shader_alpha = !preview_shader_alpha;
 			
 		}
