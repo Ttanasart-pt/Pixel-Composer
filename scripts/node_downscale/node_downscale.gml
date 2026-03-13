@@ -39,8 +39,8 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(isAtlas && !is(_outSurf, SurfaceAtlas)) 
 			_outSurf = surf.clone(true);
 		
-		var sw = surface_get_width_safe(surf);
-		var sh = surface_get_height_safe(surf);
+		var sw = surface_get_width_safe(  surf );
+		var sh = surface_get_height_safe( surf );
 		
 		var ww = max(1, ceil(sw / scale));
 		var hh = max(1, ceil(sh / scale));
@@ -58,7 +58,7 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface_stretched_safe(surf, 0, 0, ww, hh);
 		surface_reset_shader();
 		
-		draw_transforms[_array_index] = [ 0, 0, 1/scale, 1/scale, 0];
+		draw_transforms[_array_index] = [ 0, 0, 1 / scale, 1 / scale, 0];
 		
 		return _outSurf;
 	}

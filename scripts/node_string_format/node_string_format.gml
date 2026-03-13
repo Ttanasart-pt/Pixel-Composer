@@ -88,16 +88,16 @@ function Node_String_Format(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	input_display_list = [ 
-		["Function",	false], 0,
-		["Arguments",	false], argument_renderer,
-		["Inputs",		 true], 
+		[ "Function",  false ], 0,
+		[ "Arguments", false ], argument_renderer,
+		[ "Inputs",     true ], 
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text( "Argument Name"  ));
-		newInput(index + 1, nodeValue_Text( "Argument value" )).setVisible(true, true);
+		newInput(index + 0, nodeValue_Text( "Match" ));
+		newInput(index + 1, nodeValue_Text( "Value" )).setVisible(true, true);
 		
 		return inputs[index + 0];
 	} setDynamicInput(2, false);
@@ -128,10 +128,9 @@ function Node_String_Format(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			array_push(input_display_list, i);
 		}
 		
-		for( var i = input_fix_len; i < array_length(_l) - 1; i += 2 )
-			inputs[i + 1].setName(inputs[i].getValue());
+		for( var i = input_fix_len; i < array_length(_l) - 1; i += data_length )
+			inputs[i+1].setName($"Replace {inputs[i].getValue()} to");
 		
-
 		inputs = _l;
 		
 		getJunctionList();

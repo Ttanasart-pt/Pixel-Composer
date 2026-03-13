@@ -38,6 +38,8 @@ function string_char_last(str, shift = 0) {
 }
 	
 function string_to_var(str) {
+	if(str == "") return "_";
+	
 	str = string_lower(str);
 	str = string_replace_all(str, " ", "_");
 	str = string_replace_all(str, "/", "_");
