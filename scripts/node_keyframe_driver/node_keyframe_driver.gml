@@ -1,7 +1,9 @@
-global.DRIVER_TYPES = [ "None", "Linear", "Wiggle", "Sine", "Snap", "Bounce", "Elastic" ];
+global.DRIVER_TYPES = [ "None", "Linear", "Wiggle", "Sine", "Snap", "Bounce", "Elastic", "Curve" ];
 
 function KeyDriver() constructor {
 	index = 0;
+	
+	static init = function() /*=>*/ {}
 	
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {}
 	
@@ -13,6 +15,7 @@ function KeyDriver() constructor {
 			case "snap"    : return new KeyDriver_Snap();
 			case "bounce"  : return new KeyDriver_Bounce();
 			case "elastic" : return new KeyDriver_Elastic();
+			case "curve"   : return new KeyDriver_Curve();
 		}
 		
 		return undefined;
@@ -274,13 +277,16 @@ function KeyDriver_Bounce(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDri
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
 		if(_key == undefined || _keyNext == undefined) return _value;
 		
+		var _v0 = _key.value;
+		if(_keyNext == undefined) return _v0;
+		
 		var _dt   = _time - _key.time;
 		var _val  = _value ?? _key.value;
 		var _res  = _val;
 		var _ease = _anim.interpolate(_key, _keyNext, _ratio);
 		
-		var _v0 = _key.value;
 		var _v1 = _keyNext.value;
+		
 		var _t  = easeOutBounce(_ratio, _ease);
 		
 		if(is_array(_val)) {
@@ -364,12 +370,14 @@ function KeyDriver_Elastic(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDr
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
 		if(_key == undefined || _keyNext == undefined) return _value;
 		
+		var _v0 = _key.value;
+		if(_keyNext == undefined) return _v0;
+		
 		var _dt   = _time - _key.time;
 		var _val  = _value ?? _key.value;
 		var _res  = _val;
 		var _ease = _anim.interpolate(_key, _keyNext, _ratio);
 		
-		var _v0 = _key.value;
 		var _v1 = _keyNext.value;
 		var _t  = easeOutElastic(_ratio, _ease);
 		
@@ -399,6 +407,55 @@ function KeyDriver_Elastic(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDr
 		amount    = _m.amo;
 		amplitude = _m.amp;
 		steepness = _m[$ "stp"] ?? steepness;
+		
+		init();
+		return self;
+	}
+}
+
+function KeyDriver_Curve() : KeyDriver() constructor {
+	index = 7;
+	curve = CURVE_DEF_01;
+	curveObject = undefined;
+	
+	static init = function() {
+		curveObject = new curveMap(curve);
+	}
+	
+	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
+		if(curveObject == undefined) init();
+		
+		var _v0 = _key.value;
+		if(_keyNext == undefined) return _v0;
+		
+		var _val = _value ?? _key.value;
+		var _res = _val;
+		
+		var _v1 = _keyNext.value;
+		var _t  = curveObject.get(_ratio);
+		
+		if(is_array(_val)) {
+			_res = array_create(array_length(_val));
+			
+			for( var i = 0, n = array_length(_val); i < n; i++ )
+				_res[i] = lerp(_v0[i], _v1[i], _t);
+			
+		} else
+			_res = lerp(_v0, _v1, _t);
+		
+		return _res;
+	}
+	
+	static serialize   = function()   /*=>*/ {
+		var _m = {
+			typ : "curve",
+			crv : curve,
+		};
+		
+		return _m;
+	}
+	static deserialize = function(_m) /*=>*/ {
+		curve = _m.crv;
 		
 		init();
 		return self;

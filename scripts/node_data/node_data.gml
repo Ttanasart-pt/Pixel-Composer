@@ -2851,7 +2851,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _tool == noone? "" : _tool.getName(_tool.selecting);
 	}
 	
-	static getTool         = undefined;
+	static getToolNode     = undefined;
 	static getToolSettings = function() /*=>*/ {return tool_settings};
 	static showTool        = function() /*=>*/ {return tools != -1 || toolShow};
 	static drawTools       = noone;

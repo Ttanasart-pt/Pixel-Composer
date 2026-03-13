@@ -33,32 +33,36 @@
     
     function __fnInit_Inspector() {
     	var i = "Inspector";
+    	var n = MOD_KEY.none;
+    	var c = MOD_KEY.ctrl;
+    	var a = MOD_KEY.alt;
+    	var s = MOD_KEY.shift;
     	
-        registerFunction("", "Color Picker",         "",  MOD_KEY.alt,  panel_inspector_color_pick             ).setMenu("color_picker")
+        registerFunction("", "Color Picker",         "",  a, panel_inspector_color_pick             ).setMenu("color_picker")
         
-        registerFunction(i, "Copy Value",            "C", MOD_KEY.ctrl, panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
-        registerFunction(i, "Paste Value",           "V", MOD_KEY.ctrl, panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
+        registerFunction(i, "Copy Value",            "C", c, panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
+        registerFunction(i, "Paste Value",           "V", c, panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
         
-        registerFunction(i, "Expand All Sections",   "",  MOD_KEY.none, panel_inspector_section_expand_all     ).setMenu("inspector_expand_all_sections")
-        registerFunction(i, "Collapse All Sections", "",  MOD_KEY.none, panel_inspector_section_collapse_all   ).setMenu("inspector_collapse_all_sections")
+        registerFunction(i, "Expand All Sections",   "",  n, panel_inspector_section_expand_all     ).setMenu("inspector_expand_all_sections")
+        registerFunction(i, "Collapse All Sections", "",  n, panel_inspector_section_collapse_all   ).setMenu("inspector_collapse_all_sections")
         
-        registerFunction(i, "Search Toggle",        "F",  MOD_KEY.ctrl, panel_inspector_search_toggle          ).setMenu("inspector_search_toggle")
-        registerFunction(i, "Reset",                 "",  MOD_KEY.none, panel_inspector_reset                  ).setMenu("inspector_reset")
+        registerFunction(i, "Search Toggle",        "F",  c, panel_inspector_search_toggle          ).setMenu("inspector_search_toggle")
+        registerFunction(i, "Reset",                 "",  n, panel_inspector_reset                  ).setMenu("inspector_reset")
         
-        registerFunction(i, "Toggle Animation",      "",  MOD_KEY.none, panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.is_anim;            });
-        registerFunction(i, "Toggle Separate Axis",  "",  MOD_KEY.none, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle"         ).setToggle(function() /*=>*/ { INSP_JUNCTION j.sep_axis;           });
-        registerFunction(i, "Toggle Expression",     "",  MOD_KEY.none, panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle"   ).setToggle(function() /*=>*/ { INSP_JUNCTION j.expUse;             });
-        registerFunction(i, "Toggle Array Process",  "",  MOD_KEY.none, panel_inspector_array_toggle           ).setMenu("inspector_toggle_array"        ).setToggle(function() /*=>*/ { INSP_JUNCTION j.ign_array;          });   
-        registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"       ).setToggle(function() /*=>*/ { INSP_JUNCTION j.bypass_use;         });
-        registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.visible_manual;     });
-        registerFunction(i, "Toggle Mini Timeline",  "",  MOD_KEY.none, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle").setToggle(function() /*=>*/ { INSP_JUNCTION j.inspector_timeline; });
-        registerFunction(i, "Extract to Globalvar",  "",  MOD_KEY.none, panel_inspector_extract_global         ).setMenu("inspector_extract_global")
-        registerFunction(i, "Extract Value",         "",  MOD_KEY.none, panel_inspector_extract_single         ).setMenu("inspector_extract_value" )
-        registerFunction("", "Primary Action",    vk_f2,  MOD_KEY.none, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1"     )
-        registerFunction("", "Secondary Action",  vk_f3,  MOD_KEY.none, panel_inspector_trigger_2              ).setMenu("inspector_trigger_2"     )
-        registerFunction("", "Clear Cache",       vk_f4,  MOD_KEY.none, panel_inspector_trigger_cache          ).setMenu("inspector_trigger_3"     )
+        registerFunction(i, "Toggle Animation",      "",  n, panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.is_anim;            });
+        registerFunction(i, "Toggle Separate Axis",  "",  n, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle"         ).setToggle(function() /*=>*/ { INSP_JUNCTION j.sep_axis;           });
+        registerFunction(i, "Toggle Expression",     "",  n, panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle"   ).setToggle(function() /*=>*/ { INSP_JUNCTION j.expUse;             });
+        registerFunction(i, "Toggle Array Process",  "",  n, panel_inspector_array_toggle           ).setMenu("inspector_toggle_array"        ).setToggle(function() /*=>*/ { INSP_JUNCTION j.ign_array;          });   
+        registerFunction(i, "Toggle Bypass",         "",  n, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"       ).setToggle(function() /*=>*/ { INSP_JUNCTION j.bypass_use;         });
+        registerFunction(i, "Toggle Visible",        "",  n, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.visible_manual;     });
+        registerFunction(i, "Toggle Mini Timeline",  "",  n, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle").setToggle(function() /*=>*/ { INSP_JUNCTION j.inspector_timeline; });
+        registerFunction(i, "Extract to Globalvar",  "",  n, panel_inspector_extract_global         ).setMenu("inspector_extract_global")
+        registerFunction(i, "Extract Value",         "",  n, panel_inspector_extract_single         ).setMenu("inspector_extract_value" )
+        registerFunction("", "Primary Action",    vk_f2,  n, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1"     )
+        registerFunction("", "Secondary Action",  vk_f3,  n, panel_inspector_trigger_2              ).setMenu("inspector_trigger_2"     )
+        registerFunction("", "Clear Cache",       vk_f4,  n, panel_inspector_trigger_cache          ).setMenu("inspector_trigger_3"     )
         
-        registerFunction("Property", "Extract To...", "",  MOD_KEY.none, function(_dat) /*=>*/ {
+        registerFunction("Property", "Extract To...", "E", n, function(_dat) /*=>*/ {
         	var jun = PANEL_INSPECTOR.prop_hover;
         	if(jun == noone) jun = PANEL_INSPECTOR.__dialog_junction;
         	if(jun == noone) return;
@@ -79,7 +83,7 @@
 	        return array_empty(arr)? noone : submenuCall(_dat, arr);
         }).setMenu("inspector_extract", noone, true);
         
-        registerFunction("Property", "Quick Anim...", "Q", MOD_KEY.shift, function(_dat) /*=>*/ {
+        registerFunction("Property", "Quick Anim...", "Q", s, function(_dat) /*=>*/ {
         	var jun = PANEL_INSPECTOR.prop_hover;
         	if(jun == noone) jun = PANEL_INSPECTOR.__dialog_junction;
         	if(jun == noone) return;

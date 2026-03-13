@@ -429,7 +429,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static getTool = function() { return toolNode ?? self; } 
+	static getToolNode = function() { return toolNode ?? self; } 
 	
 	static setTool = function(tool) { toolNode = toolNode == tool? undefined : tool; }
 	

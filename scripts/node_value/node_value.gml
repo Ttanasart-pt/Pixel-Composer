@@ -41,10 +41,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		tooltipData = {};
 		
 		var _inode = instanceof(node);
-		if(struct_has(LOCALE_NOTE_JUNC, _inode) && struct_has(LOCALE_NOTE_JUNC[$ _inode], _initName)) {
+		if(has(LOCALE_NOTE_JUNC, _inode) && has(LOCALE_NOTE_JUNC[$ _inode], _initName)) {
 			var _dat = LOCALE_NOTE_JUNC[$ _inode][$ _initName];
 			
-			if(struct_has(LOCALE_NOTE_DATA, _dat.note)) {
+			if(has(LOCALE_NOTE_DATA, _dat.note)) {
 				tooltipData.title   = filename_name_only(_dat.note);
 				tooltipData.content = LOCALE_NOTE_DATA[$ _dat.note];
 				tooltip = function() /*=>*/ {return dialogPanelCall(new Panel_Note_Md(tooltipData))};
@@ -1007,7 +1007,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidget = noone;
 		
 		if(display_type == VALUE_DISPLAY.button) {
-			var _onClick = struct_has(display_data, "onClick")? method(node, display_data.onClick) : 
+			var _onClick = has(display_data, "onClick")? method(node, display_data.onClick) : 
 				function() /*=>*/ { setAnim(true, true); setValueDirect(true); };
 			
 			editWidget = button(_onClick).setText(struct_try_get(display_data, "name", "Trigger"));
@@ -1025,8 +1025,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY._default :	
 						editWidget = new textBox(_txt, function(val) /*=>*/ {return setValueInspector(val)});
 						
-						if(struct_has(display_data, "unit"))		 editWidget.unit = display_data.unit;
-						if(struct_has(display_data, "front_button")) editWidget.setFrontButton(display_data.front_button);
+						if(has(display_data, "unit"))         editWidget.unit = display_data.unit;
+						if(has(display_data, "front_button")) editWidget.setFrontButton(display_data.front_button);
 						
 						extract_node = "Node_Number";
 						break;
@@ -1034,7 +1034,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.range :		
 						editWidget = new rangeBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
-						if(!struct_has(display_data, "linked")) display_data.linked = false;
+						if(!has(display_data, "linked")) display_data.linked = false;
 						
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = " " + array_safe_get_fast(global.displaySuffix_Range, i);
@@ -1049,10 +1049,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(len <= 4) {
 							editWidget = new vectorBox(len, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
 							
-							if(struct_has(display_data, "label"))		 editWidget.axis	    = display_data.label;
-							if(struct_has(display_data, "linkable"))	 editWidget.linkable    = display_data.linkable;
-							if(struct_has(display_data, "per_line"))	 editWidget.per_line    = display_data.per_line;
-							if(struct_has(display_data, "linked"))		 editWidget.linked      = display_data.linked;
+							if(has(display_data, "label"))    editWidget.axis     = display_data.label;
+							if(has(display_data, "linkable")) editWidget.linkable = display_data.linkable;
+							if(has(display_data, "per_line")) editWidget.per_line = display_data.per_line;
+							if(has(display_data, "linked"))   editWidget.linked   = display_data.linked;
 							
 							switch(len) {
 								case 2 : extract_node = [ "Node_Vector2", "Node_Path" ]; break;
@@ -1071,8 +1071,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget = new vectorRangeBox(array_length(val), _txt, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
 						
-						if(!struct_has(display_data, "linked")) display_data.linked = false;
-						if(!struct_has(display_data, "ranged")) display_data.ranged = false;
+						if(!has(display_data, "linked")) display_data.linked = false;
+						if(!has(display_data, "ranged")) display_data.ranged = false;
 						
 							 if(array_length(val) == 2) extract_node = "Node_Vector2";
 						else if(array_length(val) == 3) extract_node = "Node_Vector3";
@@ -1114,7 +1114,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 										.setSlideRange( _range[0], _range[1] )
 										.setSlideStep(  _rstep );
 						
-						if(struct_has(display_data, "update_stat"))
+						if(has(display_data, "update_stat"))
 							editWidget.update_stat = display_data.update_stat;
 						
 						extract_node = "Node_Number";
@@ -1174,11 +1174,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget = new scrollBox(choices, function(val) /*=>*/ {return val == -1? undefined : setValueInspector(toNumber(val))} );
 						
-						if(struct_has(display_data, "update_hover")) editWidget.update_hover = display_data.update_hover;
-						if(struct_has(display_data, "horizontal"))   editWidget.horizontal   = display_data.horizontal;
-						if(struct_has(display_data, "item_pad"))     editWidget.item_pad     = display_data.item_pad;
-						if(struct_has(display_data, "text_pad"))     editWidget.text_pad     = display_data.text_pad;
-						if(struct_has(display_data, "show_icon"))    editWidget.show_icon    = display_data.show_icon;
+						if(has(display_data, "update_hover")) editWidget.update_hover = display_data.update_hover;
+						if(has(display_data, "horizontal"))   editWidget.horizontal   = display_data.horizontal;
+						if(has(display_data, "item_pad"))     editWidget.item_pad     = display_data.item_pad;
+						if(has(display_data, "text_pad"))     editWidget.text_pad     = display_data.text_pad;
+						if(has(display_data, "show_icon"))    editWidget.show_icon    = display_data.show_icon;
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
@@ -1198,7 +1198,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.matrix :		
 						editWidget = new matrixGrid(_txt, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
-						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
+						if(has(display_data, "size")) editWidget.setSize(display_data.size);
 						
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {i}";
@@ -1209,7 +1209,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.boolean_grid :
 						editWidget = new matrixGrid(_txt, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
-						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
+						if(has(display_data, "size")) editWidget.setSize(display_data.size);
 						
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {i}";
@@ -1250,7 +1250,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 				}
 				
-				if(editWidget && struct_has(editWidget, "setSlideType")) editWidget.setSlideType(type == VALUE_TYPE.integer);
+				if(editWidget && has(editWidget, "setSlideType")) editWidget.setSlideType(type == VALUE_TYPE.integer);
 				break;
 				
 			case VALUE_TYPE.boolean :	
@@ -1450,7 +1450,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					return res;
 				} );
 				
-				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
+				if(!has(display_data, "atlas")) display_data.atlas = true;
 				extract_node = "Node_Canvas";
 				break;
 				
@@ -1458,7 +1458,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				show_in_inspector = true;
 				editWidget = new surfaceBox(function(ind) /*=>*/ {return setValueInspector(ind)});
 				
-				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
+				if(!has(display_data, "atlas")) display_data.atlas = true;
 				extract_node = "Node_Canvas";
 				break;
 				
@@ -1609,7 +1609,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(display_type == VALUE_DISPLAY.area) {
 			
-			if(!is_undefined(nodeFrom) && struct_has(nodeFrom.display_data, "onSurfaceSize")) {
+			if(!is_undefined(nodeFrom) && has(nodeFrom.display_data, "onSurfaceSize")) {
 				var surf     = nodeFrom.display_data.onSurfaceSize();
 				var dispType = array_safe_get_fast(_value, 5, AREA_MODE.area);
 				
@@ -2282,7 +2282,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static searchNodeBackward = function(_node) {
 		if(node == _node) return true;
 			
-		if(NOT_LOAD && struct_has(node, "__key") && struct_has(_node, "__key") && node.__key == _node.__key)
+		if(NOT_LOAD && has(node, "__key") && has(_node, "__key") && node.__key == _node.__key)
 			return true;
 		
 		for(var i = 0; i < array_length(node.inputs); i++) {
@@ -2829,8 +2829,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(name_custom) _map.name_custom  = name_custom;
 		if(bypass_use)  _map.bypass       = bypass_use;
 		
-		if(struct_has(display_data, "linked")) _map.linked       = display_data.linked;
-		if(struct_has(display_data, "ranged")) _map.ranged       = display_data.ranged;
+		if(has(display_data, "linked")) _map.linked       = display_data.linked;
+		if(has(display_data, "ranged")) _map.ranged       = display_data.ranged;
 		
 		#region attributes
 			attri = variable_clone(attributes);
@@ -2945,7 +2945,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static postApplyDeserialize = function() {}
 	
 	static attributeApply = function() {
-		if(struct_has(attributes, "mapped") && attributes.mapped) 
+		if(has(attributes, "mapped") && attributes.mapped) 
 			mappableStep();
 	}
 	
@@ -2973,7 +2973,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _ol = array_length(_nd.outputs);
 		
 		if(_nd.group != node.group) return true;
-		if(_nodeGroup != undefined && !struct_has(_nodeGroup, _nodeid)) return true;
+		if(_nodeGroup != undefined && !has(_nodeGroup, _nodeid)) return true;
 		
 		// if(log) log_warning("LOAD", $"    [Connect] Connecting {node.name} to {_nd.name}", node);
 		
@@ -3155,7 +3155,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					
 					ext.createNewInput(array_length(ext.inputs), _val[0], _val[1]);
 					
-					if(_anim) ext.inputs[0].setValue(i / (_amo - 1), false, _key.time);
+					if(_anim) {
+						var _v = i / (_amo - 1);
+						var _t = _key.time;
+						ext.inputs[0].animator.setValue(_v, false, _t);
+					}
 				}
 				
 				unit.setMode(VALUE_UNIT.constant);

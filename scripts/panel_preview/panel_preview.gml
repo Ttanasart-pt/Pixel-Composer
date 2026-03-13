@@ -1249,6 +1249,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
         	var _in = _node.inputs[i];
+        	
         	if(_in.preview_hotkey == undefined) continue;
         	
         	if(_draw_sep == false) {
@@ -1272,7 +1273,8 @@ function Panel_Preview() : PanelContent() constructor {
             
         	var _key = _in.preview_hotkey;
         	var _spr = _in.preview_hotkey_spr;
-        	var _hov = thov && point_in_rectangle(mx, my, _x0, _y0 + 1, _x1, _y1 - 1);
+        	var _act = _in.value_from == noone;
+        	var _hov = _act && thov && point_in_rectangle(mx, my, _x0, _y0 + 1, _x1, _y1 - 1);
         	
         	if(_hov) {
         		TOOLTIP = new tooltipKey($"Set {_in.name}", _key.toString());
@@ -1283,10 +1285,16 @@ function Panel_Preview() : PanelContent() constructor {
         		}
         	}
         	
-            draw_sprite_colored(_spr, 0, xx, yy);
+        	if(_act) draw_sprite_colored(_spr, 0, xx, yy);
+        	else {
+        		var num = sprite_get_number(_spr);
+				
+				draw_sprite_ui(_spr, 0, xx, yy, 1, 1, 0, COLORS._main_icon, .75);
+				if(num % 2 == 0) draw_sprite_ui(_spr, num / 2, xx, yy, 1, 1, 0, COLORS._main_icon, .75);
+        	}
         	
             var _hkstr = _key.toString();
-        	if(_hkstr != "") {
+        	if(_act && _hkstr != "") {
             	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
             	var _hks  = string_width(_hkstr) + ui(8);
             	var _hkx0 = _x1 - _hks;
@@ -3574,7 +3582,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(PANEL_PREVIEW == self) { //only draw overlay once
             if(inspect_node) {
                 toolNode = inspect_node; 
-                if(inspect_node.getTool) toolNode = inspect_node.getTool();
+                if(inspect_node.getToolNode) toolNode = inspect_node.getToolNode();
                 if(toolNode) {
                 	drawNodeActions(pFOCUS, toolNode);
                 	

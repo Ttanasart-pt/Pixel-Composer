@@ -208,6 +208,7 @@
     "paste":                              { "path": "./icon/s_paste.png",                                   "s": 1, "x": 12, "y": 12 },
     "path_open_20":                       { "path": "./icon/s_path_open_20.png",                            "s": 2, "x": 10, "y": 10 },
     "path_open":                          { "path": "./icon/s_path_open.png",                               "s": 2, "x": 12, "y": 12 },
+    "path_edit":                          { "path": "./icon/s_path_edit.png",                               "s": 2, "x": 12, "y": 12 },
     "patreon_supporter":                  { "path": "./icon/s_patreon_supporter.png",                       "s": 2, "x": 12, "y": 12 },
     "patreon":                            { "path": "./icon/s_patreon.png",                                 "s": 1, "x":  8, "y":  8 },
     "pixel_diag":                         { "path": "./icon/s_pixel_diag.png",                              "s": 1, "x":  8, "y":  8 },

@@ -1276,7 +1276,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(is(_tool, canvas_tool)) {
 					_tool.node = self;
 					
-					_tool = _tool.getTool();
+					_tool = _tool.getToolNode();
 					_tool.subtool = _currTool.selecting;
 					array_append(rightTools, _tool.rightTools);
 					

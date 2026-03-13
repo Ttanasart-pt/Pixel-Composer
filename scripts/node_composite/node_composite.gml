@@ -911,7 +911,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(dynamic_input_inspecting >= 0) {
 			var ind = input_fix_len + dynamic_input_inspecting * data_length + 1;
 			if(ind < array_length(inputs)) {
-				var hov = inputs[ind].drawPath(hover, active, _x, _y, _s, _mx, _my);
+				var hov = inputs[ind].drawPath(hover, active, _x, _y, _s, _mx, _my, _params);
 				hover &= !hov; w_hovering |= hov;
 			}
 			
@@ -1683,6 +1683,27 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	////- Update
+	
+	static getToolNode = function() /*=>*/ {
+		if(dynamic_input_inspecting >= 0) {
+			var ind = input_fix_len + dynamic_input_inspecting * data_length + 1;
+			if(ind < array_length(inputs)) return self;
+			return inputs[ind].isEditingPath() ?? self;
+			
+		} else {
+			var amo     = getInputAmount();
+			var pthNode = undefined;
+			
+			for( var i = 0; i < amo; i++ ) {
+				var ind = input_fix_len + i * data_length + 1;
+				var pth = inputs[ind].isEditingPath();
+				pthNode = pthNode ?? pth;
+			}
+			return pthNode ?? self;
+		}
+		
+		return self;
+	}
 	
 	static getDimension = function(arr = 0) { 
 		if(getInputAmount() == 0) return [1,1];

@@ -86,6 +86,8 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { driver.steepness = v;     driver.init(); }), function() /*=>*/ {return driver.steepness}  ),
 			],
 		}
+		
+		curve_editor = undefined;
 	#endregion
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
@@ -95,24 +97,34 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 			return 0;
 		}
 		
+		var _w = sc_content.surface_w;
+		var _h = sc_content.surface_h;
+		var _rx = x + sc_content.x;
+		var _ry = y + sc_content.y;
+		
 		driver = key.driverObject;
-		var props = driverProp[$ instanceof(key.driverObject)];
-		if(props == undefined) {
-			bg_y = -1;
-			return 0;
+		if(is(driver, KeyDriver_Curve)) {
+			if(curve_editor == undefined) curve_editor = new curveBox(function(c) /*=>*/ { driver.curve = c; driver.init(); });
+			
+			// var params = new widgetParam(0, 0, _w, _h, driver.curve, {}, _m, _rx, _ry).setFont(font);
+			// curve_editor.drawParam(params);
+			
+			draw_set_color(c_red);
+			draw_rectangle(8, 8, _w - 8, _h - 8, true);
+			return _h;
 		}
+		
+		var props = driverProp[$ instanceof(driver)];
+		if(props == undefined) { bg_y = -1; return 0; }
 		
 		var yy = ui(4) + _y;
 		var hh = ui(4);
 		var th = prop_height;
-		var _w = sc_content.surface_w;
 		var ww = max(wdgw, _w * 0.5); 
 		var wh = prop_height - ui(6);
 		
 		var _hover = sc_content.hover;
 		var _focus = sc_content.active;
-		var _rx = x + sc_content.x;
-		var _ry = y + sc_content.y;
 		
 		var _bs = ui(32);
 		

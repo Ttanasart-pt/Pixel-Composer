@@ -149,6 +149,16 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				bx -= bs;
 				_w -= bs;
 			}
+			
+			if(front_button && front_button.visible) {
+				if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, bs, _h, CDEF.main_mdwhite, 1);
+				front_button.setFocusHover(iactive, ihover);
+				front_button.draw(_x, by, bs, bs, _m, THEME.button_hide_fill);
+				
+				_x += bs;
+				_w -= bs;
+			}
+			
 		}
 		
 		if((_w - bs) / _sz > ui(48)) {

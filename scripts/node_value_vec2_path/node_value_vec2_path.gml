@@ -41,7 +41,7 @@ function __NodeValue_Vec2_Path(_name, _node, _value) : __NodeValue_Vec2(_name, _
 	path_point_mx   = 0;
 	path_point_my   = 0;
 	
-	static drawPath = function(hover, active, _x, _y, _s, _mx, _my) {
+	static drawPath = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		if(!is_anim || value_from != noone || sep_axis) return false;
 		
 		var allPos = animator.values;

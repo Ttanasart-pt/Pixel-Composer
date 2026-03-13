@@ -4,7 +4,7 @@ function nodeValue_IVec2(_name, _value, _data = {}) { return new __NodeValue_IVe
 function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.vector, _data);
 	preview_hotkey_spr = THEME.tools_2d_move;
-	def_length = 2;
+	def_length         = 2;
 	
 	anim_presets = [
 		[ "0, 1",  [ [ 0, [ 0,   0  ] ], [ 1, [ 1,   1  ] ]], THEME.apreset_01 ], 
@@ -81,8 +81,34 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	path_point_mx   = 0;
 	path_point_my   = 0;
 	
-	static drawPath = function(hover, active, _x, _y, _s, _mx, _my) {
-		if(!is_anim || value_from != noone || sep_axis) return false;
+	path_editing    = false;
+	b_path_edit     = undefined;
+	
+	static onInitWidget  = function() {
+		b_path_edit = button(function() /*=>*/ { path_editing = !path_editing; }).setVisible(path_editing)
+			.setIcon(THEME.path_edit, function() /*=>*/ {return path_editing}).iconPad().setTooltip(__txt("Edit Path"));
+		editWidget.setFrontButton(b_path_edit);
+	}
+	
+	static isEditingPath = function() {
+		if(value_from == noone) return undefined;
+		
+		var _val = value_from.node;
+		if(b_path_edit) b_path_edit.setVisible(is(_val, Node_Path));
+		
+		if(!path_editing) return undefined;
+		if(is(_val, Node_Path)) return _val;
+		return undefined;
+	}
+	
+	static drawPath = function(hover, active, _x, _y, _s, _mx, _my, _params) {
+		if(value_from != noone) {
+			var _val = value_from.node;
+			if(is(_val, Node_Path)) return _val.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
+			return false;
+		}
+		
+		if(!is_anim || sep_axis) return false;
 		
 		var allPos = animator.values;
 		var pointHover = undefined;
