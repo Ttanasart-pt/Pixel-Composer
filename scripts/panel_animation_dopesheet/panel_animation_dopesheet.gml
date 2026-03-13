@@ -2365,10 +2365,10 @@ function Panel_Animation_Dopesheet() {
             var scr_s    = dopesheet_h;
             var scr_prog = -dopesheet_y / dopesheet_y_max;
             var scr_size =  dopesheet_h / (dopesheet_h + dopesheet_y_max);
-                    
+            
             var scr_scale_s = scr_s * scr_size;
             var scr_prog_s  = scr_prog * (scr_s - scr_scale_s);
-                
+            
             var scr_w   = scroll_w;
             var scr_h   = scr_s;
             var s_bar_w = scroll_w;

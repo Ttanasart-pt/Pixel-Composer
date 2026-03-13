@@ -107,14 +107,14 @@ function exception_print(e) {
 	if(!is_struct(e) || !struct_has(e, "longMessage")) return string(e);
 	if(!code_is_compiled()) return $"ERR:{json_stringify(e)}";
 	
-	var str = $"\n\n==========  Crash log [PXC {VERSION_STRING}] [{os_type_sting()}] ==========";
+	var str = $"\n\n==========  Error log [PXC {VERSION_STRING}] [{os_type_sting()}] ==========";
 	str += $"\n\n{e.longMessage}";
 	str += "\n\n========== Stack trace ==========\n\n";	
 	
 	for( var i = 0, n = array_length(e.stacktrace); i < n; i++ )
 		str += e.stacktrace[i] + "\n"
 	
-	str += "\n\n========= Crash log end =========\n";	
+	str += "\n\n========= Error log end =========\n";	
 	
 	return str;
 }

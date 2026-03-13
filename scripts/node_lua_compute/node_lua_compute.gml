@@ -135,6 +135,13 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		update_on_frame = _exec;
 		
 		var stat = getState();
+		if(!lua_state_exists(stat)) 
+			stat = lua_state;
+			
+		if(!lua_state_exists(stat)) {
+			noti_warning("Lua state error");
+			return;
+		}
 		
 		argument_val = [];
 		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length )

@@ -27,6 +27,13 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		update_on_frame = _type;
 		
 		var stat = getState();
+		if(!lua_state_exists(stat)) 
+			stat = lua_state;
+			
+		if(!lua_state_exists(stat)) {
+			noti_warning("Lua state error");
+			return;
+		}
 		
 		lua_projectData(stat);
 		outputs[0].setValue(stat);
