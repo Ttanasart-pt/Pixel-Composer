@@ -58,7 +58,7 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface_stretched_safe(surf, 0, 0, ww, hh);
 		surface_reset_shader();
 		
-		draw_transforms[_array_index] = [ 0, 0, ww * sw, hh * sh, 0];
+		draw_transforms[_array_index] = [ 0, 0, 1/scale, 1/scale, 0];
 		
 		return _outSurf;
 	}
