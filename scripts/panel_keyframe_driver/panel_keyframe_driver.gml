@@ -102,15 +102,17 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		var _rx = x + sc_content.x;
 		var _ry = y + sc_content.y;
 		
+		var _hover = sc_content.hover;
+		var _focus = sc_content.active;
+		
 		driver = key.driverObject;
 		if(is(driver, KeyDriver_Curve)) {
 			if(curve_editor == undefined) curve_editor = new curveBox(function(c) /*=>*/ { driver.curve = c; driver.init(); });
 			
-			// var params = new widgetParam(0, 0, _w, _h, driver.curve, {}, _m, _rx, _ry).setFont(font);
-			// curve_editor.drawParam(params);
-			
-			draw_set_color(c_red);
-			draw_rectangle(8, 8, _w - 8, _h - 8, true);
+			var params = new widgetParam(0, 0, _w, _h, driver.curve, {}, _m, _rx, _ry).setFont(font);
+			curve_editor.h = _h;
+			curve_editor.setFocusHover(_focus, _hover);
+			curve_editor.drawParam(params);
 			return _h;
 		}
 		
@@ -122,9 +124,6 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		var th = prop_height;
 		var ww = max(wdgw, _w * 0.5); 
 		var wh = prop_height - ui(6);
-		
-		var _hover = sc_content.hover;
-		var _focus = sc_content.active;
 		
 		var _bs = ui(32);
 		
