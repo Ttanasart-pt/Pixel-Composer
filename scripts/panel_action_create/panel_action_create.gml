@@ -1,13 +1,15 @@
 function Panel_Action_Create() : PanelContent() constructor {
+	title = __txt("Create Action");
+	showHeader = true;
+	
+	w     = min(WIN_W, ui(720));
+	h     = ui(400);
+	min_w = ui(640);
+	min_h = ui(320);
+	auto_pin = true;
+	padding  = ui(6);
+	
 	#region data
-		title = __txt("Create Action");
-		showHeader = true;
-		
-		w     = min(WIN_W, ui(720));
-		h     = ui(400);
-		min_w = ui(640);
-		min_h = ui(320);
-		
 		name     = "New Action";
 		tooltip  = "";
 		tags     = "";
@@ -50,15 +52,11 @@ function Panel_Action_Create() : PanelContent() constructor {
 			array_push(cat_value, noone);
 		}
 		
-		tb_name 	= new textBox( TEXTBOX_INPUT.text, function(s) /*=>*/ { name      = s; }).setAutoUpdate().setFont(f_p2);
-		tb_tooltip  = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { tooltip   = s; }).setAutoUpdate().setFont(f_p2);
-		tb_alias    = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { tags      = s; }).setAutoUpdate().setFont(f_p2);
-		tb_location = new scrollBox(node_categories,   function(v) /*=>*/ { cat_index = v; })
-		                     .setAlign(fa_left)
-		                     .setHorizontal(true)
-		                     .setFont(f_p2)
-		                     .setPadding(ui(16))
-		                     .setPaddingItem(ui(4));
+		tb_name 	= textBox_Text(  function(s) /*=>*/ { name    = s; }).setAutoUpdate().setFont(f_p2);
+		tb_tooltip  = textArea_Text( function(s) /*=>*/ { tooltip = s; }).setAutoUpdate().setFont(f_p2);
+		tb_alias    = textArea_Text( function(s) /*=>*/ { tags    = s; }).setAutoUpdate().setFont(f_p2);
+		tb_location = new scrollBox(node_categories, function(v) /*=>*/ { cat_index = v; }).setFont(f_p2)
+             .setAlign(fa_left).setHorizontal(true).setPadding(ui(16)).setPaddingItem(ui(4));
 		
 		b_create = button(function() /*=>*/ {
 			var _path = $"{DIRECTORY}Nodes/Actions/{name}.json";
@@ -80,16 +78,12 @@ function Panel_Action_Create() : PanelContent() constructor {
 			close();
 			
 			__initNodeActions(true);
-		});
-		
-		b_create.text = __txtx("new_action_create", "Create");
+		}).setText(__txtx("new_action_create", "Create"));
 		
 		KEYBOARD_RESET
 	#endregion
 	
-	function onResize() { sc_node_content.resize(w - padding * 2 - ui(320) - ui(16), h - padding * 2 - ui(16)); }
-
-	sc_node_content = new scrollPane(w - padding * 2 - ui(320) - ui(16), h - padding * 2 - ui(16), function(_y, _m) {
+	sc_node_content = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _w  = sc_node_content.surface_w;
 		var _h  = ui(16);
@@ -206,7 +200,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 		
 		return _h;
 	});
-
+	
 	function setNodes(_nodes) { 
 		rawNodes    = [];
 		nodes       = [];
@@ -280,13 +274,12 @@ function Panel_Action_Create() : PanelContent() constructor {
 	}
 	
 	function drawContent(panel) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var _pd   = padding;
 		var _conw = ui(320);
 		
 		// Nodes
-		
 		var ndx = _pd;
 		var ndy = _pd;
 		var ndw = w - _pd * 2 - _conw;
@@ -295,12 +288,12 @@ function Panel_Action_Create() : PanelContent() constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ndx, ndy, ndw, ndh);
 		
 		sc_node_content.setFocusHover(pFOCUS, pHOVER);
+		sc_node_content.verify(w - padding * 2 - ui(320) - ui(16), h - padding * 2 - ui(16));
 		sc_node_content.draw(ndx + ui(8), ndy + ui(8), mx - ndx - ui(8), my - ndy - ui(8));
 		
 		// Metadata
-		
 		var _tx = w - _conw;
-		var _nm = ui(128);
+		var _nm = ui(96);
 		var _wx = _tx + _nm;
 		var _wy = ui(8);
 		var _ww = _conw - _pd - _nm;

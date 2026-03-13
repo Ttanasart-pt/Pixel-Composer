@@ -348,6 +348,9 @@
     "node_draw_area":                     { "path": "./node/assets/s_node_draw_area.png",                   "s": 1, "x": 20, "y": 20 },
     "node_draw_path":                     { "path": "./node/assets/s_node_draw_path.png",                   "s": 1, "x": 20, "y": 20 },
 
+    "node_action_create":                 { "path": "./node/s_node_action_create.png",                      "s": 1, "x": 24, "y": 24 },
+    "node_action_manager":                { "path": "./node/s_node_action_manager.png",                     "s": 1, "x": 24, "y": 24 },
+
     "node_junction_add":                  { "path": "./node/s_node_junction_add.png",                       "s": 2, "x": 12, "y": 12 },
     "node_junction_inspector":            { "path": "./node/s_node_junction_inspector.png",                 "s": 2, "x": 12, "y": 12 },
     "node_junction_inspector_button":     { "path": "./node/s_node_junction_inspector_button.png",          "s": 2, "x": 12, "y": 12 },

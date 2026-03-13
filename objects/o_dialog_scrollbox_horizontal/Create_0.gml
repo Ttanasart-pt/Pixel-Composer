@@ -162,6 +162,8 @@ event_inherited();
 			dialog_h = max(sh + lhMax + ui(8), hh);
 		}
 		
+		dialog_w = min( dialog_w, WIN_W - ui(16) );
+		dialog_h = min( dialog_h, WIN_H - ui(16) );
 		sc_content.resize(dialog_w - _tpad * 2, dialog_h - sh);
 		
 		resetPosition();

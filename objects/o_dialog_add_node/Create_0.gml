@@ -628,8 +628,6 @@ event_inherited();
 					_shown[$ _node] = 1;
 				}
 				
-				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
-				
 				if(is_string(_node)) {
 					if(PREFERENCES.dialog_add_node_grouping == 0) continue;
 					if(PREFERENCES.dialog_add_node_grouping == 1 && string_starts_with(_node, "/")) continue;
@@ -737,8 +735,16 @@ event_inherited();
 				}
 				
 				var _name = _node.getName();
+				var  cc   = COLORS._main_text;
 				
-				draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
+				if(is(_node, NodeAction_manager)) 
+					cc = COLORS._main_text_sub;
+					
+				if(is(_node, NodeAction_create)) {
+					cc = array_empty(PANEL_GRAPH.nodes_selecting)? COLORS._main_text_sub : COLORS._main_value_positive;
+				}
+				
+				draw_set_text(f_p3, fa_center, fa_top, cc);
 				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _name, -1, grid_width);
 				
 				var name_height = string_height_ext(_name, -1, grid_width) + 8;
@@ -867,8 +873,6 @@ event_inherited();
 					_shown[$ _node] = 1;
 				}
 				
-				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
-				
 				if(++bg_ind % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, COLORS.node_base_bg, 0.1);
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1)) {
@@ -924,9 +928,21 @@ event_inherited();
 					if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 						draw_sprite_ui_uniform(THEME.play_action, 0, spr_x + list_height / 2 - 8, spr_y + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);
 					
+					var _name = _node.getName();
+					var  cc   = COLORS._main_text;
+					
+					if(is(_node, NodeAction_manager)) 
+						cc = COLORS._main_text_sub;
+						
+					if(is(_node, NodeAction_create)) {
+						cc = array_empty(PANEL_GRAPH.nodes_selecting)? COLORS._main_text_sub : COLORS._main_value_positive;
+						if(array_empty(PANEL_GRAPH.nodes_selecting))
+							_name = __txt("Select node to create Action.")
+					}
+					
 					tx = pd + list_height + ui(32 + 4);
-					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-					draw_text_add(tx, yy + list_height / 2, _node.getName());
+					draw_set_text(f_p2, fa_left, fa_center, cc);
+					draw_text_add(tx, yy + list_height / 2, _name);
 					tx += string_width(_node.getName());
 				}
 				

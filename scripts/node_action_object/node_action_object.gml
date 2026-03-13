@@ -17,10 +17,11 @@ function NodeAction() constructor {
 	outputNode  = noone;
 	
 	location = noone;
+	filepath = "";
 	
-	static getName       = function() { return name;        }
-	static getTooltip    = function() { return tooltip;     }
-	static getTooltipSpr = function() { return tooltip_spr; }
+	static getName       = function() /*=>*/ { return name;        }
+	static getTooltip    = function() /*=>*/ { return tooltip;     }
+	static getTooltipSpr = function() /*=>*/ { return tooltip_spr; }
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 		var _n = {};
@@ -92,7 +93,26 @@ function NodeAction() constructor {
 		return map;
 	}
 	
+	static save = function() {
+		var _path = $"{DIRECTORY}Nodes/Actions/{name}.json";
+		var _map  = {
+			name,
+			sprPath : $"./{name}.png",
+			tooltip,
+			tags: string_split(tags, ",", true),
+			location,
+			nodes,
+			connections,
+			inputNode,
+			outputNode,
+		};
+		
+		json_save_struct(_path, _map);
+		if(spr) surface_save(spr, filename_change_ext(_path, ".png"));
+	}
+	
 	static deserialize = function(path) {
+		filepath = path;
 		var map = json_load_struct(path);
 		
 		name		= struct_try_get(map, "name", "");
@@ -121,18 +141,28 @@ function NodeAction() constructor {
 
 function NodeAction_create() : NodeAction() constructor {
 	name    = "Create Action...";
-	spr     = s_action_add;
+	spr     = THEME.node_action_create;
 	hide_bg = true;
 	
 	static build = function() { PANEL_GRAPH.createAction(); return noone; }
 }
 
+function NodeAction_manager() : NodeAction() constructor {
+	name    = "Action Manager...";
+	spr     = THEME.node_action_manager;
+	hide_bg = true;
+	
+	static build = function() { dialogPanelCall(new Panel_Action_Manager()); return noone; }
+}
+
 function __initNodeActions(_update = false) {
-	if(_update) {
-		array_resize(NODE_ACTION_LIST, 0);
-		array_push(NODE_ACTION_LIST, new NodeAction_create());
+	// if(_update) {
+	// 	array_resize(NODE_ACTION_LIST, 0);
+	// 	array_push(NODE_ACTION_LIST, new NodeAction_create());
+	// 	array_push(NODE_ACTION_LIST, new NodeAction_manager());
 		
-	} else NODE_ACTION_LIST = [ new NodeAction_create() ];
+	// } else 
+	NODE_ACTION_LIST = [ new NodeAction_create(), new NodeAction_manager() ];
 	
 	var root = $"{DIRECTORY}Nodes/Actions";
 	directory_verify(root);
