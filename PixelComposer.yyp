@@ -2234,6 +2234,7 @@
     {"id":{"name":"text_file","path":"scripts/text_file/text_file.yy",},},
     {"id":{"name":"textArea","path":"scripts/textArea/textArea.yy",},},
     {"id":{"name":"textArrayBox","path":"scripts/textArrayBox/textArrayBox.yy",},},
+    {"id":{"name":"textArrayCustom","path":"scripts/textArrayCustom/textArrayCustom.yy",},},
     {"id":{"name":"textBox","path":"scripts/textBox/textBox.yy",},},
     {"id":{"name":"textInput","path":"scripts/textInput/textInput.yy",},},
     {"id":{"name":"theme_definition","path":"scripts/theme_definition/theme_definition.yy",},},

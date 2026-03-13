@@ -4445,9 +4445,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function createAction() {
         if(array_empty(nodes_selecting)) return;
         
-        var pan = new Panel_Action_Create();
-            pan.setNodes(nodes_selecting);
-            pan.spr = PANEL_PREVIEW.getNodePreviewSurface();
+        var pan = new Panel_Action_Manager();
+            pan.newAction(nodes_selecting);
             
         var dia = dialogPanelCall(pan);
     }

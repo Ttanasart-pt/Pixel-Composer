@@ -140,8 +140,11 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _selVal = _val;
 		if(is_array(_val)) return 0;
 		
-		if(is_array(data) && is_numeric(_val)) _selVal = array_safe_get_fast(data, _val);
-		if(has(displayStr, _val))              _selVal = displayStr[$ _val];
+		if(is_array(data) && is_numeric(_val)) {
+			if(_val < 0) _selVal = "";
+			else _selVal = array_safe_get_fast(data, _val);
+			
+		} if(has(displayStr, _val))              _selVal = displayStr[$ _val];
 		curr_val = _val;
 		
 		var _text = is(_selVal, scrollItem)? _selVal.name : _selVal;

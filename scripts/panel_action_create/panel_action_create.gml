@@ -10,18 +10,9 @@ function Panel_Action_Create() : PanelContent() constructor {
 	padding  = ui(6);
 	
 	#region data
-		name     = "New Action";
-		tooltip  = "";
-		tags     = "";
-		location = [];
-		spr      = noone;
-		
-		inputNode   = noone;
-		outputNode  = noone;
-		
-		rawNodes    = [];
-		nodes       = [];
-		connections = [];
+		newAction = new NodeAction();
+		spr       = noone;
+		rawNodes  = [];
 		
 		node_categories = [ "None" ];
 		cat_index   = 0;
@@ -52,29 +43,15 @@ function Panel_Action_Create() : PanelContent() constructor {
 			array_push(cat_value, noone);
 		}
 		
-		tb_name 	= textBox_Text(  function(s) /*=>*/ { name    = s; }).setAutoUpdate().setFont(f_p2);
-		tb_tooltip  = textArea_Text( function(s) /*=>*/ { tooltip = s; }).setAutoUpdate().setFont(f_p2);
-		tb_alias    = textArea_Text( function(s) /*=>*/ { tags    = s; }).setAutoUpdate().setFont(f_p2);
-		tb_location = new scrollBox(node_categories, function(v) /*=>*/ { cat_index = v; }).setFont(f_p2)
-             .setAlign(fa_left).setHorizontal(true).setPadding(ui(16)).setPaddingItem(ui(4));
+		tb_name 	= textBox_Text(  function(s) /*=>*/ { newAction.name    = s; }).setAutoUpdate().setFont(f_p2);
+		tb_tooltip  = textArea_Text( function(s) /*=>*/ { newAction.tooltip = s; }).setAutoUpdate().setFont(f_p2);
+		tb_location = new scrollBox(node_categories, function(v) /*=>*/ { 
+			newAction.location = v >= 0? cat_value[v] : noone;
+			cat_index = v; 
+		}).setFont(f_p2).setAlign(fa_left).setHorizontal(true).setPadding(ui(16)).setPaddingItem(ui(4));
 		
 		b_create = button(function() /*=>*/ {
-			var _path = $"{DIRECTORY}Nodes/Actions/{name}.json";
-			var _map  = {
-				name,
-				sprPath : $"./{name}.png",
-				tooltip,
-				tags: string_split(tags, ",", true),
-				location : cat_value[cat_index],
-				nodes,
-				connections,
-				inputNode,
-				outputNode,
-			};
-			
-			json_save_struct(_path, _map);
-			
-			if(spr) surface_save(spr, $"{DIRECTORY}Nodes/Actions/{name}.png");
+			newAction.save(spr);
 			close();
 			
 			__initNodeActions(true);
@@ -94,7 +71,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 			var _r    = rawNodes[i];
 			var _n    = _r.node;
 			var _name = _n.getFullName();
-			var _nd   = nodes[i];
+			var _nd   = newAction.nodes[i];
 			
 			var _bw = _w;
 			var _bh = _lh + ui(4);
@@ -103,16 +80,20 @@ function Panel_Action_Create() : PanelContent() constructor {
 			if(_hv) sc_node_content.hover_content = true;
 			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
 			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, _bw - ui(24), yy, ui(24), _bh, _cc);
-			draw_sprite_ui(THEME.arrow, 1, _bw - ui(12), yy + _bh / 2, 1, 1, 0, outputNode == i? COLORS._main_value_negative : COLORS._main_icon_dark)
-			if(mouse_press(mb_left, _hv)) outputNode = outputNode == i? noone : i;
+			
+			var _bc = newAction.outputNode == i? COLORS._main_value_negative : COLORS._main_icon_dark;
+			draw_sprite_ui(THEME.arrow, 1, _bw - ui(12), yy + _bh / 2, 1, 1, 0, _bc);
+			if(mouse_press(mb_left, _hv)) newAction.outputNode = newAction.outputNode == i? noone : i;
 			_bw -= ui(28);
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], _bw - ui(24), yy, _bw, yy + _bh);
 			if(_hv) sc_node_content.hover_content = true;
 			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
 			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, _bw - ui(24), yy, ui(24), _bh, _cc);
-			draw_sprite_ui(THEME.arrow, 3, _bw - ui(12), yy + _bh / 2, 1, 1, 0, inputNode == i? COLORS._main_value_positive : COLORS._main_icon_dark)
-			if(mouse_press(mb_left, _hv)) inputNode = inputNode == i? noone : i;
+			
+			var _bc = newAction.inputNode == i? COLORS._main_value_positive : COLORS._main_icon_dark;
+			draw_sprite_ui(THEME.arrow, 3, _bw - ui(12), yy + _bh / 2, 1, 1, 0, _bc);
+			if(mouse_press(mb_left, _hv)) newAction.inputNode = newAction.inputNode == i? noone : i;
 			_bw -= ui(28);
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _bw, yy + _bh);
@@ -203,11 +184,6 @@ function Panel_Action_Create() : PanelContent() constructor {
 	
 	function setNodes(_nodes) { 
 		rawNodes    = [];
-		nodes       = [];
-		connections = [];
-		
-		inputNode   = noone;
-		outputNode  = noone;
 		
 		if(array_empty(_nodes)) { close(); return; }
 		
@@ -235,7 +211,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 				_vals[$ j] = {};
 				
 				if(_vf != noone && !struct_has(_nmap, _vf.node.node_id))
-					inputNode = i;
+					newAction.inputNode = i;
 				
 				if(_vf == noone || !struct_has(_nmap, _vf.node.node_id)) {
 					var _vl = _in.getValue(, false);
@@ -246,7 +222,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 				
 				var _idF = _nmap[$ _vf.node.node_id];
 				
-				array_push(connections, {
+				array_push(newAction.connections, {
 					from: _idF,
 					fromIndex: _vf.index,
 					
@@ -260,10 +236,10 @@ function Panel_Action_Create() : PanelContent() constructor {
 				var _vt = _ou.getJunctionTo();
 				
 				for( var k = 0, m = array_length(_vt); k < m; k++ )
-					if(!struct_has(_nmap, _vt[k].node.node_id)) outputNode = i;
+					if(!struct_has(_nmap, _vt[k].node.node_id)) newAction.outputNode = i;
 			}
 			
-			nodes[i] = {
+			newAction.nodes[i] = {
 				node: instanceof(_n), 
 				x   : _n.x - _minx,
 				y   : _n.y - _miny,
@@ -302,22 +278,16 @@ function Panel_Action_Create() : PanelContent() constructor {
 		
 		tb_name.setFocusHover(pFOCUS, pHOVER);		tb_name.register();
 		tb_tooltip.setFocusHover(pFOCUS, pHOVER);	tb_tooltip.register();
-		tb_alias.setFocusHover(pFOCUS, pHOVER); 	tb_alias.register();
 		tb_location.setFocusHover(pFOCUS, pHOVER);	tb_location.register();
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 		draw_text_add(_tx + ui(8), _wy + _wh / 2, __txt("Name"));
-		var _hh = tb_name.draw(_wx, _wy, _ww, _wh, name, [ mx, my ]);
-		_wy += _hh + ui(8); _th += _hh + ui(8);
-		
-		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(_tx + ui(8), _wy + _wh / 2, __txt("Alias"));
-		var _hh = tb_alias.draw(_wx, _wy, _ww, _wh, tags, [ mx, my ]);
+		var _hh = tb_name.draw(_wx, _wy, _ww, _wh, newAction.name, [ mx, my ]);
 		_wy += _hh + ui(8); _th += _hh + ui(8);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 		draw_text_add(_tx + ui(8), _wy + _wh / 2, __txt("Tooltip"));
-		var _hh = tb_tooltip.draw(_wx, _wy, _ww, _wh * 2, tooltip, [ mx, my ]);
+		var _hh = tb_tooltip.draw(_wx, _wy, _ww, _wh * 2, newAction.tooltip, [ mx, my ]);
 		_wy += _hh + ui(8); _th += _hh + ui(8);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);

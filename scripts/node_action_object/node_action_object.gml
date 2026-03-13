@@ -1,7 +1,7 @@
 global.ACTIONS = [];
 
 function NodeAction() constructor {
-	name = "";
+	name = "New Action";
 	spr  = s_node_action_default;
 	node = noone;
 	tags = [];
@@ -19,9 +19,9 @@ function NodeAction() constructor {
 	location = noone;
 	filepath = "";
 	
-	static getName       = function() /*=>*/ { return name;        }
-	static getTooltip    = function() /*=>*/ { return tooltip;     }
-	static getTooltipSpr = function() /*=>*/ { return tooltip_spr; }
+	static getName       = function() /*=>*/ {return name};
+	static getTooltip    = function() /*=>*/ {return tooltip};
+	static getTooltipSpr = function() /*=>*/ {return tooltip_spr};
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 		var _n = {};
@@ -93,13 +93,15 @@ function NodeAction() constructor {
 		return map;
 	}
 	
-	static save = function() {
+	static save = function(_surf) {
+		file_delete_safe(filepath);
+		
 		var _path = $"{DIRECTORY}Nodes/Actions/{name}.json";
 		var _map  = {
 			name,
 			sprPath : $"./{name}.png",
 			tooltip,
-			tags: string_split(tags, ",", true),
+			tags,
 			location,
 			nodes,
 			connections,
@@ -108,7 +110,22 @@ function NodeAction() constructor {
 		};
 		
 		json_save_struct(_path, _map);
-		if(spr) surface_save(spr, filename_change_ext(_path, ".png"));
+		
+		if(_surf) {
+			var _newSPath = filename_change_ext(_path, ".png");
+			
+			if(filepath != "") {
+				var _oldSPath = filename_change_ext(filepath, ".png");
+				if(_oldSPath != _newSPath) file_delete(_oldSPath);
+			}
+			
+			surface_save(_surf, _newSPath);
+		}
+	}
+	
+	static deleteFile = function() {
+		file_delete_safe(filepath);
+		file_delete_safe(filename_change_ext(filepath, ".png"));
 	}
 	
 	static deserialize = function(path) {
