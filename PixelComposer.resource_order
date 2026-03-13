@@ -1998,6 +1998,7 @@
     {"name":"sh_channel_R2B","order":12,"path":"shaders/sh_channel_R2B/sh_channel_R2B.yy",},
     {"name":"sh_channel_R2G","order":11,"path":"shaders/sh_channel_R2G/sh_channel_R2G.yy",},
     {"name":"sh_channel_R2R","order":14,"path":"shaders/sh_channel_R2R/sh_channel_R2R.yy",},
+    {"name":"sh_channel_RGBA","order":15,"path":"shaders/sh_channel_RGBA/sh_channel_RGBA.yy",},
     {"name":"sh_channel_S","order":1,"path":"shaders/sh_channel_S/sh_channel_S.yy",},
     {"name":"sh_channel_V","order":2,"path":"shaders/sh_channel_V/sh_channel_V.yy",},
     {"name":"sh_checkerboard","order":1,"path":"shaders/sh_checkerboard/sh_checkerboard.yy",},

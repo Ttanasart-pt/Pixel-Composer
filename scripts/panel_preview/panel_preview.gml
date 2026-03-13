@@ -360,7 +360,7 @@ function Panel_Preview() : PanelContent() constructor {
         preview_shader_alpha = true;
         preview_shader       = 0;
         preview_shaders      = [
-        	new scrollItem( "Raw"        ).setData(undefined), 
+        	new scrollItem( "Raw"        ).setData(sh_channel_RGBA), 
         	-1,
         	new scrollItem( "Red"        ).setData(sh_channel_R), 
         	new scrollItem( "Green"      ).setData(sh_channel_G), 
@@ -2887,15 +2887,16 @@ function Panel_Preview() : PanelContent() constructor {
 			sb_shader.setTextColor(preview_shader? COLORS._main_accent : COLORS._main_text);
 			sb_shader.draw(cx, cy, cw, ch, preview_shader, m, x, y);
 			
-			if(preview_shader) {
-				var bs = ch;
-				var bx = cx - ui(4) - bs;
-				var by = cy;
-				var bb = THEME.button_hide;
-				
-				if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Apply Alpha", THEME.shader_alpha, preview_shader_alpha) == 2)
-					preview_shader_alpha = !preview_shader_alpha;
-			}
+			var bs  = ch;
+			var bx  = cx - ui(4) - bs;
+			var by  = cy;
+			var bb  = THEME.button_hide;
+			var spr = THEME.shader_alpha;
+			var sid = preview_shader_alpha;
+			var cc  = preview_shader_alpha? COLORS._main_icon : COLORS._main_accent;
+			
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Apply Alpha", spr, sid, cc) == 2)
+				preview_shader_alpha = !preview_shader_alpha;
 			
 		}
         
