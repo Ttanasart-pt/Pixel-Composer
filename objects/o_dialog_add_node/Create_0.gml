@@ -709,8 +709,12 @@ event_inherited();
 					var spr_y = yy + grid_size / 2;
 					
 					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-					if(sprite_exists(_node.spr)) 
-						draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
+					
+					if(sprite_exists(_node.spr)) {
+						if(is(_node, NodeAction))
+							 draw_sprite_fit(_node.spr, 0, spr_x, spr_y, grid_size - ui(16), grid_size - ui(16));
+						else draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
+					}
 					
 					if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 						draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
