@@ -3093,6 +3093,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static extractNode = function(_type = extract_node, _x = undefined, _y = undefined) {
+		
 		if(is_array(_type)) _type = _type[0];
 		if(_type == "") return noone;
 		
@@ -3140,6 +3141,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					
 					array_push(_in.animator.values, _kf);
 				}
+				break;
+			
+			case "Node_Path" : 
+				var _amo  = array_length(animator.values);
+				var _anim = _amo > 1;
+				ext.inputs[0].setAnim(_anim);
+				
+				for( var i = 0; i < _amo; i++ ) {
+					var _key = animator.values[i];
+					var _val = _key.value;
+					    _val = unit.apply(_val);
+					
+					ext.createNewInput(array_length(ext.inputs), _val[0], _val[1]);
+					
+					if(_anim) ext.inputs[0].setValue(i / (_amo - 1), false, _key.time);
+				}
+				
+				unit.setMode(VALUE_UNIT.constant);
+				setAnim(false);
 				break;
 			
 			default :
