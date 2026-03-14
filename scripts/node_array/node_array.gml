@@ -205,7 +205,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 				case VALUE_TYPE.gradient :
 					if(is(key, gradientObject))
-						key.draw(key, x0, val.y - jh / 2, ww, jh);
+						key.draw(x0, val.y - jh / 2, ww, jh);
 					break;
 			}
 		}
