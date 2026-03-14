@@ -31,6 +31,14 @@ function canvas_brush() constructor {
 		scatt_range = 0;
 	#endregion
 	
+	#region animation
+		animated     = false;
+		animType     = 0;
+		animSpeed    = 1;
+		animVelocity = 0;
+		animOnEnd    = 0;
+	#endregion
+	
 	#region actions
 		sizing      = false;
 		sizing_s    = 0;

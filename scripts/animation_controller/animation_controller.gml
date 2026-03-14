@@ -54,6 +54,7 @@ function AnimationManager() constructor {
 	frame_range_start = undefined;
 	frame_range_end   = undefined;
 	
+	play_speed      = 1;
 	play_direction  = 1;
 	is_simulating   = false;
 	
@@ -157,8 +158,8 @@ function AnimationManager() constructor {
 		if(!is_playing) return;
 		
 		var _frTime = 1 / framerate;
-		last_time += DELTA_TIME;
-		real_time += delta_time;
+		last_time += DELTA_TIME * play_speed;
+		real_time += delta_time * play_speed;
 		
 		if(last_time < _frTime) return;
 		

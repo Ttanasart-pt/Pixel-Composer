@@ -63,6 +63,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(17, nodeValue_RotRand( "Random Direction",    [0,0,0,0,0]              ));
 	newInput(16, nodeValue_Bool(    "Rotate by Direction", false                    ));
 	
+	////- =Animated Brush
+	newInput(23, nodeValue_Bool(    "Animated Brush", false ));
+	newInput(26, nodeValue_EButton( "Animation Type", 0, [ "Play", "Randomize" ] ));
+	newInput(11, nodeValue_Float(   "Base Speed",     1     ));
+	newInput(24, nodeValue_Float(   "Velocity Speed", false ));
+	
+	newInput(25, nodeValue_EButton( "On Animation End", 0, [ "Loop", "Ping-pong", "Stop" ] ));
+	
 	////- =Scatter
 	newInput(22, nodeValue_Bool(    "Scatter",            false ));
 	newInput( 2, nodeValue_Float(   "Scatter Amount",     1     ));
@@ -71,8 +79,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- =Data Transfer
 	newInput(19, nodeValue_Surface( "Data Source"               ));
 	newInput(20, nodeValue_Bool(    "Transfer Dimension", true  ));
-	/* deprecated */ newInput(11, nodeValue_Slider(  "Alpha", 1 ));
-	// input 23
+	// input 27
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -248,11 +255,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	sp_bsurface = new Inspector_Spacer(ui(8), true);
 	
 	input_display_list = [ 
-		["Frames",       false    ],  0, frame_renderer, 
-		["Output",       false,   ], 12,  5,  7, 13, 18, 
-		["Background",    true, 10],  4,  1,  8, 14,  9, 
-		["Brush",        false    ], 21,  6, sp_bsurface, 15, 17, 16, sp_bsurface, 22,  2,  3, 
-		["Data Transfer", true, noone, b_transferData], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
+		[ "Frames",        false     ],  0, frame_renderer, 
+		[ "Output",        false,    ], 12,  5,  7, 13, 18, 
+		[ "Background",     true, 10 ],  4,  1,  8, 14,  9, 
+		[ "Brush",         false     ], 21,  6, sp_bsurface, 15, 17, 16, sp_bsurface, 22,  2,  3, 
+		[ "Animated Brush", true, 23 ], 26, 11, 24, 25, 
+		[ "Data Transfer",  true, noone, b_transferData ], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
 	];
 	
 	////- Nodes
@@ -1608,6 +1616,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _scatt  = getInputData(22);
 			var _scAmo  = getInputData( 2);
 			var _scRad  = getInputData( 3);
+			
+			brush.animated     = getInputData(23);
+			brush.animType     = getInputData(26);
+			brush.animSpeed    = getInputData(11);
+			brush.animVelocity = getInputData(24);
+			brush.animOnEnd    = getInputData(25);
 			
 			var _brIsSurf = _brType == 1 && is_surface(_brSurf);
 			

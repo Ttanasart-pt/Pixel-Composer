@@ -33,6 +33,10 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 	temp_surf = noone;
 	mixx_surf = noone;
 	
+	animFrame     = 0;
+	animFrame_Raw = 0;
+	animDirect    = 1;
+	
 	////- Init
 	
 	static init = function() {
@@ -230,8 +234,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 			surface_set_shader(drawing_surface, noone, true, BLEND.over);
 				draw_point_wrap(true);
 			surface_reset_shader();
-				
-			mouse_holding = true;
+			
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { // Shift Line
 				surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
 					draw_line_wrap(true);
@@ -239,6 +242,27 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 				
 				mouse_holding = false;
 				apply_draw_surface();
+				
+			} else {
+				mouse_holding = true;
+				
+				if(brush.animated) {
+					switch(brush.animType) {
+						case 0 : 
+							PROJECT.animator.firstFrame(); 
+							animFrame = PROJECT.animator.real_frame;
+							animFrame_Raw = animFrame;
+							break;
+						
+						case 1 : 
+							PROJECT.animator.setFrame(irandom(PROJECT.animator.frames_total - 1)); 
+							animFrame = PROJECT.animator.real_frame;
+							animFrame_Raw = 0;
+							break;
+					}
+					
+					Render(PROJECT, false);
+				}
 			}
 			
 			node.tool_pick_color(mouse_cur_tx, mouse_cur_ty);
@@ -253,10 +277,11 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 			warp_block_py = warp_block_y;
 		}
 			
-		if(mouse_holding) {
+		if(mouse_holding) { // Drawing
 			if(active) {
 				var _1px = !brush.use_surface && brush.dist_min == brush.dist_max && brush.dist_min == 1;
-					
+				var _drawnSpeed = 0;
+				
 				if(_1px) {
 					if(tool_attribute.pixelPerfect && !isEraser) {
 						var _drawPx = abs(mouse_cur_tx - mouse_las_draw_x) > 1 || 
@@ -273,7 +298,8 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 							surface_reset_shader();
 							
 							updated = true;
-						
+							_drawnSpeed = point_distance(mouse_las_draw_x, mouse_las_draw_y, mouse_pre_draw_x, mouse_pre_draw_y);
+							
 							mouse_las_draw_x = mouse_pre_draw_x;
 							mouse_las_draw_y = mouse_pre_draw_y;
 						}
@@ -284,6 +310,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 							draw_line_wrap(true);
 						surface_reset_shader();
 						
+						_drawnSpeed = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_tx, mouse_cur_ty);
 						updated = true;
 					}
 					
@@ -292,6 +319,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 						draw_line_wrap(true);
 					surface_reset_shader();
 					
+					_drawnSpeed = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_tx, mouse_cur_ty);
 					updated = true;
 				}
 					
@@ -300,13 +328,48 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 				
 				warp_block_px = warp_block_x;
 				warp_block_py = warp_block_y;
+				
+				if(brush.animated) {
+					var _a = animFrame;
+					animFrame_Raw += (brush.animSpeed + brush.animVelocity * _drawnSpeed)
+						* PROJECT.animator.framerate * DELTA_TIME * animDirect;
+					
+					switch(brush.animType) {
+						case 0 :
+							_a = floor(animFrame_Raw);
+							
+							if(_a >= PROJECT.animator.frames_total || _a < 0)
+							switch(brush.animOnEnd) {
+								case 0 : animFrame_Raw = 0;  _a = 0; break;
+								case 1 : animDirect   *= -1;         break;
+								case 2 : 
+									mouse_holding = false;
+									apply_draw_surface();
+									break;
+							}
+							break;
+						
+						case 1 :
+							if(animFrame_Raw >= 1) {
+								_a = irandom(PROJECT.animator.frames_total - 1); 
+								animFrame_Raw = frac(animFrame_Raw);
+							}
+							break;
+					}
+					
+					if(_a != animFrame) {
+						animFrame = _a;
+						PROJECT.animator.setFrame(animFrame);
+						Render(PROJECT, false);
+					}
+				}
 			}
 			
 			if(mouse_release(mb_left)) {
 				mouse_holding = false;
 				apply_draw_surface();
 			}
-		}
+		} // Drawing
 		
 		mouse_pre_x = mouse_cur_x;
 		mouse_pre_y = mouse_cur_y;
