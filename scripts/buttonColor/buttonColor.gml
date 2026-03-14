@@ -9,12 +9,10 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	hover_wid     = ui(24);
 	
 	onColorPick   = function() /*=>*/ {
-		with(dialogCall(o_dialog_color_selector)) {
-			setApply(other.onApply);
-			selector.dropper_active = true;
-			selector.dropper_close  = true;
-			drop_target = other;
-		}
+		var _dia = colorSelectorCall(undefined, function(c) /*=>*/ {return onApply(c)});
+		_dia.selector.dropper_active = true;
+		_dia.selector.dropper_close  = true;
+		_dia.drop_target = other;
 	}
 	
 	is_picking    = false;
@@ -38,9 +36,8 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	}
 	
 	static trigger = function() { 
-		var dialog = dialogCall(o_dialog_color_selector)
-						.setDefault(is_array(current_color)? array_safe_get(current_color, 0, 0) : current_color)
-						.setApply(onApply);
+		var colr   = is_array(current_color)? array_safe_get(current_color, 0, 0) : current_color;
+		var dialog = colorSelectorCall(colr, function(c) /*=>*/ {return onApply(c)});
 		
 		dialog.interactable     = interactable;
 		dialog.drop_target      = self;

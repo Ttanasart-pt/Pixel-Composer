@@ -272,4 +272,10 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 
 #region action
 	function checkMouse() {}
+	
+	function dropperActive() {
+		selector.dropper_active = true;
+		selector.dropper_close  = true;
+		return self;
+	}
 #endregion

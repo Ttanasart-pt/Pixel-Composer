@@ -26,7 +26,6 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_to[i] = colr;
 		
 		inputs[2].setValue(_to); // Not necessary due to array reference
-		
 	} 
 	
 	sort_menu = [
@@ -109,10 +108,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_x2 -= bs + ui(4);
 			by   = _y0 + ss / 2 - bs / 2;
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.color_picker_dropper, 0, c_white) == 2) {
-				var dialog = dialogCall(o_dialog_color_selector).setApply(function(c) /*=>*/ {return setColor(c)});
-				dialog.selector.dropper_active = true;
-				dialog.selector.dropper_close  = true;
-				
+				colorSelectorCall(undefined, function(c) /*=>*/ {return setColor(c)}).dropperActive();
 				palette_select = [ i, i ];
 			}
 			
@@ -170,9 +166,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				palette_selecting = 2;
 				palette_select    = [ _mn, _mx ];
 				
-				var dialog = dialogCall(o_dialog_color_selector)
-								.setDefault(_to[palette_select[0]])
-								.setApply(function(c) /*=>*/ {return setColor(c)});
+				colorSelectorCall(_to[palette_select[0]], function(c) /*=>*/ {return setColor(c)});
 			}
 		}
 		

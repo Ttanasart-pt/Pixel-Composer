@@ -762,7 +762,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		else          current_brush.colors[color_3d_selected - 1] = color;
 		color_picking = false;
 		
-	} setToolColor = method(self, setToolColor);
+	}
 	
 	static drawTools = function(_mx, _my, xx, yy, _tool_size, hover, focus) {
 		var _sx0 = xx - _tool_size / 2;
@@ -803,7 +803,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				else if(dir > 270 || dir < 30) sel = 2;
 				
 				if(mouse_press(mb_left, focus)) { 
-					if(color_3d_selected == sel) colorSelectorCall(sel == 0? CURRENT_COLOR : current_brush.colors[sel - 1], setToolColor);
+					if(color_3d_selected == sel) 
+						colorSelectorCall(sel == 0? CURRENT_COLOR : current_brush.colors[sel - 1], function(c) /*=>*/ {return setToolColor(c)});
 					else color_3d_selected = sel;
 				}
 			}
@@ -819,7 +820,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _cx - _pd, yy - _pd, _cw + _pd * 2, _cw + _pd * 2, c_white, 1);
 			
 			if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _cw) && mouse_press(mb_left, focus))
-				colorSelectorCall(CURRENT_COLOR, setToolColor);
+				colorSelectorCall(CURRENT_COLOR, function(c) /*=>*/ {return setToolColor(c)});
 		
 			yy += _cw + ui(8);
 			hh += _cw + ui(8);
@@ -1205,14 +1206,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#region color picker
 			if(!selection.is_selected && active && key_mod_press(ALT)) {
 				color_picking = true;
-				with(dialogCall(o_dialog_color_selector)) {
-					setApply(other.setToolColor);
-					selector.dropper_active = true;
-					selector.dropper_close  = true;
-					
-					drop_target = other;
-					refocus     = true;
-				}
+				colorSelectorCall(undefined, function(c) /*=>*/ {return setToolColor(c)})
+					.setDrop(self).dropperActive()
+					.doRefocus();
 			}
 			
 			if(color_picking && !key_mod_press(ALT))
@@ -1514,7 +1510,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				array_insert(pick.palette, 0, getToolColor());
 				
 				pick.use_key = MOD_KEY.shift;
-				pick.onApply = setToolColor;
+				pick.onApply = function(c) /*=>*/ {return setToolColor(c)};
 				
 			}
 			

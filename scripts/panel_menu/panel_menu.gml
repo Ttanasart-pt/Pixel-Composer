@@ -958,10 +958,12 @@ function Panel_Menu() : PanelContent() constructor {
                     tip[i] = [ _thm, VALUE_TYPE.surface ];
                 }
                 
-                var dx  = hori? x + tcx : x + w;
-                var dy  = hori? y + h : y + tby0;
-                var da  = hori? fa_center : fa_left;
-                var dia = menuCall("title_recent_menu", arr, dx, dy, da).setTooltip(tip);
+                if(!array_empty(arr)) {
+                    var dx  = hori? x + tcx : x + w;
+                    var dy  = hori? y + h : y + tby0;
+                    var da  = hori? fa_center : fa_left;
+                    var dia = menuCall("title_recent_menu", arr, dx, dy, da).setTooltip(tip);
+                }
             }
             
             draw_set_font(f_p0b);

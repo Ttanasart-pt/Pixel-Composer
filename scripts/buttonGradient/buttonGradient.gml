@@ -49,13 +49,11 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		edit_color_index = _index;
 		
 		var _key   = edit_gradient.keys[edit_color_index];
-		var dialog = dialogCall(o_dialog_color_selector)
-			.setDefault(_key.value)
-			.setApply(function(c) /*=>*/ { 
-				edit_gradient.keys[edit_color_index].value = c;
-				onApply(edit_gradient);
-			})
-			.setClose(function() /*=>*/ { edit_color_index = -1; })
+		var dialog = colorSelectorCall(_key.value, function(c) /*=>*/ { 
+			edit_gradient.keys[edit_color_index].value = c;
+			onApply(edit_gradient);
+			
+		}).setClose(function() /*=>*/ { edit_color_index = -1; })
 		
 		dialog.interactable = interactable;
 	}

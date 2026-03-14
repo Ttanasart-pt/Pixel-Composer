@@ -38,10 +38,10 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
 	return dia;
 }
 
-function colorSelectorCall(defColor, onApply) {
-	var dialog = dialogCall(o_dialog_color_selector)
-					.setDefault(defColor)
-					.setApply(onApply);
+function colorSelectorCall(defColor = undefined, onApply = undefined) {
+	var dialog = dialogCall(o_dialog_color_selector);
+	if(defColor != undefined) dialog.setDefault(defColor);
+	if(onApply  != undefined) dialog.setApply(onApply);
 	
 	return dialog;
 }

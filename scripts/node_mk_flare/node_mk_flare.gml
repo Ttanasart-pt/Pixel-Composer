@@ -162,8 +162,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _flares = inputs[5].getValue();
 			_flares[flare_color_editing].blend = color;
 			triggerRender();
-			
-		} mself_mf0 edit_flare_color mself_mf1 edit_flare_color mself_mf2;
+		} 
 		
 		flare_builder = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 			var _flares = inputs[5].getValue();
@@ -295,7 +294,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				if(_hov && mouse_press(mb_left, _focus)) {
 					flare_color_editing = i;
-					var dialog = dialogCall(o_dialog_color_selector).setDefault(_flare.blend).setApply(edit_flare_color);
+					colorSelectorCall(_flare.blend, function(c) /*=>*/ {return edit_flare_color(c)});
 				}
 				_ffx += _ffw + ui(4);
 				_fxs  = _ffx;

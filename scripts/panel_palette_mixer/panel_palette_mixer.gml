@@ -111,8 +111,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 		if(node_selecting == noone) return;
 		node_selecting.color = clr;
 		CURRENT_COLOR = clr;
-		
-	} mself_mf0 setColor mself_mf1 setColor mself_mf2;
+	}
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
@@ -420,10 +419,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 					if(DOUBLE_CLICK) {
 						node_selecting = node_hovering;
 						
-						var dialog = dialogCall(o_dialog_color_selector)
-										.setDefault(node_selecting.color)
-										.setApply(setColor);
-						
+						colorSelectorCall(node_selecting.color, function(c) /*=>*/ {return setColor(c)});
 						save_palette_mixer(palette_data);
 					}
 					
@@ -506,10 +502,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 						array_push(palette_data.nodes, _node);
 						node_selecting = _node;
 						
-						var dialog = dialogCall(o_dialog_color_selector)
-										.setDefault(node_selecting.color)
-										.setApply(setColor);
-						
+						colorSelectorCall(node_selecting.color, function(c) /*=>*/ {return setColor(c)});
 						save_palette_mixer(palette_data);
 					}
 					

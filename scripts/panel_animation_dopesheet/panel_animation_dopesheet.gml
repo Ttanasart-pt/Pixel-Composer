@@ -600,13 +600,10 @@ function Panel_Animation_Dopesheet() {
                         break;
                     
                     default :
-                    	var dia = dialogCall(o_dialog_color_selector);
-                        dia.setDefault(keyframe.value);
-                        dia.setApply(function(val) /*=>*/ { 
-                        	__keyframe_editing.value = val; 
+                    	colorSelectorCall(keyframe.value, function(c) /*=>*/ { 
+                        	__keyframe_editing.value = c; 
                         	__keyframe_editing.anim.node.triggerRender(); 
-                        });
-                        dia.setDrop(_wid);
+                        }).setDrop(_wid);
                         break;
                 }
                 break;

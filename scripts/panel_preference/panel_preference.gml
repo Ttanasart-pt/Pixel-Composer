@@ -960,13 +960,11 @@ function Panel_Preference() : PanelContent() constructor {
     			if(b == 2) {
     				color_selector_key = key;
     				
-    				var clrSelect = dialogCall(o_dialog_color_selector)
-						.setDefault(val)
-						.setApply(function(color) /*=>*/ { 
-							CDEF[$ color_selector_key] = color; 
-							overrideColor(color_selector_key, color); 
-							refreshThemePalette(); 
-						});
+    				colorSelectorCall(val, function(c) /*=>*/ { 
+						CDEF[$ color_selector_key] = c; 
+						overrideColor(color_selector_key, c); 
+						refreshThemePalette(); 
+					});
     			}
     			
     			var _bs = ui(24);
@@ -1063,13 +1061,11 @@ function Panel_Preference() : PanelContent() constructor {
     			if(b == 2) {
     				color_selector_key = key;
     				
-    				var clrSelect = dialogCall(o_dialog_color_selector)
-    									.setDefault(val)
-    									.setApply(function(color) /*=>*/ { 
-    										COLORS_KEYS.define[$ color_selector_key] = color;
-    										COLORS[$ color_selector_key] = color; 
-    										overrideColor(color_selector_key, color); 
-    									});
+    				colorSelectorCall(val, function(c) /*=>*/ { 
+						COLORS_KEYS.define[$ color_selector_key] = c;
+						COLORS[$ color_selector_key] = c; 
+						overrideColor(color_selector_key, c); 
+					});
     			}
     			
     			var _bs = ui(24);

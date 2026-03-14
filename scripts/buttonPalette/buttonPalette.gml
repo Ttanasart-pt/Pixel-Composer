@@ -23,14 +23,12 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		edit_color_index = _index;
 		current_palette  = array_clone(current_palette);
 		
-		var dialog = dialogCall(o_dialog_color_selector)
-			.setDefault(current_palette[edit_color_index])
-			.setApply(function(c) /*=>*/ {
-				if(edit_color_index == -1) return;
-				current_palette[edit_color_index] = c;
-				onApply(current_palette);		
-			})
-			.setClose(function() /*=>*/ { edit_color_index = -1; })
+		var dialog = colorSelectorCall(current_palette[edit_color_index], function(c) /*=>*/ {
+			if(edit_color_index == -1) return;
+			current_palette[edit_color_index] = c;
+			onApply(current_palette);
+			
+		}).setClose(function() /*=>*/ { edit_color_index = -1; })
 		
 		dialog.interactable = interactable;
 	}

@@ -19,7 +19,7 @@
 	ds_list_add(DIALOGS, self);
 	
 	prefocus  = FOCUS;
-	refocus   = false;
+	refocus   = false; static doRefocus = function() /*=>*/ { refocus = true; return self; }
 	
 	active    = true;
 	dialog_w  = 320;

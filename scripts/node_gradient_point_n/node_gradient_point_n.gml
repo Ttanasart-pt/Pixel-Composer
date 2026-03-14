@@ -158,7 +158,7 @@ function Node_Gradient_Points_N(_x, _y, _group = noone) : Node_Processor(_x, _y,
 				var col   = getInputData(hoverIndex + 1);
 				editIndex = hoverIndex + 1;
 				
-				var dialog = dialogCall(o_dialog_color_selector).setDefault(col).setApply(function(c) /*=>*/ { 
+				colorSelectorCall(col, function(c) /*=>*/ { 
 					if(array_empty(anchor_select))
 						inputs[editIndex].setValue(c); 
 					else for( var i = 0, n = array_length(anchor_select); i < n; i++ )
