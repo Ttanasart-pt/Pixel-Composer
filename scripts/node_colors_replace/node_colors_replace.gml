@@ -27,7 +27,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		inputs[2].setValue(_to); // Not necessary due to array reference
 		
-	} setColor = method(self, setColor);
+	} 
 	
 	sort_menu = [
 		new MenuItem("Sort Brightness", function() /*=>*/ { sortPalette(0) }),
@@ -109,7 +109,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_x2 -= bs + ui(4);
 			by   = _y0 + ss / 2 - bs / 2;
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.color_picker_dropper, 0, c_white) == 2) {
-				var dialog = dialogCall(o_dialog_color_selector).setApply(setColor);
+				var dialog = dialogCall(o_dialog_color_selector).setApply(function(c) /*=>*/ {return setColor(c)});
 				dialog.selector.dropper_active = true;
 				dialog.selector.dropper_close  = true;
 				
@@ -121,7 +121,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.color_wheel, 0, c_white) == 2) {
 				var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 				array_insert(pick.palette, 0, to);
-				pick.onApply = setColor;
+				pick.onApply = function(c) /*=>*/ {return setColor(c)};
 				palette_select = [ i, i ];
 			}
 			
@@ -172,7 +172,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				
 				var dialog = dialogCall(o_dialog_color_selector)
 								.setDefault(_to[palette_select[0]])
-								.setApply(setColor);
+								.setApply(function(c) /*=>*/ {return setColor(c)});
 			}
 		}
 		
