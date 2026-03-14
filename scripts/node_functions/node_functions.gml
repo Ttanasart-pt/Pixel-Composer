@@ -213,7 +213,7 @@
 		}
 	}
 	
-	function nodeGetData(str) {
+	function nodeGetData(str, project = PROJECT) {
 		str = string_trim(str);
 		var strs = string_splice(str, ".");
 		
@@ -222,7 +222,7 @@
 		if(array_length(strs) == 1) {
 			var _var = strs[0];
 			var splt = string_splice(_var, "[");
-			var inp  = PROJECT.globalNode.getInputKey(_var);
+			var inp  = project.globalNode.getInputKey(_var);
 			if(inp == noone) { noti_warning($"Variable {_var} not found."); return 0; }
 			
 			var _arr = [ 0, 0 ];
@@ -230,12 +230,11 @@
 			return _arr[0];
 		} 
 		
-		if(struct_has(PROJECT_VARIABLES, strs[0])) {
-			
+		if(has(PROJECT_VARIABLES, strs[0])) {
 			var _cat = strs[0];
 			var _fnc = strs[1];
 			var _str_var = PROJECT_VARIABLES[$ _cat];
-			if(!struct_has(_str_var, _fnc)) { noti_warning($"Variable {_fnc} not found."); return 0; }
+			if(!has(_str_var, _fnc)) { noti_warning($"Variable {_fnc} not found."); return 0; }
 			
 			var val = _str_var[$ _fnc][0];
 			return is_callable(val)? val() : val;
@@ -243,9 +242,9 @@
 		
 		if(array_length(strs) > 2) { 
 			var key = strs[0];
-			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return 0;
+			if(!ds_map_exists(project.nodeNameMap, key)) return 0;
 		
-			var node = PROJECT.nodeNameMap[? key];
+			var node = project.nodeNameMap[? key];
 			var map  = noone;
 			switch(string_lower(strs[1])) {
 				case "inputs"  : case "input"  : map = node.inputMap;  break;
@@ -263,16 +262,16 @@
 		return 0;
 	}
 	
-	function nodeGetDataAnim(str) {
+	function nodeGetDataAnim(str, project = PROJECT) {
 		str = string_trim(str);
 		var strs = string_splice(str, ".");
 		
 		if(array_length(strs) == 0) return 0;
 		if(array_length(strs) == 1) return EXPRESS_TREE_ANIM.none;
 		
-		if(struct_has(PROJECT_VARIABLES, strs[0])) {
+		if(has(PROJECT_VARIABLES, strs[0])) {
 			var _str_var = PROJECT_VARIABLES[$ strs[0]];
-			if(!struct_has(_str_var, strs[1])) return EXPRESS_TREE_ANIM.none;
+			if(!has(_str_var, strs[1])) return EXPRESS_TREE_ANIM.none;
 			
 			var val = _str_var[$ strs[1]][1];
 			return val;
@@ -280,9 +279,9 @@
 		
 		if(array_length(strs) > 2) { 
 			var key = strs[0];
-			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return EXPRESS_TREE_ANIM.none;
+			if(!ds_map_exists(project.nodeNameMap, key)) return EXPRESS_TREE_ANIM.none;
 		
-			var node = PROJECT.nodeNameMap[? key];
+			var node = project.nodeNameMap[? key];
 			var map  = noone;
 			switch(string_lower(strs[1])) {
 				case "inputs"  : case "input"  : map = node.inputMap;  break;

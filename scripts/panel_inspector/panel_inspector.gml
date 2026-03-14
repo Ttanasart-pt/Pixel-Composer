@@ -1572,12 +1572,18 @@ function Panel_Inspector() : PanelContent() constructor {
                 	break;
                 	
                 case "globalvar" : 
-                    // if(findPanel("Panel_Globalvar")) { yy += ui(4); hh += ui(4); continue; }
                     if(_m[1] > yy) contentPane.hover_content = true;
                     if(array_empty(PROJECT.globalNode.inputs)) break;
                     
+					var gx = ui(16);
+					var gy = yy;
+					var gw = contentPane.surface_w - ui(24);
+					
+					var rx = ui(16) + x;
+					var ry = top_bar_h + y;
+					
                     global_drawer.viewMode = viewMode;
-                    var glPar = global_drawer.draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
+                    var glPar = global_drawer.draw(gx, gy, gw, _m, pFOCUS, _hover, contentPane, rx, ry);
                     var gvh   = glPar[0];
                     
                     yy += gvh + ui(8);

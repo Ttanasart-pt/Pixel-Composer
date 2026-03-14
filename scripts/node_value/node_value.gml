@@ -1758,6 +1758,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			try { 
 				_exp_res = expTree.eval({
+					project:      node.project,
 					name :        name,
 					node_name :   node.display_name,
 					value :       arr[0],

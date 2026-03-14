@@ -67,7 +67,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(23, nodeValue_Bool(    "Animated Brush", false ));
 	newInput(26, nodeValue_EButton( "Animation Type", 0, [ "Play", "Randomize" ] ));
 	newInput(11, nodeValue_Float(   "Base Speed",     1     ));
-	newInput(24, nodeValue_Float(   "Velocity Speed", false ));
+	newInput(24, nodeValue_Float(   "Velocity Speed", 0     ));
+	newInput(27, nodeValue_Float(   "Step Speed",     0     ));
 	
 	newInput(25, nodeValue_EButton( "On Animation End", 0, [ "Loop", "Ping-pong", "Stop" ] ));
 	
@@ -79,7 +80,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- =Data Transfer
 	newInput(19, nodeValue_Surface( "Data Source"               ));
 	newInput(20, nodeValue_Bool(    "Transfer Dimension", true  ));
-	// input 27
+	// input 28
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -259,7 +260,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		[ "Output",        false,    ], 12,  5,  7, 13, 18, 
 		[ "Background",     true, 10 ],  4,  1,  8, 14,  9, 
 		[ "Brush",         false     ], 21,  6, sp_bsurface, 15, 17, 16, sp_bsurface, 22,  2,  3, 
-		[ "Animated Brush", true, 23 ], 26, 11, 24, 25, 
+		[ "Animated Brush", true, 23 ], 26, 11, 24, 27, 25, 
 		[ "Data Transfer",  true, noone, b_transferData ], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
 	];
 	
@@ -1621,6 +1622,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			brush.animType     = getInputData(26);
 			brush.animSpeed    = getInputData(11);
 			brush.animVelocity = getInputData(24);
+			brush.animStep     = getInputData(27);
 			brush.animOnEnd    = getInputData(25);
 			
 			var _brIsSurf = _brType == 1 && is_surface(_brSurf);

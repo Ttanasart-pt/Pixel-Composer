@@ -45,11 +45,104 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newOutput( 0, nodeValue_Output("Export Output", VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Path",          VALUE_TYPE.path,    ""    )).setVisible(true, true);
 	
+	setting_editor = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
+		if(project_object == undefined) return 0;
+		
+		var con_w = _panel.contentPane.surface_w - ui(4);
+		
+		var view  = _panel.viewMode;
+		var spac  = view == INSP_VIEW_MODE.spacious;
+		var _edt  = project_object.attributeEditor;
+		
+        var _lh, wh;
+        var hh = 0;
+        var yy = _y;
+        
+        var rx = _panel.x + ui(16);
+        var ry = _panel.y + _panel.top_bar_h;
+        
+        var _font = spac? f_p2 : f_p3;
+        
+        for( var j = 0; j < 1; j++ ) {
+            var title = array_safe_get(_edt[j], 0, noone);
+            var param = array_safe_get(_edt[j], 1, noone);
+            var editW = array_safe_get(_edt[j], 2, noone);
+            var drpFn = array_safe_get(_edt[j], 3, noone);
+            
+            var widx = ui(8);
+            var widy = yy;
+            
+            draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
+            draw_text_add(ui(16), spac? yy : yy + ui(3), __txt(title));
+            
+            if(spac) {
+                _lh = line_get_height();
+                yy += _lh + ui(6);
+                hh += _lh + ui(6);
+                
+            } else if(view == INSP_VIEW_MODE.compact) {
+                _lh = line_get_height() + ui(6);
+            }
+            
+            var wh = 0;
+            var _data = project_object.attributes[$ param];
+            var _wdx  = spac? ui(16) : ui(140);
+            var _wdy  = yy;
+            var _wdw  = _panel.w - ui(48) - _wdx;
+            var _wdh  = spac? TEXTBOX_HEIGHT  : _lh;
+            
+            var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+            					.setFont(_font).setScrollpane(_panel.contentPane);
+		    if(is(editW, checkBox)) _param.setHalign(fa_center);
+			
+            editW.setFocusHover(_focus, _hover);
+            wh = editW.drawParam(_param);
+            
+            var jun  = PANEL_GRAPH.value_dragging;
+            var widw = con_w - ui(16);
+            var widh = spac? _lh + ui(6) + wh + ui(4) : max(wh, _lh);
+            
+            if(jun != noone && drpFn != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
+                draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
+            }
+            
+	    	var _wdhh = spac? wh + ui(8) : max(wh, _lh) + ui(6);
+        	yy += _wdhh; 
+        	hh += _wdhh;
+        }
+        
+		return hh - ui(6);
+	});
+	
+	global_drawer    = new GlobalVarDrawer();
+	globalvar_editor = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
+		if(project_object == undefined) return 0;
+        if(array_empty(project_object.globalNode.inputs)) return 0;
+		
+		var hh = 0;
+		var yy = _y;
+		var pane = _panel.contentPane;
+		
+		var gx = ui(16);
+		var gy = yy;
+		var gw = pane.surface_w - ui(24);
+		
+		var rx = ui(16) + _panel.x;
+		var ry = _panel.top_bar_h + _panel.y;
+		
+        global_drawer.viewMode = _panel.viewMode;
+        var glPar = global_drawer.draw(gx, gy, gw, _m, _focus, _hover, pane, rx, ry, project_object);
+        var gvh   = glPar[0] - ui(6);
+        yy += gvh;
+        hh += gvh;
+        
+		return hh;
+	});
+	
 	input_display_list = [ 
 		[ "Project",   false ],  0, 
 		[ "Animation", false ],  1,  4,  2,  3,  5,  6, 
-		// [ "Settings",  false ], 
-		// [ "Globalvar", false ], 
+		[ "Settings",  false ], setting_editor, new Inspector_Spacer(ui(6), true), globalvar_editor, 
 	];
 	
 	////- Nodes
@@ -187,7 +280,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _graph = new Panel_Graph(project_object);
 		    _graph.setSize(ui(800), ui(480));
 		    _graph.setTitle(display_name);
-		    // _graph.noGlobal();
+		    
 		var _dia = dialogPanelCall(_graph);
 		
 		return true;

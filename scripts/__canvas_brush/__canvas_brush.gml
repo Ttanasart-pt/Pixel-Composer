@@ -35,6 +35,7 @@ function canvas_brush() constructor {
 		animated     = false;
 		animType     = 0;
 		animSpeed    = 1;
+		animStep     = 0;
 		animVelocity = 0;
 		animOnEnd    = 0;
 	#endregion
@@ -132,10 +133,12 @@ function canvas_brush() constructor {
 	}
 	
 	static drawPoint = function(_x, _y, _draw = false) {
+		var _step = 0;
+		
 		if(_draw) seed = irandom_range(100000, 999999);
 		random_set_seed(seed);
 		
-		if(!_draw || scatter == 0) { drawPixel(_x, _y, _draw); return; }
+		if(!_draw || scatter == 0) { drawPixel(_x, _y, _draw); _step++; return _step; }
 		
 		var _amo = scatter >= 1? scatter : random(1) < scatter;
 		repeat(_amo) {
@@ -145,8 +148,10 @@ function canvas_brush() constructor {
 			var _yy  = _y + lengthdir_y(_dis, _dir);
 			
 			drawPixel(_xx, _yy, _draw);
+			_step++;
 		}
-	
+		
+		return _step;
 	}
 	
 	static drawPointExt = function(_x, _y, _s = 1, _draw = false) {
@@ -179,6 +184,8 @@ function canvas_brush() constructor {
 	}
 	
 	static drawLine = function(_x0, _y0, _x1, _y1, _draw = false, _cap = false) { 
+		var _step = 0;
+		
 		if(use_surface || draw_type == 1) {
 			var diss  = point_distance(_x0, _y0, _x1, _y1);
 			var dirr  = point_direction(_x0, _y0, _x1, _y1);
@@ -193,20 +200,22 @@ function canvas_brush() constructor {
 					var _px = _x0 + st_x * _i;
 					var _py = _y0 + st_y * _i;
 						
-					drawPoint(_px, _py, _draw);
-						
+					_step += drawPoint(_px, _py, _draw);
+					
 					next_dist = random_range(dist_min, dist_max);
 					_i   += next_dist;
 					_dst -= next_dist;
 				}
 				
 				next_dist -= _dst;
+				
 			} else 
 				next_dist -= diss;
 				
 			if(dist_min == dist_max && dist_min == 1)
-				drawPoint(_x1, _y1, _draw);
-			return;
+				_step += drawPoint(_x1, _y1, _draw);
+			
+			return _step;
 			
 		} 
 		
@@ -229,12 +238,14 @@ function canvas_brush() constructor {
 					
 		} else {
 			draw_line_width(_x0, _y0, _x1, _y1, size);
+			
 			if(_cap) {
-				drawPoint(_x0, _y0, true);
-				drawPoint(_x1, _y1, true);
+				_step += drawPoint(_x0, _y0, true);
+				_step += drawPoint(_x1, _y1, true);
 			}
 		}
 	
+		return _step;
 	}
 			
 	static drawRect = function(_x0, _y0, _x1, _y1, _fill, _draw = false) {

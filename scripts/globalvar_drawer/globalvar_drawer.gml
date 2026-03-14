@@ -11,11 +11,11 @@ function GlobalVarDrawer() constructor {
 	edit_y    = {};
 	edit_y_to = {};
 	
-	static drawEdit = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry) {
+	static drawEdit = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project = PROJECT) {
 		var hh   = 0;
 		var chov = false; 
 		
-		var _node = PROJECT.globalNode;
+		var _node = _project.globalNode;
 		if(array_empty(_node.inputs)) return [ 0, false ];
 		
 		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
@@ -139,13 +139,13 @@ function GlobalVarDrawer() constructor {
 		return [ hh, chov ];
 	}
 	
-	static drawValue = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry) {
+	static drawValue = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project = PROJECT) {
 		var hh   = 0;
 		var chov = false; 
 		
 		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
 		var lb_h  = line_get_height(_font, 4 + viewMode * 2);
-		var _node = PROJECT.globalNode;
+		var _node = _project.globalNode;
 		var _padd = ui(6);
 		
 		if(viewMode == INSP_VIEW_MODE.compact) { 
@@ -170,8 +170,8 @@ function GlobalVarDrawer() constructor {
 		return [ hh, chov ];
 	}
 	
-	static draw = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry) {
-		if(editing) return drawEdit(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry);
-		return drawValue(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry);
+	static draw = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project = PROJECT) {
+		if(editing) return drawEdit(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project);
+		return drawValue(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project);
 	}
 }

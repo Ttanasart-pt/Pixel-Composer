@@ -248,9 +248,9 @@
         }
         
         static getVal = function(val, params = {}, getRaw = false) {
-            if(is_struct(val))    return val.eval(params, getRaw);
-            if(is_real(val))    return val;
-            if(getRaw)            return val;
+            if(is_struct(val)) return val.eval(params, getRaw);
+            if(is_real(val))   return val;
+            if(getRaw)         return val;
             
             if(is_string(val)) val = string_trim(val);
             
@@ -264,7 +264,7 @@
             if(array_length(_str) > 1 && _str[0] == "self" && struct_has(params, "node_values"))
                 return struct_try_get(params.node_values, _str[1]);
             
-            return nodeGetData(val);
+            return nodeGetData(val, params.project);
         }
         
         static _validate = function(val) {
@@ -318,7 +318,6 @@
             }
             
             if(val == "value") return EXPRESS_TREE_ANIM.base_value;
-            //var anim = nodeGetDataAnim(val);
             return EXPRESS_TREE_ANIM.animated;
         }
         

@@ -110,7 +110,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	dynaDraw_parameter = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(array_empty(custom_parameter_names)) return 0;
 		
-		var _hh =  0;
+		var _hh = 0;
 		
 		for( var i = 0, n = array_length(custom_parameter_names); i < n; i++ ) {
 			var _n = custom_parameter_names[i];
