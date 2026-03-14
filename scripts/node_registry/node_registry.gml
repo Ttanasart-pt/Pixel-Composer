@@ -664,7 +664,7 @@ function refreshNodeFavourite() {
 }
 
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
-	if(!struct_has(ALL_NODES, _name)) {
+	if(!has(ALL_NODES, _name)) {
 		log_warning("LOAD", $"Node type {_name} not found");
 		return noone;
 	}

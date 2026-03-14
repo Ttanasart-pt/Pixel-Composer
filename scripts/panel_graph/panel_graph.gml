@@ -3586,9 +3586,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	case "Node_Statistic" : node = doCompose("Node_Statistic"); break;
 	    	case "Node_3D_Scene" :  node = doCompose("Node_3D_Scene");  break;
 	    	
-	    	case "Node_Array" :     node = doArray();                   break;
-	    	case "Node_Export" :    node = doExport();                  break;
-	    	case "Node_Frame" :     node = doFrame();                   break;
+	    	case "Node_Array" :     node = doArray();  break;
+	    	case "Node_Export" :    node = doExport(); break;
+	    	case "Node_Frame" :     node = doFrame();  return;
 	    	
 	    	case "Node_Transform" : 
 	    		if(!array_empty(nodes_selecting) && !array_empty(nodes_selecting[0].outputs)) {
