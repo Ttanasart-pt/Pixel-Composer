@@ -29,6 +29,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	icon  = THEME.node_pxc;
 	color = CDEF.orange;
 	setAlwaysTimeline(new timelineItemNode_PXC(self));
+	setCacheManual();
 	
 	////- Project
 	newInput( 0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Pixel Composer project(.pxc)|*.pxc" }).rejectArray();
@@ -154,6 +155,9 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	project_runner  = undefined;
 	project_object  = undefined;
 	
+	project_surface_dimension    = undefined;
+	project_globalvar_values     = undefined;
+	
 	attributes.timeline_override = true;
 	attributes.file_checker      = true;
 	attributes.project_length    = 0;
@@ -221,7 +225,19 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(project_object == undefined) return;
 		
-		var _outp    = project_runner.output_junc;
+		if(project_surface_dimension != undefined) {
+			project_object.attributes.surface_dimension = project_surface_dimension;
+			project_surface_dimension = undefined;
+		}
+		
+		if(project_globalvar_values != undefined) {
+			project_object.globalNode = new Node_Global();
+			project_object.globalNode.deserialize(project_globalvar_values)
+			
+			project_globalvar_values = undefined;
+		}
+		
+		var _outp  = project_runner.output_junc;
 		if(!is(_outp, NodeValue)) return;
 		
 		var _frame = CURRENT_FRAME * _spd - (_strt - 1);
@@ -284,6 +300,13 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _dia = dialogPanelCall(_graph);
 		
 		return true;
+	}
+	
+	static clearCache = function(_force = false) {
+		if(project_object == undefined) return;
+		
+		for( var i = 0, n = array_length(project_object.allNodes); i < n; i++ )
+			project_object.allNodes[i].clearCache();
 	}
 	
 	timeline_content_dragging  = false;
@@ -378,6 +401,22 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     	return _hov;
 	}
 	
+	////- Serialize
+	
+	static doSerialize = function(_map) {
+		if(project_object == undefined) return 0;
+		
+		_map.surface_dimension = project_object.attributes.surface_dimension;
+		_map.globalvar_value   = project_object.globalNode.serialize();
+	}
+	
+	static postDeserialize = function() {
+		if(has(load_map, "surface_dimension")) 
+			project_surface_dimension = load_map.surface_dimension;
+		
+		if(has(load_map, "globalvar_value")) 
+			project_globalvar_values  = load_map.globalvar_value;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

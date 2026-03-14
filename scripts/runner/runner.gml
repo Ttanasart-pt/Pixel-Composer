@@ -12,7 +12,7 @@ function Runner() constructor {
 	static processable = function() { return io_node != undefined; }
 	
 	static render = function(_frame = 0, _partial = true) {
-		project.animator.current_frame  = _frame;
+		project.animator.setFrame(_frame);
 		
 		try { RenderSync(project, _partial); }
 		catch(e) { log_warning("UPDATE error", exception_print(e)); }
