@@ -78,8 +78,8 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		var _drawFn = brush.drawRect;
 		
 		switch(shape) {
-			case CANVAS_TOOL_SHAPE.rectangle : _drawFn = brush.drawRect;    break;
-			case CANVAS_TOOL_SHAPE.ellipse   : _drawFn = brush.drawEllipse; break;
+			case CANVAS_TOOL_SHAPE.rectangle : _drawFn = method(brush, brush.drawRect);    break;
+			case CANVAS_TOOL_SHAPE.ellipse   : _drawFn = method(brush, brush.drawEllipse); break;
 		}
 		
 		if(brush.tileMode == 0) {

@@ -1431,7 +1431,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
                 	break;
 			}
 			
-			var bs = current_brush.size;
+			var bs = current_brush.getSize();
 			global.canvas_brush_surface = surface_verify(global.canvas_brush_surface, bs+1, bs+1);
 			surface_set_target(global.canvas_brush_surface);
 				DRAW_CLEAR
@@ -1518,7 +1518,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region drag n drop
-			if(DRAGGING && hover&& mouse_release(mb_left)) {
+			if(DRAGGING && hover && mouse_release(mb_left)) {
 				if(DRAGGING.type == "Color") {
 					var _filType    = tool_attribute.fillType;
 					var _filThres   = tool_attribute.thres;
@@ -1611,7 +1611,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			var _brIsSurf = _brType == 1 && is_surface(_brSurf);
 			
-			inputs[ 6].setVisible(_brType == 1);
+			inputs[ 6].setVisible(_brType == 1, _brType == 1);
 			inputs[15].setVisible(_brType == 1);
 			inputs[17].setVisible(_brType == 1);
 			inputs[16].setVisible(_brType == 1);
