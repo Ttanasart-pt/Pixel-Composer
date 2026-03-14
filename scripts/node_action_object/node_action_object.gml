@@ -18,6 +18,7 @@ function NodeAction() constructor {
 	
 	location = noone;
 	filepath = "";
+	sprPath  = "";
 	
 	static getName       = function() /*=>*/ {return name};
 	static getTooltip    = function() /*=>*/ {return tooltip};
@@ -93,7 +94,7 @@ function NodeAction() constructor {
 		return map;
 	}
 	
-	static save = function(_surf) {
+	static save = function() {
 		file_delete_safe(filepath);
 		
 		var _path = $"{DIRECTORY}Nodes/Actions/{name}.json";
@@ -110,17 +111,19 @@ function NodeAction() constructor {
 		};
 		
 		json_save_struct(_path, _map);
+		filepath = _path;
 		
-		if(_surf) {
-			var _newSPath = filename_change_ext(_path, ".png");
-			
-			if(filepath != "") {
-				var _oldSPath = filename_change_ext(filepath, ".png");
-				if(_oldSPath != _newSPath) file_delete(_oldSPath);
-			}
-			
-			surface_save(_surf, _newSPath);
+		var _newSPath = filename_change_ext(_path, ".png");
+		if(sprPath != _newSPath) {
+			file_copy(sprPath, _newSPath);
+			file_delete(sprPath);
+			sprPath = _newSPath;
 		}
+	}
+	
+	static saveSurface = function(_surf) {
+		var _sPath = filename_change_ext(filepath, ".png");
+		surface_save(_surf, _sPath);
 	}
 	
 	static deleteFile = function() {
@@ -147,6 +150,7 @@ function NodeAction() constructor {
 			var _path = string_replace(map.sprPath, "./", filename_dir(path) + "/");
 			
 			if(file_exists_empty(_path)) {
+				sprPath = _path;
 				spr = sprite_add(_path, 1, false, false, 0, 0);
 				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 			}

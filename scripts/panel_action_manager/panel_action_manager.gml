@@ -83,7 +83,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 				continue;
 				
 			var _sel = _act == action_selecting;
-			var _hov = hover && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + hg - 1);
+			var _hov = !creating && hover && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + hg - 1);
 			var _spr = _act.spr;
 			
 			var cc = _hov? COLORS._main_text : COLORS._main_text_sub;
@@ -94,7 +94,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			draw_set_text(f_p3, fa_left, fa_center, cc);
 			draw_text_add(ui(4 + 32 + 4), yy + hg / 2, _name);
 			
-			if(!creating && _hov && mouse_lpress(focus)) {
+			if(_hov && mouse_lpress(focus)) {
 				if(_sel) action_selecting = undefined;
 				else setAction(_act);
 			}
@@ -359,6 +359,8 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		var ndw  = lstw;
 		var ndh  = h - _pd * 2;
 		
+		var bb = THEME.button_hide_fill;
+		
 		var bs = ui(24);
 		var bx = ndx + ndw - bs;
 		var by = ndy;
@@ -366,9 +368,15 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		var hover = !creating && pHOVER;
 		var txt   = _sel? __txt("Create Action from Selection") : __txt("Select node to create action");
 		var bc    = !creating && _sel? COLORS._main_value_positive : COLORS._main_icon;
-		if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, [mx,my], hover, pFOCUS, txt, THEME.add, 0, bc) == 2) {
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, [mx,my], hover, pFOCUS, txt, THEME.add, 0, bc) == 2) {
 			if(_sel) newAction(PANEL_GRAPH.nodes_selecting);
 		}
+		
+		bx -= bs + ui(4);
+		bc  = COLORS._main_icon;
+		txt = __txt("Open in Explorer");
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, [mx,my], pHOVER, pFOCUS, txt, THEME.dPath_open, 0, bc, 1, ui(6)) == 2)
+			shellOpenExplorer($"{DIRECTORY}Nodes/Actions/");
 		
 		var tx = ndx;
 		var ty = ndy;
@@ -439,6 +447,29 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		var _hh = tb_location.draw(_wx, _wy, _ww, _wh, cat_index, [ mx, my ], x, y);
 		_wy += _hh + ui(8); _th += _hh + ui(8);
 		
+		draw_set_text(f_p3, fa_left, fa_center, tcc);
+		draw_text_add(_tx, _wy + _wh / 2, __txt("Thumbnail"));
+		var _ths = ui(80);
+		var _thm = _ths - ui(4);
+		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, _wx, _wy, _ths, _ths, COLORS._main_icon_light);
+		if(creating) {
+			var _surf = PANEL_PREVIEW.getNodePreviewSurface();
+			if(!is_surface(_surf)) {
+				var _node = PANEL_INSPECTOR.getInspecting();
+				if(_node) _surf = _node.getPreviewValues();
+			}
+			
+			if(is_surface(_surf))
+				draw_surface_fit(_surf, _wx + _ths / 2, _wy + _ths / 2, _thm, _thm);
+			
+		} else if(action_selecting != undefined) {
+			var spr = action_selecting.spr;
+			if(sprite_exists(spr)) draw_sprite_fit(spr, 0, _wx + _ths / 2, _wy + _ths / 2, _thm, _thm);
+		}
+		draw_sprite_stretched(THEME.box_r2_clr, 1, _wx, _wy, _ths, _ths);
+		
+		////- =Buttons
+		
 		var bw = metaW - ui(40);
 		var bh = ui(28);
 		var bx = w - _pd - metaW;
@@ -446,13 +477,24 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		var hv = pHOVER && point_in_rectangle(mx, my, bx, by, bx + bw, by + bh);
 		
 		if(creating) {
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, COLORS._main_value_positive, .3 + hv * .1);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_value_positive, .6 + hv * .25);
+			var cc = COLORS._main_value_positive;
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, cc, .4 + hv * .1);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, cc, .75 + hv * .15);
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
 			draw_text_add(bx + bw / 2, by + bh / 2, __txt("Create Action"));
 			
 			if(mouse_press(mb_left, pFOCUS && hv)) {
 				action_selecting.save();
+				
+				var _surf = PANEL_PREVIEW.getNodePreviewSurface();
+				if(!is_surface(_surf)) {
+					var _node = PANEL_INSPECTOR.getInspecting();
+					if(_node) _surf = _node.getPreviewValues();
+				}
+				
+				if(is_surface(_surf))
+					action_selecting.saveSurface(_surf);
+					
 				__initNodeActions(true);
 				close();
 			}
@@ -473,8 +515,8 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			}
 			
 		} else if(action_selecting != undefined) {
-			var cc = hv? COLORS._main_value_positive : COLORS._main_icon;
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, cc, .3 + hv * .1);
+			var cc = COLORS._main_value_positive;
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, cc, .4 + hv * .1);
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, cc, .75 + hv * .15);
 			draw_set_text(f_p2, fa_center, fa_center, cc);
 			draw_text_add(bx + bw / 2, by + bh / 2, __txt("Update"));

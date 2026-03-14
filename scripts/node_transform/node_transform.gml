@@ -935,9 +935,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		// Normal or wrap
 		surface_set_shader(_outSurf, noone, true, BLEND.normal);
 			shader_set_interpolation(surf);
+			BLEND_OVERRIDE
 			
 			if(echo) {
 				if(echo_typ == 0) {
+					
 					for( var i = 0; i <= echo_amo; i++ ) {
 						var rat = i / echo_amo;
 						var _px = lerp(_ww/2, pos_raw[0], rat);
@@ -953,10 +955,14 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						_py -= ay;
 						__p = point_rotate(_px, _py, _px + ax, _py + ay, _rt, __p);
 						
-						_px = pos_exact? round(__p[0]) : __p[0];
-						_py = pos_exact? round(__p[1]) : __p[1];
+						_px = __p[0];
+						_py = __p[1];
+						
+						// _px = pos_exact? round(_px) : _px;
+						// _py = pos_exact? round(_py) : _py;
 						
 						draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
+						BLEND_ALPHA_MAX
 					}
 					
 				} else if(echo_typ == 1 && array_safe_get(transformData, CURRENT_FRAME - 1, noone) != noone) {
@@ -970,16 +976,20 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						var _sy = lerp(_pre[3], sca[1], rat);
 						var _rt = lerp(_pre[4], rot,    rat);
 						
-						_px = pos_exact? round(_px) : _px;
-						_py = pos_exact? round(_py) : _py;
+						// _px = pos_exact? round(_px) : _px;
+						// _py = pos_exact? round(_py) : _py;
 						
 						draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
+						BLEND_ALPHA_MAX
 					}
-				} else 
+				
+				} else
 					draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 				
-			} else 
+			} else
 				draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
+			
+			BLEND_NORMAL
 			
 			if(mode == 2) {
 				draw_surface_ext_safe(surf, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);

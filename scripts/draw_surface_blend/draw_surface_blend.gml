@@ -85,26 +85,26 @@ function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, a
 	}
 	
 	var surf	= surface_get_target();
-	var surf_w  = surface_get_width_safe(surf);
-	var surf_h  = surface_get_height_safe(surf);
+	var surf_w  = surface_get_width(surf);
+	var surf_h  = surface_get_height(surf);
 	
 	var fg_use  = is_surface(foreground);
 	
 	if(fg_use) {
-		var bgw = surface_get_width_safe(background);
-		var bgh = surface_get_height_safe(background);
+		var bgw = surface_get_width(background);
+		var bgh = surface_get_height(background);
 		
-		var fgw = surface_get_width_safe(foreground);
-		var fgh = surface_get_height_safe(foreground);
+		var fgw = surface_get_width(foreground);
+		var fgh = surface_get_height(foreground);
 		
 		shader_set(sh);
-		shader_set_s("fore",		  foreground);
-		shader_set_s("mask",		  _mask);
-		shader_set_i("useMask",       is_surface(_mask));
-		shader_set_f("dimension",     bgw / fgw, bgh / fgh); 
-		shader_set_f("opacity",       alpha);
-		shader_set_i("preserveAlpha", _pre_alp);
-		shader_set_i("tile_type",     tile);
+		shader_set_s( "fore",          foreground           );
+		shader_set_s( "mask",          _mask                );
+		shader_set_i( "useMask",       is_surface(_mask)    );
+		shader_set_f( "dimension",     bgw / fgw, bgh / fgh ); 
+		shader_set_f( "opacity",       alpha                );
+		shader_set_i( "preserveAlpha", _pre_alp             );
+		shader_set_i( "tile_type",     tile                 );
 	}
 	
 	BLEND_OVERRIDE

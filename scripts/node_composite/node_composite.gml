@@ -1808,8 +1808,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _anc  = _data[_ind + 6];
 			
 			if(!is_surface(_surf)) continue;
-			var _ww = surface_get_width_safe(_surf);
-			var _hh = surface_get_height_safe(_surf);
+			var _ww = surface_get_width(_surf);
+			var _hh = surface_get_height(_surf);
+			
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
@@ -1825,7 +1826,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			array_push(_atlas, new SurfaceAtlas(_surf, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
 			_trans[i] = [ _d0[0], _d0[1], _sca[0], _sca[1], _rot ];
 			
-			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
+			surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
 				try { draw_surface_blend_ext(temp_surface[!_bg], _surf, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, false); }
 				catch(e) { noti_warning(e, noone, self); }
 			surface_reset_shader();
