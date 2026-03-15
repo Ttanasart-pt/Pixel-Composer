@@ -115,36 +115,20 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return hh - ui(6);
 	});
 	
-	global_drawer    = new GlobalVarDrawer();
-	globalvar_editor = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
-		if(project_object == undefined) return 0;
-        if(array_empty(project_object.globalNode.inputs)) return 0;
-		
-		var hh = 0;
-		var yy = _y;
-		var pane = _panel.contentPane;
-		
-		var gx = ui(16);
-		var gy = yy;
-		var gw = pane.surface_w - ui(24);
-		
-		var rx = ui(16) + _panel.x;
-		var ry = _panel.top_bar_h + _panel.y;
-		
-        global_drawer.viewMode = _panel.viewMode;
-        var glPar = global_drawer.draw(gx, gy, gw, _m, _focus, _hover, pane, rx, ry, project_object);
-        var gvh   = glPar[0] - ui(6);
-        yy += gvh;
-        hh += gvh;
-        
-		return hh;
-	});
-	
 	input_display_list = [ 
 		[ "Project",   false ],  0, 
 		[ "Animation", false ],  1,  4,  2,  3,  5,  6, 
-		[ "Settings",  false ], setting_editor, new Inspector_Spacer(ui(6), true), globalvar_editor, 
+		[ "Settings",  false ], setting_editor, 
+		[ "Globalvar", false ], 
 	];
+	
+	function createNewInput(_key = "globalvar") {
+		var index = array_length(inputs);
+		newInput(index, new NodeValue(_key, self, CONNECT_TYPE.input, VALUE_TYPE.any, 0));
+		array_push(input_display_list, index);
+		
+		return inputs[index];
+	} setDynamicInput(1, false);
 	
 	////- Nodes
 	
@@ -156,7 +140,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	project_object  = undefined;
 	
 	project_surface_dimension    = undefined;
-	project_globalvar_values     = undefined;
+	project_global_data          = undefined;
 	
 	attributes.timeline_override = true;
 	attributes.file_checker      = true;
@@ -166,15 +150,11 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
 	static updatePaths = function(_path, _force = false) {
-		// if(LOADING || APPENDING) return;
-		
 		if(filename_ext(_path) != ".pxc") return;
 		if(!_force && curr_path == _path) return;
+		
 		curr_path = _path;
 		edit_time = file_get_modify_s(_path);
-		
-		// print($"Update Path", _path);
-		// printCallStack();
 		
 		var _name = filename_name_only(_path);
 		if(!renamedManual) setDisplayName(_name, false, false);
@@ -186,6 +166,28 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(project_runner.output_junc == undefined)
 			noti_warning("Cannot find output junction");
+			
+		input_display_list = array_clone(input_display_list_raw, 1);
+		array_resize(inputs, input_fix_len);
+		
+		var _gInputs = project_object.globalNode.inputs;
+		for( var i = 0, n = array_length(_gInputs); i < n; i++ ) {
+			var _glo = _gInputs[i];
+			var _inp = createNewInput(_glo.name);
+			_inp.setType(_glo.type);
+			_inp.setDisplay(_glo.display_type, _glo.display_data);
+			
+			var _init = true;
+			if(project_global_data != undefined) {
+				var _pdata = array_safe_get_fast(project_global_data, i, noone);
+				if(_pdata != noone) {
+					_init = false;
+					_inp.applyDeserialize(_pdata);
+				}
+			}
+			
+			if(_init) _inp.applyDeserialize(_glo.serialize());
+		}
 	}
 	
 	static step = function() {
@@ -213,62 +215,69 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _frac  = getInputData( 6);
 		#endregion
 			
-		var _outSurf = outputs[0].getValue();
-		surface_clear(_outSurf);
-		outputs[0].setValue(_outSurf);
+		#region project path
+			var _outSurf = outputs[0].getValue();
+			surface_clear(_outSurf);
+			outputs[0].setValue(_outSurf);
+				
+			update_on_frame = true;
+			if(is_array(path)) return;
 			
-		update_on_frame = true;
-		if(is_array(path)) return;
-		
-		outputs[1].setValue(path);
-		updatePaths(path, false);
+			outputs[1].setValue(path);
+			updatePaths(path, false);
+		#endregion
 		
 		if(project_object == undefined) return;
-		
-		if(project_surface_dimension != undefined) {
-			project_object.attributes.surface_dimension = project_surface_dimension;
-			project_surface_dimension = undefined;
-		}
-		
-		if(project_globalvar_values != undefined) {
-			project_object.globalNode = new Node_Global();
-			project_object.globalNode.deserialize(project_globalvar_values)
-			
-			project_globalvar_values = undefined;
-		}
 		
 		var _outp  = project_runner.output_junc;
 		if(!is(_outp, NodeValue)) return;
 		
-		var _frame = CURRENT_FRAME * _spd - (_strt - 1);
-		if(!_frac) _frame = round(_frame);
-		var _len   = project_object.animator.frames_total;
-		attributes.project_length = _len;
-		
-		if(!_pbef && _frame < 0) return;
-		
-		switch(_loop) {
-			case ANIMATION_END.loop : 
-				_frame = safe_mod(_frame, _len);
-				break;
+		#region set values
+			if(project_surface_dimension != undefined) {
+				project_object.attributes.surface_dimension = project_surface_dimension;
+				project_surface_dimension = undefined;
+			}
+			
+			for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+				var _inp = inputs[i];
+				var _key = _inp.name;
+				project_object.globalNode.overrideValue[? _key] = inputs[i].getValue();
 				
-			case ANIMATION_END.ping :
-				_frame = safe_mod(_frame, _len * 2 - 2);
-				if(_frame >= _len)
-					_frame = _len * 2 - 2 - _frame;
-				break;
-				
-			case ANIMATION_END.hold :
-				// if(_frame >= _len) return;
-				_frame = clamp(_frame, -_len, _len - 1);
-				break;
-				
-			case ANIMATION_END.hide :	
-				if(_frame < 0 || _frame >= _len)
-					return;
-		}
+			}
+		#endregion
 		
-		if(_frame < 0) return;
+		#region animation
+			var _frame = CURRENT_FRAME * _spd - (_strt - 1);
+			if(!_frac) _frame = round(_frame);
+			var _len   = project_object.animator.frames_total;
+			attributes.project_length = _len;
+			
+			if(!_pbef && _frame < 0) return;
+			
+			switch(_loop) {
+				case ANIMATION_END.loop : 
+					_frame = safe_mod(_frame, _len);
+					break;
+					
+				case ANIMATION_END.ping :
+					_frame = safe_mod(_frame, _len * 2 - 2);
+					if(_frame >= _len)
+						_frame = _len * 2 - 2 - _frame;
+					break;
+					
+				case ANIMATION_END.hold :
+					// if(_frame >= _len) return;
+					_frame = clamp(_frame, -_len, _len - 1);
+					break;
+					
+				case ANIMATION_END.hide :	
+					if(_frame < 0 || _frame >= _len)
+						return;
+			}
+			
+			if(_frame < 0) return;
+		#endregion
+		
 		project_runner.render(_frame, _frame != 0);
 		var _res = _outp.getValue();
 		
@@ -406,16 +415,21 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static doSerialize = function(_map) {
 		if(project_object == undefined) return 0;
 		
-		_map.surface_dimension = project_object.attributes.surface_dimension;
-		_map.globalvar_value   = project_object.globalNode.serialize();
+		_map.surface_dimension   = project_object.attributes.surface_dimension;
+		
+		var _ind = 0;
+		_map.project_global_data = [];
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+			_map.project_global_data[_ind++] = inputs[i].serialize();
 	}
 	
 	static postDeserialize = function() {
 		if(has(load_map, "surface_dimension")) 
 			project_surface_dimension = load_map.surface_dimension;
 		
-		if(has(load_map, "globalvar_value")) 
-			project_globalvar_values  = load_map.globalvar_value;
+		if(has(load_map, "project_global_data")) 
+			project_global_data = load_map.project_global_data;
+		
 	}
 }
 

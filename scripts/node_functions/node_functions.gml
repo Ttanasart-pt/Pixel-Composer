@@ -220,14 +220,10 @@
 		if(array_length(strs) == 0) return 0;
 		
 		if(array_length(strs) == 1) {
-			var _var = strs[0];
-			var splt = string_splice(_var, "[");
-			var inp  = project.globalNode.getInputKey(_var);
-			if(inp == noone) { noti_warning($"Variable {_var} not found."); return 0; }
-			
-			var _arr = [ 0, 0 ];
-			inp.getValueRecursive(_arr);
-			return _arr[0];
+			var key = strs[0];
+			var frm = project.animator.current_frame;
+			var val = project.globalNode.getInputData(key, frm);
+			return val;
 		} 
 		
 		if(has(PROJECT_VARIABLES, strs[0])) {

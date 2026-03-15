@@ -196,13 +196,14 @@ function variable_editor(nodeVal) constructor {
 }
 
 function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
-	name         = "GLOBAL";
-	display_name = "";
+	name          = "GLOBAL";
+	display_name  = "";
 	
-	node_id   = 0;
-	group     = noone;
-	use_cache = CACHE_USE.none;
-	value     = ds_map_create();
+	node_id       = 0;
+	group         = noone;
+	use_cache     = CACHE_USE.none;
+	value         = ds_map_create();
+	overrideValue = ds_map_create();
 	
 	input_display_list = -1;
 	anim_priority      = -999;
@@ -235,9 +236,13 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		return true;
 	}
 	
-	static getInputKey = function(key, def = noone) {
-		if(!ds_map_exists(value, key)) return def;
-		return value[? key];
+	static getInputKey  = function(key, def = noone) { return ds_map_exists(value, key)? value[? key] : def; }
+	static getInputData = function(key, frame) { 
+		if(ds_map_exists(overrideValue, key))
+			return overrideValue[? key];
+		
+		var inp = getInputKey(key) 
+		return inp? inp.__getAnimValue(frame) : 0;
 	}
 	
 	static update = function() {
