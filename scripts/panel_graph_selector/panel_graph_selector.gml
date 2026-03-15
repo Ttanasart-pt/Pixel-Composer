@@ -47,9 +47,9 @@ function Panel_Graph_Selector(_graph) : Panel_Linear_Setting() constructor {
 		}
 	}
 	
-	static setNodeColor = function(_node = noone) { color    = is(_node, Node)? _node.attributes.color : -1; select(); } mself_mf0 setNodeColor mself_mf1 setNodeColor mself_mf2;
-	static setNodeType  = function(_node = noone) { nodetype = is(_node, Node)? instanceof(_node) : ""; select(); }      mself_mf0 setNodeType mself_mf1 setNodeType mself_mf2;
-	static setNode      = function(_node = noone) { node     = _node; select(); }                                        mself_mf0 setNode mself_mf1 setNode mself_mf2;
+	static setNodeColor = function(n = noone) /*=>*/ { color    = is(n, Node)? n.attributes.color : -1; select(); }
+	static setNodeType  = function(n = noone) /*=>*/ { nodetype = is(n, Node)? instanceof(n) : "";      select(); }
+	static setNode      = function(n = noone) /*=>*/ { node     = n; select();                                    }
 	
 	static select = function() {
 		if(!is(graph, Panel_Graph)) return;
@@ -105,13 +105,13 @@ function Panel_Graph_Selector(_graph) : Panel_Linear_Setting() constructor {
 	prop_type = new __Panel_Linear_Setting_Item( __txt("Type"),   new scrollBox(type_list, function(i) /*=>*/ { setType(i); }).setUpdateHover(false), function() /*=>*/ {return type}  );
 	
 	prop_name      = new __Panel_Linear_Setting_Item( __txt("RegEx"), textBox_Text(function(t) /*=>*/ { text = t; select(); }), function() /*=>*/ {return text} );
-	prop_node_type = new __Panel_Linear_Setting_Item( __txt("Node"), button(function() /*=>*/ {return graph.dropperActive(setNodeType)}, THEME.node_drop).iconPad(), function() /*=>*/ {return nodetype} );
+	prop_node_type = new __Panel_Linear_Setting_Item( __txt("Node"), button(function() /*=>*/ {return graph.dropperActive(function(n) /*=>*/ {return setNodeType(n)})}, THEME.node_drop).iconPad(), function() /*=>*/ {return nodetype} );
 	
-	prop_node      = new __Panel_Linear_Setting_Item( __txt("Node"), button(function() /*=>*/ {return graph.dropperActive(setNode)},     THEME.node_drop).iconPad(), function() /*=>*/ {return nodetype} );
+	prop_node      = new __Panel_Linear_Setting_Item( __txt("Node"), button(function() /*=>*/ {return graph.dropperActive(function(n) /*=>*/ {return setNode(n)})},     THEME.node_drop).iconPad(), function() /*=>*/ {return nodetype} );
 	prop_recur     = new __Panel_Linear_Setting_Item( __txt("Recursive"), new checkBox(function() /*=>*/ { recur = !recur; }),  function() /*=>*/ {return recur} );
 	
 	prop_color     = new __Panel_Linear_Setting_Item( __txt("Color"), new buttonColor(function(c) /*=>*/ { color = c; }).hideAlpha(), function() /*=>*/ {return color} );
-	prop_node_colr = new __Panel_Linear_Setting_Item( __txt("Sample"), button(function() /*=>*/ {return graph.dropperActive(setNodeColor)}, THEME.node_drop).iconPad(), function() /*=>*/ {return nodetype} );
+	prop_node_colr = new __Panel_Linear_Setting_Item( __txt("Sample"), button(function() /*=>*/ {return graph.dropperActive(function(n) /*=>*/ {return setNodeColor(n)})}, THEME.node_drop).iconPad(), function() /*=>*/ {return nodetype} );
 	
 	properties = [
 		prop_type

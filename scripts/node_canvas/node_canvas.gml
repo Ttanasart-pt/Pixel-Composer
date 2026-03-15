@@ -1130,7 +1130,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		project.setModified();
 		triggerRender();
 		
-	} mself_mf0 apply_draw_surface mself_mf1 apply_draw_surface mself_mf2;
+	}
 	
 	static storeAction = function(_title = "Modify canvas") {
 		if(selection.is_selected) {
@@ -1298,7 +1298,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#region selection
 			selection.drawing_surface    = drawing_surface;
 			selection.canvas_surface     = _canvas_surface;
-			selection.apply_draw_surface = apply_draw_surface;
+			selection.apply_draw_surface = function(a=1) /*=>*/ {return apply_draw_surface(a)};
 			selection.was_selected       = selection.is_selected;
 			selection.selection_hovering = false;
 			
@@ -1342,7 +1342,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				_tool.drawing_surface    = drawing_surface;
 				_tool.canvas_surface     = _canvas_surface;
 				_tool.output_surface     = getOutputSurface();
-				_tool.apply_draw_surface = apply_draw_surface;
+				_tool.apply_draw_surface = function(a=1) /*=>*/ {return apply_draw_surface(a)};
 				
 				_tool.node = self;
 				

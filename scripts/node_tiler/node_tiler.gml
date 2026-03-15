@@ -153,8 +153,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_reset_shader();
 		
 		triggerRender();
-		
-	} mself_mf0 apply_draw_surface mself_mf1 apply_draw_surface mself_mf2;
+	} 
 	
 	static storeAction = function() {
 		var action = recordAction(ACTION_TYPE.custom, function(data) { 
@@ -213,7 +212,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     		
 			_tool.brush              = brush;
 			_tool.subtool            = _currTool.selecting;
-			_tool.apply_draw_surface = apply_draw_surface;
+			_tool.apply_draw_surface = function() /*=>*/ {return apply_draw_surface()};
 			_tool.drawing_surface    = drawing_surface;
 			_tool.tile_size          = _tileSiz;
 			
