@@ -92,7 +92,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	/* deprecated */ newInput(27, nodeValue_Color(    "Animator blend",     ca_white          ));
 	// input 45
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
 	
 	typeList = [ "Linear Transform", "Blending" ];
 	enum_select_mode = __enum_array_gen( [ "Index", "Area", "Linear", "Surface" ], s_node_repeat_selection_types);
@@ -384,7 +385,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[32].setVisible( _pat == 2);
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {	
+	static processData = function(_outData, _data, _array_index) {	
 		#region data
 			var _iSrf = _data[ 0];
 			
@@ -508,7 +509,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _baseSurface = _surf;
 		var _use_array   = is_array(_surf);
 		var _arr_length  = _use_array? array_length(_surf) : 1;
-		if(_arr_length < 1) return _outSurf;
+		if(_arr_length < 1) return _outData;
 		
 		var minx =  999999, miny =  999999;
 		var maxx = -999999, maxy = -999999;
@@ -525,7 +526,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		} else if(is_surface(_surf))
 			_sdim = surface_get_dimension(_surf);
 		
-		if(!is_surface(_baseSurface)) return _outSurf;
+		if(!is_surface(_baseSurface)) return _outData;
 		
 		random_set_seed(_sed);
 		
@@ -849,12 +850,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		}
 		
 		output_dimension[_array_index] = [_dim[0], _dim[1]];
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1]);
+		_outData[0]  = _outSurf;
 		
 		var _offset_x = -_fanc[0] * (maxx - minx);
 		var _offset_y = -_fanc[1] * (maxy - miny);
 		
 		////- RENDERING
+		
+		var _atlas_arr = array_verify(_outData[1], atlas_i);
+		_outData[1] = _atlas_arr;
 		
 		surface_set_shader(_outSurf);
 			     if(_bld_md == 0) { BLEND_ALPHA_MULP }
@@ -882,13 +887,17 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					_y += _padd[1] - miny;
 				}
 				
+				if(!is(_atlas_arr[i], SurfaceAtlas))
+					 _atlas_arr[i] = new SurfaceAtlas(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
+				else _atlas_arr[i].set(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
+				
 				draw_surface_ext(_surf, _x, _y, _sx, _sy, _rot, _col, _alp);
 			}
 			
 			BLEND_NORMAL
 		surface_reset_shader();
 		
-		return _outSurf;
+		return _outData;
 	}
 	
 	////- Serialize

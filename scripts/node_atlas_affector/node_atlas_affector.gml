@@ -8,19 +8,20 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(26, nodeValue_Dimension());
 	
 	////- =Influence
-	newInput( 1, nodeValue_EScroll(  "Influence Shape", 0, [ "Area", "Linear Wipe", "Map", "Order" ]));
+	newInput( 1, nodeValue_EScroll(  "Influence Shape", 0, [ "Area", "Linear Wipe", "Map", "Order", "Uniform" ]));
 	newInput( 2, nodeValue_Area(     "Area", DEF_AREA_REF   )).setUnitSimple();
 	newInput( 3, nodeValue_Vec2(     "Wipe Origin", [.5,.5] )).setUnitSimple();
 	newInput( 4, nodeValue_Rotation( "Wipe Angle",   0      ));
 	newInput(27, nodeValue_Float(    "Order Index",  0      ));
 	newInput( 6, nodeValue_Surface(  "Influence Map"        ));
+	newInput(32, nodeValue_Slider(   "Uniform Influence", 0 ));
 	
-	newInput( 5, nodeValue_Float(    "Falloff",       0  )).setCurvable(24, CURVE_DEF_01);
+	newInput( 5, nodeValue_Float(    "Falloff",      0      )).setCurvable(24, CURVE_DEF_01);
 	
 	////- =Position
-	newInput( 7, nodeValue_Bool(    "Effect Position", false ));
+	newInput( 7, nodeValue_Bool( "Effect Position", false ));
 	newInput( 8, nodeValue_EButton( "Mode",         0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
-	newInput( 9, nodeValue_Vec2(    "Position",    [0,0] ));
+	newInput( 9, nodeValue_Vec2(    "Position",    [0,0]  ));
 	newInput(28, nodeValue_Toggle(  "Axis",        0b11, [ "X", "Y" ] )).setInternalName("Position axis");
 	
 	////- =Rotation
@@ -42,22 +43,27 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(20, nodeValue_Color(    "Blend",        ca_white ));
 	
 	////- =Alpha
-	newInput(21, nodeValue_Bool(     "Set Alpha", false));
+	newInput(21, nodeValue_Bool(     "Set Alpha", false ));
 	newInput(22, nodeValue_EButton(  "Mode",      0, [ "Absolute", "Additive", "Multiplicative" ])).setInternalName("Alpha mode");
-	newInput(23, nodeValue_Float(    "Alpha",     1 ));
-	// input 30
+	newInput(23, nodeValue_Float(    "Alpha",     1     ));
+		
+	////- =Interpolate
+	newInput(30, nodeValue_Bool(     "Interpolate", false ));
+	newInput(31, nodeValue_Atlas(    "Target Atlas"       )).setArrayDepth(1).setVisible(true, true);
+	// input 33
 	
 	newOutput( 0, nodeValue_Output( "Atlas Out", VALUE_TYPE.atlas,   noone ));
 	newOutput( 1, nodeValue_Output( "Rendered",  VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0, 
-		[ "Output",    false,    ], 25, 26, 
-		[ "Influence", false     ],  1,  2,  3,  4, 27,  6,  5, 24, 
-		[ "Position",  false,  7 ],  8,  9, 28, 
-		[ "Rotation",  false, 10 ], 11, 12, 13, 
-		[ "Scale",     false, 14 ], 15, 16, 17, 29, 
-		[ "Blend",     false, 18 ], 19, 20, 
-		[ "Alpha",     false, 21 ], 22, 23, 
+		[ "Output",      false,    ], 25, 26, 
+		[ "Influence",   false     ],  1,  2,  3,  4, 27,  6, 32,  5, 24, 
+		[ "Position",    false,  7 ],  8,  9, 28, 
+		[ "Rotation",    false, 10 ], 11, 12, 13, 
+		[ "Scale",       false, 14 ], 15, 16, 17, 29, 
+		[ "Blend",       false, 18 ], 19, 20, 
+		[ "Alpha",       false, 21 ], 22, 23, 
+		[ "Interpolate", false, 30 ], 31, 
 	];
 	
 	////- Nodes
@@ -67,7 +73,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	static getDimension = function(arr = 0) { 
 		var _use_dim = getInputSingle(25, arr);
-		if(_use_dim) return getInputSingle(26, arr);
+		if(!_use_dim) return getInputSingle(26, arr);
 		
 		var _atlas = getInputSingle( 0, arr);
 		    _atlas = array_safe_get_fast(_atlas, 0);
@@ -175,6 +181,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _inf_wrot = _data[ 4];
 			var _inf_ind  = _data[27];
 			var _inf_map  = _data[ 6];
+			var _inf_lin  = _data[32];
 			
 			var _fall_dis = _data[ 5] * 2;
 			var _fall_cur = _data[24];
@@ -182,20 +189,54 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _use_dim  = _data[25];
 			var _cus_dim  = _data[26];
 			
-			inputs[26].setVisible(_use_dim);
+			inputs[26].setVisible(!_use_dim);
 			
 			inputs[ 2].setVisible(_inf_shp == 0);
 			inputs[ 3].setVisible(_inf_shp == 1);
 			inputs[ 4].setVisible(_inf_shp == 1);
 			inputs[27].setVisible(_inf_shp == 3);
-			inputs[ 5].setVisible(_inf_shp != 2);
+			inputs[ 5].setVisible(_inf_shp != 2 && _inf_shp != 4);
 			inputs[ 6].setVisible(_inf_shp == 2, _inf_shp == 2);
+			inputs[32].setVisible(_inf_shp == 4);
 		#endregion
 		
+		#region data
+			var pos_use = _data[ 7];
+			var pos_mod = _data[ 8];
+			var pos     = _data[ 9];
+			var pos_axs = _data[28];
+			
+			var rot_use = _data[10];
+			var rot_mod = _data[11];
+			var rot_amo = _data[12];
+			var rot_cal = _data[13];
+			
+			var sca_use = _data[14];
+			var sca_mod = _data[15];
+			var sca     = _data[16];
+			var sca_anc = _data[17];
+			var sca_axs = _data[29];
+				
+			var bln_use = _data[18];
+			var bln_mod = _data[19];
+			var bln     = _data[20];
+			
+			var alp_use = _data[21];
+			var alp_mod = _data[22];
+			var alp     = _data[23];
+				
+			var inp_use = _data[30];
+			var inp_tar = _data[31];
+		#endregion
+		
+		if(!is_array(inp_tar) || array_empty(inp_tar)) inp_use = false;
 		if(_inf_shp == 2 && !is_surface(_inf_map)) return _outData;
 		
 		#region process
-			var _atlas_res = array_create(array_length(_atlas));
+			var _atlas_len     = array_length(_atlas);
+			var _atlas_tar_len = array_safe_length(inp_tar);
+			
+			var _atlas_res = array_create(_atlas_len);
 			var _fall_samp = new Surface_sampler(_inf_map);
 			
 			var area_x = _inf_are[0];
@@ -209,7 +250,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var area_y0 = area_y - area_h;
 			var area_y1 = area_y + area_h;
 			
-			for( var i = 0, n = array_length(_atlas); i < n; i++ ) {
+			for( var i = 0, n = _atlas_len; i < n; i++ ) {
 				var _a = _atlas[i];
 				if(!is(_a, Atlas)) continue;
 					
@@ -278,14 +319,12 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 						_inf = str;
 						break;
 						
+					case 4 : 
+						_inf = _inf_lin;
+						break;
 				}
 				
 				////- =Position
-				
-				var pos_use = _data[ 7];
-				var pos_mod = _data[ 8];
-				var pos     = _data[ 9];
-				var pos_axs = _data[28];
 				
 				if(pos_use) {
 					switch(pos_mod) {
@@ -302,11 +341,6 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				}
 				
 				////- =Rotation
-				
-				var rot_use = _data[10];
-				var rot_mod = _data[11];
-				var rot_amo = _data[12];
-				var rot_cal = _data[13];
 				
 				if(rot_use) {
 					var _or = _a.rotation;
@@ -328,12 +362,6 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				
 				////- =Scale
 				
-				var sca_use = _data[14];
-				var sca_mod = _data[15];
-				var sca     = _data[16];
-				var sca_anc = _data[17];
-				var sca_axs = _data[28];
-				
 				if(sca_use) {
 					var _ox = _a.sx;
 					var _oy = _a.sy;
@@ -347,18 +375,18 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 						case 2 : _nx *= sca[0]; _ny *= sca[1]; break;
 					}
 					
-					_a.sx = lerp(_ox, _nx, _inf);
-					_a.sy = lerp(_oy, _ny, _inf);
+					if(sca_axs & 0b01) {
+						_a.sx = lerp(_ox, _nx, _inf);
+						_a.x -= (_a.sx - _ox) * _w * sca_anc[0];
+					}
 					
-					if(sca_axs & 0b01) _a.x -= (_a.sx - _ox) * _w * sca_anc[0];
-					if(sca_axs & 0b10) _a.y -= (_a.sy - _oy) * _h * sca_anc[1];
+					if(sca_axs & 0b10) {
+						_a.sy = lerp(_oy, _ny, _inf);
+						_a.y -= (_a.sy - _oy) * _h * sca_anc[1];
+					}
 				}
 				
 				////- =Blend
-				
-				var bln_use = _data[18];
-				var bln_mod = _data[19];
-				var bln     = _data[20];
 				
 				if(bln_use) {
 					var _oc = _a.blend;
@@ -374,10 +402,6 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				
 				////- =Alpha
 				
-				var alp_use = _data[21];
-				var alp_mod = _data[22];
-				var alp     = _data[23];
-				
 				if(alp_use) {
 					var _oa = _a.alpha;
 					var _na = _oa;
@@ -389,6 +413,26 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					}
 					
 					_a.alpha = lerp(_oa, _na, _inf);
+				}
+				
+				////- =Interpolate
+				
+				if(inp_use) {
+					var _atlas_target = inp_tar[i % _atlas_tar_len];
+					
+					_a.x = lerp(_a.x, _atlas_target.x, _inf);
+					_a.y = lerp(_a.y, _atlas_target.y, _inf);
+					
+					_a.rotation = lerp(_a.rotation, _atlas_target.rotation, _inf);
+					
+					var _ox = _a.sx;
+					var _oy = _a.sy;
+					
+					_a.sx = lerp(_a.sx, _atlas_target.sx, _inf);
+					_a.sy = lerp(_a.sy, _atlas_target.sy, _inf);
+					
+					if(_ox != _a.sx) _a.x -= (_a.sx - _ox) * _w * sca_anc[0];
+					if(_oy != _a.sy) _a.y -= (_a.sy - _oy) * _h * sca_anc[1];
 				}
 				
 			}

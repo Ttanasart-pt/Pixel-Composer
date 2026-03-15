@@ -2247,7 +2247,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static removeFrom = function(_remove_list = true) {
-		printCallStack();
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });
 		
 		recordAction(ACTION_TYPE.junction_disconnect, self, value_from).setRef(node);
