@@ -240,6 +240,7 @@
     "rotator_random_mode":                { "path": "./icon/s_rotator_random_mode.png",                     "s": 4, "x": 12, "y": 12 },
     "save_auto":                          { "path": "./icon/s_icon_save_auto.png",                          "s": 1, "x": 12, "y": 12 },
     "save":                               { "path": "./icon/s_icon_save.png",                               "s": 1, "x": 12, "y": 12 },
+    "scissor":                            { "path": "./icon/s_scissor.png",                                 "s": 1, "x": 12, "y": 12 },
     "scroll_box_arrow":                   { "path": "./icon/s_scroll_box_arrow.png",                        "s": 1, "x": 12, "y": 12 },
     "search":                             { "path": "./icon/s_search_16.png",                               "s": 1, "x":  8, "y":  8 },
     "search_24":                          { "path": "./icon/s_search_24.png",                               "s": 1, "x": 12, "y": 12 },

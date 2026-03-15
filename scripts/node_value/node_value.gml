@@ -2299,6 +2299,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static hasJunctionFrom = function() /*=>*/ {return value_from != noone || value_from_loop != noone};
 	static hasJunctionTo   = function() /*=>*/ {return array_length(getJunctionTo())};
 	
+	static removeTo = function() {
+		var _jto = getJunctionTo();
+		for( var i = 0, n = array_length(_jto); i < n; i++ )
+			_jto[i].removeFrom();
+	}
+	
 	////- DRAW
 	
 	static setColor = function(_color) { color = _color >= 0? color_real(_color) : _color; updateColor(); return self; }
