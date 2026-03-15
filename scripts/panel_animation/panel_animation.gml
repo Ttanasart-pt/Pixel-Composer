@@ -73,8 +73,10 @@
     function panel_animation_marker_remove()           { CALL("animation_marker_remove");           PANEL_ANIMATION.removeMarker(); }
     function panel_animation_marker_clear()            { CALL("animation_marker_clear");            PANEL_ANIMATION.clearMarker();  }
     
-    function panel_animation_keys_move()   { CALL("animation_keys_move");  PANEL_ANIMATION.transformKeys_Move();  }
-    function panel_animation_keys_scale()  { CALL("animation_keys_scale"); PANEL_ANIMATION.transformKeys_Scale(); }
+    function panel_animation_keys_move()     { CALL("animation_keys_move");  PANEL_ANIMATION.transformKeys_Move();  }
+    function panel_animation_keys_scale()    { CALL("animation_keys_scale"); PANEL_ANIMATION.transformKeys_Scale(); }
+    
+    function panel_animation_transfer_ease() { CALL("animation_transfer_ease");  PANEL_ANIMATION.transferEase(); }
     
 	function __fnInit_Animation() {
 		var an = "Animation";
@@ -152,6 +154,8 @@
         
         registerFunction(an, "Move Keys",            "G", n, panel_animation_keys_move            ).setMenu("animation_keys_move"  )
         registerFunction(an, "Scale Keys",           "S", n, panel_animation_keys_scale           ).setMenu("animation_keys_scale" )
+        
+        registerFunction(an, "Transfer Easing",       "", n, panel_animation_transfer_ease        ).setMenu("animation_transfer_ease" )
         
         registerFunction(an, "Toggle Hidden",      "S", s,  panel_animation_show_hidden    )
         	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )

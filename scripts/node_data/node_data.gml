@@ -578,11 +578,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- DYNAMIC IO
 	
-	dummy_input      = noone;
-	dummy_insert     = noone;
-	dummy_add_index  = noone;
-	_dummy_add_index = noone;
-	_dummy_start     = 0;
+	dummy_input        = noone;
+	dummy_insert       = noone;
+	dummy_add_index    = noone;
+	_dummy_add_index   = noone;
+	_dummy_start       = 0;
 	
 	createNewInput     = -1;
 	dynamic_visibility = -1;

@@ -215,6 +215,8 @@ function Panel_Animation_Dopesheet() {
 	#endregion
 
     #region ---- Actions ----
+    	__selecting_key_highlight = noone;
+    	
         function edit_keyframe_value()   { if(array_empty(keyframe_selecting)) return; editKeyFrame(keyframe_selecting[0]); }
         function edit_keyframe_lock_y()  { array_foreach(keyframe_selecting, function(k) /*=>*/ { k.ease_y_lock = !k.ease_y_lock; });   }
         
@@ -315,6 +317,8 @@ function Panel_Animation_Dopesheet() {
 	        "animation_duplicate",
 	        "animation_copy",
 	        "animation_paste",
+	        -1, 
+	        "animation_transfer_ease",
 	    ];
 	    
 	    global.menuItems_animation_keyframe_empty = [
@@ -383,7 +387,7 @@ function Panel_Animation_Dopesheet() {
             if(timeline_show_time != _scrub_frame)
                 _scrub_frame = timeline_show_time;
                 
-	        if(mouse_release(mb_left))
+	        if(mouse_lrelease())
 	            timeline_scubbing = false;
         }
         
@@ -405,7 +409,7 @@ function Panel_Animation_Dopesheet() {
 					timeline_frame_typing = true;
             		KEYBOARD_RESET
             		
-            	} else if(mouse_press(mb_left, pFOCUS) && !key_mod_press_any()) {
+            	} else if(mouse_lpress(pFOCUS) && !key_mod_press_any()) {
                     timeline_scubbing = true;
                     timeline_scub_st  = GLOBAL_CURRENT_FRAME;
                     _scrub_frame      = timeline_scub_st;
@@ -433,7 +437,7 @@ function Panel_Animation_Dopesheet() {
             GLOBAL_TOTAL_FRAMES = len;
             
             timeline_draggable = false;
-            if(mouse_release(mb_left) && !timeline_frame_typing) timeline_stretch = 0;
+            if(mouse_lrelease() && !timeline_frame_typing) timeline_stretch = 0;
             return;
         } 
         
@@ -473,7 +477,7 @@ function Panel_Animation_Dopesheet() {
             }
             
             timeline_draggable = false;
-            if(mouse_release(mb_left) && !timeline_frame_typing) {
+            if(mouse_lrelease() && !timeline_frame_typing) {
             	timeline_stretch = 0;
             	
             	if(PREFERENCES.panel_animation_key_override) {
@@ -525,7 +529,7 @@ function Panel_Animation_Dopesheet() {
                 	timeline_frame_typing = true;
                 	KEYBOARD_RESET
                 	
-                } else if(mouse_press(mb_left, pFOCUS)) {
+                } else if(mouse_lpress(pFOCUS)) {
                     timeline_stretch    = 2;
                     timeline_stretch_mx = msx;
                     timeline_stretch_sx = GLOBAL_TOTAL_FRAMES;
@@ -562,7 +566,7 @@ function Panel_Animation_Dopesheet() {
                 	timeline_frame_typing = true;
                 	KEYBOARD_RESET
                 	
-                } else if(mouse_press(mb_left, pFOCUS)) {
+                } else if(mouse_lpress(pFOCUS)) {
                     timeline_stretch    = 1;
                     timeline_stretch_mx = msx;
                     timeline_stretch_sx = GLOBAL_TOTAL_FRAMES;
@@ -780,14 +784,14 @@ function Panel_Animation_Dopesheet() {
     		modulate_fade[0] = max(0, mmx - _mod_x0) / timeline_scale;
     		modulate_fade_anchor[0] = clamp(1 - (mmy - _gy0) / (_gy1 - _gy0), 0, 1);
     		
-    		if(mouse_release(mb_left)) modulate_drag = 0;
+    		if(mouse_lrelease()) modulate_drag = 0;
     	}
     	
     	if(modulate_drag == -1) {
     		modulate_fade[1] = max(0, _mod_x1 - mmx) / timeline_scale;
     		modulate_fade_anchor[1] = clamp(1 - (mmy - _gy0) / (_gy1 - _gy0), 0, 1);
     		
-    		if(mouse_release(mb_left)) modulate_drag = 0;
+    		if(mouse_lrelease()) modulate_drag = 0;
     	}
     	
     	var _mod_inf_st = _mod_st + _mod_fade_st;
@@ -1359,7 +1363,7 @@ function Panel_Animation_Dopesheet() {
 		
 		if(graph_height_dragging == prop) {
 			prop.graph_h = max(16, graph_height_drag_sy + (msy - graph_height_drag_my) / UI_SCALE);
-			if(mouse_release(mb_left)) graph_height_dragging = noone;
+			if(mouse_lrelease()) graph_height_dragging = noone;
 		}
 		
 		draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text_sub);
@@ -1468,7 +1472,7 @@ function Panel_Animation_Dopesheet() {
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
                     key_hover = key;
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, CDEF.main_grey);
-                    if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
+                    if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
                     }
@@ -1492,7 +1496,7 @@ function Panel_Animation_Dopesheet() {
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
                     key_hover = key;
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, CDEF.main_grey);
-                    if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
+                    if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
                     }
@@ -1587,7 +1591,7 @@ function Panel_Animation_Dopesheet() {
                 var edited = k.anim.setKeyTime(k, tt, false, true);
                 if(edited) UNDO_HOLDING = true;
                 
-                if(mouse_release(mb_left)) k.anim.setKeyTime(k, k.time, true, true);
+                if(mouse_lrelease()) k.anim.setKeyTime(k, k.time, true, true);
                 
             } else {
             	var _dyy = graph_key_drag_range[1] - graph_key_drag_range[0];
@@ -1629,13 +1633,13 @@ function Panel_Animation_Dopesheet() {
                         break;
                 }
                             
-                if(mouse_release(mb_left)) {
+                if(mouse_lrelease()) {
                     recordAction(ACTION_TYPE.var_modify, k, [ _in, "ease_in"  ]);
                     recordAction(ACTION_TYPE.var_modify, k, [ _ot, "ease_out" ]);
                 }
             }
             
-            if(mouse_release(mb_left)) {
+            if(mouse_lrelease()) {
                 graph_key_drag = noone;
                 UNDO_HOLDING   = false;
             }
@@ -1643,7 +1647,7 @@ function Panel_Animation_Dopesheet() {
         } else if(graph_key_hover != noone) {
             key_hover = graph_key_hover;
             
-            if(mouse_press(mb_left)) {
+            if(mouse_lpress()) {
                 graph_key_drag       = _graph_key_hover;
                 graph_key_drag_index = _graph_key_hover_index;
                 graph_key_drag_array = _graph_key_hover_array;
@@ -1741,7 +1745,7 @@ function Panel_Animation_Dopesheet() {
                         keyframe_drag_mx   = mx;
                         keyframe_drag_my   = my;
                         
-                    } else if(mouse_press(mb_left)) {
+                    } else if(mouse_lpress()) {
                         if(key_mod_check(MOD_KEY.ctrl)) {
                             editKeyFrame(keyframe);
                         	
@@ -1813,6 +1817,9 @@ function Panel_Animation_Dopesheet() {
                 }
                 
                 var hc = _scaling? CDEF.cyan : COLORS._main_accent;
+                if(keyframe == __selecting_key_highlight)
+                	hc = CDEF.lime;
+                
                 draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, ind, t, prop_y, 1, hc);
             }
             	
@@ -1934,7 +1941,7 @@ function Panel_Animation_Dopesheet() {
                 TOOLTIP = _graph_show? __txtx("panel_animation_hide_graph", "Hide graph") : 
                                        __txtx("panel_animation_show_graph", "Show graph");
                 
-                if(mouse_press(mb_left, pFOCUS)) {
+                if(mouse_lpress(pFOCUS)) {
                     if(prop.sep_axis) prop.show_graphs[animator.index] = !_graph_show;
                     else              prop.show_graph                  = !_graph_show;
                 }
@@ -2001,8 +2008,8 @@ function Panel_Animation_Dopesheet() {
 	            tooltip_loop_type.index = prop.on_end;
 	            TOOLTIP = tooltip_loop_type;
 	                            
-	            if(mouse_release(mb_left, pFOCUS)) prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
-	            if(mouse_press(  mb_left, pFOCUS)) on_end_dragging_anim = prop;
+	            if(mouse_lrelease(pFOCUS)) prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
+	            if(mouse_lpress(pFOCUS)) on_end_dragging_anim = prop;
 	            
 	    		if(key_mod_press(SHIFT) && MOUSE_WHEEL != 0)
 	    			prop.on_end = (prop.on_end + sign(MOUSE_WHEEL) + sprite_get_number(THEME.prop_on_end)) % sprite_get_number(THEME.prop_on_end);
@@ -2217,7 +2224,7 @@ function Panel_Animation_Dopesheet() {
                 item_dragging.item.parent = hovering_folder;
             }
             
-            if(mouse_release(mb_left)) {
+            if(mouse_lrelease()) {
                 _item_dragging = noone;
                 item_dragging  = noone;
             }
@@ -2228,7 +2235,7 @@ function Panel_Animation_Dopesheet() {
         BLEND_NORMAL
         surface_reset_target();
         
-        if(on_end_dragging_anim != noone && mouse_release(mb_left)) on_end_dragging_anim = noone;
+        if(on_end_dragging_anim != noone && mouse_lrelease()) on_end_dragging_anim = noone;
     }
     
     function dopeSheet_LabelHeader() {
@@ -2309,7 +2316,7 @@ function Panel_Animation_Dopesheet() {
 	            tool_width = tool_width_start + (mx - tool_width_mx);
 	            tool_width = clamp(tool_width, ui(224), w - ui(128));
 	            
-	            if(mouse_release(mb_left)) {
+	            if(mouse_lrelease()) {
 	            	if(tool_width > ui(224))
 	            		tool_width_exp  = tool_width;
 	            	tool_width_drag = false;
@@ -2323,7 +2330,7 @@ function Panel_Animation_Dopesheet() {
 	            if(DOUBLE_CLICK) {
 	            	tool_width = tool_width == ui(224)? tool_width_exp : ui(224);
 	            	
-	            } else if(mouse_press(mb_left, pFOCUS)) {
+	            } else if(mouse_lpress(pFOCUS)) {
 	                tool_width_drag  = true;
 	                tool_width_start = tool_width;
 	                tool_width_mx    = mx;
@@ -2379,7 +2386,7 @@ function Panel_Animation_Dopesheet() {
                     dopesheet_y_to = clamp(dopesheet_y_to, -dopesheet_y_max, 0);
                 }
                     
-                if(mouse_release(mb_left)) is_scrolling = false;
+                if(mouse_lrelease()) is_scrolling = false;
             }
                 
             draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, s_bar_x, scr_y, s_bar_w, scr_s, COLORS.scrollbar_bg, 1);    
@@ -2387,7 +2394,7 @@ function Panel_Animation_Dopesheet() {
             
             if(pHOVER && point_in_rectangle(mx, my, scr_x - ui(2), scr_y - ui(2), scr_x + scr_w + ui(2), scr_y + scr_h + ui(2))) {
             	cc = COLORS.scrollbar_hover;
-                if(mouse_click(mb_left, pFOCUS)) {
+                if(mouse_lclick(pFOCUS)) {
                     is_scrolling = true;
                     scroll_my    = my;
                     scroll_sy    = dopesheet_y_to;
@@ -2703,7 +2710,7 @@ function Panel_Animation_Dopesheet() {
 	        if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dopesheet_w, dopesheet_h) && timeline_stretch == 0) { 
 	            if(mouse_rpress(pFOCUS) && key_hover == noone)
 	                keyframe_selecting = [];
-	            
+	                
 	            var _ctrl = key_mod_press(CTRL);
 	            
 	            if(_ctrl) {
@@ -2714,7 +2721,7 @@ function Panel_Animation_Dopesheet() {
 		                var _ky = value_hovering.y;
 		                draw_sprite_ui_uniform(THEME.add, 0, _kx, _ky, .5, COLORS._main_value_positive, 1);
 		                
-		                if(mouse_press(mb_left, pFOCUS)) {
+		                if(mouse_lpress(pFOCUS)) {
 		                	var _nk  = new valueKey(_fr, variable_clone(value_hovering.getValue(_fr)), value_hovering);
 		                	var _add = false;
 		                	
@@ -2732,7 +2739,7 @@ function Panel_Animation_Dopesheet() {
 		                }
             		}
 	            	
-	            	if(value_hovering == noone && mouse_click(mb_left, pFOCUS)) PROJECT.animator.setFrame(_fr);
+	            	if(value_hovering == noone && mouse_lclick(pFOCUS)) PROJECT.animator.setFrame(_fr);
 	            } 
 	            
 	            if(!_ctrl && mouse_lpress(pFOCUS)) {
@@ -2785,7 +2792,10 @@ function Panel_Animation_Dopesheet() {
 	                staggerKeys(stagger_index, st);
 	            }
 	        }
-	        
+        
+            if(__selecting_key_highlight != noone && array_empty(keyframe_selecting))
+            	__selecting_key_highlight = noone;
+            
 	        if(keyframe_dragging) { // drag key
 	            if(keyframe_drag_type == KEYFRAME_DRAG_TYPE.move) {
 	                var tt = round((mx - bar_x - timeline_shift) / timeline_scale) - 1;
@@ -2805,7 +2815,7 @@ function Panel_Animation_Dopesheet() {
 	                if(edited) UNDO_HOLDING = true;
 	                timeline_show_time = floor(tt);
 	                            
-	                if(mouse_release(mb_left)) {
+	                if(mouse_lrelease()) {
 	                    keyframe_dragging = noone;
 	                    
 	                    for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
@@ -2841,7 +2851,7 @@ function Panel_Animation_Dopesheet() {
 	                	TOOLTIP = $"{__txt("Key stretch")} {keyframe_drag_st - _sf} > {tt - _sf} [{string_format(_tsca * 100, -1, 2)}%]";
 	                }
 	                            
-	                if(mouse_release(mb_left)) {
+	                if(mouse_lrelease()) {
 	                    keyframe_dragging = noone;
 	                    
 	                    for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
@@ -2901,7 +2911,7 @@ function Panel_Animation_Dopesheet() {
 	                        break;
 	                }
 	                            
-	                if(mouse_release(mb_left)) {
+	                if(mouse_lrelease()) {
 	                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_in, "ease_in"]);
 	                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
 	                            
@@ -3002,7 +3012,7 @@ function Panel_Animation_Dopesheet() {
                 if(point_in_circle(msx, msy, _sx, yc, ui(8))) {
                     draw_sprite_ui(THEME.arrow, 2, _sx, yc, 1, 1, 0, colr[0], 1);
                 
-                    if(mouse_press(mb_left, pFOCUS))
+                    if(mouse_lpress(pFOCUS))
                         onion_dragging = 0;
                     timeline_draggable = false;
                     
@@ -3012,7 +3022,7 @@ function Panel_Animation_Dopesheet() {
                 if(point_in_circle(msx, msy, _ex, yc, ui(8))) {
                     draw_sprite_ui(THEME.arrow, 0, _ex, yc, 1, 1, 0, colr[1], 1);
                 
-                    if(mouse_press(mb_left, pFOCUS))
+                    if(mouse_lpress(pFOCUS))
                         onion_dragging = 1;
                     timeline_draggable = false;
                     
@@ -3035,7 +3045,7 @@ function Panel_Animation_Dopesheet() {
                             PROJECT.onion_skin.range[1] = mf;
                     }
                     
-                    if(mouse_release(mb_left))
+                    if(mouse_lrelease())
                         onion_dragging = noone;
                 }
             }
@@ -3106,7 +3116,7 @@ function Panel_Animation_Dopesheet() {
         
         if(keyframe_boxing) {
             draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, keyframe_box_sx, keyframe_box_sy, msx, msy, COLORS._main_accent);
-            if(mouse_release(mb_left)) keyframe_boxing = false;
+            if(mouse_lrelease()) keyframe_boxing = false;
         }
         
         BLEND_SUBTRACT
@@ -3142,6 +3152,9 @@ function Panel_Animation_Dopesheet() {
                 if(array_empty(keyframe_selecting)) menuCallGen("animation_keyframe_empty");
                 else                                menuCallGen("animation_keyframe");
                 
+                if(array_length(keyframe_selecting) > 1)
+                	__selecting_key_highlight = key_hover;
+                
             } else if(point_in_rectangle(mx, my, pd, pd + top_frame_height, pd + tool_width, pd + dopesheet_h)) {
                 if(context_selecting_prop != noone) {
                     if(context_selecting_prop.sepable) menuCallGen("animation_name_prop_axis");
@@ -3150,8 +3163,10 @@ function Panel_Animation_Dopesheet() {
                 else if(context_selecting_item == noone)                    menuCallGen("animation_name_empty");
                 else if(is(context_selecting_item.item, timelineItemNode))  menuCallGen("animation_name_item");
                 else if(is(context_selecting_item.item, timelineItemGroup)) menuCallGen("animation_name_group");
+                
             }
-        }
+            
+        } // context menu
         
     	dopeSheet_LabelHeader();
     	dopeSheet_TimelineScrub();
@@ -3435,6 +3450,22 @@ function Panel_Animation_Dopesheet() {
         
 	}
 	
+	function transferEase() {
+		if(__selecting_key_highlight == noone)    return;
+		if(array_length(keyframe_selecting) <= 1) return;
+		
+		var t = __selecting_key_highlight;
+		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+			var k = keyframe_selecting[i];
+			if(k == t) continue;
+			
+			k.ease_in  = [ t.ease_in[0],  t.ease_in[1]  ];
+			k.ease_out = [ t.ease_out[0], t.ease_out[1] ];
+			
+			k.ease_in_type  = t.ease_in_type;
+			k.ease_out_type = t.ease_out_type;
+		}
+	}
 }
 
 function tooltipAnimEnd() constructor {
