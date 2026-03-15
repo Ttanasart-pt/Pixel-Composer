@@ -1,9 +1,10 @@
 function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, c1 = c_white, c2 = c_white, params = {}) {
-	var extend    = params.extend;
+	var fextend   = params.fromextend;
+	var textend   = params.toextend;
+	
 	var indexIn   = struct_try_get(params, "fromIndex", 1);
 	var indexOut  = struct_try_get(params, "toIndex",   1);
 	
-    // var corner    = min(extend, params.corner);
     var corner    = params.corner;
 	var type      = params.type;
 	
@@ -21,8 +22,8 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 	
 	var iy  = sign(y1 - y0);
 	
-	var xx0 = x0 + extend * _s;
-	var xx1 = x1 - extend * _s;
+	var xx0 = x0 + fextend * _s;
+	var xx1 = x1 - textend * _s;
 	var yy0 = y0;
 	var yy1 = y1;
 	
@@ -36,8 +37,8 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 	var rx   = _x1 - _x0;
 	var ry   = _y1 - _y0;
 	
-	xx0 = x0 + extend * _s * indexIn;
-	xx1 = x1 - extend * _s * indexOut;
+	xx0 = x0 + fextend * _s * indexIn;
+	xx1 = x1 - textend * _s * indexOut;
 
 	if(inv) {
 		var cm   = merge_color(c1, c2, 0.5);
@@ -215,11 +216,13 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 }
 
 function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
-	var extend    = params.extend;
+	var fextend   = params.fromextend;
+	var textend   = params.toextend;
+	
 	var indexIn   = struct_try_get(params, "fromIndex", 1);
 	var indexOut  = struct_try_get(params, "toIndex",   1);
 	
-    var corner    = min(extend, params.corner);
+    var corner    = min(fextend, textend, params.corner);
 	var type      = params.type;
 	
 	var sample = floor(corner / 8);
@@ -244,10 +247,10 @@ function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c
 	
 }
 
-function point_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, indexIn, indexOut, _p = undefined) {
+function point_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, fextend, textend, indexIn, indexOut, _p = undefined) {
 	var iy  = sign(y1 - y0);
-	var xx0 = x0 + extend * _s;
-	var xx1 = x1 - extend * _s;
+	var xx0 = x0 + fextend * _s;
+	var xx1 = x1 - textend * _s;
 	var yy0 = y0;
 	var yy1 = y1;
 		
@@ -260,8 +263,8 @@ function point_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, indexIn
 	var rx   = _x1 - _x0;	
 	var ry   = _y1 - _y0;
 	
-	xx0 = x0 + extend * _s * indexIn;
-	xx1 = x1 - extend * _s * indexOut;
+	xx0 = x0 + fextend * _s * indexIn;
+	xx1 = x1 - textend * _s * indexOut;
 
 	var dist = infinity;
 	

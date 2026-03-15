@@ -37,20 +37,26 @@ DIALOG_WINCLEAR1
 			var _txt = _menuItem.name;
 			var _edt = _menuItem.editWidget;
 			var _val = _menuItem.getter();
+			var _whg = ui(32);
 			
 			var _wx = dialog_x + ui(4 + 64);
 			var _wy = yy       + ui(4);
 			var _ww = dialog_w - ui(8 + 64);
-			var _wh = ui(32)   - ui(8);
+			var _wh = _whg   - ui(8);
+			
+			if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
+				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _whg, COLORS.dialog_menubox_highlight);
+				selecting = i;
+			}
 			
 			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
-			draw_text_add(dialog_x + ui(8), yy + ui(32) / 2, _txt)
+			draw_text_add(dialog_x + ui(8), yy + _whg / 2, _txt)
 			
 			var _param = new widgetParam(_wx, _wy, _ww, _wh, _val).setFont(f_p3);
 			_edt.setFocusHover(sFOCUS, sHOVER);
 			_edt.drawParam(_param);
 			
-			yy += ui(32);
+			yy += _whg;
 			continue;
 		}
 		

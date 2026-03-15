@@ -2011,6 +2011,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    
 	                    var menu = menuItems_gen("graph_junction_select");
 	                    
+	                    array_push(menu, menuWidget(__txt("Extends"), new buttonGroup(["-", "+"], function(i) /*=>*/ {
+	                    	if(__junction_hovering) __junction_hovering.extendFactor += i? 1 : -1;
+	                    	refreshDraw();
+						}).setFont(f_p4), function() /*=>*/ {return -1}));
+						
 	                    if(value_focus.connect_type == CONNECT_TYPE.output) {
 	                        var sep = false;
 	                        

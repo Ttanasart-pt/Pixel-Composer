@@ -1,6 +1,6 @@
 function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
-	var extend    = params.extend;
-    // var corner    = min(extend, params.corner);
+	var fextend   = params.fromextend;
+	var textend   = params.toextend;
     var corner    = params.corner;
 	var type      = params.type;
 	
@@ -76,8 +76,9 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 }
 
 function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
-	var extend    = params.extend;
-    var corner    = min(extend, params.corner);
+	var fextend   = params.fromextend;
+	var textend   = params.toextend;
+    var corner    = min(fextend, textend, params.corner);
 	var type      = params.type;
 	
 	var sample = clamp(corner / 4, 1, 8);

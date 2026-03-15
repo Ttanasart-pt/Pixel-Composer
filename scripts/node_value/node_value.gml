@@ -187,6 +187,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		custom_color = undefined;
 		
 		drawValue    = false;
+		extendFactor = 1;
 	#endregion
 	
 	#region ---- Inspector ----
@@ -2246,6 +2247,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static removeFrom = function(_remove_list = true) {
+		printCallStack();
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });
 		
 		recordAction(ACTION_TYPE.junction_disconnect, self, value_from).setRef(node);
@@ -2696,11 +2698,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _action = type == VALUE_TYPE.action;
 		var _output = connect_type == CONNECT_TYPE.output;
 		var _drawParam = {
-			corner :    corner,
-			extend :    node.project.graphConnection.line_extend,
-			fromIndex : 1,
-			toIndex :   1,
-			type :      LINE_STYLE.solid,
+			corner :     corner,
+			fromextend : node.project.graphConnection.line_extend,
+			toextend :   node.project.graphConnection.line_extend,
+			fromIndex :  1,
+			toIndex :    1,
+			type :       LINE_STYLE.solid,
 		}
 		
 		switch(node.project.graphConnection.type) {
@@ -2835,6 +2838,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(name_custom) _map.name_custom  = name_custom;
 		if(bypass_use)  _map.bypass       = bypass_use;
+		if(extendFactor != 1) _map.extendFactor = extendFactor;
 		
 		if(has(display_data, "linked")) _map.linked       = display_data.linked;
 		if(has(display_data, "ranged")) _map.ranged       = display_data.ranged;
@@ -2921,6 +2925,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim) animator.updateKeyMap();
 		
 		setBypass(_map[$ "bypass"] ?? false);
+		extendFactor = _map[$ "extendFactor"] ?? 1;
 		
 		if(sep_axis && has(_map, "animators")) {
 			var _anims = getAnimators();
@@ -3252,7 +3257,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 
 #region FUNCTIONS
 	function checkJuncConnection(from, to, params) {
-		if(from == noone || to == noone) return noone;
+		if(from == noone || to == noone)          return noone;
 		if(!params.active || !PANEL_GRAPH.pHOVER) return noone;
 		
 		to.draw_line_shift_hover = false;
@@ -3297,26 +3302,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			point_to_line_feedback(mx, my, jx, jy, frx, fry, _s, _hPoint);
 			
 		} else {
+			var exF = from.extendFactor * PROJECT.graphConnection.line_extend;
+			var exT = to.extendFactor   * PROJECT.graphConnection.line_extend;
 			
 			switch(PROJECT.graphConnection.type) { 
 				case 0 : 
 					if(downDirection) point_to_line(mx, my, jx, jy, frx, fry, _hPoint);
-					else              point_to_linear_connection(mx, my, frx, fry, jx, jy, _s, PROJECT.graphConnection.line_extend, _hPoint);
+					else point_to_linear_connection(mx, my, frx, fry, jx, jy, _s, exF, exT, _hPoint);
 					break;
 					
 				case 1 : 
 					if(downDirection) point_to_curve_corner(mx, my, jx, jy, frx, fry, _s, _hPoint);
-					else              point_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s, _hPoint);
+					else point_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s, _hPoint);
 					break;
 					
 				case 2 : 
 					if(downDirection) point_to_elbow_corner(mx, my, frx, fry, jx, jy, _hPoint);
-					else              point_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, _hPoint);
+					else point_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, _hPoint);
 					break;
 					
 				case 3 :
 					if(downDirection) point_to_elbow_diag_corner(mx, my, frx, fry, jx, jy, _hPoint);
-					else              point_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, PROJECT.graphConnection.line_extend, _fin, _tin, _hPoint);
+					else point_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, exF, exT, _fin, _tin, _hPoint);
 					break;
 					
 				default : return noone;
@@ -3340,11 +3347,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(from == noone || to == noone) return noone;
 		
 		static drawParam = {
-			extend :    0,
-			fromIndex : 0,
-			toIndex :   0,
-			corner :    0,
-			type :      0,
+			fromextend : 0,
+			toextend :   0,
+			fromIndex :  0,
+			toIndex :    0,
+			corner :     0,
+			type :       0,
 		}
 		
 		var high = params.highlight;
@@ -3409,11 +3417,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_loop) { draw_line_feedback(jx, jy, frx, fry, th, c1, c0, ss); return; }
 		
 		var down = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
-		drawParam.extend    = PROJECT.graphConnection.line_extend;
-		drawParam.fromIndex = from.draw_line_shift_e > -1? from.draw_line_shift_e : from.drawLineIndex;
-		drawParam.toIndex   = to.draw_line_shift_e   > -1? to.draw_line_shift_e   : to.drawLineIndex;
-		drawParam.corner    = corner;
-		drawParam.type      = ty;
+		drawParam.fromextend = from.extendFactor * PROJECT.graphConnection.line_extend;
+		drawParam.toextend   = to.extendFactor   * PROJECT.graphConnection.line_extend;
+		drawParam.fromIndex  = from.draw_line_shift_e > -1? from.draw_line_shift_e : from.drawLineIndex;
+		drawParam.toIndex    = to.draw_line_shift_e   > -1? to.draw_line_shift_e   : to.drawLineIndex;
+		drawParam.corner     = corner;
+		drawParam.type       = ty;
 		
 		switch(PROJECT.graphConnection.type) { 
 			case 0 : 

@@ -213,7 +213,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				if(_hi != noone) {
 					right_click_block = false;
 					
-					if(mouse_press(mb_right, active)) {
+					if(mouse_rpress(active)) {
 						rightclick_index = _hi;
 						menuCall("", context_menu);
 					}
