@@ -2,8 +2,10 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Threshold Switch";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float( "Index" )).setVisible(true, true).rejectArray();
-	newInput(1, nodeValue( "Default Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(false, true);
+	newInput( 2, nodeValue_EButton( "Type", 0, [ "Number", "Frame" ] ));
+	newInput( 0, nodeValue_Float(   "Index" )).setVisible(true, true).rejectArray();
+	newInput( 1, nodeValue( "Default Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(false, true);
+	// 3
 	
 	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
@@ -31,8 +33,9 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.any, 0));
 	
-	input_display_list = [ 0, 1, 
-		["Thresholds",  false], size_adjust_tool
+	input_display_list = [ 
+		[ "Selector",   false ], 2, 0, 1, 
+		[ "Thresholds", false ], size_adjust_tool
 	]
 	
 	input_selecting = noone;
@@ -151,12 +154,24 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _sel = getInputData(0);
-		var _res = getInputData(1);
+		#region data
+			var _src = getInputData(2);
+			var _num = getInputData(0);
+			
+			var _res = getInputData(1);
+			
+			inputs[0].setVisible(_src == 0);
+		#endregion
+		
 		var _typ = inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any;
+		var _sel = 0;
+		
+		switch(_src) {
+			case 0 : _sel = _num;  break;
+			case 1 : _sel = frame; break;
+		}
 		
 		input_selecting = inputs[1];
-		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _thr = getInputData(i + 0);
 			var _val = getInputData(i + 1);
