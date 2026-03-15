@@ -14,6 +14,8 @@
     function panel_animation_next_frame()    { CALL("next_frame");         if(GLOBAL_IS_RENDERING) return; PROJECT.animator.nextFrame();     }
     function panel_animation_prev_keyframe() { CALL("previous_keyframe");  if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
     function panel_animation_next_keyframe() { CALL("next_keyframe");      if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
+    function panel_animation_prev_keyframeS(){ CALL("previous_keyframeS"); if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframeS();}
+    function panel_animation_next_keyframeS(){ CALL("next_keyframeS");     if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframeS();}
     
     function panel_animation_prev_marker()   { CALL("previous_marker");    if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevMarker(); }
     function panel_animation_next_marker()   { CALL("next_marker");        if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextMarker(); }
@@ -90,12 +92,14 @@
         registerFunction("", "Resume",             vk_space,   s,  panel_animation_resume         ).setMenu("resume")
         registerFunction("", "Stop",               "",         n,  panel_animation_stop           ).setMenu("stop")
 		
-        registerFunction("", "First Frame",        vk_home,    n,  panel_animation_first_frame    ).setMenu("first_frame")
-        registerFunction("", "Last Frame",         vk_end,     n,  panel_animation_last_frame     ).setMenu("last_frame")
-        registerFunction("", "Previous Frame",     vk_left,    n,  panel_animation_prev_frame     ).setMenu("previous_frame")
-        registerFunction("", "Next Frame",         vk_right,   n,  panel_animation_next_frame     ).setMenu("next_frame")
-        registerFunction("", "Previous Keyframe",  vk_pageup,  n,  panel_animation_prev_keyframe  ).setMenu("previous_keyframe")
-        registerFunction("", "Next Keyframe",      vk_pagedown,n,  panel_animation_next_keyframe  ).setMenu("next_keyframe")
+        registerFunction("", "First Frame",            vk_home,    n, panel_animation_first_frame    ).setMenu("first_frame")
+        registerFunction("", "Last Frame",             vk_end,     n, panel_animation_last_frame     ).setMenu("last_frame")
+        registerFunction("", "Previous Frame",         vk_left,    n, panel_animation_prev_frame     ).setMenu("previous_frame")
+        registerFunction("", "Next Frame",             vk_right,   n, panel_animation_next_frame     ).setMenu("next_frame")
+        registerFunction("", "Previous Keyframe",      vk_left,    s, panel_animation_prev_keyframe  ).setMenu("previous_keyframe")
+        registerFunction("", "Next Keyframe",          vk_right,   s, panel_animation_next_keyframe  ).setMenu("next_keyframe")
+        registerFunction("", "Previous Node Keyframe", vk_left,  c|s, panel_animation_prev_keyframeS ).setMenu("previous_keyframeS")
+        registerFunction("", "Next Node Keyframe",     vk_right, c|s, panel_animation_next_keyframeS ).setMenu("next_keyframeS")
         
         registerFunction(an, "Toggle Marker",      "M",        n,  panel_animation_toggle_marker  ).setMenu("toggle_marker")
     	registerFunction("", "Previous Marker",    vk_left,    c,  panel_animation_prev_marker    ).setMenu("previous_marker")
@@ -371,6 +375,54 @@ function Panel_Animation() : PanelContent() constructor {
             for( var j = 0, m = array_length(_anims); j < m; j++ ) {
                 var animator = _anims[j];
             
+		    	for(var k = 0; k < array_length(animator.values); k++) {
+		            var _key = animator.values[k];
+		            if(_key.time > GLOBAL_CURRENT_FRAME)
+		            	_t = min(_t, _key.time);
+		        }
+    		}
+    	}
+    	
+    	if(_t != infinity) PROJECT.animator.setFrame(_t); 
+    }
+    
+    function toPrevKeyframeS() {
+    	var _node = PANEL_INSPECTOR.getInspecting();
+    	if(!is(_node, Node)) return;
+    	
+    	var _t = -infinity;
+    	for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
+    		var _inp = _node.inputs[i];
+    		if(!_inp.getAnim()) continue;
+    		
+    		var _anims = _inp.sep_axis? _inp.getAnimators() : [_inp.animator];
+	        for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+	            var animator = _anims[j];
+	        
+		    	for(var k = 0; k < array_length(animator.values); k++) {
+		            var _key = animator.values[k];
+		            if(_key.time < GLOBAL_CURRENT_FRAME)
+	                    _t = max(_t, _key.time);
+		        }
+			}
+    	}
+        
+    	if(_t != -infinity) PROJECT.animator.setFrame(_t);
+    }
+    
+    function toNextKeyframeS() {
+    	var _node = PANEL_INSPECTOR.getInspecting();
+    	if(!is(_node, Node)) return;
+    	
+    	var _t = infinity;
+    	for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
+    		var _inp = _node.inputs[i];
+    		if(!_inp.getAnim()) continue;
+    		
+    		var _anims = _inp.sep_axis? _inp.getAnimators() : [_inp.animator];
+            for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                var animator = _anims[j];
+            	
 		    	for(var k = 0; k < array_length(animator.values); k++) {
 		            var _key = animator.values[k];
 		            if(_key.time > GLOBAL_CURRENT_FRAME)
