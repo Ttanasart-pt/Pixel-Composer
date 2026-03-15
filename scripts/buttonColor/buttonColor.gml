@@ -4,6 +4,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	triggered     = false;
 	show_alpha    = true;
 	simple        = false;
+	padding       = ui(2);
 	
 	hover_hex     = 0;
 	hover_wid     = ui(24);
@@ -95,10 +96,10 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
 		
-		var _bx  = _x  + ui(2);
-		var _by  = _y  + ui(2);
-		var _bw  = _cw - ui(4);
-		var _bh  = _h  - ui(4);
+		var _bx  = _x  + padding;
+		var _by  = _y  + padding;
+		var _bw  = _cw - padding * 2;
+		var _bh  = _h  - padding * 2;
 		var _bww = _bw - hover_hex * hover_wid;
 		
 		var hoverRect = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bww, _y + _h);
