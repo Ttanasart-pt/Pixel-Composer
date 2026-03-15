@@ -69,7 +69,7 @@ function checkBox(_onClick) : widget() constructor {
 		draw_sprite_stretched_ext(spr, 0, _dx, _dy, ss, ss, c_white, aa);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _dx, _dy, _dx + ss, _dy + ss)) {
-			if(tooltip) TOOLTIP = tooltip;
+			if(tooltip != "") TOOLTIP = tooltip;
 			draw_sprite_stretched_ext(spr, 1, _dx, _dy, ss, ss, c_white, aa);	
 			
 			if(mouse_press(mb_left, active))

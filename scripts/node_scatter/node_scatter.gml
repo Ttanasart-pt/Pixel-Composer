@@ -96,24 +96,21 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-		
-	newOutput(1, nodeValue_Output("Atlas Data", VALUE_TYPE.atlas, []))
-		.setVisible(false)
-		.rejectArrayProcess();
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
 	
 	input_display_list = [ 10, 
-		["Surfaces",  true],  0,  1, 15, 24, 25, 26, 27, 
-		["Scatter",  false],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
-		["Path",     false], 19, 38, 20, 45, 21, 22, 
-		["Position", false], 40, 33, 36, 37, 39, 
-		["Rotation", false],  7,  4, 32, 
-		["Scale",    false],  3,  8, 34, 43, 
-		["Color",    false], 11, 28, 12, 16, 41, 47, 42, 
-		["Render",   false], 18, 23, 
+		[ "Surfaces",  true ],  0,  1, 15, 24, 25, 26, 27, 
+		[ "Scatter",  false ],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
+		[ "Path",     false ], 19, 38, 20, 45, 21, 22, 
+		[ "Position", false ], 40, 33, 36, 37, 39, 
+		[ "Rotation", false ],  7,  4, 32, 
+		[ "Scale",    false ],  3,  8, 34, 43, 
+		[ "Color",    false ], 11, 28, 12, 16, 41, 47, 42, 
+		[ "Render",   false ], 18, 23, 
 	];
 	
-	transform_prop = [ 10, 40, 33, 36, 37, 39 ];
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -129,8 +126,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	surfSamp = new Surface_sampler();
 	scalSamp = new Surface_sampler();
-	
-	////- Nodes
 	
 	static getDimension = function() { return getInputData(1, PROJ_SURF); }
 	

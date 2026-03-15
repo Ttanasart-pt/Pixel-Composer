@@ -21,6 +21,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 7, nodeValue_Bool(    "Effect Position", false ));
 	newInput( 8, nodeValue_EButton( "Mode",         0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
 	newInput( 9, nodeValue_Vec2(    "Position",    [0,0] ));
+	newInput(28, nodeValue_Toggle(  "Axis",        0b11, [ "X", "Y" ] )).setInternalName("Position axis");
 	
 	////- =Rotation
 	newInput(10, nodeValue_Bool(     "Set Rotation", false ));
@@ -31,8 +32,9 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- =Scale
 	newInput(14, nodeValue_Bool(     "Set Scale",  false ));
 	newInput(15, nodeValue_EButton(  "Mode",       0, [ "Absolute", "Additive", "Multiplicative" ])).setInternalName("Scale mode");
-	newInput(16, nodeValue_Vec2(     "Scale",     [1,1]   ));
-	newInput(17, nodeValue_Anchor(   "Anchor" ));
+	newInput(16, nodeValue_Vec2(     "Scale",     [1,1]  ));
+	newInput(17, nodeValue_Anchor(   "Anchor"            ));
+	newInput(29, nodeValue_Toggle(   "Axis",       0b11, [ "X", "Y" ] )).setInternalName("Scale axis");
 	
 	////- =Blend
 	newInput(18, nodeValue_Bool(     "Set Blending", false ));
@@ -43,7 +45,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(21, nodeValue_Bool(     "Set Alpha", false));
 	newInput(22, nodeValue_EButton(  "Mode",      0, [ "Absolute", "Additive", "Multiplicative" ])).setInternalName("Alpha mode");
 	newInput(23, nodeValue_Float(    "Alpha",     1 ));
-	// input 28
+	// input 30
 	
 	newOutput( 0, nodeValue_Output( "Atlas Out", VALUE_TYPE.atlas,   noone ));
 	newOutput( 1, nodeValue_Output( "Rendered",  VALUE_TYPE.surface, noone ));
@@ -51,9 +53,9 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	input_display_list = [ 0, 
 		[ "Output",    false,    ], 25, 26, 
 		[ "Influence", false     ],  1,  2,  3,  4, 27,  6,  5, 24, 
-		[ "Position",  false,  7 ],  8,  9, 
+		[ "Position",  false,  7 ],  8,  9, 28, 
 		[ "Rotation",  false, 10 ], 11, 12, 13, 
-		[ "Scale",     false, 14 ], 15, 16, 17, 
+		[ "Scale",     false, 14 ], 15, 16, 17, 29, 
 		[ "Blend",     false, 18 ], 19, 20, 
 		[ "Alpha",     false, 21 ], 22, 23, 
 	];
@@ -64,7 +66,10 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	__p1 = [ 0, 0 ];
 	
 	static getDimension = function(arr = 0) { 
-		var _atlas = getInputSingle(0, arr);
+		var _use_dim = getInputSingle(25, arr);
+		if(_use_dim) return getInputSingle(26, arr);
+		
+		var _atlas = getInputSingle( 0, arr);
 		    _atlas = array_safe_get_fast(_atlas, 0);
 		
 		if(!is(_atlas, Atlas)) return [1,1];
@@ -177,6 +182,8 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _use_dim  = _data[25];
 			var _cus_dim  = _data[26];
 			
+			inputs[26].setVisible(_use_dim);
+			
 			inputs[ 2].setVisible(_inf_shp == 0);
 			inputs[ 3].setVisible(_inf_shp == 1);
 			inputs[ 4].setVisible(_inf_shp == 1);
@@ -275,17 +282,22 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				
 				////- =Position
 				
-				var pos_use = _data[7];
-				var pos_mod = _data[8];
-				var pos     = _data[9];
+				var pos_use = _data[ 7];
+				var pos_mod = _data[ 8];
+				var pos     = _data[ 9];
+				var pos_axs = _data[28];
 				
 				if(pos_use) {
 					switch(pos_mod) {
-						case 0 : _a.x  = lerp(_a.x, pos[0], _inf); 
-						         _a.y  = lerp(_a.y, pos[1], _inf); break;
+						case 0 : 
+							if(pos_axs & 0b01) _a.x  = lerp(_a.x, pos[0], _inf); 
+						    if(pos_axs & 0b10) _a.y  = lerp(_a.y, pos[1], _inf); 
+						    break;
 						         
-						case 1 : _a.x += pos[0] * _inf; 
-						         _a.y += pos[1] * _inf;            break;
+						case 1 : 
+							if(pos_axs & 0b01) _a.x += pos[0] * _inf; 
+						    if(pos_axs & 0b10) _a.y += pos[1] * _inf;
+						    break;
 					}
 				}
 				
@@ -320,6 +332,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				var sca_mod = _data[15];
 				var sca     = _data[16];
 				var sca_anc = _data[17];
+				var sca_axs = _data[28];
 				
 				if(sca_use) {
 					var _ox = _a.sx;
@@ -337,8 +350,8 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					_a.sx = lerp(_ox, _nx, _inf);
 					_a.sy = lerp(_oy, _ny, _inf);
 					
-					_a.x -= (_a.sx - _ox) * _w * sca_anc[0];
-					_a.y -= (_a.sy - _oy) * _h * sca_anc[1];
+					if(sca_axs & 0b01) _a.x -= (_a.sx - _ox) * _w * sca_anc[0];
+					if(sca_axs & 0b10) _a.y -= (_a.sy - _oy) * _h * sca_anc[1];
 				}
 				
 				////- =Blend
