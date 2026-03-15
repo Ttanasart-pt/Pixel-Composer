@@ -47,8 +47,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Pattern
 	newInput( 3, nodeValue_EScroll(  "Pattern",          0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
 	newInput( 9, nodeValue_Vec2(     "Start Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
-	newInput(22, nodeValue_Anchor(   "Global Anchor",   [ 0, 0] ));
 	newInput(32, nodeValue_Rotation( "Start Rotation",   0      )).setHotkey("R");
+	newInput(22, nodeValue_Anchor(   "Global Anchor",   [ 0, 0] ));
+	newInput(45, nodeValue_Rotation( "Global Rotation",  0      ))
 	newInput( 2, nodeValue_Int(      "Amount",           4      ));
 	newInput(18, nodeValue_Int(      "Column",           4      ));
 	newInput( 7, nodeValue_RotRange( "Angle Range",     [0,360] ));
@@ -199,7 +200,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	input_display_list = [
 		[ "Surfaces",  true ],  0, 35, 36, 37,  1, 16, 17,
-		[ "Pattern",  false ],  3,  9, 22, 32,  2, 18,  7,  8, 
+		[ "Pattern",  false ],  3,  9, 32, 22, 45,  2, 18,  7,  8, 
 		[ "Path",      true ], 11, 12, 13, 40, 
 		[ "Position", false ],  4, 38, 26, 19, 39, 15, 44, 
 		[ "Rotation", false ], 33,  5, 20, 
@@ -399,6 +400,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 								  
 			var _spos = _data[ 9];
 			var _fanc = _data[22];
+			var _frot = _data[45];
 			var _srot = _data[32];
 			
 			var _rpos = _data[ 4], _rpos_curved = inputs[4].attributes.curved; shift_curve.set(_data[38]);
@@ -442,6 +444,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			inputs[3].getEditWidget().setSideButton(_pat == 1? b_gridFill : noone);
 			
+			inputs[45].setVisible(_pat <= 1);
 			inputs[41].setVisible(!_scaUni);
 			inputs[42].setVisible(!_scaUni && _rscaY_curved);
 			inputs[ 6].name = _scaUni? "Scale" : "Scale X";
@@ -653,7 +656,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			miny = min(miny, posy);
 			maxx = max(maxx, posx);
 			maxy = max(maxy, posy);
-				
+			
+			var cenx = posx;
+			var ceny = posy;
+			
 			var aa  = _color_get_alpha(cc);
 			point_rotate(sw * _panc[0], sh * _panc[1], 0, 0, rot, __temp_p);
 			posx -= __temp_p[0];
@@ -664,8 +670,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			atlases[ _i + ATLAS_ARRAY.surface ] = _surface;
 			atlases[ _i + ATLAS_ARRAY.x       ] = posx;
 			atlases[ _i + ATLAS_ARRAY.y       ] = posy;
-			atlases[ _i + ATLAS_ARRAY.cx      ] = posx + sw / 2;
-			atlases[ _i + ATLAS_ARRAY.cy      ] = posy + sh / 2;
+			atlases[ _i + ATLAS_ARRAY.cx      ] = cenx;
+			atlases[ _i + ATLAS_ARRAY.cy      ] = ceny;
 			atlases[ _i + ATLAS_ARRAY.sx      ] = scax;
 			atlases[ _i + ATLAS_ARRAY.sy      ] = scay;
 			atlases[ _i + ATLAS_ARRAY.sw      ] = _sw;
@@ -872,8 +878,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _ind = _invers? atlas_i - i - 1 : i;
 				var _i   = _ind * ATLAS_ARRAY.length;
 				
-				var _x = atlases[_i + ATLAS_ARRAY.x] + _offset_x;
-				var _y = atlases[_i + ATLAS_ARRAY.y] + _offset_y;
+				var _x  = atlases[_i + ATLAS_ARRAY.x ] + _offset_x;
+				var _y  = atlases[_i + ATLAS_ARRAY.y ] + _offset_y;
+				var _cx = atlases[_i + ATLAS_ARRAY.cx] + _offset_x;
+				var _cy = atlases[_i + ATLAS_ARRAY.cy] + _offset_y;
 				
 				var _surf = atlases[_i + ATLAS_ARRAY.surface];
 				var _sx   = atlases[_i + ATLAS_ARRAY.sx];
@@ -881,6 +889,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _rot  = atlases[_i + ATLAS_ARRAY.rot];
 				var _col  = atlases[_i + ATLAS_ARRAY.color];
 				var _alp  = atlases[_i + ATLAS_ARRAY.alpha];
+				
+				if(_frot != 0) {
+					var _shfx = _x - _cx;
+					var _shfy = _y - _cy;
+					point_rotate(_cx, _cy, _spos[0], _spos[1], _frot, __temp_p);
+					_x = __temp_p[0] + _shfx;
+					_y = __temp_p[1] + _shfy;
+				}
 				
 				if(_dimt == OUTPUT_SCALING.scale) {
 					_x += _padd[2] - minx;

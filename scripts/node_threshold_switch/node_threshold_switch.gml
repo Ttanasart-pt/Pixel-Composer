@@ -181,7 +181,7 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				input_selecting = inputs[i + 1];
 				_res = _val;
 				_typ = inputs[i + 1].value_from? inputs[i + 1].value_from.type : inputs[i + 1].type;
-				break;
+				// break;
 			}
 		}
 		

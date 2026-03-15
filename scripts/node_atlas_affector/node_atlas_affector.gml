@@ -431,8 +431,8 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					_a.sx = lerp(_a.sx, _atlas_target.sx, _inf);
 					_a.sy = lerp(_a.sy, _atlas_target.sy, _inf);
 					
-					if(_ox != _a.sx) _a.x -= (_a.sx - _ox) * _w * sca_anc[0];
-					if(_oy != _a.sy) _a.y -= (_a.sy - _oy) * _h * sca_anc[1];
+					// if(_ox != _a.sx) _a.x -= (_a.sx - _ox) * _w * sca_anc[0];
+					// if(_oy != _a.sy) _a.y -= (_a.sy - _oy) * _h * sca_anc[1];
 				}
 				
 			}
