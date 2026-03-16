@@ -35,6 +35,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name		= "Equation";
 	color		= COLORS.node_blend_number;
 	draw_pad_w  = 10;
+	always_pad  = true;
 	
 	setDimension(96, 48);
 	ast = [];
@@ -192,7 +193,9 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var eq = _data[0];
-		var params = {};
+		var params = {
+			project,
+		};
 		
 		for( var i = input_fix_len; i < array_length(_data); i += data_length ) {
 			var _pName = _data[i + 0];
