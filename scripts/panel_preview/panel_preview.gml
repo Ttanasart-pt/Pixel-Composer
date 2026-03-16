@@ -1824,12 +1824,12 @@ function Panel_Preview() : PanelContent() constructor {
                     break;
             } 
             
+            if(_shader_prev) shader_reset();
+            
             if(preview_junction != noone) {
             	preview_junction.drawPreviewOverlay(canvas_x, canvas_y, canvas_s, self);
             	preview_junction.node.previewing = 1;
             }
-        	
-        	if(_shader_prev) shader_reset();
         #endregion
         
         if(!instance_exists(o_dialog_menubox)) { // color sample
