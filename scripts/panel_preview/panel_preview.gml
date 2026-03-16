@@ -110,6 +110,9 @@
 	        registerFunction(p, "Tile Horizontal",          "", n, panel_preview_set_tile_horizontal       ).setMenu("preview_set_tile_horizontal")
 	        registerFunction(p, "Tile Vertical",            "", n, panel_preview_set_tile_vertical         ).setMenu("preview_set_tile_vertical")
 	        registerFunction(p, "Tile Both",                "", n, panel_preview_set_tile_both             ).setMenu("preview_set_tile_both")
+	        registerFunction(p, "Tile Draw",                "", n, function() /*=>*/ { PREFERENCES.panel_preview_show_tiles = !PREFERENCES.panel_preview_show_tiles; PREF_SAVE(); } )
+	        	.setMenu("preview_set_tile_draw").setToggle(function() /*=>*/ {return PREFERENCES.panel_preview_show_tiles});
+	        	
 	        registerFunction(p, "Toggle Tile",              "", n, panel_preview_set_tile_toggle           )
 	        	.setMenu("preview_toggle_tile", THEME.icon_tile_view)
 	        	.setSpriteInd( function() /*=>*/ {return PANEL_PREVIEW.tileMode} )
@@ -120,6 +123,8 @@
 	                 MENU_ITEMS.preview_set_tile_horizontal,
 	                 MENU_ITEMS.preview_set_tile_vertical,
 	                 MENU_ITEMS.preview_set_tile_both,
+	                 -1, 
+	                 MENU_ITEMS.preview_set_tile_draw,
 	             ])
 	        registerFunction(p, "Tiling Settings",          "", n, function(_dat) /*=>*/ { submenuCall(_dat, [
 	                 MENU_ITEMS.preview_set_tile_off,
@@ -1678,7 +1683,7 @@ function Panel_Preview() : PanelContent() constructor {
     preview_surface_width  = 0;
     preview_surface_height = 0;
     
-    static drawNodePreview = function() {
+    static drawNodePreview = function() { // DRAW PREVIEW CONTENT
         var ss   = canvas_s;
         var psx  = 0, psy  = 0;
         var psw  = 0, psh  = 0;
@@ -1736,14 +1741,17 @@ function Panel_Preview() : PanelContent() constructor {
             if(splitView == 0 && _ps0) {
                 preview_node[0].previewing = 1;
                 
+                if(tileMode < 3 && PREFERENCES.panel_preview_show_tiles) 
+                	draw_surface_tiled_ext_safe(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, .2); 
+                
                 switch(tileMode) {
                     case 0 :
-                        if(PROJECT.onion_skin.enabled) drawOnionSkin(_node, psx, psy, ss); 
+                    	if(PROJECT.onion_skin.enabled) drawOnionSkin(_node, psx, psy, ss); 
                         else draw_surface_ext(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
                         break;
                         
                     case 1 : 
-                        tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surfaces[0]) * ss);
+                        tile_surface = surface_verify(tile_surface, w, preview_surface_height);
                         surface_set_target(tile_surface);
                             DRAW_CLEAR
                             BLEND_OVERRIDE
@@ -1754,7 +1762,7 @@ function Panel_Preview() : PanelContent() constructor {
                         break;
                         
                     case 2 : 
-                        tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surfaces[0]) * ss, h);
+                        tile_surface = surface_verify(tile_surface, preview_surface_width, h);
                         surface_set_target(tile_surface);
                             DRAW_CLEAR
                             BLEND_OVERRIDE
@@ -1764,8 +1772,7 @@ function Panel_Preview() : PanelContent() constructor {
                         draw_surface_safe(tile_surface, psx, 0);
                         break;
                         
-                    case 3 : 
-                        draw_surface_tiled_ext_safe(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, 1); break;
+                    case 3 : draw_surface_tiled_ext_safe(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, 1); break;
                 }
             }
             
@@ -1892,7 +1899,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         if(!struct_try_get(_node, "bypass_grid", false)) drawNodeGrid();
-    }
+    } // DRAW PREVIEW CONTENT
     
     static drawNodeGrid = function() {
         if(!PROJECT.previewGrid.show) return;
@@ -3531,7 +3538,9 @@ function Panel_Preview() : PanelContent() constructor {
         title = __txt("Preview");
         getPreviewData();
         
-        if(_prev_node) {
+        ////- =Drawer
+        
+        if(_prev_node) {  
             if(d3_active) {
                 dragCanvas3D();
                 draw3D();

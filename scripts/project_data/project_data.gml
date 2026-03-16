@@ -83,9 +83,11 @@ function Project() constructor {
 	previewSetting  = variable_clone(PREFERENCES.project_previewSetting);
 	previewRuler    = [];
 	
-	graphGrid       = variable_clone(PREFERENCES.project_graphGrid);
-	graphDisplay    = variable_clone(PREFERENCES.project_graphDisplay);
-	graphConnection = variable_clone(PREFERENCES.project_graphConnection);
+	graphGrid        = variable_clone(PREFERENCES.project_graphGrid);
+	graphDisplay     = variable_clone(PREFERENCES.project_graphDisplay);
+	graphConnection  = variable_clone(PREFERENCES.project_graphConnection);
+	graphBGIndexData = undefined;
+	graphBG          = undefined;
 	
 	onion_skin = {
 		enabled : false,
@@ -416,6 +418,16 @@ function Project() constructor {
 		
 		globalLayer_compose();
 		if(attributes.auto_organize) node_auto_organize(nodes);
+		
+		graphBG = undefined;
+		if(graphBGIndexData != undefined) {
+			var _node = getNodeFromID(graphBGIndexData[0]);
+			if(_node) {
+				var _outp = _node.outputs[graphBGIndexData[1]];
+				graphBG = _outp.getValue();
+			}
+		}
+		
 	}
 
 	////- Slideshow
@@ -523,6 +535,9 @@ function Project() constructor {
 		
 		_map.graphGrid       = variable_clone(graphGrid);
 		_map.graphConnection = variable_clone(graphConnection);
+		_map.graph_display_parameter = graphDisplay;
+		if(graphBGIndexData != undefined) _map.graphBGIndexData = graphBGIndexData;
+		
 		_map.attributes      = variable_clone(attributes);
 		_map.data            = variable_clone(data);
 		
@@ -534,8 +549,6 @@ function Project() constructor {
 		_map.composer    = composer;
 		_map.load_layout = load_layout;
 		if(load_layout) _map.layout = panelSerialize(true);
-		
-		_map.graph_display_parameter = graphDisplay;
 		
 		_map.favVal = [];
 		for( var i = 0, n = array_length(favoritedValues); i < n; i++ ) {
@@ -610,15 +623,16 @@ function Project() constructor {
 		if(has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);
 		if(has(_map, "previewRuler"))    previewRuler = _map.previewRuler;
 		
-		if(has(_map, "graphGrid"))       struct_override(graphGrid,       _map.graphGrid);
-		if(has(_map, "graphConnection")) struct_override(graphConnection, _map.graphConnection);
 		if(has(_map, "attributes"))      struct_override(attributes,      _map.attributes);
 		if(has(_map, "metadata"))        meta.deserialize(_map.metadata);
 		if(has(_map, "composer"))        composer = _map.composer;
 		if(has(_map, "freeze"))          freeze   = _map.freeze;
 		if(has(_map, "data"))            data     = variable_clone(_map.data);
 		
-		if(has(_map, "graph_display_parameter"))	struct_override(graphDisplay,  _map.graph_display_parameter);
+		if(has(_map, "graphGrid"))               struct_override(graphGrid,       _map.graphGrid);
+		if(has(_map, "graphConnection"))         struct_override(graphConnection, _map.graphConnection);
+		if(has(_map, "graph_display_parameter")) struct_override(graphDisplay,    _map.graph_display_parameter);
+		if(has(_map, "graphBGIndexData"))        graphBGIndexData = _map.graphBGIndexData;
 		
 		is_nightly	= _map[$ "is_nightly"]  ?? is_nightly;
 		load_layout	= _map[$ "load_layout"] ?? load_layout;

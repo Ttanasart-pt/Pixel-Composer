@@ -4,6 +4,10 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform vec4  bgColor;
 
+uniform sampler2D bgSurface;
+uniform int       useBgSurface;
+uniform vec2      bgDimension;
+
 uniform int   gridShow;
 uniform float gridSize;
 uniform vec4  gridColor;
@@ -22,13 +26,21 @@ void main() {
 	vec2 px  = (v_vTexcoord * dimension) / graphScale - graphPos;
 	vec2 px0 = floor(v_vTexcoord * dimension) / graphScale - graphPos;
 	vec2 px1 = ceil(v_vTexcoord * dimension)  / graphScale - graphPos;
-	
 	vec2 tx  = 1. / dimension;
-	vec4 res = bgColor;
 	
-	gl_FragColor = res;
+	vec4 bgContent = bgColor;
+	
+	if(useBgSurface == 1) {
+		vec2 bgTx = (v_vTexcoord * dimension) / bgDimension;
+		// vec2 bgTx = px / bgDimension;
+		vec4 bgSm = texture2D(bgSurface, fract(bgTx));
+		bgContent = bgSm;
+	}
+	
+	gl_FragColor = bgContent;
 	if(gridShow == 0) return;
 	
+	vec4  res   = bgContent;
 	float alpha = gridAlpha;
 	
 	vec2 dGrid  = mod(px,  gridSize) * graphScale;
@@ -55,7 +67,7 @@ void main() {
 		alpha += glow * .5;
 	}
 	
-	if(infx || infy) res.rgb = mix(bgColor.rgb, gridColor.rgb, alpha);
+	if(infx || infy) res.rgb = mix(bgContent.rgb, gridColor.rgb, alpha);
 	
 	gl_FragColor = res;
 }

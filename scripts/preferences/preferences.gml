@@ -105,6 +105,7 @@
 	
 		PREFERENCES.panel_preview_dragging			= MOD_KEY.alt;
 		PREFERENCES.panel_preview_show_real_fps		= false;
+		PREFERENCES.panel_preview_show_tiles        = false;
 	
 		PREFERENCES.panel_menu_show_profile		    = true;
 		PREFERENCES.panel_menu_resource_monitor		= false;

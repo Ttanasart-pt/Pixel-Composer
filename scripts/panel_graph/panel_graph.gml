@@ -80,6 +80,7 @@
     function panel_graph_hide_disconnected()       { CALL("graph_hide_disconnected");   PANEL_GRAPH.hideDisconnected();     }
     function panel_graph_hide_selecting()          { CALL("graph_hide_selecting");      PANEL_GRAPH.hideSelecting();        }
     function panel_graph_disconnect_all()          { CALL("graph_disconnect_all");      PANEL_GRAPH.disconnectAll();        }
+    function panel_graph_setBG()                   { CALL("graph_setBG");               PANEL_GRAPH.setOutputGraphBG();     }
     
     function panel_graph_open_group_tab()          { CALL("graph_open_group_tab");      PANEL_GRAPH.open_group_tab();                         }
     function panel_graph_set_as_tool()             { CALL("graph_open_set_as_tool");    PANEL_GRAPH.set_as_tool();                            }
@@ -231,6 +232,7 @@
         registerFunction(g, "Hide Disconnected",     "",  n, panel_graph_hide_disconnected   ).setMenu("graph_hide_disconnected")
         registerFunction(g, "Hide Junction",         "",  n, panel_graph_hide_selecting      ).setMenu("graph_hide_selecting",  THEME.junc_visible)
         registerFunction(g, "Disconnect All",        "",  n, panel_graph_disconnect_all      ).setMenu("graph_disconnect_all",  THEME.cross)
+        registerFunction(g, "Set BG",                "",  n, panel_graph_setBG               ).setMenu("graph_setBG")
         
         registerFunction(g, "Enter Group",           "",  n, panel_graph_enter_group         ).setMenu("graph_enter_group",     THEME.group)
         registerFunction(g, "Exit Group",           192,  n, panel_graph_exit_group          ).setMenu("graph_exit_group",      THEME.group)
@@ -1036,6 +1038,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	"graph_group_junction_color",
 	    	"graph_hide_selecting",
 	    	"graph_disconnect_all",
+	    	"graph_setBG",
     	];
     	
 	    global.menuItems_graph_connection_select = [
@@ -1618,10 +1621,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         while(gls * graph_s < 8) gls *= 5;
         
     	if(OS == os_windows) {
-        
 	        shader_set(sh_panel_graph_grid);	
 	        	shader_set_2("dimension", surface_get_dimension(surface_get_target()));
 	        	shader_set_c("bgColor",   bg_color);
+	        	
+	        	shader_set_s("bgSurface",     project.graphBG);
+	        	shader_set_i("useBgSurface",  is_surface(project.graphBG));
+	        	shader_set_2("bgDimension",   surface_get_dimension(project.graphBG));
 	        	
 	        	shader_set_i("gridShow",      project.graphDisplay.show_grid);
 	        	shader_set_f("gridSize",      gls);
@@ -4571,6 +4577,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function dropperActive(_callback) {
     	dropper_active   = true;
     	dropper_callback = _callback;
+    }
+    
+    function setOutputGraphBG() {
+    	if(!__junction_hovering) return;
+    	if(__junction_hovering.connect_type != CONNECT_TYPE.output) return;
+    	
+    	project.graphBGIndexData = [
+    		__junction_hovering.node.node_id,
+    		__junction_hovering.index
+		];
+		
+		RENDER_ALL
     }
     
     ////- Serialize
