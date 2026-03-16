@@ -47,9 +47,21 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
+uniform vec2  dimension;
 uniform float stepSize;
-uniform int side;
+uniform int   side;
+
+float texDistance(vec2 a, vec2 b) {
+	return distance(a, b);
+	
+	if(sampleMode == 4) {
+		vec2 da = abs(a - b);
+		vec2 db = vec2(1.) - da;
+		vec2 d  = vec2(min(da.x, db.x), min(da.y, db.y));
+		return length(d);
+	}
+
+}
 
 void main() {
 	float c = sampleTexture( gm_BaseTexture, v_vTexcoord ).z;
@@ -58,40 +70,47 @@ void main() {
 		return;
 	}
 	
-	vec2 txStep = stepSize / dimension;
+	vec2 t = stepSize / dimension;
 	vec2 loc[9];
 	
-	loc[0] = v_vTexcoord + vec2(-txStep.x, -txStep.y);
-	loc[1] = v_vTexcoord + vec2(       0., -txStep.y);
-	loc[2] = v_vTexcoord + vec2(+txStep.x, -txStep.y);
+	loc[0] = v_vTexcoord + vec2(-t.x, -t.y);
+	loc[1] = v_vTexcoord + vec2(  0., -t.y);
+	loc[2] = v_vTexcoord + vec2(+t.x, -t.y);
 	
-	loc[3] = v_vTexcoord + vec2(-txStep.x, 0.);
-	loc[4] = v_vTexcoord + vec2(       0., 0.);
-	loc[5] = v_vTexcoord + vec2(+txStep.x, 0.);
+	loc[3] = v_vTexcoord + vec2(-t.x, 0.);
+	loc[4] = v_vTexcoord + vec2(  0., 0.);
+	loc[5] = v_vTexcoord + vec2(+t.x, 0.);
 	
-	loc[6] = v_vTexcoord + vec2(-txStep.x, +txStep.y);
-	loc[7] = v_vTexcoord + vec2(       0., +txStep.y);
-	loc[8] = v_vTexcoord + vec2(+txStep.x, +txStep.y);
+	loc[6] = v_vTexcoord + vec2(-t.x, +t.y);
+	loc[7] = v_vTexcoord + vec2(  0., +t.y);
+	loc[8] = v_vTexcoord + vec2(+t.x, +t.y);
 	
-	vec2 closetPoint = vec2(0., 0.);
+	float dist[9];
+	float diag = length(t);
+
+	dist[0] = diag; dist[1] = t.y; dist[2] = diag;
+	dist[3] = t.x;  dist[4] = 0.;  dist[5] = t.x;
+	dist[6] = diag; dist[7] = t.y; dist[8] = diag;
+
+	vec2  closetPoint    = vec2(0., 0.);
 	float closetDistance = 9999.;
 	
 	for( int i = 0 ; i < 9; i++ ) {
 		vec4 sam = sampleTexture( gm_BaseTexture, loc[i] );
 		
 		if(sam.z != c) {
-			float dist = distance(v_vTexcoord, loc[i]);
-			if(dist < closetDistance) {
-				closetDistance = dist;
+			float d = dist[i];
+			if(d < closetDistance) {
+				closetDistance = d;
 				closetPoint = loc[i];
 			}
 			continue;
 		}
 		
 		if(sam.xy == vec2(0.)) continue;
-		float dist = distance(v_vTexcoord, sam.xy);
-		if(dist < closetDistance) {
-			closetDistance = dist;
+		float d = texDistance(v_vTexcoord, sam.xy);
+		if(d < closetDistance) {
+			closetDistance = d;
 			closetPoint = sam.xy;
 		}
 	}

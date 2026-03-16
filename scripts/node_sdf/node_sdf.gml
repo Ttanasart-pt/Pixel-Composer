@@ -66,8 +66,8 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		var _n	   = max(sw, sh);
 		var cDep   = attrDepth();
 		
-		temp_surface[0] = surface_verify(temp_surface[0], _n, _n, cDep);
-		temp_surface[1] = surface_verify(temp_surface[1], _n, _n, cDep);
+		temp_surface[0] = surface_verify(temp_surface[0], _n, _n, surface_rgba16float);
+		temp_surface[1] = surface_verify(temp_surface[1], _n, _n, surface_rgba16float);
 		_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 		
 		surface_set_shader(temp_surface[0], sh_sdf_tex);
