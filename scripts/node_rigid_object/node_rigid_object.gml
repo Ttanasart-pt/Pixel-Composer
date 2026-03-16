@@ -504,6 +504,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _srot = getInputData(17);
 		var _spx, _spy;
 		
+		var sx = 1;
+		var sy = 1;
+		var _blnd = ca_white;
+		var _alph = 1;
+		
 		if(_position == undefined) {
 			_spx = _spos[0] / worldScale;
 			_spy = _spos[1] / worldScale;
@@ -522,6 +527,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				_spy += _tex.y / worldScale;
 			}
 			
+			sx    = _tex.sx;
+			sy    = _tex.sy;
+			_blnd = _tex.blend;
+			_alph = _tex.alpha;
 			_tex  = _tex.getSurface();
 		}
 		
@@ -529,8 +538,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(!is_surface(_tex)) return undefined;
 		
-		var ww = surface_get_width_safe(_tex);
-		var hh = surface_get_height_safe(_tex);
+		var ww = surface_get_width_safe(_tex)  * sx;
+		var hh = surface_get_height_safe(_tex) * sy;
 		
 		var ow = ww / 2 / worldScale;
 		var oh = hh / 2 / worldScale;
@@ -560,6 +569,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var objId  = gmlBox2D_Object_Create_Complete(); 
 		var boxObj = new __Box2DObject(objId, _tex);
+		
+		boxObj.xscale = sx;
+		boxObj.yscale = sy;
+
+		boxObj.blend   = _blnd;
+		boxObj.alpha   = _alph;
 		
 		var _mov	  = getInputData( 0);
 		var _weig     = getInputData( 1);
