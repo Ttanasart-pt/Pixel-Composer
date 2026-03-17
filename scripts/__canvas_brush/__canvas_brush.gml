@@ -318,12 +318,11 @@ function canvas_brush() constructor {
 				
 				var fx = global.FIX_POINTS[size];
 				for( var i = 0, n = array_length(fx); i < n; i++ )
-					draw_ellipse(_min_x + fx[i][0], _min_y + fx[i][1], _max_x + fx[i][0], _max_y + fx[i][1], 1);
+					draw_ellipse(_min_x + fx[i][0], _min_y + fx[i][1], 
+					             _max_x + fx[i][0], _max_y + fx[i][1], 1);
 				
-			} else {
-				draw_ellipse(_min_x, _min_y, _max_x, _max_y, size);
-				
-			}
+			} else draw_ellipse_width(_min_x, _min_y, _max_x, _max_y, size);
+			
 			return;
 		}
 		

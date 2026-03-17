@@ -175,12 +175,11 @@ function draw_ellipse_width(x0, y0, x1, y1, th = 1) {
 	var samp = 32;
 	var ox, oy, nx, ny;
 	
-	for( var i = 0; i < samp; i++ ) {
+	for( var i = 0; i <= samp; i++ ) {
 		nx = cx + lengthdir_x(ww, i * 360 / samp);
 		ny = cy + lengthdir_y(hh, i * 360 / samp);
 		
-		if(i)
-			draw_line_width(ox, oy, nx, ny, th);
+		if(i) draw_line_round(ox, oy, nx, ny, th);
 		
 		ox = nx;
 		oy = ny;
