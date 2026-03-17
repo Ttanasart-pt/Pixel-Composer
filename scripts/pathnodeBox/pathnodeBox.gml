@@ -2,7 +2,7 @@ function pathnodeBox(_junction) : widget() constructor {
 	junction = _junction;
 	
     b_newPath = button(function() /*=>*/ { 
-    	var b = nodeBuild("Node_Path", junction.node.x - 128, junction.ry - 32);
+    	var b = nodeBuild(junction.extract_node, junction.node.x - 128, junction.ry - 32);
     	junction.setFrom(b.outputs[1]);
     	
 	}).setText(__txt("New path"))
@@ -19,6 +19,12 @@ function pathnodeBox(_junction) : widget() constructor {
 		y = _y;
 		w = _w;
 		h = TEXTBOX_HEIGHT;
+		
+		#region extract
+			var ext = junction.extract_node;
+			var nod = ALL_NODES[$ ext];
+			b_newPath.text = $"New {nod.name}";
+		#endregion
         
         if(_path == noone) {
             b_newPath.setFocusHover(active, hover);

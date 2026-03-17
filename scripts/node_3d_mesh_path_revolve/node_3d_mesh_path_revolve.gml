@@ -6,7 +6,7 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	////- =Path
 	
-	newInput(i+ 0, nodeValue_PathNode( "Path" ));
+	newInput(i+ 0, nodeValue_PathNode( "Path" )).setExtractNode("Node_Path_3D");
 	newInput(i+ 9, nodeValue_Float(    "Path Scale", .25 ));
 	
 	////- =Mesh

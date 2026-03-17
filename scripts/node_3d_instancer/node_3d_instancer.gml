@@ -19,7 +19,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput(22, nodeValue_Bool(        "Look At Center", false ));
 	
 	////- =Path
-	newInput(23, nodeValue_PathNode(    "Shift Path"            ));
+	newInput(23, nodeValue_PathNode(    "Shift Path"            )).setExtractNode("Node_Path_3D");
 	newInput(27, nodeValue_Range(       "Path Range",   [0,1]   ));
 	newInput(24, nodeValue_Bool(        "Follow Path",  false   ));
 	

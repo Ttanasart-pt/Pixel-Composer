@@ -16,7 +16,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(14, nodeValue_IVec3(       "Grid",         [2,2,1] ));
 	newInput(17, nodeValue_Float(       "Radius",       1       ));
 	newInput(19, nodeValue_Slider(      "Look At Center",0      ));
-	newInput(18, nodeValue_PathNode(    "Shift Path"            ));
+	newInput(18, nodeValue_PathNode(    "Shift Path"            )).setExtractNode("Node_Path_3D");
 	newInput(20, nodeValue_Slider(      "Follow Path",  0       ));
 	
 	////- =Transform

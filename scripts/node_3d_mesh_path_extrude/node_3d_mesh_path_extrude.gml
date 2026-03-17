@@ -5,7 +5,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	var i = in_mesh;
 	
 	////- =Path
-	newInput(i+ 0, nodeValue_PathNode(   "Path"              ));
+	newInput(i+ 0, nodeValue_PathNode(   "Path"              )).setExtractNode("Node_Path_3D");
 	newInput(i+13, nodeValue_Float(      "Path Scale", .1    ));
 	newInput(i+10, nodeValue_Bool(       "Loop",       false ));
 	

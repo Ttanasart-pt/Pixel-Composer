@@ -3,7 +3,7 @@ function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	object_class = __3dWall_builder;
 	var i = in_mesh;
 	
-	newInput(i+0, nodeValue_PathNode( "Path" ));
+	newInput(i+0, nodeValue_PathNode( "Path" )).setExtractNode("Node_Path_3D");
 	newInput(i+6, nodeValue_Float(    "Path Scale", .01    ));
 	newInput(i+9, nodeValue_Bool(     "Loop",        false ));
 	newInput(i+1, nodeValue_Int(      "Segments",    16    ));

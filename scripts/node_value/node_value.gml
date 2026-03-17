@@ -1018,6 +1018,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return;
 		}
 		
+		var _ext = undefined;
+		
 		switch(type) {
 			case VALUE_TYPE.float :
 			case VALUE_TYPE.integer :
@@ -1030,7 +1032,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(has(display_data, "unit"))         editWidget.unit = display_data.unit;
 						if(has(display_data, "front_button")) editWidget.setFrontButton(display_data.front_button);
 						
-						extract_node = "Node_Number";
+						_ext = "Node_Number";
 						break;
 						
 					case VALUE_DISPLAY.range :		
@@ -1041,7 +1043,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = " " + array_safe_get_fast(global.displaySuffix_Range, i);
 						
-						extract_node = "Node_Number";
+						_ext = "Node_Number";
 						break;
 						
 					case VALUE_DISPLAY.vector :		
@@ -1057,9 +1059,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(has(display_data, "linked"))   editWidget.linked   = display_data.linked;
 							
 							switch(len) {
-								case 2 : extract_node = [ "Node_Vector2", "Node_Path" ]; break;
-								case 3 : extract_node = "Node_Vector3";                  break;
-								case 4 : extract_node = "Node_Vector4";                  break;
+								case 2 : _ext = [ "Node_Vector2", "Node_Path" ]; break;
+								case 3 : _ext = "Node_Vector3";                  break;
+								case 4 : _ext = "Node_Vector4";                  break;
 							}
 						}
 						
@@ -1076,9 +1078,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(!has(display_data, "linked")) display_data.linked = false;
 						if(!has(display_data, "ranged")) display_data.ranged = false;
 						
-							 if(array_length(val) == 2) extract_node = "Node_Vector2";
-						else if(array_length(val) == 3) extract_node = "Node_Vector3";
-						else if(array_length(val) == 4) extract_node = "Node_Vector4";
+							 if(array_length(val) == 2) _ext = "Node_Vector2";
+						else if(array_length(val) == 3) _ext = "Node_Vector3";
+						else if(array_length(val) == 4) _ext = "Node_Vector4";
 							
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_VecRange, i)}";
@@ -1090,7 +1092,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget   = new rotator(function(val) /*=>*/ {return setValueInspector(val)}, _step);
 						
-						extract_node = "Node_Number";
+						_ext = "Node_Number";
 						break;
 						
 					case VALUE_DISPLAY.rotation_range :
@@ -1099,13 +1101,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
-						extract_node = "Node_Rotation_Range_Data";
+						_ext = "Node_Rotation_Range_Data";
 						break;
 						
 					case VALUE_DISPLAY.rotation_random :
 						editWidget = new rotatorRandom(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
-						extract_node = "Node_Rotation_Random_Data";
+						_ext = "Node_Rotation_Random_Data";
 						break;
 						
 					case VALUE_DISPLAY.slider :		
@@ -1119,7 +1121,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(has(display_data, "update_stat"))
 							editWidget.update_stat = display_data.update_stat;
 						
-						extract_node = "Node_Number";
+						_ext = "Node_Number";
 						break;
 						
 					case VALUE_DISPLAY.slider_range :
@@ -1131,7 +1133,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
-						extract_node = "Node_Vector2";
+						_ext = "Node_Vector2";
 						break;
 						
 					case VALUE_DISPLAY.area :		
@@ -1143,7 +1145,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Area, i, "")}";
 						
-						extract_node = "Node_Area";
+						_ext = "Node_Area";
 						break;
 						
 					case VALUE_DISPLAY.padding :	
@@ -1152,7 +1154,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
-						extract_node = "Node_Padding";
+						_ext = "Node_Padding";
 						break;
 						
 					case VALUE_DISPLAY.corner :		
@@ -1161,13 +1163,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
-						extract_node = "Node_Corner";
+						_ext = "Node_Corner";
 						break;
 						
 					case VALUE_DISPLAY.puppet_control :
 						editWidget = new controlPointBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
-						extract_node = "";
+						_ext = "";
 						break;
 						
 					case VALUE_DISPLAY.enum_scroll :
@@ -1184,7 +1186,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
-						extract_node = "";
+						_ext = "";
 						break;
 						
 					case VALUE_DISPLAY.enum_button :
@@ -1195,7 +1197,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
-						extract_node = "";
+						_ext = "";
 						break;
 						
 					case VALUE_DISPLAY.matrix :		
@@ -1206,7 +1208,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animatorSuffix[i] = $" {i}";
 						
 						setIcon(THEME.node_junction_matrix);
-						extract_node = "Node_Matrix";
+						_ext = "Node_Matrix";
 						break;
 						
 					case VALUE_DISPLAY.boolean_grid :
@@ -1216,13 +1218,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {i}";
 						
-						extract_node = "";
+						_ext = "";
 						break;
 						
 					case VALUE_DISPLAY.transform :	
 						editWidget = new transformBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
-						extract_node = "Node_Transform_Array";
+						_ext = "Node_Transform_Array";
 						break;
 						
 					case VALUE_DISPLAY.toggle :		
@@ -1230,24 +1232,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
-						extract_node = "";
+						_ext = "";
 						break;
 						
 					case VALUE_DISPLAY.d3quarternion :
 						editWidget = new quarternionBox(function(val, i) /*=>*/ { setValueInspector(val, i); node.triggerRender(); });
 						
-						extract_node = "Node_Vector4";
+						_ext = "Node_Vector4";
 						attributes.angle_display = QUARTERNION_DISPLAY.euler;
 						break;
 						
 					case VALUE_DISPLAY.path_anchor :
 						editWidget = new pathAnchorBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
-						extract_node = "Node_Path_Anchor";
+						_ext = "Node_Path_Anchor";
 						break;
 						
 					case VALUE_DISPLAY.number_array :
 						editWidget = new numberArrayBox(function(val) /*=>*/ {return setValueInspector(val)});
-						extract_node = "Node_Number";
+						_ext = "Node_Number";
 						break;
 						
 				}
@@ -1259,20 +1261,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				if(name == "Active") editWidget = new checkBoxActive(function() /*=>*/ {return setValueInspector(!animator.getValue())} );
 				else				 editWidget = new checkBox(      function() /*=>*/ {return setValueInspector(!animator.getValue())} );
 				
-				key_inter    = CURVE_TYPE.cut;
-				extract_node = "Node_Boolean";
+				key_inter = CURVE_TYPE.cut;
+				_ext      = "Node_Boolean";
 				break;
 				
 			case VALUE_TYPE.color :		
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget   = new buttonColor(function(_color) /*=>*/ {return setValueInspector(_color)});
-						extract_node = "Node_Color";
+						_ext         = "Node_Color";
 						break;
 						
 					case VALUE_DISPLAY.palette :
 						editWidget   = new buttonPalette(function(_color) /*=>*/ {return setValueInspector(_color)});
-						extract_node = "Node_Palette";
+						_ext         = "Node_Palette";
 						updateOnSet  = true;
 						break;
 				}
@@ -1280,7 +1282,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 			case VALUE_TYPE.gradient :	
 				editWidget   = new buttonGradient(function(gradient) /*=>*/ {return setValueInspector(gradient)});
-				extract_node = "Node_Gradient_Out";
+				_ext = "Node_Gradient_Out";
 				break;
 				
 			case VALUE_TYPE.path :		
@@ -1325,7 +1327,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							
 						}).setIcon(THEME.copy_20, 0, COLORS._main_icon).setTooltip(__txt("Copy to Project")));
 						
-						extract_node = "Node_String";
+						_ext = "Node_String";
 						break;
 						
 					case VALUE_DISPLAY.path_save :
@@ -1372,7 +1374,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							
 						}).setIcon(THEME.copy_20, 0, COLORS._main_icon).setTooltip(__txt("Make Relative")));
 						
-						extract_node = "Node_String";
+						_ext = "Node_String";
 						break;
 						
 					default :
@@ -1433,11 +1435,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
-						extract_node = "";
 						break;
 				}
 				
-				extract_node = "Node_String";
+				_ext = "Node_String";
 				break;
 			
 			case VALUE_TYPE.font :
@@ -1453,7 +1454,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				} );
 				
 				if(!has(display_data, "atlas")) display_data.atlas = true;
-				extract_node = "Node_Canvas";
+				_ext = "Node_Canvas";
 				break;
 				
 			case VALUE_TYPE.surface :	
@@ -1461,12 +1462,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				editWidget = new surfaceBox(function(ind) /*=>*/ {return setValueInspector(ind)});
 				
 				if(!has(display_data, "atlas")) display_data.atlas = true;
-				extract_node = "Node_Canvas";
+				_ext = "Node_Canvas";
 				break;
 				
 			case VALUE_TYPE.dynaSurface : editWidget = new surfaceDynaBox();										break;
-			case VALUE_TYPE.pathnode :	  editWidget = new pathnodeBox(self); extract_node = "Node_Path"; 			break;
-			case VALUE_TYPE.tileset :     editWidget = new tilesetBox(self);  extract_node = "Node_Tile_Tileset"; 	break;
+			case VALUE_TYPE.pathnode :	  editWidget = new pathnodeBox(self); _ext = "Node_Path"; 			break;
+			case VALUE_TYPE.tileset :     editWidget = new tilesetBox(self);  _ext = "Node_Tile_Tileset"; 	break;
 			case VALUE_TYPE.armature :    editWidget = new armatureBox(self); 										break;
 			case VALUE_TYPE.mesh :        editWidget = new meshBox(self); 											break;
 			case VALUE_TYPE.pbBox :       editWidget = new pbBoxBox(self); 											break;
@@ -1477,6 +1478,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			default : editWidget = new outputBox(); break;
 		}
 		
+		if(_ext != undefined && extract_node == "")
+			extract_node = _ext;
 		editWidgetRaw = editWidget;
 		
 		if(has(display_data, "side_button") && editWidget.side_button == noone)
@@ -3104,6 +3107,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _newVal;
 	}
 	
+	static setExtractNode = function(e) /*=>*/ { extract_node = e; return self; }
 	static extractNode = function(_type = extract_node, _x = undefined, _y = undefined) {
 		
 		if(is_array(_type)) _type = _type[0];
