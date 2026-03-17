@@ -55,6 +55,7 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
 	
 	static action = function(_dat = undefined) {
+		if(!is_callable(fn)) return;
 		var _res;
 		
 		if(!is_undefined(_dat))  _res = fn(_dat);

@@ -105,8 +105,9 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 			draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 			
 			if(sc_content.active) {
-				if((!keyboard_trigger && mouse_press(mb_left)) || (hk_editing == noone && KEYBOARD_ENTER)) {
-					call(_menu.action, _menu.params);
+				if((!keyboard_trigger && mouse_lpress()) || (hk_editing == noone && KEYBOARD_ENTER)) {
+					_menu.action();
+					
 					array_push(RECENT_COMMANDS, _menu);
 					instance_destroy();
 				}
