@@ -259,17 +259,19 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		switch(_loop) {
 			case ANIMATION_END.loop : 
-				_frm = safe_mod(_frm, _len);
+				_frm = ((_frm % _len) + _len) % _len;
 				break;
 				
 			case ANIMATION_END.ping :
-				_frm = safe_mod(_frm, _len * 2 - 2);
+				var plen = _len * 2 - 2;
+				_frm = ((_frm % plen) + plen) % plen;
+				
 				if(_frm >= _len)
-					_frm = _len * 2 - 2 - _frm;
+					_frm = plen - _frm;
 				break;
 				
 			case ANIMATION_END.hold :
-				_frm = clamp(_frm, -_len, _len - 1);
+				_frm = clamp(_frm, 0, _len - 1);
 				break;
 				
 			case ANIMATION_END.hide :	
@@ -277,6 +279,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					_drw = false;
 				break;
 		}
+		
+		if(_frm < 0) _drw = false;
 		
 		_outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		outputs[0].setValue(_outsurf);
