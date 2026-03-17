@@ -16,7 +16,6 @@ function drawWidgetInit() {
 }
 
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0, _ID = undefined) { 
-	
 	#region data
 		var _viewSpac = viewMode == INSP_VIEW_MODE.spacious;
 		var _input    = jun.connect_type == CONNECT_TYPE.input;
@@ -35,7 +34,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		if(_ID != undefined) {
 			var _map = jun.editWidgetMap;
-			if(!struct_has(_map, _ID)) 
+			if(!has(_map, _ID)) 
 				_map[$ _ID] = wid.clone();
 			wid = _map[$ _ID];
 		}

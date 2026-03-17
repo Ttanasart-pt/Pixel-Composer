@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_globalvar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_globalvar",
+  "parent":{
+    "name":"misc",
+    "path":"folders/nodes/data/misc.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

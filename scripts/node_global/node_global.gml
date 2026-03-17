@@ -147,6 +147,9 @@ function variable_editor(nodeVal) constructor {
 			
 			default : value.setDisplay(_dtype); break;
 		}
+		
+		value.resetDisplay();
+		value.editWidgetSetted = true;
 	}
 	
 	static updateType = function() {

@@ -1005,7 +1005,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static resetDisplay = function() {
-		editWidget = noone;
+		editWidget    = noone;
+		editWidgetMap = {};
 		
 		if(display_type == VALUE_DISPLAY.button) {
 			var _onClick = has(display_data, "onClick")? method(node, display_data.onClick) : 

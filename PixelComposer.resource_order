@@ -1092,6 +1092,7 @@
     {"name":"node_gamma_map","order":34,"path":"scripts/node_gamma_map/node_gamma_map.yy",},
     {"name":"node_gap_contract","order":4,"path":"scripts/node_gap_contract/node_gap_contract.yy",},
     {"name":"node_global","order":11,"path":"scripts/node_global/node_global.yy",},
+    {"name":"node_globalvar","order":37,"path":"scripts/node_globalvar/node_globalvar.yy",},
     {"name":"node_glow","order":23,"path":"scripts/node_glow/node_glow.yy",},
     {"name":"node_gm_room","order":4,"path":"scripts/node_gm_room/node_gm_room.yy",},
     {"name":"node_gradient_cos","order":2,"path":"scripts/node_gradient_cos/node_gradient_cos.yy",},
