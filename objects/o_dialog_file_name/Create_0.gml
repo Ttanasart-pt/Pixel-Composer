@@ -9,6 +9,9 @@ event_inherited();
 	
 	destroy_on_click_out = true;
 	
+	wait     = true;
+	alarm[1] = 1;
+	
 	label = __txt("Name");
 	path  = "";
 	name  = "New file";
@@ -17,7 +20,12 @@ event_inherited();
 #region text
 	onModify = -1;
 	tb_width = ui(280);
-	tb_name  = textBox_Text(function(t) /*=>*/ { name = t; onModify(filename_combine(path, filename_name_validate(t))); instance_destroy(); });
+	tb_name  = textBox_Text(function(t) /*=>*/ { 
+		if(wait) return;
+		name = t; 
+		onModify(filename_combine(path, filename_name_validate(t))); 
+		instance_destroy(); 
+	});
 	
 	function setLabel(  _l ) { label    = _l; return self; }
 	function setName(   _n ) { name     = _n; return self; }

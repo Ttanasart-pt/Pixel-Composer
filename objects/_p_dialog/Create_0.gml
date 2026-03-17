@@ -60,7 +60,6 @@
 	dialog_drag_mx  = 0;
 	dialog_drag_my  = 0;
 	mouse_draggable = true;
-	passthrough     = false;
 	
 	function doDrag() {
 		if(!active) return;
@@ -257,9 +256,7 @@
 	}
 	
 	function checkMouse() {
-		if(!active)       return;
-		if(!DIALOG_CLICK) return;
-		if(init_pressing) return;
+		if(!active || !DIALOG_CLICK || init_pressing) return;
 		
 		if(mouse_press(mb_left) || mouse_press(mb_right)) { 
 			if(!volatile && !isTop()) return;

@@ -63,21 +63,18 @@ function __PaletteColor(_color = c_black) constructor {
 	menu_add_target = "";
 	menu_add = [
 		menuItem(__txt("Current Palette"), function() /*=>*/ {
-			var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-			dia.onModify = function(txt) /*=>*/ {
+			fileNameCall(menu_add_target == ""? DIRECTORY + "Palettes/" : menu_add_target, function(txt) /*=>*/ {
 				var file = file_text_open_write(txt + ".hex");
 				for(var i = 0; i < array_length(palette); i++)
 					file_text_write_string(file,  $"{color_get_hex(palette[i])}\n");
 				file_text_close(file);
 				
 				__refreshPalette();
-			};
-			
-			dia.path = menu_add_target == ""? DIRECTORY + "Palettes/" : menu_add_target;
+			})
 		}),
 		
 		menuItem(__txt("Lospec"), function() /*=>*/ {
-			fileNameCall("", function(txt) /*=>*/ { addPalette_LoSpec(txt, menu_add_target); }).setName("Palette")
+			textboxCall("", function(txt) /*=>*/ { addPalette_LoSpec(txt, menu_add_target); }).setLabel("Palette")
 		}),
 	];
 #endregion

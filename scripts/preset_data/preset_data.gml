@@ -95,7 +95,7 @@
 		txt = string_lower(txt);
 		txt = string_replace_all(txt, " ", "-");
 		
-		var _url = $"https://Lospec.com/palette-list{txt}.json";
+		var _url = $"https://Lospec.com/palette-list/{txt}.json";
 		var path = _path == ""? DIRECTORY + "Palettes/" : _path;
 		
 		asyncCall(http_get(_url), function(_param, _data) /*=>*/ {
@@ -122,9 +122,7 @@
 		    __initPalette();
 		    
 		    noti_status($"Loaded palette: {_name} by {_auth} completed.", noone, COLORS._main_value_positive);	
-		}, {
-			path
-		});
+		}, { path });
 	}
 #endregion
 

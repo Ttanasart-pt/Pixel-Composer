@@ -8,7 +8,6 @@
 	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(4), dialog_y + ui(4), dialog_w - ui(8), dialog_h - ui(8));
-	
 #endregion
 
 #region draw TB

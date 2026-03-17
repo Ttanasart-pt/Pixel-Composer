@@ -2084,7 +2084,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                	var menu = menuItems_gen("graph_empty");
 	                    var _dia = menuCall("graph_empty", menu, o_dialog_add_node.dialog_x - ui(8), 
 	                                                             o_dialog_add_node.dialog_y + ui(4), fa_right );
-	                    _dia.passthrough = true;
 	                    setFocus(_diaAdd, "Dialog");
 	                    
 	                } else if(node_hover == noone) {
@@ -2107,7 +2106,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    
 	                    var _dia = menuCall("graph_connection_select", menu, o_dialog_add_node.dialog_x - ui(8), 
 	                                                                         o_dialog_add_node.dialog_y + ui(4), fa_right );
-	                    _dia.passthrough = true;
 	                    setFocus(_diaAdd, "Dialog");
 	                }
 	            } 
@@ -2690,7 +2688,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	var _dx  = o_dialog_add_node.dialog_x - ui(8);
 	        	var _dy  = o_dialog_add_node.dialog_y + ui(4);
 	        	var _dme = menuCall("graph_connection_releated", menu, _dx, _dy, fa_right );
-	        	if(_dme) _dme.passthrough = true;
 	        	
 	            setFocus(_dia, "Dialog");
 	        }

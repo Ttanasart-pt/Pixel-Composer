@@ -67,7 +67,7 @@ draggable = true;
 	bx -= bs + ui(2);
 	
 	var t = __txtx("color_selector_open_palette", "Open palette folder");
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, t, THEME.dPath_open_20, 0, bc, 1, 0);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, t, THEME.dPath_open_20, 0, bc);
 	if(b == 2) shellOpenExplorer($"{DIRECTORY}Palettes");
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
