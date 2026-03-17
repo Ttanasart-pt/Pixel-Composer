@@ -49,7 +49,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 9, nodeValue_EButton(  "Scatter",         1, [ "Uniform", "Random", "Poisson" ] ));
 	newInput(31, nodeValue_Bool(     "Auto Amount",     false  ));
 	newInput( 2, nodeValue_Int(      "Amount",          8      )).setValidator(VV_min(0));
-	newInput(30, nodeValue_Vec2(     "Uniform Amount", [4,4]   ));
+	newInput(30, nodeValue_IVec2(    "Uniform Amount", [4,4]   ));
 	newInput(35, nodeValue_RotRange( "Angle Range",    [0,360] ));
 	newInput(44, nodeValue_Float(    "Distance",        8      )).setValidator(VV_min(0));
 	newInput(46, nodeValue_Int(      "Attempt",         8      ));
@@ -298,50 +298,54 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		#region data
 			var _posDist = [];
-			if(_dist == NODE_SCATTER_DIST.map) {
-				if(!is_surface(_distMap))
-					return _outData;
-				
-				scatter_mapp = get_points_from_dist(_distMap, _amount, seed, attmp, scatter_mapp);
-				scatter_map  = _distMap;
-				scatter_maps = seed;
-				scatter_mapa = _amount;
-				
-				_posDist = scatter_mapp;
-			}
 			
-			if(_dist == NODE_SCATTER_DIST.area) { // Area
-				if(_scat == 0 && (!uniAut || _area[AREA_INDEX.shape] == AREA_SHAPE.rectangle)) 
-					_amount = uniAmo[0] * uniAmo[1];
+			switch(_dist) {
+				case NODE_SCATTER_DIST.area : 
+					if(_scat == 0 && (!uniAut || _area[AREA_INDEX.shape] == AREA_SHAPE.rectangle)) 
+						_amount = uniAmo[0] * uniAmo[1];
+					
+					if(_scat == 2) {
+						var _points = area_get_random_point_poisson_c(_area, poisDist, seed);
+						_amount = array_length(_points);
+					}
+					break;
+					
+				case NODE_SCATTER_DIST.map : 
+					if(!is_surface(_distMap))
+						return _outData;
+					
+					scatter_mapp = get_points_from_dist(_distMap, _amount, seed, attmp, scatter_mapp);
+					scatter_map  = _distMap;
+					scatter_maps = seed;
+					scatter_mapa = _amount;
+					
+					_posDist = scatter_mapp;
+					break;
 				
-				if(_scat == 2) {
-					var _points = area_get_random_point_poisson_c(_area, poisDist, seed);
-					_amount = array_length(_points);
-				}
+				case NODE_SCATTER_DIST.data : 
+					_amount = array_length(_distData);
+					break;
 				
-			} else if(_dist == NODE_SCATTER_DIST.data) { // Data
-				_amount = array_length(_distData);
-			
-			} else if(_dist == NODE_SCATTER_DIST.path) { // Path
-				var path_valid    = path != noone && is_path(path);
-			
-				if(!path_valid) return _outData;
-			
-				var _pathProgress = 0;
-				var path_amount   = struct_has(path, "getLineCount")? path.getLineCount() : 1;
-				var _pre_amount   = _amount;
-				_amount *= path_amount;
-			
-				var path_line_index = 0;
+				case NODE_SCATTER_DIST.path : 
+					if(!is_path(path)) return _outData;
 				
-			} else if(_dist == NODE_SCATTER_DIST.tile) {
-				if(_scat == 0) _amount = uniAmo[0] * uniAmo[1];
+					var _pathProgress = 0;
+					var path_amount   = struct_has(path, "getLineCount")? path.getLineCount() : 1;
+					var _pre_amount   = _amount;
+					_amount *= path_amount;
 				
-				if(_scat == 2) {
-					var _area   = [ _dim[0] / 2, _dim[1] / 2, _dim[0] / 2, _dim[1] / 2, 0 ];
-					var _points = area_get_random_point_poisson_c(_area, poisDist, seed);
-					_amount = array_length(_points);
-				}
+					var path_line_index = 0;
+					break;
+					
+				case NODE_SCATTER_DIST.tile : 
+					if(_scat == 0) _amount = uniAmo[0] * uniAmo[1];
+					
+					if(_scat == 2) {
+						var _area   = [ _dim[0] / 2, _dim[1] / 2, _dim[0] / 2, _dim[1] / 2, 0 ];
+						var _points = area_get_random_point_poisson_c(_area, poisDist, seed);
+						_amount = array_length(_points);
+					}
+					break;
 				
 			}
 		
@@ -458,13 +462,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 									sp = area_get_random_point(_area, _dist, _scat, i, _amount);
 									_x = sp[0];
 									_y = sp[1];
-								} else {
-									var _ang = cirRng[0] + _acol * (cirRng[1] - cirRng[0]) / uniAmoX;
-									var _rad = uniAmoY == 1? 0.5 : _arow / (uniAmoY - 1);
-									_ang += _arow * uniRot;
 									
-									_x += _axc + lengthdir_x(_rad * _aw, _ang);
-									_y += _ayc + lengthdir_y(_rad * _ah, _ang);
+								} else {
+									var _ang = lerp(cirRng[0], cirRng[1], _acol / uniAmoX)
+									              + _arow * uniRot;
+									var _rad = uniAmoY == 1? 0.5 : _arow / (uniAmoY - 1);
+									
+									_x = _axc + lengthdir_x(_rad * _aw, _ang);
+									_y = _ayc + lengthdir_y(_rad * _ah, _ang);
 									
 									_scx += _arow * uniSca[0];
 									_scy += _arow * uniSca[1];

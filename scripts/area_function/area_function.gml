@@ -43,28 +43,24 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 					yy = _area_y - _area_h + (_irow + 0.5) * _ihig;
 					
 				} else {
-					if(index == 0) {
-						xx = _area_x;
-						yy = _area_y;
-						break;
-					}
+					if(index == 0) { xx = _area_x; yy = _area_y; break; }
+					index--;
+					total-=2;
 					
 					var _r = _area_w;
 					var _a = _area_w / _area_h;
 					
-					var _tm = floor(total / (2 * pi));
-					var _tn = ceil(sqrt(2 * _tm + 1 / 2) - 1 / 2);
-					var _s  = _r / _tn;
+					var _tn = floor((-3 + sqrt(9 + 12 * total)) / 6) + 1;
+					var _n  = floor((-3 + sqrt(9 + 12 * index)) / 6);
 					
-					var _m = floor(index / (2 * pi));
-					var _n = floor(sqrt(2 * _m + 1 / 2) - 1 / 2);
+					var _repRad = (_n + 1) * _r / _tn;
 					
-					var _sr = (_n + 1) * _s;
-					var _tt = floor((_n * (_n + 1)) / 2 * pi * 2);
-					var _sa = (index - _tt) / (min(total - _tt, floor((_n + 1) * 2 * pi)) - 1) * 360;
+					var _tt     = floor((_n * (_n + 1)) / 2 * 6); // Previous row end
+					var _curRow = _n + 1 >= _tn? (total - _tt + 1) : (_n + 1) * 6;
+					var _repAng = (index - _tt) / _curRow * 360;
 					
-					xx = _area_x + lengthdir_x(_sr, _sa);
-					yy = _area_y + lengthdir_y(_sr, _sa) / _a;
+					xx = _area_x + lengthdir_x(_repRad, _repAng);
+					yy = _area_y + lengthdir_y(_repRad, _repAng) / _a;
 				}
 				
 			} else if(scatter == AREA_SCATTER.random) {
