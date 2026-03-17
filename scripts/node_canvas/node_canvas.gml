@@ -64,22 +64,22 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(16, nodeValue_Bool(    "Rotate by Direction", false                    ));
 	
 	////- =Animated Brush
-	newInput(23, nodeValue_Bool(    "Animated Brush", false ));
-	newInput(26, nodeValue_EButton( "Animation Type", 0, [ "Play", "Randomize" ] ));
-	newInput(11, nodeValue_Float(   "Base Speed",     1     ));
-	newInput(24, nodeValue_Float(   "Velocity Speed", 0     ));
-	newInput(27, nodeValue_Float(   "Step Speed",     0     ));
+	newInput(23, nodeValue_Bool(    "Animated Brush",   false  ));
+	newInput(26, nodeValue_EButton( "Animation Type",   0, [ "Play", "Randomize" ] ));
+	newInput(11, nodeValue_Float(   "Base Speed",       1      ));
+	newInput(24, nodeValue_Float(   "Velocity Speed",   0      ));
+	newInput(27, nodeValue_Float(   "Step Speed",       0      ));
 	
 	newInput(25, nodeValue_EButton( "On Animation End", 0, [ "Loop", "Ping-pong", "Stop" ] ));
 	
 	////- =Scatter
-	newInput(22, nodeValue_Bool(    "Scatter",            false ));
-	newInput( 2, nodeValue_Float(   "Scatter Amount",     1     ));
-	newInput( 3, nodeValue_Float(   "Scatter Radius",     4     ));
+	newInput(22, nodeValue_Bool(    "Scatter",          false  ));
+	newInput( 2, nodeValue_Float(   "Scatter Amount",   1      ));
+	newInput( 3, nodeValue_Float(   "Scatter Radius",   4      ));
 	
 	////- =Data Transfer
-	newInput(19, nodeValue_Surface( "Data Source"               ));
-	newInput(20, nodeValue_Bool(    "Transfer Dimension", true  ));
+	newInput(19, nodeValue_Surface( "Data Source"              ));
+	newInput(20, nodeValue_Bool(    "Transfer Dimension", true ));
 	// input 28
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -419,8 +419,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setVAlign(fa_center)
 									.setFont(f_p3)
 									.setSideButton(button(function() /*=>*/ { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
+										.setIcon(THEME.pen_pressure, 0, function() /*=>*/ {return tool_attribute.pressure? COLORS._main_accent : COLORS._main_icon}), true)
 										.setTooltip("Pen Pressure Settings...")
-										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon), true);
 										
 		tool_smooth_edit    = textBox_Number(function(v) /*=>*/ { brush.smooth = max(0, v); })
 									.setSlideType(true)
