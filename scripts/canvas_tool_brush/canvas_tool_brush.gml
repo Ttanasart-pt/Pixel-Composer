@@ -199,7 +199,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 				var _dx = mouse_cur_x - mouse_pre_draw_x;
 				var _dy = mouse_cur_y - mouse_pre_draw_y;
 				
-				if(_dx != _dy) {
+				if(_dx != 0 && _dy != 0 && _dx != _dy) {
 					var _ddx = _dx;
 					var _ddy = _dy;
 					
@@ -404,17 +404,15 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 	}
 	
 	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my) {
-		if(brush.sizing)  return;
-		if(!mouse_line_drawing) return;
-		if(!node.attributes.show_slope_check)  return;
+		if(brush.sizing || !mouse_line_drawing || !node.attributes.show_slope_check)  return;
 		
 		var _x0 = _x + mouse_line_x0 * _s;
 		var _y0 = _y + mouse_line_y0 * _s;
 		var _x1 = _x + mouse_line_x1 * _s;
 		var _y1 = _y + mouse_line_y1 * _s;
 		
-		var _w  = mouse_line_x1 - mouse_line_x0;
-		var _h  = mouse_line_y1 - mouse_line_y0;
+		var _w  = max(1, mouse_line_x1 - mouse_line_x0);
+		var _h  = max(1, mouse_line_y1 - mouse_line_y0);
 		var _as = max(_w, _h) % min(_w, _h) == 0;
 		
 		draw_set_alpha(0.5);
