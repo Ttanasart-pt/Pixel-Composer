@@ -30,149 +30,104 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Dimension());
 	
-	shape_types = [ 
-		"Plane", "Box", "Box Frame", "Box Round", 
-		-1, 
-		"Sphere", "Ellipse", "Cut Sphere", "Cut Hollow Sphere", "Torus", "Capped Torus",
-		-1,
-		"Cylinder", "Prism", "Capsule", "Cone", "Capped Cone", "Round Cone", "3D Arc", "Pie", 
-		-1, 
-		"Octahedron", "Pyramid", 
-	];
 	shape_types_str = [];
+	shape_types     = [ 
+		    "Plane", "Box", "Box Frame", "Box Round", 
+		-1, "Sphere", "Ellipse", "Cut Sphere", "Cut Hollow Sphere", "Torus", "Capped Torus",
+		-1, "Cylinder", "Prism", "Capsule", "Cone", "Capped Cone", "Round Cone", "3D Arc", "Pie", 
+		-1, "Octahedron", "Pyramid", 
+	];
 	
 	var _ind = 0;
 	for( var i = 0, n = array_length(shape_types); i < n; i++ )
 		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_sdf, _ind++, COLORS._main_icon_light);
 	
-	newInput(1, nodeValue_Enum_Scroll("Shape",  1, { data: shape_types_str, horizontal: 1, text_pad: ui(16) }));
+	////- =Primitive
+	newInput( 1, nodeValue_EScroll(  "Shape",         1, { data: shape_types_str, horizontal: 1, text_pad: ui(16) } ));
+	newInput(21, nodeValue_Vec3(     "Size",         [1,1,1]                 ));
+	newInput(22, nodeValue_Slider(   "Radius",       .7                      ));
+	newInput(23, nodeValue_Slider(   "Thickness",    .2                      ));
+	newInput(24, nodeValue_Slider(   "Crop",          0, [-1,1,.01]          ));
+	newInput(25, nodeValue_Rotation( "Angle",         30                     ));
+	newInput(26, nodeValue_Slider(   "Height",       .5                      ));
+	newInput(27, nodeValue_SliRange( "Radius Range", [.7,.1]                 ));
+	newInput(28, nodeValue_Slider(   "Uniform Size",  1                      ));
+	newInput(39, nodeValue_Vec4(     "Corner",       [.25,.25,.25,.25]       ));
+	newInput(40, nodeValue_Vec2(     "2D Size",      [.5,.5]                 ));
+	newInput(41, nodeValue_Int(      "Side",          3                      ));
 	
-	newInput(2, nodeValue_Vec3("Position", [ 0, 0, 0 ]));
+	////- =Modify
+	newInput(12, nodeValue_Slider(   "Rounded",       0                      ));
+	newInput(11, nodeValue_Vec3(     "Elongate",     [0,0,0]                 ));
 	
-	newInput(3, nodeValue_Vec3("Rotation", [ 0, 0, 0 ]));
+	////- =Deform
+	newInput(15, nodeValue_Vec3(     "Wave Amplitude", [4,4,4]               ));
+	newInput(16, nodeValue_Vec3(     "Wave Intensity", [0,0,0]               ));
+	newInput(17, nodeValue_Vec3(     "Wave Phase",     [0,0,0]               ));
+	newInput(18, nodeValue_EButton(  "Twist Axis",      0, [ "X", "Y", "Z" ] ));
+	newInput(19, nodeValue_Slider(   "Twist Amount",    0, [ 0, 8, 0.1 ]     ));
 	
-	newInput(4, nodeValue_Slider("Scale", 1, [ 0, 4, 0.01 ] ));
+	////- =Transform
+	newInput( 2, nodeValue_Vec3(     "Position",      [0,0,0]                ));
+	newInput( 3, nodeValue_Vec3(     "Rotation",      [0,0,0]                ));
+	newInput( 4, nodeValue_Slider(   "Scale",         1, [0,4,.01]           ));
 	
-	newInput(5, nodeValue_Slider("FOV", 30, [ 0, 90, 1 ] ));
+	////- =Tile
+	newInput(45, nodeValue_Bool(     "Tile",           false                 ));
+	newInput(20, nodeValue_Vec3(     "Tile Distance",  [1,1,1]               ));
+	newInput(29, nodeValue_Vec3(     "Tile Amount",    [1,1,1]               ));
+	newInput(46, nodeValue_Vec3(     "Tiled Shift",    [0,0,0]               ));
+	newInput(47, nodeValue_Vec3(     "Tiled Rotation", [0,0,0]               ));
+	newInput(48, nodeValue_Float(    "Tiled Scale",     0                    ));
 	
-	newInput(6, nodeValue_Vec2("View Range", [ 3, 6 ]));
+	////- =Material
+	newInput( 9, nodeValue_Color(    "Base Color",      ca_white             ));
+	newInput(36, nodeValue_Surface(  "Texture" ));
+	newInput(50, nodeValue_Bool(     "Texture Interpolation", false          ));
+	newInput(35, nodeValue_Slider(   "Reflective",            0              ));
+	newInput(37, nodeValue_Slider(   "Triplanar Smoothing",   1, [0,10,.1]   ));
+	newInput(38, nodeValue_Float(    "Texture Scale",         1              ));
 	
-	newInput(7, nodeValue_Slider("Depth", 0));
+	////- =Camera
+	newInput(42, nodeValue_Vec3(     "Camera Rotation", [30,45,0]            ));
+	newInput(43, nodeValue_Slider(   "Camera Scale",     1, [0,4,.01]        ));
+	newInput(13, nodeValue_EButton(  "Projection",       0, [ "Perspective", "Orthographic" ]));
+	newInput(14, nodeValue_Float(    "Ortho Scale",      1                   ))
+	newInput( 5, nodeValue_Slider(   "FOV",              30, [0,90,1]        ));
+	newInput( 6, nodeValue_Vec2(     "View Range",      [3,6]                ));
 	
-	newInput(8, nodeValue_Vec3("Light Position", [ -.4, -.5, 1 ]));
+	////- =Render
+	newInput(44, nodeValue_Bool(     "Render",           true                ));
+	newInput(31, nodeValue_Bool(     "Draw BG",          false               ));
+	newInput(30, nodeValue_Color(    "Background",       ca_black            ));
+	newInput(34, nodeValue_Surface(  "Environment" ));
+	newInput(49, nodeValue_Bool(     "Env Interpolation", false              ));
+	newInput(10, nodeValue_Slider(   "Ambient Level",    .2                  ));
+	newInput( 7, nodeValue_Slider(   "Depth",             0                  ));
+	newInput( 8, nodeValue_Vec3(     "Light Position", [-.4,-.5,1]           ));
 	
-	newInput(9, nodeValue_Color("Base Color", ca_white));
+	////- =Volumetric
+	newInput(32, nodeValue_Bool(     "Volumetric",        false              ));
+	newInput(33, nodeValue_Slider(   "Density",          .3                  ));
+	// 51
 	
-	newInput(10, nodeValue_Slider("Ambient Level", 0.2));
-	
-	newInput(11, nodeValue_Vec3("Elongate", [ 0, 0, 0 ]));
-	
-	newInput(12, nodeValue_Slider("Rounded", 0.));
-	
-	newInput(13, nodeValue_Enum_Button("Projection",  0, [ "Perspective", "Orthographic" ]));
-	
-	newInput(14, nodeValue_Float("Ortho Scale", 1.))
-	
-	newInput(15, nodeValue_Vec3("Wave Amplitude", [ 4, 4, 4 ]));
-	
-	newInput(16, nodeValue_Vec3("Wave Intensity", [ 0, 0, 0 ]));
-	
-	newInput(17, nodeValue_Vec3("Wave Phase", [ 0, 0, 0 ]));
-	
-	newInput(18, nodeValue_Enum_Button("Twist Axis",  0, [ "X", "Y", "Z" ]));
-	
-	newInput(19, nodeValue_Slider("Twist Amount", 0, [ 0, 8, 0.1 ] ));
-	
-	newInput(20, nodeValue_Vec3("Tile Distance", [ 1, 1, 1 ]));
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(21, nodeValue_Vec3("Size", [ 1, 1, 1 ]));
-	
-	newInput(22, nodeValue_Slider("Radius", .7));
-	
-	newInput(23, nodeValue_Slider("Thickness", .2));
-	
-	newInput(24, nodeValue_Slider("Crop", 0., [ -1, 1, 0.01 ] ));
-	
-	newInput(25, nodeValue_Rotation("Angle", 30));
-	
-	newInput(26, nodeValue_Slider("Height", .5));
-	
-	newInput(27, nodeValue_Slider_Range("Radius Range", [ .7, .1 ]));
-	
-	newInput(28, nodeValue_Slider("Uniform Size", 1));
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(29, nodeValue_Vec3("Tile Amount", [ 1, 1, 1 ]));
-	
-	newInput(30, nodeValue_Color("Background", ca_black));
-	
-	newInput(31, nodeValue_Bool("Draw BG", false));
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(32, nodeValue_Bool("Volumetric", false));
-	
-	newInput(33, nodeValue_Slider("Density", 0.3));
-	
-	newInput(34, nodeValue_Surface("Environment"));
-	
-	newInput(35, nodeValue_Slider("Reflective", 0.));
-	
-	newInput(36, nodeValue_Surface("Texture"));
-	
-	newInput(37, nodeValue_Slider("Triplanar Smoothing", 1., [ 0, 10, 0.1 ] ));
-	
-	newInput(38, nodeValue_Float("Texture Scale", 1.));
-	
-	newInput(39, nodeValue_Vec4("Corner", [ 0.25, 0.25, 0.25, 0.25 ]));
-	
-	newInput(40, nodeValue_Vec2("2D Size", [ 0.5, 0.5 ]));
-	
-	newInput(41, nodeValue_Int("Side", 3));
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-	newInput(42, nodeValue_Vec3("Camera Rotation", [ 30, 45, 0 ]));
-	
-	newInput(43, nodeValue_Slider("Camera Scale", 1, [ 0, 4, 0.01 ] ));
-	
-	newInput(44, nodeValue_Bool("Render", true));
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(45, nodeValue_Bool("Tile", false));
-		
-	newInput(46, nodeValue_Vec3("Tiled Shift", [ 0, 0, 0 ]));
-		
-	newInput(47, nodeValue_Vec3("Tiled Rotation", [ 0, 0, 0 ]));
-		
-	newInput(48, nodeValue_Float("Tiled Scale", 0));
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(49, nodeValue_Bool("Env Interpolation", false));
-	
-	newInput(50, nodeValue_Bool("Texture Interpolation", false));
-	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Shape Data", VALUE_TYPE.sdf, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Shape Data",  VALUE_TYPE.sdf,     noone ));
 	
 	input_display_list = [ 0,
-		["Primitive",  false],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 
-		["Modify",     false], 12, 11, 
-		["Deform",      true], 15, 16, 17, 18, 19, 
-		["Transform",  false],  2,  3,  4, 
-		["Tile",       false, 45], 20, 29, /*46, 47, 48,*/
-		["Material",   false],  9, 36, 50, 35, 37, 38, 
+		[ "Primitive",  false     ],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 
+		[ "Modify",     false     ], 12, 11, 
+		[ "Deform",      true     ], 15, 16, 17, 18, 19, 
+		[ "Transform",  false     ],  2,  3,  4, 
+		[ "Tile",       false, 45 ], 20, 29, /*46, 47, 48,*/
+		[ "Material",   false     ],  9, 36, 50, 35, 37, 38, 
 		
-		["Camera",     false], 42, 43, 13, 14,  5,  6, 
-		["Render",     false, 44], 31, 30, 34, 49, 10,  7,  8, 
-		["Volumetric",  true, 32], 33, 
+		[ "Camera",     false     ], 42, 43, 13, 14,  5,  6, 
+		[ "Render",     false, 44 ], 31, 30, 34, 49, 10,  7,  8, 
+		[ "Volumetric",  true, 32 ], 33, 
 	];
+	
+	////- Node
 	
 	temp_surface = [ noone, noone ];
 	environ = new RM_Environment();
@@ -204,7 +159,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		axis_hover = noone;
 	#endregion
 	
-	static drawGizmoPosition = function(index, _vpos, active, params, _mx, _my, _panel) { #region
+	static drawGizmoPosition = function(index, _vpos, active, _params, _mx, _my) {
 		#region ---- main ----
 			var _pos  = inputs[index].getValue(,,, true);
 			    // _pos  = [ -_pos[0], _pos[2], -_pos[1] ];
@@ -215,17 +170,17 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			
 			var _hover     = noone;
 			var _hoverDist = 10;
-			var th;
 		
 			var _posView = _camera.worldPointToViewPoint(_vpos);
 		
-			var cx = _posView.x;
-			var cy = _posView.y;
+			var cx   = _posView.x;
+			var cy   = _posView.y;
 			
 			var ga   = [];
 			var size = 64;
-			var hs = size / 2;
-			var sq = 8;
+			var hs   = size / 2;
+			var sq   = 8;
+			var th;
 		#endregion
 			
 		#region display
@@ -326,7 +281,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			axis_hover = _hover;
 		#endregion display
 		
-		if(drag_axis != noone) { #region editing
+		if(drag_axis != noone) {
 			if(!MOUSE_WRAPPING) {
 				drag_mx += _mx - drag_px;
 				drag_my += _my - drag_py;
@@ -366,9 +321,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			setMouseWrap();
 			drag_px = _mx;
 			drag_py = _my;
-		} #endregion
+		}
 			
-		if(_hover != noone && mouse_press(mb_left, active)) { #region
+		if(_hover != noone && mouse_press(mb_left, active)) {
 			drag_axis = _hover;
 			drag_pre0 = undefined;
 			drag_pre1 = undefined;
@@ -381,206 +336,143 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			
 			drag_val = _pos;
 			drag_original = new __vec3(_pos);
-		} #endregion
-	} #endregion
+		}
+	}
 	
 	static drawOverlay3D = function(active, _mx, _my, _params) {
 		var _pos    = getInputSingle(2);
 		var _camera = _params.scene.camera;
 		var _vpos   = new __vec3( -_pos[0], _pos[2], -_pos[1] );
 		
-		if(isUsingTool("Transform"))	drawGizmoPosition(2, _vpos, active, params, _mx, _my, _panel);
+		if(isUsingTool("Transform")) drawGizmoPosition(2, _vpos, active, _params, _mx, _my);
 		
-		if(drag_axis != noone && mouse_release(mb_left)) {
-			drag_axis = noone;
+		if(drag_axis != noone && mouse_lrelease()) {
+			drag_axis    = noone;
 			UNDO_HOLDING = false;
 		}
 		
 	}
 	
-	static step = function() {
-		var _shp = getInputSingle( 1);
-		var _ort = getInputSingle(13);
-		var _ren = getInputSingle(44);
-		
-		inputs[21].setVisible(false);
-		inputs[22].setVisible(false);
-		inputs[23].setVisible(false);
-		inputs[24].setVisible(false);
-		inputs[25].setVisible(false);
-		inputs[26].setVisible(false);
-		inputs[27].setVisible(false);
-		inputs[28].setVisible(false);
-		inputs[39].setVisible(false);
-		inputs[40].setVisible(false);
-		inputs[41].setVisible(false);
-		
-		outputs[0].setVisible(_ren);
-		
-		var _shape = shape_types[_shp];
-		switch(_shape) { // Size
-			case "Box" : 
-			case "Box Frame" : 
-			case "Ellipse" : 
-				inputs[21].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Radius
-			case "Sphere" : 
-			case "Torus" : 
-			case "Cut Sphere" : 
-			case "Cut Hollow Sphere" : 
-			case "Capped Torus" : 
-			case "Cylinder" : 
-			case "Capsule" : 
-			case "3D Arc" : 
-			case "Pie" : 
-				inputs[22].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Thickness
-			case "Box Frame" : 
-			case "Box Round" : 
-			case "Torus" : 
-			case "Cut Hollow Sphere" : 
-			case "Capped Torus" : 
-			case "Terrain" : 
-			case "Extrude" : 
-			case "Prism" : 
-			case "Pie" : 
-				inputs[23].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Crop
-			case "Cut Sphere" : 
-			case "Cut Hollow Sphere" : 
-				inputs[24].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Angle
-			case "Capped Torus" : 
-			case "Cone" : 
-			case "3D Arc" : 
-			case "Pie" : 
-				inputs[25].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Height
-			case "Cylinder" : 
-			case "Capsule" : 
-			case "Cone" : 
-			case "Capped Cone" : 
-			case "Round Cone" : 
-				inputs[26].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Radius Range
-			case "Capped Cone" : 
-			case "Round Cone" : 
-				inputs[27].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Uniform Size
-			case "Octahedron" : 
-			case "Pyramid" : 
-			case "Terrain" : 
-			case "Extrude" : 
-				inputs[28].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Corner
-			case "Box Round" : 
-				inputs[39].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Size 2D
-			case "Box Round" : 
-				inputs[40].setVisible(true);
-				break;
-		}
-		
-		switch(_shape) { // Sides
-			case "Prism" : 
-				inputs[41].setVisible(true);
-				break;
-		}
-		
-		inputs[ 5].setVisible(_ort == 0);
-		inputs[14].setVisible(_ort == 1);
-	}
-	
 	static processData = function(_outSurf, _data, _array_index = 0) {
-		var _dim  = _data[0];
-		var _shp  = _data[1];
+		#region data
+			var _dim  = _data[ 0];
+			
+			var _shp  = _data[ 1];
+			var _size = _data[21];
+			var _rad  = _data[22];
+			var _thk  = _data[23];
+			var _crop = _data[24];
+			var _angl = _data[25];
+			var _heig = _data[26];
+			var _radR = _data[27];
+			var _sizz = _data[28];
+			var _corn = _data[39];
+			var _sz2d = _data[40];
+			var _side = _data[41];
+			
+			var _rond = _data[12];
+			var _elon = _data[11];
+			
+			var _wavA = _data[15];
+			var _wavI = _data[16];
+			var _wavS = _data[17];
+			var _twsX = _data[18];
+			var _twsA = _data[19];
+			
+			var _pos  = _data[ 2];
+			var _rot  = _data[ 3];
+			var _sca  = _data[ 4];
+			
+			var _tileActive  = _data[45];
+			var _tileSpace   = _data[20];
+			var _tileAmount  = _data[29];
+			var _tilePos     = _data[46];
+			var _tileRot     = _data[47];
+			var _tileSca     = _data[48];
+			
+			var _amb  = _data[ 9];
+			var _tex  = _data[36];
+			var _texF = _data[50];
+			var _refl = _data[35];
+			var _triS = _data[37];
+			var _texs = _data[38];
+			
+			var _crt  = _data[42];
+			var _csa  = _data[43];
+			var _ort  = _data[13];
+			var _ortS = _data[14];
+			var _fov  = _data[ 5];
+			var _rng  = _data[ 6];
+			
+			var _ren  = _data[44];
+			var _bgd  = _data[31];
+			var _bgc  = _data[30];
+			var bgEnv = _data[34];
+			var _eint = _data[49];
+			var _ambI = _data[10];
+			var _dpi  = _data[ 7];
+			var _lPos = _data[ 8];
+			
+			var _vol  = _data[32];
+			var _vden = _data[33];
+		#endregion
 		
-		var _pos  = _data[2];
-		var _rot  = _data[3];
-		var _sca  = _data[4];
-		
-		var _fov  = _data[5];
-		var _rng  = _data[6];
-		
-		var _dpi  = _data[7];
-		var _lPos = _data[8];
-		var _amb  = _data[9];
-		var _ambI = _data[10];
-		var _elon = _data[11];
-		var _rond = _data[12];
-		
-		var _ort  = _data[13];
-		var _ortS = _data[14];
-		
-		var _wavA = _data[15];
-		var _wavI = _data[16];
-		var _wavS = _data[17];
-		var _twsX = _data[18];
-		var _twsA = _data[19];
-		
-		var _size = _data[21];
-		var _rad  = _data[22];
-		var _thk  = _data[23];
-		var _crop = _data[24];
-		var _angl = _data[25];
-		var _heig = _data[26];
-		var _radR = _data[27];
-		var _sizz = _data[28];
-		var _bgc  = _data[30];
-		var _bgd  = _data[31];
-		
-		var _vol  = _data[32];
-		var _vden = _data[33];
-		var bgEnv = _data[34];
-		var _refl = _data[35];
-		
-		var _text = _data[36];
-		var _triS = _data[37];
-		var _texs = _data[38];
-		var _corn = _data[39];
-		var _sz2d = _data[40];
-		var _side = _data[41];
-		
-		var _crt  = _data[42];
-		var _csa  = _data[43];
-		var _ren  = _data[44];
-		
-		var _tileActive  = _data[45];
-		var _tileAmount  = _data[29];
-		var _tileSpace   = _data[20];
-		var _tilePos     = _data[46];
-		var _tileRot     = _data[47];
-		var _tileSca     = _data[48];
-		
-		var _eint        = _data[49];
-		var _textFilter  = _data[50];
+		#region visibility
+			inputs[21].setVisible(false);
+			inputs[22].setVisible(false);
+			inputs[23].setVisible(false);
+			
+			outputs[0].setVisible(_ren);
+			
+			var _shape = shape_types[_shp];
+			switch(_shape) { // Size
+				case "Box" : 
+				case "Box Frame" : 
+				case "Ellipse" : 
+					inputs[21].setVisible(true);
+					break;
+			}
+			
+			switch(_shape) { // Radius
+				case "Sphere" : 
+				case "Torus" : 
+				case "Cut Sphere" : 
+				case "Cut Hollow Sphere" : 
+				case "Capped Torus" : 
+				case "Cylinder" : 
+				case "Capsule" : 
+				case "3D Arc" : 
+				case "Pie" : 
+					inputs[22].setVisible(true);
+					break;
+			}
+			
+			switch(_shape) { // Thickness
+				case "Box Frame" : 
+				case "Box Round" : 
+				case "Torus" : 
+				case "Cut Hollow Sphere" : 
+				case "Capped Torus" : 
+				case "Terrain" : 
+				case "Extrude" : 
+				case "Prism" : 
+				case "Pie" : 
+					inputs[23].setVisible(true);
+					break;
+			}
+			
+			inputs[24].setVisible(_shape == "Cut Sphere"   || _shape == "Cut Hollow Sphere");
+			inputs[25].setVisible(_shape == "Capped Torus" || _shape == "Cone"    || _shape == "3D Arc"  || _shape == "Pie");
+			inputs[26].setVisible(_shape == "Cylinder"     || _shape == "Capsule" || _shape == "Cone"    || _shape == "Capped Cone" || _shape == "Round Cone");
+			inputs[27].setVisible(_shape == "Capped Cone"  || _shape == "Round Cone" );
+			inputs[28].setVisible(_shape == "Octahedron"   || _shape == "Pyramid" || _shape == "Terrain" || _shape == "Extrude");
+			inputs[39].setVisible(_shape == "Box Round");
+			inputs[40].setVisible(_shape == "Box Round");
+			inputs[41].setVisible(_shape == "Prism");
+			
+			inputs[ 5].setVisible(_ort == 0);
+			inputs[14].setVisible(_ort == 1);
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -623,70 +515,72 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Pyramid" :        	_shpI = 401;							break;
 		}
 		
-		object.operations    = -1;
-		object.shapeAmount   =  1;
-		
-		object.shape         = _shpI;
-		object.size          = _size;
-		object.radius        = _rad ;
-		object.thickness     = _thk ;
-		object.crop          = _crop;
-		object.angle         = degtorad(_angl);
-		object.height        = _heig;
-		object.radRange      = _radR;
-		object.sizeUni       = _sizz;
-		object.elongate      = _elon;
-		object.rounded       = _rond;
-		object.corner        = _corn;
-		object.size2D        = _sz2d;
-		object.sides         = _side;
-		
-		object.waveAmp       = _wavA;
-		object.waveInt       = _wavI;
-		object.waveShift     = _wavS;
-		
-		object.twistAxis     = _twsX;
-		object.twistAmount   = _twsA;
-		
-		object.position      = _pos;
-		object.rotation      = _rot;
-		object.objectScale   = _sca;
-		
-		object.tileActive    = _tileActive;
-		object.tileAmount    = _tileAmount;
-		object.tileSpace     = _tileSpace;
-		object.tilePos       = _tilePos;
-		object.tileRot       = _tileRot;
-		object.tileSca       = _tileSca;
-		
-		object.diffuseColor  = colorToArray(_amb, true);
-		object.reflective    = _refl;
-		    
-		object.volumetric    = _vol;
-		object.volumeDensity = _vden;
-		    
-		object.texture       = [ _text ];
-		object.textureFilter = [ _textFilter ];
-		object.useTexture    = is_surface(_text);
-		object.textureScale  = _texs;
-		object.triplanar     = _triS;
+		#region object
+			object.operations    = -1;
+			object.shapeAmount   =  1;
 			
-		object.setTexture(temp_surface[1]);
-		
-		environ.surface   = temp_surface[0];
-		environ.bgEnv     = bgEnv;
-		environ.envFilter = _eint;
-		
-		environ.projection = _ort;
-		environ.fov        = _fov;
-		environ.orthoScale = _ortS;
-		environ.viewRange  = _rng;
-		environ.depthInt   = _dpi;
-		
-		environ.bgColor    = _bgc;
-		environ.bgDraw     = _bgd;
-		environ.ambInten   = _ambI;
-		environ.light      = _lPos;
+			object.shape         = _shpI;
+			object.size          = _size;
+			object.radius        = _rad ;
+			object.thickness     = _thk ;
+			object.crop          = _crop;
+			object.angle         = degtorad(_angl);
+			object.height        = _heig;
+			object.radRange      = _radR;
+			object.sizeUni       = _sizz;
+			object.elongate      = _elon;
+			object.rounded       = _rond;
+			object.corner        = _corn;
+			object.size2D        = _sz2d;
+			object.sides         = _side;
+			
+			object.waveAmp       = _wavA;
+			object.waveInt       = _wavI;
+			object.waveShift     = _wavS;
+			
+			object.twistAxis     = _twsX;
+			object.twistAmount   = _twsA;
+			
+			object.position      = _pos;
+			object.rotation      = _rot;
+			object.objectScale   = _sca;
+			
+			object.tileActive    = _tileActive;
+			object.tileAmount    = _tileAmount;
+			object.tileSpace     = _tileSpace;
+			object.tilePos       = _tilePos;
+			object.tileRot       = _tileRot;
+			object.tileSca       = _tileSca;
+			
+			object.diffuseColor  = colorToArray(_amb, true);
+			object.reflective    = _refl;
+			    
+			object.volumetric    = _vol;
+			object.volumeDensity = _vden;
+			    
+			object.texture       = [ _tex  ];
+			object.textureFilter = [ _texF ];
+			object.useTexture    = is_surface(_tex);
+			object.textureScale  = _texs;
+			object.triplanar     = _triS;
+				
+			object.setTexture(temp_surface[1]);
+			
+			environ.surface   = temp_surface[0];
+			environ.bgEnv     = bgEnv;
+			environ.envFilter = _eint;
+			
+			environ.projection = _ort;
+			environ.fov        = _fov;
+			environ.orthoScale = _ortS;
+			environ.viewRange  = _rng;
+			environ.depthInt   = _dpi;
+			
+			environ.bgColor    = _bgc;
+			environ.bgDraw     = _bgd;
+			environ.ambInten   = _ambI;
+			environ.light      = _lPos;
+		#endregion
 		
 		if(_ren) {
 			gpu_set_texfilter(true);
