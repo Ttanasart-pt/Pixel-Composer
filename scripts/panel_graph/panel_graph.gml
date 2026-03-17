@@ -4362,6 +4362,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				node.skipDefault();
 				node.bindRoom(DRAGGING.data);
 				break;
+				
+            case "Globalvar" :
+				node = nodeBuild("Node_Globalvar", mouse_grid_x, mouse_grid_y);
+				node.skipDefault();
+				node.inputs[0].setValue(DRAGGING.data);
+				break;
+				
         }
             
         if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone) {

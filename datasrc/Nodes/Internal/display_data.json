@@ -986,6 +986,7 @@
             "Node_Corner_Data",
             "Node_Rotation_Range_Data",
             "Node_Rotation_Random_Data",
+            "Node_Globalvar",
             
             { "label": "Numbers" },
             { "label": "/Creators" },

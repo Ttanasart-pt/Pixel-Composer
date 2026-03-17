@@ -11,6 +11,10 @@ function GlobalVarDrawer() constructor {
 	edit_y    = {};
 	edit_y_to = {};
 	
+	prop_dragging   = undefined;
+    prop_sel_drag_x = 0;
+    prop_sel_drag_y = 0;
+    
 	static drawEdit = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project = PROJECT) {
 		var hh   = 0;
 		var chov = false; 
@@ -159,14 +163,28 @@ function GlobalVarDrawer() constructor {
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			var widHov  = widg[2];
+			var labHov  = widg[3];
 			
-			if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + widH))
-				_HOVERING_ELEMENT = _inp;
-			
+			if(labHov && mouse_lpress(focus)) {
+                prop_dragging   = _inp;
+                prop_sel_drag_x = mouse_mx;
+                prop_sel_drag_y = mouse_my;
+            }
+            
 			yy += widH + _padd;
 			hh += widH + _padd;
 		}
 		
+        if(prop_dragging) { //drag
+            if(DRAGGING == noone && point_distance(prop_sel_drag_x, prop_sel_drag_y, mouse_mx, mouse_my) > 16) {
+                prop_dragging.dragValue();
+                prop_dragging = noone;
+            }
+            
+            if(mouse_release(mb_left))
+                prop_dragging = noone;
+        }
+        
 		return [ hh, chov ];
 	}
 	

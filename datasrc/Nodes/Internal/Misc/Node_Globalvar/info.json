@@ -1,0 +1,6 @@
+{
+    "name":          "Globalvar",
+    "spr":           "s_node_globalvar",
+    "baseNode":      "Node_Globalvar",
+    "pxc_version":    120081,
+}
