@@ -69,7 +69,6 @@ function Node_pSystem_Oscillate(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
-			var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
 			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
 			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
@@ -79,18 +78,12 @@ function Node_pSystem_Oscillate(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _ppx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64  );
 			var _ppy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64  );
 			
-			var _dpx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposx,  buffer_f64  );
-			var _dpy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposy,  buffer_f64  );
-			
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
 			    rat = clamp(rat, 0, 1);
 			random_set_seed(_seed + _spwnId);
-			
-			_dfg |= 0b100;
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16, _dfg );
 			
 			var _strn_mod = _strn_curved? curve_strn.get(rat) : 1;
 			var _strn_cur = random_range(_strn[0], _strn[1]) * _strn_mod;
@@ -107,11 +100,11 @@ function Node_pSystem_Oscillate(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _ox = lengthdir_x(_osc, _dir + 90);
 			var _oy = lengthdir_y(_osc, _dir + 90);
 			
-			_vx += _ox;
-			_vy += _oy;
+			_px += _ox;
+			_py += _oy;
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64, _vx );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64, _vy );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
 		}
 		
 	}
