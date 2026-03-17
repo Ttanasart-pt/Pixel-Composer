@@ -143,7 +143,6 @@ function PathSegment() : Path() constructor {
 
 function PathDrawOverlay(_path, _x, _y, _s) {
 	if(!is_path(_path)) return;
-	
 	draw_set_color(COLORS._main_icon);
 	
 	var _amo = _path.getLineCount();

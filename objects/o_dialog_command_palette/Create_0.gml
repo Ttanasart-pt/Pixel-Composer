@@ -112,7 +112,7 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 					instance_destroy();
 				}
 				
-				if(mouse_press(mb_right)) {
+				if(mouse_rpress()) {
 					if(_hasKey) {
 						var _key = _menu.hotkey;
 						selecting_hotkey = _key;

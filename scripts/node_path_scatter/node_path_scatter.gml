@@ -39,6 +39,8 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		
 		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		
@@ -58,7 +60,6 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 			PathDrawOverlay(self, _x, _y, _s);
-			
 			return false;
 		}
 		
@@ -114,32 +115,39 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
+		#region data
+			var _seed     = _data[ 5];
+			
+			var path_base = _data[ 0];
+			var path_scat = _data[ 1];
+			var _trim_rng = _data[10];
+			var _trim     = _data[ 9];
+			
+			var _distrib  = _data[ 8];
+			var _repeat   = _data[ 3];
+			
+			var _resetOri = _data[12];
+			var _range    = _data[ 2];
+			
+			var _rotation = _data[ 7];
+			var _flip     = _data[11];
+			
+			var _scale    = _data[ 4];
+			var _sca_wid  = _data[ 6];
+		#endregion
 		
-		var path_base = _data[ 0];
-		var path_scat = _data[ 1];
-		var _range    = _data[ 2];
-		var _repeat   = _data[ 3];
-		var _scale    = _data[ 4];
-		var _seed     = _data[ 5];
-		var _sca_wid  = _data[ 6];
-		var _rotation = _data[ 7];
-		var _distrib  = _data[ 8];
-		var _trim     = _data[ 9];
-		var _trim_rng = _data[10];
-		var _flip     = _data[11];
-		var _resetOri = _data[12];
-		
-		var _scattered = new Path_Scatter(self);
-		if(!is_struct(path_base)) return _scattered;
-		if(!is_struct(path_scat)) return _scattered;
+		if(!is(_outData, "Path_Scatter"))
+			_outData = new Path_Scatter(self);
+			
+		if(!is_path(path_base) || !is_path(path_scat)) return _outData;
 		
 		var _line_amounts = path_scat.getLineCount();
-		_scattered.line_amount    = _repeat * _line_amounts;
-		_scattered.paths          = array_create(_scattered.line_amount);
-		_scattered.segment_counts = array_create(_scattered.line_amount);
-		_scattered.line_lengths   = array_create(_scattered.line_amount);
-		_scattered.accu_lengths   = array_create(_scattered.line_amount);
+		_outData.line_amount    = _repeat * _line_amounts;
+		_outData.paths          = array_create(_outData.line_amount);
+		_outData.segment_counts = array_create(_outData.line_amount);
+		_outData.line_lengths   = array_create(_outData.line_amount);
+		_outData.accu_lengths   = array_create(_outData.line_amount);
 		
 		random_set_seed(_seed);
 		var _ind = 0;
@@ -194,7 +202,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				_dir  = point_direction(x0, y0, x1, y1);
 				_dir += _rot;
 				
-				_scattered.paths[_ind] = {
+				_outData.paths[_ind] = {
 					path  : path_scat,
 					index : k,
 					ori   : ori,
@@ -215,15 +223,15 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				for (var j = 0, m = array_length(_accu_lengths); j < m; j++) 
 					_accu_lengths[j] *= _sca;
 				
-				_scattered.segment_counts[_ind] = _segment_counts;
-				_scattered.line_lengths[_ind]   = _line_lengths;
-				_scattered.accu_lengths[_ind]   = _accu_lengths;
+				_outData.segment_counts[_ind] = _segment_counts;
+				_outData.line_lengths[_ind]   = _line_lengths;
+				_outData.accu_lengths[_ind]   = _accu_lengths;
 				
 				_ind++;
 			}
 		}
 		
-		return _scattered;
+		return _outData;
 	}
 	
 }
