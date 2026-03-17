@@ -197,7 +197,18 @@
         } ).setMenu("graph_auto_organize", THEME.obj_auto_organize);
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
-        registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); } ).setMenu("graph_node_selector", THEME.node_selector);
+        registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ {
+        	var _dupe = false;
+        	with(o_dialog_panel) {
+        		if(instanceof(content) == "Panel_Graph_Selector") {
+        			instance_destroy();
+        			_dupe = true;
+        		}
+        	}
+        	
+        	if(!_dupe) PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); 
+        } ).setMenu("graph_node_selector", THEME.node_selector);
+        	
         registerFunction(g, "Node Multiplier...",    "",  n, function() /*=>*/ { 
         	if(array_empty(PANEL_GRAPH.nodes_selecting)) return;
         	dialogPanelCall(new Panel_Graph_Node_Multiplier(PANEL_GRAPH.nodes_selecting[0]));
@@ -4583,10 +4594,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	if(!__junction_hovering) return;
     	if(__junction_hovering.connect_type != CONNECT_TYPE.output) return;
     	
-    	project.graphBGIndexData = [
-    		__junction_hovering.node.node_id,
-    		__junction_hovering.index
-		];
+    	var n = __junction_hovering.node.node_id;
+    	var i = __junction_hovering.index;
+    	var d = project.graphBGIndexData;
+    	
+    	if(d != undefined && n == d[0] && i == d[1])
+    		 project.graphBGIndexData = undefined;
+    	else project.graphBGIndexData = [ n, i ]
 		
 		RENDER_ALL
     }

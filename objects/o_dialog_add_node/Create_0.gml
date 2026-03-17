@@ -1086,175 +1086,198 @@ event_inherited();
 		var search_lower = string_lower(search_string);
 		var search_map	 = ds_map_create();
 		
-		var curr_group    = "";
-		var curr_groupi   = 0;
-		var curr_subgroup = "";
-		
-		for( var i = 0, n = array_length(category); i < n; i++ ) {
-			var cat = category[i];
+		#region Nodes
+			var curr_group    = "";
+			var curr_groupi   = 0;
+			var curr_subgroup = "";
 			
-			curr_group    = "";
-			curr_groupi   = 0;
-			curr_subgroup = "";
-
-			if(!has(cat, "list"))
-				continue;
-			
-			if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
-				continue;
-			
-			var _content = cat.list;
-			for( var j = 0, m = array_length(_content); j < m; j++ ) {
-				var _node = _content[j];
+			for( var i = 0, n = array_length(category); i < n; i++ ) {
+				var cat = category[i];
 				
-				if(is_string(_node)) {
-					if(string_starts_with(_node, "/")) 
-						curr_subgroup = _node;
-					else {
-						curr_group    = _node;
-						curr_subgroup = "";
-						curr_groupi++;
-					}
+				curr_group    = "";
+				curr_groupi   = 0;
+				curr_subgroup = "";
+	
+				if(!has(cat, "list"))
 					continue;
-				}
 				
-				if(ds_map_exists(search_map, _node)) continue;
+				if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
+					continue;
 				
-				var _name  = string_lower(_node.getName());
-				var _match = string_partial_match_res(_name, search_lower);
-				
-				var _path = {
-					node       : _node, 
-					category   : cat,
-					categoryId : i, 
-					group      : curr_group, 
-					groupId    : curr_groupi - 1, 
-					subgroup   : curr_subgroup, 
-				};
-				
-				// Tooltip
-				var _tooltip = string_lower(_node.getTooltip());
-				var  mat     = string_partial_match_res(_tooltip, search_lower);
-				     mat[0] -= 50;
-				if(mat[0] > _match[0])
-					_match = mat;
-				
-				// Alias
-				var _param = "";
-				for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
-					var mat = string_partial_match_res(_node.tags[k], search_lower);
-					mat[0] -= 50;
+				var _content = cat.list;
+				for( var j = 0, m = array_length(_content); j < m; j++ ) {
+					var _node = _content[j];
 					
-					if(mat[0] >= _match[0]) {
+					if(is_string(_node)) {
+						if(string_starts_with(_node, "/")) 
+							curr_subgroup = _node;
+						else {
+							curr_group    = _node;
+							curr_subgroup = "";
+							curr_groupi++;
+						}
+						continue;
+					}
+					
+					if(ds_map_exists(search_map, _node)) continue;
+					
+					var _name  = string_lower(_node.getName());
+					var _match = string_partial_match_res(_name, search_lower);
+					
+					var _path = {
+						node       : _node, 
+						category   : cat,
+						categoryId : i, 
+						group      : curr_group, 
+						groupId    : curr_groupi - 1, 
+						subgroup   : curr_subgroup, 
+					};
+					
+					// Tooltip
+					var _tooltip = string_lower(_node.getTooltip());
+					var  mat     = string_partial_match_res(_tooltip, search_lower);
+					     mat[0] -= 50;
+					if(mat[0] > _match[0])
 						_match = mat;
-						_param = {
-							type  : "alias",
-							value : _node.tags[k]
-						};
-					}
-				}
-				
-				if(_match[0] <= -9999) continue;
-				
-				// Fav
-				if(is(_node, NodeObject)) {
-					if(_node.deprecated) continue; // ???
 					
-					if(_match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
-						_match[0] += 10000;
-					
-					if(PREFERENCES.dialog_add_node_search_typ && is(junction_called, NodeValue)) {
-						var _b = junction_called.connect == CONNECT_TYPE.input? _node.output_type_mask : _node.input_type_mask;
-						_match[0] += bool(_b & value_bit(junction_called.type)) * 100;
-					}
-					
-				}
-				
-				// Preset 
-				if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
-					var pres = PRESETS_MAP[$ _node.nodeName];
-					var keys = struct_get_names(pres);
-					
-					for( var k = 0, p = array_length(keys); k < p; k++ ) {
-						if(keys[k] == "_default") continue;
-						var _fname = $"{_name} {keys[k]}"
+					// Alias
+					var _param = "";
+					for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
+						var mat = string_partial_match_res(_node.tags[k], search_lower);
+						mat[0] -= 50;
 						
-						var mat = string_partial_match_res(_fname, search_lower);
-						mat[0] -= 10;
-						
-						if(mat[0] > -9999) {
-							mat[1] = array_copy_trim_start(mat[1], string_length(_name) + 1);
-							
-							var searchData = { 
-								search : true, 
-								name   : _node.name, 
-								node   : _node, 
-								param  : {
-									type  : "preset",
-									value : keys[k]
-								}, 
-								
-								match  : mat, 
-								weight : mat[0], 
-								path   : _path, 
+						if(mat[0] >= _match[0]) {
+							_match = mat;
+							_param = {
+								type  : "alias",
+								value : _node.tags[k]
 							};
-							
-							ds_priority_add(pr_list, searchData, mat[0]);
 						}
 					}
+					
+					if(_match[0] <= -9999) continue;
+					
+					// Fav
+					if(is(_node, NodeObject)) {
+						if(_node.deprecated) continue; // ???
+						
+						if(_match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
+							_match[0] += 10000;
+						
+						if(PREFERENCES.dialog_add_node_search_typ && is(junction_called, NodeValue)) {
+							var _b = junction_called.connect == CONNECT_TYPE.input? _node.output_type_mask : _node.input_type_mask;
+							_match[0] += bool(_b & value_bit(junction_called.type)) * 100;
+						}
+						
+					}
+					
+					// Preset 
+					if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
+						var pres = PRESETS_MAP[$ _node.nodeName];
+						var keys = struct_get_names(pres);
+						
+						for( var k = 0, p = array_length(keys); k < p; k++ ) {
+							if(keys[k] == "_default") continue;
+							var _fname = $"{_name} {keys[k]}"
+							
+							var mat = string_partial_match_res(_fname, search_lower);
+							mat[0] -= 10;
+							
+							if(mat[0] > -9999) {
+								mat[1] = array_copy_trim_start(mat[1], string_length(_name) + 1);
+								
+								var searchData = { 
+									search : true, 
+									name   : _node.name, 
+									node   : _node, 
+									param  : {
+										type  : "preset",
+										value : keys[k]
+									}, 
+									
+									match  : mat, 
+									weight : mat[0], 
+									path   : _path, 
+								};
+								
+								ds_priority_add(pr_list, searchData, mat[0]);
+							}
+						}
+					}
+					
+					var searchData = { 
+						search : true, 
+						name   : _node.name, 
+						node   : _node, 
+						param  : _param, 
+						match  : _match, 
+						weight : _match[0], 
+						path   : _path, 
+					};
+					
+					ds_priority_add(pr_list, searchData, _match[0]);
+					search_map[? _node] = 1;
+				}
+			}
+			ds_map_destroy(search_map);
+		#endregion
+		
+		#region Collection
+			if(PREFERENCES.dialog_add_node_collection)
+				searchCollectionData(pr_list, search_string);
+		#endregion
+		
+		#region Tunnel
+			var _match   = string_partial_match_res("tunnel", search_lower);
+			var _tunnels = ds_map_keys_to_array(PROJECT.tunnels_in);
+			var _tunnelOutNode = ALL_NODES[$ "Node_Tunnel_Out"];
+				
+			if(_match[0] > -9999) {
+				for( var i = 0, n = array_length(_tunnels); i < n; i++ ) {
+					var _tun = _tunnels[i];
+					if(_tun == "") continue;
+					
+					var _match = string_partial_match_res("tunnel " + string_lower(_tun), search_lower);
+					if(_match[0] <= -9999) continue;
+					_match[0] += 100;
+					
+					var searchData = { 
+						search : true, 
+						name   : _tunnelOutNode.name, 
+						node   : _tunnelOutNode, 
+						param  : { type: "value", value: _tun }, 
+						match  : _match, 
+						weight : _match[0], 
+						path   : undefined, 
+					};
+					
+					ds_priority_add(pr_list, searchData, _match[0]);
 				}
 				
-				var searchData = { 
-					search : true, 
-					name   : _node.name, 
-					node   : _node, 
-					param  : _param, 
-					match  : _match, 
-					weight : _match[0], 
-					path   : _path, 
-				};
+			} else {
+				for( var i = 0, n = array_length(_tunnels); i < n; i++ ) {
+					var _tun = _tunnels[i];
+					if(_tun == "") continue;
+					
+					var _match = string_partial_match_res(string_lower(_tun), search_lower);
+					if(_match[0] <= -9999) continue;
+					_match[0] += 100;
+					
+					var searchData = { 
+						search : true, 
+						name   : _tunnelOutNode.name, 
+						node   : _tunnelOutNode, 
+						param  : { type: "value", value: _tun }, 
+						match  : _match, 
+						weight : _match[0], 
+						path   : undefined, 
+					};
+					
+					ds_priority_add(pr_list, searchData, _match[0]);
+				}
 				
-				ds_priority_add(pr_list, searchData, _match[0]);
-				search_map[? _node] = 1;
 			}
-		}
-		
-		ds_map_destroy(search_map);
-		
-		if(PREFERENCES.dialog_add_node_collection)
-			searchCollectionData(pr_list, search_string);
-		
-		var _match   = string_partial_match_res("tunnel", search_lower);
-		
-		if(_match[0] > -9999) {
-			var _tunnels = ds_map_keys_to_array(PROJECT.tunnels_in);
-			var _node    = ALL_NODES[$ "Node_Tunnel_Out"];
-			
-			for( var i = 0, n = array_length(_tunnels); i < n; i++ ) {
-				var _tun = _tunnels[i];
-				if(_tun == "") continue;
-				
-				var _match = string_partial_match_res("tunnel " + string_lower(_tun), search_lower);
-				
-				if(_match[0] <= -9999) continue;
-				_match[0] -= 100;
-				
-				var searchData = { 
-					search : true, 
-					name   : _node.name, 
-					node   : _node, 
-					param  : {
-						type  : "value",
-						value : _tun
-					}, 
-					match  : _match, 
-					weight : _match[0], 
-					path   : undefined, 
-				};
-				
-				ds_priority_add(pr_list, searchData, _match[0]);
-			}
-		}
+		#endregion
 		
 		var _curr_weight = undefined;
 		var _curr_arr    = [];

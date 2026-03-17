@@ -1897,8 +1897,6 @@ function Panel_Preview() : PanelContent() constructor {
             draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
             draw_set_alpha(1);
         }
-        
-        if(!struct_try_get(_node, "bypass_grid", false)) drawNodeGrid();
     } // DRAW PREVIEW CONTENT
     
     static drawNodeGrid = function() {
@@ -3588,7 +3586,7 @@ function Panel_Preview() : PanelContent() constructor {
         	draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), tw, th, c_white, aa);
         }
         	
-        if(PANEL_PREVIEW == self) { //only draw overlay once
+        if(PANEL_PREVIEW == self) { // Draw Overlay
             if(inspect_node) {
                 toolNode = inspect_node; 
                 if(inspect_node.getToolNode) toolNode = inspect_node.getToolNode();
@@ -3611,7 +3609,9 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 if(PROJECT.previewSetting.show_ruler && !d3_active) drawRuler();
             }
-        }
+        } // Draw Overlay
+        
+        if(!struct_try_get(_prev_node, "bypass_grid", false)) drawNodeGrid();
         
         if(d3_active == NODE_3D.none)
         	drawSplitView();

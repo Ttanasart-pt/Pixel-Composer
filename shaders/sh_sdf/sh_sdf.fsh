@@ -51,18 +51,6 @@ uniform vec2  dimension;
 uniform float stepSize;
 uniform int   side;
 
-float texDistance(vec2 a, vec2 b) {
-	return distance(a, b);
-	
-	if(sampleMode == 4) {
-		vec2 da = abs(a - b);
-		vec2 db = vec2(1.) - da;
-		vec2 d  = vec2(min(da.x, db.x), min(da.y, db.y));
-		return length(d);
-	}
-
-}
-
 void main() {
 	float c = sampleTexture( gm_BaseTexture, v_vTexcoord ).z;
 	if((side == 0 && c == 0.) || (side == 1 && c == 1.)) {
@@ -108,7 +96,7 @@ void main() {
 		}
 		
 		if(sam.xy == vec2(0.)) continue;
-		float d = texDistance(v_vTexcoord, sam.xy);
+		float d = distance(v_vTexcoord, sam.xy);
 		if(d < closetDistance) {
 			closetDistance = d;
 			closetPoint = sam.xy;

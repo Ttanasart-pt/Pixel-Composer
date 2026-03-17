@@ -2,6 +2,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Atlas Affector";
 	
 	newInput( 0, nodeValue_Atlas("Atlas In")).setArrayDepth(1).setVisible(true, true);
+	newInput(34, nodeValueSeed());
 	
 	////- =Output
 	newInput(25, nodeValue_Bool(    "Use Base Dimension", true     )).rejectArray();
@@ -14,9 +15,9 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 4, nodeValue_Rotation( "Wipe Angle",   0      ));
 	newInput(27, nodeValue_Float(    "Order Index",  0      ));
 	newInput( 6, nodeValue_Surface(  "Influence Map"        ));
-	newInput(32, nodeValue_Slider(   "Uniform Influence", 0 ));
-	
 	newInput( 5, nodeValue_Float(    "Falloff",      0      )).setCurvable(24, CURVE_DEF_01);
+	newInput(32, nodeValue_Slider(   "Influence",    0      ));
+	newInput(33, nodeValue_Slider(   "Inf. Noise",   0      ));
 	
 	////- =Position
 	newInput( 7, nodeValue_Bool( "Effect Position", false ));
@@ -50,14 +51,14 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- =Interpolate
 	newInput(30, nodeValue_Bool(     "Interpolate", false ));
 	newInput(31, nodeValue_Atlas(    "Target Atlas"       )).setArrayDepth(1).setVisible(true, true);
-	// input 33
+	// input 35
 	
 	newOutput( 0, nodeValue_Output( "Atlas Out", VALUE_TYPE.atlas,   noone ));
 	newOutput( 1, nodeValue_Output( "Rendered",  VALUE_TYPE.surface, noone ));
 	
-	input_display_list = [ 0, 
+	input_display_list = [ 0, 34, 
 		[ "Output",      false,    ], 25, 26, 
-		[ "Influence",   false     ],  1,  2,  3,  4, 27,  6, 32,  5, 24, 
+		[ "Influence",   false     ],  1,  2,  3,  4, 27,  6,  5, 24, 32, 33, 
 		[ "Position",    false,  7 ],  8,  9, 28, 
 		[ "Rotation",    false, 10 ], 11, 12, 13, 
 		[ "Scale",       false, 14 ], 15, 16, 17, 29, 
@@ -174,6 +175,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 			var _atlas    = _data[ 0];
+			var _seed     = _data[34];
 			
 			var _inf_shp  = _data[ 1];
 			var _inf_are  = _data[ 2];
@@ -181,7 +183,9 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _inf_wrot = _data[ 4];
 			var _inf_ind  = _data[27];
 			var _inf_map  = _data[ 6];
-			var _inf_lin  = _data[32];
+			
+			var _inf_lin     = _data[32];
+			var _inf_lin_noi = _data[33];
 			
 			var _fall_dis = _data[ 5] * 2;
 			var _fall_cur = _data[24];
@@ -197,7 +201,9 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			inputs[27].setVisible(_inf_shp == 3);
 			inputs[ 5].setVisible(_inf_shp != 2 && _inf_shp != 4);
 			inputs[ 6].setVisible(_inf_shp == 2, _inf_shp == 2);
+			
 			inputs[32].setVisible(_inf_shp == 4);
+			inputs[33].setVisible(_inf_shp == 4);
 		#endregion
 		
 		#region data
@@ -231,6 +237,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		if(!is_array(inp_tar) || array_empty(inp_tar)) inp_use = false;
 		if(_inf_shp == 2 && !is_surface(_inf_map)) return _outData;
+		random_set_seed(_seed);
 		
 		#region process
 			var _atlas_len     = array_length(_atlas);
@@ -320,7 +327,10 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 						break;
 						
 					case 4 : 
-						_inf = _inf_lin;
+						var _ofs = random(_inf_lin_noi / 2);
+						var _ofe = 1 - random(_inf_lin_noi / 2);
+						
+						_inf = clamp(lerp_invert(_inf_lin, _ofs, _ofe), 0, 1); 
 						break;
 				}
 				
