@@ -306,6 +306,11 @@ function canvas_selection_data() : canvas_tool() constructor {
 		return _drawnSurface;
 	}
 	
+	static destroy = function() {
+		is_selected = false;
+		surface_free_safe(selection_surface);
+	}
+	
 	static onSelected = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(!is_surface(selection_surface)) { is_selected = false; return; } 
 		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
@@ -496,11 +501,10 @@ function canvas_selection_data() : canvas_tool() constructor {
 		if(!is_selected && is_surface(selection_surface))
 			apply();
 		
-		if(key_press(vk_delete)) {
-			is_selected = false;
-			surface_free_safe(selection_surface);
+		if(key_press(vk_delete))
+			destroy();
 			
-		} else if(key_press(vk_escape) || key_press(vk_enter))
+		else if(key_press(vk_escape) || key_press(vk_enter))
 			apply();
 	}
 	

@@ -577,21 +577,21 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 								.setContext(self);
 								
 		selectionExtract = function() /*=>*/ {
-			var _s  = selection.is_selected;
-			var _sx = _s? selection.selection_position[0] : 0;
-			var _sy = _s? selection.selection_position[1] : 0;
-			var _sw = _s? selection.selection_size[0] : attributes.dimension[0];
-			var _sh = _s? selection.selection_size[1] : attributes.dimension[1];
+			if(!selection.is_selected) return;
+			
+			var _sx = selection.selection_position[0];
+			var _sy = selection.selection_position[1];
+			var _sw = selection.selection_size[0];
+			var _sh = selection.selection_size[1];
 			
 			var _nc = nodeBuild("Node_Canvas", x, y + h + 16);
 			_nc.skipDefault();
-			_nc.inputs[0].setValue([_sw, _sh]);
+			_nc.setSurface(selection.selection_surface, _sw, _sh);
 			
 			var _comp = noone; 
 			var _o = outputs[0].getJunctionTo();
-			for( var i = 0, n = array_length(_o); i < n; i++ ) {
+			for( var i = 0, n = array_length(_o); i < n; i++ )
 				if(is(_o[i].node, Node_Composite)) _comp = _o[i].node;
-			}
 			
 			if(_comp == noone) {
 				_comp = nodeBuild("Node_Composite", x + w + 32, y);
@@ -603,6 +603,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				for( var i = 0, n = array_length(_comp.inputs); i < n; i++ ) {
 					var _in = _comp.inputs[i].value_from;
 					if(_in == noone) continue;
+					
 					_yy = max(_yy, _in.node.y + _in.node.h + 16);
 				}
 					
@@ -621,15 +622,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			PANEL_INSPECTOR.setInspecting(_nc);
 			PANEL_GRAPH.nodes_selecting = [ _nc ];
 			
-			if(_s) {
-				selection.apply();
-				PANEL_PREVIEW.clearTool();
-			}
+			selection.destroy();
+			PANEL_PREVIEW.clearTool();
 		}
 		
 		selectionExtractButton = new NodeTool( "Extract Selection", THEME.canvas_tools_extract, self )
-								.setToolFn(selectionExtract)
-								.setContext(self);
+								.setToolFn(selectionExtract).setContext(self);
 		
 		static addNodeTool = function(_node) {
 			UNDO_HOLDING = true;
@@ -1358,7 +1356,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_set_color_alpha(isUsingTool("Eraser")? c_white : CURRENT_COLOR, 1);
 				
 				_tool.step(hover, active, _tx, _ty, _s, _mx, _my);
-				// if(_tool.updated) { _tool.updated = false; triggerRender(); }
 				
 				if(_tool.brush_resizable) { 
 					if(_panel.pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
@@ -2008,6 +2005,30 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		selection.selection_position = [ _sel_x, _sel_y ];
 		tools[0].toggle(0);
+	}
+
+	static setSurface = function(_surf, _sw, _sh) {
+		if(!is_surface(_surf)) return self;
+		
+		_sw ??= surface_get_white(_surf);
+		_sh ??= surface_get_height(_surf);
+		
+		inputs[0].attributes.use_project_dimension = false;
+		inputs[0].setValue([_sw, _sh]);
+		attributes.dimension = [_sw, _sh];
+		
+		var _csurf = getCanvasSurface();
+		_csurf = surface_verify(_csurf, _sw, _sh);
+		surface_set_shader(_csurf, noone, true, BLEND.over);
+			draw_surface(_surf, 0, 0);
+		surface_reset_shader();
+		
+		setCanvasSurface(_csurf);
+		surface_store_buffer();
+		project.setModified();
+		triggerRender();
+		
+		return self;
 	}
 }
 
