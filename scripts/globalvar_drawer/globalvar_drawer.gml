@@ -18,8 +18,18 @@ function GlobalVarDrawer() constructor {
     renaming  = undefined;
 	tb_rename = textBox_Text(function(_n) /*=>*/ { 
 		if(renaming == undefined) return;
-		if(!string_variable_valid(_n))             { noti_warning("Invalid globalvar name.");   renaming = undefined; return; }
-		if(renaming.node.getInputKey(_n) != noone) { noti_warning("Duplicate globalvar name."); renaming = undefined; return; }
+		if(!string_variable_valid(_n)) { 
+			noti_warning("Invalid globalvar name.");
+			renaming = undefined; 
+			return; 
+		}
+		
+		var k = renaming.node.getInputKey(_n);
+		if(k != noone && k != renaming) { 
+			noti_warning("Duplicate globalvar name."); 
+			renaming = undefined; 
+			return; 
+		}
 		
 		renaming.name = _n;
 		renaming      = undefined;
