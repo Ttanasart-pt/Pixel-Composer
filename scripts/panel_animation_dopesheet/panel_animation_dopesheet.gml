@@ -3102,6 +3102,9 @@ function Panel_Animation_Dopesheet() {
 					
 					if(mouse_lpress(pFOCUS))
 						marker_dragging = _mkHover;
+						
+					if(mouse_rpress(pFOCUS))
+						array_remove(_markers, _mkHover);
 				}
 				
 				if(marker_dragging != undefined) {
