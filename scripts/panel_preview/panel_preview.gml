@@ -1196,8 +1196,10 @@ function Panel_Preview() : PanelContent() constructor {
                     draw_sprite_colored(stool[j], 0, _sxx, _syy);
                 }
                     
-                if(point_in_rectangle(mx, my, _x0, _y0 + 1, _x0 + s_ww, _y1 - 1))
-                    tool_hovering = tool;
+                if(point_in_rectangle(mx, my, _x0, _y0 + 1, _x0 + s_ww, _y1 - 1)) {
+                     tool_hovering    = tool;
+                    _mouse_on_preview = false;
+                }
             
             } else { // single tools
                 if(tool_hovering == tool) {
@@ -1423,8 +1425,10 @@ function Panel_Preview() : PanelContent() constructor {
                     
                 }
                 
-                if(point_in_rectangle(mx, my, tx, _y0 + 1, tx + s_ww, _y1 - 1))
-                    tool_hovering = tool;
+                if(point_in_rectangle(mx, my, tx, _y0 + 1, tx + s_ww, _y1 - 1)) {
+                     tool_hovering    = tool;
+                    _mouse_on_preview = false;
+                }
             
             } else { // single tools
                 if(tool_hovering == tool) {
@@ -3332,8 +3336,8 @@ function Panel_Preview() : PanelContent() constructor {
         var sw = prevSurf? surface_get_width( preview_surfaces[0]) : DEF_SURF_W;
         var sh = prevSurf? surface_get_height(preview_surfaces[0]) : DEF_SURF_H;
         
-    	var hov_h = _mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y0 + ruler_width);
-    	var hov_v = _mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x0 + ruler_width, y1);
+    	var hov_h = mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y0 + ruler_width);
+    	var hov_v = mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x0 + ruler_width, y1);
     	if(hov_h || hov_v) _mouse_on_preview = false;
 		
         #region draw

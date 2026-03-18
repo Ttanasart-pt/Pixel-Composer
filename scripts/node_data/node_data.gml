@@ -3474,7 +3474,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static dropPath = noone;  
 	 
-	static clone = function(_group = PANEL_GRAPH.getCurrentContext()) {
+	static onClone = undefined
+	static clone   = function(_group = PANEL_GRAPH.getCurrentContext()) {
 		LOADING_VERSION = SAVE_VERSION;
 		
 		CLONING = true;
@@ -3503,11 +3504,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _node;
 	}
 	
-	static onClone = undefined
-	
 	////- MISC
 	
-	static postBuild = function() {}
+	static postBuild  = function() {}
 	
 	static isTerminal = function() {
 		for( var i = 0; i < array_length(outputs); i++ ) {
@@ -3565,5 +3564,5 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_push(PROFILER_DATA, _report);
 	}
 	
-	static toString = function() { return $"Node [{internalName}] [{instanceof(self)}]: {node_id}"; }
+	static toString = function() /*=>*/ {return $"Node [{internalName}] [{instanceof(self)}]: {node_id}"};
 }

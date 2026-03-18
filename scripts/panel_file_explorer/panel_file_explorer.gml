@@ -439,14 +439,15 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _grid_height = grid_size;
 			var _grid_spac   = ui(4);
 			var _title_heigh = ui(24);
-			draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text);
 			
+			var _gs  = grid_size / ui(104);
 			var _amo = array_length(dirObject.files);
 			var _col = floor(_w / (_grid_width + _grid_spac));
 			_grid_width = (_w - (_col - 1) * _grid_spac) / _col;
 			
 			var _index = 0;
 			
+			draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text);
 			for (var i = 0; i < _amo; i++) {
 				var _cind = _index % _col;
 				var _rind = floor(_index / _col);
@@ -503,6 +504,9 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					var _ths = min((_grid_width - ui(4)) / _fil.th_w, (_grid_height - ui(4)) / _fil.th_h);
 					draw_sprite_ext(_th, 0, _px + _grid_width / 2, _py + _grid_height / 2, _ths, _ths, 0, c_white, 1);
 					gpu_set_texfilter(false);
+					
+					if( _fil.type == FILE_TYPE.project ) 
+						draw_sprite_ext(THEME.icon_24, 0, _px + _grid_width - _gs * ui(24), _py + _grid_height - _gs * ui(24), _gs, _gs, 0, c_white, 1);	
 				}
 				
 				var _cc = COLORS._main_text;
@@ -540,7 +544,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		if(frame_dragging) draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, frame_drag_mx, frame_drag_my, _m[0], _m[1], COLORS._main_accent);
 		if(context_hovering == noone) context_hovering = rootFile;
 		
-		if(draggable && mouse_press(mb_left, pFOCUS)) {
+		if(draggable && mouse_lpress(pFOCUS)) {
 			if(file_hovering == noone) {
 				file_selectings = [];
 				frame_dragging  = true;
@@ -577,9 +581,9 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}
 		}
 		
-		if(mouse_release(mb_left)) frame_dragging = false;
+		if(mouse_lrelease()) frame_dragging = false;
 		
-		if(pFOCUS && mouse_press(mb_right)) {
+		if(pFOCUS && mouse_rpress()) {
 			__menu_cnxt_selecting = context_hovering;
 			
 			if(file_hovering == noone || is(file_hovering, ExpDir)) 
