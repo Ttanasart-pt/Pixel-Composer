@@ -15,6 +15,17 @@ function GlobalVarDrawer() constructor {
     prop_sel_drag_x = 0;
     prop_sel_drag_y = 0;
     
+    renaming  = undefined;
+	tb_rename = textBox_Text(function(_n) /*=>*/ { 
+		if(renaming == undefined) return;
+		if(!string_variable_valid(_n))             { noti_warning("Invalid globalvar name.");   renaming = undefined; return; }
+		if(renaming.node.getInputKey(_n) != noone) { noti_warning("Duplicate globalvar name."); renaming = undefined; return; }
+		
+		renaming.name = _n;
+		renaming      = undefined;
+		RENDER_ALL
+	});
+		
 	static drawEdit = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project = PROJECT) {
 		var hh   = 0;
 		var chov = false; 
@@ -164,11 +175,31 @@ function GlobalVarDrawer() constructor {
 			var mbRight = widg[1];
 			var widHov  = widg[2];
 			var labHov  = widg[3];
+            var lb_x    = widg[4];
 			
-			if(labHov && mouse_lpress(focus)) {
-                prop_dragging   = _inp;
-                prop_sel_drag_x = mouse_mx;
-                prop_sel_drag_y = mouse_my;
+			if(labHov) {
+				if(DOUBLE_CLICK) {
+	            	renaming = _inp;
+					tb_rename.activate(_inp.name);
+					
+	            } else if(mouse_lpress(focus)) {
+	                prop_dragging   = _inp;
+	                prop_sel_drag_x = mouse_mx;
+	                prop_sel_drag_y = mouse_my;
+	                
+				}
+            }
+            
+            if(renaming == _inp) {
+            	var pdx = ui(12 + 4 * viewMode);
+            	var wdx = lb_x - pdx / 2;
+            	var wdy = yy;
+            	
+            	var wdw = ww * .4;
+            	var wdh = line_get_height(_font, 4 + viewMode * 2);
+            	
+            	tb_rename.setFocusHover(focus, hover);
+            	tb_rename.drawParam(new widgetParam(wdx, wdy, wdw, wdh, _inp.name, {}, _m).setFont(_font));
             }
             
 			yy += widH + _padd;
@@ -189,7 +220,7 @@ function GlobalVarDrawer() constructor {
 	}
 	
 	static draw = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project = PROJECT) {
-		if(editing) return drawEdit(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project);
-		return drawValue(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project);
+		return editing? drawEdit(  xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project ) :
+		                drawValue( xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project );
 	}
 }

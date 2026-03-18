@@ -39,8 +39,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			wid = _map[$ _ID];
 		}
 		
-		if(global_var) dispName = string_title(string_replace_all(_name, "_", " "));
-		
 		if(is(wid, widget)) {
 			breakLine = breakLine || wid.always_break_line;
 		

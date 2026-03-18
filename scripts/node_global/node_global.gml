@@ -35,21 +35,8 @@ function variable_editor(nodeVal) constructor {
 	value = nodeVal;
 	
 	tb_name  = textBox_Text(function(s) /*=>*/ { 
-		if(!string_variable_valid(s)) { 
-			noti_warning("Invalid globalvar name."); 
-			return; 
-		}
-		
-		var _node = value.node;
-		for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
-			var _in = _node.inputs[i];
-			if(_in == value) continue;
-			
-			if(_in.name == s) { 
-				noti_warning("Duplicate globalvar name."); 
-				break; 
-			}
-		}
+		if(!string_variable_valid(s))          { noti_warning("Invalid globalvar name.");   return; }
+		if(value.node.getInputKey(s) != noone) { noti_warning("Duplicate globalvar name."); return; }
 		
 		value.name = s;
 		RENDER_ALL
