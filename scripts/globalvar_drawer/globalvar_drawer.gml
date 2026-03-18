@@ -1,6 +1,6 @@
 function GlobalVarDrawer() constructor {
-	editing = false;
 	ID = UUID_generate();
+	editing = false;
 	
 	drawWidgetInit();
 	
@@ -8,8 +8,8 @@ function GlobalVarDrawer() constructor {
 	drag_disp   = noone;
 	drag_insert = 0;
 	
-	edit_y    = {};
-	edit_y_to = {};
+	edit_y      = {};
+	edit_y_to   = {};
 	
 	prop_dragging   = undefined;
     prop_sel_drag_x = 0;
