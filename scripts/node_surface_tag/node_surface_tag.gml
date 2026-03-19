@@ -3,18 +3,15 @@ function taggedSurf(_surf = noone) : dynaSurf() constructor {
 	tags     = {};
 	
 	static draw = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
-		var _surf = surfaces[0];
-		draw_surface_ext_safe(_surf, _x, _y, _xs, _ys, 0, _col, _alp);
+		draw_surface_ext_safe(surfaces[0], _x, _y, _xs, _ys, 0, _col, _alp);
 	}
 	
 	static drawTile = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _col = c_white, _alp = 1) {
-		var _surf = surfaces[0];
-		draw_surface_tiled_ext_safe(_surf, _x, _y, _xs, _ys, 0, _col, _alp);
+		draw_surface_tiled_ext_safe(surfaces[0], _x, _y, _xs, _ys, 0, _col, _alp);
 	}
 	
 	static drawPart = function(_l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
-		var _surf = surfaces[0];
-		draw_surface_part_ext_safe(_surf, _l, _t, _w, _h, _x, _y, _xs, _ys, 0, _col, _alp);
+		draw_surface_part_ext_safe(surfaces[0], _l, _t, _w, _h, _x, _y, _xs, _ys, 0, _col, _alp);
 	}
 	
 	static clone   = function() { return new taggedSurf(surfaces[0]); }
@@ -78,24 +75,24 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	});
 	
 	input_display_list = [ 
-		["Surface", false], 0, 
-		["Tags",    false], array_adjust_tool, 
-		["Values",   true], 
+		[ "Surface", false ], 0, 
+		[ "Tags",    false ], array_adjust_tool, 
+		[ "Values",   true ], 
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Tag", "new tag"));
-		
-		newInput(index + 1, nodeValue_Vec2("Position", [[ 0, 0 ]] ))
-			.setArrayDepth(1);
+		newInput(index + 0, nodeValue_Text( "Tag", "new tag" ));
+		newInput(index + 1, nodeValue_Vec2( "Position", [[0,0]] )).setArrayDepth(1);
 		
 		array_push(input_display_list, inAmo + 1);
 		return [ inputs[index + 0], inputs[index + 1] ];
 	} 
 	
 	setDynamicInput(2, false);
+	
+	////- Node
 	
 	tag_dragging    = noone;
 	tag_dragging_in = noone;

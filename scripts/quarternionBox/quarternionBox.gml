@@ -3,7 +3,8 @@ enum QUARTERNION_DISPLAY {
 	euler,
 }
 
-function quarternionBox(_onModify) : widget() constructor {
+function quarternionBox(_junc, _onModify) : widget() constructor {
+	junction      = _junc;
 	onModify      = _onModify;
 	current_value = [ 0, 0, 0, 0 ];
 	current_unit  = QUARTERNION_DISPLAY.quarterion;
@@ -86,9 +87,10 @@ function quarternionBox(_onModify) : widget() constructor {
 		if(array_empty(_data)) return 0;
 		if(is_array(_data[0])) return 0;
 		
-		var _disp = struct_try_get(attributes, "angle_display");
+		var _attr = junction.attributes;
+		var _disp = struct_try_get(_attr, "angle_display");
 		
-		if(attributes.angle_display == QUARTERNION_DISPLAY.quarterion || (!tb[0].sliding && !tb[1].sliding && !tb[2].sliding)) {
+		if(_attr.angle_display == QUARTERNION_DISPLAY.quarterion || (!tb[0].sliding && !tb[1].sliding && !tb[2].sliding)) {
 			current_value[0] = array_safe_get(_data, 0);
 			current_value[1] = array_safe_get(_data, 1);
 			current_value[2] = array_safe_get(_data, 2);
@@ -110,14 +112,14 @@ function quarternionBox(_onModify) : widget() constructor {
 			if(b == 2) tg = true;
 				
 			if(tg) {
-				setAttribute("angle_display", (_disp + 1) % 2);
+				junction.setAttribute("angle_display", (_disp + 1) % 2);
 				onModify(current_value[0], 0);
 				clickable = false;
 			}
 			_w -= bs;
 		}
 		
-		current_unit = attributes.angle_display;
+		current_unit = _attr.angle_display;
 			
 		size = _disp? 3 : 4;
 		var ww = _w / size;
@@ -144,10 +146,7 @@ function quarternionBox(_onModify) : widget() constructor {
 		return _h;
 	}
 	
-	static clone = function() {
-		var cln = new quarternionBox(onModify);
-		return cln;
-	}
+	static clone = function() /*=>*/ {return new quarternionBox(junction, onModify)};
 	
 	static free = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();

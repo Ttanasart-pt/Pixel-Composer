@@ -1236,7 +1236,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.d3quarternion :
-						editWidget = new quarternionBox(function(val, i) /*=>*/ { setValueInspector(val, i); node.triggerRender(); });
+						editWidget = new quarternionBox(self, function(val, i) /*=>*/ { setValueInspector(val, i); node.triggerRender(); });
 						
 						_ext = "Node_Vector4";
 						attributes.angle_display = QUARTERNION_DISPLAY.euler;
