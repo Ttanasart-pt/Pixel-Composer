@@ -48,8 +48,8 @@ enum RENDER_TYPE {
 		// Get list of nodes to the left (previous nodes)
 		for( var i = 0, n = array_length(_prev); i < n; i++ ) {
 			var _in = _prev[i];
-			if(_in == noone || struct_has(_sorted, _in.node_id))            continue; // node already sorted
-			if(_nodeMap != undefined && !struct_has(_nodeMap, _in.node_id)) continue; // not part of node map
+			if(_in == noone || _in == _node || has(_sorted, _in.node_id)) continue; // node already sorted
+			if(_nodeMap != undefined && !has(_nodeMap, _in.node_id))      continue; // not part of node map
 			
 			array_push(_parents, _in);
 		}

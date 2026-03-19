@@ -463,6 +463,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		setValue(unit.apply(variable_clone(def_val))); 
 		is_modified       = always_modified;
 		attributes.mapped = false;
+		
+		node.triggerRender();
 	}
 	
 	static setUnitSimple = function(r = true) { 

@@ -204,6 +204,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var nextNodes = getNextNodes();
 		
 		for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
+			if(!is(nextNodes[i], Node)) continue;
+			
 			nextNodes[i].passiveDynamic = true;
 			nextNodes[i].rendered       = false;
 		}

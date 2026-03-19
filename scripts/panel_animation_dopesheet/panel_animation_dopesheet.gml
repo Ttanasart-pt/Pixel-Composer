@@ -39,7 +39,6 @@ function Panel_Animation_Dopesheet() {
         
         dopesheet_name_mask    = noone;
         dopesheet_name_surface = noone;
-        dopesheet_name_hover   = false;
         
         mouse_on_timeline      = false;
     #endregion
@@ -1864,7 +1863,6 @@ function Panel_Animation_Dopesheet() {
         
         var drw  = ty0 < dopesheet_h + ui(16) && ty1 > -ui(16);
         var hov  = item_dragging == noone && point_in_rectangle(msx, msy, 0, ty0, w - side_width, ty1);
-            // hov &= dopesheet_name_hover;
         var foc  = pFOCUS;
         
         ////- =Draw Name
@@ -2093,8 +2091,6 @@ function Panel_Animation_Dopesheet() {
     	var ww = ui(8) + tool_width;
     	var hh = ui(8) + dopesheet_h - top_frame_height;
     	var oy = top_frame_height;
-    	
-    	dopesheet_name_hover = pHOVER && point_in_rectangle(mx, my, xx, yy, ww, hh);
     	
         surface_set_target(dopesheet_name_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
