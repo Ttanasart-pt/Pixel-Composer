@@ -1,15 +1,16 @@
 function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel Sender";
 	color = COLORS.node_blend_tunnel;
+	renderAll    = true;
 	preview_draw = false;
 	set_default  = false;
 	
 	setDimension(32, 32);
 	
-	newInput(0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{ds_map_size(project.tunnels_in_map)}" ))
+	newInput(0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_in)}" ))
 		.rejectArray().setAnimable(false);
 		
-	newInput(1, nodeValue(      "Value in", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone )).setVisible(true, true);
+	newInput(1, nodeValue_Any( "Value in" )).setVisible(true, true);
 	
 	////- =Display
 	newInput(2, nodeValue_EButton( "Label Position", 0, [ "T", "B", "L", "R" ] ));
@@ -25,15 +26,14 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0].getEditWidget().autocomplete_server = tunnel_autocomplete_server;
 	inputs[0].getEditWidget().autocomplete_subt   = "Ctrl: Change connected";
 	inputs[0].is_modified = true;
-	inputs[0].onSetValue  = function(newKey) /*=>*/ {
+	inputs[0].onSetValue  = function(newKey, oldValue) /*=>*/ {
 		if(!key_mod_press(CTRL)) return;
 		
-		for( var i = 0, n = array_length(receivers); i < n; i++ ) {
-			var node = PROJECT.nodeMap[? receivers[i]];
-			if(!node) continue;
-			
-			node.inputs[0].setValueDirect(newKey);
-		}
+		var _rec = project.tunnels_out[$ __key];
+		if(!is_array(_rec)) return;
+		
+		for( var i = 0, n = array_length(_rec); i < n; i++ )
+			_rec[i].inputs[0].setValueDirect(newKey);
 	};
 	
 	static getDisplayName = function() /*=>*/ {return string(inputs[0].getValue())};
@@ -44,13 +44,11 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	junction_hover     = false;
 	error_notification = noone;
 	
-	receivers = [];
-	open      = true;
-	
 	label_ori   = 0;
 	label_scale = 1;
 	label_color = ca_white;
 	label_alpha = 1;
+	open = true;
 	
 	__jfrom = noone;
 	__key   = noone;
@@ -59,7 +57,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- Update
 	
 	insp1button = button(function() /*=>*/ { dialogPanelCall(new Panel_Tunnels()); }).setTooltip(__txt("Tunnel Panel"))
-		.setIcon(THEME.tunnel_panel, 0, c_white).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		.setIcon(THEME.tunnel_panel, 0, c_white).iconPad(ui(6))
+		.setBaseSprite(THEME.button_hide_fill);
 	
 	insp2button = button(function() /*=>*/ { 
 		var _nx = x + 160;
@@ -73,7 +72,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		_node.inputs[0].setValue(_key);
 		
 	}).setTooltip(__txt("Create Receiver"))
-		.setIcon(THEME.tunnel, 0, COLORS.node_blend_tunnel).iconPad(ui(6))
+		.setIcon(THEME.tunnel, 0, c_white).iconPad(ui(6))
 		.setBaseSprite(THEME.button_hide_fill);
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -85,8 +84,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		label_color = getInputData(4);
 		label_alpha = getInputData(5);
 		
-		if(_key != __key) checkKey(); 
-		
 		if(_frm != __jfrom) {
 			inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);
 			inputs[1].setDisplay(_frm? _frm.display_type : VALUE_DISPLAY._default);
@@ -97,108 +94,12 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		__jfrom = _frm;
 		
 		value_validation[VALIDATION.error] = error_notification != noone;
-		
-		receivers = [];
-		var _keys = ds_map_keys_to_array(project.tunnels_out);
-		
-		for (var i = 0, n = array_length(_keys); i < n; i++) {
-			var _k = _keys[i];
-			
-			if(project.tunnels_out[? _k] != _key)   continue;
-			if(!ds_map_exists(PROJECT.nodeMap, _k)) continue;
-			
-			var node = PROJECT.nodeMap[? _k];
-			if(!node.active || node.group != group) continue;
-			
-			array_push(receivers, _k);
-		}
-		
-	}
-	
-	static resetMap = function() {
-		if(__key != noone) ds_map_delete(project.tunnels_in, __key);
-		
-		var _key = inputs[0].getValue();
-		project.tunnels_in_map[? node_id] = _key;
-		project.tunnels_in[? _key] = inputs[1];
-	}
-	
-	static checkDuplicate = function() {
-		var _key = inputs[0].getValue();
-		if(_key == "") return;
-		
-		var amo  = ds_map_size(project.tunnels_in_map);
-		var k    = ds_map_find_first(project.tunnels_in_map);
-		var dup  = false;
-		
-		repeat(amo) {
-			if(k != node_id && project.tunnels_in_map[? k] == _key)
-				dup = true;
-			
-			k = ds_map_find_next(project.tunnels_in_map, k);
-		}
-		
-		if(dup && error_notification == noone) {
-			error_notification = noti_error($"Duplicated key: {_key}");
-			error_notification.onClick = function() /*=>*/ {return PANEL_GRAPH.focusNode(self)};
-			
-		} else if(!dup && error_notification) {
-			noti_remove(error_notification);
-			error_notification = noone;
-		}
-	}
-	
-	static checkKey = function() {
-		__key = inputs[0].getValue();
-		resetMap();
-		
-		var amo = ds_map_size(project.tunnels_in_map);
-		var k   = ds_map_find_first(project.tunnels_in_map), _n;
-		repeat(amo) {
-			_n = project.nodeMap[? k];
-			k = ds_map_find_next(project.tunnels_in_map, k);
-			
-			if(!is(_n, Node_Tunnel_In)) continue;
-			if(!_n.active) continue;
-			
-			_n.resetMap();
-		}
-		
-		var k   = ds_map_find_first(project.tunnels_in_map);
-		repeat(amo) {
-			_n = project.nodeMap[? k];
-			k = ds_map_find_next(project.tunnels_in_map, k);
-			
-			if(!is(_n, Node_Tunnel_In)) continue;
-			if(!_n.active) continue;
-			
-			_n.checkDuplicate();
-		}
-	}
-	
-	static onValueUpdate = function(index = -1) {
-		checkKey();
-		if(index == 0) { RENDER_ALL_REORDER }
 	}
 	
 	static getNextNodes = function(checkLoop = false) {
-		var nodes = [];
 		var _key  = inputs[0].getValue();
-		var amo   = ds_map_size(project.tunnels_out);
-		var k     = ds_map_find_first(project.tunnels_out);
-		
-		LOG_BLOCK_START
-		if(global.FLAG.render == 1) LOG($"→→→→→ Call get next node from: {getInternalName()}");
-		
-		repeat(amo) {
-			if(project.tunnels_out[? k] == _key)
-				array_push(nodes, project.nodeMap[? k]);
-			
-			k = ds_map_find_next(project.tunnels_out, k);
-		}
-		
-		LOG_BLOCK_END
-		return nodes;
+		var nodes = project.tunnels_out[$ _key];
+		return is_array(nodes)? nodes : [];
 	}
 	
 	static forwardPassiveDynamic = function() {
@@ -245,26 +146,21 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!hover) return;
 		
 		var _key  = inputs[0].getValue();
-		var _keys = ds_map_keys_to_array(project.tunnels_out);
-		insp2button.icon_blend = inputs[1].color_display;
+		var _outs = project.tunnels_out[$ _key];
+		if(!is_array(_outs)) return;
 		
 		draw_set_color(inputs[1].color_display);
 		draw_set_alpha(0.5);
 		
-		for (var i = 0, n = array_length(_keys); i < n; i++) {
-			var _k = _keys[i];
+		for (var i = 0, n = array_length(_outs); i < n; i++) {
+			var _n = _outs[i];
+			if(_n.group != group) continue;
 			
-			if(project.tunnels_out[? _k] != _key)   continue;
-			if(!ds_map_exists(PROJECT.nodeMap, _k)) continue;
+			preview_connecting    = true;
+			_n.preview_connecting = true;
 			
-			var node = PROJECT.nodeMap[? _k];
-			if(!node.active || node.group != group) continue;
-			
-			preview_connecting      = true;
-			node.preview_connecting = true;
-			
-			var tox = _x +  node.x      * _s;
-			var toy = _y + (node.y + 8) * _s;
+			var tox = _x +  _n.x      * _s;
+			var toy = _y + (_n.y + 8) * _s;
 			draw_line_dotted(xx, yy, tox, toy, 2 * _s, 0, 3);
 		}
 		
@@ -340,25 +236,17 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var tt = string(inputs[0].getValue());
 		
 		switch(label_ori) {
-			case 0 : 
-				draw_set_text(f_sdf, fa_center, fa_bottom, label_color, aa);
-				draw_text_transformed(xx, yy - 12 * _s, tt, ss, ss, 0);
-				break;
+			case 0 : draw_set_text(f_sdf, fa_center, fa_bottom, label_color, aa);
+				     draw_text_transformed(xx, yy - 12 * _s, tt, ss, ss, 0); break;
 				
-			case 1 : 
-				draw_set_text(f_sdf, fa_center, fa_top, label_color, aa);
-				draw_text_transformed(xx, yy + 12 * _s, tt, ss, ss, 0);
-				break;
+			case 1 : draw_set_text(f_sdf, fa_center, fa_top, label_color, aa);
+				     draw_text_transformed(xx, yy + 12 * _s, tt, ss, ss, 0); break;
 				
-			case 2 : 
-				draw_set_text(f_sdf, fa_right, fa_center, label_color, aa);
-				draw_text_transformed(xx - 12 * _s, yy, tt, ss, ss, 0);
-				break;
+			case 2 : draw_set_text(f_sdf, fa_right, fa_center, label_color, aa);
+				     draw_text_transformed(xx - 12 * _s, yy, tt, ss, ss, 0); break;
 				
-			case 3 : 
-				draw_set_text(f_sdf, fa_left, fa_center, label_color, aa);
-				draw_text_transformed(xx + 12 * _s, yy, tt, ss, ss, 0);
-				break;
+			case 3 : draw_set_text(f_sdf, fa_left, fa_center, label_color, aa);
+				     draw_text_transformed(xx + 12 * _s, yy, tt, ss, ss, 0); break;
 		}
 		
 		draw_set_alpha(1);
@@ -368,24 +256,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- Actions
 	
-	static preConnect = function() { checkKey(); }
-	
 	static onDestroy = function() {
 		if(error_notification != noone)
 			noti_remove(error_notification);
-	
-		var _key = inputs[0].getValue();
-		
-		ds_map_delete(project.tunnels_in_map,  node_id);
-		ds_map_delete(project.tunnels_in,     _key);
 	}
-	
-	static onRestore = function() {
-		resetMap();
-	}
-	
-	////- Init
-	
-	resetMap();
 	
 }

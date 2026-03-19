@@ -127,6 +127,7 @@ enum RENDER_TYPE {
 	function NodeTopoSort(_project = PROJECT) {
 		if(global.FLAG.render == 1) LOG($"======================= RESET TOPO =======================")
 		
+		_project.checkTunnels();
 		var amo = array_length(_project.allNodes);
 		var _t  = get_timer();
 		

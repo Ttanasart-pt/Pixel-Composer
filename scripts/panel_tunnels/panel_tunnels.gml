@@ -62,7 +62,6 @@ function Panel_Tunnels() : PanelContent() constructor {
 		var _foc  = sc_tunnel.active;
 		var _delNode = noone;
 		
-		var _tout = ds_map_keys_to_array(PROJECT.tunnels_out);
 		var  bc   = [ c_white, COLORS._main_value_positive ];
 		
 		for( var i = 0, n = array_length(arr); i < n; i++ ) {
@@ -83,6 +82,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			
 			var key = node.inputs[0].getValue(0);
 			var col = node.inputs[1].color_display;
+			var _tout = PROJECT.tunnels_out[$ key];
 			
 			var bx = ww - ui(2) - bs;
 			var by = _y + (hg - bs) / 2;
@@ -116,29 +116,24 @@ function Panel_Tunnels() : PanelContent() constructor {
 			draw_text_add(_tx, _ty, _tt);
 			_tx += string_width(_tt) + ui(4);
 			
-			var _amo = array_length(node.receivers);
+			var _amo = is_array(_tout)? array_length(_tout) : 0;
 			draw_set_color(COLORS._main_text_sub);
 			draw_text_add(_tx, _ty, $"[{_amo}]");
 			
 			_y += hg + ui(4);
 			_h += hg + ui(4);
 		
-			if(!node.open) continue;
+			if(!node.open || !is_array(_tout)) continue;
 			
 			for( var j = 0, m = array_length(_tout); j < m; j++ ) {
-				var k   = _tout[j];
-				var out = PROJECT.tunnels_out[? k];
-				if(out != key || !ds_map_exists(PROJECT.nodeMap, k)) continue;
-				
-				var _recNode = PROJECT.nodeMap[? k];
-				if(!_recNode.active) continue;
+				var _outNode = _tout[j];
 				
 				var hv = _hov && point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + ui(20));
-				if(hv) tunnel_hover = _recNode;
+				if(hv) tunnel_hover = _outNode;
 				
 				draw_sprite_ui(THEME.tunnel, 1, ui(32), _y + ui(10), .6, .6, 0, col, .5 + .5 * hv);
 				draw_set_text(f_p3, fa_left, fa_center, hv? COLORS._main_text : COLORS._main_text_sub);
-				draw_text_add(ui(32 + 16), _y + ui(10), _recNode.renamed? _recNode.display_name : _recNode.name);
+				draw_text_add(ui(32 + 16), _y + ui(10), _outNode.renamed? _outNode.display_name : _outNode.name);
 				
 				var bbs = ui(16);
 				var bx = ww - ui(8) - bbs;
@@ -146,12 +141,12 @@ function Panel_Tunnels() : PanelContent() constructor {
 				
 				_txt = __txtx("panel_node_delete", "Delete Node");
 				if(buttonInstant(noone, bx, by, bbs, bbs, _m, _hov, _foc, _txt, THEME.cross_16, 0, _delc, .5) == 2)
-					_recNode.destroy();
+					_outNode.destroy();
 				bx -= bbs + ui(2);
 				
 				_txt = __txtx("panel_node_goto", "Go to Node");
 				if(buttonInstant(noone, bx, by, bbs, bbs, _m, _hov, _foc, _txt, THEME.node_goto_16, 0, COLORS._main_icon, .5) == 2)
-					graphFocusNode(_recNode);
+					graphFocusNode(_outNode);
 				bx -= bbs + ui(2);
 				
 				_y += ui(20);
@@ -166,19 +161,16 @@ function Panel_Tunnels() : PanelContent() constructor {
 			var key = _delNode.inputs[0].getValue(0);
 			var _jf = _delNode.inputs[1].value_from;
 			
+			var _tout = PROJECT.tunnels_out[$ key];
+			if(is_array(_tout))
 			for( var i = 0, n = array_length(_tout); i < n; i++ ) {
-				var k   = _tout[i];
-				var out = PROJECT.tunnels_out[? k];
-				if(out != key || !ds_map_exists(PROJECT.nodeMap, k)) continue;
+				var _node = _tout[i];
 				
-				var _recNode = PROJECT.nodeMap[? k];
-				if(!_recNode.active) continue;
-				
-				var _tos = _recNode.outputs[0].getJunctionTo();
+				var _tos = _node.outputs[0].getJunctionTo();
 				for( var j = 0, m = array_length(_tos); j < m; j++ )
 					_tos[j].setFrom(_jf);
 				
-				_recNode.destroy();
+				_node.destroy();
 			}
 			
 			_delNode.destroy();

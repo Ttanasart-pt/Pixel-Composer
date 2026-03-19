@@ -2,6 +2,7 @@
 #macro has struct_has
 
 function struct_create() { return {}; }
+function struct_size(s)  { return array_length(struct_key(s)); }
 
 function struct_has(s, k) { return is_struct(s) && variable_struct_exists(s, k); }
 function struct_has_ext(s) { 

@@ -13,12 +13,13 @@
 function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel Receiver";
 	color = COLORS.node_blend_tunnel;
+	renderAll    = true;
 	preview_draw = false;
 	set_default  = false;
 	
 	setDimension(32, 32);
 	
-	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) ))
+	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_out)}" ))
 		.rejectArray().setAnimable(false);
 	
 	////- =Display
@@ -38,11 +39,11 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[0].getEditWidget().autocomplete_server = tunnel_autocomplete_server;
 	inputs[0].getEditWidget().autocomplete_subt   = "Ctrl: Change connected";
 	inputs[0].is_modified = true;
-	inputs[0].onSetValue  = function(newKey) /*=>*/ {
+	inputs[0].onSetValue  = function(newKey, oldValue) /*=>*/ {
 		if(!key_mod_press(CTRL)) return;
 		
-		var node = project.tunnels_in[? __key].node;
-		if(node.group != group || node.__key != __key) return;
+		var node = project.tunnels_in[$ __key];
+		if(!is(node, Node_Tunnel_In) || node.__key != __key) return;
 		
 		node.inputs[0].setValueDirect(newKey);
 	};
@@ -65,23 +66,19 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	////- Update
 	
 	insp1button = button(function() /*=>*/ { dialogPanelCall(new Panel_Tunnels()); }).setTooltip(__txt("Tunnel Panel"))
-		.setIcon(THEME.tunnel_panel, 0, c_white).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		.setIcon(THEME.tunnel_panel, 0, c_white).iconPad(ui(6))
+		.setBaseSprite(THEME.button_hide_fill);
 	
 	insp2button = button(function() /*=>*/ { 
 		var _key = inputs[0].getValue();
-		if(!ds_map_exists(project.tunnels_in, _key)) return;
+		if(!has(project.tunnels_in, _key)) return;
 		
-		var _node = project.tunnels_in[? _key].node;
+		var _node = project.tunnels_in[$ _key];
 		graphFocusNode(_node);
 		
 	}).setTooltip(__txt("Goto Sender"))
-		.setIcon(THEME.tunnel, 1, COLORS.node_blend_tunnel).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
-	
-	static onValueUpdate = function(index = -1) {
-		resetMap();
-		
-		if(index == 0) { RENDER_ALL_REORDER }
-	}
+		.setIcon(THEME.tunnel, 1, c_white).iconPad(ui(6))
+		.setBaseSprite(THEME.button_hide_fill);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		
@@ -92,12 +89,13 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		__key = inputs[0].getValue();
 		
-		if(ds_map_exists(project.tunnels_in, __key)) {
-			var _inputNode = project.tunnels_in[? __key];
+		if(has(project.tunnels_in, __key)) {
+			var _inputNode = project.tunnels_in[$ __key];
+			var _inputVal  = _inputNode.inputs[1];
 			
-			outputs[0].setType(_inputNode.type);
-			outputs[0].setDisplay(_inputNode.display_type);
-			outputs[0].setValue(_inputNode.getValue());
+			outputs[0].setType(_inputVal.type);
+			outputs[0].setDisplay(_inputVal.display_type);
+			outputs[0].setValue(_inputVal.getValue());
 			
 		} else {
 			outputs[0].setType(VALUE_TYPE.any);
@@ -107,22 +105,9 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		outputs[0].updateColor();
 	}
 	
-	static resetMap = function() {
-		__key = inputs[0].getValue();
-		project.tunnels_out[? node_id] = __key;
-	}
-	
-	static isRenderable = function() {
-		var _key = inputs[0].getValue();
-		if(!ds_map_exists(project.tunnels_in, _key)) return false;
-		
-		return project.tunnels_in[? _key].node.rendered;
-	}
-	
-	static isActiveDynamic = function(frame = CURRENT_FRAME) { return false; }
-	
 	static onGetPreviousNodes = function(p) /*=>*/ { 
-		if(ds_map_exists(project.tunnels_in, __key)) array_push(p, project.tunnels_in[? __key].node); 
+		if(has(project.tunnels_in, __key)) 
+			array_push(p, project.tunnels_in[$ __key]); 
 	}
 	
 	////- Draw
@@ -156,15 +141,13 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var hover = isHovering || (tun && tun.tunnel_hover == self);
 		if(!hover) return;
 		
-		if(!ds_map_exists(project.tunnels_in, __key)) return;
+		if(!has(project.tunnels_in, __key)) return;
 		
-		var node = project.tunnels_in[? __key].node;
+		var node = project.tunnels_in[$ __key];
 		if(node.group != group) return;
-		if(node.__key != __key) return;
 		
 		preview_connecting      = true;
 		node.preview_connecting = true;
-		insp2button.icon_blend      = outputs[0].color_display;
 		
 		draw_set_color(outputs[0].color_display);
 		draw_set_alpha(0.5);
@@ -245,42 +228,22 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var tt = string(inputs[0].getValue());
 		
 		switch(label_ori) {
-			case 0 : 
-				draw_set_text(f_sdf, fa_center, fa_bottom, label_color, aa);
-				draw_text_transformed(xx, yy - 12 * _s, tt, ss, ss, 0);
-				break;
+			case 0 : draw_set_text(f_sdf, fa_center, fa_bottom, label_color, aa);
+				     draw_text_transformed(xx, yy - 12 * _s, tt, ss, ss, 0); break;
 				
-			case 1 : 
-				draw_set_text(f_sdf, fa_center, fa_top, label_color, aa);
-				draw_text_transformed(xx, yy + 12 * _s, tt, ss, ss, 0);
-				break;
+			case 1 : draw_set_text(f_sdf, fa_center, fa_top, label_color, aa);
+				     draw_text_transformed(xx, yy + 12 * _s, tt, ss, ss, 0); break;
 				
-			case 2 : 
-				draw_set_text(f_sdf, fa_right, fa_center, label_color, aa);
-				draw_text_transformed(xx - 12 * _s, yy, tt, ss, ss, 0);
-				break;
+			case 2 : draw_set_text(f_sdf, fa_right, fa_center, label_color, aa);
+				     draw_text_transformed(xx - 12 * _s, yy, tt, ss, ss, 0); break;
 				
-			case 3 : 
-				draw_set_text(f_sdf, fa_left, fa_center, label_color, aa);
-				draw_text_transformed(xx + 12 * _s, yy, tt, ss, ss, 0);
-				break;
+			case 3 : draw_set_text(f_sdf, fa_left, fa_center, label_color, aa);
+				     draw_text_transformed(xx + 12 * _s, yy, tt, ss, ss, 0); break;
 		}
 		
 		draw_set_alpha(1);
 	}
 	
 	static drawDimension = undefined;
-	
-	////- Actions
-	
-	static postConnect = function() { resetMap(); }
-	
-	static onRestore = function() {
-		resetMap();
-	}
-	
-	////- Init
-	
-	resetMap();
 	
 }

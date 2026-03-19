@@ -69,8 +69,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Value ----
-		static setDefValue = function(_value) {
+		static setDefValue = function(_value, _serialize = true) {
 			def_val    = array_clone(_value);
+			def_serial = _serialize;
 			
 			sepable    = is_array(_value) && array_length(_value) > 1;
 			animVector = array_safe_length(_value, -1);
@@ -88,7 +89,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		on_end		= KEYFRAME_END.hold;
 		loop_range  = -1;
 		
-		setDefValue(_value);
+		setDefValue(_value, false);
 		def_length    = is_array(def_val)? array_length(def_val) : 0;
 		def_depth     = array_get_depth(def_val);
 		unitUse       = false;
@@ -2795,6 +2796,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(visible_manual != 0)    _map.visible_manual = visible_manual;
 		if(color != -1)            _map.color          = color;
 		if(drawValue)              _map.drawValue      = drawValue;
+		if(def_serial)             _map.def_val        = def_val;
+		_map.def_serial = def_serial;
 		
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
@@ -2880,6 +2883,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		inspector_timeline = _map[$ "insp_tm"] ?? inspector_timeline;
 		drawValue	= _map[$ "drawValue"] ?? false;
+		
+		if(bool(_map[$ "def_serial"]))
+			def_val = _map[$ "def_val"] ?? def_val;
 		
 		if(connect_type == CONNECT_TYPE.output) return;
 		

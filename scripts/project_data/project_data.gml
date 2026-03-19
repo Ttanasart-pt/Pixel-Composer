@@ -101,10 +101,6 @@ function Project() constructor {
 	addons = {};
 	data   = {};
 	
-	tunnels_in     = ds_map_create();
-	tunnels_in_map = ds_map_create();
-	tunnels_out    = ds_map_create();
-	
 	timelines  = new timelineItemGroup();
 	trackAnim  = new Process_Anim();
 	randomizer = new Project_Randomizer();
@@ -115,6 +111,44 @@ function Project() constructor {
 	
 	timelineMarkers      = [];
 	timelineMarkersArray = [];
+	
+	#region ===================== TUNNEL ====================
+		tunnels_in  = {};
+		tunnels_out = {};
+		tunnel_keys = [];
+		
+		static checkTunnels = function() /*=>*/ {
+			tunnels_in  = {};
+			tunnels_out = {};
+			tunnel_keys = [];
+			
+			for( var i = 0, n = array_length(allNodes); i < n; i++ ) {
+				var _n = allNodes[i];
+				if(!_n.active) continue;
+				
+				if(is(_n, Node_Tunnel_In)) {
+					var _key = _n.inputs[0].getValue();
+					_n.__key = _key;
+					
+					if(_key == "") continue;
+					tunnels_in[$ _key] = _n;
+					array_push(tunnel_keys, _key);
+					
+				} else if(is(_n, Node_Tunnel_Out)) {
+					var _key = _n.inputs[0].getValue();
+					_n.__key = _key;
+					
+					if(_key == "") continue;
+					var _arr = tunnels_out[$ _key] ?? [];
+					array_push(_arr, _n);
+					
+					tunnels_out[$ _key] = _arr;
+					
+				}
+			}
+			
+		}
+	#endregion
 	
 	#region ===================== GLOBAL LAYER ====================
 		globalLayer_surface   = noone;
@@ -398,6 +432,7 @@ function Project() constructor {
 	
 	static preRender = function() {
 		globalNode.update();
+		checkTunnels();
 		
 		array_foreach(allNodes, function(n) /*=>*/ { 
 			if(!n.active) return; 

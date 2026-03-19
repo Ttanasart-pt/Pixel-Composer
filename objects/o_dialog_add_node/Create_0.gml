@@ -1229,7 +1229,7 @@ event_inherited();
 		
 		#region Tunnel
 			var _match   = string_partial_match_res("tunnel", search_lower);
-			var _tunnels = ds_map_keys_to_array(PROJECT.tunnels_in);
+			var _tunnels = PROJECT.tunnel_keys;
 			var _tunnelOutNode = ALL_NODES[$ "Node_Tunnel_Out"];
 				
 			if(_match[0] > -9999) {
