@@ -440,7 +440,11 @@ function Panel_Animation_Dopesheet() {
             GLOBAL_TOTAL_FRAMES = len;
             
             timeline_draggable = false;
-            if(mouse_lrelease() && !timeline_frame_typing) timeline_stretch = 0;
+            if(mouse_lrelease()) {
+            	UNDO_HOLDING = false;
+            	if(!timeline_frame_typing)
+            		timeline_stretch = 0;
+            }
             return;
         } 
         
@@ -480,10 +484,12 @@ function Panel_Animation_Dopesheet() {
             }
             
             timeline_draggable = false;
-            if(mouse_lrelease() && !timeline_frame_typing) {
-            	timeline_stretch = 0;
+            if(mouse_lrelease()) {
+            	UNDO_HOLDING = false;
             	
-            	if(PREFERENCES.panel_animation_key_override) {
+        		if(!timeline_frame_typing){
+	            	timeline_stretch = 0;
+	            	if(PREFERENCES.panel_animation_key_override)
             		for (var m = 0, n = array_length(PROJECT.allNodes); m < n; m++) {
 	                    var _node = PROJECT.allNodes[m];
 	                    if(!_node || !_node.active) continue;
@@ -515,7 +521,7 @@ function Panel_Animation_Dopesheet() {
 	                        }
 	                    }
 	                }
-            	}
+        		}
             }
             return;
         } 
@@ -539,6 +545,8 @@ function Panel_Animation_Dopesheet() {
                 }
                 
                 if(timeline_stretch == 2) {
+                    recordAction_variable_change(PROJECT.animator, "frames_total", PROJECT.animator.frames_total);
+                    
                 	for (var m = 0, n = array_length(PROJECT.allNodes); m < n; m++) {
 	                    var _node = PROJECT.allNodes[m];
 	                    if(!_node || !_node.active) continue;
@@ -547,17 +555,25 @@ function Panel_Animation_Dopesheet() {
 	                        var in = _node.inputs[i];
 	                        if(!in.is_anim) continue;
 	                        
-	                        for(var j = 0; j < array_length(in.animator.values); j++)
-	                            in.animator.values[j].calcRatio();
+	                        for(var j = 0; j < array_length(in.animator.values); j++) {
+	                        	var kf = in.animator.values[j];
+	                            kf.calcRatio();
+	                            recordAction_variable_change(kf, "time", kf.time);
+	                        }
 	                        
 	                        if(!in.sep_axis) continue;
 	                        
 	                        var _anims = in.getAnimators();
 	                        for(var k = 0; k < array_length(_anim); k++ )
-	                        for(var j = 0; j < array_length(_anim[k].values); j++)
-	                            _anim[k].values[j].calcRatio();
+	                        for(var j = 0; j < array_length(_anim[k].values); j++) {
+	                        	var kf = _anim[k].values[j];
+	                            kf.calcRatio();
+	                            recordAction_variable_change(kf, "time", kf.time);
+	                        }
 	                    }
 	                }
+	                
+	                UNDO_HOLDING = true;
                 }
                 
             } else if(key_mod_press(CTRL)) {
@@ -570,9 +586,12 @@ function Panel_Animation_Dopesheet() {
                 	KEYBOARD_RESET
                 	
                 } else if(mouse_lpress(pFOCUS)) {
+                    recordAction_variable_change(PROJECT.animator, "frames_total", PROJECT.animator.frames_total);
+                    
                     timeline_stretch    = 1;
                     timeline_stretch_mx = msx;
                     timeline_stretch_sx = GLOBAL_TOTAL_FRAMES;
+	                UNDO_HOLDING = true;
                 }
             }
         }
