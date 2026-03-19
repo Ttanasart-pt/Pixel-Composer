@@ -6,7 +6,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(32, 32);
 	
-	newInput(0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{ds_map_size(project.tunnels_in_map)}" )).rejectArray();
+	newInput(0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{ds_map_size(project.tunnels_in_map)}" ))
+		.rejectArray().setAnimable(false);
+		
 	newInput(1, nodeValue(      "Value in", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone )).setVisible(true, true);
 	
 	////- =Display

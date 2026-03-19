@@ -78,6 +78,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			animators      = undefined;
 			animatorSuffix = array_create(max(1, animVector), "");
+			return self;
 		}
 		
 		is_anim		= false;
@@ -455,8 +456,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	set_default = true;
 	static skipDefault = function() /*=>*/ { set_default = false; return self; }
-	
-	static resetValue = function() {
+	static resetValue  = function() /*=>*/ {
 		if(!set_default) return;
 		
 		unit.mode = def_unit;

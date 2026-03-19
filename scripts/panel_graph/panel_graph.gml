@@ -4481,6 +4481,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         _to.inputs[0].setValue(_key);
         _ti.inputs[0].setValue(_key);
         
+        _to.inputs[0].setDefValue(_key);
+        _ti.inputs[0].setDefValue(_key);
+        
         _ti.inputs[1].setFrom(_jo);
         _ji.setFrom(_to.outputs[0]);
         

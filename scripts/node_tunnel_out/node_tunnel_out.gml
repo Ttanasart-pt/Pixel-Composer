@@ -18,7 +18,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(32, 32);
 	
-	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) )).rejectArray();
+	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) ))
+		.rejectArray().setAnimable(false);
 	
 	////- =Display
 	newInput(1, nodeValue_EButton( "Label Position", 0, [ "T", "B", "L", "R" ] ));
