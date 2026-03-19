@@ -3493,7 +3493,6 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
     	/// Post outline
-    	
     	draw_set_color(CDEF.main_black);
         draw_rectangle(x0, y0, x0 + ruler_width, y0 + ruler_width, false);
         
@@ -3505,7 +3504,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- DRAW MAIN
     
-    static drawContent = function(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    static drawContent = function(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     	if(__temp_preview != undefined) { 
     		drawTemp(); 
     		if(pHOVER && pFOCUS && mouse_lpress()) __temp_preview = undefined; 
