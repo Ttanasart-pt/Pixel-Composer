@@ -1863,7 +1863,8 @@ function Panel_Animation_Dopesheet() {
         var m    = [msx, msy];
         
         var drw  = ty0 < dopesheet_h + ui(16) && ty1 > -ui(16);
-        var hov  = item_dragging == noone && dopesheet_name_hover && point_in_rectangle(msx, msy, 0, ty0, w - ui(64), ty1);
+        var hov  = item_dragging == noone && point_in_rectangle(msx, msy, 0, ty0, w - side_width, ty1);
+            // hov &= dopesheet_name_hover;
         var foc  = pFOCUS;
         
         ////- =Draw Name
@@ -2709,7 +2710,7 @@ function Panel_Animation_Dopesheet() {
             
             keyframe_selecting_f = _keyframe_selecting_f;
         	keyframe_selecting_l = _keyframe_selecting_l;
-        	
+            
         	////- =Selection & Stagger
 	        if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dopesheet_w, dopesheet_h) && timeline_stretch == 0) { 
 	            if(mouse_rpress(pFOCUS) && key_hover == noone)
