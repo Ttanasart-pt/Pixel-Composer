@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_bmp_encode",
+  "name":"sh_bmp_encode",
+  "parent":{
+    "name":"surface",
+    "path":"folders/functions/surface.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

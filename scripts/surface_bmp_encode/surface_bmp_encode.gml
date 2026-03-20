@@ -6,40 +6,36 @@ function surface_bmp_encode(surface, path, param = {}) {
     var fr = surface_get_format(surface);
     var bs;
     
-    if(fr == surface_rgba8unorm)
-    	bs = buffer_from_surface(surface, false);
-    else {
-    	var s = surface_create(sw, sh, surface_rgba8unorm);
-    	
+	var s = surface_create(sw, sh, surface_rgba8unorm);
+	
+	surface_set_shader(s, sh_bmp_encode);
 	    switch(fr) {
 	    	case surface_rgba4unorm  :
 			case surface_rgba8unorm	 :
 			case surface_rgba16float :
 			case surface_rgba32float :
-		    	surface_set_shader(s, sh_draw_normal);
-					draw_surface_safe(surface);
-				surface_reset_shader();
+		    	shader_set_i("grey", 0);
 				break;
 				
 			case surface_r8unorm	 : 
 			case surface_r16float	 : 
 			case surface_r32float	 : 
-				surface_set_shader(s, sh_draw_single_channel);
-					draw_surface_safe(surface);
-				surface_reset_shader();
+				shader_set_i("grey", 1);
 				break;
 	    }
 	    
-	    bs = buffer_from_surface(s, false);
-	    surface_free(s);
-    }
+		draw_surface_safe(surface);
+	surface_reset_shader();
+    
+    bs = buffer_from_surface(s, false);
+    surface_free(s);
     
     var b  = buffer_create(1, buffer_grow, 1);
     buffer_to_start(b);
     
     // File Header
     buffer_write(b, buffer_text, "BM"); // 2
-    buffer_write(b, buffer_u32,  0);    // 4 size:                          override after [2]
+    buffer_write(b, buffer_u32,  0);    // 4 size:                          override at [2]
     buffer_write(b, buffer_u16,  0);    // 2
     buffer_write(b, buffer_u16,  0);    // 2
     buffer_write(b, buffer_u32, 54);    // 4 image data offset
@@ -47,13 +43,13 @@ function surface_bmp_encode(surface, path, param = {}) {
     // Bitmap Header
     buffer_write(b, buffer_u32,  40);    // 4 header size in bytes
     buffer_write(b, buffer_u32,  sw);    // 4 width
-    buffer_write(b, buffer_s32, -sh);    // 4 height (negative for top down)
+    buffer_write(b, buffer_s32,  sh);    // 4 height (negative for top down)
     buffer_write(b, buffer_u16,   1);    // 2 color plane
     buffer_write(b, buffer_u16,  24);    // 2 bit per pixel
     buffer_write(b, buffer_u32,   0);    // 4 compression
-    buffer_write(b, buffer_u32,   0);    // 4 bitmap size:                   override after [34]
-    buffer_write(b, buffer_u32,  18);    // 4 x resolution (px/meter)?
-    buffer_write(b, buffer_u32,  18);    // 4 y resolution (px/meter)?
+    buffer_write(b, buffer_u32,   0);    // 4 bitmap size:                   override at [34]
+    buffer_write(b, buffer_s32,  18);    // 4 x resolution (px/meter)?
+    buffer_write(b, buffer_s32,  18);    // 4 y resolution (px/meter)?
     buffer_write(b, buffer_u32,   0);    // 4 number of colors
     buffer_write(b, buffer_u32,   0);    // 4 minimum colors
     
@@ -90,6 +86,7 @@ function surface_bmp_encode(surface, path, param = {}) {
     buffer_write_at(b, 34, buffer_u32, bitmap_size);
     
     buffer_save(b, path);
-    buffer_delete(b);
+    buffer_delete(b );
+    buffer_delete(bs);
     return 1;
 }
