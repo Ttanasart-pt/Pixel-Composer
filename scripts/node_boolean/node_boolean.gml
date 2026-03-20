@@ -6,8 +6,6 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	hover_state    = 0;
 	hover_state_to = 0;
 	
-	wd_checkBox = new checkBox( function() { inputs[0].setValue(!getInputData(0)); } );
-	
 	newInput(0, nodeValue_Bool( "Value", false )).setVisible(true, true);
 		
 	////- =Display
@@ -28,12 +26,21 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- Draw
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) {
+	static pointIn = function(_x, _y, _mx, _my, _s, _panel) {
 		var align = getInputData(2);
 		var xx = x * _s + _x;
 		var yy = (y - (!align * 20)) * _s + _y;
 		
-		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + (h + 20) * _s);
+		var x1 = xx + w * _s;
+		var y1 = yy + (h + 20) * _s;
+		
+		var _hov = point_in_rectangle(_mx, _my, xx, yy, x1, y1);
+		if(key_mod_press(ALT) && !_hov && point_in_rectangle(_mx, _my, x1 - 24, y1 - 24, x1 + 24, y1 + 24)) { 
+			_panel.node_hover_type = 1;
+			_hov = true;
+		}
+		
+		return _hov;
 	}
 	
 	static onDrawHover = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
@@ -83,7 +90,22 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var val	 = getInputData(0);
 		var bbox = draw_bbox;
 		
-		wd_checkBox.setFocusHover(_focus, _hover);
-		wd_checkBox.draw(bbox.xc, bbox.yc, val, [ _mx, _my ], bbox.h - 8 * _s, fa_center, fa_center);
+		var x0 = bbox.x0;
+		var y0 = bbox.y0;
+		var x1 = bbox.x1;
+		var y1 = bbox.y1;
+		var ww = bbox.w;
+		var hh = bbox.h;
+		
+		draw_sprite_stretched_ext(THEME.checkbox_def, 0, x0, y0, ww, hh, c_white, 1);
+		
+		if(_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+			draw_sprite_stretched_ext(THEME.checkbox_def, 1, x0, y0, ww, hh, c_white, 1);	
+			if(mouse_lpress(_focus))
+				inputs[0].setValue(!val);
+		}
+		
+		if(val) draw_sprite_stretched_ext(THEME.checkbox_def, 2, x0, y0, ww, hh, COLORS._main_accent, 1);
+		
 	}
 }
