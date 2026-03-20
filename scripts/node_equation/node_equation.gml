@@ -1,5 +1,6 @@
 function Node_create_Equation(_x, _y, _group = noone, _param = {}) {
-	var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
+	var quer  = _param[$ "query"]; 
+	var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 	var node  = new Node_Equation(_x, _y, _group);
 	node.skipDefault();
 	
@@ -18,6 +19,7 @@ function Node_create_Equation(_x, _y, _group = noone, _param = {}) {
 			if(str != "" && str != toNumber(str)) 
 				array_push_unique(vars, str);
 			str = "";
+			
 		} else
 			str += ch;
 	}
@@ -25,8 +27,10 @@ function Node_create_Equation(_x, _y, _group = noone, _param = {}) {
 	if(str != "" && str != toNumber(str)) 
 		array_push_unique(vars, str);
 	
-	for( var i = 0, n = array_length(vars); i < n; i++ )
-		node.inputs[1 + i * 2].setValue(vars[i]);
+	for( var i = 0, n = array_length(vars); i < n; i++ ) {
+		var _inpNam = node.createNewInput();
+		_inpNam.setValue(vars[i]);
+	}
 	
 	return node;
 }
@@ -132,17 +136,14 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Inputs",     true ], 
 	]
 	
-	function createNewInput(index = array_length(inputs)) {
+	function createNewInput(i = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Argument name"))
-			.setDisplay(VALUE_DISPLAY.text_box);
-		
-		newInput(index + 1, nodeValue_Float("Argument value", 0 ))
-			.setVisible(true, true);
+		newInput(i+0, nodeValue_Text(  "Argument name"     )).setDisplay(VALUE_DISPLAY.text_box);
+		newInput(i+1, nodeValue_Float( "Argument value", 0 )).setVisible(true, true);
 							
 		array_push(input_display_list, inAmo, inAmo + 1);
-		return inputs[index + 0];
+		return inputs[i];
 	} 
 	
 	setDynamicInput(2, false);

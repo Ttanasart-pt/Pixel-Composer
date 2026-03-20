@@ -1334,8 +1334,16 @@ event_inherited();
 			draw_text_add(round(search_pane.w / 2), round(search_pane.h / 2 - ui(4)), 
 				__txtx("add_node_equation_enter", "Press Enter to create equation node."));
 			
-			if(hk_editing == noone && KEYBOARD_ENTER)
-				buildNode(ALL_NODES[$ "Node_Equation"], { query: eq } );
+			if(hk_editing == noone && KEYBOARD_ENTER) {
+				var _context = context ?? PANEL_GRAPH.getCurrentContext();
+				var _eqNode  = Node_create_Equation(node_target_x, node_target_y, _context, {
+					query: { type: "alias", value: eq }
+				});
+				
+				instance_destroy();
+				instance_destroy(o_dialog_menubox);
+			}
+				
 			return hh;
 		}
 		
