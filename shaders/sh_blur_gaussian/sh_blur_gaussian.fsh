@@ -63,8 +63,8 @@ uniform vec4 overColor;
 
 uniform int  gamma;
 
-float wgh  = 0.;
-float twgh = 0.;
+float wgh  = 0.00001;
+float twgh = 0.00001;
 
 vec4 sample(in vec2 pos, in float index, in float tsize) {
 	float fr = fract(index);
