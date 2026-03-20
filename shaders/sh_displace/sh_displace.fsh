@@ -311,7 +311,7 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		
 	} else if(mode == 1) { // Vector
 		if(sepAxis == 0)
-			_disp = vec2(disP.r - mid, disP.g - mid) * vec2((disP.r + disP.g + disP.b) / 3. - mid) * str;
+			_disp = vec2(disP.r - mid, disP.g - mid) * str;
 			
 		else if(sepAxis == 1) {
 			vec4  disP2 = texture2Dintp( map2, pos );
