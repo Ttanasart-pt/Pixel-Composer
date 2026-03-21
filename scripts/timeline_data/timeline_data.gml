@@ -235,7 +235,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 }
 
 function timelineItemGroup() : timelineItem() constructor {
-	name          = "";
+	name          = "New folder";
 	timeline_hide = false;
 	contents      = [];
 	

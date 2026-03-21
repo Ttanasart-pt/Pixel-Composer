@@ -1350,13 +1350,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(has(display_data, "default_dir"))
 								_dir = display_data.default_dir();
 							
-							if(_dir == "")
-								_dir = PREFERENCES.dialog_path;
+							if(_dir == "") _dir = PREFERENCES.dialog_path;
 							
 							if(display_data.filter == "dir")
-								_path = get_open_directory_compat("", _dir);
-							else 
-								_path = get_save_filename_compat(display_data.filter, "", "Save as", _dir);
+								 _path = get_open_directory_compat("", _dir);
+							else _path = get_save_filename_compat(display_data.filter, "", "Save as", _dir);
 							key_release();
 							
 							if(_path == "") return noone;

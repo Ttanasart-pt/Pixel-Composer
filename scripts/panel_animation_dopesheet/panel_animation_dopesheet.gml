@@ -230,7 +230,6 @@ function Panel_Animation_Dopesheet() {
         }
         
         function dopesheet_new_folder()        { var _dir = new timelineItemGroup(); PROJECT.timelines.addItem(_dir); }
-        
         function dopesheet_new_folder_select() { 
         	var _dir = new timelineItemGroup(); 
         	PROJECT.timelines.addItem(_dir); 
@@ -2315,6 +2314,16 @@ function Panel_Animation_Dopesheet() {
     	var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_hidden, spr, sid, scc);
     	if(b == 2) show_hidden = !show_hidden;
     	if(b == 3) menuCallGen("animation_header_shy");
+    	bx -= bs + ui(1);
+    	
+    	var sel = !array_empty(PANEL_GRAPH.nodes_selecting);
+    	var spr = THEME.folder;
+    	var txt = sel? __txt("New Folder from Selection") : __txt("New Folder");
+    	var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, txt, spr, 0, COLORS._main_icon);
+    	if(b == 2) {
+    		if(sel) dopesheet_new_folder_select();
+    		else    dopesheet_new_folder();
+    	}
     	bx -= bs + ui(1);
     	
     }
