@@ -36,9 +36,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+ 8, nodeValue_Slider(   "Orthographic Scale",   .5, [ 0.01, 4, 0.01 ]  ));
 	
 	////- =Camera
-	newInput(i+3, nodeValue_EButton(  "Projection",            1 , [ "Perspective", "Orthographic" ] ));
-	newInput(i+0, nodeValue_ISlider(  "FOV",                   60, [ 10, 90, 0.1 ]                   ));
-	newInput(i+1, nodeValue_Vec2(     "Clipping Distance",    [1,10]                                 ));
+	newInput(i+ 3, nodeValue_EButton(  "Projection",            1 , [ "Perspective", "Orthographic", "Custom" ] ));
+	newInput(i+33, nodeValue_Matrix(   "Projection Matrix",    new Matrix(4), { resizeable: false }             ));
+	newInput(i+ 0, nodeValue_ISlider(  "FOV",                   60, [ 10, 90, 0.1 ]                             ));
+	newInput(i+ 1, nodeValue_Vec2(     "Clipping Distance",    [1,10]                                           ));
 	
 	////- =Render
 	newInput(i+32, nodeValue_EButton( "Shader",                0, [ "Inherited", "Phong", "PBR" ] ));
@@ -68,7 +69,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+21, nodeValue_Int(     "Round Normal",          0        )).setWindows();
 	newInput(i+29, nodeValue_Color(   "Backface Blending",     ca_white ));
 	newInput(i+30, nodeValue_Bool(    "Swap View Normal X",    false    ));
-	// inputs i+33
+	// inputs i+34
 	
 	in_cam = array_length(inputs);
 	
@@ -85,7 +86,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	input_display_list = [ i+4,
 		[ "Output",    false ], i+ 2,
 		[ "Transform", false ], i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, i+ 8, 
-		[ "Camera",     true ], i+ 3, i+ 0, i+ 1, 
+		[ "Camera",     true ], i+ 3, i+33, i+ 0, i+ 1, 
 		[ "Render",     true ], i+32, i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
 		[ "Wireframe",  true ], i+23, i+24, i+25, i+26, i+27, i+28, 
 		[ "Ambient Occlusion",  true, i+17],i+20, i+18, i+19, i+31, 
@@ -209,6 +210,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _dist   = _data[in_d3d + 14];
 			
 			var _proj   = _data[in_d3d +  3];
+			var _projMt = _data[in_d3d + 33];
 			var _fov    = _data[in_d3d +  0];
 			var _clip   = _data[in_d3d +  1];
 			var _orts   = _data[in_d3d +  8];
@@ -238,8 +240,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _bckBln = _data[in_d3d + 29];
 			var _nswapX = _data[in_d3d + 30];
 				
-			inputs[in_d3d + 0].setVisible(_proj == 0);
-			inputs[in_d3d + 8].setVisible(_proj == 1);
+			inputs[in_d3d + 33].setVisible(_proj == 2);
+			inputs[in_d3d +  0].setVisible(_proj == 0);
+			inputs[in_d3d +  1].setVisible(_proj != 2);
+			inputs[in_d3d +  8].setVisible(_proj == 1);
 			
 			inputs[0].setVisible(_posm == 0 || _posm == 1);
 			inputs[1].setVisible(_posm == 0);
@@ -254,6 +258,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			inputs[in_d3d + 20].setVisible(_aoEn);
 			
 			inputs[in_d3d + 24].setVisible(_wire != 2);
+			
 		#endregion
 		
 		surface_depth_disable(false);
@@ -315,6 +320,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			object.setMesh();
 			
 			camera.projection = _proj;
+			camera.projectionMatrix = _projMt.raw;
 			camera.setViewFov(_fov, _clip[0], _clip[1]);
 			
 			     if(_proj == CAMERA_PROJECTION.perspective)	camera.setViewSize(_dim[0], _dim[1]);

@@ -1,6 +1,7 @@
 enum CAMERA_PROJECTION {
 	perspective,
-	orthograph
+	orthograph,
+	custom
 }
 
 function __3dCamera() constructor {
@@ -22,6 +23,7 @@ function __3dCamera() constructor {
 	
 	#region view
 		projection = CAMERA_PROJECTION.perspective;
+		projectionMatrix = array_create(16);
 		
 		fov       =  60;
 		view_near = .01;
@@ -62,10 +64,19 @@ function __3dCamera() constructor {
 	}
 	
 	static setMatrix = function() {
-		if(projection == CAMERA_PROJECTION.perspective)
-			projMat.setRaw(matrix_build_projection_perspective_fov(fov, view_aspect, view_near, view_far));
-		else
-			projMat.setRaw(matrix_build_projection_ortho(view_w, view_h, view_near, view_far));
+		switch(projection) {
+			case CAMERA_PROJECTION.perspective : 
+				projMat.setRaw(matrix_build_projection_perspective_fov(fov, view_aspect, view_near, view_far));
+				break;
+			
+			case CAMERA_PROJECTION.orthograph : 
+				projMat.setRaw(matrix_build_projection_ortho(view_w, view_h, view_near, view_far));
+				break;
+				
+			case CAMERA_PROJECTION.custom : 
+				projMat.setRaw(projectionMatrix);
+				break;
+		}
 		
 		if(useFocus)
 			viewMat.setRaw(matrix_build_lookat(position.x, position.y, position.z, focus.x, focus.y, focus.z, up.x, up.y, up.z));

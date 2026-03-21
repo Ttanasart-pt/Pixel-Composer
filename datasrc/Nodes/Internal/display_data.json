@@ -1054,6 +1054,7 @@
             "Node_Matrix_Identity",
             "Node_Matrix_Transform_2D",
             "Node_Matrix_Transform_3D",
+            "Node_Matrix_Projection",
             {"label": "/Getters"},
             "Node_Matrix_Get",
             "Node_Matrix_Get_Vector",
