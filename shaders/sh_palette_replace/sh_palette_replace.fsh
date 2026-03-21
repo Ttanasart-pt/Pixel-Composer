@@ -22,6 +22,9 @@ uniform int		mode;
 uniform int		alphacmp;
 uniform int		hardReplace;
 uniform float	treshold;
+uniform float	hueRan;
+uniform float	satRan;
+uniform float	valRan;
 
 uniform int		replaceOthers;
 uniform vec4	replaceColor;
@@ -74,6 +77,14 @@ uniform vec4	replaceColor;
 float random( in float st  ) { return fract(sin(st * 12.9898 + 53.4856) * (seed + 43758.5453123)); }
 float round(  in float val ) { return fract(val) >= 0.5? ceil(val) : floor(val); }
 
+float compareHSVrand(vec2 st, vec3 hsv1, vec3 hsv2) {
+	float hd = (hsv1.x - hsv2.x) + (random(hsv1.x) - .5) * 2. * hueRan;
+	float sd = (hsv1.y - hsv2.y) + (random(hsv1.y) - .5) * 2. * satRan;
+	float vd = (hsv1.z - hsv2.z) + (random(hsv1.z) - .5) * 2. * valRan;
+	
+	return length(vec3(hd, sd, vd));
+}
+
 void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4 baseColor;
@@ -97,34 +108,51 @@ void main() {
 	if(alphacmp == 1) hsv *= col.a;
 	
 	float min_df = treshold;
-	int min_index = 0;
+	int fr_index = 0;
+	int to_index = 0;
 	
 	for(int i = 0; i < colorFrom_amo; i++) {
 		vec3 hsvFrom = rgb2hsv(colorFrom[i].rgb);
 	
 		float df = length(hsv - hsvFrom);
 		if(df < min_df) {
-			min_df = df;
-			min_index = i;
+			min_df   = df;
+			fr_index = i;
 		}
 	}
 	
-	vec4 clr = vec4(0.);
-	int  ind = int(round(float(min_index) / float(colorFrom_amo - 1) * float(colorTo_amo - 1)));
+	if(mode == 0 || mode == 1) {
+		to_index = int(round(float(fr_index) / float(colorFrom_amo - 1) * float(colorTo_amo - 1)));
+		to_index = colorTo_ind[to_index];
+		
+	} else if(mode == 2) {
+		float min_to = 999999.;
+		vec4  fromClr = colorFrom[fr_index];
+		vec3  fromHsv = rgb2hsv(fromClr.rgb);
+		
+		for(int i = 0; i < colorTo_amo; i++) {
+			vec3 hsvTo = rgb2hsv(colorTo[i].rgb);
+		
+			float df = compareHSVrand(v_vTexcoord, fromHsv, hsvTo);
+			if(df < min_to) {
+				min_to   = df;
+				to_index = i;
+			}
+		}
+		
+	}
 	
-	if(mode == 1) ind = colorTo_ind[ind];
-	clr = colorTo[ind];
+	vec4 clr = colorTo[to_index];
+	gl_FragColor = baseColor;
 	
 	if(min_df < treshold) {
+		gl_FragColor = clr;
 		if(hardReplace == 0) {
 			float rat = min_df / treshold;
 			gl_FragColor = baseColor * (rat) + clr * (1. - rat);
 			
-		} else 
-			gl_FragColor = clr;
-			
-	} else	
-		gl_FragColor = baseColor;
+		}
+	}
 	
 	if(replaceOthers == 0)
 		gl_FragColor.a = col.a;

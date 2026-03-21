@@ -15,10 +15,15 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(2, nodeValue_Palette( "To"   ));
 	
 	////- =Comparison
-	newInput(13, nodeValue_EScroll( "Mode", 0, [ "Closest", "Random" ] ));
-	newInput(14, nodeValueSeed());
+	newInput(13, nodeValue_EScroll( "Mode", 0, [ "Order", "Random", "Closet Color" ] ));
 	newInput( 3, nodeValue_Slider( "Threshold",      .1   ));
 	newInput( 5, nodeValue_Bool(   "Multiply alpha", true ));
+	
+	////- =Randomize
+	newInput(14, nodeValueSeed());
+	newInput(16, nodeValue_Slider( "Hue Randomize", 0, [-2,2,.01] ));
+	newInput(17, nodeValue_Slider( "Sat Randomize", 0, [-2,2,.01] ));
+	newInput(18, nodeValue_Slider( "Val Randomize", 0, [-2,2,.01] ));
 	
 	////- =Replace Others
 	newInput( 4, nodeValue_Bool(  "Replace Other Colors", false    ));
@@ -26,11 +31,13 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Render
 	newInput(6, nodeValue_Bool("Hard replace", true, "Completely override pixel with new color instead of blending between it."));
+	// 19
 	
 	input_display_list = [ 9, 10, 
 		[ "Surfaces",        true    ],  0,  7,  8, 11, 12, 
 		[ "Palettes",       false    ],  1,  2, 
-		[ "Comparison",     false    ], 13, 14,  3,  5, 
+		[ "Comparison",     false    ], 13,  3,  5, 
+		[ "Randomize",      false,   ], 14, 16, 17, 18,
 		[ "Replace Others", false, 4 ], 15, 
 		[ "Render",         false    ],  6
 	];
@@ -50,16 +57,23 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var to   = _data[ 2];
 			
 			var mde  = _data[13];
-			var sed  = _data[14];
 			var tr   = _data[ 3];
 			var alp  = _data[ 5];
+			
+			var sed  = _data[14];
+			var hRan = _data[16];
+			var sRan = _data[17];
+			var vRan = _data[18];
 			
 			var repo = _data[ 4];
 			var oclr = _data[15];
 		
 			var hrd  = _data[ 6];
 			
-			inputs[14].setVisible(mde == 1);
+			inputs[14].setVisible(mde == 1 || mde == 2);
+			inputs[15].setVisible(mde == 2);
+			inputs[16].setVisible(mde == 2);
+			inputs[17].setVisible(mde == 2);
 		#endregion
 		
 		var _colorFrom = paletteToArray(fr);
@@ -82,11 +96,15 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_i( "colorTo_ind",   _shfInd    );
 			shader_set_i( "colorTo_amo",   _amoTo     );
 			
-			shader_set_f( "seed",          sed  );
 			shader_set_i( "mode",          mde  );
 			shader_set_i( "alphacmp",      alp  );
 			shader_set_i( "hardReplace",   hrd  );
 			shader_set_f( "treshold",      tr   );
+			
+			shader_set_f( "seed",          sed  );
+			shader_set_f( "hueRan",        hRan );
+			shader_set_f( "satRan",        sRan );
+			shader_set_f( "valRan",        vRan );
 			
 			shader_set_i( "replaceOthers", repo );
 			shader_set_c( "replaceColor",  oclr );
