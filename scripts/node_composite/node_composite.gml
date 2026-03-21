@@ -1808,8 +1808,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _anc  = _data[_ind + 6];
 			
 			if(!is_surface(_surf)) continue;
-			var _ww = surface_get_width(_surf);
-			var _hh = surface_get_height(_surf);
+			var _ww = surface_get_width_safe(_surf);
+			var _hh = surface_get_height_safe(_surf);
 			
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
