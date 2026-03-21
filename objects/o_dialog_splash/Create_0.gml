@@ -161,6 +161,9 @@ event_inherited();
 		var hh = ui(20);
 		var yy = _y + hh;
 		
+		var _search = sample_search != "";
+		var _serStr = string_lower(sample_search);
+		
 		switch(txt) {
 			case "Welcome Files" : 
 				list = SAMPLE_PROJECTS; 
@@ -233,6 +236,9 @@ event_inherited();
 		
 		for(var i = 0; i < node_count; i++) {
 			var _project = list[i];
+			var _name    = _project.name;
+			if(_search && string_pos(_serStr, string_lower(_name)) == 0) continue;
+			
 			_project.hover_splash = _project[$ "hover_splash"] ?? 0;
 			
 			if(_group_label) {
@@ -345,7 +351,6 @@ event_inherited();
 			
 			var tx    = _boxx + ui(4);
 			var ty    = yy + grid_heigh - ui(4);
-			var _name = _project.name;
 			if(string_digits(string_char_at(_name, 1)) != "") // ???
 				_name = string_copy(_name, string_pos(" ", _name), string_length(_name) - string_pos(" ", _name) + 1);
 			

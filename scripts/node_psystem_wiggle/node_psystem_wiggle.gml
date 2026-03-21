@@ -36,7 +36,6 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(16, nodeValue_Range( "Amplitude", [4,4], true )).setCurvable(22, CURVE_DEF_11, "Over Lifespan").setInternalName("dir_amplitude");
 	newInput(17, nodeValue_Float( "Period",     4 )).setInternalName("dir_period");
 	newInput(18, nodeValue_Float( "Octave",     1 )).setInternalName("dir_octave");
-	
 	// 23
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
@@ -191,8 +190,8 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _dir_mod = _dir_curved? curve_dir.get(rat) : 1;
 				var _dir_cur = random_range(_dir_amp[0], _dir_amp[1]) * _dir_mod * _mask;
 				
-				var _dir = radtodeg(arctan2(_vy, _vx));
-				var _dis = point_distance(0, 0, _vx, _vy);
+				var _dir = point_direction( 0, 0, _vx, _vy );
+				var _dis = point_distance(  0, 0, _vx, _vy );
 				    _dir += wig_dir.getDelta(_seed + _lif) * _dir_cur * _mask;
 				
 				_vx = lengthdir_x( _dis, _dir );
