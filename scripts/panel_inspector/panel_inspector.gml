@@ -1067,17 +1067,27 @@ function Panel_Inspector() : PanelContent() constructor {
             // Mouse interaction
             if(_hover && point_in_rectangle(_m[0], _m[1], _x, yy, _x + con_w, yy + widH)) {
                 _HOVERING_ELEMENT = jun;
+                var wdx = _x + ui(4);
+                var wdy = yy;
+                var wdw = con_w - ui(8);
+                var wdh = widH;
                 
-                var hov = PANEL_GRAPH.value_dragging != noone || (NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun);
+                var hov = PANEL_GRAPH.value_dragging != noone 
+                	|| (NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun)
+                	|| DRAGGING != noone;
                 
                 if(hov) {
-                    draw_sprite_stretched_ext(THEME.ui_panel, 1, _x + ui(4), yy, con_w - ui(8), widH, COLORS._main_value_positive, 1);
-                    if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
+                    draw_sprite_stretched_ext(THEME.ui_panel, 1, wdx, wdy, wdw, wdh, COLORS._main_value_positive, 1);
+                    
+                    if(NODE_DROPPER_TARGET_CAN && mouse_lpress()) {
                         NODE_DROPPER_TARGET.expression += $"{jun.node.internalName}.{jun.connect_type == CONNECT_TYPE.input? "inputs" : "outputs"}.{jun.internalName}";
                         NODE_DROPPER_TARGET.expressionUpdate(); 
                     }
                     
-                } else draw_sprite_stretched_ext(THEME.prop_selecting, 0, _x + ui(4), yy, con_w - ui(8), widH, COLORS._main_accent, 1);
+                    if(DRAGGING != noone && DRAGGING.type == "Globalvar" && mouse_lrelease())
+                    	jun.setExpression(DRAGGING.data);
+                    
+                } else draw_sprite_stretched_ext(THEME.prop_selecting, 0, wdx, wdy, wdw, wdh, COLORS._main_accent, 1);
                 
                 prop_hover = jun;
                     
