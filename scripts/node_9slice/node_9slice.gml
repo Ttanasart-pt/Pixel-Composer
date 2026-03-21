@@ -140,6 +140,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		draw_set_color(COLORS._main_accent);
 		
+		if(hover)
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
 			hovering = true;
 			draw_line_width(sp_r, -hh, sp_r, hh, 3);

@@ -165,7 +165,7 @@ function get_open_filename_compat(ext, fname, caption = "Open", _dir = PREFERENC
 
 function get_open_directory_compat(fname, _dir = PREFERENCES.dialog_path) {
 	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
-	if(_native) return get_directory(fname);
+	if(_native) return get_directory(filename_combine(_dir, fname));
 	
 	var _res = __file_selector("load", _dir, fname, "folder", false);
 	if(!is_struct(_res)) return "";
