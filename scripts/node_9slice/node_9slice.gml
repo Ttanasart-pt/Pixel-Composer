@@ -41,16 +41,6 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	tools = [ new NodeTool( "Preview Original", THEME.bone_tool_scale ) ];
 	
-	static onValueFromUpdate = function(index = 0) {
-		if(index != 0) return;
-		
-		var s = getInputData(0);
-		if(is_array(s)) s = s[0];
-			
-		if(!is_surface(s)) return;
-		inputs[1].setValue( [ surface_get_width_safe(s), surface_get_height_safe(s) ] );
-	}
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
