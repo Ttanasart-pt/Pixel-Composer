@@ -40,10 +40,9 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	color		= COLORS.node_blend_number;
 	draw_pad_w  = 10;
 	always_pad  = true;
-	
 	setDimension(96, 48);
-	ast = [];
 	
+	ast = [];
 	attributes.size = 0;
 	
 	newInput(0, nodeValue_Text( "Equation" ));
@@ -101,6 +100,9 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.getEditWidget().clone(); _jNam.__inspWidget = _wNam;
 			var _wVal = has(_jVal, "__inspWidget")? _jVal.__inspWidget : _jVal.getEditWidget().clone(); _jVal.__inspWidget = _wVal;
+			
+			_wNam.setInteract(_jNam.value_from == noone);
+			_wVal.setInteract(_jVal.value_from == noone);
 			
 			_wNam.setFocusHover(_focus, _hover);
 			_wVal.setFocusHover(_focus, _hover);

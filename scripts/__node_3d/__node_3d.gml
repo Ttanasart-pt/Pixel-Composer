@@ -680,9 +680,9 @@
 							if(drag_prev != undefined) {
 								var _diff = mAdj.subtract(drag_prev);
 								var _dist = _diff.dot(prj);
-									
+								drag_val  = [drag_val[0], drag_val[1], drag_val[2]];
 								drag_val[drag_axis] += _dist;
-									
+								
 								if(node.inputs[index].setValue(drag_val)) 
 									UNDO_HOLDING = true;
 							}
