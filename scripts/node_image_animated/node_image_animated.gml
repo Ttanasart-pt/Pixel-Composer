@@ -44,9 +44,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(11, nodeValue_Bool( "Edit in Timeline",   true  ));
 	
 	////- =Image
-	newInput( 0, nodeValue_Path(        "Path",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
-	newInput( 1, nodeValue_Padding(     "Padding",     [0,0,0,0] )).rejectArray();
-	newInput( 8, nodeValue_Enum_Scroll( "Canvas Size", 2, [ "First", "Minimum", "Maximum" ])).rejectArray();
+	newInput( 0, nodeValue_Path(    "Path",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
+	newInput( 1, nodeValue_Padding( "Padding",     [0,0,0,0] )).rejectArray();
+	newInput( 8, nodeValue_EScroll( "Canvas Size", 2, [ "First", "Minimum", "Maximum" ])).rejectArray();
 	
 	////- =Animation
 	newInput( 5, nodeValue_Trigger( "Set animation length to match" ));

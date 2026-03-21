@@ -3,21 +3,19 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Sequence_Anim(self));
 	
-	newInput(0, nodeValue_Surface("Surface In", []))
-		.setArrayDepth(1);
+	newInput( 0, nodeValue_Surface( "Surface In", [] )).setArrayDepth(1);
 	
-	newInput(1, nodeValue_Float("Speed", 1))
-		.rejectArray();
-		
-	newInput(2, nodeValue_Int("Sequence", []))
-		.setVisible(true, true)
-		.setArrayDepth(1);
-		
-	newInput(3, nodeValue_Enum_Scroll("Overflow",  0, [ "Hold", "Loop", "Ping Pong", "Empty" ]));
+	////- =Frames
+	newInput( 2, nodeValue_Int(     "Sequence", [] )).setVisible(true, true).setArrayDepth(1);
+	newInput( 3, nodeValue_EScroll( "Overflow",  0, [ "Hold", "Loop", "Ping Pong", "Empty" ]));
+	
+	////- =Animation
+	newInput( 1, nodeValue_Float( "Speed", 1 )).rejectArray();
+	// 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	sequence_surface = noone;
+	sequence_surface  = noone;
 	sequence_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _seq = getInputData(0);
 		var _ord = getInputData(2);
@@ -80,19 +78,25 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	});
 	
 	input_display_list = [ 0,
-		["Frames",		false], sequence_renderer, 2, 3, 
-		["Animation",	false], 1, 
+		[ "Frames",    false ], sequence_renderer, 2, 3, 
+		[ "Animation", false ], 1, 
 	];
 	
+	////- Node
+	
 	static update = function(frame = CURRENT_FRAME) {
-		var _sur = getInputData(0);
-		if(!is_array(_sur)) { outputs[0].setValue(_sur); return; }
+		#region data
+			var _sur = getInputData(0);
+			
+			var _seq = getInputData(2);
+			var _ovf = getInputData(3);
+			
+			var _spd = getInputData(1);
+			
+			if(!is_array(_sur)) { outputs[0].setValue(_sur); return; }
+		#endregion
 		
-		var _spd = getInputData(1);
-		var _seq = getInputData(2);
-		var _ovf = getInputData(3);
-		
-		var frm = floor(CURRENT_FRAME / _spd);
+		var frm = floor(CURRENT_FRAME * _spd);
 		var ind = frm;
 		
 		if(array_length(_seq) == 0) {

@@ -12,8 +12,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Slices
 	newInput( 1, nodeValue_Dimension());
-	newInput( 2, nodeValue_Padding(     "Splice",       [0,0,0,0] )).setUnitSimple();
-	newInput( 3, nodeValue_Enum_Scroll( "Filling modes", 0, [ "Scale", "Repeat" ] ));
+	newInput( 2, nodeValue_Padding( "Splice",       [.25,.25,.25,.25] )).setUnitSimple();
+	newInput( 3, nodeValue_EScroll( "Filling modes", 0, [ "Scale", "Repeat" ] ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface,     noone ));
 	newOutput(1, nodeValue_Output("DynaSurf",    VALUE_TYPE.dynaSurface, new nineSliceSurf() ));
@@ -187,12 +187,14 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var _inSurf	= _data[0];
-		var _dim	= _data[1];
-		var _splice	= _data[2];
-		var _fill	= _data[3];
+		#region data
+			var _inSurf	= _data[0];
+			var _dim	= _data[1];
+			var _splice	= _data[2];
+			var _fill	= _data[3];
 		
-		if(!surface_exists(_inSurf)) return _outData;
+			if(!surface_exists(_inSurf)) return _outData;
+		#endregion
 		
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
 		_outData[0]  = _outSurf;
