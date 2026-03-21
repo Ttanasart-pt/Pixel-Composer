@@ -1585,10 +1585,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            var  sn  = !key_mod_press(CTRL) && project.graphGrid.snap;
 	            if(sn) { nw = value_snap(nw, _grd); nh = value_snap(nh, _grd); }
 	            
-	            node_dragging.attributes.node_width   = nw;
-	            node_dragging.attributes.node_height  = nh;
-	            node_dragging.attributes.preview_size = nh;
-	            node_dragging.attributes.resizeManual = true;
+	            if(node_dragging.show_parameter)
+	            	 node_dragging.attributes.node_param_width = nw;
+	            else node_dragging.attributes.node_width       = nw;
+	            
+	            node_dragging.attributes.node_height      = nh;
+	            node_dragging.attributes.preview_size     = nh;
+	            node_dragging.attributes.resizeManual     = true;
 	            node_dragging.setHeight();
 	            
 	            if(mouse_lrelease()) {
