@@ -299,18 +299,19 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var spd  = draw_spd;
 		var _col = getColor();
 		
-		var val  = outputs[0].getValue();
+		var val = outputs[0].getValue();
+		var str = string_real(val);
 		
 		__m[0] = _mx;
 		__m[1] = _my;
 		
-		var bbox = draw_bbox;
 		if(disp == 0 || inputs[0].value_from != noone) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-			draw_text_bbox(bbox, string_real(val));
+			draw_text_bbox(draw_bbox, str);
 			return;
 		}
 		
+		var  bbox = draw_bbox;
 		var _minn = rang[0];
 		var _maxx = rang[1];
 				
@@ -322,9 +323,11 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					slider_value = slider_value == -1? raw : lerp_float(slider_value, raw, 2.5);
 					var _prog = clamp((slider_value - _minn) / (_maxx - _minn), 0., 1.);
 					
-					bbox = draw_bbox;
 					draw_set_text(f_sdf, fa_center, fa_center, _col);
-					draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, string_real(val), _s * 0.5, _s * 0.5, 0);
+					var tbx = bbox.xc;
+					var tby = bbox.y0 + bbox.h / 4;
+					var tbs = min((bbox.w - 8*_s) / string_width(str), (bbox.h / 2 - 8*_s) / string_height(str));
+					draw_text_transformed(tbx, tby, str, tbs, tbs, 0);
 				
 					var sl_w = bbox.w - 8 * _s;
 					var sl_h = _s * 40;
@@ -370,7 +373,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					draw_sprite_stretched_ext(THEME.textbox, _hov || slider_dragging, sl_x0, sl_y0, sl_w, sl_h + 1, _col, 1);
 					
 					draw_set_text(f_sdf, fa_center, fa_center, _col);
-					draw_text_transformed(bbox.xc, bbox.yc + 2, string_real(val), _s * 0.5, _s * 0.5, 0);
+					var tbx = bbox.xc;
+					var tby = bbox.yc;
+					var tbs = min((bbox.w - 8*_s) / string_width(str), (bbox.h - 8*_s) / string_height(str));
+					draw_text_transformed(tbx, tby, str, tbs, tbs, 0);
 					
 				}
 				
@@ -483,8 +489,13 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					draggable = false;
 				}
 				
+				var str = string_real(val, 999, 3);
 				draw_set_text(f_sdf, fa_center, fa_center, _col);
-				draw_text_transformed(bbox.xc, bbox.yc, string_real(val, 999, 3), _s * .5, _s * .5, 0);
+				var tbx = bbox.xc;
+				var tby = bbox.yc;
+				var tbk = min(bbox.w, bbox.h);
+				var tbs = min(tbk / string_width(str), tbk / string_height(str)) * .5;
+				draw_text_transformed(tbx, tby, str, tbs, tbs, 0);
 				break;
 				
 			case 3 :
@@ -514,7 +525,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				draw_set_text(f_sdf, fa_center, fa_center, _col);
-				draw_text_transformed(bbox.xc, bbox.yc, string_real(val), _s * 0.5, _s * 0.5, 0);
+				var tbx = bbox.xc;
+				var tby = bbox.yc;
+				var tbs = min((bbox.w - bw*2 - 16*_s) / string_width(str), (bbox.h - 8*_s) / string_height(str));
+				draw_text_transformed(tbx, tby, str, tbs, tbs, 0);
 				break;
 			
 			case 4 :
@@ -534,7 +548,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				draw_set_text(f_sdf, fa_center, fa_center, _col);
-				draw_text_transformed(bbox.xc - bw / 2, bbox.yc, string_real(val), _s * 0.5, _s * 0.5, 0);
+				var tbx = bbox.xc - bw / 2;
+				var tby = bbox.yc;
+				var tbs = min((bbox.w - bw - 12*_s) / string_width(str), (bbox.h - 8*_s) / string_height(str));
+				draw_text_transformed(tbx, tby, str, tbs, tbs, 0);
 				break;
 				
 		}
