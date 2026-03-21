@@ -186,6 +186,7 @@ function GlobalVarDrawer() constructor {
 			var widHov  = widg[2];
 			var labHov  = widg[3];
             var lb_x    = widg[4];
+            var lb_w    = widg[5];
 			
 			if(labHov) {
 				if(DOUBLE_CLICK) {
@@ -205,7 +206,7 @@ function GlobalVarDrawer() constructor {
             	var wdx = lb_x - pdx / 2;
             	var wdy = yy;
             	
-            	var wdw = ww * .4;
+            	var wdw = clamp(ww * .4, lb_w, ui(200)) - pdx; 
             	var wdh = line_get_height(_font, 4 + viewMode * 2);
             	
             	tb_rename.setFocusHover(focus, hover);

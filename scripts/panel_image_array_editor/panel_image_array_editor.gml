@@ -219,6 +219,8 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		return _h;
 	});
 	
+	sp_content.setToolRect(3);
+	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
@@ -230,16 +232,17 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg,   1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		sp_content.verify(pw, ph);
-		sp_content.setToolRect(3)
     	sp_content.setFocusHover(pFOCUS, pHOVER);
     	sp_content.drawOffset(px, py, mx, my);
     	
+    	var m  = [mx,my];
+    	var bb = THEME.button_hide_fill;
 		var bs = ui(24);
 		var bx = px + pw + ui(8) - bs;
 		var by = py - ui(8);
 		
 		var bc = COLORS._main_value_positive;
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "Add...", THEME.add, 0, bc, 1, .75) == 2) {
+		if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Add...", THEME.add, 0, bc, 1, .75) == 2) {
 			var path = get_open_filenames_compat(FILE_SEL_IMAGE, "");
     		if(path == "") return;
     		
@@ -250,12 +253,12 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		
 		bx -= bs + ui(2);
 		var bc = COLORS._main_icon;
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "Sort by Name", THEME.text, 0, bc, 1, .75) == 2)
+		if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Sort by Name", THEME.text, 0, bc, 1, .75) == 2)
 			sortByName();
 		
 		bx -= bs + ui(2);
 		var bc = COLORS._main_icon;
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "View", THEME.view_mode, viewMode, bc, 1, .75) == 2)
+		if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "View", THEME.view_mode, viewMode, bc, 1, .75) == 2)
 			viewMode = !viewMode;
 		
     	if(pHOVER) {

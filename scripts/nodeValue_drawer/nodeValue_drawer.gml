@@ -204,7 +204,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
 			}
 			
-			return [ lb_h, true, cHov, false, lb_x ];
+			return [ lb_h, true, cHov, false, lb_x, lb_w ];
 		}
 	#endregion
 	
@@ -354,10 +354,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	#endregion
 	
-	if(!is(wid, widget)) return [ lb_h, true, cHov, lbHov, lb_x ];
+	if(!is(wid, widget)) return [ lb_h, true, cHov, lbHov, lb_x, lb_w ];
 	
 	#region draw widget
-		var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
+		var labelWidth = max(lb_w, min(ww * .4, ui(200)));
 		// var labelWidth = min(ww * 0.4, ui(200));
 		
 		var editBoxX   = xx	+ !breakLine * labelWidth;
@@ -370,7 +370,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(jun.expUse) {
 			var expValid = jun.expTree != noone && jun.expTree.validate();
 			var expEdit  = jun.getExpresstionEditor();
-			if(!is(expEdit, widget)) return [ lb_h, true, cHov, lbHov, lb_x ];
+			if(!is(expEdit, widget)) return [ lb_h, true, cHov, lbHov, lb_x, lb_w ];
 			
 			expEdit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 			expEdit.rx = rx;
@@ -453,7 +453,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	#endregion
 	
-	return [ lb_h + _widH, mbRight, cHov, lbHov, lb_x ];
+	return [ lb_h + _widH, mbRight, cHov, lbHov, lb_x, lb_w ];
 }	
 
 function fetchWidgetH(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0, _ID = undefined) { 
