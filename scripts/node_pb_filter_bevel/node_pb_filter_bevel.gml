@@ -1,5 +1,5 @@
 function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Bevel";
+	name = "Pixel Bevel";
 	
 	newInput(0, nodeValue_Surface( "Surface" ));
 	
