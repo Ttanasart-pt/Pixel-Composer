@@ -15,7 +15,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(2, nodeValue_Palette( "To"   ));
 	
 	////- =Comparison
-	newInput(13, nodeValue_Enum_Scroll( "Mode", 0, [ "Closest", "Random" ] ));
+	newInput(13, nodeValue_EScroll( "Mode", 0, [ "Closest", "Random" ] ));
 	newInput(14, nodeValueSeed());
 	newInput( 3, nodeValue_Slider( "Threshold",      .1   ));
 	newInput( 5, nodeValue_Bool(   "Multiply alpha", true ));
@@ -28,11 +28,11 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(6, nodeValue_Bool("Hard replace", true, "Completely override pixel with new color instead of blending between it."));
 	
 	input_display_list = [ 9, 10, 
-		["Surfaces",        true   ], 0, 7, 8, 11, 12, 
-		["Palettes",       false   ], 1, 2, 
-		["Comparison",     false   ], 13, 14, 3, 5, 
-		["Replace Others", false, 4], 15, 
-		["Render",         false   ],  6
+		[ "Surfaces",        true    ],  0,  7,  8, 11, 12, 
+		[ "Palettes",       false    ],  1,  2, 
+		[ "Comparison",     false    ], 13, 14,  3,  5, 
+		[ "Replace Others", false, 4 ], 15, 
+		[ "Render",         false    ],  6
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -44,29 +44,43 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static processData = function(_outSurf, _data, _array_index) {	
 		#region data
 			var surf = _data[ 0];
+			var msk  = _data[ 7];
+			
 			var fr   = _data[ 1];
 			var to   = _data[ 2];
-			var tr   = _data[ 3];
-			var alp  = _data[ 5];
-			var hrd  = _data[ 6];
-			var msk  = _data[ 7];
+			
 			var mde  = _data[13];
 			var sed  = _data[14];
+			var tr   = _data[ 3];
+			var alp  = _data[ 5];
 			
 			var repo = _data[ 4];
 			var oclr = _data[15];
 		
+			var hrd  = _data[ 6];
+			
 			inputs[14].setVisible(mde == 1);
 		#endregion
 		
 		var _colorFrom = paletteToArray(fr);
 		var _colorTo   = paletteToArray(to);
+		var _amoFrom   = array_length(fr)
+		var _amoTo     = array_length(to)
+		
+		var _shfInd    = array_create_ext(_amoTo, function(i) /*=>*/ {return i});
+		
+		if(mde == 1) {
+			random_set_seed(sed);
+			_shfInd = array_shuffle(_shfInd);
+		}
 		
 		surface_set_shader(_outSurf, sh_palette_replace);
-			shader_set_f( "colorFrom",     _colorFrom       );
-			shader_set_i( "colorFrom_amo", array_length(fr) );
-			shader_set_f( "colorTo",       _colorTo         );
-			shader_set_i( "colorTo_amo",   array_length(to) );
+			shader_set_f( "colorFrom",     _colorFrom );
+			shader_set_i( "colorFrom_amo", _amoFrom   );
+			
+			shader_set_f( "colorTo",       _colorTo   );
+			shader_set_i( "colorTo_ind",   _shfInd    );
+			shader_set_i( "colorTo_amo",   _amoTo     );
 			
 			shader_set_f( "seed",          sed  );
 			shader_set_i( "mode",          mde  );

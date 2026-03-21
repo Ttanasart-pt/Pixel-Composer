@@ -11,8 +11,10 @@ uniform sampler2D mask;
 #endif
 uniform vec4	colorFrom[PALETTE_LIMIT];
 uniform int		colorFrom_amo;
-uniform vec4	colorTo[PALETTE_LIMIT];
-uniform int		colorTo_amo;
+
+uniform vec4    colorTo[PALETTE_LIMIT];
+uniform int     colorTo_ind[PALETTE_LIMIT];
+uniform int     colorTo_amo;
 
 uniform float   seed;
 uniform int		mode;
@@ -108,9 +110,10 @@ void main() {
 	}
 	
 	vec4 clr = vec4(0.);
+	int  ind = int(round(float(min_index) / float(colorFrom_amo - 1) * float(colorTo_amo - 1)));
 	
-		 if(mode == 0) clr = colorTo[int(round(float(min_index) / float(colorFrom_amo - 1) * float(colorTo_amo - 1)))];
-	else if(mode == 1) clr = colorTo[int(round(random(float(min_index)) * float(colorTo_amo - 1)))];
+	if(mode == 1) ind = colorTo_ind[ind];
+	clr = colorTo[ind];
 	
 	if(min_df < treshold) {
 		if(hardReplace == 0) {
