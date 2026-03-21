@@ -1896,7 +1896,9 @@ function Panel_Preference() : PanelContent() constructor {
     #endregion
     
     #region Search
-    	tb_search = textBox_Text(function(str) /*=>*/ { search_text = str; }).setFont(f_p2).setAlign(fa_left).setEmpty().setAutoupdate();
+    	tb_search = textBox_Text(function(str) /*=>*/ { search_text = str; })
+    		.setFont(f_p2).setAlign(fa_left).setEmpty().setAutoupdate()
+    		.setLabelExt(__txt("Search" + "..."), THEME.search).setClearable();
     	
     	search_text = "";
     	contents    = {};
@@ -1943,7 +1945,6 @@ function Panel_Preference() : PanelContent() constructor {
 	    
     	tb_search.setFocusHover(pFOCUS, pHOVER);
     	tb_search.draw(tbx, tby, tbw, tbh, search_text, [ mx, my ]);
-    	draw_sprite_ui(THEME.search, 0, tbx + tbw - tbh/2, tby + tbh/2, .75, .75, 0, COLORS._main_icon, .5);
     	
     	sp_page.verify(page_width - padding, panel_height - padding - ui(32));
     	sp_page.setFocusHover(pFOCUS, pHOVER);

@@ -15,25 +15,25 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Position
 	newInput( 3, nodeValue_Bool(  "Use Wiggle", 0 )).setInternalName("pos_use");
-	newInput( 4, nodeValue_Range( "Amplitude", [0,0], true )).setCurvable(19, CURVE_DEF_11, "Over Lifespan").setInternalName("pos_amplitude");
+	newInput( 4, nodeValue_Range( "Amplitude", [4,4], true )).setCurvable(19, CURVE_DEF_11, "Over Lifespan").setInternalName("pos_amplitude");
 	newInput( 5, nodeValue_Float( "Period",     4 )).setInternalName("pos_period");
 	newInput( 6, nodeValue_Float( "Octave",     1 )).setInternalName("pos_octave");
 	
 	////- =Rotation
 	newInput( 7, nodeValue_Bool(  "Use Wiggle", 0 )).setInternalName("rot_use");
-	newInput( 8, nodeValue_Range( "Amplitude", [0,0], true )).setCurvable(20, CURVE_DEF_11, "Over Lifespan").setInternalName("rot_amplitude");
+	newInput( 8, nodeValue_Range( "Amplitude", [4,4], true )).setCurvable(20, CURVE_DEF_11, "Over Lifespan").setInternalName("rot_amplitude");
 	newInput( 9, nodeValue_Float( "Period",     4 )).setInternalName("rot_period");
 	newInput(10, nodeValue_Float( "Octave",     1 )).setInternalName("rot_octave");
 	
 	////- =Scale
 	newInput(11, nodeValue_Bool(  "Use Wiggle", 0 )).setInternalName("sca_use");
-	newInput(12, nodeValue_Range( "Amplitude", [0,0], true )).setCurvable(21, CURVE_DEF_11, "Over Lifespan").setInternalName("sca_amplitude");
+	newInput(12, nodeValue_Range( "Amplitude", [4,4], true )).setCurvable(21, CURVE_DEF_11, "Over Lifespan").setInternalName("sca_amplitude");
 	newInput(13, nodeValue_Float( "Period",     4 )).setInternalName("sca_period");
 	newInput(14, nodeValue_Float( "Octave",     1 )).setInternalName("sca_octave");
 	
 	////- =Direction
 	newInput(15, nodeValue_Bool(  "Use Wiggle", 0 )).setInternalName("dir_use");
-	newInput(16, nodeValue_Range( "Amplitude", [0,0], true )).setCurvable(22, CURVE_DEF_11, "Over Lifespan").setInternalName("dir_amplitude");
+	newInput(16, nodeValue_Range( "Amplitude", [4,4], true )).setCurvable(22, CURVE_DEF_11, "Over Lifespan").setInternalName("dir_amplitude");
 	newInput(17, nodeValue_Float( "Period",     4 )).setInternalName("dir_period");
 	newInput(18, nodeValue_Float( "Octave",     1 )).setInternalName("dir_octave");
 	

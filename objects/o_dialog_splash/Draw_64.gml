@@ -6,7 +6,7 @@ if !ready exit;
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 #endregion
 
-#region content
+#region header
 	var icx = dialog_x + ui(56);
 	var icy = dialog_y + ui(56);
 	draw_sprite_ui_uniform(THEME.icon_64, 0, icx, icy);
@@ -35,18 +35,19 @@ if !ready exit;
 		dialogPanelCall(new Panel_Preference());
 	
 	bx -= bs + ui(4);
-	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREFERENCES.show_splash) == 2) {
+	var bc = THEME.icon_splash_show_on_start;
+	var bi = PREFERENCES.show_splash;
+	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, __txt("Show on startup"), bc, bi) == 2) {
 		PREFERENCES.show_splash = !PREFERENCES.show_splash;
 		PREF_SAVE();
 	}
-	
+#endregion
+
+#region recent
 	var x0 = dialog_x + ui(16);
 	var x1 = x0 + recent_width;
 	var y0 = dialog_y + ui(128);
 	var y1 = dialog_y + dialog_h - ui(16);
-	
-	draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text_sub);
-	draw_text(x0, y0 - ui(4), __txt("Recent files"));
 	
 	sp_recent.setFocusHover(sFOCUS, sHOVER);
 	sp_recent.rx = x0 + ui(6);
@@ -89,24 +90,41 @@ if !ready exit;
 	bx -= bs + ui(1);
 	cc  = COLORS._main_icon;
 	txt = __txtx("splash_show_thumbnail", "Toggle thumbnail");
-	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, txt, THEME.image_20, PREFERENCES.splash_show_thumbnail, cc, 1, .8) == 2) {
+	var bi = PREFERENCES.splash_show_thumbnail;
+	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, txt, THEME.image_20, bi, cc, 1, .8) == 2) {
 		PREFERENCES.splash_show_thumbnail = !PREFERENCES.splash_show_thumbnail;
 		PREF_SAVE();
 	}
 	
+	var tbw = bx - ui(4) - x0;
+	var tbh = bs - ui(4);
+	var tbx = x0;
+	var tby = by + ui(2);
+	tb_recent_search.setFocusHover(sFOCUS, sHOVER);
+	tb_recent_search.drawParam(new widgetParam(tbx, tby, tbw, tbh, recent_search).setFont(f_p2));
+
 	var expandAction = false;
 	var expand = PREFERENCES.splash_expand_recent;
 	
 	switch(pages[project_page]) {
 		case "Welcome Files" :
 		case "Workshop" :
-			if(buttonInstant(THEME.button_hide_fill, x1, (y0 + y1) / 2 - ui(32), ui(16), ui(32), mouse_ui, sHOVER, sFOCUS,, THEME.arrow, expand? 2 : 0) == 2) {
+			var bx = x1;
+			var by = (y0 + y1) / 2 - ui(32);
+			var bw = ui(16);
+			var bh = ui(32);
+			
+			var bb = THEME.button_hide_fill;
+			
+			if(buttonInstant(bb, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, "", THEME.arrow, expand? 2 : 0) == 2) {
 				PREFERENCES.splash_expand_recent = !PREFERENCES.splash_expand_recent;
 				expandAction = true;
 			}
 			break;
 	}
-	
+#endregion
+
+#region content
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	bx = x0;
@@ -210,6 +228,7 @@ if !ready exit;
 	var bs = ui(32);
 	var bx = x1 - ui(32);
 	var by = y0 - ui(36);
+	var bb = THEME.button_hide_fill;
 	
 	switch(pages[project_page]) {
 		case "Welcome Files" :
@@ -217,21 +236,33 @@ if !ready exit;
 			sp_sample.draw(x0 + ui(6), y0 + 1);
 			
 			var _txt = __txt("Open Welcome Folder...");
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.dPath_open) == 2)
+			if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.dPath_open) == 2)
 				shellOpenExplorer($"{DIRECTORY}Welcome files");
 			
-			// bx -= bs + ui(4);
-			// var _txt = __txt("Edit Welcome Folders");
-			// var _bc  = welcome_editing? COLORS._main_value_positive : COLORS._main_icon;
-			// if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.gear, 0, _bc) == 2)
-			// 	welcome_editing = !welcome_editing;
-				
 			if(STEAM_ENABLED) {
 				bx -= bs + ui(4);
 				var _txt = __txtx("workshop_open", "Open Steam Workshop");
-				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
+				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
 					dialogPanelCall(new Panel_Steam_Workshop());
 					instance_destroy();
+				}
+			}
+			
+			if(tb_sample_seaching) {
+				var tbw = ui(160);
+				var tbh = bs - ui(4);
+				var tbx = bx - ui(4) - tbw;
+				var tby = by + ui(2);
+			
+				tb_sample_search.setFocusHover(sFOCUS, sHOVER);
+				tb_sample_search.drawParam(new widgetParam(tbx, tby, tbw, tbh, sample_search).setFont(f_p2));
+				
+			} else {
+				bx -= bs + ui(4);
+				var _txt = __txtx("workshop_open", "Open Steam Workshop");
+				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.search_24) == 2) {
+					tb_sample_seaching = true;
+					tb_sample_search.activate();
 				}
 			}
 			break;
@@ -240,12 +271,12 @@ if !ready exit;
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
 			
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_icon) == 2)
+			if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_icon) == 2)
 				steamUCGload();
 				
 			bx -= bs + ui(4);
 			var _txt = __txtx("workshop_open", "Open Steam Workshop");
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
+			if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
 				dialogPanelCall(new Panel_Steam_Workshop());
 				instance_destroy();
 			}

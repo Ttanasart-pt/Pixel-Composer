@@ -37,6 +37,16 @@ event_inherited();
 	
 	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		
+		var spw = sp_recent.surface_w;
+		var sph = sp_recent.surface_h;
+		
+		var hover = sp_recent.hover;
+		var focus = sp_recent.active;
+		
+		var rx = sp_recent.rx;
+		var ry = sp_recent.ry;
+		
 		var expand = PREFERENCES.splash_expand_recent;
 		var ww  = ui(264);
 		var hh	= ui(8);
@@ -44,83 +54,92 @@ event_inherited();
 		var hgt	= ui(14) + line_get_height(f_p0b) + line_get_height(f_p2);
 		_y += pad;
 		
-		var _thumb = PREFERENCES.splash_show_thumbnail;
-		var col = expand? 2 : 1;
-		var row = ceil(ds_list_size(RECENT_FILES) / col);
-		var hg  = _thumb? ui(100) : hgt;
+		var _search = recent_search != "";
+		var _serStr = string_lower(recent_search);
+		var _thumb  = PREFERENCES.splash_show_thumbnail;
 		
-		for(var i = 0; i < row; i++) {
-			var _drw = _y > -(hg + pad) && _y < sp_recent.surface_h;
+		var amo  = ds_list_size(RECENT_FILES);
+		var col  = expand? 2 : 1;
+		var dind = 0;
+		var hg   = _thumb? ui(100) : hgt;
+		var lbh  = line_get_height(f_p0b) + line_get_height(f_p2);
+		var xx, yy;
+		
+		for( var i = 0; i < amo; i++ ) {
+			var _rec = RECENT_FILES[| i];
+			var _dat = RECENT_FILE_DATA[| i];
+			if(!file_exists_empty(_rec)) continue;
+			if(_search && string_pos(_serStr, string_lower(_rec)) == 0) continue;
 			
-			if(_drw)
-			for(var j = 0; j < col; j++) {
-				var ind  = i * col + j;
-				if(ind >= ds_list_size(RECENT_FILES)) break;
+			var r = floor(dind / col);
+			var c = dind % col;
+			dind++;
 			
-				var _rec = RECENT_FILES[| ind];
-				var _dat = RECENT_FILE_DATA[| ind];
-				if(!file_exists_empty(_rec)) continue;
+			xx = c * (ww + ui(8));
+			hh = r * (hg + pad);
+			yy = _y + hh;
 			
-				var thmb = _thumb? _dat.getThumbnail() : noone;
-				var fx   = j * (ww + ui(8));
+			var _drw = yy > -(hg + pad) && yy < sph;
+			if(!_drw) continue;
+			
+			var thmb = _thumb? _dat.getThumbnail() : noone;
+			var _hov = hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg);
+			
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, xx, yy, ww, hg);
+			if(thmb) {
+				var sw = surface_get_width_safe(thmb);
+				var sh = surface_get_height_safe(thmb);
 				
-				var _hov = sp_recent.hover && point_in_rectangle(_m[0], _m[1], fx, _y, fx + ww, _y + hg);
+				var ss = (ww - ui(8)) / sw;
+				var sy = (((sh * ss) - hg) * clamp((yy + hg) / (sph + hg), 0, 1)) / ss;
 				
-				draw_sprite_stretched(THEME.ui_panel_bg, 1, fx, _y, ww, hg);
-				if(thmb) {
-					var sw = surface_get_width_safe(thmb);
-					var sh = surface_get_height_safe(thmb);
-					
-					var ss = (ww - ui(8)) / sw;
-					var sy = (((sh * ss) - hg) * clamp((_y + hg) / (sp_recent.h + hg), 0, 1)) / ss;
-					
-					draw_surface_part_ext(thmb, 0, sy, sw, (hg - ui(8)) / ss, fx + ui(4), _y + ui(4), ss, ss, COLORS._main_icon_light, 0.9);
-					draw_sprite_stretched_ext(s_fade_up, 0, fx + ui(4), _y + hg - ui(64), ww - ui(8), ui(64), COLORS._main_icon_dark, 1);
-				}
-			
-				if(_hov) {
-					sp_recent.hover_content = true;
-					if(!instance_exists(o_dialog_menubox)) {
-						if(!_thumb) TOOLTIP = new tooltipRecentFile(_rec, sp_recent.rx + fx, sp_recent.ry + _y + hg - hgt, ww, hg);
-						else        TOOLTIP = _dat.path;
-					}
-					
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, fx, _y, ww, hg, COLORS._main_accent, 1);
-					
-					if(mouse_lpress(sFOCUS)) {
-						LOAD_PATH(_rec);
-						instance_destroy();
-						
-					} else if(mouse_rpress(sFOCUS)) {
-						menuCall("splash_recent", [
-							menuItem(__txt("Load File"), function(_rec) /*=>*/ { LOAD_PATH(_rec); instance_destroy(); }).setParam(_rec),
-							menuItem(__txt("Load in Safe Mode"), function(_rec) /*=>*/ { LOAD_PATH(_rec, false, true); instance_destroy(); }).setParam(_rec),
-							-1, 
-							menuItem(__txt("Open in Explorer"), function(_rec) /*=>*/ {return shellOpenExplorer(filename_dir(_rec))}).setParam(_rec),
-						]);
-					}
-				}
-			
-				var ly = _thumb? _y + hg - (line_get_height(f_p0b) + line_get_height(f_p2)) - ui(8) : _y + ui(6);
-				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_inner);
-				draw_text(fx + ui(12), ly, filename_name_only(_rec));
-			
-				ly += line_get_height() + ui(2);
-				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-				
-				var _scis = gpu_get_scissor();
-				gpu_set_scissor(fx + ui(12), ly, ww - ui(24), ui(999));
-				draw_text_add(fx + ui(12), ly, _rec);
-				gpu_set_scissor(_scis);
+				draw_surface_part_ext(thmb, 0, sy, sw, (hg - ui(8)) / ss, xx + ui(4), yy + ui(4), ss, ss, COLORS._main_icon_light, 0.9);
+				draw_sprite_stretched_ext(s_fade_up, 0, xx + ui(4), yy + hg - ui(64), ww - ui(8), ui(64), COLORS._main_icon_dark, 1);
 			}
+		
+			if(_hov) {
+				sp_recent.hover_content = true;
+				if(!instance_exists(o_dialog_menubox)) {
+					if(!_thumb) TOOLTIP = new tooltipRecentFile(_rec, rx + xx, ry + yy + hg - hgt, ww, hg);
+					else        TOOLTIP = _dat.path;
+				}
+				
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hg, COLORS._main_accent, 1);
+				
+				if(mouse_lpress(focus)) {
+					LOAD_PATH(_rec);
+					instance_destroy();
+					
+				} else if(mouse_rpress(focus)) {
+					menuCall("splash_recent", [
+						menuItem(__txt("Load File"), function(_rec) /*=>*/ { LOAD_PATH(_rec); instance_destroy(); }).setParam(_rec),
+						menuItem(__txt("Load in Safe Mode"), function(_rec) /*=>*/ { LOAD_PATH(_rec, false, true); instance_destroy(); }).setParam(_rec),
+						-1, 
+						menuItem(__txt("Open in Explorer"), function(_rec) /*=>*/ {return shellOpenExplorer(filename_dir(_rec))}).setParam(_rec),
+					]);
+				}
+			}
+		
+			var ly = _thumb? yy + hg - lbh - ui(8) : yy + ui(6);
+			draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_inner);
+			draw_text(xx + ui(12), ly, filename_name_only(_rec));
+		
+			ly += line_get_height() + ui(2);
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			
-			hh += hg + pad;
-			_y += hg + pad;
+			var _scis = gpu_get_scissor();
+			gpu_set_scissor(xx + ui(12), ly, ww - ui(24), ui(999));
+			draw_text_add(xx + ui(12), ly, _rec);
+			gpu_set_scissor(_scis);
 		}
 		
-		return hh;
+		return hh + hg;
 	});
 	sp_recent.always_scroll = false;
+	
+	tb_recent_search = textBox_Text(function(t) /*=>*/ { recent_search = t; }).setAutoUpdate()
+		.setEmpty().setClearable().setLabelExt(__txt("Recent files"), THEME.search);
+	recent_search = "";
 #endregion
 
 #region sample projects
@@ -405,6 +424,11 @@ event_inherited();
 		return hh + ui(20);
 	});
 	sp_sample.always_scroll = false;
+	
+	tb_sample_seaching = false;
+	tb_sample_search   = textBox_Text(function(t) /*=>*/ { sample_search = t; }).setAutoUpdate()
+		.setEmpty().setClearable().setLabelExt(__txt("Search" + "..."), THEME.search);
+	sample_search = "";
 #endregion
 
 #region contest

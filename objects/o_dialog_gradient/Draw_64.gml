@@ -119,7 +119,6 @@ draggable = true;
 	draw_sprite_stretched_ext(THEME.textbox, 1, _px, _py, _pw, ui(24), COLORS._main_icon);
 	tb_palette_search.setFocusHover(sFOCUS, sHOVER);
 	tb_palette_search.draw(_px, _py, _pw, ui(24), palette_search_string);
-	draw_sprite_ui(THEME.search, 0, _px + ui(12), _py + ui(12), .75, .75, 0, COLORS._main_icon, .5);
 	
 	sp_palettes.setFocusHover(sFOCUS, sHOVER);
 	sp_palettes.verify(_pw, dialog_h - ui(72 + 24));

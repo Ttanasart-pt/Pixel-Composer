@@ -15,7 +15,8 @@ function Panel_Action_Manager() : PanelContent() constructor {
 	rawNodes         = [];
 		
 	search_string = "";
-	tb_search     = textBox_Text(function(t) /*=>*/ { search_string = t; }).setEmpty().setAutoupdate().setFont(f_p3);
+	tb_search     = textBox_Text(function(t) /*=>*/ { search_string = t; }).setEmpty().setAutoupdate().setFont(f_p3)
+		.setLabelExt(__txt("Search" + "..."), THEME.search).setClearable();
 	
 	node_categories = [ "None" ];
 	cat_value       = [ noone ];
@@ -385,7 +386,6 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		
 		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.draw(tx, ty, tw, th, search_string, [mx,my]);
-		draw_sprite_ui(THEME.search, 0, tx + tw - th/2, ty + th/2, .75, .75, 0, COLORS._main_icon, .5);
 		
 		ndy += bs + ui(4);
 		ndh -= bs + ui(4);

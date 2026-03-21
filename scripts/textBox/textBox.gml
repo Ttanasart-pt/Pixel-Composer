@@ -67,12 +67,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	#region label
 		label           = "";
-		labelColor      = COLORS._main_text_sub;
+		labelColor      = COLORS._main_text;
 		labelSpr        = noone;
 		labelSprIndex   = 0;
 		labelAlign      = fa_left;
 		highlight_color = -1; 
 		highlight_alpha = 1;
+		
+		labelIcon       = undefined;
 	#endregion
 	
 	#region text data
@@ -157,9 +159,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setAlign      = function(_v) /*=>*/ { align       = _v;    return self; }
 	static setVAlign     = function(_v) /*=>*/ { yalign      = _v;    return self; }
 	static setFont       = function(_v) /*=>*/ { font        = _v;    return self; }
+	static setLabelAlign = function(_v) /*=>*/ { labelAlign  = _v;    return self; }
+	static setLabelExt   = function(l,s)/*=>*/ { label = l; labelSpr = s; return self; }
 	static setLabel      = function(_v) /*=>*/ { label       = _v;    return self; }
 	static setLabelColor = function(_v) /*=>*/ { labelColor  = _v;    return self; }
-	static setLabelAlign = function(_v) /*=>*/ { labelAlign  = _v;    return self; }
+	static setLabelIcon  = function(_v) /*=>*/ { labelSpr    = _v;    return self; }
 	static setTooltip    = function(_t) /*=>*/ { tooltip     = _t;    return self; }
 	
 	static setPrecision  = function(_v) /*=>*/ { precision   = _v;    return self; }
@@ -596,6 +600,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		w = _w;
 		h = _h;
 		
+		var lpad = padding;
+		var rpad = padding;
+		
 		hovering = false;
 		if(shake_amount != 0) {
 			_x += irandom_range(-shake_amount, shake_amount); 
@@ -670,6 +677,26 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			_w  -= _bs;
 		}
 		
+		if(labelSpr != noone) {
+			var lbx = labelAlign == fa_left? _x : _x + _w;
+			var lby = _y + _h / 2;
+			
+			var lbs = (_h - ui(6)) / sprite_get_height(labelSpr);
+			var lbt = labelAlign == fa_left? _h/2 : -_h/2;
+			
+			lbx += lbt;
+			draw_sprite_ui(labelSpr, labelSprIndex, lbx, lby, lbs, lbs, 0, labelColor, .5);
+			lbx += lbt;
+			
+			_w -= lbt * 2;
+			if(labelAlign == fa_left) {
+				_x += lbt * 2;
+				lpad = 0;
+				
+			} else 
+				rpad = 0;
+		}
+		
 		if(format == TEXT_AREA_FORMAT.password) {
 			var hov = hover && point_in_rectangle(_m[0], _m[1], _bx, _by, _bx + _bs, _by + _bs);
 			var cc  = hov ? COLORS._main_icon_light : COLORS._main_icon;
@@ -691,19 +718,19 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		_text         = string_real(_text);
 		_current_text = _text;
 		
-		var tb_surf_x = _x + padding;
+		var tb_surf_x = _x + lpad;
 		var tb_surf_y = _y;
 		
 		var tx = _x;
 		switch(align) {
-			case fa_left   : tx = _x + padding;      break;
-			case fa_center : tx = _x + _w / 2;       break;
-			case fa_right  : tx = _x + _w - padding; break;
+			case fa_left   : tx = _x + lpad;      break;
+			case fa_center : tx = _x + _w / 2;    break;
+			case fa_right  : tx = _x + _w - rpad; break;
 		}
 		
 		if(drawText) {
-			_update = _update || !surface_valid(text_surface, _w - padding * 2, _h);
-			if(_update) text_surface = surface_verify(text_surface, _w - padding * 2, _h);
+			_update = _update || !surface_valid(text_surface, _w - lpad - rpad, _h);
+			if(_update) text_surface = surface_verify(text_surface, _w - lpad - rpad, _h);
 		}
 		
 		////- Draw
@@ -732,18 +759,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 			draw_sprite_ui_uniform(THEME.arrow, 2, _ax0, _ay, 1, COLORS._main_accent, 1);
 			draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
+		} 
 		
-		} else if(label != "") {
+		if(_raw_text == "" && label != "") {
+			var lbx = labelAlign == fa_left? _x : _x + _w;
+			var lby = _y + _h / 2;
 			
-			draw_set_text(f_p4, labelAlign, fa_center, labelColor);
-			
-			draw_set_alpha(0.5);
-			draw_text_add(labelAlign == fa_left? _x + ui(4) : _x + _w - ui(4), _y + _h / 2, label);
+			draw_set_text(font, labelAlign, fa_center, labelColor, .5);
+			draw_text_add(lbx, lby, label);
 			draw_set_alpha(1);
-			
-		} else if(labelSpr != noone) {
-			var _ix = labelAlign == fa_left? _x + _h / 2 : _x + _w - _h / 2;
-			draw_sprite_ext(labelSpr, labelSprIndex, _ix, _y + _h / 2, 1, 1, 0, labelColor, 1);
 		}
 			
 		var _dpx = disp_x;	
@@ -947,10 +971,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				cursor_pos_to = disp_x + tx + c_w + p_w;
 				if(cursor_pos_to < _x) 
-					disp_x_to += _w - padding * 2;
+					disp_x_to += _w - lpad - rpad;
 					
-				if(cursor_pos_to > _x + _w - padding * 2)  
-					disp_x_to -= _w - padding * 2;
+				if(cursor_pos_to > _x + _w - lpad - rpad)  
+					disp_x_to -= _w - lpad - rpad;
 				
 				cursor_pos_y = c_y0;
 				cursor_pos   = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 3);

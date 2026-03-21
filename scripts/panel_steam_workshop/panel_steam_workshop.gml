@@ -124,7 +124,8 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			search_string = s; 
 			filterFiles(); 
 			
-		}).setAutoUpdate().setEmpty().setAlign(fa_left).setVAlign(fa_center);
+		}).setAutoUpdate().setEmpty().setAlign(fa_left).setVAlign(fa_center)
+			.setLabelExt(__txt("Search" + "..."), THEME.search).setClearable();
 		
 		page_goto = undefined;
 	#endregion
@@ -2960,22 +2961,8 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				.setFocusHover(pFOCUS, pHOVER)
 				.setFont(f_p2);
 				
-			tb_search.setBoxColor(search_string == ""? c_white : COLORS._main_accent).drawParam(_param);
-			
-			if(search_string == "")
-				draw_sprite_ui(THEME.search, 0, x0 + ui(16), yc, 1, 1, 0, COLORS._main_icon);
-			else {
-				var _cx  = x0 + ww - ui(16);
-				var _hov = pHOVER && point_in_circle(mx, my, _cx, yc, hh / 2);
-				
-				draw_sprite_ui(THEME.cross_16, 0, _cx, yc, 1, 1, 0, _hov? COLORS._main_icon_light : COLORS._main_icon);
-				
-				if(_hov && mouse_lpress(pFOCUS)) {
-					tb_search.deactivate();
-					search_string = ""; 
-					filterFiles();	
-				}
-			}
+			tb_search.setBoxColor(search_string == ""? c_white : COLORS._main_accent);
+			tb_search.drawParam(_param);
 			
 			if(author_search_id != undefined) {
 				var _aut  = STEAM_WORKSHOP_DATA.account[$ author_search_id];
