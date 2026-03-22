@@ -43,7 +43,6 @@ function KeyDriver_Linear(_speed = 1) : KeyDriver() constructor {
 	speed = _speed;
 	
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
-		var _dt  = _time - _key.time;
 		var _val = _value ?? _key.value;
 		var _res = _val;
 		
@@ -83,7 +82,6 @@ function KeyDriver_Wiggle(_seed = seed_random(6), _octave = 2, _frequency = 4, _
 	smooth    = 0;
 	
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
-		var _dt  = _time - _key.time;
 		var _val = _value ?? _key.value;
 		var _res = _val;
 		
@@ -144,7 +142,6 @@ function KeyDriver_Sine(_frequency = 4, _amplitude = 1, _phase = 0) : KeyDriver(
 	smooth    = 0;
 	
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
-		var _dt   = _time - _key.time;
 		var _val  = _value ?? _key.value;
 		var _res  = _val;
 		var _node = _key.anim.node;
@@ -199,7 +196,6 @@ function KeyDriver_Snap() : KeyDriver() constructor {
 	snapSize  = 1;
 	
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
-		var _dt   = _time - _key.time;
 		var _val  = _value ?? _key.value;
 		var _res  = _val;
 		var _node = _key.anim.node;
@@ -280,7 +276,6 @@ function KeyDriver_Bounce(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDri
 		var _v0 = _key.value;
 		if(_keyNext == undefined) return _v0;
 		
-		var _dt   = _time - _key.time;
 		var _val  = _value ?? _key.value;
 		var _res  = _val;
 		var _ease = _anim.interpolate(_key, _keyNext, _ratio);
@@ -373,7 +368,6 @@ function KeyDriver_Elastic(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDr
 		var _v0 = _key.value;
 		if(_keyNext == undefined) return _v0;
 		
-		var _dt   = _time - _key.time;
 		var _val  = _value ?? _key.value;
 		var _res  = _val;
 		var _ease = _anim.interpolate(_key, _keyNext, _ratio);

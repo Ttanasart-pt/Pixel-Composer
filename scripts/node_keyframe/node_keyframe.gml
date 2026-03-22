@@ -271,8 +271,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				
 				var prog = NODE_TOTAL_FRAMES - fTime + _time;
 				var totl = NODE_TOTAL_FRAMES - fTime + tTime;
+				var rat  = prog / totl;
 				
-				return lerpValue(from, to, prog / totl);
+				if(from.driverObject)
+					return from.driverObject.apply(_time, from, to, lerpValue(from, to, rat), rat, self);
+					
+				return lerpValue(from, to, rat);
 			}
 			
 			return processType(values[0].value); //First frame
@@ -283,17 +287,21 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(_keyIndex >= length) {
 			var _lstKey = values[length - 1];
 			
-			if(_lstKey.driverObject)
-				return _lstKey.driverObject.apply(_time, _lstKey);
-			
 			if(prop.on_end == KEYFRAME_END.wrap) {
 				var from = _lstKey;
 				var to   = values[0];
 				var prog = _time - from.time;
 				var totl = NODE_TOTAL_FRAMES - from.time + to.time;
+				var rat  = prog / totl;
 				
-				return lerpValue(from, to, prog / totl);
+				if(from.driverObject)
+					return from.driverObject.apply(_time, from, to, lerpValue(from, to, rat), rat, self);
+					
+				return lerpValue(from, to, rat);
 			}
+			
+			if(_lstKey.driverObject)
+				return _lstKey.driverObject.apply(_time, _lstKey);
 			
 			return processType(_lstKey.value); //Last frame
 		}
