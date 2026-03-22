@@ -85,6 +85,9 @@ function Panel_Custom_Element(_data) constructor {
 		
 		for( var i = 0, n = array_length(contents); i < n; i++ )
 			contents[i].checkMouse(panel, _m);
+			
+		if(is(panel, Panel_Custom_Editor))
+			array_push(panel.snapPoints, [ pbBox, [x, y, x + w, y + h] ]);
 	}
 	
 	////- Draw

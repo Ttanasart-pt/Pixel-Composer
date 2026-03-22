@@ -40,18 +40,23 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	
 	if(type == CONNECT_TYPE.input)
 		junc_selector = Simple_Editor("Input", new scrollBoxFn(function() /*=>*/ {return getInputs()}, 
-			function(i) /*=>*/ { setJunction(juncInList[i]); } ), function() /*=>*/ {return junction? junction.name : ""}, function(n) /*=>*/ { setJunction(n); });
+			function(i) /*=>*/ { setJunction(juncInList[i]); } ), 
+			function( ) /*=>*/ {return junction? junction.name : ""}, 
+			function(n) /*=>*/ { setJunction(n); });
 	else 
 		junc_selector = Simple_Editor("Output", new scrollBoxFn(function() /*=>*/ {return getOutputs()}, 
-			function(i) /*=>*/ { setJunction(juncOutList[i]); } ), function() /*=>*/ {return junction? junction.name : ""}, function(n) /*=>*/ { setJunction(n); });
+			function(i) /*=>*/ { setJunction(juncOutList[i]); } ), 
+			function( ) /*=>*/ {return junction? junction.name : ""}, 
+			function(n) /*=>*/ { setJunction(n); });
 	
 	glob_selector = Simple_Editor("Globalvar", new scrollBoxFn(function() /*=>*/ {return getGlobals()}, 
 		function(i) /*=>*/ { globalkey = globalList[i] } ), function() /*=>*/ {return globalkey}, function(n) /*=>*/ { globalkey = n; });
 
+	currScrollItem = new scrollItem("", THEME.node_junctions_single, 0, c_white);
+
 	static draw = function(wdx, wdy, wdw, wdh, _m, foc, hov, rx, ry) {
 		if(mode == "node") {
 			getJunction();
-			
 			var scw = wdw / 2 - ui(4);
 			
 			var _data  = node_scroll.getter();
@@ -59,7 +64,7 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 			node_scroll.editWidget.setFocusHover(foc, hov);
 			node_scroll.editWidget.drawParam(_param);
 			
-			var _data  = junc_selector.getter();
+			var _data  = junction? junction.name : "";
 			var _param = new widgetParam(wdx + scw + ui(4), wdy, scw, wdh, _data, undefined, _m, rx, ry).setFont(f_p4);
 			junc_selector.editWidget.setFocusHover(foc, hov);
 			junc_selector.editWidget.drawParam(_param);
@@ -137,7 +142,7 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		for( var i = 0, n = array_length(node.outputs); i < n; i++ ) {
 			var _juncOut = node.outputs[i];
 			juncOutList[i]     = _juncOut;
-			juncOutListName[i] = _juncOut.name;
+			juncOutListName[i] = new scrollItem(_juncOut.name, THEME.node_junctions_single, _juncOut.type, c_white);
 		}
 		
 		return juncOutListName;
@@ -153,7 +158,7 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
 			var _juncIn = node.inputs[i];
 			juncInList[i]     = _juncIn;
-			juncInListName[i] = _juncIn.name;
+			juncInListName[i] = new scrollItem(_juncIn.name, THEME.node_junctions_single, _juncIn.type, c_white);
 		}
 		
 		return juncInListName;

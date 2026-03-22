@@ -72,6 +72,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		minw = editor_toolbar_width_l + editor_toolbar_width_r + ui(320);
 		minh = ui(320);
+		
+		snapPoints = [];
 	#endregion
 	
 	#region ---- preview ----
@@ -418,6 +420,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		hovering_scroll   = undefined;
 		hovering_element  = undefined;
 		hover_preview     = false;
+		snapPoints        = [];
 		
 		#region panels
 			var pd = ui(8);
@@ -621,8 +624,9 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			draw_set_color(COLORS._main_accent);
 			
 			if(element_selecting.draggable) {
-				var _hv = element_selecting.pbBox.drawOverlay(pHOVER, pFOCUS, dx0, dy0, 1, mx, my);
+				var _hv = element_selecting.pbBox.drawOverlay(pHOVER, pFOCUS, dx0, dy0, 1, mx, my, undefined, snapPoints);
 				if(_hv) hovering_element = element_selecting;
+				
 			} else 
 				draw_sprite_stretched_ext(THEME.box_r2, 1, ex, ey, ew, eh, COLORS._main_accent);
 			

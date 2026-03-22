@@ -344,11 +344,11 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					slider_surface = surface_verify(slider_surface, sl_w, sl_h);
 					
 					surface_set_shader(slider_surface, sh_ui_slider);
-						shader_set_color("c0", c0);
-						shader_set_color("c1", c1);
-						shader_set_dim("dimension", slider_surface);
-						shader_set_f("mouseProg", animation_curve_eval(ac_ripple, slider_m));
-						shader_set_f("prog", clamp(_prog, 0.1, 0.9));
+						shader_set_c(   "c0", c0 );
+						shader_set_c(   "c1", c1 );
+						shader_set_dim( "dimension", slider_surface);
+						shader_set_f(   "mouseProg", animation_curve_eval(ac_ripple, slider_m));
+						shader_set_f(   "prog",      clamp(_prog, 0.1, 0.9));
 						
 						draw_sprite_stretched(s_fx_pixel, 0, 0, 0, sl_w, sl_h);
 					surface_reset_shader();
