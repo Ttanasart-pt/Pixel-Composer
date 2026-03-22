@@ -7,11 +7,9 @@ function Panel_Custom(_data = undefined) : PanelContent() constructor {
 	project = undefined;
 	data    = undefined;
 	
-	_hovering_frame = undefined;
-	 hovering_frame = undefined;
-	
-	_hovering_element = undefined;
-	 hovering_element = undefined;
+	_hovering_frame   = undefined; hovering_frame   = undefined;
+	_hovering_scroll  = undefined; hovering_scroll  = undefined;
+	_hovering_element = undefined; hovering_element = undefined;
 	
 	function setData(_data) {
 		if(_data == undefined) return;
@@ -34,11 +32,13 @@ function Panel_Custom(_data = undefined) : PanelContent() constructor {
 		if(!data) return;
 		if(!project || !project.active) { close(); return; }
 		
-		_hovering_frame    = hovering_frame;
-		_hovering_element  = hovering_element;
+		_hovering_frame   = hovering_frame;
+		_hovering_scroll  = hovering_scroll;
+		_hovering_element = hovering_element;
 		
-		hovering_frame   = undefined;
-		hovering_element = undefined;
+		hovering_frame    = undefined;
+		hovering_scroll   = undefined;
+		hovering_element  = undefined;
 		
 		title = data.name;
 		data.setSize(x, y, w, h);

@@ -75,6 +75,7 @@ function Panel_Custom_Element(_data) constructor {
 			
 			if(is_container || key_mod_press(CTRL)) 
 				panel.hovering_frame = self;
+			
 		}
 		
 		for( var i = 0, n = array_length(contents); i < n; i++ )

@@ -81,6 +81,8 @@ function Panel_Custom_Frame_Scroll(_data) : Panel_Custom_Frame(_data) constructo
 			
 			if(is_container || key_mod_press(CTRL)) 
 				panel.hovering_frame = self;
+				
+			panel.hovering_scroll = self;
 		}
 		
 		for( var i = 0, n = array_length(contents); i < n; i++ ) {
@@ -88,7 +90,7 @@ function Panel_Custom_Frame_Scroll(_data) : Panel_Custom_Frame(_data) constructo
 			contents[i].checkMouse(panel, _m);
 		}
 		
-		if(elementHover && MOUSE_WHEEL != 0)
+		if(panel._hovering_scroll == self && MOUSE_WHEEL != 0)
 			scroll_y_to = clamp(scroll_y_to - MOUSE_WHEEL * ui(32), 0, scroll_y_max);
 	}
 	
@@ -116,14 +118,41 @@ function Panel_Custom_Frame_Scroll(_data) : Panel_Custom_Frame(_data) constructo
 			
 		if(!show_all) gpu_set_scissor(scis);
 		
-		if(scroll_pad > 0) {
+		if(scroll_pad > 0 && content_h > h) {
 			var scrx = x + w - scroll_pad;
-			var scry = y;
-			var scrh = content_h - h;
-			var scrProg  = scroll_y / h;
-			var scrRatio = content_h / (content_h + h);
+			var scrw = scroll_pad;
 			
-			draw_scroll(scrx, scry, true, scrh, scrProg, scrRatio, _m[0], _m[1], scroll_pad);
+			var barh = h * h / content_h;
+			var bary = y + scroll_y / scroll_y_max * (h - barh);
+			
+			if(is_scrolling) {
+				var delta   = _m[1] - scroll_ms;
+				scroll_ms   = _m[1];
+				scroll_y_to = clamp(scroll_y_to + (delta / barh) * h, 0, scroll_y_max);
+				
+				if(mouse_lrelease())
+					is_scrolling = false;
+			}
+			
+			if(scroll_color_bg != undefined) 
+				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scrx, y, scrw, h, scroll_color_bg, 1);
+			
+			var cc = scroll_color_bar;
+			if(elementHover && point_in_rectangle(_m[0], _m[1], scrx - 2, y - 2, scrx + scrw + 2, y + h + 2)) {
+				cc = scroll_color_bar_hover;
+				
+				if(mouse_lpress(focus)) {
+					is_scrolling = true;
+					scroll_ms    = _m[1];
+				}
+			}
+			
+			var by0 = clamp(bary,        y, y + h);
+			var by1 = clamp(bary + barh, y, y + h);
+			var hh  = by1 - by0;
+			
+			if(is_scrolling) cc = scroll_color_bar_active;
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scrx, by0, scrw, hh, cc, scroll_color_bar_alpha);
 		}
 	}
 	
@@ -140,66 +169,6 @@ function Panel_Custom_Frame_Scroll(_data) : Panel_Custom_Frame(_data) constructo
 			contents[i].drawBox(panel);
 			
 		if(!show_all) gpu_set_scissor(scis);
-	}
-	
-	static draw_scroll = function(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_ratio, mx, my, bar_spr_w) {
-		var scr_scale_s = scr_s * scr_ratio;
-		var scr_prog_s  = scr_prog * (scr_s - scr_scale_s);
-		var scr_w, scr_h, bar_w, bar_h, bar_x, bar_y;
-		
-		if(is_vert) {
-			scr_w	= bar_spr_w;
-			scr_h	= scr_s;
-			
-			bar_w	= bar_spr_w;
-			bar_h   = scr_scale_s;
-			
-			bar_x	= scr_x;
-			bar_y	= scr_y + scr_prog_s;
-		} else {
-			scr_w	= scr_s;
-			scr_h	= bar_spr_w;
-			
-			bar_w	= scr_scale_s;
-			bar_h   = bar_spr_w;
-			
-			bar_x	= scr_x + scr_prog_s;
-			bar_y	= scr_y;
-		}
-		
-		if(is_scrolling) {
-			var delta   = (is_vert? my : mx) - scroll_ms;
-			scroll_ms   = is_vert? my : mx;
-			scroll_y_to = clamp(scroll_y_to + (delta / scr_scale_s) * scr_s, 0, scroll_y_max);
-			
-			if(mouse_release(mb_left))
-				is_scrolling = false;
-		}
-		
-		var bx0 = clamp(bar_x,         scr_x, scr_x + scr_w);
-		var bx1 = clamp(bar_x + bar_w, scr_x, scr_x + scr_w);
-		var ww = bx1 - bx0;
-		
-		var by0 = clamp(bar_y,         scr_y, scr_y + scr_h);
-		var by1 = clamp(bar_y + bar_h, scr_y, scr_y + scr_h);
-		var hh = by1 - by0;
-		
-		if(scroll_color_bg != undefined) 
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h, scroll_color_bg, 1);
-		
-		var cc = scroll_color_bar;
-		
-		if(elementHover && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2)) {
-			cc = scroll_color_bar_hover;
-			
-			if(mouse_press(mb_left, focus)) {
-				is_scrolling = true;
-				scroll_ms    = is_vert? my : mx;
-			}
-		}
-		
-		if(is_scrolling) cc = scroll_color_bar_active;
-		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bx0, by0, ww, hh, cc, scroll_color_bar_alpha);
 	}
 	
 	////- Serialize

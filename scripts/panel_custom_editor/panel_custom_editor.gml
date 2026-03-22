@@ -46,13 +46,11 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		drag_mx   = 0;
 		drag_my   = 0;
 		
-		hovering_frame    = undefined;
-		_hovering_frame   = undefined;
-		hovering_element  = undefined;
-		_hovering_element = undefined;
+		_hovering_frame   = undefined; hovering_frame   = undefined; 
+	    _hovering_scroll  = undefined; hovering_scroll  = undefined;
+		_hovering_element = undefined; hovering_element = undefined; 
 		
-		_HOVER_WIDGET = undefined;
-		 HOVER_WIDGET = undefined;
+		_HOVER_WIDGET = undefined; HOVER_WIDGET = undefined;
 	#endregion
 	
 	#region ---- outline ----
@@ -412,12 +410,14 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		if(!data) return;
 		title = $"{data.name} [Edit]";
 		
-		_hovering_frame    = hovering_frame;
-		_hovering_element  = hovering_element;
+		_hovering_frame   = hovering_frame;
+		_hovering_scroll  = hovering_scroll;
+		_hovering_element = hovering_element;
 		
-		hovering_frame   = undefined;
-		hovering_element = undefined;
-		hover_preview    = false;
+		hovering_frame    = undefined;
+		hovering_scroll   = undefined;
+		hovering_element  = undefined;
+		hover_preview     = false;
 		
 		#region panels
 			var pd = ui(8);

@@ -43,6 +43,9 @@ function Panel_Custom_Frame_Stack(_data) : Panel_Custom_Frame(_data) constructor
 		var sp = split_spac_frac? split_spac * (axis == 0? w : h) : split_spac;
 		var fs = fixSize_frac?    fixSize    * (axis == 0? w : h) : fixSize;
 		
+		var ww = 0;
+		var hh = 0;
+		
 		for( var i = 0, n = array_length(contents); i < n; i++ ) {
 			var  con  = contents[i];
 			var _bbox = con.pbBox.getBBOX(bbox);
@@ -57,9 +60,15 @@ function Panel_Custom_Frame_Stack(_data) : Panel_Custom_Frame(_data) constructor
 			con.pbBox.fixed_box = [_bx, _by, _bx+_bw, _by+_bh];
 			con.setSize(bbox, _rx, _ry);
 			
-			if(axis == 0) xx += _bw + sp;
-			if(axis == 1) yy += _bh + sp;
+			if(axis == 0) { xx += _bw + sp; ww += _bw + sp; }
+			if(axis == 1) { yy += _bh + sp; hh += _bh + sp; }
 		}
+		
+		// ww = max(ww, w);
+		// hh = max(hh, h);
+		
+		// if(axis == 0) pbBox.set_w(ww);
+		// if(axis == 1) pbBox.set_h(hh);
 	}
 	
 	////- Serialize
