@@ -197,17 +197,7 @@
         } ).setMenu("graph_auto_organize", THEME.obj_auto_organize);
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
-        registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ {
-        	var _dupe = false;
-        	with(o_dialog_panel) {
-        		if(instanceof(content) == "Panel_Graph_Selector") {
-        			instance_destroy();
-        			_dupe = true;
-        		}
-        	}
-        	
-        	if(!_dupe) PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); 
-        } ).setMenu("graph_node_selector", THEME.node_selector);
+        registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); } ).setMenu("graph_node_selector", THEME.node_selector);
         	
         registerFunction(g, "Node Multiplier...",    "",  n, function() /*=>*/ { 
         	if(array_empty(PANEL_GRAPH.nodes_selecting)) return;
@@ -737,7 +727,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     #region // ++++ toolbars ++++
 	    function subDialogCall(_dia) {
-	    	dialogPanelCall(_dia, x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
+	    	var _type = instanceof(_dia);
+    		var _dupe = false;
+        	with(o_dialog_panel) {
+        		if(instanceof(content) != _type) continue;
+    			instance_destroy();
+    			_dupe = true;
+        	}
+        	if(_dupe) return;
+        	
+        	dialogPanelCall(_dia, x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
 	    }
 	    
         hk_editing = noone;

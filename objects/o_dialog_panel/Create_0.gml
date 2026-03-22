@@ -15,8 +15,8 @@ event_inherited();
 	content		 = noone;
 #endregion
 	
-function setContent(content) {
-	self.content = content;
+function setContent(_content) {
+	content      = _content;
 	context_str  = content.context_str;
 	
 	if(struct_has(content, "title_height"))

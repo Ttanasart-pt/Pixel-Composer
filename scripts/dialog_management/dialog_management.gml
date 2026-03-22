@@ -19,6 +19,8 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 }
 
 function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
+	if(DIALOG_JUST_CLOSED == instanceof(_panel)) return;
+	
 	if(_x == noone) _x = WIN_SW / 2;
 	if(_y == noone) _y = WIN_SH / 2;
 	

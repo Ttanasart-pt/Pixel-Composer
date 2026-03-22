@@ -1,0 +1,1 @@
+DIALOG_JUST_CLOSED = instanceof(content);

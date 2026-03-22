@@ -1542,13 +1542,13 @@ function Panel_Inspector() : PanelContent() constructor {
                     break;
                     
                 case "panels":
+                	var gw    = contentPane.surface_w - ui(24);
+                	var bb    = THEME.button_hide;
                 	var _pans = PROJECT.customPanels;
                 	var _ph   = ui(24);
-                	var pbw   = ui(96);
+                	var pbw   = gw * .5 - _ph * 2 - ui(2 + 4);
                 	var toDel = undefined;
                 	var pbx, pby, pbh;
-                	
-                	var bb = THEME.button_hide;
                 	
                 	for( var j = 0, m = array_length(_pans); j < m; j++ ) {
                 		var _p = _pans[j];

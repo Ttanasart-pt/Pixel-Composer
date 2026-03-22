@@ -39,13 +39,13 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 				.setFont(_font);
 			
 			var _inter = is(panel, Panel_Custom);
+			    
 			input.getEditWidget().setInteract(_inter);
 			input.getEditWidget().setFocusHover(_inter && focus, _inter && elementHover);
 			input.getEditWidget().drawParam(_param);
 			
-		} else {
+		} else
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, x, y, w, h);
-		}
 		
 	}
 	

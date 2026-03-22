@@ -56,6 +56,8 @@ gml_pragma("UnityBuild", "true");
 	globalvar TOOLTIP; TOOLTIP             = "";
 	globalvar DRAGGING; DRAGGING            = noone;
 	globalvar DIALOG_DEPTH_HOVER; DIALOG_DEPTH_HOVER  = 0;
+	globalvar DIALOG_JUST_CLOSED; DIALOG_JUST_CLOSED  = "";
+	
 	globalvar DOWNLOAD_LINKS; DOWNLOAD_LINKS      = "";
 	
 	globalvar CURRENT_COLOR; CURRENT_COLOR       = ca_white;
