@@ -76,7 +76,6 @@ function __pbBox() constructor {
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _node = undefined) {
 		static snap_dist = 8;
 		
-		if(fixed_box != 0) return;
 		var _bbox = getBBOX();
 		var _hov  = false;
 		
@@ -89,6 +88,7 @@ function __pbBox() constructor {
 	
 		draw_set_color(COLORS._main_accent);
 		draw_rectangle(_x0, _y0, _x1, _y1, true);
+		if(fixed_box != 0) return;
 		
 		if(drag_anchor == noone) {
 			     if(hover && point_in_circle(_mx, _my, _x0, _y0, 12)) { _h0 = 1; if(mouse_lpress(active)) drag_anchor = 0; } 

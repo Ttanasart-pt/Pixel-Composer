@@ -66,6 +66,11 @@ function Panel_Custom_Element(_data) constructor {
 			contents[i].setSize(bbox, _rx, _ry);
 	}
 	
+	static updateParentSize = function() {
+		if(parent == undefined) return;
+		parent.updateParentSize();
+	}
+	
 	static checkMouse = function(panel, _m) {
 		elementHover = panel._hovering_element == self;
 		

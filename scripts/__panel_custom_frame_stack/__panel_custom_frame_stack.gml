@@ -64,11 +64,10 @@ function Panel_Custom_Frame_Stack(_data) : Panel_Custom_Frame(_data) constructor
 			if(axis == 1) { yy += _bh + sp; hh += _bh + sp; }
 		}
 		
-		// ww = max(ww, w);
-		// hh = max(hh, h);
+		if(axis == 0) w = max(ww, w);
+		if(axis == 1) h = max(hh, h);
 		
-		// if(axis == 0) pbBox.set_w(ww);
-		// if(axis == 1) pbBox.set_h(hh);
+		// updateParentSize();
 	}
 	
 	////- Serialize

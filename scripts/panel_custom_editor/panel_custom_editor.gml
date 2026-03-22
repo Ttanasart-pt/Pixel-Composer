@@ -204,7 +204,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 					
 					outline_drag.parent = outline_drag_frame;
 					
-				} else {
+				} else if(hovering_element.parent) {
 					var _ind = array_find(hovering_element.parent.contents, hovering_element) + outline_drag_side;
 				    if(outline_drag.parent == hovering_element.parent) {
 				    	var _cind = array_find(hovering_element.parent.contents, outline_drag);

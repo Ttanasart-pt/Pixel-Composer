@@ -722,7 +722,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var currSec = "";
         var padd    = ui(6);
         
-        var con_ww  = con_w - ui(20);
+        var con_ww  = con_w - ui(12);
         var rrx     = ui(16) + x;
         var rry     = top_bar_h + y;
         
@@ -1012,8 +1012,8 @@ function Panel_Inspector() : PanelContent() constructor {
             	if(jun.latest_height != undefined)
             		_draw = yy + ui(8) < con_h && yy + jun.latest_height > -ui(8);
             	
-                var widg    = _draw? drawWidget(   _x + ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry ) : 
-                                     fetchWidgetH( _x + ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry );
+                var widg    = _draw? drawWidget(   _x + ui(8), yy, con_ww, _m, jun, 0, _hover, _focus, contentPane, rrx, rry ) : 
+                                     fetchWidgetH( _x + ui(8), yy, con_ww, _m, jun, 0, _hover, _focus, contentPane, rrx, rry );
                 var widH    = widg[0];
                 var mbRight = widg[1];
                 var widHov  = widg[2];
@@ -1608,9 +1608,9 @@ function Panel_Inspector() : PanelContent() constructor {
                     if(_m[1] > yy) contentPane.hover_content = true;
                     if(array_empty(PROJECT.globalNode.inputs)) break;
                     
-					var gx = ui(16);
+					var gx = ui(8);
 					var gy = yy;
-					var gw = contentPane.surface_w - ui(24);
+					var gw = contentPane.surface_w - ui(8 + 8);
 					
 					var rx = ui(16) + x;
 					var ry = top_bar_h + y;
@@ -1654,7 +1654,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var _fv = _favs[j];
 						if(!is(_fv, NodeValue) || !_fv.node.active) continue;
 						
-						var widg = drawWidget(ui(16), yy, con_ww, _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
+						var widg = drawWidget(0, yy, con_ww, _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
                 		var widH = widg[0];
                 		
 	                    yy += widH + ui(6);

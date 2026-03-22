@@ -49,8 +49,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#region left buttons
 		var bs   = _viewSpac? ui(20) : ui(15);
 		var ics  = _viewSpac? .9 : .75;
-		var butx = xx;
-		var lb_x = xx + bs;
+		var butx = xx + bs/2;
+		var lb_x = xx + bs/2 + bs;
 		
 		draw_set_font(_font);
 		var ds_w = jun.node.inspector_pad_label ?? string_width(dispName);

@@ -11,6 +11,7 @@ title = content.title;
 var p = ui(8);
 var m_in = point_in_rectangle(mouse_mxs, mouse_mys, dialog_x + p, dialog_y + p, dialog_x + dialog_w - p, dialog_y + dialog_h - p);
 var m_ot = point_in_rectangle(mouse_mxs, mouse_mys, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
+var m_task = mouse_mys <= dialog_y + title_height;
 
 DIALOG_DRAW_BG
 
@@ -24,8 +25,8 @@ if(!is_undefined(content) && content != noone) { // content
 	
 	content.onStepBegin();
 	
-	content.pFOCUS = sFOCUS && m_in;
-	content.pHOVER = sHOVER && m_in;
+	content.pFOCUS = sFOCUS && m_in && !m_task;
+	content.pHOVER = sHOVER && m_in && !m_task;
 	
 	panel = surface_verify(panel, dialog_w - content.showHeader * padding * 2, 
 								  dialog_h - content.showHeader * (padding * 2 + title_height));
