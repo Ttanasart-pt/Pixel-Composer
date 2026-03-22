@@ -26,6 +26,7 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 	color  = COLORS._main_icon_light;
 	direct = 0;
 	range  = [0,1];
+	vstep  = 0;
 	
 	dragging = false;
 	dragg_ss = 0;
@@ -39,6 +40,7 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 		[ "Sliding", false ], 
 		Simple_Editor("Axis", new scrollBox( [ "Horizontal", "Vertical" ], function(t) /*=>*/ { direct = t; } ), function() /*=>*/ {return direct}, function(t) /*=>*/ { direct = t; }), 
 		Simple_Editor("Slide Range", new rangeBox( function(v,i) /*=>*/ { range[i] = v; } ), function() /*=>*/ {return range}, function(v) /*=>*/ { range = v; }), 
+		Simple_Editor("Slide Step",  textBox_Number( function(v) /*=>*/ { vstep = v; } ),    function() /*=>*/ {return vstep}, function(v) /*=>*/ { vstep = v; }), 
 		
 		[ "Display", false ], 
 		Simple_Editor("Style", new scrollBox( [ "Blob", "Flat" ], function(t) /*=>*/ { style = t; } ), function() /*=>*/ {return style}, function(t) /*=>*/ { style = t; }), 
@@ -165,6 +167,8 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 			else            val = dragg_ss + (_m[1] - dragg_mm) / sh * (range[1] - range[0]);
 			    
 		    val = clamp(val, range[0], range[1]);
+		    if(vstep != 0) val = value_snap(val, vstep);
+		    
 			if(input_junc && input_junc.setValue(val))
 				UNDO_HOLDING = true;
 			
@@ -183,6 +187,7 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 		_m.color  = color;
 		_m.direct = direct;
 		_m.range  = range;
+		_m.vstep  = vstep;
 		
 		_m.bind  = bind_input.serialize(_m);
 		_m.slot  = slot_output.serialize(_m);
@@ -200,6 +205,7 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 		color  = _m[$ "color"]  ?? color;
 		direct = _m[$ "direct"] ?? direct;
 		range  = _m[$ "range"]  ?? range;
+		vstep  = _m[$ "vstep"]  ?? vstep;
 		
 		bind_input.deserialize(_m.bind);
 		if(has(_m, "slot"))  slot_output.deserialize(_m.slot);

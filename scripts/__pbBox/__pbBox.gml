@@ -121,7 +121,8 @@ function __pbBox() constructor {
 		var yy1 = base_bbox[3], dy1 = _y + yy1 * _s;
 		var _ww = xx1 - xx0;
 		var _hh = yy1 - yy0;
-		
+		var sx0, sy0, sx1, sy1;
+
 		var _mdx = (_mx - drag_anchor_mx) / _s;
 		var _mdy = (_my - drag_anchor_my) / _s;
 		
@@ -145,71 +146,83 @@ function __pbBox() constructor {
 			
 			draw_set_alpha(.75);
 			
-			if(_snapPoints != undefined) {
-				for( var i = -1, n = array_length(_snapPoints); i < n; i++ ) {
-					if(i == -1) {
-						var sx0 = xx0;
-						var sy0 = yy0;
-						var sx1 = xx1;
-						var sy1 = yy1;
-						
-					} else {
-						var _snap = _snapPoints[i];
-						if(_snap[0] == self) continue;
-						
-						var sx0 = _snap[1][0];
-						var sy0 = _snap[1][1];
-						var sx1 = _snap[1][2];
-						var sy1 = _snap[1][3];
-					}
+			var n = _snapPoints == undefined? 0 : array_length(_snapPoints);
+			for( var i = -1; i < n; i++ ) {
+				if(i == -1) {
+					sx0 = xx0; sy0 = yy0;
+					sx1 = xx1; sy1 = yy1;
 					
-					// snap x
-					draw_set_color(COLORS._main_icon);
-					if(abs(_bl - sx0) < snap_dist) { 
-						_bl = sx0; _br = _bl + _bw; 
-						draw_line_width(_x + _bl * _s, dy0, _x + _bl * _s, dy1, 1);
-						
-					} else if(abs(_br - sx1) < snap_dist) { 
-						_br = sx1; _bl = _br - _bw; 
-						draw_line_width(_x + _br * _s, dy0, _x + _br * _s, dy1, 1);
-					}
-					
-					// snap y
-					if(abs(_bt - sy0) < snap_dist) { 
-						_bt = sy0; _bb = _bt + _bh; 
-						draw_line_width(dx0, _y + _bt * _s, dx1, _y + _bt * _s, 1);
-						
-					} else if(abs(_bb - sy1) < snap_dist) { 
-						_bb = sy1; _bt = _bb - _bh; 
-						draw_line_width(dx0, _y + _bb * _s, dx1, _y + _bb * _s, 1);
-					}
-					
-					// snap cx
-					draw_set_color(COLORS._main_accent);
-					var cx = (sx0 + sx1) / 2;
-					if(abs((_bl + _br) / 2 - cx) < snap_dist) { 
-						_bl = round(cx - _bw / 2); _br = _bl + _bw; 
-						draw_line_width(_x + cx * _s, dy0, _x + cx * _s, dy1, 1);
-					}
-					
-					// snap cy
-					var cy = (sy0 + sy1) / 2;
-					if(abs((_bt + _bb) / 2 - cy) < snap_dist) { 
-						_bt = round(cy - _bh / 2); _bb = _bt + _bh; 
-						draw_line_width(dx0, _y + cy * _s, dx1, _y + cy * _s, 1);
-					}
-					
+				} else {
+					var _snap = _snapPoints[i];
+					if(_snap[0] == self) continue;
+					sx0 = _snap[1][0]; sy0 = _snap[1][1];
+					sx1 = _snap[1][2]; sy1 = _snap[1][3];
 				}
+				
+				// snap x
+				draw_set_color(COLORS._main_icon);
+				if(abs(_bl - sx0) < snap_dist) { 
+					_bl = sx0; _br = _bl + _bw; 
+					draw_line_width(_x + _bl * _s, dy0, _x + _bl * _s, dy1, 1);
+					
+				} else if(abs(_br - sx1) < snap_dist) { 
+					_br = sx1; _bl = _br - _bw; 
+					draw_line_width(_x + _br * _s, dy0, _x + _br * _s, dy1, 1);
+				}
+				
+				// snap y
+				if(abs(_bt - sy0) < snap_dist) { 
+					_bt = sy0; _bb = _bt + _bh; 
+					draw_line_width(dx0, _y + _bt * _s, dx1, _y + _bt * _s, 1);
+					
+				} else if(abs(_bb - sy1) < snap_dist) { 
+					_bb = sy1; _bt = _bb - _bh; 
+					draw_line_width(dx0, _y + _bb * _s, dx1, _y + _bb * _s, 1);
+				}
+				
+				// snap cx
+				draw_set_color(COLORS._main_accent);
+				var cx = (sx0 + sx1) / 2;
+				if(abs((_bl + _br) / 2 - cx) < snap_dist) { 
+					_bl = round(cx - _bw / 2); _br = _bl + _bw; 
+					draw_line_width(_x + cx * _s, dy0, _x + cx * _s, dy1, 1);
+				}
+				
+				// snap cy
+				var cy = (sy0 + sy1) / 2;
+				if(abs((_bt + _bb) / 2 - cy) < snap_dist) { 
+					_bt = round(cy - _bh / 2); _bb = _bt + _bh; 
+					draw_line_width(dx0, _y + cy * _s, dx1, _y + cy * _s, 1);
+				}
+				
 			}
 			
 			draw_set_alpha(1);
 			setBBOX([ _bl, _bt, _br, _bb ]);
 			
 		} else {
+			var n = _snapPoints == undefined? 0 : array_length(_snapPoints);
+			draw_set_alpha(.75);
+			draw_set_color(COLORS._main_icon);
+			
 			if(drag_anchor == 0 || drag_anchor == 2) {
 				var _bx = round(drag_anchor_sv[0] + _mdx);
-				var _bw = _bbox[2] - _bx;
+				for( var i = -1; i < n; i++ ) {
+					if(i == -1) {
+						sx0 = xx0; 
+						sx1 = xx1;
+						
+					} else {
+						var _snap = _snapPoints[i];
+						if(_snap[0] == self) continue;
+						sx0 = _snap[1][0]; 
+						sx1 = _snap[1][2];
+					}
+					     if(abs(_bx - sx0) < snap_dist) { _bx = sx0; draw_line_width(_x + _bx * _s, dy0, _x + _bx * _s, dy1, 1); }
+					else if(abs(_bx - sx1) < snap_dist) { _bx = sx1; draw_line_width(_x + _bx * _s, dy0, _x + _bx * _s, dy1, 1); }
+				}
 				
+				var _bw = _bbox[2] - _bx;
 				switch(anchor_x_type) {
 					case PB_AXIS_ANCHOR.minimum : set_l(_bx); set_w(_bw); break;
 					case PB_AXIS_ANCHOR.maximum : set_w(_bw);             break;
@@ -220,8 +233,22 @@ function __pbBox() constructor {
 			
 			if(drag_anchor == 0 || drag_anchor == 1) {	
 				var _by = round(drag_anchor_sv[1] + _mdy);
-				var _bh = _bbox[3] - _by;
+				for( var i = -1; i < n; i++ ) {
+					if(i == -1) {
+						sy0 = yy0; 
+						sy1 = yy1;
+						
+					} else {
+						var _snap = _snapPoints[i];
+						if(_snap[0] == self) continue;
+						sy0 = _snap[1][1]; 
+						sy1 = _snap[1][3];
+					}
+					     if(abs(_by - sy0) < snap_dist) { _by = sy0; draw_line_width(dx0, _y + _by * _s, dx1, _y + _by * _s, 1); } 
+					else if(abs(_by - sy1) < snap_dist) { _by = sy1; draw_line_width(dx0, _y + _by * _s, dx1, _y + _by * _s, 1); }
+				}
 				
+				var _bh = _bbox[3] - _by;
 				switch(anchor_y_type) {
 					case PB_AXIS_ANCHOR.minimum : set_t(_by); set_h(_bh); break;
 					case PB_AXIS_ANCHOR.maximum : set_h(_bh);             break;
@@ -232,8 +259,22 @@ function __pbBox() constructor {
 			
 			if(drag_anchor == 3 || drag_anchor == 1) {
 				var _bx = round(drag_anchor_sv[2] + _mdx);
-				var _bw = _bx - _bbox[0];
+				for( var i = -1; i < n; i++ ) {
+					if(i == -1) {
+						sx0 = xx0; 
+						sx1 = xx1;
+						
+					} else {
+						var _snap = _snapPoints[i];
+						if(_snap[0] == self) continue;
+						sx0 = _snap[1][0]; 
+						sx1 = _snap[1][2];
+					}
+					     if(abs(_bx - sx0) < snap_dist) { _bx = sx0; draw_line_width(_x + _bx * _s, dy0, _x + _bx * _s, dy1, 1); }
+					else if(abs(_bx - sx1) < snap_dist) { _bx = sx1; draw_line_width(_x + _bx * _s, dy0, _x + _bx * _s, dy1, 1); }
+				}
 				
+				var _bw = _bx - _bbox[0];
 				switch(anchor_x_type) {
 					case PB_AXIS_ANCHOR.minimum : set_w(_bw);                   break;
 					case PB_AXIS_ANCHOR.maximum : set_r(_ww - _bx); set_w(_bw); break;
@@ -244,8 +285,22 @@ function __pbBox() constructor {
 			
 			if(drag_anchor == 3 || drag_anchor == 2) {
 				var _by = round(drag_anchor_sv[3] + _mdy);
-				var _bh = _by - _bbox[1];
+				for( var i = -1; i < n; i++ ) {
+					if(i == -1) {
+						sy0 = yy0; 
+						sy1 = yy1;
+						
+					} else {
+						var _snap = _snapPoints[i];
+						if(_snap[0] == self) continue;
+						sy0 = _snap[1][1]; 
+						sy1 = _snap[1][3];
+					}
+					     if(abs(_by - sy0) < snap_dist) { _by = sy0; draw_line_width(dx0, _y + _by * _s, dx1, _y + _by * _s, 1); }
+					else if(abs(_by - sy1) < snap_dist) { _by = sy1; draw_line_width(dx0, _y + _by * _s, dx1, _y + _by * _s, 1); }
+				}
 				
+				var _bh = _by - _bbox[1];
 				switch(anchor_y_type) {
 					case PB_AXIS_ANCHOR.minimum : set_h(_bh);                   break;
 					case PB_AXIS_ANCHOR.maximum : set_b(_hh - _by); set_h(_bh); break;
@@ -253,6 +308,8 @@ function __pbBox() constructor {
 					case PB_AXIS_ANCHOR.center  : set_h(_bh);                   break;
 				}
 			}
+			
+			draw_set_alpha(1);
 		}
 		
 		if(_node) _node.w_hovering = true;
