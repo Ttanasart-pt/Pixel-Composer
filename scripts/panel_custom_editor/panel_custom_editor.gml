@@ -255,13 +255,17 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var _edt = _editors[i];
 			
 			if(_edt == "redir") {
+				var toDel = undefined;
 				for( var j = 0, m = array_length(data.io_redirect); j < m; j++ ) {
 					var io = data.io_redirect[j];
 					var hh = io.drawProp(ui(8), _y, ww - ui(16), _m, hov, foc, rx, ry);
+					if(io.deleteMe) toDel = j;
 					
 					_y += hh + ui(4);
 					_h += hh + ui(4);
 				}
+				
+				if(toDel) array_delete(data.io_redirect, toDel, 1);
 				
 				_y += ui(4);
 				_h += ui(4);

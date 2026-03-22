@@ -13,6 +13,7 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 	press_output = new JuncLister(data, "Select", CONNECT_TYPE.output);
 	type = 0;
 	
+	style  = 0;
 	font   = 4;
 	halign = fa_left;
 	valign = fa_top;
@@ -27,6 +28,12 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 			"Text", 
 			"Number", 
 		], function(t) /*=>*/ { type = t; } ), function() /*=>*/ {return type}, function(t) /*=>*/ { type = t; }), 
+		Simple_Editor("Style", new scrollBox( [ 
+			"Default", 
+			"Inner", 
+			"Inner no Highlight", 
+			"Inner no Frame", 
+		], function(t) /*=>*/ { style = t; } ), function() /*=>*/ {return style}, function(t) /*=>*/ { style = t; }), 
 		
 		[ "Textures", false ], 
 		bg_output,
@@ -99,6 +106,7 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 			.setValign(valign);
 		
 		textbox.input = type;
+		textbox.setHide(style);
 		textbox.setFocusHover(focus, elementHover);
 		textbox.drawParam(_param);
 	}
@@ -112,6 +120,7 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 		_m.press = press_output.serialize(_m);
 		
 		_m.type   = type;
+		_m.style  = style;
 		_m.font   = font;
 		_m.color  = color;
 		_m.halign = halign;
@@ -127,6 +136,7 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 		if(has(_m, "press")) press_output.deserialize(_m.press);
 		
 		type   = _m[$ "type"]   ?? type;
+		style  = _m[$ "style"]  ?? style;
 		font   = _m[$ "font"]   ?? font;
 		color  = _m[$ "color"]  ?? color;
 		halign = _m[$ "halign"] ?? halign;

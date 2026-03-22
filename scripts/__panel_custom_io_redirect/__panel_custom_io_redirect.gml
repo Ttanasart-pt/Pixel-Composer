@@ -6,6 +6,7 @@ function IO_Redirect(_data) constructor {
 	
 	type      = CONNECT_TYPE.input;
 	junctions = [];
+	deleteMe  = false;
 	
 	input     = new JuncLister(data, "input", CONNECT_TYPE.output);
 	tb_rename = textBox_Text(function(t) /*=>*/ { name = t; });
@@ -52,20 +53,24 @@ function IO_Redirect(_data) constructor {
 			junctions = [];
 		}
 		
-		var wdx = _x + bw + ui(4);
-		var wdy = _y;
-		var wdw = _w - ui(24 + 4 + 4) - bw;
-		var wdh = hg;
-		var _param = new widgetParam(wdx, wdy, wdw, wdh, name, undefined, _m, _rx, _ry).setFont(f_p3).setHide(2);
-		tb_rename.setFocusHover(_foc, _hov);
-		tb_rename.drawParam(_param);
-		
 		var bw = ui(24);
 		var bh = hg;
 		var bx = _x + _w - bw;
 		var by = _y;
+		if(buttonInstant_Pad(bs, bx, by, bw, bh, _m, _hov, _foc, "", THEME.cross, 0, COLORS._main_value_negative, 1, ui(6)) == 2)
+			deleteMe = true;
+		bx -= bw + ui(2);
+			
 		if(buttonInstant_Pad(bs, bx, by, bw, bh, _m, _hov, _foc, "", THEME.add_16, 0, COLORS._main_value_positive, 1, ui(6)) == 2)
 			array_push(junctions, new JuncLister(data, "junc"));
+		
+		var wdx = _x + bw + ui(4);
+		var wdy = _y;
+		var wdw = bx - wdx - ui(2);
+		var wdh = hg;
+		var _param = new widgetParam(wdx, wdy, wdw, wdh, name, undefined, _m, _rx, _ry).setFont(f_p3).setHide(2);
+		tb_rename.setFocusHover(_foc, _hov);
+		tb_rename.drawParam(_param);
 		
 		_y += hg + ui(4);
 		_h += hg + ui(4);
@@ -75,7 +80,7 @@ function IO_Redirect(_data) constructor {
 		
 		var wdx = _x + ui(4 + 48);
 		var wdy = _y;
-		var wdw = _w - ui(4 + 48 + 4) - bw - ui(4);
+		var wdw = _w - ui(4 + 48 + 4) - bw;
 		var wdh = hg;
 		var hh = input.draw(wdx, wdy, wdw, wdh, _m, _foc, _hov, _rx, _ry);
 		
@@ -91,12 +96,7 @@ function IO_Redirect(_data) constructor {
 			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
 			draw_text_add(_x + ui(4 + 24), _y + hg / 2, _j.name);
 			
-			var wdx = _x + ui(4 + 48);
-			var wdy = _y;
-			var wdw = _w - ui(4 + 48 + 4) - bw - ui(4);
-			var wdh = hg;
-			
-			var hh = _j.draw(wdx, wdy, wdw, wdh, _m, _foc, _hov, _rx, _ry);
+			var hh = _j.draw(wdx, _y, wdw, wdh, _m, _foc, _hov, _rx, _ry);
 			
 			var bx = _x + _w - bw - ui(4);
 			var by = _y;

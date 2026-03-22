@@ -290,6 +290,7 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 	item_pad       = ui(8);
 	text_color     = COLORS._main_text;
 	show_icon      = true;
+	displayStr     = undefined;
 	
 	minWidth = 0;
 	hide     = 0;

@@ -4,8 +4,9 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	type = _type;
 	mode = "node";
 	
-	node_id  = undefined;
-	junc_id  = undefined;
+	node_id   = undefined;
+	junc_id   = undefined;
+	globalkey = "";
 	
 	node     = undefined;
 	junction = undefined;
@@ -15,19 +16,25 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	
 	////- Editors
 	
-	node_selector   = Simple_Editor("Node", new scrollBoxFn(function() /*=>*/ {return getNodeList()}, function(i) /*=>*/ { 
+	node_scroll = Simple_Editor("Node", new scrollBoxFn(function() /*=>*/ {return getNodeList()}, function(i) /*=>*/ { 
 		node     = nodeList[i]; 
 		node_id  = undefined;
 		junction = undefined; 
 		
 		if(is(node, Node)) {
-			mode    = "node"
+			mode    = "node";
 			node_id = node.node_id;
 			
 		} else if(is(node, IO_Redirect)) {
-			mode    = "redir"
+			mode    = "redir";
 			node_id = node.uuid;
-		}
+		
+		} else if(node == -2) {
+			mode    = "global";
+				
+		} else 
+			mode    = "node"
+		
 	} ), 
 		function() /*=>*/ {return node? node.getDisplayName() : ""}, function(n) /*=>*/ { node = n; });
 	
@@ -38,29 +45,43 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		junc_selector = Simple_Editor("Output", new scrollBoxFn(function() /*=>*/ {return getOutputs()}, 
 			function(i) /*=>*/ { setJunction(juncOutList[i]); } ), function() /*=>*/ {return junction? junction.name : ""}, function(n) /*=>*/ { setJunction(n); });
 	
+	glob_selector = Simple_Editor("Globalvar", new scrollBoxFn(function() /*=>*/ {return getGlobals()}, 
+		function(i) /*=>*/ { globalkey = globalList[i] } ), function() /*=>*/ {return globalkey}, function(n) /*=>*/ { globalkey = n; });
+
 	static draw = function(wdx, wdy, wdw, wdh, _m, foc, hov, rx, ry) {
 		if(mode == "node") {
 			getJunction();
 			
 			var scw = wdw / 2 - ui(4);
 			
-			var _data  = node_selector.getter();
+			var _data  = node_scroll.getter();
 			var _param = new widgetParam(wdx, wdy, scw, wdh, _data, undefined, _m, rx, ry).setFont(f_p4);
-			node_selector.editWidget.setFocusHover(foc, hov);
-			node_selector.editWidget.drawParam(_param);
+			node_scroll.editWidget.setFocusHover(foc, hov);
+			node_scroll.editWidget.drawParam(_param);
 			
 			var _data  = junc_selector.getter();
 			var _param = new widgetParam(wdx + scw + ui(4), wdy, scw, wdh, _data, undefined, _m, rx, ry).setFont(f_p4);
 			junc_selector.editWidget.setFocusHover(foc, hov);
 			junc_selector.editWidget.drawParam(_param);
 			
+		} else if(mode == "global") {
+			var scw = wdw / 2 - ui(4);
+			
+			var _param = new widgetParam(wdx, wdy, scw, wdh, "Globalvar", undefined, _m, rx, ry).setFont(f_p4);
+			node_scroll.editWidget.setFocusHover(foc, hov);
+			node_scroll.editWidget.drawParam(_param);
+			
+			var _param = new widgetParam(wdx + scw + ui(4), wdy, scw, wdh, globalkey, undefined, _m, rx, ry).setFont(f_p4);
+			glob_selector.editWidget.setFocusHover(foc, hov);
+			glob_selector.editWidget.drawParam(_param);
+			
 		} else if(mode == "redir") {
 			getNode();
 			
-			var _data  = node_selector.getter();
+			var _data  = node_scroll.getter();
 			var _param = new widgetParam(wdx, wdy, wdw, wdh, _data, undefined, _m, rx, ry).setFont(f_p4);
-			node_selector.editWidget.setFocusHover(foc, hov);
-			node_selector.editWidget.drawParam(_param);
+			node_scroll.editWidget.setFocusHover(foc, hov);
+			node_scroll.editWidget.drawParam(_param);
 			
 		}
 		
@@ -87,6 +108,10 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 			nodeListName[_i] = _node.name;
 			_i++;
 		}
+		
+		nodeList[_i]     = -2;
+		nodeListName[_i] = "Globalvar";
+		_i++;
 		
 		nodeList[_i]     = -1;
 		nodeListName[_i] = -1;
@@ -132,6 +157,17 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		}
 		
 		return juncInListName;
+	}
+	
+	globalList     = [];
+	static getGlobals = function() {
+		globalList = [];
+		
+		var glob = PROJECT.globalNode.inputs;
+		for( var i = 0, n = array_length(glob); i < n; i++ )
+			globalList[i] = glob[i].name;
+		
+		return globalList;
 	}
 	
 	////- Get Set
@@ -183,6 +219,9 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 			return _redir.getJunction(_depth + 1);
 		}
 		
+		if(mode == "global")
+			return PROJECT.globalNode.getInputKey(globalkey);
+		
 		var _node = getNode();
 		if(!_node) return junction;
 		
@@ -197,9 +236,10 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	static serialize = function() {
 		var _m = {};
 		
-		var _junc  = getJunction();
-		_m.mode    = mode;
-		_m.node_id = "";
+		var _junc    = getJunction();
+		_m.mode      = mode;
+		_m.globalkey = globalkey;
+		_m.node_id   = "";
 		
 		if(is(node, Node)) {
 			_m.node_id = _junc? _junc.node.node_id : "";
@@ -213,9 +253,10 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	}
 	
 	static deserialize = function(_m) { 
-		mode    = _m[$ "mode"]    ?? mode;
-		node_id = _m[$ "node_id"] ?? node_id;
-		junc_id = _m[$ "junc_id"] ?? junc_id;
+		mode      = _m[$ "mode"]    ?? mode;
+		node_id   = _m[$ "node_id"] ?? node_id;
+		junc_id   = _m[$ "junc_id"] ?? junc_id;
+		globalkey = _m[$ "globalkey"] ?? globalkey;
 		
 		return self;
 	}
