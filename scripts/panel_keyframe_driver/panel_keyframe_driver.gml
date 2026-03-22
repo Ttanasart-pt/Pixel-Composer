@@ -109,7 +109,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		if(is(driver, KeyDriver_Curve)) {
 			if(curve_editor == undefined) curve_editor = new curveBox(function(c) /*=>*/ { driver.curve = c; driver.init(); });
 			
-			var params = new widgetParam(0, 0, _w, _h, driver.curve, {}, _m, _rx, _ry).setFont(font);
+			var params = new widgetParam(0, 0, _w, _h, driver.curve, undefined, _m, _rx, _ry).setFont(font);
 			curve_editor.h = _h;
 			curve_editor.setFocusHover(_focus, _hover);
 			curve_editor.drawParam(params);
@@ -218,7 +218,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				var _x1  = _w - ui(4);
 				var _wdw = ww - ui(4);
 				
-				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, {}, _m, _rx, _ry).setFont(font);
+				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, undefined, _m, _rx, _ry).setFont(font);
 				if(is(_widg, checkBox)) { 
 					params.s = wh;
 					params.halign = fa_center; 
@@ -270,7 +270,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 			sb_type.setFocusHover(pFOCUS, pHOVER);
 			sb_type.register();
 			
-			var params = new widgetParam(tx, ty, tw, th, _typ, {}, [mx,my], x, y).setFont(font);
+			var params = new widgetParam(tx, ty, tw, th, _typ, undefined, [mx,my], x, y).setFont(font);
 			sb_type.drawParam(params); 
 			
 		} else {

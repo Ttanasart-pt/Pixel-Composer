@@ -18,6 +18,7 @@ function GlobalVarDrawer() constructor {
     renaming  = undefined;
 	tb_rename = textBox_Text(function(_n) /*=>*/ { 
 		if(renaming == undefined) return;
+		
 		if(!string_variable_valid(_n)) { 
 			noti_warning("Invalid globalvar name.");
 			renaming = undefined; 
@@ -45,50 +46,47 @@ function GlobalVarDrawer() constructor {
 		
 		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
 		var  del  = noone;
+		var  yst  = yy;
 		
-		yy += ui(8);
-		hh += ui(8);
-		
-		var wd_x = xx;
-		var wd_w = ww;
-		
-		var _len = array_length(_node.inputs);
 		drag_insert = infinity;
+		var _len    = array_length(_node.inputs);
+		var _hov    = hover && (dragging == noone);
+		var _foc    = focus && (dragging == noone);
+		var _wd_h   = line_get_height(_font, 6 + viewMode * 2);
+		var _pd_h   = viewMode == INSP_VIEW_MODE.spacious? ui(4)  : ui(2)
 		
-		var _hov  = hover && (dragging == noone);
-		var _foc  = focus && (dragging == noone);
-		var _wd_h = viewMode == INSP_VIEW_MODE.spacious? ui(32) : ui(24);
-		var _pd_h = viewMode == INSP_VIEW_MODE.spacious? ui(4)  : ui(2)
+		yy += ui(8) - _pd_h;
+		hh += ui(8) - _pd_h;
 		
 		for( var j = 0; j < _len; j++ ) {
 			var _inpu = _node.inputs[j];
 			var _edit = _inpu.editor;
-			var _wd_x = wd_x;
-			
+			var _ewid = _inpu.getDefEditWidget();
 			_edit.setFont(_font);
 			
-			if(j) { yy += _pd_h; hh += _pd_h; }
+			yy += _pd_h; 
+			hh += _pd_h;
 			
 			var _k = _inpu.name;
-			edit_y_to[$ _k] = yy;
-			edit_y[$ _k]    = lerp_float(edit_y[$ _k] ?? yy, edit_y_to[$ _k], 10);
-			var _yy = edit_y[$ _k];
+			edit_y_to[$ _k] = yy - yst;
+			edit_y[$ _k]    = lerp_float(edit_y[$ _k] ?? edit_y_to[$ _k], edit_y_to[$ _k], 10);
+			var _yy = yst + edit_y[$ _k];
 			
+			_ewid.setFocusHover(_foc, _hov);
 			_edit.tb_name.setFocusHover(_foc, _hov);
 			_edit.sc_type.setFocusHover(_foc, _hov);
 			_edit.sc_disp.setFocusHover(_foc, _hov);
-			
 			if(_foc) _edit.tb_name.register(_scrollPane);
 			
-			var _wd_xx = _wd_x + ui(32);
-			var _wd_ww = wd_w - _wd_h - ui(32 + 4);
+			var _wd_xx = xx + ui(32);
+			var _wd_ww = ww - _wd_h - ui(32 + 4);
 			
-			_edit.tb_name.draw(_wd_xx + ui(22), _yy, _wd_ww - ui(22), _wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
-			gpu_set_texfilter(true);
-			draw_sprite_ui(THEME.rename, 0, _wd_xx + ui(10), _yy + _wd_h / 2, -.6, .6, 0, COLORS._main_icon, .75);
-			gpu_set_texfilter(false);
+			var wdx = _wd_xx;
+			var wdw = _wd_ww / 2;
+			_edit.tb_name.draw(wdx, _yy, wdw - ui(4), _wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
+			_ewid.drawParam(new widgetParam(wdx + wdw, _yy, wdw, _wd_h, _inpu.def_val, undefined, _m, rx, ry).setFont(_font));
 			
-			if(buttonInstant(noone, _wd_x + wd_w - _wd_h, _yy, _wd_h, _wd_h, _m, _hov, _foc, "", 
+			if(buttonInstant(noone, xx + ww - _wd_h, _yy, _wd_h, _wd_h * 2 + ui(4), _m, _hov, _foc, "", 
 				THEME.icon_delete, 0, CARRAY.button_negative) == 2) del = j;
 			
 			var _hg = 0;
@@ -96,17 +94,14 @@ function GlobalVarDrawer() constructor {
 			_yy += _hh; 
 			_hg += _hh;
 			
-			var _wd_ww = (wd_w - ui(32)) / 2 - ui(2);
-			_edit.sc_type.draw(_wd_xx, _yy, _wd_ww, _wd_h, global.GLOBALVAR_TYPES_NAME[_edit.type_index], _m, rx, ry);
-			
-			var _wd_xx2 = _wd_xx + _wd_ww + ui(4);
-			_edit.sc_disp.draw(_wd_xx2, _yy, _wd_ww, _wd_h, _edit.sc_disp.data_list[_edit.disp_index], _m, rx, ry);
+			_edit.sc_type.draw(wdx, _yy, wdw - ui(4), _wd_h, global.GLOBALVAR_TYPES_ENUM[_edit.type_index], _m, rx, ry);
+			_edit.sc_disp.draw(wdx + wdw, _yy, wdw,   _wd_h, _edit.sc_disp.data_list[_edit.disp_index],     _m, rx, ry);
 				
 			var _hh = _wd_h + _pd_h;
-			_yy += _hh; 
+			_yy += _hh;
 			_hg += _hh;
 			
-			var wdh = _inpu.editor.draw(_wd_xx, _yy, wd_w - ui(32), _m, _foc, _hov, viewMode);
+			var wdh = _inpu.editor.draw(_wd_xx, _yy, ww - ui(32), _m, _foc, _hov, viewMode);
 			var _hh = wdh + _pd_h;
 			_yy += _hh; 
 			_hg += _hh;
@@ -123,7 +118,7 @@ function GlobalVarDrawer() constructor {
 			
 			var bs = ui(32);
 			var bx = xx - ui(8);
-			var by = edit_y[$ _k];
+			var by = yst + edit_y[$ _k];
 			var aa = dragging == j? 1 : .25;
 			
 			if(dragging == noone && hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bs, by + _hg)) {
@@ -210,7 +205,7 @@ function GlobalVarDrawer() constructor {
             	var wdh = line_get_height(_font, 4 + viewMode * 2);
             	
             	tb_rename.setFocusHover(focus, hover);
-            	tb_rename.drawParam(new widgetParam(wdx, wdy, wdw, wdh, _inp.name, {}, _m).setFont(_font));
+            	tb_rename.drawParam(new widgetParam(wdx, wdy, wdw, wdh, _inp.name, undefined, _m).setFont(_font));
             }
             
 			yy += widH + _padd;

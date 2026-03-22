@@ -381,12 +381,12 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				_h += ui(24);
 				_wpd = ui(0);
 				
-				var _param = new widgetParam(ui(8), _y, ww - ui(16), wdh, _data, {}, _m, rx, ry).setFont(f_p3);
+				var _param = new widgetParam(ui(8), _y, ww - ui(16), wdh, _data, undefined, _m, rx, ry).setFont(f_p3);
 					
 			} else {
 				var wdx = ww - wdw;
 				var wdy = _y;
-				var _param = new widgetParam(wdx, wdy, wdw, wdh, _data, {}, _m, rx, ry).setFont(f_p3);
+				var _param = new widgetParam(wdx, wdy, wdw, wdh, _data, undefined, _m, rx, ry).setFont(f_p3);
 			}
 			
 			_widg.register(sc_properties);

@@ -1547,7 +1547,7 @@ function Panel_Preference() : PanelContent() constructor {
     			var wdy = yy;
     			
     			var val = _gett();
-    			var par = new widgetParam(wdx, wdy, wdw, wdh, val, {}, _m, _rx, _ry)
+    			var par = new widgetParam(wdx, wdy, wdw, wdh, val, undefined, _m, _rx, _ry)
     				.setFont(f_p3).setFocusHover(focus, hover);
     			if(is(_wdgt, checkBox)) par.setHalign(fa_center);
     			_wdgt.drawParam(par);
@@ -1814,7 +1814,7 @@ function Panel_Preference() : PanelContent() constructor {
     				widget_w -= ui(32 + 8);
     			
     			var data    = _pref.data == noone? _pref.data : _pref.data();
-    			var params  = new widgetParam(widget_x, widget_y, widget_w, widget_h, data, {}, _m, rx, ry);
+    			var params  = new widgetParam(widget_x, widget_y, widget_w, widget_h, data, undefined, _m, rx, ry);
     			params.s    = th;
     			params.font = font;
     			

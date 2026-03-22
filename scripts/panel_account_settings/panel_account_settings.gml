@@ -40,7 +40,7 @@ function Panel_Account_Settings() : PanelContent() constructor {
 			draw_text_add(_x0, _y, "Display Name");
 			_y += line_get_height() + ui(2);
 			
-			var _param = new widgetParam(_x0, _y, _cnw, TEXTBOX_HEIGHT, account_display_name, {}, _m).setFont(f_p2).setFocusHover(_focus, _hover);
+			var _param = new widgetParam(_x0, _y, _cnw, TEXTBOX_HEIGHT, account_display_name, undefined, _m).setFont(f_p2).setFocusHover(_focus, _hover);
 			tb_account_display_name.drawParam(_param);
 			_y += TEXTBOX_HEIGHT + ui(8);
 			
@@ -48,7 +48,7 @@ function Panel_Account_Settings() : PanelContent() constructor {
 			draw_text_add(_x0, _y, "Email");
 			_y += line_get_height() + ui(2);
 			
-			var _param = new widgetParam(_x0, _y, _cnw, TEXTBOX_HEIGHT, account_email, {}, _m).setFont(f_p2).setFocusHover(_focus, _hover);
+			var _param = new widgetParam(_x0, _y, _cnw, TEXTBOX_HEIGHT, account_email, undefined, _m).setFont(f_p2).setFocusHover(_focus, _hover);
 			tb_account_email.drawParam(_param);
 			_y += TEXTBOX_HEIGHT + ui(8);
 			

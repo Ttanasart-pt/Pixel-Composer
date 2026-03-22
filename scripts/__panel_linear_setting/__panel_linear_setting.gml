@@ -168,7 +168,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.prefKey    != noone) _wdw -= ui(24) + ui(4);
 				if(_prop.getDefault != noone) _wdw -= ui(24) + ui(4);
 				
-				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, {}, [ mx, my ], x, y).setFont(font);
+				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, undefined, [ mx, my ], x, y).setFont(font);
 				if(is(_widg, checkBox)) { 
 					params.s = wh;
 					params.halign = fa_center; 

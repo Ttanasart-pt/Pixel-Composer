@@ -1,5 +1,5 @@
-function buttonGradient(_onApply, dialog = noone) : widget() constructor {
-	onApply      = _onApply;
+function buttonGradient(_onModify, dialog = noone) : widget() constructor {
+	onModify     = _onModify;
 	parentDialog = dialog;
 	
 	current_gradient = undefined;
@@ -19,7 +19,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			var _grad = current_gradient.clone();
 			_grad.keys[rightclick_index].time = clamp(_t, 0, 1);
 			_grad.refresh();
-			onApply(_grad);
+			onModify(_grad);
 			
 		}).setFont(f_p4), function() /*=>*/ {return current_gradient.keys[rightclick_index].time}),
 		
@@ -28,7 +28,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			if(array_length(_grad.keys) > 1) {
 				array_delete(_grad.keys, rightclick_index, 1);
 				_grad.refresh();
-				onApply(_grad);
+				onModify(_grad);
 			}
 		})
 	]
@@ -37,7 +37,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2)
 						.setDefault(current_gradient.clone());
 						
-		dialog.onApply      = onApply;
+		dialog.onModify      = onModify;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
 		
@@ -51,7 +51,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		var _key   = edit_gradient.keys[edit_color_index];
 		var dialog = colorSelectorCall(_key.value, function(c) /*=>*/ { 
 			edit_gradient.keys[edit_color_index].value = c;
-			onApply(edit_gradient);
+			onModify(edit_gradient);
 			
 		}).setClose(function() /*=>*/ { edit_color_index = -1; })
 		
@@ -197,7 +197,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 							var apply_gradient = current_gradient.clone();
 							apply_gradient.keys[i].value = DRAGGING.data;
 							
-							onApply(apply_gradient);
+							onModify(apply_gradient);
 						}
 						
 					} else if(drag_color_index == _k || edit_color_index == i) {
@@ -231,7 +231,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 						edit_color_mx    = _m[0];
 						edit_color_sx    = _ti;
 						
-						onApply(edit_gradient);
+						onModify(edit_gradient);
 					}
 				}
 				
@@ -245,7 +245,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				if(drag_color_index.time != _val) {
 					drag_color_index.time = _val;
 					edit_gradient.refresh();
-					onApply(edit_gradient);
+					onModify(edit_gradient);
 				}
 				
 				if(mouse_lrelease())
@@ -274,12 +274,12 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		if(DRAGGING && DRAGGING.type == "Gradient" && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, h, COLORS._main_value_positive, 1);	
 			if(mouse_lrelease())
-				onApply(DRAGGING.data);
+				onModify(DRAGGING.data);
 		}
 		
 		resetFocus();
 		return h;
 	}
 	
-	static clone = function() { return new buttonGradient(onApply, parentDialog); }
+	static clone = function() { return new buttonGradient(onModify, parentDialog); }
 }

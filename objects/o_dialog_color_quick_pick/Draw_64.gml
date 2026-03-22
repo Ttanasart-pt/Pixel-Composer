@@ -29,8 +29,8 @@ for( var i = 0, n = array_length(pal); i < n; i++ ) {
 	if(point_in_rectangle(mouse_mx, mouse_my, _x, _y, _x + ss - 1, _y + ss - 1)) {
 		draw_sprite_stretched_add(THEME.box_r2, 1, _x + 1, _y + 1, ss - 2, ss - 2, c_white, 0.3);
 		
-		if(_m && selecting != i && onApply) {
-			onApply(pal[i]);
+		if(_m && selecting != i && onModify) {
+			onModify(pal[i]);
 			selecting = i;
 		}
 	}

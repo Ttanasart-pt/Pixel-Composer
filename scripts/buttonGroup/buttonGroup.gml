@@ -1,6 +1,6 @@
-function buttonGroup(_data, _onClick) : widget() constructor {
+function buttonGroup(_data, _onModify) : widget() constructor {
 	data     = _data;
-	onClick  = _onClick;
+	onModify = _onModify;
 	size     = array_length(data);
 	
 	display_button = false;
@@ -16,7 +16,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	for(var i = 0; i < array_length(data); i++)
 		buttons[i] = button(-1);
 	
-	sb_small = new scrollBox(data, _onClick);
+	sb_small = new scrollBox(data, _onModify);
 	
 	static setFont      = function(ff, fc = fColor) /*=>*/ { font = ff; fColor = fc; return self; }
 	static setButton    = function(sp) /*=>*/ { buttonSpr   = sp; return self; }
@@ -35,9 +35,9 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		if(!is_real(current_selecting)) return;
 		
 		if(current_selecting + 1 >= array_length(data))
-			onClick(0);
+			onModify(0);
 		else
-			onClick(current_selecting + 1);
+			onModify(current_selecting + 1);
 	}
 	
 	static setInteract = function(interactable = noone) { 
@@ -137,7 +137,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 					
 				} else {
 					buttons[i].draw(floor(bx), _y, ceil(bww), _h, _m, spr);
-					if(buttons[i].clicked) onClick(i);
+					if(buttons[i].clicked) onModify(i);
 				}
 				
 				if(is_string(_d)) {
@@ -164,7 +164,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				if(is_array(data) && key_mod_press(SHIFT)) {
 					var len = array_length(data);
 					if(len && MOUSE_WHEEL != 0)
-						onClick(safe_mod(_selecting - sign(MOUSE_WHEEL) + len, len));
+						onModify(safe_mod(_selecting - sign(MOUSE_WHEEL) + len, len));
 				}
 			}
 		} else {
@@ -182,8 +182,5 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() {
-		var cln = new buttonGroup(data, onClick);
-		return cln;
-	}
+	static clone = function() { return new buttonGroup(data, onModify); }
 }

@@ -1,7 +1,4 @@
-enum INSP_VIEW_MODE {
-	compact,
-	spacious
-}
+enum INSP_VIEW_MODE { compact, spacious }
 
 function drawWidgetInit() {
 	anim_toggling = false;
@@ -297,7 +294,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					if(b == 2) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  p mod_inc_mf3;
 				}
 				
-			} else if(!global_var) {
+			} else {
 				var bt = __txtx("panel_inspector_reset", "Reset value");
 				var ba = .5 + jun.is_modified * .4;
 				var bh = jun.is_modified && _hover;
@@ -307,7 +304,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				cHov = cHov || b;
 				if(b == 2) jun.resetValue();
 				
-				if(breakLine) {
+				if(!global_var && breakLine) {
 					var ic_b = c_white;
 					var bt = __txtx("panel_inspector_use_expression", "Use expression");
 					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_use_expression, jun.expUse, ic_b, .8, ics); bx -= ui(4);

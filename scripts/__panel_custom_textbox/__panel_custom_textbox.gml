@@ -68,7 +68,7 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 		
 		if(input_junc) {
 			var _currVal = input_junc.showValue();
-			var _param   = new widgetParam(x, y, w, h, _currVal, {}, _m, rx, ry)
+			var _param   = new widgetParam(x, y, w, h, _currVal, undefined, _m, rx, ry)
 				.setColor(color)
 				.setHalign(halign)
 				.setValign(valign);

@@ -1250,7 +1250,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				draw_sprite_ui(THEME.loading_s, 0, _tx + _subw / 2, _ty + ui(16), .75, .75, current_time / 2, COLORS._main_icon, .8);
 				
 			} else if(_myPage) {
-				var _param = new widgetParam(_tx, _ty, _subw, TEXTBOX_HEIGHT, _sub, {}, _m)
+				var _param = new widgetParam(_tx, _ty, _subw, TEXTBOX_HEIGHT, _sub, undefined, _m)
 					.setFont(f_p2)
 					.setFocusHover(_focus, _hhov, !tb_author_subtitle_updating);
 				
@@ -1917,7 +1917,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			if(_myitem && item_title_editing) {
 				var _lw = max(ui(256), string_width(_name) + ui(16));
 				
-				var _param = new widgetParam(_x0 - ui(6), _yy - ui(4), _lw + ui(8), _lh + ui(8), _name, {}, _m)
+				var _param = new widgetParam(_x0 - ui(6), _yy - ui(4), _lw + ui(8), _lh + ui(8), _name, undefined, _m)
 					.setFont(f_h5).setFocusHover(_focus, _hover)
 				tb_item_title.drawParam(_param);
 				if(item_title_updating)
@@ -2385,7 +2385,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			
 			_dsy += ui(10);
 			if(_myitem) {
-				var _param = new widgetParam(_dsx, _dsy, _dsw, ui(128), _desc, {}, _m)
+				var _param = new widgetParam(_dsx, _dsy, _dsw, ui(128), _desc, undefined, _m)
 					.setFont(f_p2).setFocusHover(_focus, _hover)
 				var _wh = tb_item_description.drawParam(_param);
 				if(item_description_updating)
@@ -2462,7 +2462,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 					var _by = _cmy + tb_comment.display_h - ui(8) - _bs;
 					var _hov = point_in_rectangle(_m[0], _m[1], _bx, _by, _bx + _bs, _by + _bs);
 					
-					var _param = new widgetParam(_cmx, _cmy, _cmw, ui(80), comment_text, {}, _m)
+					var _param = new widgetParam(_cmx, _cmy, _cmw, ui(80), comment_text, undefined, _m)
 						.setFont(f_p2).setFocusHover(_focus && !_hov, _hover, !comment_submitting);
 					var _wh = tb_comment.drawParam(_param);
 					_cpy += _wh + ui(8);
@@ -2957,7 +2957,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			var y0 = padding;
 			var yc = y0 + hh / 2;
 			
-			var _param = new widgetParam(x0, y0, ww, hh, search_string, {}, [mx, my], x, y)
+			var _param = new widgetParam(x0, y0, ww, hh, search_string, undefined, [mx, my], x, y)
 				.setFocusHover(pFOCUS, pHOVER)
 				.setFont(f_p2);
 				

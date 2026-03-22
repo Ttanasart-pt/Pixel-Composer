@@ -56,7 +56,7 @@ function IO_Redirect(_data) constructor {
 		var wdy = _y;
 		var wdw = _w - ui(24 + 4 + 4) - bw;
 		var wdh = hg;
-		var _param = new widgetParam(wdx, wdy, wdw, wdh, name, {}, _m, _rx, _ry).setFont(f_p3).setHide(2);
+		var _param = new widgetParam(wdx, wdy, wdw, wdh, name, undefined, _m, _rx, _ry).setFont(f_p3).setHide(2);
 		tb_rename.setFocusHover(_foc, _hov);
 		tb_rename.drawParam(_param);
 		

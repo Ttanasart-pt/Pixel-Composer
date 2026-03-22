@@ -1,7 +1,7 @@
-function folderArrayBox(_arr, _onApply) : widget() constructor {
-	onApply = _onApply;
-	array   = _arr;
-	adding  = false;
+function folderArrayBox(_arr, _onModify) : widget() constructor {
+	onModify = _onModify;
+	array    = _arr;
+	adding   = false;
 	
 	editing = noone;
 	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { 
@@ -14,7 +14,7 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 		}
 		
 		adding = false;
-		onApply();
+		onModify();
 		return true; 
 	}).setSlide(false).setEmpty();
 	
@@ -113,7 +113,7 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 		if(_del != noone) {
 			editing = noone;
 			array_delete(_arr, _del, 1);
-			onApply();
+			onModify();
 		} 
 		
 		hovering = _hovering;

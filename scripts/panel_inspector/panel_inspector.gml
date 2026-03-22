@@ -347,8 +347,11 @@ function Panel_Inspector() : PanelContent() constructor {
         	array_push(PROJECT.customPanels, _panelData);
         	dialogPanelCall(new Panel_Custom_Editor(_panelData));
         	
-    	}).setIcon(THEME.add_16,  0, COLORS._main_value_positive)
-        	.setTooltip(__txt("New Custom Panel")) ];
+    	}).setIcon(THEME.add_16,  0, COLORS._main_value_positive).setTooltip(__txt("New Custom Panel")) ];
+    #endregion
+    
+    #region ---- Panel ---- 
+    	panelData = {};
     #endregion
     
     #region ---- Workshop ----
@@ -645,7 +648,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	                draw_text_add(wx0 - ui(8), yy + _att_h / 2, _att_key.toString());
                 }
                 
-                var _param = new widgetParam(wx0, yy, ww, _att_h, _att_val, {}, _m, x + contentPane.x, y + contentPane.y);
+                var _param = new widgetParam(wx0, yy, ww, _att_h, _att_val, undefined, _m, x + contentPane.x, y + contentPane.y);
                     _param.s    = _att_h;
                     _param.font = _font;
                     
@@ -817,7 +820,7 @@ function Panel_Inspector() : PanelContent() constructor {
             } else if(is(jun, widget)) {
             	if(!jun.visible) continue;
             	
-                var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, {}, _m, x, y)
+                var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, undefined, _m, x, y)
                 	.setFont(_font);
                 	
                 jun.setFocusHover(pFOCUS, pHOVER);
@@ -981,7 +984,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				var editBoxW   = con_ww - labelWidth;
 				var editBoxH   = lb_h;
 				
-                var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _val, {}, _m, rrx, rry)
+                var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _val, undefined, _m, rrx, rry)
                 	.setFont(_font);
                 	
             	_wdgt.setFocusHover(_focus, _hover);
@@ -1048,7 +1051,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 	var wdh = line_get_height(_font, 4 + viewMode * 2);
                 	
                 	tb_rename.setFocusHover(_focus, _hover);
-                	tb_rename.drawParam(new widgetParam(wdx, wdy, wdw, wdh, jun.getName(), {}, _m).setFont(_font));
+                	tb_rename.drawParam(new widgetParam(wdx, wdy, wdw, wdh, jun.getName(), undefined, _m).setFont(_font));
                 }
             #endregion
             
@@ -1246,7 +1249,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	        var _wdh = TEXTBOX_HEIGHT;
 	        
 	        var _data  = PROJECT.attributes.bind_gamemaker_path;
-	    	var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+	    	var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, undefined, _m, rx, ry)
 	    					.setFont(_font)
 	    					.setFocusHover(pFOCUS, _hover)
 	    					.setScrollpane(contentPane);
@@ -1297,8 +1300,7 @@ function Panel_Inspector() : PanelContent() constructor {
             
             if(_tag == "group prop" && PANEL_GRAPH.getCurrentContext() == noone) continue;
             if(_tag == "layers" && !PROJECT.attributes.global_layer)             continue;
-            // if(_tag == "panels" && array_empty(PROJECT.customPanels))            continue;
-             
+            
             var _x1 = con_w;
             var _y1 = yy + ui(2);
             
@@ -1439,7 +1441,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var _wdw  = w - ui(48) - _wdx;
                         var _wdh  = spac? TEXTBOX_HEIGHT  : _lh;
                         
-                        var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+                        var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, undefined, _m, rx, ry)
                         					.setFont(_font).setScrollpane(contentPane);
 					    if(is(editW, checkBox)) _param.setHalign(fa_center);
 					    					
@@ -1501,7 +1503,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var _wdy  = yy;
                         var _wdh  = _whh * display[2];
                         
-                        var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+                        var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, undefined, _m, rx, ry)
                         					.setFont(_font)
 					    					.setFocusHover(pFOCUS, _hover, _edt)
 					    					.setScrollpane(contentPane);
@@ -1524,7 +1526,7 @@ function Panel_Inspector() : PanelContent() constructor {
                             hh += _lh + ui(6);
                         }
                         
-                        var _param = new widgetParam(_wdx, yy, _wdw, TEXTBOX_HEIGHT, STEAM_UGC_ITEM_AVATAR, {}, _m, rx, ry)
+                        var _param = new widgetParam(_wdx, yy, _wdw, TEXTBOX_HEIGHT, STEAM_UGC_ITEM_AVATAR, undefined, _m, rx, ry)
                         					.setFont(_font)
 					    					.setFocusHover(pFOCUS, _hover)
 					    					.setScrollpane(contentPane);
@@ -1541,12 +1543,12 @@ function Panel_Inspector() : PanelContent() constructor {
                 case "panels":
                 	var _pans = PROJECT.customPanels;
                 	var _ph   = ui(24);
-                	var pbw   = con_w * .4;
+                	var pbw   = ui(80);
+                	var toDel = undefined;
                 	var pbx, pby, pbh;
                 	
                 	for( var j = 0, m = array_length(_pans); j < m; j++ ) {
                 		var _p = _pans[j];
-                		
                 		if(_p.open_start) draw_sprite_ui(THEME.favorite, 1, ui(16), yy + _ph / 2, .75, .75, 0, COLORS._main_value_positive);
                 		
                 		draw_set_text(_font, fa_left, fa_center, COLORS._main_text);
@@ -1556,19 +1558,30 @@ function Panel_Inspector() : PanelContent() constructor {
                 		pby  = yy;
                 		pbh  = _ph;
                 		
-                		var _bt = __txt("Edit");
-                		if(buttonInstant_Pad(THEME.button_hide, pbx, pby, _ph, _ph, _m, _hover, _focus, _bt, THEME.gear,,,, ui(6)) == 2)
+                		var bb = THEME.button_hide;
+                		var bt = __txt("Delete Panel");
+                		var bc = CARRAY.button_negative;
+                		if(buttonInstant_Pad(bb, pbx, pby, _ph, _ph, _m, _hover, _focus, bt, THEME.cross, 0, bc, 1, ui(6)) == 2)
+                			toDel = _p;
+                		
+                		var bb = THEME.button_hide;
+                		var bt = __txt("Edit");
+                		var bc = COLORS._main_icon;
+                		pbx -= _ph + ui(1);
+                		if(buttonInstant_Pad(bb, pbx, pby, _ph, _ph, _m, _hover, _focus, bt, THEME.gear, 0, bc, 1, ui(6)) == 2)
                 			dialogPanelCall(new Panel_Custom_Editor(_p));
                 		
                 		pbx -= pbw + ui(4);
                 		draw_set_font(_font);
-                		var _bt = __txt("Open");
-                		if(buttonTextInstant(true, THEME.button_def, pbx, pby, pbw, pbh, _m, _hover, _focus, "", _bt) == 2) 
+                		var bt = __txt("Open");
+                		if(buttonTextInstant(true, THEME.button_def, pbx, pby, pbw, pbh, _m, _hover, _focus, "", bt) == 2) 
                 			dialogPanelCall(new Panel_Custom(_p));
                 		
 	                    yy += _ph + ui(4);
 	                    hh += _ph + ui(4);
                 	}
+                	
+                	if(toDel != undefined) array_remove(_pans, toDel);
                 	
                 	if(!array_empty(_pans)) {
 	                    yy += ui(4);

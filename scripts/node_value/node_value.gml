@@ -2018,6 +2018,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return res;
 	}
 	
+	static setDefaultValue = function(v, i = noone) { 
+		if(i == noone) def_val = v; 
+		else array_safe_set(def_val, i, v);
+		
+		is_modified = true; 
+		return self; 
+	}
+	
 	static onSetValueDirect = undefined;
 	static setValueDirect = function(val = 0, _index = noone, record = true, time = NODE_CURRENT_FRAME, _render = true) {
 		is_modified = true;

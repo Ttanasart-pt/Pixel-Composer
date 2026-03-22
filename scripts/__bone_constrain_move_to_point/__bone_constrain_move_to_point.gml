@@ -71,7 +71,7 @@ function __Bone_Constrain_Move_To_Point(_bone, _bid = "", _tid = "") : __Bone_Co
         draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
         draw_text_add(_lbx, _y + _wdh / 2, __txt("Strength"));
         
-        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, strength, {}, _m, _drawParam.rx, _drawParam.ry)
+        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, strength, undefined, _m, _drawParam.rx, _drawParam.ry)
             .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
         tb_strength.drawParam(_dParam);
         
@@ -81,7 +81,7 @@ function __Bone_Constrain_Move_To_Point(_bone, _bid = "", _tid = "") : __Bone_Co
         draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
         draw_text_add(_lbx, _y + _wdh / 2, __txt("Point"));
         
-        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, point, {}, _m, _drawParam.rx, _drawParam.ry)
+        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, point, undefined, _m, _drawParam.rx, _drawParam.ry)
             .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
         tb_point.drawParam(_dParam);
         

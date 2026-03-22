@@ -31,7 +31,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		if(key_selecting == noone) return;
 		key_selecting.value = int64(color);
 		
-		onApply(gradient);
+		onModify(gradient);
 	}
 	
 	function setGradient(grad) { 
@@ -53,11 +53,11 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		return self;
 	}
 	
-	b_cancel = button(function() /*=>*/ { onApply(previous_gradient); instance_destroy(); })
+	b_cancel = button(function() /*=>*/ { onModify(previous_gradient); instance_destroy(); })
 		.setIcon(THEME.undo, 0, COLORS._main_icon)
 		.setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
 	
-	b_apply = button(function() /*=>*/ { onApply(gradient); instance_destroy(); })
+	b_apply = button(function() /*=>*/ { onModify(gradient); instance_destroy(); })
 		.setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	sb_blending = new scrollBox([
@@ -73,7 +73,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			case 2 :  gradient.type = 2; break;
 			case 3 :  gradient.type = 3; break;
 		}
-		onApply(gradient);
+		onModify(gradient);
 		
 	}).setFont(f_p2);
 	
@@ -83,7 +83,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		array_remove(gradient.keys, key);
 		gradient.add(key, false);
 		
-		onApply(gradient);
+		onModify(gradient);
 	}
 	
 	function removeKeyOverlap(key) {
@@ -97,7 +97,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			array_remove(keys, key);
 		}
 		
-		onApply(gradient);
+		onModify(gradient);
 	}
 #endregion
 
@@ -250,7 +250,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 				if(is_real(k.value)) k.value = cola(k.value);
 			}
 			
-			onApply(gradient);
+			onModify(gradient);
 		}
 		
 		if(fav) __toggleGradientFav(fav);
@@ -455,7 +455,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 					}
 				}
 				
-				onApply(gradient);
+				onModify(gradient);
 			}
 			
 			palette_spread_end = _hoverIndex;

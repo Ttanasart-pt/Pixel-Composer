@@ -320,7 +320,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 				}
 				
 				_wdg.setFocusHover(pFOCUS, pHOVER);
-				var _pa = new widgetParam(wgx, by, wgw, bh, _dat, {}, m)
+				var _pa = new widgetParam(wgx, by, wgw, bh, _dat, undefined, m)
 				           .setFont(f_p2);
 				var _wh = _wdg.drawParam(_pa);
 				

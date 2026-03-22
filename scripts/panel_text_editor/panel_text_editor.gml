@@ -72,7 +72,7 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 		editor.shift_new_line = shift_new_line;
 		editor.boxColor = merge_color(CDEF.main_white, CDEF.main_ltgrey, .5);
 		
-		editor.drawParam(new widgetParam(tx, ty, tw, th, _text, {}, [ mx, my ], x, y));
+		editor.drawParam(new widgetParam(tx, ty, tw, th, _text, undefined, [ mx, my ], x, y));
 		
 		editor.boxColor = _prevBox;
 	}

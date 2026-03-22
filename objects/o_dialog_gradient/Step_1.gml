@@ -12,12 +12,12 @@ if !ready exit;
 	
 	if(sFOCUS && WIDGET_CURRENT_PREV == undefined) {
 		if(KEYBOARD_ENTER) {
-			onApply(gradient);
+			onModify(gradient);
 			instance_destroy();
 		}
 		
 		if(keyboard_check_pressed(vk_escape)) {
-			onApply(previous_gradient);
+			onModify(previous_gradient);
 			instance_destroy();
 		}
 	}

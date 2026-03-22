@@ -274,12 +274,13 @@ function __Simple_Editor(_name, _widget, _getter, _setter) constructor {
 		{ name: "Tab Frame",   key: "frametab",   fn: Panel_Custom_Frame_Tab,   spr: function() /*=>*/ {return THEME.panel_icon_element_frame_tab},   prevsize: [ 64, 64] }, 
 		
 		[ "Nodes", false ], 
+     // { name: "Globalvar",   key: "global",     fn: Panel_Custom_Globalvar,   spr: () => THEME.panel_icon_element_globalvar,   prevsize: [ 80, 32] }, 
 		{ name: "Node Input",  key: "input",      fn: Panel_Custom_Node_Input,  spr: function() /*=>*/ {return THEME.panel_icon_element_node_input},  prevsize: [ 80, 32] }, 
 		{ name: "Node Output", key: "output",     fn: Panel_Custom_Node_Output, spr: function() /*=>*/ {return THEME.panel_icon_element_node_output}, prevsize: [ 64, 64] }, 
 		
 		[ "Widgets", false ], 
 		{ name: "Button",      key: "button",     fn: Panel_Custom_Button,      spr: function() /*=>*/ {return THEME.panel_icon_element_button},      prevsize: [ 64, 64] }, 
-	//  { name: "Choices",     key: "choices",    fn: Panel_Custom_Choices,     spr: () => THEME.panel_icon_element_choices,     prevsize: [120, 64] }, 
+	 // { name: "Choices",     key: "choices",    fn: Panel_Custom_Choices,     spr: () => THEME.panel_icon_element_choices,     prevsize: [120, 64] }, 
 		{ name: "Color",       key: "color",      fn: Panel_Custom_Color,       spr: function() /*=>*/ {return THEME.panel_icon_element_color},       prevsize: [160,160] }, 
 		{ name: "Knob",        key: "knob",       fn: Panel_Custom_Knob,        spr: function() /*=>*/ {return THEME.panel_icon_element_knob},        prevsize: [ 64, 64] }, 
 		{ name: "Slider",      key: "slider",     fn: Panel_Custom_Slider,      spr: function() /*=>*/ {return THEME.panel_icon_element_slider},      prevsize: [120, 32] }, 

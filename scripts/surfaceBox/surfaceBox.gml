@@ -175,7 +175,7 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 				draw_text_add(_x, yy + _hg / 2, _txt);
 				
 				var _tw  = max(string_width(_txt) + ui(16), _w * .3);
-				var _par = new widgetParam(_x + _tw, yy, _w - _tw, _hg, _val, {}, _m, _rx, _ry).setFont(f_p3);
+				var _par = new widgetParam(_x + _tw, yy, _w - _tw, _hg, _val, undefined, _m, _rx, _ry).setFont(f_p3);
 				_par.s = _hg;
 				if(is(_wid, checkBox)) _par.halign = fa_center;
 				

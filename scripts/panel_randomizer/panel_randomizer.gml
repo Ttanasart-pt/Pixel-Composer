@@ -200,7 +200,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 			
 			var _edt = _trk.editWmax;
 			if(is(_edt, widget)) {
-				var dp = new widgetParam(ex, ey, ew, eh, _trk.max_val, {}, _m, rx, ry).setFont(f_p3);
+				var dp = new widgetParam(ex, ey, ew, eh, _trk.max_val, undefined, _m, rx, ry).setFont(f_p3);
 				
 				_edt.register(sc_randomize);
 				_edt.setFocusHover(foc, hov);
@@ -211,7 +211,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 			ex -= ew + ui(4);
 			var _edt = _trk.editWmin;
 			if(is(_edt, widget)) {
-				var dp = new widgetParam(ex, ey, ew, eh, _trk.min_val, {}, _m, rx, ry).setFont(f_p3);
+				var dp = new widgetParam(ex, ey, ew, eh, _trk.min_val, undefined, _m, rx, ry).setFont(f_p3);
 				
 				_edt.register(sc_randomize);
 				_edt.setFocusHover(foc, hov);

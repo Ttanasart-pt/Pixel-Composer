@@ -359,7 +359,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		var ww = _sidew - hh - ui(4);
 		
 		sc_local_selector.setFocusHover(pFOCUS, pHOVER);
-		sc_local_selector.drawParam(new widgetParam(x0, y0, ww, hh, current_index, {}, m, x, y).setFont(f_p2));
+		sc_local_selector.drawParam(new widgetParam(x0, y0, ww, hh, current_index, undefined, m, x, y).setFont(f_p2));
 		
 		var fx = _pd;
 		var fy = y0 + hh + _pd;

@@ -16,17 +16,17 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 	drop_target    = noone;
 	
 	onClose    = undefined;
-	onApply    = undefined;
+	onModify   = undefined;
 	
 	setDrop    = function(d) /*=>*/ { drop_target = d;                          return self; }
 	setClose   = function(c) /*=>*/ { onClose = c;                              return self; }
 	setDefault = function(c) /*=>*/ { selector.setColor(c); previous_color = c; return self; }
 	
-	function setApply(a) { selector.onApply = a; onApply = a;       return self; }
+	function setApply(a) { selector.onModify = a; onModify = a;       return self; }
 	
-	b_cancel = button(function() /*=>*/ { onApply(previous_color); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
+	b_cancel = button(function() /*=>*/ { onModify(previous_color); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
 	                                                                         .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
-	b_apply  = button(function() /*=>*/ { onApply(selector.current_color); instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
+	b_apply  = button(function() /*=>*/ { onModify(selector.current_color); instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 #endregion
 
 #region presets

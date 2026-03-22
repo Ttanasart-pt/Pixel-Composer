@@ -751,6 +751,7 @@
     {"id":{"name":"__panel_custom_frame_split","path":"scripts/__panel_custom_frame_split/__panel_custom_frame_split.yy",},},
     {"id":{"name":"__panel_custom_frame_tab","path":"scripts/__panel_custom_frame_tab/__panel_custom_frame_tab.yy",},},
     {"id":{"name":"__panel_custom_frame","path":"scripts/__panel_custom_frame/__panel_custom_frame.yy",},},
+    {"id":{"name":"__panel_custom_globalvar","path":"scripts/__panel_custom_globalvar/__panel_custom_globalvar.yy",},},
     {"id":{"name":"__panel_custom_io_redirect","path":"scripts/__panel_custom_io_redirect/__panel_custom_io_redirect.yy",},},
     {"id":{"name":"__panel_custom_juncLister","path":"scripts/__panel_custom_juncLister/__panel_custom_juncLister.yy",},},
     {"id":{"name":"__panel_custom_knob","path":"scripts/__panel_custom_knob/__panel_custom_knob.yy",},},

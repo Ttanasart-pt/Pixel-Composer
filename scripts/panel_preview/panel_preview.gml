@@ -1609,7 +1609,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, toly, tolx + tolw, toly + tolh))
     			TOOLTIP = ttip;
             			
-            var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key], {}, [ mx, my ], x, y)
+            var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key], undefined, [ mx, my ], x, y)
             				.setFont(_tool_font).setS(tolh)
             
             wdg.drawParam(params);

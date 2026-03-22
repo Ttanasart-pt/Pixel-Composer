@@ -1516,7 +1516,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				array_insert(pick.palette, 0, getToolColor());
 				
 				pick.use_key = MOD_KEY.shift;
-				pick.onApply = function(c) /*=>*/ {return setToolColor(c)};
+				pick.onModify = function(c) /*=>*/ {return setToolColor(c)};
 				
 			}
 			

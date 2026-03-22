@@ -73,8 +73,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		labelAlign      = fa_left;
 		highlight_color = -1; 
 		highlight_alpha = 1;
-		
-		labelIcon       = undefined;
 	#endregion
 	
 	#region text data

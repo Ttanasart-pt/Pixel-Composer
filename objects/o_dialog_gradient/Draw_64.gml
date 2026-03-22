@@ -179,10 +179,10 @@ draggable = true;
 	
 	// if(b == 2) {
 	// 	menuCall("gradient_window_blend_menu", [ 
-	// 		menuItem(__txtx("gradient_editor_blend_hard",  "Solid"), () => { gradient.type = 1; onApply(gradient); }), 
-	// 		menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),   () => { gradient.type = 0; onApply(gradient); }), 
-	// 		menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),   () => { gradient.type = 2; onApply(gradient); }), 
-	// 		menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"), () => { gradient.type = 3; onApply(gradient); }), 
+	// 		menuItem(__txtx("gradient_editor_blend_hard",  "Solid"), () => { gradient.type = 1; onModify(gradient); }), 
+	// 		menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),   () => { gradient.type = 0; onModify(gradient); }), 
+	// 		menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),   () => { gradient.type = 2; onModify(gradient); }), 
+	// 		menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"), () => { gradient.type = 3; onModify(gradient); }), 
 	// 	], bx + ui(32), by, fa_left, gradient);
 	// }
 	// bx -= bs + ui(2);
@@ -195,7 +195,7 @@ draggable = true;
 		for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
 			gradient.keys[i].time = 1 - gradient.keys[i].time;
 		gradient.keys = array_reverse(gradient.keys);
-		onApply(gradient);
+		onModify(gradient);
 	}
 	bx -= bs + ui(2);
 	
@@ -208,7 +208,7 @@ draggable = true;
 		
 		for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
 			gradient.keys[i].time = _stp * i;
-		onApply(gradient);
+		onModify(gradient);
 	}
 	bx -= bs + ui(2);
 #endregion
@@ -315,13 +315,13 @@ draggable = true;
 				key_drag_my	  = mouse_my;
 				
 				selector.setColor(key_dragging.value);
-				onApply(gradient);
+				onModify(gradient);
 			}
 		}
 			
 		if(mouse_press(mb_right, interactable && sFOCUS) && hover && array_length(gradient.keys) > 1) {
 			array_remove(gradient.keys, hover);
-			onApply(gradient);
+			onModify(gradient);
 		}
 	}
 	

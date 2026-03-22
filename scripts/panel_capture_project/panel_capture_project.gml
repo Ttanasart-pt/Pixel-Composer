@@ -99,29 +99,29 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		
 		// ty += th + ui(6);
 		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
-		var param = new widgetParam(tx, ty, tw, th, gif_scal, {}, [ mx, my ]);
+		var param = new widgetParam(tx, ty, tw, th, gif_scal, undefined, [ mx, my ]);
 		tb_scale.setFocusHover(pHOVER, pFOCUS);
 		tb_scale.drawParam(param);
 		
 		ty += th + ui(6);
 		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
-		var param = new widgetParam(tx, ty, tw / 2, th, gif_step, {}, [ mx, my ]);
+		var param = new widgetParam(tx, ty, tw / 2, th, gif_step, undefined, [ mx, my ]);
 		tb_step.setFocusHover(pHOVER, pFOCUS);
 		tb_step.drawParam(param);
 		
-		var param = new widgetParam(tx + tw / 2, ty, tw / 2, th, gif_fps, {}, [ mx, my ]);
+		var param = new widgetParam(tx + tw / 2, ty, tw / 2, th, gif_fps, undefined, [ mx, my ]);
 		tb_fps.setFocusHover(pHOVER, pFOCUS);
 		tb_fps.drawParam(param);
 		
 		ty += th + ui(6);
 		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
-		var param = new widgetParam(tx, ty, tw, th, cap_vers, {}, [ mx, my ]);
+		var param = new widgetParam(tx, ty, tw, th, cap_vers, undefined, [ mx, my ]);
 		tb_ver.setFocusHover(pHOVER, pFOCUS);
 		tb_ver.drawParam(param);
 		
 		ty += th + ui(6);
 		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
-		var param = new widgetParam(tx + ui(64), ty, tw - ui(64), th, show_text, {}, [ mx, my ]).setS(ui(20))
+		var param = new widgetParam(tx + ui(64), ty, tw - ui(64), th, show_text, undefined, [ mx, my ]).setS(ui(20))
 			.setHalign(fa_center).setValign(fa_center);
 		cb_text.setFocusHover(pHOVER, pFOCUS);
 		cb_text.drawParam(param);

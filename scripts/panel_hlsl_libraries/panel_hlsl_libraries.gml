@@ -221,7 +221,7 @@ Libraries in the global scope will be add to project automatically.";
     	
     	if(new_file_type == 1) {
     	    tb_new_file.setFocusHover(pFOCUS, pHOVER);
-    	    tb_new_file.drawParam(new widgetParam(px + ui(8), py + ui(8), pw - ui(16), ui(26), new_file_name, {}, [ mx, my ], x, y));
+    	    tb_new_file.drawParam(new widgetParam(px + ui(8), py + ui(8), pw - ui(16), ui(26), new_file_name, undefined, [ mx, my ], x, y));
     	}
     	
     	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,7 +270,7 @@ Libraries in the global scope will be add to project automatically.";
     	
     	if(new_file_type == 0) {
     	    tb_new_file.setFocusHover(pFOCUS, pHOVER);
-    	    tb_new_file.drawParam(new widgetParam(px + ui(8), py + ui(8), pw - ui(16), ui(26), new_file_name, {}, [ mx, my ], x, y));
+    	    tb_new_file.drawParam(new widgetParam(px + ui(8), py + ui(8), pw - ui(16), ui(26), new_file_name, undefined, [ mx, my ], x, y));
     	}
     	
     	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,7 +289,7 @@ Libraries in the global scope will be add to project automatically.";
 		editor.format = curr_lib == ""? TEXT_AREA_FORMAT._default : TEXT_AREA_FORMAT.codeHLSL;
 		editor.color  = curr_lib == ""? COLORS._main_text_sub : c_white;
 		var _cc       = curr_lib == ""? blank_text : curr_content;
-		editor.drawParam(new widgetParam(px, py, pw, ph, _cc, {}, [ mx, my ], x, y).setFont(f_code));
+		editor.drawParam(new widgetParam(px, py, pw, ph, _cc, undefined, [ mx, my ], x, y).setFont(f_code));
 		
 		py = padding;
 		

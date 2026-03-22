@@ -164,6 +164,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 			var _tb = array_safe_get_fast(tb, ind);
 			if(!is(_tb, widget)) continue;
 			
+			_tb.setFont(font);
 			_tb.setFocusHover(active, hover);
 			_tb.hide = true;
 			

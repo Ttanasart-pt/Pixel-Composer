@@ -1,5 +1,5 @@
-function buttonPalette(_onApply, dialog = noone) : widget() constructor {
-	onApply      = _onApply;
+function buttonPalette(_onModify, dialog = noone) : widget() constructor {
+	onModify     = _onModify;
 	parentDialog = dialog;
 	
 	current_palette = [];
@@ -11,7 +11,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2)
 						.setDefault(current_palette);
-		dialog.onApply      = onApply;
+		dialog.onModify      = onModify;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
 		
@@ -26,7 +26,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		var dialog = colorSelectorCall(current_palette[edit_color_index], function(c) /*=>*/ {
 			if(edit_color_index == -1) return;
 			current_palette[edit_color_index] = c;
-			onApply(current_palette);
+			onModify(current_palette);
 			
 		}).setClose(function() /*=>*/ { edit_color_index = -1; })
 		
@@ -137,7 +137,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 							draw_sprite_stretched_ext(THEME.box_r2, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, COLORS._main_value_positive, 1);
 							if(mouse_release(mb_left)) {
 								current_palette[i] = DRAGGING.data;
-								onApply(current_palette);
+								onModify(current_palette);
 							}
 							
 						} else {
@@ -175,7 +175,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		if(DRAGGING && DRAGGING.type == "Palette" && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, h, COLORS._main_value_positive, 1);	
 			if(mouse_release(mb_left))
-				onApply(DRAGGING.data);
+				onModify(DRAGGING.data);
 		}
 		
 		resetFocus();
@@ -184,7 +184,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	}
 	
 	static clone = function() {
-		var cln = new buttonPalette(onApply, parentDialog);
+		var cln = new buttonPalette(onModify, parentDialog);
 		return cln;
 	}
 }

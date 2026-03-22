@@ -94,7 +94,7 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
         
         var _wdw = _w * 2/3;
         var _wdx = _x + _w - _wdw - ui(8);
-        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, strength, {}, _m, _drawParam.rx, _drawParam.ry)
+        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, strength, undefined, _m, _drawParam.rx, _drawParam.ry)
             .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
         tb_strength.drawParam(_dParam);
         

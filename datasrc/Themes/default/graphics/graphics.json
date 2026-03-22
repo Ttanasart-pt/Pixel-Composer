@@ -419,6 +419,7 @@
     "panel_icon_element_text":            { "path": "./panel/custom/s_panel_icon_element_text.png",         "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_textbox":         { "path": "./panel/custom/s_panel_icon_element_textbox.png",      "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_textarea":        { "path": "./panel/custom/s_panel_icon_element_textarea.png",     "s": 1, "x": 32, "y": 32 },
+    "panel_icon_element_globalvar":       { "path": "./panel/custom/s_panel_icon_element_globalvar.png",    "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_node_input":      { "path": "./panel/custom/s_panel_icon_element_node_input.png",   "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_node_output":     { "path": "./panel/custom/s_panel_icon_element_node_output.png",  "s": 1, "x": 32, "y": 32 },
 

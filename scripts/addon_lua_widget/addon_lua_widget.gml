@@ -34,7 +34,7 @@
 		[ "__textBox_draw",   function(wd, _x, _y, _w, _h, _text, _m) { 
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
-			var _param = new widgetParam(_x, _y, _w, _h, _text, {}, _m)
+			var _param = new widgetParam(_x, _y, _w, _h, _text, undefined, _m)
 			global.ADDON_WIDGET[? wd].drawParam(_param);
 		} ],
 @"
@@ -69,7 +69,7 @@ end",
 		[ "__vectorBox_draw",   function(wd, _x, _y, _w, _h, _vector, _m) { 
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
-			var _param = new widgetParam(_x, _y, _w, _h, _vector, {}, _m)
+			var _param = new widgetParam(_x, _y, _w, _h, _vector, undefined, _m)
 			global.ADDON_WIDGET[? wd].drawParam(_param);
 		} ],
 
@@ -105,7 +105,7 @@ end",
 		[ "__checkBox_draw",   function(wd, _x, _y, _value, _m) { 
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
-			var _param = new widgetParam(_x, _y, ui(24), ui(24), _value, {}, _m)
+			var _param = new widgetParam(_x, _y, ui(24), ui(24), _value, undefined, _m)
 			global.ADDON_WIDGET[? wd].drawParam(_param);
 		} ],
 
@@ -142,7 +142,7 @@ end",
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
 			var _button = global.ADDON_WIDGET[? wd];
-			var _param = new widgetParam(_x, _y, _w, _h, 0, {}, _m)
+			var _param = new widgetParam(_x, _y, _w, _h, 0, undefined, _m)
 			_button.drawParam(_param);
 		} ],
 

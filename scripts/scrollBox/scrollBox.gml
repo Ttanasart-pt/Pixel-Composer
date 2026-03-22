@@ -49,6 +49,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	item_pad       = ui(8);
 	text_color     = COLORS._main_text;
 	show_icon      = true;
+	icon_padding   = ui(4)
 	
 	minWidth = 0;
 	type     = 0;
@@ -57,12 +58,14 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	
 	static setStruct        = function(l) /*=>*/ { displayStr     = l; return self; }
 	static setType          = function(l) /*=>*/ { type           = l; return self; }
+	
 	static setHorizontal    = function(l) /*=>*/ { horizontal     = l; return self; }
 	static setAlign         = function(l) /*=>*/ { align          = l; return self; }
 	static setTextColor     = function(l) /*=>*/ { text_color     = l; return self; }
 	static setUpdateHover   = function(l) /*=>*/ { update_hover   = l; return self; }
 	static setMinWidth      = function(l) /*=>*/ { minWidth       = l; return self; }
 	static setFilter        = function(l) /*=>*/ { filter         = l; return self; }
+	static setIconPadding   = function(l) /*=>*/ { icon_padding   = l; return self; }
 	static setPadding       = function(l) /*=>*/ { padding        = l; return self; }
 	static setPaddingItem   = function(l) /*=>*/ { item_pad       = l; return self; }
 	static setPaddingScroll = function(l) /*=>*/ { padding_scroll = l; return self; }
@@ -144,7 +147,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			if(_val < 0) _selVal = "";
 			else _selVal = array_safe_get_fast(data, _val);
 			
-		} if(has(displayStr, _val))              _selVal = displayStr[$ _val];
+		} if(has(displayStr, _val)) _selVal = displayStr[$ _val];
 		curr_val = _val;
 		
 		var _text = is(_selVal, scrollItem)? _selVal.name : _selVal;
@@ -233,7 +236,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			}
 			
 			if(show_icon && _spr) {
-				var _ss = (h - ui(4)) / sprite_get_height(_selVal.spr);
+				var _ss = (h - icon_padding) / sprite_get_height(_selVal.spr);
 				
 				gpu_set_tex_filter(filter);
 				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + h / 2, _yc, _ss, _selVal.spr_blend);

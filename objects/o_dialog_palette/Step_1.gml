@@ -13,12 +13,12 @@ if !ready exit;
 	
 	if(sFOCUS && WIDGET_CURRENT_PREV == undefined) {
 		if(KEYBOARD_ENTER) {
-			onApply(palette);
+			onModify(palette);
 			instance_destroy();
 		}
 		
 		if(keyboard_check_pressed(vk_escape)) {
-			onApply(previous_palette);
+			onModify(previous_palette);
 			instance_destroy();
 		}
 	}

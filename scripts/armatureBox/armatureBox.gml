@@ -27,7 +27,7 @@ function armatureBox(_junction) : widget() constructor {
         
         if(_armature == noone) {
             b_newTileset.setFocusHover(active, hover);
-            var param = new widgetParam(x, y, w, h, noone, {}, _m, rx, ry).setFont(font);
+            var param = new widgetParam(x, y, w, h, noone, undefined, _m, rx, ry).setFont(font);
             b_newTileset.drawParam(param);
             
         } else {

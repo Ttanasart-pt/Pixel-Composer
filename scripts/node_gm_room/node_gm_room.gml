@@ -63,10 +63,10 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_ww = room_resizing_area[2] - room_resizing_area[0];
 			_hh = room_resizing_area[3] - room_resizing_area[1];
 			
-			var _wpr = new widgetParam(_wdx, _wdy, _wdw / 2, _wdh, _ww, {}, _m, room_renderer.rx, room_renderer.ry).setFont(f_p2).setFocusHover(_focus, _hover);
+			var _wpr = new widgetParam(_wdx, _wdy, _wdw / 2, _wdh, _ww, undefined, _m, room_renderer.rx, room_renderer.ry).setFont(f_p2).setFocusHover(_focus, _hover);
 			tb_room_resize_w.drawParam(_wpr);
 			
-			var _wpr = new widgetParam(_wdx + _wdw / 2, _wdy, _wdw / 2, _wdh, _hh, {}, _m, room_renderer.rx, room_renderer.ry).setFont(f_p2).setFocusHover(_focus, _hover);
+			var _wpr = new widgetParam(_wdx + _wdw / 2, _wdy, _wdw / 2, _wdh, _hh, undefined, _m, room_renderer.rx, room_renderer.ry).setFont(f_p2).setFocusHover(_focus, _hover);
 			tb_room_resize_h.drawParam(_wpr);
 			
 		} else {
@@ -168,7 +168,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _yy  = _y + ui(8);
 		var _wdy = _yy;
 		var _wdh = ui(32);
-		var _wpr = new widgetParam(_wdx, _wdy, _wdw, _wdh, _l.raw.depth, {}, _m, layer_renderer.rx, layer_renderer.ry)
+		var _wpr = new widgetParam(_wdx, _wdy, _wdw, _wdh, _l.raw.depth, undefined, _m, layer_renderer.rx, layer_renderer.ry)
 						.setColor(COLORS._main_icon_light)
 						.setFocusHover(_focus, _hover);
 		tb_depth.drawParam(_wpr);

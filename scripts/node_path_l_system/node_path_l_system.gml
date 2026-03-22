@@ -87,7 +87,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			_nameW.setVAlign(pv);
 			_ruleW.setVAlign(pv);
 			
-			var _par = new widgetParam(tx, ty, tw, th, _name.showValue(), {}, _m)
+			var _par = new widgetParam(tx, ty, tw, th, _name.showValue(), undefined, _m)
 							.setFont(ff).setFocusHover(_focus, _hover);
 			dh = _nameW.drawParam(_par);
 			wh = max(wh, dh);
@@ -97,7 +97,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_sprite_ui(THEME.arrow, 0, tx + tw + ui(12), ty + dh / 2, 1, 1, 0, COLORS._main_icon);
 			
 			var _nam = _name.showValue();
-			var _par = new widgetParam(rx, ty, rw, th, _rule.showValue(), {}, _m)
+			var _par = new widgetParam(rx, ty, rw, th, _rule.showValue(), undefined, _m)
 							.setFont(ff).setFocusHover(_focus, _hover, _nam != "");
 			dh = _ruleW.drawParam(_par);
 			wh = max(wh, dh);

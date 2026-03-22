@@ -92,7 +92,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
             var _wdw  = _panel.w - ui(48) - _wdx;
             var _wdh  = spac? TEXTBOX_HEIGHT  : _lh;
             
-            var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+            var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, undefined, _m, rx, ry)
             					.setFont(_font).setScrollpane(_panel.contentPane);
 		    if(is(editW, checkBox)) _param.setHalign(fa_center);
 			

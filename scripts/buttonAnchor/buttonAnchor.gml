@@ -1,17 +1,17 @@
-function buttonAnchor(_input = noone, _onClick = noone) : widget() constructor {
-	onClick = _onClick;
-	input   = _input;
-	index   = 4;
-	click   = true;
+function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor {
+	onModify = _onModify;
+	input    = _input;
+	index    = 4;
+	click    = true;
 	
-	center  = true;
-	context = noone;
+	center   = true;
+	context  = noone;
 	
 	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.m); }
 	
 	static trigger = function(_index) {
 		if(input == noone) {
-			onClick(_index);
+			onModify(_index);
 			return;
 		}
 		
@@ -64,5 +64,5 @@ function buttonAnchor(_input = noone, _onClick = noone) : widget() constructor {
 		return _h;
 	}
 	
-	static clone = function() /*=>*/ {return new buttonAnchor(input, onClick)}
+	static clone = function() /*=>*/ {return new buttonAnchor(input, onModify)}
 }

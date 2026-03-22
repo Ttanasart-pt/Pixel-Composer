@@ -9,6 +9,8 @@ function widget() constructor {
 	
 	minWidth = ui(32);
 	
+	onModify = undefined;
+	
 	active   = false;
 	hover    = false;
 	hovering = false;
@@ -165,7 +167,9 @@ function widget() constructor {
 	static free = function() {}
 }
 
-function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, ry = 0) constructor {
+function widgetParam(x, y, w, h, data, display_data = undefined, m = mouse_ui, rx = 0, ry = 0) constructor {
+	static EMPTYPARAM = {};
+	
 	self.x = x;
 	self.y = y;
 	
@@ -180,7 +184,7 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	self.halign		= fa_left;
 	self.valign		= fa_top;
 	
-	self.display_data = display_data;
+	self.display_data = display_data ?? EMPTYPARAM;
 	
 	self.font       = f_p1;
 	

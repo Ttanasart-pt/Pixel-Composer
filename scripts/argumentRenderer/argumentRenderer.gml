@@ -50,7 +50,7 @@ function argumentRenderer(_typeArray = []) {
 				draw_text_add(_x + ui(8), ty + _th / 2, _tv);
 				var _tw = string_width(_tv) + ui(24);
 				
-				var params = new widgetParam(tx + _tw, ty, _w - _tw, _th, _jVal.showValue(), {}, _m, rx, ry);
+				var params = new widgetParam(tx + _tw, ty, _w - _tw, _th, _jVal.showValue(), undefined, _m, rx, ry);
 				    params.setFont(_fn);
 				
 				_wVal.setFocusHover(_focus, _hover);

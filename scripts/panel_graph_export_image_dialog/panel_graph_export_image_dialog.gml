@@ -84,7 +84,7 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 			var _wid = widgets[i][1];
 			var _dat = widgets[i][2]();
 			
-			var _param = new widgetParam(_tx - _ww, _tyy - _hh / 2, _ww, _hh, _dat, {}, _m, sc_settings.x + x, sc_settings.y + y).setFont(f_p3);
+			var _param = new widgetParam(_tx - _ww, _tyy - _hh / 2, _ww, _hh, _dat, undefined, _m, sc_settings.x + x, sc_settings.y + y).setFont(f_p3);
 			if(is(_wid, checkBox)) _param.x += _ww / 2 - _param.s / 2;
 			
 			_wid.setFocusHover(pFOCUS, pHOVER);

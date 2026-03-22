@@ -214,14 +214,14 @@ function Panel_Graph_Selector(_graph) : PanelContent() constructor {
 		
 		xx -= bs;
 		prop_sel_invert.setFocusHover(pFOCUS, hover);
-		prop_sel_invert.drawParam(new widgetParam(xx, ty, bs, bs, 0, {}, m, x, y)); 
+		prop_sel_invert.drawParam(new widgetParam(xx, ty, bs, bs, 0, undefined, m, x, y)); 
 		xx -= ui(4);
 		
 		xx -= ui(12);
 		prop_action_toggle.icon_index = show_action * 2;
 		prop_action_toggle.icon_blend = show_action? COLORS._main_accent : COLORS._main_icon_light;
 		prop_action_toggle.setFocusHover(pFOCUS, hover);
-		prop_action_toggle.drawParam(new widgetParam(xx, ty, ui(12), bs, 0, {}, m, x, y)); 	
+		prop_action_toggle.drawParam(new widgetParam(xx, ty, ui(12), bs, 0, undefined, m, x, y)); 	
 		xx -= ui(4);
 		
 		if(show_action) {
@@ -229,7 +229,7 @@ function Panel_Graph_Selector(_graph) : PanelContent() constructor {
 				var b = action_buttons[i];
 				xx -= bs;
 				b.setFocusHover(pFOCUS, hover);
-				b.drawParam(new widgetParam(xx, ty, bs, bs, 0, {}, m, x, y)); 	
+				b.drawParam(new widgetParam(xx, ty, bs, bs, 0, undefined, m, x, y)); 	
 				xx -= ui(4);
 			}
 			xx -= ui(4);
@@ -243,22 +243,22 @@ function Panel_Graph_Selector(_graph) : PanelContent() constructor {
 		
 		prop_name.setFocusHover(pFOCUS, hover);
 		prop_name.register();
-		prop_name.drawParam(new widgetParam(xx, ty, tw, th, text, {}, m, x, y).setFont(font)); 
+		prop_name.drawParam(new widgetParam(xx, ty, tw, th, text, undefined, m, x, y).setFont(font)); 
 		xx += tw + ui(4);
 		
 		prop_node_type.icon_blend = nodetype == ""? COLORS._main_icon_light : COLORS._main_accent;
 		prop_node_type.setFocusHover(pFOCUS, hover);
-		prop_node_type.drawParam(new widgetParam(xx, ty, bs, bs, 0, {}, m, x, y)); 
+		prop_node_type.drawParam(new widgetParam(xx, ty, bs, bs, 0, undefined, m, x, y)); 
 		xx += bs + ui(4);
 		
 		prop_color.setFocusHover(pFOCUS, hover);
-		prop_color.drawParam(new widgetParam(xx, ty, bs, bs, color, {}, m, x, y)); 
+		prop_color.drawParam(new widgetParam(xx, ty, bs, bs, color, undefined, m, x, y)); 
 		xx += bs + ui(4);
 		
 		for( var i = 0, n = array_length(filter_buttons); i < n; i++ ) {
 			var b = filter_buttons[i];
 			b.setFocusHover(pFOCUS, hover);
-			b.drawParam(new widgetParam(xx, ty, bs, bs, 0, {}, m, x, y)); 	
+			b.drawParam(new widgetParam(xx, ty, bs, bs, 0, undefined, m, x, y)); 	
 			xx += bs + ui(4);
 		}
 		

@@ -148,7 +148,7 @@ draggable = true;
 				palette = loadPalette(path);
 				refreshPaletteObject();
 				
-				onApply(palette);
+				onModify(palette);
 			}
 		}
 		
@@ -185,7 +185,7 @@ draggable = true;
 			
 			palette = pal;
 			refreshPaletteObject();
-			onApply(palette);
+			onModify(palette);
 		}
 		
 	#endregion
@@ -427,7 +427,7 @@ draggable = true;
 			index_selecting = [ 0, 0 ];
 			
 			refreshPaletteObject();
-			onApply(palette);
+			onModify(palette);
 		}
 	} else
 		draw_sprite_ui_uniform(THEME.minus, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon, 0.5);
@@ -438,7 +438,7 @@ draggable = true;
 		palette[array_length(palette)] = ca_black;
 		
 		refreshPaletteObject();
-		onApply(palette);
+		onModify(palette);
 	}
 	
 #endregion

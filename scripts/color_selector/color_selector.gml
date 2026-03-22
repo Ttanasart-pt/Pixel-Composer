@@ -2,8 +2,8 @@ globalvar DROPPER_DROPPING, DROPPER_SURFACE;
 DROPPER_DROPPING = false;
 DROPPER_SURFACE  = noone;
 
-function colorSelector(_onApply = noone) constructor {
-	onApply = _onApply;
+function colorSelector(_onModify = noone) constructor {
+	onModify = _onModify;
 	
 	focus = noone;
 	hover = noone;
@@ -128,7 +128,7 @@ function colorSelector(_onApply = noone) constructor {
 		sat = color_get_saturation(current_color);
 		val = color_get_value(current_color);
 		
-		if(_apply && onApply != noone) onApply(int64(current_color));
+		if(_apply && onModify != noone) onModify(int64(current_color));
 	}
 	
 	function setHSV(_apply = true) {
@@ -137,8 +137,8 @@ function colorSelector(_onApply = noone) constructor {
 		var _alpha    = color_get_alpha(current_color);
 		current_color = make_color_hsva(hue, sat, val, _alpha);
 		
-		if(_apply && onApply != noone) {
-			onApply(int64(current_color));
+		if(_apply && onModify != noone) {
+			onModify(int64(current_color));
 			UNDO_HOLDING = true;
 		}
 	}
@@ -599,8 +599,8 @@ function colorSelector(_onApply = noone) constructor {
 													surface_getpixel(content_surface, ui(hue), ui(256 - sat));
 					current_color = cola(current_color, 1);
 					
-					if(onApply != noone) {
-						onApply(current_color);
+					if(onModify != noone) {
+						onModify(current_color);
 						UNDO_HOLDING = true;
 					}
 				}
@@ -631,8 +631,8 @@ function colorSelector(_onApply = noone) constructor {
 													surface_getpixel(content_surface, ui(hue), ui(256 - sat));
 					current_color = cola(current_color, 1);
 					
-					if(onApply != noone) {
-						onApply(current_color);
+					if(onModify != noone) {
+						onModify(current_color);
 						UNDO_HOLDING = true;
 					}
 				}
@@ -868,8 +868,8 @@ function colorSelector(_onApply = noone) constructor {
 													surface_getpixel(content_surface, ui(hue), ui(256 - sat));
 					current_color = cola(current_color, 1);
 					
-					if(onApply != noone) {
-						onApply(current_color);
+					if(onModify != noone) {
+						onModify(current_color);
 						UNDO_HOLDING = true;
 					}
 				}
@@ -900,8 +900,8 @@ function colorSelector(_onApply = noone) constructor {
 													surface_getpixel(content_surface, ui(hue), ui(256 - sat));
 					current_color = cola(current_color, 1);
 					
-					if(onApply != noone) {
-						onApply(current_color);
+					if(onModify != noone) {
+						onModify(current_color);
 						UNDO_HOLDING = true;
 					}
 				}

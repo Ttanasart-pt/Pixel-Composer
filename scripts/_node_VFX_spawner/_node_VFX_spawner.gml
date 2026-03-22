@@ -128,7 +128,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			_hh += _th;
 			
 			_wig.setFocusHover(_focus, _hover);
-			var _hg = _wig.drawParam(new widgetParam(_x, _y, _w, 0, _dat, {}, _m, dynaDraw_parameter.rx, dynaDraw_parameter.ry).setFont(f_p2));
+			var _hg = _wig.drawParam(new widgetParam(_x, _y, _w, 0, _dat, undefined, _m, dynaDraw_parameter.rx, dynaDraw_parameter.ry).setFont(f_p2));
 			
 			_y  += _hg + ui(8);
 			_hh += _hg + ui(8);

@@ -82,7 +82,7 @@ function __Bone_Constrain_Limit_Scale(_bone, _bid = "") : __Bone_Constrain(_bone
         draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
         draw_text_add(_lbx, _y + _wdh / 2, __txt("Range"));
         
-        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, [ limit_min, limit_max ], {}, _m, _drawParam.rx, _drawParam.ry)
+        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, [ limit_min, limit_max ], undefined, _m, _drawParam.rx, _drawParam.ry)
             .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
         tb_limit.drawParam(_dParam);
         
@@ -92,7 +92,7 @@ function __Bone_Constrain_Limit_Scale(_bone, _bid = "") : __Bone_Constrain(_bone
         draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
         draw_text_add(_lbx, _y + _wdh / 2, __txt("Inherit"));
         
-        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, lock_children, {}, _m, _drawParam.rx, _drawParam.ry)
+        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, lock_children, undefined, _m, _drawParam.rx, _drawParam.ry)
             .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
         _dParam.s = _wdh;
         _dParam.halign = fa_center;

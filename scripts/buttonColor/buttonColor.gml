@@ -1,5 +1,5 @@
-function buttonColor(_onApply, dialog = noone) : widget() constructor {
-	onApply       = _onApply;
+function buttonColor(_onModify, dialog = noone) : widget() constructor {
+	onModify      = _onModify;
 	parentDialog  = dialog;
 	triggered     = false;
 	show_alpha    = true;
@@ -10,7 +10,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	hover_wid     = ui(24);
 	
 	onColorPick   = function() /*=>*/ {
-		var _dia = colorSelectorCall(undefined, function(c) /*=>*/ {return onApply(c)});
+		var _dia = colorSelectorCall(undefined, function(c) /*=>*/ {return onModify(c)});
 		_dia.selector.dropper_active = true;
 		_dia.selector.dropper_close  = true;
 		_dia.drop_target = other;
@@ -22,7 +22,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	b_quick_pick  = button(function() /*=>*/ {
 		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 		array_insert(pick.palette, 0, current_color);
-		pick.onApply = onApply;
+		pick.onModify = onModify;
 	}).setIcon(THEME.color_wheel).iconPad(ui(6));
 	
 	b_quick_pick.activate_on_press = true;
@@ -38,7 +38,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	
 	static trigger = function() { 
 		var colr   = is_array(current_color)? array_safe_get(current_color, 0, 0) : current_color;
-		var dialog = colorSelectorCall(colr, function(c) /*=>*/ {return onApply(c)});
+		var dialog = colorSelectorCall(colr, function(c) /*=>*/ {return onModify(c)});
 		
 		dialog.interactable     = interactable;
 		dialog.drop_target      = self;
@@ -141,7 +141,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 						if(interactable && key_mod_press(SHIFT)) {
 							var _hx = clipboard_get_text();
 							var _cc = color_from_rgb(_hx);
-							if(_cc >= 0) onApply(_cc);
+							if(_cc >= 0) onModify(_cc);
 						} else
 							clipboard_set_text(color_get_hex(current_color));
 					}
@@ -180,7 +180,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		if(DRAGGING && DRAGGING.type == "Color" && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _cw, _h, COLORS._main_value_positive, 1);	
 			if(mouse_release(mb_left))
-				onApply(DRAGGING.data);
+				onModify(DRAGGING.data);
 		}
 		
 		resetFocus();
@@ -188,7 +188,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	}
 	
 	static clone = function() {
-		var cln = new buttonColor(onApply, parentDialog);
+		var cln = new buttonColor(onModify, parentDialog);
 		return cln;
 	}
 }

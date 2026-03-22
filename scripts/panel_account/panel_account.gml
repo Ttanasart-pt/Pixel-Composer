@@ -63,7 +63,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 			draw_text_add(_x0, _y0, "Email");
 			_y0 += ui(2);
 			
-			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, login_email, {}, _m).setFont(f_p2).setFocusHover(_focus, _hover, !logging_in);
+			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, login_email, undefined, _m).setFont(f_p2).setFocusHover(_focus, _hover, !logging_in);
 			tb_login_email.drawParam(_param);
 			_y0 += TEXTBOX_HEIGHT + ui(24);
 			
@@ -71,7 +71,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 			draw_text_add(_x0, _y0, "Password");
 			_y0 += ui(2);
 			
-			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, login_password, {}, _m).setFont(f_code).setFocusHover(_focus, _hover, !logging_in);
+			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, login_password, undefined, _m).setFont(f_code).setFocusHover(_focus, _hover, !logging_in);
 			tb_login_password.drawParam(_param);
 			_y0 += TEXTBOX_HEIGHT + ui(16);
 			
@@ -154,7 +154,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 			draw_text_add(_x0, _y0, "Email");
 			_y0 += ui(2);
 			
-			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, signup_email, {}, _m).setFont(f_p2).setFocusHover(_focus, _hover, !signing_up);
+			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, signup_email, undefined, _m).setFont(f_p2).setFocusHover(_focus, _hover, !signing_up);
 			tb_signup_email.drawParam(_param);
 			_y0 += TEXTBOX_HEIGHT + ui(24);
 			
@@ -162,7 +162,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 			draw_text_add(_x0, _y0, "Password");
 			_y0 += ui(2);
 			
-			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, signup_password, {}, _m).setFont(f_code).setFocusHover(_focus, _hover, !signing_up);
+			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, signup_password, undefined, _m).setFont(f_code).setFocusHover(_focus, _hover, !signing_up);
 			tb_signup_password.drawParam(_param);
 			_y0 += TEXTBOX_HEIGHT + ui(24);
 			
@@ -170,7 +170,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 			draw_text_add(_x0, _y0, "Re-entry Password");
 			_y0 += ui(2);
 			
-			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, signup_password2, {}, _m).setFont(f_code).setFocusHover(_focus, _hover, !signing_up);
+			var _param = new widgetParam(_x0, _y0, _cnw, TEXTBOX_HEIGHT, signup_password2, undefined, _m).setFont(f_code).setFocusHover(_focus, _hover, !signing_up);
 			tb_signup_password2.drawParam(_param);
 			_y0 += TEXTBOX_HEIGHT + ui(16);
 			

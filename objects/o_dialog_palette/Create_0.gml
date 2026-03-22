@@ -35,7 +35,7 @@ function __PaletteColor(_color = c_black) constructor {
 	index_drag_w = 0; index_drag_w_to = 0;
 	index_drag_h = 0; index_drag_h_to = 0;
 	
-	setApply = function(a) /*=>*/ { onApply = a; selector.onApply = a; return self; }
+	setApply = function(a) /*=>*/ { onModify = a; selector.onModify = a; return self; }
 	setDrop  = function(d) /*=>*/ { drop_target = d;                   return self; }
 	setColor = function(c) /*=>*/ {
 		if(index_selecting[1] != 1 || palette == 0) return self;
@@ -44,11 +44,11 @@ function __PaletteColor(_color = c_black) constructor {
 		palette[_ind] = c;
 		paletteObject[_ind].color = c;
 		
-		if(onApply != noone) onApply(palette);
+		if(onModify != noone) onModify(palette);
 		return self;
 	};
 	
-	onApply  = noone;
+	onModify  = noone;
 	selector = new colorSelector(setColor);
 	selector.dropper_close  = false;
 	selector.discretize_pal = false;
@@ -56,9 +56,9 @@ function __PaletteColor(_color = c_black) constructor {
 	previous_palette  = c_black;
 	selection_surface = noone;
 	
-	b_cancel = button(function() /*=>*/ { onApply(previous_palette); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
+	b_cancel = button(function() /*=>*/ { onModify(previous_palette); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
 	                                                                           .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
-	b_apply  = button(function() /*=>*/ { onApply(palette);          instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
+	b_apply  = button(function() /*=>*/ { onModify(palette);          instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	menu_add_target = "";
 	menu_add = [
@@ -160,7 +160,7 @@ function __PaletteColor(_color = c_black) constructor {
 			if(b) { select = false; isHover = false; };
 			if(b == 2) {
 				setPalette(array_clone(_palt)); 
-				onApply(palette);
+				onModify(palette);
 			}
 		}
 		
@@ -183,12 +183,12 @@ function __PaletteColor(_color = c_black) constructor {
 		if(select && mouse_lpress(_foc)) {
 			preset_expands[$ _path] = !_exp;
 			click_block = true;
-			onApply(palette);
+			onModify(palette);
 		}
 		
 		if(isHover && mouse_rpress(_foc)) {
 			menuCall("palette_window_preset_menu", [
-				menuItem(__txt("Set Palette"), function(p) /*=>*/ { setPalette(array_clone(p)); onApply(palette); }).setParam(_palt),
+				menuItem(__txt("Set Palette"), function(p) /*=>*/ { setPalette(array_clone(p)); onModify(palette); }).setParam(_palt),
 				menuItem(__txtx("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
 				menuItem(__txtx("palette_editor_delete", "Delete palette"),      function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
 			]);
@@ -353,7 +353,7 @@ function __PaletteColor(_color = c_black) constructor {
 		for( var i = 0, n = array_length(paletteObject); i < n; i++ )
 			palette[i] = paletteObject[i].color;
 		
-		onApply(palette);
+		onModify(palette);
 	}
 	
 	function sortPalette(sortFunc) {
@@ -395,7 +395,7 @@ function __PaletteColor(_color = c_black) constructor {
 		index_selecting[1] = array_length(pal);
 		refreshPaletteObject();
 		
-		if(onApply != noone) onApply(palette);
+		if(onModify != noone) onModify(palette);
 	} 
 	
 	function checkMouse() {}

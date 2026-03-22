@@ -45,12 +45,12 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 			var scw = wdw / 2 - ui(4);
 			
 			var _data  = node_selector.getter();
-			var _param = new widgetParam(wdx, wdy, scw, wdh, _data, {}, _m, rx, ry).setFont(f_p4);
+			var _param = new widgetParam(wdx, wdy, scw, wdh, _data, undefined, _m, rx, ry).setFont(f_p4);
 			node_selector.editWidget.setFocusHover(foc, hov);
 			node_selector.editWidget.drawParam(_param);
 			
 			var _data  = junc_selector.getter();
-			var _param = new widgetParam(wdx + scw + ui(4), wdy, scw, wdh, _data, {}, _m, rx, ry).setFont(f_p4);
+			var _param = new widgetParam(wdx + scw + ui(4), wdy, scw, wdh, _data, undefined, _m, rx, ry).setFont(f_p4);
 			junc_selector.editWidget.setFocusHover(foc, hov);
 			junc_selector.editWidget.drawParam(_param);
 			
@@ -58,7 +58,7 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 			getNode();
 			
 			var _data  = node_selector.getter();
-			var _param = new widgetParam(wdx, wdy, wdw, wdh, _data, {}, _m, rx, ry).setFont(f_p4);
+			var _param = new widgetParam(wdx, wdy, wdw, wdh, _data, undefined, _m, rx, ry).setFont(f_p4);
 			node_selector.editWidget.setFocusHover(foc, hov);
 			node_selector.editWidget.drawParam(_param);
 			
