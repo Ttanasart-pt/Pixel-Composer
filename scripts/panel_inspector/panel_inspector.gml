@@ -322,9 +322,10 @@ function Panel_Inspector() : PanelContent() constructor {
         global_button_edit  = button(function() /*=>*/ { meta_display[3][1] = false; global_drawer.editing = true;     }).setIcon(THEME.gear_16,   0, COLORS._main_icon_light);
         global_button_apply = button(function() /*=>*/ { meta_display[3][1] = false; global_drawer.editing = false;    }).setIcon(THEME.accept_16, 0, COLORS._main_value_positive);
         global_button_new   = button(function() /*=>*/ { meta_display[3][1] = false; PROJECT.globalNode.createValue(); }).setIcon(THEME.add_16,    0, COLORS._main_value_positive);
+        global_button_pop   = button(function() /*=>*/ {return dialogPanelCall(new Panel_Globalvar())} ).setIcon(THEME.text_popup, 1, COLORS._main_icon_light, .75);
         
-        global_buttons         = [ global_button_new, global_button_edit ];
-        global_buttons_editing = [ global_button_new, global_button_apply ];
+        global_buttons         = [ global_button_new, global_button_edit,  global_button_pop ];
+        global_buttons_editing = [ global_button_new, global_button_apply, global_button_pop ];
         global_drawer          = new GlobalVarDrawer();
         
         GM_Explore_draw_init();
@@ -1543,7 +1544,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 case "panels":
                 	var _pans = PROJECT.customPanels;
                 	var _ph   = ui(24);
-                	var pbw   = ui(80);
+                	var pbw   = ui(96);
                 	var toDel = undefined;
                 	var pbx, pby, pbh;
                 	

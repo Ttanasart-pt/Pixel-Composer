@@ -13,6 +13,7 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 	press_output = new JuncLister(data, "Select", CONNECT_TYPE.output);
 	type = 0;
 	
+	font   = 4;
 	halign = fa_left;
 	valign = fa_top;
 	color  = ca_white;
@@ -33,6 +34,17 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 		press_output,
 		
 		[ "Text", false ], 
+		Simple_Editor("Font", new scrollBox( [ 
+			"Header 1", 
+			"Header 3", 
+			"Header 5", 
+			"Content 1", 
+			"Content 2", 
+			"Content 2b", 
+			"Content 3", 
+			"Content 4", 
+		], function(t) /*=>*/ { font = t; } ), function() /*=>*/ {return font}, function(t) /*=>*/ { font = t; }), 
+		
 		Simple_Editor("H Align", new buttonGroup( array_create(3, THEME.inspector_text_halign), function(c) /*=>*/ { halign = c; }), function() /*=>*/ {return halign}, function(c) /*=>*/ { halign = c; }), 
 		Simple_Editor("V Align", new buttonGroup( array_create(3, THEME.inspector_text_valign), function(c) /*=>*/ { valign = c; }), function() /*=>*/ {return valign}, function(c) /*=>*/ { valign = c; }), 
 		
@@ -48,7 +60,8 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 	
 	static draw = function(panel, _m) {
 		input_junc = bind_input.getJunction();
-		var hov = elementHover && point_in_rectangle(_m[0], _m[1], kx0, ky0, kx1, ky1);
+		
+		var hov = elementHover;
 		var pre = (hov && mouse_lclick(focus)) || textbox.selecting;
 		
 		var _bg_junc = bg_output.getJunction();
@@ -66,17 +79,28 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 		} else
 			draw_sprite_stretched_ext(THEME.box_r2, 0, x, y, w, h, COLORS._main_icon_dark, 1);
 		
-		if(input_junc) {
-			var _currVal = input_junc.showValue();
-			var _param   = new widgetParam(x, y, w, h, _currVal, undefined, _m, rx, ry)
-				.setColor(color)
-				.setHalign(halign)
-				.setValign(valign);
-			
-			textbox.input = type;
-			textbox.setFocusHover(focus, elementHover);
-			textbox.drawParam(_param);
+		var _font = f_p2;
+		switch(font) {
+			case 0 : _font = f_h1;  break;
+			case 1 : _font = f_h3;  break;
+			case 2 : _font = f_h5;  break;
+			case 3 : _font = f_p1;  break;
+			case 4 : _font = f_p2;  break;
+			case 5 : _font = f_p2b; break;
+			case 6 : _font = f_p3;  break;
+			case 7 : _font = f_p4;  break;
 		}
+		
+		var _currVal = input_junc? input_junc.showValue() : "";
+		var _param   = new widgetParam(x, y, w, h, _currVal, undefined, _m, rx, ry)
+			.setFont(_font)
+			.setColor(color)
+			.setHalign(halign)
+			.setValign(valign);
+		
+		textbox.input = type;
+		textbox.setFocusHover(focus, elementHover);
+		textbox.drawParam(_param);
 	}
 	
 	////- Serialize
@@ -88,6 +112,7 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 		_m.press = press_output.serialize(_m);
 		
 		_m.type   = type;
+		_m.font   = font;
 		_m.color  = color;
 		_m.halign = halign;
 		_m.valign = valign;
@@ -102,6 +127,7 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 		if(has(_m, "press")) press_output.deserialize(_m.press);
 		
 		type   = _m[$ "type"]   ?? type;
+		font   = _m[$ "font"]   ?? font;
 		color  = _m[$ "color"]  ?? color;
 		halign = _m[$ "halign"] ?? halign;
 		valign = _m[$ "valign"] ?? valign;
