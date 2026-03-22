@@ -15,6 +15,7 @@ function Panel_Custom_Data() constructor {
 	
 	auto_pin   = true;
 	open_start = false;
+	willDel    = false;
 	
 	#region ---- root ----
 		rootData = undefined;

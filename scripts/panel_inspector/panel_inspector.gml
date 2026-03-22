@@ -1548,6 +1548,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 	var toDel = undefined;
                 	var pbx, pby, pbh;
                 	
+                	var bb = THEME.button_hide;
+                	
                 	for( var j = 0, m = array_length(_pans); j < m; j++ ) {
                 		var _p = _pans[j];
                 		if(_p.open_start) draw_sprite_ui(THEME.favorite, 1, ui(16), yy + _ph / 2, .75, .75, 0, COLORS._main_value_positive);
@@ -1559,18 +1561,30 @@ function Panel_Inspector() : PanelContent() constructor {
                 		pby  = yy;
                 		pbh  = _ph;
                 		
-                		var bb = THEME.button_hide;
-                		var bt = __txt("Delete Panel");
-                		var bc = CARRAY.button_negative;
-                		if(buttonInstant_Pad(bb, pbx, pby, _ph, _ph, _m, _hover, _focus, bt, THEME.cross, 0, bc, 1, ui(6)) == 2)
-                			toDel = _p;
+                		if(_p.willDel) {
+	                		var bt = __txt("Cancel Deletion");
+	                		var bc = COLORS._main_value_negative;
+	                		if(buttonInstant_Pad(bb, pbx, pby, _ph, _ph, _m, _hover, _focus, bt, THEME.cross, 0, bc, 1, ui(6)) == 2)
+	                			_p.willDel = false;
+	                		
+	                		pbx -= _ph + ui(1);
+	                		var bt = __txt("Comfirm Deletion");
+	                		var bc = COLORS._main_value_positive;
+	                		if(buttonInstant_Pad(bb, pbx, pby, _ph, _ph, _m, _hover, _focus, bt, THEME.accept_16, 0, bc, 1, ui(6)) == 2)
+	                			toDel = _p;
+	                			
+                		} else {
+	                		var bt = __txt("Delete Panel");
+	                		var bc = CARRAY.button_negative;
+	                		if(buttonInstant_Pad(bb, pbx, pby, _ph, _ph, _m, _hover, _focus, bt, THEME.cross, 0, bc, 1, ui(6)) == 2)
+	                			_p.willDel = true;
                 		
-                		var bb = THEME.button_hide;
-                		var bt = __txt("Edit");
-                		var bc = COLORS._main_icon;
-                		pbx -= _ph + ui(1);
-                		if(buttonInstant_Pad(bb, pbx, pby, _ph, _ph, _m, _hover, _focus, bt, THEME.gear, 0, bc, 1, ui(6)) == 2)
-                			dialogPanelCall(new Panel_Custom_Editor(_p));
+	                		pbx -= _ph + ui(1);
+	                		var bt = __txt("Edit");
+	                		var bc = COLORS._main_icon;
+	                		if(buttonInstant_Pad(bb, pbx, pby, _ph, _ph, _m, _hover, _focus, bt, THEME.gear, 0, bc, 1, ui(6)) == 2)
+	                			dialogPanelCall(new Panel_Custom_Editor(_p));
+                		}
                 		
                 		pbx -= pbw + ui(4);
                 		draw_set_font(_font);
