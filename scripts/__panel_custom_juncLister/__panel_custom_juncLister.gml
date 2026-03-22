@@ -1,4 +1,5 @@
 function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) constructor {
+	ID = UUID_generate();
 	data = _data;
 	name = _name;
 	type = _type;
@@ -124,6 +125,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		
 		for( var i = 0, n = array_length(PROJECT.allNodes); i < n; i++ ) {
 			var _node = PROJECT.allNodes[i];
+			if(!_node.active) continue;
+			
 			nodeList[_i]     = _node;
 			nodeListName[_i] = _node.getDisplayName();
 			_i++;
@@ -181,9 +184,15 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		if(is(editWidget, widget)) return editWidget;
 		
 		var junc = getJunction();
-		if(!junc) return editWidget;
+		if(!is(junc, NodeValue)) return editWidget;
 		
-		editWidget = junc.editWidget.clone();
+		var _map = junc.editWidgetMap;
+		if(!has(_map, ID)) {
+			var wid = junc.getEditWidget();
+			_map[$ ID] = wid.clone();
+		}
+			
+		editWidget = _map[$ ID];
 		return editWidget;
 	}
 	
@@ -195,6 +204,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		
 		node_id = _junc.node.node_id;
 		junc_id = _junc.index;
+		
+		editWidget = undefined;
 		
 		return self;
 	}

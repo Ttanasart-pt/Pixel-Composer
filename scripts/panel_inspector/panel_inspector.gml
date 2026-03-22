@@ -353,6 +353,13 @@ function Panel_Inspector() : PanelContent() constructor {
     
     #region ---- Panel ---- 
     	panelData = {};
+    	
+    	panel_rename    = undefined;
+    	panel_rename_tb = textBox_Text(function(t) /*=>*/ {
+    		if(panel_rename == undefined) return;
+    		panel_rename.name = t;
+    		panel_rename = undefined;
+    	});
     #endregion
     
     #region ---- Workshop ----
@@ -1546,18 +1553,52 @@ function Panel_Inspector() : PanelContent() constructor {
                 	var bb    = THEME.button_hide;
                 	var _pans = PROJECT.customPanels;
                 	var _ph   = ui(24);
-                	var pbw   = gw * .5 - _ph * 2 - ui(2 + 4);
+                	var pbw   = ui(128);
                 	var toDel = undefined;
+                	var _padx = ui(4);
+                	
                 	var pbx, pby, pbh;
                 	
                 	for( var j = 0, m = array_length(_pans); j < m; j++ ) {
                 		var _p = _pans[j];
-                		if(_p.open_start) draw_sprite_ui(THEME.favorite, 1, ui(16), yy + _ph / 2, .75, .75, 0, COLORS._main_value_positive);
                 		
-                		draw_set_text(_font, fa_left, fa_center, COLORS._main_text);
-                		draw_text_add(ui(32), yy + _ph / 2, _p.name);
+                		var fhv = _hover && point_in_circle(_m[0], _m[1], ui(16), yy + _ph / 2, _ph / 2);
+                		var fc  = _p.open_start? COLORS._main_value_positive : COLORS._main_icon;
+                		draw_sprite_ui(THEME.favorite, _p.open_start, ui(16), yy + _ph / 2, .75, .75, 0, fc, .75 + fhv*.25);
+                		if(fhv) {
+                			TOOLTIP = __txt("Open on Project load");
+                			if(mouse_lpress(_focus))
+                				_p.open_start = !_p.open_start;
+                		}
                 		
-                		pbx  = con_w - _ph - ui(8);
+                		draw_set_font(_font);
+                		var _txt = _p.name;
+                		var _txw = string_width(_txt) + ui(8);
+                		var _txh = _ph - ui(4);
+                		var _tx0 = ui(32) - _padx / 2;
+                		var _ty0 = yy + ui(2);
+                		
+                		if(panel_rename == _p) {
+                			var tbw = w - pbw - _tx0 - ui(104);
+                			panel_rename_tb.setFocusHover(_focus, _hover)
+                			panel_rename_tb.drawParam(new widgetParam(_tx0, yy + 1, tbw, _ph - 2, _txt, undefined, _m)
+                				.setFont(_font));
+	                		
+                		} else {
+                			var lbHov = _hover && point_in_rectangle(_m[0], _m[1], _tx0, _ty0, _tx0 + _txw, _ty0 + _txh);
+							if(lbHov) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, _tx0, _ty0, _txw, _txh, c_white, 1);
+							
+							draw_set_text(_font, fa_left, fa_center, COLORS._main_text);
+	                		draw_text_add(ui(32), yy + _ph / 2, _txt);
+	                		
+	                		if(lbHov && _focus && DOUBLE_CLICK) {
+	                			panel_rename = _p;
+	                			panel_rename_tb.activate(_txt);
+	                		}
+	                		
+                		}
+                		
+                		pbx  = con_w - _ph;
                 		pby  = yy;
                 		pbh  = _ph;
                 		

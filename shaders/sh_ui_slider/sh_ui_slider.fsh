@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -19,9 +16,11 @@ void main() {
 	else if(px.x > dimension.x - rr)	bar = 1. - distance(px, vec2(dimension.x - rr, rr)) / rr;
 	bar = clamp(bar, 0., 1.);
 	
+	float scal = dimension.y / dimension.x / 5.;
+	
 	float dif = abs(v_vTexcoord.x - prog);
-	float d0  = clamp(smoothstep(0.9 + mouseProg * 0.05, 1.00, 1. - dif) * 1., 0., 1.);
-	float d1  = clamp(1. - smoothstep(0.85 + mouseProg * 0.05, 1.00, 1. - dif) * 2., 0., 0.75);
+	float d0  = clamp(     smoothstep((1. - scal * 2.) + mouseProg * scal, 1., 1. - dif) * 1., 0., 1.);
+	float d1  = clamp(1. - smoothstep((1. - scal * 3.) + mouseProg * scal, 1., 1. - dif) * 2., 0., 0.75);
 	float rad = 0.8 - d0 * (mouseProg * 0.25 + 0.4);
 	
 	bar = smoothstep(rad, 1.0, bar) * 25.;

@@ -11,6 +11,10 @@ function Panel_Custom_Element(_data) constructor {
 	outline_expand = true;
 	mouseEvent     = true;
 	
+	draggable      = true;
+	selectable     = true;
+	snapable       = true;
+	
 	outline_h = ui(24);
 	
 	#region position
@@ -30,10 +34,9 @@ function Panel_Custom_Element(_data) constructor {
 		ry = 0;
 	#endregion
 	
-	parent    = undefined;
-	hover     = false;
-	focus     = false;
-	draggable = true;
+	parent       = undefined;
+	hover        = false;
+	focus        = false;
 	elementHover = false;
 	
 	editors = [
@@ -86,7 +89,7 @@ function Panel_Custom_Element(_data) constructor {
 		for( var i = 0, n = array_length(contents); i < n; i++ )
 			contents[i].checkMouse(panel, _m);
 			
-		if(is(panel, Panel_Custom_Editor))
+		if(snapable && is(panel, Panel_Custom_Editor))
 			array_push(panel.snapPoints, [ pbBox, [x, y, x + w, y + h] ]);
 	}
 	
@@ -117,7 +120,30 @@ function Panel_Custom_Element(_data) constructor {
 	}
 	
 	static drawOutlineContent = function(_depth, _panel, _x, _y, _w, _m, hov) { 
+		var lw = ui(16);
 		var lh = outline_h;
+		
+		var bx0 = _x + _w;
+		var by0 = _y - lh;
+		
+		bx0 -= lw + 1;
+		var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
+		var aa    = selectable && draggable? .5 + .5 * hovIn : 1;
+		draw_sprite_ui_uniform(THEME.lock_12, selectable && draggable, bx0 + lw/2, by0 + lh/2, 1, COLORS._main_icon_light, aa);
+		if(hovIn) {
+			TOOLTIP = __txt("Lock");
+			if(mouse_lpress(_panel.pFOCUS)) selectable = !selectable;
+		}
+		
+		bx0 -= lw + 1;
+		var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
+		var aa    = .5 + .5 * hovIn;
+		var aa    = snapable? .5 + .5 * hovIn : 1;
+		draw_sprite_ui_uniform(THEME.magnet, snapable, bx0 + lw/2, by0 + lh/2, .5, COLORS._main_icon_light, aa);
+		if(hovIn) {
+			TOOLTIP = __txt("Snap");
+			if(mouse_lpress(_panel.pFOCUS)) snapable = !snapable;
+		}
 		
 		if(modifyContent) {
 			if(_panel.element_adding) {
@@ -128,10 +154,10 @@ function Panel_Custom_Element(_data) constructor {
 			}
 			
 			if(_panel.outline_drag && _panel.outline_drag != _panel._hovering_element) {
-				var hovIn = point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y - lh, _x + _w, _y);
-				draw_sprite_ui_uniform(THEME.icon_default, 0, _x + _w - ui(16), _y - lh / 2, .75, 
-					hovIn? COLORS._main_accent : COLORS._main_icon, .5 + .5 * hovIn);
+				bx0 -= lw + 1;
+				var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
 				
+				draw_sprite_ui_uniform(THEME.icon_default, 0, bx0 + lw/2, by0 + lh/2, .75, hovIn? COLORS._main_accent : COLORS._main_icon, 1);
 				if(hovIn) _panel.outline_drag_frame = self;
 			}
 		}
@@ -233,6 +259,8 @@ function Panel_Custom_Element(_data) constructor {
 		_m.name = name;
 		_m.type = type;
 		_m.draggable  = draggable;
+		_m.selectable = selectable;
+		_m.snapable   = snapable;
 		_m.mouseEvent = mouseEvent;
 		
 		_m.contents = array_map(contents, function(c) /*=>*/ {return c.serialize()});
@@ -251,6 +279,8 @@ function Panel_Custom_Element(_data) constructor {
 		_ele.pbBox.deserialize(_m.box).uiScale(false);
 		_ele.name       = _m[$ "name"]       ?? name;
 		_ele.draggable  = _m[$ "draggable"]  ?? draggable;
+		_ele.selectable = _m[$ "selectable"] ?? selectable;
+		_ele.snapable   = _m[$ "snapable"]   ?? snapable;
 		_ele.mouseEvent = _m[$ "mouseEvent"] ?? mouseEvent;
 		
 		if(has(_m, "contents"))

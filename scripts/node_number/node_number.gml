@@ -494,7 +494,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var tbx = bbox.xc;
 				var tby = bbox.yc;
 				var tbk = min(bbox.w, bbox.h);
-				var tbs = min(tbk / string_width(str), tbk / string_height(str)) * .5;
+				var tbs = min(tbk / string_width(str), tbk / string_height(str)) * .4;
 				draw_text_transformed(tbx, tby, str, tbs, tbs, 0);
 				break;
 				

@@ -416,18 +416,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					}
 					break;
 				
-				case VALUE_TYPE.boolean : 
-					if(is(wid, checkBoxActive)) break;
-					
-					param.halign = breakLine? fa_left : fa_center;
-					param.s      = editBoxH;
-					
-					if(!breakLine) {
-						param.w = ww - min(ui(80) + ww * 0.2, ui(200));
-						param.x = editBoxX + editBoxW - param.w;
-					}
-					break;
-					
 				case VALUE_TYPE.surface : 
 				case VALUE_TYPE.d3Material : 
 				case VALUE_TYPE.dynaSurface : 

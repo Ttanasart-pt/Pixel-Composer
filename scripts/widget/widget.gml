@@ -175,7 +175,6 @@ function widgetParam(x, y, w, h, data, display_data = undefined, m = mouse_ui, r
 	
 	self.w			= w;
 	self.h			= h;
-	self.s			= ui(24);
 	self.data		= data;
 	self.m			= m;
 	self.rx			= rx;
@@ -202,7 +201,6 @@ function widgetParam(x, y, w, h, data, display_data = undefined, m = mouse_ui, r
 	
 	static setX          = function(_x) /*=>*/ { x     = _x;  return self; }
 	static setY          = function(_y) /*=>*/ { y     = _y;  return self; }
-	static setS          = function(_s) /*=>*/ { s     = _s;  return self; }
 	static setData       = function( d) /*=>*/ { data  = d;   return self; }
 	static setColor      = function( c) /*=>*/ { color = c;   return self; }
 	static setFont       = function( f) /*=>*/ { font  = f;   return self; }

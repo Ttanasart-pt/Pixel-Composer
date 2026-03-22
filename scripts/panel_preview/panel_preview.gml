@@ -204,7 +204,7 @@
 	        registerFunction(p, "3D View Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))     }).setMenu("preview_3D_settings",    THEME.d3d_preview_settings )
 	        registerFunction(p, "3D SDF View Settings...",  "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_SDF_settings",THEME.d3d_preview_settings )
 	        registerFunction(p, "3D Snap Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))   }).setMenu("preview_snap_settings",  THEME.d3d_snap_settings )
-	        registerFunction(p, "View Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings",  THEME.icon_visibility   )
+	        registerFunction(p, "View Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings",  THEME.icon_visible_setting )
 	        
 			registerFunction(p, "Toggle View Control",      "", n, panel_preview_view_control_toggle  ).setMenu("preview_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.previewSetting.show_view_control});
 			registerFunction(p, "Show View Control",        "", n, panel_preview_view_control_show    ).setMenu("preview_view_control_show");
@@ -1610,7 +1610,7 @@ function Panel_Preview() : PanelContent() constructor {
     			TOOLTIP = ttip;
             			
             var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key], undefined, [ mx, my ], x, y)
-            				.setFont(_tool_font).setS(tolh)
+            				.setFont(_tool_font)
             
             wdg.drawParam(params);
             

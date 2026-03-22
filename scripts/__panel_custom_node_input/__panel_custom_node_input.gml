@@ -7,7 +7,7 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 	
 	input = new JuncLister(data, "Input", CONNECT_TYPE.input, true);
 	
-	full = false;
+	full = 0;
 	font = 1;
 	
 	array_append(editors, [
@@ -15,13 +15,10 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 		input, 
 		
 		[ "Display", false ], 
-		Simple_Editor("Full", new checkBox(function() /*=>*/ { full = !full; } ), function() /*=>*/ {return full}, function(t) /*=>*/ { full = t; }), 
-		Simple_Editor("Font", new scrollBox( [ 
-			"Content 1", 
-			"Content 2", 
-			"Content 3", 
-			"Content 4", 
-		], function(t) /*=>*/ { font = t; } ), function() /*=>*/ {return font}, function(t) /*=>*/ { font = t; }), 
+		Simple_Editor("Full", new scrollBox([ "Widget Only", "Full Compact", "Full Spacious" ], 
+			function(i) /*=>*/ { full = i; } ), function() /*=>*/ {return full}, function(t) /*=>*/ { full = t; }), 
+		Simple_Editor("Font", new scrollBox([ "Content 1", "Content 2", "Content 3", "Content 4" ], 
+			function(t) /*=>*/ { font = t; } ), function() /*=>*/ {return font}, function(t) /*=>*/ { font = t; }), 
 		
 	]);
 	
@@ -37,27 +34,27 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 		}
 		
 		var _junc = input.getJunction();
-		if(!_junc) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, x, y, w, h);
-			return;
-		}
+		if(!_junc) { draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, x, y, w, h); return; }
 		
 		var _inter = is(panel, Panel_Custom);
 		var _hover = _inter && elementHover;
 		var _focus = _inter && focus;
 		
-		if(full) { drawWidget(x, y, w, _m, _junc, true, _hover, _focus, noone, rx, ry, ID); return; }
-		
-		if(input.getEditWidget()) {
-			var _dat   = _junc.showValue();
-			var _param = new widgetParam(x, y, w, h, _dat, _junc.display_data, _m, rx, ry)
-				.setFont(_font);
-			    
-			input.getEditWidget().setInteract(_inter);
-			input.getEditWidget().setFocusHover(_focus, _hover);
-			input.getEditWidget().drawParam(_param);
-			
+		if(full) { 
+			viewMode = full == 1? INSP_VIEW_MODE.compact : INSP_VIEW_MODE.spacious;
+			drawWidget(x, y, w, _m, _junc, true, _hover, _focus, noone, rx, ry, ID); 
+			return; 
 		}
+		
+		var _wdgt = input.getEditWidget();
+		if(!is(_wdgt, widget)) return;
+		
+		var _dat   = _junc.showValue();
+		var _param = new widgetParam(x, y, w, h, _dat, _junc.display_data, _m, rx, ry).setFont(_font);
+		    
+		_wdgt.setInteract(_inter);
+		_wdgt.setFocusHover(_focus, _hover);
+		_wdgt.drawParam(_param);
 	}
 	
 	////- Serialize

@@ -2059,7 +2059,7 @@ function Panel_Animation_Dopesheet() {
 	        	var _wry = mouse_my - msy;
 	        	
 	        	var _par = new widgetParam(_wdx, _wdy, _wdw, _wdh, prop.showValue(), prop.display_data, m, _wrx, _wry)
-	        		.setS(_wdh).setFont(f_p4).setHide(1)
+	        		.setFont(f_p4).setHide(1)
 	        		
         		if(is(_edt, checkBox)) _par.setHalign(fa_center)
         		

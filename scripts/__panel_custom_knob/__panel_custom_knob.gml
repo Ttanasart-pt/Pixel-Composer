@@ -10,10 +10,12 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output);
 	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output);
 	
-	style       = 1;
-	color       = COLORS._main_icon_light;
-	rotate_surf = true;
+	style = 1;
+	color = COLORS._main_icon_light;
+	vstep = 0;
+	drawValue = false;
 	
+	rotate_surf = true;
 	dragging  = false;
 	dragg_ss  = 0;
 	dragg_mx  = 0;
@@ -25,15 +27,19 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 		[ "Value Binding", false ], 
 		bind_input,
 		
+		[ "Knob", false ], 
+		Simple_Editor("Slide Step",  textBox_Number( function(v) /*=>*/ { vstep = v; } ), function() /*=>*/ {return vstep}, function(v) /*=>*/ { vstep = v; }), 
+		
 		[ "Display", false ], 
 		Simple_Editor("Style", new scrollBox( [ "Blob", "Flat" ], function(t) /*=>*/ { style = t; } ), function() /*=>*/ {return style}, function(t) /*=>*/ { style = t; }), 
 		Simple_Editor("Color", new buttonColor(function(c) /*=>*/ { color = c; } ).hideAlpha(), function() /*=>*/ {return color}, function(t) /*=>*/ { color = t; }), 
+		Simple_Editor("Draw Value", new checkBox(function() /*=>*/ { drawValue = !drawValue; } ), function() /*=>*/ {return drawValue}, function(v) /*=>*/ { drawValue = v; }), 
 		
 		[ "Textures", false ], 
 		bg_output,
 		hover_output,
 		press_output,
-		Simple_Editor("Rotate Surface", new checkBox( function() /*=>*/ { rotate_surf = !rotate_surf; } ), function() /*=>*/ {return rotate_surf}, function(v) /*=>*/ { rotate_surf = v; }), 
+		Simple_Editor("Rotate Surface", new checkBox(function() /*=>*/ { rotate_surf = !rotate_surf; } ), function() /*=>*/ {return rotate_surf}, function(v) /*=>*/ { rotate_surf = v; }), 
 	]);
 	
 	////- Draw
@@ -51,7 +57,6 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 		var y0 = yc - r/2;
 		
 		var _currVal = 0;
-		
 		if(input_junc) {
 			_currVal = toNumber(input_junc.showValue());
 			
@@ -63,6 +68,7 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 			}
 		}
 		
+		var _currRad = degtorad(_currVal);
 		var _bg_junc = bg_output.getJunction();
 		if(_bg_junc) {
 			var _dat = undefined;
@@ -93,9 +99,9 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 			var c1 = colorMultiply(CDEF.main_dkgrey, color);
 		
 			shader_set(sh_ui_rotator);
-				shader_set_c( "c0",        c0                                         );
-				shader_set_c( "c1",        c1                                         );
-				shader_set_f( "angle",     degtorad(_currVal)                         );
+				shader_set_c( "c0",        c0       );
+				shader_set_c( "c1",        c1       );
+				shader_set_f( "angle",     _currRad );
 				shader_set_f( "mouse",     (_m[0] - x0) / r, (_m[1] - y0) / r         );
 				shader_set_f( "mouseProg", animation_curve_eval(ac_ripple, rotator_m) );
 				shader_set_2( "radius",    [ degtorad(0), degtorad(360) ]             );
@@ -104,13 +110,22 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 			shader_reset();
 			
 		} else if(style == 1) {
+			var c0 = colorMultiply(hov? c_white : CDEF.main_mdwhite, color);
+			
 			shader_set(sh_widget_rotator);
-				shader_set_c( "color", colorMultiply(hov? c_white : CDEF.main_mdwhite, color));
-				shader_set_f( "side",  r);
-				shader_set_f( "angle", degtorad(_currVal));
+				shader_set_c( "color", c0       );
+				shader_set_f( "side",  r        );
+				shader_set_f( "angle", _currRad );
 			
 				draw_sprite_stretched(s_fx_pixel, 0, x0, y0, r, r);
 			shader_reset();
+		}
+		
+		if(drawValue) {
+			draw_set_text(f_sdf, fa_center, fa_center, color);
+			var str = string_real(_currVal, 999, 3);
+			var tbs = min(r / string_width(str), r / string_height(str)) * .4;
+			draw_text_transformed(xc, yc, str, tbs, tbs, 0);
 		}
 		
 		if(dragging) {
@@ -123,7 +138,10 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 			dragg_mx  = _m[0];
 			dragg_my  = _m[1];
 			
-			if(input_junc.setValue(dragg_ss)) UNDO_HOLDING = true;
+			var val = dragg_ss;
+			if(vstep != 0) val = value_snap(val, vstep);
+			
+			if(input_junc.setValue(val)) UNDO_HOLDING = true;
 				
 			if(mouse_lrelease()) {
 				dragging = false;
@@ -142,8 +160,10 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 		_m.hover = hover_output.serialize(_m);
 		_m.press = press_output.serialize(_m);
 		
-		_m.style       = style;
-		_m.color       = color;
+		_m.style = style;
+		_m.color = color;
+		_m.vstep = vstep;
+		_m.drawValue   = drawValue;
 		_m.rotate_surf = rotate_surf;
 		return _m;
 	}
@@ -155,8 +175,10 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 		if(has(_m, "hover")) hover_output.deserialize(_m.hover);
 		if(has(_m, "press")) press_output.deserialize(_m.press);
 		
-		style       = _m[$ "style"]       ?? style;
-		color       = _m[$ "color"]       ?? color;
+		style = _m[$ "style"] ?? style;
+		color = _m[$ "color"] ?? color;
+		vstep = _m[$ "vstep"] ?? vstep;
+		drawValue   = _m[$ "drawValue"]   ?? drawValue;
 		rotate_surf = _m[$ "rotate_surf"] ?? rotate_surf;
 		return self;
 	}

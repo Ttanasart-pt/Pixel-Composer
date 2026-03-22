@@ -3,6 +3,7 @@ function checkBox(_onClick) : widget() constructor {
 	triggered = false;
 	spr       = THEME.checkbox_def;
 	tooltip   = "";
+	slot_x    = undefined;
 	
 	static setTooltip = function(_t) /*=>*/ { tooltip = _t; return self; }
 	
@@ -25,65 +26,55 @@ function checkBox(_onClick) : widget() constructor {
 		return t;
 	}
 	
-	static fetchHeight = function(params) { return params.s; }
-	static drawParam   = function(params) {
+	static fetchHeight = function(params) { return params.h; }
+	static drawParam   = function(params) { 
 		setParam(params);
-		var ss = params.s;
-		var x0, y0;
-		
-		switch(params.halign) {
-			case fa_left :	 x0 = params.x; break;
-			case fa_center : x0 = params.x + (params.w - ss) / 2; break;
-			case fa_right :  x0 = params.x +  params.w - ss; break;
-		}
-		
-		switch(params.valign) {
-			case fa_top :	 y0 = params.y; break;
-			case fa_center : y0 = params.y + (params.h - ss) / 2; break;
-			case fa_bottom : y0 = params.y +  params.h - ss; break;
-		}
-		
-		return draw(x0, y0, params.data, params.m, params.s);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
-	static draw = function(_x, _y, _value, _m, ss = ui(28), halign = fa_left, valign = fa_top) {
+	static draw = function(_x, _y, _w, _h, _value, _m, halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;
-		w = ss;
-		h = ss;
-		
-		var _dx, _dy;
-		switch(halign) {
-			case fa_left:   _dx = _x;			break;	
-			case fa_center: _dx = _x - ss / 2;	break;	
-			case fa_right:  _dx = _x - ss;		break;	
-		}
-		
-		switch(valign) {
-			case fa_top:    _dy = _y;			break;	
-			case fa_center: _dy = _y - ss / 2;	break;	
-			case fa_bottom: _dy = _y - ss;		break;	
-		}
+		w = _w;
+		h = _h;
 		
 		var aa = interactable * 0.25 + 0.75;
-		draw_sprite_stretched_ext(spr, 0, _dx, _dy, ss, ss, c_white, aa);
+		draw_sprite_stretched_ext(spr, 0, x, y, w, h, c_white, aa);
 		
-		if(hover && point_in_rectangle(_m[0], _m[1], _dx, _dy, _dx + ss, _dy + ss)) {
+		if(is_array(_value)) {
+			draw_set_text(f_p4, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text_add(x + w/2, y + h/2, __txt("Array"));
+			return h;
+		}
+			
+		if(hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h)) {
 			if(tooltip != "") TOOLTIP = tooltip;
-			draw_sprite_stretched_ext(spr, 1, _dx, _dy, ss, ss, c_white, aa);	
+			draw_sprite_stretched_ext(spr, 1, x, y, w, h, c_white, aa);	
 			
 			if(mouse_press(mb_left, active))
 				trigger();
 		} else
 			if(mouse_press(mb_left)) deactivate();
 		
-		if(is_array(_value))
-			draw_sprite_stretched_ext(spr, 3, _dx, _dy + ss / 2 - 8, ss, 16, COLORS._main_accent, aa);
-		else if(_value) 
-			draw_sprite_stretched_ext(spr, 2, _dx, _dy, ss, ss, COLORS._main_accent, aa);
+		var w2 = w / 2;
+		var kx = x + _value * w2;
+		var cc = _value? COLORS._main_accent : CDEF.main_dark;
+		slot_x = slot_x == undefined? kx : lerp_float(slot_x, kx, 2);
 		
+		draw_sprite_stretched_ext(spr, 2, slot_x, y, w2, h, cc, aa);
+		draw_set_text(f_p4, fa_center, fa_center);
+		
+		if(_value) {
+			draw_set_color(CDEF.main_mdblack);
+			draw_text(round(x + w2 + w2/2), round(y + h/2), __txt("True"));
+				
+		} else {
+			draw_set_color(CDEF.main_mdwhite);
+			draw_text_add(x + w2/2, y + h/2, __txt("False"));
+		}
+			
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _dx - ui(3), _dy - ui(3), ss + ui(6), ss + ui(6), COLORS._main_accent, 1);	
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, x - ui(3), y - ui(3), w + ui(6), h + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
 		

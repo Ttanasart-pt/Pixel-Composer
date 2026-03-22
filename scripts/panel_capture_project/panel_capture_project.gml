@@ -121,7 +121,7 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		
 		ty += th + ui(6);
 		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, c_white, 1);
-		var param = new widgetParam(tx + ui(64), ty, tw - ui(64), th, show_text, undefined, [ mx, my ]).setS(ui(20))
+		var param = new widgetParam(tx + ui(64), ty, tw - ui(64), th, show_text, undefined, [ mx, my ])
 			.setHalign(fa_center).setValign(fa_center);
 		cb_text.setFocusHover(pHOVER, pFOCUS);
 		cb_text.drawParam(param);

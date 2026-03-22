@@ -358,7 +358,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var _data = _edt.getter();
 			
 			if(is(_data, __pbBox)) {
-				if(element_selecting && !element_selecting.draggable) {
+				if(element_selecting && (!element_selecting.draggable || !element_selecting.selectable)) {
 					var _tx = ui(8) + string_width(_name) + ui(4);
 					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
 					draw_text_add(_tx, _y + wdh / 2, "[locked]");
@@ -366,17 +366,41 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 					_widg.setInteract(false);
 					
 				} else {
+					var bb = THEME.button_hide;
+					var bc = COLORS._main_icon;
 					var bx = ww - bs;
 					var by = _y + ui(2);
 					
-					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, hov, foc, "Pad mode", THEME.fill, 0,,, .75) == 2) {
+					var bt = __txt("Fill and Pad");
+					var bp = THEME.fill;
+					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 0, bc, 1, .75) == 2) {
 						_widg.linked = true;
 						_data.anchor_x_type = PB_AXIS_ANCHOR.bounded;
 						_data.anchor_y_type = PB_AXIS_ANCHOR.bounded;
 						
 						_data.anchor_l = 0; _data.anchor_t = 0;
 						_data.anchor_r = 0; _data.anchor_b = 0;
-					}
+						
+					} bx -= bs + ui(2);
+					
+					var bc = COLORS._main_icon_light;
+					var bt = __txt("Center Horizontal");
+					var bp = THEME.inspector_surface_halign;
+					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 1, bc, 1, .75) == 2) {
+						_data.anchor_x_type = PB_AXIS_ANCHOR.center;
+						_data.anchor_l = 0;
+						_data.anchor_r = 0;
+						
+					} bx -= bs + ui(2);
+					
+					var bt = __txt("Center Vertical");
+					var bp = THEME.inspector_surface_valign;
+					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 1, bc, 1, .75) == 2) {
+						_data.anchor_y_type = PB_AXIS_ANCHOR.center;
+						_data.anchor_t = 0;
+						_data.anchor_b = 0;
+						
+					} bx -= bs + ui(2);
 					
 					_widg.setInteract(true);
 				}
@@ -623,7 +647,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			
 			draw_set_color(COLORS._main_accent);
 			
-			if(element_selecting.draggable) {
+			if(element_selecting.draggable && element_selecting.selectable) {
 				var _hv = element_selecting.pbBox.drawOverlay(pHOVER, pFOCUS, dx0, dy0, 1, mx, my, undefined, snapPoints);
 				if(_hv) hovering_element = element_selecting;
 				
