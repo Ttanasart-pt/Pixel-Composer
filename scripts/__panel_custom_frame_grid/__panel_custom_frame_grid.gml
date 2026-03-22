@@ -9,8 +9,9 @@ function Panel_Custom_Frame_Grid(_data) : Panel_Custom_Frame(_data) constructor 
 	array_append(editors, [
 		[ "Grid", false ], 
 		Simple_Editor("Grid",       new vectorBox( 2, function(v,i) /*=>*/ { grid[i] = v; } ), function() /*=>*/ {return grid}, function(t) /*=>*/ { grid = t; }), 
-		Simple_Editor("Spacing",    new vectorBox( 2, function(v,i) /*=>*/ { split_spac[i] = v; } ), function() /*=>*/ {return split_spac}, function(v) /*=>*/ { split_spac = v; }), 
-		Simple_Editor("Fractional", new checkBox( function() /*=>*/ { split_spac_frac = !split_spac_frac; } ), function() /*=>*/ {return split_spac_frac}, function(v) /*=>*/ { split_spac_frac = v; }), 
+		Simple_Editor("Spacing",    new vectorBox( 2, function(v,i) /*=>*/ { split_spac[i] = v; } )
+			.setSideButton(button(function() /*=>*/ { split_spac_frac = !split_spac_frac; }).setIcon(THEME.unit_ref, function() /*=>*/ {return split_spac_frac}).iconPad()), 
+			function() /*=>*/ {return split_spac}, function(v) /*=>*/ { split_spac = v; }), 
 	]);
 	
 	static setSize = function(_pBbox, _rx, _ry) {

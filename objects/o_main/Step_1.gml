@@ -3,7 +3,7 @@ global.__debug_runner++;
 global.cache_call = 0;
 global.cache_hit  = 0;
 
-DIALOG_JUST_CLOSED  = "";
+DIALOG_JUST_CLOSED  = false;
 WIDGET_CURRENT_PREV = WIDGET_CURRENT;
 HOVERING_ELEMENT    = _HOVERING_ELEMENT;
 _HOVERING_ELEMENT   = noone;

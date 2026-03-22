@@ -410,7 +410,9 @@
     "panel_icon_element_frame_grid":      { "path": "./panel/custom/s_panel_icon_element_frame_grid.png",   "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_frame_scroll":    { "path": "./panel/custom/s_panel_icon_element_frame_scroll.png", "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_frame_split":     { "path": "./panel/custom/s_panel_icon_element_frame_split.png",  "s": 1, "x": 32, "y": 32 },
+    "panel_icon_element_frame_stack":     { "path": "./panel/custom/s_panel_icon_element_frame_stack.png",  "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_frame_tab":       { "path": "./panel/custom/s_panel_icon_element_frame_tab.png",    "s": 1, "x": 32, "y": 32 },
+
     "panel_icon_element_button":          { "path": "./panel/custom/s_panel_icon_element_button.png",       "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_choices":         { "path": "./panel/custom/s_panel_icon_element_choices.png",      "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_color":           { "path": "./panel/custom/s_panel_icon_element_color.png",        "s": 1, "x": 32, "y": 32 },

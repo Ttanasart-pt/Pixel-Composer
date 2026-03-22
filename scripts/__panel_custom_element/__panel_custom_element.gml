@@ -269,6 +269,7 @@ function __Simple_Editor(_name, _widget, _getter, _setter) constructor {
 		[ "Frames", false ], 
 		{ name: "Frame",       key: "frame",      fn: Panel_Custom_Frame,       spr: function() /*=>*/ {return THEME.panel_icon_element_frame},       prevsize: [ 64, 64] }, 
 		{ name: "Grid Frame",  key: "framegrid",  fn: Panel_Custom_Frame_Grid,  spr: function() /*=>*/ {return THEME.panel_icon_element_frame_grid},  prevsize: [ 64, 64] }, 
+		{ name: "Stack Frame", key: "framestack", fn: Panel_Custom_Frame_Stack, spr: function() /*=>*/ {return THEME.panel_icon_element_frame_stack}, prevsize: [ 64, 64] }, 
 		{ name: "Scroll Frame",key: "framescroll",fn: Panel_Custom_Frame_Scroll,spr: function() /*=>*/ {return THEME.panel_icon_element_frame_scroll},prevsize: [ 64, 64] }, 
 		{ name: "Split Frame", key: "framesplit", fn: Panel_Custom_Frame_Split, spr: function() /*=>*/ {return THEME.panel_icon_element_frame_split}, prevsize: [ 64, 64] }, 
 		{ name: "Tab Frame",   key: "frametab",   fn: Panel_Custom_Frame_Tab,   spr: function() /*=>*/ {return THEME.panel_icon_element_frame_tab},   prevsize: [ 64, 64] }, 

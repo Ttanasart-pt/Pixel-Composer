@@ -76,7 +76,7 @@ function __pbBox() constructor {
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _node = undefined) {
 		static snap_dist = 8;
 		
-		if(fixed_box) return;
+		if(fixed_box != 0) return;
 		var _bbox = getBBOX();
 		var _hov  = false;
 		

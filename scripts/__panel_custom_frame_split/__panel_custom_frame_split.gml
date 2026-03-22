@@ -22,11 +22,13 @@ function Panel_Custom_Frame_Split(_data) : Panel_Custom_Frame(_data) constructor
 			"Vertical", 
 		], function(t) /*=>*/ { split_dir = t; } ), function() /*=>*/ {return split_dir}, function(t) /*=>*/ { split_dir = t; }), 
 		
-		Simple_Editor("Amount",     textBox_Number( function(v) /*=>*/ { split_amou = v; } ), function() /*=>*/ {return split_amou}, function(v) /*=>*/ { split_amou = v; }), 
-		Simple_Editor("Fractional", new checkBox( function() /*=>*/ { split_amou_frac = !split_amou_frac; } ), function() /*=>*/ {return split_amou_frac}, function(v) /*=>*/ { split_amou_frac = v; }), 
+		Simple_Editor("Amount",     textBox_Number( function(v) /*=>*/ { split_amou = v; } )
+			.setSideButton(button(function() /*=>*/ { split_amou_frac = !split_amou_frac; }).setIcon(THEME.unit_ref, function() /*=>*/ {return split_amou_frac}).iconPad()), 
+			function() /*=>*/ {return split_amou}, function(v) /*=>*/ { split_amou = v; }), 
 		
-		Simple_Editor("Spacing",    textBox_Number( function(v) /*=>*/ { split_spac = v; } ), function() /*=>*/ {return split_spac}, function(v) /*=>*/ { split_spac = v; }), 
-		Simple_Editor("Fractional", new checkBox( function() /*=>*/ { split_spac_frac = !split_spac_frac; } ), function() /*=>*/ {return split_spac_frac}, function(v) /*=>*/ { split_spac_frac = v; }), 
+		Simple_Editor("Spacing",    textBox_Number( function(v) /*=>*/ { split_spac = v; } )
+			.setSideButton(button(function() /*=>*/ { split_spac_frac = !split_spac_frac; }).setIcon(THEME.unit_ref, function() /*=>*/ {return split_spac_frac}).iconPad()), 
+			function() /*=>*/ {return split_spac}, function(v) /*=>*/ { split_spac = v; }), 
 		
 		[ "Adjustable", false ], 
 		Simple_Editor("Adjustable",   new checkBox( function() /*=>*/ { adjustable = !adjustable; } ), function() /*=>*/ {return adjustable}, function(v) /*=>*/ { adjustable = v; }), 
@@ -66,7 +68,7 @@ function Panel_Custom_Frame_Split(_data) : Panel_Custom_Frame(_data) constructor
 					
 				}
 				
-				contents[i].pbBox.fixed_box = [ _x, _y, _x + _w, _y + _h];
+				contents[i].pbBox.fixed_box = [_x, _y, _x + _w, _y + _h];
 				contents[i].draggable       = false;
 				
 			} else if(i == 1) {
@@ -88,7 +90,7 @@ function Panel_Custom_Frame_Split(_data) : Panel_Custom_Frame(_data) constructor
 					
 				}
 				
-				contents[i].pbBox.fixed_box = [ _x, _y, _x + _w, _y + _h];
+				contents[i].pbBox.fixed_box = [_x, _y, _x + _w, _y + _h];
 				contents[i].draggable       = false;
 				
 			}
