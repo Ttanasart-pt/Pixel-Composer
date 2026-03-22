@@ -275,7 +275,7 @@ function KeyDriver_Bounce(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDri
 	}
 	
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
-		if(_key == undefined || _keyNext == undefined) return _value;
+		if(_key == undefined) return _value;
 		
 		var _v0 = _key.value;
 		if(_keyNext == undefined) return _v0;
@@ -368,7 +368,7 @@ function KeyDriver_Elastic(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDr
 	}
 	
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
-		if(_key == undefined || _keyNext == undefined) return _value;
+		if(_key == undefined) return _value;
 		
 		var _v0 = _key.value;
 		if(_keyNext == undefined) return _v0;
