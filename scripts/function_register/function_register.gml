@@ -38,7 +38,7 @@
 
 function registerFunction(_context, _name, _key, _mod, _action, _param = noone) { return new functionObject(_context, _name, _key, _mod, _action, _param); }
 function functionObject(_context, _name, _key, _mod, _action, _param = noone) constructor {
-	hotkey  = addHotkey(_context == ""? 0 : _context, _name, _key, _mod, _action, _param);
+	hotkey  = addHotkey(_context == ""? 0 : _context, _name, _key, _mod, _action, _param).setFn(self);
 	
 	context = _context;
 	name    = _name;

@@ -40,10 +40,12 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	param     = _param;
 	
 	interrupt = false;
+	fnObject  = undefined;
 	
 	static setParam     = function(p) /*=>*/ { param = p;        return self; }
 	static setAction    = function(a) /*=>*/ { rawAction = a;    return self; }
 	static setInterrupt = function( ) /*=>*/ { interrupt = true; return self; }
+	static setFn        = function(f) /*=>*/ { fnObject  = f;    return self; }
 	
 	static action = function() {
 		if(param == noone) rawAction();

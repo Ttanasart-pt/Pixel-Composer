@@ -59,7 +59,7 @@ function Panel_Custom_Text(_data) : Panel_Custom_Element(_data) constructor {
 		}
 		
 		draw_set_text(_font, halign, valign, color, _color_get_a(color));
-		draw_text(tx, ty, text);
+		draw_text(round(tx), round(ty), text);
 		draw_set_alpha(1);
 	}
 	

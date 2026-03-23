@@ -38,30 +38,32 @@ function Panel_Custom_Frame_Stack(_data) : Panel_Custom_Frame(_data) constructor
 		w  = bbox[2] - bbox[0];
 		h  = bbox[3] - bbox[1];
 		
-		var xx = x;
-		var yy = y;
 		var sp = split_spac_frac? split_spac * (axis == 0? w : h) : split_spac;
 		var fs = fixSize_frac?    fixSize    * (axis == 0? w : h) : fixSize;
 		
-		var ww = 0;
-		var hh = 0;
+		var xx = x, yy = y;
+		var ww = 0, hh = 0;
 		
 		for( var i = 0, n = array_length(contents); i < n; i++ ) {
-			var  con  = contents[i];
-			var _bbox = con.pbBox.getBBOX(bbox);
-			var _bx   = _bbox[0];
-			var _by   = _bbox[1];
-			var _bw   = _bbox[2] - _bbox[0];
-			var _bh   = _bbox[3] - _bbox[1];
+			var con = contents[i];
+			var bw  = con.pbBox.anchor_w_fract? w * con.pbBox.anchor_w : con.pbBox.anchor_w;
+			var bh  = con.pbBox.anchor_h_fract? h * con.pbBox.anchor_h : con.pbBox.anchor_h;
 			
-			if(axis == 0) { _bx = xx; _by = yy; if(expands) _bh = h; if(fixAxis) _bw = fs; }
-			if(axis == 1) { _bx = xx; _by = yy; if(expands) _bw = w; if(fixAxis) _bh = fs; }
+			if(axis == 0) { 
+				if(expands) bh = h;  
+				if(fixAxis) bw = fs; 
+			}
 			
-			con.pbBox.fixed_box = [_bx, _by, _bx+_bw, _by+_bh];
+			if(axis == 1) { 
+				if(expands) bw = w;  
+				if(fixAxis) bh = fs; 
+			}
+			
+			con.pbBox.fixed_box = [xx, yy, xx + bw, yy + bh];
 			con.setSize(bbox, _rx, _ry);
 			
-			if(axis == 0) { xx += _bw + sp; ww += _bw + sp; }
-			if(axis == 1) { yy += _bh + sp; hh += _bh + sp; }
+			if(axis == 0) { xx += bw + sp; ww += bw + sp; }
+			if(axis == 1) { yy += bh + sp; hh += bh + sp; }
 		}
 		
 		if(axis == 0) w = max(ww, w);
