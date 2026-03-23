@@ -93,9 +93,7 @@ function __Bone_Constrain_Limit_Scale(_bone, _bid = "") : __Bone_Constrain(_bone
         draw_text_add(_lbx, _y + _wdh / 2, __txt("Inherit"));
         
         var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, lock_children, undefined, _m, _drawParam.rx, _drawParam.ry)
-            .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
-        _dParam.s = _wdh;
-        _dParam.halign = fa_center;
+            .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover).setHalign(fa_center);
         cb_lock.drawParam(_dParam);
         
         _y += _wdh + ui(8);

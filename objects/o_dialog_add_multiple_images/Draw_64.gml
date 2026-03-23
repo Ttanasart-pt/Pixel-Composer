@@ -85,19 +85,23 @@ if !ready exit;
 
 #region directory option
 	if(is_dir) {
-		var dir_y = dialog_y + title_h + content_h + ui(8);
+		var dw = dialog_w - ui(160);
+		var dh = ui(32);
+		
+		var dx = dialog_x + dialog_w - dw - ui(16);
+		var dy = dialog_y + title_h + content_h + ui(8);
 		
 		cb_recursive.setFocusHover(sFOCUS, sHOVER);
-		cb_recursive.draw(dialog_x + dialog_w - ui(48), dir_y, dir_recursive, mouse_ui);
+		cb_recursive.draw(dx, dy, dw, dh, dir_recursive, mouse_ui);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-		draw_text(dialog_x + ui(24), dir_y + ui(14), __txtx("add_images_recursive", "Recursive"));
+		draw_text(dialog_x + ui(24), dy + dh/2, __txtx("add_images_recursive", "Recursive"));
 		
-		dir_y += ui(40);
+		dy += dh + ui(8);
 		tb_filter.setFocusHover(sFOCUS, sHOVER);
-		tb_filter.draw(dialog_x + ui(100), dir_y, dialog_w - ui(120), ui(36), dir_filter, mouse_ui);
+		tb_filter.draw(dx, dy, dw, dh, dir_filter, mouse_ui);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-		draw_text(dialog_x + ui(24), dir_y + ui(18), __txtx("add_images_filter", "Filter"));
+		draw_text(dialog_x + ui(24), dy + dh/2, __txtx("add_images_filter", "Filter"));
 	}
 #endregion

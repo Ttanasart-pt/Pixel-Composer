@@ -28,8 +28,6 @@ event_inherited();
 			return self;
 		}
 		
-		if(is(editWidget, checkBox)) dialog_w = dialog_h;
-		
 		editWidget.onModify = function(val, index = noone) { 
 			var v = keyframe.value;
 			if(is_array(v)) {

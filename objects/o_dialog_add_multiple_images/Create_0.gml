@@ -26,7 +26,7 @@ event_inherited();
 		is_dir	= directory_exists(path[0]);
 		
 		if(is_dir) {
-			dialog_h += ui(96);
+			dialog_h += ui(84);
 			dialog_w += ui(80);
 			array_push(nodes, ALL_NODES[$ "Node_Directory_Search"]);
 		}

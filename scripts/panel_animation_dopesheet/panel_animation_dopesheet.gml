@@ -2061,8 +2061,6 @@ function Panel_Animation_Dopesheet() {
 	        	var _par = new widgetParam(_wdx, _wdy, _wdw, _wdh, prop.showValue(), prop.display_data, m, _wrx, _wry)
 	        		.setFont(f_p4).setHide(1)
 	        		
-        		if(is(_edt, checkBox)) _par.setHalign(fa_center)
-        		
         		if(drw) {
 		        	_edt.setFocusHover(foc, hov);
 		        	_wh = _edt.drawParam(_par);

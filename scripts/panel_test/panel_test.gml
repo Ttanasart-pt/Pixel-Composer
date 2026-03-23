@@ -351,10 +351,10 @@ function Panel_Test() : PanelContent() constructor {
 		var hh = TEXTBOX_HEIGHT;
 		var mm = [mx,my];
 		
-		tb_test_dir.setFocusHover(pFOCUS, pHOVER);
-		tb_index.setFocusHover(pFOCUS, pHOVER);
-		tb_amount.setFocusHover(pFOCUS, pHOVER);
-		cb_save.setFocusHover(pFOCUS, pHOVER);
+		tb_test_dir.setFocusHover( pFOCUS, pHOVER );
+		tb_index.setFocusHover(    pFOCUS, pHOVER );
+		tb_amount.setFocusHover(   pFOCUS, pHOVER );
+		cb_save.setFocusHover(     pFOCUS, pHOVER );
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 		draw_text_add(lx + ui(8), yy + hh / 2, "Directory");
@@ -373,7 +373,7 @@ function Panel_Test() : PanelContent() constructor {
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 		draw_text_add(lx + ui(8), yy + hh / 2, "Save");
 		
-		cb_save.draw( lx + lw, yy, save_file, mm);
+		cb_save.draw(lx + lw, yy, dhw, hh, save_file, mm);
 		yy += hh + ui(8);
 		
 		// Log
