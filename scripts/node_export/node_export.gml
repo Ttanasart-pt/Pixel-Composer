@@ -118,11 +118,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["%s",     "Scale Factor"],
 	];
 	
-	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	export_scale_label = new Inspector_Label("");
+	export_template    = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
+		var font = f_p2;
+		if(_panel) font = _panel.viewMode == INSP_VIEW_MODE.compact? f_p3 : f_p2;
 		
-		var _tx = _x + ui(10);
+		var _tx = _x + ui(2);
 		var _ty = _y;
-		var _tw = _w - ui(8);
+		var _tw = _w;
 		
 		var rawpath = getInputData( 1);
 		var rawname = getInputData(20);
@@ -179,16 +182,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		draw_set_alpha(1);
 		
-		var hh  = _th + ui(16 + 20 * array_length(template_guide));
+		var hg  = line_get_height(font, 2);
+		var hh  = _th + ui(16) + hg * array_length(template_guide);
 		var _cy = _y + _th + ui(8);
 		
 		for( var i = 0, n = array_length(template_guide); i < n; i++ ) {
-			var _yy = _cy + ui(20) * i;
+			var _yy = _cy + hg * i;
 			
-			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+			draw_set_text(font, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_add(_x + ui(16 + 16), _yy, template_guide[i][0]);
 			
-			draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text_sub);
+			draw_set_text(font, fa_right, fa_top, COLORS._main_text_sub);
 			draw_text_add(_x + _w - ui(4 + 16), _yy, template_guide[i][1]);
 		}
 		
@@ -198,7 +202,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	input_display_list = [
 		["Export",		 false    ],  0,  1, 20,  2, export_template, 16, 22, 
 		["Format",		 false    ],  3,  9, 17, 18,  6,  7, 10, 13, 23, 
-		["Post-Process", false    ], 19,
+		["Post-Process", false    ], 19, export_scale_label, 
 		["Custom Range",  true, 15], 12, 
 		["Animation",	 false    ],  8,  5, 11, 14, 21, 
 	];
@@ -963,8 +967,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var anim = getInputData( 3);
 			var extn = getInputData( 9);
 			var expt = getInputData(22);
+			var scal = getInputData(19);
 			
 			if(inputs[8].editWidget) inputs[8].editWidget.setSuffix(inputs[8].attributes.unit? "x" : "");
+			
+			var sw = scal * surface_get_width_safe(surf);
+			var sh = scal * surface_get_height_safe(surf);
+			export_scale_label.text = $"Final Dimension [{sw} x {sh}] px";
 		#endregion
 		
 		#region visiblity

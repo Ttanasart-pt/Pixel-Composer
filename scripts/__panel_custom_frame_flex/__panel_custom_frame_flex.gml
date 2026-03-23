@@ -133,7 +133,7 @@ function Panel_Custom_Frame_Flex(_data) : Panel_Custom_Frame(_data) constructor 
 			var rowCon  = row[i];
 			var conArea = 0;
 			var conAmo  = array_length(rowCon);
-			if(conAmo <= 1) continue;
+			if(conAmo <= 0) continue;
 			
 			for( var j = 0, m = conAmo; j < m; j++ ) {
 				if(axis == 0) conArea += rowCon[j].pbBox.fixed_width;
