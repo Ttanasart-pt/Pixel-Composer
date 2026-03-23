@@ -59,7 +59,7 @@ function checkBox(_onClick) : widget() constructor {
 		var w2 = w / 2;
 		var kx = x + _value * w2;
 		var cc = _value? COLORS._main_accent : CDEF.main_dark;
-		slot_x = slot_x == undefined? kx : lerp_float(slot_x, kx, 2);
+		slot_x = slot_x == undefined? kx : lerp_float(slot_x, kx, 3);
 		
 		draw_sprite_stretched_ext(spr, 2, slot_x, y, w2, h, cc, aa);
 		draw_set_text(f_p4, fa_center, fa_center);

@@ -12,6 +12,7 @@
 #endregion
 
 function __pbBox() constructor {
+	ID = UUID_generate();
 	
 	#region ---- bbox ----
 		base_bbox = [ 0, 0, 32, 32 ];
@@ -74,7 +75,7 @@ function __pbBox() constructor {
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _node = undefined, _snapPoints = undefined) {
-		static snap_dist = 8;
+		static snap_dist = ui(6);
 		
 		var _bbox = getBBOX();
 		var _hov  = false;
@@ -147,8 +148,8 @@ function __pbBox() constructor {
 			
 			draw_set_alpha(.75);
 			
-			var n = _snapPoints == undefined? 0 : array_length(_snapPoints);
-			for( var i = 0; i < n; i++ ) {
+			if(_snapPoints != undefined)
+			for( var i = 0, n = array_length(_snapPoints); i < n; i++ ) {
 				var _snap = _snapPoints[i];
 				if(_snap[0] == self) continue;
 				sx0 = _snap[1][0]; sy0 = _snap[1][1];

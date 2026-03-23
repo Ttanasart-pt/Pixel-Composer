@@ -36,8 +36,10 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	];
 	
 	#region ---- selection ----
-		element_adding    = undefined;
-		element_selecting = undefined;
+		element_adding     = undefined;
+		element_selecting  = undefined;
+		element_selectings = [];
+		element_selectingm = {};
 		
 		element_drag = undefined;
 		drag_type = 0;
@@ -51,6 +53,19 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		_hovering_element = undefined; hovering_element = undefined; 
 		
 		_HOVER_WIDGET = undefined; HOVER_WIDGET = undefined;
+		
+		selection_boxing = 0;
+		selection_box_x  = 0;
+		selection_box_y  = 0;
+		
+		select_box_x0 = 0; select_box_y0 = 0;
+		select_box_x1 = 0; select_box_y1 = 0;
+		
+		select_multi_dragging  = false;
+		select_multi_drag_mx   = 0;
+		select_multi_drag_my   = 0;
+		select_multi_drag_init = [0,0,0,0];
+		select_multi_drag_data = undefined;
 	#endregion
 	
 	#region ---- outline ----
@@ -67,8 +82,15 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	#endregion
 	
 	#region ---- editor ----
-		editor_toolbar_width_l = ui(240);
+		editor_toolbar_width_l  = ui(232);
+		editor_toolbar_l_resize = false;
+		editor_toolbar_l_sx     = 0;
+		editor_toolbar_l_mx     = 0;
+		
 		editor_toolbar_width_r = ui(360);
+		editor_toolbar_r_resize = false;
+		editor_toolbar_r_sx     = 0;
+		editor_toolbar_r_mx     = 0;
 		
 		minw = editor_toolbar_width_l + editor_toolbar_width_r + ui(320);
 		minh = ui(320);
@@ -105,10 +127,12 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		var foc = sc_add_elements.active;
 		
 		var yy = _y;
-		var grs = ui(64);
+		var grw = ui(64);
+		var grh = ui(64);
 		var lbh = ui(20);
 		var col = 0;
-		var maxCol = floor(ww / (grs + ui(4)));
+		var maxCol = floor(ww / (grw + ui(4)));
+		grw = ww / maxCol - ui(4);
 		
 		var _cAll = 0;
 		
@@ -116,8 +140,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var ele = elements[i];
 			if(is_array(ele)) {
 				if(col) {
-					yy += grs + ui(4);
-					_h += grs + ui(4);
+					yy += grh + ui(4);
+					_h += grh + ui(4);
 				}
 				
 				var _txt = ele[0];
@@ -154,18 +178,18 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var nam = ele.name;
 			var spr = ele.spr();
 			
-			var xx = (grs + ui(4)) * col;
-			var hv = hov && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grs, yy + grs);
+			var xx = (grw + ui(4)) * col;
+			var hv = hov && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grw, yy + grh);
 			
-			var sx = xx + grs / 2;
-			var sy = yy + grs / 2 - ui(8);
+			var sx = xx + grw / 2;
+			var sy = yy + grh / 2 - ui(8);
 			draw_sprite_ui_uniform(spr, 0, sx, sy, .5);
 			
 			draw_set_text(f_p4, fa_center, fa_bottom, COLORS._main_text);
-			draw_text_add(xx + grs / 2, yy + grs - ui(2), nam);
+			draw_text_add(xx + grw / 2, yy + grh - ui(2), nam);
 			
 			if(hv) {
-				draw_sprite_stretched_add(THEME.box_r2, 1, xx, yy, grs, grs, c_white, .25);
+				draw_sprite_stretched_add(THEME.box_r2, 1, xx, yy, grw, grh, c_white, .25);
 				
 				if(mouse_lpress(foc)) {
 					element_adding = ele;
@@ -175,12 +199,12 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			col++;
 			if(col >= maxCol) {
 				col = 0;
-				yy += grs + ui(4);
-				_h += grs + ui(4);
+				yy += grh + ui(4);
+				_h += grh + ui(4);
 			}
 		}
 		
-		if(col) _h += grs + ui(4);
+		if(col) _h += grh + ui(4);
 		
 		if(_cAll ==  1) for( var i = 0, n = array_length(elements); i < n; i++ ) if(is_array(elements[i])) elements[i][1] = false; 
 		if(_cAll == -1) for( var i = 0, n = array_length(elements); i < n; i++ ) if(is_array(elements[i])) elements[i][1] =  true; 
@@ -446,7 +470,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		hover_preview     = false;
 		snapPoints        = [];
 		
-		#region panels
+		#region Panels
 			var pd = ui(8);
 			var edt_l = editor_toolbar_width_l;
 			var edt_r = editor_toolbar_width_r;
@@ -478,43 +502,99 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			sc_properties.setFocusHover(pFOCUS, pHOVER);
 			sc_properties.verify(prp_w - ui(8), prp_h - ui(8));
 			sc_properties.drawOffset(prp_x + ui(4), prp_y + ui(4), mx, my);
+		#endregion
+		
+		#region Resize
+			var cy = h / 2;
 			
-			// resize
-			
-			var cc = COLORS._main_icon;
-    		var aa = .5;
-    		
-			var _hov_res_out = pHOVER && point_in_rectangle(mx, my, out_x, out_y - pd, out_x + out_w, out_y);
-			
-	    	if(outline_height_drag) {
+			// Left
+			var lx = pd + editor_toolbar_width_l;
+			var cc = COLORS._main_icon, aa = .5;
+	    	if(editor_toolbar_l_resize) {
 	            CURSOR = cr_size_we;
+	            cc = COLORS._main_icon_light;
+				aa = 1;
+				
+	            editor_toolbar_width_l = editor_toolbar_l_sx + (mx - editor_toolbar_l_mx);
+	            editor_toolbar_width_l = clamp(editor_toolbar_width_l, ui(160), w * .4);
+	            if(mouse_lrelease()) editor_toolbar_l_resize = false;
+	        }
+	        
+	        if(pHOVER && point_in_rectangle(mx, my, lx, cy - ui(24), lx + pd, cy + ui(24))) {
+	            CURSOR = cr_size_we;
+	            aa = 1;
+	            
+	            if(mouse_lpress(pFOCUS)) {
+	                editor_toolbar_l_resize = true;
+					editor_toolbar_l_sx     = editor_toolbar_width_l;
+					editor_toolbar_l_mx     = mx;
+					
+	            }
+	        } 
+	        
+            draw_set_color_alpha(cc, aa);
+            draw_line_round(lx + pd / 2, cy - ui(12), lx + pd / 2, cy + ui(12), ui(3));
+            draw_set_alpha(1);
+            
+			// Outline
+			var cc = COLORS._main_icon, aa = .5;
+	    	if(outline_height_drag) {
+	            CURSOR = cr_size_ns;
 	            cc = COLORS._main_icon_light;
 				aa = 1;
 				
 	            outline_height = outline_height_start - (my - outline_height_my);
 	            outline_height = clamp(outline_height, ui(224), h - ui(128));
-	            if(mouse_release(mb_left)) outline_height_drag = false;
+	            if(mouse_lrelease()) outline_height_drag = false;
 	        }
 	        
-	        if(_hov_res_out) {
+	        if(pHOVER && point_in_rectangle(mx, my, out_x, out_y - pd, out_x + out_w, out_y)) {
 	            CURSOR = cr_size_ns;
 	            aa = 1;
 	            
-	            if(mouse_press(mb_left, pFOCUS)) {
+	            if(mouse_lpress(pFOCUS)) {
 	                outline_height_drag  = true;
 	                outline_height_start = outline_height;
 	                outline_height_my    = my;
 	            }
-	            
 	        } 
 	        
-	        draw_set_alpha(aa);
-            draw_set_color(cc);
+            draw_set_color_alpha(cc, aa);
             draw_line_round(out_x + out_w / 2 - ui(12), out_y - pd / 2, out_x + out_w / 2 + ui(12), out_y - pd / 2, ui(3));
             draw_set_alpha(1);
+            
+			// Right
+			var lx = w - pd - editor_toolbar_width_r;
+			var cc = COLORS._main_icon, aa = .5;
+	    	if(editor_toolbar_r_resize) {
+	            CURSOR = cr_size_we;
+	            cc = COLORS._main_icon_light;
+				aa = 1;
+				
+	            editor_toolbar_width_r = editor_toolbar_r_sx - (mx - editor_toolbar_r_mx);
+	            editor_toolbar_width_r = clamp(editor_toolbar_width_r, ui(240), w * .4);
+	            if(mouse_lrelease()) editor_toolbar_r_resize = false;
+	        }
+	        
+	        if(pHOVER && point_in_rectangle(mx, my, lx - pd, cy - ui(24), lx, cy + ui(24))) {
+	            CURSOR = cr_size_we;
+	            aa = 1;
+	            
+	            if(mouse_lpress(pFOCUS)) {
+	                editor_toolbar_r_resize = true;
+					editor_toolbar_r_sx     = editor_toolbar_width_r;
+					editor_toolbar_r_mx     = mx;
+					
+	            }
+	        } 
+	        
+            draw_set_color_alpha(cc, aa);
+            draw_line_round(lx - pd / 2, cy - ui(12), lx - pd / 2, cy + ui(12), ui(3));
+            draw_set_alpha(1);
+            
 		#endregion
 		
-		#region topbar
+		#region Topbar
 			var _top_x0 = pd + edt_l + pd ;
 			var _top_x1 = w - pd - edt_r - pd;
 			var _top_xc = (_top_x0 + _top_x1) / 2;
@@ -576,7 +656,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			}
 		#endregion
 		
-		#region display content
+		#region Display content
 			var _con_x0 = pd + edt_l + pd ;
 			var _con_x1 = w - pd - edt_r - pd;
 			var _con_xc = (_con_x0 + _con_x1) / 2;
@@ -634,12 +714,35 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		if(preview_mode) return;
 		
-		if(hover_preview && element_selecting == undefined && mouse_lpress(pFOCUS)) {
+		if(array_empty(element_selectings) && hover_preview && mouse_lpress(pFOCUS)) { // Select element
 			if(hovering_frame)   element_selecting = hovering_frame;
 			if(hovering_element) element_selecting = hovering_element;
-		}
+		} // Select element
 		
-		if(element_selecting != undefined) {
+		if(!array_empty(element_selectings)) { // Selecting multiple
+			select_box_x0 =  infinity; select_box_y0 =  infinity;
+			select_box_x1 = -infinity; select_box_y1 = -infinity;
+		
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				
+				var ex = dx0 + ele.x;
+				var ey = dy0 + ele.y;
+				var ew = ele.w;
+				var eh = ele.h;
+				
+				draw_sprite_stretched_ext(THEME.box_r2, 1, ex, ey, ew, eh, COLORS._main_accent, .5);
+				
+				select_box_x0 = min(select_box_x0, ex);
+				select_box_y0 = min(select_box_y0, ey);
+				select_box_x1 = max(select_box_x1, ex + ew);
+				select_box_y1 = max(select_box_y1, ey + eh);
+			}
+			
+			draw_sprite_stretched_ext(THEME.box_r2, 1, select_box_x0, select_box_y0, 
+				select_box_x1 - select_box_x0, select_box_y1 - select_box_y0, COLORS._main_accent);
+			 
+		} else if(element_selecting != undefined) { // Selecting object
 			var ex = dx0 + element_selecting.x;
 			var ey = dy0 + element_selecting.y;
 			var ew = element_selecting.w;
@@ -664,14 +767,14 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				element_selecting.remove();
 				element_selecting = undefined;
 			}
-		} 
+		}  // Selecting object
 		
-		if(hover_preview && mouse_lpress(pFOCUS)) {
+		if(hover_preview && mouse_lpress(pFOCUS)) { // Select element
 			if(hovering_frame)   element_selecting = hovering_frame;
 			if(hovering_element) element_selecting = hovering_element;
-		}
+		} // Select element
 		
-		if(element_drag != undefined) {
+		if(element_drag != undefined) { // Moving element
 			var _dx = drag_sx + (mx - drag_mx);
 			var _dy = drag_sy + (my - drag_my);
 			
@@ -680,9 +783,9 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			
 			if(mouse_lrelease())
 				element_drag = undefined;
-		}
+		} // Moving element
 		
-		if(element_adding) {
+		if(element_adding) { // Adding Element
 			var siz = element_adding.prevsize;
 				
 			if(hovering_frame != undefined) {
@@ -728,8 +831,122 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 					
 				element_adding = undefined;
 			}
+		} // Adding Element
+		
+		////- =Multiple dragging
+		if(!array_empty(element_selectings)) { // Selecting multiple
+			var hovBox = pHOVER && point_in_rectangle(mx, my, select_box_x0, select_box_y0, select_box_x1, select_box_y1);
+			
+			if(hovBox && mouse_lpress(pFOCUS)) {
+				select_multi_dragging  = true;
+				select_multi_drag_mx   = mx;
+				select_multi_drag_my   = my;
+				select_multi_drag_init = [select_box_x0, select_box_y0, select_box_x1, select_box_y1];
+				select_multi_drag_data = [];
+				for( var i = 0, n = array_length(element_selectings); i < n; i++ )
+					select_multi_drag_data[i] = element_selectings[i].pbBox.getBBOX();
+			}
+			
+			if(select_multi_dragging) {
+				var dx = round(mx - select_multi_drag_mx);
+				var dy = round(my - select_multi_drag_my);
+				
+				var ix0 = select_multi_drag_init[0] - dx0;
+				var iy0 = select_multi_drag_init[1] - dy0;
+				var ix1 = select_multi_drag_init[2] - dx0;
+				var iy1 = select_multi_drag_init[3] - dy0;
+				
+				var bx0 = ix0 + dx;
+				var by0 = iy0 + dy;
+				var bx1 = ix1 + dx;
+				var by1 = iy1 + dy;
+				
+				var sx0, sy0, sx1, sy1, sxc, syc;
+				
+				if(dx != 0 || dy != 0) {
+					var sd = ui(6);
+					
+					draw_set_alpha(.75);
+					for( var i = 0, n = array_length(snapPoints); i < n; i++ ) {
+						var sn = snapPoints[i];
+						if(sn != undefined && has(element_selectingm, sn[0].ID)) continue;
+						
+						sx0 = sn[1][0]; sy0 = sn[1][1];
+						sx1 = sn[1][2]; sy1 = sn[1][3];
+						sxc = (sx0 + sx1) / 2;
+						syc = (sy0 + sy1) / 2;
+						
+						draw_set_color(COLORS._main_icon);
+						if(abs(bx0 - sx0) < sd) { dx = sx0 - ix0; draw_line_width(dx0 + sx0, dy0, dx0 + sx0, dy1, 1); }
+						if(abs(bx0 - sx1) < sd) { dx = sx1 - ix0; draw_line_width(dx0 + sx1, dy0, dx0 + sx1, dy1, 1); }
+						if(abs(bx1 - sx0) < sd) { dx = sx0 - ix1; draw_line_width(dx0 + sx0, dy0, dx0 + sx0, dy1, 1); }
+						if(abs(bx1 - sx1) < sd) { dx = sx1 - ix1; draw_line_width(dx0 + sx1, dy0, dx0 + sx1, dy1, 1); }
+						
+						if(abs(by0 - sy0) < sd) { dy = sy0 - iy0; draw_line_width(dx0, dy0 + sy0, dx1, dy0 + sy0, 1); }
+						if(abs(by0 - sy1) < sd) { dy = sy1 - iy0; draw_line_width(dx0, dy0 + sy1, dx1, dy0 + sy1, 1); }
+						if(abs(by1 - sy0) < sd) { dy = sy0 - iy1; draw_line_width(dx0, dy0 + sy0, dx1, dy0 + sy0, 1); }
+						if(abs(by1 - sy1) < sd) { dy = sy1 - iy1; draw_line_width(dx0, dy0 + sy1, dx1, dy0 + sy1, 1); }
+						
+						draw_set_color(COLORS._main_accent);
+						if(abs(bx0 - sxc) < sd) { dx = sxc - ix0; draw_line_width(dx0 + sxc, dy0, dx0 + sxc, dy1, 1); }
+						if(abs(bx1 - sxc) < sd) { dx = sxc - ix1; draw_line_width(dx0 + sxc, dy0, dx0 + sxc, dy1, 1); }
+						
+						if(abs(by0 - syc) < sd) { dy = syc - iy0; draw_line_width(dx0, dy0 + syc, dx1, dy0 + syc, 1); }
+						if(abs(by1 - syc) < sd) { dy = syc - iy1; draw_line_width(dx0, dy0 + syc, dx1, dy0 + syc, 1); }
+						
+					}
+					draw_set_alpha(1);
+					
+					for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+						var ele = element_selectings[i];
+						var box = select_multi_drag_data[i];
+						ele.pbBox.setBBOX([ box[0] + dx, box[1] + dy, box[2] + dx, box[3] + dy ]);
+					}
+				}
+				
+				if(mouse_lrelease()) select_multi_dragging = false;
+			}
 		}
 		
+		////- =Box select
+		var boxable = hovering_element == undefined;
+		if(!array_empty(element_selectings))
+			boxable = !point_in_rectangle(mx, my, select_box_x0, select_box_y0, select_box_x1, select_box_y1);
+		else if(hovering_element != undefined)
+			boxable = !hovering_element.draggable || !hovering_element.selectable;
+		
+		if(boxable && mouse_lpress(pFOCUS)) {
+			element_selectings = [];
+			element_selectingm = {};
+			
+			selection_boxing = 1;
+			selection_box_x  = mx;
+			selection_box_y  = my;
+		}
+		
+		if(selection_boxing == 1) {
+			if(abs(mx - selection_box_x) > ui(4) || abs(my - selection_box_y) > ui(4))
+				selection_boxing = 2;
+		}
+		
+		if(selection_boxing == 2) {
+			var x0 = min(mx, selection_box_x);
+			var y0 = min(my, selection_box_y);
+			var x1 = max(mx, selection_box_x);
+			var y1 = max(my, selection_box_y);
+			
+			element_selectings = [];
+			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, x0, y0, x1, y1, COLORS._main_accent);
+			data.root.boxSelect(element_selectings, x0 - dx0, y0 - dy0, x1 - dx0, y1 - dy0);
+			
+			if(mouse_lrelease()) {
+				element_selectingm = {};
+				for( var i = 0, n = array_length(element_selectings); i < n; i++ )
+					element_selectingm[$ element_selectings[i].ID] = element_selectings[i];
+			}
+		}
+		
+		if(selection_boxing && mouse_lrelease()) selection_boxing = 0;
 	}
 	
 }

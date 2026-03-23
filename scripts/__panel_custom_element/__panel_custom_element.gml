@@ -1,4 +1,5 @@
 function Panel_Custom_Element(_data) constructor {
+	ID = UUID_generate();
 	data = _data;
 	type = "element";
 	name = "Element";
@@ -91,6 +92,14 @@ function Panel_Custom_Element(_data) constructor {
 			
 		if(snapable && is(panel, Panel_Custom_Editor))
 			array_push(panel.snapPoints, [ pbBox, [x, y, x + w, y + h] ]);
+	}
+	
+	static boxSelect = function(sarr, bx0, by0, bx1, by1) {
+		if(draggable && selectable && bool(rectangle_in_rectangle(bx0, by0, bx1, by1, x, y, x+w, y+h)))
+			array_push(sarr, self);
+		
+		for( var i = 0, n = array_length(contents); i < n; i++ ) 
+			contents[i].boxSelect(sarr, bx0, by0, bx1, by1);
 	}
 	
 	////- Draw
