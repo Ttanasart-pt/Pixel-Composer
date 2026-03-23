@@ -9,6 +9,9 @@ function __enum_array_gen(arr, spr, col = COLORS._main_icon, ind = undefined) {
 function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main_icon) constructor {
 	name = _name;
 	data = _name;
+	sub  = false;
+	
+	textColor = COLORS._main_text;
 	
 	spr       = _spr;
 	spr_ind   = _spr_ind;
@@ -20,6 +23,9 @@ function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main
 	active  = true;
 	tooltip = "";
 	data    = undefined;
+	
+	static setSub         = function(s) /*=>*/ { sub       = true;  return self; }
+	static setTextColor   = function(c) /*=>*/ { textColor = c;     return self; }
 	
 	static setSpriteScale = function( ) /*=>*/ { spr_scale = false; return self; }
 	static setBlend       = function(c) /*=>*/ { spr_blend = c;     return self; }

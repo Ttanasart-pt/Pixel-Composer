@@ -147,7 +147,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		for( var i = 0, n = array_length(node.outputs); i < n; i++ ) {
 			var _juncOut = node.outputs[i];
 			juncOutList[i]     = _juncOut;
-			juncOutListName[i] = new scrollItem(_juncOut.name, THEME.node_junctions_single, _juncOut.type, c_white);
+			juncOutListName[i] = new scrollItem(_juncOut.name, THEME.node_junctions_single, _juncOut.type, c_white)
+				.setTextColor(_juncOut.show_in_inspector? COLORS._main_text : COLORS._main_text_sub);
 		}
 		
 		return juncOutListName;
@@ -160,10 +161,32 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		
 		juncInList     = [];
 		juncInListName = [];
-		for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
-			var _juncIn = node.inputs[i];
-			juncInList[i]     = _juncIn;
-			juncInListName[i] = new scrollItem(_juncIn.name, THEME.node_junctions_single, _juncIn.type, c_white);
+		
+		if(node.input_display_list == -1) {
+			for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
+				var _juncIn = node.inputs[i];
+				juncInList[i]     = _juncIn;
+				juncInListName[i] = new scrollItem(_juncIn.name, THEME.node_junctions_single, _juncIn.type, c_white)
+					.setTextColor(_juncIn.show_in_inspector? COLORS._main_text : COLORS._main_text_sub);
+			}
+			
+		} else {
+			var ind = 0;
+			for( var i = 0, n = array_length(node.input_display_list); i < n; i++ ) {
+				var _i = node.input_display_list[i];
+				if(is_array(_i)) {
+					juncInList[ind]     = -1;
+					juncInListName[ind] = $"> {_i[0]}";
+					ind++;
+				}
+				
+				if(!is_real(_i)) continue;
+				
+				var _juncIn = node.inputs[_i];
+				juncInList[ind]     = _juncIn;
+				juncInListName[ind] = new scrollItem(_juncIn.name, THEME.node_junctions_single, _juncIn.type, c_white);
+				ind++;
+			}
 		}
 		
 		return juncInListName;

@@ -264,7 +264,7 @@
             if(array_length(_str) > 1 && _str[0] == "self" && struct_has(params, "node_values"))
                 return struct_try_get(params.node_values, _str[1]);
             
-            return nodeGetData(val, params.project);
+            return has(params, "project")? nodeGetData(val, params.project) : val;
         }
         
         static _validate = function(val) {

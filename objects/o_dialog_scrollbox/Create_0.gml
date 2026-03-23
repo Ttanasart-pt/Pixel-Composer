@@ -89,13 +89,16 @@ event_inherited();
 			var _act = true;
 			var _sub = false;
 			var _sca = true;
+			var _txtClr = COLORS._main_text;
 			var _offset = false;
 			
 			if(is(_val, scrollItem)) {
 				_act = _val.active;
+				_sub = _val.sub;
 				_txt = _val.name;
 				_tol = _val.tooltip != "";
 				_sca = _val.spr_scale;
+				_txtClr = _val.textColor;
 				_offset = _val.spr || _val.surface;
 				
 			} else {
@@ -114,7 +117,7 @@ event_inherited();
 			
 			var _yy  = _ly + hght / 2;
 			
-			if(_act) {
+			if(_act && !_sub) {
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
@@ -124,12 +127,14 @@ event_inherited();
 				if(selecting == i) {
 					draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-					if(sc_content.active && (mouse_press(mb_left) || KEYBOARD_ENTER)) {
+					if(sc_content.active && (mouse_lpress() || KEYBOARD_ENTER)) {
 						initVal = i;
 						instance_destroy();
 					}
 				}
 			}
+			
+			if(_sub) draw_sprite_stretched_ext(THEME.box_r5, 0, ui(2), _ly + ui(2), _dw - ui(4), hght - ui(4), CDEF.main_mdblack, 1);
 			
 			if(_tol) {
 				var tx = _dw - ui(12);
@@ -144,7 +149,10 @@ event_inherited();
 			}
 			
 			if(is_string(_txt)) {
-				draw_set_text(font, align, fa_center, _act? COLORS._main_text : COLORS._main_text_sub);
+				var tc = _act? _txtClr : COLORS._main_text_sub;
+				if(_sub) tc = COLORS._main_text_sub;
+				
+				draw_set_text(font, align, fa_center, tc);
 				if(align == fa_center) {
 					var _x0 = 0;
 					var _x1 = _dw;
@@ -157,9 +165,8 @@ event_inherited();
 				} else if(align == fa_left) 
 					draw_text_add(text_pad + _offset * hght, _yy, _txt);
 					
-			} else if(sprite_exists(_txt)) {
+			} else if(sprite_exists(_txt))
 				draw_sprite_ext(_txt, i, _dw / 2, _yy);
-			}
 			
 			if(is(_val, scrollItem)) {
 				if(_val.spr) {

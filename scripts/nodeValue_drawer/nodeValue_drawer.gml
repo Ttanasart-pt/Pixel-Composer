@@ -51,10 +51,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var ics  = _viewSpac? .9 : .75;
 		var butx = xx + bs/2;
 		var lb_x = xx + bs/2 + bs;
+		var padx = ui(12 + 4 * _viewSpac);
 		
 		draw_set_font(_font);
 		var ds_w = jun.node.inspector_pad_label ?? string_width(dispName);
-		var lb_w = ui(8) + ds_w;
+		var lb_w = ds_w + padx + ui(4);
 		var fr   = _input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
 		
 		if(anim_hold != noone && mouse_lrelease()) anim_hold = noone;
@@ -208,9 +209,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#region draw name
 		draw_set_text(_font, fa_left, fa_center, cc);
 		
-		var _padx = ui(12 + 4 * _viewSpac);
-		var lbHov = _hover && point_in_rectangle(_m[0], _m[1], lb_x - _padx / 2, yy, lb_x + ds_w + _padx, yy + lb_h);
-		if(lbHov) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x - _padx / 2, yy, ds_w + _padx, lb_h, c_white, 1);
+		var lbHov = _hover && point_in_rectangle(_m[0], _m[1], lb_x - padx / 2, yy, lb_x + ds_w + padx, yy + lb_h);
+		if(lbHov) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x - padx / 2, yy, ds_w + padx, lb_h, c_white, 1);
         
 		draw_text_add(lb_x, lb_y, dispName);
 		var dtx1 = lb_x + ds_w;
@@ -230,6 +230,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
 				cHov = true;
+				aa   = 1;
 				
 			    if(is_string(_tip)) {
 			    	TOOLTIP = _tip;
@@ -237,15 +238,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				} else if(mouse_lclick(_focus)) {
 					if(is_callable(_tip)) _tip();
 					else dialogCall(_tip);
-					
 				}
-				
-				aa = 1;
 			} 
 			
 			draw_sprite_ui(THEME.info_light, 0, tx, ty, tcs, tcs, 0, COLORS._main_icon_light, aa);
-			
-			lb_w += ui(16) * tcs;
+			lb_w += ui(24) * tcs;
 		}
 	#endregion
 	
