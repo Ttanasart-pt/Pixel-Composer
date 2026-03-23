@@ -9,12 +9,17 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	key   = noone;
 	wdgw  = ui(64);
 	
-	title_actions_show_graph = [ THEME.timeline_graph, 0, COLORS._main_icon ];
-	
-	title_actions_override = false;
-	title_actions = [
-		[ "Graph",  title_actions_show_graph, function() /*=>*/ { if(key == noone) return; key.anim.prop.show_graph = !key.anim.prop.show_graph; }  ], 
-	];
+	#region title actions
+		title_actions_show_graph = [ THEME.timeline_graph, 0, COLORS._main_icon ];
+		title_actions_override = false;
+		title_actions = [
+			[ "Graph",  title_actions_show_graph, function() /*=>*/ { 
+				if(key == noone) return; 
+				var p = key.anim.prop; 
+				p.show_graph = !p.show_graph; 
+			} ], 
+		];
+	#endregion
 	
 	#region data
 		bg_y    = -1;
@@ -29,15 +34,21 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		curr_height   = 0;
 		shift_height  = true;
 		
-		driver = undefined;
+		driver      = undefined;
+		drivers     = [];
+		driverMulti = false;
 	#endregion
 	
 	#region properties
 		__enum_driver = __enum_array_gen(global.DRIVER_TYPES, s_driver_type);
 		sb_type = new scrollBox(__enum_driver, function(val) /*=>*/ { 
-			var _drv = new KeyDriver().build(string_lower(__enum_driver[val].name));
-			key.driverObject = _drv;
-			driver = _drv;
+			for( var i = 0, n = array_length(PANEL_ANIMATION.keyframe_selecting); i < n; i++ ) {
+				var k = PANEL_ANIMATION.keyframe_selecting[i];
+				var d = new KeyDriver().build(string_lower(__enum_driver[val].name));
+				
+				k.driverObject = d;
+				driver = d;
+			}
 		}, false);
 		
 		var item = __Panel_Linear_Setting_Item;
@@ -45,45 +56,98 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		
 		driverProp = {
 			KeyDriver_Linear : [
-				new item(  __txt("Speed"),    tNum(function(v) /*=>*/ { driver.speed = v; }), function() /*=>*/ {return driver.speed} ),
+				new item(  __txt("Speed"),    tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].speed = v; 
+				}), function() /*=>*/ {return driver.speed} ),
 			],
 			
 			KeyDriver_Wiggle : [
-				new item( __txt("Seed"),      tNum(function(v) /*=>*/ { driver.seed = v; })
-					.setSideButton(button(function() /*=>*/ { randomize(); driver.seed = seed_random(6); })
+				new item( __txt("Seed"),      tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].seed = v; 
+				}).setSideButton(button(function() /*=>*/ { randomize(); driver.seed = seed_random(6); })
 						.setTooltip(__txt("Randomize"))
 						.setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad()
 					),
 					function() /*=>*/ {return driver.seed} 
 				),
-				new item( __txt("Sep Axis"),  new checkBox(function(v) /*=>*/ { driver.sep_axis = !driver.sep_axis; }), function() /*=>*/ {return driver.sep_axis} ),
-				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { driver.frequency = v; }), function() /*=>*/ {return driver.frequency}      ),
-				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { driver.amplitude = v; }), function() /*=>*/ {return driver.amplitude}      ),
-				new item( __txt("Octave"),    tNum(function(v) /*=>*/ { driver.octave = round(v); }),     function() /*=>*/ {return driver.octave} ),
-				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { driver.smooth = clamp(v,0,1); }), function() /*=>*/ {return driver.smooth} ),
+				
+				new item( __txt("Sep Axis"),  new checkBox(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].sep_axis = !driver.sep_axis;
+				}), function() /*=>*/ {return driver.sep_axis} ),
+				
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].frequency = v; 
+				}), function() /*=>*/ {return driver.frequency} ),
+				
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amplitude = v; 
+				}), function() /*=>*/ {return driver.amplitude} ),
+				
+				new item( __txt("Octave"),    tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].octave = round(v); 
+				}), function() /*=>*/ {return driver.octave} ),
+				
+				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].smooth = clamp(v,0,1); 
+				}), function() /*=>*/ {return driver.smooth} ),
 			],
 			
 			KeyDriver_Sine   : [
-				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { driver.frequency = v; }), function() /*=>*/ {return driver.frequency}      ),
-				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { driver.amplitude = v; }), function() /*=>*/ {return driver.amplitude}      ),
-				new item( __txt("Phase"),     tNum(function(v) /*=>*/ { driver.phase     = v; }), function() /*=>*/ {return driver.phase}          ),
-				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { driver.smooth = clamp(v,0,1); }), function() /*=>*/ {return driver.smooth} ),
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].frequency = v;
+				}), function() /*=>*/ {return driver.frequency} ),
+				
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amplitude = v;
+				}), function() /*=>*/ {return driver.amplitude} ),
+				
+				new item( __txt("Phase"),     tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].phase     = v;
+				}), function() /*=>*/ {return driver.phase} ),
+				
+				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].smooth = clamp(v,0,1);
+				}), function() /*=>*/ {return driver.smooth} ),
 			],
 			
 			KeyDriver_Snap   : [
-				new item( __txt("Snap"), tNum(function(v) /*=>*/ { driver.snapSize = v; }), function() /*=>*/ {return driver.snapSize}  ),
+				new item( __txt("Snap"), tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].snapSize = v; 
+				}), function() /*=>*/ {return driver.snapSize}  ),
 			],
 			
 			KeyDriver_Bounce : [
-				new item( __txt("Amount"),  tNum(function(v) /*=>*/ { driver.amount = round(v); driver.init(); }), function() /*=>*/ {return driver.amount}     ),
-				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { driver.amplitude = v;     driver.init(); }), function() /*=>*/ {return driver.amplitude}  ),
-				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { driver.steepness = v;     driver.init(); }), function() /*=>*/ {return driver.steepness}  ),
+				new item( __txt("Amount"),  tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amount = round(v); 
+					driver.init(); 
+				}), function() /*=>*/ {return driver.amount}     ),
+				
+				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amplitude = v;     
+					driver.init(); 
+				}), function() /*=>*/ {return driver.amplitude}  ),
+				
+				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].steepness = v;     
+					driver.init(); 
+				}), function() /*=>*/ {return driver.steepness}  ),
 			],
 			
 			KeyDriver_Elastic : [
-				new item( __txt("Amount"),  tNum(function(v) /*=>*/ { driver.amount = round(v); driver.init(); }), function() /*=>*/ {return driver.amount}     ),
-				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { driver.amplitude = v;     driver.init(); }), function() /*=>*/ {return driver.amplitude}  ),
-				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { driver.steepness = v;     driver.init(); }), function() /*=>*/ {return driver.steepness}  ),
+				new item( __txt("Amount"),  tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amount = round(v); 
+					driver.init(); 
+				}), function() /*=>*/ {return driver.amount}     ),
+				
+				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amplitude = v;     
+					driver.init(); 
+				}), function() /*=>*/ {return driver.amplitude}  ),
+				
+				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { 
+					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].steepness = v;     
+					driver.init(); 
+				}), function() /*=>*/ {return driver.steepness}  ),
 			],
 		}
 		
@@ -99,6 +163,13 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		
 		var _w = sc_content.surface_w;
 		var _h = sc_content.surface_h;
+		
+		if(driverMulti) {
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text_add(_w/2, _h/2, __txt("Multiple Driver types"));
+			return 0;
+		}
+		
 		var _rx = x + sc_content.x;
 		var _ry = y + sc_content.y;
 		
@@ -250,6 +321,17 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		key = array_safe_get(PANEL_ANIMATION.keyframe_selecting, 0, noone);
 		title_actions_show_graph[2] = key && key.anim.prop.show_graph? COLORS._main_accent : COLORS._main_icon;
 		
+		drivers     = [];
+		driverMulti = false;
+		var _drivTyp = undefined;
+		for( var i = 0, n = array_length(PANEL_ANIMATION.keyframe_selecting); i < n; i++ ) {
+			var k = PANEL_ANIMATION.keyframe_selecting[i];
+			if(_drivTyp == undefined) _drivTyp = instanceof(k.driverObject);
+			else if(_drivTyp != instanceof(k.driverObject)) driverMulti = true;
+			
+			if(k.driverObject) array_push(drivers, k.driverObject);
+		}
+		
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var px = padding;
@@ -270,6 +352,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 			sb_type.setFocusHover(pFOCUS, pHOVER);
 			sb_type.register();
 			
+			if(driverMulti) _typ = "Varied";
 			var params = new widgetParam(tx, ty, tw, th, _typ, undefined, [mx,my], x, y).setFont(font);
 			sb_type.drawParam(params); 
 			
