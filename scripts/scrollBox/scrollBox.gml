@@ -15,6 +15,8 @@ function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main
 	spr_blend = _spr_blend;
 	spr_scale = true;
 	
+	surface   = noone;
+	
 	active  = true;
 	tooltip = "";
 	data    = undefined;
@@ -24,6 +26,8 @@ function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main
 	static setActive      = function(a) /*=>*/ { active    = a;     return self; }
 	static setTooltip     = function(t) /*=>*/ { tooltip   = t;     return self; }
 	static setData        = function(d) /*=>*/ { data      = d;     return self; }
+	
+	static setSurface     = function(s) /*=>*/ { surface   = s;     return self; }
 }
 
 function scrollBox(_data, _onModify, _update_hover = true) : widget() constructor {
@@ -164,7 +168,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _sps =  1;
 		var _ars = .5;
 		var _arw = _arr * (sprite_get_width(arrow_spr) * _ars + ui(8));
-		var _spr = is(_selVal, scrollItem) && _selVal.spr;
+		var _offset = is(_selVal, scrollItem) && (_selVal.spr || _selVal.surface);
 		
 		if(side_button != noone) {
 			var bx = _x + _w - bs;
@@ -206,21 +210,23 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		if(show_icon && horizontal == 2) {
 			var _xc = (_x0 + _x1) / 2;
 			
-			if(_spr) {
+			if(_offset) {
 				var _hh = h - ui(32);
-				var _ss = _hh / sprite_get_height(_selVal.spr);
 				var _yy = _y + ui(4) + _hh / 2;
 				
-				gpu_set_tex_filter(filter);
-				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _xc, _yy, _ss, _selVal.spr_blend);
-				gpu_set_tex_filter(false);
+				if(_selVal.spr) {
+					var _ss = _hh / sprite_get_height(_selVal.spr);
+					gpu_set_tex_filter(filter);
+					draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _xc, _yy, _ss, _selVal.spr_blend);
+					gpu_set_tex_filter(false);
+				}
 			}
 			
 			draw_set_text(_f, fa_center, fa_bottom, text_color);
 			draw_text_add(_xc, _y + h - ui(4), _text);
 			
 		} else {
-			if(_spr) _x0 += ui(32);
+			if(_offset) _x0 += ui(32);
 			var _xc = (_x0 + _x1) / 2;
 			
 			draw_set_text(_f, align, fa_center, text_color);
@@ -235,12 +241,24 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 				draw_sprite_ext(_selVal, _val, _xc, _yc);
 			}
 			
-			if(show_icon && _spr) {
-				var _ss = (h - icon_padding) / sprite_get_height(_selVal.spr);
+			if(show_icon && _offset) {
+				if(_selVal.spr) {
+					var _ss = (h - icon_padding) / sprite_get_height(_selVal.spr);
+					gpu_set_tex_filter(filter);
+					draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + h / 2, _yc, _ss, _selVal.spr_blend);
+					gpu_set_tex_filter(false);
+				}
 				
-				gpu_set_tex_filter(filter);
-				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + h / 2, _yc, _ss, _selVal.spr_blend);
-				gpu_set_tex_filter(false);
+				if(_selVal.surface) {
+					var srf = _selVal.surface;
+					var _sw = surface_get_width(srf);
+					var _sh = surface_get_height(srf);
+					var _ss = (h - icon_padding) / max(_sw, _sh);
+					
+					gpu_set_tex_filter(filter);
+					draw_surface_ext(srf, _x + h/2, _yc - _sh*_ss/2, _ss, _ss, 0, c_white, 1);
+					gpu_set_tex_filter(false);
+				}
 			}
 		}
 		

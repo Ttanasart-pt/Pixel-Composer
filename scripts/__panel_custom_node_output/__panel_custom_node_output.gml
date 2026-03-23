@@ -26,8 +26,8 @@ function Panel_Custom_Node_Output(_data) : Panel_Custom_Element(_data) construct
 			"Content 3", 
 			"Content 4", 
 		], function(t) /*=>*/ { font = t; } ), function() /*=>*/ {return font}, function(t) /*=>*/ { font = t; }), 
-		Simple_Editor("H Align", new buttonGroup( array_create(3, THEME.inspector_text_halign), function(c) /*=>*/ { halign = c; }), function() /*=>*/ {return halign}, function(c) /*=>*/ { halign = c; }), 
-		Simple_Editor("V Align", new buttonGroup( array_create(3, THEME.inspector_text_valign), function(c) /*=>*/ { valign = c; }), function() /*=>*/ {return valign}, function(c) /*=>*/ { valign = c; }), 
+		Simple_Editor("H Align", new buttonGroup( array_create(3, THEME.inspector_surface_halign), function(c) /*=>*/ { halign = c; }), function() /*=>*/ {return halign}, function(c) /*=>*/ { halign = c; }), 
+		Simple_Editor("V Align", new buttonGroup( array_create(3, THEME.inspector_surface_valign), function(c) /*=>*/ { valign = c; }), function() /*=>*/ {return valign}, function(c) /*=>*/ { valign = c; }), 
 		Simple_Editor("Surface Fit", new scrollBox( [ 
 			"Keep Ratio min", 
 			"Keep Ratio max", 

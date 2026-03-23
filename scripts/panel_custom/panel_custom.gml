@@ -27,10 +27,13 @@ function Panel_Custom(_data = undefined) : PanelContent() constructor {
 		return self;
 	}
 	
+	function stepBegin() {
+		if(!project || !project.active) close();
+	}
+	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		if(!data) return;
-		if(!project || !project.active) { close(); return; }
 		
 		_hovering_frame   = hovering_frame;
 		_hovering_scroll  = hovering_scroll;

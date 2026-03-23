@@ -47,6 +47,18 @@ function Panel_Custom_Element(_data) constructor {
 		Simple_Editor("Mouse Event", new checkBox(function() /*=>*/ { mouseEvent = !mouseEvent; }), function() /*=>*/ {return mouseEvent}, function(v) /*=>*/ { mouseEvent = v; }), 
 	];
 	
+	////- Parent
+	
+	static isParent = function(par) {
+		var p = parent;
+		while(p != undefined) {
+			if(p == par) return true;
+			p = p.parent;
+		}
+		
+		return false;
+	}
+	
 	////- Contents
 	
 	static addContent = function(cont) {
@@ -89,9 +101,23 @@ function Panel_Custom_Element(_data) constructor {
 		
 		for( var i = 0, n = array_length(contents); i < n; i++ )
 			contents[i].checkMouse(panel, _m);
-			
-		if(snapable && is(panel, Panel_Custom_Editor))
-			array_push(panel.snapPoints, [ pbBox, [x, y, x + w, y + h] ]);
+	}
+	
+	static getSnapPoint = function(panel) {
+		var sn = snapable;
+		
+		// Do not snap to children
+		if(!array_empty(panel.element_selectings)) {
+			for( var i = 0, n = array_length(panel.element_selectings); i < n; i++ )
+				if(isParent(panel.element_selectings)) return; 
+				
+		} else if(panel.element_selecting != undefined) {
+			if(isParent(panel.element_selecting)) return;
+		}
+		
+		if(sn) array_push(panel.snapPoints, [ pbBox, [x, y, x + w, y + h], self ]);
+		for( var i = 0, n = array_length(contents); i < n; i++ )
+			contents[i].getSnapPoint(panel);
 	}
 	
 	static boxSelect = function(sarr, bx0, by0, bx1, by1) {
@@ -128,72 +154,6 @@ function Panel_Custom_Element(_data) constructor {
 			contents[i].drawBox(panel);
 	}
 	
-	static drawOutlineContent = function(_depth, _panel, _x, _y, _w, _m, hov) { 
-		var lw = ui(16);
-		var lh = outline_h;
-		
-		var bx0 = _x + _w;
-		var by0 = _y - lh;
-		
-		bx0 -= lw + 1;
-		var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
-		var aa    = selectable && draggable? .5 + .5 * hovIn : 1;
-		draw_sprite_ui_uniform(THEME.lock_12, selectable && draggable, bx0 + lw/2, by0 + lh/2, 1, COLORS._main_icon_light, aa);
-		if(hovIn) {
-			TOOLTIP = __txt("Lock");
-			if(mouse_lpress(_panel.pFOCUS)) selectable = !selectable;
-		}
-		
-		bx0 -= lw + 1;
-		var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
-		var aa    = .5 + .5 * hovIn;
-		var aa    = snapable? .5 + .5 * hovIn : 1;
-		draw_sprite_ui_uniform(THEME.magnet, snapable, bx0 + lw/2, by0 + lh/2, .5, COLORS._main_icon_light, aa);
-		if(hovIn) {
-			TOOLTIP = __txt("Snap");
-			if(mouse_lpress(_panel.pFOCUS)) snapable = !snapable;
-		}
-		
-		if(modifyContent) {
-			if(_panel.element_adding) {
-				if(_panel._hovering_frame == self)
-					draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y - lh, _w, lh, COLORS._main_accent);
-					
-				if(hov) _panel.hovering_frame = self;
-			}
-			
-			if(_panel.outline_drag && _panel.outline_drag != _panel._hovering_element) {
-				bx0 -= lw + 1;
-				var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
-				
-				draw_sprite_ui_uniform(THEME.icon_default, 0, bx0 + lw/2, by0 + lh/2, .75, hovIn? COLORS._main_accent : COLORS._main_icon, 1);
-				if(hovIn) _panel.outline_drag_frame = self;
-			}
-		}
-		
-		if(!outline_expand) return 0;
-		
-		var _h  = 0;
-		var _y0 = _y;
-		var _y1 = _y;
-		
-		for( var i = 0, n = array_length(contents); i < n; i++ ) {
-			var con = contents[i];
-			
-			var hh = con.drawOutline(_depth + 1, _panel, _x + ui(16), _y, _w - ui(16), _m);
-			_h += hh;
-			_y += hh;
-			if(i < n - 1) _y1 = _y;
-		}
-		
-		if(n) {
-			draw_set_color(CDEF.main_dark);
-			draw_line(_x + ui(12), _y0, _x + ui(12), _y1 + lh / 2);
-		}
-		
-		return _h;
-	}
-		
 	static drawOutline = function(_depth, _panel, _x, _y, _w, _m) {
 		var lh = outline_h;
 		var _h = lh;
@@ -213,6 +173,9 @@ function Panel_Custom_Element(_data) constructor {
 				outline_expand = !outline_expand;
 			ttx += ui(16);
 		}
+		
+		if(has(_panel.element_selectingm, ID))
+			draw_sprite_stretched_add(THEME.box_r2, 0, _x, _y, _w, lh, COLORS._main_icon, .1);
 		
 		draw_set_text(f_p4, fa_left, fa_center, active? COLORS._main_text : COLORS._main_text_sub);
 		draw_text_add(ttx, yc, name);
@@ -235,15 +198,95 @@ function Panel_Custom_Element(_data) constructor {
 			
 			if(_panel.element_adding && hov)
 				_panel.hovering_frame = parent;
+		}
+		
+		var lw = ui(16);
+		var bx0 = _x + _w;
+		var by0 = _y;
+		
+		bx0 -= lw + 1;
+		if(!draggable) {
+			draw_sprite_ui_uniform(THEME.value_link, 1, bx0 + lw/2, by0 + lh/2, .5, COLORS._main_icon_light, .5);
 			
-			if(mouse_lpress(_panel.pFOCUS)) {
-				_panel.element_selecting = self;
-				if(draggable) _panel.outline_drag = self;
+		} else {
+			var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
+			var aa    = selectable? .5 + .5 * hovIn : 1;
+			draw_sprite_ui_uniform(THEME.lock_12, selectable, bx0 + lw/2, by0 + lh/2, 1, COLORS._main_icon_light, aa);
+			if(hovIn) {
+				hov = false;
+				TOOLTIP = __txt("Lock");
+				_panel.outline_hover = undefined;
+				
+				if(_panel.outline_hold_lock != undefined && mouse_lclick(_panel.pFOCUS)) 
+					selectable = _panel.outline_hold_lock;
+					
+				if(mouse_lpress(_panel.pFOCUS)) {
+					_panel.outline_hold_lock = !selectable;
+					selectable = _panel.outline_hold_lock;
+				}
 			}
 		}
 		
+		bx0 -= lw + 1;
+		var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
+		var aa    = .5 + .5 * hovIn;
+		var aa    = snapable? .5 + .5 * hovIn : 1;
+		draw_sprite_ui_uniform(THEME.magnet, snapable, bx0 + lw/2, by0 + lh/2, .5, COLORS._main_icon_light, aa);
+		if(hovIn) {
+			hov = false;
+			TOOLTIP = __txt("Snap");
+			_panel.outline_hover = undefined;
+			
+			if(_panel.outline_hold_snap != undefined && mouse_lclick(_panel.pFOCUS)) 
+				snapable = _panel.outline_hold_snap;
+				
+			if(mouse_lpress(_panel.pFOCUS)) {
+				_panel.outline_hold_snap = !snapable;
+				snapable = _panel.outline_hold_snap;
+			}
+		}
+		
+		if(hov && mouse_lpress(_panel.pFOCUS)) {
+			_panel.element_selecting = self;
+			if(draggable) _panel.outline_drag = self;
+		}
+		
+		if(modifyContent) {
+			if(_panel.element_adding) {
+				if(_panel._hovering_frame == self)
+					draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, lh, COLORS._main_accent);
+					
+				if(hov) _panel.hovering_frame = self;
+			}
+			
+			if(_panel.outline_drag && _panel.outline_drag != _panel._hovering_element) {
+				bx0 -= lw + 1;
+				var hovIn = point_in_rectangle(_m[0], _m[1], bx0, by0, bx0 + lw, by0 + lh);
+				
+				draw_sprite_ui_uniform(THEME.icon_default, 0, bx0 + lw/2, by0 + lh/2, .75, hovIn? COLORS._main_accent : COLORS._main_icon, 1);
+				if(hovIn) _panel.outline_drag_frame = self;
+			}
+		}
+		
+		if(!outline_expand) return _h;
+		
 		_y += lh;
-		_h += drawOutlineContent(_depth, _panel, _x, _y, _w, _m, hov);
+		var _y0 = _y;
+		var _y1 = _y;
+		
+		for( var i = 0, n = array_length(contents); i < n; i++ ) {
+			var con = contents[i];
+			var hh  = con.drawOutline(_depth + 1, _panel, _x + ui(16), _y, _w - ui(16), _m);
+			_h += hh;
+			_y += hh;
+			
+			if(i < n - 1) _y1 = _y;
+		}
+		
+		if(n) {
+			draw_set_color(CDEF.main_dark);
+			draw_line(_x + ui(12), _y0, _x + ui(12), _y1 + lh / 2);
+		}
 		
 		return _h;
 	}
@@ -272,6 +315,7 @@ function Panel_Custom_Element(_data) constructor {
 		_m.snapable   = snapable;
 		_m.mouseEvent = mouseEvent;
 		
+		_m.outline_expand = outline_expand;
 		_m.contents = array_map(contents, function(c) /*=>*/ {return c.serialize()});
 		
 		doSerialize(_m);
@@ -291,6 +335,8 @@ function Panel_Custom_Element(_data) constructor {
 		_ele.selectable = _m[$ "selectable"] ?? selectable;
 		_ele.snapable   = _m[$ "snapable"]   ?? snapable;
 		_ele.mouseEvent = _m[$ "mouseEvent"] ?? mouseEvent;
+		
+		_ele.outline_expand = _m[$ "outline_expand"] ?? outline_expand;
 		
 		if(has(_m, "contents"))
 		for( var i = 0, n = array_length(_m.contents); i < n; i++ )

@@ -59,6 +59,7 @@ function __pbBox() constructor {
 	////- Draw
 	
 	drag_anchor    = noone;
+	drag_accept    = 0;
 	drag_anchor_sv = [ 0, 0, 0, 0 ];
 	drag_anchor_mx = 0;
 	drag_anchor_my = 0;
@@ -92,11 +93,13 @@ function __pbBox() constructor {
 		if(fixed_box != 0) return;
 		
 		if(drag_anchor == noone) {
-			     if(hover && point_in_circle(_mx, _my, _x0, _y0, 12)) { _h0 = 1; if(mouse_lpress(active)) drag_anchor = 0; } 
-			else if(hover && point_in_circle(_mx, _my, _x1, _y0, 12)) { _h1 = 1; if(mouse_lpress(active)) drag_anchor = 1; } 
-			else if(hover && point_in_circle(_mx, _my, _x0, _y1, 12)) { _h2 = 1; if(mouse_lpress(active)) drag_anchor = 2; } 
-			else if(hover && point_in_circle(_mx, _my, _x1, _y1, 12)) { _h3 = 1; if(mouse_lpress(active)) drag_anchor = 3; } 
-			else if(hover && point_in_rectangle(_mx, _my, _x0, _y0, _x1, _y1)) { _h9 = 1; if(mouse_lpress(active)) drag_anchor = 9; } 
+			if(hover) {
+				     if(point_in_circle(_mx, _my, _x0, _y0, 12)) {     _h0 = 1; if(mouse_lpress(active)) drag_anchor = 0; } 
+				else if(point_in_circle(_mx, _my, _x1, _y0, 12)) {     _h1 = 1; if(mouse_lpress(active)) drag_anchor = 1; } 
+				else if(point_in_circle(_mx, _my, _x0, _y1, 12)) {     _h2 = 1; if(mouse_lpress(active)) drag_anchor = 2; } 
+				else if(point_in_circle(_mx, _my, _x1, _y1, 12)) {     _h3 = 1; if(mouse_lpress(active)) drag_anchor = 3; } 
+				else if(point_in_rectangle(_mx,_my,_x0,_y0,_x1,_y1)) { _h9 = 1; if(mouse_lpress(active)) drag_anchor = 9; } 
+			}
 			
 			draw_anchor(_h0, _x0, _y0, ui(8), 2);
 			draw_anchor(_h1, _x1, _y0, ui(8), 2);
@@ -109,11 +112,22 @@ function __pbBox() constructor {
 				drag_anchor_sv = variable_clone(_bbox);
 				drag_anchor_mx = _mx;
 				drag_anchor_my = _my;
+				drag_accept    = false;
 				
 				if(_node) _node.w_hovering = true;
 			}
 			
 			return _hov || _h0 || _h1 || _h2 || _h3 || _h9;
+		}
+		
+		if(!drag_accept) {
+			if(point_distance(_mx, _my, drag_anchor_mx, drag_anchor_my) > ui(4))
+				drag_accept = true;
+			
+			if(mouse_release(mb_left)) 
+				drag_anchor = noone;
+				
+			return true;
 		}
 		
 		var xx0 = base_bbox[0], dx0 = _x + xx0 * _s;

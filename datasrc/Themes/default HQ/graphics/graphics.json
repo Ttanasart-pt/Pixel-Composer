@@ -345,6 +345,7 @@
     "prop_level":                         { "path": "./icon/s_prop_level.png",                              "s": 1, "x": 12, "y": 12 },
 
     "inspector_area_type":                { "path": "./inspector/s_prop_area_type.png",                     "s": 3, "x": 12, "y": 12 },
+    "inspector_fill_type":                { "path": "./inspector/s_prop_fill_type.png",                     "s": 3, "x": 12, "y": 12 },
     "inspector_area":                     { "path": "./inspector/s_inspector_area.png",                     "s": 2, "x": 12, "y": 12 },
     "inspector_surface_halign":           { "path": "./inspector/s_inspector_surface_halign.png",           "s": 3, "x": 12, "y": 12 },
     "inspector_surface_valign":           { "path": "./inspector/s_inspector_surface_valign.png",           "s": 3, "x": 12, "y": 12 },
@@ -486,6 +487,7 @@
     "obj_hemicircle":                     { "path": "./inspector/s_inspector_obj_hemicircle.png",           "s": 4, "x": 12, "y": 12 },
     "object_halign":                      { "path": "./inspector/s_inspector_obj_halign.png",               "s": 3, "x": 12, "y": 12 },
     "object_valign":                      { "path": "./inspector/s_inspector_obj_valign.png",               "s": 3, "x": 12, "y": 12 },
+    "object_align_center":                { "path": "./inspector/s_inspector_obj_align_center.png",         "s": 1, "x": 12, "y": 12 },
     "stroke_position":                    { "path": "./inspector/s_inspector_stroke_position.png",          "s": 3, "x": 12, "y": 12 },
     "stroke_profile":                     { "path": "./inspector/s_inspector_stroke_profile.png",           "s": 2, "x": 12, "y": 12 },
     "inspector_pb_line":                  { "path": "./inspector/s_inspector_pb_line.png",                  "s": 6, "x": 12, "y": 12 },

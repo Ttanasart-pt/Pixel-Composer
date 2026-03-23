@@ -84,18 +84,19 @@ event_inherited();
 			if(has(displayStr, _val))
 				_val = displayStr[$ _val];
 			
-			var _txt = _val, _spr = noone;
+			var _txt = _val;
 			var _tol = false;
 			var _act = true;
 			var _sub = false;
 			var _sca = true;
+			var _offset = false;
 			
 			if(is(_val, scrollItem)) {
 				_act = _val.active;
 				_txt = _val.name;
-				_spr = _val.spr;
 				_tol = _val.tooltip != "";
 				_sca = _val.spr_scale;
+				_offset = _val.spr || _val.surface;
 				
 			} else {
 				_act = !string_starts_with(_txt, "-");
@@ -147,25 +148,38 @@ event_inherited();
 				if(align == fa_center) {
 					var _x0 = 0;
 					var _x1 = _dw;
-					if(_spr != noone) _x0 += hght;
-					if(_tol)          _x1 -= hght;
+					if(_offset) _x0 += hght;
+					if(_tol)    _x1 -= hght;
 					
 					var _xc = (_x0 + _x1) / 2;
 					draw_text_add(_xc, _yy, _txt);
 					
 				} else if(align == fa_left) 
-					draw_text_add(text_pad + (_spr != noone) * hght, _yy, _txt);
+					draw_text_add(text_pad + _offset * hght, _yy, _txt);
 					
 			} else if(sprite_exists(_txt)) {
 				draw_sprite_ext(_txt, i, _dw / 2, _yy);
 			}
 			
-			if(_spr) {
-				var _ss = _sca? (hght - ui(8)) / sprite_get_height(_val.spr) : 1;
+			if(is(_val, scrollItem)) {
+				if(_val.spr) {
+					var _ss = _sca? (hght - ui(8)) / sprite_get_height(_val.spr) : 1;
+					
+					gpu_set_tex_filter(true);
+					draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, _ss, _ss, 0, _val.spr_blend);
+					gpu_set_tex_filter(false);
+				}
 				
-				gpu_set_tex_filter(true);
-				draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, _ss, _ss, 0, _val.spr_blend);
-				gpu_set_tex_filter(false);
+				if(_val.surface) {
+					var srf = _val.surface;
+					var _sw = surface_get_width(srf);
+					var _sh = surface_get_height(srf);
+					var _ss = (hght - ui(8)) / max(_sw, _sh);
+					
+					gpu_set_tex_filter(true);
+					draw_surface_ext(srf, ui(8) + hght/2 - _sw*_ss/2, _yy - _sh*_ss/2, _ss, _ss, 0, c_white, 1);
+					gpu_set_tex_filter(false);
+				}
 			}
 			
 			_ly += hght;

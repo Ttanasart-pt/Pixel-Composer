@@ -35,23 +35,25 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 				
 		} else 
 			mode    = "node"
-		
-	} ), 
-		function() /*=>*/ {return node? node.getDisplayName() : ""}, function(n) /*=>*/ { node = n; });
+	} ).setUpdateHover(false), 
+		function( ) /*=>*/ {return node? node.getDisplayName() : ""}, 
+		function(n) /*=>*/ { node = n; });
 	
 	if(type == CONNECT_TYPE.input)
 		junc_selector = Simple_Editor("Input", new scrollBoxFn(function() /*=>*/ {return getInputs()}, 
-			function(i) /*=>*/ { setJunction(juncInList[i]); } ), 
+			function(i) /*=>*/ { setJunction(juncInList[i]); } ).setUpdateHover(false), 
 			function( ) /*=>*/ {return junction? junction.name : ""}, 
 			function(n) /*=>*/ { setJunction(n); });
 	else 
 		junc_selector = Simple_Editor("Output", new scrollBoxFn(function() /*=>*/ {return getOutputs()}, 
-			function(i) /*=>*/ { setJunction(juncOutList[i]); } ), 
+			function(i) /*=>*/ { setJunction(juncOutList[i]); } ).setUpdateHover(false), 
 			function( ) /*=>*/ {return junction? junction.name : ""}, 
 			function(n) /*=>*/ { setJunction(n); });
 	
 	glob_selector = Simple_Editor("Globalvar", new scrollBoxFn(function() /*=>*/ {return getGlobals()}, 
-		function(i) /*=>*/ { globalkey = globalList[i] } ), function() /*=>*/ {return globalkey}, function(n) /*=>*/ { globalkey = n; });
+		function(i) /*=>*/ { globalkey = globalList[i] } ).setUpdateHover(false), 
+		function( ) /*=>*/ {return globalkey}, 
+		function(n) /*=>*/ { globalkey = n; });
 
 	currScrollItem = new scrollItem("", THEME.node_junctions_single, 0, c_white);
 
@@ -128,7 +130,7 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 			if(!_node.active) continue;
 			
 			nodeList[_i]     = _node;
-			nodeListName[_i] = _node.getDisplayName();
+			nodeListName[_i] = new scrollItem(_node.getDisplayName()).setSurface(_node.getGraphPreviewSurface());
 			_i++;
 		}
 		

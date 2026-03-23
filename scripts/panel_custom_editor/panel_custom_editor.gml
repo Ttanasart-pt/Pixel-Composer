@@ -4,6 +4,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	auto_pin = true;
 	w = min(WIN_W - ui(64), ui(1400));
 	h = min(WIN_H - ui(64), ui(800));
+	padding = ui(8);
 	
 	b_redir_new = button(function() /*=>*/ { array_push(data.io_redirect, new IO_Redirect(data)) })
 		.setIcon(THEME.add_16, 0, COLORS._main_value_positive).iconPad();
@@ -54,6 +55,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		_HOVER_WIDGET = undefined; HOVER_WIDGET = undefined;
 		
+		selection_modifying = false;
 		selection_boxing = 0;
 		selection_box_x  = 0;
 		selection_box_y  = 0;
@@ -61,7 +63,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		select_box_x0 = 0; select_box_y0 = 0;
 		select_box_x1 = 0; select_box_y1 = 0;
 		
-		select_multi_dragging  = false;
+		select_multi_dragging  = 0;
 		select_multi_drag_mx   = 0;
 		select_multi_drag_my   = 0;
 		select_multi_drag_init = [0,0,0,0];
@@ -79,6 +81,9 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		outline_height_drag  = false;
 	    outline_height_start = 0;
 	    outline_height_my    = 0;
+	    
+	    outline_hold_lock = undefined;
+	    outline_hold_snap = undefined;
 	#endregion
 	
 	#region ---- editor ----
@@ -101,20 +106,149 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	#region ---- preview ----
 		preview_surface = undefined;
 		preview_mode    = false;
-	
+		preview_x0      = 0;
+		preview_y0      = 0;
+		preview_x1      = 0;
+		preview_y1      = 0;
+		
 		topbar_height = ui(24);
 		
-		topbar_buttons = [
-			[
-				/*0*/ __txt("Preview Mode"), 
-				/*1*/ function() /*=>*/ {return THEME.sequence_control},
-				/*2*/ function() /*=>*/ {return preview_mode? 0 : 1}, 
-				/*3*/ function() /*=>*/ {return preview_mode? COLORS._main_value_positive : COLORS._main_icon},
-				/*4*/ function() /*=>*/ { preview_mode = !preview_mode; }, 
-			]
+		topbar_button_center = [
+			[ /*0*/ __txt("Preview Mode"), 
+			  /*1*/ function() /*=>*/ {return THEME.sequence_control},
+			  /*2*/ function() /*=>*/ {return preview_mode? 0 : 1}, 
+			  /*3*/ function() /*=>*/ {return preview_mode? COLORS._main_value_positive : COLORS._main_icon},
+			  /*4*/ function() /*=>*/ { preview_mode = !preview_mode; }, ]
+		];
+		
+		topbar_button_left_no_selection  = [];
+		topbar_button_left_select_single = [];
+		topbar_button_left_select_multi  = [
+			[ __txt("Align Left"),   THEME.object_halign, 0, COLORS._main_icon_light, function() /*=>*/ {return sel_align_left()},   ], 
+			[ __txt("Align Middle"), THEME.object_halign, 1, COLORS._main_icon_light, function() /*=>*/ {return sel_align_middle()}, ], 
+			[ __txt("Align Right"),  THEME.object_halign, 2, COLORS._main_icon_light, function() /*=>*/ {return sel_align_right()},  ], 
+			-1, 
+			[ __txt("Align Top"),    THEME.object_valign, 0, COLORS._main_icon_light, function() /*=>*/ {return sel_align_top()},    ], 
+			[ __txt("Align Center"), THEME.object_valign, 1, COLORS._main_icon_light, function() /*=>*/ {return sel_align_center()}, ], 
+			[ __txt("Align Bottom"), THEME.object_valign, 2, COLORS._main_icon_light, function() /*=>*/ {return sel_align_bottom()}, ], 
+			-1, 
+			[ __txt("Distribute X"), THEME.obj_distribute_h, 0, COLORS._main_icon_light, function() /*=>*/ {return sel_dist_h()}, ], 
+			[ __txt("Distribute Y"), THEME.obj_distribute_v, 0, COLORS._main_icon_light, function() /*=>*/ {return sel_dist_v()}, ], 
 		];
 		
 		panel_deleting = false;
+	#endregion
+	
+	#region actions
+		function sel_align_left() {
+			if(array_empty(element_selectings)) return;
+			
+			var _x = select_box_x0 - preview_x0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				var box = ele.pbBox.getBBOX();
+				ele.pbBox.setBBOX([ _x, box[1], _x + box[2] - box[0], box[3] ]);
+			}
+		} 
+		
+		function sel_align_middle() {
+			if(array_empty(element_selectings)) return;
+			
+			var _x = (select_box_x0 + select_box_x1) / 2 - preview_x0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				var box = ele.pbBox.getBBOX();
+				var bw  = box[2] - box[0];
+				ele.pbBox.setBBOX([ _x - bw/2, box[1], _x + bw/2, box[3] ]);
+			}
+		} 
+		
+		function sel_align_right() {
+			if(array_empty(element_selectings)) return;
+			
+			var _x = select_box_x1 - preview_x0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				var box = ele.pbBox.getBBOX();
+				ele.pbBox.setBBOX([ _x - (box[2] - box[0]), box[1], _x, box[3] ]);
+			}
+		} 
+		
+		function sel_align_top() {
+			if(array_empty(element_selectings)) return;
+			
+			var _y = select_box_y0 - preview_y0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				var box = ele.pbBox.getBBOX();
+				var bh  = box[3] - box[1];
+				ele.pbBox.setBBOX([ box[0], _y, box[2], _y + bh ]);
+			}
+		} 
+		
+		function sel_align_center() {
+			if(array_empty(element_selectings)) return;
+			
+			var _y = (select_box_y0 + select_box_y1) / 2 - preview_y0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				var box = ele.pbBox.getBBOX();
+				var bh  = box[3] - box[1];
+				ele.pbBox.setBBOX([ box[0], _y - bh / 2, box[2], _y + bh + 2 ]);
+			}
+		} 
+		
+		function sel_align_bottom() {
+			if(array_empty(element_selectings)) return;
+			
+			var _y = select_box_y1 - preview_y0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				var box = ele.pbBox.getBBOX();
+				var bh  = box[3] - box[1];
+				ele.pbBox.setBBOX([ box[0], _y - bh, box[2], _y ]);
+			}
+		} 
+		
+		function sel_dist_h() {
+			if(array_empty(element_selectings)) return;
+			array_sort(element_selectings, function(a,b) /*=>*/ {return a.x-b.x});
+			
+			var ww = select_box_x1 - select_box_x0;
+			var ow = 0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ )
+				ow += element_selectings[i].w;
+			
+			var sp = (ww - ow) / (array_length(element_selectings) - 1);
+			var xx = select_box_x0 - preview_x0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				var box = ele.pbBox.getBBOX()
+				ele.pbBox.setBBOX([ xx, box[1], xx + box[2] - box[0], box[3] ]);
+				xx += ele.w + sp;
+			}
+				
+		}
+		
+		function sel_dist_v() {
+			if(array_empty(element_selectings)) return;
+			array_sort(element_selectings, function(a,b) /*=>*/ {return a.y-b.y});
+			
+			var hh = select_box_y1 - select_box_y0;
+			var oh = 0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ )
+				oh += element_selectings[i].h;
+			
+			var sp = (hh - oh) / (array_length(element_selectings) - 1);
+			var yy = select_box_y0 - preview_y0;
+			for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
+				var ele = element_selectings[i];
+				var box = ele.pbBox.getBBOX()
+				ele.pbBox.setBBOX([ box[0], yy, box[2], yy + box[3] - box[1] ]);
+				yy += ele.h + sp;
+			}
+				
+		}
 	#endregion
 	
 	sc_add_elements = new scrollPane(1,1, function(_y, _m) /*=>*/ {
@@ -224,23 +358,30 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		if(outline_drag && mouse_lrelease()) {
 			if(hovering_element && outline_drag != hovering_element) {
+				var _marr = array_empty(element_selectings)? [outline_drag] : element_selectings;
+				
 				if(outline_drag_frame) {
-					array_remove(outline_drag.parent.contents, outline_drag);
-					array_push(outline_drag_frame.contents, outline_drag);
-					
-					outline_drag.parent = outline_drag_frame;
+					for( var i = 0, n = array_length(_marr); i < n; i++ ) {
+						var ele = _marr[i];
+						array_remove(ele.parent.contents, ele);
+						array_push(outline_drag_frame.contents, ele);
+						ele.parent = outline_drag_frame;
+					}
 					
 				} else if(hovering_element.parent) {
-					var _ind = array_find(hovering_element.parent.contents, hovering_element) + outline_drag_side;
-				    if(outline_drag.parent == hovering_element.parent) {
-				    	var _cind = array_find(hovering_element.parent.contents, outline_drag);
-				    	if(_cind < _ind) _ind--;
-				    }
-				    
-					array_remove(outline_drag.parent.contents, outline_drag);
-					array_insert(hovering_element.parent.contents, _ind, outline_drag);
-					
-					outline_drag.parent = hovering_element.parent;
+					for( var i = 0, n = array_length(_marr); i < n; i++ ) {
+						var ele = _marr[i];
+						var _ind = array_find(hovering_element.parent.contents, hovering_element) + outline_drag_side;
+					    if(ele.parent == hovering_element.parent) {
+					    	var _cind = array_find(hovering_element.parent.contents, ele);
+					    	if(_cind < _ind) _ind--;
+					    }
+					    
+						array_remove(ele.parent.contents, ele);
+						array_insert(hovering_element.parent.contents, _ind, outline_drag);
+						
+						ele.parent = hovering_element.parent;
+					}
 				}
 			}
 			
@@ -250,6 +391,11 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		if(hov && outline_hover == undefined) {
 			if(mouse_lpress(foc)) 
 				element_selecting = undefined;
+		}
+		
+		if(mouse_lrelease()) {
+			outline_hold_lock = undefined;
+	    	outline_hold_snap = undefined;
 		}
 		
 		return _h;
@@ -363,9 +509,10 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			
 			var _name = _edt.name;
 			var _wpd  = ui(4);
+			var  tx   = ui(8);
 			
 			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(8), _y + wdh / 2, _name);
+			draw_text_add(tx, _y + wdh / 2, _name);
 			
 			if(is(_edt, JuncLister)) {
 				var wdx = ww - wdw;
@@ -382,49 +529,109 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var _data = _edt.getter();
 			
 			if(is(_data, __pbBox)) {
-				if(element_selecting && (!element_selecting.draggable || !element_selecting.selectable)) {
-					var _tx = ui(8) + string_width(_name) + ui(4);
+				if(!element_selecting.draggable) {
+					var _tx = tx + string_width(_name) + ui(4);
 					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
-					draw_text_add(_tx, _y + wdh / 2, "[locked]");
+					draw_text_add(_tx, _y + wdh / 2, "[fixed]");
 					
 					_widg.setInteract(false);
 					
 				} else {
+					var bs = ui(24);
+					var bx = tx + string_width(_name);
+					var by = _y + wdh / 2 - bs / 2;
+					var bp = THEME.lock_12;
+					var bi = element_selecting.selectable;
+					var bc = element_selecting.selectable? COLORS._main_icon : COLORS._main_icon_light;
+					var ba = element_selecting.selectable? .75 : 1;
+					if(buttonInstant(noone, bx, by, bs, bs, _m, hov, foc, "", bp, bi, bc, ba) == 2)
+						element_selecting.selectable = !element_selecting.selectable;
+					
 					var bb = THEME.button_hide;
-					var bc = COLORS._main_icon;
-					var bx = ww - bs;
+					var bc = COLORS._main_icon_light;
+					var bx = ww - ui(2);
 					var by = _y + ui(2);
 					
 					var bt = __txt("Fill and Pad");
-					var bp = THEME.fill;
-					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 0, bc, 1, .75) == 2) {
+					var bp = THEME.inspector_fill_type;
+					bx -= bs;
+					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 2, bc, 1, .75) == 2) {
 						_widg.linked = true;
 						_data.anchor_x_type = PB_AXIS_ANCHOR.bounded;
 						_data.anchor_y_type = PB_AXIS_ANCHOR.bounded;
-						
-						_data.anchor_l = 0; _data.anchor_t = 0;
-						_data.anchor_r = 0; _data.anchor_b = 0;
-						
-					} bx -= bs + ui(2);
+						_data.anchor_l = 0; 
+						_data.anchor_r = 0; 
+						_data.anchor_t = 0;
+						_data.anchor_b = 0;
+					} bx -= ui(2);
 					
-					var bc = COLORS._main_icon_light;
+					var bt = __txt("Fill Y");
+					var bp = THEME.inspector_fill_type;
+					bx -= bs;
+					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 1, bc, 1, .75) == 2) {
+						_data.anchor_y_type = PB_AXIS_ANCHOR.bounded;
+						_data.anchor_t = 0; 
+						_data.anchor_b = 0;
+					} bx -= ui(2);
+					
+					var bt = __txt("Fill X");
+					var bp = THEME.inspector_fill_type;
+					bx -= bs;
+					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 0, bc, 1, .75) == 2) {
+						_data.anchor_x_type = PB_AXIS_ANCHOR.bounded;
+						_data.anchor_l = 0; 
+						_data.anchor_r = 0; 
+					} bx -= ui(2);
+					
+					bx -= ui(2); 
+					draw_set_color(CDEF.main_dkgrey); 
+					draw_line_width(bx,by+ui(2),bx,by+bs-ui(2),ui(1)); 
+					bx -= ui(3);
+					
+					var bt = __txt("Center");
+					var bp = THEME.object_align_center;
+					bx -= bs;
+					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 0, bc, 1, .75) == 2) {
+						_data.anchor_x_type = PB_AXIS_ANCHOR.center;
+						_data.anchor_y_type = PB_AXIS_ANCHOR.center;
+						_data.anchor_l = 0;
+						_data.anchor_r = 0;
+						_data.anchor_t = 0;
+						_data.anchor_b = 0;
+					} bx -= ui(2);
+					
 					var bt = __txt("Center Horizontal");
 					var bp = THEME.inspector_surface_halign;
+					bx -= bs;
 					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 1, bc, 1, .75) == 2) {
 						_data.anchor_x_type = PB_AXIS_ANCHOR.center;
 						_data.anchor_l = 0;
 						_data.anchor_r = 0;
-						
-					} bx -= bs + ui(2);
+					} bx -= ui(2);
 					
 					var bt = __txt("Center Vertical");
 					var bp = THEME.inspector_surface_valign;
+					bx -= bs;
 					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 1, bc, 1, .75) == 2) {
 						_data.anchor_y_type = PB_AXIS_ANCHOR.center;
 						_data.anchor_t = 0;
 						_data.anchor_b = 0;
-						
-					} bx -= bs + ui(2);
+					} bx -= ui(2);
+					
+					bx -= ui(2); 
+					draw_set_color(CDEF.main_dkgrey); 
+					draw_line_width(bx,by+ui(2),bx,by+bs-ui(2),ui(1)); 
+					bx -= ui(3);
+					
+					var bt = __txt("Position + Size mode");
+					var bp = THEME.inspector_area_type;
+					bx -= bs;
+					if(buttonInstant(bb, bx, by, bs, bs, _m, hov, foc, bt, bp, 0, bc, 1, .75) == 2) {
+						var bbox = _data.getBBOX();
+						_data.anchor_x_type = PB_AXIS_ANCHOR.minimum;
+						_data.anchor_y_type = PB_AXIS_ANCHOR.minimum;
+						_data.setBBOX(bbox);
+					} bx -= ui(2);
 					
 					_widg.setInteract(true);
 				}
@@ -455,6 +662,295 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		return _h;
 	});
 	
+	function drawLeftPanel() {
+		var pd = padding;
+		var edt_l = editor_toolbar_width_l;
+		var edt_h = h - pd - pd;
+		
+		var add_x = pd;
+		var add_y = pd;
+		var add_w = edt_l;
+		var add_h = edt_h - outline_height - pd;
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, add_x, add_y, add_w, add_h);
+		sc_add_elements.setFocusHover(pFOCUS, pHOVER);
+		sc_add_elements.verify(add_w - ui(8), add_h - ui(8));
+		sc_add_elements.drawOffset(add_x + ui(4), add_y + ui(4), mx, my);
+		
+		var out_x = pd;
+		var out_y = pd + add_h + pd;
+		var out_w = edt_l;
+		var out_h = outline_height;
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, out_x, out_y, out_w, out_h);
+		sc_outline.setFocusHover(pFOCUS, pHOVER);
+		sc_outline.verify(out_w - ui(8), out_h - ui(8));
+		sc_outline.drawOffset(out_x + ui(4), out_y + ui(4), mx, my);
+		
+		// Left
+		var lx = pd + editor_toolbar_width_l;
+		var cc = COLORS._main_icon, aa = .5;
+    	if(editor_toolbar_l_resize) {
+            CURSOR = cr_size_we;
+            cc = COLORS._main_icon_light;
+			aa = 1;
+			
+            editor_toolbar_width_l = editor_toolbar_l_sx + (mx - editor_toolbar_l_mx);
+            editor_toolbar_width_l = clamp(editor_toolbar_width_l, ui(160), w * .4);
+            if(mouse_lrelease()) editor_toolbar_l_resize = false;
+        }
+        
+        if(pHOVER && point_in_rectangle(mx, my, lx, h/2 - ui(24), lx + pd, h/2 + ui(24))) {
+            CURSOR = cr_size_we;
+            aa = 1;
+            
+            if(mouse_lpress(pFOCUS)) {
+                editor_toolbar_l_resize = true;
+				editor_toolbar_l_sx     = editor_toolbar_width_l;
+				editor_toolbar_l_mx     = mx;
+				
+            }
+        } 
+        
+        draw_set_color_alpha(cc, aa);
+        draw_line_round(lx + pd / 2, h/2 - ui(12), lx + pd / 2, h/2 + ui(12), ui(3));
+        draw_set_alpha(1);
+        
+		// Outline
+		var cc = COLORS._main_icon, aa = .5;
+    	if(outline_height_drag) {
+            CURSOR = cr_size_ns;
+            cc = COLORS._main_icon_light;
+			aa = 1;
+			
+            outline_height = outline_height_start - (my - outline_height_my);
+            outline_height = clamp(outline_height, ui(224), h - ui(128));
+            if(mouse_lrelease()) outline_height_drag = false;
+        }
+        
+        if(pHOVER && point_in_rectangle(mx, my, out_x, out_y - pd, out_x + out_w, out_y)) {
+            CURSOR = cr_size_ns;
+            aa = 1;
+            
+            if(mouse_lpress(pFOCUS)) {
+                outline_height_drag  = true;
+                outline_height_start = outline_height;
+                outline_height_my    = my;
+            }
+        } 
+        
+        draw_set_color_alpha(cc, aa);
+        draw_line_round(out_x + out_w / 2 - ui(12), out_y - pd / 2, out_x + out_w / 2 + ui(12), out_y - pd / 2, ui(3));
+        draw_set_alpha(1);
+	}
+	
+	function drawRightPanel() {
+		var pd = padding;
+		var edt_r = editor_toolbar_width_r;
+		var edt_h = h - pd - pd;
+		
+		var prp_x = w - edt_r - pd;
+		var prp_y = pd;
+		var prp_w = edt_r;
+		var prp_h = edt_h;
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, prp_x, prp_y, prp_w, prp_h);
+		sc_properties.setFocusHover(pFOCUS, pHOVER);
+		sc_properties.verify(prp_w - ui(8), prp_h - ui(8));
+		sc_properties.drawOffset(prp_x + ui(4), prp_y + ui(4), mx, my);
+		
+		// Right
+		var lx = w - pd - editor_toolbar_width_r;
+		var cc = COLORS._main_icon, aa = .5;
+    	if(editor_toolbar_r_resize) {
+            CURSOR = cr_size_we;
+            cc = COLORS._main_icon_light;
+			aa = 1;
+			
+            editor_toolbar_width_r = editor_toolbar_r_sx - (mx - editor_toolbar_r_mx);
+            editor_toolbar_width_r = clamp(editor_toolbar_width_r, ui(240), w * .4);
+            if(mouse_lrelease()) editor_toolbar_r_resize = false;
+        }
+        
+        if(pHOVER && point_in_rectangle(mx, my, lx - pd, h/2 - ui(24), lx, h/2 + ui(24))) {
+            CURSOR = cr_size_we;
+            aa = 1;
+            
+            if(mouse_lpress(pFOCUS)) {
+                editor_toolbar_r_resize = true;
+				editor_toolbar_r_sx     = editor_toolbar_width_r;
+				editor_toolbar_r_mx     = mx;
+				
+            }
+        } 
+        
+        draw_set_color_alpha(cc, aa);
+        draw_line_round(lx - pd / 2, h/2 - ui(12), lx - pd / 2, h/2 + ui(12), ui(3));
+        draw_set_alpha(1);
+	}
+	
+	function drawTopbar() {
+		var pd = padding;
+		var edt_l = editor_toolbar_width_l;
+		var edt_r = editor_toolbar_width_r;
+		
+		var _top_x0 = pd + edt_l + pd ;
+		var _top_x1 = w - pd - edt_r - pd;
+		var _top_xc = (_top_x0 + _top_x1) / 2;
+		
+		var _top_y0 = pd;
+		var _top_y1 = pd + topbar_height;
+		var _top_yc = (_top_y0 + _top_y1) / 2;
+		
+		var bs = THEME.button_hide_fill;
+		var ts = topbar_height;
+		
+		// Left buttons
+		var tx = _top_x0;
+		var ty = _top_y0;
+		var lb = topbar_button_left_no_selection;
+		if(!array_empty(element_selectings))
+			lb = topbar_button_left_select_multi;
+		else if(element_selecting != undefined)
+			lb = topbar_button_left_select_single;
+		
+		for( var i = 0, n = array_length(lb); i < n; i++ ) {
+			var tb = lb[i];
+			if(tb == -1) {
+				tx += ui(1);
+				draw_set_color(COLORS._main_icon_dark);
+				draw_line_round(tx, ty, tx, ty + ts, ui(2));
+				tx += ui(3);
+				continue;
+			}
+			
+			var _tooltip = tb[0];
+			var _spr     = tb[1] if(is_method(_spr))   _spr   = _spr();
+			var _sind    = tb[2] if(is_method(_sind))  _sind  = _sind();
+			var _color   = tb[3] if(is_method(_color)) _color = _color();
+			var _onClick = tb[4];
+			
+			if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
+				_onClick();
+				
+			tx += ts + ui(2);
+		}
+		
+		// Center buttons
+		var tx = _top_xc - (array_length(topbar_button_center) * (ts + ui(2) - ui(2))) / ui(2);
+		var ty = _top_y0;
+		
+		for( var i = 0, n = array_length(topbar_button_center); i < n; i++ ) {
+			var tb = topbar_button_center[i];
+			var _tooltip = tb[0];
+			var _spr     = tb[1]();
+			var _sind    = tb[2]();
+			var _color   = tb[3]();
+			var _onClick = tb[4];
+			
+			if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
+				_onClick();
+				
+			tx += ts + ui(2);
+		}
+		
+		// Right buttons
+		var tx = _top_x1 - ts;
+		var ty = _top_y0;
+		
+		if(panel_deleting) {
+			var _tooltip = __txt("Cancel");
+			var _spr     = THEME.cross;
+			var _sind    = 0;
+			var _color   = COLORS._main_icon;
+			
+			if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
+				panel_deleting = false;
+			tx -= ts + ui(2);
+			
+			var _tooltip = __txt("Confirm Deletion");
+			var _spr     = THEME.icon_delete;
+			var _sind    = 0;
+			var _color   = COLORS._main_value_negative;
+			
+			if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2) {
+				array_remove(PROJECT.customPanels, data);
+				close();
+			}
+			
+		} else {
+			var _tooltip = __txt("Delete Panel");
+			var _spr     = THEME.icon_delete;
+			var _sind    = 0;
+			var _color   = [COLORS._main_icon, COLORS._main_value_negative];
+			
+			if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
+				panel_deleting = true;
+		}
+	}
+	
+	function drawPanel() {
+		var pd = padding;
+		var edt_l = editor_toolbar_width_l;
+		var edt_r = editor_toolbar_width_r;
+		
+		var _con_x0 = pd + edt_l + pd ;
+		var _con_x1 = w - pd - edt_r - pd;
+		var _con_xc = (_con_x0 + _con_x1) / 2;
+		
+		var _con_y0 = pd + topbar_height + pd;
+		var _con_y1 = h - pd;
+		var _con_yc = (_con_y0 + _con_y1) / 2;
+		
+		var _con_w  = _con_x1 - _con_x0;
+		var _con_h  = _con_y1 - _con_y0;
+		
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _con_x0, _con_y0, _con_w, _con_h, COLORS._main_icon_light);
+		hover_preview = point_in_rectangle(mx, my, _con_x0, _con_y0, _con_x0 + _con_w, _con_y0 + _con_h);
+		
+		var pw = data.prew;
+		var ph = data.preh;
+		
+		var ss = min(1, (_con_w - ui(16)) / pw, (_con_h - ui(16)) / ph);
+		var dw = round(ss * pw);
+		var dh = round(ss * ph);
+		
+		var dx0 = round(_con_xc - dw / 2);
+		var dy0 = round(_con_yc - dh / 2);
+		var dx1 = dx0 + dw;
+		var dy1 = dy0 + dh;
+		
+		preview_x0      = dx0;
+		preview_y0      = dy0;
+		preview_x1      = dx1;
+		preview_y1      = dy1;
+		preview_surface = surface_verify(preview_surface, dw, dh);
+		surface_set_target(preview_surface);
+			draw_clear_alpha(COLORS.panel_bg_clear, 0);
+			data.setSize(x, y, dw, dh);
+			
+			if(preview_mode) {
+				data.setFocusHover(pFOCUS, pHOVER);
+				data.root.checkMouse(self, [mx - dx0, my - dy0]);
+				data.draw(self, [mx - dx0, my - dy0]);
+				
+			} else {
+				data.setFocusHover(false, pHOVER);
+				data.root.checkMouse(self, [mx - dx0, my - dy0]);
+				data.root.getSnapPoint(self);
+				data.draw(self, [mx - dx0, my - dy0]);
+				data.root.drawBox(self);
+			}
+		surface_reset_target();
+		
+		draw_surface_ext(preview_surface, dx0, dy0, 1, 1, 0, c_white, 1);
+		draw_sprite_stretched_add(THEME.ui_panel, 1, dx0, dy0, dw, dh, COLORS._main_icon, .25);
+		if(preview_mode) draw_sprite_stretched_ext(THEME.ui_panel, 1, dx0, dy0, dw, dh, COLORS._main_value_positive, 1);
+		
+		draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text);
+		draw_text_add(dx0, dy0 - ui(2), data.root.name);
+		
+		draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_sub);
+		draw_text_add(dx1, dy0 - ui(2), $"{dw}x{dh} [{ss * 100}%]");
+	}
+	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		if(!data) return;
@@ -470,254 +966,23 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		hover_preview     = false;
 		snapPoints        = [];
 		
-		#region Panels
-			var pd = ui(8);
-			var edt_l = editor_toolbar_width_l;
-			var edt_r = editor_toolbar_width_r;
-			var edt_h = h - pd - pd;
-			
-			var add_x = pd;
-			var add_y = pd;
-			var add_w = edt_l;
-			var add_h = edt_h - outline_height - pd;
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, add_x, add_y, add_w, add_h);
-			sc_add_elements.setFocusHover(pFOCUS, pHOVER);
-			sc_add_elements.verify(add_w - ui(8), add_h - ui(8));
-			sc_add_elements.drawOffset(add_x + ui(4), add_y + ui(4), mx, my);
-			
-			var out_x = pd;
-			var out_y = pd + add_h + pd;
-			var out_w = edt_l;
-			var out_h = outline_height;
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, out_x, out_y, out_w, out_h);
-			sc_outline.setFocusHover(pFOCUS, pHOVER);
-			sc_outline.verify(out_w - ui(8), out_h - ui(8));
-			sc_outline.drawOffset(out_x + ui(4), out_y + ui(4), mx, my);
-			
-			var prp_x = w - edt_r - pd;
-			var prp_y = pd;
-			var prp_w = edt_r;
-			var prp_h = edt_h;
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, prp_x, prp_y, prp_w, prp_h);
-			sc_properties.setFocusHover(pFOCUS, pHOVER);
-			sc_properties.verify(prp_w - ui(8), prp_h - ui(8));
-			sc_properties.drawOffset(prp_x + ui(4), prp_y + ui(4), mx, my);
-		#endregion
-		
-		#region Resize
-			var cy = h / 2;
-			
-			// Left
-			var lx = pd + editor_toolbar_width_l;
-			var cc = COLORS._main_icon, aa = .5;
-	    	if(editor_toolbar_l_resize) {
-	            CURSOR = cr_size_we;
-	            cc = COLORS._main_icon_light;
-				aa = 1;
-				
-	            editor_toolbar_width_l = editor_toolbar_l_sx + (mx - editor_toolbar_l_mx);
-	            editor_toolbar_width_l = clamp(editor_toolbar_width_l, ui(160), w * .4);
-	            if(mouse_lrelease()) editor_toolbar_l_resize = false;
-	        }
-	        
-	        if(pHOVER && point_in_rectangle(mx, my, lx, cy - ui(24), lx + pd, cy + ui(24))) {
-	            CURSOR = cr_size_we;
-	            aa = 1;
-	            
-	            if(mouse_lpress(pFOCUS)) {
-	                editor_toolbar_l_resize = true;
-					editor_toolbar_l_sx     = editor_toolbar_width_l;
-					editor_toolbar_l_mx     = mx;
-					
-	            }
-	        } 
-	        
-            draw_set_color_alpha(cc, aa);
-            draw_line_round(lx + pd / 2, cy - ui(12), lx + pd / 2, cy + ui(12), ui(3));
-            draw_set_alpha(1);
-            
-			// Outline
-			var cc = COLORS._main_icon, aa = .5;
-	    	if(outline_height_drag) {
-	            CURSOR = cr_size_ns;
-	            cc = COLORS._main_icon_light;
-				aa = 1;
-				
-	            outline_height = outline_height_start - (my - outline_height_my);
-	            outline_height = clamp(outline_height, ui(224), h - ui(128));
-	            if(mouse_lrelease()) outline_height_drag = false;
-	        }
-	        
-	        if(pHOVER && point_in_rectangle(mx, my, out_x, out_y - pd, out_x + out_w, out_y)) {
-	            CURSOR = cr_size_ns;
-	            aa = 1;
-	            
-	            if(mouse_lpress(pFOCUS)) {
-	                outline_height_drag  = true;
-	                outline_height_start = outline_height;
-	                outline_height_my    = my;
-	            }
-	        } 
-	        
-            draw_set_color_alpha(cc, aa);
-            draw_line_round(out_x + out_w / 2 - ui(12), out_y - pd / 2, out_x + out_w / 2 + ui(12), out_y - pd / 2, ui(3));
-            draw_set_alpha(1);
-            
-			// Right
-			var lx = w - pd - editor_toolbar_width_r;
-			var cc = COLORS._main_icon, aa = .5;
-	    	if(editor_toolbar_r_resize) {
-	            CURSOR = cr_size_we;
-	            cc = COLORS._main_icon_light;
-				aa = 1;
-				
-	            editor_toolbar_width_r = editor_toolbar_r_sx - (mx - editor_toolbar_r_mx);
-	            editor_toolbar_width_r = clamp(editor_toolbar_width_r, ui(240), w * .4);
-	            if(mouse_lrelease()) editor_toolbar_r_resize = false;
-	        }
-	        
-	        if(pHOVER && point_in_rectangle(mx, my, lx - pd, cy - ui(24), lx, cy + ui(24))) {
-	            CURSOR = cr_size_we;
-	            aa = 1;
-	            
-	            if(mouse_lpress(pFOCUS)) {
-	                editor_toolbar_r_resize = true;
-					editor_toolbar_r_sx     = editor_toolbar_width_r;
-					editor_toolbar_r_mx     = mx;
-					
-	            }
-	        } 
-	        
-            draw_set_color_alpha(cc, aa);
-            draw_line_round(lx - pd / 2, cy - ui(12), lx - pd / 2, cy + ui(12), ui(3));
-            draw_set_alpha(1);
-            
-		#endregion
-		
-		#region Topbar
-			var _top_x0 = pd + edt_l + pd ;
-			var _top_x1 = w - pd - edt_r - pd;
-			var _top_xc = (_top_x0 + _top_x1) / 2;
-			
-			var _top_y0 = pd;
-			var _top_y1 = pd + topbar_height;
-			var _top_yc = (_top_y0 + _top_y1) / 2;
-			
-			var bs = THEME.button_hide_fill;
-			var ts = topbar_height;
-			var tx = _top_xc - (array_length(topbar_buttons) * (ts + ui(2) - ui(2))) / ui(2);
-			var ty = _top_y0;
-			
-			for( var i = 0, n = array_length(topbar_buttons); i < n; i++ ) {
-				var tb = topbar_buttons[i];
-				var _tooltip = tb[0];
-				var _spr     = tb[1]();
-				var _sind    = tb[2]();
-				var _color   = tb[3]();
-				var _onClick = tb[4];
-				
-				if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
-					_onClick();
-					
-				tx += ts + ui(2);
-			}
-			
-			var tx = _top_x1 - ts;
-			var ty = _top_y0;
-			
-			if(panel_deleting) {
-				var _tooltip = __txt("Cancel");
-				var _spr     = THEME.cross;
-				var _sind    = 0;
-				var _color   = COLORS._main_icon;
-				
-				if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
-					panel_deleting = false;
-				tx -= ts + ui(2);
-				
-				var _tooltip = __txt("Confirm Deletion");
-				var _spr     = THEME.icon_delete;
-				var _sind    = 0;
-				var _color   = COLORS._main_value_negative;
-				
-				if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2) {
-					array_remove(PROJECT.customPanels, data);
-					close();
-				}
-				
-			} else {
-				var _tooltip = __txt("Delete Panel");
-				var _spr     = THEME.icon_delete;
-				var _sind    = 0;
-				var _color   = [COLORS._main_icon, COLORS._main_value_negative];
-				
-				if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
-					panel_deleting = true;
-			}
-		#endregion
-		
-		#region Display content
-			var _con_x0 = pd + edt_l + pd ;
-			var _con_x1 = w - pd - edt_r - pd;
-			var _con_xc = (_con_x0 + _con_x1) / 2;
-			
-			var _con_y0 = pd + topbar_height + pd;
-			var _con_y1 = h - pd;
-			var _con_yc = (_con_y0 + _con_y1) / 2;
-			
-			var _con_w  = _con_x1 - _con_x0;
-			var _con_h  = _con_y1 - _con_y0;
-			
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _con_x0, _con_y0, _con_w, _con_h, COLORS._main_icon_light);
-			hover_preview = point_in_rectangle(mx, my, _con_x0, _con_y0, _con_x0 + _con_w, _con_y0 + _con_h);
-			
-			var pw = data.prew;
-			var ph = data.preh;
-			
-			var ss = min(1, (_con_w - ui(16)) / pw, (_con_h - ui(16)) / ph);
-			var dw = round(ss * pw);
-			var dh = round(ss * ph);
-			
-			var dx0 = round(_con_xc - dw / 2);
-			var dy0 = round(_con_yc - dh / 2);
-			var dx1 = dx0 + dw;
-			var dy1 = dy0 + dh;
-			
-			preview_surface = surface_verify(preview_surface, dw, dh);
-			surface_set_target(preview_surface);
-				draw_clear_alpha(COLORS.panel_bg_clear, 0);
-				data.setSize(x, y, dw, dh);
-				
-				if(preview_mode) {
-					data.setFocusHover(pFOCUS, pHOVER);
-					data.root.checkMouse(self, [mx - dx0, my - dy0]);
-					data.draw(self, [mx - dx0, my - dy0]);
-					
-				} else {
-					data.setFocusHover(false, pHOVER);
-					data.root.checkMouse(self, [mx - dx0, my - dy0]);
-					data.draw(self, [mx - dx0, my - dy0]);
-					data.root.drawBox(self);
-				}
-			surface_reset_target();
-			
-			draw_surface_ext(preview_surface, dx0, dy0, 1, 1, 0, c_white, 1);
-			draw_sprite_stretched_add(THEME.ui_panel, 1, dx0, dy0, dw, dh, COLORS._main_icon, .25);
-			if(preview_mode) draw_sprite_stretched_ext(THEME.ui_panel, 1, dx0, dy0, dw, dh, COLORS._main_value_positive, 1);
-			
-			draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text);
-			draw_text_add(dx0, dy0 - ui(2), data.root.name);
-			
-			draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_sub);
-			draw_text_add(dx1, dy0 - ui(2), $"{dw}x{dh} [{ss * 100}%]");
-		#endregion
+		drawLeftPanel();
+		drawRightPanel();
+		drawTopbar();
+		drawPanel();
 		
 		if(preview_mode) return;
 		
-		if(array_empty(element_selectings) && hover_preview && mouse_lpress(pFOCUS)) { // Select element
+		var dx0 = preview_x0;
+		var dy0 = preview_y0;
+		var dx1 = preview_x1;
+		var dy1 = preview_y1;
+		
+		if(array_empty(element_selectings) && hover_preview && !selection_modifying && mouse_lpress(pFOCUS)) { // Select element
 			if(hovering_frame)   element_selecting = hovering_frame;
 			if(hovering_element) element_selecting = hovering_element;
 		} // Select element
+		selection_modifying = false;
 		
 		if(!array_empty(element_selectings)) { // Selecting multiple
 			select_box_x0 =  infinity; select_box_y0 =  infinity;
@@ -747,20 +1012,22 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var ey = dy0 + element_selecting.y;
 			var ew = element_selecting.w;
 			var eh = element_selecting.h;
+			var hv = pHOVER && point_in_rectangle(mx, my, ex, ey, ex + ew, ey + eh);
 			
 			draw_set_color(COLORS._main_accent);
 			
 			if(element_selecting.draggable && element_selecting.selectable) {
-				var _hv = element_selecting.pbBox.drawOverlay(pHOVER, pFOCUS, dx0, dy0, 1, mx, my, undefined, snapPoints);
-				if(_hv) hovering_element = element_selecting;
+				var _boxHv = element_selecting.pbBox.drawOverlay(pHOVER, pFOCUS, dx0, dy0, 1, mx, my, undefined, snapPoints);
+				if(_boxHv) {
+					selection_modifying = true;
+					hovering_element    = element_selecting;
+					hv = true;
+				}
 				
-			} else 
-				draw_sprite_stretched_ext(THEME.box_r2, 1, ex, ey, ew, eh, COLORS._main_accent);
+			} else draw_sprite_stretched_ext(THEME.box_r2, 1, ex, ey, ew, eh, COLORS._main_accent);
 			
-			var _hv = pHOVER && point_in_rectangle(mx, my, ex, ey, ex + ew, ey + eh);
 			if(mouse_lpress(pFOCUS)) {
-				if(!_hv && hover_preview)
-					element_selecting = undefined;
+				if(!hv && hover_preview) element_selecting = undefined;
 			}
 			
 			if(key_press(vk_delete)) {
@@ -838,7 +1105,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var hovBox = pHOVER && point_in_rectangle(mx, my, select_box_x0, select_box_y0, select_box_x1, select_box_y1);
 			
 			if(hovBox && mouse_lpress(pFOCUS)) {
-				select_multi_dragging  = true;
+				select_multi_dragging  = 1;
 				select_multi_drag_mx   = mx;
 				select_multi_drag_my   = my;
 				select_multi_drag_init = [select_box_x0, select_box_y0, select_box_x1, select_box_y1];
@@ -847,7 +1114,12 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 					select_multi_drag_data[i] = element_selectings[i].pbBox.getBBOX();
 			}
 			
-			if(select_multi_dragging) {
+			if(select_multi_dragging == 1) {
+				if(point_distance(mx, my, select_multi_drag_mx, select_multi_drag_my) > ui(4))
+					select_multi_dragging = 2;
+			}
+			
+			if(select_multi_dragging == 2) {
 				var dx = round(mx - select_multi_drag_mx);
 				var dy = round(my - select_multi_drag_my);
 				
@@ -860,6 +1132,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				var by0 = iy0 + dy;
 				var bx1 = ix1 + dx;
 				var by1 = iy1 + dy;
+				var bxc = (bx0 + bx1) / 2;
+				var byc = (by0 + by1) / 2;
 				
 				var sx0, sy0, sx1, sy1, sxc, syc;
 				
@@ -868,8 +1142,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 					
 					draw_set_alpha(.75);
 					for( var i = 0, n = array_length(snapPoints); i < n; i++ ) {
-						var sn = snapPoints[i];
-						if(sn != undefined && has(element_selectingm, sn[0].ID)) continue;
+						var sn    = snapPoints[i];
+						if(has(element_selectingm, sn[2].ID)) continue;
 						
 						sx0 = sn[1][0]; sy0 = sn[1][1];
 						sx1 = sn[1][2]; sy1 = sn[1][3];
@@ -888,13 +1162,15 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 						if(abs(by1 - sy1) < sd) { dy = sy1 - iy1; draw_line_width(dx0, dy0 + sy1, dx1, dy0 + sy1, 1); }
 						
 						draw_set_color(COLORS._main_accent);
-						if(abs(bx0 - sxc) < sd) { dx = sxc - ix0; draw_line_width(dx0 + sxc, dy0, dx0 + sxc, dy1, 1); }
-						if(abs(bx1 - sxc) < sd) { dx = sxc - ix1; draw_line_width(dx0 + sxc, dy0, dx0 + sxc, dy1, 1); }
+						if(abs(bx0 - sxc) < sd) { dx = sxc - ix0;         draw_line_width(dx0 + sxc, dy0, dx0 + sxc, dy1, 1); }
+						if(abs(bx1 - sxc) < sd) { dx = sxc - ix1;         draw_line_width(dx0 + sxc, dy0, dx0 + sxc, dy1, 1); }
+						if(abs(bxc - sxc) < sd) { dx = sxc - (ix0+ix1)/2; draw_line_width(dx0 + sxc, dy0, dx0 + sxc, dy1, 1); }
 						
-						if(abs(by0 - syc) < sd) { dy = syc - iy0; draw_line_width(dx0, dy0 + syc, dx1, dy0 + syc, 1); }
-						if(abs(by1 - syc) < sd) { dy = syc - iy1; draw_line_width(dx0, dy0 + syc, dx1, dy0 + syc, 1); }
-						
+						if(abs(by0 - syc) < sd) { dy = syc - iy0;         draw_line_width(dx0, dy0 + syc, dx1, dy0 + syc, 1); }
+						if(abs(by1 - syc) < sd) { dy = syc - iy1;         draw_line_width(dx0, dy0 + syc, dx1, dy0 + syc, 1); }
+						if(abs(byc - syc) < sd) { dy = syc - (iy0+iy1)/2; draw_line_width(dx0, dy0 + syc, dx1, dy0 + syc, 1); }
 					}
+					
 					draw_set_alpha(1);
 					
 					for( var i = 0, n = array_length(element_selectings); i < n; i++ ) {
@@ -904,8 +1180,9 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 					}
 				}
 				
-				if(mouse_lrelease()) select_multi_dragging = false;
 			}
+			
+			if(select_multi_dragging && mouse_lrelease()) select_multi_dragging = 0;
 		}
 		
 		////- =Box select
@@ -914,6 +1191,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			boxable = !point_in_rectangle(mx, my, select_box_x0, select_box_y0, select_box_x1, select_box_y1);
 		else if(hovering_element != undefined)
 			boxable = !hovering_element.draggable || !hovering_element.selectable;
+		boxable &= point_in_rectangle(mx, my, dx0, dy0, dx1, dy1);
 		
 		if(boxable && mouse_lpress(pFOCUS)) {
 			element_selectings = [];
@@ -940,9 +1218,15 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			data.root.boxSelect(element_selectings, x0 - dx0, y0 - dy0, x1 - dx0, y1 - dy0);
 			
 			if(mouse_lrelease()) {
-				element_selectingm = {};
-				for( var i = 0, n = array_length(element_selectings); i < n; i++ )
-					element_selectingm[$ element_selectings[i].ID] = element_selectings[i];
+				if(array_length(element_selectings) == 1) {
+					element_selecting  = element_selectings[0];
+					element_selectings = [];
+					
+				} else {
+					element_selectingm = {};
+					for( var i = 0, n = array_length(element_selectings); i < n; i++ )
+						element_selectingm[$ element_selectings[i].ID] = element_selectings[i];
+				}
 			}
 		}
 		
