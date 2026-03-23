@@ -545,6 +545,7 @@
     {"name":"__panel_custom_choices","order":10,"path":"scripts/__panel_custom_choices/__panel_custom_choices.yy",},
     {"name":"__panel_custom_color","order":11,"path":"scripts/__panel_custom_color/__panel_custom_color.yy",},
     {"name":"__panel_custom_element","order":1,"path":"scripts/__panel_custom_element/__panel_custom_element.yy",},
+    {"name":"__panel_custom_frame_flex","order":6,"path":"scripts/__panel_custom_frame_flex/__panel_custom_frame_flex.yy",},
     {"name":"__panel_custom_frame_grid","order":2,"path":"scripts/__panel_custom_frame_grid/__panel_custom_frame_grid.yy",},
     {"name":"__panel_custom_frame_scroll","order":4,"path":"scripts/__panel_custom_frame_scroll/__panel_custom_frame_scroll.yy",},
     {"name":"__panel_custom_frame_split","order":1,"path":"scripts/__panel_custom_frame_split/__panel_custom_frame_split.yy",},

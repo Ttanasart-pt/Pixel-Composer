@@ -411,6 +411,7 @@
     
     "panel_icon_element_frame":           { "path": "./panel/custom/s_panel_icon_element_frame.png",        "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_frame_grid":      { "path": "./panel/custom/s_panel_icon_element_frame_grid.png",   "s": 1, "x": 32, "y": 32 },
+    "panel_icon_element_frame_flex":      { "path": "./panel/custom/s_panel_icon_element_frame_flex.png",   "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_frame_scroll":    { "path": "./panel/custom/s_panel_icon_element_frame_scroll.png", "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_frame_split":     { "path": "./panel/custom/s_panel_icon_element_frame_split.png",  "s": 1, "x": 32, "y": 32 },
     "panel_icon_element_frame_stack":     { "path": "./panel/custom/s_panel_icon_element_frame_stack.png",  "s": 1, "x": 32, "y": 32 },

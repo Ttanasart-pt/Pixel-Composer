@@ -47,7 +47,7 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 			function(i) /*=>*/ { 
 				if(!is_real(i)) return;
 				software_action = software_function_key[i]; 
-			}).setFont(f_p2).setAlign(fa_left).setHorizontal(true).setPadding(ui(16)).setPaddingItem(ui(4)), 
+			}).setFont(f_p2).setAlign(fa_left).setHorizontal(true).setPadding(ui(16)).setPaddingItem(ui(4)).setUpdateHover(false), 
 				
 			function( ) /*=>*/   {return software_action}, 
 			function(t) /*=>*/ { software_action = t; }), 
