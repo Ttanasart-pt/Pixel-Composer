@@ -28,6 +28,7 @@ function sprite_add_center(path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var _s = sprite_add(path, 0, 0, 0, 0, 0);
+	if(_s == -1) return _s;
 	
 	var _sw = sprite_get_width(_s);
 	var _sh = sprite_get_height(_s);
@@ -79,6 +80,36 @@ function sprite_path_check_format(_path, noti = true) {
 	}
 	
 	return _path;
+}
+
+function sprite_add_gif(_path) {
+	if(!file_exists_empty(_path)) return undefined;
+	
+	var _cached = GifReadCache(_path);
+	if(_cached != undefined) {
+		var _sw = sprite_get_width(_cached);
+		var _sh = sprite_get_height(_cached);
+		sprite_set_offset(_cached, _sw / 2, _sh / 2);
+		return _cached;
+	}
+	
+	var gifBuff = buffer_load(_path);
+	var gifLoad = new Gif(gifBuff);
+	do { var readComp = gifLoad.reading();   } until(readComp);
+	
+	var gifBuild = new __gif_sprite_builder(gifLoad);
+	do { var buidComp = gifBuild.building(); } until(buidComp);
+	
+	var spr = gifBuild._spr;
+	GifCache(_path, spr);
+	buffer_delete(gifBuff);
+	gc_collect();
+	
+	var _sw = sprite_get_width(spr);
+	var _sh = sprite_get_height(spr);
+	sprite_set_offset(spr, _sw / 2, _sh / 2);
+	
+	return spr;
 }
 
 #region ================================= SERIALIZE ==================================

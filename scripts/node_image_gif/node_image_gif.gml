@@ -126,9 +126,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		function read_gif_building() {
 			var _buildComplete = spr_builder.building();
-			
-			if(_buildComplete)
-				read_gif_completed();
+			if(_buildComplete) read_gif_completed();
 		}
 		
 		function read_gif_completed() {

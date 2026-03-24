@@ -197,7 +197,7 @@ function Patreon_project_item(_file) constructor {
 		draw_roundrect_ext(_x, _y, _x + _w - 1, _y + _h - 1, ui(5), ui(5), false);
 		
 		gpu_set_stencil_compare(cmpfunc_less, 64);
-		draw_sprite_stretched(_spr, 0, _x, _y, _w, _h);
+		draw_sprite_stretched(_spr, current_time / 30, _x, _y, _w, _h);
 		
 		gpu_set_stencil_enable(false);
 	} 
@@ -342,7 +342,7 @@ function Steam_workshop_item() constructor {
 		ready = true;
 		
 		title               = _qData[? "title"];
-		description         = _qData[? "description"]; description = string_trim(description);
+		description         = _qData[? "description"];        description     = string_trim(description);
 		time_created        = _qData[? "time_created"]  ?? 0; time_created_s  = unix_time_to_string(time_created);
 		time_uploaded       = _qData[? "time_uploaded"] ?? 0; time_uploaded_s = unix_time_to_string(time_uploaded);
 		
@@ -391,7 +391,7 @@ function Steam_workshop_item() constructor {
 			else array_push(tags_content, _tag);
 		}
 		
-		preview_path   = $"ugc\\{file_id}.png"
+		preview_path   = $"ugc\\{file_id}"
 		preview_fpath  = ROAMING_DIRECTORY + preview_path;
 		
 		return self;
@@ -401,11 +401,9 @@ function Steam_workshop_item() constructor {
 		preview_sprite = undefined;
 		
 		static fetchPreviewSprite = function() {
-			if(file_exists_empty(preview_fpath)) {
-				preview_sprite = sprite_add(preview_fpath);
-				return;
-			}
-			
+			var _pth = preview_fpath;
+			if(file_exists(_pth + ".png")) { preview_fpath = _pth + ".png"; preview_sprite = sprite_add_center(preview_fpath); return; }
+			if(file_exists(_pth + ".gif")) { preview_fpath = _pth + ".gif"; preview_sprite = sprite_add_gif(preview_fpath);    return; }
 			directory_verify(filename_dir(preview_fpath));
 			
 			preview_sprite = -1;
@@ -420,12 +418,19 @@ function Steam_workshop_item() constructor {
 					return;
 				}
 				
-				if(file_exists_empty(preview_fpath))
-					preview_sprite = sprite_add(preview_fpath);
-				else 
-					noti_status($"UGC get thumbnail error: File not found {preview_fpath}");
+				var _pth = _data[? "original_filename"];
+				var _dst = filename_combine(ROAMING_DIRECTORY, _data[? "dest_filename"]);
+				var _ext = string_lower(filename_ext(_pth));
+				preview_fpath = filename_change_ext(preview_fpath, _ext);
+				file_rename(_dst, preview_fpath);
+				
+				if(_ext == ".png") { preview_sprite = sprite_add_center(preview_fpath); return; }
+				if(_ext == ".gif") { preview_sprite = sprite_add_gif(preview_fpath);    return; }
+				
+				noti_status($"UGC get thumbnail error: File not found {preview_fpath}");
 			});
 		}
+		
 		static getPreviewSprite   = function() {
 			if(preview_sprite == undefined) 
 				fetchPreviewSprite();
@@ -446,7 +451,7 @@ function Steam_workshop_item() constructor {
 			draw_roundrect_ext(_x, _y, _x + _w - 1, _y + _h - 1, ui(5), ui(5), false);
 			
 			gpu_set_stencil_compare(cmpfunc_less, 64);
-			draw_sprite_stretched(_spr, 0, _x, _y, _w, _h);
+			draw_sprite_stretched(_spr, current_time / 30, _x, _y, _w, _h);
 			
 			gpu_set_stencil_enable(false);
 		} 

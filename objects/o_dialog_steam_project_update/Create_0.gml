@@ -17,8 +17,8 @@ event_inherited();
 	
 	tb_name  = textBox_Text(function(txt) /*=>*/ { text = txt; }).setEmpty();
 	
-	function setLabel(l)  { label    = l; return self; }
-	function setParam(p)  { params   = p; return self; }
+	function setLabel(l)  { label  = l; return self; }
+	function setParam(p)  { params = p; return self; }
 	
 	function activate(_initText = "") {
 		text = _initText;
@@ -30,7 +30,6 @@ event_inherited();
 	function update() {
     	steam_ugc_update_project(update_thumbnail, text);
     	PANEL_INSPECTOR.workshop_uploading = 2;
-    	
     	instance_destroy();
 	}
 #endregion

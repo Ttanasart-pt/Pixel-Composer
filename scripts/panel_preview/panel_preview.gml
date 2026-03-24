@@ -467,7 +467,7 @@ function Panel_Preview() : PanelContent() constructor {
         d3_deferData         = noone;
         d3_drawBG            = false;
         
-        global.SKY_SPHERE    = new __3dUVSphere(0.5, 16, 8, true);
+        global.SKY_SPHERE    = new __3dUVSphere(.5, 16, 8, true);
         
         #region camera
             d3_camera            = new __3dCamera();

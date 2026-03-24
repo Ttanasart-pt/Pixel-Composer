@@ -291,6 +291,8 @@ function Panel_Inspector() : PanelContent() constructor {
     #endregion
     
     #region ---- Metadata ----
+        uploading_thumbnail = false;
+        
         current_meta   = -1; 
         tb_meta_desc   = textArea_Text( function(s) /*=>*/ { current_meta.description = s; PROJECT.setModified(); } ).setVAlign(ui(4));
         tb_meta_author = textArea_Text( function(s) /*=>*/ { current_meta.author      = s; PROJECT.setModified(); } ).setVAlign(ui(4));
@@ -302,9 +304,12 @@ function Panel_Inspector() : PanelContent() constructor {
         meta_edit[4] = new textArrayBox(noone, META_TAGS).setAddable(true);
         
         if(STEAM_ENABLED) {
-        	tb_meta_author.setSideButton(button(function() /*=>*/ { current_meta.author = STEAM_USERNAME; })
-				.setIcon(THEME.steam, 0, COLORS._main_icon).iconPad(ui(12))
-				.setTooltip("Use Steam username"));
+        	var b_steam_name = button(function() /*=>*/ { current_meta.author = STEAM_USERNAME; })
+				.setIcon(THEME.steam_invert_24, 0, COLORS._main_icon_light)
+				.setTooltip("Use Steam username");
+				
+        	tb_meta_author.setSideButton(b_steam_name);
+			b_steam_name.iconPad(ui(6));
         }
         
         meta_display = [ 
@@ -1525,25 +1530,54 @@ function Panel_Inspector() : PanelContent() constructor {
                     }
                     
                     if(STEAM_ENABLED && _edt) {
-                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
-                        draw_text_over(ui(16), spac? yy : yy + ui(3), __txt("Show Avatar"));
+                        var pad = ui(6 + spac * 2);
+                        var lpd = spac * (line_get_height() + ui(6));
                         
-                        if(spac) {
-                            _lh = line_get_height();
-                            yy += _lh + ui(6);
-                            hh += _lh + ui(6);
-                        }
+                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
+                        draw_text_add(ui(16), spac? yy : yy + ui(3), __txt("Show Avatar"));
+                        yy += lpd; hh += lpd;
                         
                         var _param = new widgetParam(_wdx, yy, _wdw, TEXTBOX_HEIGHT, STEAM_UGC_ITEM_AVATAR, undefined, _m, rx, ry)
-                        					.setFont(_font)
-					    					.setFocusHover(pFOCUS, _hover)
-					    					.setScrollpane(contentPane);
-                        
+                        					.setFont(_font).setFocusHover(pFOCUS, _hover).setScrollpane(contentPane);
                         wh = meta_steam_avatar.drawParam(_param);
+			        	yy += wh + pad; 
+			        	hh += wh + pad;
+			        	
+                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
+                        draw_text_add(ui(16), spac? yy : yy + ui(3), __txt("Thumbnail"));
+                        yy += lpd; hh += lpd;
+                        wh  = ui(80);
                         
-				    	var _wdhh = spac? wh + ui(8) : wh + ui(6);
-			        	yy += _wdhh; 
-			        	hh += _wdhh;
+                        var hv  = _hover && point_in_rectangle(_m[0], _m[1], _wdx, yy, _wdx + _wdw, yy + wh);
+                        var thm = PROJECT.getThumbnail();
+                        
+                        draw_sprite_stretched(THEME.textbox, 3, _wdx, yy, _wdw, wh);
+                        if(thm && sprite_exists(thm)) {
+                        	var sw = sprite_get_width(thm);
+                        	var sh = sprite_get_height(thm);
+                        	var ss = min((_wdw - ui(8)) / sw, (wh - ui(8)) / sh);
+                        	var sx = _wdx + _wdw/2;
+                        	var sy =   yy +   wh/2;
+                        	
+                        	draw_sprite_ext(thm, current_time / 30, sx, sy, ss, ss);
+                        }
+                        
+                        if(uploading_thumbnail)
+                        	draw_sprite_ui(THEME.loading_s, 0, _wdx + _wdw - ui(16), yy + wh - ui(16), 
+                        		1, 1, current_time / 2, COLORS._main_icon);
+                        
+                        if(hv) {
+                        	TOOLTIP = __txt("Change Thumbnail");
+                        	draw_sprite_stretched(THEME.textbox, 1, _wdx, yy, _wdw, wh);
+                        	
+                        	if(mouse_lpress(pFOCUS)) {
+                        		var _path = get_open_filename_compat("Image|.png;.gif", "thumbnail")
+                        		if(_path != "") steam_ugc_update_project_preview(_path, "Update Thumbnail");
+                        	}
+                        }
+                        
+                        yy += wh + pad; 
+			        	hh += wh + pad;
                     }
                     
                     break;
@@ -2028,25 +2062,28 @@ function Panel_Inspector() : PanelContent() constructor {
             draw_text_add(tx, ty, txt, ss);
             gpu_set_scissor(_scis);
             
+            var bb = THEME.button_hide_fill;
             var bx = w - ui(44);
             var by = ui(12);
             var bs = ui(32);
+            var hov = pHOVER;
+            var foc = pFOCUS;
             
             by += ui(36);
             if(STEAM_ENABLED && workshop_uploading == 0) {
                 if(!sav) { // unsaved project
                 	var _txt = __txtx("panel_inspector_workshop_save", "Save file before upload");
-                    buttonInstant(noone, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, c_white);
+                    buttonInstant(noone, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_upload, 0, c_white);
                     
                 } else if(PROJECT.meta.file_id == 0) { // project made locally
                     var s = PANEL_PREVIEW.getNodePreviewSurface();
                     if(!is_surface(s)) {
                     	var _txt = __txtx("panel_inspector_workshop_no_thumbnail", "Send node to preview to be use as project thumbnail before uploading.");
-                    	buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_no_file, 0, c_white);
+                    	buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_no_file, 0, c_white);
                     	
                     } else {
 	                	var _txt = __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop");
-	                    if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, c_white) == 2) {
+	                    if(buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_upload, 0, c_white) == 2) {
                             steam_ugc_create_project();
                             workshop_uploading = 2;
                     	}
@@ -2054,21 +2091,20 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                 } else if(PROJECT.meta.author_steam_id == STEAM_USER_ID) { // user-owned steam project
                 	var _txt = __txtx("panel_inspector_workshop_upload_new", "Upload as a new Steam Workshop submission");
-                    if(buttonInstant(THEME.button_hide_fill, bx, by - ui(36), bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_add, 0, c_white) == 2) {
+                    if(buttonInstant(bb, bx, by - ui(36), bs, bs, mse, hov, foc, _txt, THEME.workshop_add, 0, c_white) == 2) {
                         steam_ugc_create_project();
                         workshop_uploading = 1;
                 	}
                 	
                 	var _txt = __txtx("panel_inspector_workshop_update",  "Update Steam Workshop content");
-                	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_update, 0, c_white) == 2) {
+                	if(buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_update, 0, c_white) == 2)
                         dialogCall(o_dialog_steam_project_update, mouse_mx + 8, mouse_my + 8).activate("Update note");
-                    }
                 }
             }
             
             if(workshop_uploading) {
             	var _by = ui(12) + (workshop_uploading - 1) * ui(36);
-                draw_sprite_ui(THEME.loading_s, 0, bx + ui(16), _by + ui(16),,, current_time / 5, COLORS._main_icon);
+                draw_sprite_ui_uniform(THEME.loading_s, 0, bx + ui(16), _by + ui(16), 1, current_time / 5, COLORS._main_icon);
                 if(STEAM_UGC_UPLOADING == false)
                     workshop_uploading = 0;
             }

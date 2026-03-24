@@ -2075,8 +2075,6 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 		#endregion
 		
 		#region thumbnail
-			var _prev = item_viewing.getPreviewSprite();
-			
 			var _ths = ui(200);
 			var _thx = ui(16);
 			var _thy = _yy;

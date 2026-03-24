@@ -91,3 +91,30 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 		
 	}, { fileid: _fid });
 }
+
+function steam_ugc_update_project_preview(_path = "", update_note = "Updated") {
+	if(!file_exists_empty(_path)) return;
+	if(STEAM_UGC_UPLOADING)       return;
+	PANEL_INSPECTOR.uploading_thumbnail = true;
+	STEAM_UGC_UPLOADING = true;
+	
+	var _fid = PROJECT.meta.file_id;
+	var _han = steam_ugc_start_item_update(STEAM_APP_ID, _fid);
+	steam_ugc_set_item_preview(_han, _path);
+	
+	asyncCallGroup("steam", steam_ugc_submit_item_update(_han, update_note), function( _params, _data ) /*=>*/ {
+		PANEL_INSPECTOR.uploading_thumbnail = false;
+		STEAM_UGC_UPLOADING = false;
+		if(_data[? "result"] != ugc_result_success) { noti_warning($"Steam: {steam_ugc_get_error(_data[? "result"])}"); return; } 
+		
+		var _fid = _data[$ "fileid"] ?? 0;
+		noti_status($"Steam Workshop: Project preview updated", THEME.workshop_upload, COLORS._main_value_positive);
+		PANEL_MENU.setNotiIcon(THEME.workshop_upload);
+		
+		if(file_exists_empty(PROJECT.thumbnailPath)) file_delete(PROJECT.thumbnailPath);
+		if(PROJECT.thumbnailSpr && sprite_exists(PROJECT.thumbnailSpr))
+			sprite_delete(PROJECT.thumbnailSpr);
+		PROJECT.thumbnailSpr = undefined;
+		
+	}, { fileid: _fid });
+}

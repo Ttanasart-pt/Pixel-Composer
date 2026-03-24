@@ -24,17 +24,25 @@
 	
 	tb_name.draw(_tbx, _tby, _tbw, _tbh, text, mouse_ui);
 	
-	var _bs = tbh;
-	var _bx = _tbx + _tbw + ui(4) + _bs/2;
-	var _by = _tby + _tbh / 2;
-	if(buttonInstant_Icon(_bx, _by, _bs/2, mouse_ui, sHOVER, sFOCUS, "Update Thumbnail", THEME.splash_thumbnail, !update_thumbnail) == 2) {
-		update_thumbnail = !update_thumbnail;
-	}
+	var m = mouse_ui;
+	var hov = sHOVER;
+	var foc = sFOCUS;
 	
-	_bx += _bs + ui(4);
-	if(buttonInstant(THEME.button_hide, _bx - _bs/2, _by - _bs/2, _bs, _bs, mouse_ui, sHOVER, sFOCUS, "Update", THEME.accept_16, 0, COLORS._main_value_positive) == 2) {
+	var bb = THEME.button_hide;
+	
+	var bs = tbh;
+	var bx = _tbx + _tbw + ui(4) + bs/2;
+	var by = _tby + _tbh / 2;
+	var bp = THEME.splash_thumbnail;
+	var bi = !update_thumbnail;
+	if(buttonInstant_Icon(bx, by, bs/2, m, hov, foc, __txt("Update Thumbnail"), bp, bi) == 2)
+		update_thumbnail = !update_thumbnail;
+	
+	bx += bs + ui(4);
+	var bp = THEME.accept_16;
+	var bc = COLORS._main_value_positive;
+	if(buttonInstant(bb, bx-bs/2, by-bs/2, bs, bs, m, hov, foc, __txt("Update"), bp, 0, bc) == 2)
 		update();
-	}
 	
 	if(KEYBOARD_ENTER) update();
 #endregion

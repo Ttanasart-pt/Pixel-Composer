@@ -424,6 +424,66 @@ function Project() constructor {
 	
 	static postStep = function() { slideShowPostStep(); }
 	
+	////- Data
+	
+	thumbnailSpr  = undefined;
+	thumbnailPath = "";
+	
+	static getThumbnail = function() {
+		if(thumbnailSpr != undefined) return thumbnailSpr;
+		
+		if(meta.file_id != 0) fetchWorkshopPreview();
+		else thumbnailSpr = project_get_thumbnail(path);
+		
+		return thumbnailSpr;
+	}
+	
+	static fetchWorkshopPreview = function() {
+		var _pth = filename_combine(ROAMING_DIRECTORY, $"ugc\\{meta.file_id}");
+		if(file_exists(_pth + ".png")) { thumbnailPath = _pth + ".png"; thumbnailSpr = sprite_add_center(thumbnailPath); return; }
+		if(file_exists(_pth + ".gif")) { thumbnailPath = _pth + ".gif"; thumbnailSpr = sprite_add_gif(thumbnailPath);    return; }
+		directory_verify(filename_dir(_pth));
+		thumbnailPath  = _pth;
+		
+		thumbnailSpr = -1;
+		asyncCallGroup("steam", steam_ugc_request_item_details(meta.file_id, 30), function(_params, _data) /*=>*/ {
+			var _result = _data[? "result"];
+			if(_result != ugc_result_success) {
+				var errStr = steam_ugc_get_error(_result);
+				noti_status($"UGC query error {_result}: {errStr}");
+				return;
+			}
+			
+			downloadPreview(_data);
+		});
+	}
+	
+	static downloadPreview = function(_data) {
+		var _hpr = int64(_data[? "handle_preview_file"]);
+		asyncCallGroup("steam", steam_ugc_download(_hpr, $"ugc\\{meta.file_id}"), function(_params, _data) /*=>*/ {
+			var _result = _data[? "result"];
+			var _type   = _data[? "event_type"];
+			thumbnailSpr = -2;
+			
+			if(_result != ugc_result_success) {
+				var errStr = steam_ugc_get_error(_result);
+				noti_status($"UGC get thumbnail error {_result}: {errStr}");
+				return;
+			}
+			
+			var _pth = _data[? "original_filename"];
+			var _dst = filename_combine(ROAMING_DIRECTORY, _data[? "dest_filename"]);
+			var _ext = string_lower(filename_ext(_pth));
+			thumbnailPath = filename_change_ext(thumbnailPath, _ext);
+			file_rename(_dst, thumbnailPath);
+			
+			if(_ext == ".png") { thumbnailSpr = sprite_add_center(thumbnailPath); return; }
+			if(_ext == ".gif") { thumbnailSpr = sprite_add_gif(thumbnailPath);    return; }
+			
+			noti_status($"UGC get thumbnail error: File not found {thumbnailPath}");
+		});
+	}
+		
 	////- Node
 	
 	static getNodeFromID = function(_id) { return ds_map_try_get(nodeMap, _id, noone); }
