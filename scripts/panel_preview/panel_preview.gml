@@ -1843,7 +1843,7 @@ function Panel_Preview() : PanelContent() constructor {
             sample_y         = noone;
         	var _sampleable  = !is(_node, Node) || _node.preview_surface_sample;
         
-            if(_sampleable && mouse_on_preview && (mouse_press(mb_right) || key_mod_press(CTRL))) {
+            if(_sampleable && mouse_on_preview && (mouse_rpress() || key_mod_press(CTRL))) {
                 var _sx = sample_x;
                 var _sy = sample_y;
                 

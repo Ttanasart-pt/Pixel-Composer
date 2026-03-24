@@ -32,25 +32,69 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 		nodes_select = [ "All nodes", "Selected" ];
 		widgets      = [];
 		
-		widgets[0] = [ "Nodes", new scrollBox(nodes_select, 
+		array_push(widgets, [ "Nodes", new scrollBox(nodes_select, 
 			function(val) /*=>*/ { 
-				sel      = val; 
 				nodeList = val? targetPanel.nodes_selecting : targetPanel.nodes_list; 
-				refresh(); 
+				sel = val; refresh(); 
 			}, false),
 			function() /*=>*/ {return nodes_select[sel]}  
-		];
+		]);
 		
-		widgets[ 1] = [ "Scale",            textBox_Number( function(v) /*=>*/ { settings.scale       = v; refresh(); }),                   function() /*=>*/ {return settings.scale}       ];
-		widgets[ 2] = [ "Padding",          textBox_Number( function(v) /*=>*/ { settings.padding     = v; refresh(); }),                   function() /*=>*/ {return settings.padding}     ];
-		widgets[ 3] = [ "Solid Background", new checkBox(   function( ) /*=>*/ { settings.bgEnable    = !settings.bgEnable; refresh(); }),  function() /*=>*/ {return settings.bgEnable}    ];
-		widgets[ 4] = [ "Background Color", new buttonColor(function(v) /*=>*/ { settings.bgColor     = v; refresh(); }),                   function() /*=>*/ {return settings.bgColor}     ];
-		widgets[ 5] = [ "Render Grid",      new checkBox(   function( ) /*=>*/ { settings.gridEnable  = !settings.gridEnable; refresh(); }),function() /*=>*/ {return settings.gridEnable}  ];
-		widgets[ 6] = [ "Grid Color",       new buttonColor(function(v) /*=>*/ { settings.gridColor   = v; refresh(); }),                   function() /*=>*/ {return settings.gridColor}   ];
-		widgets[ 7] = [ "Grid Opacity",     textBox_Number( function(v) /*=>*/ { settings.gridAlpha   = v; refresh(); }),                   function() /*=>*/ {return settings.gridAlpha}   ];
-		widgets[ 8] = [ "Border",           textBox_Number( function(v) /*=>*/ { settings.borderPad   = v; refresh(); }),                   function() /*=>*/ {return settings.borderPad}   ];
-		widgets[ 9] = [ "Border Color",     new buttonColor(function(v) /*=>*/ { settings.borderColor = v; refresh(); }),                   function() /*=>*/ {return settings.borderColor} ];
-		widgets[10] = [ "Border Opacity",   textBox_Number( function(v) /*=>*/ { settings.borderAlpha = v; refresh(); }),                   function() /*=>*/ {return settings.borderAlpha} ];
+		array_push(widgets, [-1, "Dimension"]);
+		array_push(widgets, [ "Scale",
+			textBox_Number( function(v) /*=>*/ { settings.scale       = v; refresh(); }),
+			function() /*=>*/ {return settings.scale}
+		]);
+			
+		array_push(widgets, [ "Padding",
+			textBox_Number( function(v) /*=>*/ { settings.padding     = v; refresh(); }),
+			function() /*=>*/ {return settings.padding}
+		]);
+			
+		
+		array_push(widgets, [-1, "Background"]);
+		array_push(widgets, [ "Solid Background", 
+			new checkBox(   function( ) /*=>*/ { settings.bgEnable    = !settings.bgEnable; refresh(); }),  
+			function() /*=>*/ {return settings.bgEnable}
+		]);
+			
+		array_push(widgets, [ "Background Color", 
+			new buttonColor(function(v) /*=>*/ { settings.bgColor     = v; refresh(); }),                   
+			function() /*=>*/ {return settings.bgColor}
+		]);
+		
+		array_push(widgets, [-1, "Grid"]);
+		array_push(widgets, [ "Render Grid",      
+			new checkBox(   function( ) /*=>*/ { settings.gridEnable  = !settings.gridEnable; refresh(); }),
+			function() /*=>*/ {return settings.gridEnable}  
+		]);
+		
+		array_push(widgets, [ "Grid Color",       
+			new buttonColor(function(v) /*=>*/ { settings.gridColor   = v; refresh(); }),
+			function() /*=>*/ {return settings.gridColor}   
+		]);
+		
+		array_push(widgets, [ "Grid Opacity",     
+			textBox_Number( function(v) /*=>*/ { settings.gridAlpha   = v; refresh(); }),
+			function() /*=>*/ {return settings.gridAlpha}
+		]);
+		
+		array_push(widgets, [-1, "Border"]);
+		array_push(widgets, [ "Border",           
+			textBox_Number( function(v) /*=>*/ { settings.borderPad   = v; refresh(); }),
+			function() /*=>*/ {return settings.borderPad}   
+		]);
+		
+		array_push(widgets, [ "Border Color",     
+			new buttonColor(function(v) /*=>*/ { settings.borderColor = v; refresh(); }),
+			function() /*=>*/ {return settings.borderColor} 
+		]);
+		
+		array_push(widgets, [ "Border Opacity",   
+			textBox_Number( function(v) /*=>*/ { settings.borderAlpha = v; refresh(); }),
+			function() /*=>*/ {return settings.borderAlpha} 
+		]);
+		
 	#endregion
 	
 	b_export = button(function() /*=>*/ {
@@ -68,32 +112,51 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 	sc_settings = new scrollPane(set_w, set_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
+		var sw = sc_settings.surface_w;
+		
 		var _ww = max(set_w * 0.5, ui(160));
 		var _hh = ui(24);
 		var _ss = ui(28);
+		var _lh = ui(20);
+		
 		var _ty = _y + _hh / 2;
-		var _tx = sc_settings.surface_w - ui(8);
+		var _tx = sw - ui(8);
+		
 		var  wh = _hh + ui(8);
+		var _tyy = _ty;
+		
+		var _h = 0;
 		
 		for( var i = 0, n = array_length(widgets); i < n; i++ ) {
-			var _tyy = _ty + wh * i;
+			var _wdgt = widgets[i];
+			
+			if(_wdgt[0] == -1) {
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _tyy - ui(4) - _lh/2, sw, _lh, COLORS.panel_inspector_group_bg, 1);
+				
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+				draw_text_add(ui(16), _tyy - ui(4), __txt(_wdgt[1]));
+				
+				_tyy += _lh + ui(4);
+				_h   += _lh + ui(4);
+				continue;
+			}
 			
 			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(8), _tyy, __txt(widgets[i][0], "graph_export_"));
+			draw_text_add(ui(8), _tyy, __txt(_wdgt[0], "graph_export_"));
 			
-			var _wid = widgets[i][1];
-			var _dat = widgets[i][2]();
+			var _wid = _wdgt[1];
+			var _dat = _wdgt[2]();
 			
 			var _param = new widgetParam(_tx - _ww, _tyy - _hh / 2, _ww, _hh, _dat, undefined, _m, sc_settings.x + x, sc_settings.y + y).setFont(f_p3);
 			
 			_wid.setFocusHover(pFOCUS, pHOVER);
 			_wid.drawParam(_param);
+			if(_wid.inBBOX(_m)) sc_settings.hover_content = true;
 			
-			if(_wid.inBBOX(_m)) 
-				sc_settings.hover_content = true;
+			_tyy += wh;
+			_h   += wh;
 		}
 		
-		var _h = wh * array_length(widgets) + _hh;
 		return _h;
 	});
 	

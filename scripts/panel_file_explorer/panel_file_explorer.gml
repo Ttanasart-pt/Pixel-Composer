@@ -393,7 +393,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					
 					file_hovering = _fil;
 					
-					if(pFOCUS && mouse_press(mb_left) && key_mod_press(CTRL)) {
+					if(pFOCUS && mouse_lpress() && key_mod_press(CTRL)) {
 						if(_sel) array_remove(file_selectings, _fil);
 						else     array_push(file_selectings, _fil);
 					} 
@@ -481,7 +481,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					
 					file_hovering = _fil;
 					
-					if(pFOCUS && mouse_press(mb_left) && key_mod_press(CTRL)) {
+					if(pFOCUS && mouse_lpress() && key_mod_press(CTRL)) {
 						if(_sel) array_remove(file_selectings, _fil);
 						else     array_push(file_selectings, _fil);
 					}

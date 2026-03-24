@@ -16,10 +16,10 @@ function canvas_tool_inset() : canvas_tool_shader() constructor {
 		var _dx = (_mx - mouse_sx) / _s;
 		var _dy = (_my - mouse_sy) / _s;
 		
-		if(key_mod_press(CTRL)) {
+		if(key_mod_press(SHIFT)) {
 			var ang  = point_direction(0, 0, _dx, _dy);
 			var dist = point_distance(0, 0, _dx, _dy);
-			ang = round(ang / 45) * 45;
+			ang = value_snap(ang, 45);
 			
 			_dx = lengthdir_x(dist, ang);
 			_dy = lengthdir_y(dist, ang);

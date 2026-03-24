@@ -567,7 +567,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var da = angle_difference(dragging_ma, aa);
 				var sa;
 				
-				if(key_mod_press(CTRL)) sa = value_snap(dragging_sa - da, 15);
+				if(key_mod_press(SHIFT)) sa = value_snap(dragging_sa - da, 15);
 				else					sa = dragging_sa - da;
 				
 				if(inputs[5].setValue(sa)) UNDO_HOLDING = true;

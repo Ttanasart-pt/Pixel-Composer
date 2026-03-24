@@ -92,7 +92,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		} else {
 			var delta    = angle_difference(point_direction(_kx, _ky, _m[0], _m[1]), drag_sa);
 			var real_val = round(delta + drag_sv);
-			var val      = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
+			var val      = key_mod_press(SHIFT)? value_snap(real_val, 15) : real_val;
 			_angle[knob_dragging] = val;
 			
 			if(inputs[3].setValue(_angle)) UNDO_HOLDING = true;

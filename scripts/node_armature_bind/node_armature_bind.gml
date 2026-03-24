@@ -844,10 +844,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var da = angle_difference(dragging_mx, aa);
 				var sa;
 				
-				if(key_mod_press(CTRL)) 
-					sa = round((dragging_sx - da) / 15) * 15;
-				else 
-					sa = dragging_sx - da;
+				sa = dragging_sx - da;
+				if(key_mod_press(SHIFT)) sa = value_snap(sa, 15);
 				
 				_tran[TRANSFORM.rot] = sa;
 				

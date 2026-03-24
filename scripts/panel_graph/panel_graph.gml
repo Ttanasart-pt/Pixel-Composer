@@ -2289,7 +2289,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                
 		                gpu_set_texfilter(false);
 		                
-						if(_n.drawDimension) _n.drawDimension(_n.x * __gr_s + __gr_x, _n.y * __gr_s + __gr_y, __gr_s);
+						if(_n.drawDimension) _n.drawDimension(_xx, _yy, __gr_s);
 		            }
 		            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
 		        });

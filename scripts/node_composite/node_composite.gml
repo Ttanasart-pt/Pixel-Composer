@@ -1044,7 +1044,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 					if(surf_dragging > -1) {
 						var sa = dragging_sx + da;
-						if(key_mod_press(CTRL)) sa = value_snap(sa, 15);
+						if(key_mod_press(SHIFT)) sa = value_snap(sa, 15);
 						if(inputs[surf_dragging + 2].setValue(sa)) _edit = true;	
 						
 					} else {
@@ -1057,7 +1057,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 							var _surf_rotation = surface_predrag[_surf_dragging + 2];
 							
 							var sa = _surf_rotation + da;
-							if(key_mod_press(CTRL)) sa = value_snap(sa, 15);
+							if(key_mod_press(SHIFT)) sa = value_snap(sa, 15);
 							
 							var _p = point_rotate(_surf_position[0], _surf_position[1], cx, cy, da);
 							

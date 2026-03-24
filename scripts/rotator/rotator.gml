@@ -79,7 +79,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 				_kc = COLORS._main_icon_light;
 			
 				var real_val = dragging.delta_acc + drag_sv;
-				var val      = key_mod_press(CTRL)? value_snap(real_val, 15) : real_val;
+				var val      = key_mod_press(SHIFT)? value_snap(real_val, 15) : real_val;
 			
 				if(valStep != -1) val = value_snap(real_val, valStep);
 			

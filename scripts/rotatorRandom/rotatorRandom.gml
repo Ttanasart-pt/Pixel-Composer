@@ -167,10 +167,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 						curr_val[1] = round(dragging.delta_acc + drag_sv[1]);
 						curr_val[2] = round(dragging.delta_acc + drag_sv[2]);
 						
-						val   = key_mod_press(CTRL)? round(curr_val[1] / 15) * 15 : curr_val[1];
+						val   = key_mod_press(SHIFT)? value_snap(curr_val[1], 15) : curr_val[1];
 						modi = onModify(val, 1) || modi;
 						
-						val   = key_mod_press(CTRL)? round(curr_val[2] / 15) * 15 : curr_val[2];
+						val   = key_mod_press(SHIFT)? value_snap(curr_val[2], 15) : curr_val[2];
 						modi = onModify(val, 2) || modi;
 				
 						if(modi) UNDO_HOLDING = true;
@@ -238,13 +238,13 @@ function rotatorRandom(_onModify) : widget() constructor {
 						_kc = COLORS._main_icon_light;
 			
 						var val = point_direction(_kx, _ky, _m[0], _m[1]);
-						if(key_mod_press(CTRL)) val = round(val / 15) * 15;
+						if(key_mod_press(SHIFT)) val = value_snap(val, 15);
 					
 						var val;
 						var real_val = [ drag_sv[0], drag_sv[1], drag_sv[2], drag_sv[3], drag_sv[4] ];
 					
 						real_val[1] = round(dragging.delta_acc + drag_sv[1]);
-						val = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
+						val = key_mod_press(SHIFT)? value_snap(real_val[1], 15) : real_val[1];
 						
 						if(onModify(val, 1)) UNDO_HOLDING = true;
 					
@@ -316,7 +316,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 						else					_kc1 = COLORS._main_icon_light;
 					
 						var val = point_direction(_kx, dragging_index == 1? _ky0 : _ky1, _m[0], _m[1]);
-						if(key_mod_press(CTRL)) val = round(val / 15) * 15;
+						if(key_mod_press(SHIFT)) val = value_snap(val, 15);
 					
 						var val;
 						var real_val = [ drag_sv[0], drag_sv[1], drag_sv[2], drag_sv[3], drag_sv[4] ];
@@ -326,7 +326,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							var ind = (dragging_index - 1) * 2 + i;
 						
 							real_val[ind] = round(drag_sv[ind] + dragging.delta_acc);
-							val = key_mod_press(CTRL)? round(real_val[ind] / 15) * 15 : real_val[ind];
+							val = key_mod_press(SHIFT)? value_snap(real_val[ind], 15) : real_val[ind];
 						
 							if(onModify(val, ind)) modi = true;
 						}
@@ -425,14 +425,14 @@ function rotatorRandom(_onModify) : widget() constructor {
 				
 					if(dragging_index > -1) {
 						var val = point_direction(_kx, _ky, _m[0], _m[1]);
-						if(key_mod_press(CTRL)) val = round(val / 15) * 15;
+						if(key_mod_press(SHIFT)) val = value_snap(val, 15);
 					
 						var real_val = [ drag_sv[0], drag_sv[1], drag_sv[2], drag_sv[3], drag_sv[4] ];
 						var val;
 						var ind = dragging_index;
 					
 						real_val[ind] = round(drag_sv[ind] + dragging.delta_acc);
-						val = key_mod_press(CTRL)? round(real_val[ind] / 15) * 15 : real_val[ind];
+						val = key_mod_press(SHIFT)? value_snap(real_val[ind], 15) : real_val[ind];
 						
 						if(onModify(val, ind)) UNDO_HOLDING = true;
 					

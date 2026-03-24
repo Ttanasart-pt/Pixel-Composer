@@ -49,8 +49,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _rad, 
 		index = 1;
 		
 		var angle = point_direction(_x, _y, _mx, _my);
-		if(key_mod_press(CTRL))
-			angle = round(angle / 15) * 15;
+		if(key_mod_press(SHIFT)) angle = value_snap(angle, 15);
 								
 		if(setValueInspector( angle ))
 			UNDO_HOLDING = true;
@@ -115,8 +114,7 @@ function preview_overlay_rotation_range(interact, active, _x, _y, _s, _mx, _my, 
 		index = drag_type;
 		
 		var angle = point_direction(_x, _y, _mx, _my);
-		if(key_mod_press(CTRL))
-			angle = round(angle / 15) * 15;
+		if(key_mod_press(SHIFT)) angle = value_snap(angle, 15);
 		
 		_val = [ _val[0], _val[1] ];
 		_val[drag_type - 1] = angle;

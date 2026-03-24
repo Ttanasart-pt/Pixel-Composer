@@ -46,7 +46,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		var _x = _node.x * scale;
 		var _y = _node.y * scale;
 		var _w = _node.w * scale;
-		var _h = _node.h * scale;
+		var _h = (_node.h + _node.showMeta() * 16) * scale;
 		
 		bbox_x0 = min(bbox_x0, _x);
 		bbox_y0 = min(bbox_y0, _y);
@@ -72,7 +72,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	var gr_y = -bbox_y0;
 	var mx = gr_x, my = gr_y;
 	
-	surface_set_target(s); //draw nodes
+	surface_set_target(s); // Draw nodes
 		if(bgEnable) draw_clear(bgColor);
 		else		 draw_clear_alpha(0, 0);
 		
@@ -132,9 +132,22 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			for( var i = 0, n = array_length(nodeList); i < n; i++ )
 				if(nodeList[i].drawNodeBehind) nodeList[i].drawNodeBehind(gr_x, gr_y, mx, my, scale);
 			
-			for( var i = 0, n = array_length(nodeList); i < n; i++ )
-				nodeList[i].drawNode(true, gr_x, gr_y, mx, my, scale);
+			for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
+				var _n = nodeList[i];
+				_n.drawNode(true, gr_x, gr_y, mx, my, scale);
 				
+            	var _xx = gr_x + _n.x * scale;
+                var _yy = gr_y + _n.y * scale;
+                
+				gpu_set_texfilter(true);
+				if(!array_empty(_n.inputDisplayGroup)) 
+                	_n.drawJunctionGroups(_xx, _yy, mx, my, scale);
+                _n.drawJunctions(_xx, _yy, mx, my, scale);
+                gpu_set_texfilter(false);
+                
+				if(_n.drawDimension) _n.drawDimension(_xx, _yy, scale);
+			}
+			
 			for( var i = 0, n = array_length(nodeList); i < n; i++ )
 				if(nodeList[i].drawNodeFG) nodeList[i].drawNodeFG(gr_x, gr_y, mx, my, scale, param);
 		#endregion

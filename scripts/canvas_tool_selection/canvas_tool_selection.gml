@@ -398,7 +398,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_aa += _dd;
 			
 			var aa = selection_aa;
-			if(key_mod_press(CTRL)) aa = value_snap(aa, 45);
+			if(key_mod_press(SHIFT)) aa = value_snap(aa, 45);
 			
 			var sw = surface_get_width(selection_surface_base);
 			var sh = surface_get_height(selection_surface_base);
