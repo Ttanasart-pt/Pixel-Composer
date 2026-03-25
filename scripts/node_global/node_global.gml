@@ -14,6 +14,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static isActiveDynamic = function(frame = CURRENT_FRAME) /*=>*/ {return true}
 	static valueUpdate     = function(index) /*=>*/ { RENDER_ALL }
 	
+	////- Inputs
+	
 	function createValue() {
 		var _ind   = array_length(inputs);
 		while(inputExist($"NewValue{_ind}")) _ind++;
@@ -26,7 +28,22 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		return _inp;
 	}
 	
+	static valueRename = function(_val, _name) {
+		if(!string_variable_valid(s)) { 
+			noti_warning("Invalid globalvar name."); 
+			return false; 
+		}
+			
+		if(getInputKey(s) != noone) { noti_warning("Duplicate globalvar name."); return false; }
+		
+		_val.name = _name;
+		RENDER_ALL
+		return true;
+	}
+	
 	static inputExist = function(key) { return ds_map_exists(value, key); }
+	
+	////- Get Data
 	
 	static inputGetable = function(from, key) {
 		if(!inputExist(key)) return false;
@@ -46,6 +63,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		var inp = getInputKey(key) 
 		return inp? inp.__getAnimValue(frame) : 0;
 	}
+	
+	////- Update
 	
 	static update = function() {
 		ds_map_clear(value);

@@ -19,22 +19,8 @@ function GlobalVarDrawer() constructor {
 	tb_rename = textBox_Text(function(_n) /*=>*/ { 
 		if(renaming == undefined) return;
 		
-		if(!string_variable_valid(_n)) { 
-			noti_warning("Invalid globalvar name.");
-			renaming = undefined; 
-			return; 
-		}
-		
-		var k = renaming.node.getInputKey(_n);
-		if(k != noone && k != renaming) { 
-			noti_warning("Duplicate globalvar name."); 
-			renaming = undefined; 
-			return; 
-		}
-		
-		renaming.name = _n;
-		renaming      = undefined;
-		RENDER_ALL
+		renaming.node.valueRename(renaming, _n);
+		renaming = undefined;
 	});
 		
 	static drawEdit = function(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry, _project = PROJECT) {

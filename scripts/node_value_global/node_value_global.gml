@@ -81,13 +81,7 @@ function variable_editor(nodeVal) constructor {
 	if(global.GLOBALVAR_TYPES_ENUM == undefined) initGlobalvarType();
 	
 	value    = nodeVal;
-	tb_name  = textBox_Text(function(s) /*=>*/ { 
-		if(!string_variable_valid(s))          { noti_warning("Invalid globalvar name.");   return; }
-		if(value.node.getInputKey(s) != noone) { noti_warning("Duplicate globalvar name."); return; }
-		value.name = s;
-		RENDER_ALL
-		
-	}).setHide(1).setSlide(false).setLabelIcon(THEME.rename);
+	tb_name  = textBox_Text(function(s) /*=>*/ {return value.node.valueRename(value, s)}).setHide(1).setSlide(false).setLabelIcon(THEME.rename);
 	
 	vb_range = new vectorBox(2, function(v, i) /*=>*/ { slider_range[i] = v; refreshInput(); }).setLinkable(false);
 	tb_step  = textBox_Number(function(v) /*=>*/ { slider_step = v; refreshInput(); });
