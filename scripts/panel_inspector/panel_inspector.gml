@@ -1567,7 +1567,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         		1, 1, current_time / 2, COLORS._main_icon);
                         
                         if(hv) {
-                        	TOOLTIP = __txt("Change Thumbnail");
+                        	TOOLTIP = __txt("Change Thumbnail...");
                         	draw_sprite_stretched(THEME.textbox, 1, _wdx, yy, _wdw, wh);
                         	
                         	if(mouse_lpress(pFOCUS)) {

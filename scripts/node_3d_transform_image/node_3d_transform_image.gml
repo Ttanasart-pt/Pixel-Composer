@@ -117,7 +117,6 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 			
 			d3_camera.setMatrix();
 			d3_camera.viewMat.setRaw(matrix_build_lookat(0, 0, 1, /**/ 0, 0, 0, /**/ 1, 0, 0));
-			
 		#endregion
 		
 		var _outSurf = surface_verify(_outData[1], _dim[0], _dim[1]);
@@ -136,7 +135,9 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 			
 			object.transform.submitMatrix();
 			matrix_set(matrix_world, matrix_stack_top());
-			vertex_submit(object.VB[0], pr_trianglelist, surface_get_texture(_surf));
+			gpu_set_cullmode(cull_counterclockwise);
+			vertex_submit(object.VB[0], pr_trianglelist, surface_get_texture(_surf ));
+			vertex_submit(object.VB[1], pr_trianglelist, surface_get_texture(_bsurf));
 			
 			object.transform.clearMatrix();
 			matrix_set(matrix_world, matrix_build_identity());

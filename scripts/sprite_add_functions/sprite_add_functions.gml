@@ -1,5 +1,4 @@
-globalvar SPRITE_PATH_MAP;
-SPRITE_PATH_MAP = {};
+globalvar SPRITE_PATH_MAP; SPRITE_PATH_MAP = {};
 
 function sprite_delete_safe(spr) { if(sprite_exists(spr)) sprite_delete(spr); }
 
@@ -82,14 +81,12 @@ function sprite_path_check_format(_path, noti = true) {
 	return _path;
 }
 
-function sprite_add_gif(_path) {
+function sprite_add_gif(_path, _center = true) {
 	if(!file_exists_empty(_path)) return undefined;
 	
 	var _cached = GifReadCache(_path);
 	if(_cached != undefined) {
-		var _sw = sprite_get_width(_cached);
-		var _sh = sprite_get_height(_cached);
-		sprite_set_offset(_cached, _sw / 2, _sh / 2);
+		if(_center) sprite_set_offset(_cached, sprite_get_width(_cached) / 2, sprite_get_height(_cached) / 2);
 		return _cached;
 	}
 	
@@ -105,10 +102,7 @@ function sprite_add_gif(_path) {
 	buffer_delete(gifBuff);
 	gc_collect();
 	
-	var _sw = sprite_get_width(spr);
-	var _sh = sprite_get_height(spr);
-	sprite_set_offset(spr, _sw / 2, _sh / 2);
-	
+	if(_center) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 	return spr;
 }
 
