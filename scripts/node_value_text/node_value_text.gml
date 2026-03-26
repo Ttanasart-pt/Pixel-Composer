@@ -18,5 +18,8 @@ function __NodeValue_Text(_name, _node, _value, _tooltip = "") : NodeValue(_name
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
+	static lerpAnimKeys = function(from, to, rat) /*=>*/ {return from.value};
+	static processType  = function(_val) /*=>*/ {return is_numeric(_val)? string_real(_val) : _val};
+	
 	static arrayLength = arrayLengthSimple;
 }

@@ -7,7 +7,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	clamp_range   = true;
 	choicesAmount = undefined;
 	
-	/////============== SET =============
+	////- SET
 	
 	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_scroll, _ch); return self; }
 	
@@ -21,11 +21,11 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		
 	static setUnclamp  = function( ) /*=>*/ { clamp_range = false;    return self;  }
 	
-	/////============== CONNECT =============
+	////- CONNECT
 	
 	static isConnectableStrict = function() /*=>*/ {return false};
 	
-	/////============== GET =============
+	////- GET
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;
@@ -50,9 +50,11 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
+	static processType = function(_val) /*=>*/ {return round(_val)};
+	
 	static arrayLength = arrayLengthSimple;
 	
-	/////============ Serialize ===========
+	////- Serialize
 	
 	options_histories = [];
 	

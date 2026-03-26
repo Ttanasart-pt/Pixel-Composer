@@ -82,8 +82,8 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		if(sep_axis) getAnimators();
 		
 		if(!getAnim()) {
-			if(sep_axis) return array_create_ext(AREA_ARRAY_LENGTH, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
-			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
+			if(sep_axis) return array_create_ext(AREA_ARRAY_LENGTH, function(i) /*=>*/ {return animators[i].values[0].value});
+			return array_empty(animator.values)? 0 : animator.values[0].value;
 		}
 		
 		if(sep_axis) {

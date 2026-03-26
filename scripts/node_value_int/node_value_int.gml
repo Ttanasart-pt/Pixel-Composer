@@ -33,6 +33,7 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : __NodeValue_Numb
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
+	static processType = function(_val) /*=>*/ {return round(_val)};
 	static arrayLength = arrayLengthSimple;
 }
 

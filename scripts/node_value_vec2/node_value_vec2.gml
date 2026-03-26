@@ -28,7 +28,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		if(__tempValue != undefined) return __tempValue;
 		
 		getValueRecursive(self.__curr_get_val, _time);
-		var val = __curr_get_val[0];
+		var val = __curr_get_val[0]; 
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		var typ = nod.type;
 		
@@ -61,14 +61,18 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		if(sep_axis) getAnimators();
 		
 		if(!getAnim()) {
-			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
-			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
+			if(sep_axis) return [
+				animators[0].values[0].value,
+				animators[1].values[0].value
+			];
+			
+			return array_empty(animator.values)? 0 : animator.values[0].value;
 		}
 		
-		if(sep_axis) {
-			__temp_time = _time;
-			return array_create_ext(2, function(i) /*=>*/ {return animators[i].getValue(__temp_time)});
-		} 
+		if(sep_axis) return [
+			animators[0].getValue(_time),
+			animators[1].getValue(_time)
+		];
 		
 		return animator.getValue(_time);
 	}

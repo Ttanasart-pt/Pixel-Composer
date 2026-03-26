@@ -2,6 +2,37 @@ enum KEY_TYPE    { normal, adder }
 enum CURVE_TYPE  { linear, bezier, cut }
 enum DRIVER_TYPE { none, linear, wiggle, sine }
 
+#region function
+	function KeyframeInterpolate(from, to, rat) {
+		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) return rat;
+		if(rat == 0 || rat == 1) return rat;
+		
+		var eox = from.ease_out[0];
+		var eoy = from.ease_out[1];
+		    
+		var eix = to.ease_in[0];
+		var eiy = to.ease_in[1];
+		
+		if(eox > 1 && eix > 1) {
+			var _total = min(eox, eix);
+			eox /= _total;
+			eix /= _total;
+		}
+		
+		if(eox > 1) eiy -= min(eox - 1, 1);
+		eox = clamp(eox, 0, .9);
+		
+		if(eix > 1) eoy += min(eix - 1, 1);
+	    eix = clamp(eix, 0, .9);
+	    
+		eix = 1 - eix;
+		eiy = 1 - eiy;
+		
+		return eval_curve_segment_x(0, eox, eoy, eix, 1 - eiy, 1, rat);
+	}
+	
+#endregion
+
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	#region ---- main ----
 		type  = 0;
@@ -102,107 +133,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	////- Getters
 	
-	static interpolate = function(from, to, rat) {
-		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) return rat;
-		if(rat == 0 || rat == 1) return rat;
-		
-		var eox = from.ease_out[0];
-		var eoy = from.ease_out[1];
-		    
-		var eix = to.ease_in[0];
-		var eiy = to.ease_in[1];
-		
-		if(eox > 1 && eix > 1) {
-			var _total = min(eox, eix);
-			eox /= _total;
-			eix /= _total;
-		}
-		
-		if(eox > 1) eiy -= min(eox - 1, 1);
-		eox = clamp(eox, 0, .9);
-		
-		if(eix > 1) eoy += min(eix - 1, 1);
-	    eix = clamp(eix, 0, .9);
-	    
-		eix = 1 - eix;
-		eiy = 1 - eiy;
-		
-		return eval_curve_segment_x(0, eox, eoy, eix, 1 - eiy, 1, rat);
-	}
-	
-	static lerpValue = function(from, to, rat) {
-		__fr = from;
-		__to = to;
-		__f = from.value;
-		__t = to.value;
-		__r = rat;
-		
-		if(to.ease_in_type    == CURVE_TYPE.cut) return processType(__f);
-		if(from.ease_out_type == CURVE_TYPE.cut) return processType(__t);
-		
-		__i = interpolate(from, to, rat);
-		if(has(__f, "lerpTo")) return __f.lerpTo(__t, __i)
-		
-		switch(prop.type) {
-			case VALUE_TYPE.float : 
-				
-				if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.attributes.angle_display == QUARTERNION_DISPLAY.quarterion)
-					return quarternionArraySlerp(__f, __t, __i);
-				
-				var _af = array_safe_length(__f, -1);
-				var _at = array_safe_length(__t, -1);
-				
-				if(_af ==  0 || _at ==  0) return 0;
-				if(_af == -1 || _at == -1) return lerp(__f, __t, __i);
-				
-				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return lerp(__f[i], __t[i], __i)});
-				
-			case VALUE_TYPE.integer : 
-				var _af = array_safe_length(__f, -1);
-				var _at = array_safe_length(__t, -1);
-				
-				if(_af ==  0 || _at ==  0) return 0;
-				if(_af == -1 || _at == -1) return round(lerp(__f, __t, __i));
-				
-				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return round(lerp(__f[i], __t[i], __i))});
-				
-			case VALUE_TYPE.curve : 
-				var _af = array_safe_length(__f, -1);
-				var _at = array_safe_length(__t, -1);
-				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return lerp(__f[i], __t[i], __i)});
-				
-				
-			case VALUE_TYPE.color : 
-				if(is_array(__f) && is_array(__t)) {
-					var _len = ceil(lerp(array_length(__f), array_length(__t), __i));
-					var res  = array_create(_len);
-					
-					for( var i = 0; i < _len; i++ ) {
-						var _rat = i / (_len - 1);
-				
-						var rf = _rat * (array_length(__f) - 1);
-						var rt = _rat * (array_length(__t) - 1);
-						
-						var cf = array_get_decimal(__f, rf, true);
-						var ct = array_get_decimal(__t, rt, true);
-						
-						res[i] = merge_color(cf, ct, __i);
-					}
-					return res;
-				}
-				return processType(merge_color(__f, __t, __i));
-		}
-		
-		return processType(__f);
-	}
-	
 	static getName = function() { return prop.name + suffix; }
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME) {
 		//if(!prop.is_anim) return staticValue;
 		length = array_length(values);
 		
-		///////////////////////////////////////////////////////////// TRIGGER TYPE /////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////// TRIGGER TYPE ///////////////////////////////////////////////////
 		
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(length == 0 || !prop.is_anim) return false;
@@ -213,20 +150,20 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return array_safe_get_fast(key_map, _time);
 		}
 		
-		///////////////////////////////////////////////////////////// OPTIMIZATION /////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////// OPTIMIZATION ///////////////////////////////////////////////////
 		
-		if(length == 0) return processTypeDefault();
+		if(length == 0) return !sep_axis && typeArray(prop)? [] : 0;
 		if(length == 1) {
 			var _key = values[0];
 			
 			if(_key.driverObject && _time >= _key.time)
 				return _key.driverObject.apply(_time, _key);
 				
-			return processType(_key.value);
+			return _key.value;
 		}
 		
-		if(prop.type == VALUE_TYPE.path) return processType(values[0].value);
-		if(!prop.is_anim)				 return processType(values[0].value);
+		if(prop.type == VALUE_TYPE.path) return values[0].value;
+		if(!prop.is_anim)				 return values[0].value;
 		var _len = max(NODE_TOTAL_FRAMES, values[length - 1].time);
 		if(array_length(key_map) != _len) updateKeyMap();
 		
@@ -234,7 +171,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var _time_last  = values[length - 1].time;
 		var _time_dura  = _time_last - _time_first;
 			
-		////////////////////////////////////////////////////////// LOOP TIME ///////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// LOOP TIME //////////////////////////////////////////////////////
 		
 		if(_time > _time_last) {
 			switch(prop.on_end) {
@@ -257,7 +194,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		else if(_time <= 0)	   _keyIndex = -1;
 		else                   _keyIndex = array_safe_get_fast(key_map, _time);
 		
-		//////////////////////////////////////////////////////// BEFORE FIRST //////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////// BEFORE FIRST /////////////////////////////////////////////////////
 		
 		if(_keyIndex < 0) {
 			if(is(prop, __NodeValue_Active)) return false;
@@ -273,16 +210,18 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var totl = NODE_TOTAL_FRAMES - fTime + tTime;
 				var rat  = prog / totl;
 				
-				if(from.driverObject)
-					return from.driverObject.apply(_time, from, to, lerpValue(from, to, rat), rat, self);
-					
-				return lerpValue(from, to, rat);
+				if(to.ease_in_type    == CURVE_TYPE.cut) return from.value;
+				if(from.ease_out_type == CURVE_TYPE.cut) return to.value;
+				
+				if(from.driverObject) 
+					return from.driverObject.apply(_time, from, to, prop.lerpAnimKeys(from, to, rat), rat, self);
+				return prop.lerpAnimKeys(from, to, rat);
 			}
 			
-			return processType(values[0].value); //First frame
+			return values[0].value; //First frame
 		}
 		
-		///////////////////////////////////////////////////////// AFTER LAST ///////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////// AFTER LAST //////////////////////////////////////////////////////
 		
 		if(_keyIndex >= length) {
 			var _lstKey = values[length - 1];
@@ -294,28 +233,33 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var totl = NODE_TOTAL_FRAMES - from.time + to.time;
 				var rat  = prog / totl;
 				
+				if(to.ease_in_type    == CURVE_TYPE.cut) return from.value;
+				if(from.ease_out_type == CURVE_TYPE.cut) return to.value;
+				
 				if(from.driverObject)
-					return from.driverObject.apply(_time, from, to, lerpValue(from, to, rat), rat, self);
-					
-				return lerpValue(from, to, rat);
+					return from.driverObject.apply(_time, from, to, prop.lerpAnimKeys(from, to, rat), rat, self);
+				return prop.lerpAnimKeys(from, to, rat);
 			}
 			
 			if(_lstKey.driverObject)
 				return _lstKey.driverObject.apply(_time, _lstKey);
 			
-			return processType(_lstKey.value); //Last frame
+			return _lstKey.value //Last frame
 		}
 		
-		///////////////////////////////////////////////////////// INBETWEEN ////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////// INBETWEEN ///////////////////////////////////////////////////////
 		
 		var from = values[_keyIndex];
 		var to   = values[_keyIndex + 1];
 		var rat  = (_time - from.time) / (to.time - from.time);
 		
+		if(to.ease_in_type    == CURVE_TYPE.cut) return from.value;
+		if(from.ease_out_type == CURVE_TYPE.cut) return to.value;
+		
 		if(from.driverObject)
-			return from.driverObject.apply(_time, from, to, lerpValue(from, to, rat), rat, self);
+			return from.driverObject.apply(_time, from, to, prop.lerpAnimKeys(from, to, rat), rat, self);
 			
-		return lerpValue(from, to, rat);
+		return prop.lerpAnimKeys(from, to, rat);
 	}
 	
 	static getInterpolateKeys = function(_time = NODE_CURRENT_FRAME, _arr = [ undefined, undefined, 0 ]) {
@@ -325,7 +269,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		_arr[1] = undefined; 
 		_arr[2] = 0; 
 		
-		///////////////////////////////////////////////////////////// OPTIMIZATION /////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////// OPTIMIZATION ///////////////////////////////////////////////////
 		
 		if(length == 0) return _arr;
 		
@@ -341,7 +285,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var _time_last  = values[length - 1].time;
 		var _time_dura  = _time_last - _time_first;
 			
-		////////////////////////////////////////////////////////// LOOP TIME ///////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// LOOP TIME //////////////////////////////////////////////////////
 		
 		if(_time > _time_last) {
 			switch(prop.on_end) {
@@ -364,7 +308,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		else if(_time <= 0)	   _keyIndex = -1;
 		else                   _keyIndex = array_safe_get_fast(key_map, _time);
 		
-		//////////////////////////////////////////////////////// BEFORE FIRST //////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////// BEFORE FIRST /////////////////////////////////////////////////////
 		
 		if(_keyIndex < 0) {
 			if(is(prop, __NodeValue_Active)) return _arr;
@@ -389,7 +333,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return _arr; // First Frame
 		}
 		
-		///////////////////////////////////////////////////////// AFTER LAST ///////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////// AFTER LAST //////////////////////////////////////////////////////
 		
 		if(_keyIndex >= length) {
 			var _lstKey = values[length - 1];
@@ -412,7 +356,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return _arr; //Last frame
 		}
 		
-		///////////////////////////////////////////////////////// INBETWEEN ////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////// INBETWEEN ///////////////////////////////////////////////////////
 		
 		var from = values[_keyIndex];
 		var to   = values[_keyIndex + 1];
@@ -420,45 +364,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		_arr[0] = from;
 		_arr[1] = to;
-		_arr[2] = interpolate(from, to, rat);
+		_arr[2] = KeyframeInterpolate(from, to, rat);
 		
 		return _arr;
 		
-	}
-	
-	static processTypeDefault = function() {
-		if(!sep_axis && typeArray(prop)) return [];
-		return 0;
-	}
-	
-	static processType = function(_val) {
-		INLINE
-		
-		if(node.project.attributes.strict) return processValue(_val);
-		__val    = _val;
-		var _res = _val;
-		
-		if(!sep_axis && typeArray(prop) && is_array(_val))
-			_res = array_create_ext(array_length(__val), function(i) /*=>*/ {return processValue(__val[i])});
-		else 
-			_res = processValue(_val);
-		
-		return _res;
-	}
-	
-	static processValue = function(_val) {
-		INLINE
-		if(is_array(_val) || is_struct(_val)) return _val;
-		
-		switch(prop.type) {
-			case VALUE_TYPE.integer : return is_real(_val) && prop.unit.mode == VALUE_UNIT.constant? round(_val) : _val;
-			case VALUE_TYPE.float   : return _val;
-			case VALUE_TYPE.text    : return is_string(_val)?  _val : string_real(_val);
-			case VALUE_TYPE.color   : return is_real(_val)?    cola(_val) : _val;
-			case VALUE_TYPE.surface : return is_string(_val)?  get_asset(_val) : _val;
-		}
-		
-		return _val;
 	}
 	
 	static onUndo = method(self, function() /*=>*/ { updateKeyMap(); prop.triggerSetFrom(); });
@@ -826,11 +735,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				
 				if(is_array(value)) {
 					for(var j = 0, m = array_length(value); j < m; j++)
-						_val[j] = processValue(value[j]);
+						_val[j] = value[j];
 						
 				} else if(is_array(base)) {
 					for(var j = 0, m = array_length(base); j < m; j++)
-						_val[j] = processValue(value);
+						_val[j] = value;
 				}
 				
 				if(prop.type == VALUE_TYPE.curve) {

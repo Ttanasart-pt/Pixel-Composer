@@ -17,7 +17,7 @@ function __NodeValue_Atlas(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) { 
 		var _anim  = animator;
-		return array_empty(_anim.values)? noone : _anim.processValue(_anim.values[0].value); 
+		return array_empty(_anim.values)? noone : _anim.values[0].value; 
 	}
 	
 	static arrayLength = arrayLengthSimple;

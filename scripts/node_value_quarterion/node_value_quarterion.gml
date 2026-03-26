@@ -28,4 +28,20 @@ function __NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : __NodeVal
 		
 		return val;
 	}
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		var _af = array_safe_length(__f, -1);
+		var _at = array_safe_length(__t, -1);
+		
+		if(_af ==  0 || _at ==  0) return 0;
+		if(_af == -1 || _at == -1) return lerp(__f, __t, __i);
+		
+		if(attributes.angle_display == QUARTERNION_DISPLAY.quarterion)
+			return quarternionArraySlerp(__f, __t, __i);
+		return array_create_ext(min(_af, _at), function(i) /*=>*/ {return lerp(__f[i], __t[i], __i)});
+	}
+	
 }

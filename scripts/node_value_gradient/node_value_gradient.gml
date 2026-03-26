@@ -35,6 +35,13 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return has(__f, "lerpTo")? __f.lerpTo(__t, __i) : __f;
+	}
+	
 	static arrayLength = arrayLengthSimple;
 	
 	static setValueRaw = function(_dat) { 

@@ -889,8 +889,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 			} else {
 				var _val = animator.getValue();
-				animator.values = [];
-				animator.values[0] = new valueKey(0, _val, animator);
+				animator.values = [ new valueKey(0, _val, animator) ];
 				animator.updateKeyMap();
 				
 			}
@@ -1804,34 +1803,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	}
 	
-	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
-		var _anim  = animator;
-		
-		if(!is_anim) {
-			if(sep_axis) {
-				var _anims = getAnimators();
-				var val = array_create(array_length(_anims));
-				for( var i = 0, n = array_length(_anims); i < n; i++ )
-					val[i] = _anims[i].processType(_anims[i].values[0].value);
-				return val;
-			}
-			
-			if(array_empty(_anim.values)) return 0;
-			
-			return _anim.processType(_anim.values[0].value);
-		}
-		
-		if(sep_axis) {
-			var _anims = getAnimators();
-			var val = [];
-			for( var i = 0, n = array_length(_anims); i < n; i++ )
-				val[i] = _anims[i].getValue(_time);
-			return val;
-		} 
-		
-		return _anim.getValue(_time);
-	}
-	
 	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
 	
 	show_val = [];
@@ -1860,11 +1831,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			show_val   = array_verify(show_val, animVector);
 			
 			for( var i = 0, n = animVector; i < n; i++ )
-				show_val[i] = array_empty(_anims[i].values)? 0 : _anims[i].processType(_anims[i].values[0].value);
+				show_val[i] = array_empty(_anims[i].values)? 0 : _anims[i].values[0].value;
 			val = show_val;
 			
 		} else 
-			val = array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
+			val = array_empty(animator.values)? 0 : animator.values[0].value;
 		
 		return val;
 	}
@@ -1911,6 +1882,51 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	arrayLength = __arrayLength;
+	
+	////- ANIMATOR
+	
+	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
+		var _anim  = animator;
+		
+		if(!is_anim) {
+			if(sep_axis) {
+				var _anims = getAnimators();
+				var val = array_create(array_length(_anims));
+				for( var i = 0, n = array_length(_anims); i < n; i++ )
+					val[i] = _anims[i].values[0].value;
+				return val;
+			}
+			
+			if(array_empty(_anim.values)) return 0;
+			
+			return _anim.values[0].value;
+		}
+		
+		if(sep_axis) {
+			var _anims = getAnimators();
+			var val = [];
+			for( var i = 0, n = array_length(_anims); i < n; i++ )
+				val[i] = _anims[i].getValue(_time);
+			return val;
+		} 
+		
+		return _anim.getValue(_time);
+	}
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		var _af = array_safe_length(__f, -1);
+		var _at = array_safe_length(__t, -1);
+		
+		if(_af ==  0 || _at ==  0) return 0;
+		if(_af == -1 || _at == -1) return lerp(__f, __t, __i);
+		
+		return array_create_ext(min(_af, _at), function(i) /*=>*/ {return lerp(__f[i], __t[i], __i)});
+	}
+	
+	static processType = function(_val) /*=>*/ {return _val};
 	
 	////- SET
 	

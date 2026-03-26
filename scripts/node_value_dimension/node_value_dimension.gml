@@ -78,15 +78,17 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		if(applyUnit && nod == self) {
 			switch(attributes.use_project_dimension) {
 				case 1 : 
-					val[0] *= NPROJ_SURF_W;
-					val[1] *= NPROJ_SURF_H;
-					return val;
+					return [
+						val[0] * NPROJ_SURF_W, 
+						val[1] * NPROJ_SURF_H
+					];
 				
 				case 2 : 
 					var _msk = mask_input.getValue(_time);
-					val[0] *= surface_get_width_safe(_msk);
-					val[1] *= surface_get_height_safe(_msk);
-					return val;
+					return [
+						val[0] * surface_get_width_safe(_msk),
+						val[1] * surface_get_height_safe(_msk)
+					];
 			}
 			
 		}
@@ -146,15 +148,11 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		if(sep_axis) getAnimators();
 		
 		if(!getAnim()) {
-			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
-			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
+			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].values[0].value});
+			return array_empty(animator.values)? 0 : animator.values[0].value;
 		}
 		
-		if(sep_axis) {
-			__temp_time = _time;
-			return array_create_ext(2, function(i) /*=>*/ {return animators[i].getValue(__temp_time)});
-		} 
-		
+		if(sep_axis) return [ animators[0].getValue(_time), animators[1].getValue(_time) ];
 		return animator.getValue(_time);
 	}
 	

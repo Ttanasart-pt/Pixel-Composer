@@ -83,8 +83,8 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text( "Tag", "new tag" ));
-		newInput(index + 1, nodeValue_Vec2( "Position", [[0,0]] )).setArrayDepth(1);
+		newInput(index + 0, nodeValue_Text(    "Tag",    "new tag" ));
+		newInput(index + 1, nodeValue_Vec2Arr( "Position", [[0,0]] ));
 		
 		array_push(input_display_list, inAmo + 1);
 		return [ inputs[index + 0], inputs[index + 1] ];
@@ -195,8 +195,9 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _amo  = getInputAmount();
 	    for( var i = 0; i < _amo; i++ ) {
 	        var _ind = input_fix_len + i * data_length;
-	        var _tag_name = getInputSingle(_ind + 0);
-	        inputs[_ind + 1].setName($"{_tag_name} positions");
+	        var _tag = getInputSingle(_ind + 0);
+	        
+	        inputs[_ind + 1].setName($"{_tag} pos");
 	    }
 	}
 	

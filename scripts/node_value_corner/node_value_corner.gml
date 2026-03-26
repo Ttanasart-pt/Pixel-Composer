@@ -35,13 +35,13 @@ function __NodeValue_Corner(_name, _node, _value, _tooltip = "") : __NodeValue_A
 		
 		if(!getAnim()) {
 			if(sep_axis) return [
-				_anims[0].processType(_anims[0].values[0].value),
-				_anims[1].processType(_anims[1].values[0].value),
-				_anims[2].processType(_anims[2].values[0].value),
-				_anims[3].processType(_anims[3].values[0].value),
+				_anims[0].values[0].value,
+				_anims[1].values[0].value,
+				_anims[2].values[0].value,
+				_anims[3].values[0].value,
 			];
 			
-			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
+			return array_empty(animator.values)? 0 : animator.values[0].value;
 		}
 		
 		if(sep_axis) {

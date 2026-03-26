@@ -13,7 +13,6 @@
 		addHotkey("Node_Scatter", "Scatter > Toggle",      "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[ 9].setValue((_n.inputs[ 9].getValue() + 1) % 2); });
 		addHotkey("Node_Scatter", "Blend Mode > Toggle",   "B", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[18].setValue((_n.inputs[18].getValue() + 1) % 3); });
 	});
-	
 #endregion
 
 function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -30,8 +29,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 - Mixed: Create single output scattering multiple images."))
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
 		
-	newInput(24, nodeValue_Int(     "Array Indices", [] )).setArrayDepth(1);
-	newInput(25, nodeValue_Surface( "Array Texture"     ));
+	newInput(24, nodeValue_IArray(  "Array Indices" )).setArrayDepth(1);
+	newInput(25, nodeValue_Surface( "Array Texture" ));
 	newInput(26, nodeValue_Range(   "Animated Array",    [0,0], { linked : true } ));
 	newInput(27, nodeValue_EScroll( "Animated Array End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
 	

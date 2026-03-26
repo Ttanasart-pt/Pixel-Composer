@@ -98,6 +98,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var hh = bbox.h;
 		
 		draw_sprite_stretched_ext(THEME.checkbox_def, 0, x0, y0, ww, hh, c_white, 1);
+		if(is_array(val)) return;
 		
 		if(_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
 			draw_sprite_stretched_ext(THEME.checkbox_def, 1, x0, y0, ww, hh, c_white, 1);	

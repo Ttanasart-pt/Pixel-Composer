@@ -1,6 +1,8 @@
-function nodeValue_Vector(_name, _value = [], _data = {}) { return new __NodeValue_Array(_name, self, _value, "", -1); }
+function nodeValue_Vector( _name, _value = [], _data = {} ) { return new __NodeValue_Array(  _name, self, _value, "", -1 ); }
+function nodeValue_Array(  _name, _value = [], _data = {} ) { return new __NodeValue_Array(  _name, self, _value, "", -1 ); }
+function nodeValue_IArray( _name, _value = [], _data = {} ) { return new __NodeValue_IArray( _name, self, _value, "", -1 ); }
+
 function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, _tooltip) constructor {
-	
 	type_array = 1;
 	def_length = _length;
 	
@@ -31,8 +33,8 @@ function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : N
 		if(sep_axis) getAnimators()
 				
 		if(!getAnim()) {
-			if(sep_axis) return array_create_ext(def_length, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
-			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
+			if(sep_axis) return array_create_ext(def_length, function(i) /*=>*/ {return animators[i].values[0].value});
+			return array_empty(animator.values)? 0 : animator.values[0].value;
 		}
 		
 		if(sep_axis) {
@@ -42,4 +44,14 @@ function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : N
 		
 		return animator.getValue(_time);
 	}
+	
+	static processType = function(_val) /*=>*/ {return _val};
 }
+
+function __NodeValue_IArray(_name, _node, _value, _tooltip = "", _length = 2) : __NodeValue_Array(_name, _node, _value, _tooltip, _length) constructor {
+	type = VALUE_TYPE.integer;
+	
+	static processType = function(_val) /*=>*/ {return array_map(_val, function(v) /*=>*/ {return round(v)})};
+}
+
+	

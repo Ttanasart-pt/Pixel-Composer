@@ -1631,6 +1631,7 @@
     {"name":"node_value_trigger","order":9,"path":"scripts/node_value_trigger/node_value_trigger.yy",},
     {"name":"node_value_types","order":3,"path":"scripts/node_value_types/node_value_types.yy",},
     {"name":"node_value_validators","order":4,"path":"scripts/node_value_validators/node_value_validators.yy",},
+    {"name":"node_value_vec2_array","order":28,"path":"scripts/node_value_vec2_array/node_value_vec2_array.yy",},
     {"name":"node_value_vec2_path","order":8,"path":"scripts/node_value_vec2_path/node_value_vec2_path.yy",},
     {"name":"node_value_vec2_range","order":17,"path":"scripts/node_value_vec2_range/node_value_vec2_range.yy",},
     {"name":"node_value_vec2","order":5,"path":"scripts/node_value_vec2/node_value_vec2.yy",},
