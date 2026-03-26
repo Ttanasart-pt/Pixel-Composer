@@ -13,7 +13,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 0, nodeValue_EScroll( "Main Axis",  0, __axis ));
 	newInput( 1, nodeValue_Int(     "Column",     4         )).setValidator(VV_min(1));
 	newInput( 2, nodeValue_Vec2(    "Spacing",   [0,0]      ));
-	newInput( 3, nodeValue_Padding( "Padding",   [0,0,0,0]  ));
+	newInput( 3, nodeValue_IPadding("Padding",   [0,0,0,0]  ));
 	
 	////- =Fix Grid
 	newInput( 5, nodeValue_Bool( "Fix Grid",   false ));

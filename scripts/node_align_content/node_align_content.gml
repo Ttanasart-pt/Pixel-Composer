@@ -4,12 +4,12 @@ function Node_Align_Content(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newActiveInput(1);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" )).setArrayDepth(1);
-	newInput(2, nodeValue_Color(   "Background", cola(c_black, 0) ));
+	newInput(0, nodeValue_Surface(  "Surface In" )).setArrayDepth(1);
+	newInput(2, nodeValue_Color(    "Background", cola(c_black, 0) ));
 	
 	////- =Alignment
-	newInput(3, nodeValue_Anchor(  "Align Anchor" ));
-	newInput(4, nodeValue_Padding( "Pad Content", [0,0,0,0] ));
+	newInput(3, nodeValue_Anchor(   "Align Anchor" ));
+	newInput(4, nodeValue_IPadding( "Pad Content", [0,0,0,0] ));
 	// 5
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone )).setArrayDepth(1);

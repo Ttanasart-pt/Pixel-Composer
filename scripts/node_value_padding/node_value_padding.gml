@@ -7,7 +7,6 @@ function __NodeValue_Padding(_name, _node, _value, _tooltip = "") : NodeValue(_n
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
-		
 		if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
 		if(validator != noone)          value = validator.validate(value);
 		
@@ -38,22 +37,39 @@ function __NodeValue_Padding(_name, _node, _value, _tooltip = "") : NodeValue(_n
 		
 		if(!getAnim()) {
 			if(sep_axis) return [
-				animators[0].values[0].value,
-				animators[1].values[0].value,
-				animators[2].values[0].value,
-				animators[3].values[0].value,
+				animators[0].values[0].value, animators[1].values[0].value,
+				animators[2].values[0].value, animators[3].values[0].value,
 			];
 			
 			return array_empty(animator.values)? 0 : animator.values[0].value;
 		}
 		
 		if(sep_axis) return [
-			animators[0].getValue(_time),
-			animators[1].getValue(_time),
-			animators[2].getValue(_time),
-			animators[3].getValue(_time),
+			animators[0].getValue(_time), animators[1].getValue(_time),
+			animators[2].getValue(_time), animators[3].getValue(_time),
 		];
 		
 		return animator.getValue(_time);
 	}
+}
+
+function   nodeValue_IPadding(_name, _value, _tooltip = "") { return new __NodeValue_IPadding(_name, self, _value, _tooltip); }
+function __NodeValue_IPadding(_name, _node, _value, _tooltip = "") : __NodeValue_Padding(_name, _node, _value, _tooltip) constructor {
+	setType(VALUE_TYPE.integer);
+	
+	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
+		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
+		if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
+		if(validator != noone)          value = validator.validate(value);
+		
+		var res = applyUnit? unit.apply(value, arrIndex) : value;
+		
+		res[0] = round(res[0]);
+		res[1] = round(res[1]);
+		res[2] = round(res[2]);
+		res[3] = round(res[3]);
+		
+		return res;
+	}
+	
 }

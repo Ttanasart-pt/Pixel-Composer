@@ -18,7 +18,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Padding
-	newInput( 1, nodeValue_Padding(     "Padding",             [0,0,0,0] )).setUnitSimple();
+	newInput( 1, nodeValue_IPadding(    "Padding",             [0,0,0,0] )).setUnitSimple();
 	newInput( 5, nodeValue_Enum_Button( "Pad Mode",             0, [ "Pad out", "Pad to size" ] ));
 	newInput( 6, nodeValue_Vec2(        "Target Dimension",     PROJ_SURF ));
 	newInput( 7, nodeValue_Enum_Button( "Horizontal Alignment", 0, array_create(3, THEME.inspector_surface_halign) ));

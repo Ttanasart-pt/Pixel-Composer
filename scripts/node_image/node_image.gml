@@ -28,8 +28,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Image";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
-	newInput(1, nodeValue_Padding( "Padding", [0, 0, 0, 0] ));
+	newInput( 0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
+	newInput( 1, nodeValue_IPadding( "Padding", [0, 0, 0, 0] ));
 		
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output("Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);

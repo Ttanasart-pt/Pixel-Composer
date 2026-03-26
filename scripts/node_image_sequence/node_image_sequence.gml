@@ -46,7 +46,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_input;
 	
 	newInput( 0, nodeValue_Path(    "Paths",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
-	newInput( 1, nodeValue_Padding( "Padding",      [0,0,0,0] )).rejectArray();
+	newInput( 1, nodeValue_IPadding("Padding",      [0,0,0,0] )).rejectArray();
 	newInput( 2, nodeValue_EScroll( "Canvas size",   0, [ "Individual", "Minimum", "Maximum" ] )).rejectArray();
 	newInput( 3, nodeValue_EScroll( "Sizing method", 0, [ "Padding / Crop", "Scale" ]          )).rejectArray();
 	

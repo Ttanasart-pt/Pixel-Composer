@@ -13,10 +13,10 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			       new scrollItem("Vertical",   s_node_alignment, 1), 
 			       new scrollItem("On top",     s_node_alignment, 3), ];
 			       
-	newInput(0, nodeValue_EScroll( "Axis",     0, _axis_enum                  ));
-	newInput(1, nodeValue_EButton( "Align",    1, [ "Start", "Middle", "End"] ));
-	newInput(2, nodeValue_Int(     "Spacing",  0                              ));
-	newInput(3, nodeValue_Padding( "Padding", [0,0,0,0]                       ));
+	newInput(0, nodeValue_EScroll(  "Axis",     0, _axis_enum                  ));
+	newInput(1, nodeValue_EButton(  "Align",    1, [ "Start", "Middle", "End"] ));
+	newInput(2, nodeValue_Int(      "Spacing",  0                              ));
+	newInput(3, nodeValue_IPadding( "Padding", [0,0,0,0]                       ));
 	
 	////- =Render
 	newInput(4, nodeValue_Enum_Scroll( "Blend Mode", 0, BLEND_TYPES ));

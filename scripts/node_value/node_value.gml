@@ -302,10 +302,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			index  = _index;
 			lIndex = _index;
 			
-			if(_index < 0) {
-				setVisible(true, true);
-				return self;
-			}
+			if(_index < 0) { setVisible(true, true); return self; }
 			
 			if(connect_type == CONNECT_TYPE.input) {
 				if(bypass_use) getBypassJunc().setIndex(index);
@@ -313,6 +310,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				if(node.is_dynamic_input) lIndex = (lIndex - node.input_fix_len) % node.data_length;
 			}
+			
+			return self;
 		}
 		
 		static setInternalName = function(_iname) {
@@ -1925,8 +1924,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		return array_create_ext(min(_af, _at), function(i) /*=>*/ {return lerp(__f[i], __t[i], __i)});
 	}
-	
-	static processType = function(_val) /*=>*/ {return _val};
 	
 	////- SET
 	

@@ -12,8 +12,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Slices
 	newInput( 1, nodeValue_Dimension());
-	newInput( 2, nodeValue_Padding( "Splice",       [.25,.25,.25,.25] )).setUnitSimple();
-	newInput( 3, nodeValue_EScroll( "Filling modes", 0, [ "Scale", "Repeat" ] ));
+	newInput( 2, nodeValue_IPadding( "Splice",       [.25,.25,.25,.25] )).setUnitSimple();
+	newInput( 3, nodeValue_EScroll(  "Filling modes", 0, [ "Scale", "Repeat" ] ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface,     noone ));
 	newOutput(1, nodeValue_Output("DynaSurf",    VALUE_TYPE.dynaSurface, new nineSliceSurf() ));

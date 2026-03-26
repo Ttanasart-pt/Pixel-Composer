@@ -50,8 +50,6 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
-	static processType = function(_val) /*=>*/ {return round(_val)};
-	
 	static arrayLength = arrayLengthSimple;
 	
 	////- Serialize

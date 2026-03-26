@@ -38,7 +38,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
     ]));
     
 	newInput(36, nodeValue_Vec2(        "Relative Dimension", [1,1]     ));
-	newInput(37, nodeValue_Padding(     "Padding",            [0,0,0,0] ));
+	newInput(37, nodeValue_IPadding(    "Padding",            [0,0,0,0] ));
 	newInput( 1, nodeValue_Dimension());
 	newInput(16, nodeValue_EButton(     "Array Select",        0 )).setChoices([ "Order", "Random", "Spread" ])
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");

@@ -23,8 +23,18 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : __NodeValue_Numb
 		if(typ == VALUE_TYPE.text) val = toNumber(val);
 		
 		if(is_struct(val) && struct_has(val, "to_real")) val = val.to_real();
+		var _d  = array_get_depth(val);
 		
-		return valueProcess(val, nod, applyUnit);
+		if(_d == 0) return valueProcess(val, nod, applyUnit);
+		if(_d == 1) {
+			var _intAmo = array_length(val);
+			var _intArr = array_create(_intAmo);
+			for( var i = 0; i < _intAmo; i++ )
+				_intArr[i] = valueProcess(_intArr[i], nod, applyUnit);
+			return _intArr;
+		}
+		
+		return val;
 	}
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
@@ -33,7 +43,6 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : __NodeValue_Numb
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
-	static processType = function(_val) /*=>*/ {return round(_val)};
 	static arrayLength = arrayLengthSimple;
 }
 

@@ -148,28 +148,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspector_display_list	= -1;
 		is_dynamic_output		= false;
 		
-		frameInput         = nodeValue_Float("Render Frame", 0).setIndex(-1);
-		inspectInput1      = nodeValue("Toggle Execution", self, CONNECT_TYPE.input, VALUE_TYPE.action,  false).setIndex(-1);
-		inspectInput2      = nodeValue("Toggle Execution", self, CONNECT_TYPE.input, VALUE_TYPE.action,  false).setIndex(-1);
-		updatedInTrigger   = nodeValue("Update",           self, CONNECT_TYPE.input, VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateInTrigger);
-		updatedOutTrigger  = nodeValue_Output("Updated", VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateOutTrigger);
+		frameInput           = nodeValue_Float(   "Render Frame",   0 ).setIndex(-1);
+		inspectInput1        = nodeValue_Action(  "Toggle Execution"  ).setIndex(-1);
+		inspectInput2        = nodeValue_Action(  "Toggle Execution"  ).setIndex(-1);
+		updatedInTrigger     = nodeValue_Trigger( "Update"            ).setIndex(-1).setTags(VALUE_TAG.updateInTrigger);
+		updatedOutTrigger    = nodeValue_Output(  "Updated", VALUE_TYPE.trigger, false ).setIndex(-1).setTags(VALUE_TAG.updateOutTrigger);
 		
-		is_dynamic_input   = false;
-		auto_input		   = false;
-		input_display_len  = 0;
-		input_fix_len	   = 0;
-		data_length        = 1;
-		inputs_data		   = [];
-		input_hash		   = "";
-		input_hash_raw	   = "";
+		is_dynamic_input     = false;
+		auto_input		     = false;
+		input_display_len    = 0;
+		input_fix_len	     = 0;
+		data_length          = 1;
+		inputs_data		     = [];
+		input_hash		     = "";
+		input_hash_raw	     = "";
 		
-		inputs_amount        = 0;
+		inputs_amount        =  0;
 		in_cache_len         = -4;
 		inputDisplayList     = [];
 		inputDisplayBypass   = [];
 		inputDisplayGroup    = [];
 		inputDisplayBuilding = false;
-		
 		outputDisplayList    = [];
 		
 		inputs_draw_index    = [];
@@ -186,14 +185,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		current_data = [];
 		junc_meta    = [
-			nodeValue_Output( "Name",     VALUE_TYPE.text,  ""    ),
-			nodeValue_Output( "Position", VALUE_TYPE.float, [0,0] ).setDisplay(VALUE_DISPLAY.vector),
+			nodeValue_Output( "Name",     VALUE_TYPE.text,  ""    )
+				.setIndex(0).setTags(VALUE_TAG.matadata),
+				
+			nodeValue_Output( "Position", VALUE_TYPE.float, [0,0] ).setDisplay(VALUE_DISPLAY.vector)
+				.setIndex(1).setTags(VALUE_TAG.matadata),
 		];
 		
-		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
-			junc_meta[i].index = i;
-			junc_meta[i].tags  = VALUE_TAG.matadata;
-		}
 	#endregion
 	
 	#region ---- Attributes ----

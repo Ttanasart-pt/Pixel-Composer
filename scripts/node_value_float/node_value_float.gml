@@ -1,14 +1,11 @@
-function __NodeValue_Number(_name, _node, _type, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, _type, _value, _tooltip) constructor {
+function nodeValue_Float(_name, _value, _tooltip = "") { return new __NodeValue_Float(_name, self, _value, _tooltip); }
+function __NodeValue_Float(_name, _node, _value, _tooltip = "") : __NodeValue_Number(_name, _node, VALUE_TYPE.float, _value, _tooltip) constructor {
 	anim_presets = [
 		[ "0, 1",  [[ 0, 0 ], [ 1, 1 ]], THEME.apreset_01 ], 
 		[ "1, 0",  [[ 0, 1 ], [ 1, 0 ]], THEME.apreset_10 ], 
 		[ "-1, 1", [[ 0,-1 ], [ 1, 1 ]], THEME.apreset_01 ], 
 		[ "1, -1", [[ 0, 1 ], [ 1,-1 ]], THEME.apreset_10 ], 
 	];
-}
-
-function nodeValue_Float(_name, _value, _tooltip = "") { return new __NodeValue_Float(_name, self, _value, _tooltip); }
-function __NodeValue_Float(_name, _node, _value, _tooltip = "") : __NodeValue_Number(_name, _node, VALUE_TYPE.float, _value, _tooltip) constructor {
 	
 	////- GET
 	

@@ -2663,7 +2663,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
     }
     
-    function callAddDialog(ctx = getCurrentContext(), conn = junction_hovering) { //
+    function callAddDialog(ctx = getCurrentContext(), conn = junction_hovering) { 
         var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
         connect_related = noone;
         
@@ -2688,12 +2688,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        		var _r = _rel[i]
 	        		var _k = $"graph_add_{_r}";
 	        		
-	        		if(struct_has(MENU_ITEMS, _k)) array_push(menu, MENU_ITEMS[$ _k]);
+	        		if(has(MENU_ITEMS, _k)) array_push(menu, MENU_ITEMS[$ _k]);
 	        	}
 	        	
-	        	var _dx  = o_dialog_add_node.dialog_x - ui(8);
-	        	var _dy  = o_dialog_add_node.dialog_y + ui(4);
-	        	var _dme = menuCall("graph_connection_releated", menu, _dx, _dy, fa_right );
+	        	if(array_length(menu))
+		        	menuCall("graph_connection_releated", menu, 
+		        		o_dialog_add_node.dialog_x - ui(8), 
+		        		o_dialog_add_node.dialog_y + ui(4), fa_right );
 	        	
 	            setFocus(_dia, "Dialog");
 	        }

@@ -45,13 +45,10 @@ function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : N
 		return animator.getValue(_time);
 	}
 	
-	static processType = function(_val) /*=>*/ {return _val};
 }
 
 function __NodeValue_IArray(_name, _node, _value, _tooltip = "", _length = 2) : __NodeValue_Array(_name, _node, _value, _tooltip, _length) constructor {
 	type = VALUE_TYPE.integer;
-	
-	static processType = function(_val) /*=>*/ {return array_map(_val, function(v) /*=>*/ {return round(v)})};
 }
 
 	

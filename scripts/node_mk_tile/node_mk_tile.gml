@@ -19,23 +19,23 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		new scrollItem("Godot Blob (48 sprites)",        s_mk_tile_sprite_type_2).setBlend(c_white),
 	];
 	
-	newInput( 2, nodeValue_EScroll( "Type",  0, { data: _tile_sprite_types, horizontal: 2, text_pad: ui(16) }));
-	newInput( 4, nodeValue_Padding( "Crop", [8,8,8,8] )).setType(VALUE_TYPE.integer);
-	newInput(17, nodeValue_Bool(    "Exclude Empty", false ));
+	newInput( 2, nodeValue_EScroll(  "Type",  0, { data: _tile_sprite_types, horizontal: 2, text_pad: ui(16) }));
+	newInput( 4, nodeValue_IPadding( "Crop", [8,8,8,8] ));
+	newInput(17, nodeValue_Bool(     "Exclude Empty", false ));
 	
 	////- =Edge
 	var _edge_types        = __enum_array_gen([ "Uniform", "Individual" ],           s_mk_tile_edge_type,      c_white);
 	var _edge_sprite_types = __enum_array_gen([ "Single", "Left + Center + Right" ], mk_tile_edge_sprite,      c_white);
 	var _edge_transform    = __enum_array_gen([ "Flip", "Rotate" ],                  s_mk_tile_edge_transform, c_white);
 	
-	newInput( 5, nodeValue_EScroll( "Edge Type",         0, _edge_types        ));
-	newInput(12, nodeValue_EScroll( "Edge Sprite",       0, _edge_sprite_types ));
-	newInput(13, nodeValue_EScroll( "Edge Transform",    0, _edge_transform    ));
-	newInput(10, nodeValue_Padding( "Edge Shift",       [0,0,0,0] )).setType(VALUE_TYPE.integer);
-	newInput(11, nodeValue_Toggle(  "Full Edge",         0,      { data: ["T","B","L","R"] }));
+	newInput( 5, nodeValue_EScroll(  "Edge Type",         0, _edge_types        ));
+	newInput(12, nodeValue_EScroll(  "Edge Sprite",       0, _edge_sprite_types ));
+	newInput(13, nodeValue_EScroll(  "Edge Transform",    0, _edge_transform    ));
+	newInput(10, nodeValue_IPadding( "Edge Shift",       [0,0,0,0] ));
+	newInput(11, nodeValue_Toggle(   "Full Edge",         0,      { data: ["T","B","L","R"] }));
 	
-	newInput(15, nodeValue_Toggle(  "Inner Edge",        0b1111, { data: ["T","B","L","R"] }));
-	newInput(16, nodeValue_Padding( "Inner Edge Shift", [0,0,0,0] )).setType(VALUE_TYPE.integer);
+	newInput(15, nodeValue_Toggle(   "Inner Edge",        0b1111, { data: ["T","B","L","R"] }));
+	newInput(16, nodeValue_IPadding( "Inner Edge Shift", [0,0,0,0] ));
 	
 	////- =Edge Texture
 	newInput(6, nodeValue_Surface( "Edge"        ));

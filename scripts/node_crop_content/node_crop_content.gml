@@ -11,7 +11,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(4, nodeValue_Color( "Background", cola(c_black, 0) ));
 	
 	////- =Padding
-	newInput(3, nodeValue_Padding( "Padding", [0,0,0,0], "Add padding back after crop."));
+	newInput(3, nodeValue_IPadding( "Padding", [0,0,0,0], "Add padding back after crop."));
 	// 5
 	
 	newOutput(0, nodeValue_Output( "Surface Out",   VALUE_TYPE.surface, noone     )).setArrayDepth(1);

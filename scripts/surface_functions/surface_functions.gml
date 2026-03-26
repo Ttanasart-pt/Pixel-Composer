@@ -891,6 +891,8 @@
 
 #region =================================== OTHERS ===================================
 
+	function surface_valid_size(s) { return !is_numeric(s) || is_infinity(s)? 1 : clamp(round(s), 1, 16384); }
+	
 	function surface_copy_size(dest, source, format = noone) {
 		INLINE
 	
@@ -905,14 +907,6 @@
 		surface_copy_from(dest, source);
 	}
 
-	function surface_valid_size(s) {
-		INLINE
-	
-		if(!is_numeric(s)) return 1;
-		if(is_infinity(s)) return 1;
-		return clamp(round(s), 1, 16384);
-	}
-	
 	function surface_array_verify(arr, length) {
 		if(!is_array(arr)) return array_create(length, noone);
 		var _len = array_length(arr);

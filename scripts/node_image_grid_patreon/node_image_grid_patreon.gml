@@ -7,7 +7,7 @@ function Node_Image_Grid_Patreon(_x, _y, _group = undefined) : Node(_x, _y, _gro
 	////- =Grid
 	newInput(1, nodeValue_Int(     "Column", 4)).setValidator(VV_min(1)).rejectArray();
 	newInput(2, nodeValue_Vec2(    "Spacing", [ 0, 0 ])).rejectArray();
-	newInput(3, nodeValue_Padding( "Padding", [ 0, 0, 0, 0 ])).rejectArray();
+	newInput(3, nodeValue_IPadding("Padding", [ 0, 0, 0, 0 ])).rejectArray();
 	
 	newOutput(0, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
 	

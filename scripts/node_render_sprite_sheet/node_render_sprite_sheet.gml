@@ -26,7 +26,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 5, nodeValue_EButton( "Alignment",    0, [ "First", "Middle", "Last" ])).rejectArray();
 	newInput( 6, nodeValue_Int(     "Spacing",      0        ));
 	newInput( 9, nodeValue_Vec2(    "Spacing",     [0,0]     ));
-	newInput( 7, nodeValue_Padding( "Padding",     [0,0,0,0] ));
+	newInput( 7, nodeValue_IPadding("Padding",     [0,0,0,0] ));
 	
 	////- =Rendering
 	/*UNUSED*/ newInput(10, nodeValue_Bool( "Overlappable", false ));

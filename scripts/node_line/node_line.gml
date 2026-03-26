@@ -25,7 +25,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	newInput(30, nodeValue_Bool(    "Use Path Bounding Box", false    ));
-	newInput(31, nodeValue_Padding( "Padding",              [0,0,0,0] ))
+	newInput(31, nodeValue_IPadding("Padding",              [0,0,0,0] ))
 	newInput(16, nodeValue_Bool(    "Width Pass",            false    ));
 	
 	////- =Background

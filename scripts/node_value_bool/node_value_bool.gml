@@ -19,8 +19,6 @@ function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
-	static processType = function(_val) /*=>*/ {return bool(_val)};
-	
 	static arrayLength = arrayLengthSimple;
 }
 
@@ -45,8 +43,6 @@ function __NodeValue_Active(_node) : NodeValue("Active", _node, CONNECT_TYPE.inp
 		if(getAnim()) return _anim.getValue(_time);
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
-	
-	static processType = function(_val) /*=>*/ {return bool(_val)};
 	
 	static arrayLength = arrayLengthSimple;
 	

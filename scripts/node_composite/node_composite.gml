@@ -417,7 +417,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	dynamic_input_inspecting = noone;
 	preview_select_surface   = false;
 	
-	newInput(0, nodeValue_Padding(     "Padding", [0,0,0,0] ));
+	newInput(0, nodeValue_IPadding(    "Padding", [0,0,0,0] ));
 	newInput(1, nodeValue_Enum_Scroll( "Output dimension", COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
 	newInput(2, nodeValue_Dimension()).setVisible(false);
 	
