@@ -1,6 +1,6 @@
 #region ___function calls
-    function panel_animation_settings_call() { var dia = dialogPanelCall(new Panel_Animation_Setting()); dia.anchor = ANCHOR.none;    }
-    function panel_animation_scale_call()    { dialogPanelCall(new Panel_Animation_Scaler());                                         }
+    function panel_animation_settings_call() { dialogPanelCall(new Panel_Animation_Setting(), noone, noone, {anchor:ANCHOR.none}); }
+    function panel_animation_scale_call()    { dialogPanelCall(new Panel_Animation_Scaler());                                      }
     
     function panel_animation_toggle_type()   { PANEL_ANIMATION.timeline_frame = !PANEL_ANIMATION.timeline_frame; }
     

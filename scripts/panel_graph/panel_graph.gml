@@ -4502,7 +4502,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var pan = new Panel_Action_Manager();
             pan.newAction(nodes_selecting);
             
-        var dia = dialogPanelCall(pan);
+        dialogPanelCall(pan);
     }
     
     function searchWiki() {

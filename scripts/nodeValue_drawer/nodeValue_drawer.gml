@@ -327,7 +327,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 						if(b == 2) {
 							if(jun.expUse)	jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.getExpresstionEditor(), function() /*=>*/ {return context.expression},  jun));
 							else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(wid, function() /*=>*/ {return context.showValue()}, jun));
-							jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
+							if(jun.popup_dialog) jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
 						}
 					}
 					

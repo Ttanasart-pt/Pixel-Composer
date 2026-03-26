@@ -275,7 +275,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					var _colrMap  = _data[21]; 
 					
 					var _thk_curved = inputs[6].attributes.curved;
-					var _col_curved = inputs[7].attributes.curved;
+					var _col_graded = inputs[7].attributes.graded;
 	    			
 					for( var i = 0; i <= _segs; i++ ) {
 						_p = _pth.getPointRatio(i * _isg, 0, _p);
@@ -300,7 +300,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					        nx = _points[i][0] + _drop * gravx;
 							ny = _points[i][1] + _drop * gravy;
 							nt = max(1, _thk * (_thk_curved? thick_curve.get(t) : 1));
-	        				nc = _col_curved? colorMultiply(cc, _colrMap.evalFast(t)) : cc;
+	        				nc = _col_graded? colorMultiply(cc, _colrMap.evalFast(t)) : cc;
 	        				
 					        if(_swng) {
 					        	var _phs   = swing_precal[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
