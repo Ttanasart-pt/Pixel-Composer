@@ -15,8 +15,8 @@ function sprite_add_map(path, imagenumb = 1, removeback = false, smooth = false,
 	var _sprs = undefined;
 	
 	switch(_extx) {
-		case ".bmp": _sprs = sprite_create_from_file(_path, removeback, smooth, xorig, yorig); break;
-		default:     _sprs = __sprite_add(_path, imagenumb, removeback, smooth, xorig, yorig); break;
+		// case ".bmp": _sprs = bmp_load(_path, removeback, smooth, xorig, yorig); break;
+		default: _sprs = __sprite_add(_path, imagenumb, removeback, smooth, xorig, yorig); 
 	}
 	
 	SPRITE_PATH_MAP[$ path] = _sprs;
@@ -53,8 +53,10 @@ function sprite_path_check_format(_path, noti = true) {
 	static path_magick  = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";
 	
 	var _extx = string_lower(filename_ext(_path));
-	var _name = filename_name_only(_path);
-	var proxy_path  = $"{TEMPDIR}{_name}_{seed_random(6)}.png";
+	var _fmod = file_get_modify_s(_path);
+	var _hash = md5_string_unicode($"{_path}{_fmod}");
+	var _prox = $"{TEMPDIR}{_hash}.png";
+	if(file_exists_empty(_prox)) return _prox;
 	
 	switch(_extx) {
 		case ".png":
@@ -63,19 +65,16 @@ function sprite_path_check_format(_path, noti = true) {
 			
 			if(noti) noti_warning($"{_data.depth} bits image is not supported. Proxy will be used.");
 			
-			var shell_cmd = $"convert \"{_path}\" -depth 8 \"{proxy_path}\"";
+			var shell_cmd = $"convert \"{_path}\" -depth 8 \"{_prox}\"";
 			shell_execute(path_magick, shell_cmd, self);
-			return proxy_path;
+			return _prox;
 			
+		case ".bmp": 
 		case ".tga": 
-			if(noti) noti_warning($"Used proxy for {_extx} file.");
-			shell_execute(path_convert, $"\"{_path}\" \"{proxy_path}\"");
-			return proxy_path;
-			
 		case ".webp": 
 			if(noti) noti_warning($"Used proxy for {_extx} file.");
-			shell_execute(path_convert, $"\"{_path}\" \"{proxy_path}\"");
-			return proxy_path;
+			shell_execute(path_convert, $"\"{_path}\" \"{_prox}\"");
+			return _prox;
 	}
 	
 	return _path;

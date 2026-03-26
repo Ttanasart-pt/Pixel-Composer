@@ -75,9 +75,9 @@ uniform sampler2D blend_alphaSurf;
 
 uniform int highRes;
 
-vec4 blendColor(vec4 base, vec4 colr, float alpha) {
+vec4 blendColor(vec4 base, vec4 colr) {
 	float ba = base.a;
-	float ca = colr.a * alpha;
+	float ca = colr.a;
 	float al = ca + ba * (1. - ca);
 	
 	vec4 res = ((base * ba * (1. - ca)) + (colr * ca)) / al;
@@ -254,14 +254,18 @@ void main() {
 	if(_aa == 0.) return;
 	
 	if(is_blend == 0) {
-		resultColor   = blendColor(borderColor, baseColor, _aa);
-		resultOutline = borderColor;
+		vec4 bcol = vec4(borderColor.rgb, borderColor.a * _aa);
+		
+		resultColor   = blendColor(bcol, baseColor);
+		resultOutline = bcol;
 		
 	} else {
-		resultColor = blendColor(borderColor, side == 0? baseColor : closetColor, _aa * bld);
-		resultColor.a = _aa;
+		vec4 bcol = vec4(borderColor.rgb, borderColor.a * _aa * bld);
 		
-		resultOutline = blendColor(borderColor, side == 0? vec4(0.) : closetColor, _aa * bld);
+		resultColor     = blendColor(bcol, side == 0? baseColor : closetColor);
+		resultColor.a   = _aa;
+		
+		resultOutline   = blendColor(bcol, side == 0? vec4(0.) : closetColor);
 		resultOutline.a = _aa;
 	}
 	

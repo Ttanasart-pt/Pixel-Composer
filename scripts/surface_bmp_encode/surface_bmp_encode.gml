@@ -90,3 +90,35 @@ function surface_bmp_encode(surface, path, param = {}) {
     buffer_delete(bs);
     return 1;
 }
+
+function bmp_load(path, removeback, smooth, xorig, yorig) {
+	image_load(path);
+	
+	var width   = image_get_width(path);
+	var height  = image_get_height(path);
+	var channel = buffer_sizeof(buffer_u64);
+	var flipY   = height < 0;
+	
+	var width   = abs(width);
+	var height  = abs(height);
+	if(width <= 0 || height <= 0) return -1;
+	
+	var buffer = buffer_create(channel * width * height, buffer_fixed, channel);
+	if (!buffer_exists(buffer)) return -1;
+	buffer_poke(buffer, buffer_get_size(buffer) - 1, buffer_u8, 0);
+	
+	var surface = surface_create(width, height);
+	surface_set_target(surface);
+	    draw_clear_alpha(c_black, 0);
+	    
+	    image_set_buffer(path, buffer_get_address(buffer));
+	    buffer_set_surface(buffer, surface, 0);
+	    if (!surface_exists(surface)) return -1;
+	surface_reset_target();
+	
+	var sprite = sprite_create_from_surface(surface, 0, 0, width, height, removeback, smooth, xorig, yorig);
+	surface_free(surface);
+	buffer_delete(buffer);
+
+	return sprite;
+}
