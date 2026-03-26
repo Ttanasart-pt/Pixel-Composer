@@ -169,13 +169,13 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     	        UNDO_HOLDING = true;
     	    triggerRender();
     	    
-    	    if(mouse_release(mb_left)) {
+    	    if(mouse_lrelease()) {
     	        UNDO_HOLDING = false;
     	        tag_dragging = noone;
     	    }
     	    
     	} else if(_tag_hov != noone) {
-    	    if(mouse_press(mb_left, active)) {
+    	    if(mouse_lpress(active)) {
     	        _tag_pos = array_verify_ext(_tag_pos, max(1, process_amount), function() /*=>*/ {return [ 0, 0 ]});
     	        
     	        tag_dragging    = _tag_hov;
@@ -188,7 +188,7 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     	    }
     	}
     	
-    	return _tag_hov != noone;
+    	return _tag_hov != noone || tag_dragging != noone;
 	}
 	
 	static processData_prebatch  = function() {

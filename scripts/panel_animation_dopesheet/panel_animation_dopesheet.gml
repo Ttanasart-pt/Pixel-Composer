@@ -237,8 +237,10 @@ function Panel_Animation_Dopesheet() {
         	var _nodes = PANEL_GRAPH.nodes_selecting;
         	
         	for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
-        		var _item = _nodes[i].timeline_item;
+        		var _node = _nodes[i];
+        		if(!_node.active || !_node.isAnimated()) continue;
         		
+        		var _item = _node.timeline_item;
 	        	_item.removeSelf();
                 array_push(_dir.contents, _item);
                 _item.parent = _dir;

@@ -595,10 +595,8 @@ function Panel_Menu() : PanelContent() constructor {
                 if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
                     _draggable = false;
                     draw_sprite_stretched_ext(THEME.box_r2_clr, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
-                    if(mouse_press(mb_left, pFOCUS)) {
-                        var dia = dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4));
-                        dia.anchor = ANCHOR.left | ANCHOR.top;
-                    }
+                    if(mouse_lpress(pFOCUS))
+                        dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4), { anchor: ANCHOR.left | ANCHOR.top });
                     
                     TOOLTIP = $"{warning_amo} {__txt("Warnings")} {error_amo} {__txt("Errors")}";
                 } else
