@@ -910,7 +910,7 @@
 	
 		if(!is_numeric(s)) return 1;
 		if(is_infinity(s)) return 1;
-		return clamp(round(s), 1, 8192);
+		return clamp(round(s), 1, 16384);
 	}
 	
 	function surface_array_verify(arr, length) {
