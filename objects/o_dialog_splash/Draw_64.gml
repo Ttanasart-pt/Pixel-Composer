@@ -24,7 +24,7 @@ if !ready exit;
 	var ww  = string_width(txt) + ui(8);
 	var hh  = line_get_height(, 4);
 	if(buttonInstant(bhf, bx - ui(4), by - ui(2), ww, hh, m, hov, foc) == 2)
-		dialogCall(o_dialog_release_note, WIN_W / 2, WIN_H / 2);
+		dialogPanelCall(new Panel_Release_Note(), noone, noone, { toggle: true }); 
 	
 	draw_text(bx, by, txt);
 	

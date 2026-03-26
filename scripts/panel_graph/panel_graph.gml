@@ -256,10 +256,14 @@
         registerFunction(g, "Transfer Connections",  "T", a, panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
 		
 		registerFunction(g, "Export Hovering Node",   "",  n, panel_graph_send_to_export ).setMenu("graph_export_hover")
-        registerFunction(g, "Export As Image...",     "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) }).setMenu("graph_export_image",        THEME.icon_preview_export   )
-        registerFunction(g, "Connection Settings...", "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Connection_Setting())      }).setMenu("graph_connection_settings", THEME.icon_curve_connection ).setSpriteInd(function() /*=>*/ {return PANEL_GRAPH.project.graphConnection.type})
-        registerFunction(g, "Grid Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings",       THEME.icon_grid_setting     ).setSpriteInd(function() /*=>*/ {return 1})
-        registerFunction(g, "View Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PROJECT.graphDisplay)) }).setMenu("graph_view_settings", THEME.icon_visible_setting )
+        registerFunction(g, "Export As Image...",     "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) })
+        	.setMenu("graph_export_image",        THEME.icon_preview_export           )
+        registerFunction(g, "Connection Settings...", "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Connection_Setting())      })
+        	.setMenu("graph_connection_settings", THEME.icon_curve_connection_setting ).setSpriteInd(function() /*=>*/ {return PANEL_GRAPH.project.graphConnection.type})
+        registerFunction(g, "Grid Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Grid_Setting())            })
+        	.setMenu("graph_grid_settings",       THEME.icon_grid_setting             ).setSpriteInd(function() /*=>*/ {return 1})
+        registerFunction(g, "View Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PROJECT.graphDisplay)) })
+        	.setMenu("graph_view_settings",       THEME.icon_visible_setting          )
         
 		registerFunction(g, "Toggle Topbar",       "", n, panel_graph_topbar_toggle  ).setMenu("graph_topbar_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_topbar});
 		registerFunction(g, "Show Topbar",         "", n, panel_graph_topbar_show    ).setMenu("graph_topbar_show");

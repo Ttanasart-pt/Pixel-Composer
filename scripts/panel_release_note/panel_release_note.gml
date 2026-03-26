@@ -1,7 +1,7 @@
 function Panel_Release_Note() : PanelContent() constructor {
-	title    = "Release note";
-	w        = ui(800);
-	h        = ui(560);
+	title = "Release note";
+	w     = ui(800);
+	h     = ui(560);
 	auto_pin = true;
 	
 	#region data

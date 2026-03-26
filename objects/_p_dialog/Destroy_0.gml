@@ -5,6 +5,6 @@ if(refocus) setFocus(prefocus);
 
 widget_reset();
 ds_list_remove(DIALOGS, self);
-DIALOG_JUST_CLOSED = "dialog";
+DIALOG_JUST_CLOSED = string(object_get_name(object_index));
 
 if(parent) array_remove(parent.children, id);

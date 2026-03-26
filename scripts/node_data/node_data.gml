@@ -2441,6 +2441,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			surf = array_safe_get(surf, preview_index);
 		}
 		
+		if(is(surf, dynaSurf))
+			surf = surf.getSurface();
+		
 		preview_surface    = surf;
 		preview_is_surface = is_just_surface(surf);
 		if(!preview_is_surface) return;

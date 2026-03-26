@@ -126,6 +126,7 @@
     "icon_center_canvas":                 { "path": "./icon/s_icon_center_canvas.png",                      "s": 1, "x": 12, "y": 12 },
     "icon_cmd_enter":                     { "path": "./icon/s_icon_cmd_enter.png",                          "s": 1, "x":  8, "y":  8 },
     "icon_curve_connection":              { "path": "./icon/s_icon_curve_connection.png",                   "s": 4, "x": 12, "y": 12 },
+    "icon_curve_connection_setting":      { "path": "./icon/s_icon_curve_connection_setting.png",           "s": 4, "x": 12, "y": 12 },
     "icon_delete":                        { "path": "./icon/s_delete_16.png",                               "s": 1, "x":  8, "y":  8 },
     "icon_delete_24":                     { "path": "./icon/s_delete_24.png",                               "s": 1, "x": 12, "y": 12 },
     "icon_default":                       { "path": "./icon/s_default_16.png",                              "s": 1, "x":  8, "y":  8 },

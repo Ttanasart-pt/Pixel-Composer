@@ -1,4 +1,6 @@
 function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
+	if(DIALOG_JUST_CLOSED == object_get_name(_dia)) return undefined;
+	
 	if(_x == noone) _x = WIN_SW / 2;
 	if(_y == noone) _y = WIN_SH / 2;
 	
@@ -18,24 +20,42 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	return dia;
 }
 
-function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
-	if(DIALOG_JUST_CLOSED == instanceof(_panel)) return;
+function dialogPanelCall(_panel, _x = noone, _y = noone, params = undefined) {
+	var _panelName = instanceof(_panel);
+	if(DIALOG_JUST_CLOSED == _panelName) return undefined;
+	
+	var _toggle = false;
+	if(params != undefined) 
+		_toggle = params[$ "toggle"] ?? false;
+	
+	if(_toggle) {
+		var _open = false;
+		with(o_dialog_panel) {
+			if(instanceof(content) != _panelName) continue;
+			
+			_open = true;
+			instance_destroy();
+		}
+		
+		if(_open) return undefined;
+	} 
 	
 	if(_x == noone) _x = WIN_SW / 2;
 	if(_y == noone) _y = WIN_SH / 2;
 	
 	var dia = instance_create_depth(_x, _y, 0, o_dialog_panel);
-	variable_instance_set_struct(dia, params);
+	if(params != undefined) variable_instance_set_struct(dia, params);
 	dia.setContent(_panel);
 	
 	dia.x      = _x;
 	dia.y      = _y;
 	dia.xstart = _x;
 	dia.ystart = _y;
-	dia.anchor = params[$ "anchor"] ?? _panel.anchor;
+	if(params != undefined) 
+		dia.anchor = params[$ "anchor"] ?? _panel.anchor;
 	dia.resetPosition();
 	
-	if(struct_try_get(params, "focus", true))
+	if(params != undefined && (params[$ "focus"] ?? true))
 		setFocus(dia.id, _panel.context_str);
 	return dia;
 }
