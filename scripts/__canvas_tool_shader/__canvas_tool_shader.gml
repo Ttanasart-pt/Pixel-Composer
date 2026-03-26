@@ -21,7 +21,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 	static stepMaskEffect = function( hover, active, _x, _y, _s, _mx, _my ) {}
 	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
-		if(mouse_press(mb_right)) { PANEL_PREVIEW.tool_current = noone; return; }
+		if(mouse_rpress()) { PANEL_PREVIEW.tool_current = noone; return; }
 				
 		var _dim  = node.attributes.dimension;
 		var _sel  = node.selection;

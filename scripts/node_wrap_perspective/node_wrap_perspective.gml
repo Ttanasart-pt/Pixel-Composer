@@ -59,7 +59,7 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			dx = (_mx - drag_mx) / _s;
 			dy = (_my - drag_my) / _s;
 				
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				drag_side = -1;	
 				UNDO_HOLDING = false;
 			}
@@ -145,7 +145,7 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			draw_set_color(COLORS._main_accent);
 			if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], tr[0], tr[1]) < 12) {
 				draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_side = tool * 4 + 2;
 					drag_mx = _mx;
 					drag_my = _my;
@@ -153,7 +153,7 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 				}
 			} else if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], bl[0], bl[1]) < 12) {
 				draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_side = tool * 4 + 3;
 					drag_mx = _mx;
 					drag_my = _my;
@@ -161,7 +161,7 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 				}
 			} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], tr[0], tr[1]) < 12) {
 				draw_line_width(br[0], br[1], tr[0], tr[1], 3);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_side = tool * 4 + 4;
 					drag_mx = _mx;
 					drag_my = _my;
@@ -169,7 +169,7 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 				}
 			} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], bl[0], bl[1]) < 12) {
 				draw_line_width(br[0], br[1], bl[0], bl[1], 3);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_side = tool * 4 + 5;
 					drag_mx = _mx;
 					drag_my = _my;

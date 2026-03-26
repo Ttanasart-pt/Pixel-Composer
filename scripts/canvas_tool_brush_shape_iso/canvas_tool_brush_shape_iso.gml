@@ -42,7 +42,7 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 				mouse_points[0][0] = mouse_cur_x;
 				mouse_points[0][1] = mouse_cur_y;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					mouse_points[1][0] = mouse_cur_x;
 					mouse_points[1][1] = mouse_cur_y;
 				
@@ -72,7 +72,7 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 					mouse_points[1][1] = mouse_cur_y;
 				}
 				
-				if(mouse_release(mb_left))
+				if(mouse_lrelease())
 					mouse_holding = 2;
 				
 				break;
@@ -80,7 +80,7 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 			case 2 :
 				mouse_points[2] = mouse_cur_y - mouse_points[1][1];
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					apply_draw_surface();
 					mouse_holding = 0;
 				}

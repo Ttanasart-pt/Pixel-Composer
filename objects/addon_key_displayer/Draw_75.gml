@@ -74,18 +74,18 @@
 			
 			var mp = 0;
 			if(DOUBLE_CLICK)				 mp = 2;
-			else if(mouse_lpress(mb_left))	 mp = 1.3;
+			else if(mouse_lpress())	 mp = 1.3;
 			else if(mouse_lrelease()) mp = 1.3;
-			else if(mouse_lclick(mb_left))	 mp = 1;
+			else if(mouse_lclick())	 mp = 1;
 		
 			array_push(mouse_left, mp);
 			if(array_length(mouse_left) > WIN_W)
 				array_delete(mouse_left, 0, 1);
 		
 			var mp = 0;
-			     if(mouse_rpress(mb_right))	  mp = 1.3;
-			else if(mouse_rrelease(mb_right)) mp = 1.3;
-			else if(mouse_rclick(mb_right))	  mp = 1;
+			     if(mouse_rpress())	  mp = 1.3;
+			else if(mouse_rrelease()) mp = 1.3;
+			else if(mouse_rclick())	  mp = 1;
 		
 			array_push(mouse_right, mp);
 			if(array_length(mouse_right) > WIN_W)
@@ -115,9 +115,9 @@
 		var cc = PEN_USE? COLORS._main_accent : c_white;
 		
 			 if(DOUBLE_CLICK)       	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_value_positive, 1);
-		else if(mouse_click(mb_left))	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
+		else if(mouse_lclick())	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 		
-		if(mouse_click(mb_right))		draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
+		if(mouse_rclick())		draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 		if(mouse_click(mb_middle))		draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 			
 		if(MOUSE_WHEEL > 0)             draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);

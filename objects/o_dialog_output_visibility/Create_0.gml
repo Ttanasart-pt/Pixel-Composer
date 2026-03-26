@@ -30,12 +30,12 @@ event_inherited();
 				draw_sprite_stretched(THEME.node_bg, 0, ui(2), _yy + ui(2), ui(32 - 4), hh - ui(4));
 				BLEND_NORMAL
 				
-				if(mouse_press(mb_left, sFOCUS)) {
+				if(mouse_lpress(sFOCUS)) {
 					hold = !output.visible
 					output.visible = hold;
 				}
 				
-				if(mouse_click(mb_left, sFOCUS)) 
+				if(mouse_lclick(sFOCUS)) 
 					output.visible = hold;
 			}
 			

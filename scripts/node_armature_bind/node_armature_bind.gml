@@ -75,7 +75,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -158,7 +158,7 @@
 			if(node.inputs[surface_selecting + 1].setValue(val))
 				UNDO_HOLDING = true;
 			
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -243,7 +243,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -394,7 +394,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 							
 						if(_hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss)) {
 							TOOLTIP = [ _surf, VALUE_TYPE.surface ];
-							if(mouse_press(mb_left, _focus)) {
+							if(mouse_lpress(_focus)) {
 								layer_dragging  = _sid;
 								boneIDMap[_sid] = "";
 							}
@@ -430,7 +430,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			ds_stack_destroy(_bst);
 			
-			if(layer_dragging != noone && hovering && mouse_release(mb_left)) {
+			if(layer_dragging != noone && hovering && mouse_lrelease()) {
 				boneIDMap[layer_dragging] = hovering.ID;
 				layer_dragging = noone;
 				triggerRender();
@@ -482,7 +482,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
 				
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						layer_remove = _ind;
 				} else 
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
@@ -493,7 +493,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
 						draw_sprite_ui_uniform(THEME.reset_16, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
 					
-						if(mouse_press(mb_left, _focus))
+						if(mouse_lpress(_focus))
 							resetTransform(_ind);
 					} else 
 						draw_sprite_ui_uniform(THEME.reset_16, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
@@ -510,10 +510,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 				
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						hold_visibility = !_vis[_ind];
 					
-					if(mouse_click(mb_left, _focus) && _vis[_ind] != hold_visibility) {
+					if(mouse_lclick(_focus) && _vis[_ind] != hold_visibility) {
 						_vis[_ind] = hold_visibility;
 						doUpdate();
 					}
@@ -524,10 +524,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
 				
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						hold_select = !_sel[_ind];
 					
-					if(mouse_click(mb_left, _focus) && _sel[_ind] != hold_select)
+					if(mouse_lclick(_focus) && _sel[_ind] != hold_select)
 						_sel[_ind] = hold_select;
 				} else 
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
@@ -583,7 +583,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						tb_rename.activate(_txt);
 					}
 					
-					if(!_mesh && mouse_press(mb_left, _focus)) {
+					if(!_mesh && mouse_lpress(_focus)) {
 						_layer_dragging = _ind;
 						_layer_drag_y	= _m[1];
 						
@@ -605,9 +605,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 		#endregion
 		
-		if(mouse_release(mb_left)) _layer_dragging = noone;
+		if(mouse_lrelease()) _layer_dragging = noone;
 			
-		if(layer_dragging != noone && mouse_release(mb_left)) {
+		if(layer_dragging != noone && mouse_lrelease()) {
 			if(layer_dragging != hoverIndex && hoverIndex != noone) {
 				var index = input_fix_len + layer_dragging * data_length;
 				var targt = input_fix_len + hoverIndex * data_length;
@@ -924,7 +924,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(inputs[surf_dragging + 1].setValue(_tran))
 				UNDO_HOLDING = true;	
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				surf_dragging = -1;
 				UNDO_HOLDING = false;
 			}
@@ -1130,7 +1130,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 		}
 		
-		if(selection_freeze == 0 && mouse_press(mb_left, active)) surface_selecting = hovering;
+		if(selection_freeze == 0 && mouse_lpress(active)) surface_selecting = hovering;
 			
 		if(surface_selecting != noone) {
 			var a = array_safe_get_fast(anchors, surface_selecting, noone);
@@ -1151,7 +1151,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
 			}
 			
-			if(mouse_press(mb_left, active && hovering_type != noone)) {
+			if(mouse_lpress(active && hovering_type != noone)) {
 				var _tran = current_data[hovering + 1];
 				var _aang = current_data[hovering + 2];
 				var _asca = current_data[hovering + 3];

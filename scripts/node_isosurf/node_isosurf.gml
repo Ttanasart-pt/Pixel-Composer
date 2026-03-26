@@ -80,11 +80,11 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		knob_hover = _khover;
 		
-		if(mouse_press(mb_left, _focus) && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh))
+		if(mouse_lpress(_focus) && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh))
 			knob_select = knob_hover;
 		
 		if(knob_dragging == noone) {
-			if(knob_hover >= 0 && mouse_press(mb_left, _focus)) {
+			if(knob_hover >= 0 && mouse_lpress(_focus)) {
 				knob_dragging = knob_hover;
 				drag_sv = _angle[knob_hover];
 				drag_sa = point_direction(_kx, _ky, _m[0], _m[1]);
@@ -97,7 +97,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			if(inputs[3].setValue(_angle)) UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				knob_dragging = noone;
 		}
 		

@@ -185,7 +185,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							dragging_index = -1;
 							UNDO_HOLDING   = false;	
 						
-						} else if(mouse_release(mb_left)) {
+						} else if(mouse_lrelease()) {
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;
 							dragging_index = -1;
@@ -200,7 +200,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							onModify(_cr, 1);
 							onModify(_cr, 2);
 							
-						} else if(mouse_press(mb_left, active)) {
+						} else if(mouse_lpress(active)) {
 							dragging_index = 2;
 						
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -258,7 +258,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							dragging_index = -1;
 							UNDO_HOLDING   = false;	
 						
-						} else if(mouse_release(mb_left)) {
+						} else if(mouse_lrelease()) {
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;
 							dragging_index = -1;
@@ -271,7 +271,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 						if(DOUBLE_CLICK) {
 							onModify(0, 2);
 							
-						} else if(mouse_press(mb_left, active)) {
+						} else if(mouse_lpress(active)) {
 							dragging_index = 2;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -344,7 +344,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							dragging_index = -1;
 							UNDO_HOLDING   = false;	
 						
-						} else if(mouse_release(mb_left)) {
+						} else if(mouse_lrelease()) {
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;
 							dragging_index = -1;
@@ -359,7 +359,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							onModify(_cr, 1);
 							onModify(_cr, 2);
 							
-						} else if(mouse_press(mb_left, active)) {
+						} else if(mouse_lpress(active)) {
 							dragging_index = 1;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -374,7 +374,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							onModify(_cr, 3);
 							onModify(_cr, 4);
 							
-						} else if(mouse_press(mb_left, active)) {
+						} else if(mouse_lpress(active)) {
 							dragging_index = 2;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -446,7 +446,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							dragging_index = -1;
 							UNDO_HOLDING   = false;	
 						
-						} else if(mouse_release(mb_left)) {
+						} else if(mouse_lrelease()) {
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;
 							dragging_index = -1;
@@ -459,7 +459,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 						if(DOUBLE_CLICK) {
 							onModify(0, 3);
 							
-						} else if(mouse_press(mb_left, active)) {
+						} else if(mouse_lpress(active)) {
 							dragging_index = 1;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -471,7 +471,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 						if(DOUBLE_CLICK) {
 							onModify(0, 3);
 							
-						} else if(mouse_press(mb_left, active)) {
+						} else if(mouse_lpress(active)) {
 							dragging_index = 2;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];

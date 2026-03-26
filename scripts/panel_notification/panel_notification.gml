@@ -62,7 +62,7 @@ function Panel_Notification() : PanelContent() constructor {
 		draw_set_font(f_p3);
 		var timeW = string_width("00:00:00");
 		
-		if(mouse_press(mb_right, pFOCUS))
+		if(mouse_rpress(pFOCUS))
 			noti_selecting = noone;
 						
 		for( var i = 0; i < amo; i++ ) {
@@ -93,10 +93,10 @@ function Panel_Notification() : PanelContent() constructor {
 					if(noti.tooltip != "")
 						TOOLTIP = noti.tooltip;
 				
-					if(noti.onClick != noone && mouse_press(mb_left, pFOCUS))
+					if(noti.onClick != noone && mouse_lpress(pFOCUS))
 						noti.onClick(noti.param);
 				
-					if(mouse_press(mb_right, pFOCUS))
+					if(mouse_rpress(pFOCUS))
 						noti_selecting = noti;
 				}
 				
@@ -165,7 +165,7 @@ function Panel_Notification() : PanelContent() constructor {
 		sp_noti.setFocusHover(pFOCUS, pHOVER);
 		sp_noti.draw(px, py, mx - px, my - py);
 		
-		if(mouse_press(mb_right, pFOCUS))
+		if(mouse_rpress(pFOCUS))
 			menuCall("notification_log_menu", noti_selecting == noone? rightClickMenu : rightClickMenu_item);
 	}
 }

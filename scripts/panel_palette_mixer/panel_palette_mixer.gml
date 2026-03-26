@@ -209,7 +209,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 					}
 					
 					if(pHOVER && point_in_rectangle(mx, my, _x0, _y0 + 1, _x0 + _pw, _y0 + _ph)) {
-						if(mouse_press(mb_left)) {
+						if(mouse_lpress()) {
 							node_selecting = noone;
 							CURRENT_COLOR  = palette[i];
 							
@@ -257,7 +257,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 						instance_destroy(o_dialog_menubox);
 					}
 					
-					if(mouse_release(mb_left))
+					if(mouse_lrelease())
 						pal_draging = false;
 				}
 				
@@ -405,7 +405,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 				}
 				
 				if(node_hovering) {
-					if(mouse_press(mb_left)) {
+					if(mouse_lpress()) {
 						node_selecting = node_hovering;
 						node_dragging = node_hovering;
 						node_drag_mx  = mx;
@@ -423,17 +423,17 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 						save_palette_mixer(palette_data);
 					}
 					
-					if(mouse_press(mb_right))
+					if(mouse_rpress())
 						connection_drag = _ind;
 				
 				} else if(blnd_hovering != noone) {
 					
-					if(mouse_click(mb_left)) {
+					if(mouse_lclick()) {
 						node_selecting = noone;
 						CURRENT_COLOR = palette_data.blends[blnd_hovering].color;
 					}
 					
-					if(mouse_press(mb_right)) {
+					if(mouse_rpress()) {
 						conn_menu_ctx = [ blnd_hovering ];
 						
 						menuCall("", [
@@ -479,12 +479,12 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 						save_palette_mixer(palette_data);
 					}
 					
-					if(mouse_click(mb_left)) {
+					if(mouse_lclick()) {
 						node_selecting = noone;
 						CURRENT_COLOR = _cc;
 					}
 					
-					if(mouse_press(mb_right)) {
+					if(mouse_rpress()) {
 						conn_menu_ctx = [ conn[0], conn[1], _con_rat ];
 						
 						menuCall("", [
@@ -494,7 +494,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 					
 				} else if(_pHover) {
 					
-					if(mouse_press(mb_left)) 
+					if(mouse_lpress()) 
 						node_selecting = noone;
 						
 					if(DOUBLE_CLICK) {
@@ -506,7 +506,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 						save_palette_mixer(palette_data);
 					}
 					
-					if(mouse_press(mb_right)) {
+					if(mouse_rpress()) {
 						menuCall("", [
 							menuItem("Center view", function() { centerView(); } ),
 							-1,
@@ -525,7 +525,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 				}
 				
 				if(connection_drag >= 0) {
-					if(mouse_release(mb_right)) {
+					if(mouse_rrelease()) {
 						if(_ind == noone) {
 							var _pal  = _palettes[connection_drag];
 							var _node = { color : _pal.color, x : value_snap(_mmx, 8), y : value_snap(_mmy, 8) };
@@ -558,7 +558,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 					node_dragging.x = value_snap(node_drag_sx + (mx - node_drag_mx), 8);
 					node_dragging.y = value_snap(node_drag_sy + (my - node_drag_my), 8);
 					
-					if(mouse_release(mb_left)) {
+					if(mouse_lrelease()) {
 						node_dragging = false;
 						save_palette_mixer(palette_data);
 					}
@@ -609,7 +609,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 					if(DRAGGING.type == "Color") {
 						draw_sprite_stretched_ext(THEME.box_r2, 0, _mx_x + _xx - _gs / 2, _mx_y + _yy - _gs / 2, _gs, _gs, DRAGGING.data, 0.75);
 						
-						if(mouse_release(mb_left)) {
+						if(mouse_lrelease()) {
 							var _node = { color : DRAGGING.data, x : _rx, y : _ry };
 							array_push(palette_data.nodes, _node);
 								
@@ -654,7 +654,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 							_colPrev = _colCurr;
 						}
 						
-						if(mouse_release(mb_left)) {
+						if(mouse_lrelease()) {
 							for (var i = 0; i < _amo; i++) {
 								var _node = { color : _pal[i], x : _pxs[i], y : _pys[i] };
 								array_push(palette_data.nodes, _node);

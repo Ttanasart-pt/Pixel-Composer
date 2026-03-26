@@ -134,10 +134,10 @@ Libraries in the global scope will be add to project automatically.";
             draw_text_add(ui(8), yy + hg / 2, _lib);
             
             if(new_file_type == noone && _hov) {
-                if(mouse_press(mb_left, _focus))
+                if(mouse_lpress(_focus))
                     open(_hig? noone : _lib, 0);
                     
-                if(mouse_press(mb_right, _focus)) {
+                if(mouse_rpress(_focus)) {
                     lib_selecting      = _lib;
                 	lib_selecting_type = 0;
                 	
@@ -175,10 +175,10 @@ Libraries in the global scope will be add to project automatically.";
             draw_text_add(ui(8), yy + hg / 2, _lib);
             
             if(new_file_type == noone && _hov) {
-                if(mouse_press(mb_left, _focus))
+                if(mouse_lpress(_focus))
                     open(_hig? noone : _lib, 1);
                     
-                if(mouse_press(mb_right, _focus)) {
+                if(mouse_rpress(_focus)) {
                     lib_selecting      = _lib;
                 	lib_selecting_type = 1;
                 	
@@ -321,7 +321,7 @@ Libraries in the global scope will be add to project automatically.";
     		draw_sprite_ui(THEME.cross, 0, px + _tw - 8 - 4, py + _th / 2, .5, .5, 0, _hov? COLORS._main_value_negative : COLORS._main_icon, .5 + .5 * _hov);
     		gpu_set_tex_filter(false);
     		
-    		if(_hov && mouse_press(mb_left, pFOCUS))
+    		if(_hov && mouse_lpress(pFOCUS))
     		    open();
 		    
 		}

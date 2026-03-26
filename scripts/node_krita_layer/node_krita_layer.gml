@@ -36,7 +36,7 @@ function Node_Krita_layer(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + hh - 1)) {
 				cc = COLORS._main_text;
 				
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					inputs[1].setValue(_layer.name);
 			}
 			

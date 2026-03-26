@@ -83,7 +83,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 			
 			var _bc = newAction.outputNode == i? COLORS._main_value_negative : COLORS._main_icon_dark;
 			draw_sprite_ui(THEME.arrow, 1, _bw - ui(12), yy + _bh / 2, 1, 1, 0, _bc);
-			if(mouse_press(mb_left, _hv)) newAction.outputNode = newAction.outputNode == i? noone : i;
+			if(mouse_lpress(_hv)) newAction.outputNode = newAction.outputNode == i? noone : i;
 			_bw -= ui(28);
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], _bw - ui(24), yy, _bw, yy + _bh);
@@ -93,7 +93,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 			
 			var _bc = newAction.inputNode == i? COLORS._main_value_positive : COLORS._main_icon_dark;
 			draw_sprite_ui(THEME.arrow, 3, _bw - ui(12), yy + _bh / 2, 1, 1, 0, _bc);
-			if(mouse_press(mb_left, _hv)) newAction.inputNode = newAction.inputNode == i? noone : i;
+			if(mouse_lpress(_hv)) newAction.inputNode = newAction.inputNode == i? noone : i;
 			_bw -= ui(28);
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _bw, yy + _bh);
@@ -104,7 +104,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
 			draw_text_add(ui(8), yy + ui(2), _name);
 			
-			if(mouse_press(mb_left, _hv)) _r.expanded = !_r.expanded;
+			if(mouse_lpress(_hv)) _r.expanded = !_r.expanded;
 			
 			yy += _bh;
 			_h += _bh;
@@ -129,7 +129,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 					}
 					
 					draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
-					if(mouse_press(mb_left, _hv)) {
+					if(mouse_lpress(_hv)) {
 						if(_tg) struct_remove(_vali, "value");
 						else    _vali[$ "value"] = _in.getValue();
 					}
@@ -144,7 +144,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						}
 						
 						draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
-						if(mouse_press(mb_left, _hv)) {
+						if(mouse_lpress(_hv)) {
 							if(_tg) struct_remove(_vali, "expression");
 							else    _vali[$ "expression"] = _in.expression;
 						}
@@ -160,7 +160,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						}
 						
 						draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
-						if(mouse_press(mb_left, _hv)) {
+						if(mouse_lpress(_hv)) {
 							if(_tg) struct_remove(_vali, "unit");
 							else    _vali[$ "unit"] = _in.unit.mode;
 						}

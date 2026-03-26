@@ -166,7 +166,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			dx = (_mx - drag_mx) / _s;
 			dy = (_my - drag_my) / _s;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				drag_side = -1;	
 				UNDO_HOLDING = false;
 			}

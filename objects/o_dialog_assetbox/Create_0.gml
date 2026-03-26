@@ -164,7 +164,7 @@ event_inherited();
 					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					
-					if(mouse_press(mb_left, sFOCUS)) {
+					if(mouse_lpress(sFOCUS)) {
 						if(is(content, dynaSurf))
 							target.onModify(content.clone());
 						else 

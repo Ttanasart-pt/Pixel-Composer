@@ -160,7 +160,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			pany = pany / s * scale;
 		}
 	
-		if(mouse_click(mb_right, pFOCUS)) {
+		if(mouse_rclick(pFOCUS)) {
 			var _menu = menuItems_gen("preview_window");
 			var _chan = 0;
 			

@@ -92,7 +92,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left)) {
+			if(mouse_lpress()) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -162,7 +162,7 @@
 			if(node.inputs[5].setValue(_rr))
 				UNDO_HOLDING   = true;
 				
-			if(mouse_press(mb_left)) {
+			if(mouse_lpress()) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -258,7 +258,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left)) {
+			if(mouse_lpress()) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -645,7 +645,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				drag_type = noone;
 				UNDO_HOLDING = false;
 			}
@@ -656,7 +656,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(a_index) {
 				hovering = true;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_type    = NODE_COMPOSE_DRAG.anchor;
 					dragging_mx  = _mx;
 					dragging_my  = _my;
@@ -669,7 +669,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else if(sz_index) {
 				hovering = true;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_type    = NODE_COMPOSE_DRAG.scale;
 					dragging_mx  = _mx;
 					dragging_my  = _my;
@@ -682,7 +682,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else if(r_index) {
 				hovering = true;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_type    = NODE_COMPOSE_DRAG.rotate;
 					dragging_ma  = point_direction(bax, bay, _mx, _my);
 					dragging_sa  = rot;
@@ -691,7 +691,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else if(hov_corner != noone) {
 				hovering = true;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_type    = NODE_COMPOSE_DRAG.box;
 					drag_anchor  = hov_corner;
 					dragging_mx  = _mx;
@@ -707,7 +707,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else if(hov_rect) {
 				hovering = true;
 				
-	          	if(mouse_press(mb_left, active)) {
+	          	if(mouse_lpress(active)) {
 					drag_type    = NODE_COMPOSE_DRAG.move;
 					dragging_mx  = _mx;
 					dragging_my  = _my;

@@ -69,7 +69,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, ui(4), _ly, _dw - ui(4), hght, COLORS.dialog_menubox_highlight, 1);
 			ind = 1;
 			
-			if(_focus && (!adding && (mouse_press(mb_left) || KEYBOARD_ENTER))) {
+			if(_focus && (!adding && (mouse_lpress() || KEYBOARD_ENTER))) {
 				if(mode == 0) {
 					if(exists)	array_remove(arraySet, data[i]);
 					else		array_push(arraySet, data[i]);

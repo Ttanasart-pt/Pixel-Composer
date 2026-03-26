@@ -107,7 +107,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 				if(show) panel_animation_dopesheet_expand();
 				else     panel_animation_dopesheet_collapse();
 				
-			} else if(mouse_press(mb_left, focus)) show = !show;
+			} else if(mouse_lpress(focus)) show = !show;
 		}
 		
 		if(node.isActiveDynamic())
@@ -130,7 +130,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			if(focus && DOUBLE_CLICK)
 				rename();
 				
-			else if(mouse_press(mb_left, focus)) {
+			else if(mouse_lpress(focus)) {
 				if(key_mod_press(SHIFT)) array_toggle(PANEL_GRAPH.nodes_selecting, node);
 				else graphSelectNode(node, false);
 			}
@@ -291,7 +291,7 @@ function timelineItemGroup() : timelineItem() constructor {
 				if(show) panel_animation_dopesheet_expand();
 				else     panel_animation_dopesheet_collapse();
 				
-			} else if(mouse_press(mb_left, focus)) show = !show;
+			} else if(mouse_lpress(focus)) show = !show;
 		}
 		draw_sprite_ui_uniform(THEME.folder_16, show, bx + bs / 2, by + h / 2, 1, col == -1? CDEF.main_grey : col, aa);
 		bx += bs + 1;

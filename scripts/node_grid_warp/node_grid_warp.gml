@@ -108,7 +108,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -209,7 +209,7 @@
 			draw_set_color(COLORS._main_icon);
 			draw_line_dashed(ox, oy, _mx, _my);
 			
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -323,7 +323,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();

@@ -282,7 +282,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			CURSOR_SPRITE = _anchor_hover == -1? THEME.cursor_add : THEME.cursor_remove;
 			hovering = true;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				if(_anchor_hover == -1) {
 					var anc = createNewInput(, PANEL_PREVIEW.snapX((_mx - _x) / _s), PANEL_PREVIEW.snapY((_my - _y) / _s));
 					UNDO_HOLDING = true;

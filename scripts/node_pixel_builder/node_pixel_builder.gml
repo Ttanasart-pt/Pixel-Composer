@@ -71,7 +71,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 			var cc  = COLORS._main_text_sub;
 			if(hov) {
 				cc  = COLORS._main_text;
-				if(mouse_click(mb_left, _focus))
+				if(mouse_lclick(_focus))
 					PANEL_GRAPH.nodes_selecting = [ _l ];
 			}
 			

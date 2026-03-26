@@ -199,7 +199,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			tool_mx = __mx;
 			tool_my = __my;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				groomed.freeze(fix);
 				tool_dragging = noone;
 			}
@@ -239,7 +239,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				groomed.freeze(true);
 				tool_dragging = noone;
 			}
@@ -298,7 +298,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				groomed.freeze(false);
 				tool_dragging = noone;
 			}
@@ -323,7 +323,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			tool_mx = __mx;
 			tool_my = __my;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				groomed.freeze(true);
 				tool_dragging = noone;
 			}
@@ -339,7 +339,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				tool_dragging = tool_push;
 				tool_mx = (_mx - _x) / _s;
 				tool_my = (_my - _y) / _s;
@@ -376,7 +376,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_line_dashed(_p0x, _p0y, __p0x, __p0y);
 			draw_line_dashed(_p1x, _p1y, __p1x, __p1y);
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				groomed.store();
 				tool_dragging = tool_comb;
 				tool_mx = (_mx - _x) / _s;
@@ -393,7 +393,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				tool_dragging = isUsingTool(2)? tool_stretch : tool_cut;
 				tool_mx = (_mx - _x) / _s;
 				tool_my = (_my - _y) / _s;
@@ -409,7 +409,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				tool_dragging = tool_grab;
 				tool_mx = (_mx - _x) / _s;
 				tool_my = (_my - _y) / _s;

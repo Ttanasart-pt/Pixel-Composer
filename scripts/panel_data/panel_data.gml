@@ -429,7 +429,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				refreshSize();
 				dragging = -1;
 			}
@@ -468,7 +468,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				refreshSize();
 				dragging = -1;
 			}
@@ -547,7 +547,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						break;
 							
 					CURSOR = cr_size_we;
-					if(mouse_press(mb_left)) {
+					if(mouse_lpress()) {
 						dragging  = 1;
 						drag_sval = _panel.w;
 						drag_sm   = mouse_mx;
@@ -558,7 +558,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						break;
 							
 					CURSOR = cr_size_ns;
-					if(mouse_press(mb_left)) {
+					if(mouse_lpress()) {
 						dragging  = 2;
 						drag_sval = _panel.h;
 						drag_sm   = mouse_my;
@@ -638,11 +638,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var aa = 0.5;
 				if(point_in_rectangle(msx, msy, _tbx + _tbw - ui(16), _tby, _tbx + _tbw, tab_height)) {
 					aa = 1;
-					if(mouse_press(mb_left, FOCUS == self)) 
+					if(mouse_lpress(FOCUS == self)) 
 						rem = i;
 						
 				} else if(HOVER == self && _hov) {
-					if(mouse_press(mb_left, FOCUS == self)) {
+					if(mouse_lpress(FOCUS == self)) {
 						setTab(i);
 						
 						tab_holding    = cont;
@@ -652,7 +652,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_holding_sx = tab_holding.tab_x;
 					}
 					
-					if(mouse_press(mb_right, FOCUS == self)) {
+					if(mouse_rpress(FOCUS == self)) {
 						var menu = array_clone(border_rb_menu);
 						if(instanceof(cont) == "Panel_Menu")
 							array_remove(menu, border_rb_close);
@@ -737,7 +737,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					}
 				}
 				
-				if(mouse_release(mb_left))
+				if(mouse_lrelease())
 					tab_holding = noone;
 			}
 		surface_reset_target();
@@ -818,11 +818,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var aa = 0.5;
 				if(point_in_rectangle(msx, msy, _tbx, _tby + _tbh - ui(16), tab_height, _tby + _tbh)) {
 					aa = 1;
-					if(mouse_press(mb_left, focus)) 
+					if(mouse_lpress(focus)) 
 						rem = i;
 						
 				} else if(_hov) {
-					if(mouse_press(mb_left, focus)) {
+					if(mouse_lpress(focus)) {
 						setTab(i);
 						
 						tab_holding    = cont;
@@ -832,7 +832,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_holding_sx = tab_holding.tab_x;
 					}
 					
-					if(mouse_press(mb_right, focus)) {
+					if(mouse_rpress(focus)) {
 						var menu = array_clone(border_rb_menu);
 						if(instanceof(cont) == "Panel_Menu")
 							array_remove(menu, border_rb_close);
@@ -919,7 +919,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					}
 				}
 				
-				if(mouse_release(mb_left))
+				if(mouse_lrelease())
 					tab_holding = noone;
 			}
 		surface_reset_target();
@@ -1002,7 +1002,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				extract();
 				panel_mouse = 0;
 				
-			} else if(mouse_press(mb_right)) {
+			} else if(mouse_rpress()) {
 				var menu = array_clone(border_rb_menu);
 				if(instanceof(getContent()) == "Panel_Menu")
 					array_remove(menu, border_rb_close);

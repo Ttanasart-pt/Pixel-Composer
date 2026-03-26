@@ -92,7 +92,7 @@ function Panel_Addon() : PanelContent() constructor {
 					draw_sprite_stretched_ext(THEME.checkbox_def, 1, chx0, chy0, bs, bs, c_white, 1);
 					hover = false;
 					
-					if(mouse_press(mb_left, pFOCUS)) {
+					if(mouse_lpress(pFOCUS)) {
 						if(!_act)
 							addonLoad(_addon.name, true);
 							
@@ -134,7 +134,7 @@ function Panel_Addon() : PanelContent() constructor {
 					}
 				}
 				
-				if(hover && _m[0] < _bx && mouse_press(mb_left, pFOCUS))
+				if(hover && _m[0] < _bx && mouse_lpress(pFOCUS))
 					_addon.open = !_addon.open;
 				
 				if(_addon.open) {

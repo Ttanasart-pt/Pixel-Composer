@@ -77,13 +77,13 @@
 			dialog_x = clamp(_dx, ui(16) - dialog_w, WIN_W - ui(16));
 			dialog_y = clamp(_dy, ui(16) - dialog_h, WIN_H - ui(16));
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				dialog_dragging = false;
 		}
 		
 		if(mouse_draggable && !dialog_resizing && point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + title_height)) {
 			mouse_active = false;
-			if(mouse_press(mb_left, sFOCUS)) {
+			if(mouse_lpress(sFOCUS)) {
 				dialog_dragging = true;
 				dialog_drag_sx  = dialog_x;
 				dialog_drag_sy  = dialog_y;
@@ -149,7 +149,7 @@
 				case 0b1001 : case 0b0110 : CURSOR = cr_size_nesw; break;
 			}
 			
-			if(mouse_release(mb_left)) dialog_resizing = 0;
+			if(mouse_lrelease()) dialog_resizing = 0;
 		}
 		
 		if(sHOVER) {
@@ -176,7 +176,7 @@
 					case 0b1001 : case 0b0110 : CURSOR = cr_size_nesw; break;
 				}
 				
-				if(mouse_press(mb_left, sFOCUS)) {
+				if(mouse_lpress(sFOCUS)) {
 					dialog_resizing = _sel_mask;
 					dialog_resiz_sx = dialog_x;
 					dialog_resiz_sy = dialog_y;
@@ -258,7 +258,7 @@
 	function checkMouse() {
 		if(!active || !DIALOG_CLICK || init_pressing) return;
 		
-		if(mouse_press(mb_left) || mouse_press(mb_right)) { 
+		if(mouse_lpress() || mouse_rpress()) { 
 			if(!volatile && !isTop()) return;
 			
 			for( var i = 0, n = array_length(children); i < n; i++ )

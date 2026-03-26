@@ -297,7 +297,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 			}
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				size_dragging = 0;
 		}
 		
@@ -331,7 +331,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(_hh) {
 			PANEL_GRAPH.drag_locking = true;
-			if(mouse_press(mb_left)) {
+			if(mouse_lpress()) {
 				size_dragging	 = _hh;
 				size_dragging_x  = x;
 				size_dragging_y  = y;

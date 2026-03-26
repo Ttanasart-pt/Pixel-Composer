@@ -131,7 +131,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + hh - 1)) {
 				cc = COLORS._main_text;
 				
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					layer_selecting = layer_selecting == _l? noone : _l;
 			}
 			
@@ -229,9 +229,9 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				var _hov = _hover && point_in_rectangle(_m[0], _m[1], _wdx, _wdy, _wdx + _wdw, _wdy + _wdh);
 				var _ind = _hov;
-				if(mouse_click(mb_left, _focus && _hov)) _ind = 2;
+				if(mouse_lclick(_focus && _hov)) _ind = 2;
 				
-				if(mouse_press(mb_left, _focus && _hov)) exposeData(_l);
+				if(mouse_lpress(_focus && _hov)) exposeData(_l);
 				draw_sprite_stretched_ext(THEME.button_def, _ind, _wdx, _wdy, _wdw, _wdh);
 				
 				draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
@@ -463,7 +463,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	draw_anchor(room_resizing_hov[3], _cx1, _cy1, ui(8));
     	
     	if(room_resizing_t == noone) {
-	    	if(_hov > noone && mouse_press(mb_left, active)) {
+	    	if(_hov > noone && mouse_lpress(active)) {
 	    		room_resizing_t  = _hov;
 	    		room_resizing_ss = [ _area[0], _area[1], _area[2], _area[3] ];
 			    room_resizing_mx = _mx;
@@ -550,7 +550,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     		if(_dgx != undefined) draw_line_width(_x + _dgx * _s, 0, _x + _dgx * _s, WIN_H, 2);
     		if(_dgy != undefined) draw_line_width(0, _y + _dgy * _s, WIN_W, _y + _dgy * _s, 2);
     		
-    		if(mouse_release(mb_left))
+    		if(mouse_lrelease())
     			room_resizing_t = noone;
     	}
     }

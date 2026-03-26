@@ -92,10 +92,10 @@ function canvas_brush() constructor {
 				s = max(1, s);
 			attr.size = s;
 			
-			if(mouse_release(mb_right)) 
+			if(mouse_rrelease()) 
 				sizing = false;
 					
-		} else if(mouse_press(mb_right, active) && key_mod_press(SHIFT) && surface == noone) {
+		} else if(mouse_rpress(active) && key_mod_press(SHIFT) && surface == noone) {
 			sizing    = true;
 			sizing_s  = _siz;
 			sizing_mx = _mx;

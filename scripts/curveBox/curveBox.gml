@@ -235,7 +235,7 @@ function curveBox(_onModify) : widget() constructor {
 					UNDO_HOLDING = true;
 			} 
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				node_dragging = -1;
 				node_drag_typ = -1;
 				
@@ -497,7 +497,7 @@ function curveBox(_onModify) : widget() constructor {
 					else if(hov <= 6) { minx = 0; maxx = 1; }
 				}
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					dragging = hov;
 					drag_m   = [ _m[0], _m[1] ];
 					drag_s   = [ miny, maxy, minx, maxx ];
@@ -527,7 +527,7 @@ function curveBox(_onModify) : widget() constructor {
 				drag_s   = [ miny, maxy, minx, maxx ];
 			}
 			
-			if(mouse_release(mb_left) || mouse_release(mb_middle))
+			if(mouse_lrelease() || mouse_release(mb_middle))
 				dragging = false;
 			
 			////- =Height drag
@@ -538,7 +538,7 @@ function curveBox(_onModify) : widget() constructor {
 			
 			if(point_in_rectangle(_m[0], _m[1], _bhx, _bhy, _bhx + bs, _bhy + bs)) {
 				_hov = true;
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					dragging = hov;
 					
 					height_drag = true;
@@ -553,7 +553,7 @@ function curveBox(_onModify) : widget() constructor {
 				h = height_ss + _m[1] - height_my;
 				h = max(100, h);
 				
-				if(mouse_release(mb_left))
+				if(mouse_lrelease())
 					height_drag = false;
 			}
 		#endregion
@@ -578,7 +578,7 @@ function curveBox(_onModify) : widget() constructor {
 				}
 			}
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				if(node_hovering == -1) {
 					var _ind = CURVE_PADD + point_insert * 6;
 					var _px =     (_m[0] - _x) / cw;
@@ -617,7 +617,7 @@ function curveBox(_onModify) : widget() constructor {
 				
 			}
 			
-			if(mouse_press(mb_right, active)) {
+			if(mouse_rpress(active)) {
 				var rmx = rx + _m[0];
 				var rmy = ry + _m[1];
 				

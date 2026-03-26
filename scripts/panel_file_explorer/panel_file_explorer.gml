@@ -303,7 +303,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				file_hovering = _dir;
 				_ind = 3;
 				
-				if(mouse_press(mb_left)) {
+				if(mouse_lpress()) {
 					if(_dir.open == -1)
 						_dir.getContent();
 					_dir.open = !_dir.open;
@@ -383,7 +383,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				var _thm = _fil.getThumbnail();
 				
 				if(contentPane.hover && point_in_rectangle(_m[0], _m[1], _px, _py, _px + _tw, _py + _ph)) {
-					if(!mouse_click(mb_left)) {
+					if(!mouse_lclick()) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _tw, _ph, COLORS._main_icon, .75);
 						if(!instance_exists(o_dialog_menubox)) {
 							if(_fil.type == FILE_TYPE.assets)       TOOLTIP = [ _thm, "sprite"  ];
@@ -398,7 +398,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 						else     array_push(file_selectings, _fil);
 					} 
 					
-					if(pFOCUS && mouse_press(mb_right)) {
+					if(pFOCUS && mouse_rpress()) {
 						__menu_file_selecting = _fil;
 						
 						if(_fil.type == FILE_TYPE.assets)       menuCall("", menu_file_image);
@@ -473,7 +473,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				if(_sel) draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, _px, _py, _pw, _ph, merge_color(COLORS._main_icon_dark, COLORS._main_icon, 0.2), 1);
 				
 				if(contentPane.hover && point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
-					if(!mouse_click(mb_left)) {
+					if(!mouse_lclick()) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_icon, .75);
 						if(!instance_exists(o_dialog_menubox))
 							TOOLTIP = [ _th, "sprite" ];
@@ -486,7 +486,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 						else     array_push(file_selectings, _fil);
 					}
 					
-					if(pFOCUS && mouse_press(mb_right)) {
+					if(pFOCUS && mouse_rpress()) {
 						__menu_file_selecting = _fil;
 						
 							 if(_fil.type == FILE_TYPE.assets)  menuCall("", menu_file_image);
@@ -606,7 +606,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				var _file_focus = file_focus;
 				file_focus = noone;
 				

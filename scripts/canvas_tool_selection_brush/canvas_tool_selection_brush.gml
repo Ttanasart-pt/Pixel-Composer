@@ -12,7 +12,7 @@ function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selecto
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
 		
-		if(!selector.selection_hovering && mouse_press(mb_left, active)) {
+		if(!selector.selection_hovering && mouse_lpress(active)) {
 			selection_mask = surface_verify(selection_mask, _dim[0], _dim[1]);
 			
 			surface_set_shader(selection_mask, noone);
@@ -41,7 +41,7 @@ function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selecto
 			mouse_pre_draw_x = mouse_cur_x;
 			mouse_pre_draw_y = mouse_cur_y;	
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				var _bbox = surface_get_bbox(selection_mask);
 				var sel_x = _bbox[0];
 				var sel_y = _bbox[1];

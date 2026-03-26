@@ -304,7 +304,7 @@ draggable = true;
 	
 	shader_set(sh_dialog_palette_selector);
 		shader_set_f("dimension",     pl_sw, pl_sh);
-		shader_set_i("edge",          (_hedge && !mouse_click(mb_left)) || index_dragging != noone);
+		shader_set_i("edge",          (_hedge && !mouse_lclick()) || index_dragging != noone);
 		shader_set_color("edgeColor", COLORS._main_accent);
 		
 		draw_surface(selection_surface, pl_sx, pl_sy);
@@ -354,7 +354,7 @@ draggable = true;
 				refreshPalette();
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				index_selecting = [ 0, 0 ];
 				index_dragging  = noone;
 			}
@@ -367,7 +367,7 @@ draggable = true;
 		
 			if(hover > -1) {
 				
-				if(mouse_press(mb_left, sFOCUS)) {
+				if(mouse_lpress(sFOCUS)) {
 					
 					if(interactable) {
 						if(_hedge) index_dragging = hover;
@@ -384,7 +384,7 @@ draggable = true;
 					mouse_interact  = true;
 					index_sel_start = hover;
 					
-				} else if(mouse_click(mb_left, sFOCUS) && mouse_interact) {
+				} else if(mouse_lclick(sFOCUS) && mouse_interact) {
 					
 					if(hover > index_sel_start) {
 						index_selecting[0] = index_sel_start;
@@ -404,7 +404,7 @@ draggable = true;
 		}
 	}
 	
-	if(mouse_release(mb_left)) mouse_interact = false;
+	if(mouse_lrelease()) mouse_interact = false;
 	
 	selector.current_colors = noone;
 	if(index_selecting[1] > 1) {

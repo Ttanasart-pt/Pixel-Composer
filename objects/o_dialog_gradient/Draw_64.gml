@@ -265,7 +265,7 @@ draggable = true;
 			setKeyPosition(key_dragging, newT);
 		}
 		
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			if(key_deleting) array_remove(gradient.keys, key_dragging);
 			else             removeKeyOverlap(key_dragging);
 			
@@ -279,7 +279,7 @@ draggable = true;
 	var _y1 = gr_y + gr_h + ui(12);
 	
 	if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
-		if(mouse_press(mb_left, sFOCUS)) {
+		if(mouse_lpress(sFOCUS)) {
 			widget_clear();
 			
 			if(hover) {
@@ -319,7 +319,7 @@ draggable = true;
 			}
 		}
 			
-		if(mouse_press(mb_right, interactable && sFOCUS) && hover && array_length(gradient.keys) > 1) {
+		if(mouse_rpress(interactable && sFOCUS) && hover && array_length(gradient.keys) > 1) {
 			array_remove(gradient.keys, hover);
 			onModify(gradient);
 		}

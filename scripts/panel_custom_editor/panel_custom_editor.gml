@@ -286,7 +286,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	                
 	                if(foc) {
 	                    	 if(DOUBLE_CLICK) _cAll = ele[1]? -1 : 1;
-	                    else if(mouse_press(mb_left)) ele[1] = !ele[1];
+	                    else if(mouse_lpress()) ele[1] = !ele[1];
 	                }
 	            }
 	                
@@ -469,7 +469,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	            	cc = COLORS.panel_inspector_group_hover;
 	                if(foc) {
 	                    	 if(DOUBLE_CLICK) _cAll = _edt[1]? -1 : 1;
-	                    else if(mouse_press(mb_left)) _edt[1] = !_edt[1];
+	                    else if(mouse_lpress()) _edt[1] = !_edt[1];
 	                }
 	            }
 	                

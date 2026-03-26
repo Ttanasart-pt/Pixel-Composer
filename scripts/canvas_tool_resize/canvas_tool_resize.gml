@@ -234,10 +234,10 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 					break;
 			}
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				dragging = -1;
 			
-		} else if(_hovering >= 0 && mouse_click(mb_left, active)) {
+		} else if(_hovering >= 0 && mouse_lclick(active)) {
 			drag_points = array_clone(points);
 			dragging    = _hovering;
 			

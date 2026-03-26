@@ -21,7 +21,7 @@ function checkBoxGroup(_sprs, _onClick) : widget() constructor {
 		w = _h * size;
 		h = _h;
 		
-		if(mouse_release(mb_left))
+		if(mouse_lrelease())
 			holding = noone;
 		
 		var aa = interactable * 0.25 + 0.75;
@@ -36,12 +36,12 @@ function checkBoxGroup(_sprs, _onClick) : widget() constructor {
 				if(holding != noone)
 					trigger(holding, i);
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					trigger(!_value[i], i);
 					holding = _value[i];
 				}
 			} else
-				if(mouse_press(mb_left)) deactivate();
+				if(mouse_lpress()) deactivate();
 			
 			draw_sprite_stretched_ext(spr, ind, _x, _y, _h, _h, c_white, aa);
 			if(_value[i]) draw_sprite_stretched_ext(spr, 3, _x, _y, _h, _h, COLORS._main_accent, 1);

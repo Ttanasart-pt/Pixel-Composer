@@ -6,7 +6,7 @@ if(item_sel_submenu) {
 }
 
 if(init_press_l) {
-	if(mouse_release(mb_left)) 
+	if(mouse_lrelease()) 
 		init_press_l = false;
 	exit;
 }
@@ -19,4 +19,4 @@ if(instance_exists(submenu))
 	hov = hov || submenu.point_in(mouse_mx, mouse_my);
 
 _hovering_ch = hov;
-if(!hov && mouse_press(mb_left)) instance_destroy();
+if(!hov && mouse_lpress()) instance_destroy();

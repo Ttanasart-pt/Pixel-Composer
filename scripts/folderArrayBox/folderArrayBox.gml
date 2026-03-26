@@ -45,7 +45,7 @@ function folderArrayBox(_arr, _onModify) : widget() constructor {
 		var _tx = x;
 		var _ty = y;
 		
-		if(editing && !_hovering && mouse_press(mb_left)) {
+		if(editing && !_hovering && mouse_lpress()) {
 			tb_edit.deactivate();
 			editing = noone;
 		}
@@ -67,14 +67,14 @@ function folderArrayBox(_arr, _onModify) : widget() constructor {
 			if(hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _tw, _ty + _h)) {
 				draw_sprite_stretched_ext(THEME.textbox, 1, _tx, _ty, _tw, _h, boxColor);
 				
-				if(editing != i && mouse_press(mb_left, active)) {
+				if(editing != i && mouse_lpress(active)) {
 					editing = i;
 					
 					tb_edit._current_text = array[i];
 					tb_edit.activate();
 				}
 				
-				if(mouse_click(mb_left, active))
+				if(mouse_lclick(active))
 					draw_sprite_stretched(THEME.textbox, 2, _tx, _ty, _tw, _h);
 				
 			} else 
@@ -100,7 +100,7 @@ function folderArrayBox(_arr, _onModify) : widget() constructor {
 			draw_set_text(font, fa_left, fa_center, _hv? COLORS._main_text : COLORS._main_text_sub);
 			draw_text(_tx + ui(8), round(_ty + _h / 2), "Add value...");
 			
-			if(mouse_press(mb_left, _hv && active)) {
+			if(mouse_lpress(_hv && active)) {
 				editing = array_length(_arr);
 				adding  = true;
 				array_push(_arr, "");

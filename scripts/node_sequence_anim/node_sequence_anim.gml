@@ -34,7 +34,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && inputs[2].value_from == noone) {
 			draw_sprite_stretched_add(THEME.ui_panel, 1, _x, _y, _w, _h, c_white, 0.2);
 			
-			if(mouse_press(mb_left, _focus)) 
+			if(mouse_lpress(_focus)) 
 				dialogPanelCall(new Panel_Array_Sequence(self));
 		}
 		

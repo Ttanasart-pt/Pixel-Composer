@@ -7,7 +7,7 @@ function canvas_tool_selection_freeform(_selector) : canvas_selection_tool(_sele
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
 		
-		if(!selector.selection_hovering && mouse_press(mb_left, active)) {
+		if(!selector.selection_hovering && mouse_lpress(active)) {
 			is_selecting = true;
 			selection_sx = mouse_cur_x;
 			selection_sy = mouse_cur_y;
@@ -19,7 +19,7 @@ function canvas_tool_selection_freeform(_selector) : canvas_selection_tool(_sele
 			draw_set_color(c_white);
 			canvas_freeform_step(active, _x, _y, _s, _mx, _my, false);
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				is_selecting = false;
 				
 				var _bbox = surface_get_bbox(drawing_surface);

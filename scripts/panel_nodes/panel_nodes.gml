@@ -325,7 +325,7 @@ function Panel_Nodes() : PanelContent() constructor {
 				side_scroll_to = side_scroll_to + MOUSE_WHEEL * (_mus + ui(2));
 				side_scroll_to = clamp(side_scroll_to, -side_scroll_max, 0);
 				
-				if(mouse_press(mb_right, pFOCUS))
+				if(mouse_rpress(pFOCUS))
 					menuCall("node_side_context_menu", menuItems_gen("node_side_context_menu"));
 			}
 		}

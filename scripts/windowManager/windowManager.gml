@@ -199,7 +199,7 @@ function winManStep() {
 			}
 		}
 		
-		if(__winman_to_ref && mouse_release(mb_left)) {
+		if(__winman_to_ref && mouse_lrelease()) {
 			__winman_to_ref = false;
 			DISPLAY_REFRESH
 		}
@@ -236,10 +236,10 @@ function winManStep() {
 			winMan_setRect(sx, sy, sw, sh);
 		}
 		
-		if(mouse_release(mb_left)) { DISPLAY_REFRESH }
+		if(mouse_lrelease()) { DISPLAY_REFRESH }
 	}
 	
-	if(mouse_release(mb_left)) {
+	if(mouse_lrelease()) {
 		window_minimize_size = [ sw, sh ];
 		window_drag_status = 0;
 	}
@@ -266,6 +266,6 @@ function winManDraw() {
 	if(l && d) { CURSOR = MAC? cr_size_all : cr_size_nesw; hv = 0b0_1100; }
 	if(r && u) { CURSOR = MAC? cr_size_all : cr_size_nesw; hv = 0b0_0011; }
 	
-	if(hv > -1 && mouse_press(mb_left))
+	if(hv > -1 && mouse_lpress())
 		winMan_initDrag(hv);
 }

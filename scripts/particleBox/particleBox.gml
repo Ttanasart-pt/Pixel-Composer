@@ -22,7 +22,7 @@ function particleBox(_junction) : widget() constructor {
     	
     	if(ihover && point_in_rectangle(_m[0], _m[1], x, y, x + iw, y + h)) {
     		bi = 1;
-    		if(mouse_click(mb_left, iactive)) bi = 2;
+    		if(mouse_lclick(iactive)) bi = 2;
     	}
     	
     	draw_sprite_stretched_ext(THEME.button_def, bi, x, y, iw, h);

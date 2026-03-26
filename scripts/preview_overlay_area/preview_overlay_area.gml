@@ -71,7 +71,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 		if(setValueInspector(_sval))
 			UNDO_HOLDING = true;
 		
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			drag_type = 0;
 			UNDO_HOLDING = false;
 		}
@@ -82,7 +82,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 			_hov[0] = 1;
 			hovering = 1;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_type = 2;
 				drag_sy   = _t;
 				drag_my   = _my;
@@ -91,7 +91,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 			_hov[1] = 1;
 			hovering = 3;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_type = 4;
 				drag_sy   = _b;
 				drag_my   = _my;
@@ -100,7 +100,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 			_hov[2] = 1;
 			hovering = 0;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_type = 3;	
 				drag_sx   = _l;
 				drag_mx   = _mx;
@@ -109,7 +109,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 			_hov[3] = 1;
 			hovering = 2;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_type = 1;
 				drag_sx   = _r;
 				drag_mx   = _mx;
@@ -188,7 +188,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 		if(setValueInspector(_sval))
 			UNDO_HOLDING = true;
 							
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			drag_type = 0;
 			UNDO_HOLDING = false;
 		}
@@ -202,7 +202,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 		if(setValueInspector(_sval))
 			UNDO_HOLDING = true;
 							
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			drag_type = 0;
 			UNDO_HOLDING = false;
 		}
@@ -220,7 +220,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 		if(setValueInspector(_val))
 			UNDO_HOLDING = true;
 							
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			drag_type = 0;
 			UNDO_HOLDING = false;
 		}
@@ -231,7 +231,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 			_hov[1] = 1;
 			hovering = 1;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_type = 1;	
 				drag_sx   = _x0;
 				drag_sy   = _y0;
@@ -242,7 +242,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 			_hov[2] = 1;
 			hovering = 2;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_type = 2;	
 				drag_sx   = _x1;
 				drag_sy   = _y1;
@@ -253,7 +253,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 			_hov[0] = 1;
 			hovering = 3;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_type = 3;	
 				drag_sx   = _x0;
 				drag_sy   = _y0;
@@ -442,13 +442,13 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 		if(setValueInspector(_val)) 
 			UNDO_HOLDING = true;
 			
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			drag_type    = 0;
 			UNDO_HOLDING = false;
 		}
 	}
 				
-	if(hover && _hov && mouse_press(mb_left, active)) {
+	if(hover && _hov && mouse_lpress(active)) {
 		drag_type = _hov;
 		drag_mx   = _mx;
 		drag_my   = _my;

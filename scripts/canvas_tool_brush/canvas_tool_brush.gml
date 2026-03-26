@@ -241,7 +241,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 			                        || !active || !pactive;
 		}
 		
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			surface_set_shader(drawing_surface, noone, true, BLEND.over);
 				draw_point_wrap(true);
 			surface_reset_shader();
@@ -379,7 +379,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				mouse_holding = false;
 				apply_draw_surface();
 			}

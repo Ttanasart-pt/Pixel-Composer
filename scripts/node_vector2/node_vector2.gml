@@ -96,7 +96,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			if(s0 || s1) UNDO_HOLDING = true;
 							
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				gz_dragging  = false;
 				UNDO_HOLDING = false;
 			}
@@ -132,7 +132,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(is_surface(gz_sprite)) draw_surface_stretched_ext(gz_sprite, _rx0, _ry0, _rw, _rh, c_white, 0.5 + 0.5 * _hov);
 		}
 		
-		if(_hov && mouse_press(mb_left, active)) {
+		if(_hov && mouse_lpress(active)) {
 			gz_dragging = true;
 			gz_drag_mx  = _mx;
 			gz_drag_my  = _my;
@@ -249,7 +249,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _i1 = inputs[1].setValue(my);
 			if(_i0 || _i1) UNDO_HOLDING = true;
 				
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				wd_dragging  = false;
 				UNDO_HOLDING = false;
 			}
@@ -279,7 +279,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			PANEL_GRAPH.graph_draggable = false;
 			
-			if(mouse_click(mb_left, _focus))
+			if(mouse_lclick(_focus))
 				wd_dragging = true;
 				
 			else if(mouse_press(mb_middle, active)) {
@@ -305,7 +305,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 			} 
 			
-			if(mouse_press(mb_right, _focus))
+			if(mouse_rpress(_focus))
 				menuCall("node_vec2_coordinate", coordinate_menu);
 			
 		} 

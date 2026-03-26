@@ -107,15 +107,15 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched_ext(spr, toggled? 2 : 1, _x, _y, _w, _h, b, 1);
 			
-			if(!activate_on_press && pressed && mouse_release(mb_left, active))
+			if(!activate_on_press && pressed && mouse_lrelease(active))
 				trigger();
 				
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				pressed = true;
 				if(activate_on_press) trigger();
 			}
 				
-			if(mouse_click(mb_left, active)) {
+			if(mouse_lclick(active)) {
 				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);
 				draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);
 			}
@@ -133,7 +133,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 
 		} else {
 			draw_sprite_stretched_ext(spr, toggled? 2 : 0, _x, _y, _w, _h, b, 1);
-			if(mouse_press(mb_left)) deactivate();
+			if(mouse_lpress()) deactivate();
 		}
 		
 		var aa = interactable * .5 + .5;
@@ -183,7 +183,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		resetFocus();
 		
-		if(mouse_release(mb_left)) pressed = false;
+		if(mouse_lrelease()) pressed = false;
 		
 		return _h;
 	}
@@ -255,13 +255,13 @@ function buttonInstant_Pad(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 		if(spr) draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, _button_blend);
 		if(_tip != "") TOOLTIP = _tip;
 			
-		if(mouse_press(mb_left, _act))		res = 2;
-		if(mouse_press(mb_right, _act))		res = 3;
+		if(mouse_lpress(_act))		res = 2;
+		if(mouse_rpress(_act))		res = 3;
 			
-		if(mouse_release(mb_left, _act))	res = -2;
-		if(mouse_release(mb_right, _act))	res = -3;
+		if(mouse_lrelease(_act))	res = -2;
+		if(mouse_rrelease(_act))	res = -3;
 			
-		if(spr && mouse_click(mb_left, _act)) {
+		if(spr && mouse_lclick(_act)) {
 			draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, _button_blend);	
 			draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);	
 		}
@@ -300,11 +300,11 @@ function buttonInstant_Icon(_cx, _cy, _s, _m, _hvr, _act, _tip = "",
 		res = 1;
 		if(_tip != "") TOOLTIP = _tip;
 		
-		if(mouse_press(mb_left, _act))		res = 2;
-		if(mouse_press(mb_right, _act))		res = 3;
+		if(mouse_lpress(_act))		res = 2;
+		if(mouse_rpress(_act))		res = 3;
 			
-		if(mouse_release(mb_left, _act))	res = -2;
-		if(mouse_release(mb_right, _act))	res = -3;
+		if(mouse_lrelease(_act))	res = -2;
+		if(mouse_rrelease(_act))	res = -3;
 	}
 	
 	     if(is(_icon, sprite_drawer)) _icon.draw(_cx, _cy, _icon_scale, cc, _icon_alpha);
@@ -359,10 +359,10 @@ function buttonInstantGlass(hover, focus, mx, my, bx, by, bw, bh, txt = "", aa =
 	var _res = _hov;
 	var _clk = false;
 	
-	if(mouse_click(mb_left, focus && _hov))
+	if(mouse_lclick(focus && _hov))
 		_clk = true; 
 	
-	if(mouse_press(mb_left, focus && _hov))
+	if(mouse_lpress(focus && _hov))
 		_res = 2;
 	
 	draw_sprite_stretched_ext(THEME.ui_panel, 0,           bx, by, bw, bh, _col, aa     + _hov * .10);

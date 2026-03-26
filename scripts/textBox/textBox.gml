@@ -569,15 +569,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 			
 			if(target != -999 && !click_block) {
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					cursor_select = target;
 					cursor		  = target;	
 					
-				} else if(mouse_click(mb_left, active) && cursor != target)
+				} else if(mouse_lclick(active) && cursor != target)
 					cursor = target;
 			}
 		
-			if(mouse_release(mb_left, active))
+			if(mouse_lrelease(active))
 				click_block	  = false;
 		}
 	}
@@ -832,7 +832,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					slider_cur_del = 0;
 				}
 				
-				if(mouse_press(mb_right)) { //cancel
+				if(mouse_rpress()) { //cancel
 					_input_text = string_real(slider_def_val);
 					sliding = 0;
 					apply();
@@ -864,13 +864,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					if(apply()) UNDO_HOLDING = true;
 				}
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					deactivate();
 					if(onRelease != noone) apply(true);
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				sliding = 0;
 				_update = true;
 				UNDO_HOLDING = false;
@@ -922,7 +922,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				if(hover && point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y, _x + _w, _y + _h)) {
 					aa = 1;
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						_input_text = string_real(toNumber(_input_text) * _mul + _add);
 						apply();
 						
@@ -1023,7 +1023,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 			if(mouse_lrelease()) mouse_lhold = false;
 			
-			if(mouse_press(mb_right, hoverRect, active))
+			if(mouse_rpress(hoverRect, active))
 				menuCall("textbox_context", context_menu_selecting);
 			
 		} else {
@@ -1038,7 +1038,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					if(MOUSE_WHEEL != 0)    modifyValue(toNumber(_text) + MOUSE_WHEEL);
 				}
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					activate();
 					
 					if(slidable) {
@@ -1047,7 +1047,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					} 
 				}
 				
-				if(mouse_press(mb_right, active))
+				if(mouse_rpress(active))
 					menuCall("textbox_context", context_menu);
 			
 			} else if(!hide && base_index == 3)
@@ -1106,7 +1106,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, _h, COLORS._main_value_positive, 1);
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				if(onModifyParam == noone) onModify(DRAGGING.data);
 				else onModify(DRAGGING.data, onModifyParam);
 			}

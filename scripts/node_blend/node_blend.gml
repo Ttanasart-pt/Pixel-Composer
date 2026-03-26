@@ -129,7 +129,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			if(inputs[14].setValue([ px, py ]))
 				UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				UNDO_HOLDING = false;
 				dragging     = false;
 			}
@@ -140,7 +140,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_rectangle_width(_rx, _ry, _rx + _rw, _ry + _rh, 2);
 			hovering = true;
 			
-			if(mouse_press(mb_left)) {
+			if(mouse_lpress()) {
 				dragging = true;
 				drag_sx  = _posi[0] * sw;
 				drag_sy  = _posi[1] * sh;

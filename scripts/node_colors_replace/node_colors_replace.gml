@@ -133,7 +133,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				if(palette_selecting == noone)
 					draw_sprite_stretched_add(THEME.box_r5, 1, _x1, _y0, _xw, ss, c_white, .5);
 				
-				if(palette_selecting == noone && mouse_press(mb_left, _focus)) {
+				if(palette_selecting == noone && mouse_lpress(_focus)) {
 					palette_selecting = 1;
 					palette_select[0] = i;
 				}
@@ -162,7 +162,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			draw_sprite_stretched_add(THEME.ui_panel, 2, _sel_x0, _sel_y0, _sel_x1 - _sel_x0, _sel_y1 - _sel_y0, COLORS._main_accent, 1);
 			
-			if(palette_selecting == 1 && mouse_release(mb_left, _focus)) {
+			if(palette_selecting == 1 && mouse_lrelease(_focus)) {
 				palette_selecting = 2;
 				palette_select    = [ _mn, _mx ];
 				

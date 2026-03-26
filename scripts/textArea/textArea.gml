@@ -703,22 +703,22 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		if(ch_y <= _my && !_found_char) target = char_run - 1;
 		
-		if(_hover && mouse_press(mb_right, active))
+		if(_hover && mouse_rpress(active))
 			menuCall("textbox_context", context_menu_selecting);
 		
 		if(target != undefined && !click_block) {
-			if(mouse_press(mb_left, active) && HOVER != o_dialog_textbox_autocomplete.id) {
+			if(mouse_lpress(active) && HOVER != o_dialog_textbox_autocomplete.id) {
 				cursor_select = target;
 				cursor		  = target;
 				
 				o_dialog_textbox_autocomplete.deactivate(self);
 				
-			} else if(mouse_click(mb_left, active)) {
+			} else if(mouse_lclick(active)) {
 				cursor = target;
 			}
 		}
 		
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			click_block	  = false;
 			
 			if(cursor_select == cursor)
@@ -1005,10 +1005,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				
 				draw_sprite_stretched_ext(THEME.textbox, 1, x, y, w, hh, boxColor, 0.5 + 0.5 * (interactable && !hide));
 				
-				if(mouse_press(mb_left, active))
+				if(mouse_lpress(active))
 					activate();
 				
-				if(mouse_press(mb_right, active))
+				if(mouse_rpress(active))
 					menuCall("textbox_context", context_menu);
 					
 			} else if(!hide)
@@ -1038,7 +1038,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				text_y_to = text_scroll_sy - (_m[1] - text_scroll_my) / bar_h * scr_h;
 				text_y_to = clamp(text_y_to, -text_y_max, 0);
 				
-				if(mouse_release(mb_left))
+				if(mouse_lrelease())
 					text_scrolling = false;
 			}
 			
@@ -1048,7 +1048,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h, COLORS.scrollbar_bg,   1);
 				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, bar_y, scr_w, bar_h, hov || text_scrolling? COLORS.scrollbar_hover : COLORS.scrollbar_idle, 1);
 				
-				if(hov && mouse_press(mb_left, iactive)) {
+				if(hov && mouse_lpress(iactive)) {
 					text_scrolling = true;
 					text_scroll_sy = text_y;
 					text_scroll_my = _m[1];
@@ -1060,7 +1060,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, hh, COLORS._main_value_positive, 1);
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				onModify(DRAGGING.data);
 		}
 		

@@ -47,14 +47,14 @@ function canvas_tool_selection_shape(_selector, _shape) : canvas_selection_tool(
 			selection_size[0]     = sel_w;
 			selection_size[1]     = sel_h;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				is_selecting = false;
 				selector.createSelection(selection_mask, sel_x0, sel_y0, sel_w, sel_h);
 				surface_free_safe(selection_mask);
 			}
 			
 		} else if(!selector.selection_hovering && active) {
-			if(mouse_press(mb_left)) {
+			if(mouse_lpress()) {
 				is_selecting = true;
 				select_snap  = DOUBLE_CLICK && PROJECT.previewGrid.show;
 				selection_sx = mouse_cur_x;

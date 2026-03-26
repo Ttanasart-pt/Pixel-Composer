@@ -474,12 +474,12 @@ enum CAMERA_PROJ {
 			}
 		}
 		
-		if(drag_index != noone && mouse_release(mb_left)) {
+		if(drag_index != noone && mouse_lrelease()) {
 			drag_index = noone;
 			UNDO_HOLDING = false;
 		}
 		
-		if(_hover != noone && mouse_press(mb_left, active)) {
+		if(_hover != noone && mouse_lpress(active)) {
 			drag_index	= _hover;
 			drag_prev   = undefined;
 			drag_mx		= _mx;

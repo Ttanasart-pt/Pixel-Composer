@@ -68,7 +68,7 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 				if(hov && point_in_rectangle(_m[0], _m[1], 0 + padd, _y + padd, hg - padd, _y + hg - padd)) {
 					sp_content.hover_content = true;
 					aa = 1;
-					if(mouse_press(mb_left, foc)) dragging = display_list[i];
+					if(mouse_lpress(foc)) dragging = display_list[i];
 				}
 				
 				draw_sprite_ui(THEME.hamburger_s, 0, hg / 2, _y + hg / 2,,,, COLORS._main_icon_light, aa);
@@ -89,7 +89,7 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 				if(hov && point_in_rectangle(_m[0], _m[1], ed_x, _y, secw - bs - ui(8), _y + hg)) {
 					draw_sprite_stretched_ext(THEME.button_def, 1, ed_x, _y, secw - ed_x, hg, COLORS._main_icon_light, seca);
 					
-					if(sep_editing == -1 && mouse_press(mb_left, foc)) {
+					if(sep_editing == -1 && mouse_lpress(foc)) {
 						sep_editing = i;
 						tb_edit._current_text = disp[0];
 						tb_edit.activate();
@@ -135,7 +135,7 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 			array_remove(display_list, dragging);
 			array_insert(display_list, hovr, dragging);
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				node.sortIO();
 				dragging = noone;
 			}

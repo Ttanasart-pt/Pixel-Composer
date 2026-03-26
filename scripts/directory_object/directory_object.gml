@@ -252,7 +252,7 @@ function DirectoryObject(_path) constructor {
 		if(!empt && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x + ui(4), _y, ui(32 - 8), hg, CDEF.main_white, 1);
 			
-			if(mouse_press(mb_left, _focus)) {
+			if(mouse_lpress(_focus)) {
 				open = !open;
 				MOUSE_BLOCK = true;
 			}

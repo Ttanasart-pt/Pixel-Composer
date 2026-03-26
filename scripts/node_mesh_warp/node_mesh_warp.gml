@@ -352,11 +352,11 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				attributes.mesh_bound[anchor_dragging][1] = dy;
 				Mesh_build();
 			
-				if(mouse_release(mb_left))
+				if(mouse_lrelease())
 					anchor_dragging = -1;
 			}
 		
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				if(frac(hover) == 0) {
 					if(isUsingTool("Mesh edit")) {
 						anchor_dragging = hover;
@@ -397,7 +397,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(isUsingTool("Edit control point")) {
 			CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_remove : THEME.cursor_add;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				if(_hover == -1) {
 					var i = createControl();
 					i.setValue( [ PUPPET_FORCE_MODE.move, PANEL_PREVIEW.snapX(_mx - _x) / _s, PANEL_PREVIEW.snapY(_my - _y) / _s, 0, 0, 8, 8 ] );
@@ -425,7 +425,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _yy = (_my - _y) / _s;
 			var _rr = rad / _s;
 			
-			if(mouse_click(mb_left, active)) {
+			if(mouse_lclick(active)) {
 				var _pin = !key_mod_press(SHIFT);
 				
 				for(var j = 0; j < array_length(mesh_data.tris); j++) {

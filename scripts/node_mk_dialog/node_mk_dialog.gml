@@ -91,7 +91,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			if(hov && _m[0] < _x1 - ui(32)) {
 				tc = COLORS._main_text;
 				
-				if(mouse_press(mb_left, _focus)) {
+				if(mouse_lpress(_focus)) {
 					dynamic_input_inspecting = i;
 					refreshDynamicDisplay();
 					triggerRender();

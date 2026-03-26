@@ -30,7 +30,7 @@ if !ready exit;
 		
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, xx, yy, xx + grid_width, yy + grid_size)) {
 			draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-			if(mouse_press(mb_left, sFOCUS)) {
+			if(mouse_lpress(sFOCUS)) {
 				
 				switch(_node.node) {
 					case Node_Json_File_Read : 

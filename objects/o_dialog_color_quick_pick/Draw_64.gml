@@ -13,7 +13,7 @@ var y0  = min(y, WIN_H - hh);
 var x1  = x0 + ww;
 var y1  = y0 + hh;
 
-var _m  = use_mouse || mouse_press(mb_left);
+var _m  = use_mouse || mouse_lpress();
 
 draw_sprite_stretched(THEME.dialog, 0, x0 - ui(8), y0 - ui(8), ww + ui(8) * 2, hh + ui(8) * 2);
 
@@ -36,5 +36,5 @@ for( var i = 0, n = array_length(pal); i < n; i++ ) {
 	}
 }
 
-if(use_mouse  && mouse_release(mb_left)) instance_destroy();
-if(!use_mouse && mouse_press(mb_left))   instance_destroy();
+if(use_mouse  && mouse_lrelease()) instance_destroy();
+if(!use_mouse && mouse_lpress())   instance_destroy();

@@ -121,7 +121,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 		}
 		
 		if(!click_block && _foc) {
-			if(mouse_click(mb_left)) {
+			if(mouse_lclick()) {
 				if(_hoverColor != noone) {
 					selector.setColor(_hoverColor);
 					
@@ -132,7 +132,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 				}
 			}
 			
-			if(mouse_click(mb_right)) {
+			if(mouse_rclick()) {
 				if(_hoverColor != noone) {
 					menuCall("palette_window_preset_menu", [
 						menuItem(__txtx("palette_mix_color", "Mix Color"), function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
@@ -217,7 +217,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 		var _h = drawPaletteDirectory(PALETTES_FOLDER,  0, _y, _m);
 		_y += _h; hh += _h;
 		
-		if(mouse_release(mb_left)) click_block = false;
+		if(mouse_lrelease()) click_block = false;
 		
 		if(__fav) __togglePaletteFav(__fav);
 		

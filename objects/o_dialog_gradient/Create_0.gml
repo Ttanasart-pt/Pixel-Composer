@@ -226,10 +226,10 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			bx -= bs + 1;
 			
 			if(_hover && isHover) {
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					app = _grad;
 				
-				if(mouse_press(mb_right, _focus)) {
+				if(mouse_rpress(_focus)) {
 					menuCall("gradient_window_preset_menu", [ 
 						menuItem(__txtx("gradient_editor_delete", "Delete gradient"), 
 							function(p) /*=>*/ { file_delete(p); __refreshGradient(); }).setParam(g.path)
@@ -462,7 +462,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		}
 		
 		if(!click_block && _focus) {
-			if(mouse_click(mb_left)) {
+			if(mouse_lclick()) {
 				if(key_mod_press(CTRL)) {
 					if(palette_spread == undefined && _hoverIndex != noone) {
 						palette_spread       = _path;
@@ -483,7 +483,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 				}
 			}
 			
-			if(mouse_click(mb_right)) {
+			if(mouse_rclick()) {
 				if(_hoverColor != noone) {
 					menuCall("palette_window_preset_menu", [
 						menuItem(__txtx("gradient_set_single", "Set Single"), function(c) /*=>*/ { gradient = new gradientObject(c); }).setParam(_hoverColor),
@@ -579,7 +579,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		
 		if(__fav) __togglePaletteFav(__fav);
 		
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			click_block    = false;
 			palette_spread = undefined;
 		}

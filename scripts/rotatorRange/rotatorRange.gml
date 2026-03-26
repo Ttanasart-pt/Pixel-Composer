@@ -83,7 +83,7 @@ function rotatorRange(_onModify) : widget() constructor {
 					dragging_index = -1;
 					UNDO_HOLDING   = false;	
 				
-				} else if(mouse_release(mb_left)) {
+				} else if(mouse_lrelease()) {
 					instance_destroy(rotator_Rotator);
 					dragging       = noone;
 					dragging_index = -1;
@@ -93,7 +93,7 @@ function rotatorRange(_onModify) : widget() constructor {
 			} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
 				_kc = COLORS._main_icon_light;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					dragging_index = 1;
 					drag_sv  = [ _data[0], _data[1] ];
 					drag_dat = [ _data[0], _data[1] ];

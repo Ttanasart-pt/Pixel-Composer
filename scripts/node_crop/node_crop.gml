@@ -157,7 +157,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_line(0, _mys, params.w, _mys);
 					draw_set_alpha(1);
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						drag_side = 1;
 						drag_mx   = _mx;
 						drag_my   = _my;
@@ -291,7 +291,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(drag_side == noone && _hov != noone) {
 				hovering = true;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_side = _hov;
 					drag_mx   = _mx;
 					drag_my   = _my;

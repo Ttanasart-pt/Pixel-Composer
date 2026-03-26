@@ -85,7 +85,7 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
 	    if(_hov) {
             draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _panw, lbh, COLORS.panel_inspector_group_hover, 1);
             if(DOUBLE_CLICK) _call = _res[i].closed? -1 : 1;
-            else if(mouse_press(mb_left, _focus)) _res[i].closed = !_res[i].closed;
+            else if(mouse_lpress(_focus)) _res[i].closed = !_res[i].closed;
         }
         
         draw_sprite_ui(THEME.arrow, _res[i].closed? 0 : 3, ui(16), _yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
@@ -190,7 +190,7 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
                 if(_thm && _ass.type != "GMRoom") TOOLTIP = [ _thm, "sprite" ];
                 
                 if(_nod == noone) {
-                	if(mouse_press(mb_left, _focus)) 
+                	if(mouse_lpress(_focus)) 
                 		DRAGGING = { type : _ass.type, data : _ass };
                 } else 
                 	TOOLTIP = "Assets is already binded to a node.";

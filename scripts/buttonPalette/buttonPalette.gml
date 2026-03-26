@@ -84,14 +84,14 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 			h = _h + array_length(_color) * _colr_h + ui(2);
 		
 		if(hoverRect) {
-			if(mouse_press(mb_left, iactive))
+			if(mouse_lpress(iactive))
 				trigger();
 			
-			if(mouse_click(mb_left, iactive)) {
+			if(mouse_lclick(iactive)) {
 				draw_sprite_stretched_ext(THEME.button_def, 2, _x, _y, _w, h, boxColor);	
 				draw_sprite_stretched_ext(THEME.button_def, 3, _x, _y, _w, h, COLORS._main_accent, 1);	
 			}
-		} else if(mouse_press(mb_left)) deactivate();
+		} else if(mouse_lpress()) deactivate();
 		
 		if(_drawSingle) {
 			var _pph = _ph;
@@ -106,7 +106,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bbw, _y + _pph)) {
 				_bbc = COLORS._main_icon_light;
 				
-				if(mouse_press(mb_left))
+				if(mouse_lpress())
 					expanded = !expanded;
 			}
 			
@@ -135,7 +135,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 					if(hover && point_in_rectangle(_m[0], _m[1], _ccx, _ccy, _ccx + _ccw, _ccy + _cch - 1)) {
 						if(DRAGGING && DRAGGING.type == "Color") {
 							draw_sprite_stretched_ext(THEME.box_r2, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, COLORS._main_value_positive, 1);
-							if(mouse_release(mb_left)) {
+							if(mouse_lrelease()) {
 								current_palette[i] = DRAGGING.data;
 								onModify(current_palette);
 							}
@@ -143,7 +143,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 						} else {
 							draw_sprite_stretched_add(THEME.box_r2, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, c_white, .3);
 							
-							if(mouse_press(mb_left, active))
+							if(mouse_lpress(active))
 								triggerSingle(i);
 						}
 					}
@@ -174,7 +174,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 		
 		if(DRAGGING && DRAGGING.type == "Palette" && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, h, COLORS._main_value_positive, 1);	
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				onModify(DRAGGING.data);
 		}
 		

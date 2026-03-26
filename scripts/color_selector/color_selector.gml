@@ -578,7 +578,7 @@ function colorSelector(_onModify = noone) constructor {
 				draw_sprite_stretched_add(THEME.box_r2, 1, _cx, _cy, _cs, _cs, c_white, 0.75);
 			}
 			
-			if(mouse_press(mb_left, interactable && focus)) {
+			if(mouse_lpress(interactable && focus)) {
 				if(point_in_rectangle(_m[0], _m[1], sel_x, sel_y, sel_x + ui(16), sel_y + cont_h))
 					side_dragging = true;
 					
@@ -605,7 +605,7 @@ function colorSelector(_onModify = noone) constructor {
 					}
 				}
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					side_dragging = false;
 					UNDO_HOLDING  = false;
 				}
@@ -637,7 +637,7 @@ function colorSelector(_onModify = noone) constructor {
 					}
 				}
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					area_dragging = false;
 					UNDO_HOLDING  = false;
 				}
@@ -708,7 +708,7 @@ function colorSelector(_onModify = noone) constructor {
 			draw_sprite_stretched_ext(THEME.box_r2, 0, sel_x - ui(4), sel_y - mix_h / 2, ui(8), mix_h, current_color, 1);
 			draw_sprite_stretched_add(THEME.box_r2, 1, sel_x - ui(4), sel_y - mix_h / 2, ui(8), mix_h, c_white, 0.75);
 			
-			if(mouse_press(mb_left, interactable && focus)) {
+			if(mouse_lpress(interactable && focus)) {
 				if(point_in_rectangle(_m[0], _m[1], gra_x, gra_y, gra_x + gra_w, gra_y + gra_h))
 					mix_dragging = true;
 			}
@@ -721,7 +721,7 @@ function colorSelector(_onModify = noone) constructor {
 				current_color = cola(current_color, 1);
 				setColor(current_color);
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					mix_dragging  = false;
 					mixing_colors = noone;
 				}
@@ -847,7 +847,7 @@ function colorSelector(_onModify = noone) constructor {
 				draw_sprite_stretched_add(THEME.box_r2, 1, _cx, _cy, _cs, _cs, c_white, 0.75);
 			}
 			
-			if(mouse_press(mb_left, interactable && focus)) {
+			if(mouse_lpress(interactable && focus)) {
 				if(point_in_rectangle(_m[0], _m[1], sel_x, sel_y, sel_x + ui(16), sel_y + cont_h))
 					side_dragging = true;
 					
@@ -874,7 +874,7 @@ function colorSelector(_onModify = noone) constructor {
 					}
 				}
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					side_dragging = false;
 					UNDO_HOLDING  = false;
 				}
@@ -906,7 +906,7 @@ function colorSelector(_onModify = noone) constructor {
 					}
 				}
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					area_dragging = false;
 					UNDO_HOLDING  = false;
 				}

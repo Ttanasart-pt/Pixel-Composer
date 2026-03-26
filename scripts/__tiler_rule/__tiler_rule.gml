@@ -238,14 +238,14 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
 						tb_rename._current_text = _rl.name;
 						tb_rename.activate();
 						
-	    			} else if(mouse_press(mb_left, _focus)) {
+	    			} else if(mouse_lpress(_focus)) {
     					rule_dragging = _rl;
     				}
 	    			
     			} else {
     				draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_accent);
     				
-	    			if(mouse_press(mb_left, _focus))
+	    			if(mouse_lpress(_focus))
 	    				_rl.open = !_rl.open;
     			}
     		}
@@ -273,7 +273,7 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
     		
     		if(_ahv) {
     			TOOLTIP = "Active";
-    			if(mouse_press(mb_left, _focus)) {
+    			if(mouse_lpress(_focus)) {
     				_rl.active = !_rl.active;
     				tileset.triggerRender();
     			}
@@ -349,13 +349,13 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
 	    			draw_sprite_stretched_ext(THEME.ui_panel, 1 + _cen, _rl_x + _pad, _rl_y + _pad, _sls - _pad * 2, _sls - _pad * 2, _cc, _aa);
 	    			
 	    			if(_rl_hov) {
-	    				if(mouse_press(mb_left, _focus)) {
+	    				if(mouse_lpress(_focus)) {
 		    				tileset.object_selecting = _rl_selected? noone : _rl;
 		    				tileset.object_select_id = j;
 		    				tileset.triggerRender();
 	    				}
 	    				
-	    				if(mouse_press(mb_right, _focus)) {
+	    				if(mouse_rpress(_focus)) {
 	    					_rl.selection_rules[j] = -1;
 	    					tileset.object_selecting = noone;
 		    				tileset.object_select_id = noone;
@@ -408,7 +408,7 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
 	    				var _cc = _rl_hov? COLORS._main_value_positive : COLORS._main_icon;
 						draw_sprite_uniform(THEME.add_16, 0, _rpx + _rpw / 2, _rpy + _rph / 2, 1, _cc);
 						
-						if(_rl_hov && mouse_press(mb_left, _focus)) {
+						if(_rl_hov && mouse_lpress(_focus)) {
 							var _new_rep = new tiler_rule_replacement([-1]);
 	    					array_push(_rl.replacements, _new_rep);
 	    					tileset.object_selecting = _new_rep;
@@ -436,13 +436,13 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
 	    			draw_sprite_stretched_ext(THEME.ui_panel, 1, _rpx, _rpy, _rpw, _rph, _cc, _aa);
 	    			
 	    			if(_rl_hov) {
-	    				if(mouse_press(mb_left, _focus)) {
+	    				if(mouse_lpress(_focus)) {
 		    				tileset.object_selecting = tileset.object_selecting == _replace? noone : _replace;
 		    				tileset.object_select_id = _rl;
 		    				tileset.triggerRender();
 	    				}
 		    				
-	    				if(mouse_press(mb_right, _focus))
+	    				if(mouse_rpress(_focus))
 	    					del_rep = j - 1;
 	    			}
 	    		}
@@ -462,7 +462,7 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
     		array_remove(ruleTiles, rule_dragging);
     		array_insert(ruleTiles, rl_iHover, rule_dragging);
     		
-    		if(mouse_release(mb_left)) {
+    		if(mouse_lrelease()) {
     			rule_dragging = noone;
     			tileset.triggerRender();
     		}

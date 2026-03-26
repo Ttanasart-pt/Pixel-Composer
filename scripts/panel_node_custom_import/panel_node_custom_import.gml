@@ -179,7 +179,7 @@ function Panel_Node_Custom_Import(_dirs) : PanelContent() constructor {
 		draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon_light);
 		draw_text_add(bx + bw / 2, by + bh / 2, __txt("Import"));
 		
-		if(_hov && mouse_press(mb_left, pFOCUS)) {
+		if(_hov && mouse_lpress(pFOCUS)) {
 		    importing = true;
 		    for( var i = 0, n = array_length(directory); i < n; i++ ) {
                 var _dir   = directory[i];

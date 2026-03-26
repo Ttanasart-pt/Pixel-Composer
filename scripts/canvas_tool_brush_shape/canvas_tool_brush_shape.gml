@@ -146,7 +146,7 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 				draw_shape(false);
 			surface_reset_shader();
 		
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				surface_set_shader(drawing_surface, noone, true, BLEND.maximum);
 					draw_shape(true);
 				surface_reset_shader();
@@ -155,7 +155,7 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 				mouse_holding = false;
 			}
 			
-		} else if(mouse_press(mb_left, active)) {
+		} else if(mouse_lpress(active)) {
 			mouse_holding = true;
 			
 			mouse_pre_x = mouse_cur_x;

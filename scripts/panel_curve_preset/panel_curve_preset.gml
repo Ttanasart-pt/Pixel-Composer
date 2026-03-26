@@ -163,7 +163,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			draw_set_color(COLORS._main_icon);
 			draw_curve(cx, cy, cw, ch, _curv);
 			
-			if(hv && mouse_press(mb_left, foc)) { onModify(_curv); close(); }
+			if(hv && mouse_lpress(foc)) { onModify(_curv); close(); }
 			
 			yy += hg + ui(4);
 		}
@@ -181,7 +181,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			folderW = _w;
 			onResize();
 			
-			if(mouse_release(mb_left)) 
+			if(mouse_lrelease()) 
 				folderW_dragging = -1;
 		}
 		
@@ -243,7 +243,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 		
 		if(point_in_rectangle(mx, my, dx0, dy0, dx1, dy1)) {
 			CURSOR = cr_size_we;
-			if(mouse_click(mb_left, pFOCUS)) {
+			if(mouse_lclick(pFOCUS)) {
 				folderW_dragging = true;
 				folderW_drag_mx  = mx;
 				folderW_drag_sx  = folderW;

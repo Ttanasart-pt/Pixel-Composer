@@ -43,7 +43,7 @@ event_inherited();
 				if(sHOVER && point_in_rectangle(_m[0], _m[1], 0 + padd, _y + padd, hg - padd, _y + hg - padd)) {
 					sc_group.hover_content = true;
 					aa = 1;
-					if(mouse_press(mb_left, sFOCUS)) dragging = display_list[i];
+					if(mouse_lpress(sFOCUS)) dragging = display_list[i];
 				}
 				
 				draw_sprite_ui(THEME.hamburger_s, 0, hg / 2, _y + hg / 2,,,, COLORS._main_icon_light, aa);
@@ -70,7 +70,7 @@ event_inherited();
 			array_remove(display_list, dragging);
 			array_insert(display_list, hovr, dragging);
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				node.sortIO();
 				dragging = noone;
 			}

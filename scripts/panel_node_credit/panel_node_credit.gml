@@ -35,7 +35,7 @@ For your convenience we have develop a node credit system which allows you to to
 			
 			if(pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + _w, _by + _h)) {
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 1, _bx, _by, _w, _h, cc, 1);
-				if(mouse_press(mb_left, pFOCUS))
+				if(mouse_lpress(pFOCUS))
 					url_open("https://ko-fi.com/makhamdev");
 			} else
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, _by, _w, _h, cc, 1);

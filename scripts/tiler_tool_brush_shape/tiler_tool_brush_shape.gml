@@ -45,12 +45,12 @@ function tiler_tool_shape(_node, _brush, _shape) : tiler_tool(_node) constructor
 				_auto.drawing_end();
 			}
 					
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				mouse_holding = false;
 				apply_draw_surface();
 			}
 			
-		} else if(mouse_press(mb_left, active)) {
+		} else if(mouse_lpress(active)) {
 			mouse_pre_x = mouse_cur_x;
 			mouse_pre_y = mouse_cur_y;
 				

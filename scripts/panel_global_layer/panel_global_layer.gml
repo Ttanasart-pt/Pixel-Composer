@@ -224,7 +224,7 @@ function Panel_Global_Layer_Drawer() constructor {
 		
 		if(dragging != noone) {
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				if(_hovIndex != dragging) {
 					var _node = _nodes[dragging];
 					array_delete(_nodes, dragging, 1);

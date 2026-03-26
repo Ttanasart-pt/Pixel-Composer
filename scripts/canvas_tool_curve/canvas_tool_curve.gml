@@ -61,11 +61,11 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 			mouse_edit_mx = mouse_cur_x;
 			mouse_edit_my = mouse_cur_y;
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				editing[0] = noone;
 		}
 		
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			recordAction(ACTION_TYPE.var_modify, self, [ array_clone(anchors), "anchors" ]);
 			
 			if(mouse_hovering[0] == noone) {

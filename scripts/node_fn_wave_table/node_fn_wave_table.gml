@@ -141,7 +141,7 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 			if(_hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _tw, _ty + _th)) {
 				
 				if(i == _len) {
-					if(mouse_press(mb_left, _focus)) {
+					if(mouse_lpress(_focus)) {
 						array_push(attributes.wavetable, 0);
 						wavetable_selecting = i;
 						menuCall("", wavetable_menu);
@@ -150,12 +150,12 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 				} else {
 					draw_sprite_stretched_ext(THEME.button_def, 1, _tx, _ty, _tw, _th, COLORS._main_icon_light, 1);
 					
-					if(mouse_press(mb_left, _focus)) {
+					if(mouse_lpress(_focus)) {
 						wavetable_selecting = i;
 						menuCall("", wavetable_menu);
 					}
 					
-					if(_len > 1 && mouse_press(mb_right, _focus)) 
+					if(_len > 1 && mouse_rpress(_focus)) 
 						_del = i;
 				}
 			}

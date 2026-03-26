@@ -62,7 +62,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _angle, 
 		if(setValueInspector( unit.invApply(_dist) ))
 			UNDO_HOLDING = true;
 							
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			drag_type = 0;
 			UNDO_HOLDING = false;
 		}
@@ -72,7 +72,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _angle, 
 		_hover = 1;
 		 index = 1;
 		
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			drag_type = 1;
 			drag_mx   = _mx;
 			drag_my   = _my;

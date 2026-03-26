@@ -50,7 +50,7 @@ function tiler_tool_brush(_node, _brush, eraser = false) : tiler_tool(_node) con
 			}
 		}
 			
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			node.storeAction();
 			
 			if(!key_mod_press(SHIFT)) {
@@ -103,7 +103,7 @@ function tiler_tool_brush(_node, _brush, eraser = false) : tiler_tool(_node) con
 			mouse_pre_draw_x = mouse_cur_x;
 			mouse_pre_draw_y = mouse_cur_y;	
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				mouse_holding   = false;
 				apply_draw_surface();
 			}

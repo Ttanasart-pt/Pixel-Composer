@@ -281,7 +281,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 						index  : _cc[0] - 1,
 					};
 					
-					if(mouse_click(mb_left, active)) {
+					if(mouse_lclick(active)) {
 						brush.brush_indices = [[[ _cc[0] - 1, _cc[1] ]]];
 		    			brush.brush_width   = 1;
 						brush.brush_height  = 1;

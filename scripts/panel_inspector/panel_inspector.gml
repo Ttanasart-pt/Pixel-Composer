@@ -873,7 +873,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 	
                 	if(pFOCUS) {
 						if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
-						else if(mouse_press(mb_left)) { 
+						else if(mouse_lpress()) { 
 							if(key_mod_press(CTRL)) {
 								_cAll = jun[@ 1]? 1 : -1;
 								
@@ -882,7 +882,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		                       	coll = !coll; 
 							}
 	                       	
-						} else if(mouse_press(mb_right, pFOCUS)) 
+						} else if(mouse_rpress(pFOCUS)) 
 							menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
                 	}
                 } else
@@ -916,8 +916,8 @@ function Panel_Inspector() : PanelContent() constructor {
                         contentPane.hover_content = true;
                         draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, yy, lbh, lbh, COLORS.panel_inspector_group_hover, 1);
                         
-                        if(mouse_press(mb_left,  pFOCUS)) jun.setValue(!toging);
-                        if(mouse_press(mb_right, pFOCUS)) propRightClick(jun);
+                        if(mouse_lpress( pFOCUS)) jun.setValue(!toging);
+                        if(mouse_rpress(pFOCUS)) propRightClick(jun);
                             
                     } else 
                         draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, yy, lbh, lbh, COLORS.panel_inspector_group_bg, 1);
@@ -1043,7 +1043,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     draw_sprite_stretched_ext(THEME.ui_panel, 1, _x + ui(4), yy, con_w - ui(4), widH, COLORS._main_accent, aa);
                 }
                 
-                if(_hover && lbHov && prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
+                if(_hover && lbHov && prop_dragging == noone && mouse_lpress(pFOCUS)) {
                     prop_dragging = jun;
                         
                     prop_sel_drag_x = mouse_mx;
@@ -1230,7 +1230,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 prop_dragging = noone;
             }
             
-            if(mouse_release(mb_left))
+            if(mouse_lrelease())
                 prop_dragging = noone;
         }
         
@@ -1356,7 +1356,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 if(pFOCUS) {
                     	 if(DOUBLE_CLICK) _cAll = _meta[1]? -1 : 1;
-                    else if(mouse_press(mb_left)) _meta[1] = !_meta[1];
+                    else if(mouse_lpress()) _meta[1] = !_meta[1];
                 }
             }
                 
@@ -1768,7 +1768,7 @@ function Panel_Inspector() : PanelContent() constructor {
     
     static drawContentNode = function(_y, _m) {
         var con_w  = contentPane.surface_w - ui(4);
-        if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
+        if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_lpress(pFOCUS))
             prop_selecting = noone;
         
         var _hh = 0;

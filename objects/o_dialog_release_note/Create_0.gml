@@ -77,10 +77,10 @@ event_inherited();
 			if(dl.status == 0) {
 				if(hov) {
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
-					if(mouse_press(mb_left, sFOCUS)) 
+					if(mouse_lpress(sFOCUS)) 
 						toggleDownload(dl);
 					
-					if(mouse_press(mb_right, sFOCUS)) {
+					if(mouse_rpress(sFOCUS)) {
 						dl_selecting = dl;
 						menuCall("", [
 							menuItem("Download", function() /*=>*/ {return toggleDownload(dl_selecting)}),
@@ -99,10 +99,10 @@ event_inherited();
 				
 			} else if(dl.status == 2 && hov) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
-				if(mouse_press(mb_left, sFOCUS)) 
+				if(mouse_lpress(sFOCUS)) 
 					shellOpenExplorer(filename_dir(dl.download_path));
 				
-				if(mouse_press(mb_right, sFOCUS)) {
+				if(mouse_rpress(sFOCUS)) {
 					dl_selecting = dl;
 					menuCall("", [
 						menuItem("Open",   function() /*=>*/ {return shellOpenExplorer(filename_dir(dl_selecting.download_path))}),
@@ -124,7 +124,7 @@ event_inherited();
 				
 			} else if(dl.status == -1 && hov) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
-				if(mouse_press(mb_left, sFOCUS)) 
+				if(mouse_lpress(sFOCUS)) 
 					url_open(dl.link);
 				
 			}

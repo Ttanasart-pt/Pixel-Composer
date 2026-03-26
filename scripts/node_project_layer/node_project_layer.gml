@@ -99,7 +99,7 @@ function Node_Project_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					UNDO_HOLDING = true;
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				UNDO_HOLDING = false;
 				dragging = 0; 
 			}

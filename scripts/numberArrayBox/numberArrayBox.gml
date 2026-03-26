@@ -64,7 +64,7 @@ function numberArrayBox(_onModify) : widget() constructor {
     		    
     		    if(_hov) {
 			        draw_sprite_stretched_ext(THEME.textbox, 1, _tx, _ty, _tw, _th, boxColor, 1);
-			        if(mouse_press(mb_left, active)) {
+			        if(mouse_lpress(active)) {
 			            editing = i;
 			            tb.activate(_v);
 			        }

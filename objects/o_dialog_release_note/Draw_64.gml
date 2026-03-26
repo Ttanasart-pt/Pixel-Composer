@@ -26,7 +26,7 @@ if !ready exit;
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, px, py, px + pw, py + ph - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, px, py, pw, ph, CDEF.main_white, 1);
 			
-			if(i != page && mouse_press(mb_left, sFOCUS))
+			if(i != page && mouse_lpress(sFOCUS))
 				page = i;
 		}
 	

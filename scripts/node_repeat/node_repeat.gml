@@ -172,7 +172,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			if(hov && _m[0] < _x1 - ui(32)) {
 				tc = COLORS._main_text;
 				
-				if(mouse_press(mb_left, _focus)) {
+				if(mouse_lpress(_focus)) {
 					dynamic_input_inspecting = i;
 					refreshDynamicDisplay();
 				}

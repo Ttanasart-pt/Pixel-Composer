@@ -94,7 +94,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 					dragging     = noone;
 					UNDO_HOLDING = false;
 				
-				} else if(mouse_release(mb_left)) {
+				} else if(mouse_lrelease()) {
 					instance_destroy(dragging);
 					dragging     = noone;
 					UNDO_HOLDING = false;
@@ -103,7 +103,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			} else if(hover && hoverRot) {
 				_kc = COLORS._main_icon_light;
 			
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky);
 					drag_sv  = _data;
 				}

@@ -2280,11 +2280,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _js = a? THEME.node_junction_inspector_button : THEME.node_junction_inspector;
 			
 			var  ss = _s / (2 * THEME_SCALE);
-			if(_jh && mouse_click(mb_left) && a)
+			if(_jh && mouse_lclick() && a)
 				ss *= .8;
 			
 			__draw_sprite_ext(_js, _jh, _jx, _jy, ss, ss, 0, c_white, 1);
-			if(_jh && mouse_press(mb_left) && a)
+			if(_jh && mouse_lpress() && a)
 				insp1button.onClick();
 		}
 		
@@ -2295,11 +2295,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _js = a? THEME.node_junction_inspector_button : THEME.node_junction_inspector;
 			
 			var  ss = _s / (2 * THEME_SCALE);
-			if(_jh && mouse_click(mb_left) && a)
+			if(_jh && mouse_lclick() && a)
 				ss *= .8;
 				
 			__draw_sprite_ext(_js, _jh, _jx, _jy, ss, ss, 0, c_white, 1);
-			if(_jh && mouse_press(mb_left) && a)
+			if(_jh && mouse_lpress() && a)
 				insp2button.onClick();
 		}
 		

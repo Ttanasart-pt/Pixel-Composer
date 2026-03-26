@@ -176,7 +176,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			var _bc = action_selecting.outputNode == i? COLORS._main_value_negative : COLORS._main_icon_dark;
 			draw_sprite_ui(THEME.arrow, 1, _bw - ui(12), yy + _bh / 2, 1, 1, 0, _bc);
 			if(_hv) TOOLTIP = __txt("Action Output");
-			if(mouse_press(mb_left, _hv)) action_selecting.outputNode = action_selecting.outputNode == i? noone : i;
+			if(mouse_lpress(_hv)) action_selecting.outputNode = action_selecting.outputNode == i? noone : i;
 			_bw -= ui(28);
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], _bw - ui(24), yy, _bw, yy + _bh);
@@ -187,7 +187,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			var _bc = action_selecting.inputNode == i? COLORS._main_value_positive : COLORS._main_icon_dark;
 			draw_sprite_ui(THEME.arrow, 3, _bw - ui(12), yy + _bh / 2, 1, 1, 0, _bc);
 			if(_hv) TOOLTIP = __txt("Action Input");
-			if(mouse_press(mb_left, _hv)) action_selecting.inputNode = action_selecting.inputNode == i? noone : i;
+			if(mouse_lpress(_hv)) action_selecting.inputNode = action_selecting.inputNode == i? noone : i;
 			_bw -= ui(28);
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _bw, yy + _bh);
@@ -198,7 +198,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
 			draw_text_add(ui(8), yy + ui(2), _name);
 			
-			if(mouse_press(mb_left, _hv)) _r.expanded = !_r.expanded;
+			if(mouse_lpress(_hv)) _r.expanded = !_r.expanded;
 			
 			yy += _bh;
 			_h += _bh;
@@ -223,7 +223,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 					}
 					
 					draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
-					if(mouse_press(mb_left, _hv)) {
+					if(mouse_lpress(_hv)) {
 						if(_tg) struct_remove(_vali, "value");
 						else    _vali[$ "value"] = _in.getValue();
 					}
@@ -238,7 +238,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 						}
 						
 						draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
-						if(mouse_press(mb_left, _hv)) {
+						if(mouse_lpress(_hv)) {
 							if(_tg) struct_remove(_vali, "expression");
 							else    _vali[$ "expression"] = _in.expression;
 						}
@@ -254,7 +254,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 						}
 						
 						draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
-						if(mouse_press(mb_left, _hv)) {
+						if(mouse_lpress(_hv)) {
 							if(_tg) struct_remove(_vali, "unit");
 							else    _vali[$ "unit"] = _in.unit.mode;
 						}
@@ -483,7 +483,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
 			draw_text_add(bx + bw / 2, by + bh / 2, __txt("Create Action"));
 			
-			if(mouse_press(mb_left, pFOCUS && hv)) {
+			if(mouse_lpress(pFOCUS && hv)) {
 				action_selecting.save();
 				
 				var _surf = PANEL_PREVIEW.getNodePreviewSurface();
@@ -509,7 +509,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, cc, .75 + hv * .15);
 			draw_sprite_ui(THEME.cross, 0, bx + bw / 2, by + bh / 2, .75, .75, 0, cc);
 			
-			if(mouse_press(mb_left, pFOCUS && hv)) {
+			if(mouse_lpress(pFOCUS && hv)) {
 				action_selecting = undefined;
 				creating = false;
 			}
@@ -521,7 +521,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, cc);
 			draw_text_add(bx + bw / 2, by + bh / 2, __txt("Update"));
 			
-			if(mouse_press(mb_left, pFOCUS && hv)) {
+			if(mouse_lpress(pFOCUS && hv)) {
 				action_selecting.save();
 				__initNodeActions(true);
 			}
@@ -536,7 +536,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, cc, .75 + hv * .15);
 			draw_sprite_ui(THEME.icon_delete_24, 0, bx + bw / 2, by + bh / 2, .75, .75, 0, cc);
 			
-			if(mouse_press(mb_left, pFOCUS && hv)) {
+			if(mouse_lpress(pFOCUS && hv)) {
 				action_selecting.deleteFile();
 				action_selecting = undefined;
 				__initNodeActions(true);

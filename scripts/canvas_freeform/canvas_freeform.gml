@@ -19,7 +19,7 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) {
 			array_push(freeform_shape, new __vec2(_mmx, _mmy) );
 		}
 			
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			surface_set_target(drawing_surface);
 				brush.drawLine(_mmx, _mmy, freeform_shape[0].x, freeform_shape[0].y, true);
 			surface_reset_target();
@@ -58,7 +58,7 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) {
 			mouse_holding = false;
 		}
 			
-	} else if(mouse_press(mb_left, active)) {
+	} else if(mouse_lpress(active)) {
 		mouse_pre_x = _mmx;
 		mouse_pre_y = _mmy;
 				

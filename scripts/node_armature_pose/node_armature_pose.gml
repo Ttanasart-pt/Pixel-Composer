@@ -132,7 +132,7 @@
 				KEYBOARD_STRING = "";
 			}
 			
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -261,7 +261,7 @@
 				KEYBOARD_STRING = "";
 			}
 			
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -411,7 +411,7 @@
 				KEYBOARD_STRING = "";
 			}
 			
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -690,7 +690,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					if(_nod.inputs[i].setValue(val[i])) UNDO_HOLDING = true;
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				posing_bone = noone;
 				posing_type = noone;
 				UNDO_HOLDING = false;
@@ -747,7 +747,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			gpu_set_texfilter(false);
 				
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				posing_bone     = _bne;
 				posing_type     = _typ;
 				pose_child_lock = _lck;

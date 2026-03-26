@@ -29,7 +29,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh - 1)) {
 			cc = COLORS._main_text;
 			
-			if(mouse_press(mb_left, _focus))
+			if(mouse_lpress(_focus))
 				inputs[2].setValue(_layer.name);
 		}
 		

@@ -69,10 +69,10 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x1, _y0, _x1 + _xw, _y0 + ss)) {
 			    draw_sprite_stretched_add(THEME.ui_panel, 1, _x1, _y0, _xw, ss, c_white, 0.25);
 			    
-			    if(mouse_press(mb_left, _focus))
+			    if(mouse_lpress(_focus))
 			        tileset.object_selecting = tileset.object_selecting == mp? noone : mp;
 			       
-		        if(mouse_press(mb_right, _focus)) {
+		        if(mouse_rpress(_focus)) {
 		            mp.target = undefined;
 		            triggerRender();
 		        }

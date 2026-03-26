@@ -66,7 +66,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			inputs[1].setValue([ _x0, _y0 ]);
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				dragging = noone;
 		}
 		
@@ -77,7 +77,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			inputs[2].setValue(stick? _ss : _ss / _s);
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				dragging = noone;
 		}
 		
@@ -97,7 +97,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(point_in_circle(_mx, _my, _x1, _y1, 12)) {
 				_hov = true;
 				
-				if(mouse_press(mb_left, is_instanceof(FOCUS, Panel) && FOCUS.getContent() == PANEL_GRAPH)) {
+				if(mouse_lpress(is_instanceof(FOCUS, Panel) && FOCUS.getContent() == PANEL_GRAPH)) {
 					dragging = 2;
 					drag_sx  = xx;
 					drag_sy  = yy;
@@ -107,7 +107,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			} else if(point_in_rectangle(_mx, _my, xx, yy, _x1, _y1)) {
 				_hov = true;
 				
-				if(mouse_press(mb_left, is_instanceof(FOCUS, Panel) && FOCUS.getContent() == PANEL_GRAPH)) {
+				if(mouse_lpress(is_instanceof(FOCUS, Panel) && FOCUS.getContent() == PANEL_GRAPH)) {
 					dragging = 1;
 					drag_sx  = pos_x;
 					drag_sy  = pos_y;

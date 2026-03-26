@@ -197,7 +197,7 @@ event_inherited();
 					if(_hov) {
 						sp_sample.hover_content = true;
 						
-						if(mouse_press(mb_left)) {
+						if(mouse_lpress()) {
 							if(_sel) array_remove(meta_filter, tg);
 							else     array_push(meta_filter, tg);
 						}
@@ -316,7 +316,7 @@ event_inherited();
 					}
 					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 1);
-					if(mouse_press(mb_left, sFOCUS)) {
+					if(mouse_lpress(sFOCUS)) {
 						LOAD_PATH(_project.path, true);
 						PROJECT.thumbnail = array_safe_get_fast(_project.spr_data, 0);
 						instance_destroy();
@@ -408,7 +408,7 @@ event_inherited();
 					sp_sample.hover_content = true;
 					
 					if(DOUBLE_CLICK) _cAll = _coll? -1 : 1;
-					else if(mouse_press(mb_left)) {
+					else if(mouse_lpress()) {
 						if(_coll) array_remove(PREFERENCES.welcome_file_closed, lb.text);
 						else      array_push(PREFERENCES.welcome_file_closed, lb.text);
 					}
@@ -480,7 +480,7 @@ event_inherited();
 				sp_contest.hover_content = true;
 				TOOLTIP = "Go to Pixel Composer Discord server";
 			
-				if(mouse_press(mb_left, sFOCUS))
+				if(mouse_lpress(sFOCUS))
 					url_open("https://discord.gg/aHGbYjQh63");
 			}
 		
@@ -533,7 +533,7 @@ event_inherited();
 					sp_contest.hover_content = true;
 					draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, grid_width, grid_heigh, COLORS._main_accent, 1);
 					
-					if(mouse_press(mb_left, sFOCUS))
+					if(mouse_lpress(sFOCUS))
 						contest_viewing = contest;
 				} else 
 					draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, grid_width, grid_heigh, COLORS._main_icon, 0.75);
@@ -715,7 +715,7 @@ event_inherited();
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], ui(20 - 16), ui(36 - 16), ui(20 + 16), ui(36 + 16))) {
 				sp_contest.hover_content = true;
 				draw_sprite_ui(THEME.arrow_back_32, 0, ui(20), ui(36),,,, c_white);
-				if(mouse_press(mb_left, sFOCUS))
+				if(mouse_lpress(sFOCUS))
 					contest_viewing = noone;
 			} else
 				draw_sprite_ui(THEME.arrow_back_32, 0, ui(20), ui(36),,,, COLORS._main_icon);
@@ -728,7 +728,7 @@ event_inherited();
 				TOOLTIP = __txtx("contest_open_discord", "Open in Discord");
 				
 				draw_sprite_ui(THEME.discord, 0, bx, by,,,, c_white);
-				if(mouse_press(mb_left, sFOCUS))
+				if(mouse_lpress(sFOCUS))
 					url_open($"https://discord.com/channels/953634069646835773/{contest_viewing.id}");
 			} else
 				draw_sprite_ui(THEME.discord, 0, bx, by,,,, COLORS._main_icon);
@@ -984,7 +984,7 @@ event_inherited();
 				draw_sprite_stretched_add(THEME.node_bg, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, .4);
 				TOOLTIP = _inf.tooltip;
 				
-				if(mouse_press(mb_left, sp_news.active))
+				if(mouse_lpress(sp_news.active))
 					url_open(_inf.link);
 			}
 			

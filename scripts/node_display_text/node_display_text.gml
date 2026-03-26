@@ -318,11 +318,11 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		mm_press   = lerp_float(mm_press  , 0, 5);
 		mm_release = lerp_float(mm_release, 0, 5);
 		
-		if(mouse_press(mb_left))     ml_press   = 2;
-		if(mouse_release(mb_left))   ml_release = 2;
+		if(mouse_lpress())     ml_press   = 2;
+		if(mouse_lrelease())   ml_release = 2;
 		if(DOUBLE_CLICK)		     ml_double  = 2;
-		if(mouse_press(mb_right))    mr_press   = 2;
-		if(mouse_release(mb_right))  mr_release = 2;
+		if(mouse_rpress())    mr_press   = 2;
+		if(mouse_rrelease())  mr_release = 2;
 		if(mouse_press(mb_middle))   mm_press   = 2;
 		if(mouse_release(mb_middle)) mm_release = 2;
 	}
@@ -332,11 +332,11 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			case "left_mouse_click" :		 return clamp(ml_press, 0, 1);
 			case "left_mouse_double_click" : return clamp(ml_double, 0, 1);
 			case "left_mouse_release" :		 return clamp(ml_release, 0, 1);
-			case "left_mouse_drag" :		 return mouse_click(mb_left);
+			case "left_mouse_drag" :		 return mouse_lclick();
 			
 			case "right_mouse_click" :		 return clamp(mr_press, 0, 1);
 			case "right_mouse_release" :	 return clamp(mr_release, 0, 1);
-			case "right_mouse_drag" :		 return mouse_click(mb_right);
+			case "right_mouse_drag" :		 return mouse_rclick();
 			
 			case "middle_mouse_click" :		 return clamp(mm_press, 0, 1);
 			case "middle_mouse_release" :	 return clamp(mm_release, 0, 1);

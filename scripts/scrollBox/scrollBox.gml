@@ -198,7 +198,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		
 		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);
 		if(_hovering) {
-			if(mouse_press(mb_left, active))
+			if(mouse_lpress(active))
 				trigger();
 				
 			if(MOUSE_WHEEL != 0 && key_mod_press(SHIFT)) 
@@ -389,7 +389,7 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 		
 		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);
 		if(_hovering) {
-			if(mouse_press(mb_left, active))
+			if(mouse_lpress(active))
 				trigger();
 		}
 		

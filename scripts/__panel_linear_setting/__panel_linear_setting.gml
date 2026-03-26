@@ -104,7 +104,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
                 
                 if(pHOVER && point_in_rectangle(mx, my, lbx, yy, lbx + lbw, yy + lbh)) {
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
-                	if(mouse_press(mb_left, pFOCUS)) _prop[@ 1] = !coll;
+                	if(mouse_lpress(pFOCUS)) _prop[@ 1] = !coll;
                 	
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
@@ -175,7 +175,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.action != noone) {
 					var _key = _prop.action.hotkey;
 					
-					if(_whover && !_widg.inBBOX([ mx, my ]) && mouse_press(mb_right)) {
+					if(_whover && !_widg.inBBOX([ mx, my ]) && mouse_rpress()) {
 						selecting_key = _key;
 						
 						var context_menu_settings = [

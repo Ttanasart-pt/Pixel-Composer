@@ -71,7 +71,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		draw_anchor_line(__overlay_hover[2], x0, yc, 16, 90);
 		draw_anchor_line(__overlay_hover[3], x1, yc, 16, 90);
 		
-		if(_hov_ax != noone && mouse_press(mb_left, active)) {
+		if(_hov_ax != noone && mouse_lpress(active)) {
 			mouse_sx  = _mx;
 			mouse_sy  = _my;
 			skew_inv  = 0;

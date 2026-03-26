@@ -17,7 +17,7 @@ function tiler_tool_fill(_node, _brush, toolAttr) : tiler_tool(_node) constructo
 		
 		var _auto = brush.autoterrain;
 		
-		if(mouse_press(mb_left, active) && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, surface_w - 1, surface_h - 1)) {
+		if(mouse_lpress(active) && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, surface_w - 1, surface_h - 1)) {
 			node.storeAction();
 			
 			surface_set_target(drawing_surface);

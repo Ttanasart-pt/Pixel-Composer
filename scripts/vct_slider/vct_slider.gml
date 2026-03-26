@@ -34,13 +34,13 @@ function vct_slider(pressing, spr, sx, sy, ex, ey, val) {
 		_v = round(_v / _step) * _step;
 		val.set(_v);
 		
-		if(mouse_release(mb_left))
+		if(mouse_lrelease())
 			pres = false;
 	} else {
 		if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
 			draw_sprite_ext_add(spr, 0, _sx, _sy, _s, _s, 0, c_white, 0.4);
 			
-			if(mouse_press(mb_left, pFOCUS))
+			if(mouse_lpress(pFOCUS))
 				pres = true;
 		}
 	}

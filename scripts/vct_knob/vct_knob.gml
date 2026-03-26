@@ -37,13 +37,13 @@ function vct_knob(pressing, spr, sx, sy, val, angle_min = -135, angle_max = 135,
 		_v = round(_v / _step) * _step;
 		val.set(_v);
 		
-		if(mouse_release(mb_left))
+		if(mouse_lrelease())
 			pres = false;
 	} else {
 		if(pHOVER && point_in_circle(mx, my, sx, sy, bw / 2 * _s)) {
 			draw_sprite_ext_add(spr, ind, _sx, _sy, _s, _s, 0, c_white, 0.4);
 			
-			if(mouse_press(mb_left, pFOCUS))
+			if(mouse_lpress(pFOCUS))
 				pres = true;
 		}
 	}

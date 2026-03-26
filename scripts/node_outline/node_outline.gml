@@ -14,7 +14,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attributes.filter = array_create(9, 1);
 	filtering_vl      = false;
 	filter_button     = new buttonAnchor(noone, function(i) /*=>*/ {
-		if(mouse_press(mb_left)) 
+		if(mouse_lpress()) 
 			filtering_vl = !attributes.filter[i];
 		attributes.filter[i] = filtering_vl;
 		triggerRender();
@@ -75,17 +75,22 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var surf = _data[ 0];
-		var colr = _data[ 2];
-		var blnd = _data[ 3];
-		var side = _data[ 5];
-		var alis = _data[ 6];
-		var crop = _data[12];
-		var prof = _data[18];
-		var thrs = _data[19];
-		var hres = _data[20];
+		#region data
+			var surf = _data[ 0];
+			
+			var prof = _data[18];
+			var side = _data[ 5];
+			var crop = _data[12];
+			var thrs = _data[19];
+			
+			var colr = _data[ 2];
+			var alis = _data[ 6];
+			var hres = _data[20];
+			
+			var blnd = _data[ 3];
 		
-		inputs[1].setType(alis? VALUE_TYPE.float : VALUE_TYPE.integer);
+			inputs[1].setType(alis? VALUE_TYPE.float : VALUE_TYPE.integer);
+		#endregion
 		
 		filter_button.index = attributes.filter;
 		

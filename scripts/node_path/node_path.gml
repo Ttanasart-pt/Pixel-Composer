@@ -127,7 +127,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -240,7 +240,7 @@
 			draw_set_color(COLORS._main_icon);
 			draw_line_dashed(ox, oy, _mx, _my);
 			
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -369,7 +369,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -726,7 +726,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(edited) UNDO_HOLDING = true;
 				
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				transform_type = 0;
 				UNDO_HOLDING   = false;
 				RENDER_ALL
@@ -874,7 +874,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						drag_point_my = pxy;
 					}
 					
-					if(mouse_release(mb_left)) {
+					if(mouse_lrelease()) {
 						var amo		= array_length(drag_points);
 						var _p      = 0;
 						var points	= [];
@@ -1150,7 +1150,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			TOOLTIP = $"Weight: {_dis}"
 			_pth.updateLength();
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				weight_drag = noone;
 				triggerRender();
 				UNDO_HOLDING = false;
@@ -1517,7 +1517,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				draw_sprite_colored(THEME.anchor_selector, hov == 3, minx, maxy);
 				draw_sprite_colored(THEME.anchor_selector, hov == 4, maxx, maxy);
 				
-				if(hov && mouse_press(mb_left, active)) {
+				if(hov && mouse_lpress(active)) {
 					transform_type = hov;
 					transform_minx = (minx - _x) / _s;	transform_maxx = (maxx - _x) / _s;
 					transform_miny = (miny - _y) / _s;	transform_maxy = (maxy - _y) / _s;
@@ -1536,7 +1536,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				if(anchor_hover != -1 && hover_type == 0) { //remove
 					CURSOR_SPRITE = THEME.cursor_remove;
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						var _indx = input_fix_len + anchor_hover;
 						recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ])
 							.setRef(self);
@@ -1600,7 +1600,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var _msx = PANEL_PREVIEW.snapX((_mmx - _x) / _s);
 					var _msy = PANEL_PREVIEW.snapY((_mmy - _y) / _s);
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						var ind = array_length(inputs);
 						var anc = createNewInput(, _msx, _msy, 0, 0, 0, 0, false);
 						
@@ -1645,7 +1645,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				draw_sprite_ui_uniform(THEME.path_tools_draw, 0, _mx + 16, _my + 16);
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					var replace = tool_pathDrawer.attribute.create;
 					if(replace) {
 						while(array_length(inputs) > input_fix_len)
@@ -1667,7 +1667,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				anchor_select = [];
 				CURSOR_SPRITE = THEME.cursor_add;
 				
-				if(drag_point == -1 && mouse_press(mb_left, active)) {
+				if(drag_point == -1 && mouse_lpress(active)) {
 					while(array_length(inputs) > input_fix_len)
 						array_delete(inputs, input_fix_len, 1);
 					resetDisplayList();
@@ -1687,7 +1687,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				anchor_select = [];
 				CURSOR_SPRITE = THEME.cursor_add;
 				
-				if(drag_point == -1 && mouse_press(mb_left, active)) {
+				if(drag_point == -1 && mouse_lpress(active)) {
 					while(array_length(inputs) > input_fix_len)
 						array_delete(inputs, input_fix_len, 1);
 					resetDisplayList();
@@ -1707,7 +1707,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				anchor_select = [];
 				CURSOR_SPRITE = THEME.cursor_add;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					while(array_length(inputs) > input_fix_len)
 						array_delete(inputs, input_fix_len, 1);
 					resetDisplayList();
@@ -1733,7 +1733,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					} else if(_weight_hover != -1 && key_mod_press(SHIFT)) {
 						CURSOR_SPRITE = THEME.cursor_remove;
 						
-						if(mouse_press(mb_left, active)) {
+						if(mouse_lpress(active)) {
 							if(_weight_hover == 0 || _weight_hover == array_length(attributes.weight) - 1) 
 								attributes.weight[_weight_hover][0] = 1;
 							else 
@@ -1743,7 +1743,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						break;
 					}
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						if(array_empty(attributes.weight)) attributes.weight = [ [ 0, 1 ], [ 100, 1 ] ];
 						var _w = attributes.weight;
 						
@@ -1776,7 +1776,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				if(hover_type == 0 && _tooln == "Edit Control point") { // add / remove anchor point
 					CURSOR_SPRITE = THEME.cursor_path_anchor;
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						if(_a[_ANCHOR.c1x] != 0 || _a[_ANCHOR.c1y] != 0 || _a[_ANCHOR.c2x] != 0 || _a[_ANCHOR.c2y] != 0) {
 							_a[@_ANCHOR.c1x] = 0;
 							_a[@_ANCHOR.c1y] = 0;
@@ -1804,7 +1804,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				} else if(hover_type == 0 && key_mod_press(SHIFT)) { // remove
 					CURSOR_SPRITE = THEME.cursor_remove;
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						var _indx = input_fix_len + anchor_hover;
 						recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ])
 							.setRef(self);
@@ -1833,7 +1833,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 					CURSOR_SPRITE = _spr;
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						if(_mode != 0) {
 							_a[@_ANCHOR.ind] = _mode;
 							inputs[input_fix_len + anchor_hover].setValue(_a);

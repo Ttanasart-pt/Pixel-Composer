@@ -47,16 +47,16 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 			hovering = true;
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 1, x, y, w, h, boxColor);
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				trigger();
 				click = true;
 			}
 			
-			if(mouse_click(mb_left, active)) draw_sprite_stretched(THEME.textbox, 2, x, y, w, h);
+			if(mouse_lclick(active)) draw_sprite_stretched(THEME.textbox, 2, x, y, w, h);
 			
 		} else {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor);
-			if(mouse_press(mb_left)) deactivate();
+			if(mouse_lpress()) deactivate();
 		}
 		
 		var aa = interactable * 0.25 + 0.75;

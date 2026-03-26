@@ -103,7 +103,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		        if(_hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg - 1)) {
 		            cc = COLORS._main_text;
 		            
-		            if(mouse_press(mb_left, _focus)) {
+		            if(mouse_lpress(_focus)) {
 		            	selectDir  = selectDir == dr? noone : dr;
 		            	selectNode = noone;
 		            }
@@ -188,7 +188,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 			    if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - 1)) {
 		            cc = COLORS._main_text;
 		            
-		            if(mouse_press(mb_left, _focus))
+		            if(mouse_lpress(_focus))
 		            	selectNode = selectNode == _con? noone : _con;
 		        }
 		        

@@ -74,7 +74,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y, ww, hg, cc, 1);
 				tunnel_hover  = node;
 			
-				if(mouse_press(mb_left, sc_tunnel.active) && _m[0] < ww - ui(32 * 3)) 
+				if(mouse_lpress(sc_tunnel.active) && _m[0] < ww - ui(32 * 3)) 
 					node.open = !node.open;
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y, ww, hg, COLORS._main_icon_light, 1);
@@ -211,7 +211,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 		draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon);
 		draw_text_add(_ww / 2, _by + _add_h / 2, __txtx("panel_tunnel_create_tunnel", "Create tunnel"));
 		
-		if(mouse_press(mb_left, pFOCUS && _hov))
+		if(mouse_lpress(pFOCUS && _hov))
 			nodeBuild("Node_Tunnel_In", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy);
 	}
 }

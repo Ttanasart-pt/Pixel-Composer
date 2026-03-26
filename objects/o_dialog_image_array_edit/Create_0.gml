@@ -65,10 +65,10 @@ event_inherited();
 					if(dragging == -1 || dragging == index) 
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 					
-					if(mouse_press(mb_left, sFOCUS))
+					if(mouse_lpress(sFOCUS))
 						dragging = index;
 					
-					if(mouse_press(mb_right, sFOCUS)) {
+					if(mouse_rpress(sFOCUS)) {
 						menu   = index;
 						menuOn = index;
 					}
@@ -106,7 +106,7 @@ event_inherited();
 				dragging = inb_hover;
 			}
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				dragging = -1;
 		}
 		

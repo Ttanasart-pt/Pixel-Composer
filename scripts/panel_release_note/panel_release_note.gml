@@ -173,7 +173,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 					if(hov) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 						
-						if(mouse_press(mb_left, pFOCUS)) {
+						if(mouse_lpress(pFOCUS)) {
 							switch(hv_os) {
 								case  1 : toggleDownload([dl, dl.links.linux, $"PixelComposer {vers}.AppImage"]); break;
 								case  2 : toggleDownload([dl, dl.links.mac,   $""]);   break;
@@ -182,7 +182,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 							
 						}
 						
-						if(mouse_press(mb_right, pFOCUS)) {
+						if(mouse_rpress(pFOCUS)) {
 							var _menu = array_clone(dl.dMenu);
 							
 							array_push(_menu, -1, menuItem("Open URL", function(p) /*=>*/ {return url_open(p)}).setParam(hv_link));
@@ -192,10 +192,10 @@ function Panel_Release_Note() : PanelContent() constructor {
 					
 				} else if(dl.status == 2 && hov) {
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
-					if(mouse_press(mb_left, pFOCUS)) 
+					if(mouse_lpress(pFOCUS)) 
 						shellOpenExplorer(filename_dir(dl.download_path));
 					
-					if(mouse_press(mb_right, pFOCUS)) {
+					if(mouse_rpress(pFOCUS)) {
 						dl_selecting = dl;
 						var _menu = [
 							menuItem("Open Folder", function() /*=>*/ {return shellOpenExplorer(filename_dir(dl_selecting.download_path))}),
@@ -214,7 +214,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 					
 				} else if(dl.status == -1 && hov) {
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
-					if(mouse_press(mb_left, pFOCUS)) 
+					if(mouse_lpress(pFOCUS)) 
 						url_open(hv_link);
 					
 				}
@@ -372,7 +372,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 			if(pHOVER && point_in_rectangle(mx, my, px, py, px + pw, py + ph - 1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, px, py, pw, ph, CDEF.main_white, 1);
 				
-				if(i != page && mouse_press(mb_left, pFOCUS))
+				if(i != page && mouse_lpress(pFOCUS))
 					page = i;
 			}
 		

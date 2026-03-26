@@ -87,7 +87,7 @@ function Panel_Color() : PanelContent() constructor {
 					
 					if(pHOVER && point_in_rectangle(mx, my, cx, cy, cx + ui(24), cy + ui(24))) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, cx, cy, ui(24), ui(24), c_white, 1);
-						if(mouse_press(mb_left, pFOCUS)) {
+						if(mouse_lpress(pFOCUS)) {
 							array_insert(colors, 0, CURRENT_COLOR);
 							
 							DRAGGING = {
@@ -106,7 +106,7 @@ function Panel_Color() : PanelContent() constructor {
 				
 				if(point_in_rectangle(mx, my, cx, cy, cx + ui(24), cy + ui(24))) {
 					aa = 0.5;
-					if(mouse_press(mb_left, pFOCUS)) {
+					if(mouse_lpress(pFOCUS)) {
 						DRAGGING = {
 							type: "Color",
 							data: c
@@ -133,7 +133,7 @@ function Panel_Color() : PanelContent() constructor {
 			aa = 0.3;
 			if(point_in_rectangle(mx, my, padding, hex_y, padding + hex_h, hex_y + hex_h)) {
 				aa = 0.5;
-				if(mouse_press(mb_left, pFOCUS)) {
+				if(mouse_lpress(pFOCUS)) {
 					DRAGGING = {
 						type: "Color",
 						data: CURRENT_COLOR
@@ -252,7 +252,7 @@ function Panel_Color() : PanelContent() constructor {
 				
 			setHSV();
 				
-			if(mouse_release(mb_left)) drag_con = false;
+			if(mouse_lrelease()) drag_con = false;
 		}
 		
 		if(drag_sel) {
@@ -264,10 +264,10 @@ function Panel_Color() : PanelContent() constructor {
 				
 			setHSV();
 					
-			if(mouse_release(mb_left)) drag_sel = false;
+			if(mouse_lrelease()) drag_sel = false;
 		}
 		
-		if(mouse_press(mb_left, pFOCUS)) {
+		if(mouse_lpress(pFOCUS)) {
 			if(point_in_rectangle(mx, my, cont_x, cont_y, cont_x + cont_w, cont_y + cont_h))
 				drag_con = true;
 			
@@ -323,11 +323,11 @@ function Panel_Color() : PanelContent() constructor {
 		
 		if(DRAGGING && DRAGGING.type == "Color" && pHOVER) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, 2, 2, w - 4, h - 4, COLORS._main_value_positive, 1);	
-			if(mouse_release(mb_left)) 
+			if(mouse_lrelease()) 
 				setColor(DRAGGING.data);
 		}
 		
-		if(mouse_press(mb_right, pFOCUS)) {
+		if(mouse_rpress(pFOCUS)) {
 			menuCall("color_window_menu", [
 				menuItem(__txt("Hue"),  		  function() /*=>*/ { mode = 0; } ),
 				menuItem(__txt("Value"),		  function() /*=>*/ { mode = 1; } ),

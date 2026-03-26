@@ -76,12 +76,14 @@ uniform sampler2D blend_alphaSurf;
 uniform int highRes;
 
 vec4 blendColor(vec4 base, vec4 colr, float alpha) {
-	float blend = base.a + colr.a * alpha * (1. - base.a);
+	float ba = base.a;
+	float ca = colr.a * alpha;
+	float al = ca + ba * (1. - ca);
 	
-	vec4 col = (colr * alpha + base * base.a * ( 1. - alpha )) / blend;
-	col.a    = base.a + colr.a * alpha;
+	vec4 res = ((base * ba * (1. - ca)) + (colr * ca)) / al;
+	res.a = al;
 	
-	return col;
+	return res;
 }
 
 bool angleFiltered(float angle) {
@@ -252,14 +254,14 @@ void main() {
 	if(_aa == 0.) return;
 	
 	if(is_blend == 0) {
-		resultColor   = blendColor(baseColor, borderColor, _aa);
+		resultColor   = blendColor(borderColor, baseColor, _aa);
 		resultOutline = borderColor;
 		
 	} else {
-		resultColor = blendColor(side == 0? baseColor : closetColor, borderColor, _aa * bld);
+		resultColor = blendColor(borderColor, side == 0? baseColor : closetColor, _aa * bld);
 		resultColor.a = _aa;
 		
-		resultOutline = blendColor(side == 0? vec4(0.) : closetColor, borderColor, _aa * bld);
+		resultOutline = blendColor(borderColor, side == 0? vec4(0.) : closetColor, _aa * bld);
 		resultOutline.a = _aa;
 	}
 	

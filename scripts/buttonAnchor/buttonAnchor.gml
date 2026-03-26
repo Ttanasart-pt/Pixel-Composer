@@ -55,7 +55,7 @@ function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor 
 			
 			if(hov) {
 				hovering = true;
-				if(mouse_click(mb_left, active)) trigger(_in)
+				if(mouse_lclick(active)) trigger(_in)
 			}
 		}
 		

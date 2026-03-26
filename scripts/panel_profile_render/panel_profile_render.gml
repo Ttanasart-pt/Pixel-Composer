@@ -192,7 +192,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    var _wh = ui(20);
 	    gpu_set_texfilter(true);
 	    
-	    if(mouse_release(mb_left)) report_clicked = noone;
+	    if(mouse_lrelease()) report_clicked = noone;
 	    
 	    for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
 	        var _report = PROFILER_DATA[i];
@@ -517,7 +517,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    draw_rectangle(_ox - ui(4), io_label_y - ui(10), _ox + _iw - ui(4), io_label_y + ui(16), false);
 		    
 		    var _hov = _hovering && point_in_rectangle(_m[0], _m[1], 0, io_label_y, _ww, io_label_y + ui(24));
-		    if(_hov && mouse_press(mb_left)) show_io = !show_io;
+		    if(_hov && mouse_lpress()) show_io = !show_io;
 		    
 		    draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 	        draw_sprite_stretched_ext(THEME.box_r5_clr, 1, _ix - ui(4), io_label_y - ui(2), _iw, ui(24), _hov? CDEF.main_ltgrey : CDEF.main_grey);
@@ -796,7 +796,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		if(node_render_time > 0) {
 			var _running_time = 0;
 			
-			if(mouse_release(mb_left)) render_drag = false;
+			if(mouse_lrelease()) render_drag = false;
 			
 			for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
 			    var _report  = PROFILER_DATA[i];
@@ -816,7 +816,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 					if((pHOVER && point_in_rectangle(mx, my, _rx, _py0, _rx1, _py1) || (render_drag && mx >= _rx && mx < _rx1))) {
 						TOOLTIP = $"Render {_report.node.getFullName()}";
 						
-						if(mouse_click(mb_left, pFOCUS) || render_drag) {
+						if(mouse_lclick(pFOCUS) || render_drag) {
 							render_drag = true;
 							setReport(_report);
 						}

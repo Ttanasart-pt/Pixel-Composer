@@ -58,7 +58,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _type = 
 		if(setValueInspector( unit.invApply(_val) )) 
 			UNDO_HOLDING = true;
 							
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			drag_type = 0;
 			UNDO_HOLDING = false;
 		}
@@ -68,7 +68,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _type = 
 		hover  = 1;
 		_in = 1;
 		
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			drag_type = 1;
 			drag_mx   = _mx;
 			drag_my   = _my;

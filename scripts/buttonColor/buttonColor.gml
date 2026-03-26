@@ -115,7 +115,7 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 				draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, COLORS._main_accent);
 			}
 			
-		} else if(mouse_press(mb_left)) deactivate();
+		} else if(mouse_lpress()) deactivate();
 		
 		if(is_array(current_color))
 			drawPalette(current_color, _bx, _by, _bw, _bh);
@@ -137,7 +137,7 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 					_htg = _bw - _bh;
 					_baa = 1.;
 				
-					if(mouse_press(mb_left, iactive)) {
+					if(mouse_lpress(iactive)) {
 						if(interactable && key_mod_press(SHIFT)) {
 							var _hx = clipboard_get_text();
 							var _cc = color_from_rgb(_hx);
@@ -146,7 +146,7 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 							clipboard_set_text(color_get_hex(current_color));
 					}
 					
-					if(mouse_click(mb_left, iactive))
+					if(mouse_lclick(iactive))
 						_bcc = COLORS._main_icon_light;
 				}
 				
@@ -179,7 +179,7 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 		
 		if(DRAGGING && DRAGGING.type == "Color" && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _cw, _h, COLORS._main_value_positive, 1);	
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				onModify(DRAGGING.data);
 		}
 		

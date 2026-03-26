@@ -31,7 +31,7 @@
 	
 	if(point_in_rectangle(mouse_mx, mouse_my, dx0, dy0, dx1, dy1)) {
 		CURSOR = cr_size_we;
-		if(mouse_click(mb_left, sFOCUS)) {
+		if(mouse_lclick(sFOCUS)) {
 			folderW_dragging = true;
 			folderW_drag_mx = mouse_mx;
 			folderW_drag_sx = folderW;

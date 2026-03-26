@@ -68,7 +68,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
 					
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						layer_remove = ind;
 				} else 
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
@@ -79,10 +79,10 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 					
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						hold_visibility = !_vis[ind];
 						
-					if(mouse_click(mb_left, _focus) && _vis[ind] != hold_visibility) {
+					if(mouse_lclick(_focus) && _vis[ind] != hold_visibility) {
 						_vis[ind] = hold_visibility;
 						doUpdate();
 					}
@@ -93,10 +93,10 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
 					
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						hold_select = !_sel[ind];
 						
-					if(mouse_click(mb_left, _focus) && _sel[ind] != hold_select)
+					if(mouse_lclick(_focus) && _sel[ind] != hold_select)
 						_sel[ind] = hold_select;
 				} else 
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
@@ -155,11 +155,11 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			if(point_in_rectangle(_m[0], _m[1], _bx - ui(8), _cy + ui(4), _bx + ui(8), _cy + lh - ui(4))) {
 				cc = c_white;
 				
-				// if(mouse_press(mb_left, _focus))
+				// if(mouse_lpress(_focus))
 			}
 			
 			if(hover && layer_dragging == noone || layer_dragging == ind) {
-				if(mouse_press(mb_left, _focus)) {
+				if(mouse_lpress(_focus)) {
 					dynamic_input_inspecting = dynamic_input_inspecting == ind? noone : ind;
 					layer_dragging = ind;
 					refreshDynamicDisplay();
@@ -169,7 +169,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			_cy += _lh;
 		}
 		
-		if(layer_dragging != noone && mouse_release(mb_left)) {
+		if(layer_dragging != noone && mouse_lrelease()) {
 			if(layer_dragging != hoverIndex && hoverIndex != noone) {
 				var index = input_fix_len + layer_dragging * data_length;
 				var targt = input_fix_len + hoverIndex * data_length;

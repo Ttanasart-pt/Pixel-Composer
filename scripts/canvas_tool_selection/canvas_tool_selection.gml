@@ -334,7 +334,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_position[0] = px;
 			selection_position[1] = py;
 			
-			if((is_select_drag == 1 && mouse_release(mb_left)) || (is_select_drag == 2 && mouse_press(mb_left)))
+			if((is_select_drag == 1 && mouse_lrelease()) || (is_select_drag == 2 && mouse_lpress()))
 				is_select_drag = 0;
 			
 			selection_hovering = true;
@@ -380,7 +380,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_size[0] = pw;
 			selection_size[1] = ph;
 			
-			if((is_select_scal == 1 && mouse_release(mb_left)) || (is_select_scal == 2 && mouse_press(mb_left))) {
+			if((is_select_scal == 1 && mouse_lrelease()) || (is_select_scal == 2 && mouse_lpress())) {
 				selection_sampler.setSurface(selection_mask);
 				is_select_scal = 0;
 			}
@@ -425,7 +425,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_size[0] = pw;
 			selection_size[1] = ph;
 			
-			if((is_select_rota == 1 && mouse_release(mb_left)) || (is_select_rota == 2 && mouse_press(mb_left))) {
+			if((is_select_rota == 1 && mouse_lrelease()) || (is_select_rota == 2 && mouse_lpress())) {
 				selection_aa = aa;
 				
 				trimSelection();
@@ -455,12 +455,12 @@ function canvas_selection_data() : canvas_tool() constructor {
 		}
 		
 		if(hover_index == noone) {
-			if(PANEL_PREVIEW.tool_current == noone && mouse_press(mb_left, active)) 
+			if(PANEL_PREVIEW.tool_current == noone && mouse_lpress(active)) 
 				apply();
 			return;
 		}
 		
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			switch(hover_index) {
 				case 0 : 
 					is_select_drag = 1;

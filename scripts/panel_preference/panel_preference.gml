@@ -65,7 +65,7 @@ function Panel_Preference() : PanelContent() constructor {
     				sp_page.hover_content = true;
     				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yl, ww, hg, CDEF.main_white, 1);
     				
-    				if(i != page_current && mouse_press(mb_left, pFOCUS)) {
+    				if(i != page_current && mouse_lpress(pFOCUS)) {
     					page_current = i;
     					sp_pref.setScroll(0);
     				}
@@ -94,7 +94,7 @@ function Panel_Preference() : PanelContent() constructor {
 					
 					if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hs - 1)) {
 						sp_page.hover_content = true;
-						if(mouse_press(mb_left, pFOCUS))
+						if(mouse_lpress(pFOCUS))
 							scrl.scroll_y_to = -scrh;
 					
 						draw_set_color(COLORS._main_text);
@@ -1047,7 +1047,7 @@ function Panel_Preference() : PanelContent() constructor {
     			} else {
     				if(pHOVER && point_in_rectangle(_m[0], _m[1], _dx0, _dy0, _dx1, _dy1)) {
     					draw_sprite_stretched_ext(THEME.button_hide, 1, _dx0, _dy0, _dx1 - _dx0, _dy1 - _dy0);
-    					if(mouse_press(mb_left, _focus)) {
+    					if(mouse_lpress(_focus)) {
     						color_selector_edit = key;
     						tb_color_key_edit.activate(COLORS_KEYS.define[$ key]);
     					}
@@ -1116,7 +1116,7 @@ function Panel_Preference() : PanelContent() constructor {
                     	if(DOUBLE_CLICK) {
                     		_cAll = _coll? -1 : 1;
                     		
-                    	} else if(mouse_press(mb_left)) {
+                    	} else if(mouse_lpress()) {
                         	if(_coll) struct_set(collapsed, _key, 0);
                         	else      struct_set(collapsed, _key, 1);
                         }
@@ -1658,7 +1658,7 @@ function Panel_Preference() : PanelContent() constructor {
     				
     				if(hv) {
     					sp_hotkey.hover_content = true;
-    					if(mouse_press(mb_left, pFOCUS)) hk_editing = noone;
+    					if(mouse_lpress(pFOCUS)) hk_editing = noone;
     				} 
     				
     			} else {
@@ -1668,7 +1668,7 @@ function Panel_Preference() : PanelContent() constructor {
     					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
     					sp_hotkey.hover_content = true;
     					cc = CDEF.main_white;
-    					if(mouse_press(mb_left, focus)) hk_editing = key.modify();
+    					if(mouse_lpress(focus)) hk_editing = key.modify();
     				} 
     			}
     			
@@ -1688,7 +1688,7 @@ function Panel_Preference() : PanelContent() constructor {
     			hh += th + pd * 2;
     		}
     		
-    		if(!_hoverAny && hk_editing && mouse_press(mb_left, focus)) hk_editing = noone;
+    		if(!_hoverAny && hk_editing && mouse_lpress(focus)) hk_editing = noone;
     		
     		hotkey_focus         = noone;
     		hotkey_focus_high_bg = lerp_linear(hotkey_focus_high_bg, 0, DELTA_TIME);
@@ -1869,7 +1869,7 @@ function Panel_Preference() : PanelContent() constructor {
                     	if(DOUBLE_CLICK) {
                     		_cAll = _coll? -1 : 1;
                     		
-                    	} else if(mouse_press(mb_left)) {
+                    	} else if(mouse_lpress()) {
                         	if(_coll) struct_set(collapsed, _key, 0);
                         	else      struct_set(collapsed, _key, 1);
                         }
@@ -1965,7 +1965,7 @@ function Panel_Preference() : PanelContent() constructor {
     		var _hh = pHOVER && point_in_rectangle(mx, my, _rx, _ry, _rx + _rw, _ry + _rh);
     		if(_hh) {
     			draw_sprite_stretched_add(THEME.box_r5, 1, _rx, _ry, _rw, _rh, COLORS._main_accent, .3);
-    			if(mouse_press(mb_left)) Program_Restart();
+    			if(mouse_lpress()) Program_Restart();
     		}
     	}
         
@@ -2151,7 +2151,7 @@ function Panel_Preference() : PanelContent() constructor {
         				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_control : kc_control);
         				_tc = _sel? kc_control : c_control;
         				
-        				if(mouse_press(mb_left, pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.ctrl;
+        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.ctrl;
         				
         			} else if(_vk == vk_shift) {
         				_sel = bool(MOD_KEY.shift & _cmod);
@@ -2159,7 +2159,7 @@ function Panel_Preference() : PanelContent() constructor {
         				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_shift : kc_shift);
         				_tc = _sel? kc_shift : c_shift;
         				
-        				if(mouse_press(mb_left, pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.shift;
+        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.shift;
         					
         			} else if(_vk == vk_alt) {
         				_sel = bool(MOD_KEY.alt & _cmod);
@@ -2167,7 +2167,7 @@ function Panel_Preference() : PanelContent() constructor {
         				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_alt : kc_alt);
         				_tc = _sel? kc_alt : c_alt;
         				
-        				if(mouse_press(mb_left, pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.alt;
+        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.alt;
         					
         			} else if(struct_has(_keyUsing, _vk) && struct_has(_keyUsing[$ _vk], _cmod)) {
         				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_ltgrey);
@@ -2179,7 +2179,7 @@ function Panel_Preference() : PanelContent() constructor {
         				if(_hov) {
         					TOOLTIP = new tooltipHotkey_assign(_act, key_get_name(_vk, _cmod));
         					
-        					if(mouse_press(mb_left, pFOCUS)) {
+        					if(mouse_lpress(pFOCUS)) {
         						if(hotkey_focus_index >= array_length(_act))
         							hotkey_focus_index = 0;
         							

@@ -49,10 +49,10 @@ function tilesetBox(_junction) : widget() constructor {
         		TOOLTIP = __txt("View node");
         		bi = 1;
         		
-        		if(mouse_click(mb_left, iactive))
+        		if(mouse_lclick(iactive))
         			bi = 2;
         			
-        		if(mouse_press(mb_left, iactive) && is(_tileset, Node))
+        		if(mouse_lpress(iactive) && is(_tileset, Node))
         			New_Inspect_Node_Panel(_tileset);
         	}
         	

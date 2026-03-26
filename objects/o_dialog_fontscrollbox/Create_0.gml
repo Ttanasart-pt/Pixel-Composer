@@ -42,7 +42,7 @@ event_inherited();
 			if(selecting == i) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-				if(focus && (mouse_press(mb_left) || KEYBOARD_ENTER)) {
+				if(focus && (mouse_lpress() || KEYBOARD_ENTER)) {
 					scrollbox.onModify(fullpath);
 					instance_destroy();
 				}

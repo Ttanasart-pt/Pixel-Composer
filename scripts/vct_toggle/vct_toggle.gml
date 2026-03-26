@@ -19,7 +19,7 @@ function vct_toggle(spr, sx, sy, val) {
 	if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
 		draw_sprite_ext_add(spr, _val, sx, sy, _s, _s, 0, c_white, 0.4);
 			
-		if(mouse_press(mb_left, pFOCUS))
+		if(mouse_lpress(pFOCUS))
 			val.set(!_val);
 	}
 }

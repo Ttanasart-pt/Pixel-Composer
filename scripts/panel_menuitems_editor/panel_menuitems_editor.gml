@@ -311,7 +311,7 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 				draw_set_color(COLORS._main_accent);
 				draw_line_width(hoverX + ui(4), hoverY - 1, sw - ui(8) - hoverX, hoverY - 1, 2);
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					if(drag_type == 0) {
 						if(hoverC == noone) array_insert(menu, hoverI, dragging);
 						else array_insert(hoverC.items, hoverI, dragging);
@@ -323,7 +323,7 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				dragging  = "";
 				drag_type = 0;
 				

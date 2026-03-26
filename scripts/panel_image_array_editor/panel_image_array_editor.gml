@@ -103,7 +103,7 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 					if(dragging == -1 || dragging == index) 
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, its, its, COLORS._main_accent, 1);
 					
-					if(mouse_press(mb_left, focus))
+					if(mouse_lpress(focus))
 						dragging = index;
 				}
 				
@@ -150,7 +150,7 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 				if(hover && point_in_rectangle(_m[0], _m[1], _pthx, _pthy, _pthx + _pthw, _pthy + _pthh)) {
 				    draw_sprite_stretched_add(THEME.ui_panel, 1, _pthx, _pthy, _pthw, _pthh, COLORS._main_icon, 0.2);
 				    
-				    if(mouse_press(mb_left, focus)) {
+				    if(mouse_lpress(focus)) {
 				        tb_editing = i;
 				        tb_edit.activate(path);
 				    }
@@ -171,11 +171,11 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 				dragging = inb_hover;
 			}
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				dragging = -1;
 		}
 		
-		if(mouse_press(mb_right, sp_content.active)) {
+		if(mouse_rpress(sp_content.active)) {
 		    menuOn = inb_hover;
 		    
 		    if(inb_hover == -1) {

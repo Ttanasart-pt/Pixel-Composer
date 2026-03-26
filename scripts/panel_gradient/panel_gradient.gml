@@ -68,7 +68,7 @@ function Panel_Gradient() : PanelContent() constructor {
 			draw_text_add(_x + pd + ui(4), _y + ui(2), _name);
 			_grad.draw(_x + pd, _y + nh, ww - pd * 2, gh);
 			
-			if(isHover && mouse_press(mb_left, _focus)) {
+			if(isHover && mouse_lpress(_focus)) {
 				// todo
 			}
 			

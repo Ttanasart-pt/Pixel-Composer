@@ -145,7 +145,7 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 				draw_set_alpha(1);
 		}
 		
-		if(mouse_release(mb_left)) 
+		if(mouse_lrelease()) 
 			DRAGGING = noone;
 	}
 #endregion
@@ -163,7 +163,7 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 	
 	if(NODE_DROPPER_TARGET != noone) {
 		draw_sprite_ui(THEME.node_dropper, 0, mouse_x + ui(20), mouse_y + ui(20));
-		if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN))
+		if(mouse_lpress(NODE_DROPPER_TARGET_CAN))
 			NODE_DROPPER_TARGET = noone;
 		NODE_DROPPER_TARGET_CAN = true;
 	} else	

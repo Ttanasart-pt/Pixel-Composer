@@ -142,7 +142,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(hov && _m[0] < _x1 - ui(32)) {
 				tc = COLORS._main_text;
 				
-				if(mouse_press(mb_left, _focus)) {
+				if(mouse_lpress(_focus)) {
 					dynamic_input_inspecting = i;
 					refreshDynamicDisplay();
 					effect_dragging = i;
@@ -169,7 +169,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				del_fx = i;	
 		}
 		
-		if(effect_dragging != noone && mouse_release(mb_left)) {
+		if(effect_dragging != noone && mouse_lrelease()) {
 			if(effect_dragging != hoverIndex && hoverIndex != noone) {
 				var index = input_fix_len + effect_dragging * data_length;
 				var targt = input_fix_len + hoverIndex * data_length;

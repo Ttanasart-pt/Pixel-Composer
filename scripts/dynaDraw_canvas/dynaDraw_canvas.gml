@@ -80,7 +80,7 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 			var pixel_y = floor((_m[1] - _canvas_y) / _canvas_s);
 			
 			surface_set_target(_surf);
-				if(hv && mouse_click(mb_left, active))
+				if(hv && mouse_lclick(active))
 				switch(current_tool) {
 					case -1 : // eraser
 						BLEND_SUBTRACT
@@ -189,7 +189,7 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 			var py = _canvas_y + pixel_y * _canvas_s;
 			draw_sprite_stretched_add(THEME.textbox, 1, px, py, _canvas_s, _canvas_s);
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				updateBuffer();
 				updateNode();
 			}

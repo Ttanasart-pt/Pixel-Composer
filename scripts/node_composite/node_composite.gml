@@ -116,7 +116,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -225,7 +225,7 @@
 			
 			if(_edit) UNDO_HOLDING = true;
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -354,7 +354,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -402,7 +402,7 @@
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my) /*=>*/ {
 			if(!activeKeyboard || surf_dragging == noone) { PANEL_PREVIEW.resetTool(); return; }
 			
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -532,7 +532,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
 					
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						layer_remove = ind;
 				} else 
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
@@ -541,10 +541,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 					
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						hold_visibility = !_vis[ind];
 						
-					if(mouse_click(mb_left, _focus) && _vis[ind] != hold_visibility) {
+					if(mouse_lclick(_focus) && _vis[ind] != hold_visibility) {
 						_vis[ind] = hold_visibility;
 						triggerRender();
 					}
@@ -555,10 +555,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
 					
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						hold_select = !_sel[ind];
 						
-					if(mouse_click(mb_left, _focus) && _sel[ind] != hold_select)
+					if(mouse_lclick(_focus) && _sel[ind] != hold_select)
 						_sel[ind] = hold_select;
 				} else 
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
@@ -666,7 +666,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						if(_hover && point_in_circle(_m[0], _m[1], _bx, _by, ui(12))) {
 							draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, c_white);
 							
-							if(mouse_press(mb_left, _focus))
+							if(mouse_lpress(_focus))
 								_modi.inputs[_modi.active_index].setValue(!_acti);
 						} else 
 							draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, COLORS._main_icon);
@@ -706,7 +706,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(point_in_rectangle(_m[0], _m[1], _bx - ui(8), _cy + ui(4), _bx + ui(8), _cy + lh - ui(4))) {
 				cc = c_white;
 				
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					properties_expand[i] = !properties_expand[i];
 			}
 			
@@ -725,7 +725,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					tb_rename.activate();
 				}
 				
-				if(mouse_press(mb_left, _focus)) {
+				if(mouse_lpress(_focus)) {
 					dynamic_input_inspecting = dynamic_input_inspecting == ind? noone : ind;
 					layer_dragging = ind;
 					refreshDynamicDisplay();
@@ -735,7 +735,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_cy += _lh;
 		}
 		
-		if(layer_dragging != noone && mouse_release(mb_left)) {
+		if(layer_dragging != noone && mouse_lrelease()) {
 			if(layer_dragging != hoverIndex && hoverIndex != noone) {
 				var index = input_fix_len + layer_dragging * data_length;
 				var targt = input_fix_len + hoverIndex * data_length;
@@ -1219,7 +1219,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(_edit) UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				surf_dragging = noone;
 				UNDO_HOLDING  = false;
 			}

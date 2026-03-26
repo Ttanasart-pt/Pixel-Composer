@@ -8,7 +8,7 @@ function canvas_tool_selection_magic(_selector, _toolAttr) : canvas_selection_to
 		var _fill_type	= tool_attribute.fillType;
 		var _use_output	= tool_attribute.useBG;
 		
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			canvas_buffer = node.canvas_buffer;
 			preview_index = node.preview_index;
 		

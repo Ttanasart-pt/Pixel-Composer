@@ -48,7 +48,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				
 				if(pHOVER && point_in_rectangle(msx, msy, _sx, _sy, _sx + _ns, _sy + _ns)) {
 					draw_sprite_stretched(THEME.box_r5_clr, 1, _sx, _sy, _ns, _ns);
-					if(mouse_press(mb_left, pFOCUS))
+					if(mouse_lpress(pFOCUS))
 						content_drag = i;
 				} else 
 					draw_sprite_stretched(THEME.box_r5_clr, 0, _sx, _sy, _ns, _ns);
@@ -87,7 +87,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 			
 			if(pHOVER && point_in_circle(msx, msy, ax, ay, ui(8))) {
 				draw_sprite_ui(THEME.animation_stretch, 0, ax, ay,,,,, 1);
-				if(mouse_press(mb_left, pFOCUS))
+				if(mouse_lpress(pFOCUS))
 					len_stretching = true;
 			} else 
 				draw_sprite_ui(THEME.animation_stretch, 0, ax, ay,,,,, 0.75);
@@ -129,7 +129,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				draw_surface_ext_safe(_s, _ssx, _ssy, _ss, _ss,,, _def? 0.5 : 1);
 				
 				if(pHOVER && !_def && point_in_rectangle(msx, msy, _sx, _sy, _sx + _ns, _sy + _ns)) {
-					if(mouse_press(mb_left, pFOCUS)) {
+					if(mouse_lpress(pFOCUS)) {
 						_ord[i] = noone;
 						node.inputs[2].setValue(_ord);
 						content_drag = _i;
@@ -151,7 +151,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				draw_surface_ext_safe(_s, _ssx, _ssy, _ss, _ss,,, 0.75);
 				draw_drag = false;
 				
-				if(mouse_release(mb_left, pFOCUS)) {
+				if(mouse_lrelease(pFOCUS)) {
 					_ord = array_safe_set(_ord, frm, content_drag, noone);
 					node.inputs[2].setValue(_ord);
 					content_drag = noone;
@@ -172,7 +172,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 			_ord = array_resize_fill(_ord, frm, noone);
 			node.inputs[2].setValue(_ord);
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				len_stretching = false;
 		}
 		
@@ -187,7 +187,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				draw_surface_ext_safe(_s, mx, my, _ss, _ss,,, 0.5);
 			}
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				content_drag = noone;
 		}
 	}

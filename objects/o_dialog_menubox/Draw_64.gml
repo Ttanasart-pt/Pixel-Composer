@@ -8,12 +8,12 @@ DIALOG_WINCLEAR1
 	menu_building = false;
 	
 	var yy = dialog_y;
-	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left))
+	var _lclick = sFOCUS && (!mouse_init_inside && mouse_lrelease())
 								|| (KEYBOARD_ENTER && hk_editing == noone)
-								|| (init_rclick && mouse_release(mb_right));
-	var _rclick = sFOCUS && !mouse_init_inside && !init_rclick && mouse_release(mb_right);
+								|| (init_rclick && mouse_rrelease());
+	var _rclick = sFOCUS && !mouse_init_inside && !init_rclick && mouse_rrelease();
 	
-	if(!mouse_init_inside && mouse_press(mb_right) && item_sel_submenu) {
+	if(!mouse_init_inside && mouse_rpress() && item_sel_submenu) {
 		if(instance_exists(item_sel_submenu))
 			instance_destroy(item_sel_submenu);
 		item_sel_submenu = noone;
@@ -233,7 +233,7 @@ DIALOG_WINCLEAR1
 					draw_sprite_stretched_ext(THEME.textbox, 3, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					
-					if(mouse_press(mb_left, sFOCUS)) {
+					if(mouse_lpress(sFOCUS)) {
 						DIALOG_POSTDRAW
 						
 						_submenu[1](_dat);
@@ -353,10 +353,10 @@ DIALOG_WINCLEAR1
 	
 	draw_sprite_stretched(THEME.box_r2_clr, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
-	if(mouse_init_inside && (mouse_release(mb_left) || mouse_release(mb_right))) 
+	if(mouse_init_inside && (mouse_lrelease() || mouse_rrelease())) 
 		mouse_init_inside = false;
 		
-	if(mouse_release(mb_right)) 
+	if(mouse_rrelease()) 
 		init_rclick = false;
 #endregion
 

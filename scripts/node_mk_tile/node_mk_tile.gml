@@ -206,7 +206,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					draw_set_color(COLORS._main_icon_light)
 					draw_rectangle(_lx, _ly, _lx + _tw - 1, _ly + _th - 1, true);
 					
-					if(mouse_press(mb_left))
+					if(mouse_lpress())
 						tile_overlay_select = tile_overlay_select == _id? noone : _id;
 				}
 				

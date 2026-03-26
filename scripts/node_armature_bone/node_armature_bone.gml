@@ -50,7 +50,7 @@ function Node_Armature_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _hv = _arma.draw(attributes, hover * BONE_EDIT.body, _x, _y, _s, _mx, _my, anchor_selecting, _tar);
 			anchor_selecting = _hv;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				if(_hv != noone) inputs[7].setValue(_hv[0].name);
 				bone_targeting = false;
 			}

@@ -83,7 +83,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 					break;
 			}
 			
-			if(hv && mouse_press(mb_left, _focus)) {
+			if(hv && mouse_lpress(_focus)) {
 				ordering = _ind;
 				order_i  = _ind;
 			}
@@ -99,7 +99,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			inputs[1].setValue(_ord);
 			triggerRender();
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				ordering = noone;
 				order_i  = noone;
 			}

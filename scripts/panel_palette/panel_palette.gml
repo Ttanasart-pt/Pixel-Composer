@@ -157,7 +157,7 @@ function Panel_Palette() : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
 			draw_text_add(ww / 2, yy + _add_h / 2, __txt("New palette"));
 			
-			if(_hov && mouse_release(mb_left)) {
+			if(_hov && mouse_lrelease()) {
 				__save_palette_data = DRAGGING.data;
 				
 				fileNameCall($"{DIRECTORY}Palettes", function (_path) {
@@ -173,7 +173,7 @@ function Panel_Palette() : PanelContent() constructor {
 			hh += _add_h + ui(8);
 		}
 		
-		if(mouse_release(mb_left)) drag_from_self = false;
+		if(mouse_lrelease()) drag_from_self = false;
 		
 		paletteParam = { color: cur, stretch : PREFERENCES.palette_stretch, mx : _m[0], my : _m[1] };
 		var hh = drawPaletteDirectory(PALETTES_FOLDER, 0, _y, _m);

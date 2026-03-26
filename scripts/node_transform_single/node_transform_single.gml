@@ -138,7 +138,7 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 				inputs[4].setValue(pos_y);
 			}
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				overlay_dragging = 0;	
 		} else if(overlay_dragging == 3) {
 			var aa = point_direction(bax, bay, _mx, _my);
@@ -147,10 +147,10 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			
 			inputs[5].setValue(sa);
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				overlay_dragging = 0;	
 		} else {
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				if(point_in_circle(_mx, _my, bax, bay, 8)) {
 					overlay_dragging = 2;
 					overlay_drag_mx  = _mx;

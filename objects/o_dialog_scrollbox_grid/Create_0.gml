@@ -130,7 +130,7 @@ event_inherited();
 				if(selecting == i) {
 					draw_sprite_stretched_ext(THEME.textbox, 3, _xx, _yy, gw, gh, COLORS.dialog_menubox_highlight, 1);
 					
-					if(sc_content.active && (mouse_press(mb_left) || KEYBOARD_ENTER)) {
+					if(sc_content.active && (mouse_lpress() || KEYBOARD_ENTER)) {
 						initVal = i;
 						instance_destroy();
 					}

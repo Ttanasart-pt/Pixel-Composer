@@ -197,12 +197,12 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(isUsingTool("Edit Text")) {
 			HOTKEY_BLOCK = true;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				edit_cursor     = _cr_hover;
 				edit_cursor_sel = noone;
 				KEYBOARD_RESET
 				
-			} else if(_cr_hover != noone && mouse_click(mb_left, active)) {
+			} else if(_cr_hover != noone && mouse_lclick(active)) {
 				if(_cr_hover != edit_cursor) edit_cursor_sel = _cr_hover;
 			}
 			

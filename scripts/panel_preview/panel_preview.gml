@@ -934,11 +934,11 @@ function Panel_Preview() : PanelContent() constructor {
                 _doDragging = true;
                 canvas_drag_key = PREFERENCES.pan_mouse_key;
                 
-            } else if(mouse_press(mb_left, pFOCUS) && canvas_dragging_key) {
+            } else if(mouse_lpress(pFOCUS) && canvas_dragging_key) {
                 _doDragging = true;
                 canvas_drag_key = mb_left;
                 
-            } else if(mouse_press(mb_left, pFOCUS) && canvas_zooming_key) {
+            } else if(mouse_lpress(pFOCUS) && canvas_zooming_key) {
                 _doZooming = true;
                 canvas_drag_key = mb_left;
                 
@@ -2472,7 +2472,7 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawDataArray = function() {
-        if(mouse_release(mb_left)) preview_selecting = false;
+        if(mouse_lrelease()) preview_selecting = false;
         var _preview_x_max = preview_x_max;
         preview_x_max = 0;
         
@@ -2541,7 +2541,7 @@ function Panel_Preview() : PanelContent() constructor {
 	        	
             } else if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS._main_accent);
             
-            if((hov && mouse_press(mb_left, pFOCUS)) || (preview_selecting && mx > xx && mx <= xx + siz)) {
+            if((hov && mouse_lpress(pFOCUS)) || (preview_selecting && mx > xx && mx <= xx + siz)) {
                 _node.preview_index = i;
                 _node.onValueUpdate(0);
                 if(resetViewOnDoubleClick) do_fullView = true;
@@ -2584,7 +2584,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _hv = true;
                 view_hovering = true;
                 
-                if(mouse_press(mb_left, pFOCUS)) {
+                if(mouse_lpress(pFOCUS)) {
                     canvas_drag_key = mb_left;
                     d3_camPanning   = true;
                     d3_camPan_mx    = mx;
@@ -2622,7 +2622,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _hv = true;
                 view_hovering = true;
                 
-                if(mouse_press(mb_left, pFOCUS)) {
+                if(mouse_lpress(pFOCUS)) {
                     canvas_drag_key = mb_left;
                     canvas_zooming  = true;    
                     canvas_zoom_m   = my;
@@ -2647,7 +2647,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _hv = true;
                 view_hovering = true;
                 
-                if(mouse_press(mb_left, pFOCUS)) {
+                if(mouse_lpress(pFOCUS)) {
                     canvas_drag_key = mb_left;
                     canvas_dragging = true;
                     canvas_drag_mx  = mx;
@@ -2673,7 +2673,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _hv = true;
                 view_hovering = true;
                 
-                if(mouse_press(mb_left, pFOCUS)) {
+                if(mouse_lpress(pFOCUS)) {
                     canvas_drag_key = mb_left;
                     canvas_zooming  = true;    
                     canvas_zoom_mx  = w / 2;
@@ -2692,7 +2692,7 @@ function Panel_Preview() : PanelContent() constructor {
             draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
         }
         
-        if(view_hovering && mouse_press(mb_right, pFOCUS)) {
+        if(view_hovering && mouse_rpress(pFOCUS)) {
         	mouse_on_preview = false;
         	menuCall("preview_view_controller", [ menuItem("Hide view controllers", function() /*=>*/ { PROJECT.previewSetting.show_view_control = 0; }) ]);
         }
@@ -2954,7 +2954,7 @@ function Panel_Preview() : PanelContent() constructor {
             case NODE_3D.sdf :      _toolbars = "preview_toolbar_3d_sdf"; break;
         }
         
-        if(mouse_press(mb_right, hov && foc)) menuCallGen($"{_toolbars}_context");
+        if(mouse_rpress(hov && foc)) menuCallGen($"{_toolbars}_context");
     	var _tool_b = menuItems_gen(_toolbars);
         for( var i = 0, n = array_length(_tool_b); i < n; i++ ) {
 			var _menu = _tool_b[i];
@@ -3024,7 +3024,7 @@ function Panel_Preview() : PanelContent() constructor {
                 splitPosition = clamp(cy / h, .1, .9);
             }
             
-            if(mouse_release(mb_left))
+            if(mouse_lrelease())
                 splitViewDragging = false;
         }
         
@@ -3033,7 +3033,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(mouse_on_preview && point_in_rectangle(mx, my, sx - ui(4), 0, sx + ui(4), h)) {
                 draw_line_width(sx, 0, sx, h, 2);
-                if(mouse_press(mb_left, pFOCUS)) {
+                if(mouse_lpress(pFOCUS)) {
                     splitViewDragging = true;
                     splitViewStart = sx;
                     splitViewMouse = mx;
@@ -3043,7 +3043,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             draw_sprite_ui_uniform(THEME.icon_active_split, 0, splitSelection? sx + ui(16) : sx - ui(16), toolbar_height + ui(16),, COLORS._main_accent);
             
-            if(mouse_on_preview && mouse_press(mb_left, pFOCUS)) {
+            if(mouse_on_preview && mouse_lpress(pFOCUS)) {
                 if(point_in_rectangle(mx, my, 0, 0, sx, h))
                     splitSelection = 0;
                 else if(point_in_rectangle(mx, my, sx, 0, w, h))
@@ -3054,7 +3054,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(mouse_on_preview && point_in_rectangle(mx, my, 0, sy - ui(4), w, sy + ui(4))) {
                 draw_line_width(0, sy, w, sy, 2);
-                if(mouse_press(mb_left, pFOCUS)) {
+                if(mouse_lpress(pFOCUS)) {
                     splitViewDragging = true;
                     splitViewStart = sy;
                     splitViewMouse = my;
@@ -3063,7 +3063,7 @@ function Panel_Preview() : PanelContent() constructor {
                 draw_line_width(0, sy, w, sy, 1);
             draw_sprite_ui_uniform(THEME.icon_active_split, 0, ui(16), splitSelection? sy + ui(16) : sy - ui(16),, COLORS._main_accent);
             
-            if(mouse_on_preview && mouse_press(mb_left, pFOCUS)) {
+            if(mouse_on_preview && mouse_lpress(pFOCUS)) {
                 if(point_in_rectangle(mx, my, 0, 0, w, sy))
                     splitSelection = 0;
                 else if(point_in_rectangle(mx, my, 0, sy, w, h))
@@ -3173,11 +3173,11 @@ function Panel_Preview() : PanelContent() constructor {
 	            canvas_x = w / 2 - _mini_mx * canvas_s;
 	            canvas_y = h / 2 - _mini_my * canvas_s;
 	            
-	            if(mouse_release(mb_left))
+	            if(mouse_lrelease())
 	                minimap_panning = false;
 	        }
 	        
-	        if(mouse_click(mb_left, hover))
+	        if(mouse_lclick(hover))
 	            minimap_panning = true;
 	            
         BLEND_MULTIPLY
@@ -3197,13 +3197,13 @@ function Panel_Preview() : PanelContent() constructor {
             minimap_w = max(ui(64), sw);
             minimap_h = max(ui(64), sh);
             
-            if(mouse_release(mb_left))
+            if(mouse_lrelease())
                 minimap_dragging = false;
         }
         
         if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
             draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(4), my0 + ui(4), 0.5, 0.5, 180, c_white, 0.75);
-            if(mouse_press(mb_left, pFOCUS)) {
+            if(mouse_lpress(pFOCUS)) {
                 minimap_dragging = true;
                 minimap_drag_sx = minimap_w;
                 minimap_drag_sy = minimap_h;
@@ -3634,7 +3634,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         ////////////////////////////////// Actions //////////////////////////////////
         
-        if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT))
+        if(mouse_on_preview && mouse_rpress(pFOCUS) && !key_mod_press(SHIFT))
             menuCall("preview_context_menu", menuItems_gen("preview_context_menu"), 0, 0, fa_left, getNodePreview());
         
         if(pFOCUS && keyboard_check_pressed(vk_escape))
@@ -3650,7 +3650,7 @@ function Panel_Preview() : PanelContent() constructor {
                 if(DRAGGING && DRAGGING.type == "Asset") {
                     draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
                     
-                    if(mouse_release(mb_left))
+                    if(mouse_lrelease())
                         _node.dropPath(DRAGGING.data.path);
                 }
                 

@@ -16,7 +16,7 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 		surface_w	= surface_get_width(canvas_surface);
 		surface_h	= surface_get_height(canvas_surface);
 		
-		if(mouse_press(mb_left, active) && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, surface_w - 1, surface_h - 1)) {
+		if(mouse_lpress(active) && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, surface_w - 1, surface_h - 1)) {
 			node.storeAction();
 			var _surf = _use_output? output_surface : canvas_surface;
 			

@@ -276,7 +276,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			}
 		}
 		
-		if(group_dragging && mouse_release(mb_left)) {
+		if(group_dragging && mouse_lrelease()) {
 			refreshMember();
 			refreshGroupBG();
 			

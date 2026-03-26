@@ -124,7 +124,7 @@ function __pbBox() constructor {
 			if(point_distance(_mx, _my, drag_anchor_mx, drag_anchor_my) > ui(4))
 				drag_accept = true;
 			
-			if(mouse_release(mb_left)) 
+			if(mouse_lrelease()) 
 				drag_anchor = noone;
 				
 			return true;
@@ -296,7 +296,7 @@ function __pbBox() constructor {
 		
 		if(_node) _node.w_hovering = true;
 		if(_node) _node.triggerRender();
-		if(mouse_release(mb_left)) drag_anchor = noone;
+		if(mouse_lrelease()) drag_anchor = noone;
 		
 		return true;
 	}

@@ -21,10 +21,10 @@ function vct_button(bx, by, press, sprs, ind = 0, icon = noone, icon_ind = 0, ic
 	
 	if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1 - 1, _y1)) {
 		hover = true;
-		if(mouse_press(mb_left, pFOCUS))
+		if(mouse_lpress(pFOCUS))
 			res = true;
 				
-		if(mouse_click(mb_left, pFOCUS)) {
+		if(mouse_lclick(pFOCUS)) {
 			if(press)
 				res = true;
 			pes = true;

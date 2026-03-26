@@ -35,10 +35,10 @@ function tiler_brush(node) constructor {
 				s = max(1, s);
 			attr.size = s;
 			
-			if(mouse_release(mb_right)) 
+			if(mouse_rrelease()) 
 				brush_sizing = false;
 					
-		} else if(mouse_press(mb_right, active) && key_mod_press(SHIFT) && brush_surface == noone) {
+		} else if(mouse_rpress(active) && key_mod_press(SHIFT) && brush_surface == noone) {
 				
 			brush_sizing    = true;
 			brush_sizing_s  = _siz;

@@ -22,7 +22,7 @@ event_inherited();
 	submenuIt = noone;
 	
 	_hovering_ch = true;
-	init_press_l = mouse_press(mb_left);
+	init_press_l = mouse_lpress();
 	
 	alarm[0] = -1;
 	setFocus(self.id);

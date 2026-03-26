@@ -174,20 +174,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(key_mod_press(SHIFT) && point_in_circle(_msx, _msy, _del_x, _del_y, 8)) {
 						_del_a = 1;
 						
-						if(mouse_press(mb_left, _focus)) 
+						if(mouse_lpress(_focus)) 
 							_del = i;
 							
 					} else if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _ssw, _sy + _ssh)) {
 						_frame_hovering = i;
 						draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
 						
-						if(mouse_press(mb_left, _focus)) {
+						if(mouse_lpress(_focus)) {
 							setFrame(i);
 							frame_dragging  = i;
 							frame_selecting = i;
 						}
 							
-						if(mouse_press(mb_right, _focus))  {
+						if(mouse_rpress(_focus))  {
 							frame_selecting = i;
 							menuCall("node_canvas_frame", menu_frame);
 						}
@@ -243,7 +243,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				update();
 			}
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				frame_dragging = noone;
 		}
 		
@@ -809,7 +809,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(dir > 150 && dir < 270)     sel = 1;
 				else if(dir > 270 || dir < 30) sel = 2;
 				
-				if(mouse_press(mb_left, focus)) { 
+				if(mouse_lpress(focus)) { 
 					if(color_3d_selected == sel) 
 						colorSelectorCall(sel == 0? CURRENT_COLOR : current_brush.colors[sel - 1], function(c) /*=>*/ {return setToolColor(c)});
 					else color_3d_selected = sel;
@@ -826,7 +826,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			drawColor(CURRENT_COLOR, _cx, yy, _cw, _cw);
 			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _cx - _pd, yy - _pd, _cw + _pd * 2, _cw + _pd * 2, c_white, 1);
 			
-			if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _cw) && mouse_press(mb_left, focus))
+			if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _cw) && mouse_lpress(focus))
 				colorSelectorCall(CURRENT_COLOR, function(c) /*=>*/ {return setToolColor(c)});
 		
 			yy += _cw + ui(8);
@@ -856,7 +856,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 					
 			if(hover && point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch)) {
-				if(mouse_click(mb_left, focus))
+				if(mouse_lclick(focus))
 					setToolColor(_c);
 			}
 			
@@ -1524,7 +1524,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region drag n drop
-			if(DRAGGING && hover && mouse_release(mb_left)) {
+			if(DRAGGING && hover && mouse_lrelease()) {
 				if(DRAGGING.type == "Color") {
 					var _filType    = tool_attribute.fillType;
 					var _filThres   = tool_attribute.thres;
@@ -2075,7 +2075,7 @@ function timelineItemNode_Canvas(_node) : timelineItemNode(_node) constructor {
 				draw_sprite_stretched_add(THEME.box_r2, 1, _rx0, _ry0, _h, _h, c_white, 0.3);
 				_hov = true;
 				
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					node.setFrame(i);
 			}
 		}
@@ -2092,7 +2092,7 @@ function timelineItemNode_Canvas(_node) : timelineItemNode(_node) constructor {
 			draw_sprite_stretched_ext(THEME.box_r2, 0, _rx0, _ry0, _h, _h, CDEF.main_dkblack);
 			draw_sprite_stretched_ext(THEME.box_r2, 1, _rx0, _ry0, _h, _h, COLORS._main_value_positive, 0.75);
 			
-			if(mouse_press(mb_left, _focus)) {
+			if(mouse_lpress(_focus)) {
 				node.attributes.frames = _fr;
 				node.refreshFrames();
 				node.update();

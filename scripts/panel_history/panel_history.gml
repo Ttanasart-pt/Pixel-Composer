@@ -125,7 +125,7 @@ function Panel_History() : PanelContent() constructor {
 						TOOLTIP += (j? "\n" : "") + item[j].toString();
 				}
 				
-				if(mouse_click(mb_left) && click_hold != item) {
+				if(mouse_lclick() && click_hold != item) {
 					click_hold = item;
 					action = i;
 				}
@@ -191,7 +191,7 @@ function Panel_History() : PanelContent() constructor {
 			draw_text_transformed(ui(0), sep_y + ui(2 - 8), __txt("Future"), 1, 1, 90);
 		}
 		
-		if(mouse_release(mb_left)) 
+		if(mouse_lrelease()) 
 			click_hold = noone;
 		hovering = _hover;
 		

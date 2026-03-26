@@ -241,7 +241,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				triggerRender();
 				
-				if(mouse_release(mb_left)) 
+				if(mouse_lrelease()) 
 					flare_editing = noone;
 			}
 			
@@ -271,7 +271,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					TOOLTIP = __txt("Shape");
 				}
 				
-				if(_hov && mouse_press(mb_left, _focus)) {
+				if(_hov && mouse_lpress(_focus)) {
 					flare_editing = i;
 					flare_editing_prop = "type";
 					flare_editing_mx   = _m[0];
@@ -292,7 +292,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					TOOLTIP = __txt("Color");
 				}
 				
-				if(_hov && mouse_press(mb_left, _focus)) {
+				if(_hov && mouse_lpress(_focus)) {
 					flare_color_editing = i;
 					colorSelectorCall(_flare.blend, function(c) /*=>*/ {return edit_flare_color(c)});
 				}
@@ -349,7 +349,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					} else 
 						draw_text_add(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_val));
 					
-					if(_hov && mouse_press(mb_left, _focus)) {
+					if(_hov && mouse_lpress(_focus)) {
 						flare_editing      = i;
 						flare_editing_mx   = _m[0];
 						

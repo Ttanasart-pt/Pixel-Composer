@@ -226,7 +226,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
                 
                 if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
-                	if(mouse_press(mb_left, _focus)) _prop[@ 1] = !coll;
+                	if(mouse_lpress(_focus)) _prop[@ 1] = !coll;
                 	
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);

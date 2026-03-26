@@ -28,7 +28,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 			if(point_in_circle(_mx, _my, _ax + __wd * _s, _ay, ui(8))) {
 				hover = 3;
 				draw_sprite_colored(THEME.anchor_scale_hori, 1, _ax + __wd * _s, _ay);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_type = 3;
 					drag_mx   = _mx;
 					drag_sx   = __wd;
@@ -61,7 +61,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 			if(point_in_circle(_mx, _my, _l0x, _l0y, ui(8))) {
 				hover = 4;
 				draw_sprite_colored(THEME.anchor_scale_hori, 1, _l0x, _l0y,, dir + 90);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_type = 4;
 					drag_sx   = _ax;
 					drag_sy   = _ay;
@@ -72,7 +72,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 			if(point_in_circle(_mx, _my, _lx, _ly, ui(8))) {
 				hover = 5;
 				draw_sprite_colored(THEME.anchor_scale_hori, 1, _lx, _ly,, dir);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_type = 5;
 					drag_sx   = _ax;
 					drag_sy   = _ay;
@@ -89,7 +89,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 				
 				hover = 6;
 				draw_sprite_colored(THEME.anchor_rotate, 1, rx, ry,, dir - 45);
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					drag_type = 6;
 					drag_sx   = _ax;
 					drag_sy   = _ay;
@@ -148,7 +148,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 		if(setValueInspector( _val ))
 			UNDO_HOLDING = true;
 			
-		if(mouse_release(mb_left)) {
+		if(mouse_lrelease()) {
 			drag_type = 0;
 			UNDO_HOLDING = false;
 		}
@@ -157,7 +157,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, ui(8))) {
 		hover = 1;
 		draw_sprite_colored(THEME.anchor_selector, 1, _ax, _ay);
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			drag_type = 1;
 			drag_mx   = _mx;
 			drag_my   = _my;
@@ -172,7 +172,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my) {
 		
 		hover = 2;
 		draw_anchor(0, _ax1, _ay1, ui(10), 2);
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			drag_type = 2;
 			drag_mx   = _mx;
 			drag_my   = _my;

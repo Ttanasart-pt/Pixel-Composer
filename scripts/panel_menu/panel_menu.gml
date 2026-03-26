@@ -429,7 +429,7 @@ function Panel_Menu() : PanelContent() constructor {
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
                     draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2);
                     _draggable = false;
-                    if(mouse_press(mb_left, pFOCUS)) dialogCall(o_dialog_splash);
+                    if(mouse_lpress(pFOCUS)) dialogCall(o_dialog_splash);
                     
                 } else 
                     draw_sprite_ui_uniform(THEME.icon_24_grey, 0, bx, h / 2);
@@ -441,7 +441,7 @@ function Panel_Menu() : PanelContent() constructor {
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
                     draw_sprite_ui_uniform(THEME.icon_24, 0, bx, by);
                     _draggable = false;
-                    if(mouse_press(mb_left, pFOCUS)) dialogCall(o_dialog_splash);
+                    if(mouse_lpress(pFOCUS)) dialogCall(o_dialog_splash);
                     
                 } else 
                     draw_sprite_ui_uniform(THEME.icon_24_grey, 0, bx, by);
@@ -520,7 +520,7 @@ function Panel_Menu() : PanelContent() constructor {
                     _draggable = false;
                     draw_sprite_stretched(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0);
                     
-                    if((mouse_press(mb_left, pFOCUS)) || (instance_exists(o_dialog_menubox) && o_dialog_menubox.menu_id != _mname)) {
+                    if((mouse_lpress(pFOCUS)) || (instance_exists(o_dialog_menubox) && o_dialog_menubox.menu_id != _mname)) {
                         var _mnx   = hori? x + x0 : x + x1;
                         var _mny   = hori? y + y1 : y + y0;
                         var _mcont = is_string(_cont)? menuItems_gen(_cont) : _cont;
@@ -871,10 +871,10 @@ function Panel_Menu() : PanelContent() constructor {
                     draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(16), ww, ui(32), sc, 1);
                     if(NEW_VERSION) TOOLTIP = __txt("New Version Available");
                     
-                    if(mouse_press(mb_left, pFOCUS))
+                    if(mouse_lpress(pFOCUS))
                         dialogCall(o_dialog_release_note); 
                         
-                    if(mouse_press(mb_right, pFOCUS)) {
+                    if(mouse_rpress(pFOCUS)) {
                         clipboard_set_text(VERSION_STRING);
                         version_name_copy = 3;
                     }
@@ -1075,7 +1075,7 @@ function Panel_Menu() : PanelContent() constructor {
                     DISPLAY_REFRESH
                 }
                 
-                if(mouse_press(mb_left) && OS == os_windows) winMan_initDrag(0b10000);
+                if(mouse_lpress() && OS == os_windows) winMan_initDrag(0b10000);
             }
         #endregion
     }

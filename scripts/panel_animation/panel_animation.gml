@@ -487,7 +487,7 @@ function Panel_Animation() : PanelContent() constructor {
             if(timeline_show_time != _scrub_frame)
                 _scrub_frame = timeline_show_time;
                 
-	        if(mouse_release(mb_left))
+	        if(mouse_lrelease())
 	            timeline_scubbing = false;
         }
     
@@ -533,14 +533,14 @@ function Panel_Animation() : PanelContent() constructor {
 				timeline_frame_typing = true;
         		KEYBOARD_RESET
         		
-        	} else if(mouse_press(mb_left, pFOCUS) && mx < bar_int_x) {
+        	} else if(mouse_lpress(pFOCUS) && mx < bar_int_x) {
                 timeline_scubbing = true;
                 timeline_scub_st  = GLOBAL_CURRENT_FRAME;
                 _scrub_frame      = timeline_scub_st;
                 KEYBOARD_RESET
         	}
             
-            if(mouse_press(mb_right, pFOCUS)) {
+            if(mouse_rpress(pFOCUS)) {
                 __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, GLOBAL_TOTAL_FRAMES - 1);
                 menuCall("animation_summary", menuItems_gen("animation_summary"));
             }
@@ -945,7 +945,7 @@ function Panel_Animation() : PanelContent() constructor {
         hov = hov && point_in_rectangle(mx, my, bx, 0, w, max_y);
         by  = ui(8);
         
-        if(mouse_press(mb_right, hov && foc)) menuCallGen("animation_sidebar_context");
+        if(mouse_rpress(hov && foc)) menuCallGen("animation_sidebar_context");
         
         var _side_b = menuItems_gen("animation_sidebar");
         for( var i = 0, n = array_length(_side_b); i < n; i++ ) {

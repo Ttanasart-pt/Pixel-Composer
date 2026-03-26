@@ -126,14 +126,14 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					draw_sprite_stretched_ext(THEME.checkbox_def, 1, _x + ui(16), ty + ui(4), ui(20), ui(20), c_white);
 					TOOLTIP = "Include in autoweight";
 					
-					if(mouse_press(mb_left, _focus)) {
+					if(mouse_lpress(_focus)) {
 						if(attributes.rigBones == noone)
 							attributes.rigBones = [];
 						array_toggle(attributes.rigBones, _bone.ID);
 					}
 					
 				} else {
-					if(mouse_press(mb_left, _focus))
+					if(mouse_lpress(_focus))
 						attributes.rigBones = [ _bone.ID ];
 				}
 			}
@@ -151,7 +151,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					_cc = COLORS._main_value_negative;
 					TOOLTIP = "Clear weight";
 					
-					if(mouse_press(mb_left, _focus) && struct_has(attributes.bakeData, _bone.ID)) {
+					if(mouse_lpress(_focus) && struct_has(attributes.bakeData, _bone.ID)) {
 						var _wdata = attributes.bakeData[$ _bone.ID];
 						for( var i = 0, n = array_length(_wdata); i < n; i++ ) 
 							_wdata[i] = 0;
@@ -321,14 +321,14 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					triggerRender();
 				}
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					posing_bone = noone;
 					posing_type = noone;
 					UNDO_HOLDING = false;
 				}
 			}
 			
-			if(anchor_selecting != noone && mouse_press(mb_left, active)) {
+			if(anchor_selecting != noone && mouse_lpress(active)) {
 				posing_bone = anchor_selecting[0];
 				if(!struct_has(attributes.bonePoseData, posing_bone.ID))
 					attributes.bonePoseData[$ posing_bone.ID] = [ 0, 0, 0, 1, 1 ];
@@ -414,14 +414,14 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					_weightData[i] = clamp(brush_draw_orig[i] + _w, 0, 1);
 				}
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					brush_drawing = false;
 					triggerRender();
 					UNDO_HOLDING = false;
 				}
 			}
 			
-			if(hover && mouse_press(mb_left, active)) {
+			if(hover && mouse_lpress(active)) {
 				brush_drawing   = true;
 				brush_draw_mask = array_create(_plen, 0);
 				brush_draw_orig = array_create(_plen, undefined);

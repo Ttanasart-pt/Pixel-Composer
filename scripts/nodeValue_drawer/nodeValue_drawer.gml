@@ -133,7 +133,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics,, 1);
 				TOOLTIP = __txt("Visibility");
 				
-				if(mouse_press(mb_left, _focus)) {
+				if(mouse_lpress(_focus)) {
 					jun.setVisibleManual(_visi? -1 : 1);
 					visi_hold = jun.visible_manual;
 				}
@@ -155,7 +155,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					draw_sprite_ui_uniform(THEME.favorite, jun.favorited, butx, lb_y, ics, cc, 1);
 					TOOLTIP = __txt("Favorite");
 					
-					if(mouse_press(mb_left, _focus)) {
+					if(mouse_lpress(_focus)) {
 						jun.favorited = !jun.favorited;
 						var proj = jun.node.project;
 						

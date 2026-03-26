@@ -137,7 +137,7 @@ if(sFOCUS && !m_in && m_ot) {
 	
 		instance_destroy();
 		
-	} else if(mouse_press(mb_right)) {
+	} else if(mouse_rpress()) {
 		menuCall("panel_window_menu", [
 			menuItem(__txt("Move"), function() { 
 				content.dragSurface   = surface_clone(panel);

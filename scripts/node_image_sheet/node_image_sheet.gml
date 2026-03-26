@@ -231,7 +231,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			curr_off = off;
 			inputs[4].setValue(off);
 		
-			if(mouse_release(mb_left)) drag_type = 0;
+			if(mouse_lrelease()) drag_type = 0;
 			
 		} else if(drag_type == 2) {
 			var _dx = PANEL_PREVIEW.snapX(round(abs((_mx - drag_mx) / _s)));
@@ -247,27 +247,27 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			inputs[1].setValue(dim);
 			
-			if(mouse_release(mb_left)) drag_type = 0;
+			if(mouse_lrelease()) drag_type = 0;
 			
 		} else if(drag_type == 3) {
 			var _col = floor((abs(_mx - drag_mx) / _s - _spc[0]) / (__dim[0] + _spc[0]));
 			curr_amo = [ _col, curr_amo[1] ];
 			inputs[3].setValue(curr_amo);
 			
-			if(mouse_release(mb_left)) drag_type = 0;
+			if(mouse_lrelease()) drag_type = 0;
 			
 		} else if(drag_type == 4) {
 			var _row = floor((abs(_my - drag_my) / _s - _spc[1]) / (__dim[1] + _spc[1]));
 			curr_amo = [ curr_amo[0], _row ];
 			inputs[3].setValue(curr_amo);
 			
-			if(mouse_release(mb_left)) drag_type = 0;
+			if(mouse_lrelease()) drag_type = 0;
 			
 		}
 			
 		hovering = hovering || _h0 || _h1 || _h2 || _h3;
 					
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			if(_h0) { // drag size
 				drag_type = 2;
 				drag_mx   = _ax;

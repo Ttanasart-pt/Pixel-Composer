@@ -85,7 +85,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			_v[level_dragging] = _val;
 			if(inputs[1].setValue(_v)) UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				level_dragging = noone;
 				UNDO_HOLDING   = false;
 			}

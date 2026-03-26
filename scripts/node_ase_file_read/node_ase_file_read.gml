@@ -73,7 +73,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(mouse_lpress(_focus))
 					hold_visibility = !_vis[_index];
 					
-				if(mouse_click(mb_left, _focus) && _vis[_index] != hold_visibility) {
+				if(mouse_lclick(_focus) && _vis[_index] != hold_visibility) {
 					_vis[@ _index] = hold_visibility;
 					triggerRender();
 				}
@@ -88,7 +88,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(mouse_lpress(_focus))
 					hold_loop = !_lop[_index];
 					
-				if(mouse_click(mb_left, _focus) && _lop[_index] != hold_loop) {
+				if(mouse_lclick(_focus) && _lop[_index] != hold_loop) {
 					_lop[@ _index] = hold_loop;
 					triggerRender();
 				}
@@ -117,7 +117,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(mouse_lpress(_focus))
 					hold_visibility = !_vis[_index];
 					
-				if(mouse_click(mb_left, _focus) && _vis[_index] != hold_visibility) {
+				if(mouse_lclick(_focus) && _vis[_index] != hold_visibility) {
 					_vis[@ _index] = hold_visibility;
 					triggerRender();
 				}

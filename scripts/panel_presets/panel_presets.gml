@@ -117,14 +117,14 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _yy, _ww, _hh, COLORS._main_icon, 1);
 				sc_presets.hover_content = true;
 				
-				if(mouse_press(mb_left, pFOCUS)) {
+				if(mouse_lpress(pFOCUS)) {
 					LOADING_VERSION = SAVE_VERSION;
 					
 					node.setPreset(preset.name);
 					if(in_dialog && panel.destroy_on_click_out) close();
 				}
 				
-				if(mouse_press(mb_right, pFOCUS)) {
+				if(mouse_rpress(pFOCUS)) {
 					selecting_preset = preset;
 					menuCall("preset_window_menu", context_menu);
 				}
@@ -140,12 +140,12 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				aa = .75;
 				sc_presets.hover_content = true;
 				
-				if(mouse_press(mb_left, pFOCUS)) {
+				if(mouse_lpress(pFOCUS)) {
 					node.resetDefault();
 					if(in_dialog && panel.destroy_on_click_out) close();
 				}
 				
-				if(mouse_press(mb_right, pFOCUS))
+				if(mouse_rpress(pFOCUS))
 					menuCall("preset_window_menu", context_def);
 			}
 			
@@ -177,14 +177,14 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _yy, _ww, _hh, COLORS._main_accent, 1);
 				sc_presets.hover_content = true;
 				
-				if(mouse_press(mb_left, pFOCUS)) {
+				if(mouse_lpress(pFOCUS)) {
 					LOADING_VERSION = SAVE_VERSION;
 					
 					node.setPreset(_name);
 					if(in_dialog && panel.destroy_on_click_out) close();
 				}
 				
-				if(mouse_press(mb_right, pFOCUS)) {
+				if(mouse_rpress(pFOCUS)) {
 					selecting_preset = preset;
 					hk_selecting     = GRAPH_ADD_NODE_MAPS[$ fName];
 					dia = menuCall("preset_window_menu", context_menu);
@@ -289,7 +289,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon);
 			draw_text_add(_ww / 2, _by + _add_h / 2, __txt("New preset"));
 			
-			if(mouse_press(mb_left, pFOCUS && _hov)) {
+			if(mouse_lpress(pFOCUS && _hov)) {
 				if(!adding) tb_add.activate(); 
 				adding = true;
 			}

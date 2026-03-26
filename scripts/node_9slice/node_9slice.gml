@@ -86,7 +86,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			if(inputs[2].setValue(_splice))
 				UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				drag_side = -1;
 				UNDO_HOLDING = false;
 			}
@@ -144,7 +144,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
 			hovering = true;
 			draw_line_width(sp_r, -hh, sp_r, hh, 3);
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_side = 0;
 				drag_mx   = _mx;
 				drag_my   = _my;
@@ -154,7 +154,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_t, ww, sp_t) < 12) {
 			hovering = true;
 			draw_line_width(-ww, sp_t, ww, sp_t, 3);
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_side = 1;
 				drag_mx   = _mx;
 				drag_my   = _my;
@@ -164,7 +164,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		} else if(distance_to_line_infinite(_mx, _my, sp_l, -hh, sp_l, hh) < 12) {
 			hovering = true;
 			draw_line_width(sp_l, -hh, sp_l, hh, 3);
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_side = 2;
 				drag_mx   = _mx;
 				drag_my   = _my;
@@ -174,7 +174,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_b, ww, sp_b) < 12) {
 			hovering = true;
 			draw_line_width(-ww, sp_b, ww, sp_b, 3);
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				drag_side = 3;
 				drag_mx   = _mx;
 				drag_my   = _my;

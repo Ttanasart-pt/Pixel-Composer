@@ -34,16 +34,16 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 		} else {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h)) {
 				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, h, boxColor, 0.5 + !hide * 0.5);	
-				if(mouse_press(mb_left, active)) pressed = true;
+				if(mouse_lpress(active)) pressed = true;
 				
-				if(pressed && mouse_release(mb_left, active))
+				if(pressed && mouse_lrelease(active))
 					dialogCall(o_dialog_arrayBox, _rx + _x, _ry + _y + h).setArrayBox(self);
 				
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, h, boxColor, 0.5 + 0.5 * interactable);
 		}
 		
-		if(mouse_release(mb_left)) pressed = false;
+		if(mouse_lrelease()) pressed = false;
 		
 		var ww, hh = line_get_height(font, ui(4));
 		var tx = _x + ui(4);
@@ -132,7 +132,7 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 				draw_line_width(_tx, hovi[2], _tx, hovi[4], 2);
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				if(hovi != noone && hovi[0] != dragging) {
 					var _val = arraySet[dragging];
 					

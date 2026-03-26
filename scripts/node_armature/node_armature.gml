@@ -135,7 +135,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -242,7 +242,7 @@
 			draw_set_color(COLORS._main_icon);
 			draw_line_dashed(ox, oy, _mx, _my);
 			
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -368,7 +368,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left) || key_press(vk_enter)) {
+			if(mouse_lpress() || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -485,7 +485,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var bne_c = COLORS._main_icon;
 			if(_hover && point_in_circle(_m[0], _m[1], __x + ui(12), ty + ui(12), ui(12))) {
 				bne_c = COLORS._main_icon_light;
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					bone_dragging = bone;
 			}
 			
@@ -500,7 +500,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			if(point_in_circle(_m[0], _m[1], bx, by, ui(16))) {
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_value_negative);
 				
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					bone_remove = bone;
 			} else 
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_icon);
@@ -518,7 +518,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				TOOLTIP = "Apply Scale";
 				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.75);
 				
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					bone.apply_scale = !bone.apply_scale;
 			} else 
 				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.5);
@@ -529,7 +529,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				TOOLTIP = "Apply Rotation";
 				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.75);
 				
-				if(mouse_press(mb_left, _focus))
+				if(mouse_lpress(_focus))
 					bone.apply_rotation = !bone.apply_rotation;
 			} else 
 				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.5);
@@ -540,7 +540,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				TOOLTIP = "Add Constrains";
 				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .75);
 				
-				if(mouse_press(mb_left, _focus)) {
+				if(mouse_lpress(_focus)) {
 					bone_constrain_adding = bone;
 					menuCall("bone_constrain_add", bone_constrain_menu);
 				}
@@ -557,7 +557,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		ds_stack_destroy(_bst);
 		
-		if(bone_dragging && mouse_release(mb_left))
+		if(bone_dragging && mouse_lrelease())
 			bone_dragging = noone;
 			
 		if(bone_remove != noone) {
@@ -668,7 +668,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(point_in_circle(_m[0], _m[1], bx, by, 16)) {
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_value_negative);
-				if(mouse_press(mb_left, _focus)) _del = i;
+				if(mouse_lpress(_focus)) _del = i;
 				
 			} else 
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_icon);
@@ -814,7 +814,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				_bone.__setPosition();
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				bone_transform_type = -1;
 				UNDO_HOLDING = false;
 			}
@@ -846,7 +846,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(_hov_type >= -1) hovering = true;
 			
-			if(_hov_type >= -1 && mouse_press(mb_left, active)) {
+			if(_hov_type >= -1 && mouse_lpress(active)) {
 				bone_array = _b.toArray();
 				for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
 					var _h = bone_array[i].getHead(); 
@@ -952,7 +952,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						
 						if(inRange) {
 							cc = COLORS._main_accent;
-							if(mouse_release(mb_left)) 
+							if(mouse_lrelease()) 
 								builder_bone.parent_anchor = true;
 						}
 					}
@@ -970,7 +970,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				builder_bone = noone;
 				UNDO_HOLDING = false;
 			}
@@ -994,7 +994,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					_b.drawControl(attributes);
 				}
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					
 					if(anchor_selecting == noone) {
 						builder_bone = createBone(bones, point_distance(0, 0, smx, smy), point_direction(0, 0, smx, smy));
@@ -1048,7 +1048,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				hovering = true;
 				_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					builder_bone = createBone(bones, point_distance(0, 0, smx, smy), point_direction(0, 0, smx, smy));
 					builder_bone.control = true;
 				}
@@ -1059,7 +1059,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			case "Remove Bone" : 
 				anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 				
-				if(anchor_selecting != noone && anchor_selecting[1] == 2 && anchor_selecting[0].parent != noone && mouse_press(mb_left, active)) {
+				if(anchor_selecting != noone && anchor_selecting[1] == 2 && anchor_selecting[0].parent != noone && mouse_lpress(active)) {
 					var _bone = anchor_selecting[0];
 					var _par  = _bone.parent;
 					
@@ -1086,7 +1086,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				if(builder_bone == noone)
 					anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 				
-				if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
+				if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_lpress(active)) {
 					var detach_bone = anchor_selecting[0];
 					
 					recordAction(ACTION_TYPE.struct_modify, bones)
@@ -1149,7 +1149,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 							draw_line_dashed(_px, _py, p1x, p1y, 2, 8);
 							draw_sprite_ui(THEME.preview_bone_IK, 1, _px, _py, 1, 1, 0, COLORS._main_accent, 1);
 							
-							if(mouse_release(mb_left)) {
+							if(mouse_lrelease()) {
 								var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
 								var _ang = point_direction(p0.x, p0.y, p1.x, p1.y);
 								
@@ -1178,7 +1178,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					} else
 						draw_sprite_ui(THEME.preview_bone_IK, 0, p1x, p1y, 1, 1, 0, COLORS._main_accent, 0.5);
 					
-					if(mouse_release(mb_left)) {
+					if(mouse_lrelease()) {
 						ik_dragging  = noone;
 						UNDO_HOLDING = false;
 						bones.setPosition();
@@ -1187,7 +1187,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					triggerRender();
 				}
 				
-				if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active))
+				if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_lpress(active))
 					ik_dragging = anchor_selecting[0];
 				break;
 				
@@ -1212,7 +1212,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					draw_line_dashed(_x0, _y0, _x1, _y1, 3);
 					BLEND_NORMAL
 					
-					if(mouse_release(mb_left)) {
+					if(mouse_lrelease()) {
 						var _mirrored = mirroring_bone.clone();
 						var _mirArr   = _mirrored.toArray();
 						
@@ -1236,7 +1236,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var _bne = anchor_selecting[0];
 					var _typ = anchor_selecting[1];
 					
-					if(_bne.parent && mouse_press(mb_left, active)) {
+					if(_bne.parent && mouse_lpress(active)) {
 						recordAction(ACTION_TYPE.struct_modify, bones)
 							.setName($"Mirror bone")
 							.setRef(self);
@@ -1286,7 +1286,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					
 					gpu_set_texfilter(false);
 					
-					if(mouse_press(mb_left, active)) {
+					if(mouse_lpress(active)) {
 						builder_bone = _bne;
 						builder_type = _typ;
 						

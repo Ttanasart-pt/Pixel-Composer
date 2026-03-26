@@ -48,7 +48,7 @@ event_inherited();
 			
 			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
 				if(_mmove) selecting = i;
-				if(mouse_press(mb_left)) { applyAutoComplete(_dat[3]); MOUSE_BLOCK = true; break; }
+				if(mouse_lpress()) { applyAutoComplete(_dat[3]); MOUSE_BLOCK = true; break; }
 			}
 			
 			if(selecting == i) {

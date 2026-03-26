@@ -51,10 +51,10 @@ function checkBox(_onClick) : widget() constructor {
 			if(tooltip != "") TOOLTIP = tooltip;
 			draw_sprite_stretched_ext(spr, 1, x, y, w, h, c_white, aa);	
 			
-			if(mouse_press(mb_left, active))
+			if(mouse_lpress(active))
 				trigger();
 		} else
-			if(mouse_press(mb_left)) deactivate();
+			if(mouse_lpress()) deactivate();
 		
 		var w2 = w / 2;
 		var kx = x + _value * w2;

@@ -74,7 +74,7 @@
 				}
 			}
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				drag_type = -1;
 				UNDO_HOLDING = false;
 			}
@@ -135,7 +135,7 @@
 		if(hovering == -1) return;
 		if(drag_type > -1) return;
 		
-		if(mouse_press(mb_left, active)) {
+		if(mouse_lpress(active)) {
 			drag_type	= hovering;
 			if(hovering == 0) {
 				dragging_sx = _pos[0];

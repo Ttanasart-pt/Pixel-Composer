@@ -111,7 +111,7 @@ function GlobalVarDrawer() constructor {
 				chov = true;
 				aa   = 1;
 				
-				if(mouse_press(mb_left, _foc)) {
+				if(mouse_lpress(_foc)) {
 					drag_disp   = j;
 					dragging    = j;
 					drag_insert = j;
@@ -134,7 +134,7 @@ function GlobalVarDrawer() constructor {
 				drag_disp = drag_insert;
 			}
 			
-			if(mouse_release(mb_left)) dragging = noone;
+			if(mouse_lrelease()) dragging = noone;
 		}
 					
 		if(del != noone) {
@@ -204,7 +204,7 @@ function GlobalVarDrawer() constructor {
                 prop_dragging = noone;
             }
             
-            if(mouse_release(mb_left))
+            if(mouse_lrelease())
                 prop_dragging = noone;
         }
         

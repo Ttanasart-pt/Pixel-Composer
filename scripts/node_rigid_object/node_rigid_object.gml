@@ -455,7 +455,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			mesh[anchor_dragging][0] = dx;
 			mesh[anchor_dragging][1] = dy;
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				anchor_dragging = -1;
 			return hovering;
 		}
@@ -463,7 +463,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(hover_index == -1) return hovering;
 			
 		if(frac(hover_index) == 0) {
-			if(mouse_click(mb_left, active)) {
+			if(mouse_lclick(active)) {
 				if(isUsingTool(0)) {
 					anchor_dragging = hover_index;
 					anchor_drag_sx  = mesh[hover_index][0];
@@ -478,7 +478,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 		} else {
-			if(mouse_click(mb_left, active)) {
+			if(mouse_lclick(active)) {
 				var ind = ceil(hover_index);
 				ds_list_insert(lx, ind, (_mx - _x) / _s);
 				ds_list_insert(ly, ind, (_my - _y) / _s);

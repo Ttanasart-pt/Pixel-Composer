@@ -247,7 +247,7 @@
 				drag_px = _mx;
 				drag_py = _my;
 				
-				if((!activeKeyboard && mouse_release(mb_left)) || (activeKeyboard && (mouse_press(mb_left) || key_press(vk_enter))) ) {
+				if((!activeKeyboard && mouse_lrelease()) || (activeKeyboard && (mouse_lpress() || key_press(vk_enter))) ) {
 					if(activeKeyboard) PANEL_PREVIEW.resetTool();
 					
 					drag_axis      = noone;
@@ -305,7 +305,7 @@
 				PANEL_PREVIEW.setActionTooltip(_tooltipText);
 				
 			} else {
-				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
+				if((_hover != noone && mouse_lpress()) || activeKeyboard) {
 					drag_axis = activeKeyboard? 3 : _hover;
 					drag_mx	= _mx; drag_my = _my;
 					drag_px = _mx; drag_py = _my;
@@ -489,7 +489,7 @@
 				drag_px = _mx;
 				drag_py = _my;
 				
-				if((!activeKeyboard && mouse_release(mb_left)) || (activeKeyboard && (mouse_press(mb_left) || key_press(vk_enter))) ) {
+				if((!activeKeyboard && mouse_lrelease()) || (activeKeyboard && (mouse_lpress() || key_press(vk_enter))) ) {
 					if(activeKeyboard) PANEL_PREVIEW.resetTool();
 					
 					drag_axis      = noone;
@@ -535,7 +535,7 @@
 				PANEL_PREVIEW.setActionTooltip(_tooltipText);
 				
 			} else {
-				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
+				if((_hover != noone && mouse_lpress()) || activeKeyboard) {
 					drag_axis = activeKeyboard? 2 : _hover;
 					drag_mx	= _mx; drag_my = _my;
 					drag_px = _mx; drag_py = _my;
@@ -753,7 +753,7 @@
 				drag_px = _mx;
 				drag_py = _my;
 				
-				if((!activeKeyboard && mouse_release(mb_left)) || (activeKeyboard && (mouse_press(mb_left) || key_press(vk_enter))) ) {
+				if((!activeKeyboard && mouse_lrelease()) || (activeKeyboard && (mouse_lpress() || key_press(vk_enter))) ) {
 					if(activeKeyboard) PANEL_PREVIEW.resetTool();
 					
 					drag_axis      = noone;
@@ -795,7 +795,7 @@
 				PANEL_PREVIEW.setActionTooltip(_tooltipText);
 				
 			} else {
-				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
+				if((_hover != noone && mouse_lpress()) || activeKeyboard) {
 					drag_axis = activeKeyboard? 6 : _hover;
 					drag_mx	= _mx; drag_my = _my;
 					drag_px = _mx; drag_py = _my;
@@ -1058,7 +1058,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			
 			if(edited) UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				drag_point = -1;
 				RENDER_ALL
 				UNDO_HOLDING = false;
@@ -1206,7 +1206,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			if(isUsingTool(2) && hover_type == 0) {
 				CURSOR_SPRITE = THEME.cursor_path_anchor;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					
 					if(_a[3] != 0 || _a[4] != 0 || _a[5] != 0 || _a[6] != 0 || _a[7] != 0 || _a[8] != 0) {
 						_a[3] = 0; _a[4] = 0; _a[5] = 0;
@@ -1240,7 +1240,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			} else if(hover_type == 0 && key_mod_press(SHIFT)) { //remove
 				CURSOR_SPRITE = THEME.cursor_remove;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					var _indx = input_fix_len + anchor_hover;
 					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ]);
 					
@@ -1251,7 +1251,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			} else {
 				CURSOR_SPRITE = THEME.cursor_move;
 				
-				if(mouse_press(mb_left, active)) {
+				if(mouse_lpress(active)) {
 					if(isUsingTool(2)) {
 						_a[_ANCHOR3.ind] = true;
 						inputs[input_fix_len + anchor_hover].setValue(_a);
@@ -1289,7 +1289,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		} else if(key_mod_press(CTRL) || _tooln == "Anchor add / remove") {	// anchor edit
 			CURSOR_SPRITE = THEME.cursor_add;
 			
-			if(mouse_press(mb_left, active)) {
+			if(mouse_lpress(active)) {
 				
 				drag_plane_origin = new __vec3();
 				drag_plane_normal = ray.direction.multiply(-1)._normalize();

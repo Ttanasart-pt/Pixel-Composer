@@ -160,7 +160,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					
-					if(mouse_press(mb_left, foc)) {
+					if(mouse_lpress(foc)) {
 						if(is(content, dynaSurf)) 
 							target.onModify(content.clone());
 						else 
@@ -185,7 +185,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 			folderW = _w;
 			onResize();
 			
-			if(mouse_release(mb_left)) 
+			if(mouse_lrelease()) 
 				folderW_dragging = -1;
 		}
 		
@@ -248,7 +248,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 		
 		if(point_in_rectangle(mx, my, dx0, dy0, dx1, dy1)) {
 			CURSOR = cr_size_we;
-			if(mouse_click(mb_left, pFOCUS)) {
+			if(mouse_lclick(pFOCUS)) {
 				folderW_dragging = true;
 				folderW_drag_mx  = mx;
 				folderW_drag_sx  = folderW;

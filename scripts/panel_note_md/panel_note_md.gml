@@ -61,7 +61,7 @@ function Panel_Note_Md(_data) : PanelContent() constructor {
 			if(pHOVER && point_in_rectangle(mx, my, px, py, px + pw, py + ph - 1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, px, py, pw, ph, CDEF.main_white, 1);
 				
-				if(mouse_press(mb_left, pFOCUS))
+				if(mouse_lpress(pFOCUS))
 					sp_note.scroll_y_to = -page.y;
 			}
 			

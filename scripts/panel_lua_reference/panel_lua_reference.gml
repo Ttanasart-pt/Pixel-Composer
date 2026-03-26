@@ -54,7 +54,7 @@ function Panel_Lua_Reference() : PanelContent() constructor {
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, 0, yy, sp_note.surface_w, hh, COLORS.dialog_lua_ref_bg_hover, 1);
 				
-				if(mouse_press(mb_left, pFOCUS)) 
+				if(mouse_lpress(pFOCUS)) 
 					is_open[i] = !array_get(is_open, i);
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, 0, yy, sp_note.surface_w, hh, COLORS.dialog_lua_ref_bg, 1);

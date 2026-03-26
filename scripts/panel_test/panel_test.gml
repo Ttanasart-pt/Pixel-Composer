@@ -72,7 +72,7 @@ function Panel_Test() : PanelContent() constructor {
 			var _hover = sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + wh - 1);
 			if(_hover) {
 				draw_sprite_stretched_ext(THEME.box_r2_clr, 0, 0, yy, ww, wh, c_white, 1);
-				if(mouse_press(mb_left, pFOCUS))
+				if(mouse_lpress(pFOCUS))
 					LOAD_AT(_f[0]);
 			}
 			
@@ -150,7 +150,7 @@ function Panel_Test() : PanelContent() constructor {
 					cc = COLORS._main_text_sub;       
 					tx = ui(8);
 					
-					if(hv && mouse_press(mb_left, pFOCUS))
+					if(hv && mouse_lpress(pFOCUS))
 						LOAD_AT(_f.file);
 					break;
 					

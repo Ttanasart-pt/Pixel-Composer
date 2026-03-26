@@ -56,7 +56,7 @@
 			mouse_ta = 1;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, _bx0, _by0, _spw, _sph, COLORS.dialog_menubox_highlight, 0.75);
-			if(mouse_release(mb_left)) {
+			if(mouse_lrelease()) {
 				var _dat = {
 					_x: _bx0,
 					x:  _bx1,
@@ -95,7 +95,7 @@
 		draw_sprite_stretched(THEME.box_r2_clr, 1, _bx0, _by0, _spw, _sph);
 	}
 	
-	if(mouse_release(mb_left)) {
+	if(mouse_lrelease()) {
 		HOVER  = noone;
 		FOCUS  = noone;
 		active = false;

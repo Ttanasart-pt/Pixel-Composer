@@ -323,7 +323,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			drag_py = _my;
 		}
 			
-		if(_hover != noone && mouse_press(mb_left, active)) {
+		if(_hover != noone && mouse_lpress(active)) {
 			drag_axis = _hover;
 			drag_pre0 = undefined;
 			drag_pre1 = undefined;

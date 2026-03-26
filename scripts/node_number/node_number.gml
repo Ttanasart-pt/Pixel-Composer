@@ -110,7 +110,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(inputs[0].setValue(_nv)) 
 					UNDO_HOLDING = true;
 				
-				if(mouse_release(mb_left)) {
+				if(mouse_lrelease()) {
 					gz_dragging  = false;
 					UNDO_HOLDING = false;
 				}
@@ -158,7 +158,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(is_surface(gz_sprite)) draw_surface_stretched_ext(gz_sprite, _rx0, _ry0, _rw, _rh, c_white, 0.5 + 0.5 * w_hovering);
 			}
 			
-			if(w_hovering && mouse_press(mb_left, active)) {
+			if(w_hovering && mouse_lpress(active)) {
 				gz_dragging = true;
 				
 				gz_drag_sx = _val;
@@ -391,7 +391,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(inputs[0].setValue(_valL))
 						UNDO_HOLDING = true;
 					
-					if(mouse_release(mb_left)) {
+					if(mouse_lrelease()) {
 						slider_dragging = false;
 						UNDO_HOLDING    = false;
 					}
@@ -399,7 +399,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					slider_m = lerp_float(slider_m, 0, 5);
 				
 				if(_hov) {
-					if(mouse_press(mb_left, _focus) && is_real(raw)) {
+					if(mouse_lpress(_focus) && is_real(raw)) {
 						slider_dragging = true;
 						slider_mx = _mx;
 						slider_sx = raw;
@@ -471,7 +471,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(inputs[0].setValue(_val))
 						UNDO_HOLDING = true;
 					
-					if(mouse_release(mb_left)) {
+					if(mouse_lrelease()) {
 						rotator_dragging = false;
 						UNDO_HOLDING     = false;
 					}
@@ -479,7 +479,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					rotator_m = lerp_float(rotator_m, 0, 5);
 				
 				if(_hover && point_in_circle(_mx, _my, bbox.xc, bbox.yc, _ss / 2)) {
-					if(mouse_press(mb_left, _focus) && is_real(raw)) {
+					if(mouse_lpress(_focus) && is_real(raw)) {
 						rotator_dragging = true;
 						rotator_s = _knb_ang;
 						rotator_p = point_direction(bbox.xc, bbox.yc, _mx, _my);

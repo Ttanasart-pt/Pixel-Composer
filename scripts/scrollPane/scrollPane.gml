@@ -162,7 +162,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		
 		/// Pen scroll
 		
-		if(pen_scrolling == 0 && mouse_press(mb_left, !hover_content && hover && PEN_USE)) {
+		if(pen_scrolling == 0 && mouse_lpress(!hover_content && hover && PEN_USE)) {
 			pen_scrolling = 1;
 			pen_scroll_my = 0;
 		}
@@ -171,7 +171,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			pen_scroll_my += PEN_Y_DELTA;
 			if(abs(pen_scroll_my) > 0)
 				pen_scrolling = 2;
-			if(mouse_release(mb_left)) pen_scrolling = 0;
+			if(mouse_lrelease()) pen_scrolling = 0;
 			
 		} else if(pen_scrolling == 2) {
 			
@@ -180,7 +180,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			scroll_y	 = round(scroll_y_raw);
 			
 			pen_scroll_py = abs(PEN_Y_DELTA) > abs(pen_scroll_py)? PEN_Y_DELTA : lerp_float(pen_scroll_py, PEN_Y_DELTA, 10);
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				pen_scrolling = 0;
 			
 		} else {
@@ -222,7 +222,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			scroll_y_to -= (delta / scr_scale_s) * scr_s;
 			scroll_y_to = clamp(scroll_y_to, -content_h, 0);
 			
-			if(mouse_release(mb_left))
+			if(mouse_lrelease())
 				is_scrolling = false;
 		}
 		
@@ -242,7 +242,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		if(whover && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2)) {
 			cc = scroll_color_bar_hover;
 			
-			if(mouse_press(mb_left, wactive)) {
+			if(mouse_lpress(wactive)) {
 				is_scrolling = true;
 				scroll_ms = is_vert? my : mx;
 			}

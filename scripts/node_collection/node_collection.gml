@@ -424,7 +424,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && point_in_circle(_mx, _my, __gox, __goy, 8);
 		if(_hv) {
 			CURSOR_SPRITE = THEME.group_s;
-			if(mouse_press(mb_left, PANEL_GRAPH.pFOCUS))
+			if(mouse_lpress(PANEL_GRAPH.pFOCUS))
 				panelSetContext(PANEL_GRAPH);
 		}
 	}

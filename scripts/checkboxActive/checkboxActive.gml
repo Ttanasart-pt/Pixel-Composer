@@ -26,10 +26,10 @@ function checkBoxActive(_onClick) : widget() constructor {
 		if(hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
 			draw_sprite_stretched_add(spr, _value, bx - 8, by - 8, bw + 16, bh + 16, COLORS._main_icon_dark);
 			
-			if(mouse_press(mb_left, active))
+			if(mouse_lpress(active))
 				trigger();
 		} else {
-			if(mouse_press(mb_left)) 
+			if(mouse_lpress()) 
 				deactivate();
 		}
 		

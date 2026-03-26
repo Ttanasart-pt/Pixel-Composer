@@ -100,7 +100,7 @@ function Panel_Workspace() : PanelContent() constructor {
 			if(mx > currW && pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
 				draw_sprite_stretched(THEME.button_hide_fill, 1, x0, y0, tw, th);
 				
-				if(mouse_press(mb_left, pFOCUS)) {
+				if(mouse_lpress(pFOCUS)) {
 					if(i == amo) {
 						fileNameCall(str, function(name) /*=>*/ { 
 							var cont = panelSerialize();
@@ -118,7 +118,7 @@ function Panel_Workspace() : PanelContent() constructor {
 					}
 				}
 				
-				if(mouse_press(mb_right, pFOCUS)) {
+				if(mouse_rpress(pFOCUS)) {
 					layout_selecting = str;
 					menuCall("workspace_menu", [
 						menuItem( __txt("Select"), function() /*=>*/ {return apply_space()} ),
@@ -145,7 +145,7 @@ function Panel_Workspace() : PanelContent() constructor {
 		if(_hov) {
 			draw_sprite_stretched(THEME.button_hide_fill, 1, ui(8), ui(8), currW - ui(16), h - ui(16));
 				
-			if(mouse_press(mb_right, pFOCUS)) {
+			if(mouse_rpress(pFOCUS)) {
 				menuCall("workspace_current_menu", [
 					menuItem(__txt("Reset"), function() /*=>*/ {return setPanel()}),
 				]);

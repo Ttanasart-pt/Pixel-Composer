@@ -35,7 +35,7 @@ function mac_window_step() {
 				);
 		}
 		
-		if(mouse_release(mb_left))
+		if(mouse_lrelease())
 			__win_is_dragging = 0;
 	}
 	
@@ -43,7 +43,7 @@ function mac_window_step() {
 		if(point_in_rectangle(mouse_mx, mouse_my, 0, 0, ui(144), ui(40))) return;
 			
 		if(point_in_rectangle(mouse_mx, mouse_my, 6, 6, WIN_W - 6, ui(40))) {
-			if(mouse_press(mb_left)) {
+			if(mouse_lpress()) {
 				__win_is_dragging = WINDOW_DRAG_MODE._move;
 				__win_drag_mx = mouse_mx;
 				__win_drag_my = mouse_my;
@@ -78,7 +78,7 @@ function mac_window_step() {
 			else if(hover == (WINDOW_DRAG_MODE.resize_s | WINDOW_DRAG_MODE.resize_e))
 				CURSOR = cr_size_nwse;
 			
-			if(hover > 0 && mouse_press(mb_left)) {
+			if(hover > 0 && mouse_lpress()) {
 				__win_is_dragging = hover;
 				__win_drag_mx = mouse_mx;
 				__win_drag_my = mouse_my;

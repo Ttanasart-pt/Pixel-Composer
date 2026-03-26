@@ -54,7 +54,7 @@ event_inherited();
 	display_list_size = ui(28); display_list_size_to = display_list_size;
 	
 	left_free  = true;
-	right_free = !mouse_click(mb_right);
+	right_free = !mouse_rclick();
 	is_global  = PANEL_GRAPH.getCurrentContext() == noone;
 	
 	tooltip_surface   = -1;
@@ -797,7 +797,7 @@ event_inherited();
                     		_cAll = _coll? -1 : 1;
                     		left_free = false;
                     		
-                    	} else if(mouse_press(mb_left)) {
+                    	} else if(mouse_lpress()) {
                         	if(_coll) struct_set(collapsed, _key, 0);
                         	else      struct_set(collapsed, _key, 1);
                     		left_free = false;
@@ -953,7 +953,7 @@ event_inherited();
 						draw_sprite_ui_uniform(THEME.favorite, fav, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
 						gpu_set_tex_filter(false); BLEND_NORMAL
 						
-						if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
+						if(mouse_lpress(sFOCUS)) trigger_favourite(_node.nodeName);
 					}
 				}
 				
@@ -1014,7 +1014,7 @@ event_inherited();
                     		_cAll = _coll? -1 : 1;
                     		left_free = false;
                     		
-                    	} else if(mouse_press(mb_left)) {
+                    	} else if(mouse_lpress()) {
                         	if(_coll) struct_set(collapsed, _key, 0);
                         	else      struct_set(collapsed, _key, 1);
                     		left_free = false;
@@ -1619,7 +1619,7 @@ event_inherited();
 						draw_sprite_ui_uniform(THEME.favorite, fav, pd + ui(16), yc, .8, c_white, .5);
 						gpu_set_tex_filter(false); BLEND_NORMAL
 						
-						if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
+						if(mouse_lpress(sFOCUS)) trigger_favourite(_node.nodeName);
 					}
 				}
 				

@@ -213,7 +213,7 @@ _FILE_DROPPED       = false;
 
 #region clicks
 	DOUBLE_CLICK = false;
-	if(mouse_press(mb_left)) {
+	if(mouse_lpress()) {
 		if(dc_check > 0) {
 			if(point_distance(mouse_mx, mouse_my, dclick[0], dclick[1]) < 8)
 				DOUBLE_CLICK = true;
