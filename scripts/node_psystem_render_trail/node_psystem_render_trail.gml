@@ -87,7 +87,6 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 		var _off = 0;
 		
 		if(trail_buffer == undefined) reset();
-		print($"------ TRAIL UPDATE {_frame} [{inline_context.prerendering}] [{_partAmo}]------");
 		
 		repeat(_partAmo) {
 			var _start = _off;
@@ -162,12 +161,12 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 				var _trailLife = min(_fram_cur, _lif);
 				var _posIndx   = _lif;
 				
-				if(!_act) {
+				if(!_act) { // draw end trail
+					if(_trailLife + _lifMax >= TOTAL_FRAMES) continue;
 					_trailLife = min(_trailLife, _lifMax - (_lif - _trailLife) - 1);
 					_posIndx   = _lifMax - 1;
 				}
 				
-				print(_spwnId, _trailLife);
 				if(_trailLife <= 0) continue;
 				
 				var _thck_base = random_range(_thck[0], _thck[1]);
