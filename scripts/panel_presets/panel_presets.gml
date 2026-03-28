@@ -3,8 +3,8 @@
 	
 	function panel_preset_replace()     { CHECK_PANEL_PRESETS CALL("panel_preset_replace");     FOCUS_CONTENT.replacePreset(FOCUS_CONTENT.selecting_preset.path); }
 	function panel_preset_replace_def() { CHECK_PANEL_PRESETS CALL("panel_preset_replace_def"); FOCUS_CONTENT.newPresetFromNode("_default"); }
-	function panel_preset_delete()      { CHECK_PANEL_PRESETS CALL("panel_preset_delete");      file_delete(FOCUS_CONTENT.selecting_preset.path); __initPresets(); }
 	function panel_preset_reset()       { CHECK_PANEL_PRESETS CALL("panel_preset_reset");       FOCUS_CONTENT.newPresetFromNode("_default"); }
+	function panel_preset_delete()      { CHECK_PANEL_PRESETS CALL("panel_preset_delete");      file_delete(FOCUS_CONTENT.selecting_preset.path); __initPresets(); }
 	
 	function __fnInit_Presets() {
 		registerFunction("Presets", "Replace",          "", MOD_KEY.none, panel_preset_replace     ).setMenu( "preset_replace"     ).hidePalette();
@@ -63,35 +63,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	
 	thumbnail_mask = noone;
 	
-	function replacePreset(path) {
-		if(node == noone) return;
-		
-		file_delete(path);
-		var map = node.serialize(true, true);
-		var thm = node.getPreviewValues();
-		if(is_surface(thm)) map.thumbnail = surface_encode(thm, false);
-		
-		json_save_struct(path, map);
-		__initPresets();
-	}
-	
-	function newPresetFromNode(name) {
-		if(node == noone) return;
-		
-		var pth = $"{dirPath}{name}.json";
-		var map = node.serialize(true, true);
-		var thm = node.getPreviewValues();
-		
-		if(is_surface(thm)) map.thumbnail = surface_encode(thm, false);
-		
-		if(file_exists_empty(pth)) file_delete(pth);
-		json_save_struct(pth, map);
-		__initPresets();
-		
-		adding = false;
-	}
-	
-	function onResize() { sc_presets.resize(w - padding * 2, h - padding * 2 - ui(28)); }
+	function replacePreset(path)     { if(node != noone) node.savePreset(filename_name_only(path)); }
+	function newPresetFromNode(name) { if(node != noone) node.savePreset(name); adding = false;     }
 	
 	sc_presets = new scrollPane(w - padding * 2, h - padding * 2 - ui(28), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -168,10 +141,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			var _name  = preset.name;
 			var fName  = $"{nodeType}>{_name}";
 			
-			if(_name == "_default") {
-				defPres = preset;
-				continue;
-			}
+			if(_name == "_values")  continue;
+			if(_name == "_default") { defPres = preset; continue; }
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, _yy, _ww, _hh);
 			
@@ -270,31 +241,45 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
+		sc_presets.verify(w - padding * 2, h - padding * 2 - ui(28));
 		sc_presets.setFocusHover(pFOCUS, pHOVER);
 		sc_presets.draw(px, py, mx - px, my - py);
 		
-		var _add_h = ui(24);
-		var _bx    = sp;
-		var _by    = h - _add_h - sp;
-		var _ww    = w - sp * 2;
+		var ah = ui(24);
+		var bx = sp;
+		var by = h - ah - sp;
+		var ww = w - sp * 2;
 		
 		if(adding) {
 			tb_add.setFocusHover(sc_presets.active, sc_presets.hover);
 			tb_add.font = f_p2;
-			tb_add.draw(_bx, _by, _ww, _add_h, add_txt);
+			tb_add.draw(bx, by, ww, ah, add_txt);
 			
 		} else {
-			var _hov = pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + _ww, _by + _add_h);
+			var  bs = ui(32);
+			var _bx = w - sp - bs;
+			var hov = pHOVER && point_in_rectangle(mx, my, _bx, by, _bx + bs, by + ah);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, by, bs, ah, COLORS._main_value_negative, .40 + hov * .10);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, by, bs, ah, COLORS._main_value_negative, .75 + hov * .25);
+			draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon);
+			draw_sprite_ui(THEME.icon_delete, 0, _bx + bs/2, by + ah/2, 1, 1, 0, COLORS._main_value_negative);
 			
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .3 + _hov * .1);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .6 + _hov * .25);
-			draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon);
-			draw_text_add(_ww / 2, _by + _add_h / 2, __txt("New preset"));
-			
-			if(mouse_lpress(pFOCUS && _hov)) {
-				if(!adding) tb_add.activate(); 
-				adding = true;
+			if(hov) {
+				TOOLTIP = __txt("Clear Default Values");
+				if(mouse_lpress(pFOCUS)) {
+					var _pth = $"{dirPath}_values.json";
+					file_delete_safe(_pth);
+				}
 			}
+			ww -= bs + ui(4);
+			
+			var hov = pHOVER && point_in_rectangle(mx, my, bx, by, bx + ww, by + ah);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .3 + hov * .10);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .6 + hov * .25);
+			draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon);
+			draw_text_add(ww / 2, by + ah / 2, __txt("New preset"));
+			
+			if(mouse_lpress(pFOCUS && hov)) { if(!adding) tb_add.activate(); adding = true; }
 			
 		}
 		

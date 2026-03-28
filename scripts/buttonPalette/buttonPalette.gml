@@ -9,9 +9,10 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 	edit_color_index = -1;
 	
 	static trigger = function() {
-		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2)
-						.setDefault(current_palette);
-		dialog.onModify      = onModify;
+		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
+		
+		dialog.setDefault(current_palette);
+		dialog.onModify     = onModify;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
 		

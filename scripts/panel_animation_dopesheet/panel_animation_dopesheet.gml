@@ -636,10 +636,10 @@ function Panel_Animation_Dopesheet() {
                 break;
             
             case VALUE_TYPE.gradient : 
-                dialogCall(o_dialog_gradient)
-                	.setDefault(keyframe.value.clone())
-	            	.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; })
-	            	.setDrop(_wid);
+            	var dia = dialogCall(o_dialog_gradient);
+                dia.setDefault(keyframe.value.clone());
+	            dia.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; });
+	            dia.setDrop(_wid);
                 break;
                 
             default : 

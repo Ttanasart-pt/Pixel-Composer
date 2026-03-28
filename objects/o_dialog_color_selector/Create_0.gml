@@ -18,11 +18,10 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 	onClose    = undefined;
 	onModify   = undefined;
 	
-	setDrop    = function(d) /*=>*/ { drop_target = d;                          return self; }
-	setClose   = function(c) /*=>*/ { onClose = c;                              return self; }
-	setDefault = function(c) /*=>*/ { selector.setColor(c); previous_color = c; return self; }
-	
-	function setApply(a) { selector.onModify = a; onModify = a;       return self; }
+	function setDrop(d)    { drop_target = d;                          return self; }
+	function setClose(c)   { onClose = c;                              return self; }
+	function setDefault(c) { selector.setColor(c); previous_color = c; return self; }
+	function setApply(a)   { selector.onModify = a; onModify = a;      return self; }
 	
 	b_cancel = button(function() /*=>*/ { onModify(previous_color); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
 	                                                                         .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));

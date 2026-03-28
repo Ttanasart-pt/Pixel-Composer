@@ -444,7 +444,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	}
 	
-	static setDefault = function(vals) {
+	static setDefault = function() {
+		var dir = $"{DIRECTORY}Presets/{instanceof(node)}/";
+		var pth = $"{dir}_values.json";
+		var map;
+		
+		directory_verify(dir);
+		map = file_exists(pth)? json_load_struct(pth) : {};
+		map[$ internalName] = serialize(true, true);
+		
+		json_save_struct(pth, map, true);
+		is_modified = false;
+		return self;
+	}
+	
+	static resetDefault = function(vals) {
 		if(LOADING || APPENDING) return self;
 		
 		animator.values = [];
@@ -2927,7 +2941,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(has(_map, "m"))           is_modified = bool(_map.m);
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
-		if(always_modified) is_modifed = true;
+		if(always_modified) is_modified = true;
 		
 		#region attributes
 			if(has(_map, "attri")) struct_append(attributes, _map.attri);

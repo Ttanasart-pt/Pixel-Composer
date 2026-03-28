@@ -34,9 +34,9 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 	]
 	
 	static trigger = function() {
-		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2)
-						.setDefault(current_gradient.clone());
+		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
 						
+		dialog.setDefault(current_gradient.clone());
 		dialog.onModify      = onModify;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;

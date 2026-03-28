@@ -55,6 +55,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 					_anims[1].values[i].value *= sh;
 			}
 			
+			is_modified = true;
 			node.triggerRender();
 			
 		}).setIcon(THEME.node_use_project, attributes.use_project_dimension, COLORS._main_icon).iconPad().setTooltip(unitTooltip);

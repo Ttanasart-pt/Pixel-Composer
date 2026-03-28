@@ -292,7 +292,16 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 				
 			} else {
-				var bt = __txtx("panel_inspector_reset", "Reset value");
+				var bt = __txtx("panel_inspector_default", "Set default");
+				var ba = .5 + jun.is_modified * .4;
+				var bh = jun.is_modified && _hover;
+				var cc = jun.is_modified? COLORS._main_icon_light : COLORS._main_icon;
+				
+				bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); bx -= ui(4);
+				cHov = cHov || b;
+				if(b == 2) jun.setDefault();
+				
+				var bt = __txtx("panel_inspector_reset", "Reset");
 				var ba = .5 + jun.is_modified * .4;
 				var bh = jun.is_modified && _hover;
 				var cc = jun.is_modified? COLORS._main_icon_light : COLORS._main_icon;

@@ -574,6 +574,7 @@ function nodeValueUnit(__nodeValue) constructor {
 	modeTrigger = function(upd = true) /*=>*/ { 
 		mode = !mode; 
 		
+		_nodeValue.is_modified    = true;
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
 		if(upd) _nodeValue.node.doUpdate();
