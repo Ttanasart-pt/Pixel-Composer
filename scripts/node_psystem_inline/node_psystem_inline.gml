@@ -38,34 +38,31 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	// static getNextNodes = function(checkLoop = false) { return __nodeLeafList(nodes); }
 	
 	static reset = function() {
-		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "reset")) n.reset(); });
+		array_foreach(nodes, function(n) /*=>*/ { if(has(n, "reset")) n.reset(); });
 		
 		var _loop = getInputData(0);
 		var _prer = getInputData(2); if(_prer == -1) _prer = TOTAL_FRAMES - 1;
 		if(!_loop) return;
 		
-		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "reset")) n.reset(); });
-		
-		if(!IS_PLAYING && !IS_FRAME_PROGRESS) {
-			array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "resetSeed")) n.resetSeed(); }); 
+		if(!IS_PLAYING && !IS_FRAME_PROGRESS) { 
+			array_foreach(nodes, function(n) /*=>*/ { if(has(n, "resetSeed")) n.resetSeed(); }); 
 			return; 
 		}
 		
 		prerendering = true;
 		
-		for(var i = TOTAL_FRAMES - _prer; i < TOTAL_FRAMES + 4; i++) {
-			for( var j = 0, m = array_length(topoList); j < m; j++ ) {
-				var node = topoList[j];
-				if(!node.active) continue;
-				
-				if(node.preUpdate) node.preUpdate(i);
-				node.getInputs(i);
-				node.update(i);
-			}
+		for(var i = TOTAL_FRAMES - _prer; i < TOTAL_FRAMES; i++)
+		for( var j = 0, m = array_length(topoList); j < m; j++ ) {
+			var node = topoList[j];
+			if(!node.active) continue;
+			
+			if(node.preUpdate) node.preUpdate(i);
+			node.getInputs(i);
+			node.update(i);
 		}
 		
 		prerendering = false;
-		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "resetSeed")) n.resetSeed(); });
+		array_foreach(nodes, function(n) /*=>*/ { if(has(n, "resetSeed")) n.resetSeed(); });
 	}
 	
 	static update = function() {

@@ -540,7 +540,6 @@
     {"name":"__node_surface_filter","order":5,"path":"scripts/__node_surface_filter/__node_surface_filter.yy",},
     {"name":"__node_template","order":21,"path":"scripts/__node_template/__node_template.yy",},
     {"name":"__node_value_array","order":1,"path":"scripts/__node_value_array/__node_value_array.yy",},
-    {"name":"__node_value_number","order":0,"path":"scripts/__node_value_number/__node_value_number.yy",},
     {"name":"__node_value_processor","order":2,"path":"scripts/__node_value_processor/__node_value_processor.yy",},
     {"name":"__node","order":1,"path":"scripts/__node/__node.yy",},
     {"name":"__panel_custom_button","order":9,"path":"scripts/__panel_custom_button/__panel_custom_button.yy",},

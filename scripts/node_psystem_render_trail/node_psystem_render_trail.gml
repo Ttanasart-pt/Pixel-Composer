@@ -12,8 +12,8 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 	newInput(1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Trail
-	newInput(3, nodeValue_Range( "Frames", [4,4], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(5, nodeValue_Bool(  "End Trail",  true )).setTooltip("Render trail for dead particles.");
+	newInput(3, nodeValue_Range( "Length", [4,4], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(5, nodeValue_Bool(  "End Trail",     true )).setTooltip("Render trail for dead particles.");
 	
 	////- =Render
 	newInput(6, nodeValue_Range( "Thickness", [1,1], true )).setTooltip("This value then multiply by particle X scale for the final thickness.");
@@ -47,22 +47,29 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 		
 		var _parts = getInputData(0);
 		var _fram  = getInputData(3);
-		
 		if(!is(_parts, pSystem_Particles)) return;
 		
 		var _poolSize = _parts.poolSize;
-		var _lenMax   = max(_fram[0], _fram[1]);
-		var _bufLen   = (2 + buffer_data_size * _lenMax) * _poolSize;
+		var _lifMax   = max(_fram[0], _fram[1]);
+		var _bufLen   = (2 + buffer_data_size * _lifMax) * _poolSize;
 		
 		trail_buffer = buffer_verify(trail_buffer, _bufLen, buffer_grow);
 		buffer_clear(trail_buffer);
 	}
 	
 	static update = function(_frame = CURRENT_FRAME) {
+		#region data
+			var _dim   = getDimension();
+			var _seed  = getInputData(2);
+			
+			var _parts = getInputData(0);
+			var _masks = getInputData(1), use_mask = _masks != noone;
 		
-		var _dim   = getDimension();
-		var _parts = getInputData(0);
-		var _masks = getInputData(1), use_mask = _masks != noone;
+			var _fram  = getInputData(3), _fram_curved = inputs[3].attributes.curved && curve_fram != undefined;
+			var _endt  = getInputData(5);
+			
+			var _thck  = getInputData(6);
+		#endregion
 		
 		var _outSurf = outputs[0].getValue();
 		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
@@ -70,12 +77,6 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 		
 		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
-		
-		var _seed = getInputData(2);
-		var _fram = getInputData(3), _fram_curved = inputs[3].attributes.curved && curve_fram != undefined;
-		var _endt = getInputData(5);
-		
-		var _thck = getInputData(6);
 		
 		var _poolSize  = _parts.poolSize;
 		var _lenMax    = max(_fram[0], _fram[1]);
@@ -86,6 +87,7 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 		var _off = 0;
 		
 		if(trail_buffer == undefined) reset();
+		print($"------ TRAIL UPDATE {_frame} [{inline_context.prerendering}] [{_partAmo}]------");
 		
 		repeat(_partAmo) {
 			var _start = _off;
@@ -110,7 +112,7 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 			
 			var _buffOffStart = _bufDatLen * _spwnId;
 			var _buffInd = _lif % _lenMax;
-			var _buffOff = _buffOffStart + 2 + _buffInd * buffer_data_size;
+			var _buffOff = (_buffOffStart + 2) + _buffInd * buffer_data_size;
 			
 			buffer_write_at(trail_buffer, _buffOffStart, buffer_u16, _lif);
 			buffer_seek(trail_buffer, buffer_seek_start, _buffOff);
@@ -123,6 +125,8 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 			buffer_write(trail_buffer, buffer_u8, _bldG);
 			buffer_write(trail_buffer, buffer_u8, _bldB);
 			buffer_write(trail_buffer, buffer_u8, _bldA);
+			
+			// print(_spwnId, _buffInd, _draw_x, _draw_y);
 		}
 		
 		if(!is(inline_context, Node_pSystem_Inline) || inline_context.prerendering) return;
@@ -163,6 +167,7 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 					_posIndx   = _lifMax - 1;
 				}
 				
+				print(_spwnId, _trailLife);
 				if(_trailLife <= 0) continue;
 				
 				var _thck_base = random_range(_thck[0], _thck[1]);

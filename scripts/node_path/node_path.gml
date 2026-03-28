@@ -1,4 +1,4 @@
-#region
+#region Global
 	function is_path(p) { return has(p, "getPointRatio"); }
 	
 	enum _ANCHOR {
@@ -511,8 +511,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- Anchor
 	
 	static resetDisplayList = function() {
-		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ])
-			.setRef(self);
+		recordAction(ACTION_TYPE.var_modify, self, [ array_clone(input_display_list), "input_display_list" ]).setRef(self);
 		
 		input_display_list = array_clone(input_display_list_raw);
 		
@@ -527,16 +526,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	function createNewInput(index = array_length(inputs), _x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Path_Anchor("Anchor", []))
-			.setValue(newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy ));
+		var ancIn = newInput(index, nodeValue_Path_Anchor("Anchor", []));
+		ancIn.setValue(newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy ));
 		
 		if(rec) {
-			recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ])
-				.setRef(self);
+			recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]).setRef(self);
 			resetDisplayList();
 		}
 		
-		return inputs[index];
+		return ancIn;
 	}
 	
 	////- Values
