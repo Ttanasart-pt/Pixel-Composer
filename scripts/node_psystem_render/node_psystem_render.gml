@@ -185,8 +185,15 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _dfg      = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
 				var _draw_x   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
 				var _draw_y   = buffer_read(    _partBuff,                                                                      buffer_f64 );
-				var _draw_sx  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax), buffer_f64 );
-				var _draw_sy  = buffer_read(    _partBuff,                                                                      buffer_f64 );
+				
+				var _ssx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,  buffer_f64  );
+				var _sfx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64  );
+				var _draw_sx = _ssx * _sfx;
+				
+				var _ssy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,  buffer_f64  );
+				var _sfy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64  );
+				var _draw_sy = _ssy * _sfy;
+				
 				var _draw_rot = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drotx : PSYSTEM_OFF.rotx), buffer_f64 );
 				
 				var _draw_a = ((_cc & (0xFF << 24)) >> 24) / 255 * _mask;

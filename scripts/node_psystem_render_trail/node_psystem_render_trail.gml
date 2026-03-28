@@ -105,9 +105,12 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 			var _bldB   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );
 			var _bldA   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8  );
 			
-			var _draw_x  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
-			var _draw_y  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
-			var _draw_sx = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax),   buffer_f64  );
+			var _draw_x = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
+			var _draw_y = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
+			
+			var _ssx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,  buffer_f64  );
+			var _sfx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64  );
+			var _draw_sx = _ssx * _sfx;
 			
 			var _buffOffStart = _bufDatLen * _spwnId;
 			var _buffInd = _lif % _lenMax;

@@ -18,29 +18,30 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 3, nodeValue_Vec2_Range( "Move",    [0,0,0,0] )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Vector Move
-	newInput(15, nodeValue_Bool(  "Do Vector Move", false       ));
-	newInput( 9, nodeValue_Range( "Speed",          [0,0], true )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(11, nodeValue_Rotation_Random( "Direction", ROTATION_RANDOM_DEF_0_360 ));
+	newInput(15, nodeValue_Bool(    "Do Vector Move", false       ));
+	newInput( 9, nodeValue_Range(   "Speed",          [0,0], true )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(11, nodeValue_RotRand( "Direction", ROTATION_RANDOM_DEF_0_360 ));
 	
 	////- =Rotation
-	newInput(16, nodeValue_Bool(        "Do Rotate", false ));
-	newInput(13, nodeValue_Enum_Scroll( "Mode",      0, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
-	newInput( 5, nodeValue_Range(       "Rotate",   [0,0], true )).setCurvable(6, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(16, nodeValue_Bool(    "Do Rotate", false ));
+	newInput(13, nodeValue_EScroll( "Mode",      0, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
+	newInput( 5, nodeValue_Range(   "Rotate",   [0,0], true )).setCurvable(6, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Scale
-	newInput(17, nodeValue_Bool(        "Do Scale", false ));
-	newInput(12, nodeValue_Enum_Scroll( "Mode",     1, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
+	newInput(17, nodeValue_Bool(    "Do Scale", false ));
+	newInput(12, nodeValue_EScroll( "Mode",     1, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
+	newInput(18, nodeValue_Bool(    "Accumulative", false ));
 	newInput( 7, nodeValue_Vec2_Range(  "Scale",   [1,1,1,1], true )).setCurvable(8, CURVE_DEF_11, "Over Lifespan"); 
-	// 18
+	// 19
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
 	input_display_list = [ 2, 
-		[ "Particles",   false     ], 0, 1, 
-		[ "Direct Move", false, 14 ], 3, 4, 
-		[ "Vector Move", false, 15 ], 9, 10, 11, 
-		[ "Rotation",    false, 16 ], 13, 5, 6, 
-		[ "Scale",       false, 17 ], 12, 7, 8, 
+		[ "Particles",   false     ],  0,  1, 
+		[ "Direct Move", false, 14 ],  3,  4, 
+		[ "Vector Move", false, 15 ],  9, 10, 11, 
+		[ "Rotation",    false, 16 ], 13,  5,  6, 
+		[ "Scale",       false, 17 ], 12, 18,  7,  8, 
 	];
 	
 	////- Nodes
@@ -80,6 +81,7 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		var _do_scal   = getInputData(17);
 		var _scal_mode = getInputData(12);
+		var _scal_accu = getInputData(18);
 		var _scal      = getInputData( 7), _scal_curved = inputs[7].attributes.curved && curve_scal != undefined;
 		
 		var _partAmo   = _parts.maxCursor;
@@ -101,11 +103,11 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
 			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
-			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
-			
 			var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
 			var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
+			var _dsx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscax,  buffer_f64  );
+			var _dsy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscax,  buffer_f64  );
+			
 			var _rot    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,   buffer_f64  );
 			
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
@@ -136,19 +138,33 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				var _sx_t = _sx, _sx_d = random_range(_scal[0], _scal[1]) * _scal_mod;
 				var _sy_t = _sy, _sy_d = random_range(_scal[2], _scal[3]) * _scal_mod;
 				
-				switch(_scal_mode) {
-					case 0 : _sx_t = _sx + _sx_d;
-					         _sy_t = _sy + _sy_d; break;
+				if(_scal_accu) {
+					switch(_scal_mode) {
+						case 0 : _sx_t = _sx + _sx_d;
+						         _sy_t = _sy + _sy_d; break;
+						
+						case 1 : _sx_t = _sx * _sx_d;
+						         _sy_t = _sy * _sy_d; break;
+						
+						case 2 : _sx_t = _sx_d;
+						         _sy_t = _sy_d;       break;
+					}
 					
-					case 1 : _sx_t = _sx * _sx_d;
-					         _sy_t = _sy * _sy_d; break;
+					_sx = lerp(_sx, _sx_t, _mask);
+					_sy = lerp(_sy, _sy_t, _mask);
 					
-					case 2 : _sx_t = _sx_d;
-					         _sy_t = _sy_d;       break;
+				} else {
+					switch(_scal_mode) {
+						case 0 : _dsx = _dsx + _sx_d * _mask;
+						         _dsy = _dsy + _sy_d * _mask; break;
+						
+						case 1 : _dsx = _dsx * (1 + _sx_d * _mask);
+						         _dsy = _dsy * (1 + _sy_d * _mask); break;
+						
+						case 2 : _dsx = _sx_d;
+						         _dsy = _sy_d; break;
+					}
 				}
-				
-				_sx = lerp(_sx, _sx_t, _mask);
-				_sy = lerp(_sy, _sy_t, _mask);
 			}
 			
 			if(_do_rota) {
@@ -163,14 +179,14 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				_rot = lerp(_rot, _rot_t, _mask);
 			}
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,  buffer_f64, _px  );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy,  buffer_f64, _py  );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax,  buffer_f64, _sx  );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay,  buffer_f64, _sy  );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64, _sx );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64, _sy );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64, _dsx );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64, _dsy );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,  buffer_f64, _rot );
 			
