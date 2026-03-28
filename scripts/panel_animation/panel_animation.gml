@@ -136,10 +136,10 @@
         registerFunction(an, "Envelope Keys",      "",  n, panel_animation_keyframe_envelope      ).setMenu("animation_envelope"     )
         registerFunction(an, "Randomize Keys",     "",  n, panel_animation_keyframe_randomize     ).setMenu("animation_randomize"    )
         
-        registerFunction(an, "New Folder",                "", n, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",          THEME.folder)
-        registerFunction(an, "New Folder From Selection", "", n, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select",   THEME.folder)
-        registerFunction(an, "Dopesheet Expand",          "", n, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand",    )
-        registerFunction(an, "Dopesheet Collapse",        "", n, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse",  )
+        registerFunction(an, "New Folder",                "", n, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",        THEME.folder     )
+        registerFunction(an, "New Folder From Selection", "", n, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select", THEME.folder_sel )
+        registerFunction(an, "Dopesheet Expand",          "", n, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand"   )
+        registerFunction(an, "Dopesheet Collapse",        "", n, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse" )
         
         registerFunction(an, "Rename Group",          "", n, panel_animation_group_rename         ).setMenu("animation_rename_group",        )
         registerFunction(an, "Remove Group",          "", n, panel_animation_group_remove         ).setMenu("animation_remove_group",        THEME.cross)
@@ -325,7 +325,7 @@ function Panel_Animation() : PanelContent() constructor {
 		];
     	
     	global.menuItems_animation_sidebar = [
-    		"animation_new_folder",
+    		{ cond: "graph_select_node",     items: [ "animation_new_folder_select" ], items_inv: [ "animation_new_folder" ] },
 			"animation_toggle_NodeNameType",
 			"animation_toggle_NodeLabel",
 			"animation_toggle_KeyframeOverride",

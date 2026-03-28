@@ -2317,7 +2317,7 @@ function Panel_Animation_Dopesheet() {
     	bx -= bs + ui(1);
     	
     	var sel = !array_empty(PANEL_GRAPH.nodes_selecting);
-    	var spr = THEME.folder;
+    	var spr = sel? THEME.folder_sel : THEME.folder;
     	var txt = sel? __txt("New Folder from Selection") : __txt("New Folder");
     	var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, txt, spr, 0, COLORS._main_icon);
     	if(b == 2) {

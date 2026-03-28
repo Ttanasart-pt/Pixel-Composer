@@ -1011,6 +1011,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     #endregion
     
     #region ++++++++++++++++ Menus +++++++++++++++++
+	    MENUITEM_CONDITIONS[$ "graph_not_select_node"] = function() /*=>*/ {return array_empty(PANEL_GRAPH.nodes_selecting)};
+	    
 	    MENUITEM_CONDITIONS[$ "graph_select_node"]     = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 0};
 	    MENUITEM_CONDITIONS[$ "graph_select_group"]    = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection)};
 	    MENUITEM_CONDITIONS[$ "graph_select_instance"] = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection) && PANEL_GRAPH.node_hover.instanceBase != undefined};

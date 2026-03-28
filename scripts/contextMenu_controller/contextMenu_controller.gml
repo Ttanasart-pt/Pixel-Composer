@@ -161,6 +161,7 @@ function menuItems_gen(strs) {
 		
 		var _res = MENUITEM_CONDITIONS[$ _s.cond]();
 		if(_res) array_append(_menu, menuItems_gen(_s.items));
+		else if(has(_s, "items_inv")) array_append(_menu, menuItems_gen(_s.items_inv));
 	}
     
 	return _menu;
