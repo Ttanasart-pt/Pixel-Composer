@@ -76,11 +76,14 @@ uniform sampler2D blend_alphaSurf;
 uniform int highRes;
 
 vec4 blendColor(vec4 base, vec4 colr) {
-	float ba = base.a;
-	float ca = colr.a;
+	vec4 bg = base;
+	vec4 fg = colr;
+	
+	float ba = bg.a;
+	float ca = fg.a;
 	float al = ca + ba * (1. - ca);
 	
-	vec4 res = ((base * ba * (1. - ca)) + (colr * ca)) / al;
+	vec4 res = ((bg * ba * (1. - ca)) + (fg * ca)) / al;
 	res.a = al;
 	
 	return res;
@@ -113,8 +116,8 @@ void checkPixel(vec2 px, vec2 p) {
 	if(side == 0 && crop_border == 1 && (txs.x < 0. || txs.x > 1. || txs.y < 0. || txs.y > 1.)) return;
 	
 	vec4 sam = sampleTexture( gm_BaseTexture, txs );
-	if(side == 0 && sam.a >= alphaThers) return; //inside border,  skip if current pixel is filled
-	if(side == 1 && sam.a <  alphaThers) return; //outside border, skip if current pixel is empty
+	if(side == 0 && sam.a > 1. - alphaThers) return; //inside border,  skip if current pixel is filled
+	if(side == 1 && sam.a <      alphaThers) return; //outside border, skip if current pixel is empty
 	
 	isOutline = true;
 	
@@ -163,8 +166,8 @@ void main() {
 	
 	#region filter out filled / empty pixel
 		bool isBorder = false;
-		     if(side == 0) isBorder = baseColor.a >= alphaThers;
-		else if(side == 1) isBorder = baseColor.a <  alphaThers;
+		     if(side == 0) isBorder = baseColor.a > 1. - alphaThers;
+		else if(side == 1) isBorder = baseColor.a <      alphaThers;
 	
 		if(!isBorder) {
 			gl_FragData[0] = resultColor;
@@ -256,17 +259,33 @@ void main() {
 	if(is_blend == 0) {
 		vec4 bcol = vec4(borderColor.rgb, borderColor.a * _aa);
 		
-		resultColor   = blendColor(bcol, baseColor);
-		resultOutline = bcol;
+		if(side == 0) {
+			baseColor.rgb = mix(baseColor.rgb, borderColor.rgb, bcol.a);
+			bcol.a *= baseColor.a;
+			
+			resultColor   = baseColor;
+			resultOutline = bcol;
+			
+		} else {
+			resultColor   = blendColor(bcol, baseColor);
+			resultOutline = bcol;
+		}
 		
 	} else {
-		vec4 bcol = vec4(borderColor.rgb, borderColor.a * _aa * bld);
-		
-		resultColor     = blendColor(bcol, side == 0? baseColor : closetColor);
-		resultColor.a   = _aa;
-		
-		resultOutline   = blendColor(bcol, side == 0? vec4(0.) : closetColor);
-		resultOutline.a = _aa;
+		vec4 blendBord   = mix(closetColor, borderColor, bld);
+		     blendBord.a = _aa;
+		     
+		if(side == 0) {
+			blendBord.a  *= baseColor.a;
+			baseColor.rgb = mix(baseColor.rgb, blendBord.rgb, blendBord.a);
+			
+			resultColor   = baseColor;
+			resultOutline = blendBord;
+			
+		} else {
+			resultColor    = blendBord;
+			resultOutline  = blendBord;
+		}
 	}
 	
     gl_FragData[0] = resultColor;
