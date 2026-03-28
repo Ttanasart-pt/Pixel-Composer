@@ -851,7 +851,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 		#endregion
 		
-		if(anchor_selecting != noone) hovering = true;
+		hovering |= anchor_selecting != noone || posing_bone != noone;
 		return hovering;
 	}
 	
