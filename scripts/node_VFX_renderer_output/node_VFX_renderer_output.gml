@@ -2,10 +2,8 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	name  = "Renderer";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
-	setCacheAuto();
-	
 	manual_ungroupable = false;
-	previewable = true;
+	setCacheAuto();
 	
 	newInput(0, nodeValue_Vec2("Output dimension", PROJ_SURF));
 	newInput(1, nodeValue_Bool("Round position", true, "Round position to the closest integer value to avoid jittering.")).rejectArray();

@@ -821,7 +821,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function setTriggerPreview() {
         __temp_show = false;
         array_foreach(nodes_selecting, function(node, index) {
-            if(index == 0) __temp_show = !node.previewable;
+            if(index == 0) __temp_show = !node.attributes.show_preview;
             node.setPreviewable(__temp_show);
             node.refreshNodeDisplay();
         });
@@ -830,7 +830,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function setTriggerParameter() {
         __temp_show = false;
         array_foreach(nodes_selecting, function(node, index) {
-            if(index == 0) __temp_show = !node.show_parameter;
+            if(index == 0) __temp_show = !node.attributes.show_parameter;
             node.setShowParameter(__temp_show);
             node.refreshNodeDisplay();
         });
@@ -1590,7 +1590,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            var  sn  = !key_mod_press(CTRL) && project.graphGrid.snap;
 	            if(sn) { nw = value_snap(nw, _grd); nh = value_snap(nh, _grd); }
 	            
-	            if(node_dragging.show_parameter)
+	            if(node_dragging.attributes.show_parameter)
 	            	 node_dragging.attributes.node_param_width = nw;
 	            else node_dragging.attributes.node_width       = nw;
 	            
@@ -2121,7 +2121,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            if(is(frame_hovering, Node_Collection_Inline) && DOUBLE_CLICK && array_empty(nodes_selecting)) { //
 	                nodes_selecting = [ frame_hovering ];
 	                
-	                if(frame_hovering.previewable) PANEL_PREVIEW.setNodePreview(frame_hovering);
+	                if(frame_hovering.attributes.show_preview) PANEL_PREVIEW.setNodePreview(frame_hovering);
 	            } 
 	        }
 	        
@@ -2251,7 +2251,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        node_surface_update = node_surface_update
 	        	|| !surface_valid(node_surface, w, h)
-	        	|| (node_hovering != noone && (node_hovering.reactive_on_hover || node_hovering.show_parameter));
+	        	|| (node_hovering != noone && (node_hovering.reactive_on_hover || node_hovering.attributes.show_parameter));
 	        node_surface = surface_verify(node_surface, w, h);
 	        
 	        if(pHOVER)
@@ -2262,7 +2262,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            	
 	            	var _xx = __gr_x + _n.x * __gr_s;
 	                var _yy = __gr_y + _n.y * __gr_s;
-	                var val = _n.checkJunctions(_xx, _yy, __mx, __my, __gr_s, __gr_s <= 0.5 || !_n.previewable);
+	                var val = _n.checkJunctions(_xx, _yy, __mx, __my, __gr_s, __gr_s <= 0.5 || !_n.attributes.show_preview);
 	                if(val) value_focus = val;
 	            }
 	            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
@@ -2281,7 +2281,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		            	
 		            	var _xx = __gr_x + _n.x * __gr_s;
 		                var _yy = __gr_y + _n.y * __gr_s;
-		                var _fs = __gr_s <= 0.5 || !_n.previewable;
+		                var _fs = __gr_s <= 0.5 || !_n.attributes.show_preview;
 		                
 		                gpu_set_texfilter(true);
 		                if(_fs) {

@@ -2666,7 +2666,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static drawNameBG = function(_s) {
 		var _p = THEME.node_junction_name_bg; 
 		    // _p = THEME.box_r2_clr;
-		var _f = node.previewable? f_p2 : f_p3;
+		var _f = node.attributes.show_preview? f_p2 : f_p3;
 		draw_set_text(_f, fa_left, fa_center);
 		
 		var tw = string_width(name)  + 24;
@@ -2692,7 +2692,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _draw_aa = .6 + _draw_hg * .4;
 		highlight_name = false;
 		
-		var _f = node.previewable? f_p2 : f_p3;
+		var _f = node.attributes.show_preview? f_p2 : f_p3;
 		draw_set_text(_f, fa_left, fa_center, _draw_cc, _draw_aa);
 		
 		if(type == VALUE_TYPE.action) {

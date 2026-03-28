@@ -2,9 +2,7 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	name  = "Render Domain";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	
 	setCacheAuto();
-	previewable = true;
 	
 	manual_ungroupable	 = false;
 	

@@ -1,5 +1,5 @@
 #region global
-	#macro SHOW_PARAM (previewable && show_parameter)
+	#macro SHOW_PARAM (attributes.show_preview && attributes.show_parameter)
 	
 	enum NODE_3D   { none, polygon, sdf }
 	
@@ -197,6 +197,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#region ---- Attributes ----
 		attributes.preview_size      = PREFERENCES.node_def_height;
 		attributes.node_param_width  = PREFERENCES.node_param_width;
+		attributes.show_preview      = true;
+		attributes.show_parameter    = PREFERENCES.node_param_show;
 		attributes.node_width        = 0;
 		attributes.node_height       = 0;
 		attributes.outp_meta         = false;
@@ -231,6 +233,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_append(attributeEditors, [
 			"Display",  
 			Node_Attribute("Annotation",     function() /*=>*/ {return attributes.annotation},       function() /*=>*/ {return textArea_Text( function(v) /*=>*/ { setAttribute("annotation", v);  refreshNodeDisplay(); })} ),
+			Node_Attribute("Show Preview",   function() /*=>*/ {return attributes.show_preview},     function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_preview");   refreshNodeDisplay(); })} ),
+			Node_Attribute("Parameter View", function() /*=>*/ {return attributes.show_parameter},   function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_parameter"); refreshNodeDisplay(); PANEL_GRAPH.refreshDraw(2); })} ),
+			
+			"Size",  
 			Node_Attribute("Node Width",     function() /*=>*/ {return attributes.node_width},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_width", v);            refreshNodeDisplay(); })} ),
 			Node_Attribute("Node Height",    function() /*=>*/ {return attributes.node_height},      function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_height", v);           refreshNodeDisplay(); })} ),
 			Node_Attribute("Preview Height", function() /*=>*/ {return attributes.preview_size},     function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("preview_size", max(32, v)); refreshNodeDisplay(); })} ),
@@ -294,8 +300,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Preview ----
-		show_parameter   = PREFERENCES.node_param_show;
-		
 		show_input_name  = false;
 		show_output_name = false;
 	
@@ -304,7 +308,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		preview_surface	 = noone;
 		preview_amount   = 0;
-		previewable		 = true;
 		preview_draw     = true;
 		preview_index	 = 0;
 		preview_channel  = 0; preview_channel_temp = undefined;
@@ -1599,7 +1602,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static showMeta = function() { 
 		var d = project.graphDisplay;
 		return drawDimension != undefined 
-				&& (d.node_meta_view == 1 || d.node_meta_view == 2 && previewable)
+				&& (d.node_meta_view == 1 || d.node_meta_view == 2 && attributes.show_preview)
 				&& (d.show_dimension || d.show_compute); 
 	} 
 	
@@ -1614,7 +1617,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _ps = is_surface(getGraphPreviewSurface()) || preserve_height_for_preview;
 		var _oo = array_safe_get(outputs, preview_channel, noone)
 		var _ou = _oo != noone && _oo.type == VALUE_TYPE.surface;
-		var _prev_surf = previewable && preview_draw && (_ps || _ou);
+		var _prev_surf = attributes.show_preview && preview_draw && (_ps || _ou);
 		
 		junction_draw_hei_y = SHOW_PARAM? 32 : 16;
 		junction_draw_pad_y = SHOW_PARAM? attributes.preview_size : 24;
@@ -1626,7 +1629,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_hi = attributes.preview_size;
 			_ho = 24;
 			
-		} else if(previewable) {
+		} else if(attributes.show_preview) {
 			_hi = junction_draw_pad_y;
 			_ho = junction_draw_pad_y;
 			
@@ -1638,7 +1641,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_ho = name_height;
 		}
 		
-		var _p = previewable;
+		var _p = attributes.show_preview;
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			if(!inputs[i].isVisible()) continue;
 			
@@ -1647,7 +1650,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
-		var _p = previewable;
+		var _p = attributes.show_preview;
 		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			if(!outputs[i].isVisible()) continue;
@@ -1671,20 +1674,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_p = true;
 		}
 		
-		h = max(previewable? attributes.preview_size : name_height, _prev_surf * surf_h, _hi, _ho);
+		h = max(attributes.show_preview? attributes.preview_size : name_height, _prev_surf * surf_h, _hi, _ho);
 		if(attributes.node_height) h = max(h, attributes.node_height);
 	}
 	
-	static setShowParameter = function(showParam) {
-		show_parameter = showParam;
-		return self;
-	}
+	static setShowParameter = function(showParam) { attributes.show_parameter = showParam; return self; }
 	
 	static setPreviewable = function(prev) {
-		if(previewable == prev) return;
+		if(attributes.show_preview == prev) return;
 		
-		previewable = prev;
-		y += previewable? -16 : 16;
+		attributes.show_preview = prev;
+		y += attributes.show_preview? -16 : 16;
 	}
 	
 	static setVisible = function(vis) { visible = vis; return self; }
@@ -1757,8 +1757,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				|| _d._s != _s 
 				|| _d._w != w 
 				|| _d._h != h 
-				|| _d._p != previewable 
-				|| _d.sp != show_parameter 
+				|| _d._p != attributes.show_preview 
+				|| _d.sp != attributes.show_parameter 
 				|| _d.av != project.graphDisplay.avoid_label 
 		
 		_d._x = xx;
@@ -1766,8 +1766,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_d._w = w;
 		_d._h = h;
 		_d._s = _s;
-		_d._p = previewable;
-		_d.sp = show_parameter;
+		_d._p = attributes.show_preview;
+		_d.sp = attributes.show_parameter;
 		_d.av = project.graphDisplay.avoid_label;
 		
 		_d.force = false;
@@ -2003,7 +2003,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var nodeC = colorMultiply(getColor(), COLORS.node_name_bg);
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
-		var nh = previewable? name_height * _s : h * _s;
+		var nh = attributes.show_preview? name_height * _s : h * _s;
 		var ba = aa;
 		
 		if(_panel && _panel.node_hovering == self) ba = .1;
@@ -2356,7 +2356,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		var y0 = previewable? yy + name_height * _s : yy;
+		var y0 = attributes.show_preview? yy + name_height * _s : yy;
 		var y1 = yy + h * _s;
 		
 		var _hov = _panel.pHOVER && (_panel.node_hovering == noone || _panel.node_hovering == self);
@@ -2649,7 +2649,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_focus = _panel.getFocusingNode() == self;
 		}
 		
-		if(previewable) {
+		if(attributes.show_preview) {
 			if(preview_draw) drawPreview(xx, yy, _s);
 			if(node_draw_icon != noone) draw_sprite_bbox_uniform(node_draw_icon, 0, draw_bbox);
 			
@@ -2662,7 +2662,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, _panel);
 		
 		draw_name = false;
-		if((previewable && _s >= 0.5) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);
+		if((attributes.show_preview && _s >= 0.5) || (!attributes.show_preview && h * _s >= name_height * .5)) 
+			drawNodeName(xx, yy, _s, _panel);
 		
 		if(attributes.annotation != "") {
 			draw_set_text(f_sdf_medium, fa_left, fa_bottom, attributes.annotation_color);
@@ -2718,7 +2719,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var bInspect = bool(inspecting);
 		var bTool    = group != noone && group.toolNode == self;
 		
-		var _full    = previewable && w * _s > 64;
+		var _full    = attributes.show_preview && w * _s > 64;
 		var _scale   = UI_SCALE;
 		
 		if(_full) {
@@ -3040,9 +3041,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(inline_context != noone) _map.ictx  = inline_context.node_id;
 			
 			if(!renderActive)    _map.render         = renderActive;
-			if(!previewable)     _map.previewable    = previewable;
-			if(show_parameter)   _map.show_parameter = show_parameter;
-			
 			if(inspector_scroll) _map.insp_scr       = inspector_scroll;
 			_map.insp_col = variable_clone(inspector_collapse);
 		}
@@ -3144,10 +3142,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			x = load_map[$ "x"] ?? 0;
 			y = load_map[$ "y"] ?? 0;
 			renderActive   = load_map[$ "render"]         ?? true;
-			previewable    = load_map[$ "previewable"]    ?? true;
-			show_parameter = load_map[$ "show_parameter"] ?? false;
 			load_igroup    = load_map[$ "ictx"]           ?? "";
 			
+			attributes.show_preview   = load_map[$ "previewable"]    ?? attributes.show_preview;
+			attributes.show_parameter = load_map[$ "show_parameter"] ?? attributes.show_parameter;
 			inspector_scroll = load_map[$ "insp_scr"] ?? inspector_scroll;
 			if(struct_has(load_map, "insp_col")) inspector_collapse = variable_clone(load_map[$ "insp_col"]);
 		}
@@ -3389,7 +3387,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		min_w = _w;
 		w     = max(w, min_w);
-		// if(_h == 0) previewable = false;
 		
 		if(_h != undefined && (NODE_NEW_MANUAL || LOADING_VERSION < 1_19_05_0)) attributes.preview_size = _h;
 		if(_apply == undefined) return;

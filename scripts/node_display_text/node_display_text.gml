@@ -1,8 +1,7 @@
 function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Display Text";
 	setDimension(16, 16);
-	
-	previewable = false;
+	attributes.show_preview = false;
 	
 	newInput(1, nodeValue_Text("Text", "Text"));
 	

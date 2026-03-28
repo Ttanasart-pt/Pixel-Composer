@@ -737,9 +737,7 @@ function nodeReplace(_old, _new, _select = false) {
 	var _inputs  = _new.inputs;
 	var _outputs = _new.outputs;
 	
-	_new.renderActive   = _old.renderActive;
-	_new.previewable    = _old.previewable;
-	_new.show_parameter = _old.show_parameter;
+	_new.renderActive = _old.renderActive;
 	
 	var _oil = array_length(_old.inputs);
 	var _ool = array_length(_old.outputs);

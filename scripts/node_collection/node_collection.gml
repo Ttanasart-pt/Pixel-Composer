@@ -11,7 +11,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		ungroupable			= true;
 		auto_render_time	= false;
 		combine_render_time = true;
-		previewable         = true;
 	
 		isPure    = false;
 		nodeTopo  = [];
@@ -413,7 +412,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(_s < 0.75) return;
 		
 		__gox = (xx + w * _s) - 12;
-		__goy = previewable? (yy + h * _s) - 12 : yy + h / 2 * _s;
+		__goy = attributes.show_preview? (yy + h * _s) - 12 : yy + h / 2 * _s;
 		draw_sprite_ext_add(THEME.animate_node_go, 0, __gox, __goy, 1/THEME_SCALE, 1/THEME_SCALE, 0, c_white, .4);
 	}
 	

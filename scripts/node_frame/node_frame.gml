@@ -147,8 +147,6 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- Update
 	
 	static onValueUpdate = function(index = 3) { 
-		previewable = true;
-		
 		color  = inputs[1].getValue();
 		lAlpha = inputs[2].getValue();
 		tColor = inputs[3].getValue();

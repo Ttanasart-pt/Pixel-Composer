@@ -1,6 +1,5 @@
 function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Atlas Set";
-	previewable = true;
 	dimension_index = -1;
 	setDrawIcon(s_node_atlas_set);
 	setDimension(96, 48);

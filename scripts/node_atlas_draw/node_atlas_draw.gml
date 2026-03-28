@@ -1,6 +1,5 @@
 function Node_Atlas_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Atlas";
-	previewable = true;
 	
 	////- =Atlases
 	newInput(1, nodeValue_Atlas()).setArrayDepth(1).setVisible(true, true);
