@@ -23,8 +23,8 @@ globalvar GROUP_IO_TYPE_NAME, GROUP_IO_TYPE_MAP, GROUP_IO_DISPLAY;
 	
 	GROUP_IO_DISPLAY = [
 		
-	/*Integer*/	    [ "Integer", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll" ],
-	/*Float*/	    [ "Float",   "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area" ],
+	/*Integer*/	    [ "Integer", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll", "Seed" ],
+	/*Float*/	    [ "Float",   "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Seed" ],
 	/*Boolean*/	    [ "Boolean" ],
 	/*Color*/	    [ "Color", "Palette" ],
 	/*Surface*/	    [ "Surface" ],
@@ -341,6 +341,15 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				else if(_dtype == "Vector range") inParent.setDisplay(VALUE_DISPLAY.vector_range);
 				break;
 			
+			case "Seed" : 
+				var _rFun = function() /*=>*/ { randomize(); setValue(seed_random(6)); };
+				
+				inParent.setDisplay(VALUE_DISPLAY._default, { 
+					side_button : button(method(inParent, _rFun)).setTooltip(__txt("Randomize"))
+						.setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() 
+				})
+				break;
+				
 			case "Enum button" : 
 				var _elabel = inputs[3].getValue();
 				
