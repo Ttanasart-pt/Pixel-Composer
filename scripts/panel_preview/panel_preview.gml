@@ -223,6 +223,22 @@
 			registerFunction(p, "Reset Preview 3D SDF Toolbar",   "", n, function() /*=>*/ {return menuItemReset("preview_toolbar_3d_sdf" )}).setMenu("preview_reset_toolbar_3d_sdf");
 			registerFunction(p, "Reset Preview Actions",          "", n, function() /*=>*/ {return menuItemReset("preview_actions"        )}).setMenu("preview_reset_preview_actions");
 			
+			registerFunction(p, "Preview Channel > RGBA",       "",  n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  0? 0 :  0; }).setMenu("preview_channel_rgba");
+			registerFunction(p, "Preview Channel > Red",        "R", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  2? 0 :  2; }).setMenu("preview_channel_red");
+			registerFunction(p, "Preview Channel > Green",      "G", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  3? 0 :  3; }).setMenu("preview_channel_green");
+			registerFunction(p, "Preview Channel > Blue",       "B", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  4? 0 :  4; }).setMenu("preview_channel_blue");
+			registerFunction(p, "Preview Channel > Hue",        "H", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  6? 0 :  6; }).setMenu("preview_channel_hue");
+			registerFunction(p, "Preview Channel > Saturation", "S", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  7? 0 :  7; }).setMenu("preview_channel_sat");
+			registerFunction(p, "Preview Channel > Value",      "V", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  8? 0 :  8; }).setMenu("preview_channel_val");
+			registerFunction(p, "Preview Channel > Alpha",      "A", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader == 10? 0 : 10; }).setMenu("preview_channel_alpha");
+			registerFunction(p, "Preview Channel > Apply Alpha","A", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader_alpha = !p.preview_shader_alpha;  }).setMenu("preview_channel_keep_alpha");
+			registerFunction(p, "Preview Channel > Scroll",     "",  n, function() /*=>*/ { 
+				var p = PANEL_PREVIEW; 
+				var s = p.preview_shaders;
+				do { p.preview_shader = (p.preview_shader + 1) % array_length(s); } 
+				until (s[p.preview_shader] != -1);
+			}).setMenu("preview_channel_scroll");
+			
 	        __fnGroupInit_Preview();
 	    }
 	    
