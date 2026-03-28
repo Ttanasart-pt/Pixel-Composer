@@ -36,7 +36,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 				switch(ot) {
 					case 0 : sw = 1 / NPROJ_SURF_W;   sh = 1 / NPROJ_SURF_H;  break;
 					case 1 : sw = NPROJ_SURF_W / mx;  sh = NPROJ_SURF_H / my; break;
-					case 2 : sw = mx;               sh = my;              break;
+					case 2 : sw = mx;                 sh = my;                break;
 				}
 			}
 			

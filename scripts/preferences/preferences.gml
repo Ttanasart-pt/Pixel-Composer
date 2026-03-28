@@ -115,7 +115,7 @@
 	
 		PREFERENCES.inspector_focus_on_double_click	= true;
 		PREFERENCES.inspector_view_default			= INSP_VIEW_MODE.compact;
-	
+		
 		PREFERENCES.node_show_render_status			= false;
 		PREFERENCES.node_show_time					= true;
 		
@@ -141,6 +141,10 @@
 		PREFERENCES.panel_animation_key_override	= true;
 		
 		PREFERENCES.panel_force_on_escape           = false;
+		
+		PREFERENCES.widget_draw_favourite           = true;
+		PREFERENCES.widget_draw_reset               = true;
+		PREFERENCES.widget_draw_default             = true;
 	#endregion
 	
 	#region WIDGET

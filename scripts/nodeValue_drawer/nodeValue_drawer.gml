@@ -139,7 +139,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 			}
 			
-			if(_input) {
+			if(_input && PREFERENCES.widget_draw_favourite) {
 				butx += bs;
 				lb_x += bs;
 				lb_w += bs;
@@ -292,23 +292,31 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 				
 			} else {
-				var bt = __txtx("panel_inspector_default", "Set default");
-				var ba = .5 + jun.is_modified * .4;
-				var bh = jun.is_modified && _hover;
-				var cc = jun.is_modified? COLORS._main_icon_light : COLORS._main_icon;
+				if(PREFERENCES.widget_draw_default) {
+					var bt = __txtx("panel_inspector_default", "Set default");
+					var ba = .25 + jun.is_modified * .55;
+					var bh = _hover;
+					var cc = jun.def_preset? COLORS._main_accent : COLORS._main_icon_light;
+					
+					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); bx -= ui(4);
+					cHov = cHov || b;
+					if(b == 2) jun.setDefault();
+					if(b == 3) {
+						mbRight = false;
+						menuCall("", [ new MenuItem(__txt("Reset Default"), function(j) /*=>*/ {return j.clearDefault()}).setParam(jun) ]);
+					}
+				}
 				
-				bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); bx -= ui(4);
-				cHov = cHov || b;
-				if(b == 2) jun.setDefault();
-				
-				var bt = __txtx("panel_inspector_reset", "Reset");
-				var ba = .5 + jun.is_modified * .4;
-				var bh = jun.is_modified && _hover;
-				var cc = jun.is_modified? COLORS._main_icon_light : COLORS._main_icon;
-				
-				bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); bx -= ui(4);
-				cHov = cHov || b;
-				if(b == 2) jun.resetValue();
+				if(PREFERENCES.widget_draw_reset) {
+					var bt = __txtx("panel_inspector_reset", "Reset");
+					var ba = .25 + jun.is_modified * .55;
+					var bh = jun.is_modified && _hover;
+					var cc = COLORS._main_icon_light;
+					
+					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); bx -= ui(4);
+					cHov = cHov || b;
+					if(b == 2) jun.resetValue();
+				}
 				
 				if(!global_var && breakLine) {
 					var ic_b = c_white;
@@ -357,7 +365,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	#endregion
 	
-	if(!is(wid, widget)) return [ lb_h, true, cHov, lbHov, lb_x, lb_w ];
+	if(!is(wid, widget)) return [ lb_h, mbRight, cHov, lbHov, lb_x, lb_w ];
 	
 	#region draw widget
 		var labelWidth = max(lb_w, min(ww * .4, ui(200)));

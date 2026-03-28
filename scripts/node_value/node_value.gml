@@ -92,6 +92,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		setDefValue(_value, false);
 		def_length    = is_array(def_val)? array_length(def_val) : 0;
 		def_depth     = array_get_depth(def_val);
+		def_preset    = false;
 		unitUse       = false;
 		unit		  = new nodeValueUnit(self);
 		def_unit      = VALUE_UNIT.constant;
@@ -465,6 +466,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		for( var i = 0, n = array_length(vals); i < n; i++ )
 			array_push(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
 			
+		return self;
+	}
+	
+	static clearDefault = function() {
+		def_preset = false;
+		
+		var dir = $"{DIRECTORY}Presets/{instanceof(node)}/";
+		var pth = $"{dir}_values.json";
+		if(!file_exists(pth)) return;
+		
+		map = json_load_struct(pth);
+		struct_remove_safe(map, internalName);
+		json_save_struct(pth, map, true);
 		return self;
 	}
 	
@@ -2944,12 +2958,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(always_modified) is_modified = true;
 		
 		#region attributes
-			if(has(_map, "attri")) struct_append(attributes, _map.attri);
-			
 			// wtf?
 			if(has(attributes, "use_project_dimension") && has(node.load_map, "attri") && has(node.load_map.attri, "use_project_dimension"))
 				attributes.use_project_dimension = node.load_map.attri.use_project_dimension;
 			
+			if(has(_map, "attri")) struct_append(attributes, _map.attri);
 			if(has(_map, "linked")) display_data.linked = _map.linked;
 			if(has(_map, "ranged")) display_data.ranged = _map.ranged;
 		#endregion

@@ -66,7 +66,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	function replacePreset(path)     { if(node != noone) node.savePreset(filename_name_only(path)); }
 	function newPresetFromNode(name) { if(node != noone) node.savePreset(name); adding = false;     }
 	
-	sc_presets = new scrollPane(w - padding * 2, h - padding * 2 - ui(28), function(_y, _m) {
+	sc_presets = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var _ww = sc_presets.surface_w;
@@ -251,8 +251,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		var ww = w - sp * 2;
 		
 		if(adding) {
-			tb_add.setFocusHover(sc_presets.active, sc_presets.hover);
-			tb_add.font = f_p2;
+			tb_add.setFocusHover(pFOCUS, pHOVER);
+			tb_add.setFont(f_p2);
 			tb_add.draw(bx, by, ww, ah, add_txt);
 			
 		} else {

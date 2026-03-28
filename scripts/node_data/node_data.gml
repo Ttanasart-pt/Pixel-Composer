@@ -1109,6 +1109,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(!has(inputMap, _inptKey)) continue;
 				
 				inputMap[$ _inptKey].applyDeserialize(_inptDat, true, true);
+				inputMap[$ _inptKey].def_preset  = true;
 				inputMap[$ _inptKey].is_modified = false;
 			}
 		}
