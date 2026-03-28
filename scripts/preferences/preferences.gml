@@ -151,6 +151,8 @@
 	
 		PREFERENCES.widget_autocomplete_delay       = 500;
 		PREFERENCES.alt_picker						= true;
+		
+		PREFERENCES.curvebox_default_height         = 200;
 	
 	#endregion
 	

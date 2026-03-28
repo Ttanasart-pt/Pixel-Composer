@@ -1,6 +1,6 @@
 function curveBox(_onModify) : widget() constructor {
 	always_break_line  = true;
-	h = ui(200);
+	h = ui(PREFERENCES.curvebox_default_height);
 	
 	#region curve
 		onModify    = _onModify;
@@ -547,8 +547,12 @@ function curveBox(_onModify) : widget() constructor {
 				}
 				
 			}
-			draw_sprite_stretched_ext(THEME.box_r2, 0, _bhx, _bhy, bs, bs, _hov? COLORS._main_icon : CDEF.main_dkgrey, 1);
 			
+			var cc = _hov? COLORS._main_icon : CDEF.main_dkgrey;
+			if(height_drag) cc = COLORS._main_accent;
+			draw_sprite_stretched_ext(THEME.box_r2, 0, _bhx, _bhy, bs, bs, cc, 1);
+			
+			if(_hov || height_drag) CURSOR = cr_size_ns;
 			if(height_drag) {
 				h = height_ss + _m[1] - height_my;
 				h = max(100, h);

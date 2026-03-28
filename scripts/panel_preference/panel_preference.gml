@@ -627,6 +627,14 @@ function Panel_Preference() : PanelContent() constructor {
     		
     	}
     	
+    	ds_list_add(pref_appr, __txt("Curve box")); // Curvebox
+    	
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_widget_curvebox_height", "Default curvebox height"),
+    			"curvebox_default_height",
+    			textBox_Number(function(str) /*=>*/ {return prefSet("curvebox_default_height", round(real(str)))})
+    		));
+    	
     #endregion
     
     #region Node
