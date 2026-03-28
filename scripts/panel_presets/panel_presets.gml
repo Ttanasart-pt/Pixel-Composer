@@ -7,10 +7,11 @@
 	function panel_preset_reset()       { CHECK_PANEL_PRESETS CALL("panel_preset_reset");       FOCUS_CONTENT.newPresetFromNode("_default"); }
 	
 	function __fnInit_Presets() {
-		registerFunction("Presets", "Replace",			"", MOD_KEY.none, panel_preset_replace).setMenu("preset_replace").hidePalette();
-		registerFunction("Presets", "Replace Default",	"", MOD_KEY.none, panel_preset_replace_def).setMenu("preset_replace_def").hidePalette();
-		registerFunction("Presets", "Delete",			"", MOD_KEY.none, panel_preset_delete).setMenu("preset_delete", THEME.cross).hidePalette();
-		registerFunction("Presets", "Reset To Default",	"", MOD_KEY.none, panel_preset_reset).setMenu("preset_reset")
+		registerFunction("Presets", "Replace",          "", MOD_KEY.none, panel_preset_replace     ).setMenu( "preset_replace"     ).hidePalette();
+		registerFunction("Presets", "Replace Default",  "", MOD_KEY.none, panel_preset_replace_def ).setMenu( "preset_replace_def" ).hidePalette();
+		registerFunction("Presets", "Reset To Default", "", MOD_KEY.none, panel_preset_reset       ).setMenu( "preset_reset"       )
+		
+		registerFunction("Presets", "Delete",           "", MOD_KEY.none, panel_preset_delete      ).setMenu( "preset_delete", THEME.cross).hidePalette();
 	}
 #endregion
 
@@ -80,6 +81,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		var pth = $"{dirPath}{name}.json";
 		var map = node.serialize(true, true);
 		var thm = node.getPreviewValues();
+		
 		if(is_surface(thm)) map.thumbnail = surface_encode(thm, false);
 		
 		if(file_exists_empty(pth)) file_delete(pth);

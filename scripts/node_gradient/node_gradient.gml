@@ -19,24 +19,24 @@
 function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Gradient";
 	
-	////- Output
+	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(18, nodeValue_Surface( "UV Map"     ));
-	newInput(19, nodeValue_Slider(  "UV Mix", 1  ));
-	newInput( 8, nodeValue_Surface( "Mask"       ));
+	newInput(18, nodeValue_Surface(  "UV Map"     ));
+	newInput(19, nodeValue_Slider(   "UV Mix", 1  ));
+	newInput( 8, nodeValue_Surface(  "Mask"       ));
 	
-	////- Gradient
+	////- =Gradient
 	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white )).setMappable(15);
 	newInput( 5, nodeValue_Slider(   "Shift",    0, [-2,2,.01]   )).setMappable(12);
 	newInput( 9, nodeValue_Slider(   "Scale",    1, [ 0,5,.01]   )).setHotkey("S").setMappable(13);
 	newInput( 7, nodeValue_EButton(  "Loop",     0, [ "None", "Loop", "Pingpong" ] ));
 	
-	////- Remap
-	newInput(20, nodeValue_Curve( "Progress Remap", CURVE_DEF_01 ));
-	newInput(21, nodeValue_Float( "Inverse Axis",   0 ));
-	newInput(22, nodeValue_Curve( "Inverse Curve",  CURVE_DEF_00 ));
+	////- =Remap
+	newInput(20, nodeValue_Curve(    "Progress Remap", CURVE_DEF_01 ));
+	newInput(21, nodeValue_Float(    "Inverse Axis",   0 ));
+	newInput(22, nodeValue_Curve(    "Inverse Curve",  CURVE_DEF_00 ));
 	
-	////- Shape
+	////- =Shape
 	__gradTypes = __enum_array_gen(["Linear", "Circular", "Radial", "Diamond"], s_node_gradient_type);
 	newInput( 2, nodeValue_EScroll(  "Type",           0, __gradTypes));
 	newInput( 3, nodeValue_Rotation( "Angle",          0      )).setHotkey("R").setMappable(10).hideLabel();
@@ -54,6 +54,8 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Remapper", true  ], 20, 21, 22, 
 		[ "Shape",    false ],  2,  3, 10,  4, 11,  6, 17, 14, 
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	

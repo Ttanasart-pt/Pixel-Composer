@@ -2849,7 +2849,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim)          _map.anim       = is_anim;
 		if(ign_array)        _map.ign_array  = ign_array;
 		
-		if(always_modified || is_modified) {
+		if(preset || always_modified || is_modified) {
 			_map.r = animator.serialize(scale);
 			
 			if(sep_axis && animVector) {

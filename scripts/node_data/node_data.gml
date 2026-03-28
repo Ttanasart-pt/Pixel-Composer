@@ -294,7 +294,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Preview ----
-		show_parameter = PREFERENCES.node_param_show;
+		show_parameter   = PREFERENCES.node_param_show;
 		
 		show_input_name  = false;
 		show_output_name = false;
@@ -3026,9 +3026,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(struct_try_get(attri, "node_param_width")    == 192)   struct_remove(attri, "node_param_width");
 			if(struct_try_get(attri, "outp_meta")           == false) struct_remove(attri, "outp_meta");
 			
-			if(struct_try_get(attri, "annotation")          == "")                       struct_remove(attri, "annotation");
-			if(struct_try_get(attri, "annotation_size")     == .4)                       struct_remove(attri, "annotation_size");
-			if(struct_try_get(attri, "annotation_color")    == COLORS._main_text_sub)    struct_remove(attri, "annotation_color");
+			if(struct_try_get(attri, "annotation")          == "")                    struct_remove(attri, "annotation");
+			if(struct_try_get(attri, "annotation_size")     == .4)                    struct_remove(attri, "annotation_size");
+			if(struct_try_get(attri, "annotation_color")    == COLORS._main_text_sub) struct_remove(attri, "annotation_color");
 			
 			if(struct_try_get(attri, "color")               == -1)    struct_remove(attri, "color");
 			if(struct_try_get(attri, "update_graph")        == true)  struct_remove(attri, "update_graph");
