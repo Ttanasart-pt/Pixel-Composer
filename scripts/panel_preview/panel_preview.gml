@@ -1146,7 +1146,8 @@ function Panel_Preview() : PanelContent() constructor {
         var bs = ui(16);
         var bx = toolbar_width / 2 - bs / 2;
         var by = yy - ui(12);
-        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !tool_always_l) == 2)
+        var bc = tool_always_l? COLORS._main_accent : COLORS._main_icon;
+        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !tool_always_l, bc) == 2)
         	tool_always_l = !tool_always_l;
         yy         += bs + ui(8);
         tool_y_max += bs + ui(8);
@@ -1369,7 +1370,8 @@ function Panel_Preview() : PanelContent() constructor {
         var bs = ui(16);
         var bx = w + 1 - toolbar_width / 2 - bs / 2;
         var by = yy - ui(12);
-        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !tool_always_r) == 2)
+        var bc = tool_always_r? COLORS._main_accent : COLORS._main_icon;
+        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !tool_always_r, bc) == 2)
         	tool_always_r = !tool_always_r;
         yy          += bs + ui(8);
         tool_ry_max += bs + ui(8);
@@ -3346,8 +3348,9 @@ function Panel_Preview() : PanelContent() constructor {
         var sw = prevSurf? surface_get_width( preview_surfaces[0]) : DEF_SURF_W;
         var sh = prevSurf? surface_get_height(preview_surfaces[0]) : DEF_SURF_H;
         
-    	var hov_h = mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y0 + ruler_width);
-    	var hov_v = mouse_on_preview && pHOVER && point_in_rectangle(mx, my, x0, y0, x0 + ruler_width, y1);
+        var hovable = pHOVER && tool_hovering == noone;
+    	var hov_h   = hovable && point_in_rectangle(mx, my, x0, y0, x1, y0 + ruler_width);
+    	var hov_v   = hovable && point_in_rectangle(mx, my, x0, y0, x0 + ruler_width, y1);
     	if(hov_h || hov_v) _mouse_on_preview = false;
 		
         #region draw
@@ -3576,15 +3579,16 @@ function Panel_Preview() : PanelContent() constructor {
         drawViewController();
         drawDataArray();
         
-        tool_side_draw_l = false;
-        tool_side_draw_r = false;
-        
         canvas_mx = (mx - canvas_x) / canvas_s;
         canvas_my = (my - canvas_y) / canvas_s;
         drawSelection();
         
+        if(PROJECT.previewSetting.show_ruler && !d3_active) drawRuler();
+        
+        tool_side_draw_l = tool_always_l;
+        tool_side_draw_r = tool_always_r;
+        
         if(tool_always_l) {
-        	tool_side_draw_l = true;
         	var tw = toolbar_width;
         	var th = h - toolbar_height - ui(32);
         	var aa = d3_active? .8 : 1;
@@ -3592,7 +3596,6 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         if(tool_always_r) {
-        	tool_side_draw_r = true;
         	var tw = toolbar_width;
         	var th = h - toolbar_height - ui(32);
         	var aa = d3_active? .8 : 1;
@@ -3606,7 +3609,6 @@ function Panel_Preview() : PanelContent() constructor {
                 if(toolNode) {
                 	drawNodeActions(pFOCUS, toolNode);
                 	
-                	if(PROJECT.previewSetting.show_ruler && !d3_active) drawRuler();
 			        drawToolsLeft(toolNode);
 			        drawToolsRight(toolNode);
                 }
