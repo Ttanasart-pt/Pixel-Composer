@@ -1,4 +1,4 @@
-#region
+#region global & tools
 	FN_NODE_TOOL_INVOKE {
 		hotkeyCustom("Node_Armature", "Move",         "V");
 		hotkeyCustom("Node_Armature", "Scale",        "S");
@@ -385,7 +385,6 @@
 			
 		}
 	}
-	
 #endregion
 
 function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -1255,29 +1254,29 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					
 					gpu_set_texfilter(true);
 					
-					if(_typ == ARMATURE_DRAG_TYPE.move) { // free move
+					if(_typ == ARMATURE_DRAG_TYPE.move) { // Free move
 						var orig = _bne.getHead();
 						draw_sprite_ui(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 						
-					} else if(_typ == ARMATURE_DRAG_TYPE.moveTail) { // bone move
+					} else if(_typ == ARMATURE_DRAG_TYPE.moveTail) { // Move
 						var orig = _bne.getTail();
 						draw_sprite_ui(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 						
-					} else if(_typ == ARMATURE_DRAG_TYPE.rotate) { // bone rotate
+					} else if(_typ == ARMATURE_DRAG_TYPE.rotate) { // Rotate & Scale
 						var orig = _bne.getHead();
 						var _rx = _x + _s * orig.x;
 						var _ry = _y + _s * orig.y;
 						
-						var orig = _bne.getPoint(0.8);
-						var _sx = _x + _s * orig.x;
-						var _sy = _y + _s * orig.y;
+						var scal = _bne.getPoint(0.8);
+						var _sx = _x + _s * scal.x;
+						var _sy = _y + _s * scal.y;
 						
-						if(point_in_circle(_mx, _my, _sx, _sy, 12)) {
+						if(point_in_circle(_mx, _my, _sx, _sy, ui(12))) { // scale
 							draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.angle, COLORS._main_accent, 1);
 							draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.angle, c_white, 1);
-							_typ = ARMATURE_DRAG_TYPE.rotate;
+							_typ = ARMATURE_DRAG_TYPE.scale;
 							
-						} else {
+						} else { // rotate
 							draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.angle, c_white, 1);
 							draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.angle, COLORS._main_accent, 1);
 							_typ = ARMATURE_DRAG_TYPE.rotate;

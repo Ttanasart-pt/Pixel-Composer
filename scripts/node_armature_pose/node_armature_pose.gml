@@ -1,4 +1,4 @@
-#region
+#region global & tool
 	FN_NODE_TOOL_INVOKE {
 		hotkeyCustom("Node_Armature_Pose", "Move Selection",   "G");
 		hotkeyCustom("Node_Armature_Pose", "Rotate Selection", "R");
@@ -705,28 +705,26 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			gpu_set_texfilter(true);
 			
-			if(_typ == 0) { // free move
+			if(_typ == 0) { // Free move
 				var orig = _bne.getHead();
 				draw_sprite_ui(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 				
-			} else if(_typ == 1) { // bone move
+			} else if(_typ == 1) { // Move
 				var orig = _bne.getTail();
 				draw_sprite_ui(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 				
-			} else if(_typ == 2) { // bone rotate
+			} else if(_typ == 2) { // Rotate & Scale
 				var orig = _bne.getHead();
 				var _rx = _x + _s * orig.x;
 				var _ry = _y + _s * orig.y;
 				
-				var orig = _bne.getPoint(0.8);
-				var _sx = _x + _s * orig.x;
-				var _sy = _y + _s * orig.y;
+				var scal = _bne.getPoint(0.8);
+				var _sx = _x + _s * scal.x;
+				var _sy = _y + _s * scal.y;
 				
-				_typ = 2;
-				if(point_in_circle(_mx, _my, _sx, _sy, 12)) _typ = 2;
-				
-				draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, _typ == 2? COLORS._main_accent : COLORS._main_icon, 1);
-				draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, _typ == 3? COLORS._main_accent : COLORS._main_icon, 1);
+				_typ = point_in_circle(_mx, _my, _sx, _sy, ui(12))? 3 : 2;
+				draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, _typ == 2? COLORS._main_accent : COLORS._main_icon, 1);
+				draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, _typ == 3? COLORS._main_accent : COLORS._main_icon, 1);
 			}
 			
 			if(_lck) {
