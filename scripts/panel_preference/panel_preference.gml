@@ -1906,7 +1906,7 @@ function Panel_Preference() : PanelContent() constructor {
     #region Search
     	tb_search = textBox_Text(function(str) /*=>*/ { search_text = str; })
     		.setFont(f_p2).setAlign(fa_left).setEmpty().setAutoupdate()
-    		.setLabelExt(__txt("Search" + "..."), THEME.search).setClearable();
+    		.setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
     	
     	search_text = "";
     	contents    = {};

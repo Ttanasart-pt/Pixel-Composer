@@ -125,7 +125,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			filterFiles(); 
 			
 		}).setAutoUpdate().setEmpty().setAlign(fa_left).setVAlign(fa_center)
-			.setLabelExt(__txt("Search" + "..."), THEME.search).setClearable();
+			.setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
 		
 		page_goto = undefined;
 	#endregion

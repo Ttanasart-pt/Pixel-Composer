@@ -192,14 +192,13 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);
 			
 		for(var i = 0; i < _sz; i++) {
-			
 			var bx = per_line? _x : _x + ww * i;
 			var by = per_line? _y + (_h + ui(4)) * i : _y;
 			
 			tb[i].setFocusHover(active, hover);
 			tb[i].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
 			tb[i].hide       = !per_line;
-			tb[i].label      = axis[i];
+			tb[i].setLabel(axis[i]);
 			
 			tb[i].draw(bx, by, ww, _h, _data[i], _m);
 		}

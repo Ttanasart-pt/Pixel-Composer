@@ -302,7 +302,7 @@ function __PaletteColor(_color = c_black) constructor {
 	search_string = "";
 	tb_search = textBox_Text(function(t) /*=>*/ { search_string = string_lower(t); } )
 	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate()
-	               .setLabelExt(__txt("Search" + "..."), THEME.search).setClearable();
+	               .setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
 	
 	////////////////////////  SORT  ////////////////////////
 	

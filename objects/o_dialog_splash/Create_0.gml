@@ -138,7 +138,7 @@ event_inherited();
 	sp_recent.always_scroll = false;
 	
 	tb_recent_search = textBox_Text(function(t) /*=>*/ { recent_search = t; }).setAutoUpdate()
-		.setEmpty().setClearable().setLabelExt(__txt("Recent files"), THEME.search);
+		.setEmpty().setClearable().setPlaceHold(__txt("Recent files")).setLabelIcon(THEME.search);
 	recent_search = "";
 #endregion
 
@@ -432,7 +432,7 @@ event_inherited();
 	
 	tb_sample_seaching = false;
 	tb_sample_search   = textBox_Text(function(t) /*=>*/ { sample_search = t; }).setAutoUpdate()
-		.setEmpty().setClearable().setLabelExt(__txt("Search" + "..."), THEME.search);
+		.setEmpty().setClearable().setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search);
 	sample_search = "";
 #endregion
 

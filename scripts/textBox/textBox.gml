@@ -73,6 +73,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		labelAlign      = fa_left;
 		highlight_color = -1; 
 		highlight_alpha = 1;
+		
+		placeHolder     = "";
 	#endregion
 	
 	#region text data
@@ -157,6 +159,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setAlign      = function(_v) /*=>*/ { align       = _v;    return self; }
 	static setVAlign     = function(_v) /*=>*/ { yalign      = _v;    return self; }
 	static setFont       = function(_v) /*=>*/ { font        = _v;    return self; }
+	static setPlaceHold  = function(_v) /*=>*/ { placeHolder = _v;    return self; }
+	
 	static setLabelAlign = function(_v) /*=>*/ { labelAlign  = _v;    return self; }
 	static setLabelExt   = function(l,s)/*=>*/ { label = l; labelSpr = s; return self; }
 	static setLabel      = function(_v) /*=>*/ { label       = _v;    return self; }
@@ -759,8 +763,16 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
 		} 
 		
-		if(_raw_text == "" && label != "") {
+		if(_raw_text == "" && placeHolder != "") {
 			var lbx = labelAlign == fa_left? _x : _x + _w;
+			var lby = _y + _h / 2;
+			
+			draw_set_text(font, labelAlign, fa_center, labelColor, .5);
+			draw_text_add(lbx, lby, placeHolder);
+			draw_set_alpha(1);
+			
+		} else if(label != "") {
+			var lbx = labelAlign == fa_left? _x + ui(4) : _x + _w - ui(4);
 			var lby = _y + _h / 2;
 			
 			draw_set_text(font, labelAlign, fa_center, labelColor, .5);
