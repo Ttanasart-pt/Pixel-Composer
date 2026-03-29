@@ -1029,12 +1029,11 @@ function Panel_Inspector() : PanelContent() constructor {
             	_aniMap[$ currSec] |= jun.is_anim;
             }
             
+            if(filter_animation && !jun.isAnimated()) continue;
             if(filtering && filter_text != "") {
                 var pos = string_pos(string_lower(filter_text), string_lower(jun.getName()));
                 if(pos == 0) continue;
             }
-            
-            if(filter_animation && !jun.isAnimated()) continue;
             
             #region ++++ draw widget ++++
             	var _wdgt = jun.getEditWidget();

@@ -363,13 +363,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
 							
 						if(_wigUse) {
-							var wgAmp = _wigA * (curve_wigA? curve_wigA.get(_prog_curr) : 1);
-							var wgFre = _wigF * (curve_wigF? curve_wigF.get(_prog_curr) : 1);
-							var wgLen = randomFractal(_sed, _prog_curr + _wigP, wgFre, _wigI) * wgAmp;
+							var pgr = _wigTrmR? _prog_total / _rtEnd : _prog_curr;
+							var pgc = _wigTrmC? _prog_total / _rtEnd : _prog_curr;
+							
+							var wgAmp = _wigA * (curve_wigA? curve_wigA.get(pgr) : 1);
+							var wgFre = _wigF * (curve_wigF? curve_wigF.get(pgr) : 1);
+							var wgLen = randomFractal(_sed, pgc + _wigP, wgFre, _wigI) * wgAmp;
 							_nx += lengthdir_x(wgLen, _d + 90); 
 							_ny += lengthdir_y(wgLen, _d + 90);
 						}
-							
+						
 						array_push(points, new __LinePoint(_nx, _ny, _prog_total / _rtEnd, _prog_curr));
 						
 						if(_prog_curr == 1) {
