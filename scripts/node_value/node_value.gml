@@ -882,7 +882,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!force && is_anim == anim) return;
 		is_modified = true;
 		
-		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"{name} animation status").setRef(node);
+		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"{name} animation status")
+			.setRef(node).setTrigger(function() /*=>*/ { node.refreshTimeline(); });
 		is_anim = anim;
 		
 		if(is_anim) {

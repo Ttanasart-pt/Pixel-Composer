@@ -14,6 +14,7 @@ function timelineItem() constructor {
 	
 	static rename    = function() {}
 	static doRename  = function() {}
+	static refresh   = function() {}
 	
 	static setColor  = function(c) /*=>*/ { color  = c; return self; }
 	static setParent = function(p) /*=>*/ { parent = p; return self; }
@@ -30,12 +31,16 @@ function timelineItem() constructor {
 		return self;
 	}
 	
+	////- Serialize
+	
+	static cloneData = function( ) { var dat = {}; dat.obj = self; return dat; }
+	static setData   = function(m) { return self; }
+	
 	static onSerialize = function(_map) {}
 	static serialize   = function() {}
 	
 	static onDeserialize = function(_map) {}
 	static deserialize   = function(_map) {
-		
 		switch(_map.type) {
 			case "Folder" : return new timelineItemGroup().deserialize(_map);
 			case "Node"   : return new timelineItemNode(noone).deserialize(_map);
@@ -52,6 +57,8 @@ function timelineItem() constructor {
 		
 		return self;
 	}
+	
+	static toString = function() /*=>*/ {return $"timelineItem"};
 }
 
 function timelineItemNode(_node) : timelineItem() constructor {
@@ -204,6 +211,8 @@ function timelineItemNode(_node) : timelineItem() constructor {
 	static setColor = function(color) { node.setAttribute("color", color); }
 	static getColor = function()      { return node.attributes.color; }
 	
+	////- Serialize
+	
 	static serialize   = function() {
 		var _map = {};
 		
@@ -232,6 +241,8 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		
 		return self;
 	}
+	
+	static toString = function() /*=>*/ {return $"timelineItemNode: [{node}]"};
 }
 
 function timelineItemGroup() : timelineItem() constructor {
@@ -332,12 +343,7 @@ function timelineItemGroup() : timelineItem() constructor {
 		return res;
 	}
 	
-	static addItem = function(_item) {
-		array_push(contents, _item);
-		_item.parent = self;
-		
-		return self;
-	}
+	static addItem = function(_item) { array_push(contents, _item); _item.parent = self; return self; }
 	
 	static destroy = function() {
 		var ind = array_find(parent.contents, self);
@@ -347,6 +353,33 @@ function timelineItemGroup() : timelineItem() constructor {
 			array_insert(parent.contents, ind++, contents[i]);
 			contents[i].parent = parent;
 		}
+	}
+	
+	static refresh = function() {
+		for( var i = 0, n = array_length(contents); i < n; i++ ) {
+			contents[i].parent = self;
+			contents[i].refresh();
+		}
+		return self;
+	}
+	
+	////- Serialize
+	
+	static cloneData = function() {
+		var dat = {};
+		dat.obj = self;
+		dat.con = array_map(contents, function(c,i) /*=>*/ {return c.cloneData()});
+		return dat;
+	}
+	
+	static setData = function(dat) {
+		contents = [];
+		for( var i = 0, n = array_length(dat.con); i < n; i++ ) {
+			var c = dat.con[i];
+			contents[i] = c.obj.setData(c);
+			contents[i].parent = self;
+		}
+		return self;
 	}
 	
 	static serialize = function() {
@@ -388,4 +421,6 @@ function timelineItemGroup() : timelineItem() constructor {
 			
 		return self;
 	}
+
+	static toString = function() /*=>*/ {return $"timelineItemGroup: [{name}]"};
 }

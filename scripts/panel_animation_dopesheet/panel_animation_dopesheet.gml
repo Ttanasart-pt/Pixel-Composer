@@ -229,13 +229,24 @@ function Panel_Animation_Dopesheet() {
     		dialogPanelCall(panel, dx, dy, { anchor: ANCHOR.bottom | ANCHOR.left }); 
         }
         
-        function dopesheet_new_folder()        { var _dir = new timelineItemGroup(); PROJECT.timelines.addItem(_dir); }
-        function dopesheet_new_folder_select() { 
+        function dopesheet_new_folder()        { 
+        	var _con = PROJECT.timelines.cloneData();
+        	var _dir = new timelineItemGroup(); 
+        	PROJECT.timelines.addItem(_dir); 
+        	
+        	recordAction(ACTION_TYPE.custom, function(_data, _undo) /*=>*/ {
+        		var _con = PROJECT.timelines.cloneData();
+        		PROJECT.timelines.setData(_data.content);
+        		_data.content = _con;
+        	}, { content: _con });
+        }
+        	
+        function dopesheet_new_folder_select() {
+        	var _con = PROJECT.timelines.cloneData(); 
         	var _dir = new timelineItemGroup(); 
         	PROJECT.timelines.addItem(_dir); 
         	
         	var _nodes = PANEL_GRAPH.nodes_selecting;
-        	
         	for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
         		var _node = _nodes[i];
         		if(!_node.active || !_node.isAnimated()) continue;
@@ -245,6 +256,12 @@ function Panel_Animation_Dopesheet() {
                 array_push(_dir.contents, _item);
                 _item.parent = _dir;
         	}
+        	
+        	recordAction(ACTION_TYPE.custom, function(_data, _undo) /*=>*/ {
+        		var _con = PROJECT.timelines.cloneData();
+        		PROJECT.timelines.setData(_data.content);
+        		_data.content = _con;
+        	}, { content: _con });
         }
         
         function dopesheet_expand()      { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = true;  }

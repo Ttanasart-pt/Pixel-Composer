@@ -74,6 +74,12 @@ function NodeValue_Global(_name, _node) : NodeValue(_name, _node, CONNECT_TYPE.i
 		return defEditWidget;
 	}
 	
+	static setDefault = function() {
+		def_val     = getValue();
+		is_modified = false;
+		return self;
+	}
+	
 	static dragValue = function() /*=>*/ { DRAGGING = { type: "Globalvar", data: name }; }
 }
 

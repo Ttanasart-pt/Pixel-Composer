@@ -556,7 +556,6 @@ function Panel_Animation() : PanelContent() constructor {
     
     function getTimelineContentFolder(folder, _context = [], _depth = 0, _show = true) {
         var _ind = 0;
-        
         for( var i = 0, n = array_length(folder.contents); i < n; i++ ) {
             var _cont = folder.contents[i];
             if(!_cont.active) continue;
