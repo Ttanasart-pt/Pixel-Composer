@@ -19,6 +19,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 	receive  = false;
 	shadow   = true;
 	array    = false;
+	randomize();
 	
 	if(node != undefined) {
 		values = array_create(array_length(node.inputs), noone);

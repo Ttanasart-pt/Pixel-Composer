@@ -67,7 +67,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	#region label
 		label           = "";
-		labelColor      = COLORS._main_text;
+		labelColor      = COLORS._main_text_sub;
+		labelAlpha      = .5;
 		labelSpr        = noone;
 		labelSprIndex   = 0;
 		labelAlign      = fa_left;
@@ -775,7 +776,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var lbx = labelAlign == fa_left? _x + ui(4) : _x + _w - ui(4);
 			var lby = _y + _h / 2;
 			
-			draw_set_text(font, labelAlign, fa_center, labelColor, .5);
+			draw_set_text(font, labelAlign, fa_center, labelColor, labelAlpha);
 			draw_text_add(lbx, lby, label);
 			draw_set_alpha(1);
 		}

@@ -922,7 +922,8 @@ function Panel_Animation_Dopesheet() {
     	if(modulate_animator != noone && modulate_animator != animator) return noone;
         var hovering = noone;
         
-        var _gh  = ui(animator.prop.graph_h - 16);
+        var prop = animator.prop;
+        var _gh  = ui(prop.graph_h - 16);
         var _gy0 = ui(8);
         var _gy1 = _gy0 + _gh;
         var kamo = array_length(animator.values);
@@ -931,12 +932,12 @@ function Panel_Animation_Dopesheet() {
         var mmx = msx;
         var mmy = msy - (key_y + ui(8));
         
-        var _gy_val_min = animator.prop.graph_range[0];
-		var _gy_val_max = animator.prop.graph_range[1];
-        var _range      = animator.prop.prev_graph_range;
+        var _gy_val_min = prop.graph_range[0];
+		var _gy_val_max = prop.graph_range[1];
+        var _range      = prop.prev_graph_range;
             
-        animator.prop.graph_draw_y[0] = _gy0 + (key_y + ui(8));
-        animator.prop.graph_draw_y[1] = _gy1 + (key_y + ui(8));
+        prop.graph_draw_y[0] = _gy0 + (key_y + ui(8));
+        prop.graph_draw_y[1] = _gy1 + (key_y + ui(8));
         
         var val_rng  = (_gy_val_max - _gy_val_min) / (_gy1 - _gy0);
         var valArray = is_array(animator.values[0].value);
@@ -966,14 +967,14 @@ function Panel_Animation_Dopesheet() {
                 for( var _time = key.time; _time <= key_next.time; _time++ ) {
                     var rat = (_time - key.time) / (key_next.time - key.time);
                     
-                    _kv = key.driverObject.apply(_time, key, key_next, animator.lerpValue(key, key_next, rat), rat, animator);
+                    _kv = key.driverObject.apply(_time, key, key_next, prop.lerpAnimKeys(key, key_next, rat), rat, animator);
                     
                     if(!valArray) _kv = [ _kv ];
                         
                     for( var ki = 0; ki < array_length(_kv); ki++ ) {
                         var cc = COLORS.panel_animation_graph_line;
-                        if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
-                        else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                         
                         cc = colorMultiplyRGB(cc, baseC); 
                         draw_set_color(cc);
@@ -1010,8 +1011,8 @@ function Panel_Animation_Dopesheet() {
                 var kn = min(array_length(_kv), array_length(_kn));
                 for( var ki = 0; ki < kn; ki++ ) {
                     var cc = COLORS.panel_animation_graph_line;
-                    if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
-                    else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                    if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                     
                     cc = colorMultiplyRGB(cc, baseC); 
                     draw_set_color(cc);
@@ -1048,8 +1049,8 @@ function Panel_Animation_Dopesheet() {
                 var kn = min(array_length(_kv), array_length(_kn));
                 for( var ki = 0; ki < kn; ki++ ) {
                     var cc = COLORS.panel_animation_graph_line;
-                    if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
-                    else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                    if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                     
                     cc = colorMultiplyRGB(cc, baseC); 
                     draw_set_color(cc);
@@ -1087,8 +1088,8 @@ function Panel_Animation_Dopesheet() {
                 	var kn = min(array_length(_kv), array_length(_kn));
                     for( var ki = 0; ki < kn; ki++ ) {
                         var cc = COLORS.panel_animation_graph_line;
-                        if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
-                        else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                         
                         cc = colorMultiplyRGB(cc, baseC); 
                         draw_set_color(cc);
@@ -1111,7 +1112,7 @@ function Panel_Animation_Dopesheet() {
             }
         } // draw line in between
         
-        if(animator.prop.show_graph && array_length(animator.values) > 0) { // draw line outside keyframe range
+        if(prop.show_graph && array_length(animator.values) > 0) { // draw line outside keyframe range
             var key_first = animator.values[0];
             var t_first  = (key_first.time + 1) * timeline_scale + timeline_shift;
             
@@ -1120,8 +1121,8 @@ function Panel_Animation_Dopesheet() {
             
             for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
                 var cc = COLORS.panel_animation_graph_line;
-                if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
-                else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+                else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                     
                 cc = colorMultiplyRGB(cc, baseC); 
                 draw_set_color(cc);
@@ -1149,7 +1150,7 @@ function Panel_Animation_Dopesheet() {
                         for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
                             var cc = COLORS.panel_animation_graph_line;
                             if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
-                            else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                            else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                             
                             cc = colorMultiplyRGB(cc, baseC);
                             draw_set_color(cc);
@@ -1176,8 +1177,8 @@ function Panel_Animation_Dopesheet() {
                     
                     for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
                         var cc = COLORS.panel_animation_graph_line;
-                        if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
-                        else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                         
                         cc = colorMultiplyRGB(cc, baseC); 
                         draw_set_color(cc);
@@ -1217,8 +1218,8 @@ function Panel_Animation_Dopesheet() {
                 var oy = py - (    eo[1]) / val_rng;
                 
                 var cc = COLORS.panel_animation_graph_line;
-                if(valArray)                    cc = array_safe_get(COLORS.axis, j, cc);
-                else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                if(valArray)           cc = array_safe_get(COLORS.axis, j, cc);
+                else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                 
                 if(ei[0] != 0 && key.ease_in_type == CURVE_TYPE.bezier) {
                     var _hv = (graph_key_hover == key && ( graph_key_hover_index == KEYFRAME_DRAG_TYPE.ease_in || graph_key_hover_index == KEYFRAME_DRAG_TYPE.ease_both)) || 

@@ -49,53 +49,54 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(61, nodeValue_Float(    "Snap Rotation",              0                  ));
 	
 	////- =Scale
-	newInput(10, nodeValue_Vec2_Range( "Scale",        [1,1,1,1], { linked : true }  ));
-	newInput(17, nodeValue_Range(      "Size",         [1,1],     { linked : true }  )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
+	newInput(10, nodeValue_Vec2_Range( "Scale",        [1,1,1,1], { linked : true }   ));
+	newInput(17, nodeValue_Range(      "Size",         [1,1],     { linked : true }   )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
 	
 	////- =Color
-	newInput(28, nodeValue_Gradient(  "Color on Spawn",         gra_white  ));
-	newInput(50, nodeValue_Palette(   "Color by Index",         [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(12, nodeValue_Gradient(  "Color Over Lifetime",    gra_white  ));
-	newInput(13, nodeValue_Range(     "Alpha",                  [1,1], { linked : true }      )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
-	newInput(56, nodeValue_Surface(   "Sample Surface"                                        ));
+	newInput(28, nodeValue_Gradient(  "Color on Spawn",         gra_white                ));
+	newInput(50, nodeValue_Palette(   "Color by Index",         [ca_white]               )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(12, nodeValue_Gradient(  "Color Over Lifetime",    gra_white                ));
+	newInput(13, nodeValue_Range(     "Alpha",                  [1,1], { linked : true } )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
+	newInput(56, nodeValue_Surface(   "Sample Surface"                                   ));
 	
 	////- =Path
-	newInput(45, nodeValue_Bool(       "Follow Path",          false                         ));
-	newInput(46, nodeValue_PathNode(   "Path"                                                ));
-	newInput(66, nodeValue_Vec2_Range( "Path Range",           [0,0,1,1]                     ));
-	newInput(47, nodeValue_Curve(      "Path Deviation",       CURVE_DEF_11                  ));
+	newInput(45, nodeValue_Bool(       "Follow Path",          false                     ));
+	newInput(46, nodeValue_PathNode(   "Path"                                            ));
+	newInput(66, nodeValue_Vec2_Range( "Path Range",           [0,0,1,1]                 ));
+	newInput(47, nodeValue_Curve(      "Path Deviation",       CURVE_DEF_11              ));
 	
 	////- =Physics
-	newInput(57, nodeValue_Bool(     "Use Physics",            false                         ));
-	newInput(54, nodeValue_Range(    "Friction",               [0,0], { linked : true }      ));
-	newInput( 7, nodeValue_Range(    "Acceleration",           [0,0], { linked : true }      ));
-	newInput(19, nodeValue_Range(    "Gravity",                [0,0], { linked : true }      ));
-	newInput(33, nodeValue_Rotation( "Gravity Direction",      -90                           ));
+	newInput(57, nodeValue_Bool(     "Use Physics",            false                     ));
+	newInput(54, nodeValue_Range(    "Friction",               [0,0], { linked : true }  ));
+	newInput( 7, nodeValue_Range(    "Acceleration",           [0,0], { linked : true }  ));
+	newInput(19, nodeValue_Range(    "Gravity",                [0,0], { linked : true }  ));
+	newInput(33, nodeValue_Rotation( "Gravity Direction",      -90                       ));
 	
-	newInput(34, nodeValue_Range(    "Turning",                [0,0], { linked : true }      ));
-	newInput(35, nodeValue_Bool(     "Turn Both Directions",   false                         )).setTooltip("Apply randomized 1, -1 multiplier to the turning speed.");
-	newInput(36, nodeValue_Float(    "Turn Scale with Speed",  false                         ));
+	newInput(34, nodeValue_Range(    "Turning",                [0,0], { linked : true }  ));
+	newInput(35, nodeValue_Bool(     "Turn Both Directions",   false                     )).setTooltip("Apply randomized 1, -1 multiplier to the turning speed.");
+	newInput(36, nodeValue_Float(    "Turn Scale with Speed",  false                     ));
 	
 	////- =Ground
-	newInput(37, nodeValue_Bool(        "Collide Ground",      false                         ));
+	newInput(37, nodeValue_Bool(    "Collide Ground",      false                         ));
 	newInput(63, nodeValue_EButton( "Ground Offset Type",  0, [ "Relative", "Absolute" ] ));
-	newInput(38, nodeValue_Range(       "Ground Offset",       [0,0], { linked : true }      ));
-	newInput(39, nodeValue_Slider(      "Bounce Amount",       .5                            ));
-	newInput(40, nodeValue_Slider(      "Bounce Friction",     .1                            )).setTooltip("Apply horizontal friction once particle stop bouncing.");
+	newInput(38, nodeValue_Range(   "Ground Offset",       [0,0], { linked : true }      ));
+	newInput(39, nodeValue_Slider(  "Bounce Amount",       .5                            ));
+	newInput(40, nodeValue_Slider(  "Bounce Friction",     .1                            )).setTooltip("Apply horizontal friction once particle stop bouncing.");
 		
 	////- =Wiggles
-	newInput(58, nodeValue_Bool(     "Use Wiggles",            false ));
-	newInput(20, nodeValue_Vec2(     "Direction Wiggle",       [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
-	newInput(41, nodeValue_Vec2(     "Position Wiggle",        [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
-	newInput(42, nodeValue_Vec2(     "Rotation Wiggle",        [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
-	newInput(43, nodeValue_Vec2(     "Scale Wiggle",           [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
+	var wParam = { label: [ "Amplitude", "Period" ], linkable: false, per_line: true };
+	newInput(58, nodeValue_Bool( "Use Wiggles", false         ));
+	newInput(20, nodeValue_Vec2( "Direction",   [0,0], wParam )).setInternalName("direction_wiggle");
+	newInput(41, nodeValue_Vec2( "Position",    [0,0], wParam )).setInternalName("position_wiggle");
+	newInput(42, nodeValue_Vec2( "Rotation",    [0,0], wParam )).setInternalName("rotation_wiggle");
+	newInput(43, nodeValue_Vec2( "Scale",       [0,0], wParam )).setInternalName("scale_wiggle");
 	
 	////- =Unused
-	newInput(21, nodeValue_Bool(     "Loop",                   true ));
-	newInput(65, nodeValue_Int(      "Pre-Render",             -1   ));
-	newInput(25, nodeValue_Int(      "Boundary Data",          []   )).setArrayDepth(1).setVisible(false, true);
-	newInput(31, nodeValue_Surface(  "Atlas",                  []   )).setArrayDepth(1);
-	newInput(48, nodeValue_Trigger(  "Reset Seed"                   ))
+	newInput(21, nodeValue_Bool(     "Loop",          true ));
+	newInput(65, nodeValue_Int(      "Pre-Render",    -1   ));
+	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
+	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
+	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
 	// inputs 68
 	
 	array_foreach(inputs, function(inp, i) /*=>*/ { 

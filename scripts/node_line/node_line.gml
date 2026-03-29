@@ -731,6 +731,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var pxs    = [];
 				var dat    = array_safe_get_fast(_pathData, i, noone);
 				
+				var _cappS = 0;
+				var _cappE = 0;
+				
 				if(_useTex) {
 					var tex = surface_get_texture(_tex);
 				
@@ -786,12 +789,18 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_nc = colorMultiply(_nc, gradientEval(_wg2clr, (_ww - _wg2clrR[0]) / _wg2clrRng));
 					_nd = _dir;
 					
-					if(j && _capSta == undefined) {
-						_d = _dir + 180;
+					if(_cappS == 0) {
+						_cappS  = 1;
 						_capSta = [
-							[_capS, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP],
-							[_capS, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP],
+							[_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0, _capP],
+							[_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0, _capP],
 						];
+						
+					} else if(_cappS == 1) {
+						_d = _dir + 180;
+						_cappS = 2;
+						_capSta[0][5] = _d-90; _capSta[0][6] = _d;
+						_capSta[1][5] = _d;    _capSta[1][6] = _d+90;
 					}
 					
 					_d = _dir;
