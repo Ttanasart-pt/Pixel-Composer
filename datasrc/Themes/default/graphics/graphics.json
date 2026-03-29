@@ -93,6 +93,7 @@
     "file_load":                          { "path": "./icon/s_file_load.png",                               "s": 2, "x": 12, "y": 12 },
     "fill":                               { "path": "./icon/s_fill_24.png",                                 "s": 1, "x": 12, "y": 12 },
     "filter":                             { "path": "./icon/s_filter_24.png",                               "s": 1, "x": 12, "y": 12 },
+    "filter_animation":                   { "path": "./icon/s_filter_animation.png",                        "s": 2, "x": 12, "y": 12 },
     "filter_type":                        { "path": "./icon/s_filter_type.png",                             "s": 2, "x": 12, "y": 12 },
     "flip_h":                             { "path": "./icon/s_flip_h_24.png",                               "s": 1, "x": 12, "y": 12 },
     "flip_v":                             { "path": "./icon/s_flip_v_24.png",                               "s": 1, "x": 12, "y": 12 },

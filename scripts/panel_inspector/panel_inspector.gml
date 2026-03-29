@@ -208,7 +208,7 @@
 	}
 #endregion
 
-enum INSPECTOR_FLAG {
+enum INSPECTOR_FLAG { 
 	show_all   = 0, 
 	input_only = 1, 
 }
@@ -270,8 +270,10 @@ function Panel_Inspector() : PanelContent() constructor {
                              .setFont(f_h5).setHide(1).setAlign(fa_center);
         tb_node_name.format = TEXT_AREA_FORMAT.node_title;
         
-        filter_text = "";
-        filtering   = false;
+        filter_text      = "";
+        filtering        = false;
+        filter_animation = false;
+        
         tb_prop_filter = textBox_Text(function(txt) /*=>*/ { filter_text = txt; }).setEmpty(false).setAutoUpdate()
                              .setFont(f_p2).setAlign(fa_center);
     	
@@ -447,11 +449,6 @@ function Panel_Inspector() : PanelContent() constructor {
             for( var i = 0, n = array_length(_val_to); i < n; i++ ) 
                 _val_to[i].setColor(c);
         }
-        
-        group_menu = [
-            MENU_ITEMS.inspector_expand_all_sections,
-            MENU_ITEMS.inspector_collapse_all_sections,
-        ]
         
         MENUITEM_CONDITIONS[$ "inspector_value_separable"] = function() /*=>*/ {return prop_selecting && prop_selecting.sepable};
         
@@ -738,6 +735,8 @@ function Panel_Inspector() : PanelContent() constructor {
         var rrx     = ui(16) + x;
         var rry     = top_bar_h + y;
         
+        var showAll = filtering || filter_animation;
+        
         for(var i = 0; i < amo; i++) {
             var yy    = hh + _y;
             var _draw = yy + ui(8) < con_h && yy > -ui(8);
@@ -882,8 +881,24 @@ function Panel_Inspector() : PanelContent() constructor {
 		                       	coll = !coll; 
 							}
 	                       	
-						} else if(mouse_rpress(pFOCUS)) 
-							menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
+						} else if(mouse_rpress(pFOCUS)) {
+							var _menu = [
+					            MENU_ITEMS.inspector_expand_all_sections,
+					            MENU_ITEMS.inspector_collapse_all_sections,
+					            menuItem(__txt("Collapse Other"), function(m) /*=>*/ {
+					            	if(inspecting == noone) return;
+					            	var cmap = inspecting.inspector_collapse;
+					            	var carr = struct_get_names(cmap);
+						            
+						            for( var i = 0, n = array_length(carr); i < n; i++ ) 
+						                cmap[$ carr[i]] = true;
+						            cmap[$ m] = false;
+						            
+					            }).setParam(_key)
+					        ];
+					        
+							menuCall("inspector_group_menu", _menu, 0, 0, fa_left);
+						}
                 	}
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_bg, 1);
@@ -900,7 +915,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
                 }
                 
-                if(!filtering) {
+                if(!showAll) {
                 	var _anim = _aniMap[$ _key] ?? false;
                 	
                 	var cc = _anim? COLORS._main_value_positive : COLORS.panel_inspector_group_bg;
@@ -944,7 +959,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 _edtMap[$ _key] = 0;
                 _aniMap[$ _key] = false;
                 
-                if(!filtering && coll) { // skip 
+                if(!showAll && coll) { // skip 
                     _colsp   = true;
                     if(i == amoIn) { // skip attribute
                     	i = amoIn + amoAttr - 1;
@@ -1018,6 +1033,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 var pos = string_pos(string_lower(filter_text), string_lower(jun.getName()));
                 if(pos == 0) continue;
             }
+            
+            if(filter_animation && !jun.isAnimated()) continue;
             
             #region ++++ draw widget ++++
             	var _wdgt = jun.getEditWidget();
@@ -1772,15 +1789,38 @@ function Panel_Inspector() : PanelContent() constructor {
             prop_selecting = noone;
         
         var _hh = 0;
-        var tw = min(contentPane.w - ui(32), ui(280));
         var th = ui(24);
+    	var bs = th;
+    	
+        var ww = contentPane.surface_w;
+        var tw = min(ww - ui(48), ui(280));
+        
     	var tx = contentPane.w / 2 - tw / 2 + th / 2;
     	var ty = _y + ui(4);
     	
-    	var bs = th;
     	var bx = tx - bs - ui(4);
     	var by = ty;
     	var cc = filtering? COLORS._main_value_positive : COLORS._main_icon;
+    	
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, "", THEME.search, 0, cc, 1, ui(8)) == 2) {
+    		filtering = !filtering;
+    		if(filtering) tb_prop_filter.activate();
+    		else          tb_prop_filter.deactivate();
+    		
+    	} bx -= bs + 1;
+    	
+    	
+    	if(bx > ui(4)) {
+    		var bspr = THEME.filter_animation;
+    		var btxt = __txt("Filter Animated");
+    		var bi   = filter_animation;
+    		var bc   = filter_animation? COLORS._main_value_positive : COLORS._main_icon;
+    		
+	    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, btxt, bspr, bi, bc, 1, ui(8)) == 2) {
+	    		filter_animation = !filter_animation;
+	    		
+	    	} bx -= bs + 1;
+    	}
     	
     	if(filtering) {
 	        tb_prop_filter.register(contentPane);
@@ -1791,12 +1831,6 @@ function Panel_Inspector() : PanelContent() constructor {
 	        prop_page_b.data[2] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
 	        prop_page_b.setFocusHover(pFOCUS, pHOVER);
 	        prop_page_b.draw(tx, ty, tw, th, prop_page, _m, x + contentPane.x, y + contentPane.y);
-    	}
-    	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, "", THEME.search, 0, cc, 1, ui(8)) == 2) {
-    		filtering = !filtering;
-    		if(filtering) tb_prop_filter.activate();
-    		else          tb_prop_filter.deactivate();
     	}
     	
     	_hh += th + ui(16);
