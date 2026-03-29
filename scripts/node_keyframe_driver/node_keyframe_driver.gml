@@ -278,7 +278,7 @@ function KeyDriver_Bounce(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDri
 		
 		var _val  = _value ?? _key.value;
 		var _res  = _val;
-		var _ease = _anim.interpolate(_key, _keyNext, _ratio);
+		var _ease = KeyframeInterpolate(_key, _keyNext, _ratio);
 		
 		var _v1 = _keyNext.value;
 		
@@ -370,7 +370,7 @@ function KeyDriver_Elastic(_amount = 3, _amplitude = .5, _steepness = 2) : KeyDr
 		
 		var _val  = _value ?? _key.value;
 		var _res  = _val;
-		var _ease = _anim.interpolate(_key, _keyNext, _ratio);
+		var _ease = KeyframeInterpolate(_key, _keyNext, _ratio);
 		
 		var _v1 = _keyNext.value;
 		var _t  = easeOutElastic(_ratio, _ease);
