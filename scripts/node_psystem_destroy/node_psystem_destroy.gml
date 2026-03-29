@@ -72,10 +72,10 @@ function Node_pSystem_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
 			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
-				
+			
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
-					
+			
 			var rat = _lif / (_lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
@@ -90,7 +90,7 @@ function Node_pSystem_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			
 			var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64  );
 			var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64  );
-					
+			
 			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, false );
 			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64,  _lif  );
 			

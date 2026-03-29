@@ -1093,7 +1093,7 @@ function Panel_Animation_Dopesheet() {
                         draw_set_color(cc);
                         draw_set_alpha(aa);
                         
-                        var __i = animator.interpolate(key, key_next, _r);
+                        var __i = KeyframeInterpolate(key, key_next, _r);
                         ny[ki] = value_map(lerp(_kv[ki], _kn[ki], __i), _gy_val_min, _gy_val_max, _gy1, _gy0);
                         if(array_length(oy) > ki) draw_line(ox, oy[ki], nx, ny[ki]);
                             
@@ -1303,7 +1303,7 @@ function Panel_Animation_Dopesheet() {
                 
                 for( var _r = 0; _r <= 1; _r += _step ) {
                     nx = key.dopesheet_x + _r * dx * timeline_scale;
-                    var lrp = prop.animator.interpolate(key, key_next, _r);
+                    var lrp = KeyframeInterpolate(key, key_next, _r);
                     nc = merge_color(key.value, key_next.value, lrp);
                     
                     if(_r > 0) draw_rectangle_color(ox, _gy0, nx, _gy1, oc, nc, nc, oc, 0);
