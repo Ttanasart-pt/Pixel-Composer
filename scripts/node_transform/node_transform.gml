@@ -732,7 +732,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static getDimension = function(arr = 0) {
 		var surf = getInputSingle( 0, arr);
-		if(!is_surface(surf)) return DEF_SURF;
+		if(!is_surface(surf)) return PROJ_SURF;
 		
 		var _out_type = inputs[9].getValue();
 		var ww = 1, hh = 1;

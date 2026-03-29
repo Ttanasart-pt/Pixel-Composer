@@ -2086,35 +2086,36 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    menuCall("graph_node_select", menuItems_gen("graph_node_select"));
 	                    
 	                } else if(node_hover == noone && junction_hovering == noone) {
-	                    var ctx     = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
-	                    var _diaAdd = callAddDialog(ctx);
+	                    var ctx = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+	                    var dia = callAddDialog(ctx);
 	                    
-	                	var menu = menuItems_gen("graph_empty");
-	                    var _dia = menuCall("graph_empty", menu, o_dialog_add_node.dialog_x - ui(8), 
-	                                                             o_dialog_add_node.dialog_y + ui(4), fa_right );
-	                    setFocus(_diaAdd, "Dialog");
+	                    if(dia) {
+		                	var menu = menuItems_gen("graph_empty");
+		                    menuCall("graph_empty", menu, dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right );
+		                    setFocus(dia, "Dialog");
+	                    }
 	                    
 	                } else if(node_hover == noone) {
 	                    __junction_hovering = junction_hovering;
+	                    var ctx = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+	                    var dia = callAddDialog(ctx);
 	                    
-	                    var ctx     = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
-	                    var _diaAdd = callAddDialog(ctx);
-	                    
-	                    var menu = menuItems_gen("graph_connection_select");
-	                    if(is(junction_hovering, Node_Feedback_Inline)) {
-	                        var _jun = junction_hovering.junc_out;
-	                        array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", 
-	                        	function(j) /*=>*/ { j.destroy(); }, THEME.feedback).setParam(__junction_hovering));
-	                        
-	                    } else {
-	                        var _jun = junction_hovering.value_from;
-	                        array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", 
-	                        	function(j) /*=>*/ { j.removeFrom(); }, THEME.cross).setParam(__junction_hovering));
+	                    if(dia) {
+		                    var menu = menuItems_gen("graph_connection_select");
+		                    if(is(junction_hovering, Node_Feedback_Inline)) {
+		                        var _jun = junction_hovering.junc_out;
+		                        array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", 
+		                        	function(j) /*=>*/ { j.destroy(); }, THEME.feedback).setParam(__junction_hovering));
+		                        
+		                    } else {
+		                        var _jun = junction_hovering.value_from;
+		                        array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", 
+		                        	function(j) /*=>*/ { j.removeFrom(); }, THEME.cross).setParam(__junction_hovering));
+		                    }
+		                    
+		                    menuCall("graph_connection_select", menu, dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right );
+		                    setFocus(dia, "Dialog");
 	                    }
-	                    
-	                    var _dia = menuCall("graph_connection_select", menu, o_dialog_add_node.dialog_x - ui(8), 
-	                                                                         o_dialog_add_node.dialog_y + ui(4), fa_right );
-	                    setFocus(_diaAdd, "Dialog");
 	                }
 	            } 
 	            
@@ -2666,11 +2667,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function callAddDialog(ctx = getCurrentContext(), conn = junction_hovering) { 
-        var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
+    	var dx  = mouse_mx + 8;
+    	var dy  = mouse_my + 8;
+        var dia = instance_create_depth(dx, dy, 0, o_dialog_add_node, { context: ctx });
+        if(dia == undefined) return undefined;
+        dia.resetPosition();
+        setFocus(dia.id, "Dialog");
+        
         connect_related = noone;
         
         if(pFOCUS) {
-	        with(_dia) {    
+	        with(dia) {    
 	            node_target_x     = other.mouse_grid_x;
 	            node_target_y     = other.mouse_grid_y;
 	            node_target_x_raw = other.mouse_grid_x;
@@ -2698,12 +2705,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        		o_dialog_add_node.dialog_x - ui(8), 
 		        		o_dialog_add_node.dialog_y + ui(4), fa_right );
 	        	
-	            setFocus(_dia, "Dialog");
+	            setFocus(dia, "Dialog");
 	        }
 	        
         }
         
-        return _dia;
+        return dia;
     } 
     
     function callReplaceDialog(ctx = getCurrentContext()) { 
