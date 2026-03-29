@@ -98,8 +98,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
-		if(is_struct(_surf)) return;
-		if(!surface_exists(_surf)) return;
+		if(is_struct(_surf))       return false;
+		if(!surface_exists(_surf)) return false;
 		
 		var _fore = getInputSingle( 1);
 		var _fill = getInputSingle( 5);
@@ -136,21 +136,22 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		} 
 		
 		draw_set_color(COLORS._main_accent);
-		if(dragging || (active && point_in_rectangle(_mx, _my, _rx, _ry, _rx + _rw, _ry + _rh))) {
-			draw_rectangle_width(_rx, _ry, _rx + _rw, _ry + _rh, 2);
+		if(hover && point_in_rectangle(_mx, _my, _rx, _ry, _rx + _rw, _ry + _rh)) {
 			hovering = true;
 			
-			if(mouse_lpress()) {
+			if(mouse_lpress(active)) {
 				dragging = true;
 				drag_sx  = _posi[0] * sw;
 				drag_sy  = _posi[1] * sh;
 				drag_mx  = _mx;
 				drag_my  = _my;
 			}
-			
-		} else 
-			draw_rectangle(_rx, _ry, _rx + _rw, _ry + _rh, true);
-			
+		}
+		
+		if(dragging || hovering) 
+			 draw_rectangle_width(_rx, _ry, _rx + _rw, _ry + _rh, 2);
+		else draw_rectangle(_rx, _ry, _rx + _rw, _ry + _rh, true);
+		
 		return hovering || dragging;
 	} 
 	
