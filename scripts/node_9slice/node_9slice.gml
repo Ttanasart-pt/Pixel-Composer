@@ -14,6 +14,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 1, nodeValue_Dimension());
 	newInput( 2, nodeValue_IPadding( "Splice",       [.25,.25,.25,.25] )).setUnitSimple();
 	newInput( 3, nodeValue_EScroll(  "Filling modes", 0, [ "Scale", "Repeat" ] ));
+	// 5
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface,     noone ));
 	newOutput(1, nodeValue_Output("DynaSurf",    VALUE_TYPE.dynaSurface, new nineSliceSurf() ));
@@ -22,6 +23,10 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Surface", false ], 0, 
 		[ "Slices",  false ], 1, 2, 3, 
 	];
+	
+	inputs[1].use_mask    = true;
+	inputs[1].mask_input  = inputs[0];
+	array_push(inputs[1].unitTooltip.data, "Surface");
 	
 	////- Node
 	
@@ -193,7 +198,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _dim	= _data[1];
 			var _splice	= _data[2];
 			var _fill	= _data[3];
-		
+			
 			if(!surface_exists(_inSurf)) return _outData;
 		#endregion
 		
