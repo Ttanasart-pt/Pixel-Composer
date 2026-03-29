@@ -80,6 +80,7 @@ function Panel_Animation_Dopesheet() {
         keyframe_dragging      = noone;
         keyframe_drag_type     = -1;
         keyframe_dragout       = false;
+        keyframe_dragging_mx   = 0;
         keyframe_drag_mx       = 0;
         keyframe_drag_my       = 0;
         keyframe_drag_sv       = 0;
@@ -1515,6 +1516,7 @@ function Panel_Animation_Dopesheet() {
                     if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
+                        keyframe_dragging_mx = mx;
                     }
                     
                 } else 
@@ -1539,6 +1541,7 @@ function Panel_Animation_Dopesheet() {
                     if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
+                        keyframe_dragging_mx = mx;
                     }
                 } else
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, CDEF.main_dkgrey);
@@ -1677,6 +1680,8 @@ function Panel_Animation_Dopesheet() {
                     recordAction(ACTION_TYPE.var_modify, k, [ _in, "ease_in"  ]);
                     recordAction(ACTION_TYPE.var_modify, k, [ _ot, "ease_out" ]);
                 }
+                
+                k.anim.node.triggerRender(); 
             }
             
             if(mouse_lrelease()) {
@@ -1784,6 +1789,7 @@ function Panel_Animation_Dopesheet() {
                         keyframe_dragout   = false;
                         keyframe_drag_mx   = mx;
                         keyframe_drag_my   = my;
+                        keyframe_dragging_mx = mx;
                         
                     } else if(mouse_lpress()) {
                         if(key_mod_check(MOD_KEY.ctrl)) {
@@ -1801,6 +1807,7 @@ function Panel_Animation_Dopesheet() {
                             keyframe_drag_type = _scaling? KEYFRAME_DRAG_TYPE.scale : KEYFRAME_DRAG_TYPE.move;
                             keyframe_drag_mx   = mx;
                             keyframe_drag_my   = my;
+                            keyframe_dragging_mx = mx;
                             
                             keyframe_drag_sv   = sca_back? keyframe_selecting_l : keyframe_selecting_f;
                         }
@@ -2956,7 +2963,11 @@ function Panel_Animation_Dopesheet() {
 	                        }
 	                        break;
 	                }
-	                            
+                    
+                    if(keyframe_dragging_mx != mx)
+                    	keyframe_dragging.anim.node.triggerRender(); 
+                    keyframe_dragging_mx = mx;
+                    
 	                if(mouse_lrelease()) {
 	                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_in, "ease_in"]);
 	                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
@@ -3273,6 +3284,7 @@ function Panel_Animation_Dopesheet() {
         keyframe_drag_type = KEYFRAME_DRAG_TYPE.move;
         keyframe_drag_mx   = mx;
         keyframe_drag_my   = my;
+        keyframe_dragging_mx = mx;
     }
     
     function doCopy() {
