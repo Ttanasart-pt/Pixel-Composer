@@ -4,16 +4,20 @@ function Node_Vector_Cart_To_Polar(_x, _y, _group = noone) : Node_Processor(_x, 
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValue_Vec2( "Cartesian Coord", [0,0] )).setVisible(true, true);
-	
 	////- =Vector
+	newInput( 0, nodeValue_Vec2( "Cartesian Coord",  [0,0] )).setVisible(true, true);
+	newInput( 3, nodeValue_Vec2( "Cartesian Origin", [0,0] ));
+	
+	////- =Settings
 	newInput( 1, nodeValue_EButton( "Angle Unit", 0, [ "Degrees", "Radians" ]))
 	newInput( 2, nodeValue_Bool(    "Invert Y",   false ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Polar Coord", VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
-	input_display_list = [ 0, 
-		[ "Vector", false ], 1, 2 
+	input_display_list = [ 
+		[ "Vector",   false ], 0, 3, 
+		[ "Settings", false ], 1, 2 
 	];
 	
 	////- Node
@@ -21,12 +25,14 @@ function Node_Vector_Cart_To_Polar(_x, _y, _group = noone) : Node_Processor(_x, 
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 		#region data
 			var _car = _data[0];
+			var _ori = _data[3];
+			
 			var _rad = _data[1];
 			var _inv = _data[2];
 		#endregion
 		
-		var _x = _car[0];
-		var _y = _car[1];
+		var _x = _car[0] - _ori[0];
+		var _y = _car[1] - _ori[1];
 		if(_inv) _y = -_y;
 		
 		var _len = point_distance(0, 0, _x, _y);
