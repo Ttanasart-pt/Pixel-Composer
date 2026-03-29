@@ -64,8 +64,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var _ip = array_safe_get(inputs, dimension_index, noone);
 		
-		     if(is(_ip, __NodeValue_Surface))   return surface_get_dimension(getInputSingle(dimension_index, arr));
-		else if(is(_ip, __NodeValue_Dimension)) return getInputSingle(dimension_index, arr);
+	    if(is(_ip, __NodeValue_Surface)) {
+	     	var _surf = getInputSingle(dimension_index, arr);
+			return is_surface(_surf)? surface_get_dimension(_surf) : PROJ_SURF;
+			
+	    } else if(is(_ip, __NodeValue_Dimension)) return getInputSingle(dimension_index, arr);
 		
 		return PROJ_SURF;
 	} 
