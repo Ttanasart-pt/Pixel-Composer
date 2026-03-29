@@ -165,7 +165,7 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 				var _posIndx   = _lif;
 				
 				if(!_act) { // draw end trail
-					if(_trailLife + _lifMax >= TOTAL_FRAMES) continue;
+					if(_trailLife + _lifMax > TOTAL_FRAMES) continue;
 					_trailLife = min(_trailLife, _lifMax - (_lif - _trailLife) - 1);
 					_posIndx   = _lifMax - 1;
 				}

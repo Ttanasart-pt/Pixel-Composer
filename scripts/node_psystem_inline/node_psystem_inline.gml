@@ -41,7 +41,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		array_foreach(nodes, function(n) /*=>*/ { if(has(n, "reset")) n.reset(); });
 		
 		var _loop = getInputData(0);
-		var _prer = getInputData(2); if(_prer == -1) _prer = TOTAL_FRAMES - 1;
+		var _prer = getInputData(2); if(_prer == -1) _prer = TOTAL_FRAMES;
 		if(!_loop) return;
 		
 		if(!IS_PLAYING && !IS_FRAME_PROGRESS) { 
@@ -52,7 +52,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		prerendering = true;
 		
 		for(var i = TOTAL_FRAMES - _prer; i < TOTAL_FRAMES; i++)
-		for( var j = 0, m = array_length(topoList); j < m; j++ ) {
+		for( var j = 0, m = array_length(topoList); j < m; j++  ) {
 			var node = topoList[j];
 			if(!node.active) continue;
 			

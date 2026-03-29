@@ -54,8 +54,9 @@ function loadColor(theme = "default") {
 	_loadColor(theme);
 	_loadThemeParameter(theme);
 	
-	CARRAY.button_positive = [COLORS._main_icon, COLORS._main_value_positive];
-	CARRAY.button_negative = [COLORS._main_icon, COLORS._main_value_negative];
+	CARRAY.button_light    = [ COLORS._main_icon, COLORS._main_icon_light     ];
+	CARRAY.button_positive = [ COLORS._main_icon, COLORS._main_value_positive ];
+	CARRAY.button_negative = [ COLORS._main_icon, COLORS._main_value_negative ];
 }
 
 function _loadColorStringParse(str) {

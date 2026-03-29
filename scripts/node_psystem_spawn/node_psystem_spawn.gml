@@ -564,6 +564,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			destroyTrigUse = outputs[3].hasJunctionTo();
 		#endregion	
 		
+		// print($"PARTICLE STEP [{inline_context.prerendering}] [{_frame}]")
 		partStep();
 		
 		if(_sp_type == 2 && _sp_trig) {
