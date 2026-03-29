@@ -82,25 +82,26 @@ function Node_pSystem_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			var _strn_mod = _strn_curved? curve_strn.get(rat) : 1;
 			var _strn_cur = random_range(_strn[0], _strn[1]) * _strn_mod;
 			
-			if(random(1) < _strn_cur * _mask) {
-				var _dfg      = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
-				var _draw_x   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
-				var _draw_y   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
-				
-				var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64  );
-				var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64  );
-						
-				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, false );
-				
-				buffer_write(destroyTrig, buffer_f64, _draw_x);
-				buffer_write(destroyTrig, buffer_f64, _draw_y);
-				buffer_write(destroyTrig, buffer_f64,       0);
-				
-				buffer_write(destroyTrig, buffer_f64, _vx);
-				buffer_write(destroyTrig, buffer_f64, _vy);
-				buffer_write(destroyTrig, buffer_f64,   0);
-				destroyCount++;
-			}
+			if(random(1) > _strn_cur * _mask) continue;
+			
+			var _dfg      = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+			var _draw_x   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
+			var _draw_y   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
+			
+			var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64  );
+			var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64  );
+					
+			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, false );
+			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64,  _lif  );
+			
+			buffer_write(destroyTrig, buffer_f64, _draw_x);
+			buffer_write(destroyTrig, buffer_f64, _draw_y);
+			buffer_write(destroyTrig, buffer_f64,       0);
+			
+			buffer_write(destroyTrig, buffer_f64, _vx);
+			buffer_write(destroyTrig, buffer_f64, _vy);
+			buffer_write(destroyTrig, buffer_f64,   0);
+			destroyCount++;
 		}
 		
 		buffer_write_at(destroyTrig, 0, buffer_u32, destroyCount);
