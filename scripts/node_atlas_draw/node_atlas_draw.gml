@@ -32,7 +32,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	draw_transforms = [0,0,1,1,0];
 	static drawOverlayTransform = function(_n) /*=>*/ {return draw_transforms};
 	
-	static getDimension = function(arr = 0) { return [1,1]; } 
+	static getDimension = function() /*=>*/ {return DEF_SURF};
 	
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		#region data

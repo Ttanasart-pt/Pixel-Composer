@@ -731,19 +731,19 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Nodes
 	
 	static getDimension = function(arr = 0) {
+		var surf = getInputSingle( 0, arr);
+		if(!is_surface(surf)) return DEF_SURF;
+		
 		var _out_type = inputs[9].getValue();
 		var ww = 1, hh = 1;
 		
 		switch(_out_type) {
 			case OUTPUT_SCALING.same_as_input :
-				var surf = getInputSingle( 0, arr);
-				
 				ww = surface_get_width_safe(surf);
 				hh = surface_get_height_safe(surf);
 				break;
 				
 			case OUTPUT_SCALING.relative :
-				var surf = getInputSingle( 0, arr);
 				var dSca = getInputSingle(15, arr);
 				
 				ww = surface_get_width_safe(surf)  * dSca[0];
@@ -758,7 +758,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 				
 			case OUTPUT_SCALING.scale :	
-				var surf = getInputSingle( 0, arr);
 				var rot  = getInputSingle( 5, arr);
 				var sca  = getInputSingle( 6, arr);
 				

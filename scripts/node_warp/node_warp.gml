@@ -50,6 +50,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static getDimension = function(arr = 0) {
 		var _surfF  = getInputSingle(0);
+		if(!is_surface(_surfF)) return DEF_SURF;
+		
 		var _dimTyp = getInputSingle(6);
 		var _dim    = getInputSingle(7);
 		var _sdim   = getInputSingle(9);

@@ -39,7 +39,7 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(_type == 0) return getInputSingle(2);
 		
 		var _surf = getInputSingle(0);
-		if(!is_surface(_surf)) return [1,1];
+		if(!is_surface(_surf)) return DEF_SURF;
 		
 		var _amo  = getInputSingle(3);
 		var _idim = surface_get_dimension(_surf);
