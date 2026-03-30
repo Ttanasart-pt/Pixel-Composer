@@ -494,6 +494,7 @@ function Panel_Preview() : PanelContent() constructor {
         	d3_camera.projection = CAMERA_PROJECTION.perspective;
             d3_camera_preview    = d3_camera;
             d3_camera.setFocusAngle(135, 45, 4);
+            d3_camera_dist = d3_camera.focus_dist;
             
             d3_camW          = 1;
             d3_camH          = 1;
@@ -975,10 +976,12 @@ function Panel_Preview() : PanelContent() constructor {
                 canvas_zoom_m   = my;
             }
             
-            if(!key_mod_press_any() && MOUSE_WHEEL != 0)
-            	d3_camera.focus_dist = clamp(d3_camera.focus_dist * (1 - d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
+            if(!key_mod_press_any() && MOUSE_WHEEL != 0) 
+            	d3_camera_dist = clamp(d3_camera_dist * (1 - d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
         }
         
+    	d3_camera.focus_dist = lerp_float(d3_camera.focus_dist, d3_camera_dist, 3);
+    	
         canvas_dragging_key = false;
         canvas_zooming_key  = false;
         canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
@@ -1171,7 +1174,7 @@ function Panel_Preview() : PanelContent() constructor {
             var _bs = ts - pd * 2;
             
             if(tool == -1) {
-                draw_set_color(CDEF.main_dkblack);
+                draw_set_color(CDEF.main_dark);
                 draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
@@ -1279,7 +1282,7 @@ function Panel_Preview() : PanelContent() constructor {
         	
         	if(_draw_sep == false) {
             	var _y0  = yy - ts2;
-        		draw_set_color(CDEF.main_dkblack);
+        		draw_set_color(CDEF.main_dark);
                 draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
@@ -1393,7 +1396,7 @@ function Panel_Preview() : PanelContent() constructor {
             var _bs  = ts - pd * 2;
             
             if(tool == -1) {
-                draw_set_color(CDEF.main_dkblack);
+                draw_set_color(CDEF.main_dark);
                 draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
@@ -2083,13 +2086,15 @@ function Panel_Preview() : PanelContent() constructor {
                 var _tx   = round(d3_camera_preview.focus.x);
                 var _ty   = round(d3_camera_preview.focus.y);
             
-                var _scale = _dist * 2;
-                while(_scale > 32) _scale /= 2;
-                print(_dist)
+                var _scale = _dist * 8;
+                while(_scale > 64) _scale /= 4;
                 
-                shader_set_f("axisBlend", _blend);
-                shader_set_f("scale", _scale);
-                shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
+                var _fade = max(.5, 1 - power(_scale / 64, 2));
+                
+                shader_set_f( "axisBlend", _blend );
+                shader_set_f( "scale",     _scale );
+                shader_set_f( "fade",      _fade  );
+                shader_set_f( "shift",     _tx / _dist / 2, _ty / _dist / 2 );
                 draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
             shader_reset();
             

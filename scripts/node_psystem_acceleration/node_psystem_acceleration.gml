@@ -85,13 +85,27 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 			var _acel_mod = _acel_curved? curve_acel.get(rat) : 1;
 			var _acel_cur = random_range(_acel[0], _acel[1]) * _acel_mod;
 			
-			var _ds = point_distance(  0, 0, _vpx, _vpy );
-			var _dr = point_direction( 0, 0, _vpx, _vpy );
+			// Direct move
+			var _dx = _px - _ppx;
+			var _dy = _py - _ppy;
 			
-			if(_ds == 0) continue;
+			var _ds = point_distance(  0, 0, _dx, _dy );
+			var _dr = point_direction( 0, 0, _dx, _dy );
 			
-			_vx += lengthdir_x(_acel_cur * _mask, _dr);
-			_vy += lengthdir_y(_acel_cur * _mask, _dr);
+			_ds = max(0, _ds + _acel_cur * _mask);
+			_dx = lengthdir_x(_ds, _dr);
+			_dy = lengthdir_y(_ds, _dr);
+			
+			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _ppx + _dx );
+			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _ppy + _dy );
+			
+			// Vector move
+			var _ds = point_distance(  0, 0, _vx, _vy );
+			var _dr = point_direction( 0, 0, _vx, _vy );
+			
+			_ds = max(0, _ds + _acel_cur * _mask);
+			_vx = lengthdir_x(_ds, _dr);
+			_vy = lengthdir_y(_ds, _dr);
 			
 			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
 			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );

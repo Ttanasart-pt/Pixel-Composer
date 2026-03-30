@@ -9,6 +9,7 @@ varying float v_distanceToCamera;
 varying vec3 v_worldPosition;
 
 uniform float scale;
+uniform float fade;
 uniform vec2  shift;
 
 uniform float axisBlend;
@@ -25,16 +26,20 @@ void main() {
     float minx  = min(dev.x, 1.);
     
     float linea = 1. - min(line, 1.);
-    float alpha = 1. - length(cen);
-    vec4 color  = vec4(.6, .6, .6, linea * alpha);
+    float alpha = length(cen) * 2.;
+          alpha = 1. - alpha * alpha;
 	
-    // y axis
-    if(pos.x > -1. * minx / scale && pos.x < 1. * minx / scale)
-    	color = vec4(0., 1., 0., linea * axisBlend * min(1., alpha * 2.));
-        
-    // x axis
-    if(pos.y > -1. * miny / scale && pos.y < 1. * miny / scale)
-    	color = vec4(1., 0., 0., linea * axisBlend * min(1., alpha * 2.));
+    float g = .6;
+    float a = linea * fade;
+    
+         if(mod(abs(pos.x) * scale, 4.) < minx) { a += .4; }
+    else if(mod(abs(pos.y) * scale, 4.) < miny) { a += .4; }
+    
+    vec4 color  = vec4(g, g, g, a * alpha);
+	
+	linea = 1.2 - min(line, 1.2);
+    if(abs(pos.x) * scale < minx) color = vec4(0., 1., 0., linea * axisBlend * min(1., alpha * 2.));
+    if(abs(pos.y) * scale < miny) color = vec4(1., 0., 0., linea * axisBlend * min(1., alpha * 2.));
 	
     gl_FragColor = color;
 }
