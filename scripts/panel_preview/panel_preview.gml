@@ -483,6 +483,10 @@ function Panel_Preview() : PanelContent() constructor {
         d3_deferData         = noone;
         d3_drawBG            = false;
         
+        d3_mousex = undefined;
+        d3_mousey = undefined;
+        d3_mousez = undefined;
+        
         global.SKY_SPHERE    = new __3dUVSphere(.5, 16, 8, true);
         
         #region camera
@@ -1167,7 +1171,7 @@ function Panel_Preview() : PanelContent() constructor {
             var _bs = ts - pd * 2;
             
             if(tool == -1) {
-                draw_set_color(COLORS._main_icon_dark);
+                draw_set_color(CDEF.main_dkblack);
                 draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
@@ -1275,7 +1279,7 @@ function Panel_Preview() : PanelContent() constructor {
         	
         	if(_draw_sep == false) {
             	var _y0  = yy - ts2;
-        		draw_set_color(COLORS._main_icon_dark);
+        		draw_set_color(CDEF.main_dkblack);
                 draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
@@ -1389,7 +1393,7 @@ function Panel_Preview() : PanelContent() constructor {
             var _bs  = ts - pd * 2;
             
             if(tool == -1) {
-                draw_set_color(COLORS._main_icon_dark);
+                draw_set_color(CDEF.main_dkblack);
                 draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
@@ -2283,10 +2287,17 @@ function Panel_Preview() : PanelContent() constructor {
 	            if(!window_has_focus()) _cc_fps = CDEF.main_mdwhite; 
 	            
 	            var _cc_fra  = frac(GLOBAL_CURRENT_FRAME) == 0? CDEF.main_mdwhite : COLORS._main_value_negative; 
+	            var mpx, mpy, _txt_mou = undefined;
 	            
-	            var mpx = floor((mx - canvas_x) / canvas_s);
-	            var mpy = floor((my - canvas_y) / canvas_s);
-	            var _txt_mou = $"[{mpx}, {mpy}]";
+	            if(d3_active == NODE_3D.none) {
+		            mpx = floor((mx - canvas_x) / canvas_s);
+		            mpy = floor((my - canvas_y) / canvas_s);
+		            _txt_mou = $"[{mpx}, {mpy}]";
+		            
+	            } else if(d3_mousex != undefined) {
+	            	_txt_mou = $"[{d3_mousex}, {d3_mousey}, {d3_mousez}]";
+	            }
+	            
 	            var _txt_sel = $"[{selecting_w}, {selecting_h}]";
 	            var _txt_ses = $"[{selection_x1 - selection_x0}, {selection_y1 - selection_y0}]";
 			#endregion
@@ -2358,6 +2369,19 @@ function Panel_Preview() : PanelContent() constructor {
                         draw_text(right_menu_x, right_menu_y, _txt_surf);
                     	
                         right_menu_y += _lh;
+                    }
+                
+                } else {
+                    if(pHOVER) {
+                    	if(_txt_mou != undefined) {
+		                    right_menu_y += _lh; 
+		                    draw_text(right_menu_x, right_menu_y, _txt_mou);
+                    	}
+	                    
+	                	if(mouse_pos_string != "") {
+	                        right_menu_y += _lh; 
+	                        draw_text(right_menu_x, right_menu_y, mouse_pos_string);
+	                    }
                     }
                 }
                 
@@ -2475,10 +2499,34 @@ function Panel_Preview() : PanelContent() constructor {
                         draw_text_add(rx, ry, _txt_surf); 
                         rx -= tw + ui(2); 
                     }
+            	
+            	} else {
+            		draw_set_text(f_p4, fa_right, fa_top, CDEF.main_mdwhite);
+	            	rx  = right_menu_x;
+	            	ry += lh + ui(2);
+	            	
+                    if(pHOVER) {
+                    	if(_txt_mou != undefined) {
+			            	var tw = string_width(_txt_mou) + ui(8);
+		                	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+		                    draw_text_add(rx, ry, _txt_mou); 
+		                    rx -= tw + ui(2); 
+                    	}
+                    	
+	                    if(mouse_pos_string != "") {
+	                    	var tw = string_width(mouse_pos_string) + ui(8);
+	                    	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+	                        draw_text_add(rx, ry, mouse_pos_string); 
+	                        rx -= tw + ui(2); 
+	                    }
+                    }
             	}
             }
         }
         
+        d3_mousex = undefined;
+        d3_mousey = undefined;
+        d3_mousez = undefined;
         mouse_pos_string = "";
         right_menu_x = w - ui(8);
     }

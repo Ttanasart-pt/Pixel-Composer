@@ -409,7 +409,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_drawLayer_edit = new buttonGroup( array_create(3, THEME.canvas_draw_layer), function(v) /*=>*/ { tool_attribute.drawLayer = v; })
 									.setTooltips( [ "Draw on top", "Draw behind", "Draw inside" ] )
-									.setCollape(false);
+									.setCollapse(false);
 		
 		tool_mirror_edit    = new checkBoxGroup( THEME.canvas_mirror, function(v,i) /*=>*/ { tool_attribute.mirror[i] = v; })
 									.setTooltips( [ "Mirror diagonal", "Mirror", "Mirror" ] );
@@ -438,20 +438,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_fil8_edit      = new buttonGroup( array_create(3, THEME.canvas_fill_type), function(v) /*=>*/ { tool_attribute.fillType = v; })
 									.setTooltips( [ "Edge", "Edge + Corner", "Entire image" ] )
-									.setCollape(false);
+									.setCollapse(false);
 		
 		tool_fill_use_bg    = new checkBox( function() /*=>*/ { tool_attribute.useBG = !tool_attribute.useBG; });
 		
 		tool_curve_buttons  = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_curve_bez.apply(); else tool_curve_bez.cancel(); })
-									.setCollape(false);
+									.setCollapse(false);
 		
 		tool_isoangle       = new buttonGroup( array_create(2, THEME.canvas_iso_angle), function(v) /*=>*/ { tool_attribute.iso_angle = v; })
 									.setTooltips( [ "2:1", "1:1" ] )
-									.setCollape(false);
+									.setCollapse(false);
 		
 		tool_dither         = new buttonGroup( array_create(4, THEME.canvas_dither), function(v) /*=>*/ { tool_attribute.dither = v; })
 									.setTooltips( [ "No Dithering", "Bayer 2", "Bayer 4", "Bayer 8" ] )
-									.setCollape(false);
+									.setCollapse(false);
 									
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -568,7 +568,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		__action_add_node = method(self, function(c) /*=>*/ { with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: c })) canvas = true; });
 		
 		tool_node_buttons = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) nodeTool.apply(); else nodeTool.destroy(); })
-								.setCollape(false);
+								.setCollapse(false);
 		
 		nodeTool        = noone;
 		nodeToolPreview = new NodeTool( "Apply Node", THEME.canvas_tools_node, self )
@@ -687,7 +687,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_resizer_anchor  = new buttonAnchor(noone, function(v) /*=>*/ { tool_resizer.setAnchor(v); });
 		
 		tool_resizer_buttons = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_resizer.apply(); else tool_resizer.cancel(); })
-									.setCollape(false);
+									.setCollapse(false);
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		

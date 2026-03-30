@@ -896,20 +896,6 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	#endregion
 	
 	#region ---- editor ----
-		tool_object_pos = new d3d_path_tool_position(self);
-		tool_object_rot = new d3d_path_tool_rotation(self);
-		tool_object_sca = new d3d_path_tool_scale(self);
-		
-		tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform, "Node_Path_3D" ).setToolObject(tool_object_pos);
-		tool_rot = new NodeTool( "Rotate",    THEME.tools_3d_rotate,    "Node_Path_3D" ).setToolObject(tool_object_rot);
-		tool_sca = new NodeTool( "Scale",     THEME.tools_3d_scale,     "Node_Path_3D" ).setToolObject(tool_object_sca);
-		
-		tools = [
-			tool_pos, tool_rot, tool_sca, -1, 
-			new NodeTool( "Anchor add / remove", THEME.path_tools_add       ),
-			new NodeTool( "Edit Control point",  THEME.path_tools_anchor    ),
-		];
-		
 		line_hover = -1;
 	
 		drag_point    = -1;
@@ -944,6 +930,33 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		anchor_select_cy = 0;
 	#endregion
 	
+	#region ---- tool ----
+		tool_object_pos = new d3d_path_tool_position(self);
+		tool_object_rot = new d3d_path_tool_rotation(self);
+		tool_object_sca = new d3d_path_tool_scale(self);
+		
+		tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform, "Node_Path_3D" ).setToolObject(tool_object_pos);
+		tool_rot = new NodeTool( "Rotate",    THEME.tools_3d_rotate,    "Node_Path_3D" ).setToolObject(tool_object_rot);
+		tool_sca = new NodeTool( "Scale",     THEME.tools_3d_scale,     "Node_Path_3D" ).setToolObject(tool_object_sca);
+		
+		tool_add_rem = new NodeTool( "Anchor add / remove", THEME.path_tools_add    );
+		tool_control = new NodeTool( "Edit Control point",  THEME.path_tools_anchor );
+		
+		tool_attribute.fixPlane  = 0;
+		tool_attribute.fixOffset = 0;
+		
+		tool_settings = [
+			toolSetting("", new buttonGroup(array_create(4, THEME.preview_3d_axis_plane), 
+				function(i) /*=>*/ { tool_attribute.fixPlane = i; }).setCollapse(false).iconPad(ui(6)), "fixPlane", tool_attribute, "Fix Plane"),
+			toolSetting("Offset", textBox_Number(function(t) /*=>*/ {tool_attribute.fixOffset = t;}), "fixOffset", tool_attribute),
+		];
+		
+		tools = [
+			tool_pos, tool_rot, tool_sca, -1, 
+			tool_add_rem, tool_control,
+		];
+	#endregion
+	
 	static resetDisplayList = function() {
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 		
@@ -969,11 +982,14 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {}
 	
 	static drawOverlay3D = function(active, _mx, _my, _params) {
+		var fixp   = tool_attribute.fixPlane;
+		var fixo   = tool_attribute.fixOffset;
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		
 		var _qinv  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 	
+		var _panel  = _params.panel;
 		var _camera = _params.scene.camera;
 		var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 		var ray     = _camera.viewPointToWorldRay(_mx, _my);
@@ -1009,6 +1025,10 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 						anc[_ANCHOR3.z] = round(anc[_ANCHOR3.z]);
 					}
 					
+					_panel.d3_mousex = anc[_ANCHOR3.x];
+			        _panel.d3_mousey = anc[_ANCHOR3.y];
+			        _panel.d3_mousez = anc[_ANCHOR3.z];
+					
 				} else if(drag_type == 1) { //drag control 1
 					anc[_ANCHOR3.c1x] = dx - anc[_ANCHOR3.x];
 					anc[_ANCHOR3.c1y] = dy - anc[_ANCHOR3.y];
@@ -1032,6 +1052,10 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 						}
 					}
 					
+					_panel.d3_mousex = anc[_ANCHOR3.x] + anc[_ANCHOR3.c1x];
+					_panel.d3_mousey = anc[_ANCHOR3.y] + anc[_ANCHOR3.c1y];
+					_panel.d3_mousez = anc[_ANCHOR3.z] + anc[_ANCHOR3.c1z];
+					
 				} else if(drag_type == -1) { //drag control 2
 					anc[_ANCHOR3.c2x] = dx - anc[_ANCHOR3.x];
 					anc[_ANCHOR3.c2y] = dy - anc[_ANCHOR3.y];
@@ -1054,6 +1078,11 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 							anc[_ANCHOR3.c1z] = round(anc[_ANCHOR3.c1z]);
 						}
 					}
+					
+					_panel.d3_mousex = anc[_ANCHOR3.x] + anc[_ANCHOR3.c2x];
+					_panel.d3_mousey = anc[_ANCHOR3.y] + anc[_ANCHOR3.c2y];
+					_panel.d3_mousez = anc[_ANCHOR3.z] + anc[_ANCHOR3.c2z];
+					
 				} 
 				
 				if(inp.setValue(anc))
@@ -1117,12 +1146,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				}
 			}
 			
-			var _showAnchor = true;
-			switch(_tooln) {
-				case "Weight edit" : 
-					_showAnchor = false;
-					break;
-			}
+			var _showAnchor = _tooln != "Weight edit";
 			
 			if(_showAnchor)
 			for(var i = 0; i < ansize; i++) {
@@ -1206,11 +1230,32 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		/////////////////////////////////////////////////////// TOOLS ///////////////////////////////////////////////////////
 		
 		if(anchor_hover != -1) { // dragging existing point
-			var _a = array_clone(getInputData(input_fix_len + anchor_hover));
+			var _a = getInputData(input_fix_len + anchor_hover);
+			if(drag_point == -1) {
+				if(hover_type == 0) {
+					_panel.d3_mousex = _a[_ANCHOR3.x];
+			        _panel.d3_mousey = _a[_ANCHOR3.y];
+			        _panel.d3_mousez = _a[_ANCHOR3.z];
+			        
+				} else if(hover_type == 1) {
+					_panel.d3_mousex = _a[_ANCHOR3.x] + _a[_ANCHOR3.c1x];
+					_panel.d3_mousey = _a[_ANCHOR3.y] + _a[_ANCHOR3.c1y];
+					_panel.d3_mousez = _a[_ANCHOR3.z] + _a[_ANCHOR3.c1z];
+					
+				} else if(hover_type == -1) {
+					_panel.d3_mousex = _a[_ANCHOR3.x] + _a[_ANCHOR3.c2x];
+					_panel.d3_mousey = _a[_ANCHOR3.y] + _a[_ANCHOR3.c2y];
+					_panel.d3_mousez = _a[_ANCHOR3.z] + _a[_ANCHOR3.c2z];
+					
+				}
+			}
+			
 			if(toolControl && hover_type == 0) { // Edit Anchor
 				CURSOR_SPRITE = THEME.cursor_path_anchor;
 				
 				if(mouse_lpress(active)) {
+					_a = array_clone(_a);
+					
 					if(_a[3] != 0 || _a[4] != 0 || _a[5] != 0 || _a[6] != 0 || _a[7] != 0 || _a[8] != 0) {
 						_a[3] = 0; _a[4] = 0; _a[5] = 0;
 						_a[6] = 0; _a[7] = 0; _a[8] = 0;
@@ -1226,11 +1271,16 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 						drag_point    = anchor_hover;
 						drag_type     = 1;
 						
-						drag_plane_origin = new __vec3(_a[0], _a[1], _a[2]);
-						drag_plane_normal = ray.direction.multiply(-1)._normalize();
-						drag_plane        = new __plane(drag_plane_origin, drag_plane_normal);
+						drag_plane_origin.set3(_a[0], _a[1], _a[2]);
+						switch(fixp) {
+							case 0 : drag_plane_normal = ray.direction.multiply(-1)._normalize(); break;
+							case 1 : drag_plane_normal.set3(1,0,0); break;
+							case 2 : drag_plane_normal.set3(0,1,0); break;
+							case 3 : drag_plane_normal.set3(0,0,1); break;
+						}
 						
-						var mAdj = d3d_intersect_ray_plane(ray, drag_plane);
+						drag_plane = new __plane(drag_plane_origin, drag_plane_normal);
+						var mAdj   = d3d_intersect_ray_plane(ray, drag_plane);
 						drag_point_mx = mAdj.x;
 						drag_point_my = mAdj.y;
 						drag_point_mz = mAdj.z;
@@ -1253,10 +1303,12 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					triggerRender();
 				}
 				
-			} else { // Move
+			} else { // Move control points
 				CURSOR_SPRITE = THEME.cursor_move;
 				
 				if(mouse_lpress(active)) {
+					_a = array_clone(_a);
+					
 					if(isUsingTool(2)) {
 						_a[_ANCHOR3.ind] = true;
 						inputs[input_fix_len + anchor_hover].setValue(_a);
@@ -1265,11 +1317,16 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					drag_point    = anchor_hover;
 					drag_type     = hover_type;
 					
-					drag_plane_origin = new __vec3(_a[0], _a[1], _a[2]);
-					drag_plane_normal = ray.direction.multiply(-1)._normalize();
-					drag_plane        = new __plane(drag_plane_origin, drag_plane_normal);
+					drag_plane_origin.set3(_a[0], _a[1], _a[2]);
+					switch(fixp) {
+						case 0 : drag_plane_normal = ray.direction.multiply(-1)._normalize(); break;
+						case 1 : drag_plane_normal.set3(1,0,0); break;
+						case 2 : drag_plane_normal.set3(0,1,0); break;
+						case 3 : drag_plane_normal.set3(0,0,1); break;
+					}
 					
-					var mAdj = d3d_intersect_ray_plane(ray, drag_plane);
+					drag_plane = new __plane(drag_plane_origin, drag_plane_normal);
+					var mAdj   = d3d_intersect_ray_plane(ray, drag_plane);
 					drag_point_mx = mAdj.x;
 					drag_point_my = mAdj.y;
 					drag_point_mz = mAdj.z;
@@ -1294,13 +1351,22 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		} else if(key_mod_press(CTRL) || toolEditing) {	// anchor add
 			CURSOR_SPRITE = THEME.cursor_add;
 			
+			drag_plane_origin.set3(0,0,0);
+			switch(fixp) {
+				case 0 : drag_plane_normal = ray.direction.multiply(-1)._normalize(); break;
+				case 1 : drag_plane_origin.set3(fixo,0,0); drag_plane_normal.set3(1,0,0); break;
+				case 2 : drag_plane_origin.set3(0,fixo,0); drag_plane_normal.set3(0,1,0); break;
+				case 3 : drag_plane_origin.set3(0,0,fixo); drag_plane_normal.set3(0,0,1); break;
+			}
+			
+			drag_plane = new __plane(drag_plane_origin, drag_plane_normal);
+			var mAdj = d3d_intersect_ray_plane(ray, drag_plane);
+			
+			_panel.d3_mousex = mAdj.x;
+	        _panel.d3_mousey = mAdj.y;
+	        _panel.d3_mousez = mAdj.z;
+			
 			if(mouse_lpress(active)) {
-				
-				drag_plane_origin = new __vec3();
-				drag_plane_normal = ray.direction.multiply(-1)._normalize();
-				drag_plane        = new __plane(drag_plane_origin, drag_plane_normal);
-				var mAdj = d3d_intersect_ray_plane(ray, drag_plane);
-				
 				var ind = array_length(inputs);
 				var anc = createNewInput(, mAdj.x, mAdj.y, mAdj.z, 0, 0, 0, 0, 0, 0, false);
 				

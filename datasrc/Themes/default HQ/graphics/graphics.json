@@ -233,6 +233,8 @@
     "play_all":                           { "path": "./icon/s_play_all.png",                                "s": 1, "x": 12, "y": 12 },
     "play_sound":                         { "path": "./icon/s_icon_play_sound.png",                         "s": 2, "x": 12, "y": 12 },
     "preset":                             { "path": "./icon/s_preset.png",                                  "s": 1, "x": 12, "y": 12 },
+    "preview_3d_axis_empty":              { "path": "./icon/s_preview_3d_axis_empty.png",                   "s": 4, "x": 12, "y": 12 },
+    "preview_3d_axis_plane":              { "path": "./icon/s_preview_3d_axis_plane.png",                   "s": 4, "x": 12, "y": 12 },
     "project":                            { "path": "./icon/s_project.png",                                 "s": 1, "x": 12, "y": 12 },
     "redo":                               { "path": "./icon/s_redo.png",                                    "s": 1, "x": 12, "y": 12 },
     "refresh_16":                         { "path": "./icon/s_refresh_16.png",                              "s": 1, "x":  8, "y":  8 },

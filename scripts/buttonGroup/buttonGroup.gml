@@ -21,7 +21,7 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 	static setFont      = function(ff, fc = fColor) /*=>*/ { font = ff; fColor = fc; return self; }
 	static setButton    = function(sp) /*=>*/ { buttonSpr   = sp; return self; }
 	static setTooltips  = function(tt) /*=>*/ { tooltips    = tt; return self; } 
-	static setCollape   = function(cc) /*=>*/ { collapsable = cc; return self; } 
+	static setCollapse  = function(cc) /*=>*/ { collapsable = cc; return self; } 
 	static setBlend     = function(bb) /*=>*/ { sprBlend    = bb; return self; } 
 	
 	static iconPad = function(_padd = ui(4)) {

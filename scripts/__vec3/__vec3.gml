@@ -3,6 +3,13 @@ globalvar __vec3_right;   __vec3_right   = new __vec3(0.0, 1.0, 0.0);
 globalvar __vec3_up;      __vec3_up      = new __vec3(0.0, 0.0, 1.0);
 
 function __vec3(_x = 0, _y = _x, _z = _x) constructor {
+	static set3 = function(_x = 0, _y = _x, _z = _x) {
+		x = _x;
+		y = _y;
+		z = _z;
+		return self;
+	}
+	
 	static set = function(_x = 0, _y = _x, _z = _x) {
 		if(is(_x, __vec3)) {
 			x = _x.x;

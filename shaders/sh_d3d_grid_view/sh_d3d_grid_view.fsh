@@ -19,7 +19,7 @@ void main() {
 	
     vec2  coord = pos * scale; // use the scale variable to set the distance between the lines
     vec2  dev   = fwidth(coord);
-    vec2  grid  = abs(fract(coord - 0.5) - 0.5) / dev;
+    vec2  grid  = abs(fract(coord - .5) - .5) / dev;
     float line  = min(grid.x, grid.y);
     float miny  = min(dev.y, 1.);
     float minx  = min(dev.x, 1.);
@@ -30,11 +30,11 @@ void main() {
 	
     // y axis
     if(pos.x > -1. * minx / scale && pos.x < 1. * minx / scale)
-    	color = vec4(0., 1., 0., linea * axisBlend);
+    	color = vec4(0., 1., 0., linea * axisBlend * min(1., alpha * 2.));
         
     // x axis
     if(pos.y > -1. * miny / scale && pos.y < 1. * miny / scale)
-    	color = vec4(1., 0., 0., linea * axisBlend);
+    	color = vec4(1., 0., 0., linea * axisBlend * min(1., alpha * 2.));
 	
     gl_FragColor = color;
 }

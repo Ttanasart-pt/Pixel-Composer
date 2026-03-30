@@ -386,6 +386,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		isGizmoGlobal   = false;
 		tool_settings	= [];
 		tool_attribute	= {};
+		
+		toolSetting = function(_name, _widg, _key, _attr, _tool = "") /*=>*/ {return [_name, _widg, _key, _attr, _tool]};
 	#endregion
 	
 	#region ---- 3D ----

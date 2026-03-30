@@ -873,7 +873,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	tool_attribute.moveOnly = false;
 	
 	tool_settings	= [
-		[ "Move Only", new checkBox(function() /*=>*/ { tool_attribute.moveOnly = !tool_attribute.moveOnly; }), "moveOnly", tool_attribute ],
+		toolSetting("Move Only", new checkBox(function() /*=>*/ { tool_attribute.moveOnly = !tool_attribute.moveOnly; }), "moveOnly", tool_attribute),
 	];
 		
 	////- Nodes

@@ -45,7 +45,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		tool_attribute.context = 0;
 		tool_axis_edit = new scrollBox([ "local", "global" ], function(val) /*=>*/ { tool_attribute.context = val; });
 		tool_settings  = [ 
-			[ "Axis", tool_axis_edit, "context", tool_attribute ],
+			toolSetting( "Axis", tool_axis_edit, "context", tool_attribute ),
 		];
 		
 		static getToolSettings = function() /*=>*/ {return (isUsingTool("Transform") || isUsingTool("Rotate"))? tool_settings : []};
