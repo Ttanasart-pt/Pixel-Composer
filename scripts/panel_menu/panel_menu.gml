@@ -90,12 +90,12 @@
         registerFunction("", "Addons",              "",     MOD_KEY.none, function(_dat) /*=>*/ {
             var arr = [
                 MENU_ITEMS.addons,
-                menuItem(__txtx("panel_menu_addons_key", "Key displayer"), function() /*=>*/ { if(instance_exists(addon_key_displayer)) return; instance_create_depth(0, 0, 0, addon_key_displayer); }),
+                menuItem(__txtx("panel_menu_addons_key", "Key displayer"), function() /*=>*/ {return instance_toggle(addon_key_displayer)}),
                 -1
             ];
             
             for( var i = 0, n = array_length(ADDONS); i < n; i++ )
-                array_push(arr, menuItem(ADDONS[i].name, function(_dat) /*=>*/ { addonTrigger(_dat.name); } ));
+                array_push(arr, menuItem(ADDONS[i].name, function(d) /*=>*/ {return addonTrigger(d.name)}).setParam(ADDONS[i]));
             
             return submenuCall(_dat, arr);
         }).setMenu("addon_menu", THEME.addon_icon, true)

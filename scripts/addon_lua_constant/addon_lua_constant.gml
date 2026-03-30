@@ -158,8 +158,8 @@ function __addon_lua_panel_variable(lua, panel) {
 		$"Panel.hoverable = {panel.pHOVER}\n" +
 		$"Panel.clickable = {panel.pFOCUS}\n" +
 	
-		$"Animator.frame_current = {CURRENT_FRAME}\n" + 
-		$"Animator.frame_total   = {GLOBAL_TOTAL_FRAMES}\n" + 
+		$"Animator.frame_current = {PROJECT.animator.current_frame}\n" + 
+		$"Animator.frame_total   = {PROJECT.animator.frames_total}\n" + 
 		$"Animator.frame_rate    = {PROJECT.animator.framerate}\n"
 	);
 }

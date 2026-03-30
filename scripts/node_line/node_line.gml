@@ -791,10 +791,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(_cappS == 0) {
 						_cappS  = 1;
-						_capSta = [
-							[_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0, _capP],
-							[_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0, _capP],
-						];
+						_capSta = [ [_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0, _capP],
+							        [_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0, _capP] ];
 						
 					} else if(_cappS == 1) {
 						_d = _dir + 180;
@@ -804,10 +802,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 					_d = _dir;
-					_capEnd = [
-						[_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP],
-						[_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP],
-					];
+					_capEnd = [ [_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP],
+						        [_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP] ];
 					
 					if(j)
 					if(_1px) { 
