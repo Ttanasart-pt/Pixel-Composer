@@ -59,9 +59,11 @@
     function panel_animation_separate_axis()           { CALL("animation_separate_axis");           PANEL_ANIMATION.separate_axis();         }
     function panel_animation_combine_axis()            { CALL("animation_combine_axis");            PANEL_ANIMATION.combine_axis();          }
     
-    function panel_animation_range_set_start()         { CALL("animation_range_set_start");         PANEL_ANIMATION.range_set_start();       }
-    function panel_animation_range_set_end()           { CALL("animation_range_set_end");           PANEL_ANIMATION.range_set_end();         }
-    function panel_animation_range_reset()             { CALL("animation_range_reset");             PANEL_ANIMATION.range_reset();           }
+    function panel_animation_range_set_start()         { CALL("animation_range_set_start");         PANEL_ANIMATION.range_set_start();          }
+    function panel_animation_range_set_start_s()       { CALL("animation_range_set_start_sel");     PANEL_ANIMATION.range_set_start_selected(); }
+    function panel_animation_range_set_end()           { CALL("animation_range_set_end");           PANEL_ANIMATION.range_set_end();            }
+    function panel_animation_range_set_end_s()         { CALL("animation_range_set_end_sel");       PANEL_ANIMATION.range_set_end_selected();   }
+    function panel_animation_range_reset()             { CALL("animation_range_reset");             PANEL_ANIMATION.range_reset();              }
     
     function panel_animation_reset_view()              { CALL("animation_view_reset");              PANEL_ANIMATION.resetView();             }
     
@@ -147,8 +149,10 @@
         registerFunction(an, "Separate Axis",         "", n, panel_animation_separate_axis        ).setMenu("animation_separate_axis",       )
         registerFunction(an, "Combine Axis",          "", n, panel_animation_combine_axis         ).setMenu("animation_combine_axis",        )
         
-        registerFunction(an, "Set Range Start",       "", n, panel_animation_range_set_start      ).setMenu("animation_set_range_start",     [ THEME.frame_range, 0 ])
-        registerFunction(an, "Set Range End",         "", n, panel_animation_range_set_end        ).setMenu("animation_set_range_end",       [ THEME.frame_range, 1 ])
+        registerFunction(an, "Set Start",             "", n, panel_animation_range_set_start      ).setMenu("animation_set_range_start",     [ THEME.frame_range, 0 ])
+        registerFunction(an, "Set Start at Select",   "", n, panel_animation_range_set_start_s    ).setMenu("animation_set_range_start_s",   [ THEME.frame_range, 0 ])
+        registerFunction(an, "Set End",               "", n, panel_animation_range_set_end        ).setMenu("animation_set_range_end",       [ THEME.frame_range, 1 ])
+        registerFunction(an, "Set End at Select",     "", n, panel_animation_range_set_end_s      ).setMenu("animation_set_range_end_s",     [ THEME.frame_range, 1 ])
         registerFunction(an, "Reset Range",           "", n, panel_animation_range_reset          ).setMenu("animation_reset_range",         )
         registerFunction(an, "Reset View",           "F", n, panel_animation_reset_view           ).setMenu("animation_reset_view",          )
         
@@ -289,6 +293,8 @@ function Panel_Animation() : PanelContent() constructor {
     	
     	show_hidden         = 1;
     	previous_move       = 1;
+    	
+    	__selecting_frame   = undefined;
     #endregion
     
     #region ++++ Control Buttons ++++
@@ -315,8 +321,8 @@ function Panel_Animation() : PanelContent() constructor {
     	global.menuItems_animation_summary = [
     		"animation_toggle_view_type",
     		-1,
-    		"animation_set_range_start",
-			"animation_set_range_end",
+    		"animation_set_range_start_s",
+			"animation_set_range_end_s",
 			"animation_reset_range",
 			-1,
 			"animation_marker_add",
@@ -741,9 +747,12 @@ function Panel_Animation() : PanelContent() constructor {
         #endregion
         
         #region Range
-        if(GLOBAL_FRAME_RANGE_START || GLOBAL_FRAME_RANGE_END) { 
-            var _fr_x0 = GLOBAL_FRAME_RANGE_START * timeline_scale + timeline_shift - 6;
-            var _fr_x1 = GLOBAL_FRAME_RANGE_END   * timeline_scale + timeline_shift + 2;
+        var rs = GLOBAL_FRAME_RANGE_START;
+        var re = GLOBAL_FRAME_RANGE_END;
+        
+        if(rs || re) { 
+            var _fr_x0 = rs * timeline_scale + timeline_shift - 6;
+            var _fr_x1 = re * timeline_scale + timeline_shift + 2;
             var _rng_spr = PROJECT.animator.is_simulating? THEME.ui_selection_range_sim_hori : THEME.ui_selection_range_hori;
             var _rng_clr = PROJECT.animator.is_simulating? COLORS.panel_animation_range_sim  : COLORS.panel_animation_range;
             

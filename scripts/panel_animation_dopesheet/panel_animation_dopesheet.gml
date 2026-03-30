@@ -282,19 +282,24 @@ function Panel_Animation_Dopesheet() {
         	PROJECT.animator.frame_range_end   = undefined;
         }
         
-        function range_set_start() { 
+        function range_set_start(_frame = PROJECT.animator.current_frame + 1) { 
         	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
         	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
-        	PROJECT.animator.frame_range_start = __selecting_frame; 
+        	PROJECT.animator.frame_range_start = _frame; 
         	PROJECT.animator.frame_range_end   = PROJECT.animator.frame_range_end ?? PROJECT.animator.frames_total;
         }
-        
-        function range_set_end()   { 
+        function range_set_end(_frame = PROJECT.animator.current_frame + 1)   { 
         	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
         	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
         	PROJECT.animator.frame_range_start = PROJECT.animator.frame_range_start ?? 0; 
-        	PROJECT.animator.frame_range_end   = __selecting_frame; 
+        	PROJECT.animator.frame_range_end   = _frame; 
         }
+        
+        function range_set_start_current()  { range_set_start();                  }
+        function range_set_start_selected() { range_set_start(__selecting_frame); }
+        
+        function range_set_end_current()    { range_set_end();                    }
+        function range_set_end_selected()   { range_set_end(__selecting_frame);   }
         
 	    context_selecting_item = noone;
 	    context_selecting_prop = noone;
