@@ -491,6 +491,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		drag_point_py = 0;
 		
 		transform_type = 0;
+		transform_data = [];
 		transform_minx = 0; transform_miny = 0;
 		transform_maxx = 0; transform_maxy = 0;
 		transform_cx = 0;   transform_cy = 0;
@@ -578,11 +579,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		//////////////////////////////////////////////////////// EDITING ////////////////////////////////////////////////////////
 		
 		if(transform_type > 0) { 
-			var _transform_minx = transform_minx;
-			var _transform_miny = transform_miny;
-			var _transform_maxx = transform_maxx;
-			var _transform_maxy = transform_maxy;
-			
 			if(transform_type == 5) { // move
 				var mx = _mx, my = _my;
 				
@@ -594,128 +590,138 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					my = transform_sy + lengthdir_y(diss, ang);
 				}
 				
-				var dx = mx - transform_mx;
-				var dy = my - transform_my;
+				var _dat;
+				var dx = (mx - transform_mx) / _s;
+				var dy = (my - transform_my) / _s;
 				
 				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-					p    = array_clone(getInputData(i));
-					p[@_ANCHOR.x] += dx / _s;
-					p[@_ANCHOR.y] += dy / _s;
-						
+					_dat = transform_data[i-input_fix_len];
+					p    = array_clone(_dat);
+					p[@_ANCHOR.x] += dx;
+					p[@_ANCHOR.y] += dy;
+					
 					if(inputs[i].setValue(p))
 						edited = true;
 				}
 				
-				transform_mx = mx;
-				transform_my = my;
-			
 			} else { // scale
-				var mx = (_mx - _x) / _s;
-				var my = (_my - _y) / _s;
+				var dx = (_mx - transform_mx) / _s;
+				var dy = (_my - transform_my) / _s;
+				var _dat;
+				
+				var transform_minx_n = transform_minx;
+				var transform_miny_n = transform_miny;
+				var transform_maxx_n = transform_maxx;
+				var transform_maxy_n = transform_maxy;
+				
+				var ox0 = transform_minx,   ox1 = transform_maxx;
+				var oy0 = transform_miny,   oy1 = transform_maxy;
+				
+				var orx = ox1 - ox0;
+				var ory = oy1 - oy0;
 				
 				switch(transform_type) {
 					case 1 :
 						if(key_mod_press(SHIFT)) {
-							var _dx = mx - _transform_maxx;
-							var _dy = my - _transform_maxy;
-							var _dd = max(abs(_dx), abs(_dy));
-						
-							mx = _transform_maxx + _dd * sign(_dx);
-							my = _transform_maxy + _dd * sign(_dy);
+							var ss = max(abs(((ox1) - (ox0 + dx)) / orx), abs(((oy1) - (oy0 + dy)) / ory));
+							var sx = ox1 - orx * ss;
+							var sy = oy1 - ory * ss;
+							
+							dx = sx - ox0;
+							dy = sy - oy0;
 						}
 						
-						transform_minx = mx;
-						transform_miny = my;
+						transform_minx_n = ox0 + dx;
+						transform_miny_n = oy0 + dy;
 						
 						if(key_mod_press(ALT)) {
-							transform_maxx = transform_cx - (mx - transform_cx);
-							transform_maxy = transform_cy - (my - transform_cy);
+							transform_maxx_n = ox1 - dx;
+							transform_maxy_n = oy1 - dy;
 						}
 						break;
 						
 					case 2 :
 						if(key_mod_press(SHIFT)) {
-							var _dx = mx - _transform_minx;
-							var _dy = my - _transform_maxy;
-							var _dd = max(abs(_dx), abs(_dy));
-						
-							mx = _transform_minx + _dd * sign(_dx);
-							my = _transform_maxy + _dd * sign(_dy);
+							var ss = max(abs(((ox1 + dx) - (ox0)) / orx), abs(((oy1) - (oy0 + dy)) / ory));
+							var sx = ox0 + orx * ss;
+							var sy = oy1 - ory * ss;
+							
+							dx = sx - ox1;
+							dy = sy - oy0;
 						}
 					
-						transform_maxx = mx;
-						transform_miny = my;
+						transform_maxx_n = ox1 + dx;
+						transform_miny_n = oy0 + dy;
 						
 						if(key_mod_press(ALT)) {
-							transform_minx = transform_cx - (mx - transform_cx);
-							transform_maxy = transform_cy - (my - transform_cy);
+							transform_minx_n = ox0 - dx;
+							transform_maxy_n = oy1 - dy;
 						}
 						break;
 						
 					case 3 :
 						if(key_mod_press(SHIFT)) {
-							var _dx = mx - _transform_maxx;
-							var _dy = my - _transform_miny;
-							var _dd = max(abs(_dx), abs(_dy));
-						
-							mx = _transform_maxx + _dd * sign(_dx);
-							my = _transform_miny + _dd * sign(_dy);
+							var ss = max(abs(((ox1) - (ox0 + dx)) / orx), abs(((oy1 + dy) - (oy0)) / ory));
+							var sx = ox1 - orx * ss;
+							var sy = oy0 + ory * ss;
+							
+							dx = sx - ox0;
+							dy = sy - oy1;
 						}
 					
-						transform_minx = mx;
-						transform_maxy = my;
+						transform_minx_n = ox0 + dx;
+						transform_maxy_n = oy1 + dy;
 						
 						if(key_mod_press(ALT)) {
-							transform_maxx = transform_cx - (mx - transform_cx);
-							transform_miny = transform_cy - (my - transform_cy);
+							transform_maxx_n = transform_maxx_n - dx;
+							transform_miny_n = transform_miny_n - dy;
 						}
 						break;
 						
 					case 4 :
 						if(key_mod_press(SHIFT)) {
-							var _dx = mx - _transform_minx;
-							var _dy = my - _transform_miny;
-							var _dd = max(abs(_dx), abs(_dy));
-						
-							mx = _transform_minx + _dd * sign(_dx);
-							my = _transform_miny + _dd * sign(_dy);
+							var ss = max(abs(((ox1 + dx) - (ox0)) / orx), abs(((oy1 + dy) - (oy0)) / ory));
+							var sx = ox0 + orx * ss;
+							var sy = oy0 + ory * ss;
+							
+							dx = sx - ox1;
+							dy = sy - oy1;
 						}
-						
-						transform_maxx = mx;
-						transform_maxy = my;
+					
+						transform_maxx_n = ox1 + dx;
+						transform_maxy_n = oy1 + dy;
 						
 						if(key_mod_press(ALT)) {
-							transform_minx = transform_cx - (mx - transform_cx);
-							transform_miny = transform_cy - (my - transform_cy);
+							transform_minx_n = ox0 - dx;
+							transform_miny_n = oy0 - dy;
 						}
 						break;
 				}
 				
-				var  tr_rx =  transform_maxx -  transform_minx;
-				var  tr_ry =  transform_maxy -  transform_miny;
-				var _tr_rx = _transform_maxx - _transform_minx;
-				var _tr_ry = _transform_maxy - _transform_miny;
+				var nx0 = transform_minx_n, nx1 = transform_maxx_n;
+				var ny0 = transform_miny_n, ny1 = transform_maxy_n;
 				
 				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-					var p = array_clone(getInputData(i));
+					var d = transform_data[i-input_fix_len];
+					var p = array_clone(d);
 					
-					var _p2 = p[_ANCHOR.x] + p[_ANCHOR.c1x];
-					var _p3 = p[_ANCHOR.y] + p[_ANCHOR.c1y];
-					var _p4 = p[_ANCHOR.x] + p[_ANCHOR.c2x];
-					var _p5 = p[_ANCHOR.y] + p[_ANCHOR.c2y];
+					var _p2 = p[0] + p[2];
+					var _p3 = p[1] + p[3];
+					var _p4 = p[0] + p[4];
+					var _p5 = p[1] + p[5];
 					
-					p[@_ANCHOR.x] = transform_minx + (p[_ANCHOR.x] - _transform_minx) / _tr_rx * tr_rx;
-					p[@_ANCHOR.y] = transform_miny + (p[_ANCHOR.y] - _transform_miny) / _tr_ry * tr_ry;
+					p[0] = lerp(nx0, nx1, (d[0] - ox0) / orx);
+					p[1] = lerp(ny0, ny1, (d[1] - oy0) / ory);
 					
-					_p2 = transform_minx + (_p2 - _transform_minx) / _tr_rx * tr_rx;
-					_p3 = transform_miny + (_p3 - _transform_miny) / _tr_ry * tr_ry;
-					_p4 = transform_minx + (_p4 - _transform_minx) / _tr_rx * tr_rx;
-					_p5 = transform_miny + (_p5 - _transform_miny) / _tr_ry * tr_ry;
+					_p2 = lerp(nx0, nx1, (_p2 - ox0) / orx);
+					_p3 = lerp(ny0, ny1, (_p3 - oy0) / ory);
+					_p4 = lerp(nx0, nx1, (_p4 - ox0) / orx);
+					_p5 = lerp(ny0, ny1, (_p5 - oy0) / ory);
 					
-					p[@_ANCHOR.c1x] = _p2 - p[_ANCHOR.x];
-					p[@_ANCHOR.c1y] = _p3 - p[_ANCHOR.y];
-					p[@_ANCHOR.c2x] = _p4 - p[_ANCHOR.x];
-					p[@_ANCHOR.c2y] = _p5 - p[_ANCHOR.y];
+					p[2] = _p2 - p[0];
+					p[3] = _p3 - p[1];
+					p[4] = _p4 - p[0];
+					p[5] = _p5 - p[1];
 					
 					if(inputs[i].setValue(p))
 						edited = true;
@@ -723,7 +729,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 			if(edited) UNDO_HOLDING = true;
-				
+			
 			if(mouse_lrelease()) {
 				transform_type = 0;
 				UNDO_HOLDING   = false;
@@ -1524,6 +1530,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 					transform_cx   = (transform_minx + transform_maxx) / 2; 
 					transform_cy   = (transform_miny + transform_maxy) / 2;
+					
+					transform_data = [];
+					for( var i = input_fix_len; i < array_length(inputs); i++ )
+						transform_data[i - input_fix_len] = array_clone(inputs[i].getValue());
 				}
 				break;
 				

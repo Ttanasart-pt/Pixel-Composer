@@ -1,7 +1,7 @@
 function Node_Array_Transpose(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Transpose";
 	setDimension(96, 48);
-	setDrawIcon(s_node_array_flattern);
+	setDrawIcon(s_node_array_transpose);
 	
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
