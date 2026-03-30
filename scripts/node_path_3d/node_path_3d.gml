@@ -833,6 +833,7 @@
 function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Path 3D";
 	is_3D = NODE_3D.polygon;
+	preview_select_surface = false;
 	setDrawIcon(s_node_path_3d);
 	setDimension(96, 48);
 	
@@ -977,6 +978,9 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 		var ray     = _camera.viewPointToWorldRay(_mx, _my);
 		var _tooln  = getUsingToolName();
+		
+		var toolEditing = _tooln == "Anchor add / remove";
+		var toolControl = _tooln == "Edit Control point";
 		
 		/////////////////////////////////////////////////////// EDIT ///////////////////////////////////////////////////////
 		
@@ -1201,13 +1205,12 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		/////////////////////////////////////////////////////// TOOLS ///////////////////////////////////////////////////////
 		
-		if(anchor_hover != -1) { // no tool, dragging existing point
+		if(anchor_hover != -1) { // dragging existing point
 			var _a = array_clone(getInputData(input_fix_len + anchor_hover));
-			if(isUsingTool(2) && hover_type == 0) {
+			if(toolControl && hover_type == 0) { // Edit Anchor
 				CURSOR_SPRITE = THEME.cursor_path_anchor;
 				
 				if(mouse_lpress(active)) {
-					
 					if(_a[3] != 0 || _a[4] != 0 || _a[5] != 0 || _a[6] != 0 || _a[7] != 0 || _a[8] != 0) {
 						_a[3] = 0; _a[4] = 0; _a[5] = 0;
 						_a[6] = 0; _a[7] = 0; _a[8] = 0;
@@ -1237,7 +1240,8 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 						drag_point_sz = _a[2];
 					}
 				}
-			} else if(hover_type == 0 && key_mod_press(SHIFT)) { //remove
+				
+			} else if(hover_type == 0 && (toolEditing || key_mod_press(SHIFT))) { // Remove
 				CURSOR_SPRITE = THEME.cursor_remove;
 				
 				if(mouse_lpress(active)) {
@@ -1248,7 +1252,8 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					resetDisplayList();
 					triggerRender();
 				}
-			} else {
+				
+			} else { // Move
 				CURSOR_SPRITE = THEME.cursor_move;
 				
 				if(mouse_lpress(active)) {
@@ -1286,7 +1291,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				}
 			}
 		
-		} else if(key_mod_press(CTRL) || _tooln == "Anchor add / remove") {	// anchor edit
+		} else if(key_mod_press(CTRL) || toolEditing) {	// anchor add
 			CURSOR_SPRITE = THEME.cursor_add;
 			
 			if(mouse_lpress(active)) {
