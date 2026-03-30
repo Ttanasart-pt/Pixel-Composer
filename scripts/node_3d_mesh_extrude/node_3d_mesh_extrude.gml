@@ -95,7 +95,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			toRefresh = false;
 		}
 		
-		_object.checkParameter( { 
+		_object.checkParameter({ 
 			smooth  : _smt,
 			
 			surface : temp_surface[0], 

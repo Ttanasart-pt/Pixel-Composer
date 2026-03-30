@@ -1003,9 +1003,13 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		if(drag_point > -1) { 
 			var mAdj = d3d_intersect_ray_plane(ray, drag_plane);
 			
-			var dx = drag_point_sx + mAdj.x - drag_point_mx;
-			var dy = drag_point_sy + mAdj.y - drag_point_my;
-			var dz = drag_point_sz + mAdj.z - drag_point_mz;
+			var dx = mAdj.x - drag_point_mx;
+			var dy = mAdj.y - drag_point_my;
+			var dz = mAdj.z - drag_point_mz;
+			
+			var vx = drag_point_sx + dx;
+			var vy = drag_point_sy + dy;
+			var vz = drag_point_sz + dz;
 			
 			if(drag_type < 2) { // move points
 				var inp = inputs[input_fix_len + drag_point];
@@ -1015,9 +1019,9 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					anc[_ANCHOR3.ind] = !anc[_ANCHOR3.ind];
 				
 				if(drag_type == 0) { //drag anchor point
-					anc[_ANCHOR3.x] = dx;
-					anc[_ANCHOR3.y] = dy;
-					anc[_ANCHOR3.z] = dz;
+					anc[_ANCHOR3.x] = vx;
+					anc[_ANCHOR3.y] = vy;
+					anc[_ANCHOR3.z] = vz;
 					
 					if(key_mod_press(CTRL)) {
 						anc[_ANCHOR3.x] = round(anc[_ANCHOR3.x]);
@@ -1030,9 +1034,9 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			        _panel.d3_mousez = anc[_ANCHOR3.z];
 					
 				} else if(drag_type == 1) { //drag control 1
-					anc[_ANCHOR3.c1x] = dx - anc[_ANCHOR3.x];
-					anc[_ANCHOR3.c1y] = dy - anc[_ANCHOR3.y];
-					anc[_ANCHOR3.c1z] = dz - anc[_ANCHOR3.z];
+					anc[_ANCHOR3.c1x] = vx - anc[_ANCHOR3.x];
+					anc[_ANCHOR3.c1y] = vy - anc[_ANCHOR3.y];
+					anc[_ANCHOR3.c1z] = vz - anc[_ANCHOR3.z];
 					
 					if(!anc[_ANCHOR3.ind]) {
 						anc[_ANCHOR3.c2x] = -anc[_ANCHOR3.c1x];
@@ -1057,9 +1061,9 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					_panel.d3_mousez = anc[_ANCHOR3.z] + anc[_ANCHOR3.c1z];
 					
 				} else if(drag_type == -1) { //drag control 2
-					anc[_ANCHOR3.c2x] = dx - anc[_ANCHOR3.x];
-					anc[_ANCHOR3.c2y] = dy - anc[_ANCHOR3.y];
-					anc[_ANCHOR3.c2z] = dz - anc[_ANCHOR3.z];
+					anc[_ANCHOR3.c2x] = vx - anc[_ANCHOR3.x];
+					anc[_ANCHOR3.c2y] = vy - anc[_ANCHOR3.y];
+					anc[_ANCHOR3.c2z] = vz - anc[_ANCHOR3.z];
 					
 					if(!anc[_ANCHOR3.ind]) {
 						anc[_ANCHOR3.c1x] = -anc[_ANCHOR3.c2x];
@@ -1085,8 +1089,20 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					
 				} 
 				
-				if(inp.setValue(anc))
-					edited = true;
+				if(inp.setValue(anc)) edited = true;
+				
+				// if(drag_type == 0)
+				// for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
+				// 	var _as = anchor_select[i];
+				// 	var inp = inputs[input_fix_len + _as];
+				// 	var anc = array_clone(inp.getValue());
+					
+				// 	anc[_ANCHOR3.x] += dx;
+				// 	anc[_ANCHOR3.y] += dy;
+				// 	anc[_ANCHOR3.z] += dz;
+					
+				// 	if(inp.setValue(anc)) edited = true;
+				// }
 			}
 			
 			if(edited) UNDO_HOLDING = true;
@@ -1350,13 +1366,14 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		} else if(key_mod_press(CTRL) || toolEditing) {	// anchor add
 			CURSOR_SPRITE = THEME.cursor_add;
+			var rz = sign(ray.direction.z);
 			
 			drag_plane_origin.set3(0,0,0);
 			switch(fixp) {
-				case 0 : drag_plane_normal = ray.direction.multiply(-1)._normalize(); break;
-				case 1 : drag_plane_origin.set3(fixo,0,0); drag_plane_normal.set3(1,0,0); break;
-				case 2 : drag_plane_origin.set3(0,fixo,0); drag_plane_normal.set3(0,1,0); break;
-				case 3 : drag_plane_origin.set3(0,0,fixo); drag_plane_normal.set3(0,0,1); break;
+				case 0 : drag_plane_normal = ray.direction.multiply(-1)._normalize();      break;
+				case 1 : drag_plane_origin.set3(fixo,0,0); drag_plane_normal.set3(rz,0,0); break;
+				case 2 : drag_plane_origin.set3(0,fixo,0); drag_plane_normal.set3(0,rz,0); break;
+				case 3 : drag_plane_origin.set3(0,0,fixo); drag_plane_normal.set3(0,0,rz); break;
 			}
 			
 			drag_plane = new __plane(drag_plane_origin, drag_plane_normal);
@@ -1422,7 +1439,6 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	        	var sy1 = panel.canvas_y + panel.selection_y1 * panel.canvas_s;
 	        	
 				anchor_select   = [];
-				
 				for( var i = 0, n = array_length(anchor_view); i < n; i++ ) {
 					var _anc = anchor_view[i];
 					

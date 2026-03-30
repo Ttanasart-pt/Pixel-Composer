@@ -45,8 +45,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 		var flevel_rg = flevel_max - flevel_min;
 		var blevel_rg = blevel_max - blevel_min;
 		
-		#region /////////////// Buffer
-		
+		#region Buffer
 			if(useH) {
 				var hgtW = hg_ww / ww;
 				var hgtH = hg_hh / hh;
@@ -217,97 +216,97 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						
-					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, 0, 1, 0, tx1, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, 0, 1, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j0,    0, 0, 1, 0, tx0, ty0,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 0, 1, 0, tx1, ty1,,, 0, 0, 255);
 								    	  	  	  					  				   
-					__vertex_buffer_add_pntc(_bS, i0, j0,    0, 0, 1, 0, tx1, ty1,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 0, 1, 0, tx0, ty0,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 0, 1, 0, tx0, ty1,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j0,    0, 0, 1, 0, tx0, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 0, 1, 0, tx1, ty0,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 0, 1, 0, tx1, ty1,,, 0, 0, 255);
 				}
 				
 				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						
-					__vertex_buffer_add_pntc(_bS, i0, j0,    0, 0, 1, 0, tx1, ty0,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i0, j0, depb, 0, 1, 0, tx0, ty0,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 0, 1, 0, tx1, ty1,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j0,    0, 0, 1, 0, tx0, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j0, depb, 0, 1, 0, tx0, ty1,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 0, 1, 0, tx1, ty0,,, 0, 0, 255);
 					
-					__vertex_buffer_add_pntc(_bS, i0, j0, depb, 0, 1, 0, tx1, ty1,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 0, 1, 0, tx0, ty0,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 0, 1, 0, tx0, ty1,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j0, depb, 0, 1, 0, tx0, ty1,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 0, 1, 0, tx1, ty1,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 0, 1, 0, tx1, ty0,,, 0, 0, 255);
 				}
 					
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						
-					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, 0, -1, 0, tx1, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, 0, -1, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 0, -1, 0, tx1, ty1,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j1,    0, 0, -1, 0, tx0, ty0,,, 0, 0, 255);
 								    				  					 				  
-					__vertex_buffer_add_pntc(_bS, i0, j1,    0, 0, -1, 0, tx1, ty1,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 0, -1, 0, tx0, ty1,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 0, -1, 0, tx0, ty0,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j1,    0, 0, -1, 0, tx0, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 0, -1, 0, tx1, ty1,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 0, -1, 0, tx1, ty0,,, 0, 0, 255);
 				}
 					
 				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
 					
-					__vertex_buffer_add_pntc(_bS, i0, j1,    0, 0, -1, 0, tx1, ty0,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 0, -1, 0, tx1, ty1,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i0, j1, depb, 0, -1, 0, tx0, ty0,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j1,    0, 0, -1, 0, tx0, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 0, -1, 0, tx1, ty0,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j1, depb, 0, -1, 0, tx0, ty1,,, 0, 0, 255);
 								    				  					 				  
-					__vertex_buffer_add_pntc(_bS, i0, j1, depb, 0, -1, 0, tx1, ty1,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 0, -1, 0, tx0, ty1,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1, depb, 0, -1, 0, tx0, ty0,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j1, depb, 0, -1, 0, tx0, ty1,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 0, -1, 0, tx1, ty0,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1, depb, 0, -1, 0, tx1, ty1,,, 0, 0, 255);
 				}
 				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
 						
-					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, -1, 0, 0, tx1, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, -1, 0, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, -1, 0, 0, tx1, ty1,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j0,    0, -1, 0, 0, tx0, ty0,,, 0, 0, 255);
 								    				  					 				  
-					__vertex_buffer_add_pntc(_bS, i0, j0,    0, -1, 0, 0, tx1, ty1,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, -1, 0, 0, tx0, ty1,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i0, j1,    0, -1, 0, 0, tx0, ty0,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j0,    0, -1, 0, 0, tx0, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, -1, 0, 0, tx1, ty1,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j1,    0, -1, 0, 0, tx1, ty0,,, 0, 0, 255);
 				}
 				
 				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
 					
-					__vertex_buffer_add_pntc(_bS, i0, j0,    0, -1, 0, 0, tx1, ty0,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i0, j1,    0, -1, 0, 0, tx1, ty1,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i0, j0, depb, -1, 0, 0, tx0, ty0,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j0,    0, -1, 0, 0, tx0, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j1,    0, -1, 0, 0, tx1, ty0,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j0, depb, -1, 0, 0, tx0, ty1,,, 0, 0, 255);
 								    				  					 				  
-					__vertex_buffer_add_pntc(_bS, i0, j0, depb, -1, 0, 0, tx1, ty1,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i0, j1,    0, -1, 0, 0, tx0, ty1,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i0, j1, depb, -1, 0, 0, tx0, ty0,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i0, j0, depb, -1, 0, 0, tx0, ty1,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j1,    0, -1, 0, 0, tx1, ty0,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j1, depb, -1, 0, 0, tx1, ty0,,, 0, 0, 255);
 				}
 				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
 					
-					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 1, 0, 0, tx1, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 1, 0, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 1, 0, 0, tx0, ty0,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 1, 0, 0, tx1, ty1,,, 0, 0, 255);
 								    				  					  				   
-					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 1, 0, 0, tx1, ty1,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 1, 0, 0, tx0, ty0,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 1, 0, 0, tx0, ty1,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 1, 0, 0, tx0, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 1, 0, 0, tx1, ty0,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 1, 0, 0, tx1, ty1,,, 0, 0, 255);
 				}
 					
 				if((useH && abs(depb) * 2 > buffer_read_at(hb_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
 					
-					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 1, 0, 0, tx1, ty0,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 1, 0, 0, tx0, ty0,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 1, 0, 0, tx1, ty1,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 1, 0, 0, tx0, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 1, 0, 0, tx0, ty1,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 1, 0, 0, tx1, ty0,,, 0, 0, 255);
 								    				  					  				   
-					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 1, 0, 0, tx1, ty1,,, 255, 0, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1, depb, 1, 0, 0, tx0, ty0,,, 0, 255, 0);
-					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 1, 0, 0, tx0, ty1,,, 0, 0, 255);
+					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 1, 0, 0, tx0, ty1,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1, depb, 1, 0, 0, tx1, ty1,,, 0, 255, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 1, 0, 0, tx1, ty0,,, 0, 0, 255);
 				}
 				
 			} else {
@@ -315,7 +314,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						
-					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, 0, 1, 0, tx1, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, 0, 1, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j0, depb, 0, 1, 0, tx0, ty0,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 0, 1, 0, tx1, ty1,,, 0, 0, 255);
 								    	  	  	  					  								
@@ -327,10 +326,10 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
 					
-					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, 0, -1, 0, tx1, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, 0, -1, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 0, -1, 0, tx1, ty1,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j1, depb, 0, -1, 0, tx0, ty0,,, 0, 0, 255);
-								    				  					 				  
+					
 					__vertex_buffer_add_pntc(_bS, i0, j1, depb, 0, -1, 0, tx0, ty0,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 0, -1, 0, tx1, ty1,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1, depb, 0, -1, 0, tx1, ty0,,, 0, 0, 255);
@@ -339,7 +338,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				if((useH && dep * 2 > buffer_read_at(h_buff, (max(0, round((i - 1) * hgtW)) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == 0 || buffer_read_at(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
 						
-					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, -1, 0, 0, tx1, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, -1, 0, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, -1, 0, 0, tx1, ty1,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j0, depb, -1, 0, 0, tx0, ty0,,, 0, 0, 255);
 								    				  					 				  
@@ -351,7 +350,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				if((useH && dep * 2 > buffer_read_at(h_buff, (min(round((i + 1) * hgtW), hg_ww - 1 ) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (i == ww - 1 || buffer_read_at(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
 					
-					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 1, 0, 0, tx1, ty0,,, 255, 0, 0);
+					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 1, 0, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 1, 0, 0, tx0, ty0,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 1, 0, 0, tx1, ty1,,, 0, 0, 255);
 								    				  					  							
