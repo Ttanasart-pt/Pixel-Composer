@@ -322,7 +322,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 0, 1, 0, tx1, ty0,,, 0, 255, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 0, 1, 0, tx1, ty1,,, 0, 0, 255);
 				}
-					
+				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + min(round((j + 1) * hgtH), hg_hh - 1) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == hh - 1 || buffer_read_at(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
 					

@@ -2067,6 +2067,11 @@ function Panel_Preview() : PanelContent() constructor {
             surface_set_target_ext(2, d3_surface_depth);
             surface_set_target_ext(3, d3_surface_uv);
             
+            var vn = d3_camera_preview.view_near;
+			var vf = d3_camera_preview.view_far;
+            d3_camera_preview.view_near = 0.01;
+			d3_camera_preview.view_far  = 10000;
+            d3_camera_preview.setMatrix();
             d3_camera_preview.applyCamera();
             
             gpu_set_ztestenable(true);
@@ -2080,6 +2085,7 @@ function Panel_Preview() : PanelContent() constructor {
             
                 var _scale = _dist * 2;
                 while(_scale > 32) _scale /= 2;
+                print(_dist)
                 
                 shader_set_f("axisBlend", _blend);
                 shader_set_f("scale", _scale);
@@ -2090,6 +2096,9 @@ function Panel_Preview() : PanelContent() constructor {
             gpu_set_zwriteenable(true);
             
             d3_scene_preview.reset();
+            d3_camera_preview.view_near = vn;
+			d3_camera_preview.view_far  = vf;
+			d3_camera_preview.setMatrix();
             d3_scene_preview.setRendering();
             
             if(d3_scene_preview == d3_scene) {
