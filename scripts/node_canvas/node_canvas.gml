@@ -1601,7 +1601,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[ 8].setVisible(_bgTyp == 0);
 			inputs[14].setVisible(_bgTyp == 0);
 			
-			_bgr &= is_surface(_bgSrf);
+			_bgr = _bgr && is_surface(_bgSrf);
 		#endregion
 		
 		#region brush
