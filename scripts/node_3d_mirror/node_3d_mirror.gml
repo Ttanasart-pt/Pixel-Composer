@@ -1,25 +1,37 @@
 function Node_3D_Mirror(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name  = "Mirror 3D";
-	
 	gizmo_object = [ new __3dGizmoPlane() ];
 	
 	var i = in_d3d;
-	newInput(i+0, nodeValue_D3Mesh(      "Mesh" ));
-	newInput(i+1, nodeValue_Enum_Button( "Axis", 0, [ "X", "Y", "Z" ] ));
-	// i+2
+	newInput(i+0, nodeValue_D3Mesh(  "Mesh" ));
+	
+	////- =Plane
+	newInput(i+1, nodeValue_EButton( "Axis", 0, [ "X", "Y", "Z" ] ));
+	
+	////- =Mirror
+	newInput(i+2, nodeValue_Bool( "Show Original", false ));
+	// i+3
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	
 	input_display_list = [ i+0, 
-		[ "Mirror Plane", false ], i+1, 0, 
+		[ "Plane",  false ], i+1, 0, 
+		[ "Mirror", false ], i+2
 	];
 	
+	////- Node
+	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
-		var _mesh = _data[in_d3d + 0];
-		if(!is(_mesh, __3dInstance)) return noone;
-		
-		var _axis = _data[in_d3d + 1];
-		var _pos  = _data[0];
+		#region data
+			var _mesh = _data[in_d3d + 0];
+			
+			var _pos  = _data[0];
+			var _axis = _data[in_d3d + 1];
+			
+			var _orig = _data[in_d3d + 2];
+			
+			if(!is(_mesh, __3dInstance)) return noone;
+		#endregion
 		
 		var _mrot;
 		switch(_axis) {
@@ -38,6 +50,8 @@ function Node_3D_Mirror(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#endregion
 		
 		var _scene = new __3dMirrored(_mesh);
+		_scene.showOriginal   = _orig;
+		_scene.combinedOrigin = _pos;
 		
 		switch(_axis) {
 			case 0 : _scene.transform.position.set(_pos[0] * 2, 0, 0);
@@ -51,7 +65,6 @@ function Node_3D_Mirror(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		}
 		
 		_scene.transform.applyMatrix();
-		
 		return _scene;
 	}
 	
@@ -61,6 +74,9 @@ function Node_3D_Mirror(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 
 function __3dMirrored(_object = noone) : __3dInstance() constructor {
 	object = _object;
+	
+	showOriginal   = false;
+	combinedOrigin = [0,0,0];
 	
 	static getCenter = function() { return object.getCenter().add(transform.position); }
 	
@@ -94,9 +110,9 @@ function __3dMirrored(_object = noone) : __3dInstance() constructor {
 		}
 	}
 	
-	static submit       = function(_sc = {}, _sh = noone) /*=>*/ { submitTran(); object.submit(_sc, _sh);       clearTran(); }
-	static submitSel    = function(_sc = {}, _sh = noone) /*=>*/ { submitTran(); object.submitSel(_sc, _sh);    clearTran(); }
-	static submitShader = function(_sc = {}, _sh = noone) /*=>*/ { submitTran(); object.submitShader(_sc, _sh); clearTran(); }
+	static submit       = function(_sc = {}, _sh = noone) /*=>*/ { submitTran(); object.submit(_sc, _sh);       clearTran(); if(showOriginal) object.submit(_sc, _sh);       }
+	static submitSel    = function(_sc = {}, _sh = noone) /*=>*/ { submitTran(); object.submitSel(_sc, _sh);    clearTran(); if(showOriginal) object.submitSel(_sc, _sh);    }
+	static submitShader = function(_sc = {}, _sh = noone) /*=>*/ { submitTran(); object.submitShader(_sc, _sh); clearTran(); if(showOriginal) object.submitShader(_sc, _sh); }
 	static submitShadow = function(_sc = {}, _ob = noone) /*=>*/ { object.submitShadow(_sc, _ob); }
 	
 	static clone = function(vertex = true, cloneBuffer = false) {
