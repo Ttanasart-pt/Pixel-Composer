@@ -27,12 +27,12 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(17, nodeValue_Slider(   "Progress",     .5     ));
 	
 	////- =Render
-	newInput( 3, nodeValue_Enum_Button( "Type",       0, [ "Solid", "Smooth", "AA" ] ));
-	newInput( 6, nodeValue_Enum_Button( "Coloring",   0, [ "Alternate", "Palette", "Random" ] ));
-	newInput( 7, nodeValue_Gradient(    "Colors",     gra_white )).setMappable(15);
-	newInput( 8, nodeValue_Color(       "Color 1",    ca_white  ));
-	newInput( 9, nodeValue_Color(       "Color 2",    ca_black  ));
-	newInput(18, nodeValue_Palette(     "Colors",  [ c_black, c_white ] ));
+	newInput( 3, nodeValue_Enum_Button( "Type",      0, [ "Solid", "Smooth", "AA" ] ));
+	newInput( 6, nodeValue_Enum_Button( "Coloring",  0, [ "Alternate", "Palette", "Random" ] ));
+	newInput( 7, nodeValue_Gradient(    "Colors",    gra_white )).setMappable(15);
+	newInput( 8, nodeValue_Color(       "Color 1",   ca_white  ));
+	newInput( 9, nodeValue_Color(       "Color 2",   ca_black  ));
+	newInput(18, nodeValue_Palette(     "Colors",   [ca_black,ca_white] ));
 	// input 23
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

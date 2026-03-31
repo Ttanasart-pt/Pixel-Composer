@@ -738,12 +738,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 		} else if(drag_point > -1) { 
 			var releasable = true;
-			draw_set_color(COLORS._main_icon);
 			
 			if(drag_type == 0 || drag_type == 1 || drag_type == -1) {
 				var mmx = PANEL_PREVIEW.snapX(drag_point_sx + (_mx - drag_point_mx) / _s);
 				var mmy = PANEL_PREVIEW.snapY(drag_point_sy + (_my - drag_point_my) / _s);
 				
+				draw_set_color(COLORS._main_icon);
 				if(attributes.snap_point)
 				for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
 					if(drag_point == i && drag_type == 0) continue;
@@ -772,16 +772,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 				if(key_mod_press(SHIFT)) {
 					if(abs(dx) > abs(dy)) {
-						mmy = drag_point_sy;
-						dy  = 0;
+						mmy = drag_point_sy; dy = 0;
+						draw_line(0, _y + mmy * _s, WIN_W, _y + mmy * _s);
 						
 					} else {
-						mmx = drag_point_sx;
-						dx  = 0;
+						mmx = drag_point_sx; dx = 0;
+						draw_line(_x + mmx * _s, 0, _x + mmx * _s, WIN_H);
 						
 					}
 					
-					draw_line(_x + drag_point_sx * _s, _y + drag_point_sy * _s, _x + mmx * _s, _y + mmy * _s);
 				}
 				
 				if(drag_type == 0) { // Drag anchor point

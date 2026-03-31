@@ -2318,7 +2318,7 @@ function Panel_Preview() : PanelContent() constructor {
 			#endregion
             
         	if(PROJECT.previewSetting.status_display == 1) {
-            	draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text);
+            	draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
             	var _lh = line_get_height();
                 if(_active) {
                     draw_set_color(COLORS._main_text_accent);
@@ -2345,13 +2345,14 @@ function Panel_Preview() : PanelContent() constructor {
                     
                     tb_zoom_level.postBlend = _zmc;
                     tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
+                    tb_zoom_level.setFont(f_p3);
                     tb_zoom_level.draw(_zmx, right_menu_y, _zmw, _lh, string(canvas_s), [mx,my], fa_right);
                     if(tb_zoom_level.hovering) {
                     	mouse_on_preview = false;
                     	CURSOR_SPRITE    = THEME.view_zoom;
                     }
                     
-                	draw_set_text(f_p2, fa_right, fa_top, _zmc);
+                	draw_set_text(f_p3, fa_right, fa_top, _zmc);
                     if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
 	                	draw_text(_zmx - _zmw + ui(14), right_menu_y, "x");
                     
