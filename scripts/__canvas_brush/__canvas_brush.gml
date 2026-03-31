@@ -183,7 +183,7 @@ function canvas_brush() constructor {
 		
 	}
 	
-	static drawLine = function(_x0, _y0, _x1, _y1, _draw = false, _cap = false) { 
+	static drawLine = function(_x0, _y0, _x1, _y1, _draw = false, _cap = true) { 
 		var _step = 0;
 		
 		if(use_surface || draw_type == 1) {
@@ -368,7 +368,7 @@ function canvas_brush() constructor {
 			     
 		    if(i) {
 		    	var dist = point_distance(odx, ody, nx, ny);
-		    	if(dist > 1 || i == prec) {
+		    	if(dist > 3 || i == prec) {
 		    		drawLine(odx, ody, nx, ny, _draw, true);
 		    		odx = nx;
 		    		ody = ny;
