@@ -44,7 +44,7 @@ DIALOG_WINCLEAR1
 			var _ww = dialog_w - ui(8 + 64);
 			var _wh = _whg   - ui(8);
 			
-			if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
+			if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _whg - 1)) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _whg, COLORS.dialog_menubox_highlight);
 				selecting = i;
 			}
