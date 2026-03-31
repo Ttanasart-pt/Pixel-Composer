@@ -34,11 +34,11 @@ function canvas_tool_selection_freeform(_selector) : canvas_selection_tool(_sele
 						DRAW_CLEAR
 						draw_surface(drawing_surface, -sel_x, -sel_y);
 					surface_reset_target();
-				}
+					selector.createSelection(selection_mask, sel_x, sel_y, sel_w, sel_h);
+					
+				} else selector.apply();
 				
 				surface_clear(drawing_surface);
-				
-				selector.createSelection(selection_mask, sel_x, sel_y, sel_w, sel_h);
 				surface_free_safe(selection_mask);
 			}
 					

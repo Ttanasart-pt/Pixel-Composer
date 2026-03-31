@@ -48,14 +48,16 @@ function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selecto
 				var sel_w = _bbox[2];
 				var sel_h = _bbox[3];
 				
-				var _sel = surface_create(sel_w, sel_h);
-				surface_set_shader(_sel);
-					draw_surface(selection_mask, -sel_x, -sel_y);
-				surface_reset_shader();
+				if(sel_w > 1 && sel_h > 1) {
+					var _sel = surface_create(sel_w, sel_h);
+					surface_set_shader(_sel);
+						draw_surface(selection_mask, -sel_x, -sel_y);
+					surface_reset_shader();
+					selector.createSelection(_sel, sel_x, sel_y, sel_w, sel_h);
+					
+				} else selector.apply();
 				
-				is_selecting   = false;
-				
-				selector.createSelection(_sel, sel_x, sel_y, sel_w, sel_h);
+				is_selecting = false;
 				surface_free_safe(selection_mask);
 			}
 		}
