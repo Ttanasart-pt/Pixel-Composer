@@ -1420,10 +1420,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _pcc = isUsingTool("Eraser")? c_red : c_white;
 			var _paa = isUsingTool("Eraser")? .2 : _color_get_alpha(CURRENT_COLOR);
 			
-			if(!__3d)
+			if(!__3d && !inspecting)
 			switch(_panel.tileMode) {
 				case 0 : 
-					// draw_surface_ext_safe(getPreviewValues(_drawToolPreview), _x, _y, _s, _s, 0, c_white, 1); 
+					draw_surface_ext_safe(getPreviewValues(_drawToolPreview), _x, _y, _s, _s, 0, c_white, 1); 
 					break;
 				
 				case 1 : 

@@ -43,8 +43,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(33, nodeValue_Vec2(     "End Point",     [1,.5] )).setUnitSimple();
 	newInput(35, nodeValue_Bool(     "Force Loop",     false ));
 	newInput(19, nodeValue_Bool(     "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
-	newInput( 2, nodeValue_ISlider(  "Segment",        1, [1, 32, 0.1] ));
-	newInput(20, nodeValue_Float(    "Segment Length", 4 ));
+	newInput( 2, nodeValue_ISlider(  "Segment",        8, [1, 32, 0.1] ));
+	newInput(20, nodeValue_Float(    "Segment Length", 8 ));
 	
 	////- =Width
 	newInput(17, nodeValue_Bool(  "1px Mode",             false      )).setTooltip("Render pixel perfect 1px line.");
@@ -181,7 +181,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _pnt1     = _data[33];
 			var _loop     = _data[35];
 			var _fixL     = _data[19];
-			var _seg      = _data[ 2];
+			var _seg      = _data[ 2] + 1;
 			var _segL     = _data[20];
 			
 			var _1px      = _data[17];

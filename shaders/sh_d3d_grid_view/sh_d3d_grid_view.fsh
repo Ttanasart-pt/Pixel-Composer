@@ -25,11 +25,11 @@ void main() {
     float miny  = min(dev.y, 1.);
     float minx  = min(dev.x, 1.);
     
-    float linea = 1. - min(line, 1.);
+    float linea = 1.1 - min(line, 1.1);
     float alpha = length(cen) * 2.;
           alpha = 1. - alpha * alpha;
 	
-    float g = .6;
+    float g = .8;
     float a = linea * fade;
     
          if(mod(abs(pos.x) * scale, 4.) < minx) { a += .4; }

@@ -476,7 +476,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	#endregion
 	
 	#region ---- editor ----
-		
 		line_hover   = -1;
 		weight_hover = -1;
 		
@@ -489,6 +488,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		drag_point_sy = 0;
 		drag_point_px = 0;
 		drag_point_py = 0;
+		drag_point_data = [];
 		
 		transform_type = 0;
 		transform_data = [];
@@ -578,7 +578,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		//////////////////////////////////////////////////////// EDITING ////////////////////////////////////////////////////////
 		
-		if(transform_type > 0) { 
+		if(transform_type > 0) { // Transform All
 			if(transform_type == 5) { // move
 				var mx = _mx, my = _my;
 				
@@ -737,124 +737,129 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 		} else if(drag_point > -1) { 
-			var mmx = PANEL_PREVIEW.snapX(drag_point_sx + (_mx - drag_point_mx) / _s);
-			var mmy = PANEL_PREVIEW.snapY(drag_point_sy + (_my - drag_point_my) / _s);
+			var releasable = true;
+			draw_set_color(COLORS._main_icon);
 			
-			if(attributes.snap_point)
-			for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
-				if(drag_point == i && drag_type == 0) continue;
-				var _a  = _pth.anchors[i];
-				var _ax = _a[0];
-				var _ay = _a[1];
+			if(drag_type == 0 || drag_type == 1 || drag_type == -1) {
+				var mmx = PANEL_PREVIEW.snapX(drag_point_sx + (_mx - drag_point_mx) / _s);
+				var mmy = PANEL_PREVIEW.snapY(drag_point_sy + (_my - drag_point_my) / _s);
 				
-				if(abs(_ax - mmx) < snap_dist / _s) { 
-					mmx = _ax; 
-					draw_set_color(COLORS._main_icon);
-					draw_line(_x + _ax * _s, _y + _ay * _s, _x + mmx * _s, _y + mmy * _s);
-				}
+				if(attributes.snap_point)
+				for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
+					if(drag_point == i && drag_type == 0) continue;
+					var _a  = _pth.anchors[i];
+					var _ax = _a[0];
+					var _ay = _a[1];
 					
-				if(abs(_ay - mmy) < snap_dist / _s) { 
-					mmy = _ay; 
-					draw_set_color(COLORS._main_icon);
-					draw_line(_x + _ax * _s, _y + _ay * _s, _x + mmx * _s, _y + mmy * _s);
+					if(abs(_ax - mmx) < snap_dist / _s) { 
+						mmx = _ax; draw_line(_x + _ax * _s, _y + _ay * _s, _x + mmx * _s, _y + mmy * _s);
+					}
+						
+					if(abs(_ay - mmy) < snap_dist / _s) { 
+						mmy = _ay; draw_line(_x + _ax * _s, _y + _ay * _s, _x + mmx * _s, _y + mmy * _s);
+					}
+					
 				}
 				
+				var inp = inputs[input_fix_len + drag_point];
+				var rnd = key_mod_press(CTRL);
+				
+				var onc = drag_point_data[input_fix_len + drag_point];
+				var anc = array_clone(inp.getValue());
+				
+				var dx = mmx - (drag_point_mx - _x) / _s;
+				var dy = mmy - (drag_point_my - _y) / _s;
+					
+				if(key_mod_press(SHIFT)) {
+					if(abs(dx) > abs(dy)) {
+						mmy = drag_point_sy;
+						dy  = 0;
+						
+					} else {
+						mmx = drag_point_sx;
+						dx  = 0;
+						
+					}
+					
+					draw_line(_x + drag_point_sx * _s, _y + drag_point_sy * _s, _x + mmx * _s, _y + mmy * _s);
+				}
+				
+				if(drag_type == 0) { // Drag anchor point
+					anc[0] = rnd? round(mmx) : mmx;
+					anc[1] = rnd? round(mmy) : mmy;
+					
+					for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
+						var _a = anchor_select[i];
+						if(_a == drag_point) continue;
+						
+						var _inp = inputs[input_fix_len + _a];
+						var _onc = drag_point_data[input_fix_len + _a];
+						var _anc = array_clone(_inp.getValue());
+						
+						_anc[0] = _onc[0] + dx;
+						_anc[1] = _onc[1] + dy;
+						
+						if(_inp.setValue(_anc)) edited = true;
+					}
+			
+				} else if(drag_type ==  1) { //drag control 1
+					anc[2] = mmx - anc[0];
+					anc[3] = mmy - anc[1];
+					
+					if(anc[6] == 0) {
+						anc[4] = -anc[2];
+						anc[5] = -anc[3];
+						
+					} else if(anc[6] == 1) {
+						var _dir = point_direction( 0, 0, anc[2], anc[3] );
+						var _dis = point_distance(  0, 0, anc[4], anc[5] );
+						
+						anc[4] = lengthdir_x(_dis, _dir + 180);
+						anc[5] = lengthdir_y(_dis, _dir + 180);
+					}
+					
+					if(rnd) {
+						anc[2] = round(anc[2]);
+						anc[3] = round(anc[3]);
+						
+						if(anc[6] < 2) {
+							anc[4] = round(anc[4]);
+							anc[5] = round(anc[5]);
+						}
+					}
+					
+				} else if(drag_type == -1) { //drag control 2
+					anc[4] = mmx - anc[0];
+					anc[5] = mmy - anc[1];
+					
+					if(anc[6] == 0) {
+						anc[2] = -anc[4];
+						anc[3] = -anc[5];
+						
+					} else if(anc[6] == 1) {
+						var _dir = point_direction( 0, 0, anc[4], anc[5] );
+						var _dis = point_distance(  0, 0, anc[2], anc[3] );
+						
+						anc[2] = lengthdir_x(_dis, _dir + 180);
+						anc[3] = lengthdir_y(_dis, _dir + 180);
+					}
+					
+					if(rnd) {
+						anc[4] = round(anc[4]);
+						anc[5] = round(anc[5]);
+						
+						if(anc[6] < 2) {
+							anc[2] = round(anc[2]);
+							anc[3] = round(anc[3]);
+						}
+					}
+				} 
+				
+				if(inp.setValue(anc)) edited = true;
 			}
 			
-			var dx = mmx - drag_point_px;
-			var dy = mmy - drag_point_py;
-			var releasable = true;
-			
-			drag_point_px = mmx;
-			drag_point_py = mmy;
-			
 			switch(drag_type) {
-				case  0 :
-				case  1 :
-				case -1 :
-					var inp = inputs[input_fix_len + drag_point];
-					var rnd = key_mod_press(CTRL);
-					var anc/*:_ANCHOR*/ = array_clone(inp.getValue());
-					
-					if(drag_type == 0) { //drag anchor point
-						anc[@_ANCHOR.x] = mmx;
-						anc[@_ANCHOR.y] = mmy;
-						
-						if(rnd) {
-							anc[@_ANCHOR.x] = round(anc[_ANCHOR.x]);
-							anc[@_ANCHOR.y] = round(anc[_ANCHOR.y]);
-						}
-						
-						for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
-							var _a = anchor_select[i];
-							if(_a == drag_point) continue;
-							
-							var _inp = inputs[input_fix_len + _a];
-							var _anc/*:_ANCHOR*/ = array_clone(_inp.getValue());
-							
-							_anc[@_ANCHOR.x] += dx;
-							_anc[@_ANCHOR.y] += dy;
-							
-							if(_inp.setValue(_anc)) edited = true;
-						}
-				
-					} else if(drag_type == 1) { //drag control 1
-						anc[@_ANCHOR.c1x] = mmx - anc[_ANCHOR.x];
-						anc[@_ANCHOR.c1y] = mmy - anc[_ANCHOR.y];
-						
-						if(anc[_ANCHOR.ind] == 0) {
-							anc[@_ANCHOR.c2x] = -anc[_ANCHOR.c1x];
-							anc[@_ANCHOR.c2y] = -anc[_ANCHOR.c1y];
-							
-						} else if(anc[_ANCHOR.ind] == 1) {
-							var _dir = point_direction(0, 0, anc[_ANCHOR.c1x], anc[_ANCHOR.c1y]);
-							var _dis = point_distance(0, 0, anc[_ANCHOR.c2x], anc[_ANCHOR.c2y]);
-							
-							anc[@_ANCHOR.c2x] = lengthdir_x(_dis, _dir + 180);
-							anc[@_ANCHOR.c2y] = lengthdir_y(_dis, _dir + 180);
-						}
-						
-						if(rnd) {
-							anc[@_ANCHOR.c1x] = round(anc[_ANCHOR.c1x]);
-							anc[@_ANCHOR.c1y] = round(anc[_ANCHOR.c1y]);
-							
-							if(anc[_ANCHOR.ind] < 2) {
-								anc[@_ANCHOR.c2x] = round(anc[_ANCHOR.c2x]);
-								anc[@_ANCHOR.c2y] = round(anc[_ANCHOR.c2y]);
-							}
-						}
-						
-					} else if(drag_type == -1) { //drag control 2
-						anc[@_ANCHOR.c2x] = mmx - anc[_ANCHOR.x];
-						anc[@_ANCHOR.c2y] = mmy - anc[_ANCHOR.y];
-						
-						if(anc[_ANCHOR.ind] == 0) {
-							anc[@_ANCHOR.c1x] = -anc[_ANCHOR.c2x];
-							anc[@_ANCHOR.c1y] = -anc[_ANCHOR.c2y];
-							
-						} else if(anc[_ANCHOR.ind] == 1) {
-							var _dir = point_direction(0, 0, anc[_ANCHOR.c2x], anc[_ANCHOR.c2y]);
-							var _dis = point_distance(0, 0, anc[_ANCHOR.c1x], anc[_ANCHOR.c1y]);
-							
-							anc[@_ANCHOR.c1x] = lengthdir_x(_dis, _dir + 180);
-							anc[@_ANCHOR.c1y] = lengthdir_y(_dis, _dir + 180);
-						}
-						
-						if(rnd) {
-							anc[@_ANCHOR.c2x] = round(anc[_ANCHOR.c2x]);
-							anc[@_ANCHOR.c2y] = round(anc[_ANCHOR.c2y]);
-							
-							if(anc[_ANCHOR.ind] < 2) {
-								anc[@_ANCHOR.c1x] = round(anc[_ANCHOR.c1x]);
-								anc[@_ANCHOR.c1y] = round(anc[_ANCHOR.c1y]);
-							}
-						}
-					} 
-					
-					if(inp.setValue(anc)) edited = true;
-					break;
-					
-				case  2 :
+				case 2 :
 					var ox, oy, nx, ny;
 					var pxx = (_mx - _x) / _s;
 					var pxy = (_my - _y) / _s;
@@ -1872,6 +1877,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c2x];
 							drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c2y];
 						} 
+						
+						drag_point_data = array_verify(drag_point_data, array_length(inputs));
+						for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+							drag_point_data[i] = array_clone(inputs[i].getValue());
 					}
 				}
 				break;

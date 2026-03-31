@@ -2837,7 +2837,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_surf = array_safe_get_fast(_surf, preview_index, noone);
 		
 		if(!is_surface(_surf)) return BBOX().fromWH(0, 0, PROJ_SURF_W, PROJ_SURF_H);
-			
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 	}
 	

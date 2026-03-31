@@ -695,8 +695,10 @@
     {
         "name": "3D", "nodes": [
             { "label": "2D Operations" },
+            { "label": "/Simple 3D" },
             "Node_Shape_3D",
             "Node_3D_Transform_Image",
+            { "label": "/Filters" },
             "Node_Normal",
             "Node_Normal_Light",
             "Node_Bevel",
@@ -705,8 +707,10 @@
             "Node_Ambient_Occlusion",
 
             { "label": "Scenes" },
+            { "label": "/Cameras" },
             "Node_3D_Camera",
             "Node_3D_Camera_Set",
+            { "label": "/Scenes" },
             "Node_3D_Scene",
             "Node_3D_Affector",
             
@@ -714,8 +718,7 @@
             "Node_3D_Material",
             
             { "label": "Meshes" },
-            { "label": "/Creators" },
-            "Node_3D_Mesh_Obj",
+            { "label": "/Primitive" },
             "Node_3D_Mesh_Plane",
             "Node_3D_Mesh_Cube",
             "Node_3D_Mesh_Cylinder",
@@ -723,12 +726,15 @@
             "Node_3D_Mesh_Sphere_Ico",
             "Node_3D_Mesh_Cone",
             "Node_3D_Mesh_Torus",
+            { "label": "/Creators" },
             "Node_3D_Mesh_Terrain",
             "Node_3D_Mesh_Wall_Builder",
             "Node_3D_Mesh_Extrude",
             "Node_3D_Mesh_Extrude_Mesh",
             "Node_3D_Mesh_Path_Extrude",
             "Node_3D_Mesh_Path_Revolve",
+            { "label": "/Importers" },
+            "Node_3D_Mesh_Obj",
             "Node_3D_Mesh_Json",
             { "label": "/Exporters" },
             "Node_3D_Mesh_Export",
