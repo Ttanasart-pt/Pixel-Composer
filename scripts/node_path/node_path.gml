@@ -1056,12 +1056,20 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							tool_arc_angle_rg += angle_difference(dd, tool_arc_angle_pr);
 						tool_arc_angle_pr = dd;
 						
-						var _stp = ceil(abs(tool_arc_angle_rg) / 90);
-						var _ast = tool_arc_angle_rg / _stp;
+						var _angSt = tool_arc_angle_st;
+						var _angRg = tool_arc_angle_rg;
+						
+						if(tool_arc_angle_rg > 0)
+							 _angSt = tool_arc_angle_st;
+						else _angSt = tool_arc_angle_st + tool_arc_angle_rg;
+						
+						_angRg = abs(_angRg);
+						var _stp = ceil(_angRg / 90);
+						var _ast = _angRg / _stp;
 						var _aas = tool_arc_radius / _s * lerp(.0, .5, sqr(dsin(abs(_ast))) );
 						
 						for( var i = 0; i <= _stp; i++ ) {
-							var _ang = tool_arc_angle_st + i * _ast;
+							var _ang = _angSt + i * _ast;
 							var _ii  = input_fix_len + i;
 							if(_ii >= array_length(inputs)) createNewInput();
 							
@@ -1071,7 +1079,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							var _adx = lengthdir_x(_aas, _ang - 90);
 							var _ady = lengthdir_y(_aas, _ang - 90);
 							
-							edited = inputs[_ii].setValue(newAnchor( _ax, _ay, -_adx, -_ady, _adx, _ady)) || edited;
+							edited = inputs[_ii].setValue(newAnchor( _ax, _ay, _adx, _ady, -_adx, -_ady)) || edited;
 						}
 						
 						while(array_length(inputs) > input_fix_len + _stp + 1)

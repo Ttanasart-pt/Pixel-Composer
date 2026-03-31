@@ -9,12 +9,12 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(6, nodeValue_Bool("Anti-aliasing", false));
 	
 	////- =Transform
-	newInput(15, nodeValue_Enum_Scroll( "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
-	newInput( 3, nodeValue_Area(        "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitSimple();
-	newInput(16, nodeValue_Vec2(        "Center",            [.5,.5] )).setHotkey("G").setUnitSimple();
-	newInput(17, nodeValue_Vec2(        "Half Size",         [.5,.5] )).setHotkey("S").setUnitSimple();
-	newInput(19, nodeValue_Rotation(    "Shape Rotation",      0     )).setHotkey("R");
-	newInput(28, nodeValue_Slider(      "Shape Scale",         1     )).hideLabel();
+	newInput(15, nodeValue_EScroll(  "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
+	newInput( 3, nodeValue_Area(     "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitSimple();
+	newInput(16, nodeValue_Vec2(     "Center",            [.5,.5] )).setHotkey("G").setUnitSimple();
+	newInput(17, nodeValue_Vec2(     "Half Size",         [.5,.5] )).setHotkey("S").setUnitSimple();
+	newInput(19, nodeValue_Rotation( "Shape Rotation",      0     )).setHotkey("R");
+	newInput(28, nodeValue_Slider(   "Shape Scale",         1     )).hideLabel();
 	
 	////- =Shape
 	newInput( 2, nodeValue_EString( "Shape", global.node_shape_types[0], { 
@@ -28,50 +28,50 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_04_1}, list: global.node_shape_keys_204 }, 
 		]);
 		
-	newInput(32, nodeValue_Vec2(           "Point 1",       [ 0, 0]   )).setUnitSimple();
-	newInput(33, nodeValue_Vec2(           "Point 2",       [ 1, 1]   )).setUnitSimple();
-	newInput(35, nodeValue_Vec2(           "Point 3",       [ 1, 0]   )).setUnitSimple();
-	newInput(40, nodeValue_Vec2(           "Half Point",    [.5,.5]   )).setUnitSimple().hideLabel();
-	newInput(34, nodeValue_Slider(         "Thickness",      .1       )).hideLabel();
+	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitSimple();
+	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]   )).setUnitSimple();
+	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]   )).setUnitSimple();
+	newInput(40, nodeValue_Vec2(     "Half Point",    [.5,.5]   )).setUnitSimple().hideLabel();
+	newInput(34, nodeValue_Slider(   "Thickness",      .1       )).hideLabel();
 	
-	newInput( 9, nodeValue_Slider(         "Corner radius",   0, [0, 0.5, 0.001] )).hideLabel().setValidator(VV_clamp(0, .5));
-	newInput( 4, nodeValue_Int(            "Sides",           3       )).hideLabel().setVisible(false);
-	newInput(13, nodeValue_Slider(         "Start radius",   .1       )).hideLabel().setVisible(false);
-	newInput( 5, nodeValue_Slider(         "Inner radius",   .5       )).hideLabel().setVisible(false);
-	newInput( 7, nodeValue_Rotation(       "Rotation",        0       )).hideLabel();
-	newInput( 8, nodeValue_Rotation_Range( "Angle range",    [0,180]  )).hideLabel();
-	newInput(14, nodeValue_PathNode(       "Shape path"               )).hideLabel();
-	newInput(21, nodeValue_Slider_Range(   "Angles",         [.5, 1.] )).hideLabel();
-	newInput(38, nodeValue_Slider(         "Top Side",        .5      )).hideLabel();
-	newInput(39, nodeValue_Slider(         "Botton Side",      1      )).hideLabel();
-	newInput(22, nodeValue_Slider(         "Skew",            .5      )).hideLabel();
-	newInput(23, nodeValue_Float(          "Arrow Sizes",     .3      )).hideLabel();
-	newInput(24, nodeValue_Float(          "Arrow Head",       1      )).hideLabel();
-	newInput(25, nodeValue_Int(            "Teeth Amount",     6      )).hideLabel();
-	newInput(26, nodeValue_Vec2(           "Teeth Size",     [.2,.2] , { slideSpeed : 0.01 })).hideLabel();
-	newInput(27, nodeValue_Rotation(       "Teeth Rotation",   0      )).hideLabel();
-	newInput(43, nodeValue_Slider(         "Teeth Taper",      0      ))
-	newInput(30, nodeValue_Bool(           "Caps",             false  )).hideLabel();
-	newInput(31, nodeValue_Float(          "Factor",           2.5    )).hideLabel();
-	newInput(36, nodeValue_Enum_Button(    "Corner Shape",     0, [ "Round", "Cut" ] ))
+	newInput( 9, nodeValue_Slider(   "Corner radius",   0, [0, 0.5, 0.001] )).hideLabel().setValidator(VV_clamp(0, .5));
+	newInput( 4, nodeValue_Int(      "Sides",           3       )).hideLabel().setVisible(false);
+	newInput(13, nodeValue_Slider(   "Start radius",   .1       )).hideLabel().setVisible(false);
+	newInput( 5, nodeValue_Slider(   "Inner radius",   .5       )).hideLabel().setVisible(false);
+	newInput( 7, nodeValue_Rotation( "Rotation",        0       )).hideLabel();
+	newInput( 8, nodeValue_RotRange( "Angle range",    [0,180]  )).hideLabel();
+	newInput(14, nodeValue_PathNode( "Shape path"               )).hideLabel();
+	newInput(21, nodeValue_SliRange( "Angles",         [.5, 1.] )).hideLabel();
+	newInput(38, nodeValue_Slider(   "Top Side",        .5      )).hideLabel();
+	newInput(39, nodeValue_Slider(   "Botton Side",      1      )).hideLabel();
+	newInput(22, nodeValue_Slider(   "Skew",            .5      )).hideLabel();
+	newInput(23, nodeValue_Float(    "Arrow Sizes",     .3      )).hideLabel();
+	newInput(24, nodeValue_Float(    "Arrow Head",       1      )).hideLabel();
+	newInput(25, nodeValue_Int(      "Teeth Amount",     6      )).hideLabel();
+	newInput(26, nodeValue_Vec2(     "Teeth Size",     [.2,.2] , { slideSpeed : 0.01 })).hideLabel();
+	newInput(27, nodeValue_Rotation( "Teeth Rotation",   0      )).hideLabel();
+	newInput(43, nodeValue_Slider(   "Teeth Taper",      0      ))
+	newInput(30, nodeValue_Bool(     "Caps",             false  )).hideLabel();
+	newInput(31, nodeValue_Float(    "Factor",           2.5    )).hideLabel();
+	newInput(36, nodeValue_EButton(  "Corner Shape",     0, [ "Round", "Cut" ] ))
 	
 	////- =Deform
-	newInput(41, nodeValue_Slider(         "Twist",            0, [-1,1,.01 ] ))
-	newInput(42, nodeValue_Vec2(           "Shear",           [0,0]           ))
+	newInput(41, nodeValue_Slider(   "Twist",            0, [-1,1,.01 ] ))
+	newInput(42, nodeValue_Vec2(     "Shear",           [0,0]           ))
 	
 	////- =Render
-	newInput(10, nodeValue_Color(          "Shape color",      ca_white       ));
-	newInput(18, nodeValue_Bool(           "Tile",             false          ));
+	newInput(10, nodeValue_Color(    "Shape color",      ca_white       ));
+	newInput(18, nodeValue_Bool(     "Tile",             false          ));
 	
 	////- =Height
-	newInput(12, nodeValue_Bool(           "Height",           false          ));
-	newInput(29, nodeValue_Curve(          "Curve",            CURVE_DEF_01   ));
-	newInput(20, nodeValue_Slider_Range(   "Level",            [0,1]          ));
-	newInput(37, nodeValue_Bool(           "Opacity",          false          ));
+	newInput(12, nodeValue_Bool(     "Height",           false          ));
+	newInput(29, nodeValue_Curve(    "Curve",            CURVE_DEF_01   ));
+	newInput(20, nodeValue_SliRange( "Level",            [0,1]          ));
+	newInput(37, nodeValue_Bool(     "Opacity",          false          ));
 	
 	////- =Background
-	newInput( 1, nodeValue_Bool(           "Background",       false    ));
-	newInput(11, nodeValue_Color(          "Background color", ca_black ));
+	newInput( 1, nodeValue_Bool(     "Background",       false          ));
+	newInput(11, nodeValue_Color(    "Background color", ca_black       ));
 	// 44
 	
 	/////////////////////////////////////////////
@@ -86,7 +86,8 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	input_display_list = [ b_replace_full, 
 		[ "Output",    false     ],  0,  6, 
 		[ "Transform", false     ], 15,  3, 16, 17, 19, 28, 
-		[ "Shape",	   false     ],  2, 32, 33, 35, 40, 34, 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
+		[ "Shape",	   false     ],  2, 32, 33, 35, 40, 34,  9,  4, 13,  5,  7,  8, 
+		                            38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
 		[ "Deform",	    true     ], 41, 42, 
 		[ "Render",	    true     ], 10, 18,
 		[ "Height",	    true, 12 ], 29, 20, 37,  
@@ -322,9 +323,19 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 					shader_set_f("squircle_factor", abs(current_data[31]));
 					break;
 					
+				case "Superellipse" :	
+					inputs[ 4].setVisible(true);
+					inputs[ 9].setVisible(true);
+					inputs[31].setVisible(true);
+				
+					shader_set_i("shape", 22);
+					shader_set_f("super_factor", abs(current_data[31]));
+					shader_set_f("super_sides",  current_data[4]);
+					break;
+					
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-				case "Regular polygon" :
+				case "Regular Polygon" :
 					inputs[ 4].setVisible(true);
 					inputs[ 7].setVisible(true);
 					inputs[ 9].setVisible(true);
