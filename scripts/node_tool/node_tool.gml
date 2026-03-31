@@ -71,13 +71,18 @@ function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) 
 		}
 		
 		if(subtools == 0) {
-			if(PANEL_PREVIEW.getTool() == self) PANEL_PREVIEW.resetTool();
-			else PANEL_PREVIEW.setTool(self);
+			if(PANEL_PREVIEW.getTool() == self) {
+				PANEL_PREVIEW.resetTool();
+				return;
+				
+			} else PANEL_PREVIEW.setTool(self);
 			
 		} else {
 			if(PANEL_PREVIEW.getTool() == self && index == selecting) {
 				PANEL_PREVIEW.resetTool();
 				selecting = 0;
+				return;
+				
 			} else {
 				PANEL_PREVIEW.setTool(self);
 				selecting = index;
@@ -95,8 +100,11 @@ function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) 
 		HOTKEY_BLOCK = true;
 		
 		if(subtools == 0) {
-			if(PANEL_PREVIEW.getTool() == self) PANEL_PREVIEW.resetTool();
-			else PANEL_PREVIEW.setTool(self);
+			if(PANEL_PREVIEW.getTool() == self) {
+				PANEL_PREVIEW.resetTool();
+				return;
+				
+			} else PANEL_PREVIEW.setTool(self);
 			
 		} else if(PANEL_PREVIEW.getTool() != self) {
 			PANEL_PREVIEW.setTool(self);
@@ -105,6 +113,7 @@ function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) 
 		} else if(selecting == subtools - 1) {
 			PANEL_PREVIEW.resetTool();
 			selecting = 0;
+			return;
 			
 		} else 
 			selecting++;

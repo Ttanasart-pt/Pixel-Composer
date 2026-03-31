@@ -655,5 +655,5 @@ function canvas_selection_tool(_selector) : canvas_tool() constructor {
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my) {}
 	
-	static escapable = function() /*=>*/ {return !selector.was_selected};
+	// static escapable = () => !selector.was_selected;
 }
