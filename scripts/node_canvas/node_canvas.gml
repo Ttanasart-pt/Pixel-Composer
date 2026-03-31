@@ -1412,7 +1412,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_set_color(CURRENT_COLOR);
 				
 				if(current_brush.sizing) current_brush.drawPoint(current_brush.sizing_dx, current_brush.sizing_dy);
-				if(_tool) _tool.drawPreview(hover, active, _x, _y, _s, _mx, _my);
+				else if(_tool) _tool.drawPreview(hover, active, _x, _y, _s, _mx, _my);
 					
 				draw_set_alpha(1);
 			surface_reset_shader();
@@ -1423,7 +1423,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(!__3d)
 			switch(_panel.tileMode) {
 				case 0 : 
-					draw_surface_ext_safe(getPreviewValues(_drawToolPreview), _x, _y, _s, _s, 0, c_white, 1); 
+					// draw_surface_ext_safe(getPreviewValues(_drawToolPreview), _x, _y, _s, _s, 0, c_white, 1); 
 					break;
 				
 				case 1 : 
@@ -1460,12 +1460,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_set_target(preview_draw_mask);
 				DRAW_CLEAR
 				if(selection.is_selected) selection.drawMask(hover, active, _x, _y, _s, _mx, _my);
-				if(_tool) {
+				
+				if(!current_brush.sizing && _tool) {
 					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my);
 					
-					var _dx = _x + (mouse_cur_x - floor(bs/2)) * _s;
-					var _dy = _y + (mouse_cur_y - floor(bs/2)) * _s;
-					draw_surface_ext(global.canvas_brush_surface, _dx, _dy, _s, _s, 0, c_white, 1);
+					if(_tool.drawBrushMask) {
+						var _dx = _x + (mouse_cur_x - floor(bs/2)) * _s;
+						var _dy = _y + (mouse_cur_y - floor(bs/2)) * _s;
+						draw_surface_ext(global.canvas_brush_surface, _dx, _dy, _s, _s, 0, c_white, 1);
+					}
 				}
 			surface_reset_target();
 		#endregion

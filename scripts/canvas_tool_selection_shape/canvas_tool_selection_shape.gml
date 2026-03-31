@@ -1,6 +1,7 @@
 function canvas_tool_selection_shape(_selector, _shape) : canvas_selection_tool(_selector) constructor {
 	shape       = _shape;
 	select_snap = false;
+	drawBrushMask = false;
 	
 	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(is_selecting) {

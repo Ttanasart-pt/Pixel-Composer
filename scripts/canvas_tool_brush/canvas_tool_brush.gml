@@ -399,7 +399,8 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 		BLEND_MAX
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT))
 				draw_line_wrap(false);	
-			else if(!mouse_holding) 
+				
+			else //if(!mouse_holding) 
 				draw_point_wrap(false);
 		BLEND_NORMAL
 	}

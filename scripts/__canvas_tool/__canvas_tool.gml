@@ -1,6 +1,7 @@
 function canvas_tool() : ToolObject() constructor { 
 	rightTools = [];
 	brush      = noone;
+	drawBrushMask = true;
 	
 	override = false;
 	relative = false;
