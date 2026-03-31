@@ -283,16 +283,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		canvas_surface   = [];
 		canvas_buffer    = [];
 	
-		 drawing_surface = undefined;
-		_drawing_surface = undefined;
+		 drawing_surface = surface_create(1,1);
+		_drawing_surface = surface_create(1,1);
 		surface_w = 1;
 		surface_h = 1;
 	
-		prev_surface		  = undefined;
-		preview_draw_surface  = undefined;
-		preview_draw_tile     = undefined;
-		preview_draw_mask     = undefined;
-		preview_draw_final    = undefined;
+		prev_surface		  = surface_create(1,1);
+		preview_draw_surface  = surface_create(1,1);
+		preview_draw_tile     = surface_create(1,1);
+		preview_draw_mask     = surface_create(1,1);
+		preview_draw_final    = surface_create(1,1);
 		
 		draw_stack = ds_list_create();
 		

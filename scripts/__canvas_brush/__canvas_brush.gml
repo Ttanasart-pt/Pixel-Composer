@@ -229,7 +229,7 @@ function canvas_brush() constructor {
 			
 		if(size == 1) {
 			draw_line(_x0, _y0, _x1, _y1);
-				
+			
 		} else if(size < global.FIX_POINTS_AMOUNT) { 
 				
 			var fx = global.FIX_POINTS[size];

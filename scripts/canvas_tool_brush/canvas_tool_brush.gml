@@ -193,8 +193,9 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 		}
 		
 		mouse_line_drawing = false;
+		var shiftLine = key_mod_press(SHIFT) && !mouse_rclick();
 		
-		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) {
+		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && shiftLine) {
 			if(key_mod_press(CTRL)) {
 				var _dx = mouse_cur_x - mouse_pre_draw_x;
 				var _dy = mouse_cur_y - mouse_pre_draw_y;
@@ -246,7 +247,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 				draw_point_wrap(true);
 			surface_reset_shader();
 			
-			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { // Shift Line
+			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && shiftLine) { // Shift Line
 				surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
 					draw_line_wrap(true);
 				surface_reset_shader();
