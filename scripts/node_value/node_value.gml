@@ -217,10 +217,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Graph ----
-		show_graph	     = false;
-		show_graphs      = array_create(array_safe_length(_value));
-		graph_h		     = 96;
-		graph_range      = [ 0, 1 ];
+		attributes.show_graph  = false;
+		attributes.show_graphs = array_create(array_safe_length(_value));
+		attributes.graph_h     = 96;
+		attributes.graph_range = [ 0, 1 ];
+		attributes.graph_rauto = true;
 		prev_graph_range = [ 0, 1 ];
 		
 		value_validation   = VALIDATION.pass;
@@ -2850,10 +2851,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
 		if(inspector_timeline)  _map.insp_tm        = inspector_timeline;
-		if(graph_h != 96)       _map.graph_h        = graph_h;
-		if(show_graph)          _map.graph_sh       = show_graph;
-		if(array_any(show_graphs, function(v) /*=>*/ {return bool(v)})) 
-			_map.graph_shs = array_clone(show_graphs);
 		
 		if(name_custom)                 _map.name		 = name;
 		if(unit.mode != 0)              _map.unit		 = unit.mode;
@@ -2923,10 +2920,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			visible_manual = _map[$ "visible_manual"] ?? 0;
 			color   	   = _map[$ "color"] ?? -1;
-			
-			graph_h   	   = _map[$ "graph_h"]  ?? 96;
-			show_graph     = _map[$ "graph_sh"] ?? show_graph;
-			show_graphs    = array_clone(_map[$ "graph_shs"] ?? show_graphs);
 		}
 		
 		inspector_timeline = _map[$ "insp_tm"] ?? inspector_timeline;

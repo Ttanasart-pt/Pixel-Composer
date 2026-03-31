@@ -928,7 +928,7 @@ function Panel_Animation_Dopesheet() {
         var hovering = noone;
         
         var prop = animator.prop;
-        var _gh  = ui(prop.graph_h - 16);
+        var _gh  = ui(prop.attributes.graph_h - 16);
         var _gy0 = ui(8);
         var _gy1 = _gy0 + _gh;
         var kamo = array_length(animator.values);
@@ -937,8 +937,8 @@ function Panel_Animation_Dopesheet() {
         var mmx = msx;
         var mmy = msy - (key_y + ui(8));
         
-        var _gy_val_min = prop.graph_range[0];
-		var _gy_val_max = prop.graph_range[1];
+        var _gy_val_min = prop.attributes.graph_range[0];
+		var _gy_val_max = prop.attributes.graph_range[1];
         var _range      = prop.prev_graph_range;
             
         prop.graph_draw_y[0] = _gy0 + (key_y + ui(8));
@@ -1117,7 +1117,7 @@ function Panel_Animation_Dopesheet() {
             }
         } // draw line in between
         
-        if(prop.show_graph && array_length(animator.values) > 0) { // draw line outside keyframe range
+        if(prop.attributes.show_graph && array_length(animator.values) > 0) { // draw line outside keyframe range
             var key_first = animator.values[0];
             var t_first  = (key_first.time + 1) * timeline_scale + timeline_shift;
             
@@ -1290,7 +1290,6 @@ function Panel_Animation_Dopesheet() {
     
     function drawDopesheet_Graph_Prop(prop, key_y, msx, msy) {
         if(prop.type == VALUE_TYPE.color) { // draw color line
-            
             var _gy0 = key_y - ui(4);
             var _gy1 = key_y + ui(4);
             
@@ -1329,7 +1328,7 @@ function Panel_Animation_Dopesheet() {
             return;
         } // draw color line
         
-        var _gh  = ui(prop.graph_h);
+        var _gh  = ui(prop.attributes.graph_h);
         var _gy0 = key_y + ui(8);
         var _gy1 = _gy0 + _gh;
         
@@ -1356,39 +1355,19 @@ function Panel_Animation_Dopesheet() {
             prop.prev_graph_range[1] = -infinity;
             
             if(prop.sep_axis) {
-                var _min =  infinity;
-                var _max = -infinity;
                 var _anims = prop.getAnimators();
-                
                 for( var i = 0, n = array_length(_anims); i < n; i++ ) {
-                    if(!prop.show_graphs[i]) continue;
-                    
-                    var animator = _anims[i];
-                    for(var k = 0, m = array_length(animator.values); k < m; k++) {
-                        var key_val = animator.values[k].value;
-                        if(is_array(key_val)) {
-                            for( var ki = 0, mm = array_length(key_val); ki < mm; ki++ ) {
-                                _min = min(_min, key_val[ki]);
-                                _max = max(_max, key_val[ki]);
-                            }
-                            
-                        } else {
-                            _min = min(_min, key_val);
-                            _max = max(_max, key_val);
-                        }
-                    }
-                }
-                
-                for( var i = 0, n = array_length(_anims); i < n; i++ ) {
-                    if(!prop.show_graphs[i]) continue;
+                    if(!prop.attributes.show_graphs[i]) continue;
                     drawDopesheet_Graph_Line(_anims[i], key_y, msx, msy);
                 }
                 
             } else
                 drawDopesheet_Graph_Line(prop.animator, key_y, msx, msy);
                 
-            prop.graph_range[0] = prop.prev_graph_range[0];
-            prop.graph_range[1] = prop.prev_graph_range[1];
+	        if(prop.attributes.graph_rauto) {
+	            prop.attributes.graph_range[0] = prop.prev_graph_range[0];
+	            prop.attributes.graph_range[1] = prop.prev_graph_range[1];
+            }
             
         surface_reset_target();
         
@@ -1404,20 +1383,20 @@ function Panel_Animation_Dopesheet() {
         
 		if(_hov && mouse_lpress(pFOCUS)) {
 			graph_height_dragging = prop;
-			graph_height_drag_sy  = prop.graph_h;
+			graph_height_drag_sy  = prop.attributes.graph_h;
 			graph_height_drag_my  = msy;
 		}
 		
 		if(graph_height_dragging == prop) {
-			prop.graph_h = max(16, graph_height_drag_sy + (msy - graph_height_drag_my) / UI_SCALE);
+			prop.attributes.graph_h = max(16, graph_height_drag_sy + (msy - graph_height_drag_my) / UI_SCALE);
 			if(mouse_lrelease()) graph_height_dragging = noone;
 		}
 		
 		draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(ui(4), _gy0, prop.graph_range[1]);
+		draw_text_add(ui(4), _gy0, prop.attributes.graph_range[1]);
 		
 		draw_set_text(f_p4, fa_left, fa_bottom, COLORS._main_text_sub);
-		draw_text_add(ui(4), _gy1, prop.graph_range[0]);
+		draw_text_add(ui(4), _gy1, prop.attributes.graph_range[0]);
     }
     
     function drawDopesheet_Graph_BG(animator, msx, msy) { 
@@ -1595,7 +1574,7 @@ function Panel_Animation_Dopesheet() {
                 var _dy   = prop.y;
                 
                 if(isGraphable(_prop)) {
-                    var _graph_show = _prop.sep_axis? array_any(_prop.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.show_graph;
+                    var _graph_show = _prop.sep_axis? array_any(_prop.attributes.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.attributes.show_graph;
                     if(_graph_show) drawDopesheet_Graph_Prop(_prop, _dy, msx, msy);
                 }
                     
@@ -1708,8 +1687,8 @@ function Panel_Animation_Dopesheet() {
                 graph_key_sy         = _graph_key_hover_y;
                 
                 var _prop = graph_key_drag.anim.prop;
-                graph_key_drag_range[0] = _prop.graph_range[0];
-        		graph_key_drag_range[1] = _prop.graph_range[1];
+                graph_key_drag_range[0] = _prop.attributes.graph_range[0];
+        		graph_key_drag_range[1] = _prop.attributes.graph_range[1];
                 graph_key_drag_value    = graph_key_drag.value;
                 graph_key_drag_yrange   = graph_key_hover_range;
                 
@@ -1984,7 +1963,7 @@ function Panel_Animation_Dopesheet() {
 	        // BLEND_NORMAL
         }
         
-        var _graph_show = prop.sep_axis? prop.show_graphs[animator.index] : prop.show_graph;
+        var _graph_show = prop.sep_axis? prop.attributes.show_graphs[animator.index] : prop.attributes.show_graph;
         var tx = tool_width - ui(16);
         
         if(drw && isGraphable(prop)) {
@@ -1995,14 +1974,14 @@ function Panel_Animation_Dopesheet() {
                                        __txtx("panel_animation_show_graph", "Show graph");
                 
                 if(mouse_lpress(pFOCUS)) {
-                    if(prop.sep_axis) prop.show_graphs[animator.index] = !_graph_show;
-                    else              prop.show_graph                  = !_graph_show;
+                    if(prop.sep_axis) prop.attributes.show_graphs[animator.index] = !_graph_show;
+                    else              prop.attributes.show_graph                  = !_graph_show;
                 }
             } else
                 draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, _graph_show? COLORS._main_accent : COLORS._main_icon, _graph_show? 1 : _tool_a);
         
         } tx -= tw;
-           
+        
         #region keyframe controls
             bc = [COLORS._main_icon, COLORS._main_icon_on_inner];    
             if(drw && buttonInstant(noone, tx-ui(10), ty-ui(9), tw, th, m, hov, foc, "", THEME.prop_keyframe, 2, bc, _tool_a) == 2) {
@@ -2069,6 +2048,23 @@ function Panel_Animation_Dopesheet() {
 	        } else
 	            draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, on_end_dragging_anim == prop? COLORS._main_accent : COLORS._main_icon);
 	        tx -= tw;
+        #endregion
+        
+        #region graph settings
+        	var _graph_show = prop.sep_axis? prop.attributes.show_graphs[animator.index] : prop.attributes.show_graph;
+        	var tx = tool_width - ui(16);
+        	var ty = animator.y - 1 - top_frame_height + th + ui(2);
+        	
+	        if(_graph_show) {
+	        	var bt  = __txt("Auto Range");
+	        	var bsp = THEME.timeline_graph;
+	        	var bi  = prop.attributes.graph_rauto;
+	        	var bc  = prop.attributes.graph_rauto? COLORS._main_accent : COLORS._main_icon;
+	        	
+	        	if(buttonInstant_Pad(noone, tx-tw/2, ty-th/2, tw, th, [msx,msy], pHOVER, pFOCUS, bt, bsp, bi, bc, .8) == 2)
+	        		prop.attributes.graph_rauto = !prop.attributes.graph_rauto;
+                
+	        }
         #endregion
         
         draw_set_alpha(1);
@@ -2539,13 +2535,12 @@ function Panel_Animation_Dopesheet() {
                         _cont.h     += ph;
                     }
                     
-                    var _graph_show = _prop.sep_axis? array_any(_prop.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.show_graph;
-                    
+                    var _graph_show = _prop.sep_axis? array_any(_prop.attributes.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.attributes.show_graph;
                     if(_graph_show && _prop.type != VALUE_TYPE.color) {
                         draw_set_color(c1);
-                        draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(_prop.graph_h) - ui(2), false);
+                        draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(_prop.attributes.graph_h) - ui(2), false);
                         
-                        var _gr_h = ui(_prop.graph_h);
+                        var _gr_h = ui(_prop.attributes.graph_h);
                         key_y   += _gr_h + ui(8);
                         _cont.h += _gr_h + ui(8);
                     }
@@ -3479,7 +3474,7 @@ function Panel_Animation_Dopesheet() {
 	    if(!isGraphable(__prop) || __prop.type == VALUE_TYPE.color) return;
         if(array_length(__keys) < 2) return;
         
-	    __prop.show_graph = true;
+	    __prop.attributes.show_graph = true;
     	modulate_animator = __anim;
 	    modulate_keys     = array_create_ext(array_length(__keys), function(v) /*=>*/ {return [__keys[v], __keys[v].clone()]});
 	    

@@ -16,7 +16,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 			[ "Graph",  title_actions_show_graph, function() /*=>*/ { 
 				if(key == noone) return; 
 				var p = key.anim.prop; 
-				p.show_graph = !p.show_graph; 
+				p.attributes.show_graph = !p.attributes.show_graph; 
 			} ], 
 		];
 	#endregion
@@ -319,7 +319,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	
 	function drawContent() {
 		key = array_safe_get(PANEL_ANIMATION.keyframe_selecting, 0, noone);
-		title_actions_show_graph[2] = key && key.anim.prop.show_graph? COLORS._main_accent : COLORS._main_icon;
+		title_actions_show_graph[2] = key && key.anim.prop.attributes.show_graph? COLORS._main_accent : COLORS._main_icon;
 		
 		drivers     = [];
 		driverMulti = false;
