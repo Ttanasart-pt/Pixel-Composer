@@ -292,7 +292,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		preview_draw_surface  = undefined;
 		preview_draw_tile     = undefined;
 		preview_draw_mask     = undefined;
-		preview_draw_final    = 0;
+		preview_draw_final    = undefined;
 		
 		draw_stack = ds_list_create();
 		
@@ -777,7 +777,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var hh   = ui(8);
 		
 		yy += ui(4);
-		draw_set_color(COLORS._main_icon_dark);
+		draw_set_color(CDEF.main_dark);
 		draw_line_round(_sx0 + ui(8), yy, _sx1 - ui(8), yy, 2);
 		yy += ui(4);
 		
@@ -1100,12 +1100,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _drawnSurface = surface_create(surface_get_width(_can), surface_get_height(_can));
 		
 		surface_set_shader(_drawnSurface, sh_canvas_apply_draw);
-			shader_set_i("drawLayer", tool_attribute.drawLayer);
-			shader_set_i("eraser",    _sub);
-			shader_set_f("channels",  tool_attribute.channel);
-			shader_set_f("alpha",     _applyAlpha? _color_get_alpha(CURRENT_COLOR) : 1);
-			shader_set_f("mirror",    tool_attribute.mirror);
-			shader_set_c("pickColor", tool_attribute.pickColor, _color_get_alpha(tool_attribute.pickColor));
+			shader_set_i( "drawLayer", tool_attribute.drawLayer);
+			shader_set_f( "channels",  tool_attribute.channel);
+			shader_set_i( "eraser",    _sub);
+			shader_set_f( "alpha",     _applyAlpha? _color_get_alpha(CURRENT_COLOR) : 1);
+			shader_set_f( "mirror",    tool_attribute.mirror);
+			shader_set_c( "pickColor", tool_attribute.pickColor, _color_get_alpha(tool_attribute.pickColor));
 			
 			shader_set_surface("back", _can);
 			shader_set_surface("fore", _tmp);
@@ -1373,7 +1373,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _drawToolPreview = _params[$ "drawToolPreview"] ?? true;
 			
 			surface_set_shader(preview_draw_surface, noone, true, BLEND.alpha);
-				draw_surface_safe(_drawing_surface);
+				var dsrf = _drawing_surface;
+				var mrx  = tool_attribute.mirror[1];
+				var mry  = tool_attribute.mirror[2];
+				var alp  = _color_get_alpha(CURRENT_COLOR);
+				
+				draw_surface_ext_safe(dsrf, 0, 0, 1, 1, 0, c_white, alp);
 				
 				if(selection.is_selected) {
 					var _spx = selection.selection_position[0];
@@ -1381,19 +1386,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var _spw = selection.selection_size[0];
 					var _sph = selection.selection_size[1];
 					
-					if(tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, _spx * 2 + _spw, 0, -1, 1);
-					if(tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface, 0, _spy * 2 + _sph, 1, -1);
-					if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface, _spx * 2 + _spw, _spy * 2 + _sph, -1, -1);
+					if(mrx)        draw_surface_ext_safe(dsrf, _spx * 2 + _spw,               0, -1,  1, 0, c_white, alp);
+					if(mry)        draw_surface_ext_safe(dsrf,               0, _spy * 2 + _sph,  1, -1, 0, c_white, alp);
+					if(mrx && mry) draw_surface_ext_safe(dsrf, _spx * 2 + _spw, _spy * 2 + _sph, -1, -1, 0, c_white, alp);
 					
 				} else {
 					if(tool_attribute.mirror[0] == false) {
-						if(tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, _dim[0],       0, -1, 1);
-						if(tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface,       0, _dim[1], 1, -1);
-						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface, _dim[0], _dim[1], -1, -1);
+						if(mrx)        draw_surface_ext_safe(dsrf, _dim[0],       0, -1,  1, 0, c_white, alp);
+						if(mry)        draw_surface_ext_safe(dsrf,       0, _dim[1],  1, -1, 0, c_white, alp);
+						if(mrx && mry) draw_surface_ext_safe(dsrf, _dim[0], _dim[1], -1, -1, 0, c_white, alp);
+						
 					} else {
-						if(tool_attribute.mirror[1]) draw_surface_ext_safe(_drawing_surface, _dim[0], _dim[1], -1, 1, -90);
-						if(tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface,       0,       0, -1, 1,  90);
-						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(_drawing_surface, _dim[0], _dim[1], 1, 1, 180);
+						if(mrx)        draw_surface_ext_safe(dsrf, _dim[0], _dim[1], -1, 1, -90, c_white, alp);
+						if(mry)        draw_surface_ext_safe(dsrf,       0,       0, -1, 1,  90, c_white, alp);
+						if(mrx && mry) draw_surface_ext_safe(dsrf, _dim[0], _dim[1],  1, 1, 180, c_white, alp);
 					}
 				}
 				
@@ -1456,7 +1462,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					draw_surface_ext(global.canvas_brush_surface, _dx, _dy, _s, _s, 0, c_white, 1);
 				}
 			surface_reset_target();
+		#endregion
 			
+		#region draw gizmo
 			drawToolOutline();
 			
 			draw_set_color(COLORS._main_accent);
@@ -1489,6 +1497,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(tool_attribute.mirror[0] == false) {
 					if(tool_attribute.mirror[1]) draw_line(_xc, _y0, _xc, _y1);
 					if(tool_attribute.mirror[2]) draw_line(_x0, _yc, _x1, _yc);
+					
 				} else {
 					if(tool_attribute.mirror[1]) draw_line(_x0, _y1, _x1, _y0);
 					if(tool_attribute.mirror[2]) draw_line(_x0, _y0, _x1, _y1);
@@ -1799,11 +1808,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static getPreviewValues = function(_drawBG = true) {
-		if(nodeTool != noone && !nodeTool.applySelection)
-			return getOutputSurface();
-		
-		if(color_picking) 
-			return getOutputSurface();
+		var outp = getOutputSurface();
+		if(color_picking || (nodeTool != noone && !nodeTool.applySelection)) return outp;
 		
 		var _dim = attributes.dimension;
 		preview_draw_final = surface_verify(preview_draw_final, _dim[0], _dim[1]);
@@ -1812,20 +1818,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _bgUse = getInputData(10) && is_surface(_bg);
 		
 		surface_set_shader(preview_draw_final, sh_canvas_preview_canvas, true, BLEND.over);
-			shader_set_2("dimension",     _dim                 );
-			shader_set_s("background",    _bg                  );
-			shader_set_i("useBackground", _bgUse               );
-			shader_set_s("outputSurf",    getOutputSurface()   );
-			shader_set_s("canvas",        preview_draw_surface );
+			shader_set_2( "dimension",     _dim                         );
+			shader_set_s( "background",    _bg                          );
+			shader_set_i( "useBackground", _bgUse                       );
+			shader_set_s( "outputSurf",    outp                         );
+			shader_set_s( "canvas",        preview_draw_surface         );
 			
-			shader_set_i("bgDraw",        _drawBG                      );
-			shader_set_i("eraser",        isUsingTool("Eraser")        );
+			shader_set_i( "bgDraw",        _drawBG                      );
+			shader_set_i( "eraser",        isUsingTool("Eraser")        );
 			
-			shader_set_i("isSelected",    selection.is_selected        );
-			shader_set_s("selSurface",    selection.selection_surface  );
-			shader_set_s("selMask",       selection.selection_mask     );
-			shader_set_2("selSize",       selection.selection_size     );
-			shader_set_2("selPosition",   selection.selection_position );
+			shader_set_i( "isSelected",    selection.is_selected        );
+			shader_set_s( "selSurface",    selection.selection_surface  );
+			shader_set_s( "selMask",       selection.selection_mask     );
+			shader_set_2( "selSize",       selection.selection_size     );
+			shader_set_2( "selPosition",   selection.selection_position );
 			
 			draw_empty();
 		surface_reset_shader();

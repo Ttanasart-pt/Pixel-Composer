@@ -19,7 +19,7 @@ uniform vec2 selPosition;
 void main() {
 	vec4 og = vec4(0.);
 	vec4 bg = useBackground == 1? texture2D(background, v_vTexcoord) : vec4(0.);
-	vec4 fg = texture2D(canvas, v_vTexcoord);
+	vec4 drawp = texture2D(canvas, v_vTexcoord);
 	vec4 res;
 	
 	bool sel = true;
@@ -33,31 +33,36 @@ void main() {
 			     fx /= selSize     / dimension;
 		    
 		    if(fx.x > 0. && fx.y > 0. && fx.x < 1. && fx.y < 1.) {
-				vec4  cFg = texture2D( selSurface, fx );
-				vec4  msk = texture2D( selMask,    fx );
-				float al  = cFg.a + og.a * (1. - cFg.a);
+				vec4  selp = texture2D( selSurface, fx );
+				vec4  mask = texture2D( selMask,    fx );
+				float al   = selp.a + og.a * (1. - selp.a);
 				
-				og   = ((cFg * cFg.a) + (og * og.a * (1. - cFg.a))) / al;
-				og.a = al;
+				if(al == 0.) og = vec4(0.);
+				else {
+					vec4 bl = ((selp * selp.a) + (og * og.a * (1. - selp.a))) / al;
+					og = vec4(bl.rgb, al);
+				}
 				
-				if(msk.r * msk.a <= 0.) sel = false;
+				if(mask.r * mask.a <= 0.) sel = false;
 				
 		    } else 
 		    	sel = false;
 		}
 	}
 	
-	if(!sel) {
-		gl_FragColor = og;
-		return;
-	}
+	gl_FragColor = og;
+	if(!sel) return;
 	
 	if(eraser == 1) {
-		res = mix(og, bg, fg.a);
+		res = mix(og, bg, drawp.a);
 		
 	} else {
-		float al = fg.a + og.a * (1. - fg.a);
-		res = ((fg * fg.a) + (og * og.a * (1. - fg.a))) / al;
+		float al = drawp.a + og.a * (1. - drawp.a);
+		if(al == 0.) res = vec4(0.);
+		else {
+			res   = ((drawp * drawp.a) + (og * og.a * (1. - drawp.a))) / al;
+			res.a = al;
+		}
 	}
 	
 	gl_FragColor = res;

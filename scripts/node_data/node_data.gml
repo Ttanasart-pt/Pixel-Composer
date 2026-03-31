@@ -3073,6 +3073,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(struct_names_count(attri)) _map.attri = attri;
 		#endregion	
 		
+		_map.attriTool = variable_clone(tool_attribute);
+		
 		if(is_dynamic_input) {
 			_map.input_fix_len  = input_fix_len;
 			_map.data_length    = data_length;
@@ -3155,7 +3157,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		visible      = load_map[$ "visible"] ?? true;
 		is_instancer = load_map[$ "is_instancer"] ?? is_instancer;
 		
-		if(struct_has(load_map, "attri")) {
+		if(has(load_map, "attri")) {
 			var _lattr = load_map.attri;
 			_lattr.color_depth         = _lattr[$ "color_depth"]      ?? 3;
 			_lattr.interpolate         = _lattr[$ "interpolate"]      ?? 1;
@@ -3178,6 +3180,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			attributeDeserialize(CLONING? variable_clone(_lattr) : _lattr);
 		}
+		
+		if(has(load_map, "attriTool")) 
+			tool_attribute = struct_override(tool_attribute, load_map.attriTool);
 		
 		if(is_dynamic_input) {
 			inputBalance();

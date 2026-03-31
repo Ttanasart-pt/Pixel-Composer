@@ -27,6 +27,8 @@ void main() {
 	_cFg.a *= opacity * sampleMask();
 	
 	float al = _cFg.a + _cBg.a * (1. - _cFg.a);
+	if(al == 0.) { gl_FragColor = vec4(0.); return; }
+	
 	vec4 res = ((_cFg * _cFg.a) + (_cBg * _cBg.a * (1. - _cFg.a))) / al;
 	res.a = preserveAlpha == 1? _cBg.a : al;
 	

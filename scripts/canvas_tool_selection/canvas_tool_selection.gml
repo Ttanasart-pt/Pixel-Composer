@@ -284,10 +284,10 @@ function canvas_selection_data() : canvas_tool() constructor {
 		surface_reset_shader();
 		
 		surface_set_shader(_drawnSurface, sh_canvas_apply_draw, false, BLEND.over);
-			shader_set_i("drawLayer", _drawLay);
-			shader_set_i("eraser",    0);
-			shader_set_f("channels",  1, 1, 1, 1);
-			shader_set_f("alpha",     1);
+			shader_set_i( "drawLayer", _drawLay );
+			shader_set_i( "eraser",    0        );
+			shader_set_f( "channels",  1,1,1,1  );
+			shader_set_f( "alpha",     1        );
 			
 			shader_set_surface("back", targetSurface);
 			shader_set_surface("fore", _selectionSurf);

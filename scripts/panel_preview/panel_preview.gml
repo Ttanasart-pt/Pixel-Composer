@@ -1531,7 +1531,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         var tbarX = 0;
         var tbarY = 0;
-        var tbarW = w - ui(120 + 12);
+        var tbarW = w - ui(156);
         var tbarH = topbar_height;
         
         var _hover = pHOVER && point_in_rectangle(mx, my, tbarX, tbarY, tbarX + tbarW, tbarY + tbarH);
