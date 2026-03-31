@@ -337,6 +337,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	#region ++++ tools ++++
 		palette_picking = false;
 		color_picking   = false;
+		tool_color_selecting = false;
 		
 		tool_attribute.channel       = [ true, true, true, true ];
 		tool_attribute.mirror        = [ false, false, false ];
@@ -856,13 +857,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 					
 			if(hover && point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch)) {
-				if(mouse_lclick(focus))
+				if(mouse_lpress(focus))
+					tool_color_selecting = true;
+					
+				if(tool_color_selecting && mouse_lclick(focus))
 					setToolColor(_c);
 			}
 			
 			yy += _ch;
 			hh += _ch;
 		}
+		
+		if(tool_color_selecting && mouse_lrelease()) tool_color_selecting = false;
 		
 		if(_scrollTarget != noone)
 			setToolColor(PROJ_PALETTE[_scrollTarget]);

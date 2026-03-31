@@ -13,7 +13,6 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 	mouse_edit_sy = 0;
 	
 	mouse_hovering = [ noone, 0 ];
-	draw_hovering  = [];
 		
 	static clear = function() {
 		anchors = [];
@@ -99,7 +98,7 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 				nax0 = nx + anchors[i][0];
 				nay0 = ny + anchors[i][1];
 			
-				if(i) brush.drawCurve(ox, oy, oax1, oay1, nax0, nay0, nx, ny);
+				if(i) brush.drawCurve(ox, oy, oax1, oay1, nax0, nay0, nx, ny, false);
 				
 				oax1 = nx + anchors[i][4];
 				oay1 = ny + anchors[i][5];
@@ -120,7 +119,7 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 		var ox, oy, nx, ny, ax0, ay0, ax1, ay1;
 		var oax1, oay1, nax0, nay0;
 		
-		draw_set_color(c_white);
+		draw_set_color(COLORS._main_icon);
 		for (var i = 0, n = array_length(anchors); i < n; i++) {
 			nx = _x + anchors[i][2]  * _s;
 			ny = _y + anchors[i][3]  * _s;
@@ -140,8 +139,9 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 			oy = ny;
 		}
 		
+		var _hovInd = mouse_hovering[0];
+		var _hovTyp = mouse_hovering[1];
 		mouse_hovering = [ noone, 0 ];
-		draw_hovering  = array_verify(draw_hovering, array_length(anchors) * 3);
 		
 		for (var i = 0, n = array_length(anchors); i < n; i++) {
 			nx = _x + anchors[i][2] * _s;
@@ -153,9 +153,9 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 			ax1 = nx + anchors[i][4] * _s;
 			ay1 = ny + anchors[i][5] * _s;
 			
-			draw_anchor(0,  nx,  ny, lerp(ui(9), ui(10), draw_hovering[i * 3 + 1]));
-			draw_anchor(0, ax0, ay0, lerp(ui(7), ui(8), draw_hovering[i * 3 + 0]));
-			draw_anchor(0, ax1, ay1, lerp(ui(7), ui(8), draw_hovering[i * 3 + 2]));
+			draw_anchor( 0,  nx,  ny, ui(7 + 2 * (_hovInd == i && _hovTyp ==  0)) );
+			draw_anchor( 0, ax0, ay0, ui(5 + 2 * (_hovInd == i && _hovTyp == -1)) );
+			draw_anchor( 0, ax1, ay1, ui(5 + 2 * (_hovInd == i && _hovTyp ==  1)) );
 			
 			     if(point_in_circle(_mx, _my, nx, ny,   ui(10))) mouse_hovering = [ i,  0 ];
 			else if(point_in_circle(_mx, _my, ax0, ay0, ui(10))) mouse_hovering = [ i, -1 ];
@@ -163,10 +163,7 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 		}
 		
 		var index = mouse_hovering[0] != noone? mouse_hovering[0] * 3 + mouse_hovering[1] + 1 : noone;
-		for (var i = 0, n = array_length(draw_hovering); i < n; i++)
-			draw_hovering[i] = lerp_float(draw_hovering[i], i == index, 4);
-				
-		if(mouse_hovering[0] == noone && editing[0] == noone) draw_anchor(0, _mx, _my, ui(10));
+		if(mouse_hovering[0] == noone && editing[0] == noone) draw_anchor(0, _mx, _my, ui(7));
 	}
 	
 }

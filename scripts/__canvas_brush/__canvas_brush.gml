@@ -349,24 +349,35 @@ function canvas_brush() constructor {
 	
 	static drawCurve = function(x0, y0, cx0, cy0, cx1, cy1, x1, y1, _draw = false, prec = 32) { 
 		var ox, oy, nx, ny;
-		
+		var odx, ody;
 		var _st = 1 / prec;
 		
 		for (var i = 0; i <= prec; i++) {
 			var _t  = _st * i;
 			var _t1 = 1 - _t;
 			
-			nx = _t1 * _t1 * _t1 * x0 + 
-			     3 * (_t1 * _t1 * _t) * cx0 + 
-			     3 * (_t1 * _t  * _t) * cx1 + 
-			     _t * _t * _t * x1;
+			nx =     _t1 * _t1 * _t1 *  x0 + 
+			     3 * _t1 * _t1 * _t  * cx0 + 
+			     3 * _t1 * _t  * _t  * cx1 + 
+			         _t  * _t  * _t  *  x1;
 			     
-			ny = _t1 * _t1 * _t1 * y0 + 
-			     3 * (_t1 * _t1 * _t) * cy0 + 
-			     3 * (_t1 * _t  * _t) * cy1 + 
-			     _t * _t * _t * y1;
+			ny =     _t1 * _t1 * _t1 *  y0 + 
+			     3 * _t1 * _t1 * _t  * cy0 + 
+			     3 * _t1 * _t  * _t  * cy1 + 
+			         _t  * _t  * _t  *  y1;
 			     
-		     if(i) drawLine(ox, oy, nx, ny, _draw, true);
+		    if(i) {
+		    	var dist = point_distance(odx, ody, nx, ny);
+		    	if(dist > 1 || i == prec) {
+		    		drawLine(odx, ody, nx, ny, _draw, true);
+		    		odx = nx;
+		    		ody = ny;
+		    	}
+		    	
+		    } else {
+		    	odx = nx;
+		    	ody = ny;
+		    }
 			     
 			ox = nx;
 			oy = ny;
