@@ -6,8 +6,9 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	////- =Path
 	newInput(i+ 0, nodeValue_PathNode( "Path" ));
-	newInput(i+ 9, nodeValue_Float(    "Path Scale",    .25 ));
+	newInput(i+ 9, nodeValue_Float(    "Path Scale",    .25    ));
 	newInput(i+10, nodeValue_EButton(  "Project Normal", 2, [ "X", "Y", "Z" ]    ));
+	newInput(i+11, nodeValue_Bool(     "Invert Y",       false ));
 	
 	////- =Mesh
 	newInput(i+ 1, nodeValue_EButton(  "Revolve Axis",     0, [ "X", "Y" ]       ));
@@ -21,10 +22,10 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	newInput(i+ 6, nodeValue_Bool(       "Smooth",        false               ));
 	newInput(i+ 7, nodeValue_D3Material( "Material Side", new __d3dMaterial() ));
 	newInput(i+ 8, nodeValue_D3Material( "Material Cap",  new __d3dMaterial() ));
-	// input i+11
+	// input i+12
 	
 	input_display_list = [
-		[ "Path",     false ], i+0, i+9, i+10, 
+		[ "Path",     false ], i+0, i+9, i+10, i+11, 
 		__d3d_input_list_mesh, i+3, i+4, i+5, 
 		__d3d_input_list_transform,
 		[ "Material", false ], i+6, i+7, i+8, 
@@ -39,6 +40,7 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 			var _path = _data[i+ 0];
 			var _pSca = _data[i+ 9];
 			var _pAxs = _data[i+10];
+			var _yInv = _data[i+11];
 			
 			var _axis = _data[i+ 1];
 			var _orig = _data[i+ 2];
@@ -67,6 +69,8 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 				case 1: _points[i] = [ _p.x * _pSca, _p.z * _pSca ]; break;
 				case 2: _points[i] = [ _p.x * _pSca, _p.y * _pSca ]; break;
 			}
+			
+			if(_yInv) _points[i][1] = -_points[i][1];
 		}
 		
 		var object = getObject(_array_index);
