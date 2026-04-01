@@ -16,7 +16,7 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	overlay_surface = noone;
 	
 	static init = function() { 
-		if(node.attributes.useBGDim) {
+		if(node.attributes.useBGDim) { 
 			noti_warning($"Canvas: Cannot resize canvas with 'Use Background Dimension' on.")
 			cancel();
 			return;
@@ -141,7 +141,6 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	}
 	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
-		
 		var _sw = points[2] - points[0];
 		var _sh = points[3] - points[1];
 		var x0, y0, x1, y1;
@@ -178,6 +177,12 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		else if(point_in_circle(_mx, _my, x1, y0, _r))        _hovering = 1;
 		else if(point_in_circle(_mx, _my, x0, y1, _r))        _hovering = 2;
 		else if(point_in_circle(_mx, _my, x1, y1, _r))        _hovering = 3;
+		
+		else if(distance_to_line(_mx, _my, x0, y0, x1, y0) < ui(4)) _hovering = 4;
+		else if(distance_to_line(_mx, _my, x0, y1, x1, y1) < ui(4)) _hovering = 5;
+		else if(distance_to_line(_mx, _my, x0, y0, x0, y1) < ui(4)) _hovering = 6;
+		else if(distance_to_line(_mx, _my, x1, y0, x1, y1) < ui(4)) _hovering = 7;
+		
 		else if(point_in_rectangle(_mx, _my, x0, y0, x1, y1)) _hovering = 9;
 		
 		for( var i = 0; i < 4; i++ ) __hover_anim[i] = lerp_float(__hover_anim[i], i == _hovering, 4);
@@ -190,6 +195,12 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 			draw_set_color(c_white);
 			draw_rectangle_dashed(x0, y0, x1, y1, true, 6, current_time / 100);
 		}
+		
+		draw_set_color(COLORS._main_accent);
+		if((dragging == -1 && _hovering == 4) || dragging == 4) draw_line_width(x0, y0, x1, y0, 3);
+		if((dragging == -1 && _hovering == 5) || dragging == 5) draw_line_width(x0, y1, x1, y1, 3);
+		if((dragging == -1 && _hovering == 6) || dragging == 6) draw_line_width(x0, y0, x0, y1, 3);
+		if((dragging == -1 && _hovering == 7) || dragging == 7) draw_line_width(x1, y0, x1, y1, 3);
 		
 		draw_anchor(__hover_anim[0], x0, y0, _r);
 		draw_anchor(__hover_anim[1], x1, y0, _r);
@@ -206,32 +217,27 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 			_dy = round(_dy);
 			
 			switch(dragging) {
-				case 0 : 
-					points[0] = drag_points[0] + _dx;
-					points[1] = drag_points[1] + _dy;
-					break;
+				case 0 : points[0] = drag_points[0] + _dx;
+					     points[1] = drag_points[1] + _dy; break;
 					
-				case 1 : 
-					points[2] = drag_points[2] + _dx;
-					points[1] = drag_points[1] + _dy;
-					break;
+				case 1 : points[2] = drag_points[2] + _dx;
+					     points[1] = drag_points[1] + _dy; break;
 					
-				case 2 : 
-					points[0] = drag_points[0] + _dx;
-					points[3] = drag_points[3] + _dy; 
-					break;
+				case 2 : points[0] = drag_points[0] + _dx;
+					     points[3] = drag_points[3] + _dy; break;
 					
-				case 3 : 
-					points[2] = drag_points[2] + _dx;
-					points[3] = drag_points[3] + _dy;
-					break;
+				case 3 : points[2] = drag_points[2] + _dx;
+					     points[3] = drag_points[3] + _dy; break;
 					
-				case 9 : 
-					points[0] = drag_points[0] + _dx;
-					points[1] = drag_points[1] + _dy;
-					points[2] = drag_points[2] + _dx;
-					points[3] = drag_points[3] + _dy;
-					break;
+				case 4 : points[1] = drag_points[1] + _dy; break;
+				case 5 : points[3] = drag_points[3] + _dy; break;
+				case 6 : points[0] = drag_points[0] + _dx; break;
+				case 7 : points[2] = drag_points[2] + _dx; break;
+					
+				case 9 : points[0] = drag_points[0] + _dx;
+					     points[1] = drag_points[1] + _dy;
+					     points[2] = drag_points[2] + _dx;
+					     points[3] = drag_points[3] + _dy; break;
 			}
 			
 			if(mouse_lrelease())

@@ -157,6 +157,28 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		return animator.getValue(_time);
 	}
 	
+	/////============== SET =============
+	
+	static setValue = function(val = 0, record = true, time = NODE_CURRENT_FRAME, _update = true) { //// Set value
+		switch(attributes.use_project_dimension) {
+			case 1 : 
+				val = [ val[0] / NPROJ_SURF_W, 
+					    val[1] / NPROJ_SURF_H ];
+				break;
+			
+			case 2 : 
+				var _msk = mask_input.getValue(time);
+				val = [ val[0] / surface_get_width_safe(_msk),
+					    val[1] / surface_get_height_safe(_msk) ];
+				break;
+		}
+		
+		var _set = setValueDirect(val, noone, record, time, _update);
+		if(onSetValue != undefined) onSetValue(val);
+		
+		return _set;
+	}
+	
 	static onSetFrom = function() {
 		attributes.use_project_dimension = 0;
 		unitTooltip.index = attributes.use_project_dimension;
