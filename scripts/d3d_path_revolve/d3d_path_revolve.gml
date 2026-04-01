@@ -1,17 +1,17 @@
 function __3dPathRevolve() : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
-	render_type = pr_trianglelist;
+	render_type   = pr_trianglelist;
 	object_counts = 3;
 	
 	origin = new __vec2();
 	points = [];
 	sides  = 8;
 	caps   = 0;
+	axis   = 0;
 	
 	smooth = false;
 	
 	static initModel = function() {
-		
 		edges   = [];
 		var eid = 0;
 		

@@ -505,8 +505,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		weight_drag_my = 0;
 		
 		anchor_freeze   = 0;
-		anchor_select   = [];
 		anchor_focus    = undefined;
+		anchor_select   = [];
+		anchor_select_map = {};
 	#endregion
 	
 	////- Anchor
@@ -747,6 +748,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				if(attributes.snap_point)
 				for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
 					if(drag_point == i && drag_type == 0) continue;
+					if(has(anchor_select_map, i)) continue;
+					
 					var _a  = _pth.anchors[i];
 					var _ax = _a[0];
 					var _ay = _a[1];
@@ -1653,6 +1656,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						drag_point_sx = _msx;
 						drag_point_sy = _msy;
 						
+						drag_point_data = array_verify(drag_point_data, array_length(inputs));
+						for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+							drag_point_data[i] = array_clone(inputs[i].getValue());
+							
 						RENDER_ALL
 					}
 				}
@@ -1819,6 +1826,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							drag_point_sx = _a[_ANCHOR.x];
 							drag_point_sy = _a[_ANCHOR.y];
 						}
+						
+						drag_point_data = array_verify(drag_point_data, array_length(inputs));
+						for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+							drag_point_data[i] = array_clone(inputs[i].getValue());
 					}
 					
 				} else if(hover_type == 0 && key_mod_press(SHIFT)) { // remove
@@ -1905,13 +1916,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var sx1 = panel.selection_x1;
 				var sy1 = panel.selection_y1;
 				
-				anchor_select   = [];
+				anchor_select     = [];
+				anchor_select_map = {};
 				
 				for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
 					var _anc = _pth.anchors[i];
 					
-					if(point_in_rectangle(_anc[0], _anc[1], sx0, sy0, sx1, sy1)) 
+					if(point_in_rectangle(_anc[0], _anc[1], sx0, sy0, sx1, sy1)) {
 						array_push(anchor_select, i);
+						anchor_select_map[$ i] = 1;
+					}
 				}
 				
 			}
@@ -1938,7 +1952,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					triggerRender();
 				}
 				
-				anchor_select = [];
+				anchor_select     = [];
+				anchor_select_map = {};
 			}
 		}
 		
