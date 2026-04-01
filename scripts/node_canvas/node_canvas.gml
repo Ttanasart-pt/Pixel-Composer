@@ -267,10 +267,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- Nodes
 	
 	temp_surface = array_create(2);
-	
-	live_edit   = false;
-	live_target = "";
-	output_pool = [];
+	live_edit    = false;
+	live_target  = "";
+	output_pool  = [];
 	
 	#region ++++ data ++++
 		attributes.frames = 1;

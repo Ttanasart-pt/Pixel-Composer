@@ -356,7 +356,22 @@
 	        var a = arr[m];
 	        
 	        if (a == val) return m; 
+	        if (a < val) l = m + 1; 
+	        else         h = m - 1; 
+	    }
+	    
+	    return l;
+	}
+	
+	function array_find_sorted_less(arr, val) {
+	    var l = 0;
+	    var h = array_length(arr) - 1;
+	    
+	    while (l <= h) {
+	        var m = floor((l + h) / 2);
+	        var a = arr[m];
 	        
+	        if (val >= a && val < arr[m+1]) return m; 
 	        if (a < val) l = m + 1; 
 	        else         h = m - 1; 
 	    }

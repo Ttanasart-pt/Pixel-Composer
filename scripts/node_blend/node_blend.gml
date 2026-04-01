@@ -66,7 +66,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Transform
 	newInput( 5, nodeValue_Enum_Scroll( "Fill mode",         0, [ "None", "Stretch", "Tile" ]));
-	newInput(14, nodeValue_Vec2(        "Position",        [.5,.5] ));
+	newInput(14, nodeValue_Vec2(        "Position",        [.5,.5] )).setUnitSimple();
 	newInput(10, nodeValue_Enum_Button( "Horizontal Align",  0, array_create(3, THEME.inspector_surface_halign)));
 	newInput(11, nodeValue_Enum_Button( "Vertical Align",    0, array_create(3, THEME.inspector_surface_valign)));
 	// inputs 15
@@ -112,8 +112,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var fw = surface_get_width_safe( _fore);
 		var fh = surface_get_height_safe(_fore);
 		
-		var _rx = _posi[0] * sw - fw / 2;
-		var _ry = _posi[1] * sh - fh / 2;
+		var _rx = _posi[0] - fw / 2;
+		var _ry = _posi[1] - fh / 2;
 		    _rx = _x + _rx * _s;
 			_ry = _y + _ry * _s;
 		var _rw = fw * _s;
@@ -122,9 +122,6 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		if(dragging) {
 			var px = drag_sx + (_mx - drag_mx) / _s;
 			var py = drag_sy + (_my - drag_my) / _s;
-			
-			px /= sw;
-			py /= sh;
 			
 			if(inputs[14].setValue([ px, py ]))
 				UNDO_HOLDING = true;
@@ -141,8 +138,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			if(mouse_lpress(active)) {
 				dragging = true;
-				drag_sx  = _posi[0] * sw;
-				drag_sy  = _posi[1] * sh;
+				drag_sx  = _posi[0];
+				drag_sy  = _posi[1];
 				drag_mx  = _mx;
 				drag_my  = _my;
 			}
@@ -268,8 +265,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				var fw = surface_get_width_safe(_fore);
 				var fh = surface_get_height_safe(_fore);
 			
-				var px = _posit[0] * ww;
-				var py = _posit[1] * hh;
+				var px = _posit[0];
+				var py = _posit[1];
 				
 				surface_set_shader(_foreDraw, noone,, BLEND.over);
 					draw_surface_safe(_fore, px - fw / 2, py - fh / 2);

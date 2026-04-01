@@ -4,20 +4,22 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	setDimension(96, 48);
 	
 	////- =Path
-	newInput(0, nodeValue_PathNode( "Path" ));
-	newInput(2, nodeValue_Bool(     "Spread Single Path", true ));
+	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 2, nodeValue_Bool(     "Spread Single Path", true ));
+	newInput( 5, nodeValue_Bool(     "Loop",               true ));
 	
 	////- =Type
-	newInput(3, nodeValue_Enum_Scroll( "Sample Type",    0, [ "Length", "Amount" ] ));
-	newInput(1, nodeValue_Float(       "Segment Length", 1 ));
-	newInput(4, nodeValue_Int(         "Output Amount",  1 ));
-	// input 5
+	newInput( 3, nodeValue_EScroll( "Sample Type",    0, [ "Length", "Amount" ] ));
+	newInput( 1, nodeValue_Float(   "Segment Length", 1 ));
+	newInput( 4, nodeValue_Int(     "Output Amount",  1 ));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Segments", VALUE_TYPE.float,    []    )).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(2);
 	newOutput(1, nodeValue_Output("Path",     VALUE_TYPE.pathnode, noone ));
 	
-	input_display_list = [ 0, 2, 
-		[ "Type", false ], 3, 1, 4, 
+	input_display_list = [ 
+		[ "Path",   false ], 0, 2, 
+		[ "Sample", false ], 3, 1, 4, 
 	];
 	
 	output_display_list = [ 1, 0 ];
@@ -110,8 +112,13 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
-			// var _cKey  = $"{_dist}/{ind}";
 			
+			var _ll = getLength(ind);
+			if(_ll <= 0) return out;
+			
+			_dist = _dist % _ll;
+			
+			var _cKey  = $"{_dist}/{ind}";
 			// if(struct_has(cached_pos, _cKey)) {
 			// 	var _cachep = cached_pos[$ _cKey];
 			// 	out.x = _cachep.x;
@@ -121,20 +128,14 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			// }
 			
 			var _pp = points[ind];
-			var _ll = getLength(ind);
-			if(_ll <= 0) return out;
-			
 			var _la = getAccuLength(ind);
-			_dist   = _dist % _ll;
-			
-			var i0 = min(array_find_sorted(_la, _dist), array_length(_la) - 2);
-			var i1 = i0 + 1;
-			
+			var  i0 = min(array_find_sorted_less(_la, _dist), array_length(_la) - 2);
+			var  i1 = i0 + 1;
 			var _rat = (_dist - _la[i0]) / (_la[i1] - _la[i0]);
 			
 			out.x = lerp(_pp[i0][0], _pp[i1][0], _rat);
 			out.y = lerp(_pp[i0][1], _pp[i1][1], _rat);
-			// cached_pos[$ _cKey] = new __vec2P(out.x, out.y);
+			cached_pos[$ _cKey] = new __vec2P(out.x, out.y);
 			
 			return out; 
 		}
@@ -170,6 +171,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		#region data
 			var _path = getInputData(0);
 			var _sped = getInputData(2);
+			var _loop = getInputData(6);
 			
 			var _type = getInputData(3);
 			var _dist = getInputData(1);
@@ -184,14 +186,12 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _bpath = outputs[1].getValue();
 		if(!is(_bpath, _bakedPath)) _bpath = new _bakedPath(self);
 		
-		var _loop   = struct_try_get(_path, "path_loop", false);
+		var _loop   = struct_try_get(_path, "loop", false);
 		var _amo    = _path.getLineCount();
 		path_amount = _amo;
 		
 		var _segs = array_create(_amo);
-		
 		var _p = new __vec2P();
-		var st = 1 / _amou;
 		
 		if(_type == 0) {
 			for( var i = 0; i < _amo; i++ ) {
@@ -212,6 +212,8 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 		} else if(_type == 1) {
+			var st = 1 / _amou;
+			
 			for( var i = 0; i < _amo; i++ ) {
 				var _len = _path.getLength(i);
 				if(_len == 0) { _segs[i] = []; continue; }
@@ -221,7 +223,10 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var sind = 0;
 				
 				for( var j = 0; j <= _amou; j++ ) {
-					_p = _path.getPointRatio(j * st, i, _p);
+					var _rat = j * st;
+					if(!_loop) _rat = clamp(_rat, 0., .999);
+					
+					_p = _path.getPointRatio(_rat, i, _p);
 					sseg[sind++] = [ _p.x, _p.y, j * st ];
 				}
 				
