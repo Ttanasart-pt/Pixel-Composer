@@ -957,6 +957,46 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		];
 	#endregion
 	
+	#region ---- actions ----
+		function convertTo2D(_axis = 2) {
+			var node = nodeBuild("Node_Path", x + w + 32, y, group);
+			node.inputs[1].setValue(inputs[1].getValue());
+			node.inputs[3].setValue(inputs[3].getValue());
+			
+			for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+				var _anc = inputs[i].getValue();
+				var _ax = _anc[0], _ay = _anc[1], _az = _anc[2];
+				var _bx = _anc[3], _by = _anc[4], _bz = _anc[5];
+				var _cx = _anc[6], _cy = _anc[7], _cz = _anc[8];
+				var _px, _py, _c1x, _c1y, _c2x, _c2y;
+				
+				
+				switch(_axis) {
+					case 0 : _px  = _ay; _py  = _az;
+						     _c1x = _by; _c1y = _bz;
+						     _c2x = _cy; _c2y = _cz; break;
+				     
+					case 1 : _px  = _ax; _py  = _az;
+						     _c1x = _bx; _c1y = _bz;
+						     _c2x = _cx; _c2y = _cz; break;
+						     
+					case 2 : _px  = _ax; _py  = _ay;
+						     _c1x = _bx; _c1y = _by;
+						     _c2x = _cx; _c2y = _cy; break;
+						     
+				}
+				
+				node.createNewInput(, _px  * 10, _py  * 10, 
+				                      _c1x * 10, _c1y * 10, 
+				                      _c2x * 10, _c2y * 10, false);
+			}
+		}
+		
+		insp1button = button(function(fr) /*=>*/ {return convertTo2D()}).setTooltip(__txt("Convert to 2D"))
+			.setIcon(s_node_path).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		
+	#endregion
+	
 	static resetDisplayList = function() {
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 		

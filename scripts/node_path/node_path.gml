@@ -510,6 +510,25 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		anchor_select_map = {};
 	#endregion
 	
+	#region ---- actions ----
+		function convertTo3D() {
+			var node = nodeBuild("Node_Path_3D", x + w + 32, y, group);
+			node.inputs[1].setValue(inputs[1].getValue());
+			node.inputs[3].setValue(inputs[3].getValue());
+			
+			for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+				var _anc = inputs[i].getValue();
+				node.createNewInput(, _anc[0] / 10, _anc[1] / 10, 0, 
+				                      _anc[2] / 10, _anc[3] / 10, 0, 
+				                      _anc[4] / 10, _anc[5] / 10, 0, false);
+			}
+		}
+		
+		insp1button = button(function(fr) /*=>*/ {return convertTo3D()}).setTooltip(__txt("Convert to 3D"))
+			.setIcon(s_node_path_3d).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		
+	#endregion
+	
 	////- Anchor
 	
 	static resetDisplayList = function() {

@@ -19,16 +19,17 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	newInput(i+ 5, nodeValue_Int(      "Revolve Sample",  8 )).setValidator(VV_min(3));
 	
 	////- =Material
-	newInput(i+ 6, nodeValue_Bool(       "Smooth",        false               ));
+	newInput(i+ 6, nodeValue_Bool(       "Smooth",        false ));
+	newInput(i+12, nodeValue_Bool(       "Invert Normal", false ));
 	newInput(i+ 7, nodeValue_D3Material( "Material Side", new __d3dMaterial() ));
 	newInput(i+ 8, nodeValue_D3Material( "Material Cap",  new __d3dMaterial() ));
-	// input i+12
+	// input i+13
 	
 	input_display_list = [
-		[ "Path",     false ], i+0, i+9, i+10, i+11, 
-		__d3d_input_list_mesh, i+3, i+4, i+5, 
+		[ "Path",     false ], i+ 0, i+ 9, i+10, i+11, 
+		__d3d_input_list_mesh, i+ 3, i+ 4, i+ 5, 
 		__d3d_input_list_transform,
-		[ "Material", false ], i+6, i+7, i+8, 
+		[ "Material", false ], i+ 6, i+12, i+ 7, i+ 8, 
 	]
 	
 	////- Nodes
@@ -50,6 +51,7 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 			var _rsam = _data[i+ 5];
 			
 			var _smt  = _data[i+ 6];
+			var _nInv = _data[i+12];
 			var _mSid = _data[i+ 7];
 			var _mCap = _data[i+ 8];
 			
@@ -73,6 +75,7 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 			if(_yInv) _points[i][1] = -_points[i][1];
 		}
 		
+		if(_nInv) _points = array_reverse(_points);
 		var object = getObject(_array_index);
 		object.checkParameter({ 
 			origin: _orig, 
