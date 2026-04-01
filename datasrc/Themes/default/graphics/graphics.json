@@ -273,6 +273,7 @@
     "timeline_hide":                      { "path": "./icon/s_timeline_hide.png",                           "s": 3, "x":  8, "y":  8 },
     "timeline_hide_24":                   { "path": "./icon/s_timeline_hide_24.png",                        "s": 3, "x": 12, "y": 12 },
     "timeline_graph":                     { "path": "./icon/s_timeline_graph.png",                          "s": 1, "x":  6, "y":  6 },
+    "timeline_graph_range_auto":          { "path": "./icon/s_timeline_graph_range_auto.png",               "s": 2, "x":  6, "y":  6 },
     "trophy":                             { "path": "./icon/s_trophy.png",                                  "s": 1, "x": 12, "y": 12 },
     "tunnel":                             { "path": "./icon/s_tunnel.png",                                  "s": 2, "x": 12, "y": 12 },
     "tunnel_panel":                       { "path": "./icon/s_tunnel_panel.png",                            "s": 1, "x": 12, "y": 12 },

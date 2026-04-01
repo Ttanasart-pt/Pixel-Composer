@@ -13,7 +13,7 @@ void main() {
     vec4 c0 = texture2D(gm_BaseTexture, v_vTexcoord);
     gl_FragColor = c0;
     
-    if(c0.a == 0.) return;
+    // if(c0.a == 0.) return;
     
     vec2  px = floor(v_vTexcoord * dimension);
     vec2  dr = p1 - p0;
@@ -33,5 +33,6 @@ void main() {
 	}
 	
     vec4 res = mix(c0, color, rat);
+    if(res.a > 0.) res.rgb /= res.a;
     gl_FragColor = res;
 }

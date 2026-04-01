@@ -26,9 +26,9 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 	    eix = clamp(eix, 0, .9);
 	    
 		eix = 1 - eix;
-		eiy = 1 - eiy;
+		eiy =     eiy;
 		
-		return eval_curve_segment_x(0, eox, eoy, eix, 1 - eiy, 1, rat);
+		return eval_curve_segment_x(0, eox, eoy, eix, eiy, 1, rat);
 	}
 	
 #endregion

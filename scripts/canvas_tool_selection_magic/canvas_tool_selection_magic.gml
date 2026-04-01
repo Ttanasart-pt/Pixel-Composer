@@ -62,10 +62,9 @@ function canvas_tool_selection_magic(_selector, _toolAttr) : canvas_selection_to
 					UNDO_HOLDING = false;
 				}
 				
-			} else {
+			} else // click outside canvas
 				selector.apply();
 				
-			}
 		}
 	}
 	

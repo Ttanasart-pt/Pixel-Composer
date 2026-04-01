@@ -43,7 +43,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 		var _surf = mask? _sel.selection_mask : _sel.selection_surface;
 		var _pos  = _sel.selection_position;
 		
-		surface_set_shader(preview_surface[0], noone);
+		surface_set_shader(preview_surface[0], noone, true, BLEND.over);
 			draw_surface(_surf, _pos[0], _pos[1]);
 		surface_reset_shader();
 		
@@ -52,7 +52,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 			
 			if(mouse_lrelease()) {
 				var _newSurf = surface_create(mask_boundary[2], mask_boundary[3]);
-				surface_set_shader(_newSurf, noone);
+				surface_set_shader(_newSurf, noone, true, BLEND.over);
 					draw_surface(preview_surface[1], -mask_boundary[0], -mask_boundary[1]);
 				surface_reset_shader();
 				
@@ -68,7 +68,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 			
 			if(mouse_lrelease()) {
 				var _newSurf = surface_create(_dim[0], _dim[1]);
-				surface_set_shader(_newSurf, noone);
+				surface_set_shader(_newSurf, noone, true, BLEND.over);
 					draw_surface(preview_surface[1], 0, 0);
 				surface_reset_shader();
 			

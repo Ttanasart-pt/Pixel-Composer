@@ -144,6 +144,9 @@ function Panel_Animation_Dopesheet() {
     	graph_height_dragging = noone;
     	graph_height_drag_sy  = 0;
     	graph_height_drag_my  = 0;
+    	
+    	graph_range_editing   = undefined;
+    	graph_range_edit_side = 0;
     #endregion
     
     #region ---- Item Hover ----
@@ -1239,9 +1242,9 @@ function Panel_Animation_Dopesheet() {
                         _graph_key_hover       = key;
                         _graph_key_hover_index = KEYFRAME_DRAG_TYPE.ease_in;
                         
-                        _graph_key_hover_x = px;
-                        _graph_key_hover_y = py + (key_y + ui(8));
-                        graph_key_hover_range = val_rng;
+                        _graph_key_hover_x     = px;
+                        _graph_key_hover_y     = py + (key_y + ui(8));
+                        graph_key_hover_range  = val_rng;
                     }
                 }
                 
@@ -1258,9 +1261,9 @@ function Panel_Animation_Dopesheet() {
                         _graph_key_hover       = key;
                         _graph_key_hover_index = KEYFRAME_DRAG_TYPE.ease_out;
                         
-                        _graph_key_hover_x = px;
-                        _graph_key_hover_y = py + (key_y + ui(8));
-                        graph_key_hover_range = val_rng;
+                        _graph_key_hover_x     = px;
+                        _graph_key_hover_y     = py + (key_y + ui(8));
+                        graph_key_hover_range  = val_rng;
                     }
                 }
                 
@@ -1276,9 +1279,9 @@ function Panel_Animation_Dopesheet() {
                     _graph_key_hover_index = KEYFRAME_DRAG_TYPE.move;
                     _graph_key_hover_array = j;
                     
-                    _graph_key_hover_x = px;
-                    _graph_key_hover_y = py + (key_y + ui(8));
-                    graph_key_hover_range = val_rng;
+                    _graph_key_hover_x     = px;
+                    _graph_key_hover_y     = py + (key_y + ui(8));
+                    graph_key_hover_range  = val_rng;
                 }
             }
         } // draw key
@@ -1393,10 +1396,77 @@ function Panel_Animation_Dopesheet() {
 		}
 		
 		draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(ui(4), _gy0, prop.attributes.graph_range[1]);
 		
-		draw_set_text(f_p4, fa_left, fa_bottom, COLORS._main_text_sub);
-		draw_text_add(ui(4), _gy1, prop.attributes.graph_range[0]);
+		if(prop.attributes.graph_rauto) {
+			draw_set_valign(fa_top);
+			draw_text_add(ui(4), _gy0, prop.attributes.graph_range[1]);
+			
+			draw_set_valign(fa_bottom);
+			draw_text_add(ui(4), _gy1, prop.attributes.graph_range[0]);
+			
+		} else {
+			var edit  = graph_range_editing == prop;
+			var range = prop.attributes.graph_range;
+			var rmin  = range[0];
+			var rmax  = range[1];
+			
+			if(edit) {
+				if(is_real(KEYBOARD_NUMBER))
+					range[graph_range_edit_side] = KEYBOARD_NUMBER;
+				// else {
+				// 	if(graph_range_edit_side == 0) rmin = "-";
+				// 	else rmax = "-";
+				// }
+					
+				if(key_press(vk_enter)) {
+					graph_range_editing = undefined;
+					
+					var rrmin = min(range[0], range[1]);
+					var rrmax = max(range[0], range[1]);
+					range = [ rrmin, rrmax ];
+				}
+			}
+			
+			var hlin = line_get_height();
+			var wmin = string_width(rmin);
+			var wmax = string_width(rmax);
+			
+			var hmin = pHOVER && point_in_rectangle(msx, msy, 0, _gy1 - hlin - ui(2), wmin + ui(8), _gy1 + ui(2))
+			var hmax = pHOVER && point_in_rectangle(msx, msy, 0, _gy0 - ui(2), wmax + ui(8), _gy0 + hlin + ui(2))
+			
+			draw_set_valign(fa_bottom);
+			var cc = hmin? COLORS._main_text : COLORS._main_text_sub
+			if(edit && graph_range_edit_side == 0) cc = COLORS._main_accent;
+			draw_set_color(cc);
+			draw_text_add(ui(4), _gy1, rmin);
+			
+			draw_set_valign(fa_top);
+			var cc = hmax? COLORS._main_text : COLORS._main_text_sub
+			if(edit && graph_range_edit_side == 1) cc = COLORS._main_accent;
+			draw_set_color(cc);
+			draw_text_add(ui(4), _gy0, rmax);
+			
+			if(hmin) {
+				mouse_on_timeline = false;
+				if(mouse_lpress(pFOCUS)) {
+					graph_range_editing   = prop;
+					graph_range_edit_side = 0;
+					KEYBOARD_STRING = "";
+				}
+				
+			} else if(hmax) {
+				mouse_on_timeline = false;
+				if(mouse_lpress(pFOCUS)) {
+					graph_range_editing   = prop;
+					graph_range_edit_side = 1;
+					KEYBOARD_STRING = "";
+				}
+				
+			} else if(edit) {
+				if(mouse_lpress(pFOCUS))
+					graph_range_editing = undefined;
+			}
+		}
     }
     
     function drawDopesheet_Graph_BG(animator, msx, msy) { 
@@ -2057,13 +2127,12 @@ function Panel_Animation_Dopesheet() {
         	
 	        if(_graph_show) {
 	        	var bt  = __txt("Auto Range");
-	        	var bsp = THEME.timeline_graph;
+	        	var bsp = THEME.timeline_graph_range_auto;
 	        	var bi  = prop.attributes.graph_rauto;
 	        	var bc  = prop.attributes.graph_rauto? COLORS._main_accent : COLORS._main_icon;
 	        	
 	        	if(buttonInstant_Pad(noone, tx-tw/2, ty-th/2, tw, th, [msx,msy], pHOVER, pFOCUS, bt, bsp, bi, bc, .8) == 2)
 	        		prop.attributes.graph_rauto = !prop.attributes.graph_rauto;
-                
 	        }
         #endregion
         

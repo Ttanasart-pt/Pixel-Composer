@@ -317,6 +317,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_fill           = new canvas_tool_fill(tool_attribute);
 		tool_fill_grad      = new canvas_tool_fill_gradient(tool_attribute);
+		tool_fill_pattern   = new canvas_tool_pattern(tool_attribute).setNode(self);
 		
 		tool_freeform       = new canvas_tool_draw_freeform();
 		tool_curve_bez      = new canvas_tool_curve_bezier();
@@ -365,9 +366,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.pattern_mod   = 4;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		tool_pattern      = new canvas_tool_pattern(tool_attribute);
-		tool_pattern.node = self;
 		
 		fill_pattern_data = [ "Solid", 
 	           -1, "Stripe X", "Stripe Y", "Stripe D0", "Stripe D1",  
@@ -456,18 +454,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		tool_channel      =   [ "",                   tool_channel_edit,   "channel",      tool_attribute ];
-		tool_layer        =   [ "",                   tool_drawLayer_edit, "drawLayer",    tool_attribute ];
-		tool_mirror       =   [ "",                   tool_mirror_edit,    "mirror",       tool_attribute ];
-		tool_size         =   [ "",                   tool_size_edit,      "size",         tool_attribute, "Brush Size"    ];
-		tool_smooth       =   [ "",                   tool_smooth_edit,    "smooth",       brush,          "Smoothness"    ];
-		tool_bg_stamp     =   [ THEME.stamp,          tool_stamp_bg,       "stamp",        tool_attribute, "Stamp BG"      ];
-		tool_pixelp       =   [ THEME.pixel_diag,     tool_pixel_perfect,  "pixelPerfect", tool_attribute, "Pixel Perfect" ];
-		tool_thrs         =   [ THEME.tool_threshold, tool_thrs_edit,      "thres",        tool_attribute, "Threshold"     ];
-		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",     tool_attribute, "Fill Type"     ];
-		tool_fill_bg      =   [ THEME.tool_bg,        tool_fill_use_bg,    "useBG",        tool_attribute, "Use BG"        ];
-		tool_iso_settings =   [ "",                   tool_isoangle,       "iso_angle",    tool_attribute ];
-		tool_dithering    =   [ "",                   tool_dither,         "dither",       tool_attribute ];
+		tool_channel      = toolSetting( "",                   tool_channel_edit,   "channel",      tool_attribute                  );
+		tool_layer        = toolSetting( "",                   tool_drawLayer_edit, "drawLayer",    tool_attribute                  );
+		tool_mirror       = toolSetting( "",                   tool_mirror_edit,    "mirror",       tool_attribute                  );
+		tool_size         = toolSetting( "",                   tool_size_edit,      "size",         tool_attribute, "Brush Size"    );
+		tool_smooth       = toolSetting( "",                   tool_smooth_edit,    "smooth",       brush,          "Smoothness"    );
+		tool_bg_stamp     = toolSetting( THEME.stamp,          tool_stamp_bg,       "stamp",        tool_attribute, "Stamp BG"      );
+		tool_pixelp       = toolSetting( THEME.pixel_diag,     tool_pixel_perfect,  "pixelPerfect", tool_attribute, "Pixel Perfect" );
+		tool_thrs         = toolSetting( THEME.tool_threshold, tool_thrs_edit,      "thres",        tool_attribute, "Threshold"     );
+		tool_fil8         = toolSetting( THEME.tool_fill_type, tool_fil8_edit,      "fillType",     tool_attribute, "Fill Type"     );
+		tool_fill_bg      = toolSetting( THEME.tool_bg,        tool_fill_use_bg,    "useBG",        tool_attribute, "Use BG"        );
+		tool_iso_settings = toolSetting( "",                   tool_isoangle,       "iso_angle",    tool_attribute                  );
+		tool_dithering    = toolSetting( "",                   tool_dither,         "dither",       tool_attribute                  );
 		
 		tool_fill_settings = [
 			tool_thrs,
@@ -477,15 +475,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		tool_fill_grad_obj  = new NodeTool()
+		tool_fill_grad_obj = new NodeTool()
 			.setSettings(tool_fill_settings)
 			.setSetting(tool_dithering)
 			.setToolObject(tool_fill_grad);
 		
-		tool_pattern_obj  = new NodeTool()
+		tool_fill_pattern_obj = new NodeTool()
 			.setSettings(tool_pattern_settings)
-			.setToolObject(tool_pattern);
+			.setToolObject(tool_fill_pattern);
 		
+		tool_gradient = new canvas_tool_with_selector( tool_fill_grad_obj,    tool_sel_magic );
+		tool_pattern  = new canvas_tool_with_selector( tool_fill_pattern_obj, tool_sel_magic );
+
 		tools = [
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
 				.setSetting(tool_channel)
@@ -558,9 +559,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSettings(tool_fill_settings)
 				.setToolObject(tool_fill),
 			
-			new NodeTool( [ "Gradient", "Pattern" ],     [ THEME.canvas_tools_gradient, THEME.canvas_tools_pattern ] )
+			new NodeTool( [ "Gradient", "Pattern" ], [ THEME.canvas_tools_gradient, THEME.canvas_tools_pattern ] )
 				.setContext(self)
-				.setToolObject( [ new canvas_tool_with_selector(tool_fill_grad_obj, tool_sel_magic), new canvas_tool_with_selector(tool_pattern_obj, tool_sel_magic) ]),
+				.setToolObject( [ tool_gradient, tool_pattern ]),
 			
 		];
 	#endregion
