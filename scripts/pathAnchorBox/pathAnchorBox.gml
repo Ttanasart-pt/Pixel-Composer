@@ -85,6 +85,17 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			return h;
 		}
 		
+		
+		if(unit != noone && unit.reference != noone) {
+			var bx = _x + _w - _bw;
+			var by = _y;
+			
+			unit.triggerButton.setFocusHover(iactive, ihover);
+			unit.draw(bx, by, _bw, _bw, _m);
+			bx -= _bw;
+			_w -= _bw;
+		}
+		
 		if(array_length(_data) < 9) {
 			tb[0].setLabel("x");
 			tb[1].setLabel("y");

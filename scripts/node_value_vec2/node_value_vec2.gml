@@ -49,8 +49,8 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		__arrIndex  = arrIndex;
 		
 		switch(_d) {
-			case 0: return valueProcess([ val, val ], nod, applyUnit, arrIndex);
-			case 1: return valueProcess(val, nod, applyUnit, arrIndex);
+			case 0: return valueProcess([val,val], nod, applyUnit, arrIndex);
+			case 1: return valueProcess( val,      nod, applyUnit, arrIndex);
 			case 2: return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify_new(v, 2), __nod, __applyUnit, __arrIndex)}); 
 		}
 		

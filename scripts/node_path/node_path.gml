@@ -444,9 +444,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
 			-1, 
-			new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setVisible(false).setToolObject(new path_tool_move(self)),
-			new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setVisible(false).setToolObject(new path_tool_rotate(self)),
-			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setVisible(false).setToolObject(new path_tool_scale(self)),
+			new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setVisible(false).setToolObject( new path_tool_move(self)   ),
+			new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setVisible(false).setToolObject( new path_tool_rotate(self) ),
+			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setVisible(false).setToolObject( new path_tool_scale(self)  ),
 		];
 		
 		tool_arc_radius   = 0;
@@ -547,7 +547,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	function createNewInput(index = array_length(inputs), _x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
 		var inAmo = array_length(inputs);
 		
-		var ancIn = newInput(index, nodeValue_Path_Anchor("Anchor", []));
+		var ancIn = newInput(index, nodeValue_Path_Anchor("Anchor", [])).setUnitSimple();
 		ancIn.setValue(newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy ));
 		
 		if(rec) {
