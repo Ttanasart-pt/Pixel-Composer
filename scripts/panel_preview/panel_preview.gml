@@ -435,7 +435,8 @@ function Panel_Preview() : PanelContent() constructor {
         toolbar_width  = ui(40);
         toolbar_height = ui(40);
         
-        tool_hovering       = noone;
+         tool_hovering      = noone;
+        _tool_hovering      = noone;
         tool_side_draw_l    = false;
         tool_side_draw_r    = false;
         overlay_hovering    = false;
@@ -1123,13 +1124,12 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawToolsLeft = function(_node) {
-    	var _tool = tool_hovering;
-        var  ts   = ui(32);
-        var  ts2  = ts / 2;
-        var  pd   = 2;
+    	var toolH = _tool_hovering;
+        var ts    = ui(32);
+        var ts2   = ts / 2;
+        var pd    = 2;
         
         tool_clearable = true;
-        tool_hovering  = noone;
         
         if(!tool_always_l && !_node.showTool()) { tool_current = noone; return; } 
         var aa = d3_active? 0.8 : 1;
@@ -1186,7 +1186,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(thov && point_in_rectangle(mx, my, _x0, _y0 + 1, _x1, _y1 - 1))
                 tool_hovering = tool;
             
-            if(tool.subtools > 0 && _tool == tool) { // hovering subtools
+            if(tool.subtools > 0 && toolH == tool) { // hovering subtools
                 var s_ww = ts * tool.subtools;
                 var s_hh = ts;
                 draw_sprite_stretched(THEME.box_r2_clr, 0, _x0 - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
@@ -1348,10 +1348,10 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawToolsRight = function(_node) {
-        var _tool = tool_hovering;
-    	var  ts   = ui(32);
-        var  ts2  = ts / 2;
-        var  pd   = 2;
+        var toolH = _tool_hovering;
+    	var ts    = ui(32);
+        var ts2   = ts / 2;
+        var pd    = 2;
         
         if(!tool_always_r && _node.rightTools == -1) return;
         var aa = d3_active? 0.8 : 1;
@@ -1407,9 +1407,8 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(thov && point_in_rectangle(mx, my, _x0, _y0 + 1, _x1, _y1 - 1))
                 tool_hovering = tool;
-        
-            if(tool.subtools > 0 && _tool == tool) { // hovering subtools
-                
+        	
+            if(tool.subtools > 0 && toolH == tool) { // hovering subtools
                 var stool = tool.spr;
                 var s_ww  = ts * tool.subtools;
                 var s_hh  = ts;
@@ -3681,6 +3680,9 @@ function Panel_Preview() : PanelContent() constructor {
                 if(inspect_node.getToolNode) toolNode = inspect_node.getToolNode();
                 if(toolNode) {
                 	drawNodeActions(pFOCUS, toolNode);
+                	
+                	_tool_hovering = tool_hovering;
+                	tool_hovering  = noone;
                 	
 			        drawToolsLeft(toolNode);
 			        drawToolsRight(toolNode);
