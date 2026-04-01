@@ -45,14 +45,8 @@ function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) 
 		var w;
 		
 		switch(type) {
-			case VALUE_TYPE.float : 
-				w = new textBox(TEXTBOX_INPUT.number, onEdit);
-				w.font = f_p3;
-				break;
-				
-			case VALUE_TYPE.boolean : 
-				w = new checkBox(onEdit);
-				break;
+			case VALUE_TYPE.float:   w = textBox_Number(onEdit).setFont(f_p3); break;
+			case VALUE_TYPE.boolean: w = new checkBox(onEdit);                 break;
 		}
 		
 		array_push(settings, [ _name, w, keyAttr, attribute ]);

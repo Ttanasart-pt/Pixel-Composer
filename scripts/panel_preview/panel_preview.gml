@@ -1613,24 +1613,33 @@ function Panel_Preview() : PanelContent() constructor {
             wdg.register();
             wdg.setFocusHover(_focus, _hover);
             
-            var _tool_font = f_p3;
+            var _font = f_p3;
+            var _val  = atr[$ key];
+            draw_set_font(_font);
             
             switch(instanceof(wdg)) {
-                case "textBox"       : tolw = max(wdg.minWidth, ui(32)) + (wdg.side_button != noone) * (tolh + ui(8)); break;
-                case "vectorBox"     : tolw = max(wdg.minWidth, ui(32)) * wdg.size;                                    break;
+                case "textBox"       : 
+                	tolw  = max(wdg.minWidth, ui(24) + string_width(_val)); 
+                	tolw += (wdg.side_button != noone) * (tolh + ui(8));
+                	
+                	wdg.disp_x    = 0;
+                	wdg.disp_x_to = 0;
+                	break;
+                	
+                case "vectorBox"     : tolw = max(wdg.minWidth, ui(32)) * wdg.size; break;
                 case "buttonGroup"   : 
-                case "checkBoxGroup" : tolw = tolh * wdg.size;                              break;
-                case "checkBox"      : tolw = tolh;                                         break;
-                case "scrollBox"     : tolw = max(wdg.minWidth, ui(96)); _tool_font = f_p3; break;
-                case "buttonClass"   : tolw = wdg.text == ""? tolh : tolw;                  break;
-                case "buttonAnchor"  : tolw = ui(28);                                       break;
+                case "checkBoxGroup" : tolw = tolh * wdg.size;             break;
+                case "checkBox"      : tolw = tolh;                        break;
+                case "scrollBox"     : tolw = max(wdg.minWidth, ui(96));   break;
+                case "buttonClass"   : tolw = wdg.text == ""? tolh : tolw; break;
+                case "buttonAnchor"  : tolw = ui(28);                      break;
             }
             
             if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, toly, tolx + tolw, toly + tolh))
     			TOOLTIP = ttip;
             			
-            var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key], undefined, [ mx, my ], x, y)
-            				.setFont(_tool_font)
+            var params = new widgetParam(tolx, toly, tolw, tolh, _val, undefined, [ mx, my ], x, y)
+            				.setFont(_font)
             
             wdg.drawParam(params);
             

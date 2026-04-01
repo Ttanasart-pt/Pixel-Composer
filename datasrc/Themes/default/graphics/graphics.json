@@ -564,6 +564,7 @@
     "path_tools_circle":                  { "path": "./tool/s_path_tools_circle.png",                       "s": 2, "x":  9, "y":  9 },
     "path_tools_circle_mid_point":        { "path": "./tool/s_path_tools_circle_mid_point.png",             "s": 2, "x":  9, "y":  9 },
     "path_tools_draw":                    { "path": "./tool/s_path_tools_draw.png",                         "s": 2, "x":  9, "y":  9 },
+    "path_tools_polygon":                 { "path": "./tool/s_path_tools_polygon.png",                      "s": 2, "x":  9, "y":  9 },
     "path_tools_rectangle":               { "path": "./tool/s_path_tools_rectangle.png",                    "s": 2, "x":  9, "y":  9 },
     "path_tools_transform":               { "path": "./tool/s_path_tools_transform.png",                    "s": 2, "x":  9, "y":  9 },
     "path_tools_weight_edit":             { "path": "./tool/s_path_tools_weight_edit.png",                  "s": 2, "x":  9, "y":  9 },

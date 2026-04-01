@@ -428,19 +428,19 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			.addSetting("Smoothness", VALUE_TYPE.float,   function(val) /*=>*/ { tool_pathDrawer.attribute.thres = val; }, "thres", 4)
 			.addSetting("Replace",    VALUE_TYPE.boolean, function(   ) /*=>*/ { tool_pathDrawer.attribute.create = !tool_pathDrawer.attribute.create; }, "create", true);
 		
+		tool_polygon = new NodeTool( "Polygon", THEME.path_tools_polygon   )
+				.addSetting("Sides", VALUE_TYPE.float, function(val) /*=>*/ { tool_polygon.attribute.polygon_sides = max(3, round(val)); }, "polygon_sides", 3)
+				.addSetting("Angle", VALUE_TYPE.float, function(val) /*=>*/ { tool_polygon.attribute.angle = val; }, "angle", 0)
+		
 		tools = [
 			new NodeTool( "Transform",           THEME.path_tools_transform   ),
 			new NodeTool( "Anchor add / remove", THEME.path_tools_add         ),
 			new NodeTool( "Edit Control point",  THEME.path_tools_anchor      ),
 			tool_pathDrawer, 
-			new NodeTool( [ "Line", "Curve", "Arc" ], 
-				[ THEME.path_tools_line,
-				  THEME.path_tools_line_curve,
-				  THEME.path_tools_arc, ] ),
-			new NodeTool( "Rectangle",           THEME.path_tools_rectangle   ),
-			new NodeTool( ["Circle", "Circle Midpoint"], 
-				[ THEME.path_tools_circle, 
-				  THEME.path_tools_circle_mid_point, ] ),
+			new NodeTool( [ "Line", "Curve", "Arc" ],    [ THEME.path_tools_line, THEME.path_tools_line_curve, THEME.path_tools_arc, ] ),
+			new NodeTool( "Rectangle",                     THEME.path_tools_rectangle   ),
+			new NodeTool( ["Circle", "Circle Midpoint"], [ THEME.path_tools_circle, THEME.path_tools_circle_mid_point, ] ),
+			tool_polygon,
 			
 			new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
 			-1, 
@@ -757,8 +757,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 		} else if(drag_point > -1) { 
-			var releasable = true;
-			
 			if(drag_type == 0 || drag_type == 1 || drag_type == -1) {
 				var mmx = PANEL_PREVIEW.snapX(drag_point_sx + (_mx - drag_point_mx) / _s);
 				var mmy = PANEL_PREVIEW.snapY(drag_point_sy + (_my - drag_point_my) / _s);
@@ -877,303 +875,117 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				} 
 				
 				if(inp.setValue(anc)) edited = true;
+				
+				if(mouse_lrelease()) {
+					drag_point   = -1;
+					UNDO_HOLDING = false;
+				}
 			}
 			
-			switch(drag_type) {
-				case 2 :
-					var ox, oy, nx, ny;
-					var pxx = (_mx - _x) / _s;
-					var pxy = (_my - _y) / _s;
-					
-					draw_set_color(COLORS._main_accent);
-					for( var i = 0, n = array_length(drag_points); i < n; i++ ) {
-						var _p/*:_ANCHOR*/ = drag_points[i];
-						nx = _x + _p[_ANCHOR.x] * _s;
-						ny = _y + _p[_ANCHOR.y] * _s;
-						
-						if(i) draw_line(ox, oy, nx, ny);
-						
-						ox = nx;
-						oy = ny;
-					}
-					
-					if(point_distance(drag_point_mx, drag_point_my, pxx, pxy) > 4 / _s) {
-						array_push(drag_points, [ pxx, pxy ]);
-						
-						drag_point_mx = pxx;
-						drag_point_my = pxy;
-					}
-					
-					if(mouse_lrelease()) {
-						var amo		= array_length(drag_points);
-						var _p      = 0;
-						var points	= [];
-						var thres   = tool_pathDrawer.attribute.thres;
-						var replace = tool_pathDrawer.attribute.create;
-						var asize   = array_length(inputs) - input_fix_len;
-						
-						for( var i = 0; i < amo; i++ ) {
-							var pT = drag_points[i];
-							
-							if(i == 0 || i == amo - 1) {
-								array_push(points, i);
-								continue;
-							}
-							
-							var maxT = 0;
-							var pF   = drag_points[_p];
-							
-							for( var j = _p; j < i; j++ ) {
-								var pP = drag_points[j];
-								maxT = max(maxT, distance_to_line(pP[0], pP[1], pF[0], pF[1], pT[0], pT[1]));
-							}
-							
-							if(maxT >= thres) {
-								array_push(points, i);
-								_p = i;
-							}
-						}
-						
-						var amo = array_length(points);
-						if(!replace) amo = min(amo, asize);
-						
-						var i   = 0;
-						var anc = [];
-						
-						for( i = 0; i < amo; i++ ) {
-							var  ind = replace? i : clamp(i / amo * array_length(points), 0, array_length(points) - 1);
-							var _ind = points[ind];
-							var _p   = drag_points[_ind];
-							var dxx  = 0;
-							var dxy  = 0;
-							var dyx  = 0;
-							var dyy  = 0;
-							
-							if(i > 0 && i < amo - 1) {
-								var _p0/*:_ANCHOR*/ = drag_points[points[i - 1]];
-								var _p1/*:_ANCHOR*/ = drag_points[points[i + 1]];
-								
-								var d0  = point_direction(_p0[_ANCHOR.x], _p0[_ANCHOR.y],  _p[_ANCHOR.x],  _p[_ANCHOR.y]);
-								var d1  = point_direction( _p[_ANCHOR.x],  _p[_ANCHOR.y], _p1[_ANCHOR.x], _p1[_ANCHOR.y]);
-								
-								var dd  = d0 + angle_difference(d1, d0) / 2;
-								var ds0 = point_distance(_p0[_ANCHOR.x], _p0[_ANCHOR.y],  _p[_ANCHOR.x],  _p[_ANCHOR.y]);
-								var ds1 = point_distance( _p[_ANCHOR.x],  _p[_ANCHOR.y], _p1[_ANCHOR.x], _p1[_ANCHOR.y]);
-								
-								dxx = lengthdir_x(ds0 / 3, dd + 180);
-								dxy = lengthdir_y(ds0 / 3, dd + 180);
-								dyx = lengthdir_x(ds1 / 3, dd);
-								dyy = lengthdir_y(ds1 / 3, dd);
-							}
-							
-							anc = [ _p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy ];
-							if(input_fix_len + i >= array_length(inputs))
-								createNewInput(, _p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy);
-							else 
-								inputs[input_fix_len + i].setValue(anc);
-						}
-						
-						if(!replace) {
-							for(; i < asize; i++ )
-								inputs[input_fix_len + i].setValue(anc);
-						}
-					}
-					break;
+			if(drag_type == 2) {
+				var ox, oy, nx, ny;
+				var pxx = (_mx - _x) / _s;
+				var pxy = (_my - _y) / _s;
 				
-				case "Rectangle" :
-				case "Circle" :
-					var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
-					var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
-					var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
-					var maxy = max((_my - _y) / _s, (drag_point_my - _y) / _s);
+				draw_set_color(COLORS._main_accent);
+				for( var i = 0, n = array_length(drag_points); i < n; i++ ) {
+					var _p/*:_ANCHOR*/ = drag_points[i];
+					nx = _x + _p[_ANCHOR.x] * _s;
+					ny = _y + _p[_ANCHOR.y] * _s;
 					
-					minx = PANEL_PREVIEW.snapX(minx);
-					maxx = PANEL_PREVIEW.snapX(maxx);
-					miny = PANEL_PREVIEW.snapY(miny);
-					maxy = PANEL_PREVIEW.snapY(maxy);
+					if(i) draw_line(ox, oy, nx, ny);
 					
-					if(key_mod_press(ALT)) {
-						var _ccx = (drag_point_mx - _x) / _s;
-						var _ccy = (drag_point_my - _y) / _s;
-						
-						var _ww  = (maxx - minx) / 2;
-						var _hh  = (maxy - miny) / 2;
-						
-						if(key_mod_press(SHIFT)) {
-							var _n = max(_ww, _hh);
-							_ww = _n;
-							_hh = _n;
-						}
-						
-						minx = _ccx - _ww;
-						maxx = _ccx + _ww;
-						
-						miny = _ccy - _hh;
-						maxy = _ccy + _hh;
-						
-					} else if(key_mod_press(SHIFT)) {
-						var _n = max(maxx - minx, maxy - miny);
-						maxx = minx + _n;
-						maxy = miny + _n;
-					}
-					
-					if(drag_type == "Rectangle") {
-						edited = inputs[input_fix_len + 0].setValue(newAnchor(minx, miny)) || edited;
-						edited = inputs[input_fix_len + 1].setValue(newAnchor(maxx, miny)) || edited;
-						edited = inputs[input_fix_len + 2].setValue(newAnchor(maxx, maxy)) || edited;
-						edited = inputs[input_fix_len + 3].setValue(newAnchor(minx, maxy)) || edited;
-						
-					} else if(drag_type == "Circle") {
-							
-						var _cnx = (maxx + minx) / 2;
-						var _cny = (maxy + miny) / 2;
-						var _ccx = (maxx - minx) * 0.27614;
-						var _ccy = (maxy - miny) * 0.27614;
-						
-						edited = inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0)) || edited;
-						edited = inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy)) || edited;
-						edited = inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0)) || edited;
-						edited = inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy)) || edited;
-						
-					}
-					break;
+					ox = nx;
+					oy = ny;
+				}
 				
-				case "Circle Midpoint" : 
-					var dist = point_distance(drag_point_mx, drag_point_my, _mx, _my) / _s;
-					var dx = dist;
-					var dy = dist;
+				if(point_distance(drag_point_mx, drag_point_my, pxx, pxy) > 4 / _s) {
+					array_push(drag_points, [ pxx, pxy ]);
 					
-					var minx = (drag_point_mx - _x) / _s - dx;
-					var maxx = (drag_point_mx - _x) / _s + dx;
-					var miny = (drag_point_my - _y) / _s - dy;
-					var maxy = (drag_point_my - _y) / _s + dy;
+					drag_point_mx = pxx;
+					drag_point_my = pxy;
+				}
+				
+				if(mouse_lrelease()) {
+					var amo		= array_length(drag_points);
+					var _p      = 0;
+					var points	= [];
+					var thres   = tool_pathDrawer.attribute.thres;
+					var replace = tool_pathDrawer.attribute.create;
+					var asize   = array_length(inputs) - input_fix_len;
 					
-					minx = PANEL_PREVIEW.snapX(minx);
-					maxx = PANEL_PREVIEW.snapX(maxx);
-					miny = PANEL_PREVIEW.snapY(miny);
-					maxy = PANEL_PREVIEW.snapY(maxy);
-					
-					var _cnx = (maxx + minx) / 2;
-					var _cny = (maxy + miny) / 2;
-					var _ccx = (maxx - minx) * 0.27614;
-					var _ccy = (maxy - miny) * 0.27614;
-					
-					edited = inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0)) || edited;
-					edited = inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy)) || edited;
-					edited = inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0)) || edited;
-					edited = inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy)) || edited;
-					break;
-					
-				case "Arc" :
-					releasable = false;
-					
-					if(drag_point == 0) {
-						tool_arc_radius   = point_distance(  drag_point_mx, drag_point_my, _mx, _my );
-						tool_arc_angle_st = point_direction( drag_point_mx, drag_point_my, _mx, _my );
-						tool_arc_angle_rg = 0;
-						tool_arc_angle_pr = undefined;
+					for( var i = 0; i < amo; i++ ) {
+						var pT = drag_points[i];
 						
-						if(mouse_lrelease())
-							drag_point = 1;
-						
-					} else if(drag_point == 1) {
-						var dd = point_direction(drag_point_mx, drag_point_my, _mx, _my);
-						if(tool_arc_angle_pr != undefined)
-							tool_arc_angle_rg += angle_difference(dd, tool_arc_angle_pr);
-						tool_arc_angle_pr = dd;
-						
-						var _angSt = tool_arc_angle_st;
-						var _angRg = tool_arc_angle_rg;
-						
-						if(tool_arc_angle_rg > 0)
-							 _angSt = tool_arc_angle_st;
-						else _angSt = tool_arc_angle_st + tool_arc_angle_rg;
-						
-						_angRg = abs(_angRg);
-						var _stp = ceil(_angRg / 90);
-						var _ast = _angRg / _stp;
-						var _aas = tool_arc_radius / _s * lerp(.0, .5, sqr(dsin(abs(_ast))) );
-						
-						for( var i = 0; i <= _stp; i++ ) {
-							var _ang = _angSt + i * _ast;
-							var _ii  = input_fix_len + i;
-							if(_ii >= array_length(inputs)) createNewInput();
-							
-							var _ax  = (drag_point_mx + lengthdir_x(tool_arc_radius, _ang) - _x) / _s;
-							var _ay  = (drag_point_my + lengthdir_y(tool_arc_radius, _ang) - _y) / _s;
-							
-							var _adx = lengthdir_x(_aas, _ang - 90);
-							var _ady = lengthdir_y(_aas, _ang - 90);
-							
-							edited = inputs[_ii].setValue(newAnchor( _ax, _ay, _adx, _ady, -_adx, -_ady)) || edited;
+						if(i == 0 || i == amo - 1) {
+							array_push(points, i);
+							continue;
 						}
 						
-						while(array_length(inputs) > input_fix_len + _stp + 1)
-							array_delete(inputs, input_fix_len, 1);
+						var maxT = 0;
+						var pF   = drag_points[_p];
 						
-						if(mouse_lrelease()) {
-							drag_point   = -1;
-							UNDO_HOLDING = false;
+						for( var j = _p; j < i; j++ ) {
+							var pP = drag_points[j];
+							maxT = max(maxT, distance_to_line(pP[0], pP[1], pF[0], pF[1], pT[0], pT[1]));
+						}
+						
+						if(maxT >= thres) {
+							array_push(points, i);
+							_p = i;
 						}
 					}
-					break;
 					
-				case "Line" : 
-					var x0 = (drag_point_mx - _x) / _s;
-					var y0 = (drag_point_my - _y) / _s;
-					var x1 = (_mx - _x) / _s;
-					var y1 = (_my - _y) / _s;
+					var amo = array_length(points);
+					if(!replace) amo = min(amo, asize);
 					
-					edited = inputs[input_fix_len + 0].setValue(newAnchor( x0, y0, 0, 0, 0, 0 )) || edited;
-					edited = inputs[input_fix_len + 1].setValue(newAnchor( x1, y1, 0, 0, 0, 0 )) || edited;
-					break;
+					var i   = 0;
+					var anc = [];
 					
-				case "Curve" : 
-					releasable = false;
-					
-					if(drag_point == 0) {
-						var x0 = (drag_point_mx - _x) / _s;
-						var y0 = (drag_point_my - _y) / _s;
-						var x1 = (_mx - _x) / _s;
-						var y1 = (_my - _y) / _s;
-							
-						tool_curve_angle = point_direction(x0, y0, x1, y1);
-						edited = inputs[input_fix_len + 0].setValue(newAnchor( x0, y0, 0, 0, 0, 0 )) || edited;
-						edited = inputs[input_fix_len + 1].setValue(newAnchor( x1, y1, 0, 0, 0, 0 )) || edited;
+					for( i = 0; i < amo; i++ ) {
+						var  ind = replace? i : clamp(i / amo * array_length(points), 0, array_length(points) - 1);
+						var _ind = points[ind];
+						var _p   = drag_points[_ind];
+						var dxx  = 0;
+						var dxy  = 0;
+						var dyx  = 0;
+						var dyy  = 0;
 						
-						if(mouse_lrelease()) {
-							tool_curve_x0 = x0;
-							tool_curve_y0 = y0;
-							tool_curve_x1 = x1;
-							tool_curve_y1 = y1;
+						if(i > 0 && i < amo - 1) {
+							var _p0/*:_ANCHOR*/ = drag_points[points[i - 1]];
+							var _p1/*:_ANCHOR*/ = drag_points[points[i + 1]];
 							
-							drag_point_mx = _mx;
-							drag_point_my = _my;
-							drag_point    = 1;
+							var d0  = point_direction(_p0[_ANCHOR.x], _p0[_ANCHOR.y],  _p[_ANCHOR.x],  _p[_ANCHOR.y]);
+							var d1  = point_direction( _p[_ANCHOR.x],  _p[_ANCHOR.y], _p1[_ANCHOR.x], _p1[_ANCHOR.y]);
+							
+							var dd  = d0 + angle_difference(d1, d0) / 2;
+							var ds0 = point_distance(_p0[_ANCHOR.x], _p0[_ANCHOR.y],  _p[_ANCHOR.x],  _p[_ANCHOR.y]);
+							var ds1 = point_distance( _p[_ANCHOR.x],  _p[_ANCHOR.y], _p1[_ANCHOR.x], _p1[_ANCHOR.y]);
+							
+							dxx = lengthdir_x(ds0 / 3, dd + 180);
+							dxy = lengthdir_y(ds0 / 3, dd + 180);
+							dyx = lengthdir_x(ds1 / 3, dd);
+							dyy = lengthdir_y(ds1 / 3, dd);
 						}
 						
-					} else if(drag_point == 1) {
-						var len = point_distance(tool_curve_x0, tool_curve_y0, tool_curve_x1, tool_curve_y1) / 3;
-						var mds = distance_to_line_angle_signed(_mx, _my, drag_point_mx, drag_point_my, tool_curve_angle) / _s;
-						var acx = lengthdir_x(mds, tool_curve_angle + 90);
-						var acy = lengthdir_y(mds, tool_curve_angle + 90);
-						
-						edited = inputs[input_fix_len + 0].setValue(newAnchor( tool_curve_x0, tool_curve_y0, -acx, -acy,  acx,  acy )) || edited;
-						edited = inputs[input_fix_len + 1].setValue(newAnchor( tool_curve_x1, tool_curve_y1,  acx,  acy, -acx, -acy )) || edited;
-						
-						if(mouse_lrelease()) {
-							drag_point   = -1;
-							UNDO_HOLDING = false;
-						}
+						anc = [ _p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy ];
+						if(input_fix_len + i >= array_length(inputs))
+							createNewInput(, _p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy);
+						else 
+							inputs[input_fix_len + i].setValue(anc);
 					}
-					break;
-			}
-			
-			if(edited) UNDO_HOLDING = true;
-			
-			if(releasable && mouse_lrelease()) {
-				drag_point   = -1;
-				UNDO_HOLDING = false;
+					
+					if(!replace) {
+						for(; i < asize; i++ )
+							inputs[input_fix_len + i].setValue(anc);
+					}
+				}
+				
+				if(mouse_lrelease()) {
+					drag_point   = -1;
+					UNDO_HOLDING = false;
+				}
+				
 			}
 			
 		} else if(weight_drag != noone) {
@@ -1217,6 +1029,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		switch(_tooln) {
 			case "Rectangle" :
 			case "Circle" : 
+			case "Polygon" : 
 				if(drag_point > -1) { 
 					var minx = min(_mx, drag_point_mx);
 					var maxx = max(_mx, drag_point_mx);
@@ -1726,6 +1539,62 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 					repeat(2) createNewInput(, PANEL_PREVIEW.snapX((_mx - _x) / _s), PANEL_PREVIEW.snapY((_my - _y) / _s));
 				}
+				
+				if(_tooln == "Line" && drag_point == 0) {
+					var x0 = (drag_point_mx - _x) / _s;
+					var y0 = (drag_point_my - _y) / _s;
+					var x1 = (_mx - _x) / _s;
+					var y1 = (_my - _y) / _s;
+					
+					edited = inputs[input_fix_len + 0].setValue(newAnchor( x0, y0, 0, 0, 0, 0 )) || edited;
+					edited = inputs[input_fix_len + 1].setValue(newAnchor( x1, y1, 0, 0, 0, 0 )) || edited;
+					
+					if(mouse_lrelease()) {
+						drag_point   = -1;
+						UNDO_HOLDING = false;
+					}
+					
+				}
+				
+				if(_tooln == "Curve") {
+					if(drag_point == 0) {
+						var x0 = (drag_point_mx - _x) / _s;
+						var y0 = (drag_point_my - _y) / _s;
+						var x1 = (_mx - _x) / _s;
+						var y1 = (_my - _y) / _s;
+							
+						tool_curve_angle = point_direction(x0, y0, x1, y1);
+						edited = inputs[input_fix_len + 0].setValue(newAnchor( x0, y0, 0, 0, 0, 0 )) || edited;
+						edited = inputs[input_fix_len + 1].setValue(newAnchor( x1, y1, 0, 0, 0, 0 )) || edited;
+						
+						if(mouse_lrelease()) {
+							tool_curve_x0 = x0;
+							tool_curve_y0 = y0;
+							tool_curve_x1 = x1;
+							tool_curve_y1 = y1;
+							
+							drag_point_mx = _mx;
+							drag_point_my = _my;
+							drag_point    = 1;
+						}
+						
+					} else if(drag_point == 1) {
+						var len = point_distance(tool_curve_x0, tool_curve_y0, tool_curve_x1, tool_curve_y1) / 3;
+						var mds = distance_to_line_angle_signed(_mx, _my, drag_point_mx, drag_point_my, tool_curve_angle) / _s;
+						var acx = lengthdir_x(mds, tool_curve_angle + 90);
+						var acy = lengthdir_y(mds, tool_curve_angle + 90);
+						
+						edited = inputs[input_fix_len + 0].setValue(newAnchor( tool_curve_x0, tool_curve_y0, -acx, -acy,  acx,  acy )) || edited;
+						edited = inputs[input_fix_len + 1].setValue(newAnchor( tool_curve_x1, tool_curve_y1,  acx,  acy, -acx, -acy )) || edited;
+						
+						if(mouse_lrelease()) {
+							drag_point   = -1;
+							UNDO_HOLDING = false;
+						}
+						
+					}
+					
+				}
 				break;
 				
 			case "Arc" : 
@@ -1743,6 +1612,56 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					drag_point_mx = _mx;
 					drag_point_my = _my;
 					inputs[1].setValue(false);
+				}
+				
+				if(drag_point == 0) {
+					tool_arc_radius   = point_distance(  drag_point_mx, drag_point_my, _mx, _my );
+					tool_arc_angle_st = point_direction( drag_point_mx, drag_point_my, _mx, _my );
+					tool_arc_angle_rg = 0;
+					tool_arc_angle_pr = undefined;
+					
+					if(mouse_lrelease())
+						drag_point = 1;
+					
+				} else if(drag_point == 1) {
+					var dd = point_direction(drag_point_mx, drag_point_my, _mx, _my);
+					if(tool_arc_angle_pr != undefined)
+						tool_arc_angle_rg += angle_difference(dd, tool_arc_angle_pr);
+					tool_arc_angle_pr = dd;
+					
+					var _angSt = tool_arc_angle_st;
+					var _angRg = tool_arc_angle_rg;
+					
+					if(tool_arc_angle_rg > 0)
+						 _angSt = tool_arc_angle_st;
+					else _angSt = tool_arc_angle_st + tool_arc_angle_rg;
+					
+					_angRg = abs(_angRg);
+					var _stp = ceil(_angRg / 90);
+					var _ast = _angRg / _stp;
+					var _aas = tool_arc_radius / _s * lerp(.0, .5, sqr(dsin(abs(_ast))) );
+					
+					for( var i = 0; i <= _stp; i++ ) {
+						var _ang = _angSt + i * _ast;
+						var _ii  = input_fix_len + i;
+						if(_ii >= array_length(inputs)) createNewInput();
+						
+						var _ax  = (drag_point_mx + lengthdir_x(tool_arc_radius, _ang) - _x) / _s;
+						var _ay  = (drag_point_my + lengthdir_y(tool_arc_radius, _ang) - _y) / _s;
+						
+						var _adx = lengthdir_x(_aas, _ang - 90);
+						var _ady = lengthdir_y(_aas, _ang - 90);
+						
+						edited = inputs[_ii].setValue(newAnchor( _ax, _ay, _adx, _ady, -_adx, -_ady)) || edited;
+					}
+					
+					while(array_length(inputs) > input_fix_len + _stp + 1)
+						array_delete(inputs, input_fix_len, 1);
+					
+					if(mouse_lrelease()) {
+						drag_point   = -1;
+						UNDO_HOLDING = false;
+					}
 				}
 				break;
 				
@@ -1765,6 +1684,195 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					inputs[1].setValue(true);
 					
 					repeat(4) createNewInput(, PANEL_PREVIEW.snapX((_mx - _x) / _s), PANEL_PREVIEW.snapY((_my - _y) / _s));
+				}
+				
+				if(drag_point == 0) {
+					if(_tooln == "Circle Midpoint") {
+						var dist = point_distance(drag_point_mx, drag_point_my, _mx, _my) / _s;
+						var dx = dist;
+						var dy = dist;
+						
+						var minx = (drag_point_mx - _x) / _s - dx;
+						var maxx = (drag_point_mx - _x) / _s + dx;
+						var miny = (drag_point_my - _y) / _s - dy;
+						var maxy = (drag_point_my - _y) / _s + dy;
+						
+						minx = PANEL_PREVIEW.snapX(minx);
+						maxx = PANEL_PREVIEW.snapX(maxx);
+						miny = PANEL_PREVIEW.snapY(miny);
+						maxy = PANEL_PREVIEW.snapY(maxy);
+						
+						var _cnx = (maxx + minx) / 2;
+						var _cny = (maxy + miny) / 2;
+						var _ccx = (maxx - minx) * 0.27614;
+						var _ccy = (maxy - miny) * 0.27614;
+						
+						edited = inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0)) || edited;
+						edited = inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy)) || edited;
+						edited = inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0)) || edited;
+						edited = inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy)) || edited;
+						
+					} else {
+						var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
+						var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
+						var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
+						var maxy = max((_my - _y) / _s, (drag_point_my - _y) / _s);
+						
+						minx = PANEL_PREVIEW.snapX(minx);
+						maxx = PANEL_PREVIEW.snapX(maxx);
+						miny = PANEL_PREVIEW.snapY(miny);
+						maxy = PANEL_PREVIEW.snapY(maxy);
+						
+						if(key_mod_press(ALT)) {
+							var _ccx = (drag_point_mx - _x) / _s;
+							var _ccy = (drag_point_my - _y) / _s;
+							
+							var _ww  = (maxx - minx) / 2;
+							var _hh  = (maxy - miny) / 2;
+							
+							if(key_mod_press(SHIFT)) {
+								var _n = max(_ww, _hh);
+								_ww = _n;
+								_hh = _n;
+							}
+							
+							minx = _ccx - _ww;
+							maxx = _ccx + _ww;
+							
+							miny = _ccy - _hh;
+							maxy = _ccy + _hh;
+							
+						} else if(key_mod_press(SHIFT)) {
+							var _n = max(maxx - minx, maxy - miny);
+							maxx = minx + _n;
+							maxy = miny + _n;
+						}
+						
+						if(_tooln == "Rectangle") {
+							edited = inputs[input_fix_len + 0].setValue(newAnchor(minx, miny)) || edited;
+							edited = inputs[input_fix_len + 1].setValue(newAnchor(maxx, miny)) || edited;
+							edited = inputs[input_fix_len + 2].setValue(newAnchor(maxx, maxy)) || edited;
+							edited = inputs[input_fix_len + 3].setValue(newAnchor(minx, maxy)) || edited;
+							
+						} else if(_tooln == "Circle") {
+								
+							var _cnx = (maxx + minx) / 2;
+							var _cny = (maxy + miny) / 2;
+							var _ccx = (maxx - minx) * 0.27614;
+							var _ccy = (maxy - miny) * 0.27614;
+							
+							edited = inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0)) || edited;
+							edited = inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy)) || edited;
+							edited = inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0)) || edited;
+							edited = inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy)) || edited;
+							
+						}
+					}
+					
+					if(mouse_lrelease()) {
+						drag_point   = -1;
+						UNDO_HOLDING = false;
+					}
+					
+				}
+				break;
+				
+			case "Polygon":
+				var _side = tool_polygon.attribute.polygon_sides;
+				hovering      = true;
+				anchor_select = [];
+				CURSOR_SPRITE = THEME.cursor_add;
+				
+				if(mouse_lpress(active)) {
+					while(array_length(inputs) > input_fix_len)
+						array_delete(inputs, input_fix_len, 1);
+					resetDisplayList();
+					
+					drag_point    = 0;
+					drag_type     = _tooln;
+					drag_point_mx = _mx;
+					drag_point_my = _my;
+					inputs[1].setValue(true);
+					
+					repeat(_side) createNewInput(, PANEL_PREVIEW.snapX((_mx - _x) / _s), PANEL_PREVIEW.snapY((_my - _y) / _s));
+				}
+				
+				if(drag_point == 0) {
+					var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
+					var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
+					var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
+					var maxy = max((_my - _y) / _s, (drag_point_my - _y) / _s);
+					
+					minx = PANEL_PREVIEW.snapX(minx);
+					maxx = PANEL_PREVIEW.snapX(maxx);
+					miny = PANEL_PREVIEW.snapY(miny);
+					maxy = PANEL_PREVIEW.snapY(maxy);
+					
+					if(key_mod_press(ALT)) {
+						var _ccx = (drag_point_mx - _x) / _s;
+						var _ccy = (drag_point_my - _y) / _s;
+						
+						var _ww  = (maxx - minx) / 2;
+						var _hh  = (maxy - miny) / 2;
+						
+						if(key_mod_press(SHIFT)) {
+							var _n = max(_ww, _hh);
+							_ww = _n;
+							_hh = _n;
+						}
+						
+						minx = _ccx - _ww;
+						maxx = _ccx + _ww;
+						
+						miny = _ccy - _hh;
+						maxy = _ccy + _hh;
+						
+					} else if(key_mod_press(SHIFT)) {
+						var _n = max(maxx - minx, maxy - miny);
+						maxx = minx + _n;
+						maxy = miny + _n;
+					}
+					
+					var _anst = tool_polygon.attribute.angle;
+					var ast = 360 / _side;
+					
+					var cx = (minx + maxx) / 2;
+					var cy = (miny + maxy) / 2;
+					var cw = (maxx - minx) / 2;
+					var ch = (maxy - miny) / 2;
+					
+					var bminx =  infinity;
+					var bmaxx = -infinity;
+					var bminy =  infinity;
+					var bmaxy = -infinity;
+					
+					for( var i = 0; i < _side; i++ ) {
+						var aa = _anst + ast * i;
+						var vx = cx + lengthdir_x(cw, aa);
+						var vy = cy + lengthdir_y(ch, aa);
+						
+						bminx = min(bminx, vx);
+						bmaxx = max(bmaxx, vx);
+						bminy = min(bminy, vy);
+						bmaxy = max(bmaxy, vy);
+					}
+					
+					for( var i = 0; i < _side; i++ ) {
+						var aa = _anst + ast * i;
+						var vx = cx + lengthdir_x(cw, aa);
+						var vy = cy + lengthdir_y(ch, aa);
+						
+						vx = lerp(minx, maxx, (vx - bminx) / (bmaxx - bminx));
+						vy = lerp(miny, maxy, (vy - bminy) / (bmaxy - bminy));
+						
+						edited = inputs[input_fix_len + i].setValue(newAnchor(vx, vy)) || edited;
+					}
+					
+					if(mouse_lrelease()) {
+						drag_point   = -1;
+						UNDO_HOLDING = false;
+					}
+					
 				}
 				break;
 				
@@ -1915,6 +2023,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 		}
 		
+		if(edited) UNDO_HOLDING = true;
 		var _show_selecting = isNotUsingTool();
 		
 		if(isUsingTool()) {
