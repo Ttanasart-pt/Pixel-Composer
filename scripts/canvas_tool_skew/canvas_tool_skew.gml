@@ -43,7 +43,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		var xc = (x0 + x1) / 2;
 		var yc = (y0 + y1) / 2;
 		
-		draw_surface_ext(preview_surface[0], _x, _y, _s, _s, 0, c_white, 1);
+		draw_surface_ext(preview_surface, _x, _y, _s, _s, 0, c_white, 1);
 		
 		draw_set_color(COLORS._main_accent);
 		draw_rectangle_border(x0, y0, x1, y1, 1);
@@ -98,7 +98,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		else if(_amo != 0) _amo = 1 / ceil(1 / abs(_amo)) * sign(_amo);
 		if(skew_inv) _amo = -_amo;
 		
-		surface_set_shader(preview_surface[1], sh_canvas_skew);
+		surface_set_shader(content_surface, sh_canvas_skew);
 			
 			shader_set_f("dimension", _dim);
 			shader_set_f("origin",    skew_x, skew_y);
@@ -107,12 +107,12 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 			
 			shader_set_color("color", CURRENT_COLOR);
 			
-			draw_surface_safe(preview_surface[0]);
+			draw_surface_safe(preview_surface);
 		surface_reset_shader();
 		
 	}
 	
 	static drawMask = function(hover, active, _x, _y, _s, _mx, _my ) {
-		draw_surface_ext_safe(preview_surface[1], _x, _y, _s, _s);
+		draw_surface_ext_safe(content_surface, _x, _y, _s, _s);
 	}
 }

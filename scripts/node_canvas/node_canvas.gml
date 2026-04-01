@@ -365,7 +365,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.pattern_pos   = [ 0, 0 ];
 		tool_attribute.pattern_mod   = 4;
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		fill_pattern_data = [ "Solid", 
 	           -1, "Stripe X", "Stripe Y", "Stripe D0", "Stripe D1",  
@@ -402,7 +402,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			[ THEME.tool_poster,    tool_pattern_modi, "pattern_mod",   tool_attribute, "Modifier"  ],
 		];
 		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		tool_channel_edit   = new checkBoxGroup(THEME.tools_canvas_channel, function(v,i) /*=>*/ { tool_attribute.channel[i] = v; });
 		
@@ -452,7 +452,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setTooltips( [ "No Dithering", "Bayer 2", "Bayer 4", "Bayer 8" ] )
 									.setCollapse(false);
 									
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		tool_channel      = toolSetting( "",                   tool_channel_edit,   "channel",      tool_attribute                  );
 		tool_layer        = toolSetting( "",                   tool_drawLayer_edit, "drawLayer",    tool_attribute                  );
@@ -473,7 +473,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			tool_fill_bg,
 		];
 		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		tool_fill_grad_obj = new NodeTool()
 			.setSettings(tool_fill_settings)
@@ -486,7 +486,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_gradient = new canvas_tool_with_selector( tool_fill_grad_obj,    tool_sel_magic );
 		tool_pattern  = new canvas_tool_with_selector( tool_fill_pattern_obj, tool_sel_magic );
-
+		
+		node_tool_grad_patt = new NodeTool( [ "Gradient", "Pattern" ], [ THEME.canvas_tools_gradient, THEME.canvas_tools_pattern ] )
+				.setContext(self)
+				.setToolObject( [ tool_gradient, tool_pattern ]);
+				
+		tool_fill_grad.setToolAfter(    node_tool_grad_patt, 0 );
+		tool_fill_pattern.setToolAfter( node_tool_grad_patt, 1 );
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		tools = [
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
 				.setSetting(tool_channel)
@@ -559,9 +568,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSettings(tool_fill_settings)
 				.setToolObject(tool_fill),
 			
-			new NodeTool( [ "Gradient", "Pattern" ], [ THEME.canvas_tools_gradient, THEME.canvas_tools_pattern ] )
-				.setContext(self)
-				.setToolObject( [ tool_gradient, tool_pattern ]),
+			node_tool_grad_patt,
 			
 		];
 	#endregion

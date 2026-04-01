@@ -21,8 +21,12 @@ function canvas_tool() : ToolObject() constructor {
 	subtool = 0;
 	pactive = true;
 	
+	tool_after       = noone;
+	tool_after_index = undefined;
+	
 	static setBrush    = function(b) /*=>*/ { brush = b;  return self; }
 	static getToolNode = function( ) /*=>*/ {             return self; }
+	static setToolAfter= function(t,i=undefined) /*=>*/ { tool_after = t; tool_after_index = i; return self; }
 	
 	static disable = function() { 
 		PANEL_PREVIEW.tool_current = noone; 

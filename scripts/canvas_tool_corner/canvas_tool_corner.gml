@@ -287,8 +287,8 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		amount   = max(_dx, 0);
 		
 		if(amount == 0) {
-			surface_set_shader(preview_surface[1]);
-				draw_surface_safe(preview_surface[0]);
+			surface_set_shader(content_surface);
+				draw_surface_safe(preview_surface);
 			surface_reset_shader();
 			return;
 		}
@@ -343,7 +343,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 			}
 		}
 		
-		var _dim = surface_get_dimension(preview_surface[0]);
+		var _dim = surface_get_dimension(preview_surface);
 		var mx   = mask_boundary_init[0];
 		var my   = mask_boundary_init[1];
 		
@@ -371,8 +371,8 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 				draw_clear(c_white);
 		surface_reset_shader();
 		
-		surface_set_shader(preview_surface[1], noone);
-			draw_surface_safe(preview_surface[0]);
+		surface_set_shader(content_surface, noone);
+			draw_surface_safe(preview_surface);
 			
 			BLEND_MULTIPLY
 				draw_surface_safe(temp_surface[1]);

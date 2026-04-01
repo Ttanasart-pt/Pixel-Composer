@@ -1,6 +1,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform sampler2D maskSurface;
+
 uniform vec2  dimension;
 uniform vec4  color;
 
@@ -123,14 +125,14 @@ vec4 pbPattern(int pattern, vec2 tx, vec2 pos, vec2 sc, vec4 c0) {
 }
 
 void main() {
-	vec4 cc = vec4(0.);
+	vec4 cc = empty == 1? vec4(0.) : texture2D(gm_BaseTexture, v_vTexcoord);
+	gl_FragColor = cc;
 	
 	if(empty == 0) {
-		cc = texture2D(gm_BaseTexture, v_vTexcoord);
-		gl_FragColor = cc;
-		if(cc.a == 0.) return;
+	    vec4 mask = texture2D(maskSurface, v_vTexcoord);
+	    if(mask.a == 0.) return;
 	}
-	
+    
 	vec4 cs = pbPattern(pattern, v_vTexcoord, pattern_pos, pattern_scale, cc);
 	gl_FragColor = cs;
 }

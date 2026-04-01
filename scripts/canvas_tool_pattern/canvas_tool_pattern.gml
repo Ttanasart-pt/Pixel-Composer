@@ -20,20 +20,20 @@ function canvas_tool_pattern(toolAttr) : canvas_tool_shader() constructor {
 		var px = round((mouse_sx - _x) / _s);
 		var py = round((mouse_sy - _y) / _s);
 		
-		surface_set_shader(preview_surface[1], sh_canvas_pattern);
+		surface_set_shader(content_surface, sh_canvas_pattern);
+			shader_set_s( "maskSurface",   mask_surface  );
+			shader_set_i( "empty",         0             );
+			shader_set_f( "seed",          seed          );
+			shader_set_f( "dimension",     _dim          );
+			shader_set_c( "color",         CURRENT_COLOR );
 			
-			shader_set_i("empty",    0);
-			shader_set_f("seed",     seed);
-			shader_set_f("dimension", _dim);
-			shader_set_color("color", CURRENT_COLOR);
+			shader_set_i( "pattern",       tool_attribute.pattern       );
+			shader_set_f( "pattern_inten", tool_attribute.pattern_inten );
+			shader_set_2( "pattern_scale", tool_attribute.pattern_scale );
+			shader_set_2( "pattern_pos",   [ px, py ]                   );
+			shader_set_f( "pattern_mod",   tool_attribute.pattern_mod   );
 			
-			shader_set_i("pattern",       tool_attribute.pattern);
-			shader_set_f("pattern_inten", tool_attribute.pattern_inten);
-			shader_set_2("pattern_scale", tool_attribute.pattern_scale);
-			shader_set_2("pattern_pos",   [ px, py ]);
-			shader_set_f("pattern_mod",   tool_attribute.pattern_mod);
-			
-			draw_surface_safe(preview_surface[0]);
+			draw_surface_safe(preview_surface);
 		surface_reset_shader();
 		
 	}

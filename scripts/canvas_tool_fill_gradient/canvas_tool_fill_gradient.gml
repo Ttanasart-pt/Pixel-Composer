@@ -55,13 +55,14 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
     		else ty = fy + _dy;
 		}
 		
-		surface_set_shader(preview_surface[1], sh_canvas_gradient, true, BLEND.over);
-			shader_set_2("dimension", _dim);
-			shader_set_f("p0",        fx, fy);
-			shader_set_f("p1",        tx, ty);
-			shader_set_c("color",     CURRENT_COLOR);
+		surface_set_shader(content_surface, sh_canvas_gradient, true, BLEND.over);
+			shader_set_s( "maskSurface", mask_surface  );
+			shader_set_2( "dimension",   _dim          );
+			shader_set_f( "p0",          fx, fy        );
+			shader_set_f( "p1",          tx, ty        );
+			shader_set_c( "color",       CURRENT_COLOR );
 			
-            shader_set_i("dithering", bool(_dit));
+            shader_set_i( "dithering",   bool(_dit)    );
             
 			switch(_dit) {
 				case 1 : shader_set_f("ditherSize", 2);
@@ -74,7 +75,7 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 				         shader_set_f("dither",     dither8); break;
 			}
 			
-			draw_surface_safe(preview_surface[0]);
+			draw_surface_safe(preview_surface);
 		surface_reset_shader();
 		
 		dragging = true;

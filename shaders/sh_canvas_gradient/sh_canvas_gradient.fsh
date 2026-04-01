@@ -1,6 +1,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform sampler2D maskSurface;
+
 uniform vec2  dimension;
 uniform vec2  p0, p1;
 uniform vec4  color;
@@ -10,10 +12,11 @@ uniform float ditherSize;
 uniform float dither[64];
 
 void main() {
-    vec4 c0 = texture2D(gm_BaseTexture, v_vTexcoord);
+    vec4 c0   = texture2D(gm_BaseTexture, v_vTexcoord);
     gl_FragColor = c0;
     
-    // if(c0.a == 0.) return;
+    vec4 mask = texture2D(maskSurface, v_vTexcoord);
+    if(mask.a == 0.) return;
     
     vec2  px = floor(v_vTexcoord * dimension);
     vec2  dr = p1 - p0;
