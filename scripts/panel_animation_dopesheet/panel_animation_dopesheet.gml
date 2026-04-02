@@ -1706,7 +1706,7 @@ function Panel_Animation_Dopesheet() {
                     	
                         k.ease_in_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]   = _dx;
-                        k.ease_in[1]   = 1 - _dy;
+                        // k.ease_in[1]   = 1 - _dy;
                         break;
                          
                     case KEYFRAME_DRAG_TYPE.ease_out :
@@ -1714,7 +1714,7 @@ function Panel_Animation_Dopesheet() {
                         
                         k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_out[0]   = _dx;
-                        k.ease_out[1]   = _dy;
+                        // k.ease_out[1]   = _dy;
                         break;
                         
                     case KEYFRAME_DRAG_TYPE.ease_both :
@@ -1723,11 +1723,11 @@ function Panel_Animation_Dopesheet() {
                         
                         k.ease_in_type  = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]    = _dx;
-                        k.ease_in[1]    = 1 - _dy;
+                        // k.ease_in[1]    = 1 - _dy;
                     	
                         k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_out[0]   = _dx;
-                        k.ease_out[1]   = _dy;
+                        // k.ease_out[1]   = _dy;
                         break;
                 }
                             

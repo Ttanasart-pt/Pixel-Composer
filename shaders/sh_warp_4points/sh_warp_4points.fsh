@@ -218,7 +218,11 @@ void main() {
 		}
 	#endregion
 	
-	if(tile == 1) uv = fract(1. + fract(uv));
+	bool tileX = tile == 1 || tile == 3;
+	bool tileY = tile == 2 || tile == 3;
+	
+	if(tileX) uv.x = fract(1. + fract(uv.x));
+	if(tileY) uv.y = fract(1. + fract(uv.y));
 	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
 		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );

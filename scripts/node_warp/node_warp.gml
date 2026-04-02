@@ -23,7 +23,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(4, nodeValue_Vec2( "Bottom Right", [ 1, 1 ] )).hideLabel().setUnitSimple();
 	
 	////- =Render
-	newInput(8, nodeValue_Bool("Tile", false));
+	newInput(8, nodeValue_Toggle( "Tile", 0, [ "X", "Y" ] ));
 	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -286,7 +286,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return w_hovering;
 	}
 	
-	static warpSurface = function(surfBase, surfWarp, surfBack, sw, sh, tl, tr, bl, br, tile = false) {
+	static warpSurface = function(surfBase, surfWarp, surfBack, sw, sh, tl, tr, bl, br, tile = 0) {
 		var _wdim = surface_get_dimension(surfWarp);
 		
 		surface_set_shader(surfBase, sh_warp_4points);
