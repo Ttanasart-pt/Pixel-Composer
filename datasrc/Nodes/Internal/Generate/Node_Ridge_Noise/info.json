@@ -1,0 +1,6 @@
+{
+    "name":          "Ridge Noise",
+    "spr":           "s_node_ridge_noise",
+    "baseNode":      "Node_Ridge_Noise",
+    "pxc_version":    120090,
+}

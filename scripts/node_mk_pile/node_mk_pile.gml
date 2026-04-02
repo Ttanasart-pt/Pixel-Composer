@@ -67,7 +67,10 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		if(!is_array(_surf)) _surf = [_surf];
 		if(array_empty(_surf)) return _outData;
+		
 		var fSurf = _surf[0];
+		if(!is_surface(fSurf)) return _outData;
+		
 		var _samo = array_length(_surf);
 		
 		var _sw   = surface_get_width_safe(fSurf);

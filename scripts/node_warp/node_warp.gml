@@ -144,6 +144,13 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 		
 		draw_set_color(COLORS._main_accent);
+		draw_set_alpha(.5);
+		draw_line_infinite(tlX, tlY, trX, trY);
+		draw_line_infinite(tlX, tlY, blX, blY);
+		draw_line_infinite(brX, brY, trX, trY);
+		draw_line_infinite(brX, brY, blX, blY);
+		
+		draw_set_alpha(1);
 		draw_line(tlX, tlY, trX, trY);
 		draw_line(tlX, tlY, blX, blY);
 		draw_line(brX, brY, trX, trY);
@@ -172,7 +179,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#region edit
 			draw_set_color(COLORS.node_overlay_gizmo_inactive);
 			if(drag_side == 0) {
-				draw_line_width(tlX, tlY, trX, trY, 3);
+				draw_line_width_infinite(tlX, tlY, trX, trY, 3);
 			
 				var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -186,7 +193,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_up1 || _up2) UNDO_HOLDING = true;
 				
 			} else if(drag_side == 1) {
-				draw_line_width(tlX, tlY, blX, blY, 3);
+				draw_line_width_infinite(tlX, tlY, blX, blY, 3);
 			
 				var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -200,7 +207,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_up1 || _up3) UNDO_HOLDING = true;
 				
 			} else if(drag_side == 2) {
-				draw_line_width(brX, brY, trX, trY, 3);
+				draw_line_width_infinite(brX, brY, trX, trY, 3);
 			
 				var _brx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _bry = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -214,7 +221,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_up4 || _up2) UNDO_HOLDING = true;
 				
 			} else if(drag_side == 3) {
-				draw_line_width(brX, brY, blX, blY, 3);
+				draw_line_width_infinite(brX, brY, blX, blY, 3);
 			
 				var _brx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _bry = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -255,7 +262,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			} else if(hover) {
 				draw_set_color(COLORS._main_accent);
 				if(distance_to_line_infinite(_mx, _my, tlX, tlY, trX, trY) < 12) {
-					draw_line_width(tlX, tlY, trX, trY, 3);
+					draw_line_width_infinite(tlX, tlY, trX, trY, 3);
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {
@@ -266,7 +273,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 				} else if(distance_to_line_infinite(_mx, _my, tlX, tlY, blX, blY) < 12) {
-					draw_line_width(tlX, tlY, blX, blY, 3);
+					draw_line_width_infinite(tlX, tlY, blX, blY, 3);
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {
@@ -277,7 +284,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 				} else if(distance_to_line_infinite(_mx, _my, brX, brY, trX, trY) < 12) {
-					draw_line_width(brX, brY, trX, trY, 3);
+					draw_line_width_infinite(brX, brY, trX, trY, 3);
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {
@@ -288,7 +295,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 				} else if(distance_to_line_infinite(_mx, _my, brX, brY, blX, blY) < 12) {
-					draw_line_width(brX, brY, blX, blY, 3);
+					draw_line_width_infinite(brX, brY, blX, blY, 3);
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {
@@ -334,18 +341,18 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f( "surfaceSize", [sw,sh] );
 			shader_set_i( "tile",        tile    );
 			
-			shader_set_f("p0",  tr );
-			shader_set_f("p1",  br );
-			shader_set_f("p2",  bl );
-			shader_set_f("p3",  tl );
-			shader_set_i("flip", 1 );
+			shader_set_f( "p0",  tr );
+			shader_set_f( "p1",  br );
+			shader_set_f( "p2",  bl );
+			shader_set_f( "p3",  tl );
+			shader_set_i( "flip", 1 );
 			draw_surface_stretched(surfBack, 0, 0, sw, sh);
 			
-			shader_set_f("p0",  br );
-			shader_set_f("p1",  tr );
-			shader_set_f("p2",  tl );
-			shader_set_f("p3",  bl );
-			shader_set_i("flip", 0 );
+			shader_set_f( "p0",  br );
+			shader_set_f( "p1",  tr );
+			shader_set_f( "p2",  tl );
+			shader_set_f( "p3",  bl );
+			shader_set_i( "flip", 0 );
 			draw_surface_stretched(surfWarp, 0, 0, sw, sh);
 			
 		surface_reset_shader();

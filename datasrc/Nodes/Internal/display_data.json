@@ -836,6 +836,7 @@
             "Node_Flow_Noise",
             "Node_Noise_Cristal",
             "Node_Honeycomb_Noise",
+            "Node_Ridge_Noise",
             
             { "label": "Patterns" },
             { "label": "/Basics" },
