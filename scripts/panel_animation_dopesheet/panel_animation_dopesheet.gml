@@ -109,6 +109,7 @@ function Panel_Animation_Dopesheet() {
         graph_key_hover_array  = noone;
         graph_key_hover_range  = noone;
         
+        edit_ease_lock_y       = true;
         graph_key_drag         = noone;
         graph_key_drag_index   = noone;
         graph_key_drag_array   = noone;
@@ -329,7 +330,6 @@ function Panel_Animation_Dopesheet() {
     #endregion
     
     #region ++++ Context Menu ++++
-	    
 	    global.menuItems_animation_keyframe = [
 	        "animation_edit_keyframe_value",
 	        "animation_group_ease_in",
@@ -1700,13 +1700,35 @@ function Panel_Animation_Dopesheet() {
                 
             	if(_dx < 0) _dy = -_dy;
             	
+                if(!UNDO_HOLDING) {
+                	recordAction(ACTION_TYPE.custom, function(_data, _undo) /*=>*/ {
+                		var k = _data.key;
+                		var ei = [ k.ease_in[0],  k.ease_in[1] ];
+                		var eo = [ k.ease_out[0], k.ease_out[1] ];
+                		
+                		k.ease_in  = [ _data.ease_in[0],  _data.ease_in[1] ];
+                		k.ease_out = [ _data.ease_out[0], _data.ease_out[1] ];
+                		k.anim.node.triggerRender()
+                		
+                		_data.ease_in  = ei;
+                		_data.ease_out = eo;
+                	}, {
+                		key : k,
+                		ease_in  : [ k.ease_in[0],  k.ease_in[1] ],
+                		ease_out : [ k.ease_out[0], k.ease_out[1] ],
+                	});
+	                UNDO_HOLDING = true;
+                }
+                
+                var edit_y = !edit_ease_lock_y || key_mod_press(ALT);
+                
                 switch(graph_key_drag_index) {
                     case KEYFRAME_DRAG_TYPE.ease_in :
                     	_dx = clamp(_dx, 0, 2);
                     	
                         k.ease_in_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]   = _dx;
-                        // k.ease_in[1]   = 1 - _dy;
+                        if(edit_y) k.ease_in[1]   = 1 - _dy;
                         break;
                          
                     case KEYFRAME_DRAG_TYPE.ease_out :
@@ -1714,7 +1736,7 @@ function Panel_Animation_Dopesheet() {
                         
                         k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_out[0]   = _dx;
-                        // k.ease_out[1]   = _dy;
+                        if(edit_y) k.ease_out[1]   = _dy;
                         break;
                         
                     case KEYFRAME_DRAG_TYPE.ease_both :
@@ -1723,18 +1745,15 @@ function Panel_Animation_Dopesheet() {
                         
                         k.ease_in_type  = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]    = _dx;
-                        // k.ease_in[1]    = 1 - _dy;
+                        if(edit_y) k.ease_in[1]    = 1 - _dy;
                     	
                         k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_out[0]   = _dx;
-                        // k.ease_out[1]   = _dy;
+                        if(edit_y) k.ease_out[1]   = _dy;
                         break;
                 }
-                            
-                if(mouse_lrelease()) {
-                    recordAction(ACTION_TYPE.var_modify, k, [ _in, "ease_in"  ]);
-                    recordAction(ACTION_TYPE.var_modify, k, [ _ot, "ease_out" ]);
-                }
+                
+                if(mouse_lrelease()) UNDO_HOLDING = false;
                 
                 k.anim.node.triggerRender(); 
             }

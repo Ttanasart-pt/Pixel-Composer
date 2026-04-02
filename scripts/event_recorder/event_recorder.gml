@@ -169,7 +169,7 @@ function Action(_type, _object, _data) constructor {
 				break;
 		}
 		
-		if(trigger) trigger();
+		if(trigger) trigger(self);
 	}
 	
 	static redo = function() {
