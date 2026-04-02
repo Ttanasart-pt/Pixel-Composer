@@ -489,7 +489,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!set_default) return;
 		
 		unit.mode = def_unit;
-		setValue(unit.apply(variable_clone(def_val))); 
+		setValueDirect(unit.apply(variable_clone(def_val))); 
 		is_modified       = always_modified;
 		attributes.mapped = false;
 		

@@ -128,11 +128,15 @@
 
 varying vec2  v_vTexcoord;
 varying vec4  v_vColour;
+
+uniform vec2  dimension;
+
 uniform int   invert;
 uniform int   distMode;
 uniform int   swap;
 uniform vec2  tile;
 uniform vec2  range;
+uniform vec2  center;
 
 uniform vec2      angle;
 uniform int       angleUseSurf;
@@ -147,10 +151,10 @@ uniform int       twistUseSurf;
 uniform sampler2D twistSurf;
 
 void main() {
-	vec2 center = vec2(0.5, 0.5);
 	vec2 coord;
 	vec2 til   = tile/* * vec2(1., PI * 2.)*/;
 	vec2 _tile = swap == 1? til.yx : til;
+	vec2 cen   = center / dimension;
 	
 	float ang = angle.x;
 	if(angleUseSurf == 1) {
@@ -177,11 +181,11 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
 	if(invert == 0) {
-		float dist = distance(v_vTexcoord, center) / (sqrt(2.) * .5);
+		float dist = distance(v_vTexcoord, cen) / (sqrt(2.) * .5);
 		     if(distMode == 1) dist = sqrt(dist);
 		else if(distMode == 2) dist = log(dist);
 		
-		vec2  cenPos = v_vTexcoord - center;
+		vec2  cenPos = v_vTexcoord - cen;
 		float angle	 = atan(cenPos.y, -cenPos.x) + PI;
 		
 		angle = (angle - rad0) / radr;
@@ -204,7 +208,7 @@ void main() {
 		
 		angle -= ang;
 		angle += tws * dist;
-		coord = fract(center + vec2(cos(angle), sin(angle)) * dist * _tile);
+		coord = fract(cen + vec2(cos(angle), sin(angle)) * dist * _tile);
 	}
 	
 	if(swap == 1) coord.xy = coord.yx;

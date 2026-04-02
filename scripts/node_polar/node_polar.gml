@@ -18,24 +18,25 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(12, nodeValue_Vec2("Tile", [ 1, 1 ] ));
 	
 	////- =Polar
-	newInput(16, nodeValue_Rotation(    "Angle",        0 )).setMappable(17);
-	newInput( 5, nodeValue_Bool(        "Invert",       0 ))
-	newInput(10, nodeValue_Bool(        "Swap Axis",    0 ));
-	newInput( 6, nodeValue_Slider(      "Blend",        1 )).setMappable(11);
-	newInput( 9, nodeValue_Enum_Scroll( "Radius Mode",  0, [ new scrollItem("Linear",         s_node_curve_type, 2), 
-                                                             new scrollItem("Inverse Square", s_node_curve_type, 1), 
-                                                             new scrollItem("Logarithm",      s_node_curve_type, 3), ]));
-	newInput(13, nodeValue_RotRange(   "Range", [0,360] ));
+	newInput(18, nodeValue_Vec2(     "Center", [.5,.5] )).setUnitSimple();
+	newInput(16, nodeValue_Rotation( "Angle",        0 )).setMappable(17);
+	newInput( 5, nodeValue_Bool(     "Invert",       0 ))
+	newInput(10, nodeValue_Bool(     "Swap Axis",    0 ));
+	newInput( 6, nodeValue_Slider(   "Blend",        1 )).setMappable(11);
+	newInput( 9, nodeValue_EScroll(  "Radius Mode",  0, [ new scrollItem("Linear",         s_node_curve_type, 2), 
+                                                          new scrollItem("Inverse Square", s_node_curve_type, 1), 
+                                                          new scrollItem("Logarithm",      s_node_curve_type, 3), ]));
+	newInput(13, nodeValue_RotRange( "Range", [0,360] ));
 	
 	////- =Twist
 	newInput(14, nodeValue_Float( "Twist", 0 )).setMappable(15);
-	// input 18
+	// input 19
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 4,
 		[ "Surfaces", false ],  0,  1,  2,  7,  8, 12, 
-		[ "Polar",    false ], 16, 17,  5, 10,  6, 11,  9, 13, 
+		[ "Polar",    false ], 18, 16, 17,  5, 10,  6, 11,  9, 13, 
 		[ "Twist",    false ], 14, 15, 
 	];
 	
@@ -44,11 +45,20 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_surface_depth();
 	attribute_interpolation();
 	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		InputDrawOverlay(inputs[18].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
+		
+		return w_hovering;
+	}
+	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var _surf = _data[ 0];
 			var _tile = _data[12];
 			
+			var _cent = _data[18];
 			var _angl = _data[16];
 			var _invt = _data[ 5];
 			var _swap = _data[10];
@@ -61,7 +71,9 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_shader(_outSurf, sh_polar);
 			shader_set_interpolation( _surf );
+			shader_set_2("dimension", surface_get_dimension(_surf));
 			shader_set_2("tile",      _tile );
+			shader_set_2("center",    _cent );
 			
 			shader_set_i("invert",    _invt );
 			shader_set_i("swap",      _swap );
