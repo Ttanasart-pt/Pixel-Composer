@@ -32,66 +32,47 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Crop",   false], 3, 4, 1, 7, 5, 6, 
 	]
 	
+	////- Node
+	
 	attribute_surface_depth();
 	
-	tool_drag = new NodeTool("Draw crop area", THEME.crop_tool, "Node_Crop");
-	
-	tool_fitw = new NodeTool("Fit Width",      THEME.crop_fit_width)
-					.setToolFn(function() {
-						var _dim = getDimension(preview_index);
-						var _asp = current_data[3];
-						var _rat = current_data[4];
-						var _cen = current_data[5];
-						
-						var _ratio  = getRatio(_asp, _rat);
-						
-						inputs[5].setValue([ _dim[0] / 2, _cen[1] ]);
-						inputs[6].setValue(_dim[0]);
-					});
-					
-	tool_fith = new NodeTool("Fit Height",      THEME.crop_fit_height)
-					.setToolFn(function() {
-						var _dim = getDimension(preview_index);
-						var _asp = current_data[3];
-						var _rat = current_data[4];
-						var _cen = current_data[5];
-						
-						var _ratio  = getRatio(_asp, _rat);
-						
-						inputs[5].setValue([ _cen[0], _dim[1] / 2 ]);
-						inputs[6].setValue(_dim[1] * _ratio);
-					});
-					
-	tools = [ tool_drag ];
-	
-	drag_side = noone;
-	drag_mx   = 0;
-	drag_my   = 0;
-	drag_sv   = 0;
-	
-	static getPreviewValues = function() { return getInputData(0); }
-	
-	static getRatio = function(_asp, _rat) {
-		switch(_asp) {
-			case 1 : return _rat[0] / _rat[1]; 	break;
-			case 2 : return  1 / 1;				break;
-			case 3 : return  3 / 2;				break;
-			case 4 : return  4 / 3;				break;
-			case 5 : return 16 / 9;				break;
-		}
-		return 1;
-	}
-	
-	static step = function() {
-		var _asp = getInputData(3);
-		var _fit = getInputData(7);
+	#region ---- tools ----
+		tool_drag = new NodeTool("Draw crop area", THEME.crop_tool, "Node_Crop");
 		
-		inputs[1].setVisible(_asp == 0);
-		inputs[4].setVisible(_asp == 1);
-		inputs[5].setVisible(_asp >  0 && _fit == 0);
-		inputs[6].setVisible(_asp >  0 && _fit == 0);
-	}
-	
+		tool_fitw = new NodeTool("Fit Width",      THEME.crop_fit_width)
+						.setToolFn(function() /*=>*/ {
+							var _dim = getDimension(preview_index);
+							var _asp = current_data[3];
+							var _rat = current_data[4];
+							var _cen = current_data[5];
+							
+							var _ratio  = getRatio(_asp, _rat);
+							
+							inputs[5].setValue([ _dim[0] / 2, _cen[1] ]);
+							inputs[6].setValue(_dim[0]);
+						});
+						
+		tool_fith = new NodeTool("Fit Height",      THEME.crop_fit_height)
+						.setToolFn(function() /*=>*/ {
+							var _dim = getDimension(preview_index);
+							var _asp = current_data[3];
+							var _rat = current_data[4];
+							var _cen = current_data[5];
+							
+							var _ratio  = getRatio(_asp, _rat);
+							
+							inputs[5].setValue([ _cen[0], _dim[1] / 2 ]);
+							inputs[6].setValue(_dim[1] * _ratio);
+						});
+						
+		tools = [ tool_drag ];
+		
+		drag_side = noone;
+		drag_mx   = 0;
+		drag_my   = 0;
+		drag_sv   = 0;
+	#endregion
+		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, params) {
 		PROCESSOR_OVERLAY_CHECK
 		
@@ -145,6 +126,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(mouse_lrelease()) {
 						drag_side    = noone;
 						UNDO_HOLDING = false;
+						PANEL_PREVIEW.clearTool();
 					}
 					
 				} else {
@@ -349,6 +331,29 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		return hovering;
+	}
+	
+	static getPreviewValues = function() { return getInputData(0); }
+	
+	static getRatio = function(_asp, _rat) {
+		switch(_asp) {
+			case 1 : return _rat[0] / _rat[1]; 	break;
+			case 2 : return  1 / 1;				break;
+			case 3 : return  3 / 2;				break;
+			case 4 : return  4 / 3;				break;
+			case 5 : return 16 / 9;				break;
+		}
+		return 1;
+	}
+	
+	static step = function() {
+		var _asp = getInputData(3);
+		var _fit = getInputData(7);
+		
+		inputs[1].setVisible(_asp == 0);
+		inputs[4].setVisible(_asp == 1);
+		inputs[5].setVisible(_asp >  0 && _fit == 0);
+		inputs[6].setVisible(_asp >  0 && _fit == 0);
 	}
 	
 	static onValueUpdate = function(index) {

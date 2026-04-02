@@ -450,8 +450,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		];
 		
 		tool_settings = [
-			toolSetting("Snap",          new checkBox(function() /*=>*/ { attributes.snap_point = !attributes.snap_point; }), "snap_point", attributes),
-			toolSetting("Snap Distance", textBox_Number(function(v) /*=>*/ { attributes.snap_distance = max(1, v); }), "snap_distance", attributes),
+			toolSetting( "Snap",          new checkBox(function() /*=>*/ { attributes.snap_point = !attributes.snap_point; }), "snap_point", attributes ),
+			toolSetting( "Snap Distance", textBox_Number(function(v) /*=>*/ { attributes.snap_distance = max(1, v); }),     "snap_distance", attributes ),
 		];
 		
 		tool_arc_radius   = 0;
