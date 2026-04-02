@@ -116,7 +116,7 @@ function canvas_brush() constructor {
 			var _p  = point_rotate(-surface_w / 2, -surface_h / 2, 0, 0, _r);
 				
 			draw_surface_ext_safe(surface, round(_x + _p[0]), round(_y + _p[1]), 1, 1, _r, draw_get_color(), draw_get_alpha());
-			return;
+			return 1;
 		} 
 		
 		if(size <= 1) 
@@ -130,6 +130,7 @@ function canvas_brush() constructor {
 		} else
 			draw_circle_prec(_x, _y, size / 2, 0);
 			
+		return 1;
 	}
 	
 	static drawPoint = function(_x, _y, _draw = false) {
@@ -240,8 +241,8 @@ function canvas_brush() constructor {
 			draw_line_width(_x0, _y0, _x1, _y1, size);
 			
 			if(_cap) {
-				_step += drawPoint(_x0, _y0, true);
-				_step += drawPoint(_x1, _y1, true);
+				_step += drawPixel(_x0, _y0, true);
+				_step += drawPixel(_x1, _y1, true);
 			}
 		}
 	
@@ -321,8 +322,8 @@ function canvas_brush() constructor {
 					draw_ellipse(_min_x + fx[i][0], _min_y + fx[i][1], 
 					             _max_x + fx[i][0], _max_y + fx[i][1], 1);
 				
-			} else draw_ellipse_width(_min_x, _min_y, _max_x, _max_y, size);
-			
+			} else
+				draw_ellipse_border(_min_x, _min_y, _max_x, _max_y, size);
 			return;
 		}
 		
