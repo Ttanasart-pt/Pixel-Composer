@@ -3,13 +3,24 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDrawIcon(s_node_path_sample);
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode(    "Path" ));
-	newInput(1, nodeValue_Float(       "Ratio", 0 ));
-	newInput(2, nodeValue_Enum_Scroll( "Type",  0, [ "Loop", "Ping pong" ] ));
+	newInput( 0, nodeValue_PathNode( "Path"     ));
+	newInput( 2, nodeValue_EScroll(  "Type",  0, [ "Loop", "Ping pong", "Clamp" ] ));
+	newInput( 1, nodeValue_Float(    "Ratio", 0 ));
+	// 3
 	
-	newOutput(0, nodeValue_Output( "Position",  VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(1, nodeValue_Output( "Direction", VALUE_TYPE.float, 0 ));
-	newOutput(2, nodeValue_Output( "Weight",    VALUE_TYPE.float, 0 ));
+	newOutput( 0, nodeValue_Output( "Position",  VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput( 1, nodeValue_Output( "Direction", VALUE_TYPE.float, 0 ));
+	newOutput( 2, nodeValue_Output( "Weight",    VALUE_TYPE.float, 0 ));
+	
+	input_display_list = [
+		0, 2, 1, 
+	]
+	
+	////- Node
+	
+	__temp_p  = new __vec2P();
+	__temp_p0 = new __vec2P();
+	__temp_p1 = new __vec2P();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
@@ -29,14 +40,14 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return w_hovering;
 	}
 	
-	__temp_p  = new __vec2P();
-	__temp_p0 = new __vec2P();
-	__temp_p1 = new __vec2P();
-	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
-		var _path = _data[0];
-		var _rat  = _data[1];
-		var _mod  = _data[2];
+		#region data
+			var _path = _data[0];
+			
+			var _mod  = _data[2];
+			var _rat  = _data[1];
+			
+		#endregion
 		
 		if(!is_path(_path)) return _output;
 		if(!is_real(_rat))  return _output;
@@ -55,6 +66,8 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				}
 				_rat = fr;
 				break;
+				
+			case 2 : _rat = clamp(_rat, 0, 0.999); break;
 		}
 		
 		__temp_p = _path.getPointRatio(_rat, 0, __temp_p);
