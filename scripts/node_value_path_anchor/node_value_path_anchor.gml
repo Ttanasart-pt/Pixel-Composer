@@ -1,8 +1,8 @@
 function nodeValue_Path_Anchor(_name, _value, _tooltip = "") { return new __NodeValue_Path_Anchor(_name, self, _value, _tooltip); }
 function __NodeValue_Path_Anchor(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, _tooltip) constructor {
+	setDisplay(VALUE_DISPLAY.path_anchor);
 	type_array = 1;
 	def_length = _ANCHOR.amount;
-	setDisplay(VALUE_DISPLAY.path_anchor);
 	
 	////- GET
 	
@@ -18,11 +18,7 @@ function __NodeValue_Path_Anchor(_name, _node, _value, _tooltip = "") : NodeValu
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		var typ = nod.type;
 		
-		if(typ == VALUE_TYPE.surface) val = surface_get_dimension(val);
-		if(array_depth != 0 || def_length == -1) return val;
-		
 		var _d = array_get_depth(val);
-		
 		__nod       = nod;
 		__applyUnit = applyUnit;
 		__arrIndex  = arrIndex;

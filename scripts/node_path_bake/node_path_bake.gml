@@ -119,13 +119,13 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			_dist = _dist % _ll;
 			
 			var _cKey  = $"{_dist}/{ind}";
-			// if(struct_has(cached_pos, _cKey)) {
-			// 	var _cachep = cached_pos[$ _cKey];
-			// 	out.x = _cachep.x;
-			// 	out.y = _cachep.y;
-			// 	out.weight = _cachep.weight;
-			// 	return out;
-			// }
+			if(struct_has(cached_pos, _cKey)) {
+				var _cachep = cached_pos[$ _cKey];
+				out.x = _cachep.x;
+				out.y = _cachep.y;
+				out.weight = _cachep.weight;
+				return out;
+			}
 			
 			var _pp = points[ind];
 			var _la = getAccuLength(ind);

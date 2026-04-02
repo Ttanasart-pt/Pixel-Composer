@@ -913,10 +913,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(ind < array_length(inputs)) {
 				var hov = inputs[ind].drawPath(hover, active, _x, _y, _s, _mx, _my, _params);
 				hover &= !hov; w_hovering |= hov;
-			}
-			
-			if(inputs[ind].path_point_drag != undefined) 
-				return;
+				
+				if(inputs[ind].path_point_drag != undefined) 
+					return;
+					
+			} else 
+				dynamic_input_inspecting = noone;
 		}
 		
 		var pad   = current_data[0];
@@ -1687,7 +1689,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static getToolNode = function() /*=>*/ {
 		if(dynamic_input_inspecting >= 0) {
 			var ind = input_fix_len + dynamic_input_inspecting * data_length + 1;
-			if(ind < array_length(inputs)) return self;
+			if(ind >= array_length(inputs)) return self;
 			return inputs[ind].isEditingPath() ?? self;
 			
 		} else {

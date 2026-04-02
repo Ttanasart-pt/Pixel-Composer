@@ -659,7 +659,7 @@ function nodeValueUnit(__nodeValue) constructor {
 				case VALUE_DISPLAY.padding      :
 				case VALUE_DISPLAY.vector       :
 				case VALUE_DISPLAY.vector_range :
-					var _val = array_clone(_len, 1);
+					var _val = array_clone(value, 1);
 					
 					if(_len % 2 == 0) {
 						for( var i = 0, n = _len; i < n; i++ )
@@ -673,7 +673,7 @@ function nodeValueUnit(__nodeValue) constructor {
 					return _val;
 					
 				case VALUE_DISPLAY.path_anchor  :
-					var _val = array_clone(_len, 1);
+					var _val = array_clone(value, 1);
 					for( var i = 0, n = _len - 2; i < n; i++ )
 						_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];
 					
