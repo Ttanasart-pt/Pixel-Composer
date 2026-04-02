@@ -605,33 +605,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _currValue = getValue();
 				
 				if(attributes.mapped) {
-					var _mappValue = [];
+					var _mappValue = undefined;
 					
 					if(mapped_vec4) {
-						_mappValue[0] = array_safe_get_fast(0, 0, 0);
-						_mappValue[1] = array_safe_get_fast(0, 1, 0);
-						_mappValue[2] = array_safe_get_fast(_currValue, 0, 0);
-						_mappValue[3] = array_safe_get_fast(_currValue, 1, 0);
+						_mappValue = [ array_safe_get_fast(0, 0, 0), 
+						               array_safe_get_fast(0, 1, 0), 
+						               array_safe_get_fast(_currValue, 0, 0), 
+						               array_safe_get_fast(_currValue, 1, 0) ];
 						
-					} else if(!is_array(_currValue)) {
-						_mappValue[0] = 0;
-						_mappValue[1] = _currValue;
-					}
+					} else if(is_numeric(_currValue))
+						_mappValue = [ 0, _currValue ];
 					
-					setValue(_mappValue);
+					if(_mappValue != undefined)
+						setValue(_mappValue);
 					
 				} else {
-					var _mappValue;
+					var _mappValue = undefined;
 					
-					if(mapped_vec4) {
-						_mappValue[0] = array_safe_get_fast(_currValue, 2, 0);
-						_mappValue[1] = array_safe_get_fast(_currValue, 3, 0);
+					if(mapped_vec4)
+						_mappValue = [ array_safe_get_fast(_currValue, 2, 0), array_safe_get_fast(_currValue, 3, 0) ];
 						
-					} else {
+					else if(is(self, __NodeValue_Vec2))
+						_mappValue = [ array_safe_get_fast(_currValue, 0, 0), array_safe_get_fast(_currValue, 1, 0) ];
+						
+					else 
 						_mappValue = array_safe_get_fast(_currValue, 1, 0);
-					}
 					
-					setValue(_mappValue);
+					if(_mappValue != undefined)
+						setValue(_mappValue);
 				}
 				
 				setArrayDepth(attributes.mapped);
@@ -2388,6 +2389,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	__preview_bbox = noone;
 	static drawOverlayToggle = noone;
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my) { 
+		if(attributes[$ "mapped"]) return -1;
 		if(expUse) return -1;
 		
 		var argc = 7;

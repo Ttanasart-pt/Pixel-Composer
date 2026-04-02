@@ -88,7 +88,6 @@
 	}
 	
 	function shader_set_f(uniform, value) {
-		
 		var shader = shader_current();
 		if(shader == -1) return;
 		

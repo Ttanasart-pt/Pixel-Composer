@@ -176,7 +176,9 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
+		if(attributes[$ "mapped"])        return false;
 		if(expUse || value_from != noone) return false;
+		if(!is_real(_rot))                return false;
 		
 		if(!is_array(_sca)) _sca = [ _sca, _sca ];
 		var _hovering = preview_hotkey_active;

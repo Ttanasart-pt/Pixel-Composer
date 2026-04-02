@@ -204,7 +204,9 @@
 	function array_get_depth(arr) { // Read only the first member, faster
 		INLINE
 		
-		if(!is_array(arr)) return 0;
+		if(!is_array(arr))   return  0;
+		// if(array_empty(arr)) return -1;
+		
 		var d = 0;
 		var p = arr;
 		

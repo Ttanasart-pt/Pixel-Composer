@@ -105,10 +105,11 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _flag = 0b0011) { 
+		if(attributes[$ "mapped"]) return -1;
 		if(expUse) return -1;
-		__preview_bbox = node.__preview_bbox;
 		
-		var _hovering = preview_hotkey_active;
+		__preview_bbox = node.__preview_bbox;
+		var _hovering  = preview_hotkey_active;
 		
 		if(preview_hotkey_active) {
 			
