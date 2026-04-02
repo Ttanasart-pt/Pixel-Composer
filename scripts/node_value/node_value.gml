@@ -493,7 +493,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!set_default) return;
 		
 		unit.mode = def_unit;
-		setValueDirect(unit.apply(variable_clone(def_val))); 
+		setValueDirect(variable_clone(def_val)); 
+		
 		is_modified       = always_modified;
 		attributes.mapped = false;
 		
@@ -1841,8 +1842,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	show_val = [];
 	static showValue = function() {
-		INLINE
-		
 		var val = 0;
 		
 		if(value_from != noone || expUse) 
@@ -2076,6 +2075,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static onSetValueDirect = undefined;
 	static setValueDirect = function(val = 0, _index = noone, record = true, time = NODE_CURRENT_FRAME, _render = true) {
+		// if(name == "Focus Center") { printCallStack(); print(val); }
+		
 		is_modified = true;
 		var _upd = updateOnSet;
 		var _val = val;

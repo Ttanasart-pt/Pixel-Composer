@@ -77,7 +77,7 @@ float ridgeNoise( vec2 pos, vec2 sca ) {
 	float dis = length(grad);
 	
 	float str = strip(ppos, vec2(.5), dir, 8.);
-	// str *= height;
+	str *= height;
 	
 	return str;
 } 

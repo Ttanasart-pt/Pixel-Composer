@@ -15,8 +15,8 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	
 	////- =Noise
 	newInput(5, nodeValueSeed()).setShaderProp("seed");
-	newInput(4, nodeValue_Enum_Button( "Mode",       0, [ "Hexagon", "Star" ])).setShaderProp("mode");
-	newInput(6, nodeValue_Int(         "Iteration",  1)).setShaderProp("iteration");
+	newInput(4, nodeValue_EButton( "Mode",       0, [ "Hexagon", "Star" ])).setShaderProp("mode");
+	newInput(6, nodeValue_Int(     "Iteration",  1)).setShaderProp("iteration");
 	
 	////- =Transform
 	newInput(1, nodeValue_Vec2(        "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();

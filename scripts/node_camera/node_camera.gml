@@ -4,8 +4,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Camera
 	newInput( 6, nodeValue_Dimension());
-	newInput( 0, nodeValue_Vec2(   "Focus Center", [0,0] )).setHotkey("G");
-	newInput( 1, nodeValue_Slider( "Zoom",          1, [.01,4,.01] ));
+	newInput( 0, nodeValue_Vec2(   "Focus Center", [.5,.5] )).setHotkey("G").setUnitSimple();
+	newInput( 1, nodeValue_Slider( "Zoom",           1, [.01,4,.01] ));
 	
 	////- =FOV
 	newInput( 2, nodeValue_Bool(  "Depth of Field", false ));
@@ -305,7 +305,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _dim  = _data[6];
 			var _pos  = _data[0];
 			var _zoom = _data[1];
-		
+			
 			var _dof      = _data[2];
 			var _dof_dist = _data[3];
 			var _dof_stop = _data[4];

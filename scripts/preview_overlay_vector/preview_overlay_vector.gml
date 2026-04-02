@@ -55,7 +55,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _type = 
 		if(preview_hotkey_axis == -1 || preview_hotkey_axis == 0) _val[0] = _nx;
 		if(preview_hotkey_axis == -1 || preview_hotkey_axis == 1) _val[1] = _ny;
 							
-		if(setValueInspector( unit.invApply(_val) )) 
+		if(setValue(_val)) 
 			UNDO_HOLDING = true;
 							
 		if(mouse_lrelease()) {
