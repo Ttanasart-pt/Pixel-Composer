@@ -449,6 +449,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setVisible(false).setToolObject( new path_tool_scale(self)  ),
 		];
 		
+		tool_settings = [
+			toolSetting("Snap",          new checkBox(function() /*=>*/ { attributes.snap_point = !attributes.snap_point; }), "snap_point", attributes),
+			toolSetting("Snap Distance", textBox_Number(function(v) /*=>*/ { attributes.snap_distance = max(1, v); }), "snap_distance", attributes),
+		];
+		
 		tool_arc_radius   = 0;
 		tool_arc_angle_st = 0;
 		tool_arc_angle_rg = 0;
@@ -462,10 +467,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	#endregion
 	
 	#region ---- attributes ----
-		attributes.display_name = false;
-		attributes.snap_point   = true;
-		attributes.snap_distance= 8;
-		attributes.weight       = [ [ 0, 1 ], [ 100, 1 ] ];
+		attributes.display_name  = false;
+		attributes.snap_point    = true;
+		attributes.snap_distance = 8;
+		attributes.weight        = [ [ 0, 1 ], [ 100, 1 ] ];
 		
 		array_push(attributeEditors, "Display");
 		array_push(attributeEditors, Node_Attribute("Display name", function() /*=>*/ {return attributes.display_name},  function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})}));

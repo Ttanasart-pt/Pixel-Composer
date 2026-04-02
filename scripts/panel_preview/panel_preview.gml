@@ -1588,13 +1588,13 @@ function Panel_Preview() : PanelContent() constructor {
 	            continue;
             }
             
-            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_icon_light);
+            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
             if(nme != "") {
             	if(is_string(nme)) {
             		tolx      += ui(4);
                 	tol_max_w += ui(4);
                 	
-	                draw_text(tolx, topbar_height / 2, nme);
+	                draw_text_add(tolx, topbar_height / 2, nme);
 	                tolx      += string_width(nme) + ui(8);
 	                tol_max_w += string_width(nme) + ui(8);
 	                
