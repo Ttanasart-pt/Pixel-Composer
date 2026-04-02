@@ -591,9 +591,9 @@ function Panel_Animation_Dopesheet() {
 	                        if(!in.sep_axis) continue;
 	                        
 	                        var _anims = in.getAnimators();
-	                        for(var k = 0; k < array_length(_anim); k++ )
-	                        for(var j = 0; j < array_length(_anim[k].values); j++) {
-	                        	var kf = _anim[k].values[j];
+	                        for(var k = 0; k < array_length(_anims); k++ )
+	                        for(var j = 0; j < array_length(_anims[k].values); j++) {
+	                        	var kf = _anims[k].values[j];
 	                            kf.calcRatio();
 	                            recordAction_variable_change(kf, "time", kf.time);
 	                        }
