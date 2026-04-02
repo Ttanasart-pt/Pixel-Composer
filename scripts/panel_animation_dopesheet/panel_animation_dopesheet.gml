@@ -1703,10 +1703,10 @@ function Panel_Animation_Dopesheet() {
                 if(!UNDO_HOLDING) {
                 	recordAction(ACTION_TYPE.custom, function(_data, _undo) /*=>*/ {
                 		var k = _data.key;
-                		var ei = [ k.ease_in[0],  k.ease_in[1] ];
+                		var ei = [ k.ease_in[0],  k.ease_in[1]  ];
                 		var eo = [ k.ease_out[0], k.ease_out[1] ];
                 		
-                		k.ease_in  = [ _data.ease_in[0],  _data.ease_in[1] ];
+                		k.ease_in  = [ _data.ease_in[0],  _data.ease_in[1]  ];
                 		k.ease_out = [ _data.ease_out[0], _data.ease_out[1] ];
                 		k.anim.node.triggerRender()
                 		
@@ -1714,7 +1714,7 @@ function Panel_Animation_Dopesheet() {
                 		_data.ease_out = eo;
                 	}, {
                 		key : k,
-                		ease_in  : [ k.ease_in[0],  k.ease_in[1] ],
+                		ease_in  : [ k.ease_in[0],  k.ease_in[1]  ],
                 		ease_out : [ k.ease_out[0], k.ease_out[1] ],
                 	});
 	                UNDO_HOLDING = true;

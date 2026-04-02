@@ -109,39 +109,34 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _ss = current_data[0];
 		if(!is_surface(_ss)) return;
 		
-		var tl = array_clone(current_data[1]);
-		var tr = array_clone(current_data[2]);
-		var bl = array_clone(current_data[3]);
-		var br = array_clone(current_data[4]);
+		var tlX = _x + current_data[1][0] * _s;
+		var trX = _x + current_data[2][0] * _s;
+		var blX = _x + current_data[3][0] * _s;
+		var brX = _x + current_data[4][0] * _s;
 		
-		tl[0] = _x + tl[0] * _s;
-		tr[0] = _x + tr[0] * _s;
-		bl[0] = _x + bl[0] * _s;
-		br[0] = _x + br[0] * _s;
-		
-		tl[1] = _y + tl[1] * _s;
-		tr[1] = _y + tr[1] * _s;
-		bl[1] = _y + bl[1] * _s;
-		br[1] = _y + br[1] * _s;
+		var tlY = _y + current_data[1][1] * _s;
+		var trY = _y + current_data[2][1] * _s;
+		var blY = _y + current_data[3][1] * _s;
+		var brY = _y + current_data[4][1] * _s;
 		
 		#region preview
-			var sw = surface_get_width(_surf)  * _s;
-			var sh = surface_get_height(_surf) * _s;
+			// var sw = surface_get_width(_surf)  * _s;
+			// var sh = surface_get_height(_surf) * _s;
 			
-			warp_surface[0] = surface_verify(warp_surface[0], params.w, params.h);
-			warp_surface[1] = surface_verify(warp_surface[1], sw, sh);
+			// warp_surface[0] = surface_verify(warp_surface[0], params.w, params.h);
+			// warp_surface[1] = surface_verify(warp_surface[1], sw, sh);
 			
-			surface_set_target(warp_surface[1]);
-				draw_clear(c_black);
-				draw_set_color(c_dkgrey);
+			// surface_set_target(warp_surface[1]);
+			// 	draw_clear(c_black);
+			// 	draw_set_color(c_dkgrey);
 				
-				for(var i = 0; i <= 1; i += 0.125) {
-					draw_line_width(0, i * sh, sw, i * sh, 2);
-					draw_line_width(i * sw, 0, i * sw, sh, 2);
-				}
-			surface_reset_target();
+			// 	for(var i = 0; i <= 1; i += 0.125) {
+			// 		draw_line_width(0, i * sh, sw, i * sh, 2);
+			// 		draw_line_width(i * sw, 0, i * sw, sh, 2);
+			// 	}
+			// surface_reset_target();
 			
-			warpSurface( warp_surface[0], warp_surface[1], warp_surface[1], params.w, params.h, tl, tr, bl, br, true );
+			// warpSurface( warp_surface[0], warp_surface[1], warp_surface[1], params.w, params.h, [tlX, tlY], [trX, trY], [blX, blY], [brX, brY], true );
 			
 			// BLEND_ADD
 			// 	draw_surface_safe(warp_surface[0]);
@@ -149,16 +144,16 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 		
 		draw_set_color(COLORS._main_accent);
-		draw_line(tl[0], tl[1], tr[0], tr[1]);
-		draw_line(tl[0], tl[1], bl[0], bl[1]);
-		draw_line(br[0], br[1], tr[0], tr[1]);
-		draw_line(br[0], br[1], bl[0], bl[1]);
+		draw_line(tlX, tlY, trX, trY);
+		draw_line(tlX, tlY, blX, blY);
+		draw_line(brX, brY, trX, trY);
+		draw_line(brX, brY, blX, blY);
 		
 		var _hactive = active;
-		if(point_in_circle(_mx, _my, tl[0], tl[1], ui(12))) _hactive = false;
-		if(point_in_circle(_mx, _my, tr[0], tr[1], ui(12))) _hactive = false;
-		if(point_in_circle(_mx, _my, bl[0], bl[1], ui(12))) _hactive = false;
-		if(point_in_circle(_mx, _my, br[0], br[1], ui(12))) _hactive = false;
+		if(point_in_circle(_mx, _my, tlX, tlY, ui(12))) _hactive = false;
+		if(point_in_circle(_mx, _my, trX, trY, ui(12))) _hactive = false;
+		if(point_in_circle(_mx, _my, blX, blY, ui(12))) _hactive = false;
+		if(point_in_circle(_mx, _my, brX, brY, ui(12))) _hactive = false;
 		
 		var dx = 0;
 		var dy = 0;
@@ -177,7 +172,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#region edit
 			draw_set_color(COLORS.node_overlay_gizmo_inactive);
 			if(drag_side == 0) {
-				draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
+				draw_line_width(tlX, tlY, trX, trY, 3);
 			
 				var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -189,8 +184,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _up2 = inputs[2].setValue([ _trx, _try ]);
 			
 				if(_up1 || _up2) UNDO_HOLDING = true;
+				
 			} else if(drag_side == 1) {
-				draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
+				draw_line_width(tlX, tlY, blX, blY, 3);
 			
 				var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -202,8 +198,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _up3 = inputs[3].setValue([ _blx, _bly ]);
 			
 				if(_up1 || _up3) UNDO_HOLDING = true;
+				
 			} else if(drag_side == 2) {
-				draw_line_width(br[0], br[1], tr[0], tr[1], 3);
+				draw_line_width(brX, brY, trX, trY, 3);
 			
 				var _brx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _bry = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -215,8 +212,9 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _up2 = inputs[2].setValue([ _trx, _try ]);
 			
 				if(_up4 || _up2) UNDO_HOLDING = true;
+				
 			} else if(drag_side == 3) {
-				draw_line_width(br[0], br[1], bl[0], bl[1], 3);
+				draw_line_width(brX, brY, blX, blY, 3);
 			
 				var _brx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _bry = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -228,50 +226,90 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _up3 = inputs[3].setValue([ _blx, _bly ]);
 			
 				if(_up4 || _up3) UNDO_HOLDING = true;
-			} else if(_hactive) {
+				
+			} else if(drag_side == 4) {
+				draw_line_width(tlX, tlY, trX, trY, 3);
+				draw_line_width(tlX, tlY, blX, blY, 3);
+				draw_line_width(brX, brY, trX, trY, 3);
+				draw_line_width(brX, brY, blX, blY, 3);
+				
+				var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
+				var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
+			
+				var _trx = PANEL_PREVIEW.snapX(drag_s[1][0] + dx);
+				var _try = PANEL_PREVIEW.snapY(drag_s[1][1] + dy);
+			
+				var _blx = PANEL_PREVIEW.snapX(drag_s[2][0] + dx);
+				var _bly = PANEL_PREVIEW.snapY(drag_s[2][1] + dy);
+			
+				var _brx = PANEL_PREVIEW.snapX(drag_s[3][0] + dx);
+				var _bry = PANEL_PREVIEW.snapY(drag_s[3][1] + dy);
+			  
+				var _up1 = inputs[1].setValue([ _tlx, _tly ]);
+				var _up2 = inputs[2].setValue([ _trx, _try ]);
+				var _up3 = inputs[3].setValue([ _blx, _bly ]);
+				var _up4 = inputs[4].setValue([ _brx, _bry ]);
+			
+				if(_up1 || _up2 || _up4 || _up3) UNDO_HOLDING = true;
+				
+			} else if(hover) {
 				draw_set_color(COLORS._main_accent);
-				if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], tr[0], tr[1]) < 12) {
-					draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
+				if(distance_to_line_infinite(_mx, _my, tlX, tlY, trX, trY) < 12) {
+					draw_line_width(tlX, tlY, trX, trY, 3);
 					w_hovering = true;
 					
-					if(mouse_lpress()) {
+					if(mouse_lpress(_hactive)) {
 						drag_side = 0;
-						drag_mx = _mx;
-						drag_my = _my;
-						drag_s = [ current_data[1], current_data[2] ];
+						drag_mx   = _mx;
+						drag_my   = _my;
+						drag_s    = [ current_data[1], current_data[2] ];
 					}
 					
-				} else if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], bl[0], bl[1]) < 12) {
-					draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
+				} else if(distance_to_line_infinite(_mx, _my, tlX, tlY, blX, blY) < 12) {
+					draw_line_width(tlX, tlY, blX, blY, 3);
 					w_hovering = true;
 					
-					if(mouse_lpress()) {
+					if(mouse_lpress(_hactive)) {
 						drag_side = 1;
-						drag_mx = _mx;
-						drag_my = _my;
-						drag_s = [ current_data[1], current_data[3] ];
+						drag_mx   = _mx;
+						drag_my   = _my;
+						drag_s    = [ current_data[1], current_data[3] ];
 					}
 					
-				} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], tr[0], tr[1]) < 12) {
-					draw_line_width(br[0], br[1], tr[0], tr[1], 3);
+				} else if(distance_to_line_infinite(_mx, _my, brX, brY, trX, trY) < 12) {
+					draw_line_width(brX, brY, trX, trY, 3);
 					w_hovering = true;
 					
-					if(mouse_lpress()) {
+					if(mouse_lpress(_hactive)) {
 						drag_side = 2;
-						drag_mx = _mx;
-						drag_my = _my;
-						drag_s = [ current_data[4], current_data[2] ];
+						drag_mx   = _mx;
+						drag_my   = _my;
+						drag_s    = [ current_data[4], current_data[2] ];
 					}
 					
-				} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], bl[0], bl[1]) < 12) {
-					draw_line_width(br[0], br[1], bl[0], bl[1], 3);
+				} else if(distance_to_line_infinite(_mx, _my, brX, brY, blX, blY) < 12) {
+					draw_line_width(brX, brY, blX, blY, 3);
 					w_hovering = true;
 					
-					if(mouse_lpress()) {
+					if(mouse_lpress(_hactive)) {
 						drag_side = 3;
-						drag_mx = _mx;
-						drag_my = _my;
-						drag_s = [ current_data[4], current_data[3] ];
+						drag_mx   = _mx;
+						drag_my   = _my;
+						drag_s    = [ current_data[4], current_data[3] ];
+					}
+					
+				} else if(point_in_rectangle_points(_mx, _my, tlX, tlY, trX, trY, blX, blY, brX, brY)) {
+					draw_line_width(tlX, tlY, trX, trY, 3);
+					draw_line_width(tlX, tlY, blX, blY, 3);
+					draw_line_width(brX, brY, trX, trY, 3);
+					draw_line_width(brX, brY, blX, blY, 3);
+					w_hovering = true;
+					
+					if(mouse_lpress(_hactive)) {
+						drag_side = 4;
+						drag_mx   = _mx;
+						drag_my   = _my;
+						drag_s    = [ current_data[1], current_data[2], current_data[3], current_data[4] ];
 					}
 					
 				}
