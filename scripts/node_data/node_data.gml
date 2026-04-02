@@ -319,6 +319,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		preview_surface_sample = true;
 		preview_select_surface = true;
+		preview_select_boxable = true;
 		
 		preview_x  = 0;
 		preview_y  = 0;

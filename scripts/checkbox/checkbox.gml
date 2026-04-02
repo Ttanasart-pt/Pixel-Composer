@@ -62,15 +62,18 @@ function checkBox(_onClick) : widget() constructor {
 		slot_x = slot_x == undefined? kx : lerp_float(slot_x, kx, 3);
 		
 		draw_sprite_stretched_ext(spr, 2, slot_x, y, w2, h, cc, aa);
-		draw_set_text(f_p4, fa_center, fa_center);
 		
-		if(_value) {
-			draw_set_color(CDEF.main_mdblack);
-			draw_text(round(x + w2 + w2/2), round(y + h/2), __txt("True"));
-				
-		} else {
-			draw_set_color(CDEF.main_mdwhite);
-			draw_text_add(x + w2/2, y + h/2, __txt("False"));
+		if(w2 > ui(64)) { 
+			draw_set_text(f_p4, fa_center, fa_center);
+			
+			if(_value) {
+				draw_set_color(CDEF.main_mdblack);
+				draw_text(round(x + w2 + w2/2), round(y + h/2), __txt("True"));
+					
+			} else {
+				draw_set_color(CDEF.main_mdwhite);
+				draw_text_add(x + w2/2, y + h/2, __txt("False"));
+			}
 		}
 			
 		if(WIDGET_CURRENT == self)

@@ -1061,7 +1061,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     static selectAll = function() {
     	var prevN = getNodePreview();
-    	if(!is(prevN, Node)) return;
+    	if(!is(prevN, Node) || !prevN.preview_select_boxable) return;
     	
     	var inspN = PANEL_INSPECTOR.getInspecting();
     	var applS = inspN == noone || inspN.preview_select_surface;
@@ -3300,7 +3300,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     static drawSelection = function() {
     	var prevN = getNodePreview();
-    	if(!is(prevN, Node)) { selection_active = false; return; }
+    	if(!is(prevN, Node) || !prevN.preview_select_boxable) { selection_active = false; return; }
     	
     	var inspN = PANEL_INSPECTOR.getInspecting();
     	var applS = inspN == noone || inspN.preview_select_surface;

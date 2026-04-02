@@ -1431,7 +1431,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(hovering != noone) hovering_ianc = array_safe_get_fast(anchors, input_fix_len + hovering * data_length);
 		
-		var _show_selecting = true;
+		preview_select_boxable = !attributes.select_object;
+		var _show_selecting    = !attributes.select_object;
 		if(isUsingTool()) { // Draw Tool Overlay
 			_show_selecting = false;
 			var _currTool = PANEL_PREVIEW.tool_current;
