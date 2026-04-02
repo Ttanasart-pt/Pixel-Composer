@@ -1641,6 +1641,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		if(!is(out, __vec3P)) out = new __vec3P(); else { out.x = 0; out.y = 0; out.z = 0; }
 		if(array_empty(lengths)) return out;
 		
+		if(_dist < 0) _dist = lengthTotal + _dist % lengthTotal;
 		var _cKey = _dist;
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
@@ -1689,6 +1690,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
+		if(_rat < 0) _rat = 1 + frac(_rat);
 		var pix = (path_loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
 		return getPointDistance(pix, _ind, out);
 	}

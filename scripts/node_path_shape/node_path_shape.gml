@@ -109,6 +109,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		static getPointRatio    = function(_rat, _ind = 0, out = undefined) { 
 		    out ??= new __vec2P();
+		    
+		    if(_rat < 0) _rat = 1 + frac(_rat);
 		    _rat = loop? frac(_rat) : clamp(_rat, 0, .999);
 		    
 			switch(shape) {
@@ -141,6 +143,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		    out ??= new __vec2P();
+		    
+		    if(_dist < 0) _dist = lengthTotal + _dist % lengthTotal;
 		    _dist = loop? safe_mod(_dist, lengthTotal) : clamp(_dist, 0, lengthTotal - .1);
 		    
 		    var _d = _dist, l;

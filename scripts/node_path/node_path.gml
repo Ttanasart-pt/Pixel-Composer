@@ -2248,6 +2248,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(array_empty(lengths)) return out;
 			
 			out.weight = 1;
+			if(_dis < 0) _dis = lengthTotal + _dis % lengthTotal;
 			var _cKey  = _dis;
 			
 			if(struct_has(cached_pos, _cKey)) {
@@ -2295,6 +2296,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			return out;
 		}
 		static getPointRatio    = function(_rat, _ind = 0, out = undefined) {
+			if(_rat < 0) _rat = 1 + frac(_rat);
 			var pix = (loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
 			return getPointDistance(pix, _ind, out);
 		}
