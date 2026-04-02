@@ -198,7 +198,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		visible_def       = visible;
 		visible_manual    = 0;
 		visible_in_list   = true;
-		show_in_inspector = true;
+		
+		show_in_inspector    = true;
+		visible_in_inspector = false;
+		inspector_x = 0; inspector_y = 0;
+		inspector_w = 0; inspector_h = 0;
 		
 		display_type = VALUE_DISPLAY._default;
 		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
@@ -3497,5 +3501,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				else		draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, drawParam); 
 				break;
 		} 
+	}
+
+	function juncSwap(j1, j2) {
+		j1.is_modified = true;
+		j2.is_modified = true;
+		
+		var v1 = j1.serialize();
+		var v2 = j2.serialize();
+		
+		j1.applyDeserialize(v2);
+		j2.applyDeserialize(v1);
+		
+		j1.connect();
+		j2.connect();
+		
+		j1.node.triggerRender();
+		j2.node.triggerRender();
 	}
 #endregion

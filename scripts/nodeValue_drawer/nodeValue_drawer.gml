@@ -438,6 +438,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			}
 			
+			jun.inspector_x = editBoxX; 
+			jun.inspector_y = editBoxY;
+			jun.inspector_w = editBoxW;
+			jun.inspector_h = editBoxH;
+			jun.visible_in_inspector = true;
+			
 			_widH = wid.drawParam(param) ?? 0;
 			if(breakLine) _widH += ui(4);
 			else          _widH -= lb_h;

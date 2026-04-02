@@ -43,6 +43,25 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Render",	false], 3, 6, 7, 15, 8, 9, 18, 
 	];
 	
+	input_display_deco = function(_x, _y, _w, _m, _hover, _focus, _panel) /*=>*/ {
+		if(_panel.viewMode != INSP_VIEW_MODE.compact) return;
+		
+		var c1 = inputs[8];
+		var c2 = inputs[9];
+		if(!c1.visible_in_inspector || !c2.visible_in_inspector) return;
+		
+		var bs = ui(20);
+		
+		var y1 = c1.inspector_y;
+		var y2 = c2.inspector_y + c2.inspector_h;
+		
+		var bx = c1.inspector_x - ui(4) - bs;
+		var by = (y1 + y2) / 2 - bs / 2;
+		
+		if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Swap", THEME.swap_vert, 0,, 1, ui(6)) == 2)
+			juncSwap(c1, c2);
+	};
+	
 	////- Nodes
 	
 	attribute_surface_depth();

@@ -293,6 +293,8 @@
     "view_mode":                          { "path": "./icon/s_view_mode.png",                               "s": 2, "x": 12, "y": 12 },
     "scrollbox_direction":                { "path": "./icon/s_scrollbox_direction.png",                     "s": 2, "x": 10, "y": 10 },
     "shader_alpha":                       { "path": "./icon/s_shader_alpha.png",                            "s": 2, "x": 12, "y": 12 },
+    "swap_hori":                          { "path": "./icon/s_swap_hori.png",                               "s": 1, "x":  8, "y":  8 },
+    "swap_vert":                          { "path": "./icon/s_swap_vert.png",                               "s": 1, "x":  8, "y":  8 },
     "view_pan":                           { "path": "./icon/s_view_pan.png",                                "s": 1, "x":  8, "y":  8 },
     "view_zoom":                          { "path": "./icon/s_view_zoom.png",                               "s": 1, "x":  8, "y":  8 },
     "visible_12":                         { "path": "./icon/s_visible_12.png",                              "s": 2, "x":  6, "y":  6 },

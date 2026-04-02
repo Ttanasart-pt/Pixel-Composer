@@ -737,6 +737,9 @@ function Panel_Inspector() : PanelContent() constructor {
         
         var showAll = filtering || filter_animation;
         
+        for( var i = 0, n = array_length(_inspecting.inputs); i < n; i++ ) 
+        	_inspecting.inputs[i].visible_in_inspector = false;
+        	
         for(var i = 0; i < amo; i++) {
             var yy    = hh + _y;
             var _draw = yy + ui(8) < con_h && yy > -ui(8);
@@ -1229,6 +1232,9 @@ function Panel_Inspector() : PanelContent() constructor {
         
         	 if(_cAll ==  1) section_expand_all();  
 		else if(_cAll == -1) section_collapse_all();
+		
+		if(_inspecting.input_display_deco != undefined)
+			_inspecting.input_display_deco(_x, _y, _w, _m, _hover, _focus, self);
 		
         if(MESSAGE != noone && MESSAGE.type == "Color") {
             var inp = array_safe_get_fast(pickers, picker_index, 0);
@@ -1807,7 +1813,6 @@ function Panel_Inspector() : PanelContent() constructor {
     		else          tb_prop_filter.deactivate();
     		
     	} bx -= bs + 1;
-    	
     	
     	if(bx > ui(4)) {
     		var bspr = THEME.filter_animation;
