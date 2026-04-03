@@ -122,7 +122,7 @@ function pbBoxBox(_junction = undefined) : widget() constructor {
 			tbs[i].setParam(params);
 	}
 	
-	static fetchHeight = function(params) { return ui(240); }
+	static fetchHeight = function(params) { return ui(148); }
 	static drawParam   = function(params) {
 		setParam(params);
 		return draw(params.x, params.y, params.w, params.data, params.m);
