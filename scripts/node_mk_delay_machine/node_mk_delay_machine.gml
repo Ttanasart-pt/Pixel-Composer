@@ -4,48 +4,58 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	is_simulation = true;
 	
-	newInput(0, nodeValue_Surface("Surface"));
+	newInput( 0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Int("Delay Amounts", 4));
+	////- =Delay
+	newInput( 1, nodeValue_Int(     "Delay Amounts", 4 ));
+	newInput( 2, nodeValue_Int(     "Delay Frames",  1 ));
+	newInput( 7, nodeValue_EScroll( "Overflow", 0, [ "Empty", "Loop", "Hold" ] ));
+	newInput( 9, nodeValue_Bool(    "Invert",           false ));
 	
-	newInput(2, nodeValue_Int("Delay Frames", 1));
+	////- =Transform
+	newInput(10, nodeValue_Vec2(    "Position", [0,0] )).setUnitSimple();
+	newInput(11, nodeValue_Rotation("Rotation",  0    ));
+	newInput(12, nodeValue_Vec2(    "Scale",    [0,0] ));
 	
-	newInput(3, nodeValue_Palette("Blend over Delay", [ c_white ]));
-	
-	newInput(4, nodeValue_Curve("Alpha over Delay", CURVE_DEF_11));
-	
-	newInput(5, nodeValue_Enum_Scroll("Palette Select", 0, [ "Loop", "Pingpong", "Random" ]));
-	
-	newInput(6, nodeValueSeed());
-	
-	newInput(7, nodeValue_Enum_Scroll("Overflow", 0, [ "Empty", "Loop", "Hold" ]));
-	
-	newInput(8, nodeValue_Enum_Scroll("Blend Mode", 0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
-	
-	newInput(9, nodeValue_Bool("Invert", false));
+	////- =Delay
+	newInput( 3, nodeValue_Palette( "Blend over Delay", [ca_white] ));
+	newInput( 5, nodeValue_EScroll( "Palette Select",    0, [ "Loop", "Pingpong", "Random" ] ));
+	newInput( 6, nodeValueSeed());
+	newInput( 4, nodeValue_Curve(   "Alpha over Delay", CURVE_DEF_11 ));
+	newInput( 8, nodeValue_EScroll( "Blend Mode",       0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0,
-		["Delay",	false], 1, 2, 7, 
-		["Render",	false], 3, 5, 6, 4, 8, 9, 
+	input_display_list = [  0,
+		[ "Delay",     false ],  1,  2,  7,  9, 
+		[ "Transform", false ], 10, 11, 12, 
+		[ "Render",    false ],  3,  5,  6,  4,  8,
 	];
 	
 	surf_indexes = [];
 	
 	static update = function() {  
-		var _surf = getInputData(0);
-		var _amo  = getInputData(1);
-		var _frm  = getInputData(2);
-		var _pal  = getInputData(3);
-		var _alpC = getInputData(4);
-		var _psel = getInputData(5);
-		var _seed = getInputData(6);
-		var _over = getInputData(7);
-		var _blnd = getInputData(8);
-		var _invt = getInputData(9);
-		
-		inputs[6].setVisible(_psel == 2);
+		#region data
+			var _surf = getInputData( 0);
+			
+			var _amo  = getInputData( 1);
+			var _frm  = getInputData( 2);
+			var _over = getInputData( 7);
+			var _invt = getInputData( 9);
+			
+			var _tpos = getInputData(10);
+			var _trot = getInputData(11);
+			var _tsca = getInputData(12);
+			
+			var _pal  = getInputData( 3);
+			var _psel = getInputData( 5);
+			var _seed = getInputData( 6);
+			var _alpC = getInputData( 4);
+			var _blnd = getInputData( 8);
+			
+			inputs[6].setVisible(_psel == 2);
+		#endregion
 		
 		surf_indexes = array_verify(surf_indexes, TOTAL_FRAMES);
 		surface_free_safe(array_safe_get_fast(surf_indexes, CURRENT_FRAME));
@@ -89,7 +99,21 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				}
 				
 				aa = eval_curve_x(_alpC, 1 - _i / _amo);
-				draw_surface_ext(_s, 0, 0, 1, 1, 0, cc, aa);
+				
+				var sw = surface_get_width(_s);
+				var sh = surface_get_height(_s);
+				var tt = _amo > 1? i / (_amo - 1) : 0;
+				
+				var px = _tpos[0] * tt;
+				var py = _tpos[1] * tt;
+				
+				var rr = _trot * tt;
+				
+				var sx = 1 + _tsca[0] * tt;
+				var sy = 1 + _tsca[1] * tt;
+				
+				var p = point_rotate(sw/2 - sw*sx/2, sh/2 - sh*sy/2, sw/2, sh/2, rr);
+				draw_surface_ext(_s, p[0], p[1], sx, sy, rr, cc, aa);
 			}
 			
 		surface_reset_shader();

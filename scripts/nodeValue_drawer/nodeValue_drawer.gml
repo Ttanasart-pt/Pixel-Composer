@@ -4,6 +4,9 @@ function drawWidgetInit() {
 	anim_toggling = false;
 	anim_hold     = noone;
 	visi_hold     = noone;
+	fav_hold      = noone;
+	reset_hold    = noone;
+	def_hold      = noone;
 	contentPane   = undefined;
 	
 	min_w = ui(160);
@@ -53,12 +56,19 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var lb_x = xx + bs/2 + bs;
 		var padx = ui(12 + 4 * _viewSpac);
 		
+		if(mouse_lrelease()) {
+			anim_hold  = noone;
+			visi_hold  = noone;	
+			fav_hold   = noone;	
+			reset_hold = noone;	
+			def_hold   = noone;	
+		}
+		
 		draw_set_font(_font);
 		var ds_w = jun.node.inspector_pad_label ?? string_width(dispName);
 		var lb_w = ds_w + padx + ui(4);
 		var fr   = _input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
 		
-		if(anim_hold != noone && mouse_lrelease()) anim_hold = noone;
 		if(fr) { // Feedback / Loop
 			var ss = fr.icon;
 			var cc = fr.color;
@@ -113,7 +123,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		lb_w += bs;
 		
-		if(visi_hold != noone && mouse_lrelease()) visi_hold = noone;	
 		if(!global_var) { // Visibility & Expression
 			butx += bs;
 			lb_x += bs;
@@ -152,13 +161,23 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					mbRight = false;
 					cHov    = true;
 					
+					if(fav_hold != noone && jun.favorited != fav_hold) {
+						jun.favorited = fav_hold;
+						
+						var proj = jun.node.project;
+						if(jun.favorited) 
+							 array_push_unique(proj.favoritedValues, jun);
+						else array_remove(proj.favoritedValues, jun);
+					}
+					
 					draw_sprite_ui_uniform(THEME.favorite, jun.favorited, butx, lb_y, ics, cc, 1);
 					TOOLTIP = __txt("Favorite");
 					
 					if(mouse_lpress(_focus)) {
 						jun.favorited = !jun.favorited;
-						var proj = jun.node.project;
+						fav_hold = jun.favorited;
 						
+						var proj = jun.node.project;
 						if(jun.favorited) 
 							 array_push_unique(proj.favoritedValues, jun);
 						else array_remove(proj.favoritedValues, jun);
@@ -292,6 +311,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 				
 			} else {
+				
 				if(PREFERENCES.widget_draw_default) {
 					var bt = __txtx("panel_inspector_default", "Set default");
 					var ba = .25 + jun.is_modified * .55;
@@ -300,7 +320,14 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					
 					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); bx -= ui(4);
 					cHov = cHov || b;
-					if(b == 2) jun.setDefault();
+					if(b == 1 && def_hold && jun.is_modified) 
+						jun.setDefault();
+						
+					if(b == 2) {
+						jun.setDefault();
+						def_hold = true;
+					}
+					
 					if(b == 3) {
 						mbRight = false;
 						menuCall("", [ new MenuItem(__txt("Reset Default"), function(j) /*=>*/ {return j.clearDefault()}).setParam(jun) ]);
@@ -315,7 +342,15 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					
 					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); bx -= ui(4);
 					cHov = cHov || b;
-					if(b == 2) jun.resetValue();
+					
+					if(b == 1 && reset_hold && jun.is_modified) 
+						jun.resetValue();
+						
+					if(b == 2) {
+						jun.resetValue();
+						reset_hold = true;
+					}
+					
 				}
 				
 				if(!global_var && breakLine) {
