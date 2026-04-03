@@ -334,7 +334,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static warpSurface = function(surfBase, surfWarp, surfBack, sw, sh, tl, tr, bl, br, tile = 0) {
 		var _wdim = surface_get_dimension(surfWarp);
 		
-		surface_set_shader(surfBase, sh_warp_4points);
+		surface_set_shader(surfBase, sh_warp_4points, true, BLEND.over);
 		shader_set_interpolation(surfWarp);
 		
 			shader_set_f( "dimension",   _wdim   );
