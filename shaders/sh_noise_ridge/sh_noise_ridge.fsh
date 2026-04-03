@@ -31,9 +31,13 @@ uniform float ridgeScale;
 uniform float ridgeAngle;
 uniform float ridgeContrast;
 
+uniform int   ridgeMultiply;
+uniform float ridgeMulFactor;
+
 uniform float cellScale;
 
 uniform int   mode;
+uniform int   blendMode;
 
 #define PI  3.141592653589793
 #define TAU 6.283185307179586
@@ -41,8 +45,13 @@ uniform int   mode;
 vec2 random2( vec2 p ) { return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453); }
 
 float strip(in vec2 p, in vec2 o, in float r, in float s) {
-	vec2 d = (p - o) * mat2(cos(r), -sin(r), sin(r), cos(r));
-	return (1. - ridgeContrast) + ridgeContrast * cos(d.y * s);
+	vec2  d  = (p - o) * mat2(cos(r), -sin(r), sin(r), cos(r));
+	float rd = 0.;
+	
+	     if(mode == 0) rd = cos(d.y * s);
+	else if(mode == 1) rd = abs(fract(d.y / TAU * s) - .5) * 4. - 1.;
+	
+	return (1. - ridgeContrast) + ridgeContrast * rd;
 }
 
 float sampleHeight(vec2 uv) { return texture2D( gm_BaseTexture, uv ).x; }
@@ -61,7 +70,7 @@ void main() {
 		               sampleHeight(v_vTexcoord + vec2(tx.x, 0.)) - sampleHeight(v_vTexcoord - vec2(tx.x, 0.)) );
 	
 	float dir  = atan(grad.y, grad.x) + PI / 2. + radians(ridgeAngle);
-	float dis  = length(grad);
+	float dis  = length(grad) * ridgeMulFactor;
 	
 	//// Cell
 	vec2 ori = vec2(.5);
@@ -91,12 +100,18 @@ void main() {
 	}
 	
 	float str = max(0., strip(pos, ori, dir, ridgeScale));
+	if(ridgeMultiply == 1) str *= dis;
+	
 	float hgh = (pow(2. * height - 1., 3.) + 1.) / 2.;
 	// float hgh = height;
 	
-	// float rid = hgh > 0.5? (1. - (1. - 2. * (hgh - 0.5)) * (1. - str)) : ((2. * hgh) * str);
-	float rid = str * hgh;
-	
-	rid *= amplitude;
-    gl_FragColor = base + vec4(rid, rid, rid, 1.);
+	if(blendMode == 0) {
+		float rid = str * hgh * amplitude;
+		gl_FragColor = base + vec4(rid, rid, rid, 1.);
+		
+	} else if(blendMode == 1) {
+		float rid = hgh > 0.5? (1. - (1. - 2. * (hgh - 0.5)) * (1. - str)) : ((2. * hgh) * str);	
+		gl_FragColor = vec4(max(base.rgb, vec3(rid)), 1.);
+		
+	}
 }

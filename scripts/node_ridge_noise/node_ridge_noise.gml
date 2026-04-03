@@ -4,6 +4,9 @@
 	});
 #endregion
 
+// Based on Runevision Fast and Gorgeous Erosion Filter
+// https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+
 function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "Ridge Noise";
 	
@@ -16,12 +19,16 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Noise
 	newInput( 5, nodeValueSeed());
 	newInput(10, nodeValue_Surface(  "Heightmap"         ));
-	newInput( 4, nodeValue_EButton(  "Mode",           0, [ "Hexagon", "Star" ]));
-	newInput(11, nodeValue_Float(    "Ridge Scale",    32 ));
-	newInput(15, nodeValue_Rotation( "Ridge Rotation", 0  ));
-	newInput(16, nodeValue_Slider(   "Ridge Contrast",.5  ));
+	newInput( 4, nodeValue_EButton(  "Mode",           0, [ "Sine", "Sharp" ]));
 	newInput(13, nodeValue_Float(    "Cell Scale",     4  ));
 	newInput(12, nodeValue_Float(    "Blending",       4  ));
+	
+	////- =Ridge
+	newInput(11, nodeValue_Float(    "Ridge Scale",      32    ));
+	newInput(15, nodeValue_Rotation( "Ridge Rotation",   0     ));
+	newInput(16, nodeValue_Slider(   "Ridge Contrast",  .5     ));
+	newInput(18, nodeValue_Bool(     "Ridge Multiply",   false ));
+	newInput(19, nodeValue_Float(    "Ridge Multiplier", 16    ));
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitSimple();
@@ -29,17 +36,19 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 2, nodeValue_Vec2(     "Scale",     [2,2] )).setHotkey("S");
 	
 	////- =Transform
-	newInput( 6, nodeValue_Int(   "Iteration",   1   ));
-	newInput(14, nodeValue_Float( "Itr. Factor", 1.5 ));
-	// input 17
+	newInput( 6, nodeValue_Int(     "Iteration",   1   ));
+	newInput(14, nodeValue_Float(   "Itr. Factor", 1.5 ));
+	newInput(17, nodeValue_EButton( "Blend Mode",  0, [ "Mix", "Overlay" ]));
+	// input 20
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Output",     true ],  0,  8,  9,  7, 
-		[ "Noise",     false ],  5, 10, 11, 15, 16, 13, 12, 
-		[ "Transform", false ],  1,  3,  2, 
-		[ "Iteration", false ],  6, 14, 
+		[ "Output",     true ],  0,   8,  9,  7, 
+		[ "Noise",     false ],  5,  10,  4, 13, 12, 
+		[ "Ridge",     false ],  11, 15, 16, 18, 19, 
+		[ "Transform", false ],  1,   3,  2, 
+		[ "Iteration", false ],  6,  14, 17, 
 	];
 	
 	////- Nodes
@@ -69,12 +78,14 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _sed   = _data[ 5];
 			var _hgh   = _data[10];
 			var _mod   = _data[ 4];
+			var _clsca = _data[13];
+			var _blurr = _data[12];
+			
 			var _rdsca = _data[11];
 			var _rdrot = _data[15];
 			var _rdcon = _data[16];
-			
-			var _clsca = _data[13];
-			var _blurr = _data[12];
+			var _rdmul = _data[18];
+			var _rdmfc = _data[19];
 			
 			var _pos   = _data[ 1];
 			var _rot   = _data[ 3];
@@ -82,6 +93,7 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			var _itr   = _data[ 6];
 			var _ifac  = _data[14];
+			var _bmod  = _data[17];
 			
 			var _dep = attrDepth();
 			var _ovr = getAttribute("oversample");
@@ -102,6 +114,7 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f("rotation",  _rot  );
 			
 			shader_set_i("mode",      _mod  );
+			shader_set_i("blendMode", _bmod );
 		shader_reset();
 		
 		var bg = 0;
@@ -133,11 +146,13 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		repeat(_itr) {
 			surface_set_shader(temp_surface[bg], sh_noise_ridge);
-				shader_set_2("scale",         scale  );
-				shader_set_f("amplitude",     ampli  );
-				shader_set_f("ridgeAngle",    _rdrot );
-				shader_set_f("ridgeScale",    ridSca );
-				shader_set_f("ridgeContrast", _rdcon );
+				shader_set_2("scale",          scale  );
+				shader_set_f("amplitude",      ampli  );
+				shader_set_f("ridgeAngle",     _rdrot );
+				shader_set_f("ridgeScale",     ridSca );
+				shader_set_f("ridgeContrast",  _rdcon );
+				shader_set_i("ridgeMultiply",  _rdmul );
+				shader_set_f("ridgeMulFactor", _rdmfc );
 				
 				shader_set_f("cellScale",  celSca );
 				

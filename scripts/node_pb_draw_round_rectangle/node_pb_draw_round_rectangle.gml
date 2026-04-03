@@ -1,11 +1,9 @@
 function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Round Rectangle";
 	
-	newInput(pbi+0, nodeValue_Corner("Corner Radius", [ 1, 1, 1, 1 ] ));
-	
-	newInput(pbi+1, nodeValue_Enum_Button("Profile", 0, [ "Round", "Sharp" ] ));
-	
-	newInput(pbi+2, nodeValue_Bool("Clamp", false ));
+	newInput(pbi+0, nodeValue_Corner(  "Corner Radius", [1,1,1,1] ));
+	newInput(pbi+1, nodeValue_EButton( "Profile",        0, [ "Round", "Sharp" ] ));
+	newInput(pbi+2, nodeValue_Bool(    "Clamp",          false   ));
 	
 	array_insert_array(input_display_list, input_display_shape_index, [
 		["Shape", false], pbi+0, pbi+1, pbi+2, 

@@ -9,7 +9,10 @@ function Node_PB_Crop_PBBOX(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pbbox = getInputSingle(1);
-		if(is(_pbbox, __pbBox)) _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self);
+		var _hv = false;
+		if(is(_pbbox, __pbBox)) _hv = _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self);
+		
+		return _hv;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

@@ -25,6 +25,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pbase = getInputSingle(0);
+		var _hv = false;
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon_light);
@@ -32,10 +33,12 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		}
 		
 		var _pbres = getInputSingle(0,, true);
-		if(is(_pbres, __pbBox)) _pbres.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self);
+		if(is(_pbres, __pbBox)) _hv = _pbres.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self) || _hv;
 		
 		var _pbres = getInputSingle(1,, true);
-		if(is(_pbres, __pbBox)) _pbres.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self);
+		if(is(_pbres, __pbBox)) _hv = _pbres.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self) || _hv;
+		
+		return _hv;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

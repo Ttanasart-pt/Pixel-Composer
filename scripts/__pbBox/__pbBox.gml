@@ -90,7 +90,7 @@ function __pbBox() constructor {
 	
 		draw_set_color(COLORS._main_accent);
 		draw_rectangle(_x0, _y0, _x1, _y1, true);
-		if(fixed_box != 0) return;
+		if(fixed_box != 0) return false;
 		
 		if(drag_anchor == noone) {
 			if(hover) {

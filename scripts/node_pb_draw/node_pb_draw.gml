@@ -223,13 +223,17 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pbase = getInputSingle(0);
 		var _pbbox = getInputSingle(1);
+		var _hv = false;
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon);
 			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, self);
 		}
 		
-		if(is(_pbbox, __pbBox)) _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self);
+		if(is(_pbbox, __pbBox))
+			_hv = _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, self);
+		
+		return _hv;
 	}
 	
 	static getBBOX = function(_data) {
