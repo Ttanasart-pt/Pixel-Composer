@@ -1109,9 +1109,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _drawnSurface = surface_create(surface_get_width(_can), surface_get_height(_can));
 		
-		surface_set_shader(_drawnSurface, sh_canvas_apply_draw);
-			shader_set_i( "drawLayer", tool_attribute.drawLayer);
-			shader_set_f( "channels",  tool_attribute.channel);
+		surface_set_shader(_drawnSurface, sh_canvas_apply_draw );
+			shader_set_i( "drawLayer", tool_attribute.drawLayer );
+			shader_set_f( "channels",  tool_attribute.channel   );
 			shader_set_i( "eraser",    _sub);
 			shader_set_f( "alpha",     _applyAlpha? _color_get_alpha(CURRENT_COLOR) : 1);
 			shader_set_f( "mirror",    tool_attribute.mirror);
