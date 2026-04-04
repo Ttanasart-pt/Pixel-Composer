@@ -3119,10 +3119,11 @@ function Panel_Preview() : PanelContent() constructor {
             if(mouse_on_preview && point_in_rectangle(mx, my, sx - ui(4), 0, sx + ui(4), h)) {
             	hoveringContent = false;
                 draw_line_width(sx, 0, sx, h, 2);
+                
                 if(mouse_lpress(pFOCUS)) {
                     splitViewDragging = true;
-                    splitViewStart = sx;
-                    splitViewMouse = mx;
+                    splitViewStart    = sx;
+                    splitViewMouse    = mx;
                 }
                 
             } else 
@@ -3131,22 +3132,21 @@ function Panel_Preview() : PanelContent() constructor {
             draw_sprite_ui_uniform(THEME.icon_active_split, 0, splitSelection? sx + ui(16) : sx - ui(16), toolbar_height + ui(16),, COLORS._main_accent);
             
             if(mouse_on_preview && mouse_lpress(pFOCUS)) {
-            	if(point_in_rectangle(mx, my, 0, 0, sx, h))
-                    splitSelection = 0;
-                    
-                else if(point_in_rectangle(mx, my, sx, 0, w, h))
-                    splitSelection = 1;
+            	     if(point_in_rectangle(mx, my, 0, 0, sx, h)) splitSelection = 0;
+                else if(point_in_rectangle(mx, my, sx, 0, w, h)) splitSelection = 1;
             }
+            
         } else {
             var sy = h * splitPosition;
             
             if(mouse_on_preview && point_in_rectangle(mx, my, 0, sy - ui(4), w, sy + ui(4))) {
                 hoveringContent = false;
             	draw_line_width(0, sy, w, sy, 2);
+            	
                 if(mouse_lpress(pFOCUS)) {
                     splitViewDragging = true;
-                    splitViewStart = sy;
-                    splitViewMouse = my;
+                    splitViewStart    = sy;
+                    splitViewMouse    = my;
                 }
                 
             } else
@@ -3154,11 +3154,8 @@ function Panel_Preview() : PanelContent() constructor {
             draw_sprite_ui_uniform(THEME.icon_active_split, 0, ui(16), splitSelection? sy + ui(16) : sy - ui(16),, COLORS._main_accent);
             
             if(mouse_on_preview && mouse_lpress(pFOCUS)) {
-                if(point_in_rectangle(mx, my, 0, 0, w, sy))
-                    splitSelection = 0;
-                    
-                else if(point_in_rectangle(mx, my, 0, sy, w, h))
-                    splitSelection = 1;
+                     if(point_in_rectangle(mx, my, 0, 0, w, sy)) splitSelection = 0;
+                else if(point_in_rectangle(mx, my, 0, sy, w, h)) splitSelection = 1;
             }
         }
     }

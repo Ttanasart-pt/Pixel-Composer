@@ -32,26 +32,28 @@ function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor 
 		var cy = y + h / 2;
 		hovering = false;
 		
-		var spacing = 9;
-		var size    = floor(spacing / 2);
+		var spac = floor((min(_w, _h) - ui(4)) / 3);
+		var size = spac / 2;
 		
 		for( var i = -1; i <= 1; i++ ) 
 		for( var j = -1; j <= 1; j++ ) {
 			if(!center && i == 0 && j == 0) continue;
 			
-			var _bx  = cx + j * spacing;
-			var _by  = cy + i * spacing;
+			var _bx  = cx + j * spac;
+			var _by  = cy + i * spac;
 			var _in  = (i + 1) * 3 + (j + 1);
 			var _fil = is_array(index)? index[_in] : _in == index;
 			
 			var hov = hover && point_in_rectangle(_m[0], _m[1], _bx - size, _by - size, _bx + size, _by + size);
-			var cc  = hov? COLORS._main_accent : COLORS._main_icon;
-			var aa  = 0.75 + (_fil || hov) * 0.25;
+			var cc  = hov? COLORS._main_accent : COLORS._main_icon_light;
+			var aa  = .5 + (_fil || hov) * .5;
 			
-			draw_set_color_alpha(cc, aa)
-			draw_rectangle_border(_bx - size, _by - size, _bx + size, _by + size, 2);
-			if(_fil) draw_rectangle(_bx - size, _by - size, _bx + size, _by + size, false);
-			draw_set_alpha(1);
+			// draw_set_color_alpha(cc, aa);
+			// draw_rectangle_border(_bx - size, _by - size, _bx + size, _by + size, 2);
+			// if(_fil) draw_rectangle(_bx - size, _by - size, _bx + size, _by + size, false);
+			// draw_set_alpha(1);
+			
+			draw_sprite_ext(THEME.prop_anchor, _fil, _bx + size, _by + size, spac / 10, spac / 10, 0, cc, aa);
 			
 			if(hov) {
 				hovering = true;

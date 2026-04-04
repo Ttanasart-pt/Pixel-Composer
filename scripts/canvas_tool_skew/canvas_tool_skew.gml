@@ -1,7 +1,7 @@
 function canvas_tool_skew() : canvas_tool_shader() constructor {
-	
 	mouse_sx = 0;
 	mouse_sy = 0;
+	mouse_control = false;
 	
 	skew_bbox = [ 0, 0, 0, 0 ];
 	skew_ax  = 0;
@@ -29,12 +29,17 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 			_sel.selection_position[1] + _sel.selection_size[1],	
 		];
 		
-		skew_w   = _sel.selection_size[0];
-		skew_h   = _sel.selection_size[1];
+		skew_x = (skew_bbox[0] + skew_bbox[2]) / 2;
+		skew_y = (skew_bbox[1] + skew_bbox[3]) / 2;
+		skew_w = _sel.selection_size[0];
+		skew_h = _sel.selection_size[1];
+		
+		mouse_control = true;
+		mouse_sx  = _mx;
+		mouse_sy  = _my;
 	}
 	
 	static forceStep = function(hover, active, _x, _y, _s, _mx, _my) {
-		
 		var x0 = _x + skew_bbox[0] * _s;
 		var y0 = _y + skew_bbox[1] * _s;
 		var x1 = _x + skew_bbox[2] * _s;
@@ -72,6 +77,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		draw_anchor_line(__overlay_hover[3], x1, yc, 16, 90);
 		
 		if(_hov_ax != noone && mouse_lpress(active)) {
+			mouse_control = false;
 			mouse_sx  = _mx;
 			mouse_sy  = _my;
 			skew_inv  = 0;
@@ -89,9 +95,10 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 	
 	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my) {
 		var _dim  = node.attributes.dimension;
-		
 		var _dx  = (_mx - mouse_sx) / _s;
 		var _dy  = (_my - mouse_sy) / _s;
+		if(mouse_control) skew_ax = abs(_dx) < abs(_dy);
+		
 		var _amo = skew_ax? _dy / skew_h : _dx / skew_w;
 		
 		if(abs(_amo) > 1)  _amo = round(_amo);
@@ -99,13 +106,11 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		if(skew_inv) _amo = -_amo;
 		
 		surface_set_shader(content_surface, sh_canvas_skew);
-			
-			shader_set_f("dimension", _dim);
-			shader_set_f("origin",    skew_x, skew_y);
-			shader_set_i("axis",      skew_ax);
-			shader_set_f("amount",    _amo);
-			
-			shader_set_color("color", CURRENT_COLOR);
+			shader_set_f( "dimension",  _dim    );
+			shader_set_f( "origin",     skew_x, skew_y );
+			shader_set_i( "axis",       skew_ax );
+			shader_set_f( "amount",     _amo    );
+			shader_set_c( "color",  CURRENT_COLOR );
 			
 			draw_surface_safe(preview_surface);
 		surface_reset_shader();
@@ -114,5 +119,18 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 	
 	static drawMask = function(hover, active, _x, _y, _s, _mx, _my ) {
 		draw_surface_ext_safe(content_surface, _x, _y, _s, _s);
+	}
+	
+	static drawPostOverlay = function( hover, active, _x, _y, _s, _mx, _my ) /*=>*/ {
+		var _sx = mouse_sx;
+		var _sy = mouse_sy;
+		var _ex =  skew_ax? _sx : _mx;
+		var _ey = !skew_ax? _sy : _my;
+		
+		draw_set_color(COLORS._main_accent);
+		draw_line_dashed(_sx, _sy, _ex, _ey);
+		
+		draw_anchor(0, _sx, _sy, ui(8), 2);
+		draw_anchor(0, _ex, _ey, ui(8), 2);
 	}
 }

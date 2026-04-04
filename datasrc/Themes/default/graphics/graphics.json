@@ -359,7 +359,7 @@
     "inspector_surface_valign":           { "path": "./inspector/s_inspector_surface_valign.png",           "s": 3, "x": 12, "y": 12 },
     "inspector_text_halign":              { "path": "./inspector/s_inspector_text_halign.png",              "s": 3, "x": 12, "y": 12 },
     "inspector_text_valign":              { "path": "./inspector/s_inspector_text_valign.png",              "s": 3, "x": 12, "y": 12 },
-    "prop_anchor":                        { "path": "./inspector/s_prop_anchor.png",                        "s": 2, "x":  5, "y":  5 },
+    "prop_anchor":                        { "path": "./inspector/s_prop_anchor.png",                        "s": 2, "x":  0, "y":  0, "slice": 3 },
     "prop_gradient":                      { "path": "./inspector/s_prop_gradient.png",                      "s": 3, "x":  6, "y": 16, "slice": [ 5, 5, 5, 5 ] },
     "prop_keyframe":                      { "path": "./inspector/s_prop_keyframe.png",                      "s": 3, "x":  8, "y":  8 },
     "prop_on_end":                        { "path": "./inspector/s_prop_on_end.png",                        "s": 4, "x":  8, "y":  8 },
