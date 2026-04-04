@@ -109,9 +109,11 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _r = _s * 16;
 			shader_set(sh_node_circle);
 				shader_set_color("color", COLORS._main_accent, 1);
-				shader_set_f("radius", .5);
+				shader_set_f("radius",    .5  );
+				shader_set_f("thickness", .02 );
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
-				shader_set_f("radius", 0);
+				shader_set_f("radius",     0  );
+				shader_set_f("thickness",  0  );
 			shader_reset();
 			active_draw_index = -1;
 		}

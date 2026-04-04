@@ -2093,7 +2093,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	            		
 	            		SAVE_AT(PROJECT, _pth);
 	            		PROJECT.path = _pth;
-	            		file_delete_safe(_opth);
+	            		// file_delete_safe(_opth);
 	            	});
 	            }
             }

@@ -137,9 +137,11 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _r = _s * 16;
 			shader_set(sh_node_circle);
 				shader_set_color("color", COLORS._main_accent, 1);
-				shader_set_f("radius", .5);
+				shader_set_f("radius",    .5  );
+				shader_set_f("thickness", .02 );
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
-				shader_set_f("radius", 0);
+				shader_set_f("radius",     0  );
+				shader_set_f("thickness",  0  );
 			shader_reset();
 			active_draw_index = -1;
 		}
@@ -150,25 +152,17 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var tt = display_name;
 			
 			switch(label_ori) {
-				case 0 : 
-					draw_set_text(f_sdf, fa_center, fa_bottom, label_color, aa);
-					draw_text_transformed(xx, yy - 12 * _s, tt, ss, ss, 0);
-					break;
+				case 0 : draw_set_text(f_sdf, fa_center, fa_bottom, label_color, aa);
+					     draw_text_transformed(xx, yy - 12 * _s, tt, ss, ss, 0); break;
 					
-				case 1 : 
-					draw_set_text(f_sdf, fa_center, fa_top, label_color, aa);
-					draw_text_transformed(xx, yy + 12 * _s, tt, ss, ss, 0);
-					break;
+				case 1 : draw_set_text(f_sdf, fa_center, fa_top, label_color, aa);
+					     draw_text_transformed(xx, yy + 12 * _s, tt, ss, ss, 0); break;
 					
-				case 2 : 
-					draw_set_text(f_sdf, fa_right, fa_center, label_color, aa);
-					draw_text_transformed(xx - 12 * _s, yy, tt, ss, ss, 0);
-					break;
+				case 2 : draw_set_text(f_sdf, fa_right, fa_center, label_color, aa);
+					     draw_text_transformed(xx - 12 * _s, yy, tt, ss, ss, 0); break;
 					
-				case 3 : 
-					draw_set_text(f_sdf, fa_left, fa_center, label_color, aa);
-					draw_text_transformed(xx + 12 * _s, yy, tt, ss, ss, 0);
-					break;
+				case 3 : draw_set_text(f_sdf, fa_left, fa_center, label_color, aa);
+					     draw_text_transformed(xx + 12 * _s, yy, tt, ss, ss, 0); break;
 			}
 			
 			draw_set_alpha(1);

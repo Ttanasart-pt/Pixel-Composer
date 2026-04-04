@@ -132,7 +132,9 @@ varying vec4 v_vColour;
 uniform vec2 baseDimension;
 uniform vec2 surfDimension;
 uniform float scale;
+
 uniform int mode;
+uniform int multiplyAlpha;
 
 void main() {
 	vec2  px = floor(v_vTexcoord * baseDimension) * scale + .5;
@@ -151,6 +153,7 @@ void main() {
 		if(sx.x < 0. || sx.x > 1. || sx.y < 0. || sx.y > 1.) continue;
 		
 		vec4 c = sampleTexture(gm_BaseTexture, sx);
+		if(multiplyAlpha == 1) c.rgb *= c.a;
 		ii++;
 		
 		if(mode == 0) {
@@ -171,6 +174,5 @@ void main() {
 	}
 	
 	if(mode == 2) cc.a = bc.a;
-	
 	gl_FragColor = cc;
 }

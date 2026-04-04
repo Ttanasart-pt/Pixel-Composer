@@ -6,18 +6,19 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newActiveInput(3);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In" ));
 	
 	////- =Scale
-	newInput(2, nodeValue_Enum_Button( "Mode", 0, [ "Mix", "Max", "Min" ]));
-	newInput(1, nodeValue_Float(  "Downscale", 1));
-	// inputs 4
+	newInput( 2, nodeValue_EButton( "Mode",      0, [ "Mix", "Max", "Min" ] ));
+	newInput( 1, nodeValue_Float(   "Downscale", 1 ));
+	newInput( 4, nodeValue_Bool(    "Multiply Alpha", false ));
+	// inputs 5
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 3, 
-		["Surfaces", true], 0, 
-		["Scale",	false], 2, 1, 
+	input_display_list = [  3, 
+		[ "Surfaces", true ],  0,  
+		[ "Scale",	 false ],  2,  1,  4, 
 	];
 	
 	////- Nodes
@@ -31,6 +32,7 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var surf  = _data[0]; 
+			var malp  = _data[4]; 
 			
 			var mode  = _data[2];
 			var scale = _data[1];
@@ -58,6 +60,7 @@ function Node_Downscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_2("surfDimension", [sw,sh] );
 			shader_set_f("scale",          scale  );
 			shader_set_i("mode",           mode   );
+			shader_set_i("multiplyAlpha",  malp   );
 			
 			draw_surface_stretched_safe(surf, 0, 0, ww, hh);
 		surface_reset_shader();
