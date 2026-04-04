@@ -449,6 +449,7 @@
             "Node_Image_gif",
             "Node_Image_Sequence",
             "Node_Image_Animated",
+            "Node_Image_mp4",
             "Node_SVG",
             { "label": "/Converters" },
             "Node_Image_Sheet",

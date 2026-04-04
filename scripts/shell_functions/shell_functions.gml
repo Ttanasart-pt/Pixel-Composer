@@ -21,11 +21,11 @@ function shell_execute(path, command, ref = noone, _log = true) {
 	command = string_replace_all(command, "\\", "/");
 	
 	var cmd = $"{path} {command}";
-	
 	var res = ProcessExecute(cmd);
-	var out = ExecutedProcessReadFromStandardOutput(res);
-	if(_log) print($"Execute {path} {command} [{res}] > {out}");
+	if(!_log) return "";
 	
+	var out = ExecutedProcessReadFromStandardOutput(res);
+	print($"Execute {path} {command} [{res}] > {out}");
 	return out;
 }
 

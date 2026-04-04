@@ -4734,6 +4734,7 @@ function load_file_path(path, _x = undefined, _y = undefined) {
 	            case "ora"  : node = Node_create_ORA_File_Read_path(_x, _y, p);   break;
 	            
 	            case "gif"  : node = Node_create_Image_gif_path(_x, _y, p);     break;
+	            case "mp4"  : node = Node_create_Image_mp4_path(_x, _y, p);     break;
 	            case "obj"  : node = Node_create_3D_Obj_path(_x, _y, p);        break;
 	            case "wav"  : node = Node_create_WAV_File_Read_path(_x, _y, p); break;
 	            case "xml"  : node = Node_create_XML_File_Read_path(_x, _y, p); break;

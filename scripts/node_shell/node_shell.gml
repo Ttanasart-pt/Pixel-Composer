@@ -3,17 +3,25 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Path("Path"));
+	newInput(0, nodeValue_Path( "Path"   ));
+	newInput(1, nodeValue_Text( "Script" ));
 	
-	newInput(1, nodeValue_Text("Script"));
+	trust_label = new Inspector_Label(PROGRAM_ARGUMENTS._trusted? "Trusted" : "Untrusted");
+	
+	input_display_list = [
+		trust_label,
+		[ "Shell", false ], 0, 1, 
+	];
+	
+	////- =Node
 	
 	insp1button = button(function() /*=>*/ {return update()}).setTooltip(__txt("Run"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
-	
 	trusted = PROGRAM_ARGUMENTS._trusted;
 	
 	static onValueUpdate = function() { trusted = false; }
 	static update = function() { 
+		trust_label.txt = PROGRAM_ARGUMENTS._trusted? "Trusted" : "Untrusted";
 		if(project.online) return false;
 		
 		var _pro = getInputData(0);

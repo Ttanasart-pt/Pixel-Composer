@@ -41,11 +41,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 2, nodeValue_Bool( "Output as Array",    false ));
 	
 	////- =Animation
-	newInput( 1, nodeValue_Trigger("Set animation length to gif" ));
+	newInput( 1, nodeValue_Trigger("Match Animation Length" ));
 	b_match_len = button(function() /*=>*/ { 
 		if(!spr || !sprite_exists(spr)) return;
 		TOTAL_FRAMES = sprite_get_number(spr);
-		PROJECT.animator.framerate = 12;
 	}).setText("Match Length");
 	
 	newInput( 3, nodeValue_EScroll( "Loop Mode",         0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();

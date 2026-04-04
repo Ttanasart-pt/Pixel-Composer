@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_mp4",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mp4",
+  "parent":{
+    "name":"image",
+    "path":"folders/nodes/data/io/image.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
