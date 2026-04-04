@@ -2,8 +2,10 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	node = _node;
 	
 	override  = true;
-	points    = [ 0, 0, 0, 0 ];
-	dimension = [ 1, 1 ];
+	points    = [  0,  0, 0, 0 ];
+	dimension = [  1,  1 ];
+	anchor    = [ .5, .5 ];
+	anchor_widget = noone;
 	
 	drag_points = [ 0, 0, 0, 0 ];
 	dragging = -1;
@@ -51,7 +53,7 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		if(_sw <= 0 || _sh <= 0) return;
 		
 		node.storeAction();
-		node.attributes.dimension = [ _sw, _sh ];
+		node.attributes.dimension = [_sw,_sh];
 		
 		for( var i = 0; i < node.attributes.frames; i++ ) {
 			var _canvas_surface = node.getCanvasSurface(i);
@@ -78,6 +80,9 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	static setAnchor = function(a) {
 		var _r = floor(a / 3);
 		var _c =      (a % 3);
+		
+		anchor[0] = _c / 2;
+		anchor[1] = _r / 2;
 		
 		var x0 = points[0];
 		var y0 = points[1];
@@ -134,10 +139,18 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	}
 	
 	static setSize = function(_s, i) {
+		var ow = dimension[0];
+		var oh = dimension[1];
+		
 		dimension[i] = _s;
 		
-		points[2] = points[0] + dimension[0];
-		points[3] = points[1] + dimension[1];
+		var dw = dimension[0] - ow;
+		var dh = dimension[1] - oh;
+		
+		points[0] = points[0] -      anchor[0]  * dw;
+		points[1] = points[1] -      anchor[1]  * dh;
+		points[2] = points[2] + (1 - anchor[0]) * dw;
+		points[3] = points[3] + (1 - anchor[1]) * dh;
 	}
 	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
@@ -150,8 +163,9 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		x1 = _x + points[2] * _s;
 		y1 = _y + points[3] * _s;
 		
-		var _r = ui(8);
+		anchor_widget.index = round(anchor[0] * 2 + anchor[1] * 6);
 		
+		var _r = ui(8);
 		var _sr  = surface_get_target();
 		var _srw = surface_get_width(_sr);
 		var _srh = surface_get_height(_sr);
@@ -256,8 +270,8 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		dimension[0] = _sw;
 		dimension[1] = _sh;
 		
-		     if(KEYBOARD_ENTER)  apply();
-		else if(keyboard_check_pressed(vk_escape)) cancel();
+		if(WIDGET_CURRENT == undefined && KEYBOARD_ENTER) apply();
+		else if(keyboard_check_pressed(vk_escape))        cancel();
 	}
 	
 }

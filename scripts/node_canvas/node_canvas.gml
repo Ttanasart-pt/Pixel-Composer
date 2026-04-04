@@ -686,16 +686,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		tool_resizer     = new canvas_tool_resize(self);
-		
-		tool_resizer_dim = new vectorBox(2, function(v,i) /*=>*/ { tool_resizer.setSize(v,i); })
-								.setFont(f_p3)
-								.setMinWidth(ui(64));
-		
+		tool_resizer         = new canvas_tool_resize(self);
+		tool_resizer_dim     = new vectorBox(2, function(v,i) /*=>*/ { tool_resizer.setSize(round(v),i); }).setFont(f_p3).setMinWidth(ui(64));
 		tool_resizer_anchor  = new buttonAnchor(noone, function(v) /*=>*/ { tool_resizer.setAnchor(v); });
-		
 		tool_resizer_buttons = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_resizer.apply(); else tool_resizer.cancel(); })
 									.setCollapse(false);
+		
+		tool_resizer.anchor_widget = tool_resizer_anchor;
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -705,7 +702,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			-1,
 			
 			new NodeTool( "Resize Canvas",	  THEME.canvas_resize )
-				.setSetting([ THEME.tool_scale, tool_resizer_dim,     "dimension", tool_resizer, "Dimension"])
+				.setSetting([ THEME.tool_scale, tool_resizer_dim, "dimension", tool_resizer, "Dimension"])
 				.setSetting([ "", tool_resizer_anchor,  0, tool_resizer   ])
 				.setSetting([ "", tool_resizer_buttons, 0, tool_attribute ])
 				.setToolObject(tool_resizer),
