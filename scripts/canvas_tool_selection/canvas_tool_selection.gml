@@ -313,8 +313,6 @@ function canvas_selection_data() : canvas_tool() constructor {
 	
 	static onSelected = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(!is_surface(selection_surface)) { is_selected = false; return; } 
-		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
-		if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
 		
 		var _smx = (_mx - _x) / _s;
 		var _smy = (_my - _y) / _s;
@@ -328,9 +326,22 @@ function canvas_selection_data() : canvas_tool() constructor {
 		hover_index = noone;
 		
 		if(is_select_drag) {
-			var px = selection_sx + (mouse_cur_x - selection_mx);
-			var py = selection_sy + (mouse_cur_y - selection_my);
-						
+			var dx = mouse_cur_x - selection_mx;
+			var dy = mouse_cur_y - selection_my;
+			var px = selection_sx;
+			var py = selection_sy;
+
+			if(key_mod_press(SHIFT)) {
+				if(abs(dx) > abs(dy)) 
+					 px = selection_sx + dx;
+				else py = selection_sy + dy;
+				
+			} else {
+				px = selection_sx + dx;
+				py = selection_sy + dy;
+				
+			}
+			
 			selection_position[0] = px;
 			selection_position[1] = py;
 			
@@ -348,6 +359,9 @@ function canvas_selection_data() : canvas_tool() constructor {
 			
 			var pw = selection_ex - selection_sx;
 			var ph = selection_ey - selection_sy;
+			var ow = pw;
+			var oh = ph;
+			var asp = pw / ph;
 					
 			switch(is_select_scal_anchor) {
 				case 1 : px += _dx; py += _dy;
@@ -361,6 +375,33 @@ function canvas_selection_data() : canvas_tool() constructor {
 					
 				case 4 : pw += _dx; ph += _dy; break;
 					
+			}
+			
+			if(key_mod_press(SHIFT)) {
+				var ss = min(pw / ow, ph / oh);
+				_dx = ow * ss - ow;
+				_dy = oh * ss - oh;
+				
+				var px = selection_sx;
+				var py = selection_sy;
+				
+				var pw = selection_ex - selection_sx;
+				var ph = selection_ey - selection_sy;
+				
+				switch(is_select_scal_anchor) {
+					case 1 : px -= _dx; py -= _dy;
+						     pw += _dx; ph += _dy; break;
+					
+					case 2 :            py -= _dy;
+						     pw += _dx; ph += _dy; break;
+					
+					case 3 : px -= _dx;
+					         pw += _dx; ph += _dy; break;
+						
+					case 4 : pw += _dx; ph += _dy; break;
+						
+				}
+				
 			}
 			
 			selection_surface = surface_verify(selection_surface, pw, ph);
@@ -436,6 +477,9 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_hovering = true;
 			
 		} else {
+			if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
+			if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
+		
 			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x0, pos_y0, pos_x1 - 1, pos_y1 - 1)) {
 				var _msx  = mouse_cur_x - pos_x0;
 				var _msy  = mouse_cur_y - pos_y0;
