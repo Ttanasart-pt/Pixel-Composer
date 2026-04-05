@@ -24,18 +24,25 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 4, nodeValue_EButton( "Mode",    0, [ "Zigzag", "Sine", "Square" ]  ));
 	newInput(10, nodeValue_EButton( "Post Fn", 0, [ "None", "Absolute", "Clamp" ] ));
 	
+	////- =Iterative
+	newInput(13, nodeValue_Int(    "Iteration",   1  ));
+	newInput(14, nodeValue_Float(  "Itr. Freq",   2  ));
+	newInput(15, nodeValue_Slider( "Itr. Ampli", .7  ));
+	newInput(16, nodeValue_Float(  "Itr. Shift",  0  ));
+	
 	////- =Wiggle
 	newInput( 6, nodeValue_Bool(  "Wiggle",           false  ));
 	newInput( 7, nodeValue_Range( "Wiggle Amplitude", [-2,2] ));
 	newInput( 8, nodeValue_Float( "Wiggle Frequency",  8     ));
-	// input 13
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
-		[ "Path",    true    ],  0, 11, 12, 
-		[ "Wave",   false    ],  1,  2,  9,  3,  4, 10, 
-		[ "Wiggle",  true, 6 ],  7,  8, 
+		[ "Path",       true    ],  0, 11, 12, 
+		[ "Wave",      false    ],  1,  2,  9,  3,  4, 10, 
+		[ "Iterative", false    ], 13, 14, 15, 16, 
+		[ "Wiggle",     true, 6 ],  7,  8, 
 	];
 	
 	////- Node
@@ -50,6 +57,11 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		seed = 0;
 		mode = 0;
 		post = 0;
+		
+		itr    = 1;
+		itrFre = 2;
+		itrAmp = .7;
+		itrShf = 0;
 		
 		wig  = 0
 		wigs = 0
@@ -114,7 +126,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(!is_path(curr_path)) return out;
 			var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
-			if(struct_has(cached_pos, _cKey)) {
+			if(has(cached_pos, _cKey)) {
 				var _p = cached_pos[$ _cKey];
 				out.x = _p.x;
 				out.y = _p.y;
@@ -143,45 +155,52 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _wigs = wigs;
 			var _wigf = wigf;
 			
+			p0  = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind, p0);
+			p   = _path.getPointRatio(_rat, ind, p);
+			p1  = _path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind, p1);
+			dir = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
+			
 			_amp = random_range_seed(_amp[0], _amp[1], _seed + ind);
-			_shf = random_range_seed(_shf[0], _shf[1], _seed + ind + 1);
-			_fre = random_range_seed(_fre[0], _fre[1], _seed + ind + 2);
-			
-			_fre = max(0.01, abs(_fre));
-			var _t = _shf + _rat * _fre;
-			
 			if(_wig) {
 				var _wt = _shf + _rat * _fre;
 				var _w  = wiggle(_wigs[0], _wigs[1], _wigf, frac(_wt), _seed);
 				_amp += _w;
 			}
 			
-			p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind, p0);
-			p  = _path.getPointRatio(_rat, ind, p);
-			p1 = _path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind, p1);
+			_shf = random_range_seed(_shf[0], _shf[1], _seed + ind + 1);
+			_fre = random_range_seed(_fre[0], _fre[1], _seed + ind + 2);
+			_fre = max(0.01, abs(_fre));
 			
-			var dir = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
-			var prg;
+			var _itr = itr;
+			var _prg = 0;
+			var _iam = 1;
 			
-			switch(mode) {
-				case 0 : prg = (abs(frac(_t) * 2 - 1) - 0.5) * 2; break;
-				case 1 : prg = cos(_t * pi * 2);                  break;
-				case 2 : prg = (frac(_t) > .5) * 2 - 1;           break;
+			repeat(_itr) {
+				var _t = _shf + _rat * _fre;
+				switch(mode) {
+					case 0 : _prg += _iam * ((abs(frac(_t) * 2 - 1) - 0.5) * 2); break;
+					case 1 : _prg += _iam * (cos(_t * pi * 2));                  break;
+					case 2 : _prg += _iam * ((frac(_t) > .5) * 2 - 1);           break;
+				}
+				
+				_fre += itrFre;
+				_iam *= itrAmp;
+				_shf += itrShf + random(1);
 			}
 			
 			switch(post) {
 				case 0 : break;
-				case 1 : prg = abs(prg);    break;
-				case 2 : prg = max(prg, 0); break;
+				case 1 : _prg = abs(_prg);    break;
+				case 2 : _prg = max(_prg, 0); break;
 			}
 			
 			if(amp_curve) {
 				var _crat = range_clamp? (_rat - range[0]) / (range[1] - range[0]) : _rat;
-				prg *= amp_curve.get(_crat);
+				_prg *= amp_curve.get(_crat);
 			}
 			
-			out.x = p.x + lengthdir_x(_amp * prg, dir);
-			out.y = p.y + lengthdir_y(_amp * prg, dir);
+			out.x = p.x + lengthdir_x(_amp * _prg, dir);
+			out.y = p.y + lengthdir_y(_amp * _prg, dir);
 			out.weight = p.weight;
 			
 			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
@@ -219,6 +238,10 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData.wigs = _data[7];
 		_outData.wigf = _data[8];
 		
+		_outData.itr    = _data[13];
+		_outData.itrFre = _data[14];
+		_outData.itrAmp = _data[15];
+		_outData.itrShf = _data[16];
 		
 		return _outData;
 	}

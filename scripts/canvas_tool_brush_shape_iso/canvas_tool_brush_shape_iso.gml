@@ -20,7 +20,7 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 	}
 	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
-		
+		drawBrushMask = subtool != 2;
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
@@ -97,6 +97,7 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 	}
 	
 	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my) {
+		if(subtool == 2) return;
 		if(mouse_holding == 0) { brush.drawPoint(mouse_cur_x, mouse_cur_y); return; }
 		
 	}

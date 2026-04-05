@@ -240,7 +240,7 @@ if !ready exit;
 				shellOpenExplorer($"{DIRECTORY}Welcome files");
 			
 			if(STEAM_ENABLED) {
-				bx -= bs + ui(4);
+				bx -= bs + 1;
 				var _txt = __txtx("workshop_open", "Open Steam Workshop");
 				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
 					dialogPanelCall(new Panel_Steam_Workshop());
@@ -258,7 +258,7 @@ if !ready exit;
 				tb_sample_search.drawParam(new widgetParam(tbx, tby, tbw, tbh, sample_search).setFont(f_p2));
 				
 			} else {
-				bx -= bs + ui(4);
+				bx -= bs + 1;
 				var _txt = __txtx("workshop_open", "Open Steam Workshop");
 				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.search_24) == 2) {
 					tb_sample_seaching = true;
@@ -274,7 +274,7 @@ if !ready exit;
 			if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_icon) == 2)
 				steamUCGload();
 				
-			bx -= bs + ui(4);
+			bx -= bs + 1;
 			var _txt = __txtx("workshop_open", "Open Steam Workshop");
 			if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
 				dialogPanelCall(new Panel_Steam_Workshop());
