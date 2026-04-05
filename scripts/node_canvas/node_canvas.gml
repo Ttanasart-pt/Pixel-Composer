@@ -982,7 +982,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 			array_resize(canvas_buffer, fr);
 		}
-	}
+		
+	} refreshFrames();
 	
 	////- Surfaces
 	
