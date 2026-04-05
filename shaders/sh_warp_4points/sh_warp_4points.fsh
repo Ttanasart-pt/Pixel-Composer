@@ -154,8 +154,14 @@ vec2 perspectiveUV(vec2 p, vec2 _p0, vec2 _p1, vec2 _p2, vec2 _p3) {
 	float _B = (A.x * p.y) + c1 - (A.y * p.x);
 	float _C = (B.x * p.y) + c2 - (B.y * p.x);
 	
-	float u =  A == vec2(0.)?        0. : (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
-	float v = (u * A.x + B.x) == 0.? 0. : (p.x - (u * C.x) - D.x) / (u * A.x + B.x);
+	float u = 0., v = 0.;
+	
+	if(_A > .01)
+		 u = (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
+	else u = -_C / _B;
+	
+	if((u * A.x + B.x) != 0.)
+		v = (p.x - (u * C.x) - D.x) / (u * A.x + B.x);
 	
 	return vec2(u, v);
 }
@@ -178,45 +184,43 @@ void main() {
 	bool aliY = abs(p3.y - p0.y) < 1. && abs(p2.y - p1.y) < 1.;
 	gl_FragColor = vec4(0.);
 	
-	#region linear interpolation
-		if(aliX && aliY) {
-			float tx = (px - _p2.x) / (_p1.x - _p2.x);
-			float ty = (py - _p2.y) / (_p3.y - _p2.y);
-				
-			uv = vec2(tx, ty);
-				
-		} else if(aliX) { // trapezoid edge case
-			float t  = (px - _p2.x) / (_p1.x - _p2.x);
-			
-			float y0 = mix(_p1.y, _p2.y, 1. - t);
-			float y1 = mix(_p0.y, _p3.y, 1. - t);
-			
-			u = t;
-			v = unmix(y0, y1, py);
-	        uv = vec2(u, v);
-	        
-	        int side = y0 > y1? 1 : 0;
-	        // if(flip != side) return;
-	        if(side == 1) return;
-	        
-	    } else if (aliY) { // trapezoid edge case
-	        float t = (py - _p2.y) / (_p3.y - _p2.y);
-			
-			float x0 = mix(_p3.x, _p2.x, 1. - t);
-			float x1 = mix(_p0.x, _p1.x, 1. - t);
-			
-			u = unmix(x0, x1, px);
-			v = t;
-	        uv = vec2(u, v);
-	        
-	        int side = x0 > x1? 1 : 0;
-	        if(flip != side) return;
-	        
-		} else {
-			uv = perspectiveUV(v_vTexcoord, _p0, _p1, _p2, _p3);
-			uv = vec2(1. - uv.x, uv.y);
-		}
-	#endregion
+	if(aliX && aliY) {
+		float tx = (px - _p2.x) / (_p1.x - _p2.x);
+		float ty = (py - _p2.y) / (_p3.y - _p2.y);
+		
+		uv = vec2(tx, ty);
+	
+	} else if(aliX) { // trapezoid edge case
+		float t  = (px - _p2.x) / (_p1.x - _p2.x);
+		
+		float y0 = mix(_p1.y, _p2.y, 1. - t);
+		float y1 = mix(_p0.y, _p3.y, 1. - t);
+		
+		u = t;
+		v = unmix(y0, y1, py);
+		uv = vec2(u, v);
+		
+		int side = y0 > y1? 1 : 0;
+		// if(flip != side) return;
+		if(side == 1) return;
+	
+	} else if (aliY) { // trapezoid edge case
+		float t = (py - _p2.y) / (_p3.y - _p2.y);
+		
+		float x0 = mix(_p3.x, _p2.x, 1. - t);
+		float x1 = mix(_p0.x, _p1.x, 1. - t);
+		
+		u = unmix(x0, x1, px);
+		v = t;
+		uv = vec2(u, v);
+		
+		int side = x0 > x1? 1 : 0;
+		if(flip != side) return;
+	
+	} else {
+		uv = perspectiveUV(v_vTexcoord, _p0, _p1, _p2, _p3);
+		uv = vec2(1. - uv.x, uv.y);
+	}
 	
 	bool tileX = tile == 1 || tile == 3;
 	bool tileY = tile == 2 || tile == 3;
@@ -227,5 +231,5 @@ void main() {
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
 		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );
 		
-	// gl_FragColor = vec4(uv, 0., 1.);
+	gl_FragColor = vec4(uv, 0., 1.);
 }
