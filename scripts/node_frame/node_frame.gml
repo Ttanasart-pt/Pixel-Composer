@@ -227,6 +227,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			tb_name.setFocusHover(PANEL_GRAPH.pFOCUS, PANEL_GRAPH.pHOVER);
 			tb_name.draw(draw_x0, draw_y0, _w, nh, txt, [ _mx, _my ]);
+			if(_panel) _panel.refreshDraw();
 			
 		} else {
 			var nh = ui(name_height);
