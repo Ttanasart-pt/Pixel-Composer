@@ -91,6 +91,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x_max = 0;
 	frame_dragging       = noone;
 	frame_selecting      = noone;
+	input_dimension      = true;
 	
 	menu_frame = [
 		menuItem(__txt("Duplicate"), function() /*=>*/ { 
@@ -1682,7 +1683,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_dim = surface_get_dimension(_bgDim);
 				}
 			}
-			attributes.dimension = _dim;
+			
+			inputs[0].setVisible(input_dimension);
+			if(input_dimension) 
+				attributes.dimension = _dim;
+			else 
+				_dim = attributes.dimension;
 		#endregion
 		
 		#region surface

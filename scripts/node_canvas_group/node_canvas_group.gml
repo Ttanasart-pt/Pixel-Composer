@@ -313,10 +313,12 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	static update = function() {
 		refreshLayer();
 		
-		var _dim = getInputData(0);
+		var _dim = inputs[0].getValue();
 		
-		for (var i = 0, n = array_length(canvases); i < n; i++)
-			canvases[i].inputs[0].setValue(_dim);
+		for (var i = 0, n = array_length(canvases); i < n; i++) {
+			canvases[i].input_dimension      = false;
+			canvases[i].attributes.dimension = _dim;
+		}
 	}
 	
 	static getPreviewValues = function() { 
