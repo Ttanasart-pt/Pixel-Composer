@@ -47,6 +47,13 @@
 <li class="sidebar-nav"><a href="#Splice">Splice</a></li>
 <li class="sidebar-nav"><a href="#Filling Modes">Filling Modes</a></li>
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Surface In">Surface In</a></li>
+<li class="sidebar-nav"><a href="#Dimension">Dimension</a></li>
+<li class="sidebar-nav"><a href="#Splice">Splice</a></li>
+<li class="sidebar-nav"><a href="#Filling Modes">Filling Modes</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="align_content.html">Align Content</a></li>
 <li class="sidebar-nav "><a class="" href="background.html">Background</a></li>
@@ -942,7 +949,7 @@
 <br><br>
 
 <table class = "summary-table">
-    <tr><th class="head" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_9slice.png"></th></tr><tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Nine Slice</p></th></tr><tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_9Slice</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_9Slice.html">Node_9Slice</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_9slice.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Nine Slice</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_9Slice</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_9Slice.html">Node_9Slice</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_9Slice</p></th></tr><tr>
                 <td class="summary-topic" style="width: 60px"><p style="color: #ff6b97">surface</p></td>
@@ -968,9 +975,19 @@
             </tr>
 
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
-<tr><td colspan="2" class="summary-attribute"><p>Color Depth</p></td></tr><tr><td colspan="2" class="summary-attribute"><p>Interpolation</p></td></tr>
+<tr><td colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></td></tr><tr><td colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Interpolation">Interpolation</a></td></tr>
 
 </table><p>
+Create a 9-slice image from a source image. 9-slice images are used to create scalable images that can be stretched without distorting the corners. This is useful for creating scalable buttons, panels, and other UI elements.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Surface In" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Surface In</span></h3><br>
+<p>Input image to create 9-slice from.</p><br>
+<h3><a id="Dimension" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Dimension</span></h3><br>
+<p>Output image size.</p><br>
+<h3><a id="Splice" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Splice</span></h3><br>
+<p>4 values that define the 9-slice regions. The values are in the order of left, top, right, bottom.</p><br>
+<h3><a id="Filling Modes" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Filling Modes</span></h3><br>
+<p>Whether to stretch (scale) or repeat the 9-slice regions.</p><br><p>
 Create a 9-slice image from a source image. 9-slice images are used to create scalable images that can be stretched without distorting the corners. This is useful for creating scalable buttons, panels, and other UI elements.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
 <h3><a id="Surface In" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Surface In</span></h3><br>

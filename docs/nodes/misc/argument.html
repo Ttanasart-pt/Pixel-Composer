@@ -49,6 +49,12 @@
 <li class="sidebar-nav"><a href="#Type">Type</a></li>
 <li class="sidebar-nav"><a href="#Default Value">Default Value</a></li>
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Tag">Tag</a></li>
+<li class="sidebar-nav"><a href="#Type">Type</a></li>
+<li class="sidebar-nav"><a href="#Default Value">Default Value</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="array_pin.html">Array Pin</a></li>
 <li class="sidebar-nav "><a class="" href="assert.html">Assert</a></li>
@@ -959,7 +965,7 @@
 <br><br>
 
 <table class = "summary-table">
-    <tr><th class="head" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/__others/v1/s_node_argument.png"></th></tr><tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Argument</p></th></tr><tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Argument</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Argument.html">Node_Argument</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/__others/v1/s_node_argument.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Argument</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Argument</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Argument.html">Node_Argument</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_Argument</p></th></tr><tr>
                 <td class="summary-topic" style="width: 60px"><p style="color: #66ffe3">text</p></td>
@@ -979,6 +985,17 @@
             </tr>
 
 </table><p>
+This nodes allow you to add custom <a href="/misc/command_line.html">command line</a> arguments to the project. This can be useful for passing additional data to the project.</p><br>
+<p>For example, in a project named "cli.pxc" if the <span class="junction" style="border-color: #66ffe3AA">Tag</span> value is set to "arg", then you can use the following command line arguments:</p><br>
+<p><code>./[pixelcomposer.exe] cli.pxc --arg 10</code></p><br>
+<p>This will set the value of the node output to 10.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Tag" class="anchor"></a><span class="junction" style="border-color: #66ffe3AA">Tag</span></h3><br>
+<p>Tag of the argument.</p><br>
+<h3><a id="Type" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Type</span></h3><br>
+<p>Whether to interpret the argument as a string or a number.</p><br>
+<h3><a id="Default Value" class="anchor"></a><span class="junction" style="border-color: #66ffe3AA">Default Value</span></h3><br>
+<p>Default value of the argument.</p><br><p>
 This nodes allow you to add custom <a href="/misc/command_line.html">command line</a> arguments to the project. This can be useful for passing additional data to the project.</p><br>
 <p>For example, in a project named "cli.pxc" if the <span class="junction" style="border-color: #66ffe3AA">Tag</span> value is set to "arg", then you can use the following command line arguments:</p><br>
 <p><code>./[pixelcomposer.exe] cli.pxc --arg 10</code></p><br>

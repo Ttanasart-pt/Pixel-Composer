@@ -88,6 +88,13 @@
 <li class="sidebar-nav"><a href="#Iteration">Iteration</a></li>
 <li class="sidebar-nav"><a href="#Fill Empty">Fill Empty</a></li>
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Strictness">Strictness</a></li>
+<li class="sidebar-nav"><a href="#Tolerance">Tolerance</a></li>
+<li class="sidebar-nav"><a href="#Iteration">Iteration</a></li>
+<li class="sidebar-nav"><a href="#Fill Empty">Fill Empty</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="deblur.html">Deblur</a></li>
 <li class="sidebar-nav "><a class="" href="dilate.html">Dilate</a></li>
@@ -1026,7 +1033,7 @@
 <br><br>
 
 <table class = "summary-table">
-    <tr><th class="head" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_de_stray.png"></th></tr><tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>De-Stray</p></th></tr><tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_De_Stray</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_De_Stray.html">Node_De_Stray</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_de_stray.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>De-Stray</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_De_Stray</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_De_Stray.html">Node_De_Stray</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_De_Stray</p></th></tr><tr>
                 <td class="summary-topic" style="width: 60px"><p style="color: #ff6b97">surface</p></td>
@@ -1058,9 +1065,19 @@
             </tr>
 
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
-<tr><td colspan="2" class="summary-attribute"><p>Color Depth</p></td></tr>
+<tr><td colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></td></tr>
 
 </table><p>
+Strays (some time called orphan) refers to a single pixel that is not connected to any other pixel. This node is used to remove strays from the image by replacing it with the surrounding color.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Strictness" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Strictness</span></h3><br>
+<p>Algorithm stricness level.</p><br>
+<h3><a id="Tolerance" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Tolerance</span></h3><br>
+<p>How different two colors can be to be considered the same.</p><br>
+<h3><a id="Iteration" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Iteration</span></h3><br>
+<p>Repeat the process multiple times for better result.</p><br>
+<h3><a id="Fill Empty" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Fill Empty</span></h3><br>
+<p>Whether to treat empty space as stray as well.</p><br><p>
 Strays (some time called orphan) refers to a single pixel that is not connected to any other pixel. This node is used to remove strays from the image by replacing it with the surrounding color.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
 <h3><a id="Strictness" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Strictness</span></h3><br>

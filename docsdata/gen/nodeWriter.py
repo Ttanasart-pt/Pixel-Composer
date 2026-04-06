@@ -21,7 +21,7 @@ def generateBasicData(nodeData, metadata):
     categories = nodeData["categories"]
     parents    = nodeData["inheritances"]
 
-    basicData = '<tr><th class="head" colspan="2"><p>Node Data</p></th></tr>'
+    basicData = '<tr><th class="head first" colspan="2"><p>Node Data</p></th></tr>'
     basicData += f'<tr><th colspan="2"><img {spr}></th></tr>'
 
     badges = ""
@@ -33,18 +33,19 @@ def generateBasicData(nodeData, metadata):
         basicData += f'<tr><th colspan="2">{badges}</th></tr>'
         basicData += '<tr style="height: 8px;"></tr>'
 
-    basicData += f'<tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr>'
+    basicData += f'<tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr>'
     basicData += f'<tr><th colspan="2" class="summary-content"><p>{nodeName}</p></th></tr>'
     
-    basicData += f'<tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr>'
+    basicData += f'<tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr>'
     basicData += f'<tr><th colspan="2" class="summary-content"><p>{node}</p></th></tr>'
 
     if "tags" in metadata:
         for tag in metadata["tags"]:
-            basicData += f'<tr><th colspan="2" class="summary-tag"><p>{tag}</p></th></tr>'
+            href = f"/nodes/_tags/{fileUtil.pathSanitize(tag)}.html"
+            basicData += f'<tr><th colspan="2" class="summary-tag"><a href="{href}">{tag}</a></th></tr>'
     
     basicData += '<tr height="8px"></tr>'
-    basicData += '<tr><th class="head" colspan="2"><p>Inheritances</p></th></tr>'
+    basicData += '<tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr>'
 
     for i, p in enumerate(parents):
         pName = p["name"]

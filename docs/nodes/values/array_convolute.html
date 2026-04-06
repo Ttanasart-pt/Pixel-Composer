@@ -50,6 +50,11 @@
 <li class="sidebar-nav"><a href="#Array">Array</a></li>
 <li class="sidebar-nav"><a href="#Kernel">Kernel</a></li>
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Array">Array</a></li>
+<li class="sidebar-nav"><a href="#Kernel">Kernel</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="array_copy.html">Array Copy</a></li>
 <li class="sidebar-nav "><a class="" href="array_csv_parse.html">Array Csv Parse</a></li>
@@ -1091,7 +1096,7 @@
 <br><br>
 
 <table class = "summary-table">
-    <tr><th class="head" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/__others/v1/s_node_array_convolute.png"></th></tr><tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Array Convolute</p></th></tr><tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Array_Convolute</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Array_Convolute.html">Node_Array_Convolute</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/__others/v1/s_node_array_convolute.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Array Convolute</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Array_Convolute</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Array_Convolute.html">Node_Array_Convolute</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_Array_Convolute</p></th></tr><tr>
                 <td class="summary-topic" style="width: 60px"><p style="color: #ffe478">float</p></td>
@@ -1111,6 +1116,13 @@
             </tr>
 
 </table><p>
+Apply a convolution operation to an array. A convolution operation is a mathematical operation that iterate to each array member in <span class="junction" style="border-color: #ffe478AA">Array</span>, multiply it by another array (<span class="junction" style="border-color: #ffe478AA">Kernel</span>) and sum the results.</p><br>
+<p>The output array will have the same length as the input array.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Array" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Array</span></h3><br>
+<p>The original array.</p><br>
+<h3><a id="Kernel" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Kernel</span></h3><br>
+<p>The kernel array. This array will be multiplied with each element of the <span class="junction" style="border-color: #ffe478AA">Array</span>.</p><br><p>
 Apply a convolution operation to an array. A convolution operation is a mathematical operation that iterate to each array member in <span class="junction" style="border-color: #ffe478AA">Array</span>, multiply it by another array (<span class="junction" style="border-color: #ffe478AA">Kernel</span>) and sum the results.</p><br>
 <p>The output array will have the same length as the input array.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>

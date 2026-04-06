@@ -31,6 +31,7 @@ for root, dirs, files in os.walk(nodeDir):
 # %% Generate contents
 nodeContent  = {}
 nodeMetadata = {}
+nodeTags     = {}
 
 for nodePath in tqdm(nodeList, desc="Generating node content"):
     with open(nodePath, 'r') as f:
@@ -44,18 +45,6 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
     nodeName = nodeMeta["name"]
     
     placeholderPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeBase)}"
-    
-    # oldName = fileUtil.pathSanitize(nodeBase).lower().replace("node_", "")
-    # oldPath = f"docsdata/content/__nodes/{oldName}"
-
-    # if os.path.exists(f"{oldPath}.md") and not os.path.exists(f"{placeholderPath}.md"):
-    #     print(f"Renaming {oldPath} to {placeholderPath}...")
-    #     os.rename(f"{oldPath}.md", f"{placeholderPath}.md")
-
-    # if os.path.exists(f"{oldPath}.html") and not os.path.exists(f"{placeholderPath}.html"):
-    #     print(f"Renaming {oldPath} to {placeholderPath}...")
-    #     os.rename(f"{oldPath}.html", f"{placeholderPath}.html")
-
     if not os.path.exists(placeholderPath + ".html"):
         fileUtil.verifyFile(placeholderPath + ".md")
 
@@ -69,6 +58,12 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
 
     nodeContent[nodeBase]  = content
     nodeMetadata[nodeBase] = nodeMeta
+
+    tags = nodeMeta["tags"] if "tags" in nodeMeta else []
+    for tag in tags:
+        if tag not in nodeTags:
+            nodeTags[tag] = []
+        nodeTags[tag].append(nodeBase)
     
 # %% Write content to file using category
 targetRoot = "docsdata/pregen/3_nodes"
@@ -117,4 +112,23 @@ for category in nodeCategoryData:
         with open(redirectPath, "w") as file:
             file.write(f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{nodeName}.html"/></html>''')
 
-    
+# %% Write tag pages
+tagDir = os.path.join(targetRoot, "_tags")
+fileUtil.verifyFolder(tagDir)
+
+for tag, nodes in nodeTags.items():
+    tagContent = f'''<!DOCTYPE html><html></html>{VERSION}'''
+    tagContent += f"<h1>Tag: {tag}</h1><br><br>"
+
+    for node in nodes:
+        if node not in nodeMetadata:
+            print(f"Node metadata for {node} not found.")
+            continue
+        
+        nodeMeta = nodeMetadata[node]
+        nodeName = nodeMeta["name"]
+        nodeName = fileUtil.pathSanitize(nodeName)
+
+        tagContent += f'''<p><a href="/nodes/{nodeMeta["baseNode"]}.html">{nodeName}</a></p>'''
+
+    fileUtil.writeFile(os.path.join(tagDir, f"{fileUtil.pathSanitize(tag)}.html"), tagContent)

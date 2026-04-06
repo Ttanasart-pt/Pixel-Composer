@@ -157,7 +157,7 @@ tr td {
     color: var(--main_white);
     margin: 0;
 
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 table {
@@ -391,11 +391,15 @@ table.summary-table tr {
 }
 
 table.summary-table th {
-    padding: 2px;
+    padding: 1px 2px;
 }
 
 table.summary-table td {
     padding: 2px;
+}
+
+table.summary-table td.summary-topic > p.subtopic {
+    margin-bottom: -8px;
 }
 
 table.summary-table td.summary-topic > p {
@@ -408,7 +412,7 @@ table.summary-table th.summary-topic > p {
     font-weight: 600;
     color: var(--main_ltgrey);
 
-    margin-bottom: -4px;
+    margin-bottom: -2px;
 }
 
 table.summary-table p img {
@@ -417,6 +421,7 @@ table.summary-table p img {
 
 table.summary-table td.summary-attribute > p {
     text-align: center;
+    font-size: 0.8rem;
 }
 
 table.summary-table th.summary-content > p {
@@ -439,9 +444,30 @@ table.summary-table th.head > p {
     border-radius: 4px;
 }
 
+table.summary-table th.head:not(.first) {
+    padding-top: 4px;
+}
+
 table.summary-table img {
     width: 100%;
     padding: 8px;
+}
+
+table.summary-table .summary-tag > div {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+table.summary-table .summary-tag > div > p {
+    padding: 2px 6px;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--main_ltgrey);
+    background-color: var(--main_mdblack);
+    border-radius: 4px;
+    border: 1px solid var(--main_dkgrey);
 }
 
 th.inheritance-block > p, th.inheritance-block > a {
@@ -451,7 +477,7 @@ th.inheritance-block > p, th.inheritance-block > a {
     display: inline-block;
 
     color: var(--main_ltgrey);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     line-height: 1.5;
 

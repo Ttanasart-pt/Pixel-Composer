@@ -68,6 +68,17 @@
 <li class="sidebar-nav"><a href="#End Caps">End Caps</a></li>
 <li class="sidebar-nav"><a href="#Inverted">Inverted</a></li>
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Path">Path</a></li>
+<li class="sidebar-nav"><a href="#Loop">Loop</a></li>
+<li class="sidebar-nav"><a href="#Subdivision">Subdivision</a></li>
+<li class="sidebar-nav"><a href="#Side">Side</a></li>
+<li class="sidebar-nav"><a href="#Radius">Radius</a></li>
+<li class="sidebar-nav"><a href="#Radius Over Path">Radius Over Path</a></li>
+<li class="sidebar-nav"><a href="#End Caps">End Caps</a></li>
+<li class="sidebar-nav"><a href="#Inverted">Inverted</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="3d_mesh_path_revolve.html">3D Mesh Path Revolve</a></li>
 <li class="sidebar-nav "><a class="" href="3d_mesh_plane.html">3D Mesh Plane</a></li>
@@ -976,7 +987,7 @@
 <br><br>
 
 <table class = "summary-table">
-    <tr><th class="head" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_3d_mesh_path_extrude.png"></th></tr><tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Path Extrude</p></th></tr><tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_3D_Mesh_Path_Extrude</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../_index/Node_3D.html">Node_3D</a></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../_index/Node_3D_Object.html">Node_3D_Object</a></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../_index/Node_3D_Mesh.html">Node_3D_Mesh</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_3D_Mesh_Path_Extrude.html">Node_3D_Mesh_Path_Extrude</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_3d_mesh_path_extrude.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Path Extrude</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_3D_Mesh_Path_Extrude</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../_index/Node_3D.html">Node_3D</a></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../_index/Node_3D_Object.html">Node_3D_Object</a></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../_index/Node_3D_Mesh.html">Node_3D_Mesh</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_3D_Mesh_Path_Extrude.html">Node_3D_Mesh_Path_Extrude</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_3D_Object</p></th></tr><tr>
                 <td class="summary-topic" style="width: 60px"><p style="color: #ffe478">vec3</p></td>
@@ -1044,6 +1055,25 @@
             </tr>
 
 </table><p>
+Extrude the path into a 3D mesh using circle profile.</p><br>
+<p>This node support both <a class="node" href="/nodes/_index/path.html">Path</a> and <a class="node" href="/nodes/_index/3d_path.html">3D_Path</a> as input.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Path" class="anchor"></a><span class="junction" style="border-color: #ffb5b5AA">Path</span></h3><br>
+<p>2D or 3D Path data. </p><br>
+<h3><a id="Loop" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Loop</span></h3><br>
+<p>Whether to connect the last point to the first point.</p><br>
+<h3><a id="Subdivision" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Subdivision</span></h3><br>
+<p>The number of subdivisions long the path.</p><br>
+<h3><a id="Side" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Side</span></h3><br>
+<p>The resolution of the profile.</p><br>
+<h3><a id="Radius" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Radius</span></h3><br>
+<p>The radius of the profile.</p><br>
+<h3><a id="Radius Over Path" class="anchor"></a><span class="junction" style="border-color: #c2c2d1AA">Radius Over Path</span></h3><br>
+<p>Modify the radius of the profile along the path.</p><br>
+<h3><a id="End Caps" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">End Caps</span></h3><br>
+<p>Whether to add end caps to the mesh.</p><br>
+<h3><a id="Inverted" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Inverted</span></h3><br>
+<p>Whether to invert the normals of the mesh.</p><br><p>
 Extrude the path into a 3D mesh using circle profile.</p><br>
 <p>This node support both <a class="node" href="/nodes/_index/path.html">Path</a> and <a class="node" href="/nodes/_index/3d_path.html">3D_Path</a> as input.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>

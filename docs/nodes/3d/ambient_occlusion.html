@@ -87,6 +87,13 @@
 <li class="sidebar-nav"><a href="#Intensity">Intensity</a></li>
 <li class="sidebar-nav"><a href="#Pixel Sweep">Pixel Sweep</a></li>
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Height Map">Height Map</a></li>
+<li class="sidebar-nav"><a href="#Height">Height</a></li>
+<li class="sidebar-nav"><a href="#Intensity">Intensity</a></li>
+<li class="sidebar-nav"><a href="#Pixel Sweep">Pixel Sweep</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="bevel.html">Bevel</a></li>
 <li class="sidebar-nav "><a class="" href="normal.html">Normal</a></li>
@@ -972,7 +979,7 @@
 <br><br>
 
 <table class = "summary-table">
-    <tr><th class="head" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_ambient_occlusion.png"></th></tr><tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Ambient Occlusion</p></th></tr><tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Ambient_Occlusion</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Ambient_Occlusion.html">Node_Ambient_Occlusion</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_ambient_occlusion.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Ambient Occlusion</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Ambient_Occlusion</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Ambient_Occlusion.html">Node_Ambient_Occlusion</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_Ambient_Occlusion</p></th></tr><tr>
                 <td class="summary-topic" style="width: 60px"><p style="color: #ff6b97">surface</p></td>
@@ -1004,9 +1011,19 @@
             </tr>
 
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
-<tr><td colspan="2" class="summary-attribute"><p>Color Depth</p></td></tr><tr><td colspan="2" class="summary-attribute"><p>Oversample</p></td></tr>
+<tr><td colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></td></tr><tr><td colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Oversample">Oversample</a></td></tr>
 
 </table><p>
+Generate ambient occlusion using brightness as height.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Height Map" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Height Map</span></h3><br>
+<p>Image to generate ambient occlusion from.</p><br>
+<h3><a id="Height" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Height</span></h3><br>
+<p>Maximum height, this effect the radius of the ambient occlusion.</p><br>
+<h3><a id="Intensity" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Intensity</span></h3><br>
+<p>Intensity of the ambient occlusion.</p><br>
+<h3><a id="Pixel Sweep" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Pixel Sweep</span></h3><br>
+<p>Use binary sweep instead of uniform sampling.</p><br><p>
 Generate ambient occlusion using brightness as height.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
 <h3><a id="Height Map" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Height Map</span></h3><br>

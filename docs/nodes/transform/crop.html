@@ -51,6 +51,12 @@
 <li class="sidebar-nav"><a href="#Crop">Crop</a></li>
 <li class="sidebar-nav"><a href="#Fit Mode">Fit Mode</a></li>
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Aspect Ratio">Aspect Ratio</a></li>
+<li class="sidebar-nav"><a href="#Crop">Crop</a></li>
+<li class="sidebar-nav"><a href="#Fit Mode">Fit Mode</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="crop_content.html">Crop Content</a></li>
 <li class="sidebar-nav "><a class="" href="downscale.html">Downscale</a></li>
@@ -941,7 +947,7 @@
 <br><br>
 
 <table class = "summary-table">
-    <tr><th class="head" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/__others/v1/s_node_crop.png"></th></tr><tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Crop</p></th></tr><tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Crop</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Crop.html">Node_Crop</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/__others/v1/s_node_crop.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Crop</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Crop</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr><tr><th colspan="2" class="inheritance-block"><a href="../array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Crop.html">Node_Crop</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_Crop</p></th></tr><tr>
                 <td class="summary-topic" style="width: 60px"><p style="color: #ff6b97">surface</p></td>
@@ -973,9 +979,17 @@
             </tr>
 
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
-<tr><td colspan="2" class="summary-attribute"><p>Color Depth</p></td></tr>
+<tr><td colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></td></tr>
 
 </table><p>
+This node crops the input image into smaller piece. If you want to crop image into area, you can use the <a class="node" href="/nodes/_index/camera.html">Camera</a> node.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Aspect Ratio" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Aspect Ratio</span></h3><br>
+<p>If not set to "none", the aspect ratio of the crop area will be locked to the specified value.</p><br>
+<h3><a id="Crop" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Crop</span></h3><br>
+<p>A vec4 value the define crop distance from the left, top, right, and bottom of the image.</p><br>
+<h3><a id="Fit Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Fit Mode</span></h3><br>
+<p>For locked aspect ratio, this will determine how the image will be fit into the crop area.</p><br><p>
 This node crops the input image into smaller piece. If you want to crop image into area, you can use the <a class="node" href="/nodes/_index/camera.html">Camera</a> node.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
 <h3><a id="Aspect Ratio" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Aspect Ratio</span></h3><br>

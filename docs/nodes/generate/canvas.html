@@ -57,6 +57,22 @@
 <li class="sidebar-nav"><a href="#Actions">Actions</a></li>
 <ul class="submenu h3">
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Dimension">Dimension</a></li>
+<li class="sidebar-nav"><a href="#Frames Animation">Frames Animation</a></li>
+<li class="sidebar-nav"><a href="#Animation Type">Animation Type</a></li>
+<li class="sidebar-nav"><a href="#Animation Speed">Animation Speed</a></li>
+<li class="sidebar-nav"><a href="#Background">Background</a></li>
+<li class="sidebar-nav"><a href="#Use Background Dimension">Use Background Dimension</a></li>
+<li class="sidebar-nav"><a href="#Background Alpha">Background Alpha</a></li>
+</ul>
+<li class="sidebar-nav"><a href="#Tools">Tools</a></li>
+<ul class="submenu h3">
+</ul>
+<li class="sidebar-nav"><a href="#Actions">Actions</a></li>
+<ul class="submenu h3">
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="caustic.html">Caustic</a></li>
 <li class="sidebar-nav "><a class="" href="cellular.html">Cellular</a></li>
@@ -1036,7 +1052,7 @@
 <br><br>
 
 <table class = "summary-table">
-    <tr><th class="head" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/__others/v1/s_node_canvas.png"></th></tr><tr><th colspan="2" class="summary-topic"><p>Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Canvas</p></th></tr><tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Canvas</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Canvas.html">Node_Canvas</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/__others/v1/s_node_canvas.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Canvas</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Canvas</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="../_index/Node_Canvas.html">Node_Canvas</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_Canvas</p></th></tr><tr>
                 <td class="summary-topic" style="width: 60px"><p style="color: #ff9166">dimension</p></td>
@@ -1134,9 +1150,34 @@
             </tr>
 
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
-<tr><td colspan="2" class="summary-attribute"><p>Color Depth</p></td></tr>
+<tr><td colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></td></tr>
 
 </table><p>
+Canvas node is used for drawing directly to surface. </p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Dimension" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Dimension</span></h3><br>
+<p>The size of the canvas.</p><br>
+<h3><a id="Frames Animation" class="anchor"></a><span class="junction">Frames Animation</span></h3><br>
+<p>Whether to output as animated surface or surface array.</p><br>
+<h3><a id="Animation Type" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Animation Type</span></h3><br>
+<p>What to do when the animation reaches the last frame.</p><br>
+<ul>
+<li><strong>Loop</strong>: Loop back to the first frame.</li>
+<li><strong>Hold</strong>: Freeze on the last frame.</li>
+<li><strong>Clear</strong>: Output empty surface.</li>
+</ul><br>
+<h3><a id="Animation Speed" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Animation Speed</span></h3><br>
+<p>The speed of the animation.</p><br>
+<h3><a id="Background" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Background</span></h3><br>
+<p>The background texture.</p><br>
+<h3><a id="Use Background Dimension" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Use Background Dimension</span></h3><br>
+<p>Whether to use the background texture dimensions instead of the <span class="junction" style="border-color: #ff9166AA">Dimension</span>.</p><br>
+<h3><a id="Background Alpha" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Background Alpha</span></h3><br>
+<p>The alpha of the background texture.</p><br>
+<h2><a id="Tools" class="anchor"></a>Tools</h2><br>
+<p>Canvas node comes with a set of tools for drawing on the surface.</p><br>
+<h2><a id="Actions" class="anchor"></a>Actions</h2><br>
+<p>Actions are refered to the right-side button in the preview panel. These can be seen as tools for more specific tasks.</p><br><p>
 Canvas node is used for drawing directly to surface. </p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
 <h3><a id="Dimension" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Dimension</span></h3><br>
