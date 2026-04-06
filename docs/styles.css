@@ -419,6 +419,9 @@ table.summary-table p img {
     padding: 0px 8px;
 }
 
+table.summary-table th.summary-attribute {
+    line-height: 1;
+}
 table.summary-table th.summary-attribute > a {
     text-align: center;
     font-size: 0.8rem;
@@ -426,7 +429,7 @@ table.summary-table th.summary-attribute > a {
 }
 
 table.summary-table th.summary-attribute > a:hover {
-    color: white;
+    color: var(--main_white);
 }
 
 table.summary-table th.summary-content > a {

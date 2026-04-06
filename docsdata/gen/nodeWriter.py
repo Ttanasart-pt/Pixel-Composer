@@ -54,11 +54,11 @@ def generateBasicData(nodeData, metadata):
         link  = ""
 
         if pName == "Node":
-            link = "../index.html"
+            link = "/nodes/index.html"
         elif pName == "Node_Processor":
-            link = "../array_processor.html"
+            link = "/nodes/array_processor.html"
         else:
-            link = f"../_index/{pName}.html"
+            link = f"/nodes/_index/{pName.lower()}.html"
         
         _class = "inheritance-block current" if i == len(parents) - 1 else "inheritance-block"
 
