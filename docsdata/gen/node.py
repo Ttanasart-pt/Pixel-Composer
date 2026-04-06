@@ -44,9 +44,9 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
     nodeBase = nodeMeta["baseNode"]
     nodeName = nodeMeta["name"]
     
-    placeholderPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeBase)}"
-    if not os.path.exists(placeholderPath + ".html"):
-        fileUtil.verifyFile(placeholderPath + ".md")
+    # placeholderPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeBase)}"
+    # if not os.path.exists(placeholderPath + ".html"):
+    #     fileUtil.verifyFile(placeholderPath + ".md")
 
     contentPath = f"docsdata/pregen/__nodes/{fileUtil.pathSanitize(nodeBase)}.html"
     fileUtil.verifyFile(contentPath)
