@@ -171,8 +171,11 @@ def writeCategory(category, nodeMetadata):
     return content
 
 def writeTag(tag, nodes, nodeMetadata):
-    title   = f"Tag: {tag}"
-    content = f"""<h1>{title}</h1><br><br>"""
+    title    = f"Tag: {tag}"
+    content  = f"""<h1>{title}</h1><br><br>"""
+    content += '<div class="node-category">'
+    content += f'<h3 class="node-group-title">Nodes</h3>'
+    content += '<div class="node-group">'
 
     for node in nodes:
         if node not in nodeMetadata:
@@ -183,6 +186,7 @@ def writeTag(tag, nodes, nodeMetadata):
         name     = metadata["name"]
         spr      = metadata["spr"]  if "spr" in metadata else f"s_{node.lower()}"
 
-        content += f'''<div class="node-card"><a href="/nodes/{metadata["baseNode"]}.html"><img {spr}>{name}</a></div>\n'''
+        content += f'''<div class="node-card"><a href="./{node.lower().replace("node_", "")}.html"><img {spr}>{name}</a></div>\n'''
     
+    content += '</div></div>'
     return content

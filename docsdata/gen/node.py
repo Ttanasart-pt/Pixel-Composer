@@ -118,6 +118,5 @@ fileUtil.verifyFolder(tagDir)
 
 for tag, nodes in nodeTags.items():
     tagContent = f'''<!DOCTYPE html><html></html>{VERSION}'''
-    tagContent += f"<h1>Tag: {tag}</h1><br><br>"
     tagContent += nodeWriter.writeTag(tag, nodes, nodeMetadata)
     fileUtil.writeFile(os.path.join(tagDir, f"{fileUtil.pathSanitize(tag)}.html"), tagContent)
