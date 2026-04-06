@@ -1,9 +1,8 @@
 {
-  "tooltip":"Deterministically fracture and image and apply basic physics.",
-  "spr":"s_node_mk_fracture",
-  "baseNode":"Node_MK_Fracture",
-  "io":[
-    "surface"
-  ],
-  "name":"MK Fracture"
+    "name":          "MK Fracture",
+    "tooltip":       "Deterministically fracture and image and apply basic physics.",
+    "spr":           "s_node_mk_fracture",
+    "baseNode":      "Node_MK_Fracture",
+    "tags":           ["Patreon"],
+    "io":             ["surface"],
 }

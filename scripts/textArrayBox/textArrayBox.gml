@@ -13,7 +13,7 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 	dragging = noone;
 	addable  = false;
 	
-	static setAddable = function(a) /*=>*/ { addable = a; return self; }
+	static setAddable = function(a=true) /*=>*/ { addable = a; return self; }
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -122,7 +122,7 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 		
 		if(toDel != undefined) {
 			array_delete(arraySet, toDel, 1);
-			if(onModify) onModify();
+			if(onModify) onModify(arraySet);
 		}
 		
 		if(dragging != noone) {
@@ -139,7 +139,7 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 					array_delete(arraySet, dragging, 1);
 					array_insert(arraySet, hovi[0], _val);
 					
-					if(onModify) onModify();
+					if(onModify) onModify(arraySet);
 				}
 				
 				dragging = noone;

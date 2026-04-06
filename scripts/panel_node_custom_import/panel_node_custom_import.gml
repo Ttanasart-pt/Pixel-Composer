@@ -16,25 +16,28 @@ function NodeFileObject(_path) : FileObject(_path) constructor {
     	
     	_str += $"    \"name\":          \"{info.name}\",\n";
     	
-    	if(struct_has(info, "tooltip"))
+    	if(has(info, "tooltip"))
 		_str += $"    \"tooltip\":       \"{info.tooltip}\",\n";
     		
     	_str += $"    \"spr\":           \"{info.spr}\",\n";
     	_str += $"    \"baseNode\":      \"{info.baseNode}\",\n";
     	
-    	if(struct_has(info, "pxc_version"))
+    	if(has(info, "pxc_version"))
 		_str += $"    \"pxc_version\":    {info.pxc_version},\n";
     	
-    	if(struct_has(info, "alias") && !array_empty(info.alias))
-		_str += $"    \"alias\":             {json_stringify(info.alias)},\n";
+    	if(has(info, "alias") && !array_empty(info.alias))
+		_str += $"    \"alias\":          {json_stringify(info.alias)},\n";
+    	
+    	if(has(info, "tags") && !array_empty(info.tags))
+		_str += $"    \"tags\":           {json_stringify(info.tags)},\n";
     		
-    	if(struct_has(info, "io") && !array_empty(info.io))
+    	if(has(info, "io") && !array_empty(info.io))
 		_str += $"    \"io\":             {json_stringify(info.io)},\n";
     		
-    	if(struct_has(info, "show_in_recent"))
+    	if(has(info, "show_in_recent"))
 		_str += $"    \"show_in_recent\": {info.show_in_recent? "true" : "false"},\n";
     	
-    	if(struct_has(info, "deprecated"))
+    	if(has(info, "deprecated"))
 		_str += $"    \"deprecated\":     {info.deprecated? "true" : "false"},\n";
     	
     	_str += "}\n";

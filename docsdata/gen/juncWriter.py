@@ -156,17 +156,9 @@ def IOTable(nodeData):
     return summaryTxt
 
 def AttributeTable(nodeData):
-    attributes = []
-    attrList   = nodeData["attributes"]
-    rows       = ""
+    attrList = nodeData["attributes"]
+    rows     = "".join([f"""<tr><td colspan="2" class="summary-attribute"><p>{_attr}</p></td></tr>""" for _attr in attrList])
 
-    for node, attrs in attrList:
-        if attrs:
-            rows += f'<tr><th colspan="2" class="summary-topic"><p>{node}</p></th></tr>'
-            rows += "".join([f"""<tr><td colspan="2" class="summary-attribute"><p>{_attr}</p></td></tr>""" for _attr in attrs])
-
-        attributes.append(attrs)
-    
     if rows == "":
         return ""
     

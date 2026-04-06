@@ -17,7 +17,7 @@ def generateBasicData(nodeData, metadata):
     nodeName   = metadata["name"]
     node       = metadata["baseNode"]
     spr        = metadata["spr"]     if "spr" in metadata else f"s_{node.lower()}"
-
+    
     categories = nodeData["categories"]
     parents    = nodeData["inheritances"]
 
@@ -38,6 +38,10 @@ def generateBasicData(nodeData, metadata):
     
     basicData += f'<tr><th colspan="2" class="summary-topic"><p>Internal name</p></th></tr>'
     basicData += f'<tr><th colspan="2" class="summary-content"><p>{node}</p></th></tr>'
+
+    if "tags" in metadata:
+        for tag in metadata["tags"]:
+            basicData += f'<tr><th colspan="2" class="summary-tag"><p>{tag}</p></th></tr>'
     
     basicData += '<tr height="8px"></tr>'
     basicData += '<tr><th class="head" colspan="2"><p>Inheritances</p></th></tr>'

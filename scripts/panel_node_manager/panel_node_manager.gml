@@ -19,7 +19,8 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		toSelectNode = "";
 			
 		static setRootDir = function(d) /*=>*/ { 
-			internalDir = new DirectoryObject(d).scanDir(true); 
+			// internalDir = new DirectoryObject(d).scanDir(true); 
+			internalDir = new DirectoryObject(d).scan(["NodeObject"]); 
 			rootDir     = d;
 		} 
 		
@@ -28,18 +29,23 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	#endregion
 	
 	#region editors
+		arr_io  = [ "surface" ];
+		arr_ali = [];
+		arr_tag = [ "Patreon" ];
+		
 		parseArray = function(t) /*=>*/ {return (t != "" && !string_pos(",", t))? [ t ] : json_try_parse(t, [])};
 		
 		tb_root   = textBox_Text(function(t) /*=>*/ { setRootDir(t);    }).setFont(f_p2);
 		tb_search = textBox_Text(function(t) /*=>*/ { searchContent(t); }).setFont(f_p2).setEmpty().setAutoupdate();
 		
-		tb_inode = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "baseNode"]         = t;  update(); });
-		tb_name  = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "name"]             = t;  update(); });
-		tb_tips  = textArea_Text(  function(t) /*=>*/ { selectNode.info[$ "tooltip"]          = t;  update(); });
-		tb_spr   = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "spr"]              = t;  update(); });
-		tb_vers  = textBox_Number( function(t) /*=>*/ { selectNode.info[$ "pxc_version"]      = t;  update(); });
-		tb_io    = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "io"]    = parseArray(t); update(); }).setEmpty();
-		tb_alias = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "alias"] = parseArray(t); update(); }).setEmpty();
+		tb_inode = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "baseNode"]    = t;  update(); });
+		tb_name  = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "name"]        = t;  update(); });
+		tb_tips  = textArea_Text(  function(t) /*=>*/ { selectNode.info[$ "tooltip"]     = t;  update(); });
+		tb_spr   = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "spr"]         = t;  update(); });
+		tb_vers  = textBox_Number( function(t) /*=>*/ { selectNode.info[$ "pxc_version"] = t;  update(); });
+		tb_io    = new textArrayBox(function() /*=>*/ {return selectNode.info[$ "io"]    ?? []}, arr_io,  function(a) /*=>*/ { selectNode.info[$ "io"]    = a; update(); }).setAddable();
+		tb_alias = new textArrayBox(function() /*=>*/ {return selectNode.info[$ "alias"] ?? []}, arr_ali, function(a) /*=>*/ { selectNode.info[$ "alias"] = a; update(); }).setAddable();
+		ta_tags  = new textArrayBox(function() /*=>*/ {return selectNode.info[$ "tags"]  ?? []}, arr_tag, function(a) /*=>*/ { selectNode.info[$ "tags"]  = a; update(); }).setAddable();
 		
 		cb_recent = new checkBox(function(t) /*=>*/ { selectNode.info[$ "show_in_recent"] = !(selectNode.info[$ "show_in_recent"] ?? true); update(); });
 		cb_dep    = new checkBox(function(t) /*=>*/ { selectNode.info[$ "deprecated"]     = !(selectNode.info[$ "deprecated"] ?? false);    update(); });
@@ -53,6 +59,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 			[ "recent",     cb_recent, function() /*=>*/ {return selectNode.info[$ "show_in_recent"] ?? true}  ], 
 			[ "io",         tb_io,     function() /*=>*/ {return selectNode.info[$ "io"]             ?? []}    ], 
 			[ "alias",      tb_alias,  function() /*=>*/ {return selectNode.info[$ "alias"]          ?? []}    ], 
+			[ "tags",       ta_tags,   function() /*=>*/ {return selectNode.info[$ "tags"]           ?? []}    ], 
 			[ "deprecated", cb_dep,    function() /*=>*/ {return selectNode.info[$ "deprecated"]     ?? false} ], 
 		];
 		font = f_p3;
@@ -113,7 +120,13 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		        	var _contain = string_pos(searchTextL, string_lower(dr.name));
 		        	for( var j = 0, m = array_length(dr.content); j < m; j++ ) {
 		        		var _con = dr.content[j];
-				        if(string_pos(searchTextL, string_lower(_con.name)))  
+		        		
+		        		if(searchTextL == string_lower(_con.name)) {
+		        			if(selectDir != dr)    selectDir = dr;
+		        			if(selectNode != _con) selectNode = _con;
+		        		}
+		        		
+		        		if(string_pos(searchTextL, string_lower(_con.name)))  
 				        	_contain = true;
 		        	}
 		        	
@@ -216,6 +229,9 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		var m = [ mx, my ];
 		
 		// Root
+		var rx  = x;
+		var ry  = y;
+		
 		var wx  = _pd;
 		var wy  = _pd;
 		var sdw = ui(240);
@@ -320,7 +336,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 				}
 				
 				_wdg.setFocusHover(pFOCUS, pHOVER);
-				var _pa = new widgetParam(wgx, by, wgw, bh, _dat, undefined, m)
+				var _pa = new widgetParam(wgx, by, wgw, bh, _dat, undefined, m, rx, ry)
 				           .setFont(f_p2);
 				var _wh = _wdg.drawParam(_pa);
 				

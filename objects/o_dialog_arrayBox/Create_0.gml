@@ -87,7 +87,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 					}
 				}
 				
-				if(onModify) onModify();
+				if(onModify) onModify(arraySet);
 			}
 		}
 		
@@ -123,7 +123,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 			
 			if(KEYBOARD_ENTER) {
 				if(KEYBOARD_STRING != "") array_push(arraySet, KEYBOARD_STRING);
-				if(onModify) onModify();
+				if(onModify) onModify(arraySet);
 				adding = false;
 			}
 			

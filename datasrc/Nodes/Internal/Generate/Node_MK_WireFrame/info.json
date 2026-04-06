@@ -3,4 +3,5 @@
     "spr":           "s_node_mk_wireframe",
     "baseNode":      "Node_MK_WireFrame",
     "pxc_version":    120080,
+    "tags":           ["Patreon"],
 }

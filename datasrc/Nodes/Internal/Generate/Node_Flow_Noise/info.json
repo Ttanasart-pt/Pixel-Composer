@@ -1,9 +1,8 @@
 {
-  "tooltip":"Generate fluid flow noise",
-  "spr":"s_node_flow_noise",
-  "baseNode":"Node_Flow_Noise",
-  "io":[
-    "surface"
-  ],
-  "name":"Flow Noise"
+    "name":          "Flow Noise",
+    "tooltip":       "Generate fluid flow noise",
+    "spr":           "s_node_flow_noise",
+    "baseNode":      "Node_Flow_Noise",
+    "tags":           ["Patreon"],
+    "io":             ["surface"],
 }

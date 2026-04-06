@@ -192,7 +192,8 @@ function DirectoryObject(_path) constructor {
 		
 		for( var i = 0, n = array_length(_file); i < n; i++ ) {
 			var _f = _file[i];
-			if(_node && __Node_IsFileObject(_f)) continue;
+			if(__Node_IsFileObject(_f)) continue;
+			// if(_node && __Node_IsFileObject(_f)) continue;
 			array_push(subDir, new DirectoryObject(_f).scanDir(_node));
 		}
 		

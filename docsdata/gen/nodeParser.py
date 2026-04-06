@@ -42,7 +42,7 @@ def readNodeScripts():
             continue
 
         scripts[baseNode] = script
-
+        
     return scripts
 
 nodeScripts = readNodeScripts()
@@ -67,6 +67,11 @@ def readNodeFile(baseNode):
     outputs = re.findall(r"^\s*newOutput.*$", script, re.MULTILINE)
     outputs = juncParser.parseOutputs(outputs)
 
+    attrs = []
+    if script.find('attribute_surface_depth') != -1: attrs.append("Color Depth")
+    if script.find('attribute_interpolation') != -1: attrs.append("Interpolation")
+    if script.find('attribute_oversample') != -1:    attrs.append("Oversample")
+
     data = {
         "name":        baseNode,
         "classParent": classParent,
@@ -76,7 +81,7 @@ def readNodeFile(baseNode):
         "inputDynamic":inputDynamic,
         "outputs":     outputs,
         "categories":  [],
-        "attributes":  [],
+        "attributes":  attrs,
     }
 
     return data

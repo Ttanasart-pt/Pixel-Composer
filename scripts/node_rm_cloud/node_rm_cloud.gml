@@ -1,49 +1,43 @@
 function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RM CLoud";
 	
-	newInput(0, nodeValue_Dimension());
+	newInput( 0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec3("Position", [ 0, 0, 0 ]));
+	////- =Transform
+	newInput( 1, nodeValue_Vec3(    "Position", [ 0, 0, 0 ]    ));
+	newInput( 2, nodeValue_Vec3(    "Rotation", [ 0, 0, 0 ]    ));
+	newInput( 3, nodeValue_Slider(  "Scale", 1, [ 0, 4, 0.01 ] ));
 	
-	newInput(2, nodeValue_Vec3("Rotation", [ 0, 0, 0 ]));
+	////- =Camera
+	newInput( 4, nodeValue_Slider(  "FOV",        30, [ 0, 90, 1 ] ));
+	newInput( 5, nodeValue_Vec2(    "View Range", [ 0, 6 ]         ));
 	
-	newInput(3, nodeValue_Slider("Scale", 1, [ 0, 4, 0.01 ] ));
+	////- =Cloud
+	newInput(11, nodeValue_EScroll( "Shape",      0, [ "Volume", "Plane" ] ));
+	newInput( 6, nodeValue_Slider(  "Density",   .5 ));
+	newInput( 8, nodeValue_Slider(  "Threshold", .4 ));
 	
-	newInput(4, nodeValue_Slider("FOV", 30, [ 0, 90, 1 ] ));
+	////- =Noise
+	newInput( 7, nodeValue_Int(     "Detail",              8 ));
+	newInput( 9, nodeValue_Float(   "Detail Scaling",      2 ));
+	newInput(10, nodeValue_Slider(  "Detail Attenuation", .5 ));
 	
-	newInput(5, nodeValue_Vec2("View Range", [ 0, 6 ]));
-	
-	newInput(6, nodeValue_Slider("Density", 0.5));
-	
-	newInput(7, nodeValue_Int("Detail", 8));
-	
-	newInput(8, nodeValue_Slider("Threshold", 0.4));
-	
-	newInput(9, nodeValue_Float("Detail Scaling", 2.));
-	
-	newInput(10, nodeValue_Slider("Detail Attenuation", 0.5));
-	
-	newInput(11, nodeValue_Enum_Scroll("Shape",  0, [ "Volume", "Plane" ]));
-	
-	newInput(12, nodeValue_Bool("Use Fog", 0))
-	
-	newInput(13, nodeValue_Gradient("Colors", gra_black_white))
+	////- =Render
+	newInput(13, nodeValue_Gradient("Colors",  gra_black_white ));
+	newInput(12, nodeValue_Bool(    "Use Fog", 0               ));
+	// 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0,
-		["Transform", false],  1,  2,  3, 
-		["Camera",    false],  4,  5, 
-		["Cloud",     false], 11,  6,  8, 
-		["Noise",     false],  7,  9, 10, 
-		["Render",    false], 13, 12, 
+		[ "Transform", false ],  1,  2,  3, 
+		[ "Camera",    false ],  4,  5, 
+		[ "Cloud",     false ], 11,  6,  8, 
+		[ "Noise",     false ],  7,  9, 10, 
+		[ "Render",    false ], 13, 12, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
-	
-	static step = function() {
-		
-	}
+	////- Node
 	
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		var _dim  = _data[0];

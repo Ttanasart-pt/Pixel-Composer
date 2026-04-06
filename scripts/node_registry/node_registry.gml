@@ -17,7 +17,6 @@
 	
 	global.PATREON_NODES = [
 		Node_Brush_Linear, 
-		Node_Ambient_Occlusion, 
 		Node_RM_Cloud, 
 		Node_Perlin_Extra, 
 		Node_Voronoi_Extra, 
