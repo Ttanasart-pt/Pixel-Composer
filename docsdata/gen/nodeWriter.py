@@ -40,12 +40,14 @@ def generateBasicData(nodeData, metadata):
     basicData += f'<tr><th colspan="2" class="summary-content"><p>{node}</p></th></tr>'
 
     if "tags" in metadata:
+        basicData += f'<tr><th colspan="2" class="summary-tag"><div>'
         for tag in metadata["tags"]:
             href = f"/nodes/_tags/{fileUtil.pathSanitize(tag)}.html"
-            basicData += f'<tr><th colspan="2" class="summary-tag"><a href="{href}">{tag}</a></th></tr>'
+            basicData += f'<a href="{href}">{tag}</a>'
+        basicData += '</div></th></tr>'
     
     basicData += '<tr height="8px"></tr>'
-    basicData += '<tr><th class="head" colspan="2"><div><p>Inheritances</p></div></th></tr>'
+    basicData += '<tr><th class="head" colspan="2"><p>Inheritances</p></th></tr>'
 
     for i, p in enumerate(parents):
         pName = p["name"]

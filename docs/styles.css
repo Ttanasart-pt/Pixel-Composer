@@ -459,7 +459,7 @@ table.summary-table .summary-tag > div {
     gap: 4px;
 }
 
-table.summary-table .summary-tag > div > p {
+table.summary-table .summary-tag > div > a {
     padding: 2px 6px;
 
     font-size: 0.85rem;
