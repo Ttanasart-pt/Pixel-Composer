@@ -84,6 +84,7 @@ for title, path in pages:
 for _, path in tqdm(pages, desc="Static Search"):
     with open(path, "r") as f:
         content = f.read()
+        
     content  = content.replace("{{search_results}}", search_list_str)
     with open(path, "w") as f:
         f.write(content)
