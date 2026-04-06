@@ -42,7 +42,7 @@ def generateBasicData(nodeData, metadata):
     if "tags" in metadata:
         basicData += f'<tr><th colspan="2" class="summary-tag"><div>'
         for tag in metadata["tags"]:
-            href = f"/nodes/_tags/{fileUtil.pathSanitize(tag)}.html"
+            href = f"/nodes/tags/{fileUtil.pathSanitize(tag)}.html"
             basicData += f'<a href="{href}">{tag}</a>'
         basicData += '</div></th></tr>'
     

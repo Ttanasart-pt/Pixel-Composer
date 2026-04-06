@@ -33,7 +33,7 @@ def generateFolder(dirIn, dirOut):
         sidebar.append((FileType.BACK, "../", "../", "Back"))
     
     for fName in files:
-        if fName.startswith("_"):
+        if fName.startswith("__"):
             continue
         
         fullPath = os.path.join(dirIn, fName)

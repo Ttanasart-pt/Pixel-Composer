@@ -53,6 +53,12 @@
 <li class="sidebar-nav"><a href="#Stop Frame">Stop Frame</a></li>
 <li class="sidebar-nav"><a href="#Step">Step</a></li>
 </ul>
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Start Frame">Start Frame</a></li>
+<li class="sidebar-nav"><a href="#Stop Frame">Stop Frame</a></li>
+<li class="sidebar-nav"><a href="#Step">Step</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="canvas.html">Canvas</a></li>
 <li class="sidebar-nav "><a class="" href="canvas_group.html">Canvas Group</a></li>
@@ -163,6 +169,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\3d/scatter_points_3d.html">Scatter Points 3D</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d/shape_3d.html">Shape 3D</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d/sprite_stack.html">Sprite Stack</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\_tags/patreon.html">Patreon</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\animation/anim_curve.html">Anim Curve</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\animation/anim_loop.html">Anim Loop</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\animation/audio_loudness.html">Audio Loudness</a></li>
@@ -705,6 +712,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\strandsim/strand_render.html">Strand Render</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\strandsim/strand_render_texture.html">Strand Render Texture</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\strandsim/strand_update.html">Strand Update</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\tags/patreon.html">Patreon</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\transform/9slice.html">9Slice</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\transform/align_content.html">Align Content</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\transform/background.html">Background</a></li>
@@ -987,6 +995,14 @@
             </tr>
 
 </table><p>
+Cache animation as surface array. If the output is being used in other nodes, it is recommended to play the animation at least once to capture the full range of frames.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Start Frame" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Start Frame</span></h3><br>
+<p>The first frame to cache (set to -1 to cache from the first frame).</p><br>
+<h3><a id="Stop Frame" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Stop Frame</span></h3><br>
+<p>The last frame to cache (set to -1 to cache to the last frame).</p><br>
+<h3><a id="Step" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Step</span></h3><br>
+<p>The frame step, 1 means every frame, 2 means every other frame, etc.</p><br><p>
 Cache animation as surface array. If the output is being used in other nodes, it is recommended to play the animation at least once to capture the full range of frames.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
 <h3><a id="Start Frame" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Start Frame</span></h3><br>

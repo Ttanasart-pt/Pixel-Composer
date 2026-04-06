@@ -285,6 +285,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\3d/scatter_points_3d.html">Scatter Points 3D</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d/shape_3d.html">Shape 3D</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d/sprite_stack.html">Sprite Stack</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\_tags/patreon.html">Patreon</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\animation/anim_curve.html">Anim Curve</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\animation/anim_loop.html">Anim Loop</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\animation/audio_loudness.html">Audio Loudness</a></li>
@@ -827,6 +828,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\strandsim/strand_render.html">Strand Render</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\strandsim/strand_render_texture.html">Strand Render Texture</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\strandsim/strand_update.html">Strand Update</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\tags/patreon.html">Patreon</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\transform/9slice.html">9Slice</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\transform/align_content.html">Align Content</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\transform/background.html">Background</a></li>
@@ -1109,6 +1111,15 @@
             </tr>
 
 </table><p>
+Returns area data. Area data is simply a 5 dimensional vector that represents 2d bounding box. Each element of the vector represents the following:</p><br>
+<ol>
+<li>X position of the middle point of the area.</li>
+<li>Y position of the middle point of the area.</li>
+<li>Half width of the area.</li>
+<li>Half height of the area.</li>
+<li>Shape of the area (0: Rectangle, 1: Ellipse).</li>
+</ol>
+<p>This node allow you to create an area by combining vec2 <span class="junction" style="border-color: #ffe478AA">Position</span>, vec2 <span class="junction" style="border-color: #ffe478AA">Span</span> and integer <span class="junction" style="border-color: #ff9166AA">Shape</span> inputs.</p><br><p>
 Returns area data. Area data is simply a 5 dimensional vector that represents 2d bounding box. Each element of the vector represents the following:</p><br>
 <ol>
 <li>X position of the middle point of the area.</li>

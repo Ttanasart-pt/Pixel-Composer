@@ -113,7 +113,7 @@ for category in nodeCategoryData:
             file.write(f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{nodeName}.html"/></html>''')
 
 # %% Write tag pages
-tagDir = os.path.join(targetRoot, "_tags")
+tagDir = os.path.join(targetRoot, "tags")
 fileUtil.verifyFolder(tagDir)
 
 for tag, nodes in nodeTags.items():
