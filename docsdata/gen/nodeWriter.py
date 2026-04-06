@@ -133,7 +133,13 @@ def writeCategory(category, nodeMetadata):
 
             if not nl:
                 content += group_end
-            content += f'<{sgLevel}>{sgName}</{sgLevel}>'
+
+            if sgLevel == "h3":
+                if not nl:
+                    content += "</div>"
+                content += '<div class="node-category">'
+
+            content += f'<{sgLevel} class="node-group-title">{sgName}</{sgLevel}>'
             nl = True
             continue
 
@@ -149,7 +155,7 @@ def writeCategory(category, nodeMetadata):
         name     = metadata["name"]
         spr      = metadata["spr"]  if "spr" in metadata else f"s_{node.lower()}"
 
-        content += f'''<div><a href="./{node.lower().replace("node_", "")}.html"><img {spr}>{name}</a></div>\n'''
+        content += f'''<div class="node-card"><a href="./{node.lower().replace("node_", "")}.html"><img {spr}>{name}</a></div>\n'''
 
     if not nl:
         content += group_end

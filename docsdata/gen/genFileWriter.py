@@ -15,6 +15,9 @@ for root, dirs, files in os.walk("docs/src"):
         if not file.endswith(".png"):
             continue
 
+        if os.path.basename(root).startswith("__"):
+            continue
+
         key = file[:-4].lower()
         images[key] = os.path.join(root.replace("docs/", ""), file).replace("\\", "/")
 
