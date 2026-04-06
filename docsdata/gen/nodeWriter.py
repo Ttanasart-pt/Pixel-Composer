@@ -129,17 +129,19 @@ def writeCategory(category, nodeMetadata):
         if not isinstance(node, str):
             subGroup = node["label"]
             sgName   = subGroup.strip("/")
-            sgLevel  = "h5" if subGroup.startswith("/") else "h3"
+            subsubGroup = subGroup.startswith("/")
 
             if not nl:
                 content += group_end
 
-            if sgLevel == "h3":
+            if subsubGroup:
+                content += f'<h5 class="node-group-title">{sgName}</h5>'
+            else:
                 if not nl:
-                    content += "</div>"
-                content += '<div class="node-category">'
+                    content += "</details>"
+                content += '<details class="node-category">'
+                content += f'<summary><h3 class="node-group-title">{sgName}</h3></summary>'
 
-            content += f'<{sgLevel} class="node-group-title">{sgName}</{sgLevel}>'
             nl = True
             continue
 

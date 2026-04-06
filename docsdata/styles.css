@@ -778,14 +778,14 @@ input#search:focus {
     outline: 1px solid var(--accent);
 }
 
-div.node-category {
+details.node-category {
     background-color: #19192580;
     border-radius: 8px;
     padding: 0px 0px 10px 0px;
     margin-bottom: 12px;
 }
 
-div.node-category > h3 {
+details.node-category > h3 {
     background-color: var(--main_dkblack);
     border-radius: 8px;
     padding: 6px 12px;
