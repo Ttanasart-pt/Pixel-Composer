@@ -55,6 +55,11 @@
 <li class="sidebar-nav "><a class="" href="gmroom.html">Gmroom</a></li>
 <li class="sidebar-nav active "><a class="" href="http_request.html">Http Request</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Address">Address</a></li>
+<li class="sidebar-nav"><a href="#Type">Type</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="http_request_file.html">Http Request File</a></li>
 <li class="sidebar-nav "><a class="" href="image.html">Image</a></li>
@@ -952,7 +957,7 @@
 
 <div class="title">
                                                             <h1>HTTP</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.1">1.18.1</p></div>
                                                         </div>
 <p class="subtitle">Request data from the internet.</p>
 <br><br>
@@ -977,7 +982,13 @@
                 <td><p>Result</p></td>
             </tr>
 
-</table>
+</table><p>
+Send a HTTP request and returns the response. Due to its asynchronous nature, the request need to be done manually with the inspector button.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Address" class="anchor"></a><span class="junction" style="border-color: #66ffe3AA">Address</span></h3><br>
+<p>The address of the server to send the request to.</p><br>
+<h3><a id="Type" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Type</span></h3><br>
+<p>The method of the request (GET or POST).</p><br>
         </div>
     </div>
 

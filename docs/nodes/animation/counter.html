@@ -44,6 +44,10 @@
 <li class="sidebar-nav "><a class="" href="audio_window.html">Audio Window</a></li>
 <li class="sidebar-nav active "><a class="" href="counter.html">Counter</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Mode">Mode</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="delay.html">Delay</a></li>
 <li class="sidebar-nav "><a class="" href="delay_value.html">Delay Value</a></li>
@@ -923,7 +927,7 @@
 
 <div class="title">
                                                             <h1>Frame Index</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Output current frame as frame index, or animation progress (0 - 1).</p>
 <br><br>
@@ -954,7 +958,15 @@
                 <td><p>Value</p></td>
             </tr>
 
-</table>
+</table><p>
+This node can be used to returns the frame index for animation. You can also adjust the speed and starting value.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Mode</span></h3><br>
+<p>Mode of counting.</p><br>
+<ul>
+<li><code>Frame count</code>: Output direct frame index.</li>
+<li><code>Animation progress</code>: Output value from 0 to 1, representing the progress of the animation.</li>
+</ul><br>
         </div>
     </div>
 

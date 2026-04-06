@@ -56,6 +56,16 @@
 <li class="sidebar-nav "><a class="" href="blur_directional.html">Blur Directional</a></li>
 <li class="sidebar-nav active "><a class="" href="blur_path.html">Blur Path</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Surface In">Surface In</a></li>
+<li class="sidebar-nav"><a href="#Blur Path">Blur Path</a></li>
+<li class="sidebar-nav"><a href="#Path Origin">Path Origin</a></li>
+<li class="sidebar-nav"><a href="#Range">Range</a></li>
+<li class="sidebar-nav"><a href="#Resolution">Resolution</a></li>
+<li class="sidebar-nav"><a href="#Intensity">Intensity</a></li>
+<li class="sidebar-nav"><a href="#Intensity Along Path">Intensity Along Path</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="blur_radial.html">Blur Radial</a></li>
 <li class="sidebar-nav "><a class="" href="blur_shape.html">Blur Shape</a></li>
@@ -1013,7 +1023,7 @@
 
 <div class="title">
                                                             <h1>Path Blur</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Blur pixel along path.</p>
 <br><br>
@@ -1080,7 +1090,23 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>
+Blur surface along a path.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Surface In" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Surface In</span></h3><br>
+<p>Surface to blur</p><br>
+<h3><a id="Blur Path" class="anchor"></a><span class="junction" style="border-color: #ffb5b5AA">Blur Path</span></h3><br>
+<p>Path to blur along</p><br>
+<h3><a id="Path Origin" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Path Origin</span></h3><br>
+<p>Where to start the blur. Setting to 0 will start from the beginning of the path, 1 will start from the end of the path.</p><br>
+<h3><a id="Range" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Range</span></h3><br>
+<p>Range of the path to blur (0 - 1 means the entire path).</p><br>
+<h3><a id="Resolution" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Resolution</span></h3><br>
+<p>The amount of sampling along the path. Higher resolution will result in a smoother blur but will take longer to compute.</p><br>
+<h3><a id="Intensity" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Intensity</span></h3><br>
+<p>The intensity of the blur. Higher intensity will result in a more pronounced blur.</p><br>
+<h3><a id="Intensity Along Path" class="anchor"></a><span class="junction">Intensity Along Path</span></h3><br>
+<p>Curve that modify the intensity value along the path.</p><br>
         </div>
     </div>
 

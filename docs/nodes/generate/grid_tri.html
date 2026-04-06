@@ -61,6 +61,22 @@
 <li class="sidebar-nav "><a class="" href="grid_pentagonal.html">Grid Pentagonal</a></li>
 <li class="sidebar-nav active "><a class="" href="grid_tri.html">Grid Tri</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Gap">Gap</a></li>
+</ul>
+<li class="sidebar-nav"><a href="#Rendering Modes">Rendering Modes</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Colored Tile">Colored Tile</a></li>
+<li class="sidebar-nav"><a href="#Height Map">Height Map</a></li>
+<li class="sidebar-nav"><a href="#Texture Grid">Texture Grid</a></li>
+<li class="sidebar-nav"><a href="#Texture Sample">Texture Sample</a></li>
+</ul>
+<li class="sidebar-nav"><a href="#Truchet Properties">Truchet Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Truchet Threshold">Truchet Threshold</a></li>
+<li class="sidebar-nav"><a href="#Texture Angle">Texture Angle</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="herringbone_tile.html">Herringbone Tile</a></li>
 <li class="sidebar-nav "><a class="" href="honeycomb_noise.html">Honeycomb Noise</a></li>
@@ -1096,7 +1112,54 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>Generate triangular grid pattern.</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/grid_tri.png">
+<br><br>
+<h2><a id="Properties" class="anchor"></a>Properties</h2>
+<br>
+<h3><a id="Gap" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Gap</span></h3>
+<br>
+<p>The thickness of the gap between cell.</p>
+<br><br>
+<h2><a id="Rendering Modes" class="anchor"></a>Rendering Modes</h2>
+<br>
+<h3><a id="Colored Tile" class="anchor"></a>Colored Tile</h3>
+<br>
+<p>Fill each cell with a solid random color sampled from the <span class="junction" style="border-color: #8fde5dAA">Tile Color</span> value.</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/grid_tri_colored_tile.png">
+<br>
+<h3><a id="Height Map" class="anchor"></a>Height Map</h3>
+<br>
+<p>Render each cell out as a heightmap.</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/grid_tri_height_map.png">
+<br>
+<h3><a id="Texture Grid" class="anchor"></a>Texture Grid</h3>
+<br>
+<p>Render out the surface value from <span class="junction" style="border-color: #ff6b97AA">Texture</span> to each cell.</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/grid_tri_texture_grid.png">
+<br>
+<h3><a id="Texture Sample" class="anchor"></a>Texture Sample</h3>
+<br>
+<p>Fill each cell with a solid color sampled from the <span class="junction" style="border-color: #ff6b97AA">Texture</span> value.</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/grid_tri_texture_sampler.png">
+<br>
+<h2><a id="Truchet Properties" class="anchor"></a>Truchet Properties</h2>
+<br>
+<p>Similiar to other grid related nodes. Truchet settings rotate the surface randomly to create an interesting effect.</p>
+<br>
+<h3><a id="Truchet Threshold" class="anchor"></a><span class="junction">Truchet Threshold</span></h3>
+<br>
+<p>The ratio of the rotation.</p>
+<br>
+<h3><a id="Texture Angle" class="anchor"></a><span class="junction">Texture Angle</span></h3>
+<br>
+<p>Apply random rotation on top of the truchet.</p>
+<br>
         </div>
     </div>
 

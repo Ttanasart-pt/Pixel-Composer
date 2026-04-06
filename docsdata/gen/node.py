@@ -43,11 +43,23 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
     nodeBase = nodeMeta["baseNode"]
     nodeName = nodeMeta["name"]
     
-    placeholderPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeName)}"
+    placeholderPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeBase)}"
+    
+    # oldName = fileUtil.pathSanitize(nodeBase).lower().replace("node_", "")
+    # oldPath = f"docsdata/content/__nodes/{oldName}"
+
+    # if os.path.exists(f"{oldPath}.md") and not os.path.exists(f"{placeholderPath}.md"):
+    #     print(f"Renaming {oldPath} to {placeholderPath}...")
+    #     os.rename(f"{oldPath}.md", f"{placeholderPath}.md")
+
+    # if os.path.exists(f"{oldPath}.html") and not os.path.exists(f"{placeholderPath}.html"):
+    #     print(f"Renaming {oldPath} to {placeholderPath}...")
+    #     os.rename(f"{oldPath}.html", f"{placeholderPath}.html")
+
     if not os.path.exists(placeholderPath + ".html"):
         fileUtil.verifyFile(placeholderPath + ".md")
 
-    contentPath = f"docsdata/pregen/__nodes/{fileUtil.pathSanitize(nodeName)}.html"
+    contentPath = f"docsdata/pregen/__nodes/{fileUtil.pathSanitize(nodeBase)}.html"
     fileUtil.verifyFile(contentPath)
 
     content = nodeWriter.writeNode(nodeMeta, contentPath)

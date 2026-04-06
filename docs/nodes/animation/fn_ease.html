@@ -48,6 +48,12 @@
 <li class="sidebar-nav "><a class="" href="fft.html">Fft</a></li>
 <li class="sidebar-nav active "><a class="" href="fn_ease.html">Fn Ease</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Range">Range</a></li>
+<li class="sidebar-nav"><a href="#Amount">Amount</a></li>
+<li class="sidebar-nav"><a href="#Smooth">Smooth</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="fn_math.html">Fn Math</a></li>
 <li class="sidebar-nav "><a class="" href="fn_smoothstep.html">Fn Smoothstep</a></li>
@@ -923,7 +929,7 @@
 
 <div class="title">
                                                             <h1>Ease</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Create easing function.</p>
 <br><br>
@@ -951,7 +957,22 @@
                 <td><p>Output</p></td>
             </tr>
 
-</table>
+</table><p>
+A function generator that generate easing functions, a function that smoothly transition from zero to one.</p><br>
+<p>A function generator nodes precalculate the value for the entire animation and plot it as a curve. This allow for easy data visualization and manipulation.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Range" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Range</span></h3><br>
+<p>Range of the animation (as a fraction of the total duration). If set to [0, 1] then the easing function will be evaluated from the first frame to the last frame.</p><br>
+<h3><a id="Amount" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Amount</span></h3><br>
+<p>The length of the easing function. The larger the value the slower the transition.</p><br>
+<h3><a id="Smooth" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Smooth</span></h3><br>
+<p>The equation used to generate the easing function. The following equations are available:</p><br>
+<ul>
+<li>Cubic polynomial</li>
+<li>Quadratic polynomial</li>
+<li>Cubic rational</li>
+<li>Cosine</li>
+</ul><br>
         </div>
     </div>
 

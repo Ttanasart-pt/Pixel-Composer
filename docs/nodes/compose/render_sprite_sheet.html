@@ -62,6 +62,17 @@
 <li class="sidebar-nav "><a class="" href="pack_sprites.html">Pack Sprites</a></li>
 <li class="sidebar-nav active "><a class="" href="render_sprite_sheet.html">Render Sprite Sheet</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Sprites">Sprites</a></li>
+<li class="sidebar-nav"><a href="#Sprite Set">Sprite Set</a></li>
+<li class="sidebar-nav"><a href="#Frame Step">Frame Step</a></li>
+<li class="sidebar-nav"><a href="#Packing Type">Packing Type</a></li>
+<li class="sidebar-nav"><a href="#Alignment">Alignment</a></li>
+<li class="sidebar-nav"><a href="#Spacing">Spacing</a></li>
+<li class="sidebar-nav"><a href="#Padding">Padding</a></li>
+<li class="sidebar-nav"><a href="#Custom Range">Custom Range</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="separate.html">Separate</a></li>
 <li class="sidebar-nav "><a class="" href="seperate_shape.html">Seperate Shape</a></li>
@@ -933,7 +944,7 @@
 
 <div class="title">
                                                             <h1>Render Spritesheet</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.1">1.18.1</p></div>
                                                         </div>
 <p class="subtitle">Create spritesheet from image array or animation.</p>
 <br><br>
@@ -988,7 +999,26 @@
                 <td><p>Atlas Data</p></td>
             </tr>
 
-</table>
+</table><p>
+Convert image array, or animation to sprite sheet.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Sprites" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Sprites</span></h3><br>
+<p>Input image(s) or animation.</p><br>
+<h3><a id="Sprite Set" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Sprite Set</span></h3><br>
+<p>Whether to convert image array or animation to sprite sheet.</p><br>
+<p>For animation type, the project need to be played from start to finish to generate the sprite sheet.</p><br>
+<h3><a id="Frame Step" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Frame Step</span></h3><br>
+<p>Number of frame to progress per sprite sheet frame (set to 1 will render every frame, 2 will render one image per 2 frames, etc.)</p><br>
+<h3><a id="Packing Type" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Packing Type</span></h3><br>
+<p>How to pack the sprite sheet.</p><br>
+<h3><a id="Alignment" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Alignment</span></h3><br>
+<p>For <code>horizontal</code> and <code>vertical</code> packing type, how to align the images in the axis (if the source image have different sizes).</p><br>
+<h3><a id="Spacing" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Spacing</span></h3><br>
+<p>Spacing between each images in the sprite sheet.</p><br>
+<h3><a id="Padding" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Padding</span></h3><br>
+<p>Apply extra space around the entire sprite sheet.</p><br>
+<h3><a id="Custom Range" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Custom Range</span></h3><br>
+<p>Set custom range of images to convert to sprite sheet, whether the animation range or array index range.</p><br>
         </div>
     </div>
 

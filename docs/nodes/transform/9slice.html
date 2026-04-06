@@ -40,6 +40,13 @@
 <a class="" href="index.html">Transform</a></li>
 <li class="sidebar-nav active "><a class="" href="9slice.html">9Slice</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Surface In">Surface In</a></li>
+<li class="sidebar-nav"><a href="#Dimension">Dimension</a></li>
+<li class="sidebar-nav"><a href="#Splice">Splice</a></li>
+<li class="sidebar-nav"><a href="#Filling Modes">Filling Modes</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="align_content.html">Align Content</a></li>
 <li class="sidebar-nav "><a class="" href="background.html">Background</a></li>
@@ -929,7 +936,7 @@
 
 <div class="title">
                                                             <h1>Nine Slice</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Cut image into 3x3 parts, and scale/repeat only the middle part.</p>
 <br><br>
@@ -960,7 +967,17 @@
                 <td><p>Dynasurf</p></td>
             </tr>
 
-</table>
+</table><p>
+Create a 9-slice image from a source image. 9-slice images are used to create scalable images that can be stretched without distorting the corners. This is useful for creating scalable buttons, panels, and other UI elements.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Surface In" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Surface In</span></h3><br>
+<p>Input image to create 9-slice from.</p><br>
+<h3><a id="Dimension" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Dimension</span></h3><br>
+<p>Output image size.</p><br>
+<h3><a id="Splice" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Splice</span></h3><br>
+<p>4 values that define the 9-slice regions. The values are in the order of left, top, right, bottom.</p><br>
+<h3><a id="Filling Modes" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Filling Modes</span></h3><br>
+<p>Whether to stretch (scale) or repeat the 9-slice regions.</p><br>
         </div>
     </div>
 

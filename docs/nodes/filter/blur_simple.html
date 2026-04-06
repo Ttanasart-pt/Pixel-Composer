@@ -59,6 +59,13 @@
 <li class="sidebar-nav "><a class="" href="blur_shape.html">Blur Shape</a></li>
 <li class="sidebar-nav active "><a class="" href="blur_simple.html">Blur Simple</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Size">Size</a></li>
+<li class="sidebar-nav"><a href="#Blur Mask">Blur Mask</a></li>
+<li class="sidebar-nav"><a href="#Override Color">Override Color</a></li>
+<li class="sidebar-nav"><a href="#Gradient">Gradient</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="blur_slope.html">Blur Slope</a></li>
 <li class="sidebar-nav "><a class="" href="blur_zoom.html">Blur Zoom</a></li>
@@ -1071,7 +1078,29 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>Non-uniform Blur (formerly simple blur) is a blur node that use simpler algorithm than the <a class="node" href="/nodes/_index/blur.html">Blur</a>, which 
+allows you to control the blur size per pixel.</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/blur_simple.png">
+<br><br>
+<h2><a id="Properties" class="anchor"></a>Properties</h2>
+<br>
+<h3><a id="Size" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Size</span></h3>
+<br>
+<p>Maximum blur size.</p>
+<br>
+<h3><a id="Blur Mask" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Blur Mask</span></h3>
+<br>
+<p>Extra surface use for scaling blur effect.</p>
+<br>
+<h3><a id="Override Color" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Override Color</span></h3>
+<br>
+<p>Replace the resulting color with a uniform color, use when you only want to blur the alpha channel.</p>
+<br>
+<h3><a id="Gradient" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Gradient</span></h3>
+<br>
+<p>Apply color blending per sampling.</p>
+<br>
         </div>
     </div>
 

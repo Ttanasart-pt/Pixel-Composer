@@ -74,6 +74,11 @@
 <li class="sidebar-nav "><a class="" href="combine_hsv.html">Combine Hsv</a></li>
 <li class="sidebar-nav active "><a class="" href="combine_rgb.html">Combine Rgb</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Sampling Type">Sampling Type</a></li>
+<li class="sidebar-nav"><a href="#Base Value">Base Value</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="convolution.html">Convolution</a></li>
 <li class="sidebar-nav "><a class="" href="corner.html">Corner</a></li>
@@ -1053,7 +1058,24 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>Combine 4 surfaces in to 1. Each surface represent color in RGBA channels.</p>
+<br><br>
+<h2><a id="Properties" class="anchor"></a>Properties</h2>
+<br>
+<h3><a id="Sampling Type" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Sampling Type</span></h3>
+<br>
+<p>How the value is extracted from the pixel color:</p>
+<br>
+<ul>
+    <li><span class="bold">Channel value</span> extract the direct value from each channels, e.g. the red input 
+will get the red amount in the pixel, etc.</li>
+    <li><span class="bold">Greyscale</span> extract the average value from each channels, e.g. the red input 
+will get the average of red, green, and blue in the pixel, etc.</li>
+</ul>
+<br>
+<h3><a id="Base Value" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Base Value</span></h3>
+<br>
+<p>The value to set when so surface is connected to the inputs.</p>
         </div>
     </div>
 

@@ -43,16 +43,6 @@
 <li class="sidebar-nav "><a class="" href="psystem_attract.html">Psystem Attract</a></li>
 <li class="sidebar-nav active "><a class="" href="psystem_blend.html">Psystem Blend</a></li>
 <ul class="submenu">
-<li class="sidebar-nav"><a href="#Blend Modes">Blend Modes</a></li>
-<ul class="submenu h3">
-<li class="sidebar-nav"><a href="#Opacity">Opacity</a></li>
-<li class="sidebar-nav"><a href="#Preserve Alpha">Preserve Alpha</a></li>
-</ul>
-<li class="sidebar-nav"><a href="#Dimension Mixing">Dimension Mixing</a></li>
-<ul class="submenu h3">
-<li class="sidebar-nav"><a href="#Filling">Filling</a></li>
-<li class="sidebar-nav"><a href="#Alignment">Alignment</a></li>
-</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="psystem_boids.html">Psystem Boids</a></li>
 <li class="sidebar-nav "><a class="" href="psystem_clone.html">Psystem Clone</a></li>
@@ -998,132 +988,7 @@
                 <td><p>Particles</p></td>
             </tr>
 
-</table><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-<p>Blending surfaces is a fundamental step in any VFX process. Blend node allows you to combine 2 surfaces 
-under different blend mode.</p>
-<br><br>
-<h2><a id="Blend Modes" class="anchor"></a>Blend Modes</h2>
-<br>
-<p><span class="junction" style="border-color: #ff9166AA">Blend Mode</span> control how the surface is being mixed. Blend modes available in the this node are:</p>
-<br>
-<p>The examples are blend of 2 surfaces:</p>
-<br>
-<img class="node-content" src="/src/images/etc/blend/blend_sample.png">
-<br>
-<table class="ccc203050">
-    <tr>
-        <th>Mode</th>
-        <th>Operation</th>
-        <th>Example</th>
-    </tr>
-    <tr>
-        <td>Normal</td>
-        <td>$$C_{out} = C_{fg}C_{fg.a} + C_{bg}(1-C_{fg.a})$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_normal.png"></td>
-    </tr>
-    <tr>
-        <td>Add</td>
-        <td>$$C_{out} = C_{fg} + C_{bg}$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_add.png"></td>
-    </tr>
-    <tr>
-        <td>Subtract</td>
-        <td>$$C_{out} = C_{fg} - C_{bg}$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_subtract.png"></td>
-    </tr>
-    <tr>
-        <td>Multiply</td>
-        <td>$$C_{out} = C_{fg}C_{bg}$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_multiply.png"></td>
-    </tr>
-    <tr>
-        <td>Screen</td>
-        <td>$$C_{out} = 1 - (1-C_{fg})(1-C_{bg})$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_screen.png"></td>
-    </tr>
-    <tr>
-        <td>Overlay</td>
-        <td>$$C_{out} = \begin {cases} 2C_{fg}C_{bg} & C_{fg} < 0.5 \\ 1 - 2(1-C_{fg})(1-C_{bg}) & C_{fg} \ge 0.5 \end {cases}$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_overlay.png"></td>
-    </tr>
-    <tr>
-        <td>Hue</td>
-        <td>Transfer the hue of the foreground to the background</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_hue.png"></td>
-    </tr>
-    <tr>
-        <td>Saturation</td>
-        <td>Transfer the saturation of the foreground to the background</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_saturation.png"></td>
-    </tr>
-    <tr>
-        <td>Luminosity</td>
-        <td>Transfer the luminosity of the foreground to the background</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_luminosity.png"></td>
-    </tr>
-    <tr>
-        <td>Maximum</td>
-        <td>$$C_{out} = max(C_{fg}, C_{bg})$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_maximum.png"></td>
-    </tr>
-    <tr>
-        <td>Minimum</td>
-        <td>$$C_{out} = min(C_{fg}, C_{bg})$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_minimum.png"></td>
-    </tr>
-    <tr>
-        <td>Replace</td>
-        <td>$$C_{out} = C_{fg}$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_replace.png"></td>
-    </tr>
-    <tr>
-        <td>Difference</td>
-        <td>$$C_{out} = |C_{fg} - C_{bg}|$$</td>
-        <td><img class="node-content deco" src="/src/images/etc/blend/blend_difference.png"></td>
-    </tr>
 </table>
-<br>
-<h3><a id="Opacity" class="anchor"></a>Opacity</h3>
-<br>
-<p>The intensity of the effect will be multiply by the <span class="junction">Opacity</span> property.</p>
-<br>
-<h3><a id="Preserve Alpha" class="anchor"></a>Preserve Alpha</h3>
-<br>
-<p>Blend operation apply to all channel including alpha channel. Which mean some operation may erase the 
-alpha channel of the original image. To exclude the alpha calculation, set <span class="junction">Preserve Alpha</span> to true.</p>
-<br><br>
-<h2><a id="Dimension Mixing" class="anchor"></a>Dimension Mixing</h2>
-<br>
-<p>When blending surfaces of different sizes. You can set the blending behaviour using several properties:</p>
-<br>
-<h3><a id="Filling" class="anchor"></a>Filling</h3>
-<br>
-<p>The <span class="junction">Fill Mode</span> property control the behaviour of the smaller surface.</p>
-<br>
-<table class="cc4060">
-    <tr>
-        <th>Mode</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td>None</td>
-        <td>Do nothing, place smaller surface directly.</td>
-    </tr>
-    <tr>
-        <td>Stretch</td>
-        <td>Stretch the smaller surface to fit the larger surface.</td>
-    </tr>
-    <tr>
-        <td>Tile</td>
-        <td>Tile the smaller surface to fit the larger surface.</td>
-    </tr>
-</table>
-<br>
-<h3><a id="Alignment" class="anchor"></a>Alignment</h3>
-<br>
-<p>When <span class="junction">Fill Mode</span> is set to None, you can move the foreground freely in the preview panel.</p>
         </div>
     </div>
 

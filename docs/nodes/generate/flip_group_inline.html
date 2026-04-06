@@ -48,6 +48,15 @@
 <li class="sidebar-nav "><a class="" href="dotted.html">Dotted</a></li>
 <li class="sidebar-nav active "><a class="" href="flip_group_inline.html">Flip Group Inline</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#FLIP Fluid nodes">FLIP Fluid nodes</a></li>
+<ul class="submenu h3">
+</ul>
+<li class="sidebar-nav"><a href="#System Overview">System Overview</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#"></a></li>
+<li class="sidebar-nav"><a href="#"></a></li>
+<li class="sidebar-nav"><a href="#"></a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="flood_fill.html">Flood Fill</a></li>
 <li class="sidebar-nav "><a class="" href="flow_noise.html">Flow Noise</a></li>
@@ -1027,7 +1036,33 @@
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
 
 
-</table>
+</table><p>FLIP Fluid simulation is a group of nodes used to simulate fluid behaviour using Fluid-Implicit-Particle (FLIP) 
+algorithm.</p>
+<br><br>
+<h2><a id="FLIP Fluid nodes" class="anchor"></a>FLIP Fluid nodes</h2>
+<br>
+<p>To see the list and detail of all FLIP Fluid nodes, check out <a href="../flip fluid/">FLIP Fluid</a> section.</p>
+<br><br>
+<h2><a id="System Overview" class="anchor"></a>System Overview</h2>
+<br>
+<p>The FLIP fluid system consists of 3 main parts, the domain, particle and renderer. When selecting this 
+node from the add node menu, 3 nodes will be created:</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/flip_init.png">
+<br><br>
+<h3><a id="" class="anchor"></a><a class="node" href="/nodes/_index/flip_domain.html">Flip_Domain</a></h3>
+<br>
+<p>Fluid domain represent a space where a fluid can exist. This node contain properties to 
+control particle grid size, fluid physics, solver settings, etc.</p>
+<br><br>
+<h3><a id="" class="anchor"></a><a class="node" href="/nodes/_index/flip_spawner.html">Flip_Spawner</a></h3>
+<br>
+<p>Spawn fluid particles to represent fluid volume.</p>
+<br><br>
+<h3><a id="" class="anchor"></a><a class="node" href="/nodes/_index/flip_render.html">Flip_Render</a></h3>
+<br>
+<p>Render out fluid particles to a surface.</p>
+<br><br>
         </div>
     </div>
 

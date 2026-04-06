@@ -72,6 +72,9 @@
 <li class="sidebar-nav "><a class="" href="colorize.html">Colorize</a></li>
 <li class="sidebar-nav active "><a class="" href="colors_replace.html">Colors Replace</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Replacement pairs">Replacement pairs</a></li>
+<ul class="submenu h3">
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="combine_hsv.html">Combine Hsv</a></li>
 <li class="sidebar-nav "><a class="" href="combine_rgb.html">Combine Rgb</a></li>
@@ -1047,7 +1050,17 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>Replace color node replace specific colors in the image by matching it to a list of replacement pairs.</p>
+<br><br>
+<h2><a id="Replacement pairs" class="anchor"></a>Replacement pairs</h2>
+<br>
+<p>The replacement pair can be view in the inspector:</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/replacement_pairs.png">
+<br>
+<p>Replacement pairs are refresh automatically when a new surface is connected. This might cause lag when working 
+with large surface, you can disable this feature with the <span class="inline-code">Auto refresh</span> attribute.</p>
+<br><br>
         </div>
     </div>
 

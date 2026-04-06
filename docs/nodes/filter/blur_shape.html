@@ -58,6 +58,12 @@
 <li class="sidebar-nav "><a class="" href="blur_radial.html">Blur Radial</a></li>
 <li class="sidebar-nav active "><a class="" href="blur_shape.html">Blur Shape</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Mode">Mode</a></li>
+<li class="sidebar-nav"><a href="#Blur Shape">Blur Shape</a></li>
+<li class="sidebar-nav"><a href="#Blur Mask">Blur Mask</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="blur_simple.html">Blur Simple</a></li>
 <li class="sidebar-nav "><a class="" href="blur_slope.html">Blur Slope</a></li>
@@ -1059,7 +1065,30 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>Blur shape node blur image using shape map. For each pixel, it place the shape map in the middle and calculate 
+weighted convolution of the shape map and the pixel. The result is then used as the final pixel color.</p>
+<br>
+<img class="node-content" src="/src/images/etc/blur_shape.png">
+<br><br>
+<h2><a id="Properties" class="anchor"></a>Properties</h2>
+<br>
+<h3><a id="Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Mode</span></h3>
+<br>
+<p>Blur mode, there're 2 modes available: blur and maximum.</p>
+<br>
+<ul>
+    <li><span class="bold">Blur</span> calculate weighted average of the convolution.</li>
+    <li><span class="bold">Maximum</span> find brightness pixel in the convolution.</li>
+</ul>
+<br>
+<h3><a id="Blur Shape" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Blur Shape</span></h3>
+<br>
+<p>Shape map to be used for blurring.</p>
+<br>
+<h3><a id="Blur Mask" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Blur Mask</span></h3>
+<br>
+<p>Extra surface use for scaling blur effect.</p>
+<br>
         </div>
     </div>
 

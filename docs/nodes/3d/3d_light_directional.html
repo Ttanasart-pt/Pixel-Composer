@@ -46,6 +46,12 @@
 <li class="sidebar-nav "><a class="" href="3d_instancer.html">3D Instancer</a></li>
 <li class="sidebar-nav active "><a class="" href="3d_light_directional.html">3D Light Directional</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Positioning">Positioning</a></li>
+<ul class="submenu h3">
+</ul>
+<li class="sidebar-nav"><a href="#Shadow">Shadow</a></li>
+<ul class="submenu h3">
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="3d_light_point.html">3D Light Point</a></li>
 <li class="sidebar-nav "><a class="" href="3d_material.html">3D Material</a></li>
@@ -1005,7 +1011,24 @@
                 <td><p>Light</p></td>
             </tr>
 
-</table>
+</table><p>Directional light is a light that projected from far way to each verticies equally. Imagine sunlight that 
+cast perfectly parallel rays to the ground.</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/node_3d_light_directional_scene.png">
+<br><br>
+<h2><a id="Positioning" class="anchor"></a>Positioning</h2>
+<br>
+<p>Directional light will always point to the origin (0, 0, 0), thus, its direction is controlled by the position.</p>
+<br>
+<img class="node-content deco" src="/src/images/etc/node_3d_light_directional_preview.png">
+<br><br>
+<h2><a id="Shadow" class="anchor"></a>Shadow</h2>
+<br>
+<p>Selecting "Cast Shadow" will make the light cast shadow with solid objects. Note that shadow does not works with 
+transparent and translucent objects.</p>
+<br>
+<p>Shadow Map Size and Scale are used to control shadow quality. Shadow Bias can be used to fix glitch with light
+bleed around the shadow edges.</p>
         </div>
     </div>
 

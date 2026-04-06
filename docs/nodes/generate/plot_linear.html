@@ -110,6 +110,15 @@
 <li class="sidebar-nav "><a class="" href="pixel_sampler.html">Pixel Sampler</a></li>
 <li class="sidebar-nav active "><a class="" href="plot_linear.html">Plot Linear</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Data Processing">Data Processing</a></li>
+<ul class="submenu h3">
+</ul>
+<li class="sidebar-nav"><a href="#Plot Properties">Plot Properties</a></li>
+<ul class="submenu h3">
+</ul>
+<li class="sidebar-nav"><a href="#Render Properties">Render Properties</a></li>
+<ul class="submenu h3">
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="psystem_3d_inline.html">Psystem 3D Inline</a></li>
 <li class="sidebar-nav "><a class="" href="psystem_inline.html">Psystem Inline</a></li>
@@ -1126,6 +1135,138 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
+</table><p>Bar/Graph node is used to plot graph using array of number. While initialliy created for audio visualization, 
+it can be use to create interesting shape as well.</p>
+<br><br>
+<h2><a id="Data Processing" class="anchor"></a>Data Processing</h2>
+<br><br>
+<p>The first section contain properties related to data processing.</p>
+<br>
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Value Offset</span></td>
+        <td>Add or subtract all values with a fixed amount</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8c3f5dAA">Flip Value</span></td>
+        <td>Invert the sign of the data</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Trim Mode</span></td>
+        <td>Set the data trimming mode</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Range</span></td>
+        <td>Range of the data trimming</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Sample Frequency</span></td>
+        <td>Sample data at every N values instead of all</td>
+    </tr>
+</table>
+<br><br>
+<h2><a id="Plot Properties" class="anchor"></a>Plot Properties</h2>
+<br>
+<p>There're 2 typs of plot: bar and graph. Both types share similiar set of properties:</p>
+<br>
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Type</span></td>
+        <td>Set the type of plot between Bar and Graph</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Origin</span></td>
+        <td>The origin position</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Direction</span></td>
+        <td>The direction where each subsequence data go</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffb5b5AA">Path</span></td>
+        <td>The path to draw the plot on. If using path, the <span class="junction" style="border-color: #ffe478AA">Direction</span> property will be disabled</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Scale</span></td>
+        <td>The scale of the plot</td>
+    </tr>
+</table>
+<br>
+<p>The graph type open up to more controls:</p>
+<br>
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8c3f5dAA">Loop</span></td>
+        <td>Add line connecting the last and first data</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Smooth</span></td>
+        <td>Smooth out the value with moving average</td>
+    </tr>
+</table>
+<br><br>
+<h2><a id="Render Properties" class="anchor"></a>Render Properties</h2>
+<br>
+<p>Properties in this section are all related to rendering.</p>
+<br>
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Base Color</span></td>
+        <td>Base color of the plot</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Color Over Sample</span></td>
+        <td>Color to blend per each value (based on the index)</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Color Over Value</span></td>
+        <td>Color to blend based on the value</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Value Range</span></td>
+        <td>The range for the <span class="junction" style="border-color: #8fde5dAA">Color Over Value</span> property.<br><br>e.g. 
+if the range is [0, 10] then value 5 will correspond to the middle of the gradient</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8c3f5dAA">Absolute</span></td>
+        <td>Apply absolute to the value before calculating <span class="junction" style="border-color: #8fde5dAA">Color Over Value</span></td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Bar Width</span></td>
+        <td>The width of each bar</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8c3f5dAA">Rounded Bar</span></td>
+        <td>Use capsule bar shape instead of rectangle</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Graph Thickness</span></td>
+        <td>The thickness of the graph line</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #ffe478AA">Spacing</span></td>
+        <td>The distance between each data point</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8c3f5dAA">Background</span></td>
+        <td>Background Color</td>
+    </tr>
 </table>
         </div>
     </div>

@@ -46,6 +46,16 @@
 <li class="sidebar-nav "><a class="" href="flip_repel.html">Flip Repel</a></li>
 <li class="sidebar-nav active "><a class="" href="flip_spawner.html">Flip Spawner</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Spawn Shape">Spawn Shape</a></li>
+<li class="sidebar-nav"><a href="#Spawn Surface">Spawn Surface</a></li>
+<li class="sidebar-nav"><a href="#Spawn Position">Spawn Position</a></li>
+<li class="sidebar-nav"><a href="#Spawn Type">Spawn Type</a></li>
+<li class="sidebar-nav"><a href="#Spawn Direction">Spawn Direction</a></li>
+<li class="sidebar-nav"><a href="#Spawn Velocity">Spawn Velocity</a></li>
+<li class="sidebar-nav"><a href="#Inherit Velocity">Inherit Velocity</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="flip_to_vfx.html">Flip To Vfx</a></li>
 <li class="sidebar-nav "><a class="" href="flip_update.html">Flip Update</a></li>
@@ -914,7 +924,7 @@
 
 <div class="title">
                                                             <h1>Spawner</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle"></p>
 <br><br>
@@ -975,7 +985,27 @@
                 <td><p>Domain</p></td>
             </tr>
 
-</table>
+</table><p>
+Spawn fluid particles from an area.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Spawn Shape" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Spawn Shape</span></h3><br>
+<p>Shape of the spawn area.</p><br>
+<h3><a id="Spawn Surface" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Spawn Surface</span></h3><br>
+<p>For surface spawn shape, the surface to spawn on.</p><br>
+<h3><a id="Spawn Position" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Spawn Position</span></h3><br>
+<p>Position of the spawn area.</p><br>
+<h3><a id="Spawn Type" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Spawn Type</span></h3><br>
+<p>Where to spawn the particles every frame (stream) or only once (splash).</p><br>
+<ul>
+<li>Stream: Spawn <span class="junction" style="border-color: #ffe478AA">Spawn Amount</span> particles per frame.</li>
+<li>Splash: Start spawning <span class="junction" style="border-color: #ffe478AA">Spawn Amount</span> particles at frame <span class="junction" style="border-color: #ff9166AA">Spawn Frame</span> for <span class="junction" style="border-color: #ff9166AA">Spawn Duration</span> frames.</li>
+</ul><br>
+<h3><a id="Spawn Direction" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Spawn Direction</span></h3><br>
+<p>Apply initial directional velocity to the spawned particles.</p><br>
+<h3><a id="Spawn Velocity" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Spawn Velocity</span></h3><br>
+<p>Initial velocity of the spawned particles.</p><br>
+<h3><a id="Inherit Velocity" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Inherit Velocity</span></h3><br>
+<p>Apply the velopcity of the spawner (based on <span class="junction" style="border-color: #ffe478AA">Spawn Position</span>) to the spawned particles.</p><br>
         </div>
     </div>
 
