@@ -419,12 +419,12 @@ table.summary-table p img {
     padding: 0px 8px;
 }
 
-table.summary-table td.summary-attribute > p {
+table.summary-table td.summary-attribute > a {
     text-align: center;
     font-size: 0.8rem;
 }
 
-table.summary-table th.summary-content > p {
+table.summary-table th.summary-content > a {
     font-weight: 600;
     margin-bottom: 4px;
 }
