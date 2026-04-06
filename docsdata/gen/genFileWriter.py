@@ -92,6 +92,8 @@ def generateFile(dirOut, pathIn, sidebar):
 
     sideContent = ""
     for fType, _, fName, title in sidebar:
+        if fName.startswith("_"):
+            continue
         aClass  = ""
         liClass = ""
         icon    = ""

@@ -113,22 +113,11 @@ for category in nodeCategoryData:
             file.write(f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{nodeName}.html"/></html>''')
 
 # %% Write tag pages
-tagDir = os.path.join(targetRoot, "tags")
+tagDir = os.path.join(targetRoot, "_tags")
 fileUtil.verifyFolder(tagDir)
 
 for tag, nodes in nodeTags.items():
     tagContent = f'''<!DOCTYPE html><html></html>{VERSION}'''
     tagContent += f"<h1>Tag: {tag}</h1><br><br>"
-
-    for node in nodes:
-        if node not in nodeMetadata:
-            print(f"Node metadata for {node} not found.")
-            continue
-        
-        nodeMeta = nodeMetadata[node]
-        nodeName = nodeMeta["name"]
-        nodeName = fileUtil.pathSanitize(nodeName)
-
-        tagContent += f'''<p><a href="/nodes/{nodeMeta["baseNode"]}.html">{nodeName}</a></p>'''
-
+    tagContent += nodeWriter.writeTag(tag, nodes, nodeMetadata)
     fileUtil.writeFile(os.path.join(tagDir, f"{fileUtil.pathSanitize(tag)}.html"), tagContent)

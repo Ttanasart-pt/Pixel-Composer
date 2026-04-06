@@ -42,7 +42,7 @@ def generateBasicData(nodeData, metadata):
     if "tags" in metadata:
         basicData += f'<tr><th colspan="2" class="summary-tag"><div>'
         for tag in metadata["tags"]:
-            href = f"/nodes/tags/{fileUtil.pathSanitize(tag)}.html"
+            href = f"/nodes/_tags/{fileUtil.pathSanitize(tag)}.html"
             basicData += f'<a href="{href}">{tag}</a>'
         basicData += '</div></th></tr>'
     
@@ -168,4 +168,21 @@ def writeCategory(category, nodeMetadata):
 
     if not nl:
         content += group_end
+    return content
+
+def writeTag(tag, nodes, nodeMetadata):
+    title   = f"Tag: {tag}"
+    content = f"""<h1>{title}</h1><br><br>"""
+
+    for node in nodes:
+        if node not in nodeMetadata:
+            print(f"Node metadata for {node} not found.")
+            continue
+        
+        metadata = nodeMetadata[node]
+        name     = metadata["name"]
+        spr      = metadata["spr"]  if "spr" in metadata else f"s_{node.lower()}"
+
+        content += f'''<div class="node-card"><a href="/nodes/{metadata["baseNode"]}.html"><img {spr}>{name}</a></div>\n'''
+    
     return content

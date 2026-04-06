@@ -8,6 +8,9 @@ class FileType(Enum):
 
 def pathRemoveOrder(path):
     name = os.path.basename(path)
+    if name.startswith("_"):
+        return path
+    
     if name.split("_")[0].isdigit():
         name = name[name.find('_') + 1:]
     return os.path.join(os.path.dirname(path), name)
