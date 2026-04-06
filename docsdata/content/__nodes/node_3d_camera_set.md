@@ -1,0 +1,12 @@
+This node inherits all the properties from 3D Camera nodes but with 2 extra directional lights for simple 
+scene setup.
+
+
+<img-deco node_3d_camera_set_preview>
+
+
+## Light Settings
+
+
+All the additional settings are related to the added lights. The lights also use horizontal and vertical angel 
+instead of position.

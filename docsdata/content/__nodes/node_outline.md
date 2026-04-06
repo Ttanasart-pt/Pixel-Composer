@@ -1,0 +1,42 @@
+Outline node apply outline, border pixel to the surface.
+
+
+
+## Properties
+
+
+### <junc width/>
+
+
+Thickness of the outline.
+
+
+### <junc position/>
+
+
+Whether to draw the line inside or outside the image.
+
+
+### <junc start/>
+
+
+Shift the line in/out of the image.
+
+
+### <junc color/>
+
+
+Color of the outline.
+
+
+### <junc anti aliasing/>
+
+
+Takes the edge alpha value to consideration when drawing the outline.
+
+
+### <junc blend/>
+
+
+Blend the extended edge color with the outline.
+

@@ -1,0 +1,20 @@
+## Properties
+
+
+### <junc colors/>
+
+
+Palette containing colors to be removed.
+
+
+### <junc threshold/>
+
+
+How close the color should be to the palette to be removed.
+
+
+### <junc invert/>
+
+
+Invert the selection, remove the color that is not in the palette.
+

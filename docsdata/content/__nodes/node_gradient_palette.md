@@ -1,0 +1,25 @@
+Palette are an array of colors, connecting palette to this node will create gradient of uniform spacing.
+
+
+
+## Properties
+
+
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Custom positions</td>
+        <td>Whether to use custom array to define position</td>
+    </tr>
+    <tr>
+        <td>Positions</td>
+        <td>Array of numbers to define position of each colors</td>
+    </tr>
+    <tr>
+        <td>Color Space</td>
+        <td>Color space to use for the gradient</td>
+    </tr>
+</table>

@@ -1,0 +1,128 @@
+Cast shadow node use raycast to render shadow from different type of light.
+
+
+<img-deco shadow_cast>
+
+
+
+## Surfaces Properties
+
+
+### <junc use bg color/>
+
+
+Toggle this to use <junc background/> as shadow caster.
+
+
+### <junc bg threshold/>
+
+
+The brightness threshold to consider a pixel in <junc background/> as a wall.
+
+
+
+## Light Properties
+
+
+Cast shadow requires 2 surfaces. A base <junc background/> surface and <junc solid/> surface act as a 
+shadow caster.
+
+
+You can check <junc use bg color/> to use <junc background/> for both background and shadow caster.
+
+
+### <junc light type/>
+
+
+Type of light:
+
+
+<ul>
+    <li><span class="bold">Point</span> Light emit from a single point in a circular shape.</li>
+    <li><span class="bold">Sun</span> Light shines from one direction uniformly.</li>
+</ul>
+
+
+### <junc light intensity/>
+
+
+The brightness of the light.
+
+
+### <junc light radius/>
+
+
+<span class="bold">Point</span> type, radius of the light.
+
+
+### <junc light position/>
+
+
+Position of the light, for <span class="bold">Sun</span> type, the position determine the light direction.
+
+
+
+## Soft Shadow Properties
+
+
+### <junc light density/>
+
+
+Amount of lights used to render soft shadow.
+
+
+### <junc soft light radius/>
+
+
+Radius for the ligths cluster, larger radius will increase the width of the soft shadow.
+
+
+
+## Render Properties
+
+
+### <junc banding/>
+
+
+Discretize light intensity to a number of steps.
+
+
+### <junc attenuation/>
+
+
+<span class="bold">Point</span> type, a curve controling how the light got dimmer per distance.
+
+
+### <junc light color/>
+
+
+Color of the light
+
+
+### <junc ambient color/>
+
+
+Base ambient color
+
+
+### <junc render solid/>
+
+
+Whether to draw <junc solid/> in the final render.
+
+
+
+## Ambient Occlusion Properties
+
+
+### <junc ambient occlusion/>
+
+
+Size of the AO effects.
+
+
+### <junc ambient occlusion strength/>
+
+
+Intensity, darkness of the effect.
+

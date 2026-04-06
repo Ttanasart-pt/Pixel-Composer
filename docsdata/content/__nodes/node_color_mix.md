@@ -1,0 +1,20 @@
+Mix color node allows you to blend two colors together. The <junc Mix> property 
+control the blend progress from <junc Color from> to <junc Color to>.
+
+
+
+## Color Space
+
+
+<p class="subtitle">For more information, check out the <a href="color_space.html">color space</a> page.
+
+
+A color can be defines as a composition of multiple elements. For example a combination of red, green and 
+blue colors, or hue, saturation and value. The set of thoese elements is called a color space.
+
+
+When mixing colors, each elements will be mix one by one. The <junc Color space> 
+properties control the color space used for the mix.
+
+
+<img color_mix_space>

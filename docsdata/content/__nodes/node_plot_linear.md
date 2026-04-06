@@ -1,0 +1,150 @@
+Bar/Graph node is used to plot graph using array of number. While initialliy created for audio visualization, 
+it can be use to create interesting shape as well.
+
+
+
+## Data Processing
+
+
+
+The first section contain properties related to data processing.
+
+
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><junc Value Offset></td>
+        <td>Add or subtract all values with a fixed amount</td>
+    </tr>
+    <tr>
+        <td><junc Flip Value></td>
+        <td>Invert the sign of the data</td>
+    </tr>
+    <tr>
+        <td><junc Trim mode></td>
+        <td>Set the data trimming mode</td>
+    </tr>
+    <tr>
+        <td><junc Range></td>
+        <td>Range of the data trimming</td>
+    </tr>
+    <tr>
+        <td><junc Sample frequency></td>
+        <td>Sample data at every N values instead of all</td>
+    </tr>
+</table>
+
+
+
+## Plot Properties
+
+
+There're 2 typs of plot: bar and graph. Both types share similiar set of properties:
+
+
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><junc Type></td>
+        <td>Set the type of plot between Bar and Graph</td>
+    </tr>
+    <tr>
+        <td><junc Origin></td>
+        <td>The origin position</td>
+    </tr>
+    <tr>
+        <td><junc Direction></td>
+        <td>The direction where each subsequence data go</td>
+    </tr>
+    <tr>
+        <td><junc Path></td>
+        <td>The path to draw the plot on. If using path, the <junc Direction> property will be disabled</td>
+    </tr>
+    <tr>
+        <td><junc Scale></td>
+        <td>The scale of the plot</td>
+    </tr>
+</table>
+
+
+The graph type open up to more controls:
+
+
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><junc Loop></td>
+        <td>Add line connecting the last and first data</td>
+    </tr>
+    <tr>
+        <td><junc Smooth></td>
+        <td>Smooth out the value with moving average</td>
+    </tr>
+</table>
+
+
+
+## Render Properties
+
+
+Properties in this section are all related to rendering.
+
+
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><junc Base Color></td>
+        <td>Base color of the plot</td>
+    </tr>
+    <tr>
+        <td><junc Color Over Sample></td>
+        <td>Color to blend per each value (based on the index)</td>
+    </tr>
+    <tr>
+        <td><junc Color Over Value></td>
+        <td>Color to blend based on the value</td>
+    </tr>
+    <tr>
+        <td><junc Value range></td>
+        <td>The range for the <junc Color Over Value> property.
+
+e.g. 
+if the range is [0, 10] then value 5 will correspond to the middle of the gradient</td>
+    </tr>
+    <tr>
+        <td><junc Absolute></td>
+        <td>Apply absolute to the value before calculating <junc Color Over Value></td>
+    </tr>
+    <tr>
+        <td><junc Bar Width></td>
+        <td>The width of each bar</td>
+    </tr>
+    <tr>
+        <td><junc Rounded Bar></td>
+        <td>Use capsule bar shape instead of rectangle</td>
+    </tr>
+    <tr>
+        <td><junc Graph Thickness></td>
+        <td>The thickness of the graph line</td>
+    </tr>
+    <tr>
+        <td><junc Spacing></td>
+        <td>The distance between each data point</td>
+    </tr>
+    <tr>
+        <td><junc Background></td>
+        <td>Background Color</td>
+    </tr>
+</table>

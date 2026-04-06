@@ -1,0 +1,62 @@
+This node is the "rendering" part of the armature system.
+
+
+
+## Surface Binding
+
+
+To bind a surface, the first step is to connect that surface to the node.
+
+
+<img-deco armature_bind_1>
+
+
+The binding stage is done in the inspector. Click and drag the hamburger icon in the left of a surface 
+to the bone you want.
+
+
+<img-deco armature_bind_2>
+
+
+Binded surface will show up next to the bone. A surface can only be binded to one bone.
+
+
+<img-deco armature_bind_3>
+
+
+### Binding Transformation
+
+
+After the surfaces is binded, it will show up in the preview panel. You can modify the transformation 
+of the binded surface in the preview panel.
+
+
+
+## Binding Properties
+
+
+Each surface when binded will have extra properties accessible in the surfaces section in the inspector.
+
+
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Surface</td>
+        <td>The surface that is binded to the bone.</td>
+    </tr>
+    <tr>
+        <td>Transform</td>
+        <td>The transformation of the surface related to the bone.</td>
+    </tr>
+    <tr>
+        <td>Inherit Rotation</td>
+        <td>When checked, the surface will inherit the rotation of the bone parent.</td>
+    </tr>
+    <tr>
+        <td>Inherit Scale</td>
+        <td>When checked, the surface will inherit the scale of the bone parent.</td>
+    </tr>
+</table>

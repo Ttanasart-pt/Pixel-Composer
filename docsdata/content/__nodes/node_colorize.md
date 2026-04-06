@@ -1,0 +1,28 @@
+Colorize node is a main method of coloring black and white image. It map the brightness of a pixel to a color 
+in the gradient.
+
+
+<img colorize>
+
+
+
+## Properties
+
+
+### <junc gradient/>
+
+
+Gradient to map the surface.
+
+
+### <junc gradient shift/>
+
+
+Shift the gradient by a fix amount.
+
+
+### <junc multiply alpha/>
+
+
+Multiply alpha value to the brightness calculation.
+

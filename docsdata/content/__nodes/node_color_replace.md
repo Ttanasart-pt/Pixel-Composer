@@ -1,0 +1,57 @@
+<p class="banner">Do not be confused with <node colors_replace/> the internal name can be very confusing and you should use the 
+display name instead.
+
+
+Replace palette match every color in the surface with the <junc palette from/> and replace it with the color 
+on the same index in the <junc palette to/>.
+
+
+<img-deco replace_palette>
+
+
+
+## Properties
+
+
+### <junc surface in/>
+
+
+The input surface
+
+
+### <junc palette from/>
+
+
+The palette to match the color with
+
+
+### <junc palette to/>
+
+
+The palette to convert to
+
+
+### <junc threshold/>
+
+
+How much the color can differ from the palette to be match.
+
+
+### <junc multiply alpha/>
+
+
+Whether to multiply the alpha channel to the color before matching.
+
+
+### <junc set others to black/>
+
+
+Whether to set the colors that aren't matched with any color in the palette to black.
+
+
+### <junc hard replace/>
+
+
+Whether to replace the color with the closest color in the <junc palette to/> or to blend base color with the 
+target color based on similarity.
+

@@ -1,0 +1,34 @@
+Local analyze node applies non-linear convolution function on the surface.
+
+
+<img-deco local_analyze>
+
+
+
+## Properites
+
+
+### <junc algorithm/>
+
+
+The junction to use.
+
+
+<ul>
+    <li><span class="bold">Average</span> Apply average across the kernel (blurring)</li>
+    <li><span class="bold">Maximum</span> Find the brightess pixel in the kernel.</li>
+    <li><span class="bold">Minimum</span> Find the dark pixel in the kernel.</li>
+</ul>
+
+
+### <junc size/>
+
+
+Size of convolution kernel.
+
+
+### <junc shape/>
+
+
+Shape of the kernel.
+

@@ -1,0 +1,2 @@
+HSV color create color from hue, saturation and value amount. By default the value is in range 0-255, by selecting 
+<junc Normalized>, the value will be remapped to 0-1.

@@ -1,0 +1,67 @@
+Point affector modify array of points by calculating each of it's proximity to an affector.
+
+
+This node takes 3 arrays of the same size: Points, Initial value and Final value.
+
+
+<img node_3d_point_affectord>
+
+
+For each point, it calculate the proximity to an affector, and use that value to blend between the initial 
+and final value of the same index.
+
+
+
+## Preview
+
+
+Point affector comes with 3D controller which allows you to modify the affector in 3D space.
+
+
+<img-deco node_3d_point_affector_preview_transform>
+
+
+## Affectors
+
+
+Point affector comes with 2 types of affectors: Sphere and Plane.
+
+
+### Sphere
+
+
+Sphere affector influent points based on the distance from the point and the center.
+
+ 
+Note that the affector always use uniform scale, if the scale aren't uniform, then the largest value will be used.
+
+
+<img-deco node_3d_point_affector_preview>
+
+
+<img node_3d_point_affector_sphere>
+
+
+The affector size is affected by 2 properties, scale and falloff distance. 
+
+
+### Plane
+
+
+Plane affector influent points based on the distance from the point and the affector plane.
+
+
+<img-deco node_3d_point_affector_preview_plane>
+
+
+<img node_3d_point_affector_plane>
+
+
+## Falloff
+
+
+You can modify how the value transition when it's near the affector using the falloff properties.
+
+
+<img-deco node_3d_point_affector_preview_falloff>
+

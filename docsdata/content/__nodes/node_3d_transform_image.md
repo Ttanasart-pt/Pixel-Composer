@@ -1,0 +1,13 @@
+This nodes allows 2D surface to be transform and animated in 3D space.
+
+
+
+## Preview
+
+
+While the output is a 2D surface. The node is 3D internally, which means the node will preview as 3D plane. 
+Note that while not shown, the output comes from the top orthographic view.
+
+
+<img-deco node_3d_transform_image_preview>
+

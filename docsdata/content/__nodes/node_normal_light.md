@@ -1,0 +1,15 @@
+This node allows you to light up the surface using normal map.
+
+
+<img node_normal_light>
+
+
+
+## Light Properties
+
+
+There're 2 types of lights: point and sun. Point light illuminate the surrouding area, sun light will light up 
+the entire image equally.
+
+
+<img node_normal_light_light_properties>

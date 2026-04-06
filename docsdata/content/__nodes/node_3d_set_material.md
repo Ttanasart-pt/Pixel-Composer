@@ -1,0 +1,5 @@
+Each 3D object has material array it use for rendering. This node allows a replacement of the material 
+array with a new one.
+
+
+<img-deco 3d_set_material>

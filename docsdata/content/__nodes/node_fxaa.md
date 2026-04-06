@@ -1,0 +1,7 @@
+FXAA node apply anti-aliasing to the image. While this effect is not commonly used with pixel art, it can be use 
+in combination with other effects to create a unique look.
+
+
+<img fxaa>
+
+

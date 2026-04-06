@@ -1,0 +1,29 @@
+3D repeat allows you to create clones of the object with different transformations.
+
+
+
+## Direct vs. Compound Transformations
+
+
+The transformations of each instances are controlled by 2 values, direct and compound. 
+
+
+The direct value apply directly to each object based on its index, there are set by the 
+<junc Positions>, <junc Rotations>, and <junc Scales> 
+properties. 
+
+
+The compound value multiply per each index, e.g. the second object will tranform twice as much as the first object, 
+the compound values are controlled by the <junc Shift Position>, <junc Shift Rotation>, and <junc Shift Scale> properties.
+
+
+Both direct and compound transformations are added to create the final transformations.
+
+
+
+## Object Mode
+
+
+The repeat amount can be set in the <junc Object Mode> property. Duplicate mode 
+will allows you to set the amount dierctly. Array mode will set the amount to match the <junc Positions>, <junc Rotations>, 
+and <junc Scales> array.

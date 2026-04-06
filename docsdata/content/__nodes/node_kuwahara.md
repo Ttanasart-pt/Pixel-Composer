@@ -1,0 +1,14 @@
+Kuwahara filter is a stylized "blur" filter that create a watercolor-like results.
+
+
+<img-deco kuwahara>
+
+
+
+## Properties
+
+
+### <junc radius/>
+
+
+The strength of the the effect.

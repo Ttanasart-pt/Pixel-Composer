@@ -1,0 +1,28 @@
+Pixel sorting is an effect where pixels in the same horizontal or vertical axis are being sorted by the 
+brightness. This node is recommended to be animate using the feedback loop.
+
+
+<img-deco pixel_sort>
+
+
+
+## Properties
+
+
+### <junc iteration/>
+
+
+The number of sorting iteration.
+
+
+### <junc threshold/>
+
+
+The sorting group threshold. Incerasing the amount will separate the sorting into multiple segments.
+
+
+### <junc direction/>
+
+
+Axis and direction to sort to.
+

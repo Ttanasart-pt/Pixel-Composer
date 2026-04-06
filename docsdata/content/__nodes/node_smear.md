@@ -1,0 +1,39 @@
+Smear node drag out the brighter part to create a trail effect.
+
+
+<img-deco smear>
+
+
+
+## Properties
+
+
+### <junc mode/>
+
+
+Whether to smear down to the black pixel or transparent pixel.
+
+
+### <junc strength/>
+
+
+The length of the smearing.
+
+
+### <junc direction/>
+
+
+Direction of the smearing.
+
+
+### <junc spread/>
+
+
+Make the smear expands over length.
+
+
+### <junc modulate strength/>
+
+
+Whether to make the length of the smearing multiply by the brightness of the alpha value.
+

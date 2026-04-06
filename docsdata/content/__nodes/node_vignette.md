@@ -1,0 +1,1 @@
+Vignette node apply vignette effect on top of the surface.

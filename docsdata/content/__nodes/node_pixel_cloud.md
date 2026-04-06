@@ -1,0 +1,45 @@
+Pixel Cloud node move each pixel in the surface randomly.
+
+
+<img-deco pixel_cloud>
+
+
+
+## Properties
+
+
+### <junc distance/>
+
+
+The amount of displacement per step.
+
+
+### <junc strength/>
+
+
+The amount of displacment step. This values also determine the life of each pixel.
+
+
+### <junc strength map/>
+
+
+Extra surface used to control strength per pixel.
+
+
+### <junc color over lifetime/>
+
+
+Apply color blending over strength.
+
+
+### <junc alpha over lifetime/>
+
+
+Adjust alpha value over strength.
+
+
+### <junc random blending/>
+
+
+Add random shift to the lifetime value.
+

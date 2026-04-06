@@ -1,0 +1,19 @@
+Extrude image to 3D object.
+
+
+<img-deco node_3d_mesh_extrude>
+<p class="subtitle center">Fruit Asset by <a href="https://dantepixels.itch.io/small-fruits-asset-16x16">DantePixels</a>
+
+
+
+## Mesh Properties
+
+
+### Height map
+
+
+Height map is an another surface that control the extrusion height based on the brightness.
+
+
+<img-deco node_3d_mesh_extrude_height_map>
+

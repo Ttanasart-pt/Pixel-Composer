@@ -1,0 +1,40 @@
+Shadow node cast a straight shadow behind the image. This node use simple image shifting, if you want to 
+create nore complex shadow, check out the <node cast shadow/> node
+
+
+<img shadow>
+
+
+
+## Properties
+
+
+### <junc color/>
+
+
+Color of the shadow
+
+
+### <junc strength/>
+
+
+Shadow intensity
+
+
+### <junc shift/>
+
+
+Move the shadow
+
+
+### <junc grow/>
+
+
+Expands the shadow size
+
+
+### <junc blur/>
+
+
+Strength of the blur effect
+

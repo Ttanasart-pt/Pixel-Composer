@@ -1,0 +1,2 @@
+Wiggler node output random number between a given range. The <junc Frequency> property 
+control the speed which the value change.

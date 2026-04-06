@@ -1,0 +1,22 @@
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+This node takes a array of audio data and calculate loudness of that segment in decibel.
+
+
+
+## Loudness Calculation
+
+
+Loudness is calculated using the following formula:
+
+
+$$L = 10 \cdot \log_{10}\left(\frac{1}{N} \sum_{n=0}^{N-1} a[n]^2\right)$$
+
+
+Where:
+<ul class="list-empty">
+    <li><span class="bold">L</span> is the loudness in decibel</li>
+    <li><span class="bold">N</span> is the number of samples</li>
+    <li><span class="bold">a[n]</span> is the audio data</li>
+</ul>

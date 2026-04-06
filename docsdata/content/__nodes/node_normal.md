@@ -1,0 +1,13 @@
+Normal map is a texture that describe a 3D normal vector. This node allows the genration of normal map from 
+height map.
+
+
+<img node_normal>
+
+
+
+## Smoothing
+
+
+Toggle the <junc Smooth> properties to increase the sample amount.
+

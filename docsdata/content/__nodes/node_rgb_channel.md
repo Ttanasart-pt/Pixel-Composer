@@ -1,0 +1,1 @@
+RGB Extract nodes extract a single surface in to 4 surfaces, each for RGBA value.

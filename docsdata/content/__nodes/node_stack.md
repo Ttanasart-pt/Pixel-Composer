@@ -1,0 +1,29 @@
+Stack node simply place surface next to each other. You have settings for direction, spacing and alignments.
+
+
+
+## Properties
+
+
+### <junc axis/>
+
+
+The direction of the stack.
+
+
+### <junc align/>
+
+
+When the input surfaces has different sizes, <junc align/> control where to place the smaller surface.
+
+
+### <junc spacing/>
+
+
+Set the space between each surface.
+
+
+### <junc padding/>
+
+
+Add empty space in each direction afterward.

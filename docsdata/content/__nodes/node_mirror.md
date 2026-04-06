@@ -1,0 +1,22 @@
+Mirror node flip image along a given line, creating reflection. If you want to simply flip the image along 
+an axis, use the <node flip/> node.
+
+
+<img-deco mirror>
+
+
+
+## Properties
+
+
+### <junc position/>
+
+
+The center point for the reflection line.
+
+
+### <junc angle/>
+
+
+The angle of the reflection line
+

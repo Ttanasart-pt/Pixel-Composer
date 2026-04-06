@@ -1,0 +1,13 @@
+<img-deco gradient_points/>
+
+
+## Properties
+
+
+### <junc normalize weight/>
+
+
+Normalize weight when blending colors. Will results in brighter image.
+
+
+<img-deco gradient_points_normalize/>

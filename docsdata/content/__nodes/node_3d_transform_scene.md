@@ -1,0 +1,10 @@
+3D scene can contains multiple objects in them, this node allows for transformations for each individual 
+object in a scene using array.
+
+
+
+## Transform Type
+
+
+In the settings group, you can change transformation types from additive to override. As the name suggest 
+the additive mode add the vector to the original value, while the override mode replace the value completely.

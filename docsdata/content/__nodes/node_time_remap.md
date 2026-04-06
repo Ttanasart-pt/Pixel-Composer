@@ -1,0 +1,7 @@
+Time remap node combined surface from multiple time base on a <junc map/>.
+
+
+<img time_remap/>
+
+
+

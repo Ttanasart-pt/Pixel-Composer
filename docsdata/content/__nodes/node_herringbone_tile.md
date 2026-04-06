@@ -1,0 +1,8 @@
+Herring bone tile is a uniform rectangular tile. Commonly seen as the pattern used on paved brick.
+
+
+<img-deco herring_tile/>
+
+
+Herringbone tile shared many properties with <node grid/>. Except it only has colored tile, height map, 
+and texture grid rendering mode.

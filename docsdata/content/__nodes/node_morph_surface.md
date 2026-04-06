@@ -1,0 +1,4 @@
+Morph surface attempt to blend pixels from one surface to another by matching the pixel and transit between 
+them by the <junc morph amount/> property.
+
+

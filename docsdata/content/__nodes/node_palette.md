@@ -1,0 +1,1 @@
+Returns palette value, can trim the palette with the <junc Trim range> option.

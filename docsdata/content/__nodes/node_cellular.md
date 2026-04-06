@@ -1,0 +1,76 @@
+## Properties
+
+
+### <junc type/>
+
+
+Type of the pattern.
+
+
+<img cellular_type/>
+
+
+### <junc pattern/>
+
+
+Cell distribution.
+
+
+<ul>
+    <li><span class="inline-code">Uniform</span>: Distribute the cell randomly across the surface.</li>
+    <li><span class="inline-code">Radial</span>: Distribute the cell around the <junc position/> value.</li>
+</ul>
+
+
+<img cellular_pattern/>
+
+
+### <junc position/>
+
+
+The position of the pattern, or center point if set to <li><span class="inline-code">Radial</span> pattern.
+
+
+### <junc scale/>
+
+
+Scale of the pattern.
+
+
+
+## Radial Properties
+
+
+### <junc radial scale/>
+
+
+Control scaling of the radial effect.
+
+
+### <junc radial shatter/>
+
+
+Control how many angular fragmentation per radius.
+
+
+
+## Rendering Properties
+
+
+### <junc contrast/>
+
+
+Control the contrast of the final image.
+
+
+### <junc middle/>
+
+
+The middle point for contrast calculation.
+
+
+### <junc colored/>
+
+
+<span class="inline-code">Cell</span> type only: fill each cell with random color.
+

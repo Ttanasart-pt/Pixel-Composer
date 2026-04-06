@@ -1,0 +1,6 @@
+This nodes takes a curve and evaluate a number given the x axis. The output can be scale with the 
+<junc minimum> and <junc maximum> values.
+
+
+The <junc animated> toggle will make the <junc progress> 
+ties to the project animation progress.

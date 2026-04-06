@@ -1,0 +1,2 @@
+Armature Path allows you to convert armature system to path. This can be use to render bones with the 
+<node line> node.

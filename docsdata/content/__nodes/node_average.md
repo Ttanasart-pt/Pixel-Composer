@@ -1,0 +1,20 @@
+Average node extracts all color from the surface and calculate average color from it.
+
+
+The node has 2 outputs.
+
+
+
+## Outputs
+
+
+### <junc surface out/>
+
+
+Output a surface of the equal dimension with a single solid color.
+
+
+### <junc color/>
+
+
+The averaged color as a color data.

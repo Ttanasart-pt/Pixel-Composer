@@ -1,0 +1,25 @@
+Armature Sample returns a 2d position from a bone.
+
+
+
+## Properties
+
+
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Armature</td>
+        <td>The armature system to get the bone position from.</td>
+    </tr>
+    <tr>
+        <td>Bone name</td>
+        <td>The name of a bone to get the position from.</td>
+    </tr>
+    <tr>
+        <td>Sample point</td>
+        <td>The sample point to get the position from. 0 is the origin of the bone, 1 is the end of the bone.</td>
+    </tr>
+</table>

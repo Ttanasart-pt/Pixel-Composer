@@ -1,0 +1,3 @@
+Combine 3 surfaces in to 1. Each surface represent color in HSV channels.
+
+

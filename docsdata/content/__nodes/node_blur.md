@@ -1,0 +1,69 @@
+Blur node applies gaussian blur uniformly on the image.
+
+
+
+## Properties
+
+
+### <junc size/>
+
+
+Blur radius.
+
+
+### <junc override color/>
+
+
+When blurring image with transparency, sometimes the edge becomes darker (due to the empty pixel being 
+registered as complete black). Thus this option can be use to replace the final blur color with one uniform color.
+
+
+
+## Blur family
+
+
+Blur node is optimized for uniform bluring. For more complex blur, you can check out other nodes in the blur family:
+
+	
+<table class="cc4060">
+    <tr>
+        <td><node blur/></td>
+        <td>Basic uniform blur</td>
+    </tr>
+    <tr>
+        <td><node blur_simple/></td>
+        <td>Apply bluring amount differently based on blur mask</td>
+    </tr>
+    <tr>
+        <td><node blur_directional/></td>
+        <td>Blur in one direction</td>
+    </tr>
+    <tr>
+        <td><node blur_slope/></td>
+        <td>Blur image based on the slope of the slope map</td>
+    </tr>
+    <tr>
+        <td><node blur_zoom/></td>
+        <td>Blur image in or out of a single point</td>
+    </tr>
+    <tr>
+        <td><node blur_radial/></td>
+        <td>Blur image around a point</td>
+    </tr>
+    <tr>
+        <td><node blur_bokeh/></td>
+        <td>Blur image with bokeh effect</td>
+    </tr>
+    <tr>
+        <td><node blur_contrast/></td>
+        <td>Blur pixel with similar color</td>
+    </tr>
+    <tr>
+        <td><node blur_shape/></td>
+        <td>Blur image with custom shape</td>
+    </tr>
+    <tr>
+        <td><node blur_average/></td>
+        <td>Find average of the entire surface</td>
+    </tr>
+</table>

@@ -1,0 +1,35 @@
+Bloom effect is an effect where the brighter parts of the image blur and bleed the brightness to the nearby 
+pixels.
+
+
+
+## Properties
+
+
+### <junc size/>
+
+
+Size of the blur effect. Larger blur may need to be compensate with high <junc strength/>.
+
+
+### <junc tolerance/>
+
+
+The threshold of the brightness that will be affected by the bloom effect. Lower tolerance will make more 
+pixels to be affected by the bloom effect.
+
+
+### <junc strength/>
+
+
+Strength, intensity of the additive bloom layer.
+
+
+### <junc bloom mask/>
+
+
+An additional surface that use to control the bloom amount per pixel. The brightness of the mask will 
+be multiplied to the bloom to create final bloom amount.
+
+
+<img-deco bloom_mask>

@@ -1,0 +1,37 @@
+Extude out the white colors. Works best with black and white image.
+
+
+<img node_bevel>
+
+
+
+## Bevel Properties
+
+
+### Height
+
+
+Agjust the bevel amount.
+
+
+<img node_bevel_heights>
+
+
+### Slope
+
+
+Shape of the bevel profile.
+
+
+<img node_bevel_slopes>
+
+
+
+## Transformations
+
+
+Adding transformation to control the bevel direction. Scale can be use to increase the step size for each 
+bevel level.
+
+
+<img node_bevel_transform>

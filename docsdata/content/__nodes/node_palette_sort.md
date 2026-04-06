@@ -1,0 +1,45 @@
+The order specified by the <junc Order> property contains 3 letters representing 
+the priority of the sorting.
+
+
+
+## Custom Sorting
+
+
+When choosing the custom sorting order, you can provide sorting priority string. The available letters are:
+
+
+<table class="cc4060">
+    <tr>
+        <th>Letter</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="inline-code">r</span>
+        <td>Sort by red value</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">g</span>
+        <td>Sort by green value</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">b</span>
+        <td>Sort by blue value</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">h</span>
+        <td>Sort by hue value</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">s</span>
+        <td>Sort by saturation value</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">v</span>
+        <td>Sort by value</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">l</span>
+        <td>Sort by lightness value</td>
+    </tr>
+</table>

@@ -1,0 +1,73 @@
+Line node is used to draw a line (or lines) on a surface.
+
+
+
+## Path Data
+
+
+Line node takes path data to define the path to draw. Without it, it will draw a single straight line across 
+the middle of the surface with the <junc rotation/> value control the angle.
+
+
+The path data can be provided through <junc path/>.
+
+
+<img line_path_data/>
+
+
+
+## Resolution
+
+
+When drawing a path, line node generate segment of straight lines and combine them together. The more 
+segment it generated the more accurate the path will be. There're 2 types of segment generation controlled by 
+the <junc fix length/> property.
+
+
+### Fix amount
+
+
+By default, <junc fix length/> is set to false. This mean the amount of the segment is being controlled 
+directly through the <junc segment/> property./p>
+
+
+<img-deco line_fix_amount/>
+
+
+### Fix length
+
+
+When <junc fix length/> is set to true, the segment length is being controlled instead. The <junc segment length/>
+property will determine the maximum length of each segment in pixel.
+
+
+<img-deco line_fix_length/>
+
+
+
+## Line Width
+
+
+Line width can be controlled through the <junc width/> property. This width is a vector containing 2 values, 
+the width of each segment will be random bewteen these 2 values. You can set it to the same value to fix the 
+length.
+
+
+### <junc 1px mode/>
+
+
+The <junc 1px mode/> toggle will fix the line width to 1 pixel, and use a more pixel perfect algorithm to 
+draw the lines.
+
+
+<img-deco line_width_1px/>
+
+
+### <junc width over length/>
+
+
+You can modulate the width of the line over it's length using the <junc width over length/> curve. This curve 
+will be multiplied with the <junc width/> value to determine the final width.
+
+
+

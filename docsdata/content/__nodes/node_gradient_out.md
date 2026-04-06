@@ -1,0 +1,1 @@
+Gradient node output a single gradient data. It can also sample a color from a gradient.

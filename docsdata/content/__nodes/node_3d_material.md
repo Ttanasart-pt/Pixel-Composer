@@ -1,0 +1,57 @@
+While you can use any surface as a texture for 3D object, 3D Material nodes allow the creation of material with 
+more complex properties.
+
+
+<p class="banner">Note that MakhamDev have no idea how 3D works, so these properties may not behave like how other 
+3D softwares do.
+
+
+## Material Properties
+
+
+### Diffuse
+
+
+Diffuse value simulate the effect of light scattering when in contact with the surface roughtness. Diffuse 
+amount won't have any effect if the specular value is set to 0.
+
+
+### Specular
+
+
+Specular value simulate the effect of light reflection. The higher the value, the more reflective the surface
+will be.
+
+
+<img node_3d_mat_diff_spec>
+
+
+### Shininess
+
+
+Shininess value control the reflectiveness at different angles. Increasing it will make reflected light more 
+directed.
+
+
+<img node_3d_mat_shine>
+
+
+### Roughness
+
+
+Roughtness control the reflected color of the light. Lower roughtness make the surface reflect more 
+background colors.
+
+
+<img node_3d_mat_roughness>
+
+
+### Normal
+
+
+Normal map is a texture that modify the surface normal. This can be used to increase the detail of the 
+model without increasing the polygon count.
+
+
+<img node_3d_material_normal>
+

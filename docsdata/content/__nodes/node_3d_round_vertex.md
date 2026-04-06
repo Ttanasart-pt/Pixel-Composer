@@ -1,0 +1,4 @@
+Discretize vertex (round vertex) is an effect node that round all verticies in the mode by a given step amount.
+
+
+<img-deco node_3d_round_vertex>

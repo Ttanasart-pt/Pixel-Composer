@@ -1,0 +1,33 @@
+Dither node apply dithering effect to convert smooth gradient of colors into a patterns of discrete colors.
+
+
+<img dither>
+
+
+
+## Properties
+
+
+### <junc mode/>
+
+
+Control whether to dither color (RGB channel) or the alpha channel.
+
+
+### <junc pattern/>
+
+
+Dither pattern, or use a custom surface as a pattern.
+
+
+### <junc contrast/>
+
+
+The sharpness of the transition.
+
+
+### <junc contrast map/>
+
+
+Additional surface use to control contrast per pixel.
+

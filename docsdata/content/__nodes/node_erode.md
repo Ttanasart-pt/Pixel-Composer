@@ -1,0 +1,25 @@
+Erode node delete the edge of the image as far as the <junc width/> properties to create a smaller inset of 
+the shape.
+
+
+
+## Properties
+
+
+### <junc width/>
+
+
+How far away from the border to delete.
+
+
+### <junc preserve border/>
+
+
+Whether to treat the edges of the image as the border, or as a filled space.
+
+
+### <junc use alpha/>
+
+
+Whether to use transparent pixel or black pixel as the border.
+

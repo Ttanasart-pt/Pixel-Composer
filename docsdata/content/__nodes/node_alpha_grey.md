@@ -1,0 +1,5 @@
+Alpha to grey simply converted the opacity of the pixel into grey scale with full opacity.
+
+
+
+The inverse of this node is <node grey_alpha/>

@@ -1,0 +1,38 @@
+Composite node allows you to combines multiple surface together.
+
+It's similiar to <node blend>, but support 
+multiple surfaces with only normal blending.
+
+
+
+## Output Dimension
+
+
+The <junc Output Dimension/> property control how the output dimension is determined:
+
+
+<table class="cc4060">
+    <tr>
+        <td>First surface</td>
+        <td>Dimension is determined by the first surface in the list.</td>
+    </tr>
+    <tr>
+        <td>Largest surface</td>
+        <td>Dimension is determined by the largest surface in the list.</td>
+    </tr>
+    <tr>
+        <td>Constant</td>
+        <td>Dimension is determined by the <junc Dimension/></td>
+    </tr>
+</table>
+
+
+The <junc Padding/> add extra spaces in each direction.
+
+
+
+## Atlas
+
+
+<junc Atlas Data/> returns a special type of surface called Atlas. Atlas is a surface with extra metadata 
+for its position, rotation, scale, etc. Atlases can be process individually and combine together later.

@@ -1,0 +1,34 @@
+This node will search throught every pixel in the image and returns the position of the pixel with a given color. 
+With [0, 0] be the top left of the image, x axis goes to the right and y axis goes down.
+
+
+
+## Properties
+
+
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><junc Search color></td>
+        <td>Color of the pixel to find</td>
+    </tr>
+    <tr>
+        <td><junc Tolerance></td>
+        <td>How much the color can differ from the search color to be match</td>
+    </tr>
+    <tr>
+        <td><junc Find all></td>
+        <td>Returns all matches pixel instead of the first pixel</td>
+    </tr>
+    <tr>
+        <td><junc Include alpha></td>
+        <td>Include alpha channel in the search</td>
+    </tr>
+    <tr>
+        <td><junc Alpha tolerance></td>
+        <td>How much the alpha channel can differ from the search color to be match</td>
+    </tr>
+</table>

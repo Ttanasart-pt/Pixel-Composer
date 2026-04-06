@@ -1,0 +1,25 @@
+Combine 4 surfaces in to 1. Each surface represent color in RGBA channels.
+
+
+
+## Properties
+
+
+### <junc Sampling Type/>
+
+
+How the value is extracted from the pixel color:
+
+
+<ul>
+    <li><span class="bold">Channel value</span> extract the direct value from each channels, e.g. the red input 
+will get the red amount in the pixel, etc.</li>
+    <li><span class="bold">Greyscale</span> extract the average value from each channels, e.g. the red input 
+will get the average of red, green, and blue in the pixel, etc.</li>
+</ul>
+
+
+### <junc base value/>
+
+
+The value to set when so surface is connected to the inputs.

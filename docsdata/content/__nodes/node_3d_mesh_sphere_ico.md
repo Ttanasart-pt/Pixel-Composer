@@ -1,0 +1,14 @@
+Create a icosphere mesh.
+
+
+<img-deco node_3d_mesh_icosphere>
+
+
+
+## Mesh Properties
+
+
+### Subdivision
+
+
+Number of subdivisions, details of the icosphere.

@@ -1,0 +1,10 @@
+Delay is used to delay the animation by a fix amount. The node simply store that animation in a cache and replay 
+it at a dirrerent time.
+
+
+<p class="banner">You can only delay the animation forward.
+
+
+<img node_delay>
+
+

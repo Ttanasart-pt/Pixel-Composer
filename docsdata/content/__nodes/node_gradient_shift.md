@@ -1,0 +1,2 @@
+Gradient shift node allows you to move all gradient colors equally. the <junc Wrap> 
+option will wrap the key back to the beginning.
