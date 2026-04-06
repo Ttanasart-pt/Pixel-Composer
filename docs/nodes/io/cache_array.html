@@ -47,6 +47,12 @@
 <li class="sidebar-nav "><a class="" href="byte_file_write.html">Byte File Write</a></li>
 <li class="sidebar-nav active "><a class="" href="cache_array.html">Cache Array</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Start Frame">Start Frame</a></li>
+<li class="sidebar-nav"><a href="#Stop Frame">Stop Frame</a></li>
+<li class="sidebar-nav"><a href="#Step">Step</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="canvas.html">Canvas</a></li>
 <li class="sidebar-nav "><a class="" href="canvas_group.html">Canvas Group</a></li>
@@ -952,7 +958,7 @@
 
 <div class="title">
                                                             <h1>Cache Array</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Store current animation as array.  Cache persisted between save.</p>
 <br><br>
@@ -980,7 +986,15 @@
                 <td><p>Cache Array</p></td>
             </tr>
 
-</table>
+</table><p>
+Cache animation as surface array. If the output is being used in other nodes, it is recommended to play the animation at least once to capture the full range of frames.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Start Frame" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Start Frame</span></h3><br>
+<p>The first frame to cache (set to -1 to cache from the first frame).</p><br>
+<h3><a id="Stop Frame" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Stop Frame</span></h3><br>
+<p>The last frame to cache (set to -1 to cache to the last frame).</p><br>
+<h3><a id="Step" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Step</span></h3><br>
+<p>The frame step, 1 means every frame, 2 means every other frame, etc.</p><br>
         </div>
     </div>
 

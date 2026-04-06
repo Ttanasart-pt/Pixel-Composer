@@ -16,7 +16,6 @@ version_tag = "undef"
 if version_string:
     version_tag = version_string.group(1)
 VERSION = f"<v {version_tag}/>"
-print(f"Version: {version_tag}")
 
 # %% Read node metadata
 nodeDir  = "datasrc/Nodes/Internal"
@@ -44,7 +43,11 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
     nodeBase = nodeMeta["baseNode"]
     nodeName = nodeMeta["name"]
     
-    contentPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeName)}.html"
+    placeholderPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeName)}"
+    if not os.path.exists(placeholderPath + ".html"):
+        fileUtil.verifyFile(placeholderPath + ".md")
+
+    contentPath = f"docsdata/pregen/__nodes/{fileUtil.pathSanitize(nodeName)}.html"
     fileUtil.verifyFile(contentPath)
 
     content = nodeWriter.writeNode(nodeMeta, contentPath)

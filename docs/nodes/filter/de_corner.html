@@ -80,6 +80,13 @@
 <li class="sidebar-nav "><a class="" href="curve_hsv.html">Curve Hsv</a></li>
 <li class="sidebar-nav active "><a class="" href="de_corner.html">De Corner</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Type">Type</a></li>
+<li class="sidebar-nav"><a href="#Include">Include</a></li>
+<li class="sidebar-nav"><a href="#Tolerance">Tolerance</a></li>
+<li class="sidebar-nav"><a href="#Iteration">Iteration</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="de_stray.html">De Stray</a></li>
 <li class="sidebar-nav "><a class="" href="deblur.html">Deblur</a></li>
@@ -1013,7 +1020,7 @@
 
 <div class="title">
                                                             <h1>De-Corner</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Attempt to remove single pixel corner from the image.</p>
 <br><br>
@@ -1050,7 +1057,17 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>
+A corner in pixel art refers to cluster of the same color arranged in an L shape. Corner can be seen as non-preferable. This node is used to remove corners from the image by replacing it with a different color.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Type" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Type</span></h3><br>
+<p>Algorithm to use for corner removal.</p><br>
+<h3><a id="Include" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Include</span></h3><br>
+<p>Algorithm stricness level.</p><br>
+<h3><a id="Tolerance" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Tolerance</span></h3><br>
+<p>How different two colors can be to be considered the same.</p><br>
+<h3><a id="Iteration" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Iteration</span></h3><br>
+<p>Repeat the process multiple times for better result.</p><br>
         </div>
     </div>
 

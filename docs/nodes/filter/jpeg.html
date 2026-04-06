@@ -110,6 +110,16 @@
 <li class="sidebar-nav "><a class="" href="iterator_length.html">Iterator Length</a></li>
 <li class="sidebar-nav active "><a class="" href="jpeg.html">Jpeg</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Patch Size">Patch Size</a></li>
+<li class="sidebar-nav"><a href="#Compression">Compression</a></li>
+<li class="sidebar-nav"><a href="#Reconstruct All">Reconstruct All</a></li>
+<li class="sidebar-nav"><a href="#Reconstruction">Reconstruction</a></li>
+<li class="sidebar-nav"><a href="#Transformation">Transformation</a></li>
+<li class="sidebar-nav"><a href="#Phase">Phase</a></li>
+<li class="sidebar-nav"><a href="#Deconstruct Only">Deconstruct Only</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="kuwahara.html">Kuwahara</a></li>
 <li class="sidebar-nav "><a class="" href="level.html">Level</a></li>
@@ -1013,7 +1023,7 @@
 
 <div class="title">
                                                             <h1>JPEG</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.1">1.18.1</p></div>
                                                         </div>
 <p class="subtitle">Apply JPEG compression to the image.</p>
 <br><br>
@@ -1062,7 +1072,23 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>
+Apply JPEG compression to the image (Discrete cosine transform).</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Patch Size" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Patch Size</span></h3><br>
+<p>Size of the compression block in pixel.</p><br>
+<h3><a id="Compression" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Compression</span></h3><br>
+<p>Compression level.</p><br>
+<h3><a id="Reconstruct All" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Reconstruct All</span></h3><br>
+<p>Whether to reconstruct with the same compression level.</p><br>
+<h3><a id="Reconstruction" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Reconstruction</span></h3><br>
+<p>Reconstruction level. If setting the less than the compression level, some parts of the image will be lost.</p><br>
+<h3><a id="Transformation" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Transformation</span></h3><br>
+<p>Change the transformation equation.</p><br>
+<h3><a id="Phase" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Phase</span></h3><br>
+<p>Apply phase shift to the transformed data.</p><br>
+<h3><a id="Deconstruct Only" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Deconstruct Only</span></h3><br>
+<p>Return the compressed data without reconstructing the image.</p><br>
         </div>
     </div>
 

@@ -81,6 +81,13 @@
 <li class="sidebar-nav "><a class="" href="de_corner.html">De Corner</a></li>
 <li class="sidebar-nav active "><a class="" href="de_stray.html">De Stray</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Strictness">Strictness</a></li>
+<li class="sidebar-nav"><a href="#Tolerance">Tolerance</a></li>
+<li class="sidebar-nav"><a href="#Iteration">Iteration</a></li>
+<li class="sidebar-nav"><a href="#Fill Empty">Fill Empty</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="deblur.html">Deblur</a></li>
 <li class="sidebar-nav "><a class="" href="dilate.html">Dilate</a></li>
@@ -1013,7 +1020,7 @@
 
 <div class="title">
                                                             <h1>De-Stray</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Attempt to remove orphan pixel.</p>
 <br><br>
@@ -1050,7 +1057,17 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>
+Strays (some time called orphan) refers to a single pixel that is not connected to any other pixel. This node is used to remove strays from the image by replacing it with the surrounding color.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Strictness" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Strictness</span></h3><br>
+<p>Algorithm stricness level.</p><br>
+<h3><a id="Tolerance" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Tolerance</span></h3><br>
+<p>How different two colors can be to be considered the same.</p><br>
+<h3><a id="Iteration" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Iteration</span></h3><br>
+<p>Repeat the process multiple times for better result.</p><br>
+<h3><a id="Fill Empty" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Fill Empty</span></h3><br>
+<p>Whether to treat empty space as stray as well.</p><br>
         </div>
     </div>
 

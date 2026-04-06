@@ -40,6 +40,9 @@
 <a class="" href="index.html">Misc</a></li>
 <li class="sidebar-nav active "><a class="" href="animation_control.html">Animation Control</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Triggers">Triggers</a></li>
+<ul class="submenu h3">
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="application_in.html">Application In</a></li>
 <li class="sidebar-nav "><a class="" href="application_out.html">Application Out</a></li>
@@ -947,7 +950,7 @@
 
 <div class="title">
                                                             <h1>Animation Control</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Control animation state with triggers.</p>
 <br><br>
@@ -981,6 +984,39 @@
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
 
 
+</table><p>
+This node is used to control the playback of the animations using triggers. Noted that modifying playback in runtime can cause problem with animation exporter. So this node shoud be use for live update or 
+still image rendering only.</p><br>
+<br><h2><a id="Triggers" class="anchor"></a>Triggers</h2><br>
+<table class="cc4060">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="junction">Toggle Play / Pause</span></td>
+        <td>Switch between play and pause state.</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Pause</span></td>
+        <td>Pause the animation.</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Resume</span></td>
+        <td>Resume the animation.</td>
+    </tr>
+    <tr>
+        <td><span class="junction">Play From Beginning</span></td>
+        <td>Play the animation from the beginning.</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Play Once</span></td>
+        <td>Play the animation once.</td>
+    </tr>
+    <tr>
+        <td><span class="junction" style="border-color: #8fde5dAA">Skip Frames</span></td>
+        <td>Skip by <span class="junction" style="border-color: #ff9166AA">Skip Frames Count</span> frames.</td>
+    </tr>
 </table>
         </div>
     </div>

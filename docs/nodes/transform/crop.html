@@ -45,6 +45,12 @@
 <li class="sidebar-nav "><a class="" href="composite.html">Composite</a></li>
 <li class="sidebar-nav active "><a class="" href="crop.html">Crop</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Aspect Ratio">Aspect Ratio</a></li>
+<li class="sidebar-nav"><a href="#Crop">Crop</a></li>
+<li class="sidebar-nav"><a href="#Fit Mode">Fit Mode</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="crop_content.html">Crop Content</a></li>
 <li class="sidebar-nav "><a class="" href="downscale.html">Downscale</a></li>
@@ -929,7 +935,7 @@
 
 <div class="title">
                                                             <h1>Crop</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Crop out image to create smaller ones.</p>
 <br><br>
@@ -966,7 +972,15 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table>
+</table><p>
+This node crops the input image into smaller piece. If you want to crop image into area, you can use the <a class="node" href="/nodes/_index/camera.html">Camera</a> node.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Aspect Ratio" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Aspect Ratio</span></h3><br>
+<p>If not set to "none", the aspect ratio of the crop area will be locked to the specified value.</p><br>
+<h3><a id="Crop" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Crop</span></h3><br>
+<p>A vec4 value the define crop distance from the left, top, right, and bottom of the image.</p><br>
+<h3><a id="Fit Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Fit Mode</span></h3><br>
+<p>For locked aspect ratio, this will determine how the image will be fit into the crop area.</p><br>
         </div>
     </div>
 

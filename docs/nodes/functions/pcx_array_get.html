@@ -40,6 +40,12 @@
 <a class="" href="index.html">Functions</a></li>
 <li class="sidebar-nav active "><a class="" href="pcx_array_get.html">Pcx Array Get</a></li>
 <ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Array">Array</a></li>
+<li class="sidebar-nav"><a href="#Index">Index</a></li>
+<li class="sidebar-nav"><a href="#Overflow">Overflow</a></li>
+</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="pcx_array_set.html">Pcx Array Set</a></li>
 <li class="sidebar-nav "><a class="" href="pcx_equation.html">Pcx Equation</a></li>
@@ -911,7 +917,7 @@
 
 <div class="title">
                                                             <h1>Array Get</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle"></p>
 <br><br>
@@ -933,7 +939,24 @@
                 <td><p>Pcx</p></td>
             </tr>
 
-</table>
+</table><p>
+Get the value of an array at a specific index.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Array" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Array</span></h3><br>
+<p>The array to get the value from.</p><br>
+<h3><a id="Index" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Index</span></h3><br>
+<p>The index of the value to get.</p><br>
+<ul>
+<li>If the index is negative, it will count from the end of the array.</li>
+<li>In the is an array, the output will be an array with the values at the specified indexes.</li>
+</ul><br>
+<h3><a id="Overflow" class="anchor"></a><span class="junction">Overflow</span></h3><br>
+<p>What to do if the index is out of bounds.</p><br>
+<ul>
+<li><code>Clamp</code>: Clamp the index to the bounds of the array (or inverted bound for negative index).</li>
+<li><code>Loop</code>: Wrap the index around the bounds of the array.</li>
+<li><code>Ping Pong</code>: Reflect the index at the bounds of the array.</li>
+</ul><br>
         </div>
     </div>
 

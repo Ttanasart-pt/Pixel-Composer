@@ -1080,7 +1080,7 @@
 
 <div class="title">
                                                             <h1>Area</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.0">1.18.0</p></div>
                                                         </div>
 <p class="subtitle">Generate area data.</p>
 <br><br>
@@ -1108,7 +1108,16 @@
                 <td><p>Area</p></td>
             </tr>
 
-</table>
+</table><p>
+Returns area data. Area data is simply a 5 dimensional vector that represents 2d bounding box. Each element of the vector represents the following:</p><br>
+<ol>
+<li>X position of the middle point of the area.</li>
+<li>Y position of the middle point of the area.</li>
+<li>Half width of the area.</li>
+<li>Half height of the area.</li>
+<li>Shape of the area (0: Rectangle, 1: Ellipse).</li>
+</ol>
+<p>This node allow you to create an area by combining vec2 <span class="junction" style="border-color: #ffe478AA">Position</span>, vec2 <span class="junction" style="border-color: #ffe478AA">Span</span> and integer <span class="junction" style="border-color: #ff9166AA">Shape</span> inputs.</p><br>
         </div>
     </div>
 

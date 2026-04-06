@@ -40,9 +40,9 @@ def generateFile(dirOut, pathIn, sidebar):
         content = content.replace(f"<v {version}>", "")
 
         version = version.strip("/").strip()
-        badges += f'<p class="version-banner" title="This page is writed for version {version}">{version}</p>'
+        badges += f'<p class="version-banner" title="This page is updated on version {version}">{version}</p>'
     else:
-        badges += f'<p class="version-banner" title="This page is writen before 1.18, some information might be outdated">pre 1.18</p>'
+        badges += f'<p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p>'
 
     h1s = re.findall(r"<h1>(.*?)</h1>", content)
     if len(h1s) > 0:
