@@ -1,0 +1,495 @@
+<h1>High Level Shading Language</h1>
+<br><br>
+<p>High Level Shading Language (HLSL) is a shader programming language for GPU. Pixel Composer has HLSL supports 
+through the <a href="">HLSL node</a>. This page will only cover basics of HLSL. For more information, check out the 
+<a href="">further reading</a> section.</p>
+<br>
+<h2>HLSL Node</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/node_hlsl.png" alt="">
+<br>
+<p>You can find the HLSL node under the Misc. category. HLSL node takes HLSL fragment code and custom arguments. 
+The code will compile automatically, however you can also compile it manually by clicking the Compile button in 
+the inspector.</p>
+<br><br>
+<h2>Syntax</h2>
+<br>
+<p>HLSL runs over every pixel. Process and returns the output pixel color. Let's take a look at the default 
+HLSL fragment code.
+<span class="code-block">float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);<br>
+output.color = surfaceColor;</span>
+This code does 2 things. <br><br>The first line 
+<span class="code-block">float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);</span> 
+Get the color of the current pixel from the input surface and stores it in the 
+<span class="inline-code">surfaceColor</span> variable.<br><br>
+The seconds line <span class="code-block">output.color = surfaceColor;</span> apply the color to the output.</p>
+<br>
+<h3>Variable</h3>
+<br>
+<p>Variable in HLSL are strongly typed (type need to be defined when create). Variable types you can use are:</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%">
+        <col style="width: 60%">
+    </colgroup>
+    <tr>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="inline-code">float</span></td>
+        <td>Floating point number</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">int</span></td>
+        <td>Integer</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">bool</span></td>
+        <td>Boolean</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">float2</span></td>
+        <td>2D vector</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">float3</span></td>
+        <td>3D vector</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">float4</span></td>
+        <td>4D vector</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">float3x3</span></td>
+        <td>3x3 matrix</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">float4x4</span></td>
+        <td>4x4 matrix</td>
+    </tr>
+</table>
+<br>
+<h3>Operators</h3>
+<br>
+<p>Operators in HLSL are similar to other programming languages. Here are some of the operators you can use:</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%">
+        <col style="width: 60%">
+    </colgroup>
+    <tr>
+        <td><span class="inline-code">+</span></td>
+        <td>Addition</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">-</span></td>
+        <td>Subtraction</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">*</span></td>
+        <td>Multiplication</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">/</span></td>
+        <td>Division</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">%</span></td>
+        <td>Modulus</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">++</span></td>
+        <td>Increment</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">--</span></td>
+        <td>Decrement</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">==</span></td>
+        <td>Equal</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">!=</span></td>
+        <td>Not equal</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&gt;</span></td>
+        <td>Greater than</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&lt;</span></td>
+        <td>Less than</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&gt;=</span></td>
+        <td>Greater than or equal</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&lt;=</span></td>
+        <td>Less than or equal</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">!</span></td>
+        <td>Logical NOT</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&amp;&amp;</span></td>
+        <td>Logical AND</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">||</span></td>
+        <td>Logical OR</td>
+    </tr>
+</table>
+<br>
+<h3>Swizzling</h3>
+<br>
+<p>Swizzling is a feature in HLSL that allows you to access the components of a vector. For example, you can access 
+the x and y components of a float3 vector by using <span class="inline-code">.xy</span> suffixes. Here are some examples:</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%">
+        <col style="width: 60%">
+    </colgroup>
+    <tr>
+        <td><span class="inline-code">.x</span></td>
+        <td>Get a single value from vector.</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">.xz</span></td>
+        <td>Create new float2 consisting of the first and third elements.</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">.xxx</span></td>
+        <td>Create new float3 with all the values equals to the first element.</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">.rgb</span></td>
+        <td>Create new float3 with the first three elements.</td>
+    </tr>
+</table>
+<br><br>
+<h2>Functions Reference</h2>
+<br>
+<h3><span class="inline-code">abs(x)</span></h3>
+<br>
+<p>abs</p>
+<br>
+<br>
+<h3><span class="inline-code">acos(x)</span></h3>
+<br>
+<p>acos</p>
+<br>
+<br>
+<h3><span class="inline-code">asfloat(x)</span></h3>
+<br>
+<p>asfloat</p>
+<br>
+<br>
+<h3><span class="inline-code">asin(x)</span></h3>
+<br>
+<p>asin</p>
+<br>
+<br>
+<h3><span class="inline-code">asint(x)</span></h3>
+<br>
+<p>asint</p>
+<br>
+<br>
+<h3><span class="inline-code">atan(x)</span></h3>
+<br>
+<p>atan</p>
+<br>
+<br>
+<h3><span class="inline-code">atan2(y, x)</span></h3>
+<br>
+<p>atan2</p>
+<br>
+<br>
+<h3><span class="inline-code">ceil(x)</span></h3>
+<br>
+<p>ceil</p>
+<br>
+<br>
+<h3><span class="inline-code">clamp(x, min, max)</span></h3>
+<br>
+<p>clamp</p>
+<br>
+<br>
+<h3><span class="inline-code">clip(x)</span></h3>
+<br>
+<p>clip</p>
+<br>
+<br>
+<h3><span class="inline-code">cos(x)</span></h3>
+<br>
+<p>cos</p>
+<br>
+<br>
+<h3><span class="inline-code">cosh(x)</span></h3>
+<br>
+<p>cosh</p>
+<br>
+<br>
+<h3><span class="inline-code">cross(x, y)</span></h3>
+<br>
+<p>cross</p>
+<br>
+<br>
+<h3><span class="inline-code">ddx(x)</span></h3>
+<br>
+<p>ddx</p>
+<br>
+<br>
+<h3><span class="inline-code">ddy(x)</span></h3>
+<br>
+<p>ddy</p>
+<br>
+<br>
+<h3><span class="inline-code">degrees(x)</span></h3>
+<br>
+<p>degrees</p>
+<br>
+<br>
+<h3><span class="inline-code">determinant(x)</span></h3>
+<br>
+<p>determinant</p>
+<br>
+<br>
+<h3><span class="inline-code">distance(x, y)</span></h3>
+<br>
+<p>distance</p>
+<br>
+<br>
+<h3><span class="inline-code">dot(x, y)</span></h3>
+<br>
+<p>dot</p>
+<br>
+<br>
+<h3><span class="inline-code">exp(x)</span></h3>
+<br>
+<p>exp</p>
+<br>
+<br>
+<h3><span class="inline-code">exp2(x)</span></h3>
+<br>
+<p>exp2</p>
+<br>
+<br>
+<h3><span class="inline-code">faceforward(n, i, ng)</span></h3>
+<br>
+<p>faceforward</p>
+<br>
+<br>
+<h3><span class="inline-code">floor(x)</span></h3>
+<br>
+<p>floor</p>
+<br>
+<br>
+<h3><span class="inline-code">fma(a, b, c)</span></h3>
+<br>
+<p>fma</p>
+<br>
+<br>
+<h3><span class="inline-code">fmod(x, y)</span></h3>
+<br>
+<p>fmod</p>
+<br>
+<br>
+<h3><span class="inline-code">frac(x)</span></h3>
+<br>
+<p>frac</p>
+<br>
+<br>
+<h3><span class="inline-code">frexp(x, exp)</span></h3>
+<br>
+<p>frexp</p>
+<br>
+<br>
+<h3><span class="inline-code">fwidth(x)</span></h3>
+<br>
+<p>fwidth</p>
+<br>
+<br>
+<h3><span class="inline-code">isfinite(x)</span></h3>
+<br>
+<p>isfinite</p>
+<br>
+<br>
+<h3><span class="inline-code">isinf(x)</span></h3>
+<br>
+<p>isinf</p>
+<br>
+<br>
+<h3><span class="inline-code">isnan(x)</span></h3>
+<br>
+<p>isnan</p>
+<br>
+<br>
+<h3><span class="inline-code">ldexp(x, exp)</span></h3>
+<br>
+<p>ldexp</p>
+<br>
+<br>
+<h3><span class="inline-code">length(x)</span></h3>
+<br>
+<p>length</p>
+<br>
+<br>
+<h3><span class="inline-code">lerp(x, y, s)</span></h3>
+<br>
+<p>lerp</p>
+<br>
+<br>
+<h3><span class="inline-code">lit(n_dot_l, n_dot_h, m)</span></h3>
+<br>
+<p>lit</p>
+<br>
+<br>
+<h3><span class="inline-code">log(x)</span></h3>
+<br>
+<p>log</p>
+<br>
+<br>
+<h3><span class="inline-code">log10(x)</span></h3>
+<br>
+<p>log10</p>
+<br>
+<br>
+<h3><span class="inline-code">log2(x)</span></h3>
+<br>
+<p>log2</p>
+<br>
+<br>
+<h3><span class="inline-code">max(x, y)</span></h3>
+<br>
+<p>max</p>
+<br>
+<br>
+<h3><span class="inline-code">min(x, y)</span></h3>
+<br>
+<p>min</p>
+<br>
+<br>
+<h3><span class="inline-code">modf(x, out ip)</span></h3>
+<br>
+<p>modf</p>
+<br>
+<br>
+<h3><span class="inline-code">mul(x, y)</span></h3>
+<br>
+<p>mul</p>
+<br>
+<br>
+<h3><span class="inline-code">noise(x)</span></h3>
+<br>
+<p>noise</p>
+<br>
+<br>
+<h3><span class="inline-code">normalize(x)</span></h3>
+<br>
+<p>normalize</p>
+<br>
+<br>
+<h3><span class="inline-code">pow(x, y)</span></h3>
+<br>
+<p>pow</p>
+<br>
+<br>
+<h3><span class="inline-code">radians(x)</span></h3>
+<br>
+<p>radians</p>
+<br>
+<br>
+<h3><span class="inline-code">rcp(x)</span></h3>
+<br>
+<p>rcp</p>
+<br>
+<br>
+<h3><span class="inline-code">reflect(i, n)</span></h3>
+<br>
+<p>reflect</p>
+<br>
+<br>
+<h3><span class="inline-code">refract(i, n, ?)</span></h3>
+<br>
+<p>refract</p>
+<br>
+<br>
+<h3><span class="inline-code">round(x)</span></h3>
+<br>
+<p>round</p>
+<br>
+<br>
+<h3><span class="inline-code">rsqrt(x)</span></h3>
+<br>
+<p>rsqrt</p>
+<br>
+<br>
+<h3><span class="inline-code">saturate(x)</span></h3>
+<br>
+<p>saturate</p>
+<br>
+<br>
+<h3><span class="inline-code">sign(x)</span></h3>
+<br>
+<p>sign</p>
+<br>
+<br>
+<h3><span class="inline-code">sin(x)</span></h3>
+<br>
+<p>sin</p>
+<br>
+<br>
+<h3><span class="inline-code">sincos(x, out s, out c)</span></h3>
+<br>
+<p>sincos</p>
+<br>
+<br>
+<h3><span class="inline-code">sinh(x)</span></h3>
+<br>
+<p>sinh</p>
+<br>
+<br>
+<h3><span class="inline-code">smoothstep(min, max, x)</span></h3>
+<br>
+<p>smoothstep</p>
+<br>
+<br>
+<h3><span class="inline-code">sqrt(x)</span></h3>
+<br>
+<p>sqrt</p>
+<br>
+<br>
+<h3><span class="inline-code">step(y, x)</span></h3>
+<br>
+<p>step</p>
+<br>
+<br>
+<h3><span class="inline-code">tan(x)</span></h3>
+<br>
+<p>tan</p>
+<br>
+<br>
+<h3><span class="inline-code">tanh(x)</span></h3>
+<br>
+<p>tanh</p>
+<br>
+<br>
+<h3><span class="inline-code">transpose(x)</span></h3>
+<br>
+<p>transpose</p>
+<br>
+<br>
+<h3><span class="inline-code">trunc(x)</span></h3>
+<br>
+<p>trunc</p>
+<br>
+<br>
+<h2>Further Readings</h2>
+<br>

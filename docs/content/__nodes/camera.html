@@ -1,0 +1,32 @@
+<p>Camera node used to capture parts of the scene. You can think of it as a 2D camera with fix dimension 
+looking around your image.<br><br>
+Camera node also allows for parallax and Depth of Field effect.</p>
+<br><br>
+<h2>Camera Properties</h2>
+<br>
+<p>The <junc focus area> is an array data controlling the camera size and position.<br><br>
+The <junc zoom> property allows you to scale the image.</p>
+<br>
+<h2>Parallax</h2>
+<br>
+<p>Camera node allows for parallax effect by layering multiple surfaces at different depth.<br><br>
+The extra surface can be added to the <junc element {_s}> properties. When 
+the new element is added, you can change the position setting in the <junc parallax {_s}>
+property. The X and Y value indicate the parallax direction, and the Z value use to control the speed in which 
+the surface will be moved with the camera.</p>
+<br>
+<img node_camera_parallax>
+<br>
+<p>Note that the speed of parallax is depends on both XY and Z axis. If both X and Y are set to 0, then 
+there will be no parallax effect.</p>
+<br><br>
+<h2>Depth of Field</h2>
+<br>
+<p>Camera node can simulate basic Depth of Field effect using the Z value of the object as a distance from 
+camera</p>
+<br>
+<img node_camera_dof>
+<br>
+<p>The <junc Focal Distance> control where the sharpest depth will be, 
+the <junc Focal Range> control the range where the object stays sharp 
+and <junc Defocus> control how much blur will applies to object further away.</p>

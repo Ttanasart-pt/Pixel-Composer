@@ -1,0 +1,159 @@
+<h1>Graph Panel</h1>
+<br><br>
+<img src="/src/images/2_interfaces/graph_panel.png" alt="">
+<br>
+<p>Graph panel is the central work area of your project. It displays all the nodes and connections.</p>
+<br><br>
+<h2>Toolbars</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/graph_toolbars.png" alt="">
+<br>
+<h3>Context</h3>
+<br>
+<p>Context means the area the node can resides. When you first open the graph panel, you're in the "global" context. 
+When you double-click on a group, you'll be move into the group context.</p>
+<br>
+<p>You can click on the name in the context area to navigate between context level.</p>
+<br>
+<h3>Visibility Settings</h3>
+<br>
+<img src="/src/images/2_interfaces/graph_visible.png" alt="">
+<br>
+<p>Here you can toggle on/off different elements of the display.</p>
+<br>
+<h3>Grid Settings</h3>
+<br>
+<img src="/src/images/2_interfaces/garph_grid.png" alt="">
+<br>
+<p>Here you can modify grid underlying the nodes.</p>
+<br>
+<h3>Connection Rendering Settings</h3>
+<br>
+<img src="/src/images/2_interfaces/graph_connection.png" alt="">
+<br>
+<p>Here you can change how the connection line is being rendered.</p>
+<br>
+<h3>Minimap</h3>
+<br>
+<img src="/src/images/2_interfaces/graph_minimao.png" alt="">
+<br>
+<p>Clicking on this button will toggle minimap on/off. Minimap will show your entire node graph. 
+Click on the map to navigate to that area.</p>
+<br>
+<h3>Export Graph</h3>
+<br>
+<img src="/src/images/2_interfaces/graph_export.png" alt="">
+<br>
+<p>This button open graph export dialog, where you can export current node graph as a .png file for sharing.</p>
+<br><br>
+<h2>View Manipulation</h2>
+<br>
+<p>When viewing node graph, you can manipulate the view using mouse and keyboards:</p>
+<br>
+<table class="hotkey">
+    <tr>
+        <th>Action</th>
+        <th>Hotkey</th>
+    </tr>
+    <tr>
+        <td>Pan</td>
+        <td>Middle mouse<br><br><span class="inline-code">Ctrl</span> + Left click</td>
+    </tr>
+    <tr>
+        <td>Zoom</td>
+        <td>Scroll wheel</td>
+    </tr>
+    <tr>
+        <td>Center selecting nodes or all nodes (if no nodes are selected)</td>
+        <td><span class="inline-code">F</span></td>
+    </tr>
+</table>
+<br><br>
+<h2>Nodes Manipulation</h2>
+<br>
+<table class="hotkey">
+    <tr>
+        <th>Action</th>
+        <th>Hotkey</th>
+    </tr>
+    <tr>
+        <td>Select node</td>
+        <td>Left click on node</td>
+    </tr>
+    <tr>
+        <td>Select multiple node</td>
+        <td><span class="inline-code">Shift</span> + Left click on node</td>
+    </tr>
+    <tr>
+        <td>Deselect node</td>
+        <td>Left click an empty space</td>
+    </tr>
+    <tr>
+        <td>Move node</td>
+        <td>Left click and drag<br><br>Hold <span class="inline-code">Ctrl</span> to disable snapping.</td>
+    </tr>
+</table>
+<br><br>
+<h2>Junction Manipulation</h2>
+<br>
+<h3>Connecting</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/graph_connect.png" alt="">
+<br>
+<p>To connect two nodes, click on the output junction of the source node, then drag to the input junction of 
+the target node. The connection will be made if the data types are compatible.</p>
+<br>
+<p>You can also connect from output directly to the input property on the inspector panel directly.</p>
+<br>
+<p>You can also drag out from the inspector panel to the graph panel to extract the value to a new node.</p>
+<br>
+<h3>Disconnecting</h3>
+<br>
+<p>Click once on the input junction to disconnect it.</p>
+<br>
+<p>You can also right click on the connection and click on the connection in the context menu to remove it.</p>
+<br><br>
+<h2>Hotkeys</h2>
+<br>
+<p>There're a number of hotkeys to make some common operation faster.</p>
+<br>
+<h3>Blend</h3>
+<br>
+<p>Select 2 nodes and press <span class="inline-code">ctrl + b</span> to blend outputs from both nodes together.</p>
+<br>
+<h3>Compose</h3>
+<br>
+<p>Select 2 nodes or more and press <span class="inline-code">ctrl + shift + b</span> to combine all 
+outputs from all nodes with compose node.</p>
+<br>
+<h3>Group</h3>
+<br>
+<p>Select multiple nodes, then press <span class="inline-code">ctrl + g</span> to group all of them together. 
+External connection will be turns into group input/output nodes automatically.</p>
+<br>
+<h3>Quick nodes</h3>
+<br>
+<p>When the graph panel is active (orange border) you can use one letter shortcut to create some basic nodes.</p>
+<br>
+<table>
+    <tr>
+        <th>Hotkey</th>
+        <th>Node</th>
+    </tr>
+    <tr class = "center">
+        <td><span class="inline-code">1</span></td>
+        <td>Number</td>
+    </tr>
+    <tr class = "center">
+        <td><span class="inline-code">2</span></td>
+        <td>Vector 2</td>
+    </tr>
+    <tr class = "center">
+        <td><span class="inline-code">3</span></td>
+        <td>Vector 3</td>
+    </tr>
+    <tr class = "center">
+        <td><span class="inline-code">4</span></td>
+        <td>Vector 4</td>
+    </tr>
+</table>

@@ -1,0 +1,44 @@
+<h1>Array Processor</h1>
+<br><br>
+<img src="/src/images/3_nodes/nodes.png" alt="">
+<br>
+<p>Array Processors are type of nodes that can process array of inputs. This allows you to batch process 
+multiple data, or create varient of image with different parameters.</p>
+<br>
+<p>Node that are array processor will have the <img src="/src/images/3_nodes/array_processor.png" alt=""> icon.</p>
+<br><br>
+<h2>Array Processing Types</h2>
+<br>
+<p>If only one input is an array. Then each value in the array will be applies and output one by one. 
+Thus the output will be array of the same size. <br><br>However, if there're multiple array inputs 
+(especially with different size), then there're multiple ways the node can process the arrays.</p>
+<br>
+<p>There are 4 types of array processing which can be change in the settings tab.</p>
+<br>
+<h3>Loop</h3>
+<br>
+<img src="/src/images/3_nodes/array_process/array_process_loop.png" alt="">
+<br>
+<p>This is the default behaviour. Loop the shorter array until the longer array is ended. The output will be array 
+of the same size as the longer array.</p>
+<br>
+<h3>Hold</h3>
+<br>
+<img src="/src/images/3_nodes/array_process/array_process_hold.png" alt="">
+<br>
+<p>Hold the last value of the smaller array until the longer array is ended. The output will be array of the 
+same size as the longer array.</p>
+<br>
+<h3>Expand</h3>
+<br>
+<img src="/src/images/3_nodes/array_process/array_process_expand.png" alt="">
+<br>
+<p>Create all combinations of all input arrays. The output size will be the multiplication of all array lengths.</p>
+<br>
+<h3>Expand Inverse</h3>
+<br>
+<img src="/src/images/3_nodes/array_process/array_process_expand_inverse.png" alt="">
+<br>
+<p>Create all combinations of all input arrays. But reverse the order in which the combinations are generated. 
+The output size will be the multiplication of all array lengths.</p>
+<br>

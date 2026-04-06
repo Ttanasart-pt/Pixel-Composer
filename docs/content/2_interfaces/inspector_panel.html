@@ -1,0 +1,190 @@
+<h1>Inspector Panel</h1>
+<br><br>
+<img src="/src/images/2_interfaces/inspector_panel.png" alt="">
+<br>
+<p>Inspector Panel displays properties of the node(s) you're selecting, if no nodes are selected, displays 
+properties of the current context/project.</p>
+<br><br>
+<h2>Project Inspector</h2>
+<br>
+<p>When not selecting any nodes and you're on the global context. Inspector panel will display project properties. 
+Including project-wide values, metadata and global variables.</p>
+<br>
+<img src="/src/images/2_interfaces/inspector_panel_global.png" alt="">
+<br>
+<h3>Project-wide Settings</h3>
+<br>
+<p>Project wide-values/settings are global variables that applies automatically to some values. Currently there're 
+only 2 values: default dimension and palette.</p>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_use_global.png" alt="">
+<br>
+<p>The value that use project wide-values will have the "use project" button. Modifying the value will disable 
+the link. Click on the button to sync the value with the project-wide value again.</p>
+</p>
+<br>
+<h3>Metadata</h3>
+<br>
+<p>Project metadata contains basic information used when sharing the project with other peoples.</p>
+<br>
+<h3>Global Variables</h3>
+<br>
+<p>Global Variables are values that can be access from any node using expression. It can also be modify through 
+command line. There're several rules for naming global variable to prevent error:</p>
+<br>
+<ul>
+    <li>Name has to starts with alphabet or underscore.</li>
+    <li>It can only contains alphabets, numbers, and underscores</li>
+    <li>It can't be one of the reserved name.</li>
+</ul>
+<br>
+<p>For more information, visit <a href="">global variable</a> page.</p>
+<br><br>
+<h2>Group Inspector</h2>
+<br>
+<img src="/src/images/2_interfaces/inspector_group.png" alt="">
+<br>
+<p>When not selecting any nodes and you're inside some group. The inspector will display group information 
+as if you're selecting the group itself.</p>
+<br><br>
+<h2>Node Inspector</h2>
+<br>
+<img src="/src/images/2_interfaces/inspector_node.png" alt="">
+<br>
+<p>When selecting a node. The inspector panel will display node information.</p>
+<br>
+<p>When selecting multiple nodes of the same type, the inspector will display the common properties of the nodes. 
+And when selecting multiple nodes of different types, the inspector will display the properties of 
+each node after another.</p>
+<br>
+<h3>Presets</h3>
+<br>
+<img src="/src/images/2_interfaces/inspector_preset.png" alt="">
+<br>
+<p>You can store the current value of the node and reuse it by creating a preset.</p>
+<br>
+<p class="banner warning">You can name the preset "_default" to make it the default value when creating the node 
+of the same type.</p>
+<br>
+<h3>Inspector Actions</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_action.png" alt="">
+<br>
+<p>Some node comes with action button that has to be trigger manually. Some common inspector actions are:</p>
+<br>
+<table>
+    <colgroup>
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 60%;">
+      </colgroup>
+    <tr>
+        <td></td>
+        <td>Refresh</td>
+        <td>Refresh the node.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Render</td>
+        <td>Render the export node.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Clear Cache</td>
+        <td>Clear cached output.</td>
+    </tr>
+</table>
+<br>
+<h3>Node Locking</h3>
+<br>
+<p>You can click on the lock icon <img src="/src/images/2_interfaces/lock.png" alt=""> to lock the inspector panel to the inspecting node.</p>
+<br><br>
+<p>The inspector contains 2 pages accessible with the tab.</p>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_tab.png" alt="">
+<br><br>
+<h2>Properties Tab</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_properties.png" alt="">
+<br>
+<p>This tab list all input and output properties of the node. You can modify the input value using the edit widget. 
+Each data type and subtype has its own edit widget. However there're some shared elements:</p>
+</p>
+<br>
+<h3>Name Area</h3>
+<br>
+<p>This area contains main controls for the properties.</p>
+<br>
+<table>
+    <colgroup>
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 60%;">
+      </colgroup>
+    <tr>
+        <td><img src="/src/images/2_interfaces/animate_clock.png" alt=""></td>
+        <td>Toggle animation</td>
+        <td>Toggle animation status on/off</td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/junc_visible.png" alt=""></td>
+        <td>Visibility</td>
+        <td>Make the junction appear on the graph.</td>
+    </tr>
+    <tr>
+        <td><img class="deco" src="/src/images/2_interfaces/inspector_properties_name.png" alt=""></td>
+        <td>Name</td>
+        <td>Name of the property. You can click and drag it to the graph panel to extract value.</td>
+    </tr>
+</table>
+<br>
+<h3>Property Recolor</h3>
+<br>
+<img src="/src/images/2_interfaces/inspector_properties_context.png" alt="">
+<br>
+<p>You can right click on the property name to change its color. This change will reflect on the junction color 
+in the graph as well.</p>
+<br>
+<h3>Expression</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_properties_expression.png" alt="">
+<br>
+<p>On the right side is a button to toggle expression. Expression allows the data to be control using script. 
+For more information about expression scripting please visit the <a href="">scripting</a> page.</p>
+</p>
+<br>
+<h3>Keyframe Control</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_properties_keyframe.png" alt="">
+<br>
+<p>When the property is animated. The right area will turns into keyframe controller. There you can add and jump 
+between keyframes.</p>
+<br>
+<table class="icon-detail">
+    <tr>
+        <td><img src="/src/images/2_interfaces/prop_on_end.png" alt=""></td>
+        <td>Looping mode</td>
+        <td>Cycle around different keyframe looping modes.</td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/prop_keyframe_jump.png" alt=""></td>
+        <td>Jump to next/previous keyframe</td>
+        <td>Mode frames cursor to previous/next keyframe.</td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/prop_keyframe_add.png" alt=""></td>
+        <td>Add/remove keyframe</td>
+        <td>If there's no keyframe at the current time, add a new keyframe with the current value.<br><br>
+If there is one, remove it.</td>
+    </tr>
+</table>
+<br><br>
+<h2>Settings Tab</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_settings.png" alt="">
+<br>
+<p>This tab will display node attributes. Node attributes control the behaviour of the node similiar to properties, 
+but attributes are more general and cannot be animated.</p>
+<br>
+<p>For more information about node attributes, check out the <a href="">attributes</a> page.</p>
+<br>

@@ -1,0 +1,22 @@
+<p>Pack sprites nodes allows for quick composition of surfaces array with different sizes.</p>
+<br><br>
+<h2>Packing Algorithms</h2>
+<br>
+<h3>Skyline</h3>
+<br>
+<p>Skyline packing place surfaces next to each other horizontally until it reach <junc max width/>, then it goes to the beginning 
+of the row and search for the best fit for the next surface. It is a very fast algorithm but it can leave a lot of empty space.</p>
+<br>
+<h3>Shelf</h3>
+<br>
+<p>Shelf packing place surfaces next to each other horizontally until it reach <junc max width/> while keeping the same height, 
+then it goes to the next row.</p>
+<br>
+<h3>Top left</h3>
+<br>
+<p>Top left packing sort the surfaces by height and always try to place the next surface in the top left corner of the leftover space.</p>
+<br>
+<h3>Best fit</h3>
+<br>
+<p>Best fit is the slowest algorithm. It sort all surfaces by size and search for the best fit for each subsequent surface.</p>
+<br>

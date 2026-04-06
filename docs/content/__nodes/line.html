@@ -1,0 +1,48 @@
+<p>Line node is used to draw a line (or lines) on a surface.</p>
+<br><br>
+<h2>Path Data</h2>
+<br>
+<p>Line node takes path data to define the path to draw. Without it, it will draw a single straight line across 
+the middle of the surface with the <junc rotation/> value control the angle.<br><br>
+The path data can be provided through <junc path/>.</p>
+<br>
+<img line_path_data/>
+<br><br>
+<h2>Resolution</h2>
+<br>
+<p>When drawing a path, line node generate segment of straight lines and combine them together. The more 
+segment it generated the more accurate the path will be. There're 2 types of segment generation controlled by 
+the <junc fix length/> property.</p>
+<br>
+<h3>Fix amount</h3>
+<br>
+<p>By default, <junc fix length/> is set to false. This mean the amount of the segment is being controlled 
+directly through the <junc segment/> property./p>
+<br>
+<img-deco line_fix_amount/>
+<br>
+<h3>Fix length</h3>
+<br>
+<p>When <junc fix length/> is set to true, the segment length is being controlled instead. The <junc segment length/>
+property will determine the maximum length of each segment in pixel.</p>
+<br>
+<img-deco line_fix_length/>
+<br><br>
+<h2>Line Width</h2>
+<br>
+<p>Line width can be controlled through the <junc width/> property. This width is a vector containing 2 values, 
+the width of each segment will be random bewteen these 2 values. You can set it to the same value to fix the 
+length.</p>
+<br>
+<h3><junc 1px mode/></h3>
+<br>
+<p>The <junc 1px mode/> toggle will fix the line width to 1 pixel, and use a more pixel perfect algorithm to 
+draw the lines.</p>
+<br>
+<img-deco line_width_1px/>
+<br>
+<h3><junc width over length/></h3>
+<br>
+<p>You can modulate the width of the line over it's length using the <junc width over length/> curve. This curve 
+will be multiplied with the <junc width/> value to determine the final width.</p>
+<br><br>

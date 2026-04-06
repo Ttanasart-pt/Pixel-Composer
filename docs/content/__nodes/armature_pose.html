@@ -1,0 +1,30 @@
+<p>Armature Pose takes a bone structure defined by the <node armature> node and transform them.</p>
+<br><br>
+<h2>Posing</h2>
+<br>
+<p>Bone created by the <node armature> node can't be animated by itself and consider as the "rest" position. Armature Pose can 
+transform and animated them in the preview panel:</p>
+<br>
+<table class="cc4060">
+    <tr>
+        <th>Property</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Rotation</td>
+        <td>Click and drag on the bone</td>
+    </tr>
+    <tr>
+        <td>Translation</td>
+        <td>Click and drag the origin (only a parent or a detached bone can be move)</td>
+    </tr>
+    <tr>
+        <td>Scale</td>
+        <td>Click and drag the end point of the bone</td>
+    </tr>
+</table>
+<br><br>
+<h2>Animation</h2>
+<br>
+<p>Animation can be toggle in the inspector just like any other properties. However because all transformation (position, 
+rotation, scale) are combines as one property. It's recommended to separate axis when animating to allows for more control.</p>

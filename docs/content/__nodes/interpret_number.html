@@ -1,0 +1,31 @@
+<p>Interpret Number convert array of numbers into surface by map the value into a range. <br><br>This node can be useful 
+for creating animation by animating the number array instead of the surface itself.</p>
+<br>
+<img interpret_number/>
+<br><br>
+<h2>Properties</h2>
+<br>
+<h3><junc number/></h3>
+<br>
+<p>The array of number to interpret.</p>
+<br>
+<h3><junc mode/></h3>
+<br>
+<p>Select intepretation modes:</p>
+<br>
+<ul>
+    <li><span class="inline-code">Greyscale</span>: Interpret value into greyscale color by mapping to the 
+<junc range/> scale.</li>
+    <li><span class="inline-code">Gradient</span>: Takes the value from the range mapping and use it to sample 
+color from the <junc gradient/>.</li>
+</ul>
+<br>
+<h3><junc range/></h3>
+<br>
+<p>The range to map the value in. <span class="inline-code">Min</span> value will correspond to 0 and <span
+class="inline-code">Max</span> value will correspond to 1.</p>
+<br>
+<h3><junc gradient/></h3>
+<br>
+<p>The gradient to map to if use the <span class="inline-code">Gradient</span> mode.</p>
+<br>

@@ -1,0 +1,53 @@
+<p>2D Light node draw a light on top of original surface. If you want the light to cast a shadow, check 
+out <node shadow_cast>.</p>
+<br><br>
+<h2>Light Properties</h2>
+<br>
+<h3><junc light shape/></h3>
+<br>
+<p>Control the shape of the light. There are 4 available shapes: Point, line, line asymmetric, and spot.</p>
+<br>
+<img 2d_light_shape>
+<br>
+<h3><junc range/></h3>
+<br>
+<p>The size of the light.</p>
+<br>
+<h3><junc intensity/></h3>
+<br>
+<p>The brightness of the light. Adjusting this amount may effect the resulting range.</p>
+<br>
+<h3><junc color/></h3>
+<br>
+<p>Control color of the light. Note that light use additive blending.</p>
+<br>
+<h3><junc attenuation/></h3>
+<br>
+<p>Control the falloff of the light. There are 3 available falloff: quadratic, invert quadratic and linear.</p>
+<br>
+<img 2d_light_attenuation>
+<br>
+<h3><junc banding/></h3>
+<br>
+<p>Banding convert smooth light to discrete steps. The banding width depends on the <junc attenuation/>.</p>
+<br>
+<img 2d_light_banding>
+<br><br>
+<h2>Radial Properties</h2>
+<br>
+<p>With point light, you can use <junc radial banding/> to add the "shine" effect to the light.</p>
+<br>
+<h3><junc radial banding/></h3>
+<br>
+<p>The amount of radials, set to 0 for a full circle.</p>
+<br>
+<h3><junc radial start/></h3>
+<br>
+<p>Rotate the radial effect.</p>
+<br>
+<h3><junc radial band ratio/></h3>
+<br>
+<p>The width of the radial band as a ratio. 0 means no light and 1 mean fulll circle.</p>
+<br>
+<img 2d_light_radial_banding>
+<br><br>

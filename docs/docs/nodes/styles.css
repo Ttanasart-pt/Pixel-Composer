@@ -1,0 +1,4 @@
+img.node-content {
+    width: min(100%, calc(100% - 280px));
+    max-width: fit-content;
+}

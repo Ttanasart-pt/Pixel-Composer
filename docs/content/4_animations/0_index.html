@@ -1,0 +1,78 @@
+<h1>Animations</h1>
+<br><br>
+<img src="/src/images/2_interfaces/animation_content.png" alt="">
+<br>
+<p>Pixel Composer use keyframe-based animation. Most properties can be animated using the inspector panel 
+and the animation can be view and modify at the animation panel.</p>
+<br>
+<h2>Animation Basics</h2>
+<br>
+<h3>Enabling Animation</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_properties.png" alt="">
+<br>
+<p>To enable animation, click on the animation icon <img src="/src/images/2_interfaces/animate_clock.png" alt=""> 
+in the inspector. Click on it again to disable the animation.</p>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_properties_keyframe.png" alt="">
+<br>
+<h3>Adding Keyframe</h3>
+<br>
+<p>When modifying animated properties. A new keyframe will be created automatically at the current frame. 
+You can also create new keyframe by clicking on the keyframe icon <img src="/src/images/2_interfaces/prop_keyframe_add.png" alt=""> 
+on the inspector or animation panel.</p>
+<br>
+<h3>Removing Keyframe</h3>
+<br>
+<p>To remove a keyframe, select the keyframe(s) in the animation panel and press the 
+<span class="inline-code">Del</span> key.</p>
+<br><br>
+<h2>Keyframe Types</h2>
+<br>
+<p>By default, all keyframes use linear interpolation. You can change how the value is interpolated by going to 
+the animation panel. Select a keyframe and double click and drag horizontally to smoothen the interpolation curve.</p>
+<br>
+<img src="/src/images/2_interfaces/keyframe_inter.png" alt="">
+<br>
+<p>You can also right click on the keyframe and set the interpolation type directly.</p>
+<br>
+<img class="deco" src="/src/images/2_interfaces/keyframe_interpol_context.png" alt="">
+<br>
+<table class="icon-detail">
+    <tr>
+        <td><img src="/src/images/2_interfaces/interpolation_linear.png" alt=""></td>
+        <td>Linear</td>
+        <td>Value changes linearly between keyframes.</td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/interpolation_curve.png" alt=""></td>
+        <td>Smooth</td>
+        <td>Value changes following a smooth curve.</td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/interpolation_hold.png" alt=""></td>
+        <td>Hold</td>
+        <td>Value changes abruptly between keyframes.</td>
+    </tr>
+</table>
+<br><br>
+<h2>Animation Curve</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/animation_curve.png" alt="">
+<br>
+<p>You can display animation curve in the animation panel by pressing the curve icon at the property name.</p>
+<br><br>
+<h2>Separated Axis</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/animation_vector_nonsep.png" alt="">
+<br>
+<p>For value with array subdata (e.g. Vector, Area, etc.) a keyframe will represent all the member in the array. 
+This means you can't animate each member independently. To do so, you need to separate the axis by right-clicking 
+on the property in the inspector and select "Separate Axis".</p>
+<br>
+<img src="/src/images/2_interfaces/animation_context_sep.png" alt="">
+<br>
+<p>With separated axis mode on, each member in the array will get their own timeline.</p>
+<br>
+<img class="deco" src="/src/images/2_interfaces/animation_vector_sep.png" alt="">
+<br><br>

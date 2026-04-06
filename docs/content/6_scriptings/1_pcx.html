@@ -1,0 +1,352 @@
+<h1>Pixel Composer Expression</h1>
+<br><br>
+<p>Pixel Composer Expression (PCX) is a scripting language used for controlling properties value. 
+Instead of using keyframe animation, you can write a script to control the value of a property.</p>
+<br>
+<h2>Using Expression</h2>
+<br>
+<p>In the inspector panel. Click on the expression icon, or right click at the property and select 
+"Use expression" to enable/disable expression.</p>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_properties_expression.png" alt="">
+<br><br>
+<h2>Syntax</h2>
+<br>
+<h3>Statement</h3>
+<br>
+<p>Statements are separated by line, and code block is done with bracklet <span class="inline-code">{}</span></p>
+<br>
+<h3>Returns value</h3>
+<br>
+<p>The returns value of the PCX is the last result. So it can be as simple as a single expression:
+<span class="code-block">1 + 1</span>Which will returns the value 2.</p>
+<br>
+<h3>Variables</h3>
+<br>
+<h4>Local variable</h4>
+<br>
+<p>Local variable can be define directly:<span class="code-block">a = 5<br>a * 2</span>will returns 10.</p>
+<br>
+<h4>Global variable</h4>
+<br>
+<p>Global variable are read only, and can be call simply by typing the variable name.</p>
+<br>
+<h4>Value variable</h4>
+<br>
+<p><span class="inline-code">value</span> is a reserved variable for getting the value of the property 
+itself. You can use it to get value from keyframe animation or from other node through connection.</p>
+<br>
+<h4>Global Structs</h4>
+<br>
+<p>There are several global structs that can be used to access other global values.</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%">
+        <col style="width: 60%">
+    </colgroup>
+    <tr>
+        <th>Variable</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.frame</span></td>
+        <td>The current frame index</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.progress</span></td>
+        <td>Animation progress from 0 - 1</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.frameTotal</span></td>
+        <td>Total frames in the animation</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.fps</span></td>
+        <td>Current preview speed</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.time</span></td>
+        <td>Current preview time (in seconds)</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.name</span></td>
+        <td>Current project name</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeSecond</span></td>
+        <td>Current (real time) second.</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeMinute</span></td>
+        <td>Current (real time) minute</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeHour</span></td>
+        <td>Current (real time) hour</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeDay</span></td>
+        <td>Current (real time) day</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeDayInWee</span></td>
+        <td>Current (real time) day in a week (0 - 6)</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeMonth</span></td>
+        <td>Current (real time) month</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeYear</span></td>
+        <td>Current (real time) year</td>
+    </tr>
+</table>
+<br>
+<h4>Constants</h4>
+<br>
+<p>Some words are also reserved for mathematical constants.</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%">
+        <col style="width: 60%">
+    </colgroup>
+    <tr>
+        <th>Variable</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td><span class="inline-code">pi</span></td>
+        <td>3.1415926535</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">e</span></td>
+        <td>2.7182818284</td>
+    </tr>
+</table>
+<br>
+<h3>String</h3>
+<br>
+<p>String can be defined with the double quote <span class="inline-code">""</span>. String support some 
+arithmetic operation and array-like access.<span class="code-block">s = "Pixel"<br>s += " Composer"<br>s[0]</span>
+will returns "P".</p>
+<br>
+<h3>Array</h3>
+<br>
+<p>Array can be created and access with square bracket <span class="inline-code">[]</span>. Pixel Composer 
+use zero-indexing for array.<span class="code-block">a = [ 0, 1, 2, 3, 4, 5 ]<br>a[2]</span>will return 2.</p>
+<br>
+<h3>Conditions</h3>
+<br>
+<p>You can create conditional statement with if, elseif, and else:<span class="code-block">
+if(value > 10) {<br>
+&nbsp;&nbsp;1<br>
+} elseif(value < 0) {<br>
+&nbsp;&nbsp;-1<br>
+} else {<br>
+&nbsp;&nbsp;0<br>
+}</span>This will return -1, 0, 1 based on the junction value.</p>
+<br><br>
+<h2>Functions Reference</h2>
+<br>
+<br>
+<h3><span class="inline-code">sin(radian)</span></h3>
+<br>
+<p>sin</p>
+<br>
+<br>
+<h3><span class="inline-code">cos(radian)</span></h3>
+<br>
+<p>cos</p>
+<br>
+<br>
+<h3><span class="inline-code">tan(radian)</span></h3>
+<br>
+<p>tan</p>
+<br>
+<br>
+<h3><span class="inline-code">dsin(degree)</span></h3>
+<br>
+<p>dsin</p>
+<br>
+<br>
+<h3><span class="inline-code">dcos(degree)</span></h3>
+<br>
+<p>dcos</p>
+<br>
+<br>
+<h3><span class="inline-code">dtan(degree)</span></h3>
+<br>
+<p>dtan</p>
+<br>
+<br>
+<h3><span class="inline-code">arcsin(x)</span></h3>
+<br>
+<p>arcsin</p>
+<br>
+<br>
+<h3><span class="inline-code">arccos(x)</span></h3>
+<br>
+<p>arccos</p>
+<br>
+<br>
+<h3><span class="inline-code">arctan(x)</span></h3>
+<br>
+<p>arctan</p>
+<br>
+<br>
+<h3><span class="inline-code">arctan2(y, x)</span></h3>
+<br>
+<p>arctan2</p>
+<br>
+<br>
+<h3><span class="inline-code">darcsin(x)</span></h3>
+<br>
+<p>darcsin</p>
+<br>
+<br>
+<h3><span class="inline-code">darccos(x)</span></h3>
+<br>
+<p>darccos</p>
+<br>
+<br>
+<h3><span class="inline-code">darctan(x)</span></h3>
+<br>
+<p>darctan</p>
+<br>
+<br>
+<h3><span class="inline-code">darctan2(y, x)</span></h3>
+<br>
+<p>darctan2</p>
+<br>
+<br>
+<h3><span class="inline-code">abs(x)</span></h3>
+<br>
+<p>abs</p>
+<br>
+<br>
+<h3><span class="inline-code">round(x)</span></h3>
+<br>
+<p>round</p>
+<br>
+<br>
+<h3><span class="inline-code">ceil(x)</span></h3>
+<br>
+<p>ceil</p>
+<br>
+<br>
+<h3><span class="inline-code">floor(x)</span></h3>
+<br>
+<p>floor</p>
+<br>
+<br>
+<h3><span class="inline-code">fract(x)</span></h3>
+<br>
+<p>fract</p>
+<br>
+<br>
+<h3><span class="inline-code">sign(x)</span></h3>
+<br>
+<p>sign</p>
+<br>
+<br>
+<h3><span class="inline-code">min(x, y)</span></h3>
+<br>
+<p>min</p>
+<br>
+<br>
+<h3><span class="inline-code">max(x, y)</span></h3>
+<br>
+<p>max</p>
+<br>
+<br>
+<h3><span class="inline-code">clamp(x, min = 0, max = 1)</span></h3>
+<br>
+<p>clamp</p>
+<br>
+<br>
+<h3><span class="inline-code">lerp(x, y, amount)</span></h3>
+<br>
+<p>lerp</p>
+<br>
+<br>
+<h3><span class="inline-code">wiggle(time, frequency, octave = 1, seed = 0)</span></h3>
+<br>
+<p>wiggle</p>
+<br>
+<br>
+<h3><span class="inline-code">random(min = 0, max = 1)</span></h3>
+<br>
+<p>random</p>
+<br>
+<br>
+<h3><span class="inline-code">irandom(min = 0, max = 1)</span></h3>
+<br>
+<p>irandom</p>
+<br>
+<br>
+<h3><span class="inline-code">range(length, start = 0, step = 1)</span></h3>
+<br>
+<p>range</p>
+<br>
+<br>
+<h3><span class="inline-code">length(value)</span></h3>
+<br>
+<p>length</p>
+<br>
+<br>
+<h3><span class="inline-code">string(value)</span></h3>
+<br>
+<p>string</p>
+<br>
+<br>
+<h3><span class="inline-code">number(value)</span></h3>
+<br>
+<p>number</p>
+<br>
+<br>
+<h3><span class="inline-code">chr(x)</span></h3>
+<br>
+<p>chr</p>
+<br>
+<br>
+<h3><span class="inline-code">ord(char)</span></h3>
+<br>
+<p>ord</p>
+<br>
+<br>
+<h3><span class="inline-code">draw(surface, x = 0, y = 0, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)</span></h3>
+<br>
+<p>draw</p>
+<br>
+<br>
+<h3><span class="inline-code">surface_get_dimension(surface)</span></h3>
+<br>
+<p>surface_get_dimension</p>
+<br>
+<br>
+<h3><span class="inline-code">surface_get_width(surface)</span></h3>
+<br>
+<p>surface_get_width</p>
+<br>
+<br>
+<h3><span class="inline-code">surface_get_height(surface)</span></h3>
+<br>
+<p>surface_get_height</p>
+<br>
+<br>
+<h3><span class="inline-code">color_hex(char)</span></h3>
+<br>
+<p>color_hex</p>
+<br>
+<br>
+<h3><span class="inline-code">color_rgb(red, green, blue)</span></h3>
+<br>
+<p>color_rgb</p>
+<br>
+<br>
+<h3><span class="inline-code">color_hsv(red, green, blue)</span></h3>
+<br>
+<p>color_hsv</p>
+<br>

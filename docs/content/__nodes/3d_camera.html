@@ -1,0 +1,108 @@
+<p>3D Camera Node render out 3D Scene to 2D image similiar to camera in other 3D softwares. Camera node comes 
+with multiple positioning mode to make it easier to position and animate the view.</p>
+<br><br>
+<h2>Preview</h2>
+<br>
+<img-deco node_3d_camera_gizmo>
+<br>
+<p>Camera node represent itself by a camera gizmo. Preview tools will change depends on the Postioning Mode.</p>
+<br><br>
+<h2>Camera Properties</h2>
+<br>
+<p>Camera properties are parallel to physical camera. Apart from basic transformation, some important properties are:</p>
+<br>
+<h3>Projection</h3>
+<br>
+<p>Projection type of the camera. It can be Perspective or Orthographic.</p>
+<br>
+<img node_3d_camera_projection>
+<br>
+<h3>Field of View</h3>
+<br>
+<p>When using perspective projection. Field of View control the angle of the camera view frustum. Larger FOV will 
+result in wider view, and vice versa.</p>
+<br>
+<img node_3d_camera_fov>
+<br>
+<h3>Orthographic Scale</h3>
+<br>
+<P>When using orthographic projection, the camera position will not have an effect on the view size. Use 
+Orthographic Scale to control render area.</P>
+<br>
+<h3>Clipping Distance</h3>
+<br>
+<p>Clipping distance determine the depth of the camera frustum aka. the range of distance the camera 
+can see. While this may tempt you to set clipping distance as wide as possible, large clipping distance 
+can cause rendering artifact (especially with shadow). Thus choose clipping distance based on the scene and 
+camera position.</p>
+<br>
+<img node_3d_camera_clip>
+<br><br>
+<h2>Positioning Modes</h2>
+<br>
+<img-deco node_3d_camera_pos_mode>
+<br>
+<p>Camera nodes comes with 3 positioning modes for ease of positioning and animating camera.</p>
+<br>
+<h3>Position + Rotation</h3>
+<br>
+<p>The default settings. Set position and rotation of the camera directly.</p>
+<br>
+<img-deco node_3d_camera_pos_rot>
+<br>
+<h3>Position + Lookat</h3>
+<br>
+<p>Set position of the camera and the position where the camera is looking.</p>
+<br>
+<img-deco node_3d_camera_pos_look>
+<br>
+<h3>Lookat + Rotation</h3>
+<br>
+<p>Use for rotating camera around a point. Set a center point and horizontal, vertical angle, distance 
+of the camera.</p>
+<br>
+<img-deco node_3d_camera_look_rot>
+<br><br>
+<h2>Render Settings</h2>
+<br>
+<h3>Ambient Light</h3>
+<br>
+<p>Color of the ambient light. Ambient light is a constant light that affect objects in all direction.</p>
+<br>
+<h3>Environment Texture</h3>
+<br>
+<p>A texture that will be used as background of the scene and reflection. Use the "Show Background" settings to 
+control whether the background will be show in the rendered image.</p>
+</p>
+<br>
+<img-deco node_3d_camera_env>
+<br>
+<h3>Backface Culling</h3>
+<br>
+<p>For optimization reason, the model will only render one side of the model and the backface will be transparent. 
+This settings control whether to render only frontface, backface or both.</p>
+<br>
+<img node_3d_camera_backface>
+<br>
+<h2>Ambient Occlusion</h2>
+<br>
+<p>Ambient Occlusion is a shading method that darken the area where light is hard to reach (e.g. corner, inner edge)
+to simulate the effect of environment light. It can be used to add more depth to the scene.</p>
+<br>
+<img node_3d_camera_ao>
+<br>
+<h2>Effects</h2>
+<br>
+<p>Effects are post processing effect the can make modify the rendered image. Currently, there are only 1 effect:</p>
+<br>
+<h3>Round Normal</h3>
+<br>
+<p>This effect will blur out the screen-scale normal which create a softer edge.</p>
+<br>
+<img node_3d_camera_rn>
+<br><br>
+<h2>Outputs</h2>
+<br>
+<p>Camera node has 3 outputs, by default only the "Rendered" output is visible.</p>
+<br>
+<img node_3d_camera_outputs>

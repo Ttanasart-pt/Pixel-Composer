@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PXC Documentation</title>
+
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class = "header">
+        <div class="header-title">
+            <img src="/src/icon_48.png" alt="PXC Logo" class="logo">
+            <a href="/index.html">
+                <h2>PXC Documentation</h2>
+            </a>
+        </div>
+
+        <a href="https://pixel-composer.com">PXC Home</a>
+    </div>
+
+    <div class="main">
+        <div class="sidebar">
+            <ul>
+                <li class="search">
+                    <form action="search.html" method="get">
+                        <input type="text" name="search" placeholder="Search..." id="search" onkeyup="onSearch()">
+                    </form>
+                </li>
+                <div id="search_spacing" style="height: 48px;"></div>
+                {{sidebar}}
+                {{search_results}}
+                <div style="height: 96px;"></div>
+            </ul>
+        </div>
+
+        <div class="content">
+            {{content}}
+        </div>
+    </div>
+
+    <div style="height: 96px;"></div>
+    <div class="footer"> <p>2024 Pixel Composer</p> </div>
+</body>
+
+<script>
+    function onSearch() {
+        var input = document.getElementById('search').value
+        var space = document.getElementById('search_spacing');
+        var x     = document.getElementsByClassName('search-result');
+        var cnt   = document.getElementsByClassName('sidebar-nav');
+        input = input.toLowerCase();
+
+        if (input == "") {
+            for (i = 0; i < x.length; i++)
+                x[i].style.display="none";
+
+            for (i = 0; i < cnt.length; i++)
+                cnt[i].style.display="flex";
+            return;
+        }
+
+        for (i = 0; i < cnt.length; i++)
+            cnt[i].style.display="none";
+
+        for (i = 0; i < x.length; i++) {
+            if (!x[i].innerHTML.toLowerCase().includes(input))
+                x[i].style.display="none";
+            else
+                x[i].style.display="flex";
+        }
+    }
+
+    onSearch()
+</script>
+
+</html>

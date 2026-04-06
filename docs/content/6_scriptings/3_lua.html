@@ -1,0 +1,549 @@
+<h1>Lua</h1>
+<br><br>
+<p>Lua is a general-purpose CPU programming language. Pixel Composer support Lua scripting through 3 differrent nodes.
+<a href="">Lua Global</a>, <a href="">Lua Compute</a>, and <a href="">Lua Surface</a>.</p>
+<br>
+<h2>Lua Thread</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/lua_thread.png" alt="">
+<br>
+<p>Lua nodes are connected by a thread. Node in the same thread contains the same variables. Thread also implies 
+execution order. However, if the thread branch out to multiple nodes, the executinon order can be different in each 
+sessions.</p>
+<br>
+<h2>Lua Nodes</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/node_lua.png" alt="">
+<br>
+<h3>Lua Global</h3>
+<br>
+<p>Lua Global is used for defining initial variable in a thread. This node won't returns any data, the only output 
+is a lua thread that you can use in other nodes.</p>
+<br>
+<p>This node can be set to run once at the beginning, or run every frames.</p>
+<br>
+<h3>Lua Compute</h3>
+<br>
+<p>Compute is used to create a function that returns a value. Once the function is being created. It can be 
+called again in other nodes with the same thread downstream.</p>
+<br>
+<h3>Lua Surface</h3>
+<br>
+<p>Lua Surface is used to modify a surface. All the <span class="inline-code">draw*</span> functions can only work 
+in this node.</p>
+<br><br>
+<h2>Syntax</h2>
+<br>
+<h3>Variable</h3>
+<br>
+<p>You can defines a variable by simply typing the name and the value. Lua support both number and string types.</p>
+<br>
+<h3>Operators</h3>
+<br>
+<p>Lua also supports a similiar set of operators to other programming languange:</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%">
+        <col style="width: 60%">
+    </colgroup>
+    <tr>
+        <td><span class="inline-code">+</span></td>
+        <td>Addition</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">-</span></td>
+        <td>Subtraction</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">*</span></td>
+        <td>Multiplication</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">/</span></td>
+        <td>Division</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">%</span></td>
+        <td>Modulo</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">^</span></td>
+        <td>Exponential</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">==</span></td>
+        <td>Equal</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">~=</span></td>
+        <td>Not equal</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&lt;</span></td>
+        <td>Less than</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&gt;</span></td>
+        <td>Greater than</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&lt;=</span></td>
+        <td>Less than or equal</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">&gt;=</span></td>
+        <td>Greater than or equal</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">and</span></td>
+        <td>Logical and</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">or</span></td>
+        <td>Logical or</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">not</span></td>
+        <td>Logical not</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">..</span></td>
+        <td>String concatenation</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">#</span></td>
+        <td>Length of a string</td>
+    </tr>
+</table>
+<br>
+<h3>Condition</h3>
+<br>
+<p>Lua support <span class="inline-code">if...then</span>, <span class="inline-code">elseif...then</span> and 
+<span class="inline-code">else...then</span> condition. Each block need to start with <span class="inline-code">then</span> 
+and ends with <span class="inline-code">end</span> keyword.</p>
+<span class="code-block">
+if(value > 10) then<br>
+&nbsp;&nbsp;return 1<br>
+elseif(value < 0) then<br>
+&nbsp;&nbsp;return -1<br>
+else<br>
+&nbsp;&nbsp;return 0<br>
+end
+</span>
+<br>
+<h3>For Loop</h3>
+<br>
+<p>For loop can be created with <span class="inline-code">for...do</span> keyword. After the <span class="inline-code">for</span> 
+keyword, you need to define the start value, the end value, and the step. The block ends with <span class="inline-code">end</span> keyword.</p>
+<span class="code-block">
+for i = 1, 10, 1 do<br>
+&nbsp;&nbsp;print(i)<br>
+end
+</span>
+<br>
+<h3>While Loop</h3>
+<br>
+<p>While loop can be created with <span class="inline-code">while...do</span> keyword. The block ends with <span class="inline-code">end</span> keyword.</p>
+<span class="code-block">
+while(value < 10) do<br>
+&nbsp;&nbsp;value += 1<br>
+end
+</span>
+<br>
+<h3>Repeat Loop</h3>
+<br>
+<p>Repeat loop can be created with <span class="inline-code">repeat...until</span> keyword. The block ends with <span class="inline-code">until</span> keyword.</p>
+<span class="code-block">
+repeat<br>
+&nbsp;&nbsp;value += 1<br>
+until(value > 10)
+</span>
+<br><br>
+<h2>Functions Reference</h2>
+<br>
+<br>
+<h3><span class="inline-code">draw(surface, x, y)</span></h3>
+<br>
+<p>draw(surface, x, y)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawBlend(surface, x, y, color = white, alpha = 1)</span></h3>
+<br>
+<p>drawBlend(surface, x, y, color = white, alpha = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawTransform(surface, x, y, xs = 1, ys = 1, rot = 0)</span></h3>
+<br>
+<p>drawTransform(surface, x, y, xs = 1, ys = 1, rot = 0)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawGeneral(surface, x, y, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)</span></h3>
+<br>
+<p>drawGeneral(surface, x, y, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">setColor(color = white)</span></h3>
+<br>
+<p>setColor(color = white)</p>
+<br>
+<br>
+<h3><span class="inline-code">setAlpha(alpha = 1)</span></h3>
+<br>
+<p>setAlpha(alpha = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">setColorAlpha(color = white, alpha = 1)</span></h3>
+<br>
+<p>setColorAlpha(color = white, alpha = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">getColor(x, y)</span></h3>
+<br>
+<p>getColor(x, y)</p>
+<br>
+<br>
+<h3><span class="inline-code">getColorSurface(surface, x, y)</span></h3>
+<br>
+<p>getColorSurface(surface, x, y)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawRect(x0, y0, x1, y1)</span></h3>
+<br>
+<p>drawRect(x0, y0, x1, y1)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawRectOutline(x0, y0, x1, y1, thick = 1)</span></h3>
+<br>
+<p>drawRectOutline(x0, y0, x1, y1, thick = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawCircle(x, y, radius)</span></h3>
+<br>
+<p>drawCircle(x, y, radius)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawCircleOutline(x, y, radius, thick = 1)</span></h3>
+<br>
+<p>drawCircleOutline(x, y, radius, thick = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawEllipse(x0, y0, x1, y1)</span></h3>
+<br>
+<p>drawEllipse(x0, y0, x1, y1)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawEllipseOutline(x0, y0, x1, y1, thick = 1)</span></h3>
+<br>
+<p>drawEllipseOutline(x0, y0, x1, y1, thick = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawLine(x0, y0, x1, y1, thick = 1)</span></h3>
+<br>
+<p>drawLine(x0, y0, x1, y1, thick = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawLineRound(x0, y0, x1, y1, thick = 1)</span></h3>
+<br>
+<p>drawLineRound(x0, y0, x1, y1, thick = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">drawPixel(x, y)</span></h3>
+<br>
+<p>drawPixel(x, y)</p>
+<br>
+<br>
+<h3><span class="inline-code">colorGetRed(color)</span></h3>
+<br>
+<p>colorGetRed(color)</p>
+<br>
+<br>
+<h3><span class="inline-code">colorGetGreen(color)</span></h3>
+<br>
+<p>colorGetGreen(color)</p>
+<br>
+<br>
+<h3><span class="inline-code">colorGetBlue(color)</span></h3>
+<br>
+<p>colorGetBlue(color)</p>
+<br>
+<br>
+<h3><span class="inline-code">colorGetHue(color)</span></h3>
+<br>
+<p>colorGetHue(color)</p>
+<br>
+<br>
+<h3><span class="inline-code">colorGetSaturation(color)</span></h3>
+<br>
+<p>colorGetSaturation(color)</p>
+<br>
+<br>
+<h3><span class="inline-code">colorGetValue(color)</span></h3>
+<br>
+<p>colorGetValue(color)</p>
+<br>
+<br>
+<h3><span class="inline-code">getColor()</span></h3>
+<br>
+<p>getColor()</p>
+<br>
+<br>
+<h3><span class="inline-code">getAlpha()</span></h3>
+<br>
+<p>getAlpha()</p>
+<br>
+<br>
+<h3><span class="inline-code">colorCreateRGB(red, green, blue, normalize = false)</span></h3>
+<br>
+<p>colorCreateRGB(red, green, blue, normalize = false)</p>
+<br>
+<br>
+<h3><span class="inline-code">colorCreateHSV(hue, saturation, value, normalize = false)</span></h3>
+<br>
+<p>colorCreateHSV(hue, saturation, value, normalize = false)</p>
+<br>
+<br>
+<h3><span class="inline-code">colorMerge(colorFrom, colorTo, ratio)</span></h3>
+<br>
+<p>colorMerge(colorFrom, colorTo, ratio)</p>
+<br>
+<br>
+<h3><span class="inline-code">setBlend(blend)</span></h3>
+<br>
+<p>setBlend(blend)</p>
+<br>
+<br>
+<h3><span class="inline-code">resetBlend()</span></h3>
+<br>
+<p>resetBlend()</p>
+<br>
+<br>
+<h3><span class="inline-code">randomize()</span></h3>
+<br>
+<p>randomize()</p>
+<br>
+<br>
+<h3><span class="inline-code">setSeed(seed)</span></h3>
+<br>
+<p>setSeed(seed)</p>
+<br>
+<br>
+<h3><span class="inline-code">random(from = 0, to = 1)</span></h3>
+<br>
+<p>random(from = 0, to = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">irandom(from = 0, to = 1)</span></h3>
+<br>
+<p>irandom(from = 0, to = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">abs(number)</span></h3>
+<br>
+<p>abs(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">round(number)</span></h3>
+<br>
+<p>round(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">floor(number)</span></h3>
+<br>
+<p>floor(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">ceil(number)</span></h3>
+<br>
+<p>ceil(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">max(number0, number1)</span></h3>
+<br>
+<p>max(number0, number1)</p>
+<br>
+<br>
+<h3><span class="inline-code">min(number0, number1)</span></h3>
+<br>
+<p>min(number0, number1)</p>
+<br>
+<br>
+<h3><span class="inline-code">clamp(number, min = 0, max = 1)</span></h3>
+<br>
+<p>clamp(number, min = 0, max = 1)</p>
+<br>
+<br>
+<h3><span class="inline-code">lerp(numberFrom, numberTo, ratio)</span></h3>
+<br>
+<p>lerp(numberFrom, numberTo, ratio)</p>
+<br>
+<br>
+<h3><span class="inline-code">sqr(number)</span></h3>
+<br>
+<p>sqr(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">sqrt(number)</span></h3>
+<br>
+<p>sqrt(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">power(base, exponent)</span></h3>
+<br>
+<p>power(base, exponent)</p>
+<br>
+<br>
+<h3><span class="inline-code">exp(exponent)</span></h3>
+<br>
+<p>exp(exponent)</p>
+<br>
+<br>
+<h3><span class="inline-code">ln(number)</span></h3>
+<br>
+<p>ln(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">log2(number)</span></h3>
+<br>
+<p>log2(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">log10(number)</span></h3>
+<br>
+<p>log10(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">logn(base, number)</span></h3>
+<br>
+<p>logn(base, number)</p>
+<br>
+<br>
+<h3><span class="inline-code">sin(number)</span></h3>
+<br>
+<p>sin(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">cos(number)</span></h3>
+<br>
+<p>cos(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">tan(number)</span></h3>
+<br>
+<p>tan(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">asin(number)</span></h3>
+<br>
+<p>asin(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">acos(number)</span></h3>
+<br>
+<p>acos(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">atan(number)</span></h3>
+<br>
+<p>atan(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">atan2(y, x)</span></h3>
+<br>
+<p>atan2(y, x)</p>
+<br>
+<br>
+<h3><span class="inline-code">dsin(number)</span></h3>
+<br>
+<p>dsin(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">dcos(number)</span></h3>
+<br>
+<p>dcos(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">dtan(number)</span></h3>
+<br>
+<p>dtan(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">dasin(number)</span></h3>
+<br>
+<p>dasin(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">dacos(number)</span></h3>
+<br>
+<p>dacos(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">datan(number)</span></h3>
+<br>
+<p>datan(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">datan2(y, x)</span></h3>
+<br>
+<p>datan2(y, x)</p>
+<br>
+<br>
+<h3><span class="inline-code">rad(number)</span></h3>
+<br>
+<p>rad(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">deg(number)</span></h3>
+<br>
+<p>deg(number)</p>
+<br>
+<br>
+<h3><span class="inline-code">dot(x0, y0, x1, y1)</span></h3>
+<br>
+<p>dot(x0, y0, x1, y1)</p>
+<br>
+<br>
+<h3><span class="inline-code">stringLength(string)</span></h3>
+<br>
+<p>stringLength(string)</p>
+<br>
+<br>
+<h3><span class="inline-code">stringSearch(string, searchString)</span></h3>
+<br>
+<p>stringSearch(string, searchString)</p>
+<br>
+<br>
+<h3><span class="inline-code">stringCopy(string, start, length)</span></h3>
+<br>
+<p>stringCopy(string, start, length)</p>
+<br>
+<br>
+<h3><span class="inline-code">stringUpper(string)</span></h3>
+<br>
+<p>stringUpper(string)</p>
+<br>
+<br>
+<h3><span class="inline-code">stringLower(string)</span></h3>
+<br>
+<p>stringLower(string)</p>
+<br>
+<br>
+<h3><span class="inline-code">stringReplace(string, replaceFrom, replaceTo)</span></h3>
+<br>
+<p>stringReplace(string, replaceFrom, replaceTo)</p>
+<br>
+<br>
+<h3><span class="inline-code">stringReplaceAll(string, replaceFrom, replaceTo)</span></h3>
+<br>
+<p>stringReplaceAll(string, replaceFrom, replaceTo)</p>
+<br>
+<br>
+<h3><span class="inline-code">stringSplit(string, delimiter)</span></h3>
+<br>
+<p>stringSplit(string, delimiter)</p>
+<br>
+<br>
+<h3><span class="inline-code">print(string)</span></h3>
+<br>
+<p>print(string)</p>
+<br>

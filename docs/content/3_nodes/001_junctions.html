@@ -1,0 +1,459 @@
+<h1>Junctions</h1>
+<br><br>
+<img src="/src/images/3_nodes/junctions.png" alt="">
+<br>
+<p>A junction is a representation of a property in a node. Each junction has its own data type and connection 
+compatibility is based on its type. In the graph panel, holding <span class="inline-code">Shift</span> while 
+hovering on the junction will show the content inside it.</p>
+<br><br>
+<h2>Data Types</h2>
+<br>
+<table class="datatype">
+    <colgroup>
+        <col span="1" style="width: 20%;">
+        <col span="1" style="width: 20%;">
+        <col span="1" style="width: 60%;">
+      </colgroup>
+    <tr>
+        <th>Type</th>
+        <th>Icon</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Integer</td>
+        <td><img src="/src/images/3_nodes/junction/integer.png" alt=""></td>
+        <td>Number without decimal part (e.g. 1, 64)</td>
+    </tr>
+    <tr>
+        <td>Float</td>
+        <td><img src="/src/images/3_nodes/junction/float.png" alt=""></td>
+        <td>Real number (e.g. 0.5, 3.141)</td>
+    </tr>
+    <tr>
+        <td>Boolean</td>
+        <td><img src="/src/images/3_nodes/junction/boolean.png" alt=""></td>
+        <td>True or False value</td>
+    </tr>
+    <tr>
+        <td>Color</td>
+        <td><img src="/src/images/3_nodes/junction/color.png" alt=""></td>
+        <td>RGB/RGBA Color</td>
+    </tr>
+    <tr>
+        <td>Surface</td>
+        <td><img src="/src/images/3_nodes/junction/surface.png" alt=""></td>
+        <td>Image</td>
+    </tr>
+    <tr>
+        <td>Path</td>
+        <td><img src="/src/images/3_nodes/junction/path.png" alt=""></td>
+        <td>Text indicating file location</td>
+    </tr>
+    <tr>
+        <td>Curve</td>
+        <td><img src="/src/images/3_nodes/junction/curve.png" alt=""></td>
+        <td>Function interpolating values over x axis.</td>
+    </tr>
+    <tr>
+        <td>Text</td>
+        <td><img src="/src/images/3_nodes/junction/text.png" alt=""></td>
+        <td>String of characters</td>
+    </tr>
+    <tr>
+        <td>Object</td>
+        <td><img src="/src/images/3_nodes/junction/object.png" alt=""></td>
+        <td>General object type</td>
+    </tr>
+    <tr>
+        <td>Node</td>
+        <td><img src="/src/images/3_nodes/junction/node.png" alt=""></td>
+        <td>Representation of node itself</td>
+    </tr>
+    <tr>
+        <td>D3Object</td>
+        <td><img src="/src/images/3_nodes/junction/d3object.png" alt=""></td>
+        <td>(Obsolete) 3D Object</td>
+    </tr>
+    <tr>
+        <td>Any</td>
+        <td><img src="/src/images/3_nodes/junction/any.png" alt=""></td>
+        <td>Accept any input</td>
+    </tr>
+    <tr>
+        <td>Pathnode</td>
+        <td><img src="/src/images/3_nodes/junction/pathnode.png" alt=""></td>
+        <td>Series of lines connecting points</td>
+    </tr>
+    <tr>
+        <td>Particle</td>
+        <td><img src="/src/images/3_nodes/junction/particle.png" alt=""></td>
+        <td>Particle object</td>
+    </tr>
+    <tr>
+        <td>Rigid</td>
+        <td><img src="/src/images/3_nodes/junction/rigid.png" alt=""></td>
+        <td>Rigidbody object</td>
+    </tr>
+    <tr>
+        <td>Sdomain</td>
+        <td><img src="/src/images/3_nodes/junction/sdomain.png" alt=""></td>
+        <td>Smoke simulation domain</td>
+    </tr>
+    <tr>
+        <td>Struct</td>
+        <td><img src="/src/images/3_nodes/junction/struct.png" alt=""></td>
+        <td>General structure</td>
+    </tr>
+    <tr>
+        <td>Strands</td>
+        <td><img src="/src/images/3_nodes/junction/strands.png" alt=""></td>
+        <td>Strand object</td>
+    </tr>
+    <tr>
+        <td>Mesh</td>
+        <td><img src="/src/images/3_nodes/junction/mesh.png" alt=""></td>
+        <td>Lattice covering 2D area</td>
+    </tr>
+    <tr>
+        <td>Trigger</td>
+        <td><img src="/src/images/3_nodes/junction/trigger.png" alt=""></td>
+        <td>Used for UI event</td>
+    </tr>
+    <tr>
+        <td>Atlas</td>
+        <td><img src="/src/images/3_nodes/junction/atlas.png" alt=""></td>
+        <td>Surface data with additional information</td>
+    </tr>
+    <tr>
+        <td>D3Vertex</td>
+        <td><img src="/src/images/3_nodes/junction/d3vertex.png" alt=""></td>
+        <td>(Obsolete) Point in 3D space</td>
+    </tr>
+    <tr>
+        <td>Gradient</td>
+        <td><img src="/src/images/3_nodes/junction/gradient.png" alt=""></td>
+        <td>Series of changing color overtime</td>
+    </tr>
+    <tr>
+        <td>Armature</td>
+        <td><img src="/src/images/3_nodes/junction/armature.png" alt=""></td>
+        <td>Set of bones</td>
+    </tr>
+    <tr>
+        <td>Buffer</td>
+        <td><img src="/src/images/3_nodes/junction/buffer.png" alt=""></td>
+        <td>Package of data</td>
+    </tr>
+    <tr>
+        <td>Pbbox</td>
+        <td><img src="/src/images/3_nodes/junction/pbBox.png" alt=""></td>
+        <td>Pixel Builder box</td>
+    </tr>
+    <tr>
+        <td>D3Mesh</td>
+        <td><img src="/src/images/3_nodes/junction/d3Mesh.png" alt=""></td>
+        <td>3D Mesh</td>
+    </tr>
+    <tr>
+        <td>D3Light</td>
+        <td><img src="/src/images/3_nodes/junction/d3Light.png" alt=""></td>
+        <td>3D Light</td>
+    </tr>
+    <tr>
+        <td>D3Camera</td>
+        <td><img src="/src/images/3_nodes/junction/d3Camera.png" alt=""></td>
+        <td>3D Camera</td>
+    </tr>
+    <tr>
+        <td>D3Scene</td>
+        <td><img src="/src/images/3_nodes/junction/d3Scene.png" alt=""></td>
+        <td>3D Scene</td>
+    </tr>
+    <tr>
+        <td>D3Material</td>
+        <td><img src="/src/images/3_nodes/junction/d3Material.png" alt=""></td>
+        <td>3D Material</td>
+    </tr>
+    <tr>
+        <td>Dynasurface</td>
+        <td><img src="/src/images/3_nodes/junction/dynaSurface.png" alt=""></td>
+        <td>Dynamic surface, surface with custom draw behaviour</td>
+    </tr>
+    <tr>
+        <td>Pcxnode</td>
+        <td><img src="/src/images/3_nodes/junction/PCXnode.png" alt=""></td>
+        <td>PCX Node for building expression</td>
+    </tr>
+    <tr>
+        <td>Audiobit</td>
+        <td><img src="/src/images/3_nodes/junction/audioBit.png" alt=""></td>
+        <td>Sequence of audio data</td>
+    </tr>
+    <tr>
+        <td>Fdomain</td>
+        <td><img src="/src/images/3_nodes/junction/fDomain.png" alt=""></td>
+        <td>FLIP Fluid domain</td>
+    </tr>
+    <tr>
+        <td>Action</td>
+        <td><img src="/src/images/3_nodes/junction/action.png" alt=""></td>
+        <td>Trigger button action</td>
+    </tr>
+</table>
+<br>
+<h3>Number (Interger/Float)</h3>
+<br>
+<table class="datatype">
+    <colgroup>
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 70%;">
+      </colgroup>
+    <tr>
+        <th>Subtype</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Scalar</td>
+        <td>A single numerical value</td>
+    </tr>
+    <tr>
+        <td>Vector</td>
+        <td>Package of 2, 3 or 4 numbers.</td>
+    </tr>
+    <tr>
+        <td>Enum</td>
+        <td>Named integer</td>
+    </tr>
+    <tr>
+        <td>Range</td>
+        <td>Array of 2 values defining minimum and maximum.</td>
+    </tr>
+    <tr>
+        <td>Rotation</td>
+        <td>Angular value</td>
+    </tr>
+    <tr>
+        <td>Random Rotation</td>
+        <td>Array of numbers defining range of rotation to randomly sample from</td>
+    </tr>
+    <tr>
+        <td>Range Rotation</td>
+        <td>Array of 2 angles defining minimum and maximum</td>
+    </tr>
+    <tr>
+        <td>Area</td>
+        <td>Array of numbers describing area in 2D space</td>
+    </tr>
+    <tr>
+        <td>Padding</td>
+        <td>Array of numbers defining padding in each of the 4 edges of a rectangle</td>
+    </tr>
+    <tr>
+        <td>Corner</td>
+        <td>Array of numbers defining values for each corner in a rectangle</td>
+    </tr>
+    <tr>
+        <td>Toggle</td>
+        <td>Integer containing data bitwise</td>
+    </tr>
+    <tr>
+        <td>Matrix</td>
+        <td>Nest array containing numbers in a 2D grid</td>
+    </tr>
+    <tr>
+        <td>Path Anchor</td>
+        <td>Array of numbers descrbing path anchor</td>
+    </tr>
+    <tr>
+        <td>Quaternion</td>
+        <td>Array of numbers descrbing 3D quarternion rotation</td>
+    </tr>
+</table>
+<br>
+<h3>Color</h3>
+<br>
+<table class="datatype">
+    <colgroup>
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 70%;">
+      </colgroup>
+    <tr>
+        <th>Subtype</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Color</td>
+        <td>A single color</td>
+    </tr>
+    <tr>
+        <td>Palette</td>
+        <td>Array of colors</td>
+    </tr>
+</table>
+<br>
+<h3>Text</h3>
+<br>
+<table class="datatype">
+    <colgroup>
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 70%;">
+      </colgroup>
+    <tr>
+        <th>Subtype</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Text</td>
+        <td>A single text string</td>
+    </tr>
+    <tr>
+        <td>Code</td>
+        <td>Text string which can be interpret as code</td>
+    </tr>
+</table>
+<br><br>
+<h2>Type Compatibility</h2>
+<br>
+<p>Junctions of the same type are always compatible to each other. However there're also cross type compatibility 
+as well.</p>
+<br>
+<table class="junction-compat">
+    <tr>
+        <th></th>
+        <th>Any</th>
+        <th>Integer</th>
+        <th>Float</th>
+        <th>Boolean</th>
+        <th>Color</th>
+        <th>Surface</th>
+        <th>Path</th>
+        <th>Text</th>
+        <th>D3Material</th>
+    </tr>
+    <tr>
+        <td>Any</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+    </tr>
+    <tr>
+        <td>Integer</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Float</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Boolean</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Color</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Surface</td>
+        <td class="compat">Y</td>
+        <td class="compat-extra">1</td>
+        <td class="compat-extra">1</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+    </tr>
+    <tr>
+        <td>Path</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Text</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>D3Material</td>
+        <td class="compat">Y</td>
+        <td class="compat-extra">1</td>
+        <td class="compat-extra">1</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="compat">Y</td>
+    </tr>
+</table>
+<br>
+<p class="subtitle"><sup>1</sup> Surface will be converted to vector2 representing its dimension.</p>
+<br>
+<h3>Struct Type</h3>
+<br>
+<p><span class="inline-code">Mesh</span>, <span class="inline-code">Armature</span> and 
+<span class="inline-code">Particle</span> type can be connected to <span class="inline-code">Struct</span> type 
+but not the opposite.</p>
+<br>
+<h3>3D Types</h3>
+<br>
+<p><span class="inline-code">d3Mesh</span>, <span class="inline-code">d3Light</span>, <span class="inline-code">d3Camera</span>, 
+and <span class="inline-code">d3Scene</span> are all connectable both ways.</p>
+<br>
+<h3>Node Inclusivity</h3>
+<br>
+<p><span class="inline-code">Node</span> type can't be connect to any other type including the 
+<span class="inline-code">Any</span> type.</p>

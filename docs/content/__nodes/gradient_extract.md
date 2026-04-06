@@ -1,0 +1,1 @@
+Gradient object contains array of colors and position. Gradient data node allows you to extract thoese information to use in other nodes.

@@ -1,0 +1,14 @@
+span.code-tag {
+    font-size: 1rem;
+
+    margin: 4px;
+    padding: 4px 8px;
+
+    color: var(--main_ltgrey);
+    background-color: var(--main_dkgrey);
+    border-radius: 1rem;
+}
+
+span.unused {
+
+}

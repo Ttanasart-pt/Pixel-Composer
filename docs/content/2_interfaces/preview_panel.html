@@ -1,0 +1,164 @@
+<h1>Preview Panel</h1>
+<br><br>
+<img src="/src/images/2_interfaces/preview_panel.png" alt="">
+<br>
+<p>Preview panel display the content inside a node. It can also show control gizmo where you can interact with 
+node properties directly.</p>
+<br>
+<p>This page is about preview panel when previewing 2D surface. When previewing 3D object the preview panel will 
+behave differently. You can find information about the 3D preview panel 
+<a href="/content/2_interfaces/preview_panel_3D.html">here</a></p>
+<br><br>
+<h2>Previewing Node</h2>
+<br>
+<img src="/src/images/2_interfaces/preview_node_send.png" alt="">
+<br>
+<p>Double-click on a node to preview its content. However with group node, double clicking will enter the node 
+context, thus you can right-click on the group node and select "Send to preview".</p>
+<br>
+<img class="deco" src="/src/images/2_interfaces/previewing_node.png" alt="">
+<br>
+<p>When a node is previewing. An icon will show up on the node in graph. This icon can change depends on what 
+types of node you're previewing.</p>
+<br><br>
+<h2>Toolbars</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/preview_toolbar.png" alt="">
+<br>
+<img src="" alt="">
+<br>
+<h3>Split View</h3>
+<br>
+<p>Split view mode allows you to preview 2 nodes at the same time. To select which part the preview will show, 
+click on that half until the circle show up.</p>
+<br>
+<table>
+    <colgroup>
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 60%;">
+      </colgroup>
+    <tr>
+        <td><img src="/src/images/2_interfaces/split_view_0.png" alt=""></td>
+        <td>Split view off</td>
+        <td><img src="/src/images/2_interfaces/split_view_ex_0.png" alt=""></td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/split_view_1.png" alt=""></td>
+        <td>Split horizontal</td>
+        <td><img src="/src/images/2_interfaces/split_view_ex_1.png" alt=""></td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/split_view_2.png" alt=""></td>
+        <td>Split vertical</td>
+        <td><img src="/src/images/2_interfaces/split_view_ex_2.png" alt=""></td>
+    </tr>
+</table>
+<br>
+<h3>Tile View</h3>
+<br>
+<p>Tile view extends your viewport by repeating texture horizontally or vertically.</p>
+<br>
+<table>
+    <colgroup>
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 60%;">
+      </colgroup>
+    <tr>
+        <td><img src="/src/images/2_interfaces/tile_view_3.png" alt=""></td>
+        <td>Tile off</td>
+        <td><img class="deco" src="/src/images/2_interfaces/tile_view_ex_3.png" alt=""></td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/tile_view_0.png" alt=""></td>
+        <td>Tile horizontal</td>
+        <td><img class="deco" src="/src/images/2_interfaces/tile_view_ex_0.png" alt=""></td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/tile_view_1.png" alt=""></td>
+        <td>Tile vertical</td>
+        <td><img class="deco" src="/src/images/2_interfaces/tile_view_ex_1.png" alt=""></td>
+    </tr>
+    <tr>
+        <td><img src="/src/images/2_interfaces/tile_view_2.png" alt=""></td>
+        <td>Tile both</td>
+        <td><img class="deco" src="/src/images/2_interfaces/tile_view_ex_2.png" alt=""></td>
+    </tr>
+</table>
+<br>
+<h3>Grid Settings</h3>
+<br>
+<img src="/src/images/2_interfaces/preview_grid_settings.png" alt="">
+<br>
+<p>You can change how the grid line is rendered on the preview.</p>
+<br>
+<h3>Onion Skin</h3>
+<br>
+<img src="/src/images/2_interfaces/preview_onion.png" alt="">
+<br>
+<p>Onion skin overlay frames before and after on top of the current preview. This allows you to see the animation 
+clearly in a single frame. This button opens up onion skin settings where you can change color, opacity, amount 
+of frames to overlay, etc.</p>
+<br>
+<h3>Output Selector</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/preview_output.png" alt="">
+<br>
+<p>For nodes with multiple outputs. A dropdown menu will shows up for you to select which output to preview.</p>
+<br>
+<h3>Export Canvas</h3>
+<br>
+<p>You can save the current preview image quickly with this option.</p>
+<br>
+<h2>View Manipulation</h2>
+<br>
+<p>When previewing a node, you can manipulate the view using mouse and keyboard:</p>
+<br>
+<table class="hotkey">
+    <tr>
+        <th>Action</th>
+        <th>Hotkey</th>
+    </tr>
+    <tr>
+        <td>Pan</td>
+        <td>Middle mouse</td>
+    </tr>
+    <tr>
+        <td>Zoom</td>
+        <td>Scroll wheel</td>
+    </tr>
+    <tr>
+        <td>Center selecting preview</td>
+        <td><span class="inline-code">F</span></td>
+    </tr>
+</table>
+<br><br>
+<h2>Array Preview</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/preview_array.png" alt="">
+<br>
+<p>When previewing array of surfaces. The array will shows up at the bottom area. Clicking on the array member 
+will set the preview to that member.</p>
+<br><br>
+<h2>Tools Rack</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/preview_tool_rack.png" alt="">
+<br>
+<p>Some node comes with extra tools you can use in the preview panel. Those tools will appear on the tool rack 
+on the left side. Some tools can also have subtools which can be access by hovering on the tool itself.</p>
+<br>
+<h3>Tools settings</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/preview_tool_setting.png" alt="">
+<br>
+<p>Some tools also have settings that can be accessed at the top bar when selecting that tool.</p>
+<br><br>
+<h2>Color Picker</h2>
+<br>
+<img src="/src/images/2_interfaces/preview_context.png" alt="">
+<br>
+<p>Holding the <span class="inline-code">Ctrl</span> key while hovering on the preview will sample the color 
+under the mouse and display on the top left. You can also right click on the preview surface to copy the color 
+hex code.</p>
+<br><br>

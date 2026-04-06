@@ -996,6 +996,9 @@ function Panel_Inspector() : PanelContent() constructor {
             }
         	
         	if(is(jun, attribute_property)) {
+        		if(filter_animation) continue;
+        		if(filtering && filter_text != "" && !string_match_lower(filter_text, jun.name)) continue;
+        		
         		var _name = jun.name;
 				var _val  = jun.getter();
 				var _wdgt = jun.editWidget;
@@ -1033,10 +1036,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             if(filter_animation && !jun.isAnimated()) continue;
-            if(filtering && filter_text != "") {
-                var pos = string_pos(string_lower(filter_text), string_lower(jun.getName()));
-                if(pos == 0) continue;
-            }
+            if(filtering && filter_text != "" && !string_match_lower(filter_text, jun.getName())) continue;
             
             #region ++++ draw widget ++++
             	var _wdgt = jun.getEditWidget();

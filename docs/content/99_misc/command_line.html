@@ -1,0 +1,72 @@
+<h1>Command Line Interface</h1>
+<br>
+<br>
+<p>Pixel Composer supports a number of command line arguments which allow the program to be run headlessly (running without 
+user interface).</p>
+<br>
+<p>However, due to the nature of the software, it cannot output stdout. Which means you can't see any output text 
+when running it. To improve user experience, a CLI wrapper is provided as an external .exe that has to be 
+<span><a href="https://github.com/Ttanasart-pt/PXC-cli/releases/tag/release">downloaded separately</a></span>.</p>
+<br>
+<br>
+<h2>Running .pxc Project</h2>
+<br>
+<p>Command line operation is used to runs Pixel Composer project with custom values. Which means first you need to have 
+Pixel Composer project with export nodes ready. Then you can use this script to runs the project:</p>
+<span class="code-block">./[pixelcomposer.exe] [path to project] [tags] [global variables]</span>
+<br>
+<br>
+<h2>Tags</h2>
+<br>
+<h3><span class="inline-code">-c, --crashed</span> Crash mode <span class="code-tag unused">unused</span></h3>
+<br>
+<p>Run Pixel Composer normally but with crash dialog. (Only used by the software itself, no reason to call it manually).</p>
+<br>
+<br>
+<h3><span class="inline-code">-h, --headless</span> Runs in headless mode</h3>
+<br>
+<p>Run Pixel Composer without the user interface. Without this tag Pixel Composer will runs as GUI normally.</p>
+<br>
+<br>
+<h3><span class="inline-code">-t, --trusted</span> Trust project</h3>
+<br>
+<p>Allow all shell execute nodes to run. By default all shell execute nodes are disabled when running in headless mode</p>
+<br>
+<br>
+<h3><span class="inline-code">-sl, --skiplua</span> Skip lua initialization</h3>
+<br>
+<p>Skip lua initialization on startup which should improve running speed marginally.</p>
+<br>
+<br>
+<h2>Global Variables</h2>
+<br>
+<span class="code-block">-name value</span>
+<p>After tags, you can provides value to global variables. Use quotation marks to surround text with space inside.</p>
+<br>
+<br>
+<h2>CLI Wrapper</h2>
+<br>
+<p>The CLI wrapper comes with text-based user interface and extra tags which allows for persist mode.</p>
+<br>
+<br>
+<h3><span class="inline-code">-v, --verbose</span> Verbose mode</h3>
+<br>
+<p>Display output text indicating status and errors.</p>
+<br>
+<br>
+<h3><span class="inline-code">-p, --persist</span> Persist mode</h3>
+<br>
+<p>Run Pixel Composer in persist mode. Used with headless mode to keep the program open after running the command.</p>
+<br>
+<br>
+<h3><span class="inline-code">-s, --server [port]</span> Runs as server</h3>
+<br>
+<p>Run Pixel Composer as a server at the given port value.</p>
+<br>
+<br>
+<h2>Persist Mode</h2>
+<br>
+<p>Adding the persist tag <span class="inline-code">-p</span> will runs Pixel Composer in persist mode. The project 
+will run once and an interactive shell will appear. You can send console commands through this shell.</p>
+<p class="banner warning">Persist mode takes <span class="bold">console commands</span> not command line arguments. To see lists of console
+commands please check the <a href="./console_command.html">Console Command</a> page.</span></p>

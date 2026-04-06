@@ -1,0 +1,83 @@
+<p>Cast shadow node use raycast to render shadow from different type of light.</p>
+<br>
+<img-deco shadow_cast>
+<br><br>
+<h2>Surfaces Properties</h2>
+<br>
+<h3><junc use bg color/></h3>
+<br>
+<p>Toggle this to use <junc background/> as shadow caster.</p>
+<br>
+<h3><junc bg threshold/></h3>
+<br>
+<p>The brightness threshold to consider a pixel in <junc background/> as a wall.</p>
+<br><br>
+<h2>Light Properties</h2>
+<br>
+<p>Cast shadow requires 2 surfaces. A base <junc background/> surface and <junc solid/> surface act as a 
+shadow caster.<br><br>
+You can check <junc use bg color/> to use <junc background/> for both background and shadow caster.</p>
+<br>
+<h3><junc light type/></h3>
+<br>
+<p>Type of light:</p>
+<br>
+<ul>
+    <li><span class="bold">Point</span> Light emit from a single point in a circular shape.</li>
+    <li><span class="bold">Sun</span> Light shines from one direction uniformly.</li>
+</ul>
+<br>
+<h3><junc light intensity/></h3>
+<br>
+<p>The brightness of the light.</p>
+<br>
+<h3><junc light radius/></h3>
+<br>
+<p><span class="bold">Point</span> type, radius of the light.</p>
+<br>
+<h3><junc light position/></h3>
+<br>
+<p>Position of the light, for <span class="bold">Sun</span> type, the position determine the light direction.</p>
+<br><br>
+<h2>Soft Shadow Properties</h2>
+<br>
+<h3><junc light density/></h3>
+<br>
+<p>Amount of lights used to render soft shadow.</p>
+<br>
+<h3><junc soft light radius/></h3>
+<br>
+<p>Radius for the ligths cluster, larger radius will increase the width of the soft shadow.</p>
+<br><br>
+<h2>Render Properties</h2>
+<br>
+<h3><junc banding/></h3>
+<br>
+<p>Discretize light intensity to a number of steps.</p>
+<br>
+<h3><junc attenuation/></h3>
+<br>
+<p><span class="bold">Point</span> type, a curve controling how the light got dimmer per distance.</p>
+<br>
+<h3><junc light color/></h3>
+<br>
+<p>Color of the light</p>
+<br>
+<h3><junc ambient color/></h3>
+<br>
+<p>Base ambient color</p>
+<br>
+<h3><junc render solid/></h3>
+<br>
+<p>Whether to draw <junc solid/> in the final render.</p>
+<br><br>
+<h2>Ambient Occlusion Properties</h2>
+<br>
+<h3><junc ambient occlusion/></h3>
+<br>
+<p>Size of the AO effects.</p>
+<br>
+<h3><junc ambient occlusion strength/></h3>
+<br>
+<p>Intensity, darkness of the effect.</p>
+<br>

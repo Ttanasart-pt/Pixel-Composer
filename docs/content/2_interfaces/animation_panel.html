@@ -1,0 +1,151 @@
+<h1>Animation Panel</h1>
+<br><br>
+<img src="/src/images/2_interfaces/animation_panel.png" alt="">
+<br>
+<p>Located at the bottom of the window. Animation panel contains all the animation timelines and keyframes, 
+as well as the animation controller and the animation settings.</p>
+<br><br>
+<h2>Timeline</h2>
+<br>
+<img src="/src/images/2_interfaces/animation_timeline.png" alt="">
+<br>
+<p>Timeline area contains all animating properties. The area is divided into two part, the properties on the left 
+and the dopesheet on the right. The properties area display list of all animating properties, and the dopesheet 
+display all the keyframes.</p>
+<br>
+<h3>Navigation</h3>
+<br>
+<p>Navigating the timeline area is based on your mouse position:</p>
+<br>
+<ul>
+    <li>While you mouse is on the <span class = "bold" style="color:var(--cyan)">properties</span> area, 
+        <ul>
+            <li>Scrolling mouse wheel will move the view vertically.</li>
+        </ul>
+    </li>
+    <li>While you mouse is on the <span class = "bold" style="color:var(--accent)">dopesheet</span> area,  
+        <ul>
+            <li>Scrolling mouse wheel will zoom the view horizontally.</li>
+            <li>Click and hold middle mouse to move the dopesheet area horizontally and vertically.</li>
+        </ul>
+    </li>
+</ul>
+<br>
+<h3>Timeline Management</h3>
+<br>
+<p>Properties in the timeline can be rearrange, recolor and grouped.</p>
+<br>
+<table class="center">
+    <colgroup>
+        <col style="width: 30%">
+        <col style="width: 70%">
+    </colgroup>
+    <tr>
+        <td>Rearrange</td>
+        <td>Left click and drag</td>
+    </tr>
+    <tr>
+        <td>Change color</td>
+        <td>Right click on the node label</td>
+    </tr>
+    <tr>
+        <td>Create folder</td>
+        <td>Right click and select "New folder"</td>
+    </tr>
+</table>
+<br><br>
+<h2>Animaing Properties</h2>
+<br>
+<p>To animate a properties. Click on the clock icon <img src="/src/images/2_interfaces/animate_clock.png" alt=""></span> in the inspector. Animating properties will show up on the 
+timeline. Click on the clock icon again to disable animation. Deleting all keyframes will also disable animation.</p>
+<br><br>
+<h2>Keyframes</h2>
+<br>
+<img src="/src/images/2_interfaces/timeline_keyframes.png" alt="">
+<br>
+<p>Keyframe represent a single value of a properties. Putting multiple keyframes in the timelime will animated 
+the value. Keyframes can be added, removed, and edited in the dopesheet.</p>
+<br>
+<p>Changing the value of the animated properties will create a keyframe at the current time.</p>
+<br>
+<h3>Keyframe Interpolation</h3>
+<br>
+<img src="/src/images/2_interfaces/keyframe_inter.png" alt="">
+<br>
+<p>By default, keyframe interpolation is done linearly. To change the interpolation type. You can double click 
+and drag on the keyframe. This will create the smoothness slider, the longer the slider, the smoother the interpolation 
+will be.</p>
+<br>
+<img src="/src/images/2_interfaces/keyframe_context.png" alt="">
+<br>
+<p>You can also right click on the keyframe to change the interpolation type. Apart from the linear and smooth, 
+there's also a "hold" type which will disable interpolation altogether and change the value instantly.</p>
+<br>
+<h3>Curve view</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/animation_grph_mode.png" alt="">
+<br>
+<p>To see how the value interpolate in a clearer fashion, you can toggle curve view on with the curve icon.</p>
+<br>
+<h3>Driver</h3>
+<br>
+<img class="deco" src="/src/images/2_interfaces/animation_driver.png" alt="">
+<br>
+<p>You can apply modification to the animation by adding driver. Right click on the keyframe select "Driver..." 
+then select the driver you want.</p>
+<br>
+<h3>Keyframe Stagger</h3>
+<br>
+<p>You can stagger multiple keyframes by selecting all the keyframes you want, right click and select "Stagger":</p>
+<ul>
+    <li>First, left click on the keyframe you want to be the stagger base.</li>
+    <li>Move your mouse left or right to adjust the stagger amount.</li>
+    <li>Left click again to apply.</li>
+</ul>
+<br><br>
+<h2>Animation Controller</h2>
+<br>
+<img src="/src/images/2_interfaces/animation_controller.png" alt="">
+<br>
+<p>Animation controller is located at the bottom left of the panel.</p>
+<br>
+<ul>
+    <li><p><span class="bold">Stop</span> Stop the animation and reset the cursor.</p></li>
+    <li><p><span class="bold">Play/Pause button</span> Play or pause the animation.</p></li>
+    <li><p><span class="bold">Go to first/last frame</span> Move frame cursor to the first or last frame in the working range (or entire timeline if no working range is set).</p></li>
+    <li><p><span class="bold">Previous/next frame</span> Move frame cursor by 1.</p></li>
+</ul>
+<br>
+<h3>Frame stretching</h3>
+<br>
+<p>On top of the dopesheet you can see the frame index. At the right most is the button to adjust the animation 
+length <img class="deco" src="/src/images/2_interfaces/animation_frame_stretch.png" alt="">.</p>
+<ul>
+    <li>Left click and drag to adjust the animation length.</li>
+    <li><span class="inline-code">Ctrl</span> + left click to stretch the animation, adjust the animation length and scale all the keyframes accordingly.</li>
+</ul>
+<br><br>
+<h2>Animation Settings</h2>
+<br>
+<img src="/src/images/2_interfaces/animation_settings.png" alt="">
+<br>
+<p>At the bottom right is a button to open the animation settings dialog. There you can adjust animation and playback properties.</p>
+<br><br>
+<h2>Animation Scalers</h2>
+<br>
+<img src="/src/images/2_interfaces/animation_scaler.png" alt="">
+<br>
+<p>On top of the animation settings is animation scalers, which allow you to change the animation length and scale 
+all the keyframes.</p>
+<br><br>
+<h2>Working range</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/animation_working_range.png" alt="">
+<br>
+<p>Working range is a range of frame that will be active when playback and export. This can be different from 
+the animation range.</p>
+<br>
+<img src="/src/images/2_interfaces/animation_working_range_dialog.png" alt="">
+<br>
+<p>To set the working range, right click on the animation summary and select "Set Start/End".</p>
+<br><br>

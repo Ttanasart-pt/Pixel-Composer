@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PXC Documentation</title>
+
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class = "header">
+        <div class="header-title">
+            <img src="/src/icon_48.png" alt="PXC Logo" class="logo">
+            <h2>PXC Documentation</h2>
+        </div>
+
+        <a href="https://pixel-composer.com">PXC Home</a>
+    </div>
+
+    <div class="main">
+        <div class="sidebar">
+            <ul>
+                <li class="back "><a class="" href="../">Back</a></li>
+<li class="icon "><?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 28.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<path class="st0" d="M4,21V9l8-6l8,6v12h-6v-6h-4v6H4z"/>
+</svg>
+<a class="" href="index.html">Scriptings</a></li>
+<li class="active "><a class="" href="expression.html">Expression</a></li>
+<ul class="submenu">
+<li><a href="#Using Expression">Using Expression</a></li>
+<ul class="submenu h3">
+</ul>
+<li><a href="#Syntax">Syntax</a></li>
+<ul class="submenu h3">
+<li><a href="#Statement">Statement</a></li>
+<li><a href="#Returns value">Returns value</a></li>
+<li><a href="#Variables">Variables</a></li>
+<li><a href="#String">String</a></li>
+<li><a href="#Array">Array</a></li>
+<li><a href="#Conditions">Conditions</a></li>
+</ul>
+<li><a href="#Function References">Function References</a></li>
+<ul class="submenu h3">
+<li><a href="#sin(radian)">sin(radian)</a></li>
+<li><a href="#cos(radian)">cos(radian)</a></li>
+<li><a href="#tan(radian)">tan(radian)</a></li>
+<li><a href="#dsin(degree)">dsin(degree)</a></li>
+<li><a href="#dcos(degree)">dcos(degree)</a></li>
+<li><a href="#dtan(degree)">dtan(degree)</a></li>
+<li><a href="#arcsin(x)">arcsin(x)</a></li>
+<li><a href="#arccos(x)">arccos(x)</a></li>
+<li><a href="#arctan(x)">arctan(x)</a></li>
+<li><a href="#arctan2(y, x)">arctan2(y, x)</a></li>
+<li><a href="#darcsin(x)">darcsin(x)</a></li>
+<li><a href="#darccos(x)">darccos(x)</a></li>
+<li><a href="#darctan(x)">darctan(x)</a></li>
+<li><a href="#darctan2(y, x)">darctan2(y, x)</a></li>
+<li><a href="#abs(x)">abs(x)</a></li>
+<li><a href="#round(x)">round(x)</a></li>
+<li><a href="#ceil(x)">ceil(x)</a></li>
+<li><a href="#floor(x)">floor(x)</a></li>
+<li><a href="#fract(x)">fract(x)</a></li>
+<li><a href="#sign(x)">sign(x)</a></li>
+<li><a href="#min(x, y)">min(x, y)</a></li>
+<li><a href="#max(x, y)">max(x, y)</a></li>
+<li><a href="#clamp(x, min = 0, max = 1)">clamp(x, min = 0, max = 1)</a></li>
+<li><a href="#lerp(x, y, amount)">lerp(x, y, amount)</a></li>
+<li><a href="#wiggle(time, frequency, octave = 1, seed = 0)">wiggle(time, frequency, octave = 1, seed = 0)</a></li>
+<li><a href="#random(min = 0, max = 1)">random(min = 0, max = 1)</a></li>
+<li><a href="#irandom(min = 0, max = 1)">irandom(min = 0, max = 1)</a></li>
+<li><a href="#range(length, start = 0, step = 1)">range(length, start = 0, step = 1)</a></li>
+<li><a href="#length(value)">length(value)</a></li>
+<li><a href="#string(value)">string(value)</a></li>
+<li><a href="#number(value)">number(value)</a></li>
+<li><a href="#chr(x)">chr(x)</a></li>
+<li><a href="#ord(char)">ord(char)</a></li>
+<li><a href="#draw(surface, x = 0, y = 0, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)">draw(surface, x = 0, y = 0, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)</a></li>
+<li><a href="#surface_get_dimension(surface)">surface_get_dimension(surface)</a></li>
+<li><a href="#surface_get_width(surface)">surface_get_width(surface)</a></li>
+<li><a href="#surface_get_height(surface)">surface_get_height(surface)</a></li>
+<li><a href="#color_hex(char)">color_hex(char)</a></li>
+<li><a href="#color_rgb(red, green, blue)">color_rgb(red, green, blue)</a></li>
+<li><a href="#color_hsv(red, green, blue)">color_hsv(red, green, blue)</a></li>
+</ul>
+</ul>
+<li class=""><a class="" href="hlsl.html">Hlsl</a></li>
+<li class=""><a class="" href="lua.html">Lua</a></li>
+
+                <div style="height: 96px;"></div>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h1>Pixel Composer Expression</h1>
+<br><br>
+<p>Pixel Composer Expression (PCX) is a scripting language used for controlling properties value. 
+Instead of using keyframe animation, you can write a script to control the value of a property.</p>
+<br>
+<h2><a id="Using Expression" class="anchor"></a>Using Expression</h2>
+<br>
+<p>In the inspector panel. Click on the expression icon, or right click at the property and select 
+"Use expression" to enable/disable expression.</p>
+<br>
+<br><br>
+<h2><a id="Syntax" class="anchor"></a>Syntax</h2>
+<br>
+<h3><a id="Statement" class="anchor"></a>Statement</h3>
+<br>
+<p>Statements are separated by line, and code block is done with bracklet <span class="inline-code">{}</span></p>
+<br>
+<h3><a id="Returns value" class="anchor"></a>Returns value</h3>
+<br>
+<p>The returns value of the PCX is the last result. So it can be as simple as a single expression:
+<span class="code-block">1 + 1</span>Which will returns the value 2.</p>
+<br>
+<h3><a id="Variables" class="anchor"></a>Variables</h3>
+<br>
+<h4>Local variable</h4>
+<br>
+<p>Local variable can be define directly:<span class="code-block">a = 5<br>a * 2</span>will returns 10.</p>
+<br>
+<h4>Global variable</h4>
+<br>
+<p>Global variable are read only, and can be call simply by typing the variable name.</p>
+<br>
+<h4>Value variable</h4>
+<br>
+<p><span class="inline-code">value</span> is a reserved variable for getting the value of the property 
+itself. You can use it to get value from keyframe animation or from other node through connection.</p>
+<br>
+<h4>Global Structs</h4>
+<br>
+<p>There are several global structs that can be used to access other global values.</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%">
+        <col style="width: 60%">
+    </colgroup>
+    <tr>
+        <th>Variable</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.frame</span></td>
+        <td>The current frame index</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.progress</span></td>
+        <td>Animation progress from 0 - 1</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.frameTotal</span></td>
+        <td>Total frames in the animation</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.fps</span></td>
+        <td>Current preview speed</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.time</span></td>
+        <td>Current preview time (in seconds)</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Project.name</span></td>
+        <td>Current project name</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeSecond</span></td>
+        <td>Current (real time) second.</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeMinute</span></td>
+        <td>Current (real time) minute</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeHour</span></td>
+        <td>Current (real time) hour</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeDay</span></td>
+        <td>Current (real time) day</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeDayInWee</span></td>
+        <td>Current (real time) day in a week (0 - 6)</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeMonth</span></td>
+        <td>Current (real time) month</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">Device.timeYear</span></td>
+        <td>Current (real time) year</td>
+    </tr>
+</table>
+<br>
+<h4>Constants</h4>
+<br>
+<p>Some words are also reserved for mathematical constants.</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%">
+        <col style="width: 60%">
+    </colgroup>
+    <tr>
+        <th>Variable</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td><span class="inline-code">pi</span></td>
+        <td>3.1415926535</td>
+    </tr>
+    <tr>
+        <td><span class="inline-code">e</span></td>
+        <td>2.7182818284</td>
+    </tr>
+</table>
+<br>
+<h3><a id="String" class="anchor"></a>String</h3>
+<br>
+<p>String can be defined with the double quote <span class="inline-code">""</span>. String support some 
+arithmetic operation and array-like access.<span class="code-block">s = "Pixel"<br>s += " Composer"<br>s[0]</span>
+will returns "P".</p>
+<br>
+<h3><a id="Array" class="anchor"></a>Array</h3>
+<br>
+<p>Array can be created and access with square bracket <span class="inline-code">[]</span>. Pixel Composer 
+use zero-indexing for array.<span class="code-block">a = [ 0, 1, 2, 3, 4, 5 ]<br>a[2]</span>will return 2.</p>
+<br>
+<h3><a id="Conditions" class="anchor"></a>Conditions</h3>
+<br>
+<p>You can create conditional statement with if, elseif, and else:<span class="code-block">
+if(value > 10) {<br>
+&nbsp;&nbsp;1<br>
+} elseif(value < 0) {<br>
+&nbsp;&nbsp;-1<br>
+} else {<br>
+&nbsp;&nbsp;0<br>
+}</span>This will return -1, 0, 1 based on the junction value.</p>
+<br><br>
+<h2><a id="Function References" class="anchor"></a>Function References</h2>
+<br>
+<br>
+<h3><a id="sin(radian)" class="anchor"></a><span class="inline-code">sin(radian)</span></h3>
+<br>
+<p>sin</p>
+<br>
+<br>
+<h3><a id="cos(radian)" class="anchor"></a><span class="inline-code">cos(radian)</span></h3>
+<br>
+<p>cos</p>
+<br>
+<br>
+<h3><a id="tan(radian)" class="anchor"></a><span class="inline-code">tan(radian)</span></h3>
+<br>
+<p>tan</p>
+<br>
+<br>
+<h3><a id="dsin(degree)" class="anchor"></a><span class="inline-code">dsin(degree)</span></h3>
+<br>
+<p>dsin</p>
+<br>
+<br>
+<h3><a id="dcos(degree)" class="anchor"></a><span class="inline-code">dcos(degree)</span></h3>
+<br>
+<p>dcos</p>
+<br>
+<br>
+<h3><a id="dtan(degree)" class="anchor"></a><span class="inline-code">dtan(degree)</span></h3>
+<br>
+<p>dtan</p>
+<br>
+<br>
+<h3><a id="arcsin(x)" class="anchor"></a><span class="inline-code">arcsin(x)</span></h3>
+<br>
+<p>arcsin</p>
+<br>
+<br>
+<h3><a id="arccos(x)" class="anchor"></a><span class="inline-code">arccos(x)</span></h3>
+<br>
+<p>arccos</p>
+<br>
+<br>
+<h3><a id="arctan(x)" class="anchor"></a><span class="inline-code">arctan(x)</span></h3>
+<br>
+<p>arctan</p>
+<br>
+<br>
+<h3><a id="arctan2(y, x)" class="anchor"></a><span class="inline-code">arctan2(y, x)</span></h3>
+<br>
+<p>arctan2</p>
+<br>
+<br>
+<h3><a id="darcsin(x)" class="anchor"></a><span class="inline-code">darcsin(x)</span></h3>
+<br>
+<p>darcsin</p>
+<br>
+<br>
+<h3><a id="darccos(x)" class="anchor"></a><span class="inline-code">darccos(x)</span></h3>
+<br>
+<p>darccos</p>
+<br>
+<br>
+<h3><a id="darctan(x)" class="anchor"></a><span class="inline-code">darctan(x)</span></h3>
+<br>
+<p>darctan</p>
+<br>
+<br>
+<h3><a id="darctan2(y, x)" class="anchor"></a><span class="inline-code">darctan2(y, x)</span></h3>
+<br>
+<p>darctan2</p>
+<br>
+<br>
+<h3><a id="abs(x)" class="anchor"></a><span class="inline-code">abs(x)</span></h3>
+<br>
+<p>abs</p>
+<br>
+<br>
+<h3><a id="round(x)" class="anchor"></a><span class="inline-code">round(x)</span></h3>
+<br>
+<p>round</p>
+<br>
+<br>
+<h3><a id="ceil(x)" class="anchor"></a><span class="inline-code">ceil(x)</span></h3>
+<br>
+<p>ceil</p>
+<br>
+<br>
+<h3><a id="floor(x)" class="anchor"></a><span class="inline-code">floor(x)</span></h3>
+<br>
+<p>floor</p>
+<br>
+<br>
+<h3><a id="fract(x)" class="anchor"></a><span class="inline-code">fract(x)</span></h3>
+<br>
+<p>fract</p>
+<br>
+<br>
+<h3><a id="sign(x)" class="anchor"></a><span class="inline-code">sign(x)</span></h3>
+<br>
+<p>sign</p>
+<br>
+<br>
+<h3><a id="min(x, y)" class="anchor"></a><span class="inline-code">min(x, y)</span></h3>
+<br>
+<p>min</p>
+<br>
+<br>
+<h3><a id="max(x, y)" class="anchor"></a><span class="inline-code">max(x, y)</span></h3>
+<br>
+<p>max</p>
+<br>
+<br>
+<h3><a id="clamp(x, min = 0, max = 1)" class="anchor"></a><span class="inline-code">clamp(x, min = 0, max = 1)</span></h3>
+<br>
+<p>clamp</p>
+<br>
+<br>
+<h3><a id="lerp(x, y, amount)" class="anchor"></a><span class="inline-code">lerp(x, y, amount)</span></h3>
+<br>
+<p>lerp</p>
+<br>
+<br>
+<h3><a id="wiggle(time, frequency, octave = 1, seed = 0)" class="anchor"></a><span class="inline-code">wiggle(time, frequency, octave = 1, seed = 0)</span></h3>
+<br>
+<p>wiggle</p>
+<br>
+<br>
+<h3><a id="random(min = 0, max = 1)" class="anchor"></a><span class="inline-code">random(min = 0, max = 1)</span></h3>
+<br>
+<p>random</p>
+<br>
+<br>
+<h3><a id="irandom(min = 0, max = 1)" class="anchor"></a><span class="inline-code">irandom(min = 0, max = 1)</span></h3>
+<br>
+<p>irandom</p>
+<br>
+<br>
+<h3><a id="range(length, start = 0, step = 1)" class="anchor"></a><span class="inline-code">range(length, start = 0, step = 1)</span></h3>
+<br>
+<p>range</p>
+<br>
+<br>
+<h3><a id="length(value)" class="anchor"></a><span class="inline-code">length(value)</span></h3>
+<br>
+<p>length</p>
+<br>
+<br>
+<h3><a id="string(value)" class="anchor"></a><span class="inline-code">string(value)</span></h3>
+<br>
+<p>string</p>
+<br>
+<br>
+<h3><a id="number(value)" class="anchor"></a><span class="inline-code">number(value)</span></h3>
+<br>
+<p>number</p>
+<br>
+<br>
+<h3><a id="chr(x)" class="anchor"></a><span class="inline-code">chr(x)</span></h3>
+<br>
+<p>chr</p>
+<br>
+<br>
+<h3><a id="ord(char)" class="anchor"></a><span class="inline-code">ord(char)</span></h3>
+<br>
+<p>ord</p>
+<br>
+<br>
+<h3><a id="draw(surface, x = 0, y = 0, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)" class="anchor"></a><span class="inline-code">draw(surface, x = 0, y = 0, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)</span></h3>
+<br>
+<p>draw</p>
+<br>
+<br>
+<h3><a id="surface_get_dimension(surface)" class="anchor"></a><span class="inline-code">surface_get_dimension(surface)</span></h3>
+<br>
+<p>surface_get_dimension</p>
+<br>
+<br>
+<h3><a id="surface_get_width(surface)" class="anchor"></a><span class="inline-code">surface_get_width(surface)</span></h3>
+<br>
+<p>surface_get_width</p>
+<br>
+<br>
+<h3><a id="surface_get_height(surface)" class="anchor"></a><span class="inline-code">surface_get_height(surface)</span></h3>
+<br>
+<p>surface_get_height</p>
+<br>
+<br>
+<h3><a id="color_hex(char)" class="anchor"></a><span class="inline-code">color_hex(char)</span></h3>
+<br>
+<p>color_hex</p>
+<br>
+<br>
+<h3><a id="color_rgb(red, green, blue)" class="anchor"></a><span class="inline-code">color_rgb(red, green, blue)</span></h3>
+<br>
+<p>color_rgb</p>
+<br>
+<br>
+<h3><a id="color_hsv(red, green, blue)" class="anchor"></a><span class="inline-code">color_hsv(red, green, blue)</span></h3>
+<br>
+<p>color_hsv</p>
+<br>
+        </div>
+    </div>
+
+    <div style="height: 96px;"></div>
+    <div class="footer"> <p>2023 Pixel Composer</p> </div>
+</body>

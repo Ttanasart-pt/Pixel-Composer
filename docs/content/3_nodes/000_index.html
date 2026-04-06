@@ -1,0 +1,145 @@
+<h1>Nodes basics</h1>
+<br><br>
+<img src="/src/images/3_nodes/nodes.png" alt="">
+<br>
+<p>Nodes are the fundamental building block for Pixel Composer. Each nodes represent an operation with inputs and outputs, 
+and connections between nodes represent the flow of data.</p>
+<br><br>
+<h2>Terminologies</h2>
+<br>
+<h3>Nodes</h3>
+<br>
+<img src="/src/images/3_nodes/node_plain.png" alt="">
+<br>
+<p>Node represent an operation. It takes inputs, process them, and returns outputs. In graph, node inputs 
+will appear on the left side, and outputs will appear on the right. This means the data will flow from 
+left to right.</p>
+<br>
+<h3>Properties</h3>
+<br>
+<p>The node inputs, outputs are also called "Properties". Properties are elements you can see in the inspector 
+panel. Input properties can be modify, animated or connected from output properties.</p>
+<br>
+<h3>Junctions</h3>
+<br>
+<img src="/src/images/3_nodes/junctions.png" alt="">
+<br>
+<p>See <a href="./junctions.html">Junctions</a> page for more detail.</p>
+<br>
+<p>Each property can be represent in the graph panel as a junction. The junction shape and color depends on the 
+data behind it. Knowing the junctions will help you understand the data flow in the graph and making it easier 
+to debug your graph.</p>
+<br>
+<h3>Connections</h3>
+<br>
+<p>A connection can be done from output junction to input junction. You can't connect two junctions from the 
+same node, and you can't create cycle. For more information about junction type compatibility, check out the 
+<a href="">Junction</a> page.</p>
+</p>
+<br><br>
+<h2>Array Processor</h2>
+<br>
+<p>See <a href="./array_processor.html">Array Processor</a> page for more detail.</p>
+<br>
+<p>Some node with the <img src="/src/images/3_nodes/array_processor.png" alt=""> icon are array processor. Array processor can batch process array of data. For example: 
+you can insert array of surfaces and have it all process at the same time.</p>
+<br><br>
+<h2>Node Group</h2>
+<br>
+<img src="/src/images/3_nodes/node_group.png" alt="">
+<br>
+<p>You can group multiple nodes by pressing <span class="inline-code">Ctrl+G</span> in the graph panel. 
+Groupped node can be enter with double-click. Inside a group, you can create Group Input/Output node to 
+interface with the outside context.</p>
+<br>
+<h3>Inline Group</h3>
+<br>
+<img src="/src/images/3_nodes/inline_group.png" alt="">
+<br>
+<p>Some nodes, such as VFX, RigidSim, FluidSim, will create it's own context area called inline group. 
+Right-clicking in theose area will allow you to create node that can't be created outside of the inline group.</p>
+<br>
+<h3>Cache Group</h3>
+<br>
+<p>Cache, Cache Array node will also create their own inline group called cache group. Nodes in cache group will 
+be disabled once the all the values are cached, and they will be enabled if any property is changed to record 
+the new values.</p>
+<br><br>
+<h2>Actions</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/inspector_action.png" alt="">
+<br>
+<p>Some nodes comes with inspector actions that can be manually trigger in the inspector panel. Those action can 
+be display as a junction for automation.</p>
+<br><br>
+<h2>Cache</h2>
+<br>
+<p>Some nodes store (cache) value of all frames for performance or to achieve some effects. Cache status will 
+appear when inspecting a node at the animation panel.</p>
+<br>
+<img class="deco" src="/src/images/3_nodes/cache_stat.png" alt="">
+<br>
+<p>The red bar means that frame has not been cached yet, green means the frames is cached.</p>
+<br>
+<p>Cache will automatically refresh if any properties is changed. However sometime you might want to clear the 
+cache manually. You can do so by clicking the "Clear Cache" button in the inspector.</p>
+<br>
+<img class="deco" src="/src/images/3_nodes/clear_cache.png" alt="">
+<br><br>
+<h2>Attributes</h2>
+<br>
+<p>Node attributes are extra properties that cannot be animated. These are mostly general controls such as 
+texture interpolation, color space, etc. Attributes can be view in the setting tab in the inspector.</p>
+<br>
+<table>
+    <colgroup>
+        <col style="width: 40%;">
+        <col style="width: 60%;">
+    </colgroup>
+    <tr>
+        <td>Color depth</td>
+        <td>Set color depth for the surface.<br>
+        <ul>
+            <li>4 bit RGBA</li>
+            <li>8 bit RGBA</li>
+            <li>16 bit RGBA</li>
+            <li>32 bit RGBA</li>
+            <li>8 bit Greyscale</li>
+            <li>16 bit Greyscale</li>
+            <li>32 bit Greyscale</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <td>Texture interpolation</td>
+        <td>Set how the pixel color is being sampled at decimal position. <br>
+        <ul>
+            <li>Pixel</li> 
+            <li>Bilinear</li> 
+            <li>Bicubic</li> 
+            <li>RadSin</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>Oversample</td>
+        <td>Set what color to sample outside the texture. <br>
+        <ul>
+            <li>Empty</li> 
+            <li>Clamp</li> 
+            <li>Repeat</li>
+            <li>Black</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <td>Array process type</td>
+        <td>Set how array processor process multiple array inputs.</td>
+    </tr>
+</table>
+<br><br>
+<h2>Tools</h2>
+<br>
+<img class="deco" src="/src/images/2_interfaces/preview_tool_rack.png" alt="">
+<br>
+<p>Some nodes also come with tools which allow for interaction directly from the preview panel. Node tools 
+will appear when the node is inspecting. Which means you can display tools while previewing another nodes.</p>
+<br><br>

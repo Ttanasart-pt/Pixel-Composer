@@ -1,0 +1,71 @@
+<p>Displace node distort an image based on a displacement map.</p>
+<br>
+<img-deco displace>
+<br><br>
+<h2>Displacement</h2>
+<br>
+<br>
+<p>Displacement refers to the shifting of pixels. A shifting can be uniformly applies to the entire surface, which 
+will simply move the image. By using the <junc displace map/> you can control the shifting amount to make the 
+effect more interesting.</p>
+<br>
+<img displace_basic>
+<br>
+<p><junc mode/> property control how the displacement amount is being calculated.</p>
+<br>
+<h3>Linear</h3>
+<br>
+<p>When using linear mode, you can set the <junc position/> to control the direction you want the displacement to 
+happen. The displacement map will be use to scale that position vector.</p>
+<br>
+<h3>Vector</h3>
+<br>
+<p>In vector mode, the red and green channel will be used to calculate the displacement in x and y axis respectively.</p>
+<br>
+<h3>Angle</h3>
+<br>
+<p>In angle, the red and green channel will use to calculate direction and distance of the displacement. The direction 
+starts with 0 means toward the right and goes counter-clockwise.</p>
+<br>
+<h3>Gradient</h3>
+<br>
+<p>Gradient mode will distort the image down the slope of the displace map brightness.</p>
+<br>
+<h3><junc separate axis/></h3>
+<br>
+<p>For vector and angle mode which use red and green channel, you can check the <junc separate axis/> to use 
+two separate surfaces for each value.</p>
+<br><br>
+<h2>Strength</h2>
+<br>
+<p>The intensity of the displacement depends on the <junc mode/>. In linear mode, the intensity can be defined 
+directly in the <junc position/>. But for other modes, the <junc strength/> can be use to scale the displacement 
+intensity.</p>
+<br>
+<h3><junc mid value/></h3>
+<br>
+<p>By default, the data read from displacement map goes from 0 to 1, with black color correspond to 0 and 
+white color equals 1. However, if you want the effect to goes from -0.5 to 0.5, so the black color means invert 
+displacement. You can change the <junc mid value/> properties to 0.5.</p>
+<br>
+<img displace_mid>
+<br><br>
+<h2>Algorithm</h2>
+<br>
+<p>Properties in this section control how the color is being sampled.</p>
+<br>
+<h3><junc iterate/></h3>
+<br>
+<p>Iterate make the displace map sampling done step by step, instead of calculating where the pixel will go by taking 
+a single sample and multiply with the <junc strength/>. It will only move by one step, then take another displace map 
+sample repeatedly for <junc strength/> amount of time.</p>
+<br>
+<h3><junc blend mode/></h3>
+<br>
+<p>Blend mode control how the new color is chosen.</p>
+<br>
+<ul>
+    <li><span class="bold">Overwrite</span> replace the pixel with the new one.</li>
+    <li><span class="bold">Min</span> replace the pixel only if it's darker than the current one.</li>
+    <li><span class="bold">Max</span> replace the pixel only if it's brighter than the current one.</li>
+</ul>
