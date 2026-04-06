@@ -107,7 +107,7 @@ for category in nodeCategoryData:
         nodeMeta = nodeMetadata[node]
         nodeName = fileUtil.pathSanitize(nodeMeta["name"])
         nodeBase = nodeMeta["baseNode"]
-        redir    = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{nodeName}.html"/></html>'''
+        redir    = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{fname}.html"/></html>'''
         
         with open(f"docs/nodes/_index/{nodeName}.html", "w") as file:
             file.write(redir)
