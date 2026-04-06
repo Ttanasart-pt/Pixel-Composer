@@ -14,7 +14,7 @@ for root, dirs, files in os.walk("docs/src"):
     for file in files:
         if not file.endswith(".png"):
             continue
-
+        
         if os.path.basename(root).startswith("__"):
             continue
 
