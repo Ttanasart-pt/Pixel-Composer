@@ -60,7 +60,10 @@ def generateBasicData(nodeData, metadata):
         else:
             link = f"/nodes/_index/{pName}.html"
         
-        _class = "inheritance-block current" if i == len(parents) - 1 else "inheritance-block"
+        _class = "inheritance-block"
+        if i == len(parents) - 1:
+            _class = "inheritance-block current"
+            link   = "#"
 
         basicData += f'<tr><th colspan="2" class="{_class}"><a href="{link}">{pName}</a></th></tr>'
     return basicData

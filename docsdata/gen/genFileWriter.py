@@ -15,7 +15,7 @@ for root, dirs, files in os.walk("docs/src"):
         if not file.endswith(".png"):
             continue
         
-        if os.path.basename(root).startswith("__"):
+        if root.find("__") != -1:
             continue
 
         key = file[:-4].lower()
