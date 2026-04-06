@@ -747,6 +747,7 @@ li.search {
 
 li.search form {
     width: inherit;
+    padding-right: 16px;;
 }
 
 li.search-result {

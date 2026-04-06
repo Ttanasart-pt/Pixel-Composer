@@ -1,12 +1,22 @@
 # %%
 import os
+import re
 import fileUtil
 import json5 as json
 from tqdm import tqdm
 
 import nodeWriter
 
-VERSION = "<v 1.19.0/>"
+version_path = "scripts/globals/globals.gml"
+with open(version_path, 'r') as f:
+    version_data = f.read()
+version_string = re.search(r'VERSION_STRING\s*=\s*\"([^\"]+)\"', version_data)
+
+version_tag = "undef"
+if version_string:
+    version_tag = version_string.group(1)
+VERSION = f"<v {version_tag}/>"
+print(f"Version: {version_tag}")
 
 # %% Read node metadata
 nodeDir  = "datasrc/Nodes/Internal"
