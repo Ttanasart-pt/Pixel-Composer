@@ -43,6 +43,12 @@ def parseInput(inp):
 
     if "enum" in iType:
         iType = "enum"
+    
+    if iType == "escroll":
+        iType = "enum_scroll"
+
+    if iType == "ebutton":
+        iType = "enum_button"
 
     return {
         "name": iName,
