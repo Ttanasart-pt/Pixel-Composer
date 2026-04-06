@@ -73,18 +73,15 @@ shutil.copy("docsdata/styles.css", "docs/styles.css")
 
 # %% generate static search
 search_list_str = ""
-searchProgress  = tqdm(total=len(pages)*2, desc="Static Search")
 
 for title, path in pages:
-    searchProgress.update(1)
     if title == "Index":
         continue
 
     real_path = path.replace("docs\\", "\\")
     search_list_str += f'<li class="search-result" style="display: none;"><a href="{real_path}">{title}</a></li>\n'
 
-for _, path in pages:
-    searchProgress.update(1)
+for _, path in tqdm(pages, desc="Static Search"):
     with open(path, "r") as f:
         content = f.read()
     content  = content.replace("{{search_results}}", search_list_str)

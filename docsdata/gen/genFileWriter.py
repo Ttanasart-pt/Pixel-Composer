@@ -6,17 +6,17 @@ import fileUtil
 from fileUtil import FileType, pathRemoveOrder
 
 # %%
-svg_home = fileUtil.readFile("docsdata/src/svg/home.svg")
-svg_dir  = fileUtil.readFile("docsdata/src/svg/dir.svg")
+svg_home = fileUtil.readFile("docs/src/svg/home.svg")
+svg_dir  = fileUtil.readFile("docs/src/svg/dir.svg")
 
 images = {}
-for root, dirs, files in os.walk("docsdata/src"):
+for root, dirs, files in os.walk("docs/src"):
     for file in files:
         if not file.endswith(".png"):
             continue
 
         key = file[:-4].lower()
-        images[key] = os.path.join(root, file).replace("\\", "/")
+        images[key] = os.path.join("src", file).replace("\\", "/")
 
 template = fileUtil.readFile("docsdata/templates/page.html")
 

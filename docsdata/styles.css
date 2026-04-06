@@ -271,7 +271,7 @@ a.anchor {
 }
 
 .sidebar a {
-    width: auto;
+    width: -webkit-fill-available;
     
     display: block;
     padding-left: 32px;
@@ -282,7 +282,7 @@ a.anchor {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    transition: color 0.1s ease-in-out;
+    transition: color 0.05s ease-in-out;
 }
 
 .sidebar li.active > a {
