@@ -138,9 +138,9 @@ def writeCategory(category, nodeMetadata):
                 content += f'<h5 class="node-group-title">{sgName}</h5>'
             else:
                 if not nl:
-                    content += "</details>"
-                content += '<details class="node-category">'
-                content += f'<summary><h3 class="node-group-title">{sgName}</h3></summary>'
+                    content += "</div>"
+                content += '<div class="node-category">'
+                content += f'<h3 class="node-group-title">{sgName}</h3>'
 
             nl = True
             continue
