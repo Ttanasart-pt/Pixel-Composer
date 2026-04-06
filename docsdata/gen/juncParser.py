@@ -7,8 +7,8 @@ shortDict = {
     "c":  "color",
     "b":  "bool",
     "cu": "curve",
-    "es": "enum_scroll",
-    "eb": "enum_button",
+    "es": "enum",
+    "eb": "enum",
     "f":  "float",
     "gr": "gradient",
     "i":  "int",
@@ -20,6 +20,15 @@ shortDict = {
     "sr": "surface",
     "tr": "trigger",
     "2":  "vec2",
+    
+    "escroll": "enum",
+    "ebutton": "enum", 
+    "estring": "enum_string",
+
+    "rotrand": "rotation_random",
+    "rotrange": "rotation_range",
+    "slirange": "range",
+    "slider_range": "range",
 }
 
 # %%
@@ -44,12 +53,6 @@ def parseInput(inp):
     if "enum" in iType:
         iType = "enum"
     
-    if iType == "escroll":
-        iType = "enum_scroll"
-
-    if iType == "ebutton":
-        iType = "enum_button"
-
     return {
         "name": iName,
         "type": iType, 

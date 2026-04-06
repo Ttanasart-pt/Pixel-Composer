@@ -15,23 +15,23 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	dimension_index = -1;
 	
 	////- =Text
-	newInput( 0, nodeValue_Text(         "Text" )).setVisible(true, true);
-	newInput(32, nodeValue_Enum_Scroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
+	newInput( 0, nodeValue_Text(     "Text" )).setVisible(true, true);
+	newInput(32, nodeValue_EScroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
 	
 	////- =Output
-	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
-	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",  PROJ_SURF  )).setVisible(true, false);
-	newInput(34, nodeValue_Vec2(         "Offset",           [0,0]     ));
-	newInput(10, nodeValue_IPadding(     "Padding",          [0,0,0,0] ));
-	newInput(33, nodeValue_Bool(         "Atlas",            false     ));
+	newInput( 9, nodeValue_EScroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
+	newInput( 6, nodeValue_Vec2(     "Fixed Dimension",  PROJ_SURF  )).setVisible(true, false);
+	newInput(34, nodeValue_Vec2(     "Offset",           [0,0]     ));
+	newInput(10, nodeValue_IPadding( "Padding",          [0,0,0,0] ));
+	newInput(33, nodeValue_Bool(     "Atlas",            false     ));
 	
 	////- =Alignment
-	newInput(13, nodeValue_PathNode(     "Path"));
-	newInput(14, nodeValue_Float(        "Path Shift",        0    ));
-	newInput(27, nodeValue_Int(          "Max Line Width",    0    ));
-	newInput( 7, nodeValue_Enum_Button(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
-	newInput( 8, nodeValue_Enum_Button(  "V Align",           0, array_create(3, THEME.inspector_text_valign) ));
-	newInput(30, nodeValue_Bool(         "Rotate Along Path", true ));
+	newInput(13, nodeValue_PathNode( "Path"));
+	newInput(14, nodeValue_Float(    "Path Shift",        0    ));
+	newInput(27, nodeValue_Int(      "Max Line Width",    0    ));
+	newInput( 7, nodeValue_EButton(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
+	newInput( 8, nodeValue_EButton(  "V Align",           0, array_create(3, THEME.inspector_text_valign) ));
+	newInput(30, nodeValue_Bool(     "Rotate Along Path", true ));
 	
 	////- =Font
 	newInput( 1, nodeValue_Font(  "Font"                      )).setVisible(true, false);
@@ -45,27 +45,27 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(36, nodeValue_Bool(  "Monospaced",       false   ));
 	
 	////- =Rendering
-	newInput(28, nodeValue_Bool(         "Round Position",   true     ));
-	newInput( 5, nodeValue_Color(        "Color",            ca_white ));
-	newInput(29, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
-	newInput(31, nodeValue_Palette(      "Color by Letter", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(28, nodeValue_Bool(     "Round Position",   true     ));
+	newInput( 5, nodeValue_Color(    "Color",            ca_white ));
+	newInput(29, nodeValue_EButton(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
+	newInput(31, nodeValue_Palette(  "Color by Letter", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	
 	////- =Background
-	newInput(16, nodeValue_Bool(         "Render Background", false    ));
-	newInput(17, nodeValue_Color(        "BG Color",          ca_black ));
+	newInput(16, nodeValue_Bool(     "Render Background", false    ));
+	newInput(17, nodeValue_Color(    "BG Color",          ca_black ));
 	
 	////- =Wave
-	newInput(18, nodeValue_Bool(         "Wave",           false ));
-	newInput(22, nodeValue_Slider(       "Wave Shape",     0, [ 0, 3, 0.01 ]));
-	newInput(19, nodeValue_Float(        "Wave Amplitude", 4     ));
-	newInput(20, nodeValue_Float(        "Wave Scale",     30    ));
-	newInput(21, nodeValue_Rotation(     "Wave Phase",     0     ));
+	newInput(18, nodeValue_Bool(     "Wave",           false ));
+	newInput(22, nodeValue_Slider(   "Wave Shape",     0, [ 0, 3, 0.01 ]));
+	newInput(19, nodeValue_Float(    "Wave Amplitude", 4     ));
+	newInput(20, nodeValue_Float(    "Wave Scale",     30    ));
+	newInput(21, nodeValue_Rotation( "Wave Phase",     0     ));
 	
 	////- =Trim
-	newInput(23, nodeValue_Bool(         "Trim",               false ));
-	newInput(25, nodeValue_Enum_Button(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
-	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]  ));
-	newInput(26, nodeValue_Bool(         "Use Full Text Size", false ));
+	newInput(23, nodeValue_Bool(     "Trim",               false ));
+	newInput(25, nodeValue_EButton(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
+	newInput(24, nodeValue_SliRange( "Range",             [0,1]  ));
+	newInput(26, nodeValue_Bool(     "Use Full Text Size", false ));
 	// inputs 37
 		
 	input_display_list = [ 
