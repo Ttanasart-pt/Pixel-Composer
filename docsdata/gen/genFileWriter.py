@@ -16,7 +16,7 @@ for root, dirs, files in os.walk("docs/src"):
             continue
 
         key = file[:-4].lower()
-        images[key] = os.path.join("src", file).replace("\\", "/")
+        images[key] = os.path.join(root, file).replace("\\", "/")
 
 template = fileUtil.readFile("docsdata/templates/page.html")
 
