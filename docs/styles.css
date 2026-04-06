@@ -419,9 +419,14 @@ table.summary-table p img {
     padding: 0px 8px;
 }
 
-table.summary-table td.summary-attribute > a {
+table.summary-table th.summary-attribute > a {
     text-align: center;
     font-size: 0.8rem;
+    color: var(--main_ltgrey);
+}
+
+table.summary-table th.summary-attribute > a:hover {
+    color: white;
 }
 
 table.summary-table th.summary-content > a {

@@ -157,7 +157,7 @@ def IOTable(nodeData):
 
 def AttributeTable(nodeData):
     attrList = nodeData["attributes"]
-    rows     = "".join([f"""<tr><td colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#{_attr}">{_attr}</a></td></tr>""" for _attr in attrList])
+    rows     = "".join([f"""<tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#{_attr}">{_attr}</a></th></tr>""" for _attr in attrList])
 
     if rows == "":
         return ""
