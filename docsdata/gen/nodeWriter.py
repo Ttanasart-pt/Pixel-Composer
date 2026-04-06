@@ -58,7 +58,7 @@ def generateBasicData(nodeData, metadata):
         elif pName == "Node_Processor":
             link = "/nodes/array_processor.html"
         else:
-            link = f"/nodes/_index/{pName.lower()}.html"
+            link = f"/nodes/_index/{pName}.html"
         
         _class = "inheritance-block current" if i == len(parents) - 1 else "inheritance-block"
 

@@ -104,12 +104,16 @@ for category in nodeCategoryData:
         targetPath = os.path.join(categoryDir, fname + ".html")
         fileUtil.writeFile(targetPath, nodeContent[node])
 
+        redir = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{nodeName}.html"/></html>'''
         nodeMeta = nodeMetadata[node]
         nodeName = fileUtil.pathSanitize(nodeMeta["name"])
-
-        redirectPath = f"docs/nodes/_index/{nodeName}.html"
-        with open(redirectPath, "w") as file:
-            file.write(f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{nodeName}.html"/></html>''')
+        nodeBase = nodeMeta["baseNode"]
+        
+        with open(f"docs/nodes/_index/{nodeName}.html", "w") as file:
+            file.write(redir)
+        
+        with open(f"docs/nodes/_index/{nodeBase}.html", "w") as file:
+            file.write(redir)
 
 # %% Write tag pages
 tagDir = os.path.join(targetRoot, "_tags")
