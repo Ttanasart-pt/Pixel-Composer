@@ -6,7 +6,7 @@ import fileUtil
 import nodeParser
 import juncWriter
 
-with open("../templates/node.html", "r") as f:
+with open("docsdata/templates/node.html", "r") as f:
     template = f.read()
 
 def generateBadge(title, tooltip, color, page = ""):

@@ -1,19 +1,23 @@
 import os
 import shutil
+import time
 
-shutil.copytree("../content", "../pregen", dirs_exist_ok=True)
+starttime = time.time()
+shutil.copytree("docsdata/content", "docsdata/pregen", dirs_exist_ok=True)
 
 # Convert markdown to HTML
-print("Runing md.py...") 
-os.system("python md.py")
+print("> Runing md.py...") 
+os.system("python docsdata/gen/md.py")
 
 # Generate node files
-print("Runing nodes.py...")
-os.system("python node.py")
+print("> Runing nodes.py...")
+os.system("python docsdata/gen/node.py")
 
 # Generate web contents
-print("Runing gen.py...")
-os.system("python gen.py")
+print("> Runing gen.py...")
+os.system("python docsdata/gen/gen.py")
 
 # Delete pregen folder
-shutil.rmtree("../pregen")
+shutil.rmtree("docsdata/pregen")
+endtime = time.time()
+print(f"> Generating docs complete in {endtime - starttime:.2f} s")

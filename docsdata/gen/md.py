@@ -3,7 +3,7 @@ import re
 import markdown
 
 def parse_md(path):
-    target = path.replace(".md", ".html").replace("../content", "../pregen")
+    target = path.replace(".md", ".html").replace("docsdata/content", "docsdata/pregen")
     with open(path, "r") as f:
         data = f.read()
 
@@ -18,7 +18,7 @@ def parse_md(path):
     with open(target, "a") as f:
         f.write(data_html)
 
-for root, dirs, files in os.walk("../content"):
+for root, dirs, files in os.walk("docsdata/content"):
     for file in files:
         path = os.path.join(root, file)
         if file.endswith(".md"):

@@ -1,1 +1,0 @@
-py "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/releases/noteGetter.py"

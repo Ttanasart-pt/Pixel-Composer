@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 import juncParser
 
-scriptDir   = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/scripts"
+scriptDir   = "scripts"
 nodeScripts = {}
 nodeLists   = []
 nodeData    = {}

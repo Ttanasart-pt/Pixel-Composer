@@ -9,33 +9,32 @@ import nodeWriter
 VERSION = "<v 1.19.0/>"
 
 # %% Read node metadata
-nodeDir  = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal"
+nodeDir  = "datasrc/Nodes/Internal"
 nodeList = []
 for root, dirs, files in os.walk(nodeDir):
     for file in files:
+        if file == "display_data.json":
+             continue
+        
         if file.endswith(".json"):
             nodeList.append(os.path.join(root, file))
-
-# %% Load node metadata
-def getNodeMetadata(nodePath):
-    with open(nodePath, 'r') as f:
-        nodeData = json.load(f)
-    return nodeData
 
 # %% Generate contents
 nodeContent  = {}
 nodeMetadata = {}
 
 for nodePath in tqdm(nodeList, desc="Generating node content"):
-    nodeMeta = getNodeMetadata(nodePath)
+    with open(nodePath, 'r') as f:
+        nodeMeta = json.load(f)
+
     if not nodeMeta:
-        print(f"Node data for {nodePath} not found.")
+        print(f"Invalid Node metadata for {nodePath}.")
         continue
     
     nodeBase = nodeMeta["baseNode"]
     nodeName = nodeMeta["name"]
     
-    contentPath = f"../content/__nodes/{fileUtil.pathSanitize(nodeName)}.html"
+    contentPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeName)}.html"
     fileUtil.verifyFile(contentPath)
 
     content = nodeWriter.writeNode(nodeMeta, contentPath)
@@ -47,11 +46,11 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
     nodeMetadata[nodeBase] = nodeMeta
     
 # %% Write content to file using category
-targetRoot = "../pregen/3_nodes"
-fileUtil.verifyFile("../docs/nodes/_index/index.html", f'''<!DOCTYPE html><html></html>''')
+targetRoot = "docsdata/pregen/3_nodes"
+fileUtil.verifyFile("docs/nodes/_index/index.html", f'''<!DOCTYPE html><html></html>''')
 fileUtil.verifyFolder(targetRoot)
 
-nodeCategoryDir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/display_data.json"
+nodeCategoryDir = "datasrc/Nodes/Internal/display_data.json"
 with open(nodeCategoryDir, 'r') as f:
     nodeCategoryData = json.load(f)
 
@@ -89,7 +88,7 @@ for category in nodeCategoryData:
         nodeName = nodeMeta["name"]
         nodeName = fileUtil.pathSanitize(nodeName)
 
-        redirectPath = f"../docs/nodes/_index/{nodeName}.html"
+        redirectPath = f"docs/nodes/_index/{nodeName}.html"
         with open(redirectPath, "w") as file:
             file.write(f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{nodeName}.html"/></html>''')
 

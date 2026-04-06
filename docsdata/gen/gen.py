@@ -2,6 +2,7 @@
 import os
 import shutil
 import re
+from tqdm import tqdm
 
 from fileUtil import FileType, pathRemoveOrder, verifyFolder
 import genFileWriter
@@ -10,9 +11,9 @@ def title(s): # Replace _ with space and capitalize the first letter in each wor
     return s.replace('_', ' ').title()
     
 # %% Copy image files
-nodeIconDir = "D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/nodeIcons"
-shutil.copytree(nodeIconDir, "../src/nodeIcons", dirs_exist_ok = True)
-shutil.copytree("../src", "../docs/src", dirs_exist_ok = True)
+nodeIconDir = "datasrc/NodeIcons"
+shutil.copytree(nodeIconDir, "docsdata/src/nodeIcons", dirs_exist_ok = True)
+shutil.copytree("docsdata/src", "docs/src", dirs_exist_ok = True)
 
 # %%
 pages = []
@@ -23,7 +24,7 @@ def generateFolder(dirIn, dirOut):
     files   = sorted(os.listdir(dirIn))
     sidebar = []
 
-    if dirIn == "../pregen":
+    if dirIn == "docsdata/pregen":
         groupTitle = "Home"
         sidebar.append((FileType.BACK, "", "", ""))
     else:
@@ -67,19 +68,23 @@ def generateFolder(dirIn, dirOut):
             page = genFileWriter.generateFile(dirOut, fDirIn, sidebar)
             pages.append(page)
 
-generateFolder("../pregen", "../docs")
-shutil.copy("../styles.css", "../docs/styles.css")
+generateFolder("docsdata/pregen", "docs")
+shutil.copy("docsdata/styles.css", "docs/styles.css")
 
 # %% generate static search
 search_list_str = ""
+searchProgress  = tqdm(total=len(pages)*2, desc="Static Search")
+
 for title, path in pages:
+    searchProgress.update(1)
     if title == "Index":
         continue
 
-    real_path = path.replace("../docs\\", "\\")
+    real_path = path.replace("docs\\", "\\")
     search_list_str += f'<li class="search-result" style="display: none;"><a href="{real_path}">{title}</a></li>\n'
 
 for _, path in pages:
+    searchProgress.update(1)
     with open(path, "r") as f:
         content = f.read()
     content  = content.replace("{{search_results}}", search_list_str)

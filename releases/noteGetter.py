@@ -1,8 +1,8 @@
 import os
 import re
 
-srcDir = "D:\\Project\\MakhamDev\\LTS-PixelComposer\\EXE"
-trgDir = "D:\\Project\\MakhamDev\\LTS-PixelComposer\\PixelComposer\\releases"
+srcDir = "../../EXE"
+trgDir = "../releases"
 
 notes = []
 
