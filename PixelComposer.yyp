@@ -592,6 +592,7 @@
     {"id":{"name":"DOWNLOAD_GAMECENTER_EXT","path":"notes/DOWNLOAD_GAMECENTER_EXT/DOWNLOAD_GAMECENTER_EXT.yy",},},
     {"id":{"name":"DOWNLOAD_GOOGLE_PLAY_SERVICES_EXT","path":"notes/DOWNLOAD_GOOGLE_PLAY_SERVICES_EXT/DOWNLOAD_GOOGLE_PLAY_SERVICES_EXT.yy",},},
     {"id":{"name":"DOWNLOAD_GOOGLE_SIGNIN_EXT","path":"notes/DOWNLOAD_GOOGLE_SIGNIN_EXT/DOWNLOAD_GOOGLE_SIGNIN_EXT.yy",},},
+    {"id":{"name":"note_level","path":"notes/note_level/note_level.yy",},},
     {"id":{"name":"_addon_custom","path":"objects/_addon_custom/_addon_custom.yy",},},
     {"id":{"name":"_p_dialog_undo_block","path":"objects/_p_dialog_undo_block/_p_dialog_undo_block.yy",},},
     {"id":{"name":"_p_dialog","path":"objects/_p_dialog/_p_dialog.yy",},},

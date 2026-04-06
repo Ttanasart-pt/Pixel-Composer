@@ -3,6 +3,7 @@ import os
 import shutil
 import re
 from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor
 
 from fileUtil import FileType, pathRemoveOrder, verifyFolder
 import genFileWriter
@@ -81,10 +82,44 @@ for title, path in pages:
     real_path = path.replace("docs\\", "\\")
     search_list_str += f'<li class="search-result" style="display: none;"><a href="{real_path}">{title}</a></li>\n'
 
-for _, path in tqdm(pages, desc="Static Search"):
-    with open(path, "r") as f:
-        content = f.read()
+# for _, path in tqdm(pages, desc="Static Search"):
+#     with open(path, "r") as f:
+#         content = f.read()
         
-    content = content.replace("{{search_results}}", search_list_str)
-    with open(path, "w") as f:
-        f.write(content)
+#     content = content.replace("{{search_results}}", search_list_str)
+#     with open(path, "w") as f:
+#         f.write(content)
+
+def replace_in_file(path, old_text, new_text):
+    try:
+        with open(path, "r", encoding='utf-8') as f:
+            content = f.read()
+        
+        if old_text in content:
+            new_content = content.replace(old_text, new_text)
+            with open(path, "w", encoding='utf-8') as f:
+                f.write(new_content)
+            return f"Updated: {path}"
+        else:
+            return f"Skipped: {path}"
+    except Exception as e:
+        return f"Error {path}: {e}"
+
+# Parallel processing
+def process_files_parallel(pages, search_list_str, max_workers=None):
+    if max_workers is None:
+        max_workers = min(32, (os.cpu_count() or 1) + 4)
+    
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = [
+            executor.submit(replace_in_file, path, "{{search_results}}", search_list_str)
+            for _, path in pages
+        ]
+        
+        results = []
+        for future in tqdm(futures, desc="Static Search"):
+            results.append(future.result())
+    
+    return results
+
+results = process_files_parallel(pages, search_list_str)

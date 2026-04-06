@@ -5,6 +5,10 @@ import time
 starttime = time.time()
 shutil.copytree("docsdata/content", "docsdata/pregen", dirs_exist_ok=True)
 
+# Extract note file from the source code
+print("> Runing note_extract.py...") 
+os.system("python docsdata/gen/note_extract.py")
+
 # Convert markdown to HTML
 print("> Runing md.py...") 
 os.system("python docsdata/gen/md.py")

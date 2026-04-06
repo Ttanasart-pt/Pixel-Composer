@@ -113,23 +113,38 @@
 
 /* Put put shader or folder that comes after node in the same line as the node itself */
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"][draggable="true"], 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="notes"][draggable="true"], 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"][draggable="true"], 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir:not(.is-empty) {
     padding-top: 0px;
     margin-left: 208px;
     margin-top: -20px;
-    /* width: 32px; */
+    width: 24px;
+}
+
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div + div.item[data-kind="notes"][draggable="true"] {
+    padding-top: 0px;
+    margin-left: 192px;
+    margin-top: -20px;
+    width: 12px;
+}
+
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div + div.item[data-kind="notes"][draggable="true"] {
+    margin-right: 0px;
 }
 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"]::before, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="notes"]::before, 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"]::before, 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir::before {
     margin-right: 4px;
 }
 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"] > span, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="notes"] > span, 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"] > span, 
-.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir > div.header > span {
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir > div.header > span, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div + div.item[data-kind="notes"][draggable="true"] > span {
     color: #9F9FB500;
 }
 
@@ -138,6 +153,8 @@
 }
 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"]:hover, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="notes"]:hover, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div + div.item[data-kind="notes"]:hover, 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"]:hover, 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir div.header:hover {
     background-color: transparent !important;
@@ -149,6 +166,14 @@
 
 .treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir div.header:hover::before {
     background-image: url(gmedit/treeview_hover.png?r4);
+}
+
+div.item[data-kind="notes"]::before {
+    background-image: url(gmedit/tree_note.png);
+}
+
+div.item[data-kind="notes"]:hover::before {
+    background-image: url(gmedit/tree_note_hover.png);
 }
 
 /* ------------------------------------------------------------------------------------------------------------------------------------------ */
