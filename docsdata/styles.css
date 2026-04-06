@@ -807,15 +807,25 @@ input#search:focus {
 div.node-category {
     background-color: #19192580;
     border-radius: 8px;
+    outline: 1px solid #3b3b4eaa;
+    
     padding: 0px 0px 10px 0px;
     margin-bottom: 12px;
 }
 
 div.node-category > h3 {
     background-color: var(--main_dkblack);
-    border-radius: 8px;
+    border-radius: 8px 8px 0px 0px;
     padding: 6px 12px;
     margin-bottom: 4px;
+}
+
+div.node-category .node-card a {
+    color: var(--main_white);
+}
+
+div.node-category .node-card a:hover {
+    color: var(--accent);
 }
 
 ::-webkit-scrollbar {

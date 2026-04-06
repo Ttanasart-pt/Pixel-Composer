@@ -105,8 +105,7 @@ for category in nodeCategoryData:
         fileUtil.writeFile(targetPath, nodeContent[node])
 
         nodeMeta = nodeMetadata[node]
-        nodeName = nodeMeta["name"]
-        nodeName = fileUtil.pathSanitize(nodeName)
+        nodeName = fileUtil.pathSanitize(nodeMeta["name"])
 
         redirectPath = f"docs/nodes/_index/{nodeName}.html"
         with open(redirectPath, "w") as file:

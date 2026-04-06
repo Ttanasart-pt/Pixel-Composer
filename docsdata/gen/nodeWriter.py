@@ -185,8 +185,9 @@ def writeTag(tag, nodes, nodeMetadata):
         metadata = nodeMetadata[node]
         name     = metadata["name"]
         spr      = metadata["spr"]  if "spr" in metadata else f"s_{node.lower()}"
+        nodeName = fileUtil.pathSanitize(name)
 
-        content += f'''<div class="node-card"><a href="./{node.lower().replace("node_", "")}.html"><img {spr}>{name}</a></div>\n'''
+        content += f'''<div class="node-card"><a href="docs/nodes/_index/{nodeName}.html"><img {spr}>{name}</a></div>\n'''
     
     content += '</div></div>'
     return content
