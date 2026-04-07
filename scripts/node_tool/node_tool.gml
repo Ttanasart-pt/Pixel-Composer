@@ -1,6 +1,7 @@
 function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) constructor {
 	ctx       = _contextString;
 	context   = noone;
+	node      = undefined;
 	
 	name      = _name;
 	spr       = _spr;

@@ -1,4 +1,4 @@
-function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selector) constructor {
+function canvas_tool_selection_brush() : canvas_selection_tool() constructor {
 	brush_resizable = true;
 	
 	mouse_cur_x = 0;
@@ -12,7 +12,7 @@ function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selecto
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
 		
-		if(!selector.selection_hovering && mouse_lpress(active)) {
+		if(!node.selection.selection_hovering && mouse_lpress(active)) {
 			selection_mask = surface_verify(selection_mask, _dim[0], _dim[1]);
 			
 			surface_set_shader(selection_mask, noone);
@@ -53,9 +53,9 @@ function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selecto
 					surface_set_shader(_sel);
 						draw_surface(selection_mask, -sel_x, -sel_y);
 					surface_reset_shader();
-					selector.createSelection(_sel, sel_x, sel_y, sel_w, sel_h);
+					node.selection.createSelection(_sel, sel_x, sel_y, sel_w, sel_h);
 					
-				} else selector.apply();
+				} else node.selection.apply();
 				
 				is_selecting = false;
 				surface_free_safe(selection_mask);
@@ -70,7 +70,7 @@ function canvas_tool_selection_brush(_selector) : canvas_selection_tool(_selecto
 	}
 		
 	static onDrawMask = function(hover, active, _x, _y, _s, _mx, _my) {
-		if(selector.selection_hovering) return;
+		if(node.selection.selection_hovering) return;
 		
 		var _dx = _x + mouse_cur_x * _s;
 		var _dy = _y + mouse_cur_y * _s;

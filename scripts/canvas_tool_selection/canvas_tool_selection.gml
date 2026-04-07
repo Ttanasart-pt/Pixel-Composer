@@ -648,9 +648,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 	
 }
 
-function canvas_selection_tool(_selector) : canvas_tool() constructor {
-	selector   = _selector;
-	
+function canvas_selection_tool() : canvas_tool() constructor {
 	selection_mask		= noone;
 	selection_position	= [ 0, 0 ];
 	selection_size   	= [ 0, 0 ];

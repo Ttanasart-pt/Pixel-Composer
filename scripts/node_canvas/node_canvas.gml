@@ -315,18 +315,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_ellipse        = new canvas_tool_shape(CANVAS_TOOL_SHAPE.ellipse).setNode(self);
 		tool_iso_cube       = new canvas_tool_shape_iso(CANVAS_TOOL_SHAPE_ISO.cube, tool_attribute).setNode(self);
 		
-		tool_fill           = new canvas_tool_fill(tool_attribute);
-		tool_fill_grad      = new canvas_tool_fill_gradient(tool_attribute);
+		tool_fill           = new canvas_tool_fill(tool_attribute).setNode(self);
+		tool_fill_grad      = new canvas_tool_fill_gradient(tool_attribute).setNode(self);
 		tool_fill_pattern   = new canvas_tool_pattern(tool_attribute).setNode(self);
 		
-		tool_freeform       = new canvas_tool_draw_freeform();
-		tool_curve_bez      = new canvas_tool_curve_bezier();
+		tool_freeform       = new canvas_tool_draw_freeform().setNode(self);
+		tool_curve_bez      = new canvas_tool_curve_bezier().setNode(self);
 		
-		tool_sel_rectangle  = new canvas_tool_selection_shape(selection, CANVAS_TOOL_SHAPE.rectangle);
-		tool_sel_ellipse    = new canvas_tool_selection_shape(selection, CANVAS_TOOL_SHAPE.ellipse);
-		tool_sel_freeform   = new canvas_tool_selection_freeform(selection);
-		tool_sel_magic      = new canvas_tool_selection_magic(selection, tool_attribute);
-		tool_sel_brush      = new canvas_tool_selection_brush(selection);
+		tool_sel_rectangle  = new canvas_tool_selection_shape(CANVAS_TOOL_SHAPE.rectangle).setNode(self);
+		tool_sel_ellipse    = new canvas_tool_selection_shape(CANVAS_TOOL_SHAPE.ellipse).setNode(self);
+		tool_sel_freeform   = new canvas_tool_selection_freeform().setNode(self);
+		tool_sel_magic      = new canvas_tool_selection_magic(, tool_attribute).setNode(self);
+		tool_sel_brush      = new canvas_tool_selection_brush().setNode(self);
 		
 		use_color_3d        = false;
 		color_3d_selected   = 0;
@@ -958,7 +958,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		update();
 	}
 	
-	static refreshFrames = function() {
+	static refreshFrames = function(clear = false) {
+		if(clear) {
+			surface_array_free(canvas_surface);
+			canvas_surface = [];
+		}
+		
 		var  fr  = attributes.frames;
 		var _dim = attributes.dimension;
 		
@@ -979,7 +984,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		} else {
 			for( var i = fr; i < array_length(canvas_buffer); i++ )
 				buffer_delete_safe(canvas_buffer[i]);
-				
 			array_resize(canvas_buffer, fr);
 		}
 		
@@ -1289,8 +1293,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_tool_sel = _tool;
 				
 				if(is(_tool, canvas_tool)) {
-					_tool.node = self;
-					
 					_tool = _tool.getToolNode();
 					_tool.subtool = _currTool.selecting;
 					array_append(rightTools, _tool.rightTools);
@@ -1300,6 +1302,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				} else 
 					_tool = noone;
 			}
+			
+			if(_tool && _tool.node != self) _tool.setNode(self);
 			
 			if(is(_tool, canvas_tool)) _tool.setBrush(current_brush);
 			tool_mirror_edit.sprs = tool_attribute.mirror[0]? THEME.canvas_mirror_diag : THEME.canvas_mirror;

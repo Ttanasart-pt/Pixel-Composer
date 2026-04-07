@@ -187,6 +187,10 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			focusCanvas(_canvas);
 		}
 		
+		var _dim = inputs[0].getValue();
+		_canvas.attributes.dimension = _dim;
+		_canvas.refreshFrames(true);
+		
 		return _canvas;
 	}
 	
@@ -261,7 +265,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		if(composite  != noone) draw_surface_ext_safe(composite.outputs[0].getValue(), _x, _y, _s, _s);
 		if(canvas_sel == noone) return false;
 		
-		_params.drawToolPreview = false;
+		// _params.drawToolPreview = false;
 		var _draw = canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		canvas_sel.drawToolOutline();
 		
@@ -269,8 +273,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	}
 	
 	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
-		if(canvas_sel) return canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus);
-		return 0;
+		return canvas_sel? canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus) : 0;
 	}
 	
 	////- Update
@@ -314,7 +317,6 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		refreshLayer();
 		
 		var _dim = inputs[0].getValue();
-		
 		for (var i = 0, n = array_length(canvases); i < n; i++) {
 			canvases[i].input_dimension      = false;
 			canvases[i].attributes.dimension = _dim;

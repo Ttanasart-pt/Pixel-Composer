@@ -1,9 +1,11 @@
-function canvas_tool_selection_shape(_selector, _shape) : canvas_selection_tool(_selector) constructor {
+function canvas_tool_selection_shape(_shape) : canvas_selection_tool() constructor {
 	shape       = _shape;
 	select_snap = false;
 	drawBrushMask = false;
 	
 	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
+		if(!is(node, Node)) return;
+		
 		if(is_selecting) {
 			var sel_x0, sel_y0, sel_x1, sel_y1;
 			var sel_w = 1, sel_h = 1;
@@ -50,11 +52,11 @@ function canvas_tool_selection_shape(_selector, _shape) : canvas_selection_tool(
 			
 			if(mouse_lrelease()) {
 				is_selecting = false;
-				selector.createSelection(selection_mask, sel_x0, sel_y0, sel_w, sel_h);
+				node.selection.createSelection(selection_mask, sel_x0, sel_y0, sel_w, sel_h);
 				surface_free_safe(selection_mask);
 			}
 			
-		} else if(!selector.selection_hovering && active) {
+		} else if(!node.selection.selection_hovering && active) {
 			if(mouse_lpress()) {
 				is_selecting = true;
 				select_snap  = DOUBLE_CLICK && PROJECT.previewGrid.show;

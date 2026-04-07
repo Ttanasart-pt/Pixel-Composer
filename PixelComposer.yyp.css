@@ -125,20 +125,26 @@
     div.item[data-kind="script"]                                  + div.dir:not(.is-empty),                          /* Directory after node */
     div.item[data-kind="script"]    + div.item[data-kind="notes"] + div.dir:not(.is-empty)                           /* Directory after node and note */
     {
-        padding-top: 0px;
+        padding: 0px;
         margin-left: calc(var(--sidebar-width) - 108px);
-        margin-top: -20px;
+        margin-top: -19px;
+        margin-bottom: -1px;
+
         width: 24px;
+        /* height: 20px; */
     }
 
     div.item[data-kind="script"]       + div.item[data-kind="notes"][draggable="true"], /* note after node */ 
     div.item[data-kind="script"] + div + div.item[data-kind="notes"][draggable="true"]  /* note after node with intermediate element */
     {
-        padding-top: 0px;
+        padding: 0px;
         margin-left: calc(var(--sidebar-width) - 124px);
         margin-right: 0px;
-        margin-top: -20px;
+        margin-top: -19px;
+        margin-bottom: -1px;
+        
         width: 12px;
+        /* height: 20px; */
     }
 
     /* Fix misalignment issue with note after script */
@@ -148,7 +154,8 @@
     }
 
     /* Offset children */
-    div.item[data-kind="script"] + div.dir > div.items {
+    div.item[data-kind="script"] + div.item[data-kind="notes"] + div.dir > div.items,
+    div.item[data-kind="script"]                               + div.dir > div.items {
         margin-left: calc(-1 * (var(--sidebar-width) - 108px)) !important;
     }
 
@@ -176,11 +183,13 @@
     }
 
     /* Custom icon */
-    div.item[data-kind="script"] + div.item[data-kind="shader"]:hover::before {
+    div.item[data-kind="script"]                               + div.item[data-kind="shader"]:hover::before,
+    div.item[data-kind="script"] + div.item[data-kind="notes"] + div.item[data-kind="shader"]:hover::before {
         background-image: url(gmedit/tree_shader_hover.png);
     }
 
-    div.item[data-kind="script"] + div.dir div.header:hover::before {
+    div.item[data-kind="script"]                               + div.dir div.header:hover::before,
+    div.item[data-kind="script"] + div.item[data-kind="notes"] + div.dir div.header:hover::before {
         background-image: url(gmedit/treeview_hover.png?r4);
     }
 

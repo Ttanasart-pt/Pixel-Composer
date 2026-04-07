@@ -1,4 +1,4 @@
-function canvas_tool_selection_freeform(_selector) : canvas_selection_tool(_selector) constructor {
+function canvas_tool_selection_freeform() : canvas_selection_tool() constructor {
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
 	freeform_shape = [];
@@ -8,7 +8,7 @@ function canvas_tool_selection_freeform(_selector) : canvas_selection_tool(_sele
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
 		
-		if(!selector.selection_hovering && mouse_lpress(active)) {
+		if(!node.selection.selection_hovering && mouse_lpress(active)) {
 			is_selecting = true;
 			selection_sx = mouse_cur_x;
 			selection_sy = mouse_cur_y;
@@ -35,9 +35,9 @@ function canvas_tool_selection_freeform(_selector) : canvas_selection_tool(_sele
 						DRAW_CLEAR
 						draw_surface(drawing_surface, -sel_x, -sel_y);
 					surface_reset_target();
-					selector.createSelection(selection_mask, sel_x, sel_y, sel_w, sel_h);
+					node.selection.createSelection(selection_mask, sel_x, sel_y, sel_w, sel_h);
 					
-				} else selector.apply();
+				} else node.selection.apply();
 				
 				surface_clear(drawing_surface);
 				surface_free_safe(selection_mask);
