@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_flag",
+  "name":"note_mk_flag",
+  "parent":{
+    "name":"MKFX",
+    "path":"folders/nodes/data/MKFX.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

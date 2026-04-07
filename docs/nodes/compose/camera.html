@@ -1007,37 +1007,27 @@
 <tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr>
 
 </table><p>Camera node used to capture parts of the scene. You can think of it as a 2D camera with fix dimension 
-looking around your image.<br><br>
-Camera node also allows for parallax and Depth of Field effect.</p>
-<br><br>
-<h2><a id="Camera Properties" class="anchor"></a>Camera Properties</h2>
-<br>
-<p>The <span class="junction">Focus Area</span> is an array data controlling the camera size and position.<br><br>
-The <span class="junction" style="border-color: #ffe478AA">Zoom</span> property allows you to scale the image.</p>
-<br>
-<h2><a id="Parallax" class="anchor"></a>Parallax</h2>
-<br>
-<p>Camera node allows for parallax effect by layering multiple surfaces at different depth.<br><br>
-The extra surface can be added to the <span class="junction">Element {_S}</span> properties. When 
+looking around your image.</p><br>
+<p>Camera node also allows for parallax and Depth of Field effect.</p><br>
+<br><h2><a id="Camera Properties" class="anchor"></a>Camera Properties</h2><br>
+<p>The <span class="junction">Focus Area</span> is an array data controlling the camera size and position.</p><br>
+<p>The <span class="junction" style="border-color: #ffe478AA">Zoom</span> property allows you to scale the image.</p><br>
+<h2><a id="Parallax" class="anchor"></a>Parallax</h2><br>
+<p>Camera node allows for parallax effect by layering multiple surfaces at different depth.</p><br>
+<p>The extra surface can be added to the <span class="junction">Element {_S}</span> properties. When 
 the new element is added, you can change the position setting in the <span class="junction">Parallax {_S}</span>
 property. The X and Y value indicate the parallax direction, and the Z value use to control the speed in which 
-the surface will be moved with the camera.</p>
-<br>
-<img class="node-content" src="/src/images/etc/node_camera_parallax.png">
-<br>
+the surface will be moved with the camera.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_camera_parallax.png"></p><br>
 <p>Note that the speed of parallax is depends on both XY and Z axis. If both X and Y are set to 0, then 
-there will be no parallax effect.</p>
-<br><br>
-<h2><a id="Depth of Field" class="anchor"></a>Depth of Field</h2>
-<br>
+there will be no parallax effect.</p><br>
+<h2><a id="Depth of Field" class="anchor"></a>Depth of Field</h2><br>
 <p>Camera node can simulate basic Depth of Field effect using the Z value of the object as a distance from 
-camera</p>
-<br>
-<img class="node-content" src="/src/images/etc/node_camera_dof.png">
-<br>
+camera</p><br>
+<p><img class="node-content" src="/src/images/etc/node_camera_dof.png"></p><br>
 <p>The <span class="junction" style="border-color: #ffe478AA">Focal Distance</span> control where the sharpest depth will be, 
 the <span class="junction" style="border-color: #ffe478AA">Focal Range</span> control the range where the object stays sharp 
-and <span class="junction" style="border-color: #ffe478AA">Defocus</span> control how much blur will applies to object further away.</p>
+and <span class="junction" style="border-color: #ffe478AA">Defocus</span> control how much blur will applies to object further away.</p><br>
         </div>
     </div>
 

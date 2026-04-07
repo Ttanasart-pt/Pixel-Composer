@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_palette_sort",
+  "name":"note_palette_sort",
+  "parent":{
+    "name":"palette",
+    "path":"folders/nodes/data/value/palette.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

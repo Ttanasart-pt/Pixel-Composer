@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_flip_group_inline",
+  "name":"note_flip_group_inline",
+  "parent":{
+    "name":"FLIP",
+    "path":"folders/nodes/data/simulation/FLIP.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

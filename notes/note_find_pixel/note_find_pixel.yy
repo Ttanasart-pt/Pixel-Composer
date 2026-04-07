@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_find_pixel",
+  "name":"note_find_pixel",
+  "parent":{
+    "name":"color",
+    "path":"folders/nodes/data/value/color.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

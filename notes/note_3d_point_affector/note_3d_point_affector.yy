@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_3d_point_affector",
+  "name":"note_3d_point_affector",
+  "parent":{
+    "name":"3D",
+    "path":"folders/nodes/data/3D.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

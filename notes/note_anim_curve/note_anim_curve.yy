@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_anim_curve",
+  "name":"note_anim_curve",
+  "parent":{
+    "name":"animation",
+    "path":"folders/nodes/data/animation.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

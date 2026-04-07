@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_directory_search",
+  "name":"note_directory_search",
+  "parent":{
+    "name":"io",
+    "path":"folders/nodes/data/io.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_wiggler",
+  "name":"note_wiggler",
+  "parent":{
+    "name":"fn",
+    "path":"folders/nodes/data/animation/fn.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

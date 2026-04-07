@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_animation_control",
+  "name":"note_animation_control",
+  "parent":{
+    "name":"misc",
+    "path":"folders/nodes/data/misc.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

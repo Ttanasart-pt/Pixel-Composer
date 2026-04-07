@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_flip_apply_velocity",
+  "name":"note_flip_apply_velocity",
+  "parent":{
+    "name":"FLIP",
+    "path":"folders/nodes/data/simulation/FLIP.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

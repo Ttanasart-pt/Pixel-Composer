@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_morph_surface",
+  "name":"note_morph_surface",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

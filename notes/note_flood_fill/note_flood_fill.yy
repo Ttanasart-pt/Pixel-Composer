@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_flood_fill",
+  "name":"note_flood_fill",
+  "parent":{
+    "name":"regions",
+    "path":"folders/nodes/data/generator/regions.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

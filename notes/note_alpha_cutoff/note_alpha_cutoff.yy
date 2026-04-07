@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_alpha_cutoff",
+  "name":"note_alpha_cutoff",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

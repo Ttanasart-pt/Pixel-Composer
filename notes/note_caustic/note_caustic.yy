@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_caustic",
+  "name":"note_caustic",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

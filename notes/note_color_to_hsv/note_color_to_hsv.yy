@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_color_to_hsv",
+  "name":"note_color_to_hsv",
+  "parent":{
+    "name":"color",
+    "path":"folders/nodes/data/value/color.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

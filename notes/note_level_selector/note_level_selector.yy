@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_level_selector",
+  "name":"note_level_selector",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

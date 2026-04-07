@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_interpret_number",
+  "name":"note_interpret_number",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

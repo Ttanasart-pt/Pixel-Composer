@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_3d_light_directional",
+  "name":"note_3d_light_directional",
+  "parent":{
+    "name":"d3d_light",
+    "path":"folders/nodes/data/3D/d3d_light.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_colors_replace",
+  "name":"note_colors_replace",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -4,7 +4,7 @@
 	});
 #endregion
 
-function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
+ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
 	name   = "Honeycomb Noise";
 	shader = sh_noise_honey;
 	

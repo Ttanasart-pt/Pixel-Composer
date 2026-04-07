@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_blend",
+  "name":"note_blend",
+  "parent":{
+    "name":"compose",
+    "path":"folders/nodes/data/compose.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

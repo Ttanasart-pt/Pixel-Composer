@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_iterator_sort_output",
+  "name":"note_iterator_sort_output",
+  "parent":{
+    "name":"for_sort",
+    "path":"folders/nodes/data/iterate/_legacy/for_sort.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"2.0",
+}

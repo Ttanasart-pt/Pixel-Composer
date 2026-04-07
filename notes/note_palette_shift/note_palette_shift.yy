@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_palette_shift",
+  "name":"note_palette_shift",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

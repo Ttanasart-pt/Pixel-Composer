@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_smoke_add",
+  "name":"note_smoke_add",
+  "parent":{
+    "name":"smokeSim",
+    "path":"folders/nodes/data/simulation/smokeSim.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_plot_linear",
+  "name":"note_plot_linear",
+  "parent":{
+    "name":"drawer",
+    "path":"folders/nodes/data/generator/drawer.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

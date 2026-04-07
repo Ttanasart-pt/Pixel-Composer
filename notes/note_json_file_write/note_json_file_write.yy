@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_json_file_write",
+  "name":"note_json_file_write",
+  "parent":{
+    "name":"io",
+    "path":"folders/nodes/data/io.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

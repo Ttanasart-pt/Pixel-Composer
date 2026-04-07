@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_smoke_render_output",
+  "name":"note_smoke_render_output",
+  "parent":{
+    "name":"legacy",
+    "path":"folders/nodes/data/simulation/smokeSim/legacy.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

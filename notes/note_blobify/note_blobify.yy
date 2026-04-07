@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_blobify",
+  "name":"note_blobify",
+  "parent":{
+    "name":"blur",
+    "path":"folders/nodes/data/filter/blur.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

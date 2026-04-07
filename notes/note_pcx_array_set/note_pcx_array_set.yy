@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pcx_array_set",
+  "name":"note_pcx_array_set",
+  "parent":{
+    "name":"array",
+    "path":"folders/nodes/data/PCX/array.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

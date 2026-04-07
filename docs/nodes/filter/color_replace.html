@@ -68,16 +68,6 @@
 <li class="sidebar-nav "><a class="" href="color_remove.html">Color Remove</a></li>
 <li class="sidebar-nav active "><a class="" href="color_replace.html">Color Replace</a></li>
 <ul class="submenu">
-<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
-<ul class="submenu h3">
-<li class="sidebar-nav"><a href="#Surface In">Surface In</a></li>
-<li class="sidebar-nav"><a href="#Palette From">Palette From</a></li>
-<li class="sidebar-nav"><a href="#Palette To">Palette To</a></li>
-<li class="sidebar-nav"><a href="#Threshold">Threshold</a></li>
-<li class="sidebar-nav"><a href="#Multiply Alpha">Multiply Alpha</a></li>
-<li class="sidebar-nav"><a href="#Set Others To Black">Set Others To Black</a></li>
-<li class="sidebar-nav"><a href="#Hard Replace">Hard Replace</a></li>
-</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="color_select.html">Color Select</a></li>
 <li class="sidebar-nav "><a class="" href="color_separate.html">Color Separate</a></li>
@@ -1093,44 +1083,43 @@
 <tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr>
 
 </table><p class="banner">Do not be confused with <a class="node" href="/nodes/_index/colors_replace.html">Colors_Replace</a> the internal name can be very confusing and you should use the 
-display name instead.</p>
-<br>
-<p>Replace palette match every color in the surface with the <span class="junction">Palette From</span> and replace it with the color 
-on the same index in the <span class="junction">Palette To</span>.</p>
-<br>
+display name instead.
+
+Replace palette match every color in the surface with the <span class="junction">Palette From</span> and replace it with the color 
+on the same index in the <span class="junction">Palette To</span>.
+
 <img class="node-content deco" src="/src/images/etc/replace_palette.png">
-<br><br>
-<h2><a id="Properties" class="anchor"></a>Properties</h2>
-<br>
-<h3><a id="Surface In" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Surface In</span></h3>
-<br>
-<p>The input surface</p>
-<br>
-<h3><a id="Palette From" class="anchor"></a><span class="junction">Palette From</span></h3>
-<br>
-<p>The palette to match the color with</p>
-<br>
-<h3><a id="Palette To" class="anchor"></a><span class="junction">Palette To</span></h3>
-<br>
-<p>The palette to convert to</p>
-<br>
-<h3><a id="Threshold" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Threshold</span></h3>
-<br>
-<p>How much the color can differ from the palette to be match.</p>
-<br>
-<h3><a id="Multiply Alpha" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Multiply Alpha</span></h3>
-<br>
-<p>Whether to multiply the alpha channel to the color before matching.</p>
-<br>
-<h3><a id="Set Others To Black" class="anchor"></a><span class="junction">Set Others To Black</span></h3>
-<br>
-<p>Whether to set the colors that aren't matched with any color in the palette to black.</p>
-<br>
-<h3><a id="Hard Replace" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Hard Replace</span></h3>
-<br>
-<p>Whether to replace the color with the closest color in the <span class="junction">Palette To</span> or to blend base color with the 
-target color based on similarity.</p>
-<br>
+
+## Properties
+
+### <span class="junction" style="border-color: #ff6b97AA">Surface In</span>
+
+The input surface
+
+### <span class="junction">Palette From</span>
+
+The palette to match the color with
+
+### <span class="junction">Palette To</span>
+
+The palette to convert to
+
+### <span class="junction" style="border-color: #ffe478AA">Threshold</span>
+
+How much the color can differ from the palette to be match.
+
+### <span class="junction" style="border-color: #8c3f5dAA">Multiply Alpha</span>
+
+Whether to multiply the alpha channel to the color before matching.
+
+### <span class="junction">Set Others To Black</span>
+
+Whether to set the colors that aren't matched with any color in the palette to black.
+
+### <span class="junction" style="border-color: #8c3f5dAA">Hard Replace</span>
+
+Whether to replace the color with the closest color in the <span class="junction">Palette To</span> or to blend base color with the 
+target color based on similarity.
         </div>
     </div>
 

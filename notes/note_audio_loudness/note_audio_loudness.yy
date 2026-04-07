@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_audio_loudness",
+  "name":"note_audio_loudness",
+  "parent":{
+    "name":"audio",
+    "path":"folders/nodes/data/value/audio.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

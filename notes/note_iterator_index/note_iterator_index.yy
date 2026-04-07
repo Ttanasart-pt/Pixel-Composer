@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_iterator_index",
+  "name":"note_iterator_index",
+  "parent":{
+    "name":"iterate",
+    "path":"folders/nodes/data/iterate.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

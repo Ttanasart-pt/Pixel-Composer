@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_compare",
+  "name":"note_compare",
+  "parent":{
+    "name":"bool",
+    "path":"folders/nodes/data/value/bool.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

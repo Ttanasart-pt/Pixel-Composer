@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_palette_extract",
+  "name":"note_palette_extract",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

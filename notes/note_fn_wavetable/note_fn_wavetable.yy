@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_fn_wavetable",
+  "name":"note_fn_wavetable",
+  "parent":{
+    "name":"fn",
+    "path":"folders/nodes/data/animation/fn.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

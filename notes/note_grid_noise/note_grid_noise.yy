@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_grid_noise",
+  "name":"note_grid_noise",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

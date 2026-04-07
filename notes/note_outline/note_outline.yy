@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_outline",
+  "name":"note_outline",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

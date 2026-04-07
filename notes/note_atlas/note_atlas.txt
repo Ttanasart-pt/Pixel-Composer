@@ -1,0 +1,1 @@
+Atlas node expands the transparent pixel into the closet opaque pixel.

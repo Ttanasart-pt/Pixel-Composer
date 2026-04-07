@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pack_sprites",
+  "name":"note_pack_sprites",
+  "parent":{
+    "name":"render",
+    "path":"folders/nodes/data/render.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_time_remap",
+  "name":"note_time_remap",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_export",
+  "name":"note_export",
+  "parent":{
+    "name":"io",
+    "path":"folders/nodes/data/io.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

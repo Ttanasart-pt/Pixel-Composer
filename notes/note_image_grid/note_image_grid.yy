@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_image_grid",
+  "name":"note_image_grid",
+  "parent":{
+    "name":"compose",
+    "path":"folders/nodes/data/compose.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

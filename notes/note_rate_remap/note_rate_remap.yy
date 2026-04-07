@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rate_remap",
+  "name":"note_rate_remap",
+  "parent":{
+    "name":"animation",
+    "path":"folders/nodes/data/animation.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

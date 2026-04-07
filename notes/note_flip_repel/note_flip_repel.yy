@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_flip_repel",
+  "name":"note_flip_repel",
+  "parent":{
+    "name":"FLIP",
+    "path":"folders/nodes/data/simulation/FLIP.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pcx_equation",
+  "name":"note_pcx_equation",
+  "parent":{
+    "name":"PCX",
+    "path":"folders/nodes/data/PCX.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

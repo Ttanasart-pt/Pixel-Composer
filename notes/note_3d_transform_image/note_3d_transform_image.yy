@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_3d_transform_image",
+  "name":"note_3d_transform_image",
+  "parent":{
+    "name":"3D",
+    "path":"folders/nodes/data/3D.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

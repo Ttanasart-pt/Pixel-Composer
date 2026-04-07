@@ -30,8 +30,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(16, nodeValue_Vec3(       "Shift Position Z", [0,0,1]   ));
 	newInput( 7, nodeValue_Quaternion( "Shift Rotation" ));
 	newInput( 8, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
-	newInput(25, nodeValue_Bool(       "Scale Uniform",    true              ));
-	/* UNUSED */ newInput(12, nodeValue_Bool( "Use Instance", true ))
+	newInput(25, nodeValue_Bool(       "Scale Uniform",    true      ));
+	/* UNUSED */ newInput(12, nodeValue_Bool( "Use Instance", true   ))
 	
 	////- =Scatter
 	newInput(22, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));

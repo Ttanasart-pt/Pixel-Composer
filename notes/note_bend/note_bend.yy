@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_bend",
+  "name":"note_bend",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

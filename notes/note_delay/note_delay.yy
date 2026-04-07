@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_delay",
+  "name":"note_delay",
+  "parent":{
+    "name":"animation",
+    "path":"folders/nodes/data/animation.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

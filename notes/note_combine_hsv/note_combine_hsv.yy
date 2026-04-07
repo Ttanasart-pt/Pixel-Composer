@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_combine_hsv",
+  "name":"note_combine_hsv",
+  "parent":{
+    "name":"combine",
+    "path":"folders/nodes/data/filter/combine.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

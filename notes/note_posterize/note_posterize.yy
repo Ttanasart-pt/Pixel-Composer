@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_posterize",
+  "name":"note_posterize",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

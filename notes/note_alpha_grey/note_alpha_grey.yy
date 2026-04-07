@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_alpha_grey",
+  "name":"note_alpha_grey",
+  "parent":{
+    "name":"conversion",
+    "path":"folders/nodes/data/filter/conversion.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

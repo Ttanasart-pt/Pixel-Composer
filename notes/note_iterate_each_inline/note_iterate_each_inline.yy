@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_iterate_each_inline",
+  "name":"note_iterate_each_inline",
+  "parent":{
+    "name":"for_each",
+    "path":"folders/nodes/data/iterate/for_each.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

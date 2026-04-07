@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_stack",
+  "name":"note_stack",
+  "parent":{
+    "name":"compose",
+    "path":"folders/nodes/data/compose.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_3d_mesh_sphere_uv",
+  "name":"note_3d_mesh_sphere_uv",
+  "parent":{
+    "name":"d3d_mesh",
+    "path":"folders/nodes/data/3D/d3d_mesh.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

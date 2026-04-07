@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_array_shuffle",
+  "name":"note_array_shuffle",
+  "parent":{
+    "name":"array",
+    "path":"folders/nodes/data/value/array.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

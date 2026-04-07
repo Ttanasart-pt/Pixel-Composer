@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_group_thumbnail",
+  "name":"note_group_thumbnail",
+  "parent":{
+    "name":"group",
+    "path":"folders/nodes/data/group.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

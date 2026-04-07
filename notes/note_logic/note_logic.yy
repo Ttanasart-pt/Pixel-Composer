@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_logic",
+  "name":"note_logic",
+  "parent":{
+    "name":"bool",
+    "path":"folders/nodes/data/value/bool.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_flow_noise",
+  "name":"note_flow_noise",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

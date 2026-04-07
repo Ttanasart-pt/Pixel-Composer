@@ -959,7 +959,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static refreshFrames = function() {
-		var fr   = attributes.frames;
+		var  fr  = attributes.frames;
 		var _dim = attributes.dimension;
 		
 		if(array_length(canvas_surface) < fr) {

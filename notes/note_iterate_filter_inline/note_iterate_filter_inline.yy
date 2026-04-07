@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_iterate_filter_inline",
+  "name":"note_iterate_filter_inline",
+  "parent":{
+    "name":"for_filter",
+    "path":"folders/nodes/data/iterate/for_filter.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

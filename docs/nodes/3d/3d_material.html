@@ -48,14 +48,6 @@
 <li class="sidebar-nav "><a class="" href="3d_light_point.html">3D Light Point</a></li>
 <li class="sidebar-nav active "><a class="" href="3d_material.html">3D Material</a></li>
 <ul class="submenu">
-<li class="sidebar-nav"><a href="#Material Properties">Material Properties</a></li>
-<ul class="submenu h3">
-<li class="sidebar-nav"><a href="#Diffuse">Diffuse</a></li>
-<li class="sidebar-nav"><a href="#Specular">Specular</a></li>
-<li class="sidebar-nav"><a href="#Shininess">Shininess</a></li>
-<li class="sidebar-nav"><a href="#Roughness">Roughness</a></li>
-<li class="sidebar-nav"><a href="#Normal">Normal</a></li>
-</ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="3d_mesh_cone.html">3D Mesh Cone</a></li>
 <li class="sidebar-nav "><a class="" href="3d_mesh_cube.html">3D Mesh Cube</a></li>
@@ -1028,46 +1020,44 @@
             </tr>
 
 </table><p>While you can use any surface as a texture for 3D object, 3D Material nodes allow the creation of material with 
-more complex properties.</p>
-<br>
+more complex properties.</p><br>
 <p class="banner">Note that MakhamDev have no idea how 3D works, so these properties may not behave like how other 
-3D softwares do.</p>
-<br>
-<h2><a id="Material Properties" class="anchor"></a>Material Properties</h2>
-<br>
-<h3><a id="Diffuse" class="anchor"></a>Diffuse</h3>
-<br>
-<p>Diffuse value simulate the effect of light scattering when in contact with the surface roughtness. Diffuse 
-amount won't have any effect if the specular value is set to 0.</p>
-<br>
-<h3><a id="Specular" class="anchor"></a>Specular</h3>
-<br>
-<p>Specular value simulate the effect of light reflection. The higher the value, the more reflective the surface
-will be.</p>
-<br>
+3D softwares do.
+
+## Material Properties
+
+### Diffuse
+
+Diffuse value simulate the effect of light scattering when in contact with the surface roughtness. Diffuse 
+amount won't have any effect if the specular value is set to 0.
+
+### Specular
+
+Specular value simulate the effect of light reflection. The higher the value, the more reflective the surface
+will be.
+
 <img class="node-content" src="/src/images/etc/node_3d_mat_diff_spec.png">
-<br>
-<h3><a id="Shininess" class="anchor"></a>Shininess</h3>
-<br>
-<p>Shininess value control the reflectiveness at different angles. Increasing it will make reflected light more 
-directed.</p>
-<br>
+
+### Shininess
+
+Shininess value control the reflectiveness at different angles. Increasing it will make reflected light more 
+directed.
+
 <img class="node-content" src="/src/images/etc/node_3d_mat_shine.png">
-<br>
-<h3><a id="Roughness" class="anchor"></a>Roughness</h3>
-<br>
-<p>Roughtness control the reflected color of the light. Lower roughtness make the surface reflect more 
-background colors.</p>
-<br>
+
+### Roughness
+
+Roughtness control the reflected color of the light. Lower roughtness make the surface reflect more 
+background colors.
+
 <img class="node-content" src="/src/images/etc/node_3d_mat_roughness.png">
-<br>
-<h3><a id="Normal" class="anchor"></a>Normal</h3>
-<br>
-<p>Normal map is a texture that modify the surface normal. This can be used to increase the detail of the 
-model without increasing the polygon count.</p>
-<br>
+
+### Normal
+
+Normal map is a texture that modify the surface normal. This can be used to increase the detail of the 
+model without increasing the polygon count.
+
 <img class="node-content" src="/src/images/etc/node_3d_material_normal.png">
-<br>
         </div>
     </div>
 

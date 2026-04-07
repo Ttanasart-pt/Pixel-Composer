@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_array_range",
+  "name":"note_array_range",
+  "parent":{
+    "name":"array",
+    "path":"folders/nodes/data/value/array.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

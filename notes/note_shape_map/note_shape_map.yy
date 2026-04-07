@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_shape_map",
+  "name":"note_shape_map",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

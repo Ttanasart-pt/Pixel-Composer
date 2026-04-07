@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_atlas_draw",
+  "name":"note_atlas_draw",
+  "parent":{
+    "name":"atlas",
+    "path":"folders/nodes/data/value/atlas.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

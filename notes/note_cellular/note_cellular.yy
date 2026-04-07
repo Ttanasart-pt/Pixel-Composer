@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_cellular",
+  "name":"note_cellular",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

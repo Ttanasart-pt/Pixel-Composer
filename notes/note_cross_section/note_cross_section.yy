@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_cross_section",
+  "name":"note_cross_section",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

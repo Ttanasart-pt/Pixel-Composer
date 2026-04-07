@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_hsv_channel",
+  "name":"note_hsv_channel",
+  "parent":{
+    "name":"conversion",
+    "path":"folders/nodes/data/filter/conversion.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

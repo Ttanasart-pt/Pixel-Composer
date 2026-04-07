@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_wrap_area",
+  "name":"note_wrap_area",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

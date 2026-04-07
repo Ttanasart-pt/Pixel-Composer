@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_override_channel",
+  "name":"note_override_channel",
+  "parent":{
+    "name":"combine",
+    "path":"folders/nodes/data/filter/combine.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

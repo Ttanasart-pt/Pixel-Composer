@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_base_convert",
+  "name":"note_base_convert",
+  "parent":{
+    "name":"number",
+    "path":"folders/nodes/data/value/number.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

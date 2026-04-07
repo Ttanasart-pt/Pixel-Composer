@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_grid_pentagonal",
+  "name":"note_grid_pentagonal",
+  "parent":{
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

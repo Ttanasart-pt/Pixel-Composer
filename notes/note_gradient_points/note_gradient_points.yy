@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_gradient_points",
+  "name":"note_gradient_points",
+  "parent":{
+    "name":"gradient",
+    "path":"folders/nodes/data/generator/drawer/gradient.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

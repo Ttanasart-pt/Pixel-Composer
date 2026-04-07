@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_gradient_shift",
+  "name":"note_gradient_shift",
+  "parent":{
+    "name":"gradient",
+    "path":"folders/nodes/data/value/gradient.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

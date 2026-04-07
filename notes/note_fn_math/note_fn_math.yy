@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_fn_math",
+  "name":"note_fn_math",
+  "parent":{
+    "name":"fn",
+    "path":"folders/nodes/data/animation/fn.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

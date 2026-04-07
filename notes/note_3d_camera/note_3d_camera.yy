@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_3d_camera",
+  "name":"note_3d_camera",
+  "parent":{
+    "name":"d3d_camera",
+    "path":"folders/nodes/data/3D/d3d_camera.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

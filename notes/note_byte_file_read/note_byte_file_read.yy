@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_byte_file_read",
+  "name":"note_byte_file_read",
+  "parent":{
+    "name":"io",
+    "path":"folders/nodes/data/io.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

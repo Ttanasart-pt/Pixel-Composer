@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_feedback",
+  "name":"note_feedback",
+  "parent":{
+    "name":"feedback",
+    "path":"folders/nodes/data/iterate/feedback.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}
