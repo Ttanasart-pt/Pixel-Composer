@@ -71,9 +71,14 @@ def generateFile(dirOut, pathIn, sidebar):
     for img in imgs:
         imgraw = img.strip("/")
 
+        quiet = re.search(r'quiet', img)
+        if quiet:
+            imgraw = imgraw.replace("quiet", "").strip()
+
         if imgraw.lower() in images:
             content = content.replace(f"<img {img}>", f'<img class="node-content" src="/{images[imgraw.lower()]}">')
-        elif "=" not in imgraw: 
+            
+        elif "=" not in imgraw and not quiet: 
             print(f"{pathOut} : Image {imgraw} not found")
 
     imgs = re.findall(r"<img-deco (.*?)>", content)
