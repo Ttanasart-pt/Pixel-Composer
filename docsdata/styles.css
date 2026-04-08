@@ -398,9 +398,16 @@ a.anchor {
 
 .content {
     width: calc(100% - clamp(20%, 200px, 320px));
-    float: right;
+    /* float: right; */
 
-    margin: auto;
+    margin-left: 256px;
+    margin-right: 32px;
+    
+    @media (max-width: 1000px) {
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
 }
 
 .footer {
@@ -953,11 +960,5 @@ table.change-table th {
 
 ::-webkit-scrollbar-corner {
     background: #00000000;
-}
-
-@media (max-width: 1000px) {
-    .content {
-        width: 100%;
-    }
 }
 
