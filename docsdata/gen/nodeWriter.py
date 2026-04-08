@@ -78,12 +78,23 @@ def applyTemplate(template, nodeName, tooltip, summary):
                    .replace("{{tooltip}}",  tooltip)  \
                    .replace("{{summary}}",  summary)
 
-def writeNode(metadata, contentPath, changedPath):
-    rawContent = ""
-    if os.path.exists(contentPath):
-        with open(contentPath, "r") as f:
-            rawContent = f.read()
+def writeChangeTable(changeData):
+    changeText = '''
+<br><h2>Change History</h2><br>
+<table class="change-table">'''
+    for change in changeData:
+        version = change["version"]
+        changes = change["changes"]
+        changeText += f'<tr><th>{version}</th><tr>'
 
+        for c in changes:
+            commit  = c["commit"]
+            changeText += f'<tr><td>{commit}</td></tr>'
+        
+    changeText += '</table>'
+    return changeText
+
+def writeNode(metadata, rawContent, changeData = None):
     nodeName = metadata["name"]
     nodeBase = metadata["baseNode"]
     tooltip  = metadata["tooltip"] if "tooltip" in metadata else ""
@@ -123,6 +134,9 @@ def writeNode(metadata, contentPath, changedPath):
         rawContent = rawContent.replace(f'<attr {tag}/>', f'<span class="inline-code">{tag}</span>')
 
     content += rawContent
+    if changeData:
+        content += writeChangeTable(changeData)
+
     return content
 
 # %%
