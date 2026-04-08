@@ -265,7 +265,7 @@ a.anchor {
     margin: auto;
     margin-top: .25rem;
     float: left;
-    left: 0px;
+    left: 32px;
 
     display: flex;
     flex-direction: row;
@@ -286,11 +286,10 @@ a.anchor {
         top: 48px;
         bottom: 0px;
         height: 100%;
+        left: -292px;
 
-        .closed {
-            @media (max-width: 1000px) {
-                left: -292px;
-            }
+        .open {
+            left: 0px;
         }
     }
 }
