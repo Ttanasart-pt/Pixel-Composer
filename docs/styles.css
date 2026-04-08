@@ -285,7 +285,7 @@ a.anchor {
         position: fixed;
         top: 48px;
         bottom: 0px;
-        height: 100%;
+        height: calc(100% - 80px);
         left: -292px;
     }
 }
@@ -397,7 +397,7 @@ a.anchor {
 }
 
 .content {
-    width: calc(100% - 320px);
+    width: calc(100% - clamp(20%, 200px, 320px));
     float: right;
 
     margin: auto;
