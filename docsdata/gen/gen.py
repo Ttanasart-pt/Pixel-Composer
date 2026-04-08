@@ -29,8 +29,9 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
     verifyFolder(dirOut)
     files   = sorted(os.listdir(dirIn))
     sidebar = []
-    groupTitle = title(os.path.basename(dirOut))
-
+    groupTitle = title(os.path.basename(dirIn))
+    sidebarParent.append((groupTitle, sidebar))
+    
     for fName in files:
         if fName.startswith("__"):
             continue
@@ -52,16 +53,12 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
             shutil.copy(fullPath, fDirOut)
             continue
 
-        if fName == "index.html":
-            pTitle = groupTitle
-        else:
+        if fName != "index.html":
             pTitle = title(fNameS.replace('.html', ''))
+            sidebar.append((pTitle, fName, fNameS))
 
         page = genFileWriter.generateFile(dirOut, fDirIn)
         pages.append(page)
-        sidebar.append((pTitle, fName, fNameS))
-    
-    sidebarParent.append((groupTitle, sidebar))
 
 generateFolder("docsdata/pregen", "docs")
 shutil.copy("docsdata/styles.css", "docs/styles.css")

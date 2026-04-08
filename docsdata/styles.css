@@ -303,8 +303,6 @@ a.anchor {
     }
 
     li {
-        height: 1.3rem;
-
         list-style-type: none;
         margin: 0;
         padding: 0;
@@ -325,6 +323,7 @@ a.anchor {
 
         &::marker {
             display: none;
+            font-size: 0;
         }
     }
 
@@ -342,7 +341,6 @@ a.anchor {
             padding-left: 20px;
 
             li {
-                height: 1.5rem;
                 opacity: 0.75;
             }
 
