@@ -26,15 +26,8 @@ def generateFolder(dirIn, dirOut):
     verifyFolder(dirOut)
     files   = sorted(os.listdir(dirIn))
     sidebar = []
+    groupTitle = title(os.path.basename(dirOut))
 
-    if dirIn == "docsdata/pregen":
-        groupTitle = "Home"
-        sidebar.append((FileType.BACK, "", "", ""))
-    else:
-        groupTitle = os.path.basename(dirIn)
-        groupTitle = title(pathRemoveOrder(groupTitle))
-        sidebar.append((FileType.BACK, "../", "../", "Back"))
-    
     for fName in files:
         if fName.startswith("__"):
             continue
@@ -68,7 +61,7 @@ def generateFolder(dirIn, dirOut):
             generateFolder(fDirIn, fDirOut)
 
         elif fType == FileType.FILE:
-            page = genFileWriter.generateFile(dirOut, fDirIn, sidebar)
+            page = genFileWriter.generateFile(dirOut, fDirIn)
             pages.append(page)
     
     allSidebar.append((groupTitle, sidebar))
@@ -88,17 +81,7 @@ for title, sidebar in allSidebar:
         aClass  = ""
         liClass = ""
         icon    = ""
-
-        if fType == FileType.DIR:
-            icon = svg_dir
-
-        elif fType == FileType.FILE:
-            if fName == "index.html":
-                icon = svg_home
-
-        elif fType == FileType.BACK:
-            liClass += "back "
-
+        
         if icon != "":
             liClass += "icon "
 
