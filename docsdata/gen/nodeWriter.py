@@ -83,7 +83,7 @@ def writeChangeTable(metadata, changeData):
     hasAnyChange = False
 
     changeText = '''
-<br><h2>Commit History</h2><br>
+<br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table">'''
     for change in changeData:
         version = change["version"]

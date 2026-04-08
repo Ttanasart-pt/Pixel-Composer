@@ -28,7 +28,7 @@ body {
 h1 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     font-weight: 700;
-    font-size: 2.5rem;
+    font-size: 1.9rem;
     color: var(--accent);
     margin: 0;
 }
@@ -36,7 +36,7 @@ h1 {
 h2 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     font-weight: 700;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     color: var(--accent);
     margin: 0;
 
@@ -46,7 +46,7 @@ h2 {
 h3 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: var(--main_ltgrey);
     margin: 0;
 
@@ -56,7 +56,7 @@ h3 {
 h4 {
     font-family: 'Noto Sans', sans-serif;
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--main_ltgrey);
     margin: 0;
 
@@ -233,7 +233,7 @@ a.anchor {
 }
 
 .sidebar {
-    width: 280px;
+    width: 256px;
     height: 80%;
     padding: 0;
     margin: auto;
@@ -258,7 +258,7 @@ a.anchor {
 }
 
 .sidebar li {
-    height: 1.5rem;
+    /* height: 1.5rem; */
 
     list-style-type: none;
     margin: 0;
@@ -272,7 +272,8 @@ a.anchor {
 
 .sidebar a {
     width: -webkit-fill-available;
-    
+    font-size: .9rem;
+
     display: block;
     padding-left: 32px;
     margin: 0;
