@@ -25,8 +25,8 @@
         <div class="sidebar">
             <ul>
                 <li class="search">
-                    <form action="search.html" method="get">
-                        <input type="search" name="search" placeholder="Search..." id="search" onsearch="onSearch()">
+                    <form id="search_form" onsubmit="return false;">
+                        <input type="search" name="search" placeholder="Search..." id="search" onkeyup="onSearch()" onchange="onSearch()">
                     </form>
                 </li>
                 <div id="search_spacing" style="height: 48px;"></div>
