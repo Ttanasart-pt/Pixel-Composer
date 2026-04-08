@@ -1147,64 +1147,64 @@
             </tr>
 
 </table><p>3D Camera Node render out 3D Scene to 2D image similiar to camera in other 3D softwares. Camera node comes 
-with multiple positioning mode to make it easier to position and animate the view.</p>
-<h2><a id="Preview" class="anchor"></a>Preview</h2>
-<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_gizmo.png"></p>
-<p>Camera node represent itself by a camera gizmo. Preview tools will change depends on the Postioning Mode.</p>
-<h2><a id="Camera Properties" class="anchor"></a>Camera Properties</h2>
-<p>Camera properties are parallel to physical camera. Apart from basic transformation, some important properties are:</p>
-<h3><a id="Projection" class="anchor"></a>Projection</h3>
-<p>Projection type of the camera. It can be Perspective or Orthographic.</p>
-<p><img class="node-content" src="/src/images/etc/node_3d_camera_projection.png"></p>
-<h3><a id="Field of View" class="anchor"></a>Field of View</h3>
+with multiple positioning mode to make it easier to position and animate the view.</p><br>
+<h2><a id="Preview" class="anchor"></a>Preview</h2><br>
+<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_gizmo.png"></p><br>
+<p>Camera node represent itself by a camera gizmo. Preview tools will change depends on the Postioning Mode.</p><br>
+<h2><a id="Camera Properties" class="anchor"></a>Camera Properties</h2><br>
+<p>Camera properties are parallel to physical camera. Apart from basic transformation, some important properties are:</p><br>
+<h3><a id="Projection" class="anchor"></a>Projection</h3><br>
+<p>Projection type of the camera. It can be Perspective or Orthographic.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_3d_camera_projection.png"></p><br>
+<h3><a id="Field of View" class="anchor"></a>Field of View</h3><br>
 <p>When using perspective projection. Field of View control the angle of the camera view frustum. Larger FOV will 
-result in wider view, and vice versa.</p>
-<p><img class="node-content" src="/src/images/etc/node_3d_camera_fov.png"></p>
-<h3><a id="Orthographic Scale" class="anchor"></a>Orthographic Scale</h3>
+result in wider view, and vice versa.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_3d_camera_fov.png"></p><br>
+<h3><a id="Orthographic Scale" class="anchor"></a>Orthographic Scale</h3><br>
 <p>When using orthographic projection, the camera position will not have an effect on the view size. Use 
-Orthographic Scale to control render area.</p>
-<h3><a id="Clipping Distance" class="anchor"></a>Clipping Distance</h3>
+Orthographic Scale to control render area.</p><br>
+<h3><a id="Clipping Distance" class="anchor"></a>Clipping Distance</h3><br>
 <p>Clipping distance determine the depth of the camera frustum aka. the range of distance the camera 
 can see. While this may tempt you to set clipping distance as wide as possible, large clipping distance 
 can cause rendering artifact (especially with shadow). Thus choose clipping distance based on the scene and 
-camera position.</p>
-<p><img class="node-content" src="/src/images/etc/node_3d_camera_clip.png"></p>
-<h2><a id="Positioning Modes" class="anchor"></a>Positioning Modes</h2>
-<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_pos_mode.png"></p>
-<p>Camera nodes comes with 3 positioning modes for ease of positioning and animating camera.</p>
-<h3><a id="Position + Rotation" class="anchor"></a>Position + Rotation</h3>
-<p>The default settings. Set position and rotation of the camera directly.</p>
-<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_pos_rot.png"></p>
-<h3><a id="Position + Lookat" class="anchor"></a>Position + Lookat</h3>
-<p>Set position of the camera and the position where the camera is looking.</p>
-<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_pos_look.png"></p>
-<h3><a id="Lookat + Rotation" class="anchor"></a>Lookat + Rotation</h3>
+camera position.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_3d_camera_clip.png"></p><br>
+<h2><a id="Positioning Modes" class="anchor"></a>Positioning Modes</h2><br>
+<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_pos_mode.png"></p><br>
+<p>Camera nodes comes with 3 positioning modes for ease of positioning and animating camera.</p><br>
+<h3><a id="Position + Rotation" class="anchor"></a>Position + Rotation</h3><br>
+<p>The default settings. Set position and rotation of the camera directly.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_pos_rot.png"></p><br>
+<h3><a id="Position + Lookat" class="anchor"></a>Position + Lookat</h3><br>
+<p>Set position of the camera and the position where the camera is looking.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_pos_look.png"></p><br>
+<h3><a id="Lookat + Rotation" class="anchor"></a>Lookat + Rotation</h3><br>
 <p>Use for rotating camera around a point. Set a center point and horizontal, vertical angle, distance 
-of the camera.</p>
-<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_look_rot.png"></p>
-<h2><a id="Render Settings" class="anchor"></a>Render Settings</h2>
-<h3><a id="Ambient Light" class="anchor"></a>Ambient Light</h3>
-<p>Color of the ambient light. Ambient light is a constant light that affect objects in all direction.</p>
-<h3><a id="Environment Texture" class="anchor"></a>Environment Texture</h3>
+of the camera.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_look_rot.png"></p><br>
+<h2><a id="Render Settings" class="anchor"></a>Render Settings</h2><br>
+<h3><a id="Ambient Light" class="anchor"></a>Ambient Light</h3><br>
+<p>Color of the ambient light. Ambient light is a constant light that affect objects in all direction.</p><br>
+<h3><a id="Environment Texture" class="anchor"></a>Environment Texture</h3><br>
 <p>A texture that will be used as background of the scene and reflection. Use the "Show Background" settings to 
-control whether the background will be show in the rendered image.</p>
-<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_env.png"></p>
-<h3><a id="Backface Culling" class="anchor"></a>Backface Culling</h3>
+control whether the background will be show in the rendered image.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/node_3d_camera_env.png"></p><br>
+<h3><a id="Backface Culling" class="anchor"></a>Backface Culling</h3><br>
 <p>For optimization reason, the model will only render one side of the model and the backface will be transparent. 
-This settings control whether to render only frontface, backface or both.</p>
-<p><img class="node-content" src="/src/images/etc/node_3d_camera_backface.png"></p>
-<h2><a id="Ambient Occlusion" class="anchor"></a>Ambient Occlusion</h2>
+This settings control whether to render only frontface, backface or both.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_3d_camera_backface.png"></p><br>
+<h2><a id="Ambient Occlusion" class="anchor"></a>Ambient Occlusion</h2><br>
 <p>Ambient Occlusion is a shading method that darken the area where light is hard to reach (e.g. corner, inner edge)
-to simulate the effect of environment light. It can be used to add more depth to the scene.</p>
-<p><img class="node-content" src="/src/images/etc/node_3d_camera_ao.png"></p>
-<h2><a id="Effects" class="anchor"></a>Effects</h2>
-<p>Effects are post processing effect the can make modify the rendered image. Currently, there are only 1 effect:</p>
-<h3><a id="Round Normal" class="anchor"></a>Round Normal</h3>
-<p>This effect will blur out the screen-scale normal which create a softer edge.</p>
-<p><img class="node-content" src="/src/images/etc/node_3d_camera_rn.png"></p>
-<h2><a id="Outputs" class="anchor"></a>Outputs</h2>
-<p>Camera node has 3 outputs, by default only the "Rendered" output is visible.</p>
-<p><img class="node-content" src="/src/images/etc/node_3d_camera_outputs.png"></p><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_3d_camera/node_3d_camera.gml">/scripts/node_3d_camera/node_3d_camera.gml</a></li><li><span>Shader [sh_d3d_unlit]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_d3d_unlit/sh_d3d_unlit.fsh">/shaders/sh_d3d_unlit/sh_d3d_unlit.fsh</a></li><li><span>Shader [sh_d3d_render_view_normal]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_d3d_render_view_normal/sh_d3d_render_view_normal.fsh">/shaders/sh_d3d_render_view_normal/sh_d3d_render_view_normal.fsh</a></li></ul>
+to simulate the effect of environment light. It can be used to add more depth to the scene.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_3d_camera_ao.png"></p><br>
+<h2><a id="Effects" class="anchor"></a>Effects</h2><br>
+<p>Effects are post processing effect the can make modify the rendered image. Currently, there are only 1 effect:</p><br>
+<h3><a id="Round Normal" class="anchor"></a>Round Normal</h3><br>
+<p>This effect will blur out the screen-scale normal which create a softer edge.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_3d_camera_rn.png"></p><br>
+<h2><a id="Outputs" class="anchor"></a>Outputs</h2><br>
+<p>Camera node has 3 outputs, by default only the "Rendered" output is visible.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_3d_camera_outputs.png"></p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_3d_camera/node_3d_camera.gml">/scripts/node_3d_camera/node_3d_camera.gml</a></li><li><span>Shader [sh_d3d_unlit]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_d3d_unlit/sh_d3d_unlit.fsh">/shaders/sh_d3d_unlit/sh_d3d_unlit.fsh</a></li><li><span>Shader [sh_d3d_render_view_normal]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_d3d_render_view_normal/sh_d3d_render_view_normal.fsh">/shaders/sh_d3d_render_view_normal/sh_d3d_render_view_normal.fsh</a></li></ul>
         </div>
     </div>
 

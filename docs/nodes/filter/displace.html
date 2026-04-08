@@ -1122,49 +1122,49 @@
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
 <tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr><tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Interpolation">Interpolation</a></th></tr><tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Oversample">Oversample</a></th></tr>
 
-</table><p>Displace node distort an image based on a displacement map.</p>
-<p><img class="node-content deco" src="/src/images/etc/displace.png"></p>
-<h2><a id="Displacement" class="anchor"></a>Displacement</h2>
+</table><p>Displace node distort an image based on a displacement map.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/displace.png"></p><br>
+<h2><a id="Displacement" class="anchor"></a>Displacement</h2><br>
 <p>Displacement refers to the shifting of pixels. A shifting can be uniformly applies to the entire surface, which 
 will simply move the image. By using the <span class="junction" style="border-color: #ff6b97AA">Displace Map</span> you can control the shifting amount to make the 
-effect more interesting.</p>
-<p><img class="node-content" src="/src/images/etc/displace_basic.png"></p>
-<p><span class="junction" style="border-color: #ff9166AA">Mode</span> property control how the displacement amount is being calculated.</p>
-<h3><a id="Linear" class="anchor"></a>Linear</h3>
+effect more interesting.</p><br>
+<p><img class="node-content" src="/src/images/etc/displace_basic.png"></p><br>
+<p><span class="junction" style="border-color: #ff9166AA">Mode</span> property control how the displacement amount is being calculated.</p><br>
+<h3><a id="Linear" class="anchor"></a>Linear</h3><br>
 <p>When using linear mode, you can set the <span class="junction" style="border-color: #ffe478AA">Position</span> to control the direction you want the displacement to 
-happen. The displacement map will be use to scale that position vector.</p>
-<h3><a id="Vector" class="anchor"></a>Vector</h3>
-<p>In vector mode, the red and green channel will be used to calculate the displacement in x and y axis respectively.</p>
-<h3><a id="Angle" class="anchor"></a>Angle</h3>
+happen. The displacement map will be use to scale that position vector.</p><br>
+<h3><a id="Vector" class="anchor"></a>Vector</h3><br>
+<p>In vector mode, the red and green channel will be used to calculate the displacement in x and y axis respectively.</p><br>
+<h3><a id="Angle" class="anchor"></a>Angle</h3><br>
 <p>In angle, the red and green channel will use to calculate direction and distance of the displacement. The direction 
-starts with 0 means toward the right and goes counter-clockwise.</p>
-<h3><a id="Gradient" class="anchor"></a>Gradient</h3>
-<p>Gradient mode will distort the image down the slope of the displace map brightness.</p>
-<h3><a id="Separate Axis" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Separate Axis</span></h3>
+starts with 0 means toward the right and goes counter-clockwise.</p><br>
+<h3><a id="Gradient" class="anchor"></a>Gradient</h3><br>
+<p>Gradient mode will distort the image down the slope of the displace map brightness.</p><br>
+<h3><a id="Separate Axis" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Separate Axis</span></h3><br>
 <p>For vector and angle mode which use red and green channel, you can check the <span class="junction" style="border-color: #8c3f5dAA">Separate Axis</span> to use 
-two separate surfaces for each value.</p>
-<h2><a id="Strength" class="anchor"></a>Strength</h2>
+two separate surfaces for each value.</p><br>
+<h2><a id="Strength" class="anchor"></a>Strength</h2><br>
 <p>The intensity of the displacement depends on the <span class="junction" style="border-color: #ff9166AA">Mode</span>. In linear mode, the intensity can be defined 
 directly in the <span class="junction" style="border-color: #ffe478AA">Position</span>. But for other modes, the <span class="junction" style="border-color: #ffe478AA">Strength</span> can be use to scale the displacement 
-intensity.</p>
-<h3><a id="Mid Value" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Mid Value</span></h3>
+intensity.</p><br>
+<h3><a id="Mid Value" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Mid Value</span></h3><br>
 <p>By default, the data read from displacement map goes from 0 to 1, with black color correspond to 0 and 
 white color equals 1. However, if you want the effect to goes from -0.5 to 0.5, so the black color means invert 
-displacement. You can change the <span class="junction" style="border-color: #ffe478AA">Mid Value</span> properties to 0.5.</p>
-<p><img class="node-content" src="/src/images/etc/displace_mid.png"></p>
-<h2><a id="Algorithm" class="anchor"></a>Algorithm</h2>
-<p>Properties in this section control how the color is being sampled.</p>
-<h3><a id="Iterate" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Iterate</span></h3>
+displacement. You can change the <span class="junction" style="border-color: #ffe478AA">Mid Value</span> properties to 0.5.</p><br>
+<p><img class="node-content" src="/src/images/etc/displace_mid.png"></p><br>
+<h2><a id="Algorithm" class="anchor"></a>Algorithm</h2><br>
+<p>Properties in this section control how the color is being sampled.</p><br>
+<h3><a id="Iterate" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Iterate</span></h3><br>
 <p>Iterate make the displace map sampling done step by step, instead of calculating where the pixel will go by taking 
 a single sample and multiply with the <span class="junction" style="border-color: #ffe478AA">Strength</span>. It will only move by one step, then take another displace map 
-sample repeatedly for <span class="junction" style="border-color: #ffe478AA">Strength</span> amount of time.</p>
-<h3><a id="Blend Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Blend Mode</span></h3>
-<p>Blend mode control how the new color is chosen.</p>
+sample repeatedly for <span class="junction" style="border-color: #ffe478AA">Strength</span> amount of time.</p><br>
+<h3><a id="Blend Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Blend Mode</span></h3><br>
+<p>Blend mode control how the new color is chosen.</p><br>
 <ul>
     <li><span class="bold">Overwrite</span> replace the pixel with the new one.</li>
     <li><span class="bold">Min</span> replace the pixel only if it's darker than the current one.</li>
     <li><span class="bold">Max</span> replace the pixel only if it's brighter than the current one.</li>
-</ul><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_displace/node_displace.gml">/scripts/node_displace/node_displace.gml</a></li><li><span>Shader [sh_displace]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_displace/sh_displace.fsh">/shaders/sh_displace/sh_displace.fsh</a></li></ul>
+</ul><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_displace/node_displace.gml">/scripts/node_displace/node_displace.gml</a></li><li><span>Shader [sh_displace]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_displace/sh_displace.fsh">/shaders/sh_displace/sh_displace.fsh</a></li></ul>
         </div>
     </div>
 

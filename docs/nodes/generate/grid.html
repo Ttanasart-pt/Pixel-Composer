@@ -1163,39 +1163,39 @@
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
 <tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr><tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Interpolation">Interpolation</a></th></tr><tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Oversample">Oversample</a></th></tr>
 
-</table><p><img class="node-content deco" src="/src/images/etc/grid.png"></p>
-<h2><a id="Properties" class="anchor"></a>Properties</h2>
-<h3><a id="Gap" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Gap</span></h3>
-<p>Thickness of the gap between grid.</p>
-<h3><a id="Shift" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Shift</span></h3>
-<p>Shift every even row by a fix amount to create brick pattern.</p>
-<h3><a id="Shift Axis" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Shift Axis</span></h3>
-<p>The axis to apply shift to.</p>
-<h2><a id="Rendering Modes" class="anchor"></a>Rendering Modes</h2>
-<h3><a id="Colored Tile" class="anchor"></a>Colored Tile</h3>
+</table><p><img class="node-content deco" src="/src/images/etc/grid.png"></p><br>
+<h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<h3><a id="Gap" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Gap</span></h3><br>
+<p>Thickness of the gap between grid.</p><br>
+<h3><a id="Shift" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Shift</span></h3><br>
+<p>Shift every even row by a fix amount to create brick pattern.</p><br>
+<h3><a id="Shift Axis" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Shift Axis</span></h3><br>
+<p>The axis to apply shift to.</p><br>
+<h2><a id="Rendering Modes" class="anchor"></a>Rendering Modes</h2><br>
+<h3><a id="Colored Tile" class="anchor"></a>Colored Tile</h3><br>
 <p>Fill each grid with different color sampled from the <span class="junction" style="border-color: #8fde5dAA">Tile Color</span> property.
 The <span class="junction" style="border-color: #8fde5dAA">Gap Color</span> 
-control the color of the gap between tile.</p>
-<p><img class="node-content deco" src="/src/images/etc/grid_colored_tile.png"></p>
-<h3><a id="Height Map" class="anchor"></a>Height Map</h3>
-<p>Render the grid out as height map.</p>
-<p><img class="node-content deco" src="/src/images/etc/grid_height_map.png"></p>
-<h3><a id="Texture Grid" class="anchor"></a>Texture Grid</h3>
+control the color of the gap between tile.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/grid_colored_tile.png"></p><br>
+<h3><a id="Height Map" class="anchor"></a>Height Map</h3><br>
+<p>Render the grid out as height map.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/grid_height_map.png"></p><br>
+<h3><a id="Texture Grid" class="anchor"></a>Texture Grid</h3><br>
 <p>Fill each grid with the texture from the <span class="junction" style="border-color: #ff6b97AA">Texture</span> property. This mean each cell will contain the 
-full surface.</p>
-<p><img class="node-content deco" src="/src/images/etc/grid_texture_grid.png"></p>
-<h3><a id="Texture Sampler" class="anchor"></a>Texture Sampler</h3>
-<p>Fill each cell with solid color sampled from the <span class="junction" style="border-color: #ff6b97AA">Texture</span>.</p>
-<p><img class="node-content deco" src="/src/images/etc/grid_texture_sampler.png"></p>
-<h2><a id="Truchet Properties" class="anchor"></a>Truchet Properties</h2>
+full surface.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/grid_texture_grid.png"></p><br>
+<h3><a id="Texture Sampler" class="anchor"></a>Texture Sampler</h3><br>
+<p>Fill each cell with solid color sampled from the <span class="junction" style="border-color: #ff6b97AA">Texture</span>.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/grid_texture_sampler.png"></p><br>
+<h2><a id="Truchet Properties" class="anchor"></a>Truchet Properties</h2><br>
 <p>Toggling on the <span class="junction" style="border-color: #8c3f5dAA">Truchet</span> when using the <span class="inline-code">Texture Grid</span> mode will rotate 
-the sampled texture randomly. Using this effect with a surface with rotational symmetry to create an interesting image.</p>
-<p><img class="node-content deco" src="/src/images/etc/grid_truchet.png"></p>
-<h3><a id="Flip" class="anchor"></a>Flip</h3>
+the sampled texture randomly. Using this effect with a surface with rotational symmetry to create an interesting image.</p><br>
+<p><img class="node-content deco" src="/src/images/etc/grid_truchet.png"></p><br>
+<h3><a id="Flip" class="anchor"></a>Flip</h3><br>
 <p>The <span class="junction" style="border-color: #ffe478AA">Flip Horizontal</span> and <span class="junction" style="border-color: #ffe478AA">Flip Vertical</span> properties are used to control how often a surface will 
-be flip on each axis accordingly.</p>
-<h3><a id="Angle" class="anchor"></a>Angle</h3>
-<p>The <span class="junction" style="border-color: #ffe478AA">Angle</span> property adds random rotation to each surface.</p><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_grid/node_grid.gml">/scripts/node_grid/node_grid.gml</a></li><li><span>Shader [sh_grid]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_grid/sh_grid.fsh">/shaders/sh_grid/sh_grid.fsh</a></li></ul>
+be flip on each axis accordingly.</p><br>
+<h3><a id="Angle" class="anchor"></a>Angle</h3><br>
+<p>The <span class="junction" style="border-color: #ffe478AA">Angle</span> property adds random rotation to each surface.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_grid/node_grid.gml">/scripts/node_grid/node_grid.gml</a></li><li><span>Shader [sh_grid]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_grid/sh_grid.fsh">/shaders/sh_grid/sh_grid.fsh</a></li></ul>
         </div>
     </div>
 
