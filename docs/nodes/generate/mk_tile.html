@@ -1113,7 +1113,13 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table><img node_mk_tile-graph quiet><br><p>MK Tile generate tileset from a set of surfaces.</p><br>
+</table>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text);
+    }
+</script><img node_mk_tile-graph quiet><br><p>MK Tile generate tileset from a set of surfaces.</p><br>
 <br><h2><a id="Layers" class="anchor"></a>Layers</h2><br>
 <p>Tile set generation has 3 layers, the background <span class="junction">Background Texture</span>, tile <span class="junction">Texture</span>, and edges 
 <span class="junction" style="border-color: #ff6b97AA">Edge</span>. The surface provided to every layers should be tilable/seamless texture.</p><br>

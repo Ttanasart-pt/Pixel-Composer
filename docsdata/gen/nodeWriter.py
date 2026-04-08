@@ -176,8 +176,18 @@ def writeNode(metadata, contentPath, changeData = None):
     for tag in attrTags:
         rawContent = rawContent.replace(f'<attr {tag}/>', f'<span class="inline-code">{tag}</span>')
 
-    content += f'<img {nodeBase.lower()}-graph quiet><br>'
+    # PRE CONTENT
+    nodeBaseLower = nodeBase.lower()
+    content += f'<img {nodeBaseLower}-graph quiet><br>'
+    samplePath = f"docsdata/src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-sample.txt"
+    if os.path.exists(samplePath):
+        with open(samplePath, "r") as f:
+            sampleContent = f.read()
+        content += f'''<button class="copy-sample" onclick="copyToClipboard(`{sampleContent}`)">Copy to Clipboard</button><br>'''
+
+    # ADD CONTENT
     content += rawContent
+
     if changeData:
         content += writeChangeTable(metadata, changeData)
 

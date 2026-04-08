@@ -981,7 +981,13 @@
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
 <tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr>
 
-</table><img node_palette_extract-graph quiet><br><p>Palette extract read the image and generate palette from it. Note that this node can cause performance issue if 
+</table>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text);
+    }
+</script><img node_palette_extract-graph quiet><br><p>Palette extract read the image and generate palette from it. Note that this node can cause performance issue if 
 the image is too large.</p><br>
 <br><h2><a id="Algorithms" class="anchor"></a>Algorithms</h2><br>
 <p>The first step is to extract all colors from the images, then we can use different algorithms to reduce the 
