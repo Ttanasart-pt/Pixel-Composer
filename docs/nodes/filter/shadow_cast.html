@@ -1133,51 +1133,51 @@
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
 <tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr>
 
-</table><p>Cast shadow node use raycast to render shadow from different type of light.</p><br>
-<p><img class="node-content deco" src="/src/images/etc/shadow_cast.png"></p><br>
-<br><h2><a id="Surfaces Properties" class="anchor"></a>Surfaces Properties</h2><br>
-<h3><a id="Use Bg Color" class="anchor"></a><span class="junction">Use Bg Color</span></h3><br>
-<p>Toggle this to use <span class="junction" style="border-color: #ff6b97AA">Background</span> as shadow caster.</p><br>
-<h3><a id="Bg Threshold" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Bg Threshold</span></h3><br>
-<p>The brightness threshold to consider a pixel in <span class="junction" style="border-color: #ff6b97AA">Background</span> as a wall.</p><br>
-<h2><a id="Light Properties" class="anchor"></a>Light Properties</h2><br>
+</table><p>Cast shadow node use raycast to render shadow from different type of light.</p>
+<p><img class="node-content deco" src="/src/images/etc/shadow_cast.png"></p>
+<h2><a id="Surfaces Properties" class="anchor"></a>Surfaces Properties</h2>
+<h3><a id="Use Bg Color" class="anchor"></a><span class="junction">Use Bg Color</span></h3>
+<p>Toggle this to use <span class="junction" style="border-color: #ff6b97AA">Background</span> as shadow caster.</p>
+<h3><a id="Bg Threshold" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Bg Threshold</span></h3>
+<p>The brightness threshold to consider a pixel in <span class="junction" style="border-color: #ff6b97AA">Background</span> as a wall.</p>
+<h2><a id="Light Properties" class="anchor"></a>Light Properties</h2>
 <p>Cast shadow requires 2 surfaces. A base <span class="junction" style="border-color: #ff6b97AA">Background</span> surface and <span class="junction" style="border-color: #ff6b97AA">Solid</span> surface act as a 
-shadow caster.</p><br>
-<p>You can check <span class="junction">Use Bg Color</span> to use <span class="junction" style="border-color: #ff6b97AA">Background</span> for both background and shadow caster.</p><br>
-<h3><a id="Light Type" class="anchor"></a><span class="junction">Light Type</span></h3><br>
-<p>Type of light:</p><br>
+shadow caster.</p>
+<p>You can check <span class="junction">Use Bg Color</span> to use <span class="junction" style="border-color: #ff6b97AA">Background</span> for both background and shadow caster.</p>
+<h3><a id="Light Type" class="anchor"></a><span class="junction">Light Type</span></h3>
+<p>Type of light:</p>
 <ul>
     <li><span class="bold">Point</span> Light emit from a single point in a circular shape.</li>
     <li><span class="bold">Sun</span> Light shines from one direction uniformly.</li>
-</ul><br>
+</ul>
 
-<h3><a id="Light Intensity" class="anchor"></a><span class="junction">Light Intensity</span></h3><br>
-<p>The brightness of the light.</p><br>
-<h3><a id="Light Radius" class="anchor"></a><span class="junction">Light Radius</span></h3><br>
-<p><span class="bold">Point</span> type, radius of the light.</p><br>
-<h3><a id="Light Position" class="anchor"></a><span class="junction">Light Position</span></h3><br>
-<p>Position of the light, for <span class="bold">Sun</span> type, the position determine the light direction.</p><br>
-<h2><a id="Soft Shadow Properties" class="anchor"></a>Soft Shadow Properties</h2><br>
-<h3><a id="Light Density" class="anchor"></a><span class="junction">Light Density</span></h3><br>
-<p>Amount of lights used to render soft shadow.</p><br>
-<h3><a id="Soft Light Radius" class="anchor"></a><span class="junction">Soft Light Radius</span></h3><br>
-<p>Radius for the ligths cluster, larger radius will increase the width of the soft shadow.</p><br>
-<h2><a id="Render Properties" class="anchor"></a>Render Properties</h2><br>
-<h3><a id="Banding" class="anchor"></a><span class="junction">Banding</span></h3><br>
-<p>Discretize light intensity to a number of steps.</p><br>
-<h3><a id="Attenuation" class="anchor"></a><span class="junction">Attenuation</span></h3><br>
-<p><span class="bold">Point</span> type, a curve controling how the light got dimmer per distance.</p><br>
-<h3><a id="Light Color" class="anchor"></a><span class="junction">Light Color</span></h3><br>
-<p>Color of the light</p><br>
-<h3><a id="Ambient Color" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Ambient Color</span></h3><br>
-<p>Base ambient color</p><br>
-<h3><a id="Render Solid" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Render Solid</span></h3><br>
-<p>Whether to draw <span class="junction" style="border-color: #ff6b97AA">Solid</span> in the final render.</p><br>
-<h2><a id="Ambient Occlusion Properties" class="anchor"></a>Ambient Occlusion Properties</h2><br>
-<h3><a id="Ambient Occlusion" class="anchor"></a><span class="junction">Ambient Occlusion</span></h3><br>
-<p>Size of the AO effects.</p><br>
-<h3><a id="Ambient Occlusion Strength" class="anchor"></a><span class="junction">Ambient Occlusion Strength</span></h3><br>
-<p>Intensity, darkness of the effect.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_shadow_cast/node_shadow_cast.gml">/scripts/node_shadow_cast/node_shadow_cast.gml</a></li><li><span>Shader [sh_shadow_cast_bg_convert]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_convert/sh_shadow_cast_bg_convert.fsh">/shaders/sh_shadow_cast_bg_convert/sh_shadow_cast_bg_convert.fsh</a></li><li><span>Shader [sh_shadow_cast]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast/sh_shadow_cast.fsh">/shaders/sh_shadow_cast/sh_shadow_cast.fsh</a></li><li><span>Shader [sh_shadow_cast_bg_extract]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh">/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh</a></li></ul>
+<h3><a id="Light Intensity" class="anchor"></a><span class="junction">Light Intensity</span></h3>
+<p>The brightness of the light.</p>
+<h3><a id="Light Radius" class="anchor"></a><span class="junction">Light Radius</span></h3>
+<p><span class="bold">Point</span> type, radius of the light.</p>
+<h3><a id="Light Position" class="anchor"></a><span class="junction">Light Position</span></h3>
+<p>Position of the light, for <span class="bold">Sun</span> type, the position determine the light direction.</p>
+<h2><a id="Soft Shadow Properties" class="anchor"></a>Soft Shadow Properties</h2>
+<h3><a id="Light Density" class="anchor"></a><span class="junction">Light Density</span></h3>
+<p>Amount of lights used to render soft shadow.</p>
+<h3><a id="Soft Light Radius" class="anchor"></a><span class="junction">Soft Light Radius</span></h3>
+<p>Radius for the ligths cluster, larger radius will increase the width of the soft shadow.</p>
+<h2><a id="Render Properties" class="anchor"></a>Render Properties</h2>
+<h3><a id="Banding" class="anchor"></a><span class="junction">Banding</span></h3>
+<p>Discretize light intensity to a number of steps.</p>
+<h3><a id="Attenuation" class="anchor"></a><span class="junction">Attenuation</span></h3>
+<p><span class="bold">Point</span> type, a curve controling how the light got dimmer per distance.</p>
+<h3><a id="Light Color" class="anchor"></a><span class="junction">Light Color</span></h3>
+<p>Color of the light</p>
+<h3><a id="Ambient Color" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Ambient Color</span></h3>
+<p>Base ambient color</p>
+<h3><a id="Render Solid" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Render Solid</span></h3>
+<p>Whether to draw <span class="junction" style="border-color: #ff6b97AA">Solid</span> in the final render.</p>
+<h2><a id="Ambient Occlusion Properties" class="anchor"></a>Ambient Occlusion Properties</h2>
+<h3><a id="Ambient Occlusion" class="anchor"></a><span class="junction">Ambient Occlusion</span></h3>
+<p>Size of the AO effects.</p>
+<h3><a id="Ambient Occlusion Strength" class="anchor"></a><span class="junction">Ambient Occlusion Strength</span></h3>
+<p>Intensity, darkness of the effect.</p><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_shadow_cast/node_shadow_cast.gml">/scripts/node_shadow_cast/node_shadow_cast.gml</a></li><li><span>Shader [sh_shadow_cast_bg_extract]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh">/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh</a></li><li><span>Shader [sh_shadow_cast_bg_convert]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_convert/sh_shadow_cast_bg_convert.fsh">/shaders/sh_shadow_cast_bg_convert/sh_shadow_cast_bg_convert.fsh</a></li><li><span>Shader [sh_shadow_cast]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast/sh_shadow_cast.fsh">/shaders/sh_shadow_cast/sh_shadow_cast.fsh</a></li></ul>
         </div>
     </div>
 

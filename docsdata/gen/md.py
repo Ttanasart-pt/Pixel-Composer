@@ -8,12 +8,12 @@ def parse_md(path):
         data = f.read()
 
     data_html = markdown.markdown(data)
-    data_html = data_html.replace("</h1>", "</h1><br>")
-    data_html = data_html.replace("<h2>",  "<br><h2>", 1)
-    data_html = data_html.replace("</h2>", "</h2><br>")
-    data_html = data_html.replace("</h3>", "</h3><br>")
-    data_html = data_html.replace("</p>",  "</p><br>" )
-    data_html = data_html.replace("</ul>", "</ul><br>")
+    # data_html = data_html.replace("</h1>", "</h1><br>")
+    # data_html = data_html.replace("<h2>",  "<br><h2>", 1)
+    # data_html = data_html.replace("</h2>", "</h2><br>")
+    # data_html = data_html.replace("</h3>", "</h3><br>")
+    # data_html = data_html.replace("</p>",  "</p><br>" )
+    # data_html = data_html.replace("</ul>", "</ul><br>")
     
     with open(target, "a") as f:
         f.write(data_html)

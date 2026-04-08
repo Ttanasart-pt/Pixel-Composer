@@ -53,7 +53,7 @@
 <li class="sidebar-nav "><a class="" href="armature_subdivide.html">Armature Subdivide</a></li>
 <li class="sidebar-nav active "><a class="" href="blend.html">Blend</a></li>
 <ul class="submenu">
-<li class="sidebar-nav"><a href="#Blend Modes">Blend Modes</a></li>
+<li class="sidebar-nav"><a href="#<span class="junction" style="border-color: #ff9166AA">Blend Mode</span>"><span class="junction" style="border-color: #ff9166AA">Blend Mode</span></a></li>
 <ul class="submenu h3">
 <li class="sidebar-nav"><a href="#Opacity">Opacity</a></li>
 <li class="sidebar-nav"><a href="#Preserve Alpha">Preserve Alpha</a></li>
@@ -1011,15 +1011,15 @@
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
 <tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr>
 
-</table><p></p><br>
+</table><p></p>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <p>Blending surfaces is a fundamental step in any VFX process. Blend node allows you to combine 2 surfaces 
-under different blend mode.</p><br>
-<br><h2><a id="Blend Modes" class="anchor"></a>Blend Modes</h2><br>
-<p><span class="junction" style="border-color: #ff9166AA">Blend Mode</span> control how the surface is being mixed. Blend modes available in the this node are:</p><br>
-<p>The examples are blend of 2 surfaces:</p><br>
-<p><img class="node-content" src="/src/images/etc/blend/blend_sample.png"></p><br>
+under different blend mode.</p>
+<h2><a id="<span class="junction" style="border-color: #ff9166AA">Blend Mode</span>" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Blend Mode</span></h2>
+<p><span class="junction" style="border-color: #ff9166AA">Blend Mode</span> control how the surface is being mixed. Blend modes available in the this node are:</p>
+<p>The examples are blend of 2 surfaces:</p>
+<p><img class="node-content" src="/src/images/etc/blend/blend_sample.png"></p>
 <table class="ccc203050">
     <tr>
         <th>Mode</th>
@@ -1093,15 +1093,15 @@ under different blend mode.</p><br>
     </tr>
 </table>
 
-<h3><a id="Opacity" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Opacity</span></h3><br>
-<p>The intensity of the effect will be multiply by the <span class="junction" style="border-color: #ffe478AA">Opacity</span> property.</p><br>
-<h3><a id="Preserve Alpha" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Preserve Alpha</span></h3><br>
+<h3><a id="Opacity" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Opacity</span></h3>
+<p>The intensity of the effect will be multiply by the <span class="junction" style="border-color: #ffe478AA">Opacity</span> property.</p>
+<h3><a id="Preserve Alpha" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Preserve Alpha</span></h3>
 <p>Blend operation apply to all channel including alpha channel. Which mean some operation may erase the 
-alpha channel of the original image. To exclude the alpha calculation, set <span class="junction" style="border-color: #8c3f5dAA">Preserve Alpha</span> to true.</p><br>
-<h2><a id="Dimension Mixing" class="anchor"></a>Dimension Mixing</h2><br>
-<p>When blending surfaces of different sizes. You can set the blending behaviour using several properties:</p><br>
-<h3><a id="Fill Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Fill Mode</span></h3><br>
-<p>The <span class="junction" style="border-color: #ff9166AA">Fill Mode</span> property control the behaviour of the smaller surface.</p><br>
+alpha channel of the original image. To exclude the alpha calculation, set <span class="junction" style="border-color: #8c3f5dAA">Preserve Alpha</span> to true.</p>
+<h2><a id="Dimension Mixing" class="anchor"></a>Dimension Mixing</h2>
+<p>When blending surfaces of different sizes. You can set the blending behaviour using several properties:</p>
+<h3><a id="Fill Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Fill Mode</span></h3>
+<p>The <span class="junction" style="border-color: #ff9166AA">Fill Mode</span> property control the behaviour of the smaller surface.</p>
 <table class="cc4060">
     <tr>
         <th>Mode</th>
@@ -1121,8 +1121,8 @@ alpha channel of the original image. To exclude the alpha calculation, set <span
     </tr>
 </table>
 
-<h3><a id="Position" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Position</span></h3><br>
-<p>When <span class="junction" style="border-color: #ff9166AA">Fill Mode</span> is set to None, you can set the position of the <span class="junction" style="border-color: #ff6b97AA">Foreground</span> freely using the <span class="junction" style="border-color: #ffe478AA">Position</span> property.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_blend/node_blend.gml">/scripts/node_blend/node_blend.gml</a></li></ul>
+<h3><a id="Position" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Position</span></h3>
+<p>When <span class="junction" style="border-color: #ff9166AA">Fill Mode</span> is set to None, you can set the position of the <span class="junction" style="border-color: #ff6b97AA">Foreground</span> freely using the <span class="junction" style="border-color: #ffe478AA">Position</span> property.</p><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_blend/node_blend.gml">/scripts/node_blend/node_blend.gml</a></li></ul>
         </div>
     </div>
 

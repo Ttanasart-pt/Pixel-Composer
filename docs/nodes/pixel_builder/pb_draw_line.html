@@ -1090,35 +1090,35 @@
                 <td><p>Surface Out</p></td>
             </tr>
 
-</table><p>Line node is used to draw a line (or lines) on a surface.</p><br>
-<br><h2><a id="Path Data" class="anchor"></a>Path Data</h2><br>
+</table><p>Line node is used to draw a line (or lines) on a surface.</p>
+<h2><a id="Path Data" class="anchor"></a>Path Data</h2>
 <p>Line node takes path data to define the path to draw. Without it, it will draw a single straight line across 
-the middle of the surface with the <span class="junction">Rotation</span> value control the angle.</p><br>
-<p>The path data can be provided through <span class="junction">Path</span>.</p><br>
-<p><img class="node-content" src="/src/images/etc/line_path_data.png"></p><br>
-<h2><a id="Resolution" class="anchor"></a>Resolution</h2><br>
+the middle of the surface with the <span class="junction">Rotation</span> value control the angle.</p>
+<p>The path data can be provided through <span class="junction">Path</span>.</p>
+<p><img class="node-content" src="/src/images/etc/line_path_data.png"></p>
+<h2><a id="Resolution" class="anchor"></a>Resolution</h2>
 <p>When drawing a path, line node generate segment of straight lines and combine them together. The more 
 segment it generated the more accurate the path will be. There're 2 types of segment generation controlled by 
-the <span class="junction">Fix Length</span> property.</p><br>
-<h3><a id="Fix amount" class="anchor"></a>Fix amount</h3><br>
+the <span class="junction">Fix Length</span> property.</p>
+<h3><a id="Fix amount" class="anchor"></a>Fix amount</h3>
 <p>By default, <span class="junction">Fix Length</span> is set to false. This mean the amount of the segment is being controlled 
-directly through the <span class="junction">Segment</span> property./p&gt;</p><br>
-<p><img-deco line_fix_amount/></p><br>
-<h3><a id="Fix length" class="anchor"></a>Fix length</h3><br>
+directly through the <span class="junction">Segment</span> property./p&gt;</p>
+<p><img-deco line_fix_amount/></p>
+<h3><a id="Fix length" class="anchor"></a>Fix length</h3>
 <p>When <span class="junction">Fix Length</span> is set to true, the segment length is being controlled instead. The <span class="junction">Segment Length</span>
-property will determine the maximum length of each segment in pixel.</p><br>
-<p><img-deco line_fix_length/></p><br>
-<h2><a id="Line Width" class="anchor"></a>Line Width</h2><br>
+property will determine the maximum length of each segment in pixel.</p>
+<p><img-deco line_fix_length/></p>
+<h2><a id="Line Width" class="anchor"></a>Line Width</h2>
 <p>Line width can be controlled through the <span class="junction">Width</span> property. This width is a vector containing 2 values, 
 the width of each segment will be random bewteen these 2 values. You can set it to the same value to fix the 
-length.</p><br>
-<h3><a id="1Px Mode" class="anchor"></a><span class="junction">1Px Mode</span></h3><br>
+length.</p>
+<h3><a id="1Px Mode" class="anchor"></a><span class="junction">1Px Mode</span></h3>
 <p>The <span class="junction">1Px Mode</span> toggle will fix the line width to 1 pixel, and use a more pixel perfect algorithm to 
-draw the lines.</p><br>
-<p><img-deco line_width_1px/></p><br>
-<h3><a id="Width Over Length" class="anchor"></a><span class="junction">Width Over Length</span></h3><br>
+draw the lines.</p>
+<p><img-deco line_width_1px/></p>
+<h3><a id="Width Over Length" class="anchor"></a><span class="junction">Width Over Length</span></h3>
 <p>You can modulate the width of the line over it's length using the <span class="junction">Width Over Length</span> curve. This curve 
-will be multiplied with the <span class="junction">Width</span> value to determine the final width.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_pb_draw_line/node_pb_draw_line.gml">/scripts/node_pb_draw_line/node_pb_draw_line.gml</a></li></ul>
+will be multiplied with the <span class="junction">Width</span> value to determine the final width.</p><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_pb_draw_line/node_pb_draw_line.gml">/scripts/node_pb_draw_line/node_pb_draw_line.gml</a></li></ul>
         </div>
     </div>
 

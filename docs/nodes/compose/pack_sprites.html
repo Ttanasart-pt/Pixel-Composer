@@ -981,18 +981,18 @@
                 <td><p>Atlas Data</p></td>
             </tr>
 
-</table><p>Pack sprites nodes allows for quick composition of surfaces array with different sizes.</p><br>
-<br><h2><a id="Packing Algorithms" class="anchor"></a>Packing Algorithms</h2><br>
-<h3><a id="Skyline" class="anchor"></a>Skyline</h3><br>
+</table><p>Pack sprites nodes allows for quick composition of surfaces array with different sizes.</p>
+<h2><a id="Packing Algorithms" class="anchor"></a>Packing Algorithms</h2>
+<h3><a id="Skyline" class="anchor"></a>Skyline</h3>
 <p>Skyline packing place surfaces next to each other horizontally until it reach <span class="junction" style="border-color: #ff9166AA">Max Width</span>, then it goes to the beginning 
-of the row and search for the best fit for the next surface. It is a very fast algorithm but it can leave a lot of empty space.</p><br>
-<h3><a id="Shelf" class="anchor"></a>Shelf</h3><br>
+of the row and search for the best fit for the next surface. It is a very fast algorithm but it can leave a lot of empty space.</p>
+<h3><a id="Shelf" class="anchor"></a>Shelf</h3>
 <p>Shelf packing place surfaces next to each other horizontally until it reach <span class="junction" style="border-color: #ff9166AA">Max Width</span> while keeping the same height, 
-then it goes to the next row.</p><br>
-<h3><a id="Top left" class="anchor"></a>Top left</h3><br>
-<p>Top left packing sort the surfaces by height and always try to place the next surface in the top left corner of the leftover space.</p><br>
-<h3><a id="Best fit" class="anchor"></a>Best fit</h3><br>
-<p>Best fit is the slowest algorithm. It sort all surfaces by size and search for the best fit for each subsequent surface.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_pack_sprites/node_pack_sprites.gml">/scripts/node_pack_sprites/node_pack_sprites.gml</a></li></ul>
+then it goes to the next row.</p>
+<h3><a id="Top left" class="anchor"></a>Top left</h3>
+<p>Top left packing sort the surfaces by height and always try to place the next surface in the top left corner of the leftover space.</p>
+<h3><a id="Best fit" class="anchor"></a>Best fit</h3>
+<p>Best fit is the slowest algorithm. It sort all surfaces by size and search for the best fit for each subsequent surface.</p><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_pack_sprites/node_pack_sprites.gml">/scripts/node_pack_sprites/node_pack_sprites.gml</a></li></ul>
         </div>
     </div>
 

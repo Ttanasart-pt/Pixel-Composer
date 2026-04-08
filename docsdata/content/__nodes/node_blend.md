@@ -4,7 +4,7 @@
 Blending surfaces is a fundamental step in any VFX process. Blend node allows you to combine 2 surfaces 
 under different blend mode.
 
-## Blend Modes
+## <junc Blend Mode/>
 
 <junc Blend mode> control how the surface is being mixed. Blend modes available in the this node are:
 
