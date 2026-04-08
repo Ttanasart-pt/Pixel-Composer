@@ -247,7 +247,7 @@ def writeCategory(category, nodeMetadata):
         name     = metadata["name"]
         spr      = metadata["spr"]  if "spr" in metadata else f"s_{node.lower()}"
 
-        content += f'''<div class="node-card"><a href="./{node.lower().replace("node_", "")}.html"><img {spr}>{name}</a></div>\n'''
+        content += f'''<div class="node-card"><a href="/nodes/_index/{node.lower()}.html"><img {spr}>{name}</a></div>\n'''
 
     if not nl:
         content += group_end

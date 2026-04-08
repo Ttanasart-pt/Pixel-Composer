@@ -128,10 +128,14 @@ for category in nodeCategoryData:
         currentDir = categoryDir
         if subgroupCurrent != None:
             currentDir = os.path.join(categoryDir, fileUtil.pathSanitize(subgroupCurrent))
+            fileUtil.verifyFolder(currentDir)
+            fileUtil.verifyFile(f"{currentDir}/index.html", f'''<!DOCTYPE html><html></html>''')
+
             if subsubGroupCurrent != None:
                 currentDir = os.path.join(currentDir, fileUtil.pathSanitize(subsubGroupCurrent))
-        fileUtil.verifyFolder(currentDir)
-
+                fileUtil.verifyFolder(currentDir)
+                fileUtil.verifyFile(f"{currentDir}/index.html", f'''<!DOCTYPE html><html></html>''')
+        
         targetPath = os.path.join(currentDir, fname + ".html")
         fileUtil.writeFile(targetPath, nodeContent[node])
         
