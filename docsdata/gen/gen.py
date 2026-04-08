@@ -87,7 +87,7 @@ def writeSidebar(sidebar):
 
     return sideContent
 
-sidebarContent = '<ul class="sidebar">\n'
+sidebarContent = '<ul class="sidebar-content">\n'
 for s in allSidebar:
     sidebarContent += writeSidebar(s)
 sidebarContent += '</ul>\n'

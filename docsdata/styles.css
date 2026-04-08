@@ -274,7 +274,7 @@ a.anchor {
     left: 32px;
 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
 
@@ -302,12 +302,12 @@ a.anchor {
     }
 
     li {
-        /* height: 1.5rem; */
+        height: 1.3rem;
 
         list-style-type: none;
         margin: 0;
         padding: 0;
-        display: flex;
+        /* display: flex; */
         
         &.back {
             opacity: 0.5;
@@ -320,6 +320,10 @@ a.anchor {
 
         &.icon > a {
             padding-left: 0px;
+        }
+
+        &::marker {
+            display: none;
         }
 
     }
