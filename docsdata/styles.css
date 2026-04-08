@@ -795,7 +795,7 @@ li.search-result a {
 }
 
 input#search {
-    width: calc(100% - 48px);
+    width: calc(100% - 12px);
     margin: 1px 1px;
     padding: 8px 16px;
     border: 1px solid var(--main_dkgrey);
@@ -811,6 +811,16 @@ input#search {
 
 input#search:focus {
     outline: 1px solid var(--accent);
+}
+
+input#search::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    background-image: url("/src/icons/s_cross_32.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 div.node-category {
