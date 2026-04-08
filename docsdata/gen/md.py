@@ -9,7 +9,7 @@ def parse_md(path):
 
     data_html = markdown.markdown(data)
     data_html = data_html.replace("</h1>", "</h1><br>")
-    # data_html = data_html.replace("<h2>",  "<br><h2>", 1)
+    data_html = data_html.replace("<h2>",  "<br><h2>", 1)
     data_html = data_html.replace("</h2>", "</h2><br>")
     data_html = data_html.replace("</h3>", "</h3><br>")
     data_html = data_html.replace("</p>",  "</p><br>" )
