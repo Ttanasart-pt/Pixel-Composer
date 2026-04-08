@@ -178,7 +178,10 @@ def writeNode(metadata, contentPath, changeData = None):
 
     # PRE CONTENT
     nodeBaseLower = nodeBase.lower()
-    content += f'<img class="node-graph-preview" src="/src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-graph.png">'
+    imagePath = f"src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-graph.png"
+    if os.path.exists(f"docsdata/{imagePath}"):
+        content += f'<img class="node-graph-preview" src="/{imagePath}">'
+        
     samplePath = f"docsdata/src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-sample.txt"
     if os.path.exists(samplePath):
         with open(samplePath, "r") as f:
