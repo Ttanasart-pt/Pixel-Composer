@@ -48,20 +48,18 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
             generateFolder(fDirIn, fDirOut)
             continue
 
-        if fName == "index.html":
-            pTitle = groupTitle
-            sidebar.insert(1, (fName, fNameS, pTitle))
-
-        elif fullPath.endswith(".html"):
-            pTitle = title(fNameS.replace('.html', ''))
-            sidebar.append((fName, fNameS, pTitle))
-
-        else :
+        if not fullPath.endswith(".html"):
             shutil.copy(fullPath, fDirOut)
             continue
-        
+
+        if fName == "index.html":
+            pTitle = groupTitle
+        else:
+            pTitle = title(fNameS.replace('.html', ''))
+
         page = genFileWriter.generateFile(dirOut, fDirIn)
         pages.append(page)
+        sidebar.append((fName, fNameS, pTitle))
     
     sidebarParent.append((groupTitle, sidebar))
 

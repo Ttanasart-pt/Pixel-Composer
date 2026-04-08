@@ -23,12 +23,12 @@
 
     <div class="main">
         <div id="sidebar" class="sidebar">
+            <div class="search">
+                <form id="search_form" onsubmit="return false;">
+                    <input type="search" name="search" placeholder="Search..." id="search" onkeyup="onSearch()" onchange="onSearch()">
+                </form>
+            </div>
             <ul>
-                <li class="search">
-                    <form id="search_form" onsubmit="return false;">
-                        <input type="search" name="search" placeholder="Search..." id="search" onkeyup="onSearch()" onchange="onSearch()">
-                    </form>
-                </li>
                 <div id="search_spacing" style="height: 48px;"></div>
                 {{sidebar}}
                 {{search_results}}

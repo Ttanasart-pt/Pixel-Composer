@@ -279,6 +279,7 @@ a.anchor {
     justify-content: flex-start;
 
     position: fixed;
+    overflow-x: hidden;
     overflow-y: scroll;
 
     transition: left 0.2s ease-in-out;
@@ -325,7 +326,6 @@ a.anchor {
         &::marker {
             display: none;
         }
-
     }
 
     ul {
@@ -388,6 +388,27 @@ a.anchor {
         transform: translateY(2px);
 
         fill: var(--main_ltgrey);
+    }
+
+    .search {
+        position: fixed;
+        width: calc(256px - 16px);
+        height: auto;
+        z-index: 1;
+        
+        form {
+            width: inherit;
+            padding-right: 16px;;
+        }
+    }
+        
+    .search-result {
+        height: 1.5rem;
+        
+        a {
+            font-weight: 500;
+            font-size: .9rem;
+        }
     }
 
 }
@@ -863,28 +884,6 @@ ul.list-empty {
     
     li {
         line-height: 1.75;
-    }
-}
-
-li.search {
-    position: fixed;
-    width: inherit;
-    height: auto;
-    z-index: 1;
-    transform: translateY(-4px);
-    
-    form {
-        width: inherit;
-        padding-right: 16px;;
-    }
-}
-    
-li.search-result {
-    height: 1.5rem;
-    
-    a {
-        font-weight: 500;
-        font-size: .9rem;
     }
 }
 
