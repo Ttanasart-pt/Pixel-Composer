@@ -30,7 +30,23 @@
                     </form>
                 </li>
                 <div id="search_spacing" style="height: 48px;"></div>
-                {{sidebar}}
+                <li class="sidebar-nav back "><a class="" href="../">Back</a></li>
+<li class="sidebar-nav "><a class="" href="blend_edge.html">Blend Edge</a></li>
+<li class="sidebar-nav active "><a class="" href="bloom.html">Bloom</a></li>
+<ul class="submenu">
+<li class="sidebar-nav"><a href="#Properties">Properties</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Size">Size</a></li>
+<li class="sidebar-nav"><a href="#Tolerance">Tolerance</a></li>
+<li class="sidebar-nav"><a href="#Strength">Strength</a></li>
+<li class="sidebar-nav"><a href="#Bloom Mask">Bloom Mask</a></li>
+</ul>
+</ul>
+<li class="sidebar-nav "><a class="" href="chromatic_aberration.html">Chromatic Aberration</a></li>
+<li class="sidebar-nav "><a class="" href="grain.html">Grain</a></li>
+<li class="sidebar-nav "><a class="" href="jpeg.html">Jpeg</a></li>
+<li class="sidebar-nav "><a class="" href="vignette.html">Vignette</a></li>
+
                 <li class="search-result" style="display: none;"><a href="docs/getting_started.html">Getting Started</a></li>
 <li class="search-result" style="display: none;"><a href="\interfaces/animation_panel.html">Animation Panel</a></li>
 <li class="search-result" style="display: none;"><a href="\interfaces/collection_panel.html">Collection Panel</a></li>
@@ -1003,7 +1019,7 @@ pixels to be affected by the bloom effect.</p><br>
 <h3><a id="Bloom Mask" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Bloom Mask</span></h3><br>
 <p>An additional surface that use to control the bloom amount per pixel. The brightness of the mask will 
 be multiplied to the bloom to create final bloom amount.</p><br>
-<p><img class="node-content deco" src="/src/images/etc/bloom_mask.png"></p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_bloom/node_bloom.gml">/scripts/node_bloom/node_bloom.gml</a></li><li><span>Shader [sh_bloom_pass]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_bloom_pass/sh_bloom_pass.fsh">/shaders/sh_bloom_pass/sh_bloom_pass.fsh</a></li><li><span>Shader [sh_blend_add_alpha_adj]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_blend_add_alpha_adj/sh_blend_add_alpha_adj.fsh">/shaders/sh_blend_add_alpha_adj/sh_blend_add_alpha_adj.fsh</a></li><li><span>Shader [sh_bloom_blend]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_bloom_blend/sh_bloom_blend.fsh">/shaders/sh_bloom_blend/sh_bloom_blend.fsh</a></li></ul>
+<p><img class="node-content deco" src="/src/images/etc/bloom_mask.png"></p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_bloom/node_bloom.gml">/scripts/node_bloom/node_bloom.gml</a></li><li><span>Shader [sh_bloom_blend]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_bloom_blend/sh_bloom_blend.fsh">/shaders/sh_bloom_blend/sh_bloom_blend.fsh</a></li><li><span>Shader [sh_blend_add_alpha_adj]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_blend_add_alpha_adj/sh_blend_add_alpha_adj.fsh">/shaders/sh_blend_add_alpha_adj/sh_blend_add_alpha_adj.fsh</a></li><li><span>Shader [sh_bloom_pass]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_bloom_pass/sh_bloom_pass.fsh">/shaders/sh_bloom_pass/sh_bloom_pass.fsh</a></li></ul>
         </div>
     </div>
 

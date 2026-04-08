@@ -30,7 +30,118 @@
                     </form>
                 </li>
                 <div id="search_spacing" style="height: 48px;"></div>
-                {{sidebar}}
+                <li class="sidebar-nav back "><a class="" href="../">Back</a></li>
+<li class="sidebar-nav icon "><?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 28.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<path class="st0" d="M4,21V9l8-6l8,6v12h-6v-6h-4v6H4z"/>
+</svg>
+<a class="" href="index.html">Index</a></li>
+<li class="sidebar-nav "><a class="" href="pcx.html">Pcx</a></li>
+<li class="sidebar-nav "><a class="" href="hlsl.html">Hlsl</a></li>
+<li class="sidebar-nav active "><a class="" href="lua.html">Lua</a></li>
+<ul class="submenu">
+<li class="sidebar-nav"><a href="#Lua Thread">Lua Thread</a></li>
+<ul class="submenu h3">
+</ul>
+<li class="sidebar-nav"><a href="#Lua Nodes">Lua Nodes</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Lua Global">Lua Global</a></li>
+<li class="sidebar-nav"><a href="#Lua Compute">Lua Compute</a></li>
+<li class="sidebar-nav"><a href="#Lua Surface">Lua Surface</a></li>
+</ul>
+<li class="sidebar-nav"><a href="#Syntax">Syntax</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#Variable">Variable</a></li>
+<li class="sidebar-nav"><a href="#Operators">Operators</a></li>
+<li class="sidebar-nav"><a href="#Condition">Condition</a></li>
+<li class="sidebar-nav"><a href="#For Loop">For Loop</a></li>
+<li class="sidebar-nav"><a href="#While Loop">While Loop</a></li>
+<li class="sidebar-nav"><a href="#Repeat Loop">Repeat Loop</a></li>
+</ul>
+<li class="sidebar-nav"><a href="#Functions Reference">Functions Reference</a></li>
+<ul class="submenu h3">
+<li class="sidebar-nav"><a href="#draw(surface, x, y)">draw(surface, x, y)</a></li>
+<li class="sidebar-nav"><a href="#drawBlend(surface, x, y, color = white, alpha = 1)">drawBlend(surface, x, y, color = white, alpha = 1)</a></li>
+<li class="sidebar-nav"><a href="#drawTransform(surface, x, y, xs = 1, ys = 1, rot = 0)">drawTransform(surface, x, y, xs = 1, ys = 1, rot = 0)</a></li>
+<li class="sidebar-nav"><a href="#drawGeneral(surface, x, y, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)">drawGeneral(surface, x, y, xs = 1, ys = 1, rot = 0, color = white, alpha = 1)</a></li>
+<li class="sidebar-nav"><a href="#setColor(color = white)">setColor(color = white)</a></li>
+<li class="sidebar-nav"><a href="#setAlpha(alpha = 1)">setAlpha(alpha = 1)</a></li>
+<li class="sidebar-nav"><a href="#setColorAlpha(color = white, alpha = 1)">setColorAlpha(color = white, alpha = 1)</a></li>
+<li class="sidebar-nav"><a href="#getColor(x, y)">getColor(x, y)</a></li>
+<li class="sidebar-nav"><a href="#getColorSurface(surface, x, y)">getColorSurface(surface, x, y)</a></li>
+<li class="sidebar-nav"><a href="#drawRect(x0, y0, x1, y1)">drawRect(x0, y0, x1, y1)</a></li>
+<li class="sidebar-nav"><a href="#drawRectOutline(x0, y0, x1, y1, thick = 1)">drawRectOutline(x0, y0, x1, y1, thick = 1)</a></li>
+<li class="sidebar-nav"><a href="#drawCircle(x, y, radius)">drawCircle(x, y, radius)</a></li>
+<li class="sidebar-nav"><a href="#drawCircleOutline(x, y, radius, thick = 1)">drawCircleOutline(x, y, radius, thick = 1)</a></li>
+<li class="sidebar-nav"><a href="#drawEllipse(x0, y0, x1, y1)">drawEllipse(x0, y0, x1, y1)</a></li>
+<li class="sidebar-nav"><a href="#drawEllipseOutline(x0, y0, x1, y1, thick = 1)">drawEllipseOutline(x0, y0, x1, y1, thick = 1)</a></li>
+<li class="sidebar-nav"><a href="#drawLine(x0, y0, x1, y1, thick = 1)">drawLine(x0, y0, x1, y1, thick = 1)</a></li>
+<li class="sidebar-nav"><a href="#drawLineRound(x0, y0, x1, y1, thick = 1)">drawLineRound(x0, y0, x1, y1, thick = 1)</a></li>
+<li class="sidebar-nav"><a href="#drawPixel(x, y)">drawPixel(x, y)</a></li>
+<li class="sidebar-nav"><a href="#colorGetRed(color)">colorGetRed(color)</a></li>
+<li class="sidebar-nav"><a href="#colorGetGreen(color)">colorGetGreen(color)</a></li>
+<li class="sidebar-nav"><a href="#colorGetBlue(color)">colorGetBlue(color)</a></li>
+<li class="sidebar-nav"><a href="#colorGetHue(color)">colorGetHue(color)</a></li>
+<li class="sidebar-nav"><a href="#colorGetSaturation(color)">colorGetSaturation(color)</a></li>
+<li class="sidebar-nav"><a href="#colorGetValue(color)">colorGetValue(color)</a></li>
+<li class="sidebar-nav"><a href="#getColor()">getColor()</a></li>
+<li class="sidebar-nav"><a href="#getAlpha()">getAlpha()</a></li>
+<li class="sidebar-nav"><a href="#colorCreateRGB(red, green, blue, normalize = false)">colorCreateRGB(red, green, blue, normalize = false)</a></li>
+<li class="sidebar-nav"><a href="#colorCreateHSV(hue, saturation, value, normalize = false)">colorCreateHSV(hue, saturation, value, normalize = false)</a></li>
+<li class="sidebar-nav"><a href="#colorMerge(colorFrom, colorTo, ratio)">colorMerge(colorFrom, colorTo, ratio)</a></li>
+<li class="sidebar-nav"><a href="#setBlend(blend)">setBlend(blend)</a></li>
+<li class="sidebar-nav"><a href="#resetBlend()">resetBlend()</a></li>
+<li class="sidebar-nav"><a href="#randomize()">randomize()</a></li>
+<li class="sidebar-nav"><a href="#setSeed(seed)">setSeed(seed)</a></li>
+<li class="sidebar-nav"><a href="#random(from = 0, to = 1)">random(from = 0, to = 1)</a></li>
+<li class="sidebar-nav"><a href="#irandom(from = 0, to = 1)">irandom(from = 0, to = 1)</a></li>
+<li class="sidebar-nav"><a href="#abs(number)">abs(number)</a></li>
+<li class="sidebar-nav"><a href="#round(number)">round(number)</a></li>
+<li class="sidebar-nav"><a href="#floor(number)">floor(number)</a></li>
+<li class="sidebar-nav"><a href="#ceil(number)">ceil(number)</a></li>
+<li class="sidebar-nav"><a href="#max(number0, number1)">max(number0, number1)</a></li>
+<li class="sidebar-nav"><a href="#min(number0, number1)">min(number0, number1)</a></li>
+<li class="sidebar-nav"><a href="#clamp(number, min = 0, max = 1)">clamp(number, min = 0, max = 1)</a></li>
+<li class="sidebar-nav"><a href="#lerp(numberFrom, numberTo, ratio)">lerp(numberFrom, numberTo, ratio)</a></li>
+<li class="sidebar-nav"><a href="#sqr(number)">sqr(number)</a></li>
+<li class="sidebar-nav"><a href="#sqrt(number)">sqrt(number)</a></li>
+<li class="sidebar-nav"><a href="#power(base, exponent)">power(base, exponent)</a></li>
+<li class="sidebar-nav"><a href="#exp(exponent)">exp(exponent)</a></li>
+<li class="sidebar-nav"><a href="#ln(number)">ln(number)</a></li>
+<li class="sidebar-nav"><a href="#log2(number)">log2(number)</a></li>
+<li class="sidebar-nav"><a href="#log10(number)">log10(number)</a></li>
+<li class="sidebar-nav"><a href="#logn(base, number)">logn(base, number)</a></li>
+<li class="sidebar-nav"><a href="#sin(number)">sin(number)</a></li>
+<li class="sidebar-nav"><a href="#cos(number)">cos(number)</a></li>
+<li class="sidebar-nav"><a href="#tan(number)">tan(number)</a></li>
+<li class="sidebar-nav"><a href="#asin(number)">asin(number)</a></li>
+<li class="sidebar-nav"><a href="#acos(number)">acos(number)</a></li>
+<li class="sidebar-nav"><a href="#atan(number)">atan(number)</a></li>
+<li class="sidebar-nav"><a href="#atan2(y, x)">atan2(y, x)</a></li>
+<li class="sidebar-nav"><a href="#dsin(number)">dsin(number)</a></li>
+<li class="sidebar-nav"><a href="#dcos(number)">dcos(number)</a></li>
+<li class="sidebar-nav"><a href="#dtan(number)">dtan(number)</a></li>
+<li class="sidebar-nav"><a href="#dasin(number)">dasin(number)</a></li>
+<li class="sidebar-nav"><a href="#dacos(number)">dacos(number)</a></li>
+<li class="sidebar-nav"><a href="#datan(number)">datan(number)</a></li>
+<li class="sidebar-nav"><a href="#datan2(y, x)">datan2(y, x)</a></li>
+<li class="sidebar-nav"><a href="#rad(number)">rad(number)</a></li>
+<li class="sidebar-nav"><a href="#deg(number)">deg(number)</a></li>
+<li class="sidebar-nav"><a href="#dot(x0, y0, x1, y1)">dot(x0, y0, x1, y1)</a></li>
+<li class="sidebar-nav"><a href="#stringLength(string)">stringLength(string)</a></li>
+<li class="sidebar-nav"><a href="#stringSearch(string, searchString)">stringSearch(string, searchString)</a></li>
+<li class="sidebar-nav"><a href="#stringCopy(string, start, length)">stringCopy(string, start, length)</a></li>
+<li class="sidebar-nav"><a href="#stringUpper(string)">stringUpper(string)</a></li>
+<li class="sidebar-nav"><a href="#stringLower(string)">stringLower(string)</a></li>
+<li class="sidebar-nav"><a href="#stringReplace(string, replaceFrom, replaceTo)">stringReplace(string, replaceFrom, replaceTo)</a></li>
+<li class="sidebar-nav"><a href="#stringReplaceAll(string, replaceFrom, replaceTo)">stringReplaceAll(string, replaceFrom, replaceTo)</a></li>
+<li class="sidebar-nav"><a href="#stringSplit(string, delimiter)">stringSplit(string, delimiter)</a></li>
+<li class="sidebar-nav"><a href="#print(string)">print(string)</a></li>
+</ul>
+</ul>
+
                 <li class="search-result" style="display: none;"><a href="docs/getting_started.html">Getting Started</a></li>
 <li class="search-result" style="display: none;"><a href="\interfaces/animation_panel.html">Animation Panel</a></li>
 <li class="search-result" style="display: none;"><a href="\interfaces/collection_panel.html">Collection Panel</a></li>
