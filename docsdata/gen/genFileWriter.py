@@ -116,46 +116,46 @@ def generateFile(dirOut, pathIn, sidebar):
         name = tag.strip("/")
         content = content.replace(f'<node {tag}>', f'<a class="node" href="/nodes/_index/{name}.html">{name.title()}</a>')
 
-    sideContent = ""
-    for fType, _, fName, title in sidebar:
-        if fName.startswith("_"):
-            continue
-        aClass  = ""
-        liClass = ""
-        icon    = ""
+    # sideContent = ""
+    # for fType, _, fName, title in sidebar:
+    #     if fName.startswith("_"):
+    #         continue
+    #     aClass  = ""
+    #     liClass = ""
+    #     icon    = ""
 
-        if fType == FileType.DIR:
-            icon = svg_dir
+    #     if fType == FileType.DIR:
+    #         icon = svg_dir
 
-        elif fType == FileType.FILE:
-            if fName == fileName :
-                liClass += "active "
-            if fName == "index.html":
-                icon = svg_home
+    #     elif fType == FileType.FILE:
+    #         if fName == fileName :
+    #             liClass += "active "
+    #         if fName == "index.html":
+    #             icon = svg_home
 
-        elif fType == FileType.BACK:
-            liClass += "back "
+    #     elif fType == FileType.BACK:
+    #         liClass += "back "
 
-        if icon != "":
-            liClass += "icon "
+    #     if icon != "":
+    #         liClass += "icon "
 
-        sideContent += f'<li class="sidebar-nav {liClass}">{icon}<a class="{aClass}" href="{fName}">{title}</a></li>\n'
+        # sideContent += f'<li class="sidebar-nav {liClass}">{icon}<a class="{aClass}" href="{fName}">{title}</a></li>\n'
 
-        if fName == fileName :
-            sideContent += '<ul class="submenu">\n'
-            for h2 in headers:
-                title = h2["h2"]
-                sideContent += f'<li class="sidebar-nav"><a href="#{title}">{title}</a></li>\n'
+        # if fName == fileName :
+        #     sideContent += '<ul class="submenu">\n'
+        #     for h2 in headers:
+        #         title = h2["h2"]
+        #         sideContent += f'<li class="sidebar-nav"><a href="#{title}">{title}</a></li>\n'
 
-                sideContent += '<ul class="submenu h3">\n'
-                for h3 in h2["h3s"]:
-                    sideContent += f'<li class="sidebar-nav"><a href="#{h3}">{h3}</a></li>\n'
-                sideContent += "</ul>\n"
+        #         sideContent += '<ul class="submenu h3">\n'
+        #         for h3 in h2["h3s"]:
+        #             sideContent += f'<li class="sidebar-nav"><a href="#{h3}">{h3}</a></li>\n'
+        #         sideContent += "</ul>\n"
 
-            sideContent += "</ul>\n"
+        #     sideContent += "</ul>\n"
 
     data = template.replace("{{content}}", content)
-    data = data.replace("{{sidebar}}", sideContent)
+    # data = data.replace("{{sidebar}}", sideContent)
 
     with open(pathOut, "w") as f:
         f.write(data)

@@ -5,6 +5,7 @@ import re
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
 
+import fileUtil
 from fileUtil import FileType, pathRemoveOrder, verifyFolder
 import genFileWriter
 
@@ -75,6 +76,34 @@ def generateFolder(dirIn, dirOut):
 generateFolder("docsdata/pregen", "docs")
 shutil.copy("docsdata/styles.css", "docs/styles.css")
 
+# %% generate sidebar
+svg_home = fileUtil.readFile("docs/src/svg/home.svg")
+svg_dir  = fileUtil.readFile("docs/src/svg/dir.svg")
+
+sidebarContent = ""
+for title, sidebar in allSidebar:
+    for fType, _, fName, title in sidebar:
+        if fName.startswith("_"):
+            continue
+        aClass  = ""
+        liClass = ""
+        icon    = ""
+
+        if fType == FileType.DIR:
+            icon = svg_dir
+
+        elif fType == FileType.FILE:
+            if fName == "index.html":
+                icon = svg_home
+
+        elif fType == FileType.BACK:
+            liClass += "back "
+
+        if icon != "":
+            liClass += "icon "
+
+        sidebarContent += f'<li class="sidebar-nav {liClass}">{icon}<a class="{aClass}" href="{fName}">{title}</a></li>\n'
+
 # %% generate static search
 search_list_str = ""
 
@@ -85,14 +114,7 @@ for title, path in pages:
     real_path = path.replace("docs\\", "\\")
     search_list_str += f'<li class="search-result" style="display: none;"><a href="{real_path}">{title}</a></li>\n'
 
-# for _, path in tqdm(pages, desc="Static Search"):
-#     with open(path, "r") as f:
-#         content = f.read()
-        
-#     content = content.replace("{{search_results}}", search_list_str)
-#     with open(path, "w") as f:
-#         f.write(content)
-
+# %% multithreaded replace in file
 def replace_in_file(path, old_text, new_text):
     try:
         with open(path, "r", encoding='utf-8') as f:
@@ -108,21 +130,21 @@ def replace_in_file(path, old_text, new_text):
     except Exception as e:
         return f"Error {path}: {e}"
 
-# Parallel processing
-def process_files_parallel(pages, search_list_str, max_workers=None):
+def process_files_parallel(pages, replace_key, replace_value, tqdm_desc="Static Search", max_workers=None):
     if max_workers is None:
         max_workers = min(32, (os.cpu_count() or 1) + 4)
     
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [
-            executor.submit(replace_in_file, path, "{{search_results}}", search_list_str)
+            executor.submit(replace_in_file, path, replace_key, replace_value)
             for _, path in pages
         ]
         
         results = []
-        for future in tqdm(futures, desc="Static Search"):
+        for future in tqdm(futures, desc=tqdm_desc):
             results.append(future.result())
     
     return results
 
-results = process_files_parallel(pages, search_list_str)
+process_files_parallel(pages, "{{sidebar}}", sidebarContent, tqdm_desc="Sidebar")
+process_files_parallel(pages, "{{search_results}}", search_list_str, tqdm_desc="Static Search")
