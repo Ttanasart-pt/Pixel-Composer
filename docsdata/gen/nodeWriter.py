@@ -94,7 +94,7 @@ def writeChangeTable(metadata, changeData):
         for c in changes:
             commit  = c["commit"]
             node    = c["node"]
-            if(node != nodeName):
+            if(node != nodeName and node != "any"):
                 continue
             if(commit.startswith("Fix")):
                 continue
