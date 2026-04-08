@@ -87,6 +87,10 @@ def generateFile(dirOut, pathIn, sidebar):
             img = img.replace(f'caption="{captionText}"', "").strip()
         imgraw = img.strip("/")
 
+        quiet = re.search(r'quiet', img)
+        if quiet:
+            imgraw = imgraw.replace("quiet", "").strip()
+
         if imgraw.lower() in images:
             replaceText  = ""
 
@@ -99,7 +103,7 @@ def generateFile(dirOut, pathIn, sidebar):
                 replaceText += "</figure>"
             content = content.replace(originalText, replaceText)
 
-        elif "=" not in imgraw: 
+        elif "=" not in imgraw and not quiet: 
             print(f"{pathOut} : Image {imgraw} not found")
 
     nodeTags = re.findall(r'<node\s(.*?)>', content)
