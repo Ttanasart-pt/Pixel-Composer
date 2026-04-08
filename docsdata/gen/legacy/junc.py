@@ -174,7 +174,7 @@ def IOTable(ioList):
             mapStr = "" if not _mappable else '<a href="/nodes/junctions/mappable.html" style="line-height: 1;"><img mappable></a>'
 
             inputRows += f"""<tr>
-                <td class="summary-topic" style="width: 60px"><p style="color: {getColor(_dataty)}">{_dataty}</p></td>
+                <td class="summary-topic junction-type"><p style="color: {getColor(_dataty)}">{_dataty}</p></td>
                 <td><p>{_name.title()}{mapStr}</p></td>
             </tr>"""
 
@@ -187,7 +187,7 @@ def IOTable(ioList):
 
             for _name, _dataty, _mappable in _inputDy:
                 dynamicTable += f"""<tr>
-                    <td class="summary-topic" style="width: 60px"><p style="color: {getColor(_dataty)}" >{_dataty}</p></td>
+                    <td class="summary-topic junction-type"><p style="color: {getColor(_dataty)}" >{_dataty}</p></td>
                     <td><p>{_name.title()}</p></td>
                 </tr>"""
 
@@ -200,7 +200,7 @@ def IOTable(ioList):
 
         for _name, _dataty, _mappable in _outputs:
             outputRows += f"""<tr>
-                <td class="summary-topic" style="width: 60px"><p style="color: {getColor(_dataty)}">{_dataty}</p></td>
+                <td class="summary-topic junction-type"><p style="color: {getColor(_dataty)}">{_dataty}</p></td>
                 <td><p>{_name.title()}</p></td>
             </tr>"""
 

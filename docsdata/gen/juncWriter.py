@@ -110,7 +110,7 @@ def IOTable(nodeData):
             jType  = _junc["type"]
 
             inputRows += f"""<tr>
-                <td class="summary-topic" style="width: 60px"><p style="color: {getColor(jType)}">{jType}</p></td>
+                <td class="summary-topic junction-type"><p style="color: {getColor(jType)}">{jType}</p></td>
                 <td><p>{jName.title()}{mapStr}</p></td>
             </tr>"""
 
@@ -126,7 +126,7 @@ def IOTable(nodeData):
                 jType  = _junc["type"]
 
                 dynamicTable += f"""<tr>
-                    <td class="summary-topic" style="width: 60px"><p style="color: {getColor(jType)}" >{jType}</p></td>
+                    <td class="summary-topic junction-type"><p style="color: {getColor(jType)}" >{jType}</p></td>
                     <td><p>{jName.title()}</p></td>
                 </tr>"""
 
@@ -141,7 +141,7 @@ def IOTable(nodeData):
             jType  = _junc["type"]
 
             outputRows += f"""<tr>
-                <td class="summary-topic" style="width: 60px"><p style="color: {getColor(jType)}">{jType}</p></td>
+                <td class="summary-topic junction-type"><p style="color: {getColor(jType)}">{jType}</p></td>
                 <td><p>{jName.title()}</p></td>
             </tr>"""
 

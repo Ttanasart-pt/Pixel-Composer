@@ -21,6 +21,7 @@
 body {
     background-color: var(--main_mdblack);
     background-image: url("/src/bg.png");
+    background-attachment: fixed;
 
     margin: 0;
 }
@@ -46,7 +47,7 @@ h2 {
 h3 {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: var(--main_ltgrey);
     margin: 0;
 
@@ -197,7 +198,7 @@ figcaption {
     font-size: 0.8rem;
     text-align: center;
     color: var(--main_grey);
-    
+
     margin: 0px;
     margin-top: -4px;
     padding: 8px 0px 4px 0px;
@@ -259,10 +260,10 @@ a.anchor {
 
 .sidebar {
     width: 256px;
-    height: 80%;
+    height: calc(100vh - .25rem - 96px - 48px);
     padding: 0;
     margin: auto;
-    margin-top: 3.5rem;
+    margin-top: .25rem;
     float: left;
 
     display: flex;
@@ -395,6 +396,13 @@ table.summary-table {
     background-color: var(--main_black);
     border: 1px solid var(--main_dkgrey);
     border-radius: 4px;
+
+    @media (max-width: 800px) {
+        width: 100%;
+        margin: 0px 0px 16px 0px;
+        float: none;
+        clear: none;
+    }
 }
 
 table.summary-table table.dynamic {
@@ -437,8 +445,12 @@ table.summary-table th.summary-topic > p {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--main_ltgrey);
-
+    
     margin-bottom: -2px;
+}
+
+table.summary-table th.summary-topic.junction-type {
+    width: 60px;
 }
 
 table.summary-table p img {
@@ -565,7 +577,7 @@ span.junction {
 h3 span.junction {
     padding: 2px 12px;
 
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--main_white);
 
