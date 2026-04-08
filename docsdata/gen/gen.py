@@ -59,7 +59,7 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
 
         page = genFileWriter.generateFile(dirOut, fDirIn)
         pages.append(page)
-        sidebar.append((fName, fNameS, pTitle))
+        sidebar.append((pTitle, fName, fNameS))
     
     sidebarParent.append((groupTitle, sidebar))
 
@@ -69,18 +69,15 @@ shutil.copy("docsdata/styles.css", "docs/styles.css")
 # %% generate sidebar
 
 def writeSidebar(sidebar):
-    if len(sidebar) == 0:
-        return ""
-    
     if len(sidebar) == 2:
         title, contents = sidebar
-        sideContent = f'''<ul><li><a href="/" class="sidebar-dir">{title}</a>\n'''
+        sideContent = f'''<li><a href="/" class="sidebar-dir">{title}</a><ul class="submenu">\n'''
         for content in contents:
             sideContent += writeSidebar(content)
-        sideContent += "</li></ul>\n"
+        sideContent += "</ul></li>\n"
 
     if len(sidebar) == 3:
-        fName, fNameS, title = sidebar
+        title, fName, fNameS = sidebar
         sideContent = f'''<li><a href="{fName}" class="sidebar-file">{title}</a></li>\n'''
 
     return sideContent
