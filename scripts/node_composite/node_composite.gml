@@ -1690,8 +1690,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static getToolNode = function() /*=>*/ {
 		if(dynamic_input_inspecting >= 0) {
 			var ind = input_fix_len + dynamic_input_inspecting * data_length + 1;
-			if(ind >= array_length(inputs)) return self;
-			return inputs[ind].isEditingPath() ?? self;
+			var inp = array_safe_get_fast(inputs, ind);
+			if(!is(inp, NodeValue)) return self;
+			return inp.isEditingPath() ?? self;
 			
 		} else {
 			var amo     = getInputAmount();

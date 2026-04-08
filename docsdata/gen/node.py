@@ -49,9 +49,10 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
     #     fileUtil.verifyFile(placeholderPath + ".md")
 
     contentPath = f"docsdata/pregen/__nodes/{fileUtil.pathSanitize(nodeBase)}.html"
-    fileUtil.verifyFile(contentPath)
+    changedPath = f"docsdata/content/__nodes/__changes/{fileUtil.pathSanitize(nodeBase)}.json"
 
-    content = nodeWriter.writeNode(nodeMeta, contentPath)
+    content = nodeWriter.writeNode(nodeMeta, contentPath, changedPath)
+
     if not content:
         print(f"Cannot write content for {nodeBase}.")
         continue

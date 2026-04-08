@@ -132,6 +132,10 @@
 
         width: 24px;
         /* height: 20px; */
+
+        div.header {
+            padding: 0px;
+        }
     }
 
     div.item[data-kind="script"]       + div.item[data-kind="notes"][draggable="true"], /* note after node */ 

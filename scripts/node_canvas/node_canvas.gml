@@ -1303,7 +1303,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_tool = noone;
 			}
 			
-			if(_tool && _tool.node != self) _tool.setNode(self);
+			if(_tool && _tool.node != self) {
+				if(is(_tool, canvas_selection_tool))
+					_tool.node.selection.apply();
+				_tool.setNode(self);
+			}
 			
 			if(is(_tool, canvas_tool)) _tool.setBrush(current_brush);
 			tool_mirror_edit.sprs = tool_attribute.mirror[0]? THEME.canvas_mirror_diag : THEME.canvas_mirror;
