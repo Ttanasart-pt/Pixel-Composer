@@ -975,32 +975,6 @@ ul.link-table {
     }
 }
 
-button.copy-sample {
-    margin: 0;
-    padding: 8px 16px;
-
-    font-family: 'Noto Sans', sans-serif;
-    font-weight: 500;
-    font-size: .8rem;
-    color: var(--main_white);
-    background-color: var(--main_black);
-    border: 1px solid var(--main_dkgrey);
-    border-radius: 5px;
-
-    display: block;
-    margin: auto;
-    margin-top: -16px;
-
-    &:hover {
-        /* background-color: var(--main_dkgrey); */
-        border-color: var(--main_grey);
-    }
-
-    &:active {
-        background-color: var(--main_dkgrey);
-    }
-}
-
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;;

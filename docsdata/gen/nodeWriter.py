@@ -178,13 +178,14 @@ def writeNode(metadata, contentPath, changeData = None):
 
     # PRE CONTENT
     nodeBaseLower = nodeBase.lower()
-    content += f'<img {nodeBaseLower}-graph quiet>'
+    content += f'<img class="node-graph-preview" src="/src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-graph.png">'
     samplePath = f"docsdata/src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-sample.txt"
     if os.path.exists(samplePath):
         with open(samplePath, "r") as f:
             sampleContent = f.read()
         sampleContent = sampleContent.replace('"', '\\"').replace("\n", "")
-        content += f'''<button class="copy-sample" onclick="copyToClipboard('{sampleContent}')">
+        content += f'''<script>const sampleContent = "{sampleContent}";</script>'''
+        content += f'''<button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
 </button>'''
     content += "<br>"
