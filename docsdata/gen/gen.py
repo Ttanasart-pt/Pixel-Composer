@@ -17,11 +17,14 @@ nodeIconDir = "datasrc/NodeIcons"
 shutil.copytree(nodeIconDir, "docsdata/src/nodeIcons", dirs_exist_ok = True)
 shutil.copytree("docsdata/src", "docs/src", dirs_exist_ok = True)
 
+svg_home = fileUtil.readFile("docs/src/svg/home.svg")
+svg_dir  = fileUtil.readFile("docs/src/svg/dir.svg")
+
 # %%
 pages = []
 allSidebar = []
 
-def generateFolder(dirIn, dirOut):
+def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
     # print(f"Generating {dirIn} -> {dirOut}")
     verifyFolder(dirOut)
     files   = sorted(os.listdir(dirIn))
@@ -34,58 +37,60 @@ def generateFolder(dirIn, dirOut):
         
         fullPath = os.path.join(dirIn, fName)
         fNameS   = pathRemoveOrder(fName)
+        if fullPath.endswith(".md"):
+            continue   
+
+        fDirIn  = os.path.join(dirIn,  fName)
+        fDirOut = os.path.join(dirOut, fNameS)
         
         if os.path.isdir(fullPath):
             pTitle = title(fNameS)
-            sidebar.append((FileType.DIR, fName, fNameS, pTitle))
+            generateFolder(fDirIn, fDirOut)
+            continue
 
-        elif fName == "index.html":
+        if fName == "index.html":
             pTitle = groupTitle
-            sidebar.insert(1, (FileType.FILE, fName, fNameS, pTitle))
+            sidebar.insert(1, (fName, fNameS, pTitle))
 
         elif fullPath.endswith(".html"):
             pTitle = title(fNameS.replace('.html', ''))
-            sidebar.append((FileType.FILE, fName, fNameS, pTitle))
+            sidebar.append((fName, fNameS, pTitle))
 
-        elif fullPath.endswith(".md"):
-            continue   
-        
         else :
-            shutil.copy(fullPath, os.path.join(dirOut, fName))
-
-    for fType, fName, fNameS, _ in sidebar[1:]:
-        fDirIn  = os.path.join(dirIn,  fName)
-        fDirOut = os.path.join(dirOut, fNameS)
-
-        if fType == FileType.DIR:
-            generateFolder(fDirIn, fDirOut)
-
-        elif fType == FileType.FILE:
-            page = genFileWriter.generateFile(dirOut, fDirIn)
-            pages.append(page)
+            shutil.copy(fullPath, fDirOut)
+            continue
+        
+        page = genFileWriter.generateFile(dirOut, fDirIn)
+        pages.append(page)
     
-    allSidebar.append((groupTitle, sidebar))
+    sidebarParent.append((groupTitle, sidebar))
 
 generateFolder("docsdata/pregen", "docs")
 shutil.copy("docsdata/styles.css", "docs/styles.css")
 
 # %% generate sidebar
-svg_home = fileUtil.readFile("docs/src/svg/home.svg")
-svg_dir  = fileUtil.readFile("docs/src/svg/dir.svg")
 
-sidebarContent = ""
-for title, sidebar in allSidebar:
-    for fType, _, fName, title in sidebar:
-        if fName.startswith("_"):
-            continue
-        aClass  = ""
-        liClass = ""
-        icon    = ""
-        
-        if icon != "":
-            liClass += "icon "
+def writeSidebar(sidebar):
+    if len(sidebar) == 0:
+        return ""
+    
+    if len(sidebar) == 2:
+        title, contents = sidebar
+        sideContent = f'''<ul><li><a href="/" class="sidebar-dir">{title}</a>\n'''
+        for content in contents:
+            sideContent += writeSidebar(content)
+        sideContent += "</li></ul>\n"
 
-        sidebarContent += f'<li class="sidebar-nav {liClass}">{icon}<a class="{aClass}" href="{fName}">{title}</a></li>\n'
+    if len(sidebar) == 3:
+        fName, fNameS, title = sidebar
+        sideContent = f'''<li><a href="{fName}" class="sidebar-file">{title}</a></li>\n'''
+
+    return sideContent
+
+sidebarContent = '<ul class="sidebar">\n'
+for s in allSidebar:
+    sidebarContent += writeSidebar(s)
+sidebarContent += '</ul>\n'
 
 # %% generate static search
 search_list_str = ""
