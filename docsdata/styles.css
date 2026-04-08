@@ -287,10 +287,12 @@ a.anchor {
         bottom: 0px;
         height: 100%;
         left: -292px;
+    }
+}
 
-        .open {
-            left: 0px;
-        }
+.sidebar.open {
+    @media (max-width: 1000px) {
+        left: 0px;
     }
 }
 
