@@ -111,7 +111,13 @@ def writeChangeTable(metadata, changeData):
         return ""
     return changeText
 
-def writeNode(metadata, rawContent, changeData = None):
+def writeNode(metadata, contentPath, changeData = None):
+    rawContent  = ""
+    if os.path.exists(contentPath):
+        with open(contentPath, "r") as f:
+            rawContent = f.read()
+        editTime = os.path.getmtime(contentPath)
+
     nodeName = metadata["name"]
     nodeBase = metadata["baseNode"]
     tooltip  = metadata["tooltip"] if "tooltip" in metadata else ""

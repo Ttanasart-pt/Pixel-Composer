@@ -1,7 +1,7 @@
 Non-uniform Blur (formerly simple blur) is a blur node that use simpler algorithm than the <node blur/>, which 
 allows you to control the blur size per pixel.
 
-<img-deco blur_simple>
+<img-deco blur_simple caption="Credit: Synth Cities Environment by ansimuz">
 
 ## Properties
 

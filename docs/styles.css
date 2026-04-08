@@ -181,6 +181,31 @@ table th, table td {
     padding: 8px;
 }
 
+figure {
+    margin: 0px;
+}
+
+figure img {
+    margin-left: 0px;
+}
+
+figcaption {
+    width: min(100%, calc(100% - 280px));
+
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--main_grey);
+    
+    margin: 0px;
+    margin-top: -4px;
+    padding: 8px 0px 4px 0px;
+
+    background: var(--main_dkblack);
+    border-radius: 0px 0px 8px 8px;
+}
+
 a.anchor {
     display: block;
     position: relative;
