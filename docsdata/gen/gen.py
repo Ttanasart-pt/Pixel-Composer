@@ -82,10 +82,9 @@ def writeSidebar(sidebar):
 
     return sideContent
 
-sidebarContent = '<ul class="sidebar-content">\n'
+sidebarContent = ''
 for s in allSidebar:
     sidebarContent += writeSidebar(s)
-sidebarContent += '</ul>\n'
 
 # %% generate static search
 search_list_str = ""
