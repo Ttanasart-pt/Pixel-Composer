@@ -936,7 +936,6 @@ table.change-table th {
 
 @media (max-width: 1000px) {
     .sidebar {
-        display: none;
         background-color: var(--main_dkblack);
         padding: 16px;
         margin: 0px;
