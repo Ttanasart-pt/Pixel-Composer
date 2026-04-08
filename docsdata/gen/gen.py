@@ -31,7 +31,7 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
     sidebar = []
     groupTitle = title(os.path.basename(dirIn))
     sidebarParent.append((groupTitle, sidebar))
-    
+
     for fName in files:
         if fName.startswith("__"):
             continue
@@ -46,7 +46,7 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
         
         if os.path.isdir(fullPath):
             pTitle = title(fNameS)
-            generateFolder(fDirIn, fDirOut)
+            generateFolder(fDirIn, fDirOut, sidebar)
             continue
 
         if not fullPath.endswith(".html"):
@@ -65,19 +65,22 @@ shutil.copy("docsdata/styles.css", "docs/styles.css")
 
 # %% generate sidebar
 
-def writeSidebar(sidebar):
+def writeSidebar(sidebar, depth = 0):
     if len(sidebar) == 2:
         title, contents = sidebar
         sideContent = f'''<li><a href="/" class="sidebar-dir">{title}</a><ul class="submenu">\n'''
+        # print(f"Group: {title}, Depth: {depth}, Contents: {len(contents)}")
         for content in contents:
-            sideContent += writeSidebar(content)
+            sideContent += writeSidebar(content, depth + 1)
         sideContent += "</ul></li>\n"
+        return sideContent
 
     if len(sidebar) == 3:
         title, fName, fNameS = sidebar
         sideContent = f'''<li><a href="{fName}" class="sidebar-file">{title}</a></li>\n'''
-
-    return sideContent
+        return sideContent
+    
+    return ""
 
 sidebarContent = ''
 for s in allSidebar:
