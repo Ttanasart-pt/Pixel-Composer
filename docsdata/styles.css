@@ -371,7 +371,7 @@ a.anchor {
     height: 32px; 
 
     @media (max-width: 1000px) {
-        display: fixed;
+        display: block;
     }
 }
 
