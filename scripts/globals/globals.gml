@@ -11,6 +11,7 @@ gml_pragma("UnityBuild", "true");
 	globalvar APPENDING; APPENDING	      = false;
 	globalvar APPEND_MAP; APPEND_MAP      = ds_map_create();
 	globalvar APPEND_LIST; APPEND_LIST     = [];
+	globalvar SERIALIZE_STRIP; SERIALIZE_STRIP = false;
 	
 	globalvar CONNECTION_CONFLICT; CONNECTION_CONFLICT = ds_queue_create();
 	

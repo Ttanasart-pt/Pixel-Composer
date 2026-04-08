@@ -3045,7 +3045,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(!renderActive)    _map.render         = renderActive;
 			if(inspector_scroll) _map.insp_scr       = inspector_scroll;
-			_map.insp_col = variable_clone(inspector_collapse);
+			
+			if(!SERIALIZE_STRIP)
+				_map.insp_col = variable_clone(inspector_collapse);
 		}
 		
 		var _attr = attributeSerialize();
@@ -3070,6 +3072,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(struct_try_get(attri, "array_process")       == 0)     struct_remove(attri, "array_process");
 			
 			if(struct_has(attri, "use_project_dimension"))			  struct_remove(attri, "use_project_dimension");
+			
+			if(SERIALIZE_STRIP) {
+				struct_remove(attri, "show_timeline");
+				struct_remove(attri, "show_parameter");
+				struct_remove(attri, "preview_size");
+				struct_remove(attri, "process");
+				struct_remove(attri, "timeline_hide");
+				struct_remove(attri, "timeline_override");
+				struct_remove(attri, "cache");
+				struct_remove(attri, "color_depth");
+				struct_remove(attri, "interpolate");
+				struct_remove(attri, "oversample");
+				struct_remove(attri, "resizeManual");
+				struct_remove(attri, "color_depth");
+				struct_remove(attri, "show_render_frame");
+				struct_remove(attri, "show_preview");
+			}
 			
 			if(struct_names_count(attri)) _map.attri = attri;
 		#endregion	
@@ -3152,7 +3171,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			attributes.show_preview   = load_map[$ "previewable"]    ?? attributes.show_preview;
 			attributes.show_parameter = load_map[$ "show_parameter"] ?? attributes.show_parameter;
 			inspector_scroll = load_map[$ "insp_scr"] ?? inspector_scroll;
-			if(struct_has(load_map, "insp_col")) inspector_collapse = variable_clone(load_map[$ "insp_col"]);
+			if(has(load_map, "insp_col")) inspector_collapse = variable_clone(load_map[$ "insp_col"]);
 		}
 		
 		visible      = load_map[$ "visible"] ?? true;

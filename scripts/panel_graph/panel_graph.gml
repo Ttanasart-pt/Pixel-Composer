@@ -4032,12 +4032,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(array_empty(nodes_selecting)) return;
         clipboard_set_text("");
     	LOADING_VERSION = SAVE_VERSION;
+    	if(TESTING) SERIALIZE_STRIP = true;
     	
         var _map = { version: SAVE_VERSION, nodes: [] };
         
         for( var i = 0, n = array_length(nodes_selecting); i < n; i++ )
             SAVE_NODE(_map.nodes, nodes_selecting[i], 0, 0, false, getCurrentContext());
         
+        SERIALIZE_STRIP = false;
         clipboard_set_text(json_stringify_minify(_map));
     } 
 

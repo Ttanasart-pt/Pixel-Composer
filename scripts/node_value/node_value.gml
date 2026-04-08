@@ -69,6 +69,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Value ----
+		
 		static setDefValue = function(_value, _serialize = true) {
 			def_val    = array_clone(_value);
 			def_serial = _serialize;
@@ -88,6 +89,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		key_inter   = CURVE_TYPE.linear;
 		on_end		= KEYFRAME_END.hold;
 		loop_range  = -1;
+		def_serial  = false;
 		
 		setDefValue(_value, false);
 		def_length    = is_array(def_val)? array_length(def_val) : 0;
@@ -2852,8 +2854,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(visible_manual != 0)    _map.visible_manual = visible_manual;
 		if(color != -1)            _map.color          = color;
 		if(drawValue)              _map.drawValue      = drawValue;
-		if(def_serial)             _map.def_val        = def_val;
-		_map.def_serial = def_serial;
+		if(def_serial) {
+			_map.def_val    = def_val;
+			_map.def_serial = def_serial;
+		}
 		
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
@@ -2909,6 +2913,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(struct_try_get(attri, "use_project_dimension") == true) struct_remove(attri, "use_project_dimension");
 			if(struct_try_get(attri, "timeline_hide") == false)        struct_remove(attri, "timeline_hide");
 			
+			if(SERIALIZE_STRIP) {
+				struct_remove(attri, "show_graph");
+				struct_remove(attri, "show_graphs");
+				struct_remove(attri, "graph_h");
+				struct_remove(attri, "graph_range");
+				struct_remove(attri, "graph_rauto");
+				
+			} else {
+				if(struct_try_get(attri, "show_graph") == false)           struct_remove(attri, "show_graph");
+				if(struct_try_get(attri, "graph_h") == 96)                 struct_remove(attri, "graph_h");
+				if(struct_try_get(attri, "graph_rauto") == true)           struct_remove(attri, "graph_rauto");
+			}
+			
 			if(struct_names_count(attri)) _map.attri = attri;
 		#endregion
 		
@@ -2932,8 +2949,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		inspector_timeline = _map[$ "insp_tm"] ?? inspector_timeline;
 		drawValue	= _map[$ "drawValue"] ?? false;
 		
-		if(bool(_map[$ "def_serial"]))
+		if(bool(_map[$ "def_serial"])) {
+			def_serial = true;
 			def_val = _map[$ "def_val"] ?? def_val;
+		}
 		
 		if(connect_type == CONNECT_TYPE.output) return;
 		
