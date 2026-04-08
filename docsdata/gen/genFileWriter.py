@@ -80,8 +80,8 @@ def generateFile(dirOut, pathIn, sidebar):
     for img in imgs:
         originalText = f"<img-deco {img}>"
         
-        caption = re.match(r'caption="(.*?)"', img)
-        captionText = ""
+        caption = re.search(r'caption=\"(.*?)\"', img)
+        captionText = None
         if caption:
             captionText = caption.group(1)
             img = img.replace(f'caption="{captionText}"', "").strip()
@@ -89,8 +89,8 @@ def generateFile(dirOut, pathIn, sidebar):
 
         if imgraw.lower() in images:
             replaceText  = ""
-            
-            if captionText == "":
+
+            if captionText == None:
                 replaceText += f'<img class="node-content deco" src="/{images[imgraw.lower()]}">'
             else:
                 replaceText += "<figure>"
