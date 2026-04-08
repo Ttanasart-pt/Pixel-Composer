@@ -1,2 +1,2 @@
 <v 1.18.1/>
-Output node for the <node iterator_filter_inline> node. This node will be generated automatically when creating the <node iterator_filter_inline> node.
+Output node for the <node Iterate_Filter_Inline> node. This node will be generated automatically when creating the <node Iterate_Filter_Inline> node.

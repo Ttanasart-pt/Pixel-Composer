@@ -1,6 +1,6 @@
 <v 1.18.0/>
 Extrude the path into a 3D mesh using circle profile.
-This node support both <node path> and <node 3d_path> as input.
+This node support both <node path> and <node path_3d> as input.
 ## Properties
 ### <junc path>
 2D or 3D Path data. 

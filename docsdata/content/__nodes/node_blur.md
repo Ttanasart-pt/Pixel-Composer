@@ -9,7 +9,7 @@ Blur radius.
 ### <junc override color/>
 
 When blurring image with transparency, sometimes the edge becomes darker (due to the empty pixel being 
-registered as complete black). Thus this option can be use to replace the final blur color with one uniform color.
+registered as transparent black). Thus this option can be use to replace the final blur color with one uniform color.
 
 ## Blur family
 
@@ -53,7 +53,7 @@ Blur node is optimized for uniform bluring. For more complex blur, you can check
         <td>Blur image with custom shape</td>
     </tr>
     <tr>
-        <td><node blur_average/></td>
+        <td><node average/></td>
         <td>Find average of the entire surface</td>
     </tr>
 </table>

@@ -88,7 +88,7 @@ p.subtitle {
     font-weight: 500;
     color: var(--main_ltgrey);
 
-    margin: 8px 0 16px 0;
+    margin: 0 0 16px 0;
 }
 
 p.subtitle a {
@@ -540,7 +540,7 @@ span.junction {
 h3 span.junction {
     padding: 2px 12px;
 
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--main_white);
 

@@ -68,6 +68,7 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
 
     nodeContent[nodeBase]  = content
     nodeMetadata[nodeBase] = nodeMeta
+    nodeMetadata[nodeBase.lower()] = nodeMeta
 
     tags = nodeMeta["tags"] if "tags" in nodeMeta else []
     for tag in tags:
@@ -133,3 +134,32 @@ for tag, nodes in nodeTags.items():
     tagContent = f'''<!DOCTYPE html><html></html>{VERSION}'''
     tagContent += nodeWriter.writeTag(tag, nodes, nodeMetadata)
     fileUtil.writeFile(os.path.join(tagDir, f"{fileUtil.pathSanitize(tag)}.html"), tagContent)
+
+# %% Replace node tags
+root = "docsdata/pregen"
+for root, dirs, files in os.walk(root):
+    for file in files:
+        if not file.endswith(".html"):
+            continue
+        
+        path = os.path.join(root, file)
+        with open(path, "r") as f:
+            content = f.read()
+
+        nodeTags = re.findall(r'<node\s(.*?)>', content)
+        for tag in nodeTags:
+            name = tag.strip("/").replace(" ", "_").lower()
+            if not name.startswith("node_"):
+                name = "node_" + name
+            if name not in nodeMetadata:
+                print(f"Node {name} not found for tag replacement in <node {tag}>.")
+                continue
+            
+            meta = nodeMetadata[name]
+            nodeBase = meta["baseNode"]
+            nodeName = meta["name"]
+
+            content = content.replace(f'<node {tag}>', f'<a class="node" href="/nodes/_index/{nodeBase}.html">{nodeName}</a>')
+
+        with open(path, "w") as f:
+            f.write(content)

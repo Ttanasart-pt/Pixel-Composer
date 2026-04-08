@@ -1,5 +1,5 @@
 Shadow node cast a straight shadow behind the image. This node use simple image shifting, if you want to 
-create nore complex shadow, check out the <node cast shadow/> node
+create nore complex shadow, check out the <node shadow_cast/> node
 
 <img shadow>
 
