@@ -22,7 +22,7 @@
     </div>
 
     <div class="main">
-        <div class="sidebar">
+        <div id="sidebar" class="sidebar">
             <ul>
                 <li class="search">
                     <form id="search_form" onsubmit="return false;">
@@ -917,6 +917,11 @@
 
                 <div style="height: 96px;"></div>
             </ul>
+            <div class="sidebar-toggle" style="position: fixed;left: 8px;width: 32px;height: 32px; top: 63px;">
+                <a href="javascript:void(0);" onclick="toggleSidebar()">
+                    <img src="/src/icons/hamburger.png" alt="Search Icon" style="width: 100%; height: 100%;">
+                </a>
+            </div>
         </div>
 
         <div class="content">
@@ -975,8 +980,20 @@ Output for group node. This node allows you to pass the value from the group to 
                 x[i].style.display="flex";
         }
     }
-
     onSearch()
+
+    let sideBarOpen = false;
+    let sideBar = document.getElementById('sidebar');
+
+    function toggleSidebar() {
+        if (sideBarOpen) {
+            sideBar.style.left = '-292px';
+            sideBarOpen = false;
+        } else {
+            sideBar.style.left = '0px';
+            sideBarOpen = true;
+        }
+    }
 </script>
 
 </html>

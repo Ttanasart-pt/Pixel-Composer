@@ -362,6 +362,14 @@ a.anchor {
     font-weight: 500;
 }
 
+.sidebar-toggle {
+    display: none;
+
+    @media (max-width: 1000px) {
+        display: fixed;
+    }
+}
+
 .content {
     width: calc(100% - 320px);
     float: right;
@@ -844,6 +852,11 @@ input#search {
 
     background-color: var(--main_black);
     color: var(--main_white);
+
+    @media (max-width: 1000px) {
+        width: calc(100% - 16px);
+        margin-left: 29px;
+    }
 }
 
 input#search:focus {
@@ -919,6 +932,17 @@ table.change-table th {
 @media (max-width: 1000px) {
     .sidebar {
         display: none;
+        background-color: var(--main_dkblack);
+        padding: 16px;
+        margin: 0px;
+
+        position: fixed;
+        top: 48px;
+        left: -292px;
+        bottom: 0px;
+        height: 100%;
+
+        transition: left 0.2s ease-in-out;
     }
 
     .content {
