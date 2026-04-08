@@ -12,6 +12,7 @@
     --positive: #8fde5d;
     --positive_50: #8fde5d88;
     --cyan: #88ffe9;
+    --blue: #27aae1;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500;600;700&display=swap');
@@ -933,10 +934,22 @@ div.node-category .node-card a:hover {
 table.change-table {
     width: -webkit-fill-available;
     margin: 0px;
+    
+    th {
+        padding: 4px;
+    }
 }
 
-table.change-table th {
-    padding: 4px;
+table.link-table {
+    td {
+        font-size: .9rem;
+    }
+
+    a {
+        font-size: .9rem;
+        font-weight: 500;
+        color: var(--blue);
+    }
 }
 
 ::-webkit-scrollbar {

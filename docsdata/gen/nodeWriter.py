@@ -123,14 +123,10 @@ def writeLinks(metadata, nodeData):
         shaderLower = shader.lower()
         links.append((f"Shader: {shader}", f'https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/{shaderLower}/{shaderLower}.fsh'))
     
-    linkText = '''<br><h2 class="nosidebar">Related Links</h2><br>
-<table class="link-table">'''
+    linkText = '''<br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table">'''
     for link in links:
-        linkText += f'''<tr>
-    <td>{link[0]}</td>
-    <td><a href="{link[1]}">{link[1]}</a></td>
-</tr>'''
-    linkText += '</table>'
+        linkText += f'''<li><span>{link[0]}: </span><a href="{link[1]}">{link[1]}</a></li>'''
+    linkText += '</ul>'
     return linkText
 
 def writeNode(metadata, contentPath, changeData = None):
