@@ -67,6 +67,9 @@ def readNodeFile(baseNode):
     outputs = re.findall(r"^\s*newOutput.*$", script, re.MULTILINE)
     outputs = juncParser.parseOutputs(outputs)
 
+    shaderMatch = re.findall(r"\s(sh_\w+)", script)
+    shaders = list(set(shaderMatch))
+    
     attrs = []
     if script.find('attribute_surface_depth') != -1: attrs.append("Color Depth")
     if script.find('attribute_interpolation') != -1: attrs.append("Interpolation")
@@ -82,6 +85,8 @@ def readNodeFile(baseNode):
         "outputs":     outputs,
         "categories":  [],
         "attributes":  attrs,
+
+        "shaders":     shaders
     }
 
     return data

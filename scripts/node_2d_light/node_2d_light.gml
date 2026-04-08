@@ -28,14 +28,13 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var inAmo = array_length(inputs);
 		
 		dynamic_input_inspecting = getInputAmount();
-		
-		var _val = nodeValue_Enum_Scroll("Light shape", 0, typeList);
-			_val.options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
 			
 		newInput(index + 14, nodeValue_Active());
 		
 		////- =Shape
-		newInput(index +  0, _val);
+		newInput(index +  0, nodeValue_Enum_Scroll("Light shape", 0, typeList));
+		inputs[index].options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
+		
 		newInput(index +  1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple().hideLabel();
 		newInput(index +  2, nodeValue_Float(    "Range",        16     )).hideLabel();
 		newInput(index +  5, nodeValue_Vec2(     "Start",       [16,16] )).hideLabel();

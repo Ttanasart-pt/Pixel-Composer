@@ -8,7 +8,7 @@ dispIndex = {
     "enum_scroll"     : "integer",
     "int"             : "integer",
     "toggle"          : "integer",
-    "islider"         : "float",
+    "islider"         : "integer",
 
     "area"            : "float",
     "corner"          : "float",
@@ -93,6 +93,9 @@ def IOTable(nodeData):
         _inputs  = node["inputs"]
         _inputDy = node["inputDynamic"]
         _outputs = node["outputs"]
+
+        if _name.strip() == "":
+            continue
         
         for _junc in _inputs:
             allio[_junc["name"]] = getColor(_junc["type"])

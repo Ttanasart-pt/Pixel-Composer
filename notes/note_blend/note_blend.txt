@@ -1,3 +1,4 @@
+<v 1.20.9/>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 Blending surfaces is a fundamental step in any VFX process. Blend node allows you to combine 2 surfaces 
@@ -84,11 +85,11 @@ The examples are blend of 2 surfaces:
     </tr>
 </table>
 
-### Opacity
+### <junc Opacity>
 
 The intensity of the effect will be multiply by the <junc Opacity> property.
 
-### Preserve Alpha
+### <junc Preserve Alpha>
 
 Blend operation apply to all channel including alpha channel. Which mean some operation may erase the 
 alpha channel of the original image. To exclude the alpha calculation, set <junc Preserve Alpha> to true.
@@ -97,7 +98,7 @@ alpha channel of the original image. To exclude the alpha calculation, set <junc
 
 When blending surfaces of different sizes. You can set the blending behaviour using several properties:
 
-### Filling
+### <junc Fill mode>
 
 The <junc Fill mode> property control the behaviour of the smaller surface.
 
@@ -120,6 +121,6 @@ The <junc Fill mode> property control the behaviour of the smaller surface.
     </tr>
 </table>
 
-### Alignment
+### <junc Position>
 
-When <junc Fill mode> is set to None, you can move the foreground freely in the preview panel.
+When <junc Fill mode> is set to None, you can set the position of the <junc foreground> freely using the <junc position> property.

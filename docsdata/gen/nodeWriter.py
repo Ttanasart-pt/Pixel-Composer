@@ -111,6 +111,28 @@ def writeChangeTable(metadata, changeData):
         return ""
     return changeText
 
+def writeLinks(metadata, nodeData):
+    nodeBase = metadata["baseNode"]
+
+    links = []
+    baseLower  = nodeBase.lower()
+    links.append(("Base Code", f'https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/{baseLower}/{baseLower}.gml'))
+
+    shaders = nodeData["shaders"] if "shaders" in nodeData else []
+    for shader in shaders:
+        shaderLower = shader.lower()
+        links.append((f"Shader: {shader}", f'https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/{shaderLower}/{shaderLower}.fsh'))
+    
+    linkText = '''<br><h2 class="nosidebar">Related Links</h2><br>
+<table class="link-table">'''
+    for link in links:
+        linkText += f'''<tr>
+    <td>{link[0]}</td>
+    <td><a href="{link[1]}">{link[1]}</a></td>
+</tr>'''
+    linkText += '</table>'
+    return linkText
+
 def writeNode(metadata, contentPath, changeData = None):
     rawContent  = ""
     if os.path.exists(contentPath):
@@ -160,6 +182,8 @@ def writeNode(metadata, contentPath, changeData = None):
     if changeData:
         content += writeChangeTable(metadata, changeData)
 
+    content += writeLinks(metadata, nodeData)
+    
     return content
 
 # %%

@@ -54,8 +54,8 @@
 </ul>
 <li class="sidebar-nav"><a href="#Dimension Mixing">Dimension Mixing</a></li>
 <ul class="submenu h3">
-<li class="sidebar-nav"><a href="#Filling">Filling</a></li>
-<li class="sidebar-nav"><a href="#Alignment">Alignment</a></li>
+<li class="sidebar-nav"><a href="#Fill Mode">Fill Mode</a></li>
+<li class="sidebar-nav"><a href="#Position">Position</a></li>
 </ul>
 </ul>
 <li class="sidebar-nav "><a class="" href="blend_edge.html">Blend Edge</a></li>
@@ -1031,7 +1031,7 @@
 
 <div class="title">
                                                             <h1>Blend</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.20.9">1.20.9</p></div>
                                                         </div>
 <p class="subtitle">Combine 2 images using different blend modes.</p>
 
@@ -1091,7 +1091,8 @@
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
 <tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr>
 
-</table><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+</table><p></p><br>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <p>Blending surfaces is a fundamental step in any VFX process. Blend node allows you to combine 2 surfaces 
 under different blend mode.</p><br>
@@ -1172,14 +1173,14 @@ under different blend mode.</p><br>
     </tr>
 </table>
 
-<h3><a id="Opacity" class="anchor"></a>Opacity</h3><br>
+<h3><a id="Opacity" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Opacity</span></h3><br>
 <p>The intensity of the effect will be multiply by the <span class="junction" style="border-color: #ffe478AA">Opacity</span> property.</p><br>
-<h3><a id="Preserve Alpha" class="anchor"></a>Preserve Alpha</h3><br>
+<h3><a id="Preserve Alpha" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Preserve Alpha</span></h3><br>
 <p>Blend operation apply to all channel including alpha channel. Which mean some operation may erase the 
 alpha channel of the original image. To exclude the alpha calculation, set <span class="junction" style="border-color: #8c3f5dAA">Preserve Alpha</span> to true.</p><br>
 <h2><a id="Dimension Mixing" class="anchor"></a>Dimension Mixing</h2><br>
 <p>When blending surfaces of different sizes. You can set the blending behaviour using several properties:</p><br>
-<h3><a id="Filling" class="anchor"></a>Filling</h3><br>
+<h3><a id="Fill Mode" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Fill Mode</span></h3><br>
 <p>The <span class="junction" style="border-color: #ff9166AA">Fill Mode</span> property control the behaviour of the smaller surface.</p><br>
 <table class="cc4060">
     <tr>
@@ -1200,8 +1201,12 @@ alpha channel of the original image. To exclude the alpha calculation, set <span
     </tr>
 </table>
 
-<h3><a id="Alignment" class="anchor"></a>Alignment</h3><br>
-<p>When <span class="junction" style="border-color: #ff9166AA">Fill Mode</span> is set to None, you can move the foreground freely in the preview panel.</p><br>
+<h3><a id="Position" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Position</span></h3><br>
+<p>When <span class="junction" style="border-color: #ff9166AA">Fill Mode</span> is set to None, you can set the position of the <span class="junction" style="border-color: #ff6b97AA">Foreground</span> freely using the <span class="junction" style="border-color: #ffe478AA">Position</span> property.</p><br><br><h2 class="nosidebar">Related Links</h2><br>
+<table class="link-table"><tr>
+    <td>Base Code</td>
+    <td><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_blend/node_blend.gml">https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_blend/node_blend.gml</a></td>
+</tr></table>
         </div>
     </div>
 
