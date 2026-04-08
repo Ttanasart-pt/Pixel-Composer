@@ -265,6 +265,7 @@ a.anchor {
     margin: auto;
     margin-top: .25rem;
     float: left;
+    left: 0px;
 
     display: flex;
     flex-direction: row;
@@ -273,6 +274,25 @@ a.anchor {
 
     position: fixed;
     overflow-y: scroll;
+
+    transition: left 0.2s ease-in-out;
+    
+    @media (max-width: 1000px) {
+        background-color: var(--main_dkblack);
+        padding: 16px;
+        margin: 0px;
+
+        position: fixed;
+        top: 48px;
+        bottom: 0px;
+        height: 100%;
+
+        .closed {
+            @media (max-width: 1000px) {
+                left: -292px;
+            }
+        }
+    }
 }
 
 .sidebar ul {
@@ -935,20 +955,6 @@ table.change-table th {
 }
 
 @media (max-width: 1000px) {
-    .sidebar {
-        background-color: var(--main_dkblack);
-        padding: 16px;
-        margin: 0px;
-
-        position: fixed;
-        top: 48px;
-        left: -292px;
-        bottom: 0px;
-        height: 100%;
-
-        transition: left 0.2s ease-in-out;
-    }
-
     .content {
         width: 100%;
     }

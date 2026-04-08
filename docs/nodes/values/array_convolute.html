@@ -1161,16 +1161,13 @@ The output array will have the same length as the input array.</p><br>
     }
     onSearch()
 
-    let sideBarOpen = false;
     let sideBar = document.getElementById('sidebar');
 
     function toggleSidebar() {
-        if (sideBarOpen) {
-            sideBar.style.left = '-292px';
-            sideBarOpen = false;
+        if (sideBar.classList.contains('closed')) {
+            sideBar.classList.remove('closed');
         } else {
-            sideBar.style.left = '0px';
-            sideBarOpen = true;
+            sideBar.classList.add('closed');
         }
     }
 </script>

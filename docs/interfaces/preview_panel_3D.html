@@ -1013,16 +1013,13 @@ If you're previewing a 3D camera node, this settings will be overrided with the 
     }
     onSearch()
 
-    let sideBarOpen = false;
     let sideBar = document.getElementById('sidebar');
 
     function toggleSidebar() {
-        if (sideBarOpen) {
-            sideBar.style.left = '-292px';
-            sideBarOpen = false;
+        if (sideBar.classList.contains('closed')) {
+            sideBar.classList.remove('closed');
         } else {
-            sideBar.style.left = '0px';
-            sideBarOpen = true;
+            sideBar.classList.add('closed');
         }
     }
 </script>

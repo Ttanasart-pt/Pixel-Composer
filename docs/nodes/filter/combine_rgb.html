@@ -1117,16 +1117,13 @@ will get the average of red, green, and blue in the pixel, etc.</li>
     }
     onSearch()
 
-    let sideBarOpen = false;
     let sideBar = document.getElementById('sidebar');
 
     function toggleSidebar() {
-        if (sideBarOpen) {
-            sideBar.style.left = '-292px';
-            sideBarOpen = false;
+        if (sideBar.classList.contains('closed')) {
+            sideBar.classList.remove('closed');
         } else {
-            sideBar.style.left = '0px';
-            sideBarOpen = true;
+            sideBar.classList.add('closed');
         }
     }
 </script>

@@ -1523,16 +1523,13 @@ the x and y components of a float3 vector by using <span class="inline-code">.xy
     }
     onSearch()
 
-    let sideBarOpen = false;
     let sideBar = document.getElementById('sidebar');
 
     function toggleSidebar() {
-        if (sideBarOpen) {
-            sideBar.style.left = '-292px';
-            sideBarOpen = false;
+        if (sideBar.classList.contains('closed')) {
+            sideBar.classList.remove('closed');
         } else {
-            sideBar.style.left = '0px';
-            sideBarOpen = true;
+            sideBar.classList.add('closed');
         }
     }
 </script>
