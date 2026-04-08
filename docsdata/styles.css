@@ -942,7 +942,17 @@ table.change-table {
 
 ul.link-table {
     line-break: anywhere;
+    margin-left: 1.5rem;
     
+    li {
+        line-height: 1;
+
+        ::marker {
+            font-size: 1.5rem;
+            line-height: 0.8;
+        }
+    }
+
     span {
         font-size: .9rem;
     }

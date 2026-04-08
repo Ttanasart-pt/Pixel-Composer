@@ -113,19 +113,21 @@ def writeChangeTable(metadata, changeData):
 
 def writeLinks(metadata, nodeData):
     nodeBase = metadata["baseNode"]
+    srchub = "https://github.com/Ttanasart-pt/Pixel-Composer/blob/main"
 
     links = []
     baseLower  = nodeBase.lower()
-    links.append(("Base Code", f'https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/{baseLower}/{baseLower}.gml'))
+    links.append(("Base Code", f'/scripts/{baseLower}/{baseLower}.gml'))
 
     shaders = nodeData["shaders"] if "shaders" in nodeData else []
     for shader in shaders:
         shaderLower = shader.lower()
-        links.append((f"Shader: {shader}", f'https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/{shaderLower}/{shaderLower}.fsh'))
+        links.append((f"Shader [{shader}]", f'/shaders/{shaderLower}/{shaderLower}.fsh'))
     
     linkText = '''<br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table">'''
     for link in links:
-        linkText += f'''<li><span>{link[0]}: </span><a href="{link[1]}">{link[1]}</a></li>'''
+        fullLink = srchub + link[1]
+        linkText += f'''<li><span>{link[0]}: </span><a href="{fullLink}">{link[1]}</a></li>'''
     linkText += '</ul>'
     return linkText
 
