@@ -817,7 +817,7 @@ input#search::-webkit-search-cancel-button {
     -webkit-appearance: none;
     height: 16px;
     width: 16px;
-    background-image: url("/src/icons/s_cross_32.png");
+    background-image: url("/src/icons/search_close_grey.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
