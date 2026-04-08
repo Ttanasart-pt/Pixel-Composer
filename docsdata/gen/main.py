@@ -3,6 +3,9 @@ import shutil
 import time
 
 starttime = time.time()
+
+if os.path.exists("docsdata/pregen"):
+    shutil.rmtree("docsdata/pregen")
 shutil.copytree("docsdata/content", "docsdata/pregen", dirs_exist_ok=True)
 
 # Extract note file from the source code
@@ -22,6 +25,6 @@ print("> Runing gen.py...")
 os.system("python docsdata/gen/gen.py")
 
 # Delete pregen folder
-shutil.rmtree("docsdata/pregen")
+# shutil.rmtree("docsdata/pregen")
 endtime = time.time()
 print(f"> Generating docs complete in {endtime - starttime:.2f} s")

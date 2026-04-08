@@ -7,6 +7,7 @@ from tqdm import tqdm
 
 import nodeWriter
 
+# %% Get Version number
 version_path = "scripts/globals/globals.gml"
 with open(version_path, 'r') as f:
     version_data = f.read()
@@ -71,7 +72,7 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
         if tag not in nodeTags:
             nodeTags[tag] = []
         nodeTags[tag].append(nodeBase)
-    
+
 # %% Write content to file using category
 targetRoot = "docsdata/pregen/3_nodes"
 fileUtil.verifyFile("docs/nodes/_index/index.html", f'''<!DOCTYPE html><html></html>''')
@@ -97,8 +98,24 @@ for category in nodeCategoryData:
     categoryContent += nodeWriter.writeCategory(category, nodeMetadata)
     fileUtil.writeFile(f"{categoryDir}/index.html", categoryContent)
 
+    subgroupCurrent    = None
+    subsubGroupCurrent = None
+
     for node in cNodes:
         if not isinstance(node, str):
+            if "label" not in node:
+                continue
+
+            subgroup = node["label"]
+            if subgroup.startswith("/"):
+                subsubGroup = subgroup.strip("/")
+                if subsubGroup != subsubGroupCurrent:
+                    subsubGroupCurrent = subsubGroup
+                continue
+            
+            if subgroup  != subgroupCurrent:
+                subgroupCurrent = subgroup
+                subsubGroupCurrent = None
             continue
 
         if node not in nodeContent:
@@ -108,19 +125,25 @@ for category in nodeCategoryData:
         fname = fileUtil.pathSanitize(node)
         fname = fname.replace("node_", "")
 
-        targetPath = os.path.join(categoryDir, fname + ".html")
-        fileUtil.writeFile(targetPath, nodeContent[node])
+        currentDir = categoryDir
+        if subgroupCurrent != None:
+            currentDir = os.path.join(categoryDir, fileUtil.pathSanitize(subgroupCurrent))
+            if subsubGroupCurrent != None:
+                currentDir = os.path.join(currentDir, fileUtil.pathSanitize(subsubGroupCurrent))
+        fileUtil.verifyFolder(currentDir)
 
+        targetPath = os.path.join(currentDir, fname + ".html")
+        fileUtil.writeFile(targetPath, nodeContent[node])
+        
         nodeMeta = nodeMetadata[node]
         nodeName = fileUtil.pathSanitize(nodeMeta["name"])
         nodeBase = nodeMeta["baseNode"]
-        redir    = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url=/nodes/{cName.lower()}/{fname}.html"/></html>'''
+
+        redirPath = targetPath.replace("docsdata/pregen/3_nodes", "/nodes")
+        redir     = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url={redirPath}"/></html>'''
         
-        with open(f"docs/nodes/_index/{nodeName}.html", "w") as file:
-            file.write(redir)
-        
-        with open(f"docs/nodes/_index/{nodeBase}.html", "w") as file:
-            file.write(redir)
+        fileUtil.writeFile(f"docs/nodes/_index/{nodeName}.html", redir)
+        fileUtil.writeFile(f"docs/nodes/_index/{nodeBase}.html", redir)
 
 # %% Write tag pages
 tagDir = os.path.join(targetRoot, "_tags")

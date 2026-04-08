@@ -3125,8 +3125,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!array_empty(_outMeta)) _map.outputMeta = _outMeta;
 		if(renamed)       _map.renamed       = renamed;
 		if(renamedManual) _map.renamedManual = renamedManual;
-		
-		if(instanceBase)  _map.instanceBase = instanceBase.node_id;
+		if(instanceBase)  _map.instanceBase  = instanceBase.node_id;
 		
 		doSerialize(_map);
 		processSerialize(_map);

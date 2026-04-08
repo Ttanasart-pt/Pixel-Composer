@@ -18,6 +18,7 @@ shutil.copytree("docsdata/src", "docs/src", dirs_exist_ok = True)
 
 # %%
 pages = []
+allSidebar = []
 
 def generateFolder(dirIn, dirOut):
     # print(f"Generating {dirIn} -> {dirOut}")
@@ -68,6 +69,8 @@ def generateFolder(dirIn, dirOut):
         elif fType == FileType.FILE:
             page = genFileWriter.generateFile(dirOut, fDirIn, sidebar)
             pages.append(page)
+    
+    allSidebar.append((groupTitle, sidebar))
 
 generateFolder("docsdata/pregen", "docs")
 shutil.copy("docsdata/styles.css", "docs/styles.css")

@@ -38,6 +38,6 @@ button.copy-sample {
     }
 
     &:active {
-        background-color: var(--main_dkgrey);
+        background-color: var(--main_dkblack);
     }
 }
