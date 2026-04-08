@@ -364,6 +364,11 @@ a.anchor {
 
 .sidebar-toggle {
     display: none;
+    position: fixed;
+    top: 63px;
+    left: 8px;
+    width: 32px;
+    height: 32px; 
 
     @media (max-width: 1000px) {
         display: fixed;
