@@ -1,9 +1,9 @@
 function graph_export_settings() constructor {
-	scale		= 1;
+	scale		= 2;
 	padding		= 64;
 	margin		= 64;
 	
-	bgEnable	= false;
+	bgEnable	= true;
 	bgColor		= cola(COLORS.panel_bg_clear);
 	
 	gridEnable  = false;

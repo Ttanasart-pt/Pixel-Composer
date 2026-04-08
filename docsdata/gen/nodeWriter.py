@@ -176,6 +176,7 @@ def writeNode(metadata, contentPath, changeData = None):
     for tag in attrTags:
         rawContent = rawContent.replace(f'<attr {tag}/>', f'<span class="inline-code">{tag}</span>')
 
+    content += f'<img-deco {nodeBase}-graph>'
     content += rawContent
     if changeData:
         content += writeChangeTable(metadata, changeData)
