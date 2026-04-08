@@ -836,6 +836,15 @@ div.node-category .node-card a:hover {
     color: var(--accent);
 }
 
+table.change-table {
+    width: -webkit-fill-available;
+    margin: 0px;
+}
+
+table.change-table th {
+    padding: 4px;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;;

@@ -78,20 +78,37 @@ def applyTemplate(template, nodeName, tooltip, summary):
                    .replace("{{tooltip}}",  tooltip)  \
                    .replace("{{summary}}",  summary)
 
-def writeChangeTable(changeData):
+def writeChangeTable(metadata, changeData):
+    nodeName = metadata["name"]
+    hasAnyChange = False
+
     changeText = '''
-<br><h2>Change History</h2><br>
+<br><h2>Commit History</h2><br>
 <table class="change-table">'''
     for change in changeData:
         version = change["version"]
         changes = change["changes"]
-        changeText += f'<tr><th>{version}</th><tr>'
+        changeTextV = f'<tr><th>{version}</th></tr>'
+        hasChanges  = False
 
         for c in changes:
             commit  = c["commit"]
-            changeText += f'<tr><td>{commit}</td></tr>'
-        
+            node    = c["node"]
+            if(node != nodeName):
+                continue
+            if(commit.startswith("Fix")):
+                continue
+
+            changeTextV += f'<tr><td>{commit}</td></tr>'
+            hasChanges = True
+
+        if hasChanges:
+            changeText += changeTextV
+            hasAnyChange = True
+
     changeText += '</table>'
+    if not hasAnyChange:
+        return ""
     return changeText
 
 def writeNode(metadata, rawContent, changeData = None):
@@ -135,7 +152,7 @@ def writeNode(metadata, rawContent, changeData = None):
 
     content += rawContent
     if changeData:
-        content += writeChangeTable(changeData)
+        content += writeChangeTable(metadata, changeData)
 
     return content
 
