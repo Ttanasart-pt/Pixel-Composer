@@ -183,7 +183,10 @@ def writeNode(metadata, contentPath, changeData = None):
     if os.path.exists(samplePath):
         with open(samplePath, "r") as f:
             sampleContent = f.read()
-        content += f'''<button class="copy-sample" onclick="copyToClipboard(`{sampleContent}`)">Copy to Clipboard</button><br>'''
+        sampleContent = sampleContent.replace('"', '\\"').replace("\n", "")
+        content += f'''<button class="copy-sample" onclick="copyToClipboard('{sampleContent}')">
+        Copy to Clipboard
+</button>'''
     content += "<br>"
 
     # ADD CONTENT

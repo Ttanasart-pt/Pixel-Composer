@@ -772,7 +772,31 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            "graph_auto_organize"
             ] },
     	];
-        
+    	
+    	if(TESTING) array_insert(global.menuItems_graph_toolbars_general, 0, new MenuItem("Export Doc", function() /*=>*/ {
+    		var _n = array_safe_get_fast(nodes_selecting, 0, noone);
+    		if(_n == noone) return;
+    		
+    		var nodeBase = string_lower(instanceof(_n));
+    		var dir = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
+    		directory_verify(dir);
+    		
+    		var surface  = graph_export_image(nodes_list, nodes_list, new graph_export_settings());
+    		surface_save(surface, $"{dir}/{nodeBase}-graph.png");
+    		surface_free(surface);
+    		
+    		LOADING_VERSION = SAVE_VERSION;
+	    	SERIALIZE_STRIP = true;
+	    	
+	        var _map = { version: SAVE_VERSION, nodes: [] };
+	        for( var i = 0, n = array_length(nodes_list); i < n; i++ )
+	            SAVE_NODE(_map.nodes, nodes_list[i], 0, 0, false, getCurrentContext());
+	        
+	        SERIALIZE_STRIP = false;
+	        json_save_struct($"{dir}/{nodeBase}-sample.txt", _map);
+    		
+    	}, THEME.icon_preview_export));
+    	
         function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
 		function topbar_show()   { project.graphDisplay.show_topbar =  true; }
 		function topbar_hide()   { project.graphDisplay.show_topbar = false; }
@@ -4032,14 +4056,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(array_empty(nodes_selecting)) return;
         clipboard_set_text("");
     	LOADING_VERSION = SAVE_VERSION;
-    	if(TESTING) SERIALIZE_STRIP = true;
     	
         var _map = { version: SAVE_VERSION, nodes: [] };
-        
         for( var i = 0, n = array_length(nodes_selecting); i < n; i++ )
             SAVE_NODE(_map.nodes, nodes_selecting[i], 0, 0, false, getCurrentContext());
         
-        SERIALIZE_STRIP = false;
         clipboard_set_text(json_stringify_minify(_map));
     } 
 

@@ -113,6 +113,8 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var sw = sc_settings.surface_w;
+		var hover = sc_settings.hover;
+		var focus = sc_settings.active;
 		
 		var _ww = max(set_w * 0.5, ui(160));
 		var _hh = ui(24);
@@ -149,7 +151,7 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 			
 			var _param = new widgetParam(_tx - _ww, _tyy - _hh / 2, _ww, _hh, _dat, undefined, _m, sc_settings.x + x, sc_settings.y + y).setFont(f_p3);
 			
-			_wid.setFocusHover(pFOCUS, pHOVER);
+			_wid.setFocusHover(hover, focus);
 			_wid.drawParam(_param);
 			if(_wid.inBBOX(_m)) sc_settings.hover_content = true;
 			
@@ -235,8 +237,9 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, sx - ui(8), sy, set_w + ui(8), h - padding * 2);
 		
+		settHover = point_in_rectangle(mx, my, sx, sy + ui(8), sx + set_w - ui(8), sy + ui(8) + set_h - ui(16));
 		sc_settings.verify(set_w - ui(8), set_h - ui(16));
-		sc_settings.setFocusHover(pFOCUS, pHOVER);
+		sc_settings.setFocusHover(pFOCUS, settHover);
 		sc_settings.drawOffset(sx, sy + ui(8), mx, my);
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);

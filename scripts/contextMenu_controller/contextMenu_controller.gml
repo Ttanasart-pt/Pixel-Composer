@@ -157,7 +157,8 @@ function menuItems_gen(strs) {
 			continue; 
 		}
 		
-		if(!is_struct(_s) || !struct_has(MENUITEM_CONDITIONS, _s.cond)) continue;
+		if(is(_s, MenuItem)) { array_append(_menu, _s); continue; }
+		if(!is_struct(_s) || !has(MENUITEM_CONDITIONS, _s.cond)) continue;
 		
 		var _res = MENUITEM_CONDITIONS[$ _s.cond]();
 		if(_res) array_append(_menu, menuItems_gen(_s.items));
