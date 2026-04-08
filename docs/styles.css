@@ -940,8 +940,10 @@ table.change-table {
     }
 }
 
-table.link-table {
-    td {
+ul.link-table {
+    line-break: anywhere;
+    
+    span {
         font-size: .9rem;
     }
 
