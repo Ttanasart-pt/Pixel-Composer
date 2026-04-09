@@ -676,9 +676,10 @@ table.summary-table {
 }
 
 div.breadcrumb {
+    display: flex;
+
     a {
         color: var(--main_grey);
-        margin-right: 4px;
         font-weight: 500;
         font-size: .8rem;
 
@@ -687,9 +688,10 @@ div.breadcrumb {
         }
     }
 
-    a:not(:last-child)::after {
-        content: "";
-        margin-left: 4px;
+    .breadcrumb-separator {
+        margin: 0px 4px;
+        width: 16px;
+        height: 16px;
         background: url("/src/svg/arrow_right.svg") no-repeat center;
         opacity: 0.5;
     }
