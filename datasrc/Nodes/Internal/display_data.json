@@ -595,6 +595,7 @@
             "Node_Mirror",
             "Node_Mirror_Polar",
             "Node_Dilate",
+            "Node_Barrel_Distort",
             "Node_Spherize",
             "Node_Displace",
             "Node_Morph_Surface",

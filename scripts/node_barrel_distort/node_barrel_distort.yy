@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_barrel_distort",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_barrel_distort",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
