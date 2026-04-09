@@ -43,7 +43,7 @@ def generateBasicData(nodeData, metadata):
         basicData += f'<tr><th colspan="2" class="summary-tag"><div>'
         for tag in metadata["tags"]:
             href = f"/nodes/_tags/{fileUtil.pathSanitize(tag)}.html"
-            basicData += f'<a href="{href}">{tag}</a>'
+            basicData += f'<a href="{href}" class="tag {tag.lower().replace(" ", "_")}">{tag}</a>'
         basicData += '</div></th></tr>'
     
     basicData += '<tr height="8px"></tr>'

@@ -44,6 +44,10 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
     
     nodeBase = nodeMeta["baseNode"]
     nodeName = nodeMeta["name"]
+    if "deprecated" in nodeMeta and nodeMeta["deprecated"]:
+        if "tags" not in nodeMeta:
+            nodeMeta["tags"] = []
+        nodeMeta["tags"].append("deprecated")
     
     # placeholderPath = f"docsdata/content/__nodes/{fileUtil.pathSanitize(nodeBase)}"
     # if not os.path.exists(placeholderPath + ".html"):

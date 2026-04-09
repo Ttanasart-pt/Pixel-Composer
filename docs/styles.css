@@ -615,21 +615,27 @@ table.summary-table {
         }
     }
 
-    .summary-tag > div {
-        display: flex;
-        justify-content: center;
-        gap: 4px;
-    }
+    .summary-tag {
+        > div {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            
+            > a {
+                padding: 2px 6px;
+                
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--main_ltgrey);
+                background-color: var(--main_mdblack);
+                border-radius: 4px;
+                border: 1px solid var(--main_dkgrey);
 
-    .summary-tag > div > a {
-        padding: 2px 6px;
-
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--main_ltgrey);
-        background-color: var(--main_mdblack);
-        border-radius: 4px;
-        border: 1px solid var(--main_dkgrey);
+                &.patreon {
+                    color: #eb00b7;
+                }
+            }
+        }
     }
     
     th.inheritance-block {
