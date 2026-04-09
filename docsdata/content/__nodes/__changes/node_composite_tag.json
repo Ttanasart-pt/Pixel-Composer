@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.011",
+    "changes": [
+      {
+        "date": "2026-04-09T07:26:26.505Z",
+        "node": "Composite Tag",
+        "commit": "**Composite Tag**: Fix alpha blending error."
+      }
+    ]
+  }
+]

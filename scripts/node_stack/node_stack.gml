@@ -166,11 +166,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR 
-			BLEND_OVERRIDE
+		surface_set_shader(_outSurf, noone, true, BLEND.over);
 			draw_surface_safe(temp_surface[ppind]);
-			BLEND_NORMAL
 		surface_reset_target();
 		
 		outputs[0].setValue(_outSurf);
