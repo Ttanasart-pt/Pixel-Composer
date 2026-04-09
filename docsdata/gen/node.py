@@ -82,21 +82,49 @@ nodeCategoryDir = "datasrc/Nodes/Internal/display_data.json"
 with open(nodeCategoryDir, 'r') as f:
     nodeCategoryData = json.load(f)
 
-nodeCategory = {}
+nodeCategory  = {}
+categoryIndex = 0
+specialCategory = {
+    "PCX": [ "pcx_variable", "pcx_functions", "pcx_flow_control" ],
+    "Iteration": [ "iterate", "iterate_inline", "iterate_each", "iterate_each_inline", "iterate_filter", "iterate_filter_inline" ],
+    "Particle": [ "psystem", "psystem_3d", "vfx" ],
+    "Simulation": [ "rigidsim", "smokesim", "flip_fluid", "strandsim", "verletsim" ],
+}
+
+spmap = {}
+spindex = 0
+for sp, nodes in specialCategory.items():
+    nodeindex = 0
+    for node in nodes:
+        spmap[node] = (sp, spindex + 200, nodeindex)
+        nodeindex += 1
+    spindex += 1
+
 for category in nodeCategoryData:
-    cName  = category["name"]
+    cName  = category["iname"] if "iname" in category else category["name"]
     cNodes = category["nodes"]
+    cContext = category["context"] if "context" in category else None
     if not cNodes:
         continue
 
     nodeCategory[cName] = cNodes
     
-    categoryDir = os.path.join(targetRoot, fileUtil.pathSanitize(cName))
+    sortIndex = categoryIndex
+    if cContext:
+        sortIndex += 100
+
+    categoryDir = os.path.join(targetRoot, f"{sortIndex:03}_{fileUtil.pathSanitize(cName)}")
+    spkey = cName.lower().replace(" ", "_")
+    if spkey in spmap:
+        spgroup = spmap[spkey]
+        categoryDir = os.path.join(targetRoot, f"{spgroup[1]:03}_{spgroup[0]}")
+        categoryDir = os.path.join(categoryDir, f"{spgroup[2]:03}_{fileUtil.pathSanitize(cName)}")
     fileUtil.verifyFolder(categoryDir)
 
     categoryContent  = f'''<!DOCTYPE html><html></html>{VERSION}'''
     categoryContent += nodeWriter.writeCategory(category, nodeMetadata)
     fileUtil.writeFile(f"{categoryDir}/index.html", categoryContent)
+    categoryIndex += 1
 
     subgroupCurrent    = None
     subgroupIndex      = 0

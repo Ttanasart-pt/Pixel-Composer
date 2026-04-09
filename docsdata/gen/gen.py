@@ -30,7 +30,9 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
     files   = sorted(os.listdir(dirIn))
     sidebar = []
     groupTitle = title(pathRemoveOrder(os.path.basename(dirIn)))
-    sidebarParent.append((groupTitle, dirOut.replace("docs\\", "\\") + "\\index.html", sidebar))
+
+    if not os.path.basename(dirIn).startswith("_"):
+        sidebarParent.append((groupTitle, dirOut.replace("docs\\", "\\") + "\\index.html", sidebar))
 
     for fName in files:
         if fName.startswith("__"):
@@ -56,7 +58,8 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
         if fNameS != "index.html":
             pTitle = title(fNameS.replace('.html', ''))
             path = fDirOut.replace("docs\\", "\\")
-            sidebar.append((pTitle, path, None))
+            if not fName.startswith("_"):
+                sidebar.append((pTitle, path, None))
 
         page = genFileWriter.generateFile(dirOut, fDirIn)
         pages.append(page)
