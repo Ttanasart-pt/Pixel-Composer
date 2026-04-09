@@ -124,7 +124,7 @@ for category in nodeCategoryData:
         categoryDir = os.path.join(targetRoot, f"{spgroup[1]:03}_{spgroup[0]}")
         fileUtil.verifyFolder(categoryDir)
 
-        groupTitle = spgroup[0].title().replace("_", " ")
+        groupTitle = spgroup[0].replace("_", " ").title()
         groupData  = specialCategory[spgroup[0]]
         fileUtil.writeFile(f"{categoryDir}/index.html", nodeWriter.writeCategory(groupTitle, groupData, nodeMetadata))
 

@@ -214,8 +214,8 @@ group_end   = '''</div>'''
 def writeCategory(name, nodes, nodeMetadata, subFilter = None):
     title   = name
     content = f"""<h1>{title}</h1><br><br>"""
-    nl      = True
     sgName  = ""
+    closeGroup = False
     subGroupCurrent = None
 
     for node in nodes:
@@ -224,8 +224,9 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
             sgName      = subGroup.strip("/")
             subsubGroup = subGroup.startswith("/")
             
-            if not nl:
+            if closeGroup:
                 content += group_end
+                closeGroup = False
 
             if subsubGroup:
                 if subFilter and subFilter != subGroupCurrent:
@@ -238,34 +239,32 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
                 if subFilter and subFilter != subGroupCurrent:
                     continue
 
-                if not nl:
-                    content += "</div>"
+                if closeGroup:
+                    content += group_end
+                    closeGroup = False
                 
                 content += '<div class="node-category">'
                 content += f'<h3 class="node-group-title">{sgName}</h3>'
-
-            nl = True
             continue
 
         if subFilter and subFilter != subGroupCurrent:
             continue
 
-        if nl:
+        if not closeGroup:
             content += group_start
-            nl = False
-
-
+            closeGroup = True
+        
         if node in nodeMetadata:
             metadata = nodeMetadata[node]
             name     = metadata["name"]
             spr      = metadata["spr"]  if "spr" in metadata else f"s_{node.lower()}"
         else:
-            name = node.title()
-            spr  = f'cat_{name.lower().replace(" ", "_")}'
+            name = node.replace("_", " ").title()
+            spr  = "node_generic"
 
         content += f'''<div class="node-card"><a href="/nodes/_index/{node.lower()}.html"><img {spr}>{name}</a></div>\n'''
 
-    if not nl:
+    if closeGroup:
         content += group_end
     return content
 
