@@ -689,9 +689,9 @@ div.breadcrumb {
     }
 
     .breadcrumb-separator {
-        margin: 0px 4px;
-        width: 16px;
-        height: 16px;
+        margin: 0px 6px;
+        width: 102px;
+        height: auto;
         background: url("/src/svg/arrow_right.svg") no-repeat center;
         opacity: 0.5;
     }

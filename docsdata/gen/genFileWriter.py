@@ -122,6 +122,9 @@ def generateFile(dirOut, pathIn):
     
     breadcrumbs  = f'''<div class="breadcrumb">'''
     pathOutSplit = pathOut.replace("\\", "/").split("/")
+    if pathOutSplit[-1] == "index.html":
+        pathOutSplit = pathOutSplit[:-1]
+        
     for i in range(1, len(pathOutSplit)):
         pathPart = pathOutSplit[i].replace(".html", "")
         if pathPart == "_index":
