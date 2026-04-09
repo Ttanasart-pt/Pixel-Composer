@@ -162,14 +162,14 @@ for category in nodeCategoryData:
         fname = fname.replace("node_", "")
 
         currentDir = categoryDir
-        if subgroupCurrent != None:
+        if subgroupCurrent != None and subgroupCurrent != cName:
             currentDir = os.path.join(categoryDir, f"{subgroupIndex}_{fileUtil.pathSanitize(subgroupCurrent)}")
             fileUtil.verifyFolder(currentDir)
 
             subcategoryContent  = nodeWriter.writeCategory(cName, cNodes, nodeMetadata, subgroupCurrent)
             fileUtil.verifyFile(f"{currentDir}/index.html", subcategoryContent)
 
-            if subsubGroupCurrent != None:
+            if subsubGroupCurrent != None and subsubGroupCurrent != subgroupCurrent:
                 currentDir = os.path.join(currentDir, f"{subsubGroupIndex}_{fileUtil.pathSanitize(subsubGroupCurrent)}")
                 fileUtil.verifyFolder(currentDir)
                 fileUtil.verifyFile(f"{currentDir}/index.html", subcategoryContent)
