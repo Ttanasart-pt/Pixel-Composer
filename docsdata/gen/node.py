@@ -85,10 +85,10 @@ with open(nodeCategoryDir, 'r') as f:
 nodeCategory  = {}
 categoryIndex = 0
 specialCategory = {
-    "PCX": [ "pcx_variable", "pcx_functions", "pcx_flow_control" ],
-    "Iteration": [ "iterate", "iterate_inline", "iterate_each", "iterate_each_inline", "iterate_filter", "iterate_filter_inline" ],
-    "Particle": [ "psystem", "psystem_3d", "vfx" ],
-    "Simulation": [ "rigidsim", "smokesim", "flip_fluid", "strandsim", "verletsim" ],
+    "pcx": [ "pcx_variable", "pcx_functions", "pcx_flow_control" ],
+    "iteration": [ "iterate", "iterate_inline", "iterate_each", "iterate_each_inline", "iterate_filter", "iterate_filter_inline" ],
+    "particle": [ "psystem", "psystem_3d", "vfx" ],
+    "simulation": [ "rigidsim", "smokesim", "flip_fluid", "strandsim", "verletsim" ],
 }
 
 spmap = {}
@@ -118,11 +118,13 @@ for category in nodeCategoryData:
     if spkey in spmap:
         spgroup = spmap[spkey]
         categoryDir = os.path.join(targetRoot, f"{spgroup[1]:03}_{spgroup[0]}")
+        fileUtil.verifyFolder(categoryDir)
+        fileUtil.writeFile(f"{categoryDir}/index.html", "")
+
         categoryDir = os.path.join(categoryDir, f"{spgroup[2]:03}_{fileUtil.pathSanitize(cName)}")
     fileUtil.verifyFolder(categoryDir)
 
-    categoryContent  = f'''<!DOCTYPE html><html></html>{VERSION}'''
-    categoryContent += nodeWriter.writeCategory(category, nodeMetadata)
+    categoryContent  = nodeWriter.writeCategory(cName, cNodes, nodeMetadata)
     fileUtil.writeFile(f"{categoryDir}/index.html", categoryContent)
     categoryIndex += 1
 
@@ -163,12 +165,14 @@ for category in nodeCategoryData:
         if subgroupCurrent != None:
             currentDir = os.path.join(categoryDir, f"{subgroupIndex}_{fileUtil.pathSanitize(subgroupCurrent)}")
             fileUtil.verifyFolder(currentDir)
-            fileUtil.verifyFile(f"{currentDir}/index.html", f'''<!DOCTYPE html><html></html>''')
+
+            subcategoryContent  = nodeWriter.writeCategory(cName, cNodes, nodeMetadata, subgroupCurrent)
+            fileUtil.verifyFile(f"{currentDir}/index.html", subcategoryContent)
 
             if subsubGroupCurrent != None:
                 currentDir = os.path.join(currentDir, f"{subsubGroupIndex}_{fileUtil.pathSanitize(subsubGroupCurrent)}")
                 fileUtil.verifyFolder(currentDir)
-                fileUtil.verifyFile(f"{currentDir}/index.html", f'''<!DOCTYPE html><html></html>''')
+                fileUtil.verifyFile(f"{currentDir}/index.html", subcategoryContent)
         
         targetPath = os.path.join(currentDir, fname + ".html")
         fileUtil.writeFile(targetPath, nodeContent[node])
@@ -177,7 +181,7 @@ for category in nodeCategoryData:
         nodeName = fileUtil.pathSanitize(nodeMeta["name"])
         nodeBase = nodeMeta["baseNode"]
 
-        redirPath = targetPath.replace("docsdata/pregen/3_nodes", "/nodes")
+        redirPath = fileUtil.pathRemoveOrderAll(targetPath.replace("docsdata/pregen/3_nodes", "/nodes"))
         redir     = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url={redirPath}"/></html>'''
         
         fileUtil.writeFile(f"docs/nodes/_index/{nodeName}.html", redir)

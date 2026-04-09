@@ -65,7 +65,11 @@ def generateBasicData(nodeData, metadata):
             _class = "inheritance-block current"
             link   = "#"
 
-        basicData += f'<tr><th colspan="2" class="{_class}"><a href="{link}">{pName}</a></th></tr>'
+        content = f'<a href="{link}">{pName}</a>'
+        if i > 0:
+            content = f'''<div class="vertical"></div>{content}'''
+        basicData += f'''<tr><th colspan="2" class="{_class}">{content}</th></tr>'''
+            
     return basicData
 
 def applySummaryTable(basicData, junctionText, attributeText):
@@ -207,28 +211,36 @@ def writeNode(metadata, contentPath, changeData = None):
 group_start = '''<div class="node-group">'''
 group_end   = '''</div>'''
 
-def writeCategory(category, nodeMetadata):
-    name  = category["name"]
-    nodes = category["nodes"]
-
+def writeCategory(name, nodes, nodeMetadata, subFilter = None):
     title   = name
     content = f"""<h1>{title}</h1><br><br>"""
-    nl = True
-    
+    nl      = True
+    sgName  = ""
+    subGroupCurrent = None
+
     for node in nodes:
         if not isinstance(node, str):
-            subGroup = node["label"]
-            sgName   = subGroup.strip("/")
+            subGroup    = node["label"]
+            sgName      = subGroup.strip("/")
             subsubGroup = subGroup.startswith("/")
-
+            
             if not nl:
                 content += group_end
 
             if subsubGroup:
+                if subFilter and subFilter != subGroupCurrent:
+                    continue
+
                 content += f'<h5 class="node-group-title">{sgName}</h5>'
+                
             else:
+                subGroupCurrent = sgName
+                if subFilter and subFilter != subGroupCurrent:
+                    continue
+
                 if not nl:
                     content += "</div>"
+                
                 content += '<div class="node-category">'
                 content += f'<h3 class="node-group-title">{sgName}</h3>'
 
@@ -239,6 +251,9 @@ def writeCategory(category, nodeMetadata):
             print(f"Node content for {node} not found.")
             continue
         
+        if subFilter and subFilter != subGroupCurrent:
+            continue
+
         if nl:
             content += group_start
             nl = False

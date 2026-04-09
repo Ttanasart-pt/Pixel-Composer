@@ -15,6 +15,18 @@ def pathRemoveOrder(path):
         name = name[name.find('_') + 1:]
     return os.path.join(os.path.dirname(path), name)
 
+def pathRemoveOrderAll(path):
+    path = path.replace("\\", "/")
+    parts = path.split("/")
+    for i in range(len(parts)):
+        if parts[i].startswith("_"):
+            continue
+        
+        if parts[i].split("_")[0].isdigit():
+            parts[i] = parts[i][parts[i].find('_') + 1:]
+    
+    return "/".join(parts)
+
 def pathStrip(path): # Strip out the custom ordering n_ at the start of the file
     if path.split("_")[0].isdigit():
         path = path[path.find('_') + 1:]

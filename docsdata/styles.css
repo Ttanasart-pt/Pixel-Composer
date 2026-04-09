@@ -656,6 +656,15 @@ table.summary-table {
         &.current > a {
             color: var(--main_white);
         }
+
+        .vertical {
+            border-left: 1px solid var(--main_dkgrey);
+            height: 10px;
+            position: relative;
+            left: 50%;
+            transform: translateY(-6px);
+            margin-bottom: -8px;
+        }
     }
 }
 
