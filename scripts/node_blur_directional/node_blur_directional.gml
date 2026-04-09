@@ -23,6 +23,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput( 2, nodeValue_Rotation( "Direction",        0     )).setHotkey("R").setMappable(10);
 	newInput(11, nodeValue_Bool(     "Single Direction", false ));
 	newInput(13, nodeValue_Bool(     "Fade Distance",    false ));
+	newInput(23, nodeValue_Slider(   "Smooth Blur",      0     ));
 	
 	////- =Colorize
 	newInput(18, nodeValue_EScroll(  "Colorize",     0, [ "None", "Spectral", "Gradient" ] ));
@@ -34,11 +35,11 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	////- =Processing
 	newInput(17, nodeValue_Float(    "Resolution",       1     ));
 	newInput(12, nodeValue_Bool(     "Gamma Correction", false ));
-	// inputs 23
+	// inputs 24
 	
 	input_display_list = [ 5, 6, 
 		[ "Surfaces",    true ],  0, 14, 15,  3,  4,  7,  8, 
-		[ "Blur",       false ],  1,  9, 16,  2, 10, 11, 13, 
+		[ "Blur",       false ],  1,  9, 16,  2, 10, 11, 13, 23, 
 		[ "Colorize",   false ], 18, 21, 19, 22, 20, 
 		[ "Processing", false ], 17, 12, 
 	]
@@ -50,6 +51,8 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	attribute_surface_depth();
 	attribute_oversample();
 	surface_blur_init();
+	
+	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _surf = outputs[0].getValue();
@@ -71,13 +74,12 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var _surf = _data[ 0];
+			
 			var _strn = _data[ 1];
 			var _dirc = _data[ 2];
-			
 			var _sing = _data[11];
 			var _fade = _data[13];
-			var _reso = _data[17];
-			var _gamm = _data[12];
+			var _smth = _data[23];
 			
 			var _sCurveUse = inputs[1].attributes.curved;
 			var _sCurve    = _data[16];
@@ -87,6 +89,9 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			var _specInt   = _data[19];
 			var _specSca   = _data[22];
 			var _specShf   = _data[20];
+			
+			var _reso = _data[17];
+			var _gamm = _data[12];
 			
 			inputs[21].setVisible(_specUse == 2);
 		#endregion
@@ -103,8 +108,19 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 						.setSpectral(_specUse, _specInt, _specShf, _specSca, _specGrd);
 		
 		if(_sCurveUse) _args.setSizeCurve(_sCurve);
+		_outSurf = surface_apply_blur_directional(_outSurf, _args);
 		
-		_outSurf  = surface_apply_blur_directional(_outSurf, _args);
+		if(_smth > 0) {
+			temp_surface[0] = surface_verify(temp_surface[0], surface_get_width_safe(_surf), surface_get_height_safe(_surf));
+			surface_set_shader(temp_surface[0], noone, true, BLEND.over);
+				draw_surface(_outSurf, 0, 0)
+			surface_reset_shader()
+			
+			_args.surface   = temp_surface[0];
+			_args.size[0]  *= _smth;
+			_args.angle[0] += 90;
+			_outSurf = surface_apply_blur_directional(_outSurf, _args);
+		}
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_surf, _outSurf, _data[3], _data[4]);

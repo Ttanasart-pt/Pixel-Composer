@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.011",
+    "changes": [
+      {
+        "date": "2026-04-09T08:30:28.019Z",
+        "node": "Directional Blur",
+        "commit": "**Directional Blur**: Add smooth blur."
+      }
+    ]
+  }
+]
