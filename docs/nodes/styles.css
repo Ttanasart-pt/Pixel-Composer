@@ -1,6 +1,6 @@
 img.node-content {
     width: min(100%, calc(100% - 280px));
-    max-width: fit-content;
+    /* max-width: fit-content; */
 
     @media (max-width: 800px) {
         margin: 0px;

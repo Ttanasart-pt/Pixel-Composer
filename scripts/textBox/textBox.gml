@@ -649,7 +649,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(_w - _bs > ui(32) && front_button) {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
-			
 			front_button.setFocusHover(iactive, ihover);
 			front_button.draw(_x, _by, _bs, _bs, _m, THEME.button_hide_fill);
 			

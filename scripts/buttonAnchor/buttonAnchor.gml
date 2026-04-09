@@ -48,12 +48,7 @@ function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor 
 			var cc  = hov? COLORS._main_accent : COLORS._main_icon_light;
 			var aa  = .5 + (_fil || hov) * .5;
 			
-			// draw_set_color_alpha(cc, aa);
-			// draw_rectangle_border(_bx - size, _by - size, _bx + size, _by + size, 2);
-			// if(_fil) draw_rectangle(_bx - size, _by - size, _bx + size, _by + size, false);
-			// draw_set_alpha(1);
-			
-			draw_sprite_ext(THEME.prop_anchor, _fil, _bx + size, _by + size, spac / 10, spac / 10, 0, cc, aa);
+			draw_sprite_ext(THEME.prop_anchor, _fil, _bx - size, _by - size, spac / 10, spac / 10, 0, cc, aa);
 			
 			if(hov) {
 				hovering = true;

@@ -1,6 +1,6 @@
 Radial blur ndoe blur pixel around a fix point.
 
-<img-deco blur_radial>
+<img-deco blur_radial caption="Credit: Synth Cities Environment by ansimuz">
 
 ## Properties
 
