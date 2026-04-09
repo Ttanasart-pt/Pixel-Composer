@@ -120,10 +120,10 @@ def generateFile(dirOut, pathIn):
     data = template.replace("{{content}}", content)
 
     
-    breadcrumbs = f'''<div class="breadcrumb">'''
-    pathOutSplit = pathOut.split("/")
-    for i in range(1, len(pathOutSplit) - 1):
-        pathPart = pathOutSplit[i]
+    breadcrumbs  = f'''<div class="breadcrumb">'''
+    pathOutSplit = pathOut.replace("\\", "/").split("/")
+    for i in range(1, len(pathOutSplit)):
+        pathPart = pathOutSplit[i].replace(".html", "")
         if pathPart == "_index":
             continue
         
