@@ -327,6 +327,10 @@ a.anchor {
         }
     }
 
+    > ul {
+        margin-left: 8px !important; 
+    }
+
     ul {
         width: inherit;
 
@@ -338,22 +342,10 @@ a.anchor {
             width: auto;
             margin: 0;
             padding: 0;
-            padding-left: 20px;
-
-            li {
-                opacity: 0.75;
-            }
+            padding-left: 12px;
 
             li:last-child {
                 margin-bottom: 0.25rem;
-            }
-
-            a {
-                font-size: 0.9rem;
-            }
-
-            ul.h3 a {
-                font-weight: 500;
             }
         }
     }
@@ -361,9 +353,10 @@ a.anchor {
     a {
         width: -webkit-fill-available;
         font-size: .9rem;
+        font-weight: 500;
 
         display: block;
-        padding-left: 32px;
+        padding: 1px 0px;
         margin: 0;
         color: var(--main_ltgrey);
         text-decoration: none;
@@ -376,6 +369,10 @@ a.anchor {
         &:hover {
             color: var(--main_white);
         }
+
+        &.sidebar-dir {
+            font-weight: 700;
+        }
     }
 
     svg {
@@ -386,6 +383,24 @@ a.anchor {
         transform: translateY(2px);
 
         fill: var(--main_ltgrey);
+    }
+
+    div.sidebar-menu {
+        display: flex;
+    }
+
+    div.sidebar-icon {
+        width: 20px;
+        height: 20px;
+        margin-left: 0px;
+        margin-right: 4px;
+        transform: translateY(2px);
+
+        opacity: .5;
+
+        &:hover {
+            opacity: 1;
+        }
     }
 
     .search {
@@ -409,6 +424,34 @@ a.anchor {
         }
     }
 
+    div.sidebar-menu {
+        + ul.submenu {
+            display: none;
+        }
+
+        .sidebar-dir.sidebar-icon {
+            background: url("/src/svg/bullet.svg") no-repeat left center;
+            background-position-y: -.5px;
+        }
+
+        &.open {
+            + ul.submenu {
+                display: block;
+            }
+
+            .sidebar-dir.sidebar-icon {
+                background: url("/src/svg/bullet-open.svg") no-repeat left center;
+            }
+        }
+
+        &.active a {
+            color: var(--main_white);
+        }
+
+        &.sidebar-file.active a {
+            color: var(--accent);
+        }
+    }
 }
 
 .sidebar-toggle {

@@ -99,7 +99,9 @@ for category in nodeCategoryData:
     fileUtil.writeFile(f"{categoryDir}/index.html", categoryContent)
 
     subgroupCurrent    = None
+    subgroupIndex      = 0
     subsubGroupCurrent = None
+    subsubGroupIndex   = 0
 
     for node in cNodes:
         if not isinstance(node, str):
@@ -111,11 +113,15 @@ for category in nodeCategoryData:
                 subsubGroup = subgroup.strip("/")
                 if subsubGroup != subsubGroupCurrent:
                     subsubGroupCurrent = subsubGroup
+                    subsubGroupIndex += 1
                 continue
             
             if subgroup  != subgroupCurrent:
                 subgroupCurrent = subgroup
+                subgroupIndex += 1
+
                 subsubGroupCurrent = None
+                subsubGroupIndex   = 0
             continue
 
         if node not in nodeContent:
@@ -127,12 +133,12 @@ for category in nodeCategoryData:
 
         currentDir = categoryDir
         if subgroupCurrent != None:
-            currentDir = os.path.join(categoryDir, fileUtil.pathSanitize(subgroupCurrent))
+            currentDir = os.path.join(categoryDir, f"{subgroupIndex}_{fileUtil.pathSanitize(subgroupCurrent)}")
             fileUtil.verifyFolder(currentDir)
             fileUtil.verifyFile(f"{currentDir}/index.html", f'''<!DOCTYPE html><html></html>''')
 
             if subsubGroupCurrent != None:
-                currentDir = os.path.join(currentDir, fileUtil.pathSanitize(subsubGroupCurrent))
+                currentDir = os.path.join(currentDir, f"{subsubGroupIndex}_{fileUtil.pathSanitize(subsubGroupCurrent)}")
                 fileUtil.verifyFolder(currentDir)
                 fileUtil.verifyFile(f"{currentDir}/index.html", f'''<!DOCTYPE html><html></html>''')
         

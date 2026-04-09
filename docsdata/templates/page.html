@@ -30,7 +30,9 @@
             </div>
             <ul>
                 <div id="search_spacing" style="height: 48px;"></div>
-                {{sidebar}}
+                <div id="sidebar-nav">
+                    {{sidebar}}
+                </div>
                 {{search_results}}
                 <div style="height: 96px;"></div>
             </ul>
@@ -56,21 +58,18 @@
         var input = document.getElementById('search').value
         var space = document.getElementById('search_spacing');
         var x     = document.getElementsByClassName('search-result');
-        var cnt   = document.getElementsByClassName('sidebar-nav');
+        var cnt   = document.getElementById('sidebar-nav');
         input = input.toLowerCase();
 
         if (input == "") {
             for (i = 0; i < x.length; i++)
                 x[i].style.display="none";
 
-            for (i = 0; i < cnt.length; i++)
-                cnt[i].style.display="flex";
+            cnt.style.display="block";
             return;
         }
 
-        for (i = 0; i < cnt.length; i++)
-            cnt[i].style.display="none";
-
+        cnt.style.display="none";
         for (i = 0; i < x.length; i++) {
             if (!x[i].innerHTML.toLowerCase().includes(input))
                 x[i].style.display="none";
@@ -89,6 +88,57 @@
             sideBar.classList.add('open');
         }
     }
+
+    let toggles = document.getElementsByClassName('sidebar-dir');
+    for (let i = 0; i < toggles.length; i++) {
+        toggles[i].addEventListener('click', function() {
+            let submenu = this.parentElement;
+            if (submenu.classList.contains('open')) {
+                submenu.classList.remove('open');
+            } else {
+                submenu.classList.add('open');
+            }
+        });
+    }
+
+    function sidebarNavigate() {
+        let sidebarNav   = document.getElementById('sidebar-nav');
+        let currentPath  = window.location.pathname.replace(".html", "");
+        let pathSegments = currentPath.split('/').filter(segment => segment.length > 0);
+        let navpointer   = sidebarNav;
+
+        for(let i = 0; i < pathSegments.length; i++) {
+            let segment = pathSegments[i];
+            let found = false;
+
+            for (let j = 0; j < navpointer.children.length; j++) {
+                let child = navpointer.children[j];
+                if (child.id === segment) {
+                    let dir = child.querySelector('.sidebar-menu');
+                    if (dir) {
+                        dir.classList.add('open');
+                        dir.classList.add('active');
+                    }
+                    
+                    navpointer = child.querySelector('ul.submenu');
+                    found = true;
+                    // console.log(`Navigating to segment: ${segment}`);
+                    break;
+                }
+            }
+
+            if (!found) {
+                console.warn(`Could not find sidebar entry for segment: ${segment}`);
+                break;
+            }
+        }
+
+        if(navpointer && navpointer != sidebarNav) { // scroll to active item
+            navpointer.scrollIntoView({ behavior: 'instant', block: 'center' });   
+        }
+    }
+
+    sidebarNavigate();
 </script>
 
 </html>

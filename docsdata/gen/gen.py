@@ -29,8 +29,8 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
     verifyFolder(dirOut)
     files   = sorted(os.listdir(dirIn))
     sidebar = []
-    groupTitle = title(os.path.basename(dirIn))
-    sidebarParent.append((groupTitle, sidebar))
+    groupTitle = title(pathRemoveOrder(os.path.basename(dirIn)))
+    sidebarParent.append((groupTitle, dirOut.replace("docs\\", "\\") + "\\index.html", sidebar))
 
     for fName in files:
         if fName.startswith("__"):
@@ -53,9 +53,10 @@ def generateFolder(dirIn, dirOut, sidebarParent = allSidebar):
             shutil.copy(fullPath, fDirOut)
             continue
 
-        if fName != "index.html":
+        if fNameS != "index.html":
             pTitle = title(fNameS.replace('.html', ''))
-            sidebar.append((pTitle, fName, fNameS))
+            path = fDirOut.replace("docs\\", "\\")
+            sidebar.append((pTitle, path, None))
 
         page = genFileWriter.generateFile(dirOut, fDirIn)
         pages.append(page)
@@ -66,21 +67,40 @@ shutil.copy("docsdata/styles.css", "docs/styles.css")
 # %% generate sidebar
 
 def writeSidebar(sidebar, depth = 0):
-    if len(sidebar) == 2:
-        title, contents = sidebar
-        sideContent = f'''<li><a href="/" class="sidebar-dir">{title}</a><ul class="submenu">\n'''
-        # print(f"Group: {title}, Depth: {depth}, Contents: {len(contents)}")
+    if len(sidebar) != 3:
+        return ""
+    
+    title, page, contents = sidebar
+    _id = page.replace("index.html", "").replace(".html", "").rstrip("\\").split("\\")[-1].replace(" ", "_").lower()
+    sideContent = f'<li id="{_id}">'
+
+    if contents != None and len(contents) > 0:
+        if depth > 0:
+            sideContent += f'''<div class="sidebar-menu">
+                <div class="sidebar-icon sidebar-dir"></div>
+                <a href="{page}" class="sidebar-dir">{title}</a>
+            </div>
+            <ul class="submenu">\n'''
+        else:
+            sideContent += f'''<div class="sidebar-menu">
+                <div class="sidebar-icon"></div>
+                <a href="/" class="sidebar-home">Home</a>
+            </div>\n'''
+
         for content in contents:
             sideContent += writeSidebar(content, depth + 1)
-        sideContent += "</ul></li>\n"
-        return sideContent
 
-    if len(sidebar) == 3:
-        title, fName, fNameS = sidebar
-        sideContent = f'''<li><a href="{fName}" class="sidebar-file">{title}</a></li>\n'''
-        return sideContent
-    
-    return ""
+        if depth > 0:
+            sideContent += "</ul>\n"
+
+    else:
+        sideContent += f'''<div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="{page}" class="sidebar-file">{title}</a>
+            </div>\n'''
+        
+    sideContent += "</li>"
+    return sideContent
 
 sidebarContent = ''
 for s in allSidebar:
