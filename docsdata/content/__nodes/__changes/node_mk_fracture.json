@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.011",
+    "changes": [
+      {
+        "date": "2026-04-09T07:05:41.379Z",
+        "node": "MK Fracture",
+        "commit": "**MK Fracture**: Fix error when not connect to surface."
+      }
+    ]
+  }
+]

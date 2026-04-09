@@ -1,0 +1,1 @@
+{"version":120076,"nodes":[{"x":-32,"y":32,"inputs":[{"linked":true},{"unit":1},{"unit":1},{"r":{"d":682908},"m":1},{},{},{},{},{},{},{"v":0},{"v":0}],"outputs":[{}],"renamed":true,"id":"gA8CgU4487942OeraEQ4tuzjEuTNMPfF","version":120076,"attriTool":{},"name":"Caustic","inspectInputs":[{"v":1},{"v":1},{"v":1},{},{"v":1}],"iname":"Caustic34261","type":"Node_Caustic"}]}

@@ -1,0 +1,1 @@
+{"version":120076,"nodes":[{"x":-16,"y":0,"inputs":[{"linked":true},{},{},{"r":{"d":244192},"m":1},{},{},{},{},{},{},{}],"outputs":[{}],"renamed":true,"id":"gA8Cgf4498809V5pihlt2etiwXMedibO","version":120076,"attriTool":{},"name":"Cristal Noise","inspectInputs":[{"v":1},{"v":1},{"v":1},{},{"v":1}],"iname":"Cristal_Noise61336","type":"Node_Noise_Cristal"}]}

@@ -1,0 +1,1 @@
+{"version":120076,"nodes":[{"x":-224,"y":128,"inputs":[{"linked":true},{"unit":1},{"unit":1},{},{},{},{},{},{},{}],"outputs":[{}],"renamed":true,"id":"gA8CjF4653187Ky2vsTNogCKgcbopxj8","version":120076,"attriTool":{},"name":"Julia","inspectInputs":[{"v":1},{"v":1},{"v":1},{},{"v":1}],"iname":"Julia18868","type":"Node_Julia_Set"}]}

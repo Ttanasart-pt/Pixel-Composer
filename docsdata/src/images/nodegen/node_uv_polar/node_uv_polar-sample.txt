@@ -1,0 +1,1 @@
+{"version":120076,"nodes":[{"x":-96,"y":-128,"inputs":[{"linked":true},{},{},{},{"unit":1},{},{},{},{},{},{}],"outputs":[{}],"renamed":true,"id":"gA8Cqe509818709mIZc0HIGE8EUOgDJl","version":120076,"attriTool":{},"name":"UV Polar","inspectInputs":[{"v":1},{"v":1},{"v":1},{},{"v":1}],"iname":"UV_Polar68604","type":"Node_UV_Polar"}]}
