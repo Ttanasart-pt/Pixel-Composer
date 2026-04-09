@@ -39,9 +39,9 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _skew = _data[12];
 			
 			var _move = _data[ 4];
-			var _grav = _data[ 8];
 			var _rota = _data[ 5];
 			var _scal = _data[ 6];
+			var _grav = _data[ 8];
 			
 			var _alph = _data[ 7];
 			
@@ -60,9 +60,9 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f( "skew",         _skew );
 			
 			shader_set_f_map( "movement", _move, _data[ 9], inputs[ 4]);
-			shader_set_f( "gravity",      _grav );
-			shader_set_f( "rotation",     _rota, _data[10], inputs[ 5]);
+			shader_set_f_map( "rotation", _rota, _data[10], inputs[ 5]);
 			shader_set_f( "scale",        _scal );
+			shader_set_f( "gravity",      _grav );
 			
 			shader_set_f( "alpha",        _alph );
 			
