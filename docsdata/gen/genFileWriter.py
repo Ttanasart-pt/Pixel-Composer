@@ -128,7 +128,8 @@ def generateFile(dirOut, pathIn):
             continue
         
         breadcrumbPath = "/" + "/".join(pathOutSplit[1:i+1])
-        breadcrumbs += f'<a href="{breadcrumbPath}">{pathPart.title()}</a>'
+        breadTitle     = pathPart.title().replace("_", " ")
+        breadcrumbs   += f'<a href="{breadcrumbPath}">{breadTitle}</a>'
     breadcrumbs += "</div>"
     data = data.replace("{{breadcrumbs}}", breadcrumbs)
 

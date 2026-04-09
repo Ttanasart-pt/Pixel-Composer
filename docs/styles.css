@@ -675,6 +675,26 @@ table.summary-table {
     }
 }
 
+div.breadcrumb {
+    a {
+        color: var(--main_grey);
+        margin-right: 4px;
+        font-weight: 500;
+        font-size: .8rem;
+
+        &:hover {
+            color: var(--main_white);
+        }
+    }
+
+    a:not(:last-child)::after {
+        content: "";
+        margin-left: 4px;
+        background: url("/src/svg/arrow_right.svg") no-repeat center;
+        opacity: 0.5;
+    }
+}
+
 span.inline-code {
     display: inline;
     padding: 2px 4px;
