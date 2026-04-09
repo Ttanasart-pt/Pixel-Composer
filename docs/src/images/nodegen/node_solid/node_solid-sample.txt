@@ -1,0 +1,1 @@
+{"version":120076,"nodes":[{"x":-640,"y":-256,"inputs":[{"linked":true},{"r":{"d":4290026379},"m":1},{},{},{},{}],"outputs":[{}],"renamed":true,"id":"gA8CUo3788388xOoo92TGlAEAmKLKgti","version":120076,"attriTool":{},"name":"Solid","inspectInputs":[{"v":1},{"v":1},{"v":1},{},{"v":1}],"iname":"Solid14429","type":"Node_Solid"}]}
