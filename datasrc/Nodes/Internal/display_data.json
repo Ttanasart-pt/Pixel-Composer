@@ -575,7 +575,6 @@
             "Node_Blur_Box",
             "Node_Blur_Shape",
             "Node_High_Pass",
-            "Node_FXAA",
             { "label": "/Linear" },
             "Node_Blur_Directional",
             "Node_Blur_Slope",
@@ -589,6 +588,7 @@
             "Node_Kuwahara",
             "Node_Symmetric_NN",
             "Node_Brush_Linear",
+            "Node_FXAA",
             
             { "label": "Warp" },
             { "label": "/Effect" },

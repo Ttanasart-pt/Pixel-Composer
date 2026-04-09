@@ -6,6 +6,11 @@
         "date": "2026-04-09T08:30:28.019Z",
         "node": "Directional Blur",
         "commit": "**Directional Blur**: Add smooth blur."
+      },
+      {
+        "date": "2026-04-09T09:37:43.722Z",
+        "node": "Blobify",
+        "commit": "**Blobify**: Add mask inputs."
       }
     ]
   }

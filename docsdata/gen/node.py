@@ -123,7 +123,9 @@ for category in nodeCategoryData:
         spgroup = spmap[spkey]
         categoryDir = os.path.join(targetRoot, f"{spgroup[1]:03}_{spgroup[0]}")
         fileUtil.verifyFolder(categoryDir)
-        fileUtil.writeFile(f"{categoryDir}/index.html", "")
+
+        groupData = specialCategory[spgroup[0]]
+        fileUtil.writeFile(f"{categoryDir}/index.html", nodeWriter.writeCategory(spgroup[0].title(), groupData, nodeMetadata))
 
         categoryDir = os.path.join(categoryDir, f"{spgroup[2]:03}_{fileUtil.pathSanitize(cName)}")
     fileUtil.verifyFolder(categoryDir)

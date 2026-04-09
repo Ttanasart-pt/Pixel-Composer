@@ -599,10 +599,6 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\filter\blur\kernel_based\blur_simple.html" class="sidebar-file">Blur Simple</a>
             </div>
-</li><li id="fxaa"><div class="sidebar-menu sidebar-file">
-                <div class="sidebar-icon"></div>
-                <a href="\nodes\filter\blur\kernel_based\fxaa.html" class="sidebar-file">Fxaa</a>
-            </div>
 </li><li id="high_pass"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\filter\blur\kernel_based\high_pass.html" class="sidebar-file">High Pass</a>
@@ -654,6 +650,10 @@
 </li><li id="brush_linear"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\filter\blur\non_linear\brush_linear.html" class="sidebar-file">Brush Linear</a>
+            </div>
+</li><li id="fxaa"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\filter\blur\non_linear\fxaa.html" class="sidebar-file">Fxaa</a>
             </div>
 </li><li id="kuwahara"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
@@ -5384,7 +5384,6 @@
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\kernel_based/blur_contrast.html">Blur Contrast</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\kernel_based/blur_shape.html">Blur Shape</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\kernel_based/blur_simple.html">Blur Simple</a></li>
-<li class="search-result" style="display: none;"><a href="\nodes\filter\blur\kernel_based/fxaa.html">Fxaa</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\kernel_based/high_pass.html">High Pass</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\linear/blur_directional.html">Blur Directional</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\linear/blur_path.html">Blur Path</a></li>
@@ -5395,6 +5394,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/average.html">Average</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/blur_bokeh.html">Blur Bokeh</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/brush_linear.html">Brush Linear</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/fxaa.html">Fxaa</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/kuwahara.html">Kuwahara</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/symmetric_nn.html">Symmetric Nn</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/dilate.html">Dilate</a></li>
@@ -6220,7 +6220,7 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_atlas/node_atlas-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-208,\"y\":-32,\"inputs\":[{\"linked\":true},{},{\"r\":{\"d\":\"Ellipse\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"r\":{\"d\":0.5},\"m\":1},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamed\":true,\"id\":\"gA8Btc1676368YGXfUfCzS6M9iC6aboy\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape32580\",\"type\":\"Node_Shape\"},{\"x\":-48,\"y\":-32,\"inputs\":[{\"from_node\":\"gA8Btc1676368YGXfUfCzS6M9iC6aboy\",\"from_index\":0},{\"from_node\":\"gA8Bti16817462dKUSk9HwbNVltiIsVv\",\"from_index\":0},{\"r\":{\"d\":3},\"m\":1},{},{},{},{},{},{},{},{},{},{},{},{\"unit\":1}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8Btm1686352oErFhdeyUOvnZpyLhrB\",\"version\":120076,\"attriTool\":{},\"name\":\"Blend\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Blend43796\",\"type\":\"Node_Blend\"},{\"x\":-208,\"y\":128,\"inputs\":[{\"linked\":true},{},{},{},{},{},{\"unit\":1},{},{},{\"r\":{\"d\":0.67539267015706805},\"m\":1},{\"v\":0},{\"v\":0},{\"v\":0},{\"v\":0},{},{\"v\":0},{},{},{},{},{},{},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8Bti16817462dKUSk9HwbNVltiIsVv\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Gradient\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Gradient14450\",\"type\":\"Node_Gradient\"},{\"x\":112,\"y\":-32,\"inputs\":[{\"from_node\":\"gA8Btm1686352oErFhdeyUOvnZpyLhrB\",\"from_index\":0},{},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8Bta1674266rHiYz3eA5gsGiLbx27r\",\"version\":120076,\"attriTool\":{},\"name\":\"Pixel Expand\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Pixel_Expand82418\",\"type\":\"Node_Atlas\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><p>Atlas node expands the transparent pixel into the closet opaque pixel.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_atlas/node_atlas.gml">/scripts/node_atlas/node_atlas.gml</a></li><li><span>Shader [sh_atlas_scan]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_atlas_scan/sh_atlas_scan.fsh">/shaders/sh_atlas_scan/sh_atlas_scan.fsh</a></li><li><span>Shader [sh_atlas]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_atlas/sh_atlas.fsh">/shaders/sh_atlas/sh_atlas.fsh</a></li></ul>
+</button><br><p>Atlas node expands the transparent pixel into the closet opaque pixel.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_atlas/node_atlas.gml">/scripts/node_atlas/node_atlas.gml</a></li><li><span>Shader [sh_atlas]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_atlas/sh_atlas.fsh">/shaders/sh_atlas/sh_atlas.fsh</a></li><li><span>Shader [sh_atlas_scan]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_atlas_scan/sh_atlas_scan.fsh">/shaders/sh_atlas_scan/sh_atlas_scan.fsh</a></li></ul>
         </div>
     </div>
 

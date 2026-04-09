@@ -247,10 +247,6 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
             nl = True
             continue
 
-        if node not in nodeMetadata:
-            print(f"Node content for {node} not found.")
-            continue
-        
         if subFilter and subFilter != subGroupCurrent:
             continue
 
@@ -258,9 +254,14 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
             content += group_start
             nl = False
 
-        metadata = nodeMetadata[node]
-        name     = metadata["name"]
-        spr      = metadata["spr"]  if "spr" in metadata else f"s_{node.lower()}"
+
+        if node in nodeMetadata:
+            metadata = nodeMetadata[node]
+            name     = metadata["name"]
+            spr      = metadata["spr"]  if "spr" in metadata else f"s_{node.lower()}"
+        else:
+            name = node.title()
+            spr  = f'cat_{name.lower().replace(" ", "_")}'
 
         content += f'''<div class="node-card"><a href="/nodes/_index/{node.lower()}.html"><img {spr}>{name}</a></div>\n'''
 

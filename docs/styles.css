@@ -693,7 +693,7 @@ div.breadcrumb {
         width: 10px;
         height: auto;
         background: url("/src/svg/arrow_right.svg") no-repeat center;
-        opacity: 0.52
+        opacity: 0.25;
     }
 }
 
