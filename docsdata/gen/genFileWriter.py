@@ -52,12 +52,13 @@ def generateFile(dirOut, pathIn):
                                                             <div class="badges">{badges}</div>
                                                         </div>''')
         
-
+    
     for h2s in content.split("<h2>")[1:]:
-        h2  = h2s.split("</h2>")[0]
-        h3s = re.findall(r"<h3>(.*?)</h3>", h2s)
+        h2      = re.findall(r"(.*?)</h2>", h2s)[0]
+        h2text  = re.sub(r'<.*?>', '', h2)
+        content = content.replace(f"<h2>{h2}</h2>", f'<h2><a id="{h2text}" class="anchor"></a>{h2}</h2>')
         
-        content = content.replace(f"<h2>{h2}</h2>", f'<h2><a id="{h2}" class="anchor"></a>{h2}</h2>')
+        h3s = re.findall(r"<h3>(.*?)</h3>", h2s)
         for i, _h3 in enumerate(h3s):
             h3 = re.sub(r'<(.*?)\/.*?>', '', _h3)
             if h3 == "":

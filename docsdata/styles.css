@@ -702,6 +702,16 @@ span.junction {
     border-radius: 100px;
 }
 
+h2 span.junction {
+    padding: 2px 12px;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--main_white);
+
+    border-width: 2px;
+}
+
 h3 span.junction {
     padding: 2px 12px;
 
