@@ -23,6 +23,7 @@ uniform float direction;
 uniform int   repeatType;
 uniform float repeatLength;
 
+uniform int       lengthInf;
 uniform vec2      exLength;
 uniform int       exLengthUseSurf;
 uniform sampler2D exLengthSurf;
@@ -179,12 +180,12 @@ vec2 rayHitPathExtends(in vec2 rayOrigin, in vec2 p0, in vec2 p1, out bool hit) 
 
 void main() {
 	extendLength = exLength.x;
-	
 	if(exLengthUseSurf == 1) {
 		vec4 _vMap = texture2D( exLengthSurf, v_vTexcoord );
 		extendLength = mix(exLength.x, exLength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
+	if(lengthInf == 1) extendLength = 9999999.;
 	vec2 tx = 1. / dimension;
 	
 	float _exLength = extendLength * tx.x;

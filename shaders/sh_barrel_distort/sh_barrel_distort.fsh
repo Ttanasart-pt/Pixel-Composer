@@ -130,13 +130,22 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform float intensity;
 uniform vec2  center;
 uniform vec2  scale;
 
 uniform int   distanceMethod;
 
+uniform vec2      intensity;
+uniform int       intensityUseSurf;
+uniform sampler2D intensitySurf;
+
 void main() {
+	float ins = intensity.x;
+	if(intensityUseSurf == 1) {
+		vec4 _vMap = texture2D( intensitySurf, v_vTexcoord );
+		ins = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 cen = center / dimension;
 	vec2 pos = (v_vTexcoord - cen) / scale;
 	
@@ -148,7 +157,7 @@ void main() {
 	else if(distanceMethod == 2) radius = max(abs(pos.x), abs(pos.y));
     else if(distanceMethod == 3) radius = min(abs(pos.x), abs(pos.y));
     	
-    radius = pow(radius, intensity);
+    radius = pow(radius, ins);
     vec2 uv = cen + vec2(radius * cos(theta), radius * sin(theta));
     
 	gl_FragColor = sampleTexture(gm_BaseTexture, uv);

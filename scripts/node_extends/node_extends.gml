@@ -18,6 +18,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(14, nodeValue_Int(      "Path Sample", 16   ));
 	
 	////- =Extends
+	newInput(23, nodeValue_Bool(     "Infinity",   false ));
 	newInput(10, nodeValue_Float(    "Length",    .25    )).setUnitSimple().setMappable(17);
 	newInput(15, nodeValue_Bool(     "Use normal", false ));
 	newInput(11, nodeValue_Rotation( "Direction",   0    ));
@@ -32,7 +33,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Render
 	newInput(18, nodeValue_Color( "Blend Color", ca_white ));
-	// input 23
+	// input 24
 	
 	newOutput(0, nodeValue_Output("Surface Out",  VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Extends Mask", VALUE_TYPE.surface, noone));
@@ -40,7 +41,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_list = [ 1, 2,
 		[ "Surfaces", false ],  0,  3,  4,  5,  6, 
 		[ "Select",   false ],  7,  8,  9, 13, 14, 
-		[ "Extends",  false ], 10, 17, 15, 11, 12, 16,// 21, 22, 
+		[ "Extends",  false ], 23, 10, 17, 15, 11, 12, 16,// 21, 22, 
 		[ "Repeat",   false ], 19, 20, 
 		[ "Render",   false ], 18, 
 	];
@@ -105,6 +106,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _path = _data[13];
 			var _psam = _data[14];
 			
+			var _linf = _data[23];
 			var _leng = _data[10];
 			var _norm = _data[15];
 			var _dirr = _data[11];
@@ -122,6 +124,8 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			inputs[ 9].setVisible(_type == 0);
 			inputs[13].setVisible(_type == 2,   _type == 2);
 			inputs[14].setVisible(_type == 2);
+			
+			inputs[10].setVisible(!_linf);
 			
 			inputs[21].setVisible(_type != 2);
 			inputs[22].setVisible(_type != 2);
@@ -188,7 +192,8 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f( "expathData",   _extPath );
 			shader_set_i( "expathSample", _spth    );
 			
-			shader_set_f_map( "exLength",   _leng, _data[17], inputs[10] );
+			shader_set_i( "lengthInf",    _linf );
+			shader_set_f_map( "exLength", _leng, _data[17], inputs[10] );
 			shader_set_f( "direction",  _dirr );
 			shader_set_i( "useNormal",  _norm );
 			shader_set_i( "extends",    _extn );

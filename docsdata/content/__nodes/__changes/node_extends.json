@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.011",
+    "changes": [
+      {
+        "date": "2026-04-09T10:16:30.671Z",
+        "node": "",
+        "commit": "**Extends**: Add toggle to extends infinitely."
+      }
+    ]
+  }
+]
