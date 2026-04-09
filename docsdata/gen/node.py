@@ -188,8 +188,8 @@ for category in nodeCategoryData:
         redirPath = fileUtil.pathRemoveOrderAll(targetPath.replace("docsdata/pregen/3_nodes", "/nodes"))
         redir     = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url={redirPath}"/></html>'''
         
-        fileUtil.writeFile(f"docs/nodes/_index/{nodeName}.html", redir)
-        fileUtil.writeFile(f"docs/nodes/_index/{nodeBase}.html", redir)
+        fileUtil.writeFile(f"docs/nodes/_index/{nodeName.lower()}.html", redir)
+        fileUtil.writeFile(f"docs/nodes/_index/{nodeBase.lower()}.html", redir)
 
 # %% Write tag pages
 tagDir = os.path.join(targetRoot, "_tags")
