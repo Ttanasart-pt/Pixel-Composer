@@ -675,7 +675,11 @@
                 <a href="\nodes\filter\warp\effect\index.html" class="sidebar-dir">Effect</a>
             </div>
             <ul class="submenu">
-<li id="dilate"><div class="sidebar-menu sidebar-file">
+<li id="barrel_distort"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\filter\warp\effect\barrel_distort.html" class="sidebar-file">Barrel Distort</a>
+            </div>
+</li><li id="dilate"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\filter\warp\effect\dilate.html" class="sidebar-file">Dilate</a>
             </div>
@@ -5397,6 +5401,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/fxaa.html">Fxaa</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/kuwahara.html">Kuwahara</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/symmetric_nn.html">Symmetric Nn</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/barrel_distort.html">Barrel Distort</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/dilate.html">Dilate</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/displace.html">Displace</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/extends.html">Extends</a></li>
@@ -6241,7 +6246,7 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_pb_fx_bevel/node_pb_fx_bevel-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-208,\"y\":-32,\"inputs\":[{\"linked\":true},{},{\"r\":{\"d\":\"Rectangle\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"r\":{\"d\":0.5},\"m\":1},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamed\":true,\"id\":\"gA8BmW1249743smFQToZN6krCSi8w8rx\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape30972\",\"type\":\"Node_Shape\"},{\"x\":-32,\"y\":-32,\"inputs\":[{\"from_node\":\"gA8BmW1249743smFQToZN6krCSi8w8rx\",\"from_index\":0},{\"r\":{\"d\":4},\"m\":1},{},{},{},{},{},{},{}],\"outputs\":[{},{\"v\":0}],\"renamed\":true,\"id\":\"gA8BmU1248272D8IFU5puqK9fHyfFtcs\",\"version\":120076,\"attriTool\":{},\"name\":\"Pixel Bevel\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Pixel_Bevel84577\",\"type\":\"Node_PB_FX_Bevel\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_pb_fx_bevel/node_pb_fx_bevel.gml">/scripts/node_pb_fx_bevel/node_pb_fx_bevel.gml</a></li><li><span>Shader [sh_pb_fx_bevel_angle]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_pb_fx_bevel_angle/sh_pb_fx_bevel_angle.fsh">/shaders/sh_pb_fx_bevel_angle/sh_pb_fx_bevel_angle.fsh</a></li><li><span>Shader [sh_pb_fx_bevel_apply]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_pb_fx_bevel_apply/sh_pb_fx_bevel_apply.fsh">/shaders/sh_pb_fx_bevel_apply/sh_pb_fx_bevel_apply.fsh</a></li><li><span>Shader [sh_pb_fx_bevel_edge]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_pb_fx_bevel_edge/sh_pb_fx_bevel_edge.fsh">/shaders/sh_pb_fx_bevel_edge/sh_pb_fx_bevel_edge.fsh</a></li></ul>
+</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_pb_fx_bevel/node_pb_fx_bevel.gml">/scripts/node_pb_fx_bevel/node_pb_fx_bevel.gml</a></li><li><span>Shader [sh_pb_fx_bevel_apply]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_pb_fx_bevel_apply/sh_pb_fx_bevel_apply.fsh">/shaders/sh_pb_fx_bevel_apply/sh_pb_fx_bevel_apply.fsh</a></li><li><span>Shader [sh_pb_fx_bevel_edge]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_pb_fx_bevel_edge/sh_pb_fx_bevel_edge.fsh">/shaders/sh_pb_fx_bevel_edge/sh_pb_fx_bevel_edge.fsh</a></li><li><span>Shader [sh_pb_fx_bevel_angle]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_pb_fx_bevel_angle/sh_pb_fx_bevel_angle.fsh">/shaders/sh_pb_fx_bevel_angle/sh_pb_fx_bevel_angle.fsh</a></li></ul>
         </div>
     </div>
 

@@ -675,7 +675,11 @@
                 <a href="\nodes\filter\warp\effect\index.html" class="sidebar-dir">Effect</a>
             </div>
             <ul class="submenu">
-<li id="dilate"><div class="sidebar-menu sidebar-file">
+<li id="barrel_distort"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\filter\warp\effect\barrel_distort.html" class="sidebar-file">Barrel Distort</a>
+            </div>
+</li><li id="dilate"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\filter\warp\effect\dilate.html" class="sidebar-file">Dilate</a>
             </div>
@@ -5397,6 +5401,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/fxaa.html">Fxaa</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/kuwahara.html">Kuwahara</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/symmetric_nn.html">Symmetric Nn</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/barrel_distort.html">Barrel Distort</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/dilate.html">Dilate</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/displace.html">Displace</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/extends.html">Extends</a></li>
@@ -6196,8 +6201,17 @@
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_blobify.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Blobify</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Blobify</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="/nodes/array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><div class="vertical"></div><a href="#">Node_Blobify</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic"><p>Node_Blobify</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">toggle</p></td>
+                <td><p>Channel</p></td>
+            </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Surface In</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
+                <td><p>Mask</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
+                <td><p>Mix</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
                 <td><p>Radius</p></td>

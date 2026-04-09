@@ -675,7 +675,11 @@
                 <a href="\nodes\filter\warp\effect\index.html" class="sidebar-dir">Effect</a>
             </div>
             <ul class="submenu">
-<li id="dilate"><div class="sidebar-menu sidebar-file">
+<li id="barrel_distort"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\filter\warp\effect\barrel_distort.html" class="sidebar-file">Barrel Distort</a>
+            </div>
+</li><li id="dilate"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\filter\warp\effect\dilate.html" class="sidebar-file">Dilate</a>
             </div>
@@ -5397,6 +5401,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/fxaa.html">Fxaa</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/kuwahara.html">Kuwahara</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\blur\non_linear/symmetric_nn.html">Symmetric Nn</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/barrel_distort.html">Barrel Distort</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/dilate.html">Dilate</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/displace.html">Displace</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\warp\effect/extends.html">Extends</a></li>
@@ -6256,7 +6261,7 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_flow_path/node_flow_path-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-224,\"y\":-96,\"inputs\":[{\"linked\":true},{\"unit\":1,\"r\":{\"d\":0.25},\"m\":1},{},{\"unit\":1},{},{},{\"v\":0},{\"v\":0},{},{},{},{},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8BI1467366BBubdU9QXYDC9MC5SGc8\",\"version\":120076,\"attriTool\":{},\"name\":\"Checker\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Checker20020\",\"type\":\"Node_Checker\"},{\"x\":-192,\"y\":64,\"inputs\":[{},{},{},{},{\"unit\":1,\"r\":{\"d\":[0.34555913474196948,0.23560303120063197,-0.302734375,0.09765625,0.302734375,-6.25,0]},\"m\":1},{\"unit\":1,\"r\":{\"d\":[0.79868413474196953,0.73950928120063197,-0.455078125,0.279296875,0.455078125,-17.875,0]},\"m\":1}],\"outputs\":[{\"v\":0},{},{\"v\":0}],\"renamed\":true,\"data_length\":1,\"id\":\"gA8BIY500463V0UecrrvFZglxV85VDQB\",\"version\":120076,\"attri\":{\"size\":0,\"weight\":[[0,1],[100,1]],\"display_name\":false,\"snap_point\":true,\"snap_distance\":8},\"input_fix_len\":4,\"attriTool\":{},\"name\":\"Path\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Path98805\",\"type\":\"Node_Path\"},{\"x\":-64,\"y\":-96,\"inputs\":[{\"from_node\":\"gA8BI1467366BBubdU9QXYDC9MC5SGc8\",\"from_index\":0},{},{},{},{},{},{},{\"v\":1,\"from_node\":\"gA8BIY500463V0UecrrvFZglxV85VDQB\",\"from_index\":1},{\"unit\":1},{},{},{},{},{},{},{},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8BIW498250GmqRUpBgG8fXupPKJpEQ\",\"version\":120076,\"attriTool\":{},\"name\":\"Flow Path\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Flow_Path20557\",\"type\":\"Node_Flow_Path\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_flow_path/node_flow_path.gml">/scripts/node_flow_path/node_flow_path.gml</a></li><li><span>Shader [sh_flow_path_blur]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_flow_path_blur/sh_flow_path_blur.fsh">/shaders/sh_flow_path_blur/sh_flow_path_blur.fsh</a></li><li><span>Shader [sh_flow_path_add]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_flow_path_add/sh_flow_path_add.fsh">/shaders/sh_flow_path_add/sh_flow_path_add.fsh</a></li><li><span>Shader [sh_flow_path_apply]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_flow_path_apply/sh_flow_path_apply.fsh">/shaders/sh_flow_path_apply/sh_flow_path_apply.fsh</a></li></ul>
+</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_flow_path/node_flow_path.gml">/scripts/node_flow_path/node_flow_path.gml</a></li><li><span>Shader [sh_flow_path_blur]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_flow_path_blur/sh_flow_path_blur.fsh">/shaders/sh_flow_path_blur/sh_flow_path_blur.fsh</a></li><li><span>Shader [sh_flow_path_apply]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_flow_path_apply/sh_flow_path_apply.fsh">/shaders/sh_flow_path_apply/sh_flow_path_apply.fsh</a></li><li><span>Shader [sh_flow_path_add]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_flow_path_add/sh_flow_path_add.fsh">/shaders/sh_flow_path_add/sh_flow_path_add.fsh</a></li></ul>
         </div>
     </div>
 
