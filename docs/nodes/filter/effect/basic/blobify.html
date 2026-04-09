@@ -6219,7 +6219,9 @@
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
     }
-</script><br><p>Blobify node tries to soften the sharp edge.</p><br>
+</script><img class="node-graph-preview" src="/src/images/nodegen/node_blobify/node_blobify-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-224,\"y\":-64,\"inputs\":[{\"linked\":true},{},{\"r\":{\"d\":\"Arrow\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{\"r\":{\"d\":0.29999999999999999},\"m\":1},{},{},{},{},{\"r\":{\"d\":0.5},\"m\":1},{},{},{},{\"unit\":1,\"r\":{\"d\":[0.20000000000000001,0.20000000000000001]},\"m\":1},{\"unit\":1,\"r\":{\"d\":[0.80000000000000004,0.80000000000000004]},\"m\":1},{\"r\":{\"d\":0.10000000000000001},\"m\":1},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamedManual\":true,\"renamed\":true,\"id\":\"gA8BKm6344598VP491dBEuopxPjpbMBs\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape14832\",\"type\":\"Node_Shape\"},{\"x\":-48,\"y\":-64,\"inputs\":[{\"from_node\":\"gA8BKm6344598VP491dBEuopxPjpbMBs\",\"from_index\":0},{},{\"r\":{\"d\":11},\"m\":1},{\"r\":{\"d\":0.5},\"m\":1},{\"v\":0}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8BSQ043799UMsZZrZdEUsWjaGZZNuW\",\"version\":120076,\"attriTool\":{},\"name\":\"Blobify\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Blobify54382\",\"type\":\"Node_Blobify\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
+        Copy to Clipboard
+</button><br><p>Blobify node tries to soften the sharp edge.</p><br>
 <p><img class="node-content" src="/src/images/etc/blobify.png"></p><br>
 <br><h2><a id="Algorithm" class="anchor"></a>Algorithm</h2><br>
 <p>The node first blur the image by the <span class="junction" style="border-color: #ff9166AA">Radius</span> amount, then apply threshold by 

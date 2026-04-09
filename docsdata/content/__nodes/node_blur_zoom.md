@@ -1,6 +1,6 @@
 Zoom blur node blur image by scaling the image in and out of a point.
 
-<img-deco blur_zoom>
+<img-deco blur_zoom caption="Credit: Synth Cities Environment by ansimuz">
 
 ## Properties
 

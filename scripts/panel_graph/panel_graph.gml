@@ -795,7 +795,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        SERIALIZE_STRIP = false;
 	        json_save_struct($"{dir}/{nodeBase}-sample.txt", _map);
     		
-    	}, THEME.icon_preview_export));
+    	}, THEME.icon_preview_export)
+    		.setColorGet(function() /*=>*/ {return array_safe_get_fast(nodes_selecting, 0, noone) == noone? COLORS._main_icon : COLORS._main_accent}));
     	
         function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
 		function topbar_show()   { project.graphDisplay.show_topbar =  true; }

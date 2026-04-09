@@ -48,6 +48,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
     static setIsShelf   = function()           /*=>*/ { isShelf    = true;       return self; }
     static setActive    = function(_active)    /*=>*/ { active     = _active;    return self; }
     static setColor     = function(_color)     /*=>*/ { color      = _color;     return self; }
+    static setColorGet  = function(_color)     /*=>*/ { getColor   = _color;     return self; }
     static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu  = _shiftMenu; return self; }
     static setParam     = function(_param)     /*=>*/ { params     = _param;     return self; }
     static setToggle    = function(_toggle)    /*=>*/ { toggle     = _toggle;    return self; }

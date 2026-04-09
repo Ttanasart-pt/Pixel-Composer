@@ -1,7 +1,5 @@
 Smear node drag out the brighter part to create a trail effect.
 
-<img-deco smear>
-
 ## Properties
 
 ### <junc mode/>
