@@ -690,10 +690,10 @@ div.breadcrumb {
 
     .breadcrumb-separator {
         margin: 0px 6px;
-        width: 102px;
+        width: 10px;
         height: auto;
         background: url("/src/svg/arrow_right.svg") no-repeat center;
-        opacity: 0.5;
+        opacity: 0.52
     }
 }
 
