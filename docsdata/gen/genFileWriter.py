@@ -119,6 +119,19 @@ def generateFile(dirOut, pathIn):
 
     data = template.replace("{{content}}", content)
 
+    
+    breadcrumbs = f'''<div class="breadcrumb">'''
+    pathOutSplit = pathOut.split("/")
+    for i in range(1, len(pathOutSplit) - 1):
+        pathPart = pathOutSplit[i]
+        if pathPart == "_index":
+            continue
+        
+        breadcrumbPath = "/" + "/".join(pathOutSplit[1:i+1])
+        breadcrumbs += f'<a href="{breadcrumbPath}">{pathPart.title()}</a>'
+    breadcrumbs += "</div>"
+    data = data.replace("{{breadcrumbs}}", breadcrumbs)
+
     with open(pathOut, "w") as f:
         f.write(data)
 
