@@ -180,6 +180,7 @@
             "Node_pSystem_Render_Trail",
             "Node_pSystem_Render_Path",
             "Node_pSystem_Render_Line",
+            "Node_pSystem_Render_Triangle",
             "Node_pSystem_Triangulate",
             
             { "label": "/Blending" },

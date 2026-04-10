@@ -1,0 +1,6 @@
+{
+    "name":          "Render Triangle",
+    "spr":           "s_node_psystem_render_triangle",
+    "baseNode":      "Node_pSystem_Render_Triangle",
+    "pxc_version":    120090,
+}

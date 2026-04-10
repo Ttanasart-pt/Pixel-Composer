@@ -6,6 +6,11 @@
         "date": "2026-04-10T04:02:13.076Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Fix scroll menu disappear when open other scroll menu."
+      },
+      {
+        "date": "2026-04-10T04:44:12.312Z",
+        "node": "any",
+        "commit": "Introduced"
       }
     ]
   }

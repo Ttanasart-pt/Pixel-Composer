@@ -14,7 +14,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	input_node_types   = [ Node_pSystem_Spawn,  Node_pSystem_from_Points  ];
 	output_node_types  = [ Node_pSystem_Render, Node_pSystem_Render_Trail, Node_pSystem_Trail, Node_pSystem_Render_Path, 
-						   Node_pSystem_Render_Line, Node_pSystem_Triangulate ];
+						   Node_pSystem_Render_Line, Node_pSystem_Render_Triangle, Node_pSystem_Triangulate ];
 	input_display_list = [ 1, 
 		[ "Loop", false, 0 ], 2 
 	];
