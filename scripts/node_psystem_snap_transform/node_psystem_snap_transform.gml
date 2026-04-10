@@ -17,28 +17,33 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 	newInput(16, nodeValue_Bool(  "Snap Position", false ));
 	newInput( 8, nodeValue_Vec2_Range( "Position Snap",  [0,0,0,0], true )).setCurvable( 9, CURVE_DEF_11, "Over Lifespan"); 
 	newInput(10, nodeValue_Vec2_Range( "Position Shift", [0,0,0,0], true )); 
-	newInput(14, nodeValue_Bool(  "Override Position" ));
+	newInput(14, nodeValue_Bool(  "Override Position", false ));
 	
 	////- =Angle
 	newInput(17, nodeValue_Bool(  "Snap Angle", false ));
 	newInput( 3, nodeValue_Range( "Angle Snap",  [1,1], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
 	newInput( 5, nodeValue_Range( "Angle Shift", [0,0], true )).setCurvable( 6, CURVE_DEF_11, "Over Lifespan"); 
-	newInput( 7, nodeValue_Bool(  "Override Angle" ));
+	newInput( 7, nodeValue_Bool(  "Override Angle", false ));
 	
 	////- =Scale
 	newInput(18, nodeValue_Bool(  "Snap Scale", false ));
 	newInput(11, nodeValue_Vec2_Range( "Scale Snap",  [0,0,0,0], true )).setCurvable(12, CURVE_DEF_11, "Over Lifespan"); 
 	newInput(13, nodeValue_Vec2_Range( "Scale Shift", [0,0,0,0], true )); 
-	newInput(15, nodeValue_Bool(  "Override Scale" ));
-	// 19
+	newInput(15, nodeValue_Bool(  "Override Scale", false ));
+	
+	////- =Direction
+	newInput(19, nodeValue_Bool(     "Snap Direction", false ));
+	newInput(20, nodeValue_Rotation( "Direction Snap", 0     ));
+	// 21
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
-	input_display_list = [ 2, 
-		[ "Particles", false     ], 0, 1, 
-		[ "Position",  false, 16 ], 8, 9, 10, 14, 
-		[ "Angle",     false, 17 ], 3, 4, 5, 6, 7, 
+	input_display_list = [  2, 
+		[ "Particles", false     ],  0,  1, 
+		[ "Position",  false, 16 ],  8,  9, 10, 14, 
+		[ "Angle",     false, 17 ],  3,  4,  5,  6,  7, 
 		[ "Scale",     false, 18 ], 11, 12, 13, 15, 
+		[ "Direction", false, 19 ], 20, 
 	];
 	
 	////- Nodes
@@ -58,29 +63,34 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 	}
 	
 	static update = function(_frame = CURRENT_FRAME) {
-		var _parts = getInputData(0);
-		var _masks = getInputData(1), use_mask = _masks != noone;
-		
-		if(!is(_parts, pSystem_Particles)) return;
-		if(use_mask) buffer_to_start(_masks);
-		outputs[0].setValue(_parts);
-		
-		var _seed      = getInputData( 2);
-		
-		var _posi      = getInputData(16);
-		var _posi_snap = getInputData( 8), _posi_snap_curved = inputs[8].attributes.curved && curve_posi_snap != undefined;
-		var _posi_shft = getInputData(10);
-		var _posi_over = getInputData(14);
-		
-		var _rota      = getInputData(17);
-		var _rota_snap = getInputData( 3), _rota_snap_curved = inputs[3].attributes.curved && curve_rota_snap != undefined;
-		var _rota_shft = getInputData( 5), _rota_shft_curved = inputs[5].attributes.curved && curve_rota_shft != undefined;
-		var _rota_over = getInputData( 7);
-		
-		var _scal      = getInputData(18);
-		var _scal_snap = getInputData(11), _scal_snap_curved = inputs[11].attributes.curved && curve_scal_snap != undefined;
-		var _scal_shft = getInputData(13);
-		var _scal_over = getInputData(15);
+		#region data
+			var _parts = getInputData(0);
+			var _masks = getInputData(1), use_mask = _masks != noone;
+			
+			if(!is(_parts, pSystem_Particles)) return;
+			if(use_mask) buffer_to_start(_masks);
+			outputs[0].setValue(_parts);
+			
+			var _seed      = getInputData( 2);
+			
+			var _posi      = getInputData(16);
+			var _posi_snap = getInputData( 8), _posi_snap_curved = inputs[8].attributes.curved && curve_posi_snap != undefined;
+			var _posi_shft = getInputData(10);
+			var _posi_over = getInputData(14);
+			
+			var _rota      = getInputData(17);
+			var _rota_snap = getInputData( 3), _rota_snap_curved = inputs[3].attributes.curved && curve_rota_snap != undefined;
+			var _rota_shft = getInputData( 5), _rota_shft_curved = inputs[5].attributes.curved && curve_rota_shft != undefined;
+			var _rota_over = getInputData( 7);
+			
+			var _scal      = getInputData(18);
+			var _scal_snap = getInputData(11), _scal_snap_curved = inputs[11].attributes.curved && curve_scal_snap != undefined;
+			var _scal_shft = getInputData(13);
+			var _scal_over = getInputData(15);
+			
+			var _dirr      = getInputData(19);
+			var _dirr_snap = getInputData(20);
+		#endregion
 		
 		var _partAmo  = _parts.maxCursor;
 		var _partBuff = _parts.buffer;
@@ -151,6 +161,21 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				_sy = value_snap(_sy - _scal_shft_y_curr, _scal_snap_y_curr) + _scal_shft_y_curr;
 				
 				_dfg |= 0b010 * !_scal_over;
+			}
+			
+			if(_dirr) {
+				var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+				var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+				
+				var _dir = point_direction( 0, 0, _vx, _vy );
+				var _dis = point_distance(  0, 0, _vx, _vy );
+				_dir = value_snap(_dir, _dirr_snap);
+				
+				_vx = lengthdir_x(_dis, _dir);
+				_vy = lengthdir_y(_dis, _dir);
+				
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
 			}
 			
 			buffer_write_at( _partBuff, _start + ( _posi_over? PSYSTEM_OFF.posx : PSYSTEM_OFF.dposx ), buffer_f64, _px  );

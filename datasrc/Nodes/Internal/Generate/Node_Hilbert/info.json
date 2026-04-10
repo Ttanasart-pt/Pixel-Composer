@@ -1,0 +1,6 @@
+{
+    "name":          "Hilbert",
+    "spr":           "s_node_hilbert",
+    "baseNode":      "Node_Hilbert",
+    "pxc_version":    120090,
+}

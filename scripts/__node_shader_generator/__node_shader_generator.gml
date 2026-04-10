@@ -31,3 +31,27 @@ function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 	}
 	
 }
+
+/*
+function Node_RENAME(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
+	name   = "RENAME";
+	shader = sh_;
+	
+	////- =Output
+	newInput( 1, nodeValue_Surface( "UV Map"     ));
+	newInput( 2, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 3, nodeValue_Surface( "Mask"       ));
+	
+	////- =Shader
+	// 4
+	
+	input_display_list = [
+		[ "Output",     true ],  0,  1,  2,  3, 
+		[ "Shader",    false ],  
+	];
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		
+	}
+}
+*/

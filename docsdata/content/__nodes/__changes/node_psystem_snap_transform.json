@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.011",
+    "changes": [
+      {
+        "date": "2026-04-10T02:22:18.262Z",
+        "node": "pSystem > Snap Transform",
+        "commit": "**pSystem > Snap Transform**: Add direction snap."
+      }
+    ]
+  }
+]

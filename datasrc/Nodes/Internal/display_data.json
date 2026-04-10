@@ -864,6 +864,7 @@
             "Node_Julia_Set",
             "Node_Maze_Pattern",
             "Node_Weave",
+            "Node_Hilbert",
             
             { "label": "Populate" },
             { "label": "/Repeat" },
