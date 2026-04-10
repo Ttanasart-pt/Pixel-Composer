@@ -208,15 +208,14 @@ def writeNode(metadata, contentPath, changeData = None):
     return content
 
 # %%
-group_start = '''<div class="node-group">'''
-group_end   = '''</div>'''
-
 def writeCategory(name, nodes, nodeMetadata, subFilter = None):
     title   = name
-    content = f"""<h1>{title}</h1><br><br>"""
-    sgName  = ""
-    closeGroup = False
+    content = f'<h1>{title}</h1><br><br>'
+    sgName  = ''
     subGroupCurrent = None
+
+    closeGroup      = False
+    closeNodeGroup  = False
 
     for node in nodes:
         if not isinstance(node, str):
@@ -227,6 +226,10 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
             if subsubGroup:
                 if subFilter and subFilter != subGroupCurrent:
                     continue
+                
+                if closeNodeGroup:
+                    content += '</div>'
+                    closeNodeGroup = False
 
                 content += f'<h5 class="node-group-title">{sgName}</h5>'
                 
@@ -235,8 +238,12 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
                 if subFilter and subFilter != subGroupCurrent:
                     continue
 
+                if closeNodeGroup:
+                    content += '</div>'
+                    closeNodeGroup = False
+
                 if closeGroup:
-                    content += group_end
+                    content += '</div>'
                     closeGroup = False
                 
                 content += '<div class="node-category">'
@@ -247,9 +254,9 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
         if subFilter and subFilter != subGroupCurrent:
             continue
 
-        if not closeGroup:
-            content += group_start
-            closeGroup = True
+        if not closeNodeGroup:
+            content += '<div class="node-group">'
+            closeNodeGroup = True
         
         if node in nodeMetadata:
             metadata = nodeMetadata[node]
@@ -259,10 +266,14 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
             name = node.replace("_", " ").title()
             spr  = "node_generic"
 
-        content += f'''<div class="node-card"><a href="/nodes/_index/{node.lower()}.html"><img {spr}>{name}</a></div>\n'''
+        content += f'<div class="node-card"><a href="/nodes/_index/{node.lower()}.html"><img {spr}>{name}</a></div>\n'
 
     if closeGroup:
-        content += group_end
+        content += '</div>'
+
+    if closeNodeGroup:
+        content += '</div>'
+
     return content
 
 def writeTag(tag, nodes, nodeMetadata):
