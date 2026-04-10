@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_line_match",
+  "name":"sh_line_match",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

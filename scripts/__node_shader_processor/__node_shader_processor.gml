@@ -33,7 +33,7 @@ function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		surface_set_shader(_outSurf, shader);
 			shader_set_interpolation(_surf);
 			shader_set_i( "sampleMode", getAttribute("oversample"));
-			shader_set_f("dimension", _sw, _sh);
+			shader_set_f( "dimension", _sw, _sh);
 			setShader(_data);
 			
 			draw_surface_safe(_surf);
@@ -50,3 +50,20 @@ function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		return processShader(_outSurf, _data);
 	}
 }
+
+/*
+function Node_RENAME(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y, _group) constructor {
+	name   = "RENAME";
+	shader = sh_background;
+	
+	var i = shader_index;
+	
+	////- =Type
+	newInput(i+0, nodeValue_Color("Color", ca_black )).setShaderProp("color");
+	
+	array_append(input_display_list, [ 
+		[ "BG", false ], i+0 
+	]);
+	
+}
+*/

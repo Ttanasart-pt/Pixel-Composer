@@ -655,6 +655,7 @@
             "Node_Edge_Detect",
             "Node_Curvature",
             "Node_Hough_Transform",
+            "Node_Line_Match",
             
             { "label": "Color" },
             { "label": "/Replacement" },
