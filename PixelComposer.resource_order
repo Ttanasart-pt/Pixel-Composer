@@ -3366,6 +3366,7 @@
     {"name":"s_node_psystem_mask","order":26,"path":"sprites/s_node_psystem_mask/s_node_psystem_mask.yy",},
     {"name":"s_node_psystem_oscillate","order":16,"path":"sprites/s_node_psystem_oscillate/s_node_psystem_oscillate.yy",},
     {"name":"s_node_psystem_override","order":13,"path":"sprites/s_node_psystem_override/s_node_psystem_override.yy",},
+    {"name":"s_node_psystem_render_line","order":41,"path":"sprites/s_node_psystem_render_line/s_node_psystem_render_line.yy",},
     {"name":"s_node_psystem_render_output","order":14,"path":"sprites/s_node_psystem_render_output/s_node_psystem_render_output.yy",},
     {"name":"s_node_psystem_render_path","order":37,"path":"sprites/s_node_psystem_render_path/s_node_psystem_render_path.yy",},
     {"name":"s_node_psystem_render","order":11,"path":"sprites/s_node_psystem_render/s_node_psystem_render.yy",},
