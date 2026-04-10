@@ -865,6 +865,7 @@
             { "label": "/Other" },
             "Node_Box_Pattern",
             "Node_Recursive_Subdiv",
+            "Node_Wave_Interfere",
             "Node_Quasicrystal",
             "Node_Pixel_Sampler",
             "Node_Julia_Set",
