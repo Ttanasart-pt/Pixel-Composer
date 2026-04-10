@@ -20,6 +20,8 @@ shutil.copytree("docsdata/src", "docs/src", dirs_exist_ok = True)
 svg_home = fileUtil.readFile("docs/src/svg/home.svg")
 svg_dir  = fileUtil.readFile("docs/src/svg/dir.svg")
 
+genFileWriter.getImages()
+
 # %%
 pages = []
 allSidebar = []

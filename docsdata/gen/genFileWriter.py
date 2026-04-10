@@ -10,16 +10,18 @@ svg_home = fileUtil.readFile("docs/src/svg/home.svg")
 svg_dir  = fileUtil.readFile("docs/src/svg/dir.svg")
 
 images = {}
-for root, dirs, files in os.walk("docs/src"):
-    for file in files:
-        if not file.endswith(".png"):
-            continue
-        
-        if root.find("__") != -1:
-            continue
 
-        key = file[:-4].lower()
-        images[key] = os.path.join(root.replace("docs/", ""), file).replace("\\", "/")
+def getImages():
+    for root, dirs, files in os.walk("docs/src"):
+        for file in files:
+            if not file.endswith(".png"):
+                continue
+            
+            if root.find("__") != -1:
+                continue
+
+            key = file[:-4].lower()
+            images[key] = os.path.join(root.replace("docs/", ""), file).replace("\\", "/")
 
 template = fileUtil.readFile("docsdata/templates/page.html")
 
