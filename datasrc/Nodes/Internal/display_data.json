@@ -161,6 +161,10 @@
             "Node_pSystem_Follow_Path",
             "Node_pSystem_Align_to_Velocity",
             "Node_pSystem_Wrap",
+            { "label": "/Fields" },
+            "Node_pSystem_Vector_Field",
+            "Node_pSystem_Vector_Gradient",
+
             
             { "label": "/Relation" },
             "Node_pSystem_Boids",

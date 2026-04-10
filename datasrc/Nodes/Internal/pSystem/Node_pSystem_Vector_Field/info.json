@@ -1,0 +1,6 @@
+{
+    "name":          "Vector Field",
+    "spr":           "s_node_psystem_vector_field",
+    "baseNode":      "Node_pSystem_Vector_Field",
+    "pxc_version":    120090,
+}

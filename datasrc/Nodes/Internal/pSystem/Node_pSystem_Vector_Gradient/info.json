@@ -1,0 +1,6 @@
+{
+    "name":          "Vector Gradient",
+    "spr":           "s_node_psystem_vector_gradient",
+    "baseNode":      "Node_pSystem_Vector_Gradient",
+    "pxc_version":    120090,
+}

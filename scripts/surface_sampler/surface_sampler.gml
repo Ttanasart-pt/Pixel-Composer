@@ -18,15 +18,19 @@ function Surface_sampler(s = noone) constructor {
         sw      = surface_get_width(surface);
         sh      = surface_get_height(surface);
         format  = surface_get_format(surface);
-        buffer  = buffer_create(sw * sh * 4, buffer_fixed, 1);
+        
+        var bsize = 1;
+        switch(format) {
+            case surface_r16float :    bsize = sw * sh * 2; getPixel = getPixelF16;  break;
+            case surface_r32float :    bsize = sw * sh * 4; getPixel = getPixelF32;  break;
+            
+            case surface_rgba8unorm  : bsize = sw * sh * 4; getPixel = getPixelU32;  break;
+            case surface_rgba16float : bsize = sw * sh * 8; getPixel = getPixel4F16; break;
+        }
+        
+        buffer  = buffer_create(bsize, buffer_fixed, 1);
         buffer_get_surface(buffer, surface, 0);
         
-        switch(format) {
-            case surface_r16float   : getPixel = getPixelF16; break;
-            case surface_r32float   : getPixel = getPixelF32; break;
-            
-            case surface_rgba8unorm : getPixel = getPixelU32; break;
-        }
     }
     
     setSurface(s);
@@ -37,6 +41,13 @@ function Surface_sampler(s = noone) constructor {
     static getPixelU8  = function(_x,_y) /*=>*/ {return buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 1, buffer_u8)};
     static getPixelU16 = function(_x,_y) /*=>*/ {return buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 2, buffer_u16)};
     static getPixelU32 = function(_x,_y) /*=>*/ {return buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 4, buffer_u32)};
+    
+    static getPixel4F16 = function(_x,_y) /*=>*/ {return [
+        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 0, buffer_f16),
+        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 2, buffer_f16),
+        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 4, buffer_f16),
+        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 6, buffer_f16),
+    ]};
     
     getPixel = getPixelU32;
     

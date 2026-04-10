@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_psystem_gradient",
+  "name":"sh_psystem_gradient",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/simulation/particleSystem/transform.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

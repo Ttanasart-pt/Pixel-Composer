@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_psystem_vector_field",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_psystem_vector_field",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/simulation/particleSystem/transform.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

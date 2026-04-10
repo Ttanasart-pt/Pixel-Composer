@@ -1,0 +1,6 @@
+{
+    "name":          "Vector Curl",
+    "spr":           "s_node_psystem_vector_curl",
+    "baseNode":      "Node_pSystem_Vector_Curl",
+    "pxc_version":    120090,
+}
