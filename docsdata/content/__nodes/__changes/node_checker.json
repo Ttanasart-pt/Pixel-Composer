@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.011",
+    "changes": [
+      {
+        "date": "2026-04-10T07:40:36.588Z",
+        "node": "Checkerboard",
+        "commit": "**Checkerboard**: Add aspect ratio setting."
+      }
+    ]
+  }
+]

@@ -21,10 +21,11 @@ varying vec4 v_vColour;
 
 #define PI 3.14159265359
 
-uniform vec2 dimension;
-uniform vec2 position;
-uniform int  diagonal;
-uniform int  blend;
+uniform vec2  dimension;
+uniform vec2  position;
+uniform int   diagonal;
+uniform float aspect;
+uniform int   blend;
 
 uniform vec2      amount;
 uniform int       amountUseSurf;
@@ -68,7 +69,7 @@ void main() {
 	
 	vec2 vtx = getUV(v_vTexcoord);
 	vec2 a   = dimension / dimension.y;
-	vec2 c   = (vtx - position) * a;
+	vec2 c   = (vtx - position) * a * vec2(1., aspect);
 	float ch;
 	
 	if(diagonal == 0 || blend != 0) {

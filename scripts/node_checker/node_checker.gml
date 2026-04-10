@@ -16,23 +16,24 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(10, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput(9, nodeValue_Bool(     "Diagonal",  false  ));
-	newInput(1, nodeValue_Slider(   "Amount",   .5,     )).setMappable(6).setUnitSimple();
-	newInput(2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").setMappable(7);
-	newInput(3, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
+	newInput( 9, nodeValue_Bool(     "Diagonal",  false  ));
+	newInput( 1, nodeValue_Float(    "Amount",   .5      )).setMappable(6).setUnitSimple();
+	newInput(13, nodeValue_Float(    "Aspect",    1      ));
+	newInput( 2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").setMappable(7);
+	newInput( 3, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	
 	////- =Render
-	newInput(8, nodeValue_EButton( "Type",    0, [ "Solid", "Smooth", "AA" ] ));
-	newInput(4, nodeValue_Color(   "Color 1", ca_white ));
-	newInput(5, nodeValue_Color(   "Color 2", ca_black ));
-	// input 13
+	newInput( 8, nodeValue_EButton( "Type",    0, [ "Solid", "Smooth", "AA" ] ));
+	newInput( 4, nodeValue_Color(   "Color 1", ca_white ));
+	newInput( 5, nodeValue_Color(   "Color 2", ca_black ));
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",	true],	0, 11, 12, 10, 
-		["Pattern",	false], 9, 1, 6, 2, 7, 3,
-		["Render",	false], 8, 4, 5,
+		[ "Output",	  true ],  0, 11, 12, 10, 
+		[ "Pattern", false ],  9,  1,  6, 13,  2,  7,  3,
+		[ "Render",  false ],  8,  4,  5,
 	];
 	
 	input_display_deco = function(_x, _y, _w, _m, _hover, _focus, _panel) /*=>*/ {
@@ -72,24 +73,36 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim = _data[0];
-		var _pos = _data[3]
+		#region data
+			var _dim = _data[ 0];
+			
+			var _dia = _data[ 9];
+			var _asp = _data[13];
+			var _pos = _data[ 3];
+			
+			var _bld = _data[ 8];
+			var _c1  = _data[ 4];
+			var _c2  = _data[ 5];
 		
-		inputs[2].setVisible(!_data[9]);
+			inputs[2].setVisible(!_data[9]);
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_checkerboard);
 			shader_set_uv(_data[11], _data[12]);
 			
-			shader_set_2("dimension",  _dim);
-			shader_set_i("diagonal",   _data[9]);
-			shader_set_f("position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_f_map("amount", _data[1], _data[6], inputs[1]);
-			shader_set_f_map("angle",  _data[2], _data[7], inputs[2]);
-			shader_set_color("col1",   _data[4]);
-			shader_set_color("col2",   _data[5]);
-			shader_set_i("blend",      _data[8]);
+			shader_set_2( "dimension",  _dim );
+			
+			shader_set_i( "diagonal",   _dia );
+			shader_set_f( "position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_f_map( "amount", _data[1], _data[6], inputs[1]);
+			shader_set_f_map( "angle",  _data[2], _data[7], inputs[2]);
+			shader_set_f( "aspect",     _asp );
+			
+			shader_set_i( "blend",      _bld );
+			shader_set_c( "col1",       _c1  );
+			shader_set_c( "col2",       _c2  );
 			
 			draw_empty();
 		surface_reset_shader();
