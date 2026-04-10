@@ -224,10 +224,6 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
             sgName      = subGroup.strip("/")
             subsubGroup = subGroup.startswith("/")
             
-            if closeGroup:
-                content += group_end
-                closeGroup = False
-
             if subsubGroup:
                 if subFilter and subFilter != subGroupCurrent:
                     continue
