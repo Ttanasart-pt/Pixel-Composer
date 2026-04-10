@@ -92,7 +92,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	point_dist_map_sw = 1;
 	point_dist_map_sh = 1;
 	
-	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		if(!is(partPool, pSystem_Particles)) return;
@@ -143,7 +143,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
-	static step = function() {}
+	////- Particle
 	
 	static spawn = function(_frame = CURRENT_FRAME, _ox = 0, _oy = 0, _ovx = undefined, _ovy = undefined) {
 		if(!is(partPool, pSystem_Particles)) return;
@@ -514,6 +514,8 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 	}
 	
+	////- Updates
+	
 	static update = function(_frame = CURRENT_FRAME) {
 		if(!is(partPool, pSystem_Particles)) reset();
 		
@@ -648,6 +650,8 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		curve_step = new curveMap(getInputData(22));
 	}
+	
+	////- Actions
 	
 	static cleanUp = function() {
 		if(is(partPool, pSystem_Particles))

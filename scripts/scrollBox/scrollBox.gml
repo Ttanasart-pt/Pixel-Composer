@@ -66,6 +66,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	hide     = 0;
 	displayStr = undefined;
 	
+	scrollDialog = noone;
+	
 	static setStruct        = function(l) /*=>*/ { displayStr     = l; return self; }
 	static setType          = function(l) /*=>*/ { type           = l; return self; }
 	
@@ -107,7 +109,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			case 2 : _object = o_dialog_scrollbox_grid;       break;
 		}
 		
-		with(dialogCall(_object, x + open_rx, y + open_ry)) {
+		scrollDialog = dialogCall(_object, x + open_rx, y + open_ry);
+		with(scrollDialog) {
 			initVal      = ind;
 			font         = other.font;
 			align        = other.align;
@@ -194,6 +197,12 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			_w -= bs;
 		}
 		
+		if(scrollDialog && !instance_exists(scrollDialog)) {
+			scrollDialog = noone;
+			open = false;
+		}
+		
+		if(scrollDialog == undefined) open = false;
 		if(open) { resetFocus(); return h; }
 		
 		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);

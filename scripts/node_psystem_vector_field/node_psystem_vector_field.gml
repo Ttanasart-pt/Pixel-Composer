@@ -2,7 +2,7 @@ function Node_pSystem_Vector_Field(_x, _y, _group = noone) : Node(_x, _y, _group
 	name  = "Vector Field";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	setDrawIcon(s_node_psystem_oscillate);
+	setDrawIcon(s_node_psystem_vector_field);
 	
 	setDimension(96, 0);
 	update_on_frame = true;
