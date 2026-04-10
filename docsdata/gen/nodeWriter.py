@@ -245,6 +245,7 @@ def writeCategory(name, nodes, nodeMetadata, subFilter = None):
                 
                 content += '<div class="node-category">'
                 content += f'<h3 class="node-group-title">{sgName}</h3>'
+                closeGroup = True
             continue
 
         if subFilter and subFilter != subGroupCurrent:
