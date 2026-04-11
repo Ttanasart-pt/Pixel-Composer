@@ -3464,6 +3464,44 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
     }
     
+    static draw_debug_content = function() {
+    	var _selNode = array_safe_get_fast(nodes_selecting, 0, noone);
+    	var _x1 = w - ui(8);
+    	var _y1 = h - toolbar_height - ui(8);
+    	
+    	if(_selNode) {
+    		var nodeBase = string_lower(instanceof(_selNode));
+    		var dir = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
+    		
+    		if(!directory_exists(dir)) {
+    			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+    			
+    			var _w = ui(128);
+    			var _h = ui(32);
+    			
+    			var _x0 = _x1 - _w;
+    			var _y0 = _y1 - _h;
+    			
+    			draw_sprite_stretched(THEME.ui_panel_bg,  3, _x0, _y0, _w, _h);
+    			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y0, _w, _h, c_white, .1);
+    			draw_text_add(_x0 + _w / 2, _y0 + _h / 2, "No doc");
+    			
+    		} else {
+    			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text);
+    			
+    			var _w = ui(32) + string_width(nodeBase);
+    			var _h = ui(32);
+    			
+    			var _x0 = _x1 - _w;
+    			var _y0 = _y1 - _h;
+    			
+    			draw_sprite_stretched(THEME.ui_panel_bg,  3, _x0, _y0, _w, _h);
+    			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y0, _w, _h, c_white, .1);
+    			draw_text_add(_x0 + _w / 2, _y0 + _h / 2, nodeBase);
+    		}
+    	}
+    }
+    
     ////- Main Draw
     
     function drawContent(panel) { 
@@ -3531,10 +3569,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             var _mx = mouse_mxs - x;
             var _my = mouse_mys - y;
             
-            for(var i = 0; i < array_length(nodes_list); i++) {
+            for(var i = 0, n = array_length(nodes_list); i < n; i++) {
                 var _n = nodes_list[i];
                 if(is(_n, Node_Frame)) continue;
-                
                 if(_n.pointIn(gr_x, gr_y, _mx, _my, graph_s, self))
                     _node_hover = _n;
             }
@@ -3575,6 +3612,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             if(_tip != "") TOOLTIP = _tip;
             
         } // File Drop
+        
+        if(RUN_IDE) draw_debug_content();
         
         if(LOADING) { // Loading overlay
         	draw_set_color(CDEF.main_dkblack);
@@ -4407,7 +4446,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				break;
 				
         }
-            
+        
         if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone) {
             for( var i = 0; i < array_length(node.outputs); i++ )
                 if(DRAGGING.from.setFrom(node.outputs[i])) break;
@@ -4776,6 +4815,11 @@ function load_file_path(path, _x = undefined, _y = undefined) {
 	                node.inputs[0].setValue(loadPalette(p));
 	                break;
 	                
+	        	case "cube" : 
+	        		node = new Node_LUT(_x, _y, PANEL_GRAPH.getCurrentContext());
+	                node.skipDefault()
+	                node.inputs[7].setValue(p);
+	                break;
 	        }
         }
         

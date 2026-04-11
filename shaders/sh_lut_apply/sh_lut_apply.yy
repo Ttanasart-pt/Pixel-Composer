@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_lut_apply",
+  "name":"sh_lut_apply",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

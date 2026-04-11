@@ -1,0 +1,6 @@
+{
+    "name":          "LUT",
+    "spr":           "s_node_lut",
+    "baseNode":      "Node_LUT",
+    "pxc_version":    120090,
+}

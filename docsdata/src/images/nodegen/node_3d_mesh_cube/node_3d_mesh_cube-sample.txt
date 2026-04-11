@@ -1,0 +1,1 @@
+{"version":120076,"nodes":[{"x":-16,"y":-144,"inputs":[{},{"attri":{"angle_display":1}},{},{},{},{"v":1},{},{},{},{},{},{},{},{}],"outputs":[{}],"renamed":true,"id":"gAAA0O10601346rkYrRSR0fIbLkG6bpO","version":120076,"name":"3D Cube","attriTool":{"context":0},"type":"Node_3D_Mesh_Cube","inspectInputs":[{"v":1},{"v":1},{"v":1},{},{"v":1}],"iname":"3D_Cube65843"}]}

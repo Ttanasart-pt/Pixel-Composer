@@ -693,6 +693,7 @@
             "Node_Gamma_Map",
             "Node_Tonemap_ACE",
             "Node_Color_Blind",
+            "Node_LUT",
             
             { "label": "Fix" },
             "Node_De_Corner",
