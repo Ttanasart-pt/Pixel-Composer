@@ -12,7 +12,7 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Effect
 	newInput( 2, nodeValue_Int(         "Patch Size",       8     )).setValidator(VV_min(1));
-	newInput( 3, nodeValue_Float(       "Compression",      10    ));
+	newInput( 3, nodeValue_Float(       "Compression",      32    ));
 	newInput( 4, nodeValue_Int(         "Reconstruction",   8     )).setValidator(VV_min(0));
 	newInput(10, nodeValue_Enum_Scroll( "Transformation",   0,    [ "Cosine", "Zigzag", "Smooth Zigzag", "Step" ]));
 	newInput(11, nodeValue_Rotation(    "Phase",            0     ));

@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 #ifdef _YY_HLSL11_ 
 	#define PALETTE_LIMIT 1024 
 #else 
@@ -13,6 +10,7 @@ varying vec4 v_vColour;
 uniform sampler2D map;
 uniform vec2 mapDimension;
 uniform int  useMap;
+uniform int  type;
 
 uniform vec2      contrast;
 uniform int       contrastUseSurf;
@@ -24,7 +22,7 @@ uniform int useConMap;
 uniform vec2  dimension;
 uniform vec2  scale;
 
-uniform float ditherSize;
+uniform vec2  ditherSize;
 uniform float dither[64];
 uniform int   invert;
 
@@ -36,7 +34,8 @@ uniform float seed;
 uniform int   usePalette;
 uniform float colors;
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
+float random  (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
+vec2  random2 (in vec2 st, float seed) { float a = random(st, seed) * 6.28319; return vec2(cos(a), sin(a)); }
 
 #region ============================== COLOR SPACES ==============================
 	vec3 rgb2xyz( vec3 c ) { #region
@@ -144,13 +143,15 @@ void main() {
 			rat = (rat - 0.5) * _cont + 0.5;
 		}
 		
-		vec2 px = floor(pos * dimension);
+		vec2 px  = pos * dimension;
+		     //px += random2(pos * dimension, seed) / dimension * .5;
+		     px  = floor(px);
 		
 		if(useMap == 0) {
-			float col = mod(px.x, ditherSize);
-			float row = mod(px.y, ditherSize);
+			float col = mod(px.x, ditherSize.x);
+			float row = mod(px.y, ditherSize.y);
 			
-			float ditherVal = dither[int(row * ditherSize + col)] / (ditherSize * ditherSize - 1.);
+			float ditherVal = dither[int(row * ditherSize.x + col)] / (ditherSize.x * ditherSize.y - 1.);
 			if(invert == 1) ditherVal = 1. - ditherVal;
 			
 			if(rat < ditherVal) gl_FragColor = col1;

@@ -35,10 +35,11 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(7, 11); // inputs 11, 12, 
 	
 	////- =Pattern
-	newInput( 2, nodeValue_EScroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
-	newInput( 3, nodeValue_Surface( "Dither map"                )).setVisible(false);
-	newInput(16, nodeValue_Vec2(    "Dither Scale", [1,1], true ));
-	newInput(17, nodeValue_Bool(    "Invert",       false       ));
+	newInput( 2, nodeValue_EScroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom", "Matrix" ]));
+	newInput( 3, nodeValue_Surface( "Dither map"                   )).setVisible(false);
+	newInput(18, nodeValue_Matrix(  "Dither Matrix", new Matrix(2).setArray([0,2,3,1]) ));
+	newInput(16, nodeValue_Vec2(    "Dither Scale", [1,1], true    ));
+	newInput(17, nodeValue_Bool(    "Invert",       false          ));
 	
 	////- =Dither
 	newInput( 6, nodeValue_EButton( "Mode",     0, [ "Color", "Alpha" ] ));
@@ -48,13 +49,13 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 1, nodeValue_Palette( "Palette" ));
 	newInput(14, nodeValue_Bool(    "Use palette", true ));
 	newInput(15, nodeValue_ISlider( "Steps",       4, [2, 16, 0.1] ));
-	// input 18
+	// input 19
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  9, 10, 13, 
 		[ "Surfaces",  true ], 0,  7,  8, 11, 12, 
-		[ "Pattern",  false ], 2,  3, 16, 17, 
+		[ "Pattern",  false ], 2,  3, 18, 16, 17, 
 		[ "Dither",   false ], 6,  4,  5, 
 		[ "Palette",  false, 14 ], 1, 15, 
 	];
@@ -81,6 +82,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _typ    = _data[ 2];
 			var _map    = _data[ 3];
+			var _mat    = _data[18];
 			var _sca    = _data[16];
 			var _inv    = _data[17];
 			
@@ -91,38 +93,42 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _usepal = _data[14];
 			var _step   = _data[15];
 			
-			inputs[3].setVisible(_typ == 4, _typ == 4);
-			inputs[1].setVisible(_mode == 0 && _usepal);
-			inputs[4].setVisible(_mode == 0);
+			inputs[ 3].setVisible(_typ == 4, _typ == 4);
+			inputs[18].setVisible(_typ == 5);
 			
+			inputs[ 4].setVisible(_mode == 0);
+			
+			inputs[ 1].setVisible(_mode == 0 && _usepal);
 			inputs[15].setVisible(!_usepal);
 		#endregion
 		
 		surface_set_shader(_outSurf, _mode? sh_alpha_hash : sh_dither);
 			shader_set_f("dimension", surface_get_dimension(_data[0]));
 			
+			shader_set_i("type", _typ );
+			
 			switch(_typ) {
 				case 0 :
 					shader_set_i("useMap",		0);
-					shader_set_f("ditherSize",	2);
-					shader_set_f("dither",		dither2);
+					shader_set_2("ditherSize",	[2,2]   );
+					shader_set_f("dither",		dither2 );
 					break;
 					
 				case 1 :
 					shader_set_i("useMap",		0);
-					shader_set_f("ditherSize",	4);
-					shader_set_f("dither",		dither4);
+					shader_set_2("ditherSize",	[4,4]   );
+					shader_set_f("dither",		dither4 );
 					break;
 					
 				case 2 :
 					shader_set_i("useMap",		0);
-					shader_set_f("ditherSize",	8);
-					shader_set_f("dither",		dither8);
+					shader_set_2("ditherSize",	[8,8]   );
+					shader_set_f("dither",		dither8 );
 					break;
 					
 				case 3 :
-					shader_set_i("useMap",		2);
-					shader_set_f("seed",	_seed);
+					shader_set_i("useMap", 2);
+					shader_set_f("seed",   _seed);
 					break;
 					
 				case 4 :
@@ -132,6 +138,13 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 						shader_set_surface("map",	 _map);
 					}
 					break;
+					
+				case 5 : 
+					shader_set_i("useMap",		0);
+					shader_set_2("ditherSize",	_mat.size );
+					shader_set_f("dither",		_mat.raw  );
+					break;
+			
 			}
 			
 			if(_mode == 0) {

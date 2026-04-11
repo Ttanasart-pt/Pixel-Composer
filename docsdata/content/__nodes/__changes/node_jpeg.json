@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.012",
+    "changes": [
+      {
+        "date": "2026-04-11T01:52:31.990Z",
+        "node": "",
+        "commit": "**Dither**: Add custom dither matrix type."
+      }
+    ]
+  }
+]
