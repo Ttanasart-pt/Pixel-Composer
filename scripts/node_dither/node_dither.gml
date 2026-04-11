@@ -46,18 +46,21 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 4, nodeValue_Slider(  "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C");
 	
 	////- =Palette
+	newInput(14, nodeValue_EScroll( "Color Type",  1, [ "Greyscale", "Palette", "RGB", "HSV" ]  ));
+	newInput(15, nodeValue_ISlider( "Steps",       4, [2, 16, .1] ));
+	newInput(19, nodeValue_ISlider( "R Steps",     4, [2, 16, .1] ));
+	newInput(20, nodeValue_ISlider( "G Steps",     4, [2, 16, .1] ));
+	newInput(21, nodeValue_ISlider( "B Steps",     4, [2, 16, .1] ));
 	newInput( 1, nodeValue_Palette( "Palette" ));
-	newInput(14, nodeValue_Bool(    "Use palette", true ));
-	newInput(15, nodeValue_ISlider( "Steps",       4, [2, 16, 0.1] ));
-	// input 19
+	// input 22
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  9, 10, 13, 
-		[ "Surfaces",  true ], 0,  7,  8, 11, 12, 
-		[ "Pattern",  false ], 2,  3, 18, 16, 17, 
-		[ "Dither",   false ], 6,  4,  5, 
-		[ "Palette",  false, 14 ], 1, 15, 
+		[ "Surfaces",  true ],  0,  7,  8, 11, 12, 
+		[ "Pattern",  false ],  2,  3, 18, 16, 17, 
+		[ "Dither",   false ],  6,  4,  5, 
+		[ "Palette",  false ], 14, 15, 19, 20, 21,  1,
 	];
 	
 	////- Nodes
@@ -78,28 +81,36 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _seed   = _data[13];
+			var _seed  = _data[13];
 			
-			var _typ    = _data[ 2];
-			var _map    = _data[ 3];
-			var _mat    = _data[18];
-			var _sca    = _data[16];
-			var _inv    = _data[17];
+			var _typ   = _data[ 2];
+			var _map   = _data[ 3];
+			var _mat   = _data[18];
+			var _sca   = _data[16];
+			var _inv   = _data[17];
 			
-			var _mode   = _data[ 6];
-			var _con    = _data[ 4];
+			var _mode  = _data[ 6];
+			var _con   = _data[ 4];
 			
-			var _pal    = _data[ 1];
-			var _usepal = _data[14];
-			var _step   = _data[15];
+			var _cmode = _data[14];
+			var _step  = _data[15];
+			var _rstep = _data[19];
+			var _gstep = _data[20];
+			var _bstep = _data[21];
+			var _pal   = _data[ 1];
 			
 			inputs[ 3].setVisible(_typ == 4, _typ == 4);
 			inputs[18].setVisible(_typ == 5);
 			
-			inputs[ 4].setVisible(_mode == 0);
+			inputs[15].setVisible(_cmode == 0);
+			inputs[19].setVisible(_cmode == 2 || _cmode == 3);
+			inputs[20].setVisible(_cmode == 2 || _cmode == 3);
+			inputs[21].setVisible(_cmode == 2 || _cmode == 3);
+			inputs[ 1].setVisible(_mode  == 0 && _cmode == 1);
 			
-			inputs[ 1].setVisible(_mode == 0 && _usepal);
-			inputs[15].setVisible(!_usepal);
+			inputs[19].setName(_cmode == 2? "R Steps" : "H Steps");
+			inputs[20].setName(_cmode == 2? "G Steps" : "S Steps");
+			inputs[21].setName(_cmode == 2? "B Steps" : "V Steps");
 		#endregion
 		
 		surface_set_shader(_outSurf, _mode? sh_alpha_hash : sh_dither);
@@ -150,12 +161,16 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			if(_mode == 0) {
 				shader_set_f_map("contrast",   _con, _data[5], inputs[4]);
 				
-				shader_set_i("usePalette", _usepal );
-				shader_set_i("invert",     _inv    );
-				shader_set_f("colors",     _step   );
-				shader_set_2("scale",      _sca    );
-				shader_set_f("palette",    paletteToArray(_pal) );
-				shader_set_i("keys",       array_length(_pal)   );
+				shader_set_i("colorMode", _cmode );
+				shader_set_f("steps",     _step  );
+				shader_set_f("rsteps",    _rstep );
+				shader_set_f("gsteps",    _gstep );
+				shader_set_f("bsteps",    _bstep );
+				shader_set_f("palette",   paletteToArray(_pal) );
+				shader_set_i("keys",      array_length(_pal)   );
+				
+				shader_set_i("invert",    _inv   );
+				shader_set_2("scale",     _sca   );
 			}
 			
 			draw_surface_safe(_data[0]);

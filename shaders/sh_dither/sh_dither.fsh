@@ -12,6 +12,8 @@ uniform vec2 mapDimension;
 uniform int  useMap;
 uniform int  type;
 
+uniform float seed;
+
 uniform vec2      contrast;
 uniform int       contrastUseSurf;
 uniform sampler2D contrastSurf;
@@ -26,19 +28,19 @@ uniform vec2  ditherSize;
 uniform float dither[64];
 uniform int   invert;
 
+uniform int   colorMode;
+uniform float steps;
+uniform float rsteps;
+uniform float gsteps;
+uniform float bsteps;
 uniform vec4  palette[PALETTE_LIMIT];
-
 uniform int   keys;
-uniform float seed;
-
-uniform int   usePalette;
-uniform float colors;
 
 float random  (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
 vec2  random2 (in vec2 st, float seed) { float a = random(st, seed) * 6.28319; return vec2(cos(a), sin(a)); }
 
 #region ============================== COLOR SPACES ==============================
-	vec3 rgb2xyz( vec3 c ) { #region
+	vec3 rgb2xyz( vec3 c ) {
 	    vec3 tmp;
 	    tmp.x = ( c.r > 0.04045 ) ? pow( ( c.r + 0.055 ) / 1.055, 2.4 ) : c.r / 12.92;
 	    tmp.y = ( c.g > 0.04045 ) ? pow( ( c.g + 0.055 ) / 1.055, 2.4 ) : c.g / 12.92,
@@ -47,28 +49,44 @@ vec2  random2 (in vec2 st, float seed) { float a = random(st, seed) * 6.28319; r
 	        mat3( 0.4124, 0.3576, 0.1805,
 	              0.2126, 0.7152, 0.0722,
 	              0.0193, 0.1192, 0.9505 );
-	} #endregion
+	}
 
-	vec3 xyz2lab( vec3 c ) { #region
+	vec3 xyz2lab( vec3 c ) {
 	    vec3 n = c / vec3( 95.047, 100, 108.883 );
 	    vec3 v;
 	    v.x = ( n.x > 0.008856 ) ? pow( n.x, 1.0 / 3.0 ) : ( 7.787 * n.x ) + ( 16.0 / 116.0 );
 	    v.y = ( n.y > 0.008856 ) ? pow( n.y, 1.0 / 3.0 ) : ( 7.787 * n.y ) + ( 16.0 / 116.0 );
 	    v.z = ( n.z > 0.008856 ) ? pow( n.z, 1.0 / 3.0 ) : ( 7.787 * n.z ) + ( 16.0 / 116.0 );
 	    return vec3(( 116.0 * v.y ) - 16.0, 500.0 * ( v.x - v.y ), 200.0 * ( v.y - v.z ));
-	} #endregion
+	}
 
-	vec3 rgb2lab(vec3 c) { #region
+	vec3 rgb2lab(vec3 c) {
 	    vec3 lab = xyz2lab( rgb2xyz( c ) );
 	    return vec3( lab.x / 100.0, 0.5 + 0.5 * ( lab.y / 127.0 ), 0.5 + 0.5 * ( lab.z / 127.0 ));
-	} #endregion
-
-	float colorDifferent(in vec4 c1, in vec4 c2) { #region
+	}
+	
+	vec3 rgb2hsv(vec3 c) {
+		vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+	    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+	    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+	
+	    float d = q.x - min(q.w, q.y);
+	    float e = 0.0000000001;
+	    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+	 }
+	
+	vec3 hsv2rgb(vec3 c) {
+	    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+	    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+	}
+	
+	float colorDifferent(in vec4 c1, in vec4 c2) {
 		vec3 lab1 = rgb2lab(c1.rgb);
 		vec3 lab2 = rgb2lab(c2.rgb);
 	
 		return length(lab1 - lab2);
-	} #endregion
+	}
 #endregion
 
 void main() {
@@ -85,16 +103,16 @@ void main() {
 	bool exactColor = false;
 	vec4 col1, col2;
 	
-	if(usePalette == 0) {
-		col1 = floor(_col * colors) / colors;
-		col2 = ceil( _col * colors) / colors;
+	if(colorMode == 0) {
+		col1 = floor(_col * steps) / steps;
+		col2 = ceil( _col * steps) / steps;
 		
 		col1.a = _col.a;
 		col2.a = _col.a;
 		
 		exactColor = distance(_col, col1) < 0.05; 
 		
-	} else if(usePalette == 1) {
+	} else if(colorMode == 1) {
 		int   closet1_index = 0;
 		float closet1_value = 99.;
 		
@@ -124,6 +142,40 @@ void main() {
 		
 		col1 = palette[closet1_index];
 		col2 = palette[closet2_index];
+		
+	} else if(colorMode == 2) {
+		col1.r = floor(_col.r * rsteps) / rsteps;
+		col1.g = floor(_col.g * gsteps) / gsteps;
+		col1.b = floor(_col.b * bsteps) / bsteps;
+		
+		col2.r = ceil( _col.r * rsteps) / rsteps;
+		col2.g = ceil( _col.g * gsteps) / gsteps;
+		col2.b = ceil( _col.b * bsteps) / bsteps;
+		
+		col1.a = _col.a;
+		col2.a = _col.a;
+		
+		exactColor = distance(_col, col1) < 0.05; 
+		
+	} else if(colorMode == 3) {
+		vec3 _hsv = rgb2hsv(_col.rgb);
+		
+		col1.r = floor(_hsv.r * rsteps) / rsteps;
+		col1.g = floor(_hsv.g * gsteps) / gsteps;
+		col1.b = floor(_hsv.b * bsteps) / bsteps;
+		
+		col2.r = ceil( _hsv.r * rsteps) / rsteps;
+		col2.g = ceil( _hsv.g * gsteps) / gsteps;
+		col2.b = ceil( _hsv.b * bsteps) / bsteps;
+		
+		col1.rgb = hsv2rgb(col1.rgb);
+		col2.rgb = hsv2rgb(col2.rgb);
+		
+		col1.a = _col.a;
+		col2.a = _col.a;
+		
+		exactColor = distance(_col, col1) < 0.05; 
+		
 	}
 	
 	if(exactColor) {

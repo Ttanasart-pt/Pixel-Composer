@@ -6,6 +6,11 @@
         "date": "2026-04-11T01:52:31.990Z",
         "node": "Dither",
         "commit": "**Dither**: Add custom dither matrix type."
+      },
+      {
+        "date": "2026-04-11T02:24:18.262Z",
+        "node": "Dither",
+        "commit": "**Dither**: Add RGB/HSV steps mode."
       }
     ]
   }
