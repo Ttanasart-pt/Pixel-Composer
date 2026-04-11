@@ -29,9 +29,6 @@
 		Node_Noise_Cristal, 
 		Node_Honeycomb_Noise, 
 		Node_Grid_Pentagonal, 
-		Node_Pytagorean_Tile, 
-		Node_Herringbone_Tile, 
-		Node_Random_Tile, 
 		Node_MK_Fracture, 
 		Node_MK_Sparkle, 
 		Node_MK_WireFrame, 
@@ -155,7 +152,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	
 	static getName       = function() /*=>*/ {return __txt_node_name(nodeName, name)};
 	static getTooltip    = function() /*=>*/ {return __txt_node_tooltip(nodeName, tooltip)};
-	static getTooltipSpr = function() { 
+	static getTooltipSpr = function() /*=>*/ { 
 		if(tooltip_spr != undefined) return tooltip_spr;
 		
 		tooltip_spr = noone;

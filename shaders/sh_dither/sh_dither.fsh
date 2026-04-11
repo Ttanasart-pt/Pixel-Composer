@@ -12,7 +12,7 @@ varying vec4 v_vColour;
 
 uniform sampler2D map;
 uniform vec2 mapDimension;
-uniform int useMap;
+uniform int  useMap;
 
 uniform vec2      contrast;
 uniform int       contrastUseSurf;
@@ -21,13 +21,17 @@ uniform sampler2D contrastSurf;
 uniform sampler2D conMap;
 uniform int useConMap;
 
+uniform vec2  dimension;
+uniform vec2  scale;
+
 uniform float ditherSize;
 uniform float dither[64];
-uniform vec2  dimension;
+uniform int   invert;
+
 uniform vec4  palette[PALETTE_LIMIT];
+
 uniform int   keys;
 uniform float seed;
-uniform float scale;
 
 uniform int   usePalette;
 uniform float colors;
@@ -75,7 +79,9 @@ void main() {
 		con = mix(contrast.x, contrast.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec4 _col = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec2 dimScale = scale / dimension;
+	vec2  pos = floor(v_vTexcoord / dimScale) * dimScale;
+	vec4 _col = texture2D( gm_BaseTexture, pos );
 	
 	bool exactColor = false;
 	vec4 col1, col2;
@@ -90,9 +96,10 @@ void main() {
 		exactColor = distance(_col, col1) < 0.05; 
 		
 	} else if(usePalette == 1) {
-		int closet1_index   = 0;
-		int closet2_index   = 0;
+		int   closet1_index = 0;
 		float closet1_value = 99.;
+		
+		int   closet2_index = 0;
 		float closet2_value = 99.;
 		
 		for(int i = 0; i < keys; i++) {
@@ -112,7 +119,7 @@ void main() {
 				
 			} else if(dif < closet2_value) {
 				closet2_value = dif;
-				closet2_index = i;	
+				closet2_index = i;
 			}
 		}
 		
@@ -137,22 +144,25 @@ void main() {
 			rat = (rat - 0.5) * _cont + 0.5;
 		}
 		
-		vec2 px = floor(v_vTexcoord * dimension);
+		vec2 px = floor(pos * dimension);
 		
 		if(useMap == 0) {
-			float col = mod(px.x * scale, ditherSize);
-			float row = mod(px.y * scale, ditherSize);
+			float col = mod(px.x, ditherSize);
+			float row = mod(px.y, ditherSize);
+			
 			float ditherVal = dither[int(row * ditherSize + col)] / (ditherSize * ditherSize - 1.);
-	
+			if(invert == 1) ditherVal = 1. - ditherVal;
+			
 			if(rat < ditherVal) gl_FragColor = col1;
 			else                gl_FragColor = col2;	
 				
 		} else if(useMap == 1) {
-			float col = mod(px.x * scale, mapDimension.x);
-			float row = mod(px.y * scale, mapDimension.y);
+			float col = mod(px.x, mapDimension.x);
+			float row = mod(px.y, mapDimension.y);
 			vec4 map_data = texture2D( map, vec2(col, row) / mapDimension );
 			
 			float ditherVal = dot(map_data.rgb, vec3(0.2126, 0.7152, 0.0722));
+			if(invert == 1) ditherVal = 1. - ditherVal;
 			
 			if(rat < ditherVal) gl_FragColor = col1;
 			else                gl_FragColor = col2;

@@ -36,8 +36,9 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Pattern
 	newInput( 2, nodeValue_EScroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
-	newInput( 3, nodeValue_Surface( "Dither map" )).setVisible(false);
-	newInput(16, nodeValue_Float(   "Dither Scale", 1 ));
+	newInput( 3, nodeValue_Surface( "Dither map"                )).setVisible(false);
+	newInput(16, nodeValue_Vec2(    "Dither Scale", [1,1], true ));
+	newInput(17, nodeValue_Bool(    "Invert",       false       ));
 	
 	////- =Dither
 	newInput( 6, nodeValue_EButton( "Mode",     0, [ "Color", "Alpha" ] ));
@@ -47,13 +48,13 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 1, nodeValue_Palette( "Palette" ));
 	newInput(14, nodeValue_Bool(    "Use palette", true ));
 	newInput(15, nodeValue_ISlider( "Steps",       4, [2, 16, 0.1] ));
-	// input 17
+	// input 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  9, 10, 13, 
 		[ "Surfaces",  true ], 0,  7,  8, 11, 12, 
-		[ "Pattern",  false ], 2,  3, 16, 
+		[ "Pattern",  false ], 2,  3, 16, 17, 
 		[ "Dither",   false ], 6,  4,  5, 
 		[ "Palette",  false, 14 ], 1, 15, 
 	];
@@ -81,6 +82,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _typ    = _data[ 2];
 			var _map    = _data[ 3];
 			var _sca    = _data[16];
+			var _inv    = _data[17];
 			
 			var _mode   = _data[ 6];
 			var _con    = _data[ 4];
@@ -136,8 +138,9 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				shader_set_f_map("contrast",   _con, _data[5], inputs[4]);
 				
 				shader_set_i("usePalette", _usepal );
+				shader_set_i("invert",     _inv    );
 				shader_set_f("colors",     _step   );
-				shader_set_f("scale",      _sca    );
+				shader_set_2("scale",      _sca    );
 				shader_set_f("palette",    paletteToArray(_pal) );
 				shader_set_i("keys",       array_length(_pal)   );
 			}

@@ -23,6 +23,8 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 
+uniform int   pattern;
+
 uniform int   type;
 uniform int   comp;
 uniform int   blendMode;
@@ -30,6 +32,9 @@ uniform int   blendMode;
 uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
+
+uniform vec2  polarPos1;
+uniform vec2  polarPos2;
 
 uniform float intensity;
 
@@ -52,15 +57,24 @@ void main() {
     mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
         
 	vec2  pos = getUV(v_vTexcoord);
-    pos -= position / dimension;
-    pos *= rot;
-    pos *= scale;
-        
-	float val = valueProcess(pos.x);
+	float val = 0., v0, v1;
+    
+	if(pattern == 0) {
+		pos -= position / dimension;
+    	pos *= rot;
+		pos *= scale;
+		val = valueProcess(pos.x);
+		v0  = valueProcess(pos.y);
+		
+	} else if(pattern == 1) {
+		val = valueProcess( distance(pos, polarPos1 / dimension) * scale.x );
+		v0  = valueProcess( distance(pos, polarPos2 / dimension) * scale.y );
+		
+	}
 	
-	float v   = valueProcess(pos.y);
-	     if(blendMode == 0) val += v;
-	else if(blendMode == 1) val *= v;
+	     if(blendMode == 0) val += v0;
+	else if(blendMode == 1) val *= v0;
+	else if(blendMode == 2) val  = max(val, v0);
 	
 	gl_FragColor = vec4(val, val, val, 1.);
 }

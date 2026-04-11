@@ -508,7 +508,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	insp1button = undefined;
 	insp2button = undefined;
-	
 	static onInspect = undefined;
 	
 	static triggerInsp = function(i) {
