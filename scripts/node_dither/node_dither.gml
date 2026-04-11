@@ -45,7 +45,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 6, nodeValue_EButton( "Mode",     0, [ "Color", "Alpha" ] ));
 	newInput( 4, nodeValue_Slider(  "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C");
 	
-	////- =Palette
+	////- =Colors
 	newInput(14, nodeValue_EScroll( "Color Type",  1, [ "Greyscale", "Palette", "RGB", "HSV" ]  ));
 	newInput(15, nodeValue_ISlider( "Steps",       4, [2, 16, .1] ));
 	newInput(19, nodeValue_ISlider( "R Steps",     4, [2, 16, .1] ));
@@ -60,7 +60,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Surfaces",  true ],  0,  7,  8, 11, 12, 
 		[ "Pattern",  false ],  2,  3, 18, 16, 17, 
 		[ "Dither",   false ],  6,  4,  5, 
-		[ "Palette",  false ], 14, 15, 19, 20, 21,  1,
+		[ "Colors",   false ], 14, 15, 19, 20, 21,  1,
 	];
 	
 	////- Nodes

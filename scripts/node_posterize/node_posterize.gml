@@ -28,9 +28,9 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	// inputs 12
 	
 	input_display_list = [ 5, 0, 
-		["Palette", false, 2], 1, 9, 3, 4, 7, 8, 
-		["Bias",    false],    11, 10, 
-		["Alpha",   false],    6, 
+		[ "Palette", false, 2 ],  1,  9,  3,  4,  7,  8, 
+		[ "Bias",    false    ], 11, 10, 
+		[ "Alpha",   false    ],  6, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

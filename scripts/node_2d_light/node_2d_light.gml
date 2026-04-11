@@ -18,7 +18,8 @@
 function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "2D Light";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface( "Surface In"  ));
+	newInput( 1, nodeValue_Bool(    "Tile", false ));
 	
 	typeListStr = [ "Point", "Ellipse", "Line", "Line asymmetric", "Saber", "Spot", "Flame" ];
 	typeList    = __enum_array_gen(typeListStr, s_node_2d_light_shape);
@@ -137,7 +138,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Render",	false], 10, 24,  9, 18, 19, 
 	];
 	
-	input_display_list = [ 0, new Inspector_Spacer(ui(4), true, false), lights_renderer ];
+	input_display_list = [ 0, 1, new Inspector_Spacer(ui(4), true, false), lights_renderer ];
 	
 	setDynamicInput(25, false);
 	if(!LOADING && !APPENDING) createNewInput();
@@ -242,7 +243,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return w_hovering;
 	}
 	
-	static applyLight = function(_data, _ind, _lightSurf) {
+	static applyLight = function(_data, _ind, _lightSurf, _offset = [0,0]) {
 		#region data
 			var _surf  = _data[0];
 			var _dim   = surface_get_dimension(_surf);
@@ -277,6 +278,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _thick = _data[_ind + 21];
 		#endregion
 		
+		var px = _pos[0] + _offset[0];
+		var py = _pos[1] + _offset[1];
+		
 		surface_set_shader(temp_surface[0], noone);
 			draw_clear(c_black);
 			BLEND_ADD
@@ -285,9 +289,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			switch(_shape) {
 				case LIGHT_SHAPE_2D.point :
-					if(_rbnd < 2)
-						draw_circle_color(_pos[0], _pos[1], _range, c_white, c_black,  0);
-					else {
+					if(_rbnd < 2) {
+						draw_circle_color(px, py, _range, c_white, c_black,  0);
+					} else {
 						_rbnd *= 2;
 						var bnd_amo = ceil(64 / _rbnd); //band radial per step
 						var step = bnd_amo * _rbnd;
@@ -298,11 +302,11 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						
 						for( var i = 0; i <= step; i++ ) {
 							var dir = _rbns + i * astp;
-							nx = _pos[0] + lengthdir_x(_range, dir);
-							ny = _pos[1] + lengthdir_y(_range, dir);
+							nx = px + lengthdir_x(_range, dir);
+							ny = py + lengthdir_y(_range, dir);
 							
 							if(safe_mod(i, bnd_amo) / bnd_amo < _rbnr && i) {
-								draw_vertex_color(_pos[0], _pos[1], c_white, 1);
+								draw_vertex_color(px, py, c_white, 1);
 								draw_vertex_color(ox, oy, c_black, 1);
 								draw_vertex_color(nx, ny, c_black, 1);
 							}
@@ -316,7 +320,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					break;
 				
 				case LIGHT_SHAPE_2D.ellipse :
-					draw_ellipse_angle_color(_pos[0], _pos[1], _rngx, _rngy, _anng, c_white, c_black);
+					draw_ellipse_angle_color(px, py, _rngx, _rngy, _anng, c_white, c_black);
 					break;
 					
 				case LIGHT_SHAPE_2D.line :
@@ -495,7 +499,10 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var _surf  = _data[0];
+		#region data
+			var _surf = _data[0];
+			var _tile = _data[1];
+		#endregion
 		
 		if(getInputAmount() == 0) return;
 		
@@ -576,6 +583,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _outSurf   = surface_verify(_outData[0], _dim[0], _dim[1]);
 		var _lightSurf = surface_verify(_outData[1], _dim[0], _dim[1]);
 		
+		var sw = _dim[0];
+		var sh = _dim[1];
+		
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba32float);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
 		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1]);
@@ -586,7 +596,20 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		for( var i = 0; i < getInputAmount(); i++ ) {
 			var _ind = input_fix_len + i * data_length;
-			applyLight(_data, _ind, _lightSurf);
+			applyLight(_data, _ind, _lightSurf, [0,0]);
+			
+			if(_tile) {
+				applyLight(_data, _ind, _lightSurf, [-sw,0]);
+				applyLight(_data, _ind, _lightSurf, [ sw,0]);
+				
+				applyLight(_data, _ind, _lightSurf, [0,-sh]);
+				applyLight(_data, _ind, _lightSurf, [0, sh]);
+				
+				applyLight(_data, _ind, _lightSurf, [-sw, -sh]);
+				applyLight(_data, _ind, _lightSurf, [-sw,  sh]);
+				applyLight(_data, _ind, _lightSurf, [ sw, -sh]);
+				applyLight(_data, _ind, _lightSurf, [ sw,  sh]);
+			}
 		}
 		
 		surface_set_shader(_outSurf, sh_2d_light_apply, true, BLEND.over);

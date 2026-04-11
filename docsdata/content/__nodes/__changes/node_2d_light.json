@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.012",
+    "changes": [
+      {
+        "date": "2026-04-11T03:10:20.363Z",
+        "node": "2D Light",
+        "commit": "**2D Light**: Add tile option."
+      }
+    ]
+  }
+]

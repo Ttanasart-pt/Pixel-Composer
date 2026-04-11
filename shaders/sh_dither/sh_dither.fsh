@@ -89,6 +89,8 @@ vec2  random2 (in vec2 st, float seed) { float a = random(st, seed) * 6.28319; r
 	}
 #endregion
 
+float max3(float a, float b, float c) { return max(a, max(b, c)); }
+
 void main() {
 	float con = contrast.x;
 	if(contrastUseSurf == 1) {
@@ -184,6 +186,10 @@ void main() {
 	} else {
 		float d1 = colorDifferent(_col, col1);
 		float d2 = colorDifferent(_col, col2);
+		
+		// float d1 = max3(abs(_col.x - col1.x), abs(_col.y - col1.y), abs(_col.z - col1.z));
+		// float d2 = max3(abs(_col.x - col2.x), abs(_col.y - col2.y), abs(_col.z - col2.z));
+		
 		float rat = d1 / (d1 + d2);
 		
 		if(useConMap == 0) {
