@@ -57,7 +57,10 @@
 	}
 	
 	function get_asset(key) {
-		if(!ds_map_exists(global.ASSET_MAP, key)) return noone;
+		if(!ds_map_exists(global.ASSET_MAP, key)) {
+			noti_warning($"Asset not found {key}");
+			return noone;
+		}
 		
 		if(ds_map_exists(global.ASSET_CACHE, key)) {
 			var s = global.ASSET_CACHE[? key];
@@ -65,6 +68,7 @@
 			if(is_array(s)) {
 				for( var i = 0, n = array_length(s); i < n; i++ )
 					valid = valid && is_surface(s[i]);
+					
 			} else 
 				valid = is_surface(s);
 			if(valid) return s;
@@ -72,7 +76,7 @@
 		
 		var spr = global.ASSET_MAP[? key].getSpr();
 		global.ASSET_CACHE[? key] = surface_create_from_sprite(spr);
-		
 		return global.ASSET_CACHE[? key];
 	}
+	
 #endregion

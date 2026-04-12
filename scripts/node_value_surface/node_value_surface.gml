@@ -54,7 +54,11 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; 
 		
-		if(is_string(val)) val = get_asset(val);
+		if(is_string(val)) {
+			print(val, get_asset(val));
+			val = get_asset(val);
+		}
+		
 		if(!is(nod, NodeValue)) return val;
 		
 		if(is(val, dynaDraw)) val.node = node;
