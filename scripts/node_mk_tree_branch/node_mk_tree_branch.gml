@@ -43,7 +43,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setCurvable(24, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	
 	////- =Rendering
-	newInput(39, nodeValue_Bool(     "Draw Line", false       ));
+	newInput(39, nodeValue_EScroll(  "Draw Mode",  0, [ "Texture", "Line" ] ));
 	newInput( 6, nodeValue_Range(    "Thickness", [2,2], true ))
 		.setCurvable( 11, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 36, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )

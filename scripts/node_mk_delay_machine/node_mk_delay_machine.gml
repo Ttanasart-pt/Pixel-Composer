@@ -35,7 +35,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	surf_indexes = [];
 	
-	static update = function() {  
+	static update = function(_frame = CURRENT_FRAME) {  
 		#region data
 			var _surf = getInputData( 0);
 			

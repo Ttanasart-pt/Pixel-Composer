@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc1",
+    "changes": [
+      {
+        "date": "2026-04-12T00:42:36.593Z",
+        "node": "",
+        "commit": "Remove Patreon exclusive nodes."
+      }
+    ]
+  },
+  {
     "version": "1.20.9.012",
     "changes": [
       {

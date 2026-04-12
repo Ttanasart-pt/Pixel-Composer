@@ -1059,6 +1059,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\filter\color\adjustment\level_selector.html" class="sidebar-file">Level Selector</a>
             </div>
+</li><li id="lut"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\filter\color\adjustment\lut.html" class="sidebar-file">Lut</a>
+            </div>
 </li><li id="normalize"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\filter\color\adjustment\normalize.html" class="sidebar-file">Normalize</a>
@@ -5510,6 +5514,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\filter\color\adjustment/invert.html">Invert</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\color\adjustment/level.html">Level</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\color\adjustment/level_selector.html">Level Selector</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\filter\color\adjustment/lut.html">Lut</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\color\adjustment/normalize.html">Normalize</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\color\adjustment/threshold.html">Threshold</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\filter\color\adjustment/tonemap_ace.html">Tonemap Ace</a></li>
@@ -6302,7 +6307,7 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_liquefy/node_liquefy-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-224,\"y\":-96,\"inputs\":[{\"linked\":true},{\"unit\":1,\"r\":{\"d\":0.25},\"m\":1},{},{\"unit\":1},{},{},{\"v\":0},{\"v\":0},{},{},{},{},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8BI1467366BBubdU9QXYDC9MC5SGc8\",\"version\":120076,\"attriTool\":{},\"name\":\"Checker\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Checker20020\",\"type\":\"Node_Checker\"},{\"x\":-48,\"y\":-96,\"inputs\":[{\"from_node\":\"gA8BI1467366BBubdU9QXYDC9MC5SGc8\",\"from_index\":0},{},{},{},{},{},{},{},{\"unit\":1,\"r\":{\"d\":[0.23828125,0.271484375]},\"m\":1},{\"unit\":1,\"r\":{\"d\":[0.8203125,0.79296875]},\"m\":1},{\"r\":{\"d\":12.99078462348605},\"m\":1},{\"r\":{\"d\":0.47999999999999998},\"m\":1},{\"r\":{\"d\":4},\"attri\":{\"curved\":false},\"m\":1},{},{},{\"v\":1},{},{}],\"outputs\":[{}],\"renamed\":true,\"data_length\":11,\"id\":\"gA8BI0465334uiZNHvd6dhn3lEgHDSXr\",\"version\":120076,\"attri\":{\"size\":0},\"input_fix_len\":7,\"attriTool\":{},\"name\":\"Liquefy\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Liquefy22607\",\"type\":\"Node_Liquefy\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_liquefy/node_liquefy.gml">/scripts/node_liquefy/node_liquefy.gml</a></li><li><span>Shader [sh_liquefy_pinch]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_pinch/sh_liquefy_pinch.fsh">/shaders/sh_liquefy_pinch/sh_liquefy_pinch.fsh</a></li><li><span>Shader [sh_liquefy_twirl]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_twirl/sh_liquefy_twirl.fsh">/shaders/sh_liquefy_twirl/sh_liquefy_twirl.fsh</a></li><li><span>Shader [sh_liquefy_bloat]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_bloat/sh_liquefy_bloat.fsh">/shaders/sh_liquefy_bloat/sh_liquefy_bloat.fsh</a></li><li><span>Shader [sh_liquefy_push]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_push/sh_liquefy_push.fsh">/shaders/sh_liquefy_push/sh_liquefy_push.fsh</a></li></ul>
+</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_liquefy/node_liquefy.gml">/scripts/node_liquefy/node_liquefy.gml</a></li><li><span>Shader [sh_liquefy_twirl]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_twirl/sh_liquefy_twirl.fsh">/shaders/sh_liquefy_twirl/sh_liquefy_twirl.fsh</a></li><li><span>Shader [sh_liquefy_bloat]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_bloat/sh_liquefy_bloat.fsh">/shaders/sh_liquefy_bloat/sh_liquefy_bloat.fsh</a></li><li><span>Shader [sh_liquefy_pinch]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_pinch/sh_liquefy_pinch.fsh">/shaders/sh_liquefy_pinch/sh_liquefy_pinch.fsh</a></li><li><span>Shader [sh_liquefy_push]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_push/sh_liquefy_push.fsh">/shaders/sh_liquefy_push/sh_liquefy_push.fsh</a></li></ul>
         </div>
     </div>
 

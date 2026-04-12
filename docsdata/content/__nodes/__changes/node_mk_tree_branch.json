@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.20.9.012",
+    "changes": [
+      {
+        "date": "2026-04-11T08:18:13.326Z",
+        "node": "",
+        "commit": "**MK Tree**: Rename \"Draw line\" to \"Draw mode\" to avoid confusion."
+      }
+    ]
+  }
+]

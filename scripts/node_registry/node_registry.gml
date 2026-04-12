@@ -15,24 +15,7 @@
 	
 	globalvar NODE_COMMONS; NODE_COMMONS = [];
 	
-	global.PATREON_NODES = [
-		Node_Brush_Linear, 
-		Node_RM_Cloud, 
-		Node_Perlin_Extra, 
-		Node_Voronoi_Extra, 
-		Node_Gabor_Noise, 
-		Node_Shard_Noise, 
-		Node_Wavelet_Noise, 
-		Node_Caustic, 
-		Node_Noise_Bubble, 
-		Node_Flow_Noise, 
-		Node_Noise_Cristal, 
-		Node_Honeycomb_Noise, 
-		Node_Grid_Pentagonal, 
-		Node_MK_Fracture, 
-		Node_MK_Sparkle, 
-		Node_MK_WireFrame, 
-	];
+	global.PATREON_NODES = [];
 #endregion
 
 function NodeObject(_name, _node, _tooltip = "") constructor {

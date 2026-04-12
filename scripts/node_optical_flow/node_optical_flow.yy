@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_optical_flow",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_optical_flow",
+  "parent":{
+    "name":"animation",
+    "path":"folders/nodes/data/animation.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
