@@ -11,6 +11,11 @@
         "date": "2026-04-12T04:32:10.355Z",
         "node": "Surface",
         "commit": "**Surface**: Add warning when trying to access missing asset."
+      },
+      {
+        "date": "2026-04-12T04:36:52.131Z",
+        "node": "Surface",
+        "commit": "**Surface**: Fix asset load asynchronously."
       }
     ]
   }

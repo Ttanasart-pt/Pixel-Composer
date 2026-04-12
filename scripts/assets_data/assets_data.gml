@@ -74,7 +74,7 @@
 			if(valid) return s;
 		}
 		
-		var spr = global.ASSET_MAP[? key].getSpr();
+		var spr = global.ASSET_MAP[? key].getSpr(false);
 		global.ASSET_CACHE[? key] = surface_create_from_sprite(spr);
 		return global.ASSET_CACHE[? key];
 	}

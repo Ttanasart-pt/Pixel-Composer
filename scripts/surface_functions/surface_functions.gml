@@ -691,15 +691,14 @@
 
 	function surface_create_from_sprite(spr) {
 		if(!sprite_exists(spr)) return noone;
-	
+		
 		if(sprite_get_number(spr) == 1)
 			return surface_create_from_sprite_ext(spr, 0);
 	
 		var s = [];
-		for( var i = 0; i < sprite_get_number(spr); i++ ) {
+		for( var i = 0; i < sprite_get_number(spr); i++ )
 			array_push(s, surface_create_from_sprite_ext(spr, i));
-		}
-	
+		
 		return s;
 	}
 

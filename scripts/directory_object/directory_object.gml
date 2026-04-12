@@ -83,7 +83,7 @@ function FileObject(_path) constructor {
 		return thumbnail;
 	}
 	
-	static getSpr = function() {
+	static getSpr = function(async = true) {
 		if(!retrive_data) getMetadata();									// Metadata not loaded
 		if(spr != -1 && sprite_exists(spr))	return spr;
 		if(sprFetchID != noone) return -1;
@@ -92,7 +92,7 @@ function FileObject(_path) constructor {
 			spr_path = array_safe_get_fast(spr_data, 0);
 			var _amo = array_safe_get_fast(spr_data, 1);
 			
-			if(loadThumbnailAsync) {
+			if(async && loadThumbnailAsync) {
 				sprFetchID = sprite_add_ext(spr_path, _amo, 0, 0, true);
 				IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
 					spr = load_result[? "id"];
