@@ -515,10 +515,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			editWidget.onSurfaceSize = unit.reference;
 		}
 		
-		unit.reference  = _ref;
-		unit.mode		= _mode;
-		def_unit        = _mode;
-		cache_value[0]  = false;
+		unit.reference = _ref;
+		unit.mode      = _mode;
+		def_unit       = _mode;
+		cache_value[0] = false;
 		
 		if(_mode == VALUE_UNIT.reference && PREFERENCES.node_def_dim_unit == 0) {
 			// run_in(1, () => { unit.modeTrigger(); });

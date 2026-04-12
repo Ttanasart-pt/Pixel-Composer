@@ -8,8 +8,8 @@ img.node-content {
 }
 
 img.node-graph-preview {
-    width: 30%;
-    /* max-height: 200px; */
+    max-width: 20%;
+    height: auto;
 }
 
 p:has(img.node-content) {
