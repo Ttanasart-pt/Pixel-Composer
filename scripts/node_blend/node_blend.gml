@@ -50,33 +50,33 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newActiveInput(8);
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface(     "Background" ));
-	newInput( 1, nodeValue_Surface(     "Foreground" ));
-	newInput( 4, nodeValue_Surface(     "Mask"       ));
-	newInput(12, nodeValue_Bool(        "Invert mask",        false        ));
-	newInput(13, nodeValue_Slider(      "Mask feather",       1, [1,16,.1] ));
-	newInput( 6, nodeValue_Enum_Scroll( "Output dimension",   0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])).rejectArray();
-	newInput( 7, nodeValue_Vec2(        "Constant dimension", PROJ_SURF     ));
+	newInput( 0, nodeValue_Surface( "Background" ));
+	newInput( 1, nodeValue_Surface( "Foreground" ));
+	newInput( 4, nodeValue_Surface( "Mask"       ));
+	newInput(12, nodeValue_Bool(    "Invert mask",        false        ));
+	newInput(13, nodeValue_Slider(  "Mask feather",       1, [1,16,.1] ));
+	newInput( 6, nodeValue_EScroll( "Output dimension",   0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])).rejectArray();
+	newInput( 7, nodeValue_Vec2(    "Constant dimension", PROJ_SURF    ));
 	
 	////- =Blend
-	newInput(2, nodeValue_Enum_Scroll( "Blend mode",     0, BLEND_TYPES ))
+	newInput(2, nodeValue_EScroll(  "Blend mode",     0, BLEND_TYPES ))
 		.setHistory([ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ]);
-	newInput(3, nodeValue_Slider(      "Opacity",        1     ));
-	newInput(9, nodeValue_Bool(        "Preserve alpha", false ));
+	newInput(3, nodeValue_Slider(   "Opacity",        1     ));
+	newInput(9, nodeValue_Bool(     "Preserve alpha", false ));
 	
 	////- =Transform
-	newInput( 5, nodeValue_Enum_Scroll( "Fill mode",         0, [ "None", "Stretch", "Tile" ]));
-	newInput(14, nodeValue_Vec2(        "Position",        [.5,.5] )).setUnitSimple();
-	newInput(10, nodeValue_Enum_Button( "Horizontal Align",  0, array_create(3, THEME.inspector_surface_halign)));
-	newInput(11, nodeValue_Enum_Button( "Vertical Align",    0, array_create(3, THEME.inspector_surface_valign)));
+	newInput( 5, nodeValue_EScroll( "Fill mode",         0, [ "None", "Stretch", "Tile" ] ));
+	newInput(14, nodeValue_Vec2(    "Position",        [.5,.5] )).setUnitSimple();
+	newInput(10, nodeValue_EButton( "Horizontal Align",  0, array_create(3, THEME.inspector_surface_halign) ));
+	newInput(11, nodeValue_EButton( "Vertical Align",    0, array_create(3, THEME.inspector_surface_valign) ));
 	// inputs 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 
-		["Surfaces",   true], 0, 1, 4, 12, 13, 6, 7,
-		["Blend",     false], 2, 3, 9,
-		["Transform", false], 5, 14, 
+		[ "Surfaces",   true ],  0,  1,  4, 12, 13,  6,  7,
+		[ "Blend",     false ],  2,  3,  9,
+		[ "Transform", false ],  5, 14, 
 	]
 	
 	input_display_deco = function(_x, _y, _w, _m, _hover, _focus, _panel) /*=>*/ {

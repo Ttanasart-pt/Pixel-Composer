@@ -145,7 +145,6 @@ event_inherited();
 	
 	function checkValid(node, skipConnect = false) {
 		if(!is(node, NodeObject))             return true;
-		if(node.patreon && !IS_PATREON)       return false;
 		if(!node.show_in_global && is_global) return false;
 		
 		return true;
@@ -621,7 +620,6 @@ event_inherited();
 				if(is_undefined(_node)) continue;
 				
 				if(is(_node, NodeObject)) {
-					if(_node.patreon && !IS_PATREON)       continue;
 					if(is_global && !_node.show_in_global) continue;
 					if(!_repeat && has(_shown, _node))     continue;
 					
@@ -866,7 +864,6 @@ event_inherited();
 				}
 				
 				if(is(_node, NodeObject)) {
-					if(_node.patreon && !IS_PATREON)       continue;
 					if(is_global && !_node.show_in_global) continue;
 					if(!_repeat && has(_shown, _node))     continue;
 					

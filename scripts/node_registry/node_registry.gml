@@ -1,7 +1,7 @@
 #region globalvar
 	globalvar ALL_NODES, NODE_PCX_CATEGORY; ALL_NODES = {};
 	globalvar NODE_CATEGORY, NODE_CATEGORY_MAP;
-	globalvar SUPPORTER_NODES, NEW_NODES;
+	globalvar NEW_NODES;
 	globalvar CUSTOM_NODES, CUSTOM_NODES_POSITION;
 	
 	globalvar NODE_PAGE_DEFAULT;
@@ -14,8 +14,6 @@
 	globalvar NODE_FAV_MAP; NODE_FAV_MAP = {};
 	
 	globalvar NODE_COMMONS; NODE_COMMONS = [];
-	
-	global.PATREON_NODES = [];
 #endregion
 
 function NodeObject(_name, _node, _tooltip = "") constructor {
@@ -51,9 +49,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	
 	show_in_recent = true;
 	show_in_global = true;
-	
-	patreon  = array_exists(global.PATREON_NODES, node);
-	if(patreon) array_push(SUPPORTER_NODES, self);
 	
 	testable = true;
 	
@@ -197,18 +192,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		var spr_x = _x + grid_width - 4;
 		var spr_y = _y + 4;
-				
-		if(IS_PATREON && patreon) {
-			BLEND_SUBTRACT
-			gpu_set_colorwriteenable(0, 0, 0, 1);
-			draw_sprite_ui(THEME.patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
-			gpu_set_colorwriteenable(1, 1, 1, 1);
-			BLEND_NORMAL
-			
-			draw_sprite_ui(THEME.patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
-			
-			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = __txt("Supporter exclusive");
-		}
 		
 		if(icon) draw_sprite_ext(icon, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
 	}
@@ -263,21 +246,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			if(_range == 0) draw_text_add(tx, ty, _txt);
 			else            draw_text_match_range(tx, ty, _txt, _range);
 			tx += string_width(_txt);
-		}
-		
-		if(IS_PATREON && patreon) {
-			var spr_x = tx + ui(4);
-			var spr_y = _y + _h / 2 - ui(6);
-						
-			gpu_set_colorwriteenable(0, 0, 0, 1); BLEND_SUBTRACT
-			draw_sprite_ui(THEME.patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
-			gpu_set_colorwriteenable(1, 1, 1, 1); BLEND_NORMAL
-			
-			draw_sprite_ui(THEME.patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
-			
-			if(point_in_circle(_mx, _my, spr_x, spr_y, ui(10))) TOOLTIP = __txt("Supporter exclusive");
-			
-			tx += ui(12);
 		}
 		
 		return tx;
@@ -570,7 +538,6 @@ function __initNodes(unzip = true) {
 	NODE_CATEGORY_MAP     = {};
 	NODE_CATEGORY	      = [];
 	NODE_PCX_CATEGORY     = [];
-	SUPPORTER_NODES       = [];
 	NEW_NODES		      = [];
 	CUSTOM_NODES	      = [];
 	CUSTOM_NODES_POSITION = {};
@@ -604,7 +571,6 @@ function __initNodes(unzip = true) {
 	__read_node_display_folder(root);
 	
 	__initNodeActions();           array_push(NODE_CATEGORY, { name : "Action", list : NODE_ACTION_LIST });
-	if(IS_PATREON)                 array_push(NODE_CATEGORY, { name : "Extra",  list : SUPPORTER_NODES  });
 	if(!array_empty(CUSTOM_NODES)) array_push(NODE_CATEGORY, { name : "Custom", list : CUSTOM_NODES     });
 	
 	////- FAV

@@ -6,6 +6,11 @@
         "date": "2026-04-12T00:42:36.593Z",
         "node": "",
         "commit": "Remove Patreon exclusive nodes."
+      },
+      {
+        "date": "2026-04-12T01:24:12.001Z",
+        "node": "",
+        "commit": "Fix value change when loading project with different default unit setting."
       }
     ]
   },

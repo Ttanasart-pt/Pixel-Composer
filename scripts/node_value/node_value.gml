@@ -520,21 +520,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		def_unit        = _mode;
 		cache_value[0]  = false;
 		
-		if(NODE_NEW_MANUAL && _mode == VALUE_UNIT.reference && PREFERENCES.node_def_dim_unit == 0) 
-			run_in(1, function() /*=>*/ { unit.modeTrigger(); });
+		if(_mode == VALUE_UNIT.reference && PREFERENCES.node_def_dim_unit == 0) {
+			// run_in(1, () => { unit.modeTrigger(); });
+			
+			var pxValue = unit.convertUnit(def_val, VALUE_UNIT.constant);
+			setDefValue(pxValue);
+			unit.mode = VALUE_UNIT.constant;
+		}
 		
 		return self;
 	}
 	
-	static setValidator = function(val) {
-		validator = val;
-		
-		return self;
-	}
-	
-	static rejectArray     = function( ) { accept_array  = false; return self; } 
-	static setArrayDepth   = function(a) { array_depth   = a;     return self; }
-	static setArrayDynamic = function( ) { dynamic_array = true;  return self; }
+	static setValidator    = function(v) /*=>*/ { validator     = v;     return self; }
+	static rejectArray     = function( ) /*=>*/ { accept_array  = false; return self; } 
+	static setArrayDepth   = function(a) /*=>*/ { array_depth   = a;     return self; }
+	static setArrayDynamic = function( ) /*=>*/ { dynamic_array = true;  return self; }
 	
 	static rejectArrayProcess = function() {
 		process_array = false;
@@ -2861,33 +2861,32 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
-		if(inspector_timeline)  _map.insp_tm        = inspector_timeline;
+		if(name_custom)                 _map.name		= name;
+		if(inspector_timeline)          _map.insp_tm    = inspector_timeline;
+		if(on_end != KEYFRAME_END.hold) _map.on_end		= on_end;
+		if(loop_range != -1)            _map.loop_range	= loop_range;
+		if(sep_axis)                    _map.sep_axis	= sep_axis;
+		if(favorited)                   _map.favorited	= favorited;
 		
-		if(name_custom)                 _map.name		 = name;
-		if(unit.mode != 0)              _map.unit		 = unit.mode;
-		if(on_end != KEYFRAME_END.hold) _map.on_end		 = on_end;
-		if(loop_range != -1)            _map.loop_range	 = loop_range;
-		if(sep_axis)                    _map.sep_axis	 = sep_axis;
-		if(favorited)                   _map.favorited	 = favorited;
-		
-		if(draw_line_shift_x !=  0) _map.shift_x = draw_line_shift_x;
-		if(draw_line_shift_y !=  0) _map.shift_y = draw_line_shift_y;
-		if(draw_line_shift_e != -1) _map.shift_e = draw_line_shift_e;
-		if(always_modified || is_modified == true) _map.m = 1;
+		if(draw_line_shift_x !=  0)     _map.shift_x = draw_line_shift_x;
+		if(draw_line_shift_y !=  0)     _map.shift_y = draw_line_shift_y;
+		if(draw_line_shift_e != -1)     _map.shift_e = draw_line_shift_e;
+		if(always_modified || is_modified) _map.m = 1;
 		
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
 			_map.from_index = value_from.index;
 			if(value_from.tags != 0) _map.from_tag = value_from.tags;
 		}
-			
+		
 		if(expUse)           _map.global_use = expUse;
 		if(expression != "") _map.global_key = expression;
 		if(is_anim)          _map.anim       = is_anim;
 		if(ign_array)        _map.ign_array  = ign_array;
 		
 		if(preset || always_modified || is_modified) {
-			_map.r = animator.serialize(scale);
+			_map.unit = unit.mode;
+			_map.r    = animator.serialize(scale);
 			
 			if(sep_axis && animVector) {
 				var _anims = getAnimators();
@@ -2947,7 +2946,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		inspector_timeline = _map[$ "insp_tm"] ?? inspector_timeline;
-		drawValue	= _map[$ "drawValue"] ?? false;
+		drawValue          = _map[$ "drawValue"] ?? drawValue;
 		
 		if(bool(_map[$ "def_serial"])) {
 			def_serial = true;
@@ -2956,33 +2955,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == CONNECT_TYPE.output) return;
 		
-		on_end     = _map[$ "on_end"]     ?? KEYFRAME_END.hold;
-		loop_range = _map[$ "loop_range"] ?? -1;
-		unit.mode  = _map[$ "unit"]       ?? 0;
-		ign_array  = _map[$ "ign_array"]  ?? false;
+		on_end     = _map[$ "on_end"]     ?? on_end;
+		loop_range = _map[$ "loop_range"] ?? loop_range;
+		ign_array  = _map[$ "ign_array"]  ?? ign_array;
 		
 		expUse     = _map[$ "global_use"] ?? false;
 		expression = _map[$ "global_key"] ?? "";
 		expTree    = expression == ""? noone : evaluateFunctionList(expression); 
 		
-		sep_axis   = _map[$ "sep_axis"]  ?? false;
-		favorited  = _map[$ "favorited"] ?? false;
-		setAnim(_map[$ "anim"] ?? false);
+		sep_axis   = _map[$ "sep_axis"]  ?? sep_axis;
+		favorited  = _map[$ "favorited"] ?? favorited;
+		if(has(_map, "anim")) setAnim(_map[$ "anim"]);
 		
-		draw_line_shift_x = _map[$ "shift_x"]     ??  0;
-		draw_line_shift_y = _map[$ "shift_y"]     ??  0;
-		draw_line_shift_e = _map[$ "shift_e"]     ?? -1;
-		
-		if(has(_map, "m"))           is_modified = bool(_map.m);
-		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
-		if(always_modified) is_modified = true;
+		draw_line_shift_x = _map[$ "shift_x"] ?? draw_line_shift_x;
+		draw_line_shift_y = _map[$ "shift_y"] ?? draw_line_shift_y;
+		draw_line_shift_e = _map[$ "shift_e"] ?? draw_line_shift_e;
 		
 		#region attributes
-			// wtf?
 			if(has(attributes, "use_project_dimension") && has(node.load_map, "attri") && has(node.load_map.attri, "use_project_dimension"))
 				attributes.use_project_dimension = node.load_map.attri.use_project_dimension;
 			
-			if(has(_map, "attri")) struct_append(attributes, _map.attri);
+			if(has(_map, "attri"))  struct_append(attributes, _map.attri);
 			if(has(_map, "linked")) display_data.linked = _map.linked;
 			if(has(_map, "ranged")) display_data.ranged = _map.ranged;
 		#endregion
@@ -2996,9 +2989,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(name_custom) name = _map[$ "name"] ?? name;
 			
 		}
-			
-		if(has(_map, "raw_value")) animator.deserialize(_map[$ "raw_value"], scale);
-		if(has(_map, "r"))         animator.deserialize(_map[$ "r"],         scale);
+		
+		if(has(_map, "m"))           is_modified = bool(_map.m);
+		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
+		if(always_modified)          is_modified = true;
+		
+		if(has(_map, "unit"))        unit.mode = _map[$ "unit"];
+		if(has(_map, "raw_value"))   animator.deserialize(_map[$ "raw_value"], scale);
+		if(has(_map, "r"))           animator.deserialize(_map[$ "r"],         scale);
 		if(is_anim) animator.updateKeyMap();
 		
 		setBypass(_map[$ "bypass"] ?? false);
