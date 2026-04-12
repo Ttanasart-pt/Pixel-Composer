@@ -2862,7 +2862,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
 		if(name_custom)                 _map.name		= name;
-		if(inspector_timeline)          _map.insp_tm    = inspector_timeline;
+		if(inspector_timeline)          _map.insp_tm    = inspectr_timeline;
 		if(on_end != KEYFRAME_END.hold) _map.on_end		= on_end;
 		if(loop_range != -1)            _map.loop_range	= loop_range;
 		if(sep_axis)                    _map.sep_axis	= sep_axis;
@@ -2884,9 +2884,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim)          _map.anim       = is_anim;
 		if(ign_array)        _map.ign_array  = ign_array;
 		
+		_map.unit = unit.mode;
 		if(preset || always_modified || is_modified) {
-			_map.unit = unit.mode;
-			_map.r    = animator.serialize(scale);
+			_map.r = animator.serialize(scale);
 			
 			if(sep_axis && animVector) {
 				var _anims = getAnimators();
@@ -2990,11 +2990,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		}
 		
+		if(!preset) {
+			con_node  = _map[$ "from_node"]  ?? -1;
+			con_index = _map[$ "from_index"] ?? -1;
+			con_tag   = _map[$ "from_tag"]   ?? 0;
+		}
+		
 		if(has(_map, "m"))           is_modified = bool(_map.m);
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
 		if(always_modified)          is_modified = true;
 		
-		if(has(_map, "unit"))        unit.mode = _map[$ "unit"];
+		if(con_node != -1) unit.mode = 0;
+		unit.mode = _map[$ "unit"] ?? unit.mode;
+		
 		if(has(_map, "raw_value"))   animator.deserialize(_map[$ "raw_value"], scale);
 		if(has(_map, "r"))           animator.deserialize(_map[$ "r"],         scale);
 		if(is_anim) animator.updateKeyMap();
@@ -3011,12 +3019,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_anims[i].deserialize(_animm[i], scale);
 				if(is_anim) _anims[i].updateKeyMap();
 			}
-		}
-		
-		if(!preset) {
-			con_node  = _map[$ "from_node"]  ?? -1;
-			con_index = _map[$ "from_index"] ?? -1;
-			con_tag   = _map[$ "from_tag"]   ?? 0;
 		}
 		
 		if(index >= 0) {

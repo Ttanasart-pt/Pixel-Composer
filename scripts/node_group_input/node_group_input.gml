@@ -92,26 +92,26 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		/* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
 		/* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]
 		
-	newInput( 9, nodeValue_Enum_Scroll("Visible Condition", 0, __visible_condition));
-	newInput(10, nodeValue_Float(      "Visible Check",     0 ));
-	newInput(11, nodeValue_Float(      "Visible Check To",  0 ));
+	newInput( 9, nodeValue_EScroll( "Visible Condition", 0, __visible_condition));
+	newInput(10, nodeValue_Float(   "Visible Check",     0 ));
+	newInput(11, nodeValue_Float(   "Visible Check To",  0 ));
 	
 	////- =Data
-	newInput(2, nodeValue_Enum_Scroll( "Input Type",    11, { data: GROUP_IO_TYPE_NAME,   update_hover: false })).setUnclamp();
-	newInput(0, nodeValue_Enum_Scroll( "Subtype",        0, { data: GROUP_IO_DISPLAY[11], update_hover: false })).setUnclamp();
-	newInput(4, nodeValue_Enum_Button( "Vector Size",    0, [ "2", "3", "4" ] ));
-	newInput(1, nodeValue_Range(       "Range",         [0,1] ));
-	newInput(7, nodeValue_Float(       "Step",           0.01 ));
-	newInput(3, nodeValue_Text(        "Enum Labels")).setTooltip("Define enum choices, use comma to separate each choice.");
-	newInput(8, nodeValue_Text(        "Button Label", "Trigger"));
-	newInput(5, nodeValue_Int(         "Order",         0));
+	newInput(2, nodeValue_EScroll(  "Input Type",    11, { data: GROUP_IO_TYPE_NAME,   update_hover: false })).setUnclamp();
+	newInput(0, nodeValue_EScroll(  "Subtype",        0, { data: GROUP_IO_DISPLAY[11], update_hover: false })).setUnclamp();
+	newInput(4, nodeValue_EButton(  "Vector Size",    0, [ "2", "3", "4" ] ));
+	newInput(1, nodeValue_Range(    "Range",         [0,1] ));
+	newInput(7, nodeValue_Float(    "Step",           0.01 ));
+	newInput(3, nodeValue_Text(     "Enum Labels")).setTooltip("Define enum choices, use comma to separate each choice.");
+	newInput(8, nodeValue_Text(     "Button Label", "Trigger"));
+	newInput(5, nodeValue_Int(      "Order",         0));
 	
 	////- =Gizmo
-	newInput( 6, nodeValue_Bool(       "Display Preview Gizmo",  true ));
-	newInput(12, nodeValue_Vec2(       "Gizmo Position",        [0,0] ));
-	newInput(13, nodeValue_Float(      "Gizmo Scale",            1    ));
-	newInput(14, nodeValue_Rotation(   "Gizmo Rotation",         0    ));
-	newInput(15, nodeValue_Bool(       "Gizmo Label",            true ));
+	newInput( 6, nodeValue_Bool(     "Display Preview Gizmo",  true ));
+	newInput(12, nodeValue_Vec2(     "Gizmo Position",        [0,0] ));
+	newInput(13, nodeValue_Float(    "Gizmo Scale",            1    ));
+	newInput(14, nodeValue_Rotation( "Gizmo Rotation",         0    ));
+	newInput(15, nodeValue_Bool(     "Gizmo Label",            true ));
 	
 	inputs[10].setFrom_condition = function(v) /*=>*/ {
 		if(is(v.node, Node_Group_Input)) return true;

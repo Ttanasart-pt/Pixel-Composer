@@ -29,9 +29,11 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0]; 
-		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
-		var typ = nod.type;
+		var nod = __curr_get_val[1]; 
 		
+		if(!is(nod, NodeValue)) return val;
+		
+		var typ = nod.type;
 		if(typ == VALUE_TYPE.surface) return surface_get_dimension(val);
 		
 		if(is_path(val)) {

@@ -197,7 +197,7 @@ function __test_update_collections_meta(dir = COLLECTIONS) {
 
 function __test_zip_collection(dir = COLLECTIONS) {
 	var _dirr = dir.path + "/";
-	var _targ = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Collections.zip"
+	var _targ = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/pack/collections.zip"
 	var _zip  = zip_create();
 	
 	print("---------- ZIP COLLECTION STARTED ----------");

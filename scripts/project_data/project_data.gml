@@ -267,6 +267,7 @@ function Project() constructor {
 		attributes.autosave            = false;
 		attributes.auto_organize       = false;
 		attributes.render_topo         = false;
+		attributes.use_unit_in_connect = true;
 		
 		static setAttribute = function(_k,_v) /*=>*/ {
 			attributes[$ _k]         = _v;

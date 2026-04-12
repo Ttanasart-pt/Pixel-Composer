@@ -32,7 +32,6 @@ if __name__ == "__main__":
     packFolder("Actions", "actions")
     packFolder("Addons", "addons")
     packFolder("Assets", "assets")
-    packFolder("Collections", "collections")
     packFolder("Curves", "curves")
     packFolder("Layouts", "layouts")
     packFolder("Locale", "locale")

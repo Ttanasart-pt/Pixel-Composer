@@ -3,11 +3,6 @@
     "version": "1.21.rc1",
     "changes": [
       {
-        "date": "2026-04-12T01:24:12.001Z",
-        "node": "",
-        "commit": "Fix value change when loading project with different default unit setting."
-      },
-      {
         "date": "2026-04-12T06:34:49.604Z",
         "node": "",
         "commit": "updated default collection"

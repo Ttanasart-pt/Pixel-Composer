@@ -57,6 +57,7 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 				_surface = noone;
 		}
 		
+		if(is_string(_surface)) _surface = get_asset(_surface);
 		if(!is_surface(_surface)) _surface = noone;
 		
 		var _ars = .5;
