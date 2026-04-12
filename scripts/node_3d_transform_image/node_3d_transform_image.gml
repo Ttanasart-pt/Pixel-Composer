@@ -145,6 +145,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 			
 		BLEND_NORMAL
 		gpu_set_texfilter(false);
+		gpu_set_cullmode(cull_noculling);
 		surface_reset_target();
 	
 		return [ object, _outSurf, _dptSurf ];

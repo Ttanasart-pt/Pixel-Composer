@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc2",
+    "changes": [
+      {
+        "date": "2026-04-12T08:54:10.530Z",
+        "node": "",
+        "commit": "**Transform Image 3D**: Fix UI rendering error when playing animation."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc1",
     "changes": [
       {

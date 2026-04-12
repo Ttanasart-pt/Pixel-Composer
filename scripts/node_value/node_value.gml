@@ -2993,7 +2993,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!preset) {
 			con_node  = _map[$ "from_node"]  ?? -1;
 			con_index = _map[$ "from_index"] ?? -1;
-			con_tag   = _map[$ "from_tag"]   ?? 0;
+			con_tag   = _map[$ "from_tag"]   ??  0;
 		}
 		
 		if(has(_map, "m"))           is_modified = bool(_map.m);
