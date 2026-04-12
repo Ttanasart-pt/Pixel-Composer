@@ -16,11 +16,11 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Scale
-	newInput(2, nodeValue_Enum_Button( "Mode", 0, [ "Upscale", "Scale to fit" ]));
-	newInput(6, nodeValue_Enum_Button( "Fit Mode", 0, [ "Stretch", "Minimum", "Maximum" ]));
-	newInput(1, nodeValue_Float(       "Scale", 1));
-	newInput(3, nodeValue_Vec2(        "Target Dimension", PROJ_SURF));
-	newInput(5, nodeValue_Bool(        "Scale Atlas Position", true));
+	newInput(2, nodeValue_EButton( "Mode", 0, [ "Upscale", "Scale to fit" ]));
+	newInput(6, nodeValue_EButton( "Fit Mode", 0, [ "Stretch", "Minimum", "Maximum" ]));
+	newInput(1, nodeValue_Float(   "Scale", 1));
+	newInput(3, nodeValue_Vec2(    "Target Dimension", PROJ_SURF));
+	newInput(5, nodeValue_Bool(    "Scale Atlas Position", true));
 	// inputs 6
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

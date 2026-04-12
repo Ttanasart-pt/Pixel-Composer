@@ -52,7 +52,10 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
-		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
+		var nod = __curr_get_val[1]; 
+		
+		if(is_string(val)) val = get_asset(val);
+		if(!is(nod, NodeValue)) return val;
 		
 		if(is(val, dynaDraw)) val.node = node;
 		if(is(val, dynaDraw_canvas)) return val.surfaces[0];
@@ -64,8 +67,6 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 		if(array_empty(_anim.values)) return noone;
 		
 		var _val = _anim.values[0].value;
-		if(is_string(_val)) return get_asset(_val);
-		
 		return _val; 
 	}
 	

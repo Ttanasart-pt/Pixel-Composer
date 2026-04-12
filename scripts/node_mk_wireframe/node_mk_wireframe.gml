@@ -26,7 +26,7 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		[ "Output",    false ],  0,
 		[ "Path",      false ],  1,  2,  7,  
 		[ "Thickness", false ],  3,  4, 11, 12, 13, 

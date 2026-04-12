@@ -9,7 +9,7 @@ function __initCollection() {
 		COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
 		COLLECTIONS.free();
 		
-		zip_unzip($"{working_directory}pack/collections.zip", root);
+		// zip_unzip($"{working_directory}pack/collections.zip", root);
 	}
 	
 	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
@@ -97,9 +97,11 @@ function saveCollection(_node, _path, save_surface = true, metadata = noone) {
 	var _outpath = filename_ext_verify(_path, ".pxcc");
 	SAVE_COLLECTION(_node, _outpath, save_surface, metadata, _node.group);
 	
-	PANEL_COLLECTION.updated_path = _outpath;
-	PANEL_COLLECTION.updated_prog = 1;
-	PANEL_COLLECTION.refreshContext();
+	if(PANEL_COLLECTION) {
+		PANEL_COLLECTION.updated_path = _outpath;
+		PANEL_COLLECTION.updated_prog = 1;
+		PANEL_COLLECTION.refreshContext();
+	}
 }
 
 function clearDefaultCollection() {

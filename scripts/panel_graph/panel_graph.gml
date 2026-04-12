@@ -4220,7 +4220,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	function doGroupUpdate() {
 		var _node = getFocusingNode();
         if(is(!_node, Node_Collection)) return;
-        if(_node.collPath == "") return;
+        if(_node.collPath == "")        return;
         
         saveCollection(_node, _node.collPath, false, _node.metadata);
 	}
@@ -4379,7 +4379,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	var data = DRAGGING.data;
                 var path = data.path;
                 var app  = APPEND(data.path, getCurrentContext());
-            
+            	
                 if(is_array(app)) {
                     var cx = 0;
                     var cy = 0;
@@ -4394,6 +4394,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     cy /= amo;
                     
                     for( var i = 0; i < amo; i++ ) {
+                    	if(is(app[i], Node_Collection)) {
+	                    	app[i].metadata = data.getMetadata();
+	                    	app[i].collPath = path;
+	                    }
+                    	
                         app[i].x = app[i].x - cx + mouse_grid_x;
                         app[i].y = app[i].y - cy + mouse_grid_y;
                     }

@@ -34,7 +34,7 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 2, 
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 2, 
 		[ "Output",     false    ],  0,  8, 
 		[ "Circuit",    false    ],  1,  3, 15, 16, 18, 
 		[ "Render",     false    ],  4,  5,  6,  7, 17, 

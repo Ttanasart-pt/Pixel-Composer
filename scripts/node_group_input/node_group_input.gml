@@ -441,6 +441,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static visibleCheck = function() {
 		var _vty = inputs[9].getValue();
+		if(is_array(_vty)) _vty = 0;
 		
 		inputs[10].setVisible(_vty >= 2, _vty >= 2);
 		inputs[11].setVisible(_vty >= 2);

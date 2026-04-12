@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc1",
+    "changes": [
+      {
+        "date": "2026-04-12T04:20:17.917Z",
+        "node": "",
+        "commit": "**Group Input**: Fix error when using internal surface asset."
+      }
+    ]
+  }
+]
