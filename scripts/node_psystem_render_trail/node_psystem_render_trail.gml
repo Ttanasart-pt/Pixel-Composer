@@ -5,26 +5,27 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	update_on_frame = true;
 	
-	newInput(2, nodeValueSeed());
+	newInput( 2, nodeValueSeed());
 	
 	////- =Particles
-	newInput(0, nodeValue_Particle( "Particles" ));
-	newInput(1, nodeValue_Buffer(   "Mask"      ));
+	newInput( 0, nodeValue_Particle( "Particles" ));
+	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Trail
-	newInput(3, nodeValue_Range( "Length", [4,4], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(5, nodeValue_Bool(  "End Trail",     true )).setTooltip("Render trail for dead particles.");
+	newInput( 3, nodeValue_Range( "Length", [4,4], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
+	newInput( 5, nodeValue_Bool(  "End Trail",     true )).setTooltip("Render trail for dead particles.");
 	
 	////- =Render
-	newInput(6, nodeValue_Range( "Thickness", [1,1], true )).setTooltip("This value then multiply by particle X scale for the final thickness.");
-	// 
+	newInput( 7, nodeValue_Bool(  "1px mode",        false ));
+	newInput( 6, nodeValue_Range( "Thickness", [1,1], true )).setTooltip("This value then multiply by particle X scale for the final thickness.");
+	// 8
 	
 	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 2, 
-		[ "Particles", false ], 0, 1, 
-		[ "Trail",     false ], 3, 4, 5, 
-		[ "Render",    false ], 6, 
+		[ "Particles", false ],  0,  1, 
+		[ "Trail",     false ],  3,  4,  5, 
+		[ "Render",    false ],  7,  6, 
 	];
 	
 	////- Nodes
@@ -60,15 +61,18 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 	static update = function(_frame = CURRENT_FRAME) {
 		#region data
 			var _dim   = getDimension();
-			var _seed  = getInputData(2);
+			var _seed  = getInputData( 2);
 			
-			var _parts = getInputData(0);
-			var _masks = getInputData(1), use_mask = _masks != noone;
-		
-			var _fram  = getInputData(3), _fram_curved = inputs[3].attributes.curved && curve_fram != undefined;
-			var _endt  = getInputData(5);
+			var _parts = getInputData( 0);
+			var _masks = getInputData( 1), use_mask = _masks != noone;
 			
-			var _thck  = getInputData(6);
+			var _fram  = getInputData( 3), _fram_curved = inputs[3].attributes.curved && curve_fram != undefined;
+			var _endt  = getInputData( 5);
+			
+			var _1px   = getInputData( 7);
+			var _thck  = getInputData( 6);
+			
+			inputs[6].setVisible(!_1px);
 		#endregion
 		
 		var _outSurf = outputs[0].getValue();
@@ -195,7 +199,10 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 					nc = make_color_rgb(_r, _g, _b);
 					na = _a;
 					
-					if(_segIndex) draw_line_width2(ox, oy, nx, ny, ot, nt, true, oc, nc);
+					if(_segIndex) {
+						if(_1px) draw_line_color(  ox, oy, nx, ny, oc, nc );
+						else     draw_line_width2( ox, oy, nx, ny, ot, nt, true, oc, nc );
+					}
 					
 					ox = nx;
 					oy = ny;

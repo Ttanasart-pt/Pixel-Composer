@@ -3517,7 +3517,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         if(context != noone) {
         	title_raw += " > " + (context.renamed? context.display_name : context.name);
-        	bg_color   = merge_color(COLORS.panel_graph_bg, context.getColor(), .05);
+        	bg_color   = hsv_hue_swap(COLORS.panel_graph_bg, context.getColor(), 1);
         	
         	if(!context.active) {
         		resetContext();

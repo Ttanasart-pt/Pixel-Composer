@@ -148,6 +148,14 @@
 			__clamp255_mf0 lerp(color_get_alpha(c0),      color_get_alpha(c1),      t) __clamp255_mf1,
 		);
 	}
+	
+	function hsv_hue_swap(c0, c1, t) {
+		var h = lerp(color_get_h(c0), color_get_h(c1), t);
+		var s = color_get_s(c0);
+		var v = color_get_v(c0);
+		
+		return make_color_hsv(h,s,v);
+	}
 #endregion
 
 #region ok
