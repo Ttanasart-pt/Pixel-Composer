@@ -32,9 +32,10 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 					var list = HOTKEYS[$ _focus_ctx];
 					for( var i = 0, n = array_length(list); i < n; i++ ) {
 						var h = list[i];
+						var p = h.isPressing();
 						
-						if(h.isPressing()) {
-							if(h.key._K == noone) h.action(); // Modifier action trigger immediately
+						if(p != undefined) {
+							if(p._K == noone) h.action(); // Modifier action trigger immediately
 							else if(h.interrupt) _toActIn = h;
 							else array_push(_toAct, h);
 						}
@@ -44,7 +45,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 				if(_focus_ctx == "Graph" || _focus_ctx == "Nodes") {
 					for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
 		        		var h = GRAPH_ADD_NODE_KEYS[i];
-		        		if(h.isPressing()) array_push(_toAct, h);
+		        		if(h.isPressing() != undefined) array_push(_toAct, h);
 		        	}
 				}
 			}

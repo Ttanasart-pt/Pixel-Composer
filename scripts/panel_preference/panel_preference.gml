@@ -1315,6 +1315,7 @@ function Panel_Preference() : PanelContent() constructor {
     #region Hotkey
     	hk_init       = false;
     	hk_editing    = noone;
+    	hk_edit_key   = noone;
     	hk_modifiers  = MOD_KEY.none;
     	hotkeyContext = [];
     	hotkeyArray   = [];
@@ -1682,49 +1683,100 @@ function Panel_Preference() : PanelContent() constructor {
     				var b = buttonInstant(noone, bx, by, bs, bs, _m, hover, pFOCUS, "", bp, 0, bc, .75, 1);
     				
     				if(b) _hoverAny = true;
-    				if(b == 2) hk_editing = hotkey.modify();
+    				if(b == 2) {
+    					hotkey.key.modify();
+    					if(hk_editing) hk_editing.refresh();
+    					hk_editing  = hotkey;
+    					hk_edit_key = hotkey.key;
+    				}
     				continue;
     			}
     			
-    			var kw = string_width(keyTxt);
-    			var bw = kw + ui(16);
-    			var bh = th + ui(6);
-    			
-    			var bx = key_x1 - bw;
-    			var by = _yy - ui(3);
-    			var tx = bx + ui(8);
-    			
-    			var cc = hk_editing == hotkey? COLORS._main_text_accent : COLORS._main_text;
-    			
-    			var hv = hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh);
-    			_hoverAny = _hoverAny || hv;
-    			
-    			draw_sprite_stretched_ext(THEME.box_r5, 0, bx, by, bw, bh, CDEF.main_black);
-    			draw_sprite_stretched_add(THEME.box_r5, 1, bx, by, bw, bh, CDEF.main_mdblack);
-    			draw_set_text(f_p2, fa_left, fa_top, cc);
-    			draw_text_add(tx, _yy, keyTxt);
-    			
-    			if(hk_editing == hotkey) {
-    				draw_sprite_stretched_ext(THEME.box_r5, 1, bx, by, bw, bh, COLORS._main_accent);
-    				if(hv) {
-    					sp_hotkey.hover_content = true;
-    					if(mouse_lpress(pFOCUS)) hk_editing = noone;
-    				} 
-    				
-    			} else if(hv) {
-					draw_sprite_stretched_add(THEME.box_r5, 1, bx, by, bw, bh, CDEF.main_dkgrey);
-					sp_hotkey.hover_content = true;
-					if(mouse_lpress(focus)) hk_editing = hotkey.modify();
-				} 
+				var klen = hotkey.keys == undefined? 0 : array_length(hotkey.keys);
+				for( var k = -1; k < klen; k++ ) {
+					var _key = k < 0? hotkey.key : hotkey.keys[k];
+					
+					var keyTxt = _key.toString();
+	    			var kw = string_width(keyTxt);
+	    			var bw = kw + ui(16);
+	    			var bh = th + ui(6);
+	    			
+	    			var bx = key_x1 - bw;
+	    			var by = _yy - ui(3);
+	    			var tx = bx + ui(8);
+	    			
+	    			var cc = hk_editing == hotkey && hk_edit_key == _key? COLORS._main_text_accent : COLORS._main_text;
+	    			
+	    			var hv = hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh);
+	    			_hoverAny = _hoverAny || hv;
+	    			
+	    			draw_sprite_stretched_ext(THEME.box_r5, 0, bx, by, bw, bh, CDEF.main_black);
+	    			draw_sprite_stretched_add(THEME.box_r5, 1, bx, by, bw, bh, CDEF.main_mdblack);
+	    			draw_set_text(f_p2, fa_left, fa_top, cc);
+	    			draw_text_add(tx, _yy, keyTxt);
+	    			
+	    			if(hk_editing == hotkey && hk_edit_key == _key) {
+	    				draw_sprite_stretched_ext(THEME.box_r5, 1, bx, by, bw, bh, COLORS._main_accent);
+	    				if(hv) {
+	    					sp_hotkey.hover_content = true;
+	    					if(mouse_lpress(pFOCUS)) {
+	    						hk_editing.refresh();
+	    						hk_editing = noone;
+	    					}
+	    				} 
+	    				
+	    			} else if(hv) {
+						draw_sprite_stretched_add(THEME.box_r5, 1, bx, by, bw, bh, CDEF.main_dkgrey);
+						sp_hotkey.hover_content = true;
+						if(mouse_lpress(focus)) {
+							_key.modify();
+							if(hk_editing) hk_editing.refresh();
+							hk_editing  = hotkey;
+							hk_edit_key = _key;
+						}
+					} 
+					
+					key_x1 = bx - ui(4);
+				}
+				
+				// add key
+				var bs = th;
+				var bx = key_x1 - bs;
+				var by = _yy;
+				
+				var bp = THEME.add_16;
+				var bc = CARRAY.button_positive;
+				
+				var b = buttonInstant(noone, bx, by, bs, bs, _m, hover, pFOCUS, "", bp, 0, bc, .75, 1);
+				
+				if(b) _hoverAny = true;
+				if(b == 2) {
+					var _k = new KeyCombination().modify();
+					if(hotkey.keys == undefined) hotkey.keys = [];
+					array_push(hotkey.keys, _k);
+					
+					hk_editing  = hotkey;
+					hk_edit_key = _k;
+				}
     		}
     		
-    		if(!_hoverAny && hk_editing && mouse_lpress(focus)) hk_editing = noone;
+    		if(!_hoverAny && hk_editing && mouse_lpress(focus)) {
+    			hk_editing.refresh();
+    			hk_editing = noone;
+    		}
     		
     		hotkey_focus         = noone;
     		hotkey_focus_high_bg = lerp_linear(hotkey_focus_high_bg, 0, DELTA_TIME);
     		if(hotkey_focus_high_bg == 0) hotkey_focus_highlight = noone;
     		
-    		if(hk_editing != noone) hotkey_editing(hk_editing);
+    		if(hk_editing != noone) {
+    			hotkey_editing(hk_editing, hk_edit_key);
+    			
+    			if(keyboard_check_pressed(vk_escape)) {
+    				hk_editing.refresh();
+    				hk_editing = noone;
+    			}
+    		}
     		
     		return hh + ui(32);
     	});
@@ -2095,36 +2147,41 @@ function Panel_Preference() : PanelContent() constructor {
 	        		
         		if(hk_page)
         		for (var j = 0, m = array_length(_list); j < m; j++) {
+        			var hotkey = _list[j];
+        			var klen   = hotkey.keys == undefined? 0 : array_length(hotkey.keys);
         			
-        			var _ky   = _list[j];
-        			var _kkey = _ky.key._K;
-        			var _kmod = _ky.key._M;
-        			
-        			if(_kkey == noone && _kmod == MOD_KEY.none) continue;
-        			
-        			if(_kkey == KEY_GROUP.numeric) {
-        				for( var k = 0; k <= 9; k++ ) {
-        					var _numk = ord(k);
-        					if(!has(_keyUsing, _numk)) 
-        						_keyUsing[$ _numk] = {};
-		        			
-		        			var _kuse = _keyUsing[$ _numk];
-		        			if(!has(_kuse, _kmod))
-		        				_kuse[$ _kmod] = [];
-		        				
-		        			array_append(_kuse[$ _kmod], _ky);
-        				}
-        				continue;
-        			}
-        			
-        			if(!has(_keyUsing, _kkey))
-        				_keyUsing[$ _kkey] = {};
-        			
-        			var _kuse = _keyUsing[$ _kkey];
-        			if(!has(_kuse, _kmod))
-        				_kuse[$ _kmod] = [];
-        				
-        			array_append(_kuse[$ _kmod], _ky);
+					for( var k = -1; k < klen; k++ ) {
+						var _key = k < 0? hotkey.key : hotkey.keys[k];
+						if(!_key.hasKey()) continue;
+						
+	        			var _kkey = _key._K;
+	        			var _kmod = _key._M;
+	        			
+	        			if(_kkey == KEY_GROUP.numeric) {
+	        				for( var k = 0; k <= 9; k++ ) {
+	        					var _numk = ord(k);
+	        					if(!has(_keyUsing, _numk)) 
+	        						_keyUsing[$ _numk] = {};
+			        			
+			        			var _kuse = _keyUsing[$ _numk];
+			        			if(!has(_kuse, _kmod))
+			        				_kuse[$ _kmod] = [];
+			        				
+			        			array_append(_kuse[$ _kmod], hotkey);
+	        				}
+	        				continue;
+	        			}
+	        			
+	        			if(!has(_keyUsing, _kkey))
+	        				_keyUsing[$ _kkey] = {};
+	        			
+	        			var _kuse = _keyUsing[$ _kkey];
+	        			if(!has(_kuse, _kmod))
+	        				_kuse[$ _kmod] = [];
+	        				
+	        			array_append(_kuse[$ _kmod], hotkey);
+	        			
+					}
         		}
         		
         		var _mc = MOD_KEY.ctrl;
@@ -2173,7 +2230,8 @@ function Panel_Preference() : PanelContent() constructor {
         			}
         			
         			var _tc  = CDEF.main_grey;
-        			var _hov = pHOVER && point_in_rectangle(mx, my, _kx - _kp, _ky - _kp, _kx + _kw + _kp - 1, _ky + _kh + _kp - 1);
+        			var _hov = pHOVER && point_in_rectangle(mx, my, _kx - _kp       + 1, _ky - _kp       + 1, 
+        			                                                _kx + _kp + _kw - 1, _ky + _kp + _kh - 1);
         			
         			if(_vk == vk_control) {
         				_sel = bool(MOD_KEY.ctrl & _cmod);

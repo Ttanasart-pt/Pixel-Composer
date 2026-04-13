@@ -23,10 +23,12 @@ function KeyCombination(_key = "", _modi = MOD_KEY.none) constructor {
 	static hasKey  = function()    /*=>*/ {return _K > 0 || _M > 0};
 	static isEqual = function(k)   /*=>*/ {return _K == k._K && _M == k._M};
 	
+	static modify = function()     /*=>*/ { keyboard_lastchar = _K; return self; }
+	
 	////- Serialize
 	
 	static serialize   = function( ) /*=>*/ { return { key: _K, modi: _M } }
-	static deserialize = function(m) /*=>*/ { _K = m.key; _M = m.modi; }
+	static deserialize = function(m) /*=>*/ { _K = m.key; _M = m.modi; return self; }
 }
 
 function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone, _param = noone) constructor {
@@ -51,6 +53,27 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	
 	static hasKey = function() /*=>*/ {return key.hasKey()};
 	
+	static refresh = function() /*=>*/ {
+		if(keys == undefined) return self;
+		
+		print(keys);
+		keys = array_filter(keys, function(k,i) /*=>*/ {return k.hasKey()});
+		print(keys);
+		
+		if(array_empty(keys)) {
+			keys = undefined;
+			return self;
+		}
+		
+		if(!key.hasKey())
+			key = array_shift(keys);
+			
+		if(array_empty(keys))
+			keys = undefined;
+			
+		return self;
+	}
+	
 	static action = function() {
 		if(param == noone) rawAction();
 		else rawAction(param);
@@ -66,15 +89,17 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	static getKeyName  = function() /*=>*/ {return key.toString()};
 	static getNameFull = function() /*=>*/ {return string_to_var(context == 0? $"global.{name}" : $"{context}.{name}")};
 	
-	static isPressing  = function(h=0) /*=>*/ { return key.isPressing(h);
-		if(key.isPressing(h)) return true;
-		return keys != undefined && array_any(keys, function(k,i) /*=>*/ {return k.isPressing(h)});
+	static isPressing  = function(h=0) /*=>*/ { 
+		if(key.isPressing(h)) return key;
+		if(keys == undefined) return undefined;
+		
+		var ind = array_find_index(keys, function(k,i) /*=>*/ {return k.isPressing()});
+		return ind < 0? undefined : keys[ind];
 	}
 	
-	static isModified  = function() /*=>*/ {return !key.isEqual(dkey)};
+	static isModified  = function() /*=>*/ {return !key.isEqual(dkey) || keys != undefined};
 	
 	static reset  = function(r=0) /*=>*/ { key.setKey(dkey); if(r) PREF_SAVE(); }
-	static modify = function()    /*=>*/ { keyboard_lastchar = key._K; return self; }
 	
 	static toString = function() /*=>*/ {return $"{getNameFull()}: {getKeyName()}"};
 	
@@ -161,7 +186,7 @@ function getToolHotkey(_group, _key) {
 	return _grp[$ _key];
 }
 
-function hotkey_editing(hotkey) {
+function hotkey_editing(hotkey, key = undefined) {
 	static vk_list = [ 
 		vk_left, vk_right, vk_up, vk_down, vk_space, vk_backspace, vk_tab, vk_home, vk_end, vk_delete, vk_insert, 
 		vk_pageup, vk_pagedown, vk_pause, vk_printscreen, 
@@ -175,12 +200,14 @@ function hotkey_editing(hotkey) {
 	if(keyboard_check(vk_shift))	_mod_prs |= MOD_KEY.shift;
 	if(keyboard_check(vk_alt))		_mod_prs |= MOD_KEY.alt;
 	
+	var k = key ?? hotkey.key;
+	
 	if(keyboard_check_pressed(vk_escape)) {
-		hotkey.set(0,0);
+		k.set(0,0);
 		PREF_SAVE();
 		
 	} else if(keyboard_check_pressed(vk_anykey)) {
-		hotkey.set(keyboard_lastkey, _mod_prs);
+		k.set(keyboard_lastkey, _mod_prs);
 		PREF_SAVE();
 	}
 }
