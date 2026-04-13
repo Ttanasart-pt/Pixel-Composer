@@ -52,6 +52,7 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	static setFn        = function(f) /*=>*/ { fnObject  = f;    return self; }
 	
 	static hasKey = function() /*=>*/ {return key.hasKey()};
+	static modify = function() /*=>*/ { key.modify(); return self; }
 	
 	static refresh = function() /*=>*/ {
 		if(keys == undefined) return self;

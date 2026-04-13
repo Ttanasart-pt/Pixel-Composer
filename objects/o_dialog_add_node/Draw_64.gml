@@ -228,7 +228,7 @@ if(DIALOG_SHOW_FOCUS) {
 		draw_text(_txx, ty + th / 2, _txt);
 		_txx += string_width(_txt);
 		
-		var _key  = hk_editing.getName();
+		var _key  = hk_editing.getKeyName();
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 		draw_text(_txx, ty + th / 2, _key);
 	}
@@ -274,7 +274,7 @@ if(DIALOG_SHOW_FOCUS) {
 			
 			if(hk != noone) {
 				draw_set_font(f_p2);
-				ww += string_width(hk.getName()) + ui(8);
+				ww += string_width(hk.getKeyName()) + ui(8);
 			}
 		}
 		
@@ -295,7 +295,7 @@ if(DIALOG_SHOW_FOCUS) {
 			
 			if(hk != noone) {
 				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
-				draw_text_add(ww - ui(8), ui(8), hk.getName());
+				draw_text_add(ww - ui(8), ui(8), hk.getKeyName());
 			}
 			
 			draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text)

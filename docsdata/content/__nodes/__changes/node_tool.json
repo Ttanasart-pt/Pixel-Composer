@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc3",
+    "changes": [
+      {
+        "date": "2026-04-13T08:41:13.758Z",
+        "node": "",
+        "commit": "-- fix crash related to keyname change"
+      }
+    ]
+  }
+]

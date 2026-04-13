@@ -17,7 +17,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 }
 
 #region hotkey
-	if(!HOTKEY_BLOCK && key_press(vk_anykey)) {
+	if(!HOTKEY_BLOCK && keyboard_check(vk_anykey)) {
 		var hotkey_use = !HOTKEY_ACT;
 		HOTKEY_ACT = false;
 		

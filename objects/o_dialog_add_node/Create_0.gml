@@ -137,6 +137,7 @@ event_inherited();
 				hk_edit_node = node_menu_selecting;
 				hk_editing   = _hk.modify();
 			}),
+			
 			menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return hk_selecting.reset(true)}, THEME.refresh_20).setActive(hk_selecting != noone && hk_selecting.isModified()),
 		]);
 		
