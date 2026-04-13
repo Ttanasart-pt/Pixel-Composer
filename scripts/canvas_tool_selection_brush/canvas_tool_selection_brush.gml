@@ -15,7 +15,8 @@ function canvas_tool_selection_brush() : canvas_selection_tool() constructor {
 		if(!node.selection.selection_hovering && mouse_lpress(active)) {
 			selection_mask = surface_verify(selection_mask, _dim[0], _dim[1]);
 			
-			surface_set_shader(selection_mask, noone);
+			surface_set_shader(selection_mask, sh_canvas_tool_selection_brush_mask);
+				draw_set_color(c_white);
 				brush.drawPoint(mouse_cur_x, mouse_cur_y, true);
 			surface_reset_shader();
 				
@@ -30,12 +31,11 @@ function canvas_tool_selection_brush() : canvas_selection_tool() constructor {
 			var _1stp = brush.dist_min == brush.dist_max && brush.dist_min == 1;
 				
 			if(_move || !_1stp) {
-				surface_set_target(selection_mask);
-					BLEND_ADD
+				surface_set_shader(selection_mask, sh_canvas_tool_selection_brush_mask, false, BLEND.add);
+					draw_set_color(c_white);
 					if(_1stp) brush.drawPoint(mouse_cur_x, mouse_cur_y, true);
 					brush.drawLine(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
-					BLEND_NORMAL
-				surface_reset_target();
+				surface_reset_shader();
 			}
 				
 			mouse_pre_draw_x = mouse_cur_x;

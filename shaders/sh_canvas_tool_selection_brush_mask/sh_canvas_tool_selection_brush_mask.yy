@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_canvas_tool_selection_brush_mask",
+  "name":"sh_canvas_tool_selection_brush_mask",
+  "parent":{
+    "name":"selection",
+    "path":"folders/nodes/data/canvas/tools/selection.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
