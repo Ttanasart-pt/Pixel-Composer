@@ -6,6 +6,11 @@
         "date": "2026-04-12T08:54:10.530Z",
         "node": "",
         "commit": "**Transform Image 3D**: Fix UI rendering error when playing animation."
+      },
+      {
+        "date": "2026-04-13T00:24:11.954Z",
+        "node": "Serialize",
+        "commit": "**Serialize**: Roll back modify-only saves. All value now stored in the save file."
       }
     ]
   },

@@ -2885,18 +2885,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(ign_array)        _map.ign_array  = ign_array;
 		
 		_map.unit = unit.mode;
-		if(preset || always_modified || is_modified) {
-			_map.r = animator.serialize(scale);
+		_map.r    = animator.serialize(scale);
+		
+		if(sep_axis && animVector) {
+			var _anims = getAnimators();
+			var _animm = array_create(animVector);
 			
-			if(sep_axis && animVector) {
-				var _anims = getAnimators();
-				var _animm = array_create(animVector);
+			for( var i = 0; i < animVector; i++ )
+				_animm[i] = _anims[i].serialize(scale);
 				
-				for( var i = 0; i < animVector; i++ )
-					_animm[i] = _anims[i].serialize(scale);
-					
-				_map.animators    = _animm;
-			}
+			_map.animators    = _animm;
 		}
 		
 		if(name_custom) _map.name_custom  = name_custom;

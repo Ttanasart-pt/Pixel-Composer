@@ -252,6 +252,7 @@
 				
 				case "-h" : case "--headless" : 
 					PROGRAM_ARGUMENTS._cmd = true; 
+					draw_enable_drawevent(false);
 					break;
 					
 				case "-p" : case "--persist" : 
