@@ -7,6 +7,8 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 	menu   = variable_clone(menuItems_get(menuId));
 	auto_pin = true;
 	
+	print(menuId, menu)
+	
 	w      = min(WIN_W - ui(100), ui(1000));
 	h      = ui(480);
 	list_w = (w - padding * 2) / 2;
@@ -193,8 +195,7 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 		for( var i = 0, n = array_length(menu); i < n; i++ ) {
 			var _menu = menu[i];
 			
-			if(!is_struct(_menu)) {
-				
+			if(!is_struct(_menu)) { // string
 				var _hov = drawMenu(hover, focus, _menu, xx, yy, sw, hg, _m);
 				if(_hov) {
 					hoverC = noone;
@@ -213,6 +214,8 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 				hh += hg + ui(4);
 				continue;
 			}
+			
+			if(!has(_menu, "items")) continue;
 			
 			var _item  = _menu.items;
 			var _cat_h = (array_length(_item) + 1) * (hg + ui(4));

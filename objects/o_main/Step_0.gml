@@ -17,7 +17,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 }
 
 #region hotkey
-	if(!HOTKEY_BLOCK) {
+	if(!HOTKEY_BLOCK && key_press(vk_anykey)) {
 		var hotkey_use = !HOTKEY_ACT;
 		HOTKEY_ACT = false;
 		
@@ -65,11 +65,10 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 				}
 			}
 		}
-		
-		ds_stack_clear(FOCUS_STACK);
-		ds_stack_push(FOCUS_STACK, 0, FOCUS_STR);
-		
 	}
+	
+	ds_stack_clear(FOCUS_STACK);
+	ds_stack_push(FOCUS_STACK, 0, FOCUS_STR);
 	
 	HOTKEY_BLOCK = false;
 #endregion

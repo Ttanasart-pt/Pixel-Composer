@@ -56,9 +56,7 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	static refresh = function() /*=>*/ {
 		if(keys == undefined) return self;
 		
-		print(keys);
-		keys = array_filter(keys, function(k,i) /*=>*/ {return k.hasKey()});
-		print(keys);
+		keys = array_filter(keys, function(k,i) /*=>*/ {return is(k, KeyCombination) && k.hasKey()});
 		
 		if(array_empty(keys)) {
 			keys = undefined;
@@ -110,8 +108,10 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 		m.fname = getNameFull();
 		m.keyd  = key.serialize();
 		
-		if(keys != undefined)
+		if(keys != undefined) {
 			m.keys = array_map(keys, function(k,i) /*=>*/ {return k.serialize()});
+			refresh();
+		}
 		
 		return m;
 	}
