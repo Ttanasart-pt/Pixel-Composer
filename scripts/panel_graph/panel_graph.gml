@@ -1660,7 +1660,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function drawBGBase() { //
     	draw_clear(bg_color);
-    	
+        
     	var gls = project.graphGrid.size;
         while(gls * graph_s < 8) gls *= 5;
         
@@ -3521,7 +3521,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	}
         }
         
-        bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
+        bg_color = context == noone? COLORS.panel_graph_bg : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
         drawBGBase();
         
         node_bg_hovering = drawBasePreview();

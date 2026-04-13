@@ -129,8 +129,7 @@ if !ready exit;
 	x1 = dialog_x + dialog_w - ui(16);
 	bx = x0;
 	
-	var tab_cover = noone;
-	var th = ui(36) + THEME_VALUE.panel_tab_extend;
+	var th = ui(36);
 	
 	for( var i = 0, n = array_length(pages); i < n; i++ ) {
 		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
@@ -159,7 +158,6 @@ if !ready exit;
 		
 		if(project_page == i) {
 			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab, 1);
-			tab_cover = BBOX().fromWH(bx, y0, tw, THEME_VALUE.panel_tab_extend);
 			
 		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + _tabW, y0)) {
 			
@@ -223,7 +221,6 @@ if !ready exit;
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
 	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
-	draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 	
 	var bs = ui(32);
 	var bx = x1 - ui(32);

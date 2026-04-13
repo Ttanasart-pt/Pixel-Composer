@@ -154,6 +154,7 @@
         "panel_tab_icon": "main_dkblack",
         "panel_separator": "main_dkgrey",
 
+        "panel_graph_bg": "main_black",
         "panel_graph_minimap_outline": "main_dkgrey",
         "panel_graph_node_dimension": "main_grey",
         "panel_graph_minimap_focus": "main_ltgrey",
@@ -168,6 +169,7 @@
         "panel_preview_split_line": "main_grey",
         "panel_preview_tool_button": "main_white",
         "panel_preview_tool_separator": "main_dkgrey",
+        "panel_preview_bg": "main_black",
         "panel_preview_transparent": ["main_dkgrey", "main_black", 0.65],
 
         "panel_3d_bg": "main_dkblack",

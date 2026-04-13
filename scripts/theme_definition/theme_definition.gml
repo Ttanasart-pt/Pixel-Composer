@@ -154,6 +154,7 @@ function ThemeColor() constructor {
     panel_tab_icon                      = CDEF.main_dkblack;
     panel_separator                     = CDEF.main_dkgrey;
 
+    panel_graph_bg                      = CDEF.main_black;
     panel_graph_minimap_outline         = CDEF.main_dkgrey;
     panel_graph_node_dimension          = CDEF.main_grey;
     panel_graph_minimap_focus           = CDEF.main_ltgrey;
@@ -168,6 +169,7 @@ function ThemeColor() constructor {
     panel_preview_split_line            = CDEF.main_grey;
     panel_preview_tool_button           = CDEF.main_white;
     panel_preview_tool_separator        = CDEF.main_dkgrey;
+    panel_preview_bg                    = CDEF.main_black;
     panel_preview_transparent           = merge_color(CDEF.main_dkgrey, CDEF.main_black, 0.65);
 
     panel_3d_bg                         = CDEF.main_dkblack;
@@ -206,7 +208,7 @@ function ThemeValue() constructor {
     panel_margin               = 2;
     panel_corner_radius        = 8;
     panel_notification_padding = 0;
-    panel_tab_extend           = 2;
+    panel_tab_padding          = 2;
 
     minimap_corner_radius      = 2;
     slider_type                = "stem";

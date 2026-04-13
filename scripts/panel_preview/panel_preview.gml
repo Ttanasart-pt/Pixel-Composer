@@ -3616,7 +3616,7 @@ function Panel_Preview() : PanelContent() constructor {
         	d3_active    = preview_mode? NODE_3D.polygon : NODE_3D.none;
         }
         
-        bg_color = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
+        bg_color = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_preview_bg, 0.3);
         draw_clear(canvas_bg == -1? bg_color : canvas_bg);
         if(canvas_bg == -1 && canvas_s >= 0.1) 
         	draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);

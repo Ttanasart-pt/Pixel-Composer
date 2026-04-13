@@ -24,7 +24,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	tab_align   = 0;
 	tab_width   = 0;
-	tab_height  = ui(24);
+	tab_size  = ui(24);
 	tab_x       = 0;
 	tab_x_to    = 0;
 	tab_surface = noone;
@@ -46,7 +46,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	tab_holding_my = 0;
 	tab_holding_sx = 0;
 	tab_holding_sy = 0;
-	tab_cover	   = noone;
 	
 	draw_droppable = false;
 	
@@ -145,7 +144,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function setTabSize() {
 		var tab  = array_length(content) > 1;
-		var tabh = tab * tab_height;
+		var tabh = tab * tab_size;
 		
 		switch(tab_align) {
 			case 0 : 
@@ -573,23 +572,24 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function drawTabH() {
 		var _top    = tab_align == 0;
-		var tab_w   = w - padding * 2 + 1;
-		var tab_h   = tab_height + ui(4);
+		var tab_w   = w - padding * 2;
+		var tab_h   = tab_size;
 		
-		var tsx     = x + padding - 2;
-		var tsy     = _top? y + ui(2) : y + h - tab_h - ui(1);
+		var tsx     = x + padding;
+		var tsy     = _top? y + padding : y + h - padding - tab_h;
 		var msx     = mouse_x - tsx;
 		var msy     = mouse_y - tsy;
 		
+		var ppad = ui(THEME_VALUE.panel_tab_padding);
+		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
-		tab_cover   = noone;
 		
 		surface_set_target(tab_surface);
 			DRAW_CLEAR
 			
-			var tbx = tab_x + ui(1);
+			var tbx = tab_x;
 			var tby = 0;
-			var tbh = tab_height + ui(2);
+			var tbh = tab_size;
 			var tabHov = msx < 0 ? 0 : array_length(content) - 1;
 			
 			tab_x = lerp_float(tab_x, tab_x_to, 5);
@@ -606,26 +606,27 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var tbw = string_width(txt) + ui(16 + 16) + (icn != noone) * ui(16 + 4);
 				var foc = false;
 				
-				tab_width += tbw + ui(2);
-				if(msx >= tbx && msx <= tbx + tbw) tabHov = i;
-				if(tab_holding == cont) { tbx += tbw + ui(2); continue; }
+				tab_width += tbw + ppad;
+				if(msx >= tbx && msx <= tbx + tbw) 
+					tabHov = i;
+				if(tab_holding == cont) { 
+					tbx += tbw + ppad; 
+					continue;
+				}
 				
 				cont.tab_x = cont.tab_x == 0? tbx : lerp_float(cont.tab_x, tbx, 5);
 				
-				var _tbx = cont.tab_x;
-				var _tby = tby;
+				var _tbx = ppad + cont.tab_x;
+				var _tby = _top? tby : tby + ppad;
 				var _tbw = tbw;
-				var _tbh = tbh + THEME_VALUE.panel_tab_extend - !_top;
+				var _tbh = tbh - ppad;
 				
-				var _hov = point_in_rectangle(msx, msy, _tbx, _tby, _tbx + _tbw, tab_height);
+				var _hov = point_in_rectangle(msx, msy, _tbx, _tby, _tbx + _tbw, tab_size);
 				
 				if(i == content_index) {
 					foc = FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
 					var cc = foc? (PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border) : COLORS.panel_tab;
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + foc, _tbx, _tby, _tbw, _tbh, cc, 1);
-					
-					if(!foc) tab_cover = _top? BBOX().fromWH(tsx + _tbx + 1, tsy + _tby + tbh - ui(3), _tbw - 2, THEME_VALUE.panel_tab_extend) : 
-					                           BBOX().fromWH(tsx + _tbx + 1, tsy + 3, _tbw - 2, THEME_VALUE.panel_tab_extend);
 					
 				} else {
 					var cc = COLORS.panel_tab_inactive;
@@ -636,7 +637,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 				
 				var aa = 0.5;
-				if(point_in_rectangle(msx, msy, _tbx + _tbw - ui(16), _tby, _tbx + _tbw, tab_height)) {
+				if(point_in_rectangle(msx, msy, _tbx + _tbw - ui(16), _tby, _tbx + _tbw, tab_size)) {
 					aa = 1;
 					if(mouse_lpress(FOCUS == self)) 
 						rem = i;
@@ -669,7 +670,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 				
 				var cc =  foc? COLORS.panel_tab_icon : COLORS._main_text_sub;
-				var tc = _top? tab_height / 2 - ui(1) : tab_height / 2 + ui(2);
+				var tc = _top? tab_size / 2 - ui(1) : tab_size / 2 + ui(2);
 				
 				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), tc + ui(1), 1, 1, 0, cc, aa);
 				
@@ -681,13 +682,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				draw_set_text(f_p3, fa_left, fa_center, foc? COLORS.panel_tab_text : COLORS._main_text_sub);
 				draw_text_add(_tbx + ui(8), tc, txt);
 				
-				tbx += _tbw + ui(2);
+				tbx += _tbw + ppad;
 			}
 			
 			if(rem > -1) content[rem].close();
 			
 			tab_width = max(0, tab_width - w + ui(32));
-			if(point_in_rectangle(msx, msy, 0, 0, w, tab_height) && MOUSE_WHEEL != 0) 
+			if(point_in_rectangle(msx, msy, 0, 0, w, tab_size) && MOUSE_WHEEL != 0) 
 				tab_x_to = clamp(tab_x_to + ui(64) * MOUSE_WHEEL, -tab_width, 0);
 				
 			if(tab_holding) {
@@ -698,11 +699,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var tbw  = string_width(txt) + ui(16 + 16);
 				if(icn != noone) tbw += ui(16 + 4);
 				
-				var _tbx = tab_holding.tab_x;
-				var _tby = tby;
-				var _tbw = tbw;
-				var _tbh = tbh + THEME_VALUE.panel_tab_extend;
-				var  tc  = _top? tab_height / 2 - ui(1) : tab_height / 2 + ui(2);
+				var _tbx = ppad + tab_holding.tab_x;
+				var _tby = _top? tby : tby + ppad;
+				var _tbw = tbw - ppad;
+				var _tbh = tbh - ppad;
+				var  tc  = _top? tab_size / 2 - ui(1) : tab_size / 2 + ui(2);
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1);
 				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), tc + 1, 1, 1, 0, COLORS.panel_tab_icon);
@@ -720,7 +721,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_hold_state = 1;
 						
 				} else if(tab_hold_state == 1) {
-					if(point_in_rectangle(msx, msy, 0, 0, w, tab_height)) {
+					if(point_in_rectangle(msx, msy, 0, 0, w, tab_size)) {
 						if(msx < ui(32))		tab_x_to = clamp(tab_x_to + ui(2), -tab_width, 0);
 						if(msx > w - ui(32))	tab_x_to = clamp(tab_x_to - ui(2), -tab_width, 0);
 					}
@@ -747,23 +748,24 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function drawTabV() {
 		var _left   = tab_align == 2;
-		var tab_w   = tab_height + ui(4);
-		var tab_h   = h - padding * 2 + 1;
+		var tab_w   = tab_size;
+		var tab_h   = h - padding * 2;
 		
-		var tsx     = _left? x + padding - 2 : x + w - tab_w;
-		var tsy     = y + ui(1);
-		var msx     = mouse_x - tsx;
-		var msy     = mouse_y - tsy;
+		var tsx  = _left? x + padding : x + w - tab_w - padding;
+		var tsy  = y + padding;
+		var msx  = mouse_x - tsx;
+		var msy  = mouse_y - tsy;
+		
+		var ppad = ui(THEME_VALUE.panel_tab_padding);
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
-		tab_cover   = noone;
 		
 		surface_set_target(tab_surface);
 			DRAW_CLEAR
 			
 			var tbx = tab_x;
 			var tby = 0;
-			var tbh = tab_height + ui(2);
+			var tbs = tab_size;
 			var tabHov = msy < 0 ? 0 : array_length(content) - 1;
 			
 			var rem   = -1;
@@ -782,15 +784,20 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var tbw  = string_width(txt) + ui(16 + 16) + (icn != noone) * ui(16 + 4);
 				var foc  = false;
 				
-				tab_width += tbw + ui(2);
-				if(msy >= tbx && msy <= tbx + tbw) tabHov = i;
-				if(tab_holding == cont) { tbx += tbw + ui(2); continue; }
+				tab_width += tbw + ppad;
+				if(msy >= tbx && msy <= tbx + tbw) 
+					tabHov = i;
+				
+				if(tab_holding == cont) { 
+					tbx += tbw + ppad; 
+					continue; 
+				}
 				
 				cont.tab_x = cont.tab_x == 0? tbx : lerp_float(cont.tab_x, tbx, 5);
 				
-				var _tbx = tby;
+				var _tbx = _left? tby : ppad + tby;
 				var _tby = cont.tab_x;
-				var _tbw = tbh + THEME_VALUE.panel_tab_extend;
+				var _tbw = tbs - ppad;
 				var _tbh = tbw;
 				
 				var _hov = hover && point_in_rectangle(msx, msy, _tbx, _tby, _tbx + _tbw, _tby + _tbh);
@@ -799,24 +806,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					foc = focus || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
 					
 					var cc = COLORS.panel_tab;
-					if(foc) {
-						if(PREFERENCES.panel_outline_accent) cc = COLORS._main_accent;
-						else cc = COLORS.panel_select_border;
-					}
+					if(foc) cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 					
-					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + foc, _tbx, _tby, _tbw, _tbh, cc, 1);
-					if(!foc) tab_cover = _left? BBOX().fromWH(tsx + _tbx + _tbw - ui(4), tsy + _tby + 1, THEME_VALUE.panel_tab_extend, _tbh - 2) : 
-					                            BBOX().fromWH(tsx + ui(2), tsy + _tby + 1, THEME_VALUE.panel_tab_extend, _tbh - 2);
+					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + foc, _tbx, _tby, _tbw, _tbh, cc);
 					
 				} else {
 					var cc = COLORS.panel_tab_inactive;
 					if(_hov) cc = COLORS.panel_tab_hover;
 						
-					draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, _tby, _tbw, _tbh, cc, 1);
+					draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, _tby, _tbw, _tbh, cc);
 				}
 				
 				var aa = 0.5;
-				if(point_in_rectangle(msx, msy, _tbx, _tby + _tbh - ui(16), tab_height, _tby + _tbh)) {
+				if(point_in_rectangle(msx, msy, _tbx, _tby + _tbh - ui(16), tab_size, _tby + _tbh)) {
 					aa = 1;
 					if(mouse_lpress(focus)) 
 						rem = i;
@@ -849,7 +851,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 				
 				var cc =  foc?  COLORS.panel_tab_icon : COLORS._main_text_sub;
-				var tc = _left? tab_height / 2 : tab_height / 2 + ui(2);
+				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
 				
 				draw_sprite_ui(THEME.tab_exit, 0, tc - !_left, _tby + _tbh - ui(12), 1, 1, 0, cc, aa);
 				
@@ -861,13 +863,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, foc? COLORS.panel_tab_text : COLORS._main_text_sub);
 				draw_text_transform_add(tc, _tby + ui(8), txt, 1, _left? 90 : -90);
 				
-				tbx += _tbh + ui(2);
+				tbx += _tbh + ppad;
 			}
 			
 			if(rem > -1) content[rem].close();
 			
 			tab_width = max(0, tab_width - h + ui(32));
-			if(point_in_rectangle(msx, msy, 0, 0, tab_height, h) && MOUSE_WHEEL != 0) 
+			if(point_in_rectangle(msx, msy, 0, 0, tab_size, h) && MOUSE_WHEEL != 0) 
 				tab_x_to = clamp(tab_x_to + ui(64) * MOUSE_WHEEL, -tab_width, 0);
 				
 			if(tab_holding) {
@@ -878,13 +880,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var tbw  = string_width(txt) + ui(16 + 16);
 				if(icn != noone) tbw += ui(16 + 4);
 				
-				var _tbx = tby;
+				var _tbx = _left? tby : ppad + tby;
 				var _tby = tab_holding.tab_x;
-				var _tbw = tbh + THEME_VALUE.panel_tab_extend;
+				var _tbw = tbs - ppad;
 				var _tbh = tbw;
 				
 				var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
-				var tc = _left? tab_height / 2 : tab_height / 2 + ui(2);
+				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, cc, 1);
 				draw_sprite_ui(THEME.tab_exit, 0, tc - !_left, _tby + _tbh - ui(12), 1, 1, 0, COLORS.panel_tab_icon);
@@ -902,7 +904,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_hold_state = 1;
 						
 				} else if(tab_hold_state == 1) {
-					if(point_in_rectangle(msx, msy, 0, 0, tab_height, h)) {
+					if(point_in_rectangle(msx, msy, 0, 0, tab_size, h)) {
 						if(msy < ui(32))		tab_x_to = clamp(tab_x_to + ui(2), -tab_width, 0);
 						if(msy > h - ui(32))	tab_x_to = clamp(tab_x_to - ui(2), -tab_width, 0);
 					}
@@ -988,7 +990,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			draw_surface_ext_safe(content_surface, tx, ty, 1, 1, 0, c_white, .5);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
-		if(tab && tab_cover != noone) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 		
 		if(FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;

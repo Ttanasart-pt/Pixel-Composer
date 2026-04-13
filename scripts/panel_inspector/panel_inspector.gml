@@ -943,8 +943,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     cc = toging? COLORS._main_accent : COLORS.panel_inspector_group_bg;
                     aa = 0.5 + toging * 0.5;
                     
-                               draw_sprite_stretched_ext(THEME.inspector_checkbox, 0, _x + ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
-                    if(toging) draw_sprite_stretched_ext(THEME.inspector_checkbox, 1, _x + ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
+                               draw_sprite_stretched_ext(THEME.box_r2, 1, _x + ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
+                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, _x + ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
                 }
                 
                 var ltx = lbx + ui(32);
