@@ -325,7 +325,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_sel_rectangle  = new canvas_tool_selection_shape(CANVAS_TOOL_SHAPE.rectangle).setNode(self);
 		tool_sel_ellipse    = new canvas_tool_selection_shape(CANVAS_TOOL_SHAPE.ellipse).setNode(self);
 		tool_sel_freeform   = new canvas_tool_selection_freeform().setNode(self);
-		tool_sel_magic      = new canvas_tool_selection_magic(, tool_attribute).setNode(self);
+		tool_sel_magic      = new canvas_tool_selection_magic(tool_attribute).setNode(self);
 		tool_sel_brush      = new canvas_tool_selection_brush().setNode(self);
 		
 		use_color_3d        = false;
