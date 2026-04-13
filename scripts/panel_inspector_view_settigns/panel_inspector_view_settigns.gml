@@ -27,25 +27,37 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 			"widget_draw_favourite",
 		),
 		
-		new __Panel_Linear_Setting_Item(
-			__txt("Reset Button"),
-			new checkBox(function() /*=>*/ { PREFERENCES.widget_draw_reset = !PREFERENCES.widget_draw_reset; }),
-			function( ) /*=>*/   {return PREFERENCES.widget_draw_reset},
-			function(v) /*=>*/ { PREFERENCES.widget_draw_reset = v; },
-			PREFERENCES.widget_draw_reset,
-			noone,
-			"widget_draw_reset",
-		),
+		-1, 
 		
 		new __Panel_Linear_Setting_Item(
-			__txt("Default Button"),
-			new checkBox(function() /*=>*/ { PREFERENCES.widget_draw_default = !PREFERENCES.widget_draw_default; }),
-			function( ) /*=>*/   {return PREFERENCES.widget_draw_default},
-			function(v) /*=>*/ { PREFERENCES.widget_draw_default = v; },
-			PREFERENCES.widget_draw_default,
+			__txt("Right Button"),
+			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order}, [ "Reset", "Set Default" ]),
+			function( ) /*=>*/   {return PREFERENCES.widget_draw_order},
+			function(v) /*=>*/ { PREFERENCES.widget_draw_order = v; },
+			PREFERENCES.widget_draw_order,
 			noone,
-			"widget_draw_default",
+			"widget_draw_order",
 		),
+		
+		// new __Panel_Linear_Setting_Item(
+		// 	__txt("Reset Button"),
+		// 	new checkBox(() => { PREFERENCES.widget_draw_reset = !PREFERENCES.widget_draw_reset; }),
+		// 	( ) =>   PREFERENCES.widget_draw_reset,
+		// 	(v) => { PREFERENCES.widget_draw_reset = v; },
+		// 	PREFERENCES.widget_draw_reset,
+		// 	noone,
+		// 	"widget_draw_reset",
+		// ),
+		
+		// new __Panel_Linear_Setting_Item(
+		// 	__txt("Default Button"),
+		// 	new checkBox(() => { PREFERENCES.widget_draw_default = !PREFERENCES.widget_draw_default; }),
+		// 	( ) =>   PREFERENCES.widget_draw_default,
+		// 	(v) => { PREFERENCES.widget_draw_default = v; },
+		// 	PREFERENCES.widget_draw_default,
+		// 	noone,
+		// 	"widget_draw_default",
+		// ),
 		
 	];
 	

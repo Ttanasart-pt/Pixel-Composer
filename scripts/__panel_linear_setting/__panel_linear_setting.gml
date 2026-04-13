@@ -169,8 +169,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.getDefault != noone) _wdw -= ui(24) + ui(4);
 				
 				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, undefined, [ mx, my ], x, y).setFont(font);
-				
-				_widg.drawParam(params); 
+				var wdgh   = _widg.drawParam(params) + ui(8); 
 				
 				if(_prop.action != noone) {
 					var _key = _prop.action.hotkey;
@@ -260,7 +259,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					}
 				}
 				
-				yy += th;
+				yy += max(wdgh, th);
 				continue;
 			}
 		}

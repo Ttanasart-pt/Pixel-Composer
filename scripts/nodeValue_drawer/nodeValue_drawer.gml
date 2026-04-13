@@ -118,7 +118,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 		} else { // Animation
 			draw_sprite_ui_uniform(THEME.animate_clock, 0, butx, lb_y, ics, COLORS._main_icon, .3);
-			
 		}
 		
 		lb_w += bs;
@@ -311,46 +310,51 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 				
 			} else {
-				
-				if(PREFERENCES.widget_draw_default) {
-					var bt = __txtx("panel_inspector_default", "Set default");
-					var ba = .25 + jun.is_modified * .55;
-					var bh = _hover;
-					var cc = jun.def_preset? COLORS._main_accent : COLORS._main_icon_light;
+				for( var i = array_length(PREFERENCES.widget_draw_order) - 1; i >= 0; i--) {
+					var _widgetButton = PREFERENCES.widget_draw_order[i];
 					
-					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); bx -= ui(4);
-					cHov = cHov || b;
-					if(b == 1 && def_hold && jun.is_modified) 
-						jun.setDefault();
+					switch(_widgetButton) {
+						case "Set Default" : if(!PREFERENCES.widget_draw_default) continue;
+							var bt = __txtx("panel_inspector_default", "Set default");
+							var ba = .25 + jun.is_modified * .55;
+							var bh = _hover;
+							var cc = jun.def_preset? COLORS._main_accent : COLORS._main_icon_light;
+							
+							bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); bx -= ui(4);
+							cHov = cHov || b;
+							if(b == 1 && def_hold && jun.is_modified) 
+								jun.setDefault();
+								
+							if(b == 2) {
+								jun.setDefault();
+								def_hold = true;
+							}
+							
+							if(b == 3) {
+								mbRight = false;
+								menuCall("", [ new MenuItem(__txt("Reset Default"), function(j) /*=>*/ {return j.clearDefault()}).setParam(jun) ]);
+							}
+							break;
 						
-					if(b == 2) {
-						jun.setDefault();
-						def_hold = true;
+						case "Reset" : if(!PREFERENCES.widget_draw_reset) continue;
+							var bt = __txtx("panel_inspector_reset", "Reset");
+							var ba = .25 + jun.is_modified * .55;
+							var bh = jun.is_modified && _hover;
+							var cc = COLORS._main_icon_light;
+							
+							bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); bx -= ui(4);
+							cHov = cHov || b;
+							
+							if(b == 1 && reset_hold && jun.is_modified) 
+								jun.resetValue();
+								
+							if(b == 2) {
+								jun.resetValue();
+								reset_hold = true;
+							}
+							break;
+							
 					}
-					
-					if(b == 3) {
-						mbRight = false;
-						menuCall("", [ new MenuItem(__txt("Reset Default"), function(j) /*=>*/ {return j.clearDefault()}).setParam(jun) ]);
-					}
-				}
-				
-				if(PREFERENCES.widget_draw_reset) {
-					var bt = __txtx("panel_inspector_reset", "Reset");
-					var ba = .25 + jun.is_modified * .55;
-					var bh = jun.is_modified && _hover;
-					var cc = COLORS._main_icon_light;
-					
-					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); bx -= ui(4);
-					cHov = cHov || b;
-					
-					if(b == 1 && reset_hold && jun.is_modified) 
-						jun.resetValue();
-						
-					if(b == 2) {
-						jun.resetValue();
-						reset_hold = true;
-					}
-					
 				}
 				
 				if(!global_var && breakLine) {
