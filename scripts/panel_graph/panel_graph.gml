@@ -3995,7 +3995,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
 	
 	function doNewNode(_nodeType) {
-		
 		if(pFOCUS) {
 			if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {
 	            mouse_create_sx = mouse_grid_x;
@@ -4009,13 +4008,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			mouse_create_y = graph_cy;
 		}
         
-        var _mx = mouse_create_x;
-        var _my = mouse_create_y;
-        var _gs = project.graphGrid.size;
+        var _mx = PREFERENCES.node_add_select? mouse_create_x : graph_cx;
+        var _my = PREFERENCES.node_add_select? mouse_create_y : graph_cy;
         
         var node = nodeBuild(_nodeType, _mx, _my);
-        if(node == noone) return noone;
+        if(!PREFERENCES.node_add_select) {
+	        node.x -= node.w / 2;
+	        node.y -= node.h / 2;
+        }
         
+        if(node == noone || !PREFERENCES.node_add_select) return noone;
+        
+        var _gs = project.graphGrid.size;
         mouse_create_y = ceil((mouse_create_y + node.h + _gs / 2) / _gs) * _gs;
         
         if(value_dragging != noone) {
