@@ -1,5 +1,6 @@
 function canvas_tool_curve_bezier() : canvas_tool() constructor {
 	brush_resizable = true;
+	drawBrushMask   = false;
 	
 	anchors = [];
 	
@@ -20,13 +21,12 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 		surface_clear(drawing_surface);
 	}
 	
-	static init = function()      { clear();   }
-	static apply = function()     { apply_draw_surface(); disable(); }
-	static cancel = function()    { disable(); }
-	static onDisable = function() { clear();   }
+	static init      = function() /*=>*/ { clear();   }
+	static apply     = function() /*=>*/ { apply_draw_surface(); disable(); }
+	static cancel    = function() /*=>*/ { disable(); }
+	static onDisable = function() /*=>*/ { clear();   }
 	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
-		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
