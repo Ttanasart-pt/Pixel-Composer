@@ -687,7 +687,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var lbt = labelAlign == fa_left? _h/2 : -_h/2;
 			
 			lbx += lbt;
-			draw_sprite_ui(labelSpr, labelSprIndex, lbx, lby, lbs, lbs, 0, labelColor, .5);
+			draw_sprite_ext(labelSpr, labelSprIndex, lbx, lby, lbs, lbs, 0, labelColor, .5);
 			lbx += lbt;
 			
 			_w -= lbt * 2;

@@ -3513,15 +3513,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         graph_cy = (h / 2) / graph_s - graph_y;
         
         var context = getCurrentContext();
+        bg_color = COLORS.panel_graph_bg;
+        
         if(context != noone) {
         	title_raw += " > " + (context.renamed? context.display_name : context.name);
+        	bg_color   = merge_color(COLORS.panel_graph_bg, context.getColor(), .05);
+        	
         	if(!context.active) {
         		resetContext();
         		context = noone;
         	}
         }
         
-        bg_color = context == noone? COLORS.panel_graph_bg : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
         drawBGBase();
         
         node_bg_hovering = drawBasePreview();
