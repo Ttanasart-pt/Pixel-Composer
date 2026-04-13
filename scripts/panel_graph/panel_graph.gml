@@ -1449,6 +1449,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	
     		var _from = node_drag_connect.getOutput(), _to;
     		var _draw = true;
+    		var _conn = false;
     		
     		if(_from) {
 	        	if(node_hovering != noone) {
@@ -1459,6 +1460,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        			
 	        			_from.drawConnectionMouse(connection_param, _to.x, _to.y, _to);
 	        			_draw = false;
+	        			_conn = true;
 	        			
 	        			if(mouse_lrelease())
 	        				_to.setFrom(_from);
@@ -1469,10 +1471,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        		draw_set_color(COLORS.node_border_file_drop);
 	    			draw_line(_from.x, _from.y, mx, my);
 	        	}
+	        	
     		}
         	
-        	if(mouse_lrelease())
+        	if(mouse_lrelease()) {
+            	if(!_conn) callAddDialog(getCurrentContext(), _from)
             	node_drag_connect = noone;
+        	}
         }
         
         if(node_drag_removing) {
