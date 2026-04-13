@@ -11,6 +11,11 @@
         "date": "2026-04-13T00:24:11.954Z",
         "node": "Serialize",
         "commit": "**Serialize**: Roll back modify-only saves. All value now stored in the save file."
+      },
+      {
+        "date": "2026-04-13T02:18:20.833Z",
+        "node": "",
+        "commit": "**Path**: Fix loading older version set unit to fractional."
       }
     ]
   },

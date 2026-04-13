@@ -2401,6 +2401,18 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- Serialize
 	
+	static preDeserialize = function() {
+		if(CLONING) return;
+		
+		if(LOADING_VERSION < 1_20_07_6) {
+			for( var i = input_fix_len, n = array_length(load_map.inputs); i < n; i++ ) {
+				var _inp  = load_map.inputs[i];
+				_inp.unit = 0;
+			}
+			
+		}
+	}
+	
 	static onCleanUp = function() {
 		surface_free(_path_preview_surface);
 		surface_free( path_preview_surface);

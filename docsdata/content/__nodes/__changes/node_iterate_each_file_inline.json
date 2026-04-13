@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc2",
+    "changes": [
+      {
+        "date": "2026-04-13T02:18:20.832Z",
+        "node": "Path",
+        "commit": "**Path**: Fix loading older version set unit to fractional."
+      }
+    ]
+  }
+]

@@ -5,8 +5,6 @@
     "icon_64":                            { "path": "./meta/s_icon_64.png",                                 "s": 1, "x": 32, "y": 32 },
     "forum_grey":                         { "path": "./meta/s_forum_grey.png",                              "s": 1, "x": 32, "y": 32 },
     
-    "dialog":                             { "path": "./dialog/s_dialog.png",                                "s": 2, "x":  0, "y":  0, "slice": 15 },
-    
     "ui_panel_bg_cover":                  { "path": "./generic/s_empty.png",                                "s": 1, "x":  0, "y":  0 },
     "box_r2":                             { "path": "./generic/s_box_r2.png",                               "s": 2, "x":  0, "y":  0, "slice":  3 },
     "box_r2_clr":                         { "path": "./generic/s_box_r2_colored.png",                       "s": 2, "x":  0, "y":  0, "slice":  7 },
@@ -404,6 +402,7 @@
     "node_websocket_receive":             { "path": "./node/assets/s_websocket_receive.png",                "s": 1, "x": 64, "y": 64 },
     "node_websocket_send":                { "path": "./node/assets/s_websocket_send.png",                   "s": 1, "x": 64, "y": 64 },
 
+    "dialog":                             { "path": "./panel/s_dialog.png",                                 "s": 2, "x":  0, "y":  0, "slice": 15 },
     "panel_tab_align":                    { "path": "./panel/s_panel_tab_align.png",                        "s": 4, "x":  8, "y":  8 },
     "tool_side":                          { "path": "./panel/s_tool_side.png",                              "s": 2, "x":  0, "y":  0, "slice":  4 },
     "toolbar":                            { "path": "./panel/s_toolbar.png",                                "s": 2, "x":  0, "y":  0, "slice":  4 },

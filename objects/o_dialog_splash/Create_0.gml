@@ -36,7 +36,7 @@ event_inherited();
 	var y1 = dialog_y + dialog_h - ui(16);
 	
 	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var spw = sp_recent.surface_w;
 		var sph = sp_recent.surface_h;

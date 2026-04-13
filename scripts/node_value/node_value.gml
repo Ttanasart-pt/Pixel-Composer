@@ -2871,7 +2871,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(draw_line_shift_x !=  0)     _map.shift_x = draw_line_shift_x;
 		if(draw_line_shift_y !=  0)     _map.shift_y = draw_line_shift_y;
 		if(draw_line_shift_e != -1)     _map.shift_e = draw_line_shift_e;
-		if(always_modified || is_modified) _map.m = 1;
+		if(is_modified)                 _map.m = 1;
 		
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
@@ -2996,7 +2996,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(has(_map, "m"))           is_modified = bool(_map.m);
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
-		if(always_modified)          is_modified = true;
 		
 		if(con_node != -1) unit.mode = 0;
 		unit.mode = _map[$ "unit"] ?? unit.mode;

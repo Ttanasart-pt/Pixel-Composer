@@ -1,5 +1,5 @@
 function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "RM CLoud";
+	name = "RM Cloud";
 	
 	newInput( 0, nodeValue_Dimension());
 	

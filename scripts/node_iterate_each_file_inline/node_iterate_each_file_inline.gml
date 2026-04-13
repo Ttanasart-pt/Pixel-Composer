@@ -11,16 +11,20 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 	output_node_types = [ Node_Iterate_Each_File_Inline_Output ];
 	
 	newActiveInput(3);
-	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" }).setVisible(true, false);
-	newInput(1, nodeValue_Text( "Extensions", ".png" ));
-	newInput(2, nodeValue_Enum_Scroll( "Type",  0, [ "Surface", "Text" ] ));
 	
-	iteration_count  = 0;
-	iterated         = 0;
+	////- =Loop
+	newInput(0, nodeValue_Path(    "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" }).setVisible(true, false);
+	newInput(1, nodeValue_Text(    "Extensions", ".png" ));
+	newInput(2, nodeValue_EScroll( "Type", 0, [ "Surface", "Text" ] ));
 	
 	input_display_list = [ 3, 
 		[ "Loop", false ], 0, 1, 2, 
 	];
+	
+	////- Node
+	
+	iteration_count  = 0;
+	iterated         = 0;
 	
 	activated = true;
 	paths = [];
