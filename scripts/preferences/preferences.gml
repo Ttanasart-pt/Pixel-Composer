@@ -470,6 +470,7 @@
 			
 			__initProjectAttr();
 			hotkey_deserialize();
+			// hotkey_refresh();
 			
 			TESTING = PREFERENCES[$ "test_mode"] ?? false;
 			

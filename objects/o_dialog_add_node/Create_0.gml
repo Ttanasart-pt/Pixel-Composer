@@ -542,7 +542,7 @@ event_inherited();
 			if(_sz == 0) continue;
 			
 			if(_hv) {
-				draw_sprite_stretched_add(THEME.ui_panel_bg, 0, ui(4), yy, ww - ui(4), hg, CDEF.main_white, .2);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), yy, ww - ui(4), hg, CDEF.main_ltgrey, 1);
 				if(mouse_lclick(_active) || init_rclick) setSubgroup(i);
 			}
 			
@@ -909,7 +909,7 @@ event_inherited();
 					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
 					if(_hotkey != undefined) {
 						draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
-						draw_text_add(ww - ui(16), yy + list_height / 2, _hotkey.getName());
+						draw_text_add(ww - ui(16), yy + list_height / 2, _hotkey.getKeyName());
 					}
 					
 				} else {
@@ -1564,7 +1564,7 @@ event_inherited();
 					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
 					if(_hotkey != undefined) {
 						draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
-						draw_text_add(ww - ui(16), yc, _hotkey.getName());
+						draw_text_add(ww - ui(16), yc, _hotkey.getKeyName());
 					}
 					
 				} else {

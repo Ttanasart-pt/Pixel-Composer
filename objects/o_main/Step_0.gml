@@ -34,7 +34,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 						var h = list[i];
 						
 						if(h.isPressing()) {
-							if(h.key == noone) h.action(); // Modifier action trigger immediately
+							if(h.key._K == noone) h.action(); // Modifier action trigger immediately
 							else if(h.interrupt) _toActIn = h;
 							else array_push(_toAct, h);
 						}

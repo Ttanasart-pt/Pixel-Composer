@@ -302,7 +302,7 @@ DIALOG_WINCLEAR1
 		if(_key) {
 			draw_set_font(font);
 			
-			var _ktxt = key_get_name(_key.key, _key.modi);
+			var _ktxt = _key.getKeyName();
 			var _tw = string_width(_ktxt);
 			var _th = line_get_height();
 			

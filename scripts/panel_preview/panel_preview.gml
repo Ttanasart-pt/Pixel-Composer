@@ -224,14 +224,14 @@
 			registerFunction(p, "Reset Preview Actions",          "", n, function() /*=>*/ {return menuItemReset("preview_actions"        )}).setMenu("preview_reset_preview_actions");
 			
 			registerFunction(p, "Preview Channel > RGBA",       "",  n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  0? 0 :  0; }).setMenu("preview_channel_rgba");
-			registerFunction(p, "Preview Channel > Red",        "R", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  2? 0 :  2; }).setMenu("preview_channel_red");
-			registerFunction(p, "Preview Channel > Green",      "G", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  3? 0 :  3; }).setMenu("preview_channel_green");
-			registerFunction(p, "Preview Channel > Blue",       "B", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  4? 0 :  4; }).setMenu("preview_channel_blue");
-			registerFunction(p, "Preview Channel > Hue",        "H", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  6? 0 :  6; }).setMenu("preview_channel_hue");
-			registerFunction(p, "Preview Channel > Saturation", "S", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  7? 0 :  7; }).setMenu("preview_channel_sat");
-			registerFunction(p, "Preview Channel > Value",      "V", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  8? 0 :  8; }).setMenu("preview_channel_val");
-			registerFunction(p, "Preview Channel > Alpha",      "A", n, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader == 10? 0 : 10; }).setMenu("preview_channel_alpha");
-			registerFunction(p, "Preview Channel > Apply Alpha","A", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader_alpha = !p.preview_shader_alpha;  }).setMenu("preview_channel_keep_alpha");
+			registerFunction(p, "Preview Channel > Red",        "R", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  2? 0 :  2; }).setMenu("preview_channel_red");
+			registerFunction(p, "Preview Channel > Green",      "G", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  3? 0 :  3; }).setMenu("preview_channel_green");
+			registerFunction(p, "Preview Channel > Blue",       "B", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  4? 0 :  4; }).setMenu("preview_channel_blue");
+			registerFunction(p, "Preview Channel > Hue",        "H", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  6? 0 :  6; }).setMenu("preview_channel_hue");
+			registerFunction(p, "Preview Channel > Saturation", "S", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  7? 0 :  7; }).setMenu("preview_channel_sat");
+			registerFunction(p, "Preview Channel > Value",      "V", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader ==  8? 0 :  8; }).setMenu("preview_channel_val");
+			registerFunction(p, "Preview Channel > Alpha",      "A", s, function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader = p.preview_shader == 10? 0 : 10; }).setMenu("preview_channel_alpha");
+			registerFunction(p, "Preview Channel > Apply Alpha","A", cs,function() /*=>*/ { var p = PANEL_PREVIEW; p.preview_shader_alpha = !p.preview_shader_alpha;  }).setMenu("preview_channel_keep_alpha");
 			registerFunction(p, "Preview Channel > Scroll",     "",  n, function() /*=>*/ { 
 				var p = PANEL_PREVIEW; 
 				var s = p.preview_shaders;
@@ -365,7 +365,7 @@ function Panel_Preview() : PanelContent() constructor {
         splitViewMouse      = 0;
     
         tileMode            = 0;
-        bg_color            = COLORS.panel_bg_clear;
+        bg_color            = COLORS.panel_preview_bg;
         
         array_preview_size  = ui(48);
         
@@ -1249,7 +1249,7 @@ function Panel_Preview() : PanelContent() constructor {
                 	HOTKEY_BLOCK = true;
                 }
                 
-                var _hkstr = _key.getName();
+                var _hkstr = _key.getKeyName();
                 if(_hkstr != "" && __tool_show_key) {
                 	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
                 	var _hks  = string_width(_hkstr) + ui(8);
@@ -1476,7 +1476,7 @@ function Panel_Preview() : PanelContent() constructor {
                 	HOTKEY_BLOCK = true;
                 }
                 
-                var _hkstr = _key.getName();
+                var _hkstr = _key.getKeyName();
                 if(_hkstr != "" && __tool_show_key) {
                 	draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
                 	var _hks  = string_width(_hkstr) + ui(8);

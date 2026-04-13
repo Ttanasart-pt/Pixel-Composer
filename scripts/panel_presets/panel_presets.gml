@@ -203,7 +203,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			var _hotkey = GRAPH_ADD_NODE_MAPS[$ fName];
 			var _hkC    = COLORS._main_text_sub;
 			
-			var _ktxt = _hotkey != undefined? _hotkey.getName() : "";
+			var _ktxt = _hotkey != undefined? _hotkey.getKeyName() : "";
 			var _tx   = _ww - ui(16);
 			var _ty   = _yy + _hh / 2;
 			var _tw   = string_width(_ktxt);

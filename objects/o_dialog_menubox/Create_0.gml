@@ -86,7 +86,7 @@ event_inherited();
 			var _key = _menuItem.hoykeyObject;
 			
 			draw_set_font(font);
-			var _kw = _key? string_width(key_get_name(_key.key, _key.modi)) + ui(16) : 0;
+			var _kw = _key? string_width(_key.getKeyName()) + ui(16) : 0;
 			
 			if(is(_menuItem, MenuItemGroup)) {
 				var amo = array_length(_menuItem.group);

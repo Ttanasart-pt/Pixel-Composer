@@ -3306,7 +3306,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text, .75);
 			var _tw = 0;
 			for( var i = 0, n = array_length(_list); i < n; i++ ) 
-				_tw = max(_tw, string_width(_list[i].getName()));
+				_tw = max(_tw, string_width(_list[i].getKeyName()));
     		
 			var _ttx = _tx + _tw + ui(16);
 			BLEND_ADD
@@ -3314,7 +3314,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		for(var i = array_length(_list) - 1; i >= 0; i--) {
 				var hotkey = _list[i];
 				var _title = hotkey.name;
-				var _key   = hotkey.getName();
+				var _key   = hotkey.getKeyName();
 				
 				draw_set_font(f_p2b);
 				draw_set_color(CDEF.main_mdwhite);

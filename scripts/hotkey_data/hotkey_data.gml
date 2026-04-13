@@ -1,4 +1,4 @@
-globalvar HOTKEYS_DATA, HOTKEYS_CUSTOM;
+globalvar HOTKEYS_DATA, HOTKEYS_CUSTOM, HOTKEY_MAP;
 #macro FN_NODE_TOOL_INVOKE if(!variable_global_exists("__FN_NODE_TOOL") || variable_global_get("__FN_NODE_TOOL") == undefined) variable_global_set("__FN_NODE_TOOL", []); \
 array_push(global.__FN_NODE_TOOL, function()
 	
@@ -12,29 +12,30 @@ function __initHotKey() {
 	////- Classes
 
 function KeyCombination(_key = "", _modi = MOD_KEY.none) constructor {
-	key  = key_get_index(_key);
-	modi = _modi;
+	_K = key_get_index(_key);
+	_M = _modi;
 	
-	static pressable  = function() /*=>*/ {return key > 0 || modi != MOD_KEY.none};
-	static isPressing = function(hold = false) /*=>*/ {return pressable()? key_press(key, modi, hold) : false};
+	static isPressing = function(hold = false) /*=>*/ {return _K > 0 || _M != MOD_KEY.none? key_press(_K, _M, hold) : false};
+	static toString   = function() /*=>*/ {return key_get_name(_K, _M)};
 	
-	static toString = function() /*=>*/ {return key_get_name(key, modi)};
+	static set     = function(k,m) /*=>*/ { _K = k;    _M = m;    return self; }
+	static setKey  = function(k)   /*=>*/ { _K = k._K; _M = k._M; return self; }
+	static hasKey  = function()    /*=>*/ {return _K > 0 || _M > 0};
+	static isEqual = function(k)   /*=>*/ {return _K == k._K && _M == k._M};
 	
 	////- Serialize
 	
-	static serialize   = function( ) /*=>*/ { return { key, modi } }
-	static deserialize = function(m) /*=>*/ { key = m.key; modi = m.modi; }
+	static serialize   = function( ) /*=>*/ { return { key: _K, modi: _M } }
+	static deserialize = function(m) /*=>*/ { _K = m.key; _M = m.modi; }
 }
 
 function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone, _param = noone) constructor {
 	context   = _context;
 	name      = _name;
 	
-	key       = key_get_index(_key);
-	dKey      = key;
-	
-	modi      = _mod;
-	dModi     = modi;
+	dkey = new KeyCombination(_key, _mod);
+	key  = new KeyCombination(_key, _mod);
+	keys = undefined; // alternative keys?
 	
 	rawAction = _action;
 	param     = _param;
@@ -42,16 +43,19 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	interrupt = false;
 	fnObject  = undefined;
 	
+	static set          = function(k,m) /*=>*/ {return key.set(k,m)};
 	static setParam     = function(p) /*=>*/ { param = p;        return self; }
 	static setAction    = function(a) /*=>*/ { rawAction = a;    return self; }
 	static setInterrupt = function( ) /*=>*/ { interrupt = true; return self; }
 	static setFn        = function(f) /*=>*/ { fnObject  = f;    return self; }
 	
+	static hasKey = function() /*=>*/ {return key.hasKey()};
+	
 	static action = function() {
 		if(param == noone) rawAction();
 		else rawAction(param);
 		
-		if(key)
+		if(key.hasKey())
 		switch(context) {
 			case "Graph":     PANEL_GRAPH.setActionTooltip(name);     break;
 			case "Preview":   PANEL_PREVIEW.setActionTooltip(name);   break;
@@ -59,26 +63,44 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 		}
 	}
 	
-	static getName     = function() /*=>*/ {return key_get_name(key, modi)};
+	static getKeyName  = function() /*=>*/ {return key.toString()};
 	static getNameFull = function() /*=>*/ {return string_to_var(context == 0? $"global.{name}" : $"{context}.{name}")};
 	
-	static isPressing  = function(h=0) /*=>*/ {return key <= 0 && modi == 0? false : key_press(key, modi, h)};
-	static isModified  = function()    /*=>*/ {return key != dKey || modi != dModi};
+	static isPressing  = function(h=0) /*=>*/ { return key.isPressing(h);
+		if(key.isPressing(h)) return true;
+		return keys != undefined && array_any(keys, function(k,i) /*=>*/ {return k.isPressing(h)});
+	}
 	
-	static equal  = function(h)   /*=>*/ {return key == h.key && modi == h.modi};
-	static reset  = function(r=0) /*=>*/ { key = dKey; modi = dModi; if(r) PREF_SAVE(); }
-	static modify = function()    /*=>*/ { keyboard_lastchar = key; return self; }
+	static isModified  = function() /*=>*/ {return !key.isEqual(dkey)};
 	
-	static toString = function() /*=>*/ {return $"{getNameFull()}: {getName()} [{key}+{modi}]"};
+	static reset  = function(r=0) /*=>*/ { key.setKey(dkey); if(r) PREF_SAVE(); }
+	static modify = function()    /*=>*/ { keyboard_lastchar = key._K; return self; }
+	
+	static toString = function() /*=>*/ {return $"{getNameFull()}: {getKeyName()}"};
 	
 	////- Serialize
 	
-	static serialize = function() /*=>*/ { return { context, name, key, modi, fname : getNameFull() } }
+	static serialize = function() /*=>*/ { 
+		var m = { context, name };
+		m.fname = getNameFull();
+		m.keyd  = key.serialize();
+		
+		if(keys != undefined)
+			m.keys = array_map(keys, function(k,i) /*=>*/ {return k.serialize()});
+		
+		return m;
+	}
 	
 	static deserialize = function(l) /*=>*/ { 
 		if(!is_struct(l)) return self; 
-		key  = l.key; 
-		modi = l.modi; 
+		
+		if(has(l, "keyd"))
+			 key.deserialize(l.keyd);
+		else key.set(l.key, l.modi)
+		
+		if(has(l, "keys"))
+			keys = array_map(l.keys, function(k,i) /*=>*/ {return new KeyCombination().deserialize(k)});
+		
 		return self; 
 	}
 	
@@ -97,7 +119,7 @@ function hotkeyCustom(_context, _name, _key = "", _mod = MOD_KEY.none) {
 	////- Actions
 
 function addHotkey(_context, _name, _key, _mod, _action, _param = noone) {
-	var key = new Hotkey(_context, _name, _key, _mod, _action, _param);
+	var hotkey = new Hotkey(_context, _name, _key, _mod, _action, _param);
 	
 	if(!struct_has(HOTKEYS, _context)) {
 		HOTKEYS[$ _context] = [];
@@ -105,18 +127,18 @@ function addHotkey(_context, _name, _key, _mod, _action, _param = noone) {
 	}
 	
 	for(var i = 0; i < array_length(HOTKEYS[$ _context]); i++) {
-		var hotkey = HOTKEYS[$ _context][i];
-		if(hotkey.name == key.name) {
+		var _hotkey = HOTKEYS[$ _context][i];
+		if(_hotkey.name == hotkey.name) {
 			delete HOTKEYS[$ _context][i];
-			HOTKEYS[$ _context][i] = key;
-			return key;
+			HOTKEYS[$ _context][i] = hotkey;
+			return hotkey;
 		}
 	}
 	
-	if(_context == "") array_insert(HOTKEYS[$ _context], 0, key);
-	else			   array_push(HOTKEYS[$ _context], key);
+	if(_context == "") array_insert(HOTKEYS[$ _context], 0, hotkey);
+	else			   array_push(HOTKEYS[$ _context], hotkey);
 	
-	return key;
+	return hotkey;
 }
 
 function find_hotkey(_context, _name) {
@@ -154,15 +176,11 @@ function hotkey_editing(hotkey) {
 	if(keyboard_check(vk_alt))		_mod_prs |= MOD_KEY.alt;
 	
 	if(keyboard_check_pressed(vk_escape)) {
-		hotkey.key  = 0;
-		hotkey.modi = 0;
-		
+		hotkey.set(0,0);
 		PREF_SAVE();
 		
 	} else if(keyboard_check_pressed(vk_anykey)) {
-		hotkey.modi = _mod_prs;
-		hotkey.key  = keyboard_lastkey;
-		
+		hotkey.set(keyboard_lastkey, _mod_prs);
 		PREF_SAVE();
 	}
 }
@@ -190,7 +208,8 @@ function hotkey_serialize() {
 		
 		for(var j = 0, m = array_length(ll); j < m; j++) {
 			var _hk = ll[j];
-			if(_hk.dKey == _hk.key && _hk.dModi == _hk.modi) continue;
+			if(!_hk.isModified()) continue;
+			
 			array_push(_context, _hk.serialize());
 		}
 	}
@@ -205,8 +224,8 @@ function hotkey_serialize() {
 		for (var j = 0, m = array_length(kk); j < m; j++) {
 			var _nm = kk[j];
 			var _hk = nl[$ _nm];
+			if(_hk.isModified()) continue;
 			
-			if(_hk.dKey == _hk.key && _hk.dModi == _hk.modi) continue;
 			array_push(_node, _hk.serialize());
 		}
 	}
@@ -234,4 +253,46 @@ function hotkey_deserialize() {
 	if(struct_has(map, "context")) array_foreach(map.context, fn);
 	if(struct_has(map, "node"))    array_foreach(map.node,    fn);
 	if(struct_has(map, "graph"))   HOTKEYS_DATA.graph = map.graph;
+}
+
+	////- ACTION-BASED SYSTEM
+
+function hotkey_refresh() {
+	HOTKEY_MAP = {};
+	
+	var conts = struct_get_names(HOTKEYS);
+	
+	for( var i = 0, n = array_length(conts); i < n; i++ ) {
+		var _ctx = conts[i];
+		var list = HOTKEYS[$ _ctx];
+		
+		for( var i = 0, n = array_length(list); i < n; i++ ) {
+			var h = list[i];
+			if(!h.hasKey()) continue;
+			
+			var kname = h.getKeyName();
+			if(!has(HOTKEY_MAP, kname))
+				HOTKEY_MAP[$ kname] = [];
+				
+			array_push(HOTKEY_MAP[$ kname], h);
+		}
+	}
+}
+
+function hotkey_check(_str) {
+	if(!has(HOTKEY_MAP, _str)) return;
+	
+	var _toAct   = [];
+	var _toActIn = undefined;
+	
+	var _list = HOTKEY_MAP[$ _str];
+	for( var i = 0, n = array_length(_list); i < n; i++ ) {
+		var h = _list[i];
+		
+		if(h.isPressing()) {
+			if(h.key == noone) h.action(); // Modifier action trigger immediately
+			else if(h.interrupt) _toActIn = h;
+			else array_push(_toAct, h);
+		}
+	}
 }

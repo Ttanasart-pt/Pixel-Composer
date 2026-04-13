@@ -186,7 +186,7 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 			
 			draw_set_text(f_p3, fa_right, fa_center, COLORS._main_accent);
 			
-			var _ktxt = key_get_name(_key.key, _key.modi);
+			var _ktxt = _key.getKeyName();
 			var _tw = string_width(_ktxt);
 			var _th = line_get_height();
 			
