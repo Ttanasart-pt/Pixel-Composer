@@ -1,5 +1,6 @@
 function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor {
 	tool_attribute = toolAttr;
+	drawBrushMask  = false;
 	
 	mouse_sx = 0;
 	mouse_sy = 0;

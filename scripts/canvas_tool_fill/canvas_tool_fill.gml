@@ -1,5 +1,6 @@
 function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 	tool_attribute = toolAttr;
+	drawBrushMask  = false;
 	
 	relative    = true;
 	mouse_cur_x = 0;

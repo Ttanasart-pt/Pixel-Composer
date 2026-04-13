@@ -1,5 +1,6 @@
 function canvas_tool_selection_magic(_toolAttr) : canvas_selection_tool() constructor {
 	tool_attribute = _toolAttr;
+	drawBrushMask  = false;
 	
 	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(node.selection.is_select_drag) return;
