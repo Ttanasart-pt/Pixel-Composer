@@ -19,7 +19,7 @@ DIALOG_WINCLEAR1
 		item_sel_submenu = noone;
 	}
 	
-	draw_sprite_stretched(THEME.box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.dialog_menu, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	var to_del = noone;
 	
@@ -351,7 +351,7 @@ DIALOG_WINCLEAR1
 		}
 	}
 	
-	draw_sprite_stretched(THEME.box_r2_clr, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.dialog_menu, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	if(mouse_init_inside && (mouse_lrelease() || mouse_rrelease())) 
 		mouse_init_inside = false;

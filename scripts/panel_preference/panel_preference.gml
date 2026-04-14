@@ -443,12 +443,14 @@ function Panel_Preference() : PanelContent() constructor {
     			function(   ) /*=>*/ { 
     				PREFERENCES._display_scaling = max(PREFERENCES._display_scaling, 0.5);
     				resetScale(PREFERENCES._display_scaling, true); should_restart = true;
+    				setPanel();
     			}),
     			
     			function(   ) /*=>*/ {return PREFERENCES._display_scaling},
     			function(val) /*=>*/ {
     				PREFERENCES._display_scaling = val;
     				resetScale(PREFERENCES._display_scaling, true); should_restart = true;
+    				setPanel();
     			},
     			1,
     		).setKey("ui_scale"));
@@ -459,6 +461,7 @@ function Panel_Preference() : PanelContent() constructor {
     			textBox_Number(function(str) /*=>*/ {
     				prefSet("text_scaling", clamp(real(str), .5, 4), true);
     				loadFonts();
+    				setPanel();
     			})
     		));
     		
@@ -738,6 +741,11 @@ function Panel_Preference() : PanelContent() constructor {
     		PREFERENCES.theme = thm;
     		should_restart    = true;
     		PREF_SAVE();
+    		
+    		__initTheme();
+    		loadFonts();
+    		setPanel();
+    		
     	}, false);
     	sb_theme.font  = f_p2;
     	sb_theme.align = fa_left;
@@ -1115,10 +1123,11 @@ function Panel_Preference() : PanelContent() constructor {
     				
     				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
     				var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
-    				var _tc = CDEF.main_ltgrey;
+    				var _tc = COLORS._main_text_sub;
     				
     				BLEND_OVERRIDE
-                	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+                	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg);
+                	if(_hv) draw_sprite_stretched_add(THEME.box_r5_clr, 1, padx, _yy, ww - padx * 2, sectH);
                 	
     				if(_hv && _focus) {
                     	if(DOUBLE_CLICK) {
@@ -1942,10 +1951,11 @@ function Panel_Preference() : PanelContent() constructor {
     				
     				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
     				var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
-    				var _tc = CDEF.main_ltgrey;
+    				var _tc = COLORS._main_text_sub;
     				
     				BLEND_OVERRIDE
                 	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+                	if(_hv) draw_sprite_stretched_add(THEME.box_r5_clr, 1, padx, _yy, ww - padx * 2, sectH);
                 	
     				if(_hv && pFOCUS) {
                     	if(DOUBLE_CLICK) {
@@ -2229,7 +2239,7 @@ function Panel_Preference() : PanelContent() constructor {
         				continue;
         			}
         			
-        			var _tc  = CDEF.main_grey;
+        			var _tc  = COLORS._main_text_sub;
         			var _hov = pHOVER && point_in_rectangle(mx, my, _kx - _kp       + 1, _ky - _kp       + 1, 
         			                                                _kx + _kp + _kw - 1, _ky + _kp + _kh - 1);
         			
@@ -2263,7 +2273,7 @@ function Panel_Preference() : PanelContent() constructor {
         				if(has(_keyUsing[$ _vk], _cmod)) {
         					draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_ltgrey);
         					draw_sprite_stretched_add(THEME.ui_panel, 1, _kx, _ky, _kw, _kh, c_white, 0.1);
-        					_tc = CDEF.main_mdblack;
+        					_tc = COLORS._main_text_on_accent;
 	        				
 	        				if(_hov) {
 	        					var _act = _keyUsing[$ _vk][$ _cmod];
@@ -2281,12 +2291,12 @@ function Panel_Preference() : PanelContent() constructor {
 	        				}
         				} else {
         					draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black);
-        					_tc  = CDEF.main_grey;
+        					_tc  = COLORS._main_text_sub;
         				}
         				
         			} else {
         				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black);
-        				_tc  = CDEF.main_grey;
+        				_tc  = COLORS._main_text_sub;
         				
         				if(_hov) TOOLTIP = new tooltipHotkey_assign(noone, key_get_name(_vk, _cmod));
         			}

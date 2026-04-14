@@ -131,7 +131,7 @@ function Panel_Workspace() : PanelContent() constructor {
 			_tx = x0 + tw / 2;
 			_ty = cy;
 			
-			draw_set_color(sel? CDEF.main_mdwhite : CDEF.main_grey);
+			draw_set_color(sel? COLORS._main_text : COLORS._main_text_sub);
 			draw_text_add(_tx, _ty, str);
 			
 			x0 += tw + ui(1);

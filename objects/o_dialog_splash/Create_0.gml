@@ -133,7 +133,7 @@ event_inherited();
 			gpu_set_scissor(_scis);
 		}
 		
-		return hh + hg;
+		return hh + hg * 2;
 	});
 	sp_recent.always_scroll = false;
 	
@@ -149,7 +149,7 @@ event_inherited();
 	x1 = dialog_x + dialog_w - ui(16);
 	
 	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var hover = sp_sample.hover;
 		var focus = sp_sample.active;
@@ -191,7 +191,8 @@ event_inherited();
 					var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], mtx, mty, mtx + mtw, mty + mth);
 					
 					BLEND_OVERRIDE
-					draw_sprite_stretched_ext(THEME.box_r5_clr, _hov, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon, 1);
+					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon);
+					if(_hov) draw_sprite_stretched_add(THEME.box_r5_clr, 1, mtx, mty, mtw, mth);
 					BLEND_NORMAL
 					
 					if(_hov) {
@@ -396,12 +397,13 @@ event_inherited();
 				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + label_h);
 				
 				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.box_r5_clr, _hov, pd, _yy, ww - pd, label_h, c_white, 0.3 + _hov * 0.2);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, pd, _yy, ww - pd, label_h);
+				if(_hov) draw_sprite_stretched_add(THEME.box_r5_clr, 1, pd, _yy, ww - pd, label_h);
 				BLEND_NORMAL
 				
 				if(!welcome_editing) {
 					var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
-					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, CDEF.main_ltgrey, 1);
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, COLORS._main_icon, 1);
 				}
 				
 				if(_hov) {
@@ -414,7 +416,7 @@ event_inherited();
 					}
 				}
 				
-				draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(pd + ui(32), _yy + label_h / 2, string_titlecase(lb.text));
 			}
 			
@@ -457,7 +459,7 @@ event_inherited();
 	contest_viewing = noone;
 	
 	sp_contest = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh  = 0;
 		var sww = sp_contest.surface_w;
 		
@@ -848,7 +850,7 @@ event_inherited();
 	}
 	
 	sp_news = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) /*=>*/ {
-		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		if(!art_req) getDiscourseArtworks();
 		
 		var hh = ui(16);

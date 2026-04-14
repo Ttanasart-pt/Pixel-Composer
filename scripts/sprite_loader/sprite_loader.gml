@@ -1,5 +1,6 @@
 globalvar THEME_DEF; THEME_DEF        = true;
 globalvar USE_TEXTUREGROUP; USE_TEXTUREGROUP = false; 
+globalvar SPRITE_FALLBACK; SPRITE_FALLBACK  = "default"; 
 globalvar SPRITES; 
 globalvar THEME; 
 
@@ -40,20 +41,28 @@ function __initTheme() {
 	loadGraphic(PREFERENCES.theme);			printDebug($"  - Load graphic | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
 }
 
-function _sprite_path(rel, theme) { INLINE return $"{DIRECTORY}Themes/{theme}/graphics/{string_replace_all(rel, "./", "")}"; }
+function _sprite_path(rel, theme) {
+	return $"{DIRECTORY}Themes/{theme}/graphics/{string_replace_all(rel, "./", "")}"; 
+}
 
 function _sprite_load_from_struct(str, theme, key) {
-	var path = _sprite_path(str.path, theme);
+	var path = filename_os(_sprite_path(str.path, theme));
 	var numb = struct_try_get(str, "s", 1);
 	var sx   = struct_try_get(str, "x", 0) * THEME_SCALE;
 	var sy   = struct_try_get(str, "y", 0) * THEME_SCALE;
 	
-	var _path = filename_os(path);
+	if(!file_exists_empty(path)) { 
+		path = filename_os(_sprite_path(str.path, SPRITE_FALLBACK));
+		// log_message("THEME", $"Load sprite {str.path} failed: using fallback [{path}]."); 
+		
+		if(!file_exists_empty(path)) { 
+			log_message("THEME", $"Load sprite {str.path} failed: Path not exists [{path}]."); 
+			return 0;
+		}
+	}
 	
-	if(!file_exists_empty(_path)) { log_message("THEME", $"Load sprite {_path} failed: Path not exists."); return 0; }
-	
-	var s = sprite_add(_path, numb, false, true, sx, sy);
-	if( s < 0) { log_message("THEME", $"Load sprite {_path} failed: Cannot read file."); return 0; }
+	var s = sprite_add(path, numb, false, true, sx, sy);
+	if( s < 0) { log_message("THEME", $"Load sprite {path} failed: Cannot read file."); return 0; }
 	
 	if(!struct_has(str, "slice")) return s;
 	
@@ -90,8 +99,6 @@ function loadGraphic(theme = "default") {
 	SPRITES = {};
 	THEME   = {};
 	
-	var path   = _sprite_path("./graphics.json", theme);
-	var sprDef = json_load_struct(_sprite_path("./graphics.json", "default"));
 	var _metaP = $"{DIRECTORY}Themes/{theme}/meta.json";
 	
 	if(!file_exists_empty(_metaP))
@@ -100,10 +107,14 @@ function loadGraphic(theme = "default") {
 		var _meta = json_load_struct(_metaP);
 		if(_meta[$ "version"] < VERSION)
 			noti_warning($"Init Theme: Loading theme made for older version [{_meta[$ "version"]} < {VERSION}].");
+			
+		SPRITE_FALLBACK  = _meta[$ "fallback"] ?? "default"; 
 	}
 	
+	var pathF  = _sprite_path("./graphics.json", SPRITE_FALLBACK);
+	var path   = _sprite_path("./graphics.json", theme);
+	
 	printDebug($"  - Loading theme {theme}");
-	if(!file_exists_empty(path)) { print($"  > Theme not defined at {path}, rollback to default theme."); return; }
 	
 	var packPath = $"{DIRECTORY}Themes/{theme}/packed";
 	var packed   = !PREFERENCES.theme_load_unpack && file_exists($"{packPath}/struct.json");
@@ -128,13 +139,13 @@ function loadGraphic(theme = "default") {
 		}
 		
 	} else {
+		var sprDef   = json_load_struct(pathF);
 		var sprStr   = json_load_struct(path);
-		var graphics = variable_struct_get_names(sprStr);
-		var str, key;
+		var graphics = variable_struct_get_names(sprDef);
 		
 		for( var i = 0, n = array_length(graphics); i < n; i++ ) {
-			key = graphics[i];
-			str = sprStr[$ key];
+			var key = graphics[i];
+			var str = sprStr[$ key] ?? sprDef[$ key];
 			
 			THEME[$ key]   = _sprite_load_from_struct(str, theme, key);
 			SPRITES[$ key] = THEME[$ key];

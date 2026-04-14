@@ -11,6 +11,9 @@
 	}
 	
 	globalvar CMD_FUNCTIONS, MENU_ITEMS, FUNCTIONS, RECENT_COMMANDS;
+	global.FUNCTION_CALL_EVENT = {
+		type: "null", 
+	};
 	
 	function __fnInit() {
 		
@@ -33,7 +36,6 @@
 		
 		__fnInit_Preference();
 	}
-	
 #endregion
 
 function registerFunction(_context, _name, _key, _mod, _action, _param = noone) { return new functionObject(_context, _name, _key, _mod, _action, _param); }
@@ -58,9 +60,14 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 		if(!is_callable(fn)) return;
 		var _res;
 		
-		if(!is_undefined(_dat))  _res = fn(_dat);
-		else if(params != noone) _res = fn(params);
-		else                     _res = fn();
+		if(!is_undefined(_dat)) {
+			if(params != noone) _res = fn(params, _dat);
+			else                _res = fn(_dat);
+			
+		} else {
+			if(params != noone) _res = fn(params);
+			else                _res = fn();
+		}
 		
 		switch(context) {
 			case "Graph":   PANEL_GRAPH.setActionTooltip(name);   break;

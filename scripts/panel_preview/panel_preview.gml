@@ -1765,9 +1765,8 @@ function Panel_Preview() : PanelContent() constructor {
 	        if(!_ps0 && !_ps1) {
 	        	var _prevS = PROJECT.getOutputSurface();
 				draw_surface_ext_safe(_prevS, canvas_x, canvas_y, canvas_s, canvas_s); 
-				draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
+				draw_set_color(COLORS.panel_preview_surface_outline);
 				draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
-				draw_set_alpha(1);
 	        }
 	        
             if(splitView == 0 && _ps0) {
@@ -1925,9 +1924,8 @@ function Panel_Preview() : PanelContent() constructor {
             draw_rectangle(psx, psy, psx + preview_surface_width - 1, psy + preview_surface_height - 1, true);
             
         } else {
-        	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
+        	draw_set_color_alpha(COLORS.panel_preview_surface_outline);
             draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
-            draw_set_alpha(1);
         }
     } // DRAW PREVIEW CONTENT
     
@@ -2306,10 +2304,10 @@ function Panel_Preview() : PanelContent() constructor {
         	#region data
 	        	var _active = PANEL_PREVIEW == self;
 	        	
-	            var _cc_fps = fps >= PROJECT.animator.framerate? CDEF.main_mdwhite : COLORS._main_value_negative;
-	            if(!window_has_focus()) _cc_fps = CDEF.main_mdwhite; 
+	            var _cc_fps = fps >= PROJECT.animator.framerate? COLORS._main_text_inner : COLORS._main_value_negative;
+	            if(!window_has_focus()) _cc_fps = COLORS._main_text_inner; 
 	            
-	            var _cc_fra  = frac(GLOBAL_CURRENT_FRAME) == 0? CDEF.main_mdwhite : COLORS._main_value_negative; 
+	            var _cc_fra  = frac(GLOBAL_CURRENT_FRAME) == 0? COLORS._main_text_inner : COLORS._main_value_negative; 
 	            var mpx, mpy, _txt_mou = undefined;
 	            
 	            if(d3_active == NODE_3D.none) {
@@ -2347,7 +2345,7 @@ function Panel_Preview() : PanelContent() constructor {
                     var _zms  = $"x{canvas_s}";
                     var _zmw  = string_width(_zms) + ui(16);
                     var _zmx  = right_menu_x + ui(8);
-                    var _zmc  = _zmsl? COLORS._main_text : CDEF.main_mdwhite;
+                    var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_inner;
                     
                     if(_zmsl) draw_sprite_stretched(THEME.textbox, 3, _zmx - _zmw + ui(4), right_menu_y + ui(2), _zmw - ui(10), _lh - ui(2));
                     
@@ -2364,7 +2362,7 @@ function Panel_Preview() : PanelContent() constructor {
                     if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
 	                	draw_text(_zmx - _zmw + ui(14), right_menu_y, "x");
                     
-                	draw_set_color(CDEF.main_mdwhite);
+                	draw_set_color(COLORS._main_text_inner);
                 	
                     if(pHOVER) {
                         right_menu_y += _lh; 
@@ -2410,7 +2408,7 @@ function Panel_Preview() : PanelContent() constructor {
                 }
                 
             } else if(PROJECT.previewSetting.status_display == 2) {
-            	draw_set_text(f_p4, fa_right, fa_top, CDEF.main_mdwhite);
+            	draw_set_text(f_p4, fa_right, fa_top, COLORS._main_text_inner);
             	right_menu_y += ui(2);
             	
             	var ls = THEME.box_r5_clr;
@@ -2457,7 +2455,7 @@ function Panel_Preview() : PanelContent() constructor {
 	                	var hv = pHOVER && point_in_rectangle(mx, my, rx-tw+ui(4), ry, rx+ui(4), ry+lh);
 	        			if(hv) mouse_on_preview = false;
 	        			
-	                	draw_sprite_stretched_ext(ls, hv, rx-tw+ui(4), ry, tw, lh, hv? CDEF.main_mdwhite : lc, .8 + hv * .2);
+	                	draw_sprite_stretched_ext(ls, hv, rx-tw+ui(4), ry, tw, lh, hv? COLORS._main_text_inner : lc, .8 + hv * .2);
 	                	draw_text_add(rx, ry, $"x{canvas_s}"); 
             			
             			if(hv && mouse_lpress(pFOCUS)) {
@@ -2482,7 +2480,7 @@ function Panel_Preview() : PanelContent() constructor {
 		        		zoom_slide = 0;
         		
             		rx -= tw + ui(2); 
-            		draw_set_text(f_p4, fa_right, fa_top, CDEF.main_mdwhite);
+            		draw_set_text(f_p4, fa_right, fa_top, COLORS._main_text_inner);
             		
 	            	rx  = right_menu_x;
 	            	ry += lh + ui(2);
@@ -2525,7 +2523,7 @@ function Panel_Preview() : PanelContent() constructor {
                     }
             	
             	} else {
-            		draw_set_text(f_p4, fa_right, fa_top, CDEF.main_mdwhite);
+            		draw_set_text(f_p4, fa_right, fa_top, COLORS._main_text_inner);
 	            	rx  = right_menu_x;
 	            	ry += lh + ui(2);
 	            	
@@ -2884,7 +2882,6 @@ function Panel_Preview() : PanelContent() constructor {
 	            	
 					draw_set_color(COLORS.panel_preview_surface_outline);
 					draw_rectangle(_ovx, _ovy, _ovx + _node_pw * _ovs - 1, _ovy + _node_ph * _ovs - 1, true);
-					draw_set_alpha(1);
 					
 	            } else {
 		            var _prevNode = getNodePreview();
@@ -3646,9 +3643,8 @@ function Panel_Preview() : PanelContent() constructor {
         	dragCanvas();
         	
         	draw_surface_ext_safe(PROJECT.getOutputSurface(), canvas_x, canvas_y, canvas_s, canvas_s); 
-        	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
+        	draw_set_color(COLORS.panel_preview_surface_outline);
             draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
-            draw_set_alpha(1);
         }
         
         var inspect_node = PANEL_INSPECTOR.getInspecting();

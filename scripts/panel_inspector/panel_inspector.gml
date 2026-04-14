@@ -872,6 +872,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
                     contentPane.hover_content = true;
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_hover, 1);
+                	draw_sprite_stretched_add(THEME.box_r5_clr, 1, lbx, yy, con_w - lbx, lbh);
                 	
                 	if(pFOCUS) {
 						if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
@@ -921,7 +922,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(!showAll) {
                 	var _anim = _aniMap[$ _key] ?? false;
                 	
-                	var cc = _anim? COLORS._main_value_positive : COLORS.panel_inspector_group_bg;
+                	var cc = _anim? COLORS._main_value_positive : COLORS._main_icon;
                 	draw_sprite_ui(THEME.arrow, 0, lbx + ui(16), yy + lbh / 2, 1, 1, -90 + coll * 90, cc, 1);
                 }
                 
@@ -933,6 +934,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     if(_hover && point_in_rectangle(_m[0], _m[1], _x, yy, lbh, yy + lbh)) {
                         contentPane.hover_content = true;
                         draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, yy, lbh, lbh, COLORS.panel_inspector_group_hover, 1);
+                        draw_sprite_stretched_add(THEME.box_r5_clr, 1, _x, yy, lbh, lbh);
                         
                         if(mouse_lpress( pFOCUS)) jun.setValue(!toging);
                         if(mouse_rpress(pFOCUS)) propRightClick(jun);
@@ -1373,7 +1375,8 @@ function Panel_Inspector() : PanelContent() constructor {
             /// Section
             
             var cc = COLORS.panel_inspector_group_bg;
-            if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
+            var hv = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh);
+            if(hv) {
             	cc = COLORS.panel_inspector_group_hover;
                 
                 if(pFOCUS) {
@@ -1382,8 +1385,10 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
             }
                 
-            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc, 1);
-            draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
+            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc);
+            if(hv) draw_sprite_stretched_add(THEME.box_r5_clr, 1, 0, yy, _x1, lbh);
+            
+            draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS._main_icon, 1);    
             draw_set_text(fnt, fa_left, fa_center, COLORS._main_text);
             
             var tx = ui(32);

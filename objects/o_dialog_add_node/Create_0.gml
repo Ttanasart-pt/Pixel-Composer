@@ -525,7 +525,7 @@ event_inherited();
 	catagory_pane.scroll_color_bar_alpha = .5;
 	
 	subcatagory_pane = new scrollPane(ui(96), dialog_h - ui(66), function(_y, _m) {
-		draw_clear_alpha(COLORS._main_text, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		
 		var font  = f_p2;
 		var fontS = f_p2b;
@@ -548,7 +548,7 @@ event_inherited();
 			}
 			
 			var _f  = i == subgroup_index? fontS : font;
-			var _bc = CDEF.main_ltgrey;
+			var _bc = COLORS._main_text_sub;
 			var _c  = i == subgroup_index? COLORS._main_text_accent : _bc;
 			
 			draw_set_text(_f, fa_left, fa_top, _c);

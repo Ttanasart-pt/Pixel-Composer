@@ -129,10 +129,11 @@ if !ready exit;
 	x1 = dialog_x + dialog_w - ui(16);
 	bx = x0;
 	
-	var th = ui(36);
+	var tabH = ui(32);
+	var ppad = ui(THEME_VALUE.panel_tab_padding) * 2;
 	
 	for( var i = 0, n = array_length(pages); i < n; i++ ) {
-		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
+		draw_set_text(f_p0, fa_left, fa_center, project_page == i? COLORS._main_text : COLORS._main_text_sub);
 		var txt  = pages[i];
 		var dtxt = __txt(txt);
 		var amo  = 0;
@@ -154,15 +155,16 @@ if !ready exit;
 		if(amo) tw += ui(8) + string_width(amo) + ui(6);
 		
 		var _x1 = min(bx + tw, x1);
-		var _tabW = _x1 - bx;
+		var tabW = _x1 - bx;
+		var tabY = y0 - ppad - tabH;
 		
 		if(project_page == i) {
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, tabY, tabW, tabH, COLORS.panel_tab, 1);
 			
-		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + _tabW, y0)) {
+		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, tabY, bx + tabW, y0)) {
 			
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_hover, 1);
-			draw_sprite_stretched_add(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_hover, 0.1);
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, tabY, tabW, tabH, COLORS.panel_tab_hover, 1);
+			draw_sprite_stretched_add(THEME.ui_panel_tab, 0, bx, tabY, tabW, tabH, COLORS.panel_tab_hover, 0.1);
 			
 			if(mouse_lpress(sFOCUS)) {
 				project_page = i;
@@ -173,7 +175,7 @@ if !ready exit;
 				}
 			}
 		} else
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_inactive, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, tabY, tabW, tabH, COLORS.panel_tab_inactive, 1);
 		
 		var _btx = bx + ui(8);
 		var cc   = COLORS._main_text_sub;
@@ -183,40 +185,40 @@ if !ready exit;
 			case "Contests" :
 				if(project_page == i) cc = CDEF.yellow;
 				
-				draw_sprite_ui(THEME.trophy, 0, _btx + ui(12), y0 - ui(14),,,, COLORS._main_icon);
+				draw_sprite_ui(THEME.trophy, 0, _btx + ui(12), tabY + tabH / 2, 1, 1, 0, COLORS._main_icon);
 				_btx += ui(32);
 				break;
 				
 			case "News" :
 				if(project_page == i) cc = CDEF.cyan;
 				
-				draw_sprite_ui(THEME.globe, 0, _btx + ui(12), y0 - ui(16),,,, COLORS._main_icon);
+				draw_sprite_ui(THEME.globe, 0, _btx + ui(12), tabY + tabH / 2, 1, 1, 0, COLORS._main_icon);
 				_btx += ui(32);
 				break;
 		}
 		
 		draw_set_color(cc);
 		var _scis = gpu_get_scissor();
-		gpu_set_scissor(bx + ui(8), y0 - ui(32), _tabW - ui(16), ui(32));
-		draw_text_add(_btx, y0 - ui(4), dtxt);
+		gpu_set_scissor(bx + ui(8), tabY, tabW - ui(16), ui(32));
+		draw_text_add(_btx, tabY + tabH / 2, dtxt);
 		gpu_set_scissor(_scis);
 		
 		_btx += ui(8) + string_width(dtxt);
 		
 		if(amo && _x1 + ui(32) < x1) {
 			var _btw = string_width(amo) + ui(8);
-			var _bth = ui(22);
+			var _bth = tabH - ui(8);
 			var _btc = COLORS._main_icon_light;
 			
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), _btw, _bth, _btc, 1);
-			draw_sprite_stretched_add(THEME.ui_panel, 1, _btx, y0 - ui(26), _btw, _bth, _btc, 0.1);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, tabY + ui(4), _btw, _bth, _btc,  1);
+			draw_sprite_stretched_add(THEME.ui_panel,    1, _btx, tabY + ui(4), _btw, _bth, _btc, .1);
 			
 			_btx += ui(4);
-			draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text_sub);
-			draw_text(_btx, y0 - ui(6), amo);
+			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text(_btx, tabY + tabH / 2, amo);
 		}
 		
-		bx += _tabW;
+		bx += tabW + ppad;
 	}
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);

@@ -80,11 +80,11 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _sam = getAttribute("oversample");
 		
 		surface_set_shader(_outSurf, sh_corner_apply);
-			shader_set_2(       "dimension",  _dim );
-			shader_set_f_map(   "radius",     _rad, _data[ 9], inputs[1] );
-			shader_set_f_map(   "threshold",  _thr, _data[10], inputs[8] );
-			shader_set_surface( "original",   _surf);
-			shader_set_i(       "sampleMode", _sam );
+			shader_set_2(     "dimension",  _dim );
+			shader_set_f_map( "radius",     _rad, _data[ 9], inputs[1] );
+			shader_set_f_map( "threshold",  _thr, _data[10], inputs[8] );
+			shader_set_s(     "original",   _surf);
+			shader_set_i(     "sampleMode", _sam );
 			
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();

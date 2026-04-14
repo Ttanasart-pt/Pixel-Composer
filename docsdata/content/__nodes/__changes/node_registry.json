@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc4",
+    "changes": [
+      {
+        "date": "2026-04-14T03:45:46.163Z",
+        "node": "",
+        "commit": "**Round Corner**: All non-black color now treated as content."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc1",
     "changes": [
       {

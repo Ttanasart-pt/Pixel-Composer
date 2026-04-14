@@ -56,6 +56,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 			} else {
 				var _l = array_length(_toAct);
 				if(_l == 1) {
+					global.FUNCTION_CALL_EVENT.type = "hotkey";
 					_toAct[0].action();
 					HOTKEY_ACT = true;
 					

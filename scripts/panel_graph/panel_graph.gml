@@ -2975,6 +2975,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			if(!sprite_exists(_spr)) _spr = THEME.pxc_hub;
 			
 			if(buttonInstant_Pad(THEME.button_hide_fill, _mux, _muy, _mus, _mus, _m, pHOVER, pFOCUS, _name, _spr, 0, _cc, 1, ui(6)) == 2) {
+				global.FUNCTION_CALL_EVENT.type = "button";
 				var _res = _menu.toggleFunction();
 				if(is(_res, Node)) selectDragNode(_res, true);
 			}
@@ -3287,7 +3288,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
 			for( var i = array_length(_keys) - 1; i >= 0; i-- ) {
 				draw_set_font(f_p2b);
-				draw_set_color(CDEF.main_mdwhite);
+				draw_set_color(COLORS._main_text_inner);
 				draw_text_add(_tx, _ty, _keys[i][0]);
 				
 				draw_set_font(f_p2);
@@ -3322,7 +3323,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				var _key   = hotkey.getKeyName();
 				
 				draw_set_font(f_p2b);
-				draw_set_color(CDEF.main_mdwhite);
+				draw_set_color(COLORS._main_text_inner);
 				draw_text(_tx, _ty, _key);
 				
 				draw_set_font(f_p2);
@@ -3334,7 +3335,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    			draw_text(_ttxx, _ty, _sp[1]);
 	    			_ttxx += string_width(_sp[1]) + ui(4);
 	    			
-	    			draw_set_color(CDEF.main_mdwhite);
+	    			draw_set_color(COLORS._main_text_inner);
     				draw_text(_ttxx, _ty, _sp[0]);
     				_ttxx += string_width(_sp[0]) + ui(4);
     				
@@ -3441,7 +3442,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     			if(hv) mouse_on_graph = false;
 	        			
 	        	draw_sprite_stretched_ext(ls, hv, _zmx - _zmw, _zmy, _zmw, _zmh, hv? CDEF.main_mdwhite : lc, .8 + hv * .2);
-	        	draw_set_text(f_p4, fa_right, fa_center, CDEF.main_mdwhite);
+	        	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text_inner);
 		        draw_text_add(_zmx - ui(4), _zmy + _zmh/2, _zms);
 		        
     			if(hv && mouse_lpress(pFOCUS)) {
@@ -3682,6 +3683,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function createNodeHotkey(_node, _select = true, _connect = false) {
     	var _nodeType = _node;
     	var _preset   = "";
+    	_select = _select && PREFERENCES.node_add_select;
     	
     	if(string_pos(">", _node)) {
     		var _sp   = string_split(_node, ">");
@@ -3718,7 +3720,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    		break;
 	    	
 	    	default : 
-	    		node  = doNewNode(_nodeType); 
+	    		node  = doNewNode(_nodeType, true); 
 	    		_drag = _select; 
 	    		_conn = true;
 	    		break;
@@ -3994,8 +3996,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         return _export;
     }
 	
-	function doNewNode(_nodeType) {
-		if(pFOCUS) {
+	function doNewNode(_nodeType, _atMouse = false) {
+		if(pFOCUS && PREFERENCES.node_add_select) {
 			if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {
 	            mouse_create_sx = mouse_grid_x;
 	            mouse_create_sy = mouse_grid_y;
@@ -4003,13 +4005,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            mouse_create_x = mouse_grid_x;
 	            mouse_create_y = mouse_grid_y;
 	        } 
+		} else if(pHOVER && _atMouse) {
+			mouse_create_x = mouse_grid_x;
+            mouse_create_y = mouse_grid_y;
+	            
 		} else {
 			mouse_create_x = graph_cx;
 			mouse_create_y = graph_cy;
 		}
         
-        var _mx = PREFERENCES.node_add_select? mouse_create_x : graph_cx;
-        var _my = PREFERENCES.node_add_select? mouse_create_y : graph_cy;
+        var _mx = mouse_create_x;
+        var _my = mouse_create_y;
         
         var node = nodeBuild(_nodeType, _mx, _my);
         if(!PREFERENCES.node_add_select) {
@@ -4017,7 +4023,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        node.y -= node.h / 2;
         }
         
-        if(node == noone || !PREFERENCES.node_add_select) return noone;
+        if(node == noone) return noone;
         
         var _gs = project.graphGrid.size;
         mouse_create_y = ceil((mouse_create_y + node.h + _gs / 2) / _gs) * _gs;
