@@ -57,9 +57,9 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			jun.setAnim(!jun.is_anim);
 		
 		bx += bs + ui(4);
-		var vis = jun.visible;
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus,, THEME.junc_visible, vis) == 2)
-			jun.visible = !vis;
+		var vis = jun.visible_manual;
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus,, THEME.junc_visible, bool(vis)) == 2)
+			jun.setVisibleManual(vis? -1 : 1);
 			
 		bx += bs + ui(4);
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus,, THEME.sort_16) == 2)

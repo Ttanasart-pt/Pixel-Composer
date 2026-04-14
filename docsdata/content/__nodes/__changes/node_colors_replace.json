@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc4",
+    "changes": [
+      {
+        "date": "2026-04-14T03:55:14.305Z",
+        "node": "Replace Colors",
+        "commit": "**Replace Colors**: Fix visibility button not working."
+      }
+    ]
+  }
+]
