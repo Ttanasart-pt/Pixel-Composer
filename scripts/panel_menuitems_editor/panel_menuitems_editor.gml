@@ -7,8 +7,6 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 	menu   = variable_clone(menuItems_get(menuId));
 	auto_pin = true;
 	
-	print(menuId, menu)
-	
 	w      = min(WIN_W - ui(100), ui(1000));
 	h      = ui(480);
 	list_w = (w - padding * 2) / 2;

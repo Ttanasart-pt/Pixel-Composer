@@ -2034,6 +2034,7 @@
     {"name":"panel_account_settings","order":1,"path":"scripts/panel_account_settings/panel_account_settings.yy",},
     {"name":"panel_action_create","order":10,"path":"scripts/panel_action_create/panel_action_create.yy",},
     {"name":"panel_action_manager","order":10,"path":"scripts/panel_action_manager/panel_action_manager.yy",},
+    {"name":"panel_addnode_pie_editor","order":5,"path":"scripts/panel_addnode_pie_editor/panel_addnode_pie_editor.yy",},
     {"name":"panel_addon","order":9,"path":"scripts/panel_addon/panel_addon.yy",},
     {"name":"panel_animation_cleaner","order":5,"path":"scripts/panel_animation_cleaner/panel_animation_cleaner.yy",},
     {"name":"panel_animation_dopesheet","order":1,"path":"scripts/panel_animation_dopesheet/panel_animation_dopesheet.yy",},

@@ -436,7 +436,7 @@ function __read_node_display(_list, _dir) {
 		var _head  = "";
 		var _lab   = "";
 		
-		if(struct_has(NODE_CATEGORY_MAP, _iname)) {
+		if(has(NODE_CATEGORY_MAP, _iname)) {
 			_lobj = NODE_CATEGORY_MAP[$ _iname];
 			_l = _lobj.list;
 			
@@ -745,4 +745,77 @@ function nodeReplace(_old, _new, _select = false) {
 	
 	_old.destroy(false);
 	if(_select) PANEL_GRAPH.setFocusingNode(_new);
+}
+
+function nodeSearchGlobal(_key = search_string, _context = noone) { 
+	var search_list  = [];
+	var pr_list      = ds_priority_create();
+	
+	var search_lower = string_lower(_key);
+	var search_map	 = ds_map_create();
+	
+	#region Nodes
+		for( var i = 0, n = array_length(NODE_CATEGORY); i < n; i++ ) {
+			var cat = NODE_CATEGORY[i];
+			
+			if(!has(cat, "list"))
+				continue;
+			
+			if(cat[$ "filter"] != undefined)
+				continue;
+			
+			var _content = cat.list;
+			for( var j = 0, m = array_length(_content); j < m; j++ ) {
+				var _node = _content[j];
+				
+				if(is_string(_node))
+					continue;
+				
+				if(ds_map_exists(search_map, _node)) 
+					continue;
+				
+				var _name  = string_lower(_node.getName());
+				var _match = string_partial_match_res(_name, search_lower);
+				
+				var searchData = { 
+					name   : _node.name, 
+					node   : _node, 
+					weight : _match[0], 
+				};
+				
+				ds_priority_add(pr_list, searchData, _match[0]);
+				search_map[? _node] = 1;
+			}
+		}
+		ds_map_destroy(search_map);
+	#endregion
+
+	var _curr_weight = undefined;
+	var _curr_arr    = [];
+	
+	repeat(ds_priority_size(pr_list)) {
+		var _data = ds_priority_delete_max(pr_list);
+		var _wigh = _data.weight;
+		
+		if(_curr_weight != _wigh) {
+			if(!array_empty(_curr_arr)) {
+				array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a.name, b.name)});
+				array_append(search_list, _curr_arr);
+			}
+			
+			_curr_arr    = [_data.node];
+			_curr_weight = _wigh;
+			
+		} else
+			array_push(_curr_arr, _data.node);
+			
+	}
+	
+	if(!array_empty(_curr_arr)) {
+		array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a.name, b.name)});
+		array_append(search_list, _curr_arr);
+	}
+	
+	ds_priority_destroy(pr_list);
+	return search_list;
 }

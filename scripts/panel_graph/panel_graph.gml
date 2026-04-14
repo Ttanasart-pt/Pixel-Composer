@@ -275,8 +275,10 @@
 		registerFunction(g, "Show View Control",   "", n, panel_graph_view_control_show    ).setMenu("graph_view_control_show");
 		registerFunction(g, "Hide View Control",   "", n, panel_graph_view_control_hide    ).setMenu("graph_view_control_hide");
 		
-		registerFunction(g, "Edit Graph Toolbar...",       "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_general")}  ).setMenu("graph_edit_toolbar"                          );
-		registerFunction(g, "Reset Graph Toolbar",         "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_general")} ).setMenu("graph_reset_toolbar",       THEME.refresh_20 );
+		registerFunction(g, "Edit Graph Toolbar...", "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_general")}  ).setMenu("graph_edit_toolbar"                          );
+		registerFunction(g, "Reset Graph Toolbar",   "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_general")} ).setMenu("graph_reset_toolbar",       THEME.refresh_20 );
+		
+		registerFunction(g, "Edit Node Piemenu...",  "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Addnode_Pie_Editor())} ).setMenu("addnode_edit_pie");
 		
         __fnGroupInit_Graph();
         
@@ -1087,12 +1089,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	"graph_create_tunnel",
 	    	-1,
 	    	"graph_copy", 
-			"graph_paste", 
+			"graph_paste",
+			-1,
+			"addnode_edit_pie", 
     	];
     	
 	    global.menuItems_graph_empty = [
 	    	"graph_copy", 
 			"graph_paste", 
+			-1,
+			"addnode_edit_pie", 
     	];
     	
 	#endregion

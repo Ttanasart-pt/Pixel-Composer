@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_addnode_pie_editor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_addnode_pie_editor",
+  "parent":{
+    "name":"nodes",
+    "path":"folders/panels/nodes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
