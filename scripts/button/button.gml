@@ -337,10 +337,10 @@ function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _hvr, _act, _tip
 	return _b;
 }
 
-function buttonTextInstant(active, spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", _label = "") {
+function buttonTextInstant(active, spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", _label = "", _button_blend = c_white) {
 	var _b = 0;
 	
-	if(active) _b = buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip);
+	if(active) _b = buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip, noone, 0, 0, 1, 1, _button_blend);
 	
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_center);

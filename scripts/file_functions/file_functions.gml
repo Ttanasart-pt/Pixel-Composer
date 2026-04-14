@@ -332,3 +332,18 @@ function directory_create_os(_p) {
 #macro __zip_unzip zip_unzip
 #macro zip_unzip zip_unzip_os
 function zip_unzip_os(p0, p1) { return __zip_unzip(filename_os(p0), filename_os(p1)); }
+
+function zip_add_folder(_zip, _zipDir, _dir) {
+	var _list = directory_listdir(_dir, fa_none);
+	
+	for( var i = 0, n = array_length(_list); i < n; i++ ) {
+		var _f = _list[i];
+		var _z = string_replace(_f, _dir, _zipDir)
+		
+		zip_add_file(_zip, string_trim_start(_z, ["/"]), _f);
+	}
+		
+	var _dirs = directory_listdir(_dir, fa_directory);
+	for( var i = 0, n = array_length(_dirs); i < n; i++ )
+		zip_add_folder(_zip, string_replace(_dirs[i], _dir, _zipDir), _dirs[i]);
+}

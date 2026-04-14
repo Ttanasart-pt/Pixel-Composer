@@ -16,6 +16,7 @@ function Panel_Preference() : PanelContent() constructor {
 	
 	page_width     = ui(160);
 	should_restart = false;
+	pref_resetting = false;
 	
 	panel_width   = w - padding * 2 - page_width;
 	panel_height  = h - padding * 2;
@@ -2038,28 +2039,89 @@ function Panel_Preference() : PanelContent() constructor {
     	tb_search.setFocusHover(pFOCUS, pHOVER);
     	tb_search.draw(tbx, tby, tbw, tbh, search_text, [ mx, my ]);
     	
-    	sp_page.verify(page_width - padding, panel_height - padding - ui(32));
-    	sp_page.setFocusHover(pFOCUS, pHOVER);
-    	sp_page.drawOffset(padding, padding + ui(32), mx, my);
-        
-    	if(should_restart) {
-    		var _txt = "Restart recommended";
-    		draw_set_text(f_p2b, fa_center, fa_center, COLORS._main_text_accent);
-    		
-    		var _rw = page_width - ui(8);
-    		var _rh = string_height_ext(_txt, -1, _rw - ui(16)) + ui(8);
-    		var _rx = ui(6);
-    		var _ry = h - ui(6) - _rh;
-    		
-    		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS._main_accent, 1);
-    		draw_text_ext_add(_rx + _rw / 2, _ry + _rh / 2, _txt, -1, _rw - ui(16));
-    		
-    		var _hh = pHOVER && point_in_rectangle(mx, my, _rx, _ry, _rx + _rw, _ry + _rh);
-    		if(_hh) {
-    			draw_sprite_stretched_add(THEME.box_r5, 1, _rx, _ry, _rw, _rh, COLORS._main_accent, .3);
-    			if(mouse_lpress()) Program_Restart();
-    		}
-    	}
+    	#region page
+	    	var page_y0 = padding + ui(32);
+	    	var page_y1 = h - padding;
+	    	
+	    	var page_w = page_width - padding * 2;
+	    	
+	    	var bw = page_w / 2 - ui(2);
+	    	var bh = ui(24);
+	    	var bx = padding;
+	    	var by = page_y1 - bh;
+	    	
+	    	draw_set_font(f_p3);
+	    	if(pref_resetting) {
+	    		var bc = COLORS._main_value_negative;
+	    		if(buttonTextInstant(true, THEME.button_def, bx, by, page_w, bh, [mx,my], pHOVER, pFOCUS, "", "Confirm Reset", bc) == 2) {
+		    		directory_clear($"{DIRECTORY}Preferences");
+	    			PREF_LOAD();
+	    			should_restart = true;
+	    			pref_resetting = false;
+		    	}
+		    	
+		    	if(mouse_lpress())
+		    		pref_resetting = false;
+		    	
+	    	} else {
+	    		if(buttonTextInstant(true, THEME.button_def, bx, by, page_w, bh, [mx,my], pHOVER, pFOCUS, "", "Reset Default") == 2)
+	    			pref_resetting = true;
+	    	}
+	    	
+	    	by -= bh + ui(4);
+	    	
+	    	if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, [mx,my], pHOVER, pFOCUS, "", "Save") == 2) {
+	    		var _path = get_save_filename_compat("zip file|.zip", "Preference-backup");
+    			
+	    		if(_path != "") {
+	    			PREF_SAVE();
+	    			
+	    			var _zip = zip_create();
+	    			zip_add_folder(_zip, "", $"{DIRECTORY}Preferences");
+	    			zip_save(_zip, _path);
+	    		}
+	    	}
+	    	
+	    	bx += bw + ui(4);
+	    	
+	    	if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, [mx,my], pHOVER, pFOCUS, "", "Load") == 2) {
+	    		var _path = get_open_filename_compat("zip file|.zip", "Preference-backup");
+	    		if(_path != "") {
+	    			directory_clear($"{DIRECTORY}Preferences");
+	    			zip_unzip(_path, $"{DIRECTORY}Preferences");
+	    			
+	    			PREF_LOAD();
+	    			should_restart = true;
+	    		}
+	    	}
+	    	
+	    	page_y1 = by - ui(4);
+	    	
+	    	if(should_restart) {
+	    		var _txt = "Restart recommended";
+	    		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_accent);
+	    		
+	    		var _rw = page_width - padding * 2;
+	    		var _rh = string_height_ext(_txt, -1, _rw - ui(16)) + ui(8);
+	    		var _rx = padding;
+	    		var _ry = page_y1 - _rh;
+	    		
+	    		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS._main_accent, 1);
+	    		draw_text_ext_add(_rx + _rw / 2, _ry + _rh / 2, _txt, -1, _rw - ui(16));
+	    		
+	    		var _hh = pHOVER && point_in_rectangle(mx, my, _rx, _ry, _rx + _rw, _ry + _rh);
+	    		if(_hh) {
+	    			draw_sprite_stretched_add(THEME.box_r5, 1, _rx, _ry, _rw, _rh, COLORS._main_accent, .3);
+	    			if(mouse_lpress()) Program_Restart();
+	    		}
+	    		
+	    		page_y1 -= _rh + ui(4);
+	    	}
+	        
+	    	sp_page.verify(page_w, page_y1 - page_y0);
+	    	sp_page.setFocusHover(pFOCUS, pHOVER);
+	    	sp_page.drawOffset(padding, page_y0, mx, my);
+        #endregion
         
     	section_current = "";
     	var px = padding + page_width;
