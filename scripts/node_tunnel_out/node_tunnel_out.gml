@@ -42,10 +42,14 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[0].onSetValue  = function(newKey, oldValue) /*=>*/ {
 		if(!key_mod_press(CTRL)) return;
 		
-		var node = project.tunnels_in[$ __key];
-		if(!is(node, Node_Tunnel_In) || node.__key != __key) return;
-		
-		node.inputs[0].setValueDirect(newKey);
+		var nodes = project.tunnels_in[$ __key];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
+			if(!is(node, Node_Tunnel_In) || node.__key != __key) continue;
+			if(node.scope == 1 && node.group != group)           continue;
+			
+			node.inputs[0].setValueDirect(newKey);
+		}
 	};
 	
 	static getDisplayName = function() /*=>*/ {return string(inputs[0].getValue())};
@@ -73,15 +77,20 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _key = inputs[0].getValue();
 		if(!has(project.tunnels_in, _key)) return;
 		
-		var _node = project.tunnels_in[$ _key];
-		graphFocusNode(_node);
+		var nodes = project.tunnels_in[$ _key];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
+			if(!is(node, Node_Tunnel_In) || node.__key != __key) continue;
+			if(node.scope == 1 && node.group != group)           continue;
+			
+			graphFocusNode(node);
+		}
 		
 	}).setTooltip(__txt("Goto Sender"))
 		.setIcon(THEME.tunnel, 1, c_white).iconPad(ui(6))
 		.setBaseSprite(THEME.button_hide_fill);
 	
 	static update = function(frame = CURRENT_FRAME) {
-		
 		label_ori   = getInputData(1);
 		label_scale = getInputData(2);
 		label_color = getInputData(3);
@@ -90,12 +99,18 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		__key = inputs[0].getValue();
 		
 		if(has(project.tunnels_in, __key)) {
-			var _inputNode = project.tunnels_in[$ __key];
-			var _inputVal  = _inputNode.inputs[1];
-			
-			outputs[0].setType(_inputVal.type);
-			outputs[0].setDisplay(_inputVal.display_type);
-			outputs[0].setValue(_inputVal.getValue());
+			var nodes = project.tunnels_in[$ __key];
+			for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+				var node = nodes[i];
+				if(!is(node, Node_Tunnel_In) || node.__key != __key) continue;
+				if(node.scope == 1 && node.group != group)           continue;
+				
+				var _inputVal = node.inputs[1];
+				
+				outputs[0].setType(_inputVal.type);
+				outputs[0].setDisplay(_inputVal.display_type);
+				outputs[0].setValue(_inputVal.getValue());
+			}
 			
 		} else {
 			outputs[0].setType(VALUE_TYPE.any);
@@ -106,8 +121,16 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static onGetPreviousNodes = function(p) /*=>*/ { 
-		if(has(project.tunnels_in, __key)) 
-			array_push(p, project.tunnels_in[$ __key]); 
+		if(!has(project.tunnels_in, __key)) return;
+		
+		var nodes = project.tunnels_in[$ __key];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
+			if(!is(node, Node_Tunnel_In) || node.__key != __key) continue;
+			if(node.scope == 1 && node.group != group)           continue;
+			
+			array_push(p, node); 
+		}
 	}
 	
 	////- Draw
@@ -143,20 +166,24 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(!has(project.tunnels_in, __key)) return;
 		
-		var node = project.tunnels_in[$ __key];
-		if(node.group != group) return;
-		
-		preview_connecting      = true;
-		node.preview_connecting = true;
-		
-		draw_set_color(outputs[0].color_display);
-		draw_set_alpha(0.5);
-		
-		var frx = _x +  node.x      * _s;
-		var fry = _y + (node.y + 8) * _s;
-		draw_line_dotted(frx, fry, xx, yy, 2 * _s, 0, 3);
-		
-		draw_set_alpha(1);
+		var nodes = project.tunnels_in[$ __key];
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
+			if(!is(node, Node_Tunnel_In) || node.__key != __key) continue;
+			if(node.group != group) continue;
+			
+			preview_connecting      = true;
+			node.preview_connecting = true;
+			
+			draw_set_color(outputs[0].color_display);
+			draw_set_alpha(0.5);
+			
+			var frx = _x +  node.x      * _s;
+			var fry = _y + (node.y + 8) * _s;
+			draw_line_dotted(frx, fry, xx, yy, 2 * _s, 0, 3);
+			
+			draw_set_alpha(1);
+		}
 	}
 	
 	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {

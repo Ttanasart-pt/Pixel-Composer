@@ -7,20 +7,23 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(32, 32);
 	
-	newInput(0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_in)}" ))
+	newInput( 0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_in)}" ))
 		.rejectArray().setAnimable(false);
-		
-	newInput(1, nodeValue_Any( "Value in" )).setVisible(true, true);
+	newInput( 1, nodeValue_Any( "Value in" )).setVisible(true, true);
 	
 	////- =Display
-	newInput(2, nodeValue_EButton( "Label Position", 0, [ "T", "B", "L", "R" ] ));
-	newInput(3, nodeValue_Float(   "Label Scale",    1        ));
-	newInput(4, nodeValue_Color(   "Label Color",    ca_white ));
-	newInput(5, nodeValue_Slider(  "Label Alpha",    1        ));
-	// input 6
+	newInput( 2, nodeValue_EButton( "Label Position", 0, [ "T", "B", "L", "R" ] ));
+	newInput( 3, nodeValue_Float(   "Label Scale",    1        ));
+	newInput( 4, nodeValue_Color(   "Label Color",    ca_white ));
+	newInput( 5, nodeValue_Slider(  "Label Alpha",    1        ));
+	
+	////- =Scope
+	newInput( 6, nodeValue_EButton( "Scope", 0, [ "Global", "Group" ] ));
+	// input 7
 	
 	input_display_list = [ 0, 1, 
-		["Display", false], 2, 3, 4, 5, 
+		[ "Display", false ], 2, 3, 4, 5, 
+		[ "Scope",   false ], 6, 
 	];
 	
 	inputs[0].getEditWidget().autocomplete_server = tunnel_autocomplete_server;
@@ -48,7 +51,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	label_scale = 1;
 	label_color = ca_white;
 	label_alpha = 1;
-	open = true;
+	open        = true;
+	scope       = 0;
 	
 	__jfrom = noone;
 	__key   = noone;
@@ -83,6 +87,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		label_scale = getInputData(3);
 		label_color = getInputData(4);
 		label_alpha = getInputData(5);
+		scope       = getInputData(6);
 		
 		if(_frm != __jfrom) {
 			inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);
@@ -99,7 +104,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getNextNodes = function(checkLoop = false) {
 		var _key  = inputs[0].getValue();
 		var nodes = project.tunnels_out[$ _key];
-		return is_array(nodes)? nodes : [];
+		if(!array_valid(nodes)) return [];
+		
+		if(scope == 1) return array_filter(nodes, function(n,i) /*=>*/ {return is(n, Node) && n.group == group});
+		return array_filter(nodes, function(n,i) /*=>*/ {return is(n, Node)});
 	}
 	
 	static forwardPassiveDynamic = function() {
@@ -107,8 +115,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var nextNodes = getNextNodes();
 		
 		for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
-			if(!is(nextNodes[i], Node)) continue;
-			
 			nextNodes[i].passiveDynamic = true;
 			nextNodes[i].rendered       = false;
 		}

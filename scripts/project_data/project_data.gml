@@ -131,7 +131,10 @@ function Project() constructor {
 					_n.__key = _key;
 					
 					if(_key == "") continue;
-					tunnels_in[$ _key] = _n;
+					if(!has(tunnels_in, _key))
+						tunnels_in[$ _key] = [];
+					
+					array_push(tunnels_in[$ _key], _n);
 					array_push(tunnel_keys, _key);
 					
 				} else if(is(_n, Node_Tunnel_Out)) {

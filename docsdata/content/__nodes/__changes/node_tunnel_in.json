@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc4",
+    "changes": [
+      {
+        "date": "2026-04-14T06:49:17.164Z",
+        "node": "Tunnel Sender",
+        "commit": "**Tunnel Sender**: Add scope control."
+      }
+    ]
+  }
+]
