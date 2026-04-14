@@ -33,7 +33,7 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 			__txt("Right Button"),
 			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order}, [ "Reset", "Set Default" ]),
 			function( ) /*=>*/   {return PREFERENCES.widget_draw_order},
-			function(v) /*=>*/ { PREFERENCES.widget_draw_order = v; },
+			function(v) /*=>*/ { PREFERENCES.widget_draw_order = array_clone(v); },
 			PREFERENCES.widget_draw_order,
 			noone,
 			"widget_draw_order",

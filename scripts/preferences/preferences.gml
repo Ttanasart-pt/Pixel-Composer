@@ -144,7 +144,7 @@
 		
 		PREFERENCES.widget_draw_favourite           = true;
 		
-		PREFERENCES.widget_draw_order               = [ "Reset", "Set Default" ]
+		PREFERENCES.widget_draw_order               = [ "Reset", "Set Default" ];
 		PREFERENCES.widget_draw_reset               = true;
 		PREFERENCES.widget_draw_default             = true;
 	#endregion
