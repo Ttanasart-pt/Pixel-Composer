@@ -1127,7 +1127,7 @@ function Panel_Preference() : PanelContent() constructor {
     				
     				BLEND_OVERRIDE
                 	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg);
-                	if(_hv) draw_sprite_stretched_add(THEME.box_r5_clr, 1, padx, _yy, ww - padx * 2, sectH);
+                	if(_hv) draw_sprite_stretched(THEME.box_r5_clr, 1, padx, _yy, ww - padx * 2, sectH);
                 	
     				if(_hv && _focus) {
                     	if(DOUBLE_CLICK) {
@@ -1955,7 +1955,7 @@ function Panel_Preference() : PanelContent() constructor {
     				
     				BLEND_OVERRIDE
                 	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
-                	if(_hv) draw_sprite_stretched_add(THEME.box_r5_clr, 1, padx, _yy, ww - padx * 2, sectH);
+                	if(_hv) draw_sprite_stretched(THEME.box_r5_clr, 1, padx, _yy, ww - padx * 2, sectH);
                 	
     				if(_hv && pFOCUS) {
                     	if(DOUBLE_CLICK) {

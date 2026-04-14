@@ -27,23 +27,20 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 		if(getArray != noone) arraySet = getArray();
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, boxColor);
+		var _hoverEmpty = false;
 		
 		if(open) { 
 			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, h, COLORS._main_accent, 1);
 			
 		} else {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h)) {
+				_hoverEmpty = true;
 				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, h, boxColor, 0.5 + !hide * 0.5);	
 				if(mouse_lpress(active)) pressed = true;
-				
-				if(pressed && mouse_lrelease(active))
-					dialogCall(o_dialog_arrayBox, _rx + _x, _ry + _y + h).setArrayBox(self);
 				
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, h, boxColor, 0.5 + 0.5 * interactable);
 		}
-		
-		if(mouse_lrelease()) pressed = false;
 		
 		var ww, hh = line_get_height(font, ui(4));
 		var tx = _x + ui(4);
@@ -92,9 +89,13 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 					var  cc  = COLORS._main_icon;
 					
 					if(_chv) {
+						_hoverEmpty = false;
 						_hov = false;
-						cc  = COLORS._main_value_negative;
-						if(mouse_lpress(active)) toDel = i;
+						 cc  = COLORS._main_value_negative;
+						if(mouse_lpress(active)) {
+							pressed = false;
+							toDel   = i;
+						}
 					}
 					
 					draw_sprite_ui(THEME.cross_16, 0, _rmx,_rmy, 1, 1, 0, cc);
@@ -110,6 +111,7 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 			
 			if(_hov) {
 				hovi = [i, tx, ty, tx + ww, ty + hh];
+				_hoverEmpty = false;
 				
 				if(mouse_lpress(active)) {
 					pressed  = false;
@@ -148,6 +150,10 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 		
 		h = th;
 		
+		if(_hoverEmpty && pressed && mouse_lrelease(active))
+			dialogCall(o_dialog_arrayBox, _rx + _x, _ry + _y + h).setArrayBox(self);
+		if(mouse_lrelease()) pressed = false;
+			
 		resetFocus();
 		return th;
 	}
