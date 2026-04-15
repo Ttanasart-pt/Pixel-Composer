@@ -11,6 +11,8 @@
     "panel_tab_padding": 2,
     "panel_animation_padding": 6, 
 
+    "dialog_modal_button_spacing": 8, 
+
     "minimap_corner_radius": 2,
     "slider_type": "stem",
     "font_aa": true

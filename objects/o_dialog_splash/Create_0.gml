@@ -94,7 +94,7 @@ event_inherited();
 				var sy = (((sh * ss) - hg) * clamp((yy + hg) / (sph + hg), 0, 1)) / ss;
 				
 				draw_surface_part_ext(thmb, 0, sy, sw, (hg - ui(8)) / ss, xx + ui(4), yy + ui(4), ss, ss, COLORS._main_icon_light, 0.9);
-				draw_sprite_stretched_ext(s_fade_up, 0, xx + ui(4), yy + hg - ui(64), ww - ui(8), ui(64), COLORS._main_icon_dark, 1);
+				draw_sprite_stretched_ext(THEME.fade_up, 0, xx + ui(4), yy + hg - ui(64), ww - ui(8), ui(64), COLORS._main_icon_dark, 1);
 			}
 		
 			if(_hov) {
@@ -103,8 +103,6 @@ event_inherited();
 					if(!_thumb) TOOLTIP = new tooltipRecentFile(_rec, rx + xx, ry + yy + hg - hgt, ww, hg);
 					else        TOOLTIP = _dat.path;
 				}
-				
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hg, COLORS._main_accent, 1);
 				
 				if(mouse_lpress(focus)) {
 					LOAD_PATH(_rec);
@@ -131,6 +129,8 @@ event_inherited();
 			gpu_set_scissor(xx + ui(12), ly, ww - ui(24), ui(999));
 			draw_text_add(xx + ui(12), ly, _rec);
 			gpu_set_scissor(_scis);
+			
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hg, _hov? COLORS._main_accent : COLORS.panel_frame);
 		}
 		
 		return hh + hg * 2;
@@ -189,9 +189,10 @@ event_inherited();
 					
 					var  mtw = string_width(tg) + ui(16);
 					var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], mtx, mty, mtx + mtw, mty + mth);
+					var  cc  = _hov? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
 					
 					BLEND_OVERRIDE
-					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon);
+					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mtx, mty, mtw, mth, _sel? c_white : cc);
 					BLEND_NORMAL
 					if(_hov) draw_sprite_stretched(THEME.box_r5_clr, 1, mtx, mty, mtw, mth);
 					
@@ -238,6 +239,10 @@ event_inherited();
 		for(var i = 0; i < node_count; i++) {
 			var _project = list[i];
 			var _name    = _project.name;
+			
+			if(string_digits(string_char_at(_name, 1)) != "")
+				_name = string_copy(_name, string_pos(" ", _name), string_length(_name) - string_pos(" ", _name) + 1);
+			
 			if(_search && string_pos(_serStr, string_lower(_name)) == 0) continue;
 			
 			_project.hover_splash = _project[$ "hover_splash"] ?? 0;
@@ -316,7 +321,6 @@ event_inherited();
 						TOOLTIP = _meta;
 					}
 					
-					draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 1);
 					if(mouse_lpress(sFOCUS)) {
 						LOAD_PATH(_project.path, true);
 						PROJECT.thumbnail = array_safe_get_fast(_project.spr_data, 0);
@@ -333,14 +337,17 @@ event_inherited();
 					
 					var ox = sprite_get_xoffset(spr) * ss;
 					var oy = sprite_get_yoffset(spr) * ss;
-					var fh = ui(32 + _project.hover_splash * 32);
+					draw_set_font(f_p4);
+					var th = string_height_ext(_name, -1, grid_width - ui(8));
+					var fh = th + ui(16) + _project.hover_splash * ui(32);
 					
 					gpu_set_scissor(gridX + ui(2), gridY + ui(2), gridW - ui(4), gridH - ui(4));
 					gpu_set_tex_filter(_curr_tag == "Getting started");
 					draw_sprite_uniform(spr, 0, _sx + ox, _sy + oy, ss);
 					gpu_set_tex_filter(false);
-					draw_sprite_stretched_ext(s_fade_up, 0, gridX, gridY + gridH - fh, gridW, fh, COLORS._main_icon_dark, 1);
 					gpu_set_scissor(_scis);
+					
+					draw_sprite_stretched_ext(THEME.fade_up, 0, gridX, gridY + gridH - fh, gridW, fh, COLORS._main_icon_dark, 1);
 					
 				} else {
 					var _sx = _boxx + grid_width / 2;
@@ -348,13 +355,12 @@ event_inherited();
 					
 					draw_sprite_ext(s_icon_64_white, 0, _sx, _sy, 1, 1, 0, COLORS._main_icon, 1);
 				}
+				
+				if(ghov) draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 1);
 			}
 			
-			var tx    = _boxx + ui(4);
-			var ty    = yy + grid_heigh - ui(4);
-			if(string_digits(string_char_at(_name, 1)) != "") // ???
-				_name = string_copy(_name, string_pos(" ", _name), string_length(_name) - string_pos(" ", _name) + 1);
-			
+			var tx = _boxx + ui(4);
+			var ty = yy + grid_heigh - ui(4);
 			draw_set_text(f_p4, fa_left, fa_bottom, COLORS._main_text);
 			draw_text_ext_add(round(tx), round(ty), _name, -1, grid_width - ui(8));
 			contentRow = true;
@@ -395,9 +401,10 @@ event_inherited();
 				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
 				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + label_h);
+				var  cc  = _hov? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
 				
 				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, pd, _yy, ww - pd, label_h);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, pd, _yy, ww - pd, label_h, cc);
 				BLEND_NORMAL
 				if(_hov) draw_sprite_stretched(THEME.box_r5_clr, 1, pd, _yy, ww - pd, label_h);
 				
@@ -923,7 +930,7 @@ event_inherited();
 			var _ph = _py1 - _py0;
 			
 			var fh = lerp(ui(72), ui(96), _art.hoverPrg);
-			draw_sprite_stretched_ext(s_fade_up, 0, _px0, _py1 - fh, _pw, fh, COLORS._main_icon_dark, 1);
+			draw_sprite_stretched_ext(THEME.fade_up, 0, _px0, _py1 - fh, _pw, fh, COLORS._main_icon_dark, 1);
 			
 			var scis = gpu_get_scissor();
 			gpu_set_scissor(_px0, _py0, _pw, _ph);

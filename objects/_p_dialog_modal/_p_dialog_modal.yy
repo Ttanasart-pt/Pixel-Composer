@@ -1,19 +1,21 @@
 {
   "$GMObject":"",
-  "%Name":"o_dialog_save",
+  "%Name":"_p_dialog_modal",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":1,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":64,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_dialog_save",
+  "name":"_p_dialog_modal",
   "overriddenProperties":[],
   "parent":{
     "name":"modal",
     "path":"folders/dialog/menu/modal.yy",
   },
   "parentObjectId":{
-    "name":"_p_dialog_modal",
-    "path":"objects/_p_dialog_modal/_p_dialog_modal.yy",
+    "name":"_p_dialog",
+    "path":"objects/_p_dialog/_p_dialog.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,

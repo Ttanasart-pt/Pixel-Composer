@@ -779,7 +779,7 @@ event_inherited();
 					
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 					var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh);
-					var _tc = CDEF.main_ltgrey;
+					var _tc = COLORS._main_text_sub;
 					
 					BLEND_OVERRIDE
 					if(PREFERENCES.dialog_add_node_grouping == 1)
@@ -790,7 +790,7 @@ event_inherited();
                     }
                     
 					if(_hv && _focus) {
-						if(PREFERENCES.dialog_add_node_grouping == 2) _tc = CDEF.main_white;
+						if(PREFERENCES.dialog_add_node_grouping == 2) _tc = COLORS._main_text;
 						
                     	if(DOUBLE_CLICK) {
                     		_cAll = _coll? -1 : 1;
@@ -805,7 +805,7 @@ event_inherited();
                         
 					BLEND_NORMAL
 					
-					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, _tc, 1);    
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, COLORS._main_icon, 1);    
 					draw_set_text(f_p2, fa_left, fa_center, _tc);
 					draw_text_add(ui(16 + 28), _yy + _lbh / 2, __txt(_name));
 				}
@@ -995,7 +995,7 @@ event_inherited();
 					
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 					var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh);
-					var _tc = CDEF.main_ltgrey;
+					var _tc = COLORS._main_text_sub;
 					
 					BLEND_OVERRIDE
 					if(PREFERENCES.dialog_add_node_grouping == 1)
@@ -1006,7 +1006,7 @@ event_inherited();
                     }
                     
 					if(_hv && _focus) {
-						if(PREFERENCES.dialog_add_node_grouping == 2) _tc = CDEF.main_white;
+						if(PREFERENCES.dialog_add_node_grouping == 2) _tc = COLORS._main_text;
 						
                     	if(DOUBLE_CLICK) {
                     		_cAll = _coll? -1 : 1;
@@ -1022,7 +1022,7 @@ event_inherited();
                         
 					BLEND_NORMAL
 					
-					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, _tc, 1);    
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, COLORS._main_icon, 1);    
 					
 					draw_set_text(f_p2, fa_left, fa_center, _tc);
 					draw_text_add(ui(16 + 28), _yy + _lbh / 2, __txt(_name));

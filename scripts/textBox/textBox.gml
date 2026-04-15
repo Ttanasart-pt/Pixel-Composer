@@ -68,7 +68,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	#region label
 		label           = "";
 		labelColor      = COLORS._main_text_sub;
-		labelAlpha      = .5;
+		labelAlpha      = .75;
 		labelSpr        = noone;
 		labelSprIndex   = 0;
 		labelAlign      = fa_left;

@@ -2,12 +2,11 @@
 event_inherited();
 
 #region data
-	project  = noone;
-	dialog_w = ui(400);
-	dialog_h = ui(128);
-	padding  = ui(16);
+	project = noone;
 	
-	buttonIndex = 0;
+	title   = __txt($"Project modified");
+	content = __txtx("dialog_exit_content", "Save progress before close?");
+	
 	buttons = [
 		[ __txt("Save"),       function() /*=>*/ { SAVE(project); closeProject(project); }, COLORS._main_value_positive ],
 		[ __txt("Don't Save"), function() /*=>*/ { closeProject(project); }, COLORS._main_value_negative ],

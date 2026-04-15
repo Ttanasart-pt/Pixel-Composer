@@ -320,8 +320,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 							var ba = .25 + jun.is_modified * .55 + (jun.def_preset * .5);
 							var cc = jun.def_preset? COLORS._main_accent : COLORS._main_icon_light;
 							
-							bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); bx -= ui(4);
+							bx  -= bs; 
+							b    = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); 
+							bx  -= ui(4);
 							cHov = cHov || b;
+							
 							if(b == 1 && def_hold && jun.is_modified) 
 								jun.setDefault();
 								
@@ -342,7 +345,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 							var bh = jun.is_modified && _hover;
 							var cc = COLORS._main_icon_light;
 							
-							bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); bx -= ui(4);
+							bx  -= bs; 
+							b    = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); 
+							bx  -= ui(4);
 							cHov = cHov || b;
 							
 							if(b == 1 && reset_hold && jun.is_modified) 

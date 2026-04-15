@@ -729,7 +729,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var _cAll   = 0;
         
         var currSec = "";
-        var padd    = ui(6);
+        var padd    = ui(THEME_VALUE.panel_inspector_prop_paddding);
         
         var con_ww  = con_w - ui(12);
         var rrx     = ui(16) + x;
@@ -741,7 +741,7 @@ function Panel_Inspector() : PanelContent() constructor {
         	_inspecting.inputs[i].visible_in_inspector = false;
         	
         for(var i = 0; i < amo; i++) {
-            var yy    = hh + _y;
+            var yy    = _y + hh;
             var _draw = yy + ui(8) < con_h && yy > -ui(8);
             
             if(i < amoIn) { // inputs
@@ -1328,6 +1328,8 @@ function Panel_Inspector() : PanelContent() constructor {
         var _font = spac? f_p2 : f_p3;
         var lbh   = spac? ui(26) : ui(22);
         
+        var padd  = ui(THEME_VALUE.panel_inspector_prop_paddding);
+        
         attribute_hovering = noone;
         
         for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
@@ -1443,8 +1445,8 @@ function Panel_Inspector() : PanelContent() constructor {
             
             /// Content
             
-            yy += lbh + ui(6);
-            hh += lbh + ui(6);
+            yy += lbh + padd;
+            hh += lbh + padd;
             
             if(_meta[1]) continue;
             
@@ -1467,11 +1469,11 @@ function Panel_Inspector() : PanelContent() constructor {
                         
                         if(spac) {
                             _lh = line_get_height();
-                            yy += _lh + ui(6);
-                            hh += _lh + ui(6);
+                            yy += _lh + padd;
+                            hh += _lh + padd;
                             
                         } else if(viewMode == INSP_VIEW_MODE.compact) {
-                            _lh = line_get_height() + ui(6);
+                            _lh = line_get_height() + padd;
                         }
                         
                         var wh = 0;
@@ -1490,14 +1492,14 @@ function Panel_Inspector() : PanelContent() constructor {
                         
                         var jun  = PANEL_GRAPH.value_dragging;
                         var widw = con_w - ui(16);
-                        var widh = spac? _lh + ui(6) + wh + ui(4) : max(wh, _lh);
+                        var widh = spac? _lh + padd + wh + ui(4) : max(wh, _lh);
                         
                         if(jun != noone && drpFn != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
                             draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
                             attribute_hovering = drpFn;
                         }
                         
-				    	var _wdhh = spac? wh + ui(8) : max(wh, _lh) + ui(6);
+				    	var _wdhh = spac? wh + padd + ui(2) : max(wh, _lh) + padd;
 			        	yy += _wdhh; 
 			        	hh += _wdhh;
                     }
@@ -1531,11 +1533,11 @@ function Panel_Inspector() : PanelContent() constructor {
                         
                         if(spac) {
                             _lh = line_get_height();
-                            yy += _lh + ui(6);
-                            hh += _lh + ui(6);
+                            yy += _lh + padd;
+                            hh += _lh + padd;
                             
                         } else if(viewMode == INSP_VIEW_MODE.compact) {
-                            _lh = line_get_height() + ui(6);
+                            _lh = line_get_height() + padd;
                         }
                         
                         var _dataFunc = display[1];
@@ -1551,14 +1553,14 @@ function Panel_Inspector() : PanelContent() constructor {
                         if(is(_wdgt, textArrayBox)) _wdgt.arraySet = current_meta.tags;
                         wh = _wdgt.drawParam(_param);
                         
-				    	var _wdhh = spac? wh + ui(8) : max(wh, _lh) + ui(6);
+				    	var _wdhh = spac? wh + padd + ui(2) : max(wh, _lh) + padd;
 			        	yy += _wdhh; 
 			        	hh += _wdhh;
                     }
                     
                     if(STEAM_ENABLED && _edt) {
                         var pad = ui(6 + spac * 2);
-                        var lpd = spac * (line_get_height() + ui(6));
+                        var lpd = spac * (line_get_height() + padd);
                         
                         draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
                         draw_text_add(ui(16), spac? yy : yy + ui(3), __txt("Show Avatar"));
@@ -1759,12 +1761,12 @@ function Panel_Inspector() : PanelContent() constructor {
 						var widg = drawWidget(0, yy, con_ww, _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
                 		var widH = widg[0];
                 		
-	                    yy += widH + ui(6);
-	                    hh += widH + ui(6);
+	                    yy += widH + padd;
+	                    hh += widH + padd;
 					}
 					
-                    yy += ui(8);
-                    hh += ui(8);
+                    yy += padd + ui(2);
+                    hh += padd + ui(2);
             		break;
             }
             

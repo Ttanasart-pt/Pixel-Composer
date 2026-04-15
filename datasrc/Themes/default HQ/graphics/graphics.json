@@ -6,6 +6,7 @@
     "forum_grey":                         { "path": "./meta/s_forum_grey.png",                              "s": 1, "x": 32, "y": 32 },
     
     "ui_panel_bg_cover":                  { "path": "./generic/s_empty.png",                                "s": 1, "x":  0, "y":  0 },
+    "fade_up":                            { "path": "./generic/fade_up.png",                                "s": 1, "x":  0, "y":  0 },
     "box_r2":                             { "path": "./generic/s_box_r2.png",                               "s": 2, "x":  0, "y":  0, "slice":  3 },
     "box_r2_clr":                         { "path": "./generic/s_box_r2_colored.png",                       "s": 2, "x":  0, "y":  0, "slice":  7 },
     "box_r5":                             { "path": "./generic/s_box_r5.png",                               "s": 2, "x":  0, "y":  0, "slice":  7 },

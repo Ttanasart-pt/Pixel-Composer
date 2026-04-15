@@ -46,7 +46,7 @@ function checkBox(_onClick) : widget() constructor {
 			y = _y + _h / 2 - h / 2;
 		}
 		
-		var aa = interactable * 0.25 + 0.75;
+		var aa = interactable * .25 + .75;
 		draw_sprite_stretched_ext(spr, 0, x, y, w, h, c_white, aa);
 		
 		if(is_array(_value)) {

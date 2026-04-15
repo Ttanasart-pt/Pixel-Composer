@@ -290,7 +290,6 @@ if(DIALOG_SHOW_FOCUS) {
 				gpu_set_texfilter(false);
 				
 				BLEND_NORMAL
-				// if(txt != "") draw_sprite_stretched_ext(THEME.add_node_bg, 0, 0, hh - _th - ui(32), ww, _th + ui(32), CDEF.main_dkblack);
 			} 
 			
 			if(hk != noone) {

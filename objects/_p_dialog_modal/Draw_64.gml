@@ -3,30 +3,43 @@ if !ready exit;
 WIDGET_TAB_BLOCK = true;
 
 #region base UI
-	draw_set_color(c_black);
-	draw_set_alpha(0.5);
-	draw_rectangle(0, 0, WIN_W, WIN_H, false);
-	draw_set_alpha(1);
+	var lowest = true;
+	with(_p_dialog_modal) {
+		if(id == other.id) continue;
+		if(depth > other.depth) lowest = false;
+	}
 
+	if(backdrop && lowest) {
+		draw_set_color(c_black);
+		draw_set_alpha(0.5);
+		draw_rectangle(0, 0, WIN_W, WIN_H, false);
+		draw_set_alpha(1);
+	}
+
+	DIALOG_PREDRAW
+	DIALOG_WINCLEAR
+	
 	DIALOG_DRAW_BG
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 #endregion
 
 #region text
 	var py  = dialog_y + padding;
-	var txt = __txt($"Project modified");
 	draw_set_text(f_sdf, fa_left, fa_top, COLORS._main_text);
-	draw_text_add(dialog_x + padding + ui(8), py, txt, .5);
-	py += line_get_height(noone, 0) * .5;
+	draw_text_add(dialog_x + padding + ui(8), py, title, .5);
+	py += line_get_height(noone, 8) * .5;
 	
 	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + padding + ui(8), py, __txtx("dialog_exit_content", "Save progress before close?"));
+	draw_text_ext(dialog_x + padding + ui(8), py, content, -1, dialog_w - ui(48));
+	_dialog_h = ui(118) + string_height_ext(content, -1, dialog_w - ui(48));
+	
+	var bpad = ui(THEME_VALUE.dialog_modal_button_spacing);
 	
 	var amo = array_length(buttons);
-	var bw  = (dialog_w - padding * 2 - ui(8 * (amo - 1))) / amo;
+	var bw  = (dialog_w - DIALOG_PAD - bpad * (amo - 1)) / amo;
 	var bh  = line_get_height(f_p2, 10);
-	var bx1 = dialog_x + dialog_w - padding;
-	var by1 = dialog_y + dialog_h - padding;
+	var bx1 = dialog_x + dialog_w - DIALOG_PAD / 2;
+	var by1 = dialog_y + dialog_h - DIALOG_PAD / 2;
 	var bx0 = bx1 - bw;
 	var by0 = by1 - bh;
 	
@@ -47,12 +60,15 @@ WIDGET_TAB_BLOCK = true;
 		var _trg = b == 2 || (buttonIndex == i && KEYBOARD_ENTER);
 		if(_trg) { 
 			_fn(); 
-			_des = true;
+			_des = true; 
 		}
 		
-		bx0 -= bw + ui(8);
+		bx0 -= bw + ui(bpad);
 	}
 	
+	dialog_h = _dialog_h;
 #endregion
+
+DIALOG_POSTDRAW
 
 if(_des) instance_destroy();

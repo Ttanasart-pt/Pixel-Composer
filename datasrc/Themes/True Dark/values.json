@@ -181,10 +181,10 @@
         "panel_toolbar_separator": "main_dkblack",
         
         "widget_curve_line": "main_ltgrey",
-        "widget_curve_outline": "main_grey",
+        "widget_curve_outline": "main_ltgrey",
         "widget_rotator_range": "main_dkgrey",
-        "widget_rotator_range_hover": "main_grey",
-        "widget_rotator_guide": "main_grey",
+        "widget_rotator_range_hover": "main_ltgrey",
+        "widget_rotator_guide": "main_ltgrey",
         "widget_surface_frame": "main_dkgrey",
         "widget_text_highlight": "main_dkgrey",
         "widget_slider_step": "main_dkgrey",

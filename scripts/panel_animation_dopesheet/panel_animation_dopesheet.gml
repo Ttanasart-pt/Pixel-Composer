@@ -2386,7 +2386,7 @@ function Panel_Animation_Dopesheet() {
     	tb_frame.ry = y;
     	tb_frame.setFocusHover(pFOCUS, pHOVER);
     	tb_frame.setLabel($"/{GLOBAL_TOTAL_FRAMES}");
-    	tb_frame.setColor(COLORS._main_accent);
+    	tb_frame.setColor(COLORS._main_accent).setLabelColor(COLORS._main_text);
     	tb_frame.draw(bx, by, tw, bs, GLOBAL_CURRENT_FRAME + 1, mm);
     	bx += tw + ui(4);
     	

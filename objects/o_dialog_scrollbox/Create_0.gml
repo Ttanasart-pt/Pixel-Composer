@@ -1,8 +1,9 @@
 /// @description init
 event_inherited();
 
-#region 
-	max_h	 = 640;
+#region data
+	max_h  = 640;
+	anchor = ANCHOR.top | ANCHOR.left;
 	
 	font     = f_p0
 	align	 = fa_center;
@@ -17,23 +18,17 @@ event_inherited();
 	data		  = [];
 	initVal		  = 0;
 	update_hover  = true;
-	
-	search_string	= "";
+
+#endregion
+
+#region search
 	KEYBOARD_RESET
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
+	search_string = "";
+	tb_search     = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); })
 					.setFont(f_p2).setAutoUpdate().setEmpty().setAlign(fa_left);
-	
 	tb_search.activate();
 	
-	anchor = ANCHOR.top | ANCHOR.left;
-	
-	function initScroll(scroll) {
-		scrollbox  = scroll;
-		dialog_w   = max(ui(200), scroll.w);
-		data       = scroll.data;
-		displayStr = scroll.displayStr;
-		setSize();
-	}
+	searchIndex   = undefined;
 	
 	function filterSearch() {
 		if(search_string == "") {
@@ -43,15 +38,29 @@ event_inherited();
 		}
 		
 		data = [];
+		searchIndex = [];
+		
 		for( var i = 0, n = array_length(scrollbox.data); i < n; i++ ) {
 			var val = scrollbox.data[i];
 			if(val == -1) continue;
 			
 			var _txt = is(val, scrollItem)? val.name : val;
-			if(string_pos(string_lower(search_string), string_lower(_txt)) > 0)
+			if(string_pos(string_lower(search_string), string_lower(_txt)) > 0) {
 				array_push(data, val);
+				array_push(searchIndex, i);
+			}
 		}
 		
+		setSize();
+	}
+#endregion
+
+#region content
+	function initScroll(scroll) {
+		scrollbox  = scroll;
+		dialog_w   = max(ui(200), scroll.w);
+		data       = scroll.data;
+		displayStr = scroll.displayStr;
 		setSize();
 	}
 	
@@ -121,7 +130,7 @@ event_inherited();
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
-					hov       = i;
+					hov       = searchIndex == undefined? i : searchIndex[i];
 				}
 			
 				if(selecting == i) {
@@ -217,6 +226,5 @@ event_inherited();
 		
 		return _h;
 	});
-	
 	sc_content.scroll_resize = false;
 #endregion
