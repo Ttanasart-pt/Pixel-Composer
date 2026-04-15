@@ -485,7 +485,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static clearDefault = function() {
 		def_preset = false;
 		
-		var dir = $"{DIRECTORY}Presets/{instanceof(node)}/";
+		var key = instanceof(node);
+		var dir = $"{DIRECTORY}Presets/{key}/";
 		var pth = $"{dir}_values.json";
 		if(!file_exists(pth)) return;
 		
