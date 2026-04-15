@@ -757,6 +757,7 @@ function Panel_Preference() : PanelContent() constructor {
     	font_override_sb_code = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite_code = v; should_restart = true; PREF_SAVE(); });
     	
     	cb_load_unpack = new checkBox(function() /*=>*/ {return prefToggle("theme_load_unpack")});
+    	sb_bool_style  = new scrollBox([ "Slider", "Checkbox" ], function(i) /*=>*/ {return prefSet("theme_boolean", i)});
     	
     	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -879,12 +880,23 @@ function Panel_Preference() : PanelContent() constructor {
     		hh += _mh + ui(8 + 4);
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(ui(8), _y + _h / 2, __txtx("pref_theme_unpack", "Load unpacked UI"));
+    		draw_text_add(ui(8), _y + _h / 2, __txtx("pref_theme_unpack", "Load unpacked"));
     		
-    		cb_load_unpack.drawParam(_wpar.setHalign(fa_center).setY(_y).setData(PREFERENCES.theme_load_unpack));
+    		cb_load_unpack.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_load_unpack));
     		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
     			PREFERENCES.theme_load_unpack = true;
     			should_restart = true; 
+    			PREF_SAVE();
+    		}
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
+    		
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(ui(8), _y + _h / 2, __txtx("pref_theme_bool", "Boolean Style"));
+    		
+    		sb_bool_style.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_boolean));
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
+    			PREFERENCES.theme_boolean = 0;
     			PREF_SAVE();
     		}
     		_y += _h + ui(8);

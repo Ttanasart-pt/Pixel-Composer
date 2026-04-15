@@ -192,8 +192,8 @@ event_inherited();
 					
 					BLEND_OVERRIDE
 					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon);
-					if(_hov) draw_sprite_stretched(THEME.box_r5_clr, 1, mtx, mty, mtw, mth);
 					BLEND_NORMAL
+					if(_hov) draw_sprite_stretched(THEME.box_r5_clr, 1, mtx, mty, mtw, mth);
 					
 					if(_hov) {
 						sp_sample.hover_content = true;
@@ -398,8 +398,8 @@ event_inherited();
 				
 				BLEND_OVERRIDE
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, pd, _yy, ww - pd, label_h);
-				if(_hov) draw_sprite_stretched(THEME.box_r5_clr, 1, pd, _yy, ww - pd, label_h);
 				BLEND_NORMAL
+				if(_hov) draw_sprite_stretched(THEME.box_r5_clr, 1, pd, _yy, ww - pd, label_h);
 				
 				if(!welcome_editing) {
 					var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);

@@ -271,6 +271,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function split_h(_w) {
+		_w = floor(_w);
+		
 		if(abs(_w) > w) {
 			print($"Error: Split panel larger than size w ({_w} > {w})");
 			return noone;
@@ -308,6 +310,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function split_v(_h) {
+		_h = floor(_h);
+		
 		if(abs(_h) > h) {
 			print($"Error: Split panel larger than size h ({_h} > {h})");
 			return noone;
@@ -515,7 +519,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	static draw = function() {
 		if(!array_empty(content)) { drawContent(); return; }
-		
 		if(array_empty(childs)) return;
 		
 		var _min_w = ui(32);
@@ -535,7 +538,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			if(_panel == 0) continue;
 			
 			_panel.draw();
-			
 			if!(HOVER == noone || is_struct(HOVER)) continue;
 			
 			var p = ui(6 - 1);
@@ -568,6 +570,20 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(self == PANEL_MAIN && o_main.panel_dragging != noone && key_mod_press(CTRL))
 			checkHover();
+		
+		if(THEME_VALUE.panel_separation_type == "line") {
+			draw_set_color(COLORS.panel_frame);
+			
+			if(split == "h") {
+				var _x = childs[0].x + childs[0].w;
+				draw_line(_x, y, _x, y + h);
+				
+			} else {
+				var _y = childs[0].y + childs[0].h;
+				draw_line(x, _y, x + w, _y);
+				
+			}
+		}
 	}
 	
 	function drawTabH() {
@@ -989,7 +1005,27 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		} else 
 			draw_surface_ext_safe(content_surface, tx, ty, 1, 1, 0, c_white, .5);
 		
-		draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
+	}
+	
+	function drawFrame() {
+		for(var i = 0, n = array_length(childs); i < n; i++) {
+			var _panel = array_safe_get(childs, i, 0);
+			if(_panel != 0) _panel.drawFrame();
+		}
+		
+		if(array_empty(content)) return;
+		var _mx = mouse_mxs;
+		var _my = mouse_mys;
+			
+		var p = ui(6);
+		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);
+		var m_ot = point_in_rectangle(_mx, _my, tx, ty, tx + tw, ty + th);
+		
+		var _tw = tw - padding * 2;
+		var _th = th - padding * 2;
+		
+		if(THEME_VALUE.panel_separation_type == "frame")
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
 		
 		if(FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;

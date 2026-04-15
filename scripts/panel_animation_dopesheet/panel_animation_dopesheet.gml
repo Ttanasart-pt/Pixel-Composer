@@ -210,10 +210,6 @@ function Panel_Animation_Dopesheet() {
 	#endregion
 	
 	#region ---- Draw ----
-        bar_x = 0;
-        bar_y = 0;
-        bar_w = 1;
-        bar_h = 1;
         bar_total_w     = 1;
         bar_total_shift = 1;
         
@@ -773,7 +769,7 @@ function Panel_Animation_Dopesheet() {
     
     function drawDopesheet_setDimension() {
     	dopesheet_w    = timeline_w;
-        dopesheet_h    = h - ui(52);
+        dopesheet_h    = h - padding * 2 - timeline_h - animPad;
         dopesheet_show = dopesheet_h > ui(24);
     }
     
@@ -2466,7 +2462,10 @@ function Panel_Animation_Dopesheet() {
 	            }
 	        }
 	        
-	        if(pHOVER && point_in_rectangle(mx, my, tool_width + ui(8), ui(8), tool_width + ui(16), ui(8) + dopesheet_h)) {
+	        var sx0 = padding + tool_width;
+	        var sx1 = sx0 + animPad;
+	        
+	        if(pHOVER && point_in_rectangle(mx, my, sx0, ui(8), sx1, ui(8) + dopesheet_h)) {
 	            CURSOR = cr_size_we;
 	            aa = 1;
 	            
@@ -2484,14 +2483,9 @@ function Panel_Animation_Dopesheet() {
             var cy = ui(8) + dopesheet_h / 2;
 	        draw_set_alpha(aa);
             draw_set_color(cc);
-            draw_line_round(tool_width + ui(12), cy - ui(12), tool_width + ui(12), cy + ui(12), ui(3));
+            draw_line_round(sx0 + animPad/2, cy - ui(12), sx0 + animPad/2, cy + ui(12), ui(2));
             draw_set_alpha(1);
         #endregion
-        
-        bar_x = tool_width + ui(16);
-        bar_y = h - timeline_h - ui(10);
-        bar_w = timeline_w;
-        bar_h = timeline_h;
         
         bar_total_w     = GLOBAL_TOTAL_FRAMES * timeline_scale;
         bar_total_shift = bar_total_w + timeline_shift;
@@ -3283,16 +3277,16 @@ function Panel_Animation_Dopesheet() {
     	////- =Draw
     	
         drawDopesheet_Label();
-        var pd = ui(8);
+        var pd = padding;
         
         draw_sprite_stretched_ext( THEME.ui_panel_bg,        1, pd, pd, tool_width, dopesheet_h);
         draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, pd, pd, tool_width, top_frame_height, COLORS._main_icon );
         draw_surface_safe(dopesheet_name_surface, pd, pd + top_frame_height);
-        draw_sprite_stretched_ext( THEME.ui_panel,           1, pd, pd, tool_width, dopesheet_h,      CDEF.black );
+        draw_sprite_stretched_ext( THEME.ui_panel,           1, pd, pd, tool_width, dopesheet_h,      COLORS.panel_frame_inner );
         
         draw_sprite_stretched(     THEME.ui_panel_bg, 1, bar_x, pd, bar_w, dopesheet_h );
         draw_surface_safe(dopesheet_surface, bar_x, pd);
-        draw_sprite_stretched_ext( THEME.ui_panel,    1, bar_x, pd, bar_w, dopesheet_h, CDEF.black );
+        draw_sprite_stretched_ext( THEME.ui_panel,    1, bar_x, pd, bar_w, dopesheet_h, COLORS.panel_frame_inner );
         
         draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, pd, bar_w, dopesheet_h);
         

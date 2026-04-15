@@ -242,6 +242,7 @@ function Panel_Animation() : PanelContent() constructor {
     context_str  = "Animation";
     icon         = THEME.panel_animation_icon;
     project      = undefined;
+    padding		 = ui(8);
     
 	#region ---- Dimension ----
 	    min_w = ui(40);
@@ -253,6 +254,13 @@ function Panel_Animation() : PanelContent() constructor {
 	    side_width = ui(44);
 	    timeline_w = w - tool_width - ui(68);
 	    timeline_h = ui(28);
+	    
+	    bar_x = 0;
+	    bar_y = 0;
+	    bar_w = 0;
+	    bar_h = 0;
+	    
+	    animPad = ui(THEME_VALUE.panel_animation_padding);
 	    
 	    dopesheet_show   = true;
 	#endregion
@@ -472,11 +480,6 @@ function Panel_Animation() : PanelContent() constructor {
     ////- Interaction
     
     function timelineScrub() {
-    	var bar_x = tool_width + ui(16);
-        var bar_y = h - timeline_h - ui(10);
-        var bar_w = timeline_w;
-        var bar_h = timeline_h;
-        
         var bar_total_w = GLOBAL_TOTAL_FRAMES * timeline_scale;
     	var bar_line_w  = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
         var bar_int_x   = min(bar_x + bar_w, bar_x + bar_line_w);
@@ -556,8 +559,22 @@ function Panel_Animation() : PanelContent() constructor {
     ////- Content
     
     function setDimension() {
-    	timeline_w = w - tool_width - side_width - ui(16);
-    	// timeline_h = ui(28);
+    	var hPad = ui(6);
+    	
+    	timeline_w = w - tool_width - side_width - animPad - padding;
+    	bar_x      = padding + tool_width + animPad;
+        bar_w      = timeline_w;
+        
+        if(dopesheet_show) {
+        	timeline_h = ui(28);
+	        bar_y      = h - padding - timeline_h;
+	        bar_h      = timeline_h;
+	        
+        } else {
+	    	timeline_h = h - hPad * 2;
+	        bar_y      = h - timeline_h - hPad;
+	        bar_h      = timeline_h;
+        }
     }
     
     function getTimelineContentFolder(folder, _context = [], _depth = 0, _show = true) {
@@ -671,13 +688,6 @@ function Panel_Animation() : PanelContent() constructor {
     ////- Draw
     
     function drawTimeline() {
-    	var padd   = dopesheet_show? ui(8) : ui(6);
-    	timeline_h = dopesheet_show? ui(28) : h - padd * 2;
-    
-    	var bar_x       = tool_width + ui(16);
-        var bar_y       = h - timeline_h - padd;
-        var bar_w       = timeline_w;
-        var bar_h       = timeline_h;
         var bar_total_w = GLOBAL_TOTAL_FRAMES * timeline_scale;
         var inspecting  = PANEL_INSPECTOR.getInspecting();
         
@@ -827,16 +837,10 @@ function Panel_Animation() : PanelContent() constructor {
         
         if(IS_RENDERING)
 	        draw_sprite_stretched_add( THEME.ui_panel, 1, bar_x, bar_y, bar_w, bar_h, COLORS._main_value_positive, .75);
+        draw_sprite_stretched_ext(THEME.ui_panel, 1, bar_x, bar_y, bar_w, bar_h, COLORS.panel_frame_inner);
     }
     
     function drawFrames() {
-    	var padd   = dopesheet_show? ui(10) : ui(6);
-    	timeline_h = dopesheet_show? ui(28) : h - padd * 2;
-    
-    	var bar_x       = tool_width + ui(16);
-        var bar_y       = h - timeline_h - padd;
-        var bar_w       = timeline_w;
-        var bar_h       = timeline_h;
         var bar_total_w = GLOBAL_TOTAL_FRAMES * timeline_scale;
         var inspecting  = PANEL_INSPECTOR.getInspecting();
         
@@ -907,7 +911,7 @@ function Panel_Animation() : PanelContent() constructor {
         surface_reset_target();
         
         draw_surface_safe(timeline_surface, bar_x, bar_y);
-        
+        draw_sprite_stretched_ext(THEME.ui_panel, 1, bar_x, bar_y, timeline_w, timeline_h, COLORS.panel_frame_inner);
     }
     
     function drawAnimationSettings() {
@@ -919,12 +923,12 @@ function Panel_Animation() : PanelContent() constructor {
 		var hov = pHOVER;
         
         var bs = ui(24);
-    	var by = h - bs - ui(8);
-        var bx = w - bs - ui(8);
+    	var by = h - bs - padding;
+        var bx = w - bs - padding;
         
         var bt = __txtx("panel_animation_animation_settings", "Animation settings");
         var b  = buttonInstant_Pad(bSpr, bx, by, bs, bs, m, hov, foc, bt, THEME.gear, 2, bc, 1, ui(6));
-        if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bs, y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bs, y + by - padding, { anchor: ANCHOR.right | ANCHOR.bottom }); 
         
         if(!dopesheet_show) return;
         
@@ -949,9 +953,9 @@ function Panel_Animation() : PanelContent() constructor {
         if(by < bs) return;
         
         var scis = gpu_get_scissor();
-        gpu_set_scissor(bx, 0, bs + ui(8), max_y);
+        gpu_set_scissor(bx, 0, bs + padding, max_y);
         hov = hov && point_in_rectangle(mx, my, bx, 0, w, max_y);
-        by  = ui(8);
+        by  = padding;
         
         if(mouse_rpress(hov && foc)) menuCallGen("animation_sidebar_context");
         
@@ -981,16 +985,16 @@ function Panel_Animation() : PanelContent() constructor {
     	var bs = ui(28);
         
         if(dopesheet_show) {
-        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + ui(8);
-        	by = h - ui(8) - timeline_h + (timeline_h - bs) / 2;
+        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + padding;
+        	by = h - padding - timeline_h + (timeline_h - bs) / 2;
         	
         } else {
         	// bs = h - ui(12);
-        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + ui(8);
+        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + padding;
         	by = h - ui(6) - timeline_h + (timeline_h - bs) / 2;
         }
         
-        var col = floor((w - ui(8)) / (bs + ui(4)));
+        var col = floor((w - padding) / (bs + ui(4)));
     	var row = ceil(amo / col);
     	
         if(col < 1) return;
@@ -1029,22 +1033,22 @@ function Panel_Animation() : PanelContent() constructor {
         }
         
         if(mini) {
-            var y0 = ui(8);
+            var y0 = padding;
             var y1 = by + bs - ui(4);
             var cy = (y0 + y1) / 2;
             
             if(y1 - y0 < 12) return;
             
-            draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), y0, w - ui(16), y1 - y0);
+            draw_sprite_stretched(THEME.ui_panel_bg, 1, padding, y0, w - padding*2, y1 - y0);
             
-            var pw = w - ui(16);
-            var px = ui(8) + pw * (GLOBAL_CURRENT_FRAME / GLOBAL_TOTAL_FRAMES);
+            var pw = w - padding * 2;
+            var px = padding + pw * (GLOBAL_CURRENT_FRAME / GLOBAL_TOTAL_FRAMES);
             draw_set_color(COLORS._main_accent);
             draw_line(px, y0, px, y1);
             
-            if(point_in_rectangle(mx, my, ui(8), y0, w - ui(16), y1) && timeline_stretch == 0) {
+            if(point_in_rectangle(mx, my, padding, y0, w - padding*2, y1) && timeline_stretch == 0) {
                 if(mouse_lclick(pFOCUS)) {
-                    var rfrm = (mx - ui(8)) / (w - ui(16)) * GLOBAL_TOTAL_FRAMES;
+                    var rfrm = (mx - padding) / (w - padding*2) * GLOBAL_TOTAL_FRAMES;
                     if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1); // clamp to animating region
                     PROJECT.animator.setFrame(rfrm);
                 }
@@ -1125,7 +1129,6 @@ function Panel_Animation() : PanelContent() constructor {
 	}
 	
     function focusTimeline() {
-    	var bar_w       = timeline_w;
     	var bar_line_x  = (GLOBAL_CURRENT_FRAME + 1) * timeline_scale;
     	var bar_line_sx = bar_line_x + timeline_shift;
     	

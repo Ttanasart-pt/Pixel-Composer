@@ -43,7 +43,11 @@ draw_clear(COLORS.bg);
 	var surf = surface_get_target();
 	try {
 		PANEL_MAIN.draw();
+		PANEL_MAIN.drawFrame();
 		
+		if(THEME_VALUE.panel_separation_type == "line") 
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, 0, WIN_W-1, WIN_H-1, COLORS.panel_frame);
+			
 	} catch(e) { 
 		while(surface_get_target() != surf)
 			surface_reset_target();

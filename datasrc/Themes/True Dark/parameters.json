@@ -3,11 +3,13 @@
     "highlight_corner_radius": 0,
     "selection_corner_radius": 0,
     
+    "panel_separation_type": "line",
     "panel_padding": 0,
     "panel_margin": 0,
     "panel_corner_radius": 0,
     "panel_notification_padding": 0,
     "panel_tab_padding": 0,
+    "panel_animation_padding": 4, 
 
     "minimap_corner_radius": 0,
     "slider_type": "stem",

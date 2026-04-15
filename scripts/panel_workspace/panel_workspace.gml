@@ -80,6 +80,7 @@ function Panel_Workspace() : PanelContent() constructor {
 		var currT = PREFERENCES.panel_layout_file;
 		if(PANEL_MODIFIED) currT += "*";
 		
+		draw_set_font(f_p2b);
 		var currW = string_width(currT) + ui(24)
 		x0 += currW;
 		ww += currW;
@@ -152,7 +153,7 @@ function Panel_Workspace() : PanelContent() constructor {
 			}
 		}
 		
-		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(f_p2b, fa_left, fa_center, COLORS._main_text);
 		draw_text_add(ui(12), cy, currT);
 		
 		draw_set_color(COLORS._main_icon_dark);

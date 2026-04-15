@@ -146,6 +146,7 @@ function ThemeColor() constructor {
     panel_bg_clear                      = CDEF.main_black;
     panel_select_border					= CDEF.main_grey;
     panel_frame                         = CDEF.main_dkgrey;
+    panel_frame_inner                   = CDEF.main_dkgrey;
     panel_prop_bg                       = CDEF.main_ltgrey;
     panel_tab                           = CDEF.white;
     panel_tab_hover                     = CDEF.white;
@@ -204,11 +205,14 @@ function ThemeValue() constructor {
 	highlight_corner_radius    = 8;
     selection_corner_radius    = 6;
     
+    panel_separation_type      = "frame";
     panel_padding              = 2;
     panel_margin               = 2;
     panel_corner_radius        = 8;
     panel_notification_padding = 0;
     panel_tab_padding          = 2;
+
+	panel_animation_padding    = 6;
 
     minimap_corner_radius      = 2;
     slider_type                = "stem";

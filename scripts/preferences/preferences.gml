@@ -22,6 +22,8 @@
 		PREFERENCES.theme							= "default";
 		PREFERENCES.theme_override					= "override";
 		PREFERENCES.theme_load_unpack				= true;
+		PREFERENCES.theme_boolean                   = 0;
+		
 		PREFERENCES.local							= "en";
 		PREFERENCES.font_overwrite					= "";
 		PREFERENCES.font_overwrite_bold				= "";

@@ -146,6 +146,7 @@
         "panel_bg_clear": "main_black",
         "panel_select_border": "main_grey",
         "panel_frame": "main_dkgrey",
+        "panel_frame_inner": "main_dkgrey",
         "panel_prop_bg": "main_ltgrey",
         "panel_tab": "white",
         "panel_tab_hover": "white",
