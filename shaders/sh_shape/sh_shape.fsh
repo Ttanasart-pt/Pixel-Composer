@@ -213,7 +213,6 @@ uniform int  cornerShape;
 
 vec2 ratio;
 
-float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
 float dot2(in vec2 v ) { return dot(v,v); }
 
 mat2 rot(in float ang) { return mat2(cos(ang), - sin(ang), sin(ang), cos(ang)); }
@@ -369,11 +368,13 @@ float sdDonut(vec2 p, float s) {
 	return max(o, -i);
 }
 
+float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
 float sdRhombus( in vec2 p, in vec2 b )  {
     p = abs(p);
-
-    float h = clamp( ndot(b - 2.0 * p,b) / dot(b, b), -1.0, 1.0 );
-    float d = length( p - 0.5 * b * vec2(1.0 - h, 1.0 + h) );
+    
+    return (p.x + p.y) - 1.;
+    float h = clamp( ndot(b - 2. * p, b) / dot(b, b), -1., 1. );
+    float d = length( p - .5 * b * vec2(1. - h, 1. + h));
 	
 	return d * sign( p.x * b.y + p.y * b.x - b.x * b.y );
 }
@@ -532,7 +533,8 @@ float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle, float
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
-	vec2 vtx      = getUV(v_vTexcoord);
+	vec2 vtx = getUV(v_vTexcoord);
+	
 	vec2 coordUni = (vtx - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
 	vec2 coord    = coordUni / scale;
 	float d;
@@ -550,6 +552,10 @@ void main() {
 	coord.x += coord.y * shear.x;
 	coord.y += coord.x * shear.y;
 	
+	coord = (v_vTexcoord - center) / scale;
+	gl_FragData[0] = vec4(abs(coord), 0., 1.);
+	return;
+	
 		 if(shape ==  0) { d = sdBox(           coord, scale * ratio, corner4);                                                          }  
 	else if(shape ==  1) { d = sdCircle(        coord);                                                                                  } 
 	else if(shape ==  2) { d = sdRegularPolygon(coord, 0.9 - corner, sides, angle ) - corner;                                            } 
@@ -560,7 +566,7 @@ void main() {
 	else if(shape ==  7) { d = sdVesica(        coord, inner, outer );                                              	                 }
 	else if(shape ==  8) { d = sdCrescent(      coord, inner, outer, angle );                                   		                 }
 	else if(shape ==  9) { d = sdDonut(         coord, inner );                                                     	                 }
-	else if(shape == 10) { d = sdRhombus(       coord, vec2(1. - corner) ) - corner;                                	                 }
+	else if(shape == 10) { d = sdRhombus(       coord, vec2(1. - corner) );                                	                 }
 	else if(shape == 11) { d = sdTrapezoid(     coord, trep.x - corner, trep.y - corner, 1. - corner ) - corner;		                 }
 	else if(shape == 12) { d = sdParallelogram(	coord, 1. - corner - parall, 1. - corner, parall) - corner;   			                 }
 	else if(shape == 13) { d = sdHeart(         coord );                                                            	                 }
@@ -574,7 +580,7 @@ void main() {
 	else if(shape == 21) { d = sdHalf(vtx, p1, -rotation);                                                                               }
 	else if(shape == 22) { d = sdSuperEllipse(coord, super_factor, super_sides) - corner;                                                }
 	
-	float cc = step(d, 0.0);
+	float cc = d <= 0.? 1. : 0.;
 	if(aa == 1) {
 		float _aa = 1. / max(dimension.x, dimension.y);
 		cc = smoothstep(_aa, -_aa, d);

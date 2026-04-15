@@ -1008,12 +1008,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function drawFrame() {
-		for(var i = 0, n = array_length(childs); i < n; i++) {
-			var _panel = array_safe_get(childs, i, 0);
-			if(_panel != 0) _panel.drawFrame();
+		if(array_empty(content)) {
+			for(var i = 0, n = array_length(childs); i < n; i++) {
+				var _panel = array_safe_get(childs, i, 0);
+				if(_panel != 0) _panel.drawFrame();
+			}
+			return;
 		}
 		
-		if(array_empty(content)) return;
 		var _mx = mouse_mxs;
 		var _my = mouse_mys;
 			
