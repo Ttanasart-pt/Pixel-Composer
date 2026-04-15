@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc5",
+    "changes": [
+      {
+        "date": "2026-04-15T01:30:48.044Z",
+        "node": "Group IO",
+        "commit": "**Group IO**: Remove name-only mode when zoom out."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc1",
     "changes": [
       {

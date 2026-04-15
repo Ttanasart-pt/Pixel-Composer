@@ -555,27 +555,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my);
 	}
 	
-	static drawNodeDef = drawNode;
-	
-	static drawNode = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
-		draw_metadata = _s >= .75;
-		if(_s >= .75) return drawNodeDef(_draw, _x, _y, _mx, _my, _s, _panel);
-		
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
-		
-		var _name = renamed? display_name : name;
-		var _ts   = _s * .4 / UI_SCALE;
-		var _tx   = round(xx + (w - 6) * _s - 2);
-		var _ty   = round(outputs[0].y);
-		
-		draw_set_text(f_sdf, fa_right, fa_center);
-		BLEND_ALPHA_MULP
-		draw_set_color(c_black);			draw_text_transformed(_tx+1, _ty+1, _name, _ts, _ts, 0);
-		draw_set_color(COLORS._main_text);	draw_text_transformed(_tx,   _ty,   _name, _ts, _ts, 0);
-		BLEND_NORMAL
-	}
-	
 	////- Serialize
 	
 	static postDeserialize = function() { createInput(false); }
