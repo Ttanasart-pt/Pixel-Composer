@@ -316,8 +316,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					switch(_widgetButton) {
 						case "Set Default" : if(!PREFERENCES.widget_draw_default) continue;
 							var bt = __txtx("panel_inspector_default", "Set default");
-							var ba = .25 + jun.is_modified * .55;
 							var bh = _hover;
+							var ba = .25 + jun.is_modified * .55 + (jun.def_preset * .5);
 							var cc = jun.def_preset? COLORS._main_accent : COLORS._main_icon_light;
 							
 							bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); bx -= ui(4);

@@ -453,7 +453,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setDefault = function() {
-		var dir = $"{DIRECTORY}Presets/{instanceof(node)}/";
+		var key = instanceof(node);
+		var dir = $"{DIRECTORY}Presets/{key}/";
 		var pth = $"{dir}_values.json";
 		var map;
 		
@@ -463,6 +464,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		json_save_struct(pth, map, true);
 		is_modified = false;
+		def_preset  = true;
+		
+		if(!has(PRESETS_MAP, key)) PRESETS_MAP[$ key] = {};
+		PRESETS_MAP[$ key]._values = { content: map };
+		
 		return self;
 	}
 	
@@ -486,6 +492,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		map = json_load_struct(pth);
 		struct_remove_safe(map, internalName);
 		json_save_struct(pth, map, true);
+		
+		if(!has(PRESETS_MAP, key)) PRESETS_MAP[$ key] = {};
+		PRESETS_MAP[$ key]._values = { content: map };
+		
 		return self;
 	}
 	
