@@ -1,7 +1,7 @@
 #region global
 	#region ___function calls
-	    
-	    function panel_preview_clear_tool()                 { CALL("preview_clear_tool");                PANEL_PREVIEW.clearTool();               }
+	    function panel_preview_add_node()    { CALL("preview_add_node");   PANEL_PREVIEW.callAddDialog();  }
+	    function panel_preview_clear_tool()  { CALL("preview_clear_tool"); PANEL_PREVIEW.clearTool();      }
 	    
 	    function panel_preview_focus_content()              { CALL("preview_focus_content");             PANEL_PREVIEW.fullView();                }
 	    function panel_preview_save_current_frame()         { CALL("preview_save_current_frame");        PANEL_PREVIEW.saveCurrentFrame();        }
@@ -79,7 +79,8 @@
 	    	var a = MOD_KEY.alt;
 	    	var cs = MOD_KEY.ctrl | MOD_KEY.shift;
 	    	
-	        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         ).setMenu("preview_focus_content");
+	    	registerFunction(p, "Add Node",                 "A",       n, panel_preview_add_node           ).setMenu("preview_add_node", THEME.add_20)
+	        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         ).setMenu("preview_focus_content" );
 	        
 	        registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content",      THEME.icon_center_canvas)
 	        registerFunction(p, "Save Current Frame...",    "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame", THEME.icon_preview_export)
@@ -655,7 +656,7 @@ function Panel_Preview() : PanelContent() constructor {
     	];
         
         global.menuItems_preview_context_menu = [
-        	"graph_add_node", 
+        	"preview_add_node", 
             "preview_new_preview_window", 
             -1,
             "preview_focus_content",
@@ -3904,19 +3905,19 @@ function Panel_Preview() : PanelContent() constructor {
     	var  ctx = PANEL_GRAPH.getCurrentContext();
     	var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
     	
-    	_dia.buildCallback = addNodeCallback;
+    	_dia.buildCallback = function(n) /*=>*/ {return addNodeCallback(n)};
     }
     
     static addNodeCallback = function(_node) {
     	if(!is(_node, Node)) return;
     	
-    	var _baseNode = getNodePreview();
-    	
 		var _outp = _node.getOutput();
 		if(_outp == noone) return;
 		
+    	var _baseNode = getNodePreview();
     	if(is(_baseNode, Node_Composite) && _outp.type == VALUE_TYPE.surface)
     		_baseNode.addInput(_outp);
+    	setNodePreview(_baseNode);
     }
     
     static snapX = function(v) {

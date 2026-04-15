@@ -36,10 +36,10 @@ WIDGET_TAB_BLOCK = true;
 	var bpad = ui(THEME_VALUE.dialog_modal_button_spacing);
 	
 	var amo = array_length(buttons);
-	var bw  = (dialog_w - DIALOG_PAD - bpad * (amo - 1)) / amo;
+	var bw  = (dialog_w - DIALOG_PAD - bpad * (amo + 1)) / amo;
 	var bh  = line_get_height(f_p2, 10);
-	var bx1 = dialog_x + dialog_w - DIALOG_PAD / 2;
-	var by1 = dialog_y + dialog_h - DIALOG_PAD / 2;
+	var bx1 = dialog_x + dialog_w - DIALOG_PAD / 2 - bpad;
+	var by1 = dialog_y + dialog_h - DIALOG_PAD / 2 - bpad;
 	var bx0 = bx1 - bw;
 	var by0 = by1 - bh;
 	
@@ -63,7 +63,7 @@ WIDGET_TAB_BLOCK = true;
 			_des = true; 
 		}
 		
-		bx0 -= bw + ui(bpad);
+		bx0 -= bw + bpad;
 	}
 	
 	dialog_h = _dialog_h;

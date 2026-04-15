@@ -8,11 +8,7 @@
 	#macro FN_NODE_CONTEXT_INVOKE if(!variable_global_exists("__FN_NODE_CONTEXT") || variable_global_get("__FN_NODE_CONTEXT") == undefined) variable_global_set("__FN_NODE_CONTEXT", []); \
 	array_push(global.__FN_NODE_CONTEXT, function()
 	
-    function panel_graph_add_node() { 
-		CALL("graph_add_node");
-		if(FOCUS_CONTENT == PANEL_PREVIEW) PANEL_PREVIEW.callAddDialog(); 
-		else PANEL_GRAPH.callAddDialog();
-	}
+    function panel_graph_add_node() { CALL("graph_add_node"); PANEL_GRAPH.callAddDialog(); }
     
     function panel_graph_replace_node()            { CALL("graph_replace_node");        PANEL_GRAPH.callReplaceDialog();     }
     function panel_graph_focus_content()           { CALL("graph_focus_content");       PANEL_GRAPH.fullView();              }
@@ -152,7 +148,7 @@
     	var s = MOD_KEY.shift;
     	var a = MOD_KEY.alt;
     	
-    	registerFunction("", "Add Node",             "A", s, panel_graph_add_node      ).setMenu("graph_add_node", THEME.add_20)
+    	registerFunction(g, "Add Node",              "A", s, panel_graph_add_node      ).setMenu("graph_add_node", THEME.add_20)
         registerFunction(g, "Replace Node",          "R", c, panel_graph_replace_node  ).setMenu("graph_replace_node")
         registerFunction(g, "Focus Content",         "F", n, panel_graph_focus_content ).setMenu("graph_focus_content", THEME.icon_center_canvas)
         registerFunction(g, "Preview Focusing Node", "P", n, panel_graph_preview_focus ).setMenu("graph_preview_focusing_node")
