@@ -299,8 +299,6 @@ event_inherited();
 			for( var i = 0, n = array_length(_new_node.outputs); i < n; i++ ) 
 				array_push(_outputs, _new_node.outputs[i]);
 			
-			if(buildCallback != undefined) buildCallback(_new_node);
-			
 			var _query = struct_try_get(_param, "query");
 			if(struct_try_get(_query, "type") == "preset") {
 				_new_node.skipDefault();
@@ -374,8 +372,7 @@ event_inherited();
 				}
 			}
 			
-			if(PANEL_PREVIEW && PANEL_PREVIEW.panel == prefocus)
-				PANEL_PREVIEW.setNodePreview(_new_node);
+			if(buildCallback != undefined) buildCallback(_new_node);
 		}
 		
 		if(node_replace != noone) { // Replace Nodes

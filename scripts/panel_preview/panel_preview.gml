@@ -680,7 +680,7 @@ function Panel_Preview() : PanelContent() constructor {
     ////- DATA
     
     static setNodePreview = function(_node, _lock = locked, _view = true) {
-        if(locked) return self;
+    	if(locked) return self;
         
         if(_view && resetViewOnDoubleClick)
             do_fullView = true;
@@ -3915,9 +3915,18 @@ function Panel_Preview() : PanelContent() constructor {
 		if(_outp == noone) return;
 		
     	var _baseNode = getNodePreview();
-    	if(is(_baseNode, Node_Composite) && _outp.type == VALUE_TYPE.surface)
+    	
+    	if(is(_baseNode, Node_Composite) && _outp.type == VALUE_TYPE.surface) {
+    		_node.x = _baseNode.x - 32 - _node.w;
     		_baseNode.addInput(_outp);
-    	setNodePreview(_baseNode);
+    		_baseNode.dynamic_input_inspecting = _baseNode.getInputAmount() - 1;
+    		setNodePreview(_baseNode);
+    		
+    	} else {
+    		setNodePreview(_node);
+    		
+    	}
+    	
     }
     
     static snapX = function(v) {
