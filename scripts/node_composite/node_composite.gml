@@ -759,6 +759,23 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				for( var i = 0; i < data_length; i++ )
 					array_insert(inputs, targt + i, ext[i]);
 				
+				if(amo > 1) {
+					var _ndepth = 0;
+					if(hoverIndex == 0) { // drag to lowest
+						_ndepth = current_data[targt + 7] - 100; // set to lowest - 100
+						
+					} else if(hoverIndex == amo - 1) { // drag to highest
+						_ndepth = current_data[targt + 7] + 100; // set to highest + 100
+						
+					} else { // middle
+						var _fl = current_data[targt               + 7];
+						var _ce = current_data[targt + data_length + 7];
+						_ndepth = round((_fl + _ce) / 2);
+					}
+					
+					inputs[targt + 7].setValue(_ndepth);
+				}
+				
 				for( var i = 0, n = array_length(inputs); i < n; i++ )
 					inputs[i].index = i;
 				
@@ -767,6 +784,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			layer_dragging = noone;
 			if(canvas_group) canvas_group.onLayerChanged();
+			// refreshDepth();
 			refreshDynamicDisplay();
 		}
 		
@@ -814,6 +832,29 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		triggerRender();
 	}
 	
+	function refreshDepth() {
+		var amo = getInputAmount();
+		var _minDepth = infinity;
+		
+		for( var i = 0; i < amo; i++ ) {
+			var index = input_fix_len + i * data_length;
+			var _depI = inputs[index + 7];
+			_minDepth = min(_minDepth, _depI.getValue());
+		}
+		
+		for( var i = 0; i < amo; i++ ) {
+			var index = input_fix_len + i * data_length;
+			var _depI = inputs[index + 7];
+			
+			_depI.setValue(_minDepth);
+			_minDepth += 100;
+		}
+	}
+	
+	b_refresh = button(function() /*=>*/ {return refreshDepth()}).setTooltip(__txt("Refresh Layer Depth"))
+		.setIcon(THEME.refresh_icon, 0, COLORS._main_value_positive).iconPad(ui(6))
+		.setBaseSprite(THEME.button_hide_fill);
+	
 	////- Dynamic IO
 	
 	function createNewInput(i = array_length(inputs)) {
@@ -852,7 +893,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [
 		[ "Output",  true ],  1,  2,  0, 
-		[ "Layers", false ], layer_renderer,
+		[ "Layers", false, noone, b_refresh ], layer_renderer,
 	];
 	
 	setDynamicInput(8, true, VALUE_TYPE.surface);

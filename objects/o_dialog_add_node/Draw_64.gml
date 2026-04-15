@@ -180,6 +180,15 @@ if(DIALOG_SHOW_FOCUS) {
 		if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
 		tw -= bs + sp;
 		
+		if(buildCallback != undefined) {
+			bx -= bs + sp;
+			var bi = doCallback;
+			var bc = doCallback? COLORS._main_accent : COLORS._main_icon;
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, __txt("Composite"), THEME.shader_alpha, 0, bc, 1, ui(12));
+			if(b == 2) doCallback = !doCallback;
+			tw -= bs + sp;
+		}
+		
 		if(search_string != "") {
 			bx -= bs + sp;
 			var bt = __txt("Prioritize Favourite");

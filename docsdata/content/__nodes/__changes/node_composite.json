@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc5",
+    "changes": [
+      {
+        "date": "2026-04-15T07:14:54.714Z",
+        "node": "Composite] Rearranging layer order now adjust the depth accordingly. - [Composite",
+        "commit": "**Composite] Rearranging layer order now adjust the depth accordingly. - [Composite**: Add button for refreshing layer depth to match layer order."
+      }
+    ]
+  }
+]

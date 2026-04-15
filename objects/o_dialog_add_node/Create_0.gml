@@ -254,6 +254,7 @@ event_inherited();
 
 #region build
 	buildCallback = undefined;
+	doCallback    = true;
 	
 	function buildNode(_node, _param = {}) {
 		instance_destroy();
@@ -372,7 +373,7 @@ event_inherited();
 				}
 			}
 			
-			if(buildCallback != undefined) buildCallback(_new_node);
+			if(doCallback && buildCallback != undefined) buildCallback(_new_node);
 		}
 		
 		if(node_replace != noone) { // Replace Nodes
