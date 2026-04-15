@@ -68,7 +68,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	#region label
 		label           = "";
 		labelColor      = COLORS._main_text_sub;
-		labelAlpha      = .75;
+		labelAlpha      = .65;
 		labelSpr        = noone;
 		labelSprIndex   = 0;
 		labelAlign      = fa_left;
@@ -768,7 +768,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var lby = _y + _h / 2;
 			
 			draw_set_text(font, labelAlign, fa_center, labelColor, .5);
-			draw_text_add(lbx, lby, placeHolder);
+			gpu_set_texfilter(true);
+			draw_text_add(lbx, lby, placeHolder, .8);
+			gpu_set_texfilter(false);
 			draw_set_alpha(1);
 			
 		} else if(label != "") {
@@ -776,7 +778,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var lby = _y + _h / 2;
 			
 			draw_set_text(font, labelAlign, fa_center, labelColor, labelAlpha);
-			draw_text_add(lbx, lby, label);
+			gpu_set_texfilter(true);
+			draw_text_add(lbx, lby, label, .8);
+			gpu_set_texfilter(false);
 			draw_set_alpha(1);
 		}
 			

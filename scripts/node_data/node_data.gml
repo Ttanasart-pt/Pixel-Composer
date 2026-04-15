@@ -1282,21 +1282,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	doUpdate     = doUpdateFull;
 	getInputData = function(i,d=0) /*=>*/ {return array_safe_get_fast(inputs_data, i, d)};
 	
-	static valueUpdate       = function(index = noone) { onValueUpdate(index); onValueRefresh(); cacheCheck(); }
-	static valueFromUpdate   = function(index = noone) {
-		onValueFromUpdate(index);
-		onValueUpdate(index);
+	static valueUpdate       = function(i=noone) /*=>*/ { onValueUpdate(i); onValueRefresh(); cacheCheck(); }
+	static valueFromUpdate   = function(i=noone) /*=>*/ {
+		onValueFromUpdate(i);
+		onValueUpdate(i);
 		onValueRefresh();
 		
 		if(auto_input && !LOADING && !APPENDING) 
 			refreshDynamicInput();
-			
+		
 		cacheCheck();
 	}
 	
-	static onValueRefresh    = function(index = noone) {}
-	static onValueUpdate     = function(index = noone) {}
-	static onValueFromUpdate = function(index = noone) {}
+	static onValueRefresh    = function(i=noone) /*=>*/ {}
+	static onValueUpdate     = function(i=noone) /*=>*/ {}
+	static onValueFromUpdate = function(i=noone) /*=>*/ {}
 	
 	static getDimension      = function() /*=>*/ {
 		if(dimension_index < 0) return PROJ_SURF;

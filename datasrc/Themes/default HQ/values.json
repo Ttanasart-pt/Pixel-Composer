@@ -122,6 +122,8 @@
         "panel_animation_key_tool_unselected": "main_grey",
         "panel_animation_keyframe_selected": "main_white",
         "panel_animation_keyframe_unselected": "main_ltgrey",
+        "panel_animation_keyease_selected": "main_white",
+        "panel_animation_keyease_unselected": "main_ltgrey",
         "panel_animation_keyframe_hide": "main_grey",
         "panel_animation_node_bg": "main_grey",
         "panel_animation_node_outline": "main_black",

@@ -122,6 +122,8 @@ function ThemeColor() constructor {
     panel_animation_key_tool_unselected = CDEF.main_grey;
     panel_animation_keyframe_selected   = CDEF.main_white;
     panel_animation_keyframe_unselected = CDEF.main_ltgrey;
+    panel_animation_keyease_selected    = CDEF.main_white;
+    panel_animation_keyease_unselected  = CDEF.main_ltgrey;
     panel_animation_keyframe_hide       = CDEF.main_grey;
     panel_animation_node_bg             = CDEF.main_grey;
     panel_animation_node_outline        = CDEF.main_black;
@@ -204,6 +206,8 @@ function ThemeValue() constructor {
 	icon_scale                    = 1;
 	highlight_corner_radius       = 8;
     selection_corner_radius       = 6;
+    
+    inline_node_radius = 6;
     
     panel_separation_type         = "frame";
     panel_padding                 = 2;

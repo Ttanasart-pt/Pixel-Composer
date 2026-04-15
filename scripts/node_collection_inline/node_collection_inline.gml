@@ -92,7 +92,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }
 	
 	static getNodeBorder = function(_ind, _vertex, _node) {
-		var _rad = 6;
+		var _rad = THEME_VALUE.inline_node_radius;
 		var _stp = 30;
 		var _nx0, _ny0, _nx1, _ny1;
 		

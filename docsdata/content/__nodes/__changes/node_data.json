@@ -6,6 +6,11 @@
         "date": "2026-04-15T02:02:04.373Z",
         "node": "Value",
         "commit": "**Value**: Fix setting default not apply in the same session."
+      },
+      {
+        "date": "2026-04-15T05:43:25.698Z",
+        "node": "",
+        "commit": "**MK Parallax**: Add depth properties."
       }
     ]
   },

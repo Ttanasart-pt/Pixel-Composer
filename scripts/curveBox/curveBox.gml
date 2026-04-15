@@ -306,9 +306,6 @@ function curveBox(_onModify) : widget() constructor {
 					draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy, _shift, _scale);
 				}
 				
-				draw_set_color(COLORS._main_accent);
-				draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy);
-				
 				var _sca = cw;
 				for( var i = 0; i < points; i++ ) {
 					var ind = CURVE_PADD + i * 6;
@@ -399,6 +396,9 @@ function curveBox(_onModify) : widget() constructor {
 						point_insert = i;
 					_x1 = _x0;
 				}
+				
+				draw_set_color(COLORS._main_accent);
+				draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy);
 				
 			surface_reset_target();
 		#endregion

@@ -1221,9 +1221,7 @@ function Panel_Animation_Dopesheet() {
                 var iy = py + (1 - ei[1]) / val_rng;
                 var oy = py - (    eo[1]) / val_rng;
                 
-                var cc = COLORS.panel_animation_graph_line;
-                if(valArray)           cc = array_safe_get(COLORS.axis, j, cc);
-                else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                var cc = COLORS.panel_animation_keyease_unselected;
                 
                 if(ei[0] != 0 && key.ease_in_type == CURVE_TYPE.bezier) {
                     var _hv = (graph_key_hover == key && ( graph_key_hover_index == KEYFRAME_DRAG_TYPE.ease_in || graph_key_hover_index == KEYFRAME_DRAG_TYPE.ease_both)) || 
@@ -1265,6 +1263,10 @@ function Panel_Animation_Dopesheet() {
                 
                 var _hv = (graph_key_hover == key && graph_key_hover_index == KEYFRAME_DRAG_TYPE.move) || 
                           (graph_key_drag  == key && graph_key_drag_index  == KEYFRAME_DRAG_TYPE.move);
+                
+                var cc = COLORS.panel_animation_graph_line;
+                if(valArray)           cc = array_safe_get(COLORS.axis, j, cc);
+                else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                 
                 draw_sprite_ui_uniform(THEME.timeline_keyframe, 0, px, py, 1, _hv? COLORS._main_accent : cc, aa);
                 
@@ -1563,7 +1565,7 @@ function Panel_Animation_Dopesheet() {
                 
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
                     key_hover = key;
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_selected);
                     if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
@@ -1571,7 +1573,7 @@ function Panel_Animation_Dopesheet() {
                     }
                     
                 } else 
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_unselected);
             } 
                         
             if(key.ease_out_type == CURVE_TYPE.bezier) {
@@ -1588,14 +1590,14 @@ function Panel_Animation_Dopesheet() {
                     
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
                     key_hover = key;
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_selected);
                     if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
                         keyframe_dragging_mx = mx;
                     }
                 } else
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_unselected);
             }
         }
         

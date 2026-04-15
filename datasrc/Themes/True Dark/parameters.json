@@ -3,6 +3,8 @@
     "highlight_corner_radius": 0,
     "selection_corner_radius": 0,
     
+    "inline_node_radius": 0, 
+
     "panel_separation_type": "line",
     "panel_padding": 0,
     "panel_margin": 0,

@@ -13,25 +13,25 @@ function Node_MK_Parallax(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _s    = floor((index - input_fix_len) / data_length);
 		if(_s) array_push(input_display_list, new Inspector_Spacer(20, true));
 		
-		newInput(index + 0, nodeValue_Surface( $"Surface {_s}"));
-		newInput(index + 1, nodeValue_Vec2(    $"Position {_s}", [0,0])).setUnitSimple();
-		newInput(index + 2, nodeValue_Vec2(    $"Parallax {_s}", [0,0]));
+		newInput(index + 0, nodeValue_Surface( $"Surface {_s}"         ));
+		newInput(index + 1, nodeValue_Vec2(    $"Position {_s}", [0,0] )).setUnitSimple();
+		newInput(index + 2, nodeValue_Vec2(    $"Parallax {_s}", [0,0] ));
+		newInput(index + 3, nodeValue_Float(   $"Depth {_s}",    _s*100));
 		
 		var stat_label = new Inspector_Label("");
 		inputs[index].stat = stat_label;
 		
-		array_push(input_display_list, index + 0);
-		array_push(input_display_list, index + 1);
-		array_push(input_display_list, index + 2);
-		array_push(input_display_list, stat_label);
+		array_push(input_display_list, index + 0, index + 1, index + 2, index + 3, stat_label);
 		return inputs[index + 0];
 	} 
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX),
-		["Surfaces",  false], 
-	]
+		[ "Surfaces", false ], 
+	];
 	
-	setDynamicInput(3, true, VALUE_TYPE.surface);
+	setDynamicInput( 4, true, VALUE_TYPE.surface );
+	
+	////- Node
 	
 	temp_surface = [ noone, noone, noone ];
 	
@@ -52,10 +52,21 @@ function Node_MK_Parallax(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outSurf = surface_verify(_outSurf, _sw, _sh);
 		blend_temp_surface = temp_surface[2];
 		
-		var _bg = 0;
-		
+		var _pr = ds_priority_create();
 		for( var i = 0; i < amo; i++ ) {
 			var _ind = input_fix_len + i * data_length;
+			var _dep = _data[_ind + 3];
+			ds_priority_add(_pr, i, _dep);
+		}
+		
+		var _sortLayer = [];
+		repeat(amo) array_push(_sortLayer, ds_priority_delete_min(_pr));
+		ds_priority_destroy(_pr);
+		
+		var _bg = 0;
+		for( var i = 0; i < amo; i++ ) {
+			var _layerIndex = _sortLayer[i];
+			var _ind = input_fix_len + _layerIndex * data_length;
 			
 			var _srf = _data[_ind + 0];
 			var _pos = _data[_ind + 1];

@@ -2155,7 +2155,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                }
 	            } 
 	            
-	            if(is(frame_hovering, Node_Collection_Inline) && DOUBLE_CLICK && array_empty(nodes_selecting)) { //
+	            var _inline_focus = DOUBLE_CLICK; // or mouse_lpress()
+	            if(is(frame_hovering, Node_Collection_Inline) && _inline_focus && array_empty(nodes_selecting)) { 
 	                nodes_selecting = [ frame_hovering ];
 	                
 	                if(frame_hovering.attributes.show_preview) PANEL_PREVIEW.setNodePreview(frame_hovering);
