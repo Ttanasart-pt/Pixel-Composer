@@ -13,10 +13,10 @@ function Node_MK_Parallax(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _s    = floor((index - input_fix_len) / data_length);
 		if(_s) array_push(input_display_list, new Inspector_Spacer(20, true));
 		
-		newInput(index + 0, nodeValue_Surface( $"Surface {_s}"         ));
-		newInput(index + 1, nodeValue_Vec2(    $"Position {_s}", [0,0] )).setUnitSimple();
-		newInput(index + 2, nodeValue_Vec2(    $"Parallax {_s}", [0,0] ));
-		newInput(index + 3, nodeValue_Float(   $"Depth {_s}",    _s*100));
+		newInput(index + 0, nodeValue_Surface( $"Surface {_s}"          ));
+		newInput(index + 1, nodeValue_Vec2(    $"Position {_s}", [0,0]  )).setUnitSimple();
+		newInput(index + 2, nodeValue_Vec2(    $"Parallax {_s}", [0,0]  ));
+		newInput(index + 3, nodeValue_Float(   $"Depth {_s}",    _s*100 ));
 		
 		var stat_label = new Inspector_Label("");
 		inputs[index].stat = stat_label;

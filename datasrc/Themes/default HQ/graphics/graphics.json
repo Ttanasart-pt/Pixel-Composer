@@ -502,6 +502,7 @@
     "stroke_profile":                     { "path": "./inspector/s_inspector_stroke_profile.png",           "s": 2, "x": 12, "y": 12 },
     "inspector_pb_line":                  { "path": "./inspector/s_inspector_pb_line.png",                  "s": 6, "x": 12, "y": 12 },
 
+    "area_tool":                          { "path": "./tool/s_area_tool.png",                               "s": 2, "x":  9, "y":  9 },
     "bone_tool_add":                      { "path": "./tool/s_bone_tool_add.png",                           "s": 2, "x":  9, "y":  9 },
     "bone_tool_add_control":              { "path": "./tool/s_bone_tool_add_control.png",                   "s": 2, "x":  9, "y":  9 },
     "bone_tool_detach":                   { "path": "./tool/s_bone_tool_detach.png",                        "s": 2, "x":  9, "y":  9 },

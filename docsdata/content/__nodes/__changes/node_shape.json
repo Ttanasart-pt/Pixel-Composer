@@ -3,13 +3,8 @@
     "version": "1.21.rc5",
     "changes": [
       {
-        "date": "2026-04-15T05:43:25.698Z",
-        "node": "",
-        "commit": "**MK Parallax**: Add depth properties."
-      },
-      {
         "date": "2026-04-15T06:08:01.040Z",
-        "node": "Shape",
+        "node": "",
         "commit": "**Shape**: Add draw area tool."
       }
     ]

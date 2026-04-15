@@ -176,9 +176,67 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- Nodes
 	
 	attribute_surface_depth();
-	
 	temp_surface = [ noone ];
-	drawOverlay  = method(self, Node_Shape_drawOverlay);
+	
+	#region ---- tools ----
+		tools = [ new NodeTool("Draw area", THEME.area_tool, "Node_Shape") ];
+		
+		tool_draw_mode = 0;
+		tool_draw_sx   = 0;
+		tool_draw_sy   = 0;
+		tool_draw_mx   = 0;
+		tool_draw_my   = 0;
+	#endregion
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		var _msx = (_mx - _x) / _s;
+		var _msy = (_my - _y) / _s;
+		
+		if(isUsingTool(0)) {
+			switch(tool_draw_mode) {
+				case 0 :
+					if(mouse_lpress(active)) {
+						tool_draw_sx   = _msx;
+						tool_draw_sy   = _msy;
+						tool_draw_mode = 1;
+						
+						inputs[15].setValue(0);
+					}
+					break;
+					
+				case 1 : 
+					tool_draw_mx = _msx;
+					tool_draw_my = _msy;
+					
+					var _x0 = min(tool_draw_mx, tool_draw_sx);
+					var _y0 = min(tool_draw_my, tool_draw_sy);
+					var _x1 = max(tool_draw_mx, tool_draw_sx);
+					var _y1 = max(tool_draw_my, tool_draw_sy);
+					
+					var _xc = (_x0 + _x1) / 2;
+					var _yc = (_y0 + _y1) / 2;
+					var _hw = (_x1 - _x0) / 2;
+					var _hh = (_y1 - _y0) / 2;
+					
+					var _area = [ _xc, _yc, _hw, _hh, AREA_SHAPE.rectangle, AREA_MODE.area ];
+					inputs[3].setValue(_area);
+					
+					if(mouse_lrelease()) {
+						tool_draw_mode = 0;
+						PANEL_PREVIEW.resetTool();
+					}
+					break;
+			}
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line(_mx, 0, _mx, WIN_H);
+			draw_line(0, _my, WIN_W, _my);
+			
+			return true;
+		}
+		
+		return Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
+	}
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
