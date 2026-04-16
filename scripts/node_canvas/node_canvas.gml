@@ -777,14 +777,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	}
 	
-	static drawTools = function(_mx, _my, xx, yy, _tool_size, hover, focus) {
+	static drawTools = function(_mx, _my, xx, yy, _tool_size, hover, focus, panel) {
 		var _sx0 = xx - _tool_size / 2;
 		var _sx1 = xx + _tool_size / 2;
 		var hh   = ui(8);
 		
 		yy += ui(4);
-		draw_set_color(CDEF.main_dark);
-		draw_line_round(_sx0 + ui(8), yy, _sx1 - ui(8), yy, 2);
+		var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
+		draw_set_color(COLORS.panel_separator);
+		if(_spFrm) draw_line_round(_sx0 + ui(8), yy, _sx1 - ui(8), yy, 2);
+		else       draw_line(0, yy, panel.toolbar_width, yy);
 		yy += ui(4);
 		
 		var _cx = _sx0 + ui(8);

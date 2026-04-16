@@ -2877,7 +2877,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var tbx = w - ui(4) - bs;
         var tby = ty + th / 2;
         var _m  = [ mx, my ];
-        var _lh = toolbar_height / 2 - ui(8);
+        
+        var _spFrm = THEME_VALUE.panel_separation_type == "frame";
+        var _lh    = toolbar_height / 2 - ui(8);
         
         var scs = gpu_get_scissor();
         gpu_set_scissor(cont_x, ty, w - cont_x, th);
@@ -2890,7 +2892,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	var _menu = tbb[i];
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
-				draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
+				if(_spFrm) draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
+				else       draw_line(tbx + bs - ui(2), ty, tbx + bs - ui(2), ty + th);
 				
 				tbx -= ui(6);
 				continue;
@@ -2904,7 +2907,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
 			if(i == n - 1) {
 				draw_set_color(COLORS.panel_separator);
-				draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
+				if(_spFrm) draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
+				else       draw_line(tbx + bs - ui(2), ty, tbx + bs - ui(2), ty + th);
 			}
         }
         
@@ -2962,11 +2966,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		var _cc  = [COLORS._main_icon, c_white];
 		var _m   = [mx, my];
 		
+		var _spFrm = THEME_VALUE.panel_separation_type == "frame";
+		var _lh    = topbar_height / 2 - ui(8);
+		
 		for( var i = 0, n = array_length(_side_m); i < n; i++ ) {
 			var _menu = _side_m[i];
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
-				draw_line_width(_mux + ui(1), _muy, _mux + ui(1), _muy + _mus, 2);
+				if(_spFrm) draw_line_width(_mux + ui(1), ty + th / 2 - _lh, _mux + ui(1), ty + th / 2 + _lh, 2);
+				else       draw_line(_mux + ui(1), ty, _mux + ui(1), ty + th);
 				
 				_mux += ui(6);
 				_ww  += ui(6);

@@ -271,8 +271,8 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		return _draw;
 	}
 	
-	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
-		return canvas_sel? canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus) : 0;
+	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus, panel) {
+		return canvas_sel? canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus, panel) : 0;
 	}
 	
 	////- Update

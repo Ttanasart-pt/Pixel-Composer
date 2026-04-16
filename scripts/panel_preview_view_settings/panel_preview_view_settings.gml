@@ -28,18 +28,22 @@ function Panel_Preview_View_Setting(_panel) : Panel_Linear_Setting() constructor
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Always show Left toolbar"),
-			new checkBox(function() /*=>*/ { PANEL_PREVIEW.tool_always_l = !PANEL_PREVIEW.tool_always_l; }),
-			function()    /*=>*/   {return PANEL_PREVIEW.tool_always_l},
-			function(val) /*=>*/ { PANEL_PREVIEW.tool_always_l = val; },
-			false,
+			new checkBox(function() /*=>*/ { previewPanel.tool_always_l = !previewPanel.tool_always_l; }),
+			function()    /*=>*/   {return previewPanel.tool_always_l},
+			function(val) /*=>*/ { previewPanel.tool_always_l = val; },
+			PREFERENCES.project_previewSetting.tool_always_l,
+			noone,
+			"project_previewSetting.tool_always_l",
 		),
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Always show Right toolbar"),
-			new checkBox(function() /*=>*/ { PANEL_PREVIEW.tool_always_r = !PANEL_PREVIEW.tool_always_r; }),
-			function()    /*=>*/   {return PANEL_PREVIEW.tool_always_r},
-			function(val) /*=>*/ { PANEL_PREVIEW.tool_always_r = val; },
-			false,
+			new checkBox(function() /*=>*/ { previewPanel.tool_always_r = !previewPanel.tool_always_r; }),
+			function()    /*=>*/   {return previewPanel.tool_always_r},
+			function(val) /*=>*/ { previewPanel.tool_always_r = val; },
+			PREFERENCES.project_previewSetting.tool_always_r,
+			noone,
+			"project_previewSetting.tool_always_r",
 		),
 		
 		-1,

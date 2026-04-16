@@ -14,6 +14,11 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 	hover_index      = 0;
 	rightclick_index = undefined;
 	
+	b_quick_pick  = button(function() /*=>*/ {
+		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
+		pick.onModify = function(c) /*=>*/ { onModify(new gradientObject(c)); }
+	}).setIcon(THEME.color_wheel).iconPad(ui(6)).setActivatePress();
+	
 	context_menu = [
 		menuWidget(__txt("Position"), textBox_Number(function(_t) /*=>*/ {
 			var _grad = current_gradient.clone();
@@ -74,6 +79,16 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		draw_sprite_stretched_ext(THEME.button_def, 0, x, y, w, h, boxColor);
+		
+		if(_w - bs > ui(128) && interactable) {
+			var bx = _x + _w - bs;
+			_w -= bs;
+			
+			draw_sprite_stretched_ext(THEME.textbox, 3, bx - bs, _y, bs, _h, CDEF.main_mdwhite, 1);
+			
+			b_quick_pick.setFocusHover(active, hover);
+			b_quick_pick.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+		}
 		
 		if(_w - bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
 			var bx = _x + _w - bs;

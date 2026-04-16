@@ -12,6 +12,7 @@
     "panel_notification_padding": 0,
     "panel_tab_padding": 0,
     "panel_animation_padding": 4, 
+    "panel_inspector_prop_paddding": 4, 
 
     "dialog_modal_button_spacing": 0, 
 

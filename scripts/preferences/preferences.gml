@@ -245,6 +245,9 @@
 			d3_tool_snap          : false,
             d3_tool_snap_position : 1,
             d3_tool_snap_rotation : 15,
+            
+            tool_always_l : false,
+            tool_always_r : false,
 		}
 		
 		PREFERENCES.project_graphGrid = {

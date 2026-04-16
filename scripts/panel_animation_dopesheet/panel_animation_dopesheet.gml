@@ -2466,6 +2466,7 @@ function Panel_Animation_Dopesheet() {
 	        
 	        var sx0 = padding + tool_width;
 	        var sx1 = sx0 + animPad;
+            var cy  = ui(8) + dopesheet_h / 2;
 	        
 	        if(pHOVER && point_in_rectangle(mx, my, sx0, ui(8), sx1, ui(8) + dopesheet_h)) {
 	            CURSOR = cr_size_we;
@@ -2482,10 +2483,12 @@ function Panel_Animation_Dopesheet() {
 	            
 	        } 
 	        
-            var cy = ui(8) + dopesheet_h / 2;
-	        draw_set_alpha(aa);
             draw_set_color(cc);
-            draw_line_round(sx0 + animPad/2, cy - ui(12), sx0 + animPad/2, cy + ui(12), ui(2));
+	        draw_set_alpha(aa);
+	        if(THEME_VALUE.panel_separation_type == "frame")
+	             draw_line_round(sx0 + animPad/2, cy - ui(12), sx0 + animPad/2, cy + ui(12), ui(2));
+	        else draw_line(sx0 + animPad/2, cy - ui(12), sx0 + animPad/2, cy + ui(12));
+	        
             draw_set_alpha(1);
         #endregion
         

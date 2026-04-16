@@ -23,9 +23,7 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 		array_insert(pick.palette, 0, current_color);
 		pick.onModify = onModify;
-	}).setIcon(THEME.color_wheel).iconPad(ui(6));
-	
-	b_quick_pick.activate_on_press = true;
+	}).setIcon(THEME.color_wheel).iconPad(ui(6)).setActivatePress();
 	
 	static isSimple  = function() /*=>*/ { show_alpha = false; simple = true; return self; };
 	static hideAlpha = function() /*=>*/ { show_alpha = false;                return self; };

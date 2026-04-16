@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc6",
+    "changes": [
+      {
+        "date": "2026-04-16T06:19:43.734Z",
+        "node": "",
+        "commit": "**Gradient Box**: Add color quick pick."
+      }
+    ]
+  }
+]

@@ -156,8 +156,10 @@ function Panel_Workspace() : PanelContent() constructor {
 		draw_set_text(f_p2b, fa_left, fa_center, COLORS._main_text);
 		draw_text_add(ui(12), cy, currT);
 		
-		draw_set_color(COLORS._main_icon_dark);
-		draw_line_round(currW - ui(4), ui(8), currW - ui(4), h - ui(8), 3);
+		var _spFrm = THEME_VALUE.panel_separation_type == "frame";
+		draw_set_color(COLORS.panel_separator);
+		if(_spFrm) draw_line_round(currW - ui(4), ui(8), currW - ui(4), h - ui(8), 3);
+		else       draw_line(currW - ui(4), 0, currW - ui(4), h);
 		
 		scroll     = lerp_float(scroll, scroll_to, 5);
 		scroll_max = max(ww - w + ui(16), 0);

@@ -61,9 +61,6 @@
 	    function panel_preview_toggle_mini()          { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini();  }
 	    function panel_preview_toggle_gizmo()         { CALL("preview_toggle_gizmo");              PANEL_PREVIEW.toggle_gizmo(); }
 	    
-	    function panel_preview_toggle_tool_lock_l()   { CALL("preview_toggle_tool_lock_l");        PANEL_PREVIEW.tool_always_l = !PANEL_PREVIEW.tool_always_l; }
-	    function panel_preview_toggle_tool_lock_r()   { CALL("preview_toggle_tool_lock_r");        PANEL_PREVIEW.tool_always_r = !PANEL_PREVIEW.tool_always_r; }
-	    
 		function panel_preview_view_control_toggle()  { PANEL_PREVIEW.view_control_toggle(); }
 		function panel_preview_view_control_show()    { PANEL_PREVIEW.view_control_show();   }
 		function panel_preview_view_control_hide()    { PANEL_PREVIEW.view_control_hide();   }
@@ -190,8 +187,6 @@
 	        	.setColorFn(   function() /*=>*/ {return PANEL_PREVIEW.locked? COLORS._main_accent : COLORS._main_icon} )
 	        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini",   THEME.icon_minimap ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.minimap_show} )
 	        registerFunction(p, "Toggle Gizmo",             "", n, panel_preview_toggle_gizmo              ).setMenu("preview_toggle_gizmo",  THEME.icon_gizmo   ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.gizmo_show}   )
-	        registerFunction(p, "Lock Left Toolbar",        "", n, panel_preview_toggle_tool_lock_l        ).setMenu("preview_toggle_tool_l", THEME.lock         ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always_l} )
-	        registerFunction(p, "Lock Right Toolbar",       "", n, panel_preview_toggle_tool_lock_r        ).setMenu("preview_toggle_tool_r", THEME.lock         ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always_r} )
 	        
 	        registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());         }).setMenu("preview_popup",          THEME.node_goto_thin    )
 	        registerFunction(p, "Grid Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Grid_Setting())  })
@@ -417,9 +412,6 @@ function Panel_Preview() : PanelContent() constructor {
     #endregion
     
     #region ---- tool ----
-    	tool_always_l  = false;
-    	tool_always_r  = false;
-    	
         tool_x       = 0;
         tool_x_to    = 0;
         tool_x_max   = 0;
@@ -1132,7 +1124,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         tool_clearable = true;
         
-        if(!tool_always_l && !_node.showTool()) { tool_current = noone; return; } 
+        if(!PROJECT.previewSetting.tool_always_l && !_node.showTool()) { tool_current = noone; return; } 
         var aa = d3_active? 0.8 : 1;
         draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
         
@@ -1155,14 +1147,16 @@ function Panel_Preview() : PanelContent() constructor {
         var bs = ui(16);
         var bx = toolbar_width / 2 - bs / 2;
         var by = yy - ui(12);
-        var bc = tool_always_l? COLORS._main_accent : COLORS._main_icon;
-        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !tool_always_l, bc) == 2)
-        	tool_always_l = !tool_always_l;
+        var bi = PROJECT.previewSetting.tool_always_l;
+        var bc = bi? COLORS._main_accent : COLORS._main_icon;
+        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !bi, bc) == 2)
+        	PROJECT.previewSetting.tool_always_l = !PROJECT.previewSetting.tool_always_l;
         yy         += bs + ui(8);
         tool_y_max += bs + ui(8);
         
         var _draw_sep = true;
-       
+    	var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
+    	
         for( var i = 0, n = array_length(_node.tools); i < n; i++ ) {
             var tool = _node.tools[i];
             
@@ -1177,7 +1171,8 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(tool == -1) {
                 draw_set_color(COLORS.panel_separator);
-                draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+                if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+                else       draw_line(0, _y0 + ui(3), toolbar_width, _y0 + ui(3));
                 
                 yy          += ui(8);
                 tool_y_max  += ui(8);
@@ -1285,7 +1280,8 @@ function Panel_Preview() : PanelContent() constructor {
         	if(_draw_sep == false) {
             	var _y0  = yy - ts2;
         		draw_set_color(COLORS.panel_separator);
-                draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+        		if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+        		else       draw_line(0, _y0 + ui(3), toolbar_width, _y0 + ui(3));
                 
                 yy          += ui(8);
                 tool_y_max  += ui(8);
@@ -1338,7 +1334,7 @@ function Panel_Preview() : PanelContent() constructor {
             tool_y_max += ts;
         }
         
-        var _h = _node.drawTools == noone? 0 : _node.drawTools(mx, my, xx, yy - ts2, ts, thov, pFOCUS);
+        var _h = _node.drawTools == noone? 0 : _node.drawTools(mx, my, xx, yy - ts2, ts, thov, pFOCUS, self);
         yy         += _h;
         tool_y_max += _h;
         
@@ -1354,7 +1350,7 @@ function Panel_Preview() : PanelContent() constructor {
         var ts2   = ts / 2;
         var pd    = 2;
         
-        if(!tool_always_r && _node.rightTools == -1) return;
+        if(!PROJECT.previewSetting.tool_always_r && _node.rightTools == -1) return;
         var aa = d3_active? 0.8 : 1;
         draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
         
@@ -1379,11 +1375,14 @@ function Panel_Preview() : PanelContent() constructor {
         var bs = ui(16);
         var bx = w + 1 - toolbar_width / 2 - bs / 2;
         var by = yy - ui(12);
-        var bc = tool_always_r? COLORS._main_accent : COLORS._main_icon;
-        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !tool_always_r, bc) == 2)
-        	tool_always_r = !tool_always_r;
+        var bi = PROJECT.previewSetting.tool_always_r;
+        var bc = bi? COLORS._main_accent : COLORS._main_icon;
+        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !bi, bc) == 2)
+        	PROJECT.previewSetting.tool_always_r = !PROJECT.previewSetting.tool_always_r;
         yy          += bs + ui(8);
         tool_ry_max += bs + ui(8);
+        
+        var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
         
         for(var i = 0; i < array_length(_node.rightTools); i++) {
             var tool = _node.rightTools[i];
@@ -1399,7 +1398,8 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(tool == -1) {
                 draw_set_color(COLORS.panel_separator);
-                draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+                if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+                else       draw_line(w - toolbar_width, _y0 + ui(3), w, _y0 + ui(3));
                 
                 yy          += ui(8);
                 tool_ry_max += ui(8);
@@ -2835,8 +2835,8 @@ function Panel_Preview() : PanelContent() constructor {
         var cy = canvas_y + _node.preview_y * canvas_s;
         var _snx = 0, _sny = 0;
         
-        tool_side_draw_l = tool_always_l || _node.showTool();
-        tool_side_draw_r = tool_always_r || _node.rightTools != -1;
+        tool_side_draw_l = PROJECT.previewSetting.tool_always_l || _node.showTool();
+        tool_side_draw_r = PROJECT.previewSetting.tool_always_r || _node.rightTools != -1;
         
         if(_node.showTool() && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h))
             overHover = false;
@@ -3038,11 +3038,14 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(mouse_rpress(hov && foc)) menuCallGen($"{_toolbars}_context");
     	var _tool_b = menuItems_gen(_toolbars);
+    	var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
+    	
         for( var i = 0, n = array_length(_tool_b); i < n; i++ ) {
 			var _menu = _tool_b[i];
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
-				draw_line_width(tbx + ui(2), by + ui(2), tbx + ui(2), by + bs - ui(2), 2);
+				if(_spFrm) draw_line_width(tbx + ui(2), by + ui(2), tbx + ui(2), by + bs - ui(2), 2);
+				else       draw_line(tbx + ui(2), ty, tbx + ui(2), h);
 				
 				tbx += ui(6);
 				continue;
@@ -3069,7 +3072,8 @@ function Panel_Preview() : PanelContent() constructor {
         	var _menu = _action_b[i];
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
-				draw_line_width(tbx - ui(2), by + ui(2), tbx - ui(2), by + bs - ui(2), 2);
+				if(_spFrm) draw_line_width(tbx - ui(2), by + ui(2), tbx - ui(2), by + bs - ui(2), 2);
+				else       draw_line(tbx - ui(2), ty, tbx - ui(2), h);
 				
 				tbx -= ui(6);
 				continue;
@@ -3089,7 +3093,9 @@ function Panel_Preview() : PanelContent() constructor {
         var _lh = toolbar_height / 2 - ui(8);
         
         draw_set_color(COLORS.panel_separator);
-        draw_line_width(_lx, _ly - _lh, _lx, _ly + _lh, 2);
+        if(_spFrm) draw_line_width(_lx, _ly - _lh, _lx, _ly + _lh, 2);
+        else       draw_line(_lx, ty, _lx, h);
+        
     }
     
     static drawSplitView = function() {
@@ -3660,17 +3666,17 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(PROJECT.previewSetting.show_ruler && !d3_active) drawRuler();
         
-        tool_side_draw_l = tool_always_l;
-        tool_side_draw_r = tool_always_r;
+        tool_side_draw_l = PROJECT.previewSetting.tool_always_l;
+        tool_side_draw_r = PROJECT.previewSetting.tool_always_r;
         
-        if(tool_always_l) {
+        if(PROJECT.previewSetting.tool_always_l) {
         	var tw = toolbar_width;
         	var th = h - toolbar_height - ui(32);
         	var aa = d3_active? .8 : 1;
         	draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), tw, th, c_white, aa);
         }
         
-        if(tool_always_r) {
+        if(PROJECT.previewSetting.tool_always_r) {
         	var tw = toolbar_width;
         	var th = h - toolbar_height - ui(32);
         	var aa = d3_active? .8 : 1;
@@ -3911,20 +3917,28 @@ function Panel_Preview() : PanelContent() constructor {
     static addNodeCallback = function(_node) {
     	if(!is(_node, Node)) return;
     	
-		var _outp = _node.getOutput();
-		if(_outp == noone) return;
-		
     	var _baseNode = getNodePreview();
+    	if(!is(_baseNode, Node)) return;
     	
-    	if(is(_baseNode, Node_Composite) && _outp.type == VALUE_TYPE.surface) {
-    		_node.x = _baseNode.x - 32 - _node.w;
-    		_baseNode.addInput(_outp);
-    		_baseNode.dynamic_input_inspecting = _baseNode.getInputAmount() - 1;
-    		setNodePreview(_baseNode);
+    	var _currOutp = _baseNode.getOutput();
+    	setNodePreview(_node);
+    	
+    	if(is(_baseNode, Node_Composite)) {
+			var _outp = _node.getOutput();
+    		if(_outp && _outp.type == VALUE_TYPE.surface) {
+	    		_node.x = _baseNode.x - 32 - _node.w;
+	    		_baseNode.addInput(_outp);
+	    		_baseNode.dynamic_input_inspecting = _baseNode.getInputAmount() - 1;
+	    		setNodePreview(_baseNode);
+    		}
     		
-    	} else {
-    		setNodePreview(_node);
+    	} else if(_currOutp && _currOutp.type == VALUE_TYPE.surface) {
+    		var _addInp = _node.getInput();
+    		if(_addInp && _addInp.type == VALUE_TYPE.surface)
+    			_addInp.setFrom(_currOutp);
     		
+    		PANEL_INSPECTOR.setInspecting(_node);
+    		PANEL_GRAPH.setFocusingNode(_node);
     	}
     	
     }
