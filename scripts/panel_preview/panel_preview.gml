@@ -1176,8 +1176,8 @@ function Panel_Preview() : PanelContent() constructor {
             var _bs = ts - pd * 2;
             
             if(tool == -1) {
-                draw_set_color(CDEF.main_dark);
-                draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+                draw_set_color(COLORS.panel_separator);
+                draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
                 tool_y_max  += ui(8);
@@ -1284,8 +1284,8 @@ function Panel_Preview() : PanelContent() constructor {
         	
         	if(_draw_sep == false) {
             	var _y0  = yy - ts2;
-        		draw_set_color(CDEF.main_dark);
-                draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+        		draw_set_color(COLORS.panel_separator);
+                draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
                 tool_y_max  += ui(8);
@@ -1398,8 +1398,8 @@ function Panel_Preview() : PanelContent() constructor {
             var _bs  = ts - pd * 2;
             
             if(tool == -1) {
-                draw_set_color(CDEF.main_dark);
-                draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+                draw_set_color(COLORS.panel_separator);
+                draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
                 
                 yy          += ui(8);
                 tool_ry_max += ui(8);
@@ -3041,7 +3041,7 @@ function Panel_Preview() : PanelContent() constructor {
         for( var i = 0, n = array_length(_tool_b); i < n; i++ ) {
 			var _menu = _tool_b[i];
 			if(_menu == -1) {
-				draw_set_color(COLORS.panel_toolbar_separator);
+				draw_set_color(COLORS.panel_separator);
 				draw_line_width(tbx + ui(2), by + ui(2), tbx + ui(2), by + bs - ui(2), 2);
 				
 				tbx += ui(6);
@@ -3068,7 +3068,7 @@ function Panel_Preview() : PanelContent() constructor {
         for( var i = 0, n = array_length(_action_b); i < n; i++ ) {
         	var _menu = _action_b[i];
 			if(_menu == -1) {
-				draw_set_color(COLORS.panel_toolbar_separator);
+				draw_set_color(COLORS.panel_separator);
 				draw_line_width(tbx - ui(2), by + ui(2), tbx - ui(2), by + bs - ui(2), 2);
 				
 				tbx -= ui(6);
@@ -3088,7 +3088,7 @@ function Panel_Preview() : PanelContent() constructor {
         var _ly = tby;
         var _lh = toolbar_height / 2 - ui(8);
         
-        draw_set_color(COLORS.panel_toolbar_separator);
+        draw_set_color(COLORS.panel_separator);
         draw_line_width(_lx, _ly - _lh, _lx, _ly + _lh, 2);
     }
     

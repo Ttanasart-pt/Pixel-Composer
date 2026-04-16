@@ -78,9 +78,9 @@ function checkBox(_onClick) : widget() constructor {
 				if(_value) {
 					draw_set_color(CDEF.main_mdblack);
 					draw_text(round(x + w2 + w2/2), round(y + h/2), __txt("True"));
-						
+					
 				} else {
-					draw_set_color(CDEF.main_mdwhite);
+					draw_set_color(COLORS._main_text_sub);
 					draw_text_add(x + w2/2, y + h/2, __txt("False"));
 				}
 			}

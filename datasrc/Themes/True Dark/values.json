@@ -8,7 +8,7 @@
         "main_grey":	"202020",
         "main_ltgrey":	"404040",
         "main_mdwhite":	"404040",
-        "main_white":	"555555",
+        "main_white":	"888888",
         "main_bg":      "1c1c1c",
         
         "blue":			"27aae1",
@@ -38,8 +38,8 @@
         "_main_text_accent": "orange",
         "_main_text_accent_inner": "orange",
         "_main_text_on_accent": "main_black",
-        "_main_text_sub": "white",
-        "_main_text_sub_inner": "white",
+        "_main_text_sub": "main_white",
+        "_main_text_sub_inner": "main_white",
         "_main_icon": "icon",
         "_main_icon_on_inner": "icon",
         "_main_icon_light": "icon",
@@ -157,7 +157,7 @@
         "panel_tab_inactive": "white",
         "panel_tab_text": "main_dkblack",
         "panel_tab_icon": "main_dkblack",
-        "panel_separator": "main_dkgrey",
+        "panel_separator": "main_ltgrey",
 
         "panel_graph_bg": "main_dkblack",
         "panel_graph_minimap_outline": "main_dkgrey",

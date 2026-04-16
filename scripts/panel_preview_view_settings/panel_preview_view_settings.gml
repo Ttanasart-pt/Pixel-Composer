@@ -1,5 +1,6 @@
-function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
+function Panel_Preview_View_Setting(_panel) : Panel_Linear_Setting() constructor {
 	title = __txt("preview_view_settings", "View Settings");
+	panel = _panel;
 	previewPanel = PROJECT.previewSetting;
 	
 	properties = [
@@ -21,6 +22,24 @@ function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
 			PREFERENCES.project_previewSetting.show_view_control,
 			noone,
 			"project_previewSetting.show_view_control",
+		),
+		
+		-1,
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Always show Left toolbar"),
+			new checkBox(function() /*=>*/ { PANEL_PREVIEW.tool_always_l = !PANEL_PREVIEW.tool_always_l; }),
+			function()    /*=>*/   {return PANEL_PREVIEW.tool_always_l},
+			function(val) /*=>*/ { PANEL_PREVIEW.tool_always_l = val; },
+			false,
+		),
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Always show Right toolbar"),
+			new checkBox(function() /*=>*/ { PANEL_PREVIEW.tool_always_r = !PANEL_PREVIEW.tool_always_r; }),
+			function()    /*=>*/   {return PANEL_PREVIEW.tool_always_r},
+			function(val) /*=>*/ { PANEL_PREVIEW.tool_always_r = val; },
+			false,
 		),
 		
 		-1,

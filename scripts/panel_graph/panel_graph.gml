@@ -2889,7 +2889,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         for( var i = 0, n = array_length(tbb); i < n; i++ ) {
         	var _menu = tbb[i];
 			if(_menu == -1) {
-				draw_set_color(COLORS.panel_toolbar_separator);
+				draw_set_color(COLORS.panel_separator);
 				draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
 				
 				tbx -= ui(6);
@@ -2903,7 +2903,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			tbx -= bs + ui(2);
 			
 			if(i == n - 1) {
-				draw_set_color(COLORS.panel_toolbar_separator);
+				draw_set_color(COLORS.panel_separator);
 				draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
 			}
         }
@@ -2965,7 +2965,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		for( var i = 0, n = array_length(_side_m); i < n; i++ ) {
 			var _menu = _side_m[i];
 			if(_menu == -1) {
-				draw_set_color(CDEF.main_mdblack);
+				draw_set_color(COLORS.panel_separator);
 				draw_line_width(_mux + ui(1), _muy, _mux + ui(1), _muy + _mus, 2);
 				
 				_mux += ui(6);

@@ -155,7 +155,7 @@ function ThemeColor() constructor {
     panel_tab_inactive                  = CDEF.white;
     panel_tab_text                      = CDEF.main_dkblack;
     panel_tab_icon                      = CDEF.main_dkblack;
-    panel_separator                     = CDEF.main_dkgrey;
+    panel_separator                     = CDEF.main_dark;
 
     panel_graph_bg                      = CDEF.main_dkblack;
     panel_graph_minimap_outline         = CDEF.main_dkgrey;

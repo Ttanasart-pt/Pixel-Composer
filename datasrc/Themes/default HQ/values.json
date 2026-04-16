@@ -155,7 +155,7 @@
         "panel_tab_inactive": "white",
         "panel_tab_text": "main_dkblack",
         "panel_tab_icon": "main_dkblack",
-        "panel_separator": "main_dkgrey",
+        "panel_separator": "main_dkblack",
 
         "panel_graph_bg": "main_dkblack",
         "panel_graph_minimap_outline": "main_dkgrey",
