@@ -756,8 +756,9 @@ function Panel_Preference() : PanelContent() constructor {
     	font_override_sb_bold = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite_bold = v; should_restart = true; PREF_SAVE(); });
     	font_override_sb_code = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite_code = v; should_restart = true; PREF_SAVE(); });
     	
-    	cb_load_unpack = new checkBox(function() /*=>*/ {return prefToggle("theme_load_unpack")});
-    	sb_bool_style  = new scrollBox([ "Slider", "Checkbox" ], function(i) /*=>*/ {return prefSet("theme_boolean", i)});
+    	cb_load_unpack  = new checkBox(function() /*=>*/ {return prefToggle("theme_load_unpack")});
+    	cb_accent_panel = new checkBox(function() /*=>*/ {return prefToggle("panel_outline_accent")});
+    	sb_bool_style   = new scrollBox([ "Slider", "Checkbox" ], function(i) /*=>*/ {return prefSet("theme_boolean", i)});
     	
     	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -897,6 +898,17 @@ function Panel_Preference() : PanelContent() constructor {
     		sb_bool_style.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_boolean));
     		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
     			PREFERENCES.theme_boolean = 0;
+    			PREF_SAVE();
+    		}
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
+    		
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(ui(8), _y + _h / 2, __txt("pref_theme_panel_border_accent", "Accent panel border"));
+    		
+    		cb_accent_panel.drawParam(_wpar.setY(_y).setData(PREFERENCES.panel_outline_accent));
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
+    			PREFERENCES.panel_outline_accent = true;
     			PREF_SAVE();
     		}
     		_y += _h + ui(8);

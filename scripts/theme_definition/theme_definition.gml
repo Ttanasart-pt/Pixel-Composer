@@ -211,9 +211,14 @@ function ThemeValue() constructor {
     inline_node_radius = 6;
     
     panel_separation_type         = "frame";
+    panel_tab_expands             = 0;
     panel_padding                 = 2;
     panel_margin                  = 2;
     panel_corner_radius           = 8;
+    
+    panel_menu_padding            = 6;
+    panel_menu_action_spacing     = 4;
+    panel_menu_user_padding       = 10;
     panel_notification_padding    = 0;
     panel_tab_padding             = 2;
 	panel_animation_padding       = 6;

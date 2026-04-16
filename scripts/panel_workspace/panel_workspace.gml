@@ -11,8 +11,12 @@
 function Panel_Workspace() : PanelContent() constructor {
 	title      = "Workspace";
 	workspaces = [];
+	
 	w = ui(480);
 	h = ui(24);
+	
+	min_w = ui(40);
+	min_h = ui(24);
 	
 	font       = f_p3;
 	scroll     = 0;
@@ -144,8 +148,8 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		var _hov = pHOVER && point_in_rectangle(mx, my, 0, 0, currW, h);
 		if(_hov) {
-			draw_sprite_stretched(THEME.button_hide_fill, 1, ui(8), ui(8), currW - ui(16), h - ui(16));
-				
+			draw_sprite_stretched(THEME.button_hide_fill, 1, ui(4), ui(4), currW - ui(8), h - ui(8));
+			
 			if(mouse_rpress(pFOCUS)) {
 				menuCall("workspace_current_menu", [
 					menuItem(__txt("Reset"), function() /*=>*/ {return setPanel()}),

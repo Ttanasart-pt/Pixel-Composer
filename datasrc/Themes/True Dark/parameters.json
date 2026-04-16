@@ -6,9 +6,14 @@
     "inline_node_radius": 0, 
 
     "panel_separation_type": "line",
+    "panel_tab_expands": 1, 
     "panel_padding": 0,
     "panel_margin": 0,
     "panel_corner_radius": 0,
+
+    "panel_menu_padding": 0,
+    "panel_menu_action_spacing": 0,
+    "panel_menu_user_padding": 6,
     "panel_notification_padding": 0,
     "panel_tab_padding": 0,
     "panel_animation_padding": 4, 

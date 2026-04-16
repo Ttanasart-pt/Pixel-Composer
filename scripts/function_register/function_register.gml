@@ -85,7 +85,6 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	}
 	
 	static action = function(_dat = undefined) {
-		print("fnObject action")
 		if(!is_callable(fn)) return;
 		var _res;
 		

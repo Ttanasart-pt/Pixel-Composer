@@ -2687,9 +2687,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 			
 			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, hh * _s, cc, 1);
-			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, hh * _s, COLORS._main_accent, 0.5);
+			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, hh * _s, COLORS._main_accent, .5);
 			
-			if(key_mod_press(ALT)) { 
+			if(_panel.pHOVER && key_mod_press(ALT)) { 
 				var x1 = xx +  w * _s;
 				var y1 = yy + hh * _s;
 				var hv = point_in_rectangle(_mx, _my, x1 - 24, y1 - 24, x1 + 24, y1 + 24) && 

@@ -116,6 +116,7 @@
 function Panel_Menu() : PanelContent() constructor {
     title     = __txt("Menu");
     auto_pin  = true;
+	min_h     = ui(24);
     
     noti_flash        = 0;
     noti_flash_color  = COLORS._main_accent;
@@ -463,13 +464,15 @@ function Panel_Menu() : PanelContent() constructor {
             var xc, x0, x1, yc, y0, y1;
             var  sx = xx;
             var _mx = xx;
+            
+            var len = array_length(_menus);
             var row = 1;
             var maxRow = ceil(h / ui(40));
             var ww, _ww = 0;
             
             draw_set_text(font, fa_center, fa_center, COLORS._main_text);
             
-            for(var i = 0; i < array_length(_menus) - 1; i++) {
+            for(var i = 0; i < len - 1; i++) {
                  ww = string_width(_menus[i][0]) + ui(16 + 8);
                 _ww += ww;
                 
@@ -480,11 +483,12 @@ function Panel_Menu() : PanelContent() constructor {
             }
             
             row = min(row, maxRow);
+            var _padd   = ui(THEME_VALUE.panel_menu_padding);
             var _curRow = 0, currY;
-            var _rowH   = (h - ui(12)) / row;
+            var _rowH   = (h - _padd * 2) / row;
             var _ww     = 0;
         
-            for(var i = 0; i < array_length(_menus); i++) {
+            for(var i = 0; i < len; i++) {
                 var _menu  = _menus[i];
                 var _name  = _menu[0];
                 var _cont  = _menu[1];
@@ -498,7 +502,7 @@ function Panel_Menu() : PanelContent() constructor {
                     xc = xx + ww / 2;
                     x0 = xx;
                     x1 = xx + ww;
-                    y0 = ui(6) + _rowH * _curRow;
+                    y0 = _padd + _rowH * _curRow;
                     y1 = y0 + _rowH;
                 
                     yc = (y0 + y1) / 2;
@@ -549,19 +553,21 @@ function Panel_Menu() : PanelContent() constructor {
         
         #region notification
             var nx0, ny0;
+            var nw, nh;
                 
             if(hori) {
                 nx0 = _mx + ui(8);
                 ny0 = h / 2;
+                nh  = h - _padd / 2;
                 
             } else {
                 nx0 = ui(8);
                 ny0 = yy + ui(16);
+                nh  = ui(24);
             }
             
             if(RENDERING != undefined) {
                 var nw = hori? ui(104) : w - ui(16);
-                var nh = ui(24);
                 
                 draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh/2, nw, nh);
                 
@@ -586,7 +592,6 @@ function Panel_Menu() : PanelContent() constructor {
                     noti_icon_show = lerp_float(noti_icon_show, 0, 4);
                 
                 var nw = hori? ui(8) + wr_w + ui(4) + er_w + noti_icon_show * ui(32) : w - ui(16);
-                var nh = ui(24);
                 
                 noti_flash = lerp_linear(noti_flash, 0, 0.02);
                 var ev = animation_curve_eval(ac_flash, noti_flash);
@@ -628,7 +633,7 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region addons 
-            var wh = ui(24);
+            var wh = nh;
             
             if(instance_exists(addon)) {
                 draw_set_text(font, fa_left, fa_center, COLORS._main_text);
@@ -662,17 +667,21 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region actions
-            var x1 = _right? w - ui(6) : ui(8 + 28);
-            var bs = ui(28);
+            var bs = h - _padd * 2;
+            var x1 = _right? w - _padd : ui(_padd) + bs;
             var bspr = THEME.button_hide_fill;
+            var aSpc = ui(THEME_VALUE.panel_menu_action_spacing);
             
             if(_action) {
                 for( var i = 0, n = array_length(action_buttons); i < n; i++ ) {
                     var action = action_buttons[i];
                     
+                    var bx = x1 - bs;
+                    var by = _padd;
+                    
                     switch(action) {
                         case WINDOW_ACTION.Exit:
-                            var b = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
+                            var b = buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
                             if(b) _draggable = false;
                             if(b == 2) window_close();
                             break;
@@ -682,7 +691,7 @@ function Panel_Menu() : PanelContent() constructor {
                             if(OS == os_macosx) win_max = __win_is_maximized;
                             
                             var bc = [ COLORS._main_icon, CDEF.lime ];
-                            var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_maximize_icon, win_max, bc);
+                            var b  = buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, true,, THEME.window_maximize_icon, win_max, bc);
                             if(b) _draggable = false;
                             if(b == 2) {
                                 if(OS == os_windows) {
@@ -708,7 +717,7 @@ function Panel_Menu() : PanelContent() constructor {
                             
                         case WINDOW_ACTION.Minimize:
                             var bc = [ COLORS._main_icon, CDEF.yellow ];
-                            var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_minimize_icon, 0, bc);
+                            var b  = buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, true,, THEME.window_minimize_icon, 0, bc);
                             if(b) _draggable = false;
                             if(b == -2) winMan_Minimize();
                             break;
@@ -716,7 +725,7 @@ function Panel_Menu() : PanelContent() constructor {
                         case WINDOW_ACTION.Fullscreen:
                             var win_full = window_is_fullscreen;
                             var bc = [ COLORS._main_icon, CDEF.cyan ];
-                            var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_fullscreen_icon, win_full, bc);
+                            var b  = buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, true,, THEME.window_fullscreen_icon, win_full, bc);
                             if(b) _draggable = false;
                             if(b == 2) {
                                 if(OS == os_windows)
@@ -733,8 +742,8 @@ function Panel_Menu() : PanelContent() constructor {
                             break;
                     }
                     
-                    if(_right) x1 -= bs + ui(4);
-                    else       x1 += bs + ui(4);
+                    if(_right) x1 -= bs + aSpc;
+                    else       x1 += bs + aSpc;
                 }
             
                 if(_right) {
@@ -746,11 +755,13 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region profile
+            var uPad = ui(THEME_VALUE.panel_menu_user_padding);
+            
             if(PREFERENCES.panel_menu_show_profile && os_is_network_connected()) {
                 if(hori) {
-                    var _sts = h - ui(20);
+                    var _sts = h - uPad * 2;
                     var _stx = x1 - _sts;
-                    var _sty = ui(10);
+                    var _sty = uPad;
                     
                 } else {
                     var _sts = ui(24);
@@ -829,7 +840,7 @@ function Panel_Menu() : PanelContent() constructor {
                 if(w > 1500) {
                     draw_set_text(fnt, fa_right, fa_center, tc);
                     var  ww = string_width(txt) + ui(12) + ui(20) * NIGHTLY + ui(20) * STEAM_ENABLED;
-                    var  hh = string_height(txt) + ui(8);
+                    var  hh = nh;
                     var _x0 = _xx1 - ww;
                     var _x1 = _xx1;
                     
@@ -923,11 +934,11 @@ function Panel_Menu() : PanelContent() constructor {
             var full_name = string_width(txt + ".pxc") < maxW;
             var tc = string_cut(txt, maxW);
             var tw = string_width(tc) + ui(16);
-            var th = ui(28);
+            var th = nh;
             
             if(hori) {
                 tbx0 = tcx - tw / 2;
-                tby0 = ty1 / 2 - ui(14);
+                tby0 = ty1 / 2 - th / 2;
                 
             } else {
                 tbx0 = tx0;

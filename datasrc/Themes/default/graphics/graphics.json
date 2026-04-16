@@ -413,6 +413,7 @@
     "ui_panel_bg_header":                 { "path": "./panel/s_ui_panel_bg_header.png",                     "s": 1, "x":  0, "y":  0, "slice":  6 },
     "ui_panel_tool":                      { "path": "./panel/s_ui_panel_tool.png",                          "s": 1, "x":  0, "y":  0, "slice": [ 18, 4, 4, 4 ] },
     "ui_panel_tab":                       { "path": "./panel/s_ui_panel_tab.png",                           "s": 4, "x":  0, "y":  0, "slice":  5 },
+    "ui_panel_tab_v":                     { "path": "./panel/s_ui_panel_tab_v.png",                         "s": 4, "x":  0, "y":  0, "slice":  5 },
     "ui_selection_range_hori":            { "path": "./panel/s_ui_selection_range_hori.png",                "s": 1, "x":  0, "y":  0, "slice": [ 10,  7,  4,  4 ] },
     "ui_selection_range_sim_hori":        { "path": "./panel/s_ui_selection_range_sim_hori.png",            "s": 1, "x":  0, "y":  0, "slice": [ 10,  7,  4,  4 ] },
     "ui_selection":                       { "path": "./panel/s_ui_selection.png",                           "s": 1, "x":  0, "y":  0, "slice":  4 },

@@ -2704,6 +2704,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var dy  = mouse_my + 8;
         var dia = instance_create_depth(dx, dy, 0, o_dialog_add_node, { context: ctx });
         if(dia == undefined) return undefined;
+        
         dia.resetPosition();
         setFocus(dia.id, "Dialog");
         
@@ -2729,8 +2730,29 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	for( var i = 0, n = array_length(_rel); i < n; i++ ) {
 	        		var _r = _rel[i]
 	        		var _k = $"graph_add_{_r}";
+	        		if(!has(MENU_ITEMS, _k)) continue;
 	        		
-	        		if(has(MENU_ITEMS, _k)) array_push(menu, MENU_ITEMS[$ _k]);
+	        		var _orig = MENU_ITEMS[$ _k];
+	        		var _item = new MenuItem(_orig.name, function(n) /*=>*/ {
+	        			var _newNode = createNodeHotkey(n.node);
+	        			if(!is(_newNode, Node)) return;
+	        			
+	        			var j = n.junc;
+	        			if(j.connect_type == CONNECT_TYPE.input) {
+	        				var _targ = _newNode.getOutput();
+	        				if(_targ) j.setFrom(_targ);
+	        				
+	        			} else if(j.connect_type == CONNECT_TYPE.output) {
+	        				var _targ = _newNode.getInput();
+	        				if(_targ) _targ.setFrom(j);
+	        			}
+	        			
+	        		}, _orig.spr).setParam({
+	        			node: _r, 
+	        			junc: conn, 
+	        		});
+	        		
+	        		array_push(menu, _item);
 	        	}
 	        	
 	        	if(array_length(menu))

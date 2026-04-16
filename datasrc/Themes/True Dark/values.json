@@ -149,7 +149,7 @@
 
         "panel_bg_clear_inner": "main_mdblack",
         "panel_bg_clear": "main_black",
-        "panel_select_border": "main_grey",
+        "panel_select_border": "main_white",
         "panel_frame": "main_mdwhite",
         "panel_frame_inner": "main_grey",
         "panel_prop_bg": "main_ltgrey",
@@ -176,7 +176,7 @@
         "panel_preview_tool_button": "main_white",
         "panel_preview_tool_separator": "main_dkgrey",
         "panel_preview_bg": "main_mdblack",
-        "panel_preview_transparent": "main_dkblack",
+        "panel_preview_transparent": "main_white",
 
         "panel_3d_bg": "main_dkblack",
 

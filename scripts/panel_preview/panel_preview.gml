@@ -3626,6 +3626,7 @@ function Panel_Preview() : PanelContent() constructor {
     		var _list = PANEL_GRAPH.getNodeList();
     		for( var i = 0, n = array_length(_list); i < n; i++ ) {
 				var _n = _list[i];
+				if(is(_n, Node_Collection_Inline)) continue;
 			
 				var nx = graph_nav_x + graph_nav_s * (_n.x - ox);
 				var ny = graph_nav_y + graph_nav_s * (_n.y - oy);
@@ -3684,6 +3685,7 @@ function Panel_Preview() : PanelContent() constructor {
 				var _list = PANEL_GRAPH.getNodeList();
 				for( var i = 0, n = array_length(_list); i < n; i++ ) {
 					var _n = _list[i];
+					if(is(_n, Node_Collection_Inline)) continue;
 					
 					graph_nav_graph_x0 = min( graph_nav_graph_x0, _n.x        );
 					graph_nav_graph_y0 = min( graph_nav_graph_y0, _n.y        );
@@ -3694,10 +3696,6 @@ function Panel_Preview() : PanelContent() constructor {
 				if(array_empty(_list)) {
 					graph_nav_ox = 0;
 					graph_nav_oy = 0;
-					
-				} else if(graph_nav_node_ini != undefined) {
-					graph_nav_ox = graph_nav_node_ini.x + graph_nav_node_ini.w / 2;
-					graph_nav_oy = graph_nav_node_ini.y + graph_nav_node_ini.h / 2;
 					
 				} else {
 					graph_nav_ox = (graph_nav_graph_x0 + graph_nav_graph_x1) / 2;

@@ -11,6 +11,11 @@
         "date": "2026-04-16T08:35:43.598Z",
         "node": "",
         "commit": "**Preview Panel**: Add Alt+Shift quick nav."
+      },
+      {
+        "date": "2026-04-16T09:55:12.534Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Fix node add from related menu not connect to the calling junction."
       }
     ]
   },

@@ -587,16 +587,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function drawTabH() {
-		var _top    = tab_align == 0;
-		var tab_w   = w - padding * 2;
-		var tab_h   = tab_size;
+		var _top  = tab_align == 0;
+		var tab_w = w - padding * 2;
+		var tab_h = tab_size;
 		
-		var tsx     = x + padding;
-		var tsy     = _top? y + padding : y + h - padding - tab_h;
-		var msx     = mouse_x - tsx;
-		var msy     = mouse_y - tsy;
+		var tsx   = x + padding;
+		var tsy   = _top? y + padding : y + h - padding - tab_h;
+		var msx   = mouse_x - tsx;
+		var msy   = mouse_y - tsy;
 		
-		var ppad = ui(THEME_VALUE.panel_tab_padding);
+		var _len  = array_length(content);
+		var ppad  = ui(THEME_VALUE.panel_tab_padding);
+		var expd  = THEME_VALUE.panel_tab_expands;
+		var expw  = (w - ppad * (_len + 1)) / _len;
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
 		
@@ -606,7 +609,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			var tbx = tab_x;
 			var tby = 0;
 			var tbh = tab_size;
-			var tabHov = msx < 0 ? 0 : array_length(content) - 1;
+			var tabHov = msx < 0 ? 0 : _len - 1;
 			
 			tab_x = lerp_float(tab_x, tab_x_to, 5);
 			tab_width = 0;
@@ -614,12 +617,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			var rem = -1;
 			
 			draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text_sub);
-			for( var i = 0, n = array_length(content); i < n; i++ ) {
+			for( var i = 0; i < _len; i++ ) {
 				var cont = content[i];
 				var txt  = cont.title;
 				var icn  = cont.icon;
 				
-				var tbw = string_width(txt) + ui(16 + 16) + (icn != noone) * ui(16 + 4);
+				var tbw = expd? expw : string_width(txt) + ui(16 + 16) + (icn != noone) * ui(16 + 4);
 				var foc = false;
 				
 				tab_width += tbw + ppad;
@@ -712,8 +715,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				var txt  = tab_holding.title;
 				var icn  = tab_holding.icon;
-				var tbw  = string_width(txt) + ui(16 + 16);
-				if(icn != noone) tbw += ui(16 + 4);
+				var tbw  = expd? expw : string_width(txt) + ui(16 + 16) + (icn != noone) * ui(16 + 4);
 				
 				var _tbx = ppad + tab_holding.tab_x;
 				var _tby = _top? tby : tby + ppad;
@@ -763,16 +765,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function drawTabV() {
-		var _left   = tab_align == 2;
-		var tab_w   = tab_size;
-		var tab_h   = h - padding * 2;
+		var _left = tab_align == 2;
+		var tab_w = tab_size;
+		var tab_h = h - padding * 2;
 		
-		var tsx  = _left? x + padding : x + w - tab_w - padding;
-		var tsy  = y + padding;
-		var msx  = mouse_x - tsx;
-		var msy  = mouse_y - tsy;
+		var tsx   = _left? x + padding : x + w - tab_w - padding;
+		var tsy   = y + padding;
+		var msx   = mouse_x - tsx;
+		var msy   = mouse_y - tsy;
 		
-		var ppad = ui(THEME_VALUE.panel_tab_padding);
+		var _len  = array_length(content);
+		var ppad  = ui(THEME_VALUE.panel_tab_padding);
+		var expd  = THEME_VALUE.panel_tab_expands;
+		var expw  = (h - ppad * (_len + 1)) / _len;
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
 		
@@ -782,7 +787,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			var tbx = tab_x;
 			var tby = 0;
 			var tbs = tab_size;
-			var tabHov = msy < 0 ? 0 : array_length(content) - 1;
+			var tabHov = msy < 0 ? 0 : _len - 1;
 			
 			var rem   = -1;
 			var hover = HOVER == self;
@@ -792,12 +797,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			tab_width = 0;
 			
 			draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text_sub);
-			for( var i = 0, n = array_length(content); i < n; i++ ) {
+			for( var i = 0; i < _len; i++ ) {
 				var cont = content[i];
 				var txt  = cont.title;
 				var icn  = cont.icon;
 				
-				var tbw  = string_width(txt) + ui(16 + 16) + (icn != noone) * ui(16 + 4);
+				var tbw  = expd? expw : string_width(txt) + ui(16 + 16) + (icn != noone) * ui(16 + 4);
 				var foc  = false;
 				
 				tab_width += tbw + ppad;
@@ -824,13 +829,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					var cc = COLORS.panel_tab;
 					if(foc) cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 					
-					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + foc, _tbx, _tby, _tbw, _tbh, cc);
+					draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 1 + foc, _tbx, _tby, _tbw, _tbh, cc);
 					
 				} else {
 					var cc = COLORS.panel_tab_inactive;
 					if(_hov) cc = COLORS.panel_tab_hover;
 						
-					draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, _tby, _tbw, _tbh, cc);
+					draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 0, _tbx, _tby, _tbw, _tbh, cc);
 				}
 				
 				var aa = 0.5;
@@ -893,8 +898,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				var txt  = tab_holding.title;
 				var icn  = tab_holding.icon;
-				var tbw  = string_width(txt) + ui(16 + 16);
-				if(icn != noone) tbw += ui(16 + 4);
+				var tbw  = expd? expw : string_width(txt) + ui(16 + 16) + (icn != noone) * ui(16 + 4);
 				
 				var _tbx = _left? tby : ppad + tby;
 				var _tby = tab_holding.tab_x;
@@ -904,7 +908,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
 				
-				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, cc, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 2, _tbx, _tby, _tbw, _tbh, cc, 1);
 				draw_sprite_ui(THEME.tab_exit, 0, tc - !_left, _tby + _tbh - ui(12), 1, 1, 0, COLORS.panel_tab_icon);
 				
 				if(icn != noone) {
@@ -1033,11 +1037,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);
 		}
 		
 		if(FOCUS == self && parent != noone && !m_in && m_ot) {
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, c_white, 0.4);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, c_white, .4);
 			
 			if(DOUBLE_CLICK) {
 				extract();
