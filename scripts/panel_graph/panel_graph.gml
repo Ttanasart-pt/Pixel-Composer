@@ -3396,7 +3396,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, tx0, ty0, tw, th, c_white, aa);
 		draw_set_alpha(aa);
-		draw_text(tx1 - ui(6), ty1 - ui(3), txt);
+		draw_text_add(tx1 - ui(6), ty1 - ui(3), txt);
 		draw_set_alpha(1);
     }
     

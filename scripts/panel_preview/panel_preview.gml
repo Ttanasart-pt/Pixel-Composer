@@ -565,6 +565,24 @@ function Panel_Preview() : PanelContent() constructor {
         minimap_drag_my  = 0;
     #endregion
     
+    #region ---- graph navigator ----
+    	graph_nav   = false;
+    	graph_nav_x = 0;
+		graph_nav_y = 0;
+		graph_nav_s = 1;
+		
+		graph_nav_node     = undefined;
+		graph_nav_node_ini = undefined;
+		graph_nav_graph_x0 = 0;
+		graph_nav_graph_y0 = 0;
+		graph_nav_graph_x1 = 0;
+		graph_nav_graph_y1 = 0;
+		graph_nav_ox       = 0;
+		graph_nav_oy       = 0;
+		
+    	graph_nav_hover = undefined;
+    #endregion
+    
     #region ++++ Toolbars & Actions ++++
     	MENUITEM_CONDITIONS[$ "preview_3d_is_unlock"] = function() /*=>*/ {return !preview_lock};
     	
@@ -2806,7 +2824,7 @@ function Panel_Preview() : PanelContent() constructor {
         overHover = overHover && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
         overHover = overHover && !key_mod_press(CTRL);
         
-        var overActive = active && overHover;
+        var overActive = active && overHover && !graph_nav;
         var params = { w, h, toolbar_height };
         params.panel = self;
         
@@ -2846,7 +2864,7 @@ function Panel_Preview() : PanelContent() constructor {
         overHover = overHover && !canvas_dragging && !canvas_zooming;
         overHover = overHover && point_in_rectangle(mx, my, (_node.showTool()) * toolbar_width, toolbar_height, w, h - toolbar_height);
         
-        overActive = active && overHover;
+        overActive = active && overHover && !graph_nav;
         overHover  = overHover && !key_mod_press(CTRL);
         hoveringContent = overHover;
         
@@ -3183,7 +3201,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, tx0, ty0, tw, th, c_white, aa);
 		draw_set_alpha(aa);
-		draw_text(tx1 - ui(6), ty1 - ui(3), txt);
+		draw_text_add(tx1 - ui(6), ty1 - ui(3), txt);
 		draw_set_alpha(1);
     }
     
@@ -3595,6 +3613,102 @@ function Panel_Preview() : PanelContent() constructor {
     	
     }
     
+    static graphNavigator = function() {
+    	if(!PROJECT.previewSetting.quick_nav) return;
+    	
+    	if(graph_nav) {
+    		graph_nav_node = undefined;
+    		
+    		var curr = getNodePreview();
+    		var ox = graph_nav_ox;// + (mx - graph_nav_x) / 2;
+    		var oy = graph_nav_oy;// + (my - graph_nav_y) / 2;
+    		
+    		var _list = PANEL_GRAPH.getNodeList();
+    		for( var i = 0, n = array_length(_list); i < n; i++ ) {
+				var _n = _list[i];
+			
+				var nx = graph_nav_x + graph_nav_s * (_n.x - ox);
+				var ny = graph_nav_y + graph_nav_s * (_n.y - oy);
+				
+				var nw = graph_nav_s * _n.w;
+				var nh = graph_nav_s * _n.h;
+				
+				var dx = nx - nw / 2;
+				var dy = ny - nh / 2;
+				
+				var cc = _n.getColor();
+				var aa = _n.bg_spr_add;
+				
+				var hov = point_in_rectangle(mouse_mx, mouse_my, dx, dy, dx + nw, dy + nh);
+				
+				draw_sprite_stretched_ext(THEME.node_bg, 0, dx, dy, nw, nh, CDEF.main_dkblack, .5); 
+				if(curr == _n)
+				     draw_sprite_stretched_ext(THEME.node_bg, 1, dx, dy, nw, nh, COLORS._main_accent, 1);
+				else draw_sprite_stretched_add(THEME.node_bg, 1, dx, dy, nw, nh, cc, aa + hov * .5);
+				
+				var _prev = _n.getGraphPreviewSurface();
+				if(is_surface(_prev)) {
+					var _pw = surface_get_width_safe(_prev);
+					var _ph = surface_get_height_safe(_prev);
+					var _ss = min((nw - ui(4)) / _pw, (nh - ui(4)) / _ph);
+					
+					draw_surface_ext_safe(_prev, dx + nw/2 - _pw * _ss/2, dy + nh/2 - _ph * _ss/2, _ss, _ss, 0, c_white, .8 + .2 * hov);
+				}
+				
+				if(hov) graph_nav_node = _n;
+    		}
+    		
+    		if(graph_nav_node != undefined) {
+    			if(mouse_lpress()) panelFocusNode(graph_nav_node);
+    		}
+    		
+    		if(MOUSE_WHEEL > 0) graph_nav_s = clamp(graph_nav_s / .8, .1, 2);
+    		if(MOUSE_WHEEL < 0) graph_nav_s = clamp(graph_nav_s * .8, .1, 2);
+    		
+    		if(keyboard_check_released(vk_alt))
+    			graph_nav = false;
+    			
+    	} else {
+    		if(pHOVER && (key_mod_press(ALT) && key_mod_press(SHIFT))) {
+	    		graph_nav   = true;
+	    		graph_nav_x = mouse_mx;
+	    		graph_nav_y = mouse_my;
+	    		graph_nav_s = .5;
+	    		
+				graph_nav_node_ini = getNodePreview();
+				graph_nav_graph_x0 =  infinity;
+				graph_nav_graph_y0 =  infinity;
+				graph_nav_graph_x1 = -infinity;
+				graph_nav_graph_y1 = -infinity;
+				
+				var _list = PANEL_GRAPH.getNodeList();
+				for( var i = 0, n = array_length(_list); i < n; i++ ) {
+					var _n = _list[i];
+					
+					graph_nav_graph_x0 = min( graph_nav_graph_x0, _n.x        );
+					graph_nav_graph_y0 = min( graph_nav_graph_y0, _n.y        );
+					graph_nav_graph_x1 = max( graph_nav_graph_x1, _n.x + _n.w );
+					graph_nav_graph_y1 = max( graph_nav_graph_y1, _n.y + _n.h );
+				}
+				
+				if(array_empty(_list)) {
+					graph_nav_ox = 0;
+					graph_nav_oy = 0;
+					
+				} else if(graph_nav_node_ini != undefined) {
+					graph_nav_ox = graph_nav_node_ini.x + graph_nav_node_ini.w / 2;
+					graph_nav_oy = graph_nav_node_ini.y + graph_nav_node_ini.h / 2;
+					
+				} else {
+					graph_nav_ox = (graph_nav_graph_x0 + graph_nav_graph_x1) / 2;
+		    		graph_nav_oy = (graph_nav_graph_y0 + graph_nav_graph_y1) / 2;
+				}
+				
+	    	}
+    	
+    	}
+    }
+    
     ////- DRAW MAIN
     
     static drawContent = function(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -3760,6 +3874,10 @@ function Panel_Preview() : PanelContent() constructor {
         
     }
     
+    static drawGUI = function() {
+    	graphNavigator();
+    }
+    
     ////- ACTION
     
     static blendAtSelection = function() {
@@ -3918,10 +4036,10 @@ function Panel_Preview() : PanelContent() constructor {
     	if(!is(_node, Node)) return;
     	
     	var _baseNode = getNodePreview();
-    	if(!is(_baseNode, Node)) return;
-    	
-    	var _currOutp = _baseNode.getOutput();
     	setNodePreview(_node);
+    	
+    	if(!is(_baseNode, Node)) return;
+    	var _currOutp = _baseNode.getOutput();
     	
     	if(is(_baseNode, Node_Composite)) {
 			var _outp = _node.getOutput();

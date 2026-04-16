@@ -6,6 +6,11 @@
         "date": "2026-04-16T06:19:43.734Z",
         "node": "Gradient Box",
         "commit": "**Gradient Box**: Add color quick pick."
+      },
+      {
+        "date": "2026-04-16T08:35:43.592Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Add Alt+Shift quick nav."
       }
     ]
   },

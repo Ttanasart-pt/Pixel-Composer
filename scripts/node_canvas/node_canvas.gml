@@ -1229,7 +1229,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region color picker
-			if(!selection.is_selected && active && key_mod_press(ALT)) {
+			if(!selection.is_selected && active && key_mod_down(ALT)) {
 				color_picking = true;
 				colorSelectorCall(undefined, function(c) /*=>*/ {return setToolColor(c)})
 					.setDrop(self).dropperActive()

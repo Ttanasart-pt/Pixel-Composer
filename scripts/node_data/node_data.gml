@@ -743,7 +743,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getInput = function(_y = 0, _junc = noone, _shft = input_fix_len, _over = false) {
-		
 		var _targ = noone;
 		var _dy   = infinity;
 		for( var i = _shft, n = array_length(inputs); i < n; i++ ) {

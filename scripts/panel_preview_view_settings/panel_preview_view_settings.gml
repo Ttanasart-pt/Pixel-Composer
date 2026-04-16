@@ -24,7 +24,17 @@ function Panel_Preview_View_Setting(_panel) : Panel_Linear_Setting() constructor
 			"project_previewSetting.show_view_control",
 		),
 		
-		-1,
+		new __Panel_Linear_Setting_Item(
+			__txt("Quick Nav"),
+			new checkBox(function() /*=>*/ { previewPanel.quick_nav = !previewPanel.quick_nav; }),
+			function()    /*=>*/   {return previewPanel.quick_nav},
+			function(val) /*=>*/ { previewPanel.quick_nav = val; },
+			PREFERENCES.project_previewSetting.quick_nav,
+			noone,
+			"project_previewSetting.quick_nav",
+		),
+		
+		-1, 
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Always show Left toolbar"),
