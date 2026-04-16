@@ -3268,13 +3268,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		struct_override(attributes, attr, true); 
 		
 		if(!CLONING && LOADING_VERSION < 1_18_02_0) {
-			if(struct_has(attributes, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
-			if(struct_has(attributes, "interpolate")) attributes.interpolate++;
-			if(struct_has(attributes, "oversample"))  attributes.oversample++;
+			if(has(attributes, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
+			if(has(attributes, "interpolate")) attributes.interpolate++;
+			if(has(attributes, "oversample"))  attributes.oversample++;
 		}
 		
-		if(struct_has(attributes, "color_depth") && !global.SURFACE_FORMAT_SUPP[attributes[$ "color_depth"]])
-			attributes.color_depth = PREFERENCES.node_default_depth;
+		if(has(attributes, "color_depth")) {
+			var _depth = attributes[$ "color_depth"];
+			var _supp  = array_safe_get_fast(global.SURFACE_FORMAT_SUPP, _depth, true);
+			if(!_supp) attributes.color_depth = PREFERENCES.node_default_depth;
+		}
 	}
 	
 	static doDeserialize   = function(m) /*=>*/ {}

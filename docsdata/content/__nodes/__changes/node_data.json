@@ -16,6 +16,11 @@
         "date": "2026-04-16T09:55:12.534Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Fix node add from related menu not connect to the calling junction."
+      },
+      {
+        "date": "2026-04-16T10:38:04.643Z",
+        "node": "Deserialize",
+        "commit": "**Deserialize**: Fix error when checking surface depth."
       }
     ]
   },

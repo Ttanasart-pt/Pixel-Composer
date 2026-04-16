@@ -178,7 +178,7 @@
         registerFunction(g, "Delete (merge)",        vk_delete, n, panel_graph_delete_merge  ).setMenu("graph_delete_merge",    THEME.cross)
     
         registerFunction(g, "Duplicate",             "D", c, panel_graph_duplicate           ).setMenu("graph_duplicate",       THEME.duplicate)
-        registerFunction(g, "Instance",              "D", a, panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
+        registerFunction(g, "Create Instance",       "D", a, panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
         registerFunction(g, "Copy",                  "C", c, panel_graph_copy                ).setMenu("graph_copy",            THEME.copy)
         registerFunction(g, "Paste",                 "V", c, panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
         registerFunction(g, "Mass Connect",          "",  n, panel_graph_mass_connect        ).setMenu("graph_mass_connect",    THEME.obj_auto_organize)
@@ -1056,7 +1056,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	"graph_node_display", 
 	    	"graph_toggle_render", 
 	    	"graph_hide_disconnected",
-	    	{ cond : "graph_select_group",    items : [ -1, "graph_enter_group", "graph_open_in_new_tab", "graph_ungroup", "graph_update" ] },
+	    	{ cond : "graph_select_group",    items : [ -1, "graph_enter_group", "graph_open_in_new_tab", "graph_ungroup", "graph_update", "graph_instance" ] },
 	    	{ cond : "graph_select_instance", items : [     "graph_uninstance"  ] },
 	    	{ cond : "graph_select_in_group", items : [     "graph_set_as_tool" ] },
 	    	{ cond : "graph_select_multiple", items : [ -1, "graph_group", "graph_add_Node_Frame" ] },
