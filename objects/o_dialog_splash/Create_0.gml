@@ -441,7 +441,7 @@ event_inherited();
 	
 	tb_sample_seaching = false;
 	tb_sample_search   = textBox_Text(function(t) /*=>*/ { sample_search = t; }).setAutoUpdate()
-		.setEmpty().setClearable().setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search);
+		.setEmpty().setClearable().setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search);
 	sample_search = "";
 #endregion
 
@@ -734,7 +734,7 @@ event_inherited();
 			
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
 				sp_contest.hover_content = true;
-				TOOLTIP = __txtx("contest_open_discord", "Open in Discord");
+				TOOLTIP = __txt("contest_open_discord", "Open in Discord");
 				
 				draw_sprite_ui(THEME.discord, 0, bx, by,,,, c_white);
 				if(mouse_lpress(sFOCUS))

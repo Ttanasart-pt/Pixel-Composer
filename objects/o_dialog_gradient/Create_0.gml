@@ -8,7 +8,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	dialog_h = ui(468);
 	title_height = 52;
 	
-	name = __txtx("gradient_editor_title", "Gradient editor");
+	name = __txt("gradient_editor_title", "Gradient editor");
 	gradient      = noone;
 	interactable  = true;
 	drop_target   = noone;
@@ -55,16 +55,16 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	
 	b_cancel = button(function() /*=>*/ { onModify(previous_gradient); instance_destroy(); })
 		.setIcon(THEME.undo, 0, COLORS._main_icon)
-		.setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
+		.setTooltip(__txt("dialog_revert_and_exit", "Revert and exit"));
 	
 	b_apply = button(function() /*=>*/ { onModify(gradient); instance_destroy(); })
 		.setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	sb_blending = new scrollBox([
-		__txtx("gradient_editor_blend_hard",  "Solid"),
-		__txtx("gradient_editor_blend_RGB",   "RGB"),  
-		__txtx("gradient_editor_blend_HSV",   "HSV"),  
-		__txtx("gradient_editor_blend_OKLAB", "OKLAB"),
+		__txt("gradient_editor_blend_hard",  "Solid"),
+		__txt("gradient_editor_blend_RGB",   "RGB"),  
+		__txt("gradient_editor_blend_HSV",   "HSV"),  
+		__txt("gradient_editor_blend_OKLAB", "OKLAB"),
 		
 	], function(i) /*=>*/ {
 		switch(i) {
@@ -138,7 +138,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 				var by = _y + ui(2);
 				
 				if(!_favFol) {
-					var bt = __txt("Add preset to folder...");
+					var bt = __txt("Add preset to folder") + "...";
 					var bc = [COLORS._main_icon, COLORS._main_value_positive];
 					var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.add, 0, bc, .85);
 					if(b) { _hovSec = false; isHover = false; };
@@ -231,7 +231,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 				
 				if(mouse_rpress(_focus)) {
 					menuCall("gradient_window_preset_menu", [ 
-						menuItem(__txtx("gradient_editor_delete", "Delete gradient"), 
+						menuItem(__txt("gradient_editor_delete", "Delete gradient"), 
 							function(p) /*=>*/ { file_delete(p); __refreshGradient(); }).setParam(g.path)
 					]);
 				}
@@ -275,7 +275,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	gradient_search_string = "";
 	tb_preset_search       = textBox_Text(function(t) /*=>*/ { gradient_search_string = string_lower(t) } ).setFont(f_p2).setHide(1)
 		.setEmpty(false).setPadding(ui(24)).setAutoUpdate()
-		.setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
+		.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
 				
 	////////////////////////  SORT  ////////////////////////
 	
@@ -486,13 +486,13 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			if(mouse_rclick()) {
 				if(_hoverColor != noone) {
 					menuCall("palette_window_preset_menu", [
-						menuItem(__txtx("gradient_set_single", "Set Single"), function(c) /*=>*/ { gradient = new gradientObject(c); }).setParam(_hoverColor),
-						menuItem(__txtx("palette_mix_color", "Mix Color"),    function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
+						menuItem(__txt("gradient_set_single", "Set Single"), function(c) /*=>*/ { gradient = new gradientObject(c); }).setParam(_hoverColor),
+						menuItem(__txt("palette_mix_color", "Mix Color"),    function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
 					]);
 					
 				} else if(isHover) {
 					menuCall("palette_window_preset_menu", [
-						menuItem(__txtx("gradient_set_palette", "Convert to Gradient"), function(_palt) { 
+						menuItem(__txt("gradient_set_palette", "Convert to Gradient"), function(_palt) { 
 							if(array_length(_palt) < 2) return;
 							
 							gradient.keys = [];
@@ -596,7 +596,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	palette_search_string = "";
 	tb_palette_search = textBox_Text(function(t) /*=>*/ { palette_search_string = string_lower(t) } )
 		.setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate()
-		.setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
+		.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
 	
 	////////////////////////  SORT  ////////////////////////
 	

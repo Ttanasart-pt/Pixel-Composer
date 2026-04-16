@@ -343,7 +343,7 @@ function Panel_Inspector() : PanelContent() constructor {
         
         metadata_buttons = [ button(function() /*=>*/ { json_save_struct(DIRECTORY + "meta.json", PROJECT.meta.serialize()); })
         	.setIcon(THEME.save,  0, COLORS._main_icon_light, .75)
-        	.setTooltip(__txtx("panel_inspector_set_default", "Set as default")) ];
+        	.setTooltip(__txt("panel_inspector_set_default", "Set as default")) ];
         
         global_layer_drawer = new Panel_Global_Layer_Drawer();
         globallayer_buttons = [ button(function() /*=>*/ {return dialogPanelCall(new Panel_Global_Layer())} )
@@ -542,7 +542,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var _menuItem = menuItems_gen("inspector_value_input");
        
         if(jun.globalExtractable()) {
-    		array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
+    		array_push(_menuItem, menuItemShelf(__txt("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
     			var arr = [];
                 for( var i = 0, n = array_length(PROJECT.globalNode.inputs); i < n; i++ ) {
             		var _glInp = PROJECT.globalNode.inputs[i];
@@ -1596,7 +1596,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         		1, 1, current_time / 2, COLORS._main_icon);
                         
                         if(hv) {
-                        	TOOLTIP = __txt("Change Thumbnail...");
+                        	TOOLTIP = __txt("Change Thumbnail") + "...";
                         	draw_sprite_stretched(THEME.textbox, 1, _wdx, yy, _wdw, wh);
                         	
                         	if(mouse_lpress(pFOCUS)) {
@@ -2085,7 +2085,7 @@ function Panel_Inspector() : PanelContent() constructor {
             
             if(sav) {
 	            if(PROJECT.meta.file_id != 0) {
-	            	var _stxt = __txt("View on Workshop...");
+	            	var _stxt = __txt("View on Workshop") + "...";
 	            	if(buttonInstant_Icon(sx0, ty, ui(10), mse, pHOVER, pFOCUS, _stxt, THEME.steam_invert_24, 0, .8) == 2)
 	                	dialogPanelCall(new Panel_Steam_Workshop().navigate({ type: "fileid", fileid: PROJECT.meta.file_id }));
 	            }
@@ -2120,17 +2120,17 @@ function Panel_Inspector() : PanelContent() constructor {
             by += ui(36);
             if(STEAM_ENABLED && workshop_uploading == 0) {
                 if(!sav) { // unsaved project
-                	var _txt = __txtx("panel_inspector_workshop_save", "Save file before upload");
+                	var _txt = __txt("panel_inspector_workshop_save", "Save file before upload");
                     buttonInstant(noone, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_upload, 0, c_white);
                     
                 } else if(PROJECT.meta.file_id == 0) { // project made locally
                     var s = PANEL_PREVIEW.getNodePreviewSurface();
                     if(!is_surface(s)) {
-                    	var _txt = __txtx("panel_inspector_workshop_no_thumbnail", "Send node to preview to be use as project thumbnail before uploading.");
+                    	var _txt = __txt("panel_inspector_workshop_no_thumbnail", "Send node to preview to be use as project thumbnail before uploading.");
                     	buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_no_file, 0, c_white);
                     	
                     } else {
-	                	var _txt = __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop");
+	                	var _txt = __txt("panel_inspector_workshop_upload", "Upload to Steam Workshop");
 	                    if(buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_upload, 0, c_white) == 2) {
                             steam_ugc_create_project();
                             workshop_uploading = 2;
@@ -2138,13 +2138,13 @@ function Panel_Inspector() : PanelContent() constructor {
                     }
                     
                 } else if(PROJECT.meta.author_steam_id == STEAM_USER_ID) { // user-owned steam project
-                	var _txt = __txtx("panel_inspector_workshop_upload_new", "Upload as a new Steam Workshop submission");
+                	var _txt = __txt("panel_inspector_workshop_upload_new", "Upload as a new Steam Workshop submission");
                     if(buttonInstant(bb, bx, by - ui(36), bs, bs, mse, hov, foc, _txt, THEME.workshop_add, 0, c_white) == 2) {
                         steam_ugc_create_project();
                         workshop_uploading = 1;
                 	}
                 	
-                	var _txt = __txtx("panel_inspector_workshop_update",  "Update Steam Workshop content");
+                	var _txt = __txt("panel_inspector_workshop_update",  "Update Steam Workshop content");
                 	if(buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_update, 0, c_white) == 2)
                         dialogCall(o_dialog_steam_project_update, mouse_mx + 8, mouse_my + 8).activate("Update note");
                 }

@@ -73,7 +73,7 @@ event_inherited();
 	
 	menuDialog     = undefined;
 	
-	view_tooltip   = new tooltipSelector("View",  [ __txtx("view_grid", "Grid view"), __txtx("view_list", "List view") ]);
+	view_tooltip   = new tooltipSelector("View",  [ __txt("view_grid", "Grid view"), __txt("view_list", "List view") ]);
 	group_tooltip  = new tooltipSelector("Group", [ __txt("Disabled"), __txt("Inline"), __txt("Stacked") ]);
 	
 	#region ---- category ----
@@ -91,7 +91,7 @@ event_inherited();
 			if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
 				continue;
 			
-			var name = __txt(cat.name);
+			var name = __txt(string_trim(cat.name, ["/"]));
 			maxLen   = max(maxLen, string_width(name));
 		}
 		
@@ -113,7 +113,7 @@ event_inherited();
 		
 		node_menu_selecting = node;
 		var fav = struct_exists(NODE_FAV_MAP, node.nodeName);
-		var fvt = fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite");
+		var fvt = fav? __txt("add_node_remove_favourite", "Remove from favourite") : __txt("add_node_add_favourite", "Add to favourite");
 		hk_selecting = struct_try_get(GRAPH_ADD_NODE_MAPS, node.nodeName, noone);
 		
 		var menu = [ menuItem(fvt, trigger_favourite, THEME.star, noone, noone, node.nodeName) ];
@@ -636,7 +636,7 @@ event_inherited();
 					curr_height = 0;
 					var _key = $"{ADD_NODE_PAGE}:{index}";
 					
-					array_push(group_labels, { y: yy, text: __txt(string_trim_start(__txt(_node), ["/"])), key: _key });
+					array_push(group_labels, { y: yy, text: __txt(string_trim_start(_node, ["/"])), key: _key });
 					
 					if(struct_try_get(collapsed, _key, 0)) {
 						hh += _lbh + ui(4);
@@ -843,7 +843,7 @@ event_inherited();
 					
 					var _key = $"{ADD_NODE_PAGE}:{i}";
 					
-					array_push(group_labels, { y: yy, text: string_trim_start(__txt(_node), ["/"]), key: _key });
+					array_push(group_labels, { y: yy, text: __txt(string_trim_start(_node, ["/"])), key: _key });
 					
 					if(struct_try_get(collapsed, _key, 0)) {
 						hh += _lbh;
@@ -1324,11 +1324,11 @@ event_inherited();
 			
 			draw_set_text(f_h5, fa_center, fa_bottom, COLORS._main_text_sub);
 			draw_text_line(search_pane.w / 2, search_pane.h / 2 - ui(8), 
-				__txtx("add_node_create_equation", "Create equation") + ": " + eq, -1, search_pane.w - ui(32));
+				__txt("add_node_create_equation", "Create equation") + ": " + eq, -1, search_pane.w - ui(32));
 			
 			draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
 			draw_text_add(round(search_pane.w / 2), round(search_pane.h / 2 - ui(4)), 
-				__txtx("add_node_equation_enter", "Press Enter to create equation node."));
+				__txt("add_node_equation_enter", "Press Enter to create equation node."));
 			
 			if(hk_editing == noone && KEYBOARD_ENTER)
 				buildNode(ALL_NODES[$ "Node_Equation"], { query: { type: "alias", value: eq } });

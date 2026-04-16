@@ -55,7 +55,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 			close();
 			
 			__initNodeActions(true);
-		}).setText(__txtx("new_action_create", "Create"));
+		}).setText(__txt("new_action_create", "Create"));
 		
 		KEYBOARD_RESET
 	#endregion

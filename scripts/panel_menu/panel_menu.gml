@@ -90,7 +90,7 @@
         registerFunction("", "Addons",              "",     MOD_KEY.none, function(_dat) /*=>*/ {
             var arr = [
                 MENU_ITEMS.addons,
-                menuItem(__txtx("panel_menu_addons_key", "Key displayer"), function() /*=>*/ {return instance_toggle(addon_key_displayer)}),
+                menuItem(__txt("panel_menu_addons_key", "Key displayer"), function() /*=>*/ {return instance_toggle(addon_key_displayer)}),
                 -1
             ];
             
@@ -256,7 +256,7 @@ function Panel_Menu() : PanelContent() constructor {
                     f = file_find_next();
                 }
                 
-                array_push(arr, menuItem(__txtx("panel_menu_save_layout", "Save layout"), function() {
+                array_push(arr, menuItem(__txt("panel_menu_save_layout", "Save layout"), function() {
                     var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
                     dia.name = PREFERENCES.panel_layout_file;
                     dia.onModify = function(name) { 
@@ -313,23 +313,23 @@ function Panel_Menu() : PanelContent() constructor {
         ]];
         
         menu_help = [ __txt("Help"), [
-            menuItem(__txtx("panel_menu_help_forum", "Pixel Composer Forum"), function() /*=>*/ {return url_open("https://forum.pixel-composer.com")}, THEME.forum_grey),
-            menuItem(__txtx("panel_menu_help_wiki",  "Documentation"), function() /*=>*/ {return url_open("https://docs.pixel-composer.com")}),
+            menuItem(__txt("panel_menu_help_forum", "Pixel Composer Forum"), function() /*=>*/ {return url_open("https://forum.pixel-composer.com")}, THEME.forum_grey),
+            menuItem(__txt("panel_menu_help_wiki",  "Documentation"), function() /*=>*/ {return url_open("https://docs.pixel-composer.com")}),
             -1, 
-            menuItem(__txtx("panel_menu_local_directory", "Open local directory"),             function() /*=>*/ {return shellOpenExplorer(DIRECTORY)},               THEME.folder),
-            menuItem(__txtx("panel_menu_autosave_directory", "Open autosave directory"),       function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave/")}, THEME.folder),
-            menuItem(__txtx("panel_menu_reset_default", "Reset default collection, assets"),   function() /*=>*/ {
+            menuItem(__txt("panel_menu_local_directory", "Open local directory"),             function() /*=>*/ {return shellOpenExplorer(DIRECTORY)},               THEME.folder),
+            menuItem(__txt("panel_menu_autosave_directory", "Open autosave directory"),       function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave/")}, THEME.folder),
+            menuItem(__txt("panel_menu_reset_default", "Reset default collection, assets"),   function() /*=>*/ {
                 zip_unzip($"{working_directory}pack/collections.zip", $"{DIRECTORY}Collections");
                 zip_unzip($"{working_directory}pack/assets.zip", $"{DIRECTORY}Assets");
             }),
             -1,
-            menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"),               function() /*=>*/ {return dialogCall(o_dialog_patreon)},         THEME.patreon),
-            menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon (legacy)"),      function() /*=>*/ {return dialogPanelCall(new Panel_Patreon())}, THEME.patreon),
+            menuItem(__txt("panel_menu_connect_patreon", "Connect to Patreon"),               function() /*=>*/ {return dialogCall(o_dialog_patreon)},         THEME.patreon),
+            menuItem(__txt("panel_menu_connect_patreon", "Connect to Patreon (legacy)"),      function() /*=>*/ {return dialogPanelCall(new Panel_Patreon())}, THEME.patreon),
             -1,
             menuItem(__txt("About Pixel Composer"), function() /*=>*/ {return dialogCall(o_dialog_about)}),
         ]];
         
-        if(steam_initialised()) array_push(menu_help[1], -1, menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() /*=>*/ {return steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/")}, THEME.steam) );
+        if(steam_initialised()) array_push(menu_help[1], -1, menuItem(__txt("panel_menu_steam_workshop", "Steam Workshop"), function() /*=>*/ {return steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/")}, THEME.steam) );
         
         menu_test = [ __txt("Dev"), [
             MENU_ITEMS.console_panel,
@@ -338,9 +338,9 @@ function Panel_Menu() : PanelContent() constructor {
                 menuItem(__txt("Render Profiler"), function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
                 menuItem(__txt("Tester"),          function() /*=>*/ { dialogPanelCall(new Panel_Test());             }),
                 -1,
-                menuItem(__txtx("panel_menu_test_warning", "Display Warning"), function() /*=>*/ {return noti_warning("Error message")}),
-                menuItem(__txtx("panel_menu_test_error", "Display Error"),     function() /*=>*/ {return noti_error("Error message")}),
-                menuItem(__txtx("panel_menu_test_crash", "Force crash"),       function() /*=>*/ {return print(1 + "a")}),
+                menuItem(__txt("panel_menu_test_warning", "Display Warning"), function() /*=>*/ {return noti_warning("Error message")}),
+                menuItem(__txt("panel_menu_test_error", "Display Error"),     function() /*=>*/ {return noti_error("Error message")}),
+                menuItem(__txt("panel_menu_test_crash", "Force crash"),       function() /*=>*/ {return print(1 + "a")}),
             ])}),
             
             menuItemShelf(__txt("Tools"), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
@@ -350,7 +350,7 @@ function Panel_Menu() : PanelContent() constructor {
                 menuItem(__txt("Collection Manager"), function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
                 menuItem(__txt("Projects Manager"),   function() /*=>*/ {return dialogPanelCall(new Panel_Dev_Project_Manager())}),
                 menuItem(__txt("Locale Manager"),     function() /*=>*/ {return dialogPanelCall(new Panel_Locale_Manager())}),
-                menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
+                menuItem(__txt("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
                 -1, 
                 menuItem(__txt("Generate Texture Group"), function() /*=>*/ {return __generate_texturegroup()}),
                 menuItem(__txt("Generate UGC Thumbnail"), function() /*=>*/ {return generate_patreon_thumbnail()}),
@@ -568,7 +568,7 @@ function Panel_Menu() : PanelContent() constructor {
                 draw_sprite_ui(THEME.loading_s, 0, nx0 + nh/2, ny0, .65, .65, current_time / 2, COLORS._main_icon, .8);
                 
                 draw_set_text(f_p3, fa_left, fa_center, COLORS._main_value_positive);
-                draw_text_add(nx0 + nh, ny0 - ui(1), __txt("Rendering..."));
+                draw_text_add(nx0 + nh, ny0 - ui(1), __txt("Rendering") + "...");
                 
             } else {
                 var warning_amo = ds_list_size(WARNING);

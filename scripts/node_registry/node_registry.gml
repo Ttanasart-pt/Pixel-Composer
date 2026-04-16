@@ -59,7 +59,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	author  = "";
 	license = "";
 	
-	buildFn = registerFunction("_", nodeName, "", 0, function(n) /*=>*/ { 
+	buildFn = registerLFunction("_", nodeName, "", 0, function(n) /*=>*/ { 
 		var _node = PANEL_GRAPH.doNewNode(n); 
 		if(!is(_node, Node)) return;
 		
@@ -404,7 +404,9 @@ function __read_node_folder(dir) {
 	
 	if(struct_has(ALL_NODES, _inme))
 		print($"NODE WARNING: Duplicate node iname {_inme} | {dir}.");
-		
+	
+	// show_debug_message($"Create new node: {_name}, {_base}, {_info}" );
+	
 	var _node = asset_get_index(_base);
 	var _n = new NodeObject(_name, _node);
 	

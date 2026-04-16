@@ -60,12 +60,12 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings..."), THEME.sort_v, 0, bc, 1, ui(4));
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings") + "...", THEME.sort_v, 0, bc, 1, ui(4));
 	if(b == 2) with menuCall("", menu_preset_sort, bx + bs, by + bs) close_on_trigger = false;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
-	var t = __txtx("color_selector_open_palette", "Open palette folder");
+	var t = __txt("color_selector_open_palette", "Open palette folder");
 	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, t, THEME.dPath_open_20, 0, bc);
 	if(b == 2) shellOpenExplorer($"{DIRECTORY}Palettes");
 	draggable = draggable && !b;

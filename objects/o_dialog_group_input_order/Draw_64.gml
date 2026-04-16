@@ -6,7 +6,7 @@ if !ready exit;
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txtx("dialog_group_order_title", "IO order"));
+	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txt("dialog_group_order_title", "IO order"));
 #endregion
 
 #region preset
@@ -24,7 +24,7 @@ if !ready exit;
 	var by = dialog_y + ui(16);
 	
 	if(type == CONNECT_TYPE.input) { 
-		var _txt = __txtx("dialog_group_order_add", "Add separator");
+		var _txt = __txt("dialog_group_order_add", "Add separator");
 		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), mouse_ui, sHOVER, sFOCUS, _txt, THEME.add_16, 1, COLORS._main_value_positive) == 2)
 			addSection();
 	}

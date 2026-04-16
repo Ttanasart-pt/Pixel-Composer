@@ -85,9 +85,9 @@ function Panel_Addon() : PanelContent() constructor {
 				if(pHOVER && point_in_rectangle(_m[0], _m[1], chx0, chy0, chx1, chy1)) {
 					sc_addon.hover_content = true;
 					
-					if(!_act)			TOOLTIP = __txtx("panel_addon_not_activated", "Not activated");
-					else if(!_onStart)	TOOLTIP = __txtx("panel_addon_activated",     "Activated");
-					else				TOOLTIP = __txtx("panel_addon_run_on_start",  "Run on start");
+					if(!_act)			TOOLTIP = __txt("panel_addon_not_activated", "Not activated");
+					else if(!_onStart)	TOOLTIP = __txt("panel_addon_activated",     "Activated");
+					else				TOOLTIP = __txt("panel_addon_run_on_start",  "Run on start");
 					
 					draw_sprite_stretched_ext(THEME.checkbox_def, 1, chx0, chy0, bs, bs, c_white, 1);
 					hover = false;

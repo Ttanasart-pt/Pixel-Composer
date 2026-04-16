@@ -18,7 +18,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 5, nodeValue_Slider(  "Label Alpha",    1        ));
 	
 	////- =Scope
-	newInput( 6, nodeValue_EButton( "Scope", 0, [ "Global", "Group" ] ));
+	newInput( 6, nodeValue_EButton( "Scope", 1, [ "Global", "Group" ] ));
 	// input 7
 	
 	input_display_list = [ 0, 1, 
@@ -52,7 +52,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	label_color = ca_white;
 	label_alpha = 1;
 	open        = true;
-	scope       = 0;
+	scope       = 1;
 	
 	__jfrom = noone;
 	__key   = noone;
@@ -80,7 +80,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setBaseSprite(THEME.button_hide_fill);
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _key = inputs[0].getValue();
 		var _frm = inputs[1].value_from;
 		
 		label_ori   = getInputData(2);
@@ -95,7 +94,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			inputs[1].updateColor();
 		}
 		
-		__key   = _key;
 		__jfrom = _frm;
 		
 		value_validation[VALIDATION.error] = error_notification != noone;

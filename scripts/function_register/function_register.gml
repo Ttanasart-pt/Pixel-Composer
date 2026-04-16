@@ -38,13 +38,22 @@
 	}
 #endregion
 
-function registerFunction(_context, _name, _key, _mod, _action, _param = noone) { return new functionObject(_context, _name, _key, _mod, _action, _param); }
+function registerFunction(_context, _name, _key, _mod, _action, _param = noone) { 
+	return new functionObject(_context, _name, _key, _mod, _action, _param).getLname(); 
+}
+
+function registerLFunction(_context, _name, _key, _mod, _action, _param = noone) { 
+	return new functionObject(_context, _name, _key, _mod, _action, _param); 
+}
+
 function functionObject(_context, _name, _key, _mod, _action, _param = noone) constructor {
 	hotkey  = addHotkey(_context == ""? 0 : _context, _name, _key, _mod, _action, _param).setFn(self);
 	
 	context = _context;
 	name    = _name;
 	comName = _name;
+	Lname   = name;
+	
 	fn      = method(undefined, _action);
 	params  = _param;
 	hide    = false;
@@ -55,6 +64,24 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
+	
+	static getLname = function() /*=>*/ {
+		var elp = string_ends_with(name, "...");
+		
+		Lname = name;
+		Lname = string_replace_all(Lname, ".",   ""  );
+		var n = Lname;
+		
+		Lname = string_replace_all(Lname, "(",   ""  );
+		Lname = string_replace_all(Lname, ")",   ""  );
+		Lname = string_replace_all(Lname, " > ", "_" );
+		Lname = string_replace_all(Lname, "/",   "_" );
+		Lname = string_replace_all(Lname, " ",   "_" );
+		
+		Lname = __txt(Lname, n);
+		if(elp) Lname += "...";
+		return self;
+	}
 	
 	static action = function(_dat = undefined) {
 		if(!is_callable(fn)) return;
@@ -70,8 +97,8 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 		}
 		
 		switch(context) {
-			case "Graph":   PANEL_GRAPH.setActionTooltip(name);   break;
-			case "Preview": PANEL_PREVIEW.setActionTooltip(name); break;
+			case "Graph":   PANEL_GRAPH.setActionTooltip(Lname);   break;
+			case "Preview": PANEL_PREVIEW.setActionTooltip(Lname); break;
 		}
 		
 		return _res;
@@ -91,7 +118,7 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	}
 	
 	static setMenu = function(_id, _spr = noone, shelf = false, toggle = undefined) { 
-		return setMenuName(_id, __txt(name), _spr, shelf, toggle);
+		return setMenuName(_id, Lname, _spr, shelf, toggle);
 	}
 	
 	static setMenuName = function(_id, _name, _spr = noone, shelf = false, toggle = undefined) { 

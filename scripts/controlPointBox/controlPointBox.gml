@@ -20,8 +20,8 @@ function controlPointBox(_onModify) : widget() constructor {
 	onSurfaceSize     = -1;
 	
 	sMode = [
-		__txtx("widget_control_point_move",   "Move"), 
-		__txtx("widget_control_point_wind",   "Wind"), 
+		__txt("widget_control_point_move",   "Move"), 
+		__txt("widget_control_point_wind",   "Wind"), 
 	];
 	
 	tbCx   = textBox_Number( function(val) /*=>*/ {return onModify(toNumber(val),         PUPPET_CONTROL.cx     )}).setHide(1).setLabel("cx");

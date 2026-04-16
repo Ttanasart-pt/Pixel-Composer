@@ -1,5 +1,5 @@
 function Panel_Preview_Snap_Setting() : Panel_Linear_Setting() constructor {
-	title = __txtx("preview_snap_settings", "3D Snap Settings");
+	title = __txt("preview_snap_settings", "3D Snap Settings");
 	previewPanel = PROJECT.previewSetting;
 	
 	properties = [

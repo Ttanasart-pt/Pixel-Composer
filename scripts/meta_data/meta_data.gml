@@ -111,8 +111,8 @@ function MetaDataManager() constructor {
 		var _own = author_steam_id == STEAM_USER_ID;
 		var _ont = "Your creation";
 		var _aut = $"{__txt("By")} {author}";
-		var _ver = floor(version) < floor(SAVE_VERSION)? __txtx("meta_old_version", "Created on an older version") : 
-		                                                 __txtx("meta_new_version", "Created on a newer version");
+		var _ver = floor(version) < floor(SAVE_VERSION)? __txt("meta_old_version", "Created on an older version") : 
+		                                                 __txt("meta_new_version", "Created on a newer version");
 		
 		draw_set_font(f_h5);
 		_h += string_height_ext(name, -1, ww) - ui(2);

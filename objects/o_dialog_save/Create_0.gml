@@ -5,7 +5,7 @@ event_inherited();
 	project = noone;
 	
 	title   = __txt($"Project modified");
-	content = __txtx("dialog_exit_content", "Save progress before close?");
+	content = __txt("dialog_exit_content", "Save progress before close?");
 	
 	buttons = [
 		[ __txt("Save"),       function() /*=>*/ { SAVE(project); closeProject(project); }, COLORS._main_value_positive ],

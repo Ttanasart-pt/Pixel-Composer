@@ -1,5 +1,5 @@
 function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting() constructor {
-	title = __txtx("graph_view_settings", "View Settings");
+	title = __txt("graph_view_settings", "View Settings");
 	
 	graphP = _graphPanel;
 	dparam = _display;
@@ -30,7 +30,7 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("graph_visibility_dim", "Dimension"),
+			__txt("graph_visibility_dim", "Dimension"),
 			new checkBox(function() /*=>*/ { dparam.show_dimension = !dparam.show_dimension; graphP.refreshDraw(); }),
 			function()    /*=>*/   {return dparam.show_dimension},
 			function(val) /*=>*/ { dparam.show_dimension = val; },
@@ -40,7 +40,7 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("graph_visibility_compute", "Compute Time"),
+			__txt("graph_visibility_compute", "Compute Time"),
 			new checkBox(function() /*=>*/ { dparam.show_compute = !dparam.show_compute; graphP.refreshDraw(); }),
 			function()    /*=>*/   {return dparam.show_compute},
 			function(val) /*=>*/ { dparam.show_compute = val; },
@@ -50,7 +50,7 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("graph_visibility_avoid_label", "Avoid Label"),
+			__txt("graph_visibility_avoid_label", "Avoid Label"),
 			new checkBox(function() /*=>*/ { dparam.avoid_label = !dparam.avoid_label; graphP.refreshDraw(); }),
 			function()    /*=>*/   {return dparam.avoid_label},
 			function(val) /*=>*/ { dparam.avoid_label = val; },
@@ -60,7 +60,7 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("graph_visibility_slideshow", "Show Controller"),
+			__txt("graph_visibility_slideshow", "Show Controller"),
 			new checkBox(function() /*=>*/ { dparam.show_control = !dparam.show_control; graphP.refreshDraw(); }),
 			function()    /*=>*/   {return dparam.show_control},
 			function(val) /*=>*/ { dparam.show_control = val; },
@@ -72,7 +72,7 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		-1, ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("graph_visibility_preview_scale", "Preview Scale"),
+			__txt("graph_visibility_preview_scale", "Preview Scale"),
 			slider(50, 100, 1, function(val) /*=>*/ { dparam.preview_scale = val; graphP.refreshDraw(); }),
 			function()    /*=>*/   {return dparam.preview_scale},
 			function(val) /*=>*/ { dparam.preview_scale = val; },
@@ -92,7 +92,7 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("graph_visibility_tooltip", "Show Tooltip"),
+			__txt("graph_visibility_tooltip", "Show Tooltip"),
 			new checkBox(function() /*=>*/ { dparam.show_tooltip = !dparam.show_tooltip; graphP.refreshDraw(); }),
 			function()    /*=>*/   {return dparam.show_tooltip},
 			function(val) /*=>*/ { dparam.show_tooltip = val; },

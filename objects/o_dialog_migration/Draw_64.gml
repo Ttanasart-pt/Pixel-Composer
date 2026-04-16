@@ -13,11 +13,11 @@ draw_set_alpha(1);
 #region text
 	var py = dialog_y + ui(16);
 	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), py, __txtx("dialog_migration_title", "Program directory changed in 1.13"));
+	draw_text(dialog_x + ui(24), py, __txt("dialog_migration_title", "Program directory changed in 1.13"));
 	py += line_get_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text_line(dialog_x + ui(24), py, __txtx("dialog_migration_content", 
+	draw_text_line(dialog_x + ui(24), py, __txt("dialog_migration_content", 
 		"You can press migrate files or manually move all custom collections, assets, palettes, gradients, fonts and presets."), -1, dialog_w - ui(48));
 	
 	var bw = ui(112), bh = BUTTON_HEIGHT;
@@ -53,7 +53,7 @@ draw_set_alpha(1);
 	bx0 = dialog_x + ui(16);
 	bw = ui(160);
 	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("migrate_open_directory", "Open directory") + "...");
+	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("migrate_open_directory", "Open directory") + "...");
 	if(b == 2) {
 		if(directory_exists(DIRECTORY)) 
 			shellOpenExplorer(DIRECTORY);

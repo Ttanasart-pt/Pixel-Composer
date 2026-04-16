@@ -1,11 +1,11 @@
 function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
-	title     = __txtx("graph_grid_settings", "Grid Settings");
+	title     = __txt("graph_grid_settings", "Grid Settings");
 	project   = PANEL_GRAPH.project;
 	graphGrid = project.graphGrid;
 	
 	properties = [
 		new __Panel_Linear_Setting_Item(
-			__txtx("grid_snap", "Snap to grid"),
+			__txt("grid_snap", "Snap to grid"),
 			new checkBox(function() /*=>*/ { graphGrid.snap = !graphGrid.snap; }),
 			function( ) /*=>*/   {return graphGrid.snap},
 			function(v) /*=>*/ { graphGrid.snap = v; },
@@ -15,7 +15,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("grid_size", "Grid size"),
+			__txt("grid_size", "Grid size"),
 			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { graphGrid.size = max(1, real(str)); }),
 			function( ) /*=>*/   {return graphGrid.size},
 			function(v) /*=>*/ { graphGrid.size = v; },
@@ -25,7 +25,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("project_graphGrid_opacity", "Grid opacity"),
+			__txt("project_graphGrid_opacity", "Grid opacity"),
 			slider(0, 1, .05, function(str) /*=>*/ { graphGrid.opacity = clamp(real(str), 0, 1); }),
 			function( ) /*=>*/   {return graphGrid.opacity},
 			function(v) /*=>*/ { graphGrid.opacity = v; },
@@ -35,7 +35,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("project_graphGrid_color", "Grid color"),
+			__txt("project_graphGrid_color", "Grid color"),
 			new buttonColor(function(color) /*=>*/ { graphGrid.color = color; }, self),
 			function( ) /*=>*/   {return graphGrid.color},
 			function(v) /*=>*/ { graphGrid.color = v; },
@@ -45,7 +45,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("grid_show_origin", "Show origin"),
+			__txt("grid_show_origin", "Show origin"),
 			new checkBox(function() /*=>*/ { graphGrid.show_origin = !graphGrid.show_origin; }),
 			function( ) /*=>*/   {return graphGrid.show_origin},
 			function(v) /*=>*/ { graphGrid.show_origin = v; },
@@ -55,7 +55,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("grid_highlight_every", "Highlight period"),
+			__txt("grid_highlight_every", "Highlight period"),
 			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { graphGrid.highlight = max(1, round(real(str))); }),
 			function( ) /*=>*/   {return graphGrid.highlight},
 			function(v) /*=>*/ { graphGrid.highlight = v; },

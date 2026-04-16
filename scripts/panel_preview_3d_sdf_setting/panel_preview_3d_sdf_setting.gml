@@ -1,5 +1,5 @@
 function Panel_Preview_3D_SDF_Setting(panel) : Panel_Linear_Setting() constructor {
-	title = __txtx("preview_3d_settings", "3D SDF Preview Settings");
+	title = __txt("preview_3d_settings", "3D SDF Preview Settings");
 	preview = PANEL_PREVIEW;
 	scene   = PANEL_PREVIEW.d3_scene;
 	

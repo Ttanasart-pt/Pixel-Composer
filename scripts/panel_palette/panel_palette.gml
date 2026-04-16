@@ -19,7 +19,7 @@ function Panel_Palette() : PanelContent() constructor {
 	menu_refresh = menuItem(__txt("Refresh"), function() /*=>*/ {return __initPalette()});
 	menu_add     = menuItemShelf(__txt("Add"), function(_dat) /*=>*/ {
 		return submenuCall(_dat, [
-			menuItem(__txt("File..."), function() /*=>*/ {
+			menuItem(__txt("File") + "...", function() /*=>*/ {
 				var _p = get_open_filename_compat("hex|*.hex|gpl|*.gpl|Image|.png", "palette");
 				if(!file_exists_empty(_p)) return;
 				
@@ -27,7 +27,7 @@ function Panel_Palette() : PanelContent() constructor {
 				__initPalette();
 			}),
 			
-			menuItem(__txt("Lospec..."), function() /*=>*/ {
+			menuItem(__txt("Lospec") + "...", function() /*=>*/ {
 				fileNameCall("", function(txt) /*=>*/ { addPalette_LoSpec(txt); }).setName("Palette")
 			}),
 		]);

@@ -1,16 +1,22 @@
 #region data
 	globalvar LOCALE; LOCALE       = { fontDir: "", config: { per_character_line_break: false } }
-	globalvar TEST_LOCALE; TEST_LOCALE  = 0;
-	globalvar LOCALE_DEF; LOCALE_DEF   = 1;
+	globalvar TEST_LOCALE; TEST_LOCALE  = true;
+	globalvar LOCALE_DEF; LOCALE_DEF   = true;
 	
 	globalvar LOCALE_NOTE_DATA; LOCALE_NOTE_DATA = {};
 	globalvar LOCALE_NOTE_JUNC; LOCALE_NOTE_JUNC = {};
 	
 	global.missing_locale     = {}
-	global.missing_lfile      = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
+	global.missing_lfile      = "";
 	
-	global.missing_lnode      = {}
-	global.missing_lfile_node = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
+	globalvar LOCALE_CACHE; LOCALE_CACHE = {};
+	globalvar __txt; __txt        = undefined;
+	
+	function useDefaultLocale(_def) {
+		LOCALE_DEF = _def;
+		__txt = method(undefined, _def? __txtDef : __txtLoc);
+		if(TEST_LOCALE) __txt = method(undefined, __txtTest);
+	}
 #endregion
 
 function __locale_file(file) {
@@ -23,6 +29,7 @@ function __locale_file(file) {
 
 function __initLocale() {
 	var root  = $"{DIRECTORY}Locale";
+	global.missing_lfile = $"{root}/missing.json";
 	
 	directory_verify(root);
 	if(check_version($"{root}/version"))
@@ -52,6 +59,7 @@ function loadLocale() {
 	var _word     = json_load_struct(__locale_file("/words.json"));
 	var _ui       = json_load_struct(__locale_file("/UI.json"));
 	LOCALE.texts  = struct_append(_word, _ui);
+	print(__locale_file("/words.json"), json_stringify(_word, true));
 	
 	LOCALE.node   = json_load_struct(__locale_file("/nodes.json"));
 	LOCALE.config = json_load_struct(__locale_file("/config.json"));
@@ -61,50 +69,25 @@ function loadLocale() {
 	
 }
 
-function __txtx(key, def = "") {
-	INLINE
-	
-	if(LOCALE_DEF && !TEST_LOCALE) return def;
-	
-	if(TEST_LOCALE) {
-		if(key != "" && !struct_has(LOCALE.texts, key) && !struct_has(global.missing_locale, key)) {
-			global.missing_locale[$ key] = def;
-			file_text_write_all(global.missing_lfile, json_stringify(global.missing_locale));
-		}
-		
-		return def;
-	}
-	
-	return LOCALE.texts[$ key] ?? def;
-}
-
-function __txts(keys) { array_map_ext(keys, function(k) /*=>*/ {return __txt(k, k)}); return keys; } 
-
-function __txt(txt, prefix = "") {
-	INLINE
-	
-	if(!is_string(txt)) return txt;
-	if(LOCALE_DEF && !TEST_LOCALE) return txt;
-	
+function __txtLoc(  txt, def = txt ) { return LOCALE.texts[$ string_replace_all(string_lower(txt), " ", "_")] ?? def; }
+function __txtDef(  txt, def = txt ) { return def; }
+function __txtTest( txt, def = txt ) {
 	var key = string_replace_all(string_lower(txt), " ", "_");
-		
-	if(TEST_LOCALE) {
-		if(key != "" && !struct_has(LOCALE.texts, key) && !struct_has(global.missing_locale, key)) {
-			global.missing_locale[$ key] = txt;
-			file_text_write_all(global.missing_lfile, json_stringify(global.missing_locale));
-		}
-		
-		return txt;
+	if(key != "" && !has(LOCALE.texts, key) && !has(global.missing_locale, key)) {
+		show_debug_message($"missing {key}:{def}");
+		// printCallStack();
+		global.missing_locale[$ key] = def;
+		file_text_write_all(global.missing_lfile, json_stringify(global.missing_locale));
 	}
 	
-	return __txtx(prefix + key, txt);
+	return def;
 }
 
+function __txts(keys) { array_map_ext(keys, function(k,i) /*=>*/ {return __txt(k)}); return keys; } 
 function __txta(txt) {
 	var _txt = __txt(txt);
 	for(var i = 1; i < argument_count; i++)
 		_txt = string_replace_all(_txt, "{" + string(i) + "}", string(argument[i]));
-	
 	return _txt;
 }
 
@@ -113,15 +96,13 @@ function __txt_node_name(node, def = "") {
 	
 	if(LOCALE_DEF && !TEST_LOCALE) return def;
 	
-	if(TEST_LOCALE) {
-		if(node != "Node_Custom" && !struct_has(LOCALE.node, node)) {
-			show_debug_message($"LOCALE [NODE]: \"{node}\": \"{def}\",");
-			return def;
-		}
+	if(TEST_LOCALE && node != "Node_Custom" && node != "Node_Custom_Shader" && !has(LOCALE.node, node)) {
+		show_debug_message($"LOCALE_[NODE]| \"{node}\": \"{def}\",");
+		return def;
 	}
 	
-	if(!struct_has(LOCALE.node, node)) return def;
-	return struct_try_get(LOCALE.node[$ node], "name", def);
+	if(!has(LOCALE.node, node)) return def;
+	return LOCALE.node[$ node][$ name] ?? def;
 }
 
 function __txt_node_tooltip(node, def = "") {
@@ -129,15 +110,13 @@ function __txt_node_tooltip(node, def = "") {
 	
 	if(LOCALE_DEF && !TEST_LOCALE) return def;
 		
-	if(TEST_LOCALE) {
-		if(node != "Node_Custom" && !struct_has(LOCALE.node, node)) {
-			show_debug_message($"LOCALE [TIP]: \"{node}\": \"{def}\",");
-			return def;
-		}
+	if(TEST_LOCALE && node != "Node_Custom" && node != "Node_Custom_Shader" && !has(LOCALE.node, node)) {
+		show_debug_message($"LOCALE_[TIP]| \"{node}\": \"{def}\",");
+		return def;
 	}
 	
-	if(!struct_has(LOCALE.node, node)) return def;
-	return struct_try_get(LOCALE.node[$ node], "tooltip", def);
+	if(!has(LOCALE.node, node)) return def;
+	return LOCALE.node[$ node][$ "tooltip"] ?? def;
 }
 
 function __txt_junction_name(node, type, index, def = "") {
@@ -145,21 +124,18 @@ function __txt_junction_name(node, type, index, def = "") {
 	
 	if(LOCALE_DEF && !TEST_LOCALE) return def;
 	
-	if(TEST_LOCALE) {
-		if(!struct_has(LOCALE.node, node)) {
-			show_debug_message($"LOCALE [JNAME]: \"{node}\": \"{def}\",");
-			return def;
-		}
+	if(TEST_LOCALE && !has(LOCALE.node, node)) {
+		show_debug_message($"LOCALE_[JNAME]| \"{node}\": \"{def}\",");
+		return def;
 	}
 	
-	if(!struct_has(LOCALE.node, node)) 
-		return def;
+	if(!has(LOCALE.node, node)) return def;
 	
 	var nde = LOCALE.node[$ node];
 	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
-	return struct_try_get(lst[index], "name", def);
+	return lst[index][$ "name"] ?? def;
 }
 
 function __txt_junction_tooltip(node, type, index, def = "") {
@@ -167,21 +143,18 @@ function __txt_junction_tooltip(node, type, index, def = "") {
 	
 	if(LOCALE_DEF && !TEST_LOCALE) return def;
 	
-	if(TEST_LOCALE) {
-		if(!struct_has(LOCALE.node, node)) {
-			show_debug_message($"LOCALE [JTIP]: \"{node}\": \"{def}\",");
-			return def;
-		}
+	if(TEST_LOCALE && !has(LOCALE.node, node)) {
+		show_debug_message($"LOCALE_[JTIP]| \"{node}\": \"{def}\",");
+		return def;
 	}
 	
-	if(!struct_has(LOCALE.node, node)) 
-		return def;
+	if(!has(LOCALE.node, node)) return def;
 	
 	var nde = LOCALE.node[$ node];
 	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
-	return struct_try_get(lst[index], "tooltip", def);
+	return lst[index][$ "tooltip"] ?? def
 }
 
 function __txt_junction_data(node, type, index, def = []) {
@@ -189,20 +162,19 @@ function __txt_junction_data(node, type, index, def = []) {
 	
 	if(LOCALE_DEF && !TEST_LOCALE) return def;
 	
-	if(TEST_LOCALE) {
-		if(!struct_has(LOCALE.node, node)) {
-			show_debug_message($"LOCALE [DDATA]: \"{node}\": \"{def}\",");
-			return def;
-		}
-		return [ "" ];
+	if(TEST_LOCALE && !has(LOCALE.node, node)) {
+		show_debug_message($"LOCALE_[DDATA]| \"{node}\": \"{def}\",");
+		return def;
 	}
 	
-	if(!struct_has(LOCALE.node, node)) 
+	if(!has(LOCALE.node, node)) 
 		return def;
 		
 	var nde = LOCALE.node[$ node];
 	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
-	return struct_try_get(lst[index], "display_data", def);
+	return lst[index][$ "display_data"] ?? def;
 }
+
+useDefaultLocale(true);

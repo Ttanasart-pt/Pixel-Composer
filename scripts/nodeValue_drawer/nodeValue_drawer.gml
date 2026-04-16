@@ -12,7 +12,7 @@ function drawWidgetInit() {
 	min_w = ui(160);
 	viewMode = PREFERENCES.inspector_view_default;
 	
-	tooltip_loop_type = new tooltipSelector(__txtx("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
+	tooltip_loop_type = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
 }
 
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0, _ID = undefined) { 
@@ -101,7 +101,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					jun.setAnim(anim_hold, true);
 					
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
-				TOOLTIP = jun.hasJunctionFrom()? __txtx("panel_inspector_remove_link", "Remove link") : __txtx("panel_inspector_toggle_anim", "Toggle animation");
+				TOOLTIP = jun.hasJunctionFrom()? __txt("panel_inspector_remove_link", "Remove link") : __txt("panel_inspector_toggle_anim", "Toggle animation");
 						
 				if(mouse_lpress(_focus)) {
 					if(jun.value_from != noone)
@@ -284,7 +284,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 				var kfFocus = jun.animationCurrentKey();
 				var  cc  = kfFocus? COLORS._main_accent : COLORS._main_icon;
-				var _tlp = kfFocus? __txtx("panel_inspector_remove_key", "Remove keyframe") : __txtx("panel_inspector_add_key", "Add keyframe");
+				var _tlp = kfFocus? __txt("panel_inspector_remove_key", "Remove keyframe") : __txt("panel_inspector_add_key", "Add keyframe");
 				bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_keyframe, 1, cc); bx -= ui(4);
 				cHov = cHov || b;
 				if(b == 2) jun.animationToggleKey();
@@ -315,7 +315,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					
 					switch(_widgetButton) {
 						case "Set Default" : if(!PREFERENCES.widget_draw_default) continue;
-							var bt = __txtx("panel_inspector_default", "Set default");
+							var bt = __txt("panel_inspector_default", "Set default");
 							var bh = _hover;
 							var ba = .25 + jun.is_modified * .55 + (jun.def_preset * .5);
 							var cc = jun.def_preset? COLORS._main_accent : COLORS._main_icon_light;
@@ -340,7 +340,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 							break;
 						
 						case "Reset" : if(!PREFERENCES.widget_draw_reset) continue;
-							var bt = __txtx("panel_inspector_reset", "Reset");
+							var bt = __txt("panel_inspector_reset", "Reset");
 							var ba = .25 + jun.is_modified * .55;
 							var bh = jun.is_modified && _hover;
 							var cc = COLORS._main_icon_light;
@@ -364,7 +364,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 				if(!global_var && breakLine) {
 					var ic_b = c_white;
-					var bt = __txtx("panel_inspector_use_expression", "Use expression");
+					var bt = __txt("panel_inspector_use_expression", "Use expression");
 					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_use_expression, jun.expUse, ic_b, .8, ics); bx -= ui(4);
 					cHov = cHov || b;
 					if(b == 2) {
@@ -374,7 +374,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 						
 					if(jun.expUse) {
 						var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : c_white;
-						var bt = __txtx("panel_inspector_dropper", "Node Dropper");
+						var bt = __txt("panel_inspector_dropper", "Node Dropper");
 						bx  -= bs; b  = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_dropper, 0, cc, .8, ics); bx -= ui(4);
 						cHov = cHov || b;
 						if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
@@ -382,7 +382,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					
 					if(jun.expUse || is(wid, textArea)) {
 						var cc = jun.popup_dialog == noone? c_white : COLORS._main_value_positive;
-						var t  = __txtx("panel_inspector_pop_text", "Pop up Editor");
+						var t  = __txt("panel_inspector_pop_text", "Pop up Editor");
 						bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, t, THEME.text_popup, 0, cc, .8, ics); bx -= ui(4);
 						cHov = cHov || b;
 						if(b == 2) {

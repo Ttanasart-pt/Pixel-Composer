@@ -135,7 +135,7 @@ function Panel_Animation_Dopesheet() {
         show_nodes = true;
         
         tooltip_loop_prop = noone;
-        tooltip_loop_type = new tooltipSelector(__txtx("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
+        tooltip_loop_type = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
         
         tooltip_action      = "";
         tooltip_action_time = 0;
@@ -459,7 +459,7 @@ function Panel_Animation_Dopesheet() {
             len = max(1, len);
         
         if(timeline_stretch == 1) {
-            TOOLTIP = __txtx("panel_animation_length", "Animation length") + $" {len}";
+            TOOLTIP = __txt("panel_animation_length", "Animation length") + $" {len}";
             GLOBAL_TOTAL_FRAMES = len;
             
             timeline_draggable = false;
@@ -472,7 +472,7 @@ function Panel_Animation_Dopesheet() {
         } 
         
         if(timeline_stretch == 2) {
-            TOOLTIP  = __txtx("panel_animation_length", "Animation length") + $" {len}";
+            TOOLTIP  = __txt("panel_animation_length", "Animation length") + $" {len}";
             var _len = GLOBAL_TOTAL_FRAMES;
             GLOBAL_TOTAL_FRAMES = len;
             
@@ -553,7 +553,7 @@ function Panel_Animation_Dopesheet() {
         	TOOLTIP = tooltip_anim_end;
         	
         	if(key_mod_press(ALT)) {
-                TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
+                TOOLTIP = __txt("panel_animation_stretch", "Stretch animation");
         		
                 if(DOUBLE_CLICK) {
                 	timeline_stretch      = 2;
@@ -600,7 +600,7 @@ function Panel_Animation_Dopesheet() {
                 }
                 
             } else if(key_mod_press(CTRL)) {
-                TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
+                TOOLTIP = __txt("panel_animation_adjust_length", "Adjust animation length");
         		
                 if(DOUBLE_CLICK) {
                 	timeline_stretch      = 1;
@@ -2057,8 +2057,8 @@ function Panel_Animation_Dopesheet() {
             tx = tool_width - ui(16);
             if(pHOVER && point_in_rectangle(msx, msy, tx - ui(9), ty - ui(10), tx + ui(10), ty + ui(8))) {
                 draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, _tool_a);
-                TOOLTIP = _graph_show? __txtx("panel_animation_hide_graph", "Hide graph") : 
-                                       __txtx("panel_animation_show_graph", "Show graph");
+                TOOLTIP = _graph_show? __txt("panel_animation_hide_graph", "Hide graph") : 
+                                       __txt("panel_animation_show_graph", "Show graph");
                 
                 if(mouse_lpress(pFOCUS)) {
                     if(prop.sep_axis) prop.attributes.show_graphs[animator.index] = !_graph_show;

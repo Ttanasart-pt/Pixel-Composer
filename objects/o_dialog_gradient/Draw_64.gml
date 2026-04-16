@@ -64,7 +64,7 @@ draggable = true;
 	var m   = mouse_ui;
 	var bc  = COLORS._main_icon;
 	
-	var bt = __txtx("add_preset", "Add to preset");
+	var bt = __txt("add_preset", "Add to preset");
 	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.add);
 	if(b == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
@@ -84,7 +84,7 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings..."), THEME.sort_v);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings") + "...", THEME.sort_v);
 	if(b == 2) with menuCall("", menu_grad_preset_sort, bx + bs, by + bs) close_on_trigger = false;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
@@ -95,7 +95,7 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
-	var bt = __txtx("graident_editor_open_folder", "Open gradient folder");
+	var bt = __txt("graident_editor_open_folder", "Open gradient folder");
 	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.dPath_open_20, 0, bc);
 	if(b == 2) {
 		var _realpath = DIRECTORY + "Gradients";
@@ -138,7 +138,7 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings..."), THEME.sort_v);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings") + "...", THEME.sort_v);
 	if(b == 2) with menuCall("", menu_preset_sort, bx + bs, by + bs) close_on_trigger = false;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
@@ -173,21 +173,21 @@ draggable = true;
 	sb_blending.draw(bx, by, sw, bs, tt);
 	bx -= bs + ui(4);
 	
-	// var t = __txtx("gradient_editor_key_blend", "Key blending...");
+	// var t = __txt("gradient_editor_key_blend", "Key blending") + "...";
 	// var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_blend, 0, bc);
 	// draggable = draggable && !b;
 	
 	// if(b == 2) {
 	// 	menuCall("gradient_window_blend_menu", [ 
-	// 		menuItem(__txtx("gradient_editor_blend_hard",  "Solid"), () => { gradient.type = 1; onModify(gradient); }), 
-	// 		menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),   () => { gradient.type = 0; onModify(gradient); }), 
-	// 		menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),   () => { gradient.type = 2; onModify(gradient); }), 
-	// 		menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"), () => { gradient.type = 3; onModify(gradient); }), 
+	// 		menuItem(__txt("gradient_editor_blend_hard",  "Solid"), () => { gradient.type = 1; onModify(gradient); }), 
+	// 		menuItem(__txt("gradient_editor_blend_RGB",   "RGB"),   () => { gradient.type = 0; onModify(gradient); }), 
+	// 		menuItem(__txt("gradient_editor_blend_HSV",   "HSV"),   () => { gradient.type = 2; onModify(gradient); }), 
+	// 		menuItem(__txt("gradient_editor_blend_OKLAB", "OKLAB"), () => { gradient.type = 3; onModify(gradient); }), 
 	// 	], bx + ui(32), by, fa_left, gradient);
 	// }
 	// bx -= bs + ui(2);
 	
-	var t = __txtx("gradient_editor_reverse", "Reverse");
+	var t = __txt("gradient_editor_reverse", "Reverse");
 	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_reverse, 0, bc);
 	draggable = draggable && !b;
 	

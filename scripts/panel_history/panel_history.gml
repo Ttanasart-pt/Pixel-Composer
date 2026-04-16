@@ -141,7 +141,7 @@ function Panel_History() : PanelContent() constructor {
 				
 				if(j == 3) {
 					draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub, .5);
-					draw_text_add(ui(32 + 12), _ty, string(array_length(item) - 3) + __txtx("more_actions", " more actions..."));
+					draw_text_add(ui(32 + 12), _ty, string(array_length(item) - 3) + __txt("more_actions", " more actions") + "...");
 					draw_set_alpha(1);
 					
 				} else {

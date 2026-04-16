@@ -42,7 +42,7 @@
 	var bx = dialog_x + dialog_w - _pd - bw;
 	var by = dialog_y + _pd;
 	
-	var txt  = __txtx("new_action_create", "Create action");
+	var txt  = __txt("new_action_create", "Create action");
 	var icon = THEME.accept;
 	var clr  = COLORS._main_value_positive;
 	

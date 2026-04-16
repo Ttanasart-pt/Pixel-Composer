@@ -6,7 +6,7 @@ if !ready exit;
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txtx("add_images_title_images", "Import multiple images as"));
+	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("add_images_title_images", "Import multiple images as"));
 #endregion
 
 #region nodes
@@ -95,13 +95,13 @@ if !ready exit;
 		cb_recursive.draw(dx, dy, dw, dh, dir_recursive, mouse_ui);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-		draw_text(dialog_x + ui(24), dy + dh/2, __txtx("add_images_recursive", "Recursive"));
+		draw_text(dialog_x + ui(24), dy + dh/2, __txt("add_images_recursive", "Recursive"));
 		
 		dy += dh + ui(8);
 		tb_filter.setFocusHover(sFOCUS, sHOVER);
 		tb_filter.draw(dx, dy, dw, dh, dir_filter, mouse_ui);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-		draw_text(dialog_x + ui(24), dy + dh/2, __txtx("add_images_filter", "Filter"));
+		draw_text(dialog_x + ui(24), dy + dh/2, __txt("add_images_filter", "Filter"));
 	}
 #endregion

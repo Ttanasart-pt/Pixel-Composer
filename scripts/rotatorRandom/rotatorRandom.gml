@@ -23,10 +23,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 4)}); tb_max_1.hide = true;
 	
 	tooltip  = new tooltipSelector("Mode", [
-		__txtx("widget_rotator_random_range",        "Range"), 
-		__txtx("widget_rotator_random_span",         "Span"), 
-		__txtx("widget_rotator_random_double_range", "Double Range"), 
-		__txtx("widget_rotator_random_double_span",  "Double Span")
+		__txt("widget_rotator_random_range",        "Range"), 
+		__txt("widget_rotator_random_span",         "Span"), 
+		__txt("widget_rotator_random_double_range", "Double Range"), 
+		__txt("widget_rotator_random_double_span",  "Double Span")
 	]);
 	
 	static setInteract = function(i = noone) {

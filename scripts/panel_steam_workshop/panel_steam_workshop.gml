@@ -125,7 +125,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			filterFiles(); 
 			
 		}).setAutoUpdate().setEmpty().setAlign(fa_left).setVAlign(fa_center)
-			.setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
+			.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
 		
 		page_goto = undefined;
 	#endregion
@@ -1051,7 +1051,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				
 				draw_sprite_ui(THEME.animate_node_go, 0, _gx, _gy, 1, 1, 0, _hv? COLORS._main_icon_light : COLORS._main_icon);
 				if(_hv) {
-					TOOLTIP = __txt("View Graph...");
+					TOOLTIP = __txt("View Graph") + "...";
 					
 					if(mouse_lpress(_focus)) {
 						var _graph = new Panel_Graph(_author.profile_graph_runner.project);
@@ -1100,7 +1100,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 					
 					if(_indx == _lam) { // edit links
 						_bspr = THEME.add;
-						_btxt = __txt("Add link...");
+						_btxt = __txt("Add link") + "...";
 						_bcc  = [ COLORS._main_value_positive, COLORS._main_value_positive ];
 						
 					} else {
@@ -2159,7 +2159,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				draw_text_add(_vx + _vw/2, _vy + _bh/2, __txt("Link to PXC hub"));
 				
 				if(_hov) {
-					TOOLTIP = __txtx("pxc_hub_upload_des", "Linking submission to PXC hub will allows for in-software rating and comment (Data separated from Steam Workshop).")
+					TOOLTIP = __txt("pxc_hub_upload_des", "Linking submission to PXC hub will allows for in-software rating and comment (Data separated from Steam Workshop).")
 					if(mouse_lpress(_focus)) item_viewing.linkHUB();
 				}
 				

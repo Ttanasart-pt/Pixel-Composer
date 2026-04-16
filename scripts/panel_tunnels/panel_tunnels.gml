@@ -86,17 +86,17 @@ function Panel_Tunnels() : PanelContent() constructor {
 			var bx = ww - ui(2) - bs;
 			var by = _y + (hg - bs) / 2;
 			
-			_txt = __txtx("panel_node_delete", "Delete Node");
+			_txt = __txt("panel_node_delete", "Delete Node");
 			if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, _hov, _foc, _txt, THEME.cross, 0, CARRAY.button_negative) == 2)
 				_delNode = node;
 			bx -= bs + ui(2);
 			
-			_txt = __txtx("panel_node_goto", "Go to Node");
+			_txt = __txt("panel_node_goto", "Go to Node");
 			if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, _hov, _foc, _txt, THEME.node_goto, 0, CARRAY.button_light) == 2)
 				graphFocusNode(node);
 			bx -= bs + ui(2);
 			
-			_txt = __txtx("panel_tunnel_create_tunnel", "Create Receiver");
+			_txt = __txt("panel_tunnel_create_tunnel", "Create Receiver");
 			if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, _hov, _foc, _txt, THEME.tunnel_create, 0, bc) == 2) {
 				// var _nx = node.x + 160;
 				// var _ny = PANEL_GRAPH.getFreeY(_nx, node.y);
@@ -110,7 +110,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			
 			var _tx = ui(4 + 32 + 4);
 			var _ty = _y + hg / 2;
-			var _tt = key == ""? $"[{__txtx("panel_tunnel_no_key", "No key")}]" : key;
+			var _tt = key == ""? $"[{__txt("panel_tunnel_no_key", "No key")}]" : key;
 			
 			draw_sprite_ui(THEME.tunnel, 0, ui(4 + 16), _y + hg / 2, .75, .75, 0, col, .8 + .2 * node.open);
 			draw_set_text(f_p3, fa_left, fa_center, key == ""? COLORS._main_text_sub : COLORS._main_text);
@@ -140,12 +140,12 @@ function Panel_Tunnels() : PanelContent() constructor {
 				var bx = ww - ui(8) - bbs;
 				var by = _y + (ui(20) - bbs) / 2;
 				
-				_txt = __txtx("panel_node_delete", "Delete Node");
+				_txt = __txt("panel_node_delete", "Delete Node");
 				if(buttonInstant(noone, bx, by, bbs, bbs, _m, _hov, _foc, _txt, THEME.cross_16, 0, CARRAY.button_negative, 1) == 2)
 					_outNode.destroy();
 				bx -= bbs + ui(2);
 				
-				_txt = __txtx("panel_node_goto", "Go to Node");
+				_txt = __txt("panel_node_goto", "Go to Node");
 				if(buttonInstant(noone, bx, by, bbs, bbs, _m, _hov, _foc, _txt, THEME.node_goto_16, 0, CARRAY.button_light, 1, .75) == 2)
 					graphFocusNode(_outNode);
 				bx -= bbs + ui(2);
@@ -210,7 +210,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 		draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .3 + _hov * .1);
 		draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .6 + _hov * .25);
 		draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon);
-		draw_text_add(_ww / 2, _by + _add_h / 2, __txtx("panel_tunnel_create_tunnel", "Create tunnel"));
+		draw_text_add(_ww / 2, _by + _add_h / 2, __txt("panel_tunnel_create_tunnel", "Create tunnel"));
 		
 		if(mouse_lpress(pFOCUS && _hov))
 			nodeBuild("Node_Tunnel_In", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy);

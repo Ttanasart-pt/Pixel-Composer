@@ -1,5 +1,5 @@
 function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
-	title = __txtx("preview_view_settings", "View Settings");
+	title = __txt("preview_view_settings", "View Settings");
 	previewPanel = PROJECT.previewSetting;
 	
 	properties = [

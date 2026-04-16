@@ -6,7 +6,7 @@ if !ready exit;
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txtx("output_visibility_title", "Outputs visibility"));
+	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txt("output_visibility_title", "Outputs visibility"));
 #endregion
 
 #region preset

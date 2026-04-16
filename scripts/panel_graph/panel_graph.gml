@@ -274,7 +274,7 @@
 		registerFunction(g, "Edit Graph Toolbar...", "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_general")}  ).setMenu("graph_edit_toolbar"                          );
 		registerFunction(g, "Reset Graph Toolbar",   "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_general")} ).setMenu("graph_reset_toolbar",       THEME.refresh_20 );
 		
-		registerFunction(g, "Edit Node Piemenu...",  "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Addnode_Pie_Editor())} ).setMenu("addnode_edit_pie");
+		registerFunction(g, "Edit Node Pie menu...", "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Addnode_Pie_Editor())} ).setMenu("addnode_edit_pie");
 		
         __fnGroupInit_Graph();
         
@@ -322,7 +322,7 @@
     
     function __fnGroupInit_Graph() {
         
-        MENU_ITEMS.graph_group_align = menuItemGroup(__txtx("panel_graph_align_nodes", "Align"), [
+        MENU_ITEMS.graph_group_align = menuItemGroup(__txt("panel_graph_align_nodes", "Align"), [
                 [ [THEME.inspector_surface_halign, 0], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_left)}   ],
                 [ [THEME.inspector_surface_halign, 1], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_center)} ],
                 [ [THEME.inspector_surface_halign, 2], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_right)}  ],
@@ -3568,7 +3568,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         if(project.safeMode) {
 			draw_set_text(f_sdf, fa_right, fa_bottom, COLORS._main_text_sub);
-			draw_text_transform_add(w - ui(8), h - toolbar_height, __txtx("safe_mode", "SAFE MODE"), .5);
+			draw_text_transform_add(w - ui(8), h - toolbar_height, __txt("safe_mode", "SAFE MODE"), .5);
 		}
 		
         if(pHOVER) { // File Drop

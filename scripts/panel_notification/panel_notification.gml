@@ -38,7 +38,7 @@ function Panel_Notification() : PanelContent() constructor {
 	];
 	
 	rightClickMenu_item = [
-		menuItem(__txtx("noti_copy_message",   "Copy notification message"), function() /*=>*/ { if(noti_selecting == noone) return; clipboard_set_text(noti_selecting.txt); }, THEME.copy), 
+		menuItem(__txt("noti_copy_message",   "Copy notification message"), function() /*=>*/ { if(noti_selecting == noone) return; clipboard_set_text(noti_selecting.txt); }, THEME.copy), 
 		-1, 
 	]
 	

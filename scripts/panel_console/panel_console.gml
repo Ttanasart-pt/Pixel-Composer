@@ -11,7 +11,7 @@
 #endregion
 
 function Panel_Console() : PanelContent() constructor {
-	title = __txtx("panel_debug_console", "Console");
+	title = __txt("panel_debug_console", "Console");
 	w     = ui(640);
 	h     = ui(320);
 	

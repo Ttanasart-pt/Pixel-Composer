@@ -1,5 +1,5 @@
 function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
-	title   = __txtx("panel_export_graph", "Export Graph");
+	title   = __txt("panel_export_graph", "Export Graph");
 	
 	#region panel dimension
 		padding = ui(6);

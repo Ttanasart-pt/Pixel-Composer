@@ -1,5 +1,5 @@
 function Panel_Animation_Cleaner() : Panel_Linear_Setting() constructor {
-	title = __txtx("anim_clean_title", "Animation Cleaner");
+	title = __txt("anim_clean_title", "Animation Cleaner");
 	w     = ui(380);
 	
 	quantize        = false;
@@ -7,11 +7,11 @@ function Panel_Animation_Cleaner() : Panel_Linear_Setting() constructor {
 	
 	properties = [
 		new __Panel_Linear_Setting_Item(
-			__txtx("anim_clean_quantize", "Quantize Time"),
+			__txt("anim_clean_quantize", "Quantize Time"),
 			new checkBox(function() /*=>*/ { quantize = !quantize; }), function() /*=>*/ {return quantize},
 		),
 		new __Panel_Linear_Setting_Item(
-			__txtx("anim_clean_overflow", "Delete Overflow Keyframes"),
+			__txt("anim_clean_overflow", "Delete Overflow Keyframes"),
 			new checkBox(function() /*=>*/ { delete_overflow = !delete_overflow; }), function() /*=>*/ {return delete_overflow},
 		),
 	];

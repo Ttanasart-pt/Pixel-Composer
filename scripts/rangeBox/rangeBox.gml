@@ -5,8 +5,8 @@ function rangeBox(_onModify) : widget() constructor {
 	extras   = -1;
 	
 	tooltip	 = new tooltipSelector("Value Type", [
-		__txtx("widget_range_random",   "Random Range"),
-		__txtx("widget_range_constant", "Constant"),
+		__txt("widget_range_random",   "Random Range"),
+		__txt("widget_range_constant", "Constant"),
 	]);
 	
 	onModifyIndex = function(val, _i) /*=>*/ { 

@@ -8,6 +8,8 @@
 		connection = 1 << 0,
 		zero       = 1 << 1,
 	}
+	
+	function getNodeID(node) { return is(node, Node)? node.node_id : -4; }
 #endregion
 
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {

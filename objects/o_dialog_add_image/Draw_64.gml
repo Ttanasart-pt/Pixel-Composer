@@ -6,7 +6,7 @@ if !ready exit;
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txtx("add_images_title_single", "Import image as"));
+	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("add_images_title_single", "Import image as"));
 #endregion
 
 #region nodes

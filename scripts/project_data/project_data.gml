@@ -128,13 +128,13 @@ function Project() constructor {
 				
 				if(is(_n, Node_Tunnel_In)) {
 					var _key = _n.inputs[0].getValue();
+					if(_key == "") continue;
+					
+					var _scp = _n.inputs[6].getValue();
+					if(_scp == 1) _key = $"{getNodeID(_n.group)}|{_key}";
 					_n.__key = _key;
 					
-					if(_key == "") continue;
-					if(!has(tunnels_in, _key))
-						tunnels_in[$ _key] = [];
-					
-					array_push(tunnels_in[$ _key], _n);
+					tunnels_in[$ _key] = _n;
 					array_push(tunnel_keys, _key);
 					
 				} else if(is(_n, Node_Tunnel_Out)) {

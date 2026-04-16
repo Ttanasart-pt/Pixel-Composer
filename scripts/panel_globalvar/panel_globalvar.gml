@@ -1,5 +1,5 @@
 function Panel_Globalvar() : PanelContent() constructor {
-	title       = __txtx("panel_globalvar", "Global Variables");
+	title       = __txt("panel_globalvar", "Global Variables");
 	context_str = "Globalvar";
 	auto_pin    = true;
 	

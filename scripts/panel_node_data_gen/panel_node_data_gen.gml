@@ -87,6 +87,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 			switch(_in.display_type) {
 				case VALUE_DISPLAY.enum_button :
 				case VALUE_DISPLAY.enum_scroll :
+					print(_in, _in.display_data)
 					var _eData = _in.display_data.data;
 					var _sData = "";
 					

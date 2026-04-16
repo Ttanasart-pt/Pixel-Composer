@@ -54,7 +54,7 @@ if !ready exit;
 	
 	bx0 -= bw + bpad;
 	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
-	draw_text_add(bx0 + bw / 2, by0 + bh / 2, __txtx("run", "Run"));
+	draw_text_add(bx0 + bw / 2, by0 + bh / 2, __txt("run", "Run"));
 	if(b == 2) {
 		shell_execute_async(prog, cmd);		
 		node.trusted = true;

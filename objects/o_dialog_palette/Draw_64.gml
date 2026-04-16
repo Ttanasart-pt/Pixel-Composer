@@ -54,7 +54,7 @@ draggable = true;
 	var m   = mouse_ui;
 	var bc  = COLORS._main_icon;
 	
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add preset..."), THEME.add);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add preset") + "...", THEME.add);
 	if(b == 2) {
 		menu_add_target = "";
 		menuCall("", menu_add, bx + bs, by + bs);
@@ -62,7 +62,7 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings..."), THEME.sort_v);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings") + "...", THEME.sort_v);
 	if(b == 2) with menuCall("", menu_preset_sort, bx + bs, by + bs) close_on_trigger = false;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
@@ -72,7 +72,7 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
-	var bt = __txtx("color_selector_open_palette", "Open palette folder...");
+	var bt = __txt("color_selector_open_palette", "Open palette folder") + "...";
 	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.dPath_open_20, 0, bc);
 	if(b == 2) shellOpenExplorer(DIRECTORY + "Palettes")
 	draggable = draggable && !b;
@@ -85,7 +85,7 @@ draggable = true;
 		var by = dialog_y + ui(14);
 		
 		bx -= bs + ui(2);
-		var _txt = index_selecting[1] < 2? __txtx("palette_editor_sort", "Sort palette...") : __txtx("palette_editor_sort_selected", "Sort selected...");
+		var _txt = index_selecting[1] < 2? __txt("palette_editor_sort", "Sort palette") + "..." : __txt("palette_editor_sort_selected", "Sort selected") + "...";
 		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, interactable && foc, _txt, THEME.sort);
 		if(b) { mouse_draggable = false; draggable = false; }
 		if(b == 2) {
@@ -94,7 +94,7 @@ draggable = true;
 		}
 		
 		bx -= bs + ui(2);
-		var _txt = index_selecting[1] < 2? __txtx("palette_editor_reverse", "Reverse palette") : __txtx("palette_editor_reverse_selected", "Reverse selected");
+		var _txt = index_selecting[1] < 2? __txt("palette_editor_reverse", "Reverse palette") : __txt("palette_editor_reverse_selected", "Reverse selected");
 		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, interactable && foc, _txt, THEME.reverse);
 		if(b) { mouse_draggable = false; draggable = false; }
 		if(b == 2) {
@@ -137,7 +137,7 @@ draggable = true;
 		bx -= ui(2);
 		
 		bx -= bs + ui(2);
-		var _txt = __txtx("palette_editor_load", "Load Palette File") + " (.hex)";
+		var _txt = __txt("palette_editor_load", "Load Palette File") + " (.hex)";
 		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, interactable && foc, _txt, THEME.dFile_load);
 		if(b) { mouse_draggable = false; draggable = false; }
 		if(b == 2) {
@@ -153,7 +153,7 @@ draggable = true;
 		}
 		
 		bx -= bs + ui(2);
-		var _txt = __txtx("palette_editor_save", "Save Palette File") + " (.hex)";
+		var _txt = __txt("palette_editor_save", "Save Palette File") + " (.hex)";
 		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, interactable && foc, _txt, THEME.dFile_save);
 		if(b) { mouse_draggable = false; draggable = false; }
 		if(b == 2) {
@@ -175,7 +175,7 @@ draggable = true;
 		bx -= ui(2);
 		
 		bx -= bs + ui(2);
-		var _txt = __txtx("palette_editor_delete_other", "Delete Unselected");
+		var _txt = __txt("palette_editor_delete_other", "Delete Unselected");
 		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, interactable && foc, _txt, THEME.icon_tile_view, 1);
 		if(b) { mouse_draggable = false; draggable = false; }
 		if(b == 2 && index_selecting[1]) {

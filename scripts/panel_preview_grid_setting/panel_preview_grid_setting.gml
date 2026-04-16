@@ -1,5 +1,5 @@
 function Panel_Preview_Grid_Setting() : Panel_Linear_Setting() constructor {
-	title = __txtx("preview_grid_settings", "Grid Settings");
+	title = __txt("preview_grid_settings", "Grid Settings");
 	previewGrid = PROJECT.previewGrid;
 	
 	properties = [
@@ -24,7 +24,7 @@ function Panel_Preview_Grid_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
-			__txtx("grid_snap", "Snap to grid"),
+			__txt("grid_snap", "Snap to grid"),
 			new checkBox(function() /*=>*/ { previewGrid.snap = !previewGrid.snap; }),
 			function( ) /*=>*/   {return previewGrid.snap},
 			function(v) /*=>*/ { previewGrid.snap = v; },

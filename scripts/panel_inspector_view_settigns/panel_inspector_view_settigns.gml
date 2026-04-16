@@ -1,5 +1,5 @@
 function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
-	title = __txtx("inspector_view_settings", "View Settings");
+	title = __txt("inspector_view_settings", "View Settings");
 	
 	properties = [
 		new __Panel_Linear_Setting_Item(

@@ -6,10 +6,10 @@ function Node_Rotation_Random_Data(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	types = [
 		__txt("Single"),
-		__txtx("widget_rotator_random_range",        "Range"), 
-		__txtx("widget_rotator_random_span",         "Span"), 
-		__txtx("widget_rotator_random_double_range", "Double Range"), 
-		__txtx("widget_rotator_random_double_span",  "Double Span")
+		__txt("widget_rotator_random_range",        "Range"), 
+		__txt("widget_rotator_random_span",         "Span"), 
+		__txt("widget_rotator_random_double_range", "Double Range"), 
+		__txt("widget_rotator_random_double_span",  "Double Span")
 	];
 	
 	////- Rotation

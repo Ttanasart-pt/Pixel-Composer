@@ -10,7 +10,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	
 	disp_h = 0;
 	
-	tooltip_ranged = new tooltipSelector("Value Type", [ __txtx("widget_range_constant", "Constant"), __txtx("widget_range_random", "Random Range") ]);
+	tooltip_ranged = new tooltipSelector("Value Type", [ __txt("widget_range_constant", "Constant"), __txt("widget_range_random", "Random Range") ]);
 	
 	onModifyIndex = function(val, index) { 
 		var v = toNumber(val);

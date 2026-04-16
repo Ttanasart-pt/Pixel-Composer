@@ -165,7 +165,7 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 		var bc = COLORS._main_value_positive;
 		
 		if(type == CONNECT_TYPE.input) { 
-			var _txt = __txtx("dialog_group_order_add", "Add separator");
+			var _txt = __txt("dialog_group_order_add", "Add separator");
 			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, _txt, THEME.add, 1, bc, 1, .75) == 2)
 				addSection();
 		}

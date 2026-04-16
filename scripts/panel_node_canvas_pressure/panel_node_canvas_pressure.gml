@@ -1,5 +1,5 @@
 function Panel_Node_Canvas_Pressure(canvas) : Panel_Linear_Setting() constructor {
-	title = __txtx("pen_pressure_settings", "Per Pressure Settings");
+	title = __txt("pen_pressure_settings", "Per Pressure Settings");
 	
 	w = ui(380);
 	self.canvas = canvas;

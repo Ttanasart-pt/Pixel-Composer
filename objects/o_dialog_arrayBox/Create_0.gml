@@ -144,7 +144,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 			}
 			
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
-			draw_text_add(ui(40), yc, __txt("Add value..."));
+			draw_text_add(ui(40), yc, __txt("Add value") + "...");
 		}
 		
 		draw_sprite_ui(THEME.add_16, 0, _cx, yc, 1, 1, 0, COLORS._main_value_positive);

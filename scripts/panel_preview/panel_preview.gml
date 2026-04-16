@@ -157,7 +157,7 @@
 	        registerFunction(p, "Set Reset View On",        "", n, panel_preview_set_reset_view_on         ).setMenu("preview_set_reset_view_on")
 	        registerFunction(p, "Toggle Reset View",        "", n, panel_preview_toggle_reset_view         )
 	        	.setMenu("preview_toggle_reset_view", THEME.icon_reset_when_preview).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.resetViewOnDoubleClick} )
-	        	.setTooltip(new tooltipSelector(__txtx("panel_preview_on_preview", "On Preview Changed"), [ __txt("Center view"), __txt("Keep view") ]))
+	        	.setTooltip(new tooltipSelector(__txt("panel_preview_on_preview", "On Preview Changed"), [ __txt("Center view"), __txt("Keep view") ]))
 	                                                               
 	        registerFunction(p, "Set Mode 2D",  "", n, panel_preview_set_mode_2d ).setMenu("preview_set_mode_2d")
 	        registerFunction(p, "Set Mode 3D",  "", n, panel_preview_set_mode_3d ).setMenu("preview_set_mode_3d")
@@ -244,7 +244,7 @@
 	    }
 	    
 	    function __fnGroupInit_Preview() {
-	        MENU_ITEMS.preview_group_preview_bg = menuItemGroup(__txtx("panel_menu_preview_background", "Preview background"), [
+	        MENU_ITEMS.preview_group_preview_bg = menuItemGroup(__txt("panel_menu_preview_background", "Preview background"), [
 	            [ THEME.preview_bg_transparent, function() /*=>*/ { PANEL_PREVIEW.canvas_bg = -1;      } ],
 	            [ THEME.preview_bg_white,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_white; } ],
 	            [ THEME.preview_bg_black,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_black; } ],

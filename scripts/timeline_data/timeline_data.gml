@@ -177,7 +177,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		////- =Right Buttons
 		
 		var tx = lx + lw - ui(7);
-		var tt = __txtx("panel_animation_goto", "Go to node");
+		var tt = __txt("panel_animation_goto", "Go to node");
 
 		var bx = tx - ui(9);
 		var by = _y + ui(1);

@@ -198,7 +198,7 @@ if(DIALOG_SHOW_FOCUS) {
 			tw -= bs + sp;
 			
 			if(junction_called != noone) {
-				var txt = __txtx("Prioritize Connection");
+				var txt = __txt("Prioritize Connection");
 				var bi  = PREFERENCES.dialog_add_node_search_typ;
 				var cc  = bi? COLORS._main_accent : COLORS._main_icon;
 				

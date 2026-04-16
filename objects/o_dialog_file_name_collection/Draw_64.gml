@@ -43,20 +43,20 @@
 		instance_destroy();
 	bx -= bs + ui(4);
 		
-	var txt  = __txtx("new_collection_create", "Create collection");
+	var txt  = __txt("new_collection_create", "Create collection");
 	var icon = THEME.accept_16;
 	var clr  = COLORS._main_value_positive;
 	
 	if(updating != noone)
-		txt  = __txtx("new_collection_update", "Update collection");
+		txt  = __txt("new_collection_update", "Update collection");
 	
 	if(ugc == 1) {
-		txt  = __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop");
+		txt  = __txt("panel_inspector_workshop_upload", "Upload to Steam Workshop");
 		icon = THEME.workshop_upload;
 		clr  = c_white;
 		
 	} else if(ugc == 2) {
-		txt  = __txtx("panel_inspector_workshop_update", "Update Steam Workshop");
+		txt  = __txt("panel_inspector_workshop_update", "Update Steam Workshop");
 		icon = THEME.workshop_update;
 		clr  = c_white;
 	}
@@ -116,7 +116,7 @@
 	
 	if(!meta_expand) {
 		bx -= bs + ui(4);
-		var txt = __txtx("new_collection_meta_edit", "Edit metadata");
+		var txt = __txt("new_collection_meta_edit", "Edit metadata");
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, txt, THEME.arrow, meta_expand? 3 : 0) == 2)
 			doExpand();
 	}

@@ -59,7 +59,7 @@ if !ready exit;
 	var bx  = x1 - bs;
 	var by  = y0 - bs - ui(4);
 	var cc  = COLORS._main_value_negative;
-	var txt = __txtx("splash_clear_recent", "Clear recent files");
+	var txt = __txt("splash_clear_recent", "Clear recent files");
 	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, txt, THEME.icon_delete, 0, cc) == 2) {
 		ds_list_clear(RECENT_FILES);
 		RECENT_SAVE();
@@ -67,7 +67,7 @@ if !ready exit;
 	
 	bx -= bs + ui(1);
 	cc  = crashed? COLORS._main_accent : COLORS._main_icon;
-	txt = __txtx("splash_open_autosave", "Open autosave folder");
+	txt = __txt("splash_open_autosave", "Open autosave folder");
 	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, txt, THEME.save_auto, 0, cc, 1, .75) == 2) {
 		shellOpenExplorer(DIRECTORY + "autosave");
 	}
@@ -89,7 +89,7 @@ if !ready exit;
 	
 	bx -= bs + ui(1);
 	cc  = COLORS._main_icon;
-	txt = __txtx("splash_show_thumbnail", "Toggle thumbnail");
+	txt = __txt("splash_show_thumbnail", "Toggle thumbnail");
 	var bi = PREFERENCES.splash_show_thumbnail;
 	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, txt, THEME.image_20, bi, cc, 1, .8) == 2) {
 		PREFERENCES.splash_show_thumbnail = !PREFERENCES.splash_show_thumbnail;
@@ -234,13 +234,13 @@ if !ready exit;
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
 			
-			var _txt = __txt("Open Welcome Folder...");
+			var _txt = __txt("Open Welcome Folder") + "...";
 			if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.dPath_open) == 2)
 				shellOpenExplorer($"{DIRECTORY}Welcome files");
 			
 			if(STEAM_ENABLED) {
 				bx -= bs + 1;
-				var _txt = __txtx("workshop_open", "Open Steam Workshop");
+				var _txt = __txt("workshop_open", "Open Steam Workshop");
 				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
 					dialogPanelCall(new Panel_Steam_Workshop());
 					instance_destroy();
@@ -258,7 +258,7 @@ if !ready exit;
 				
 			} else {
 				bx -= bs + 1;
-				var _txt = __txtx("workshop_open", "Open Steam Workshop");
+				var _txt = __txt("workshop_open", "Open Steam Workshop");
 				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.search_24) == 2) {
 					tb_sample_seaching = true;
 					tb_sample_search.activate();
@@ -274,7 +274,7 @@ if !ready exit;
 				steamUCGload();
 				
 			bx -= bs + 1;
-			var _txt = __txtx("workshop_open", "Open Steam Workshop");
+			var _txt = __txt("workshop_open", "Open Steam Workshop");
 			if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
 				dialogPanelCall(new Panel_Steam_Workshop());
 				instance_destroy();

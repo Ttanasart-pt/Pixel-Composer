@@ -344,7 +344,7 @@ function Panel_Collection() : PanelContent() constructor {
 					array_push(contentMenu, MENU_ITEMS.collection_update_steam);
 					
 				array_push(contentMenu, MENU_ITEMS.collection_unsubscribe, -1);
-				array_push(contentMenu, menuItem( __txt("View on Workshop..."), function(_fid) /*=>*/ {
+				array_push(contentMenu, menuItem( __txt("View on Workshop") + "...", function(_fid) /*=>*/ {
 					var _p = new Panel_Steam_Workshop().navigate({ type: "fileid", fileid: _fid });
                     dialogPanelCall(_p);
                     
@@ -645,7 +645,7 @@ function Panel_Collection() : PanelContent() constructor {
 		node_menu_selecting = node;
 		var fav  = struct_exists(NODE_FAV_MAP, node.node);
 		var menu = [
-			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
+			menuItem(fav? __txt("add_node_remove_favourite", "Remove from favourite") : __txt("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
 		];
 		
 		menuCall("add_node_window_menu", menu, 0, 0, fa_left);
@@ -957,7 +957,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(pageS == "Collections" && !DEMO) {
 			if(context != root && PANEL_INSPECTOR.getInspecting() != noone) {
-				var txt = __txtx("panel_collection_add_node", "Add inspecting node as a collection");
+				var txt = __txt("panel_collection_add_node", "Add inspecting node as a collection");
 				if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.add_20, 0, COLORS._main_value_positive, 1, .9) == 2) {
 					data_path = context.path;
 					
@@ -971,7 +971,7 @@ function Panel_Collection() : PanelContent() constructor {
 				draw_sprite_ui_uniform(THEME.add, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon_dark);	
 			bx -= bs + ui(4); if(bx < rootx) return;
 			
-			var txt = __txtx("panel_collection_add_folder", "Add folder");
+			var txt = __txt("panel_collection_add_folder", "Add folder");
 			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dFolder_add, 0, COLORS._main_icon, 1, .9) == 2) 
 				fileNameCall(context.path, function(txt) /*=>*/ { directory_create(txt); refreshContext(); })
 					.setLabel(__txt("Folder name"))
@@ -980,7 +980,7 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 	
 		if(pageS != "Nodes") {
-			var txt = __txtx("panel_collection_open_file", "Open in file explorer");
+			var txt = __txt("panel_collection_open_file", "Open in file explorer");
 			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dPath_open, 0, COLORS._main_icon, 1, .9) == 2)
 				shellOpenExplorer(context.path);
 			bx -= bs + ui(4); if(bx < rootx) return;

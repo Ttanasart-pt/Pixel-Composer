@@ -8,9 +8,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	adjust_shape = true;
 	mode		 = AREA_MODE.area;
 	tooltip		 = new tooltipSelector("Area type", [
-		__txtx("widget_area_center_Span", "Center + Span"),
-		__txtx("widget_area_padding",     "Padding"),
-		__txtx("widget_area_two_points",  "Two points"),
+		__txt("widget_area_center_Span", "Center + Span"),
+		__txt("widget_area_padding",     "Padding"),
+		__txt("widget_area_two_points",  "Two points"),
 	]);
 	
 	onModifySingle[0] = function(val) {
@@ -272,7 +272,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			if(b == 2) mode = setMode(_data, (mode + 1) % 3);
 			
 			var _by   = _y + _h + _h / 2 - _bs / 2;
-			var _btxt = __txtx("widget_area_fill_surface", "Fill surface");
+			var _btxt = __txt("widget_area_fill_surface", "Fill surface");
 			
 			if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, _btxt, THEME.fill) == 2) { 
 				var cnvt = unit != noone && unit.mode == VALUE_UNIT.reference;

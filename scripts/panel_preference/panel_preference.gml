@@ -41,8 +41,8 @@ function Panel_Preference() : PanelContent() constructor {
     
     #region Pages
     	page_current = 0;
-    	page[0] = __txtx("pref_pages_general", "General");
-    	page[1] = __txtx("pref_pages_interface", "Interface");
+    	page[0] = __txt("pref_pages_general", "General");
+    	page[1] = __txt("pref_pages_interface", "Interface");
     	page[2] = __txt("Nodes");
     	page[3] = __txt("Theme");
     	page[4] = __txt("Hotkeys");
@@ -128,49 +128,49 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_global, __txt("Inputs"));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_double_click_delay", "Double click delay"), 
+    			__txt("pref_double_click_delay", "Double click delay"), 
     			"double_click_delay",
     			slider(0, 1, 0.01, function(val) /*=>*/ {return prefSet("double_click_delay", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_mouse_wheel_speed", "Scroll speed"),
+    			__txt("pref_mouse_wheel_speed", "Scroll speed"),
     			"mouse_wheel_speed",
     			textBox_Number(function(val) /*=>*/ {return prefSet("mouse_wheel_speed", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_keyboard_hold_start", "Keyboard hold start"),
+    			__txt("pref_keyboard_hold_start", "Keyboard hold start"),
     			"keyboard_repeat_start",
     			slider(0, 1, 0.01, function(val) /*=>*/ {return prefSet("keyboard_repeat_start", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
+    			__txt("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
     			"keyboard_repeat_speed",
     			slider(0, 1, 0.01, function(val) /*=>*/ {return prefSet("keyboard_repeat_speed", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_keyboard_check_sweep", "Keyboard check sweep"),
+    			__txt("pref_keyboard_check_sweep", "Keyboard check sweep"),
     			"keyboard_check_sweep",
     			new checkBox(function() /*=>*/ {return prefToggle("keyboard_check_sweep")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_expand_hovering_panel", "Expand hovering panel"),
+    			__txt("pref_expand_hovering_panel", "Expand hovering panel"),
     			"expand_hover",
     			new checkBox(function() /*=>*/ {return prefToggle("expand_hover")})
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_expand_lock_mouse_slider", "Lock mouse when sliding"),
+    			__txt("pref_expand_lock_mouse_slider", "Lock mouse when sliding"),
     			"slider_lock_mouse",
     			new checkBox(function() /*=>*/ {return prefToggle("slider_lock_mouse")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_pen_pool_delay", "Pen leave delay"),
+    			__txt("pref_pen_pool_delay", "Pen leave delay"),
     			"pen_pool_delay",
     			textBox_Number(function(val) /*=>*/ {return prefSet("pen_pool_delay", max(0, val))})
     		));
@@ -178,37 +178,37 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_global, __txt("Save/Load"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
+    			__txt("pref_auto_save_time", "Autosave delay (-1 to disable)"),
     			"auto_save_time",
     			textBox_Number(function(val) /*=>*/ {return prefSet("auto_save_time", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_save_layout", "Save layout"),
+    			__txt("pref_save_layout", "Save layout"),
     			"save_layout",
     			new checkBox(function() /*=>*/ {return prefToggle("save_layout")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_save_file_minify", "Minify save file"),
+    			__txt("pref_save_file_minify", "Minify save file"),
     			"save_file_minify",
     			new checkBox(function() /*=>*/ {return prefToggle("save_file_minify")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_save_backups", "Backup save(s) amount"),
+    			__txt("pref_save_backups", "Backup save(s) amount"),
     			"save_backup",
     			textBox_Number(function(val) /*=>*/ {return prefSet("save_backup", max(0, val))})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_save_file_thumbnail", "Save Thumbnail"),
+    			__txt("pref_save_file_thumbnail", "Save Thumbnail"),
     			"save_thumbnail",
     			new checkBox(function() /*=>*/ {return prefToggle("save_thumbnail")})
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_save_thumbnail_size", "Thumbnail Size"),
+    			__txt("pref_save_thumbnail_size", "Thumbnail Size"),
     			"save_thumbnail_size",
     			textBox_Number(function(val) /*=>*/ {return prefSet("save_thumbnail_size", max(32, val))})
     		));
@@ -216,13 +216,13 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_global, __txt("Crash"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_legacy_exception", "Use legacy exception handler"),
+    			__txt("pref_legacy_exception", "Use legacy exception handler"),
     			"use_legacy_exception",
     			new checkBox(function() /*=>*/ {return prefToggle("use_legacy_exception", true)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_crash_dialog", "Show dialog after crash"),
+    			__txt("pref_crash_dialog", "Show dialog after crash"),
     			"show_crash_dialog",
     			new checkBox(function() /*=>*/ {return prefToggle("show_crash_dialog", true)})
     		));
@@ -230,13 +230,13 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_global, __txt("Misc"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_clear_temp", "Clear temp file on close"),
+    			__txt("pref_clear_temp", "Clear temp file on close"),
     			"clear_temp_on_close",
     			new checkBox(function() /*=>*/ {return prefToggle("clear_temp_on_close")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_enable_test_mode", "Developer mode*"),
+    			__txt("pref_enable_test_mode", "Developer mode*"),
     			"test_mode",
     			new checkBox(function() /*=>*/ {return prefToggle("test_mode", false, true)})
     		));
@@ -259,7 +259,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_global, __txt("Paths"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_directory", "Main directory path*"),
+    			__txt("pref_directory", "Main directory path*"),
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
     				.setSideButton(button(function() /*=>*/ { 
     					PRESIST_PREF.path = get_open_directory_compat(struct_try_get(PRESIST_PREF, "path", ""));
@@ -272,7 +272,7 @@ function Panel_Preference() : PanelContent() constructor {
     		).setKey("main_dir_path"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_temp", "Temp directory path*"),
+    			__txt("pref_directory_temp", "Temp directory path*"),
     			"temp_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("temp_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.temp_path = get_open_directory_compat(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -280,19 +280,19 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_assets", "Assets directory paths*"),
+    			__txt("pref_directory_assets", "Assets directory paths*"),
     			"path_assets",
     			new folderArrayBox(PREFERENCES.path_assets, function() /*=>*/ {return PREF_SAVE()}).setFont(f_p2),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_font", "Font directory paths*"),
+    			__txt("pref_directory_font", "Font directory paths*"),
     			"path_fonts",
     			new folderArrayBox(PREFERENCES.path_fonts, function() /*=>*/ {return PREF_SAVE()}).setFont(f_p2),
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_welcome", "Welcome file directory paths*"),
+    			__txt("pref_directory_welcome", "Welcome file directory paths*"),
     			"path_welcome",
     			new folderArrayBox(PREFERENCES.path_welcome, function() /*=>*/ {return PREF_SAVE()}).setFont(f_p2),
     		));
@@ -300,7 +300,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_global, __txt("Libraries"));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_ImageMagick", "ImageMagick path*"),
+    			__txt("pref_directory_ImageMagick", "ImageMagick path*"),
     			"ImageMagick_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("ImageMagick_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.ImageMagick_path = get_open_directory_compat(PREFERENCES.ImageMagick_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -308,7 +308,7 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_webp", "Webp path*"),
+    			__txt("pref_directory_webp", "Webp path*"),
     			"webp_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("webp_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.webp_path = get_open_directory_compat(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -316,7 +316,7 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_gifski", "Gifski path*"),
+    			__txt("pref_directory_gifski", "Gifski path*"),
     			"gifski_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("gifski_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.gifski_path = get_open_directory_compat(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -324,7 +324,7 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_FFmpeg", "FFmpeg path*"),
+    			__txt("pref_directory_FFmpeg", "FFmpeg path*"),
     			"ffmpeg_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("gifski_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.ffmpeg_path = get_open_directory_compat(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
@@ -334,39 +334,39 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_global, __txt("Cleanups"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_clear_recents", "Recents"),
+    			__txt("pref_clear_recents", "Recents"),
     			button(function() /*=>*/ { file_delete_safe(DIRECTORY + "recent.json"); }).setText($"Clear Recent Files"),
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_clear_temp", "Temp File"),
+    			__txt("pref_clear_temp", "Temp File"),
     			button(function() /*=>*/ { directory_clear(TEMPDIR); }).setText($"Clear Temp Folder"),
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_clear_theme", "Autosaves"),
+    			__txt("pref_clear_theme", "Autosaves"),
     			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Autosave"); }).setText($"Clear Autosaves"),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_clear_theme", "Caches"),
+    			__txt("pref_clear_theme", "Caches"),
     			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Cache"); 
     			               directory_destroy(DIRECTORY + "font_cache"); }).setText($"Clear Caches"),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_clear_collection", "Default Collections"),
+    			__txt("pref_clear_collection", "Default Collections"),
     			button(function() /*=>*/ { clearDefaultCollection(); }).setText($"Clear Default Collections"),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_clear_theme", "Default Theme"),
+    			__txt("pref_clear_theme", "Default Theme"),
     			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Themes/default"); file_delete_safe(DIRECTORY + "Themes/version"); })
     				.setText($"Clear Default Theme"),
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_clear_nodes", "Default Nodes"),
+    			__txt("pref_clear_nodes", "Default Nodes"),
     			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Nodes/Internal"); file_delete_safe(DIRECTORY + "Nodes/version"); })
     				.setText($"Clear Nodes"),
     		));
@@ -409,7 +409,7 @@ function Panel_Preference() : PanelContent() constructor {
 		array_push(locals, -1, locale_manager);
 		
 		item_locale = new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_interface_language", "Interface Language*"),
+			__txt("pref_interface_language", "Interface Language*"),
 			"local",
 			new scrollBox(locals, function(_idx) /*=>*/ { 
 				var _l = array_safe_get(locals, _idx, "en");
@@ -439,7 +439,7 @@ function Panel_Preference() : PanelContent() constructor {
     	
     		PREFERENCES._display_scaling = PREFERENCES.display_scaling;
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
-    			__txtx("pref_gui_scaling", "GUI scaling*"),
+    			__txt("pref_gui_scaling", "GUI scaling*"),
     			slider(0.5, 2, 0.01, function(val) /*=>*/ { PREFERENCES._display_scaling = val; should_restart = true; }, 
     			function(   ) /*=>*/ { 
     				PREFERENCES._display_scaling = max(PREFERENCES._display_scaling, 0.5);
@@ -457,7 +457,7 @@ function Panel_Preference() : PanelContent() constructor {
     		).setKey("ui_scale"));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_text_scaling", "Text scale"),
+    			__txt("pref_ui_text_scaling", "Text scale"),
     			"text_scaling",
     			textBox_Number(function(str) /*=>*/ {
     				prefSet("text_scaling", clamp(real(str), .5, 4), true);
@@ -467,13 +467,13 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_frame_rate", "UI frame rate"),
+    			__txt("pref_ui_frame_rate", "UI frame rate"),
     			"ui_framerate",
     			textBox_Number(function(str) /*=>*/ {return prefSet("ui_framerate", round(real(str)))})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_frame_rate", "UI inactive frame rate"),
+    			__txt("pref_ui_frame_rate", "UI inactive frame rate"),
     			"ui_framerate_non_focus",
     			textBox_Number(function(str) /*=>*/ {return prefSet("ui_framerate_non_focus", round(real(str)))})
     		));
@@ -481,7 +481,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, item_locale);
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_font", "Overwrite UI font") + "*",
+    			__txt("pref_ui_font", "Overwrite UI font") + "*",
     			"font_overwrite",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("font_overwrite", txt, true)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_compat("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
@@ -490,21 +490,21 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_native_file_selector", "Use native file selector"),
+    			__txt("pref_ui_native_file_selector", "Use native file selector"),
     			"use_native_file_browser",
     			new checkBox(function() /*=>*/ {return prefToggle("use_native_file_browser")})
     		));
     		
     		if(TESTING)
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_window_shadow", "Shadow"),
+    			__txt("pref_ui_window_shadow", "Shadow"),
     			"window_shadow",
     			new checkBox(function() /*=>*/ {return prefToggle("window_shadow", true)})
     		));
     		
     		if(IS_PATREON)
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_supporter_icon", "Show supporter icon"),
+    			__txt("pref_supporter_icon", "Show supporter icon"),
     			"show_supporter_icon",
     			new checkBox(function() /*=>*/ {return prefToggle("show_supporter_icon")})
     		));
@@ -512,19 +512,19 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Window")); // Window
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_fix_window_size", "Fix Window size on start"),
+    			__txt("pref_ui_fix_window_size", "Fix Window size on start"),
     			"window_fix",
     			new checkBox(function() /*=>*/ {return prefToggle("window_fix")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_fix_width", "Fix width"),
+    			__txt("pref_ui_fix_width", "Fix width"),
     			"window_fix_width",
     			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_width", max(1, round(real(str))))})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_ui_fix_height", "Fix height"),
+    			__txt("pref_ui_fix_height", "Fix height"),
     			"window_fix_height",
     			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_height", max(1, round(real(str))))})
     		));
@@ -533,19 +533,19 @@ function Panel_Preference() : PanelContent() constructor {
     	
     		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_windows_control", "Right align window controls."),
+    			__txt("pref_windows_control", "Right align window controls."),
     			"panel_menu_right_control",
     			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_right_control")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_menu_profile", "Show online account."),
+    			__txt("pref_menu_profile", "Show online account."),
     			"panel_menu_show_profile",
     			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_show_profile")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_check_update", "Check for update on start."),
+    			__txt("pref_check_update", "Check for update on start."),
     			"check_update",
     			new checkBox(function() /*=>*/ {return prefToggle("check_update")})
     		));
@@ -553,25 +553,25 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Graph")); // Graph
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_add_node_remember", "Remember add node position"),
+    			__txt("pref_add_node_remember", "Remember add node position"),
     			"add_node_remember",
     			new checkBox(function() /*=>*/ {return prefToggle("add_node_remember")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_graph_group_in_tab", "Open group in new tab"),
+    			__txt("pref_graph_group_in_tab", "Open group in new tab"),
     			"graph_open_group_in_tab",
     			new checkBox(function() /*=>*/ {return prefToggle("graph_open_group_in_tab")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
+    			__txt("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
     			"graph_zoom_smoooth",
     			textBox_Number(function(str) /*=>*/ {return prefSet("graph_zoom_smoooth", max(1, round(real(str))))})
     		));
     		
 			ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_add_select", "Select node on add"),
+				__txt("pref_node_add_select", "Select node on add"),
 				"node_add_select",
 				new checkBox(function() /*=>*/ {return prefToggle("node_add_select")})
 			));
@@ -579,7 +579,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Preview")); // Preview
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_preview_show_real_fps", "Show real fps"),
+    			__txt("pref_preview_show_real_fps", "Show real fps"),
     			"panel_preview_show_real_fps",
     			new checkBox(function() /*=>*/ {return prefToggle("panel_preview_show_real_fps")})
     		));
@@ -587,7 +587,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Inspector")); // Inspector
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_inspector_focus_on_double_click", "Focus on double click"),
+    			__txt("pref_inspector_focus_on_double_click", "Focus on double click"),
     			"inspector_focus_on_double_click",
     			new checkBox(function() /*=>*/ {return prefToggle("inspector_focus_on_double_click")})
     		));
@@ -595,7 +595,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Collection")); // Collection
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_collection_preview_speed", "Collection preview speed"),
+    			__txt("pref_collection_preview_speed", "Collection preview speed"),
     			"collection_preview_speed",
     			textBox_Number(function(str) /*=>*/ {return prefSet("collection_preview_speed", max(1, round(real(str))))})
     		));
@@ -603,7 +603,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Notification")); // Notification
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_warning_notification_time", "Warning notification time"),
+    			__txt("pref_warning_notification_time", "Warning notification time"),
     			"notification_time",
     			textBox_Number(function(str) /*=>*/ {return prefSet("notification_time", max(0, round(real(str))))})
     		));
@@ -611,20 +611,20 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Text Area")); // Text area
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_widget_autocomplete_delay", "Code Autocomplete delay"),
+    			__txt("pref_widget_autocomplete_delay", "Code Autocomplete delay"),
     			"widget_autocomplete_delay",
     			textBox_Number(function(str) /*=>*/ {return prefSet("widget_autocomplete_delay", round(real(str)))})
     		));
     	
     	if(IS_PATREON) {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_widget_textbox_shake", "Textbox shake"),
+    			__txt("pref_widget_textbox_shake", "Textbox shake"),
     			"textbox_shake",
     			textBox_Number(function(str) /*=>*/ {return prefSet("textbox_shake", real(str))})
     		).patreon());
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_widget_textbox_particles", "Textbox particles"),
+    			__txt("pref_widget_textbox_particles", "Textbox particles"),
     			"textbox_particle",
     			textBox_Number(function(str) /*=>*/ {return prefSet("textbox_particle", round(real(str)))})
     		).patreon());
@@ -634,7 +634,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Curve box")); // Curvebox
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_widget_curvebox_height", "Default curvebox height"),
+    			__txt("pref_widget_curvebox_height", "Default curvebox height"),
     			"curvebox_default_height",
     			textBox_Number(function(str) /*=>*/ {return prefSet("curvebox_default_height", round(real(str)))})
     		));
@@ -647,26 +647,26 @@ function Panel_Preference() : PanelContent() constructor {
 		ds_list_add(pref_node, __txt("Rendering"));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_render_max_time", "Max render time per frame"),
+				__txt("pref_render_max_time", "Max render time per frame"),
 				"render_max_time",
 				textBox_Number(function(val) /*=>*/ {return prefSet("render_max_time", val)})
 			));
 				
 		ds_list_add(pref_node, __txt("Defaults"));
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_height", "Default node height"),
+				__txt("pref_node_height", "Default node height"),
 				"node_def_height",
 				textBox_Number(function(val) /*=>*/ {return prefSet("node_def_height", val)})
 			));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_param_width", "Default param width"),
+				__txt("pref_node_param_width", "Default param width"),
 				"node_param_width",
 				textBox_Number(function(val) /*=>*/ {return prefSet("node_param_width", val)})
 			));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_dim_unit", "Default value unit"),
+				__txt("pref_node_dim_unit", "Default value unit"),
 				"node_def_dim_unit",
 				new scrollBox([ "Pixel", "Fraction / Global" ], function(val) /*=>*/ {return prefSet("node_def_dim_unit", val)})
 			));
@@ -674,13 +674,13 @@ function Panel_Preference() : PanelContent() constructor {
 		ds_list_add(pref_node, __txt("Display"));
 		
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_param_show", "Show parameter on new node"),
+				__txt("pref_node_param_show", "Show parameter on new node"),
 				"node_param_show",
 				new checkBox(function() /*=>*/ {return prefToggle("node_param_show")})
 			));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_3d_preview", "3D Preview resolution"),
+				__txt("pref_node_3d_preview", "3D Preview resolution"),
 				"node_3d_preview_size",
 				textBox_Number(function(val) /*=>*/ {return prefSet("node_3d_preview_size", clamp(val, 16, 1024))})
 			));
@@ -688,7 +688,7 @@ function Panel_Preference() : PanelContent() constructor {
 		ds_list_add(pref_node, __txt("Files"));
 		
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_file_watcher_delay", "File watcher delay (s)"),
+				__txt("pref_file_watcher_delay", "File watcher delay (s)"),
 				"file_watcher_delay",
 				textBox_Number(function(val) /*=>*/ {return prefSet("file_watcher_delay", val)})
 			));
@@ -880,7 +880,7 @@ function Panel_Preference() : PanelContent() constructor {
     		hh += _mh + ui(8 + 4);
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(ui(8), _y + _h / 2, __txtx("pref_theme_unpack", "Load unpacked"));
+    		draw_text_add(ui(8), _y + _h / 2, __txt("pref_theme_unpack", "Load unpacked"));
     		
     		cb_load_unpack.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_load_unpack));
     		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
@@ -892,7 +892,7 @@ function Panel_Preference() : PanelContent() constructor {
     		hh += _h + ui(8);
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(ui(8), _y + _h / 2, __txtx("pref_theme_bool", "Boolean Style"));
+    		draw_text_add(ui(8), _y + _h / 2, __txt("pref_theme_bool", "Boolean Style"));
     		
     		sb_bool_style.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_boolean));
     		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
@@ -1378,17 +1378,17 @@ function Panel_Preference() : PanelContent() constructor {
 				function() /*=>*/ {return PREFERENCES.panel_force_on_escape}
 			],
 			
-			[ __txtx("panel_graph_group_require_shift", "Hold Shift to enter group"),
+			[ __txt("panel_graph_group_require_shift", "Hold Shift to enter group"),
 				new checkBox(function() /*=>*/ {return prefToggle("panel_graph_group_require_shift")}), 
 				function() /*=>*/ {return PREFERENCES.panel_graph_group_require_shift}
 			],
 			
-			[ __txtx("pref_use_alt", "Use ALT for"),
+			[ __txt("pref_use_alt", "Use ALT for"),
 				new buttonGroup(__txts([ "Pan", "Color Picker" ]), function(val) /*=>*/ {return prefSet("alt_picker", val)}),
 				function() /*=>*/ {return PREFERENCES.alt_picker}
 			],
 			
-			[ __txtx("pref_pan_key", "Panning key"),
+			[ __txt("pref_pan_key", "Panning key"),
 				new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ {return prefSet("pan_mouse_key", val + 3)}),
     			function() /*=>*/ {return PREFERENCES.pan_mouse_key - 3},
 			],
@@ -2003,7 +2003,7 @@ function Panel_Preference() : PanelContent() constructor {
     #region Search
     	tb_search = textBox_Text(function(str) /*=>*/ { search_text = str; })
     		.setFont(f_p2).setAlign(fa_left).setEmpty().setAutoupdate()
-    		.setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
+    		.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
     	
     	search_text = "";
     	contents    = {};

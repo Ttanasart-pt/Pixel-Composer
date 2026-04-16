@@ -9,7 +9,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 	interactable = true;
 	destroy_on_click_out = true;
 	
-	name = __txtx("color_selector_title", "Color selector");
+	name = __txt("color_selector_title", "Color selector");
 	
 	previous_color = c_black;
 	selector       = new colorSelector();
@@ -24,7 +24,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 	function setApply(a)   { selector.onModify = a; onModify = a;      return self; }
 	
 	b_cancel = button(function() /*=>*/ { onModify(previous_color); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
-	                                                                         .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
+	                                                                         .setTooltip(__txt("dialog_revert_and_exit", "Revert and exit"));
 	b_apply  = button(function() /*=>*/ { onModify(selector.current_color); instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 #endregion
 
@@ -134,13 +134,13 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 			if(mouse_rclick()) {
 				if(_hoverColor != noone) {
 					menuCall("palette_window_preset_menu", [
-						menuItem(__txtx("palette_mix_color", "Mix Color"), function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
+						menuItem(__txt("palette_mix_color", "Mix Color"), function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
 					]);
 					
 				} else if(isHover && p != projectPal) {
 					menuCall("palette_window_preset_menu", [
-						menuItem(__txtx("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
-						menuItem(__txtx("palette_editor_delete",      "Delete palette"), function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
+						menuItem(__txt("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
+						menuItem(__txt("palette_editor_delete",      "Delete palette"), function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
 					]);
 				}
 			}
@@ -232,7 +232,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 	search_string = "";
 	tb_search = textBox_Text(function(t) /*=>*/ { search_string = string_lower(t) } )
 	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate()
-	               .setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
+	               .setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
 	
 	////////////////////////  SORT  ////////////////////////
 	

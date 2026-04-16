@@ -123,7 +123,7 @@ function Panel_Workspace() : PanelContent() constructor {
 					layout_selecting = str;
 					menuCall("workspace_menu", [
 						menuItem( __txt("Select"), function() /*=>*/ {return apply_space()} ),
-						menuItem( __txtx("workspace_replace_current", "Replace with current"), function() /*=>*/ {return replace_space()} ),
+						menuItem( __txt("workspace_replace_current", "Replace with current"), function() /*=>*/ {return replace_space()} ),
 						menuItem( __txt("Delete"), function() /*=>*/ {return delete_space()}, THEME.cross),
 					]);
 				}

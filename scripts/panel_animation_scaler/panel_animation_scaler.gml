@@ -1,5 +1,5 @@
 function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
-	title = __txtx("anim_scale_title", "Animation Scaler");
+	title = __txt("anim_scale_title", "Animation Scaler");
 	w     = ui(380);
 	
 	scale_to = GLOBAL_TOTAL_FRAMES;
@@ -7,12 +7,12 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	
 	properties = [
 		new __Panel_Linear_Setting_Item(
-			__txtx("anim_scale_target_frame_length", "Target frame length"),
+			__txt("anim_scale_target_frame_length", "Target frame length"),
 			new textBox(TEXTBOX_INPUT.number, function(to) /*=>*/ { scale_to = toNumber(to); }), 
 			function() /*=>*/ {return scale_to},
 		),
 		new __Panel_Linear_Setting_Item(
-			__txtx("anim_scale_quantize", "Quantize Keyframes"),
+			__txt("anim_scale_quantize", "Quantize Keyframes"),
 			new checkBox(function() /*=>*/ { quantize = !quantize; }), 
 			function() /*=>*/ {return quantize},
 		),

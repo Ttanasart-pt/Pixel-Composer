@@ -172,9 +172,9 @@
         registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType      )
         	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.node_name_type} )
         	.setTooltip(new tooltipSelector("Name Display", [
-	            __txtx("panel_animation_name_full", "Full name"),
-	            __txtx("panel_animation_name_type", "Node type"),
-	            __txtx("panel_animation_name_only", "Node name"),
+	            __txt("panel_animation_name_full", "Full name"),
+	            __txt("panel_animation_name_type", "Node type"),
+	            __txt("panel_animation_name_only", "Node name"),
 	        ])).setScroll()
 	        
         registerFunction(an, "Show Node Name",    "", n, panel_animation_toggle_NodeLabel       )
@@ -197,20 +197,20 @@
     	var s  = THEME.timeline_ease;
         var t  = "panel_animation_ease";
         
-        MENU_ITEMS.animation_group_ease_in = menuItemGroup(__txtx($"{t}_in", "Ease in"),  [ 
-			[ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.linear; k.ease_in = [0, 1]; }) }, __txtx($"{t}_linear",    "Linear")    ],
-			[ [s,1], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 1]; }) }, __txtx($"{t}_smooth",    "Smooth")    ],
-			[ [s,2], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 2]; }) }, __txtx($"{t}_overshoot", "Overshoot") ],
-			[ [s,3], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [0, 0]; }) }, __txtx($"{t}_sharp",     "Sharp")     ],
-			[ [s,4], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.cut;    k.ease_in = [0, 0]; }) }, __txtx($"{t}_hold",      "Hold")      ],
+        MENU_ITEMS.animation_group_ease_in = menuItemGroup(__txt($"{t}_in", "Ease in"),  [ 
+			[ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.linear; k.ease_in = [0, 1]; }) }, __txt($"{t}_linear",    "Linear")    ],
+			[ [s,1], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 1]; }) }, __txt($"{t}_smooth",    "Smooth")    ],
+			[ [s,2], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 2]; }) }, __txt($"{t}_overshoot", "Overshoot") ],
+			[ [s,3], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [0, 0]; }) }, __txt($"{t}_sharp",     "Sharp")     ],
+			[ [s,4], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.cut;    k.ease_in = [0, 0]; }) }, __txt($"{t}_hold",      "Hold")      ],
         ], [ "Animation", "Ease In" ]);
         registerFunction(an, "Ease In",  "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_ease_in ]); });
         
-        MENU_ITEMS.animation_group_ease_out = menuItemGroup(__txtx($"{t}_out", "Ease out"),  [ 
-            [ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.linear; k.ease_out = [0, 0]; }) }, __txtx($"{t}_linear",    "Linear")    ],
-            [ [s,1], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1, 0]; }) }, __txtx($"{t}_smooth",    "Smooth")    ],
-            [ [s,2], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1,-1]; }) }, __txtx($"{t}_overshoot", "Overshoot") ],
-            [ [s,3], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [0, 1]; }) }, __txtx($"{t}_sharp",     "Sharp")     ],
+        MENU_ITEMS.animation_group_ease_out = menuItemGroup(__txt($"{t}_out", "Ease out"),  [ 
+            [ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.linear; k.ease_out = [0, 0]; }) }, __txt($"{t}_linear",    "Linear")    ],
+            [ [s,1], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1, 0]; }) }, __txt($"{t}_smooth",    "Smooth")    ],
+            [ [s,2], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1,-1]; }) }, __txt($"{t}_overshoot", "Overshoot") ],
+            [ [s,3], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [0, 1]; }) }, __txt($"{t}_sharp",     "Sharp")     ],
         ], [ "Animation", "Ease Outs" ]);
         registerFunction(an, "Ease Out", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_ease_out ]); });
         
@@ -306,14 +306,14 @@ function Panel_Animation() : PanelContent() constructor {
     #endregion
     
     #region ++++ Control Buttons ++++
-        tooltip_toggle_nodes = new tooltipHotkey(__txtx("panel_animation_show_node", "Toggle node label"), "Animation", "Toggle Nodes");
+        tooltip_toggle_nodes = new tooltipHotkey(__txt("panel_animation_show_node", "Toggle node label"), "Animation", "Toggle Nodes");
         tooltip_resume       = new tooltipHotkey(__txt("Resume"), "", "Resume" );
         tooltip_pause        = new tooltipHotkey(__txt("Pause"),  "", "Resume" );
         tooltip_stop         = new tooltipHotkey(__txt("Stop"),   "", "Stop"   );
-        tooltip_fr_first     = new tooltipHotkey(__txtx("panel_animation_go_to_first_frame", "Go to first frame"),  "", "First Frame");
-        tooltip_fr_last      = new tooltipHotkey(__txtx("panel_animation_go_to_last_frame", "Go to last frame"),    "", "Last Frame");
-        tooltip_fr_prev      = new tooltipHotkey(__txtx("panel_animation_previous_frame", "Previous frame"),        "", "Previous Frame");
-        tooltip_fr_next      = new tooltipHotkey(__txtx("panel_animation_next_frame", "Next frame"),                "", "Next Frame");
+        tooltip_fr_first     = new tooltipHotkey(__txt("panel_animation_go_to_first_frame", "Go to first frame"),  "", "First Frame");
+        tooltip_fr_last      = new tooltipHotkey(__txt("panel_animation_go_to_last_frame", "Go to last frame"),    "", "Last Frame");
+        tooltip_fr_prev      = new tooltipHotkey(__txt("panel_animation_previous_frame", "Previous frame"),        "", "Previous Frame");
+        tooltip_fr_next      = new tooltipHotkey(__txt("panel_animation_next_frame", "Next frame"),                "", "Next Frame");
     
         control_buttons = [ 
             [ tooltip_stop,      4, -1,                function() /*=>*/ {return PROJECT.animator.stop()}          ],
@@ -926,7 +926,7 @@ function Panel_Animation() : PanelContent() constructor {
     	var by = h - bs - padding;
         var bx = w - bs - padding;
         
-        var bt = __txtx("panel_animation_animation_settings", "Animation settings");
+        var bt = __txt("panel_animation_animation_settings", "Animation settings");
         var b  = buttonInstant_Pad(bSpr, bx, by, bs, bs, m, hov, foc, bt, THEME.gear, 2, bc, 1, ui(6));
         if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bs, y + by - padding, { anchor: ANCHOR.right | ANCHOR.bottom }); 
         
@@ -939,10 +939,10 @@ function Panel_Animation() : PanelContent() constructor {
         	var _dy = y + by - ui(8);
         	
         	menuCall("animation_tools", [
-        		menuItem(__txtx("panel_animation_scale_animation", "Scaler"),  function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Scaler(),  d.x, d.y, 
+        		menuItem(__txt("panel_animation_scale_animation", "Scaler"),  function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Scaler(),  d.x, d.y, 
         			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
         			
-        		menuItem(__txtx("panel_animation_clean_animation", "Cleaner"), function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Cleaner(), d.x, d.y, 
+        		menuItem(__txt("panel_animation_clean_animation", "Cleaner"), function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Cleaner(), d.x, d.y, 
         			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
         			
     		], _dx, _dy);

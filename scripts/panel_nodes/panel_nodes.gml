@@ -165,7 +165,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		var bh = hg;
 		var bx = _x1 - bw;
 		var by = _y;
-		var bt = __txtx("panel_node_goto", "Go to node");
+		var bt = __txt("panel_node_goto", "Go to node");
 		
 		if(buttonInstant(noone, bx, by, bw, bh, _m, hover, focus, bt, THEME.animate_prop_go, 0, COLORS._main_icon, 0.75) == 2)
 			graphFocusNode(node);

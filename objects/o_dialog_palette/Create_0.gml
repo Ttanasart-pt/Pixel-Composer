@@ -14,7 +14,7 @@ function __PaletteColor(_color = c_black) constructor {
 	title_height = 52;
 	destroy_on_click_out = true;
 	
-	name            = __txtx("palette_editor_title", "Palette editor");
+	name            = __txt("palette_editor_title", "Palette editor");
 	palette         = 0;
 	paletteObject   = [];
 	
@@ -57,7 +57,7 @@ function __PaletteColor(_color = c_black) constructor {
 	selection_surface = noone;
 	
 	b_cancel = button(function() /*=>*/ { onModify(previous_palette); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
-	                                                                           .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
+	                                                                           .setTooltip(__txt("dialog_revert_and_exit", "Revert and exit"));
 	b_apply  = button(function() /*=>*/ { onModify(palette);          instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	menu_add_target = "";
@@ -189,8 +189,8 @@ function __PaletteColor(_color = c_black) constructor {
 		if(isHover && mouse_rpress(_foc)) {
 			menuCall("palette_window_preset_menu", [
 				menuItem(__txt("Set Palette"), function(p) /*=>*/ { setPalette(array_clone(p)); onModify(palette); }).setParam(_palt),
-				menuItem(__txtx("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
-				menuItem(__txtx("palette_editor_delete", "Delete palette"),      function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
+				menuItem(__txt("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
+				menuItem(__txt("palette_editor_delete", "Delete palette"),      function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
 			]);
 		}
 		
@@ -223,7 +223,7 @@ function __PaletteColor(_color = c_black) constructor {
 				var by = _y + ui(2);
 				
 				if(!_favFol) {
-					var bt = __txt("Add preset to folder...");
+					var bt = __txt("Add preset to folder") + "...";
 					var bc = [COLORS._main_icon, COLORS._main_value_positive];
 					var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, bt, THEME.add, 0, bc, .85);
 					if(b) { _hovSec = false; isHover = false; };
@@ -302,7 +302,7 @@ function __PaletteColor(_color = c_black) constructor {
 	search_string = "";
 	tb_search = textBox_Text(function(t) /*=>*/ { search_string = string_lower(t); } )
 	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate()
-	               .setPlaceHold(__txt("Search" + "...")).setLabelIcon(THEME.search).setClearable();
+	               .setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
 	
 	////////////////////////  SORT  ////////////////////////
 	
@@ -401,14 +401,14 @@ function __PaletteColor(_color = c_black) constructor {
 	function checkMouse() {}
 	
 	menu_palette_sort = [
-		new MenuItem_Sort(__txtx("palette_editor_sort_brightness", "Brightness"), 
+		new MenuItem_Sort(__txt("palette_editor_sort_brightness", "Brightness"), 
 			[ function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortBright(a.color, b.color)})}, function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortDark(a.color, b.color)})} ]),
 		-1,
-		new MenuItem_Sort(__txtx("palette_editor_sort_hue", "Hue"),           
+		new MenuItem_Sort(__txt("palette_editor_sort_hue", "Hue"),           
 			[ function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortHue(a.color, b.color)})}, function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortHue(b.color, a.color)})} ] ),
-		new MenuItem_Sort(__txtx("palette_editor_sort_sat", "Saturation"),    
+		new MenuItem_Sort(__txt("palette_editor_sort_sat", "Saturation"),    
 			[ function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortSat(a.color, b.color)})}, function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortSat(b.color, a.color)})} ] ),
-		new MenuItem_Sort(__txtx("palette_editor_sort_val", "Value"),         
+		new MenuItem_Sort(__txt("palette_editor_sort_val", "Value"),         
 			[ function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortVal(a.color, b.color)})}, function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortVal(b.color, a.color)})} ] ),
 	];
 #endregion
