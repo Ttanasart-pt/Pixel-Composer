@@ -1,6 +1,6 @@
 #region data
 	globalvar LOCALE; LOCALE       = { fontDir: "", config: { per_character_line_break: false } }
-	globalvar TEST_LOCALE; TEST_LOCALE  = true;
+	globalvar TEST_LOCALE; TEST_LOCALE  = false;
 	globalvar LOCALE_DEF; LOCALE_DEF   = true;
 	
 	globalvar LOCALE_NOTE_DATA; LOCALE_NOTE_DATA = {};
@@ -74,8 +74,6 @@ function __txtDef(  txt, def = txt ) { return def; }
 function __txtTest( txt, def = txt ) {
 	var key = string_replace_all(string_lower(txt), " ", "_");
 	if(key != "" && !has(LOCALE.texts, key) && !has(global.missing_locale, key)) {
-		show_debug_message($"missing {key}:{def}");
-		// printCallStack();
 		global.missing_locale[$ key] = def;
 		file_text_write_all(global.missing_lfile, json_stringify(global.missing_locale));
 	}
