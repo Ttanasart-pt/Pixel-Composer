@@ -78,7 +78,12 @@ function _loadColorStringParse(str) {
 }
 
 function _loadColorString(str) {
-	if(!is_array(str)) return struct_has(CDEF, str)? CDEF[$ str] : color_from_rgb(str);
+	if(!is_array(str)) {
+		if(has(CDEF,   str)) return CDEF[$   str];
+		if(has(COLORS, str)) return COLORS[$ str];
+		return color_from_rgb(str);
+	}
+	
 	if(array_length(str) != 3) return 0;
 	
 	var c0 = struct_try_get(CDEF, str[0], 0);
@@ -125,7 +130,7 @@ function _loadColor(theme = "default") {
 		
 		COLORS_DEF.colors[$ key] = str;
 		
-		if(struct_has(override, key)) {
+		if(has(override, key)) {
 			str = override[$ key];
 			COLORS_KEYS.colors[$ key] = str;
 		} 
@@ -140,7 +145,7 @@ function _loadColor(theme = "default") {
 		
 		COLORS_DEF.define[$ key] = def;
 		
-		if(struct_has(override, key)) {
+		if(has(override, key)) {
 			def = override[$ key];
 			COLORS_KEYS.define[$ key] = def;
 		}
@@ -154,7 +159,7 @@ function _loadColor(theme = "default") {
 		
 		COLORS_DEF.define[$ key] = def;
 		
-		if(struct_has(override, key)) {
+		if(has(override, key)) {
 			def = override[$ key];
 			COLORS_KEYS.array[$ key] = def;
 		}

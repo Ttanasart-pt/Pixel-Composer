@@ -89,26 +89,26 @@
 		var s  = MOD_KEY.shift;
 		var a  = MOD_KEY.alt;
 		
-        registerFunction("", "Toggle Dopesheet",   vk_tab,     c,  function() /*=>*/ { PANEL_ANIMATION.toggleDopesheet(); } ).setMenu("animation_dopesheet_toggle")
-        registerFunction("", "Play/Pause",         vk_space,   n,  panel_animation_play_pause     ).setMenu("play_pause")
-        registerFunction("", "Resume",             vk_space,   s,  panel_animation_resume         ).setMenu("resume")
-        registerFunction("", "Stop",               "",         n,  panel_animation_stop           ).setMenu("stop")
+        registerFunction("", "Toggle Dopesheet",   vk_tab,     c,  function() /*=>*/ { PANEL_ANIMATION.toggleDopesheet(); } ).setTContext(an).setMenu("animation_dopesheet_toggle")
+        registerFunction("", "Play/Pause",         vk_space,   n,  panel_animation_play_pause     ).setTContext(an).setMenu("play_pause")
+        registerFunction("", "Resume",             vk_space,   s,  panel_animation_resume         ).setTContext(an).setMenu("resume")
+        registerFunction("", "Stop",               "",         n,  panel_animation_stop           ).setTContext(an).setMenu("stop")
 		
-        registerFunction("", "First Frame",            vk_home,    n, panel_animation_first_frame    ).setMenu("first_frame")
-        registerFunction("", "Last Frame",             vk_end,     n, panel_animation_last_frame     ).setMenu("last_frame")
-        registerFunction("", "Previous Frame",         vk_left,    n, panel_animation_prev_frame     ).setMenu("previous_frame")
-        registerFunction("", "Next Frame",             vk_right,   n, panel_animation_next_frame     ).setMenu("next_frame")
-        registerFunction("", "Previous Keyframe",      vk_left,    s, panel_animation_prev_keyframe  ).setMenu("previous_keyframe")
-        registerFunction("", "Next Keyframe",          vk_right,   s, panel_animation_next_keyframe  ).setMenu("next_keyframe")
-        registerFunction("", "Previous Node Keyframe", vk_left,  c|s, panel_animation_prev_keyframeS ).setMenu("previous_keyframeS")
-        registerFunction("", "Next Node Keyframe",     vk_right, c|s, panel_animation_next_keyframeS ).setMenu("next_keyframeS")
+        registerFunction("", "First Frame",            vk_home,    n, panel_animation_first_frame    ).setTContext(an).setMenu("first_frame")
+        registerFunction("", "Last Frame",             vk_end,     n, panel_animation_last_frame     ).setTContext(an).setMenu("last_frame")
+        registerFunction("", "Previous Frame",         vk_left,    n, panel_animation_prev_frame     ).setTContext(an).setMenu("previous_frame")
+        registerFunction("", "Next Frame",             vk_right,   n, panel_animation_next_frame     ).setTContext(an).setMenu("next_frame")
+        registerFunction("", "Previous Keyframe",      vk_left,    s, panel_animation_prev_keyframe  ).setTContext(an).setMenu("previous_keyframe")
+        registerFunction("", "Next Keyframe",          vk_right,   s, panel_animation_next_keyframe  ).setTContext(an).setMenu("next_keyframe")
+        registerFunction("", "Previous Node Keyframe", vk_left,  c|s, panel_animation_prev_keyframeS ).setTContext(an).setMenu("previous_keyframeS")
+        registerFunction("", "Next Node Keyframe",     vk_right, c|s, panel_animation_next_keyframeS ).setTContext(an).setMenu("next_keyframeS")
         
-        registerFunction(an, "Toggle Marker",      "M",        n,  panel_animation_toggle_marker  ).setMenu("toggle_marker")
-    	registerFunction("", "Previous Marker",    vk_left,    c,  panel_animation_prev_marker    ).setMenu("previous_marker")
-        registerFunction("", "Next Marker",        vk_right,   c,  panel_animation_next_marker    ).setMenu("next_marker")
+        registerFunction(an, "Toggle Marker",      "M",        n,  panel_animation_toggle_marker  ).setTContext(an).setMenu("toggle_marker")
+    	registerFunction("", "Previous Marker",    vk_left,    c,  panel_animation_prev_marker    ).setTContext(an).setMenu("previous_marker")
+        registerFunction("", "Next Marker",        vk_right,   c,  panel_animation_next_marker    ).setTContext(an).setMenu("next_marker")
         
-        registerFunction("", "Move Left Again",    vk_left,    a,  panel_animation_move_again_left  ).setMenu("frame_again_left")
-        registerFunction("", "Move Right Again",   vk_right,   a,  panel_animation_move_again_right ).setMenu("frame_again_right")
+        registerFunction("", "Move Left Again",    vk_left,    a,  panel_animation_move_again_left  ).setTContext(an).setMenu("frame_again_left")
+        registerFunction("", "Move Right Again",   vk_right,   a,  panel_animation_move_again_right ).setTContext(an).setMenu("frame_again_right")
     	
         registerFunction(an, "Toggle Frame View",  "",         n,  panel_animation_toggle_type    ).setMenu("animation_toggle_view_type")
         registerFunction(an, "Delete keys",        vk_delete,  n,  panel_animation_delete_key     ).setMenu("animation_delete_keys")

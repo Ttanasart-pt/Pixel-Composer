@@ -1023,19 +1023,21 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);
 		var m_ot = point_in_rectangle(_mx, _my, tx, ty, tx + tw, ty + th);
 		
+		var _tx = tx + padding;
+		var _ty = ty + padding;
 		var _tw = tw - padding * 2;
 		var _th = th - padding * 2;
 		
 		if(THEME_VALUE.panel_separation_type == "frame")
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS.panel_frame);
 		
 		if(FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, _color, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);	
 		}
 		
 		if(FOCUS == self && parent != noone && !m_in && m_ot) {
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, c_white, 0.4);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, c_white, 0.4);
 			
 			if(DOUBLE_CLICK) {
 				extract();
@@ -1051,7 +1053,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		} 
 		
 		if(draw_droppable) {
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_value_positive, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS._main_value_positive, 1);	
 			draw_droppable = false;
 		}
 		

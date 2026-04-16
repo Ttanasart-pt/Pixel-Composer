@@ -144,7 +144,7 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 			}
 			
 			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(8), _tyy, __txt(_wdgt[0], "graph_export_"));
+			draw_text_add(ui(8), _tyy, __txt("graph_export_" + _wdgt[0], _wdgt[0]));
 			
 			var _wid = _wdgt[1];
 			var _dat = _wdgt[2]();

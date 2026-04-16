@@ -3180,37 +3180,43 @@ function Panel_Animation_Dopesheet() {
                 }
             }
             
-            draw_set_font(f_p2);
-            var cf = string(GLOBAL_CURRENT_FRAME + 1);
-            var tx = string_width(cf) + ui(4);
-            
-            if(timeline_frame_typing && timeline_stretch == 0) {
-	            draw_sprite_stretched_ext(THEME.box_r2, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, CDEF.main_dkblack, 1);
-	            draw_sprite_stretched_ext(THEME.box_r2, 1, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
+            #region Current frame cursor
+	            draw_set_font(f_p2);
+	            var cf = string(GLOBAL_CURRENT_FRAME + 1);
+	            var tw = string_width(cf) + ui(4);
+	            var th = hh - 2;
+	            var tx = bar_line_x - tw / 2;
+	            var ty = 2;
 	            
-	            draw_set_text(f_p2, fa_center, fa_top, cc);
-	            draw_text_add(bar_line_x, PANEL_PAD, cf);
+	            if(timeline_frame_typing && timeline_stretch == 0) {
+		            draw_sprite_stretched_ext(THEME.timeline_frame_box, 0, tx, ty, tw, th, CDEF.main_dkblack, 1);
+		            draw_sprite_stretched_ext(THEME.timeline_frame_box, 1, tx, ty, tw, th, cc, 1);
+		            
+		            draw_set_text(f_p2, fa_center, fa_top, cc);
+		            draw_text_add(bar_line_x, PANEL_PAD, cf);
+		            
+	            } else {
+		            draw_sprite_stretched_ext(THEME.timeline_frame_box, 0, tx, ty, tw, th, cc, 1);
+		            
+		            draw_set_text(f_p2, fa_center, fa_top, colorMultiply(cc, COLORS.panel_animation_dopesheet_frame_number));
+		            draw_text_add(bar_line_x, PANEL_PAD, cf);
+	            }
 	            
-            } else {
-	            draw_sprite_stretched_ext(THEME.box_r2, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
+	            if(timeline_frame_typing && timeline_stretch) {
+	            	var bar_end_x = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
+	            	var cc = COLORS._main_value_positive;
+	            	var cf = string(GLOBAL_TOTAL_FRAMES);
+	            	var tw = string_width(cf) + ui(4);
+	            	var tx = bar_end_x - tw / 2;
+	            	
+	            	draw_sprite_stretched_ext(THEME.timeline_frame_box, 0, tx, ty, tw, th, CDEF.main_dkblack, 1);
+		            draw_sprite_stretched_ext(THEME.timeline_frame_box, 1, tx, ty, tw, th, cc, 1);
+		            
+		            draw_set_text(f_p2, fa_center, fa_top, cc);
+		            draw_text_add(bar_end_x, PANEL_PAD, cf);
+	            }
+	        #endregion
 	            
-	            draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_on_accent);
-	            draw_text_add(bar_line_x, PANEL_PAD, cf);
-            }
-            
-            if(timeline_frame_typing && timeline_stretch) {
-            	var bar_end_x = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
-            	var cc = COLORS._main_value_positive;
-            	var cf = string(GLOBAL_TOTAL_FRAMES);
-            	var tx = string_width(cf) + ui(4);
-            	
-            	draw_sprite_stretched_ext(THEME.box_r2, 0, bar_end_x - tx / 2, 0, tx, hh + PANEL_PAD, CDEF.main_dkblack, 1);
-	            draw_sprite_stretched_ext(THEME.box_r2, 1, bar_end_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
-	            
-	            draw_set_text(f_p2, fa_center, fa_top, cc);
-	            draw_text_add(bar_end_x, PANEL_PAD, cf);
-            }
-            
 			#region Markers
 				var _markers = PROJECT.timelineMarkers;
 				var _s = .4;

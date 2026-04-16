@@ -32,6 +32,7 @@ function KeyCombination(_key = "", _modi = MOD_KEY.none) constructor {
 }
 
 function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone, _param = noone) constructor {
+	tooltipContext = undefined;
 	context   = _context;
 	name      = _name;
 	
@@ -78,7 +79,7 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 		else rawAction(param);
 		
 		if(key.hasKey())
-		switch(context) {
+		switch(tooltipContext ?? context) {
 			case "Graph":     PANEL_GRAPH.setActionTooltip(name);     break;
 			case "Preview":   PANEL_PREVIEW.setActionTooltip(name);   break;
 			case "Animation": PANEL_ANIMATION.setActionTooltip(name); break;

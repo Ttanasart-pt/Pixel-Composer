@@ -142,6 +142,7 @@
         "panel_animation_timeline_top": ["black", "main_dkblack", 0.5],
         "panel_animation_range": "lime",
         "panel_animation_range_sim": "cyan",
+        "panel_animation_dopesheet_frame_number": "white",
 
         "panel_animation_dope_blend_default": ["blue", "main_dkblack", 0.5],
         "panel_animation_dope_blend": "main_dkblack",

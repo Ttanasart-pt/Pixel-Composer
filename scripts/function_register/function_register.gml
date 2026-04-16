@@ -49,6 +49,7 @@ function registerLFunction(_context, _name, _key, _mod, _action, _param = noone)
 function functionObject(_context, _name, _key, _mod, _action, _param = noone) constructor {
 	hotkey  = addHotkey(_context == ""? 0 : _context, _name, _key, _mod, _action, _param).setFn(self);
 	
+	tooltipContext = undefined;
 	context = _context;
 	name    = _name;
 	comName = _name;
@@ -84,6 +85,7 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	}
 	
 	static action = function(_dat = undefined) {
+		print("fnObject action")
 		if(!is_callable(fn)) return;
 		var _res;
 		
@@ -96,14 +98,16 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 			else                _res = fn();
 		}
 		
-		switch(context) {
-			case "Graph":   PANEL_GRAPH.setActionTooltip(Lname);   break;
-			case "Preview": PANEL_PREVIEW.setActionTooltip(Lname); break;
+		switch(tooltipContext ?? context) {
+			case "Graph":     PANEL_GRAPH.setActionTooltip(Lname);     break;
+			case "Preview":   PANEL_PREVIEW.setActionTooltip(Lname);   break;
+			case "Animation": PANEL_ANIMATION.setActionTooltip(Lname); break;
 		}
 		
 		return _res;
 	}
 	
+	static setTContext    = function(_p) /*=>*/ { tooltipContext = _p; hotkey.tooltipContext = _p;   return self; }
 	static setCommandName = function(_p) /*=>*/ { comName = _p;                                      return self; }
 	static setSpr = function(_spr)       /*=>*/ { spr = _spr; if(menu) menu.spr = _spr;              return self; }
 	static setArg = function(_args = []) /*=>*/ { CMD_FUNCTIONS[$ fnName] = { action, args: _args }; return self; }

@@ -140,6 +140,7 @@ function ThemeColor() constructor {
     panel_animation_timeline_top        = merge_color(CDEF.black, CDEF.main_dkblack, 0.5);
     panel_animation_range               = CDEF.lime;
     panel_animation_range_sim           = CDEF.cyan;
+    panel_animation_dopesheet_frame_number = CDEF.main_black;
 
     panel_animation_dope_blend_default  = merge_color(CDEF.blue, CDEF.main_dkblack, 0.5);
     panel_animation_dope_blend          = CDEF.main_dkblack;

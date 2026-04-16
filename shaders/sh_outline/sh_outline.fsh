@@ -178,7 +178,7 @@ void main() {
 	
 	if(bSiz + bStr > 0.) {
 		float itr = bStr + bSiz + float(is_aa);
-		float iir = (highRes == 1? 16. : 6.) + float(is_aa) * 2.;
+		float iir = (highRes == 1? 16. : 8.) + float(is_aa) * 2.;
 		float ang;
 		
 		if(profile == 0) {
@@ -196,6 +196,7 @@ void main() {
 							top   = 1.;
 							base *= 2.;
 						}
+						
 					} else {
 						ang = j / atr * TAU;
 					}

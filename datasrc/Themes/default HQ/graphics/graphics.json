@@ -481,6 +481,7 @@
     "timeline_keyframes_content":         { "path": "./timeline/s_timeline_keyframes_content.png",          "s": 2, "x": 10, "y": 10, "slice": -1 },
     "timeline_marker":                    { "path": "./timeline/s_timeline_marker.png",                     "s": 3, "x": 10, "y": 10 },
     "timeline_onion_skin":                { "path": "./timeline/s_timeline_onion_skin.png",                 "s": 2, "x":  8, "y":  8, "slice": 7 },
+    "timeline_frame_box":                 { "path": "./timeline/s_frame_box.png",                           "s": 2, "x":  0, "y":  0, "slice": 5 },
 
     "curve_presets":                      { "path": "./inspector/s_inspector_curve_presets.png",            "s": 4, "x": 12, "y": 12 },
     "curve_type":                         { "path": "./inspector/s_inspector_curve_type.png",               "s": 4, "x": 12, "y": 12 },

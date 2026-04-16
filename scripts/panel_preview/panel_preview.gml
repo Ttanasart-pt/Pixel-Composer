@@ -3937,8 +3937,7 @@ function Panel_Preview() : PanelContent() constructor {
     		if(_addInp && _addInp.type == VALUE_TYPE.surface)
     			_addInp.setFrom(_currOutp);
     		
-    		PANEL_INSPECTOR.setInspecting(_node);
-    		PANEL_GRAPH.setFocusingNode(_node);
+    		panelFocusNode(_node);
     	}
     	
     }

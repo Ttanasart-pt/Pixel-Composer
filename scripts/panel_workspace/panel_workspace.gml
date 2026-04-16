@@ -82,8 +82,8 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		draw_set_font(f_p2b);
 		var currW = string_width(currT) + ui(24)
-		x0 += currW;
-		ww += currW;
+		x0 += currW + ui(8);
+		ww += currW + ui(8);
 		
 		draw_set_text(font, fa_center, fa_center);
 		
@@ -158,14 +158,13 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		var _spFrm = THEME_VALUE.panel_separation_type == "frame";
 		draw_set_color(COLORS.panel_separator);
-		if(_spFrm) draw_line_round(currW - ui(4), ui(8), currW - ui(4), h - ui(8), 3);
-		else       draw_line(currW - ui(4), 0, currW - ui(4), h);
+		if(_spFrm) draw_line_round(currW, ui(8), currW, h - ui(8), 3);
+		else       draw_line(currW, 0, currW, h);
 		
 		scroll     = lerp_float(scroll, scroll_to, 5);
 		scroll_max = max(ww - w + ui(16), 0);
 		if(pHOVER && MOUSE_WHEEL != 0)
 			scroll_to = clamp(scroll_to + ui(128) * MOUSE_WHEEL, -scroll_max, 0);
 		scroll_ini = false;
-			
 	}
 }

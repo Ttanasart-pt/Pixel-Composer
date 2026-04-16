@@ -76,8 +76,9 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		var ww = max(wdgw, w * 0.5); 
 		var wh = prop_height - ui(6);
 	
-		var _bs = ui(32);
-		var _mm = [ mx, my ];
+		var _bs  = ui(32);
+		var _mm  = [ mx, my ];
+		var padd = ui(THEME_VALUE.panel_inspector_prop_paddding + 2);
 		
 		var _hov = false;
 		if(bg_y) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), bg_y, w - ui(8), th, COLORS.panel_prop_bg, 0.5 * bg_a);
@@ -170,7 +171,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.getDefault != noone) _wdw -= ui(24) + ui(4);
 				
 				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, undefined, [ mx, my ], x, y).setFont(font);
-				var wdgh   = _widg.drawParam(params) + ui(8); 
+				var wdgh   = _widg.drawParam(params) + padd; 
 				
 				if(_prop.action != noone) {
 					var _key = _prop.action.hotkey;
