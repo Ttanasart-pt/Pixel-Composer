@@ -280,9 +280,9 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				
 				var _txt = ele[0];
 				
-				var cc = COLORS.panel_inspector_group_bg;
+				var cc = COLORS.section_bg;
 	            if(hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + lbh)) {
-	            	cc = COLORS.panel_inspector_group_hover;
+	            	cc = COLORS.section_hover;
 	                
 	                if(foc) {
 	                    	 if(DOUBLE_CLICK) _cAll = ele[1]? -1 : 1;
@@ -291,7 +291,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	            }
 	                
 	            draw_sprite_stretched_ext(THEME.box_r2_clr, 0, 0, yy, ww, lbh, cc, 1);
-	            draw_sprite_ui(THEME.arrow, ele[1]? 0 : 3, ui(12), yy + lbh / 2, .75, .75, 0, COLORS.panel_inspector_group_bg, 1);    
+	            draw_sprite_ui(THEME.arrow, ele[1]? 0 : 3, ui(12), yy + lbh / 2, .75, .75, 0, COLORS.section_bg, 1);    
 	            draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
 	            
 	            draw_text_add(ui(24), yy + lbh / 2, _txt);
@@ -462,11 +462,11 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				_y += ui(2);
 				_h += ui(2);
 				
-				var cc = COLORS.panel_inspector_group_bg;
+				var cc = COLORS.section_bg;
 				var lw = ww - (_but != 0) * ui(28);
 				
 	            if(hov && point_in_rectangle(_m[0], _m[1], 0, _y, lw, _y + lbh)) {
-	            	cc = COLORS.panel_inspector_group_hover;
+	            	cc = COLORS.section_hover;
 	                if(foc) {
 	                    	 if(DOUBLE_CLICK) _cAll = _edt[1]? -1 : 1;
 	                    else if(mouse_lpress()) _edt[1] = !_edt[1];
@@ -474,7 +474,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	            }
 	                
 	            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y, lw, lbh, cc, 1);
-	            draw_sprite_ui(THEME.arrow, _edt[1]? 0 : 3, ui(16), _y + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
+	            draw_sprite_ui(THEME.arrow, _edt[1]? 0 : 3, ui(16), _y + lbh / 2, 1, 1, 0, COLORS.section_bg, 1);    
 	            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
 	            draw_text_add(ui(32), _y + lbh / 2, _txt);
 	            
@@ -484,7 +484,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	            	var _bx = ww - _bw;
 	            	var _by = _y;
 	            	
-	            	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, _by, _bw, _bh, COLORS.panel_inspector_group_bg, 1);
+	            	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, _by, _bw, _bh, COLORS.section_bg, 1);
 	            	
 	            	_bx += ui(2);
 	            	_by += ui(2);

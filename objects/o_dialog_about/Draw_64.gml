@@ -1,10 +1,7 @@
 /// @description init
 if !ready exit;
 
-#region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-#endregion
+DIALOG_DRAW_BG
 
 #region about
 	var cx = dialog_x + dialog_w / 2;
@@ -33,3 +30,5 @@ if !ready exit;
 	sc_thank.verify(thank_w, thank_h);
 	sc_thank.draw(thank_x, thank_y);
 #endregion
+
+DIALOG_DRAW_FOCUS

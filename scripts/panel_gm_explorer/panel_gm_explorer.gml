@@ -81,14 +81,14 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
 	    var _panw = _ww - ui(32);
 	    var _hov  = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _panw, _yy + lbh);
 	    
-	    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _panw, lbh, COLORS.panel_inspector_group_bg, 1);
+	    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _panw, lbh, COLORS.section_bg, 1);
 	    if(_hov) {
-            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _panw, lbh, COLORS.panel_inspector_group_hover, 1);
+            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _panw, lbh, COLORS.section_hover, 1);
             if(DOUBLE_CLICK) _call = _res[i].closed? -1 : 1;
             else if(mouse_lpress(_focus)) _res[i].closed = !_res[i].closed;
         }
         
-        draw_sprite_ui(THEME.arrow, _res[i].closed? 0 : 3, ui(16), _yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
+        draw_sprite_ui(THEME.arrow, _res[i].closed? 0 : 3, ui(16), _yy + lbh / 2, 1, 1, 0, COLORS.section_bg, 1);    
         
         draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_inner);
         draw_text_add(ui(32), _yy + lbh / 2, $"{_name} ({array_length(_data)})");
@@ -97,7 +97,7 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
 	    var _ry = _yy;
 	    var _rw = ui(32 - 4);
 	    var _rh = lbh;
-	    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS.panel_inspector_group_bg, 1);
+	    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS.section_bg, 1);
 	    if(buttonInstant(THEME.button_hide_fill, _rx + ui(2), _ry + ui(2), _rw - ui(4), _rh - ui(4), _m, _hover, _focus, "", 
 	    	THEME.view_mode, _res[i].view, COLORS._main_icon, 1, .7) == 2)
 	    	_res[i].view = !_res[i].view;

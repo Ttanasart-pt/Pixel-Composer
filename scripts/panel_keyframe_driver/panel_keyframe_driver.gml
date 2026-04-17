@@ -225,14 +225,14 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
                 var lbw = _w - ui(8);
                 
                 if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
-                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.section_hover, 1);
                 	if(mouse_lpress(_focus)) _prop[@ 1] = !coll;
                 	
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
             	
-                draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);
-                draw_set_text(font, fa_left, fa_center, COLORS.panel_inspector_group_bg, 1);
+                draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS.section_bg, 1);
+                draw_set_text(font, fa_left, fa_center, COLORS.section_bg, 1);
                 draw_text_add(lbx + ui(32), yy + lbh / 2, txt);
                 draw_set_alpha(1);
                 

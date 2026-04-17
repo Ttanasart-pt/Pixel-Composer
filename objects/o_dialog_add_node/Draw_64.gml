@@ -54,10 +54,6 @@ if !ready exit;
 #endregion
 
 DIALOG_DRAW_BG
-if(DIALOG_SHOW_FOCUS) {
-	var cc = node_replace == noone? COLORS._main_accent : COLORS.dialog_add_node_replace_mode;
-	draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, cc, 1);
-}
 
 #region content
 	tb_search.activate();
@@ -243,6 +239,11 @@ if(DIALOG_SHOW_FOCUS) {
 	}
 	
 #endregion
+
+if(DIALOG_SHOW_FOCUS) {
+	var cc = node_replace == noone? COLORS._main_accent : COLORS.dialog_add_node_replace_mode;
+	draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, cc, 1);
+}
 
 #region tooltip
 	if(sprite_exists(node_icon)) {

@@ -20,7 +20,6 @@ WIDGET_TAB_BLOCK = true;
 	DIALOG_WINCLEAR
 	
 	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 #endregion
 
 #region text
@@ -69,6 +68,7 @@ WIDGET_TAB_BLOCK = true;
 	dialog_h = _dialog_h;
 #endregion
 
+DIALOG_DRAW_FOCUS
 DIALOG_POSTDRAW
 
 if(_des) instance_destroy();

@@ -2,8 +2,9 @@
 event_inherited();
 
 #region 
-	max_w	 = ui(640);
-	max_h	 = ui(640);
+	max_w  = ui(640);
+	max_h  = ui(640);
+	anchor = ANCHOR.top | ANCHOR.left;
 	
 	horizon  = true;
 	font     = f_p0
@@ -24,13 +25,12 @@ event_inherited();
 	data		  = [];
 	initVal		  = undefined;
 	update_hover  = true;
-	search_string = "";
 	
 	KEYBOARD_RESET
-	tb_search = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); }).setFont(f_p2).setAutoUpdate().setAlign(fa_left);
-	tb_search.activate();
-	
-	anchor = ANCHOR.top | ANCHOR.left;
+	search_string = "";
+	tb_search     = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); })
+					.setFont(f_p2).setAutoUpdate().setAlign(fa_left).activate();
+	searchIndex   = undefined;
 	
 	function initScroll(scroll) {
 		scrollbox	= scroll;
@@ -47,13 +47,17 @@ event_inherited();
 		}
 		
 		data = [];
+		searchIndex = [];
+		
 		for( var i = 0, n = array_length(scrollbox.data); i < n; i++ ) {
 			var val = scrollbox.data[i];
 			if(val == -1) continue;
 			
 			var _txt = is(val, scrollItem)? val.name : val;
-			if(string_pos(string_lower(search_string), string_lower(_txt)) > 0)
+			if(string_pos(string_lower(search_string), string_lower(_txt)) > 0) {
 				array_push(data, val);
+				array_push(searchIndex, i);
+			}
 		}
 		
 		setSize();
@@ -252,7 +256,7 @@ event_inherited();
 					sc_content.hover_content = true;
 					_hov      = true;
 					selecting = i;
-					hovering  = i;
+					hovering  = searchIndex == undefined? i : searchIndex[i];
 					
 					if(_tol) TOOLTIP = _val.tooltip;
 				}

@@ -1150,9 +1150,9 @@ function Panel_Preference() : PanelContent() constructor {
     				var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
     				var _tc = COLORS._main_text_sub;
     				
-    				BLEND_OVERRIDE
-                	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg);
-                	if(_hv) draw_sprite_stretched(THEME.box_r5_clr, 1, padx, _yy, ww - padx * 2, sectH);
+            		draw_sprite_stretched_ext(THEME.section_separator, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.section_hover : COLORS.section_bg);
+                	if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, padx, _yy, ww - padx * 2, sectH, COLORS.section_selected);
+                	if(_hv)    draw_sprite_stretched_ext(THEME.section_separator, 1, padx, _yy, ww - padx * 2, sectH, COLORS.section_hover);
                 	
     				if(_hv && _focus) {
                     	if(DOUBLE_CLICK) {
@@ -1164,8 +1164,6 @@ function Panel_Preference() : PanelContent() constructor {
                         }
                     }
                         
-    				BLEND_NORMAL
-    				
     				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, _tc, 1);    
     				
     				draw_set_text(f_p2, fa_left, fa_center, _tc);
@@ -1978,9 +1976,9 @@ function Panel_Preference() : PanelContent() constructor {
     				var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
     				var _tc = COLORS._main_text_sub;
     				
-    				BLEND_OVERRIDE
-                	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
-                	if(_hv) draw_sprite_stretched(THEME.box_r5_clr, 1, padx, _yy, ww - padx * 2, sectH);
+            		draw_sprite_stretched_ext(THEME.section_separator, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.section_hover : COLORS.section_bg);
+                	if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, padx, _yy, ww - padx * 2, sectH, COLORS.section_selected);
+                	if(_hv)    draw_sprite_stretched_ext(THEME.section_separator, 1, padx, _yy, ww - padx * 2, sectH, COLORS.section_hover);
                 	
     				if(_hv && pFOCUS) {
                     	if(DOUBLE_CLICK) {
@@ -1991,9 +1989,7 @@ function Panel_Preference() : PanelContent() constructor {
                         	else      struct_set(collapsed, _key, 1);
                         }
                     }
-                        
-    				BLEND_NORMAL
-    				
+                    
     				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, _tc, 1);    
     				
     				draw_set_text(f_p2, fa_left, fa_center, _tc);

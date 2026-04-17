@@ -1,10 +1,7 @@
 /// @description init
 if !ready exit;
 
-#region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-#endregion
+DIALOG_DRAW_BG
 
 #region text
 	var _x = dialog_x + ui(16);
@@ -59,3 +56,5 @@ if !ready exit;
 		
 	}
 #endregion
+
+DIALOG_DRAW_FOCUS

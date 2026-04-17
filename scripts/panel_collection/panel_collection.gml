@@ -245,13 +245,12 @@ function Panel_Collection() : PanelContent() constructor {
 			    _graph.addContext(_proj.io_node);
 			
 			var _dia = dialogPanelCall(_graph);
-			
+			_graph.fullView();
 			_graph.title_actions = [
 				[ "Save and Close", [ THEME.toolbar_check, 0, c_white ], function(d) /*=>*/ {
 					saveCollection(d.project.io_node, d.path, false);
 					instance_destroy(d.dialog);
 				}, { project: _proj, path: _menu_node.path, dialog: _dia}  ], 
-				
 				[ "Cancel", [ THEME.toolbar_check, 1, c_white ], function(d) /*=>*/ { instance_destroy(d); }, _dia ], 
 			];
 			

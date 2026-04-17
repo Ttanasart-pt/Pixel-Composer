@@ -6,7 +6,6 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 }
 
 #region tooltip
-	
 	if(!_MOUSE_BLOCK) {
 		if(is_struct(TOOLTIP)) {
 			if(struct_has(TOOLTIP, "drawTooltip"))

@@ -869,10 +869,13 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 if(righ != noone) lbw -= ui(32);
                 
-                if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
+                var hov = _hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh);
+                draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, con_w - lbx, lbh, hov? COLORS.section_hover : COLORS.section_bg);
+                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, con_w - lbx, lbh, COLORS.section_selected);
+                
+                if(hov) {
+                	draw_sprite_stretched_ext(THEME.section_separator, 1, lbx, yy, con_w - lbx, lbh, COLORS.section_hover);
                     contentPane.hover_content = true;
-                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_hover, 1);
-                	draw_sprite_stretched(THEME.box_r5_clr, 1, lbx, yy, con_w - lbx, lbh);
                 	
                 	if(pFOCUS) {
 						if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
@@ -904,9 +907,8 @@ function Panel_Inspector() : PanelContent() constructor {
 							menuCall("inspector_group_menu", _menu, 0, 0, fa_left);
 						}
                 	}
-                } else
-                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_bg, 1);
-            	
+                }
+                
                 _colMap[$ _key] = coll;
                 
                 if(righ != noone) {
@@ -930,19 +932,19 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 if(togl != noone) {
                 	var jun = _inspecting.inputs[togl];
+                	var hov = _hover && point_in_rectangle(_m[0], _m[1], _x, yy, lbh, yy + lbh);
                 	
-                    if(_hover && point_in_rectangle(_m[0], _m[1], _x, yy, lbh, yy + lbh)) {
+                    draw_sprite_stretched_ext(THEME.section_separator, 0, _x, yy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
+                    if(hov) {
+                        draw_sprite_stretched_ext(THEME.section_separator, 1, _x, yy, lbh, lbh, COLORS.section_hover);
                         contentPane.hover_content = true;
-                        draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, yy, lbh, lbh, COLORS.panel_inspector_group_hover, 1);
-                        draw_sprite_stretched(THEME.box_r5_clr, 1, _x, yy, lbh, lbh);
                         
                         if(mouse_lpress( pFOCUS)) jun.setValue(!toging);
                         if(mouse_rpress(pFOCUS)) propRightClick(jun);
                             
-                    } else 
-                        draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, yy, lbh, lbh, COLORS.panel_inspector_group_bg, 1);
+                    }
                     
-                    cc = toging? COLORS._main_accent : COLORS.panel_inspector_group_bg;
+                    cc = toging? COLORS._main_accent : COLORS.section_bg;
                     aa = 0.5 + toging * 0.5;
                     
                                draw_sprite_stretched_ext(THEME.box_r2, 1, _x + ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
@@ -1335,6 +1337,7 @@ function Panel_Inspector() : PanelContent() constructor {
         for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
             var _meta  = meta_display[i];
             var _txt   = array_safe_get_fast(_meta, 0);
+            var _col   = array_safe_get_fast(_meta, 1);
             var _tag   = array_safe_get_fast(_meta, 2);
             
             if(_tag == "group prop" && PANEL_GRAPH.getCurrentContext() == noone) continue;
@@ -1360,7 +1363,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 var _amo = array_length(_butts);
                 var _tw  = (_bw + ui(4)) * _amo;
-                draw_sprite_stretched_ext(THEME.box_r5_clr, 0, con_w - _tw, yy, _tw, lbh, COLORS.panel_inspector_group_bg, 1);
+                draw_sprite_stretched_ext(THEME.section_separator, 0, con_w - _tw, yy, _tw, lbh, COLORS.section_bg);
                 
                 for (var j = 0, m = array_length(_butts); j < m; j++) {
                     _x1 -= _bw + ui(4);
@@ -1376,21 +1379,20 @@ function Panel_Inspector() : PanelContent() constructor {
             
             /// Section
             
-            var cc = COLORS.panel_inspector_group_bg;
             var hv = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh);
+            draw_sprite_stretched_ext(THEME.section_separator, 0, 0, yy, _x1, lbh, hv? COLORS.section_hover : COLORS.section_bg);
+            if(!_col) draw_sprite_stretched_ext(THEME.section_separator, 2, 0, yy, _x1, lbh, COLORS.section_selected);
+            
             if(hv) {
-            	cc = COLORS.panel_inspector_group_hover;
+                draw_sprite_stretched_ext(THEME.section_separator, 1, 0, yy, _x1, lbh, COLORS.section_hover);
                 
                 if(pFOCUS) {
                     	 if(DOUBLE_CLICK) _cAll = _meta[1]? -1 : 1;
                     else if(mouse_lpress()) _meta[1] = !_meta[1];
                 }
             }
-                
-            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc);
-            if(hv) draw_sprite_stretched(THEME.box_r5_clr, 1, 0, yy, _x1, lbh);
             
-            draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS._main_icon, 1);    
+            draw_sprite_ui(THEME.arrow, _col? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS._main_icon, 1);    
             draw_set_text(fnt, fa_left, fa_center, COLORS._main_text);
             
             var tx = ui(32);
@@ -1448,7 +1450,7 @@ function Panel_Inspector() : PanelContent() constructor {
             yy += lbh + padd;
             hh += lbh + padd;
             
-            if(_meta[1]) continue;
+            if(_col) continue;
             
             switch(_tag) {
                 case "settings" :

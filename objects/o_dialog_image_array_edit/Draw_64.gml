@@ -2,10 +2,8 @@
 if !ready exit;
 if !target exit;
 
+DIALOG_DRAW_BG
 #region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(padding), dialog_y + ui(20), __txt("array_edit_title", "Image array edit"));
 #endregion
@@ -47,3 +45,5 @@ if !target exit;
 	if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, __txt("array_edit_sort_name", "Sort by name"), THEME.text) == 2)
 		sortByName();
 #endregion
+
+DIALOG_DRAW_FOCUS

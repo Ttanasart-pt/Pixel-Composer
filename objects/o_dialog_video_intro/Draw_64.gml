@@ -1,10 +1,7 @@
 /// @description init
 if !ready exit;
 
-#region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-#endregion
+DIALOG_DRAW_BG
 
 #region content
 	var m   = mouse_ui;
@@ -105,3 +102,5 @@ if !ready exit;
 	dialog_x = WIN_W / 2 - dialog_w / 2;
 	dialog_y = WIN_H / 2 - dialog_h / 2;
 #endregion
+
+DIALOG_DRAW_FOCUS

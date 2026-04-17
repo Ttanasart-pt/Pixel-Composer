@@ -10,10 +10,7 @@ if !ready exit;
 	draw_set_alpha(1);
 #endregion
 
-#region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-#endregion
+DIALOG_DRAW_BG
 
 #region text
 	var py  = dialog_y + ui(20);
@@ -62,3 +59,5 @@ if !ready exit;
 		instance_destroy();
 	}
 #endregion
+
+DIALOG_DRAW_FOCUS

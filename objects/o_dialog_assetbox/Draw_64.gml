@@ -1,9 +1,6 @@
 /// @description init
-#region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-#endregion
-
+DIALOG_DRAW_BG
+	
 #region draw
 	if(folderW_dragging) {
 		var w = folderW_drag_sx + (mouse_mx - folderW_drag_mx);
@@ -43,3 +40,5 @@
 	contentPane.setFocusHover(sFOCUS, sHOVER);
 	contentPane.draw(_cnt_x, dialog_y + ui(12));
 #endregion
+
+DIALOG_DRAW_FOCUS

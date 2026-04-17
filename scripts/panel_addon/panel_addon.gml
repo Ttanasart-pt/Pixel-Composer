@@ -68,7 +68,7 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				if(_addon.open) draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, 0, by, ww, hh, COLORS._main_icon_light, 1);
 				
-				var cc = hover? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+				var cc = hover? COLORS.section_hover : COLORS.section_bg;
 				if(hover) sc_addon.hover_content = true;
 				
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, by, ww, hg, cc, 1);

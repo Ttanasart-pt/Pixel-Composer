@@ -133,7 +133,7 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 			var _wdgt = widgets[i];
 			
 			if(_wdgt[0] == -1) {
-				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _tyy - ui(4) - _lh/2, sw, _lh, COLORS.panel_inspector_group_bg, 1);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _tyy - ui(4) - _lh/2, sw, _lh, COLORS.section_bg, 1);
 				
 				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text_add(ui(16), _tyy - ui(4), __txt(_wdgt[1]));

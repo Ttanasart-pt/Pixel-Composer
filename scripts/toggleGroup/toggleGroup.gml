@@ -6,6 +6,9 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 	fColor  = COLORS._main_text;
 	value   = 0;
 	
+	channelType = array_safe_get_fast(_data, 0) == THEME.inspector_channel;
+	channelText = [ "R", "G", "B", "A" ];
+	
 	for(var i = 0; i < array_length(data); i++) 
 		buttons[i] = button(-1);
 	
@@ -48,21 +51,28 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 		var ww  = _w / amo;
 		
 		for(var i = 0; i < amo; i++) {
-			buttons[i].setFocusHover(active, hover);
+			var b = buttons[i];
+			b.setFocusHover(active, hover);
+			if(channelType) b.blend = COLORS.channel[i];
 			
 			var bx  = _x + ww * i;
 			var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 			var tog = _data & (1 << i);
 			
-			buttons[i].toggled = tog;
-			buttons[i].draw(bx, _y, ww, _h, _m, spr);
+			b.toggled = tog;
+			b.draw(bx, _y, ww, _h, _m, spr);
 			
-			if(buttons[i].clicked) {
+			if(b.clicked) {
 				value ^= (1 << i);
 				onClick(value);
 			}
 				
-			if(is_string(data[i])) {
+			if(channelType) {
+				var tc = tog? COLORS.channel[i] : COLORS._main_text_sub;
+				draw_set_text(font, fa_center, fa_center, tc);
+				draw_text_add(bx + ww / 2, _y + _h / 2, channelText[i]);
+				
+			} else if(is_string(data[i])) {
 				draw_set_text(font, fa_center, fa_center, fColor);
 				draw_text_add(bx + ww / 2, _y + _h / 2, data[i]);
 				

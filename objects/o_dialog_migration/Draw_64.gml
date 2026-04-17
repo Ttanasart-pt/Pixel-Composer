@@ -5,10 +5,7 @@ draw_set_alpha(0.5);
 draw_rectangle(0, 0, WIN_W, WIN_H, false);
 draw_set_alpha(1);
 
-#region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-#endregion
+DIALOG_DRAW_BG
 
 #region text
 	var py = dialog_y + ui(16);
@@ -59,3 +56,5 @@ draw_set_alpha(1);
 			shellOpenExplorer(DIRECTORY);
 	}
 #endregion
+
+DIALOG_DRAW_FOCUS

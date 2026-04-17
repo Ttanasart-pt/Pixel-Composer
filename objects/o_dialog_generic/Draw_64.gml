@@ -20,9 +20,7 @@ if !ready exit;
 
 DIALOG_PREDRAW
 DIALOG_WINCLEAR
-
 DIALOG_DRAW_BG
-if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 
 #region text
 	var py  = dialog_y + ui(16);
@@ -62,6 +60,7 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	dialog_h = _dialog_h;
 #endregion
 
+DIALOG_DRAW_FOCUS
 DIALOG_POSTDRAW
 
 if(_des) instance_destroy();

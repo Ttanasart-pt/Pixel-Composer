@@ -643,9 +643,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _hov = point_in_rectangle(msx, msy, _tbx, _tby, _tbx + _tbw, tab_size);
 				
 				if(i == content_index) {
+					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, _tbx, _tby, _tbw, _tbh, COLORS.panel_tab);
 					foc = FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
-					var cc = foc? (PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border) : COLORS.panel_tab;
-					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + foc, _tbx, _tby, _tbw, _tbh, cc, 1);
+					
+					if(foc) {
+						var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
+						draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, cc);
+					}
 					
 				} else {
 					var cc = COLORS.panel_tab_inactive;
@@ -824,12 +828,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _hov = hover && point_in_rectangle(msx, msy, _tbx, _tby, _tbx + _tbw, _tby + _tbh);
 				
 				if(i == content_index) {
+					draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 1, _tbx, _tby, _tbw, _tbh, COLORS.panel_tab);
 					foc = focus || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
 					
-					var cc = COLORS.panel_tab;
-					if(foc) cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
-					
-					draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 1 + foc, _tbx, _tby, _tbw, _tbh, cc);
+					if(foc) {
+						cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
+						draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 2, _tbx, _tby, _tbw, _tbh, cc);
+					}
 					
 				} else {
 					var cc = COLORS.panel_tab_inactive;

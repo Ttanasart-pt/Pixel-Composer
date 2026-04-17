@@ -118,6 +118,10 @@
         "scrollbar_active": "main_white",
         "scrollbar_idle": "main_mdwhite",
 
+        "section_hover": "_main_accent",
+        "section_selected": "main_mdwhite",
+        "section_bg": "main_mdwhite",
+
         "panel_animation_frame_divider": "main_black",
         "panel_animation_keyframe_ease_line": "main_ltgrey",
         "panel_animation_loop_line": "lime",
@@ -156,7 +160,7 @@
         "panel_tab": "white",
         "panel_tab_hover": "white",
         "panel_tab_inactive": "white",
-        "panel_tab_text": "main_dkblack",
+        "panel_tab_text": "main_white",
         "panel_tab_icon": "main_dkblack",
         "panel_separator": "main_ltgrey",
 
@@ -166,8 +170,8 @@
         "panel_graph_minimap_focus": "main_ltgrey",
 
         "panel_inspector_key_separator": "main_dkgrey",
-        "panel_inspector_group_hover": "main_white",
-        "panel_inspector_group_bg": ["main_white", "main_ltgrey", 0.5],
+        "panel_inspector_group_hover": "main_mdwhite",
+        "panel_inspector_group_bg": "main_dark",
         "panel_inspector_output_label": "black",
         
         "panel_preview_grid": "main_grey",
@@ -176,7 +180,7 @@
         "panel_preview_tool_button": "main_white",
         "panel_preview_tool_separator": "main_dkgrey",
         "panel_preview_bg": "main_mdblack",
-        "panel_preview_transparent": "main_dark",
+        "panel_preview_transparent": "black",
 
         "panel_3d_bg": "main_dkblack",
 
@@ -199,6 +203,7 @@
         "widget_text_dec_i": "yellow"
     },
     "array": {
+        "channel": ["red", "pgreen", "pblue", "white"],
         "axis": ["red", "pgreen", "pblue", "yellow", "pink", "purple"],
         "histogram": ["red", "lime", "cyan", "white"],
         "heat": ["red", "yellow", "lime"],

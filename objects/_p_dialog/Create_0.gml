@@ -1,7 +1,12 @@
 /// @description init
 #macro DIALOG_PAD 8
-#macro DIALOG_DRAW_BG    draw_sprite_stretched(     THEME.dialog, 0, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16 );
-#macro DIALOG_DRAW_FOCUS draw_sprite_stretched_ext( THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1 );
+#macro DIALOG_SHOW_FOCUS (FOCUS == self.id || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))
+#macro DIALOG_DRAW_BG    draw_sprite_stretched( THEME.dialog, 0, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16 );
+#macro DIALOG_DRAW_FOCUS \
+	if(FOCUS == self.id || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) \
+		draw_sprite_stretched_ext( THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1 ); \
+	else \
+		draw_sprite_stretched_ext( THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, COLORS.panel_frame, 1 );
 
 #macro DIALOG_WINCLEAR  //
 #macro DIALOG_WINCLEAR1 //

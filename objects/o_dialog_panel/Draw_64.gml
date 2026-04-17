@@ -123,7 +123,7 @@ if(content.showHeader) {
 	}
 }
 
-if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
+DIALOG_DRAW_FOCUS
 
 if(sFOCUS && !m_in && m_ot) {
 	var p  = DIALOG_PAD;

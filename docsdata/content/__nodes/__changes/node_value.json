@@ -6,6 +6,11 @@
         "date": "2026-04-16T02:45:52.919Z",
         "node": "",
         "commit": "**Locale**: Remove comments and duplicated entries in words.json"
+      },
+      {
+        "date": "2026-04-17T03:16:44.052Z",
+        "node": "",
+        "commit": "Fix some scrollbox not return correct value when using search"
       }
     ]
   },

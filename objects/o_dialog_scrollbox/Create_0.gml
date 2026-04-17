@@ -25,9 +25,7 @@ event_inherited();
 	KEYBOARD_RESET
 	search_string = "";
 	tb_search     = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); })
-					.setFont(f_p2).setAutoUpdate().setEmpty().setAlign(fa_left);
-	tb_search.activate();
-	
+					.setFont(f_p2).setAutoUpdate().setEmpty().setAlign(fa_left).activate();
 	searchIndex   = undefined;
 	
 	function filterSearch() {

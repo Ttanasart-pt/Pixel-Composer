@@ -115,7 +115,11 @@ function ThemeColor() constructor {
     scrollbar_idle                      = CDEF.main_grey;
     scrollbar_hover                     = CDEF.main_mdwhite;
     scrollbar_active                    = CDEF.main_white;
-
+	
+	section_hover                       = CDEF.main_white;
+	section_selected                    = CDEF.main_white;
+    section_bg                          = merge_color(CDEF.main_white, CDEF.main_ltgrey, 0.5);
+    
     panel_animation_frame_divider       = CDEF.main_black;
     panel_animation_keyframe_ease_line  = CDEF.main_dkgrey;
     panel_animation_loop_line           = CDEF.lime;
@@ -196,6 +200,7 @@ function ThemeColor() constructor {
     widget_text_dec_f                   = CDEF.pink;
     widget_text_dec_i                   = CDEF.yellow;
 	
+    channel   = [CDEF.red, CDEF.pgreen, CDEF.pblue, CDEF.white];
     axis      = [CDEF.red, CDEF.pgreen, CDEF.pblue, CDEF.yellow, CDEF.pink, CDEF.purple];
     histogram = [CDEF.red, CDEF.lime, CDEF.cyan, CDEF.white];
     heat      = [CDEF.red, CDEF.yellow, CDEF.lime];

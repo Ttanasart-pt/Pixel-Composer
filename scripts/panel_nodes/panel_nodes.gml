@@ -117,13 +117,13 @@ function Panel_Nodes() : PanelContent() constructor {
 		_item.x = _x0;
 		_item.y = _y;
 		
-		if(_bg) draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y, _w, bhg, COLORS.panel_inspector_group_bg, 1);
+		if(_bg) draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y, _w, bhg, COLORS.section_bg, 1);
 		
 		if(hov) {
 			node_hovering = node;
 			
 			sc_nodes.hover_content = true;
-			draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.panel_inspector_group_hover, .4);
+			draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.section_hover, .4);
 			hovEx = _m[0] < _x0 + hg + ui(4) + (_len > 1) * ui(16);
 			
 			if(focus) {
@@ -153,10 +153,10 @@ function Panel_Nodes() : PanelContent() constructor {
 			
 		} else {
 			if(_item.parent != noone && _item.parent.hovering) {
-				draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.panel_inspector_group_hover, .2);
+				draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.section_hover, .2);
 				
 			} else if(_node_hovering != noone && _node_hovering == node) {
-				draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.panel_inspector_group_hover, .4);
+				draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.section_hover, .4);
 				
 			}
 		}

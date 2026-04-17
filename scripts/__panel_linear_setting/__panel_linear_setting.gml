@@ -87,8 +87,10 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			var _prop = properties[i];
 			
 			if(_prop == -1) {
-				draw_set_color(CDEF.main_mdblack);
-				draw_line_round(ui(16), yy + ui(4), w - ui(16), yy + ui(4), 2);
+				draw_set_color(COLORS.panel_separator);
+				if(THEME_VALUE.panel_separation_type == "frame") 
+				     draw_line_round(ui(16), yy + ui(4), w - ui(16), yy + ui(4), 2);
+				else draw_line(0, yy + ui(4), w, yy + ui(4));
 				yy += ui(8);
 				continue;
 			}
@@ -105,14 +107,14 @@ function Panel_Linear_Setting() : PanelContent() constructor {
                 var lbw =  w - ui(8);
                 
                 if(pHOVER && point_in_rectangle(mx, my, lbx, yy, lbx + lbw, yy + lbh)) {
-                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.section_hover, 1);
                 	if(mouse_lpress(pFOCUS)) _prop[@ 1] = !coll;
                 	
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
             	
-                draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);
-                draw_set_text(font, fa_left, fa_center, COLORS.panel_inspector_group_bg, 1);
+                draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS.section_bg, 1);
+                draw_set_text(font, fa_left, fa_center, COLORS.section_bg, 1);
                 draw_text_add(lbx + ui(32), yy + lbh / 2, txt);
                 draw_set_alpha(1);
                 

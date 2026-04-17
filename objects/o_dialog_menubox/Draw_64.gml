@@ -64,10 +64,15 @@ DIALOG_WINCLEAR1
 			_menuItem = _menuItem.shiftMenu;
 			
 		if(_menuItem == -1) {
-			var bx = dialog_x + ui(16);
-			var bw = dialog_w - ui(32);
-			draw_set_color(CDEF.main_mdblack);
-			draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), 2);
+			draw_set_color(COLORS.panel_separator);
+			if(THEME_VALUE.panel_separation_type == "frame") {
+				var bx = dialog_x + ui(16);
+				var bw = dialog_w - ui(32);
+				draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), 2);
+				
+			} else
+				draw_line(dialog_x, yy + ui(3), dialog_x + dialog_w, yy + ui(3));
+			
 			yy += ui(8);
 			continue;
 		}

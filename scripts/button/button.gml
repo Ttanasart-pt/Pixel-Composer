@@ -33,11 +33,11 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	static setContext = function(_s)          /*=>*/ { onClick = method(_s, onClick); return self; }
 	static setWheel   = function(_u, _d = _u) /*=>*/ { onWUp = _u; onWDown = _d;      return self; }
 	
-	static setActivatePress = function() /*=>*/ { activate_on_press = true; return self; }
-	static setBaseSprite = function(_b) /*=>*/ { base_spr = _b; return self; }
-	static setText       = function(_t) /*=>*/ { text     = _t; return self; }
-	static setParams     = function(_p) /*=>*/ { params   = _p; return self; }
-	static setTooltip    = function(_t, _v = undefined) /*=>*/ { tooltip  = _t; tooltipIndexFn = _v; return self; }
+	static setActivatePress = function(  ) /*=>*/ { activate_on_press = true; return self; }
+	static setBaseSprite    = function(_b) /*=>*/ { base_spr = _b;            return self; }
+	static setText          = function(_t) /*=>*/ { text     = _t;            return self; }
+	static setParams        = function(_p) /*=>*/ { params   = _p;            return self; }
+	static setTooltip       = function(_t, _v = undefined) /*=>*/ { tooltip  = _t; tooltipIndexFn = _v; return self; }
 	
 	static setIcon = function(_icon, _index = 0, _blend = c_white, _size = 1) {
 		icon       = _icon; 

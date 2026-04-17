@@ -127,6 +127,7 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 				
 				var bww = !is_string(_d) && sprite_exists(_d) && _mx? _sw : ww;
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
+				var tc  = fColor;
 				
 				if(_selecting == i) {
 					if(hover && point_in_rectangle(_m[0], _m[1], floor(bx), _y, floor(bx) + bww, _y + _h)) 
@@ -134,6 +135,7 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 						
 					draw_sprite_stretched_ext(spr, 2, floor(bx), _y, ceil(bww), _h, boxColor);
 					draw_sel = [spr, bx];
+					tc = COLORS._main_text;
 					
 				} else {
 					buttons[i].draw(floor(bx), _y, ceil(bww), _h, _m, spr);
@@ -141,7 +143,7 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 				}
 				
 				if(is_string(_d)) {
-					draw_set_text(font, fa_center, fa_center, fColor);
+					draw_set_text(font, fa_center, fa_center, tc);
 					draw_text_add(bx + bww / 2, _y + _h / 2, _d);
 					
 				} else if(sprite_exists(_d)) {

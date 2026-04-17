@@ -1,10 +1,9 @@
 /// @description init
 if !ready exit;
 
+DIALOG_DRAW_BG
+
 #region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txt("dialog_group_output_order_title", "Output order"));
 #endregion
@@ -20,3 +19,5 @@ if !ready exit;
 	sc_group.verify(dialog_w - ui(padding * 2), dialog_h - ui(title_height + padding));
 	sc_group.draw(px, py);
 #endregion
+
+DIALOG_DRAW_FOCUS

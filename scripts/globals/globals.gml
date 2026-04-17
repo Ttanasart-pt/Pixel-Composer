@@ -119,7 +119,6 @@ gml_pragma("UnityBuild", "true");
 	
 	#macro sFOCUS (FOCUS == self.id)
 	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id))
-	#macro DIALOG_SHOW_FOCUS (FOCUS == self.id || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))
 	
 	#macro CONF_TESTING false
 	globalvar TESTING; TESTING    = CONF_TESTING;

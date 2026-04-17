@@ -189,14 +189,12 @@ event_inherited();
 					
 					var  mtw = string_width(tg) + ui(16);
 					var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], mtx, mty, mtx + mtw, mty + mth);
-					var  cc  = _hov? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
 					
-					BLEND_OVERRIDE
-					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mtx, mty, mtw, mth, _sel? c_white : cc);
-					BLEND_NORMAL
-					if(_hov) draw_sprite_stretched(THEME.box_r5_clr, 1, mtx, mty, mtw, mth);
+					draw_sprite_stretched_ext(THEME.section_separator, 0, mtx, mty, mtw, mth, _hov? COLORS.section_hover : COLORS.section_bg);
+					if(_sel) draw_sprite_stretched_ext(THEME.section_separator, 2, mtx, mty, mtw, mth, COLORS.section_selected);
 					
 					if(_hov) {
+						draw_sprite_stretched_ext(THEME.section_separator, 1, mtx, mty, mtw, mth, COLORS.section_hover);
 						sp_sample.hover_content = true;
 						
 						if(mouse_lpress()) {
@@ -400,20 +398,15 @@ event_inherited();
 				var lb  = group_labels[i];
 				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
-				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + label_h);
-				var  cc  = _hov? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+				var _hov  = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + label_h);
+				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
 				
-				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, pd, _yy, ww - pd, label_h, cc);
-				BLEND_NORMAL
-				if(_hov) draw_sprite_stretched(THEME.box_r5_clr, 1, pd, _yy, ww - pd, label_h);
-				
-				if(!welcome_editing) {
-					var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
-					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, COLORS._main_icon, 1);
-				}
+				draw_sprite_stretched_ext(THEME.section_separator, 0, pd, _yy, ww - pd, label_h, _hov? COLORS.section_hover : COLORS.section_bg);
+				if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, pd, _yy, ww - pd, label_h, COLORS.section_selected);
 				
 				if(_hov) {
+					draw_sprite_stretched_ext(THEME.section_separator, 1, pd, _yy, ww - pd, label_h, COLORS.section_hover);
+					
 					sp_sample.hover_content = true;
 					
 					if(DOUBLE_CLICK) _cAll = _coll? -1 : 1;
@@ -422,6 +415,9 @@ event_inherited();
 						else      array_push(PREFERENCES.welcome_file_closed, lb.text);
 					}
 				}
+				
+				if(!welcome_editing)
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, COLORS._main_icon, 1);
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(pd + ui(32), _yy + label_h / 2, string_titlecase(lb.text));

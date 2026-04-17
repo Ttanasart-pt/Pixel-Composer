@@ -710,8 +710,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var ww = maxx - minx;
         var hh = maxy - miny;
         
+        var topbar = project.graphDisplay.show_topbar * topbar_height;
         var _w = w;
-        var _h = h - toolbar_height - project.graphDisplay.show_topbar * topbar_height;
+        var _h = h - toolbar_height - topbar;
         
         if(_zoom) {
 	        var sc = min(_w / ww, _h / hh);
@@ -722,7 +723,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         graph_x = (_w / 2) / graph_s - cx;
-        graph_y = (_h / 2) / graph_s - cy;
+        graph_y = (_h / 2) / graph_s - cy + topbar;
     }
     
     function initSize() { toCenterNode(); }

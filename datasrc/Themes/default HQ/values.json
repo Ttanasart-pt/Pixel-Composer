@@ -116,6 +116,10 @@
         "scrollbar_active": "main_white",
         "scrollbar_idle": "main_grey",
 
+        "section_hover": "main_white",
+        "section_selected": "main_white",
+        "section_bg": ["main_white", "main_ltgrey", 0.5],
+
         "panel_animation_frame_divider": "main_black",
         "panel_animation_keyframe_ease_line": "main_dkgrey",
         "panel_animation_loop_line": "lime",
@@ -197,6 +201,7 @@
         "widget_text_dec_i": "yellow"
     },
     "array": {
+        "channel": ["red", "pgreen", "pblue", "white"],
         "axis": ["red", "pgreen", "pblue", "yellow", "pink", "purple"],
         "histogram": ["red", "lime", "cyan", "white"],
         "heat": ["red", "yellow", "lime"],

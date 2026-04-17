@@ -135,7 +135,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + hg);
 			if(_hv) sc_action_content.hover_content = true;
-			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+			var _cc = _hv? COLORS.section_hover : COLORS.section_bg;
 			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, 0, yy, _w, hg, _cc);
 			
 			var tx = ui(8);
@@ -170,7 +170,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], _bw - ui(24), yy, _bw, yy + _bh);
 			if(_hv) sc_action_creating.hover_content = true;
-			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+			var _cc = _hv? COLORS.section_hover : COLORS.section_bg;
 			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, _bw - ui(24), yy, ui(24), _bh, _cc);
 			
 			var _bc = action_selecting.outputNode == i? COLORS._main_value_negative : COLORS._main_icon_dark;
@@ -181,7 +181,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], _bw - ui(24), yy, _bw, yy + _bh);
 			if(_hv) sc_action_creating.hover_content = true;
-			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+			var _cc = _hv? COLORS.section_hover : COLORS.section_bg;
 			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, _bw - ui(24), yy, ui(24), _bh, _cc);
 			
 			var _bc = action_selecting.inputNode == i? COLORS._main_value_positive : COLORS._main_icon_dark;
@@ -192,7 +192,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _bw, yy + _bh);
 			if(_hv) sc_action_creating.hover_content = true;
-			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+			var _cc = _hv? COLORS.section_hover : COLORS.section_bg;
 			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, 0, yy, _bw, _bh, _cc);
 			
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);

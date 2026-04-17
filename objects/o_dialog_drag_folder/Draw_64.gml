@@ -1,10 +1,9 @@
 /// @description init
 if !ready exit;
 
-#region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
+DIALOG_DRAW_BG
 	
+#region base UI
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("add_images_title_direcory", "Import directory"));
 #endregion
@@ -45,3 +44,5 @@ if !ready exit;
 	draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
 	draw_text(bx + bw / 2, dy + dh/2, __txt("Import"));
 #endregion
+
+DIALOG_DRAW_FOCUS
