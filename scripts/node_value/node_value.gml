@@ -358,8 +358,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		preview_hotkey_mx = 0;
 		preview_hotkey_my = 0;
 		
-		static setHotkey = function(k = "", m = MOD_KEY.none) /*=>*/ { preview_hotkey = new KeyCombination(k,m); node.toolShow = true; return self; }
 		static setHotkeySpr = function(s) /*=>*/ { preview_hotkey_spr = s; return self; }
+		static setHotkey    = function(k = "", m = MOD_KEY.none) /*=>*/ { 
+			preview_hotkey = new KeyCombination(k,m); 
+			node.toolShow  = true; 
+			return self; 
+		}
+		
+		static setHotkeyAuto = function(k = "", m = MOD_KEY.none) /*=>*/ { 
+			preview_hotkey = new KeyCombination(k,m); 
+			node.toolShow  = true; 
+			array_push(node.preview_overlay_inputs, self);
+			return self; 
+		}
+		
 	#endregion
 	
 	////- META

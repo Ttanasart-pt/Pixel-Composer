@@ -1570,10 +1570,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                var dx = nx - node_drag_ox;
 	                var dy = ny - node_drag_oy;
 	                
-	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
-	                    var _node = nodes_selecting[i];
-	                    _node.moved = false;
-	                }
+	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ )
+	                    nodes_selecting[i].moved = false;
 	                
 	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
 	                    var _node = nodes_selecting[i];
@@ -1640,13 +1638,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         ////- Start Drag
         
-		if(!_focus || !mouse_on_graph) return;
-		if(cache_group_edit != noone)  return;
-		if(value_focus != noone)       return;
+		if(!_focus || !mouse_on_graph)                  return;
+		if(cache_group_edit != noone)                   return;
+		if(value_focus != noone)                        return;
+		if(key_mod_press(CTRL) || key_mod_press(SHIFT)) return;
 		
         var _node = getFocusingNode();
-		if(_node == noone || !_node.draggable)          return;
-		if(key_mod_press(CTRL) || key_mod_press(SHIFT)) return;
+		if(!is(_node, Node) || !_node.draggable) return;
         
         if(mouse_lpress()) {
         	node_drag_type = node_hover_type;

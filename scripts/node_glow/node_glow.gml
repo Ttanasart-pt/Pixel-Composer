@@ -28,7 +28,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(13, nodeValue_EButton( "Blend Mode",  3, [ "Normal", "Replace", -1, "Lighten", "Screen", -1, "Darken", "Multiply" ]));
-	newInput( 4, nodeValue_Color(   "Color",          ca_white ));
+	newInput( 4, nodeValue_Color(   "Color",          ca_white )).setHotkeyAuto("C");
 	newInput(18, nodeValue_Surface( "Texture"                  ));
 	newInput(11, nodeValue_Bool(    "Draw Original",  true     ));
 	newInput(19, nodeValue_Slider(  "Blend Color",    0        ));

@@ -57,7 +57,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(22, nodeValue_Float(    "Piece Scale",    1));
 	
 	////- =Render
-	newInput( 3, nodeValue_Color(    "Shape color",     ca_white));
+	newInput( 3, nodeValue_Color(    "Shape color",     ca_white)).setHotkeyAuto("C");
 	newInput(23, nodeValue_Palette(  "Shape Palette",  [ca_white]));
 	newInput(19, nodeValue_Color(    "Vertex Color 1",  ca_white));
 	newInput(20, nodeValue_Color(    "Vertex Color 2",  ca_white));

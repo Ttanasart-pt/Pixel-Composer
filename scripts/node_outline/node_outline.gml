@@ -29,16 +29,16 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	__init_mask_modifier(9, 13);
 	
 	////- =Outline
+	newInput( 5, nodeValue_EButton( "Position",    1, ["Inside", "Outside"] ));
 	newInput(18, nodeValue_EScroll( "Profile",     0, [ "Circle", "Square", "Diamond" ] ));
 	newInput( 1, nodeValue_Float(   "Width",       0 )).setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
 		.setHotkey("S").setMappable(15).setValidator(VV_min(0)).setUnitSimple(false);
-	newInput( 5, nodeValue_EButton( "Position",    1, ["Inside", "Outside"] ));
 	newInput( 8, nodeValue_Int(     "Start",       0, "Shift outline inside, outside the shape." )).setMappable(17);
 	newInput(12, nodeValue_Bool(    "Crop border", false ));
 	newInput(19, nodeValue_Slider(  "Threshold",   1     ));
 	
 	////- =Render
-	newInput( 2, nodeValue_Color( "Color",         ca_white ));
+	newInput( 2, nodeValue_Color( "Color",         ca_white )).setHotkeyAuto("C");
 	newInput( 6, nodeValue_Bool(  "Anti-aliasing", 0        ));
 	newInput(20, nodeValue_Bool(  "High res",      0        ));
 	
@@ -46,21 +46,22 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 3, nodeValue_Bool(    "Blend",           false, "Blend outline color with the original color." ));
 	newInput( 4, nodeValue_Slider(  "Blend alpha",     1 )).setMappable(16);
 	newInput( 7, nodeValue_EScroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ] ));
-	
 	//// inputs 21
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Outline",     VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Outline",     VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 11, 
 		[ "Surfaces",  true    ],  0,  9, 10, 13, 14, 
-		[ "Outline",  false    ], 18,  1, 15,  5,  8, 17, 12, 19, 
+		[ "Outline",  false    ],  5, 18,  1, 15,  8, 17, 12, 19, 
 		[ "Render",   false    ],  2,  6, 20, 
 		[ "Blend",     true, 3 ],  4, 16,
 	];
 	
 	attribute_surface_depth();
 	attribute_oversample();
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK

@@ -21,6 +21,11 @@
         "date": "2026-04-16T10:38:04.643Z",
         "node": "Deserialize",
         "commit": "**Deserialize**: Fix error when checking surface depth."
+      },
+      {
+        "date": "2026-04-17T05:47:47.730Z",
+        "node": "",
+        "commit": "**Inline Group**: Add dragging support."
       }
     ]
   },

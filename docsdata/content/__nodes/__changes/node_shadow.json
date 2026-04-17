@@ -3,11 +3,6 @@
     "version": "1.21.rc6",
     "changes": [
       {
-        "date": "2026-04-16T07:34:16.184Z",
-        "node": "Outline",
-        "commit": "**Outline**: Increase scan iteration count for non-highres mode."
-      },
-      {
         "date": "2026-04-17T05:47:47.744Z",
         "node": "",
         "commit": "**Inline Group**: Add dragging support."

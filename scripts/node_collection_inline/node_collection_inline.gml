@@ -6,7 +6,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_adding       = false;
 	vertex_hash        = "";
 	modifiable         = true;
-	draggable          = false;
+	// draggable          = false;
 	manual_deletable   = false;
 	bbox               = [ 0, 0, 0, 0 ];
 	
@@ -30,6 +30,22 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	static topoSortable = function() /*=>*/ {return false};
 	
 	////- Nodes
+	
+	static move = function(_x, _y, _direct = true) {
+		moved = true;
+		if(x == _x && y == _y) return;
+		if(!LOADING) project.setModified();
+		
+		var dx = _x - x;
+		var dy = _y - y;
+		x = _x;
+		y = _y; 
+		
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var _n = nodes[i];
+			_n.move(_n.x + dx, _n.y + dy);
+		}
+	}
 	
 	static removeNode = function(node) {
 		array_remove(attributes.members, node.node_id);

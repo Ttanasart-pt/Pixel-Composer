@@ -336,6 +336,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w_hovering  = false;
 		w_hoverable = false;
 		w_active    = false;
+		preview_overlay_inputs = [];
 		
 		inspector_scroll   = 0;
 		inspector_collapse = {};
@@ -2785,6 +2786,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		} catch(e) { log_warning($"{toString()}, drawOverlay", exception_print(e)); }
 		
 		attribute_drawOverlay(hover, active);
+		for( var i = 0, n = array_length(preview_overlay_inputs); i < n; i++ ) 
+			InputDrawOverlay(preview_overlay_inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

@@ -144,7 +144,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(42, nodeValue_Vec2(     "Shear",           [0,0]           ))
 	
 	////- =Render
-	newInput(10, nodeValue_Color(    "Shape Color",      ca_white       ));
+	newInput(10, nodeValue_Color(    "Shape Color",      ca_white       )).setHotkeyAuto("C");
 	newInput(18, nodeValue_Bool(     "Tile",             false          ));
 	
 	////- =Height

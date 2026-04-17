@@ -22,7 +22,7 @@ function Node_Hough_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	////- =Rendering
 	newInput( 9, nodeValue_Slider( "Line Threshold", .99  ));
 	newInput(11, nodeValue_Float(  "Thickness",      .1   ));
-	newInput(10, nodeValue_Color(  "Color",          cola(c_white, .6) ));
+	newInput(10, nodeValue_Color(  "Color",          cola(c_white, .6) )).setHotkeyAuto("C");
 	newInput(14, nodeValue_Float(  "Line Fade",      0    ));
 	newInput(16, nodeValue_Bool(   "Draw Original",  true ));
 	// inputs 18

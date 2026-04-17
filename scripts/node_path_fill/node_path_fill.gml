@@ -10,7 +10,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(6, nodeValue_Vec2(     "Scale",     [1,1] ));
 	
 	////- =Rendering
-	newInput(3, nodeValue_Color(   "Color",      ca_white ));
+	newInput(3, nodeValue_Color(   "Color",      ca_white )).setHotkeyAuto("C");
 	newInput(4, nodeValue_Bool(    "Inverted",   false    ));
 	newInput(7, nodeValue_EScroll( "Background", 0, [ "None", "Solid", "Surface" ]  ));
 	newInput(5, nodeValue_Color(   "BG Color",   ca_zero  ));

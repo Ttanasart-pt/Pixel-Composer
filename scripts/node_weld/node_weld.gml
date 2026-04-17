@@ -18,7 +18,7 @@ function Node_Weld(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Rendering
 	newInput(11, nodeValue_EButton( "Weld Color",  0, [ "Blended", "Closest" ]  ));
 	newInput(12, nodeValue_EButton( "Blending",    0, [ "Multiply", "Screen", "Override" ] ));
-	newInput(13, nodeValue_Color(   "Blend Color", ca_white ));
+	newInput(13, nodeValue_Color(   "Blend Color", ca_white )).setHotkeyAuto("C");
 	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

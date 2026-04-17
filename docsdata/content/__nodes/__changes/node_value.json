@@ -11,6 +11,11 @@
         "date": "2026-04-17T03:16:44.052Z",
         "node": "",
         "commit": "Fix some scrollbox not return correct value when using search"
+      },
+      {
+        "date": "2026-04-17T05:47:47.749Z",
+        "node": "",
+        "commit": "**Inline Group**: Add dragging support."
       }
     ]
   },

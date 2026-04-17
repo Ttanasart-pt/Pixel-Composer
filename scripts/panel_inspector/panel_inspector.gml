@@ -232,10 +232,8 @@ function Panel_Inspector() : PanelContent() constructor {
         inspectGroup = false;
         top_bar_h    = ui(100);
         
-        static initSize = function() {
-            content_w = w - ui(32);
-            content_h = h - top_bar_h - ui(12);
-        } initSize();
+        content_w = 0;
+        content_h = 0;
         
         view_mode_tooltip = new tooltipSelector("View Settings...", [ "Compact", "Spacious" ])
         
@@ -509,11 +507,6 @@ function Panel_Inspector() : PanelContent() constructor {
     
     function onFocusBegin() { if(!focusable) return; PANEL_INSPECTOR = self; }
     
-    function onResize() {
-        initSize();
-        contentPane.resize(content_w, content_h);
-    }
-    
     function triggerInspectingNode(index = 1) {
     	__index = index;
     	
@@ -732,8 +725,8 @@ function Panel_Inspector() : PanelContent() constructor {
         var padd    = ui(THEME_VALUE.panel_inspector_prop_paddding);
         
         var con_ww  = con_w - ui(12);
-        var rrx     = ui(16) + x;
-        var rry     = top_bar_h + y;
+        var rrx     = x + contentPane.x;
+        var rry     = y + contentPane.y;
         
         var showAll = filtering || filter_animation;
         
@@ -1739,8 +1732,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     	
 				case "favorites" :
 					var con_ww = con_w - ui(20);
-					var rrx = ui(16) + x;
-            		var rry = top_bar_h + y;
+					var rrx    = x + contentPane.x;
+    		        var rry    = y + contentPane.y;
 	                
 					var _favs = PROJECT.favoritedValues;
 					for( var j = 0, m = array_length(_favs); j < m; j++ ) {
@@ -2024,9 +2017,10 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     function drawContent(panel) { 
+    	var pad = ui(8);
     	draw_clear_alpha(COLORS.panel_bg_clear, 1);
-        draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
-    	
+        draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, top_bar_h, w - pad * 2, h - top_bar_h - pad);
+        
         if(inspecting && !inspecting.active) inspecting = noone;
         var mse = [mx,my];
         var pd = ui(8);
@@ -2160,8 +2154,12 @@ function Panel_Inspector() : PanelContent() constructor {
             }
         }
         
+        content_w = w - pad * 4;
+        content_h = h - top_bar_h - pad * 3 - 2;
+        
+        contentPane.verify(content_w, content_h);
         contentPane.setFocusHover(pFOCUS, pHOVER);
-        contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
+        contentPane.drawOffset(pad * 2, top_bar_h + pad + 1, mx, my);
         
         if(prop_hover != noone)
         	ds_stack_push(FOCUS_STACK, "Property");

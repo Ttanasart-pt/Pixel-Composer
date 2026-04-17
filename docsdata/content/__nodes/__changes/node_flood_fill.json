@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc6",
+    "changes": [
+      {
+        "date": "2026-04-17T05:47:47.732Z",
+        "node": "",
+        "commit": "**Inline Group**: Add dragging support."
+      }
+    ]
+  }
+]

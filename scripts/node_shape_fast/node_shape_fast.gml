@@ -60,7 +60,7 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(42, nodeValue_Vec2(     "Shear",           [0,0]           ))
 	
 	////- =Render
-	newInput(10, nodeValue_Color(    "Shape color",      ca_white       ));
+	newInput(10, nodeValue_Color(    "Shape color",      ca_white       )).setHotkeyAuto("C");
 	newInput(18, nodeValue_Bool(     "Tile",             false          ));
 	
 	////- =Height

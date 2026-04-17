@@ -581,6 +581,7 @@
     "strand_push":                        { "path": "./tool/s_strand_tool_push.png",                        "s": 2, "x":  9, "y":  9 },
     "strand_stretch":                     { "path": "./tool/s_strand_tool_stretch.png",                     "s": 2, "x":  9, "y":  9 },
     "text_tools_edit":                    { "path": "./tool/s_text_tools_edit.png",                         "s": 2, "x":  9, "y":  9 },
+    "tool_color":                         { "path": "./tool/s_tool_color.png",                              "s": 2, "x":  9, "y":  9 },
     "toolbar_check":                      { "path": "./tool/s_toolbar_check.png",                           "s": 2, "x":  8, "y":  8 },
     "tools_1d_move":                      { "path": "./tool/s_1d_tool_move.png",                            "s": 2, "x":  9, "y":  9 },
     "tools_2d_move":                      { "path": "./tool/s_2d_tool_move.png",                            "s": 2, "x":  9, "y":  9 },

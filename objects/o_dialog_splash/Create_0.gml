@@ -130,7 +130,7 @@ event_inherited();
 			draw_text_add(xx + ui(12), ly, _rec);
 			gpu_set_scissor(_scis);
 			
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hg, _hov? COLORS._main_accent : COLORS.panel_frame);
+			if(_hov) draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hg, COLORS._main_accent);
 		}
 		
 		return hh + hg * 2;

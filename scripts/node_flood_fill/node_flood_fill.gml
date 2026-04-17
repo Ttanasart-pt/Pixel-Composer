@@ -12,7 +12,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	////- =Fill
 	newInput( 4, nodeValue_Vec2(        "Position",   [.5,.5]   )).setHotkey("G").setUnitSimple();
 	newInput( 6, nodeValue_Slider(      "Threshold",   .1       ));
-	newInput( 5, nodeValue_Color(       "Colors",      ca_black ));
+	newInput( 5, nodeValue_Color(       "Color",      ca_black )).setHotkeyAuto("C");
 	newInput( 7, nodeValue_Bool(        "Diagonal",    false    ));
 	newInput(10, nodeValue_Enum_Scroll( "Blend",       0, [ "Override", "Multiply" ] ));
 	// input 11

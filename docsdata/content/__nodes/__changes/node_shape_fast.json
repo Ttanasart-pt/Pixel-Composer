@@ -8,15 +8,5 @@
         "commit": "**Inline Group**: Add dragging support."
       }
     ]
-  },
-  {
-    "version": "1.21.rc5",
-    "changes": [
-      {
-        "date": "2026-04-15T06:08:01.040Z",
-        "node": "",
-        "commit": "**Shape**: Add draw area tool."
-      }
-    ]
   }
 ]
