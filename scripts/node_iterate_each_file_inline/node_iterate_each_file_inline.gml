@@ -7,9 +7,6 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 	input_node  = noone;
 	output_node = noone;
 	
-	input_node_types  = [ Node_Iterate_Each_File_Inline_Input  ];
-	output_node_types = [ Node_Iterate_Each_File_Inline_Output ];
-	
 	newActiveInput(3);
 	
 	////- =Loop

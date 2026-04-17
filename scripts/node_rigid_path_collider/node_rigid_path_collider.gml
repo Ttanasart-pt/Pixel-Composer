@@ -2,6 +2,7 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name  = "Path Collider";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
+	parameters.inline_draw_input = true;
 	setDimension(96, 48);
 	
 	manual_ungroupable	 = false;

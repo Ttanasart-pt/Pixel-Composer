@@ -2,6 +2,7 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name  = "From Points";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
+	parameters.inline_draw_input = true;
 	setDrawIcon(s_node_psystem_from_points);
 	setDimension(96, 0);
 	

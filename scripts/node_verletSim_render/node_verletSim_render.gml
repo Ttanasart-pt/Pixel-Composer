@@ -3,6 +3,7 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
 	update_on_frame = true;
+	parameters.inline_draw_output = true;
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	

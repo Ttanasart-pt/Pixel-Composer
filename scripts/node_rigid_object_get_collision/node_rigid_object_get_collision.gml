@@ -3,6 +3,7 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	update_on_frame = true;
+	parameters.inline_draw_output = true;
 	setDrawIcon(s_node_rigid_object_get_collision);
 	setDimension(96, 48);
 	

@@ -2,11 +2,13 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	name  = "Loop Output";
 	color = COLORS.node_blend_loop;
 	loop  = noone;
+	parameters.inline_draw_output = true;
 	setDimension(96, 48);
 	
 	loopable = false;
 	clonable = false;
 	
+	parameters.inline_draw_output = true;
 	inline_output        = false;
 	inline_parent_object = "Node_Iterate_Each_Inline";
 	manual_ungroupable	 = false;

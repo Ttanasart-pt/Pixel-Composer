@@ -2,6 +2,8 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Mesh";
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
+	parameters.inline_draw_input = true;
+	
 	setDrawIcon(s_node_verletsim_mesh);
 	setDimension(96, 48);
 	

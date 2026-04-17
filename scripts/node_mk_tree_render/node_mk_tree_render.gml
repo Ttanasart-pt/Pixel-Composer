@@ -2,6 +2,7 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name  = "Tree Render";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
+	parameters.inline_draw_output = true;
 	
 	newInput(0, nodeValue_Struct("Tree",         noone )).setArrayDepth(1).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	newInput(1, nodeValue_Bool(  "Output Array", false )).rejectArray();

@@ -6,6 +6,11 @@
         "date": "2026-04-17T05:47:47.725Z",
         "node": "",
         "commit": "**Inline Group**: Add dragging support."
+      },
+      {
+        "date": "2026-04-17T06:18:23.802Z",
+        "node": "",
+        "commit": "**Inline Group**: Add rectangle shape option."
       }
     ]
   },

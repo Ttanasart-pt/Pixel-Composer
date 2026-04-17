@@ -2,6 +2,7 @@ function Node_pSystem_Render_Triangle(_x, _y, _group = noone) : Node(_x, _y, _gr
 	name  = "Render Triangle";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
+	parameters.inline_draw_output = true;
 	
 	update_on_frame = true;
 	

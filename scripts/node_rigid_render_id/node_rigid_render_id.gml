@@ -2,6 +2,7 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name  = "Render ID";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
+	parameters.inline_draw_output = true;
 	
 	manual_ungroupable = false;
 	update_on_frame    = true;

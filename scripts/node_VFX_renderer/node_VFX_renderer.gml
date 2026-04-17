@@ -2,6 +2,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Renderer";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
+	parameters.inline_draw_output = true;
 	setCacheAuto();
 	
 	inline_output      = false;

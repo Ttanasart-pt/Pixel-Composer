@@ -2,6 +2,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name  = "Tree Trunk Path";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
+	parameters.inline_draw_input = true;
 	setDrawIcon(s_node_mk_tree_path_root);
 	setDimension(96, 48);
 	

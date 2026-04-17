@@ -2,6 +2,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name      = "Strand Render";
 	color     = COLORS.node_blend_strand;
 	icon      = THEME.strandSim;
+	parameters.inline_draw_output = true;
 	
 	inline_output        = false;
 	manual_ungroupable	 = false;

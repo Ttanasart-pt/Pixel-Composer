@@ -15,9 +15,6 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_hover_al     = 0;
 	selectable         = false;
 	
-	input_node_types   = [];
-	output_node_types  = [];
-	
 	add_point = false;
 	point_x   = 0;
 	point_y   = 0;
@@ -28,6 +25,19 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	is_root = true;
 	
 	static topoSortable = function() /*=>*/ {return false};
+	
+	////- Attributes
+	
+	attributes.shape = 0;
+	array_push(attributeEditors, "Inline Group");
+	array_push(attributeEditors, Node_Attribute( "Shape", function() /*=>*/ {return attributes.shape}, function() /*=>*/ {
+		return new scrollBox(["Polygon", "Rectangle"], function(i) /*=>*/ { 
+			setAttribute("shape", i);
+			refreshGroupBG();
+			
+			PANEL_GRAPH.refreshDraw();
+		});
+	}));
 	
 	////- Nodes
 	
@@ -121,9 +131,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			_ny1 = _node.y + 32;
 
 		} else {
-			_nx0 = array_any(input_node_types,  function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x - 32 + _rad;
+			_nx0 = _node.parameters[$ "inline_draw_input"]?  _node.x + _node.w / 2 : _node.x - 32 + _rad;
 			_ny0 = _node.y - 32 + _rad;
-			_nx1 = array_any(output_node_types, function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
+			_nx1 = _node.parameters[$ "inline_draw_output"]? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
 			_ny1 = _node.y + _node.h + 32 - _rad;
 		}
 		
@@ -149,119 +159,166 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}
 	
 	static refreshGroupBG = function() {
-		var _hash = "";
-		var _ind  = 0;
-		
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
-			var _node = nodes[i];
-			if(!_node.active || _node.group != group) continue;
-			_hash += $"{_node.x},{_node.y},{_node.w},{_node.h}|";
-			_ind++;
-		}
-		if(add_point) _hash += $"{point_x},{point_y}|";
-		
-		if(_hash == "") {
+		if(array_empty(nodes)) {
 			group_vertex = [];
-			destroy();
 			return;
 		}
-		_hash = md5_string_utf8(_hash);
 		
-		if(vertex_hash == _hash) return;
-		
-		vertex_hash  = _hash;
-		group_vertex = [];
-		
-		if(_ind == 0) return;
-		var _vtrx = array_create(_ind * 4 * (90 / 30 + 1));
-		
-		var _ind = 0;
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
-			var _node = nodes[i];
-			if(!_node.active || _node.group != group) continue;
-			_ind = getNodeBorder(_ind, _vtrx, _node);
-		}
-		
-		if(add_point) array_push(_vtrx, [ point_x, point_y ]);
-		
-		__temp_minP = _vtrx[0];
-		__temp_minI = 0;
-		
-		for( var i = 0, n = array_length(_vtrx); i < n; i++ ) {
-			var _v  = _vtrx[i];
-			var _vx = _v[0];
-			var _vy = _v[1];
-		
-			if(_vy > __temp_minP[1] || (_vy == __temp_minP[1] && _vx < __temp_minP[0])) {
-				__temp_minP = _v;
-				__temp_minI = i;
+		if(attributes.shape == 0) {
+			var _hash = "";
+			var _ind  = 0;
+			
+			for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+				var _node = nodes[i];
+				if(!_node.active || _node.group != group) continue;
+				_hash += $"{_node.x},{_node.y},{_node.w},{_node.h}|";
+				_ind++;
 			}
-		}
-		
-		_vtrx = array_map( _vtrx, function(a, i)   { return [ a[0], a[1], i == __temp_minI? -999 : point_direction(__temp_minP[0], __temp_minP[1], a[0], a[1]) + 360 ] });
-		        array_sort(_vtrx, function(a0, a1) { return a0[2] == a1[2]? sign(a0[0] - a1[0]) : sign(a0[2] - a1[2]); });
-	
-		var _linS = 0;
-		for( var i = 1, n = array_length(_vtrx); i < n; i++ ) {
-			if(_vtrx[i][1] != _vtrx[0][1]) break;
-			_linS = i;
-		}
-	
-		array_delete(_vtrx, 1, _linS - 1);
-	
-		group_vertex = [ _vtrx[0], _vtrx[1] ];
-		
-		var minx   = _vtrx[0][0];
-		var miny   = _vtrx[0][1];
-		var maxx   = _vtrx[0][0];
-		var maxy   = _vtrx[0][1];
-		
-		for( var i = 2, n = array_length(_vtrx); i < n; i++ ) {
-			var _v = _vtrx[i];
-		
-			while( array_length(group_vertex) >= 2 && ccw( group_vertex[array_length(group_vertex) - 2], group_vertex[array_length(group_vertex) - 1], _v ) >= 0 )
-				array_pop(group_vertex);
-			array_push(group_vertex, _v);
-		}
-		
-		for( var i = array_length(group_vertex) - 1; i >= 0; i-- ) {
-			var n  = array_length(group_vertex);
-			if(n < 4) break;
+			if(add_point) _hash += $"{point_x},{point_y}|";
 			
-			var v0 = group_vertex[(i - 1 + n) % n];
-			var v1 = group_vertex[i];
-			var v2 = group_vertex[(i + 1) % n];
-			
-			var a0 = point_direction(v1[0], v1[1], v0[0], v0[1]);
-			var a1 = point_direction(v1[0], v1[1], v2[0], v2[1]);
-			var d  = angle_difference(a0, a1);
-			
-			if(min(abs(d), abs(d - 180)) <= 2) 
-				array_delete(group_vertex, i, 1);
-			
-			minx = min(minx, v1[0]);
-			miny = min(miny, v1[1]);
-			maxx = max(maxx, v1[0]);
-			maxy = max(maxy, v1[1]);
-		}
-		
-		junction_x = group_vertex[0][0]; 
-		junction_y = group_vertex[0][1];
-		for( var i = 1, n = array_length(group_vertex); i < n; i++ ) {
-			var v1 = group_vertex[i];
-			if(v1[0] <= junction_x && v1[1] <= junction_y) {
-				junction_x = v1[0];
-				junction_y = v1[1] + 8;
+			if(_hash == "") {
+				group_vertex = [];
+				destroy();
+				return;
 			}
+			_hash = md5_string_utf8(_hash);
+			
+			if(vertex_hash == _hash) return;
+			
+			vertex_hash  = _hash;
+			group_vertex = [];
+			
+			if(_ind == 0) return;
+			var _vtrx = array_create(_ind * 4 * (90 / 30 + 1));
+			
+			var _ind = 0;
+			for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+				var _node = nodes[i];
+				if(!_node.active || _node.group != group) continue;
+				_ind = getNodeBorder(_ind, _vtrx, _node);
+			}
+			
+			if(add_point) array_push(_vtrx, [ point_x, point_y ]);
+			
+			__temp_minP = _vtrx[0];
+			__temp_minI = 0;
+			
+			for( var i = 0, n = array_length(_vtrx); i < n; i++ ) {
+				var _v  = _vtrx[i];
+				var _vx = _v[0];
+				var _vy = _v[1];
+			
+				if(_vy > __temp_minP[1] || (_vy == __temp_minP[1] && _vx < __temp_minP[0])) {
+					__temp_minP = _v;
+					__temp_minI = i;
+				}
+			}
+			
+			_vtrx = array_map( _vtrx, function(a, i)   { return [ a[0], a[1], i == __temp_minI? -999 : point_direction(__temp_minP[0], __temp_minP[1], a[0], a[1]) + 360 ] });
+			        array_sort(_vtrx, function(a0, a1) { return a0[2] == a1[2]? sign(a0[0] - a1[0]) : sign(a0[2] - a1[2]); });
+		
+			var _linS = 0;
+			for( var i = 1, n = array_length(_vtrx); i < n; i++ ) {
+				if(_vtrx[i][1] != _vtrx[0][1]) break;
+				_linS = i;
+			}
+		
+			array_delete(_vtrx, 1, _linS - 1);
+		
+			group_vertex = [ _vtrx[0], _vtrx[1] ];
+			
+			var minx   = _vtrx[0][0];
+			var miny   = _vtrx[0][1];
+			var maxx   = _vtrx[0][0];
+			var maxy   = _vtrx[0][1];
+			
+			for( var i = 2, n = array_length(_vtrx); i < n; i++ ) {
+				var _v = _vtrx[i];
+			
+				while( array_length(group_vertex) >= 2 && ccw( group_vertex[array_length(group_vertex) - 2], group_vertex[array_length(group_vertex) - 1], _v ) >= 0 )
+					array_pop(group_vertex);
+				array_push(group_vertex, _v);
+			}
+			
+			for( var i = array_length(group_vertex) - 1; i >= 0; i-- ) {
+				var n  = array_length(group_vertex);
+				if(n < 4) break;
+				
+				var v0 = group_vertex[(i - 1 + n) % n];
+				var v1 = group_vertex[i];
+				var v2 = group_vertex[(i + 1) % n];
+				
+				var a0 = point_direction(v1[0], v1[1], v0[0], v0[1]);
+				var a1 = point_direction(v1[0], v1[1], v2[0], v2[1]);
+				var d  = angle_difference(a0, a1);
+				
+				if(min(abs(d), abs(d - 180)) <= 2) 
+					array_delete(group_vertex, i, 1);
+				
+				minx = min(minx, v1[0]);
+				miny = min(miny, v1[1]);
+				maxx = max(maxx, v1[0]);
+				maxy = max(maxy, v1[1]);
+			}
+			
+			junction_x = group_vertex[0][0]; 
+			junction_y = group_vertex[0][1];
+			for( var i = 1, n = array_length(group_vertex); i < n; i++ ) {
+				var v1 = group_vertex[i];
+				if(v1[0] <= junction_x && v1[1] <= junction_y) {
+					junction_x = v1[0];
+					junction_y = v1[1] + 8;
+				}
+			}
+			
+			bbox = [ minx, miny, maxx, maxy ];
+			
+			x = (minx + maxx) / 2;
+			y = (miny + maxy) / 2;
+			
+			junction_x -= x;
+			junction_y -= y;
+			
+		} else if(attributes.shape == 1) {
+			var minx =  infinity;
+			var miny =  infinity;
+			var maxx = -infinity;
+			var maxy = -infinity;
+			
+			for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+				var _node = nodes[i];
+				if(!_node.active || _node.group != group) continue;
+				
+				var nx0 = _node.x - 16;
+				var ny0 = _node.y - 16;
+				var nx1 = _node.x + _node.w + 16;
+				var ny1 = _node.y + _node.h + _node.showMeta() * 16 + 16;
+				
+				if(_node.parameters[$ "inline_draw_input"])
+					nx0 = _node.x + _node.w / 2;
+				
+				if(_node.parameters[$ "inline_draw_output"])
+					nx1 = _node.x + _node.w / 2;
+				
+				minx = min(minx, nx0);
+				miny = min(miny, ny0);
+				maxx = max(maxx, nx1);
+				maxy = max(maxy, ny1);
+			}
+			
+			group_vertex = [
+				[minx, miny],
+				[maxx, miny],
+				[maxx, maxy],
+				[minx, maxy],
+			];
+			
+			x = (minx + maxx) / 2;
+			y = (miny + maxy) / 2;
+			
+			junction_x = minx - x;
+			junction_y = miny - y;
 		}
-		
-		bbox = [ minx, miny, maxx, maxy ];
-		
-		x = (minx + maxx) / 2;
-		y = (miny + maxy) / 2;
-		
-		junction_x -= x;
-		junction_y -= y;
 	}
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {
@@ -313,54 +370,71 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _sel   = inspecting || add_point;
 		inspecting = false;
 		
-		draw_set_color(_color);
 		group_hover_al = lerp_float(group_hover_al, group_hovering, 4);
 		group_hovering = 0;
+		
+		draw_set_color(_color);
 		draw_set_alpha(_sel? 0.1 : lerp(0.025, 0.05, group_hover_al));
 		
-		draw_primitive_begin(pr_trianglelist);
-			var a = group_vertex[0];
-			var b = group_vertex[1];
-			var c;
+		if(attributes.shape == 0) {
+			draw_primitive_begin(pr_trianglelist);
+				var a = group_vertex[0];
+				var b = group_vertex[1];
+				var c;
+				
+				for( var i = 2, n = array_length(group_vertex); i < n; i++ ) {
+					c = group_vertex[i];
+					
+					var v0x = _x + a[0] * _s;
+					var v0y = _y + a[1] * _s;
+					var v1x = _x + b[0] * _s;
+					var v1y = _y + b[1] * _s;
+					var v2x = _x + c[0] * _s;
+					var v2y = _y + c[1] * _s;
+					
+					draw_vertex(round(v0x), round(v0y));
+					draw_vertex(round(v1x), round(v1y));
+					draw_vertex(round(v2x), round(v2y));
+					
+					if(!_hov && point_in_triangle(_mx, _my, v0x, v0y, v1x, v1y, v2x, v2y)) {
+						group_hovering = 1 + (PANEL_GRAPH._frame_hovering == self && key_mod_press(SHIFT)) * 2;
+						_hov = true;
+					}
+					
+					b = group_vertex[i];
+				}
+			draw_primitive_end();
 			
-			for( var i = 2, n = array_length(group_vertex); i < n; i++ ) {
-				c = group_vertex[i];
-				
-				var v0x = _x + a[0] * _s;
-				var v0y = _y + a[1] * _s;
-				var v1x = _x + b[0] * _s;
-				var v1y = _y + b[1] * _s;
-				var v2x = _x + c[0] * _s;
-				var v2y = _y + c[1] * _s;
-				
-				draw_vertex(round(v0x), round(v0y));
-				draw_vertex(round(v1x), round(v1y));
-				draw_vertex(round(v2x), round(v2y));
-				
-				if(!_hov && point_in_triangle(_mx, _my, v0x, v0y, v1x, v1y, v2x, v2y)) {
-					group_hovering = 1 + (PANEL_GRAPH._frame_hovering == self && key_mod_press(SHIFT)) * 2;
-					_hov = true;
+			draw_set_alpha(_sel? 1 : lerp(0.4, 0.65, group_hover_al));
+			BLEND_ADD
+			draw_primitive_begin(pr_linestrip);
+				for( var i = 0, n = array_length(group_vertex); i < n; i++ ) {
+					var a = group_vertex[i];
+					draw_vertex(_x + a[0] * _s, _y + a[1] * _s);
 				}
 				
-				b = group_vertex[i];
-			}
-		draw_primitive_end();
-		
-		draw_set_alpha(_sel? 1 : lerp(0.4, 0.65, group_hover_al));
-		BLEND_ADD
-		draw_primitive_begin(pr_linestrip);
-			for( var i = 0, n = array_length(group_vertex); i < n; i++ ) {
-				var a = group_vertex[i];
+				a = group_vertex[0];
 				draw_vertex(_x + a[0] * _s, _y + a[1] * _s);
+			draw_primitive_end();
+			BLEND_NORMAL
+			
+		} else if(attributes.shape == 1) {
+			var x0 = _x + group_vertex[0][0] * _s;
+			var y0 = _y + group_vertex[0][1] * _s;
+			var x1 = _x + group_vertex[2][0] * _s;
+			var y1 = _y + group_vertex[2][1] * _s;
+			
+			if(point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+				group_hovering = 1 + (PANEL_GRAPH._frame_hovering == self && key_mod_press(SHIFT)) * 2;
+				_hov = true;
 			}
 			
-			a = group_vertex[0];
-			draw_vertex(_x + a[0] * _s, _y + a[1] * _s);
-		draw_primitive_end();
-		BLEND_NORMAL
+			draw_roundrect(x0, y0, x1, y1, false);
+			draw_set_alpha(_sel? 1 : lerp(0.4, 0.65, group_hover_al));
+			draw_roundrect(x0, y0, x1, y1, true);
+		}
 		
 		draw_set_alpha(1);
-		
 		add_point = false;
 		
 		return _hov;
@@ -433,10 +507,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	static junctionIsInside = function(junc) {
         if(!modifiable) return false;
 		
-        __temp_node = junc.node;
-        
-        if(array_any(input_node_types,   function(n) /*=>*/ {return is(__temp_node, n)}) && junc.connect_type == CONNECT_TYPE.input)  return false;
-        if(array_any(output_node_types, function(n) /*=>*/ {return is(__temp_node, n)}) && junc.connect_type == CONNECT_TYPE.output) return false;
+        if(junc.node.parameters[$ "inline_draw_input"]  && junc.connect_type == CONNECT_TYPE.input)  return false;
+        if(junc.node.parameters[$ "inline_draw_output"] && junc.connect_type == CONNECT_TYPE.output) return false;
 		
 		return true;
 	}

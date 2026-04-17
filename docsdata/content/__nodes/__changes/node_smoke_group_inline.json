@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc6",
+    "changes": [
+      {
+        "date": "2026-04-17T06:18:23.834Z",
+        "node": "",
+        "commit": "**Inline Group**: Add rectangle shape option."
+      }
+    ]
+  }
+]

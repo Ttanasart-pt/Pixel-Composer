@@ -8,11 +8,8 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	input_node  = noone;
 	output_node = noone;
 	
-	toSort = true;
-	
-	input_node_types  = [ Node_Iterator_Sort_Inline_Input ];
-	output_node_types = [ Node_Iterator_Sort_Inline_Output ];
-	iterated         = 0;
+	toSort   = true;
+	iterated = 0;
 	
 	if(!LOADING && !APPENDING) {
 		var input  = nodeBuild("Node_Iterator_Sort_Inline_Input",  x,       y, self);

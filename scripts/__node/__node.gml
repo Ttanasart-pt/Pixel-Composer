@@ -22,6 +22,7 @@ function __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Attributes ----
+		parameters = {};
 		attributes = {
 			update_graph:        true,
 			show_update_trigger: false,

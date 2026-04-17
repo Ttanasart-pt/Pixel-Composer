@@ -2,6 +2,7 @@ function Node_Iterator_Filter_Inline_Input(_x, _y, _group = noone) : Node(_x, _y
 	name  = "Filter Input";
 	color = COLORS.node_blend_loop;
 	loop  = noone;
+	parameters.inline_draw_input = true;
 	setDimension(96, 48);
 	
 	loopable = false;

@@ -1,6 +1,7 @@
 function Node_Iterator_Sort_Inline_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Sort result";
 	color = COLORS.node_blend_loop;
+	parameters.inline_draw_output = true;
 	setDimension(96, 48);
 	
 	loopable = false;

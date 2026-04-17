@@ -15,6 +15,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Object";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
+	parameters.inline_draw_input = true;
 	setDimension(96, 96);
 	
 	update_on_frame    = true;

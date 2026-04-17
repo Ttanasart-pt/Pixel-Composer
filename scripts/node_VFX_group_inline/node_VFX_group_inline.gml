@@ -10,7 +10,6 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	newInput(0, nodeValue_Bool( "Loop",       true )).rejectArray();
 	newInput(2, nodeValue_Int(  "Pre-Render", -1   ));
 	
-	output_node_types  = [ Node_VFX_Renderer ];
 	input_display_list = [ 1, 
 		[ "Loop", false, 0 ], 2 
 	];

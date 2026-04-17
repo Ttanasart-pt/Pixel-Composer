@@ -4,8 +4,6 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	icon  = THEME.verletSim;
 	
 	is_simulation      = true;
-	input_node_types   = [ Node_VerletSim_Mesh   ];
-	output_node_types  = [ Node_VerletSim_Render ];
 	
 	newInput(0, nodeValue_Int(  "Substep",   8     ));
 	newInput(1, nodeValue_Vec2( "Gravity",  [0,.5] ));
