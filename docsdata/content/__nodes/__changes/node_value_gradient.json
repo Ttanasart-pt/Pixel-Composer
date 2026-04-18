@@ -6,6 +6,11 @@
         "date": "2026-04-18T02:50:44.203Z",
         "node": "",
         "commit": "**Graph Panel**: Pasting nodes while hovering on inline group will add the nodes to the group."
+      },
+      {
+        "date": "2026-04-18T03:40:06.673Z",
+        "node": "",
+        "commit": "**Graph Panel**: Multi-junction will now only connect to visible junctions."
       }
     ]
   }

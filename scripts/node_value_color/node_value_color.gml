@@ -33,10 +33,8 @@ function __NodeValue_Color(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 	
 	////- Draw
 	
+	static drawOverlayToggle = function() /*=>*/ { colorSelectorCall(getValue(), function(c) /*=>*/ {return setValueInspector(c)}); }
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
-		if(active && preview_hotkey && preview_hotkey.isPressing()) {
-			var clr    = getValue();
-			var dialog = colorSelectorCall(clr, function(c) /*=>*/ {return setValueInspector(c)});
-		}
+		if(active && preview_hotkey && preview_hotkey.isPressing()) drawOverlayToggle();
 	}
 }

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc7",
+    "changes": [
+      {
+        "date": "2026-04-18T03:40:06.672Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Multi-junction will now only connect to visible junctions."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc6",
     "changes": [
       {

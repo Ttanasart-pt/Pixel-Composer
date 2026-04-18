@@ -60,12 +60,13 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 	
 	////- Draw
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
-		if(active && preview_hotkey && preview_hotkey.isPressing()) {
-			var clr    = getValue();
-			var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
-			dialog.setDefault(clr.clone());
+	static drawOverlayToggle = function() /*=>*/ { 
+		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
+			dialog.setDefault(getValue().clone());
 			dialog.onModify = function(c) /*=>*/ {return setValueInspector(c)};
-		}
+	}
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
+		if(active && preview_hotkey && preview_hotkey.isPressing()) drawOverlayToggle();
 	}
 }

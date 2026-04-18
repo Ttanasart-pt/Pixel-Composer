@@ -1290,9 +1290,10 @@ function Panel_Preview() : PanelContent() constructor {
             _draw_sep = false;
         }
         
-        for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
-        	var _in = _node.inputs[i];
-        	
+        var useList = _node.input_display_list != -1;
+        var amo = useList? array_length(useList) : array_length(_node.inputs);
+        for( var i = 0; i < amo; i++ ) {
+        	var _in = useList? _node.inputs[_node.input_display_list[i]] : _node.inputs[i];
         	if(_in.preview_hotkey == undefined) continue;
         	
         	if(_draw_sep == false) {
@@ -1322,7 +1323,6 @@ function Panel_Preview() : PanelContent() constructor {
         	
         	if(_hov) {
         		TOOLTIP = new tooltipKey($"Set {_in.name}", _key.toString());
-        		
         		if(_in.drawOverlayToggle != noone) {
 	        		draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);
 	        		if(mouse_lpress(pFOCUS)) _in.drawOverlayToggle();
