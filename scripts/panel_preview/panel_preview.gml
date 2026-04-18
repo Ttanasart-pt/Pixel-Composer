@@ -1290,10 +1290,14 @@ function Panel_Preview() : PanelContent() constructor {
             _draw_sep = false;
         }
         
-        var useList = _node.input_display_list != -1;
-        var amo = useList? array_length(useList) : array_length(_node.inputs);
+        var inpList = _node.input_display_list;
+        var useList = inpList != -1;
+        var amo = useList? array_length(inpList) : array_length(_node.inputs);
         for( var i = 0; i < amo; i++ ) {
-        	var _in = useList? _node.inputs[_node.input_display_list[i]] : _node.inputs[i];
+        	var ind = useList? inpList[i] : i;
+        	if(!is_real(ind)) continue;
+        	
+        	var _in = _node.inputs[ind];
         	if(_in.preview_hotkey == undefined) continue;
         	
         	if(_draw_sep == false) {
