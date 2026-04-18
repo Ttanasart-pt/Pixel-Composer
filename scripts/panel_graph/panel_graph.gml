@@ -2571,8 +2571,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	
         } else if(key_mod_press(SHIFT)) {
             array_push_unique(value_draggings, value_dragging);
+            var _typ = value_dragging.connect_type;
             
-            if(value_focus && !array_exists(value_draggings, value_focus)) {
+            if(value_focus && value_focus.connect_type == _typ && !array_exists(value_draggings, value_focus)) {
                 array_push(value_draggings, value_focus);
                 array_sort(value_draggings, function(a,b) /*=>*/ {return a.y-b.y});
             }
