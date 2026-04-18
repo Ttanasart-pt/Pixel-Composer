@@ -61,6 +61,8 @@
 			
 			KEYBOARD_STRING = "";
 		});
+		
+		hotkeyCustom("Node_Shape", "Draw area", "D");
 	});
 	
 #endregion
@@ -85,7 +87,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Transform
 	newInput(15, nodeValue_EScroll(  "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
-	newInput( 3, nodeValue_Area(     "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitSimple();
+	newInput( 3, nodeValue_Area(     "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitSimple();
 	newInput(16, nodeValue_Vec2(     "Center",            [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(17, nodeValue_Vec2(     "Half Size",         [.5,.5] )).setHotkey("S").setUnitSimple();
 	newInput(19, nodeValue_Rotation( "Shape Rotation",      0     )).setHotkey("R");

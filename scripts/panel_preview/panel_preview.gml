@@ -1298,6 +1298,7 @@ function Panel_Preview() : PanelContent() constructor {
         	if(!is_real(ind)) continue;
         	
         	var _in = _node.inputs[ind];
+        	if(!_in.show_in_inspector)          continue;
         	if(_in.preview_hotkey == undefined) continue;
         	
         	if(_draw_sep == false) {
@@ -3330,7 +3331,10 @@ function Panel_Preview() : PanelContent() constructor {
     
     static drawSelection = function() {
     	var prevN = getNodePreview();
-    	if(!is(prevN, Node) || !prevN.preview_select_boxable) { selection_active = false; return; }
+    	if(is(prevN, Node) && !prevN.preview_select_boxable) { 
+    		selection_active = false; 
+    		return; 
+    	}
     	
     	var inspN = PANEL_INSPECTOR.getInspecting();
     	var applS = inspN == noone || inspN.preview_select_surface;
@@ -3346,7 +3350,7 @@ function Panel_Preview() : PanelContent() constructor {
 			mmy = value_snap(mmy, _sny);
     	}
     	
-    	if(hoveringContent && !hoveringGizmo) {
+    	if(hoveringContent && !hoveringGizmo) { // clear selection
         	if(mouse_lpress(pFOCUS)) {
         		selection_active    = false;
         		selection_selecting = 1;
@@ -3355,7 +3359,7 @@ function Panel_Preview() : PanelContent() constructor {
         		selection_sx = mmx;
         		selection_sy = mmy;
         	}
-        }
+        } // clear selection
         
         if(selection_selecting) {
         	selection_mx = mmx;
@@ -3814,6 +3818,7 @@ function Panel_Preview() : PanelContent() constructor {
                 }
                 
             } else {
+            	hoveringContent = true;
             	if(tool_current != noone) {
 	                var _tobj = tool_current.getToolObject();
 	        		if(struct_has(_tobj, "disable")) _tobj.disable();
