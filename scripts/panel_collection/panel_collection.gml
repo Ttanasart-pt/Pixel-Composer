@@ -48,7 +48,7 @@ function Panel_Collection() : PanelContent() constructor {
 		group_w_sx       = false;
 		group_w_mx       = false;
 		
-		top_h     = ui(36);
+		top_h     = ui(32);
 		content_w = w - ui( 8) - group_w;
 		content_h = h - top_h - ui(8);
 		
@@ -355,7 +355,7 @@ function Panel_Collection() : PanelContent() constructor {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	contentView = 0;
-	contentPane = new scrollPane(1, 1, function(_y, _m) {
+	contentPane = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var content;
@@ -393,15 +393,14 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(contentView == 0) {
 			var grid_width = PREFERENCES.collection_label? round(grid_size * 1.25) : grid_size;
-			var grid_space = ui(6);
+			var grid_space = ui(4);
 			
 			var col = max(1, floor(_cw / (grid_width + grid_space)));
 			var row = ceil(node_count / col);
 			var yy  = _y + grid_space;
 			var name_height = 0;
 				
-			grid_width = round(contentPane.surface_w - grid_space) / col - grid_space;
-			
+			grid_width = round(contentPane.surface_w - grid_space * col) / col;
 			hh += grid_space;
 			
 			for(var i = 0; i < row; i++) {
@@ -585,7 +584,7 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh;
 	});
 	
-	folderPane = new scrollPane(1, 1, function(_y, _m) {
+	folderPane = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var hh = ui(8);
 		_y += ui(8);
@@ -650,7 +649,7 @@ function Panel_Collection() : PanelContent() constructor {
 		menuCall("add_node_window_menu", menu, 0, 0, fa_left);
 	}
 	
-	nodeListPane = new scrollPane(1, 1, function(_y, _m) {
+	nodeListPane = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var hh = ui(8);
 		   _y += ui(8);
@@ -687,7 +686,7 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh + ui(16);
 	});
 	
-	nodecontentPane = new scrollPane(1, 1, function(_y, _m) {
+	nodecontentPane = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var hh    = ui(0);
 		var _cat  = NODE_CATEGORY[nodeListPane_page];
@@ -931,16 +930,16 @@ function Panel_Collection() : PanelContent() constructor {
 		rootx = _sx + _sw + ui(8);
 		
 		var bb = THEME.button_hide_fill;
-		var pd = ui(4);
-		var bs = ui(28);
-		var bx = w - (bs + pd);
+		var bs = top_h - ui(8);
+		var pd = ui(5);
+		var bx = w - pd;
 		var by = pd;
 		var bc = searching? COLORS._main_accent : COLORS._main_icon;
+		bx -= bs;
 		
-		if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, __txt("Search"), THEME.search_24, 0, bc, 1, .9) == 2)
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Search"), THEME.search_24, 0, bc) == 2)
 			search_toggle();
-			
-		bx -= bs + ui(4);
+		bx -= bs + ui(2);
 		
 		////- =Topbar
 		
@@ -955,56 +954,55 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		if(pageS == "Collections" && !DEMO) {
-			if(context != root && PANEL_INSPECTOR.getInspecting() != noone) {
-				var txt = __txt("panel_collection_add_node", "Add inspecting node as a collection");
-				if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.add_20, 0, COLORS._main_value_positive, 1, .9) == 2) {
-					data_path = context.path;
-					
-					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8))
-						.setNode(PANEL_INSPECTOR.getInspecting())
-						.setPath(data_path)
-						.setPrefix(string_replace(data_path, $"{DIRECTORY}Collections", "") + "/");
-				}
+			var _addable = context != root && PANEL_INSPECTOR.getInspecting() != noone;
+			var bsp = _addable? bb : noone;
+			var cc  = _addable? COLORS._main_value_positive : COLORS._main_icon_dark;
+			var txt = _addable? __txt("panel_collection_add_node", "Add inspecting node as a collection") : "";
+			if(buttonInstant_Pad(bsp, bx, by, bs, bs, m, hov, foc, txt, THEME.add_20, 0, cc) == 2 && _addable) {
+				data_path = context.path;
 				
-			} else
-				draw_sprite_ui_uniform(THEME.add, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon_dark);	
-			bx -= bs + ui(4); if(bx < rootx) return;
+				var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8))
+					.setNode(PANEL_INSPECTOR.getInspecting())
+					.setPath(data_path)
+					.setPrefix(string_replace(data_path, $"{DIRECTORY}Collections", "") + "/");
+			}
+			bx -= bs + ui(2); if(bx < rootx) return;
 			
 			var txt = __txt("panel_collection_add_folder", "Add folder");
-			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dFolder_add, 0, COLORS._main_icon, 1, .9) == 2) 
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dFolder_add, 0, COLORS._main_icon) == 2) 
 				fileNameCall(context.path, function(txt) /*=>*/ { directory_create(txt); refreshContext(); })
 					.setLabel(__txt("Folder name"))
 					.setPrefix(string_replace(context.path, $"{DIRECTORY}Collections", "") + "/");
-			bx -= bs + ui(4); if(bx < rootx) return;
+			bx -= bs + ui(2); if(bx < rootx) return;
 		}
-	
+		
 		if(pageS != "Nodes") {
 			var txt = __txt("panel_collection_open_file", "Open in file explorer");
-			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dPath_open, 0, COLORS._main_icon, 1, .9) == 2)
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dPath_open, 0, COLORS._main_icon) == 2)
 				shellOpenExplorer(context.path);
-			bx -= bs + ui(4); if(bx < rootx) return;
+			bx -= bs + ui(2); if(bx < rootx) return;
 			
 			var txt = __txt("Refresh");
-			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.refresh_icon, 0, COLORS._main_icon, 1, .9) == 2)
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.refresh_icon, 0, COLORS._main_icon) == 2)
 				refreshContext();
-			bx -= bs + ui(4); if(bx < rootx) return;
+			bx -= bs + ui(2); if(bx < rootx) return;
 		}
 		
 		var txt = __txt("Settings");
-		if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, 1, .9) == 2)
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon) == 2)
 			dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-		bx -= bs + ui(4); if(bx < rootx) return;
+		bx -= bs + ui(2); if(bx < rootx) return;
 		
 		if(TESTING) {
 			var txt = __txt("Collection Manager");
-			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, .75, .9) == 2)
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, .8) == 2)
 				dialogPanelCall(new Panel_Collection_Manager()); 
-			bx -= bs + ui(4); if(bx < rootx) return;
+			bx -= bs + ui(2); if(bx < rootx) return;
 			
 			var txt = __txt("Create default Zip");
-			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, .75, .9) == 2)
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, .8) == 2)
 				__test_zip_collection(COLLECTIONS);
-			bx -= bs + ui(4); if(bx < rootx) return;
+			bx -= bs + ui(2); if(bx < rootx) return;
 		}
 	}
 	

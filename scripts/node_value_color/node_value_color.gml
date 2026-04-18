@@ -3,7 +3,7 @@ function nodeValue_Color(_name, _value, _tooltip = "") { return new __NodeValue_
 function __NodeValue_Color(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.color, _value, _tooltip) constructor {
 	preview_hotkey_spr    = THEME.tool_color;
 	
-	/////============== GET =============
+	////- GET
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;

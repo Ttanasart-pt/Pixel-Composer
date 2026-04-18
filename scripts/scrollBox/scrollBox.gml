@@ -137,7 +137,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		open_rx = _rx;
 		open_ry = _ry;
 		
-		var _f = type == 1? f_p0b : font;
+		var _f = type == 1? f_p2 : font;
 		if(horizontal == 2) h = ui(80);
 		
 		data = is_method(data_list)? data_list() : data_list;

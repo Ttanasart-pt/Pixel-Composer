@@ -23,7 +23,7 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(10, nodeValue_Slider(  "Detail Attenuation", .5 ));
 	
 	////- =Render
-	newInput(13, nodeValue_Gradient("Colors",  gra_black_white ));
+	newInput(13, nodeValue_Gradient("Colors",  gra_black_white )).setHotkeyAuto("C");
 	newInput(12, nodeValue_Bool(    "Use Fog", 0               ));
 	// 14
 	

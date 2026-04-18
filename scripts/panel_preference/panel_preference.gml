@@ -576,6 +576,12 @@ function Panel_Preference() : PanelContent() constructor {
 				new checkBox(function() /*=>*/ {return prefToggle("node_add_select")})
 			));
 		
+			ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+				__txt("pref_graph_paste_inline", "Paste node directly inside inline group."),
+				"panel_graph_paste_inline",
+				new checkBox(function() /*=>*/ {return prefToggle("panel_graph_paste_inline")})
+			));
+		
     	ds_list_add(pref_appr, __txt("Preview")); // Preview
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
@@ -1148,7 +1154,6 @@ function Panel_Preference() : PanelContent() constructor {
     				
     				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
     				var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
-    				var _tc = COLORS._main_text_sub;
     				
             		draw_sprite_stretched_ext(THEME.section_separator, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.section_hover : COLORS.section_bg);
                 	if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, padx, _yy, ww - padx * 2, sectH, COLORS.section_selected);
@@ -1164,9 +1169,9 @@ function Panel_Preference() : PanelContent() constructor {
                         }
                     }
                         
-    				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, _tc, 1);    
+    				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, COLORS._main_text_sub, 1);    
     				
-    				draw_set_text(f_p2, fa_left, fa_center, _tc);
+    				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     				draw_text_add(padx + ui(28), _yy + sectH / 2, _name);
     			}
     			
@@ -1974,7 +1979,6 @@ function Panel_Preference() : PanelContent() constructor {
     				
     				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
     				var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
-    				var _tc = COLORS._main_text_sub;
     				
             		draw_sprite_stretched_ext(THEME.section_separator, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.section_hover : COLORS.section_bg);
                 	if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, padx, _yy, ww - padx * 2, sectH, COLORS.section_selected);
@@ -1990,9 +1994,9 @@ function Panel_Preference() : PanelContent() constructor {
                         }
                     }
                     
-    				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, _tc, 1);    
+    				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, COLORS._main_text_sub, 1);    
     				
-    				draw_set_text(f_p2, fa_left, fa_center, _tc);
+    				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     				draw_text_add(padx + ui(28), _yy + sectH / 2, _name);
     			}
     			

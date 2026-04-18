@@ -3293,7 +3293,7 @@ function Panel_Animation_Dopesheet() {
         draw_sprite_stretched_ext( THEME.ui_panel_bg,        1, pd, pd, tool_width, dopesheet_h);
         draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, pd, pd, tool_width, top_frame_height, COLORS._main_icon );
         draw_surface_safe(dopesheet_name_surface, pd, pd + top_frame_height);
-        draw_sprite_stretched_ext( THEME.ui_panel,           1, pd, pd, tool_width, dopesheet_h,      COLORS.panel_frame_inner );
+        // draw_sprite_stretched_ext( THEME.ui_panel,           1, pd, pd, tool_width, dopesheet_h,      COLORS.panel_frame_inner );
         
         draw_sprite_stretched(     THEME.ui_panel_bg, 1, bar_x, pd, bar_w, dopesheet_h );
         draw_surface_safe(dopesheet_surface, bar_x, pd);

@@ -29,7 +29,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- Color
 	
 	newInput(4, nodeValue_Gradient( "Random color", gra_white));
-	newInput(5, nodeValue_Gradient( "Color over length", gra_white));
+	newInput(5, nodeValue_Gradient( "Color over length", gra_white)).setHotkeyAuto("C");
 	
 	//// inputs 11
 	

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc7",
+    "changes": [
+      {
+        "date": "2026-04-18T02:50:44.184Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Pasting nodes while hovering on inline group will add the nodes to the group."
+      }
+    ]
+  }
+]

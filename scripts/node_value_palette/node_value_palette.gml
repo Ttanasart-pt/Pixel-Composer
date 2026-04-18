@@ -1,9 +1,9 @@
 function nodeValue_Palette(_name, _value = array_clone(PROJ_PALETTE), _tooltip = "") { return new __NodeValue_Palette(_name, self, _value, _tooltip); }
 function __NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.color, _value, _tooltip) constructor {
-	
+	preview_hotkey_spr    = THEME.tool_color;
 	setDisplay(VALUE_DISPLAY.palette);
 	
-	/////============== GET =============
+	////- GET
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;
@@ -47,4 +47,14 @@ function __NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_n
 		return res;
 	}
 	
+	////- Draw
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
+		if(active && preview_hotkey && preview_hotkey.isPressing()) {
+			var clr    = getValue();
+			var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
+			dialog.setDefault(clr);
+			dialog.onModify = function(c) /*=>*/ {return setValueInspector(c)};
+		}
+	}
 }

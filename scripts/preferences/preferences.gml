@@ -100,55 +100,56 @@
 	
 	#region PANEL
 	
-		PREFERENCES.panel_layout_file				= "Vertical";
+		PREFERENCES.panel_layout_file                 = "Vertical";
 		
-		PREFERENCES.panel_graph_dragging			= MOD_KEY.alt;
-		PREFERENCES.panel_graph_group_require_shift	= true;
+		PREFERENCES.panel_graph_dragging              = MOD_KEY.alt;
+		PREFERENCES.panel_graph_group_require_shift   = true;
+		PREFERENCES.panel_graph_paste_inline          = true;
 	
-		PREFERENCES.panel_preview_dragging			= MOD_KEY.alt;
-		PREFERENCES.panel_preview_show_real_fps		= false;
-		PREFERENCES.panel_preview_show_tiles        = false;
+		PREFERENCES.panel_preview_dragging            = MOD_KEY.alt;
+		PREFERENCES.panel_preview_show_real_fps       = false;
+		PREFERENCES.panel_preview_show_tiles          = false;
 	
-		PREFERENCES.panel_menu_show_profile		    = true;
-		PREFERENCES.panel_menu_resource_monitor		= false;
-		PREFERENCES.panel_menu_right_control		= os_type != os_macosx;
+		PREFERENCES.panel_menu_show_profile           = true;
+		PREFERENCES.panel_menu_resource_monitor       = false;
+		PREFERENCES.panel_menu_right_control          = os_type != os_macosx;
 	
-		PREFERENCES.panel_menu_palette_node_size    = 20;
+		PREFERENCES.panel_menu_palette_node_size      = 20;
 	
-		PREFERENCES.inspector_focus_on_double_click	= true;
-		PREFERENCES.inspector_view_default			= INSP_VIEW_MODE.compact;
+		PREFERENCES.inspector_focus_on_double_click   = true;
+		PREFERENCES.inspector_view_default            = INSP_VIEW_MODE.compact;
 		
-		PREFERENCES.node_show_render_status			= false;
-		PREFERENCES.node_show_time					= true;
+		PREFERENCES.node_show_render_status           = false;
+		PREFERENCES.node_show_time                    = true;
 		
-		PREFERENCES.expand_hover					= false;
+		PREFERENCES.expand_hover                      = false;
 	
-		PREFERENCES.graph_zoom_smoooth				= 4;
-		PREFERENCES.graph_open_group_in_tab			= false;
+		PREFERENCES.graph_zoom_smoooth                = 4;
+		PREFERENCES.graph_open_group_in_tab           = false;
 		
-		PREFERENCES.collection_animated				= true;
-		PREFERENCES.collection_label				= true;
-		PREFERENCES.collection_name_force_cut       = true;
-		PREFERENCES.collection_preview_speed		= 60;
-		PREFERENCES.collection_scale				= 1;
+		PREFERENCES.collection_animated               = true;
+		PREFERENCES.collection_label                  = true;
+		PREFERENCES.collection_name_force_cut         = true;
+		PREFERENCES.collection_preview_speed          = 60;
+		PREFERENCES.collection_scale                  = 1;
 		
-		PREFERENCES.palette_stretch				    = false;
+		PREFERENCES.palette_stretch                   = false;
 		
-		PREFERENCES.pan_mouse_key					= mb_middle;
-		PREFERENCES.panel_outline_accent			= true;
+		PREFERENCES.pan_mouse_key                     = mb_middle;
+		PREFERENCES.panel_outline_accent              = true;
 		
-		PREFERENCES.panel_animation_separate        = 5;
-		PREFERENCES.panel_animation_frame			= true;
-		PREFERENCES.panel_animation_quan_scale		= false;
-		PREFERENCES.panel_animation_key_override	= true;
+		PREFERENCES.panel_animation_separate          = 5;
+		PREFERENCES.panel_animation_frame             = true;
+		PREFERENCES.panel_animation_quan_scale        = false;
+		PREFERENCES.panel_animation_key_override      = true;
 		
-		PREFERENCES.panel_force_on_escape           = false;
+		PREFERENCES.panel_force_on_escape             = false;
 		
-		PREFERENCES.widget_draw_favourite           = true;
+		PREFERENCES.widget_draw_favourite             = true;
 		
-		PREFERENCES.widget_draw_order               = [ "Reset", "Set Default" ];
-		PREFERENCES.widget_draw_reset               = true;
-		PREFERENCES.widget_draw_default             = true;
+		PREFERENCES.widget_draw_order                 = [ "Reset", "Set Default" ];
+		PREFERENCES.widget_draw_reset                 = true;
+		PREFERENCES.widget_draw_default               = true;
 	#endregion
 	
 	#region WIDGET

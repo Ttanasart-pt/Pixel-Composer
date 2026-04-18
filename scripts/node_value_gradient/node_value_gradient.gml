@@ -1,8 +1,9 @@
 function nodeValue_Gradient(_name, _value, _tooltip = "") { return new __NodeValue_Gradient(_name, self, _value, _tooltip); }
 function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.gradient, _value, _tooltip) constructor {
 	updateOnSet = true;
+	preview_hotkey_spr    = THEME.tool_color;
 	
-	/////============== GET =============
+	////- GET
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;
@@ -57,4 +58,14 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 		}
 	}
 	
+	////- Draw
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
+		if(active && preview_hotkey && preview_hotkey.isPressing()) {
+			var clr    = getValue();
+			var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
+			dialog.setDefault(clr.clone());
+			dialog.onModify = function(c) /*=>*/ {return setValueInspector(c)};
+		}
+	}
 }

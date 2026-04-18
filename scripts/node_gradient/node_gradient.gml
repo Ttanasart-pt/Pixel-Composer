@@ -26,7 +26,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 8, nodeValue_Surface(  "Mask"       ));
 	
 	////- =Gradient
-	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white )).setMappable(15);
+	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white )).setHotkeyAuto("C").setMappable(15);
 	newInput( 5, nodeValue_Slider(   "Shift",    0, [-2,2,.01]   )).setMappable(12);
 	newInput( 9, nodeValue_Slider(   "Scale",    1, [ 0,5,.01]   )).setHotkey("S").setMappable(13);
 	newInput( 7, nodeValue_EButton(  "Loop",     0, [ "None", "Loop", "Pingpong" ] ));

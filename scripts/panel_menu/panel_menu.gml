@@ -558,7 +558,7 @@ function Panel_Menu() : PanelContent() constructor {
             if(hori) {
                 nx0 = _mx + ui(8);
                 ny0 = h / 2;
-                nh  = h - _padd / 2;
+                nh  = h - _padd * 2;
                 
             } else {
                 nx0 = ui(8);

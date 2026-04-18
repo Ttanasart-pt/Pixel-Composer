@@ -4153,7 +4153,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         clipboard_set_text(json_stringify_minify(_map));
     } 
-
+	
     function doPasteSurface() {
     	var s = clipboard_get_surface();
     	if(s == noone) return false;
@@ -4168,13 +4168,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function doPasteNode(_map) {
+    	var _context = getCurrentContext();
+    	
     	ds_map_clear(APPEND_MAP);
         CLONING  = true;
-        var _app = __APPEND_MAP(_map, getCurrentContext(), [], true);
+        var _app = __APPEND_MAP(_map, _context, [], true);
         recordAction(ACTION_TYPE.collection_loaded, array_clone(_app));
         CLONING  = false;
         
         if(_app == noone || array_empty(_app)) return;
+    	if(PREFERENCES.panel_graph_paste_inline && is(frame_hovering, Node_Collection_Inline)) {
+    		for( var i = 0, n = array_length(_app); i < n; i++ )
+				if(_app[i].manual_ungroupable) frame_hovering.addNode(_app[i]);
+    	}
     	
         for( var i = 0, n = array_length(_app); i < n; i++ ) {
             var _sel = _app[i];
@@ -4215,6 +4221,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(is_struct(_map)) { doPasteNode(_map); return; }
         
         var _ext = filename_ext_raw(string_trim(txt, ["\""]));
+        var node = undefined;
         
         switch(_ext) {
         	case "pxc" : 
@@ -4225,13 +4232,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	case "png" : 
         	case "jpg" : 
         		if(file_exists_empty(txt)) { 
-        			Node_create_Image_path(0, 0, txt); 
+        			node = Node_create_Image_path(0, 0, txt); 
         			break; 
         		}
         		
         		var path = $"{TEMPDIR}url_pasted_{seed_random()}.png";
 	            var img  = http_get_file(txt, path);
-	            var node = new Node_Image(0, 0);
+	            node = new Node_Image(0, 0);
 	            node.skipDefault();
 	            
 	            var args = [ node, path ];
@@ -4241,9 +4248,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	
         	case "gif" : 
         		if(file_exists_empty(txt))
-        			Node_create_Image_gif_path(0, 0, txt); 
+        			node = Node_create_Image_gif_path(0, 0, txt); 
     			break; 
         }
+        
+        if(PREFERENCES.panel_graph_paste_inline && is(frame_hovering, Node_Collection_Inline) && is(node, Node))
+        	frame_hovering.addNode(node);
         
     } 
 
