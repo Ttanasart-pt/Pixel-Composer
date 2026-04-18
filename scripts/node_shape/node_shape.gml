@@ -110,7 +110,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18  }, 
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_01_0}, list: global.node_shape_keys_20  }, 
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_04_1}, list: global.node_shape_keys_204 }, 
-		]);
+		]).setTopbar();
 		
 	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitSimple();
 	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]   )).setUnitSimple();

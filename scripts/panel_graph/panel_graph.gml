@@ -457,11 +457,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         toolbar_height    = ui(32);
         toolbar_left      = 0;
         
-        topbar_height  = ui(32);
-        top_scroll     = 0;
-		top_scroll_to  = 0;
-		top_scroll_max = 0;
-		
         function addKeyOverlay(_title, _keys) {
         	if(struct_has(tooltip_overlay, _title)) {
         		array_append(tooltip_overlay[$ _title], _keys);
@@ -639,6 +634,33 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         minimap_drag_sy  = 0;
         minimap_drag_mx  = 0;
         minimap_drag_my  = 0;
+    #endregion
+    
+    #region // ---- topbar ----
+    	topbar_height  = ui(32);
+        top_scroll     = 0;
+		top_scroll_to  = 0;
+		top_scroll_max = 0;
+		
+		topbar_widget_dim = new vectorBox(2, function(v,i) /*=>*/ { 
+			PROJECT.attributes.surface_dimension[i] = v; 
+			PROJECT_ATTRIBUTES.surface_dimension = array_clone(PROJECT.attributes.surface_dimension);
+			RENDER_ALL 
+		}).setFont(f_p3);
+		
+		topbar_buttons = [
+			[ s_attr_interpolate, 
+			  function() /*=>*/ {return $"{__txt("Interpolation")}: {global.SURFACE_INTERPOLATION[PROJECT.attributes.interpolate + 1].name}"}, 
+			  function() /*=>*/ {return bool(PROJECT.attributes.interpolate)}, 
+			  function() /*=>*/ {return PROJECT.setAttribute("interpolate", !PROJECT.attributes.interpolate)} 
+			],
+			[ s_attr_oversample, 
+			  function() /*=>*/ {return $"{__txt("Oversample")}: {global.SURFACE_OVERSAMPLE[PROJECT.attributes.oversample + 1].name}"}, 
+			  function() /*=>*/ {return bool(PROJECT.attributes.oversample)}, 
+			  function() /*=>*/ {return PROJECT.setAttribute("oversample", !bool(PROJECT.attributes.oversample) * 3)} 
+			],
+			
+		];
     #endregion
     
     #region // ---- context frame ----
@@ -2980,15 +3002,46 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
     	draw_sprite_stretched(THEME.toolbar, 1, tx, ty, tw, th);
     	
+    	var _m = [mx,my];
+    	
+    	var pad = ui(4);
+    	var wdw = ui(128);
+    	var wdh = th - pad * 2;
+    	var wdx = tx + tw - pad - wdw;
+    	var wdy = pad;
+    	
+    	var bb  = THEME.button_hide_fill;
+    	var val = PROJECT.attributes.surface_dimension;
+    	topbar_widget_dim.setFocusHover(pFOCUS, pHOVER);
+    	topbar_widget_dim.drawParam(new widgetParam(wdx, wdy, wdw, wdh, val, undefined, _m, x, y).setFont(f_p3));
+    	
+    	var bs = wdh;
+    	for( var i = 0, n = array_length(topbar_buttons); i < n; i++ ) {
+    		var but = topbar_buttons[i];
+    		var spr = but[0];
+    		var tip = but[1]();
+    		var ind = but[2]();
+    		var fn  = but[3];
+    		
+    		wdx -= bs + ui(2);
+    		if(buttonInstant_Pad(bb, wdx, wdy, bs, bs, _m, pHOVER, pFOCUS, tip, spr, ind, COLORS._main_icon, 1, ui(8)) == 2)
+    			fn();
+    	}
+    	
+    	tw = wdx - ui(4);
+    	
+    	var scis = gpu_get_scissor();
+    	gpu_set_scissor(tx, ty, tw, th);
+    	
     	var _side_m = menuItems_gen("graph_topbar_menu");
     	var _pad = ui(4);
 		var _mus = th - _pad * 2;
 		var _mux = top_scroll + _pad;
 		var _muy = ty + _pad;
 		var _ww  = ui(16);
+		var hover = pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th);
 		
 		var _cc  = [COLORS._main_icon, c_white];
-		var _m   = [mx, my];
 		
 		var _spFrm = THEME_VALUE.panel_separation_type == "frame";
 		var _lh    = topbar_height / 2 - ui(8);
@@ -3009,7 +3062,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			var _spr  = _menu.getSpr();
 			if(!sprite_exists(_spr)) _spr = THEME.pxc_hub;
 			
-			if(buttonInstant_Pad(THEME.button_hide_fill, _mux, _muy, _mus, _mus, _m, pHOVER, pFOCUS, _name, _spr, 0, _cc, 1, ui(6)) == 2) {
+			if(buttonInstant_Pad(THEME.button_hide_fill, _mux, _muy, _mus, _mus, _m, hover, pFOCUS, _name, _spr, 0, _cc, 1, ui(6)) == 2) {
 				global.FUNCTION_CALL_EVENT.type = "button";
 				var _res = _menu.toggleFunction();
 				if(is(_res, Node)) selectDragNode(_res, true);
@@ -3018,6 +3071,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			_mux += _mus + ui(2);
 			_ww  += _mus + ui(2);
 		}
+		
+		gpu_set_scissor(scis);
 		
 		top_scroll_max = max(_ww - tw + ui(16), 0);
 		top_scroll = lerp_float(top_scroll, top_scroll_to, 5);

@@ -7,6 +7,8 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 		setDisplay(VALUE_DISPLAY.enum_button, _data);
 	}
 	
+	topbar_editWidget_width = ui(160);
+	
 	/////============== Display =============
 	
 	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_button, { data: _ch }); return self; }

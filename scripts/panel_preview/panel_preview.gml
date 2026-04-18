@@ -1541,7 +1541,9 @@ function Panel_Preview() : PanelContent() constructor {
 	    	var _toolObj = tool_current.getToolObject();
 	    	if(is(_toolObj, canvas_tool_with_selector))
 	    		array_append(settings, _toolObj.tool.settings);
-    	}
+	    		
+    	} else
+    		array_append(settings, _node.topbar_settings);
     	
         tool_x = lerp_float(tool_x, tool_x_to, 5);
         
@@ -1587,22 +1589,24 @@ function Panel_Preview() : PanelContent() constructor {
             var atr  = array_safe_get_fast(sett, 3, {});
             var ttip = array_safe_get_fast(sett, 4, "");
             
+            if(is_callable(wdg)) wdg = wdg();
+            var _val = is_callable(key)? key() : atr[$ key];
+            
             if(is(wdg, checkBox) && (is_numeric(nme) && sprite_exists(nme))) {
             	var cbw = tolh;
-            	var val = atr[$ key];
             	var hov = _hover && point_in_rectangle(mx, my, tolx, 0, tolx + cbw, topbar_height);
             	
             	var spr = THEME.button_def;
-            	var spi = val? 2 : 0;
+            	var spi = _val? 2 : 0;
             	draw_sprite_stretched(spr, spi, tolx, ui(5), cbw, tolh);
-            	draw_sprite_stretched_ext(spr, 3, tolx, ui(5), cbw, tolh, val? COLORS._main_accent : CDEF.main_dark);
+            	draw_sprite_stretched_ext(spr, 3, tolx, ui(5), cbw, tolh, _val? COLORS._main_accent : CDEF.main_dark);
             	
             	if(hov) {
             		draw_sprite_stretched_add(spr, 3, tolx, ui(5), cbw, tolh, COLORS._main_icon, .5);
             		if(mouse_lpress(_focus)) wdg.onClick();
             	}
             	
-            	var cc = val? COLORS._main_accent : COLORS._main_icon_light;
+            	var cc = _val? COLORS._main_accent : COLORS._main_icon_light;
             	var ss = (cbw - ui(8)) / max(sprite_get_width(nme), sprite_get_height(nme));
             	draw_sprite_ext(nme, 0, tolx + cbw / 2, topbar_height / 2, ss, ss, 0, cc);
         		if(hov && ttip != "") TOOLTIP = ttip;
@@ -1637,7 +1641,6 @@ function Panel_Preview() : PanelContent() constructor {
             wdg.setFocusHover(_focus, _hover);
             
             var _font = f_p3;
-            var _val  = atr[$ key];
             draw_set_font(_font);
             
             switch(instanceof(wdg)) {

@@ -391,6 +391,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		isGizmoGlobal   = false;
 		tool_settings	= [];
 		tool_attribute	= {};
+		
+		topbar_settings = [];
 	#endregion
 	
 	#region ---- 3D ----

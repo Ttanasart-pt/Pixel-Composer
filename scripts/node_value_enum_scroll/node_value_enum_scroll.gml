@@ -6,7 +6,8 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		if(!is_struct(_data)) _data = { data: _data };
 		setDisplay(VALUE_DISPLAY.enum_scroll, _data);
 	}
-	
+
+	topbar_editWidget_width = ui(160);
 	clamp_range   = true;
 	choicesAmount = undefined;
 	

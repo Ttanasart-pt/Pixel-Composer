@@ -11,6 +11,11 @@
         "date": "2026-04-18T03:59:15.367Z",
         "node": "Preview Panel",
         "commit": "**Preview Panel**: Fix selection can't be made when not inspecting a node."
+      },
+      {
+        "date": "2026-04-18T05:03:05.087Z",
+        "node": "",
+        "commit": "**Graph Panel**: Add project settings in topbar."
       }
     ]
   },

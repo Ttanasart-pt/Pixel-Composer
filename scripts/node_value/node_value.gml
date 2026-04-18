@@ -358,6 +358,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		preview_hotkey_mx = 0;
 		preview_hotkey_my = 0;
 		
+		topbar_editWidget       = undefined;
+		topbar_editWidget_width = undefined;
+		
 		static setHotkeySpr = function(s) /*=>*/ { preview_hotkey_spr = s; return self; }
 		static setHotkey    = function(k = "", m = MOD_KEY.none) /*=>*/ { 
 			preview_hotkey = new KeyCombination(k,m); 
@@ -372,6 +375,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return self; 
 		}
 		
+		static setTopbar = function(_minWidth = topbar_editWidget_width) /*=>*/ { 
+			topbar_editWidget_width = _minWidth;
+			array_push(node.topbar_settings, [ "", function() /*=>*/ {return getTopbarWidget()}, function() /*=>*/ {return showValue()}, undefined, name ]); 
+			return self; 
+		}
+		
+		static getTopbarWidget = function() /*=>*/ {
+			if(topbar_editWidget != undefined) return topbar_editWidget;
+			topbar_editWidget = getEditWidget().clone();
+			if(topbar_editWidget && topbar_editWidget_width != undefined) 
+				topbar_editWidget.setMinWidth(topbar_editWidget_width);
+			return topbar_editWidget;
+		}
 	#endregion
 	
 	////- META
