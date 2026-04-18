@@ -1035,13 +1035,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     #endregion
     
     #region ++++++++++++++++ Menus +++++++++++++++++
-	    MENUITEM_CONDITIONS[$ "graph_not_select_node"] = function() /*=>*/ {return array_empty(PANEL_GRAPH.nodes_selecting)};
+	    MENUITEM_CONDITIONS[$ "graph_not_select_node"]  = function() /*=>*/ {return array_empty(PANEL_GRAPH.nodes_selecting)};
 	    
-	    MENUITEM_CONDITIONS[$ "graph_select_node"]     = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 0};
-	    MENUITEM_CONDITIONS[$ "graph_select_group"]    = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection)};
-	    MENUITEM_CONDITIONS[$ "graph_select_instance"] = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection) && PANEL_GRAPH.node_hover.instanceBase != undefined};
-    	MENUITEM_CONDITIONS[$ "graph_select_in_group"] = function() /*=>*/ {return PANEL_GRAPH.node_hover.group != noone};
-    	MENUITEM_CONDITIONS[$ "graph_select_multiple"] = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 1};
+	    MENUITEM_CONDITIONS[$ "graph_select_node"]      = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 0};
+	    MENUITEM_CONDITIONS[$ "graph_select_group"]     = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection)};
+	    MENUITEM_CONDITIONS[$ "graph_select_instance"]  = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection) && PANEL_GRAPH.node_hover.instanceBase != undefined};
+    	MENUITEM_CONDITIONS[$ "graph_select_in_group"]  = function() /*=>*/ {return PANEL_GRAPH.node_hover.group != noone};
+    	MENUITEM_CONDITIONS[$ "graph_select_multiple"]  = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 1};
     	
     	MENUITEM_CONDITIONS[$ "graph_context_group"]    = function() /*=>*/ {return is(PANEL_GRAPH.getCurrentContext(), Node_Collection)};
     	MENUITEM_CONDITIONS[$ "graph_context_group_pb"] = function() /*=>*/ {return is(PANEL_GRAPH.getCurrentContext(), Node_Pixel_Builder)};
@@ -1087,17 +1087,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	-1,
 	    	"graph_copy", 
 			"graph_paste",
-			-1,
-			"addnode_edit_pie", 
     	];
     	
 	    global.menuItems_graph_empty = [
 	    	"graph_copy", 
 			"graph_paste", 
-			-1,
-			"addnode_edit_pie", 
     	];
     	
+    	if(global.FLAG.use_pie) {
+    		array_push(global.menuItems_graph_connection_select, -1, "addnode_edit_pie");
+    		array_push(global.menuItems_graph_empty,             -1, "addnode_edit_pie");
+    	}
 	#endregion
     
     ////- Project
@@ -2486,12 +2486,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     
                     else {
                         var _node = target.node;
-                        var _indx = target.index;
+                        var _iArr = _node.inputDisplayList;
+                        var _indx = array_find(_iArr, target);
                         
                         for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
-                        	if(_indx < 0 || _indx > array_length(_node.inputs)) break;
-                        	_node.inputs[_indx].setFrom(value_draggings[i]);
-                        	_indx++;
+                        	if(_indx < 0 || _indx >= array_length(_iArr)) break;
+                        	_iArr[_indx++].setFrom(value_draggings[i]);
                         }
                     }
                 }
@@ -2563,17 +2563,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	var _list = _conn == CONNECT_TYPE.input? _n.inputDisplayList : _n.outputDisplayList;
             
             array_push_unique(value_draggings, value_dragging);
-            
             for (var i = 0, n = array_length(_list); i < n; i++) {
                 var _j = _list[i];
                 if(_j.type == _type) array_push_unique(value_draggings, _j);
             }
+        	array_sort(value_draggings, function(a,b) /*=>*/ {return a.y-b.y});
         	
         } else if(key_mod_press(SHIFT)) {
             array_push_unique(value_draggings, value_dragging);
             
-            if(value_focus) 
-                array_push_unique(value_draggings, value_focus);
+            if(value_focus && !array_exists(value_draggings, value_focus)) {
+                array_push(value_draggings, value_focus);
+                array_sort(value_draggings, function(a,b) /*=>*/ {return a.y-b.y});
+            }
             
             if(mouse_lrelease()) {
                 value_dragging        = noone;

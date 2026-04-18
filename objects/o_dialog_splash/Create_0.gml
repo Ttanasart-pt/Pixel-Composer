@@ -353,8 +353,9 @@ event_inherited();
 					
 					draw_sprite_ext(s_icon_64_white, 0, _sx, _sy, 1, 1, 0, COLORS._main_icon, 1);
 				}
-				
-				if(ghov) draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 1);
+			
+				var cc = ghov? COLORS._main_accent : COLORS.panel_frame;
+				draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, cc);
 			}
 			
 			var tx = _boxx + ui(4);

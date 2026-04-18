@@ -199,5 +199,7 @@ gml_pragma("UnityBuild", "true");
 		keyframe_override	: true,
 		wav_import			: true,
 		ase_import			: false,
+		
+		use_pie : false, 
 	};
 #endregion

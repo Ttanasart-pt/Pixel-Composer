@@ -769,7 +769,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			draw_set_text(font, labelAlign, fa_center, labelColor, .5);
 			gpu_set_texfilter(true);
-			draw_text_add(lbx, lby, placeHolder, .8);
+			draw_text_add(lbx, lby, placeHolder);
 			gpu_set_texfilter(false);
 			draw_set_alpha(1);
 			

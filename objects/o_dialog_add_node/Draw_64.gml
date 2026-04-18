@@ -2,52 +2,54 @@
 if !ready exit;
 
 #region pie menus
-	var _maa = point_direction(dialog_x, dialog_y, mouse_mx, mouse_my);
-	var _mdd = point_distance(dialog_x, dialog_y, mouse_mx, mouse_my);
-
-	if(init_rclick)
-		pie_open = pie_open || mouse_my < dialog_y - ui(16);
+	if(global.FLAG.use_pie) {
+		var _maa = point_direction( dialog_x, dialog_y, mouse_mx, mouse_my );
+		var _mdd = point_distance(  dialog_x, dialog_y, mouse_mx, mouse_my );
 	
-	var _amo = array_length(pie_menus);
-	if(pie_open && _amo > 0) {
-		var _ang = 180 / _amo;
-		var _rad = ui(48);
-		var _mss = _mdd > _rad * 0.5 && _mdd < _rad * 1.5;
+		if(init_rclick)
+			pie_open = pie_open || mouse_my < dialog_y - ui(16);
 		
-		var _psel = undefined;
-		
-		draw_set_color_alpha(COLORS._main_icon_dark, .3 + _mss * .2);
-		draw_donut(dialog_x, dialog_y, _rad * 0.5, _rad * 1.5);
-		draw_set_alpha(1);
-		
-		for( var i = 0; i < _amo; i++ ) {
-			var _aa = 180 - _ang * (i + .5);
+		var _amo = array_length(pie_menus);
+		if(pie_open && _amo > 0) {
+			var _ang = 180 / _amo;
+			var _rad = ui(48);
+			var _mss = _mdd > _rad * 0.5 && _mdd < _rad * 1.5;
 			
-			var _px = dialog_x + lengthdir_x(_rad, _aa);
-			var _py = dialog_y + lengthdir_y(_rad, _aa);
+			var _psel = undefined;
 			
-			var _key = pie_menus[i];
-			var _nod = ALL_NODES[$ _key];
-			if(_nod == undefined) continue;
+			draw_set_color_alpha(COLORS._main_icon_dark, .3 + _mss * .2);
+			draw_donut(dialog_x, dialog_y, _rad * 0.5, _rad * 1.5);
+			draw_set_alpha(1);
 			
-			var _adel = abs(angle_difference(_maa, _aa));
-			var _sel  = _mss && _adel < (_ang / 2);
-			var _selA = _mss? clamp(1 - _adel / (_ang / 2), 0, 1) : 0;
+			for( var i = 0; i < _amo; i++ ) {
+				var _aa = 180 - _ang * (i + .5);
+				
+				var _px = dialog_x + lengthdir_x(_rad, _aa);
+				var _py = dialog_y + lengthdir_y(_rad, _aa);
+				
+				var _key = pie_menus[i];
+				var _nod = ALL_NODES[$ _key];
+				if(_nod == undefined) continue;
+				
+				var _adel = abs(angle_difference(_maa, _aa));
+				var _sel  = _mss && _adel < (_ang / 2);
+				var _selA = _mss? clamp(1 - _adel / (_ang / 2), 0, 1) : 0;
+				
+				var _spr = _nod.spr;
+				var  ss  = ui_raw(.3 + _selA * .2);
+				var  aa  = .5 + _sel  * .5;
+				
+				draw_sprite_ext(_spr, 0, _px, _py, ss, ss, 0, c_white, aa);
+				
+				if(_sel) _psel = _nod;
+			}
 			
-			var _spr = _nod.spr;
-			var  ss  = ui_raw(.3 + _selA * .2);
-			var  aa  = .5 + _sel  * .5;
-			
-			draw_sprite_ext(_spr, 0, _px, _py, ss, ss, 0, c_white, aa);
-			
-			if(_sel) _psel = _nod;
-		}
-		
-		if(mouse_rrelease()) {
-			pie_open = false;
-			if(_psel != undefined) {
-				buildNode(_psel);
-				exit;
+			if(mouse_rrelease()) {
+				pie_open = false;
+				if(_psel != undefined) {
+					buildNode(_psel);
+					exit;
+				}
 			}
 		}
 	}
