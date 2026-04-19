@@ -46,6 +46,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				var k = PANEL_ANIMATION.keyframe_selecting[i];
 				var d = new KeyDriver().build(string_lower(__enum_driver[val].name));
 				
+				recordAction_variable_change(k, "driverObject", k.driverObject, "Setting Driver Type");
 				k.driverObject = d;
 				driver = d;
 			}
@@ -54,100 +55,65 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		var item = __Panel_Linear_Setting_Item;
 		var tNum = textBox_Number;
 		
+		static setValue = function(k,v,it=false) /*=>*/ {
+			for( var i = 0, n = array_length(drivers); i < n; i++ ) {
+				recordAction_variable_change(drivers[i], k, drivers[i][$ k], $"Setting Driver {k}");
+				drivers[i][$ k] = v; 
+			}
+			
+			UNDO_HOLDING = true;
+			if(it) driver.init();
+		}
+		
+		static toggleValue = function(k) /*=>*/ {
+			for( var i = 0, n = array_length(drivers); i < n; i++ ) {
+				recordAction_variable_change(drivers[i], k, drivers[i][$ k], $"Setting Driver {k}");
+				drivers[i][$ k] = !drivers[i][$ k]; 
+			}
+		}
+		
 		driverProp = {
 			KeyDriver_Linear : [
-				new item(  __txt("Speed"),    tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].speed = v; 
-				}), function() /*=>*/ {return driver.speed} ),
+				new item(  __txt("Speed"),    tNum(function(v) /*=>*/ {return setValue("speed", v)}), function() /*=>*/ {return driver.speed} ),
 			],
 			
 			KeyDriver_Wiggle : [
-				new item( __txt("Seed"),      tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].seed = v; 
-				}).setSideButton(button(function() /*=>*/ { randomize(); driver.seed = seed_random(6); })
+				new item( __txt("Seed"),      tNum(function(v) /*=>*/ {return setValue("seed", v)})
+					.setSideButton(button(function() /*=>*/ { randomize(); driver.seed = seed_random(6); })
 						.setTooltip(__txt("Randomize"))
 						.setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad()
 					),
 					function() /*=>*/ {return driver.seed} 
 				),
 				
-				new item( __txt("Sep Axis"),  new checkBox(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].sep_axis = !driver.sep_axis;
-				}), function() /*=>*/ {return driver.sep_axis} ),
-				
-				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].frequency = v; 
-				}), function() /*=>*/ {return driver.frequency} ),
-				
-				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amplitude = v; 
-				}), function() /*=>*/ {return driver.amplitude} ),
-				
-				new item( __txt("Octave"),    tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].octave = round(v); 
-				}), function() /*=>*/ {return driver.octave} ),
-				
-				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].smooth = clamp(v,0,1); 
-				}), function() /*=>*/ {return driver.smooth} ),
+				new item( __txt("Sep Axis"),  new checkBox(function(v) /*=>*/ {return toggleValue("sep_axis")}),  function() /*=>*/ {return driver.sep_axis}  ),
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ {return setValue("frequency", v)}),         function() /*=>*/ {return driver.frequency} ),
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ {return setValue("amplitude", v)}),         function() /*=>*/ {return driver.amplitude} ),
+				new item( __txt("Octave"),    tNum(function(v) /*=>*/ {return setValue("octave", round(v))}),     function() /*=>*/ {return driver.octave}    ),
+				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ {return setValue("smooth", clamp(v,0,1))}), function() /*=>*/ {return driver.smooth}    ),
 			],
 			
 			KeyDriver_Sine   : [
-				new item( __txt("Frequency"), tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].frequency = v;
-				}), function() /*=>*/ {return driver.frequency} ),
-				
-				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amplitude = v;
-				}), function() /*=>*/ {return driver.amplitude} ),
-				
-				new item( __txt("Phase"),     tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].phase     = v;
-				}), function() /*=>*/ {return driver.phase} ),
-				
-				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].smooth = clamp(v,0,1);
-				}), function() /*=>*/ {return driver.smooth} ),
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ {return setValue("frequency", v)}),         function() /*=>*/ {return driver.frequency} ),
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ {return setValue("amplitude", v)}),         function() /*=>*/ {return driver.amplitude} ),
+				new item( __txt("Phase"),     tNum(function(v) /*=>*/ {return setValue("phase", v)}),             function() /*=>*/ {return driver.phase}     ),
+				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ {return setValue("smooth", clamp(v,0,1))}), function() /*=>*/ {return driver.smooth}    ),
 			],
 			
 			KeyDriver_Snap   : [
-				new item( __txt("Snap"), tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].snapSize = v; 
-				}), function() /*=>*/ {return driver.snapSize}  ),
+				new item( __txt("Snap"),      tNum(function(v) /*=>*/ {return setValue("snapSize", v)}),          function() /*=>*/ {return driver.snapSize}  ),
 			],
 			
 			KeyDriver_Bounce : [
-				new item( __txt("Amount"),  tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amount = round(v); 
-					driver.init(); 
-				}), function() /*=>*/ {return driver.amount}     ),
-				
-				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amplitude = v;     
-					driver.init(); 
-				}), function() /*=>*/ {return driver.amplitude}  ),
-				
-				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].steepness = v;     
-					driver.init(); 
-				}), function() /*=>*/ {return driver.steepness}  ),
+				new item( __txt("Amount"),    tNum(function(v) /*=>*/ {return setValue("amount", round(v), 1)}),  function() /*=>*/ {return driver.amount}    ),
+				new item( __txt("Spacing"),   tNum(function(v) /*=>*/ {return setValue("amplitude", v, 1)}),      function() /*=>*/ {return driver.amplitude} ),
+				new item( __txt("Curve"),     tNum(function(v) /*=>*/ {return setValue("steepness", v, 1)}),      function() /*=>*/ {return driver.steepness} ),
 			],
 			
 			KeyDriver_Elastic : [
-				new item( __txt("Amount"),  tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amount = round(v); 
-					driver.init(); 
-				}), function() /*=>*/ {return driver.amount}     ),
-				
-				new item( __txt("Spacing"), tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].amplitude = v;     
-					driver.init(); 
-				}), function() /*=>*/ {return driver.amplitude}  ),
-				
-				new item( __txt("Curve"),   tNum(function(v) /*=>*/ { 
-					for( var i = 0, n = array_length(drivers); i < n; i++ ) drivers[i].steepness = v;     
-					driver.init(); 
-				}), function() /*=>*/ {return driver.steepness}  ),
+				new item( __txt("Amount"),    tNum(function(v) /*=>*/ {return setValue("amount", round(v), 1)}),  function() /*=>*/ {return driver.amount}    ),
+				new item( __txt("Spacing"),   tNum(function(v) /*=>*/ {return setValue("amplitude", v, 1)}),      function() /*=>*/ {return driver.amplitude} ),
+				new item( __txt("Curve"),     tNum(function(v) /*=>*/ {return setValue("steepness", v, 1)}),      function() /*=>*/ {return driver.steepness} ),
 			],
 		}
 		
