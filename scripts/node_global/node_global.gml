@@ -29,12 +29,17 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static valueRename = function(_val, _name) {
-		if(!string_variable_valid(s)) { 
+		if(!is(_val, NodeValue)) return false;
+		
+		if(!string_variable_valid(_name)) { 
 			noti_warning("Invalid globalvar name."); 
 			return false; 
 		}
 			
-		if(getInputKey(s) != noone) { noti_warning("Duplicate globalvar name."); return false; }
+		if(getInputKey(_name) != noone) { 
+			noti_warning("Duplicate globalvar name."); 
+			return false;
+		}
 		
 		_val.name = _name;
 		RENDER_ALL

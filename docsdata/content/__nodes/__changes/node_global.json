@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc7",
+    "changes": [
+      {
+        "date": "2026-04-19T01:34:01.030Z",
+        "node": "Globalvar",
+        "commit": "**Globalvar**: Fix crash on rename."
+      }
+    ]
+  }
+]
