@@ -218,6 +218,8 @@ function string_partial_match_res(str, key, _arr = [0,0]) {
 		runm++
 	}
 	
+	if(_matchw > -9999) _matchw -= lenn - runn; // ++ Panalty for leftover unmatched string
+	
 	_arr[0] = _matchw;
 	_arr[1] = _matRng;
 	return _arr;

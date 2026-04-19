@@ -6,6 +6,11 @@
         "date": "2026-04-18T05:03:05.087Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Add project settings in topbar."
+      },
+      {
+        "date": "2026-04-19T04:19:19.809Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Add shift+ctrl when using quick connect to allow overriding already connected junction."
       }
     ]
   },

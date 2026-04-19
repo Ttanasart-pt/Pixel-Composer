@@ -751,8 +751,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = _shft, n = array_length(inputs); i < n; i++ ) {
 			var _inp = inputs[i];
 			
-			if(!_inp.isVisible()) continue;
-			if(_inp.value_from != noone) continue;
+			if(!_inp.isVisible())                  continue;
+			if(!_over && _inp.value_from != noone) continue;
 			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
 			
 			var _ddy = abs(_inp.y - _y);

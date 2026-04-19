@@ -9,7 +9,7 @@ event_inherited();
 	selecting = 0;
 	
 	text_pad = ui(8);
-	item_pad = ui(6);
+	item_pad = ui(4);
 	
 	dialog_w  = ui(480);
 	dialog_h  = ui(32) + line_get_height(f_p2, item_pad);
@@ -54,8 +54,8 @@ event_inherited();
 				}
 			}
 			
-			var _name = _menu[$ "comName"] ?? _menu.name;
-			var _fname = $"{string_lower(_cnxt)} {string_lower(_name)}"
+			var _name  = _menu[$ "comName"] ?? _menu.name;
+			var _fname = _cnxt == "_"? string_lower(_name) : $"{string_lower(_cnxt)} {string_lower(_name)}"
 			
 			var match = string_partial_match_res(_fname, search_lower)[0];
 			if(match == -9999) continue;
