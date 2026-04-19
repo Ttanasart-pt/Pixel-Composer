@@ -73,7 +73,6 @@ function Panel_Collection() : PanelContent() constructor {
 			
 		grid_size     = ui(52);
 		grid_size_to  = grid_size;
-		
 	#endregion
 	
 	#region search
@@ -987,6 +986,13 @@ function Panel_Collection() : PanelContent() constructor {
 				refreshContext();
 			bx -= bs + ui(2); if(bx < rootx) return;
 		}
+		
+		var txt = __txt("Animated Preview");
+		var spr = THEME.sequence_control;
+		var ind = PREFERENCES.collection_animated;
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, spr, ind, COLORS._main_icon, 1, ui(6)) == 2)
+			PREFERENCES.collection_animated = !PREFERENCES.collection_animated;
+		bx -= bs + ui(2); if(bx < rootx) return;
 		
 		var txt = __txt("Settings");
 		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon) == 2)

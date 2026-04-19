@@ -91,7 +91,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x_max = 0;
 	frame_dragging       = noone;
 	frame_selecting      = noone;
-	input_dimension      = true;
+	use_external_dimension = false;
 	
 	menu_frame = [
 		menuItem(__txt("Duplicate"), function() /*=>*/ { 
@@ -925,22 +925,21 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Frames
 	
-	static setFrame = function(frame) {
+	static setFrame = function(frame) /*=>*/ {
 		var _anim  = getInputData(12);
 		var _autof = getInputData( 5);
 		if(_anim == 1 && _autof) PROJECT.animator.setFrame(frame);
 		
 		preview_index = frame;
 	}
-	
-	static addFrame = function(_focus = true) {
+	static addFrame = function(_focus = true) /*=>*/ {
 		if(_focus) setFrame(attributes.frames);
 		attributes.frames++;
 		refreshFrames();
 		update();
 	}
 	
-	static removeFrame = function(index = 0) {
+	static removeFrame   = function(index = 0) /*=>*/ {
 		if(attributes.frames <= 1) {
 			surface_clear(canvas_surface[0]);
 			buffer_delete(canvas_buffer[0]);
@@ -959,8 +958,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		array_delete(canvas_buffer,  index, 1);
 		update();
 	}
-	
-	static refreshFrames = function(clear = false) {
+	static refreshFrames = function(clear = false) /*=>*/ {
 		if(clear) {
 			surface_array_free(canvas_surface);
 			canvas_surface = [];
@@ -991,15 +989,40 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	} refreshFrames();
 	
+	static resizeFrame   = function(index = 0) /*=>*/ {
+		var _dim    = attributes.dimension;
+		var _canvas = array_safe_get_fast(canvas_surface, index, -1);
+		var _resize = _canvas;
+		
+		if(!surface_exists(_canvas))
+			_resize = surface_create(_dim[0], _dim[1]);
+		else {
+			var _sw = surface_get_width(_canvas);
+			var _sh = surface_get_height(_canvas);
+			
+			if(_sw != _dim[0] || _sh != _dim[1]) {
+				_resize = surface_create(_dim[0], _dim[1]);
+				surface_set_shader(_resize, noone, true, BLEND.over);
+					draw_surface(_canvas, 0, 0);
+				surface_reset_shader();
+				surface_free(_canvas);
+			}
+		}
+		
+		canvas_surface[index] = _resize;
+		surface_store_buffer(index);
+	}
+	static resizeFrames  = function() /*=>*/ { for( var i = 0; i < attributes.frames; i++ ) resizeFrame(i); }
+	
 	////- Surfaces
 	
-	static getCanvasSurface = function(i = preview_index) { INLINE return array_safe_get_fast(canvas_surface, i); }
-	static getOutputSurface = function(i = preview_index) { INLINE return array_safe_get_fast(output_surface, i); }
+	static getCanvasSurface = function(i = preview_index) /*=>*/ {return array_safe_get_fast(canvas_surface, i)};
+	static getOutputSurface = function(i = preview_index) /*=>*/ {return array_safe_get_fast(output_surface, i)};
 	
-	static setCanvasSurface = function(surface, index = preview_index) { canvas_surface[index] = surface; }
+	static setCanvasSurface = function(surface, index = preview_index) /*=>*/ { canvas_surface[index] = surface; }
 	
-	static apply_surfaces = function() { for( var i = 0; i < attributes.frames; i++ ) apply_surface(i); }
-	static apply_surface  = function(index = preview_index) {
+	static apply_surfaces = function() /*=>*/ { for( var i = 0; i < attributes.frames; i++ ) apply_surface(i); }
+	static apply_surface  = function(index = preview_index) /*=>*/  {
 		var _dim = attributes.dimension;
 		var cDep = attrDepth();
 		
@@ -1033,8 +1056,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		surface_clear(drawing_surface);
 	}
 	
-	static surface_store_buffers = function(index = preview_index) { for( var i = 0; i < attributes.frames; i++ ) surface_store_buffer(i); }
-	static surface_store_buffer  = function(index = preview_index) {
+	static surface_store_buffers = function(index = preview_index) /*=>*/ { for( var i = 0; i < attributes.frames; i++ ) surface_store_buffer(i); }
+	static surface_store_buffer  = function(index = preview_index) /*=>*/ {
 		if(index >= attributes.frames) return;
 		
 		var _cbuff = array_safe_get_fast(canvas_buffer, index, -1);
@@ -1052,7 +1075,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		apply_surface(index);
 	}
 	
-	static apply_draw_surface = function(_applyAlpha = true) {
+	static apply_draw_surface = function(_applyAlpha = true) /*=>*/ {
 		var _can = getCanvasSurface();
 		var _drw = drawing_surface;
 		var _dim = attributes.dimension;
@@ -1148,7 +1171,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	}
 	
-	static storeAction = function(_title = "Modify canvas") {
+	static storeAction = function(_title = "Modify canvas") /*=>*/ {
 		if(selection.is_selected) {
 			recordAction(ACTION_TYPE.custom, function(data) /*=>*/ { 
 				// if(selection.is_selected) selection.apply();
@@ -1684,22 +1707,29 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region dimension
-			attributes.useBGDim  = false;
+			attributes.useBGDim = false;
+			var currDim = [ 
+				attributes.dimension[0],
+				attributes.dimension[1]
+			];
 			
 			if(_bgTyp == 0 && _bgDim) {
-				var _bgDim = _bgSrf;
-				if(is_array(_bgDim) && !array_empty(_bgDim)) _bgDim = _bgSrf[0];
-				if(is_surface(_bgDim)) {
+				var _bgSrfRef = _bgSrf;
+				
+				if(array_valid(_bgSrfRef)) _bgSrfRef = _bgSrf[0];
+				if(is_surface(_bgSrfRef)) {
 					attributes.useBGDim = true;
-					_dim = surface_get_dimension(_bgDim);
+					_dim = surface_get_dimension(_bgSrfRef);
 				}
 			}
 			
-			inputs[0].setVisible(input_dimension);
-			if(input_dimension) 
-				attributes.dimension = _dim;
-			else 
-				_dim = attributes.dimension;
+			inputs[0].setVisible(!use_external_dimension);
+			if(use_external_dimension) 
+				 _dim = attributes.dimension;
+			else attributes.dimension = _dim;
+			
+			if(attributes.dimension[0] != currDim[0] || attributes.dimension[1] != currDim[1])
+				resizeFrames();
 		#endregion
 		
 		#region surface

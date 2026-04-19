@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc7",
+    "changes": [
+      {
+        "date": "2026-04-19T01:08:53.542Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Fix dimension change not apply immediately."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc6",
     "changes": [
       {

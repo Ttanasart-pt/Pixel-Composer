@@ -317,8 +317,8 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		
 		var _dim = inputs[0].getValue();
 		for (var i = 0, n = array_length(canvases); i < n; i++) {
-			canvases[i].input_dimension      = false;
-			canvases[i].attributes.dimension = _dim;
+			canvases[i].use_external_dimension = true;
+			canvases[i].attributes.dimension   = _dim;
 		}
 	}
 	
