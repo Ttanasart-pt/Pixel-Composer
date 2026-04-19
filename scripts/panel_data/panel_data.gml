@@ -639,6 +639,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _tby = _top? tby : tby + ppad;
 				var _tbw = tbw;
 				var _tbh = tbh - ppad;
+				var _tbc = _tby + _tbh / 2;
 				
 				var _hov = point_in_rectangle(msx, msy, _tbx, _tby, _tbx + _tbw, tab_size);
 				
@@ -695,10 +696,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var cc =  foc? COLORS.panel_tab_icon : COLORS._main_text_sub;
 				var tc = _top? tab_size / 2 - ui(1) : tab_size / 2 + ui(2);
 				
-				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), tc + ui(1), 1, 1, 0, cc, aa);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), _tbc, 1, 1, 0, cc, aa);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tc + ui(1), 1, 1, 0, cc); 
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), _tbc, 1, 1, 0, cc); 
 					_tbx += ui(20);
 				}
 				
@@ -725,13 +726,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _tby = _top? tby : tby + ppad;
 				var _tbw = tbw - ppad;
 				var _tbh = tbh - ppad;
+				var _tbc = _tby + _tbh / 2;
 				var  tc  = _top? tab_size / 2 - ui(1) : tab_size / 2 + ui(2);
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1);
-				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), tc + 1, 1, 1, 0, COLORS.panel_tab_icon);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), _tbc, 1, 1, 0, COLORS.panel_tab_icon);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tc + 1, 1, 1, 0, COLORS.panel_tab_icon);
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), _tbc, 1, 1, 0, COLORS.panel_tab_icon);
 					_tbx += ui(20);
 				}
 				
@@ -824,6 +826,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _tby = cont.tab_x;
 				var _tbw = tbs - ppad;
 				var _tbh = tbw;
+				var _tbc = _tbx + _tbw / 2;
 				
 				var _hov = hover && point_in_rectangle(msx, msy, _tbx, _tby, _tbx + _tbw, _tby + _tbh);
 				
@@ -879,10 +882,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var cc =  foc?  COLORS.panel_tab_icon : COLORS._main_text_sub;
 				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
 				
-				draw_sprite_ui(THEME.tab_exit, 0, tc - !_left, _tby + _tbh - ui(12), 1, 1, 0, cc, aa);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbc, _tby + _tbh - ui(12), 1, 1, 0, cc, aa);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, tc - !_left, _tby + ui(8 + 8), 1, 1, 0, cc);
+					draw_sprite_ui(icn, 0, _tbc, _tby + ui(8 + 8), 1, 1, 0, cc);
 					_tby += ui(20);
 				}
 				
@@ -909,15 +912,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _tby = tab_holding.tab_x;
 				var _tbw = tbs - ppad;
 				var _tbh = tbw;
+				var _tbc = _tbx + _tbw / 2;
 				
 				var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 2, _tbx, _tby, _tbw, _tbh, cc, 1);
-				draw_sprite_ui(THEME.tab_exit, 0, tc - !_left, _tby + _tbh - ui(12), 1, 1, 0, COLORS.panel_tab_icon);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbc, _tby + _tbh - ui(12), 1, 1, 0, COLORS.panel_tab_icon);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, tc - !_left, _tby + ui(8 + 8), 1, 1, 0, COLORS._main_text_sub);
+					draw_sprite_ui(icn, 0, _tbc, _tby + ui(8 + 8), 1, 1, 0, COLORS._main_text_sub);
 					_tby += ui(20);
 				}
 				

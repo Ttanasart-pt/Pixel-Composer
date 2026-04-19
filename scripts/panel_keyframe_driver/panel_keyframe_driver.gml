@@ -1,7 +1,7 @@
 function Panel_Keyframe_Driver() : PanelContent() constructor {
-	title = __txt("driver_settings", "Driver Settings");
-	w     = ui(300);
-	h     = ui(240);
+	title    = __txt("Driver");
+	w        = ui(300);
+	h        = ui(240);
 	auto_pin = true;
 	padding  = ui(8);
 	project  = undefined;
