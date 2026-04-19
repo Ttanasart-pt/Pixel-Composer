@@ -12,7 +12,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput(18, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
 	
 	////- =Repeat
-	newInput(19, nodeValue_Enum_Scroll( "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
+	newInput(19, nodeValue_EScroll(     "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
 	newInput( 1, nodeValue_Int(         "Amounts",      1 ));
 	newInput(20, nodeValue_IVec3(       "Grid",         [2,2,1] ));
 	newInput(21, nodeValue_Float(       "Radius",       1       ));
@@ -86,8 +86,8 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			var _sta_sca = _data[18];
 			
 			var _patt    = _data[19];
-			var _amo     = _data[ 1];
-			var _grid    = _data[20];
+			var _amo     = _data[ 1]; 
+			var _grid    = _data[20]; 
 			var _radius  = _data[21];
 			var _lok_cen = _data[22];
 			
@@ -125,6 +125,11 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			
 			inputs[21].setVisible(_patt == 2);
 			inputs[22].setVisible(_patt == 2);
+			
+			_amo     = round(_amo);
+			_grid[0] = round(_grid[0]);
+			_grid[1] = round(_grid[1]);
+			_grid[2] = round(_grid[2]);
 		#endregion
 			
 		#region base instancer
