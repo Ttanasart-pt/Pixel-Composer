@@ -46,6 +46,14 @@ event_inherited();
 			var _menu = FUNCTIONS[$ k];
 			
 			var _cnxt = _menu.context;
+			if(_cnxt == "_") { // fitler node context
+				var _nname = _menu.name;
+				if(has(ALL_NODES, _nname)) {
+					var _ndat = ALL_NODES[$ _nname];
+					if(!_ndat.show_in_recent) continue;
+				}
+			}
+			
 			var _name = _menu[$ "comName"] ?? _menu.name;
 			var _fname = $"{string_lower(_cnxt)} {string_lower(_name)}"
 			
