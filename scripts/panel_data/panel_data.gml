@@ -598,7 +598,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var _len  = array_length(content);
 		var ppad  = ui(THEME_VALUE.panel_tab_padding);
-		var expd  = THEME_VALUE.panel_tab_expands;
+		var expd  = PREFERENCES.panel_tab_expands;
 		var expw  = (w - ppad * (_len + 1)) / _len;
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
@@ -782,7 +782,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var _len  = array_length(content);
 		var ppad  = ui(THEME_VALUE.panel_tab_padding);
-		var expd  = THEME_VALUE.panel_tab_expands;
+		var expd  = PREFERENCES.panel_tab_expands;
 		var expw  = (h - ppad * (_len + 1)) / _len;
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);

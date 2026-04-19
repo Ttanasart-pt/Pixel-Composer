@@ -764,6 +764,7 @@ function Panel_Preference() : PanelContent() constructor {
     	
     	cb_load_unpack  = new checkBox(function() /*=>*/ {return prefToggle("theme_load_unpack")});
     	cb_accent_panel = new checkBox(function() /*=>*/ {return prefToggle("panel_outline_accent")});
+    	cb_tab_expands  = new checkBox(function() /*=>*/ {return prefToggle("panel_tab_expands")});
     	sb_bool_style   = new scrollBox([ "Slider", "Checkbox" ], function(i) /*=>*/ {return prefSet("theme_boolean", i)});
     	
     	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
@@ -883,42 +884,36 @@ function Panel_Preference() : PanelContent() constructor {
     			draw_text_add(ww - ui(16), _yy, _d);
     		}
     		
-    		_y += _mh + ui(8 + 4);
-    		hh += _mh + ui(8 + 4);
+    		_y += _mh + ui(8+4);
+    		hh += _mh + ui(8+4);
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(ui(8), _y + _h / 2, __txt("pref_theme_unpack", "Load unpacked"));
-    		
     		cb_load_unpack.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_load_unpack));
-    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
-    			PREFERENCES.theme_load_unpack = true;
-    			should_restart = true; 
-    			PREF_SAVE();
-    		}
-    		_y += _h + ui(8);
-    		hh += _h + ui(8);
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2)
+    			prefSet("theme_load_unpack", true, true);
+    		_y += _h + ui(8); hh += _h + ui(8);
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(ui(8), _y + _h / 2, __txt("pref_theme_bool", "Boolean Style"));
-    		
     		sb_bool_style.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_boolean));
-    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
-    			PREFERENCES.theme_boolean = 0;
-    			PREF_SAVE();
-    		}
-    		_y += _h + ui(8);
-    		hh += _h + ui(8);
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2)
+    			prefSet("theme_boolean", 0);
+    		_y += _h + ui(8); hh += _h + ui(8);
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(ui(8), _y + _h / 2, __txt("pref_theme_panel_border_accent", "Accent panel border"));
-    		
     		cb_accent_panel.drawParam(_wpar.setY(_y).setData(PREFERENCES.panel_outline_accent));
-    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
-    			PREFERENCES.panel_outline_accent = true;
-    			PREF_SAVE();
-    		}
-    		_y += _h + ui(8);
-    		hh += _h + ui(8);
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2)
+    			prefSet("panel_outline_accent", true);
+    		_y += _h + ui(8); hh += _h + ui(8);
+    		
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(ui(8), _y + _h / 2, __txt("pref_theme_tab_expands", "Expands Tabs"));
+    		cb_tab_expands.drawParam(_wpar.setY(_y).setData(PREFERENCES.panel_tab_expands));
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2)
+    			prefSet("panel_tab_expands", false);
+    		_y += _h + ui(8); hh += _h + ui(8);
     		
     		return hh;
     	});

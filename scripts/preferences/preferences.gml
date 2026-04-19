@@ -23,6 +23,7 @@
 		PREFERENCES.theme_override					= "override";
 		PREFERENCES.theme_load_unpack				= true;
 		PREFERENCES.theme_boolean                   = 0;
+		PREFERENCES.panel_tab_expands               = false;
 		
 		PREFERENCES.local							= "en";
 		PREFERENCES.font_overwrite					= "";
