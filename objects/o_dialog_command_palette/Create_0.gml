@@ -55,9 +55,27 @@ event_inherited();
 			ds_priority_add(pr_list, _menu, match);
 		}
 		
+		for( var i = 0, n = array_length(PROJECT.allNodes); i < n; i++ ) {
+			var _node  = PROJECT.allNodes[i];
+			var _fname = _node.getDisplayName();
+			
+			var match = string_partial_match_res(string_lower(_fname), search_lower)[0];
+			if(match == -9999) continue;
+			
+			var _menu = {
+				context : "Select Node", 
+				name    : _node.getFullName(),
+				spr     : noone,
+				menu    : noone,
+				node    : _node,
+				action  : function(n) /*=>*/ {return panelFocusNode(n)},
+			}
+			
+			ds_priority_add(pr_list, _menu, match + 100);
+		}
+		
 		repeat(ds_priority_size(pr_list))
 			array_push(data, ds_priority_delete_max(pr_list));
-		
 		ds_priority_destroy(pr_list);
 		
 		var hght = line_get_height(f_p2, item_pad);
@@ -106,7 +124,9 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 			
 			if(sc_content.active) {
 				if((!keyboard_trigger && mouse_lpress()) || (hk_editing == noone && KEYBOARD_ENTER)) {
-					_menu.action();
+					if(_menu.context == "Select Node") 
+					     _menu.action(_menu.node);
+					else _menu.action();
 					
 					array_push(RECENT_COMMANDS, _menu);
 					instance_destroy();
@@ -168,9 +188,7 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_icon_light);
 		draw_text_match_ext(_tx, _ty, _name, _dw, search_string);
 		
-		var _spr = _menu.spr;
-		if(_menuItem != noone) _spr = _menuItem.spr;
-			
+		var _spr = _menuItem != noone? _menuItem.spr : _menu.spr;
 		if(_spr != noone) {
 			var spr = is_array(_spr)? _spr[0] : _spr;
 			var ind = is_array(_spr)? _spr[1] : 0;

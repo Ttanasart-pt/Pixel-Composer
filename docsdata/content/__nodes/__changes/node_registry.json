@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc7",
+    "changes": [
+      {
+        "date": "2026-04-19T04:02:31.772Z",
+        "node": "Command Palette",
+        "commit": "**Command Palette**: Add search for current nodes."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc6",
     "changes": [
       {

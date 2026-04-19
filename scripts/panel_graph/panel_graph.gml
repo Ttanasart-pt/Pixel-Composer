@@ -648,14 +648,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			RENDER_ALL 
 		}).setFont(f_p3);
 		
+		topbar_int = new tooltipSelector(__txt("Interpolation"), [ __txt("Pixel"), __txt("Bilinear")  ]);
+		topbar_ovr = new tooltipSelector(__txt("Oversample"),    [ __txt("Empty"), __txt("Repeat XY") ]);
+		
 		topbar_buttons = [
 			[ s_attr_interpolate, 
-			  function() /*=>*/ {return $"{__txt("Interpolation")}: {global.SURFACE_INTERPOLATION[PROJECT.attributes.interpolate + 1].name}"}, 
+			  topbar_int, 
 			  function() /*=>*/ {return bool(PROJECT.attributes.interpolate)}, 
 			  function() /*=>*/ {return PROJECT.setAttribute("interpolate", !PROJECT.attributes.interpolate)} 
 			],
 			[ s_attr_oversample, 
-			  function() /*=>*/ {return $"{__txt("Oversample")}: {global.SURFACE_OVERSAMPLE[PROJECT.attributes.oversample + 1].name}"}, 
+			  topbar_ovr, 
 			  function() /*=>*/ {return bool(PROJECT.attributes.oversample)}, 
 			  function() /*=>*/ {return PROJECT.setAttribute("oversample", !bool(PROJECT.attributes.oversample) * 3)} 
 			],
@@ -3024,10 +3027,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	for( var i = 0, n = array_length(topbar_buttons); i < n; i++ ) {
     		var but = topbar_buttons[i];
     		var spr = but[0];
-    		var tip = but[1]();
+    		var tip = but[1];
     		var ind = but[2]();
     		var fn  = but[3];
     		
+    		tip.index = ind;
     		wdx -= bs + ui(2);
     		if(buttonInstant_Pad(bb, wdx, wdy, bs, bs, _m, pHOVER, pFOCUS, tip, spr, ind, COLORS._main_icon, 1, ui(8)) == 2)
     			fn();

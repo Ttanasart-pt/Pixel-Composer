@@ -161,7 +161,7 @@
         "panel_tab_hover": "white",
         "panel_tab_inactive": "white",
         "panel_tab_text": "main_white",
-        "panel_tab_icon": "main_dkblack",
+        "panel_tab_icon": "main_white",
         "panel_separator": "main_ltgrey",
 
         "panel_graph_bg": "main_dkblack",

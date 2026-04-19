@@ -638,6 +638,8 @@ function nodeDestroy(_node, _merge = false) { _node.destroy(_merge); }
 
 function panelFocusNode(_node = noone) {
 	PANEL_GRAPH.nodes_selecting = _node == noone? [] : [ _node ];
+	PANEL_GRAPH.refreshDraw();
+	
 	PANEL_PREVIEW.setNodePreview(_node);
 	PANEL_INSPECTOR.setInspecting(_node);
 }

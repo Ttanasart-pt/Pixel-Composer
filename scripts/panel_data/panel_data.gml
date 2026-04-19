@@ -602,6 +602,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var expw  = (w - ppad * (_len + 1)) / _len;
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
+		if(expd) {
+			tab_x     = 0;
+			tab_x_to  = 0;
+			tab_width = 0;
+		}
 		
 		surface_set_target(tab_surface);
 			DRAW_CLEAR
@@ -695,7 +700,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				var cc =  foc? COLORS.panel_tab_icon : COLORS._main_text_sub;
 				var tc = _top? tab_size / 2 - ui(1) : tab_size / 2 + ui(2);
-				
 				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), _tbc, 1, 1, 0, cc, aa);
 				
 				if(icn != noone) {
@@ -730,7 +734,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var  tc  = _top? tab_size / 2 - ui(1) : tab_size / 2 + ui(2);
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1);
-				// draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), _tbc, 1, 1, 0, COLORS.panel_tab_icon);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), _tbc, 1, 1, 0, COLORS.panel_tab_icon);
 				
 				if(icn != noone) {
 					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), _tbc, 1, 1, 0, COLORS.panel_tab_icon);
@@ -786,6 +790,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var expw  = (h - ppad * (_len + 1)) / _len;
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
+		if(expd) {
+			tab_x     = 0;
+			tab_x_to  = 0;
+			tab_width = 0;
+		}
 		
 		surface_set_target(tab_surface);
 			DRAW_CLEAR
@@ -881,7 +890,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				var cc =  foc?  COLORS.panel_tab_icon : COLORS._main_text_sub;
 				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
-				
 				draw_sprite_ui(THEME.tab_exit, 0, _tbc, _tby + _tbh - ui(12), 1, 1, 0, cc, aa);
 				
 				if(icn != noone) {
@@ -918,7 +926,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 2, _tbx, _tby, _tbw, _tbh, cc, 1);
-				// draw_sprite_ui(THEME.tab_exit, 0, _tbc, _tby + _tbh - ui(12), 1, 1, 0, COLORS.panel_tab_icon);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbc, _tby + _tbh - ui(12), 1, 1, 0, COLORS.panel_tab_icon);
 				
 				if(icn != noone) {
 					draw_sprite_ui(icn, 0, _tbc, _tby + ui(8 + 8), 1, 1, 0, COLORS._main_text_sub);
