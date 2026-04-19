@@ -990,8 +990,10 @@ function Panel_Collection() : PanelContent() constructor {
 		var txt = __txt("Animated Preview");
 		var spr = THEME.sequence_control;
 		var ind = PREFERENCES.collection_animated;
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, spr, ind, COLORS._main_icon, 1, ui(6)) == 2)
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, spr, ind, COLORS._main_icon, 1, ui(6)) == 2) {
 			PREFERENCES.collection_animated = !PREFERENCES.collection_animated;
+			PREF_SAVE();
+		}
 		bx -= bs + ui(2); if(bx < rootx) return;
 		
 		var txt = __txt("Settings");

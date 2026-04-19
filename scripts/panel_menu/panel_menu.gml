@@ -792,6 +792,8 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 draw_sprite_stretched_add(THEME.box_r2, 1, _stx, _sty, _sts, _sts, c_white, .35 + _hv * .25);
                 if(_hv) {
+                	_draggable = false;
+                	
                     if(ACCOUNT_ID == undefined) {
                         TOOLTIP = __txt("Online Accounts");
                         
