@@ -1,4 +1,4 @@
-#region
+#region global
 	FN_NODE_CONTEXT_INVOKE {
 		addHotkey("Node_Text", "Output Dimension > Toggle", "D", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
 	});
@@ -563,7 +563,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			__wave_shape =  _waveH;
 		#endregion
 		
-		surface_set_shader(_outSurf, noone, true, BLEND.alpha);
+		surface_set_shader(_outSurf, noone, true, BLEND.alphamulp);
 		if(_ubg) {
 			draw_clear(_bgc);
 			BLEND_ALPHA_MULP
@@ -586,150 +586,153 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		__dwData   = array_create(string_length(str));
 		__dwDataI  = 0;
 		
-		if(_use_path) {
-			var _pthl = _path.getLength(0);
-			
-			switch(_vali) {
-				case 0 : va = fa_top;    ty = 0;                                    break;
-				case 1 : va = fa_center; ty = (_max_hh - line_get_height(__f)) / 2; break;
-				case 2 : va = fa_top;    ty =  _max_hh;                             break;
-			}
-			
-			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
-				var _str_line   = _str_lines[i];
-				var _line_width = _line_widths[i];
+		#region draw
+			if(_use_path) {
+				var _pthl = _path.getLength(0);
 				
-				draw_set_text(__f, fa_left, va, _col);
-				draw_font_data[_array_index] = [__f, fa_left, va, _col];
-				
-				switch(_hali) {
-					case 0 : tx = 0;                           break;
-					case 1 : tx = _pthl / 2 - _line_width / 2; break;
-					case 2 : tx = _pthl     - _line_width;     break;
+				switch(_vali) {
+					case 0 : va = fa_top;    ty = 0;                                    break;
+					case 1 : va = fa_center; ty = (_max_hh - line_get_height(__f)) / 2; break;
+					case 2 : va = fa_top;    ty =  _max_hh;                             break;
 				}
 				
-				__temp_tx = tx + _pthS;
-				__temp_ty = ty;
-				__temp_p0 = new __vec2P();
-				__temp_p1 = new __vec2P();
-				
-				string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
-					var _p1  = __temp_pt.getPointDistance(__temp_tx,      0, __temp_p0);
-					var _p2  = __temp_pt.getPointDistance(__temp_tx + .1, 0, __temp_p1);
-					var _nor = __pthR? point_direction(_p1.x, _p1.y, _p2.x, _p2.y) : 0;
+				for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
+					var _str_line   = _str_lines[i];
+					var _line_width = _line_widths[i];
 					
-					var _line_ang = _nor + 90;
-					var _dx = lengthdir_x(__temp_ty, _line_ang);
-					var _dy = lengthdir_y(__temp_ty, _line_ang);
+					draw_set_text(__f, fa_left, va, _col);
+					draw_font_data[_array_index] = [__f, fa_left, va, _col];
 					
-					var _tx = _p1.x + _dx;
-					var _ty = _p1.y + _dy;
-					
-					if(__wave) {
-						var _wd = waveGet(_ind);
-						_tx += lengthdir_x(_wd, _line_ang + 90);
-						_ty += lengthdir_y(_wd, _line_ang + 90);
+					switch(_hali) {
+						case 0 : tx = 0;                           break;
+						case 1 : tx = _pthl / 2 - _line_width / 2; break;
+						case 2 : tx = _pthl     - _line_width;     break;
 					}
 					
-					var clti = __dwDataI;
-					switch(__colLtTyp) {
-						case 0  : clti = __dwDataI % __colLtLen;                break;
-						case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
-						case 2  : clti = irandom(__colLtLen - 1);               break;
-					}
+					__temp_tx = tx + _pthS;
+					__temp_ty = ty;
+					__temp_p0 = new __vec2P();
+					__temp_p1 = new __vec2P();
 					
-					_tx += __offx;
-					_ty += __offy;
-					
-					var _clt  = __colLt[clti];
-					var _c    = colorMultiply(__col, _clt);
-					draw_set_color(_c);
-					
-					draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
-					__dwData[__dwDataI++] = [_tx, _ty, _chr, 1, 1, _nor];
-					
-					if(__outAtlas) array_push(__atlas, { 
-						char : _chr, 
-						x    : _tx, 
-						y    : _ty, 
-						rot  : _nor,
-						sx   : 1, 
-						sy   : 1, 
+					string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
+						var _p1  = __temp_pt.getPointDistance(__temp_tx,      0, __temp_p0);
+						var _p2  = __temp_pt.getPointDistance(__temp_tx + .1, 0, __temp_p1);
+						var _nor = __pthR? point_direction(_p1.x, _p1.y, _p2.x, _p2.y) : 0;
 						
-						blend : _c,
-						halign: fa_left,
-						valign: va, 
+						var _line_ang = _nor + 90;
+						var _dx = lengthdir_x(__temp_ty, _line_ang);
+						var _dy = lengthdir_y(__temp_ty, _line_ang);
+						
+						var _tx = _p1.x + _dx;
+						var _ty = _p1.y + _dy;
+						
+						if(__wave) {
+							var _wd = waveGet(_ind);
+							_tx += lengthdir_x(_wd, _line_ang + 90);
+							_ty += lengthdir_y(_wd, _line_ang + 90);
+						}
+						
+						var clti = __dwDataI;
+						switch(__colLtTyp) {
+							case 0  : clti = __dwDataI % __colLtLen;                break;
+							case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
+							case 2  : clti = irandom(__colLtLen - 1);               break;
+						}
+						
+						_tx += __offx;
+						_ty += __offy;
+						
+						var _clt  = __colLt[clti];
+						var _c    = colorMultiply(__col, _clt);
+						draw_set_color(_c);
+						
+						draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
+						__dwData[__dwDataI++] = [_tx, _ty, _chr, 1, 1, _nor];
+						
+						if(__outAtlas) array_push(__atlas, { 
+							char : _chr, 
+							x    : _tx, 
+							y    : _ty, 
+							rot  : _nor,
+							sx   : 1, 
+							sy   : 1, 
+							
+							blend : _c,
+							halign: fa_left,
+							valign: va, 
+						});
+						
+						__temp_tx += (__mono? __monoW : string_width(_chr)) + __temp_trck;
 					});
 					
-					__temp_tx += (__mono? __monoW : string_width(_chr)) + __temp_trck;
-				});
-				
-				ty -= string_height(_str_line) + _line;
-			}
-			
-		} else {
-			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
-				var _str_line   = _str_lines[i];
-				var _line_width = _line_widths[i];
-				
-				draw_set_text(__f, fa_left, fa_top, _col);
-				draw_font_data[_array_index] = [__f, fa_left, fa_top, _col];
-				
-				tx = _padd[PADDING.left];
-				
-				switch(_hali) {
-					case 0 : tx = _padd[PADDING.left];								break;
-					case 1 : tx = (_sw - _line_width * _ss) / 2;					break;
-					case 2 : tx = _sw - _padd[PADDING.right] - _line_width * _ss;	break;
+					ty -= string_height(_str_line) + _line;
 				}
 				
-				__temp_tx = tx;
-				__temp_ty = ty;
-			
-				string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
-					var _tx = __temp_tx;
-					var _ty = __temp_ty;
+			} else {
+				for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
+					var _str_line   = _str_lines[i];
+					var _line_width = _line_widths[i];
 					
-					if(__wave) _ty += waveGet(_ind);
+					draw_set_text(__f, fa_left, fa_top, _col);
+					draw_font_data[_array_index] = [__f, fa_left, fa_top, _col];
 					
-					var clti = __dwDataI;
-					switch(__colLtTyp) {
-						case 0  : clti = __dwDataI % __colLtLen;                break;
-						case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
-						case 2  : clti = irandom(__colLtLen - 1);               break;
+					tx = _padd[PADDING.left];
+					
+					switch(_hali) {
+						case 0 : tx = _padd[PADDING.left];								break;
+						case 1 : tx = (_sw - _line_width * _ss) / 2;					break;
+						case 2 : tx = _sw - _padd[PADDING.right] - _line_width * _ss;	break;
 					}
 					
-					var _clt = array_safe_get_fast(__colLt, clti);
-					var _c   = colorMultiply(__col, _clt);
-					draw_set_color(_c);
-					
-					_tx += __offx;
-					_ty += __offy;
-					var chw = string_width(_chr);
-					if(__mono) _tx += (__monoW - chw) / 2;
-					
-					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
-					__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
-					
-					if(__outAtlas) array_push(__atlas, { 
-						char : _chr, 
-						x    : _tx, 
-						y    : _ty, 
-						rot  : 0,
-						sx   : __temp_ss, 
-						sy   : __temp_ss, 
+					__temp_tx = tx;
+					__temp_ty = ty;
+				
+					string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
+						var _tx = __temp_tx;
+						var _ty = __temp_ty;
 						
-						blend : _c,
-						halign: fa_left,
-						valign: fa_top, 
+						if(__wave) _ty += waveGet(_ind);
+						
+						var clti = __dwDataI;
+						switch(__colLtTyp) {
+							case 0  : clti = __dwDataI % __colLtLen;                break;
+							case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
+							case 2  : clti = irandom(__colLtLen - 1);               break;
+						}
+						
+						var _clt = array_safe_get_fast(__colLt, clti);
+						var _c   = colorMultiply(__col, _clt);
+						draw_set_color(_c);
+						
+						_tx += __offx;
+						_ty += __offy;
+						var chw = string_width(_chr);
+						if(__mono) _tx += (__monoW - chw) / 2;
+						
+						draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
+						__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
+						
+						if(__outAtlas) array_push(__atlas, { 
+							char : _chr, 
+							x    : _tx, 
+							y    : _ty, 
+							rot  : 0,
+							sx   : __temp_ss, 
+							sy   : __temp_ss, 
+							
+							blend : _c,
+							halign: fa_left,
+							valign: fa_top, 
+						});
+						
+						__temp_tx += ((__mono? __monoW : chw) + __temp_trck) * __temp_ss;
 					});
-					
-					__temp_tx += ((__mono? __monoW : chw) + __temp_trck) * __temp_ss;
-				});
-			
-				ty += (string_height(_str_line) + _line) * _ss;
+				
+					ty += (string_height(_str_line) + _line) * _ss;
+				}
 			}
-		}
+		#endregion
+		
 		surface_reset_shader();
 		
 		array_resize(__dwData, __dwDataI);
