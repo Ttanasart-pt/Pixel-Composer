@@ -407,7 +407,7 @@ function Panel_Menu() : PanelContent() constructor {
     function drawContent(panel) {
         var _right     = PREFERENCES.panel_menu_right_control// || OS != os_windows;
         var _action    = true//OS == os_windows;
-        var _draggable = pFOCUS;
+        var _draggable = pHOVER && pFOCUS;
         
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         var hori = w > h;
@@ -423,7 +423,9 @@ function Panel_Menu() : PanelContent() constructor {
                 if(!_right) {
                     xx = ui(140);
                     draw_set_color(COLORS._main_icon_dark);
-                    draw_line_round(xx, ui(8), xx, h - ui(8), 3);
+                    
+                    if(THEME_VALUE.panel_separation_type == "frame")
+                    	draw_line_round(xx, ui(8), xx, h - ui(8), 3);
                 }
         
                 var bx = _right? xx : w - ui(24);
@@ -747,8 +749,11 @@ function Panel_Menu() : PanelContent() constructor {
                 }
             
                 if(_right) {
-                    draw_set_color(COLORS.panel_toolbar_separator);
-                    draw_line_width(x1, ui(8), x1, h - ui(8), 2);
+                    draw_set_color(COLORS.panel_separator);
+                	if(THEME_VALUE.panel_separation_type == "frame")
+                    	 draw_line_width(x1, ui(8), x1, h - ui(8), 2);
+                    else draw_line_width(x1, 0, x1, h, 1);
+                    
                     x1 -= ui(8);
                 }
             }
@@ -769,7 +774,8 @@ function Panel_Menu() : PanelContent() constructor {
                     var _sty = h - ui(32 + 6);
                     
                     draw_set_color(COLORS._main_icon_dark);
-                    draw_line_round(ui(8), _sty, w - ui(8), _sty, 2);
+                    if(THEME_VALUE.panel_separation_type == "frame")
+	                    draw_line_round(ui(8), _sty, w - ui(8), _sty, 2);
                     
                     _sty -= _sts + ui(6);
                 }
