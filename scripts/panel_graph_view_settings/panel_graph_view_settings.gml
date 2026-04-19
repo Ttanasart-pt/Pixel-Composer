@@ -1,5 +1,7 @@
 function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting() constructor {
 	title = __txt("graph_view_settings", "View Settings");
+	w       = ui(400);
+	wdgw    = ui(240);
 	
 	graphP = _graphPanel;
 	dparam = _display;

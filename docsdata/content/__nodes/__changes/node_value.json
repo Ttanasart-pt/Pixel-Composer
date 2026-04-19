@@ -6,6 +6,11 @@
         "date": "2026-04-18T05:03:05.092Z",
         "node": "",
         "commit": "**Graph Panel**: Add project settings in topbar."
+      },
+      {
+        "date": "2026-04-19T03:40:57.333Z",
+        "node": "Animation Panel",
+        "commit": "**Animation Panel**: Fix dopesheet not reappear when expands panel."
       }
     ]
   },

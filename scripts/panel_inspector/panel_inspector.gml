@@ -243,6 +243,10 @@ function Panel_Inspector() : PanelContent() constructor {
     #region ---- Properties ----
         prop_hover          = noone;
         prop_selecting      = noone;
+        prop_selecting_y    = 0;
+        prop_selecting_y_to = 0;
+        prop_selecting_h    = 0;
+        prop_selecting_h_to = 0;
         
         prop_highlight      = noone;
         prop_highlight_time = 0;
@@ -250,7 +254,7 @@ function Panel_Inspector() : PanelContent() constructor {
         prop_dragging       = noone;
         prop_sel_drag_x     = 0;
         prop_sel_drag_y     = 0;
-    
+    	
         color_picking       = false;
         picker_index        = 0;
         picker_change       = false;
@@ -729,6 +733,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var rry     = y + contentPane.y;
         
         var showAll = filtering || filter_animation;
+        var showHig = false;
         
         for( var i = 0, n = array_length(_inspecting.inputs); i < n; i++ ) 
         	_inspecting.inputs[i].visible_in_inspector = false;
@@ -1092,7 +1097,9 @@ function Panel_Inspector() : PanelContent() constructor {
             
             // Selection highlight
             if(_wdgt && _wdgt.temp_hovering) {
-            	draw_sprite_stretched_ext(THEME.prop_selecting, 0, _x + ui(4), yy, con_w - ui(8), widH, COLORS._main_accent, 1);
+            	showHig = true;
+            	prop_selecting_y_to = yy;
+            	prop_selecting_h_to = widH;
             	_wdgt.temp_hovering = false;
             }
             
@@ -1119,7 +1126,11 @@ function Panel_Inspector() : PanelContent() constructor {
                     if(DRAGGING != noone && DRAGGING.type == "Globalvar" && mouse_lrelease())
                     	jun.setExpression(DRAGGING.data);
                     
-                } else draw_sprite_stretched_ext(THEME.prop_selecting, 0, wdx, wdy, wdw, wdh, COLORS._main_accent, 1);
+                } else {
+                	showHig = true;
+                	prop_selecting_y_to = wdy;
+                	prop_selecting_h_to = wdh;
+                }
                 
                 prop_hover = jun;
                     
@@ -1260,6 +1271,18 @@ function Panel_Inspector() : PanelContent() constructor {
         }
         
         _inspecting.inspector_draw_height = hh;
+        
+        #region selection highlight
+	        prop_selecting_y = lerp_float(prop_selecting_y, prop_selecting_y_to, 2);
+	        prop_selecting_h = lerp_float(prop_selecting_h, prop_selecting_h_to, 2);
+	        
+	        var _px = _x + ui(4);
+	        var _py = prop_selecting_y;
+	        var _pw = con_w - ui(8);
+	        var _ph = prop_selecting_h;
+	        if(pHOVER) draw_sprite_stretched_ext(THEME.prop_selecting, 0, _px, _py, _pw, _ph, COLORS._main_accent, 1);
+    	#endregion
+        
         return hh;
     }
     
@@ -1488,10 +1511,16 @@ function Panel_Inspector() : PanelContent() constructor {
                         var jun  = PANEL_GRAPH.value_dragging;
                         var widw = con_w - ui(16);
                         var widh = spac? _lh + padd + wh + ui(4) : max(wh, _lh);
+                        var drop = jun != noone && drpFn != noone;
                         
-                        if(jun != noone && drpFn != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
-                            draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
-                            attribute_hovering = drpFn;
+                        if(_hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
+                        	if(drop) {
+                            	draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
+                            	attribute_hovering  = drpFn;
+                        	}
+                        	
+                            prop_selecting_y_to = widy;
+                        	prop_selecting_h_to = widh;
                         }
                         
 				    	var _wdhh = spac? wh + padd + ui(2) : max(wh, _lh) + padd;
@@ -1499,6 +1528,17 @@ function Panel_Inspector() : PanelContent() constructor {
 			        	hh += _wdhh;
                     }
                     
+			        #region selection highlight
+				        prop_selecting_y = lerp_float(prop_selecting_y, prop_selecting_y_to, 2);
+				        prop_selecting_h = lerp_float(prop_selecting_h, prop_selecting_h_to, 2);
+				        
+				        var _px = ui(4);
+				        var _py = prop_selecting_y;
+				        var _pw = con_w - ui(4);
+				        var _ph = prop_selecting_h;
+				        if(pHOVER) draw_sprite_stretched_ext(THEME.prop_selecting, 0, _px, _py, _pw, _ph, COLORS._main_accent, 1);
+			    	#endregion
+			        
                     break;
                     
                 case "layers" : 

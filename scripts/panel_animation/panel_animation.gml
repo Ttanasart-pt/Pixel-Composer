@@ -565,6 +565,10 @@ function Panel_Animation() : PanelContent() constructor {
     	bar_x      = padding + tool_width + animPad;
         bar_w      = timeline_w;
         
+        dopesheet_w    = timeline_w;
+        dopesheet_h    = h - padding * 2 - ui(28) - animPad;
+        dopesheet_show = dopesheet_h > ui(24);
+        
         if(dopesheet_show) {
         	timeline_h = ui(28);
 	        bar_y      = h - padding - timeline_h;
@@ -1080,7 +1084,6 @@ function Panel_Animation() : PanelContent() constructor {
         if(project != PROJECT) keyframe_selecting = [];
         project = PROJECT;
         setDimension();
-        drawDopesheet_setDimension();
         getTimelineContent();
         
         if(w >= ui(348)) {

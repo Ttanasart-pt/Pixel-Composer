@@ -6,6 +6,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	padding  = ui(8);
 	project  = undefined;
 	
+	keyLock = false;
 	key   = noone;
 	wdgw  = ui(64);
 	
@@ -42,13 +43,22 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 	#region properties
 		__enum_driver = __enum_array_gen(global.DRIVER_TYPES, s_driver_type);
 		sb_type = new scrollBox(__enum_driver, function(val) /*=>*/ { 
-			for( var i = 0, n = array_length(PANEL_ANIMATION.keyframe_selecting); i < n; i++ ) {
-				var k = PANEL_ANIMATION.keyframe_selecting[i];
+			if(keyLock && key) {
 				var d = new KeyDriver().build(string_lower(__enum_driver[val].name));
-				
-				recordAction_variable_change(k, "driverObject", k.driverObject, "Setting Driver Type");
-				k.driverObject = d;
+					
+				recordAction_variable_change(key, "driverObject", key.driverObject, "Setting Driver Type");
+				key.driverObject = d;
 				driver = d;
+				
+			} else {
+				for( var i = 0, n = array_length(PANEL_ANIMATION.keyframe_selecting); i < n; i++ ) {
+					var k = PANEL_ANIMATION.keyframe_selecting[i];
+					var d = new KeyDriver().build(string_lower(__enum_driver[val].name));
+					
+					recordAction_variable_change(k, "driverObject", k.driverObject, "Setting Driver Type");
+					k.driverObject = d;
+					driver = d;
+				}
 			}
 		}, false);
 		
@@ -165,7 +175,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		var _bs = ui(32);
 		
 		var _hov = false;
-		if(bg_y && _hover) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), bg_y, _w - ui(8), th, CDEF.main_mdwhite, 1);
+		if(bg_y && _hover) draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), bg_y, _w - ui(8), th, COLORS._main_accent);
 		
 		for( var i = 0, n = array_length(props); i < n; i++ ) {
 			var _prop = props[i];
@@ -283,19 +293,30 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		return hh;
 	});
 	
+	function setKeyLock(_key) {
+		key     = _key;
+		keyLock = true;
+		return self;
+	} 
+	
 	function drawContent() {
-		key = array_safe_get(PANEL_ANIMATION.keyframe_selecting, 0, noone);
 		title_actions_show_graph[2] = key && key.anim.prop.attributes.show_graph? COLORS._main_accent : COLORS._main_icon;
 		
-		drivers     = [];
-		driverMulti = false;
-		var _drivTyp = undefined;
-		for( var i = 0, n = array_length(PANEL_ANIMATION.keyframe_selecting); i < n; i++ ) {
-			var k = PANEL_ANIMATION.keyframe_selecting[i];
-			if(_drivTyp == undefined) _drivTyp = instanceof(k.driverObject);
-			else if(_drivTyp != instanceof(k.driverObject)) driverMulti = true;
+		if(keyLock) {
+			drivers     = key.driverObject? [key.driverObject] : [];
 			
-			if(k.driverObject) array_push(drivers, k.driverObject);
+		} else {
+			key         = array_safe_get(PANEL_ANIMATION.keyframe_selecting, 0, noone);
+			drivers     = [];
+			driverMulti = false;
+			var _drivTyp = undefined;
+			for( var i = 0, n = array_length(PANEL_ANIMATION.keyframe_selecting); i < n; i++ ) {
+				var k = PANEL_ANIMATION.keyframe_selecting[i];
+				if(_drivTyp == undefined) _drivTyp = instanceof(k.driverObject);
+				else if(_drivTyp != instanceof(k.driverObject)) driverMulti = true;
+				
+				if(k.driverObject) array_push(drivers, k.driverObject);
+			}
 		}
 		
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);

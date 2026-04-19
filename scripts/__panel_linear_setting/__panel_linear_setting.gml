@@ -81,7 +81,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		var padd = ui(THEME_VALUE.panel_inspector_prop_paddding + 2);
 		
 		var _hov = false;
-		if(bg_y) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), bg_y, w - ui(8), th, COLORS.panel_prop_bg, 0.5 * bg_a);
+		if(bg_y) draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), bg_y, w - ui(8), th, COLORS._main_accent);
 		
 		for( var i = 0, n = array_length(properties); i < n; i++ ) {
 			var _prop = properties[i];

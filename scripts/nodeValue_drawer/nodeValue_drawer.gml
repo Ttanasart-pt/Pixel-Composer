@@ -282,7 +282,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					if(b == 2) jun.animationGotoAfter();
 				}
 				
-				var kfFocus = jun.animationCurrentKey();
+				var kfCurr  = jun.animationCurrentKey();
+				var kfFocus = kfCurr != undefined;
 				var  cc  = kfFocus? COLORS._main_accent : COLORS._main_icon;
 				var _tlp = kfFocus? __txt("panel_inspector_remove_key", "Remove keyframe") : __txt("panel_inspector_add_key", "Add keyframe");
 				bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_keyframe, 1, cc); bx -= ui(4);
@@ -309,12 +310,27 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					if(b == 2) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  p mod_inc_mf3;
 				}
 				
+				var bt = __txt("Driver");
+				var bh = kfFocus && _hover;
+				var ba = .25 + kfFocus * .55;
+				var cc = kfFocus? (kfCurr.driverObject != undefined? COLORS._main_accent : COLORS._main_icon_light) : COLORS._main_icon;
+				bx  -= bs; 
+				b    = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.driver, 0, cc, ba, ics * .7); 
+				bx  -= ui(4);
+				cHov = cHov || b;
+				
+				if(b == 2) {
+					var dia = new Panel_Keyframe_Driver().setKeyLock(kfCurr);
+					dia.auto_pin = false;
+					dialogPanelCall(dia, rx + bx + ui(4) + bs, ry + by + bs, { anchor: ANCHOR.right | ANCHOR.top });
+				}
+				
 			} else {
 				for( var i = array_length(PREFERENCES.widget_draw_order) - 1; i >= 0; i--) {
 					var _widgetButton = PREFERENCES.widget_draw_order[i];
 					
 					switch(_widgetButton) {
-						case "Set Default" : if(!PREFERENCES.widget_draw_default) continue;
+						case "Set Default" :
 							var bt = __txt("panel_inspector_default", "Set default");
 							var bh = _hover;
 							var ba = .25 + jun.is_modified * .55 + (jun.def_preset * .5);
@@ -339,7 +355,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 							}
 							break;
 						
-						case "Reset" : if(!PREFERENCES.widget_draw_reset) continue;
+						case "Reset" : 
 							var bt = __txt("panel_inspector_reset", "Reset");
 							var ba = .25 + jun.is_modified * .55;
 							var bh = jun.is_modified && _hover;
@@ -358,7 +374,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 								reset_hold = true;
 							}
 							break;
-							
 					}
 				}
 				

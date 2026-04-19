@@ -2999,9 +2999,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var ty = 0;
         var tw = w;
         var th = topbar_height;
+        var _lh = topbar_height / 2 - ui(8);
         
     	draw_sprite_stretched(THEME.toolbar, 1, tx, ty, tw, th);
     	
+    	var _spFrm = THEME_VALUE.panel_separation_type == "frame";
     	var _m = [mx,my];
     	
     	var pad = ui(6);
@@ -3033,6 +3035,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	tw = wdx - ui(4);
     	
+    	draw_set_color(COLORS.panel_separator);
+		if(_spFrm) draw_line_width(tw, ty + th / 2 - _lh, tw, ty + th / 2 + _lh, 2);
+		else       draw_line(tw, ty, tw, ty + th);
+		
     	var scis = gpu_get_scissor();
     	gpu_set_scissor(tx, ty, tw, th);
     	
@@ -3044,10 +3050,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		var _ww  = ui(16);
 		var hover = pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th);
 		
-		var _cc  = [COLORS._main_icon, c_white];
-		
-		var _spFrm = THEME_VALUE.panel_separation_type == "frame";
-		var _lh    = topbar_height / 2 - ui(8);
+		var _cc = [COLORS._main_icon, c_white];
 		
 		for( var i = 0, n = array_length(_side_m); i < n; i++ ) {
 			var _menu = _side_m[i];

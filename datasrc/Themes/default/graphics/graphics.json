@@ -78,6 +78,7 @@
     "curvable":                           { "path": "./icon/s_curvable.png",                                "s": 2, "x": 12, "y": 12 },
     "d3d_preview_settings":               { "path": "./icon/s_3d_preview_settings.png",                     "s": 1, "x": 12, "y": 12 },
     "d3d_snap_settings":                  { "path": "./icon/s_3d_snap_settings.png",                        "s": 1, "x": 12, "y": 12 },
+    "driver":                             { "path": "./icon/s_driver.png",                                  "s": 1, "x": 12, "y": 12 },
     "discord":                            { "path": "./icon/s_discord.png",                                 "s": 1, "x": 12, "y": 12 },
     "display_palette":                    { "path": "./icon/s_display_palette.png",                         "s": 2, "x": 12, "y": 12 },
     "dynadraw":                           { "path": "./icon/s_dynadraw.png",                                "s": 1, "x": 12, "y": 12 },

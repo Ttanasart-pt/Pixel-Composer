@@ -3145,10 +3145,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _anim = animator;
 		for( var i = 0, n = array_length(_anim.values); i < n; i++ ) {
 			if(_anim.values[i].time == NODE_CURRENT_FRAME) 
-				return true;
+				return _anim.values[i];
 		}
 		
-		return false;
+		return undefined;
 	}
 	
 	static animationToggleKey = function() {

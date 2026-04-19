@@ -767,12 +767,6 @@ function Panel_Animation_Dopesheet() {
     	draw_set_alpha(1);
     }
     
-    function drawDopesheet_setDimension() {
-    	dopesheet_w    = timeline_w;
-        dopesheet_h    = h - padding * 2 - timeline_h - animPad;
-        dopesheet_show = dopesheet_h > ui(24);
-    }
-    
     function drawDopesheet_ResetTimelineMask() {
     	dopesheet_mask         = surface_verify(dopesheet_mask,    dopesheet_w, dopesheet_h);
         dopesheet_surface      = surface_verify(dopesheet_surface, dopesheet_w, dopesheet_h);
