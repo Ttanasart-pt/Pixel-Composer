@@ -1186,10 +1186,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(graph_autopan) {
         	refreshDraw(1);
         	
-        	graph_pan_prog = lerp_float(graph_pan_prog, 1, graph_pan_speed, .001);
-        	var gx = lerp(graph_pan_x_from, graph_pan_x_to, graph_pan_prog);
-        	var gy = lerp(graph_pan_y_from, graph_pan_y_to, graph_pan_prog);
-        	var gs = lerp(graph_pan_s_from, graph_pan_s_to, graph_pan_prog);
+        	// graph_pan_prog = lerp_float(graph_pan_prog, 1, graph_pan_speed, .001);
+        	graph_pan_prog = lerp_linear(graph_pan_prog, 1, DELTA_TIME / graph_pan_speed * 25);
+        	var pr = animation_curve_eval(ac_smoothstep, graph_pan_prog);
+        	var gx = lerp(graph_pan_x_from, graph_pan_x_to, pr);
+        	var gy = lerp(graph_pan_y_from, graph_pan_y_to, pr);
+        	var gs = lerp(graph_pan_s_from, graph_pan_s_to, pr);
         	
             graph_x = w / 2 / gs - gx;
             graph_y = h / 2 / gs - gy;
@@ -1197,7 +1199,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             graph_s    = gs;
             graph_s_to = gs;
             
-            if(graph_pan_prog == 1) graph_autopan = false;
+            if(pr == 1) graph_autopan = false;
             return;
         }
         
@@ -3335,6 +3337,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             mouse_on_graph = false;
             
             if(pHOVER && !_hv) {
+        		TOOLTIP = __txt("Next Section");
                 draw_sprite_stretched_add(THEME.ui_panel_bg, 4, _sl_x, _sl_y, slider_width, _sl_h, COLORS._main_icon, 0.05);
                 draw_sprite_stretched_add(THEME.ui_panel, 1, _sl_x, _sl_y, slider_width, _sl_h, c_white, 0.1);
                 

@@ -369,6 +369,7 @@
   "ResourceOrderSettings":[
     {"name":"ac_disappear","order":2,"path":"animcurves/ac_disappear/ac_disappear.yy",},
     {"name":"ac_ripple","order":1,"path":"animcurves/ac_ripple/ac_ripple.yy",},
+    {"name":"ac_smoothstep","order":2,"path":"animcurves/ac_smoothstep/ac_smoothstep.yy",},
     {"name":"clipboard","order":2,"path":"extensions/clipboard/clipboard.yy",},
     {"name":"discordBridge","order":4,"path":"extensions/discordBridge/discordBridge.yy",},
     {"name":"display_measure","order":1,"path":"extensions/display_measure/display_measure.yy",},
