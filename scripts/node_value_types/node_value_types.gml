@@ -674,7 +674,7 @@ function nodeValueUnit(__nodeValue) constructor {
 					
 				case VALUE_DISPLAY.path_anchor  :
 					var _val = array_clone(value, 1);
-					for( var i = 0, n = _len - 2; i < n; i++ )
+					for( var i = 0; i < 6; i++ )
 						_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];
 					
 					return _val;
