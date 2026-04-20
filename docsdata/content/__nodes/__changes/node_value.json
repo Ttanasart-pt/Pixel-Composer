@@ -6,6 +6,11 @@
         "date": "2026-04-20T07:23:00.824Z",
         "node": "",
         "commit": "Fix padding value extract to surface padding node."
+      },
+      {
+        "date": "2026-04-20T08:49:10.548Z",
+        "node": "",
+        "commit": "Empty array now returns depth of 1."
       }
     ]
   },

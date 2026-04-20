@@ -27,9 +27,9 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 2,
-		["Surface", true], 0, 
-		["Crop",   false], 3, 4, 1, 7, 5, 6, 
+	input_display_list = [  2,
+		[ "Surface", true ],  0, 
+		[ "Crop",   false ],  3,  4,  1,  7,  5,  6, 
 	]
 	
 	////- Node
@@ -75,11 +75,12 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, params) {
 		PROCESSOR_OVERLAY_CHECK
-		
 		var _inSurf	= current_data[0];
 		var _spRaw 	= current_data[1];
 		var _asp	= current_data[3];
 		var _fit	= current_data[7];
+		if(!is_surface(_inSurf)) return false;
+		
 		var _splice;
 		var hovering = false;
 		
@@ -333,7 +334,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return hovering;
 	}
 	
-	static getPreviewValues = function() { return getInputData(0); }
+	static getPreviewValues = function() /*=>*/ {return getInputData(0)};
 	
 	static getRatio = function(_asp, _rat) {
 		switch(_asp) {
@@ -370,13 +371,21 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _inSurf	= _data[0];
-		var _crop	= _data[1];
-		var _asp	= _data[3];
-		var _rat 	= _data[4];
-		var _cent 	= _data[5];
-		var _width 	= abs(_data[6]);
-		var _fit  	= _data[7];
+		#region data
+			var _inSurf	= _data[0];
+			
+			var _asp	= _data[3];
+			var _rat 	= _data[4];
+			var _crop	= _data[1];
+			
+			var _fit  	= _data[7];
+			var _cent 	= _data[5];
+			var _width 	= _data[6];
+			
+			_width = abs(_width);
+			
+			if(!is_surface(_inSurf)) return _outSurf;
+		#endregion
 		
 		var _sdim = surface_get_dimension(_inSurf);
 		

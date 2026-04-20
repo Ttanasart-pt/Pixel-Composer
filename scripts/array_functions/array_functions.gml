@@ -194,8 +194,9 @@
 	function __array_get_depth(arr) { // Read all member, slower
 		INLINE
 		
-		if(!is_array(arr)) return 0;
-		var dep = 0;
+		if(!is_array(arr))   return 0;
+		
+		var dep = 1;
 		for (var i = 0, n = array_length(arr); i < n; i++)
 			dep = max(dep, __array_get_depth(arr[i]));
 		return 1 + dep;
@@ -204,13 +205,13 @@
 	function array_get_depth(arr) { // Read only the first member, faster
 		INLINE
 		
-		if(!is_array(arr))   return  0;
-		// if(array_empty(arr)) return -1;
+		if(!is_array(arr))   return 0;
+		if(array_empty(arr)) return 1;
 		
-		var d = 0;
-		var p = arr;
+		var d = 1;
+		var p = arr[0];
 		
-		while(is_array(p) && !array_empty(p)) {
+		while(array_valid(p)) {
 			d++;
 			p = p[0];
 		}

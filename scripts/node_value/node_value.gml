@@ -3234,6 +3234,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var len = 2;
 		switch(_type) {
+			case "Node_Padding_Data" : 
 			case "Node_Vector4" : len++;
 			case "Node_Vector3" : len++;
 			case "Node_Vector2" : 

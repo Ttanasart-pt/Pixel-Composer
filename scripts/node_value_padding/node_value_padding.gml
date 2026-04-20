@@ -20,7 +20,7 @@ function __NodeValue_Padding(_name, _node, _value, _tooltip = "") : NodeValue(_n
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		var _d  = array_get_depth(val);
-					
+		
 		__nod       = nod;
 		__applyUnit = applyUnit;
 		__arrIndex  = arrIndex;
