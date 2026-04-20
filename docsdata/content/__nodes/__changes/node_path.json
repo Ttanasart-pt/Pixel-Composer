@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc8",
+    "changes": [
+      {
+        "date": "2026-04-20T05:37:19.415Z",
+        "node": "Path",
+        "commit": "**Path**: Fix error when adding anchor in pixel unit."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc2",
     "changes": [
       {

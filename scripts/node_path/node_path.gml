@@ -547,14 +547,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static newAnchor = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) { return [ _x, _y, _dxx, _dxy, _dyx, _dyy, 0 ]; }
+	static newAnchor = function(_x=0, _y=0, _dxx=0, _dxy=0, _dyx=0, _dyy=0) { return [ _x, _y, _dxx, _dxy, _dyx, _dyy, 0 ]; }
 	
 	function createNewInput(index = array_length(inputs), _x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
 		var inAmo = array_length(inputs);
 		
-		var anc   = newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy );
-		var ancIn = newInput(index, nodeValue_Path_Anchor("Anchor", [])).setUnitSimple();
-		ancIn.setValue(anc);
+		var ancIn = newInput(index, nodeValue_Path_Anchor("Anchor", newAnchor())).setUnitSimple();
+		    ancIn.setValue(newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy ));
 		
 		if(rec) {
 			recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]).setRef(self);

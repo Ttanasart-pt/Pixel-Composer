@@ -3,11 +3,6 @@
     "version": "1.21.rc8",
     "changes": [
       {
-        "date": "2026-04-20T05:17:42.653Z",
-        "node": "Path Anchor",
-        "commit": "**Path Anchor**: Fix incorrect unit conversion."
-      },
-      {
         "date": "2026-04-20T05:37:19.415Z",
         "node": "",
         "commit": "**Path**: Fix error when adding anchor in pixel unit."
