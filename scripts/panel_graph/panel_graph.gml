@@ -3016,35 +3016,37 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var _spFrm = THEME_VALUE.panel_separation_type == "frame";
     	var _m = [mx,my];
     	
-    	var pad = ui(6);
-    	var wdw = ui(128);
-    	var wdh = th - pad * 2 + ui(1);
-    	var wdx = tx + tw - pad - wdw;
-    	var wdy = pad;
-    	
-    	var bb  = THEME.button_hide_fill;
-    	var val = PROJECT.attributes.surface_dimension;
-    	topbar_widget_dim.setFocusHover(pFOCUS, pHOVER);
-    	topbar_widget_dim.drawParam(new widgetParam(wdx, wdy, wdw, wdh, val, undefined, _m, x, y).setFont(f_p3));
-    	
-    	var pad = ui(4);
-    	var bs  = th - pad * 2 + ui(1);
-    	var wdy = pad;
-    	
-    	for( var i = 0, n = array_length(topbar_buttons); i < n; i++ ) {
-    		var but = topbar_buttons[i];
-    		var spr = but[0];
-    		var tip = but[1];
-    		var ind = but[2]();
-    		var fn  = but[3];
-    		
-    		tip.index = ind;
-    		wdx -= bs + ui(2);
-    		if(buttonInstant_Pad(bb, wdx, wdy, bs, bs, _m, pHOVER, pFOCUS, tip, spr, ind, COLORS._main_icon, 1, ui(8)) == 2)
-    			fn();
+    	if(hasGlobal) {
+	    	var pad = ui(6);
+	    	var wdw = ui(128);
+	    	var wdh = th - pad * 2 + ui(1);
+	    	var wdx = tx + tw - pad - wdw;
+	    	var wdy = pad;
+	    	
+	    	var bb  = THEME.button_hide_fill;
+	    	var val = PROJECT.attributes.surface_dimension;
+	    	topbar_widget_dim.setFocusHover(pFOCUS, pHOVER);
+	    	topbar_widget_dim.drawParam(new widgetParam(wdx, wdy, wdw, wdh, val, undefined, _m, x, y).setFont(f_p3));
+	    	
+	    	var pad = ui(4);
+	    	var bs  = th - pad * 2 + ui(1);
+	    	var wdy = pad;
+	    	
+	    	for( var i = 0, n = array_length(topbar_buttons); i < n; i++ ) {
+	    		var but = topbar_buttons[i];
+	    		var spr = but[0];
+	    		var tip = but[1];
+	    		var ind = but[2]();
+	    		var fn  = but[3];
+	    		
+	    		tip.index = ind;
+	    		wdx -= bs + ui(2);
+	    		if(buttonInstant_Pad(bb, wdx, wdy, bs, bs, _m, pHOVER, pFOCUS, tip, spr, ind, COLORS._main_icon, 1, ui(8)) == 2)
+	    			fn();
+	    	}
+	    	
+	    	tw = wdx - ui(4);
     	}
-    	
-    	tw = wdx - ui(4);
     	
     	draw_set_color(COLORS.panel_separator);
 		if(_spFrm) draw_line_width(tw, ty + th / 2 - _lh, tw, ty + th / 2 + _lh, 2);
