@@ -65,8 +65,8 @@ function checkBox(_onClick) : widget() constructor {
 			if(mouse_lpress()) deactivate();
 		
 		if(PREFERENCES.theme_boolean == 0) {
-			var w2 = w / 2;
-			var kx = x + _value * w2;
+			var w2 = w > ui(128)? w * .5 : w * .65;
+			var kx = x + _value * (w - w2);
 			var cc = _value? COLORS._main_accent : CDEF.main_dark;
 			slot_x = slot_x == undefined? kx : lerp_float(slot_x, kx, 3);
 			
@@ -84,6 +84,7 @@ function checkBox(_onClick) : widget() constructor {
 					draw_text_add(x + w2/2, y + h/2, __txt("False"));
 				}
 			}
+			
 		} else {
 			if(_value) draw_sprite_stretched_ext(spr, 2, x, y, w, h, COLORS._main_accent);
 		}
