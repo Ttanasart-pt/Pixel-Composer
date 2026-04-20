@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc8",
+    "changes": [
+      {
+        "date": "2026-04-20T07:23:00.818Z",
+        "node": "",
+        "commit": "Fix padding value extract to surface padding node."
+      }
+    ]
+  }
+]

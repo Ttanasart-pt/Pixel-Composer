@@ -35,8 +35,10 @@ function pathnodeBox(_junction) : widget() constructor {
         	var ic = s_node_path;
         	var _node = is(_path, Path)? _path.node : _path;
         	
-        	switch(instanceof(_path)) {
-        		case "Node_Path" : ic = s_node_path; break;
+        	if(is(_node, Node)) {
+        		var _key = instanceof(_node);
+        		if(has(ALL_NODES, _key))
+        			ic = ALL_NODES[$ _key].spr;
         	}
         	
         	var iw = ui(24);

@@ -1232,7 +1232,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animatorSuffix[i] = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
-						_ext = "Node_Padding";
+						_ext = "Node_Padding_Data";
 						break;
 						
 					case VALUE_DISPLAY.corner :		

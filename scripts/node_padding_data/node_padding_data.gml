@@ -5,17 +5,14 @@ function Node_Padding_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	setDimension(96, 48);
 	
 	////- Fractional
-	
-	newInput(4, nodeValue_Bool(    "Use Fractional", false ));
-	newInput(5, nodeValue_Surface( "Reference Surface"));
+	newInput( 4, nodeValue_Bool(    "Use Fractional", false ));
+	newInput( 5, nodeValue_Surface( "Reference Surface"     ));
 	
 	////- Padding
-	
-	newInput(0, nodeValue_Float( "Left", 0 ));
-	newInput(1, nodeValue_Float( "Right", 0 ));
-	newInput(2, nodeValue_Float( "Top", 0 ));
-	newInput(3, nodeValue_Float( "Bottom", 0 ));
-	
+	newInput( 0, nodeValue_Float( "Left",   0 ));
+	newInput( 1, nodeValue_Float( "Right",  0 ));
+	newInput( 2, nodeValue_Float( "Top",    0 ));
+	newInput( 3, nodeValue_Float( "Bottom", 0 ));
 	// inputs 6
 	
 	newOutput(0, nodeValue_Output("Padding", VALUE_TYPE.float, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
