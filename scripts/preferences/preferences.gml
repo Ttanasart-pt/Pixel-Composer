@@ -106,6 +106,7 @@
 		PREFERENCES.panel_graph_dragging              = MOD_KEY.alt;
 		PREFERENCES.panel_graph_group_require_shift   = true;
 		PREFERENCES.panel_graph_paste_inline          = true;
+		PREFERENCES.panel_graph_show_control          = false;
 	
 		PREFERENCES.panel_preview_dragging            = MOD_KEY.alt;
 		PREFERENCES.panel_preview_show_real_fps       = false;
@@ -114,7 +115,7 @@
 		PREFERENCES.panel_menu_show_profile           = true;
 		PREFERENCES.panel_menu_resource_monitor       = false;
 		PREFERENCES.panel_menu_right_control          = os_type != os_macosx;
-	
+		
 		PREFERENCES.panel_menu_palette_node_size      = 20;
 	
 		PREFERENCES.inspector_focus_on_double_click   = true;
@@ -276,7 +277,6 @@
 			preview_scale   : 100,
 			highlight       : false,
 			
-			show_control    : false,
 			show_tooltip    : true,
 			show_topbar     : true, 
 		}

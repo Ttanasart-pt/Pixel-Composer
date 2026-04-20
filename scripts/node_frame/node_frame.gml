@@ -97,9 +97,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     	
         for( var i = 0, n = array_length(node_list); i < n; i++ ) { // Select content
             var _node = node_list[i];
-            
-            if(_node == self || !_node.selectable) continue;
-            if(!project.graphDisplay.show_control && _node.is_controller) continue;
+            if(_node == self || !_node.selectable || _node.is_controller) continue;
             
             var nx0 = _node.x;
             var ny0 = _node.y;

@@ -22,8 +22,9 @@
     function panel_graph_toggle_meta_view()        { CALL("graph_toggle_meta_view");    PANEL_GRAPH.project.graphDisplay.node_meta_view = !PANEL_GRAPH.project.graphDisplay.node_meta_view;   }
     function panel_graph_toggle_dimension()        { CALL("graph_toggle_dimension");    PANEL_GRAPH.project.graphDisplay.show_dimension = !PANEL_GRAPH.project.graphDisplay.show_dimension;   }
     function panel_graph_toggle_compute()          { CALL("graph_toggle_compute");      PANEL_GRAPH.project.graphDisplay.show_compute   = !PANEL_GRAPH.project.graphDisplay.show_compute;     }
-    function panel_graph_toggle_control()          { CALL("graph_toggle_control");      PANEL_GRAPH.project.graphDisplay.show_control   = !PANEL_GRAPH.project.graphDisplay.show_control;     }
     function panel_graph_toggle_avoid_label()      { CALL("graph_toggle_avoid_label");  PANEL_GRAPH.project.graphDisplay.avoid_label    = !PANEL_GRAPH.project.graphDisplay.avoid_label;      }
+    
+    function panel_graph_toggle_control()          { CALL("graph_toggle_control");      PREFERENCES.panel_graph_show_control            = !PREFERENCES.panel_graph_show_control;     }
     
     function panel_graph_group()                   { CALL("graph_group");               PANEL_GRAPH.doGroup();                }
     function panel_graph_ungroup()                 { CALL("graph_ungroup");             PANEL_GRAPH.doUngroup();              }
@@ -1918,7 +1919,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_hover_type = 0;
 	    
         #region drawController
-        	if(project.graphDisplay.show_control) {
+        	if(PREFERENCES.panel_graph_show_control) {
 	        	var _node_controller = array_filter(_node_active, function(_n) /*=>*/ {return _n.is_controller});
 		        array_foreach(_node_controller, function(_n) /*=>*/ { 
 		        	_n.active_draw_index = -1;
@@ -2368,7 +2369,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        BLEND_NORMAL
 	        
 	        #region drawController
-	        	if(project.graphDisplay.show_control)
+	        	if(PREFERENCES.panel_graph_show_control)
 			        array_foreach(_node_controller, function(_n) /*=>*/ {return _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s)});
 	        #endregion
         
@@ -2397,8 +2398,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    var _node = nodes_list[i];
 	                    
 	                    if(!_node.selectable) continue;
-	                    if(!project.graphDisplay.show_control && _node.is_controller) continue;
-	                    if(is(_node, Node_Frame) && !nodes_select_frame)              continue;
+	                    if(!PREFERENCES.panel_graph_show_control && _node.is_controller) continue;
+	                    if(is(_node, Node_Frame) && !nodes_select_frame)                 continue;
 	                    
 	                    var _x = (_node.x + graph_x) * graph_s;
 	                    var _y = (_node.y + graph_y) * graph_s;

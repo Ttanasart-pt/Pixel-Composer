@@ -63,12 +63,12 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("graph_visibility_slideshow", "Show Controller"),
-			new checkBox(function() /*=>*/ { dparam.show_control = !dparam.show_control; graphP.refreshDraw(); }),
-			function()    /*=>*/   {return dparam.show_control},
-			function(val) /*=>*/ { dparam.show_control = val; },
-			PREFERENCES.project_graphDisplay.show_control,
+			new checkBox(function() /*=>*/ { PREFERENCES.panel_graph_show_control = !PREFERENCES.panel_graph_show_control; graphP.refreshDraw(); }),
+			function()    /*=>*/   {return PREFERENCES.panel_graph_show_control},
+			function(val) /*=>*/ { PREFERENCES.panel_graph_show_control = val; },
+			PREFERENCES.panel_graph_show_control,
 			[ "Graph", "Toggle Control" ],
-			"project_graphDisplay.show_control",
+			"panel_graph_show_control",
 		),
 		
 		-1, ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

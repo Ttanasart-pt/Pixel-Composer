@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc8",
+    "changes": [
+      {
+        "date": "2026-04-20T04:24:35.819Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Control node visibility is now device preference instead of project setting."
+      }
+    ]
+  }
+]
