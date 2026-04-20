@@ -242,7 +242,7 @@ function Panel_Animation() : PanelContent() constructor {
     context_str  = "Animation";
     icon         = THEME.panel_animation_icon;
     project      = undefined;
-    padding		 = ui(8);
+    padding		 = ui(6);
     
 	#region ---- Dimension ----
 	    min_w = ui(40);
@@ -260,7 +260,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    bar_w = 0;
 	    bar_h = 0;
 	    
-	    animPad = ui(THEME_VALUE.panel_animation_padding);
+	    animPad = ui(4);
 	    
 	    dopesheet_show   = true;
 	#endregion
@@ -560,18 +560,19 @@ function Panel_Animation() : PanelContent() constructor {
     
     function setDimension() {
     	var hPad = ui(6);
+    	var pPad = hPad;
     	
-    	timeline_w = w - tool_width - side_width - animPad - padding;
-    	bar_x      = padding + tool_width + animPad;
+    	timeline_w = w - tool_width - side_width - animPad - pPad;
+    	bar_x      = pPad + tool_width + animPad;
         bar_w      = timeline_w;
         
         dopesheet_w    = timeline_w;
-        dopesheet_h    = h - padding * 2 - ui(28) - animPad;
+        dopesheet_h    = h - pPad * 2 - ui(28) - animPad;
         dopesheet_show = dopesheet_h > ui(24);
         
         if(dopesheet_show) {
         	timeline_h = ui(28);
-	        bar_y      = h - padding - timeline_h;
+	        bar_y      = h - pPad - timeline_h;
 	        bar_h      = timeline_h;
 	        
         } else {
@@ -983,22 +984,23 @@ function Panel_Animation() : PanelContent() constructor {
     
     function drawAnimationControl() {
         var mini = w < ui(348);
+    	var pad  = ui(6);
         
         var amo = array_length(control_buttons);
         var bx, by;
     	var bs = ui(28);
         
         if(dopesheet_show) {
-        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + padding;
-        	by = h - padding - timeline_h + (timeline_h - bs) / 2;
+        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + pad;
+        	by = h - pad - timeline_h + (timeline_h - bs) / 2;
         	
         } else {
         	// bs = h - ui(12);
-        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + padding;
+        	bx = tool_width / 2 - (bs + ui(4)) * amo / 2 + pad;
         	by = h - ui(6) - timeline_h + (timeline_h - bs) / 2;
         }
         
-        var col = floor((w - padding) / (bs + ui(4)));
+        var col = floor((w - pad) / (bs + ui(4)));
     	var row = ceil(amo / col);
     	
         if(col < 1) return;

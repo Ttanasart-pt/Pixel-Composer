@@ -846,8 +846,9 @@ function Panel_Collection() : PanelContent() constructor {
 	function drawContent(panel) { 
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
-		content_w = w - ui( 8) - group_w;
-		content_h = h - top_h - ui(8);
+		var pad = ui(6);
+		content_w = w - pad - group_w;
+		content_h = h - top_h - pad;
 		
 		var content_y = top_h;
 		var ppd       = ui(2);
@@ -861,12 +862,12 @@ function Panel_Collection() : PanelContent() constructor {
 			case "Collections" : 
 			case "Assets" : 
 			case "Nodes" : 
-				contentPane.verify(content_w - ui(8), content_h - ui(4));
+				contentPane.verify(content_w - pad, content_h - ui(4));
 				
 				if(pageS == "Nodes") {
 					draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
-					nodeListPane.verify(group_w - ui(8), content_h);
-					nodecontentPane.verify(content_w - ui(8), content_h - ui(4));
+					nodeListPane.verify(group_w - pad, content_h);
+					nodecontentPane.verify(content_w - pad, content_h - ui(4));
 					
 					nodeListPane.setFocusHover(pFOCUS, pHOVER);
 					nodecontentPane.setFocusHover(pFOCUS, pHOVER);
@@ -876,7 +877,7 @@ function Panel_Collection() : PanelContent() constructor {
 					
 				} else {
 					draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
-					folderPane.verify(  group_w - ui(8), content_h);
+					folderPane.verify(  group_w - pad, content_h);
 					
 					folderPane.setFocusHover(pFOCUS, pHOVER);
 					contentPane.setFocusHover(pFOCUS, pHOVER);
@@ -906,12 +907,9 @@ function Panel_Collection() : PanelContent() constructor {
 			case "Projects" : 
 				contentPane.verify(w - ui(24), content_h - ui(4));
 				
-				var pad = ui(8);
-				
 				draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, content_y, w - pad * 2, content_h);
 				contentPane.setFocusHover(pFOCUS, pHOVER);
 				contentPane.draw(pad + ppd, content_y + ppd, mx - pad - ppd, my - content_y - ppd);
-				
 				break;
 				
 		}

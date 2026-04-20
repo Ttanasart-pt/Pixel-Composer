@@ -399,7 +399,8 @@ function Panel_Animation_Dopesheet() {
     }
     
     function dopeSheet_TimelineScrub() {
-        var bar_int_x   = min(bar_x + bar_w, bar_x + bar_total_shift);
+        var bar_int_x = min(bar_x + bar_w, bar_x + bar_total_shift);
+        var pad = ui(6);
         
         if(timeline_scubbing) {
             var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
@@ -428,7 +429,7 @@ function Panel_Animation_Dopesheet() {
         	}
         	
         } else if(pHOVER) {
-        	var _hov = point_in_rectangle(mx, my, bar_x, ui(8), min(bar_x + bar_w, bar_int_x), ui(8 + 16));
+        	var _hov = point_in_rectangle(mx, my, bar_x, pad, min(bar_x + bar_w, bar_int_x), pad + ui(16));
         	
             if(timeline_draggable && _hov) { // Top bar
             	if(DOUBLE_CLICK) {
@@ -450,9 +451,10 @@ function Panel_Animation_Dopesheet() {
     function dopeSheet_TimelineStretch() {
     	var stx = bar_total_shift;
         var sty = ui(10);
+        var pad = ui(6);
         
         var msx = mx - bar_x;
-        var msy = my - ui(8);
+        var msy = my - pad;
         
         var len = timeline_frame_typing? (KEYBOARD_NUMBER != undefined? KEYBOARD_NUMBER : timeline_stretch_sx) :
                                          (round((mx - bar_x - timeline_shift) / timeline_scale));
@@ -2210,10 +2212,11 @@ function Panel_Animation_Dopesheet() {
     }
 	    
     function drawDopesheet_Label() { 
-    	var xx = ui(8);
-    	var yy = ui(8) + top_frame_height;
-    	var ww = ui(8) + tool_width;
-    	var hh = ui(8) + dopesheet_h - top_frame_height;
+    	var pad = ui(6);
+    	var xx = pad;
+    	var yy = pad + top_frame_height;
+    	var ww = pad + tool_width;
+    	var hh = pad + dopesheet_h - top_frame_height;
     	var oy = top_frame_height;
     	
         surface_set_target(dopesheet_name_surface);    
@@ -2364,9 +2367,11 @@ function Panel_Animation_Dopesheet() {
     }
     
     function dopeSheet_LabelHeader() {
-    	var xx = ui(8);
-    	var yy = ui(8);
-    	var ww = ui(8) + tool_width;
+    	var pad = ui(6);
+    	
+    	var xx = pad;
+    	var yy = pad;
+    	var ww = pad + tool_width;
     	var hh = top_frame_height;
     	var mm = [mx, my];
     	
@@ -2438,6 +2443,7 @@ function Panel_Animation_Dopesheet() {
     
     function drawDopesheet() { 
     	drawDopesheet_ResetTimelineMask();
+    	var pad = ui(6);
     	
     	#region Tool width
     		var cc = COLORS._main_icon;
@@ -2460,9 +2466,9 @@ function Panel_Animation_Dopesheet() {
 	        
 	        var sx0 = padding + tool_width;
 	        var sx1 = sx0 + animPad;
-            var cy  = ui(8) + dopesheet_h / 2;
+            var cy  = pad + dopesheet_h / 2;
 	        
-	        if(pHOVER && point_in_rectangle(mx, my, sx0, ui(8), sx1, ui(8) + dopesheet_h)) {
+	        if(pHOVER && point_in_rectangle(mx, my, sx0, pad, sx1, pad + dopesheet_h)) {
 	            CURSOR = cr_size_we;
 	            aa = 1;
 	            
@@ -2490,18 +2496,18 @@ function Panel_Animation_Dopesheet() {
         bar_total_shift = bar_total_w + timeline_shift;
         if(pFOCUS && key_mod_double(ALT)) show_value = !show_value;
         
-        mouse_on_timeline = pHOVER && point_in_rectangle(mx, my, bar_x,         ui(8) + top_frame_height, 
-                                                                 bar_x + bar_w, ui(8) + dopesheet_h );
+        mouse_on_timeline = pHOVER && point_in_rectangle(mx, my, bar_x,         pad + top_frame_height, 
+                                                                 bar_x + bar_w, pad + dopesheet_h );
         
         #region Scroll
             dopesheet_y    = lerp_float(dopesheet_y, dopesheet_y_to, 4);
             dopesheet_y_to = clamp(dopesheet_y_to, -dopesheet_y_max, 0);
             
-            if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), bar_x, ui(8) + dopesheet_h) && MOUSE_WHEEL != 0)
+            if(pHOVER && point_in_rectangle(mx, my, pad, pad, bar_x, pad + dopesheet_h) && MOUSE_WHEEL != 0)
                 dopesheet_y_to = clamp(dopesheet_y_to + ui(32) * MOUSE_WHEEL, -dopesheet_y_max, 0);
                 
             var scr_x    = bar_x + dopesheet_w + ui(4);
-            var scr_y    = ui(8);
+            var scr_y    = pad;
             var scr_s    = dopesheet_h;
             var scr_prog = -dopesheet_y / dopesheet_y_max;
             var scr_size =  dopesheet_h / (dopesheet_h + dopesheet_y_max);
@@ -2545,7 +2551,7 @@ function Panel_Animation_Dopesheet() {
         #endregion
 		
         var msx = mx - bar_x;
-        var msy = my - ui(8);
+        var msy = my - pad;
         var _toSel = undefined;
     	
         surface_set_target(dopesheet_surface);    
@@ -3282,7 +3288,7 @@ function Panel_Animation_Dopesheet() {
     	////- =Draw
     	
         drawDopesheet_Label();
-        var pd = padding;
+        var pd = pad;
         
         draw_sprite_stretched_ext( THEME.ui_panel_bg,        1, pd, pd, tool_width, dopesheet_h);
         draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, pd, pd, tool_width, top_frame_height, COLORS._main_icon );
@@ -3333,6 +3339,7 @@ function Panel_Animation_Dopesheet() {
     function setActionTooltip(txt, time = 1) { tooltip_action = txt; tooltip_action_time = time; return self; }
     function drawActionTooltip() {
     	if(tooltip_action_time <= 0) return;
+    	var pad = ui(6);
     	
     	tooltip_action_time -= DELTA_TIME;
     	var aa = clamp(tooltip_action_time * 2, 0, 1);
@@ -3343,7 +3350,7 @@ function Panel_Animation_Dopesheet() {
     	var th  = string_height(txt) + ui(3 * 2);
     	
     	var tx1 = bar_x + bar_w - ui(4);
-    	var ty1 = ui(8) + dopesheet_h - ui(4);
+    	var ty1 = pad + dopesheet_h - ui(4);
     	var tx0 = tx1 - tw;
 		var ty0 = ty1 - th;
 		

@@ -99,8 +99,6 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static onGetPreviousNodes = function(p) /*=>*/ { 
-		if(!has(project.tunnels_in, __key)) return;
-		
 		var node = project.tunnels_in[$ $"{getNodeID(group)}|{__key}"] ?? project.tunnels_in[$ __key];
 		if(is(node, Node_Tunnel_In)) array_push(p, node); 
 	}

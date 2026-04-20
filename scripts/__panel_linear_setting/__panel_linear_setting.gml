@@ -11,7 +11,10 @@ function __Panel_Linear_Setting_Item(_name, _editWidget, _data = noone, _onEdit 
 	key        = "";
 	is_patreon = false;
 	
+	tooltip    = "";
+	
 	static setKey  = function(k) /*=>*/ { key = k;           return self; }
+	static setTips = function(t) /*=>*/ { tooltip = t;       return self; }
 	static patreon = function( ) /*=>*/ { is_patreon = true; return self; }
 }
 

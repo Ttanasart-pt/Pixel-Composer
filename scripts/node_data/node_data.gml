@@ -756,8 +756,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
 			
 			var _ddy = abs(_inp.y - _y);
-			
-			if(_ddy < _dy) {
+			if( _ddy < _dy) {
 				_targ = _inp;
 				_dy   = _ddy;
 			}
@@ -778,8 +777,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
 			
 			var _ddy = abs(_inp.y - _y);
-			
-			if(_ddy < _dy) {
+			if( _ddy < _dy) {
 				_targ = _inp;
 				_dy   = _ddy;
 			}

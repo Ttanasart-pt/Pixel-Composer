@@ -1,4 +1,4 @@
-#region 
+#region global
 	FN_NODE_TOOL_INVOKE {
 		hotkeyCustom("Node_Canvas", "Selection",       "S");
 		hotkeyCustom("Node_Canvas", "Magic Selection", "W");
@@ -33,8 +33,8 @@
 #endregion 
 
 function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name	= "Canvas";
-	color	= COLORS.node_blend_canvas;
+	name  = "Canvas";
+	color = COLORS.node_blend_canvas;
 	preview_select_surface = false;
 	setAlwaysTimeline(new timelineItemNode_Canvas(self));
 	
@@ -1919,10 +1919,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static postApplyDeserialize = function() {
-		var _dim     = struct_has(attributes, "dimension")? attributes.dimension : getInputData(0);
+		var _dim = struct_has(attributes, "dimension")? attributes.dimension : getInputData(0);
 		
-		if(!struct_has(load_map, "surfaces")) {
-			if(struct_has(load_map, "surface")) {
+		if(!has(load_map, "surfaces")) {
+			if(has(load_map, "surface")) {
 				var buff = buffer_base64_decode(load_map.surface);
 				
 				canvas_buffer[0]  = buffer_decompress(buff);
@@ -2099,7 +2099,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 }
 
 function timelineItemNode_Canvas(_node) : timelineItemNode(_node) constructor {
-	
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is(node, Node_Canvas))         return;
 		if(!node.attributes.show_timeline) return;

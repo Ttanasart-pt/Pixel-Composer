@@ -2057,7 +2057,7 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     function drawContent(panel) { 
-    	var pad = ui(8);
+    	var pad = ui(6);
     	draw_clear_alpha(COLORS.panel_bg_clear, 1);
         draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, top_bar_h, w - pad * 2, h - top_bar_h - pad);
         

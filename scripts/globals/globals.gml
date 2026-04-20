@@ -34,14 +34,14 @@ gml_pragma("UnityBuild", "true");
 	globalvar DEBUG; DEBUG    = false;
 	
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_20_00_0;
-	globalvar VERSION; VERSION        = 1_20_09_0;
+	globalvar VERSION; VERSION        = 1_21_00_0;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_20_07_6;
-	globalvar VERSION_STRING; VERSION_STRING = "1.21.rc7";
-	globalvar RELEASE_STRING; RELEASE_STRING = "1.20.9.1";
-	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_09_0.019;
+	globalvar VERSION_STRING; VERSION_STRING = "1.21.rc8";
+	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.0.0";
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_09_0.020;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1; //
-	globalvar NEW_VERSION; NEW_VERSION    = false;
 	
+	globalvar NEW_VERSION; NEW_VERSION    = false;
 	globalvar VERSION_MAJOR; VERSION_MAJOR  = floor(VERSION / 1000) * 1000;
 	
 	var _versions = string_split(VERSION_STRING, ".");

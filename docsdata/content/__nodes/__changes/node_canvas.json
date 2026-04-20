@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc8",
+    "changes": [
+      {
+        "date": "2026-04-20T04:11:51.120Z",
+        "node": "Tunnel",
+        "commit": "**Tunnel**: Fix tunnel not connect when setting scope to group in global context."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc7",
     "changes": [
       {

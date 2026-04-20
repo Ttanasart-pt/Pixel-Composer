@@ -479,11 +479,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         graph_cx = 0;
         graph_cy = 0;
         
-        graph_autopan   = false;
-        graph_pan_x_to  = 0;
-        graph_pan_y_to  = 0;
-        graph_pan_s_to  = 0;
-        graph_pan_speed = 32;
+        graph_autopan    = false;
+        graph_pan_x_from = 0;
+        graph_pan_y_from = 0;
+        graph_pan_s_from = 0;
+        graph_pan_x_to   = 0;
+        graph_pan_y_to   = 0;
+        graph_pan_s_to   = 0;
+        graph_pan_speed  = 32;
+        graph_pan_prog   = 0;
         
         scale      = [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0, 2.5, 3.0, 4.0 ];
         graph_s    = 1;
@@ -1181,23 +1185,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(graph_autopan) {
         	refreshDraw(1);
         	
-            graph_x = lerp_float(graph_x, graph_pan_x_to, graph_pan_speed / 2, 4);
-            graph_y = lerp_float(graph_y, graph_pan_y_to, graph_pan_speed / 2, 4);
+        	graph_pan_prog = lerp_float(graph_pan_prog, 1, graph_pan_speed, .001);
+        	var gx = lerp(graph_pan_x_from, graph_pan_x_to, graph_pan_prog);
+        	var gy = lerp(graph_pan_y_from, graph_pan_y_to, graph_pan_prog);
+        	var gs = lerp(graph_pan_s_from, graph_pan_s_to, graph_pan_prog);
+        	
+            graph_x = w / 2 / gs - gx;
+            graph_y = h / 2 / gs - gy;
             
-            if(graph_pan_s_to > 0) {
-            	var _s = graph_s;
-            	var cx = w/2;
-            	var cy = h/2;
-            	
-            	graph_s  = lerp_float(graph_s, graph_pan_s_to, graph_pan_speed / 2);
-            	graph_x += (cx - graph_x * graph_s) / graph_s - (cx - graph_x * _s) / _s;
-            	graph_y += (cy - graph_y * graph_s) / graph_s - (cy - graph_y * _s) / _s;
-            	
-            	graph_s_to = graph_pan_s_to;
-            }
+            graph_s    = gs;
+            graph_s_to = gs;
             
-            if(graph_x == graph_pan_x_to && graph_y == graph_pan_y_to)
-                graph_autopan = false;
+            if(graph_pan_prog == 1) graph_autopan = false;
             return;
         }
         
@@ -1333,11 +1332,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function autoPanTo(_x, _y, _speed = 32, _zoom = 0) {
-        graph_autopan   = true;
-        graph_pan_x_to  = _x;
-        graph_pan_y_to  = _y;
-        graph_pan_s_to  = _zoom;
-        graph_pan_speed = _speed;
+        graph_autopan    = true;
+        graph_pan_speed  = _speed;
+        graph_pan_prog   = 0;
+        
+        graph_pan_x_from = w / 2 / graph_s - graph_x;
+        graph_pan_y_from = h / 2 / graph_s - graph_y;
+        graph_pan_s_from = graph_s;
+        
+        graph_pan_x_to   = _x;
+        graph_pan_y_to   = _y;
+        graph_pan_s_to   = _zoom;
     }
     
     function setSlideShow(index, skip = false) {
@@ -1346,33 +1351,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         setContext(_targ);
         
-        var _tz = _targ.slide_zoom;
-        var _gs = _tz > 0? _tz : graph_s;
-        var _gx = w / 2 / _gs;
-        var _gy = h / 2 / _gs;
+        var area_w = max(1, _targ.slide_size[0]);
+		var area_h = max(1, _targ.slide_size[1]);
+		var area_x = _targ.slide_anchor? _targ.x - area_w : _targ.x;
+		var area_y = _targ.slide_anchor? _targ.y - area_h : _targ.y;
         
-        var _tx = _gx;
-        var _ty = _gy;
-        
-        switch(_targ.slide_anchor) {
-            case 0 :
-                _tx = _gx - _targ.x;
-                _ty = _gy - _targ.y;
-                break;
-                
-            case 1 :
-                _tx = 64 * _gs - _targ.x;
-                _ty = 64 * _gs - _targ.y;
-                break;
-                
-        }
+        var _gs = min((w - ui(16)) / (area_w * 2), (h - ui(16)) / (area_h * 2));
         
         if(skip) {
-            graph_x = _tx;
-            graph_y = _ty;
+            graph_x = w / 2 / _gs - area_x;
+            graph_y = h / 2 / _gs - area_y;
             
         } else
-            autoPanTo(_tx, _ty, _targ.slide_speed, _tz);
+            autoPanTo(area_x, area_y, _targ.slide_speed * .75, _gs);
     }
     
     ////- Context
@@ -1915,16 +1906,27 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         #region node list filter
 	        array_foreach(project.allNodes, function(_n) /*=>*/ { _n.is_selecting = false; });
 	        
-	        var _node_active = nodes_list;
-	        if(project.graphDisplay.show_control) _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && _n.visible});
-	        else _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && _n.visible && !_n.is_controller});
-        
-	        var _node_draw = array_filter( _node_active, function(_n) /*=>*/ {
+	        var _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && _n.visible});
+	        var _node_draw   = array_filter( _node_active, function(_n) /*=>*/ {
 	        	_n.preDraw(__gr_x, __gr_y, __mx, __my, __gr_s);
 	        	var _cull = _n.cullCheck(__gr_x, __gr_y, __gr_s, -32, -32, __gr_w + 32, __gr_h + 64);
-	        	return _n.active && _cull;
+	        	return _n.active && !_n.is_controller && _cull;
 	    	});
 	    #endregion
+	    
+	    node_hovering   = noone;
+        node_hover_type = 0;
+	    
+        #region drawController
+        	if(project.graphDisplay.show_control) {
+	        	var _node_controller = array_filter(_node_active, function(_n) /*=>*/ {return _n.is_controller});
+		        array_foreach(_node_controller, function(_n) /*=>*/ { 
+		        	_n.active_draw_index = -1;
+		        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s))
+		        		node_hovering = _n; 
+		        });
+        	}
+        #endregion
         
         #region drawNodeBG
 	        _frame_hovering  = frame_hovering;
@@ -1953,10 +1955,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         #endregion
         
         #region node_hovering
-	        node_hovering   = noone;
-	        node_hover_type = 0;
-	        
-	        if(pHOVER) array_foreach(_node_draw, function(_n) /*=>*/ { 
+	        if(pHOVER && node_hovering == noone) array_foreach(_node_draw, function(_n) /*=>*/ { 
 	        	_n.branch_drawing = false;
 	        	if(_n.pointIn(__gr_x, __gr_y, __mx, __my, __gr_s, __self))
 	                node_hovering = _n;
@@ -2362,12 +2361,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        array_foreach(_node_draw, function(_n) /*=>*/ { if(_n.drawNodeFG) _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s, __self); });
 				surface_reset_target();
 	        }
-	        
+		        
 	        BLEND_ALPHA_MULP
 	        	draw_surface_safe(node_surface);
-		        array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawJunctionNames(__gr_x, __gr_y, __mx, __my, __gr_s, self); });
+		        array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawJunctionNames(__gr_x, __gr_y, __mx, __my, __gr_s, __self); });
 	        BLEND_NORMAL
 	        
+	        #region drawController
+	        	if(project.graphDisplay.show_control)
+			        array_foreach(_node_controller, function(_n) /*=>*/ {return _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s)});
+	        #endregion
+        
 	        if(value_focus != noone && key_mod_press(SHIFT)) {
             	TOOLTIP = [ value_focus.getValue(), value_focus.type ];
             	if(pFOCUS && DOUBLE_CLICK) value_focus.drawValue = !value_focus.drawValue;
@@ -2394,7 +2398,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    
 	                    if(!_node.selectable) continue;
 	                    if(!project.graphDisplay.show_control && _node.is_controller) continue;
-	                    if(is(_node, Node_Frame) && !nodes_select_frame)           continue;
+	                    if(is(_node, Node_Frame) && !nodes_select_frame)              continue;
 	                    
 	                    var _x = (_node.x + graph_x) * graph_s;
 	                    var _y = (_node.y + graph_y) * graph_s;
