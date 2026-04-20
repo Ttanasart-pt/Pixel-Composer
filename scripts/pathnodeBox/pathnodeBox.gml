@@ -33,6 +33,7 @@ function pathnodeBox(_junction) : widget() constructor {
             
         } else {
         	var ic = s_node_path;
+        	var _node = is(_path, Path)? _path.node : _path;
         	
         	switch(instanceof(_path)) {
         		case "Node_Path" : ic = s_node_path; break;
@@ -49,8 +50,7 @@ function pathnodeBox(_junction) : widget() constructor {
         		if(mouse_lclick(iactive))
         			bi = 2;
         			
-        		if(mouse_lpress(iactive) && is(_path, Node))
-        			New_Inspect_Node_Panel(_path);
+        		if(mouse_lpress(iactive) && is(_node, Node)) New_Inspect_Node_Panel(_node);
         	}
         	
         	draw_sprite_stretched_ext(THEME.button_def, bi, x, y, iw, h);
@@ -59,7 +59,7 @@ function pathnodeBox(_junction) : widget() constructor {
             draw_sprite_ext(ic, 0, x + iw / 2, y + h / 2, _s, _s);
             
             draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
-            draw_text_add(x + iw + ui(4 + 8), y + h / 2, is(_path, Node)? _path.getDisplayName() : "Path");
+            draw_text_add(x + iw + ui(4 + 8), y + h / 2, is(_node, Node)? _node.getDisplayName() : "Path");
         }
         
 		return h;
