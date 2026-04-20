@@ -80,6 +80,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}).setTooltip(__txt("Execute"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
+	// insp2button = button(() => {
+	// 	var app = APPEND(collPath, group);
+	// 	nodeReplace(self, app, true);
+		
+	// }).setTooltip(__txt("Sync"))
+	// 	.setIcon(THEME.refresh_icon, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
 	buttonCacheClear.onClick = function() /*=>*/ { array_foreach(nodes, function(n) /*=>*/ {return n.clearCache()} ); };
 	
 	////- GROUP
@@ -159,6 +166,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static stepBegin = function() {
 		dummy_input = attributes.lock_input? noone : __dummy_input;
+		// insp2button.visible = collPath != "";
 		
 		if(will_refresh) refreshNodes();
 		
@@ -504,6 +512,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				array_push(_attr.custom_output_list , outputs[i].from.node_id);
 		}
 		
+		_attr.path = collPath;
+		
 		return _attr;
 	}
 	static doSerialize		  = function(_map) {
@@ -540,7 +550,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			return;
 		}
 		
-		if(struct_has(attr, "custom_input_list")) {
+		if(has(attr, "custom_input_list")) {
 			var _ilist = attr.custom_input_list;
 			var _inarr = {};
 			var _dilst = [];
@@ -550,7 +560,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				_ilist[i] = ds_map_try_get(APPEND_MAP, _ilist[i], _ilist[i]);
 			
 			for( var i = array_length(inputs) - 1; i >= custom_input_index; i-- ) {
-				if(!struct_has(inputs[i], "from")) continue;
+				if(!has(inputs[i], "from")) continue;
 				
 				var _frNode = inputs[i].from.node_id;
 				if(array_exists(_ilist, _frNode)) {
@@ -560,7 +570,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			}
 			
 			for( var i = 0, n = array_length(_ilist); i < n; i++ ) {
-				if(!struct_has(_inarr, _ilist[i])) continue;
+				if(!has(_inarr, _ilist[i])) continue;
 				
 				var _inJunc = _inarr[$ _ilist[i]];
 				_inJunc.index = array_length(inputs);
@@ -569,7 +579,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			
 		}
 		
-		if(struct_has(attr, "custom_output_list")) {
+		if(has(attr, "custom_output_list")) {
 			var _ilist = attr.custom_output_list;
 			var _inarr = {};
 			
@@ -597,7 +607,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			
 		}
 		
+		if(has(attr, "path")) collPath = attr.path;
+			
 	}
+	
 	static doDeserialize       = function(_map) {
 		var _toolNode = _map[$ "tool"] ?? -4;
 		if(_toolNode != -4) {

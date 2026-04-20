@@ -15,14 +15,13 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_hover_al     = 0;
 	selectable         = false;
 	
-	add_point = false;
-	point_x   = 0;
-	point_y   = 0;
+	add_point  = false;
+	point_x    = 0;
+	point_y    = 0;
 	
 	junction_x = 0;
 	junction_y = 0;
-	
-	is_root = true;
+	is_root    = true;
 	
 	static topoSortable = function() /*=>*/ {return false};
 	
@@ -43,6 +42,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static move = function(_x, _y, _direct = true) {
 		moved = true;
+		
 		if(x == _x && y == _y) return;
 		if(!LOADING) project.setModified();
 		
@@ -52,8 +52,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		y = _y; 
 		
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
-			var _n = nodes[i];
-			_n.move(_n.x + dx, _n.y + dy);
+			var _n = nodes[i]; 
+			if(!_n.moved) _n.move(_n.x + dx, _n.y + dy);
 		}
 	}
 	

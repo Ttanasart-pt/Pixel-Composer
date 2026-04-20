@@ -1564,6 +1564,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	var _node = nodes_list[i];
             if(is(_node, Node_Collection_Inline)) 
             	_node.groupCheck(gr_x, gr_y, graph_s, mx, my);
+            _node.moved = false;
         }
         
         var _mgx = mouse_graph_x;
@@ -1588,9 +1589,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            } else if(nx != node_drag_ox || ny != node_drag_oy) {
 	                var dx = nx - node_drag_ox;
 	                var dy = ny - node_drag_oy;
-	                
-	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ )
-	                    nodes_selecting[i].moved = false;
 	                
 	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
 	                    var _node = nodes_selecting[i];
@@ -4532,21 +4530,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     cy /= amo;
                     
                     for( var i = 0; i < amo; i++ ) {
-                    	if(is(app[i], Node_Collection)) {
-	                    	app[i].metadata = data.getMetadata();
-	                    	app[i].collPath = path;
-	                    }
-                    	
                         app[i].x = app[i].x - cx + mouse_grid_x;
                         app[i].y = app[i].y - cy + mouse_grid_y;
                     }
                     
                 } else if(is(app, Node)) {
-                    if(is(app, Node_Collection)) {
-                    	app.metadata = data.getMetadata();
-                    	app.collPath = path;
-                    }
-                    
                     app.x = mouse_grid_x;
                     app.y = mouse_grid_y;
                 }

@@ -6,6 +6,11 @@
         "date": "2026-04-20T04:24:35.819Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Control node visibility is now device preference instead of project setting."
+      },
+      {
+        "date": "2026-04-20T07:04:23.231Z",
+        "node": "",
+        "commit": "Fix dragging node and it's parent move node twice."
       }
     ]
   }

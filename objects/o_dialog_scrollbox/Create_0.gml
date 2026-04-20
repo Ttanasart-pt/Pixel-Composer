@@ -5,7 +5,7 @@ event_inherited();
 	max_h  = 640;
 	anchor = ANCHOR.top | ANCHOR.left;
 	
-	font     = f_p0
+	font     = f_p2;
 	align	 = fa_center;
 	text_pad = ui(8);
 	item_pad = ui(8);

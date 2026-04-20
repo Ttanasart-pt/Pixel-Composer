@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc8",
+    "changes": [
+      {
+        "date": "2026-04-20T07:04:23.226Z",
+        "node": "",
+        "commit": "Fix dragging node and it's parent move node twice."
+      }
+    ]
+  }
+]

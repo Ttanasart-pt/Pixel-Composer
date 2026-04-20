@@ -73,8 +73,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _n  = __nodes[i];
 			var _nx = _n.x + _dx;
 			var _ny = _n.y + _dy;
-			
-			_n.move(_nx, _ny, false);
+			if(!_n.moved) _n.move(_nx, _ny, false);
 		}
 		
 		if(!LOADING) project.setModified();

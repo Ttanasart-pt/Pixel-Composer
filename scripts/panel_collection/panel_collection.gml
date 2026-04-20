@@ -119,18 +119,17 @@ function Panel_Collection() : PanelContent() constructor {
 					for(var i = 0; i < array_length(NODE_CATEGORY); i++) {
 						var cat = NODE_CATEGORY[i];
 						
-						if(!struct_has(cat, "list")) continue;
+						if(!struct_has(cat, "list"))      continue;
 						if(!array_empty(cat[$ "filter"])) continue;
 						
 						var _content = cat.list;
 						for(var j = 0; j < array_length(_content); j++) {
 							var _node = _content[j];
 							
-							if(is_string(_node))				      continue;
-							if(ds_map_exists(search_map, _node))      continue;
-							if(!is(_node, NodeObject))     continue;
-							if(_node.patreon && !IS_PATREON)          continue;
-							if(_node.deprecated)					  continue;
+							if(is_string(_node))                 continue;
+							if(ds_map_exists(search_map, _node)) continue;
+							if(!is(_node, NodeObject))           continue;
+							if(_node.deprecated)                 continue;
 							
 							var match = string_partial_match(string_lower(_node.getName()), search_lower);
 							var param = "";
@@ -391,7 +390,7 @@ function Panel_Collection() : PanelContent() constructor {
 		updated_prog   = lerp_linear(updated_prog, 0, 0.01);
 		
 		if(contentView == 0) {
-			var grid_width = PREFERENCES.collection_label? round(grid_size * 1.25) : grid_size;
+			var grid_width = grid_size;
 			var grid_space = ui(4);
 			
 			var col = max(1, floor(_cw / (grid_width + grid_space)));
@@ -417,9 +416,9 @@ function Panel_Collection() : PanelContent() constructor {
 					var gr_x1 = _boxx + grid_size;
 					var gr_y1 = yy + grid_size;
 					
-					if(has(_node, "getSpr")) _node.getSpr();
-					
 					if(yy + grid_size >= 0 && yy <= contentPane.surface_h) {
+						if(has(_node, "getSpr")) _node.getSpr();
+						
 						BLEND_OVERRIDE
 						draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, CDEF.main_black);
 						BLEND_NORMAL
@@ -475,8 +474,8 @@ function Panel_Collection() : PanelContent() constructor {
 							
 						} else
 							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
-					
-						if(meta != noone && page == 0) {
+						
+						if(meta != noone) {
 							if(meta.file_id != 0) {
 								var icc = COLORS._main_icon;
 								var ipd = ui(10);
@@ -553,7 +552,7 @@ function Panel_Collection() : PanelContent() constructor {
 					var spr_x = list_height / 2 + ui(14);
 					var spr_y = yy + list_height / 2;
 					var spr_s = list_height - ui(8);
-					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+					if(has(_node, "getSpr")) _node.getSpr();
 					if(sprite_exists(_node.spr)) {
 						var sw = sprite_get_width(_node.spr);
 						var sh = sprite_get_height(_node.spr);
@@ -738,7 +737,6 @@ function Panel_Collection() : PanelContent() constructor {
 			var _node = _list[| index];
 			
 			if(!is(_node, NodeObject)) continue;
-			if(_node.patreon && !IS_PATREON)      continue;
 			if(_node.deprecated)                  continue;
 			
 			i = floor(ii / col);

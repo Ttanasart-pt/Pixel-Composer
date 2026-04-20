@@ -230,7 +230,7 @@ function Panel_Inspector() : PanelContent() constructor {
         inspecting   = noone;
         inspectings  = [];
         inspectGroup = false;
-        top_bar_h    = ui(100);
+        top_bar_h    = ui(92);
         
         content_w = 0;
         content_h = 0;
@@ -2195,11 +2195,11 @@ function Panel_Inspector() : PanelContent() constructor {
         }
         
         content_w = w - pad * 4;
-        content_h = h - top_bar_h - pad * 3 - 2;
+        content_h = h - top_bar_h - pad * 3;
         
         contentPane.verify(content_w, content_h);
         contentPane.setFocusHover(pFOCUS, pHOVER);
-        contentPane.drawOffset(pad * 2, top_bar_h + pad + 1, mx, my);
+        contentPane.drawOffset(pad * 2, top_bar_h + pad, mx, my);
         
         if(prop_hover != noone)
         	ds_stack_push(FOCUS_STACK, "Property");

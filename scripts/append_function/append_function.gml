@@ -11,6 +11,12 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 	recordAction(ACTION_TYPE.collection_loaded, array_clone(node_create), _path);
 	log_message("FILE", "append file " + _path, THEME.noti_icon_file_load);
 	
+	if(is_array(node_create) && array_length(node_create) == 1) {
+		var _n = node_create[0];
+    	if(is(_n, Node_Collection))
+        	_n.collPath = _path;
+    }
+	
 	return node_create;
 }
 
