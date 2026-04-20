@@ -4550,6 +4550,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     app.x = mouse_grid_x;
                     app.y = mouse_grid_y;
                 }
+                
+                project.setModified();
                 break;
             
             case "Project":

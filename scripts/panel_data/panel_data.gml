@@ -685,6 +685,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_holding_sx = tab_holding.tab_x;
 					}
 					
+					if(DRAGGING) TOOLTIP = __txt("Right Click to switch tab");
 					if(mouse_rpress(focus)) {
 						if(DRAGGING) setTab(i);
 						else {
@@ -876,6 +877,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_holding_sx = tab_holding.tab_x;
 					}
 					
+					if(DRAGGING) TOOLTIP = __txt("Right Click to switch tab");
 					if(mouse_rpress(focus)) {
 						if(DRAGGING) setTab(i);
 						else {
