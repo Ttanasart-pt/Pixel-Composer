@@ -596,6 +596,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var msx   = mouse_x - tsx;
 		var msy   = mouse_y - tsy;
 		
+		var hover = HOVER == self;
+		var focus = FOCUS == self;
+		
 		var _len  = array_length(content);
 		var ppad  = ui(THEME_VALUE.panel_tab_padding);
 		var expd  = PREFERENCES.panel_tab_expands;
@@ -650,7 +653,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				if(i == content_index) {
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, _tbx, _tby, _tbw, _tbh, COLORS.panel_tab);
-					foc = FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
+					foc = focus || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
 					
 					if(foc) {
 						var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
@@ -659,7 +662,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					
 				} else {
 					var cc = COLORS.panel_tab_inactive;
-					if(HOVER == self && _hov)
+					if(hover && _hov)
 						var cc = COLORS.panel_tab_hover;
 						
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, _tby, _tbw, _tbh, cc, 1);
@@ -668,11 +671,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var aa = 0.5;
 				if(point_in_rectangle(msx, msy, _tbx + _tbw - ui(16), _tby, _tbx + _tbw, tab_size)) {
 					aa = 1;
-					if(mouse_lpress(FOCUS == self)) 
+					if(mouse_lpress(focus)) 
 						rem = i;
 						
-				} else if(HOVER == self && _hov) {
-					if(mouse_lpress(FOCUS == self)) {
+				} else if(hover && _hov) {
+					if(mouse_lpress(focus)) {
 						setTab(i);
 						
 						tab_holding    = cont;
@@ -682,20 +685,20 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_holding_sx = tab_holding.tab_x;
 					}
 					
-					if(mouse_rpress(FOCUS == self)) {
-						var menu = array_clone(border_rb_menu);
-						if(instanceof(cont) == "Panel_Menu")
-							array_remove(menu, border_rb_close);
-						array_push(menu, tab_align_item);
-						
-						menuCall("panel_border_menu", menu);
+					if(mouse_rpress(focus)) {
+						if(DRAGGING) setTab(i);
+						else {
+							var menu = array_clone(border_rb_menu);
+							if(instanceof(cont) == "Panel_Menu")
+								array_remove(menu, border_rb_close);
+							array_push(menu, tab_align_item);
+							
+							menuCall("panel_border_menu", menu);
+						}
 					}
 					
-					if(mouse_press(mb_middle, FOCUS == self))
+					if(mouse_press(mb_middle, focus))
 						rem = i;
-					
-					if(DRAGGING)
-						setTab(i);
 				}
 				
 				var cc =  foc? COLORS.panel_tab_icon : COLORS._main_text_sub;
@@ -784,6 +787,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var msx   = mouse_x - tsx;
 		var msy   = mouse_y - tsy;
 		
+		var hover = HOVER == self;
+		var focus = FOCUS == self;
+		
 		var _len  = array_length(content);
 		var ppad  = ui(THEME_VALUE.panel_tab_padding);
 		var expd  = PREFERENCES.panel_tab_expands;
@@ -805,8 +811,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			var tabHov = msy < 0 ? 0 : _len - 1;
 			
 			var rem   = -1;
-			var hover = HOVER == self;
-			var focus = FOCUS == self;
 			
 			tab_x = lerp_float(tab_x, tab_x_to, 5);
 			tab_width = 0;
@@ -873,19 +877,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					}
 					
 					if(mouse_rpress(focus)) {
-						var menu = array_clone(border_rb_menu);
-						if(instanceof(cont) == "Panel_Menu")
-							array_remove(menu, border_rb_close);
-						array_push(menu, tab_align_item);
-						
-						menuCall("panel_border_menu", menu);
+						if(DRAGGING) setTab(i);
+						else {
+							var menu = array_clone(border_rb_menu);
+							if(instanceof(cont) == "Panel_Menu")
+								array_remove(menu, border_rb_close);
+							array_push(menu, tab_align_item);
+							
+							menuCall("panel_border_menu", menu);
+						}
 					}
 					
 					if(mouse_press(mb_middle, focus)) 
 						rem = i;
-					
-					if(DRAGGING)
-						setTab(i);
 				}
 				
 				var cc =  foc?  COLORS.panel_tab_icon : COLORS._main_text_sub;

@@ -3029,8 +3029,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	topbar_widget_dim.drawParam(new widgetParam(wdx, wdy, wdw, wdh, val, undefined, _m, x, y).setFont(f_p3));
 	    	
 	    	var pad = ui(4);
-	    	var bs  = th - pad * 2 + ui(1);
 	    	var wdy = pad;
+	    	var bs  = th - pad * 2 + ui(1);
 	    	
 	    	for( var i = 0, n = array_length(topbar_buttons); i < n; i++ ) {
 	    		var but = topbar_buttons[i];
