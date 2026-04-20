@@ -179,5 +179,6 @@ switch(load_process) {
     run_in(2, function() /*=>*/ { 
     	PANEL_PREVIEW.fullView();
     	PANEL_GRAPH.refreshDraw(); 
+    	RENDER_ALL_REORDER
     });
 }
