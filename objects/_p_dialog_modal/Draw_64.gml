@@ -30,7 +30,6 @@ WIDGET_TAB_BLOCK = true;
 	
 	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	draw_text_ext(dialog_x + padding + ui(8), py, content, -1, dialog_w - ui(48));
-	_dialog_h = ui(118) + string_height_ext(content, -1, dialog_w - ui(48));
 	
 	var bpad = ui(THEME_VALUE.dialog_modal_button_spacing);
 	
@@ -65,7 +64,6 @@ WIDGET_TAB_BLOCK = true;
 		bx0 -= bw + bpad;
 	}
 	
-	dialog_h = _dialog_h;
 #endregion
 
 DIALOG_DRAW_FOCUS

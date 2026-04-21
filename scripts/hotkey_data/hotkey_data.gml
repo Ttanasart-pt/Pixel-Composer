@@ -5,8 +5,13 @@ array_push(global.__FN_NODE_TOOL, function()
 function __initHotKey() {
 	HOTKEYS_CUSTOM = {};
 	
-    for( var i = 0, n = array_length(global.__FN_NODE_TOOL); i < n; i++ ) 
-    	global.__FN_NODE_TOOL[i]();
+	try {
+	    for( var i = 0, n = array_length(global.__FN_NODE_TOOL); i < n; i++ ) 
+	    	global.__FN_NODE_TOOL[i]();
+	    	
+	} catch(e) {
+		print($"Loading hotkey failed: {e}")
+	}
 }
 
 	////- Classes

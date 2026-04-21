@@ -2978,30 +2978,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     } 
     
     function drawTopbar() { 
-    	if(!project.graphDisplay.show_topbar) {
+    	if(!project.graphDisplay.show_topbar)
     		return;
-    		
-    		var cx = w / 2;
-    		var ww = ui(20);
-    		var hh = ui(16);
-    		
-    		var x0 = cx - ww / 2;
-    		var x1 = cx + ww / 2;
-    		var y0 = 0;
-    		var y1 = hh;
-    		var aa = .5;
-    		
-    		// draw_sprite_stretched_ext(THEME.box_r2, 0, x0, y0, ww, hh, COLORS._main_icon_dark);
-    		
-    		if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
-    			aa = 1;
-				mouse_on_graph = false;
-				if(mouse_lpress(pFOCUS)) project.graphDisplay.show_topbar = true;
-    		}
-    		
-    		draw_sprite_ui_uniform(THEME.arrow, 3, x0 + ww / 2, y0 + hh / 2 + ui(2), 1, COLORS._main_icon, aa);
-    		return;
-    	}
     	
     	var tx = 0;
         var ty = 0;
@@ -3009,6 +2987,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var th = topbar_height;
         var _lh = topbar_height / 2 - ui(8);
         
+		if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th))
+			mouse_on_graph = false;
+			
     	draw_sprite_stretched(THEME.toolbar, 1, tx, ty, tw, th);
     	
     	var _spFrm = THEME_VALUE.panel_separation_type == "frame";
@@ -3095,12 +3076,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		top_scroll = lerp_float(top_scroll, top_scroll_to, 5);
 		
 		if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th)) {
-			mouse_on_graph = false;
-			
 			top_scroll_to = top_scroll_to + MOUSE_WHEEL * (_mus + ui(2));
 			top_scroll_to = clamp(top_scroll_to, -top_scroll_max, 0);
 			
-			if(mouse_rpress(pFOCUS)) menuCall("graph_topbar_context_menu", menuItems_gen("graph_topbar_context_menu"));
+			if(mouse_rpress(pFOCUS)) menuCallGen("graph_topbar_context_menu");
 		}
     }
     
