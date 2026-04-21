@@ -117,14 +117,14 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								var _bw = string_width(_bch);
 								var _bh = string_height(_bch);
 								
-								_tx +=  pd;
+								// _tx +=  pd;
 								_tw  = _bw * _ss;
 								_th  = _bh * _ss;
 								
 								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_icon);
 								draw_sprite_stretched_points(THEME.box_r5,     1, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, CDEF.main_dkgrey);
 									
-								draw_set_color(_cc);
+								draw_set_color(COLORS._main_icon_light);
 								draw_text_add_float(_tx, _y, _bch, _ss);
 								
 								var _reac = button_reactive(string_to_var(_bch));
@@ -135,8 +135,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									draw_set_alpha(_reac);
 									draw_text_transformed(_tx, _y, _bch, _ss, _ss, 0);
 									draw_set_alpha(_aa);
-									draw_set_color(_cc);
 								} 
+								draw_set_color(_cc);
 								
 								_tx   += _tw + pd;
 								width += _bw * fsize + 8;
@@ -150,7 +150,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								var _bw = string_width(_bch);
 								var _bh = string_height(_bch);
 								
-								_tx +=  pd;
+								// _tx +=  pd;
 								_tw  = _bw * _ss;
 								_th  = _bh * _ss;
 								
@@ -170,7 +170,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								var _bw = string_width(_key);
 								var _bh = string_height(_key);
 								
-								_tx +=  pd;
+								// _tx +=  pd;
 								_tw  = _bw * _ss;
 								_th  = _bh * _ss;
 								

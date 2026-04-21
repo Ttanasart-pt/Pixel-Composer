@@ -98,15 +98,20 @@ def IOTable(nodeData):
             continue
         
         for _junc in _inputs:
+            if _junc["type"] == "separator":
+                continue
             allio[_junc["name"]] = getColor(_junc["type"])
         
         for _junc in _outputs:
             allio[_junc["name"]] = getColor(_junc["type"])
 
-        if _inputs:
-            inputRows += f'<tr><th colspan="2" class="summary-topic"><p>{_name}</p></th></tr>'
+        # if _inputs:
+        #     inputRows += f'<tr><th colspan="2" class="summary-topic"><p>{_name}</p></th></tr>'
 
         for _junc in _inputs:
+            if _junc["type"] == "separator":
+                inputRows += f'<tr><th colspan="2" class="summary-topic junction-separator"><p>{_junc["name"]}</p></th></tr>'
+                continue
             # mapStr = "" if not _mappable else '<a href="/nodes/junctions/mappable.html" style="line-height: 1;"><img mappable></a>'
             mapStr = ""
             jName  = _junc["name"]
@@ -136,8 +141,8 @@ def IOTable(nodeData):
             dynamicTable += "</table>"
             inputRows    += f"""<tr><td colspan="2">{dynamicTable}</td></tr>"""
 
-        if _outputs:
-            outputRows += f'<tr><th colspan="2" class="summary-topic"><p>{_name}</p></th></tr>'
+        # if _outputs:
+        #     outputRows += f'<tr><th colspan="2" class="summary-topic"><p>{_name}</p></th></tr>'
 
         for _junc in _outputs:
             jName  = _junc["name"]

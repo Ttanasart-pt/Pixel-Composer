@@ -54,9 +54,9 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	b_fast = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Number_Simple", x, y, group), true); })
 		.setText("Switch to Fast mode");
 		
-	input_display_list = [ b_fast, 0, 1, 
-		[ "Display",  false ], 2, 6, 15, 3, 5, 4, 7, 16, 
-		[ "Gizmo",    true  ], 8, 11, 19, 12, 13, 14, 9, 10, __inspc(ui(6), true), 17, 18, 
+	input_display_list = [ b_fast,  0,  1, 
+		[ "Display",  false ],  2,  6, 15,  3,  5,  4,  7, 16, 
+		[ "Gizmo",    true  ],  8, 11, 19, 12, 13, 14,  9, 10, __inspc(ui(6), true), 17, 18, 
 	];
 	
 	////- Nodes

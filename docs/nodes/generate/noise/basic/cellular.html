@@ -6246,7 +6246,7 @@
 <table class = "summary-table">
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_cellular.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Cellular Noise</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Cellular</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="/nodes/array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><div class="vertical"></div><a href="#">Node_Cellular</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
-<tr><th colspan="2" class="summary-topic"><p>Node_Cellular</p></th></tr><tr>
+<tr><th colspan="2" class="summary-topic junction-separator"><p>Output</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">dimension</p></td>
                 <td><p>Dimension</p></td>
             </tr><tr>
@@ -6258,19 +6258,16 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Mask</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Noise</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Type</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Pattern</p></td>
             </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #8fde5d">seed</p></td>
-                <td><p></p></td>
-            </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation</p></td>
                 <td><p>Phase</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Transform</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
                 <td><p>Position</p></td>
             </tr><tr>
@@ -6279,13 +6276,13 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
                 <td><p>Scale</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Radial</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Radial Scale</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Radial Shatter</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Iteration</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
                 <td><p>Iteration</p></td>
             </tr><tr>
@@ -6297,7 +6294,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Blend Mode</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Rendering</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Inverted</p></td>
             </tr><tr>
@@ -6312,7 +6309,7 @@
             </tr>
 <tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
-<tr><th colspan="2" class="summary-topic"><p>Node_Cellular</p></th></tr><tr>
+<tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Surface Out</p></td>
             </tr>
@@ -6355,7 +6352,7 @@
 <h3><a id="Middle" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Middle</span></h3><br>
 <p>The middle point for contrast calculation.</p><br>
 <h3><a id="Colored" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Colored</span></h3><br>
-<p><span class="inline-code">Cell</span> type only: fill each cell with random color.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_cellular/node_cellular.gml">/scripts/node_cellular/node_cellular.gml</a></li><li><span>Shader [sh_cell_noise_crystal]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_cell_noise_crystal/sh_cell_noise_crystal.fsh">/shaders/sh_cell_noise_crystal/sh_cell_noise_crystal.fsh</a></li><li><span>Shader [sh_cell_noise_random]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_cell_noise_random/sh_cell_noise_random.fsh">/shaders/sh_cell_noise_random/sh_cell_noise_random.fsh</a></li><li><span>Shader [sh_cell_noise]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_cell_noise/sh_cell_noise.fsh">/shaders/sh_cell_noise/sh_cell_noise.fsh</a></li><li><span>Shader [sh_cell_noise_edge]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_cell_noise_edge/sh_cell_noise_edge.fsh">/shaders/sh_cell_noise_edge/sh_cell_noise_edge.fsh</a></li></ul>
+<p><span class="inline-code">Cell</span> type only: fill each cell with random color.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_cellular/node_cellular.gml">/scripts/node_cellular/node_cellular.gml</a></li><li><span>Shader [sh_cell_noise_random]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_cell_noise_random/sh_cell_noise_random.fsh">/shaders/sh_cell_noise_random/sh_cell_noise_random.fsh</a></li><li><span>Shader [sh_cell_noise]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_cell_noise/sh_cell_noise.fsh">/shaders/sh_cell_noise/sh_cell_noise.fsh</a></li><li><span>Shader [sh_cell_noise_crystal]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_cell_noise_crystal/sh_cell_noise_crystal.fsh">/shaders/sh_cell_noise_crystal/sh_cell_noise_crystal.fsh</a></li><li><span>Shader [sh_cell_noise_edge]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_cell_noise_edge/sh_cell_noise_edge.fsh">/shaders/sh_cell_noise_edge/sh_cell_noise_edge.fsh</a></li></ul>
         </div>
     </div>
 

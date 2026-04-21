@@ -673,6 +673,32 @@ table.summary-table {
             margin-bottom: -8px;
         }
     }
+
+    th.junction-separator {
+         > p {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--main_ltgrey);
+            background: var(--main_black);
+            
+            padding: 0px 8px;
+            margin-bottom: -2px;
+            margin: auto;
+            
+            width: fit-content;
+            z-index: 1;
+            position: relative;
+        }
+        
+        &::before {
+            content: "";
+            display: block;
+            border-bottom: solid 1px var(--main_dkgrey);
+            transform: translateY(10px);
+            z-index: 0;
+            position: relative;
+        }
+    }
 }
 
 div.breadcrumb {

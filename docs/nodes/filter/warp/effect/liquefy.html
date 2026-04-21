@@ -6246,10 +6246,10 @@
 <table class = "summary-table">
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_liquefy.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Liquefy</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Liquefy</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="/nodes/array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><div class="vertical"></div><a href="#">Node_Liquefy</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
-<tr><th colspan="2" class="summary-topic"><p>Node_Liquefy</p></th></tr><tr>
+<tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">toggle</p></td>
                 <td><p>Channel</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Surfaces</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Surface In</p></td>
             </tr><tr>
@@ -6258,40 +6258,44 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Mix</p></td>
+            </tr><tr><td colspan="2"><table class="summary-table dynamic" style="margin-top: 8px;"><tr>
+                <th colspan="2" class="summary-topic">
+                    <p style="margin: -0.85rem auto -4px auto;width: fit-content;padding: 0px 8px;">Dynamic Inputs</p>
+                </th>
             </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
-                <td><p>Type</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
-                <td><p>Position</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
-                <td><p>Position 2</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffb5b5">pathnode</p></td>
-                <td><p>Push Path</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
-                <td><p>Push Resolution</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
-                <td><p>Radius</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
-                <td><p>Radius 2</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
-                <td><p>Falloff</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
-                <td><p>Intensity</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
-                <td><p>Push</p></td>
-            </tr>
+                    <td class="summary-topic junction-type"><p style="color: #ff9166" >enum</p></td>
+                    <td><p>Type</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >vec2</p></td>
+                    <td><p>Position</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >vec2</p></td>
+                    <td><p>Position 2</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffb5b5" >pathnode</p></td>
+                    <td><p>Push Path</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ff9166" >int</p></td>
+                    <td><p>Push Resolution</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >float</p></td>
+                    <td><p>Radius</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >float</p></td>
+                    <td><p>Radius 2</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >float</p></td>
+                    <td><p>Falloff</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >slider</p></td>
+                    <td><p>Intensity</p></td>
+                </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >slider</p></td>
+                    <td><p>Push</p></td>
+                </tr></table></td></tr>
 <tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
-<tr><th colspan="2" class="summary-topic"><p>Node_Liquefy</p></th></tr><tr>
+<tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Surface Out</p></td>
             </tr>
@@ -6307,7 +6311,7 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_liquefy/node_liquefy-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-224,\"y\":-96,\"inputs\":[{\"linked\":true},{\"unit\":1,\"r\":{\"d\":0.25},\"m\":1},{},{\"unit\":1},{},{},{\"v\":0},{\"v\":0},{},{},{},{},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8BI1467366BBubdU9QXYDC9MC5SGc8\",\"version\":120076,\"attriTool\":{},\"name\":\"Checker\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Checker20020\",\"type\":\"Node_Checker\"},{\"x\":-48,\"y\":-96,\"inputs\":[{\"from_node\":\"gA8BI1467366BBubdU9QXYDC9MC5SGc8\",\"from_index\":0},{},{},{},{},{},{},{},{\"unit\":1,\"r\":{\"d\":[0.23828125,0.271484375]},\"m\":1},{\"unit\":1,\"r\":{\"d\":[0.8203125,0.79296875]},\"m\":1},{\"r\":{\"d\":12.99078462348605},\"m\":1},{\"r\":{\"d\":0.47999999999999998},\"m\":1},{\"r\":{\"d\":4},\"attri\":{\"curved\":false},\"m\":1},{},{},{\"v\":1},{},{}],\"outputs\":[{}],\"renamed\":true,\"data_length\":11,\"id\":\"gA8BI0465334uiZNHvd6dhn3lEgHDSXr\",\"version\":120076,\"attri\":{\"size\":0},\"input_fix_len\":7,\"attriTool\":{},\"name\":\"Liquefy\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Liquefy22607\",\"type\":\"Node_Liquefy\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_liquefy/node_liquefy.gml">/scripts/node_liquefy/node_liquefy.gml</a></li><li><span>Shader [sh_liquefy_pinch]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_pinch/sh_liquefy_pinch.fsh">/shaders/sh_liquefy_pinch/sh_liquefy_pinch.fsh</a></li><li><span>Shader [sh_liquefy_push]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_push/sh_liquefy_push.fsh">/shaders/sh_liquefy_push/sh_liquefy_push.fsh</a></li><li><span>Shader [sh_liquefy_twirl]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_twirl/sh_liquefy_twirl.fsh">/shaders/sh_liquefy_twirl/sh_liquefy_twirl.fsh</a></li><li><span>Shader [sh_liquefy_bloat]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_bloat/sh_liquefy_bloat.fsh">/shaders/sh_liquefy_bloat/sh_liquefy_bloat.fsh</a></li></ul>
+</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_liquefy/node_liquefy.gml">/scripts/node_liquefy/node_liquefy.gml</a></li><li><span>Shader [sh_liquefy_push]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_push/sh_liquefy_push.fsh">/shaders/sh_liquefy_push/sh_liquefy_push.fsh</a></li><li><span>Shader [sh_liquefy_bloat]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_bloat/sh_liquefy_bloat.fsh">/shaders/sh_liquefy_bloat/sh_liquefy_bloat.fsh</a></li><li><span>Shader [sh_liquefy_pinch]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_pinch/sh_liquefy_pinch.fsh">/shaders/sh_liquefy_pinch/sh_liquefy_pinch.fsh</a></li><li><span>Shader [sh_liquefy_twirl]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_liquefy_twirl/sh_liquefy_twirl.fsh">/shaders/sh_liquefy_twirl/sh_liquefy_twirl.fsh</a></li></ul>
         </div>
     </div>
 

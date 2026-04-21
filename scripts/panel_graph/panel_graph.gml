@@ -101,6 +101,9 @@
 	function panel_graph_view_control_show()       { PANEL_GRAPH.view_control_show();   }
 	function panel_graph_view_control_hide()       { PANEL_GRAPH.view_control_hide();   }
 	
+	function panel_graph_slideShow_next()       { PANEL_GRAPH.slideShow_next();   }
+	function panel_graph_slideShow_prev()       { PANEL_GRAPH.slideShow_prev();   }
+	
     function panel_graph_set_node_display_mini() { 
     	var nodes = PANEL_GRAPH.nodes_selecting; 
     	
@@ -271,6 +274,9 @@
 		registerFunction(g, "Toggle View Control", "", n, panel_graph_view_control_toggle  ).setMenu("graph_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_view_control});
 		registerFunction(g, "Show View Control",   "", n, panel_graph_view_control_show    ).setMenu("graph_view_control_show");
 		registerFunction(g, "Hide View Control",   "", n, panel_graph_view_control_hide    ).setMenu("graph_view_control_hide");
+		
+		registerFunction(g, "Slideshow Next",      vk_pagedown, n, panel_graph_slideShow_next ).setMenu("graph_slideShow_next");
+		registerFunction(g, "Slideshow Previous",  vk_pageup,   n, panel_graph_slideShow_prev ).setMenu("graph_slideShow_prev");
 		
 		registerFunction(g, "Edit Graph Toolbar...", "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_general")}  ).setMenu("graph_edit_toolbar"                          );
 		registerFunction(g, "Reset Graph Toolbar",   "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_general")} ).setMenu("graph_reset_toolbar",       THEME.refresh_20 );
@@ -3355,6 +3361,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
     }
     
+    function slideShow_next() { if(!project.useSlideShow) return; setSlideShow((project.slideShow_index + 1) % project.slideShow_amount);                            }
+    function slideShow_prev() { if(!project.useSlideShow) return; setSlideShow((project.slideShow_index - 1 + project.slideShow_amount) % project.slideShow_amount); }
+    
     function drawTooltipHints() {
     	if(!project.graphDisplay.show_tooltip) { tooltip_overlay = {}; return; }
 		
@@ -4693,7 +4702,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function searchWiki() {
     	if(array_empty(nodes_selecting)) return;
     	
-    	var dia = dialogCall(o_dialog_generic)
+    	var dia = dialogCall(_p_dialog_modal)
     		.setContent("Open URL", "Open documentation in browser?")
     		.setButtons([
 				[ __txt("Open"),   function() /*=>*/ {
@@ -4709,7 +4718,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function viewSource() {
     	if(array_empty(nodes_selecting)) return;
     	
-    	var dia = dialogCall(o_dialog_generic)
+    	var dia = dialogCall(_p_dialog_modal)
     		.setContent("Open URL", "Open source code in browser?")
     		.setButtons([
 				[ __txt("Open"),   function() /*=>*/ {

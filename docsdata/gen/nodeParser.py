@@ -58,11 +58,23 @@ def readNodeFile(baseNode):
     
     classParent = reFindFirst(r"function.*:\s(\w*)", script).strip()
 
-    inputs = re.findall(r"^\s*newInput\((?!index).*$", script, re.MULTILINE)
-    inputs = juncParser.parseInputs(inputs)
+    inputs = []
+    inputDynamic = []
+    outputs = []
 
-    inputDynamic = re.findall(r"^\s*newInput\(index.*$", script, re.MULTILINE)
-    inputDynamic = juncParser.parseInputs(inputDynamic)
+    dynamicInputCapture = re.findall(r"function\screateNewInput.*\{([\s\S]*?)\n\s*\}", script)
+    if dynamicInputCapture:
+        dynamicInputCapture = dynamicInputCapture[0]
+        script = script.replace(dynamicInputCapture, "")
+        
+        inputDynamic = re.findall(r"^\s*newInput.*$", dynamicInputCapture, re.MULTILINE)
+        inputDynamic = juncParser.parseInputs(inputDynamic)
+
+    _inputs = re.findall(r"(^\s*newInput.*$)|(^\s*\/{4}-\s=.*$)", script, re.MULTILINE)
+    for _input in _inputs:
+        inputs.extend(_input)
+    inputs  = juncParser.parseInputs(inputs)
+    inputs  = [i for i in inputs if i["name"] != ""]
 
     outputs = re.findall(r"^\s*newOutput.*$", script, re.MULTILINE)
     outputs = juncParser.parseOutputs(outputs)

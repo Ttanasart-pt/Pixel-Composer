@@ -39,7 +39,16 @@ def reFindFirst(pattern, string):
     return ""
 
 def parseInput(inp):
-    inp   = inp.strip()
+    inp = inp.strip()
+    
+    if inp.startswith("////- ="):
+        iName = inp.lstrip("/-= ").strip()
+        iType = "separator"
+        return {
+            "name": iName,
+            "type": iType, 
+        }
+    
     iName = reFindFirst(r'"(.*?)"', inp)
     iType = reFindFirst(r"^.*nodeValue(.*?)\(", inp).strip(" _").lower()
 

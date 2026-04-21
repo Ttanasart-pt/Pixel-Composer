@@ -6246,10 +6246,10 @@
 <table class = "summary-table">
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_canvas.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Canvas</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Canvas</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="#">Node_Canvas</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
-<tr><th colspan="2" class="summary-topic"><p>Node_Canvas</p></th></tr><tr>
+<tr><th colspan="2" class="summary-topic junction-separator"><p>Frames</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">dimension</p></td>
                 <td><p>Dimension</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Output</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Output Type</p></td>
             </tr><tr>
@@ -6264,7 +6264,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>On End</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Background</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Render Background</p></td>
             </tr><tr>
@@ -6282,7 +6282,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Background Alpha</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Brush</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Brush Type</p></td>
             </tr><tr>
@@ -6297,7 +6297,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Rotate By Direction</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Animated Brush</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Animated Brush</p></td>
             </tr><tr>
@@ -6315,7 +6315,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>On Animation End</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Scatter</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Scatter</p></td>
             </tr><tr>
@@ -6324,7 +6324,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
                 <td><p>Scatter Radius</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Data Transfer</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Data Source</p></td>
             </tr><tr>
@@ -6333,7 +6333,7 @@
             </tr>
 <tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
-<tr><th colspan="2" class="summary-topic"><p>Node_Canvas</p></th></tr><tr>
+<tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Surface Out</p></td>
             </tr><tr>
@@ -6377,7 +6377,7 @@ Canvas node is used for drawing directly to surface. </p><br>
 <h2><a id="Actions" class="anchor"></a>Actions</h2><br>
 <p>Actions are refered to the right-side button in the preview panel. These can be seen as tools for more specific tasks.</p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
-<table class="change-table"><tr><th>1.21.rc7</th></tr><tr><td>**Canvas**: Fix dimension change not apply immediately.</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_canvas/node_canvas.gml">/scripts/node_canvas/node_canvas.gml</a></li><li><span>Shader [sh_canvas_apply_draw]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_canvas_apply_draw/sh_canvas_apply_draw.fsh">/shaders/sh_canvas_apply_draw/sh_canvas_apply_draw.fsh</a></li><li><span>Shader [sh_canvas_apply_canvas]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_canvas_apply_canvas/sh_canvas_apply_canvas.fsh">/shaders/sh_canvas_apply_canvas/sh_canvas_apply_canvas.fsh</a></li><li><span>Shader [sh_canvas_preview_canvas]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_canvas_preview_canvas/sh_canvas_preview_canvas.fsh">/shaders/sh_canvas_preview_canvas/sh_canvas_preview_canvas.fsh</a></li></ul>
+<table class="change-table"><tr><th>1.21.rc7</th></tr><tr><td>**Canvas**: Fix dimension change not apply immediately.</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_canvas/node_canvas.gml">/scripts/node_canvas/node_canvas.gml</a></li><li><span>Shader [sh_canvas_preview_canvas]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_canvas_preview_canvas/sh_canvas_preview_canvas.fsh">/shaders/sh_canvas_preview_canvas/sh_canvas_preview_canvas.fsh</a></li><li><span>Shader [sh_canvas_apply_canvas]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_canvas_apply_canvas/sh_canvas_apply_canvas.fsh">/shaders/sh_canvas_apply_canvas/sh_canvas_apply_canvas.fsh</a></li><li><span>Shader [sh_canvas_apply_draw]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_canvas_apply_draw/sh_canvas_apply_draw.fsh">/shaders/sh_canvas_apply_draw/sh_canvas_apply_draw.fsh</a></li></ul>
         </div>
     </div>
 
