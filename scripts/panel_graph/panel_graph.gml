@@ -1334,7 +1334,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            	graph_s_to = clamp(graph_s_to + MOUSE_WHEEL * .1, scale[0], array_last(scale));
             }
             
-            graph_s = lerp_float(graph_s, graph_s_to, PREFERENCES.graph_zoom_smoooth);
+            graph_s = lerp_float(graph_s, graph_s_to, PREFERENCES.graph_zoom_smoooth, .001);
         }
         
         if(_s != graph_s) {
@@ -1701,8 +1701,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function drawBGBase() { //
     	draw_clear(bg_color);
         
+        var minGrid = 10;
     	var gls = project.graphGrid.size;
-        while(gls * graph_s < 8) gls *= 5;
+    	var prd = project.graphGrid.highlight;
+        while(gls * graph_s <= minGrid) gls *= prd;
         
     	if(OS == os_windows) {
 	        shader_set(sh_panel_graph_grid);	
@@ -1715,6 +1717,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	
 	        	shader_set_i("gridShow",      project.graphDisplay.show_grid);
 	        	shader_set_f("gridSize",      gls);
+	        	shader_set_f("gridSizeMin",   minGrid);
 	        	shader_set_c("gridColor",     project.graphGrid.color);
 	        	shader_set_f("gridAlpha",     project.graphGrid.opacity);
 	        	shader_set_i("gridOrigin",    project.graphGrid.show_origin);

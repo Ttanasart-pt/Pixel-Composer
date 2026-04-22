@@ -263,7 +263,7 @@
 			size	    : 16,
 			color       : ca_white,
 			opacity     : 0.05,
-			highlight   : 12,
+			highlight   : 8,
 		}
 		
 		PREFERENCES.project_graphDisplay = {
