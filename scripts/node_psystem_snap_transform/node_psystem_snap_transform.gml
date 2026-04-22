@@ -135,6 +135,9 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				_py = value_snap(_py - _posi_shft_y_curr, _posi_snap_y_curr) + _posi_shft_y_curr;
 				
 				_dfg |= 0b100 * !_posi_over;
+				
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px  );
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py  );
 			}
 			
 			if(_rota) {
@@ -147,6 +150,8 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				_rot = value_snap(_rot - _rota_shft_curr, _rota_snap_curr) + _rota_shft_curr;
 				
 				_dfg |= 0b001 * !_rota_over;
+				
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx, buffer_f64, _rot );
 			}
 			
 			if(_scal) {
@@ -161,6 +166,9 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				_sy = value_snap(_sy - _scal_shft_y_curr, _scal_snap_y_curr) + _scal_shft_y_curr;
 				
 				_dfg |= 0b010 * !_scal_over;
+				
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64, _sx  );
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64, _sy  );
 			}
 			
 			if(_dirr) {
@@ -178,13 +186,7 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
 			}
 			
-			buffer_write_at( _partBuff, _start + ( _posi_over? PSYSTEM_OFF.posx : PSYSTEM_OFF.dposx ), buffer_f64, _px  );
-			buffer_write_at( _partBuff, _start + ( _posi_over? PSYSTEM_OFF.posy : PSYSTEM_OFF.dposy ), buffer_f64, _py  );
-			buffer_write_at( _partBuff, _start + ( _scal_over? PSYSTEM_OFF.scax : PSYSTEM_OFF.dscax ), buffer_f64, _sx  );
-			buffer_write_at( _partBuff, _start + ( _scal_over? PSYSTEM_OFF.scay : PSYSTEM_OFF.dscay ), buffer_f64, _sy  );
-			buffer_write_at( _partBuff, _start + ( _rota_over? PSYSTEM_OFF.rotx  : PSYSTEM_OFF.drotx  ), buffer_f64, _rot );
-			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16, _dfg );
+			// buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16, _dfg );
 		}
 		
 	}
