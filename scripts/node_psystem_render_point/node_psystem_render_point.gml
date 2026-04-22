@@ -37,7 +37,7 @@ function Node_pSystem_Render_Point(_x, _y, _group = noone) : Node(_x, _y, _group
 		if(use_mask) buffer_to_start(_masks);
 		
 		var _poolSize = _parts.poolSize;
-		var _partAmo  = _parts.maxCursor;
+		var _partAmo  = _parts.maxCursor; 
 		var _partBuff = _parts.buffer;
 		var _off = 0;
 		
