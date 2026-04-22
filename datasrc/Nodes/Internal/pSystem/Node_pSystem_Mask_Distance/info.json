@@ -1,1 +1,7 @@
-{"name":"Mask Distance","baseNode":"Node_pSystem_Mask_Distance","pxc_version":120020,"spr":"s_node_psystem_mask_distance"}
+{
+    "name":          "Mask Distance",
+    "spr":           "s_node_psystem_mask_distance",
+    "baseNode":      "Node_pSystem_Mask_Distance",
+    "pxc_version":    120020,
+    "show_in_recent": false,
+}

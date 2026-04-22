@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc9",
+    "changes": [
+      {
+        "date": "2026-04-22T08:11:46.120Z",
+        "node": "pSystem",
+        "commit": "**pSystem**: Fix some context nodes shows up in recents."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc6",
     "changes": [
       {

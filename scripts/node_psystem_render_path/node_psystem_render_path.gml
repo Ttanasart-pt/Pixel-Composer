@@ -20,7 +20,7 @@ function Node_pSystem_Render_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	// 
 	
-	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.pathnode, noone ));
+	newOutput(0, nodeValue_Output( "Path", VALUE_TYPE.pathnode, noone ));
 	
 	input_display_list = [ 2, 
 		[ "Particles", false ], 0, 1, 
@@ -137,10 +137,6 @@ function Node_pSystem_Render_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _dim   = getDimension();
 		var _parts = getInputData(0);
 		var _masks = getInputData(1), use_mask = _masks != noone;
-		
-		var _outSurf = outputs[0].getValue();
-		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		outputs[0].setValue(_outSurf);
 		
 		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);

@@ -178,10 +178,11 @@
             { "label": "/Render" },
             "Node_pSystem_Render",
             "Node_pSystem_Render_Trail",
-            "Node_pSystem_Render_Path",
             "Node_pSystem_Render_Line",
             "Node_pSystem_Render_Triangle",
             "Node_pSystem_Triangulate",
+            "Node_pSystem_Render_Point",
+            "Node_pSystem_Render_Path",
             
             { "label": "/Blending" },
             "Node_pSystem_Blend",
