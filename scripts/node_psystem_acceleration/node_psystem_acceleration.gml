@@ -103,13 +103,14 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 			var _ds = point_distance(  0, 0, _vx, _vy );
 			var _dr = point_direction( 0, 0, _vx, _vy );
 			
-			_ds = max(0, _ds + _acel_cur * _mask);
-			_vx = lengthdir_x(_ds, _dr);
-			_vy = lengthdir_y(_ds, _dr);
-			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
-			
+			if(_ds != 0) {
+				_ds = max(0, _ds + _acel_cur * _mask);
+				_vx = lengthdir_x(_ds, _dr);
+				_vy = lengthdir_y(_ds, _dr);
+				
+				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+			}
 		}
 		
 	}

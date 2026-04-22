@@ -19,6 +19,7 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- =Vector Move
 	newInput(15, nodeValue_Bool(    "Do Vector Move", false       ));
+	newInput(19, nodeValue_Bool(    "Vector Impulse", false       ));
 	newInput( 9, nodeValue_Range(   "Speed",          [0,0], true )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
 	newInput(11, nodeValue_RotRand( "Direction", ROTATION_RANDOM_DEF_0_360 ));
 	
@@ -32,14 +33,14 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(12, nodeValue_EScroll( "Mode",     1, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
 	newInput(18, nodeValue_Bool(    "Accumulative", false ));
 	newInput( 7, nodeValue_Vec2_Range(  "Scale",   [1,1,1,1], true )).setCurvable(8, CURVE_DEF_11, "Over Lifespan"); 
-	// 19
+	// 20
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
 	input_display_list = [ 2, 
 		[ "Particles",   false     ],  0,  1, 
 		[ "Direct Move", false, 14 ],  3,  4, 
-		[ "Vector Move", false, 15 ],  9, 10, 11, 
+		[ "Vector Move", false, 15 ], 19,  9, 10, 11, 
 		[ "Rotation",    false, 16 ], 13,  5,  6, 
 		[ "Scale",       false, 17 ], 12, 18,  7,  8, 
 	];
@@ -72,6 +73,7 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _move      = getInputData( 3), _move_curved = inputs[3].attributes.curved && curve_move != undefined;
 		
 		var _do_vect   = getInputData(15);
+		var _impl      = getInputData(19);
 		var _sped      = getInputData( 9), _sped_curved = inputs[9].attributes.curved && curve_sped != undefined;
 		var _dirr      = getInputData(11);
 		
@@ -106,7 +108,7 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
 			var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
 			var _dsx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscax,  buffer_f64  );
-			var _dsy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscax,  buffer_f64  );
+			var _dsy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscay,  buffer_f64  );
 			
 			var _rot    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,   buffer_f64  );
 			
@@ -124,13 +126,21 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			}
 			
 			if(_do_vect) {
+				var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64  );
+				var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64  );
+				
 				var _sped_mod = _sped_curved? curve_sped.get(rat) : 1;
 				var _sped_cur = random_range(_sped[0], _sped[1]) * _sped_mod;
+				if(_impl) _sped_cur *= bool(_lif == 0);
+				
 				if(_sped_cur != 0) {
 					var _dirr_cur = rotation_random_eval(_dirr);
-					_px += lengthdir_x(_sped_cur, _dirr_cur) * _mask;
-					_py += lengthdir_y(_sped_cur, _dirr_cur) * _mask;
+					_vx += lengthdir_x(_sped_cur, _dirr_cur) * _mask;
+					_vy += lengthdir_y(_sped_cur, _dirr_cur) * _mask;
 				}
+				
+				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
 			}
 			
 			if(_do_scal) {
