@@ -39,6 +39,9 @@ function LOAD_SAMPLE() {
 	directory_verify(targ);
 	
 	if(check_version($"{targ}/version")) {
+		var _path = $"{DIRECTORY}Welcome files/Getting started";
+		if(directory_exists(_path)) directory_destroy(_path);
+		
 		directory_destroy($"{targ}/Sample Projects")
 		zip_unzip($"{working_directory}pack/welcome_files.zip", targ);
 	}
