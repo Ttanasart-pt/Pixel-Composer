@@ -748,10 +748,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInput = function(_y = 0, _junc = noone, _shft = input_fix_len, _over = false) {
 		var _targ = noone;
 		var _dy   = infinity;
-		for( var i = _shft, n = array_length(inputs); i < n; i++ ) {
-			var _inp = inputs[i];
-			
-			if(!_inp.isVisible())                  continue;
+		
+		var _useList = input_display_list != -1;
+		var _amo     = _useList? array_length(input_display_list) : array_length(inputs);
+		
+		for( var i = 0, n = array_length(inputDisplayList); i < n; i++ ) {
+			var _inp = inputDisplayList[i];
 			if(!_over && _inp.value_from != noone) continue;
 			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
 			
@@ -765,22 +767,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(dummy_input) {
 			var _ddy = abs(dummy_input.y - _y);
 			if(_ddy < _dy) _targ = dummy_input;
-		}
-		
-		if(_targ != noone || !_over) return _targ;
-		
-		var _dy = infinity;
-		for( var i = _shft, n = array_length(inputs); i < n; i++ ) {
-			var _inp = inputs[i];
-			
-			if(!_inp.isVisible()) continue;
-			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
-			
-			var _ddy = abs(_inp.y - _y);
-			if( _ddy < _dy) {
-				_targ = _inp;
-				_dy   = _ddy;
-			}
 		}
 		
 		return _targ;

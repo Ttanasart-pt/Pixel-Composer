@@ -903,8 +903,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					_y += _padd[1] - miny;
 				}
 				
-				if(!is(_atlas_arr[i], SurfaceAtlas))
-					 _atlas_arr[i] = new SurfaceAtlas(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
+				if(!is(_atlas_arr[i], Atlas))
+					 _atlas_arr[i] = new Atlas(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
 				else _atlas_arr[i].set(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
 				
 				draw_surface_ext(_surf, _x, _y, _sx, _sy, _rot, _col, _alp);

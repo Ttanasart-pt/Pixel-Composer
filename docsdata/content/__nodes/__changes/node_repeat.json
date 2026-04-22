@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc9",
+    "changes": [
+      {
+        "date": "2026-04-22T04:41:09.319Z",
+        "node": "",
+        "commit": "**Graph Panel**: Fix node wrangler select incorrect input."
+      }
+    ]
+  }
+]

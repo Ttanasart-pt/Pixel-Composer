@@ -13,8 +13,8 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	anchors       = {};
 	
 	////- =Display
-	newInput( 1, nodeValue_Text(    "Title"                 ));
-	newInput( 0, nodeValue_Int(     "Order",      0         ));
+	newInput( 1, nodeValue_Text(    "Title" ));
+	newInput( 0, nodeValue_Int(     "Order",     struct_size(project.slideShow) ));
 	newInput( 5, nodeValue_Vec2(    "Half Size", [400, 200] ));
 	
 	////- =Transition
