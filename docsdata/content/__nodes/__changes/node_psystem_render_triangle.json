@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc9",
+    "changes": [
+      {
+        "date": "2026-04-22T07:59:41.247Z",
+        "node": "",
+        "commit": "**pSystem Render Triangle**: Fix color not applying."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc6",
     "changes": [
       {

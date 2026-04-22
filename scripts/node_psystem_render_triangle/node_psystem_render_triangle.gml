@@ -117,10 +117,10 @@ function Node_pSystem_Render_Triangle(_x, _y, _group = noone) : Node(_x, _y, _gr
 				var _sx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64  );
 				var _sy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64  );
 				
-				var _cr = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsr, buffer_u8  );
-				var _cg = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsg, buffer_u8  );
-				var _cb = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsb, buffer_u8  );
-				var _ca = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsa, buffer_u8  );
+				var _cr = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnr, buffer_u8  );
+				var _cg = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blng, buffer_u8  );
+				var _cb = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnb, buffer_u8  );
+				var _ca = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blna, buffer_u8  );
 				var _cc = make_color_rgba(_cr, _cg, _cb, _ca);
 				
 				random_set_seed(_seed + _spwnId);
