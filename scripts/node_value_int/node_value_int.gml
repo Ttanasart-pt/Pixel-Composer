@@ -30,7 +30,7 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : __NodeValue_Numb
 			var _intAmo = array_length(val);
 			var _intArr = array_create(_intAmo);
 			for( var i = 0; i < _intAmo; i++ )
-				_intArr[i] = valueProcess(_intArr[i], nod, applyUnit);
+				_intArr[i] = valueProcess(val[i], nod, applyUnit);
 			return _intArr;
 		}
 		

@@ -9,51 +9,55 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, 0));
 	
-	static getArray = function(_arr, index, _ovf) {
-		if(!is_array(_arr)) return;
-		if(is_array(index)) return;
+	static getArray = function(_arr, _ind, _ovf) {
+		if(!is_array(_arr)) return 0;
+		if(!is_real(_ind))  return 0;
 		
 		var _len  = array_length(_arr);
 		
 		switch(_ovf) {
 			case 0 :
-				if(index < 0) index = _len + index;
-				index = clamp(index, 0, _len - 1);
+				if(_ind < 0) _ind = _len + _ind;
+				_ind = clamp(_ind, 0, _len - 1);
 				break;
 				
 			case 1 :
-				index = safe_mod(index, _len);
-				if(index < 0) index = _len + index;
+				_ind = safe_mod(_ind, _len);
+				if(_ind < 0) _ind = _len + _ind;
 				break;
 				
 			case 2 :
 				var _pplen = (_len - 1) * 2;
-				index = safe_mod(abs(index), _pplen);
-				if(index >= _len) 
-					index = _pplen - index;
+				_ind = safe_mod(abs(_ind), _pplen);
+				if(_ind >= _len) 
+					_ind = _pplen - _ind;
 				break;
 		}
 		
-		return array_safe_get_fast(_arr, index);
+		return array_safe_get_fast(_arr, _ind);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[0].setType(type);
-		outputs[0].setType(type);
+		#region data
+			var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+			inputs[0].setType(type);
+			outputs[0].setType(type);
+			
+			var _arr = getInputData(0);
+			var _ind = getInputData(1);
+			var _ovf = getInputData(2);
+			if(!is_array(_arr)) return;
+		#endregion
 		
-		var _arr  = getInputData(0);
-		var index = getInputData(1);
-		var _ovf  = getInputData(2);
-		if(!is_array(_arr)) return;
+		var res = 0;
 		
-		var res = is_array(index)? array_create(array_length(index)) : 0;
-		
-		if(is_array(index)) {
-			for( var i = 0, n = array_length(index); i < n; i++ )
-				res[i] = getArray(_arr, index[i], _ovf);
+		if(is_array(_ind)) {
+			res = array_create(array_length(_ind));
+			for( var i = 0, n = array_length(_ind); i < n; i++ )
+				res[i] = getArray(_arr, _ind[i], _ovf);
+			
 		} else 
-			res = getArray(_arr, index, _ovf);
+			res = getArray(_arr, _ind, _ovf);
 		
 		outputs[0].setValue(res);
 	}
