@@ -148,7 +148,7 @@ event_inherited();
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	
-	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) {
+	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var hover = sp_sample.hover;
@@ -158,7 +158,7 @@ event_inherited();
 		var list, _group_label;
 		
 		var ww = sp_sample.surface_w;
-		var hh = ui(20);
+		var hh = ui(6);
 		var yy = _y + hh;
 		
 		var _search = sample_search != "";
@@ -306,7 +306,6 @@ event_inherited();
 				}
 				
 				draw_sprite_stretched_ext(THEME.node_bg, 0, gridX, gridY, gridW, gridH, COLORS.node_base_bg);
-				draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, CDEF.main_dark);
 				
 				if(_project.path == PROJECT.path)
 					draw_sprite_stretched_add(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 0.25);
@@ -353,9 +352,9 @@ event_inherited();
 					
 					draw_sprite_ext(s_icon_64_white, 0, _sx, _sy, 1, 1, 0, COLORS._main_icon, 1);
 				}
-			
-				var cc = ghov? COLORS._main_accent : COLORS.panel_frame;
-				draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, cc);
+				
+				draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS.node_name_bg);
+				if(ghov) draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent);
 			}
 			
 			var tx = _boxx + ui(4);
@@ -395,19 +394,44 @@ event_inherited();
 			var pd    = grid_padd;
 			var _cAll = 0;
 			
+			var bb = THEME.button_hide_fill;
+			var bp = ui(3);
+			var bw = ui(28);
+			var bh = label_h - bp * 2;
+			var bx, by, bt, bc;
+						
 			for( var i = 0; i < len; i++ ) {
-				var lb  = group_labels[i];
-				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+				var lb    = group_labels[i];
+				var title = string_titlecase(lb.text);
 				
-				var _hov  = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + label_h);
+				var _yy   = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
+				var  lx1  = pd + ww;
 				
+				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, lx1, _yy + label_h);
 				draw_sprite_stretched_ext(THEME.section_separator, 0, pd, _yy, ww - pd, label_h, _hov? COLORS.section_hover : COLORS.section_bg);
 				if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, pd, _yy, ww - pd, label_h, COLORS.section_selected);
 				
+				switch(title) {
+					case "Getting Started" :
+						bx =  ww - bp - bw;
+						by = _yy + bp;
+						bt = __txt("Refresh")
+						bc = COLORS._main_value_positive;
+						
+						if(buttonInstant_Pad(bb, bx, by, bw, bh, _m, sHOVER, sFOCUS, bt, THEME.refresh_icon, 0, bc) == 2) {
+							var _path = $"{DIRECTORY}Welcome files/Getting started";
+							directory_destroy(_path);
+							LOAD_SAMPLE();
+						}
+						
+						lx1 -= bw + bp;
+						break;
+				}
+				
+				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, lx1, _yy + label_h);
 				if(_hov) {
 					draw_sprite_stretched_ext(THEME.section_separator, 1, pd, _yy, ww - pd, label_h, COLORS.section_hover);
-					
 					sp_sample.hover_content = true;
 					
 					if(DOUBLE_CLICK) _cAll = _coll? -1 : 1;
@@ -421,7 +445,7 @@ event_inherited();
 					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, COLORS._main_icon, 1);
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(pd + ui(32), _yy + label_h / 2, string_titlecase(lb.text));
+				draw_text_add(pd + ui(32), _yy + label_h / 2, title);
 			}
 			
 			if(_cAll !=  0) PREFERENCES.welcome_file_closed = [];

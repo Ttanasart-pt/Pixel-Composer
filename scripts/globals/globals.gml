@@ -52,6 +52,7 @@ gml_pragma("UnityBuild", "true");
 	globalvar VERSION_STRING_BETA; VERSION_STRING_BETA = NIGHTLY? string_join(".", _versions[0], _versions[1], _versions[2]) : VERSION_STRING;
 	
 	globalvar HOTKEYS; HOTKEYS             = {};
+	globalvar HOTKEYS_ALL; HOTKEYS_ALL         = {};
 	globalvar HOTKEY_CONTEXT; HOTKEY_CONTEXT      = [0];
 	
 	globalvar TOOLTIP; TOOLTIP             = "";

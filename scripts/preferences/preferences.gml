@@ -50,6 +50,7 @@
 		
 		PREFERENCES.check_update				    = 1;
 		
+		PREFERENCES.tutorial_mode                   = true;
 	#endregion
 			
 	#region IO

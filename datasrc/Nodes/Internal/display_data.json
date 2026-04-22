@@ -1360,6 +1360,7 @@
             "Node_Widget_Test",
             "Node_Graph_Preview",
             "Node_Slideshow",
+            "Node_Slideshow_Node_Anchor",
             
             { "label": "Project" },
             "Node_Project_Data",

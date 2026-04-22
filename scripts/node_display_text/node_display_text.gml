@@ -104,7 +104,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			switch(_ch) {
 				case "<" : _mode = 1; continue;
 					
-				case ">" : 
+				case ">" : if(_mode != 1) break;
 					var _c = string_splice(_cmd, " ");
 					
 					if(array_length(_c) > 1) {
@@ -117,19 +117,23 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								var _bw = string_width(_bch);
 								var _bh = string_height(_bch);
 								
-								// _tx +=  pd;
 								_tw  = _bw * _ss;
 								_th  = _bh * _ss;
 								
-								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_icon);
-								draw_sprite_stretched_points(THEME.box_r5,     1, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, CDEF.main_dkgrey);
+								var _tx0 = _tx - pd;
+								var _ty0 = _y  - pd;
+								var _tx1 = _tx + _tw + pd;
+								var _ty1 = _y  + _th + pd;
+								
+								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
+								draw_sprite_stretched_points(THEME.box_r5,     1, _tx0, _ty0, _tx1, _ty1, CDEF.main_dkgrey);
 									
 								draw_set_color(COLORS._main_icon_light);
 								draw_text_add_float(_tx, _y, _bch, _ss);
 								
 								var _reac = button_reactive(string_to_var(_bch));
 								if(_reac > 0) {
-									draw_sprite_stretched_points(THEME.box_r5, 4, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_accent, _reac);
+									draw_sprite_stretched_points(THEME.box_r5, 4, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, _reac);
 									
 									draw_set_color(merge_color(0, COLORS.panel_bg_clear_inner, 0.5));
 									draw_set_alpha(_reac);
@@ -138,7 +142,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								} 
 								draw_set_color(_cc);
 								
-								_tx   += _tw + pd;
+								_tx   += _tw;
 								width += _bw * fsize + 8;
 								break;
 							
@@ -150,36 +154,55 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								var _bw = string_width(_bch);
 								var _bh = string_height(_bch);
 								
-								// _tx +=  pd;
 								_tw  = _bw * _ss;
 								_th  = _bh * _ss;
 								
-								draw_sprite_stretched_ext(THEME.node_bg, 0, _tx - pd, _y - pd, _tw + pd*2, _th + pd*2, COLORS.node_base_bg, .75);
-								draw_sprite_stretched_add(THEME.node_bg, 0, _tx - pd, _y - pd, _tw + pd*2, _th + pd*2, COLORS.node_base_bg, .10);
+								var _tx0 = _tx - pd;
+								var _ty0 = _y  - pd;
+								var _tx1 = _tx + _tw + pd;
+								var _ty1 = _y  + _th + pd;
 								
+								draw_sprite_stretched_points(THEME.node_bg, 0, _tx0, _ty0, _tx1, _ty1,        COLORS.node_base_bg, .75);
+								draw_sprite_stretched_points(THEME.node_bg, 0, _tx0, _ty0, _tx1, _ty0 + 6*_s, COLORS.node_base_bg, 1);
+								BLEND_ADD
+								draw_sprite_stretched_points(THEME.node_bg, 1, _tx0, _ty0, _tx1, _ty1, COLORS.node_base_bg, .4);
+								
+								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+									draw_sprite_stretched_points(THEME.node_bg, 1, _tx0, _ty0, _tx1, _ty1, COLORS.node_base_bg, 1);
+									PANEL_GRAPH.node_highlighting = _bch;
+								}
+								
+								BLEND_NORMAL
 								draw_set_color(_cc);
 								draw_text_add_float(_tx, _y, _bch, _ss);
 								
-								_tx   += _tw + pd;
+								_tx   += _tw;
 								width += _bw * fsize + 8;
 								break;
 								
 							case "panel" :
-								var _key = _c[1] + " panel";
+								var _pan = "";
+								for( var i = 1; i < array_length(_c); i++ )
+									_pan += i > 1? " " + _c[i] : _c[i];
+									
+								var _key = string_title(_pan) + " Panel";
+								var _bw  = string_width(_key);
+								var _bh  = string_height(_key);
 								
-								var _bw = string_width(_key);
-								var _bh = string_height(_key);
-								
-								// _tx +=  pd;
 								_tw  = _bw * _ss;
 								_th  = _bh * _ss;
 								
-								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_icon);
+								var _tx0 = _tx - pd;
+								var _ty0 = _y  - pd;
+								var _tx1 = _tx + _tw + pd;
+								var _ty1 = _y  + _th + pd;
 								
-								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd)) {
-									draw_sprite_stretched_points(THEME.box_r5, 1, _tx - pd, _y - pd, _tx + _tw + pd, _y + _th + pd, COLORS._main_accent, 1);
+								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
+								
+								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+									draw_sprite_stretched_points(THEME.box_r5, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, 1);
 									
-									switch(string_lower(_c[1])) {
+									switch(string_lower(_pan)) {
 										case "graph" :      FOCUSING_PANEL = PANEL_GRAPH;      break;
 										case "preview" :    FOCUSING_PANEL = PANEL_PREVIEW;    break;
 										case "inspector" :  FOCUSING_PANEL = PANEL_INSPECTOR;  break;
@@ -191,12 +214,111 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								draw_set_color(COLORS._main_accent);
 								draw_text_add_float(_tx, _y, _key, _ss);
 								
-								_tx   += _tw + pd;
+								_tx   += _tw;
 								width += _bw * fsize + 8;
 								
 								draw_set_font(_ff);
 								draw_set_color(_cc);
 								draw_set_alpha(_aa);
+								break;
+								
+							case "dialog" :
+								var _pan = "";
+								for( var i = 1; i < array_length(_c); i++ )
+									_pan += i > 1? " " + _c[i] : _c[i];
+									
+								var _key = string_title(_pan) + " Dialog";
+								var _bw  = string_width(_key);
+								var _bh  = string_height(_key);
+								
+								_tw  = _bw * _ss;
+								_th  = _bh * _ss;
+								
+								var _tx0 = _tx - pd;
+								var _ty0 = _y  - pd;
+								var _tx1 = _tx + _tw + pd;
+								var _ty1 = _y  + _th + pd;
+								
+								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
+								
+								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+									draw_sprite_stretched_points(THEME.box_r5, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, 1);
+									
+									switch(string_lower(_pan)) {
+										case "add node" : TOOLTIP = "Right click on an empty area in the Graph Panel."; break;
+									}
+								}
+								
+								draw_set_color(COLORS._main_accent);
+								draw_text_add_float(_tx, _y, _key, _ss);
+								
+								_tx   += _tw;
+								width += _bw * fsize + 8;
+								
+								draw_set_font(_ff);
+								draw_set_color(_cc);
+								draw_set_alpha(_aa);
+								break;
+								
+							case "action" :
+								var _key = array_safe_get_fast(_c, 1, "");
+								var _txt = array_safe_get_fast(_c, 2, "");
+								var _bw  = string_width(_txt);
+								var _bh  = string_height(_txt);
+								
+								_tw  = _bw * _ss;
+								_th  = _bh * _ss;
+								
+								var _tx0 = _tx - pd;
+								var _ty0 = _y  - pd;
+								var _tx1 = _tx + _tw + pd;
+								var _ty1 = _y  + _th + pd;
+								
+								draw_sprite_stretched_points(THEME.box_r2_clr, 0, _tx0, _ty0, _tx1, _ty1);
+								
+								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+									draw_sprite_stretched_points(THEME.box_r2, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
+									TOOLTIP = new tooltipHotkey(_txt, _key);
+								}
+								
+								draw_set_color(_cc);
+								draw_text_add_float(_tx, _y, _txt, _ss);
+								
+								_tx   += _tw;
+								width += _bw * fsize + 8;
+								
+								draw_set_font(_ff);
+								draw_set_alpha(_aa);
+								break;
+								
+							case "url":
+								var _bch = "";
+								for( var i = 1; i < array_length(_c); i++ )
+									_bch += i > 1? " " + _c[i] : _c[i];
+								
+								var _bw = string_width(_bch);
+								var _bh = string_height(_bch);
+								
+								_tw  = _bw * _ss;
+								_th  = _bh * _ss;
+								
+								var _tx0 = _tx - pd;
+								var _ty0 = _y  - pd;
+								var _tx1 = _tx + _tw + pd;
+								var _ty1 = _y  + _th + pd;
+								var tc = COLORS._main_accent;
+								
+								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+									tc = COLORS._main_text;
+									if(mouse_lpress()) URL_open(_bch);
+								}
+								
+								draw_set_color(tc);
+								draw_text_add_float(_tx, _y, _bch, _ss);
+								draw_set_color(_cc);
+								
+								_tx   += _tw;
+								width += _bw * fsize + 8;
 								break;
 								
 							case "spr" :
@@ -213,7 +335,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								var _ow = sprite_get_xoffset(_spr) * _spr_s;
 								var _oh = sprite_get_yoffset(_spr) * _spr_s;
 								
+								gpu_set_tex_filter(true);
 								draw_sprite_ext(_spr, _spr_i, _tx + _ow, _y + _ch_h / 2 - _th / 2 + _oh, _spr_s, _spr_s, 0, c_white, 1);
+								gpu_set_tex_filter(false);
 								
 								_tx   += _tw * _spr_s;
 								width += _tw;
@@ -274,13 +398,14 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			switch(_ch) {
 				case "<" : _mode = 1; continue;
 				
-				case ">" : 
+				case ">" : if(_mode != 1) break;
 					var _c = string_splice(ch_str, " ");
 					
 					if(array_length(_c) > 1) {
 						switch(_c[0]) {
 							case "bt"   :
 							case "node" : 
+							case "url"  : 
 								var _bch = "";
 								for( var i = 1; i < array_length(_c); i++ )
 									_bch += i > 1? " " + _c[i] : _c[i];
@@ -291,7 +416,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					}
 					
 					ch_str = "";
-					_mode = 0; 
+					_mode  = 0; 
 					continue;
 			}
 			
@@ -328,36 +453,38 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static button_reactive = function(key) {
 		switch(key) {
-			case "left_mouse_click" :		 return clamp(ml_press, 0, 1);
-			case "left_mouse_double_click" : return clamp(ml_double, 0, 1);
-			case "left_mouse_release" :		 return clamp(ml_release, 0, 1);
-			case "left_mouse_drag" :		 return mouse_lclick();
+			case "left_mouse_click" :       return clamp(ml_press, 0, 1);
+			case "left_mouse_double_click" :return clamp(ml_double, 0, 1);
+			case "left_mouse_release" :     return clamp(ml_release, 0, 1);
+			case "left_mouse_drag" :        return mouse_lclick();
 			
-			case "right_mouse_click" :		 return clamp(mr_press, 0, 1);
-			case "right_mouse_release" :	 return clamp(mr_release, 0, 1);
-			case "right_mouse_drag" :		 return mouse_rclick();
+			case "right_mouse_click" :      return clamp(mr_press, 0, 1);
+			case "right_mouse_release" :    return clamp(mr_release, 0, 1);
+			case "right_mouse_drag" :       return mouse_rclick();
 			
-			case "middle_mouse_click" :		 return clamp(mm_press, 0, 1);
-			case "middle_mouse_release" :	 return clamp(mm_release, 0, 1);
-			case "middle_mouse_drag" :		 return mouse_click(mb_middle);
+			case "middle_mouse_click" :     return clamp(mm_press, 0, 1);
+			case "middle_mouse_release" :   return clamp(mm_release, 0, 1);
+			case "middle_mouse_drag" :      return mouse_click(mb_middle);
 			
-			case "ctrl" :  return key_mod_press(CTRL);
-			case "alt" :   return key_mod_press(ALT);
-			case "shift" : return key_mod_press(SHIFT);
+			case "mouse_wheel" :            return MOUSE_WHEEL != 0;
 			
-			case "space" : return keyboard_check(vk_space);
-			case "f1" :    return keyboard_check(vk_f1);
-			case "f2" :    return keyboard_check(vk_f2);
-			case "f3" :    return keyboard_check(vk_f3);
-			case "f4" :    return keyboard_check(vk_f4);
-			case "f5" :    return keyboard_check(vk_f5);
-			case "f6" :    return keyboard_check(vk_f6);
-			case "f7" :    return keyboard_check(vk_f7);
-			case "f8" :    return keyboard_check(vk_f8);
-			case "f9" :    return keyboard_check(vk_f9);
-			case "f10" :   return keyboard_check(vk_f10);
-			case "f11" :   return keyboard_check(vk_f11);
-			case "f12" :   return keyboard_check(vk_f12);
+			case "ctrl" :                   return key_mod_press(CTRL);
+			case "alt" :                    return key_mod_press(ALT);
+			case "shift" :                  return key_mod_press(SHIFT);
+			
+			case "space" :                  return keyboard_check(vk_space);
+			case "f1" :                     return keyboard_check(vk_f1);
+			case "f2" :                     return keyboard_check(vk_f2);
+			case "f3" :                     return keyboard_check(vk_f3);
+			case "f4" :                     return keyboard_check(vk_f4);
+			case "f5" :                     return keyboard_check(vk_f5);
+			case "f6" :                     return keyboard_check(vk_f6);
+			case "f7" :                     return keyboard_check(vk_f7);
+			case "f8" :                     return keyboard_check(vk_f8);
+			case "f9" :                     return keyboard_check(vk_f9);
+			case "f10" :                    return keyboard_check(vk_f10);
+			case "f11" :                    return keyboard_check(vk_f11);
+			case "f12" :                    return keyboard_check(vk_f12);
 		}
 		
 		if(string_length(key) == 1) return keyboard_check(ord(string_upper(key)));

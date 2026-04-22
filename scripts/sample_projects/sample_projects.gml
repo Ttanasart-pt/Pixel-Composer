@@ -7,15 +7,25 @@ function LOAD_FOLDER(list, path) {
 	
 	var folder = filename_name_only(path);
 	var files  = directory_listdir(path, 0);
+	var pr     = ds_priority_create();
 	
 	for( var i = 0, n = array_length(files); i < n; i++ ) {
 		var fPath = files[i];
 		if(!path_is_project(fPath)) continue;
 		
-		var fObj = new FileObject(fPath);
-		fObj.tag = folder;
-		array_push(list, fObj);
+		var fObj  = new FileObject(fPath);
+		fObj.tag  = folder;
+		
+		var wei   = 0;
+		var fname = filename_name_only(fPath);
+		var sname = string_split(fname, " ");
+		if(isNumber(sname[0])) wei = toNumber(sname[0]);
+		ds_priority_add(pr, fObj, wei);
 	}
+	
+	while(!ds_priority_empty(pr))
+		array_push(list, ds_priority_delete_min(pr));
+	ds_priority_destroy(pr);
 	
 	var _dir = directory_listdir(path, fa_directory);
 	for( var i = 0, n = array_length(_dir); i < n; i++ ) 

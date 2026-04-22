@@ -152,6 +152,7 @@ function hotkeyCustom(_context, _name, _key = "", _mod = MOD_KEY.none) {
 
 function addHotkey(_context, _name, _key, _mod, _action, _param = noone) {
 	var hotkey = new Hotkey(_context, _name, _key, _mod, _action, _param);
+	HOTKEYS_ALL[$ string_to_var2(_context, _name)] = hotkey;
 	
 	if(!struct_has(HOTKEYS, _context)) {
 		HOTKEYS[$ _context] = [];
@@ -182,6 +183,8 @@ function find_hotkey(_context, _name) {
 	var i  = array_find_index(hk, function(h) /*=>*/ {return string_lower(h.name) == __name});
 	return i == -1? noone : hk[i];
 }
+
+function find_hotkey_ext(_key) { return HOTKEYS_ALL[$ _key] ?? -1; }
 
 function getToolHotkey(_group, _key) {
 	INLINE

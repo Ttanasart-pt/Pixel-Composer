@@ -541,6 +541,7 @@ function Project() constructor {
 	
 	static slideShowPostStep = function() {
 		slideShow_keys = variable_struct_get_names(slideShow);
+		array_map_ext(slideShow_keys, function(s) /*=>*/ {return toNumber(s)});
 		array_sort(slideShow_keys, true);
 		
 		slideShow_amount  = array_length(slideShow_keys);

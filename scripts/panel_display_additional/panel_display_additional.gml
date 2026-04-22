@@ -17,18 +17,22 @@ function panelDisplayDraw() {
 	}
 	
 	if(FOCUSING_AREA != noone) {
-		focusing_prog = lerp_float(focusing_prog, 1, 6);
 		focusing_targ = [ FOCUSING_AREA[0], FOCUSING_AREA[1], FOCUSING_AREA[2], FOCUSING_AREA[3] ];
+		focusing_prog = lerp_linear(focusing_prog, 1, DELTA_TIME * 3);
+		// focusing_prog = lerp_float(focusing_prog, 1, 6);
+    		
 	} else {
-		focusing_prog = lerp_float(focusing_prog, 0, 6);
+		focusing_prog = lerp_linear(focusing_prog, 0, DELTA_TIME * 3);
+		// focusing_prog = lerp_float(focusing_prog, 0, 6);
 	}
 	
-	focusing_draw[0] = lerp(0,     focusing_targ[0], focusing_prog);
-	focusing_draw[1] = lerp(0,     focusing_targ[1], focusing_prog);
-	focusing_draw[2] = lerp(WIN_W, focusing_targ[2], focusing_prog);
-	focusing_draw[3] = lerp(WIN_H, focusing_targ[3], focusing_prog);
+	var pr = animation_curve_eval(ac_smoothstep, focusing_prog);
+	focusing_draw[0] = lerp(0,     focusing_targ[0], pr);
+	focusing_draw[1] = lerp(0,     focusing_targ[1], pr);
+	focusing_draw[2] = lerp(WIN_W, focusing_targ[2], pr);
+	focusing_draw[3] = lerp(WIN_H, focusing_targ[3], pr);
 	
-	if(focusing_prog > 0) {
+	if(pr > 0) {
 		var x0 = focusing_draw[0]
 		var y0 = focusing_draw[1]
 		var ww = focusing_draw[2]
@@ -39,7 +43,7 @@ function panelDisplayDraw() {
 		focusing_surface = surface_verify(focusing_surface, WIN_W, WIN_H);
 		
 		surface_set_target(focusing_surface);
-			draw_clear_alpha(c_black, focusing_prog * 0.6);
+			draw_clear_alpha(c_black, pr * .6);
 			BLEND_SUBTRACT
 				draw_sprite_stretched(THEME.ui_panel_bg, 1, x0, y0, ww, hh);
 			BLEND_NORMAL

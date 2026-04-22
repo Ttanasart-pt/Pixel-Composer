@@ -1,0 +1,6 @@
+{
+    "name":          "Slideshow Node",
+    "spr":           "s_node_slideshow_node_anchor",
+    "baseNode":      "Node_Slideshow_Node_Anchor",
+    "pxc_version":    121000,
+}

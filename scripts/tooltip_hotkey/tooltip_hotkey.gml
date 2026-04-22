@@ -1,6 +1,11 @@
-function tooltipHotkey(_text, context = "", name = "") constructor {
+function tooltipHotkey(_text, context = undefined, name = undefined) constructor {
 	text   = _text;
-	hotkey = context == undefined? noone : find_hotkey(context, name);
+	hotkey = noone;
+	
+	if(context != undefined) {
+		if(name != undefined) hotkey = find_hotkey(context, name);
+		else                  hotkey = find_hotkey_ext(context);
+	}
 	
 	static drawTooltip = function() {
 		var keyStr = hotkey? hotkey.getKeyName() : "";

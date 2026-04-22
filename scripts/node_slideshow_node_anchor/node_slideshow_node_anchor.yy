@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_slideshow_node_anchor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_slideshow_node_anchor",
+  "parent":{
+    "name":"misc",
+    "path":"folders/nodes/data/misc.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

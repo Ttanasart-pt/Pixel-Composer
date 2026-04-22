@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc9",
+    "changes": [
+      {
+        "date": "2026-04-22T03:46:51.992Z",
+        "node": "Slideshow",
+        "commit": "**Slideshow**: Fix slide order sorted alphabetcally."
+      }
+    ]
+  }
+]

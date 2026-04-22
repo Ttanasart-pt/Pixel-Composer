@@ -10,19 +10,21 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	slide_speed   = 32;
 	slide_zoom    = 0;
 	slide_size    = [64, 64];
+	anchors       = {};
 	
 	////- =Display
-	newInput(1, nodeValue_Text(    "Title"                 ));
-	newInput(0, nodeValue_Int(     "Order",      0         ));
-	newInput(5, nodeValue_Vec2(    "Half Size", [400, 200] ));
+	newInput( 1, nodeValue_Text(    "Title"                 ));
+	newInput( 0, nodeValue_Int(     "Order",      0         ));
+	newInput( 5, nodeValue_Vec2(    "Half Size", [400, 200] ));
 	
 	////- =Transition
-	newInput(2, nodeValue_EScroll( "Anchor",        0, [ "Center", "Top left" ]));
-	newInput(3, nodeValue_Float(   "Arrival Speed", 4 ));
-	newInput(4, nodeValue_Float(   "Zoom Level",    0 ));
+	newInput( 2, nodeValue_EScroll( "Anchor",        0, [ "Center", "Top left" ]));
+	newInput( 3, nodeValue_Float(   "Arrival Speed", 4 ));
+	newInput( 4, nodeValue_Float(   "Zoom Level",    0 ));
+	// 6
 	
 	input_display_list = [ 
-		[ "Display",    false ], 0, 1, 5, 
+		[ "Display",    false ], 1, 0, 5, 
 		[ "Transition", false ], 2, 3, 
 	];
 	
@@ -42,6 +44,30 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		setDisplayName($"Slide-{slide_title}", false);
 	}
 	
+	////- Slideshow
+	
+	static slideInit = function() {
+		var _anchs = struct_get_names(anchors);
+		for( var i = 0, n = array_length(_anchs); i < n; i++ ) {
+			var _an  = _anchs[i];
+			var _anc = anchors[$ _an];
+			if(_anc.slide_obj != self) continue;
+			
+			_anc.slideInit();
+		}
+	}
+	
+	static slideStep = function(_t = 0) {
+		var _anchs = struct_get_names(anchors);
+		for( var i = 0, n = array_length(_anchs); i < n; i++ ) {
+			var _an  = _anchs[i];
+			var _anc = anchors[$ _an];
+			if(_anc.slide_obj != self) continue;
+			
+			_anc.slideStep(_t);
+		}
+	}
+	
 	////- Draw
 	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s, _panel = noone) {
@@ -50,7 +76,7 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var x0 = x * _s + _x;
 		var y0 = y * _s + _y;
-		var hov = point_in_circle(_mx, _my, x0, y0, 16);
+		var hov = point_in_circle(_mx, _my, x0, y0, 16 * _s);
 		
 		var area_w = slide_size[0] * _s;
 		var area_h = slide_size[1] * _s;
