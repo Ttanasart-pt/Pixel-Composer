@@ -11,6 +11,11 @@
         "date": "2026-04-22T04:41:09.319Z",
         "node": "",
         "commit": "**Graph Panel**: Fix node wrangler select incorrect input."
+      },
+      {
+        "date": "2026-04-22T06:13:35.113Z",
+        "node": "",
+        "commit": "Add project setting to only render node in the current slideshow (to help performance in the \"Particle\" tutorial)."
       }
     ]
   },

@@ -35,6 +35,7 @@
 		oversample        : 3,
 		
 		global_layer      : false, 
+		slideshow_render_only : false, 
 	}
 	
 	function __initProjectAttr() {
@@ -380,6 +381,7 @@ function Project() constructor {
 			
 			[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ {return toggleAttribute("autosave")})     ],
 			[ "Layers",      "global_layer", new checkBox(function() /*=>*/ {return toggleAttribute("global_layer")}) ],
+			[ "Render only in Slide", "slideshow_render_only", new checkBox(function() /*=>*/ {return toggleAttribute("slideshow_render_only")}) ],
 			
 		];
 		
@@ -398,6 +400,20 @@ function Project() constructor {
 	#endregion
 	
 	static stepBegin = function() { 
+		if(useSlideShow && attributes.slideshow_render_only && slideShow_current != noone) {
+			var x0 = slideShow_current.x - slideShow_current.slide_size[0];
+			var y0 = slideShow_current.y - slideShow_current.slide_size[1];
+			var x1 = slideShow_current.x + slideShow_current.slide_size[0];
+			var y1 = slideShow_current.y + slideShow_current.slide_size[1];
+			
+			for( var i = 0, n = array_length(allNodes); i < n; i++ ) {
+				var _n = allNodes[i];
+				if(_n.is_controller) continue;
+				
+				_n.renderActive = point_in_rectangle(_n.x, _n.y, x0, y0, x1, y1);
+			}
+		}
+		
 		if(immediate_render != undefined) {
 			immediate_render.doUpdate();
 			immediate_render = undefined;

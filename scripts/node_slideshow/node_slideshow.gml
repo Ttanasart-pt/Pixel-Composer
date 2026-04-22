@@ -15,7 +15,7 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- =Display
 	newInput( 1, nodeValue_Text(    "Title" ));
 	newInput( 0, nodeValue_Int(     "Order",     struct_size(project.slideShow) ));
-	newInput( 5, nodeValue_Vec2(    "Half Size", [400, 200] ));
+	newInput( 5, nodeValue_Vec2(    "Half Size", [400, 300] ));
 	
 	////- =Transition
 	newInput( 2, nodeValue_EScroll( "Anchor",        0, [ "Center", "Top left" ]));
