@@ -250,7 +250,11 @@ function filename_name_validate(name) {
 	return name;
 }
 
-function filename_name_only(name) { name = filename_name(name); return string_replace(name, filename_ext(name), ""); }
+function filename_name_only(name)   { name = filename_name(name); return string_replace(name, filename_ext(name), ""); }
+function filename_strip_order(name) { 
+	var _sname = string_split(name, " ", true, 1);
+	return isNumber(_sname[0])? _sname[1] : name;
+}
 
 function filename_ext_verify(_path, _ext)     { return filename_ext(_path) == _ext? _path : $"{filename_dir(_path)}/{filename_name_only(_path)}{_ext}"; }
 function filename_ext_verify_add(_path, _ext) { return filename_ext(_path) == _ext? _path : $"{_path}{_ext}"; }

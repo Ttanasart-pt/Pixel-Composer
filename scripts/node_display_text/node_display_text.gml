@@ -34,7 +34,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	draw_scale  = 1;
 	init_size   = true;
 	
-	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(v) /*=>*/ { inputs[1].setValue(v); });
+	ta_editor   = textArea_Text(function(v) /*=>*/ { inputs[1].setValue(v); });
 	
 	_prev_text  = "";
 	font        = f_sdf_medium;

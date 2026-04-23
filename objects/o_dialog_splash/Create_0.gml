@@ -7,7 +7,7 @@ event_inherited();
 	dialog_w = min(WIN_W - ui(160), ui(960));
 	dialog_h = ui(600);
 	
-	pages = ["News", "Welcome Files"];
+	pages = [ "News", "Getting Started", "Welcome Files" ];
 	if(STEAM_ENABLED) array_push(pages, "Workshop");
 	project_page = 1;
 	
@@ -153,9 +153,10 @@ event_inherited();
 		
 		var hover = sp_sample.hover;
 		var focus = sp_sample.active;
+		var page  = pages[project_page];
 		
-		var txt = pages[project_page];
-		var list, _group_label;
+		var _group_label = true;
+		var list;
 		
 		var ww = sp_sample.surface_w;
 		var hh = ui(6);
@@ -164,13 +165,11 @@ event_inherited();
 		var _search = sample_search != "";
 		var _serStr = string_lower(sample_search);
 		
-		switch(txt) {
-			case "Welcome Files" : 
-				list = SAMPLE_PROJECTS; 
-				_group_label = true; 
-				break;
+		switch(page) {
+			case "Getting Started" : list = GETTING_STARTED; break;
+			case "Welcome Files"   : list = SAMPLE_PROJECTS; break;
 				
-			case "Workshop" : 
+			case "Workshop" :        
 				list = STEAM_PROJECTS;
 				_group_label = false; 
 				
@@ -223,10 +222,9 @@ event_inherited();
 		
 		var grid_width = (ww - col * grid_padd) / col;
 		var grid_heigh = grid_width * 0.75;
-		if(txt == "Workshop") grid_heigh = grid_width;
+		if(page == "Workshop") grid_heigh = grid_width;
 		
-		var contentRow = false;
-		
+		var contentRow   = false;
 		var group_labels = [];
 		var _curr_tag    = "";
 		var _cur_col     = 0;
@@ -268,17 +266,14 @@ event_inherited();
 				if(_coll) continue;
 			} 
 			
-			if(txt == "Workshop" && !array_empty(meta_filter)) {
+			if(page == "Workshop" && !array_empty(meta_filter)) {
 				var _meta = _project.getMetadata();
 				if(array_empty(array_intersection(_meta.tags, meta_filter)))
 					continue;
 			}
 			
-			if(txt != "Workshop") {
-				grid_heigh = grid_width;
-				if(_curr_tag == "Getting started" || _curr_tag == "Templates")
-					grid_heigh = grid_width * 0.75;
-			}
+			if(page != "Workshop")        grid_heigh = grid_width;
+			if(page == "Getting Started") grid_heigh = grid_width * 0.75;
 			
 			_nx   = grid_padd + (grid_width + grid_padd) * _cur_col;
 			_boxx = _nx;
@@ -313,7 +308,7 @@ event_inherited();
 				if(ghov) {
 					sp_sample.hover_content = true;
 					
-					if(txt == "Workshop") {
+					if(page == "Workshop") {
 						_meta = _project.getMetadata();
 						TOOLTIP = _meta;
 					}

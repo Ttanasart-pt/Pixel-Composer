@@ -227,6 +227,7 @@ DIALOG_DRAW_BG
 	var bb = THEME.button_hide_fill;
 	
 	switch(pages[project_page]) {
+		case "Getting Started" :
 		case "Welcome Files" :
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
@@ -255,7 +256,7 @@ DIALOG_DRAW_BG
 				
 			} else {
 				bx -= bs + 1;
-				var _txt = __txt("workshop_open", "Open Steam Workshop");
+				var _txt = __txt("Search");
 				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.search_24) == 2) {
 					tb_sample_seaching = true;
 					tb_sample_search.activate();

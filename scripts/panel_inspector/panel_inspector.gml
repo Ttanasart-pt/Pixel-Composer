@@ -1473,11 +1473,13 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _edt = PROJECT.attributeEditor;
                     var _lh, wh;
                     
-                    for( var j = 0; j < array_length(_edt); j++ ) {
+                    for( var j = 0, mlen = array_length(_edt); j < mlen; j++ ) {
                         var title = array_safe_get(_edt[j], 0, noone);
                         var param = array_safe_get(_edt[j], 1, noone);
                         var editW = array_safe_get(_edt[j], 2, noone);
                         var drpFn = array_safe_get(_edt[j], 3, noone);
+                        
+                        if(param == "slideshow_render_only" && !PROJECT.useSlideShow) continue;
                         
                         var widx = ui(8);
                         var widy = yy;
