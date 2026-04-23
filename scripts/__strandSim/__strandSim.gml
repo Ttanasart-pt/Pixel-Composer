@@ -274,8 +274,6 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq =
 	}
 	
 	static step = function(timeStep = 1, iteration = 4, detach = true) {
-		motionDelta();
-		
 		repeat(timeStep) {
 			motionPropagate(timeStep);
 			
@@ -285,6 +283,7 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq =
 			}
 		}
 		
+		motionDelta();
 		if(detach && rootStrength > -1 && rootForce > rootStrength) 
 			free = true;
 	}

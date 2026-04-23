@@ -8,7 +8,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	manual_ungroupable	 = false;
 	
 	newInput(6, nodeValueSeed());
-	newInput(8, nodeValue_Int( "Update Step", 1 ));
+	newInput(8, nodeValue_Int( "Update Step", 4 ));
 	
 	////- =Output
 	newInput(0, nodeValue_Dimension());

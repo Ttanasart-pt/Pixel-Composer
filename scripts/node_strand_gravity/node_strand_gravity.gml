@@ -33,6 +33,7 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			for( var j = 1; j < array_length(h.points); j++ ) {
 				var p = h.points[j];
+				 
 				p.x += p.dx + gx;
 				p.y += p.dy + gy;
 				

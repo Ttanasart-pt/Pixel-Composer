@@ -3,18 +3,18 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(16, 16);
 	attributes.show_preview = false;
 	
-	newInput(1, nodeValue_Text("Text", "Text"));
+	newInput( 1, nodeValue_Text("Text", "Text"));
 	
 	////- =Styling
-	newInput(2, nodeValue_Enum_Scroll( "Style", 2, [ "Header", "Sub header", "Normal" ]));
-	newInput(0, nodeValue_Color(       "Color", ca_white ));
-	newInput(3, nodeValue_Slider(      "Alpha", 0.75));
-	newInput(4, nodeValue_Float(       "Line width", -1));
-	newInput(6, nodeValue_Float(       "Line height", 0));
+	newInput( 2, nodeValue_Enum_Scroll( "Style", 2, [ "Header", "Sub header", "Normal" ]));
+	newInput( 0, nodeValue_Color(       "Color", ca_white ));
+	newInput( 3, nodeValue_Slider(      "Alpha", 0.75));
+	newInput( 4, nodeValue_Float(       "Line width", -1));
+	newInput( 6, nodeValue_Float(       "Line height", 0));
 	
 	////- =Display
-	newInput(5, nodeValue_Vec2( "Position", [ x, y ]));
-	// inputs 7
+	newInput( 5, nodeValue_Vec2( "Position", [ x, y ]   ));
+	// inputs 8
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
 		
@@ -651,6 +651,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 	}
 
+	static drawNodeBG = function(_x, _y, _mx, _my, _s, _panel = noone) {}
+	static drawNodeFG = function(_x, _y, _mx, _my, _s, _panel = noone) {}
+	
 	static drawDimension = undefined
 	
 }

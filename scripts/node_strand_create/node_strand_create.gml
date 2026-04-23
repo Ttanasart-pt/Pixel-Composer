@@ -21,13 +21,13 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(10, nodeValueSeed());
 	
 	////- =Generation
-	newInput( 0, nodeValue_EScroll(  "Source",    0, [ "Point", "Path", "Mesh" ]     ));
-	newInput( 1, nodeValue_Int(      "Density",   8, "How many strands to generate." ));
+	newInput( 0, nodeValue_EScroll(  "Source",       0, [ "Point", "Path", "Mesh" ]     ));
+	newInput( 1, nodeValue_Int(      "Strands",      8, "How many strands to generate." ));
 	newInput( 5, nodeValue_PathNode( "Path" ));
-	newInput( 6, nodeValue_Vec2(     "Position", [.5,.5] )).setUnitSimple();
-	newInput( 7, nodeValue_EButton(  "Side",      0, [ "Inner", "Outer", "Both" ]    ));
+	newInput( 6, nodeValue_Vec2(     "Position",   [.5,.5] )).setUnitSimple();
+	newInput( 7, nodeValue_EButton(  "Side",         0, [ "Inner", "Outer", "Both" ]    ));
 	newInput(13, nodeValue_Mesh(     "Mesh" ));
-	newInput(14, nodeValue_EScroll(  "Distribution", 0, [ "Uniform", "Random" ]      ));
+	newInput(14, nodeValue_EScroll(  "Distribution", 0, [ "Uniform", "Random" ]         ));
 	newInput(15, nodeValue_Trigger(  "Bake hair", "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."));
 	
 	b_bake = button(function() /*=>*/ { 
@@ -37,14 +37,14 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}).setText("Bake Strand");
 		
 	////- =Strand
-	newInput( 2, nodeValue_Vec2(    "Length",      [4,4] ));
-	newInput( 3, nodeValue_Int(     "Segment",      4    ));
+	newInput( 2, nodeValue_Vec2(    "Length",      [4,4], { linked: true } ));
+	newInput( 3, nodeValue_Int(     "Segment",      4        ));
 	newInput(18, nodeValue_RotRand( "Direction",   ROTATION_RANDOM_DEF_0_360 ));
-	newInput( 4, nodeValue_Slider(  "Elasticity",  .05   )).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
-	newInput( 8, nodeValue_Slider(  "Spring",      .8    ));
-	newInput( 9, nodeValue_Slider(  "Structure",   .2    )).setTooltip("The ability to keep its original shape.");
+	newInput( 4, nodeValue_Slider(  "Elasticity",  .05       )).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
+	newInput( 8, nodeValue_Slider(  "Spring",      .8        ));
+	newInput( 9, nodeValue_Slider(  "Structure",   .2        )).setTooltip("The ability to keep its original shape.");
 	newInput(17, nodeValue_Vec2(    "Root Strength", [-1,-1] )).setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
-	newInput(19, nodeValue_Float(   "Restitution", .01   )).setTooltip("Minimum speed before the strand stops moving completely.");
+	newInput(19, nodeValue_Float(   "Restitution", .01       )).setTooltip("Minimum speed before the strand stops moving completely.");
 	
 	////- =Curl
 	newInput(11, nodeValue_Float(  "Curl frequency", 0 ));

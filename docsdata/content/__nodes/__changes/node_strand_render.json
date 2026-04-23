@@ -6,6 +6,11 @@
         "date": "2026-04-23T06:23:13.020Z",
         "node": "",
         "commit": "**StrandSim Gravity**: Fix gravity apply incorrectly."
+      },
+      {
+        "date": "2026-04-23T08:02:07.080Z",
+        "node": "",
+        "commit": "Add getting started projects for SmokeSim, FLIP Fluid, and StrandSim."
       }
     ]
   },

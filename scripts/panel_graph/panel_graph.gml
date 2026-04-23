@@ -1386,6 +1386,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             autoPanTo(area_x, area_y, _targ.slide_speed * .75, _gs);
             
         _targ.slideInit();
+        RENDER_ALL_REORDER
     }
     
     ////- Context
