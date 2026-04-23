@@ -951,15 +951,16 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		PROCESSOR_OVERLAY_CHECK
 		if(dynamic_input_inspecting >= 0) {
 			var ind = input_fix_len + dynamic_input_inspecting * data_length + 1;
-			if(ind < array_length(inputs)) {
-				var hov = inputs[ind].drawPath(hover, active, _x, _y, _s, _mx, _my, _params);
-				hover &= !hov; w_hovering |= hov;
-				
-				if(inputs[ind].path_point_drag != undefined) 
-					return;
-					
-			} else 
-				dynamic_input_inspecting = noone;
+			var _in = array_safe_get_fast(inputs, ind);
+        	if(!is(_in, NodeValue)) {
+        		dynamic_input_inspecting = noone;
+        		return;
+        	}
+        	
+			var hov = _in.drawPath(hover, active, _x, _y, _s, _mx, _my, _params);
+			hover &= !hov; w_hovering |= hov;
+			
+			if(_in.path_point_drag != undefined) return;
 		}
 		
 		var pad   = current_data[0];
@@ -1741,7 +1742,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			for( var i = 0; i < amo; i++ ) {
 				var ind = input_fix_len + i * data_length + 1;
-				var pth = inputs[ind].isEditingPath();
+				var _in = array_safe_get_fast(inputs, ind);
+        		if(!is(_in, NodeValue)) continue;
+        		
+				var pth = _in.isEditingPath();
 				pthNode = pthNode ?? pth;
 			}
 			return pthNode ?? self;

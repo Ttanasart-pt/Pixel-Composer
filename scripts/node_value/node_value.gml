@@ -2095,9 +2095,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			for( var i = 0, n = array_length(PANEL_INSPECTOR.inspectings); i < n; i++ ) {
 				var _node = PANEL_INSPECTOR.inspectings[i];
-				if(ind >= array_length(_node.inputs)) continue;
-				
-				var r = _node.inputs[ind].setValueDirect(_val, _index, true, time);
+				var _in = array_safe_get_fast(_node.inputs, ind);
+        		if(!is(_in, NodeValue)) continue;
+        	
+				var r = _in.setValueDirect(_val, _index, true, time);
 				if(_node == node) res = r;
 			}
 		} else

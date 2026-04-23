@@ -1302,7 +1302,8 @@ function Panel_Preview() : PanelContent() constructor {
         	var ind = useList? inpList[i] : i;
         	if(!is_real(ind)) continue;
         	
-        	var _in = _node.inputs[ind];
+        	var _in = array_safe_get_fast(_node.inputs, ind);
+        	if(!is(_in, NodeValue))             continue;
         	if(!_in.show_in_inspector)          continue;
         	if(_in.preview_hotkey == undefined) continue;
         	

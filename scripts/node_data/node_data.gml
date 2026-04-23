@@ -748,12 +748,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInput = function(_y = 0, _junc = noone, _shft = input_fix_len, _over = false) {
 		var _targ = noone;
 		var _dy   = infinity;
-		
-		var _useList = input_display_list != -1;
-		var _amo     = _useList? array_length(input_display_list) : array_length(inputs);
-		
-		for( var i = 0, n = array_length(inputDisplayList); i < n; i++ ) {
-			var _inp = inputDisplayList[i];
+		var list  = array_empty(inputDisplayList)? inputs : input_display_list;
+		for( var i = 0, n = array_length(list); i < n; i++ ) {
+			var _inp = list[i];
 			if(!_over && _inp.value_from != noone) continue;
 			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
 			
