@@ -6,6 +6,11 @@
         "date": "2026-04-23T01:59:49.223Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Hide slideshow related settings if there's no slideshow node in the project,."
+      },
+      {
+        "date": "2026-04-23T02:28:07.863Z",
+        "node": "Display Text",
+        "commit": "**Display Text**: Fix line cut between special characters."
       }
     ]
   },

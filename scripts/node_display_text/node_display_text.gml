@@ -36,11 +36,11 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	ta_editor   = textArea_Text(function(v) /*=>*/ { inputs[1].setValue(v); });
 	
-	_prev_text  = "";
+	prev_text  = "";
 	font        = f_sdf_medium;
 	fsize       = 1;
 	line_h      = 0;
-	_lines      = [];
+	lines       = [];
 	draw_simple = false;
 	
 	pos_x       = x;
@@ -105,248 +105,199 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				case "<" : _mode = 1; continue;
 					
 				case ">" : if(_mode != 1) break;
-					var _c = string_splice(_cmd, " ");
+					var _c = string_split(_cmd, " ", false, 1);
+					_mode  = 0; 
+					_cmd   = "";
+					if(array_length(_c) <= 1) continue;
 					
-					if(array_length(_c) > 1) {
-						switch(_c[0]) {
-							case "bt" :
-								var _bch = "";
-								for( var i = 1; i < array_length(_c); i++ )
-									_bch += i > 1? " " + _c[i] : _c[i];
-								
-								var _bw = string_width(_bch);
-								var _bh = string_height(_bch);
-								
-								_tw  = _bw * _ss;
-								_th  = _bh * _ss;
-								
-								var _tx0 = _tx - pd;
-								var _ty0 = _y  - pd;
-								var _tx1 = _tx + _tw + pd;
-								var _ty1 = _y  + _th + pd;
-								
-								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
-								draw_sprite_stretched_points(THEME.box_r5,     1, _tx0, _ty0, _tx1, _ty1, CDEF.main_dkgrey);
-									
-								draw_set_color(COLORS._main_icon_light);
-								draw_text_add_float(_tx, _y, _bch, _ss);
-								
-								var _reac = button_reactive(string_to_var(_bch));
-								if(_reac > 0) {
-									draw_sprite_stretched_points(THEME.box_r5, 4, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, _reac);
-									
-									draw_set_color(merge_color(0, COLORS.panel_bg_clear_inner, 0.5));
-									draw_set_alpha(_reac);
-									draw_text_transformed(_tx, _y, _bch, _ss, _ss, 0);
-									draw_set_alpha(_aa);
-								} 
-								draw_set_color(_cc);
-								
-								_tx   += _tw;
-								width += _bw * fsize + 8;
-								break;
+					var _type = _c[0];
+					var _data = _c[1];
+					
+					switch(_type) {
+						case "bt" :
+							var _bw = string_width(_data);
+							var _bh = string_height(_data);
 							
-							case "node" :
-								var _bch = "";
-								for( var i = 1; i < array_length(_c); i++ )
-									_bch += i > 1? " " + _c[i] : _c[i];
+							_tw  = _bw * _ss;
+							_th  = _bh * _ss;
+							
+							var _tx0 = _tx - pd;
+							var _ty0 = _y  - pd;
+							var _tx1 = _tx + _tw + pd;
+							var _ty1 = _y  + _th + pd;
+							
+							draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
+							draw_sprite_stretched_points(THEME.box_r5,     1, _tx0, _ty0, _tx1, _ty1, CDEF.main_dkgrey);
 								
-								var _bw = string_width(_bch);
-								var _bh = string_height(_bch);
+							draw_set_color(COLORS._main_icon_light);
+							draw_text_add_float(_tx, _y, _data, _ss);
+							
+							var _reac = button_reactive(string_to_var(_data));
+							if(_reac > 0) {
+								draw_sprite_stretched_points(THEME.box_r5, 4, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, _reac);
 								
-								_tw  = _bw * _ss;
-								_th  = _bh * _ss;
-								
-								var _tx0 = _tx - pd;
-								var _ty0 = _y  - pd;
-								var _tx1 = _tx + _tw + pd;
-								var _ty1 = _y  + _th + pd;
-								
-								draw_sprite_stretched_points(THEME.node_bg, 0, _tx0, _ty0, _tx1, _ty1,        COLORS.node_base_bg, .75);
-								draw_sprite_stretched_points(THEME.node_bg, 0, _tx0, _ty0, _tx1, _ty0 + 6*_s, COLORS.node_base_bg, 1);
-								BLEND_ADD
-								draw_sprite_stretched_points(THEME.node_bg, 1, _tx0, _ty0, _tx1, _ty1, COLORS.node_base_bg, .4);
-								
-								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
-									draw_sprite_stretched_points(THEME.node_bg, 1, _tx0, _ty0, _tx1, _ty1, COLORS.node_base_bg, 1);
-									PANEL_GRAPH.node_highlighting = _bch;
-								}
-								
-								BLEND_NORMAL
-								draw_set_color(_cc);
-								draw_text_add_float(_tx, _y, _bch, _ss);
-								
-								_tx   += _tw;
-								width += _bw * fsize + 8;
-								break;
-								
-							case "panel" :
-								var _pan = "";
-								for( var i = 1; i < array_length(_c); i++ )
-									_pan += i > 1? " " + _c[i] : _c[i];
-									
-								var _key = string_title(_pan) + " Panel";
-								var _bw  = string_width(_key);
-								var _bh  = string_height(_key);
-								
-								_tw  = _bw * _ss;
-								_th  = _bh * _ss;
-								
-								var _tx0 = _tx - pd;
-								var _ty0 = _y  - pd;
-								var _tx1 = _tx + _tw + pd;
-								var _ty1 = _y  + _th + pd;
-								
-								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
-								
-								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
-									draw_sprite_stretched_points(THEME.box_r5, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, 1);
-									
-									switch(string_lower(_pan)) {
-										case "graph" :      FOCUSING_PANEL = PANEL_GRAPH;      break;
-										case "preview" :    FOCUSING_PANEL = PANEL_PREVIEW;    break;
-										case "inspector" :  FOCUSING_PANEL = PANEL_INSPECTOR;  break;
-										case "animation" :  FOCUSING_PANEL = PANEL_ANIMATION;  break;
-										case "collection" : FOCUSING_PANEL = PANEL_COLLECTION; break;
-									}
-								}
-								
-								draw_set_color(COLORS._main_accent);
-								draw_text_add_float(_tx, _y, _key, _ss);
-								
-								_tx   += _tw;
-								width += _bw * fsize + 8;
-								
-								draw_set_font(_ff);
-								draw_set_color(_cc);
+								draw_set_color(merge_color(0, COLORS.panel_bg_clear_inner, 0.5));
+								draw_set_alpha(_reac);
+								draw_text_transformed(_tx, _y, _data, _ss, _ss, 0);
 								draw_set_alpha(_aa);
-								break;
+							} 
+							draw_set_color(_cc);
+							
+							_tx   += _tw;
+							width += _bw * fsize + 8;
+							break;
+						
+						case "node" :
+							var _bw = string_width(_data);
+							var _bh = string_height(_data);
+							
+							_tw  = _bw * _ss;
+							_th  = _bh * _ss;
+							
+							var _tx0 = _tx - pd;
+							var _ty0 = _y  - pd;
+							var _tx1 = _tx + _tw + pd;
+							var _ty1 = _y  + _th + pd;
+							
+							draw_sprite_stretched_points(THEME.node_bg, 0, _tx0, _ty0, _tx1, _ty1,        COLORS.node_base_bg, .75);
+							draw_sprite_stretched_points(THEME.node_bg, 0, _tx0, _ty0, _tx1, _ty0 + 6*_s, COLORS.node_base_bg, 1);
+							BLEND_ADD
+							draw_sprite_stretched_points(THEME.node_bg, 1, _tx0, _ty0, _tx1, _ty1, COLORS.node_base_bg, .4);
+							
+							if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+								draw_sprite_stretched_points(THEME.node_bg, 1, _tx0, _ty0, _tx1, _ty1, COLORS.node_base_bg, 1);
+								PANEL_GRAPH.node_highlighting = _data;
+							}
+							
+							BLEND_NORMAL
+							draw_set_color(_cc);
+							draw_text_add_float(_tx, _y, _data, _ss);
+							
+							_tx   += _tw;
+							width += _bw * fsize + 8;
+							break;
+						
+						case "dialog" :
+						case "panel"  :
+							var _key = $"{string_title(_data)} {string_title(_type)}";
+							var _bw  = string_width(_key);
+							var _bh  = string_height(_key);
+							
+							_tw  = _bw * _ss;
+							_th  = _bh * _ss;
+							
+							var _tx0 = _tx - pd;
+							var _ty0 = _y  - pd;
+							var _tx1 = _tx + _tw + pd;
+							var _ty1 = _y  + _th + pd;
+							
+							draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
+							
+							if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+								draw_sprite_stretched_points(THEME.box_r5, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, 1);
 								
-							case "dialog" :
-								var _pan = "";
-								for( var i = 1; i < array_length(_c); i++ )
-									_pan += i > 1? " " + _c[i] : _c[i];
+								switch(string_lower(_data)) {
+									case "graph" :      FOCUSING_PANEL = PANEL_GRAPH;      break;
+									case "preview" :    FOCUSING_PANEL = PANEL_PREVIEW;    break;
+									case "inspector" :  FOCUSING_PANEL = PANEL_INSPECTOR;  break;
+									case "animation" :  FOCUSING_PANEL = PANEL_ANIMATION;  break;
+									case "collection" : FOCUSING_PANEL = PANEL_COLLECTION; break;
 									
-								var _key = string_title(_pan) + " Dialog";
-								var _bw  = string_width(_key);
-								var _bh  = string_height(_key);
-								
-								_tw  = _bw * _ss;
-								_th  = _bh * _ss;
-								
-								var _tx0 = _tx - pd;
-								var _ty0 = _y  - pd;
-								var _tx1 = _tx + _tw + pd;
-								var _ty1 = _y  + _th + pd;
-								
-								draw_sprite_stretched_points(THEME.box_r5_clr, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
-								
-								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
-									draw_sprite_stretched_points(THEME.box_r5, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, 1);
-									
-									switch(string_lower(_pan)) {
-										case "add node" : TOOLTIP = "Right click on an empty area in the Graph Panel."; break;
-									}
+									case "add node" :   TOOLTIP = "Right click on an empty area in the Graph Panel."; break;
 								}
-								
-								draw_set_color(COLORS._main_accent);
-								draw_text_add_float(_tx, _y, _key, _ss);
-								
-								_tx   += _tw;
-								width += _bw * fsize + 8;
-								
-								draw_set_font(_ff);
-								draw_set_color(_cc);
-								draw_set_alpha(_aa);
-								break;
-								
-							case "action" :
-								var _key = array_safe_get_fast(_c, 1, "");
-								var _txt = array_safe_get_fast(_c, 2, "");
-								var _bw  = string_width(_txt);
-								var _bh  = string_height(_txt);
-								
-								_tw  = _bw * _ss;
-								_th  = _bh * _ss;
-								
-								var _tx0 = _tx - pd;
-								var _ty0 = _y  - pd;
-								var _tx1 = _tx + _tw + pd;
-								var _ty1 = _y  + _th + pd;
-								
-								draw_sprite_stretched_points(THEME.box_r2_clr, 0, _tx0, _ty0, _tx1, _ty1);
-								
-								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
-									draw_sprite_stretched_points(THEME.box_r2, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
-									TOOLTIP = new tooltipHotkey(_txt, _key);
-								}
-								
-								draw_set_color(_cc);
-								draw_text_add_float(_tx, _y, _txt, _ss);
-								
-								_tx   += _tw;
-								width += _bw * fsize + 8;
-								
-								draw_set_font(_ff);
-								draw_set_alpha(_aa);
-								break;
-								
-							case "url":
-								var _bch = "";
-								for( var i = 1; i < array_length(_c); i++ )
-									_bch += i > 1? " " + _c[i] : _c[i];
-								
-								var _bw = string_width(_bch);
-								var _bh = string_height(_bch);
-								
-								_tw  = _bw * _ss;
-								_th  = _bh * _ss;
-								
-								var _tx0 = _tx - pd;
-								var _ty0 = _y  - pd;
-								var _tx1 = _tx + _tw + pd;
-								var _ty1 = _y  + _th + pd;
-								var tc = COLORS._main_accent;
-								
-								if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
-									tc = COLORS._main_text;
-									if(mouse_lpress()) URL_open(_bch);
-								}
-								
-								draw_set_color(tc);
-								draw_text_add_float(_tx, _y, _bch, _ss);
-								draw_set_color(_cc);
-								
-								_tx   += _tw;
-								width += _bw * fsize + 8;
-								break;
-								
-							case "spr" :
-								var _spr_t = _c[1];
-								if(!variable_struct_exists(THEME, _spr_t)) break;
-								var _spr = variable_struct_get(THEME, _spr_t);
-								
-								var _spr_i = array_length(_c) > 2? real(_c[2]) : 0;
-								var _spr_s = array_length(_c) > 3? _s * real(_c[3]) : _s;
-								    _spr_s /= THEME_SCALE;
-								
-								_tw = sprite_get_width(_spr);
-								_th = sprite_get_height(_spr) * _spr_s;
-								var _ow = sprite_get_xoffset(_spr) * _spr_s;
-								var _oh = sprite_get_yoffset(_spr) * _spr_s;
-								
-								gpu_set_tex_filter(true);
-								draw_sprite_ext(_spr, _spr_i, _tx + _ow, _y + _ch_h / 2 - _th / 2 + _oh, _spr_s, _spr_s, 0, c_white, 1);
-								gpu_set_tex_filter(false);
-								
-								_tx   += _tw * _spr_s;
-								width += _tw;
-								break;
-						}
+							}
+							
+							draw_set_color(COLORS._main_accent);
+							draw_text_add_float(_tx, _y, _key, _ss);
+							
+							_tx   += _tw;
+							width += _bw * fsize + 8;
+							
+							draw_set_font(_ff);
+							draw_set_color_alpha(_cc, _aa);
+							break;
+							
+						case "action" :
+							var _datas = string_split(_data, " ");
+							var _key = array_safe_get_fast(_datas, 0, "");
+							var _txt = array_safe_get_fast(_datas, 1, "");
+							var _bw  = string_width(_txt);
+							var _bh  = string_height(_txt);
+							
+							_tw  = _bw * _ss;
+							_th  = _bh * _ss;
+							
+							var _tx0 = _tx - pd;
+							var _ty0 = _y  - pd;
+							var _tx1 = _tx + _tw + pd;
+							var _ty1 = _y  + _th + pd;
+							
+							draw_sprite_stretched_points(THEME.box_r2_clr, 0, _tx0, _ty0, _tx1, _ty1);
+							
+							if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+								draw_sprite_stretched_points(THEME.box_r2, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
+								TOOLTIP = new tooltipHotkey(_txt, _key);
+							}
+							
+							draw_set_color(_cc);
+							draw_text_add_float(_tx, _y, _txt, _ss);
+							
+							_tx   += _tw;
+							width += _bw * fsize + 8;
+							
+							draw_set_font(_ff);
+							draw_set_alpha(_aa);
+							break;
+							
+						case "url" :
+							var _bw = string_width(_data);
+							var _bh = string_height(_data);
+							
+							_tw  = _bw * _ss;
+							_th  = _bh * _ss;
+							
+							var _tx0 = _tx - pd;
+							var _ty0 = _y  - pd;
+							var _tx1 = _tx + _tw + pd;
+							var _ty1 = _y  + _th + pd;
+							var tc = COLORS._main_accent;
+							
+							if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+								tc = COLORS._main_text;
+								if(mouse_lpress()) URL_open(_data);
+							}
+							
+							draw_set_color(tc);
+							draw_text_add_float(_tx, _y, _data, _ss);
+							draw_set_color(_cc);
+							
+							_tx   += _tw;
+							width += _bw * fsize + 8;
+							break;
+							
+						case "spr" :
+							var _datas = string_split(_data, " ");
+							var _spr_t = _datas[0];
+							if(!variable_struct_exists(THEME, _spr_t)) break;
+							var _spr = variable_struct_get(THEME, _spr_t);
+							
+							var _spr_i = real(array_safe_get_fast(_datas, 1, "0"));
+							var _spr_s = real(array_safe_get_fast(_datas, 2, "1")) * _s;
+							    _spr_s /= THEME_SCALE;
+							
+							_tw = sprite_get_width(_spr);
+							_th = sprite_get_height(_spr) * _spr_s;
+							var _ow = sprite_get_xoffset(_spr) * _spr_s;
+							var _oh = sprite_get_yoffset(_spr) * _spr_s;
+							
+							gpu_set_tex_filter(true);
+							draw_sprite_ext(_spr, _spr_i, _tx + _ow, _y + _ch_h / 2 - _th / 2 + _oh, _spr_s, _spr_s, 0, c_white, 1);
+							gpu_set_tex_filter(false);
+							
+							_tx   += _tw * _spr_s;
+							width += _tw;
+							break;
 					}
-					
-					_mode = 0; 
-					_cmd = "";
 					continue;
 			}
 			
@@ -399,24 +350,17 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				case "<" : _mode = 1; continue;
 				
 				case ">" : if(_mode != 1) break;
-					var _c = string_splice(ch_str, " ");
-					
-					if(array_length(_c) > 1) {
-						switch(_c[0]) {
-							case "bt"   :
-							case "node" : 
-							case "url"  : 
-								var _bch = "";
-								for( var i = 1; i < array_length(_c); i++ )
-									_bch += i > 1? " " + _c[i] : _c[i];
-								
-								buffer_write(b, buffer_text, _bch);
-								break;
-						}
-					}
-					
+					var _c = string_split(ch_str, " ", false, 1);
 					ch_str = "";
 					_mode  = 0; 
+					
+					if(array_length(_c) <= 1)
+						continue;
+					
+					switch(_c[0]) {
+						case "spr" : break;
+						default    : buffer_write(b, buffer_text, _c[1]); break;
+					}
 					continue;
 			}
 			
@@ -442,11 +386,11 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		mm_press   = lerp_float(mm_press  , 0, 5);
 		mm_release = lerp_float(mm_release, 0, 5);
 		
-		if(mouse_lpress())     ml_press   = 2;
-		if(mouse_lrelease())   ml_release = 2;
-		if(DOUBLE_CLICK)		     ml_double  = 2;
-		if(mouse_rpress())    mr_press   = 2;
-		if(mouse_rrelease())  mr_release = 2;
+		if(mouse_lpress())           ml_press   = 2;
+		if(mouse_lrelease())         ml_release = 2;
+		if(DOUBLE_CLICK)             ml_double  = 2;
+		if(mouse_rpress())           mr_press   = 2;
+		if(mouse_rrelease())         mr_release = 2;
 		if(mouse_press(mb_middle))   mm_press   = 2;
 		if(mouse_release(mb_middle)) mm_release = 2;
 	}
@@ -493,22 +437,24 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static line_update = function(txt, line_width = -1) {
-		_prev_text = txt;
-		_lines = [];
+		prev_text = txt;
+		lines     = [];
 		
-		var ch, i = 1, ss = "", _txt = _prev_text;
-		var len = string_length(_prev_text);
-		
-		var _line_man = string_splice(_txt, "\n");
+		var ch, ss = "";
+		var _txt   = prev_text;
+		var _lines = string_splice(_txt, "\n");
 		
 		draw_set_font(font);
-		
-		for( var i = 0, n = array_length(_line_man); i < n; i++ ) {
-			var _tx = _line_man[i];
+		for( var i = 0, n = array_length(_lines); i < n; i++ ) {
+			var _tx = _lines[i];
 			
 			while(string_length(_tx) > 0) {
-				var sp = min(string_pos(" ", _tx));
+				var sp     = string_pos(" ", _tx);
+				var bOpen  = string_pos("<", _tx);
+				var bClose = string_pos(">", _tx);
+				
 				if(sp == 0) sp = string_length(_tx);
+				else if(bOpen && sp > bOpen && sp < bClose) sp = bClose;
 			
 				var _ps = string_copy(_tx, 1, sp);
 				_tx = string_copy(_tx, sp + 1, string_length(_tx) - sp);
@@ -516,21 +462,20 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var fullStr = ss + _ps;
 				
 				if(line_width > 0 && string_width(string_raw(fullStr)) * fsize >= line_width) {
-					array_push(_lines, ss);
+					array_push(lines, ss);
 					ss = _ps;
 					
 				} else if(string_length(_tx) <= 0) {
-					array_push(_lines, fullStr);
+					array_push(lines, fullStr);
 					ss = "";
 					
 				} else 
 					ss += _ps;	
 			}
 			
-			array_push(_lines, "/");
+			if(ss != "") array_push(lines, ss);
+			array_push(lines, "/");
 		}
-		
-		if(ss != "") array_push(_lines, ss);
 	}
 	
 	static preDraw = function(_x, _y, _mx, _my, _s) {
@@ -603,24 +548,23 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			ta_editor.draw(tx, ty, wid * _s, 0, txt, [ mx, my ] );
 			
 		} else {
-			if(_prev_text != txt) line_update(txt, wid);
+			if(prev_text != txt) line_update(txt, wid);
 			
 			draw_set_alpha(alp);
 			draw_set_text(font, fa_left, fa_top, color);
 			var _lh = line_get_height(font) * fsize + line_h;
 			
-			for( var i = 0, n = array_length(_lines); i < n; i++ ) {
-				var _line = _lines[i];
-				var _w;
+			for( var i = 0, n = array_length(lines); i < n; i++ ) {
+				var _line = lines[i];
 				if(_line == "/") { hh += 8; ty += 8 * _s; continue; }
 				
+				var _w;
 				if(draw_simple) {
 					draw_text_add_float(tx, ty, _line, _s * fsize);
 					_w = string_width(txt) * fsize;
 					
-				} else {
+				} else
 					_w = draw_text_style(tx, ty, _line, _s, mx, my);
-				}
 				
 				ww = max(ww, _w);
 				hh += _lh;
