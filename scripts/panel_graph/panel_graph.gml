@@ -3327,7 +3327,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         _sl_y = h - toolbar_height - ui(8) - _sl_h;
         
         var _dpd = 12;
-        draw_sprite_stretched(THEME.ui_panel_bg, 3, _sl_x, _sl_y, slider_width, _sl_h);
+        draw_sprite_stretched( THEME.dialog, 0, _sl_x - 8, _sl_y - 8, slider_width + 16, _sl_h + 16 );
+        draw_sprite_stretched( THEME.ui_panel_bg, 3, _sl_x, _sl_y, slider_width, _sl_h );
         
         if(cur != noone) draw_text_add(round(w / 2), round(_sl_y + ui(8)), cur.slide_title);
         
@@ -3373,6 +3374,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
         }
         
+        draw_sprite_stretched_add( THEME.ui_panel, 1, _sl_x, _sl_y, slider_width, _sl_h, COLORS._main_icon, .3 );
         if(PREFERENCES.tutorial_mode) {
         	var pg = (500 - current_time % 500) / 500;
         	var pd = pg * 10;
@@ -3407,6 +3409,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            }
 	        }
 	        
+	        draw_sprite_stretched_add( THEME.ui_panel, 1, _spx0, _spy0, _spw, _sph, COLORS._main_icon, .3 );
 	        draw_sprite_ui(THEME.hamburger_s, 0, _spx0 + _spw / 2, _spy0 + _sph / 2, 1, 1, 0, COLORS._main_icon);
         }
     }

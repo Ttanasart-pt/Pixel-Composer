@@ -30,78 +30,39 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 	#region settings
 		sel          = 0;
 		nodes_select = [ "All nodes", "Selected" ];
-		widgets      = [];
-		
-		array_push(widgets, [ "Nodes", new scrollBox(nodes_select, 
-			function(val) /*=>*/ { 
-				nodeList = val? targetPanel.nodes_selecting : targetPanel.nodes_list; 
-				sel = val; refresh(); 
-			}, false),
-			function() /*=>*/ {return nodes_select[sel]}  
-		]);
-		
-		array_push(widgets, [-1, "Dimension"]);
-		array_push(widgets, [ "Scale",
-			textBox_Number( function(v) /*=>*/ { settings.scale       = v; refresh(); }),
-			function() /*=>*/ {return settings.scale}
-		]);
+		widgets      = [
+			[ "Nodes", new scrollBox(nodes_select, 
+				function(val) /*=>*/ { 
+					nodeList = val? targetPanel.nodes_selecting : targetPanel.nodes_list; 
+					sel = val; refresh(); 
+				}, false), function() /*=>*/ {return nodes_select[sel]}  
+			],
 			
-		array_push(widgets, [ "Padding",
-			textBox_Number( function(v) /*=>*/ { settings.padding     = v; refresh(); }),
-			function() /*=>*/ {return settings.padding}
-		]);
+			[-1, "Dimension"],
+			[ "Scale",   textBox_Number(function(v) /*=>*/ { settings.scale   = v; refresh(); }), function() /*=>*/ {return settings.scale}   ],
+			[ "Padding", textBox_Number(function(v) /*=>*/ { settings.padding = v; refresh(); }), function() /*=>*/ {return settings.padding} ],
 			
-		
-		array_push(widgets, [-1, "Background"]);
-		array_push(widgets, [ "Solid Background", 
-			new checkBox(   function( ) /*=>*/ { settings.bgEnable    = !settings.bgEnable; refresh(); }),  
-			function() /*=>*/ {return settings.bgEnable}
-		]);
+			[-1, "Background"],
+			[ "Solid Background", new checkBox(function() /*=>*/ { settings.bgEnable    = !settings.bgEnable; refresh(); }), function() /*=>*/ {return settings.bgEnable} ],
+			[ "Background Color", new buttonColor(function(v) /*=>*/ { settings.bgColor = v; refresh(); }), function() /*=>*/ {return settings.bgColor} ],
 			
-		array_push(widgets, [ "Background Color", 
-			new buttonColor(function(v) /*=>*/ { settings.bgColor     = v; refresh(); }),                   
-			function() /*=>*/ {return settings.bgColor}
-		]);
-		
-		array_push(widgets, [-1, "Grid"]);
-		array_push(widgets, [ "Render Grid",      
-			new checkBox(   function( ) /*=>*/ { settings.gridEnable  = !settings.gridEnable; refresh(); }),
-			function() /*=>*/ {return settings.gridEnable}  
-		]);
-		
-		array_push(widgets, [ "Grid Color",       
-			new buttonColor(function(v) /*=>*/ { settings.gridColor   = v; refresh(); }),
-			function() /*=>*/ {return settings.gridColor}   
-		]);
-		
-		array_push(widgets, [ "Grid Opacity",     
-			textBox_Number( function(v) /*=>*/ { settings.gridAlpha   = v; refresh(); }),
-			function() /*=>*/ {return settings.gridAlpha}
-		]);
-		
-		array_push(widgets, [-1, "Border"]);
-		array_push(widgets, [ "Border",           
-			textBox_Number( function(v) /*=>*/ { settings.borderPad   = v; refresh(); }),
-			function() /*=>*/ {return settings.borderPad}   
-		]);
-		
-		array_push(widgets, [ "Border Color",     
-			new buttonColor(function(v) /*=>*/ { settings.borderColor = v; refresh(); }),
-			function() /*=>*/ {return settings.borderColor} 
-		]);
-		
-		array_push(widgets, [ "Border Opacity",   
-			textBox_Number( function(v) /*=>*/ { settings.borderAlpha = v; refresh(); }),
-			function() /*=>*/ {return settings.borderAlpha} 
-		]);
-		
+			[-1, "Grid"],
+			[ "Render Grid",  new checkBox(function() /*=>*/ { settings.gridEnable = !settings.gridEnable; refresh(); }), function() /*=>*/ {return settings.gridEnable} ],
+			[ "Grid Color",   new buttonColor(function(v) /*=>*/ { settings.gridColor = v; refresh(); }), function() /*=>*/ {return settings.gridColor} ],
+			[ "Grid Opacity", textBox_Number( function(v) /*=>*/ { settings.gridAlpha = v; refresh(); }), function() /*=>*/ {return settings.gridAlpha} ],
+			
+			[-1, "Border"],
+			[ "Border",         textBox_Number( function(v) /*=>*/ { settings.borderPad   = v; refresh(); }), function() /*=>*/ {return settings.borderPad}   ],
+			[ "Border Color",   new buttonColor(function(v) /*=>*/ { settings.borderColor = v; refresh(); }), function() /*=>*/ {return settings.borderColor} ],
+			[ "Border Opacity", textBox_Number( function(v) /*=>*/ { settings.borderAlpha = v; refresh(); }), function() /*=>*/ {return settings.borderAlpha} ],
+		];
 	#endregion
 	
 	b_export = button(function() /*=>*/ {
 		if(!is_surface(surface)) return;
 		
 		var path = get_save_filename_compat("image|*.png;*.jpg", "Screenshot");
-		if(path == -1) return;
+		if(!is_string(path) || path == "") return;
 		
 		if(filename_ext(path) != ".png") path += ".png";
 		surface_save(surface, path);

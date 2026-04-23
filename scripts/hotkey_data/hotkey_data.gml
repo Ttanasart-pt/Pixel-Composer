@@ -112,6 +112,9 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	
 	static serialize = function() /*=>*/ { 
 		var m = { context, name };
+		m.key   = key._K;
+		m.modi  = key._M;
+		
 		m.fname = getNameFull();
 		m.keyd  = key.serialize();
 		

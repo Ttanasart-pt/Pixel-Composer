@@ -96,10 +96,10 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _panel = noone) {
 		var x0 = x * _s + _x;
 		var y0 = y * _s + _y;
-		var ts  = .3 * _s;
+		var ts  = .2 * _s;
 		
-		draw_anchor_cross(0, x0, y0, 16 * _s, 1);
+		draw_anchor_cross(0, x0, y0, 8 * _s, 1);
 		draw_set_text(f_sdf, fa_left, fa_top, color);
-		draw_text_transformed(x0 + 4 * _s, y0, slide_title, ts, ts, 0);
+		draw_text_add(x0 + 4 * _s, y0, slide_title, ts);
 	}
 }
