@@ -8,39 +8,36 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	manual_ungroupable	 = false;
 	
 	newInput(6, nodeValueSeed());
-	newInput(8, nodeValue_Int("Update Step", 0));
+	newInput(8, nodeValue_Int( "Update Step", 1 ));
 	
-	////- Output
-	
+	////- =Output
 	newInput(0, nodeValue_Dimension());
 	
-	////- Strand
-	
+	////- =Strand
 	newInput(1, nodeValue(       "Strand",                self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
 	newInput(2, nodeValue_Range( "Thickness", [ 1, 1 ], { linked : true }));
 	newInput(3, nodeValue_Curve( "Thickness over length", CURVE_DEF_11));
 	
-	////- Scatter
-	
+	////- =Scatter
 	newInput( 9, nodeValue_Bool(  "Use Scatter", false));
 	newInput( 7, nodeValue_Float( "Children Count", 0, "Render extra strands between the real strands."));
 	newInput(10, nodeValue_Float( "Scatter Range", 2));
 	
-	////- Color
-	
+	////- =Color
 	newInput(4, nodeValue_Gradient( "Random color", gra_white));
 	newInput(5, nodeValue_Gradient( "Color over length", gra_white)).setHotkeyAuto("C");
-	
 	//// inputs 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 6, 8, 
-		["Output",   false   ], 0,
-		["Strand",   false   ], 1, 2, 3, 
-		["Scatter",  false, 9], 7, 10, 
-		["Color",    false   ], 4, 5, 
+	input_display_list = [  6,  8, 
+		[ "Output",   false    ],  0,
+		[ "Strand",   false    ],  1,  2,  3, 
+		[ "Scatter",  false, 9 ],  7, 10, 
+		[ "Color",    false    ],  4,  5, 
 	];
+	
+	////- Node
 	
 	attributes.use_cache   = false;
 	attributes.show_strand = true;
@@ -66,25 +63,27 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _seed       = getInputData(6);
-		var _renderStep = getInputData(8);
-		
-		var _dim   = getInputData(0);
-		
-		var _strd  = getInputData(1);
-		var _tbas  = getInputData(2);
-		var _tlen  = getInputData(3);
-		
-		var _chUse = getInputData( 9);
-		var _chid  = getInputData( 7);
-		var _chRng = getInputData(10);
-		
-		var _cbas  = getInputData(4);
-		var _clen  = getInputData(5);
-		
-		var _surf  = outputs[0].getValue();
-		    _surf  = surface_verify(_surf, _dim[0], _dim[1]);
-		outputs[0].setValue(_surf);
+		#region data
+			var _seed       = getInputData(6);
+			var _renderStep = getInputData(8);
+			
+			var _dim   = getInputData(0);
+			
+			var _strd  = getInputData(1);
+			var _tbas  = getInputData(2);
+			var _tlen  = getInputData(3);
+			
+			var _chUse = getInputData( 9);
+			var _chid  = getInputData( 7);
+			var _chRng = getInputData(10);
+			
+			var _cbas  = getInputData(4);
+			var _clen  = getInputData(5);
+			
+			var _surf  = outputs[0].getValue();
+			    _surf  = surface_verify(_surf, _dim[0], _dim[1]);
+			outputs[0].setValue(_surf);
+		#endregion
 		
 		if(_strd == noone) return;
 		if(!is_array(_strd)) _strd = [ _strd ];

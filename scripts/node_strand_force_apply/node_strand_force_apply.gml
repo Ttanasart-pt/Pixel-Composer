@@ -6,32 +6,35 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	setDrawIcon(s_node_strand_force_apply);
 	
 	manual_ungroupable	 = false;
+	var i = input_fix_len;
 	
-	newInput(input_fix_len + 0, nodeValue_Slider("Strength", 1, [ 0, 5, 0.01 ] ));
-	
-	newInput(input_fix_len + 1, nodeValue_Float("Turbulence", 0));
-		
-	newInput(input_fix_len + 2, nodeValueSeed());
-	
-	newInput(input_fix_len + 3, nodeValue_Float("Turbulence frequency", 0.5));
-	
-	newInput(input_fix_len + 4, nodeValue_Int("Turbulence detail", 2));
+	////- =Force
+	newInput(i+0, nodeValue_Slider( "Strength", 1, [ 0, 5, 0.01 ] ));
+	newInput(i+2, nodeValueSeed());
+	newInput(i+1, nodeValue_Float( "Turbulence",            0 ));
+	newInput(i+3, nodeValue_Float( "Turbulence frequency", .5 ));
+	newInput(i+4, nodeValue_Int(   "Turbulence detail",     2 ));
+	// i+5
 	
 	array_push(input_display_list, 
-		["Force",	false], input_fix_len + 0, input_fix_len + 2, input_fix_len + 1, input_fix_len + 3, input_fix_len + 4
+		[ "Force", false ], i+0, i+2, i+1, i+3, i+4, 
 	);
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _pos = getInputData(2);
-		var _dir = getInputData(4);
-	
-		var _stn = getInputData(input_fix_len + 0);
-		var _tur = getInputData(input_fix_len + 1);
-		var _sed = getInputData(input_fix_len + 2);
-		var _tfr = getInputData(input_fix_len + 3);
-		var _toc = getInputData(input_fix_len + 4);
+		#region data
+			var i = input_fix_len;
+			
+			var _pos = getInputData(2);
+			var _dir = getInputData(4);
 		
-		inputs[4].setVisible(true);
+			var _stn = getInputData(i+0);
+			var _tur = getInputData(i+1);
+			var _sed = getInputData(i+2);
+			var _tfr = getInputData(i+3);
+			var _toc = getInputData(i+4);
+			
+			inputs[4].setVisible(true);
+		#endregion
 		
 		var _strTur = _tur == 0? _stn : perlin1D(CURRENT_FRAME, _sed, _tfr, _toc, _stn - _tur, _stn + _tur);
 		var gx = lengthdir_x(_strTur, _dir);

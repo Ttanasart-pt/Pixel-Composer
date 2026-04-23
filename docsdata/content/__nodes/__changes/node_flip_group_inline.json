@@ -6,6 +6,11 @@
         "date": "2026-04-23T05:27:03.008Z",
         "node": "",
         "commit": "**Display Text**: Fix multi-lines bounding box calculate incorrectly."
+      },
+      {
+        "date": "2026-04-23T06:23:13.014Z",
+        "node": "StrandSim Gravity",
+        "commit": "**StrandSim Gravity**: Fix gravity apply incorrectly."
       }
     ]
   },

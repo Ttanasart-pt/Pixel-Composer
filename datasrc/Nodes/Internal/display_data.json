@@ -322,22 +322,23 @@
     }, //FLIP
     {
         "name": "StrandSim", "nodes": [
-            { "label": "Group" },
-            "Node_Group_Input",
-            "Node_Group_Output",
-            
             { "label": "System" },
+            { "label": "/Strand" },
             "Node_Strand_Create",
             "Node_Strand_Update",
+            { "label": "/Render" },
             "Node_Strand_Render",
             "Node_Strand_Render_Texture",
             
             { "label": "Affector" },
+            { "label": "/Forces" },
             "Node_Strand_Gravity",
             "Node_Strand_Force_Apply",
-            "Node_Strand_Break",
+            { "label": "/Other" },
             "Node_Strand_Length_Adjust",
-            "Node_Strand_Collision"
+            "Node_Strand_Collision",
+            { "label": "/Destroy" },
+            "Node_Strand_Break",
         ],
         "context": ["Node_Strand_Group", "Node_Strand_Group_Inline"],
         "color": "node_blend_strand"

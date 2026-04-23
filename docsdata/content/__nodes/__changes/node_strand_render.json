@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-23T06:23:13.020Z",
+        "node": "",
+        "commit": "**StrandSim Gravity**: Fix gravity apply incorrectly."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc7",
     "changes": [
       {

@@ -7,14 +7,13 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue_Float("Gravity", 1));
-	
-	newInput(2, nodeValue_Rotation("Direction", 0));
+	newInput( 0, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
+	newInput( 1, nodeValue_Float(    "Gravity",    1  ));
+	newInput( 2, nodeValue_Rotation( "Direction", -90 ));
 	
 	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
+	
+	////- Node
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _str = getInputData(0);
@@ -33,8 +32,10 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var h = __str[k].hairs[i];
 			
 			for( var j = 1; j < array_length(h.points); j++ ) {
-				h.points[j].x += gx;
-				h.points[j].y += gy;
+				var p = h.points[j];
+				p.x += p.dx + gx;
+				p.y += p.dy + gy;
+				
 			}
 		}
 		
