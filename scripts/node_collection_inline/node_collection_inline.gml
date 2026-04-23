@@ -6,8 +6,6 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_adding       = false;
 	vertex_hash        = "";
 	modifiable         = true;
-	// draggable          = false;
-	manual_deletable   = false;
 	bbox               = [ 0, 0, 0, 0 ];
 	
 	managedRenderOrder = false;
@@ -511,5 +509,10 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
         if(junc.node.parameters[$ "inline_draw_output"] && junc.connect_type == CONNECT_TYPE.output) return false;
 		
 		return true;
+	}
+	
+	static onDestroy = function() {
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			nodes[i].destroy();
 	}
 }

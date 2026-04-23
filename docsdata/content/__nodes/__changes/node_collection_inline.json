@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-23T04:21:29.839Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Add the ability to delete inline group (will delete all nodes inside it)."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc8",
     "changes": [
       {
