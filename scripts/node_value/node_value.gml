@@ -1542,15 +1542,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_ext = "Node_Canvas";
 				break;
 				
-			case VALUE_TYPE.dynaSurface : editWidget = new surfaceDynaBox();										break;
-			case VALUE_TYPE.pathnode :	  editWidget = new pathnodeBox(self); _ext = "Node_Path"; 			break;
-			case VALUE_TYPE.tileset :     editWidget = new tilesetBox(self);  _ext = "Node_Tile_Tileset"; 	break;
-			case VALUE_TYPE.armature :    editWidget = new armatureBox(self); 										break;
-			case VALUE_TYPE.mesh :        editWidget = new meshBox(self); 											break;
-			case VALUE_TYPE.pbBox :       editWidget = new pbBoxBox(self); 											break;
-			case VALUE_TYPE.struct :      editWidget = new outputStructBox();                                       break;
+			case VALUE_TYPE.pathnode :    
+				editWidget = new pathnodeBox(self); 
+				_ext = ["Node_Path", "Node_Path_Shape"];
+				break;
 				
-			case VALUE_TYPE.particle :    editWidget = new particleBox(self); 										break;
+			case VALUE_TYPE.tileset :     editWidget = new tilesetBox(self);  _ext = "Node_Tile_Tileset"; break;
+			case VALUE_TYPE.dynaSurface : editWidget = new surfaceDynaBox();                              break;
+			case VALUE_TYPE.armature :    editWidget = new armatureBox(self);                             break;
+			case VALUE_TYPE.mesh :        editWidget = new meshBox(self);                                 break;
+			case VALUE_TYPE.pbBox :       editWidget = new pbBoxBox(self);                                break;
+			case VALUE_TYPE.struct :      editWidget = new outputStructBox();                             break;
+				
+			case VALUE_TYPE.particle :    editWidget = new particleBox(self);                             break;
 				
 			default : editWidget = new outputBox(); break;
 		}
@@ -3273,6 +3277,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			
 			case "Node_Path" : 
+				if(type == VALUE_TYPE.pathnode) break;
+				
 				var _amo  = array_length(animator.values);
 				var _anim = _amo > 1;
 				ext.inputs[0].setAnim(_anim);

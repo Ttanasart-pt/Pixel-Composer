@@ -6,6 +6,11 @@
         "date": "2026-04-23T08:23:47.430Z",
         "node": "",
         "commit": "**Graph Panel**: Fix adding node not auto connect."
+      },
+      {
+        "date": "2026-04-23T09:09:27.410Z",
+        "node": "Path",
+        "commit": "**Path**: Fix error when extracting path data."
       }
     ]
   },
