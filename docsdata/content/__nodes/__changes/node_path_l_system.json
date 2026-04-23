@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-23T08:36:51.008Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Fix multiple dialogs created when click on property guide."
+      }
+    ]
+  }
+]

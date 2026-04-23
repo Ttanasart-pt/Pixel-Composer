@@ -253,7 +253,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			    if(is_string(_tip)) {
 			    	TOOLTIP = _tip;
 			    	
-				} else if(mouse_lclick(_focus)) {
+				} else if(mouse_lpress(_focus)) {
 					if(is_callable(_tip)) _tip();
 					else dialogCall(_tip);
 				}

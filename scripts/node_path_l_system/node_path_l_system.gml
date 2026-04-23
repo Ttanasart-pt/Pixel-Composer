@@ -36,9 +36,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(11, nodeValue_Rotation(    "Subangle", 45    ));
 	
 	////- =Rules
-	newInput(3, nodeValue_Int(  "Iteration",    4 ));
-	newInput(4, nodeValue_Text( "Starting rule"   ));
-	newInput(5, nodeValue_Text( "End replacement" )).setTooltip("Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
+	newInput( 3, nodeValue_Int(  "Iteration",    4 ));
+	newInput( 4, nodeValue_Text( "Starting rule"   ));
+	newInput( 5, nodeValue_Text( "End replacement" )).setTooltip("Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
@@ -139,6 +139,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	setDynamicInput(2, false);
 	if(NOT_LOAD) createNewInput();
+	
+	////- Node
 	
 	attributes.rule_length_limit = 10000;
 	array_push(attributeEditors, "L System" );
