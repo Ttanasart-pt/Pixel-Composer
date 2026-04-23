@@ -299,22 +299,23 @@
     {
         "name": "FLIP Fluid", "nodes": [
             { "label": "Domain" },
+            { "label": "/Domain" },
             "Node_FLIP_Domain",
-            "Node_FLIP_Render",
             "Node_FLIP_Update",
+            { "label": "/Render" },
+            "Node_FLIP_Render",
+            "Node_FLIP_to_VFX",
             
             { "label": "Fluid" },
+            { "label": "/Spawner" },
             "Node_FLIP_Spawner",
+            { "label": "/Destroy" },
             "Node_FLIP_Destroy",
-            
-            { "label": "Affector" },
+            { "label": "/Affector" },
             "Node_FLIP_Apply_Velocity",
             "Node_FLIP_Apply_Force",
             "Node_FLIP_Repel",
             "Node_FLIP_Vortex",
-            
-            { "label": "Misc" },
-            "Node_FLIP_to_VFX"
         ],
         "context": ["Node_FLIP_Group_Inline"],
         "color": "node_blend_fluid"

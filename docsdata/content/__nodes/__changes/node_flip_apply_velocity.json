@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-23T05:27:03.003Z",
+        "node": "",
+        "commit": "**Display Text**: Fix multi-lines bounding box calculate incorrectly."
+      }
+    ]
+  }
+]

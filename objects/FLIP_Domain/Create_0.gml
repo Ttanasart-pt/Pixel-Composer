@@ -74,6 +74,8 @@ function init(_width, _height, _particleSize, _density, _maxParticles) {
 	domain_preview = surface_verify(domain_preview, width, height);
 }
 
+function getSize() { return [width, height]; }
+
 function update() {
 	FLIP_setQuality(		 domain, iteration, numPressureIters, numParticleIters);
 	FLIP_setGravity(		 domain, g, gDirection);

@@ -15,21 +15,21 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		"Surface" 
 	];
 	
-	newInput( 1, nodeValue_Enum_Scroll( "Spawn Shape",  0 , spawner_shapes));
-	newInput( 7, nodeValue_Surface(     "Spawn Surface" ));
-	newInput( 8, nodeValue_Slider(      "Spawn Radius",    2, [1, 16, 0.1] ));
-	newInput(13, nodeValue_Vec2(        "Spawn Size",     [2,2]    ));
-	newInput( 2, nodeValue_Vec2(        "Spawn Position", [.5,.25] )).setHotkey("G").setUnitSimple();
-	newInput( 3, nodeValue_Enum_Button( "Spawn Type",      0, [ "Stream", "Splash" ]));
-	newInput( 4, nodeValue_Int(         "Spawn Frame",     0 ));
-	newInput(12, nodeValue_Int(         "Spawn Duration",  1 ));
-	newInput( 5, nodeValue_Float(       "Spawn Amount",    8 ));
-	newInput(14, nodeValue_Int(         "Attempt",         8 ));
+	newInput( 1, nodeValue_EScroll( "Spawn Shape",  0 , spawner_shapes));
+	newInput( 7, nodeValue_Surface( "Spawn Surface" ));
+	newInput( 8, nodeValue_Slider(  "Spawn Radius",    2, [1, 16, 0.1] ));
+	newInput(13, nodeValue_Vec2(    "Spawn Size",     [2,2]    ));
+	newInput( 2, nodeValue_Vec2(    "Spawn Position", [.5,.25] )).setHotkey("G").setUnitSimple();
+	newInput( 3, nodeValue_EButton( "Spawn Type",       0, [ "Stream", "Splash" ]));
+	newInput( 4, nodeValue_Int(     "Spawn Frame",      0 ));
+	newInput(12, nodeValue_Int(     "Spawn Duration",   1 ));
+	newInput( 5, nodeValue_Float(   "Spawn Amount",     8 ));
+	newInput(14, nodeValue_Int(     "Attempt",          8 ));
 	
 	////- =Physics
-	newInput(10, nodeValue_Rotation_Random( "Spawn Direction",  [0,45,135,0,0 ] ));
-	newInput( 6, nodeValue_Range(           "Spawn Velocity",   [0,0] ));
-	newInput(11, nodeValue_Slider(          "Inherit Velocity",  0    ));
+	newInput(10, nodeValue_RotRand( "Spawn Direction",  [0,45,135,0,0 ] ));
+	newInput( 6, nodeValue_Range(   "Spawn Velocity",   [0,0] ));
+	newInput(11, nodeValue_Slider(  "Inherit Velocity",  0    ));
 	// input 15
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
@@ -45,6 +45,8 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	prev_position = [ 0, 0 ];
 	toReset       = true;
 	point_cache   = [];
+	
+	static getDimension = function() { var d = getInputData(0); return instance_exists(d)? d.getSize() : [ 1, 1 ]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _shp   = getInputData(1);
@@ -78,13 +80,6 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
 		
 		return w_hovering;
-	}
-	
-	static getDimension = function() { 
-		var domain = getInputData(0);
-		if(!instance_exists(domain)) return [ 1, 1 ];
-		
-		return [ domain.width, domain.height ];
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

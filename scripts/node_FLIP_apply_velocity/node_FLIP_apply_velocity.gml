@@ -6,27 +6,25 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDrawIcon(s_node_flip_apply_velocity);
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
+	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
 	
-	newInput(4, nodeValue_Enum_Scroll( "Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0) ]));
-	newInput(1, nodeValue_Vec2(   "Position",  [ 0, 0 ] )).setHotkey("G").setUnitSimple();
-	newInput(2, nodeValue_Slider( "Radius",      4, [1, 16, 0.1] ));
-	newInput(5, nodeValue_Vec2(   "Size",      [ 4, 4 ] ));
-	newInput(3, nodeValue_Vec2(   "Velocity",  [ 0, 0 ] ));
+	////- =Velocity
+	newInput( 4, nodeValue_EScroll( "Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0) ]));
+	newInput( 1, nodeValue_Vec2(    "Position",  [ 0, 0 ] )).setHotkey("G").setUnitSimple();
+	newInput( 2, nodeValue_Slider(  "Radius",      4, [1, 16, 0.1] ));
+	newInput( 5, nodeValue_Vec2(    "Size",      [ 4, 4 ] ));
+	newInput( 3, nodeValue_Vec2(    "Velocity",  [ 0, 0 ] ));
 	// input 6
-		
-	input_display_list = [ 0, 
-		["Velocity",	false], 4, 1, 2, 5, 3, 
-	]
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
-	
-	static getDimension = function() { 
-		var domain = getInputData(0);
-		if(!instance_exists(domain)) return [ 1, 1 ];
 		
-		return [ domain.width, domain.height ];
-	}
+	input_display_list = [ 0, 
+		[ "Velocity", false ], 4, 1, 2, 5, 3, 
+	]
+	
+	////- Node
+	
+	static getDimension = function() { var d = getInputData(0); return instance_exists(d)? d.getSize() : [ 1, 1 ]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _posit = getInputData(1);

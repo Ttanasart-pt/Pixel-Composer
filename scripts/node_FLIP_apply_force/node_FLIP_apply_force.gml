@@ -23,33 +23,32 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
+	newInput( 0, nodeValue_Fdomain("Domain")).setVisible(true, true);
 	
-	newInput(3, nodeValue_Enum_Scroll("Shape",   0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]));
-	newInput(2, nodeValue_Slider( "Radius",      4, [1, 16, 0.1] ));
-	newInput(4, nodeValue_Vec2(   "Size",      [ 4, 4 ] ));
+	////- =Collider
+	newInput( 3, nodeValue_Enum_Scroll("Shape",   0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]));
+	newInput( 2, nodeValue_Slider( "Radius",      4, [1, 16, 0.1] ));
+	newInput( 4, nodeValue_Vec2(   "Size",      [ 4, 4 ] ));
 	
-	newInput(1, nodeValue_Vec2(    "Position", [ 0, 0 ] )).setHotkey("G").setUnitSimple();
-	newInput(5, nodeValue_Surface( "Texture" ));
+	////- =Obstracle
+	newInput( 1, nodeValue_Vec2(    "Position", [ 0, 0 ] )).setHotkey("G").setUnitSimple();
+	newInput( 5, nodeValue_Surface( "Texture" ));
 	// input 6
 	
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
+	
 	input_display_list = [ 0, 
-		["Collider",	false], 3, 2, 4, 
-		["Obstracle",	false], 1, 5, 
+		[ "Collider",  false ], 3, 2, 4, 
+		[ "Obstracle", false ], 1, 5, 
 	]
 	
-	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
+	////- Node
 	
 	obstracle = new FLIP_Obstracle();
 	index     = 0;
 	toReset   = true;
 	
-	static getDimension = function() { 
-		var domain = getInputData(0);
-		if(!instance_exists(domain)) return [ 1, 1 ];
-		
-		return [ domain.width, domain.height ];
-	}
+	static getDimension = function() { var d = getInputData(0); return instance_exists(d)? d.getSize() : [ 1, 1 ]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _posit = getInputData(1);

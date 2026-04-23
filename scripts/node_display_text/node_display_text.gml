@@ -585,7 +585,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _w;
 				if(draw_simple) {
 					draw_text_add_float(tx, ty, _line, _s * fsize);
-					_w = string_width(txt) * fsize;
+					_w = string_width(_line) * fsize;
 					
 				} else
 					_w = draw_text_style(tx, ty, _line, _s, mx, my);

@@ -2428,8 +2428,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    			var ny = __gr_y + _n.y * __gr_s;
 	    			var nw = _n.w * __gr_s;
 	    			var nh = (_n.h + _n.showMeta() * 16) * __gr_s;
-	    			
-	    			draw_sprite_stretched_ext(THEME.node_glow_border, 0, nx - 9, ny - 9, nw + 18, nh + 18, COLORS._main_accent, 1);
+	    			var cc = _n.color == c_white? COLORS._main_accent : _n.color;
+	    			draw_sprite_stretched_ext(THEME.node_glow_border, 0, nx - 9, ny - 9, nw + 18, nh + 18, cc, 1);
 	    		}
 	    		
 	        	node_highlighting = undefined;

@@ -37,6 +37,8 @@ function Node_Slideshow_Node_Anchor(_x, _y, _group = noone) : Node(_x, _y, _grou
 		node_init_x = node_obj.x;
 		node_init_y = node_obj.y;
 		
+		w = node_obj.w;
+		h = node_obj.h;
 	}
 	
 	static slideStep = function(_t = 0) {

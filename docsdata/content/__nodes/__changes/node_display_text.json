@@ -16,6 +16,11 @@
         "date": "2026-04-23T03:43:07.634Z",
         "node": "SmokeSim",
         "commit": "**SmokeSim**: Add relative units to transformation properties."
+      },
+      {
+        "date": "2026-04-23T05:27:03.009Z",
+        "node": "",
+        "commit": "**Display Text**: Fix multi-lines bounding box calculate incorrectly."
       }
     ]
   },
