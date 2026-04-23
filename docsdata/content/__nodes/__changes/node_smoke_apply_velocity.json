@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-23T03:43:07.635Z",
+        "node": "",
+        "commit": "**SmokeSim**: Add relative units to transformation properties."
+      }
+    ]
+  }
+]

@@ -6,18 +6,23 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	manual_ungroupable	 = false;
 	
 	////- =Domain
-	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
+	newInput( 0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
 	////- =Collider
-	newInput(1, nodeValue_Surface( "Collider" ));
-	newInput(2, nodeValue_Area(    "Area", DEF_AREA, { useShape : false } ));
+	newInput( 1, nodeValue_Surface( "Collider" ));
+	newInput( 2, nodeValue_Area(    "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
+	// 3
+	
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 
 		["Collider",	false], 1, 2,
 	];
 	
-	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
+	////- Node
+	
+	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : [1,1]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _mat = getInputData(1);

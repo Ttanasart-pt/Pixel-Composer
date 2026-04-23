@@ -273,23 +273,25 @@
         "color": "node_blend_simulation"
     }, //Rigidsim
     {
-        "name": "SmokeSim", "nodes": [
-            { "label": "Group" },
-            "Node_Smoke_Render_Output",
-            
+        "name": "SmokeSim", "nodes": [            
             { "label": "Domain" },
+            { "label": "/Domain" },
             "Node_Smoke_Domain",
-            "Node_Smoke_Update",
-            "Node_Smoke_Render",
             "Node_Smoke_Domain_Queue",
+            { "label": "/Update" },
+            "Node_Smoke_Update",
+            { "label": "/Render" },
+            "Node_Smoke_Render",
             
             { "label": "Smoke" },
+            { "label": "/Add" },
             "Node_Smoke_Add",
-            "Node_Smoke_Apply_Velocity",
             "Node_Smoke_Add_Collider",
+            { "label": "/Modify" },
+            "Node_Smoke_Apply_Velocity",
             "Node_Smoke_Vortex",
             "Node_Smoke_Repulse",
-            "Node_Smoke_Turbulence"
+            "Node_Smoke_Turbulence",
         ],
         "context": ["Node_Smoke_Group", "Node_Smoke_Group_Inline"],
         "color": "node_blend_smoke"

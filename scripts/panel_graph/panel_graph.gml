@@ -1113,7 +1113,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	];
     	
     	if(TESTING) array_push(global.menuItems_graph_node_select, new MenuItem("Copy Node ID", function() /*=>*/ {
-    		if(!array_empty(nodes_selecting)) clipboard_set_text(nodes_selecting[0].node_id);
+    		if(array_empty(nodes_selecting)) return;
+    		print(nodes_selecting[0])
+    		clipboard_set_text(nodes_selecting[0].node_id);
     	}))
     	
 	    global.menuItems_graph_junction_select = [
@@ -2412,6 +2414,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    		
 	    		for( var i = 0, n = array_length(_node_draw); i < n; i++ ) {
 	    			var _n = _node_draw[i];
+	    			
+	    			if(is(_n, Node_Collection_Inline)) 
+	    				continue;
 	    			
 	    			if(is(_n, Node_Pin) || is(_n, Node_Tunnel_In) || is(_n, Node_Tunnel_Out)) 
 	    				continue;

@@ -6,27 +6,31 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	
 	////- =Domain
 	newActiveInput(4);
-	newInput(0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone )).setVisible(true, true);
+	newInput( 0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone )).setVisible(true, true);
 	
 	////- =Brush
-	newInput(5, nodeValue_Enum_Button( "Type", 0, [ "Shape", "Surface" ] ));
-	newInput(1, nodeValue_Surface( "Brush" ));
-	newInput(6, nodeValue_Vec2(    "Scale",    [ 8, 8 ] )).setHotkey("S");
-	newInput(2, nodeValue_Vec2(    "Position", [ 0, 0 ] )).setHotkey("G");
+	newInput( 5, nodeValue_EButton( "Type", 0, [ "Shape", "Surface" ] ));
+	newInput( 1, nodeValue_Surface( "Brush" ));
+	newInput( 6, nodeValue_Vec2(    "Scale",    [ .25,.25 ] )).setUnitSimple().setHotkey("S");
+	newInput( 2, nodeValue_Vec2(    "Position", [ .50,.50 ] )).setUnitSimple().setHotkey("G");
 	
 	////- =Velocity
-	newInput(3, nodeValue_Vec2(    "Velocity", [ 1, 0 ] ));
-	newInput(7, nodeValue_Float(   "Strength", 1        ));
+	newInput( 3, nodeValue_Vec2(    "Velocity", [ 1, 0 ] ));
+	newInput( 7, nodeValue_Float(   "Strength", 1        ));
 	// input 8
+	
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	input_display_list = [ 4, 0, 
 		["Brush",	 false], 5, 1, 6, 2, 
 		["Velocity", false], 3, 7, 
 	];
 	
-	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
+	////- Node
 	
 	temp_surface = [ noone ];
+	
+	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : [1,1]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _typ = getInputData(5);

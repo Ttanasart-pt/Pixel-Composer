@@ -5,24 +5,28 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	manual_ungroupable	 = false;
 	
 	////- =Domain
-	newInput(0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
+	newInput( 0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
 	////- =Repulse
-	newInput(1, nodeValue_Vec2(     "Position",  [0, 0] )).setHotkey("G");
-	newInput(2, nodeValue_Float(    "Radius",     8     )).setHotkey("S");
-	newInput(3, nodeValue_Slider(   "Strength",   0.10, [-1, 1, 0.01] ));
-	newInput(4, nodeValue_Float(    "Spokes",     0     ));
-	newInput(5, nodeValue_Rotation( "Twist",      0     ));
+	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitSimple().setHotkey("G");
+	newInput( 2, nodeValue_Float(    "Radius",     .25    )).setUnitSimple().setHotkey("S");
+	newInput( 3, nodeValue_Slider(   "Strength",   0.10, [-1, 1, 0.01] ));
+	newInput( 4, nodeValue_Float(    "Spokes",     0      ));
+	newInput( 5, nodeValue_Rotation( "Twist",      0      ));
 	// input 6
+	
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	input_display_list = [ 
 		["Domain",	false], 0, 
 		["Repulse",	false], 1, 2, 3, 4, 5, 
 	];
 	
-	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
+	////- Node
 	
 	temp_surface = [ noone ];
+	
+	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : [1,1]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pos = getInputData(1);

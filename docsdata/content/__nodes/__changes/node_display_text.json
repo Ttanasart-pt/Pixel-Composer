@@ -11,6 +11,11 @@
         "date": "2026-04-23T02:28:07.863Z",
         "node": "Display Text",
         "commit": "**Display Text**: Fix line cut between special characters."
+      },
+      {
+        "date": "2026-04-23T03:43:07.634Z",
+        "node": "SmokeSim",
+        "commit": "**SmokeSim**: Add relative units to transformation properties."
       }
     ]
   },

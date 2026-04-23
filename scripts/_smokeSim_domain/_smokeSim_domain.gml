@@ -12,6 +12,9 @@ enum FD_BOUNDARY_TYPE {
 }
 
 function smokeSim_Domain(_width, _height) constructor {
+	width  = 1;
+	height = 1;
+	
     sf_world        = noone;
 	sf_world_update = true;
 
@@ -47,6 +50,7 @@ function smokeSim_Domain(_width, _height) constructor {
 	
 	max_force = 10;
 	
+	static getSize = function() /*=>*/ {return [width,height]};
     static setSize = function(_width, _height) {
         width     = _width;
     	height    = _height;

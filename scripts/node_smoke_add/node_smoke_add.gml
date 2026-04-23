@@ -10,12 +10,12 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	newInput( 0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
 	////- =Brush
-	newInput( 8, nodeValue_Enum_Button(  "Type",        0, [ "Shape", "Surface" ]));
-	newInput( 1, nodeValue_Surface(      "Fluid brush" ));
-	newInput(11, nodeValue_Enum_Scroll(  "Shape",       0, [ "Disk", "Ring" ]));
-	newInput(12, nodeValue_Slider_Range( "Level",      [0,1]   ));
-	newInput( 2, nodeValue_Vec2(         "Position",   [0,0]   )).setUnitSimple();
-	newInput( 9, nodeValue_Vec2(         "Scale",      [.5,.5] )).setUnitSimple();
+	newInput( 8, nodeValue_EButton(  "Type",        0, [ "Shape", "Surface" ] ));
+	newInput( 1, nodeValue_Surface(  "Fluid brush" ));
+	newInput(11, nodeValue_EScroll(  "Shape",       0, [ "Disk", "Ring" ]     ));
+	newInput(12, nodeValue_SliRange( "Level",      [0,1]     ));
+	newInput( 2, nodeValue_Vec2(     "Position",   [.5,.5]   )).setUnitSimple();
+	newInput( 9, nodeValue_Vec2(     "Scale",      [.25,.25] )).setUnitSimple();
 	
 	////- =Smoke
 	newInput( 5, nodeValue_Slider( "Density", 1 ));
@@ -42,10 +42,12 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 		["Repulse",  false], 10, 13, 14, 
 	];
 	
+	////- Node
+	
 	_prevPos     = noone;
 	temp_surface = array_create(4);
 	
-	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? [_dom.width, _dom.height] : [1,1]; }
+	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : [1,1]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		

@@ -177,6 +177,32 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							width += _bw * fsize + 8;
 							break;
 						
+						case "junc" :
+							var _bw = string_width(_data);
+							var _bh = string_height(_data);
+							
+							_tw  = _bw * _ss;
+							_th  = _bh * _ss;
+							
+							var _tx0 = _tx - pd;
+							var _ty0 = _y  - pd/2;
+							var _tx1 = _tx + _tw + pd;
+							var _ty1 = _y  + _th + pd/2;
+							
+							draw_sprite_stretched_points(THEME.box_r2_clr, 1, _tx0, _ty0, _tx1, _ty1, c_white, 1);
+							
+							if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+								draw_sprite_stretched_points(THEME.box_r2_clr, 0, _tx0, _ty0, _tx1, _ty1, c_white, 1);
+							}
+							
+							draw_set_color(COLORS._main_icon_light);
+							draw_text_add_float(_tx, _y, _data, _ss);
+							draw_set_color(_cc);
+							
+							_tx   += _tw;
+							width += _bw * fsize + 8;
+							break;
+						
 						case "dialog" :
 						case "panel"  :
 							var _key = $"{string_title(_data)} {string_title(_type)}";
@@ -302,9 +328,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 			switch(_mode) {
-				case 0 : 
-					_str += _ch; 
-					break;
+				case 0 : _str += _ch; break;
 					
 				case 1 : 
 					if(_str != "") {
@@ -462,18 +486,18 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var fullStr = ss + _ps;
 				
 				if(line_width > 0 && string_width(string_raw(fullStr)) * fsize >= line_width) {
-					array_push(lines, ss);
+					array_push(lines, string_trim(ss));
 					ss = _ps;
 					
 				} else if(string_length(_tx) <= 0) {
-					array_push(lines, fullStr);
+					array_push(lines, string_trim(fullStr));
 					ss = "";
 					
 				} else 
 					ss += _ps;	
 			}
 			
-			if(ss != "") array_push(lines, ss);
+			if(ss != "") array_push(lines, string_trim(ss));
 			array_push(lines, "/");
 		}
 	}
