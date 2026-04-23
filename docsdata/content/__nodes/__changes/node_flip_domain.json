@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-23T04:16:43.941Z",
+        "node": "FLIP Domain",
+        "commit": "**FLIP Domain**: Fix some properties not visible in inspector."
+      }
+    ]
+  }
+]

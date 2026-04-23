@@ -10,7 +10,7 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	////- =Repulse
 	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitSimple().setHotkey("G");
 	newInput( 2, nodeValue_Float(    "Radius",     .25    )).setUnitSimple().setHotkey("S");
-	newInput( 3, nodeValue_Slider(   "Strength",   0.10, [-1, 1, 0.01] ));
+	newInput( 3, nodeValue_Slider(   "Strength",   0.10, [-8, 8, 0.01] ));
 	newInput( 4, nodeValue_Float(    "Spokes",     0      ));
 	newInput( 5, nodeValue_Rotation( "Twist",      0      ));
 	// input 6

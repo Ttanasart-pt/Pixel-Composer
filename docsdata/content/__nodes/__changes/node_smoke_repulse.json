@@ -6,6 +6,11 @@
         "date": "2026-04-23T03:43:07.635Z",
         "node": "",
         "commit": "**SmokeSim**: Add relative units to transformation properties."
+      },
+      {
+        "date": "2026-04-23T04:16:43.942Z",
+        "node": "",
+        "commit": "**FLIP Domain**: Fix some properties not visible in inspector."
       }
     ]
   }

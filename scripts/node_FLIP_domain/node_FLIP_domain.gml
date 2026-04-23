@@ -3,45 +3,42 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDrawIcon(s_node_flip_domain);
+	setDimension(96, 48);
 	
 	manual_ungroupable = false;
 	update_on_frame    = true;
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Domain
+	newInput( 0, nodeValue_Dimension());
+	newInput( 1, nodeValue_Int(    "Particle Size",    1  ));
+	newInput( 2, nodeValue_Int(    "Particle Density", 10 ));
+	newInput( 9, nodeValue_Toggle( "Wall",             0b1111, [ "T", "B", "L", "R" ] ));
+	newInput(12, nodeValue_Slider( "Wall Elasticity",  0., [ 0, 2, 0.01 ] ));
 	
-	newInput(1, nodeValue_Int("Particle Size", 1));
+	////- =Solver
+	newInput( 3, nodeValue_Slider( "FLIP Ratio",    .8  ));
+	newInput( 8, nodeValue_Float(  "Time Step",     .05 ));
 	
-	newInput(2, nodeValue_Int("Particle Density", 10));
+	////- =Physics
+	newInput( 6, nodeValue_Slider(   "Damping",           .8   ));
+	newInput( 7, nodeValue_Float(    "Gravity",            5  ));
+	newInput(13, nodeValue_Rotation( "Gravity Direction", -90 ));
+	newInput(10, nodeValue_Slider(   "Viscosity",          0., [ -1, 1, 0.01 ] ));
+	newInput(11, nodeValue_Slider(   "Friction",           0. ));
 	
-	newInput(3, nodeValue_Slider("FLIP Ratio", 0.8));
-	
-	newInput(4, nodeValue_Float("Resolve accelerator", 1.5));
-	
-	newInput(5, nodeValue_Int("Iteration", 8));
-	
-	newInput(6, nodeValue_Slider("Damping", 0.8));
-	
-	newInput(7, nodeValue_Float("Gravity", 5));
-	
-	newInput(8, nodeValue_Float("Time Step", 0.05));
-	
-	newInput(9, nodeValue_Toggle("Wall", 0b1111, { data:  [ "T", "B", "L", "R" ] }));
-	
-	newInput(10, nodeValue_Slider("Viscosity", 0., [ -1, 1, 0.01 ] ));
-	
-	newInput(11, nodeValue_Slider("Friction", 0.));
-		
-	newInput(12, nodeValue_Slider("Wall Elasticity", 0., [ 0, 2, 0.01 ] ));
-	
-	newInput(13, nodeValue_Rotation("Gravity Direction", -90));
-	
-	input_display_list = [
-		["Domain",	false], 0, 1, 9, 12, 
-		["Solver",   true], 3, 8, 
-		["Physics", false], 7, 13, 10, 11, 
-	]
+	/*UNUSED*/ newInput( 4, nodeValue_Float(  "Resolve accelerator", 1.5 ));
+	/*UNUSED*/ newInput( 5, nodeValue_Int(    "Iteration",           8   ));
+	// 14
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone));
+	
+	input_display_list = [
+		[ "Domain",  false ],  0,  1,  2,  9, 12, 
+		[ "Solver",   true ],  3,  8, 
+		[ "Physics", false ],  6,  7, 13, 10, 11, 
+	];
+	
+	////- Nodes
 	
 	#region attributes
 		attributes.max_particles       = 10000;
@@ -70,30 +67,32 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dim = getInputData(0);
-		var _siz = getInputData(1); _siz = max(_siz, 1);
-		var _den = getInputData(2);
+		#region data
+			var _dim = getInputData(0);
+			var _siz = getInputData(1); _siz = max(_siz, 1);
+			var _den = getInputData(2);
+			
+			var _flp = getInputData(3);
+			 
+			var _dmp = getInputData(6);
+			var _grv = getInputData(7);
+			var _dt  = getInputData(8);
+			var _col = getInputData(9);
+			
+			var _vis  = getInputData(10);
+			var _fric = getInputData(11);
+			var _ela  = getInputData(12);
+			var _gdir = getInputData(13);
+			
+			var _ovr  = attributes.overrelax;
+			
+			var _itr  = attributes.iteration;
+			var _itrP = attributes.iteration_pressure;
+			var _itrR = attributes.iteration_particle;
+		#endregion
 		
-		var _flp = getInputData(3);
-		 
-		var _dmp = getInputData(6);
-		var _grv = getInputData(7);
-		var _dt  = getInputData(8);
-		var _col = getInputData(9);
-		
-		var _vis  = getInputData(10);
-		var _fric = getInputData(11);
-		var _ela  = getInputData(12);
-		var _gdir = getInputData(13);
-		
-		var _ovr  = attributes.overrelax;
-		
-		var _itr  = attributes.iteration;
-		var _itrP = attributes.iteration_pressure;
-		var _itrR = attributes.iteration_particle;
-		
-		var width        = _dim[0] + _siz * 2;
-		var height       = _dim[1] + _siz * 2;
+		var width  = _dim[0] + _siz * 2;
+		var height = _dim[1] + _siz * 2;
 			
 		if(IS_FIRST_FRAME || toReset) {
 			var particleSize = _siz;
