@@ -16,6 +16,11 @@
         "date": "2026-04-24T02:39:32.395Z",
         "node": "",
         "commit": "**SmokeSim > Render Domain**: Add volume color and density remap."
+      },
+      {
+        "date": "2026-04-24T03:30:23.524Z",
+        "node": "StrandSim gravity",
+        "commit": "**StrandSim gravity**: revert gravity calculation change."
       }
     ]
   },

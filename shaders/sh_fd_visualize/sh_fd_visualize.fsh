@@ -267,11 +267,13 @@ uniform float densityMap_curve[CURVE_MAX];
 uniform int   densityMap_use;
 uniform int   densityMap_amount;
 
+uniform int   transparent;
+
 void main() {
 	float rawV = texture2D(gm_BaseTexture, v_vTexcoord).a;
 	float dens = curveEval(densityMap_curve, densityMap_amount, clamp(rawV, 0., 1.));
 	vec4  gradSample = gradientEval(dens);
 	
     gl_FragColor = gradSample;
-    // gl_FragColor = vec4(rawV, dens, 0., 1.);
+    if(transparent == 1) gl_FragColor.a *= dens;
 }

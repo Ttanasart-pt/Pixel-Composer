@@ -11,6 +11,11 @@
         "date": "2026-04-23T08:02:07.080Z",
         "node": "",
         "commit": "Add getting started projects for SmokeSim, FLIP Fluid, and StrandSim."
+      },
+      {
+        "date": "2026-04-24T03:30:23.529Z",
+        "node": "",
+        "commit": "**StrandSim gravity**: revert gravity calculation change."
       }
     ]
   }
