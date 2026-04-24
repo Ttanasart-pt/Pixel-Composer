@@ -273,9 +273,8 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	//////////////////////// SEARCH ////////////////////////
 	
 	gradient_search_string = "";
-	tb_preset_search       = textBox_Text(function(t) /*=>*/ { gradient_search_string = string_lower(t) } ).setFont(f_p2).setHide(1)
-		.setEmpty(false).setPadding(ui(24)).setAutoUpdate()
-		.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
+	tb_preset_search       = textBox_Text(function(t) /*=>*/ { gradient_search_string = string_lower(t) } )
+		.setFont(f_p2).setHide(1).setPadding(ui(24)).setSearch();
 				
 	////////////////////////  SORT  ////////////////////////
 	
@@ -595,8 +594,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	
 	palette_search_string = "";
 	tb_palette_search = textBox_Text(function(t) /*=>*/ { palette_search_string = string_lower(t) } )
-		.setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate()
-		.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
+		.setFont(f_p2).setHide(1).setPadding(ui(24)).setSearch();
 	
 	////////////////////////  SORT  ////////////////////////
 	

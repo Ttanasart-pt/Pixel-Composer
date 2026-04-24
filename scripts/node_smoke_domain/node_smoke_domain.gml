@@ -7,9 +7,9 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	////- =Domain
 	newInput( 0, nodeValue_Dimension());
-	newInput( 1, nodeValue_Surface(     "Collision"    ));
-	newInput(11, nodeValue_Enum_Scroll( "Boundary",  0, [ "Free", "Wall", "Wrap" ]));
-	newInput(12, nodeValue_Float(       "Timestep",  1 ));
+	newInput( 1, nodeValue_Surface( "Collision"    ));
+	newInput(11, nodeValue_EScroll( "Boundary",  0, [ "Free", "Wall", "Wrap" ]));
+	newInput(12, nodeValue_Float(   "Timestep",  1 ));
 	
 	////- =Properties
 	newInput( 8, nodeValue_Slider( "Initial pressure",   .75     ));
@@ -21,10 +21,10 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput( 5, nodeValue_Slider( "Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
 	
 	////- =Advance
-	newInput( 2, nodeValue_Enum_Button( "Material dissipation type",  1, [ "Multiply", "Subtract" ] ));
-	newInput( 4, nodeValue_Enum_Button( "Velocity dissipation type",  1, [ "Multiply", "Subtract" ] ));
-	newInput( 9, nodeValue_Slider(      "Material Maccormack weight", 1 ));
-	newInput(10, nodeValue_Slider(      "Velocity Maccormack weight", 0 ));
+	newInput( 2, nodeValue_EButton( "Material dissipation type",  1, [ "Multiply", "Subtract" ] ));
+	newInput( 4, nodeValue_EButton( "Velocity dissipation type",  1, [ "Multiply", "Subtract" ] ));
+	newInput( 9, nodeValue_Slider(  "Material Maccormack weight", 1 ));
+	newInput(10, nodeValue_Slider(  "Velocity Maccormack weight", 0 ));
 	// input 13 
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,29 +34,39 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newOutput(2, nodeValue_Output( "Pressure", VALUE_TYPE.surface, noone )).setVisible(false);
 	
 	input_display_list = [ 
-		["Domain",			false], 0, 1, 11, 12, 
-		["Properties",		false], 8, 6, 7,
-		["Dissipation",		false], 3, 5,
-		["Advance Settings", true], 2, 4, 9, 10, 
+		[ "Domain",           false ],  0,  1, 11, 12, 
+		[ "Properties",       false ],  8,  6,  7,
+		[ "Dissipation",      false ],  3,  5,
+		[ "Advance Settings",  true ],  2,  4,  9, 10, 
 	];
 	
-	domain   = new smokeSim_Domain(1, 1);
+	////- Node
+	
+	domain   = undefined; 
 	_dim_old = [0, 0];
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dim	= getInputData( 0);
-		var coll	= getInputData( 1);
-		var mdisTyp = getInputData( 2);
-		var mdis    = getInputData( 3);
-		var vdisTyp = getInputData( 4);
-		var vdis    = getInputData( 5);
-		var acc     = getInputData( 6);
-		var matInr  = getInputData( 7);
-		var inPress = getInputData( 8);
-		var mMac	= getInputData( 9);
-		var vMac	= getInputData(10);
-		var bound	= getInputData(11);
-		var tstp	= getInputData(12);
+		#region data
+			var _dim	= getInputData( 0);
+			var coll	= getInputData( 1);
+			var bound	= getInputData(11);
+			var tstp	= getInputData(12);
+			
+			var inPress = getInputData( 8);
+			var acc     = getInputData( 6);
+			var matInr  = getInputData( 7);
+			
+			var mdis    = getInputData( 3);
+			var vdis    = getInputData( 5);
+			
+			var mdisTyp = getInputData( 2);
+			var vdisTyp = getInputData( 4);
+			var mMac	= getInputData( 9);
+			var vMac	= getInputData(10);
+			
+		#endregion
+		
+		if(domain == undefined) domain = new smokeSim_Domain(_dim[0], _dim[1]);
 		
 		if(IS_FIRST_FRAME || !is_surface(domain.sf_world)) {
 			domain.resetSize(_dim[0], _dim[1]);

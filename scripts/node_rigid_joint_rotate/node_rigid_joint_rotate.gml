@@ -27,7 +27,7 @@ function Node_Rigid_Joint_Rotate(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	////- Node
 	
-	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", DEF_SURF)};
 	
 	static update = function(frame = CURRENT_FRAME) {
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);

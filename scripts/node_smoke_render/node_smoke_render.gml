@@ -3,7 +3,7 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
 	parameters.inline_draw_output = true;
-	setCacheAuto();
+	// setCacheAuto();
 	
 	inline_output      = false;
 	manual_ungroupable = false;

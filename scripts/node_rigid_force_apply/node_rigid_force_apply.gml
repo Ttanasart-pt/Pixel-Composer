@@ -46,7 +46,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	array_push(attributeEditors, Node_Attribute("Show objects",  function() /*=>*/ {return attributes.show_objects},  function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})}));
 	array_push(attributeEditors, Node_Attribute("Display scale", function() /*=>*/ {return attributes.display_scale}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("display_scale", v)})}));
 	
-	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", DEF_SURF)};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(process_amount > 0) return;

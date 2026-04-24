@@ -18,7 +18,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Node
 	
-	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", DEF_SURF)};
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _obj = getInputData(0);

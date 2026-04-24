@@ -136,9 +136,8 @@ event_inherited();
 	});
 	sp_recent.always_scroll = false;
 	
-	tb_recent_search = textBox_Text(function(t) /*=>*/ { recent_search = t; }).setAutoUpdate()
-		.setEmpty().setClearable().setPlaceHold(__txt("Recent files")).setLabelIcon(THEME.search);
-	recent_search = "";
+	tb_recent_search = textBox_Text(function(t) /*=>*/ { recent_search = t; }).setSearch(__txt("Recent files"));
+	recent_search    = "";
 #endregion
 
 #region sample projects
@@ -220,8 +219,7 @@ event_inherited();
 		var row = ceil(node_count / col);
 		
 		var grid_width = (ww - col * grid_padd) / col;
-		var grid_heigh = grid_width * 0.75;
-		if(page == "Workshop") grid_heigh = grid_width;
+		var grid_heigh = page == "Getting Started"? grid_width * 2/3 : grid_width;
 		
 		var contentRow   = false;
 		var group_labels = [];
@@ -276,9 +274,6 @@ event_inherited();
 				if(!_incl) continue;
 			}
 			
-			if(page != "Workshop")        grid_heigh = grid_width;
-			if(page == "Getting Started") grid_heigh = grid_width * 0.75;
-			
 			_nx   = grid_padd + (grid_width + grid_padd) * _cur_col;
 			_boxx = _nx;
 			
@@ -294,8 +289,8 @@ event_inherited();
 				_project.hover_splash = lerp_float(_project.hover_splash, ghov, 10);
 				
 				if(sprite_exists(spr)) {
-					var gw = grid_width;
-					var gh = grid_heigh;
+					var gw = grid_width - ui(8);
+					var gh = grid_heigh - ui(8);
 					
 					var sw = sprite_get_width(spr);
 					var sh = sprite_get_height(spr);
@@ -333,9 +328,6 @@ event_inherited();
 					
 					var ox = sprite_get_xoffset(spr) * ss;
 					var oy = sprite_get_yoffset(spr) * ss;
-					draw_set_font(f_p4);
-					var th = string_height_ext(_name, -1, grid_width - ui(8));
-					var fh = th + ui(16) + _project.hover_splash * ui(32);
 					
 					gpu_set_scissor(gridX + ui(2), gridY + ui(2), gridW - ui(4), gridH - ui(4));
 					gpu_set_tex_filter(page == "Getting started");
@@ -343,6 +335,9 @@ event_inherited();
 					gpu_set_tex_filter(false);
 					gpu_set_scissor(_scis);
 					
+					draw_set_font(f_p4);
+					var th = string_height_ext(_name, -1, grid_width - ui(8));
+					var fh = th + ui(16) + _project.hover_splash * ui(32);
 					draw_sprite_stretched_ext(THEME.fade_up, 0, gridX, gridY + gridH - fh, gridW, fh, COLORS._main_icon_dark, 1);
 					
 				} else {
@@ -460,9 +455,8 @@ event_inherited();
 	sp_sample.always_scroll = false;
 	
 	tb_sample_seaching = false;
-	tb_sample_search   = textBox_Text(function(t) /*=>*/ { sample_search = t; }).setAutoUpdate()
-		.setEmpty().setClearable().setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search);
-	sample_search = "";
+	tb_sample_search   = textBox_Text(function(t) /*=>*/ { sample_search = t; }).setSearch();
+	sample_search      = "";
 #endregion
 
 #region contest

@@ -177,6 +177,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setClearable  = function(  ) /*=>*/ { clearable   = true;  return self; }
 	static setDeactivate = function(_d) /*=>*/ { onDeactivate = _d;   return self; }
 	
+	static setSearch = function(pl = __txt("Search") + "...") /*=>*/ {
+		no_empty    = false;
+		clearable   = true;
+		labelSpr    = THEME.search;
+		auto_update = true;
+		placeHolder = pl;
+		return self;
+	}
+	
 	////- Actives
 	
 	static activate = function(_def_str = _current_text) { 

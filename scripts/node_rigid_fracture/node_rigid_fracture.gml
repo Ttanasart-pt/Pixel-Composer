@@ -51,7 +51,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Mesh
 	
-	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", DEF_SURF)};
 	
 	static generateMesh = function(_texture) {
 		if(!is_surface(_texture)) return [];

@@ -15,8 +15,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 	rawNodes         = [];
 		
 	search_string = "";
-	tb_search     = textBox_Text(function(t) /*=>*/ { search_string = t; }).setEmpty().setAutoupdate().setFont(f_p3)
-		.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
+	tb_search     = textBox_Text(function(t) /*=>*/ { search_string = t; }).setSearch().setFont(f_p3);
 	
 	node_categories = [ "None" ];
 	cat_value       = [ noone ];

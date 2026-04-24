@@ -2017,10 +2017,7 @@ function Panel_Preference() : PanelContent() constructor {
     #endregion
     
     #region Search
-    	tb_search = textBox_Text(function(str) /*=>*/ { search_text = str; })
-    		.setFont(f_p2).setAlign(fa_left).setEmpty().setAutoupdate()
-    		.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
-    	
+    	tb_search   = textBox_Text(function(str) /*=>*/ { search_text = str; }).setFont(f_p2).setAlign(fa_left).setSearch();
     	search_text = "";
     	contents    = {};
     	goto_item   = noone;

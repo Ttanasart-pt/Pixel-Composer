@@ -49,7 +49,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- Nodes
 
-	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.getDimension() : [1,1]};
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.getDimension() : DEF_SURF};
 		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _resT = outputs[0].getValue();

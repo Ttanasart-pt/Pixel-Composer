@@ -124,8 +124,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			search_string = s; 
 			filterFiles(); 
 			
-		}).setAutoUpdate().setEmpty().setAlign(fa_left).setVAlign(fa_center)
-			.setPlaceHold(__txt("Search") + "...").setLabelIcon(THEME.search).setClearable();
+		}).setSearch().setAlign(fa_left).setVAlign(fa_center);
 		
 		page_goto = undefined;
 	#endregion

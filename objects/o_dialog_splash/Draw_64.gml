@@ -222,6 +222,7 @@ DIALOG_DRAW_BG
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
 	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
 	
+	var leftX = bx;
 	var bs = ui(32);
 	var bx = x1 - ui(32);
 	var by = y0 - ui(36);
@@ -247,7 +248,7 @@ DIALOG_DRAW_BG
 			}
 			
 			if(tb_sample_seaching) {
-				var tbw = ui(160);
+				var tbw = min(160, bx - leftX);
 				var tbh = bs - ui(4);
 				var tbx = bx - ui(4) - tbw;
 				var tby = by + ui(2);

@@ -6,6 +6,11 @@
         "date": "2026-04-23T03:43:07.634Z",
         "node": "",
         "commit": "**SmokeSim**: Add relative units to transformation properties."
+      },
+      {
+        "date": "2026-04-24T01:12:11.690Z",
+        "node": "",
+        "commit": "**SmokeSim/ Flip fluid render**: Auto-cache new disabled by default."
       }
     ]
   }

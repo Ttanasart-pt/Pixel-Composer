@@ -22,7 +22,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	UPDATE_PART_FORWARD
 	junction_tos = array_create(array_length(outputs));
 	
-	static getDimension = function() /*=>*/ {return is(inline_context, Node_VFX_Group_Inline)? inline_context.dimension : [1,1]};
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_VFX_Group_Inline)? inline_context.dimension : DEF_SURF};
 	
 	////- Trigger
 	

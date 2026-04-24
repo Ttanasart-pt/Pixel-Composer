@@ -37,7 +37,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	__phy = false;
 	__tor = 0;
 	
-	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", DEF_SURF)};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(process_amount > 0) return;

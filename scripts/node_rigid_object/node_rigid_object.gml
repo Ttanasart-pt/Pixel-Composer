@@ -86,7 +86,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	insp1button = button(function() /*=>*/ {return generateAllMesh()}).setTooltip(__txt("Generate Mesh"))
 		.setIcon(THEME.mesh, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", DEF_SURF)};
 	
 	static newMesh = function(_index) {
 		var _tex  = inputs[6].getValue();

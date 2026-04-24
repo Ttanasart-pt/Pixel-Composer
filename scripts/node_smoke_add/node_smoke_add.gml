@@ -3,7 +3,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
 	
-	manual_ungroupable	 = false;
+	manual_ungroupable = false;
 	
 	////- =Domain
 	newInput( 3, nodeValue_Active());
@@ -35,11 +35,11 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
-	input_display_list = [ 3, 0, 
-		["Brush",	 false], 8, 1, 11, 12, 2, 9, 
-		["Smoke",	 false], 5, 
-		["Push",	 false], 6, 7, 4, 
-		["Repulse",  false], 10, 13, 14, 
+	input_display_list = [  3,  0, 
+		[ "Brush",   false ],  8,  1, 11, 12,  2,  9, 
+		[ "Smoke",   false ],  5, 
+		[ "Push",    false ],  6,  7,  4, 
+		[ "Repulse", false ], 10, 13, 14, 
 	];
 	
 	////- Node
@@ -47,7 +47,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	_prevPos     = noone;
 	temp_surface = array_create(4);
 	
-	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : [1,1]; }
+	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : DEF_SURF; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		
@@ -88,31 +88,33 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _act = getInputData(3);
-		var _dom = getInputData(0);
-		
-		var _typ = getInputData( 8);
-		var _mat = getInputData( 1);
-		var _den = getInputData( 5);
-		var _pos = getInputData( 2);
-		var _sca = getInputData( 9);
-		var _shp = getInputData(11);
-		var _lev = getInputData(12);
-		
-		var _msk   = getInputData( 6);
-		var _vel   = getInputData( 7);
-		var _inh   = getInputData( 4);
-		var _rep   = getInputData(10);
-		var _spk   = getInputData(13);
-		var _spk_r = getInputData(14);
-		
-		inputs[ 1].setVisible(_typ == 1, _typ == 1);
-		inputs[ 9].setVisible(_typ == 0);
-		inputs[11].setVisible(_typ == 0);
-		inputs[12].setVisible(_typ == 0);
-		
-		SMOKE_DOMAIN_CHECK
-		outputs[0].setValue(_dom);
+		#region data
+			var _act   = getInputData( 3);
+			var _dom   = getInputData( 0);
+			
+			var _typ   = getInputData( 8);
+			var _mat   = getInputData( 1);
+			var _den   = getInputData( 5);
+			var _pos   = getInputData( 2);
+			var _sca   = getInputData( 9);
+			var _shp   = getInputData(11);
+			var _lev   = getInputData(12);
+			
+			var _msk   = getInputData( 6);
+			var _vel   = getInputData( 7);
+			var _inh   = getInputData( 4);
+			var _rep   = getInputData(10);
+			var _spk   = getInputData(13);
+			var _spk_r = getInputData(14);
+			
+			inputs[ 1].setVisible(_typ == 1, _typ == 1);
+			inputs[ 9].setVisible(_typ == 0);
+			inputs[11].setVisible(_typ == 0);
+			inputs[12].setVisible(_typ == 0);
+			
+			SMOKE_DOMAIN_CHECK
+			outputs[0].setValue(_dom);
+		#endregion
 		
 		if(!_act) return;
 		

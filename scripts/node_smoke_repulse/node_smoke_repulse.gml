@@ -26,7 +26,7 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	
 	temp_surface = [ noone ];
 	
-	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : [1,1]; }
+	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : DEF_SURF; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pos = getInputData(1);

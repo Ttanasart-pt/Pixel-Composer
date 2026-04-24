@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-24T01:12:11.649Z",
+        "node": "",
+        "commit": "**SmokeSim/ Flip fluid render**: Auto-cache new disabled by default."
+      }
+    ]
+  }
+]
