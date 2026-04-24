@@ -205,16 +205,16 @@ function smokeSim_Domain(_width, _height) constructor {
     	
         surface_set_target(sf_velocity_t);
             shader_set(sh_fd_advect_velocity);
-            shader_set_surface("texture_world",    sf_world);
-            shader_set_surface("texture_material", sf_material);
-            shader_set_f("max_force",              max_force);
-            shader_set_i("mode",                   acceleration_type);
-            shader_set_i("repeat",                 texture_repeat);
-            shader_set_i("wall",                   texture_wall);
-            shader_set_f("precalculated",          time_step * tx_width, time_step * tx_height, tx_width, tx_height);
-            shader_set_f("precalculated_1",        velocity_dissipation_type, velocity_dissipation_value, velocity_maccormack_weight * 0.5);
-            shader_set_f("acceleration",           acceleration_x, acceleration_y, acceleration_a, acceleration_b);
-            shader_set_f("texel_size",             tx_width, tx_height);
+            shader_set_s("texture_world",    sf_world);
+            shader_set_s("texture_material", sf_material);
+            shader_set_f("max_force",        max_force);
+            shader_set_i("mode",             acceleration_type);
+            shader_set_i("repeat",           texture_repeat);
+            shader_set_i("wall",             texture_wall);
+            shader_set_f("precalculated",    time_step * tx_width, time_step * tx_height, tx_width, tx_height);
+            shader_set_f("precalculated_1",  velocity_dissipation_type, velocity_dissipation_value, velocity_maccormack_weight * 0.5);
+            shader_set_f("acceleration",     acceleration_x, acceleration_y, acceleration_a, acceleration_b);
+            shader_set_f("texel_size",       tx_width, tx_height);
             
             draw_surface_safe(sf_velocity);
             shader_reset();
@@ -237,10 +237,10 @@ function smokeSim_Domain(_width, _height) constructor {
         surface_reset_target();
     
         shader_set(sh_fd_pressure_srj);
-            shader_set_f("texel_size",       tx_width, tx_height);
-            shader_set_f("max_force",        max_force);
-            shader_set_i("repeat",           texture_repeat);
-            shader_set_i("wall",             texture_wall);
+            shader_set_f("texel_size", tx_width, tx_height);
+            shader_set_f("max_force",  max_force);
+            shader_set_i("repeat",     texture_repeat);
+            shader_set_i("wall",       texture_wall);
             
             var length = array_length(pressure_relax);
             for (var i = 0; i < length; ++i) {
@@ -258,11 +258,11 @@ function smokeSim_Domain(_width, _height) constructor {
         // Calculates the gradient of pressure and subtracts it from the velocity.
         surface_set_target(sf_velocity_t);
             shader_set(sh_fd_subtract_pressure_gradient);
-                shader_set_surface("texture_pressure", sf_pressure);
-                shader_set_f("texel_size",             tx_width, tx_height);
-                shader_set_f("max_force",              max_force);
-	            shader_set_i("repeat",                 texture_repeat);
-	            shader_set_i("wall",                   texture_wall);
+                shader_set_s("texture_pressure", sf_pressure);
+                shader_set_f("texel_size",       tx_width, tx_height);
+                shader_set_f("max_force",        max_force);
+	            shader_set_i("repeat",           texture_repeat);
+	            shader_set_i("wall",             texture_wall);
                 draw_surface_safe(sf_velocity);
             shader_reset();
         surface_reset_target();
@@ -281,20 +281,20 @@ function smokeSim_Domain(_width, _height) constructor {
 	    gpu_set_texfilter(true);
 	    gpu_set_blendenable(false);
         verify();
-    
+    	
     	var _scale = .5;
     	
         surface_set_target(sf_material_t);
         shader_set(sh_fd_advect_material);
-            shader_set_surface("texture_velocity", sf_velocity);
-            shader_set_surface("texture_world",    sf_world);
-            shader_set_i("repeat",                 texture_repeat);
-            shader_set_i("wall",                   texture_wall);
-            shader_set_f("max_force",              max_force);
-            shader_set_f("texel_size",             tx_width, tx_height);
-            shader_set_f("precalculated",          time_step * tx_width, time_step * tx_height);
-            shader_set_f("precalculated_1",        tx_width * _scale, tx_height * _scale, -tx_width * _scale, -tx_height * _scale);
-            shader_set_f("precalculated_2",        material_dissipation_type, material_dissipation_value, material_maccormack_weight * 0.5);
+            shader_set_s("texture_velocity", sf_velocity);
+            shader_set_s("texture_world",    sf_world);
+            shader_set_i("repeat",           texture_repeat);
+            shader_set_i("wall",             texture_wall);
+            shader_set_f("max_force",        max_force);
+            shader_set_f("texel_size",       tx_width, tx_height);
+            shader_set_f("precalculated",    time_step * tx_width, time_step * tx_height);
+            shader_set_f("precalculated_1",  tx_width * _scale, tx_height * _scale, -tx_width * _scale, -tx_height * _scale);
+            shader_set_f("precalculated_2",  material_dissipation_type, material_dissipation_value, material_maccormack_weight * 0.5);
             draw_surface_safe(sf_material);
         shader_reset();
         surface_reset_target();

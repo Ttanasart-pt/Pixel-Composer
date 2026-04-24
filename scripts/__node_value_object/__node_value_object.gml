@@ -1,6 +1,5 @@
 function nodeValue_Object(_name, _value, _tooltip = "") { return new __NodeValue_Object(_name, self, _value, _tooltip); }
 function __NodeValue_Object_Generic(_name, _node, _type, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, _type, _value, _tooltip) constructor {
-	
 	animable = false;
 	
 	/////============== GET =============
@@ -10,13 +9,12 @@ function __NodeValue_Object_Generic(_name, _node, _type, _value, _tooltip = "") 
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
-		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
+		var nod = __curr_get_val[1]; 
 		return val;
 	}
 	
 	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) { 
-		var _anim  = animator;
-		return array_empty(_anim.values)? noone : _anim.values[0].value; 
+		return array_empty(animator.values)? noone : animator.values[0].value; 
 	} 
 	
 	static arrayLength = arrayLengthSimple;

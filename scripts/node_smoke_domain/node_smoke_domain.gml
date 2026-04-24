@@ -7,8 +7,8 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	////- =Domain
 	newInput( 0, nodeValue_Dimension());
-	newInput( 1, nodeValue_Surface( "Collision"    ));
 	newInput(11, nodeValue_EScroll( "Boundary",  0, [ "Free", "Wall", "Wrap" ]));
+	newInput( 1, nodeValue_Surface( "Collision"    ));
 	newInput(12, nodeValue_Float(   "Timestep",  1 ));
 	
 	////- =Properties
@@ -20,7 +20,7 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput( 3, nodeValue_Slider( "Material dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
 	newInput( 5, nodeValue_Slider( "Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
 	
-	////- =Advance
+	////- =Advance Settings
 	newInput( 2, nodeValue_EButton( "Material dissipation type",  1, [ "Multiply", "Subtract" ] ));
 	newInput( 4, nodeValue_EButton( "Velocity dissipation type",  1, [ "Multiply", "Subtract" ] ));
 	newInput( 9, nodeValue_Slider(  "Material Maccormack weight", 1 ));
@@ -34,10 +34,10 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newOutput(2, nodeValue_Output( "Pressure", VALUE_TYPE.surface, noone )).setVisible(false);
 	
 	input_display_list = [ 
-		[ "Domain",           false ],  0,  1, 11, 12, 
-		[ "Properties",       false ],  8,  6,  7,
-		[ "Dissipation",      false ],  3,  5,
-		[ "Advance Settings",  true ],  2,  4,  9, 10, 
+		[ "Domain",          false ],  0, 11,  1, 12, 
+		[ "Properties",      false ],  8,  6,  7,
+		[ "Dissipation",     false ],  3,  5,
+		[ "Advance Settings", true ],  2,  4,  9, 10, 
 	];
 	
 	////- Node
@@ -63,7 +63,6 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 			var vdisTyp = getInputData( 4);
 			var mMac	= getInputData( 9);
 			var vMac	= getInputData(10);
-			
 		#endregion
 		
 		if(domain == undefined) domain = new smokeSim_Domain(_dim[0], _dim[1]);
@@ -74,7 +73,7 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		}
 		
 		surface_set_target(domain.sf_world);
-			draw_clear_alpha($00FFFF, 0);
+			draw_clear_alpha(#FFFF00, 0);
 			draw_surface_stretched_safe(coll, 0, 0, _dim[0], _dim[1]);
 		surface_reset_target();
 		

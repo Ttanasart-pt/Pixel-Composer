@@ -5,7 +5,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	manual_ungroupable	 = false;
 	
 	////- =Domain
-	newInput( 0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
+	newInput( 0, nodeValue_Sdomain());
 	
 	////- =Turbulence
 	newInput( 1, nodeValue_Area(   "Effect area", DEF_AREA_REF, { useShape : false } )).setUnitSimple().setHotkey("A");
@@ -25,7 +25,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	
 	////- Node
 	
-	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : DEF_SURF; }
+	SMOKE_DOMAIN_DIMENSION
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));

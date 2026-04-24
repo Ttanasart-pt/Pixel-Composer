@@ -5,7 +5,7 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	manual_ungroupable	 = false;
 	
 	////- =Domain
-	newInput( 0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
+	newInput( 0, nodeValue_Sdomain());
 	
 	////- =Repulse
 	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitSimple().setHotkey("G");
@@ -26,7 +26,7 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	
 	temp_surface = [ noone ];
 	
-	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : DEF_SURF; }
+	SMOKE_DOMAIN_DIMENSION
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pos = getInputData(1);

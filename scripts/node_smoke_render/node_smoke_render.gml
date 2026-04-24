@@ -9,42 +9,45 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	manual_ungroupable = false;
 	
 	////- =Domain
-	newInput(0, nodeValue(      "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
-	newInput(4, nodeValue_Bool( "Auto Update", true ));
-	newInput(5, nodeValue_Int(  "Update Step", 1    ));
-	newInput(1, nodeValue_Dimension());
+	newInput( 0, nodeValue_Sdomain());
+	newInput( 4, nodeValue_Bool( "Auto Update", true ));
+	newInput( 5, nodeValue_Int(  "Update Step", 1    ));
+	newInput( 1, nodeValue_Dimension());
 	
 	////- =Render
-	newInput(2, nodeValue_Bool( "Interpolate", false ));
-	newInput(3, nodeValue_Bool( "Draw Domain", false ));
+	newInput( 2, nodeValue_Bool( "Interpolate", false ));
+	newInput( 3, nodeValue_Bool( "Draw Domain", false ));
 	// input 6
 	
 	newOutput(0, nodeValue_Output( "Smoke",  VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Domain", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
-		["Domain",	false], 0, 4, 5, 
-		["Render",	false], 2, 3,
+		[ "Domain", false ], 0, 4, 5, 
+		[ "Render", false ], 2, 3,
 	];
 		
+	////- Node
+		
 	attribute_surface_depth();
-	
 	temp_surface = [ noone ];
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom = getInputData(0);
-		if(is(_dom, smokeSim_Domain))
-			temp_surface[0] = surface_verify(temp_surface[0], _dom.width, _dom.height, attrDepth());
-		
-		if(!PROJECT.animator.is_playing && recoverCache()) return;
-		
-		var _int = getInputData(2);
-		var _drw = getInputData(3);
-		
-		var _upd = getInputData(4);
-		var _ups = getInputData(5);
-		
-		SMOKE_DOMAIN_CHECK
+		#region data
+			var _dom = getInputData(0);
+			if(is(_dom, smokeSim_Domain))
+				temp_surface[0] = surface_verify(temp_surface[0], _dom.width, _dom.height, attrDepth());
+			
+			if(!PROJECT.animator.is_playing && recoverCache()) return;
+			
+			var _int = getInputData(2);
+			var _drw = getInputData(3);
+			
+			var _upd = getInputData(4);
+			var _ups = getInputData(5);
+			
+			SMOKE_DOMAIN_CHECK
+		#endregion
 		
 		var _outSurf = outputs[0].getValue();
 		_outSurf = surface_verify(_outSurf, _dom.width, _dom.height, attrDepth());
@@ -69,8 +72,7 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	}
 	
 	static getPreviewingNode = function() { return self; }
-	
-	static getPreviewValues = function() {
+	static getPreviewValues  = function() {
 		var val = outputs[preview_channel].getValue();
 		return is_surface(val)? val : temp_surface[0];
 	}

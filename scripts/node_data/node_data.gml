@@ -751,6 +751,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var list  = array_empty(inputDisplayList)? inputs : input_display_list;
 		for( var i = 0, n = array_length(list); i < n; i++ ) {
 			var _inp = list[i];
+			
+			if(!is(_inp, NodeValue)) continue;
 			if(!_over && _inp.value_from != noone) continue;
 			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
 			

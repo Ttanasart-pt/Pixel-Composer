@@ -5,7 +5,7 @@ function Node_Smoke_Domain_Queue(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	
 	manual_ungroupable	 = false;
 	
-	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
+	newInput( 0, nodeValue_Sdomain());
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

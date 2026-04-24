@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_value_fdomain",
+  "%Name":"node_value_domain",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_value_fdomain",
+  "name":"node_value_domain",
   "parent":{
     "name":"object",
     "path":"folders/nodes/values/types/object.yy",

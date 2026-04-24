@@ -1,8 +1,11 @@
+#region global
+	#macro SMOKE_DOMAIN_DIMENSION static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : PROJECT.attributes.surface_dimension; }
+#endregion
+
 function Node_Smoke_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x, _y, _group) constructor {
 	name  = "SmokeSim";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	
 	is_simulation = true;
 	
 	if(NODE_NEW_MANUAL) {

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-24T01:42:41.796Z",
+        "node": "",
+        "commit": "**Graph Panel**: Fix quick connect returns error when hovering on inline group."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc6",
     "changes": [
       {

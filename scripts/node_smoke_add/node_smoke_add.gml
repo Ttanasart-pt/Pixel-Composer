@@ -7,7 +7,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	////- =Domain
 	newInput( 3, nodeValue_Active());
-	newInput( 0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
+	newInput( 0, nodeValue_Sdomain());
 	
 	////- =Brush
 	newInput( 8, nodeValue_EButton(  "Type",        0, [ "Shape", "Surface" ] ));
@@ -47,7 +47,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	_prevPos     = noone;
 	temp_surface = array_create(4);
 	
-	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : DEF_SURF; }
+	SMOKE_DOMAIN_DIMENSION
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		

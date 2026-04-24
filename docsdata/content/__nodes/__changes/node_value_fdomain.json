@@ -3,12 +3,12 @@
     "version": "1.21.rc10",
     "changes": [
       {
-        "date": "2026-04-24T01:12:11.697Z",
+        "date": "2026-04-24T01:42:41.798Z",
         "node": "",
-        "commit": "**SmokeSim/ Flip fluid render**: Auto-cache new disabled by default."
+        "commit": "**Graph Panel**: Fix quick connect returns error when hovering on inline group."
       },
       {
-        "date": "2026-04-24T01:42:41.791Z",
+        "date": "2026-04-24T01:42:41.803Z",
         "node": "",
         "commit": "**Graph Panel**: Fix quick connect returns error when hovering on inline group."
       }

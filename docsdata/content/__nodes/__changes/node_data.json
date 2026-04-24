@@ -6,6 +6,11 @@
         "date": "2026-04-23T08:23:47.425Z",
         "node": "",
         "commit": "**Graph Panel**: Fix adding node not auto connect."
+      },
+      {
+        "date": "2026-04-24T01:42:41.790Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Fix quick connect returns error when hovering on inline group."
       }
     ]
   },

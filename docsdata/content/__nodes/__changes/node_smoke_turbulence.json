@@ -6,6 +6,16 @@
         "date": "2026-04-23T03:43:07.635Z",
         "node": "",
         "commit": "**SmokeSim**: Add relative units to transformation properties."
+      },
+      {
+        "date": "2026-04-24T01:12:11.706Z",
+        "node": "",
+        "commit": "**SmokeSim/ Flip fluid render**: Auto-cache new disabled by default."
+      },
+      {
+        "date": "2026-04-24T01:42:41.797Z",
+        "node": "",
+        "commit": "**Graph Panel**: Fix quick connect returns error when hovering on inline group."
       }
     ]
   }

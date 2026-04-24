@@ -6,7 +6,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	
 	////- =Domain
 	newActiveInput(4);
-	newInput( 0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone )).setVisible(true, true);
+	newInput( 0, nodeValue_Sdomain());
 	
 	////- =Brush
 	newInput( 5, nodeValue_EButton( "Type", 0, [ "Shape", "Surface" ] ));
@@ -30,7 +30,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	
 	temp_surface = [ noone ];
 	
-	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? _dom.getSize() : DEF_SURF; }
+	SMOKE_DOMAIN_DIMENSION
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _typ = getInputData(5);
