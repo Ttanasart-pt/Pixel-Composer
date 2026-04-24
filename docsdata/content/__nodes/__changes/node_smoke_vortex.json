@@ -16,6 +16,11 @@
         "date": "2026-04-24T01:42:41.798Z",
         "node": "",
         "commit": "**Graph Panel**: Fix quick connect returns error when hovering on inline group."
+      },
+      {
+        "date": "2026-04-24T02:39:32.396Z",
+        "node": "",
+        "commit": "**SmokeSim > Render Domain**: Add volume color and density remap."
       }
     ]
   }

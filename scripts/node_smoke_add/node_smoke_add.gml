@@ -199,7 +199,20 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 		var _typ = getInputData(8);
 		
 		if(_typ == 0) {
-			draw_circle_ui(bbox.xc, bbox.yc, min(bbox.w, bbox.h) * .25, 0);
+			var _shp = getInputData(11);
+			var _rad = min(bbox.w, bbox.h) * .25;
+			
+			switch(_shp) {
+				case 0 : draw_circle_ui(bbox.xc, bbox.yc, _rad, 0); break;
+				case 1 : 
+					var _lev = getInputData(12);
+					
+					draw_circle_ui(bbox.xc, bbox.yc, _rad * _lev[1], 0);
+					BLEND_SUBTRACT_ALPHA
+					draw_circle_ui(bbox.xc, bbox.yc, _rad * _lev[0], 0);
+					BLEND_NORMAL
+					break;
+			}
 			
 		} else {
 			var _mat = getInputData(1);

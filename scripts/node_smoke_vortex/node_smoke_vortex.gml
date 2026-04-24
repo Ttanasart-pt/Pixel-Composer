@@ -10,16 +10,16 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	////- =Vortex
 	newInput( 1, nodeValue_Vec2(   "Position",   [.5,.5] )).setUnitSimple().setHotkey("G");
 	newInput( 2, nodeValue_Float(  "Radius",      .5     )).setUnitSimple().setHotkey("S");
-	newInput( 3, nodeValue_Slider( "Strength",   .10, [-1, 1, 0.01] ));
-	newInput( 4, nodeValue_Slider( "Attraction",  0,  [-1, 1, 0.01] ));
+	newInput( 3, nodeValue_Slider( "Strength",    .10, [-1, 1, 0.01] ));
+	newInput( 4, nodeValue_Slider( "Attraction",   0,  [-1, 1, 0.01] ));
 	// 5
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	newOutput(1, nodeValue_Output("Domain", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		["Domain",	false], 0, 
-		["Vortex",	false], 1, 2, 3, 4
+		[ "Domain", false ], 0, 
+		[ "Vortex", false ], 1, 2, 3, 4
 	];
 	
 	temp_surface = [ noone ];
@@ -44,11 +44,14 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom = getInputData(0);
-		var _pos = getInputData(1);
-		var _rad = getInputData(2);
-		var _str = getInputData(3);
-		var _aio = getInputData(4);
+		#region data
+			var _dom = getInputData(0);
+			
+			var _pos = getInputData(1);
+			var _rad = getInputData(2);
+			var _str = getInputData(3);
+			var _aio = getInputData(4);
+		#endregion
 		
 		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
@@ -69,7 +72,6 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		surface_reset_target();
 		
 		_dom.addVelocity(temp_surface[0]);
-		
 		outputs[1].setValue(temp_surface[0]);
 	}
 	

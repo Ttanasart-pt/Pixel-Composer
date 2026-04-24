@@ -33,10 +33,14 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	SMOKE_DOMAIN_DIMENSION
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		var _typ = getInputData(5);
-		var _mat = getInputData(1);
-		var _pos = getInputData(2);
-		var _sca = getInputData(6);
+		#region data
+			var _typ = getInputData(5);
+			var _mat = getInputData(1);
+			var _pos = getInputData(2);
+			var _sca = getInputData(6);
+			
+			var _vel = getInputData(3);
+		#endregion
 		
 		var _px  = _x + _pos[0] * _s;
 		var _py  = _y + _pos[1] * _s;
@@ -65,24 +69,32 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 		}
 		
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, 4));
+		
+		var _vx = _px + _vel[0] * _s * 4;
+		var _vy = _py + _vel[1] * _s * 4;
+		draw_set_color(COLORS._main_accent);
+		draw_line_dashed(_px, _py, _vx, _vy);
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 1, 4));
 		
 		return w_hovering;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _act = getInputData(4);
-		var _dom = getInputData(0);
+		#region data
+			var _act = getInputData(4);
+			var _dom = getInputData(0);
+			
+			var _typ = getInputData(5);
+			var _mat = getInputData(1);
+			var _sca = getInputData(6);
+			var _pos = getInputData(2);
+			
+			var _vel = getInputData(3);
+			var _str = getInputData(7);
 		
-		var _typ = getInputData(5);
-		var _mat = getInputData(1);
-		var _sca = getInputData(6);
-		var _pos = getInputData(2);
-		var _vel = getInputData(3);
-		var _str = getInputData(7);
-		
-		inputs[1].setVisible(_typ == 1, _typ == 1);
-		inputs[6].setVisible(_typ == 0);
+			inputs[1].setVisible(_typ == 1, _typ == 1);
+			inputs[6].setVisible(_typ == 0);
+		#endregion
 		
 		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
@@ -97,6 +109,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 			temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
 			surface_set_shader(temp_surface[0], noone);
 				draw_ellipse_color(0, 0, sw - 1, sh - 1, c_white, c_white, false);
+				// draw_ellipse_color(0, 0, sw - 1, sh - 1, c_black, c_white, false);
 			surface_reset_shader();
 			
 		} else if(_typ == 1) {

@@ -12,13 +12,13 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	newInput( 2, nodeValue_Slider( "Strength",    .10, [-1, 1, 0.01] ));
 	newInput( 4, nodeValueSeed());
 	newInput( 3, nodeValue_Slider( "Scale",         4, [1, 16, 0.01] ));
-	// 4
+	// 5
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	input_display_list = [ 
-		["Domain",		false], 0, 
-		["Turbulence",	false], 1, 2, 4, 3
+		[ "Domain",     false ], 0, 
+		[ "Turbulence", false ], 1, 2, 4, 3
 	];
 	
 	temp_surface = [ noone ];
@@ -33,11 +33,14 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom = getInputData(0);
-		var _are = getInputData(1);
-		var _str = getInputData(2);
-		var _sca = getInputData(3);
-		var _sed = getInputData(4);
+		#region data
+			var _dom = getInputData(0);
+			
+			var _are = getInputData(1);
+			var _str = getInputData(2);
+			var _sca = getInputData(3);
+			var _sed = getInputData(4);
+		#endregion
 		
 		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);

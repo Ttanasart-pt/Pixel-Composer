@@ -11,6 +11,8 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitSimple().setHotkey("G");
 	newInput( 2, nodeValue_Float(    "Radius",     .25    )).setUnitSimple().setHotkey("S");
 	newInput( 3, nodeValue_Slider(   "Strength",   0.10, [-8, 8, 0.01] ));
+	
+	////- =Spokes
 	newInput( 4, nodeValue_Float(    "Spokes",     0      ));
 	newInput( 5, nodeValue_Rotation( "Twist",      0      ));
 	// input 6
@@ -18,8 +20,9 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	input_display_list = [ 
-		["Domain",	false], 0, 
-		["Repulse",	false], 1, 2, 3, 4, 5, 
+		[ "Domain",  false ], 0, 
+		[ "Repulse", false ], 1, 2, 3,
+		[ "Spokes",  false ], 4, 5, 
 	];
 	
 	////- Node
@@ -44,12 +47,16 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom = getInputData(0);
-		var _pos = getInputData(1);
-		var _rad = getInputData(2);
-		var _str = getInputData(3);
-		var _spk = getInputData(4);
-		var _spk_r = getInputData(5);
+		#region data
+			var _dom = getInputData(0);
+			
+			var _pos = getInputData(1);
+			var _rad = getInputData(2);
+			var _str = getInputData(3);
+			
+			var _spk   = getInputData(4);
+			var _spk_r = getInputData(5);
+		#endregion
 		
 		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);

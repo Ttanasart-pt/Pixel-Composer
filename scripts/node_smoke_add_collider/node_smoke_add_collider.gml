@@ -16,8 +16,8 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	input_display_list = [ 
-		["Domain",		false], 0, 
-		["Collider",	false], 1, 2,
+		[ "Domain",   false ], 0, 
+		[ "Collider", false ], 1, 2,
 	];
 	
 	////- Node
@@ -43,14 +43,16 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dom  = getInputData(0);
-		var _mat  = getInputData(1);
-		var _area = getInputData(2);
+		#region data
+			var _dom  = getInputData(0);
+			var _mat  = getInputData(1);
+			var _area = getInputData(2);
+		#endregion
 		
 		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
-		if(!is_surface(_mat)) return;
+		if(!is_surface(_mat))          return;
 		if(!is_surface(_dom.sf_world)) return;
 		
 		surface_set_target(_dom.sf_world);

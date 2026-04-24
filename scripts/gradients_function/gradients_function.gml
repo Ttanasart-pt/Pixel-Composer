@@ -358,7 +358,7 @@ function shader_set_gradient(gradient, surface = noone, range = [0,0,1,1], junc 
 	var t = shader_set_surface("gradient_map", surface);
 	gpu_set_tex_filter_ext(t, true);
 	
-	if(is_instanceof(gradient, gradientObject))
+	if(is(gradient, gradientObject))
 		gradient.shader_submit();
 }
 	

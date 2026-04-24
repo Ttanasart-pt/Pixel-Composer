@@ -18,7 +18,9 @@
 	#macro BLEND_MIN        gpu_set_blendmode(bm_normal); gpu_set_blendequation_sepalpha(bm_eq_min, bm_add);
 	
 	#macro BLEND_MULTIPLY	gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
+	
 	#macro BLEND_SUBTRACT	gpu_set_blendmode(bm_subtract);
+	#macro BLEND_SUBTRACT_ALPHA	gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_subtract);
 	
 	#macro DRAW_CLEAR       draw_clear_alpha(0, 0);
 #endregion
