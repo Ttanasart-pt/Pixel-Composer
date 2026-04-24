@@ -9,7 +9,6 @@ event_inherited();
 	
 	pages = [ "News", "Getting Started", "Welcome Files" ];
 	if(STEAM_ENABLED) array_push(pages, "Workshop");
-	project_page = 1;
 	
 	thumbnail_retriever = 0;
 	show_autosaves		= false;
@@ -153,7 +152,7 @@ event_inherited();
 		
 		var hover = sp_sample.hover;
 		var focus = sp_sample.active;
-		var page  = pages[project_page];
+		var page  = pages[PREFERENCES.splash_page];
 		
 		var _group_label = true;
 		var list;
@@ -268,8 +267,13 @@ event_inherited();
 			
 			if(page == "Workshop" && !array_empty(meta_filter)) {
 				var _meta = _project.getMetadata();
-				if(array_empty(array_intersection(_meta.tags, meta_filter)))
-					continue;
+				var _tagm = _meta.getTagMap();
+				
+				var _incl = false;
+				for( var j = 0, m = array_length(meta_filter); j < m; j++ ) 
+					if(has(_tagm, meta_filter[j])) { _incl = true; break; }
+					
+				if(!_incl) continue;
 			}
 			
 			if(page != "Workshop")        grid_heigh = grid_width;
@@ -334,7 +338,7 @@ event_inherited();
 					var fh = th + ui(16) + _project.hover_splash * ui(32);
 					
 					gpu_set_scissor(gridX + ui(2), gridY + ui(2), gridW - ui(4), gridH - ui(4));
-					gpu_set_tex_filter(_curr_tag == "Getting started");
+					gpu_set_tex_filter(page == "Getting started");
 					draw_sprite_uniform(spr, 0, _sx + ox, _sy + oy, ss);
 					gpu_set_tex_filter(false);
 					gpu_set_scissor(_scis);

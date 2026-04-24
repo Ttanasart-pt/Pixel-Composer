@@ -77,6 +77,7 @@
 		PREFERENCES.show_splash                 = true;
 		PREFERENCES.splash_expand_recent        = false;
 		PREFERENCES.splash_show_thumbnail       = false;
+		PREFERENCES.splash_page                 = 1;
 		
 		PREFERENCES.dialog_add_node_view        = 1;
 		PREFERENCES.dialog_add_node_grouping    = 2;

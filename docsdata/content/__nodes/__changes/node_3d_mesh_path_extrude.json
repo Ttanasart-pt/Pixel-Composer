@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc10",
+    "changes": [
+      {
+        "date": "2026-04-24T00:44:58.200Z",
+        "node": "Splash",
+        "commit": "**Splash**: Page now save between session."
+      }
+    ]
+  }
+]

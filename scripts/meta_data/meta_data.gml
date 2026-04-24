@@ -27,6 +27,7 @@ function MetaDataManager() constructor {
 	author_steam_id = 0;
 	file_id     = 0;
 	tags        = [];
+	tagMap      = undefined;
 	version     = SAVE_VERSION;
 	hidden      = false;
 	
@@ -39,6 +40,8 @@ function MetaDataManager() constructor {
 		[ "Alias",        function(m) /*=>*/ {return m.alias},       1],
 		[ "Tags",         function(m) /*=>*/ {return m.tags},        1],
 	];
+	
+	////- Serialize
 	
 	static serialize = function() {
 		var m = {
@@ -73,6 +76,16 @@ function MetaDataManager() constructor {
 		return self;
 	}
 	
+	////- Action
+	
+	static getTagMap = function() {
+		if(tagMap != undefined) return tagMap;
+		tagMap = {};
+		for( var i = 0, n = array_length(tags); i < n; i++ ) 
+			tagMap[$ tags[i]] = tags[i];
+		return tagMap;
+	}
+	
 	static clone = function() {
 		var m = new MetaDataManager();
 		
@@ -83,6 +96,8 @@ function MetaDataManager() constructor {
 		
 		return m;
 	}
+	
+	////- Draw
 	
 	static drawTooltip = function() {
 		var _pdx = ui(10);

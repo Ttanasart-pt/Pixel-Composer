@@ -25,7 +25,7 @@ if(_id == contest_req) {
 		}
 		
 		array_insert(pages, 0, "Contests");
-		project_page++;
+		PREFERENCES.splash_page++;
 	}
 	
 	exit;

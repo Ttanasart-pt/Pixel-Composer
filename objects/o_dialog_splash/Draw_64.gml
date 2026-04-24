@@ -103,7 +103,7 @@ DIALOG_DRAW_BG
 	var expandAction = false;
 	var expand = PREFERENCES.splash_expand_recent;
 	
-	switch(pages[project_page]) {
+	switch(pages[PREFERENCES.splash_page]) {
 		case "Welcome Files" :
 		case "Workshop" :
 			var bx = x1;
@@ -130,7 +130,7 @@ DIALOG_DRAW_BG
 	var ppad = ui(THEME_VALUE.panel_tab_padding) * 2;
 	
 	for( var i = 0, n = array_length(pages); i < n; i++ ) {
-		draw_set_text(f_p0, fa_left, fa_center, project_page == i? COLORS._main_text : COLORS._main_text_sub);
+		draw_set_text(f_p0, fa_left, fa_center, PREFERENCES.splash_page == i? COLORS._main_text : COLORS._main_text_sub);
 		var txt  = pages[i];
 		var dtxt = __txt(txt);
 		var amo  = 0;
@@ -155,7 +155,7 @@ DIALOG_DRAW_BG
 		var tabW = _x1 - bx;
 		var tabY = y0 - ppad - tabH;
 		
-		if(project_page == i) {
+		if(PREFERENCES.splash_page == i) {
 			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, tabY, tabW, tabH, COLORS.panel_tab, 1);
 			
 		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, tabY, bx + tabW, y0)) {
@@ -164,7 +164,8 @@ DIALOG_DRAW_BG
 			draw_sprite_stretched_add(THEME.ui_panel_tab, 0, bx, tabY, tabW, tabH, COLORS.panel_tab_hover, 0.1);
 			
 			if(mouse_lpress(sFOCUS)) {
-				project_page = i;
+				PREFERENCES.splash_page = i;
+				PREF_SAVE();
 				
 				if(txt == "Contests" && PREFERENCES.splash_expand_recent) {
 					PREFERENCES.splash_expand_recent = false;
@@ -176,18 +177,18 @@ DIALOG_DRAW_BG
 		
 		var _btx = bx + ui(8);
 		var cc   = COLORS._main_text_sub;
-		if(project_page == i) cc = COLORS._main_text;
+		if(PREFERENCES.splash_page == i) cc = COLORS._main_text;
 		
 		switch(txt) {
 			case "Contests" :
-				if(project_page == i) cc = CDEF.yellow;
+				if(PREFERENCES.splash_page == i) cc = CDEF.yellow;
 				
 				draw_sprite_ui(THEME.trophy, 0, _btx + ui(12), tabY + tabH / 2, 1, 1, 0, COLORS._main_icon);
 				_btx += ui(32);
 				break;
 				
 			case "News" :
-				if(project_page == i) cc = CDEF.cyan;
+				if(PREFERENCES.splash_page == i) cc = CDEF.cyan;
 				
 				draw_sprite_ui(THEME.globe, 0, _btx + ui(12), tabY + tabH / 2, 1, 1, 0, COLORS._main_icon);
 				_btx += ui(32);
@@ -226,7 +227,7 @@ DIALOG_DRAW_BG
 	var by = y0 - ui(36);
 	var bb = THEME.button_hide_fill;
 	
-	switch(pages[project_page]) {
+	switch(pages[PREFERENCES.splash_page]) {
 		case "Getting Started" :
 		case "Welcome Files" :
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
