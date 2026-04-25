@@ -99,6 +99,11 @@ void main() {
 			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
 		
+		if(pattern == 0) {
+			sca    = floor(sca);
+			scaMax = floor(scaMax);
+		}
+		
 		float ang = rotation;
 	#endregion
 	

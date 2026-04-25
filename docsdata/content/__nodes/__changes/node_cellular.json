@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc12",
+    "changes": [
+      {
+        "date": "2026-04-25T07:22:49.284Z",
+        "node": "Cellular Noise",
+        "commit": "**Cellular Noise**: Tiled mode now round scale value automatically."
+      }
+    ]
+  }
+]

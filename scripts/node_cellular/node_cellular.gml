@@ -17,10 +17,10 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(13, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 4, nodeValue_Enum_Scroll( "Type",    0, [ "Point", "Edge", "Cell", "Crystal" ] ));
-	newInput( 6, nodeValue_Enum_Button( "Pattern", 0, [ "Tiled", "Uniform", "Radial" ]       ));
+	newInput( 4, nodeValue_EScroll( "Type",    0, [ "Point", "Edge", "Cell", "Crystal" ] ));
+	newInput( 6, nodeValue_EButton( "Pattern", 0, [ "Tiled", "Uniform", "Radial" ]       ));
 	newInput( 3, nodeValueSeed());
-	newInput(14, nodeValue_Rotation(    "Phase",   0 ));
+	newInput(14, nodeValue_Rotation("Phase",   0 ));
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
