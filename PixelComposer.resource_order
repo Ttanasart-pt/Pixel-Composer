@@ -2082,6 +2082,7 @@
     {"name":"panel_lua_reference","order":2,"path":"scripts/panel_lua_reference/panel_lua_reference.yy",},
     {"name":"panel_menu","order":13,"path":"scripts/panel_menu/panel_menu.yy",},
     {"name":"panel_menuitems_editor","order":1,"path":"scripts/panel_menuitems_editor/panel_menuitems_editor.yy",},
+    {"name":"panel_migration_error","order":22,"path":"scripts/panel_migration_error/panel_migration_error.yy",},
     {"name":"panel_node_align","order":4,"path":"scripts/panel_node_align/panel_node_align.yy",},
     {"name":"panel_node_custom_import","order":2,"path":"scripts/panel_node_custom_import/panel_node_custom_import.yy",},
     {"name":"panel_node_data_gen","order":1,"path":"scripts/panel_node_data_gen/panel_node_data_gen.yy",},

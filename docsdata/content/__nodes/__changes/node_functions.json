@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc12",
+    "changes": [
+      {
+        "date": "2026-04-25T06:31:16.862Z",
+        "node": "",
+        "commit": "Add Shift+Click to change unit without changing value."
+      }
+    ]
+  }
+]

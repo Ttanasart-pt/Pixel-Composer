@@ -1992,14 +1992,14 @@ function Panel_Animation_Dopesheet() {
 	        var _gx = ui(8);
 	        var _gy = ty - ui(9);
 	        var  bc = [COLORS._main_icon, COLORS._main_icon_on_inner];
-	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, "", THEME.animate_prop_go, 0, bc, .75) == 2) {
+	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, __txt("Go to Property"), THEME.animate_prop_go, 0, bc, .75) == 2) {
 	            graphFocusNode(_node);
 	            PANEL_INSPECTOR.highlightProp(prop);
 	        }
 	        _gx += tw + 1;
 	        
 	        var ii = prop.attributes.timeline_hide;
-	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, "", THEME.timeline_hide, ii, bc, .75, .75) == 2)
+	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, __txt("Hide"), THEME.timeline_hide, ii, bc, .75, .75) == 2)
 	            prop.toggleAttribute("timeline_hide");
 	        _gx += tw + 1;
 	        

@@ -581,10 +581,13 @@ function nodeValueUnit(__nodeValue) constructor {
 	}
 	
 	tooltip       = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
-	triggerButton = button(modeTrigger)
-						.setWheel(modeTrigger)
-						.setIcon(THEME.unit_ref, 0, COLORS._main_icon_light).iconPad()
-						.setTooltip(tooltip, function() /*=>*/ {return mode});
+	triggerButton = button(function() /*=>*/ { 
+		if(key_mod_press(SHIFT))
+			mode = !mode;
+		else modeTrigger(); 
+	}).setWheel(modeTrigger)
+	  .setIcon(THEME.unit_ref, 0, COLORS._main_icon_light).iconPad()
+	  .setTooltip(tooltip, function() /*=>*/ {return mode});
 	
 	static setMode = function(type) {
 		if((type == "constant" || type == VALUE_UNIT.constant)  && mode == VALUE_UNIT.constant) return;

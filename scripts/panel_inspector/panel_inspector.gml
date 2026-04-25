@@ -522,7 +522,7 @@ function Panel_Inspector() : PanelContent() constructor {
     
     static highlightProp = function(prop) {
         prop_highlight      = prop;
-        prop_highlight_time = 60;
+        prop_highlight_time = 1;
     }
     
     function propSelectCopy()  { if(prop_selecting) clipboard_set_text(prop_selecting.getString()); }
@@ -1058,10 +1058,17 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(widHov || lbHov) contentPane.hover_content = true;
                 hh += widH + padd;
                 
-                if(jun == prop_highlight && prop_highlight_time) {
-                    if(prop_highlight_time == 60) contentPane.setScroll(_y - yy);
-                    var aa = min(1, prop_highlight_time / 30);
-                    draw_sprite_stretched_ext(THEME.ui_panel, 1, _x + ui(4), yy, con_w - ui(4), widH, COLORS._main_accent, aa);
+                if(jun == prop_highlight && prop_highlight_time > 0) {
+                    contentPane.setScroll(_y - yy);
+                    var aa  = min(1, prop_highlight_time * 2);
+                    var hgp = max(0, prop_highlight_time * 8 - 7) * ui(4);
+                    
+                    var hgx = _x + ui(4)     - hgp;
+                    var hgy = yy             - hgp;
+                    var hgw = con_w - ui(4)  + hgp * 2;
+                    var hgh = widH           + hgp * 2;
+                    
+                    draw_sprite_stretched_add(THEME.ui_panel, 2, hgx, hgy, hgw, hgh, COLORS._main_accent, aa);
                 }
                 
                 if(_hover && lbHov && prop_dragging == noone && mouse_lpress(pFOCUS)) {
@@ -1264,10 +1271,13 @@ function Panel_Inspector() : PanelContent() constructor {
                 prop_dragging = noone;
         }
         
-        if(prop_highlight_time) {
-            prop_highlight_time--;
-            if(prop_highlight_time == 0)
+        if(prop_highlight_time > 0) {
+            prop_highlight_time -= DELTA_TIME;
+            
+            if(prop_highlight_time <= 0) {
+            	prop_highlight_time = 0;
                 prop_highlight = noone;
+            }
         }
         
         _inspecting.inspector_draw_height = hh;

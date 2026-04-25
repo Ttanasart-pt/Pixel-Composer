@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc12",
+    "changes": [
+      {
+        "date": "2026-04-25T06:31:16.875Z",
+        "node": "",
+        "commit": "Add Shift+Click to change unit without changing value."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc10",
     "changes": [
       {

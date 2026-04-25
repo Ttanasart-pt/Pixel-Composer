@@ -98,6 +98,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		unitUse       = false;
 		unit		  = new nodeValueUnit(self);
 		def_unit      = VALUE_UNIT.constant;
+		def_unit_simp = false;
 		
 		is_modified     = false;
 		always_modified = false;
@@ -557,6 +558,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		unit.reference = _ref;
 		unit.mode      = _mode;
 		def_unit       = _mode;
+		def_unit_simp  = true;
 		cache_value[0] = false;
 		
 		if(_mode == VALUE_UNIT.reference && PREFERENCES.node_def_dim_unit == 0) {
@@ -3043,6 +3045,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
 		
 		if(con_node != -1) unit.mode = 0;
+		if(unitUse && !has(_map, "unit")) node.project.addError($"Value loading error [{node.name} > {name}]: unit unset", self);
 		unit.mode = _map[$ "unit"] ?? unit.mode;
 		
 		if(has(_map, "raw_value"))   animator.deserialize(_map[$ "raw_value"], scale);

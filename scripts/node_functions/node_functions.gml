@@ -201,6 +201,12 @@
 		if(_moveView) PANEL_GRAPH.fullView();
 	}
 	
+	function inspectorFocusProp(prop) {
+		if(!is(prop, NodeValue)) return;
+		graphFocusNode(prop.node);
+		PANEL_INSPECTOR.highlightProp(prop);
+	}
+	
 	function refreshNodeMap() {
 		if(!ds_exists(PROJECT.nodeNameMap, ds_type_map)) return;
 		ds_map_clear(PROJECT.nodeNameMap);

@@ -68,7 +68,7 @@ function surface_apply_gaussian(args) {
 	var _sizeJunc  = _sizeArr? args.size[2] : noone;
 	var _msize     = is_array(_size)? max(_size[0], _size[1]) : _size;
 		
-	var gau_array = __gaussian_get_kernel(_msize);
+	var gau_array = __gaussian_get_kernel(min(1024, _msize));
 	
 	if(args.sizeCurve != noone) {
 		var _klen = array_length(gau_array);

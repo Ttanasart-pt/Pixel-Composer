@@ -176,6 +176,9 @@ switch(load_process) {
     	
         instance_destroy();
     
+    if(!array_empty(PROJECT.migrationError))
+    	dialogPanelCall(new Panel_Migration_Error(PROJECT));
+    
     run_in(2, function() /*=>*/ { 
     	PANEL_PREVIEW.fullView();
     	PANEL_GRAPH.refreshDraw(); 

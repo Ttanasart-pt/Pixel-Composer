@@ -21,6 +21,11 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 			var nt = (ot + 1) % (2 + use_mask);
 			attributes.use_project_dimension = nt;
 			
+			if(key_mod_press(SHIFT)) {
+				node.triggerRender();
+				return;
+			}
+			
 			var sw;
 			var sh;
 			

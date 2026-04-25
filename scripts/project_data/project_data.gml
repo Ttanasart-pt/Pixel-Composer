@@ -43,6 +43,11 @@
 		struct_override(PROJECT_ATTRIBUTES, f);
 		PROJECT_ATTRIBUTES.surface_dimension = array_verify(PROJECT_ATTRIBUTES.surface_dimension, 2);
 	}
+
+	function __initProject() {
+		PROJECT  = new Project();
+		PROJECTS = [ PROJECT ];
+	}
 #endregion
 
 function Project() constructor {
@@ -616,6 +621,12 @@ function Project() constructor {
 			timelineMarkersArray[i] = timelineMarkers[i].frame;
 	}
 	
+	////- Migration
+	
+	migrationError = [];
+
+	static addError = function(_txt, _ref) { array_push(migrationError, new ProjectError(_txt, _ref)); return self; }
+	
 	////- Serialize
 
 	static serialize = function(_addon = true) {
@@ -822,7 +833,7 @@ function Project() constructor {
 	}
 }
 
-function __initProject() {
-	PROJECT  = new Project();
-	PROJECTS = [ PROJECT ];
+function ProjectError(_txt, _ref) constructor {
+	txt = _txt;
+	reference = _ref;
 }
