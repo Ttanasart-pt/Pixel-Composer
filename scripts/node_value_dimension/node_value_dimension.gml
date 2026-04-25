@@ -10,7 +10,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 	
 	use_mask    = false;
 	mask_input  = undefined;
-	unitTooltip = new tooltipSelector("Unit", ["Pixel", "Global"]);
+	unitTooltip = new tooltipSelector("Unit", ["Pixel", "Global"]).setSubtitle(__txt("Shift: change without conversion"));
 	node.dimension_input = index;
 	attributes.use_project_dimension = PREFERENCES.node_def_dim_unit;
 	

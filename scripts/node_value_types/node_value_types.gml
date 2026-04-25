@@ -575,16 +575,23 @@ function nodeValueUnit(__nodeValue) constructor {
 		mode = !mode; 
 		
 		_nodeValue.is_modified    = true;
+		_nodeValue.node.project.setModified();
+		
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
-		if(upd) _nodeValue.node.doUpdate();
+		if(upd) _nodeValue.node.triggerRender();
 	}
 	
-	tooltip       = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
+	tooltip       = new tooltipSelector("Unit", ["Pixel", "Fraction"]).setSubtitle(__txt("Shift: change without conversion"));
 	triggerButton = button(function() /*=>*/ { 
-		if(key_mod_press(SHIFT))
+		if(key_mod_press(SHIFT)) {
 			mode = !mode;
-		else modeTrigger(); 
+			_nodeValue.is_modified    = true;
+			_nodeValue.node.project.setModified();
+			
+			_nodeValue.node.triggerRender();
+		} else modeTrigger(); 
+		
 	}).setWheel(modeTrigger)
 	  .setIcon(THEME.unit_ref, 0, COLORS._main_icon_light).iconPad()
 	  .setTooltip(tooltip, function() /*=>*/ {return mode});
@@ -596,7 +603,7 @@ function nodeValueUnit(__nodeValue) constructor {
 		mode = (type == "constant" || type == VALUE_UNIT.constant)? VALUE_UNIT.constant : VALUE_UNIT.reference;
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
-		_nodeValue.node.doUpdate();
+		_nodeValue.node.triggerRender();
 	}
 	
 	static draw = function(_x, _y, _w, _h, _m) {

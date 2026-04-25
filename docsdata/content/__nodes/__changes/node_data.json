@@ -11,6 +11,11 @@
         "date": "2026-04-25T01:24:51.113Z",
         "node": "",
         "commit": "--add preview_hotkey node based prop"
+      },
+      {
+        "date": "2026-04-25T07:11:42.083Z",
+        "node": "",
+        "commit": "Add project migration tool to highlight properties that changed and could have impact to the project when loading project made in older version."
       }
     ]
   },

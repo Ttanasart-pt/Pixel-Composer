@@ -304,6 +304,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		con_node  = -1;
 		con_index = -1;
 		con_tag   =  0;
+		
+		migrationVersion = undefined;
+		static setMigration = function(v) /*=>*/ { migrationVersion = v; return self; }
 	#endregion
 	
 	#region ---- Init Fn ----
@@ -3032,7 +3035,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} else {
 			name_custom = _map[$ "name_custom"]   ?? false;
 			if(name_custom) name = _map[$ "name"] ?? name;
-			
 		}
 		
 		if(!preset) {
@@ -3045,7 +3047,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
 		
 		if(con_node != -1) unit.mode = 0;
-		if(unitUse && !has(_map, "unit")) node.project.addError($"Value loading error [{node.name} > {name}]: unit unset", self);
+		if(unitUse && !has(_map, "unit")) {
+			node.project.addError($"{node.name} > {name}: unit unset", self, THEME.unit_ref);
+		}
 		unit.mode = _map[$ "unit"] ?? unit.mode;
 		
 		if(has(_map, "raw_value"))   animator.deserialize(_map[$ "raw_value"], scale);
@@ -3069,6 +3073,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(index >= 0) {
 			node.inputs_data[index]              = def_val;
 			node.input_value_map[$ internalName] = def_val;
+		}
+		
+		if(migrationVersion != undefined && LOADING_VERSION < migrationVersion) {
+			var _nod = ALL_NODES[$ instanceof(node)];
+			var _spr = _nod? _nod.spr : noone;
+			node.project.addError($"{node.name} > {name}: code changed", self, _spr);
 		}
 		
 		postApplyDeserialize();

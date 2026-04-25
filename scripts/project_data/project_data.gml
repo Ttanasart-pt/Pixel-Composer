@@ -625,7 +625,13 @@ function Project() constructor {
 	
 	migrationError = [];
 
-	static addError = function(_txt, _ref) { array_push(migrationError, new ProjectError(_txt, _ref)); return self; }
+	static addError = function(_txt, _ref, _spr = noone) { 
+		var _err = new ProjectError(_txt, _ref); 
+		_err.spr = _spr;
+		
+		array_push(migrationError, _err); 
+		return self; 
+	}
 	
 	////- Serialize
 
@@ -836,4 +842,6 @@ function Project() constructor {
 function ProjectError(_txt, _ref) constructor {
 	txt = _txt;
 	reference = _ref;
+	
+	spr = noone;         function setSpr(s) { spr = s; return self; }
 }

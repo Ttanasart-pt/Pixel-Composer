@@ -33,7 +33,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		node_database        = undefined;
 		run_in(1, function() /*=>*/ { 
-			node_database = ALL_NODES[$ instanceof(self)]; 
+			node_database = ALL_NODES[$ instanceof(self)];
 			onValueRefresh();
 		});
 		

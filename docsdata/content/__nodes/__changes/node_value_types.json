@@ -6,6 +6,11 @@
         "date": "2026-04-25T06:31:16.881Z",
         "node": "",
         "commit": "Add Shift+Click to change unit without changing value."
+      },
+      {
+        "date": "2026-04-25T07:11:42.083Z",
+        "node": "",
+        "commit": "Add project migration tool to highlight properties that changed and could have impact to the project when loading project made in older version."
       }
     ]
   },
