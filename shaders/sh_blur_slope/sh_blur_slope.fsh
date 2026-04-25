@@ -279,11 +279,10 @@ vec2 txMap;
 float sampleBright(vec2 pos) { vec4 c = sampleTexture(slopeMap, pos); return (c.r + c.g + c.b) / 3.;  }
 
 vec2 sampleSlope(vec2 pos) { 
-	float h0 = sampleBright(clamp(pos + vec2(-txMap.x, 0.), 0., 1.));
-	float h1 = sampleBright(clamp(pos + vec2( txMap.x, 0.), 0., 1.));
-	float h2 = sampleBright(clamp(pos + vec2(0., -txMap.y), 0., 1.));
-	float h3 = sampleBright(clamp(pos + vec2(0.,  txMap.y), 0., 1.));
-	
+	float h0 = sampleBright(pos + vec2(-txMap.x, 0.));
+	float h1 = sampleBright(pos + vec2( txMap.x, 0.));
+	float h2 = sampleBright(pos + vec2(0., -txMap.y));
+	float h3 = sampleBright(pos + vec2(0.,  txMap.y));
 	return vec2(h1 - h0, h3 - h2);
 }
 

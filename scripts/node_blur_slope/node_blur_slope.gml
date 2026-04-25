@@ -51,24 +51,33 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0]; 
-		var _slop = _data[2]; 
+		#region data
+			var _surf = _data[ 0]; 
+			
+			var _slop = _data[ 2]; 
+			var _strn = _data[ 1]; 
+			var _step = _data[10]; 
+			var _gamm = _data[11]; 
+		#endregion
 		
 		if(!is_surface(_surf)) return _outSurf;
+		
+		var _dim  = surface_get_dimension(_surf);
+		var _sdim = surface_get_dimension(_slop);
 		
 		surface_set_shader(_outSurf, sh_blur_slope);
 			shader_set_interpolation(_surf);
 			shader_set_i("sampleMode",	  getAttribute("oversample"));
 			shader_set_uv(_data[12], _data[13]);
 			
-			shader_set_f("dimension",     surface_get_dimension(_surf));
-			shader_set_f_map("strength",  _data[1], _data[ 9], inputs[1], _data[14]);
-			shader_set_f("stepSize",      _data[10]);
+			shader_set_f("dimension",     _dim);
+			shader_set_f_map("strength",  _strn, _data[ 9], inputs[1], _data[14]);
+			shader_set_f("stepSize",      _step);
 			
 			shader_set_s("slopeMap",      _slop);
-			shader_set_f("slopeMapDim",   surface_get_dimension(_slop));
+			shader_set_f("slopeMapDim",   _sdim);
 			
-			shader_set_i("gamma",         _data[11]);
+			shader_set_i("gamma",         _gamm);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

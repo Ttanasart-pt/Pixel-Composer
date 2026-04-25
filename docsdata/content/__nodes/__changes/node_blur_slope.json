@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc12",
+    "changes": [
+      {
+        "date": "2026-04-25T05:13:29.018Z",
+        "node": "Slope blur",
+        "commit": "**Slope blur**: Fix node not respect oversample setting."
+      }
+    ]
+  }
+]
