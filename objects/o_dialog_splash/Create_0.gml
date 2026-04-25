@@ -224,7 +224,9 @@ event_inherited();
 		var contentRow   = false;
 		var group_labels = [];
 		var _curr_tag    = "";
+		var _curr_lab    = undefined;
 		var _cur_col     = 0;
+		
 		var _nx, _boxx;
 		var _meta;
 		var _scis = gpu_get_scissor();
@@ -232,9 +234,6 @@ event_inherited();
 		for(var i = 0; i < node_count; i++) {
 			var _project = list[i];
 			var _name    = _project.name;
-			
-			if(string_digits(string_char_at(_name, 1)) != "")
-				_name = string_copy(_name, string_pos(" ", _name), string_length(_name) - string_pos(" ", _name) + 1);
 			
 			if(_search && string_pos(_serStr, string_lower(_name)) == 0) continue;
 			
@@ -250,16 +249,19 @@ event_inherited();
 						yy += hght;
 					}
 					
-					array_push(group_labels, { y: yy + ui(2), text: _project.tag });
+					var _lab = { y: yy + ui(2), text: _project.tag, len: 0 }
+					array_push(group_labels, _lab);
 					hh += label_h + ui(4) + (!_coll) * ui(4);
 					yy += label_h + ui(4) + (!_coll) * ui(4);
 					
 					_nx         = grid_padd;
 					_curr_tag   = _project.tag;
+					_curr_lab   = _lab;
 					_cur_col    = 0;
 					contentRow  = false;
 				}
 				
+				if(_curr_lab != undefined) _curr_lab.len++;
 				if(_coll) continue;
 			} 
 			
@@ -402,6 +404,7 @@ event_inherited();
 			for( var i = 0; i < len; i++ ) {
 				var lb    = group_labels[i];
 				var title = string_titlecase(lb.text);
+				var clen  = string_titlecase(lb.len);
 				
 				var _yy   = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
@@ -443,8 +446,14 @@ event_inherited();
 				if(!welcome_editing)
 					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, COLORS._main_icon, 1);
 				
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(pd + ui(32), _yy + label_h / 2, title);
+				draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text);
+				draw_text_add(pd + ui(32), _yy + label_h - ui(4), title);
+				
+				if(clen) {
+					var lnx = pd + ui(32) + string_width(title) + ui(4);
+					draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text_sub);
+					draw_text_add(lnx, _yy + label_h - ui(4), $"[{clen}]");
+				}
 			}
 			
 			if(_cAll !=  0) PREFERENCES.welcome_file_closed = [];

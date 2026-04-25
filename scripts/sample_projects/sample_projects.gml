@@ -3,7 +3,7 @@
 	globalvar GETTING_STARTED; GETTING_STARTED = [];
 #endregion
 
-function LOAD_FOLDER(list, path) {
+function loadSampleFolder(list, path) {
 	if(!directory_exists(path)) return;
 	
 	var folder = filename_name_only(path);
@@ -15,6 +15,7 @@ function LOAD_FOLDER(list, path) {
 		if(!path_is_project(fPath)) continue;
 		
 		var fObj  = new FileObject(fPath);
+		fObj.name = filename_strip_order(fObj.name);
 		fObj.tag  = filename_strip_order(folder);
 		
 		var wei   = 0;
@@ -30,7 +31,7 @@ function LOAD_FOLDER(list, path) {
 	
 	var _dir = directory_listdir(path, fa_directory);
 	for( var i = 0, n = array_length(_dir); i < n; i++ ) 
-		LOAD_FOLDER(list, _dir[i]);
+		loadSampleFolder(list, _dir[i]);
 }
 
 function LOAD_SAMPLE() {
@@ -51,12 +52,12 @@ function LOAD_SAMPLE() {
 	var path = $"{DIRECTORY}Welcome files";
 	var _dir = directory_listdir(path, fa_directory);
 	
-	LOAD_FOLDER(GETTING_STARTED, $"{path}/Getting started"); 
+	loadSampleFolder(GETTING_STARTED, $"{path}/Getting started"); 
 	array_remove(_dir, $"{path}/Getting started");
 	
 	for (var i = 0, n = array_length(_dir); i < n; i++) 
-		LOAD_FOLDER(SAMPLE_PROJECTS, _dir[i]); 
+		loadSampleFolder(SAMPLE_PROJECTS, _dir[i]); 
 		
 	for( var i = 0, n = array_length(PREFERENCES.path_welcome); i < n; i++ ) 
-		LOAD_FOLDER(SAMPLE_PROJECTS, PREFERENCES.path_welcome[i]); 
+		loadSampleFolder(SAMPLE_PROJECTS, PREFERENCES.path_welcome[i]); 
 }

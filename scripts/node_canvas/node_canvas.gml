@@ -841,8 +841,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 		} else {
 			var hov = -1;
-			var cw = _cw * .75;
-			var p  = ui(3);
+			var cw  = _cw * .75;
+			var p   = ui(3);
 			
 			var c2x = _cx + _cw - cw + p * 2;
 			var c2y =  yy + _cw - cw + p * 2;
@@ -859,7 +859,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(hov == 1) colorSelectorCall(CURRENT_COLOR, function(c) /*=>*/ {return setToolColor(c)});
 				if(hov == 2) toolSwitchColor();
 			}
-		
+			
 			yy += _cw + ui(8);
 			hh += _cw + ui(8);
 			
