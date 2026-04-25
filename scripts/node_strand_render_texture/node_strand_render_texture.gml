@@ -10,29 +10,27 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	newInput(5, nodeValueSeed());
 	
-	////- Ouptut
+	////- =Ouptut
+	newInput( 0, nodeValue_Dimension());
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Strand
+	newInput( 1, nodeValue_Strand());
+	newInput( 2, nodeValue_Range("Thickness", [ 8, 8 ], { linked : true }));
 	
-	////- Strand
-	
-	newInput(1, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
-	newInput(2, nodeValue_Range("Thickness", [ 8, 8 ], { linked : true }));
-	
-	////- Texture
-	
-	newInput(4, nodeValue_Surface("Texture"));
-	newInput(3, nodeValue_Gradient("Random color", gra_white));
-	
+	////- =Texture
+	newInput( 4, nodeValue_Surface("Texture"));
+	newInput( 3, nodeValue_Gradient("Random color", gra_white));
 	// inputs 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 
-		["Output",  false], 0,
-		["Strand",  false], 1, 2,  
-		["Texture", false], 4, 3, 
+		[ "Output",  false ], 0,
+		[ "Strand",  false ], 1, 2,  
+		[ "Texture", false ], 4, 3, 
 	];
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _str = getInputData(1);
@@ -44,26 +42,25 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	static update = function(frame = CURRENT_FRAME) {
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
 			
-		var _dim = getInputData(0);
-		var _str = getInputData(1);
-		
-		var _thk = getInputData(2);
-		var _bld = getInputData(3);
-		var _tex = getInputData(4);
-		var _sed = getInputData(5);
-		
-		var _surf = outputs[0].getValue();
-		_surf = surface_verify(_surf, _dim[0], _dim[1]);
-		outputs[0].setValue(_surf);
-		
-		if(_str == noone) 
-			return;
-		if(!is_array(_str)) 
-			_str = [ _str ];
-		if(inputs[4].value_from == noone) 
-			return;
+		#region data
+			var _dim = getInputData(0);
+			var _str = getInputData(1);
 			
+			var _thk = getInputData(2);
+			var _bld = getInputData(3);
+			var _tex = getInputData(4);
+			var _sed = getInputData(5);
+			
+			var _surf = outputs[0].getValue();
+			_surf = surface_verify(_surf, _dim[0], _dim[1]);
+			outputs[0].setValue(_surf);
+		#endregion
+		
+		if(_str == noone) return;
+		if(!is_array(_str)) _str = [ _str ];
 		if(!is_array(_tex)) _tex = [ _tex ];
+		
+		if(array_empty(_tex)) return;
 		
 		random_set_seed(_sed);
 		var _sedIndex = 0;

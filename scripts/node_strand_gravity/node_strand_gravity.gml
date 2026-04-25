@@ -7,18 +7,26 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	manual_ungroupable	 = false;
 	
-	newInput( 0, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
+	newInput( 0, nodeValue_Strand());
+	
+	////- =Gravity
 	newInput( 1, nodeValue_Float(    "Gravity",    1  ));
 	newInput( 2, nodeValue_Rotation( "Direction", -90 ));
 	
 	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
 	
+	input_display_list = [ 0, 
+		[ "Gravity", false ], 1, 2, 
+	];
+	
 	////- Node
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _str = getInputData(0);
-		var _gra = getInputData(1);
-		var _dir = getInputData(2);
+		#region data
+			var _str = getInputData(0);
+			var _gra = getInputData(1);
+			var _dir = getInputData(2);
+		#endregion
 		
 		if(_str == noone) return;
 		var __str = _str;
@@ -31,14 +39,13 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		for( var i = 0, n = array_length(__str[k].hairs); i < n; i++ ) {
 			var h = __str[k].hairs[i];
 			
-			for( var j = 1; j < array_length(h.points); j++ ) {
+			for( var j = h.free? 0 : 1, m = array_length(h.points); j < m; j++ ) {
 				var p = h.points[j];
-				// p.x += p.dx;
-				// p.y += p.dy;
+				p.x += p.dx;
+				p.y += p.dy;
 				
 				p.x += gx;
 				p.y += gy;
-				
 			}
 		}
 		

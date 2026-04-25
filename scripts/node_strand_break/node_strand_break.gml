@@ -8,6 +8,8 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	manual_ungroupable	 = false;
 	
 	var i = input_fix_len;
+	
+	////- =Break
 	newInput(i+0, nodeValue_Slider("Chance", 1));
 	newInput(i+1, nodeValueSeed());
 	
@@ -36,6 +38,7 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 		STRAND_EFFECTOR_PRE
 			if(_sed && random1D(h.id) < _cha * mulp)
 				h.free = true;
+				
 			else if(!_sed && random(1) < _cha * mulp)
 				h.free = true;
 		STRAND_EFFECTOR_POST

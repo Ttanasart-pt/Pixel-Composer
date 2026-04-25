@@ -2513,11 +2513,48 @@ function Panel_Preview() : PanelContent() constructor {
 		        		zoom_slide = 0;
         		
             		rx -= tw + ui(2); 
-            		draw_set_text(f_p4, fa_right, fa_top, COLORS._main_text_inner);
-            		
-	            	rx  = right_menu_x;
+            	}
+            	
+            	if(is(_node, Node)) {
+            		rx  = right_menu_x;
 	            	ry += lh + ui(2);
 	            	
+	            	var _junc  = array_safe_get(_node.outputs, _node.preview_channel);
+	            	var _jval  = is(_junc, NodeValue);
+	            	var _jname = _jval? _junc.name : __txt("no output");
+	            	
+	            	var tw = string_width(_jname) + ui(8);
+	                draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+	                draw_set_color(_jval? COLORS._main_text_inner : COLORS._main_text_sub); draw_text_add(rx, ry, _jname); 
+	                rx -= tw + ui(2); 
+	                
+	                draw_sprite_ui(THEME.arrow, 0, rx, ry + lh/2, .75, .75, 0, COLORS._main_icon);
+	                
+	                rx -= ui(10);
+	            	var _nodeName = _node.getDisplayName();
+	                var tw = string_width(_nodeName) + ui(8);
+	                draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+	                draw_set_color(COLORS._main_text_inner); draw_text_add(rx, ry, _nodeName); 
+	                rx -= tw + ui(2); 
+	                
+            	} else {
+            		rx  = right_menu_x;
+	            	ry += lh + ui(2);
+	            	
+	            	var _txt = __txt("no data");
+	                var tw   = string_width(_txt) + ui(8);
+	                draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
+	                draw_set_color(COLORS._main_text_sub); draw_text_add(rx, ry, _txt); 
+	                rx -= tw + ui(2); 
+	                
+            	}
+            	
+            	if(d3_active == NODE_3D.none) {
+            		rx  = right_menu_x;
+	            	ry += lh + ui(2);
+	            	
+            		draw_set_text(f_p4, fa_right, fa_top, COLORS._main_text_inner);
+            		
                     if(pHOVER) {
                 		var tw = string_width(_txt_mou) + ui(8);
                     	draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);

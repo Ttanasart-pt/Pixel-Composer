@@ -1252,15 +1252,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region color picker
-			if(!selection.is_selected && active && key_mod_down(ALT)) {
-				color_picking = true;
-				colorSelectorCall(undefined, function(c) /*=>*/ {return setToolColor(c)})
-					.setDrop(self).dropperActive()
-					.doRefocus();
-			}
-			
 			if(color_picking && !key_mod_press(ALT))
 				color_picking = false;
+			
+			if(!color_picking && !selection.is_selected && active && key_mod_press(ALT)) {
+				color_picking = true;
+				colorSelectorCall(CURRENT_COLOR, function(c) /*=>*/ {return setToolColor(c)})
+					.setDrop(self).dropperActive().doRefocus();
+			}
 			
 			if(color_picking) return;
 		#endregion

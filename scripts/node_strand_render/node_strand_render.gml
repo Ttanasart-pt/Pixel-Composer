@@ -11,12 +11,12 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(8, nodeValue_Int( "Update Step", 4 ));
 	
 	////- =Output
-	newInput(0, nodeValue_Dimension());
+	newInput( 0, nodeValue_Dimension());
 	
 	////- =Strand
-	newInput(1, nodeValue(       "Strand",                self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
-	newInput(2, nodeValue_Range( "Thickness", [ 1, 1 ], { linked : true }));
-	newInput(3, nodeValue_Curve( "Thickness over length", CURVE_DEF_11));
+	newInput( 1, nodeValue_Strand());
+	newInput( 2, nodeValue_Range( "Thickness", [ 1, 1 ], { linked : true }));
+	newInput( 3, nodeValue_Curve( "Thickness over length", CURVE_DEF_11));
 	
 	////- =Scatter
 	newInput( 9, nodeValue_Bool(  "Use Scatter", false));

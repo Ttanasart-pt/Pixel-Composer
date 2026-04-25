@@ -7,13 +7,19 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
-		.setVisible(true, true);
+	newInput( 0, nodeValue_Strand());
 	
-	newInput(1, nodeValue("Collision mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
-		.setVisible(true, true);
+	////- =Collision
+	newInput( 1, nodeValue_Mesh("Collision mesh")).setVisible(true, true);
+	// 2
 	
 	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
+	
+	input_display_list = [ 0, 
+		[ "Collision", false ], 1, 
+	];
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _msh = getInputData(1);

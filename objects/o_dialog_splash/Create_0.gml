@@ -289,8 +289,13 @@ event_inherited();
 				_project.hover_splash = lerp_float(_project.hover_splash, ghov, 10);
 				
 				if(sprite_exists(spr)) {
-					var gw = grid_width - ui(8);
-					var gh = grid_heigh - ui(8);
+					var gw = grid_width;
+					var gh = grid_heigh;
+					
+					if(page == "Getting Started") {
+						gw -= ui(16);
+						gh -= ui(16);
+					}
 					
 					var sw = sprite_get_width(spr);
 					var sh = sprite_get_height(spr);

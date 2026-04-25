@@ -1,3 +1,7 @@
+function nodeValue_Strand(_name = "Strands", _value = noone, _tooltip = "") { 
+	return new __NodeValue_Object_Generic(_name, self, VALUE_TYPE.strands, _value, _tooltip).setVisible(true, true);
+}
+
 function StrandPoint(_x = 0, _y = 0) constructor {
 	x   = _x;
 	y   = _y;
@@ -89,7 +93,7 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq =
 	
 	static setOrigin = function(_sx, _sy) {
 		if(pointAmo < 1) return;
-		if(free) return;
+		if(free)         return;
 		
 		points[0].set(_sx, _sy);
 	}
@@ -126,14 +130,14 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq =
 	
 	static motionDelta = function() {
 		rootForce = 0;
-		array_foreach(points, function(p) /*=>*/ {return p.motionDelta()}, !free);
+		array_foreach(points, function(p,i) /*=>*/ {return p.motionDelta()}, !free);
 	}
 	
 	static motionPropagate = function(timeStep) {
 		__rs = restitution / timeStep;
 		__ts = timeStep;
 		
-		array_foreach(points, function(p) /*=>*/ {return p.motionPropagate(__rs, __ts)}, !free);
+		array_foreach(points, function(p,i) /*=>*/ {return p.motionPropagate(__rs, __ts)}, !free);
 	}
 	
 	static chainConstrain = function() {
@@ -141,29 +145,31 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq =
 			var p0 = points[i - 1];
 			var p1 = points[i - 0];
 			
-			var dir = point_direction(p0.x, p0.y, p1.x, p1.y);
-			var dis = point_distance(p0.x, p0.y, p1.x, p1.y);
+			var dir = point_direction( p0.x, p0.y, p1.x, p1.y );
+			var dis = point_distance(  p0.x, p0.y, p1.x, p1.y );
+			// if(dis < 1) continue;
 			
-			if(dis < 1) continue;
 			var len = lerp(dis, length[i], tension);
+			var dx  = lengthdir_x(dis - len, dir);
+			var dy  = lengthdir_y(dis - len, dir);
 			
 			if(free) {
-				var dx = lengthdir_x(dis - len, dir) / 2;
-				var dy = lengthdir_y(dis - len, dir) / 2;
+				p0.x += dx / 2;
+				p0.y += dy / 2;
 				
-				p0.x += dx;
-				p0.y += dy;
+				p1.x -= dx / 2;
+				p1.y -= dy / 2;
+				
+			} else {
+				if(i == 1) rootForce += dis - len;
 				
 				p1.x -= dx;
 				p1.y -= dy;
-				
-			} else {
-				if(i == 1) rootForce += len;
-				p1.x = p0.x + lengthdir_x(len, dir);
-				p1.y = p0.y + lengthdir_y(len, dir);
 			}
 		}
-		
+	}
+	
+	static angleConstrain = function() {
 		var oa = restAngle[0], na;
 		
 		for( var i = 1; i < pointAmo; i++ ) {
@@ -176,7 +182,7 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq =
 			var dst  = oa + restAngle[i];
 			var adf  = angle_difference(dst, dir);
 			
-			if(dis < 1) continue;
+			// if(dis < 1) continue;
 			var delt = adf * power(angularTension, 2) * power(1 - i / pointAmo, 2);
 			na = dir + delt;
 			
@@ -279,6 +285,7 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq =
 			
 			repeat(iteration) {
 				chainConstrain();
+				angleConstrain();
 				springConstrain();
 			}
 		}

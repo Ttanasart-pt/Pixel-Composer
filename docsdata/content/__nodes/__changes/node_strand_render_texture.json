@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc12",
+    "changes": [
+      {
+        "date": "2026-04-25T01:11:19.652Z",
+        "node": "",
+        "commit": "**Canvas**: Fix color picker always pick brush color."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc10",
     "changes": [
       {

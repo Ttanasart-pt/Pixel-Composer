@@ -1,17 +1,18 @@
+// !!??
 #macro STRAND_EFFECTOR_PRE																										\
-	var _str = getInputData(0);																							\
-	var _typ = getInputData(1);																							\
-	var _pos = getInputData(2);																							\
-	var _ran = getInputData(3);																							\
-	var _dir = getInputData(4);																							\
-	var _fal = getInputData(5); var fal = _ran * _fal;																	\
+	var _str = getInputData(0);																									\
+	var _typ = getInputData(1);																									\
+	var _pos = getInputData(2);																									\
+	var _ran = getInputData(3);																									\
+	var _dir = getInputData(4);																									\
+	var _fal = getInputData(5); var fal = _ran * _fal;																			\
 																																\
 	if(_str == noone) return;																									\
 	var __str = _str;																											\
 	if(!is_array(_str)) __str = [ _str ];																						\
 																																\
 	for( var k = 0; k < array_length(__str); k++ )																				\
-	for( var i = 0, n = array_length(__str[k].hairs); i < n; i++ ) {																	\
+	for( var i = 0, n = array_length(__str[k].hairs); i < n; i++ ) {															\
 		var h = __str[k].hairs[i];																								\
 																																\
 		for( var j = 1; j < array_length(h.points); j++ ) {																		\
@@ -41,29 +42,26 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	setDimension(96, 48);
 	setDrawIcon(s_node_strand_force_apply);
 	
-	newInput(0, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
-		.setVisible(true, true);
+	newInput( 0, nodeValue_Strand());
 	
-	newInput(1, nodeValue_Enum_Scroll("Shape", 0, [ "Point", "Band" ]));
-	
-	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]));
-	
-	newInput(3, nodeValue_Float("Range", 4));
-	
-	newInput(4, nodeValue_Rotation("Direction", 0));
-	
-	newInput(5, nodeValue_Slider("Falloff", 0.2));
+	////- =Shape
+	newInput( 1, nodeValue_EScroll(  "Shape",     0, [ "Point", "Band" ] ));
+	newInput( 2, nodeValue_Vec2(     "Position",  [0,0] ));
+	newInput( 3, nodeValue_Float(    "Range",      4    ));
+	newInput( 4, nodeValue_Rotation( "Direction",  0    ));
+	newInput( 5, nodeValue_Slider(   "Falloff",   .2    ));
+	// 6
 	
 	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
 	
 	input_fix_len = array_length(inputs);
-	
 	input_display_list = [ 0, 
-		["Shape",		false], 1, 2, 3, 4, 5, 
+		[ "Shape", false ], 1, 2, 3, 4, 5, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-
+	////- Node
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _typ = getInputData(1);
 		var _pos = getInputData(2);
 		var _ran = getInputData(3);
