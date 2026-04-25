@@ -6,6 +6,11 @@
         "date": "2026-04-25T01:11:19.635Z",
         "node": "",
         "commit": "**Canvas**: Fix color picker always pick brush color."
+      },
+      {
+        "date": "2026-04-25T01:24:51.113Z",
+        "node": "",
+        "commit": "--add preview_hotkey node based prop"
       }
     ]
   },

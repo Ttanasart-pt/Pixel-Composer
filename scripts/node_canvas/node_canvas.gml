@@ -753,7 +753,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	#endregion
 	
 	#region ++++ hotkey ++++
-		hotkeys = [
+		preview_hotkeys = [
 			[ "New Frame",       function() /*=>*/ { addFrame(); } ], 
 			
 			[ "Select All",      function() /*=>*/ { selection.selectAll();                        } ], 
@@ -802,7 +802,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _3x = _cx + _cw / 2;
 			var _3y =  yy + _cw / 2;
 			
-			draw_sprite_ui(THEME.color_3d, 0, _3x, _3y, 1, 1, 0, CURRENT_COLOR  );
+			draw_sprite_ui(THEME.color_3d, 0, _3x, _3y, 1, 1, 0, CURRENT_COLOR          );
 			draw_sprite_ui(THEME.color_3d, 1, _3x, _3y, 1, 1, 0, current_brush.colors[0]);
 			draw_sprite_ui(THEME.color_3d, 2, _3x, _3y, 1, 1, 0, current_brush.colors[1]);
 			
@@ -880,8 +880,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(_scrollTarget != noone)
 			setToolColor(PROJ_PALETTE[_scrollTarget]);
 		
-		if(_sel != noone) 
-			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _sel[0] - _pd, _sel[1] - _pd, _cw + _pd * 2, _ch + _pd * 2 - 1, c_white, 1);
+		if(_sel != noone) {
+			var px = _sel[0] - _pd; 
+			var py = _sel[1] - _pd; 
+			var pw = _cw + _pd * 2; 
+			var ph = _ch + _pd * 2 - 1;
+			
+			draw_sprite_stretched_ext(THEME.palette_selecting, 0, px, py, pw, ph, c_white, 1);
+		}
 		
 		return hh + ui(4);
 	}
@@ -1214,14 +1220,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		preview_surface_sample = isNotUsingTool();
-		
-		if(active)
-		array_foreach(hotkeys, function(h, i) /*=>*/ { // hotkey
-			if(HOTKEYS_CUSTOM[$ "Node_Canvas"][$ h[0]].isPressing()) {
-				PANEL_PREVIEW.setActionTooltip(h[0]);
-				h[1](); 
-			}
-		}); // hotkey
 		
 		#region parameters
 			var hovering = isUsingTool();

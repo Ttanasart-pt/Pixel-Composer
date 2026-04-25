@@ -344,6 +344,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspector_animated = {};
 		
 		reactive_on_hover  = false;
+		
+		preview_hotkeys    = undefined;
 	#endregion
 	
 	#region ---- Rendering ------

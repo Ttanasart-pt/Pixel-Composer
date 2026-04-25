@@ -2991,6 +2991,19 @@ function Panel_Preview() : PanelContent() constructor {
 	        }
         }
         
+        if(_node.preview_hotkeys != undefined)
+    	array_foreach(_node.preview_hotkeys, function(h, i) /*=>*/ {
+    		var _hname = h[0];
+    		var _hact  = h[1];
+    		
+    		var _iname = instanceof(_node);
+    		var _hotk  = HOTKEYS_CUSTOM[$ _iname][$ _hname];
+    		
+			if(_hotk.isPressing()) {
+				setActionTooltip(_hname);
+				_hact(); 
+			}
+		});
     }
     
     static drawTopbar = function(_node) {
