@@ -63,6 +63,7 @@ gml_pragma("UnityBuild", "true");
 	globalvar DOWNLOAD_LINKS; DOWNLOAD_LINKS      = "";
 	
 	globalvar CURRENT_COLOR; CURRENT_COLOR       = ca_white;
+	globalvar CURRENT_COLOR_2; CURRENT_COLOR_2     = ca_black;
 #endregion
 
 #region input

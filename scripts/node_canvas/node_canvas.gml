@@ -29,6 +29,8 @@
 		hotkeyCustom("Node_Canvas", "Copy Selection",  "C", MOD_KEY.ctrl);
 		hotkeyCustom("Node_Canvas", "Paste",           "V", MOD_KEY.ctrl);
 		hotkeyCustom("Node_Canvas", "Paste at Cursor", "V", MOD_KEY.ctrl | MOD_KEY.shift);
+		
+		hotkeyCustom("Node_Canvas", "Switch Color",    "X");
 	});
 #endregion 
 
@@ -754,13 +756,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	#region ++++ hotkey ++++
 		preview_hotkeys = [
-			[ "New Frame",       function() /*=>*/ { addFrame(); } ], 
+			[ "New Frame",       function() /*=>*/ { addFrame();                } ], 
 			
-			[ "Select All",      function() /*=>*/ { selection.selectAll();                        } ], 
-			[ "Copy Selection",  function() /*=>*/ { selection.copySelection(); selection.apply(); } ], 
-			[ "Paste",           function() /*=>*/ { pasteSurface(false);                          } ], 
-			[ "Paste at Cursor", function() /*=>*/ { pasteSurface(true);                           } ], 
+			[ "Select All",      function() /*=>*/ { selection.selectAll();     } ], 
+			[ "Copy Selection",  function() /*=>*/ { selection.copySelection(); 
+			                             selection.apply();         } ], 
+			[ "Paste",           function() /*=>*/ { pasteSurface(false);       } ], 
+			[ "Paste at Cursor", function() /*=>*/ { pasteSurface(true);        } ], 
 			
+			[ "Switch Color",    function() /*=>*/ { toolSwitchColor();         } ], 
 		];
 	#endregion
 	
@@ -777,6 +781,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	}
 	
+	static toolSwitchColor = function() {
+		if(use_color_3d) color_3d_selected = (color_3d_selected + 1) % 3;
+		else {
+			var temp = CURRENT_COLOR;
+			CURRENT_COLOR   = CURRENT_COLOR_2;
+			CURRENT_COLOR_2 = temp;
+		}
+	}
+	
 	static drawTools = function(_mx, _my, xx, yy, _tool_size, hover, focus, panel) {
 		var _sx0 = xx - _tool_size / 2;
 		var _sx1 = xx + _tool_size / 2;
@@ -789,10 +802,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		else       draw_line(0, yy, panel.toolbar_width, yy);
 		yy += ui(4);
 		
-		var _cx = _sx0 + ui(8);
-		var _cw = _tool_size - ui(16);
+		var _cx = _sx0 + ui(4);
+		var _cw = _tool_size - ui(8);
 		var _ch = ui(12);
-		var _pd = ui(5);
 		var _currc = CURRENT_COLOR;
 		
 		yy += ui(8);
@@ -824,18 +836,29 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			}
 			
-			if(focus && keyboard_check_pressed(ord("X")))
-				color_3d_selected = (color_3d_selected + 1) % 3;
-			
 			yy += _cw + ui(12);
 			hh += _cw + ui(12);
 			
 		} else {
-			drawColor(CURRENT_COLOR, _cx, yy, _cw, _cw);
-			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _cx - _pd, yy - _pd, _cw + _pd * 2, _cw + _pd * 2, c_white, 1);
+			var hov = -1;
+			var cw = _cw * .75;
+			var p  = ui(3);
 			
-			if(point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _cw) && mouse_lpress(focus))
-				colorSelectorCall(CURRENT_COLOR, function(c) /*=>*/ {return setToolColor(c)});
+			var c2x = _cx + _cw - cw + p * 2;
+			var c2y =  yy + _cw - cw + p * 2;
+			var c2s =  cw - p * 2;
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, c2x, c2y, c2s, c2s, CURRENT_COLOR_2);
+			if(point_in_rectangle(_mx, _my, c2x, c2y, c2x + c2s, c2y + c2s)) hov = 2;
+			
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _cx,   yy,   cw,     cw, CDEF.main_dkblack);
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, _cx+p, yy+p, cw-p*2, cw-p*2, CURRENT_COLOR);
+			draw_sprite_stretched_ext(THEME.ui_panel, 2, _cx,   yy,   cw,     cw, c_white);
+			if(point_in_rectangle(_mx, _my, _cx, yy,  _cx + cw,  yy + cw))   hov = 1;
+			
+			if(hov && mouse_lpress(focus)) {
+				if(hov == 1) colorSelectorCall(CURRENT_COLOR, function(c) /*=>*/ {return setToolColor(c)});
+				if(hov == 2) toolSwitchColor();
+			}
 		
 			yy += _cw + ui(8);
 			hh += _cw + ui(8);
@@ -843,6 +866,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		var _sel = noone;
+		var _cx  = _sx0 + ui(8);
+		var _cw  = _tool_size - ui(16);
 		
 		var _scroll = 0;
 		var _scrollTarget = noone;
@@ -881,6 +906,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			setToolColor(PROJ_PALETTE[_scrollTarget]);
 		
 		if(_sel != noone) {
+			var _pd = ui(5);
 			var px = _sel[0] - _pd; 
 			var py = _sel[1] - _pd; 
 			var pw = _cw + _pd * 2; 
@@ -889,7 +915,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_sprite_stretched_ext(THEME.palette_selecting, 0, px, py, pw, ph, c_white, 1);
 		}
 		
-		return hh + ui(4);
+		return hh + ui(8);
 	}
 	
 	static tool_pick_color = function(_x, _y) {

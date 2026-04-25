@@ -11,6 +11,11 @@
         "date": "2026-04-25T01:24:51.113Z",
         "node": "",
         "commit": "--add preview_hotkey node based prop"
+      },
+      {
+        "date": "2026-04-25T01:48:52.475Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Add secondary color."
       }
     ]
   },
