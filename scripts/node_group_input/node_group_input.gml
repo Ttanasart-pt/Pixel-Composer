@@ -154,24 +154,38 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		switch(instanceof(juncTo)) {
 			case "__NodeValue_Vec2" : 
 			case "__NodeValue_Dimension" : 
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       inputs[4].setValue(0); break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       
+				inputs[4].setValue(0); 
+				break;
 			
 			case "__NodeValue_Vec2_Range" :
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range")); inputs[4].setValue(0); break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range")); 
+				inputs[4].setValue(0); 
+				break;
 			
 			case "__NodeValue_Vec3" :
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       inputs[4].setValue(1); break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       
+				inputs[4].setValue(1); 
+				break;
 			
 			case "__NodeValue_Vec3_Range" :
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range")); inputs[4].setValue(1); break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range")); 
+				inputs[4].setValue(1); 
+				break;
 			
 			case "__NodeValue_Vec4" :
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       inputs[4].setValue(2); break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       
+				inputs[4].setValue(2); 
+				break;
 				
 			case "__NodeValue_Rotation" : 
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Rotation"));     inputs[4].setValue(2); break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Rotation"));     
+				inputs[4].setValue(2); 
+				break;
 				
-			case "__NodeValue_Palette" : inputs[0].setValue(1); break;
+			case "__NodeValue_Palette" : 
+				inputs[0].setValue(1); 
+				break;
 		} 
 		
 		juncTo.value_from = noone;
@@ -216,13 +230,15 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(curr_type != _inType) {
 			inParent.setType(_valType);
 			
-			inputs[0].setValue(0);
 			outputs[0].setType(_valType);
 			
 			inputs[0].display_data.data         = _dispArr;
 			inputs[0].getEditWidget().data_list = _dispArr;
 			
-			_inDisp = 0;
+			if(!LOADING && !APPENDING) {
+				inputs[0].setValue(0);
+				_inDisp = 0;
+			}
 		}
 		
 		var _dtype = array_safe_get_fast(_dispArr, _inDisp);
@@ -265,6 +281,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					
 				inParent.def_val = [0, 0];
 				inParent.setDisplay(VALUE_DISPLAY.range); 
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 			
 			case "Slider" :	
@@ -275,6 +292,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY.slider, { range: [_range[0], _range[1], _step] });	
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 				
 			case "Slider range" :
@@ -286,6 +304,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					
 				inParent.def_val = [0, 0];
 				inParent.setDisplay(VALUE_DISPLAY.slider_range, { range: [_range[0], _range[1], _step] });
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 				
 			case "Rotation" : 
@@ -293,6 +312,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY.rotation);	
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 				
 			case "Rotation range" :
@@ -301,6 +321,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					
 				inParent.def_val = [0, 0];
 				inParent.setDisplay(VALUE_DISPLAY.rotation_range);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 				
 			case "Padding" :
@@ -309,6 +330,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					
 				inParent.def_val = [0, 0, 0, 0];
 				inParent.setDisplay(VALUE_DISPLAY.padding);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 				
 			case "Area" :
@@ -317,6 +339,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					
 				inParent.def_val = array_clone(DEF_AREA);
 				inParent.setDisplay(VALUE_DISPLAY.area);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 				
 			case "Vector" :
@@ -330,6 +353,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				     if(_dtype == "Vector")       inParent.setDisplay(VALUE_DISPLAY.vector);
 				else if(_dtype == "Vector range") inParent.setDisplay(VALUE_DISPLAY.vector_range);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 			
 			case "Seed" : 
@@ -364,6 +388,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				inParent.def_val = [ca_black];
 				inParent.setDisplay(VALUE_DISPLAY.palette);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 				
 			case "Gradient":
@@ -373,12 +398,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inParent.animator = new valueAnimator(new gradientObject(ca_white), inParent);
 				inParent.def_val  = new gradientObject(ca_white);
 				inParent.setDisplay(VALUE_DISPLAY._default);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 				
 			case "Curve":
 				inParent.animator = new valueAnimator(CURVE_DEF_11, inParent);
 				inParent.def_val  = array_clone(CURVE_DEF_11);
 				inParent.setDisplay(VALUE_DISPLAY.curve);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 			
 			case "Surface":
@@ -404,6 +431,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inParent.animator = new valueAnimator(noone, inParent);
 				inParent.def_val  = array_clone(noone);
 				inParent.setDisplay(VALUE_DISPLAY._default);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 			
 			default:
@@ -411,6 +439,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY._default);
+				outputs[0].setDisplay(inParent.display_type);
 				break;
 		}
 		
@@ -421,7 +450,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 		}
 		
-		outputs[0].setDisplay(inParent.display_type);
 		curr_type = _inType;
 		curr_disp = _inDisp;
 	}

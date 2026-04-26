@@ -202,7 +202,7 @@ void main() {
 		
 		int side = y0 > y1? 1 : 0;
 		// if(flip != side) return;
-		if(side == 1) return;
+		if(side == 1) discard;
 	
 	} else if (aliY) { // trapezoid edge case
 		float t = (py - _p2.y) / (_p3.y - _p2.y);
@@ -215,7 +215,7 @@ void main() {
 		uv = vec2(u, v);
 		
 		int side = x0 > x1? 1 : 0;
-		if(flip != side) return;
+		if(flip != side) discard;
 	
 	} else {
 		uv = perspectiveUV(v_vTexcoord, _p0, _p1, _p2, _p3);
@@ -230,6 +230,6 @@ void main() {
 	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
 		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );
-		
-	// gl_FragColor = vec4(uv, 0., 1.);
+	else 
+		discard;
 }

@@ -106,7 +106,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			display    : global.node_shape_types_map, 
 			horizontal : 1, 
 			text_pad   : ui(16) 
-		})).setHistory([ global.node_shape_types, 
+		})).setHistory([ global.node_shape_types,
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18  }, 
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_01_0}, list: global.node_shape_keys_20  }, 
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_04_1}, list: global.node_shape_keys_204 }, 

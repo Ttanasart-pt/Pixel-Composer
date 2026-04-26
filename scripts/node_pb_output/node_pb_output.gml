@@ -80,6 +80,8 @@ function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs[1].y = yy;
 	}
 	
+	static drawDimension = function(xx, yy, _s) {}
+	
 	static drawBadge = function(_x, _y, _s) {}
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {}
 	

@@ -341,10 +341,15 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f( "surfaceSize", [sw,sh] );
 			shader_set_i( "tile",        tile    );
 			
-			shader_set_f( "p0",  tr );
-			shader_set_f( "p1",  br );
-			shader_set_f( "p2",  bl );
-			shader_set_f( "p3",  tl );
+			// shader_set_f( "p0",  tr );
+			// shader_set_f( "p1",  br );
+			// shader_set_f( "p2",  bl );
+			// shader_set_f( "p3",  tl );
+			
+			shader_set_f( "p0",  br );
+			shader_set_f( "p1",  tr );
+			shader_set_f( "p2",  tl );
+			shader_set_f( "p3",  bl );
 			shader_set_i( "flip", 1 );
 			draw_surface_stretched(surfBack, 0, 0, sw, sh);
 			

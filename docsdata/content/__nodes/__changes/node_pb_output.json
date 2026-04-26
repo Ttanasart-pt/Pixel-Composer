@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc13",
+    "changes": [
+      {
+        "date": "2026-04-26T07:29:10.190Z",
+        "node": "",
+        "commit": "**Warp**: Fix backside transparent pixel override front pixel."
+      }
+    ]
+  }
+]
