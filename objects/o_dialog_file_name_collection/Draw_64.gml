@@ -154,75 +154,35 @@
 		t_desc.setFocusHover(sFOCUS, sHOVER);
 		t_desc.register();
 		t_desc.draw(dx, yy, dw, wd_h, meta.description, mouse_ui);
-		yy		 += wd_h + sh;
-		dialog_h += wd_h + sh;
+		yy		 += wd_h + sh + ui(8);
+		dialog_h += wd_h + sh + ui(8);
 		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
-		draw_text(dx, yy, __txt("Author"));
-		yy		 += lh;
-		dialog_h += lh;
-		
-		var wd_w = dw;
-		var wd_h = th;
-		
-		if(STEAM_ENABLED) {
-			var st_s = ui(28);
-			var st_x = dx + wd_w - st_s;
-			wd_w -= st_s + ui(4);
+		var lw = ui(92);
+		for( var i = 0, n = array_length(widgets); i < n; i++ ) {
+			var w = widgets[i];
+			var _txt = w[0];
+			var _wdg = w[1];
+			var _val = w[2]();
 			
-			if(buttonInstant(THEME.button_hide, st_x, yy, st_s, wd_h, mouse_ui, sHOVER, sFOCUS, "Use Steam username", THEME.steam) == 2)
-				meta.author = STEAM_USERNAME;
+			draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
+			draw_text(dx, yy, _txt);
+			
+			var wx = dx + lw;
+			var ww = dw - lw;
+			
+			_wdg.setFocusHover(sFOCUS, sHOVER);
+			_wdg.register();
+			
+			var wh = _wdg.drawParam(new widgetParam(wx, yy, ww, th, _val));
+			yy		 += wh + sh;
+			dialog_h += wh + sh;
 		}
 		
-		t_auth.setFocusHover(sFOCUS, sHOVER);
-		t_auth.register();
-		t_auth.draw(dx, yy, wd_w, wd_h, meta.author, mouse_ui);
-		yy		 += wd_h + sh;
-		dialog_h += wd_h + sh;
-		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
-		draw_text(dx, yy, __txt("Contact info"));
-		yy		 += lh;
-		dialog_h += lh;
-		
-		var wd_h = th;
-		t_cont.setFocusHover(sFOCUS, sHOVER);
-		t_cont.register();
-		t_cont.draw(dx, yy, dw, wd_h, meta.contact, mouse_ui);
-		yy		 += wd_h + sh;
-		dialog_h += wd_h + sh;
-		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
-		draw_text(dx, yy, __txt("Alias"));
-		yy		 += lh;
-		dialog_h += lh;
-		
-		var wd_h = th;
-		t_alias.setFocusHover(sFOCUS, sHOVER);
-		t_alias.register();
-		t_alias.draw(dx, yy, dw, wd_h, meta.alias, mouse_ui);
-		yy		 += wd_h + sh;
-		dialog_h += wd_h + sh;
-		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
-		draw_text(dx, yy, __txt("Tags"));
-		yy		 += lh;
-		dialog_h += lh;
-		
-		var wd_h = th;
-		t_tags.setFocusHover(sFOCUS, sHOVER);
-		t_tags.register();
-		var hh = t_tags.draw(dx, yy, dw, wd_h, mouse_ui);
-		yy		 += hh + sh;
-		dialog_h += hh + sh;
-		
-		dialog_h -= sh;
-		dialog_h += padding;
+		dialog_h += ui(8);
 	}
 	
-	dialog_y = clamp(dialog_y, padding * 2, WIN_H - padding - dialog_h);
+	if(move) {
+		dialog_y = clamp(dialog_y, padding * 2, WIN_H - padding - dialog_h);
+		move     = false;
+	}
 #endregion

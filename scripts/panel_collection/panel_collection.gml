@@ -184,7 +184,7 @@ function Panel_Collection() : PanelContent() constructor {
 		function edit_meta() { 
 			if(_menu_node == noone) return;
 			
-			var dia  = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+			var dia  = dialogCall(o_dialog_file_name_collection, x, y);
 			var meta = _menu_node.getMetadata();
 			if(meta != noone && meta != undefined) 
 				dia.meta = meta;
@@ -265,7 +265,7 @@ function Panel_Collection() : PanelContent() constructor {
 		function steam_file_upload() { 
 			if(_menu_node == noone) return;
 			
-			var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+			var dia = dialogCall(o_dialog_file_name_collection, x, y);
 			var meta = _menu_node.getMetadata();
 			if(meta != noone && meta != undefined) 
 				dia.meta = meta;
@@ -284,7 +284,7 @@ function Panel_Collection() : PanelContent() constructor {
 				noti_warning("No node selected. Select a node in graph panel to update workshop content.");
 				return;
 			}
-			var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+			var dia = dialogCall(o_dialog_file_name_collection, x, y);
 			var meta = _menu_node.getMetadata();
 			if(meta != noone && meta != undefined) 
 				dia.meta = meta;
@@ -360,36 +360,15 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	curentContent = [];
+	
 	contentView = 0;
 	contentPane = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
-		var content;
-		var steamNode = [];
+		var content = searching? search_list : curentContent;
 		
-		switch(page) {
-		    case 0 :
-    		    if(!COLLECTIONS.scanned) 
-    				COLLECTIONS.scan([".json", ".pxcc"]); 
-    			
-    			if(context == root) content = STEAM_COLLECTION;
-    			else				content = context.content;
-    			
-    			for( var i = 0; i < array_length(STEAM_COLLECTION); i++ ) {
-    				var meta = STEAM_COLLECTION[i].meta;	
-    				if(array_exists(meta.tags, context.name))
-    					array_push(steamNode, STEAM_COLLECTION[i]);	
-    			}
-		        break;
-		       
-	        case 1 : content = context.content;     break;
-	        case 2 : content = context;             break;
-		}
-		
-		if(searching) content = search_list;
-		
-		var node_list  = array_length(content);
-		var node_count = node_list + array_length(steamNode);
+		var node_count = array_length(curentContent);
 		var frame	   = current_time * PREFERENCES.collection_preview_speed / 3000;
 		var _cw		   = contentPane.surface_w;
 		var _hover	   = pHOVER && contentPane.hover;
@@ -416,7 +395,7 @@ function Panel_Collection() : PanelContent() constructor {
 					var index = i * col + j;
 					if(index >= node_count) break;
 					
-					var _node = index < node_list? content[index] : steamNode[index - node_list];
+					var _node = content[index];
 					var _nx   = grid_space + (grid_width + grid_space) * j;
 					var _boxx = _nx + (grid_width - grid_size) / 2;
 					_boxx = round(_boxx);
@@ -544,7 +523,7 @@ function Panel_Collection() : PanelContent() constructor {
 			hh += list_height;
 		
 			for(var i = 0; i < node_count; i++) {
-				var _node = i < node_list? content[i] : steamNode[i - node_list];
+				var _node = content[i];
 				if(!_node) continue;
 				var anim = PREFERENCES.collection_animated;
 				
@@ -840,21 +819,51 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh + ui(16);
 	});
 	
-	////- Draw
+	////- Content
+		
+	function setContent() {
+		var cContent = [];
+		switch(page) {
+		    case 0 :
+    		    if(!COLLECTIONS.scanned) 
+    				COLLECTIONS.scan([".json", ".pxcc"]); 
+    			
+    			if(context == root) array_append(cContent, STEAM_COLLECTION);
+    			else				array_append(cContent, context.content);
+    			
+    			for( var si = 0; si < array_length(STEAM_COLLECTION); si++ ) {
+    				var sfil = STEAM_COLLECTION[si];
+    				var meta = sfil.meta;	
+    				
+    				if(array_exists(meta.tags, context.name))
+    					array_push(cContent, sfil);	
+    			}
+		        break;
+		       
+	        case 1 : array_append(cContent, context.content); break;
+	        case 2 : array_append(cContent, context);         break;
+		}
+		
+		curentContent = array_filter(cContent, function(f,i) /*=>*/ { return !is(f, FileObject) || !f.getMetadata().deprecated; });
+	}
 		
 	function setPage(i) { 
 		page    = i;
 		title   = roots[i][0];
 		root    = roots[i][1];
 		context = root;
-	}
+		setContent();
+	} setPage(0);
 	
+	////- Draw
+		
 	function onFocusBegin() { PANEL_COLLECTION = self; }
 	
 	function setContext(cont) { 
 		context = cont;
 		contentPane.scroll_y_raw = 0;
 		contentPane.scroll_y_to	 = 0;
+		setContent();
 	} 
 	
 	function refreshContext() { 

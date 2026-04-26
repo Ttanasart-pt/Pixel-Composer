@@ -30,6 +30,7 @@ function MetaDataManager() constructor {
 	tagMap      = undefined;
 	version     = SAVE_VERSION;
 	hidden      = false;
+	deprecated  = false;
 	
 	preview_frames = 1;
 	
@@ -54,6 +55,7 @@ function MetaDataManager() constructor {
 			version, 
 			isDefault, 
 			preview_frames,
+			deprecated,
 		};
 		
 		m.aut_id = author_steam_id;
@@ -72,6 +74,7 @@ function MetaDataManager() constructor {
 		version         = m[$ "version"]     ?? version;
 		isDefault       = m[$ "isDefault"]   ?? isDefault;
 		preview_frames  = m[$ "preview_frames"] ?? preview_frames;
+		deprecated      = m[$ "deprecated"]  ?? deprecated;
 		
 		return self;
 	}

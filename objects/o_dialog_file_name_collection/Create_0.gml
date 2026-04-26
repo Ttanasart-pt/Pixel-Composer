@@ -24,6 +24,7 @@ event_inherited();
 	
 	font = f_p2;
 	ugc  = 0;
+	move = true;
 	ugc_loading = false;
 	
 	KEYBOARD_RESET
@@ -35,10 +36,21 @@ event_inherited();
 	t_cont   = textBox_Text(  function(str) /*=>*/ { meta.contact     = str; }).setAutoUpdate();
 	t_alias  = textBox_Text(  function(str) /*=>*/ { meta.alias       = str; }).setAutoUpdate();
 	t_tags   = new textArrayBox(function() /*=>*/ {return meta.tags}, META_TAGS).setAddable(true);
+	c_dep    = new checkBox(  function() /*=>*/ { meta.deprecated  = !meta.deprecated; });
 	
-	function setPrefix( _l ) { tb_name.setPrefix(_l); return self; }
+	if(STEAM_ENABLED)
+		t_auth.setSideButton(button(function() /*=>*/ {return meta.author = STEAM_USERNAME}).setIcon(THEME.steam, 0, COLORS._main_icon).iconPad(ui(8)));
 	
+	widgets = [
+		[ __txt("Author"),       t_auth,  function() /*=>*/ {return meta.author}     ],
+		[ __txt("Contact info"), t_cont,  function() /*=>*/ {return meta.contact}    ],
+		[ __txt("Alias"),        t_alias, function() /*=>*/ {return meta.alias}      ],
+		[ __txt("Tags"),         t_tags,  function() /*=>*/ {return meta.tags}       ],
+		[ __txt("Deprecated"),   c_dep,   function() /*=>*/ {return meta.deprecated} ],
+	];
 #endregion
+	
+function setPrefix( _l ) { tb_name.setPrefix(_l); return self; }
 	
 function doExpand() {
 	meta_expand = true;
