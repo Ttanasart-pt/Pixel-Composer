@@ -234,8 +234,17 @@ function Panel_Collection() : PanelContent() constructor {
 			if(_menu_node == noone) return;
 			
 			var _cont = json_load_struct(_menu_node.path);
+			
 			var _proj = new Runner().appendMap(_cont).fetchIO();
 			    _proj.project.path = _menu_node.path;
+			
+			print(_proj.io_node);
+			
+			if(!is(_proj.io_node, Node_Collection)) {
+				noti_warning("Cannot edit non-group collection.")
+				_proj.cleanup();
+				return false;
+			}
 			
 			var _graph = new Panel_Graph(_proj.project);
 			    _graph.setSize(ui(800), ui(480));

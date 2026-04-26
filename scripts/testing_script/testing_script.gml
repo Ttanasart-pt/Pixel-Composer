@@ -199,8 +199,7 @@ function __test_zip_collection(dir = COLLECTIONS) {
 	var _dirr = dir.path + "/";
 	var _targ = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/pack/collections.zip"
 	var _zip  = zip_create();
-	
-	print("---------- ZIP COLLECTION STARTED ----------");
+	var _t    = get_timer();
 	
 	var st = ds_stack_create();
 	ds_stack_push(st, dir);
@@ -232,6 +231,5 @@ function __test_zip_collection(dir = COLLECTIONS) {
 	ds_stack_destroy(st);
 	zip_save(_zip, _targ);
 	
-	print("---------- ZIP COLLECTION ENDED ----------");
-	noti_status("ZIP collection complete", noone, COLORS._main_value_positive);
+	noti_status($"ZIP collection complete in {(get_timer() - _t) / 1_000}ms", noone, COLORS._main_value_positive);
 }

@@ -1430,6 +1430,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function addContext(_node) {
+    	if(!has(_node, "nodes")) return self;
+    	
         nodes_list = _node.nodes;
         array_push(node_context, _node);
         
