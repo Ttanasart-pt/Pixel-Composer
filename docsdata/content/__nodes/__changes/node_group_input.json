@@ -6,6 +6,11 @@
         "date": "2026-04-26T05:14:03.595Z",
         "node": "Group Input",
         "commit": "**Group Input**: Fix palette type return 2d array of each colors."
+      },
+      {
+        "date": "2026-04-26T05:38:22.761Z",
+        "node": "",
+        "commit": "Fix leaf group with animated input value not partial updating."
       }
     ]
   },

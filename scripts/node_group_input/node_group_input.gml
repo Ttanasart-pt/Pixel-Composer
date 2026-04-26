@@ -435,6 +435,16 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return true;
 	}
 	
+	static isActiveDynamic = function(frame = CURRENT_FRAME) {
+		if(update_on_frame)           return true;
+		if(!rendered)                 return true;
+		if(instanceBase != undefined) return true;
+		
+		force_requeue = false;
+		__temp_frame  = frame;
+		return inParent.isActiveDynamic(frame) || array_any(inputs, function(inp) /*=>*/ {return inp.isActiveDynamic(__temp_frame)});
+	}
+	
 	static visibleCheck = function() {
 		var _vty = inputs[9].getValue();
 		if(is_array(_vty)) _vty = 0;
@@ -530,7 +540,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static postDeserialize = function() { createInput(false); }
 	
-	static postApplyDeserialize = function() {
+	static postApplyDeserialize = function() {  
 		if(inParent == undefined) return;
 		if(group == noone) return;
 		

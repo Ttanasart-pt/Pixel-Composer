@@ -157,10 +157,10 @@ enum RENDER_TYPE {
 		for( var i = 0, n = array_length(_arr); i < n; i++ ) {
 			var _node = _arr[i];
 			
-			if(!_node.active)			 { if(global.FLAG.render == 1) LOG_LINE($"Reject {_node.internalName} [inactive]");       continue; }
-			if( _node.rendered)          { if(global.FLAG.render == 1) LOG_LINE($"Reject {_node.internalName} [rendered]");       continue; }
-			if(!_node.isLeafList(_arr))  { if(global.FLAG.render == 1) LOG_LINE($"Reject {_node.internalName} [not leaf]");       continue; }
-			if(!_node.isRenderable())    { if(global.FLAG.render == 1) LOG_LINE($"Reject {_node.internalName} [not renderable]"); continue; }
+			if(!_node.active)			 { if(global.FLAG.render == 1) LOG_LINE($"Reject {_node.internalName} [inactive]");        continue; }
+			if(!_node.isRenderActive())  { if(global.FLAG.render == 1) LOG_LINE($"Reject {_node.internalName} [render inactive]"); continue; }
+			if(!_node.isLeafList(_arr))  { if(global.FLAG.render == 1) LOG_LINE($"Reject {_node.internalName} [not leaf]");        continue; }
+			if(!_node.isRenderable())    { if(global.FLAG.render == 1) LOG_LINE($"Reject {_node.internalName} [not renderable]");  continue; }
 			
 			array_push(nodes, _node);
 		}

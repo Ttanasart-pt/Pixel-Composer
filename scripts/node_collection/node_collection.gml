@@ -265,6 +265,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var _nodes = [];
 		if(isRenderActive()) {
+			
 			var allReady = true;
 			for(var i = custom_input_index; i < array_length(inputs); i++) {
 				var _in = inputs[i].from;
