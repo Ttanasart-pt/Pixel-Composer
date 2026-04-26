@@ -122,7 +122,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		variable_struct_remove(FUNCTIONS, _fn.fnName);
 		return self;
 	}
-	
 	static hideGlobal = function() {
 		INLINE 
 		if(IS_CMD) return self;

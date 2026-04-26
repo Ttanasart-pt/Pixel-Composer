@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc13",
+    "changes": [
+      {
+        "date": "2026-04-26T01:52:29.757Z",
+        "node": "",
+        "commit": "Loading Collection now set initial value as default."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc7",
     "changes": [
       {

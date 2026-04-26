@@ -178,6 +178,7 @@ function Panel_Collection() : PanelContent() constructor {
 		function replace() { 
 			if(_menu_node == noone) return;
 			saveCollection(PANEL_INSPECTOR.getInspecting(), _menu_node.path, false, _menu_node.meta);
+			if(RUN_IDE) __test_zip_collection(COLLECTIONS);
 		}
 		
 		function edit_meta() { 

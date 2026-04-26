@@ -32,13 +32,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		destroy_when_upgroup = false;
 		
 		node_database        = undefined;
-		run_in(1, function() /*=>*/ { 
-			node_database = ALL_NODES[$ instanceof(self)];
-			onValueRefresh();
-		});
+		run_in(1, function() /*=>*/ { node_database = ALL_NODES[$ instanceof(self)]; onValueRefresh(); });
 		
 		if(NOT_LOAD) array_push(_group == noone? project.nodes : _group.getNodeList(), self);
-		
 		array_push(project.allNodes, self);
 		
 		inline_input         = true;
@@ -1076,6 +1072,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		array_foreach(inputs, function(i,_) /*=>*/ {return i.resetValue()});
 	} 
+	
+	static setAllDefault = function() {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var _in = inputs[i];
+			_in.is_modified = false;
+			_in.def_val = variable_clone(_in.getValue());
+		}
+	}
 	
 	static setPreset = function(pName) {
 		var _key = instanceof(self);

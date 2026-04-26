@@ -84,7 +84,9 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 		for(var i = 0; i < _append_len; i++) {
 			var _node = appended_list[i];
 			_node.applyDeserialize();
+			_node.setAllDefault();
 		}
+		
 	} catch(e) {
 		log_warning("APPEND, apply deserialize", exception_print(e));
 	}
@@ -172,5 +174,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	for(var i = 0; i < _append_len; i++)
 		appended_list[i].onValueRefresh();
 	
+    if(!array_empty(PROJECT.migrationError)) dialogPanelCall(new Panel_Migration_Error(PROJECT), WIN_W / 2, WIN_H * 2/3);
+    
 	return node_create;
 }

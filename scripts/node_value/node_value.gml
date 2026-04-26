@@ -72,7 +72,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		static setDefValue = function(_value, _serialize = true) {
 			def_val    = array_clone(_value);
-			def_serial = _serialize;
 			
 			sepable    = is_array(_value) && array_length(_value) > 1;
 			animVector = array_safe_length(_value, -1);
@@ -89,7 +88,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		key_inter   = CURVE_TYPE.linear;
 		on_end		= KEYFRAME_END.hold;
 		loop_range  = -1;
-		def_serial  = false;
 		
 		setDefValue(_value, false);
 		def_length    = is_array(def_val)? array_length(def_val) : 0;
@@ -306,7 +304,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		con_tag   =  0;
 		
 		migrationVersion = undefined;
-		static setMigration = function(v) /*=>*/ { migrationVersion = v; return self; }
+		migrationNote    = undefined;
+		static setMigration = function(v = SAVE_VERSION, n = undefined) /*=>*/ { migrationVersion = v; migrationNote = n; return self; }
 	#endregion
 	
 	#region ---- Init Fn ----
@@ -2904,11 +2903,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(visible_manual != 0)    _map.visible_manual = visible_manual;
 		if(color != -1)            _map.color          = color;
 		if(drawValue)              _map.drawValue      = drawValue;
-		if(def_serial) {
-			_map.def_val    = def_val;
-			_map.def_serial = def_serial;
-		}
-		
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
 		if(name_custom)                 _map.name		= name;
@@ -2934,8 +2928,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim)          _map.anim       = is_anim;
 		if(ign_array)        _map.ign_array  = ign_array;
 		
-		_map.unit = unit.mode;
-		_map.r    = animator.serialize(scale);
+		_map.def_val = def_val;
+		_map.unit    = unit.mode;
+		_map.r       = animator.serialize(scale);
 		
 		if(sep_axis && animVector) {
 			var _anims = getAnimators();
@@ -2996,11 +2991,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		inspector_timeline = _map[$ "insp_tm"] ?? inspector_timeline;
 		drawValue          = _map[$ "drawValue"] ?? drawValue;
 		
-		if(bool(_map[$ "def_serial"])) {
-			def_serial = true;
-			def_val = _map[$ "def_val"] ?? def_val;
-		}
-		
 		if(connect_type == CONNECT_TYPE.output) return;
 		
 		on_end     = _map[$ "on_end"]     ?? on_end;
@@ -3011,8 +3001,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expression = _map[$ "global_key"] ?? "";
 		expTree    = expression == ""? noone : evaluateFunctionList(expression); 
 		
-		sep_axis   = _map[$ "sep_axis"]  ?? sep_axis;
-		favorited  = _map[$ "favorited"] ?? favorited;
+		def_val    = _map[$ "def_val"]    ?? def_val;
+		sep_axis   = _map[$ "sep_axis"]   ?? sep_axis;
+		favorited  = _map[$ "favorited"]  ?? favorited;
 		if(has(_map, "anim")) setAnim(_map[$ "anim"]);
 		
 		draw_line_shift_x = _map[$ "shift_x"] ?? draw_line_shift_x;
@@ -3048,7 +3039,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(con_node != -1) unit.mode = 0;
 		if(unitUse && !has(_map, "unit")) {
-			node.project.addError($"{node.name} > {name}: unit unset", self, THEME.unit_ref);
+			node.project.addError($"{toStringS()}: unit unset", self, THEME.unit_ref);
 		}
 		unit.mode = _map[$ "unit"] ?? unit.mode;
 		
@@ -3078,7 +3069,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(migrationVersion != undefined && LOADING_VERSION < migrationVersion) {
 			var _nod = ALL_NODES[$ instanceof(node)];
 			var _spr = _nod? _nod.spr : noone;
-			node.project.addError($"{node.name} > {name}: code changed", self, _spr);
+			var _txt = migrationNote == undefined? __txt("code changed") : migrationNote;
+			node.project.addError($"{toStringS()}: {_txt}", self, _spr);
 		}
 		
 		postApplyDeserialize();
@@ -3380,7 +3372,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(bypass_junc) { bypass_junc.cleanUp(); delete bypass_junc; }
 	}
 		
-	static toString = function() { return (connect_type == CONNECT_TYPE.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }
+	static toString  = function() /*=>*/ {return (connect_type == CONNECT_TYPE.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"};
+	static toStringS = function() /*=>*/ {return $"{node.name} > {name}"}
 	
 	static clone = function(_node) {
 		var _n = new NodeValue(name, _node, connect, type, def_val, tooltip);

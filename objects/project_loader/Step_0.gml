@@ -176,11 +176,7 @@ switch(load_process) {
     	
         instance_destroy();
     
-    if(!array_empty(PROJECT.migrationError)) {
-    	var _diax = WIN_W     / 2;
-    	var _diay = WIN_H * 2 / 3;
-    	dialogPanelCall(new Panel_Migration_Error(PROJECT), _diax, _diay);
-    }
+    if(!array_empty(PROJECT.migrationError)) dialogPanelCall(new Panel_Migration_Error(PROJECT), WIN_W / 2, WIN_H * 2/3);
     
     run_in(2, function() /*=>*/ { 
     	PANEL_PREVIEW.fullView();
