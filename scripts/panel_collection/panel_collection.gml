@@ -844,7 +844,9 @@ function Panel_Collection() : PanelContent() constructor {
 	        case 2 : array_append(cContent, context);         break;
 		}
 		
-		curentContent = array_filter(cContent, function(f,i) /*=>*/ { return !is(f, FileObject) || !f.getMetadata().deprecated; });
+		if(PREFERENCES.collection_show_dep)
+			 curentContent = cContent;
+		else curentContent = array_filter(cContent, function(f,i) /*=>*/ {return !is(f, FileObject) || !f.getMetadata().deprecated});
 	}
 		
 	function setPage(i) { 

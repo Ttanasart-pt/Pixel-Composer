@@ -206,66 +206,58 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Render
 	
-	static updateGroupInput = function(_get = true) {
-		var _inType = _get? inputs[2].getValue() : __inType;
-		var _dsType = _get? inputs[0].getValue() : __dsType;
-		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _inType);
-		if(!is_array(_dsList)) _dsList = [ "Default" ];
-		
-		__inType = _inType;
-		__dsType = _dsType;
-			
-		inputs[0].display_data.data    = _dsList;
-		inputs[0].getEditWidget().data_list = _dsList;
-		
-		var _dsType = array_safe_get_fast(_dsList, _dsType);
-		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _inType, VALUE_TYPE.any);
-		
-		inputs[1].setVisible(false);
-		inputs[3].setVisible(false);
-		inputs[4].setVisible(false);
-		inputs[7].setVisible(false);
-		inputs[8].setVisible(_datype == VALUE_TYPE.trigger);
-		
-		switch(_dsType) {
-			case "Slider" : 
-			case "Slider range" :
-				inputs[7].setVisible(true);
-				inputs[1].setVisible(true);
-				break;
-				
-			case "Range" :
-				inputs[1].setVisible(true);
-				break;
-				
-			case "Enum button" :
-			case "Menu scroll" :
-				inputs[3].setVisible(true);
-				break;
-				
-			case "Vector" :
-			case "Vector range" :
-				inputs[4].setVisible(true);
-				break;
-		}
-		
-	}
-	
 	static refreshWidget = function() {
 		var _inType = inputs[2].getValue();
 		var _inDisp = inputs[0].getValue();
 		if(curr_type == _inType && curr_disp == _inDisp) return;
 		
-		curr_type = _inType;
-		curr_disp = _inDisp;
+		var _valType = array_safe_get_fast(GROUP_IO_TYPE_MAP,  _inType, VALUE_TYPE.any);
+		var _dispArr = array_safe_get_fast(GROUP_IO_DISPLAY,   _inType, [ "Default" ]);
 		
-		var _vtype = array_safe_get_fast(GROUP_IO_TYPE_MAP,  _inType, VALUE_TYPE.any);
-		var _stype = array_safe_get_fast(GROUP_IO_TYPE_NAME, _inType, VALUE_TYPE.any);
-		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _inType), _inDisp);
+		if(curr_type != _inType) {
+			inParent.setType(_valType);
+			
+			inputs[0].setValue(0);
+			outputs[0].setType(_valType);
+			
+			inputs[0].display_data.data         = _dispArr;
+			inputs[0].getEditWidget().data_list = _dispArr;
+			
+			_inDisp = 0;
+		}
 		
-		inParent.setType(_vtype);
-		outputs[0].setType(_vtype);
-		var _val = inParent.getValue();
+		var _dtype = array_safe_get_fast(_dispArr, _inDisp);
+		var _val   = inParent.getValue();
+		
+		#region junction visibility
+			inputs[1].setVisible(false);
+			inputs[3].setVisible(false);
+			inputs[4].setVisible(false);
+			inputs[7].setVisible(false);
+			inputs[8].setVisible(_valType == VALUE_TYPE.trigger);
+			
+			switch(_dtype) {
+				case "Slider" : 
+				case "Slider range" :
+					inputs[7].setVisible(true);
+					inputs[1].setVisible(true);
+					break;
+					
+				case "Range" :
+					inputs[1].setVisible(true);
+					break;
+					
+				case "Enum button" :
+				case "Menu scroll" :
+					inputs[3].setVisible(true);
+					break;
+					
+				case "Vector" :
+				case "Vector range" :
+					inputs[4].setVisible(true);
+					break;
+			}
+		#endregion
 		
 		switch(_dtype) {
 			case "Range" :	
@@ -370,7 +362,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			case "Palette" :
 				if(!is_array(_val)) inParent.animator = new valueAnimator([ca_black], inParent);
-					
+				
 				inParent.def_val = [ca_black];
 				inParent.setDisplay(VALUE_DISPLAY.palette);
 				break;
@@ -423,12 +415,16 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 		}
 		
-		switch(_vtype) {
+		switch(_valType) {
 			case VALUE_TYPE.trigger : 
 				var bname = inputs[8].getValue();
 				inParent.setDisplay(VALUE_DISPLAY.button, { name: bname, onClick: function() /*=>*/ { doTrigger = 1; } });
 				break;
 		}
+		
+		outputs[0].setDisplay(inParent.display_type);
+		curr_type = _inType;
+		curr_disp = _inDisp;
 	}
 	
 	static isRenderable = function(log = false) { // Check if every input is ready (updated)
@@ -468,26 +464,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static onValueUpdate = function(index = noone) {
-		if(is_undefined(inParent)) return;
+		if(!is(inParent, NodeValue)) return;
 		
-		var _inType		= inputs[2].getValue();
-		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP, _inType, VALUE_TYPE.any);
-		
-		if(index == 2) {
-			if(outputs[0].type != _val_type) {
-				var _to = outputs[0].getJunctionTo();
-				for( var i = 0, n = array_length(_to); i < n; i++ )
-					_to[i].removeFrom();
-			}
-			
-			inputs[0].setValue(0);
-			attributes.inherit_type = false;
-		}
-		
-		if(index != noone) {
-			refreshWidget();
-			visibleCheck();
-		}
+		refreshWidget();
+		visibleCheck();
+		attributes.inherit_type = false;
 	}
 	
 	static onSetDisplayName = function() {
@@ -505,17 +486,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(display_name != "") group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
 		
 		outputs[0].setValue(inParent.getValue());
-		
 		visibleCheck();
-		
-		var _inType = inputs[2].getValue();
-		var _dsType = inputs[0].getValue();
-		if(_inType != __inType || _dsType != __dsType) {
-			__inType = _inType;
-			__dsType = _dsType;
-			
-			updateGroupInput(false);
-		}
 	}
 	
 	////- Draw

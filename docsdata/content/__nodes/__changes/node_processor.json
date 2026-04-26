@@ -8,15 +8,5 @@
         "commit": "**Group Input**: Fix palette type return 2d array of each colors."
       }
     ]
-  },
-  {
-    "version": "1.20.9.012",
-    "changes": [
-      {
-        "date": "2026-04-11T03:10:20.364Z",
-        "node": "",
-        "commit": "**2D Light**: Add tile option."
-      }
-    ]
   }
 ]

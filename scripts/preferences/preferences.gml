@@ -136,6 +136,7 @@
 		PREFERENCES.collection_name_force_cut         = true;
 		PREFERENCES.collection_preview_speed          = 60;
 		PREFERENCES.collection_scale                  = 1;
+		PREFERENCES.collection_show_dep               = false;
 		
 		PREFERENCES.palette_stretch                   = false;
 		

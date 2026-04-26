@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc13",
+    "changes": [
+      {
+        "date": "2026-04-26T05:14:03.595Z",
+        "node": "Group Input",
+        "commit": "**Group Input**: Fix palette type return 2d array of each colors."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc5",
     "changes": [
       {

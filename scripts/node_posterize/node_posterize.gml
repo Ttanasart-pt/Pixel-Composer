@@ -12,12 +12,12 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Palette
-	newInput(2, nodeValue_Bool(        "Use Palette",      true ));
-	newInput(1, nodeValue_Palette(     "Palette"                ));
-	newInput(9, nodeValue_Bool(        "Use Global Range", true ));
-	newInput(3, nodeValue_ISlider(     "Steps", 4, [2, 16, 0.1] ));
-	newInput(4, nodeValue_Slider(      "Gamma", 1, [0, 2, 0.01] )).setMappable(7);
-	newInput(8, nodeValue_Enum_Button( "Space", 0, [ "RGB", "LAB" ] ));
+	newInput(2, nodeValue_Bool(    "Use Palette",      true ));
+	newInput(1, nodeValue_Palette( "Palette"                ));
+	newInput(9, nodeValue_Bool(    "Use Global Range", true ));
+	newInput(3, nodeValue_ISlider( "Steps", 4, [2, 16, 0.1] ));
+	newInput(4, nodeValue_Slider(  "Gamma", 1, [0, 2, 0.01] )).setMappable(7);
+	newInput(8, nodeValue_EButton( "Space", 0, [ "RGB", "LAB" ] ));
 	
 	////- =Bias
 	newInput(11, nodeValue_Surface( "Reference"));
@@ -27,13 +27,15 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(6, nodeValue_Bool( "Posterize alpha", true));
 	// inputs 12
 	
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
 	input_display_list = [ 5, 0, 
 		[ "Palette", false, 2 ],  1,  9,  3,  4,  7,  8, 
 		[ "Bias",    false    ], 11, 10, 
 		[ "Alpha",   false    ],  6, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- Node
 	
 	attribute_surface_depth();
 	

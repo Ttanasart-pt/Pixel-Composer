@@ -114,8 +114,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			if(_in.bypass_use) _in.getBypassJunc().setValue(val);
 			
-				 if(amo == 0) val = noone;		//empty array
-			else if(amo == 1) val = raw[0];		//spread single array
+				 if(amo == 0) val = noone;		// empty array
+			else if(amo == 1) val = raw[0];		// spread single array
 			amo = max(1, amo);
 			
 			inputs_is_array[i] = amo > 1;
