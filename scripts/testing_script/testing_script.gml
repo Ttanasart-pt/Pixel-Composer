@@ -220,7 +220,7 @@ function __test_zip_collection(dir = COLLECTIONS) {
 			var zspath = string_replace(_spath, _dirr, "");
 			var zmpath = string_replace(_mpath, _dirr, "");
 			
-			zip_add_file(_zip, zcpath, _cpath); print($" > Adding {zcpath}")
+			zip_add_file(_zip, zcpath, _cpath); // print($" > Adding {zcpath}")
 			zip_add_file(_zip, zspath, _spath); 
 			zip_add_file(_zip, zmpath, _mpath); 
 		}

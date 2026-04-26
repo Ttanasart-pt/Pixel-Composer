@@ -17,6 +17,10 @@
     function panel_graph_select_all()              { CALL("graph_select_all");          PANEL_GRAPH.nodes_selecting = PANEL_GRAPH.nodes_list; }
     function panel_graph_select_none()             { CALL("graph_select_none");         PANEL_GRAPH.nodes_selecting = []; 
                                                                                         PANEL_INSPECTOR.inspecting  = PANEL_GRAPH.getCurrentContext(); }
+    function panel_graph_select_prev()             { CALL("graph_select_prev");         PANEL_GRAPH.selectPrevious();        }
+    function panel_graph_select_next()             { CALL("graph_select_next");         PANEL_GRAPH.selectNext();            }
+    function panel_graph_select_prev_all()         { CALL("graph_select_prev_all");     PANEL_GRAPH.selectAllPrevious();     }
+    function panel_graph_select_next_all()         { CALL("graph_select_next_all");     PANEL_GRAPH.selectAllNext();         }
     
     function panel_graph_toggle_grid()             { CALL("graph_toggle_grid");         PANEL_GRAPH.project.graphDisplay.show_grid      = !PANEL_GRAPH.project.graphDisplay.show_grid;        }
     function panel_graph_toggle_meta_view()        { CALL("graph_toggle_meta_view");    PANEL_GRAPH.project.graphDisplay.node_meta_view = !PANEL_GRAPH.project.graphDisplay.node_meta_view;   }
@@ -159,6 +163,10 @@
 		
         registerFunction(g, "Select All",            "A", c, panel_graph_select_all          ).setMenu("graph_select_all")
         registerFunction(g, "Select None",     vk_escape, n, panel_graph_select_none         ).setMenu("graph_select_none")
+        registerFunction(g, "Select Previous",       "[", s, panel_graph_select_prev         ).setMenu("graph_select_prev")
+        registerFunction(g, "Select Next",           "]", s, panel_graph_select_next         ).setMenu("graph_select_next")
+        registerFunction(g, "Select All Previous",   "[", c|s,panel_graph_select_prev_all    ).setMenu("graph_select_prev_all")
+        registerFunction(g, "Select All Next",       "]", c|s,panel_graph_select_next_all    ).setMenu("graph_select_next_all")
         
         registerFunction(g, "Toggle Grid",           "G", n, panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
         registerFunction(g, "Toggle Meta View",      "",  n, panel_graph_toggle_meta_view    ).setMenu("graph_toggle_meta_view")
@@ -3831,6 +3839,58 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_drag_oy = -1;
         
         node_drag_add = _add;
+    }
+    
+    function selectPrevious() {
+    	if(array_empty(nodes_selecting)) return;
+    	
+    	var _sel = [];
+    	for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+    		var _node = nodes_selecting[i];
+    		array_push(  _sel, _node );
+    		array_append(_sel, _node.getNodeFrom());
+    	}
+    	
+    	selectNodes(array_unique(_sel));
+    }
+    
+    function selectAllPrevious() {
+    	if(array_empty(nodes_selecting)) return;
+    	
+    	var _sel = [];
+    	for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+    		var _node = nodes_selecting[i];
+    		array_push(  _sel, _node );
+    		array_append(_sel, _node.getAllNodeFrom());
+    	}
+    	
+    	selectNodes(array_unique(_sel));
+    }
+    
+    function selectNext() {
+    	if(array_empty(nodes_selecting)) return;
+    	
+    	var _sel = [];
+    	for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+    		var _node = nodes_selecting[i];
+    		array_push(  _sel, _node );
+    		array_append(_sel, _node.getNodeTo());
+    	}
+    	
+    	selectNodes(array_unique(_sel));
+    }
+    
+    function selectAllNext() {
+    	if(array_empty(nodes_selecting)) return;
+    	
+    	var _sel = [];
+    	for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+    		var _node = nodes_selecting[i];
+    		array_push(  _sel, _node );
+    		array_append(_sel, _node.getAllNodeTo());
+    	}
+    	
+    	selectNodes(array_unique(_sel));
     }
     
     ////- Action

@@ -52,7 +52,7 @@
         "lua_highlight_string": "blue",
         "lua_highlight_comment": "main_ltgrey",
         
-        "collection_folder_empty": "main_dkgrey",
+        "collection_folder_empty": "main_grey",
         "collection_folder_nonempty": "main_ltgrey",
         "collection_tree_line": "main_dkgrey",
         "collection_path_current_bg": "main_grey",

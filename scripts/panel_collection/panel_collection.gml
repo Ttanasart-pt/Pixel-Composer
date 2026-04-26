@@ -383,7 +383,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		var node_list  = array_length(content);
 		var node_count = node_list + array_length(steamNode);
-		var frame	   = PREFERENCES.collection_animated? current_time * PREFERENCES.collection_preview_speed / 3000 : 0;
+		var frame	   = current_time * PREFERENCES.collection_preview_speed / 3000;
 		var _cw		   = contentPane.surface_w;
 		var _hover	   = pHOVER && contentPane.hover;
 		var hh         = 0;
@@ -416,8 +416,10 @@ function Panel_Collection() : PanelContent() constructor {
 					
 					var gr_x1 = _boxx + grid_size;
 					var gr_y1 = yy + grid_size;
+					var _draw = yy + grid_size >= 0 && yy <= contentPane.surface_h;
 					
-					if(yy + grid_size >= 0 && yy <= contentPane.surface_h) {
+					if(_draw) {
+						var anim = PREFERENCES.collection_animated;
 						if(has(_node, "getSpr")) _node.getSpr();
 						
 						BLEND_OVERRIDE
@@ -428,6 +430,8 @@ function Panel_Collection() : PanelContent() constructor {
 						var meta = has(_node, "getMetadata")? _node.getMetadata() : noone;
 						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							contentPane.hover_content = true;
+							anim = true;
+							
 							draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
 							
 							if(mouse_lpress(pFOCUS)) {
@@ -469,14 +473,21 @@ function Panel_Collection() : PanelContent() constructor {
 							
 							if(ss < 1) gpu_set_tex_filter(true);
 							BLEND_ALPHA_MULP
-							draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+							var _fr = anim? frame : sprite_get_number(_node.spr) / 2;
+							draw_sprite_ext(_node.spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL
 							if(ss < 1) gpu_set_tex_filter(false);
+							
+							if(sprite_get_number(_node.spr) > 1) { // Anim arrow
+								var _ax = _boxx + ui(4);
+								var _ay = yy + grid_size - ui(8);
+								draw_sprite_ui_uniform(THEME.arrow, 0, _ax, _ay, .75, COLORS._main_value_positive);
+							}
 							
 						} else
 							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
 						
-						if(meta != noone) {
+						if(meta != noone) { // Outdated
 							if(meta.file_id != 0) {
 								var icc = COLORS._main_icon;
 								var ipd = ui(10);
@@ -528,8 +539,11 @@ function Panel_Collection() : PanelContent() constructor {
 			for(var i = 0; i < node_count; i++) {
 				var _node = i < node_list? content[i] : steamNode[i - node_list];
 				if(!_node) continue;
+				var anim = PREFERENCES.collection_animated;
 				
 				if(yy + list_height >= 0 && yy <= contentPane.surface_h) {
+					anim = true;
+					
 					if(i % 2) {
 						BLEND_OVERRIDE
 						draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, CDEF.main_black, 0.2);
@@ -565,7 +579,8 @@ function Panel_Collection() : PanelContent() constructor {
 						var sy = spr_y + yo;
 					
 						if(ss < 1) gpu_set_tex_filter(true);
-						draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+						var _fr = anim? frame : sprite_get_number(_node.spr) / 2;
+						draw_sprite_ext(_node.spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
 						if(ss < 1) gpu_set_tex_filter(false);
 						
 					} else

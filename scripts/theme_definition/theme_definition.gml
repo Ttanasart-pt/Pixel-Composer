@@ -52,7 +52,7 @@ function ThemeColor() constructor {
     lua_highlight_string                = CDEF.blue;
     lua_highlight_comment               = CDEF.main_ltgrey;
     
-    collection_folder_empty             = CDEF.main_dkgrey;
+    collection_folder_empty             = CDEF.main_grey;
     collection_folder_nonempty          = CDEF.main_ltgrey;
     collection_tree_line                = CDEF.main_dkgrey;
     collection_path_current_bg          = CDEF.main_grey;
