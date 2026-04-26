@@ -199,7 +199,7 @@
 		var dep = 1;
 		for (var i = 0, n = array_length(arr); i < n; i++)
 			dep = max(dep, __array_get_depth(arr[i]));
-		return 1 + dep;
+		return dep;
 	}
 	
 	function array_get_depth(arr) { // Read only the first member, faster

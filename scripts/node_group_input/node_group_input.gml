@@ -177,7 +177,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		juncTo.value_from = noone;
 		inParent.setValue(juncTo.getValue());
 		juncTo.value_from = outputs[0];
-		
 	}
 	
 	static createInput = function() {

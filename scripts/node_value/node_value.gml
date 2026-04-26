@@ -1698,7 +1698,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(display_type == VALUE_DISPLAY.palette && !is_array(_value)) return [ _value ];
 		
 		if(display_type == VALUE_DISPLAY.area) {
-			
 			if(!is_undefined(nodeFrom) && has(nodeFrom.display_data, "onSurfaceSize")) {
 				var surf     = nodeFrom.display_data.onSurfaceSize();
 				var dispType = array_safe_get_fast(_value, 5, AREA_MODE.area);
@@ -1801,7 +1800,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == CONNECT_TYPE.output) return val;
 		
 		val = arrayBalance(val);
-		
 		if(isArray(val) && array_length(val) < 1024) { // Process data
 			var _val = array_create(array_length(val));
 			for( var i = 0, n = array_length(val); i < n; i++ )
