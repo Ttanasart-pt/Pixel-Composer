@@ -24,7 +24,7 @@
 		registerFunction(o, "Load Collection",            "", n, panel_collection_load              ).setMenu("collection_load")
 		registerFunction(o, "Replace with Selecting",     "", n, panel_collection_replace           ).setMenu("collection_replace")
 		registerFunction(o, "Edit Collection...",         "", n, panel_collection_edit_default      ).setMenu("collection_edit_collection",   THEME.group_s)
-		registerFunction(o, "Edit Meta...",               "", n, panel_collection_edit_meta         ).setMenu("collection_edit_meta")
+		registerFunction(o, "Edit Metadata...",           "", n, panel_collection_edit_meta         ).setMenu("collection_edit_meta")
 		registerFunction(o, "Update Thumbnail",           "", n, panel_collection_update_thumbnail  ).setMenu("collection_update_thumbnail")
 		registerFunction(o, "Delete Collection",          "", n, panel_collection_delete_collection ).setMenu("collection_delete_collection",	THEME.cross)
 		
@@ -237,8 +237,6 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			var _proj = new Runner().appendMap(_cont).fetchIO();
 			    _proj.project.path = _menu_node.path;
-			
-			print(_proj.io_node);
 			
 			if(!is(_proj.io_node, Node_Collection)) {
 				noti_warning("Cannot edit non-group collection.")
@@ -482,7 +480,7 @@ function Panel_Collection() : PanelContent() constructor {
 							
 							if(ss < 1) gpu_set_tex_filter(true);
 							BLEND_ALPHA_MULP
-							var _fr = anim? frame : sprite_get_number(_node.spr) / 2;
+							var _fr = anim? frame : floor((sprite_get_number(_node.spr) - 1) / 2);
 							draw_sprite_ext(_node.spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL
 							if(ss < 1) gpu_set_tex_filter(false);
@@ -586,9 +584,9 @@ function Panel_Collection() : PanelContent() constructor {
 						var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
 						var sx = spr_x + xo;
 						var sy = spr_y + yo;
-					
+						
 						if(ss < 1) gpu_set_tex_filter(true);
-						var _fr = anim? frame : sprite_get_number(_node.spr) / 2;
+						var _fr = anim? frame : floor((sprite_get_number(_node.spr) - 1) / 2);
 						draw_sprite_ext(_node.spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
 						if(ss < 1) gpu_set_tex_filter(false);
 						

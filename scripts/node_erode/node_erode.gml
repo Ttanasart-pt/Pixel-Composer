@@ -19,18 +19,18 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(4, 8); // inputs 8, 9, 
 	
 	////- =Erode
-	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "Radial", "Box", "Diamond", "Cross" ] ));
-	newInput( 1, nodeValue_Int(  "Width", 1)).setHotkey("S").setMappable(10);
-	newInput( 2, nodeValue_Bool( "Preserve Border", false ));
-	newInput( 3, nodeValue_Bool( "Use Alpha",        true ));
+	newInput(11, nodeValue_EScroll( "Pattern",    0, [ "Radial", "Box", "Diamond", "Cross" ] ));
+	newInput( 1, nodeValue_Int(     "Width",      1 )).setHotkey("S").setMappable(10);
+	newInput( 2, nodeValue_Bool(    "Preserve Border", false ));
+	newInput( 3, nodeValue_Bool(    "Use Alpha",        true ));
 	// input 11
+	
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  6,  7,
 		[ "Surfaces", true ],  0,  4,  5,  8,  9, 
 		[ "Erode",   false ], 11,  1, 10,  3, 
-	]
-	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	];
 	
 	////- Node
 	

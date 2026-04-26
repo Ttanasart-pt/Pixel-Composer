@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.rc13",
+    "changes": [
+      {
+        "date": "2026-04-26T03:17:59.593Z",
+        "node": "",
+        "commit": "add project migration tool for collecion loading"
+      }
+    ]
+  }
+]

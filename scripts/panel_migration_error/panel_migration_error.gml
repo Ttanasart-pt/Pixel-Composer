@@ -28,6 +28,8 @@ function Panel_Migration_Error(_project) : PanelContent() constructor {
 			var _ref = _mig.reference;
 			var _spr = _mig.spr;
 			
+			if(is(_ref, NodeValue) && !_ref.node.active) continue;
+			
 			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ww, hg, CDEF.main_mdwhite);
 			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ui(32), hg);
 			

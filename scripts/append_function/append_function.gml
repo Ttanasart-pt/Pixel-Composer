@@ -23,6 +23,7 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_list = [], _connect_outside = false, _scale = true) {
 	static log   = false;
 	UNDO_HOLDING = true;
+	PROJECT.migrationError = [];
 	
 	if(struct_has(_map, "version")) {
 		var _v = _map.version;

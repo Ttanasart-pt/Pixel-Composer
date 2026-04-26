@@ -720,6 +720,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             return;
         }
         
+        var vali =  false;
         var minx =  infinity;
         var miny =  infinity;
         var maxx = -infinity;
@@ -740,6 +741,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                
 	            miny = min(miny, _bbox[1] - 32);
 	            maxy = max(maxy, _bbox[3] + 32);
+	            vali = true;
             	continue;
             }
             
@@ -748,7 +750,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 
             miny = min(miny, _node.y - 32);
             maxy = max(maxy, _node.y + _node.h + 32);
+            vali = true;
         }
+        
+        if(!vali) return;
         
         var cx = (minx + maxx) / 2;
         var cy = (miny + maxy) / 2;
