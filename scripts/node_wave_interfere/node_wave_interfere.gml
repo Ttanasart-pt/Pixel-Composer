@@ -11,6 +11,7 @@ function Node_Wave_Interfere(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "Axis", "Polar" ] )).setShaderProp("pattern");
 	newInput(12, nodeValue_Vec2(    "Polar Center 1", [0,.5] )).setUnitSimple().setShaderProp("polarPos1");
 	newInput(13, nodeValue_Vec2(    "Polar Center 2", [1,.5] )).setUnitSimple().setShaderProp("polarPos2");
+	newInput(14, nodeValue_Vec2(    "Phases",         [0,0] )).setShaderProp("phase");
 	
 	////- =Wave
 	newInput( 8, nodeValue_EScroll( "Wave",         0, [ "Sine", "Zigzag" ] )).setShaderProp("type");
@@ -22,11 +23,11 @@ function Node_Wave_Interfere(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	newInput( 5, nodeValue_Vec2(     "Position", [.5,.5] )).setUnitSimple().setShaderProp("position");
 	newInput( 6, nodeValue_Rotation( "Rotation",   0     )).setShaderProp("rotation");
 	newInput( 4, nodeValue_Vec2(     "Scale",     [4,4]  )).setShaderProp("scale");
-	// 9
+	// 15
 	
 	input_display_list = [
 		[ "Output",     true ],  0,  1,  2,  3, 
-		[ "Pattern",   false ], 11, 12, 13, 
+		[ "Pattern",   false ], 11, 12, 13, 14, 
 		[ "Wave",      false ],  8,  7,  9, 10, 
 		[ "Transform", false ],  5,  6,  4,  
 	];

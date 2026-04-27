@@ -5,6 +5,7 @@
 	if(search_string != "") hh += ui(24);
 	
 	dialog_h = min(max_h, hh);
+	dialog_y = min(dialog_y, WIN_H - dialog_h - ui(8));
 #endregion
 
 #region draw

@@ -223,7 +223,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		//////////////////////////////////////////////////// AFTER LAST //////////////////////////////////////////////////////
 		
-		if(_keyIndex >= length) {
+		if(_keyIndex >= length - 1) {
 			var _lstKey = values[length - 1];
 			
 			if(prop.on_end == KEYFRAME_END.wrap) {
@@ -335,7 +335,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		//////////////////////////////////////////////////// AFTER LAST //////////////////////////////////////////////////////
 		
-		if(_keyIndex >= length) {
+		if(_keyIndex >= length - 1) {
 			var _lstKey = values[length - 1];
 			_arr[0] = _lstKey;
 			_arr[2] = 0;
@@ -370,7 +370,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 	}
 	
-	static onUndo = method(self, function() /*=>*/ { updateKeyMap(); prop.triggerSetFrom(); });
+	static onUndo = function() /*=>*/ { updateKeyMap(); prop.triggerSetFrom(); };
 	
 	////- Setters
 	
@@ -408,9 +408,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(record) recordAction(ACTION_TYPE.custom, function(data) { 
 				var _prevTime = data.key.time; 
 				setKeyTime(data.key, data.time, false); 
-				
 				data.time = _prevTime;
-			}, { key : _key, time : _prevTime, tooltip : $"Modify '{prop.name}' timeline" }).setRef(node).setTrigger(onUndo);
+			}, { key : _key, time : _prevTime, tooltip : $"Modify '{prop.name}' timeline" })
+				.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 			
 			array_insert(values, i, _key);
 			if(_replace) updateKeyMap();
@@ -420,9 +420,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(record) recordAction(ACTION_TYPE.custom, function(data) { // insert key after the last key
 			var _prevTime = data.key.time; 
 			setKeyTime(data.key, data.time, false); 
+			updateKeyMap();
 			
 			data.time = _prevTime;
-		}, { key : _key, time : _prevTime, tooltip : $"Modify '{prop.name}' timeline" }).setRef(node).setTrigger(onUndo);
+		}, { key : _key, time : _prevTime, tooltip : $"Modify '{prop.name}' timeline" })
+			.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 			
 		array_push(values, _key);
 		if(_replace) updateKeyMap();
@@ -463,7 +465,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(isEqual(values[0].value, _val)) 
 				return false;
 			
-			if(_record) recordAction_variable_change(values[0], "value", values[0].value, prop.name).setRef(node).setTrigger(onUndo);
+			if(_record) recordAction_variable_change(values[0], "value", values[0].value, prop.name)
+				.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 			
 			values[0].value = _val;
 			return true;
@@ -472,7 +475,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(array_length(values) == 0) { // Should not be called normally
 			var k = new valueKey(_time, _val, self, ease_in, ease_out);
 			array_push(values, k);
-			if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values) - 1, $"Add '{prop.name}'' keyframe" ]).setRef(node).setTrigger(onUndo);
+			if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values) - 1, $"Add '{prop.name}'' keyframe" ])
+				.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 			return true;
 		}
 		
@@ -482,7 +486,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(!PREFERENCES.panel_animation_key_override) return false;
 				
 				if(_key.value != _val) {
-					if(_record) recordAction_variable_change(_key, "value", _key.value, $"{prop.name}").setRef(node).setTrigger(onUndo);
+					if(_record) recordAction_variable_change(_key, "value", _key.value, $"{prop.name}")
+						.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 					_key.value = _val;
 					return true;
 				}
@@ -491,14 +496,16 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			} else if(_key.time > _time) {
 				var k = new valueKey(_time, _val, self, ease_in, ease_out);
 				array_insert(values, i, k);
-				if(_record) recordAction(ACTION_TYPE.array_insert, values, [k, i, $"Add '{prop.name}'' keyframe" ]).setRef(node).setTrigger(onUndo);
+				if(_record) recordAction(ACTION_TYPE.array_insert, values, [k, i, $"Add '{prop.name}'' keyframe" ])
+					.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 				updateKeyMap();
 				return true;
 			}
 		}
 		
 		var k = new valueKey(_time, _val, self, ease_in, ease_out);
-		if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values), $"Add '{prop.name}'' keyframe" ]).setRef(node).setTrigger(onUndo);
+		if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values), $"Add '{prop.name}'' keyframe" ])
+			.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 		array_push(values, k);
 		updateKeyMap();
 		return true;

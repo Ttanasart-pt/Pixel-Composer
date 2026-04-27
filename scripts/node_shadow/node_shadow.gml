@@ -26,7 +26,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Position
 	newInput(11, nodeValue_EButton( "Positioning",     0, [ "Shift", "Light" ] ));
 	newInput( 3, nodeValue_Vec2(    "Shift",          [.25,.25] )).setUnitSimple().hideLabel();
-	newInput(12, nodeValue_Vec2(    "Light Position", [0,0] )).setUnitSimple().hideLabel();
+	newInput(12, nodeValue_Vec2(    "Light Position", [0,0]     )).setUnitSimple().hideLabel();
 	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

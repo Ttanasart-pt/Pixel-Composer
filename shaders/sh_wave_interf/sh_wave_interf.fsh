@@ -35,6 +35,7 @@ uniform vec2  scale;
 
 uniform vec2  polarPos1;
 uniform vec2  polarPos2;
+uniform vec2  phase;
 
 uniform float intensity;
 
@@ -63,12 +64,12 @@ void main() {
 		pos -= position / dimension;
     	pos *= rot;
 		pos *= scale;
-		val = valueProcess(pos.x);
-		v0  = valueProcess(pos.y);
+		val = valueProcess(pos.x + phase.x);
+		v0  = valueProcess(pos.y + phase.y);
 		
 	} else if(pattern == 1) {
-		val = valueProcess( distance(pos, polarPos1 / dimension) * scale.x );
-		v0  = valueProcess( distance(pos, polarPos2 / dimension) * scale.y );
+		val = valueProcess( distance(pos, polarPos1 / dimension) * scale.x + phase.x );
+		v0  = valueProcess( distance(pos, polarPos2 / dimension) * scale.y + phase.y );
 		
 	}
 	

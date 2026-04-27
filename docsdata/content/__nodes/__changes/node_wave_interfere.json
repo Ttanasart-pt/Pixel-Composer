@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.rc14",
+    "changes": [
+      {
+        "date": "2026-04-27T02:08:02.886Z",
+        "node": "",
+        "commit": "Fix error when undoing keyframe insertion."
+      }
+    ]
+  },
+  {
     "version": "1.20.9.012",
     "changes": [
       {
