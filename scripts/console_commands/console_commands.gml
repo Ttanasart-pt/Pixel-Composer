@@ -148,31 +148,45 @@ function cmd_submit(command) {
 	return noone;
 }
 
+function cmp_path_simplematch(key, path) {
+	// *.png, thumbnail.png🠂
+	var plen   = string_length(path);
+	var apos   = string_pos("*", key);
+	var keyPre = string_copy(key, 1, apos - 1);
+	var keyPos = string_copy(key, apos + 1, plen - apos - 2);
+	
+	if(keyPre != "" && !string_starts_with( path, keyPre )) return false;
+	if(keyPos != "" && !string_ends_with(   path, keyPos )) return false;
+	return true;
+}
+
+function cmd_listdir(path, filt = "") {
+	var files = directory_listdir(path, 0, true);
+	if(filt == "" || array_empty(files)) return files;
+	
+	__filter = filt;
+	return array_filter(files, function(f,i) /*=>*/ {return string_ends_with(f, __filter)});
+}
+
 function cmd_path(path) {
-	var params = string_splice(path, ";");
-	var vals   = [];
-			
-	for( var j = 0, n = array_length(params); j < n; j++ ) {
-		var _p = params[j];
-		if(filename_drive(_p) == "") { 
-			array_push(vals, _p); 
-			continue; 
+	var val   = string_split(path, ";");
+	var paths = [];
+	
+	for( var i = 0, n = array_length(val); i < n; i++ ) {
+		var v = val[i];
+		
+		if(!string_pos("*", v)) {
+			array_push(paths, v); 
+			continue;
 		}
 		
-		var _f   = file_find_first(_p, 0);
-		var _dir = filename_dir(_p) + "/";
-		
-		while (_f != "") {
-			var _pf = _f;
-			array_push(vals, _dir + _f);
-			_f = file_find_next();
-			if(_pf == _f) break;
-		}
-					
-		file_find_close();
+		var spl = string_split(v, "*", false, 1);
+		var dir = spl[0];
+		var pth = spl[1];
+		array_push(paths, cmd_listdir(dir, pth)); 
 	}
 	
-	return array_length(vals) == 1? vals[0] : vals;
+	return array_length(paths) == 1? paths[0] : paths;
 }
 
 function cmd_program() constructor {

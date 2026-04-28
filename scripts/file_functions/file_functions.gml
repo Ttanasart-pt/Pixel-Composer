@@ -197,24 +197,6 @@ function get_save_filename_compat(ext, fname, caption = "Save as", _dir = PREFER
 	return path;
 }
 
-	////- Directory
-
-function directory_listdir(path, flag = fa_directory, _full = true) {
-	var _dir = []
-	var file = file_find_first($"{path}/*", flag);
-	
-	while(file != "") {	
-		var f = $"{path}/{file}";
-		if(flag == fa_directory && directory_exists(f) || flag != fa_directory && file_exists_empty(f)) 
-			array_push(_dir, _full? f : file);
-			
-		file = file_find_next();
-	}
-	file_find_close();
-	
-	return _dir;
-}
-
 	////- File name
 	
 function filepath_resolve(path) {

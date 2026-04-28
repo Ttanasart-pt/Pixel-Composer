@@ -68,6 +68,7 @@
 	// PROGRAM_ARGUMENTS._cmd  = true;
 	// PROGRAM_ARGUMENTS.in    = "D:/Project/MakhamDev/LTS-PixelComposer/EXE/1.21.0/thumbnail.png";
 	// PROGRAM_ARGUMENTS.out   = "D:/Project/MakhamDev/LTS-PixelComposer/EXE/1.21.0/thumbnailBW.png";
+	// var p = "D:/Project/MakhamDev/LTS-PixelComposer/EXE/1.21.0/*.png"; print(p, cmd_path(p));
 	
 	if(IS_CMD) {
 		draw_enable_drawevent(false);
