@@ -152,7 +152,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
 		var _hov = point_in_circle(_mx, _my, _x, _y, _s * 24);
-		if(__hov != _hov) PANEL_GRAPH.refreshDraw();
+		if(__hov != _hov) GraphRefresh();
 		__hov = _hov;
 		
 		if(!_hov) { isHovering = false; return noone; }

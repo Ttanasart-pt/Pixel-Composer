@@ -39,29 +39,41 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	selecting_preset = noone; 
 	hk_selecting     = noone;
 	hk_editing       = noone;
+	thumbnail_mask   = noone;
 	
 	directory_verify(dirPath);
 	__initPresets();
 	
-	context_menu = [
-		MENU_ITEMS.preset_replace,
-		MENU_ITEMS.preset_delete,
+	#region ++++ menu ++++
+		context_menu = [
+			MENU_ITEMS.preset_replace,
+			MENU_ITEMS.preset_delete,
+			
+			-1,
+			menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { 
+				var _hk    = __fnGraph_BuildNode($"{nodeType}>{selecting_preset.name}");
+				hk_editing = _hk.modify();
+			}),
+			menuItem(__txt("Reset Hotkey"), function() /*=>*/ { if(is_struct(hk_selecting)) hk_selecting.reset(true) }, THEME.refresh_20)
+				.setActive(is_struct(hk_selecting) && hk_selecting.isModified()),
+		];
 		
-		-1,
-		menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { 
-			var _hk    = __fnGraph_BuildNode($"{nodeType}>{selecting_preset.name}");
-			hk_editing = _hk.modify();
-		}),
-		menuItem(__txt("Reset Hotkey"), function() /*=>*/ { if(is_struct(hk_selecting)) hk_selecting.reset(true) }, THEME.refresh_20)
-			.setActive(is_struct(hk_selecting) && hk_selecting.isModified()),
-	];
+		context_def    = [
+			MENU_ITEMS.preset_replace_def,
+			MENU_ITEMS.preset_reset,
+		];
+	#endregion
 	
-	context_def = [
-		MENU_ITEMS.preset_replace_def,
-		MENU_ITEMS.preset_reset,
-	];
-	
-	thumbnail_mask = noone;
+	#region default values
+		valPath = $"{dirPath}_values.json";
+		defVal  = undefined;
+		defKeys = [];
+		
+		if(file_exists(valPath)) {
+			defVal  = json_load_struct(valPath);
+			defKeys = struct_get_names(defVal);
+		}
+	#endregion
 	
 	function replacePreset(path)     { if(node != noone) node.savePreset(filename_name_only(path)); }
 	function newPresetFromNode(name) { if(node != noone) node.savePreset(name); adding = false;     }
@@ -258,25 +270,34 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		} else {
 			var  bs = ui(32);
 			var _bx = w - sp - bs;
-			var hov = pHOVER && point_in_rectangle(mx, my, _bx, by, _bx + bs, by + ah);
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, by, bs, ah, COLORS._main_value_negative, .40 + hov * .10);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, by, bs, ah, COLORS._main_value_negative, .75 + hov * .25);
-			draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon);
-			draw_sprite_ui(THEME.icon_delete, 0, _bx + bs/2, by + ah/2, 1, 1, 0, COLORS._main_value_negative);
 			
-			if(hov) {
-				TOOLTIP = __txt("Clear Default Values");
-				if(mouse_lpress(pFOCUS)) {
-					var _pth = $"{dirPath}_values.json";
-					file_delete_safe(_pth);
+			if(file_exists_empty(valPath)) {
+				var hov = pHOVER && point_in_rectangle(mx, my, _bx, by, _bx + bs, by + ah);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, by, bs, ah, COLORS._main_value_negative, .40 + hov * .10);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, by, bs, ah, COLORS._main_value_negative, .75 + hov * .25);
+				draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon);
+				draw_sprite_ui(THEME.icon_delete, 0, _bx + bs/2, by + ah/2, 1, 1, 0, COLORS._main_value_negative);
+				
+				if(hov) {
+					TOOLTIP = __txta("Clear {1} Default Value(s)", array_length(defKeys));
+					if(mouse_lpress(pFOCUS)) {
+						file_delete_safe(valPath);
+						PRESETS_MAP[$ instanceof(nodeType)] = {}
+					}
 				}
+				
+			} else {
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, by, bs, ah, COLORS._main_icon, .40);
+				draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon);
+				draw_sprite_ui(THEME.icon_delete, 0, _bx + bs/2, by + ah/2, 1, 1, 0, COLORS._main_icon);
 			}
+			
 			ww -= bs + ui(4);
 			
 			var hov = pHOVER && point_in_rectangle(mx, my, bx, by, bx + ww, by + ah);
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .3 + hov * .10);
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .6 + hov * .25);
-			draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon);
+			draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon_light);
 			draw_text_add(ww / 2, by + ah / 2, __txt("New preset"));
 			
 			if(mouse_lpress(pFOCUS && hov)) { if(!adding) tb_add.activate(); adding = true; }

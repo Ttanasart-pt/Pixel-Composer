@@ -532,7 +532,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static drawNodeBase = function(xx, yy, mx, my, _s) {
 		if(draw_graph_culled) return;
-		PANEL_GRAPH.refreshDraw(2);
+		GraphRefresh(2);
 		
 		var color  = inputs[0].getValue();
 		var txt    = inputs[1].getValue();

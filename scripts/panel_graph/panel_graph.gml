@@ -118,7 +118,7 @@
 	    	nodes[i].refreshNodeDisplay();
     	}
     	
-    	PANEL_GRAPH.refreshDraw(2);
+    	GraphRefresh(2);
 	}
     
     function panel_graph_set_node_display_default() { 
@@ -132,7 +132,7 @@
 	    	nodes[i].refreshNodeDisplay();
     	}
     	
-    	PANEL_GRAPH.refreshDraw(2);
+    	GraphRefresh(2);
 	}
     
     function panel_graph_set_node_display_parameter() { 
@@ -146,7 +146,7 @@
 	    	nodes[i].refreshNodeDisplay();
     	}
     	
-    	PANEL_GRAPH.refreshDraw(2);
+    	GraphRefresh(2);
 	}
     
     function __fnInit_Graph() {
@@ -4992,14 +4992,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     initSize();
 }
 
-	////- File
+	////- Functions
     
 function load_file_path(path, _x = undefined, _y = undefined) {
     if(!is_array(path)) path = [ path ];
     if(array_length(path) == 0) return; 
     
-    _x = _x == undefined? PANEL_GRAPH.graph_cx : _x;
-    _y = _y == undefined? PANEL_GRAPH.graph_cy : _y;
+    _x = _x ?? (IS_CMD? 0 : PANEL_GRAPH.graph_cx);
+    _y = _y ?? (IS_CMD? 0 : PANEL_GRAPH.graph_cy);
     
     var type = "others";
     
@@ -5110,3 +5110,5 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 		draw_text(_hx + ui(8), my + ui(8) + h1 + ui(6), _shft);
 	}
 }
+
+function GraphRefresh(_delay = undefined) { if(PANEL_GRAPH != undefined) PANEL_GRAPH.refreshDraw(_delay); }

@@ -462,5 +462,5 @@ function node_auto_organize(nodeList, param = new node_auto_organize_parameter()
 	
 	array_foreach(_frameList, function(f,i) /*=>*/ { f.reFrame(); });
 	
-	PANEL_GRAPH.refreshDraw();
+	GraphRefresh();
 }

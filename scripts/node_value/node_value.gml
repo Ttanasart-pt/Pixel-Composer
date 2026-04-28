@@ -2904,7 +2904,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
 		if(name_custom)                 _map.name		= name;
-		if(inspector_timeline)          _map.insp_tm    = inspectr_timeline;
+		if(inspector_timeline)          _map.insp_tm    = inspector_timeline;
 		if(on_end != KEYFRAME_END.hold) _map.on_end		= on_end;
 		if(loop_range != -1)            _map.loop_range	= loop_range;
 		if(sep_axis)                    _map.sep_axis	= sep_axis;
@@ -3034,16 +3034,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(has(_map, "m"))           is_modified = bool(_map.m);
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
-		
-		if(con_node != -1) unit.mode = 0;
-		if(unitUse && !has(_map, "unit")) {
-			node.project.addError($"{toStringS()}: unit unset", self, THEME.unit_ref);
-		}
-		unit.mode = _map[$ "unit"] ?? unit.mode;
+		if(!is_modified && def_preset) 
+			node.project.addError($"{toStringS()}: modified default.", self, THEME.icon_default);
 		
 		if(has(_map, "raw_value"))   animator.deserialize(_map[$ "raw_value"], scale);
 		if(has(_map, "r"))           animator.deserialize(_map[$ "r"],         scale);
 		if(is_anim) animator.updateKeyMap();
+		
+		if(con_node != -1) unit.mode = def_unit;
+		if(unitUse && !has(_map, "unit") && is_modified)
+			node.project.addError($"{toStringS()}: unit unset.", self, THEME.unit_ref);
+		unit.mode = _map[$ "unit"] ?? unit.mode;
 		
 		setBypass(_map[$ "bypass"] ?? false);
 		extendFactor = _map[$ "extendFactor"] ?? 1;

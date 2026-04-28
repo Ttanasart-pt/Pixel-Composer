@@ -1,5 +1,14 @@
 #region data
-	globalvar PANEL_MAIN, PANEL_MENU, PANEL_PREVIEW, PANEL_INSPECTOR, PANEL_GRAPH, PANEL_ANIMATION, PANEL_COLLECTION, PANEL_FILE, PANEL_NODES;
+	globalvar PANEL_MAIN; PANEL_MAIN       = undefined;
+	globalvar PANEL_MENU; PANEL_MENU       = undefined;
+	globalvar PANEL_PREVIEW; PANEL_PREVIEW    = undefined;
+	globalvar PANEL_INSPECTOR; PANEL_INSPECTOR  = undefined;
+	globalvar PANEL_GRAPH; PANEL_GRAPH      = undefined;
+	globalvar PANEL_ANIMATION; PANEL_ANIMATION  = undefined;
+	globalvar PANEL_COLLECTION; PANEL_COLLECTION = undefined;
+	globalvar PANEL_FILE; PANEL_FILE       = undefined;
+	globalvar PANEL_NODES; PANEL_NODES      = undefined;
+	
 	globalvar FULL_SCREEN_PANEL, FULL_SCREEN_CONTENT, FULL_SCREEN_PARENT;
 	
 	PANEL_MAIN = 0;

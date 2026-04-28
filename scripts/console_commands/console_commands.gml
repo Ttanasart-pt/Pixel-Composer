@@ -80,8 +80,7 @@ function cmd_submit(command) {
 			break;
 		
 		case "render":
-			PROGRAM_ARGUMENTS._run       = true;
-			PROGRAM_ARGUMENTS._rendering = true;
+			PROGRAM_ARGUMENTS._rendering = 1;
 			CLI_EXPORT_AMOUNT            = 0;
 			break;
 		
@@ -155,20 +154,17 @@ function cmd_path(path) {
 			
 	for( var j = 0, n = array_length(params); j < n; j++ ) {
 		var _p = params[j];
-				
-		if(filename_drive(_p) == "") {
-			array_push(vals, _p);
-			continue;
+		if(filename_drive(_p) == "") { 
+			array_push(vals, _p); 
+			continue; 
 		}
-				
+		
 		var _f   = file_find_first(_p, 0);
 		var _dir = filename_dir(_p) + "/";
-					
+		
 		while (_f != "") {
 			var _pf = _f;
-					
 			array_push(vals, _dir + _f);
-					
 			_f = file_find_next();
 			if(_pf == _f) break;
 		}
@@ -176,7 +172,7 @@ function cmd_path(path) {
 		file_find_close();
 	}
 	
-	return vals;
+	return array_length(vals) == 1? vals[0] : vals;
 }
 
 function cmd_program() constructor {

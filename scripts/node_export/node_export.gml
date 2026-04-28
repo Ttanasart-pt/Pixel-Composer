@@ -29,12 +29,11 @@ MPEG-4 (.mp4)|*.mp4";
 }
 	
 function exportAll() {
-	if(IS_RENDERING) return;
+	if(GLOBAL_IS_RENDERING) return;
 	
 	for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
 		var node = PROJECT.allNodes[i];
 		if(!is(node, Node_Export) || !node.active) continue;
-		
 		node.doInspectorAction();
 	}
 }
@@ -885,7 +884,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setIcon(THEME.play_all, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static doInspectorAction = function() {
-		if(!IS_CMD && (LOADING || APPENDING)) return;
+		if(LOADING || APPENDING) return;
+		
 		directory = $"{TEMPDIR}{irandom_range(100000, 999999)}";
 		
 		var path = getInputData(1);
@@ -930,7 +930,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(render_process_id != 0) {
 			var res = ProcIdExists(render_process_id);
-			PANEL_GRAPH.refreshDraw();
+			GraphRefresh();
 			
 			if(res == 0 || OS == os_macosx) {
 				var msg = ExecutedProcessReadFromStandardOutput(render_process_id);

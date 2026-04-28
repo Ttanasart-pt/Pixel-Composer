@@ -2697,7 +2697,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _node.preview_index = i;
                 _node.onValueUpdate(0);
                 if(resetViewOnDoubleClick) do_fullView = true;
-                PANEL_GRAPH.refreshDraw();
+                GraphRefresh();
                 
                 preview_selecting = true;
             }

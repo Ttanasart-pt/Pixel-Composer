@@ -1,4 +1,6 @@
 /// @description 
+if(IS_CMD) exit;
+
 var ev_id   = async_load[? "id"];
 var ev_type = async_load[? "event_type"];
 

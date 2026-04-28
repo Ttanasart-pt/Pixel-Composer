@@ -10,6 +10,87 @@
 	gc_target_frame_time(100);
 #endregion
 
+#region arguments
+	#macro IS_CMD PROGRAM_ARGUMENTS._cmd
+	globalvar PROGRAM_ARGUMENTS, CLI_EXPORT_AMOUNT;
+	
+	alarm[1] = 2;
+	
+	PROGRAM_ARGUMENTS = { 
+		_path:       "",
+		_cmd:        false,
+		
+		_persist:    false,
+		_trusted:    false,
+		_lua:        false,
+		_nodir:      false, 
+		
+		_rendering:  0,
+		_exporting:  [],
+		
+	};
+	
+	CLI_EXPORT_AMOUNT = 0;
+	
+	var paramCount = parameter_count();
+	var paramType  = "_path";
+	var useTCP     = false;
+	
+	for( var i = 0; i < paramCount; i++ ) {
+		var param = parameter_string(i);
+		show_debug_message($"    >>> params {i}: {param}");
+		
+		if(string_starts_with(param, "-")) {
+			switch(param) {
+				case "-h"  : case "--headless": PROGRAM_ARGUMENTS._cmd     = true; draw_enable_drawevent(false); break;
+				case "-p"  : case "--persist" : PROGRAM_ARGUMENTS._persist = true;                break;
+				case "-t"  : case "--trusted" : PROGRAM_ARGUMENTS._trusted = true;                break;
+				case "-s"  : case "--server"  : PROGRAM_ARGUMENTS._persist = true; useTCP = true; break;
+				case "-l"  : case "--lua"     : PROGRAM_ARGUMENTS._lua     = true;                break;
+				case "-nd" : case "--nodir"   : PROGRAM_ARGUMENTS._nodir   = true;                break;
+				default : paramType = string_trim(param, ["-"]); break;
+			}
+			
+		} else if(paramType == "_path") {
+			var path = param;
+			    path = string_replace_all(path, "\n", "");
+			    path = string_replace_all(path, "\"", "");
+				
+			if(path_is_project(path))
+				PROGRAM_ARGUMENTS._path = path;
+				
+		} else
+			PROGRAM_ARGUMENTS[$ paramType] = cmd_path(param);
+	}
+	
+	// TEST
+	// PROGRAM_ARGUMENTS._path = "D:/Project/MakhamDev/LTS-PixelComposer/EXE/1.21.0/project/clibw.pxc";
+	// PROGRAM_ARGUMENTS._cmd  = true;
+	// PROGRAM_ARGUMENTS.in    = "D:/Project/MakhamDev/LTS-PixelComposer/EXE/1.21.0/thumbnail.png";
+	// PROGRAM_ARGUMENTS.out   = "D:/Project/MakhamDev/LTS-PixelComposer/EXE/1.21.0/thumbnailBW.png";
+	
+	if(IS_CMD) {
+		draw_enable_drawevent(false);
+		log_console($"Running PixelComposer {VERSION_STRING}");
+		PROGRAM_ARGUMENTS._rendering = 1; 
+	}
+	
+	if(file_exists_empty(PROGRAM_ARGUMENTS._path)) {
+		run_in(1, function() /*=>*/ {return load_file_path(PROGRAM_ARGUMENTS._path)});
+		
+	} else if(IS_CMD) {
+		show_debug_message("Cmd mode with empty path. exiting...")
+		game_end();
+	}
+	
+	if(useTCP && struct_has(PROGRAM_ARGUMENTS, "port")) {
+		TCP_PORT   = PROGRAM_ARGUMENTS.port;
+		TCP_SERVER = network_create_server_raw(network_socket_tcp, TCP_PORT, 32);
+		
+		log_console($"Open port: {TCP_PORT}");
+	}
+#endregion
+
 #region window & IO
 	window_set_min_width(960);
 	window_set_min_height(600);
@@ -130,7 +211,7 @@
 	DIALOGS = ds_list_create();
 	WIDGET_TAB_BLOCK = false;
 	
-	run_in(1, function() /*=>*/ {
+	if(!IS_CMD) run_in(1, function() /*=>*/ {
 		instance_create(0, 0, o_dialog_textbox_autocomplete);
 		instance_create(0, 0, o_dialog_textbox_function_guide);
 	});
@@ -212,116 +293,5 @@
 	TCP_SERVER  = false;
 	TCP_PORT    = noone;
 	TCP_CLIENTS = [];
-	
-#endregion
-
-#region arguments
-	#macro IS_CMD PROGRAM_ARGUMENTS._cmd
-	
-	alarm[1] = 2;
-	
-	globalvar PROGRAM_ARGUMENTS, CLI_EXPORT_AMOUNT;
-	
-	PROGRAM_ARGUMENTS = { 
-		_path :      "",
-		_cmd :       false,
-		_run :       false,
-		_rendering : false,
-		_exporting : [],
-		_persist :   false,
-		_trusted:    false,
-		_lua:        true,
-		_nodir:      false, 
-	};
-	
-	CLI_EXPORT_AMOUNT = 0;
-	
-	var paramCount = parameter_count();
-	var paramType  = "_path";
-	var useTCP     = false;
-	
-	for( var i = 0; i < paramCount; i++ ) {
-		var param = parameter_string(i);
-		show_debug_message($"    >>> params {i}: {param}");
-		
-		if(string_starts_with(param, "-")) {
-			switch(param) {
-				case "-c" : case "--crashed" : 
-					if(PREFERENCES.show_crash_dialog) run_in(1, function() /*=>*/ {return dialogCall(o_dialog_crashed)});
-					break;
-				
-				case "-h" : case "--headless" : 
-					PROGRAM_ARGUMENTS._cmd = true; 
-					draw_enable_drawevent(false);
-					break;
-					
-				case "-p" : case "--persist" : 
-					PROGRAM_ARGUMENTS._persist = true; 
-					break;
-					
-				case "-t" : case "--trusted" : 
-					PROGRAM_ARGUMENTS._trusted = true; 
-					break;
-					
-				case "-s" : case "--server" : 
-					PROGRAM_ARGUMENTS._persist = true; 
-					useTCP = true;
-					break;
-					
-				case "-sl" : case "--skiplua" : 
-					PROGRAM_ARGUMENTS._lua = false; 
-					break;
-					
-				case "-nd" : case "--nodir" : 
-					PROGRAM_ARGUMENTS._nodir = true; 
-					break;
-					
-				default : paramType = string_trim(param, ["-"]); break;
-			}
-			
-		} else if(paramType == "_path") {
-			var path = param;
-			    path = string_replace_all(path, "\n", "");
-			    path = string_replace_all(path, "\"", "");
-				
-			if(path_is_project(path))
-				PROGRAM_ARGUMENTS._path = path;
-				
-		} else
-			PROGRAM_ARGUMENTS[$ paramType] = cmd_path(param);
-	}
-	
-	if(IS_CMD) {
-		draw_enable_drawevent(false);
-		log_console($"Running PixelComposer {VERSION_STRING}");
-		
-		PROGRAM_ARGUMENTS._run = true; 
-		PROGRAM_ARGUMENTS._rendering = true; 
-	}
-	
-	if(file_exists_empty(PROGRAM_ARGUMENTS._path)) {
-		run_in(1, function() { load_file_path(PROGRAM_ARGUMENTS._path); });
-		
-	} else if(IS_CMD)
-		game_end();
-	
-	if(useTCP && struct_has(PROGRAM_ARGUMENTS, "port")) {
-		TCP_PORT   = PROGRAM_ARGUMENTS.port;
-		TCP_SERVER = network_create_server_raw(network_socket_tcp, TCP_PORT, 32);
-		
-		log_console($"Open port: {TCP_PORT}");
-	}
-#endregion
-
-#region random debug
-	// var s = "1,2,23423,423,423,543,564,6,435,34,5"
-	
-	// var t = get_timer();
-	// repeat(1000000) { string_split(s, ","); }
-	// print($"{(get_timer() - t) / 1000} ms");
-	
-	// var t = get_timer();
-	// repeat(1000000) { string_splice(s, ","); }
-	// print($"{(get_timer() - t) / 1000} ms");
 	
 #endregion

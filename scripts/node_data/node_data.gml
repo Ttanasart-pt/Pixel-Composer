@@ -233,7 +233,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			"Display",  
 			Node_Attribute("Annotation",     function() /*=>*/ {return attributes.annotation},       function() /*=>*/ {return textArea_Text( function(v) /*=>*/ { setAttribute("annotation", v);  refreshNodeDisplay(); })} ),
 			Node_Attribute("Show Preview",   function() /*=>*/ {return attributes.show_preview},     function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_preview");   refreshNodeDisplay(); })} ),
-			Node_Attribute("Parameter View", function() /*=>*/ {return attributes.show_parameter},   function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_parameter"); refreshNodeDisplay(); PANEL_GRAPH.refreshDraw(2); })} ),
+			Node_Attribute("Parameter View", function() /*=>*/ {return attributes.show_parameter},   function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_parameter"); refreshNodeDisplay(); GraphRefresh(2); })} ),
 			
 			"Size",  
 			Node_Attribute("Node Width",     function() /*=>*/ {return attributes.node_width},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_width", v);            refreshNodeDisplay(); })} ),
@@ -496,7 +496,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
 		refreshNodeMap();
-		PANEL_GRAPH.refreshDraw();
+		GraphRefresh();
 		
 		if(onSetDisplayName) onSetDisplayName();
 		return self;
@@ -1721,7 +1721,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		getJunctionList();
 		setJunctionIndex();
 		
-		PANEL_GRAPH.refreshDraw();
+		GraphRefresh();
 		__preDraw_data.force = true;
 	} 
 	
@@ -1771,7 +1771,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(_dummy || _dummy_add_index != dummy_add_index) {
 				getJunctionList();
-				PANEL_GRAPH.refreshDraw();
+				GraphRefresh();
 			}
 			
 			_dummy_add_index = dummy_add_index;
@@ -2529,7 +2529,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawDimension = function(xx, yy, _s) {
 		if(!project.graphDisplay.show_dimension && !project.graphDisplay.show_compute) return;
-			
 		draw_set_text(f_sdf_medium, fa_center, fa_top);
 		
 		var ts = _s * .275 / UI_SCALE;
@@ -3435,7 +3434,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		disable();
 		
-		PANEL_GRAPH.refreshDraw();
+		GraphRefresh();
 		array_remove(group == noone? project.nodes : group.getNodeList(), self);
 		
 		if(PANEL_GRAPH.node_hover == self) PANEL_GRAPH.node_hover = noone;
@@ -3488,7 +3487,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(active) return;
 		enable();
 		
-		PANEL_GRAPH.refreshDraw();
+		GraphRefresh();
 		array_push(group == noone? project.nodes : group.getNodeList(), self);
 		
 		onRestore();

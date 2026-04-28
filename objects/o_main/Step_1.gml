@@ -165,7 +165,32 @@ _FILE_DROPPED       = false;
 		catch(e) { exception_print(e); }
 	}
 	
-	if(!LOADING) {
+	if(IS_CMD) {
+		if(PROJECT.path == "" || LOADING) exit;
+		switch(PROGRAM_ARGUMENTS._rendering) {
+			case 1 :
+				RenderSync(PROJECT, false);
+				exportAll();
+				PROGRAM_ARGUMENTS._rendering = 2;
+				break;
+				
+			case 2: 
+				if(array_empty(PROGRAM_ARGUMENTS._exporting)) {
+					log_console($"Export {CLI_EXPORT_AMOUNT} {CLI_EXPORT_AMOUNT > 1? "files" : "file"} completed");
+					
+					if(PROGRAM_ARGUMENTS._persist) {
+						PROGRAM_ARGUMENTS._rendering = false;
+						cli_wait();
+						
+					} else {
+						show_debug_message("Export Complete. Persist mode off, exiting...");
+						game_end();
+					}
+				}
+				break;
+		}
+		
+	} else if(!LOADING) {
 		if(!PROJECT.safeMode) PROJECT.stepBegin();
 		
 		if(LIVE_UPDATE) RenderSync(PROJECT);
@@ -175,13 +200,7 @@ _FILE_DROPPED       = false;
 			if(PROJECT.active) {
 				PROJECT.animator.is_simulating = false;
 				
-				if(PROGRAM_ARGUMENTS._run) {
-					if(PROJECT != noone && PROJECT.path != "") {
-						exportAll();
-						PROGRAM_ARGUMENTS._run = false;
-					}
-							
-				} else if(GLOBAL_IS_PLAYING || GLOBAL_IS_RENDERING) {
+				if(GLOBAL_IS_PLAYING || GLOBAL_IS_RENDERING) {
 					if(PROJECT.animator.frame_progress) {
 						__addon_preAnim();
 						RenderSync(PROJECT, !IS_CMD);
@@ -195,16 +214,6 @@ _FILE_DROPPED       = false;
 					else if(UPDATE & RENDER_TYPE.partial) Render(PROJECT, true);
 				}
 			}
-		}
-	
-		if(PROGRAM_ARGUMENTS._rendering && PROGRAM_ARGUMENTS._run == false && array_empty(PROGRAM_ARGUMENTS._exporting)) {
-			log_console($"Export {CLI_EXPORT_AMOUNT} {CLI_EXPORT_AMOUNT > 1? "files" : "file"} completed");
-			
-			if(PROGRAM_ARGUMENTS._persist) {
-				PROGRAM_ARGUMENTS._rendering = false;
-				cli_wait();
-			} else
-				game_end();
 		}
 	}
 	

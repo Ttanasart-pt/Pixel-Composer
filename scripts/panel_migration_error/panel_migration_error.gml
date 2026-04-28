@@ -65,6 +65,13 @@ function Panel_Migration_Error(_project) : PanelContent() constructor {
 		}
 		
 		if(del != undefined) array_delete(_data, del, 1);
+		
+		if(mouse_rpress(focus)) {
+			menuCall("", [
+				menuItem(__txt("Clear All"), function() /*=>*/ { project.migrationError = []; }),
+			]);
+		}
+		
 		return hh;
 	});
 	

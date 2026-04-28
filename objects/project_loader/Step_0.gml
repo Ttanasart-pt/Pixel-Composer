@@ -160,7 +160,7 @@ switch(load_process) {
         
         if(!IS_CMD) {
             PANEL_GRAPH.toCenterNode();
-            PANEL_GRAPH.refreshDraw();
+            GraphRefresh();
         }
         
         log_message("FILE", $"load {path} completed in {(get_timer() - t0) / 1000} ms", THEME.noti_icon_file_load);
@@ -179,8 +179,8 @@ switch(load_process) {
     if(!array_empty(PROJECT.migrationError)) dialogPanelCall(new Panel_Migration_Error(PROJECT), WIN_W / 2, WIN_H * 2/3);
     
     run_in(2, function() /*=>*/ { 
-    	PANEL_PREVIEW.fullView();
-    	PANEL_GRAPH.refreshDraw(); 
+    	if(PANEL_PREVIEW) PANEL_PREVIEW.fullView();
+    	GraphRefresh(); 
     	RENDER_ALL_REORDER
     });
 }

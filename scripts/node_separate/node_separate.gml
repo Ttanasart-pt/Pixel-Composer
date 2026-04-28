@@ -22,7 +22,7 @@ function Node_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	array_push(attributeEditors,  "Display" );
 	array_push(attributeEditors, Node_Attribute("Display Mask", function() /*=>*/ {return attributes.display_mask}, function() /*=>*/ {return new checkBox(function() /*=>*/ {
 		toggleAttribute("display_mask");
-		PANEL_GRAPH.refreshDraw();
+		GraphRefresh();
 	})}));
 	
 	preview_size = 256;

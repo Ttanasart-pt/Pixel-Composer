@@ -1,4 +1,5 @@
 /// @description init
+if(IS_CMD) exit;
 if(winMan_isMinimized()) exit;
 if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_loading) exit;
 

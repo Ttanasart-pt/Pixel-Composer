@@ -292,103 +292,106 @@ function Project() constructor {
 			return true;
 		}
 		
-		attributeEditor = [
-			[ "Dimension", "surface_dimension", new vectorBox(2, 
-				function(val, index) /*=>*/ { 
-					attributes.surface_dimension[index] = val; 
-					PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);
-					RENDER_ALL 
-					return true; 
+		static initEditor = function() /*=>*/ {
+			attributeEditor = [
+				[ "Dimension", "surface_dimension", new vectorBox(2, 
+					function(val, index) /*=>*/ { 
+						attributes.surface_dimension[index] = val; 
+						PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);
+						RENDER_ALL 
+						return true; 
+						
+					}).setLink(), 
 					
-				}).setLink(), 
+					function(junc) /*=>*/ {
+						if(!is(junc, NodeValue)) return;
+						
+						var attr = attributes.surface_dimension;
+						var _val = junc.getValue();
+						var _res = [ attr[0], attr[1] ];
+						
+						switch(junc.type) {
+							case VALUE_TYPE.float : 
+							case VALUE_TYPE.integer : 
+								if(is_real(_val)) 
+									_res = [ _val, _val ];
+								else if(is_array(_val) && array_length(_val) >= 2) {
+									_res[0] = is_real(_val[0])? _val[0] : 1;
+									_res[1] = is_real(_val[1])? _val[1] : 1;
+								}
+								break;
+								
+							case VALUE_TYPE.surface : 
+								if(is_array(_val)) _val = array_safe_get_fast(_val, 0);
+								if(is_surface(_val)) 
+									_res = surface_get_dimension(_val);
+								break;
+						}
+						
+						attr[0]  = _res[0];
+						attr[1]  = _res[1];
+					} 
+				],
 				
-				function(junc) /*=>*/ {
-					if(!is(junc, NodeValue)) return;
+				[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RENDER_ALL return true; }), 
+					function(junc) /*=>*/ {
+						if(!is(junc, NodeValue)) return;
+						if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;
+						
+						setPalette(junc.getValue());
+					} 
+				],
+				
+				[ "Color Depth", "color_depth", new scrollBox(array_copy_trim_start(global.SURFACE_FORMAT_NAME, 2), function(i) /*=>*/ {
+					return setAttribute("color_depth", i);
 					
-					var attr = attributes.surface_dimension;
-					var _val = junc.getValue();
-					var _res = [ attr[0], attr[1] ];
+				}).setFrontButton(button(function() /*=>*/ {
+					var i = attributes.color_depth == 1? 4 : 1;
+					return setAttribute("color_depth", i);
 					
-					switch(junc.type) {
-						case VALUE_TYPE.float : 
-						case VALUE_TYPE.integer : 
-							if(is_real(_val)) 
-								_res = [ _val, _val ];
-							else if(is_array(_val) && array_length(_val) >= 2) {
-								_res[0] = is_real(_val[0])? _val[0] : 1;
-								_res[1] = is_real(_val[1])? _val[1] : 1;
-							}
-							break;
-							
-						case VALUE_TYPE.surface : 
-							if(is_array(_val)) _val = array_safe_get_fast(_val, 0);
-							if(is_surface(_val)) 
-								_res = surface_get_dimension(_val);
-							break;
-					}
+				}).setIcon(s_attr_colordepth, function() /*=>*/ {return attributes.color_depth >= 4}, COLORS._main_icon_light)).setUpdateHover(false) ], 
+				
+				[ "Interpolation", "interpolate", new scrollBox(array_copy_trim_start(global.SURFACE_INTERPOLATION, 1), function(i) /*=>*/ {
+					return setAttribute("interpolate", i);
 					
-					attr[0]  = _res[0];
-					attr[1]  = _res[1];
-				} 
-			],
-			
-			[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RENDER_ALL return true; }), 
-				function(junc) /*=>*/ {
-					if(!is(junc, NodeValue)) return;
-					if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;
+				}).setFrontButton(button(function() /*=>*/ {
+					var i = !bool(attributes.interpolate);
+					return setAttribute("interpolate", i);
 					
-					setPalette(junc.getValue());
-				} 
-			],
+				}).setIcon(s_attr_interpolate, function() /*=>*/ {return bool(attributes.interpolate)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
+				
+				[ "Oversample", "oversample", new scrollBox(array_copy_trim_start(global.SURFACE_OVERSAMPLE, 1), function(i) /*=>*/ {
+					return setAttribute("oversample", i);
+					
+				}).setFrontButton(button(function() /*=>*/ {
+					var i = !bool(attributes.oversample) * 3;
+					return setAttribute("oversample", i);
+					
+				}).setIcon(s_attr_oversample, function() /*=>*/ {return bool(attributes.oversample)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
+				
+				[ "Shader", "shader", new scrollBox(["Phong", "PBR"], function(i) /*=>*/ {
+					return setAttribute("shader", i);
+					
+				}).setFrontButton(button(function() /*=>*/ {
+					var i = !bool(attributes.shader);
+					return setAttribute("shader", i);
+					
+				}).setIcon(s_attr_shader, function() /*=>*/ {return bool(attributes.shader)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
+				
+				[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
+					.setSideButton( button(function() /*=>*/ { 
+						var _fpath = get_open_directory_compat(attributes.export_dir); key_release();
+						if(_fpath != "") attributes.export_dir = _fpath;
+					}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
+					) ],
+				
+				[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ {return toggleAttribute("autosave")})     ],
+				[ "Layers",      "global_layer", new checkBox(function() /*=>*/ {return toggleAttribute("global_layer")}) ],
+				[ "Render only in Slide", "slideshow_render_only", new checkBox(function() /*=>*/ {return toggleAttribute("slideshow_render_only")}) ],
+				
+			];
 			
-			[ "Color Depth", "color_depth", new scrollBox(array_copy_trim_start(global.SURFACE_FORMAT_NAME, 2), function(i) /*=>*/ {
-				return setAttribute("color_depth", i);
-				
-			}).setFrontButton(button(function() /*=>*/ {
-				var i = attributes.color_depth == 1? 4 : 1;
-				return setAttribute("color_depth", i);
-				
-			}).setIcon(s_attr_colordepth, function() /*=>*/ {return attributes.color_depth >= 4}, COLORS._main_icon_light)).setUpdateHover(false) ], 
-			
-			[ "Interpolation", "interpolate", new scrollBox(array_copy_trim_start(global.SURFACE_INTERPOLATION, 1), function(i) /*=>*/ {
-				return setAttribute("interpolate", i);
-				
-			}).setFrontButton(button(function() /*=>*/ {
-				var i = !bool(attributes.interpolate);
-				return setAttribute("interpolate", i);
-				
-			}).setIcon(s_attr_interpolate, function() /*=>*/ {return bool(attributes.interpolate)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
-			
-			[ "Oversample", "oversample", new scrollBox(array_copy_trim_start(global.SURFACE_OVERSAMPLE, 1), function(i) /*=>*/ {
-				return setAttribute("oversample", i);
-				
-			}).setFrontButton(button(function() /*=>*/ {
-				var i = !bool(attributes.oversample) * 3;
-				return setAttribute("oversample", i);
-				
-			}).setIcon(s_attr_oversample, function() /*=>*/ {return bool(attributes.oversample)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
-			
-			[ "Shader", "shader", new scrollBox(["Phong", "PBR"], function(i) /*=>*/ {
-				return setAttribute("shader", i);
-				
-			}).setFrontButton(button(function() /*=>*/ {
-				var i = !bool(attributes.shader);
-				return setAttribute("shader", i);
-				
-			}).setIcon(s_attr_shader, function() /*=>*/ {return bool(attributes.shader)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
-			
-			[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
-				.setSideButton( button(function() /*=>*/ { 
-					var _fpath = get_open_directory_compat(attributes.export_dir); key_release();
-					if(_fpath != "") attributes.export_dir = _fpath;
-				}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
-				) ],
-			
-			[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ {return toggleAttribute("autosave")})     ],
-			[ "Layers",      "global_layer", new checkBox(function() /*=>*/ {return toggleAttribute("global_layer")}) ],
-			[ "Render only in Slide", "slideshow_render_only", new checkBox(function() /*=>*/ {return toggleAttribute("slideshow_render_only")}) ],
-			
-		];
+		} if(!IS_CMD) initEditor();
 		
 		static setPalette = function(pal = noone) { 
 			if(pal != noone) {

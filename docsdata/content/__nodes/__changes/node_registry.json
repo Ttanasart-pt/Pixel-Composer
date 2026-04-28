@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.0",
+    "changes": [
+      {
+        "date": "2026-04-28T01:59:52.073Z",
+        "node": "",
+        "commit": "Fix cli mode unusable."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc13",
     "changes": [
       {

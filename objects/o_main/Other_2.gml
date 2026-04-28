@@ -136,10 +136,10 @@
 	
 				  __initSurfaceFormat();  printDebug($"- init SurfaceFormat | {__log_tr()}"); 
 				  __initUser();           printDebug($"- init User          | {__log_tr()}"); 
-	if(!IS_CMD) { __initTheme();          printDebug($"- init Theme         | {__log_tr()}");  }
+	if(!IS_CMD) __initTheme(); else __initThemeEmpty(); printDebug($"- init Theme         | {__log_tr()}");
 	if(!IS_CMD) { loadFonts();            printDebug($"- init Font          | {__log_tr()}");  }
-	if(!IS_CMD) { __initProject();        printDebug($"- init Project       | {__log_tr()}");  }
-	              __fnInit();             printDebug($"- init Functions     | {__log_tr()}"); 
+	              __initProject();        printDebug($"- init Project       | {__log_tr()}");
+	if(!IS_CMD) { __fnInit();             printDebug($"- init Functions     | {__log_tr()}");  }
 	
 	if(!IS_CMD) { __initCollection();     printDebug($"- init Collection    | {__log_tr()}"); }
 	if(!IS_CMD) { __initAssets();         printDebug($"- init Assets        | {__log_tr()}"); }

@@ -350,7 +350,7 @@ enum RENDER_TYPE {
 			project.postRender();
 			
 			LOG_END
-			PANEL_GRAPH.refreshDraw();
+			GraphRefresh();
 		}
 		
 		static renderTo = function(_node) {
@@ -398,7 +398,7 @@ enum RENDER_TYPE {
 				render_time /= 1000;
 				project.postRender();
 				
-				PANEL_GRAPH.refreshDraw();
+				GraphRefresh();
 			}
 		}
 		

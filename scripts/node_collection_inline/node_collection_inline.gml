@@ -32,7 +32,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			setAttribute("shape", i);
 			refreshGroupBG();
 			
-			PANEL_GRAPH.refreshDraw();
+			GraphRefresh();
 		});
 	}));
 	

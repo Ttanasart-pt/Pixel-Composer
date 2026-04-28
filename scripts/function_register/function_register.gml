@@ -10,10 +10,11 @@
 		self.fn   = fn;
 	}
 	
-	globalvar CMD_FUNCTIONS, MENU_ITEMS, FUNCTIONS, RECENT_COMMANDS;
-	global.FUNCTION_CALL_EVENT = {
-		type: "null", 
-	};
+	globalvar CMD_FUNCTIONS; CMD_FUNCTIONS    = {};
+	globalvar MENU_ITEMS; MENU_ITEMS       = {};
+	globalvar FUNCTIONS; FUNCTIONS        = {};
+	globalvar RECENT_COMMANDS; RECENT_COMMANDS  = [];
+	global.FUNCTION_CALL_EVENT = { type: "null" };
 	
 	function __fnInit() {
 		
