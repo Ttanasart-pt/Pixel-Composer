@@ -396,7 +396,9 @@
             { "label": "Render" },
             { "label": "/Render" },
             "Node_MK_Tree_Render",
+            { "label": "/Conversion" },
             "Node_MK_Tree_Branch_To_Path",
+            "Node_MK_Tree_Leaf_to_Points",
         ],
         "context": ["Node_MK_Tree_Inline"],
         "color": "node_blend_mktree"
