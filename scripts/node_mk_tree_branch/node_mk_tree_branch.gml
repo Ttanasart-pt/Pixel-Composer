@@ -190,10 +190,18 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(_auni) _amo = _tr.totalLength / _amo; // density
 			
 			var  rat, j = 0;
-			
+			var _pos = array_create(_amo);
 			repeat(_amo) {
 				     if(_dist == 0) rat = random_range(_oriR[0], _oriR[1]);
 				else if(_dist == 1) rat = lerp(_oriR[0], _oriR[1], j / _amo);
+				_pos[j++] = rat;
+			}
+			
+			if(_dist == 1) array_sort(_pos, true);
+			
+			j = 0;
+			repeat(_amo) {
+				rat = _pos[j];
 				
 				var ori  = [0,0,0];
 				var crat = rat;
@@ -218,8 +226,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _angle   = 0;
 				
 				switch(_angT) {
-					case 0 : _angle = rotation_random_eval(_ang); break;
-					case 1 : _angle = rotation_random_eval_uniform(_ang, j / (_amo - 1)); break;
+					case 0 : _angle = rotation_random_eval(_ang);                                                         break;
+					case 1 : _angle = rotation_random_eval_uniform(_ang, j / (_amo - 1));                                 break;
 					case 2 : _angle = ori[2] + random_range(_sprd[0], _sprd[1]) * (curve_sprd? curve_sprd.get(crat) : 1); break;
 				}
 				
