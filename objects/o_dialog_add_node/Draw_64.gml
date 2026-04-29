@@ -59,6 +59,7 @@ DIALOG_DRAW_BG
 
 #region content
 	tb_search.activate();
+	ds_stack_push(FOCUS_STACK, context_str);
 	
 	var pd = ui(10);
 	

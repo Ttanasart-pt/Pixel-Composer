@@ -8,6 +8,7 @@ event_inherited();
 	volatile  = true;
 	destroy_on_click_out = true;
 	
+	context_str       = "Add Node";
 	title             = "Add node";
 	node_target_x	  = 0;
 	node_target_y	  = 0;
@@ -1694,4 +1695,11 @@ event_inherited();
 		
 		return hh;
 	});
+#endregion
+
+#region functions
+	function toggleSearchFav()   { PREFERENCES.dialog_add_node_search_fav = !PREFERENCES.dialog_add_node_search_fav; }
+	function toggleSearchType()  { PREFERENCES.dialog_add_node_search_typ = !PREFERENCES.dialog_add_node_search_typ; }
+	function toggleSearchColl()  { PREFERENCES.dialog_add_node_collection = !PREFERENCES.dialog_add_node_collection; }
+	function toggleSearchSteam() { search_steam = !search_steam; }
 #endregion

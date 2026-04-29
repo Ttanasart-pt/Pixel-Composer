@@ -131,7 +131,7 @@
 	PREF_APPLY();
 	var t0   = get_timer();
 	var t    = get_timer();
-	var _lua = PROGRAM_ARGUMENTS._lua;
+	var _lua = !IS_CMD || PROGRAM_ARGUMENTS._lua;
 	__r = getMemoryUsage(pid); 
 	
 				  __initSurfaceFormat();  printDebug($"- init SurfaceFormat | {__log_tr()}"); 

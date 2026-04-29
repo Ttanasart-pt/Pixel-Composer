@@ -8,13 +8,21 @@
 	function panel_nodes_edit_sidebar()    { if(PANEL_NODES == noone) return; PANEL_NODES.edit_sidebar();    }
 	
 	function __fnInit_Nodes() {
-		registerFunction("Nodes", "Add Node",        "",        MOD_KEY.none, panel_nodes_add_node        ).setMenu("nodes_add", THEME.add_20);
-		registerFunction("Nodes", "Delete Selected", vk_delete, MOD_KEY.none, panel_nodes_delete_selected ).setMenu("nodes_delete_select");
-		registerFunction("Nodes", "Delete Hovering", "",        MOD_KEY.none, panel_nodes_delete_hovering ).setMenu("nodes_delete_hovering");
+		var n = MOD_KEY.none;
+		var a = MOD_KEY.alt;
 		
-		registerFunction("Nodes", "Toggle Preview",  "", MOD_KEY.none, panel_nodes_toggle_preview  ).setMenu("nodes_toggle_preview");
-		registerFunction("Nodes", "Toggle Sidebar",  "", MOD_KEY.none, panel_nodes_toggle_sidebar  ).setMenu("nodes_toggle_sidebar");
-		registerFunction("Nodes", "Edit Sidebar",    "", MOD_KEY.none, panel_nodes_edit_sidebar    ).setMenu("nodes_edit_sidebar");
+		registerFunction("Nodes", "Add Node",        "",        n, panel_nodes_add_node        ).setMenu("nodes_add", THEME.add_20);
+		registerFunction("Nodes", "Delete Selected", vk_delete, n, panel_nodes_delete_selected ).setMenu("nodes_delete_select");
+		registerFunction("Nodes", "Delete Hovering", "",        n, panel_nodes_delete_hovering ).setMenu("nodes_delete_hovering");
+		
+		registerFunction("Nodes", "Toggle Preview",  "", n, panel_nodes_toggle_preview  ).setMenu("nodes_toggle_preview");
+		registerFunction("Nodes", "Toggle Sidebar",  "", n, panel_nodes_toggle_sidebar  ).setMenu("nodes_toggle_sidebar");
+		registerFunction("Nodes", "Edit Sidebar",    "", n, panel_nodes_edit_sidebar    ).setMenu("nodes_edit_sidebar");
+		
+		registerFunction("Add Node", "Toggle Search Favorite",   "F", a, function() /*=>*/ { if(instance_exists(o_dialog_add_node)) o_dialog_add_node.toggleSearchFav();   });
+		registerFunction("Add Node", "Toggle Search Type",       "T", a, function() /*=>*/ { if(instance_exists(o_dialog_add_node)) o_dialog_add_node.toggleSearchType();  });
+		registerFunction("Add Node", "Toggle Search Collection", "C", a, function() /*=>*/ { if(instance_exists(o_dialog_add_node)) o_dialog_add_node.toggleSearchColl();  });
+		registerFunction("Add Node", "Toggle Search Steam",      "S", a, function() /*=>*/ { if(instance_exists(o_dialog_add_node)) o_dialog_add_node.toggleSearchSteam(); });
 	}
 #endregion
 

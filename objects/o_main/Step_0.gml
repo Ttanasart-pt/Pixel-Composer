@@ -28,26 +28,24 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 			repeat(ds_stack_size(FOCUS_STACK)) {
 				var _focus_ctx = ds_stack_pop(FOCUS_STACK);
 				
-				if(struct_has(HOTKEYS, _focus_ctx)) {
+				if(has(HOTKEYS, _focus_ctx)) {
 					var list = HOTKEYS[$ _focus_ctx];
 					for( var i = 0, n = array_length(list); i < n; i++ ) {
 						var h = list[i];
 						var p = h.isPressing();
+						if(p == undefined) continue;
 						
-						if(p != undefined) {
-							if(p._K == noone) h.action(); // Modifier action trigger immediately
-							else if(h.interrupt) _toActIn = h;
-							else array_push(_toAct, h);
-						}
+						if(p._K == noone) h.action(); // Modifier action trigger immediately
+						else if(h.interrupt) _toActIn = h;
+						else array_push(_toAct, h);
 					}
 				}
 				
-				if(_focus_ctx == "Graph" || _focus_ctx == "Nodes") {
-					for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
-		        		var h = GRAPH_ADD_NODE_KEYS[i];
-		        		if(h.isPressing() != undefined) array_push(_toAct, h);
-		        	}
-				}
+				if(_focus_ctx == "Graph" || _focus_ctx == "Nodes")
+				for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
+	        		var h = GRAPH_ADD_NODE_KEYS[i];
+	        		if(h.isPressing() != undefined) array_push(_toAct, h);
+	        	}
 			}
 			
 			if(_toActIn) {

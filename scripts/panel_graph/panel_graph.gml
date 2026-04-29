@@ -2804,7 +2804,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(dia == undefined) return undefined;
         
         dia.resetPosition();
-        setFocus(dia.id, "Dialog");
+        setFocus(dia.id, dia.context_str);
         
         connect_related = noone;
         

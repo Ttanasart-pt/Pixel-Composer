@@ -19,8 +19,7 @@ gml_pragma("UnityBuild", "true");
 	randomize();
 #endregion
 
-#region //////////////// MAIN ////////////////
-
+#region //// MAIN ////
 	globalvar OS; OS = os_type;
 	#macro MAC (OS == os_macosx)
 	window_set_showborder(OS != os_windows);
@@ -34,11 +33,11 @@ gml_pragma("UnityBuild", "true");
 	globalvar DEBUG; DEBUG    = false;
 	
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_20_00_0;
-	globalvar VERSION; VERSION        = 1_21_00_0;
+	globalvar VERSION; VERSION        = 1_21_00_1;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_00_0;
-	globalvar VERSION_STRING; VERSION_STRING = "1.21.0.0.001";
+	globalvar VERSION_STRING; VERSION_STRING = "1.21.0.1";
 	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.0.0";
-	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_00_0.001;
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_00_1;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1; //
 	
 	globalvar NEW_VERSION; NEW_VERSION    = false;
