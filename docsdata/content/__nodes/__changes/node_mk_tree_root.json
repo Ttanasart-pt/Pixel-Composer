@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1",
+    "changes": [
+      {
+        "date": "2026-04-29T05:33:40.239Z",
+        "node": "",
+        "commit": "**Checkbox**: Fix text overflow in small display."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc10",
     "changes": [
       {

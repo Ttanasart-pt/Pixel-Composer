@@ -13,7 +13,7 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 1, nodeValue_Float(    "Gravity",    1  ));
 	newInput( 2, nodeValue_Rotation( "Direction", -90 ));
 	
-	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
+	newOutput(0, nodeValue_Output("Strands", VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 0, 
 		[ "Gravity", false ], 1, 2, 

@@ -329,7 +329,7 @@ function curveBox(_onModify) : widget() constructor {
 							ac = COLORS.widget_curve_line;
 							ar = ui(3);
 							
-							if(hover && point_in_circle(msx, msy, bx0, by0, 10)) {
+							if(hover && point_in_circle(msx, msy, bx0, by0, ui(10))) {
 								ac = COLORS._main_icon_light;
 								ar = ui(4);
 								
@@ -353,7 +353,7 @@ function curveBox(_onModify) : widget() constructor {
 							ac = COLORS.widget_curve_line;
 							ar = ui(3);
 							
-							if(hover && point_in_circle(msx, msy, ax0, ay0, 10)) {
+							if(hover && point_in_circle(msx, msy, ax0, ay0, ui(10))) {
 								ac = COLORS._main_icon_light;
 								ar = ui(4);
 								
@@ -377,7 +377,7 @@ function curveBox(_onModify) : widget() constructor {
 					ac = COLORS._main_accent;
 					ar = ui(4);
 					
-					if(hover && point_in_circle(msx, msy, _x0, _y0, ui(6))) {
+					if(hover && point_in_circle(msx, msy, _x0, _y0, ui(10))) {
 						ac = COLORS._main_accent;
 						ar = ui(5);
 						

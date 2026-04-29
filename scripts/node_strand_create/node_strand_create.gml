@@ -54,7 +54,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(16, nodeValue_Bool( "View fix hair", false ));
 	//// inputs 20
 	
-	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
+	newOutput(0, nodeValue_Output("Strands", VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 10, 
 		[ "Generation", false ],  0,  1,  5,  6,  7, 13, 14, b_bake, 

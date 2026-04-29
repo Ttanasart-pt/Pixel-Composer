@@ -11,6 +11,11 @@
         "date": "2026-04-29T04:28:33.045Z",
         "node": "Wave Interfere",
         "commit": "**Wave Interfere**: Add square and custom curve wave shape."
+      },
+      {
+        "date": "2026-04-29T05:33:40.246Z",
+        "node": "",
+        "commit": "**Checkbox**: Fix text overflow in small display."
       }
     ]
   },

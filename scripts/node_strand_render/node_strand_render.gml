@@ -15,17 +15,16 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- =Strand
 	newInput( 1, nodeValue_Strand());
-	newInput( 2, nodeValue_Range( "Thickness", [ 1, 1 ], { linked : true }));
-	newInput( 3, nodeValue_Curve( "Thickness over length", CURVE_DEF_11));
+	newInput( 2, nodeValue_Range( "Thickness", [1,1], { linked : true } )).setCurvable(3, CURVE_DEF_11, "over length");
 	
 	////- =Scatter
-	newInput( 9, nodeValue_Bool(  "Use Scatter", false));
-	newInput( 7, nodeValue_Float( "Children Count", 0, "Render extra strands between the real strands."));
-	newInput(10, nodeValue_Float( "Scatter Range", 2));
+	newInput( 9, nodeValue_Bool(  "Use Scatter",    false ));
+	newInput( 7, nodeValue_Float( "Children Count", 2, "Render extra strands between the real strands."));
+	newInput(10, nodeValue_Float( "Scatter Range",  2     ));
 	
 	////- =Color
-	newInput(4, nodeValue_Gradient( "Random color", gra_white));
-	newInput(5, nodeValue_Gradient( "Color over length", gra_white)).setHotkeyAuto("C");
+	newInput(4, nodeValue_Gradient( "Random color",      gra_white ));
+	newInput(5, nodeValue_Gradient( "Color over length", gra_white )).setHotkeyAuto("C");
 	//// inputs 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -71,14 +70,14 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			var _strd  = getInputData(1);
 			var _tbas  = getInputData(2);
-			var _tlen  = getInputData(3);
+			var _tlen  = getInputData(3), len_curve = inputs[2].attributes.curved;
 			
 			var _chUse = getInputData( 9);
 			var _chid  = getInputData( 7);
 			var _chRng = getInputData(10);
 			
-			var _cbas  = getInputData(4);
-			var _clen  = getInputData(5);
+			var _cbas  = getInputData(4); _cbas.cache();
+			var _clen  = getInputData(5); _clen.cache();
 			
 			var _surf  = outputs[0].getValue();
 			    _surf  = surface_verify(_surf, _dim[0], _dim[1]);
@@ -90,6 +89,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		random_set_seed(_seed);
 		var _sedIndex = 0;
+		var _rndWidth = _tbas[0] != _tbas[1];
 		
 		surface_set_target(_surf);
 		DRAW_CLEAR
@@ -98,6 +98,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var oy, ny; 
 		var ot, nt;
 		var oc, nc;
+		var _count = 0;
 		
 		if(!_chUse) _chid = 0;
 		
@@ -113,30 +114,35 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var len = array_length(hair.points);
 				if(len <= 1) continue;
 				
-				var bld = _cbas.eval(random1D(_seed + _sedIndex++));
+				var bld = _cbas.evalFast(random1D(_seed + _sedIndex++));
 				var st  = 1 / (len - 1);
 				var j   = 0;
 				var prg = 0;
 				
-				repeat(len) {
-					nx  = hair.points[j].x;
-					ny  = hair.points[j].y;
+				ox = hair.points[0].x;
+				oy = hair.points[0].y;
+				ot =  (_rndWidth? random1D(_seed + _sedIndex++, _tbas[0], _tbas[1]) : _tbas[0])
+					* (len_curve? eval_curve_x(_tlen, 0) : 1);
+				oc = colorMultiply(bld, _clen.evalFast(0));
+				prg += st;
+				j++;
+				
+				draw_primitive_begin(pr_trianglestrip);
+				repeat(len-1) {
+					nx = hair.points[j].x;
+					ny = hair.points[j].y;
 					
-					nt  = eval_curve_x(_tlen, prg);
-					nt *= random1D(_seed + _sedIndex++, _tbas[0], _tbas[1]);
+					nt =  (_rndWidth? random1D(_seed + _sedIndex++, _tbas[0], _tbas[1]) : _tbas[0])
+						* (len_curve? eval_curve_x(_tlen, prg) : 1);
+					nc = colorMultiply(bld, _clen.evalFast(prg));
 					
-					nc  = _clen.eval(prg);
-					nc  = colorMultiply(bld, nc);
+					draw_line_width2_prim(ox, oy, nx, ny, ot, nt, 3, oc, nc);
 					
-					if(j) {
-						draw_line_width2(ox, oy, nx, ny, ot, nt, 3, oc, nc);
+					repeat(_chid) {
+						var ofx = random_range(-_chRng, _chRng);
+						var ofy = random_range(-_chRng, _chRng);
 						
-						repeat(_chid) {
-							var ofx = random_range(-_chRng, _chRng);
-							var ofy = random_range(-_chRng, _chRng);
-							
-							draw_line_width2(ox + ofx, oy + ofy, nx + ofx, ny + ofy, ot, nt, 3, oc, nc);
-						}
+						draw_line_width2_prim(ox + ofx, oy + ofy, nx + ofx, ny + ofy, ot, nt, 3, oc, nc);
 					}
 					
 					ox = nx;
@@ -145,10 +151,13 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					oc = nc;
 					prg += st;
 					j++;
+					
 				}
-				
+				draw_primitive_end();
 			}
+			
 		}
+		
 		surface_reset_target();
 		
 		if(attributes.use_cache) cacheCurrentFrame(_surf);

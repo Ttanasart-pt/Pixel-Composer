@@ -48,10 +48,12 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setCurvable( 11, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 36, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
 		
+	////- =Color
 	newInput(37, nodeValue_Slider(   "Inherit Parent Color", 0      ));
 	newInput(12, nodeValue_Gradient( "Base Color",      gra_white   ));
 	newInput(27, nodeValue_EButton(  "Length Blending", 0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(28, nodeValue_Gradient( "Length Color",    gra_white   ));
+	
 	newInput(17, nodeValue_EButton(  "Edge Blending",   0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(18, nodeValue_Gradient( "L Edge Color",    gra_white   ));
 	newInput(29, nodeValue_Gradient( "R Edge Color",    gra_white   ));
@@ -66,10 +68,11 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
 		[ "Origin",    false ],  5, 19,  8, 32, 
-		[ "Segment",   false ],  7,  3, 13, 
+		[ "Segments",  false ],  7,  3, 13, 
 		[ "Direction", false ], 31,  4, 10, 34, 35, 15,  9, 16, 33, 
-		[ "Spiral",    false ], 25, 38, 26, 21, 22, 23, 24, 
-		[ "Rendering", false ], 39, 6, 11, 36, 37, 12, 27, 28, 17, 18, 29, 30, 
+		[ "Spiral",     true ], 25, 38, 26, 21, 22, 23, 24, 
+		[ "Rendering", false ], 39,  6, 11, 36, 
+		[ "Color",     false ], 37, 12, 27, 28, __inspc(), 17, 18, 29, 30, 
 		[ "Growth",    false ], 20, 
 	];
 	

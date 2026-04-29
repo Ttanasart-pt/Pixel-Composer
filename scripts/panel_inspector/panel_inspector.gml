@@ -198,7 +198,7 @@
 	    open = true;
 	}
 	
-	function __inspc(_h, _line = false, _coll = true, _shf = ui(2)) { return new Inspector_Spacer(_h, _line, _coll, _shf); }
+	function __inspc(_h = ui(6),  _line =  true, _coll = true, _shf = ui(2)) { return new Inspector_Spacer(_h, _line, _coll, _shf); }
 	function Inspector_Spacer(_h, _line = false, _coll = true, _shf = ui(2)) constructor { 
 		active = true;
 	    h      = _h;  

@@ -13,7 +13,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 1, nodeValue_Mesh("Collision mesh")).setVisible(true, true);
 	// 2
 	
-	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
+	newOutput(0, nodeValue_Output("Strands", VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 0, 
 		[ "Collision", false ], 1, 

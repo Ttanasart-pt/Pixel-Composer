@@ -25,13 +25,16 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(15, nodeValue_Range(  "Curl",      [0,0], true ))
 		.setCurvable(16, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 	
-	////- =Rendering
-	newInput(21, nodeValue_Bool(     "Draw Line", false       ));
-	newInput( 3, nodeValue_Range(       "Thickness",       [4,4], true ))
+	////- =Render
+	newInput(21, nodeValue_EScroll(     "Draw Mode",  0, [ "Texture", "Line" ] ));
+	newInput( 3, nodeValue_Range(       "Thickness", [4,4], true ))
 		.setCurvable(4, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+		
+	////- =Color
 	newInput( 5, nodeValue_Gradient(    "Base Color",      gra_white ));
 	newInput(17, nodeValue_Enum_Button( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(18, nodeValue_Gradient(    "Length Color",    gra_white ));
+	
 	newInput( 6, nodeValue_Enum_Button( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput( 7, nodeValue_Gradient(    "L Edge Color",    gra_white ));
 	newInput(19, nodeValue_Gradient(    "R Edge Color",    gra_white ));
@@ -43,8 +46,9 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		[ "Path",      false ],  1,  2, 
 		[ "Direction", false ],  8, 10, 
-		[ "Spiral",    false ], 11, 12, 13, 14, 15, 16, 
-		[ "Render",    false ], 21,  3,  4,  5, 17, 18,  6,  7, 19, 20, 
+		[ "Spiral",     true ], 11, 12, 13, 14, 15, 16, 
+		[ "Render",    false ], 21,  3,  4,
+		[ "Color",     false ],  5, 17, 18, __inspc(),  6,  7, 19, 20, 
 	];
 	
 	////- Nodes

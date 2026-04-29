@@ -52,7 +52,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 5, nodeValue_Slider(   "Falloff",   .2    ));
 	// 6
 	
-	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
+	newOutput(0, nodeValue_Output("Strands", VALUE_TYPE.strands, noone));
 	
 	input_fix_len = array_length(inputs);
 	input_display_list = [ 0, 
