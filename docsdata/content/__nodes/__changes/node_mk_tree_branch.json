@@ -6,6 +6,11 @@
         "date": "2026-04-29T05:33:40.238Z",
         "node": "Checkbox",
         "commit": "**Checkbox**: Fix text overflow in small display."
+      },
+      {
+        "date": "2026-04-29T06:13:53.160Z",
+        "node": "MK Tree > Tree Branch",
+        "commit": "**MK Tree > Tree Branch**: Improve trunk to branch connection rendering."
       }
     ]
   },

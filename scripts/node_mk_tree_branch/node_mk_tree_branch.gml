@@ -197,11 +197,12 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_t.x = ori[0];
 				_t.y = ori[1];
 				
-				_t.amount       = random_range(_segs[0], _segs[1]);
-				_t.texture      = _tex;
-				_t.rootPosition =  rat;
-				_t.curvPosition = crat;
-				_t.drawLine     = _line;
+				_t.amount        = random_range(_segs[0], _segs[1]);
+				_t.texture       = _tex;
+				_t.rootPosition  =  rat;
+				_t.rootDirection = ori[2];
+				_t.curvPosition  = crat;
+				_t.drawLine      = _line;
 				
 				var _baseDir = ori[2];
 				var _length  = random_range(_len[0], _len[1]) * (curve_length? curve_length.get(crat) : 1);

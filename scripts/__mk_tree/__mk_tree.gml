@@ -336,6 +336,7 @@ function __MK_Tree() constructor {
 	y = 0;
 	
 	rootPosition   = 0;
+	rootDirection  = undefined;
 	curvPosition   = 0;
 	amount         = 1;
 	segments       = [];
@@ -640,20 +641,25 @@ function __MK_Tree() constructor {
 	static drawBranch = function() {
 		var ox, oy, ot, oa, oc, ocl, ocr, orat;
 		var nx, ny, nt, na, nc, ncl, ncr, nrat;
-		var tid = is_surface(texture)? surface_get_texture(texture) : -1;
 		
+		var len = array_length(segments);
+		if(len <= 1) return;
+		
+		var tid = is_surface(texture)? surface_get_texture(texture) : -1;
 		draw_set_circle_precision(16);
 		draw_primitive_begin_texture(pr_trianglelist, tid);
 		
-		var len = array_length(segments);
 		var ang = array_create(len);
-		
 		for( var i = 1; i < len; i++ ) {
 			var _s0 = segments[i - 1];
 			var _s1 = segments[i];
 			
 			ang[i] = point_direction(_s0.x, _s0.y, _s1.x, _s1.y) - 90;
 		}
+		
+		ang[0] = ang[1];
+		if(rootDirection != undefined)
+			ang[0] = rootDirection + (angle_difference(rootDirection, ang[1] + 90) > 0) * 180;
 		
 		for( var i = 0; i < len; i++ ) {
 			var _seg = segments[i];

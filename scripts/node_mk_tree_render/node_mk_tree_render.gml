@@ -4,8 +4,8 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	icon  = THEME.mkTree;
 	parameters.inline_draw_output = true;
 	
-	newInput(0, nodeValue_Struct("Tree",         noone )).setArrayDepth(1).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
-	newInput(1, nodeValue_Bool(  "Output Array", false )).rejectArray();
+	newInput(0, nodeValue_Struct( "Tree",         noone )).setArrayDepth(1).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	newInput(1, nodeValue_Bool(   "Output Array", false )).rejectArray();
 	// 2
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -27,10 +27,7 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}
 	
 	static drawTree = function(_t) {
-		if(is(_t, __MK_Tree_Leaf)) { 
-			_t.draw(); 
-			return; 
-		}
+		if(is(_t, __MK_Tree_Leaf)) { _t.draw(); return; }
 			
 		if(is(_t, __MK_Tree)) { 
 			if(_t.root.drawn) return;
@@ -56,7 +53,6 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			DRAW_CLEAR
 			
 			draw_set_color(c_white);
-			draw_set_alpha(1);
 			
 			if(is_array(_tree)) 
 				array_foreach(_tree, function(t,i) /*=>*/ {return drawTree(t)})
