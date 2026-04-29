@@ -353,6 +353,8 @@ function __MK_Tree() constructor {
 	texture   = noone;
 	drawLine  = false;
 	
+	mesh = undefined;
+	
 	////- Get
 	
 	static getPosition = function(rat, res) {

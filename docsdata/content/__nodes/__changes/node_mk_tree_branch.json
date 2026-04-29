@@ -11,6 +11,11 @@
         "date": "2026-04-29T06:13:53.160Z",
         "node": "MK Tree > Tree Branch",
         "commit": "**MK Tree > Tree Branch**: Improve trunk to branch connection rendering."
+      },
+      {
+        "date": "2026-04-29T06:28:10.318Z",
+        "node": "MK Tree > Tree Branch",
+        "commit": "**MK Tree > Tree Branch**: Add \"Spread\" direction type that defined branch direction by the spread angle from the branch parent."
       }
     ]
   },

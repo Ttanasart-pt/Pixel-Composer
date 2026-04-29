@@ -22,9 +22,12 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setCurvable(13, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	
 	////- =Direction
-	newInput(31, nodeValue_EButton( "Direction Type",  0, [ "Random", "Uniform" ] ));
+	newInput(31, nodeValue_EButton( "Direction Type",  0, [ "Random", "Uniform", "Spread" ] ));
 	newInput( 4, nodeValue_RotRand( "Direction",      [0,80,100,0,0] ));
-	newInput(10, nodeValue_Range(   "Dir. Wiggle",    [0,0], true    ))
+	newInput(40, nodeValue_Range(   "Spread",         [15,30]   ))
+		.setCurvable(41, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+		
+	newInput(10, nodeValue_Range(   "Wiggle",    [0,0], true    ))
 		.setCurvable( 34, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 35, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
 		
@@ -61,7 +64,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 40
+	// input 42
 	
 	newOutput(0, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -69,7 +72,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
 		[ "Origin",    false ],  5, 19,  8, 32, 
 		[ "Segments",  false ],  7,  3, 13, 
-		[ "Direction", false ], 31,  4, 10, 34, 35, 15,  9, 16, 33, 
+		[ "Direction", false ], 31,  4, 40, 41, 10, 34, 35, 15,  9, 16, 33, 
 		[ "Spiral",     true ], 25, 38, 26, 21, 22, 23, 24, 
 		[ "Rendering", false ], 39,  6, 11, 36, 
 		[ "Color",     false ], 37, 12, 27, 28, __inspc(), 17, 18, 29, 30, 
@@ -130,19 +133,22 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var _angT  = getInputData(31);
 			var _ang   = getInputData( 4);
+			var _sprd  = getInputData(40);
+			var _sprdC = getInputData(41),    curve_sprd  = inputs[40].attributes.curved? new curveMap(_sprdC)  : undefined;
+			
 			var _anw   = getInputData(10);
-			var _anwC  = getInputData(34),     curve_angw   = inputs[10].attributes.curved?        new curveMap(_anwC)  : undefined;
-			var _anwCR = getInputData(35),     curve_angw_r = inputs[10].attributes.curved_branch? new curveMap(_anwCR) : undefined;
+			var _anwC  = getInputData(34),    curve_angw   = inputs[10].attributes.curved?        new curveMap(_anwC)  : undefined;
+			var _anwCR = getInputData(35),    curve_angw_r = inputs[10].attributes.curved_branch? new curveMap(_anwCR) : undefined;
 			
 			var _refl  = getInputData(15);
 			var _grv   = getInputData( 9);
-			var _grvC  = getInputData(16),     curve_grav   = inputs[ 9].attributes.curved?        new curveMap(_grvC)  : undefined;
-			var _grvCR = getInputData(33),     curve_grav_r = inputs[ 9].attributes.curved_branch? new curveMap(_grvCR) : undefined;
+			var _grvC  = getInputData(16),    curve_grav   = inputs[ 9].attributes.curved?        new curveMap(_grvC)  : undefined;
+			var _grvCR = getInputData(33),    curve_grav_r = inputs[ 9].attributes.curved_branch? new curveMap(_grvCR) : undefined;
 			
 			var _line  = getInputData(39);
 			var _thk   = getInputData( 6);
-			var _thkC  = getInputData(11),     curve_thick   = inputs[ 6].attributes.curved?        new curveMap(_thkC)  : undefined;
-			var _thkCR = getInputData(36),     curve_thick_r = inputs[ 6].attributes.curved_branch? new curveMap(_thkCR) : undefined;
+			var _thkC  = getInputData(11),    curve_thick   = inputs[ 6].attributes.curved?        new curveMap(_thkC)  : undefined;
+			var _thkCR = getInputData(36),    curve_thick_r = inputs[ 6].attributes.curved_branch? new curveMap(_thkCR) : undefined;
 			
 			var _inhColor = getInputData(37);
 			var _baseGrad = getInputData(12);
@@ -154,6 +160,9 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _tex      = getInputData(30);
 				
 			var _grow = getInputData(20);
+			
+			inputs[ 4].setVisible(_angT != 2);
+			inputs[40].setVisible(_angT == 2);
 			
 			inputs[27].setVisible(!_line);
 			inputs[28].setVisible(!_line);
@@ -206,7 +215,13 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				var _baseDir = ori[2];
 				var _length  = random_range(_len[0], _len[1]) * (curve_length? curve_length.get(crat) : 1);
-				var _angle   = _angT == 0? rotation_random_eval(_ang) : rotation_random_eval_uniform(_ang, j / (_amo - 1));
+				var _angle   = 0;
+				
+				switch(_angT) {
+					case 0 : _angle = rotation_random_eval(_ang); break;
+					case 1 : _angle = rotation_random_eval_uniform(_ang, j / (_amo - 1)); break;
+					case 2 : _angle = ori[2] + random_range(_sprd[0], _sprd[1]) * (curve_sprd? curve_sprd.get(crat) : 1); break;
+				}
 				
 				switch(_refl) {
 					case 1 : if(choose(0, 1))   _angle = _baseDir + angle_difference(_baseDir, _angle); break;
