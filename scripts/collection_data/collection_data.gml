@@ -22,7 +22,7 @@ function refreshCollections() {
 	COLLECTIONS.open = true;
 }
 
-function searchCollection(_arr, _search_str, _inputArray = true) {
+function searchCollection(_arr, _search_str, _inputArray = true, _steam = false) {
 	if(_search_str == "") return;
 	var search_lower = string_lower(_search_str);
 	
@@ -45,6 +45,16 @@ function searchCollection(_arr, _search_str, _inputArray = true) {
 			ds_stack_push(st, _st.subDir[i]);
 	}
 	
+	if(_steam) {
+		for( var si = 0; si < array_length(STEAM_COLLECTION); si++ ) {
+			var sfil  = STEAM_COLLECTION[si];
+			var match = string_partial_match(string_lower(sfil.name), search_lower);
+			if(match == -9999) continue;
+			
+			ds_priority_add(ll, sfil, match);
+		}
+	}
+	
 	if(_inputArray) {
 		repeat(ds_priority_size(ll))
 			array_push(_arr, ds_priority_delete_max(ll));
@@ -55,7 +65,7 @@ function searchCollection(_arr, _search_str, _inputArray = true) {
 	ds_stack_destroy(st);
 }
 
-function searchCollectionData(pr_list, _search_str) {
+function searchCollectionData(pr_list, _search_str, _steam = false) {
 	if(_search_str == "") return;
 	var search_lower = string_lower(_search_str);
 	
@@ -86,6 +96,28 @@ function searchCollectionData(pr_list, _search_str) {
 			
 		for( var i = 0; i < array_length(_st.subDir); i++ )
 			ds_stack_push(st, _st.subDir[i]);
+	}
+	
+	if(_steam) {
+		for( var si = 0; si < array_length(STEAM_COLLECTION); si++ ) {
+			var sfil  = STEAM_COLLECTION[si];
+			var match = string_partial_match_res(string_lower(sfil.name), search_lower);
+			if(match == -9999) continue;
+			
+			match[0] -= 10;
+			
+			var searchData = { 
+				search : true, 
+				name   : sfil.name, 
+				node   : sfil, 
+				param  : undefined, 
+				match  : match, 
+				weight : match[0], 
+				path   : undefined, 
+			};
+			
+			ds_priority_add(pr_list, searchData, match[0]);
+		}	
 	}
 	
 	ds_stack_destroy(st);

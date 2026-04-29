@@ -1068,6 +1068,7 @@ event_inherited();
 #region search
 	search_string = "";
 	search_list   = [];
+	search_steam  = true;
 	march_array   = [0,0];
 	KEYBOARD_RESET
 	
@@ -1220,7 +1221,7 @@ event_inherited();
 		
 		#region Collection
 			if(PREFERENCES.dialog_add_node_collection)
-				searchCollectionData(pr_list, search_string);
+				searchCollectionData(pr_list, search_string, search_steam);
 		#endregion
 		
 		#region Tunnel
@@ -1417,9 +1418,9 @@ event_inherited();
 							var _soy = sprite_get_yoffset(_node.spr);
 					
 							var _sx = _boxx + grid_size / 2;
-							var _sy = yy + grid_size / 2;
-							_sx += _sw * _ss / 2 - _sox * _ss;
-							_sy += _sh * _ss / 2 - _soy * _ss;
+							var _sy =  yy   + grid_size / 2;
+							_sx -= (_sw / 2 - _sox) * _ss;
+							_sy -= (_sh / 2 - _soy) * _ss;
 					
 							draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 						}
@@ -1579,9 +1580,9 @@ event_inherited();
 					
 						var _sx = pd + list_height / 2 + ui(32);
 						var _sy = yc;
-						_sx += _sw * _ss / 2 - _sox * _ss;
-						_sy += _sh * _ss / 2 - _soy * _ss;
-				
+						_sx -= (_sw / 2 - _sox) * _ss;
+						_sy -= (_sh / 2 - _soy) * _ss;
+					
 						draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 					
 						if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))

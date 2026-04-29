@@ -89,7 +89,7 @@ function Panel_Collection() : PanelContent() constructor {
 			switch(pageStr[page]) {
 				case "Collections" :
 				case "Assets" : 
-					searchCollection(search_list, search_string);
+					searchCollection(search_list, search_string, true, true);
 					break;
 					
 				case "Projects" : 

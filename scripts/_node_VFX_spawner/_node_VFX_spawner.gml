@@ -10,60 +10,60 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(22, nodeValue_EScroll(  "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.");
 	
-	newInput(23, nodeValue_Range(    "Animation Speed",      [1,1], { linked : true } ));
-	newInput(49, nodeValue_Bool(     "Stretch Animation",    false                    ));
-	newInput(26, nodeValue_EButton(  "On Animation End",     ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
+	newInput(23, nodeValue_Range(    "Animation Speed",   [1,1], { linked : true } ));
+	newInput(49, nodeValue_Bool(     "Stretch Animation", false                    ));
+	newInput(26, nodeValue_EButton(  "On Animation End",  ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
 	
 	////- =Spawn
-	newInput(27, nodeValue_Bool(     "Spawn",                true          ));
-	newInput(16, nodeValue_EButton(  "Spawn Type",           0             )).setChoices([ "Stream", "Burst", "Trigger" ]);
-	newInput(44, nodeValue_Trigger(  "Spawn"                               ));
-	newInput( 1, nodeValue_Int(      "Spawn Delay",          4             )).setTooltip("Frames delay between each particle spawn.");
-	newInput(51, nodeValue_Int(      "Burst Duration",       1             ));
-	newInput( 2, nodeValue_Range(    "Spawn Amount",        [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
-	newInput( 5, nodeValue_Range(    "Lifespan",            [20,30]        ));
+	newInput(27, nodeValue_Bool(     "Spawn",            true          ));
+	newInput(16, nodeValue_EButton(  "Spawn Type",       0             )).setChoices([ "Stream", "Burst", "Trigger" ]);
+	newInput(44, nodeValue_Trigger(  "Spawn"                           ));
+	newInput( 1, nodeValue_Int(      "Spawn Delay",      4             )).setTooltip("Frames delay between each particle spawn.");
+	newInput(51, nodeValue_Int(      "Burst Duration",   1             ));
+	newInput( 2, nodeValue_Range(    "Spawn Amount",    [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
+	newInput( 5, nodeValue_Range(    "Lifespan",        [20,30]        ));
 	
 	////- =Spawn Source
-	newInput( 4, nodeValue_EScroll(  "Spawn Source",         0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
-	newInput( 3, nodeValue_Area(     "Spawn Area",           DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
-	newInput(30, nodeValue_Surface(  "Distribution Map"                    ));
-	newInput(55, nodeValue_PathNode( "Spawn Path"                          ));
-	newInput(62, nodeValue_Vector(   "Spawn Data"                          )).setArrayDepth(1);
-	newInput(24, nodeValue_EButton(  "Distribution",         1             )).setChoices([ "Uniform", "Random" ]);
-	newInput(52, nodeValue_Float(    "Uniform Period",       4             ));
+	newInput( 4, nodeValue_EScroll(  "Spawn Source",     0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
+	newInput( 3, nodeValue_Area(     "Spawn Area",       DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
+	newInput(30, nodeValue_Surface(  "Distribution Map"                ));
+	newInput(55, nodeValue_PathNode( "Spawn Path"                      ));
+	newInput(62, nodeValue_Vector(   "Spawn Data"                      )).setArrayDepth(1).setTooltip("Array of vec2 points to spawn particles at.");
+	newInput(24, nodeValue_EButton(  "Distribution",     1             )).setChoices([ "Uniform", "Random" ]);
+	newInput(52, nodeValue_Float(    "Uniform Period",   4             ));
 	
 	////- =Movement
-	newInput(64, nodeValue_EButton(  "Direction Type",              0, [ "Random", "Uniform" ] ));
-	newInput( 6, nodeValue_RotRand(  "Initial Direction",          [0,45,135,0,0]     )); 
-	newInput(18, nodeValue_Range(    "Speed",                      [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
-	inputs[60].setTooltip("Speed may conflict with physics-based properties.");
+	newInput(64, nodeValue_EButton(  "Direction Type",        0, [ "Random", "Uniform" ] ));
+	newInput( 6, nodeValue_RotRand(  "Initial Direction",    [0,45,135,0,0]     )); 
+	newInput(18, nodeValue_Range(    "Speed",                [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
+	inputs[60].setTooltip("Speed Curve may conflict with physics-based properties.");
 	
-	newInput(29, nodeValue_Bool(     "Directed From Center",       false              )).setTooltip("Make particle move away from the spawn center.");
-	newInput(53, nodeValue_RotRange( "Angle Range",                [0,360]            ));
-	newInput(67, nodeValue_Toggle(   "Wrap",                       0, [ "X", "Y" ]    ))
+	newInput(29, nodeValue_Bool(     "Directed From Center", false              )).setTooltip("Make particle move away from the spawn center.");
+	newInput(53, nodeValue_RotRange( "Angle Range",          [0,360]            ));
+	newInput(67, nodeValue_Toggle(   "Wrap",                  0, [ "X", "Y" ]   ))
 	
 	////- =Rotation
-	newInput(15, nodeValue_Bool(     "Rotate by Direction",        false              )).setTooltip("Make the particle rotates to follow its movement.");
-	newInput( 8, nodeValue_RotRand(  "Initial Rotation",           [0,0,0,0,0]        ));
-	newInput( 9, nodeValue_RotRand(  "Rotational Speed",           [0,0,0,0,0]        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
-	newInput(61, nodeValue_Float(    "Snap Rotation",              0                  ));
+	newInput(15, nodeValue_Bool(     "Rotate by Direction",   false             )).setTooltip("Make the particle rotates to follow its movement.");
+	newInput( 8, nodeValue_RotRand(  "Initial Rotation",     [0,0,0,0,0]        ));
+	newInput( 9, nodeValue_RotRand(  "Rotational Speed",     [0,0,0,0,0]        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
+	newInput(61, nodeValue_Float(    "Snap Rotation",         0                 ));
 	
 	////- =Scale
 	newInput(10, nodeValue_Vec2_Range( "Scale",        [1,1,1,1], { linked : true }   ));
 	newInput(17, nodeValue_Range(      "Size",         [1,1],     { linked : true }   )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
 	
 	////- =Color
-	newInput(28, nodeValue_Gradient(  "Color on Spawn",         gra_white                ));
-	newInput(50, nodeValue_Palette(   "Color by Index",         [ca_white]               )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(12, nodeValue_Gradient(  "Color Over Lifetime",    gra_white                ));
-	newInput(13, nodeValue_Range(     "Alpha",                  [1,1], { linked : true } )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
+	newInput(28, nodeValue_Gradient(  "Color on Spawn",      gra_white                ));
+	newInput(50, nodeValue_Palette(   "Color by Index",      [ca_white]               )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(12, nodeValue_Gradient(  "Color Over Lifetime", gra_white                ));
+	newInput(13, nodeValue_Range(     "Alpha",               [1,1], { linked : true } )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
 	newInput(56, nodeValue_Surface(   "Sample Surface"                                   ));
 	
 	////- =Path
-	newInput(45, nodeValue_Bool(       "Follow Path",          false                     ));
-	newInput(46, nodeValue_PathNode(   "Path"                                            ));
-	newInput(66, nodeValue_Vec2_Range( "Path Range",           [0,0,1,1]                 ));
-	newInput(47, nodeValue_Curve(      "Path Deviation",       CURVE_DEF_11              ));
+	newInput(45, nodeValue_Bool(       "Follow Path",        false                    ));
+	newInput(46, nodeValue_PathNode(   "Path"                                         ));
+	newInput(66, nodeValue_Vec2_Range( "Path Range",         [0,0,1,1]                ));
+	newInput(47, nodeValue_Curve(      "Path Deviation",     CURVE_DEF_11             ));
 	
 	////- =Physics
 	newInput(57, nodeValue_Bool(     "Use Physics",            false                     ));
@@ -198,65 +198,66 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- VFX
 	
 	static spawn = function(_time = NODE_CURRENT_FRAME, _pos = -1) {
-		var _inSurf     	= getInputData( 0);
-		var _arr_type   	= getInputData(22);
-		var _anim_speed 	= getInputData(23);
-		var _anim_stre  	= getInputData(49);
-		var _anim_end   	= getInputData(26);
-		
-		var _spawn_amount	= getInputData( 2);
-		var _spawn_area 	= inputs[3].getValue();
-		var _distrib    	= getInputData( 4);
-		var _dist_map   	= getInputData(30);
-		var _dist_path   	= getInputData(55);
-		var _dist_data      = getInputData(62);
-		var _scatter    	= getInputData(24);
-		var _spawn_period   = getInputData(52);
-		
-		var _life       	= getInputData( 5);
-		var _directionType  = getInputData(64);
-		var _direction  	= getInputData( 6);
-		var _directCenter	= getInputData(29);
-		var _directRange	= getInputData(53);
-		var _warp           = getInputData(67);
-		var _velocity   	= getInputData(18);
-		
-		var _rotation   	= getInputData( 8);
-		var _rotation_speed	= getInputData( 9);
-		var _rotation_snap	= getInputData(61);
-		var _scale      	= getInputData(10);
-		var _size       	= getInputData(17);
-		var _follow     	= getInputData(15);
-		
-		var _color      	= getInputData(12);
-		var _blend      	= getInputData(28);
-		var _color_idx   	= getInputData(50), _color_idx_len  = array_length(_color_idx), _color_idx_typ = inputs[50].attributes.array_select;
-		var _alpha      	= getInputData(13);
-		
-		//////////////////////////////////////////////////////////////////////////////
-		
-		var _path       	= getInputData(46);
-		var _pathRange      = getInputData(66);
-		
-		var _use_phy     	= getInputData(57);
-		var _accel      	= getInputData( 7);
-		var _grav       	= getInputData(19);
-		var _gvDir      	= getInputData(33);
-		var _turn       	= getInputData(34);
-		var _turnBi     	= getInputData(35);
-		var _turnSc     	= getInputData(36);
-		var _friction     	= getInputData(54);
-		
-		var _ground         = getInputData(37);
-		var _ground_offtyp  = getInputData(63);
-		var _ground_offset  = getInputData(38);
-		var _ground_bounce  = getInputData(39);
-		var _ground_frict   = getInputData(40);
-		
-		var _use_wig     	= getInputData(58);
+		#region data
+			var _inSurf     	= getInputData( 0);
+			var _arr_type   	= getInputData(22);
+			var _anim_speed 	= getInputData(23);
+			var _anim_stre  	= getInputData(49);
+			var _anim_end   	= getInputData(26);
+			
+			var _spawn_amount	= getInputData( 2);
+			var _spawn_area 	= inputs[3].getValue();
+			var _distrib    	= getInputData( 4);
+			var _dist_map   	= getInputData(30);
+			var _dist_path   	= getInputData(55);
+			var _dist_data      = getInputData(62);
+			var _scatter    	= getInputData(24);
+			var _spawn_period   = getInputData(52);
+			
+			var _life       	= getInputData( 5);
+			var _directionType  = getInputData(64);
+			var _direction  	= getInputData( 6);
+			var _directCenter	= getInputData(29);
+			var _directRange	= getInputData(53);
+			var _warp           = getInputData(67);
+			var _velocity   	= getInputData(18);
+			
+			var _rotation   	= getInputData( 8);
+			var _rotation_speed	= getInputData( 9);
+			var _rotation_snap	= getInputData(61);
+			var _scale      	= getInputData(10);
+			var _size       	= getInputData(17);
+			var _follow     	= getInputData(15);
+			
+			var _color      	= getInputData(12);
+			var _blend      	= getInputData(28);
+			var _color_idx   	= getInputData(50), _color_idx_len  = array_length(_color_idx), _color_idx_typ = inputs[50].attributes.array_select;
+			var _alpha      	= getInputData(13);
 		
 		//////////////////////////////////////////////////////////////////////////////
 		
+			var _path       	= getInputData(46);
+			var _pathRange      = getInputData(66);
+			
+			var _use_phy     	= getInputData(57);
+			var _accel      	= getInputData( 7);
+			var _grav       	= getInputData(19);
+			var _gvDir      	= getInputData(33);
+			var _turn       	= getInputData(34);
+			var _turnBi     	= getInputData(35);
+			var _turnSc     	= getInputData(36);
+			var _friction     	= getInputData(54);
+			
+			var _ground         = getInputData(37);
+			var _ground_offtyp  = getInputData(63);
+			var _ground_offset  = getInputData(38);
+			var _ground_bounce  = getInputData(39);
+			var _ground_frict   = getInputData(40);
+			
+			var _use_wig     	= getInputData(58);
+			
+		//////////////////////////////////////////////////////////////////////////////
+		#endregion
 		
 		if(array_empty(_inSurf)) return;
 		
@@ -269,7 +270,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			_posDist       = dist_map_cache;
 		}
 		
-		if(_distrib == 4) _amo     = array_length(_dist_data);
+		if(_distrib == 4) {
+			var _dep = array_get_depth(_dist_data);
+			if(_dep != 2) return;
+			_amo = array_length(_dist_data);
+		}
 		
 		for( var i = 0; i < _amo; i++ ) {
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);

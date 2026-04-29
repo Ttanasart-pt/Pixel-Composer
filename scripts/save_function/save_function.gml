@@ -69,10 +69,12 @@ function SAVE_AS(project = PROJECT) {
 	return true;
 }
 
-function save_param(_thumbnail = true, _log_prefix = "Save at", _save_addon = true) constructor {
+function save_param(_thumbnail = true, _log_prefix = "Save at", _save_addon = true, _mark_modified = true) constructor {
 	thumbnail  = _thumbnail;
 	log_prefix = _log_prefix;
 	save_addon = _save_addon;
+	
+	mark_modified = _mark_modified;
 }
 
 function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
@@ -171,8 +173,9 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 	#endregion
 	
 	SAVING = false;
-	project.readonly  = false;
-	project.modified  = false;
+	project.readonly = false;
+	if(_param.mark_modified)
+		project.modified = false;
 	
 	log_message("FILE", _param.log_prefix + " " + path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);

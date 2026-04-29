@@ -159,7 +159,7 @@ DIALOG_DRAW_BG
 		
 		view_tooltip.index  = PREFERENCES.dialog_add_node_view;
 		var bi = PREFERENCES.dialog_add_node_view;
-		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, view_tooltip, THEME.view_mode, bi, bc, 1, ui(4));
+		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, view_tooltip, THEME.view_mode, bi, bc, 1, ui(6));
 		if(b == 1) {
 			if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mod_dec_mf0 PREFERENCES.dialog_add_node_view mod_dec_mf1 PREFERENCES.dialog_add_node_view mod_dec_mf2  2 mod_dec_mf3  2 mod_dec_mf4;
 			if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
@@ -170,7 +170,7 @@ DIALOG_DRAW_BG
 		bx -= bs + sp;
 		group_tooltip.index = PREFERENCES.dialog_add_node_grouping;
 		var bi = PREFERENCES.dialog_add_node_grouping;
-		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, group_tooltip, THEME.view_group, bi, bc, 1, ui(4));
+		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, group_tooltip, THEME.view_group, bi, bc, 1, ui(6));
 		if(b == 1) {
 			if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mod_dec_mf0 PREFERENCES.dialog_add_node_grouping mod_dec_mf1 PREFERENCES.dialog_add_node_grouping mod_dec_mf2  3 mod_dec_mf3  3 mod_dec_mf4;
 			if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
@@ -188,6 +188,12 @@ DIALOG_DRAW_BG
 		}
 		
 		if(search_string != "") {
+			bx -= ui(2);
+			draw_set_color(COLORS.panel_separator);
+			draw_line_round(bx, by + ui(2), bx, by + bs - ui(2), ui(2));
+			bx -= ui(2);
+			tw -= ui(4);
+			
 			bx -= bs + sp;
 			var bt = __txt("Prioritize Favourite");
 			var bi = PREFERENCES.dialog_add_node_search_fav;
@@ -209,9 +215,22 @@ DIALOG_DRAW_BG
 			bx -= bs + sp;
 			var bt = __txt("Include Collection");
 			var bi = PREFERENCES.dialog_add_node_collection;
-			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, bt, THEME.group, bi, bc, 1, ui(12));
+			var cc = bi? COLORS._main_accent : COLORS._main_icon;
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, bt, THEME.group, bi, cc, 1, ui(10));
 			if(b == 2) PREFERENCES.dialog_add_node_collection = !PREFERENCES.dialog_add_node_collection;
 			tw -= bs + sp;
+			
+			if(PREFERENCES.dialog_add_node_collection && STEAM_ENABLED) {
+				bx -= bs + sp;
+				var bt = __txt("Include Steam");
+				var cc = search_steam? COLORS._main_accent : COLORS._main_icon;
+				var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, bt, THEME.steam, 0, cc, 1, ui(12));
+				if(b == 2) {
+					search_steam = !search_steam;
+					searchNodes();
+				}
+				tw -= bs + sp;
+			}
 		}
 		
 		tw -= ui(4);
