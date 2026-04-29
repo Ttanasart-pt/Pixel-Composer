@@ -14,7 +14,8 @@ function Node_Wave_Interfere(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	newInput(14, nodeValue_Vec2(    "Phases",         [0,0] )).setShaderProp("phase");
 	
 	////- =Wave
-	newInput( 8, nodeValue_EScroll( "Wave",         0, [ "Sine", "Zigzag", "Square" ] )).setShaderProp("type");
+	newInput( 8, nodeValue_EScroll( "Wave",         0, [ "Sine", "Zigzag", "Square", "Curve" ] )).setShaderProp("type");
+	newInput(15, nodeValue_Curve(   "Curve",        CURVE_DEF_01 )).setShaderProp("wave");
 	newInput( 7, nodeValue_EScroll( "Post Process", 0, [ "None", "Absolute", "Normalize" ] )).setShaderProp("comp");
 	newInput( 9, nodeValue_Float(   "Amplitude",   .5 )).setShaderProp("intensity");
 	newInput(10, nodeValue_EScroll( "Blend Mode",   0, [ "Add", "Multiply", "Max" ] )).setShaderProp("blendMode");
@@ -23,12 +24,12 @@ function Node_Wave_Interfere(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	newInput( 5, nodeValue_Vec2(     "Position", [.5,.5] )).setUnitSimple().setShaderProp("position");
 	newInput( 6, nodeValue_Rotation( "Rotation",   0     )).setShaderProp("rotation");
 	newInput( 4, nodeValue_Vec2(     "Scale",     [4,4]  )).setShaderProp("scale");
-	// 15
+	// 16
 	
 	input_display_list = [
 		[ "Output",     true ],  0,  1,  2,  3, 
 		[ "Pattern",   false ], 11, 12, 13, 14, 
-		[ "Wave",      false ],  8,  7,  9, 10, 
+		[ "Wave",      false ],  8, 15,  7,  9, 10, 
 		[ "Transform", false ],  5,  6,  4,  
 	];
 	
@@ -54,10 +55,13 @@ function Node_Wave_Interfere(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	
 	static onProcessData = function(_outSurf, _data, _array_index) {
 		#region data
+			var _wave = _data[ 8];
 			var _patt = _data[11];
 			
 			inputs[12].setVisible(_patt == 1);
 			inputs[13].setVisible(_patt == 1);
+			
+			inputs[15].setVisible(_wave == 3);
 			
 			inputs[ 5].setVisible(_patt == 0);
 			inputs[ 6].setVisible(_patt == 0);

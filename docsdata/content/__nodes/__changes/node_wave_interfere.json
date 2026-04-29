@@ -6,6 +6,11 @@
         "date": "2026-04-29T04:23:47.822Z",
         "node": "",
         "commit": "**Preview Panel**: Esc key now reset alpha."
+      },
+      {
+        "date": "2026-04-29T04:28:33.045Z",
+        "node": "Wave Interfere",
+        "commit": "**Wave Interfere**: Add square and custom curve wave shape."
       }
     ]
   },
