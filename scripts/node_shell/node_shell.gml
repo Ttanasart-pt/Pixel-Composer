@@ -21,7 +21,7 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onValueUpdate = function() { trusted = false; }
 	static update = function() { 
-		trust_label.txt = PROGRAM_ARGUMENTS._trusted? "Trusted" : "Untrusted";
+		trust_label.text = trusted? "Trusted" : "Untrusted";
 		if(project.online) return false;
 		
 		var _pro = getInputData(0);

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.0.1",
+    "changes": [
+      {
+        "date": "2026-04-29T03:08:52.591Z",
+        "node": "Execute Shell",
+        "commit": "**Execute Shell**: Fix trust status label not updating."
+      }
+    ]
+  }
+]

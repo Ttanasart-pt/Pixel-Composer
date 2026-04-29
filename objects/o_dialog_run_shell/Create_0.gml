@@ -24,7 +24,7 @@ event_inherited();
 		var _hh  = string_height_ext(ctxt[0], -1, dialog_w - ui(48)) + ui(16);
 		
 		draw_set_font(f_code);
-			_hh += string_height_ext(ctxt[1], -1, dialog_w - ui(64)) + ui(16);
+			_hh += string_height_ext_override(ctxt[1], -1, dialog_w - ui(64), true) + ui(16);
 			
 		draw_set_font(f_p0);
 			_hh += string_height_ext(ctxt[2], -1, dialog_w - ui(48));

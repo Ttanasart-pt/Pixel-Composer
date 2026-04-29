@@ -125,6 +125,8 @@ function draw_text_int(x, y, str) {
 	draw_text(round(x), round(y), str);
 }
 
+	////- Ext
+
 function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx = 1, sy = 1, rotation = 0, _break = LOCALE.config.per_character_line_break) {
 	INLINE
 	_x = round(_x);
