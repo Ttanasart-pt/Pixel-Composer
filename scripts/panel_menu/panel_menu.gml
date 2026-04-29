@@ -327,6 +327,7 @@ function Panel_Menu() : PanelContent() constructor {
             menuItem(__txt("panel_menu_connect_patreon", "Connect to Patreon"),               function() /*=>*/ {return dialogCall(o_dialog_patreon)},         THEME.patreon),
             menuItem(__txt("panel_menu_connect_patreon", "Connect to Patreon (legacy)"),      function() /*=>*/ {return dialogPanelCall(new Panel_Patreon())}, THEME.patreon),
             -1,
+            menuItem(__txt("System Info..."),       function() /*=>*/ {return dialogPanelCall(new Panel_System_Info())}),
             menuItem(__txt("About Pixel Composer"), function() /*=>*/ {return dialogCall(o_dialog_about)}),
         ]];
         

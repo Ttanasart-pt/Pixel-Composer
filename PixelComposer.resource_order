@@ -2110,6 +2110,7 @@
     {"name":"panel_resource_monitor","order":4,"path":"scripts/panel_resource_monitor/panel_resource_monitor.yy",},
     {"name":"panel_rogueTD","order":1,"path":"scripts/panel_rogueTD/panel_rogueTD.yy",},
     {"name":"panel_steam_link_edit","order":1,"path":"scripts/panel_steam_link_edit/panel_steam_link_edit.yy",},
+    {"name":"panel_system_info","order":23,"path":"scripts/panel_system_info/panel_system_info.yy",},
     {"name":"panel_test","order":2,"path":"scripts/panel_test/panel_test.yy",},
     {"name":"panel_text_editor","order":15,"path":"scripts/panel_text_editor/panel_text_editor.yy",},
     {"name":"panel_timer","order":19,"path":"scripts/panel_timer/panel_timer.yy",},
