@@ -182,7 +182,6 @@ function __IMPORT_ZIP() {
 	
 	var _f    = file_find_first(_dir + "/*.pxc", fa_none);
 	var _proj = $"{_dir}/{_f}";
-	print(_proj);
 	if(!file_exists_empty(_proj)) return false;
 	
 	LOAD_PATH(_proj, true);

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1",
+    "changes": [
+      {
+        "date": "2026-04-29T04:23:47.822Z",
+        "node": "",
+        "commit": "**Preview Panel**: Esc key now reset alpha."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc14",
     "changes": [
       {

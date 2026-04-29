@@ -14,7 +14,7 @@ function Node_Wave_Interfere(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	newInput(14, nodeValue_Vec2(    "Phases",         [0,0] )).setShaderProp("phase");
 	
 	////- =Wave
-	newInput( 8, nodeValue_EScroll( "Wave",         0, [ "Sine", "Zigzag" ] )).setShaderProp("type");
+	newInput( 8, nodeValue_EScroll( "Wave",         0, [ "Sine", "Zigzag", "Square" ] )).setShaderProp("type");
 	newInput( 7, nodeValue_EScroll( "Post Process", 0, [ "None", "Absolute", "Normalize" ] )).setShaderProp("comp");
 	newInput( 9, nodeValue_Float(   "Amplitude",   .5 )).setShaderProp("intensity");
 	newInput(10, nodeValue_EScroll( "Blend Mode",   0, [ "Add", "Multiply", "Max" ] )).setShaderProp("blendMode");

@@ -44,6 +44,7 @@ float valueProcess(float t) {
 	
 	     if(type == 0) v = sin(t * TAU); 
 	else if(type == 1) v = abs(fract(t) * 2. - 1.) * 2. - 1.; 
+	else if(type == 2) v = step(.5, fract(fract(t) + 1.)) * 2. - 1.;
 	
 	v *= intensity;
 	

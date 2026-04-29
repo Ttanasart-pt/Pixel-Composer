@@ -25,7 +25,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	newInput(14, nodeValue_Int( "Resolution", 64 ));
 	// input 22
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 3, 
 		[ "Surface",    false ],  0,  8,  9, 10, 11, 12, 13, 
@@ -34,7 +34,6 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	];
 	
 	////- Node
-	
 	attribute_surface_depth();
 	attribute_interpolation();
 	attribute_oversample();
@@ -62,11 +61,11 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			
 			inputs[21].setVisible(_type == 2);
 			
-			inputs[15].setVisible(_type == 1);
-			inputs[17].setVisible(_type == 1);
+			inputs[15].setVisible(_type == 1 || _type == 2);
+			inputs[17].setVisible(_type == 1 || _type == 2);
 			
 			inputs[20].setVisible(_type == 0);
-			inputs[14].setVisible(_type == 1);
+			inputs[14].setVisible(_type == 1 || _type == 2);
 		#endregion
 		
 		var sh = sh_chromatic_aberration;

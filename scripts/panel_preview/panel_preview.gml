@@ -3487,6 +3487,7 @@ function Panel_Preview() : PanelContent() constructor {
         	draw_set_color(c_white);
         	draw_rectangle_dashed(sx0 - 1, sy0 - 1, sx1, sy1);
         	
+        	if(key_press(vk_escape)) clearSelection();
         }
     }
     

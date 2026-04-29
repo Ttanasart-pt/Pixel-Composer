@@ -51,7 +51,7 @@ if (_id == note_get) {
 	} else if(_status == 1) {
 		if(ds_map_exists(async_load, "http_status")) {
 			var _http_status   = ds_map_find_value(async_load, "http_status");
-			print(_http_status);
+			// print(_http_status);
 		}
 		
 		dl.size_total      = ds_map_find_value(async_load, "contentLength");

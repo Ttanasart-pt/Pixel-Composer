@@ -366,8 +366,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 							bx  -= ui(4);
 							cHov = cHov || b;
 							
-							if(b == 1) print(jun.is_modified)
-							
 							if(b == 1 && reset_hold && jun.is_modified) 
 								jun.resetValue();
 								
