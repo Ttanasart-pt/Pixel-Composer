@@ -6,6 +6,11 @@
         "date": "2026-04-29T06:13:53.160Z",
         "node": "",
         "commit": "**MK Tree > Tree Branch**: Improve trunk to branch connection rendering."
+      },
+      {
+        "date": "2026-04-29T07:29:12.044Z",
+        "node": "MK Tree > Tree Render",
+        "commit": "**MK Tree > Tree Render**: Add option to disable root drawing."
       }
     ]
   },

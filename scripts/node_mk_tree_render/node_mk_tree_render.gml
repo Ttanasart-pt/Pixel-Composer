@@ -4,17 +4,25 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	icon  = THEME.mkTree;
 	parameters.inline_draw_output = true;
 	
-	newInput(0, nodeValue_Struct( "Tree",         noone )).setArrayDepth(1).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
-	newInput(1, nodeValue_Bool(   "Output Array", false )).rejectArray();
-	// 2
+	newInput( 0, nodeValue_Struct( "Tree",           noone )).setArrayDepth(1).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	
+	////- =Outputs
+	newInput( 1, nodeValue_Bool(   "Output Array",   false )).rejectArray();
+	
+	////- =Render
+	newInput( 2, nodeValue_Bool(   "Draw From Root", true  )).rejectArray();
+	// 3
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		[ "Outputs", false ], 1, 
+		[ "Render",  false ], 2, 
 	];
 	
 	////- Nodes
+	
+	drawRoot = false;
 	
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.getDimension() : DEF_SURF};
 	
@@ -23,17 +31,17 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _arr  = inputs[1].getValue();
 		inputs[0].setArrayDepth(!_arr);
 		
-		if(array_safe_length(_tree)) array_foreach(_tree, function(t,i) /*=>*/ { if(t.root) t.root.drawn = false; })
+		if(array_safe_length(_tree)) array_foreach(_tree, function(t,i) /*=>*/ { t.drawn = false; if(t.root) t.root.drawn = false; })
 	}
 	
 	static drawTree = function(_t) {
 		if(is(_t, __MK_Tree_Leaf)) { _t.draw(); return; }
 			
 		if(is(_t, __MK_Tree)) { 
-			if(_t.root.drawn) return;
-			
-			_t.root.drawn = true;
-			_t.root.draw();
+			var _drawT = drawRoot? _t.root : _t;
+			if(_drawT.drawn) return;
+			_drawT.drawn = true;
+			_drawT.draw();
 		}
 	}
 	
@@ -43,8 +51,9 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		#region data
 			var _tree = _data[0];
 			var _arra = _data[1];
-			var _dim  = getDimension();
+			drawRoot  = _data[2];
 			
+			var _dim  = getDimension();
 			if(is_array(_tree) && array_empty(_tree)) return _outSurf;
 		#endregion
 		

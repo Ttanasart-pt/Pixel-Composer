@@ -61,6 +61,7 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 	geoWiggC     = undefined;
 	
 	mesh         = undefined;
+	drawn        = false;
 	
 	static recalDir = function() {
 		dx = lengthdir_x(sx, dir);
@@ -352,6 +353,7 @@ function __MK_Tree() constructor {
 	
 	texture   = noone;
 	drawLine  = false;
+	drawn     = false;
 	
 	mesh = undefined;
 	
@@ -735,15 +737,8 @@ function __MK_Tree() constructor {
 		
 	}
 	
-	// static drawTooltip = function() {
-	// 	var ww = ui(160);
-	// 	var hh = ui(160);
-			
-	// 	var pd = ui(8);
-	// 	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
-	// 	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
-			
-	// 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
-	// 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
-	// }
+	////- Action
+	
+	static toString = function() /*=>*/ {return $"[MK Tree]: {array_length(children)} branch, {array_length(leaves)} leaves."};
+	
 }
