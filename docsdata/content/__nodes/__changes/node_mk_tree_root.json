@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1.001",
+    "changes": [
+      {
+        "date": "2026-04-29T09:44:35.353Z",
+        "node": "",
+        "commit": "**Particle**: Direct data type now respect particle amount and distribution."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.1",
     "changes": [
       {

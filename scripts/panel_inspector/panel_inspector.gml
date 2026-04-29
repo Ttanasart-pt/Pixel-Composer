@@ -19,6 +19,8 @@
     function panel_inspector_visible_toggle()            { CALL("inspector_junc_visible");           PANEL_INSPECTOR.junction_visible_toggle();        }
     function panel_inspector_mini_timeline_toggle()      { CALL("inspector_mini_timeline");          PANEL_INSPECTOR.junction_mini_timeline_toggle();  }
     
+    function panel_inspector_filter_anim()               { CALL("inspector_filter_anim");            PANEL_INSPECTOR.filter_animation = !PANEL_INSPECTOR.filter_animation  }
+    
     function panel_inspector_trigger_1()                 { CALL("inspector_trigger_1");              PANEL_INSPECTOR.triggerInspectingNode(1);        }
     function panel_inspector_trigger_2()                 { CALL("inspector_trigger_2");              PANEL_INSPECTOR.triggerInspectingNode(2);        }
     function panel_inspector_trigger_cache()             { CALL("inspector_trigger_cache");          PANEL_INSPECTOR.triggerInspectingNode(3);        }
@@ -56,6 +58,7 @@
         registerFunction(i, "Toggle Bypass",         "",  n, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"       ).setToggle(function() /*=>*/ { INSP_JUNCTION j.bypass_use;         });
         registerFunction(i, "Toggle Visible",        "",  n, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.visible_manual;     });
         registerFunction(i, "Toggle Mini Timeline",  "",  n, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle").setToggle(function() /*=>*/ { INSP_JUNCTION j.inspector_timeline; });
+        registerFunction(i, "Filter Animation",     "F",  n, panel_inspector_filter_anim            ).setMenu("inspector_filter_anim"   );
         registerFunction(i, "Extract to Globalvar",  "",  n, panel_inspector_extract_global         ).setMenu("inspector_extract_global")
         registerFunction(i, "Extract Value",         "",  n, panel_inspector_extract_single         ).setMenu("inspector_extract_value" )
         registerFunction("", "Primary Action",    vk_f2,  n, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1"     )
@@ -382,6 +385,9 @@ function Panel_Inspector() : PanelContent() constructor {
     #endregion
     
     #region ++++ Menus ++++
+    	tSearch     = new tooltipHotkey(__txt("Search"), "Inspector", "Search Toggle");
+    	tFilteranim = new tooltipHotkey(__txt("Filter Animated"), "Inspector", "Filter Animation");
+    	
         static nodeExpandAll = function(node) {
             if(node.input_display_list == -1) return;
             
@@ -1861,7 +1867,7 @@ function Panel_Inspector() : PanelContent() constructor {
     	var by = ty;
     	var cc = filtering? COLORS._main_value_positive : COLORS._main_icon;
     	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, "", THEME.search, 0, cc, 1, ui(8)) == 2) {
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, tSearch, THEME.search, 0, cc, 1, ui(8)) == 2) {
     		filtering = !filtering;
     		if(filtering) tb_prop_filter.activate();
     		else          tb_prop_filter.deactivate();
@@ -1870,14 +1876,12 @@ function Panel_Inspector() : PanelContent() constructor {
     	
     	if(bx > ui(4)) {
     		var bspr = THEME.filter_animation;
-    		var btxt = __txt("Filter Animated");
     		var bi   = filter_animation;
     		var bc   = filter_animation? COLORS._main_value_positive : COLORS._main_icon;
     		
-	    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, btxt, bspr, bi, bc, 1, ui(8)) == 2) {
+	    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, tFilteranim, bspr, bi, bc, 1, ui(8)) == 2)
 	    		filter_animation = !filter_animation;
-	    		
-	    	} bx -= bs + 1;
+	    	bx -= bs + 1;
     	}
     	
     	if(filtering) {

@@ -352,7 +352,7 @@ function draw_tooltip_curve(curve) {
 }
 
 function draw_tooltip_path(_path) {
-	if(!is_struct(_path)) return;
+	if(!is_path(_path)) return;
 	
 	var ww = ui(160);
 	var hh = ui(160);
@@ -382,6 +382,7 @@ function draw_tooltip_path(_path) {
 	draw_set_alpha(1);
 	
 	draw_set_color(COLORS._main_accent);
+	var _pamo = _path.getLineCount();
 	var _bbox = _path.getBoundary();
 	if(!is_struct(_bbox)) return;
 	
@@ -414,6 +415,9 @@ function draw_tooltip_path(_path) {
 	
 	draw_set_text(f_p4, fa_right, fa_bottom);
 	draw_text_add(x1 - ui(2), y1, $"({_x1}, {_y1})");
+	
+	draw_set_text(f_p4, fa_left, fa_bottom);
+	draw_text_add(x0 + ui(2), y1, $"Lines: {_pamo}");
 	
 }
 

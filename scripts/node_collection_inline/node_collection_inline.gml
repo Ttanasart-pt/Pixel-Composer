@@ -30,8 +30,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	array_push(attributeEditors, Node_Attribute( "Shape", function() /*=>*/ {return attributes.shape}, function() /*=>*/ {
 		return new scrollBox(["Polygon", "Rectangle"], function(i) /*=>*/ { 
 			setAttribute("shape", i);
-			refreshGroupBG();
+			vertex_hash = "";
 			
+			refreshGroupBG();
 			GraphRefresh();
 		});
 	}));

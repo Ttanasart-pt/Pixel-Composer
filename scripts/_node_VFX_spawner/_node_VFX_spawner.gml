@@ -271,9 +271,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		if(_distrib == 4) {
+			var _len = array_length(_dist_data);
 			var _dep = array_get_depth(_dist_data);
 			if(_dep != 2) return;
-			_amo = array_length(_dist_data);
+			
+			// _amo = _len;
+			_amo = min(_amo, _len);
 		}
 		
 		for( var i = 0; i < _amo; i++ ) {
@@ -330,7 +333,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					yy = _p.y;
 					
 				} else if(_distrib == 4) {
-					var _p = _dist_data[i];
+					var _i = _scatter == 0? safe_mod(spawn_index_raw, _len) : irandom(_len - 1);
+					var _p = _dist_data[_i];
 					
 					xx = _p[0];
 					yy = _p[1];
@@ -592,7 +596,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _usePth = getInputData(45);
 			var _direct = getInputData(29);
 			
-			inputs[24].setVisible(_dist == 0 || _dist == 1 || _dist == 3);
+			inputs[24].setVisible(_dist == 0 || _dist == 1 || _dist == 3 || _dist == 4);
 			
 			inputs[ 3].setVisible(_dist != 3 && _dist != 4);
 			inputs[30].setVisible(_dist == 2, _dist == 2);

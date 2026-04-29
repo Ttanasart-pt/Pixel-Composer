@@ -106,7 +106,6 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _t = _resT[i];
 			if(is(_t, __MK_Tree)) _t.drawOverlay(_x, _y, _s);
 		}
-		
 	}
 	
 	static update = function() {

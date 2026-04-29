@@ -17,9 +17,9 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	/* UNUSED */ newInput( 2, nodeValue_Vec2_Range( "Origin Wiggle",   [0,0,0,0] ));
 	
 	////- =Segment
-	newInput( 7, nodeValue_Range(  "Segments",   [4,8]     ));
 	newInput( 3, nodeValue_Range(  "Length",     [16,32]   ))
 		.setCurvable(13, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput( 7, nodeValue_Range(  "Segments",   [4,8]     ));
 	
 	////- =Direction
 	newInput(31, nodeValue_EButton( "Direction Type",  0, [ "Random", "Uniform", "Spread" ] ));
@@ -67,12 +67,12 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	// input 42
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
-	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
+	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
 		[ "Origin",    false ],  5, 19,  8, 32, 
-		[ "Segments",  false ],  7,  3, 13, 
+		[ "Segments",  false ],  3, 13,  7, 
 		[ "Direction", false ], 31,  4, 40, 41, 10, 34, 35, 15,  9, 16, 33, 
 		[ "Spiral",     true ], 25, 38, 26, 21, 22, 23, 24, 
 		[ "Rendering", false ], 39,  6, 11, 36, 

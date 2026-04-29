@@ -10,14 +10,15 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Origin
-	newInput( 5, nodeValue_Range(        "Amount",          [1,1], true ));
-	newInput( 8, nodeValue_Slider_Range( "Origin Ratio",    [.5,1]      ));
-	newInput( 1, nodeValue_Vec2(         "Origin Position", [.5,1]      )).setUnitSimple();
-	newInput( 2, nodeValue_Vec2_Range(   "Origin Wiggle",   [0,0,0,0]   )).setUnitSimple();
+	newInput( 5, nodeValue_Range(    "Amount",          [1,1], true ));
+	newInput( 8, nodeValue_SliRange( "Origin Ratio",    [.5,1]      ));
+	newInput( 1, nodeValue_Vec2(     "Origin Position", [.5,1]      )).setUnitSimple();
+	newInput(30, nodeValue_Vec2(     "Origin Area",     [0,0]       )).setUnitSimple();
+	newInput( 2, nodeValue_Vec2(     "Origin Area",     [0,0]       )).setUnitSimple();
 	
 	////- =Segment
-	newInput( 7, nodeValue_Range(  "Segments", [8,8],   true ));
 	newInput( 3, nodeValue_Range(  "Length",   [24,24], true ));
+	newInput( 7, nodeValue_Range(  "Segments", [8,8],   true ));
 	/* UNUSED */ newInput(13, nodeValue_Curve(  "Length Curve", CURVE_DEF_11 ));
 	
 	////- =Direction
@@ -49,13 +50,13 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(17, nodeValue_Gradient( "L Edge Color",    gra_white   ));
 	newInput(26, nodeValue_Gradient( "R Edge Color",    gra_white   ));
 	newInput(27, nodeValue_Surface(  "Texture" ));
-	// input 30
+	// input 31
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14,
-		[ "Origin",    false ],  5,  1,  2, 
-		[ "Segments",  false ],  7,  3, 
+		[ "Origin",    false ],  5,  1, 30, 
+		[ "Segments",  false ],  3,  7, 
 		[ "Direction", false ],  4, 10,  9, 15, 
 		[ "Spiral",     true ], 22, 28, 23, 18, 19, 20, 21, 
 		[ "Render",    false ], 29,  6, 11, 
@@ -74,6 +75,16 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(is(_t, __MK_Tree)) _t.drawOverlay(_x, _y, _s);
 		}
 		
+		var _ori = getInputData( 1);
+		var _siz = getInputData(30);
+		var _px  = _x + _ori[0] * _s;
+		var _py  = _y + _ori[1] * _s;
+		
+		var _sw  = _siz[0] * _s;
+		var _sh  = _siz[1] * _s;
+		draw_set_color(COLORS._main_accent);
+		draw_rectangle_dashed(_px - _sw, _py - _sh, _px + _sw, _py + _sh);
+		
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 	}
 	
@@ -86,7 +97,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _bran = getInputData( 5);
 			var _ori  = getInputData( 1);
-			var _oriW = getInputData( 2);
+			var _oriW = getInputData(30);
 			
 			var _segs = getInputData( 7);
 			var _len  = getInputData( 3);
@@ -138,8 +149,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for( var i = 0; i < _amo; i++ ) {
 			var _t = new __MK_Tree();
 			
-			var ox = _ori[0] + random_range(_oriW[0], _oriW[1]);
-			var oy = _ori[1] + random_range(_oriW[2], _oriW[3]);
+			var ox = _ori[0] + random_range(-_oriW[0], _oriW[0]);
+			var oy = _ori[1] + random_range(-_oriW[1], _oriW[1]);
 			
 			_t.x = ox;
 			_t.y = oy;
