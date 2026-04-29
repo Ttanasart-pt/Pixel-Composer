@@ -2,6 +2,7 @@ function nodeValue_D3Material(_name, _value = new __d3dMaterial(), _tooltip = ""
 function __NodeValue_D3Material(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.d3Material, _value, _tooltip) constructor {
 	setVisible(true, true);
 	animable = false;
+	defMat   = is(_value, __d3dMaterial)? _value : new __d3dMaterial();
 	
 	/////============== GET =============
 	
@@ -15,17 +16,17 @@ function __NodeValue_D3Material(_name, _node, _value, _tooltip = "") : NodeValue
 		var nod = __curr_get_val[1]; 
 		
 		if(!is(nod, NodeValue)) return val;
-		if(nod == self) return def_val;
+		if(nod == self) return defMat;
 		
 		var typ = nod.type;
 		var dis = nod.display_type;
 		
 		if(typ == VALUE_TYPE.surface) {
-			if(!is_array(val)) return def_val.clone(val);
+			if(!is_array(val)) return defMat.clone(val);
 			
 			var _val = array_create(array_length(val));
 			for( var i = 0, n = array_length(val); i < n; i++ ) 
-				_val[i] = def_val.clone(val[i]);
+				_val[i] = defMat.clone(val[i]);
 			
 			return _val;
 		}

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.0.0.001",
+    "changes": [
+      {
+        "date": "2026-04-29T00:05:11.342Z",
+        "node": "",
+        "commit": "Fix crash when converting surface to 3d material."
+      }
+    ]
+  }
+]
