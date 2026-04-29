@@ -9,7 +9,7 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 #region tooltip
 	if(!_MOUSE_BLOCK) {
 		if(is_struct(TOOLTIP)) {
-			if(struct_has(TOOLTIP, "drawTooltip"))
+			if(has(TOOLTIP, "drawTooltip"))
 				TOOLTIP.drawTooltip();
 				
 		} else if(is_array(TOOLTIP)) {
@@ -23,11 +23,9 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 			} else if(is_method(raw)) content = raw();
 			
 			switch(type) {
-				
 				case VALUE_TYPE.float    :
 				case VALUE_TYPE.integer  : 
 				case VALUE_TYPE.text     :
-				case VALUE_TYPE.struct   :
 				case VALUE_TYPE.particle : 
 				case VALUE_TYPE.path     : draw_tooltip_text(content);                                                          break;
 				
@@ -57,6 +55,11 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 					var txt = __txt("Mesh Object");
 					if(is(content, MeshedSurface)) txt += $" (triangles: {array_length(content.tris)})";
 					draw_tooltip_text($"[{txt}]");
+					break;
+					
+				case VALUE_TYPE.struct   : 
+					if(has(content, "drawTooltip")) content.drawTooltip();
+					else draw_tooltip_text(content);
 					break;
 				
 				case "sprite"  : draw_tooltip_sprite(content);  break;

@@ -21,6 +21,16 @@
         "date": "2026-04-29T06:32:27.853Z",
         "node": "MK Tree > Tree Branch",
         "commit": "**MK Tree > Tree Branch**: Branch origin now sorted, so the \"Ordered\" reflect type can have correct ordering in random mode."
+      },
+      {
+        "date": "2026-04-29T07:12:35.937Z",
+        "node": "",
+        "commit": "**MK Tree > Add branch, Add leaf**: Rename to  \"Combine branches\", \"Combine leaves\"."
+      },
+      {
+        "date": "2026-04-29T07:18:27.972Z",
+        "node": "MK Tree > Tree Branch",
+        "commit": "**MK Tree > Tree Branch**: Rename `Trunk` output to `Tree` (as it outputs the whole tree) and add `Trunk` output that only contain original trunk."
       }
     ]
   },

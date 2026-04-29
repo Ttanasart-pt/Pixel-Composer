@@ -735,4 +735,15 @@ function __MK_Tree() constructor {
 		
 	}
 	
+	// static drawTooltip = function() {
+	// 	var ww = ui(160);
+	// 	var hh = ui(160);
+			
+	// 	var pd = ui(8);
+	// 	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	// 	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
+			
+	// 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
+	// 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
+	// }
 }

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1",
+    "changes": [
+      {
+        "date": "2026-04-29T07:12:35.937Z",
+        "node": "",
+        "commit": "**MK Tree > Add branch, Add leaf**: Rename to  \"Combine branches\", \"Combine leaves\"."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc10",
     "changes": [
       {

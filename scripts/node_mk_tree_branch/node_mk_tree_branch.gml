@@ -66,8 +66,9 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
 	// input 42
 	
-	newOutput(0, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
-	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
+	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
+	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
+	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
 		[ "Origin",    false ],  5, 19,  8, 32, 
@@ -92,7 +93,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.getDimension() : DEF_SURF};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		var _resT = outputs[0].getValue();
+		var _resT = outputs[preview_channel].getValue();
+		
 		if(is_array(_resT)) 
 		for( var i = 0, n = array_length(_resT); i < n; i++ ) {
 			var _t = _resT[i];
@@ -182,6 +184,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _branches  = [];
 		var _spawnIndx = 0;
 		var _oriRange  = _oriR[1] - _oriR[0];
+		
+		outputs[2].setValue(_tree);
 		_tree = variable_clone(_tree);
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
@@ -197,7 +201,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_pos[j++] = rat;
 			}
 			
-			if(_dist == 1) array_sort(_pos, true);
+			if(_dist == 0) array_sort(_pos, true);
 			
 			j = 0;
 			repeat(_amo) {
