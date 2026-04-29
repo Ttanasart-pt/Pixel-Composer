@@ -336,7 +336,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					var _i = _scatter == 0? safe_mod(spawn_index_raw, _len) : irandom(_len - 1);
 					var _p = _dist_data[_i];
 					
-					xx = _p[0];
+					xx = _p[0]; 
 					yy = _p[1];
 				}
 				
