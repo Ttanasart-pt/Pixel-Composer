@@ -85,7 +85,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Shape",    false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
 		[ "Color",    false ],  4, 20, 12,  6, 13, 34, 42, 47, 
 			new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
-		[ "Growth",   false ], 22, 
+		[ "Growth",    true ], 22, 
 	];
 	
 	amountUnitToggle  = button(function() /*=>*/ { inputs[2].toggleAttribute("unit"); })

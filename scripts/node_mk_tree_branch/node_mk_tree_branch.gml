@@ -77,7 +77,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Spiral",     true ], 25, 38, 26, 21, 22, 23, 24, 
 		[ "Rendering", false ], 39,  6, 11, 36, 
 		[ "Color",     false ], 37, 12, 27, 28, __inspc(), 17, 18, 29, 30, 
-		[ "Growth",    false ], 20, 
+		[ "Growth",     true ], 20, 
 	];
 	
 	amountUnitTooltip = new tooltipSelector("Unit", [ "Fixed Amount", "Branch Distance" ]);

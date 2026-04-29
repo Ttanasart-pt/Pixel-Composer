@@ -288,6 +288,8 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 		}
 	}
 	
+	////- Action
+	
 	static copy = function(_l) {
 		gravity    = _l.gravity;
 		surface    = _l.surface;
@@ -318,6 +320,9 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constr
 		var _l = new __MK_Tree_Leaf(root, rootPosition, shape, x, y, dir, sx, sy, sp).copy(self);
 		return _l;
 	}
+	
+	static toString = function() /*=>*/ {return $"[MK Leaf]"};
+	
 }
 
 function __MK_Tree_Segment(_x, _y, _t) constructor {

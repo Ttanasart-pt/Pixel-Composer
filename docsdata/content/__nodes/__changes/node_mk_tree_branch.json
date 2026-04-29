@@ -31,6 +31,11 @@
         "date": "2026-04-29T07:18:27.972Z",
         "node": "MK Tree > Tree Branch",
         "commit": "**MK Tree > Tree Branch**: Rename `Trunk` output to `Tree` (as it outputs the whole tree) and add `Trunk` output that only contain original trunk."
+      },
+      {
+        "date": "2026-04-29T07:58:50.171Z",
+        "node": "MK Tree > Branch to Path",
+        "commit": "**MK Tree > Branch to Path**: Fix output path incorrect."
       }
     ]
   },
