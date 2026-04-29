@@ -12,23 +12,24 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	__init_mask_modifier(10, 12); // inputs 12, 13, 
 	
 	////- =Effect
-	newInput( 5, nodeValue_EButton( "Type",       0, [ "Scale", "Continuous" ] ));
+	newInput( 5, nodeValue_EButton( "Type",       0, [ "Scale", "Continuous", "Gradient" ] ));
+	newInput(21, nodeValue_Gradient("Gradient",   gra_black_white ));
 	newInput( 1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitSimple();
-	newInput( 2, nodeValue_Slider(  "Strength",   1, [-16, 16, 0.01] )).setHotkey("S").setMappable(4).setCurvable(19);
-	newInput( 6, nodeValue_Slider(  "Intensity",  1, [  0,  4, 0.01] )).setHotkey("I").setMappable(7);
-	newInput(15, nodeValue_Slider(  "Shift",      0, [ -1,  1, 0.01] )).setMappable(16);
-	newInput(17, nodeValue_Slider(  "Scale",      1, [  0, 16, 0.01] )).setMappable(18);
+	newInput( 2, nodeValue_Slider(  "Strength",   1, [-16, 16, .01] )).setHotkey("S").setMappable(4).setCurvable(19);
+	newInput( 6, nodeValue_Slider(  "Intensity",  1, [  0,  4, .01] )).setHotkey("I").setMappable(7);
+	newInput(15, nodeValue_Slider(  "Shift",      0, [ -1,  1, .01] )).setMappable(16);
+	newInput(17, nodeValue_Slider(  "Scale",      1, [  0, 16, .01] )).setMappable(18);
 	
 	////- =Processing
 	newInput(20, nodeValue_Int( "Iteration",  1  ));
 	newInput(14, nodeValue_Int( "Resolution", 64 ));
-	// input 20
+	// input 22
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
-		[ "Surface",    false ], 0, 8, 9, 10, 11, 12, 13, 
-		[ "Effect",     false ], 5, 1, 2, 4, 19, 6, 7, 15, 16, 17, 18,
+		[ "Surface",    false ],  0,  8,  9, 10, 11, 12, 13, 
+		[ "Effect",     false ],  5, 21,  1,  2,  4, 19,  6,  7, 15, 16, 17, 18,
 		[ "Processing", false ], 20, 14, 
 	];
 	
@@ -46,7 +47,6 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, 1  ));
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my     ));
 		InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, 90, _dim[1] / 4 ));
-		
 		return w_hovering;
 	}
 	
@@ -55,9 +55,12 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			var _surf = _data[ 0];
 			var _cent = _data[ 1];
 			var _type = _data[ 5];
+			var _grad = _data[21];
 			
 			var _iter = _data[20];
 			var _reso = _data[14];
+			
+			inputs[21].setVisible(_type == 2);
 			
 			inputs[15].setVisible(_type == 1);
 			inputs[17].setVisible(_type == 1);
@@ -70,6 +73,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		switch(_type) {
 			case 0 : sh = sh_chromatic_aberration;      break;
 			case 1 : sh = sh_chromatic_aberration_cont; break;
+			case 2 : sh = sh_chromatic_aberration_grad; break;
 		}
 		
 		surface_set_shader(_outSurf, sh);
@@ -78,6 +82,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			
 			shader_set_dim("dimension",   _surf );
 			shader_set_2("center",        _cent );
+			shader_set_gradient(_grad);
 			
 			shader_set_f_map("strength",  _data[ 2], _data[ 4], inputs[ 2], _data[19] );
 			shader_set_f_map("intensity", _data[ 6], _data[ 7], inputs[ 6] );

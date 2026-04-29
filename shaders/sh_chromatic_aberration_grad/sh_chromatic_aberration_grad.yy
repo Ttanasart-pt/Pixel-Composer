@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_chromatic_aberration_grad",
+  "name":"sh_chromatic_aberration_grad",
+  "parent":{
+    "name":"chromatic_abb",
+    "path":"folders/nodes/data/filter/effects/chromatic_abb.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

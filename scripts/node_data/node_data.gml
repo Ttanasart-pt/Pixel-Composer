@@ -430,7 +430,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _act = ds_stack_pop(undo_stack);
 			    _act.undo();
 			IS_UNDOING = false;
-			    
+			
 			ds_stack_push(redo_stack, _act);
 			return self;
 		}
@@ -442,7 +442,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _act = ds_stack_pop(redo_stack);
 			    _act.redo();
 			IS_UNDOING = false;
-			    
+			
 			ds_stack_push(undo_stack, _act);
 			return self;
 		}

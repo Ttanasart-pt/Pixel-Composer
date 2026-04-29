@@ -2338,6 +2338,7 @@
     {"name":"sh_channel_V","order":2,"path":"shaders/sh_channel_V/sh_channel_V.yy",},
     {"name":"sh_checkerboard","order":1,"path":"shaders/sh_checkerboard/sh_checkerboard.yy",},
     {"name":"sh_chromatic_aberration_cont","order":1,"path":"shaders/sh_chromatic_aberration_cont/sh_chromatic_aberration_cont.yy",},
+    {"name":"sh_chromatic_aberration_grad","order":2,"path":"shaders/sh_chromatic_aberration_grad/sh_chromatic_aberration_grad.yy",},
     {"name":"sh_clean_shape","order":1,"path":"shaders/sh_clean_shape/sh_clean_shape.yy",},
     {"name":"sh_color_adjust","order":10,"path":"shaders/sh_color_adjust/sh_color_adjust.yy",},
     {"name":"sh_color_blind","order":67,"path":"shaders/sh_color_blind/sh_color_blind.yy",},

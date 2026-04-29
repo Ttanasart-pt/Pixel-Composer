@@ -2733,6 +2733,7 @@
     {"id":{"name":"sh_checkerboard","path":"shaders/sh_checkerboard/sh_checkerboard.yy",},},
     {"id":{"name":"sh_chromatic_aberration_cont","path":"shaders/sh_chromatic_aberration_cont/sh_chromatic_aberration_cont.yy",},},
     {"id":{"name":"sh_chromatic_aberration","path":"shaders/sh_chromatic_aberration/sh_chromatic_aberration.yy",},},
+    {"id":{"name":"sh_chromatic_aberration_grad","path":"shaders/sh_chromatic_aberration_grad/sh_chromatic_aberration_grad.yy",},},
     {"id":{"name":"sh_clean_shape","path":"shaders/sh_clean_shape/sh_clean_shape.yy",},},
     {"id":{"name":"sh_color_adjust","path":"shaders/sh_color_adjust/sh_color_adjust.yy",},},
     {"id":{"name":"sh_color_blind","path":"shaders/sh_color_blind/sh_color_blind.yy",},},
