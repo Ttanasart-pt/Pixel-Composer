@@ -161,10 +161,13 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		function search_toggle() {
 			searching = !searching;
-			if(!searching) return;
 			
-			doSearch(); 
-			tb_search.activate(); 
+			if(searching) {
+				doSearch(); 
+				tb_search.activate();
+				
+			} else if(WIDGET_CURRENT == tb_search)
+				tb_search.deactivate();
 		}
 	
 	#endregion
@@ -366,9 +369,9 @@ function Panel_Collection() : PanelContent() constructor {
 	contentPane = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
-		var content = searching? search_list : curentContent;
+		var content    = searching? search_list : curentContent;
+		var node_count = array_length(content);
 		
-		var node_count = array_length(curentContent);
 		var frame	   = current_time * PREFERENCES.collection_preview_speed / 3000;
 		var _cw		   = contentPane.surface_w;
 		var _hover	   = pHOVER && contentPane.hover;
@@ -974,11 +977,11 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(searching) {
 			var tb_w = ui(200);
-			var tb_x = bx - tb_w + ui(28);
+			var tb_x = bx - tb_w + bs - ui(2);
 			var tb_y = by;
 			
 			tb_search.setFocusHover(foc, hov);
-			tb_search.draw(tb_x, tb_y + ui(2), tb_w, bs - ui(4), search_string, m);
+			tb_search.draw(tb_x, tb_y, tb_w, bs, search_string, m);
 			return;
 		}
 		
