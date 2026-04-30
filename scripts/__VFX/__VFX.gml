@@ -98,12 +98,16 @@ function __part(_node) : __particleObject() constructor {
 	scx_history = [];
 	scy_history = [];
 	
-	follow 	 = false;
 	rot      = 0;
-	rotT     = noone;
-	rot_base = 0;
-	rot_s	 = 0;
-	rot_snap = 0;
+	rotType  = 0; // 0: Delta, 1: Lerp
+	rotCurve = noone;
+	rotBase  = 0;
+	rotSpeed = 0;
+	rotSnap  = 0;
+	follow   = false;
+	
+	rotTarget       = 0;
+	rotTargetCurve  = 0;
 	
 	wrap_x = false;
 	wrap_y = false;
@@ -274,19 +278,36 @@ function __part(_node) : __particleObject() constructor {
 		return self;
 	}
 	
-	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _rott, _rot_snap, _follow) {
+	static setTransform = function(_scx, _scy, _sct) {
 		INLINE
 		
 		sc_sx = _scx;
 		sc_sy = _scy;
 		scT   = _sct;
 		
-		rot_base = _rot;
+		return self;
+	}
+	
+	static setRotation = function(_rot, _rotSpeed, _rotCurve, _rotSnap, _follow) {
+		rotType  = 0;
+		rotBase  = _rot;
 		rot      = _rot;
-		rotT     = _rott;
-		rot_snap = _rot_snap;
-		rot_s    = _rots;
+		rotSpeed = _rotSpeed;
+		rotCurve = _rotCurve;
+		rotSnap  = _rotSnap;
 		follow   = _follow;
+		
+		return self;
+	}
+	
+	static setRotationTarget = function(_rot, _rotTarget, _rotTargetCurve, _rotSnap) {
+		rotType        = 1;
+		rotBase        = _rot;
+		rot            = _rot;
+		rotTarget      = _rotTarget;
+		rotTargetCurve = _rotTargetCurve;
+		
+		rotSnap  = _rotSnap;
 		
 		return self;
 	}
@@ -388,11 +409,15 @@ function __part(_node) : __particleObject() constructor {
 		#endregion
 		
 		#region rotation
-			var rotCurve = rotT == noone? 1 : rotT.get(lifeRat);
-			rot_base += rot_s * rotCurve;
-			
-			if(follow)  rot = spVec[1] + rot_base;
-			else        rot = rot_base;
+			if(rotType == 0) {
+				rotBase  += rotSpeed * (rotCurve == noone? 1 : rotCurve.get(lifeRat));
+				if(follow)  rot = spVec[1] + rotBase;
+				else        rot = rotBase;
+				
+			} else if(rotType == 1) {
+				var _rLerp = rotTargetCurve == noone? lifeRat : rotTargetCurve.get(lifeRat);
+				rot = lerp_angle_direct(rotBase, rotTarget, _rLerp);
+			}
 		#endregion
 		
 		if(node.onPartStep != noone && step_int > 0 && safe_mod(life, step_int) == 0) 
@@ -523,7 +548,7 @@ function __part(_node) : __particleObject() constructor {
 		var _xx = drawx;
 		var _yy = drawy;
 		var _rr = drawrot;
-		_rr = value_snap(_rr, rot_snap);
+		_rr = value_snap(_rr, rotSnap);
 		
 		var s_w = (_useS? surface_get_width_safe(_surf)  : 1) * scx;
 		var s_h = (_useS? surface_get_height_safe(_surf) : 1) * scy;

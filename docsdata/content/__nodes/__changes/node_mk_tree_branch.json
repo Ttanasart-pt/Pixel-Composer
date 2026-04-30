@@ -16,6 +16,11 @@
         "date": "2026-04-30T03:57:08.395Z",
         "node": "MK Tree > Branch",
         "commit": "**MK Tree > Branch**: Add draw toggle."
+      },
+      {
+        "date": "2026-04-30T04:50:21.502Z",
+        "node": "Particle",
+        "commit": "**Particle**: Add `Fixed` Rotational type that lerp angle to the desired angle instead of increasing angle per frame."
       }
     ]
   },

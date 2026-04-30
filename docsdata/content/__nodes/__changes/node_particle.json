@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.0.1.002",
+    "changes": [
+      {
+        "date": "2026-04-30T04:50:21.502Z",
+        "node": "",
+        "commit": "**Particle**: Add `Fixed` Rotational type that lerp angle to the desired angle instead of increasing angle per frame."
+      }
+    ]
+  }
+]

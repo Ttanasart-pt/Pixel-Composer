@@ -21,6 +21,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 1, nodeValue_Int(      "Spawn Delay",      4             )).setTooltip("Frames delay between each particle spawn.");
 	newInput(51, nodeValue_Int(      "Burst Duration",   1             ));
 	newInput( 2, nodeValue_Range(    "Spawn Amount",    [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
+	
+		////- =/Lifespan
 	newInput( 5, nodeValue_Range(    "Lifespan",        [20,30]        ));
 	
 		////- =/Source
@@ -47,9 +49,15 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(67, nodeValue_Toggle(   "Wrap",                  0, [ "X", "Y" ]   ))
 	
 	////- =Rotation
-	newInput(15, nodeValue_Bool(     "Rotate by Direction",   false             )).setTooltip("Make the particle rotates to follow its movement.");
 	newInput( 8, nodeValue_RotRand(  "Initial Rotation",     [0,0,0,0,0]        ));
+	newInput(15, nodeValue_Bool(     "Rotate by Direction",   false             )).setTooltip("Make the particle rotates to follow its movement.");
+	
+		////- =/Animated
+	newInput(68, nodeValue_EScroll(  "Rotation Type",         0, [ "Speed", "Fix Relative", "Fix Angle" ] )).setTooltip("Rotation method:\n\t- Speed: Add rotation angle per frame.\n\t- Fix Relative: Lerp to angle ralative to orignal angle.\n\t- Fix target: Lerp to fix angle.");
 	newInput( 9, nodeValue_RotRand(  "Rotational Speed",     [0,0,0,0,0]        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
+	newInput(69, nodeValue_RotRand(  "Target Angle",         [0,0,0,0,0]        )).setCurvable(70, CURVE_DEF_01, "Over Lifespan");
+	
+		////- =/Snap
 	newInput(61, nodeValue_Float(    "Snap Rotation",         0                 ));
 	
 	////- =Scale
@@ -101,7 +109,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
-	// inputs 68
+	// inputs 71
 	
 	array_foreach(inputs, function(inp, i) /*=>*/ { 
 		if(i == 6 || i == 8) return; 
@@ -154,7 +162,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			[ "/Direction",false], 64,  6, 29, 53, 
 			[ "/Wrap",     true ], 67, 
 			
-		[ "Rotation",      true ], 15,  8,  9, 59, 61, 
+		[ "Rotation",      true ],  8, 15, 
+			[ "/Animated",false ], 68,  9, 59, 69, 70, 
+			[ "/Snap",     true ], 61, 
+			
 		[ "Scale",         true ], 10, 17, 11, 
 		[ "Color",         true ], 28, 50, 12, 13, 14, 56, 
 		__inspc(ui(6), true, false, ui(3)), 
@@ -193,6 +204,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	curve_speed    = noone;
 	curve_rotate   = noone;
+	curve_rotateF  = noone;
 	curve_scale    = noone;
 	curve_alpha    = noone;
 	curve_path_div = noone;
@@ -216,28 +228,32 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _anim_end   	= getInputData(26);
 			
 			var _spawn_amount	= getInputData( 2);
-			var _spawn_area 	= inputs[3].getValue();
+			var _life       	= getInputData( 5);
+			
 			var _distrib    	= getInputData( 4);
+			var _spawn_area 	= getInputData( 3);
 			var _dist_map   	= getInputData(30);
 			var _dist_path   	= getInputData(55);
 			var _dist_data      = getInputData(62);
 			var _scatter    	= getInputData(24);
 			var _spawn_period   = getInputData(52);
 			
-			var _life       	= getInputData( 5);
+			var _velocity   	= getInputData(18);
 			var _directionType  = getInputData(64);
 			var _direction  	= getInputData( 6);
 			var _directCenter	= getInputData(29);
 			var _directRange	= getInputData(53);
 			var _warp           = getInputData(67);
-			var _velocity   	= getInputData(18);
 			
-			var _rotation   	= getInputData( 8);
-			var _rotation_speed	= getInputData( 9);
-			var _rotation_snap	= getInputData(61);
+			var _rotation       = getInputData( 8);
+			var _follow         = getInputData(15);
+			var _rotation_type  = getInputData(68);
+			var _rotation_speed = getInputData( 9);
+			var _rotation_targ  = getInputData(69);
+			var _rotation_snap  = getInputData(61);
+			
 			var _scale      	= getInputData(10);
 			var _size       	= getInputData(17);
-			var _follow     	= getInputData(15);
 			
 			var _color      	= getInputData(12);
 			var _blend      	= getInputData(28);
@@ -266,7 +282,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _use_wig     	= getInputData(58);
 			
-		//////////////////////////////////////////////////////////////////////////////
 		#endregion
 		
 		if(array_empty(_inSurf)) return;
@@ -291,135 +306,164 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		for( var i = 0; i < _amo; i++ ) {
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);
-			var part = parts[parts_runner];
+			var part = parts[parts_runner].reset();
 			
-			part.reset();
-			
-			var _spr = _inSurf, _index = 0;
-			if(is_array(_inSurf)) switch(_arr_type) {
-				case 0 : 	
-					_index = irandom(array_length(_inSurf) - 1);
-					_spr = _inSurf[_index];						
-					break;
-					
-				case 1 : 
-					_index = safe_mod(spawn_index, array_length(_inSurf));
-					_spr = _inSurf[_index];
-					break;
-					
-				case 2 : case 3 : 
-					_spr = _inSurf;
-					break;
-			}
-			
-			var xx = 0;
-			var yy = 0;
-			
-			if(_pos == -1) {
-				if(is(_spr, SurfaceAtlas)) {
-					xx = _spawn_area[0] + _spr.x + _spr.w / 2;
-					yy = _spawn_area[1] + _spr.y + _spr.h / 2;
-					part.atlas = _spr;
-					
-				} else if(_distrib < 2) {
-					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period);
-					xx = sp[0];
-					yy = sp[1];
-					
-				} else if(_distrib == 2) {
-					var sp = array_safe_get_fast(_posDist, i);
-					if(array_invalid(sp) || sp[0] == undefined) continue;
+			#region Sprites
+				var _spr = _inSurf, _index = 0;
+				if(is_array(_inSurf)) switch(_arr_type) {
+					case 0 : 	
+						_index = irandom(array_length(_inSurf) - 1);
+						_spr = _inSurf[_index];						
+						break;
 						
-					xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
-					yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);
-					
-				} else if(_distrib == 3) {
-					if(_dist_path == noone) continue;
-					
-					var _pathProg = _scatter == 0? (spawn_index % _spawn_period) / (_spawn_period - 1) : random(1);
-					var _p = _dist_path.getPointRatio(_pathProg, 0);
-					
-					xx = _p.x;
-					yy = _p.y;
-					
-				} else if(_distrib == 4) {
-					var _i = _scatter == 0? safe_mod(spawn_index_raw, _len) : irandom(_len - 1);
-					var _p = _dist_data[_i];
-					
-					xx = _p[0]; 
-					yy = _p[1];
+					case 1 : 
+						_index = safe_mod(spawn_index, array_length(_inSurf));
+						_spr = _inSurf[_index];
+						break;
+						
+					case 2 : case 3 : 
+						_spr = _inSurf;
+						break;
 				}
+			#endregion
+			
+			#region Position
+				var xx = 0;
+				var yy = 0;
 				
-			} else {
-				xx = _pos[0];
-				yy = _pos[1];
-			}
-				
-			var _lif      = irandom_range(_life[0], _life[1]);
-				
-			var _rot	  = rotation_random_eval(is_array(_rotation[0])? _rotation[i] : _rotation);
-			var _rot_spd  = rotation_random_eval(_rotation_speed);
-			var _rot_snap = _rotation_snap;
+				if(_pos == -1) {
+					if(is(_spr, SurfaceAtlas)) {
+						xx = _spawn_area[0] + _spr.x + _spr.w / 2;
+						yy = _spawn_area[1] + _spr.y + _spr.h / 2;
+						part.atlas = _spr;
+						
+					} else if(_distrib < 2) {
+						var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period);
+						xx = sp[0];
+						yy = sp[1];
+						
+					} else if(_distrib == 2) {
+						var sp = array_safe_get_fast(_posDist, i);
+						if(array_invalid(sp) || sp[0] == undefined) continue;
+							
+						xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
+						yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);
+						
+					} else if(_distrib == 3) {
+						if(_dist_path == noone) continue;
+						
+						var _pathProg = _scatter == 0? (spawn_index % _spawn_period) / (_spawn_period - 1) : random(1);
+						var _p = _dist_path.getPointRatio(_pathProg, 0);
+						
+						xx = _p.x;
+						yy = _p.y;
+						
+					} else if(_distrib == 4) {
+						var _i = _scatter == 0? safe_mod(spawn_index_raw, _len) : irandom(_len - 1);
+						var _p = _dist_data[_i];
+						
+						xx = _p[0]; 
+						yy = _p[1];
+					}
+					
+				} else {
+					xx = _pos[0];
+					yy = _pos[1];
+				}
+			#endregion
 			
-			var _dirs     = is_array(_direction[0])? _direction[i] : _direction;
-			var _dirr	  = _directionType == 0? rotation_random_eval(_dirs) : rotation_random_eval_uniform(_dirs, i / (_amo - 1));
-			if(_directCenter) {
-				var _pointDir = point_direction(_spawn_area[0], _spawn_area[1], xx, yy);
-				    _pointDir = lerp(_directRange[0], _directRange[1], _pointDir / 360);
-				_dirr += _pointDir;
-			}
-			
-			var _velo = random_range(_velocity[0], _velocity[1]);
-			var _vx   = lengthdir_x(_velo, _dirr);
-			var _vy   = lengthdir_y(_velo, _dirr);
-			var _acc  = random_range(_accel[0], _accel[1]);
-			var _frc  = random_range(_friction[0], _friction[1]);
-			
-			var _ss   = random_range(_size[0], _size[1]);
-			var _scx  = random_range(_scale[0], _scale[1]) * _ss;
-			var _scy  = random_range(_scale[2], _scale[3]) * _ss;
-				
-			var _alp  = random_range(_alpha[0], _alpha[1]);
-			var _bld  = _blend.eval(random(1));
-			
-			var clti  = spawn_index;
-			switch(_color_idx_typ) {
-				case 0  : clti = spawn_index % _color_idx_len;                break;
-				case 1  : clti = pingpong_value(spawn_index, _color_idx_len); break;
-				case 2  : clti = irandom(_color_idx_len - 1);                 break;
-			}
-			
-			var _clr_ind  = array_safe_get(_color_idx, clti, ca_white);
-			    _bld      = colorMultiply(_bld, _clr_ind);
-			
-			if(surfSamp.active) {
-				var _samC = surfSamp.getPixel(xx, yy);
-					_bld  = colorMultiply(_bld, _samC);
-			}
-			
-			var _path_range = [ random_range(_pathRange[0], _pathRange[1]), random_range(_pathRange[2], _pathRange[3]) ];
-			
+			var _lif = irandom_range(_life[0], _life[1]);
 			part.create(_spr, xx, yy, _lif, _warp & 0b01, _warp & 0b10);
 			part.seed = irandom_range(100000, 999999);
-			
 			part.setSpriteAnimation(random_range(_anim_speed[0], _anim_speed[1]), _anim_stre, _anim_end, _arr_type);
-				
-			var _trn = random_range(_turn[0], _turn[1]);
-			if(_turnBi) _trn *= choose(-1, 1);
-			
-			var _gravity = random_range(_grav[0], _grav[1]);
-			
-			part.setTransform( _scx, _scy, curve_scale, _rot, _rot_spd, curve_rotate, _rot_snap, _follow );
-			part.setDraw(   _color, _bld, _alp, curve_alpha );
-			part.setPath(   _path, _path_range, curve_path_div );
-			part.setPhysic( _use_phy, _vx, _vy, curve_speed, _acc, _frc, _gravity, _gvDir, _trn, _turnSc );
-			
-			var __ground_offset = random_range(_ground_offset[0], _ground_offset[1]);
-			part.setGround( _ground, _ground_offtyp, __ground_offset, _ground_bounce, _ground_frict );
-			
-			part.setWiggle( _use_wig, wiggle_maps );
-			
 			part.params = custom_parameter_map;
+			
+			#region Rotation
+				var _rot = rotation_random_eval(is_array(_rotation[0])? _rotation[i] : _rotation);
+				
+				switch(_rotation_type) {
+					case 0 : 
+						var _rot_spd  = rotation_random_eval(_rotation_speed);
+						part.setRotation(  _rot, _rot_spd, curve_rotate, _rotation_snap, _follow ); 
+						break;
+					
+					case 1 : 
+						var _rot_tar = rotation_random_eval(_rotation_targ);
+						part.setRotationTarget( _rot, _rot + _rot_tar, curve_rotateF, _rotation_snap ); 
+						break;
+						
+					case 2 : 
+						var _rot_tar = rotation_random_eval(_rotation_targ);
+						part.setRotationTarget( _rot, _rot_tar, curve_rotateF, _rotation_snap ); 
+						break;
+						
+				}
+			#endregion
+			
+			#region Scale
+				var _ss   = random_range(_size[0], _size[1]);
+				var _scx  = random_range(_scale[0], _scale[1]) * _ss;
+				var _scy  = random_range(_scale[2], _scale[3]) * _ss;
+					
+				part.setTransform( _scx, _scy, curve_scale );
+			#endregion
+			
+			#region Draw
+				var _alp  = random_range(_alpha[0], _alpha[1]);
+				var _bld  = _blend.eval(random(1));
+				
+				var clti  = spawn_index;
+				switch(_color_idx_typ) {
+					case 0  : clti = spawn_index % _color_idx_len;                break;
+					case 1  : clti = pingpong_value(spawn_index, _color_idx_len); break;
+					case 2  : clti = irandom(_color_idx_len - 1);                 break;
+				}
+				
+				var _clr_ind  = array_safe_get(_color_idx, clti, ca_white);
+				    _bld      = colorMultiply(_bld, _clr_ind);
+				
+				if(surfSamp.active) {
+					var _samC = surfSamp.getPixel(xx, yy);
+						_bld  = colorMultiply(_bld, _samC);
+				}
+				
+				part.setDraw( _color, _bld, _alp, curve_alpha );
+			#endregion
+			
+			#region Follow Path
+				var _path_range = [ random_range(_pathRange[0], _pathRange[1]), random_range(_pathRange[2], _pathRange[3]) ];
+				part.setPath(   _path, _path_range, curve_path_div );
+			#endregion
+			
+			#region Physics
+				var _dirs = is_array(_direction[0])? _direction[i] : _direction;
+				var _dirr = _directionType == 0? rotation_random_eval(_dirs) : rotation_random_eval_uniform(_dirs, i / (_amo - 1));
+				if(_directCenter) {
+					var _pointDir = point_direction(_spawn_area[0], _spawn_area[1], xx, yy);
+					    _pointDir = lerp(_directRange[0], _directRange[1], _pointDir / 360);
+					_dirr += _pointDir;
+				}
+					
+				var _velo = random_range(_velocity[0], _velocity[1]);
+				var _vx   = lengthdir_x(_velo, _dirr);
+				var _vy   = lengthdir_y(_velo, _dirr);
+				var _acc  = random_range(_accel[0], _accel[1]);
+				var _frc  = random_range(_friction[0], _friction[1]);
+				
+				var _gravity = random_range(_grav[0], _grav[1]);
+				var _trn = random_range(_turn[0], _turn[1]) * (_turnBi? choose(-1, 1) : 1);
+				
+				part.setPhysic( _use_phy, _vx, _vy, curve_speed, _acc, _frc, _gravity, _gvDir, _trn, _turnSc );
+			#endregion
+			
+			#region Ground
+				var __ground_offset = random_range(_ground_offset[0], _ground_offset[1]);
+				part.setGround( _ground, _ground_offtyp, __ground_offset, _ground_bounce, _ground_frict );
+			#endregion
+			
+			#region Wiggle
+				part.setWiggle( _use_wig, wiggle_maps );
+			#endregion
 			
 			spawn_index = safe_mod(spawn_index + 1, attributes.part_amount);
 			onSpawn(_time, part);
@@ -498,12 +542,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _curve_alp = getInputData(14);
 			var _curve_pth = getInputData(47);
 			var _curve_rot = getInputData(59);
+			var _curve_rtF = getInputData(70);
 			var _curve_spd = getInputData(60);
 		
 			curve_scale    = new curveMap(_curve_sca, TOTAL_FRAMES);
 			curve_alpha    = new curveMap(_curve_alp, TOTAL_FRAMES);
 			curve_path_div = new curveMap(_curve_pth, TOTAL_FRAMES);
 			curve_rotate   = new curveMap(_curve_rot, TOTAL_FRAMES);
+			curve_rotateF  = new curveMap(_curve_rtF, TOTAL_FRAMES);
 			curve_speed    = new curveMap(_curve_spd, TOTAL_FRAMES);
 			
 			for( var i = 0, n = array_length(custom_parameter_names); i < n; i++ ) {
@@ -598,13 +644,17 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static update = function(frame = NODE_CURRENT_FRAME) {
 		
 		#region visiblity
-			var _inSurf = getInputData(0);
-			var _dist   = getInputData(4);
+			var _inSurf = getInputData( 0);
+			
+			var _dist   = getInputData( 4);
 			var _spwTyp = getInputData(16);
 			var _scatt  = getInputData(24);
-			var _turn   = getInputData(34);
-			var _usePth = getInputData(45);
+			
 			var _direct = getInputData(29);
+			var _rotTyp = getInputData(68);
+			
+			var _usePth = getInputData(45);
+			var _turn   = getInputData(34);
 			
 			inputs[24].setVisible(_dist == 0 || _dist == 1 || _dist == 3 || _dist == 4);
 			
@@ -625,6 +675,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			inputs[51].setVisible(_spwTyp == 1);
 			inputs[52].setVisible(_dist != 2 && _scatt == 0);
 			inputs[53].setVisible(_direct);
+			
+			inputs[ 9].setVisible(_rotTyp == 0);
+			inputs[69].setVisible(_rotTyp != 0);
 			
 			inputs[1].setVisible(_spwTyp < 2);
 			     if(_spwTyp == 0) inputs[1].name = "Spawn Delay";

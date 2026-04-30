@@ -4,8 +4,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	var i = input_len;
 	
 	////- =Output
-	newInput(i+3, nodeValue_Surface( "Background" ));
 	newInput(i+0, nodeValue_Dimension());
+	newInput(i+3, nodeValue_Surface( "Background" ));
 	
 	////- =Render
 	newInput(i+4, nodeValue_Enum_Button( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ] ));
@@ -18,9 +18,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, i);
 	
-	array_insert( input_display_list, 1, ["Output", true], i+3, i+0);
+	array_insert( input_display_list, 1, ["Output", true], i+0, i+3 );
 	array_insert_after( input_display_list, 56, [
-		["Render", true], i+4, i+5, 21, i+1, i+2
+		[ "Render", true ], i+4, i+5, 21, i+1, i+2
 	]);
 	
 	////- Nodes
@@ -29,11 +29,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	attribute_interpolation();
 	
 	attributes.cache = true;
-	
-	def_surface    = -1;
-	curr_dimension = [0,0];
-	render_amount  = 0;
-	render_frame   = 0;
+	def_surface      = -1;
+	curr_dimension   = [0,0];
+	render_amount    = 0;
+	render_frame     = 0;
 	
 	static getDimension = function() /*=>*/ {return inputs[input_len].getValue()};
 	

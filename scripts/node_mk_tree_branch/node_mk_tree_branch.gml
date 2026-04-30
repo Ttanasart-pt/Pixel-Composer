@@ -131,7 +131,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _seed = inline_context.seed + getInputData(14);
 			var _gDir = inline_context.gravityDir;
 			
-			var _tree = getInputData(0);
+			var _tree = getInputData( 0);
 			
 			var _oriR = getInputData( 8);
 			var _chan = getInputData(44);
