@@ -1,5 +1,5 @@
 function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Tree Wiggle";
+	name  = "Wiggle Branch";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	update_on_frame = true;

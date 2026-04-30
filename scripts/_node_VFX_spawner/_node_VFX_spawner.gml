@@ -23,7 +23,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 2, nodeValue_Range(    "Spawn Amount",    [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
 	newInput( 5, nodeValue_Range(    "Lifespan",        [20,30]        ));
 	
-	////- =Spawn Source
+		////- =/Source
 	newInput( 4, nodeValue_EScroll(  "Spawn Source",     0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
 	newInput( 3, nodeValue_Area(     "Spawn Area",       DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
 	newInput(30, nodeValue_Surface(  "Distribution Map"                ));
@@ -33,13 +33,17 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(52, nodeValue_Float(    "Uniform Period",   4             ));
 	
 	////- =Movement
-	newInput(64, nodeValue_EButton(  "Direction Type",        0, [ "Random", "Uniform" ] ));
-	newInput( 6, nodeValue_RotRand(  "Initial Direction",    [0,45,135,0,0]     )); 
 	newInput(18, nodeValue_Range(    "Speed",                [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
 	inputs[60].setTooltip("Speed Curve may conflict with physics-based properties.");
 	
+		////- =/Direction
+	newInput(64, nodeValue_EButton(  "Direction Type",        0, [ "Random", "Uniform" ] ));
+	newInput( 6, nodeValue_RotRand(  "Initial Direction",    [0,45,135,0,0]     )); 
+	
 	newInput(29, nodeValue_Bool(     "Directed From Center", false              )).setTooltip("Make particle move away from the spawn center.");
 	newInput(53, nodeValue_RotRange( "Angle Range",          [0,360]            ));
+	
+		////- =/Wrap
 	newInput(67, nodeValue_Toggle(   "Wrap",                  0, [ "X", "Y" ]   ))
 	
 	////- =Rotation
@@ -140,13 +144,19 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	});
 	
 	input_display_list = [ 32, 
-		[ "Sprite",       true ],  0, dynaDraw_parameter, 22, 23, 49, 26,
-		[ "Spawn",        true ], 27, 16, 44,  1, 51,  2, __inspc(ui(6), true),  5, 
-		[ "Spawn Source", true ],  4,  3, 30, 55, 62, 24, 52, 
-		[ "Movement",     true ], 64,  6, 18, 60, 29, 53, 67, 
-		[ "Rotation",     true ], 15,  8,  9, 59, 61, 
-		[ "Scale",        true ], 10, 17, 11, 
-		[ "Color",        true ], 28, 50, 12, 13, 14, 56, 
+		[ "Sprite",        true ],  0, dynaDraw_parameter, 22, 23, 49, 26,
+		[ "Spawn",         true ], 
+			[ "/Spawning",false ], 27, 16, 44,  1, 51,  2,
+			[ "/Lifespan",false ],  5, 
+			[ "/Source",  false ],  4,  3, 30, 55, 62, 24, 52, 
+			
+		[ "Movement",      true ], 18, 60, 
+			[ "/Direction",false], 64,  6, 29, 53, 
+			[ "/Wrap",     true ], 67, 
+			
+		[ "Rotation",      true ], 15,  8,  9, 59, 61, 
+		[ "Scale",         true ], 10, 17, 11, 
+		[ "Color",         true ], 28, 50, 12, 13, 14, 56, 
 		__inspc(ui(6), true, false, ui(3)), 
 		
 		[ "Follow path", true, 45 ], 46, 66, 47, 

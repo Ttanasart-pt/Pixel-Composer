@@ -1,5 +1,5 @@
 {
-    "name":          "Tree Combine Leaves",
+    "name":          "Combine Leaves",
     "spr":           "s_node_mk_tree_add_leaf",
     "baseNode":      "Node_MK_Tree_Add_Leaf",
     "pxc_version":    120050,

@@ -1,5 +1,5 @@
 function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Tree Trunk";
+	name  = "Trunk";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	parameters.inline_draw_input = true;
@@ -11,7 +11,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	/* UNUSED */ newInput(13, nodeValue_Curve( "Length Curve", CURVE_DEF_11 ));
 	
 	newInput(14, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	newInput( 0, nodeValue_Struct( "Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Position
 	newInput( 1, nodeValue_Vec2(     "Position",        [.5,1]      )).setUnitSimple();
@@ -69,19 +69,19 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14,
-		[ "Position",  false ],  1, 
-			[ "/Scatter",  true ],   5, 30, 31, 
+		[ "Position",   false ],  1, 
+			[ "/Scatter",true ],  5, 30, 31, 
 			
-		[ "Segments",  false ],  3,  7, 
-		[ "Direction", false ],  4,  9, 15, 
-			[ "/Wiggle",   true ],  10, 34, 32, 33, 
-			[ "/Spiral",   true ],  22, 28, 23, 18, 19, 20, 21, 
+		[ "Segments",   false ],  3,  7, 
+		[ "Direction",  false ],  4,  9, 15, 
+			[ "/Wiggle", true ],  10, 34, 32, 33, 
+			[ "/Spiral", true ],  22, 28, 23, 18, 19, 20, 21, 
 			
-		[ "Thickness", false ],  6, 11, 
-		[ "Render",    false ], 29,  
-			[ "/Base Color", false ],  12, 24, 25, 
-			[ "/Edge Color", false ],  16, 17, 26, 
-			[ "/Texture",    false ],  27, 
+		[ "Thickness",       false ],  6, 11, 
+		[ "Render",          false ], 29,  
+			[ "/Base Color", false ], 12, 24, 25, 
+			[ "/Edge Color", false ], 16, 17, 26, 
+			[ "/Texture",    false ], 27, 
 	];
 	
 	////- Nodes

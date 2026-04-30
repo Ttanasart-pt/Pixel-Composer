@@ -6,6 +6,11 @@
         "date": "2026-04-30T02:09:34.254Z",
         "node": "",
         "commit": "**MK Tree**: Add subgroups to some properties."
+      },
+      {
+        "date": "2026-04-30T02:58:43.178Z",
+        "node": "",
+        "commit": "**MK Tree > Branch, Leaf**: Add `Chance` property for branch level randomization."
       }
     ]
   },

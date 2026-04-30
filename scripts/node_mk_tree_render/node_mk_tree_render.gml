@@ -1,5 +1,5 @@
 function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name  = "Tree Render";
+	name  = "Render Tree";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	parameters.inline_draw_output = true;

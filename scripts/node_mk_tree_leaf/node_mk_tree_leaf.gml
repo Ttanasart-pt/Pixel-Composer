@@ -1,15 +1,16 @@
 function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Tree Leaves";
+	name  = "Leaves";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	setDrawIcon(s_node_mk_tree_leaf);
 	setDimension(96, 48);
 	
 	newInput(5, nodeValueSeed());
-	newInput(0, nodeValue_Struct("Branches", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	newInput(0, nodeValue_Struct( "Branches", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Position
 	newInput( 1, nodeValue_SliRange( "Position", [.5,1] ));
+	newInput(55, nodeValue_Slider(   "Chance",    1     ));
 	newInput( 2, nodeValue_Range(    "Amount",   [8,16] ));
 	newInput(19, nodeValue_EButton(  "Distribution", 0, [ "Random", "Uniform" ] ))
 		.setCurvable(52, CURVE_DEF_01, "Over Branch", "curved", THEME.mk_tree_curve_branch );
@@ -20,7 +21,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setCurvable(53, CURVE_DEF_11, "Over Whorled", "curved_whorled", THEME.mk_tree_curve_whorled )
 	
 		////- =/Settings
-	newInput(35, nodeValue_Bool(    "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Leaf Position' range or total range.");
+	newInput(35, nodeValue_Bool(    "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Position' range or total range.");
 		
 	////- =Direction
 	newInput( 7, nodeValue_Range(   "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
@@ -84,15 +85,15 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 54
+	// input 56
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
-		[ "Position",  false ],  1,  2, 19, 52, 
-			[ "/Offset",   true ],  10, 17, 53, 
-			[ "/Settings", true ],  35, 
+		[ "Position",     false ],  1, 55,  2, 19, 52, 
+			[ "/Offset",   true ], 10, 17, 53, 
+			[ "/Settings", true ], 35, 
 			
 		[ "Direction", false ],  7, 51, 16, 27, 28, 
 		[ "Grouping",  false ], 15, 36, 32, 33, 54, 
@@ -136,14 +137,16 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _tree = getInputData( 0);
 			
+			var _pos  = getInputData( 1);
+			var _chan = getInputData(55);
 			var _amou = getInputData( 2);
 			var _auni = inputs[2].attributes.unit;
 			inputs[2].setName(_auni? "Distance" : "Amount");
 			amountUnitToggle.icon_index = _auni;
 			
-			var _pos  = getInputData( 1);
-			var _clam = getInputData(35);
 			var _dist = getInputData(19);
+			
+			var _clam = getInputData(35);
 			var _disC = getInputData(52), curve_distri = inputs[19].attributes.curved? new curveMap(_disC)  : undefined;
 			
 			var _sprd = getInputData( 7);
@@ -258,6 +261,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(__p1 < __p0) return;
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
+			if(random(1) > _chan) continue;
+			
 			random_set_seed(_seed + i * 100);
 			var _br = _tree[i];
 			

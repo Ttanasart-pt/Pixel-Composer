@@ -1,5 +1,5 @@
 function Node_MK_Tree_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Tree Attract";
+	name  = "Attract Branch";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	setDrawIcon(s_node_mk_tree_attract);

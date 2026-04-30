@@ -1,5 +1,5 @@
 {
-    "name":          "Tree Branch",
+    "name":          "Branch",
     "spr":           "s_node_mk_tree_branch",
     "baseNode":      "Node_MK_Tree_Branch",
     "pxc_version":    119051,

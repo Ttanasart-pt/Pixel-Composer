@@ -1,6 +1,6 @@
 {
-    "name":          "Tree Wiggle",
+    "name":          "Wiggle Branch",
     "spr":           "s_node_mk_tree_wiggle",
     "baseNode":      "Node_MK_Tree_Wiggle",
-    "pxc_version":    119051.00,
+    "pxc_version":    119051,
 }

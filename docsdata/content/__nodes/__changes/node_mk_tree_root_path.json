@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1.002",
+    "changes": [
+      {
+        "date": "2026-04-30T02:58:43.177Z",
+        "node": "",
+        "commit": "**MK Tree > Branch, Leaf**: Add `Chance` property for branch level randomization."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.1",
     "changes": [
       {

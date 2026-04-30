@@ -1,5 +1,5 @@
 function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Tree Trunk Path";
+	name  = "Trunk Path";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	parameters.inline_draw_input = true;

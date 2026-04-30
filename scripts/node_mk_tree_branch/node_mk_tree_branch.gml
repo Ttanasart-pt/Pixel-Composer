@@ -1,5 +1,5 @@
 function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Tree Branch";
+	name  = "Branch";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	setDrawIcon(s_node_mk_tree_branch);
@@ -9,15 +9,16 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	/* UNUSED */ newInput( 2, nodeValue_Vec2_Range( "Origin Wiggle",   [0,0,0,0] ));
 	
 	newInput(14, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	newInput( 0, nodeValue_Struct( "Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Position
 	newInput( 8, nodeValue_SliRange( "Position",       [.5,1]    ));
+	newInput(44, nodeValue_Slider(   "Chance",           1       ));
 	newInput( 5, nodeValue_Range(    "Amount",          [4,8]    ));
 	newInput(19, nodeValue_EButton(  "Distribution",     0,      )).setChoices([ "Random", "Uniform" ]);
 	
 		////- =/Settings
-	newInput(32, nodeValue_Bool( "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Leaf Position' range or total range.");
+	newInput(32, nodeValue_Bool( "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Position' range or total range.");
 	
 	////- =Segment
 	newInput( 3, nodeValue_Range(  "Length",     [16,32]   ))
@@ -75,26 +76,26 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 44
+	// input 45
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
-		[ "Position",  false ],  8,  5, 19, 
-			[ "/Settings", true ],  32, 
+		[ "Position",        false ],  8, 44,  5, 19, 
+			[ "/Settings",    true ], 32, 
 			
-		[ "Segments",  false ],  3, 13,  7, 
-		[ "Direction", false ], 31,  4, 40, 41, 15,  9, 16, 33, 
-			[ "/Wiggle",  true ],   10, 34, 35, 42, 43, 
-			[ "/Spiral",  true ],   25, 38, 26, 21, 22, 23, 24, 
+		[ "Segments",        false ],  3, 13,  7, 
+		[ "Direction",       false ], 31,  4, 40, 41, 15,  9, 16, 33, 
+			[ "/Wiggle",      true ], 10, 34, 35, 42, 43, 
+			[ "/Spiral",      true ], 25, 38, 26, 21, 22, 23, 24, 
 			
-		[ "Thickness", false ],  6, 11, 36, 
-		[ "Rendering", false ], 39, 
-			[ "/Base Color", false ],   37, 12, 27, 28, 
-			[ "/Edge Color", false ],   17, 18, 29, 
-			[ "/Texture",    false ],   30, 
+		[ "Thickness",       false ],  6, 11, 36, 
+		[ "Rendering",       false ], 39, 
+			[ "/Base Color", false ], 37, 12, 27, 28, 
+			[ "/Edge Color", false ], 17, 18, 29, 
+			[ "/Texture",    false ], 30, 
 			
 		[ "Growth",     true ], 20, 
 	];
@@ -130,13 +131,14 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var _tree = getInputData(0);
 			
+			var _oriR = getInputData( 8);
+			var _chan = getInputData(44);
 			var _bran = getInputData( 5);
 			var _auni = inputs[5].attributes.unit;
 			inputs[5].setName(_auni? "Distance" : "Amount");
 			amountUnitToggle.icon_index = _auni;
 			
 			var _dist = getInputData(19);
-			var _oriR = getInputData( 8);
 			var _clam = getInputData(32);
 			
 			var _segs = getInputData( 7);
@@ -211,6 +213,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
 			var _tr  = _tree[i];
+			if(random(1) > _chan) continue;
+			
 			var _amo = irandom_range(_bran[0], _bran[1]);
 			if(_auni) _amo = _tr.totalLength / _amo; // density
 			

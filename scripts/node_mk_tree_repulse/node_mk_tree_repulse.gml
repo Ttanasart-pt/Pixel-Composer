@@ -1,5 +1,5 @@
 function Node_MK_Tree_Repulse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Tree Repulse";
+	name  = "Repulse Branch";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	setDrawIcon(s_node_mk_tree_repulse);
