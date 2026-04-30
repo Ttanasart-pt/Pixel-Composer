@@ -21,6 +21,11 @@
         "date": "2026-04-30T04:50:21.502Z",
         "node": "Particle",
         "commit": "**Particle**: Add `Fixed` Rotational type that lerp angle to the desired angle instead of increasing angle per frame."
+      },
+      {
+        "date": "2026-04-30T08:38:30.711Z",
+        "node": "any",
+        "commit": "Introduced"
       }
     ]
   },

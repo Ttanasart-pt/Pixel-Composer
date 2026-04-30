@@ -21,7 +21,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		////- =/Settings
 	newInput(32, nodeValue_Bool( "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Position' range or total range.");
 	
-	////- =Segment
+	////- =Geometry
 	newInput( 3, nodeValue_Range(  "Length",     [16,32]   ))
 		.setCurvable(13, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	newInput( 7, nodeValue_Range(  "Segments",   [4,8]     ));
@@ -88,7 +88,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Position",        false ],  8, 44,  5, 19, 45, 
 			[ "/Settings",    true ], 32, 
 			
-		[ "Segments",        false ],  3, 13,  7, 
+		[ "Geometry",        false ],  3, 13,  7, 
 		[ "Direction",       false ], 31,  4, 40, 41, 15,  9, 16, 33, 
 			[ "/Wiggle",      true ], 10, 34, 35, 42, 43, 
 			[ "/Spiral",      true ], 25, 38, 26, 21, 22, 23, 24, 
@@ -174,16 +174,18 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _wigF  = getInputData(42);
 			var _wigP  = getInputData(43);
 			
-			var _draw  = getInputData(46);
-			var _line  = getInputData(39);
 			var _thk   = getInputData( 6);
 			var _thkC  = getInputData(11),    curve_thick   = inputs[ 6].attributes.curved?        new curveMap(_thkC)  : undefined;
 			var _thkCR = getInputData(36),    curve_thick_r = inputs[ 6].attributes.curved_branch? new curveMap(_thkCR) : undefined;
+			
+			var _draw  = getInputData(46);
+			var _line  = getInputData(39);
 			
 			var _inhColor = getInputData(37);
 			var _baseGrad = getInputData(12);
 			var _lenc     = getInputData(27);
 			var _lencGrad = getInputData(28); inputs[28].setVisible(_lenc > 0);
+			
 			var _edge     = getInputData(17);
 			var _edgeLGrd = getInputData(18); inputs[18].setVisible(_edge > 0);
 			var _edgeRGrd = getInputData(29); inputs[29].setVisible(_edge > 0);
@@ -217,9 +219,9 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		_tree = variable_clone(_tree);
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
-			var _tr  = _tree[i];
 			if(random(1) > _chan) continue;
 			
+			var _tr  = _tree[i];
 			var _amo = irandom_range(_bran[0], _bran[1]);
 			if(_auni) _amo = _tr.totalLength / _amo; // density
 			
@@ -227,7 +229,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _pos = array_create(_amo);
 			repeat(_amo) {
 				     if(_dist == 0) rat = random_range(_oriR[0], _oriR[1]);
-				else if(_dist == 1) rat = lerp(_oriR[0], _oriR[1], j / _amo);
+				else if(_dist == 1) rat = lerp(_oriR[0], _oriR[1], _amo > 1? j / (_amo - 1) : .5);
 				
 				rat = curve_distri? curve_distri.get(rat) : rat;
 				_pos[j++] = rat;
@@ -245,13 +247,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				_tr.getPosition(rat, ori);
 				
-				var _t = new __MK_Tree();
-				
-				_t.doDraw = _draw;
-				_t.seed   = _seed + i;
-				_t.root   = _tr.root;
-				_t.x = ori[0];
-				_t.y = ori[1];
+				var _t = new __MK_Tree(_tr.root, ori[0], ori[1], _seed + i)
+					.setDraw(_draw);
 				
 				_t.amount        = random_range(_segs[0], _segs[1]);
 				_t.texture       = _tex;

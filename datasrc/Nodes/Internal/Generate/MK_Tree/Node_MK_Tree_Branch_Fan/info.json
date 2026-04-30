@@ -1,0 +1,6 @@
+{
+    "name":          "Fan Branch",
+    "spr":           "s_node_mk_tree_branch_fan",
+    "baseNode":      "Node_MK_Tree_Branch_Fan",
+    "pxc_version":    121001,
+}

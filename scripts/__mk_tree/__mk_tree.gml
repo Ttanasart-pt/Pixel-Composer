@@ -335,13 +335,13 @@ function __MK_Tree_Segment(_x, _y, _t) constructor {
 	colorEdgeR = c_white;
 }
 
-function __MK_Tree() constructor {
-	root = self;
+function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
+	root = _root ?? self;
+	seed = _seed;
 	
-	x = 0;
-	y = 0;
+	x = _x;
+	y = _y;
 	
-	seed = 0;
 	rootPosition   = 0;
 	rootDirection  = undefined;
 	curvPosition   = 0;
@@ -363,6 +363,10 @@ function __MK_Tree() constructor {
 	drawn     = false;
 	
 	mesh = undefined;
+	
+	////- Set
+	
+	static setDraw = function(_d) /*=>*/ { doDraw = _d; return self; }
 	
 	////- Get
 	
@@ -593,6 +597,42 @@ function __MK_Tree() constructor {
 			
 			_sg.colorEdgeL = merge_color(_sg.color, _sg.colorEdgeL, _color_get_alpha(_sg.colorEdgeL));
 			_sg.colorEdgeR = merge_color(_sg.color, _sg.colorEdgeR, _color_get_alpha(_sg.colorEdgeR));
+		}
+		
+		var l = 0;
+		for( var i = 0, n = array_length(segmentLengths); i < n; i++ ) {
+			l += segmentLengths[i];
+			segmentRatio[i] = l / totalLength;
+		}
+	}
+	
+	static setPoints = function(_points) {
+		amount         = array_length(_points);
+		segments       = array_create(amount);
+		segmentLengths = array_create(amount);
+		segmentRatio   = array_create(amount);
+		totalLength    = 0;
+		
+		var ox, oy, nx, ny, t;
+		for( var i = 0; i < amount; i++ ) {
+			var p = _points[i];
+			
+			nx = p[0];
+			ny = p[1];
+			t  = p[2];
+			c  = p[3];
+			
+			segments[i] = new __MK_Tree_Segment(nx, ny, t);
+			segments[i].color = c;
+			
+			if(i) {
+				var l = point_distance(ox, oy, nx, ny)
+				segmentLengths[i] = l;
+				totalLength += l;
+			}
+			
+			ox = nx;
+			oy = ny;
 		}
 		
 		var l = 0;

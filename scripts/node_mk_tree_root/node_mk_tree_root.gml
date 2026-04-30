@@ -21,7 +21,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(30, nodeValue_Vec2(     "Scatter Area",    [0,0]       )).setUnitSimple();
 	newInput(31, nodeValue_EButton(  "Scatter Shape",    0, [ "Rectangle", "Ellipse" ] ));
 	
-	////- =Segment
+	////- =Geometry
 	newInput( 3, nodeValue_Range(  "Length",   [24,24], true ));
 	newInput( 7, nodeValue_Range(  "Segments", [8,8],   true ));
 	
@@ -73,7 +73,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Position",   false ],  1, 
 			[ "/Scatter",true ],  5, 30, 31, 
 			
-		[ "Segments",   false ],  3,  7, 
+		[ "Geometry",   false ],  3,  7, 
 		[ "Direction",  false ],  4,  9, 15, 
 			[ "/Wiggle", true ],  10, 34, 32, 33, 
 			[ "/Spiral", true ],  22, 28, 23, 18, 19, 20, 21, 

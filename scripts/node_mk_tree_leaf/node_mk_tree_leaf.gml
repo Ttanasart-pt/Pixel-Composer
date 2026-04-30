@@ -95,7 +95,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			[ "/Offset",   true ], 10, 17, 53, 
 			[ "/Settings", true ], 35, 
 			
-		[ "Direction", false ],  7, 51, 16, 27, 28, 
+		[ "Direction", false ],  7, 16, 51, 27, 28, 
 		[ "Grouping",  false ], 15, 36, 32, 33, 54, 
 		[ "Shape",     false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
 		[ "Color",     false ], 

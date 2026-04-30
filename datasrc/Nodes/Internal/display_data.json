@@ -376,6 +376,7 @@
             "Node_MK_Tree_Root",
             "Node_MK_Tree_Path_Root",
             "Node_MK_Tree_Branch",
+            "Node_MK_Tree_Branch_Fan",
             "Node_MK_Tree_Add_Branch",
             
             { "label": "/Leave" },
