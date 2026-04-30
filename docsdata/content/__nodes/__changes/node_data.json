@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1.002",
+    "changes": [
+      {
+        "date": "2026-04-30T05:07:14.165Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Collapsing section will keep scroll position until manual scrolling."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.0",
     "changes": [
       {

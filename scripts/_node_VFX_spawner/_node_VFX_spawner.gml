@@ -67,9 +67,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- =Color
 	newInput(28, nodeValue_Gradient(  "Color on Spawn",      gra_white                ));
 	newInput(50, nodeValue_Palette(   "Color by Index",      [ca_white]               )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(12, nodeValue_Gradient(  "Color Over Lifetime", gra_white                ));
+	newInput(12, nodeValue_Gradient(  "Color over Lifetime", gra_white                ));
 	newInput(13, nodeValue_Range(     "Alpha",               [1,1], { linked : true } )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
-	newInput(56, nodeValue_Surface(   "Sample Surface"                                   ));
+		
+		////- =/Sampler
+	newInput(56, nodeValue_Surface(   "Sample Surface" ));
 	
 	////- =Path
 	newInput(45, nodeValue_Bool(       "Follow Path",        false                    ));
@@ -81,9 +83,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(57, nodeValue_Bool(     "Use Physics",            false                     ));
 	newInput(54, nodeValue_Range(    "Friction",               [0,0], { linked : true }  ));
 	newInput( 7, nodeValue_Range(    "Acceleration",           [0,0], { linked : true }  ));
+	
+		////- =/Gravity
 	newInput(19, nodeValue_Range(    "Gravity",                [0,0], { linked : true }  ));
 	newInput(33, nodeValue_Rotation( "Gravity Direction",      -90                       ));
 	
+		////- =/Turning
 	newInput(34, nodeValue_Range(    "Turning",                [0,0], { linked : true }  ));
 	newInput(35, nodeValue_Bool(     "Turn Both Directions",   false                     )).setTooltip("Apply randomized 1, -1 multiplier to the turning speed.");
 	newInput(36, nodeValue_Float(    "Turn Scale with Speed",  false                     ));
@@ -92,6 +97,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(37, nodeValue_Bool(    "Collide Ground",      false                         ));
 	newInput(63, nodeValue_EButton( "Ground Offset Type",  0, [ "Relative", "Absolute" ] ));
 	newInput(38, nodeValue_Range(   "Ground Offset",       [0,0], { linked : true }      ));
+	
+		////- =/Bounce
 	newInput(39, nodeValue_Slider(  "Bounce Amount",       .5                            ));
 	newInput(40, nodeValue_Slider(  "Bounce Friction",     .1                            )).setTooltip("Apply horizontal friction once particle stop bouncing.");
 		
@@ -167,12 +174,16 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			[ "/Snap",     true ], 61, 
 			
 		[ "Scale",         true ], 10, 17, 11, 
-		[ "Color",         true ], 28, 50, 12, 13, 14, 56, 
+		[ "Color",         true ], 28, 50, 12, 13, 14, 
+			[ "/Sampler",  true ], 56, 
 		__inspc(ui(6), true, false, ui(3)), 
 		
 		[ "Follow path", true, 45 ], 46, 66, 47, 
-		[ "Physics",     true, 57 ], 54,  7, 19, 33, 34, 35, 36, 
-		[ "Ground",      true, 37 ], 38, 63, 39, 40, 
+		[ "Physics",     true, 57 ], 54,  7, 
+			[ "/Gravity",false    ], 19, 33, 
+			[ "/Turning",false    ], 34, 35, 36, 
+		[ "Ground",      true, 37 ], 38, 63, 
+			[ "/Bounce", false    ], 39, 40, 
 		[ "Wiggles",     true, 58 ], 20, 41, 42, 43, 
 		
 	];
@@ -396,7 +407,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 						var _rot_tar = rotation_random_eval(_rotation_targ);
 						part.setRotationTarget( _rot, _rot_tar, curve_rotateF, _rotation_snap ); 
 						break;
-						
 				}
 			#endregion
 			

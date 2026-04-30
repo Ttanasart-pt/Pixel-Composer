@@ -486,9 +486,18 @@ function Panel_Inspector() : PanelContent() constructor {
     
     ////- Actions
     
+    function clearInspecting() {
+    	inspecting = noone;
+    	contentPane.scroll_y_to = 0;
+    }
+    
     function setInspecting(_inspecting, _lock = false, _focus = true, _record = true) {
         if(locked) return;
         if(inspecting == _inspecting) return;
+        if(_inspecting == noone) {
+        	clearInspecting();
+        	return;
+        }
         
         if(_record) {
 	        array_push(inspect_history_undo, inspecting);
@@ -506,6 +515,7 @@ function Panel_Inspector() : PanelContent() constructor {
         } else 
         	contentPane.scroll_y_to = 0;
         
+    	contentPane.scrollReset();
         contentPane.scroll_y     = contentPane.scroll_y_to;
         contentPane.scroll_y_raw = contentPane.scroll_y_to;
         contentPane.scroll_wait  = 2;
@@ -572,18 +582,15 @@ function Panel_Inspector() : PanelContent() constructor {
     
     contentPane = new scrollPane(content_w, content_h, function(_y, _m) { 
         draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-        
-        if(inspecting == noone) 
-        	return drawContentMeta(_y, _m);
-        return drawContentNode(_y, _m);
-    });
+        return inspecting == noone? drawContentMeta(_y, _m) : drawContentNode(_y, _m);
+    }).setScrollUnclamp();
     
     function drawContent(panel) { 
     	var pad = ui(6);
     	draw_clear_alpha(COLORS.panel_bg_clear, 1);
         draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, top_bar_h, w - pad * 2, h - top_bar_h - pad);
         
-        if(inspecting && !inspecting.active) inspecting = noone;
+        if(inspecting && !inspecting.active) clearInspecting();
         var mse = [mx,my];
         var pd = ui(8);
         var bs = ui(24);

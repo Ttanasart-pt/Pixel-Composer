@@ -24,6 +24,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_y_raw = 0;
 	scroll_y_to	 = 0;
 	scroll_wait  = 0;
+	scroll_clamp = true;
 	
 	scroll_dragable = false;
 	scroll_drag     = false;
@@ -70,8 +71,10 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		return self; 
 	}
 		
-	static setScroll   = function(_s) /*=>*/ { scroll_y_to = _s; return self; }
-	static setUseDepth = function(  ) /*=>*/ { use_depth = true; return self; }
+	static setScrollUnclamp = function(  ) /*=>*/ { scroll_clamp = false; return self; }
+	static setScroll   = function(_s) /*=>*/ { scroll_y_to  = _s;    return self; }
+	static setUseDepth = function(  ) /*=>*/ { use_depth    = true;  return self; }
+	static scrollReset = function() /*=>*/ { scroll_y_to = clamp(scroll_y_to, -content_h, 0); return self; }
 	
 	static drawOffset = function(_x, _y, _mx = mouse_mx, _my = mouse_my) { return draw(_x, _y, _mx - _x, _my - _y); }
 	
@@ -112,7 +115,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		
 		if(scroll_wait) scroll_wait--;
 		else {
-			scroll_y_to  = clamp(scroll_y_to, -content_h, 0);
+			if(scroll_clamp) 
+				scroll_y_to = clamp(scroll_y_to, -content_h, 0);
 			scroll_y_raw = scroll_inertia > 0? lerp_float(scroll_y_raw, scroll_y_to, scroll_inertia) : scroll_y_to;
 			scroll_y	 = round(scroll_y_raw);
 		}
@@ -122,7 +126,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		
 		if(hover && !scroll_lock) {
 			if(!key_mod_press(SHIFT) && !key_mod_press(CTRL) && MOUSE_WHEEL != 0)
-				scroll_y_to += scroll_step * MOUSE_WHEEL;
+				scroll_y_to = clamp(scroll_y_to + scroll_step * MOUSE_WHEEL, -content_h, 0);
 				
 			if(scroll_dragable && mouse_press(mb_middle)) {
 				scroll_drag    = true;
