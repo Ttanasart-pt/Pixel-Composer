@@ -59,14 +59,14 @@ function random1D(seed, startRange = 0, endRange = 1) {
 	
 	var _f = frac(seed);
 	if(_f == 0) {
-		random_set_seed(PROJECT.seed + seed);
+		random_set_seed(seed);
 		return random_range(startRange, endRange);
 	}
 	
-	random_set_seed(PROJECT.seed + floor(seed));
+	random_set_seed(floor(seed));
 	var f1 = random_range(startRange, endRange);
 	
-	random_set_seed(PROJECT.seed + floor(seed) + 1);
+	random_set_seed(floor(seed) + 1);
 	var f2 = random_range(startRange, endRange);
 	
 	return lerp(f1, f2, _f);
@@ -76,8 +76,9 @@ function __noise(_x) {
     var i = floor(_x);
     var f = frac(_x);
 	
-    var a = random1D(i);
-    var b = random1D(i + 1);
+	random_set_seed(i);
+    var a = random(1);
+    var b = random(1);
 
     var u = f * f * (3.0 - 2.0 * f);
 

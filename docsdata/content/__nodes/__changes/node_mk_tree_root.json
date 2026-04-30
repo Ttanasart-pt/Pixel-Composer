@@ -16,6 +16,11 @@
         "date": "2026-04-30T02:58:43.173Z",
         "node": "",
         "commit": "**MK Tree > Branch, Leaf**: Add `Chance` property for branch level randomization."
+      },
+      {
+        "date": "2026-04-30T03:57:08.395Z",
+        "node": "",
+        "commit": "**MK Tree > Branch**: Add draw toggle."
       }
     ]
   },

@@ -13,7 +13,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(55, nodeValue_Slider(   "Chance",    1     ));
 	newInput( 2, nodeValue_Range(    "Amount",   [8,16] ));
 	newInput(19, nodeValue_EButton(  "Distribution", 0, [ "Random", "Uniform" ] ))
-		.setCurvable(52, CURVE_DEF_01, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+		.setCurvable(52, CURVE_DEF_01, "Remap", "curved", THEME.mk_tree_curve_branch );
 	
 		////- =/Offset
 	newInput(10, nodeValue_Range( "Offset",  [0,0],   true ))
@@ -133,7 +133,6 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		#region data
 			var _seed = inline_context.seed + getInputData(5);
 			var _gDir = inline_context.gravityDir;
-			random_set_seed(_seed);
 			
 			var _tree = getInputData( 0);
 			
@@ -145,9 +144,9 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			amountUnitToggle.icon_index = _auni;
 			
 			var _dist = getInputData(19);
+			var _disC = getInputData(52), curve_distri = inputs[19].attributes.curved? new curveMap(_disC)  : undefined;
 			
 			var _clam = getInputData(35);
-			var _disC = getInputData(52), curve_distri = inputs[19].attributes.curved? new curveMap(_disC)  : undefined;
 			
 			var _sprd = getInputData( 7);
 			var _sprf = getInputData(51);

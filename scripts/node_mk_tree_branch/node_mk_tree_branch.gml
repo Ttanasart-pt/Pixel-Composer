@@ -15,7 +15,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 8, nodeValue_SliRange( "Position",       [.5,1]    ));
 	newInput(44, nodeValue_Slider(   "Chance",           1       ));
 	newInput( 5, nodeValue_Range(    "Amount",          [4,8]    ));
-	newInput(19, nodeValue_EButton(  "Distribution",     0,      )).setChoices([ "Random", "Uniform" ]);
+	newInput(19, nodeValue_EButton(  "Distribution",     0, [ "Random", "Uniform" ] ))
+		.setCurvable(45, CURVE_DEF_01, "Remap", "curved", THEME.mk_tree_curve_branch );
 	
 		////- =/Settings
 	newInput(32, nodeValue_Bool( "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Position' range or total range.");
@@ -58,6 +59,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setCurvable( 36, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
 	
 	////- =Rendering
+	newInput(46, nodeValue_Bool(     "Draw",       true ));
 	newInput(39, nodeValue_EScroll(  "Draw Mode",  0, [ "Texture", "Line" ] ));
 		
 		////- =/Base Color
@@ -76,14 +78,14 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 45
+	// input 47
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
-		[ "Position",        false ],  8, 44,  5, 19, 
+		[ "Position",        false ],  8, 44,  5, 19, 45, 
 			[ "/Settings",    true ], 32, 
 			
 		[ "Segments",        false ],  3, 13,  7, 
@@ -92,7 +94,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			[ "/Spiral",      true ], 25, 38, 26, 21, 22, 23, 24, 
 			
 		[ "Thickness",       false ],  6, 11, 36, 
-		[ "Rendering",       false ], 39, 
+		[ "Rendering",       false ], 46, 39, 
 			[ "/Base Color", false ], 37, 12, 27, 28, 
 			[ "/Edge Color", false ], 17, 18, 29, 
 			[ "/Texture",    false ], 30, 
@@ -139,6 +141,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			amountUnitToggle.icon_index = _auni;
 			
 			var _dist = getInputData(19);
+			var _disC = getInputData(45), curve_distri = inputs[19].attributes.curved? new curveMap(_disC)  : undefined;
+			
 			var _clam = getInputData(32);
 			
 			var _segs = getInputData( 7);
@@ -170,6 +174,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _wigF  = getInputData(42);
 			var _wigP  = getInputData(43);
 			
+			var _draw  = getInputData(46);
 			var _line  = getInputData(39);
 			var _thk   = getInputData( 6);
 			var _thkC  = getInputData(11),    curve_thick   = inputs[ 6].attributes.curved?        new curveMap(_thkC)  : undefined;
@@ -223,6 +228,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			repeat(_amo) {
 				     if(_dist == 0) rat = random_range(_oriR[0], _oriR[1]);
 				else if(_dist == 1) rat = lerp(_oriR[0], _oriR[1], j / _amo);
+				
+				rat = curve_distri? curve_distri.get(rat) : rat;
 				_pos[j++] = rat;
 			}
 			
@@ -239,8 +246,10 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_tr.getPosition(rat, ori);
 				
 				var _t = new __MK_Tree();
-				_t.seed = _seed + i;
-				_t.root = _tr.root;
+				
+				_t.doDraw = _draw;
+				_t.seed   = _seed + i;
+				_t.root   = _tr.root;
 				_t.x = ori[0];
 				_t.y = ori[1];
 				

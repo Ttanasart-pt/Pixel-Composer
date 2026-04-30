@@ -357,6 +357,7 @@ function __MK_Tree() constructor {
 	growShift = 0;
 	growSpeed = 1;
 	
+	doDraw    = true;
 	texture   = noone;
 	drawLine  = false;
 	drawn     = false;
@@ -741,7 +742,7 @@ function __MK_Tree() constructor {
 	}
 	
 	static draw = function() {
-		if(array_length(segments) >= 2) {
+		if(doDraw && array_length(segments) >= 2) {
 			if(drawLine) drawBranchLine();
 			else         drawBranch();
 		}

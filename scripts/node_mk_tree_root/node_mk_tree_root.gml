@@ -50,6 +50,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setCurvable(11, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 		
 	////- =Render
+	newInput(35, nodeValue_Bool(     "Draw",       true ));
 	newInput(29, nodeValue_EScroll(  "Draw Mode",  0, [ "Texture", "Line" ] ));
 		
 		////- =/Base Color
@@ -64,7 +65,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 		////- =/Texture
 	newInput(27, nodeValue_Surface(  "Texture" ));
-	// input 35
+	// input 36
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -78,7 +79,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			[ "/Spiral", true ],  22, 28, 23, 18, 19, 20, 21, 
 			
 		[ "Thickness",       false ],  6, 11, 
-		[ "Render",          false ], 29,  
+		[ "Render",          false ], 35, 29,  
 			[ "/Base Color", false ], 12, 24, 25, 
 			[ "/Edge Color", false ], 16, 17, 26, 
 			[ "/Texture",    false ], 27, 
@@ -144,6 +145,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _wigF = getInputData(32);
 			var _wigP = getInputData(33);
 			
+			var _draw  = getInputData(35);
 			var _line  = getInputData(29);
 			var _thk   = getInputData( 6);
 			var _thkC  = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
@@ -193,7 +195,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					break;
 			}
 			
-			_t.seed = _seed + i;
+			_t.doDraw = _draw;
+			_t.seed   = _seed + i;
 			_t.x = ox;
 			_t.y = oy;
 			_t.amount   = random_range(_segs[0], _segs[1]);
