@@ -396,7 +396,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					draw_vertex(round(v2x), round(v2y));
 					
 					if(!_hov && point_in_triangle(_mx, _my, v0x, v0y, v1x, v1y, v2x, v2y)) {
-						group_hovering = 1 + (PANEL_GRAPH._frame_hovering == self && key_mod_press(SHIFT)) * 2;
+						var _mouseFree = key_mod_press(SHIFT);
+						group_hovering = 1 + (PANEL_GRAPH._frame_hovering == self && _mouseFree) * 2;
 						_hov = true;
 					}
 					
@@ -424,7 +425,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var y1 = _y + group_vertex[2][1] * _s;
 			
 			if(point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-				group_hovering = 1 + (PANEL_GRAPH._frame_hovering == self && key_mod_press(SHIFT)) * 2;
+				var _mouseFree = key_mod_press(SHIFT);
+				group_hovering = 1 + (PANEL_GRAPH._frame_hovering == self && _mouseFree) * 2;
 				_hov = true;
 			}
 			

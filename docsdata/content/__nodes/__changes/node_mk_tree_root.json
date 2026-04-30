@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1.002",
+    "changes": [
+      {
+        "date": "2026-04-30T00:12:14.652Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Fix widget highlight shift when scroll."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.1.001",
     "changes": [
       {

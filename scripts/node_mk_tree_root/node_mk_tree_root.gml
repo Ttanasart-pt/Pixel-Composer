@@ -14,7 +14,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 8, nodeValue_SliRange( "Origin Ratio",    [.5,1]      ));
 	newInput( 1, nodeValue_Vec2(     "Origin Position", [.5,1]      )).setUnitSimple();
 	newInput(30, nodeValue_Vec2(     "Origin Area",     [0,0]       )).setUnitSimple();
-	newInput( 2, nodeValue_Vec2(     "Origin Area",     [0,0]       )).setUnitSimple();
+	/* UNUSED */ newInput( 2, nodeValue_Vec4( "Origin Wiggle", [0,0,0,0] )).setUnitSimple();
 	
 	////- =Segment
 	newInput( 3, nodeValue_Range(  "Length",   [24,24], true ));
