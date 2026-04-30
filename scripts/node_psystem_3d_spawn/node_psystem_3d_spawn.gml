@@ -540,9 +540,9 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			inputs[13].setVisible(_sh_type == 2, _sh_type == 2);
 			inputs[14].setVisible(_sh_type == 3, _sh_type == 3);
 			
-			buffer_seek(spawnTrig,   buffer_seek_start, 4);
-			buffer_seek(stepTrig,    buffer_seek_start, 4);
-			buffer_seek(destroyTrig, buffer_seek_start, 4);
+			if(spawnTrig   && buffer_exists(spawnTrig))   buffer_seek(spawnTrig,   buffer_seek_start, 4);
+			if(stepTrig    && buffer_exists(stepTrig))    buffer_seek(stepTrig,    buffer_seek_start, 4);
+			if(destroyTrig && buffer_exists(destroyTrig)) buffer_seek(destroyTrig, buffer_seek_start, 4);
 			
 			spawnCount   = 0;
 			stepCount    = 0;
@@ -638,7 +638,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 		spawn_index = 0;
 		spawn_trigger_loop_frame = undefined;
 		
-		cache_grad = getInputData(19);
+		cache_grad = inputs[19].getValue();
 		cache_grad.cache();
 		
 		spawnTrig   = buffer_verify(spawnTrig,   4 + attributes.poolSize * global.pSystem_trig_length);

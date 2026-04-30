@@ -10,10 +10,11 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
-		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
+		var nod = __curr_get_val[1]; 
+		if(!is(nod, NodeValue)) return val;
 		
-		if(is_instanceof(val, gradientObject)) return val;
-		if(nod.type != VALUE_TYPE.color)	   return val;
+		if(is(val, gradientObject))      return val;
+		if(nod.type != VALUE_TYPE.color) return val;
 		
 		if(is_array(val)) {
 			var amo  = array_length(val);

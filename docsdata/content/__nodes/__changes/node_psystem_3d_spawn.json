@@ -6,6 +6,11 @@
         "date": "2026-04-30T05:56:42.730Z",
         "node": "Preview Panel",
         "commit": "**Preview Panel**: Selection area now won't shows up in 3d view."
+      },
+      {
+        "date": "2026-04-30T06:08:03.871Z",
+        "node": "pSystem Spawner",
+        "commit": "**pSystem Spawner**: Fix error popup on load."
       }
     ]
   },

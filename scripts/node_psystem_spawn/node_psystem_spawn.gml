@@ -554,9 +554,9 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			inputs[24].setVisible(_sp_type == 2);
 			
-			buffer_seek(spawnTrig,   buffer_seek_start, 4);
-			buffer_seek(stepTrig,    buffer_seek_start, 4);
-			buffer_seek(destroyTrig, buffer_seek_start, 4);
+			if(spawnTrig   && buffer_exists(spawnTrig))   buffer_seek(spawnTrig,   buffer_seek_start, 4);
+			if(stepTrig    && buffer_exists(stepTrig))    buffer_seek(stepTrig,    buffer_seek_start, 4);
+			if(destroyTrig && buffer_exists(destroyTrig)) buffer_seek(destroyTrig, buffer_seek_start, 4);
 			
 			spawnCount   = 0;
 			stepCount    = 0;
@@ -631,7 +631,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		spawn_index = 0;
 		spawn_trigger_loop_frame = undefined;
 		
-		cache_grad = getInputData(16);
+		cache_grad = inputs[16].getValue();
 		cache_grad.cache();
 		
 		var _sh_type = getInputData( 6);
