@@ -141,31 +141,6 @@ uniform int  flip;
 
 float unmix( float st, float ed, float val) { return (val - st) / (ed - st); }
 
-vec2 perspectiveUV(vec2 p, vec2 _p0, vec2 _p1, vec2 _p2, vec2 _p3) {
-	vec2 A = (_p3 - _p0) - (_p2 - _p1);
-    vec2 B = (_p0 - _p1);
-    vec2 C = (_p2 - _p1);
-    vec2 D =  _p1;
-
-	float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
-    float c2 = (B.y * D.x) - (B.x * D.y);
-
-	float _A = (A.y * C.x) - (A.x * C.y);
-	float _B = (A.x * p.y) + c1 - (A.y * p.x);
-	float _C = (B.x * p.y) + c2 - (B.y * p.x);
-	
-	float u = 0., v = 0.;
-	
-	if(_A > .01)
-		 u = (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
-	else u = -_C / _B;
-	
-	if((u * A.x + B.x) != 0.)
-		v = (p.x - (u * C.x) - D.x) / (u * A.x + B.x);
-	
-	return vec2(u, v);
-}
-
 // 2 1
 // 3 0
 
@@ -218,7 +193,29 @@ void main() {
 		if(flip != side) discard;
 	
 	} else {
-		uv = perspectiveUV(v_vTexcoord, _p0, _p1, _p2, _p3);
+		vec2 p = v_vTexcoord;
+		vec2 A = (_p3 - _p0) - (_p2 - _p1);
+	    vec2 B = (_p0 - _p1);
+	    vec2 C = (_p2 - _p1);
+	    vec2 D =  _p1;
+	
+		float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
+	    float c2 = (B.y * D.x) - (B.x * D.y);
+	
+		float _A = (A.y * C.x) - (A.x * C.y);
+		float _B = (A.x * p.y) + c1 - (A.y * p.x);
+		float _C = (B.x * p.y) + c2 - (B.y * p.x);
+		
+		float u = 0., v = 0.;
+		
+		if(abs(_A) > .00001)
+			 u = (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
+		else u = -_C / _B;
+		
+		if((u * A.x + B.x) != 0.)
+			v = (p.x - (u * C.x) - D.x) / (u * A.x + B.x);
+		
+		uv =  vec2(u, v);
 		uv = vec2(1. - uv.x, uv.y);
 	}
 	
@@ -230,6 +227,5 @@ void main() {
 	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
 		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );
-	else 
-		discard;
+	else discard;
 }

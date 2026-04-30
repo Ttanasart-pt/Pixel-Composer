@@ -71,4 +71,12 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
 		if(active && preview_hotkey && preview_hotkey.isPressing()) drawOverlayToggle();
 	}
+	
+	////- Serialize
+	
+	static postApplyDeserialize = function() {
+		if(is(def_val, gradientObject)) return;
+		if(is_struct(def_val)) static_set(def_val, static_get(gradientObject));
+	}
+	
 }

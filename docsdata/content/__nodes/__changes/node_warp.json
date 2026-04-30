@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1.002",
+    "changes": [
+      {
+        "date": "2026-04-30T09:42:50.145Z",
+        "node": "",
+        "commit": "**Warp**: Fix render error."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc13",
     "changes": [
       {

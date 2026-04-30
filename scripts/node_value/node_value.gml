@@ -71,7 +71,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#region ---- Value ----
 		
 		static setDefValue = function(_value, _serialize = true) {
-			def_val    = array_clone(_value);
+			def_val    = variable_clone(_value);
 			
 			sepable    = is_array(_value) && array_length(_value) > 1;
 			animVector = array_safe_length(_value, -1);
@@ -537,7 +537,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!set_default) return;
 		
 		unit.mode = def_unit;
-		setValueRaw(variable_clone(def_val)); 
+		setValueDirect(variable_clone(def_val)); 
 		
 		is_modified       = always_modified;
 		attributes.mapped = false;
@@ -1879,7 +1879,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!is_array(val))     return array_create(def_length, val);
 		
 		if(array_length(val) < def_length) {
-			val = array_clone(val, 1);
+			val = variable_clone(val, 1);
 			array_resize(val, def_length);
 		}
 		

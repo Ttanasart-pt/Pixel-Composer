@@ -141,42 +141,42 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			amountUnitToggle.icon_index = _auni;
 			
 			var _dist = getInputData(19);
-			var _disC = getInputData(45), curve_distri = inputs[19].attributes.curved? new curveMap(_disC)  : undefined;
+			var _disC = getInputData(45),  curve_distri  = inputs[19].attributes.curved? new curveMap(_disC)  : undefined;
 			
 			var _clam = getInputData(32);
 			
 			var _segs = getInputData( 7);
 			var _len  = getInputData( 3);
-			var _lenC = getInputData(13),     curve_length = inputs[ 3].attributes.curved? new curveMap(_lenC)  : undefined;
+			var _lenC = getInputData(13),  curve_length  = inputs[ 3].attributes.curved? new curveMap(_lenC)  : undefined;
 			
 			var _sprS = getInputData(25);
-			var _spsC = getInputData(38),     curve_spis   = inputs[25].attributes.curved? new curveMap(_spsC)  : undefined;
+			var _spsC = getInputData(38),  curve_spis    = inputs[25].attributes.curved? new curveMap(_spsC)  : undefined;
 			var _sprP = getInputData(26);
 			var _wav  = getInputData(21);
-			var _wavC = getInputData(22),     curve_wave  = inputs[21].attributes.curved? new curveMap(_wavC)  : undefined;
+			var _wavC = getInputData(22),  curve_wave    = inputs[21].attributes.curved? new curveMap(_wavC)  : undefined;
 			
 			var _cur  = getInputData(23);
-			var _curC = getInputData(24),     curve_curl  = inputs[23].attributes.curved? new curveMap(_curC)  : undefined;
+			var _curC = getInputData(24),  curve_curl    = inputs[23].attributes.curved? new curveMap(_curC)  : undefined;
 			
 			var _angT  = getInputData(31);
 			var _ang   = getInputData( 4);
 			var _sprd  = getInputData(40);
-			var _sprdC = getInputData(41),    curve_sprd  = inputs[40].attributes.curved? new curveMap(_sprdC)  : undefined;
+			var _sprdC = getInputData(41), curve_sprd    = inputs[40].attributes.curved? new curveMap(_sprdC)  : undefined;
 			
 			var _refl  = getInputData(15);
 			var _grv   = getInputData( 9);
-			var _grvC  = getInputData(16),    curve_grav   = inputs[ 9].attributes.curved?        new curveMap(_grvC)  : undefined;
-			var _grvCR = getInputData(33),    curve_grav_r = inputs[ 9].attributes.curved_branch? new curveMap(_grvCR) : undefined;
+			var _grvC  = getInputData(16), curve_grav    = inputs[ 9].attributes.curved?        new curveMap(_grvC)  : undefined;
+			var _grvCR = getInputData(33), curve_grav_r  = inputs[ 9].attributes.curved_branch? new curveMap(_grvCR) : undefined;
 			
 			var _anw   = getInputData(10);
-			var _anwC  = getInputData(34),    curve_angw   = inputs[10].attributes.curved?        new curveMap(_anwC)  : undefined;
-			var _anwCR = getInputData(35),    curve_angw_r = inputs[10].attributes.curved_branch? new curveMap(_anwCR) : undefined;
+			var _anwC  = getInputData(34), curve_angw    = inputs[10].attributes.curved?        new curveMap(_anwC)  : undefined;
+			var _anwCR = getInputData(35), curve_angw_r  = inputs[10].attributes.curved_branch? new curveMap(_anwCR) : undefined;
 			var _wigF  = getInputData(42);
 			var _wigP  = getInputData(43);
 			
 			var _thk   = getInputData( 6);
-			var _thkC  = getInputData(11),    curve_thick   = inputs[ 6].attributes.curved?        new curveMap(_thkC)  : undefined;
-			var _thkCR = getInputData(36),    curve_thick_r = inputs[ 6].attributes.curved_branch? new curveMap(_thkCR) : undefined;
+			var _thkC  = getInputData(11), curve_thick   = inputs[ 6].attributes.curved?        new curveMap(_thkC)  : undefined;
+			var _thkCR = getInputData(36), curve_thick_r = inputs[ 6].attributes.curved_branch? new curveMap(_thkCR) : undefined;
 			
 			var _draw  = getInputData(46);
 			var _line  = getInputData(39);
