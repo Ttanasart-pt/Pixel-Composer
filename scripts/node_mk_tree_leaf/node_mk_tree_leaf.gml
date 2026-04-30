@@ -8,20 +8,24 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(5, nodeValueSeed());
 	newInput(0, nodeValue_Struct("Branches", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Leaf
-	newInput( 1, nodeValue_Slider_Range( "Leaf Position",   [.5,1] ));
-	newInput(35, nodeValue_Bool(    "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Leaf Position' range or total range.");
-	newInput(19, nodeValue_EButton( "Distribution",     0, [ "Random", "Uniform" ] ))
+	////- =Position
+	newInput( 1, nodeValue_SliRange( "Position", [.5,1] ));
+	newInput( 2, nodeValue_Range(    "Amount",   [8,16] ));
+	newInput(19, nodeValue_EButton(  "Distribution", 0, [ "Random", "Uniform" ] ))
 		.setCurvable(52, CURVE_DEF_01, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	
-	newInput( 2, nodeValue_Range( "Amount",  [8,16]        ));
-	newInput( 7, nodeValue_Range( "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
-	newInput(51, nodeValue_EButton( "Flip",   0, [ "Random", "Ordered", "Never" ] ));
-	newInput(27, nodeValue_Range( "Gravity", [0,0],   true )).setCurvable(28, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
-	
+		////- =/Offset
 	newInput(10, nodeValue_Range( "Offset",  [0,0],   true ))
 		.setCurvable(17, CURVE_DEF_11, "Over Branch",  "curved",         THEME.mk_tree_curve_branch )
 		.setCurvable(53, CURVE_DEF_11, "Over Whorled", "curved_whorled", THEME.mk_tree_curve_whorled )
+	
+		////- =/Settings
+	newInput(35, nodeValue_Bool(    "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Leaf Position' range or total range.");
+		
+	////- =Direction
+	newInput( 7, nodeValue_Range(   "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(51, nodeValue_EButton( "Flip",     0, [ "Random", "Ordered", "Never" ] ));
+	newInput(27, nodeValue_Range(   "Gravity", [0,0],   true )).setCurvable(28, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	
 	////- =Grouping
 	newInput(15, nodeValue_Range( "Whorled", [0,0], true )).setCurvable(36, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
@@ -59,14 +63,20 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(30, nodeValue_Int(        "Resolution",     6           ));
 	
 	////- =Color
+	
+		////- =/per Branch
 	newInput( 4, nodeValue_Gradient( "Random Branch",   gra_white )).setMappableConst(12);
 	newInput(20, nodeValue_Gradient( "Along Branch",    gra_white ));
+	
+		////- =/per Leaf
 	newInput( 6, nodeValue_Gradient( "Random Leaf",     gra_white )).setMappableConst(13);
 	newInput(34, nodeValue_Gradient( "Along Leaf",      gra_white ));
+	
+		////- =/Group
 	newInput(42, nodeValue_Gradient( "Random Whorled",  gra_white ));
 	newInput(47, nodeValue_Gradient( "Along Whorled",   gra_white ));
 	
-	////- =Edge
+		////- =/Edge
 	newInput(14, nodeValue_EButton(  "Render Edge",     0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(11, nodeValue_Gradient( "Edge Color",      gra_white )).setMappableConst(25);
 	newInput(23, nodeValue_EButton(  "Render Top Edge", 0, [ "None", "Override", "Multiply", "Screen" ] ));
@@ -80,12 +90,20 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
-		[ "Leaf",     false ],  1, 35, 19, 52,  2,  7, 51, 16, 27, 28, 10, 17, 53, 
-		[ "Grouping", false ], 15, 36, 32, 33, 54, 
-		[ "Shape",    false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
-		[ "Color",    false ],  4, 20, 12,  6, 13, 34, 42, 47, 
-			new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
-		[ "Growth",    true ], 22, 
+		[ "Position",  false ],  1,  2, 19, 52, 
+			[ "/Offset",   true ],  10, 17, 53, 
+			[ "/Settings", true ],  35, 
+			
+		[ "Direction", false ],  7, 51, 16, 27, 28, 
+		[ "Grouping",  false ], 15, 36, 32, 33, 54, 
+		[ "Shape",     false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
+		[ "Color",     false ], 
+			[ "/per Branch", false ],  4, 12, 20, 
+			[ "/per Leaf",   false ],  6, 13, 34, 
+			[ "/Group",      false ], 42, 47, 
+			[ "/Edge",       false ], 14, 11, 25, 23, 24, 26, 
+			
+		[ "Growth",     true ], 22, 
 	];
 	
 	amountUnitToggle  = button(function() /*=>*/ { inputs[2].toggleAttribute("unit"); })

@@ -6,6 +6,11 @@
         "date": "2026-04-30T00:12:14.652Z",
         "node": "",
         "commit": "**Inspector Panel**: Fix widget highlight shift when scroll."
+      },
+      {
+        "date": "2026-04-30T02:09:34.250Z",
+        "node": "",
+        "commit": "**MK Tree**: Add subgroups to some properties."
       }
     ]
   },

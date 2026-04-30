@@ -341,6 +341,7 @@ function __MK_Tree() constructor {
 	x = 0;
 	y = 0;
 	
+	seed = 0;
 	rootPosition   = 0;
 	rootDirection  = undefined;
 	curvPosition   = 0;
@@ -475,8 +476,10 @@ function __MK_Tree() constructor {
 		var _length = _param.length;
 		var _angle  = _param.angle;
 		
-		var _angleW  = _param.angleW;
-		var _angleWC = _param.angleWC;
+		var _wigg   = _param.wigg;
+		var _wiggC  = _param.wiggC;
+		var _wiggF  = _param.wiggF;
+		var _wiggP  = _param.wiggP;
 		
 		var _grav   = _param.grav;
 		var _gravC  = _param.gravC;
@@ -524,8 +527,14 @@ function __MK_Tree() constructor {
 			
 			if(i) {
 				var t  = _thick * (_thickC? _thickC.get(p) : 1);
+				var aa = _a;
 				
-				var aa = _a + random_range(_angleW[0], _angleW[1]) * choose(-1, 1) * (_angleWC? _angleWC.get(p) : 1);
+				if(_wigg != 0) {
+					var _wan = wiggle(-1, 1, _wiggF, p + _wiggP, seed + i);
+					var _wam = _wigg * (_wiggC? _wiggC.get(p) : 1);
+					aa += _wan * _wam;
+				}
+				
 				var dx = lengthdir_x(ll, aa);
 				var dy = lengthdir_y(ll, aa);
 				

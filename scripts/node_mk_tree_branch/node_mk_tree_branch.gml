@@ -5,16 +5,19 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDrawIcon(s_node_mk_tree_branch);
 	setDimension(96, 48);
 	
+	/* UNUSED */ newInput( 1, nodeValue_Vec2(       "Origin Position", [.5,1]    ));
+	/* UNUSED */ newInput( 2, nodeValue_Vec2_Range( "Origin Wiggle",   [0,0,0,0] ));
+	
 	newInput(14, nodeValueSeed());
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Origin
-	newInput( 5, nodeValue_Range(        "Amount",          [4,8]     ));
-	newInput(19, nodeValue_EButton(      "Distribution",     0,       )).setChoices([ "Random", "Uniform" ]);
-	newInput( 8, nodeValue_Slider_Range( "Origin Ratio",    [.5,1]    ));
+	////- =Position
+	newInput( 8, nodeValue_SliRange( "Position",       [.5,1]    ));
+	newInput( 5, nodeValue_Range(    "Amount",          [4,8]    ));
+	newInput(19, nodeValue_EButton(  "Distribution",     0,      )).setChoices([ "Random", "Uniform" ]);
+	
+		////- =/Settings
 	newInput(32, nodeValue_Bool( "Apply to Property Curves", false )).setTooltip("Set the 'Over Branch' property to use 'Leaf Position' range or total range.");
-	/* UNUSED */ newInput( 1, nodeValue_Vec2(       "Origin Position", [.5,1]    ));
-	/* UNUSED */ newInput( 2, nodeValue_Vec2_Range( "Origin Wiggle",   [0,0,0,0] ));
 	
 	////- =Segment
 	newInput( 3, nodeValue_Range(  "Length",     [16,32]   ))
@@ -27,16 +30,19 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(40, nodeValue_Range(   "Spread",         [15,30]   ))
 		.setCurvable(41, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 		
-	newInput(10, nodeValue_Range(   "Wiggle",    [0,0], true    ))
-		.setCurvable( 34, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
-		.setCurvable( 35, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
-		
 	newInput(15, nodeValue_EScroll( "Reflect",           0,            )).setChoices([ "None", "Randomize", "Ordered" ]);
 	newInput( 9, nodeValue_Range(   "Gravity",          [0,0], true    ))
 		.setCurvable( 16, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 33, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
 	
-	////- =Spiral
+		////- =/Wiggle
+	newInput(10, nodeValue_Range(   "Wiggle",    [0,0], true    ))
+		.setCurvable( 34, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
+		.setCurvable( 35, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
+	newInput(42, nodeValue_Range(   "Wig. Frequency",   [4,4], true ));
+	newInput(43, nodeValue_Range(   "Wig. Phase",       [0,0], true ));
+	
+		////- =/Spiral
 	newInput(25, nodeValue_Range(   "Frequency", [4,4], true ))
 		.setCurvable(38, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	newInput(26, nodeValue_Range(   "Phase",     [0,0], true ));
@@ -45,38 +51,51 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(23, nodeValue_Range(   "Curl",      [0,0], true ))
 		.setCurvable(24, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	
-	////- =Rendering
-	newInput(39, nodeValue_EScroll(  "Draw Mode",  0, [ "Texture", "Line" ] ));
+	////- =Thickness
 	newInput( 6, nodeValue_Range(    "Thickness", [2,2], true ))
 		.setCurvable( 11, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 36, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
+	
+	////- =Rendering
+	newInput(39, nodeValue_EScroll(  "Draw Mode",  0, [ "Texture", "Line" ] ));
 		
-	////- =Color
+		////- =/Base Color
 	newInput(37, nodeValue_Slider(   "Inherit Parent Color", 0      ));
 	newInput(12, nodeValue_Gradient( "Base Color",      gra_white   ));
 	newInput(27, nodeValue_EButton(  "Length Blending", 0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(28, nodeValue_Gradient( "Length Color",    gra_white   ));
 	
+		////- =/Edge Color
 	newInput(17, nodeValue_EButton(  "Edge Blending",   0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(18, nodeValue_Gradient( "L Edge Color",    gra_white   ));
 	newInput(29, nodeValue_Gradient( "R Edge Color",    gra_white   ));
+	
+		////- =/Texture
 	newInput(30, nodeValue_Surface(  "Texture" ));
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 42
+	// input 44
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
-		[ "Origin",    false ],  5, 19,  8, 32, 
+		[ "Position",  false ],  8,  5, 19, 
+			[ "/Settings", true ],  32, 
+			
 		[ "Segments",  false ],  3, 13,  7, 
-		[ "Direction", false ], 31,  4, 40, 41, 10, 34, 35, 15,  9, 16, 33, 
-		[ "Spiral",     true ], 25, 38, 26, 21, 22, 23, 24, 
-		[ "Rendering", false ], 39,  6, 11, 36, 
-		[ "Color",     false ], 37, 12, 27, 28, __inspc(), 17, 18, 29, 30, 
+		[ "Direction", false ], 31,  4, 40, 41, 15,  9, 16, 33, 
+			[ "/Wiggle",  true ],   10, 34, 35, 42, 43, 
+			[ "/Spiral",  true ],   25, 38, 26, 21, 22, 23, 24, 
+			
+		[ "Thickness", false ],  6, 11, 36, 
+		[ "Rendering", false ], 39, 
+			[ "/Base Color", false ],   37, 12, 27, 28, 
+			[ "/Edge Color", false ],   17, 18, 29, 
+			[ "/Texture",    false ],   30, 
+			
 		[ "Growth",     true ], 20, 
 	];
 	
@@ -138,14 +157,16 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _sprd  = getInputData(40);
 			var _sprdC = getInputData(41),    curve_sprd  = inputs[40].attributes.curved? new curveMap(_sprdC)  : undefined;
 			
-			var _anw   = getInputData(10);
-			var _anwC  = getInputData(34),    curve_angw   = inputs[10].attributes.curved?        new curveMap(_anwC)  : undefined;
-			var _anwCR = getInputData(35),    curve_angw_r = inputs[10].attributes.curved_branch? new curveMap(_anwCR) : undefined;
-			
 			var _refl  = getInputData(15);
 			var _grv   = getInputData( 9);
 			var _grvC  = getInputData(16),    curve_grav   = inputs[ 9].attributes.curved?        new curveMap(_grvC)  : undefined;
 			var _grvCR = getInputData(33),    curve_grav_r = inputs[ 9].attributes.curved_branch? new curveMap(_grvCR) : undefined;
+			
+			var _anw   = getInputData(10);
+			var _anwC  = getInputData(34),    curve_angw   = inputs[10].attributes.curved?        new curveMap(_anwC)  : undefined;
+			var _anwCR = getInputData(35),    curve_angw_r = inputs[10].attributes.curved_branch? new curveMap(_anwCR) : undefined;
+			var _wigF  = getInputData(42);
+			var _wigP  = getInputData(43);
 			
 			var _line  = getInputData(39);
 			var _thk   = getInputData( 6);
@@ -214,6 +235,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_tr.getPosition(rat, ori);
 				
 				var _t = new __MK_Tree();
+				_t.seed = _seed + i;
 				_t.root = _tr.root;
 				_t.x = ori[0];
 				_t.y = ori[1];
@@ -243,10 +265,10 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _grav   = random_range(_grv[0], _grv[1]);
 				    _grav  *= curve_grav_r? curve_grav_r.get(crat)   : 1;
 				    
-				var _angw     = [_anw[0], _anw[1]];
-				    _angw[0] *= curve_angw_r? curve_angw_r.get(crat) : 1;
-				    _angw[1] *= curve_angw_r? curve_angw_r.get(crat) : 1;
-				    
+				var _wiggA  = random_range(_anw[0], _anw[1]) * (curve_angw_r? curve_angw_r.get(crat) : 1);
+				var _wiggF  = random_range(_wigF[0], _wigF[1]);
+				var _wiggP  = random_range(_wigP[0], _wigP[1]);
+			
 				var _thick  = random_range(_thk[0], _thk[1]);
 				    _thick *= curve_thick_r? curve_thick_r.get(crat) : 1;
 				
@@ -263,7 +285,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				var _growParam = {
 					length : _length,
-					angle  : _angle,   angleW : _angw,         angleWC : curve_angw,
+					angle  : _angle,   
+					wigg   : _wiggA,   wiggC  : curve_angw,    wiggF   : _wiggF,    wiggP : _wiggP, 
 					grav   : _grav,    gravC  : curve_grav,    gravD   : _gDir, 
 					thick  : _thick,   thickC : curve_thick,
 					
