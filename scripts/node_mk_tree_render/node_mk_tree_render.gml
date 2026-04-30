@@ -10,7 +10,7 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 1, nodeValue_Bool(   "Output Array",   false )).rejectArray();
 	
 	////- =Render
-	newInput( 2, nodeValue_Bool(    "Draw From Root", true  )).rejectArray();
+	newInput( 2, nodeValue_Bool(    "Draw From Root", true )).rejectArray();
 	newInput( 3, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Add", "Max" ]  )).rejectArray();
 	// 3
 	
@@ -52,6 +52,7 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		#region data
 			var _tree = _data[0];
 			var _arra = _data[1];
+			
 			drawRoot  = _data[2];
 			var _blnd = _data[3];
 			

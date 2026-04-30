@@ -1,7 +1,8 @@
 function nodeValue_Gradient(_name, _value, _tooltip = "") { return new __NodeValue_Gradient(_name, self, _value, _tooltip); }
 function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.gradient, _value, _tooltip) constructor {
+	// def_val     = _value.clone();
 	updateOnSet = true;
-	preview_hotkey_spr    = THEME.tool_color;
+	preview_hotkey_spr = THEME.tool_color;
 	
 	////- GET
 	
@@ -11,8 +12,8 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; 
-		if(!is(nod, NodeValue)) return val;
 		
+		if(!is(nod, NodeValue))          return val;
 		if(is(val, gradientObject))      return val;
 		if(nod.type != VALUE_TYPE.color) return val;
 		

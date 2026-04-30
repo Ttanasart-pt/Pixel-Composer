@@ -11,6 +11,11 @@
         "date": "2026-04-30T08:41:40.244Z",
         "node": "MK Tree > Render Tree",
         "commit": "**MK Tree > Render Tree**: Add blend mode."
+      },
+      {
+        "date": "2026-04-30T09:08:04.955Z",
+        "node": "Gradient Value",
+        "commit": "**Gradient Value**: Fix error when resetting value."
       }
     ]
   },

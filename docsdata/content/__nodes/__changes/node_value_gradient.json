@@ -6,6 +6,11 @@
         "date": "2026-04-30T06:08:03.878Z",
         "node": "",
         "commit": "**pSystem Spawner**: Fix error popup on load."
+      },
+      {
+        "date": "2026-04-30T09:08:04.967Z",
+        "node": "",
+        "commit": "**Gradient Value**: Fix error when resetting value."
       }
     ]
   },
