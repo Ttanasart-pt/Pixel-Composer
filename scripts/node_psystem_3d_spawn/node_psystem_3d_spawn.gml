@@ -31,7 +31,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	newInput( 4, nodeValue_Range(       "Spawn Amount",     [2,2], true )).setTooltip("Amount of particle spawn in that frame.");
 	newInput( 5, nodeValue_Range(       "Lifespan",         [20,30]     ));
 	
-	////- =Source
+		////- =/Source
 	newInput( 7, nodeValue_Enum_Scroll( "Type",      0,         )).setChoices([ "Shape", "Path", "Mesh Vertices", "Direct Data" ]);
 	newInput( 8, nodeValue_Enum_Scroll( "Shape",     0,         )).setChoices(__enum_array_gen([ "Box", "Sphere", "Circle" ], s_node_particle_3d_spawn_shape));
 	newInput( 9, nodeValue_Vec3(        "Origin",   [0,0,0]     ));
@@ -69,7 +69,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	
 	input_display_list = [  6, 
 		[ "Spawn",     false ],  0,  1,  2,  3,  4,  5, 
-		[ "Source",    false ],  7,  8,  9, 10, 11, 12, 13, 14, 
+			[ "/Source",false],  7,  8,  9, 10, 11, 12, 13, 14, 
 		[ "Transform", false ], 15, 16, 24, 
 		[ "Rotation",  false ], 17, 
 		[ "Scale",     false ], 18, 25, 

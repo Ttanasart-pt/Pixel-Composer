@@ -19,7 +19,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 4, nodeValue_Range(   "Spawn Amount",     [2,2], true )).setTooltip("Amount of particle spawn in that frame.");
 	newInput( 5, nodeValue_Range(   "Lifespan",         [20,30]     ));
 	
-	////- =Source
+		////- =/Source
 	newInput( 6, nodeValue_EScroll( "Type",         0, [ "Area", "Border", "Path", "Mesh", "Map", "Data" ] ));
 	newInput( 7, nodeValue_EScroll( "Shape",        0, [ "Rectangle", "Ellipse" ]                          ));
 	newInput(25, nodeValue_EScroll( "Border Shape", 0, [ "Rectangle", "Ellipse", "Line" ]                  ));
@@ -63,7 +63,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	input_display_list = [ 13, 
 		[ "Spawn",     false ],  0,  1,  2,  3,  4,  5, 
-		[ "Source",    false ],  6,  7, 25, 23, 28, 29,  8, 26, 27,  9, 10, 11, 12, 31, 
+			[ "/Source",false],  6,  7, 25, 23, 28, 29,  8, 26, 27,  9, 10, 11, 12, 31, 
 		[ "Transform", false ], 24, 19, 20, 
 		[ "Rotation",  false ], 14, 
 		[ "Scale",     false ], 15, 30, 

@@ -3844,9 +3844,10 @@ function Panel_Preview() : PanelContent() constructor {
         
         canvas_mx = (mx - canvas_x) / canvas_s;
         canvas_my = (my - canvas_y) / canvas_s;
-        drawSelection();
-        
-        if(PROJECT.previewSetting.show_ruler && !d3_active) drawRuler();
+        if(!d3_active) {
+        	drawSelection();
+        	if(PROJECT.previewSetting.show_ruler) drawRuler();
+        }
         
         tool_side_draw_l = PROJECT.previewSetting.tool_always_l;
         tool_side_draw_r = PROJECT.previewSetting.tool_always_r;

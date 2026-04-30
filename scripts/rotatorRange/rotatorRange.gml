@@ -118,7 +118,7 @@ function rotatorRange(_onModify) : widget() constructor {
 		_tw /= 2;
 		
 		tb_min.setFocusHover(active, hover);
-		tb_min.draw(_tx, _y, _tw, _h, _data[0], _m);
+		tb_min.draw(_tx, _y, _tw - 1, _h, _data[0], _m);
 		
 		tb_max.setFocusHover(active, hover);
 		tb_max.draw(_tx + _tw, _y, _tw, _h, _data[1], _m);

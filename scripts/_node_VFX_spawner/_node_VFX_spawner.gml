@@ -176,6 +176,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		[ "Scale",         true ], 10, 17, 11, 
 		[ "Color",         true ], 28, 50, 12, 13, 14, 
 			[ "/Sampler",  true ], 56, 
+			
 		__inspc(ui(6), true, false, ui(3)), 
 		
 		[ "Follow path", true, 45 ], 46, 66, 47, 

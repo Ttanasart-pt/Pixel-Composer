@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.1.002",
+    "changes": [
+      {
+        "date": "2026-04-30T05:56:42.730Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Selection area now won't shows up in 3d view."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc6",
     "changes": [
       {

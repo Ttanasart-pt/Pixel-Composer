@@ -200,7 +200,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			tb[i].hide       = !per_line;
 			tb[i].setLabel(axis[i]);
 			
-			tb[i].draw(bx, by, ww, _h, _data[i], _m);
+			tb[i].draw(bx, by, ww - 1, _h, _data[i], _m);
 		}
 		
 		resetFocus();

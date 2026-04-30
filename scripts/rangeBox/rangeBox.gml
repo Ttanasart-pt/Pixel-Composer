@@ -141,12 +141,11 @@ function rangeBox(_onModify) : widget() constructor {
 				tb[i].setLabel(labels[i]);
 				
 				var bx  = _x + disp_w * i;
-				tb[i].draw(bx, _y, disp_w, _h, _data[i], _m);
+				tb[i].draw(bx, _y, disp_w - 1, _h, _data[i], _m);
 			}
 		}
 		
 		resetFocus();
-		
 		return h;
 	} 
 	
