@@ -10,14 +10,15 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 1, nodeValue_Bool(   "Output Array",   false )).rejectArray();
 	
 	////- =Render
-	newInput( 2, nodeValue_Bool(   "Draw From Root", true  )).rejectArray();
+	newInput( 2, nodeValue_Bool(    "Draw From Root", true  )).rejectArray();
+	newInput( 3, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Add", "Max" ]  )).rejectArray();
 	// 3
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		[ "Outputs", false ], 1, 
-		[ "Render",  false ], 2, 
+		[ "Render",  false ], 2, 3, 
 	];
 	
 	////- Nodes
@@ -52,6 +53,7 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _tree = _data[0];
 			var _arra = _data[1];
 			drawRoot  = _data[2];
+			var _blnd = _data[3];
 			
 			var _dim  = getDimension();
 			if(is_array(_tree) && array_empty(_tree)) return _outSurf;
@@ -61,12 +63,18 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
-			draw_set_color(c_white);
+			switch(_blnd) {
+				case 0 : BLEND_NORMAL; break;
+				case 1 : BLEND_ADD;    break;
+				case 2 : BLEND_MAX;    break;
+			}
 			
+			draw_set_color(c_white);
 			if(is_array(_tree)) 
-				array_foreach(_tree, function(t,i) /*=>*/ {return drawTree(t)})
-			else 
-				drawTree(_tree)
+				 array_foreach(_tree, function(t,i) /*=>*/ {return drawTree(t)});
+			else drawTree(_tree);
+			
+			BLEND_NORMAL
 		surface_reset_target();
 		
 		return _outSurf;
