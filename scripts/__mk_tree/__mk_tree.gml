@@ -345,6 +345,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 	rootPosition   = 0;
 	rootDirection  = undefined;
 	curvPosition   = 0;
+	
 	amount         = 1;
 	segments       = [];
 	segmentLengths = [];
@@ -366,7 +367,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 	
 	////- Set
 	
-	static setDraw = function(_d) /*=>*/ { doDraw = _d; return self; }
+	static setDraw    = function(v,l=0) /*=>*/ { doDraw  = v; drawLine = l; return self; }
+	static setTexture = function(v)     /*=>*/ { texture = v; return self; }
 	
 	////- Get
 	
@@ -477,7 +479,9 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 		}
 	}
 	
-	static grow = function(_param) {
+	static grow = function(_amount, _param) {
+		amount = _amount;
+		
 		var _length = _param.length;
 		var _angle  = _param.angle;
 		

@@ -3821,6 +3821,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\mk_tree\builder\branch\mk_tree_branch.html" class="sidebar-file">Mk Tree Branch</a>
             </div>
+</li><li id="mk_tree_branch_fan"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\mk_tree\builder\branch\mk_tree_branch_fan.html" class="sidebar-file">Mk Tree Branch Fan</a>
+            </div>
 </li><li id="mk_tree_path_root"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\mk_tree\builder\branch\mk_tree_path_root.html" class="sidebar-file">Mk Tree Path Root</a>
@@ -6065,6 +6069,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\feedback\group/group_thumbnail.html">Group Thumbnail</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_add_branch.html">Mk Tree Add Branch</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_branch.html">Mk Tree Branch</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_branch_fan.html">Mk Tree Branch Fan</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_path_root.html">Mk Tree Path Root</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_root.html">Mk Tree Root</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\leave/mk_tree_add_leaf.html">Mk Tree Add Leaf</a></li>
@@ -6339,10 +6344,10 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Spawn Amount</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Lifespan</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Lifespan</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Spawn Source</p></th></tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Source</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Spawn Source</p></td>
             </tr><tr>
@@ -6364,33 +6369,39 @@
                 <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
                 <td><p>Uniform Period</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Movement</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
+                <td><p>Speed</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Direction</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Direction Type</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation_random</p></td>
                 <td><p>Initial Direction</p></td>
             </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
-                <td><p>Speed</p></td>
-            </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Directed From Center</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation_range</p></td>
                 <td><p>Angle Range</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Wrap</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">toggle</p></td>
                 <td><p>Wrap</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Rotation</p></th></tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
-                <td><p>Rotate By Direction</p></td>
-            </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation_random</p></td>
                 <td><p>Initial Rotation</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
+                <td><p>Rotate By Direction</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Animated</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
+                <td><p>Rotation Type</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation_random</p></td>
                 <td><p>Rotational Speed</p></td>
             </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">rotation_random</p></td>
+                <td><p>Target Angle</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Snap</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
                 <td><p>Snap Rotation</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Scale</p></th></tr><tr>
@@ -6411,7 +6422,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Alpha</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Sampler</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Sample Surface</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Path</p></th></tr><tr>
@@ -6435,13 +6446,13 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Acceleration</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Gravity</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Gravity</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation</p></td>
                 <td><p>Gravity Direction</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Turning</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Turning</p></td>
             </tr><tr>
@@ -6459,7 +6470,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Ground Offset</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Bounce</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Bounce Amount</p></td>
             </tr><tr>

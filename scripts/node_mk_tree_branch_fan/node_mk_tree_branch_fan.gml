@@ -8,7 +8,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput( 1, nodeValueSeed());
 	newInput( 0, nodeValue_Struct( "Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Position
+	////- =Spawning
 	newInput( 2, nodeValue_SliRange( "Position", [.5,1] ));
 	newInput( 9, nodeValue_Slider(   "Chance",     1    ));
 	newInput( 3, nodeValue_Range(    "Amount",    [2,2] ));
@@ -66,7 +66,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
-		[ "Position",        false ],  2,  9,  3,  7,  8,  
+		[ "Spawning",        false ],  2,  9,  3,  7,  8,  
 			[ "/Settings",    true ], 33, 
 			
 		[ "Geometry",        false ],  4, 
@@ -224,13 +224,13 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 					var _hang = _pha + j * _fst;
 					
 					var _t = new __MK_Tree(_tr.root, ori[0], ori[1], _seed + bIndex++)
-						.setDraw(_draw);
+						.setDraw(_draw, _line)
+						.setTexture(_tex)
 						
 					_t.texture       = _tex;
 					_t.rootPosition  = rat;
 					_t.rootDirection = ori[2];
 					_t.curvPosition  = crat;
-					_t.drawLine      = _line;
 					
 					var _colBase = _baseGrad.evalFast(random(1));
 					if(_inhColor > 0)
@@ -253,8 +253,8 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 					ex = pp[0];
 					ey = pp[1];
 					
-					var cx = lengthdir_x(_cdr, _gDir);//ori[2] + 180);
-					var cy = lengthdir_y(_cdr, _gDir);//ori[2] + 180);
+					var cx = lengthdir_x(_cdr, _gDir);
+					var cy = lengthdir_y(_cdr, _gDir);
 					
 					var _trmRange = random_range(_trim[0], _trim[1]);
 					

@@ -8,7 +8,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(5, nodeValueSeed());
 	newInput(0, nodeValue_Struct( "Branches", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Position
+	////- =Spawning
 	newInput( 1, nodeValue_SliRange( "Position", [.5,1] ));
 	newInput(55, nodeValue_Slider(   "Chance",    1     ));
 	newInput( 2, nodeValue_Range(    "Amount",   [8,16] ));
@@ -91,7 +91,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
-		[ "Position",     false ],  1, 55,  2, 19, 52, 
+		[ "Spawning",     false ],  1, 55,  2, 19, 52, 
 			[ "/Offset",   true ], 10, 17, 53, 
 			[ "/Settings", true ], 35, 
 			

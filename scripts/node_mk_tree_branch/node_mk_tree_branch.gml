@@ -11,7 +11,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(14, nodeValueSeed());
 	newInput( 0, nodeValue_Struct( "Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Position
+	////- =Spawning
 	newInput( 8, nodeValue_SliRange( "Position",       [.5,1]    ));
 	newInput(44, nodeValue_Slider(   "Chance",           1       ));
 	newInput( 5, nodeValue_Range(    "Amount",          [4,8]    ));
@@ -85,7 +85,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
-		[ "Position",        false ],  8, 44,  5, 19, 45, 
+		[ "Spawning",        false ],  8, 44,  5, 19, 45, 
 			[ "/Settings",    true ], 32, 
 			
 		[ "Geometry",        false ],  3, 13,  7, 
@@ -94,7 +94,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			[ "/Spiral",      true ], 25, 38, 26, 21, 22, 23, 24, 
 			
 		[ "Thickness",       false ],  6, 11, 36, 
-		[ "Rendering",       false ], 46, 39, 
+		[ "Rendering",   false, 46 ], 39, 
 			[ "/Base Color", false ], 37, 12, 27, 28, 
 			[ "/Edge Color", false ], 17, 18, 29, 
 			[ "/Texture",    false ], 30, 
@@ -248,14 +248,13 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_tr.getPosition(rat, ori);
 				
 				var _t = new __MK_Tree(_tr.root, ori[0], ori[1], _seed + i)
-					.setDraw(_draw);
+					.setDraw(_draw, _line)
+					.setTexture(_tex)
 				
-				_t.amount        = random_range(_segs[0], _segs[1]);
-				_t.texture       = _tex;
 				_t.rootPosition  =  rat;
 				_t.rootDirection = ori[2];
 				_t.curvPosition  = crat;
-				_t.drawLine      = _line;
+				var _amou        = random_range(_segs[0], _segs[1]);
 				
 				var _baseDir = ori[2];
 				var _length  = random_range(_len[0], _len[1]) * (curve_length? curve_length.get(crat) : 1);
@@ -310,7 +309,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					cEdg   : _edge,     cEdgL  : _edgeLGrd,    cEdgR  : _edgeRGrd
 				}
 				
-				_t.grow(_growParam);
+				_t.grow(_amou, _growParam);
 			    _t.growShift = random_range(_grow[0], _grow[1]);
 				
 				array_push(_tr.children, _t);

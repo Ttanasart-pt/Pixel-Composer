@@ -3821,6 +3821,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\mk_tree\builder\branch\mk_tree_branch.html" class="sidebar-file">Mk Tree Branch</a>
             </div>
+</li><li id="mk_tree_branch_fan"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\mk_tree\builder\branch\mk_tree_branch_fan.html" class="sidebar-file">Mk Tree Branch Fan</a>
+            </div>
 </li><li id="mk_tree_path_root"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\mk_tree\builder\branch\mk_tree_path_root.html" class="sidebar-file">Mk Tree Path Root</a>
@@ -6065,6 +6069,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\feedback\group/group_thumbnail.html">Group Thumbnail</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_add_branch.html">Mk Tree Add Branch</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_branch.html">Mk Tree Branch</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_branch_fan.html">Mk Tree Branch Fan</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_path_root.html">Mk Tree Path Root</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\branch/mk_tree_root.html">Mk Tree Root</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mk_tree\builder\leave/mk_tree_add_leaf.html">Mk Tree Add Leaf</a></li>
@@ -6298,33 +6303,30 @@
             <link rel="stylesheet" href="/nodes/styles.css">
 
 <div class="title">
-                                                            <h1>Tree Trunk</h1>
+                                                            <h1>Trunk</h1>
                                                             <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
                                                         </div>
 <p class="subtitle"></p>
 
 <table class = "summary-table">
-    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_mk_tree_root.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Tree Trunk</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_MK_Tree_Root</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="#">Node_MK_Tree_Root</a></th></tr><tr height="8px"></tr>
+    <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_mk_tree_root.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Trunk</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_MK_Tree_Root</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="#">Node_MK_Tree_Root</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">struct</p></td>
                 <td><p>Tree</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Origin</p></th></tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Position</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
+                <td><p>Position</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Scatter</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Amount</p></td>
             </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
-                <td><p>Origin Ratio</p></td>
-            </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
-                <td><p>Origin Position</p></td>
+                <td><p>Scatter Area</p></td>
             </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
-                <td><p>Origin Area</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
-                <td><p>Origin Area</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Segment</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
+                <td><p>Scatter Shape</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Geometry</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Length</p></td>
             </tr><tr>
@@ -6335,10 +6337,16 @@
                 <td><p>Direction</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
-                <td><p>Direction Wiggle</p></td>
+                <td><p>Gravity</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Wiggle</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
+                <td><p>Wig. Amplitude</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
-                <td><p>Gravity</p></td>
+                <td><p>Wig. Frequency</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
+                <td><p>Wig. Phase</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Spiral</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Frequency</p></td>
@@ -6351,13 +6359,16 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Curl</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Render</p></th></tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
-                <td><p>Draw Mode</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Thickness</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Thickness</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Color</p></th></tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Render</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
+                <td><p>Draw</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
+                <td><p>Draw Mode</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Base Color</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">gradient</p></td>
                 <td><p>Base Color</p></td>
             </tr><tr>
@@ -6366,7 +6377,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">gradient</p></td>
                 <td><p>Length Color</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Edge Color</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Edge Blending</p></td>
             </tr><tr>
@@ -6375,7 +6386,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">gradient</p></td>
                 <td><p>R Edge Color</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Texture</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Texture</p></td>
             </tr>

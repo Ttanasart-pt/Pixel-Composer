@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.0.2.001",
+    "changes": [
+      {
+        "date": "2026-05-01T01:18:57.193Z",
+        "node": "",
+        "commit": "**RangeBox**: Add scaling knob."
+      }
+    ]
+  }
+]

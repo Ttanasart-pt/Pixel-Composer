@@ -414,8 +414,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _area  = inputs[4].getValue();
 		var _grid  = inputs[2].getValue();
 		
-		var _gridW = _grid[0];
-		var _gridH = _grid[1];
+		var _gridW = round(_grid[0]);
+		var _gridH = round(_grid[1]);
 		var _amo   = (_gridW + 1) * (_gridH + 1);
 		var _ind   = input_fix_len;
 		
@@ -450,8 +450,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _surf  = getInputData(0);
 		var _grid  = getInputData(2);
-		var _gridW = _grid[0];
-		var _gridH = _grid[1];
+		var _gridW = round(_grid[0]);
+		var _gridH = round(_grid[1]);
 		var panel  = _params[$ "panel"] ?? noone;
 		
 		var _aamo = (_gridW + 1) * (_gridH + 1);
@@ -538,7 +538,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_edited = true;
 			
 			var dx = mmx - dragging_px;
-			var dy = mmx - dragging_py;
+			var dy = mmy - dragging_py;
 			
 			for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
 				var _a = anchor_select[i];
@@ -624,8 +624,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static preGetInputs  = function() {
 		var _grid  = inputs[2].getValue();
-		var _gridW = _grid[0];
-		var _gridH = _grid[1];
+		var _gridW = round(_grid[0]);
+		var _gridH = round(_grid[1]);
 		
 		var _aamo = (_gridW + 1) * (_gridH + 1);
 		var _iamo = getInputAmount();
@@ -640,8 +640,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _grid  = _data[2];
 			var _subd  = _data[3];
 			
-			var _gridW = _grid[0];
-			var _gridH = _grid[1];
+			var _gridW = round(_grid[0]);
+			var _gridH = round(_grid[1]);
 			
 			if(!is_surface(_surf)) return _outSurf;
 		#endregion

@@ -4,6 +4,11 @@ function rangeBox(_onModify) : widget() constructor {
 	disp_w   = 0;
 	extras   = -1;
 	
+	rangeDrag = false;
+	rangeDrag_mx = 0;
+	rangeDrag_my = 0;
+	rangeDrag_ss = 0;
+	
 	tooltip	 = new tooltipSelector("Value Type", [
 		__txt("widget_range_random",   "Random Range"),
 		__txt("widget_range_constant", "Constant"),
@@ -130,18 +135,64 @@ function rangeBox(_onModify) : widget() constructor {
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
 		disp_w = linked? _w : _w / 2;
 		
+		var ps = h / 2;
+		var px = x + w / 2;
+		var py = y + h / 2;
+		
 		if(linked) {
 			tb[0].setFocusHover(active, hover);
 			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);
 			tb[0].setLabel("value");
 			
 		} else if(array_safe_length(_data) >= 2) {
+			var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
+			var tbHover = bxHover;
+			
+			if(bxHover && w > ui(80)) {
+				var pHover = hover && point_in_circle(_m[0], _m[1], px, py, ps / 2);
+				if(pHover) tbHover = false;
+			}
+			
 			for(var i = 0; i < 2; i++) {
-				tb[i].setFocusHover(active, hover);
+				tb[i].setFocusHover(active, tbHover);
 				tb[i].setLabel(labels[i]);
 				
 				var bx  = _x + disp_w * i;
 				tb[i].draw(bx, _y, disp_w - 1, _h, _data[i], _m);
+			}
+			
+			if(bxHover && w > ui(80)) {
+				draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+				if(mouse_lpress(active)) {
+					rangeDrag = true;
+					rangeDrag_mx = _m[0];
+					rangeDrag_my = _m[1];
+					rangeDrag_ss = [_data[0], _data[1]];
+				}
+			}
+		}
+		
+		if(rangeDrag) {
+			draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+			
+			var _dt = (_m[0] - rangeDrag_mx) / w;
+			var _sc = power(2, _dt);
+			
+			var _vx = rangeDrag_ss[0] * _sc;
+			var _vy = rangeDrag_ss[1] * _sc;
+			
+			if(key_mod_press(CTRL)) {
+				_vx = round(_vx);
+				_vy = round(_vy);
+			}
+			
+			var u0 = onModify(_vx, 0); 
+			var u1 = onModify(_vy, 1); 
+			if(u0 || u1) UNDO_HOLDING = true;
+			
+			if(mouse_lrelease()) {
+				UNDO_HOLDING = false;
+				rangeDrag    = false;
 			}
 		}
 		

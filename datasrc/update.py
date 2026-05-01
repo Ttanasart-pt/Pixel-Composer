@@ -1,12 +1,39 @@
 import os
 import shutil
 import json
+import re
 
 root = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(root)
 
 lzipPath = f"{root}/datasrc/last_zip.json"
 lzipData = json.load(open(lzipPath, 'r')) if os.path.exists(lzipPath) else {}
+
+version    = None
+globalPath = f"{root}/scripts/globals/globals.gml"
+with open(globalPath, 'r') as f:
+    globalContent = f.read()
+    versionMatch = re.search(r'\sVERSION\s*=\s*([^\"]+?);', globalContent, re.MULTILINE)
+    if versionMatch:
+        versionStr = versionMatch.group(1)
+        versionStr = versionStr.replace(' ', '').replace("_", "")
+        version = int(versionStr)
+
+def updateThemeMeta(theme):
+    if version is None:
+        return
+    
+    thmDir = f"{root}/datasrc/Themes/{theme}"
+    metaP  = f"{thmDir}/meta.json"
+    if not os.path.exists(metaP):
+        return
+    
+    jsonData = json.load(open(metaP, 'r'))
+    if jsonData.get('version') == version:
+        return;
+    
+    jsonData['version'] = version
+    json.dump(jsonData, open(metaP, 'w'), indent=4)
 
 def packFolder(src, trg, forced = False):    
     srcDir = f"{root}/datasrc/{src}"
@@ -29,6 +56,11 @@ def packFolder(src, trg, forced = False):
     shutil.make_archive(trgZip, 'zip', srcDir)
 
 if __name__ == "__main__":
+    print(f"Updating data files for version {version}...")
+    updateThemeMeta("default")
+    updateThemeMeta("default HQ")
+    updateThemeMeta("True Dark")
+
     packFolder("Actions", "actions")
     packFolder("Addons", "addons")
     packFolder("Assets", "assets")

@@ -1,7 +1,6 @@
 {
-  "name":"True Dark",
-  "author":"MakhamDev",
-  "version":121001,
-
-  "fallback": "default HQ"
+    "name": "True Dark",
+    "author": "MakhamDev",
+    "version": 121002,
+    "fallback": "default HQ"
 }

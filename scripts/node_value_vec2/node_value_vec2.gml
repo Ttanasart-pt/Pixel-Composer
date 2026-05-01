@@ -284,4 +284,69 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 function __NodeValue_IVec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.vector, _data);
 	def_length = 2;
+	
+	////- GET
+	
+	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
+		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
+		
+		if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
+		if(validator != noone)          value = validator.validate(value);
+		
+		var val = applyUnit? unit.apply(value, arrIndex) : value;
+		val[0] = round(val[0]);
+		val[1] = round(val[1]);
+		
+		return val;
+	}
+	
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) {
+		if(__tempValue != undefined) return __tempValue;
+		
+		getValueRecursive(self.__curr_get_val, _time);
+		var val = __curr_get_val[0]; 
+		var nod = __curr_get_val[1]; 
+		
+		if(!is(nod, NodeValue)) return val;
+		
+		var typ = nod.type;
+		if(typ == VALUE_TYPE.surface) return surface_get_dimension(val);
+		
+		if(array_empty(val)) return val;
+		
+		var _d = array_get_depth(val);
+		
+		__nod       = nod;
+		__applyUnit = applyUnit;
+		__arrIndex  = arrIndex;
+		
+		switch(_d) {
+			case 0: return valueProcess([val,val], nod, applyUnit, arrIndex);
+			case 1: return valueProcess( val,      nod, applyUnit, arrIndex);
+			case 2: return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify_new(v, 2), __nod, __applyUnit, __arrIndex)}); 
+		}
+		
+		return val;
+	}
+	
+	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
+		if(sep_axis) getAnimators();
+		
+		if(!getAnim()) {
+			if(sep_axis) return [
+				animators[0].values[0].value,
+				animators[1].values[0].value
+			];
+			
+			return array_empty(animator.values)? 0 : animator.values[0].value;
+		}
+		
+		if(sep_axis) return [
+			animators[0].getValue(_time),
+			animators[1].getValue(_time)
+		];
+		
+		return animator.getValue(_time);
+	}
+
 }

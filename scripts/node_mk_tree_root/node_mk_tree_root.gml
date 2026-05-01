@@ -13,7 +13,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(14, nodeValueSeed());
 	newInput( 0, nodeValue_Struct( "Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Position
+	////- =Spawning
 	newInput( 1, nodeValue_Vec2(     "Position",        [.5,1]      )).setUnitSimple();
 	
 		////- =/Scatter
@@ -70,7 +70,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14,
-		[ "Position",   false ],  1, 
+		[ "Spawning",   false ],  1, 
 			[ "/Scatter",true ],  5, 30, 31, 
 			
 		[ "Geometry",   false ],  3,  7, 
@@ -79,7 +79,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			[ "/Spiral", true ],  22, 28, 23, 18, 19, 20, 21, 
 			
 		[ "Thickness",       false ],  6, 11, 
-		[ "Render",          false ], 35, 29,  
+		[ "Render",      false, 35 ], 29,  
 			[ "/Base Color", false ], 12, 24, 25, 
 			[ "/Edge Color", false ], 16, 17, 26, 
 			[ "/Texture",    false ], 27, 
@@ -177,8 +177,6 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _roots = array_create(_amo);
 		
 		for( var i = 0; i < _amo; i++ ) {
-			var _t = new __MK_Tree();
-			
 			var ox = _ori[0];
 			var oy = _ori[1];
 			
@@ -195,13 +193,11 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					break;
 			}
 			
-			_t.doDraw = _draw;
-			_t.seed   = _seed + i;
-			_t.x = ox;
-			_t.y = oy;
-			_t.amount   = random_range(_segs[0], _segs[1]);
-			_t.texture  = _tex;
-			_t.drawLine = _line;
+			var _t = new __MK_Tree(undefined, ox, oy, _seed + i)
+				.setDraw(_draw, _line)
+				.setTexture(_tex)
+				
+			var _amou   = random_range(_segs[0], _segs[1]);
 			
 			var _length = random_range(_len[0], _len[1]);
 			var _angle  = rotation_random_eval(_ang);
@@ -237,7 +233,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				cEdg   : _edge,     cEdgL  : _edgeLGrd,    cEdgR  : _edgeRGrd
 			}
 			
-			_t.grow(_growParam);
+			_t.grow(_amou, _growParam);
 			
 			_roots[i] = _t;
 		}
