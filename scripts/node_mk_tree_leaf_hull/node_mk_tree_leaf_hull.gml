@@ -29,7 +29,8 @@ function Node_MK_Tree_Leaf_Hull(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	////- =Convex Hull
 	newInput( 3, nodeValue_Bool(     "Collpase Array", false       ));
 	newInput( 4, nodeValue_SliRange( "Trim Path",      [0,1]       ));
-	newInput( 5, nodeValue_Range(    "Expands",        [0,0], true ));
+	newInput( 5, nodeValue_Range(    "Expands",        [0,0], true ))
+		.setCurvable(12, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	
 	////- =Color
 	
@@ -40,14 +41,14 @@ function Node_MK_Tree_Leaf_Hull(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		////- =/per Leaf
 	newInput( 9, nodeValue_Gradient( "Random Leaf",     gra_white )).setMappableConst(10);
 	newInput(11, nodeValue_Gradient( "Along Leaf",      gra_white ));
-	// 12
+	// 13
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
 		[ "Spawning",     false ],  2, 
-		[ "Convex Hull",  false ],  3,  4,  5, 
+		[ "Convex Hull",  false ],  3,  4,  5, 12, 
 		[ "Color",        false ], 
 			[ "/per Branch", false ],  6,  7,  8, 
 			// [ "/per Leaf",   false ],  9, 10, 11, 
@@ -79,7 +80,9 @@ function Node_MK_Tree_Leaf_Hull(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			var _coll = getInputData( 3);
 			var _trim = getInputData( 4);
+			
 			var _expn = getInputData( 5);
+			var _expC = getInputData(12),  curve_expn  = inputs[ 5].attributes.curved? new curveMap(_expC)  : undefined;
 			
 			var _cBra     = getInputData( 6);
 			var _cBraMap  = getInputData( 7);
@@ -172,7 +175,7 @@ function Node_MK_Tree_Leaf_Hull(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				var ox = lps[0].x;
 				var oy = lps[0].y;
 					
-				var _exp = random_range(_expn[0], _expn[1]);
+				var _exp = random_range(_expn[0], _expn[1]) * (curve_expn? curve_expn.get(_rp) : 1);
 				
 				var _hull = polygon_point_get_convex_hull(lps, _exp);
 				var _poly = polygon_triangulate(_hull);
