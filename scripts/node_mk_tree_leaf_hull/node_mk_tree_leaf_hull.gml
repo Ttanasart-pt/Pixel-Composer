@@ -2,13 +2,10 @@ function __MK_Tree_Leaf_Hull(_root) : __MK_Tree_Element(_root) constructor {
 	vb      = undefined;
 	texture = -1;
 	
-	static drawOverlay = function(_x,_y,_s) /*=>*/ {
-		
-	}
+	static drawOverlay = function(_x,_y,_s) /*=>*/ {}
 	
 	static draw = function() /*=>*/ {
-		if(vb != undefined) 
-			vertex_submit(vb, pr_trianglelist, texture);
+		if(vb != undefined) vertex_submit(vb, pr_trianglelist, texture);
 	}
 	
 }

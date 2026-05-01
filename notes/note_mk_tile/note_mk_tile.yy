@@ -3,9 +3,9 @@
   "%Name":"note_mk_tile",
   "name":"note_mk_tile",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"composite",
+    "path":"folders/nodes/data/MKFX/composite.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

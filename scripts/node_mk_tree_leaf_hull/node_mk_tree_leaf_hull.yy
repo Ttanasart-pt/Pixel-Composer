@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_tree_leaf_hull",
   "parent":{
-    "name":"mk tree",
-    "path":"folders/nodes/data/MKFX/mk tree.yy",
+    "name":"leaves",
+    "path":"folders/nodes/data/MKFX/MK Tree/leaves.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

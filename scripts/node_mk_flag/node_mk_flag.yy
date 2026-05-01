@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_flag",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"simulation",
+    "path":"folders/nodes/data/MKFX/simulation.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

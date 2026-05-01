@@ -26,6 +26,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		.setCurvable(15, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	newInput(18, nodeValue_Range(  "Aspect",       [.5,.5], true ))
 		.setCurvable(19, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(36, nodeValue_Range(  "Random",       [0,0],   true ))
 		
 		////- =/Shape
 	newInput(10, nodeValue_Range(  "Inner Radius", [0,0],   true ))
@@ -65,7 +66,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 		////- =/Texture
 	newInput(32, nodeValue_Surface(  "Texture" ));
-	// 36
+	// 37
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -76,7 +77,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			[ "/Settings",    true ], 33, 
 			
 		[ "Geometry",        false ],  4, 
-		[ "Fan",             false ], 14, 15, 18, 19, 
+		[ "Fan",             false ], 14, 15, 18, 19, 36, 
 			[ "/Shape",      false ], 10, 11, 12, 13, 
 			[ "/Cone",       false ], 16, 17, 34, 35, 
 			[ "/Phase",      false ], 20, 21, 22, 
@@ -127,6 +128,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			var _fanC = getInputData(15), curve_fanamo = inputs[14].attributes.curved? new curveMap(_fanC)  : undefined;
 			var _asp  = getInputData(18);
 			var _aspC = getInputData(19), curve_aspect = inputs[18].attributes.curved? new curveMap(_aspC)  : undefined;
+			var _fran = getInputData(36);
 			
 			var _lin  = getInputData(10);
 			var _linC = getInputData(11), curve_lenIn  = inputs[10].attributes.curved? new curveMap(_linC)  : undefined;
@@ -220,6 +222,8 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				var _cdr = random_range(_con[0], _con[1]) * (curve_cone?   curve_cone.get(crat)   : 1);
 				var _pha = random_range(_phs[0], _phs[1]) * (curve_phase?  curve_phase.get(crat)  : 1);
 				
+				var _rand = random_range(_fran[0], _fran[1]);
+				
 				_tr.getPosition(crat, ori);
 				if(_inhColor > 0) _rootColor = _tr.getColor(crat);
 						
@@ -227,7 +231,8 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				if(_offs && _p % 2) _pha += _fst / 2;
 				
 				for( var j = 0; j < _fam; j++ ) {
-					var _hang = _pha + j * _fst;
+					var _hang  = _pha + j * _fst;
+					    _hang += _rand * random_range(-_fst / 2, _fst / 2);
 					
 					var _t = new __MK_Tree(_tr.root, ori[0], ori[1], _seed + bIndex++)
 						.setDraw(_draw, _line)

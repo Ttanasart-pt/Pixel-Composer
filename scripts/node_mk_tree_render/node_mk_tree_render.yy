@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_tree_render",
   "parent":{
-    "name":"mk tree",
-    "path":"folders/nodes/data/MKFX/mk tree.yy",
+    "name":"render",
+    "path":"folders/nodes/data/MKFX/MK Tree/render.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

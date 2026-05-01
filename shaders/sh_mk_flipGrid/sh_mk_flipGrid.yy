@@ -3,8 +3,8 @@
   "%Name":"sh_mk_flipGrid",
   "name":"sh_mk_flipGrid",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"filter",
+    "path":"folders/nodes/data/MKFX/filter.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -3,9 +3,9 @@
   "%Name":"note_mk_flare",
   "name":"note_mk_flare",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

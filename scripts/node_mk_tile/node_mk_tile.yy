@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_tile",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"composite",
+    "path":"folders/nodes/data/MKFX/composite.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

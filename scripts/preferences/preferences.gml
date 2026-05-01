@@ -667,4 +667,3 @@
 		__regFnPref(__txt("pref_file_watcher_delay",              "File watcher delay (s)"),            "file_watcher_delay"              )
 	}
 #endregion
-

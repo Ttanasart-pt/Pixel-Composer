@@ -4,7 +4,7 @@
   "name":"sh_mk_isoextrude_coordinate",
   "parent":{
     "name":"isoextrude",
-    "path":"folders/nodes/data/MKFX/isoextrude.yy",
+    "path":"folders/nodes/data/MKFX/3d/isoextrude.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

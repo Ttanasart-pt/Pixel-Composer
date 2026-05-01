@@ -4,7 +4,7 @@
   "name":"sh_blink_expand",
   "parent":{
     "name":"mk blinker",
-    "path":"folders/nodes/data/MKFX/mk blinker.yy",
+    "path":"folders/nodes/data/MKFX/animation/mk blinker.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

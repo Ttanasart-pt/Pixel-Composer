@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_delay_machine",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"animation",
+    "path":"folders/nodes/data/MKFX/animation.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_mk_grass",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"filter",
+    "path":"folders/nodes/data/MKFX/filter.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

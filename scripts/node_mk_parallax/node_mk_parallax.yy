@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_mk_parallax",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"animation",
+    "path":"folders/nodes/data/MKFX/animation.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

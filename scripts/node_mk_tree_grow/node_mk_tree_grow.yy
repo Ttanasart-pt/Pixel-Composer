@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_mk_tree_grow",
   "parent":{
-    "name":"mk tree",
-    "path":"folders/nodes/data/MKFX/mk tree.yy",
+    "name":"modify",
+    "path":"folders/nodes/data/MKFX/MK Tree/modify.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

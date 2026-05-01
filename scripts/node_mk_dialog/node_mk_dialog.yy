@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_mk_dialog",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

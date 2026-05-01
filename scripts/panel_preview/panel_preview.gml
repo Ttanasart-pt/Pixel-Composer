@@ -3,7 +3,7 @@
 	    function panel_preview_add_node()    { CALL("preview_add_node");   PANEL_PREVIEW.callAddDialog();  }
 	    function panel_preview_clear_tool()  { CALL("preview_clear_tool"); PANEL_PREVIEW.clearTool();      }
 	    
-	    function panel_preview_focus_content()              { CALL("preview_focus_content");             PANEL_PREVIEW.fullView();                }
+	    function panel_preview_focus_content()              { CALL("preview_focus_content");             PANEL_PREVIEW.fullView(0, false, true);  }
 	    function panel_preview_save_current_frame()         { CALL("preview_save_current_frame");        PANEL_PREVIEW.saveCurrentFrame();        }
 	    function panel_preview_saveCurrentFrameToFocus()    { CALL("preview_save_to_focused_file");      PANEL_PREVIEW.saveCurrentFrameToFocus(); }
 	    function panel_preview_saveCurrentFrameProject()    { CALL("preview_save_to_project");           PANEL_PREVIEW.saveCurrentFrameProject(); }
@@ -322,6 +322,7 @@ function Panel_Preview() : PanelContent() constructor {
     	selecting_h  = 0;
     	
     	selection_active = false;
+    	selection_focus  = false;
     	selection_x0 = 0; 
     	selection_y0 = 0; 
     	selection_x1 = 0; 
@@ -1004,7 +1005,7 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
     }
     
-    static fullView = function(scale = 0, gizmo = false) {
+    static fullView = function(scale = 0, gizmo = false, sel = false) {
         var bbox = noone;
         
         var node = getNodePreview();
@@ -1014,6 +1015,17 @@ function Panel_Preview() : PanelContent() constructor {
         var _x = bbox.x0, _y = bbox.y0;
         var _w = bbox.w,  _h = bbox.h;
         
+        if(sel && selection_active) {
+        	if(selection_focus) {
+	        	_x = selection_x0;
+	        	_y = selection_y0; 
+	        	_w = selection_x1 - selection_x0;
+	        	_h = selection_y1 - selection_y0;
+        	}
+        	
+        	selection_focus = !selection_focus;
+        } else selection_focus = true;
+        	
         if(_w == 0 || _h == 0) { 
             _x = 0; 
             _y = 0;

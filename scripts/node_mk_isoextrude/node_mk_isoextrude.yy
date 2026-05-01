@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_isoextrude",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"3d",
+    "path":"folders/nodes/data/MKFX/3d.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

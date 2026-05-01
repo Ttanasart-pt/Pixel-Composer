@@ -4,7 +4,7 @@
   "name":"sh_mk_flare_multiply",
   "parent":{
     "name":"mk flare",
-    "path":"folders/nodes/data/MKFX/mk flare.yy",
+    "path":"folders/nodes/data/MKFX/generator/mk flare.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

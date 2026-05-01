@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_tree_inline",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"MK Tree",
+    "path":"folders/nodes/data/MKFX/MK Tree.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

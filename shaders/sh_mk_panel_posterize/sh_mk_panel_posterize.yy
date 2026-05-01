@@ -4,7 +4,7 @@
   "name":"sh_mk_panel_posterize",
   "parent":{
     "name":"mkpanels",
-    "path":"folders/nodes/data/MKFX/mkpanels.yy",
+    "path":"folders/nodes/data/MKFX/generator/mkpanels.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

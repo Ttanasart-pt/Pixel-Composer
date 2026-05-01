@@ -3,9 +3,9 @@
   "%Name":"note_mk_brownian",
   "name":"note_mk_brownian",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"simulation",
+    "path":"folders/nodes/data/MKFX/simulation.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

@@ -4,7 +4,7 @@
   "name":"sh_mk_tile55_edge_l",
   "parent":{
     "name":"Tile",
-    "path":"folders/nodes/data/MKFX/Tile.yy",
+    "path":"folders/nodes/data/MKFX/composite/Tile.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

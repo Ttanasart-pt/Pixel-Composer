@@ -3,9 +3,9 @@
   "%Name":"note_mk_blinker",
   "name":"note_mk_blinker",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"animation",
+    "path":"folders/nodes/data/MKFX/animation.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

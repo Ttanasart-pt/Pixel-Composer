@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_tree_leaf_particle",
   "parent":{
-    "name":"mk tree",
-    "path":"folders/nodes/data/MKFX/mk tree.yy",
+    "name":"modify",
+    "path":"folders/nodes/data/MKFX/MK Tree/modify.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

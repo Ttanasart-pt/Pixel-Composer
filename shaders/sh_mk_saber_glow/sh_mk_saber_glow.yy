@@ -3,8 +3,8 @@
   "%Name":"sh_mk_saber_glow",
   "name":"sh_mk_saber_glow",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

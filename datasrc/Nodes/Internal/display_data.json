@@ -379,7 +379,7 @@
             "Node_MK_Tree_Branch_Fan",
             "Node_MK_Tree_Add_Branch",
             
-            { "label": "/Leave" },
+            { "label": "/Leaves" },
             "Node_MK_Tree_Leaf",
             "Node_MK_Tree_Leaf_Hull",
             "Node_MK_Tree_Add_Leaf", 

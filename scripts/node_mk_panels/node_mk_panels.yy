@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_mk_panels",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

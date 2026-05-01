@@ -4,7 +4,7 @@
   "name":"sh_mk_flag_shade",
   "parent":{
     "name":"Flag",
-    "path":"folders/nodes/data/MKFX/Flag.yy",
+    "path":"folders/nodes/data/MKFX/simulation/Flag.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
