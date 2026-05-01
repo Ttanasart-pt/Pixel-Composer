@@ -240,6 +240,11 @@
 		}
 		
 		PREFERENCES.project_previewSetting = {
+			bg_type     : 1,
+			bg_color    : cola(#1e1e2c),
+			bg_color_ch : cola(#191925),
+			bg_color_3d : cola(#191925),
+			
 			show_info         : true,
 			show_view_control : 1,
 			status_display    : 2,

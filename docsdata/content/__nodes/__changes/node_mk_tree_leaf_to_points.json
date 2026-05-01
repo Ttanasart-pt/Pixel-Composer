@@ -8,15 +8,5 @@
         "commit": "**Preview Panel**: Toggle Focus Content with hotkey now toggle between full view and selection view."
       }
     ]
-  },
-  {
-    "version": "1.21.rc10",
-    "changes": [
-      {
-        "date": "2026-04-24T01:12:11.664Z",
-        "node": "",
-        "commit": "**SmokeSim/ Flip fluid render**: Auto-cache new disabled by default."
-      }
-    ]
   }
 ]

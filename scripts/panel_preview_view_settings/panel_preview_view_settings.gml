@@ -5,6 +5,38 @@ function Panel_Preview_View_Setting(_panel) : Panel_Linear_Setting() constructor
 	
 	properties = [
 		new __Panel_Linear_Setting_Item(
+			__txt("Background Texture"),
+			new buttonGroup(__txts([ "Solid", "Checkered" ]), function(val) /*=>*/ { previewPanel.bg_type = val; }),
+			function()    /*=>*/   {return previewPanel.bg_type},
+			function(val) /*=>*/ { previewPanel.bg_type = val; },
+			PREFERENCES.project_previewSetting.bg_type,
+			noone,
+			"project_previewSetting.bg_type",
+		),
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Background Color"),
+			new buttonColor(function(val) /*=>*/ { previewPanel.bg_color = val; }),
+			function()    /*=>*/   {return previewPanel.bg_color},
+			function(val) /*=>*/ { previewPanel.bg_color = val; },
+			PREFERENCES.project_previewSetting.bg_color,
+			noone,
+			"project_previewSetting.bg_color",
+		),
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Background Sub Color"),
+			new buttonColor(function(val) /*=>*/ { previewPanel.bg_color_ch = val; }),
+			function()    /*=>*/   {return previewPanel.bg_color_ch},
+			function(val) /*=>*/ { previewPanel.bg_color_ch = val; },
+			PREFERENCES.project_previewSetting.bg_color_ch,
+			noone,
+			"project_previewSetting.bg_color_ch",
+		),
+		
+		-1, 
+		
+		new __Panel_Linear_Setting_Item(
 			__txt("Info"),
 			new buttonGroup(__txts([ "None", "Stacked", "Compact" ]), function(val) /*=>*/ { previewPanel.status_display = val; }),
 			function()    /*=>*/   {return previewPanel.status_display},

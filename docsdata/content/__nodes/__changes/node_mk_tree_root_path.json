@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.2",
+    "changes": [
+      {
+        "date": "2026-05-01T06:48:08.703Z",
+        "node": "",
+        "commit": "**Preview Panel**: Toggle Focus Content with hotkey now toggle between full view and selection view."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.1.002",
     "changes": [
       {

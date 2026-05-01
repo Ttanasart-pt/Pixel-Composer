@@ -6,6 +6,11 @@
         "date": "2026-05-01T03:03:47.091Z",
         "node": "",
         "commit": "**MK Tree > Branch**: Add Spiral amplitude."
+      },
+      {
+        "date": "2026-05-01T06:48:08.699Z",
+        "node": "",
+        "commit": "**Preview Panel**: Toggle Focus Content with hotkey now toggle between full view and selection view."
       }
     ]
   },

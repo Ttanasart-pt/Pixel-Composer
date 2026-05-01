@@ -245,9 +245,9 @@
 	    
 	    function __fnGroupInit_Preview() {
 	        MENU_ITEMS.preview_group_preview_bg = menuItemGroup(__txt("panel_menu_preview_background", "Preview background"), [
-	            [ THEME.preview_bg_transparent, function() /*=>*/ { PANEL_PREVIEW.canvas_bg = -1;      } ],
-	            [ THEME.preview_bg_white,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_white; } ],
-	            [ THEME.preview_bg_black,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_black; } ],
+	            [ THEME.preview_bg_transparent, function() /*=>*/ { PROJECT.previewSetting.bg_type = 1; PROJECT.previewSetting.bg_color = -1;      } ],
+	            [ THEME.preview_bg_white,       function() /*=>*/ { PROJECT.previewSetting.bg_type = 0; PROJECT.previewSetting.bg_color = c_white; } ],
+	            [ THEME.preview_bg_black,       function() /*=>*/ { PROJECT.previewSetting.bg_type = 0; PROJECT.previewSetting.bg_color = c_black; } ],
 	        ], ["Preview", "Background"]);
 	        registerFunction("Preview", "Background", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.menu_group_preview_bg ]); });
 	        
@@ -280,7 +280,7 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_w    = ui(128);
         canvas_h    = ui(128);
         canvas_a    = 0;
-        canvas_bg   = -1;
+        
         canvas_mx   = 0;
         canvas_my   = 0;
         do_fullView = false;
@@ -367,7 +367,7 @@ function Panel_Preview() : PanelContent() constructor {
         splitViewMouse      = 0;
     
         tileMode            = 0;
-        bg_color            = COLORS.panel_preview_bg;
+        bg_color_default    = COLORS.panel_preview_bg;
         
         array_preview_size  = ui(48);
         
@@ -2112,7 +2112,7 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
         #region render
-        	surface_clear( d3_surface, bg_color );
+        	surface_clear( d3_surface, PROJECT.previewSetting.bg_color_3d );
         	surface_clear( d3_surface_normal    );
         	surface_clear( d3_surface_depth     );
         	surface_clear( d3_surface_uv        );
@@ -2183,7 +2183,7 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
         #region draw
-            draw_clear(bg_color);
+            draw_clear(PROJECT.previewSetting.bg_color_3d);
             
             switch(d3_preview_channel) {
                 case 0 : 
@@ -2285,7 +2285,7 @@ function Panel_Preview() : PanelContent() constructor {
             d3_camera.setMatrix();
         #endregion
         
-        draw_clear(bg_color);
+        draw_clear(PROJECT.previewSetting.bg_color_3d);
             
         gpu_set_texfilter(true);
         shader_set(sh_rm_primitive);
@@ -3814,12 +3814,16 @@ function Panel_Preview() : PanelContent() constructor {
         	d3_active    = preview_mode? NODE_3D.polygon : NODE_3D.none;
         }
         
-        var targColor = d3_active? COLORS.panel_3d_bg : COLORS.panel_preview_bg;
-        bg_color = lerp_color(bg_color, targColor, 0.3);
-        draw_clear(canvas_bg == -1? bg_color : canvas_bg);
-        
-        if(canvas_bg == -1 && canvas_s >= 0.1) 
-        	draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);
+        switch(PROJECT.previewSetting.bg_type) {
+        	case 0 : draw_clear(PROJECT.previewSetting.bg_color); break;
+        	
+        	case 1 :
+        		var _ts = max(canvas_s, .1);
+        		draw_clear(PROJECT.previewSetting.bg_color);
+        		draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, _ts, _ts, PROJECT.previewSetting.bg_color_ch, 1);
+        		break;
+        		
+        }
         
         draw_set_color(COLORS._main_icon_dark);
         draw_line_width(canvas_x, 0, canvas_x, h, 1);

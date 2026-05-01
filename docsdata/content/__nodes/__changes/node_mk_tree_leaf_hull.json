@@ -6,6 +6,16 @@
         "date": "2026-05-01T05:08:19.729Z",
         "node": "any",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-05-01T06:48:08.678Z",
+        "node": "",
+        "commit": "**Preview Panel**: Toggle Focus Content with hotkey now toggle between full view and selection view."
+      },
+      {
+        "date": "2026-05-01T06:48:08.682Z",
+        "node": "",
+        "commit": "**Preview Panel**: Toggle Focus Content with hotkey now toggle between full view and selection view."
       }
     ]
   }
