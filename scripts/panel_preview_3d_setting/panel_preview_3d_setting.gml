@@ -67,12 +67,10 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 		
 		["Render", false],
 		new __Panel_Linear_Setting_Item( __txt("Background Color"),
-			new buttonColor(function(val) /*=>*/ { previewPanel.bg_color_3d = val; }),
-			function()    /*=>*/   {return previewPanel.bg_color_3d},
-			function(val) /*=>*/ { previewPanel.bg_color_3d = val; },
+			new buttonColor(function(val) /*=>*/ { PROJECT.previewSetting.bg_color_3d = val; }),
+			function()    /*=>*/   {return PROJECT.previewSetting.bg_color_3d},
+			function(val) /*=>*/ { PROJECT.previewSetting.bg_color_3d = val; },
 			PREFERENCES.project_previewSetting.bg_color_3d,
-			noone,
-			"project_previewSetting.bg_color_3d",
 		),
 		
 		new __Panel_Linear_Setting_Item( __txt("Shader"),

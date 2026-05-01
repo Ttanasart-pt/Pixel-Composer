@@ -47,5 +47,5 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : __NodeValue_Numb
 }
 
 function nodeValue_ISlider(_name, _value, _data = {}) { 
-	return new __NodeValue_Int(_name, self, _value, _data).setDisplay(VALUE_DISPLAY.slider, is_array(_data)? { range: _data } : _data);
+	return new __NodeValue_Int(_name, self, _value).setDisplay(VALUE_DISPLAY.slider, is_array(_data)? { range: _data } : _data);
 }
