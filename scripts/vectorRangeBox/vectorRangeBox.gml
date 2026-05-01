@@ -10,6 +10,11 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	
 	disp_h = 0;
 	
+	rangeDrag = false;
+	rangeDrag_mx = 0;
+	rangeDrag_my = 0;
+	rangeDrag_ss = 0;
+	
 	tooltip_ranged = new tooltipSelector("Value Type", [ __txt("widget_range_constant", "Constant"), __txt("widget_range_random", "Random Range") ]);
 	
 	onModifyIndex = function(val, index) { 
@@ -39,6 +44,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	axis = [ "min", "max" ];
 	extras = -1;
 	
+	////- Textbox
+	
 	tb[0] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,0)}).setHide(1);
 	tb[1] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,1)}).setHide(1);
 	
@@ -57,6 +64,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		tb[7] = new textBox(_type, function(v) /*=>*/ {return onModifyIndex(v,7)}).setHide(1);
 	}
 	
+	////- Set
+	
 	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
 		for( var i = 0; i < size; i++ ) tb[i].interactable = interactable;
@@ -74,7 +83,9 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		return ranged? params.h * 2 : params.h; 
 	}
 	
-	static drawParam   = function(params) {
+	////- Draw
+	
+	static drawParam = function(params) {
 		setParam(params);
 		for(var i = 0; i < size; i++) tb[i].setParam(params);
 		
@@ -162,27 +173,131 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2 - ui(2), _y + _h / 2, _w - ww, ui(4), COLORS._main_accent, .2);
 		}
 		
-		if(ranged) {
-			for( var i = 0; i < dim; i++ ) {
-				for( var j = 0; j < 2; j++ ) {
-					var bx  = _x + ww * i;
-					var by  = _y + _h * j;
-					var ind = i * 2 + j;
+		if(rangeDrag) {
+			hover = false;
+			
+			var _dt = (_m[0] - rangeDrag_mx) / w;
+			var _sc = power(2, _dt);
+			var _ed = false;
+			
+			if(ranged) {
+				for( var i = 0; i < dim; i++ ) {
+					var ind = i * 2 + rangeDrag - 1;
+					var _v = rangeDrag_ss[ind] * _sc;
+					if(key_mod_press(CTRL))
+						_v = round(_v);
 					
-					if(i == 0) tb[ind].label = axis[j];
-					tb[ind].setFocusHover(active, hover);
-					tb[ind].draw(bx, by, ww, _h, array_safe_get_fast(_data, ind), _m);
+					var u = onModify(_v, ind); _ed |= u;
+				}
+				
+			} else {
+				for( var i = 0; i < dim; i++ ) {
+					var ind = i * 2;
+					var _v = rangeDrag_ss[ind] * _sc;
+					if(key_mod_press(CTRL))
+						_v = round(_v);
+					
+					var u = onModify(_v, ind); _ed |= u;
 				}
 			}
+			
+			if(_ed) UNDO_HOLDING = true;
+			
+			if(mouse_lrelease()) {
+				UNDO_HOLDING = false;
+				rangeDrag    = false;
+			}
+		}
+		
+		var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
+		var tbHover = bxHover;
+		
+		if(ranged) {
+			for( var j = 0; j < 2; j++ ) {
+				var by  = _y + _h * j;
+				
+				for( var i = 1; i < dim; i++ ) {
+					var bx  = _x + ww * i;
+					
+					var ps = _h / 2;
+					var px = bx;
+					var py = by + _h / 2;
+					
+					if(bxHover && w > ui(80)) {
+						var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+						if(pHover) tbHover = false;
+					}
+				}
+				
+				for( var i = 0; i < dim; i++ ) {
+					var bx  = _x + ww * i;
+					var ind = i * 2 + j;
+					
+					var ps = _h / 2;
+					var px = bx;
+					var py = by + _h / 2;
+					
+					if(i == 0) tb[ind].label = axis[j];
+					tb[ind].setFocusHover(active, tbHover);
+					tb[ind].draw(bx, by, ww, _h, array_safe_get_fast(_data, ind), _m);
+					
+					if(i == 0) continue;
+					if(rangeDrag == 1 + j) {
+						draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+						
+					} else if(bxHover && w > ui(80)) {
+						draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+						if(pHover && mouse_lpress(active)) {
+							rangeDrag = 1 + j;
+							rangeDrag_mx = _m[0];
+							rangeDrag_my = _m[1];
+							rangeDrag_ss = array_clone(_data);
+						}
+					}
+				}
+			}
+			
 		} else {
+			for( var i = 1; i < dim; i++ ) {
+				var bx  = _x + ww * i;
+				var by  = _y;
+				
+				var ps = _h / 2;
+				var px = bx;
+				var py = by + _h / 2;
+				
+				if(bxHover && w > ui(80)) {
+					var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+					if(pHover) tbHover = false;
+				}
+			}
+			
 			for( var i = 0; i < dim; i++ ) {
 				var bx  = _x + ww * i;
 				var by  = _y;
 				var ind = i * 2;
 				
+				var ps = _h / 2;
+				var px = bx;
+				var py = by + _h / 2;
+				
 				tb[ind].label = "";
-				tb[ind].setFocusHover(active, hover);
+				tb[ind].setFocusHover(active, tbHover);
 				tb[ind].draw(bx, by, ww, _h, array_safe_get_fast(_data, ind), _m);
+				
+				if(i == 0) continue;
+				if(rangeDrag) {
+					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+					
+				} else if(bxHover && w > ui(80)) {
+					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+					if(pHover && mouse_lpress(active)) {
+						rangeDrag = true;
+						rangeDrag_mx = _m[0];
+						rangeDrag_my = _m[1];
+						rangeDrag_ss = array_clone(_data);
+					}
+				}
 			}
 		}
 		
@@ -190,6 +305,8 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		
 		return h;
 	}
+	
+	////- Action
 	
 	static clone = function() {
 		var cln = new vectorRangeBox(size, type, onModify, unit);

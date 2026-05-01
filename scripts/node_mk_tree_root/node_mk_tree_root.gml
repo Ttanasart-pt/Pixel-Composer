@@ -31,15 +31,17 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setCurvable(15, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 		
 		////- =/Wiggle
-	newInput(10, nodeValue_Range(   "Wig. Amplitude",   [0,0], true ))
-		.setCurvable( 34, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
-	newInput(32, nodeValue_Range(   "Wig. Frequency",   [4,4], true ));
-	newInput(33, nodeValue_Range(   "Wig. Phase",       [0,0], true ));
+	newInput(10, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("wiggle_amplitude")
+		.setCurvable(34, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length )
+	newInput(32, nodeValue_Range(   "Frequency",   [4,4], true )).setInternalName("wiggle_frequency");
+	newInput(33, nodeValue_Range(   "Phase",       [0,0], true )).setInternalName("wiggle_phase");
 	
 		////- =/Spiral
-	newInput(22, nodeValue_Range(  "Frequency", [4,4], true ))
+	newInput(36, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("spiral_amplitude")
+		.setCurvable(37, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length )
+	newInput(22, nodeValue_Range(  "Frequency", [4,4], true )).setInternalName("spiral_frequency")
 		.setCurvable(28, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
-	newInput(23, nodeValue_Range(  "Phase",     [0,0], true ));
+	newInput(23, nodeValue_Range(  "Phase",     [0,0], true )).setInternalName("spiral_phase");
 	newInput(18, nodeValue_Range(  "Wave",      [0,0], true ))
 		.setCurvable(19, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	newInput(20, nodeValue_Range(  "Curl",      [0,0], true ))
@@ -65,7 +67,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 		////- =/Texture
 	newInput(27, nodeValue_Surface(  "Texture" ));
-	// input 36
+	// input 38
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -76,7 +78,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Geometry",   false ],  3,  7, 
 		[ "Direction",  false ],  4,  9, 15, 
 			[ "/Wiggle", true ],  10, 34, 32, 33, 
-			[ "/Spiral", true ],  22, 28, 23, 18, 19, 20, 21, 
+			[ "/Spiral", true ],  36, 37, 22, 28, 23, 18, 19, 20, 21, 
 			
 		[ "Thickness",       false ],  6, 11, 
 		[ "Render",      false, 35 ], 29,  
@@ -119,14 +121,17 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _seed = inline_context.seed + getInputData(14);
 			var _gDir = inline_context.gravityDir;
 			
-			var _bran = getInputData( 5);
 			var _ori  = getInputData( 1);
+			
+			var _ramo = getInputData( 5);
 			var _oriW = getInputData(30);
 			var _oriS = getInputData(31);
 			
 			var _segs = getInputData( 7);
 			var _len  = getInputData( 3);
 			
+			var _sprA = getInputData(36);
+			var _spaC = getInputData(37),  curve_spia  = inputs[36].attributes.curved? new curveMap(_spaC)  : undefined;
 			var _sprS = getInputData(22);
 			var _spsC = getInputData(28),  curve_spis  = inputs[22].attributes.curved? new curveMap(_spsC)  : undefined;
 			var _sprP = getInputData(23);
@@ -173,8 +178,9 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			random_set_seed(_seed);
 		#endregion
 			
-		var _amo   = irandom_range(_bran[0], _bran[1]);
-		var _roots = array_create(_amo);
+		var _amo     = irandom_range(_ramo[0], _ramo[1]);
+		var _roots   = array_create(_amo);
+		var _rootPos = array_create(_amo);
 		
 		for( var i = 0; i < _amo; i++ ) {
 			var ox = _ori[0];
@@ -193,6 +199,16 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					break;
 			}
 			
+			_rootPos[i] = [ox, oy];
+		}
+		
+		array_sort(_rootPos, function(a,b) /*=>*/ {return a[1] - b[1]});
+		
+		for( var i = 0; i < _amo; i++ ) {
+			var _pos = _rootPos[i];
+			var  ox  = _pos[0];
+			var  oy  = _pos[1];
+			
 			var _t = new __MK_Tree(undefined, ox, oy, _seed + i)
 				.setDraw(_draw, _line)
 				.setTexture(_tex)
@@ -209,6 +225,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _grav   = random_range(_grv[0], _grv[1]);
 			var _thick  = random_range(_thk[0], _thk[1]);
 			
+			var _spirA  = random_range(_sprA[0], _sprA[1]);
 			var _spirS  = random_range(_sprS[0], _sprS[1]);
 			var _spirP  = random_range(_sprP[0], _sprP[1]);
 			var _wave   = random_range(_wav[0], _wav[1]);
@@ -223,6 +240,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				grav   : _grav,    gravC  : curve_grav,   gravD   : _gDir, 
 				thick  : _thick,   thickC : curve_thick,
 				
+				spirA  : _spirA,   spirAC : curve_spia, 
 				spirS  : _spirS,   spirSC : curve_spis, 
 				spirP  : _spirP,
 				wave   : _wave,    waveC  : curve_wave, 

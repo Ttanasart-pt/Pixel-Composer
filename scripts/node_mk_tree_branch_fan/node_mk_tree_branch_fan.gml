@@ -22,20 +22,26 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput( 4, nodeValue_Range(  "Segments",   [4,8]     ));
 	
 	////- =Fan
-	newInput(14, nodeValue_Range(  "Fan Amount",   [6,6],   true )).setCurvable(15, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
-	newInput(18, nodeValue_Range(  "Aspect",       [.5,.5], true )).setCurvable(19, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(14, nodeValue_Range(  "Fan Amount",   [6,6],   true ))
+		.setCurvable(15, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(18, nodeValue_Range(  "Aspect",       [.5,.5], true ))
+		.setCurvable(19, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 		
 		////- =/Shape
-	newInput(10, nodeValue_Range(  "Inner Radius", [0,0],   true )).setCurvable(11, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
-	newInput(12, nodeValue_Range(  "Outer Radius", [16,32], true )).setCurvable(13, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(10, nodeValue_Range(  "Inner Radius", [0,0],   true ))
+		.setCurvable(11, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(12, nodeValue_Range(  "Outer Radius", [16,32], true ))
+		.setCurvable(13, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 		
 		////- =/Cone
-	newInput(16, nodeValue_Range(  "Cone Height",  [8,8],   true )).setCurvable(17, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(16, nodeValue_Range(  "Cone Height",  [8,8],   true ))
+		.setCurvable(17, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	newInput(34, nodeValue_Curve(  "Cone Shape",   CURVE_DEF_01  ));
 	newInput(35, nodeValue_SliRange( "Cone Trim",  [1,1]         ));
 	
 		////- =/Phase
-	newInput(20, nodeValue_Range(  "Phase",        [0,0],   true )).setCurvable(21, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(20, nodeValue_Range(  "Phase",        [0,0],   true ))
+		.setCurvable(21, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	newInput(22, nodeValue_Bool(   "Overlap",      false         ));
 	
 	////- =Thickness

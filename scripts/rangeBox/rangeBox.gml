@@ -30,29 +30,29 @@ function rangeBox(_onModify) : widget() constructor {
 	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 0)};
 	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 1)};
 	
-	for(var i = 0; i < 2; i++) tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]).setHide(true).setLabel(labels[i]);
+	for(var i = 0; i < 2; i++) tb[i] = textBox_Number(onModifySingle[i]).setHide(true).setLabel(labels[i]);
 	
-	#region setter
-		static setSuffix   = function(_v) /*=>*/ { 
-			tb[0].setSuffix(_v); 
-			tb[1].setSuffix(_v); 
-			return self; 
-		}
-		
-		static setBoxColor = function(_v) /*=>*/ { 
-			tb[0].setBoxColor(_v); 
-			tb[1].setBoxColor(_v); 
-			return self; 
-		}
-		
-		static setFont = function(_f = noone) /*=>*/ { 
-			font = _f;
-			tb[0].setFont(_f);
-			tb[1].setFont(_f);
-			return self; 
-		}
-	#endregion
+	////- Set
 	
+	static setSuffix   = function(_v) /*=>*/ { 
+		tb[0].setSuffix(_v); 
+		tb[1].setSuffix(_v); 
+		return self; 
+	}
+	
+	static setBoxColor = function(_v) /*=>*/ { 
+		tb[0].setBoxColor(_v); 
+		tb[1].setBoxColor(_v); 
+		return self; 
+	}
+	
+	static setFont = function(_f = noone) /*=>*/ { 
+		font = _f;
+		tb[0].setFont(_f);
+		tb[1].setFont(_f);
+		return self; 
+	}
+
 	static setInteract = function(_inter = noone) /*=>*/ { 
 		interactable = _inter;
 		
@@ -66,6 +66,8 @@ function rangeBox(_onModify) : widget() constructor {
 	} 
 	
 	static isHovering = function() /*=>*/ {return tb[0].isHovering() || tb[1].isHovering()};
+	
+	////- Draw
 	
 	static drawParam = function(params) { 
 		setParam(params);
@@ -139,41 +141,8 @@ function rangeBox(_onModify) : widget() constructor {
 		var px = x + w / 2;
 		var py = y + h / 2;
 		
-		if(linked) {
-			tb[0].setFocusHover(active, hover);
-			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);
-			tb[0].setLabel("value");
-			
-		} else if(array_safe_length(_data) >= 2) {
-			var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
-			var tbHover = bxHover;
-			
-			if(bxHover && w > ui(80)) {
-				var pHover = hover && point_in_circle(_m[0], _m[1], px, py, ps / 2);
-				if(pHover) tbHover = false;
-			}
-			
-			for(var i = 0; i < 2; i++) {
-				tb[i].setFocusHover(active, tbHover);
-				tb[i].setLabel(labels[i]);
-				
-				var bx  = _x + disp_w * i;
-				tb[i].draw(bx, _y, disp_w - 1, _h, _data[i], _m);
-			}
-			
-			if(bxHover && w > ui(80)) {
-				draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
-				if(mouse_lpress(active)) {
-					rangeDrag = true;
-					rangeDrag_mx = _m[0];
-					rangeDrag_my = _m[1];
-					rangeDrag_ss = [_data[0], _data[1]];
-				}
-			}
-		}
-		
 		if(rangeDrag) {
-			draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+			hover = false;
 			
 			var _dt = (_m[0] - rangeDrag_mx) / w;
 			var _sc = power(2, _dt);
@@ -196,9 +165,47 @@ function rangeBox(_onModify) : widget() constructor {
 			}
 		}
 		
+		if(linked) {
+			tb[0].setFocusHover(active, hover);
+			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);
+			tb[0].setLabel("value");
+			
+		} else if(array_safe_length(_data) >= 2) {
+			var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
+			var tbHover = bxHover;
+			
+			if(bxHover && w > ui(80)) {
+				var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+				if(pHover) tbHover = false;
+			}
+			
+			for(var i = 0; i < 2; i++) {
+				tb[i].setFocusHover(active, tbHover);
+				tb[i].setLabel(labels[i]);
+				
+				var bx  = _x + disp_w * i;
+				tb[i].draw(bx, _y, disp_w - 1, _h, _data[i], _m);
+			}
+			
+			if(rangeDrag) {
+				draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+				
+			} else if(bxHover && w > ui(80)) {
+				draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+				if(pHover && mouse_lpress(active)) {
+					rangeDrag = true;
+					rangeDrag_mx = _m[0];
+					rangeDrag_my = _m[1];
+					rangeDrag_ss = [_data[0], _data[1]];
+				}
+			}
+		}
+		
 		resetFocus();
 		return h;
 	} 
+	
+	////- Action
 	
 	static clone = function() { 
 		return new rangeBox(onModify);

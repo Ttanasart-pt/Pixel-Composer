@@ -48,16 +48,16 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 	static arrayLength = arrayLengthSimple;
 	
 	static setValueRaw = function(_dat) { 
-		if(is(_dat, gradientObject)) {
-			setValue(_dat); 
-			return;
+		if(!is_struct(_dat)) return;
+		
+		if(!is(_dat, gradientObject)) {
+			static_set(_dat, static_get(gradientObject));
+			for( var i = 0, n = array_length(_dat.keys); i < n; i++ )
+				static_set(_dat.keys[i], static_get(gradientKey));
 		}
 		
-		if(is_struct(_dat)) {
-			static_set(_dat, static_get(gradientObject));
-			setValue(_dat);
-			return;
-		}
+		if(is(_dat, gradientObject))
+			setValue(_dat); 
 	}
 	
 	////- Draw
@@ -75,8 +75,12 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 	////- Serialize
 	
 	static postApplyDeserialize = function() {
+		if(!is_struct(def_val)) return;
 		if(is(def_val, gradientObject)) return;
-		if(is_struct(def_val)) static_set(def_val, static_get(gradientObject));
+		
+		static_set(def_val, static_get(gradientObject));
+		for( var i = 0, n = array_length(def_val.keys); i < n; i++ )
+			static_set(def_val.keys[i], static_get(gradientKey));
 	}
 	
 }

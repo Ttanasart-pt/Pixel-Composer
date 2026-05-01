@@ -38,16 +38,18 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setCurvable( 33, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
 	
 		////- =/Wiggle
-	newInput(10, nodeValue_Range(   "Wiggle",    [0,0], true    ))
+	newInput(10, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("wiggle_amplitude")
 		.setCurvable( 34, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 35, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
-	newInput(42, nodeValue_Range(   "Wig. Frequency",   [4,4], true ));
-	newInput(43, nodeValue_Range(   "Wig. Phase",       [0,0], true ));
+	newInput(42, nodeValue_Range(   "Frequency",   [4,4], true )).setInternalName("wiggle_frequency");
+	newInput(43, nodeValue_Range(   "Phase",       [0,0], true )).setInternalName("wiggle_phase");
 	
 		////- =/Spiral
-	newInput(25, nodeValue_Range(   "Frequency", [4,4], true ))
+	newInput(47, nodeValue_Range(   "Amplitude", [0,0], true )).setInternalName("spiral_amplitude")
+		.setCurvable(48, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length )
+	newInput(25, nodeValue_Range(   "Frequency", [4,4], true )).setInternalName("spiral_frequency")
 		.setCurvable(38, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
-	newInput(26, nodeValue_Range(   "Phase",     [0,0], true ));
+	newInput(26, nodeValue_Range(   "Phase",     [0,0], true )).setInternalName("spiral_phase");
 	newInput(21, nodeValue_Range(   "Wave",      [0,0], true ))
 		.setCurvable(22, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	newInput(23, nodeValue_Range(   "Curl",      [0,0], true ))
@@ -78,7 +80,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 47
+	// input 49
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -91,7 +93,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Geometry",        false ],  3, 13,  7, 
 		[ "Direction",       false ], 31,  4, 40, 41, 15,  9, 16, 33, 
 			[ "/Wiggle",      true ], 10, 34, 35, 42, 43, 
-			[ "/Spiral",      true ], 25, 38, 26, 21, 22, 23, 24, 
+			[ "/Spiral",      true ], 47, 48, 25, 38, 26, 21, 22, 23, 24, 
 			
 		[ "Thickness",       false ],  6, 11, 36, 
 		[ "Rendering",   false, 46 ], 39, 
@@ -149,6 +151,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _len  = getInputData( 3);
 			var _lenC = getInputData(13),  curve_length  = inputs[ 3].attributes.curved? new curveMap(_lenC)  : undefined;
 			
+			var _sprA = getInputData(47);
+			var _spaC = getInputData(48),  curve_spia    = inputs[47].attributes.curved? new curveMap(_spaC)  : undefined;
 			var _sprS = getInputData(25);
 			var _spsC = getInputData(38),  curve_spis    = inputs[25].attributes.curved? new curveMap(_spsC)  : undefined;
 			var _sprP = getInputData(26);
@@ -259,6 +263,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _baseDir = ori[2];
 				var _length  = random_range(_len[0], _len[1]) * (curve_length? curve_length.get(crat) : 1);
 				var _angle   = 0;
+				var _reflected = false;
 				
 				switch(_angT) {
 					case 0 : _angle = rotation_random_eval(_ang);                                                         break;
@@ -267,12 +272,14 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				}
 				
 				switch(_refl) {
-					case 1 : if(choose(0, 1))   _angle = _baseDir + angle_difference(_baseDir, _angle); break;
-					case 2 : if(_spawnIndx % 2) _angle = _baseDir + angle_difference(_baseDir, _angle); break;
+					case 1 : _reflected = choose(0, 1);   break;
+					case 2 : _reflected = _spawnIndx % 2; break;
 				}
 				
+				if(_reflected) _angle = _baseDir + angle_difference(_baseDir, _angle);
+				
 				var _grav   = random_range(_grv[0], _grv[1]);
-				    _grav  *= curve_grav_r? curve_grav_r.get(crat)   : 1;
+				    _grav  *= curve_grav_r? curve_grav_r.get(crat) : 1;
 				    
 				var _wiggA  = random_range(_anw[0], _anw[1]) * (curve_angw_r? curve_angw_r.get(crat) : 1);
 				var _wiggF  = random_range(_wigF[0], _wigF[1]);
@@ -281,6 +288,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _thick  = random_range(_thk[0], _thk[1]);
 				    _thick *= curve_thick_r? curve_thick_r.get(crat) : 1;
 				
+				var _spirA  = random_range(_sprA[0], _sprA[1]) * (_reflected? -1 : 1);
 				var _spirS  = random_range(_sprS[0], _sprS[1]);
 				var _spirP  = random_range(_sprP[0], _sprP[1]);
 				var _wave   = random_range(_wav[0], _wav[1]);
@@ -299,6 +307,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					grav   : _grav,    gravC  : curve_grav,    gravD   : _gDir, 
 					thick  : _thick,   thickC : curve_thick,
 					
+					spirA  : _spirA,   spirAC : curve_spia, 
 					spirS  : _spirS,   spirSC : curve_spis, 
 					spirP  : _spirP,
 					wave   : _wave,    waveC  : curve_wave, 

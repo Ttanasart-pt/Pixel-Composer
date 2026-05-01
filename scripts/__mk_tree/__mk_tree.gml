@@ -497,6 +497,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 		var _thick  = _param.thick;
 		var _thickC = _param.thickC;
 		
+		var _spirA  = _param.spirA;
+		var _spirAC = _param.spirAC;
 		var _spirS  = _param.spirS;
 		var _spirSC = _param.spirSC;
 		var _spirP  = _param.spirP;
@@ -531,6 +533,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 		var _gy = lengthdir_y(1, _gravD);
 		var _gg;
 		
+		var _sprAng = 0;
+		
 		for( var i = 0; i <= amount; i++ ) {
 			var p = i / amount;
 			
@@ -543,6 +547,10 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 					var _wam = _wigg * (_wiggC? _wiggC.get(p) : 1);
 					aa += _wan * _wam;
 				}
+				
+				var _spr = _spirA * (_spirAC? _spirAC.get(p) : 1);
+				_sprAng += _spr;
+				aa += _sprAng;
 				
 				var dx = lengthdir_x(ll, aa);
 				var dy = lengthdir_y(ll, aa);
