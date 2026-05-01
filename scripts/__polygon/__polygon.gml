@@ -1,3 +1,49 @@
+function polygon_point_get_convex_hull(_points, _expands = 0) {
+	var hull = [];
+	
+	var len = array_length(_points);
+	if(len < 3) return _points;
+	
+	var leftmost = 0;
+	for( var i = 1; i < len; i++ ) {
+		if(_points[i].x < _points[leftmost].x)
+			leftmost = i;
+	}
+	
+	var p = leftmost;
+	do {
+		array_push(hull, _points[p]);
+		
+		var q = (p + 1) % len;
+		for( var r = 0; r < len; r++ ) {
+			if(cross_product(_points[p].x, _points[p].y, _points[q].x, _points[q].y, _points[r].x, _points[r].y) > 0)
+				q = r;
+		}
+		
+		p = q;
+	} until(p == leftmost);
+	
+	if(_expands != 0 && array_length(hull) >= 3) {
+		var _exHull = array_create(array_length(hull));
+		
+		for( var i = 0, n = array_length(hull); i < n; i++ ) {
+			var _p0 = hull[(i - 1 + n) % n];
+			var _p1 = hull[(i        ) % n];
+			var _p2 = hull[(i + 1    ) % n];
+			
+			var _dirr = point_direction(_p0.x, _p0.y, _p2.x, _p2.y) - 90;
+			var _dirx = lengthdir_x(_expands, _dirr);
+			var _diry = lengthdir_y(_expands, _dirr);
+
+			_exHull[i] = new __vec2(_p1.x + _dirx, _p1.y + _diry);
+		}
+		
+		hull = _exHull;
+	}
+	
+	return hull;
+}
+
 function polygon_simplify(points, tolerance = 4) {
 	
 	// Delete duplicated points

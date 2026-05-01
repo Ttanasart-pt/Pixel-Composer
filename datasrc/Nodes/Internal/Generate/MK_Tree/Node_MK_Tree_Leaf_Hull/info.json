@@ -1,0 +1,6 @@
+{
+    "name":          "Leaves Hull",
+    "spr":           "s_node_mk_tree_leaf_hull",
+    "baseNode":      "Node_MK_Tree_Leaf_Hull",
+    "pxc_version":    121002,
+}

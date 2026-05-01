@@ -4,28 +4,34 @@ enum CAMERA_PROJ {
 }
 
 #region setup
-	globalvar PRIMITIVES, FORMAT_P, FORMAT_PT, FORMAT_PNT, FORMAT_2PC;
-	PRIMITIVES = ds_map_create();
+	globalvar PRIMITIVES; PRIMITIVES = ds_map_create();
 
 	vertex_format_begin();
 	vertex_format_add_position_3d();
-	FORMAT_P = vertex_format_end();
+	globalvar FORMAT_P; FORMAT_P = vertex_format_end();
 
 	vertex_format_begin();
 	vertex_format_add_position_3d();
 	vertex_format_add_texcoord();
-	FORMAT_PT = vertex_format_end();
+	globalvar FORMAT_PT; FORMAT_PT = vertex_format_end();
 
 	vertex_format_begin();
 	vertex_format_add_position_3d();
 	vertex_format_add_normal();
 	vertex_format_add_texcoord();
-	FORMAT_PNT = vertex_format_end();
+	globalvar FORMAT_PNT; FORMAT_PNT = vertex_format_end();
 	
 	vertex_format_begin();
 	vertex_format_add_position();
 	vertex_format_add_color();
-	FORMAT_2PC = vertex_format_end();
+	globalvar FORMAT_2PC; FORMAT_2PC = vertex_format_end();
+	
+	vertex_format_begin();
+	vertex_format_add_position();
+	vertex_format_add_color();
+	vertex_format_add_texcoord();
+	globalvar FORMAT_2PCT; FORMAT_2PCT = vertex_format_end();
+	
 #endregion
 
 #region 3d obj

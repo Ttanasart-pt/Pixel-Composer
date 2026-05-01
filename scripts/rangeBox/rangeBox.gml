@@ -30,7 +30,8 @@ function rangeBox(_onModify) : widget() constructor {
 	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 0)};
 	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 1)};
 	
-	for(var i = 0; i < 2; i++) tb[i] = textBox_Number(onModifySingle[i]).setHide(true).setLabel(labels[i]);
+	tb[0] = textBox_Number(onModifySingle[0]).setHide(true).setLabel(labels[0]);
+	tb[1] = textBox_Number(onModifySingle[1]).setHide(true).setLabel(labels[1]);
 	
 	////- Set
 	

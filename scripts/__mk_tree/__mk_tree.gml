@@ -21,308 +21,16 @@
 	}
 #endregion
 
-function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
-	root         = _root;
-	rootPosition = _pos;
-	shape        = _shp;
-	whorlIndex   = 0;
+function __MK_Tree_Element(_root = undefined) constructor {
+	root = _root;
 	
-	x            = _x;
-	y            = _y;
-	gravity      = -90;
-	
-	startx       = _x;
-	starty       = _y;
-	
-	scale        = 1;
-	sx           = _sx;
-	sy           = _sy;
-	dir          = _dir;
-	sp           = _span;
-	
-	surface      = noone;
-	surf_w       = 1;
-	surf_h       = 1;
-	
-	color        = c_white;
-	colorE       = undefined;
-	colorU       = undefined;
-	colorLeaf    = undefined;
-	
-	growShift    = 0;
-	growSpeed    = 1;
-	
-	resolution   =  0;
-	geometry     = undefined;
-	geometry1    = undefined;
-	geoGrav      = .1;
-	geoTwist     =  0;
-	geoWigg      =  0;
-	geoWiggC     = undefined;
-	
-	mesh         = undefined;
-	drawn        = false;
-	
-	static recalDir = function() {
-		dx = lengthdir_x(sx, dir);
-		dy = lengthdir_y(sx, dir);
-		
-		dsx = lengthdir_x(sy, dir + 90);
-		dsy = lengthdir_y(sy, dir + 90);
-		
-	} recalDir();
-	
-	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
-	
-	static draw = function() {
-		if(scale <= 0) return;
-		
-		var x0 = x;
-		var y0 = y;
-		
-		var x1 = x + dx * scale;
-		var y1 = y + dy * scale;
-		
-		var x2 = x + dx * sp * scale;
-		var y2 = y + dy * sp * scale;
-		
-		var _cE   = colorE? colorE : color;
-		var _cTop = colorU? colorU : _cE;
-		var _cBot = _cE;
-						
-		switch(shape) {
-			case MKLEAF_TYPE.Leaf : 
-				var _sg   = -sign(dsy);
-				var _scsg = scale * _sg;
-				
-				var _dsx = dsx * _scsg;
-				var _dsy = dsy * _scsg;
-		
-				var c0 = colorLeaf.evalFast(  0 );
-				var c2 = colorLeaf.evalFast( .5 );
-				var c1 = colorLeaf.evalFast(  1 );
-				
-				var oc  = colorMultiply(color, c0);
-				
-				var tc2 = colorMultiply(_cTop, c2);
-				var bc2 = colorMultiply(_cBot, c2);
-				
-				var tc1 = colorMultiply(_cTop, c1);
-				var bc1 = colorMultiply(_cBot, c1);
-				
-				draw_primitive_begin(pr_trianglelist);
-					draw_vertex_color(x0,        y0,        oc,  1);
-					draw_vertex_color(x1,        y1,        tc1, 1);
-					draw_vertex_color(x2 + _dsx, y2 + _dsy, tc2, 1);
-					
-					draw_vertex_color(x0,        y0,        oc,  1);
-					draw_vertex_color(x1,        y1,        bc1, 1);
-					draw_vertex_color(x2 - _dsx, y2 - _dsy, bc2, 1);
-				draw_primitive_end();
-				break;
-				
-			case MKLEAF_TYPE.Complex_Leaf : 
-				if(geometry == undefined) break;
-				
-				var g0 = geometry;
-				var g1 = geometry1;
-				
-				var ssx = sx * scale;
-				var ssy = sy * scale;
-				
-				var _samp = resolution;
-				var ds = ssx / _samp;
-				var os = g1 == undefined? g0.get(0) : random_range(g0.get(0), g1.get(0));
-				var ns = os;
-				var od = dir,         nd = od;
-				var ox = x0,          nx = ox;
-				var oy = y0,          ny = oy;
-				var oc = colorLeaf.evalFast(0), nc = oc;
-				var gg = geoGrav / _samp;
-				var rr;
-				var wd;
-				
-				draw_primitive_begin(pr_trianglelist);
-					for( var i = 1; i <= _samp; i++ ) {
-						var _t = i / _samp;
-						
-						ns = g1 == undefined? g0.get(_t) : random_range(g0.get(_t), g1.get(_t));
-						
-						wd = random_range(-geoWigg, geoWigg) * (geoWiggC? geoWiggC.get(_t) : 1) * sign(geoWigg);
-						nx = ox + lengthdir_x(ds, nd) + lengthdir_x(wd, nd + 90);
-						ny = oy + lengthdir_y(ds, nd) + lengthdir_y(wd, nd + 90);
-						nd = lerp_angle_direct(nd, gravity, gg) + geoTwist / _samp;
-						nc = colorLeaf.evalFast(i / _samp);
-						
-						var _odx = lengthdir_x(ssy, od + 90);
-						var _ody = lengthdir_y(ssy, od + 90);
-						
-						var _ndx = lengthdir_x(ssy, nd + 90);
-						var _ndy = lengthdir_y(ssy, nd + 90);
-						
-						var x00 = ox + _odx * os;
-						var y00 = oy + _ody * os;
-						
-						var x01 = ox - _odx * os;
-						var y01 = oy - _ody * os;
-						
-						var x10 = nx + _ndx * ns;
-						var y10 = ny + _ndy * ns;
-						
-						var x11 = nx - _ndx * ns;
-						var y11 = ny - _ndy * ns;
-						
-						var occ = colorMultiply(color, oc);
-						var ncc = colorMultiply(color, nc);
-						
-						var otc = colorMultiply(_cTop, oc);
-						var ntc = colorMultiply(_cTop, nc);
-						
-						var obc = colorMultiply(_cBot, oc);
-						var nbc = colorMultiply(_cBot, nc);
-						
-						draw_vertex_color(x00, y00, otc, 1);
-						draw_vertex_color( ox,  oy, occ, 1);
-						draw_vertex_color( nx,  ny, ncc, 1);
-						
-						draw_vertex_color(x00, y00, otc, 1);
-						draw_vertex_color( nx,  ny, ncc, 1);
-						draw_vertex_color(x10, y10, ntc, 1);
-						
-						//////////////////////////////////////
-						
-						draw_vertex_color(x01, y01, obc, 1);
-						draw_vertex_color( ox,  oy, occ, 1);
-						draw_vertex_color( nx,  ny, ncc, 1);
-						
-						draw_vertex_color(x01, y01, obc, 1);
-						draw_vertex_color( nx,  ny, ncc, 1);
-						draw_vertex_color(x11, y11, nbc, 1);
-						
-						od = nd;
-						os = ns;
-						ox = nx;
-						oy = ny;
-						oc = nc;
-					}
-				draw_primitive_end();
-				break;
-				
-			case MKLEAF_TYPE.Line : 
-				var _samp = resolution;
-				var ds = sx / _samp;
-				var od = dir,         nd = od;
-				var ox = x0,          nx = ox;
-				var oy = y0,          ny = oy;
-				var oc = colorLeaf.evalFast(0), nc = oc;
-				var gg = geoGrav / _samp;
-				
-				for( var i = 1; i < _samp; i++ ) {
-					nx = ox + lengthdir_x(ds, nd);
-					ny = oy + lengthdir_y(ds, nd);
-					nd = lerp_angle_direct(nd, gravity, gg);
-					nc = colorLeaf.evalFast(i/_samp);
-					
-					draw_line_round_color(ox, oy, nx, ny, sy, oc, nc);
-					
-					ox = nx;
-					oy = ny;
-					oc = nc;
-				}
-				break;
-				
-			case MKLEAF_TYPE.Circle : 
-				draw_set_circle_precision(16)
-				draw_circle_color(x2, y2, sx * scale, color, _cE, false);
-				break;
-				
-			case MKLEAF_TYPE.Surface : 
-				var _xx = x + lengthdir_x(surf_h * sy * scale / 2, 90 + dir);
-				var _yy = y + lengthdir_y(surf_h * sy * scale / 2, 90 + dir);
-				
-				draw_surface_ext_safe(surface, _xx, _yy, sx * scale, sy * scale, dir, color); 
-				break;
-			
-			case MKLEAF_TYPE.Mesh : 
-				if(mesh == undefined) break;
-				
-				draw_set_color(colorMultiply(color, colorLeaf.evalFast(0)));
-				draw_primitive_begin(pr_trianglelist);
-				var _vtx = 0;
-				var tris = mesh.triangles;
-				var pnts = mesh.points;
-				
-				var _x = x;
-				var _y = y;
-				
-				var _d  = dir;
-				var _dc = dcos(_d);
-				var _ds = dsin(_d);
-				
-				for( var i = 0, n = array_length(tris); i < n; i++ ) {
-					var t  = tris[i];
-					var p0 = pnts[t[0]];
-					var p1 = pnts[t[1]];
-					var p2 = pnts[t[2]];
-						
-				    var _x0 = p0.x * sx, _y0 = p0.y * sy;
-				    var _x1 = p1.x * sx, _y1 = p1.y * sy;
-				    var _x2 = p2.x * sx, _y2 = p2.y * sy;
-					
-				    var x0 = _x + (_x0 * _dc - _y0 * _ds), y0 = _y + (_x0 * _ds + _y0 * _dc);
-				    var x1 = _x + (_x1 * _dc - _y1 * _ds), y1 = _y + (_x1 * _ds + _y1 * _dc);
-				    var x2 = _x + (_x2 * _dc - _y2 * _ds), y2 = _y + (_x2 * _ds + _y2 * _dc);
-				    
-					draw_vertex(x0, y0);
-					draw_vertex(x1, y1);
-					draw_vertex(x2, y2);
-					
-					if(++_vtx > 64) {
-						draw_primitive_end();
-						draw_primitive_begin(pr_trianglelist);
-					}
-				}
-				
-				draw_primitive_end();
-				break;
-		}
-	}
+	static drawOverlay = function(_x,_y,_s) /*=>*/ {}
+	static draw        = function()         /*=>*/ {}
 	
 	////- Action
 	
-	static copy = function(_l) {
-		gravity    = _l.gravity;
-		surface    = _l.surface;
-		surf_w     = _l.surf_w;
-		surf_h     = _l.surf_h;
-		
-		color      = _l.color;
-		colorE     = _l.colorE;
-		colorU     = _l.colorU;
-		colorLeaf  = _l.colorLeaf;
-		
-		growShift  = _l.growShift;
-		growSpeed  = _l.growSpeed;
-		
-		resolution = _l.resolution;
-		geometry   = _l.geometry;
-		geometry1  = _l.geometry1;
-		geoGrav    = _l.geoGrav;
-		geoTwist   = _l.geoTwist;
-		geoWigg    = _l.geoWigg;
-		geoWiggC   = _l.geoWiggC;
-		
-		mesh       = _l.mesh;
-		return self;
-	}
-	
-	static clone = function() { 
-		var _l = new __MK_Tree_Leaf(root, rootPosition, shape, x, y, dir, sx, sy, sp).copy(self);
-		return _l;
-	}
-	
+	static clone    = function() /*=>*/ {return variable_clone(self)};
 	static toString = function() /*=>*/ {return $"[MK Leaf]"};
-	
 }
 
 function __MK_Tree_Segment(_x, _y, _t) constructor {
@@ -533,6 +241,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 		var _gy = lengthdir_y(1, _gravD);
 		var _gg;
 		
+		var _sprAmp = _spirA / (amount * amount) * 2;
 		var _sprAng = 0;
 		
 		for( var i = 0; i <= amount; i++ ) {
@@ -548,7 +257,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 					aa += _wan * _wam;
 				}
 				
-				var _spr = _spirA * (_spirAC? _spirAC.get(p) : 1);
+				var _spr = _sprAmp * (_spirAC? _spirAC.get(p) : 1);
 				_sprAng += _spr;
 				aa += _sprAng;
 				
@@ -799,8 +508,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 			else         drawBranch();
 		}
 		
-		array_foreach(leaves,   function(l) /*=>*/ { if(is(l, __MK_Tree_Leaf)) l.draw(); });
-		array_foreach(children, function(c) /*=>*/ { if(is(c, __MK_Tree))      c.draw(); });
+		array_foreach(leaves,   function(l) /*=>*/ { if(is(l, __MK_Tree_Element)) l.draw(); });
+		array_foreach(children, function(c) /*=>*/ { if(is(c, __MK_Tree)) c.draw(); });
 		
 	}
 	

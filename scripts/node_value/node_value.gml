@@ -685,7 +685,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			node.triggerRender(); 
-		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} ).iconPad()
+		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} )
+		    .iconPad()
 			.setTooltip("Toggle Map");
 		
 		if(type != VALUE_TYPE.gradient) {
@@ -712,7 +713,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		parameters.map_index = node.inputs[_index];
 		
 		var mapButton = button(function() /*=>*/ { toggleAttribute("mapped"); })
-			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} ).iconPad()
+			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} )
+			.iconPad()
 			.setTooltip("Toggle Map");
 		
 		setSideButton(mapButton);
@@ -782,7 +784,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.visible != vis) {
-					inp.visible = vis;
+					inp.setVisible(vis);
 					node.toRefreshNodeDisplay = true;
 				}
 				
@@ -791,7 +793,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.visible != vis) {
-					inp.visible = vis;
+					inp.setVisible(vis);
 					node.toRefreshNodeDisplay = true;
 				}
 				

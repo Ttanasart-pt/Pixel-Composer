@@ -8,8 +8,15 @@ function rotatorRange(_onModify) : widget() constructor {
 	
 	knob_hovering = noone;
 	
-	tb_min = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 0)}); tb_min.hide = true;
-	tb_max = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 1)}); tb_max.hide = true;
+	rangeDrag = false;
+	rangeDrag_mx = 0;
+	rangeDrag_my = 0;
+	rangeDrag_ss = 0;
+	
+	tb_min = textBox_Number(function(v) /*=>*/ {return onModify(v, 0)}).setHide(true);
+	tb_max = textBox_Number(function(v) /*=>*/ {return onModify(v, 1)}).setHide(true);
+	
+	////- Set
 	
 	static setInteract = function(i = noone) {
 		interactable = i;
@@ -23,6 +30,8 @@ function rotatorRange(_onModify) : widget() constructor {
 	}
 	
 	static isHovering = function() { return dragging || tb_min.hovering || tb_max.hovering; }
+	
+	////- Draw
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -117,17 +126,60 @@ function rotatorRange(_onModify) : widget() constructor {
 		
 		_tw /= 2;
 		
-		tb_min.setFocusHover(active, hover);
+		var ps = h / 2;
+		var px = _tx + _tw;
+		var py = _y + _h / 2;
+		
+		if(rangeDrag) {
+			hover = false;
+			
+			var _dt = (_m[0] - rangeDrag_mx) / w * 180;
+			var _vx = value_snap(rangeDrag_ss[0] + _dt, key_mod_press(CTRL)? 15 : 1);
+			var _vy = value_snap(rangeDrag_ss[1] + _dt, key_mod_press(CTRL)? 15 : 1);
+			
+			var u0 = onModify(_vx, 0); 
+			var u1 = onModify(_vy, 1); 
+			if(u0 || u1) UNDO_HOLDING = true;
+			
+			if(mouse_lrelease()) {
+				UNDO_HOLDING = false;
+				rangeDrag    = false;
+			}
+		}
+		
+		var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
+		var tbHover = bxHover;
+		
+		if(bxHover && w > ui(80)) {
+			var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+			if(pHover) tbHover = false;
+		}
+		
+		tb_min.setFocusHover(active, tbHover);
 		tb_min.draw(_tx, _y, _tw - 1, _h, _data[0], _m);
 		
-		tb_max.setFocusHover(active, hover);
+		tb_max.setFocusHover(active, tbHover);
 		tb_max.draw(_tx + _tw, _y, _tw, _h, _data[1], _m);
 		
-		resetFocus();
+		if(rangeDrag) {
+			draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+			
+		} else if(bxHover && w > ui(80)) {
+			draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+			if(pHover && mouse_lpress(active)) {
+				rangeDrag = true;
+				rangeDrag_mx = _m[0];
+				rangeDrag_my = _m[1];
+				rangeDrag_ss = [_data[0], _data[1]];
+			}
+		}
 		
+		resetFocus();
 		return h;
 	}
 		
+	////- Action
+	
 	static clone = function() {
 		var cln = new rotatorRange(onModify);
 		return cln;

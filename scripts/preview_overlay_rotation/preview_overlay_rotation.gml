@@ -83,11 +83,12 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _rad, 
 	__overlay_hover = array_verify(__overlay_hover, 1);
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], index, 4);
 	
+	var _color = COLORS._main_accent;
 	shader_set(sh_node_widget_rotator);
-		shader_set_color("color", COLORS._main_accent);
-		shader_set_i("type",      _type);
-		shader_set_f("index",     __overlay_hover[0]);
-		shader_set_f("angle",     degtorad(_val + 90));
+		shader_set_c( "color", _color);
+		shader_set_i( "type",  _type);
+		shader_set_f( "index", __overlay_hover[0]);
+		shader_set_f( "angle", degtorad(_val + 90));
 		
 		var _arx = _x + lengthdir_x(_rad - ui(4), _val);
 		var _ary = _y + lengthdir_y(_rad - ui(4), _val);

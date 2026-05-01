@@ -16,11 +16,16 @@ function rotatorRandom(_onModify) : widget() constructor {
 	
 	knob_hovering = noone;
 	
+	rangeDrag = false;
+	rangeDrag_mx = 0;
+	rangeDrag_my = 0;
+	rangeDrag_ss = 0;
+	
 	mode = 0;
-	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 1)}); tb_min_0.hide = true;
-	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 2)}); tb_max_0.hide = true;
-	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 3)}); tb_min_1.hide = true;
-	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 4)}); tb_max_1.hide = true;
+	tb_min_0 = textBox_Number(function(v) /*=>*/ {return onModify(v, 1)}).setHide(true);
+	tb_max_0 = textBox_Number(function(v) /*=>*/ {return onModify(v, 2)}).setHide(true);
+	tb_min_1 = textBox_Number(function(v) /*=>*/ {return onModify(v, 3)}).setHide(true);
+	tb_max_1 = textBox_Number(function(v) /*=>*/ {return onModify(v, 4)}).setHide(true);
 	
 	tooltip  = new tooltipSelector("Mode", [
 		__txt("widget_rotator_random_range",        "Range"), 
@@ -28,6 +33,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 		__txt("widget_rotator_random_double_range", "Double Range"), 
 		__txt("widget_rotator_random_double_span",  "Double Span")
 	]);
+	
+	////- Set
 	
 	static setInteract = function(i = noone) {
 		interactable = i;
@@ -74,9 +81,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 		return _mode;
 	}
 	
-	static fetchHeight = function(params) { return params.h; }
-	
 	static fetchHeight = function(params) { return params.data[0]? params.h * 2 : params.h; }
+	
+	////- Draw
+	
 	static drawParam   = function(params) {
 		setParam(params);
 		tb_min_0.setParam(params);
@@ -148,13 +156,56 @@ function rotatorRandom(_onModify) : widget() constructor {
 		
 		_tw /= 2;
 		
+		var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
+		var tbHover = bxHover;
+		
+		var ps = _h / 2;
+		var px = _tx + _tw;
+				
 		switch(mode) {
 			case ROTATOR_RANDOM_TYPE.range : 
-				tb_min_0.setFocusHover(active, hover);
-				tb_max_0.setFocusHover(active, hover);
+				var py = _ty + _h / 2;
+				
+				if(rangeDrag) {
+					hover = false;
+					
+					var _dt = (_m[0] - rangeDrag_mx) / w * 180;
+					var _vx = value_snap(rangeDrag_ss[1] + _dt, key_mod_press(CTRL)? 15 : 1);
+					var _vy = value_snap(rangeDrag_ss[2] + _dt, key_mod_press(CTRL)? 15 : 1);
+					
+					var u0 = onModify(_vx, 1); 
+					var u1 = onModify(_vy, 2); 
+					if(u0 || u1) UNDO_HOLDING = true;
+					
+					if(mouse_lrelease()) {
+						UNDO_HOLDING = false;
+						rangeDrag    = false;
+					}
+				}
+				
+				if(bxHover && w > ui(80)) {
+					var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+					if(pHover) tbHover = false;
+				}
+				
+				tb_min_0.setFocusHover(active, tbHover);
+				tb_max_0.setFocusHover(active, tbHover);
 		
 				tb_min_0.draw(_tx,        _ty, _tw, _h, array_safe_get_fast(_data, 1), _m);
 				tb_max_0.draw(_tx + _tw,  _ty, _tw, _h, array_safe_get_fast(_data, 2), _m);
+				
+				if(rangeDrag) {
+					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+					
+				} else if(bxHover && w > ui(80)) {
+					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+					if(pHover && mouse_lpress(active)) {
+						rangeDrag = true;
+						rangeDrag_mx = _m[0];
+						rangeDrag_my = _m[1];
+						rangeDrag_ss = array_clone(_data);
+					}
+				}
 				
 				if(_drawRot) {
 					if(dragging_index > -1) {
@@ -300,15 +351,70 @@ function rotatorRandom(_onModify) : widget() constructor {
 				var _kc0 = _kc;
 				var _kc1 = _kc;
 				
-				tb_min_0.setFocusHover(active, hover);
-				tb_max_0.setFocusHover(active, hover);
-				tb_min_1.setFocusHover(active, hover);
-				tb_max_1.setFocusHover(active, hover);
+				if(rangeDrag) {
+					hover = false;
+					
+					var _dt = (_m[0] - rangeDrag_mx) / w * 180;
+					var _vx = value_snap(rangeDrag_ss[(rangeDrag - 1) * 2 + 1] + _dt, key_mod_press(CTRL)? 15 : 1);
+					var _vy = value_snap(rangeDrag_ss[(rangeDrag - 1) * 2 + 2] + _dt, key_mod_press(CTRL)? 15 : 1);
+					
+					var u0 = onModify(_vx, (rangeDrag - 1) * 2 + 1); 
+					var u1 = onModify(_vy, (rangeDrag - 1) * 2 + 2); 
+					if(u0 || u1) UNDO_HOLDING = true;
+					
+					if(mouse_lrelease()) {
+						UNDO_HOLDING = false;
+						rangeDrag    = false;
+					}
+				}
 				
+				var py = _ty + _h / 2;
+				if(bxHover && w > ui(80)) {
+					var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+					if(pHover) tbHover = false;
+				}
+				
+				tb_min_0.setFocusHover(active, tbHover);
+				tb_max_0.setFocusHover(active, tbHover);
 				tb_min_0.draw(_tx,        _ty,      _tw, _h, array_safe_get_fast(_data, 1), _m);
 				tb_max_0.draw(_tx + _tw,  _ty,      _tw, _h, array_safe_get_fast(_data, 2), _m);
+				
+				if(rangeDrag == 1) {
+					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+					
+				} else if(bxHover && w > ui(80)) {
+					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+					if(pHover && mouse_lpress(active)) {
+						rangeDrag = 1;
+						rangeDrag_mx = _m[0];
+						rangeDrag_my = _m[1];
+						rangeDrag_ss = array_clone(_data);
+					}
+				}
+				
+				var py = _ty + _h + _h / 2;
+				if(bxHover && w > ui(80)) {
+					var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+					if(pHover) tbHover = false;
+				}
+				
+				tb_min_1.setFocusHover(active, tbHover);
+				tb_max_1.setFocusHover(active, tbHover);
 				tb_min_1.draw(_tx,        _ty + _h, _tw, _h, array_safe_get_fast(_data, 3), _m);
 				tb_max_1.draw(_tx + _tw,  _ty + _h, _tw, _h, array_safe_get_fast(_data, 4), _m);
+				
+				if(rangeDrag == 2) {
+					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+					
+				} else if(bxHover && w > ui(80)) {
+					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+					if(pHover && mouse_lpress(active)) {
+						rangeDrag = 2;
+						rangeDrag_mx = _m[0];
+						rangeDrag_my = _m[1];
+						rangeDrag_ss = array_clone(_data);
+					}
+				}
 				
 				if(_drawRot) {
 					if(dragging_index > -1) {
@@ -506,6 +612,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 		return h;
 	}
 		
+	////- Action
+	
 	static clone = function() {
 		return new rotatorRandom(onModify);
 	}
