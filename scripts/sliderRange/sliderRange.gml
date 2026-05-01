@@ -9,10 +9,12 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	tb_value_min = textBox_Number(function(val) /*=>*/ {return onModify(val, 0)}).setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
 	tb_value_max = textBox_Number(function(val) /*=>*/ {return onModify(val, 1)}).setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
 	
-	static setInteract = function(interactable = noone) {
-		self.interactable = interactable;
-		tb_value_min.interactable = interactable;
-		tb_value_max.interactable = interactable;
+	////- Set
+	
+	static setInteract = function(i = noone) {
+		interactable = i;
+		tb_value_min.interactable = i;
+		tb_value_max.interactable = i;
 	}
 	
 	static register = function(parent = noone) {
@@ -21,6 +23,8 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	}
 	
 	static isHovering = function() { return tb_value_min.hovering || tb_value_max.hovering; }
+	
+	////- Draw
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -43,7 +47,8 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 			return h;
 		}
 		
-		tb_value_min.hide = true;
+		tb_value_min.hide = 1;
+		tb_value_max.hide = 1;
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 		
 		var _minn = slide_range[0];
@@ -57,12 +62,12 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 			curr_range[1] = (_currMax <= _maxx)? _maxx : _maxx + ceil(abs(_currMax - _maxx) / _rang) * _rang;
 		}
 			
-		var lx = _w * ((_currMin               ) - curr_range[0]) / (curr_range[1] - curr_range[0]);
-		var lw = _w * ((_currMax - _currMin + 1) - curr_range[0]) / (curr_range[1] - curr_range[0]);
+		var lx0 = _x + _w * (_currMin - curr_range[0]) / (curr_range[1] - curr_range[0]);
+		var lx1 = _x + _w * (_currMax - curr_range[0]) / (curr_range[1] - curr_range[0]);
 		
-		var _lxx = clamp(_x + lx, _x, _x + _w);
-		var _lww = clamp(_lxx + lw, _x, _x + _w) - _lxx;
-		draw_sprite_stretched_ext(THEME.textbox, 4, _lxx, _y, _lww, _h, boxColor, 1);
+		lx0 = clamp(lx0, _x, _x + _w);
+		lx1 = clamp(lx1, _x, _x + _w);
+		draw_sprite_stretched_ext(THEME.textbox, 4, lx0, _y, lx1 - lx0, _h, boxColor, 1);
 		
 		var tb_w = _w / 2;
 		
@@ -86,6 +91,8 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		return h;
 	}
 		
+	////- Action
+	
 	static clone = function() {
 		var cln = new sliderRange(stepSize, isInt, slide_range, onModify);
 		
