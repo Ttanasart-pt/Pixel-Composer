@@ -3647,34 +3647,63 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	if(_selNode) {
     		var nodeBase = string_lower(instanceof(_selNode));
-    		var dir = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
+    		var dir      = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
+    		var dirValid = directory_exists(dir);
     		
-    		if(!directory_exists(dir)) {
-    			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
-    			
-    			var _w = ui(128);
-    			var _h = ui(32);
-    			
-    			var _x0 = _x1 - _w;
-    			var _y0 = _y1 - _h;
-    			
-    			draw_sprite_stretched(THEME.ui_panel_bg,  3, _x0, _y0, _w, _h);
-    			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y0, _w, _h, c_white, .1);
-    			draw_text_add(_x0 + _w / 2, _y0 + _h / 2, "No doc");
-    			
-    		} else {
-    			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text);
-    			
-    			var _w = ui(32) + string_width(nodeBase);
-    			var _h = ui(32);
-    			
-    			var _x0 = _x1 - _w;
-    			var _y0 = _y1 - _h;
-    			
-    			draw_sprite_stretched(THEME.ui_panel_bg,  3, _x0, _y0, _w, _h);
-    			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y0, _w, _h, c_white, .1);
-    			draw_text_add(_x0 + _w / 2, _y0 + _h / 2, nodeBase);
-    		}
+    		var _title = nodeBase;
+    		var _font  = f_p4;
+    		
+			draw_set_font(_font);
+			var lh = line_get_height();
+			var pd = ui(1);
+			var _w = ui(32) + max(ui(128), string_width(_title));
+			var _h = ui(4 + 10) + (lh + pd) * 3;
+			
+			var _x0 = _x1 - _w;
+			var _y0 = _y1 - _h;
+			
+			draw_sprite_stretched(THEME.ui_panel_bg,  3, _x0, _y0, _w, _h);
+			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y0, _w, _h, c_white, .1);
+			
+			var txc = _x0 + _w / 2;
+			var tx0 = _x0 + ui(8);
+			var tx1 = _x1 - ui(4);
+			var tyy = _y0 + ui(4);
+			
+			draw_set_text(_font, fa_center, fa_top, COLORS._main_text);
+			draw_text_add(txc, tyy, _title);
+    		tyy += lh + pd + ui(2);
+    		draw_set_color(COLORS.panel_frame);
+    		draw_line(_x0, tyy, _x1, tyy);
+    		tyy += ui(4);
+    		
+			draw_set_text(_font, fa_left, fa_top);
+			var txx = tx0;
+			var txt = array_length(_selNode.inputs);
+			draw_set_color(CDEF.cyan);
+			draw_text_add(txx, tyy, txt); txx += string_width(txt) + ui(4);
+			
+			draw_set_color(COLORS._main_text_sub);
+			draw_text_add(txx, tyy, $"inputs");
+			
+			var txx = txc;
+			var txt = array_length(_selNode.outputs);
+			draw_set_color(CDEF.yellow);
+			draw_text_add(txx, tyy, txt); txx += string_width(txt) + ui(4);
+			
+			draw_set_color(COLORS._main_text_sub);
+			draw_text_add(txx, tyy, $"outputs");
+			tyy += lh + pd;
+    		
+    		var txx = tx0;
+			var txt = "Doc stat: ";
+			draw_set_color(COLORS._main_text_sub);
+			draw_text_add(txx, tyy, txt); txx += string_width(txt) + ui(4);
+			
+			draw_set_color(dirValid? COLORS._main_text : COLORS._main_value_negative);
+			draw_text_add(txx, tyy, dirValid? "Created" : "Not found");
+			tyy += lh + pd;
+    		
     	}
     }
     

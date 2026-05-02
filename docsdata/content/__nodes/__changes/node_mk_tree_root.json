@@ -26,6 +26,11 @@
         "date": "2026-05-02T00:44:35.438Z",
         "node": "",
         "commit": "**MK Tree > Branch/ Leaves**: Add override gravity propertiy"
+      },
+      {
+        "date": "2026-05-02T01:52:31.366Z",
+        "node": "MK Tree > Branch",
+        "commit": "**MK Tree > Branch**: Add grid and direct data scattering type."
       }
     ]
   },

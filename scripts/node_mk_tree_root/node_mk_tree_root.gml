@@ -14,12 +14,15 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 0, nodeValue_Struct( "Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Spawning
-	newInput( 1, nodeValue_Vec2(     "Position",        [.5,1]      )).setUnitSimple();
+	newInput( 1, nodeValue_Vec2(    "Position", [.5,1] )).setUnitSimple();
 	
 		////- =/Scatter
-	newInput( 5, nodeValue_Range(    "Amount",          [1,1], true ));
-	newInput(30, nodeValue_Vec2(     "Scatter Area",    [0,0]       )).setUnitSimple();
-	newInput(31, nodeValue_EButton(  "Scatter Shape",    0, [ "Rectangle", "Ellipse" ] ));
+	newInput(40, nodeValue_EScroll( "Distribution",     0, [ "Scatter", "Grid", "Direct Data" ] ));
+	newInput( 5, nodeValue_Range(   "Amount",          [1,1], true ));
+	newInput(30, nodeValue_Vec2(    "Scatter Area",    [0,0]       )).setUnitSimple();
+	newInput(31, nodeValue_EButton( "Scatter Shape",    0, [ "Rectangle", "Ellipse" ] ));
+	newInput(41, nodeValue_IVec2(   "Grid",            [1,1]       ));
+	newInput(42, nodeValue_Vec2(    "Spawn Points",    [0,0]       )).setArrayDepth(1);
 	
 	////- =Geometry
 	newInput( 3, nodeValue_Range(  "Length",   [24,24], true ));
@@ -71,13 +74,13 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 		////- =/Texture
 	newInput(27, nodeValue_Surface(  "Texture" ));
-	// input 40
+	// input 43
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14,
 		[ "Spawning",        false ],  1, 
-			[ "/Scatter",     true ],  5, 30, 31, 
+			[ "/Scatter",     true ], 40,  5, 30, 31, 41, 42, 
 			
 		[ "Geometry",        false ],  3,  7, 
 		[ "Direction",       false ],  4, 
@@ -104,6 +107,9 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(is(_t, __MK_Tree)) _t.drawOverlay(_x, _y, _s);
 		}
 		
+		var _dist = getInputData(40);
+		if(_dist == 2) return;
+		
 		var _ori = getInputData( 1);
 		var _siz = getInputData(30);
 		var _shp = getInputData(31);
@@ -125,11 +131,14 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		#region data
 			var _seed = inline_context.seed + getInputData(14);
 			
-			var _ori  = getInputData( 1);
+			var _ori    = getInputData( 1);
 			
-			var _ramo = getInputData( 5);
-			var _oriW = getInputData(30);
-			var _oriS = getInputData(31);
+			var _dist   = getInputData(40);
+			var _ramo   = getInputData( 5);
+			var _scSpan = getInputData(30);
+			var _scShap = getInputData(31);
+			var _scGrid = getInputData(41);
+			var _scData = getInputData(42);
 			
 			var _segs = getInputData( 7);
 			var _len  = getInputData( 3);
@@ -170,6 +179,12 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _edgeRGrd = getInputData(26); inputs[26].setVisible(_edge > 0);
 			var _tex      = getInputData(27);
 			
+			inputs[ 5].setVisible(_dist == 0);
+			inputs[30].setVisible(_dist == 0 || _dist == 1);
+			inputs[31].setVisible(_dist == 0);
+			inputs[41].setVisible(_dist == 1);
+			inputs[42].setVisible(_dist == 2);
+			
 			inputs[39].setVisible(_grvO);
 			
 			inputs[24].setVisible(!_line);
@@ -187,33 +202,69 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			random_set_seed(_seed);
 			var _gDir = _grvO? _grvD : inline_context.gravityDir;
 		#endregion
-			
-		var _amo     = irandom_range(_ramo[0], _ramo[1]);
-		var _roots   = array_create(_amo);
-		var _rootPos = array_create(_amo);
 		
-		for( var i = 0; i < _amo; i++ ) {
-			var ox = _ori[0];
-			var oy = _ori[1];
+		#region root positions
+			var _amo = 1;
 			
-			switch(_oriS) {
+			switch(_dist) {
 				case 0 : 
-					ox += random_range(-_oriW[0], _oriW[0]);
-					oy += random_range(-_oriW[1], _oriW[1]); 
+					_amo = irandom_range(_ramo[0], _ramo[1]); 
+					var _rootPos = array_create(_amo);
+					for( var i = 0; i < _amo; i++ ) {
+						var ox = _ori[0];
+						var oy = _ori[1];
+						
+						switch(_scShap) {
+							case 0 : 
+								ox += random_range(-_scSpan[0], _scSpan[0]);
+								oy += random_range(-_scSpan[1], _scSpan[1]); 
+								break;
+						    
+						    case 1 : 
+						    	var dirr = random(360);
+							    ox += lengthdir_x(random(_scSpan[0]), dirr);
+								oy += lengthdir_y(random(_scSpan[1]), dirr);
+								break;
+						}
+						
+						_rootPos[i] = [ox, oy];
+					}
+					
+					array_sort(_rootPos, function(a,b) /*=>*/ {return a[1] - b[1]});
 					break;
-			    
-			    case 1 : 
-			    	var dirr = random(360);
-				    ox += lengthdir_x(random(_oriW[0]), dirr);
-					oy += lengthdir_y(random(_oriW[1]), dirr);
+					
+				case 1 : 
+					_amo = _scGrid[0] * _scGrid[1];
+					var _rootPos = array_create(_amo);
+					
+					var x0 = _ori[0] - _scSpan[0], x1 = _ori[0] + _scSpan[0];
+					var y0 = _ori[1] - _scSpan[1], y1 = _ori[1] + _scSpan[1];
+					
+					for( var i = 0; i < _scGrid[1]; i++ )
+					for( var j = 0; j < _scGrid[0]; j++ ) {
+						var _fx = _scGrid[0] > 1? j / (_scGrid[0] - 1) : .5;
+						var _fy = _scGrid[1] > 1? i / (_scGrid[1] - 1) : .5;
+						
+						var ox = lerp(x0, x1, _fx);
+						var oy = lerp(y0, y1, _fy);
+						
+						var ind = i * _scGrid[0] + j;
+						_rootPos[ind] = [ox, oy];
+					}
+					break;
+				
+				case 2 :	
+					var _d = array_get_depth(_scData);
+					if(_d != 2) return;
+					
+					_rootPos = _scData;
+					_amo = array_length(_scData);
 					break;
 			}
-			
-			_rootPos[i] = [ox, oy];
-		}
+				
+		#endregion
 		
-		array_sort(_rootPos, function(a,b) /*=>*/ {return a[1] - b[1]});
-		
+		var _roots = array_create(_amo);
 		for( var i = 0; i < _amo; i++ ) {
 			var _pos = _rootPos[i];
 			var  ox  = _pos[0];
