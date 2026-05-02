@@ -66,8 +66,8 @@
     function panel_graph_search()                  { CALL("graph_search");              PANEL_GRAPH.toggleSearch();                                                                     }
     function panel_graph_toggle_minimap()          { CALL("graph_toggle_minimap");      PANEL_GRAPH.minimap_show = !PANEL_GRAPH.minimap_show;                                           }
                                                                                                                             
-    function panel_graph_pan()                     { CALL("graph_pan");  if(PANEL_GRAPH.node_hovering || PANEL_GRAPH.value_focus) return; PANEL_GRAPH.graph_dragging_key = true;        }
-    function panel_graph_zoom()                    { CALL("graph_zoom"); if(PANEL_GRAPH.node_hovering || PANEL_GRAPH.value_focus) return; PANEL_GRAPH.graph_zooming_key  = true;        }
+    function panel_graph_pan()                     { CALL("graph_pan");                 PANEL_GRAPH.toggleDragKey(); }
+    function panel_graph_zoom()                    { CALL("graph_zoom");                PANEL_GRAPH.toggleZoomKey(); }
     
     function panel_graph_send_to_preview()         { CALL("graph_send_to_preview");     PANEL_GRAPH.send_to_preview();                        }
     function panel_graph_preview_window()          { CALL("graph_preview_window");      create_preview_window(PANEL_GRAPH.getFocusingNode()); }
@@ -574,10 +574,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_drag_ox         = 0;
         node_drag_oy         = 0;
         node_drag_add        = false;
-    	node_drag_connect    = noone;
-    	node_drag_removing   = false;
-    	node_drag_remove     = [];
-    	frame_draggings      = [];
+        
+    	node_wran_connect      = noone;
+    	node_wran_connect_junc = noone;
+    	node_wran_connect_x    = noone;
+    	node_wran_connect_y    = noone;
+    	node_wran_removing     = false;
+    	node_wran_remove       = [];
+    	
+    	frame_draggings        = [];
     	
     	node_drag_clone      = false;
 		node_drag_nx         = undefined;
@@ -607,6 +612,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_hover           = noone;
         
         junction_hovering    = noone;
+        junction_hover_point = undefined;
+        
         add_node_draw_junc   = noone;
         add_node_draw_x      = 0;
         add_node_draw_y      = 0;
@@ -1209,6 +1216,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	fullView_zoom = !fullView_zoom;
     }
     
+    function toggleDragKey() {
+    	if(node_hovering || value_focus || junction_hovering) return; 
+    	graph_dragging_key = true;
+    }
+    
+    function toggleZoomKey() {
+    	if(node_hovering || value_focus || junction_hovering) return; 
+    	graph_zooming_key  = true;
+    }
+    
     function dragGraph() {
         if(graph_autopan) {
         	refreshDraw(1);
@@ -1500,14 +1517,30 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function nodeWrangler() {
     	var _focus = pFOCUS && !view_hovering;
     	
-        if(node_drag_connect) {
-        	node_drag_connect.drawActive(2);
+        if(node_wran_connect || node_wran_connect_junc) {
         	connection_param.setDraw(1, bg_color);
         	
-    		var _from = node_drag_connect.getOutput(), _to;
+        	var _from, _to;
+        	var _fx = 0;
+        	var _fy = 0;
     		var _draw = true;
     		var _conn = false;
     		
+        	if(node_wran_connect) {
+	        	node_wran_connect.drawActive(2);
+	    		_from = node_wran_connect.getOutput();
+	    		if(_from) {
+	    			_fx = _from.x;
+					_fy = _from.y;
+	    		}
+        	} 
+        	
+        	if(node_wran_connect_junc) {
+        		_from = node_wran_connect_junc.value_from;
+        		_fx = node_wran_connect_x;
+				_fy = node_wran_connect_y;
+        	}
+        	
     		if(_from) {
 	        	if(node_hovering != noone) {
 	        		_to = node_hovering.getInput(my, _from, 0, key_mod_check(MOD_KEY.ctrl | MOD_KEY.shift));
@@ -1526,37 +1559,46 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	
 	        	if(_draw) {
 	        		draw_set_color(COLORS.node_border_file_drop);
-	    			draw_line(_from.x, _from.y, mx, my);
+	    			draw_line(_fx, _fy, mx, my);
 	        	}
 	        	
     		}
         	
         	if(mouse_lrelease()) {
             	if(!_conn) callAddDialog(getCurrentContext(), _from)
-            	node_drag_connect = noone;
+            	node_wran_connect_junc = noone;
+            	node_wran_connect      = noone;
         	}
         }
         
-        if(node_drag_removing) {
+        if(node_wran_removing) {
         	draw_circle_ui(mx, my, ui(8), 0, COLORS._main_value_negative, .25);
         	
         	if(junction_hovering != noone)
         		junction_hovering.removeFrom();
         	
         	if(mouse_rrelease())
-            	node_drag_removing = false;
+            	node_wran_removing = false;
         }
         
         if(!_focus || !mouse_on_graph) return;
         if(value_focus != noone)       return;
         
-        var _node = getFocusingNode();
-        if(_node && mouse_lpress() && key_mod_check(MOD_KEY.ctrl))
-        	node_drag_connect = _node;
-        
-        if(mouse_rpress() && key_mod_check(MOD_KEY.ctrl)) {
-        	node_drag_removing = true;
-        	node_drag_remove   = [];
+        if(key_mod_check(MOD_KEY.ctrl)) {
+	        if(mouse_lpress(pFOCUS)) {
+	        	var _node = getFocusingNode();
+	        	if(_node) node_wran_connect = _node;
+	        	else if(junction_hovering) {
+	        		node_wran_connect_junc = junction_hovering;
+	        		node_wran_connect_x    = junction_hover_point != undefined? junction_hover_point[0] : mx;
+					node_wran_connect_y    = junction_hover_point != undefined? junction_hover_point[1] : my;
+	        	}
+	        }
+	        
+	        if(mouse_rpress(pFOCUS)) {
+	        	node_wran_removing = true;
+	        	node_wran_remove   = [];
+	        }
         }
     }
     
@@ -2252,8 +2294,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        connection_surface_cc = surface_verify(connection_surface_cc, w * aa, h * aa);
 	        connection_surface_aa = surface_verify(connection_surface_aa, w,      h     );
 	        
-	        __hov     = noone;
-	        __context = getCurrentContext();
+	        __hov      = noone;
+	        __hovPoint = undefined;
+	        __context  = getCurrentContext();
 	        
 	        connection_param.setPos(gr_x, gr_y, graph_s, mx, my);
 	        connection_param.setBoundary(-64, -64, w + 64, h + 64);
@@ -2271,7 +2314,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			        	if(n.group != __context) return;
 			        	
 			        	var _hov = n.drawConnections(connection_param, connection_draw_update);
-			            if(is_struct(_hov)) __hov = _hov;
+			        	if(_hov == undefined) return;
+			        	
+			            __hov      = _hov[0];
+			            __hovPoint = _hov[1];
 			        });
 			        
 			        connection_draw_update--;
@@ -2334,7 +2380,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	draw_surface_safe(connection_surface_aa);
 	        BLEND_NORMAL
 	        
-	        junction_hovering = __hov;
+	        junction_hovering    = __hov;
+	        junction_hover_point = __hovPoint;
 	        if(node_hovering != noone && node_hovering != node_dragging)
 	        	junction_hovering = noone;
         #endregion
@@ -3650,6 +3697,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		var dir      = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
     		var dirValid = directory_exists(dir);
     		
+			var noteName  = string_replace(nodeBase, "node", "note");
+			var nodePath  = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/notes/{noteName}/{noteName}.txt";
+			var noteValid = file_exists(nodePath);
+    		
     		var _title = nodeBase;
     		var _font  = f_p4;
     		
@@ -3657,7 +3708,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			var lh = line_get_height();
 			var pd = ui(1);
 			var _w = ui(32) + max(ui(128), string_width(_title));
-			var _h = ui(4 + 10) + (lh + pd) * 3;
+			var _h = ui(4 + 10) + (lh + pd) * 4;
 			
 			var _x0 = _x1 - _w;
 			var _y0 = _y1 - _h;
@@ -3703,7 +3754,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			draw_set_color(dirValid? COLORS._main_text : COLORS._main_value_negative);
 			draw_text_add(txx, tyy, dirValid? "Created" : "Not found");
 			tyy += lh + pd;
-    		
+			
+    		var txx = tx0;
+			var txt = "Note stat: ";
+			draw_set_color(COLORS._main_text_sub);
+			draw_text_add(txx, tyy, txt); txx += string_width(txt) + ui(4);
+			
+			draw_set_color(noteValid? COLORS._main_text : COLORS._main_value_negative);
+			draw_text_add(txx, tyy, noteValid? "Created" : "Not found");
+			tyy += lh + pd;
+			
     	}
     }
     

@@ -2434,23 +2434,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawConnections = function(params = {}, _draw = true) { 
-		if(!active) return noone;
+		if(!active) return undefined;
 		
-		var _hov, hovering = noone;
-		if(insp1button && insp1button.visible) { _hov = inspectInput1.drawConnections(params, _draw); if(_hov) hovering = _hov; }
-		if(insp2button && insp2button.visible) { _hov = inspectInput2.drawConnections(params, _draw); if(_hov) hovering = _hov; }
+		var _hov, hovering = undefined;
+		if(insp1button && insp1button.visible) { _hov = inspectInput1.drawConnections(params, _draw); hovering ??= _hov; }
+		if(insp2button && insp2button.visible) { _hov = inspectInput2.drawConnections(params, _draw); hovering ??= _hov; }
 		
 		for( var i = 0; i < __draw_inputs_len; i++ ) {
 			var _jun = __draw_inputs[i];
 			if(_jun.bypass_use) _jun.getBypassJunc().drawBypass(params);
 			
 			_hov = _jun.drawConnections(params, _draw); 
-			if(_hov) hovering = _hov;
+			hovering ??= _hov;
 		}
 		
 		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.drawConnections(params, _draw))  hovering = updatedInTrigger;
-			if(updatedOutTrigger.drawConnections(params, _draw)) hovering = updatedOutTrigger;
+			if(updatedInTrigger.drawConnections(params, _draw))  hovering ??= updatedInTrigger;
+			if(updatedOutTrigger.drawConnections(params, _draw)) hovering ??= updatedOutTrigger;
 		}
 		
 		return hovering;

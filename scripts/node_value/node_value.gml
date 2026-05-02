@@ -2774,7 +2774,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static drawConnections = function(params = {}, _draw = true) {
-		if(value_from == noone || !value_from.node.active || !isVisible()) return noone;
+		if(value_from == noone || !value_from.node.active || !isVisible()) return undefined;
 		if(_draw) drawJuncConnection(value_from, self, params);
 		
 		return checkJuncConnection(value_from, self, params);
@@ -3385,8 +3385,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 
 #region FUNCTIONS
 	function checkJuncConnection(from, to, params) {
-		if(from == noone || to == noone)          return noone;
-		if(!params.active || !PANEL_GRAPH.pHOVER) return noone;
+		if(from == noone || to == noone)          return undefined;
+		if(!params.active || !PANEL_GRAPH.pHOVER) return undefined;
 		
 		to.draw_line_shift_hover = false;
 		
@@ -3399,7 +3399,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(params.minx != 0 && params.maxx != 0) {
 			if((jx < params.minx && frx < params.minx) || (jx > params.maxx && frx > params.maxx) || 
-			   (jy < params.miny && fry < params.miny) || (jy > params.maxy && fry > params.maxy)) return noone;
+			   (jy < params.miny && fry < params.miny) || (jy > params.maxy && fry > params.maxy)) return undefined;
 		}
 	
 		var shx = to.draw_line_shift_x * _s;
@@ -3408,7 +3408,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var cx  = round((frx + jx) / 2 + shx);
 		var cy  = round((fry + jy) / 2 + shy);
 		var th  = max(1, PROJECT.graphConnection.line_width * _s);
-		var hover, hovDist = max(th * 2, 12);
+		var hovDist = max(th * 2, 12);
 		
 		var _fin = from.draw_line_shift_e > -1? from.draw_line_shift_e : from.drawLineIndex;
 		var _tin = to.draw_line_shift_e   > -1? to.draw_line_shift_e   : to.drawLineIndex;
@@ -3424,7 +3424,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _chNode = params[$ "checkNode"] ?? noone;
 		var _hPoint = [ 0, 0 ];
 		
-		if(_chNode == noone && !point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) return noone;
+		if(_chNode == noone && !point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) return undefined;
 		
 		if(_loop || from.node == to.node) {
 			point_to_line_feedback(mx, my, jx, jy, frx, fry, _s, _hPoint);
@@ -3454,11 +3454,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					else point_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, exF, exT, _fin, _tin, _hPoint);
 					break;
 					
-				default : return noone;
+				default : return undefined;
 					
 			}
 		} 
 		
+		var hover;
 		if(_chNode == noone) {
 			var _dx = _hPoint[0] - mx;
 			var _dy = _hPoint[1] - my;
@@ -3468,7 +3469,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			hover = _chNode.pointIn(params.x, params.y, _hPoint[0], _hPoint[1], params.s);
 		
 		if(PANEL_GRAPH.value_focus == noone) to.draw_line_shift_hover = hover;
-		return hover? self : noone;
+		return hover? [ self, _hPoint ] : undefined;
 	}
 	
 	function drawJuncConnection(from, to, params, _hover = 0) {
