@@ -1,10 +1,14 @@
 #region global
 	enum GRADIENT_INTER {
-		smooth,
-		none,
-		hue,
-		oklab,
-		srgb
+		smooth = 0,
+		none   = 1,
+		
+		hue    = 2,
+		hueInv = 5,
+		
+		oklab  = 3,
+		srgb   = 4,
+		// 6
 	}
 	
 	global.gradient_sort_list = ds_priority_create();
@@ -150,7 +154,10 @@ function gradientObject(color = ca_black) constructor {
 			switch(type) {
 				case GRADIENT_INTER.smooth : return merge_color_rgba (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.srgb   : return merge_color_srgb (_pkey.value, _key.value, rat);
-				case GRADIENT_INTER.hue    : return merge_color_hsva (_pkey.value, _key.value, rat);
+				
+				case GRADIENT_INTER.hue    : return merge_color_hsva (_pkey.value, _key.value, rat, false);
+				case GRADIENT_INTER.hueInv : return merge_color_hsva (_pkey.value, _key.value, rat,  true);
+				
 				case GRADIENT_INTER.oklab  : return merge_color_oklab(_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.none   : return _pkey.value;
 			}

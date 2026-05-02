@@ -1,7 +1,7 @@
-function __Panel_Linear_Setting_Item(_name, _editWidget, _data = noone, _onEdit = noone, _getDefault = noone, _action = noone, _prefKey = noone) constructor {
+function __Panel_Linear_Setting_Item(_name, _editWidget, _getter = noone, _onEdit = noone, _getDefault = noone, _action = noone, _prefKey = noone) constructor {
 	name       = _name;
 	editWidget = _editWidget;
-	data       = _data;
+	data       = _getter;
 	
 	onEdit     = _onEdit;
 	getDefault = _getDefault;

@@ -160,7 +160,7 @@ function ThemeColor() constructor {
     panel_tab_inactive                  = CDEF.white;
     panel_tab_text                      = CDEF.main_dkblack;
     panel_tab_icon                      = CDEF.main_dkblack;
-    panel_separator                     = CDEF.main_dark;
+    panel_separator                     = CDEF.main_dkblack;
 
     panel_graph_bg                      = CDEF.main_dkblack;
     panel_graph_minimap_outline         = CDEF.main_dkgrey;
@@ -172,15 +172,15 @@ function ThemeColor() constructor {
     panel_inspector_group_bg            = merge_color(CDEF.main_white, CDEF.main_ltgrey, 0.5);
     panel_inspector_output_label        = CDEF.black;
     
+    panel_preview_bg                    = CDEF.main_mdblack;
+    panel_preview_transparent           = CDEF.main_dkblack;
+    panel_preview_bg_3d                 = CDEF.main_dkblack;
+    
     panel_preview_grid                  = CDEF.main_grey;
     panel_preview_surface_outline       = CDEF.main_grey;
     panel_preview_split_line            = CDEF.main_grey;
     panel_preview_tool_button           = CDEF.main_white;
     panel_preview_tool_separator        = CDEF.main_dkgrey;
-    panel_preview_bg                    = CDEF.main_mdblack;
-    panel_preview_transparent           = CDEF.main_dkblack;
-
-    panel_3d_bg                         = CDEF.main_dkblack;
 
     panel_toolbar_outline               = CDEF.main_dkgrey;
     panel_toolbar_separator             = CDEF.main_dkblack;

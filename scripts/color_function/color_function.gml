@@ -125,14 +125,45 @@
 	
 	function make_color_hsva(h, s, v, a) { INLINE return _cola(make_color_hsv(h, s, v), a); }
 	
-	function merge_color_hsva(c0, c1, t) {
+	
+	function hueLerp(a0, a1, t) {
+		a0 /= 255;
+		a1 /= 255;
+		
+		var da = frac(a1 - a0);
+	    var ds = frac(2. * da) - da;
+	    return round((a0 + ds * t) * 255);
+	}
+
+	function hueLerpInv(a0, a1, t) {
+		a0 /= 255;
+		a1 /= 255;
+		
+		var da = frac(a1 - a0);
+	    var ds = frac(2. * da) - da;
+	    ds -= sign(ds);
+		return round((a0 + ds * t) * 255);
+	}
+
+	function merge_color_hsva(c0, c1, t, _inv = false) {
+		var h0 = color_get_hue(c0);
+		var s0 = color_get_saturation(c0);
+		var v0 = color_get_value(c0);
+		var a0 = color_get_alpha(c0);
+		
+		var h1 = color_get_hue(c1);
+		var s1 = color_get_saturation(c1);
+		var v1 = color_get_value(c1);
+		var a1 = color_get_alpha(c1);
+
 		return make_color_hsva(
-			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_alpha(c0),      color_get_alpha(c1),      t) __clamp255_mf1,
+			__clamp255_mf0 _inv? hueLerpInv(h0, h1, t) : hueLerp(h0, h1, t) __clamp255_mf1,
+			__clamp255_mf0 lerp(s0, s1, t) __clamp255_mf1,
+			__clamp255_mf0 lerp(v0, v1, t) __clamp255_mf1,
+			__clamp255_mf0 lerp(a0, a1, t) __clamp255_mf1,
 		);
 	}
+	
 	function merge_color_hsv(c0, c1, t) {
 		INLINE
 		if(is_real(c0)) return make_color_hsv(

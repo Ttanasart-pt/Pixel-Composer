@@ -166,26 +166,23 @@ draggable = true;
 	var bx = content_x + content_w - ui(12);
 	var by = dialog_y + ui(14);
 	
-	var sw = ui(104);
-	var tt = gradient.type < 2? !gradient.type : gradient.type; 
+	var sw = ui(128);
+	var tt = gradient.type; 
+	switch(gradient.type) {
+		case GRADIENT_INTER.none :   tt = 0; break;
+		case GRADIENT_INTER.smooth : tt = 1; break;
+		
+		case GRADIENT_INTER.hue :    tt = 2; break;
+		case GRADIENT_INTER.hueInv : tt = 3; break;
+		
+		case GRADIENT_INTER.oklab :  tt = 4; break;
+	}
+	
 	bx -= sw;
 	sb_blending.setFocusHover(foc, hov);
 	sb_blending.draw(bx, by, sw, bs, tt);
+	draggable = draggable && !point_in_rectangle(mouse_mx, mouse_my, bx, by, bx + sw, by + bs);
 	bx -= bs + ui(4);
-	
-	// var t = __txt("gradient_editor_key_blend", "Key blending") + "...";
-	// var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_blend, 0, bc);
-	// draggable = draggable && !b;
-	
-	// if(b == 2) {
-	// 	menuCall("gradient_window_blend_menu", [ 
-	// 		menuItem(__txt("gradient_editor_blend_hard",  "Solid"), () => { gradient.type = 1; onModify(gradient); }), 
-	// 		menuItem(__txt("gradient_editor_blend_RGB",   "RGB"),   () => { gradient.type = 0; onModify(gradient); }), 
-	// 		menuItem(__txt("gradient_editor_blend_HSV",   "HSV"),   () => { gradient.type = 2; onModify(gradient); }), 
-	// 		menuItem(__txt("gradient_editor_blend_OKLAB", "OKLAB"), () => { gradient.type = 3; onModify(gradient); }), 
-	// 	], bx + ui(32), by, fa_left, gradient);
-	// }
-	// bx -= bs + ui(2);
 	
 	var t = __txt("gradient_editor_reverse", "Reverse");
 	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_reverse, 0, bc);

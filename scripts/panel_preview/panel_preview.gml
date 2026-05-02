@@ -2112,7 +2112,10 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
         #region render
-        	surface_clear( d3_surface, PROJECT.previewSetting.bg_color_3d );
+        	var cc = PROJECT.previewSetting.bg_color_3d;
+    		if(cc == -1) cc = COLORS.panel_preview_bg_3d;
+        	
+        	surface_clear( d3_surface,       cc );
         	surface_clear( d3_surface_normal    );
         	surface_clear( d3_surface_depth     );
         	surface_clear( d3_surface_uv        );
@@ -2183,7 +2186,10 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
         #region draw
-            draw_clear(PROJECT.previewSetting.bg_color_3d);
+        	var cc = PROJECT.previewSetting.bg_color_3d;
+    		if(cc == -1) cc = COLORS.panel_preview_bg_3d;
+        	
+            draw_clear(cc);
             
             switch(d3_preview_channel) {
                 case 0 : 
@@ -2285,7 +2291,10 @@ function Panel_Preview() : PanelContent() constructor {
             d3_camera.setMatrix();
         #endregion
         
-        draw_clear(PROJECT.previewSetting.bg_color_3d);
+        var cc = PROJECT.previewSetting.bg_color_3d;
+		if(cc == -1) cc = COLORS.panel_preview_bg_3d;
+        	
+        draw_clear(cc);
             
         gpu_set_texfilter(true);
         shader_set(sh_rm_primitive);
@@ -3815,12 +3824,22 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         switch(PROJECT.previewSetting.bg_type) {
-        	case 0 : draw_clear(PROJECT.previewSetting.bg_color); break;
+        	case 0 : 
+        		var cc = PROJECT.previewSetting.bg_color;
+        		if(cc == -1) cc = COLORS.panel_preview_bg;
+        		draw_clear(cc); 
+        		break;
         	
         	case 1 :
+        		var cc = PROJECT.previewSetting.bg_color;
+        		if(cc == -1) cc = COLORS.panel_preview_bg;
+        		
+        		var ch = PROJECT.previewSetting.bg_color_ch;
+        		if(ch == -1) ch = COLORS.panel_preview_transparent;
+        		
         		var _ts = max(canvas_s, .1);
-        		draw_clear(PROJECT.previewSetting.bg_color);
-        		draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, _ts, _ts, PROJECT.previewSetting.bg_color_ch, 1);
+        		draw_clear(cc);
+        		draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, _ts, _ts, ch, 1);
         		break;
         		
         }

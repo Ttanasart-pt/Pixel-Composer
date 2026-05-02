@@ -16,7 +16,7 @@ function Panel_Preview_View_Setting(_panel) : Panel_Linear_Setting() constructor
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Background Color"),
-			new buttonColor(function(val) /*=>*/ { previewPanel.bg_color = val; }),
+			new buttonColor(function(val) /*=>*/ { previewPanel.bg_color = val; }).hideAlpha(),
 			function()    /*=>*/   {return previewPanel.bg_color},
 			function(val) /*=>*/ { previewPanel.bg_color = val; },
 			PREFERENCES.project_previewSetting.bg_color,
@@ -26,7 +26,7 @@ function Panel_Preview_View_Setting(_panel) : Panel_Linear_Setting() constructor
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Background Sub Color"),
-			new buttonColor(function(val) /*=>*/ { previewPanel.bg_color_ch = val; }),
+			new buttonColor(function(val) /*=>*/ { previewPanel.bg_color_ch = val; }).hideAlpha(),
 			function()    /*=>*/   {return previewPanel.bg_color_ch},
 			function(val) /*=>*/ { previewPanel.bg_color_ch = val; },
 			PREFERENCES.project_previewSetting.bg_color_ch,

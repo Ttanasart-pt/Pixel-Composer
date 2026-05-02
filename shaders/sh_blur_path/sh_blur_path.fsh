@@ -1,6 +1,6 @@
 #pragma use(gradient)
 
-#region -- gradient -- [1764901316.7213297]
+#region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
 	uniform int		  gradient_blend;
@@ -68,18 +68,25 @@
 	    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 	}
 
-	float hueDist(float a0, float a1, float t) {
+	float hueLerp(float a0, float a1, float t) {
 		float da = fract(a1 - a0);
 	    float ds = fract(2. * da) - da;
 	    return a0 + ds * t;
 	}
 
-	vec3 hsvMix(vec3 c1, vec3 c2, float t) {
+	float hueLerpInv(float a0, float a1, float t) {
+		float da = fract(a1 - a0);
+	    float ds = fract(2. * da) - da;
+	    ds -= sign(ds);
+		return a0 + ds * t;
+	}
+
+	vec3 hsvMix(vec3 c1, vec3 c2, float t, bool inv) {
 		vec3 h1 = rgb2hsv(c1);
 		vec3 h2 = rgb2hsv(c2);
 	
 		vec3 h = vec3(0.);
-		h.x = h.x + hueDist(h1.x, h2.x, t);
+		h.x = inv ? hueLerpInv(h1.x, h2.x, t) : hueLerp(h1.x, h2.x, t);
 		h.y = mix(h1.y, h2.y, t);
 		h.z = mix(h1.z, h2.z, t);
 	
@@ -112,7 +119,10 @@
 						return gradient_color[i - 1];
 						
 					else if(gradient_blend == 2)
-						return vec4(hsvMix(c0, c1, t), a);
+						return vec4(hsvMix(c0, c1, t, false), a);
+						
+					else if(gradient_blend == 5)
+						return vec4(hsvMix(c0, c1, t, true), a);
 						
 					else if(gradient_blend == 3)
 						return vec4(oklabMax(c0, c1, t), a);

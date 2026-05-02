@@ -172,15 +172,15 @@
         "panel_inspector_group_bg": ["main_white", "main_ltgrey", 0.5],
         "panel_inspector_output_label": "black",
         
+        "panel_preview_bg": "main_mdblack",
+        "panel_preview_transparent": "main_dkblack",
+        "panel_preview_bg_3d": "main_dkblack",
+
         "panel_preview_grid": "main_grey",
         "panel_preview_surface_outline": "main_grey",
         "panel_preview_split_line": "main_grey",
         "panel_preview_tool_button": "main_white",
         "panel_preview_tool_separator": "main_dkgrey",
-        "panel_preview_bg": "main_mdblack",
-        "panel_preview_transparent": "main_dkblack",
-
-        "panel_3d_bg": "main_dkblack",
 
         "panel_toolbar_outline": "main_dkgrey",
         "panel_toolbar_separator": "main_dkblack",

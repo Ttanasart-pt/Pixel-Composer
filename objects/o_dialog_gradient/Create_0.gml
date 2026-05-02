@@ -64,14 +64,16 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		__txt("gradient_editor_blend_hard",  "Solid"),
 		__txt("gradient_editor_blend_RGB",   "RGB"),  
 		__txt("gradient_editor_blend_HSV",   "HSV"),  
+		__txt("gradient_editor_blend_HSV",   "HSV Inverted"),  
 		__txt("gradient_editor_blend_OKLAB", "OKLAB"),
 		
 	], function(i) /*=>*/ {
 		switch(i) {
-			case 0 :  gradient.type = 1; break;
-			case 1 :  gradient.type = 0; break;
-			case 2 :  gradient.type = 2; break;
-			case 3 :  gradient.type = 3; break;
+			case 0 :  gradient.type = GRADIENT_INTER.none;   break;
+			case 1 :  gradient.type = GRADIENT_INTER.smooth; break;
+			case 2 :  gradient.type = GRADIENT_INTER.hue;    break;
+			case 3 :  gradient.type = GRADIENT_INTER.hueInv; break;
+			case 4 :  gradient.type = GRADIENT_INTER.oklab;  break;
 		}
 		onModify(gradient);
 		

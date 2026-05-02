@@ -6,313 +6,315 @@
 	globalvar HOTKEYS_DATA; HOTKEYS_DATA = {};
 	globalvar PREFERENCES_MENUITEMS; PREFERENCES_MENUITEMS = {};
 	
-	#region GENERAL UI
-		
-		PREFERENCES.display_scaling					= 1;
-		PREFERENCES.text_scaling					= 1;
-		PREFERENCES.window_width					= 1600;
-		PREFERENCES.window_height					= 800;
-		PREFERENCES.window_maximize					= false;
-		PREFERENCES.window_monitor					= "";
-		PREFERENCES.window_fix					    = false;
-		PREFERENCES.window_fix_width				= 1600;
-		PREFERENCES.window_fix_height				= 800;
-		PREFERENCES.window_shadow                   = true;
-		
-		PREFERENCES.theme							= "default";
-		PREFERENCES.theme_override					= "override";
-		PREFERENCES.theme_load_unpack				= true;
-		PREFERENCES.theme_boolean                   = 0;
-		PREFERENCES.panel_tab_expands               = false;
-		
-		PREFERENCES.local							= "en";
-		PREFERENCES.font_overwrite					= "";
-		PREFERENCES.font_overwrite_bold				= "";
-		PREFERENCES.font_overwrite_code				= "";
-		
-		PREFERENCES.ui_framerate					= 120;
-		PREFERENCES.ui_framerate_non_focus			= 30;
-		PREFERENCES.path_resolution					= 32;
-		PREFERENCES.move_directory					= false;
-		
-		PREFERENCES.notification_time				= 180;
-		PREFERENCES.notify_load_version				= true;
-		PREFERENCES.show_crash_dialog				= false;
-		
-		PREFERENCES.test_mode						= false;
-		PREFERENCES.auto_save_time					= 300;
-		PREFERENCES.use_legacy_exception			= false;
-	
-		PREFERENCES.caret_blink						= 0.75;
-	
-		PREFERENCES.textbox_shake					= 0;
-		PREFERENCES.textbox_particle				= 0;
-		
-		PREFERENCES.check_update				    = 1;
-		
-		PREFERENCES.tutorial_mode                   = true;
-	#endregion
+	function PREF_INIT() {
+		#region GENERAL UI
 			
-	#region IO
+			PREFERENCES.display_scaling					= 1;
+			PREFERENCES.text_scaling					= 1;
+			PREFERENCES.window_width					= 1600;
+			PREFERENCES.window_height					= 800;
+			PREFERENCES.window_maximize					= false;
+			PREFERENCES.window_monitor					= "";
+			PREFERENCES.window_fix					    = false;
+			PREFERENCES.window_fix_width				= 1600;
+			PREFERENCES.window_fix_height				= 800;
+			PREFERENCES.window_shadow                   = true;
+			
+			PREFERENCES.theme							= "default";
+			PREFERENCES.theme_override					= "override";
+			PREFERENCES.theme_load_unpack				= true;
+			PREFERENCES.theme_boolean                   = 0;
+			PREFERENCES.panel_tab_expands               = false;
+			
+			PREFERENCES.local							= "en";
+			PREFERENCES.font_overwrite					= "";
+			PREFERENCES.font_overwrite_bold				= "";
+			PREFERENCES.font_overwrite_code				= "";
+			
+			PREFERENCES.ui_framerate					= 120;
+			PREFERENCES.ui_framerate_non_focus			= 30;
+			PREFERENCES.path_resolution					= 32;
+			PREFERENCES.move_directory					= false;
+			
+			PREFERENCES.notification_time				= 180;
+			PREFERENCES.notify_load_version				= true;
+			PREFERENCES.show_crash_dialog				= false;
+			
+			PREFERENCES.test_mode						= false;
+			PREFERENCES.auto_save_time					= 300;
+			PREFERENCES.use_legacy_exception			= false;
+		
+			PREFERENCES.caret_blink						= 0.75;
+		
+			PREFERENCES.textbox_shake					= 0;
+			PREFERENCES.textbox_particle				= 0;
+			
+			PREFERENCES.check_update				    = 1;
+			
+			PREFERENCES.tutorial_mode                   = true;
+		#endregion
 				
-		PREFERENCES.double_click_delay				= 0.25;
-		PREFERENCES.mouse_wheel_speed				= 1.00;
-		
-		PREFERENCES.pen_pool_delay					= 1;
-		PREFERENCES.slider_lock_mouse				= os_type == os_windows;
-		
-		PREFERENCES.keyboard_repeat_start			= 0.50;
-		PREFERENCES.keyboard_repeat_speed			= 0.10;
-		PREFERENCES.keyboard_double_delay			= 0.25;
-		PREFERENCES.keyboard_check_sweep			= true;
-		PREFERENCES.keyboard_capture_raw			= true;
-		
-		PREFERENCES.file_watcher_delay              = 0.1;
-		
-	#endregion
-	
-	#region DIALOG
-		PREFERENCES.node_recents_amount         = 20;
+		#region IO
+					
+			PREFERENCES.double_click_delay				= 0.25;
+			PREFERENCES.mouse_wheel_speed				= 1.00;
 			
-		PREFERENCES.show_splash                 = true;
-		PREFERENCES.splash_expand_recent        = false;
-		PREFERENCES.splash_show_thumbnail       = false;
-		PREFERENCES.splash_page                 = 1;
-		
-		PREFERENCES.dialog_add_node_view        = 1;
-		PREFERENCES.dialog_add_node_grouping    = 2;
-		
-		PREFERENCES.dialog_add_node_w           = 600;
-		PREFERENCES.dialog_add_node_h           = 400;
-		PREFERENCES.dialog_add_node_search_high = true;
-		PREFERENCES.dialog_add_node_search_fav  = false;
-		PREFERENCES.dialog_add_node_search_typ  = true;
-		PREFERENCES.dialog_add_node_pie         = [ "Node_Shape", "Node_Canvas" ];
-		PREFERENCES.dialog_add_node_collection  = false;
-		
-		PREFERENCES.add_node_page               = 0;
-		PREFERENCES.add_node_subpage            = 0;
-		PREFERENCES.add_node_remember           = true;
-		
-		PREFERENCES.file_explorer_view          = FILE_EXPLORER_VIEW.list;
-		PREFERENCES.use_native_file_browser     = os_type == os_windows;
-		
-		PREFERENCES.color_selector_slider_type  = 0;
-		PREFERENCES.color_selector_range_type   = 0;
-	#endregion
-	
-	#region PANEL
-	
-		PREFERENCES.panel_layout_file                 = "Vertical";
-		
-		PREFERENCES.panel_graph_dragging              = MOD_KEY.alt;
-		PREFERENCES.panel_graph_group_require_shift   = true;
-		PREFERENCES.panel_graph_paste_inline          = true;
-		PREFERENCES.panel_graph_show_control          = false;
-	
-		PREFERENCES.panel_preview_dragging            = MOD_KEY.alt;
-		PREFERENCES.panel_preview_show_real_fps       = false;
-		PREFERENCES.panel_preview_show_tiles          = false;
-	
-		PREFERENCES.panel_menu_show_profile           = true;
-		PREFERENCES.panel_menu_resource_monitor       = false;
-		PREFERENCES.panel_menu_right_control          = os_type != os_macosx;
-		
-		PREFERENCES.panel_menu_palette_node_size      = 20;
-	
-		PREFERENCES.inspector_focus_on_double_click   = true;
-		PREFERENCES.inspector_view_default            = INSP_VIEW_MODE.compact;
-		
-		PREFERENCES.node_show_render_status           = false;
-		PREFERENCES.node_show_time                    = true;
-		
-		PREFERENCES.expand_hover                      = false;
-	
-		PREFERENCES.graph_zoom_smoooth                = 4;
-		PREFERENCES.graph_open_group_in_tab           = false;
-		
-		PREFERENCES.collection_animated               = true;
-		PREFERENCES.collection_label                  = true;
-		PREFERENCES.collection_name_force_cut         = true;
-		PREFERENCES.collection_preview_speed          = 60;
-		PREFERENCES.collection_scale                  = 1;
-		PREFERENCES.collection_show_dep               = false;
-		
-		PREFERENCES.palette_stretch                   = false;
-		
-		PREFERENCES.pan_mouse_key                     = mb_middle;
-		PREFERENCES.panel_outline_accent              = true;
-		
-		PREFERENCES.panel_animation_separate          = 5;
-		PREFERENCES.panel_animation_frame             = true;
-		PREFERENCES.panel_animation_quan_scale        = false;
-		PREFERENCES.panel_animation_key_override      = true;
-		
-		PREFERENCES.panel_force_on_escape             = false;
-		
-		PREFERENCES.widget_draw_favourite             = true;
-		
-		PREFERENCES.widget_draw_order                 = [ "Reset", "Set Default" ];
-		PREFERENCES.widget_draw_reset                 = true;
-		PREFERENCES.widget_draw_default               = true;
-	#endregion
-	
-	#region WIDGET
-	
-		PREFERENCES.widget_autocomplete_delay       = 500;
-		PREFERENCES.alt_picker						= true;
-		
-		PREFERENCES.curvebox_default_height         = 200;
-	
-	#endregion
-	
-	#region NODES
-		
-		PREFERENCES.node_add_select        = true;
-		
-		PREFERENCES.node_param_show        = false;
-		PREFERENCES.node_param_width       = 192;
-		PREFERENCES.node_3d_preview_size   = 256;
-		
-		PREFERENCES.node_def_dim_unit      = 1;
-		PREFERENCES.node_def_depth         = 1;
-		PREFERENCES.node_def_oversample    = 0;
-		PREFERENCES.node_def_interpolation = 0;
-		
-		PREFERENCES.node_def_height        = 128;
-	
-	#endregion
-	
-	#region SAVE
-	
-		PREFERENCES.save_file_minify				= true;
-		PREFERENCES.save_backup						= 1;
-		PREFERENCES.save_thumbnail					= false;
-		PREFERENCES.save_thumbnail_size             = 256;
-		PREFERENCES.save_layout						= false;
-		PREFERENCES.save_compress                   = true;
-		PREFERENCES.save_auto                       = false;
-	
-	#endregion
-	
-	#region MISC
-		
-		PREFERENCES.render_all_export				= true;
-		PREFERENCES.render_max_time					= 1/50;
-		PREFERENCES.clear_temp_on_close				= true;
-	
-		PREFERENCES.show_supporter_icon				= true;
-		PREFERENCES.welcome_file_order				= [ "Getting started", "Sample Projects" ];
-		PREFERENCES.welcome_file_closed				= [];
-	
-	#endregion
-	
-	#region PATHS
-	
-		PREFERENCES.temp_path			= "%DIR%/temp/";
-		PREFERENCES.ImageMagick_path	= "%APP%/ImageMagick/";
-		PREFERENCES.webp_path			= "%APP%/webp/";
-		PREFERENCES.gifski_path			= "%APP%/gifski/";
-		PREFERENCES.ffmpeg_path			= "%APP%/ffmpeg/";
-		
-		PREFERENCES.file_explorer       = "";
-		PREFERENCES.dialog_path         = "";
-		
-		PREFERENCES.path_assets         = [];
-		PREFERENCES.path_fonts          = [];
-		PREFERENCES.path_welcome        = [];
-		
-		PREFERENCES.versions			= {};
-	
-	#endregion
-	
-	#region PROJECT
-		PREFERENCES.project_animation_duration  = 30;
-		PREFERENCES.project_animation_framerate = 30;
-		
-		PREFERENCES.project_previewGrid = {
-			show	: false,
-			snap	: false,
-			size	: [ 16, 16 ],
-			opacity : 0.5,
-			color   : cola(#6d6d81),
-			pixel   : false,
-		}
-		
-		PREFERENCES.project_previewSetting = {
-			bg_type     : 1,
-			bg_color    : cola(#1e1e2c),
-			bg_color_ch : cola(#191925),
-			bg_color_3d : cola(#191925),
+			PREFERENCES.pen_pool_delay					= 1;
+			PREFERENCES.slider_lock_mouse				= os_type == os_windows;
 			
-			show_info         : true,
-			show_view_control : 1,
-			status_display    : 2,
+			PREFERENCES.keyboard_repeat_start			= 0.50;
+			PREFERENCES.keyboard_repeat_speed			= 0.10;
+			PREFERENCES.keyboard_double_delay			= 0.25;
+			PREFERENCES.keyboard_check_sweep			= true;
+			PREFERENCES.keyboard_capture_raw			= true;
 			
-			show_ruler    : false, 
-			ruler_color   : -1, 
-			ruler_spacing :  8, 
+			PREFERENCES.file_watcher_delay              = 0.1;
 			
-			d3_tool_snap          : false,
-            d3_tool_snap_position : 1,
-            d3_tool_snap_rotation : 15,
-            
-            tool_always_l : false,
-            tool_always_r : false,
-            
-            quick_nav : true, 
-		}
+		#endregion
 		
-		PREFERENCES.project_graphGrid = {
-			show	    : true,
-			show_origin : false,
-			snap	    : true,
-			size	    : 16,
-			color       : ca_white,
-			opacity     : 0.05,
-			highlight   : 8,
-		}
+		#region DIALOG
+			PREFERENCES.node_recents_amount         = 20;
+				
+			PREFERENCES.show_splash                 = true;
+			PREFERENCES.splash_expand_recent        = false;
+			PREFERENCES.splash_show_thumbnail       = false;
+			PREFERENCES.splash_page                 = 1;
+			
+			PREFERENCES.dialog_add_node_view        = 1;
+			PREFERENCES.dialog_add_node_grouping    = 2;
+			
+			PREFERENCES.dialog_add_node_w           = 600;
+			PREFERENCES.dialog_add_node_h           = 400;
+			PREFERENCES.dialog_add_node_search_high = true;
+			PREFERENCES.dialog_add_node_search_fav  = false;
+			PREFERENCES.dialog_add_node_search_typ  = true;
+			PREFERENCES.dialog_add_node_pie         = [ "Node_Shape", "Node_Canvas" ];
+			PREFERENCES.dialog_add_node_collection  = false;
+			
+			PREFERENCES.add_node_page               = 0;
+			PREFERENCES.add_node_subpage            = 0;
+			PREFERENCES.add_node_remember           = true;
+			
+			PREFERENCES.file_explorer_view          = FILE_EXPLORER_VIEW.list;
+			PREFERENCES.use_native_file_browser     = os_type == os_windows;
+			
+			PREFERENCES.color_selector_slider_type  = 0;
+			PREFERENCES.color_selector_range_type   = 0;
+		#endregion
 		
-		PREFERENCES.project_graphDisplay = {
-			show_grid	    : true,
-			show_view_control : 1,
-			
-			show_dimension  : true,
-			show_compute    : true,
-			node_meta_view  : 1, 
-			
-			avoid_label     : false,
-			preview_scale   : 100,
-			highlight       : false,
-			
-			show_tooltip    : true,
-			show_topbar     : true, 
-		}
+		#region PANEL
 		
-		PREFERENCES.project_graphConnection = {
-			type : 0, 
+			PREFERENCES.panel_layout_file                 = "Vertical";
 			
-			line_width			: 1,
-			line_sample			: 1,
-			line_corner			: 4,
-			line_aa				: 2,
-			line_highlight		: 0,
-			line_highlight_fade	: 0.75,
-			line_highlight_all	: false,
-			line_extend			: 16,
-			
-			connect_on_create   : false, 
-		}
+			PREFERENCES.panel_graph_dragging              = MOD_KEY.alt;
+			PREFERENCES.panel_graph_group_require_shift   = true;
+			PREFERENCES.panel_graph_paste_inline          = true;
+			PREFERENCES.panel_graph_show_control          = false;
 		
-	#endregion
+			PREFERENCES.panel_preview_dragging            = MOD_KEY.alt;
+			PREFERENCES.panel_preview_show_real_fps       = false;
+			PREFERENCES.panel_preview_show_tiles          = false;
+		
+			PREFERENCES.panel_menu_show_profile           = true;
+			PREFERENCES.panel_menu_resource_monitor       = false;
+			PREFERENCES.panel_menu_right_control          = os_type != os_macosx;
+			
+			PREFERENCES.panel_menu_palette_node_size      = 20;
+		
+			PREFERENCES.inspector_focus_on_double_click   = true;
+			PREFERENCES.inspector_view_default            = INSP_VIEW_MODE.compact;
+			
+			PREFERENCES.node_show_render_status           = false;
+			PREFERENCES.node_show_time                    = true;
+			
+			PREFERENCES.expand_hover                      = false;
+		
+			PREFERENCES.graph_zoom_smoooth                = 4;
+			PREFERENCES.graph_open_group_in_tab           = false;
+			
+			PREFERENCES.collection_animated               = true;
+			PREFERENCES.collection_label                  = true;
+			PREFERENCES.collection_name_force_cut         = true;
+			PREFERENCES.collection_preview_speed          = 60;
+			PREFERENCES.collection_scale                  = 1;
+			PREFERENCES.collection_show_dep               = false;
+			
+			PREFERENCES.palette_stretch                   = false;
+			
+			PREFERENCES.pan_mouse_key                     = mb_middle;
+			PREFERENCES.panel_outline_accent              = true;
+			
+			PREFERENCES.panel_animation_separate          = 5;
+			PREFERENCES.panel_animation_frame             = true;
+			PREFERENCES.panel_animation_quan_scale        = false;
+			PREFERENCES.panel_animation_key_override      = true;
+			
+			PREFERENCES.panel_force_on_escape             = false;
+			
+			PREFERENCES.widget_draw_favourite             = true;
+			
+			PREFERENCES.widget_draw_order                 = [ "Reset", "Set Default" ];
+			PREFERENCES.widget_draw_reset                 = true;
+			PREFERENCES.widget_draw_default               = true;
+		#endregion
+		
+		#region WIDGET
+		
+			PREFERENCES.widget_autocomplete_delay       = 500;
+			PREFERENCES.alt_picker						= true;
+			
+			PREFERENCES.curvebox_default_height         = 200;
+		
+		#endregion
+		
+		#region NODES
+			
+			PREFERENCES.node_add_select        = true;
+			
+			PREFERENCES.node_param_show        = false;
+			PREFERENCES.node_param_width       = 192;
+			PREFERENCES.node_3d_preview_size   = 256;
+			
+			PREFERENCES.node_def_dim_unit      = 1;
+			PREFERENCES.node_def_depth         = 1;
+			PREFERENCES.node_def_oversample    = 0;
+			PREFERENCES.node_def_interpolation = 0;
+			
+			PREFERENCES.node_def_height        = 128;
+		
+		#endregion
+		
+		#region SAVE
+		
+			PREFERENCES.save_file_minify				= true;
+			PREFERENCES.save_backup						= 1;
+			PREFERENCES.save_thumbnail					= false;
+			PREFERENCES.save_thumbnail_size             = 256;
+			PREFERENCES.save_layout						= false;
+			PREFERENCES.save_compress                   = true;
+			PREFERENCES.save_auto                       = false;
+		
+		#endregion
+		
+		#region MISC
+			
+			PREFERENCES.render_all_export				= true;
+			PREFERENCES.render_max_time					= 1/50;
+			PREFERENCES.clear_temp_on_close				= true;
+		
+			PREFERENCES.show_supporter_icon				= true;
+			PREFERENCES.welcome_file_order				= [ "Getting started", "Sample Projects" ];
+			PREFERENCES.welcome_file_closed				= [];
+		
+		#endregion
+		
+		#region PATHS
+		
+			PREFERENCES.temp_path			= "%DIR%/temp/";
+			PREFERENCES.ImageMagick_path	= "%APP%/ImageMagick/";
+			PREFERENCES.webp_path			= "%APP%/webp/";
+			PREFERENCES.gifski_path			= "%APP%/gifski/";
+			PREFERENCES.ffmpeg_path			= "%APP%/ffmpeg/";
+			
+			PREFERENCES.file_explorer       = "";
+			PREFERENCES.dialog_path         = "";
+			
+			PREFERENCES.path_assets         = [];
+			PREFERENCES.path_fonts          = [];
+			PREFERENCES.path_welcome        = [];
+			
+			PREFERENCES.versions			= {};
+		
+		#endregion
+		
+		#region PROJECT
+			PREFERENCES.project_animation_duration  = 30;
+			PREFERENCES.project_animation_framerate = 30;
+			
+			PREFERENCES.project_previewGrid = {
+				show	: false,
+				snap	: false,
+				size	: [ 16, 16 ],
+				opacity : 0.5,
+				color   : cola(#6d6d81),
+				pixel   : false,
+			}
+			
+			PREFERENCES.project_previewSetting = {
+				bg_type     : 1,
+				bg_color    : -1,
+				bg_color_ch : -1,
+				bg_color_3d : -1,
+				
+				show_info         : true,
+				show_view_control : 1,
+				status_display    : 2,
+				
+				show_ruler    : false, 
+				ruler_color   : -1, 
+				ruler_spacing :  8, 
+				
+				d3_tool_snap          : false,
+	            d3_tool_snap_position : 1,
+	            d3_tool_snap_rotation : 15,
+	            
+	            tool_always_l : false,
+	            tool_always_r : false,
+	            
+	            quick_nav : true, 
+			}
+			
+			PREFERENCES.project_graphGrid = {
+				show	    : true,
+				show_origin : false,
+				snap	    : true,
+				size	    : 16,
+				color       : ca_white,
+				opacity     : 0.05,
+				highlight   : 8,
+			}
+			
+			PREFERENCES.project_graphDisplay = {
+				show_grid	    : true,
+				show_view_control : 1,
+				
+				show_dimension  : true,
+				show_compute    : true,
+				node_meta_view  : 1, 
+				
+				avoid_label     : false,
+				preview_scale   : 100,
+				highlight       : false,
+				
+				show_tooltip    : true,
+				show_topbar     : true, 
+			}
+			
+			PREFERENCES.project_graphConnection = {
+				type : 0, 
+				
+				line_width			: 1,
+				line_sample			: 1,
+				line_corner			: 4,
+				line_aa				: 2,
+				line_highlight		: 0,
+				line_highlight_fade	: 0.75,
+				line_highlight_all	: false,
+				line_extend			: 16,
+				
+				connect_on_create   : false, 
+			}
+		#endregion
+		
+		#region VIDEO
+			PREFERENCES.video_mode   = false;
+			PREFERENCES.video_title  = "";
+			PREFERENCES.video_topics = [];
+		#endregion
+			
+		PREFERENCES_DEF = variable_clone(PREFERENCES);
+	}
 	
-	#region VIDEO
-		PREFERENCES.video_mode   = false;
-		PREFERENCES.video_title  = "";
-		PREFERENCES.video_topics = [];
-	#endregion
-		
-	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion
 
 #region recent files
@@ -392,7 +394,7 @@
 		},
 	];
 	
-	function PREF_INIT() {
+	function PREF_LOAD_INIT() {
 		var xdpi = display_get_dpi_x();
 		var disp = clamp(xdpi / 72, 1, 2);
 		
@@ -472,7 +474,7 @@
 					PREFERENCES.theme = "default";
 				
 			} else
-				PREF_INIT();
+				PREF_LOAD_INIT();
 			
 			useDefaultLocale(PREFERENCES.local == "en");
 			
