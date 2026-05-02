@@ -324,7 +324,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	////- =Direction
 	newInput( 7, nodeValue_Range(   "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
-	newInput(51, nodeValue_EButton( "Flip",     0, [ "Random", "Ordered", "Never" ] ));
+	
+	newInput(51, nodeValue_EButton( "Reflect",       0, [ "Random", "Ordered", "Never" ] ));
+	newInput(56, nodeValue_EScroll( "Reflect Order", 0, [ "Even", "Odd", "Random" ] ));
+	
 	newInput(27, nodeValue_Range(   "Gravity", [0,0],   true )).setCurvable(28, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
 	
 	////- =Grouping
@@ -384,7 +387,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 56
+	// input 57
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
@@ -394,7 +397,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			[ "/Offset",   true ], 10, 17, 53, 
 			[ "/Settings", true ], 35, 
 			
-		[ "Direction", false ],  7, 16, 51, 27, 28, 
+		[ "Direction", false ],  7, 16, 51, 56, 27, 28, 
 		[ "Grouping",  false ], 15, 36, 32, 33, 54, 
 		[ "Shape",     false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
 		[ "Color",     false ], 
@@ -448,7 +451,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _clam = getInputData(35);
 			
 			var _sprd = getInputData( 7);
-			var _sprf = getInputData(51);
+			
+			var _refl = getInputData(51);
+			var _refo = getInputData(56);
+			
 			var _sprC = getInputData(16), curve_spread = inputs[ 7].attributes.curved? new curveMap(_sprC)  : undefined;
 			var _grav = getInputData(27);
 			var _graC = getInputData(28), curve_garvit = inputs[27].attributes.curved? new curveMap(_graC)  : undefined;
@@ -588,6 +594,13 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _sprdB = random_range(_sprd[0], _sprd[1]);
 			
+			var _refOrd = 0, _ref;
+			switch(_refo) {
+				case 0 : _refOrd = 0; break;
+				case 1 : _refOrd = 1; break;
+				case 2 : _refOrd = choose(0,1); break;
+			}
+			
 			for( var j = 1; j < _sn; j++ ) {
 				var _r0 = _br.segmentRatio[j - 1];
 				var _r1 = _br.segmentRatio[j    ];
@@ -612,9 +625,12 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _ly = lerp(oy, ny, _rr); 
 					
 					var _sprD = 1;
-					switch(_sprf) {
-						case 0 : _sprD = choose(-1, 1);            break;
-						case 1 : _sprD = 1 - (_posCursor % 2) * 2; break;
+					switch(_refl) {
+						case 0 : _sprD = choose(-1, 1); break;
+						case 1 : 
+							_ref  = (_posCursor % 2) == _refOrd;
+							_sprD = 1 - _ref * 2; 
+							break;
 					}
 					
 					var _spra = _sprdB * _sprD * (curve_spread? curve_spread.get(_cPos) : 1);

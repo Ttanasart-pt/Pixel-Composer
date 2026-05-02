@@ -638,11 +638,12 @@ function Project() constructor {
 	
 	////- Serialize
 
-	static serialize = function(_addon = true) {
+	static serialize = function(_addon = true, _readonly = readonly) {
 		var _map = {};
 		_map.version    = SAVE_VERSION;
 		_map.versions   = VERSION_STRING;
 		_map.is_nightly = NIGHTLY;
+		_map.readonly   = _readonly;
 		_map.freeze     = freeze;
 		
 		var _anim_map = {};
@@ -753,6 +754,8 @@ function Project() constructor {
 			}
 			
 		}
+		
+		readonly = _map[$ "readonly"] ?? readonly;
 		
 		if(has(_map, "onion_skin"))      struct_override(onion_skin,      _map.onion_skin);
 		if(has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);

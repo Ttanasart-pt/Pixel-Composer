@@ -69,10 +69,11 @@ function SAVE_AS(project = PROJECT) {
 	return true;
 }
 
-function save_param(_thumbnail = true, _log_prefix = "Save at", _save_addon = true, _mark_modified = true) constructor {
-	thumbnail  = _thumbnail;
-	log_prefix = _log_prefix;
-	save_addon = _save_addon;
+function save_param(_thumbnail = true, _log_prefix = "Save at", _save_addon = true, _readonly = false, _mark_modified = true) constructor {
+	thumbnail     = _thumbnail;
+	log_prefix    = _log_prefix;
+	save_addon    = _save_addon;
+	readonly      = _readonly;
 	
 	mark_modified = _mark_modified;
 }
@@ -98,7 +99,7 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 	if(file_exists_empty(path)) file_delete(path);
 	var _ext = filename_ext_raw(path);
 	
-	var _map = project.serialize(_param.save_addon);
+	var _map = project.serialize(_param.save_addon, _param.readonly);
 	var _prj = PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
 	var _raw = buffer_compress_string(_prj);
 	var _buf = buffer_create(1, buffer_grow, 1);

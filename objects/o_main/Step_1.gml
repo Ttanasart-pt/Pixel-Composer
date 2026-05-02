@@ -141,7 +141,7 @@ _FILE_DROPPED       = false;
 			+ string_lead_zero(current_second, 2) 
 			+ ".pxc";
 		
-		try		 { SAVE_AT(PROJECT, loc + fname, new save_param(false, "Autosaved", true, false)); }
+		try		 { SAVE_AT(PROJECT, loc + fname, new save_param(false, "Autosaved", true, true, false)); }
 		catch(e) { print(exception_print(e)); }
 	}
 #endregion
