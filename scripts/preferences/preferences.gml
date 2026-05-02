@@ -73,7 +73,7 @@
 		#endregion
 		
 		#region DIALOG
-			PREFERENCES.node_recents_amount         = 20;
+			PREFERENCES.node_recents_amount         = 100;
 				
 			PREFERENCES.show_splash                 = true;
 			PREFERENCES.splash_expand_recent        = false;

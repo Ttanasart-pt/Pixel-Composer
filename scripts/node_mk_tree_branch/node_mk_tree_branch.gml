@@ -14,6 +14,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- =Spawning
 	newInput( 8, nodeValue_SliRange( "Position",       [.5,1]    ));
 	newInput(44, nodeValue_Slider(   "Chance",           1       ));
+	
+		////- =/Scatter
 	newInput( 5, nodeValue_Range(    "Amount",          [4,8]    ));
 	newInput(19, nodeValue_EButton(  "Distribution",     0, [ "Random", "Uniform" ] ))
 		.setCurvable(45, CURVE_DEF_01, "Remap", "curved", THEME.mk_tree_curve_branch );
@@ -92,7 +94,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
-		[ "Spawning",        false ],  8, 44,  5, 19, 45, 
+		[ "Spawning",        false ],  8, 44, 
+			[ "/Scatter",    false ],  5, 19, 45, 
 			[ "/Settings",    true ], 32, 
 			
 		[ "Geometry",        false ],  3, 13,  7, 

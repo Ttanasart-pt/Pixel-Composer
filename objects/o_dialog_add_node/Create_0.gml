@@ -26,14 +26,20 @@ event_inherited();
 	pie_open  = false;
 	
 	recent_nodes = [];
+	var _context = context ?? PANEL_GRAPH.getCurrentContext();
 	if(is_array(global.RECENT_NODES))
 	for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
 		var _nodeIndex = global.RECENT_NODES[i];
 		if(!has(ALL_NODES, _nodeIndex)) continue;
 		
 		var _node = ALL_NODES[$ _nodeIndex];
-		if(!_node.show_in_recent) continue;
 		
+		if(!_node.show_in_recent) 
+			continue;
+		
+		if(_node.context != noone && !array_exists(_node.context, instanceof(_context)))
+			continue;
+			
 		array_push(recent_nodes, _node);
 	}
 	
