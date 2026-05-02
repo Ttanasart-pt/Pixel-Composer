@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.0.2.001",
+    "changes": [
+      {
+        "date": "2026-05-02T00:44:35.444Z",
+        "node": "",
+        "commit": "**MK Tree > Branch/ Leaves**: Add override gravity propertiy"
+      }
+    ]
+  }
+]

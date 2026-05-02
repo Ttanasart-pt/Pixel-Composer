@@ -328,7 +328,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(51, nodeValue_EButton( "Reflect",       0, [ "Random", "Ordered", "Never" ] ));
 	newInput(56, nodeValue_EScroll( "Reflect Order", 0, [ "Even", "Odd", "Random" ] ));
 	
-	newInput(27, nodeValue_Range(   "Gravity", [0,0],   true )).setCurvable(28, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+		////- =/Gravity
+	newInput(27, nodeValue_Range( "Gravity", [0,0],    true  )).setCurvable(28, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+	newInput(57, nodeValue_Bool(  "Override",          false ))
+	newInput(58, nodeValue_Rot(   "Gravity Direction", 0     ))
 	
 	////- =Grouping
 	newInput(15, nodeValue_Range( "Whorled", [0,0], true )).setCurvable(36, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
@@ -387,26 +390,28 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 57
+	// input 59
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
-		[ "Spawning",     false ],  1, 55,  2, 19, 52, 
-			[ "/Offset",   true ], 10, 17, 53, 
-			[ "/Settings", true ], 35, 
+		[ "Spawning",        false ],  1, 55,  2, 19, 52, 
+			[ "/Offset",      true ], 10, 17, 53, 
+			[ "/Settings",    true ], 35, 
 			
-		[ "Direction", false ],  7, 16, 51, 56, 27, 28, 
-		[ "Grouping",  false ], 15, 36, 32, 33, 54, 
-		[ "Shape",     false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
-		[ "Color",     false ], 
+		[ "Direction",       false ],  7, 16, 51, 56, 
+			[ "/Gravity",    false ], 27, 28, 57, 58, 
+			
+		[ "Grouping",        false ], 15, 36, 32, 33, 54, 
+		[ "Shape",           false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
+		[ "Color",           false ], 
 			[ "/per Branch", false ],  4, 12, 20, 
 			[ "/per Leaf",   false ],  6, 13, 34, 
 			[ "/Group",      false ], 42, 47, 
 			[ "/Edge",       false ], 14, 11, 25, 23, 24, 26, 
 			
-		[ "Growth",     true ], 22, 
+		[ "Growth",           true ], 22, 
 	];
 	
 	amountUnitToggle  = button(function() /*=>*/ { inputs[2].toggleAttribute("unit"); })
@@ -434,7 +439,6 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		#region data
 			var _seed = inline_context.seed + getInputData(5);
-			var _gDir = inline_context.gravityDir;
 			
 			var _tree = getInputData( 0);
 			
@@ -458,6 +462,9 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _sprC = getInputData(16), curve_spread = inputs[ 7].attributes.curved? new curveMap(_sprC)  : undefined;
 			var _grav = getInputData(27);
 			var _graC = getInputData(28), curve_garvit = inputs[27].attributes.curved? new curveMap(_graC)  : undefined;
+			var _grvO = getInputData(57);
+			var _grvD = getInputData(58); 
+			
 			var _offs = getInputData(10);
 			var _offC = getInputData(17), curve_offset = inputs[10].attributes.curved?         new curveMap(_offC)  : undefined;
 			var _offW = getInputData(53), curve_offsW  = inputs[10].attributes.curved_whorled? new curveMap(_offW)  : undefined;
@@ -519,6 +526,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _grow = getInputData(22);
 			
+			inputs[58].setVisible(_grvO);
+			
 			inputs[21].setVisible(_shap == MKLEAF_TYPE.Leaf);
 			inputs[23].setVisible(_shap == MKLEAF_TYPE.Leaf);
 			inputs[24].setVisible(_shap == MKLEAF_TYPE.Leaf && _edt);
@@ -547,6 +556,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				if(_geoSc) _geo2 = new curveMap(_lgeo2, _lres + 1);
 			}
 			
+			var _gDir = _grvO? _grvD : inline_context.gravityDir;
 		#endregion
 		
 		var ox, oy, nx, ny;

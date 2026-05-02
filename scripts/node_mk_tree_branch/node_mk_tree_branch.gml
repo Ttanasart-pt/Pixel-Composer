@@ -35,9 +35,12 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(15, nodeValue_EScroll( "Reflect",         0, [ "None", "Randomize", "Ordered" ] ));
 	newInput(49, nodeValue_EScroll( "Reflect Order",   0, [ "Even", "Odd", "Random" ] ));
 	
+		////- =/Gravity
 	newInput( 9, nodeValue_Range(   "Gravity",        [0,0], true    ))
 		.setCurvable( 16, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 33, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
+	newInput(50, nodeValue_Bool(  "Override",           false ))
+	newInput(51, nodeValue_Rot(   "Gravity Direction",  0     ))
 	
 		////- =/Wiggle
 	newInput(10, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("wiggle_amplitude")
@@ -82,7 +85,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 50
+	// input 52
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -93,7 +96,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			[ "/Settings",    true ], 32, 
 			
 		[ "Geometry",        false ],  3, 13,  7, 
-		[ "Direction",       false ], 31,  4, 40, 41, 15, 49,  9, 16, 33, 
+		[ "Direction",       false ], 31,  4, 40, 41, 15, 49,
+			[ "/Gravity",    false ],  9, 16, 33, 50, 51, 
 			[ "/Wiggle",      true ], 10, 34, 35, 42, 43, 
 			[ "/Spiral",      true ], 47, 48, 25, 38, 26, 21, 22, 23, 24, 
 			
@@ -103,7 +107,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			[ "/Edge Color", false ], 17, 18, 29, 
 			[ "/Texture",    false ], 30, 
 			
-		[ "Growth",     true ], 20, 
+		[ "Growth",           true ], 20, 
 	];
 	
 	amountUnitTooltip = new tooltipSelector("Unit", [ "Fixed Amount", "Branch Distance" ]);
@@ -133,7 +137,6 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		#region data
 			var _seed = inline_context.seed + getInputData(14);
-			var _gDir = inline_context.gravityDir;
 			
 			var _tree = getInputData( 0);
 			
@@ -175,6 +178,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _grv   = getInputData( 9);
 			var _grvC  = getInputData(16), curve_grav    = inputs[ 9].attributes.curved?        new curveMap(_grvC)  : undefined;
 			var _grvCR = getInputData(33), curve_grav_r  = inputs[ 9].attributes.curved_branch? new curveMap(_grvCR) : undefined;
+			var _grvO  = getInputData(50);
+			var _grvD  = getInputData(51); 
 			
 			var _anw   = getInputData(10);
 			var _anwC  = getInputData(34), curve_angw    = inputs[10].attributes.curved?        new curveMap(_anwC)  : undefined;
@@ -206,6 +211,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			inputs[49].setVisible(_refl == 2);
 			
+			inputs[51].setVisible(_grvO);
+			
 			inputs[27].setVisible(!_line);
 			inputs[28].setVisible(!_line);
 			inputs[17].setVisible(!_line);
@@ -219,6 +226,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_edgeRGrd.cache();
 			
 			random_set_seed(_seed);
+			var _gDir = _grvO? _grvD : inline_context.gravityDir;
 		#endregion
 		
 		var _branches  = [];

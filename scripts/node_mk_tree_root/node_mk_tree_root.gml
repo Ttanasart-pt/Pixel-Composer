@@ -26,10 +26,14 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 7, nodeValue_Range(  "Segments", [8,8],   true ));
 	
 	////- =Direction
-	newInput( 4, nodeValue_RotRand( "Direction", [0,80,100,0,0]       ));
-	newInput( 9, nodeValue_Range(   "Gravity",            [0,0], true ))
+	newInput( 4, nodeValue_RotRand( "Direction", [0,80,100,0,0] ));
+	
+		////- =/Gravity
+	newInput( 9, nodeValue_Range( "Gravity",   [0,0],   true  ))
 		.setCurvable(15, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
-		
+	newInput(38, nodeValue_Bool(  "Override",           false ))
+	newInput(39, nodeValue_Rot(   "Gravity Direction",  0     ))
+	
 		////- =/Wiggle
 	newInput(10, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("wiggle_amplitude")
 		.setCurvable(34, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length )
@@ -67,18 +71,19 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 		////- =/Texture
 	newInput(27, nodeValue_Surface(  "Texture" ));
-	// input 38
+	// input 40
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14,
-		[ "Spawning",   false ],  1, 
-			[ "/Scatter",true ],  5, 30, 31, 
+		[ "Spawning",        false ],  1, 
+			[ "/Scatter",     true ],  5, 30, 31, 
 			
-		[ "Geometry",   false ],  3,  7, 
-		[ "Direction",  false ],  4,  9, 15, 
-			[ "/Wiggle", true ],  10, 34, 32, 33, 
-			[ "/Spiral", true ],  36, 37, 22, 28, 23, 18, 19, 20, 21, 
+		[ "Geometry",        false ],  3,  7, 
+		[ "Direction",       false ],  4, 
+			[ "/Gravity",    false ],  9, 15, 38, 39, 
+			[ "/Wiggle",      true ], 10, 34, 32, 33, 
+			[ "/Spiral",      true ], 36, 37, 22, 28, 23, 18, 19, 20, 21, 
 			
 		[ "Thickness",       false ],  6, 11, 
 		[ "Render",      false, 35 ], 29,  
@@ -119,7 +124,6 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		#region data
 			var _seed = inline_context.seed + getInputData(14);
-			var _gDir = inline_context.gravityDir;
 			
 			var _ori  = getInputData( 1);
 			
@@ -142,8 +146,11 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _curC = getInputData(21),  curve_curl  = inputs[20].attributes.curved? new curveMap(_curC)  : undefined;
 			
 			var _ang  = getInputData( 4);
+			
 			var _grv  = getInputData( 9);
 			var _grvC = getInputData(15),  curve_grav  = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
+			var _grvO = getInputData(38);
+			var _grvD = getInputData(39); 
 			
 			var _wigA = getInputData(10);
 			var _wigAC= getInputData(34),  curve_wiga  = inputs[10].attributes.curved? new curveMap(_wigAC)  : undefined;
@@ -162,7 +169,9 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _edgeLGrd = getInputData(17); inputs[17].setVisible(_edge > 0);
 			var _edgeRGrd = getInputData(26); inputs[26].setVisible(_edge > 0);
 			var _tex      = getInputData(27);
-				
+			
+			inputs[39].setVisible(_grvO);
+			
 			inputs[24].setVisible(!_line);
 			inputs[25].setVisible(!_line);
 			inputs[16].setVisible(!_line);
@@ -176,6 +185,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_edgeRGrd.cache();
 			
 			random_set_seed(_seed);
+			var _gDir = _grvO? _grvD : inline_context.gravityDir;
 		#endregion
 			
 		var _amo     = irandom_range(_ramo[0], _ramo[1]);

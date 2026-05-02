@@ -21,6 +21,11 @@
         "date": "2026-05-01T01:18:57.202Z",
         "node": "",
         "commit": "**RangeBox**: Add scaling knob."
+      },
+      {
+        "date": "2026-05-02T00:44:35.438Z",
+        "node": "",
+        "commit": "**MK Tree > Branch/ Leaves**: Add override gravity propertiy"
       }
     ]
   },

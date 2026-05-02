@@ -13,9 +13,11 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 2, nodeValue_Int(      "Sample", 8     ));
 	
 	////- =Direction
-	newInput( 8, nodeValue_Range(  "Wiggle",   [0,0] ))
+	newInput( 8, nodeValue_Range( "Wiggle",   [0,0] ))
 		.setCurvable(10, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
-	newInput( 9, nodeValue_Range(  "Gravity",  [0,0] ));
+	newInput( 9, nodeValue_Range( "Gravity",  [0,0] ));
+	newInput(22, nodeValue_Bool(  "Override",           false ))
+	newInput(23, nodeValue_Rot(   "Gravity Direction",  0     ))
 	
 	////- =Spiral
 	newInput(11, nodeValue_Range(  "Frequency", [4,4], true ));
@@ -30,25 +32,35 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 3, nodeValue_Range(       "Thickness", [4,4], true ))
 		.setCurvable(4, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 		
-	////- =Color
+	////- =Render
+	
+		////- =/Base Color
 	newInput( 5, nodeValue_Gradient(    "Base Color",      gra_white ));
 	newInput(17, nodeValue_Enum_Button( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(18, nodeValue_Gradient(    "Length Color",    gra_white ));
 	
+		////- =/Edge Color
 	newInput( 6, nodeValue_Enum_Button( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput( 7, nodeValue_Gradient(    "L Edge Color",    gra_white ));
 	newInput(19, nodeValue_Gradient(    "R Edge Color",    gra_white ));
+	
+		////- =/Texture
 	newInput(20, nodeValue_Surface(     "Texture" ));
-	// input 22
+	// input 24
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		[ "Path",      false ],  1,  2, 
 		[ "Direction", false ],  8, 10, 
+			// [ "/Gravity",false],  9, 22, 23, 
+			
 		[ "Spiral",     true ], 11, 12, 13, 14, 15, 16, 
 		[ "Render",    false ], 21,  3,  4,
-		[ "Color",     false ],  5, 17, 18, __inspc(),  6,  7, 19, 20, 
+		[ "Color",     false ],
+			[ "/Base Color", false ],  5, 17, 18, 
+			[ "/Edge Color", false ],  6,  7, 19, 
+			[ "/Texture",    false ], 20, 
 	];
 	
 	////- Nodes

@@ -26,6 +26,11 @@
         "date": "2026-05-02T00:26:30.087Z",
         "node": "MK Tree > Branch/ Leaves",
         "commit": "**MK Tree > Branch/ Leaves**: Add reflect order property."
+      },
+      {
+        "date": "2026-05-02T00:44:35.431Z",
+        "node": "MK Tree > Branch/ Leaves",
+        "commit": "**MK Tree > Branch/ Leaves**: Add override gravity propertiy"
       }
     ]
   },
