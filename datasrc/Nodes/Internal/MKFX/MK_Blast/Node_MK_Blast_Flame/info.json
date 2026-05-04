@@ -1,0 +1,6 @@
+{
+    "name":          "Flame Ball",
+    "spr":           "s_node_mk_blast_flame",
+    "baseNode":      "Node_MK_Blast_Flame",
+    "pxc_version":    121002,
+}

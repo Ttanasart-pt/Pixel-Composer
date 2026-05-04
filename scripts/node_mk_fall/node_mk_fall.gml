@@ -57,7 +57,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 2, 
+	input_display_list = [ s_MKFX, 2, 
 		["Dimension", false], 0, 1, 
 		["Spawn",     false], 3, 4, 
 		["Physics",   false], 10, 5, 12,  

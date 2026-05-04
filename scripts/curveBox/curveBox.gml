@@ -123,7 +123,7 @@ function curveBox(_onModify) : widget() constructor {
 		     w = _w; 
 		var hh =  h - ui(4);
 		
-		if(!is_array(_data) || array_length(_data) == 0) return 0;
+		if(!is_array(_data) || array_length(_data) <= CURVE_PADD) return 0;
 		if(is_array(_data[0])) return 0;
 		
 		var tbh       = line_get_height(font);

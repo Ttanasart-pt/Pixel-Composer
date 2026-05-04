@@ -139,8 +139,8 @@ function rangeBox(_onModify) : widget() constructor {
 		disp_w = linked? _w : _w / 2;
 		
 		var ps = h / 2;
-		var px = x + w / 2;
-		var py = y + h / 2;
+		var px = _x + _w / 2;
+		var py =  y +  h / 2;
 		
 		if(rangeDrag) {
 			hover = false;

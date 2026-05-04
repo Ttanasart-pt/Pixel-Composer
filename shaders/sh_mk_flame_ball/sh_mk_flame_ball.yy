@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_flame_ball",
+  "name":"sh_mk_flame_ball",
+  "parent":{
+    "name":"mk_flame",
+    "path":"folders/nodes/data/MKFX/simulation/mk_flame.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

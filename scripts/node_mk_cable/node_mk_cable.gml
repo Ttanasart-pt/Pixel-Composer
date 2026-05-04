@@ -34,7 +34,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 3, 
+	input_display_list = [ s_MKFX, 3, 
 		["Output",  false    ], 0, 19, 
 		["Anchors", false    ], 15, 1, 2, 9, 10, 16, 17, 18, 
 		["Cable",   false    ], 5, 14, 4, 8, 

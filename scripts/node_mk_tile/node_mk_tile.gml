@@ -48,7 +48,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(14, nodeValue_Bool(    "Sort Array by Bit", true))
 	// input 18
 		
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 
+	input_display_list = [ s_MKFX, 
 		[ "Surfaces",      true ],  0,  1, 
 		[ "Tileset",      false ],  2,  4, 17, 
 		[ "Edge",         false ],  5, 12, 13, 10, 11, __inspc(ui(4), true, true, ui(6)), 15, 16, 

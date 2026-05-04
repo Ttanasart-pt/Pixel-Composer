@@ -40,7 +40,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_Color( "Ground",      ca_black));
 	// input 24
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
+	input_display_list = [ s_MKFX, 1, 0, 
 		["Source",  false    ],  2,  3,  4,  5,  6, 
 		["Shape",   false    ],  7, 22,  8, 17, 20, 21, 
 		["Scatter", false    ],  9, 11, 14, 15,

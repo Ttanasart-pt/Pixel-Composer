@@ -34,7 +34,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 	var drawPos  = _flag & 0b0001;
 	var drawSize = _flag & 0b0010;
 	
-	var _rr = ui(16);
+	var _r = ui(PREVIEW_OVERLAY_RAD);
 	
 	if(drawSize) {
 		draw_set_color(COLORS._main_accent);
@@ -78,7 +78,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 	}
 		
 	if(hover) {
-		if(drawSize && point_in_circle(_mx, _my, xc, y0, _rr)) {
+		if(drawSize && point_in_circle(_mx, _my, xc, y0, _r)) {
 			_hov[0] = 1;
 			hovering = 1;
 			
@@ -87,7 +87,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 				drag_sy   = _t;
 				drag_my   = _my;
 			}
-		} else if(drawSize && point_in_circle(_mx, _my, xc, y1, _rr)) {
+		} else if(drawSize && point_in_circle(_mx, _my, xc, y1, _r)) {
 			_hov[1] = 1;
 			hovering = 3;
 			
@@ -96,7 +96,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 				drag_sy   = _b;
 				drag_my   = _my;
 			}
-		} else if(drawSize && point_in_circle(_mx, _my, x0, yc, _rr)) {
+		} else if(drawSize && point_in_circle(_mx, _my, x0, yc, _r)) {
 			_hov[2] = 1;
 			hovering = 0;
 			
@@ -105,7 +105,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 				drag_sx   = _l;
 				drag_mx   = _mx;
 			}
-		} else if(drawSize && point_in_circle(_mx, _my, x1, yc, _rr)) {
+		} else if(drawSize && point_in_circle(_mx, _my, x1, yc, _r)) {
 			_hov[3] = 1;
 			hovering = 2;
 			
@@ -121,10 +121,10 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _flag
 		__overlay_hover[i] = lerp_float(__overlay_hover[i], _hov[i], 4);
 	
 	if(drawSize) {
-		if(drag_type == 0 || drag_type == 2) draw_anchor_line(__overlay_hover[0], xc, y0, _rr,  0);
-		if(drag_type == 0 || drag_type == 4) draw_anchor_line(__overlay_hover[1], xc, y1, _rr,  0);
-		if(drag_type == 0 || drag_type == 3) draw_anchor_line(__overlay_hover[2], x0, yc, _rr, 90);
-		if(drag_type == 0 || drag_type == 1) draw_anchor_line(__overlay_hover[3], x1, yc, _rr, 90);
+		if(drag_type == 0 || drag_type == 2) draw_anchor_line(__overlay_hover[0], xc, y0, _r,  0);
+		if(drag_type == 0 || drag_type == 4) draw_anchor_line(__overlay_hover[1], xc, y1, _r,  0);
+		if(drag_type == 0 || drag_type == 3) draw_anchor_line(__overlay_hover[2], x0, yc, _r, 90);
+		if(drag_type == 0 || drag_type == 1) draw_anchor_line(__overlay_hover[3], x1, yc, _r, 90);
 	}
 	
 	return hovering;
@@ -165,7 +165,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 	}
 	
 	var _hov = [ 0, 0, 0 ];
-	var _r   = ui(8);
+	var _r   = ui(PREVIEW_OVERLAY_RAD);
 	
 	if(drag_type) {
 		var _sval = array_clone(showValue());
@@ -227,7 +227,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 	}
 	
 	if(hover) {
-		if(drawSize && point_in_circle(_mx, _my, x0, y0, ui(8))) {
+		if(drawSize && point_in_circle(_mx, _my, x0, y0, _r)) {
 			_hov[1] = 1;
 			hovering = 1;
 			
@@ -238,7 +238,7 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _fl
 				drag_mx   = _mx;
 				drag_my   = _my;
 			}
-		} else if(drawSize && point_in_circle(_mx, _my, x1, y1, ui(8))) {
+		} else if(drawSize && point_in_circle(_mx, _my, x1, y1, _r)) {
 			_hov[2] = 1;
 			hovering = 2;
 			
@@ -302,7 +302,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 	var ys = y1 + 16 * sign(_ah);
 			
 	var _hov = -1;
-	var _r   = ui(10);
+	var _r   = ui(PREVIEW_OVERLAY_RAD);
 			
 	var drawPos  = _flag & 0b0001;
 	var drawSize = _flag & 0b0010;
@@ -329,13 +329,13 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 		if(point_in_circle(_mx, _my, x1, y1, _r)) _hov = 6;
 	}
 	
-	if(drawPos)  draw_anchor_cross(_hov == 1, _ax, _ay, ui(8), 1);
+	if(drawPos)  draw_anchor_cross(_hov == 1, _ax, _ay, _r, 1);
 	if(drawSize) {
-		draw_anchor(_hov == 2, xs, ys, ui(8), 1);
-		draw_anchor(_hov == 3, x0, y0, ui(8), 2);
-		draw_anchor(_hov == 4, x1, y0, ui(8), 2);
-		draw_anchor(_hov == 5, x0, y1, ui(8), 2);
-		draw_anchor(_hov == 6, x1, y1, ui(8), 2);
+		draw_anchor(_hov == 2, xs, ys, _r, 1);
+		draw_anchor(_hov == 3, x0, y0, _r, 2);
+		draw_anchor(_hov == 4, x1, y0, _r, 2);
+		draw_anchor(_hov == 5, x0, y1, _r, 2);
+		draw_anchor(_hov == 6, x1, y1, _r, 2);
 	}
 	
 	switch(drag_type) {

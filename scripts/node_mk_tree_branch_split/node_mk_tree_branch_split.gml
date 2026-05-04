@@ -24,7 +24,7 @@ function Node_MK_Tree_Branch_Split(_x, _y, _group = noone) : Node(_x, _y, _group
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
+	input_display_list = [ s_MKFX, 1, 0, 
 		[ "Position",  false ],  2,  3, 
 		[ "Geometry",  false ],  4, 
 		[ "Thickness", false ],  5,  6, 

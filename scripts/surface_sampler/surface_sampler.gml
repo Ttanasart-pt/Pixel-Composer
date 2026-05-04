@@ -24,8 +24,9 @@ function Surface_sampler(s = noone) constructor {
             case surface_r16float :    bsize = sw * sh * 2; getPixel = getPixelF16;  break;
             case surface_r32float :    bsize = sw * sh * 4; getPixel = getPixelF32;  break;
             
-            case surface_rgba8unorm  : bsize = sw * sh * 4; getPixel = getPixelU32;  break;
-            case surface_rgba16float : bsize = sw * sh * 8; getPixel = getPixel4F16; break;
+            case surface_rgba8unorm  : bsize = sw * sh *  4; getPixel = getPixelU32;  break;
+            case surface_rgba16float : bsize = sw * sh *  8; getPixel = getPixel4F16; break;
+            case surface_rgba32float : bsize = sw * sh * 16; getPixel = getPixel4F32; break;
         }
         
         buffer  = buffer_create(bsize, buffer_fixed, 1);
@@ -47,6 +48,13 @@ function Surface_sampler(s = noone) constructor {
         buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 2, buffer_f16),
         buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 4, buffer_f16),
         buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 6, buffer_f16),
+    ]};
+    
+    static getPixel4F32 = function(_x,_y) /*=>*/ {return [
+        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 0, buffer_f32),
+        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 2, buffer_f32),
+        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 4, buffer_f32),
+        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 6, buffer_f32),
     ]};
     
     getPixel = getPixelU32;

@@ -21,7 +21,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var _ay1 = __y1 * _s + _y;
 	
 	var cc = COLORS.labels[2];
-	var _r = ui(8);
+	var _r = ui(PREVIEW_OVERLAY_RAD);
 	
 	__overlay_hover = array_verify(__overlay_hover, 2);
 	if(surface_exists(_surf) && (__overlay_hover[0] > 0 || __overlay_hover[1] > 0))
@@ -81,7 +81,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 		}
 		
 	} else if(interact && active) {
-		if(point_in_circle(_mx, _my, _ax0, _ay0, ui(8))) {
+		if(point_in_circle(_mx, _my, _ax0, _ay0, _r)) {
 			d0 = true;
 			hover = 1;
 			
@@ -92,7 +92,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 				drag_sx   = _ax0;
 				drag_sy   = _ay0;
 			}
-		} else if(point_in_circle(_mx, _my, _ax1, _ay1, ui(8))) {
+		} else if(point_in_circle(_mx, _my, _ax1, _ay1, _r)) {
 			d1 = true;
 			hover = 2;
 			

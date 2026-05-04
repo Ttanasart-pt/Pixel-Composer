@@ -147,6 +147,8 @@ function __part(_node) : __particleObject() constructor {
 	
 	////- Physics
 	
+	phyDirr = 0;
+	
 	ground			= false;
 	ground_y		= 0;
 	ground_bounce	= 0;
@@ -426,6 +428,7 @@ function __part(_node) : __particleObject() constructor {
 		if(life-- < 0) kill();
 		
 		if(prevx != undefined) {
+			phyDirr  = point_direction(prevx, prevy, x, y);
 			spVec[0] = point_distance(prevx, prevy, x, y);
 			if(spVec[0] > 1)
 				spVec[1] = point_direction(prevx, prevy, x, y);

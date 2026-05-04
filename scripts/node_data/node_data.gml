@@ -545,6 +545,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
+	static insertMapDisplay = function() {
+		for(var i = array_length(input_display_list) - 1; i >= 0; i--) {
+			var _dis = input_display_list[i];
+			if(!is_real(_dis)) continue;
+			
+			var _inp = inputs[_dis];
+			var _map = _inp.parameters[$ "map_index"];
+			if(!is(_map, NodeValue)) continue;
+			
+			var _ind = _map.index;
+			array_insert(input_display_list, i+1, _ind);
+		}
+	}
+	
 	////- STEP
 	
 	static stepBegin = function() {

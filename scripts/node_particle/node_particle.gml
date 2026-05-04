@@ -8,13 +8,14 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	newInput(i+3, nodeValue_Surface( "Background" ));
 	
 	////- =Render
-	newInput(i+4, nodeValue_Enum_Button( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ] ));
-	newInput(i+5, nodeValue_Int(         "Line Life",      4 ));
-	newInput(i+1, nodeValue_Bool(        "Round Position", true, "Round position to the closest integer value to avoid jittering." ));
-	newInput(i+2, nodeValue_Enum_Scroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
+	newInput(i+4, nodeValue_EButton( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ] ));
+	newInput(i+5, nodeValue_Int(     "Line Life",      4 ));
+	newInput(i+1, nodeValue_Bool(    "Round Position", true, "Round position to the closest integer value to avoid jittering." ));
+	newInput(i+2, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
 	//input i+6
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
+	newOutput( 1, nodeValue_Output( "Data",        VALUE_TYPE.particle, []    ));
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, i);
 	
@@ -89,6 +90,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		render_amount = 0;
 		
 		outputs[0].setValue(_outSurf);
+		outputs[1].setValue(parts);
 		
 		__dim = _dim;
 		array_foreach(parts, function(p) /*=>*/ { p.bound_w = __dim[0]; p.bound_h = __dim[1]; });

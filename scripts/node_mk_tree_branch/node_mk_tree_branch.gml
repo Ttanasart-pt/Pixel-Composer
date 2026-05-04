@@ -93,7 +93,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
+	input_display_list = [ s_MKFX, 14, 0, 
 		[ "Spawning",        false ],  8, 44, 
 			[ "/Scatter",    false ],  5, 19, 45, 
 			[ "/Settings",    true ], 32, 

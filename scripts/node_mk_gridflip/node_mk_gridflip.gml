@@ -25,7 +25,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 												                 new scrollItem("90",   s_node_mk_grid_flip, 1), 
 												                 new scrollItem("180",  s_node_mk_grid_flip, 2), ]));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 3, 1, 
+	input_display_list = [ s_MKFX, 3, 1, 
 		["Surface",		 true], 0, 4, 
 		["Grid",		false], 2,
 		["Flip",		false], 6, 10, 5, 7, 8, 9, 

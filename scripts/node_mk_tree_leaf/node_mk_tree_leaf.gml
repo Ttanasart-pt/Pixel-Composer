@@ -397,7 +397,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
+	input_display_list = [ s_MKFX, 5, 0, 
 		[ "Spawning",        false ],  1, 55, 
 			[ "/Scatter",    false ],  2, 19, 52, 
 			[ "/Offset",      true ], 10, 17, 53, 

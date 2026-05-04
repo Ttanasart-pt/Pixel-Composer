@@ -43,7 +43,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _rad, 
 	var _ax   = _x + lengthdir_x(_rad, _val);
 	var _ay   = _y + lengthdir_y(_rad, _val);
 	var index = 0;
-	var _r    = ui(10);
+	var _r    = ui(PREVIEW_OVERLAY_RAD);
 						
 	if(drag_type) {
 		index = 1;
@@ -129,7 +129,7 @@ function preview_overlay_rotation_range(interact, active, _x, _y, _s, _mx, _my, 
 		}
 	}
 	
-	var _r  = ui(8);
+	var _r  = ui(PREVIEW_OVERLAY_RAD);
 	
 	for( var i = 0; i < 2; i++ ) {
 		var _ax = _x + lengthdir_x(_rad, _val[i]);

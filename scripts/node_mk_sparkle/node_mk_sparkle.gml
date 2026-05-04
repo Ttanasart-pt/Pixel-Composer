@@ -38,7 +38,7 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 
+	input_display_list = [ s_MKFX, 1, 
 		["Output",    false], 0, 12, 13, 
 		["Sparkle",	  false], 4, 5, 8, 
 		["Animation", false], 2, 11, 9, 10, 

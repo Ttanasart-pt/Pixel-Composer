@@ -29,7 +29,7 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	preview_hotkey_spr = THEME.bone_tool_move;
 	def_length = AREA_ARRAY_LENGTH;
 	
-	/////============== GET =============
+	////- GET
 	
 	static valueProcess = function(val, nodeFrom, applyUnit = true, arrIndex = 0) {
 		val = array_verify(val, AREA_ARRAY_LENGTH);
@@ -94,7 +94,7 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		return animator.getValue(_time);
 	}
 	
-	/////============== DRAW =============
+	////- DRAW
 	
 	__preview_bbox = noone;
 	preview_hotkey_v0 = [ 0, 0 ];

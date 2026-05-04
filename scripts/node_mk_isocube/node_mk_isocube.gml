@@ -35,7 +35,7 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(18, nodeValue_Color( "Outside Color",     ca_white ));
 	// inputs 20
 		
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 
+	input_display_list = [ s_MKFX, 
 		[ "Output",  false ], 7, 
 		[ "Shape",   false ], 0, 8, 19, 
 		[ "Depth",   false ], 1, 2, 3, 

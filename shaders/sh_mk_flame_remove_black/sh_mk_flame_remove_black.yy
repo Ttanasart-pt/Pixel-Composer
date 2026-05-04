@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_flame_remove_black",
+  "name":"sh_mk_flame_remove_black",
+  "parent":{
+    "name":"mk_flame",
+    "path":"folders/nodes/data/MKFX/simulation/mk_flame.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

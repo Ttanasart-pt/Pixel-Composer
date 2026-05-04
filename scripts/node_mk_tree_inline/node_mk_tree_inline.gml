@@ -24,7 +24,7 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	newInput(1, nodeValue_Rotation( "Gravity", -90 ));
 	newInput(2, nodeValue_Dimension());
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 2, 
+	input_display_list = [ s_MKFX, 0, 2, 
 		[ "Physics", false ], 1, 
 	];
 	

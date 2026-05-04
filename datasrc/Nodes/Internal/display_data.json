@@ -406,6 +406,29 @@
         "color": "node_blend_mktree"
     }, //MK Tree
     {
+        "name": "MK Blast", "nodes": [
+            { "label": "Element" },
+            { "label": "/Flame" },
+            "Node_MK_Blast_Flame",
+            "Node_MK_Blast_Particle",
+            { "label": "/Smoke" },
+            "Node_MK_Blast_Smoke",
+            
+            { "label": "Modify" },
+            { "label": "/Force" },
+            "Node_MK_Blast_Force",
+            "Node_MK_Blast_Gravity",
+            "Node_MK_Blast_Attract",
+            "Node_MK_Blast_Wave",
+
+            { "label": "Render" },
+            { "label": "/Render" },
+            "Node_MK_Blast_Render",
+        ],
+        "context": ["Node_MK_Blast_Inline"],
+        "color": "node_blend_mkblast"
+    }, //MK Blast
+    {
         "name": "Pixel Builder", "nodes": [
             { "label": "Group" },
             "Node_Group_Input",
@@ -951,6 +974,7 @@
             "Node_MK_IsoCube", 
             "Node_MK_Isoextrude", 
             "Node_MK_WireFrame", 
+            "Node_MK_Blast_Inline", 
         ]
     }, //Generate
     {
@@ -1346,10 +1370,11 @@
             "Node_MK_Tree_Inline",
             
             { "label": "Simulation" },
-            "Node_MK_Cable",
-            "Node_MK_Flag",
             "Node_MK_Brownian",
+            "Node_MK_Cable",
             "Node_MK_Fall",
+            "Node_MK_Flag",
+            "Node_MK_Blast_Inline",
 
             { "label": "Filter" },
             "Node_MK_Rain",

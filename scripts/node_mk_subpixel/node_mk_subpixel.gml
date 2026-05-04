@@ -35,7 +35,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(16, nodeValue_Slider("Flicker Cut", .5));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 7, 
+	input_display_list = [ s_MKFX, 7, 
 		["Subpixel", false],      1,  2, 12, 
 		["Effect",   false],      3,  4,  8, 
 		["Ridge",    false, 11],  9, 10, 

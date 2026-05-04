@@ -38,7 +38,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 6, nodeValue_Slider(   "Shading",    .5     )).setMappable(31);
 	// input 35
 		
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 1, 
+	input_display_list = [ s_MKFX, 5, 1, 
 		[ "Surface",   true     ],  0,
 		[ "Grid",     false     ],  2,  8, 19, 32, 
 		[ "Scatter",  false, 16 ],  4, 21,  7, 

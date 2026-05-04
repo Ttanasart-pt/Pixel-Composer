@@ -22,7 +22,7 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
+	input_display_list = [ s_MKFX, 0, 
 		[ "Fracture", false ],  1,  2, 13, 11, 12, 
 		[ "Physics",  false ],  3,  4,  9,  8,  5, 10,  6, 
 		[ "Render",   false ],  7, 

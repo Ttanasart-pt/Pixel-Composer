@@ -745,10 +745,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					shader_set_interpolation(_tex);
 					if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
-					draw_primitive_begin_texture(pr_trianglestrip, tex);
+					draw_primitive_begin_texture(pr_trianglelist, tex);
 					
 				} else 
-					draw_primitive_begin(pr_trianglestrip);
+					draw_primitive_begin(pr_trianglelist);
 				
 				var _col_base = dat == noone? gradientEval(_colb, random(1)) : dat.color;
 				_ow = 1;
@@ -846,6 +846,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							draw_vertex_texture_color(ox0 * _aa, oy0 * _aa, _u0, _v0, _oc, 1);
 							draw_vertex_texture_color(ox1 * _aa, oy1 * _aa, _u1, _v0, _oc, 1);
 							draw_vertex_texture_color(nx0 * _aa, ny0 * _aa, _u0, _v1, _nc, 1);
+							
+							draw_vertex_texture_color(ox1 * _aa, oy1 * _aa, _u1, _v0, _oc, 1);
+							draw_vertex_texture_color(nx0 * _aa, ny0 * _aa, _u0, _v1, _nc, 1);
 							draw_vertex_texture_color(nx1 * _aa, ny1 * _aa, _u1, _v1, _nc, 1);
 							
 						} else {
@@ -864,7 +867,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(j % 120 == 0) {
 						draw_primitive_end();
-						if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
+						if(_useTex) draw_primitive_begin_texture(pr_trianglelist, tex); 
+						else draw_primitive_begin(pr_trianglelist);
 					}
 				}
 				
@@ -947,7 +951,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(array_length(lines[i]) < 2) continue;
 					var points = lines[i];
 					
-					draw_primitive_begin(pr_trianglestrip);
+					draw_primitive_begin(pr_trianglelist);
 					
 					random_set_seed(_sed + i);
 					var pxs = [];
@@ -1003,7 +1007,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						if(j % 120 == 0) {
 							draw_primitive_end();
-							draw_primitive_begin(pr_trianglestrip);
+							draw_primitive_begin(pr_trianglelist);
 						}
 					}
 					

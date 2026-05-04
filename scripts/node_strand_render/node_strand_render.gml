@@ -127,7 +127,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				prg += st;
 				j++;
 				
-				draw_primitive_begin(pr_trianglestrip);
+				draw_primitive_begin(pr_trianglelist);
 				repeat(len-1) {
 					nx = hair.points[j].x;
 					ny = hair.points[j].y;

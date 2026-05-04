@@ -20,7 +20,7 @@ function Node_MK_Tree_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
+	input_display_list = [ s_MKFX, 1, 0, 
 		[ "Area",   false ], 2, 3, 4, 
 		[ "Effect", false ], 6, 5, 
 	];

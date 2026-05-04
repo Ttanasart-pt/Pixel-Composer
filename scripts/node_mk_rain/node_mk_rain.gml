@@ -41,7 +41,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	// inputs 25
 		
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 8, 
+	input_display_list = [ s_MKFX, 0, 8, 
 		["Shape",    false    ], 9, 3, 4, 10, 11, 
 		["Rain",     false    ], 2, 1, 7, 
 		["Render",   false    ], 5, 6, 17, 

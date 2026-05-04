@@ -605,6 +605,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} setDropKey();
 	
+	static setWidget = function(_widg) { editWidget = _widg; return self; }
+	
+	static setShaderProp = function(_key) { node.shaderProp[$ _key] = self; return self; }
+	
+	////- Mappable
+	
 	mapWidget   = noone;
 	mapWidgetF  = noone;
 	mappedJunc  = noone;
@@ -712,10 +718,29 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		parameters.map_index = node.inputs[_index];
 		
-		var mapButton = button(function() /*=>*/ { toggleAttribute("mapped"); })
+		var mapButton = button(function() /*=>*/ { toggleAttribute("mapped"); node.triggerRender(); })
 			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} )
 			.iconPad()
 			.setTooltip("Toggle Map");
+		
+		setSideButton(mapButton);
+		return self;
+	}
+	
+	static setMappableRange = function(_index, _suf = "Map", _icon = THEME.mappable_parameter) {
+		attributes.mapped = false;
+		parameters.mapped = true;
+		mapped_type = 2;
+		array_push(node.inputMappable, self);
+		
+		with(node) { newInput(_index, nodeValue_Range( $"{other.name} {_suf}", [0,0] )).setVisible(false, false) }
+		
+		parameters.map_index = node.inputs[_index];
+		
+		var mapButton = button(function() /*=>*/ { toggleAttribute("mapped"); node.triggerRender(); })
+			.setIcon( _icon, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} )
+			.iconPad()
+			.setTooltip($"Toggle {_suf}");
 		
 		setSideButton(mapButton);
 		return self;
@@ -760,7 +785,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		parameters.gra_index = node.inputs[_index];
 		array_push(node.inputMappable, self);
 		
-		var gradeButton = button(function() /*=>*/ { toggleAttribute("graded"); })
+		var gradeButton = button(function() /*=>*/ { toggleAttribute("graded");  node.triggerRender(); })
 			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.graded} ], function() /*=>*/ {return attributes.graded? c_white : COLORS._main_icon} ).iconPad()
 			.setTooltip("Toggle Curve");
 		
@@ -842,9 +867,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	}
 	
-	static setShaderProp = function(_key) { node.shaderProp[$ _key] = self; return self; }
-	
-	static setWidget = function(_widg) { editWidget = _widg; return self; }
+	////- Axis
 	
 	static separateAxis = function(_setValue = true) {
 		if(sep_axis) return;
@@ -2450,29 +2473,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.float :
 				if(value_from != noone) return -1;
 				switch(display_type) {
-					case VALUE_DISPLAY._default :
-					case VALUE_DISPLAY.slider :
-						var _angle = argument_count > argc + 0? argument[argc + 0] : 0;
-						var _scale = argument_count > argc + 1? argument[argc + 1] : 1;
-						var _type  = argument_count > argc + 2? argument[argc + 2] : 0;
-						return preview_overlay_scalar(hover, active, _x, _y, _s, _mx, _my, _angle, _scale, _type);
-								
-					case VALUE_DISPLAY.rotation :
-						var _rad  = argument_count > argc + 0? argument[argc + 0] : 64;
-						var _type = argument_count > argc + 1? argument[argc + 1] : 0;
-						return preview_overlay_rotation(hover, active, _x, _y, _s, _mx, _my, _rad, _type);
-								
-					case VALUE_DISPLAY.rotation_range :
-						var _rad = argument_count >  argc + 0? argument[ argc + 0] : 64;
-						return preview_overlay_rotation_range(hover, active, _x, _y, _s, _mx, _my, _rad);
-								
-					case VALUE_DISPLAY.vector :
-						var _typ = argument_count > argc + 0? argument[argc + 0] : 0;
-						var _sca = argument_count > argc + 1? argument[argc + 1] : [ 1, 1 ];
-						var _rot = argument_count > argc + 2? argument[argc + 2] : 0;
-						
-						return preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _typ, _sca, _rot);
-						
 					case VALUE_DISPLAY.gradient_range :
 						var _dim = argument[argc];
 						
@@ -2480,19 +2480,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return preview_overlay_gradient_range(hover, active, _x, _y, _s, _mx, _my, _dim);
 						break;
 								
-					case VALUE_DISPLAY.area :
-						var _flag = argument_count > argc + 0? argument[argc + 0] : 0b0011;
-						return preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _flag, struct_try_get(display_data, "onSurfaceSize"));
-						
 					case VALUE_DISPLAY.puppet_control :
 						return preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my);
 				}
-				break;
-			
-			case VALUE_TYPE.pathnode :
-				var _path   = getValue();
-				var _params = argument_count > argc + 0? argument[argc + 0] : {};
-				if(has(_path, "drawOverlay")) return _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 				break;
 		}
 		

@@ -1,0 +1,6 @@
+{
+    "name":          "Move",
+    "spr":           "s_node_mk_blast_force",
+    "baseNode":      "Node_MK_Blast_Force",
+    "pxc_version":    121002,
+}

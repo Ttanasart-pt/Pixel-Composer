@@ -13,7 +13,7 @@ function Node_MK_Tree_Add_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 1, 
+	input_display_list = [ s_MKFX, 0, 1, 
 		[ "Leaves", false ], 
 	];
 	

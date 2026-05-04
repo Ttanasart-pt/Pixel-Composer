@@ -193,8 +193,6 @@
 	    }
 	}
 	
-	function Inspector_Sprite(_spr) constructor { spr = _spr; }
-	
 	function Inspector_Label(_text = "", _font = f_p3) constructor { 
 	    text = _text; 
 	    font = _font; 
@@ -420,12 +418,14 @@ function Panel_Inspector() : PanelContent() constructor {
             if(inspecting != noone) nodeExpandAll(inspecting);
             for( var i = 0, n = array_length(inspectings); i < n; i++ ) 
                 nodeExpandAll(inspectings[i]);
+            contentPane.scroll_y_to = 0;
         }
         
         function section_collapse_all() {
             if(inspecting != noone) nodeCollapseAll(inspecting);
             for( var i = 0, n = array_length(inspectings); i < n; i++ ) 
                 nodeCollapseAll(inspectings[i]);
+            contentPane.scroll_y_to = 0;
         }
         
         function junction_reset()                { var d = __dialog_junction; if(d == noone) return; d.resetValue();                        }
@@ -820,7 +820,15 @@ function Panel_Inspector() : PanelContent() constructor {
                 jun = _inspecting.junc_meta[i - (amoIn + amoAttr + 1 + amoOut)];
             }
             
-                   if(is(jun, Inspector_Spacer)) {                    // SPACER
+            if(is_handle(jun)) {
+            	var _type = asset_get_type(jun);
+            	if(_type == asset_sprite) {
+	                draw_sprite(jun, 0, xc, yy);
+	                hh += sprite_get_height(jun) + padd;
+	                continue;	
+            	}
+            	
+            } else if(is(jun, Inspector_Spacer)) {                    // SPACER
             	if(!jun.active) continue;
                 var _hh = ui(jun.h);
                 var _yy = yy + _hh / 2 - jun.lshf;
@@ -831,15 +839,6 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
                 
                 hh += _hh;
-                continue;
-                
-            } else if(is(jun, Inspector_Sprite)) {            // SPRITE
-                var _spr = jun.spr;
-                var _sh  = sprite_get_height(_spr);
-                
-                draw_sprite(_spr, 0, xc, yy);
-                
-                hh += _sh + padd;
                 continue;
                 
             } else if(is(jun, Inspector_Label)) {            // TEXT
@@ -919,7 +918,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	                    contentPane.hover_content = true;
 	                	
 	                	if(pFOCUS) {
-							if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
+							if(DOUBLE_CLICK && !subk) _cAll = jun[@ 1]? -1 : 1;
 							else if(mouse_lpress()) { 
 								if(key_mod_press(CTRL)) {
 									_cAll = jun[@ 1]? 1 : -1;

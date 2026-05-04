@@ -36,7 +36,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput( 0, nodeValue_Output( "Output",    VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Positions", VALUE_TYPE.float,   []    ));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 8, 
+	input_display_list = [ s_MKFX, 8, 
 		[ "Dimension",  false     ], 12,  0, 
 		[ "Particles",  false     ],  1, 15, 
 		[ "Spawn",      false     ],  3,  2, 

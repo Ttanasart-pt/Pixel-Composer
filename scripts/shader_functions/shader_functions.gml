@@ -219,7 +219,7 @@
 #endregion
 
 #region prebuild
-	enum BLEND { normal, add, over, alpha, alphamulp, subtract, maximum }
+	enum BLEND { normal, add, over, alpha, alphamulp, subtract, maximum, minimum }
 	
 	#macro gpu_set_tex_filter gpu_set_tex_filter_override
 	#macro __gpu_set_tex_filter gpu_set_tex_filter

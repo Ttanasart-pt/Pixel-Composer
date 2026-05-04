@@ -106,6 +106,7 @@ function ThemeColor() constructor {
     node_blend_vct                      = CDEF.white;
     node_blend_dynaSurf                 = CDEF.red;
     node_blend_mktree                   = CDEF.pgreen;
+    node_blend_mkblast                  = CDEF.red;
     node_path_overlay_control_line      = CDEF.main_grey;
     node_wiggler_frame                  = CDEF.main_grey;
     node_border_file_drop               = CDEF.cyan;

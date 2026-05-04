@@ -8,7 +8,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 
+	input_display_list = [ s_MKFX, 
 		[ "Output", false ], 0, 
 	];
 	

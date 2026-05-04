@@ -14,7 +14,7 @@ function Node_MK_Tree_Branch_Trim(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	newOutput(0, nodeValue_Output("Branch", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
+	input_display_list = [ s_MKFX, 1, 0, 
 		[ "Trim", false ], 2, 
 	];
 	

@@ -67,7 +67,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(31, nodeValue_Bool( "Posterize",  false ));
 	// inputs 44
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 2, 
+	input_display_list = [ s_MKFX, 1, 2, 
 		[ "Panels",       false     ], 0, 3, 27, 16, 4, 10, 5, 
 		[ "Split",        false     ], 26, 17, 20, 23, new Inspector_Spacer(ui(4), true), 18, 6, 19, 
 		[ "Shapes",       false     ], 30, 7, 9, 24, 28, 25, 43, 

@@ -1,0 +1,6 @@
+{
+    "name":          "Particle",
+    "spr":           "s_node_mk_blast_particle",
+    "baseNode":      "Node_MK_Blast_Particle",
+    "pxc_version":    121002,
+}

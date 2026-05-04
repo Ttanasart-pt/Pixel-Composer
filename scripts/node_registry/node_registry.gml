@@ -559,8 +559,10 @@ function __initNodes(unzip = true) {
 	if(unzip) {
 		directory_verify(iroot);
 		
-		if(check_version($"{root}/version", "internal")) 
+		if(check_version($"{root}/version", "internal")) {
+			directory_clear(iroot);
 			zip_unzip($"{working_directory}pack/nodes.zip", root);
+		}
 	}
 	
 	__read_node_directory(root);

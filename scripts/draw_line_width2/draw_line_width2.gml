@@ -1,27 +1,26 @@
-function draw_line_width2(x0, y0, x1, y1, w0, w1, cap = false, c0 = noone, c1 = noone) {
+function draw_line_width2(x0, y0, x1, y1, w0, w1, cap = false, c0 = undefined, c1 = undefined) {
 	var aa  = point_direction(x0, y0, x1, y1) + 90;
 	var d0x = lengthdir_x(w0 / 2, aa);
 	var d0y = lengthdir_y(w0 / 2, aa);
 	var d1x = lengthdir_x(w1 / 2, aa);
 	var d1y = lengthdir_y(w1 / 2, aa);
 	
-	var _x0 = x0 + d0x;
-	var _y0 = y0 + d0y;
-	var _x1 = x0 - d0x;
-	var _y1 = y0 - d0y;
-	var _x2 = x1 + d1x;
-	var _y2 = y1 + d1y;
-	var _x3 = x1 - d1x;
-	var _y3 = y1 - d1y;
+	var _x0 = x0 + d0x, _y0 = y0 + d0y;
+	var _x1 = x0 - d0x, _y1 = y0 - d0y;
+	var _x2 = x1 + d1x, _y2 = y1 + d1y;
+	var _x3 = x1 - d1x, _y3 = y1 - d1y;
 	
-	c0 = c0 == noone? draw_get_color() : c0;
-	c1 = c1 == noone? draw_get_color() : c1;
+	c0 ??= draw_get_color();
+	c1 ??= draw_get_color();
 	
-	draw_primitive_begin(pr_trianglestrip);
-		draw_vertex_color(_x0, _y0, c0, 1);
-		draw_vertex_color(_x1, _y1, c0, 1);
-		draw_vertex_color(_x2, _y2, c1, 1);
-		draw_vertex_color(_x3, _y3, c1, 1);
+	draw_primitive_begin(pr_trianglelist);
+		draw_vertex_texture_color(_x0, _y0, 0, 0, c0, 1);
+		draw_vertex_texture_color(_x1, _y1, 0, 1, c0, 1);
+		draw_vertex_texture_color(_x2, _y2, 1, 0, c1, 1);
+		
+		draw_vertex_texture_color(_x1, _y1, 0, 1, c0, 1);
+		draw_vertex_texture_color(_x2, _y2, 1, 0, c1, 1);
+		draw_vertex_texture_color(_x3, _y3, 1, 1, c1, 1);
 	draw_primitive_end();
 	
 	if(cap && w0 / 2 - 1 > 0) {
@@ -30,7 +29,7 @@ function draw_line_width2(x0, y0, x1, y1, w0, w1, cap = false, c0 = noone, c1 = 
 	}
 }
 
-function draw_line_width2_prim(x0, y0, x1, y1, w0, w1, cap = false, c0 = noone, c1 = noone) {
+function draw_line_width2_prim(x0, y0, x1, y1, w0, w1, cap = false, c0 = undefined, c1 = undefined) {
 	var aa  = point_direction(x0, y0, x1, y1) + 90;
 	var d0x = lengthdir_x(w0 / 2, aa);
 	var d0y = lengthdir_y(w0 / 2, aa);
@@ -46,13 +45,16 @@ function draw_line_width2_prim(x0, y0, x1, y1, w0, w1, cap = false, c0 = noone, 
 	var _x3 = x1 - d1x;
 	var _y3 = y1 - d1y;
 	
-	c0 = c0 == noone? draw_get_color() : c0;
-	c1 = c1 == noone? draw_get_color() : c1;
+	c0 ??= draw_get_color();
+	c1 ??= draw_get_color();
 	
-	draw_vertex_color(_x0, _y0, c0, 1);
-	draw_vertex_color(_x1, _y1, c0, 1);
-	draw_vertex_color(_x2, _y2, c1, 1);
-	draw_vertex_color(_x3, _y3, c1, 1);
+	draw_vertex_texture_color(_x0, _y0, 0, 0, c0, 1);
+	draw_vertex_texture_color(_x1, _y1, 0, 1, c0, 1);
+	draw_vertex_texture_color(_x2, _y2, 1, 0, c1, 1);
+	
+	draw_vertex_texture_color(_x1, _y1, 0, 1, c0, 1);
+	draw_vertex_texture_color(_x2, _y2, 1, 0, c1, 1);
+	draw_vertex_texture_color(_x3, _y3, 1, 1, c1, 1);
 }
 
 
@@ -68,10 +70,13 @@ function draw_line_width2_angle(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _oc = c_
 	var _y1 = y1 + _d1y;
 	
 	//draw_set_color(c_red);
-	draw_vertex_color( x0,  y0, _oc, 1);
-	draw_vertex_color( x1,  y1, _nc, 1);
-	draw_vertex_color(_x0, _y0, _oc, 1);
-	draw_vertex_color(_x1, _y1, _nc, 1);
+	draw_vertex_texture_color( x0,  y0, 0, .5, _oc, 1);
+	draw_vertex_texture_color( x1,  y1, 1, .5, _nc, 1);
+	draw_vertex_texture_color(_x0, _y0, 0,  0, _oc, 1);
+	
+	draw_vertex_texture_color( x1,  y1, 1, .5, _nc, 1);
+	draw_vertex_texture_color(_x0, _y0, 0,  0, _oc, 1);
+	draw_vertex_texture_color(_x1, _y1, 1,  0, _nc, 1);
 	
 	var _x0 = x0 - _d0x;
 	var _y0 = y0 - _d0y;
@@ -79,10 +84,13 @@ function draw_line_width2_angle(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _oc = c_
 	var _y1 = y1 - _d1y;
 	
 	//draw_set_color(c_blue);
-	draw_vertex_color( x0,  y0, _oc, 1);
-	draw_vertex_color( x1,  y1, _nc, 1);
-	draw_vertex_color(_x0, _y0, _oc, 1);
-	draw_vertex_color(_x1, _y1, _nc, 1);
+	draw_vertex_texture_color( x0,  y0, 0, .5, _oc, 1);
+	draw_vertex_texture_color( x1,  y1, 1, .5, _nc, 1);
+	draw_vertex_texture_color(_x0, _y0, 0,  1, _oc, 1);
+	
+	draw_vertex_texture_color( x1,  y1, 1, .5, _nc, 1);
+	draw_vertex_texture_color(_x0, _y0, 0,  1, _oc, 1);
+	draw_vertex_texture_color(_x1, _y1, 1,  1, _nc, 1);
 }
 
 function draw_line_width2_angle_width(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _oc = c_white, _nc = c_white, _otc = c_black, _ntc = c_black) {
@@ -97,10 +105,13 @@ function draw_line_width2_angle_width(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _o
 	var _y1 = y1 + _d1y;
 	
 	//draw_set_color(c_red);
-	draw_vertex_color( x0,  y0, _oc,  1);
-	draw_vertex_color( x1,  y1, _nc,  1);
-	draw_vertex_color(_x0, _y0, _otc, 1);
-	draw_vertex_color(_x1, _y1, _ntc, 1);
+	draw_vertex_texture_color( x0,  y0, 0, .5, _oc,  1);
+	draw_vertex_texture_color( x1,  y1, 1, .5, _nc,  1);
+	draw_vertex_texture_color(_x0, _y0, 0,  0, _otc, 1);
+	
+	draw_vertex_texture_color( x1,  y1, 1, .5, _nc,  1);
+	draw_vertex_texture_color(_x0, _y0, 0,  0, _otc, 1);
+	draw_vertex_texture_color(_x1, _y1, 1,  0, _ntc, 1);
 	
 	var _x0 = x0 - _d0x;
 	var _y0 = y0 - _d0y;
@@ -108,10 +119,13 @@ function draw_line_width2_angle_width(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _o
 	var _y1 = y1 - _d1y;
 	
 	//draw_set_color(c_blue);
-	draw_vertex_color( x0,  y0, _oc,  1);
-	draw_vertex_color( x1,  y1, _nc,  1);
-	draw_vertex_color(_x0, _y0, _otc, 1);
-	draw_vertex_color(_x1, _y1, _ntc, 1);
+	draw_vertex_texture_color( x0,  y0, 0, .5, _oc,  1);
+	draw_vertex_texture_color( x1,  y1, 1, .5, _nc,  1);
+	draw_vertex_texture_color(_x0, _y0, 0,  1, _otc, 1);
+	
+	draw_vertex_texture_color( x1,  y1, 1, .5, _nc,  1);
+	draw_vertex_texture_color(_x0, _y0, 0,  1, _otc, 1);
+	draw_vertex_texture_color(_x1, _y1, 1,  1, _ntc, 1);
 }
 
 function draw_line_cap_T(x0, y0, x1, y1, cap = 4) {

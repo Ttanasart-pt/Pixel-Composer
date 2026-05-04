@@ -25,7 +25,7 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(12, nodeValue_Range( "Range",  [.75, 1.5] ));
 	// inputs 15
 		
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 2, 
+	input_display_list = [ s_MKFX, 1, 2, 
 		[ "Object",  false ],  0, 14,  3,  4,  9, 
 		[ "Pile",    false ],  5,  6,  7,  8, 10, 13, 
 		[ "Scatter", false ], 11, 12, 

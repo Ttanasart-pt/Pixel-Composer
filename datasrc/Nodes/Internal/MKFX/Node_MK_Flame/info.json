@@ -1,0 +1,6 @@
+{
+    "name":          "MK Flame",
+    "spr":           "s_node_mk_flame",
+    "baseNode":      "Node_MK_Flame",
+    "pxc_version":    121002,
+}

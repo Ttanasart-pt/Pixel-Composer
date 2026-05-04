@@ -23,7 +23,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output( "Light only", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 6, 
+	input_display_list = [ s_MKFX, 6, 
 		["Surfaces", false], 0, 1, 
 		["Blink",    false], 2, 3, 4, 5, 7, 
 		["Glow",      true, 8], 9, 10, 

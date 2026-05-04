@@ -426,7 +426,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		});
 	#endregion
 		
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 7, 
+	input_display_list = [ s_MKFX, 7, 
 		[ "Surfaces",   false ], 0, 2, 
 		[ "Positions",  false ], 1, 6, 
 		[ "Flare",      false ], flare_builder,
