@@ -49,7 +49,7 @@ function Node_MK_Blast_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _strns = getInputData( 2);
 			var _dirrs = getInputData( 3);
 			
-			var _useC  = getInputData( 4);
+			var _useC  = getInputData( 4); 
 			var _moveC = getInputData( 5), _move_curve = new curveMap(_moveC);
 			var _lifeM = getInputData( 6);
 			
