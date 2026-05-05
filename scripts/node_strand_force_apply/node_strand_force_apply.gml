@@ -3,7 +3,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
-	setDrawIcon(s_node_strand_force_apply);
+	setDrawIcon();
 	
 	manual_ungroupable	 = false;
 	var i = input_fix_len;

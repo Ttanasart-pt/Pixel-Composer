@@ -55,6 +55,33 @@ def packFolder(src, trg, forced = False):
 
     shutil.make_archive(trgZip, 'zip', srcDir)
 
+def packNodeIcons():
+    srcDir = f"{root}/datasrc/NodeIcons"
+    trgZip = f"{root}/datafiles/pack/node_icons"
+
+    lastZipTime  = lzipData.get("Node icons", 0)
+    lastEditTime = max(os.path.getmtime(r) if os.path.basename(r) != "last_zip.txt" else 0 for r,_,_ in os.walk(srcDir))
+
+    if lastEditTime <= lastZipTime:
+        print(f" x Skipping NodeIcons, no changes detected.")
+        return
+    
+    print(f" > Packing NodeIcons into node_icons...")
+    lzipData["Node icons"] = lastEditTime
+
+    tmpDir = f"{root}/datasrc/__NodeIcons"
+    if os.path.exists(tmpDir):
+        shutil.rmtree(tmpDir)
+
+    # copy only .png from src to tmpDir
+    os.makedirs(tmpDir, exist_ok=True)
+    for item in os.listdir(srcDir):
+        if item.endswith('.png'):
+            shutil.copy(os.path.join(srcDir, item), os.path.join(tmpDir, item))
+    
+    shutil.make_archive(trgZip, 'zip', tmpDir)
+    shutil.rmtree(tmpDir)
+
 if __name__ == "__main__":
     print(f"Updating data files for version {version}...")
     updateThemeMeta("default")
@@ -70,5 +97,5 @@ if __name__ == "__main__":
     packFolder("Nodes", "nodes")
     packFolder("Themes", "themes")
     packFolder("Welcome files", "welcome_files")
-
+    packNodeIcons()
     json.dump(lzipData, open(lzipPath, 'w'), indent=4)

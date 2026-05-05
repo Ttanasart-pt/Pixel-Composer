@@ -6,7 +6,7 @@
 
 function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name = "3D Path Camera";
-	setDrawIcon(s_node_path_3d_camera);
+	setDrawIcon();
 	
 	object   = new __3dCamera_object();
 	camera   = new __3dCamera();

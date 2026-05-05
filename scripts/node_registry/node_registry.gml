@@ -19,11 +19,14 @@
 function NodeObject(_name, _node, _tooltip = "") constructor {
 	name = _name;
 	node = _node;
-	spr  = s_node_icon;
 	icon = noone;
 	nodekey = "";
 	context = noone;
 	allow_outside = false;
+	
+	spr     = undefined;
+	sprPath = undefined;
+	sprLoad = false;
 	
 	nodeName     = script_get_name(node);
 	usecreateFn  = false;
@@ -141,6 +144,19 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
 		
 		return tooltip_spr;
+	}
+	static getSpr        = function() /*=>*/ {
+		if(spr != undefined) return spr;
+		if(sprPath == undefined) {
+			spr = s_node_icon;
+			return spr;
+		}
+		
+		if(sprLoad) return THEME.loading;
+		
+		sprite_add_center_async(sprPath, function(s) /*=>*/ {return setSpr(s)})
+		sprLoad = true;
+		return THEME.loading;
 	}
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}, _skip_context = false) {
@@ -277,14 +293,18 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	static deserialize = function(_data, _dir) {
 		sourceDir = _dir;
 		
-		if(struct_has(_data, "tooltip")) setTooltip(_data.tooltip);
+		if(has(_data, "tooltip")) setTooltip(_data.tooltip);
 		
-		if(struct_has(_data, "spr")) {
+		if(has(_data, "spr")) {
 			var _ispr = _data[$ "spr"];
+			sprPath   = $"{DIRECTORY}NodeIcons/{_ispr}.png";
+			
 			_spr = asset_get_index(_ispr);
-				
 			if(sprite_exists(_spr)) setSpr(_spr);
-			else run_in(1, function(s) /*=>*/ {return print(s)}, [ $"Missing_icon|{_ispr}" ]);
+			else if(!file_exists(sprPath)) {
+				run_in(1, function(s) /*=>*/ {return print(s)}, [ $"Missing_icon|{_ispr}" ]);
+				sprPath = undefined;
+			}
 			
 		} else {
 			var pth = $"{sourceDir}/icon.png";
@@ -300,13 +320,13 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			}
 		}
 			
-		if(struct_has(_data, "io")) {
+		if(has(_data, "io")) {
 			var _io = _data.io;
 			for( var i = 0, n = array_length(_io); i < n; i++ ) 
 				setIO(value_type_from_string(_io[i]));
 		}
 		
-		if(struct_has(_data, "build")) {
+		if(has(_data, "build")) {
 			var _bfn = asset_get_index(_data.build);
 			if(_bfn != -1) setBuild(_bfn);
 		}
@@ -315,22 +335,22 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		_createFn = asset_get_index(_createFn);
 		if(_createFn != -1) setBuild(_createFn);
 		
-		if(struct_has(_data, "deprecated"))
+		if(has(_data, "deprecated"))
 			isDeprecated();
 		
-		if(struct_has(_data, "alias"))
+		if(has(_data, "alias"))
 			setTags(_data.alias);
 			
 		if(variable_global_exists($"{name}_alias"))
 			setTags(variable_global_get($"{name}_alias"));
 			
-		if(struct_has(_data, "show_in_recent"))
+		if(has(_data, "show_in_recent"))
 			show_in_recent = _data.show_in_recent;
 			
-		if(struct_has(_data, "pxc_version"))
+		if(has(_data, "pxc_version"))
 			setVersion(_data.pxc_version);
 		
-		if(struct_has(_data, "params"))
+		if(has(_data, "params"))
 			setParam(_data.params);
 		
     	allow_outside = _data[$ "allow_outside"] ?? allow_outside;
@@ -338,7 +358,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		author        = _data[$ "author"]   ?? author;
 		license       = _data[$ "license"]  ?? license;
 			
-		if(struct_has(_data, "position")) {
+		if(has(_data, "position")) {
 			for( var i = 0, n = array_length(_data.position); i < n; i++ ) {
 				var pos = _data.position[i];
 				if(struct_has(CUSTOM_NODES_POSITION, pos))

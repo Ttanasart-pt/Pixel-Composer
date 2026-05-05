@@ -4,7 +4,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	color = COLORS.node_blend_vfx;
 	update_on_frame = true;
 	parameters.inline_draw_input = true;
-	setDrawIcon(s_node_psystem_spawn);
+	setDrawIcon();
 	
 	setDimension(96, 0);
 	update_on_frame = true;

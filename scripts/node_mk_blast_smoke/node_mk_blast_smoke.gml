@@ -3,7 +3,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_mkblast;
 	icon  = THEME.mkBlast;
 	update_on_frame = true;
-	setDrawIcon(s_node_mk_blast_smoke);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 2, nodeValueSeed());
@@ -176,8 +176,8 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			for( var j = 0, m = array_length(_l.flames); j < m; j++ ) {
 				var _flm = _l.flames[j];
-				if(!is(_flm, MKBlast_Element)) continue;
-				if(!_flm.hot) continue;
+				if(!is(_flm, MKBlast_Element))        continue;
+				if(!(_flm.mask & MKBlast_Mask.flame)) continue;
 				
 				var _amo = irandom_range(_amount[0], _amount[1]);
 				repeat(_amo) {
@@ -195,7 +195,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					_flm.animCurve = _an;
 					_smk.animCurve = _an;
 					
-					_flm.mask    = MKBlast_Mask.smoke;
+					_smk.mask    = MKBlast_Mask.smoke;
 					_smk.discard = true;
 					
 					_smk.speed     += random_range(_speedOf[0], _speedOf[1]);

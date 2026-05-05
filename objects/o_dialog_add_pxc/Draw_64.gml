@@ -52,7 +52,7 @@ DIALOG_DRAW_BG
 				break;
 				
 			case 1 : 
-				draw_sprite_uniform(_node.spr, 0, xx + grid_size / 2, yy + grid_size / 2, .5 * UI_SCALE);
+				draw_sprite_uniform(_node.getSpr(), 0, xx + grid_size / 2, yy + grid_size / 2, .5 * UI_SCALE);
 				_txt = _node.name;
 				break;
 				

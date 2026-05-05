@@ -1,7 +1,7 @@
 function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Offset Path";
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_offset);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_PathNode( "Path" ));
 	newInput(1, nodeValue_Slider(   "Offset", 0, [-1, 1, 0.01] ));

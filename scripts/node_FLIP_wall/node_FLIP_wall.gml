@@ -2,7 +2,7 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name  = "Wall";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	setDrawIcon(s_node_flip_wall);
+	setDrawIcon();
 	setDimension(96, 96);
 	
 	manual_ungroupable = false;

@@ -2,7 +2,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "WAV File Out";
 	color = COLORS.node_blend_input;
 	setDimension(, 72);
-	setDrawIcon(s_node_wav_file_write);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_Path("Path"))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "audio file|*.wav" })

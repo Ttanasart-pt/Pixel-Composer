@@ -2,7 +2,7 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name  = "Mask Data";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	setDrawIcon(s_node_psystem_mask_data);
+	setDrawIcon();
 	
 	setDimension(96, 0);
 	update_on_frame = true;

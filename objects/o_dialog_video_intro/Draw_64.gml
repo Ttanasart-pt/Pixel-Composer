@@ -71,7 +71,7 @@ DIALOG_DRAW_BG
 			var _node = ALL_NODES[$ _data];
 			if(_node) {
 				_title = _node.getName();
-				_spr   = _node.spr;
+				_spr   = _node.getSpr();
 			}
 			
 			draw_set_font(f_p3);

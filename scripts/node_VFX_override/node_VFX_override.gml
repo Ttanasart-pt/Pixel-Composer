@@ -2,7 +2,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "VFX Override";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
-	setDrawIcon(s_node_vfx_override);
+	setDrawIcon();
 	
 	manual_ungroupable = false;
 	setDimension(96, 48);

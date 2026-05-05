@@ -3,7 +3,7 @@ function Node_MK_Blast_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	color = COLORS.node_blend_mkblast;
 	icon  = THEME.mkBlast;
 	update_on_frame = true;
-	setDrawIcon(s_node_mk_blast_gravity);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());

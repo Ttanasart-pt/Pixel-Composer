@@ -3,7 +3,7 @@ function Node_VerletSim_Step(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
 	update_on_frame = true;
-	setDrawIcon(s_node_verletsim_step);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	

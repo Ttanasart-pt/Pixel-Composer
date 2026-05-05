@@ -1,7 +1,7 @@
 function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Particle";
 	update_on_frame = true;
-	setCacheManual();
+	use_cache = CACHE_USE.manual;
 	// setCacheAuto();
 	
 	newInput(32, nodeValueSeed());
@@ -80,8 +80,10 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(56, nodeValue_Surface(   "Sample Surface" ));
 	
 	////- =Render
+	newInput(77, nodeValue_Bool(    "Render",         true ));
 	newInput(75, nodeValue_EButton( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ] ));
 	newInput(76, nodeValue_Int(     "Line Life",      4 ));
+	newInput(21, nodeValue_Bool(    "Loop",           true ));
 	newInput(72, nodeValue_Bool(    "Round Position", true, "Round position to the closest integer value to avoid jittering." ));
 	newInput(73, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
 	
@@ -123,13 +125,11 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(43, nodeValue_Vec2( "Scale",       [0,0], wParam )).setInternalName("scale_wiggle");
 	
 	////- =Unused
-	newInput(21, nodeValue_Bool(     "Loop",          true ));
 	newInput(65, nodeValue_Int(      "Pre-Render",    -1   ));
 	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
-	
-	//input 77
+	//input 78
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput( 1, nodeValue_Output( "Data",        VALUE_TYPE.particle, []    ));
@@ -192,7 +192,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		[ "Color",           true ], 28, 50, 12, 13, 14, 
 			[ "/Sampler",    true ], 56, 
 		
-		[ "Render",          true ], 75, 76, 21, 72, 73,
+		[ "Render",      true, 77 ], 75, 76, 21, 72, 73,
 		
 		__inspc(ui(6), true, false, ui(3)), 
 		
@@ -215,7 +215,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		attributes.cache = true;
 		
 		attributes.part_amount = 512;
-		array_push(attributeEditors, Node_Attribute( "Maximum particles", function() /*=>*/ {return attributes.part_amount}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("part_amount", v)})} ));
+		array_push(attributeEditors, Node_Attribute( "Maximum Particles", function() /*=>*/ {return attributes.part_amount}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("part_amount", v)})} ));
 	#endregion
 	
 	#region Particles
@@ -700,7 +700,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		surface_reset_shader();	
 		
 		outputs[0].setValue(_outSurf);
-		cacheCurrentFrame(_outSurf, _time);
+		if(attributes.cache) cacheCurrentFrame(_outSurf, _time);
 	}
 	
 	static preUpdate = function() /*=>*/ { // Clear cache on dimension change
@@ -718,8 +718,10 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	}
 	
 	static update = function(frame = NODE_CURRENT_FRAME) {
-		var _cache = getCacheFrame(frame);
-		if(is_surface(_cache)) { outputs[0].setValue(_cache); return; }
+		if(attributes.cache) {
+			var _cache = getCacheFrame(frame);
+			if(is_surface(_cache)) { outputs[0].setValue(_cache); return; }
+		}
 		
 		#region Visiblity
 			var _inSurf = getInputData( 0);
@@ -811,6 +813,9 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		#region Render
 			outputs[1].setValue(parts);
 			var _loop = getInputData(21);
+			var _rend = getInputData(77);
+			
+			if(frame == 0) render_frame = 0;
 			
 			while(render_frame <= frame) {
 				if(render_frame == 0) {
@@ -831,7 +836,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				}
 				
 				runVFX(render_frame);
-				render(render_frame);
+				if(_rend) render(render_frame);
 				render_frame++;
 			}
 		#endregion

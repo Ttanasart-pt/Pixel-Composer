@@ -2,7 +2,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	name  = "Fan Branch";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	setDrawIcon(s_node_mk_tree_branch_fan);
+	setDrawIcon();
 	setDimension(96, 48);
 
 	newInput( 1, nodeValueSeed());

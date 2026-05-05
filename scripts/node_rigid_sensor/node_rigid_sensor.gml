@@ -4,7 +4,7 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon  = THEME.rigidSim;
 	update_on_frame    = true;
 	manual_ungroupable = false;
-	setDrawIcon(s_node_rigid_sensor);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	worldIndex  = undefined;

@@ -1,7 +1,7 @@
 function Node_Array_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Reverse";
 	setDimension(96, 48);
-	setDrawIcon(s_node_array_reverse);
+	setDrawIcon();
 	
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);

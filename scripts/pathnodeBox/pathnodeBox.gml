@@ -22,7 +22,7 @@ function pathnodeBox(_junction) : widget() constructor {
     			var b = nodeBuild(e, junction.node.x - 128, junction.ry - 32);
     			var o = b.getOutput(0, junction);
     			if(is(o, NodeValue)) junction.setFrom(o);
-    		}, node.spr).setParam(_ext));
+    		}, node.getSpr()).setParam(_ext));
     	}
     	
     	menuCall("", menu);
@@ -63,7 +63,7 @@ function pathnodeBox(_junction) : widget() constructor {
     	if(is(_node, Node)) {
     		var _key = instanceof(_node);
     		if(has(ALL_NODES, _key))
-    			ic = ALL_NODES[$ _key].spr;
+    			ic = ALL_NODES[$ _key].getSpr();
     	}
     	
     	var iw = ui(24);

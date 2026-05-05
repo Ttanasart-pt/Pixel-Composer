@@ -2,7 +2,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name   = "Plot Path";
 	length = 0;
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_plot);
+	setDrawIcon();
 	
 	eq_type_car = [ "x function", "y function", "parametric" ];
 	eq_type_pol = [ "r function", "O function", "parametric" ];

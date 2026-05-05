@@ -18,7 +18,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name  = "Add Collider";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	setDrawIcon(s_node_flip_add_collider);
+	setDrawIcon();
 	setDimension(96, 96);
 	
 	manual_ungroupable = false;

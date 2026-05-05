@@ -4,7 +4,7 @@ function Node_MK_Tree_Leaf_to_Points(_x, _y, _group = noone) : Node(_x, _y, _gro
 	icon  = THEME.mkTree;
 	parameters.inline_draw_output = true;
 	
-	setDrawIcon(s_node_mk_tree_leaf_to_points);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Leaves

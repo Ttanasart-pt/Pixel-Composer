@@ -1,6 +1,6 @@
 function Node_Points_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Triangulate Points";
-	setDrawIcon(s_node_points_triangulate);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vec2("Points", [ 0, 0 ])).setVisible(true, true).setArrayDepth(1);

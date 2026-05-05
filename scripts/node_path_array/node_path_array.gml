@@ -1,6 +1,6 @@
 function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Combine";
-	setDrawIcon(s_node_path_array);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newOutput(0, nodeValue_Output("Combined Path", VALUE_TYPE.pathnode, self));

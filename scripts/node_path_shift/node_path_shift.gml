@@ -1,7 +1,7 @@
 function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Shift Path";
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_shift);
+	setDrawIcon();
 	
 	////- =Path
 	newInput( 0, nodeValue_PathNode( "Path" ));

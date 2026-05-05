@@ -1,7 +1,7 @@
 function Node_Array_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Flatten";
 	setDimension(96, 48);
-	setDrawIcon(s_node_array_flattern);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_Any( "Array in", []) ).setVisible(true, true);
 	newInput(1, nodeValue_Int( "Depth",    0 ) );

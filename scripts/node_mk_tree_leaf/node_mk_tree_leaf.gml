@@ -301,7 +301,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Leaves";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	setDrawIcon(s_node_mk_tree_leaf);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(5, nodeValueSeed());

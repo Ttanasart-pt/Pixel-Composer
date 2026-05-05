@@ -8,7 +8,7 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name  = "Path Anchor";
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_anchor);
+	setDrawIcon();
 		
 	newInput(0, nodeValue_Vec2( "Postion",              [0,0]   )).setHotkey("G").setVisible(true, true);
 	newInput(1, nodeValue_Vec2( "Control point 1",      [-16,0] ));

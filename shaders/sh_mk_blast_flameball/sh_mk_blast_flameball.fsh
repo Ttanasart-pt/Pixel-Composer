@@ -5,6 +5,7 @@ varying vec4 v_vColour;
 #define TAU 6.283185307179586476925286766559
 
 uniform int shapeIndex;
+uniform int mask;
 
 uniform float innerRad;
 uniform vec2  origin;

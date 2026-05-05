@@ -1,7 +1,7 @@
 function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) constructor {
 	name  = "Turbulence";
 	setDimension(96, 96);
-	setDrawIcon(s_node_smoke_turbulence);
+	setDrawIcon();
 	manual_ungroupable	 = false;
 	
 	////- =Domain

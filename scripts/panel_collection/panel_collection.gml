@@ -409,7 +409,7 @@ function Panel_Collection() : PanelContent() constructor {
 					
 					if(_draw) {
 						var anim = PREFERENCES.collection_animated;
-						if(has(_node, "getSpr")) _node.getSpr();
+						var spr  = has(_node, "getSpr")? _node.getSpr() : _node.spr;
 						
 						BLEND_OVERRIDE
 						draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, CDEF.main_black);
@@ -441,7 +441,7 @@ function Panel_Collection() : PanelContent() constructor {
 							}
 							
 							if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined) {
-								meta.thumbnail = _node.spr;
+								meta.thumbnail = spr;
 								TOOLTIP = meta;
 							}
 						}
@@ -449,25 +449,25 @@ function Panel_Collection() : PanelContent() constructor {
 						if(_node.path == updated_path && updated_prog > 0) 
 							draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_value_positive, updated_prog * 2);
 						
-						if(sprite_exists(_node.spr)) {
-							var sw = sprite_get_width(_node.spr);
-							var sh = sprite_get_height(_node.spr);
+						if(sprite_exists(spr)) {
+							var sw = sprite_get_width(spr);
+							var sh = sprite_get_height(spr);
 							var ss = (grid_size - ui(4)) * PREFERENCES.collection_scale / max(sw, sh);
 							
-							var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
-							var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
+							var xo = (sprite_get_xoffset(spr) - sw / 2) * ss;
+							var yo = (sprite_get_yoffset(spr) - sh / 2) * ss;
 							
 							var sx = _boxx + grid_size / 2 + xo;
 							var sy =    yy + grid_size / 2 + yo;
 							
 							if(ss < 1) gpu_set_tex_filter(true);
 							BLEND_ALPHA_MULP
-							var _fr = anim? frame : floor((sprite_get_number(_node.spr) - 1) / 2);
-							draw_sprite_ext(_node.spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
+							var _fr = anim? frame : floor((sprite_get_number(spr) - 1) / 2);
+							draw_sprite_ext(spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL
 							if(ss < 1) gpu_set_tex_filter(false);
 							
-							if(sprite_get_number(_node.spr) > 1) { // Anim arrow
+							if(sprite_get_number(spr) > 1) { // Anim arrow
 								var _ax = _boxx + ui(4);
 								var _ay = yy + grid_size - ui(8);
 								draw_sprite_ui_uniform(THEME.arrow, 0, _ax, _ay, .75, COLORS._main_value_positive);
@@ -553,23 +553,24 @@ function Panel_Collection() : PanelContent() constructor {
 						}
 					}
 				
+					var spr   = has(_node, "getSpr")? _node.getSpr() : _node.spr;
 					var spr_x = list_height / 2 + ui(14);
 					var spr_y = yy + list_height / 2;
 					var spr_s = list_height - ui(8);
-					if(has(_node, "getSpr")) _node.getSpr();
-					if(sprite_exists(_node.spr)) {
-						var sw = sprite_get_width(_node.spr);
-						var sh = sprite_get_height(_node.spr);
+					
+					if(sprite_exists(spr)) {
+						var sw = sprite_get_width(spr);
+						var sh = sprite_get_height(spr);
 						var ss = spr_s / max(sw, sh);
 							
-						var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
-						var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
+						var xo = (sprite_get_xoffset(spr) - sw / 2) * ss;
+						var yo = (sprite_get_yoffset(spr) - sh / 2) * ss;
 						var sx = spr_x + xo;
 						var sy = spr_y + yo;
 						
 						if(ss < 1) gpu_set_tex_filter(true);
-						var _fr = anim? frame : floor((sprite_get_number(_node.spr) - 1) / 2);
-						draw_sprite_ext(_node.spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
+						var _fr = anim? frame : floor((sprite_get_number(spr) - 1) / 2);
+						draw_sprite_ext(spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
 						if(ss < 1) gpu_set_tex_filter(false);
 						
 					} else
@@ -742,11 +743,13 @@ function Panel_Collection() : PanelContent() constructor {
 			var _node = _list[| index];
 			
 			if(!is(_node, NodeObject)) continue;
-			if(_node.deprecated)                  continue;
+			if(_node.deprecated)       continue;
 			
 			i = floor(ii / col);
 			j = safe_mod(ii, col);
 			ii++;
+			
+			var spr   = _node.getSpr();
 			
 			var _nx   = grid_space + (grid_width + grid_space) * j;
 			var _boxx = _nx + (grid_width - grid_size) / 2;
@@ -772,13 +775,13 @@ function Panel_Collection() : PanelContent() constructor {
 					}
 				}
 				
-				var ss = (grid_size * .8) / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
+				var ss = (grid_size * .8) / max(sprite_get_width(spr), sprite_get_height(spr));
 				var sx = _boxx + grid_size / 2;
 				var sy = yy + grid_size / 2;
 				
 				gpu_set_texfilter(true);
 					BLEND_ALPHA_MULP
-					draw_sprite_ext(_node.spr, 0, sx, sy, ss, ss, 0, c_white, 1);
+					draw_sprite_ext(spr, 0, sx, sy, ss, ss, 0, c_white, 1);
 					BLEND_NORMAL
 				gpu_set_texfilter(false);
 				

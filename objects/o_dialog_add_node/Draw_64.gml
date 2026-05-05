@@ -35,7 +35,7 @@ if !ready exit;
 				var _sel  = _mss && _adel < (_ang / 2);
 				var _selA = _mss? clamp(1 - _adel / (_ang / 2), 0, 1) : 0;
 				
-				var _spr = _nod.spr;
+				var _spr = _nod.getSpr();
 				var  ss  = ui_raw(.3 + _selA * .2);
 				var  aa  = .5 + _sel  * .5;
 				
@@ -93,7 +93,7 @@ DIALOG_DRAW_BG
 			for( var i = 0, n = array_length(recent_nodes); i < n; i++ ) {
 				var _rec = recent_nodes[i];
 				var _nam = _rec.name;
-				var _spr = _rec.spr;
+				var _spr = _rec.getSpr();
 				
 				var _hov = hv && point_in_rectangle(mouse_mx, mouse_my, _rcx, _rcy, _rcx + _rcs, _rcy + _rcs);
 				var _cc  = _hov? COLORS._main_icon_light : COLORS._main_icon;

@@ -7,11 +7,12 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- =Blast
 	newInput( 0, nodeValue_Struct( "Blast" )).setCustomData(global.MKBLAST_JUNC).setVisible(true, true);
+	newInput( 1, nodeValue_Toggle( "Mask", 0b11, [ "Flame", "Smoke" ] ))
 	
 	newOutput( 0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 
-		[ "Blast",   false ], 0,  
+		[ "Blast",   false ],  0,  1, 
 	];
 	
 	////- Nodes
@@ -31,6 +32,7 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			var _dim = getDimension();
 			
 			var _layers = getInputData(0);
+			var _mask   = getInputData(1);
 		#endregion
 		
 		var _outSurf = surface_verify(outputs[0].getValue(), _dim[0], _dim[1]);
@@ -41,7 +43,7 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			DRAW_CLEAR
 			
 			for( var i = 0, n = array_length(_layers); i < n; i++ )
-				_layers[i].draw(temp_surface[0]);
+				_layers[i].draw(temp_surface[0], _mask);
 			
 		surface_reset_target();
 		

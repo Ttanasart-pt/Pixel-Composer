@@ -1,7 +1,7 @@
 function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Shuffle Array";
 	setDimension(96, 48);
-	setDrawIcon(s_node_array_shuffle);
+	setDrawIcon();
 	
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);

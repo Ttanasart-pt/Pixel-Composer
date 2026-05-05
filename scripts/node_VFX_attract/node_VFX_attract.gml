@@ -1,6 +1,6 @@
 function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _group) constructor {
 	name = "Attract";
-	setDrawIcon(s_node_vfx_attract);
+	setDrawIcon();
 	
 	inputs[4].setVisible(false, false);
 	

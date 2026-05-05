@@ -1,7 +1,7 @@
 function Node_Surface_To_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Points from Surface";
 	setDimension(96, 48);
-	setDrawIcon(s_node_surface_to_points);
+	setDrawIcon();
 	
 	////- =Surface
 	newInput(0, nodeValue_Surface( "Surface" ));

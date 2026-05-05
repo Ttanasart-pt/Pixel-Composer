@@ -4,7 +4,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	icon   = THEME.vfx;
 	reloop = true;
 	manual_ungroupable	 = false;
-	setDrawIcon(s_node_vfx_boids);
+	setDrawIcon();
 	
 	setDimension(96, 48);
 	

@@ -7,7 +7,7 @@
 function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Lattice Point";
 	color = COLORS.node_blend_number;
-	setDrawIcon(s_node_scatter_point_lattice);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Base

@@ -1,7 +1,7 @@
 function Node_Rotation_Range_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Rotation Range";
 	color = COLORS.node_blend_number;
-	setDrawIcon(s_node_rotation_range_data);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- Rotation

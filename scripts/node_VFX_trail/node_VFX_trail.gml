@@ -1,7 +1,7 @@
 function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "VFX Trail";
 	setDimension(96, 48);
-	setDrawIcon(s_node_vfx_trail);
+	setDrawIcon();
 	
 	manual_ungroupable	 = false;
 	

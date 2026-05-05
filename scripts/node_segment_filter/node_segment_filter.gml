@@ -1,6 +1,6 @@
 function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Filter Segment";
-	setDrawIcon(s_node_segment_filter);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vector("Segment"))

@@ -2,7 +2,7 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Rigidbody Override";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	setDrawIcon(s_node_rigid_override);
+	setDrawIcon();
 	
 	manual_ungroupable = false;
 	setDimension(96, 48);

@@ -1110,7 +1110,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 						var _n     = t.getNode();
 						if(_n.node_database == undefined) break;
 						
-						var spr = _n.node_database.spr;
+						var spr = _n.node_database.getSpr();
 						var thx = _xx + _siz / 2;
 						var thy = _yy + _siz / 2;
 						var rr  = (dsin(play_frame * 6) * 15) * (_ind % 2 - .5) * 2;
@@ -1432,7 +1432,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				
 	        	if(view_thumbnail == 0) {
 					if(_node.node_database != undefined) {
-						var spr = _node.node_database.spr;
+						var spr = _node.node_database.getSpr();
 						var sww = min(hh - ui(4), ww - ui(4));
 						draw_sprite_stretched_ext(THEME.ui_panel, 0, tx + ui(2), ty + ui(2), sww, hh - ui(4), CDEF.main_dkblack);
 						draw_sprite_ext(spr, 0, tx + hh/2, ty + hh/2, .4, .4);

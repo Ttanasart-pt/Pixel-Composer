@@ -3,7 +3,7 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDimension(96, 96);
-	setDrawIcon(s_node_flip_vortex);
+	setDrawIcon();
 	
 	manual_ungroupable = false;
 	

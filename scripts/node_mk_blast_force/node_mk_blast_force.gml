@@ -3,7 +3,7 @@ function Node_MK_Blast_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_mkblast;
 	icon  = THEME.mkBlast;
 	update_on_frame = true;
-	setDrawIcon(s_node_mk_blast_force);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());

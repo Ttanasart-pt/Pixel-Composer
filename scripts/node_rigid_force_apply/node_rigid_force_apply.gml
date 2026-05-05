@@ -4,7 +4,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	icon  = THEME.rigidSim;
 	update_on_frame    = true;
 	manual_ungroupable = false;
-	setDrawIcon(s_node_rigid_force_apply);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	worldIndex = undefined;

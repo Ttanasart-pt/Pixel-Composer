@@ -2,7 +2,7 @@ function Node_pSystem_Oscillate(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name  = "Oscillate";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	setDrawIcon(s_node_psystem_oscillate);
+	setDrawIcon();
 	
 	setDimension(96, 0);
 	update_on_frame = true;

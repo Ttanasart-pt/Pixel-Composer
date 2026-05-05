@@ -21,6 +21,5 @@ function asyncLoad(data, _key = "id", _group = "") {
 	}
 	
 	if(complete) ds_map_delete(global.asyncCalls, _id);
-	
 	return true;
 }

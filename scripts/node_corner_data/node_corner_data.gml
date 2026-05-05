@@ -1,7 +1,7 @@
 function Node_Corner_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Corner Data";
 	color = COLORS.node_blend_number;
-	setDrawIcon(s_node_corner_data);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- Corner

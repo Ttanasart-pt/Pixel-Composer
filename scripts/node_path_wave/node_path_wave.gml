@@ -7,7 +7,7 @@
 function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Wave Path";
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_wave);
+	setDrawIcon();
 	
 	newInput(5, nodeValueSeed());
 	

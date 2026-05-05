@@ -163,7 +163,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 			var hv  = hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy+hg);
 			
 			if(_nod.node_database != undefined) {
-				var spr = _nod.node_database.spr;
+				var spr = _nod.node_database.getSpr();
 				
 				draw_sprite_ui(spr, 0, tx + ui(16), yy + hg / 2, .3, .3);
 				tx += ui(32);

@@ -2,7 +2,7 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name  = "PBBox Mirror";
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
-	setDrawIcon(s_node_pb_box_mirror);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_Pbbox("Mirror PBBOX"));
 	newInput(1, nodeValue_Pbbox("PBBOX"));

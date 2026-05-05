@@ -1,7 +1,7 @@
 function Node_3D_Get_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name   = "3D Get Data";
 	setDimension(96, 48);
-	setDrawIcon(s_node_3d_get_data);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_D3Mesh("Mesh"));
 	

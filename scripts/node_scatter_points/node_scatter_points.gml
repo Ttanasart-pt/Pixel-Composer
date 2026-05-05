@@ -9,7 +9,7 @@
 function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Scatter Points";
 	color = COLORS.node_blend_number;
-	setDrawIcon(s_node_scatter_points);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	dimension_index = -1;

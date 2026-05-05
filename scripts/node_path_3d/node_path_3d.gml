@@ -834,7 +834,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name  = "Path 3D";
 	is_3D = NODE_3D.polygon;
 	preview_select_surface = false;
-	setDrawIcon(s_node_path_3d);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Path

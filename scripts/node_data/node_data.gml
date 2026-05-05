@@ -72,7 +72,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		icon           = noone;
 		icon_24        = noone;
 		icon_blend     = undefined;
-		node_draw_icon = noone;
+		node_draw_icon = false;
 		bg_spr         = THEME.node_bg;
 		bg_spr_add     = .25;
 		bg_spr_add_clr = c_white;
@@ -1616,7 +1616,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				&& (d.show_dimension || d.show_compute); 
 	} 
 	
-	static setDrawIcon = function(s) { node_draw_icon = s; always_pad = true; return self; }
+	static setDrawIcon = function() { 
+		node_draw_icon = true; 
+		always_pad     = true; 
+		return self; 
+	}
 	
 	static setHeight = function() {
 		w = attributes.node_width? attributes.node_width : min_w;
@@ -2659,8 +2663,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(attributes.show_preview) {
-			if(preview_draw) drawPreview(xx, yy, _s);
-			if(node_draw_icon != noone) draw_sprite_bbox_uniform(node_draw_icon, 0, draw_bbox);
+			if(preview_draw)   drawPreview(xx, yy, _s);
+			if(node_draw_icon) draw_sprite_bbox_uniform(node_database.getSpr(), 0, draw_bbox);
 			
 			if(onDrawNode) {
 				try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }

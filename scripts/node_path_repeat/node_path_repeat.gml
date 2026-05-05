@@ -1,7 +1,7 @@
 function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Repeat Path";
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_repeat);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_PathNode( "Path" ));
 	

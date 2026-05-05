@@ -3,7 +3,7 @@ function Node_VerletSim_to_Path(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
 	setDimension(96, 48);
-	setDrawIcon(s_node_verletsim_to_path);
+	setDrawIcon();
 	
 	////- =Mesh
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);

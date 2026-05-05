@@ -3,7 +3,7 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDimension(96, 96);
-	setDrawIcon(s_node_flip_destroy);
+	setDrawIcon();
 	
 	manual_ungroupable = false;
 	

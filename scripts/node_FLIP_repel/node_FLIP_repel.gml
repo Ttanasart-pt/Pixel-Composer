@@ -3,7 +3,7 @@ function Node_FLIP_Repel(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDimension(96, 96);
-	setDrawIcon(s_node_flip_repel);
+	setDrawIcon();
 	
 	manual_ungroupable = false;
 	

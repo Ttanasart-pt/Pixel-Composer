@@ -1,7 +1,7 @@
 function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Convolute";
 	setDimension(96, 48);
-	setDrawIcon(s_node_array_convolute);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_Float("Array", []))
 		.setArrayDepth(1)

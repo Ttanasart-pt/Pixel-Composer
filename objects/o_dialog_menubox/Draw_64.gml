@@ -257,7 +257,7 @@ DIALOG_WINCLEAR1
 				
 			var _nodeKey = string_pos(">", _txt)? string_copy(_txt, 1, string_pos(">", _txt) - 1) : _txt;
 			var _node    = struct_try_get(ALL_NODES, _nodeKey, noone);
-			if(_node != noone) _spr = [ _node.spr, 0, .5, c_white ];
+			if(_node != noone) _spr = [ _node.getSpr(), 0, .5, c_white ];
 				
 			if(_spr != noone) {
 				var spr = array_safe_get_fast(_spr, 0, _spr);

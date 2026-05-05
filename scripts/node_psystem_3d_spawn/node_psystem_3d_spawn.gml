@@ -11,7 +11,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	color = COLORS.node_blend_vfx;
 	update_on_frame = true;
 	parameters.inline_draw_input = true;
-	setDrawIcon(s_node_psystem_3d_spawn);
+	setDrawIcon();
 	
 	setDimension(96, 0);
 	update_on_frame = true;

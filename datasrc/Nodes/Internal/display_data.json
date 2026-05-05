@@ -428,11 +428,13 @@
             "Node_MK_Blast_Smoke",
             
             { "label": "Modify" },
-            { "label": "/Force" },
+            { "label": "/Physics" },
             "Node_MK_Blast_Force",
             "Node_MK_Blast_Gravity",
             "Node_MK_Blast_Attract",
+            { "label": "/Direct Set" },
             "Node_MK_Blast_Wave",
+            "Node_MK_Blast_Align",
 
             { "label": "Render" },
             { "label": "/Render" },

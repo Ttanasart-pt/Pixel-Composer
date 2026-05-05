@@ -2,7 +2,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Branch";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	setDrawIcon(s_node_mk_tree_branch);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	/* UNUSED */ newInput( 1, nodeValue_Vec2(       "Origin Position", [.5,1]    ));

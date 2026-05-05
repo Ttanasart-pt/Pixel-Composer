@@ -1,7 +1,7 @@
 function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Flatten";
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_flattern);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_PathNode( "Path" ));
 	newInput(1, nodeValue_Bool(     "Reverse",   false ));

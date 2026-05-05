@@ -1,7 +1,7 @@
 function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Zip";
 	setDimension(96, 48);
-	setDrawIcon(s_node_array_zip);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_Bool("Spread Content", false));
 	

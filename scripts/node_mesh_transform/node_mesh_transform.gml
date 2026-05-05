@@ -1,7 +1,7 @@
 function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Mesh Transform";
 	setDimension(96, 48);
-	setDrawIcon(s_node_mesh_transform);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	

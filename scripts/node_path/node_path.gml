@@ -392,7 +392,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path";
 	preview_channel = 1;
 	preview_select_surface = false;
-	setDrawIcon(s_node_path);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Path

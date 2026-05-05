@@ -1,7 +1,7 @@
 function Node_Matrix_Get_Vector(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Matrix Get Vector";
 	color = COLORS.node_blend_number;
-	setDrawIcon(s_node_matrix_get_vector);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValue_Matrix(  "Matrix" )).setVisible(true, true).rejectArray();

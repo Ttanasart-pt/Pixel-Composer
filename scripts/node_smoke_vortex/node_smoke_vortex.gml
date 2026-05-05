@@ -1,7 +1,7 @@
 function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) constructor {
 	name  = "Vortex";
 	setDimension(96, 96);
-	setDrawIcon(s_node_smoke_vortex);
+	setDrawIcon();
 	manual_ungroupable	 = false;
 	
 	////- =Domain

@@ -8,7 +8,7 @@ function Node_Scatter_Point_Lattice_3D(_x, _y, _group = noone) : Node_Processor(
 	name  = "Lattice Point 3D";
 	color = COLORS.node_blend_number;
 	is_3D = NODE_3D.polygon;
-	setDrawIcon(s_node_scatter_point_lattice_3d);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Base

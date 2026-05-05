@@ -3,7 +3,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
-	setDrawIcon(s_node_strand_collision);
+	setDrawIcon();
 	
 	manual_ungroupable	 = false;
 	

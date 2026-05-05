@@ -3,7 +3,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	setDimension(96, 48);
-	setDrawIcon(s_node_rigid_activate);
+	setDrawIcon();
 	manual_ungroupable	 = false;
 	
 	////- =Object
@@ -27,7 +27,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		RETURN_ON_REST
 		
 		var _act = getInputData(1);
-		setDrawIcon(_act? s_node_rigid_activate : s_node_rigid_deactivate);
+		setDrawIcon();
 		
 		if(!is_array(_obj)) return;
 			

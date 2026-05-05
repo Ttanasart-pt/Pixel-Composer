@@ -62,7 +62,7 @@ function MKBlast_Layer() constructor {
 	colorize = undefined;
 	flames   = [];
 	
-	static draw = function(_surf) {
+	static draw = function(_surf, _mask = -1) {
 		var _dim = surface_get_dimension(_surf);
 		
 		surface_set_target(_surf);
@@ -72,8 +72,11 @@ function MKBlast_Layer() constructor {
 			shader_reset();
 			BLEND_NORMAL
 			
-			for( var i = 0, m = array_length(flames); i < m; i++ )
-				flames[i].draw();
+			for( var i = 0, m = array_length(flames); i < m; i++ ) {
+				var _flm = flames[i];
+				if(_mask != -1 && (_mask & _flm.mask) == 0) continue;
+				_flm.draw();
+			}
 		surface_reset_target();
 		
 		if(colorize != undefined) {
@@ -96,7 +99,7 @@ enum MKBlast_Mask {
 }
 
 function MKBlast_Element() constructor {
-	mask = 0;
+	mask = 1;
 	
 	#region Life
 		life      = 0;
@@ -232,6 +235,7 @@ function MKBlast_Element() constructor {
 		BLEND_MAX
 		shader_set(sh_mk_blast_flameball);
 			shader_set_i( "shapeIndex",      shape     );
+			shader_set_i( "mask",            mask      );
 			
 			shader_set_f( "innerRad",        doDecay? blastRad : 0 );
 			shader_set_2( "origin",          normal    );

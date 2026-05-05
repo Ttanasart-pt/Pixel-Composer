@@ -14,7 +14,7 @@ function Node_MK_Tree_Leaf_Hull(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name  = "Leaves Hull";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	setDrawIcon(s_node_mk_tree_leaf_hull);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());

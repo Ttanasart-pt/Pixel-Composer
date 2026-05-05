@@ -3,7 +3,7 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	update_on_frame = true;
-	setDrawIcon(s_node_mk_tree_grow);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());

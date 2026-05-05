@@ -8,7 +8,7 @@ function Node_Scatter_Points_3D(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	name  = "Scatter Points 3D";
 	color = COLORS.node_blend_number;
 	is_3D = NODE_3D.polygon;
-	setDrawIcon(s_node_scatter_points_3d);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Base

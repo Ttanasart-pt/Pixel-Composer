@@ -3,7 +3,7 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	manual_ungroupable = false;
-	setDrawIcon(s_node_vfx_variable);
+	setDrawIcon();
 	
 	setDimension(96, 48);
 	

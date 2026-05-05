@@ -17,7 +17,7 @@ function L_Turtle(x = 0, y = 0, z = 0, ang = 90, w = 1, color = c_white, itr = 0
 
 function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "L System";
-	setDrawIcon(s_node_path_l_system);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Origin

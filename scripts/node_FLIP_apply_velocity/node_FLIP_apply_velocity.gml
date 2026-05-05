@@ -3,7 +3,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDimension(96, 96);
-	setDrawIcon(s_node_flip_apply_velocity);
+	setDrawIcon();
 	manual_ungroupable = false;
 	
 	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);

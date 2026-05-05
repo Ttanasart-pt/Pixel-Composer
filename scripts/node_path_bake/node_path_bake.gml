@@ -1,6 +1,6 @@
 function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Bake Path";
-	setDrawIcon(THEME.node_draw_path);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Path

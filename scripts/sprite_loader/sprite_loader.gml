@@ -39,6 +39,7 @@ function __initTheme() {
 	
 	loadColor(PREFERENCES.theme);			printDebug($"  - Load color   | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
 	loadGraphic(PREFERENCES.theme);			printDebug($"  - Load graphic | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
+	loadNodeIcons();
 }
 
 function _sprite_path(rel, theme) {
@@ -285,6 +286,18 @@ function __generate_texturegroup_dir(_f) {
 function __generate_texturegroup() {
 	__generate_texturegroup_dir($"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Themes/{PREFERENCES.theme}");
 	__test_update_theme();
+}
+
+function loadNodeIcons() {
+	var root = DIRECTORY + "NodeIcons";
+	var t    = get_timer();
+	
+	directory_verify(root);
+	if(check_version($"{root}/version")) {
+		zip_unzip($"{working_directory}pack/node_icons.zip", root);	
+		printDebug($"  - Unzip node icons  | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
+	}
+	
 }
 
 ///// CMD 

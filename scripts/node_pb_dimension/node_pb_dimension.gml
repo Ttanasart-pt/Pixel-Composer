@@ -1,7 +1,7 @@
 function Node_PB_Dimension(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Dimension";
 	color = COLORS.node_blend_feedback;
-	setDrawIcon(s_node_pb_dimension);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newOutput(0, nodeValue_Output("Dimension", VALUE_TYPE.float, [ 1, 1 ] ))

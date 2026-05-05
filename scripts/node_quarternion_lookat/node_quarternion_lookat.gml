@@ -1,6 +1,6 @@
 function Node_Quarternion_Lookat(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name = "Lookat";
-	setDrawIcon(s_node_quarternion_lookat);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	giz_orig = new __3dGizmoSphere(.25, c_yellow, 1);

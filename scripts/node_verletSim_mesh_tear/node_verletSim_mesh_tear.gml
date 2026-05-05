@@ -2,7 +2,7 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name  = "Tear Mesh";
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
-	setDrawIcon(s_node_verletsim_mesh_tear);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newActiveInput(4);

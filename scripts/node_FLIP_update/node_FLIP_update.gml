@@ -3,7 +3,7 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDimension(96, 96);
-	setDrawIcon(s_node_flip_update);
+	setDrawIcon();
 	manual_ungroupable = false;
 	
 	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
@@ -24,7 +24,6 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var domain  = getInputData(0);
 		var _active = getInputData(1);
 		
-		setDrawIcon(_active? s_node_flip_update : s_node_flip_update_paused);
 		outputs[0].setValue(domain);
 		
 		if(!instance_exists(domain)) return;

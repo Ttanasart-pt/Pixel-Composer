@@ -3,7 +3,7 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	update_on_frame = true;
-	setDrawIcon(s_node_mk_tree_leaf_particle);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(18, nodeValue_Bool( "Active", true ));

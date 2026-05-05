@@ -3,7 +3,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_mkblast;
 	icon  = THEME.mkBlast;
 	update_on_frame = true;
-	setDrawIcon(s_node_mk_blast_flame);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValueSeed());
@@ -26,6 +26,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		////- =/Group
 	newInput( 7, nodeValue_Range(    "Group Size", [6,9]     ));
+	newInput(49, nodeValue_Vec2(     "Scale",      [1,1]     ));
 	newInput(10, nodeValue_RotRange( "Angle Span", [360,360] ));
 	
 	////- =Movement
@@ -73,32 +74,30 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(18, nodeValue_Range(    "Level", [0,1]  ));
 	
 		////- =/Perspective
-	newInput(15, nodeValue_Vec2(  "View Origin", [.5,.5] )).setUnitSimple();
-	newInput(16, nodeValue_Range( "Perspective", [2,2]   ));
-	// 49
+	newInput(15, nodeValue_Vec2(  "View Origin", [.25,.25] )).setUnitSimple();
+	newInput(16, nodeValue_Range( "Perspective", [2,2]     ));
+	// 50
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	
 	input_display_list = [ s_MKFX, 0,  
 		[ "Settings",          true ], 19, 20, 
 		[ "Spawning",         false ],  1,  2, 
-			[ "/Lifespan",    false ],  3, 
-			[ "/Source",      false ],  4,  5,  6,
-			[ "/Group",       false ],  7, 10, 
+			[ "/Lifespan",    false ],  3, 40, 
+			[ "/Source",      false ],  4,  5,  6, 41, 
+			[ "/Group",       false ],  7, 49, 10, 
 			
-		[ "Movement",         false ], 38, 11, 39, 24, 12, 22, 
+		[ "Movement",         false ], 38, 11, 39, 24, 42, 12, 22, 
 		[ "Rotation",         false ], 26, 27, 
-		[ "Size",             false ], 13, 28, 48, 
+		[ "Size",             false ], 13, 43, 28, 48, 
 		[ "Spiral",        true, 32 ], 34, 29, 30, 33, 31, 
-		[ "Decay",         true, 25 ], 14, 
+		[ "Decay",         true, 25 ], 14, 44, 
 			
 		[ "Render",           false ], 21, 
-			[ "/Shape",       false ], 23, 35, 46, 47, 36, 37, 
+			[ "/Shape",       false ], 23, 35, 46, 47, 36, 45, 37, 
 			[ "/Color",       false ], 17, 18, 
 			[ "/Perspective", false ], 15, 16, 
 	];
-	
-	insertMapDisplay();
 	
 	////- Nodes
 	
@@ -129,6 +128,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var _group   = getInputData( 7);
 			var _grpSpn  = getInputData(10);
+			var _grpScal = getInputData(49);
 			
 			var _rotat   = getInputData(26), _grpAng   = getInputData( 8);
 			var _rotaFl  = getInputData(27);
@@ -231,13 +231,16 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _layer  = new MKBlast_Layer();
 			_layer.colorize  = _color;
 			
+			var grX = _grpScal[0];
+			var grY = _grpScal[1];
+			
 			for( var g = 0; g < _gro; g++ ) {
 				var _flm = new MKBlast_Element();
 				var pDir = _dir + g * _grAng + random_range(-_grAsp, _grAsp);
 				
 				var _rrad = _rad  + random_range(_raddRand[0], _raddRand[1]);
-				var ox = _orig[0] + random_range(-_area[0], _area[0]) + lengthdir_x(_rrad, pDir);
-				var oy = _orig[1] + random_range(-_area[1], _area[1]) + lengthdir_y(_rrad, pDir);
+				var ox = _orig[0] + random_range(-_area[0], _area[0]) + lengthdir_x(_rrad, pDir) * grX;
+				var oy = _orig[1] + random_range(-_area[1], _area[1]) + lengthdir_y(_rrad, pDir) * grY;
 				
 				_flm.mask    = MKBlast_Mask.flame;
 				_flm.texture = _text;

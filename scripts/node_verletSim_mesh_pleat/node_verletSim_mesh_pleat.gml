@@ -2,7 +2,7 @@ function Node_VerletSim_Mesh_Pleat(_x, _y, _group = noone) : Node(_x, _y, _group
 	name  = "Pleat Mesh";
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
-	setDrawIcon(s_node_verletsim_mesh_pleat);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);

@@ -1,6 +1,6 @@
 function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sample Path";
-	setDrawIcon(s_node_path_sample);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValue_PathNode( "Path"     ));

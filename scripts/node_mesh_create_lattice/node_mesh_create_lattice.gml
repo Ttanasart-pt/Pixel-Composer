@@ -2,7 +2,7 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name = "Lattice Mesh";
 	dimension_index = -1;
 	setDimension(96, 48);
-	setDrawIcon(s_node_mesh_create_lattice);
+	setDrawIcon();
 	
 	////- =Area
 	newInput( 0, nodeValue_Area(  "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();

@@ -2,7 +2,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Rigidbody Variable";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	setDrawIcon(s_node_rigid_variable);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	worldIndex = undefined;

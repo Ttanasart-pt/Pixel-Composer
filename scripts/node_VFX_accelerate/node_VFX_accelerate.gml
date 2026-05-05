@@ -1,6 +1,6 @@
 function Node_VFX_Accelerate(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _group) constructor {
 	name = "Accelerate";
-	setDrawIcon(s_node_vfx_accelerate);
+	setDrawIcon();
 	
 	function onAffect(part, str) {
 		var _rot = random_range(rotateX, rotateY);

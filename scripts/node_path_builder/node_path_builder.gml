@@ -1,7 +1,7 @@
 function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Builder";
 	setDimension(96, 48);
-	setDrawIcon(s_node_path_builder);
+	setDrawIcon();
 	
 	newInput(0, nodeValue_Float("Point array", []))
 		.setVisible(true, true)

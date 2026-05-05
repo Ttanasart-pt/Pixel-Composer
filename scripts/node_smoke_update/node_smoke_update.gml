@@ -3,7 +3,7 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
 	setDimension(96, 48);
-	setDrawIcon(s_node_smoke_update);
+	setDrawIcon();
 	
 	manual_ungroupable	 = false;
 	
@@ -39,7 +39,7 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
-		setDrawIcon(_act? s_node_smoke_update : s_node_smoke_update_paused);
+		setDrawIcon();
 		if(!_act || _stp <= 0) return;
 		
 		var _ts = _dom.time_step;

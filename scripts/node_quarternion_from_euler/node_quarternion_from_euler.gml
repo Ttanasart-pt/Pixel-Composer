@@ -1,6 +1,6 @@
 function Node_Quarternion_From_Euler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Quaternion From Euler";
-	setDrawIcon(s_node_quarternion_from_euler);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vec3("Euler Rotation", [0,0,0] )).setVisible(true, true);

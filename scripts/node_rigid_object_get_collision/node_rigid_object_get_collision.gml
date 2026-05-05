@@ -4,7 +4,7 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 	icon  = THEME.rigidSim;
 	update_on_frame = true;
 	parameters.inline_draw_output = true;
-	setDrawIcon(s_node_rigid_object_get_collision);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue( "Objects",       self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);

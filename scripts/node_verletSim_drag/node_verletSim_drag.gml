@@ -3,7 +3,7 @@ function Node_VerletSim_Drag(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
 	update_on_frame = true;
-	setDrawIcon(s_node_verletsim_drag);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newActiveInput(1);

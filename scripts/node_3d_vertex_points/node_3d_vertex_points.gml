@@ -2,7 +2,7 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	name  = "Mesh Vertices";
 	color = COLORS.node_blend_number;
 	is_3D = NODE_3D.polygon;
-	setDrawIcon(s_node_3d_mesh_vertex_points);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_D3Mesh( "Mesh" ));

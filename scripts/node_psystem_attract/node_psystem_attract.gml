@@ -2,7 +2,7 @@ function Node_pSystem_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name  = "Attract";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	setDrawIcon(s_node_psystem_attract);
+	setDrawIcon();
 	
 	setDimension(96, 0);
 	update_on_frame = true;

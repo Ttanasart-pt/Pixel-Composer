@@ -1,6 +1,6 @@
 function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scatter Path";
-	setDrawIcon(s_node_path_scatter);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 5, nodeValueSeed());

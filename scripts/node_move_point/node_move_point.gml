@@ -1,7 +1,7 @@
 function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Transform Point";
 	color = COLORS.node_blend_number;
-	setDrawIcon(s_node_move_point);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Points

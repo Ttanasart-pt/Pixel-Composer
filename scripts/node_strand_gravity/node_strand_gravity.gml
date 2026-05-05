@@ -3,7 +3,7 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
-	setDrawIcon(s_node_strand_gravity);
+	setDrawIcon();
 	
 	manual_ungroupable	 = false;
 	

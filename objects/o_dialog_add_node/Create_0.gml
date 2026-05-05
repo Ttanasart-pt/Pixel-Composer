@@ -665,6 +665,7 @@ event_inherited();
 				var _nx   = grid_space + (grid_width + grid_space) * cProg;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				var cc    = c_white;
+				var spr   = _node.getSpr();
 				
 				     if(is(_node, NodeObject))  cc = c_white;
 				else if(is(_node, NodeAction))  cc = COLORS.add_node_blend_action;
@@ -706,16 +707,17 @@ event_inherited();
 				
 				if(is(_node, NodeObject)) {
 					_node.drawGrid(_nx, yy, _m[0], _m[1], grid_width, grid_size);
+					
 				} else {
 					var spr_x = _boxx + grid_size / 2;
 					var spr_y = yy + grid_size / 2;
 					
 					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 					
-					if(sprite_exists(_node.spr)) {
+					if(sprite_exists(spr)) {
 						if(is(_node, NodeAction))
-							 draw_sprite_fit(_node.spr, 0, spr_x, spr_y, grid_size - ui(16), grid_size - ui(16));
-						else draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
+							 draw_sprite_fit(spr, 0, spr_x, spr_y, grid_size - ui(16), grid_size - ui(16));
+						else draw_sprite_ui_uniform(spr, 0, spr_x, spr_y, 0.5);
 					}
 					
 					if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
@@ -876,11 +878,13 @@ event_inherited();
 					_shown[$ _node] = 1;
 				}
 				
+				var spr = _node.getSpr();
+				
 				if(++bg_ind % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, COLORS.node_base_bg, 0.1);
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1)) {
 					content_pane.hover_content = true;
-					node_icon      = _node.spr;
+					node_icon      = spr;
 					node_icon_x    = content_pane.x + pd + list_height / 2 + ui(32);
 					node_icon_y    = content_pane.y + yy + list_height / 2;
 					
@@ -923,9 +927,9 @@ event_inherited();
 					var spr_y = yy + list_height / 2;
 					
 					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-					if(sprite_exists(_node.spr)) {
-						var ss = (list_height - ui(8)) / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
-						draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
+					if(sprite_exists(spr)) {
+						var ss = (list_height - ui(8)) / max(sprite_get_width(spr), sprite_get_height(spr));
+						draw_sprite_ext(spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 					}
 					
 					if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
@@ -1385,6 +1389,8 @@ event_inherited();
 					else if(is(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
 					else							cc = COLORS.dialog_add_node_collection;
 					
+					var spr = has(_node, "getSpr")? _node.getSpr() : _node.spr;
+					
 					if(!struct_try_get(_node, "hide_bg", false)) {
 						BLEND_OVERRIDE
 						var nc = colorMultiply(cc, CDEF.main_black);
@@ -1414,22 +1420,21 @@ event_inherited();
 						_node.drawGrid(_nx, yy, _m[0], _m[1], grid_width, grid_size, _param);
 						
 					} else {
-						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-						if(sprite_exists(_node.spr)) {
+						if(sprite_exists(spr)) {
 							var _si = current_time * PREFERENCES.collection_preview_speed /  3000;
-							var _sw = sprite_get_width(_node.spr);
-							var _sh = sprite_get_height(_node.spr);
+							var _sw = sprite_get_width(spr);
+							var _sh = sprite_get_height(spr);
 							var _ss = ui(32) / max(_sw, _sh);
 					
-							var _sox = sprite_get_xoffset(_node.spr);
-							var _soy = sprite_get_yoffset(_node.spr);
+							var _sox = sprite_get_xoffset(spr);
+							var _soy = sprite_get_yoffset(spr);
 					
 							var _sx = _boxx + grid_size / 2;
 							var _sy =  yy   + grid_size / 2;
 							_sx -= (_sw / 2 - _sox) * _ss;
 							_sy -= (_sh / 2 - _soy) * _ss;
 					
-							draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
+							draw_sprite_ext(spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 						}
 					
 						if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
@@ -1537,12 +1542,13 @@ event_inherited();
 				
 				if(i % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, COLORS.node_base_bg, 0.1);
 				
+				var spr = has(_node, "getSpr")? _node.getSpr() : _node.spr;
 				var _minput  = _hover && (MOUSE_MOVED || mouse_release(mb_any));
 				var _mouseOn = point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1);
 				
 				if(_mouseOn) {
 					search_pane.hover_content = true;
-					node_icon   = _node.spr;
+					node_icon   = spr;
 					node_icon_x = search_pane.x + pd + list_height / 2 + ui(32);
 					node_icon_y = search_pane.y + yc;
 				}
@@ -1575,22 +1581,21 @@ event_inherited();
 					}
 					
 				} else {
-					if(has(_node, "getSpr")) _node.getSpr();
-					if(sprite_exists(_node.spr)) {
+					if(sprite_exists(spr)) {
 						var _si = current_time * PREFERENCES.collection_preview_speed / 3000;
-						var _sw = sprite_get_width(_node.spr);
-						var _sh = sprite_get_height(_node.spr);
+						var _sw = sprite_get_width(spr);
+						var _sh = sprite_get_height(spr);
 						var _ss = (list_height - ui(8)) / max(_sw, _sh);
 					
-						var _sox = sprite_get_xoffset(_node.spr);
-						var _soy = sprite_get_yoffset(_node.spr);
+						var _sox = sprite_get_xoffset(spr);
+						var _soy = sprite_get_yoffset(spr);
 					
 						var _sx = pd + list_height / 2 + ui(32);
 						var _sy = yc;
 						_sx -= (_sw / 2 - _sox) * _ss;
 						_sy -= (_sh / 2 - _soy) * _ss;
 					
-						draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
+						draw_sprite_ext(spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 					
 						if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 							draw_sprite_ui_uniform(THEME.play_action, 0, _sx + list_height / 2 - 8, _sy + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);

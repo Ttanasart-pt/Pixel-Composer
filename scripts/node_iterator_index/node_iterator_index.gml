@@ -3,7 +3,7 @@ function Node_Iterator_Index(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_loop;
 	destroy_when_upgroup = true;
 	manual_ungroupable	 = false;
-	setDrawIcon(s_node_iterator_index);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newOutput(0, nodeValue_Output("Loop index", VALUE_TYPE.integer, 0));

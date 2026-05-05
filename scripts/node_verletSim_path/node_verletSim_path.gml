@@ -3,7 +3,7 @@ function Node_VerletSim_Path(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
 	setDimension(96, 48);
-	setDrawIcon(s_node_verletsim_path);
+	setDrawIcon();
 	
 	////- =Path
 	newInput(0, nodeValue_PathNode( "Path"         )).setVisible(true, true);

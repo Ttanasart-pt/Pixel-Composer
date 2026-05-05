@@ -36,6 +36,24 @@ function sprite_add_center(path) {
 	return _s;
 }
 
+function sprite_add_center_async(path, _callBack) {
+	if(!file_exists_empty(path)) return noone;
+	
+	asyncCallGroup("image", sprite_add_ext(path, 1, 0, 0, true), function(_callBack, _load) /*=>*/ {
+		var _sid = _load[?"id"];
+		if(!sprite_exists(_sid)) return;
+		
+		var _sw = sprite_get_width(_sid);
+		var _sh = sprite_get_height(_sid);
+		sprite_set_offset(_sid, _sw / 2, _sh / 2);
+		_callBack(_sid);
+		return _sid;
+		
+	}, _callBack);
+	
+	return noone;
+}
+
 function sprite_set_center(spr) { sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2); }
 
 function sprite_get_splices(path) {

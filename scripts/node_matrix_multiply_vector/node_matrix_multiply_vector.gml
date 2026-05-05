@@ -1,7 +1,7 @@
 function Node_Matrix_Multiply_Vector(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Multiply Vector";
 	color = COLORS.node_blend_number;
-	setDrawIcon(s_node_matrix_multiply_vector);
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Matrix( "Matrix", new Matrix(3) )).setVisible(true, true);

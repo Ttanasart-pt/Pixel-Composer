@@ -4112,11 +4112,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
         var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
         
+        if(_ty == "") return noone;
+        
         var _nodex = max(_n0.x, _n1.x) + 160;
         var _nodey = round((_n0.y + _n1.y) / 2 / 32) * 32;
         var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext());
-            _blend.skipDefault();
+        if(!is(_blend, Node)) return _blend;
         
+        _blend.skipDefault();
         if(array_empty(_n0.outputs)) return _blend;
         if(array_empty(_n1.outputs)) return _blend;
         

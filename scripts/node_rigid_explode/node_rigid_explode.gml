@@ -5,7 +5,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame    = true;
 	manual_ungroupable = false;
 	setDimension(96, 48);
-	setDrawIcon(s_node_rigid_explode);
+	setDrawIcon();
 	worldIndex = undefined;
 	worldScale = 100;
 	
