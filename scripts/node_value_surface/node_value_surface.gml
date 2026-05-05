@@ -26,7 +26,7 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 	if(_name == "Mask") {
 		setCustomData(global.SURFACE_MASK_JUNC);
 		
-		var _dimTarget = array_safe_get(node.inputs, node.dimension_input);
+		var _dimTarget = array_safe_get(node.inputs, node.dimension_index);
 		if(is(_dimTarget, __NodeValue_Dimension)) {
 			_dimTarget.use_mask   = true;
 			_dimTarget.mask_input = self;

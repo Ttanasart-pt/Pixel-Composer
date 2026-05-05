@@ -581,7 +581,7 @@ function Panel_Inspector() : PanelContent() constructor {
     ////- Draw Content
     
     contentPane = new scrollPane(content_w, content_h, function(_y, _m) { 
-        draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+    	draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
         return inspecting == noone? drawContentMeta(_y, _m) : drawContentNode(_y, _m);
     }).setScrollUnclamp();
     
@@ -590,6 +590,11 @@ function Panel_Inspector() : PanelContent() constructor {
     	draw_clear_alpha(COLORS.panel_bg_clear, 1);
         draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, top_bar_h, w - pad * 2, h - top_bar_h - pad);
         
+     //   if(inspecting) { // 
+	    // 	var _colr = inspecting.getColor();
+	    // 	COLORS._main_accent = _colr == -1 || _colr == c_white? COLOR_ACCENT : _colr;
+    	// } else COLORS._main_accent = COLOR_ACCENT;
+    	
         if(inspecting && !inspecting.active) clearInspecting();
         var mse = [mx,my];
         var pd = ui(8);

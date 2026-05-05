@@ -174,7 +174,7 @@
             "Node_pSystem_Acceleration",
             "Node_pSystem_Collision",
             
-            { "label": "Rendering" },
+            { "label": "Render" },
             { "label": "/Render" },
             "Node_pSystem_Render",
             "Node_pSystem_Render_Trail",
@@ -220,7 +220,7 @@
             "Node_pSystem_3D_Acceleration",
             "Node_pSystem_3D_Collision",
             
-            { "label": "Rendering" },
+            { "label": "Render" },
             { "label": "/Render" },
             "Node_pSystem_3D_Render_Model",
             
@@ -259,6 +259,7 @@
             "Node_Rigid_Joint_Rotate",
             
             { "label": "Render" },
+            { "label": "/Render" },
             "Node_Rigid_Render",
             "Node_Rigid_Render_ID",
             
@@ -280,8 +281,6 @@
             "Node_Smoke_Domain_Queue",
             { "label": "/Update" },
             "Node_Smoke_Update",
-            { "label": "/Render" },
-            "Node_Smoke_Render",
             
             { "label": "Smoke" },
             { "label": "/Add" },
@@ -292,6 +291,11 @@
             "Node_Smoke_Vortex",
             "Node_Smoke_Repulse",
             "Node_Smoke_Turbulence",
+            
+            { "label": "Render" },
+            { "label": "/Render" },
+            "Node_Smoke_Render",
+
         ],
         "context": ["Node_Smoke_Group", "Node_Smoke_Group_Inline"],
         "color": "node_blend_smoke"
@@ -302,10 +306,7 @@
             { "label": "/Domain" },
             "Node_FLIP_Domain",
             "Node_FLIP_Update",
-            { "label": "/Render" },
-            "Node_FLIP_Render",
-            "Node_FLIP_to_VFX",
-            
+
             { "label": "Fluid" },
             { "label": "/Spawner" },
             "Node_FLIP_Spawner",
@@ -316,19 +317,22 @@
             "Node_FLIP_Apply_Force",
             "Node_FLIP_Repel",
             "Node_FLIP_Vortex",
+            
+            { "label": "Render" },
+            { "label": "/Render" },
+            "Node_FLIP_Render",
+            "Node_FLIP_to_VFX",
+            
         ],
         "context": ["Node_FLIP_Group_Inline"],
         "color": "node_blend_fluid"
     }, //FLIP
     {
         "name": "StrandSim", "nodes": [
-            { "label": "System" },
+            { "label": "Strand" },
             { "label": "/Strand" },
             "Node_Strand_Create",
             "Node_Strand_Update",
-            { "label": "/Render" },
-            "Node_Strand_Render",
-            "Node_Strand_Render_Texture",
             
             { "label": "Affector" },
             { "label": "/Forces" },
@@ -339,6 +343,11 @@
             "Node_Strand_Collision",
             { "label": "/Destroy" },
             "Node_Strand_Break",
+            
+            { "label": "Render" },
+            { "label": "/Render" },
+            "Node_Strand_Render",
+            "Node_Strand_Render_Texture",
         ],
         "context": ["Node_Strand_Group", "Node_Strand_Group_Inline"],
         "color": "node_blend_strand"
@@ -354,10 +363,14 @@
             { "label": "/Path" },
             "Node_VerletSim_Path", 
             { "label": "Simulation" },
+
+            { "label": "Modify" },
             { "label": "/Force" },
             "Node_VerletSim_Force",
             "Node_VerletSim_Drag",
             "Node_VerletSim_Wind",
+
+            { "label": "Render" },
             { "label": "/Render" },
             "Node_VerletSim_Step",
             "Node_VerletSim_Render",

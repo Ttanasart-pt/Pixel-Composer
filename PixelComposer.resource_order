@@ -1152,6 +1152,7 @@
     {"name":"meshBox","order":3,"path":"scripts/meshBox/meshBox.yy",},
     {"name":"meta_data","order":12,"path":"scripts/meta_data/meta_data.yy",},
     {"name":"migration_function","order":1,"path":"scripts/migration_function/migration_function.yy",},
+    {"name":"mkblastBox","order":7,"path":"scripts/mkblastBox/mkblastBox.yy",},
     {"name":"mktreeBox","order":6,"path":"scripts/mktreeBox/mktreeBox.yy",},
     {"name":"mouse_input","order":2,"path":"scripts/mouse_input/mouse_input.yy",},
     {"name":"mtl_reader","order":8,"path":"scripts/mtl_reader/mtl_reader.yy",},

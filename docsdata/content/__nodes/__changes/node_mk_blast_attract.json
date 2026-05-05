@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.0.2.004",
+    "changes": [
+      {
+        "date": "2026-05-05T01:53:39.426Z",
+        "node": "",
+        "commit": "**Particle**: Node will now automatically render the all the missing frames to improve smoothness when scrubbing or editing value."
+      }
+    ]
+  }
+]

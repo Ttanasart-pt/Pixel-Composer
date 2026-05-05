@@ -135,7 +135,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputMap        = {};
 		input_value_map  = {};
 		dimension_index  = 0;
-		dimension_input  = -1;
 		
 		active_index     = -1;
 		active_value     = true;
@@ -806,6 +805,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		inputm[$ j.name] = j;
 		inputs[i] = j; 
+		
+		if(is(j, __NodeValue_Dimension))
+			dimension_index = i;
 		
 		j.setIndex(i); 
 		switch(j.name) {
@@ -2986,8 +2988,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return true;
 	}
 	
+	static onClearCache = undefined;
 	static clearCache = function(_force = false) {
 		clearInputCache();
+		if(onClearCache) onClearCache();
 		
 		if(!_force) {
 			if(!use_cache)          return;

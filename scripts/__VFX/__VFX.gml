@@ -70,9 +70,6 @@ function __part(_node) : __particleObject() constructor {
 	life_incr  = 0;
 	step_int   = 0;
 	
-	bound_w    = 1;
-	bound_h    = 1;
-	
 	////-  Transforms
 	
 	startx  = 0; starty  = 0;
@@ -206,8 +203,6 @@ function __part(_node) : __particleObject() constructor {
 		
 		wrap_x = _wx;
 		wrap_y = _wy;
-	
-		if(node.onPartCreate != noone) node.onPartCreate(self);
 		
 		trailLife     = 0;
 		x_history     = array_create(life);
@@ -342,8 +337,6 @@ function __part(_node) : __particleObject() constructor {
 		INLINE
 		
 		active = false;
-		if(callDestroy && node.onPartDestroy != noone)
-			node.onPartDestroy(self);
 	}
 	
 	static step = function(_frame = 0) {
@@ -372,13 +365,15 @@ function __part(_node) : __particleObject() constructor {
 				y += speedy * spdCurve;
 				
 			if(wrap_x) {
-				if(x < 0)       x += bound_w;
-				if(x > bound_w) x -= bound_w;
+				var bw = node.curr_dimension[0];
+				if(x < 0)  x += bw;
+				if(x > bw) x -= bw;
 			}
 			
 			if(wrap_y) {
-				if(y < 0)       y += bound_h;
-				if(y > bound_h) y -= bound_h;
+				var bh = node.curr_dimension[1];
+				if(y < 0)  y += bh;
+				if(y > bh) y -= bh;
 			}
 		#endregion
 		
@@ -421,9 +416,6 @@ function __part(_node) : __particleObject() constructor {
 				rot = lerp_angle_direct(rotBase, rotTarget, _rLerp);
 			}
 		#endregion
-		
-		if(node.onPartStep != noone && step_int > 0 && safe_mod(life, step_int) == 0) 
-			node.onPartStep(self);
 		
 		if(life-- < 0) kill();
 		
@@ -572,8 +564,8 @@ function __part(_node) : __particleObject() constructor {
 		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
 			return;
 		
-		var bw = bound_w;
-		var bh = bound_h;
+		var bw = node.curr_dimension[0];
+		var bh = node.curr_dimension[1];
 		
 		switch(render_type) {
 			case PARTICLE_RENDER_TYPE.surface : 

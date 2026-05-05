@@ -41,8 +41,9 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(27, nodeValue_Bool(    "Flip Rotate", false ));
 	
 	////- =Size
-	newInput(13, nodeValue_Range(   "Size",        [6,10]  )).setMappableRange(43, "Group Varience", THEME.mk_blast_group);
-	newInput(28, nodeValue_Range(   "Spawn Size",  [.5,.5] ));
+	newInput(13, nodeValue_Range(   "Size",         [6,10]    )).setMappableRange(43, "Group Varience", THEME.mk_blast_group);
+	newInput(28, nodeValue_Range(   "Spawn Size",   [.5,.5]   ));
+	newInput(48, nodeValue_Range2(  "Aspect Ratio", [1,1,1,1] ));
 	
 	////- =Spiral
 	newInput(32, nodeValue_Bool(    "Spiral Use", false   ));
@@ -74,7 +75,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		////- =/Perspective
 	newInput(15, nodeValue_Vec2(  "View Origin", [.5,.5] )).setUnitSimple();
 	newInput(16, nodeValue_Range( "Perspective", [2,2]   ));
-	// 48
+	// 49
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	
@@ -87,7 +88,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 		[ "Movement",         false ], 38, 11, 39, 24, 12, 22, 
 		[ "Rotation",         false ], 26, 27, 
-		[ "Size",             false ], 13, 28, 
+		[ "Size",             false ], 13, 28, 48, 
 		[ "Spiral",        true, 32 ], 34, 29, 30, 33, 31, 
 		[ "Decay",         true, 25 ], 14, 
 			
@@ -134,6 +135,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var _size    = getInputData(13), _sizeRand = getInputData(43);
 			var _sizeRat = getInputData(28);
+			var _aspects = getInputData(48);
 			
 			var _spiUse  = getInputData(32);
 			var _spiPhs  = getInputData(34);
@@ -230,13 +232,14 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_layer.colorize  = _color;
 			
 			for( var g = 0; g < _gro; g++ ) {
-				var _flm = new MKBlast_Ball();
+				var _flm = new MKBlast_Element();
 				var pDir = _dir + g * _grAng + random_range(-_grAsp, _grAsp);
 				
 				var _rrad = _rad  + random_range(_raddRand[0], _raddRand[1]);
 				var ox = _orig[0] + random_range(-_area[0], _area[0]) + lengthdir_x(_rrad, pDir);
 				var oy = _orig[1] + random_range(-_area[1], _area[1]) + lengthdir_y(_rrad, pDir);
 				
+				_flm.mask    = MKBlast_Mask.flame;
 				_flm.texture = _text;
 					
 				_flm.origin    = _vorig;
@@ -261,6 +264,8 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				if(_rotaFl && choose(0,1)) _flm.rotate = -_flm.rotate;
 				
 				var _ssiz = _siz + random_range(_sizeRand[0], _sizeRand[1]);
+				_flm.aspect[0]  = random_range(_aspects[0], _aspects[1]);
+				_flm.aspect[1]  = random_range(_aspects[2], _aspects[3]);
 				_flm.size[0]    = _ssiz * random_range(_sizeRat[0], _sizeRat[1]);
 				_flm.size[1]    = _ssiz;
 				_flm.shape      = _shape;
@@ -294,208 +299,4 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		outputs[0].setValue(_flameLayer);
 	} 
-}
-
-function MKBlast_Ball() : MKBlast_Element() constructor {
-	blastRatio      = 0;
-	
-	radiusBlast     = .4;
-	
-	moveType        = 0;
-	moveCurve       = undefined;
-
-	normal          = [0,0];
-	discard         = false;
-	
-	texture         = undefined;
-	shape           = 0;
-	
-	doDecay         = true;
-	decay           = 6;
-	
-	rotate          = 0;
-	
-	spiralSize      = 0;
-	spiralIntensity = 0;
-	spiralRotation  = 0;
-	spiralPhase     = 0;
-	spiralMultiply  = 1;
-
-	arrowSize       = 0;
-	lineThickness   = 2;
-	lineShape       = [1];
-	pathData        = [];
-	
-	static step = function() {
-		var _life = max(life / lifeTotal, 0);
-		var _blas = max((life - decay) / lifeTotal, 0);
-		
-		if(animCurve) _life = animCurve.get(_life);
-		
-		lifeRatio   = _life;
-		blastRatio  = _blas;
-		
-		// Movement
-		if(moveType == 1 && moveCurve != undefined) {
-			var _tDist = speed * lifeTotal;
-			var _cDist = moveCurve.get(clamp(_life, 0, 1)) * _tDist;
-			
-			x = sx + lengthdir_x(_cDist, direction);
-			y = sy + lengthdir_y(_cDist, direction);
-			
-		} else {
-			var _dist = (speed + max(0, speed - friction * life)) / 2 * life;
-			x = sx + lengthdir_x(_dist, direction);
-			y = sy + lengthdir_y(_dist, direction);
-		}
-		
-		// Gravity
-		x += lengthdir_x(gravity, gravityDir) * sqr(max(0, life));
-		y += lengthdir_y(gravity, gravityDir) * sqr(max(0, life));
-	}
-	
-	static draw = function(_x = 0, _y = 0, _r = 0, _s = 1) {
-		var rad = lerp(size[0], size[1], lifeRatio);
-		var ro  = rad * _s;
-		if(life < 0 || ro <= 0) return;
-		
-		var ars = ro * arrowSize;
-		
-		var xx = _x + x * _s;
-		var yy = _y + y * _s;
-		
-		normal[0] = (x - origin[0]) / originDim[0] * perspective;
-		normal[1] = (y - origin[1]) / originDim[1] * perspective;
-		
-		angle = direction + lifeRatio * rotate;
-		
-		var blastRad = max(0, blastRatio) * radiusBlast;
-		
-		BLEND_MAX
-		shader_set(sh_mk_blast_flameball);
-			shader_set_i( "shapeIndex",   shape     );
-			
-			shader_set_f( "innerRad",     doDecay? blastRad : 0 );
-			shader_set_2( "origin",       normal    );
-			shader_set_i( "discardBlack", discard   );
-			shader_set_f( "rotation",     angle     );
-			
-			shader_set_f( "spiralSize",      spiralSize      );
-			shader_set_f( "spiralPhase",     spiralPhase     );
-			shader_set_f( "spiralIntensity", spiralIntensity );
-			shader_set_f( "spiralRotation",  spiralRotation * life  );
-			shader_set_i( "spiralMultiply",  spiralMultiply  );
-			
-			shader_set_i( "useTexture", is_surface(texture) );
-			if(is_surface(texture)) shader_set_s("texture", texture);
-			
-			shader_set_2("level",    level);
-			
-			var cc = c_white;
-			var aa = doDecay? 1 : 1 - clamp((life - decay) / lifeTotal, 0, 1);
-			
-			switch(shape) {
-				case 0 : // Circle
-					draw_sprite_ext(s_fx_pixel2, 0, xx, yy, ro, ro, 0, cc, aa); 
-					break;
-				
-				case 1 : // Arrow
-					var xc = xx + lengthdir_x(ars, angle + 180);
-					var yc = yy + lengthdir_y(ars, angle + 180);
-					
-					var x0 = xx + lengthdir_x(ro, angle +   0);
-					var y0 = yy + lengthdir_y(ro, angle +   0);
-					
-					var x1 = xx + lengthdir_x(ro, angle + 135);
-					var y1 = yy + lengthdir_y(ro, angle + 135);
-					
-					var x2 = xx + lengthdir_x(ro, angle - 135);
-					var y2 = yy + lengthdir_y(ro, angle - 135);
-					
-					draw_primitive_begin(pr_trianglelist);
-						draw_vertex_texture_color(xc, yc, .5, .5, cc, aa);
-						draw_vertex_texture_color(x0, y0,  1,  0, cc, aa);
-						draw_vertex_texture_color(x1, y1,  0,  0, cc, aa);
-						
-						draw_vertex_texture_color(xc, yc, .5, .5, cc, aa);
-						draw_vertex_texture_color(x0, y0,  1,  1, cc, aa);
-						draw_vertex_texture_color(x2, y2,  0,  1, cc, aa);
-					draw_primitive_end();
-					break;
-				
-				case 2 : // Line
-					shader_set_f_array("lineShape", lineShape);
-					shader_set_2("textureRange", [0,1]);
-					
-					var x0 = xx + lengthdir_x(ro, angle);
-					var y0 = yy + lengthdir_y(ro, angle);
-					
-					var x1 = xx + lengthdir_x(ro, angle + 180);
-					var y1 = yy + lengthdir_y(ro, angle + 180);
-					
-					var dx = lengthdir_x(lineThickness / 2, angle + 90);
-					var dy = lengthdir_y(lineThickness / 2, angle + 90);
-					
-					var _x0 = x0 + dx, _y0 = y0 + dy;
-					var _x1 = x0 - dx, _y1 = y0 - dy;
-					var _x2 = x1 + dx, _y2 = y1 + dy;
-					var _x3 = x1 - dx, _y3 = y1 - dy;
-					
-					draw_primitive_begin(pr_trianglelist);
-						draw_vertex_texture_color(_x0, _y0, 0, 0, cc, 1);
-						draw_vertex_texture_color(_x1, _y1, 0, 1, cc, 1);
-						draw_vertex_texture_color(_x2, _y2, 1, 0, cc, 1);
-						
-						draw_vertex_texture_color(_x1, _y1, 0, 1, cc, 1);
-						draw_vertex_texture_color(_x2, _y2, 1, 0, cc, 1);
-						draw_vertex_texture_color(_x3, _y3, 1, 1, cc, 1);
-					draw_primitive_end();
-					break;
-					
-				case 3 : // Path
-					if(array_length(pathData) < 2) break;
-					shader_set_f_array("lineShape", lineShape);
-					
-					var len = array_length(pathData);
-					var ox = pathData[0][0];
-					var oy = pathData[0][1];
-					var nx = pathData[1][0];
-					var ny = pathData[1][1];
-					var od = point_direction(ox, oy, nx, ny);
-					var nd;
-					
-					var rcos  = cos(angle);
-					var rsin  = sin(angle);
-					var trans = [
-						 lifeRatio * rcos,  lifeRatio * rsin, 0, 0, 
-						 lifeRatio * rsin, -lifeRatio * rcos, 0, 0, 
-						                0,                 0, 1, 0, 
-						               xx,                yy, 0, 1
-					];
-					
-					var stl = 1 / (len - 1);
-					
-					matrix_set(matrix_world, trans);
-					for( var i = 1; i < len; i++ ) {
-						nx = pathData[i][0];
-						ny = pathData[i][1];
-						nd = point_direction(ox, oy, nx, ny);
-						
-						shader_set_2("textureRange", [(i-1) * stl, i * stl]);
-						draw_primitive_begin(pr_trianglelist);
-						draw_line_width2_angle(ox, oy, nx, ny, lineThickness, lineThickness, od+90, nd+90, cc, cc);
-						draw_primitive_end();
-						
-						ox = nx;
-						oy = ny;
-						od = nd;
-					}
-					matrix_set(matrix_world, MATRIX_IDENTITY);
-					
-					break;
-			}
-		shader_reset();
-		BLEND_NORMAL
-		
-	}
 }

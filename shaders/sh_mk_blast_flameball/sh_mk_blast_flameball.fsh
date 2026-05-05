@@ -8,7 +8,9 @@ uniform int shapeIndex;
 
 uniform float innerRad;
 uniform vec2  origin;
+
 uniform float rotation;
+uniform vec2  scale;
 
 uniform int useTexture;
 uniform sampler2D texture;
@@ -25,6 +27,11 @@ uniform float lineShape[33];
 
 uniform vec2 level;
 uniform vec2 textureRange;
+
+mat2 invert(mat2 m) {
+	float det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+	return mat2(m[1][1], -m[0][1], -m[1][0], m[0][0]) / det;
+}
 
 vec2 sphereCoord(vec2 uv, vec3 normal) {
 	// position at [0,0,1] normal
@@ -47,18 +54,24 @@ vec2 sphereCoord(vec2 uv, vec3 normal) {
 }
 
 void main() {
-	
 	float scl = 2.;
 	vec2  sc;
 	bool  doSpiral = true;
 	
+	vec2  vtx = v_vTexcoord;
+	float ang = radians(rotation);
+	mat2  rotMat    = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	mat2  rotMatInv = invert(rotMat);
+	
+	vtx = .5 + ((vtx - .5) * rotMat / scale) * rotMatInv;
+	
 	if(useTexture == 1) {
-		vec4 tex = texture2D( texture, v_vTexcoord );
+		vec4 tex = texture2D( texture, vtx );
 		scl /= tex.r;
 	}
 	
 	if(shapeIndex == 0 || shapeIndex == 1) {
-		vec2 tx = (v_vTexcoord - .5) * scl;
+		vec2 tx = (vtx - .5) * scl;
 		
 		float r = length(tx);
 		if(r > 1.) discard;
@@ -74,8 +87,8 @@ void main() {
 	} else if(shapeIndex == 2 || shapeIndex == 3) {
 		doSpiral = false;
 		
-		float _x = v_vTexcoord.x;
-		float _y = v_vTexcoord.y;
+		float _x = vtx.x;
+		float _y = vtx.y;
 		
 		_x = mix(textureRange[0], textureRange[1], _x);
 		int   ix = int(floor(_x * 32.));

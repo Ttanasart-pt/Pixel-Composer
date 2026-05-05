@@ -3747,7 +3747,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			tyy += lh + pd;
     		
     		var txx = tx0;
-			var txt = "Doc stat: ";
+			var txt = "Doc: ";
 			draw_set_color(COLORS._main_text_sub);
 			draw_text_add(txx, tyy, txt); txx += string_width(txt) + ui(4);
 			
@@ -3756,7 +3756,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			tyy += lh + pd;
 			
     		var txx = tx0;
-			var txt = "Note stat: ";
+			var txt = "Note: ";
 			draw_set_color(COLORS._main_text_sub);
 			draw_text_add(txx, tyy, txt); txx += string_width(txt) + ui(4);
 			

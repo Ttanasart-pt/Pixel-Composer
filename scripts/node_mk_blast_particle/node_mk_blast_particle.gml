@@ -36,8 +36,9 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(22, nodeValue_Bool(    "Flip Rotate", false ));
 	
 	////- =Size
-	newInput(12, nodeValue_Range(   "Size",        [6,10]  ));
-	newInput(24, nodeValue_Range(   "Spawn Size",  [.5,.5] ));
+	newInput(12, nodeValue_Range(      "Size",         [6,10]    ));
+	newInput(24, nodeValue_Range(      "Spawn Size",   [.5,.5]   ));
+	newInput(36, nodeValue_Vec2_Range( "Aspect Ratio", [1,1,1,1] ));
 	
 	////- =Spiral
 	newInput(25, nodeValue_Bool(    "Spiral Use", false   ));
@@ -69,7 +70,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		////- =/Perspective
 	newInput(19, nodeValue_Vec2(  "View Origin", [.5,.5] )).setUnitSimple();
 	newInput(20, nodeValue_Range( "Perspective", [2,2]   ));
-	// 36
+	// 37
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	
@@ -81,7 +82,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		[ "Particle",      false ],  3, 
 		[ "Movement",      false ],  8,  9, 10, 11, 
 		[ "Rotation",      false ], 21, 22, 
-		[ "Size",          false ], 12, 24, 
+		[ "Size",          false ], 12, 24, 36, 
 		
 		[ "Spiral",    false, 25 ], 30, 26, 27, 29, 28, 
 		[ "Decay",     false, 13 ], 14, 
@@ -133,6 +134,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			var _sizes   = getInputData(12);
 			var _sizeRat = getInputData(24);
+			var _aspects = getInputData(36);
 			
 			var _spiUse  = getInputData(25);
 			var _spiPhs  = getInputData(30);
@@ -195,9 +197,10 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _gro  = _amount;
 			
 			for( var g = 0; g < _gro; g++ ) {
-				var _flm = new MKBlast_Ball();
+				var _flm = new MKBlast_Element();
 				
 				_flm.texture = _texture;
+				_flm.mask    = MKBlast_Mask.flame;
 					
 				_flm.origin    = _vieworg;
 				_flm.originDim = _dim;
@@ -224,6 +227,8 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				if(_rotaFl && choose(0,1)) _flm.rotate = -_flm.rotate;
 				
 				var _siz = random_range(_sizes[0], _sizes[1]);
+				_flm.aspect[0] = random_range(_aspects[0], _aspects[1]);
+				_flm.aspect[1] = random_range(_aspects[2], _aspects[3]);
 				_flm.size[0]   = _siz * random_range(_sizeRat[0], _sizeRat[1]);
 				_flm.size[1]   = _siz;
 				

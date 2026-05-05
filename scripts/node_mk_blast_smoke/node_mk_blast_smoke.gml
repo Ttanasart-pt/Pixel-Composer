@@ -33,6 +33,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- =Size
 	newInput( 8, nodeValue_Range( "Scale Offset", [.75,1] ));
 	newInput(19, nodeValue_Range( "Spawn Size",   [.5,.5] ));
+	newInput(31, nodeValue_Vec2_Range( "Aspect Ratio", [1,1,1,1] ));
 	
 	////- =Spiral
 	newInput(20, nodeValue_Bool(    "Spiral Use", false   ));
@@ -61,7 +62,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		////- =/Color
 	newInput( 3, nodeValue_Gradient( "Color", gra_black_white ));
 	newInput(10, nodeValue_Range(    "Level", [0,1]  ));
-	// 31
+	// 32
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	newOutput( 1, nodeValue_Output( "Smoke", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
@@ -75,7 +76,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			[ "/Direction",false ], 14,  9, 
 			
 		[ "Rotation",      false ], 15, 16, 
-		[ "Size",          false ],  8, 
+		[ "Size",          false ],  8, 31, 
 		
 		[ "Spiral",    false, 20 ], 25, 21, 22, 24, 23, 
 		[ "Decay",     false, 13 ], 17, 
@@ -116,6 +117,8 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _rotaFl     = getInputData(16);
 			
 			var _scalOf     = getInputData( 8);
+			var _sizeRat    = getInputData(19);
+			var _aspects    = getInputData(31);
 			
 			var _spiUse     = getInputData(20);
 			var _spiPhs     = getInputData(25);
@@ -173,7 +176,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			for( var j = 0, m = array_length(_l.flames); j < m; j++ ) {
 				var _flm = _l.flames[j];
-				if(!is(_flm, MKBlast_Ball)) continue;
+				if(!is(_flm, MKBlast_Element)) continue;
 				if(!_flm.hot) continue;
 				
 				var _amo = irandom_range(_amount[0], _amount[1]);
@@ -192,8 +195,8 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					_flm.animCurve = _an;
 					_smk.animCurve = _an;
 					
-					_smk.hot       = false;
-					_smk.discard   = true;
+					_flm.mask    = MKBlast_Mask.smoke;
+					_smk.discard = true;
 					
 					_smk.speed     += random_range(_speedOf[0], _speedOf[1]);
 					
@@ -204,6 +207,8 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					if(_rotaFl && choose(0,1)) _smk.rotate = -_smk.rotate;
 				
 					var ss = random_range(_scalOf[0], _scalOf[1]);
+					_smk.aspect[0]  = random_range(_aspects[0], _aspects[1]);
+					_smk.aspect[1]  = random_range(_aspects[2], _aspects[3]);
 					_smk.size[0]   *= ss;
 					_smk.size[1]   *= ss;
 					
