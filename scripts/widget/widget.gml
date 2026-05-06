@@ -99,6 +99,7 @@ function widget() constructor {
 		sep_axis = params[$ "sep_axis"] ?? sep_axis;
 		hide     = params[$ "hide"]     ?? hide;
 		color    = params[$ "color"]    ?? color;
+		boxColor = params[$ "boxColor"] ?? boxColor;
 		
 		if(!is_undefined(params.interact))
 			setInteract(params.interact);
@@ -190,6 +191,7 @@ function widgetParam(x, y, w, h, data, display_data = undefined, m = mouse_ui, r
 	sep_axis = false;
 	
 	color      = undefined;
+	boxColor   = undefined;
 	hid        = undefined;
 	focus      = undefined;
 	hover      = undefined;
@@ -199,10 +201,12 @@ function widgetParam(x, y, w, h, data, display_data = undefined, m = mouse_ui, r
 	static setHalign     = function(_a) /*=>*/ { halign = _a; return self; }
 	static setValign     = function(_a) /*=>*/ { valign = _a; return self; }
 	
-	static setX          = function(_x) /*=>*/ { x     = _x;  return self; }
-	static setY          = function(_y) /*=>*/ { y     = _y;  return self; }
-	static setData       = function( d) /*=>*/ { data  = d;   return self; }
-	static setColor      = function( c) /*=>*/ { color = c;   return self; }
+	static setX          = function(_x) /*=>*/ { x     = _x;   return self; }
+	static setY          = function(_y) /*=>*/ { y     = _y;   return self; }
+	static setData       = function( d) /*=>*/ { data  = d;    return self; }
+	static setColor      = function( c) /*=>*/ { color = c;    return self; }
+	static setBoxColor   = function( c) /*=>*/ { boxColor = c; return self; }
+	
 	static setFont       = function( f) /*=>*/ { font  = f;   return self; }
 	static setHide       = function( h) /*=>*/ { hide  = h;   return self; }
 	static setScrollpane = function( s) /*=>*/ { scrollpane = s; return self; }

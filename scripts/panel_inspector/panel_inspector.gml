@@ -263,6 +263,7 @@ function Panel_Inspector() : PanelContent() constructor {
         attribute_hovering  = noone;
         
         timeline_scrubbing  = false;
+        inline_expands      = false;
         
         renaming  = undefined;
 		tb_rename = textBox_Text(function(_n) /*=>*/ { if(renaming != undefined) renaming.setName(_n, false); renaming = undefined; });
@@ -745,15 +746,50 @@ function Panel_Inspector() : PanelContent() constructor {
     
     ////- DRAW NODE
     
-    static drawNodeProperties = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all) { 
+    static drawNodeProperties = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all, _blend = c_white) { 
+    	if(!is(_inspecting, Node)) return 0;
+    	
         var _hover  = pHOVER && contentPane.hover;
         var _focus  = pFOCUS || PANEL_GRAPH.pFOCUS;
         
+    	var hh = 0;
+    	
+    	if(is(_inspecting.inline_context, Node_Collection_Inline)) {
+    		var _inl = _inspecting.inline_context;
+    		var _col = _inl.getColor();
+    		var _lbh = ui(22);
+    		
+			var _inh = _inl.group_height ?? 0;
+    		if(inline_expands) {
+	    		if(_inh) draw_sprite_stretched_ext(THEME.box_r5, 0, _x, _y, _w, _inh + _lbh + ui(10), _col, .1);
+	    		
+	    		var _h = drawNodeProperties(_x + ui(8), _y + _lbh + ui(8), _w - ui(16), _m, _inl, INSPECTOR_FLAG.input_only, _col);
+	    		_inl.group_height = _h;
+	    		hh += _h + ui(14);
+    		}
+    		
+    		var _name = _inl.getDisplayName();
+    		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, _w, _lbh, _col, 1);
+    		draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(_x + ui(24), _y + _lbh/2, _name);
+    		
+    		var _ic = _inl.icon == noone? THEME.arrow : _inl.icon;
+    		draw_sprite_ui(_ic, inline_expands * 3, _x + ui(12), _y + _lbh / 2, 1, 1, 0, _col);
+    		if(inline_expands && _inh) draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, _w, _inh + _lbh + ui(10), _col, 1);
+    		
+    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _lbh);
+    		if(_hov) {
+    			draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _lbh, c_white, .3);
+    			if(mouse_lpress(_focus)) inline_expands = !inline_expands;
+    		}
+    		
+    		hh += _lbh + ui(4);
+    	}
+    	
         var con_w   = _w - ui(4); 
         var con_h   = contentPane.surface_h;
         
         var _font   = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
-        var hh      = 0;
         var xc      = con_w / 2;
         
         var amoIn   = is_array(_inspecting.input_display_list)?  array_length(_inspecting.input_display_list)  : array_length(_inspecting.inputs);
@@ -765,7 +801,6 @@ function Panel_Inspector() : PanelContent() constructor {
         var amo     = inspectGroup == 0? amoIn + amoAttr + 1 + amoOut + amoMeta : amoIn + amoAttr;
         if(_flag == INSPECTOR_FLAG.input_only) amo = amoIn;
         
-        prop_hover  = noone;
         var jun     = noone;
         
         var _colMap = _inspecting.inspector_collapse;
@@ -914,9 +949,9 @@ function Panel_Inspector() : PanelContent() constructor {
 	                if(!subk) {
 	                	var scc = hov? COLORS.section_hover : COLORS.section_bg;
 	                	
-		                          draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, lbh, scc);
-		                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, scw, lbh, COLORS.section_selected);
-		                if(hov)   draw_sprite_stretched_ext(THEME.section_separator, 1, lbx, yy, scw, lbh, COLORS.section_hover);
+		                          draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, lbh, colorMultiply(_blend, scc));
+		                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, scw, lbh, colorMultiply(_blend, COLORS.section_selected));
+		                if(hov)   draw_sprite_stretched_ext(THEME.section_separator, 1, lbx, yy, scw, lbh, colorMultiply(_blend, COLORS.section_hover));
 	                }
 	                
 	                if(hov) {
@@ -1122,8 +1157,8 @@ function Panel_Inspector() : PanelContent() constructor {
             	if(jun.latest_height != undefined)
             		_draw = yy + ui(8) < con_h && yy + jun.latest_height > -ui(8);
             	
-                var widg    = _draw? drawWidget(   _x + ui(8), yy, con_ww, _m, jun, 0, _hover, _focus, contentPane, rrx, rry ) : 
-                                     fetchWidgetH( _x + ui(8), yy, con_ww, _m, jun, 0, _hover, _focus, contentPane, rrx, rry );
+                var widg    = _draw? drawWidget(   _x + ui(8), yy, con_ww, _m, jun, 0, _hover, _focus, contentPane, rrx, rry, undefined, _blend ) : 
+                                     fetchWidgetH( _x + ui(8), yy, con_ww, _m, jun, 0, _hover, _focus, contentPane, rrx, rry, undefined, _blend );
                 var widH    = widg[0];
                 var mbRight = widg[1];
                 var widHov  = widg[2];
@@ -1500,6 +1535,8 @@ function Panel_Inspector() : PanelContent() constructor {
     static drawNodeData = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all) { 
     	_inspecting.inspecting       = true;
         _inspecting.inspector_scroll = contentPane.scroll_y_to;
+        
+        prop_hover  = noone;
         
     	switch(prop_page) {
     		case 0 : return drawNodeProperties(_x, _y, _w, _m, _inspecting, _flag);
