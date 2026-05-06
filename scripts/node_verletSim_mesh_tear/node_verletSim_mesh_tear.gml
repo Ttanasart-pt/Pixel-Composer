@@ -6,7 +6,7 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDimension(96, 48);
 	
 	newActiveInput(4);
-	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
+	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Target
 	newInput(1, nodeValue_Enum_Scroll( "Source",  0, [ "Area", "Surface" ] ));
@@ -14,7 +14,7 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput(3, nodeValue_Surface(     "Surface", noone ));
 	// input 5
 	
-	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 4, 0, 
 		[ "Target", false ], 1, 2, 3, 

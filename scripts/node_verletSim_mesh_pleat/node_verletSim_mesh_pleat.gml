@@ -5,7 +5,7 @@ function Node_VerletSim_Mesh_Pleat(_x, _y, _group = noone) : Node(_x, _y, _group
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
+	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Target
 	newInput(1, nodeValue_Area(   "Area", DEF_AREA_REF, { useShape : false } )).setHotkey("A").setUnitSimple();
@@ -20,7 +20,7 @@ function Node_VerletSim_Mesh_Pleat(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	// input 8
 	
-	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 0, 
 		[ "Target", false ], 1, 

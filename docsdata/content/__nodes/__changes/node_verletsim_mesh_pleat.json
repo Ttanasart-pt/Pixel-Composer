@@ -6,6 +6,11 @@
         "date": "2026-05-05T04:36:04.528Z",
         "node": "",
         "commit": "**Graph Panel**: Fix crash when trying to blend nodes with no surface output."
+      },
+      {
+        "date": "2026-05-06T05:48:16.545Z",
+        "node": "",
+        "commit": "Verlet sim now initialize with grid mesh node."
       }
     ]
   }

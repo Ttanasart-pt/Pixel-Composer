@@ -7,7 +7,7 @@ function Node_VerletSim_Wind(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDimension(96, 48);
 	
 	newActiveInput(7);
-	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
+	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Wind
 	newInput(1, nodeValue_Vec2(     "Center",      [.5,.5] )).setHotkey("G").setUnitSimple();
@@ -17,7 +17,7 @@ function Node_VerletSim_Wind(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(5, nodeValue_Curve(    "Falloff Curve", CURVE_DEF_01 ));
 	newInput(6, nodeValue_Float(    "Strength",      1     ));
 	
-	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 7, 0, 
 		[ "Wind", false ], 1, 2, 3, 4, 5, 6, 

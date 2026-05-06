@@ -5,22 +5,25 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	update_on_frame = true;
 	parameters.inline_draw_output = true;
 	
-	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
+	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Output
 	newInput(1, nodeValue_Dimension());
 	
+	////- =Simulation
+	newInput(4, nodeValue_Bool( "Step", true ));
+	
 	////- =Render
-	newInput(4, nodeValue_Bool(        "Step", true ));
-	newInput(3, nodeValue_Enum_Button( "Type", 0, [ "Textured", "Wireframe" ] ));
-	newInput(2, nodeValue_Surface(     "Texture" )).setVisible(true, true);
-	newInput(5, nodeValue_Color(       "Color", ca_white ));
+	newInput(3, nodeValue_EButton( "Type", 0, [ "Textured", "Wireframe" ] ));
+	newInput(2, nodeValue_Surface( "Texture" )).setVisible(true, true);
+	newInput(5, nodeValue_Color(   "Color", ca_white ));
 	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		[ "Render", false ], 4, 3, 2, 5, 
+		[ "Simulation", false ],  4, 
+		[ "Render",     false ],  3,  2,  5, 
 	];
 	
 	////- Nodes
@@ -45,6 +48,7 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _dim = getDimension();
 			
 			var _step = getInputData(4); 
+			
 			var _type = getInputData(3); 
 			var _srf  = getInputData(2); 
 			var _clr  = getInputData(5); 

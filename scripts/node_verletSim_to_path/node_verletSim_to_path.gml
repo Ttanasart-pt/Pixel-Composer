@@ -6,7 +6,7 @@ function Node_VerletSim_to_Path(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	setDrawIcon();
 	
 	////- =Mesh
-	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
+	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	

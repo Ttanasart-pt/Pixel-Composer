@@ -384,6 +384,7 @@
     "node_junction_mktree_leaves":        { "path": "./node/s_node_junction_mktree_leaves.png",             "s": 2, "x": 12, "y": 12 },
     "node_junction_surface_ext":          { "path": "./node/s_node_junction_surface_ext.png",               "s": 2, "x": 12, "y": 12 },
     "node_junction_surface_map":          { "path": "./node/s_node_junction_surface_map.png",               "s": 2, "x": 12, "y": 12 },
+    "node_junction_verlet":               { "path": "./node/s_node_junction_verlet.png",                    "s": 2, "x": 12, "y": 12 },
 
     "node_junctions_single":              { "path": "./node/s_node_junctions_single.png",                   "s": 38, "x": 12, "y": 12 },
     "node_junctions_bg":                  { "path": "./node/s_node_junctions_bg.png",                       "s": 38, "x": 12, "y": 12 },

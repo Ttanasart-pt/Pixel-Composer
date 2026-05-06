@@ -88,9 +88,9 @@ function __verlet_Mesh() : Mesh() constructor {
 	////- Draw
 	
 	static draw = function(_x, _y, _s) {
-		draw_primitive_begin(pr_linelist);
 		var _vtx = 0;
 		
+		draw_primitive_begin(pr_linelist);
 		if(array_empty(vtriangles)) {
 			for( var i = 0, n = array_length(vedges); i < n; i++ ) {
 				var e  = vedges[i];
@@ -136,7 +136,6 @@ function __verlet_Mesh() : Mesh() constructor {
 				}
 			}
 		}
-		
 		draw_primitive_end();
 	}
 	

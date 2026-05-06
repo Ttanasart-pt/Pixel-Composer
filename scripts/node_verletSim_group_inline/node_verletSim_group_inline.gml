@@ -1,3 +1,11 @@
+#region global
+	global.VERLET_MESH_JUNC = {
+		icon:  function() /*=>*/ {return THEME.node_junction_verlet},
+		color: function() /*=>*/ {return COLORS.node_blend_verlet},
+	}
+	
+#endregion
+
 function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x, _y, _group) constructor {
 	name  = "VerletSim";
 	color = COLORS.node_blend_verlet;
@@ -12,7 +20,7 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	newInput( 1, nodeValue_Vec2( "Gravity",  [0,.5] ));
 	// input 3
 	
-	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
+	newOutput( 0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 
 		[ "Domain",     false ], 2, 
@@ -26,8 +34,8 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	verlet_dimension = [1,1];
 	
 	if(NODE_NEW_MANUAL) {
-		var _mesh   = nodeBuild(Node_VerletSim_Mesh,   x,       y, self);
-		var _render = nodeBuild(Node_VerletSim_Render, x + 160, y, self);
+		var _mesh   = nodeBuild(Node_VerletSim_Mesh_Grid, x,       y, self);
+		var _render = nodeBuild(Node_VerletSim_Render,    x + 160, y, self);
 		
 		_render.inputs[0].setFrom(_mesh.outputs[0]);
 		

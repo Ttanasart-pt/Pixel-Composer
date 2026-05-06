@@ -8,7 +8,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDimension(96, 48);
 	
 	////- =Mesh
-	newInput( 0, nodeValue_Area(   "Area" )).setUnitSimple();
+	newInput( 0, nodeValue_Area(   "Area", DEF_AREA_REF )).setUnitSimple();
 	newInput( 1, nodeValue_IVec2(  "Subdivision", [4,4] ));
 	newInput( 4, nodeValue_Bool(   "Quad",        false ));
 	
@@ -17,7 +17,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 3, nodeValue_Slider( "Drag",         0    ));
 	// input 5
 	
-	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 
 		[ "Mesh",   false ],  0,  1,  4, 
@@ -29,15 +29,16 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_VerletSim_Inline)? inline_context.getDimension() : DEF_SURF};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		var _msh = getInputData(0);
-		var _uv  = getInputData(2);
+		var _msh = outputs[0].getValue();
 		
 		if(is(_msh, Mesh)) {
 			draw_set_color(COLORS._main_icon);
 			_msh.draw(_x, _y, _s);
+			_msh.drawVertex(_x, _y, _s);
 		}
 		
-		if(_uv) InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		
 		return w_hovering;
 	}
 	
@@ -90,10 +91,8 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 		_i = 0;
 		for( var j = 0; j <  gh; j++ )
 		for( var i = 0; i <= gw; i++ ) {
-			var i0 = (j    ) * (gw+1) + (i);
-			var i1 = (j + 1) * (gw+1) + (i);
-			var p0 = points[i0];
-			var p1 = points[i1];
+			var i0 = (j    ) * (gw+1) + (i), p0 = points[i0];
+			var i1 = (j + 1) * (gw+1) + (i), p1 = points[i1];
 			
 			edges[_i]  = [ i0, i1 ];
 			vedges[_i] = new __verlet_edge(p0, p1, _tens); 
@@ -103,12 +102,10 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		for( var j = 0; j <= gh; j++ )
  		for( var i = 0; i <  gw; i++ ) {
-			var i0 = (j) * (gw+1) + (i);
-			var i1 = (j) * (gw+1) + (i + 1);
-			var p0 = points[i0];
-			var p1 = points[i1];
+			var i0 = (j) * (gw+1) + (i),     p0 = points[i0];
+			var i1 = (j) * (gw+1) + (i + 1), p1 = points[i1];
 			
-			edges[_i] = [ i0, i1 ];
+			edges[_i]  = [ i0, i1 ];
 			vedges[_i] = new __verlet_edge(p0, p1, _tens); 
 			_emap[$ vedges[_i].toString()] = vedges[_i];
 			_i++;
@@ -117,25 +114,25 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 		_i = 0;
 		for( var j = 0; j < gh; j++ )
 		for( var i = 0; i < gw; i++ ) {
-			var p0 = (j    ) * (gw+1) + (i    );
-			var p1 = (j    ) * (gw+1) + (i + 1);
-			var p2 = (j + 1) * (gw+1) + (i    );
-			var p3 = (j + 1) * (gw+1) + (i + 1);
+			var i0 = (j    ) * (gw+1) + (i    ), p0 = points[i0];
+			var i1 = (j    ) * (gw+1) + (i + 1), p1 = points[i1];
+			var i2 = (j + 1) * (gw+1) + (i    ), p2 = points[i2];
+			var i3 = (j + 1) * (gw+1) + (i + 1), p3 = points[i3];
 			
-			tris[_i]  = [ p0, p1, p2 ];
+			tris[_i]  = [ i0, i1, i2 ];
 			
 			var T = new __verlet_triangle(p0, p1, p2);
-			T.e0  = _emap[$ __verlet_edge_index(p0, p1)];
-			T.e1  = _emap[$ __verlet_edge_index(p1, p2)];
-			T.e2  = _emap[$ __verlet_edge_index(p2, p0)];
+			T.e0  = _emap[$ __verlet_edge_index(i0, i1)];
+			T.e1  = _emap[$ __verlet_edge_index(i1, i2)];
+			T.e2  = _emap[$ __verlet_edge_index(i2, i0)];
 			vtris[_i] = T;
 			_i++;
 			
-			tris[_i]  = [ p2, p1, p3 ];
+			tris[_i]  = [ i2, i1, i3 ];
 			var T = new __verlet_triangle(p2, p1, p3);
-			T.e0  = _emap[$ __verlet_edge_index(p0, p1)];
-			T.e1  = _emap[$ __verlet_edge_index(p1, p2)];
-			T.e2  = _emap[$ __verlet_edge_index(p2, p0)];
+			T.e0  = _emap[$ __verlet_edge_index(i0, i1)];
+			T.e1  = _emap[$ __verlet_edge_index(i1, i2)];
+			T.e2  = _emap[$ __verlet_edge_index(i2, i0)];
 			vtris[_i] = T;
 			_i++;
 		}
