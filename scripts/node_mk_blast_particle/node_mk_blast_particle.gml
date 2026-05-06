@@ -53,7 +53,8 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(14, nodeValue_Range(   "Decay",    [4,6] ));
 	
 	////- =Render
-	newInput(16, nodeValue_Surface( "Texture" ));
+	newInput(16, nodeValue_Surface( "Texture"  ));
+	newInput(37, nodeValue_Float(   "Depth", 0 ));
 	
 		////- =/Shape
 	newInput(15, nodeValue_EScroll( "Shape", 0, [ "Circle", "Arrow", "Line", "Path" ] ));
@@ -70,7 +71,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		////- =/Perspective
 	newInput(19, nodeValue_Vec2(  "View Origin", [.5,.5] )).setUnitSimple();
 	newInput(20, nodeValue_Range( "Perspective", [2,2]   ));
-	// 37
+	// 38
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	
@@ -87,7 +88,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		[ "Spiral",    false, 25 ], 30, 26, 27, 29, 28, 
 		[ "Decay",     false, 13 ], 14, 
 		
-		[ "Render",           false ], 16, 
+		[ "Render",           false ], 16, 37, 
 			[ "/Shape",       false ], 15, 31, 32, 33, 34, 35, 
 			[ "/Color",       false ], 17, 18, 
 			[ "/Perspective", false ], 20, 21, 
@@ -147,6 +148,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _decay   = getInputData(14);
 			
 			var _texture = getInputData(16);
+			var _depth   = getInputData(37);
 			
 			var _shape   = getInputData(15);
 			var _arrowO  = getInputData(31);
@@ -189,10 +191,46 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		for( var i = 0, n = array_length(mainLayer.flames); i < n; i++ )
 			mainLayer.flames[i].life++;
 		
-		for( var i = 0, n = array_length(_parts); i < n; i++ ) {
-			var _part = _parts[i];
-			if(!_part.active) continue;
-			if(_part.life % _period != 0) continue;
+		var _type = 0;
+		var _pAmo = 0;
+		
+		if(is_array(_parts)) {
+			_type = 0;
+			_pAmo = array_length(_parts);
+			
+		} else if(is(_parts, pSystem_Particles)) {
+			_type = 1;
+			_pAmo = _parts.maxCursor;
+			
+		}
+		
+		var _pActive, _pLife, _pLifeTotal, _pX, _pY, _pDir;
+		
+		for( var i = 0; i < _pAmo; i++ ) {
+			if(_type == 0) {
+				var _part = _parts[i];
+				_pActive    = _part.active;
+				_pLife      = _part.life;
+				_pLifeTotal = _part.life_total;
+				_pX         = _part.x;
+				_pY         = _part.y;
+				_pDir       = _part.phyDirr;
+				
+			} else if(_type == 1) {
+				_pActive    = _part.getPartData(i, PSYSTEM_OFF.active, buffer_bool);
+				_pLife      = _part.getPartData(i, PSYSTEM_OFF.life,   buffer_f64);
+				_pLifeTotal = _part.getPartData(i, PSYSTEM_OFF.mlife,  buffer_f64);
+				_pX         = _part.getPartData(i, PSYSTEM_OFF.posx,   buffer_f64);
+				_pY         = _part.getPartData(i, PSYSTEM_OFF.posy,   buffer_f64);
+				
+				var _ppx    = _part.getPartData(i, PSYSTEM_OFF.pospx,  buffer_f64);
+				var _ppy    = _part.getPartData(i, PSYSTEM_OFF.pospy,  buffer_f64);
+				_pDir       = point_direction(_ppx, _ppy, _pX, _pY);
+				
+			}
+			
+			if(!_pActive) continue;
+			if(_pLife % _period != 0) continue;
 			
 			var _gro  = _amount;
 			
@@ -208,17 +246,17 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				var _scLen = random_range(_scatt[0], _scatt[1]);
 				var _scDir = random(360);
 				
-				_flm.sx = _part.x + lengthdir_x(_scLen, _scDir);
-				_flm.sy = _part.y + lengthdir_y(_scLen, _scDir);
+				_flm.sx = _pX + lengthdir_x(_scLen, _scDir);
+				_flm.sy = _pY + lengthdir_y(_scLen, _scDir);
 				
 				var _life = irandom_range(_lifes[0], _lifes[1]);
 				var _fram = irandom_range(_frames[0], _frames[1]);
 				_flm.life      = -_fram;
-				_flm.lifeTotal = _part.life_total + _life;
+				_flm.lifeTotal = _pLifeTotal + _life;
 				
 				_flm.speed     = random_range(_speed[0], _speed[1]);
 				_flm.friction  = random_range(_fract[0], _fract[1]);
-				_flm.direction = _part.phyDirr + rotation_random_eval(_direct);
+				_flm.direction = _pDir + rotation_random_eval(_direct);
 				
 				_flm.gravity    = random_range(_gravity[0], _gravity[1]);
 				_flm.gravityDir = _gDir;
@@ -245,13 +283,14 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				_flm.spiralRotation  = random_range(_spiRot[0], _spiRot[1]);
 				_flm.spiralMultiply  = _spiMul;
 				
-				_flm.doDecay   = _ddecay;
-				_flm.decay     = random_range(_decay[0], _decay[1]);
+				_flm.doDecay     = _ddecay;
+				_flm.decay       = random_range(_decay[0], _decay[1]);
 				
 				_flm.perspective = random_range(_perspec[0], _perspec[1]);
 				_flm.animCurve   = curve_anInt;
 				
-				_flm.level     = _level;
+				_flm.level       = _level;
+				_flm.depth       = _depth;
 				
 				array_push(mainLayer.flames, _flm);
 			}

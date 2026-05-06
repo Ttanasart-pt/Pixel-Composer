@@ -187,12 +187,13 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var spr_x = _x + grid_width / 2;
 		var spr_y = _y + grid_size  / 2;
 		
-		var _spw = sprite_get_width(spr);
-		var _sph = sprite_get_height(spr);
+		var _spr = getSpr();
+		var _spw = sprite_get_width(_spr);
+		var _sph = sprite_get_height(_spr);
 		var _ss  = grid_size / max(_spw, _sph) * 0.85;
 		
 		gpu_set_tex_filter(true);
-		draw_sprite_uniform(spr, 0, spr_x, spr_y, _ss);
+		draw_sprite_uniform(_spr, 0, spr_x, spr_y, _ss);
 		gpu_set_tex_filter(false);
 				
 		if(new_node) {
@@ -219,12 +220,13 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		if(fav) draw_sprite_ui_uniform(THEME.favorite, 1, _x + ui(16), _y + _h / 2, .8, CDEF.yellow, 1.);
 		
 		var _query = struct_try_get(_param, "query", "");
+		var _spr   = getSpr();
 		var spr_x  = _x + ui(32) + _h / 2;
 		var spr_y  = _y + _h / 2;
-				
-		var ss = (_h - ui(8)) / max(sprite_get_width(spr), sprite_get_height(spr));
+		
+		var ss = (_h - ui(8)) / max(sprite_get_width(_spr), sprite_get_height(_spr));
 		gpu_set_tex_filter(true);
-		draw_sprite_ext(spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
+		draw_sprite_ext(_spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 		gpu_set_tex_filter(false);
 		
 		var tx = spr_x + _h / 2 + ui(4);
@@ -275,7 +277,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var _str = {
 			name,
 			
-			spr: sprite_get_name(spr),
+			spr: sprite_get_name(getSpr()),
 			baseNode: nodeName,
 			io: ioArray,
 		}
@@ -635,6 +637,9 @@ function refreshNodeFavourite() {
 }
 
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
+	if(is_handle(_name)) // ref script Node_ID
+		_name = string_replace(string(_name), "ref script ", "");
+	
 	if(!has(ALL_NODES, _name)) {
 		log_warning("LOAD", $"Node type {_name} not found");
 		return noone;

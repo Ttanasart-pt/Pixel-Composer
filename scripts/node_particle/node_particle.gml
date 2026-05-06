@@ -634,7 +634,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	static runVFX = function(_time = NODE_CURRENT_FRAME) {
 		for( var i = 0, n = array_length(inputs); i < n; i++ )
-			if(inputs[i].is_anim) inputs_data[i] = inputs[i].getValue(_time);
+			if(inputs[i].isAnimated()) inputs_data[i] = inputs[i].getValue(_time);
 		
 		var _spawn_delay    = inputs_data[ 1];
 		var _spawn_type     = inputs_data[16];

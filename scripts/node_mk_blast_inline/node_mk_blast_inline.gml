@@ -62,10 +62,11 @@ function MKBlast_Layer() constructor {
 	colorize = undefined;
 	flames   = [];
 	
-	static draw = function(_surf, _mask = -1) {
-		var _dim = surface_get_dimension(_surf);
+	static draw = function(_surfs, _mask = -1, _param = {}) {
+		var _dim = surface_get_dimension(_surfs[0]);
 		
-		surface_set_target(_surf);
+		surface_set_target_ext(0, _surfs[0]);
+		surface_set_target_ext(1, _surfs[2]);
 			BLEND_OVERRIDE
 			shader_set(sh_mk_blast_clear);
 				draw_empty();
@@ -79,16 +80,24 @@ function MKBlast_Layer() constructor {
 			}
 		surface_reset_target();
 		
-		if(colorize != undefined) {
+		surface_set_target(_surfs[1]);
 			shader_set(sh_mk_blast_colorize);
 			shader_set_2("dimension", _dim);
+			shader_set_s("depthBase", _surfs[3]);
+			shader_set_s("depth",     _surfs[2]);
+			shader_set_i("useDepth",  _param.useDepth);
 			shader_set_gradient(colorize);
-		}
-		
-		draw_surface(_surf, 0, 0);
-		
-		if(colorize != undefined)
+			
+			draw_surface(_surfs[0], 0, 0);
+			
 			shader_reset();
+		surface_reset_target();
+		
+		surface_set_target(_surfs[3]);
+			BLEND_MAX
+			draw_surface(_surfs[2], 0, 0);
+			BLEND_NORMAL
+		surface_reset_target();
 	}
 	
 }
@@ -116,11 +125,15 @@ function MKBlast_Element() constructor {
 		
 		px = 0;
 		py = 0;
+		
+		gx = 1;
+		gy = 1;
 	#endregion
 	
 	#region Transformation
 		x = 0; 
 		y = 0; 
+		depth = 0;
 		
 		angle  = 0;
 		angleS = 0;
@@ -196,13 +209,13 @@ function MKBlast_Element() constructor {
 			var _tDist = speed * lifeTotal;
 			var _cDist = moveCurve.get(clamp(_life, 0, 1)) * _tDist;
 			
-			x = sx + lengthdir_x(_cDist, direction);
-			y = sy + lengthdir_y(_cDist, direction);
+			x = sx + lengthdir_x(_cDist, direction) * gx;
+			y = sy + lengthdir_y(_cDist, direction) * gy;
 			
 		} else {
 			var _dist = (speed + max(0, speed - friction * life)) / 2 * life;
-			x = sx + lengthdir_x(_dist, direction);
-			y = sy + lengthdir_y(_dist, direction);
+			x = sx + lengthdir_x(_dist, direction) * gx;
+			y = sy + lengthdir_y(_dist, direction) * gy;
 		}
 		
 		// Gravity
@@ -234,8 +247,9 @@ function MKBlast_Element() constructor {
 		
 		BLEND_MAX
 		shader_set(sh_mk_blast_flameball);
-			shader_set_i( "shapeIndex",      shape     );
-			shader_set_i( "mask",            mask      );
+			shader_set_i( "shapeIndex",      shape      );
+			shader_set_i( "mask",            mask       );
+			shader_set_f( "particleDepth",   yy + depth );
 			
 			shader_set_f( "innerRad",        doDecay? blastRad : 0 );
 			shader_set_2( "origin",          normal    );

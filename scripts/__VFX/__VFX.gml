@@ -340,7 +340,6 @@ function __part(_node) : __particleObject() constructor {
 	}
 	
 	static step = function(_frame = 0) {
-		INLINE
 		trailLife++;
 		
 		if(!active) return;

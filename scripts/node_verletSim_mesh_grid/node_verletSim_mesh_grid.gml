@@ -1,0 +1,168 @@
+function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+	name  = "Grid Mesh";
+	color = COLORS.node_blend_verlet;
+	icon  = THEME.verletSim;
+	parameters.inline_draw_input = true;
+	
+	setDrawIcon();
+	setDimension(96, 48);
+	
+	////- =Mesh
+	newInput( 0, nodeValue_Area(   "Area" )).setUnitSimple();
+	newInput( 1, nodeValue_IVec2(  "Subdivision", [4,4] ));
+	newInput( 4, nodeValue_Bool(   "Quad",        false ));
+	
+	////- =Verlet
+	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
+	newInput( 3, nodeValue_Slider( "Drag",         0    ));
+	// input 5
+	
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
+	
+	input_display_list = [ 
+		[ "Mesh",   false ],  0,  1,  4, 
+		[ "Verlet", false ],  2,  3,  
+	];
+	
+	////- Nodes
+	
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_VerletSim_Inline)? inline_context.getDimension() : DEF_SURF};
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		var _msh = getInputData(0);
+		var _uv  = getInputData(2);
+		
+		if(is(_msh, Mesh)) {
+			draw_set_color(COLORS._main_icon);
+			_msh.draw(_x, _y, _s);
+		}
+		
+		if(_uv) InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		return w_hovering;
+	}
+	
+	static update = function() {
+		if(!IS_FIRST_FRAME) return;
+		
+		#region data
+			var _area = getInputData(0);
+			var _subd = getInputData(1);
+			var _quad = getInputData(4);
+			
+			var _ten  = getInputData(2), _tens = 1 - _ten;
+			var _drag = getInputData(3);
+		#endregion
+		
+		var mesh = new __verlet_Mesh();
+		
+		var x0 = _area[0] - _area[2];
+		var x1 = _area[0] + _area[2];
+		var y0 = _area[1] - _area[3];
+		var y1 = _area[1] + _area[3];
+		
+		var gw = max(1, _subd[0]);
+		var gh = max(1, _subd[1]);
+		var sx = 1 / gw;
+		var sy = 1 / gh;
+		
+		var _i = 0;
+		var points = array_create((gw + 1) * (gh + 1));
+		var tris   = [];
+		var edges  = [];
+		var vtris  = [];
+		var vedges = [];
+		var _emap  = {};
+		
+		for( var j = 0; j <= gh; j++ )
+		for( var i = 0; i <= gw; i++ ) {
+			var _u  = i * sx;
+			var _v  = j * sy;
+			
+			var _x0 = lerp(x0, x1, _u);
+			var _y0 = lerp(y0, y1, _v);
+			
+			var _ind     = j*(gw+1)+i;
+			var _p       = new __verlet_vec2(_x0, _y0, _u, _v);
+			_p.index     = _ind;
+			points[_ind] = _p;
+		}
+		
+		_i = 0;
+		for( var j = 0; j <  gh; j++ )
+		for( var i = 0; i <= gw; i++ ) {
+			var i0 = (j    ) * (gw+1) + (i);
+			var i1 = (j + 1) * (gw+1) + (i);
+			var p0 = points[i0];
+			var p1 = points[i1];
+			
+			edges[_i]  = [ i0, i1 ];
+			vedges[_i] = new __verlet_edge(p0, p1, _tens); 
+			_emap[$ vedges[_i].toString()] = vedges[_i];
+			_i++;
+		}
+		
+		for( var j = 0; j <= gh; j++ )
+ 		for( var i = 0; i <  gw; i++ ) {
+			var i0 = (j) * (gw+1) + (i);
+			var i1 = (j) * (gw+1) + (i + 1);
+			var p0 = points[i0];
+			var p1 = points[i1];
+			
+			edges[_i] = [ i0, i1 ];
+			vedges[_i] = new __verlet_edge(p0, p1, _tens); 
+			_emap[$ vedges[_i].toString()] = vedges[_i];
+			_i++;
+		}
+		
+		_i = 0;
+		for( var j = 0; j < gh; j++ )
+		for( var i = 0; i < gw; i++ ) {
+			var p0 = (j    ) * (gw+1) + (i    );
+			var p1 = (j    ) * (gw+1) + (i + 1);
+			var p2 = (j + 1) * (gw+1) + (i    );
+			var p3 = (j + 1) * (gw+1) + (i + 1);
+			
+			tris[_i]  = [ p0, p1, p2 ];
+			
+			var T = new __verlet_triangle(p0, p1, p2);
+			T.e0  = _emap[$ __verlet_edge_index(p0, p1)];
+			T.e1  = _emap[$ __verlet_edge_index(p1, p2)];
+			T.e2  = _emap[$ __verlet_edge_index(p2, p0)];
+			vtris[_i] = T;
+			_i++;
+			
+			tris[_i]  = [ p2, p1, p3 ];
+			var T = new __verlet_triangle(p2, p1, p3);
+			T.e0  = _emap[$ __verlet_edge_index(p0, p1)];
+			T.e1  = _emap[$ __verlet_edge_index(p1, p2)];
+			T.e2  = _emap[$ __verlet_edge_index(p2, p0)];
+			vtris[_i] = T;
+			_i++;
+		}
+		
+		_i = 0;
+		if(_quad) {
+			var _qamo = gw * gh;
+			var _q = array_create(_qamo);
+			
+			for( var i = 0; i < _qamo; i++ )
+				_q[i] = [i*2, i*2+1];
+			
+			mesh.quads = _q;
+		}
+		
+		mesh.points     = points;
+		mesh.edges      = edges;
+		mesh.triangles  = tris;
+		mesh.vedges     = vedges;
+		mesh.vtriangles = vtris;
+		
+		mesh.center     = [_area[0], _area[1]];
+		mesh.bbox       = [x0, y0, x1, y1];
+		
+		mesh.calcCoM();
+		
+		outputs[0].setValue(mesh);
+	}
+	
+}

@@ -10,6 +10,7 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	////- =Mesh
 	newInput( 1, nodeValue_IVec2( "Sample", [8,8] ));
 	newInput( 2, nodeValue_Bool(  "Quad",   false ));
+	// 3
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone ));
 	
@@ -17,6 +18,8 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		["Area", false], 0, 
 		["Mesh", false], 1, 2, 
 	];
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var mesh = outputs[0].getValue();

@@ -2,31 +2,40 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	name  = "VerletSim";
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
+	is_simulation = true;
 	
-	is_simulation      = true;
+	////- =Domain
+	newInput( 2, nodeValue_Dimension());
 	
-	newInput(0, nodeValue_Int(  "Substep",   8     ));
-	newInput(1, nodeValue_Vec2( "Gravity",  [0,.5] ));
-	// input 2
+	////- =Simulation
+	newInput( 0, nodeValue_Int(  "Substep",   8     ));
+	newInput( 1, nodeValue_Vec2( "Gravity",  [0,.5] ));
+	// input 3
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
 	
 	input_display_list = [ 
+		[ "Domain",     false ], 2, 
 		[ "Simulation", false ], 0, 1, 
 	];
 	
-	verlet_substep = 8;
-	verlet_gravity = [0,0];
+	////- Node
+	
+	verlet_substep   = 8;
+	verlet_gravity   = [0,0];
+	verlet_dimension = [1,1];
 	
 	if(NODE_NEW_MANUAL) {
-		var _mesh   = nodeBuild("Node_VerletSim_Mesh",   x,       y, self);
-		var _render = nodeBuild("Node_VerletSim_Render", x + 160, y, self);
+		var _mesh   = nodeBuild(Node_VerletSim_Mesh,   x,       y, self);
+		var _render = nodeBuild(Node_VerletSim_Render, x + 160, y, self);
 		
 		_render.inputs[0].setFrom(_mesh.outputs[0]);
 		
 		addNode(_mesh);
 		addNode(_render);
 	}
+	
+	static getDimension = function() /*=>*/ {return verlet_dimension};
 	
 	////- Verlet
 	
@@ -122,8 +131,10 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	////- Nodes
 	
 	static update = function() {
-		verlet_substep = inputs[0].getValue();
-		verlet_gravity = inputs[1].getValue();
+		verlet_dimension = inputs[2].getValue();
+		
+		verlet_substep   = inputs[0].getValue();
+		verlet_gravity   = inputs[1].getValue();
 	}
 	
 }

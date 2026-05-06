@@ -1,0 +1,6 @@
+{
+    "name":          "Combine",
+    "spr":           "s_node_mk_blast_combine",
+    "baseNode":      "Node_MK_Blast_Combine",
+    "pxc_version":    121002,
+}

@@ -7,17 +7,21 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- =Blast
 	newInput( 0, nodeValue_Struct( "Blast" )).setCustomData(global.MKBLAST_JUNC).setVisible(true, true);
-	newInput( 1, nodeValue_Toggle( "Mask", 0b11, [ "Flame", "Smoke" ] ))
+	newInput( 1, nodeValue_Toggle( "Mask", 0b11, [ "Flame", "Smoke" ] ));
+	
+	////- =Rendering
+	newInput( 2, nodeValue_Bool( "Depth Sorting", true ));
 	
 	newOutput( 0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 
-		[ "Blast",   false ],  0,  1, 
+		[ "Blast",     false ],  0,  1, 
+		[ "Rendering", false ],  2, 
 	];
 	
 	////- Nodes
 	
-	temp_surface = [ noone, noone ];
+	temp_surface = [ noone, noone, noone, noone ];
 	
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Blast_Inline)? inline_context.getDimension() : DEF_SURF};
 	
@@ -29,24 +33,36 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		if(!is(inline_context, Node_MK_Blast_Inline)) return;
 		
 		#region data
-			var _dim = getDimension();
+			var _dim    = getDimension();
 			
 			var _layers = getInputData(0);
-			var _mask   = getInputData(1);
+			var _mask   = getInputData(1); 
+			
+			var _depth  = getInputData(2); 
 		#endregion
 		
 		var _outSurf = surface_verify(outputs[0].getValue(), _dim[0], _dim[1]);
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba32float);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_rgba16float);
+		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1], surface_r16float);
+		temp_surface[3] = surface_verify(temp_surface[3], _dim[0], _dim[1], surface_r16float);
 		
-		surface_set_target(temp_surface[1]);
-			DRAW_CLEAR
-			
-			for( var i = 0, n = array_length(_layers); i < n; i++ )
-				_layers[i].draw(temp_surface[0], _mask);
-			
+		surface_set_target_ext(0, temp_surface[1]);
+		surface_set_target_ext(1, temp_surface[3]);
+			BLEND_OVERRIDE
+			shader_set(sh_mk_blast_clear);
+				draw_empty();
+			shader_reset();
+			BLEND_NORMAL
 		surface_reset_target();
 		
+		var _param = {
+			useDepth : _depth, 
+		}
+		
+		for( var i = 0, n = array_length(_layers); i < n; i++ )
+			_layers[i].draw(temp_surface, _mask, _param);
+			
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			

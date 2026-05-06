@@ -17,6 +17,7 @@ uniform int useTexture;
 uniform sampler2D texture;
 
 uniform int   discardBlack;
+uniform float particleDepth;
 
 uniform float spiralSize;
 uniform float spiralPhase;
@@ -116,11 +117,12 @@ void main() {
 	float i  = step(innerRad, lo);
 	float g  = i * lo * 4.;
 	
-	if(g <= 0.) { gl_FragColor = vec4(0., 1., 0., 1.); return; }
+	if(g <= 0.) { gl_FragData[0] = vec4(0., 1., 0., 1.); return; }
 	
 	g = 1. - g;
 	g = (g - level[0]) / (level[1] - level[0]);
-	gl_FragColor = vec4(g * v_vColour.a, 0., 0., v_vColour.a);
+	gl_FragData[0] = vec4(g * v_vColour.a, 0., 0., v_vColour.a);
+	gl_FragData[1] = vec4(particleDepth, 0., 0., 0.);
 }
 
 /* 2d version idk which one look nicer

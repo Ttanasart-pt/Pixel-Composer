@@ -6,6 +6,11 @@
         "date": "2026-05-05T04:36:04.265Z",
         "node": "",
         "commit": "**Graph Panel**: Fix crash when trying to blend nodes with no surface output."
+      },
+      {
+        "date": "2026-05-06T04:48:42.517Z",
+        "node": "Blue noise",
+        "commit": "**Blue noise**: Add partial processing to reduce lag."
       }
     ]
   }

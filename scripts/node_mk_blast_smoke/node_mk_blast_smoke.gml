@@ -49,7 +49,8 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Render
 	newInput( 4, nodeValue_Bool(    "Overlay",  false ));
-	newInput(11, nodeValue_Surface( "Texture" ));
+	newInput(11, nodeValue_Surface( "Texture"  ));
+	newInput(32, nodeValue_Float(   "Depth", 0 ));
 	
 		////- =/Shape
 	newInput(12, nodeValue_EScroll( "Shape", 0, [ "Circle", "Arrow", "Line", "Path" ] ));
@@ -62,7 +63,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		////- =/Color
 	newInput( 3, nodeValue_Gradient( "Color", gra_black_white ));
 	newInput(10, nodeValue_Range(    "Level", [0,1]  ));
-	// 32
+	// 33
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	newOutput( 1, nodeValue_Output( "Smoke", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
@@ -80,7 +81,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		[ "Spiral",    false, 20 ], 25, 21, 22, 24, 23, 
 		[ "Decay",     false, 13 ], 17, 
-		[ "Render",        false ],  4, 11, 
+		[ "Render",        false ],  4, 11, 32, 
 			[ "/Shape",    false ], 12, 26, 27, 28, 29, 30, 
 			[ "/Color",    false ],  3, 10, 
 	];
@@ -132,6 +133,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var _overl      = getInputData( 4);
 			var _text       = getInputData(11);
+			var _depth      = getInputData(32);
 			
 			var _shape      = getInputData(12);
 			var _arrowO     = getInputData(26);
@@ -232,7 +234,8 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					_smk.decay      = random_range(_decay[0], _decay[1]);
 					_smk.doDecay    = _ddecay;
 					
-					_smk.level     = _level;
+					_smk.level      = _level;
+					_smk.depth      = _depth;
 					
 					_smk.step();
 					

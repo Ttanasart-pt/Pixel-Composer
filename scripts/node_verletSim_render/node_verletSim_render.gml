@@ -20,14 +20,14 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		[ "Output", false ], 1, 
 		[ "Render", false ], 4, 3, 2, 5, 
 	];
 	
 	////- Nodes
 	
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_VerletSim_Inline)? inline_context.getDimension() : DEF_SURF};
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		
 		var mesh = getInputData(0);
 		if(is(mesh, __verlet_Mesh)) {
 			draw_set_color(COLORS._main_icon);
@@ -40,16 +40,18 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static update = function() {
 		if(!is(inline_context, Node_VerletSim_Inline)) return;
 		
-		var _msh = getInputData(0);
-		var _dim = getInputData(1);
-		
-		var _step = getInputData(4); 
-		var _type = getInputData(3); 
-		var _srf  = getInputData(2); 
-		var _clr  = getInputData(5); 
-		
-		inputs[2].setVisible(_type == 0, _type == 0);
-		inputs[5].setVisible(_type == 1);
+		#region data
+			var _msh = getInputData(0);
+			var _dim = getDimension();
+			
+			var _step = getInputData(4); 
+			var _type = getInputData(3); 
+			var _srf  = getInputData(2); 
+			var _clr  = getInputData(5); 
+			
+			inputs[2].setVisible(_type == 0, _type == 0);
+			inputs[5].setVisible(_type == 1);
+		#endregion
 		
 		if(!IS_PLAYING) return;
 		

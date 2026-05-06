@@ -42,11 +42,6 @@ function Node_VerletSim_Simple(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			}
 		}
 		
-		// for( var i = 0, n = array_length(_points); i < n; i++ ) {
-		// 	var p = _points[i];
-		// 	if(p.y > 64) p.y = 64;
-		// }
-		
 	}
 	
 	function verletConstrain(_mesh, _substep) {

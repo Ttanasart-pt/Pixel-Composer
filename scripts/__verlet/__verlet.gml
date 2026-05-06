@@ -1,8 +1,10 @@
-function __verlet_vec2() : __vec2() constructor {
-	px = 0; py = 0;
-	sx = 0; sy = 0;
-	vx = 0; vy = 0;
-	u  = 0; v  = 0;
+function __verlet_vec2(_x = 0, _y = 0, _u = 0, _v = 0) : __vec2(_x, _y) constructor {
+	px = x; py = y;
+	sx = x; sy = y;
+	vx = x; vy = y;
+	u = _u; v = _v;
+	
+	index = 0;
 	
 	dx = undefined; 
 	dy = undefined;
@@ -20,6 +22,7 @@ function __verlet_vec2() : __vec2() constructor {
 	}
 }
 
+function __verlet_edge_index(i0, i1) { return $"{i0 + i1}_{i0 * i1}" }
 function __verlet_edge(_p0, _p1, _k) constructor {
 	p0 = _p0;
 	p1 = _p1;
@@ -27,8 +30,8 @@ function __verlet_edge(_p0, _p1, _k) constructor {
 	
 	active   = true;
 	distance = point_distance(p0.x, p0.y, p1.x, p1.y);
-	
-	static toString = function() { return p0.lessThan(p1)? $"{p0}-{p1}" : $"{p1}-{p0}"; }
+
+	static toString = function() /*=>*/ {return __verlet_edge_index(p0.index, p1.index)};
 }
 
 function __verlet_triangle(_p0, _p1, _p2) constructor {

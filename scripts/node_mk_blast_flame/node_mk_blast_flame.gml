@@ -59,7 +59,8 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(14, nodeValue_Range(   "Decay Offset", [4,6] )).setMappableRange(44, "Group Varience", THEME.mk_blast_group);
 	
 	////- =Render
-	newInput(21, nodeValue_Surface( "Texture" ));
+	newInput(21, nodeValue_Surface( "Texture"  ));
+	newInput(50, nodeValue_Float(   "Depth", 0 ));
 	
 		////- =/Shape
 	newInput(23, nodeValue_EScroll( "Shape", 0, [ "Circle", "Arrow", "Line", "Path" ] ));
@@ -76,7 +77,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		////- =/Perspective
 	newInput(15, nodeValue_Vec2(  "View Origin", [.25,.25] )).setUnitSimple();
 	newInput(16, nodeValue_Range( "Perspective", [2,2]     ));
-	// 50
+	// 51
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	
@@ -93,7 +94,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Spiral",        true, 32 ], 34, 29, 30, 33, 31, 
 		[ "Decay",         true, 25 ], 14, 44, 
 			
-		[ "Render",           false ], 21, 
+		[ "Render",           false ], 21, 50, 
 			[ "/Shape",       false ], 23, 35, 46, 47, 36, 45, 37, 
 			[ "/Color",       false ], 17, 18, 
 			[ "/Perspective", false ], 15, 16, 
@@ -156,6 +157,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _gravity = getInputData(22);
 			
 			var _text    = getInputData(21);
+			var _depth   = getInputData(50);
 			
 			var _shape   = getInputData(23);
 			var _arrowO  = getInputData(35);
@@ -251,6 +253,9 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_flm.sx = ox;
 				_flm.sy = oy;
 				
+				_flm.gx = grX;
+				_flm.gy = grY;
+				
 				_flm.life      = _frame - _spFrm;
 				_flm.lifeTotal = _lifeT + random_range(_lifeRand[0], _lifeRand[1]);
 				
@@ -291,10 +296,11 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_flm.animCurve   = curve_anInt;
 				
 				_flm.level       = _level;
+				_flm.depth       = _depth;
 				
 				_flm.step();
 				
-				array_push(_layer.flames, _flm);
+				array_push(_layer.flames, _flm); 
 			}
 			
 			array_push(_flameLayer, _layer);

@@ -145,10 +145,19 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform sampler2D depthBase;
+uniform sampler2D depth;
+
 uniform vec2 dimension;
+uniform int  useDepth;
 
 void main() {
-	vec4 v = texture2D(gm_BaseTexture, v_vTexcoord); 
+	vec4  v = texture2D(gm_BaseTexture, v_vTexcoord); 
+	float b = texture2D(depthBase, v_vTexcoord).r; 
+	float d = texture2D(depth, v_vTexcoord).r; 
+	
+	if(useDepth == 1 && d < b) return; 
+	
 	if(v.a <= 0. || v.r <= -9999999.) {  // Transparent current layer
 		gl_FragColor = vec4(0.); 
 		return; 

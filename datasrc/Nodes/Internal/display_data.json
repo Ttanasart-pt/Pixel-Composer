@@ -354,15 +354,16 @@
     }, //StrandSim
     {
         "name": "VerletSim", "nodes": [
-            { "label": "Object" },
-            { "label": "/Mesh" },
+            { "label": "Mesh" },
+            { "label": "/Create" },
             "Node_VerletSim_Mesh",
+            "Node_VerletSim_Mesh_Grid",
+            { "label": "/Edit" },
             "Node_VerletSim_Mesh_Pin",
             "Node_VerletSim_Mesh_Tear",
             "Node_VerletSim_Mesh_Pleat",
             { "label": "/Path" },
             "Node_VerletSim_Path", 
-            { "label": "Simulation" },
 
             { "label": "Modify" },
             { "label": "/Force" },
@@ -380,7 +381,7 @@
             "Node_VerletSim_Mesh_Cache_Lerp",
         ],
         "context": ["", "Node_VerletSim_Inline"],
-        "color": "node_blend_strand"
+        "color": "node_blend_verlet"
     }, //VerletSim
     {
         "name": "MK Tree", "nodes": [
@@ -426,6 +427,8 @@
             "Node_MK_Blast_Particle",
             { "label": "/Smoke" },
             "Node_MK_Blast_Smoke",
+            { "label": "/Operators" },
+            "Node_MK_Blast_Combine", 
             
             { "label": "Modify" },
             { "label": "/Physics" },

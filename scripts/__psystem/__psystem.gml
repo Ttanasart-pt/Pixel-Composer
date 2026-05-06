@@ -64,78 +64,87 @@
 	global.pSystem_trig_length = 8*3 + 8*3; // px, py, pz, vx, vy, vz
 #endregion
 
-#region global
-	function pSystem_Particles() constructor {
-		poolSize  = 1024;
-		cursor    = 0;
-		maxCursor = 0;
-		buffer    = undefined;
-		
-		static init = function(_poolSize = 1024) {
-			poolSize = _poolSize;
-			cursor   = 0;
-			
-			var _poolbSize = global.pSystem_data_length * poolSize;
-			buffer = buffer_create(_poolbSize, buffer_fixed, 1);
-			buffer_clear(buffer);
-			
-			return self;
-		}
-		
-		static verify = function(_poolSize) {
-			if(poolSize == _poolSize) return self;
-			
-			buffer_delete_safe(buffer);
-			init(_poolSize);
-			return self;
-		}
-		
-		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
-			var _partBuff = buffer;
-			var _partAmo  = maxCursor;
-			var _off = 0;
-			
-			draw_set_color(COLORS._main_accent);
-			
-			repeat(_partAmo) {
-				var _start = _off;
-				buffer_seek(_partBuff, buffer_seek_start, _start);
-				_off += global.pSystem_data_length;
-				
-				var _act = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-				if(!_act) continue;
-				
-				var _px = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-				var _py = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
-				var __x = _x + _px * _s;
-				var __y = _y + _py * _s;
-				
-				draw_line(__x - 4, __y, __x + 4, __y);
-				draw_line(__x, __y - 4, __x, __y + 4);
-			}
-			
-		}
-		
-		static free = function() {
-			buffer_delete_safe(buffer);
-		}
-		
-		static clone = function() {
-			var _n = new pSystem_Particles();
-			
-			_n.poolSize  = poolSize;
-			_n.cursor    = cursor;
-			_n.maxCursor = maxCursor;
-			_n.buffer    = buffer_clone(buffer);
-			
-			return _n;
-		}
+function pSystem_Particles() constructor {
+	poolSize  = 1024;
+	cursor    = 0;
+	maxCursor = 0;
+	buffer    = undefined;
 	
-		static toString = function() {
-			return $"[{__txt("Particle Object")} ({maxCursor}/{poolSize}) ]";
-		}
+	////- Data
+	
+	static init = function(_poolSize = 1024) {
+		poolSize = _poolSize;
+		cursor   = 0;
+		
+		var _poolbSize = global.pSystem_data_length * poolSize;
+		buffer = buffer_create(_poolbSize, buffer_fixed, 1);
+		buffer_clear(buffer);
+		
+		return self;
 	}
-#endregion
+	
+	static verify = function(_poolSize) {
+		if(poolSize == _poolSize) return self;
+		
+		buffer_delete_safe(buffer);
+		init(_poolSize);
+		return self;
+	}
+	
+	static getPartData = function(_index, _key, _type) {
+		var _pos = global.pSystem_data_length * _index + _key;
+		return buffer_read_at( buffer, _pos, _type );
+	}	
+	
+	////- Draw
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
+		var _partBuff = buffer;
+		var _partAmo  = maxCursor;
+		var _off = 0;
+		
+		draw_set_color(COLORS._main_accent);
+		
+		repeat(_partAmo) {
+			var _start = _off;
+			buffer_seek(_partBuff, buffer_seek_start, _start);
+			_off += global.pSystem_data_length;
+			
+			var _act = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			if(!_act) continue;
+			
+			var _px = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var __x = _x + _px * _s;
+			var __y = _y + _py * _s;
+			
+			draw_line(__x - 4, __y, __x + 4, __y);
+			draw_line(__x, __y - 4, __x, __y + 4);
+		}
+		
+	}
+	
+	////- Actions
+	
+	static free = function() {
+		buffer_delete_safe(buffer);
+	}
+	
+	static clone = function() {
+		var _n = new pSystem_Particles();
+		
+		_n.poolSize  = poolSize;
+		_n.cursor    = cursor;
+		_n.maxCursor = maxCursor;
+		_n.buffer    = buffer_clone(buffer);
+		
+		return _n;
+	}
+
+	static toString = function() {
+		return $"[{__txt("Particle Object")} ({maxCursor}/{poolSize}) ]";
+	}
+}
 
 /*[cpp] pSystem_main.h
 #include <cstdint>

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.2.004",
+    "changes": [
+      {
+        "date": "2026-05-06T04:48:42.553Z",
+        "node": "",
+        "commit": "**Blue noise**: Add partial processing to reduce lag."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc6",
     "changes": [
       {
