@@ -2484,6 +2484,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						return preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my);
 				}
 				break;
+				
+			case VALUE_TYPE.pathnode :
+				var _path   = getValue();
+				var _params = argument[argc];
+				
+				if(has(_path, "drawOverlay")) 
+					return _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
+				break;
 		}
 		
 		return -1;

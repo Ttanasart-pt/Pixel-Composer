@@ -11,6 +11,11 @@
         "date": "2026-05-07T04:21:02.286Z",
         "node": "",
         "commit": "**Wave Path**: Fix error when using wiggle."
+      },
+      {
+        "date": "2026-05-07T04:36:42.589Z",
+        "node": "",
+        "commit": "**Trim Path**: Add clamp property."
       }
     ]
   }

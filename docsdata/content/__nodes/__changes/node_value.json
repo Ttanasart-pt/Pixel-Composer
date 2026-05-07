@@ -6,6 +6,11 @@
         "date": "2026-05-07T00:11:06.314Z",
         "node": "",
         "commit": "**Bridge/ Map path**: Add support for multiple non-composite paths."
+      },
+      {
+        "date": "2026-05-07T04:36:42.595Z",
+        "node": "",
+        "commit": "**Trim Path**: Add clamp property."
       }
     ]
   },

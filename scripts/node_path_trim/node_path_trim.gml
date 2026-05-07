@@ -3,13 +3,27 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_PathNode(     "Path"));
-	newInput(1, nodeValue_Slider_Range( "Range", [ 0, 1 ]));
-	newInput(2, nodeValue_Float(        "Shift", 0));
+	////- =Path
+	newInput( 0, nodeValue_PathNode( "Path"));
+	
+	////- =Trim
+	newInput( 1, nodeValue_SliRange( "Range", [0,1] ));
+	newInput( 2, nodeValue_Float(    "Shift", 0     ));
+	
+	////- =Clamp
+	newInput( 3, nodeValue_Bool(     "Clamp", false ));
+	newInput( 4, nodeValue_Range(    "Range", [0,1] ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
-	input_display_list = [ 0, 1, 2 ];
+	input_display_list = [ 
+		[ "Path",  false    ],  0,
+		[ "Trim",  false    ],  1,  2,  
+		[ "Clamp", false, 3 ],  4, 
+	];
+	
+	////- Node
 	
 	function _trimmedPath(_node) : Path(_node) constructor {
 		curr_path  = noone;
@@ -51,16 +65,29 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
+		#region data
+			var _path = _data[0];
+			
+			var _rang = _data[1];
+			var _shft = _data[2];
+			
+			var _clam = _data[3];
+			var _cran = _data[4];
+		#endregion
+		
+		_rang = [
+			_rang[0] + _shft, 
+			_rang[1] + _shft	
+		];
+		
+		if(_clam) {
+			_rang[0] = clamp(_rang[0], _cran[0], _cran[1]);
+			_rang[1] = clamp(_rang[1], _cran[0], _cran[1]);
+		}
+		
 		if(!is(_outData, _trimmedPath)) 
 			_outData = new _trimmedPath(self);
-		
-		var _path = _data[0];
-		var _rang = [ _data[1][0], _data[1][1] ];
-		var _shft = _data[2];
-		
-		_rang[0] += _shft;
-		_rang[1] += _shft;
-		
+			
 		_outData.cached_pos = {};
 		_outData.curr_path  = _path;
 		_outData.curr_range = _rang;
