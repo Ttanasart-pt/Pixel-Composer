@@ -76,8 +76,8 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(_lamo <= 1) return;
 		
 		var _pPoint = array_create(_lamo);
-		var _pSamp  = _subd[0] + 1;
-		var _pStep  = 1 / (_pSamp - 1);
+		var _pSamp  = _subd[0];
+		var _pStep  = 1 / _pSamp;
 		var _p = new __vec2P();
 		
 		for( var i = 0; i < _lamo; i++ ) {
@@ -133,15 +133,15 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 				}
 			}
 			
-			for( var j = bool(p); j <  gh; j++ ) {
+			for( var i = 0; i <= gw; i++ ) {
 				var _pEdge = undefined;
 				if(p) {
 					var _pst = (p-1) * (gw+1) * (gh);
-					var _ind = __verlet_edge_index(_pst + (j) * (gw+1) + gw, _pst + (j+1) * (gw+1) + gw);
+					var _ind = __verlet_edge_index(_pst + gh * (gw+1) + (i), _pst + (gh+1) * (gw+1) + (i));
 					_pEdge = _emap[$ _ind];
 				}
 				
-				for( var i = 0; i <= gw; i++ ) {
+				for( var j = bool(p); j <  gh; j++ ) {
 					var i0 = _st + (j  ) * (gw+1) + (i);
 					var i1 = _st + (j+1) * (gw+1) + (i);
 					

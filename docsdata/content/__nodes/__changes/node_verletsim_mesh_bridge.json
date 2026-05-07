@@ -11,6 +11,11 @@
         "date": "2026-05-07T01:10:31.970Z",
         "node": "any",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-05-07T01:40:04.785Z",
+        "node": "VerletSim > Pin Mesh",
+        "commit": "**VerletSim > Pin Mesh**: Add edge loop source type."
       }
     ]
   }

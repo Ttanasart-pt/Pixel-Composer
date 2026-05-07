@@ -86,9 +86,9 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _emap  = {};
 		
 		_i = 0;
-		for( var j = 0; j <  gh; j++ ) {
+		for( var i = 0; i <= gw; i++ ) {
 			var _pEdge = undefined;
-			for( var i = 0; i <= gw; i++ ) {
+			for( var j = 0; j <  gh; j++ ) {
 				var i0 = (j  ) * (gw+1) + (i);
 				var i1 = (j+1) * (gw+1) + (i);
 				
