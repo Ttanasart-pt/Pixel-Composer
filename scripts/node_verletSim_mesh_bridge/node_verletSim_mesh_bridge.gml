@@ -76,7 +76,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(_lamo <= 1) return;
 		
 		var _pPoint = array_create(_lamo);
-		var _pSamp  = _subd[0];
+		var _pSamp  = _subd[0] + 1;
 		var _pStep  = 1 / (_pSamp - 1);
 		var _p = new __vec2P();
 		
@@ -94,7 +94,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		var mesh = new __verlet_Mesh();
 		
-		var gw = _subd[0];
+		var gw = _pSamp;
 		var gh = _subd[1];
 		var sx = 1 / gw;
 		var sy = 1 / gh;
@@ -133,24 +133,48 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 				}
 			}
 			
-			for( var j = bool(p); j <  gh; j++ )
-			for( var i = 0;       i <= gw; i++ ) {
-				var i0 = _st + (j  ) * (gw+1) + (i);
-				var i1 = _st + (j+1) * (gw+1) + (i);
+			for( var j = bool(p); j <  gh; j++ ) {
+				var _pEdge = undefined;
+				if(p) {
+					var _pst = (p-1) * (gw+1) * (gh);
+					var _ind = __verlet_edge_index(_pst + (j) * (gw+1) + gw, _pst + (j+1) * (gw+1) + gw);
+					_pEdge = _emap[$ _ind];
+				}
 				
-				edges[_e]  = [ i0, i1 ];
-				vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
-				_e++;
+				for( var i = 0; i <= gw; i++ ) {
+					var i0 = _st + (j  ) * (gw+1) + (i);
+					var i1 = _st + (j+1) * (gw+1) + (i);
+					
+					edges[_e]  = [ i0, i1 ];
+					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+					
+					if(_pEdge) {
+						_pEdge.setNEdge(vedges[_e]);
+						vedges[_e].setPEdge(_pEdge);
+					}
+					_pEdge = vedges[_e];
+					
+					_e++;
+				}
 			}
 			
-			for( var j = bool(p); j <= gh; j++ )
-	 		for( var i = 0;       i <  gw; i++ ) {
-				var i0 = _st + (j) * (gw+1) + (i  );
-				var i1 = _st + (j) * (gw+1) + (i+1);
-				
-				edges[_e]  = [ i0, i1 ];
-				vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
-				_e++;
+			for( var j = bool(p); j <= gh; j++ ) {
+				var _pEdge = undefined;
+		 		for( var i = 0; i <  gw; i++ ) {
+					var i0 = _st + (j) * (gw+1) + (i  );
+					var i1 = _st + (j) * (gw+1) + (i+1);
+					
+					edges[_e]  = [ i0, i1 ];
+					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+					
+					if(_pEdge) {
+						_pEdge.setNEdge(vedges[_e]);
+						vedges[_e].setPEdge(_pEdge);
+					}
+					_pEdge = vedges[_e];
+					
+					_e++;
+				}
 			}
 			
 			for( var j = 0; j < gh; j++ )

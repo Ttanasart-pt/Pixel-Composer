@@ -16,6 +16,11 @@
         "date": "2026-05-07T00:11:06.349Z",
         "node": "",
         "commit": "**Bridge/ Map path**: Add support for multiple non-composite paths."
+      },
+      {
+        "date": "2026-05-07T01:10:31.971Z",
+        "node": "",
+        "commit": "Introduced"
       }
     ]
   }

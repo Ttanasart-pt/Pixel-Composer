@@ -6,6 +6,11 @@
         "date": "2026-05-07T00:55:19.476Z",
         "node": "VerletSim",
         "commit": "**VerletSim**: Mesh preview now show static mesh for non-rendering nodes."
+      },
+      {
+        "date": "2026-05-07T01:10:31.970Z",
+        "node": "any",
+        "commit": "Introduced"
       }
     ]
   }

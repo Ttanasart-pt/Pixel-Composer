@@ -6,24 +6,23 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	setDimension(96, 48);
 	
 	newActiveInput(5);
-	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
+	newInput( 0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Mode
-	
-	newInput(2, nodeValue_Enum_Button( "Mode", 0, [ "Override", "Pin", "Unpin" ] ));
+	newInput( 2, nodeValue_EButton( "Mode", 0, [ "Override", "Pin", "Unpin" ] ));
 	
 	////- =Target
-	
-	newInput(3, nodeValue_Enum_Scroll( "Source",  0, [ "Area", "Surface" ] ));
-	newInput(1, nodeValue_Area(        "Area",    DEF_AREA_REF, { useShape : false } )).setUnitSimple();
-	newInput(4, nodeValue_Surface(     "Surface", noone ));
-	// input 6
+	newInput( 3, nodeValue_EScroll( "Source",     0, [ "Area", "Surface", "Edge Loop" ] ));
+	newInput( 1, nodeValue_Area(    "Area",       DEF_AREA_REF, { useShape : false } )).setUnitSimple();
+	newInput( 4, nodeValue_Surface( "Surface",    noone ));
+	newInput( 6, nodeValue_Int(     "Edge Index", 0     ));
+	// input 7
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
-	input_display_list = [ 5, 0, 
-		[ "Mode",       false ], 2,
-		[ "Pin Target", false ], 3, 1, 4, 
+	input_display_list = [  5,  0, 
+		[ "Mode",       false ],  2,
+		[ "Pin Target", false ],  3,  1,  4,  6, 
 	];
 	
 	////- Nodes
@@ -46,19 +45,23 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	}
 	
 	static update = function() {
-		var _active = getInputData(5);
-		var _mesh   = getInputData(0);
-		
-		var _mode   = getInputData(2);
-		
-		var _type   = getInputData(3);
-		var _area   = getInputData(1);
-		var _surf   = getInputData(4);
-		
-		inputs[3].setVisible(_type == 0);
-		inputs[4].setVisible(_type == 1, _type == 1);
-		
-		outputs[0].setValue(_mesh);
+		#region data
+			var _active = getInputData(5);
+			var _mesh   = getInputData(0);
+			
+			var _mode   = getInputData(2);
+			
+			var _type   = getInputData(3);
+			var _area   = getInputData(1);
+			var _surf   = getInputData(4);
+			var _edge   = getInputData(6);
+			
+			inputs[3].setVisible(_type == 0);
+			inputs[4].setVisible(_type == 1, _type == 1);
+			inputs[6].setVisible(_type == 2);
+			
+			outputs[0].setValue(_mesh);
+		#endregion
 		
 		if(!_active) return;
 		if(!is(_mesh, __verlet_Mesh)) return;

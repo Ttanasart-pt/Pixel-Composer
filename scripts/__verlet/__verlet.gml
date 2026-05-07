@@ -30,7 +30,10 @@ function __verlet_edge(_p0, _p1, _k) constructor {
 	
 	active   = true;
 	distance = point_distance(p0.x, p0.y, p1.x, p1.y);
-
+	
+	prevEdge = undefined; static setPEdge = function(e) /*=>*/ { prevEdge = e; return self; }
+	nextEdge = undefined; static setNEdge = function(e) /*=>*/ { nextEdge = e; return self; }
+	
 	static setMap = function(_edgeMap) { 
 		_edgeMap[$ toString()] = self;
 		return self;

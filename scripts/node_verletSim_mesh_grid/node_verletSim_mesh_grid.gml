@@ -86,24 +86,42 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _emap  = {};
 		
 		_i = 0;
-		for( var j = 0; j <  gh; j++ )
-		for( var i = 0; i <= gw; i++ ) {
-			var i0 = (j  ) * (gw+1) + (i);
-			var i1 = (j+1) * (gw+1) + (i);
-			
-			edges[_i]  = [ i0, i1 ];
-			vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
-			_i++;
+		for( var j = 0; j <  gh; j++ ) {
+			var _pEdge = undefined;
+			for( var i = 0; i <= gw; i++ ) {
+				var i0 = (j  ) * (gw+1) + (i);
+				var i1 = (j+1) * (gw+1) + (i);
+				
+				edges[_i]  = [ i0, i1 ];
+				vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+				
+				if(_pEdge) {
+					_pEdge.setNEdge(vedges[_i]);
+					vedges[_i].setPEdge(_pEdge);
+				}
+				_pEdge = vedges[_i];
+				
+				_i++;
+			}
 		}
 		
-		for( var j = 0; j <= gh; j++ )
- 		for( var i = 0; i <  gw; i++ ) {
-			var i0 = (j) * (gw+1) + (i  );
-			var i1 = (j) * (gw+1) + (i+1);
-			
-			edges[_i]  = [ i0, i1 ];
-			vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
-			_i++;
+		for( var j = 0; j <= gh; j++ ) {
+			var _pEdge = undefined;
+	 		for( var i = 0; i <  gw; i++ ) {
+				var i0 = (j) * (gw+1) + (i  );
+				var i1 = (j) * (gw+1) + (i+1);
+				
+				edges[_i]  = [ i0, i1 ];
+				vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+				
+				if(_pEdge) {
+					_pEdge.setNEdge(vedges[_i]);
+					vedges[_i].setPEdge(_pEdge);
+				}
+				_pEdge = vedges[_i];
+				
+				_i++;
+			}
 		}
 		
 		var tris   = array_create(gw * gh);
