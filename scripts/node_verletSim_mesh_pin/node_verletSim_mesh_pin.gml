@@ -6,6 +6,8 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	setDimension(96, 48);
 	
 	newActiveInput(5);
+	
+	////- =Mesh
 	newInput( 0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Mode
@@ -20,7 +22,8 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
-	input_display_list = [  5,  0, 
+	input_display_list = [  5, 
+		[ "Mesh",       false ],  0, 
 		[ "Mode",       false ],  2,
 		[ "Pin Target", false ],  3,  1,  4,  6, 
 	];

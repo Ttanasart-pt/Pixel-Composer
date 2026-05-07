@@ -6,6 +6,11 @@
         "date": "2026-05-05T04:36:04.384Z",
         "node": "",
         "commit": "**Graph Panel**: Fix crash when trying to blend nodes with no surface output."
+      },
+      {
+        "date": "2026-05-07T04:21:02.285Z",
+        "node": "",
+        "commit": "**Wave Path**: Fix error when using wiggle."
       }
     ]
   }

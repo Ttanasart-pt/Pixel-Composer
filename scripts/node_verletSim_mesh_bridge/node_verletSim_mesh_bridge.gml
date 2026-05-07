@@ -16,14 +16,16 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newInput( 3, nodeValue_Slider( "Drag",         0    ));
 	
 	////- =Paths
-	// input 4
+	newInput( 4, nodeValue_Bool(   "Loop",  false ));
+	newInput( 5, nodeValue_Slider( "Shift", 0     ));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 
 		[ "Mesh",   false ],  0,  1,
 		[ "Verlet", false ],  2,  3,  
-		[ "Path",   false ],  
+		[ "Path",   false ],  4,  5, 
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -59,6 +61,9 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			
 			var _ten  = getInputData(2), _tens = 1 - _ten;
 			var _drag = getInputData(3);
+			
+			var _loop = getInputData(4);
+			var _pshf = getInputData(5);
 		#endregion
 		
 		var _pathData = [];
@@ -86,7 +91,9 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			_pPoint[i] = _ps;
 			
 			for( var j = 0; j <= _pSamp; j++ ) {
-				var _rat = j * _pStep;
+				var _rat = j * _pStep + _pshf;
+				if(_loop) _rat = frac(_rat);
+				
 				_p = _pathD[0].getPointRatio(clamp(_rat, 0, 0.999), _pathD[1], _p);
 				_ps[j] = [_p.x, _p.y];
 			}
@@ -94,7 +101,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		var mesh = new __verlet_Mesh();
 		
-		var gw = _pSamp;
+		var gw = _subd[0];
 		var gh = _subd[1];
 		var sx = 1 / gw;
 		var sy = 1 / gh;
@@ -111,13 +118,13 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var vtris  = [];
 		
 		for( var p = 0; p < _lamo - 1; p++ ) {
-			var _st = p * (gw+1) * (gh);
+			var _st = p * (_pSamp+1) * (gh);
 			
 			var _point0 = _pPoint[p+0];
 			var _point1 = _pPoint[p+1];
 			var _pv = p / (_lamo - 1);
 			
-			for( var i = 0; i <= gw; i++ ) {
+			for( var i = 0; i <= _pSamp; i++ ) {
 				var _p0 = _point0[i];
 				var _p1 = _point1[i];
 				var _u  = i * sx;
@@ -128,7 +135,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 					var _x0 = lerp(_p0[0], _p1[0], j * sy);
 					var _y0 = lerp(_p0[1], _p1[1], j * sy);
 					
-					var _ind     = _st + j*(gw+1) + i;
+					var _ind     = _st + j*(_pSamp+1) + i;
 					points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind);
 				}
 			}
@@ -137,13 +144,13 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 				var _pEdge = undefined;
 				if(p) {
 					var _pst = (p-1) * (gw+1) * (gh);
-					var _ind = __verlet_edge_index(_pst + gh * (gw+1) + (i), _pst + (gh+1) * (gw+1) + (i));
+					var _ind = __verlet_edge_index(_pst + gh * (gw+1) + (i) % _pSamp, _pst + (gh+1) * (gw+1) + (i) % _pSamp);
 					_pEdge = _emap[$ _ind];
 				}
 				
 				for( var j = bool(p); j <  gh; j++ ) {
-					var i0 = _st + (j  ) * (gw+1) + (i);
-					var i1 = _st + (j+1) * (gw+1) + (i);
+					var i0 = _st + (j  ) * (gw+1) + (i) % _pSamp;
+					var i1 = _st + (j+1) * (gw+1) + (i) % _pSamp;
 					
 					edges[_e]  = [ i0, i1 ];
 					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
@@ -161,8 +168,8 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			for( var j = bool(p); j <= gh; j++ ) {
 				var _pEdge = undefined;
 		 		for( var i = 0; i <  gw; i++ ) {
-					var i0 = _st + (j) * (gw+1) + (i  );
-					var i1 = _st + (j) * (gw+1) + (i+1);
+					var i0 = _st + (j) * (gw+1) + (i  )%_pSamp;
+					var i1 = _st + (j) * (gw+1) + (i+1)%_pSamp;
 					
 					edges[_e]  = [ i0, i1 ];
 					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
@@ -179,10 +186,10 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			
 			for( var j = 0; j < gh; j++ )
 			for( var i = 0; i < gw; i++ ) {
-				var i0 = _st + (j  ) * (gw+1) + (i  );
-				var i1 = _st + (j  ) * (gw+1) + (i+1);
-				var i2 = _st + (j+1) * (gw+1) + (i  );
-				var i3 = _st + (j+1) * (gw+1) + (i+1);
+				var i0 = _st + (j  ) * (gw+1) + (i  )%_pSamp;
+				var i1 = _st + (j  ) * (gw+1) + (i+1)%_pSamp;
+				var i2 = _st + (j+1) * (gw+1) + (i  )%_pSamp;
+				var i3 = _st + (j+1) * (gw+1) + (i+1)%_pSamp;
 				
 				tris[_t]  = [ i0, i1, i2 ];
 				vtris[_t] = new __verlet_triangle(points[i0], points[i1], points[i2]).getEdge(_emap);

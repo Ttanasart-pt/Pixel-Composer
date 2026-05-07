@@ -21,6 +21,11 @@
         "date": "2026-05-07T00:55:19.477Z",
         "node": "",
         "commit": "**VerletSim**: Mesh preview now show static mesh for non-rendering nodes."
+      },
+      {
+        "date": "2026-05-07T04:21:02.309Z",
+        "node": "",
+        "commit": "**Wave Path**: Fix error when using wiggle."
       }
     ]
   },

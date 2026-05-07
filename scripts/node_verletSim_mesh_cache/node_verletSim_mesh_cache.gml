@@ -8,13 +8,14 @@ function Node_VerletSim_Mesh_Cache(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
+	////- =Auto Cache
 	newInput(1, nodeValue_Bool( "Autocache", false ));
 	newInput(2, nodeValue_Int(  "Frame",     1     ));
 	
 	newOutput(0, nodeValue_Output("Cached Data", VALUE_TYPE.struct, noone));
 	
 	input_display_list = [ 0, button(function() /*=>*/ {return cacheMesh()}).setText("Cache"),
-		["Auto Cache", false, 1], 2, 
+		[ "Auto Cache", false, 1 ], 2, 
 	];
 	
 	attributes.cache_data = undefined;

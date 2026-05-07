@@ -2,19 +2,21 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "Map Path";
 	
 	////- =Mapping
-	newInput(1, nodeValue_Dimension());
-	newInput(2, nodeValue_Surface( "Texture" ));
-	newInput(3, nodeValue_Int(     "Subdivision", 16)).setValidator(VV_min(2)).rejectArray();
+	newInput( 1, nodeValue_Dimension());
+	newInput( 2, nodeValue_Surface( "Texture" ));
+	newInput( 3, nodeValue_Int(     "Subdivision", 16)).setValidator(VV_min(2)).rejectArray();
 	
 	////- =Paths
-	newInput(0, nodeValue_PathNode( "Path" )).rejectArray();
-	// input 4
+	newInput( 4, nodeValue_Slider(   "Shift",  0     ));
+	newInput( 5, nodeValue_Bool(     "Invert", false ));
+	newInput( 0, nodeValue_PathNode( "Path" )).rejectArray();
+	// input 6
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Mapping", false ],  1,  2,  3, 
-		[ "Paths",   false ],  0,
+		[ "Paths",   false ],  4,  5,  0,
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -31,7 +33,6 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) 
 			InputDrawOverlay(inputs[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));	
-		
 	}
 		
 	static update = function() {
@@ -43,6 +44,8 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _surf = getInputData(2);
 			var _sub  = getInputData(3);
 			
+			var _sft  = getInputData(4);
+			var _inv  = getInputData(5);
 		#endregion
 		
 		var _pathData = [];
@@ -56,7 +59,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			var _lamo = _path.getLineCount();
 			_lines += _lamo;
-			for( var j = 0; j < _lines; j++ )
+			for( var j = 0; j < _lamo; j++ )
 				array_push(_pathData, [_path, j]);
 		}
 		
@@ -71,7 +74,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		}
 		
 		var _pnt = array_create(_lines + 1);
-		var _isb = 1 / (_sub - 1);
+		var _isb = .9999 / (_sub - 1);
 		var _pp  = new __vec2P();
 		
 		for( var i = 0; i < _lines; i++ ) {
@@ -80,7 +83,8 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _ind = 0;
 			
 			for( var j = 0; j <= _sub; j++ ) {
-				var _prog = clamp(j * _isb, 0., 0.999);
+				var _prog = clamp(frac(j * _isb + _sft), 0., 0.9999);
+				if(_inv) _prog = 1 - _prog;
 				
 				_pp = _pathD[0].getPointRatio(_prog, _pathD[1], _pp);
 				_p[_ind++] = [ _pp.x, _pp.y ];

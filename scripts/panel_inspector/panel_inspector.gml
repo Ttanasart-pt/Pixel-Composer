@@ -1132,7 +1132,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				var labelWidth = max(ds_w, min(con_ww * 0.4, ui(200)));
 				var editBoxX   = _x + ui(16) + labelWidth;
 				var editBoxY   = yy;
-				var editBoxW   = con_ww - labelWidth;
+				var editBoxW   = con_ww - labelWidth - ui(4);
 				var editBoxH   = lb_h;
 				
                 var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _val, undefined, _m, rrx, rry)

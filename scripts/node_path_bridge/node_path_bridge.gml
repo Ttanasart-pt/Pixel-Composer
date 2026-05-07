@@ -182,7 +182,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _lamo = _path.getLineCount();
 			
 			_lines += _lamo;
-			for( var j = 0; j < _lines; j++ )
+			for( var j = 0; j < _lamo; j++ )
 				array_push(_pathData, [_path, j]);
 		}
 		

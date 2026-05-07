@@ -161,15 +161,15 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			dir = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
 			
 			_amp = random_range_seed(_amp[0], _amp[1], _seed + ind);
+			_shf = random_range_seed(_shf[0], _shf[1], _seed + ind + 1);
+			_fre = random_range_seed(_fre[0], _fre[1], _seed + ind + 2);
+			_fre = max(0.01, abs(_fre));
+			
 			if(_wig) {
 				var _wt = _shf + _rat * _fre;
 				var _w  = wiggle(_wigs[0], _wigs[1], _wigf, frac(_wt), _seed);
 				_amp += _w;
 			}
-			
-			_shf = random_range_seed(_shf[0], _shf[1], _seed + ind + 1);
-			_fre = random_range_seed(_fre[0], _fre[1], _seed + ind + 2);
-			_fre = max(0.01, abs(_fre));
 			
 			var _itr = itr;
 			var _prg = 0;

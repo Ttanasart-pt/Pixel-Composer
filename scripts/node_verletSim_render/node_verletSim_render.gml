@@ -58,11 +58,9 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		#endregion
 		
 		if(!IS_PLAYING) return;
+		if(!is(_msh, __verlet_Mesh)) return;
 		
 		var _tex = is_surface(_srf)? surface_get_texture(_srf) : -1;
-		
-		if(!is(_msh, __verlet_Mesh)) return;
-		if(_type == 0 && !is_surface(_srf)) return;
 		
 		if(_step) inline_context.verletStep(_msh);
 		

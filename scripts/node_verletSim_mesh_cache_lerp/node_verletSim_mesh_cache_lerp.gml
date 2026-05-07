@@ -10,9 +10,12 @@ function Node_VerletSim_Mesh_Cache_Lerp(_x, _y, _group = noone) : Node(_x, _y, _
 	newInput(2, nodeValue_Slider( "Amount", .5 ));
 	// input 3
 	
-	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
-	input_display_list = [ 0, 1, 2  ];
+	input_display_list = [ 
+		[ "Mesh", false ],  0,  1,
+		[ "Mix",  false ],  2 
+	];
 	
 	attributes.cache_data = undefined;
 	
