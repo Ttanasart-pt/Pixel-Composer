@@ -66,13 +66,13 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-			var _path = _data[0];
+			var _path = _data[ 0];
 			
-			var _rang = _data[1];
-			var _shft = _data[2];
+			var _rang = _data[ 1];
+			var _shft = _data[ 2];
 			
-			var _clam = _data[3];
-			var _cran = _data[4];
+			var _clam = _data[ 3];
+			var _cran = _data[ 4];
 		#endregion
 		
 		_rang = [

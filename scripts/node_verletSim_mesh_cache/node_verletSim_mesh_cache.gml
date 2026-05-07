@@ -41,11 +41,10 @@ function Node_VerletSim_Mesh_Cache(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _msh = getInputData(0);
+		if(!is(_mesh, __verlet_Mesh)) return;
 		
-		if(is(_msh, Mesh)) {
-			draw_set_color(COLORS._main_icon);
-			_msh.draw(_x, _y, _s);
-		}
+		draw_set_color(COLORS._main_icon);
+		_mesh.draw(_x, _y, _s);
 		
 		return w_hovering;
 	}

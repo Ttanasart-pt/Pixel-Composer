@@ -78,7 +78,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _y0 = lerp(y0, y1, _v);
 			
 			var _ind     = j*(gw+1)+i;
-			points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind);
+			points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind).setDrag(_drag);
 		}
 		
 		var edges  = array_create(gh * (gw + 1) + (gh + 1) * gw);

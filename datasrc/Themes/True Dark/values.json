@@ -9,7 +9,7 @@
         "main_ltgrey":	"404040",
         "main_mdwhite":	"404040",
         "main_white":	"888888",
-        "main_bg":      "1c1c1c",
+        "main_bg":      "040404",
         
         "blue":			"27aae1",
         "cyan":			"88ffe9",
@@ -108,7 +108,7 @@
         "node_blend_vct": "white",
         "node_blend_dynaSurf": "red",
         "node_blend_mktree": "pgreen",
-        "node_path_overlay_control_line": "main_grey",
+        "node_path_overlay_control_line": "main_white",
         "node_wiggler_frame": "main_grey",
         "node_border_file_drop": "cyan",
         "node_border_context": "yellow",

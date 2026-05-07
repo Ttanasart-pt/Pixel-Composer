@@ -34,13 +34,11 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		var _mesh = getInputData(0);
 		var _type = getInputData(3);
 		
-		if(is(_mesh, Mesh)) {
-			draw_set_color(COLORS._main_icon);
-			_mesh.draw(_x, _y, _s);
-		}
+		if(!is(_mesh, __verlet_Mesh)) return;
 		
-		if(is(_mesh, __verlet_Mesh)) 
-			_mesh.drawVertex(_x, _y, _s);
+		draw_set_color(COLORS._main_icon);
+		_mesh.draw(_x, _y, _s);
+		_mesh.drawVertex(_x, _y, _s);
 		
 		switch(_type) {
 			case 0 : InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
@@ -58,6 +56,7 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				draw_line_width(_p0x, _p0y, _p1x, _p1y, 2);
 				break;
 		}
+		
 		return w_hovering;
 	}
 	

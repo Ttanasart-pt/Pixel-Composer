@@ -25,15 +25,10 @@ function Node_VerletSim_Drag(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Transform", false ], 2, 5, 
 	];
 	
-	prev_x = 0;
-	prev_y = 0;
+	move_x = 0; move_y = 0;
+	draw_x = 0; draw_y = 0;
+	prev_x = 0; prev_y = 0;
 	prev_a = 0;
-	
-	move_x = 0;
-	move_y = 0;
-	
-	draw_x = 0;
-	draw_y = 0;
 	
 	////- Nodes
 	

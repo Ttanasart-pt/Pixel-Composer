@@ -776,7 +776,7 @@ function Panel_Inspector() : PanelContent() constructor {
     		
     		var _ic = _inl.icon == noone? THEME.arrow : _inl.icon;
     		draw_sprite_ui(_ic, inline_expands * 3, _x + ui(12), _y + _lbh / 2, 1, 1, 0, _col);
-    		if(inline_expands && _inh) draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _inh + _lbh + ui(10), _col, .2);
+    		if(inline_expands && _inh) draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _inh + _lbh + ui(10), c_white, .2);
     		
     		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _lbh);
     		if(_hov) {

@@ -229,7 +229,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.prefKey != noone) {
 					_bx -= ui(24);
 					
-					var _prefVal = getPreference(_prop.prefKey, PREFERENCES_DEF);
+					var _prefVal = getPreference(_prop.prefKey, PREFERENCES);
 					
 					if(isEqual(_data, _prefVal))
 						draw_sprite_ui(THEME.icon_default, 0, _bx + ui(24) / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);

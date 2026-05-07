@@ -241,7 +241,7 @@
 			}
 			
 			PREFERENCES.project_previewSetting = {
-				bg_type     : 1,
+				bg_type     :  1,
 				bg_color    : -1,
 				bg_color_ch : -1,
 				bg_color_3d : -1,
@@ -592,7 +592,10 @@
 		
 		for( var i = 0, n = array_length(_sep); i < n; i++ ) {
 			var _s = _sep[i];
-			if(!struct_has(_pnt, _s)) return noone;
+			if(!has(_pnt, _s)) {
+				print($"Setting prefkey {_k} error: key not found.")
+				return noone;
+			}
 			
 			if(i == n - 1) _pnt[$ _s] = _v;
 			else _pnt = _pnt[$ _s];

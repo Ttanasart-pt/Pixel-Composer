@@ -77,10 +77,9 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var p = _msh.points[i];
 			if(!is(p, __vec2)) { mesh.points[i] = undefined; continue; }
 			
-			var _p = new __verlet_vec2().set2(p);
+			var _p = new __verlet_vec2().set2(p).setDrag(_drag);
 			mesh.points[i] = _p;
 			_p.index = i;
-			_p.drag  = _drag;
 			
 			if(is(p, __vec2UV)) { 
 				_p.u = p.u;

@@ -4,7 +4,9 @@ function __verlet_vec2(_x = 0, _y = 0, _u = 0, _v = 0, _index = 0) : __vec2(_x, 
 	vx = x; vy = y;
 	u = _u; v = _v;
 	
-	index = _index;
+	index  = _index;
+	active = true;
+	rest   = false;
 	
 	dx = undefined; 
 	dy = undefined;
@@ -13,6 +15,8 @@ function __verlet_vec2(_x = 0, _y = 0, _u = 0, _v = 0, _index = 0) : __vec2(_x, 
 	pin  = false;
 	
 	blend = c_white;
+	
+	static setDrag = function(d) /*=>*/ { drag = d; return self; }
 	
 	static set2 = function(_v2) {
 		x  = _v2.x; y  = _v2.y;

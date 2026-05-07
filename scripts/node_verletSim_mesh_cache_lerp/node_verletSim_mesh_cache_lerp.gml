@@ -22,19 +22,25 @@ function Node_VerletSim_Mesh_Cache_Lerp(_x, _y, _group = noone) : Node(_x, _y, _
 	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		var _mesh = getInputData(0);
+		if(!is(_mesh, __verlet_Mesh)) return;
+		
+		draw_set_color(COLORS._main_icon);
+		_mesh.draw(_x, _y, _s);
 		
 	}
 	
 	static update = function() {
-		var _mesh = getInputData(0);
+		#region data
+			var _mesh = getInputData(0);
+			var _cach = getInputData(1);
+			var _lerp = getInputData(2);
+			
+			if(!is(_mesh, __verlet_Mesh)) return;
+		#endregion
+		
 		outputs[0].setValue(_mesh);
-		
-		if(!is(_mesh, __verlet_Mesh)) return;
-		
-		var _cach = getInputData(1);
 		if(!is_struct(_cach) || !struct_has(_cach, "points")) return;
-		
-		var _lerp = getInputData(2);
 		
 		var _mp  = _mesh.points;
 		var _cp  = _cach.points;

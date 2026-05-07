@@ -16,16 +16,17 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newInput( 3, nodeValue_Slider( "Drag",         0    ));
 	
 	////- =Paths
-	newInput( 4, nodeValue_Bool(   "Loop",  false ));
-	newInput( 5, nodeValue_Slider( "Shift", 0     ));
-	// input 6
+	newInput( 4, nodeValue_Bool(   "Loop",      false ));
+	newInput( 5, nodeValue_Slider( "Shift",     0     ));
+	newInput( 6, nodeValue_Bool(   "Pin First", false ));
+	// input 7
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 
 		[ "Mesh",   false ],  0,  1,
 		[ "Verlet", false ],  2,  3,  
-		[ "Path",   false ],  4,  5, 
+		[ "Path",   false ],  4,  5,  6, 
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -64,6 +65,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			
 			var _loop = getInputData(4);
 			var _pshf = getInputData(5);
+			var _pinf = getInputData(6);
 		#endregion
 		
 		var _pathData = [];
@@ -101,6 +103,8 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		var mesh = new __verlet_Mesh();
 		
+		var _pLoop = _pSamp + !_loop;
+		
 		var gw = _subd[0];
 		var gh = _subd[1];
 		var sx = 1 / gw;
@@ -136,7 +140,9 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 					var _y0 = lerp(_p0[1], _p1[1], j * sy);
 					
 					var _ind     = _st + j*(_pSamp+1) + i;
-					points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind);
+					points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind).setDrag(_drag);
+					
+					if(_pinf && j == 0) points[_ind].pin = true;
 				}
 			}
 			
@@ -144,13 +150,13 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 				var _pEdge = undefined;
 				if(p) {
 					var _pst = (p-1) * (gw+1) * (gh);
-					var _ind = __verlet_edge_index(_pst + gh * (gw+1) + (i) % _pSamp, _pst + (gh+1) * (gw+1) + (i) % _pSamp);
+					var _ind = __verlet_edge_index(_pst + gh * (gw+1) + (i) % _pLoop, _pst + (gh+1) * (gw+1) + (i) % _pLoop);
 					_pEdge = _emap[$ _ind];
 				}
 				
 				for( var j = bool(p); j <  gh; j++ ) {
-					var i0 = _st + (j  ) * (gw+1) + (i) % _pSamp;
-					var i1 = _st + (j+1) * (gw+1) + (i) % _pSamp;
+					var i0 = _st + (j  ) * (gw+1) + (i) % _pLoop;
+					var i1 = _st + (j+1) * (gw+1) + (i) % _pLoop;
 					
 					edges[_e]  = [ i0, i1 ];
 					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
@@ -168,8 +174,8 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			for( var j = bool(p); j <= gh; j++ ) {
 				var _pEdge = undefined;
 		 		for( var i = 0; i <  gw; i++ ) {
-					var i0 = _st + (j) * (gw+1) + (i  )%_pSamp;
-					var i1 = _st + (j) * (gw+1) + (i+1)%_pSamp;
+					var i0 = _st + (j) * (gw+1) + (i  ) % _pLoop;
+					var i1 = _st + (j) * (gw+1) + (i+1) % _pLoop;
 					
 					edges[_e]  = [ i0, i1 ];
 					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
@@ -186,10 +192,10 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			
 			for( var j = 0; j < gh; j++ )
 			for( var i = 0; i < gw; i++ ) {
-				var i0 = _st + (j  ) * (gw+1) + (i  )%_pSamp;
-				var i1 = _st + (j  ) * (gw+1) + (i+1)%_pSamp;
-				var i2 = _st + (j+1) * (gw+1) + (i  )%_pSamp;
-				var i3 = _st + (j+1) * (gw+1) + (i+1)%_pSamp;
+				var i0 = _st + (j  ) * (gw+1) + (i  ) % _pLoop;
+				var i1 = _st + (j  ) * (gw+1) + (i+1) % _pLoop;
+				var i2 = _st + (j+1) * (gw+1) + (i  ) % _pLoop;
+				var i3 = _st + (j+1) * (gw+1) + (i+1) % _pLoop;
 				
 				tris[_t]  = [ i0, i1, i2 ];
 				vtris[_t] = new __verlet_triangle(points[i0], points[i1], points[i2]).getEdge(_emap);
@@ -199,6 +205,15 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 				vtris[_t] = new __verlet_triangle(points[i2], points[i1], points[i3]).getEdge(_emap);
 				_t++;
 			}
+		}
+		
+		if(_quad) {
+			var _q = [];
+			
+			for( var i = 0, n = array_length(vtris); i < n; i += 2 ) 
+				_q[i] = [i, i+1];
+			
+			mesh.quads = _q;
 		}
 		
 		mesh.points     = points;

@@ -369,8 +369,9 @@
             { "label": "Modify" },
             { "label": "/Force" },
             "Node_VerletSim_Force",
-            "Node_VerletSim_Drag",
             "Node_VerletSim_Wind",
+            { "label": "/Direct" },
+            "Node_VerletSim_Drag",
 
             { "label": "Render" },
             { "label": "/Render" },
@@ -436,7 +437,7 @@
             "Node_MK_Blast_Force",
             "Node_MK_Blast_Gravity",
             "Node_MK_Blast_Attract",
-            { "label": "/Direct Set" },
+            { "label": "/Direct" },
             "Node_MK_Blast_Wave",
             "Node_MK_Blast_Align",
 
