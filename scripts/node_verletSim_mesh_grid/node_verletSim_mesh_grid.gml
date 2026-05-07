@@ -68,11 +68,6 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		var _i = 0;
 		var points = array_create((gw + 1) * (gh + 1));
-		var tris   = [];
-		var edges  = [];
-		var vtris  = [];
-		var vedges = [];
-		var _emap  = {};
 		
 		for( var j = 0; j <= gh; j++ )
 		for( var i = 0; i <= gw; i++ ) {
@@ -83,57 +78,51 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _y0 = lerp(y0, y1, _v);
 			
 			var _ind     = j*(gw+1)+i;
-			var _p       = new __verlet_vec2(_x0, _y0, _u, _v);
-			_p.index     = _ind;
-			points[_ind] = _p;
+			points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind);
 		}
+		
+		var edges  = array_create(gh * (gw + 1) + (gh + 1) * gw);
+		var vedges = array_create(gh * (gw + 1) + (gh + 1) * gw);
+		var _emap  = {};
 		
 		_i = 0;
 		for( var j = 0; j <  gh; j++ )
 		for( var i = 0; i <= gw; i++ ) {
-			var i0 = (j    ) * (gw+1) + (i), p0 = points[i0];
-			var i1 = (j + 1) * (gw+1) + (i), p1 = points[i1];
+			var i0 = (j  ) * (gw+1) + (i);
+			var i1 = (j+1) * (gw+1) + (i);
 			
 			edges[_i]  = [ i0, i1 ];
-			vedges[_i] = new __verlet_edge(p0, p1, _tens); 
-			_emap[$ vedges[_i].toString()] = vedges[_i];
+			vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
 			_i++;
 		}
 		
 		for( var j = 0; j <= gh; j++ )
  		for( var i = 0; i <  gw; i++ ) {
-			var i0 = (j) * (gw+1) + (i),     p0 = points[i0];
-			var i1 = (j) * (gw+1) + (i + 1), p1 = points[i1];
+			var i0 = (j) * (gw+1) + (i  );
+			var i1 = (j) * (gw+1) + (i+1);
 			
 			edges[_i]  = [ i0, i1 ];
-			vedges[_i] = new __verlet_edge(p0, p1, _tens); 
-			_emap[$ vedges[_i].toString()] = vedges[_i];
+			vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
 			_i++;
 		}
+		
+		var tris   = array_create(gw * gh);
+		var vtris  = array_create(gw * gh);
 		
 		_i = 0;
 		for( var j = 0; j < gh; j++ )
 		for( var i = 0; i < gw; i++ ) {
-			var i0 = (j    ) * (gw+1) + (i    ), p0 = points[i0];
-			var i1 = (j    ) * (gw+1) + (i + 1), p1 = points[i1];
-			var i2 = (j + 1) * (gw+1) + (i    ), p2 = points[i2];
-			var i3 = (j + 1) * (gw+1) + (i + 1), p3 = points[i3];
+			var i0 = (j  ) * (gw+1) + (i  );
+			var i1 = (j  ) * (gw+1) + (i+1);
+			var i2 = (j+1) * (gw+1) + (i  );
+			var i3 = (j+1) * (gw+1) + (i+1);
 			
 			tris[_i]  = [ i0, i1, i2 ];
-			
-			var T = new __verlet_triangle(p0, p1, p2);
-			T.e0  = _emap[$ __verlet_edge_index(i0, i1)];
-			T.e1  = _emap[$ __verlet_edge_index(i1, i2)];
-			T.e2  = _emap[$ __verlet_edge_index(i2, i0)];
-			vtris[_i] = T;
+			vtris[_i] = new __verlet_triangle(points[i0], points[i1], points[i2]).getEdge(_emap);
 			_i++;
 			
 			tris[_i]  = [ i2, i1, i3 ];
-			var T = new __verlet_triangle(p2, p1, p3);
-			T.e0  = _emap[$ __verlet_edge_index(i0, i1)];
-			T.e1  = _emap[$ __verlet_edge_index(i1, i2)];
-			T.e2  = _emap[$ __verlet_edge_index(i2, i0)];
-			vtris[_i] = T;
+			vtris[_i] = new __verlet_triangle(points[i2], points[i1], points[i3]).getEdge(_emap);
 			_i++;
 		}
 		

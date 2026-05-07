@@ -445,7 +445,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _a = (_v + 1) % p.choiceAmount;
 			
 			setAttribute(_k, _a);
-		}).setParams({ key: _key, choiceAmount: array_length(_choices) })
+		}).setParam({ key: _key, choiceAmount: array_length(_choices) })
 		  .setIcon(_icon, function(p) /*=>*/ {return getAttribute(p.key)}, COLORS._main_icon)
 		  .setTooltip(new tooltipSelector(_title, _choices, _val), function(p) /*=>*/ {return getAttribute(p.key)});
 		  
@@ -770,7 +770,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var curveButton = button(function(_key) /*=>*/ { attributes[$ _key] = !attributes[$ _key]; node.triggerRender(); })
 			.setIcon( _icon, function(_key) /*=>*/ {return attributes[$ _key]}, function(_key) /*=>*/ {return attributes[$ _key]? c_white : COLORS._main_icon} ).iconPad()
 			.setTooltip(_suf == "Curve"? $"Toggle Curve" : $"Toggle {_suf} Curve")
-			.setParams(_key);
+			.setParam(_key);
 		
 		setSideButton(curveButton);
 		return self;

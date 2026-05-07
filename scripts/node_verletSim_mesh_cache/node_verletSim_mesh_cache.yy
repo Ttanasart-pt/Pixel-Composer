@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_verletSim_mesh_cache",
   "parent":{
-    "name":"verletSim",
-    "path":"folders/nodes/data/simulation/verletSim.yy",
+    "name":"cache",
+    "path":"folders/nodes/data/simulation/verletSim/cache.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

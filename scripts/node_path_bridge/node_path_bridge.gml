@@ -3,24 +3,31 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode( "Path" ));
-	newInput(4, nodeValueSeed());
+	newInput( 4, nodeValueSeed());
 	
 	////- =Bridge
+	newInput( 3, nodeValue_EScroll( "Distribution", 0, [ "Uniform", "Random" ] ));
+	newInput( 1, nodeValue_Int(     "Amount", 4     ));
+	newInput( 2, nodeValue_Bool(    "Smooth", false ));
 	
-	newInput(3, nodeValue_Enum_Scroll( "Distribution", 0, [ "Uniform", "Random" ] ));
-	newInput(1, nodeValue_Int(  "Amount", 4     ));
-	newInput(2, nodeValue_Bool( "Smooth", false ));
-	
+	////- =Paths
+	newInput( 0, nodeValue_PathNode( "Path" ));
 	// inputs 5
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
 	
-	input_display_list = [ 0, 4, 
-		["Bridge",  false], 3, 1, 2, 
-	]
+	input_display_list = [  4, 
+		[ "Bridge", false ],  3,  1,  2, 
+		[ "Paths",  false ],  0,
+	];
+	
+	function createNewInput(index = array_length(inputs)) {
+		newInput(index, nodeValue_PathNode( "Path" )).setVisible(true, true);
+		array_push(input_display_list, index);
+		return inputs[index];
+	} setDynamicInput(1);
 	
 	////- Nodes
 	
@@ -40,9 +47,9 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	#endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		
-		if(curr_path && struct_has(curr_path, "drawOverlay")) 
-			InputDrawOverlay(curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) 
+			InputDrawOverlay(inputs[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));	
 		
 		var _amo = array_length(anchors);
 		var ox, oy, nx, ny;
@@ -150,26 +157,45 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 		
 	static update = function() {
-		cached_pos  = {};
-		curr_path   = getInputData(0);
-		var seed    = getInputData(4);
-		
-		curr_type   = getInputData(3);
-		curr_amount = getInputData(1);
-		curr_smooth = getInputData(2);
+		#region data
+			var seed    = getInputData(4);
+			
+			curr_type   = getInputData(3);
+			curr_amount = getInputData(1);
+			curr_smooth = getInputData(2);
+			
+			curr_path   = getInputData(0);
+			cached_pos  = {};
+		#endregion
 		
 		if(!is_path(curr_path)) return;
 		
+		var _pathData = [];
 		var _lines = curr_path.getLineCount();
-		var _p = new __vec2P();
+		for( var i = 0; i < _lines; i++ )
+			array_push(_pathData, [curr_path, i]);
+		
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+			var _path = getInputData(i);
+			if(!is_path(_path)) continue;
+			
+			var _lamo = _path.getLineCount();
+			
+			_lines += _lamo;
+			for( var j = 0; j < _lines; j++ )
+				array_push(_pathData, [_path, j]);
+		}
+		
 		var _rat, _a;
+		var _p = new __vec2P();
 		
 		anchors    = array_create(curr_amount);
 		lengths    = array_create(curr_amount);
 		lengthAccs = array_create(curr_amount);
 				
 		random_set_seed(seed);
-				
+		var _index  = 0;
+		
 		for( var i = 0; i < curr_amount; i++ ) {
 			_a = array_create(_lines);
 			
@@ -180,12 +206,13 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			}
 			
 			for( var j = 0; j < _lines; j++ ) {
-				_p    = curr_path.getPointRatio(clamp(_rat, 0, 0.999), j, _p);
+				var _pathD = _pathData[j];
+				_p    = _pathD[0].getPointRatio(clamp(_rat, 0, 0.999), _pathD[1], _p);
 				_a[j] = [ _p.x, _p.y, _p.weight ];
 			}
 			
 			anchors[i] = _a;
-		
+			
 			if(curr_smooth) {
 				var _cnt = array_create(_lines - 1);
 			

@@ -761,7 +761,7 @@ function Panel_Inspector() : PanelContent() constructor {
     		
 			var _inh = _inl.group_height ?? 0;
     		if(inline_expands) {
-	    		if(_inh) draw_sprite_stretched_ext(THEME.box_r5, 0, _x, _y, _w, _inh + _lbh + ui(10), _col, .1);
+	    		if(_inh) draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, _w, _inh + _lbh + ui(10), _col, .5);
 	    		
 	    		var _h = drawNodeProperties(_x + ui(8), _y + _lbh + ui(8), _w - ui(16), _m, _inl, INSPECTOR_FLAG.input_only, _col);
 	    		_inl.group_height = _h;
@@ -770,23 +770,24 @@ function Panel_Inspector() : PanelContent() constructor {
     		
     		var _name = _inl.getDisplayName();
     		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, _w, _lbh, _col, 1);
+    		draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _lbh, c_white, .1);
     		draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(_x + ui(24), _y + _lbh/2, _name);
     		
     		var _ic = _inl.icon == noone? THEME.arrow : _inl.icon;
     		draw_sprite_ui(_ic, inline_expands * 3, _x + ui(12), _y + _lbh / 2, 1, 1, 0, _col);
-    		if(inline_expands && _inh) draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, _w, _inh + _lbh + ui(10), _col, 1);
+    		if(inline_expands && _inh) draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _inh + _lbh + ui(10), _col, .2);
     		
     		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _lbh);
     		if(_hov) {
-    			draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _lbh, c_white, .3);
+    			draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _lbh, c_white, .2);
     			if(mouse_lpress(_focus)) inline_expands = !inline_expands;
     		}
     		
     		hh += _lbh + ui(4);
     	}
     	
-        var con_w   = _w - ui(4); 
+        var con_w   = _w 
         var con_h   = contentPane.surface_h;
         
         var _font   = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
@@ -861,6 +862,8 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             if(is_handle(jun)) {
+            	if(_flag == INSPECTOR_FLAG.input_only) continue;
+            	
             	var _type = asset_get_type(jun);
             	if(_type == asset_sprite) {
 	                draw_sprite(jun, 0, xc, yy);

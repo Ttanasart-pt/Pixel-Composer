@@ -1,37 +1,64 @@
 function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Map Path";
 	
-	newInput(0, nodeValue_PathNode("Path")).rejectArray();
-	
 	////- =Mapping
-	
 	newInput(1, nodeValue_Dimension());
 	newInput(2, nodeValue_Surface( "Texture" ));
 	newInput(3, nodeValue_Int(     "Subdivision", 16)).setValidator(VV_min(2)).rejectArray();
+	
+	////- =Paths
+	newInput(0, nodeValue_PathNode( "Path" )).rejectArray();
 	// input 4
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 
-		["Mapping", false], 1, 2, 3, 
-	]
+	input_display_list = [ 
+		[ "Mapping", false ],  1,  2,  3, 
+		[ "Paths",   false ],  0,
+	];
+	
+	function createNewInput(index = array_length(inputs)) {
+		newInput(index, nodeValue_PathNode( "Path" )).setVisible(true, true);
+		array_push(input_display_list, index);
+		return inputs[index];
+	} setDynamicInput(1);
+	
+	////- Node
 	
 	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) 
+			InputDrawOverlay(inputs[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));	
+		
 	}
 		
 	static update = function() {
-		var _path = getInputData(0);
-		if(_path == noone) return;
+		#region data
+			var _path = getInputData(0);
+			if(_path == noone) return;
+			
+			var _dim  = getInputData(1);
+			var _surf = getInputData(2);
+			var _sub  = getInputData(3);
+			
+		#endregion
 		
-		var _dim  = getInputData(1);
-		var _surf = getInputData(2);
-		var _sub  = getInputData(3);
+		var _pathData = [];
+		var _lines = _path.getLineCount();
+		for( var i = 0; i < _lines; i++ )
+			array_push(_pathData, [_path, i]);
 		
-		var _amo  = _path.getLineCount();
-		if(_amo < 2) return;
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+			var _path = getInputData(i);
+			if(!is_path(_path)) continue;
+			
+			var _lamo = _path.getLineCount();
+			_lines += _lamo;
+			for( var j = 0; j < _lines; j++ )
+				array_push(_pathData, [_path, j]);
+		}
 		
 		if(!is_surface(_surf)) {
 			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
@@ -43,18 +70,19 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			_surf = temp_surface[0];
 		}
 		
-		var _pnt = array_create(_amo + 1);
+		var _pnt = array_create(_lines + 1);
 		var _isb = 1 / (_sub - 1);
 		var _pp  = new __vec2P();
 		
-		for( var i = 0; i < _amo; i++ ) {
+		for( var i = 0; i < _lines; i++ ) {
+			var _pathD = _pathData[i];
 			var _p   = array_create(_sub + 1);
 			var _ind = 0;
 			
 			for( var j = 0; j <= _sub; j++ ) {
 				var _prog = clamp(j * _isb, 0., 0.999);
 				
-				_pp = _path.getPointRatio(_prog, i, _pp);
+				_pp = _pathD[0].getPointRatio(_prog, _pathD[1], _pp);
 				_p[_ind++] = [ _pp.x, _pp.y ];
 			}
 			
@@ -70,17 +98,17 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			draw_set_color(c_white);
 			
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
-				for( var j = 0; j < _sub - 1; j++ )
-				for( var i = 0; i < _amo - 1; i++ ) {
+				for( var j = 0; j < _sub   - 1; j++ )
+				for( var i = 0; i < _lines - 1; i++ ) {
 					var p0 = _pnt[i + 0][j + 0];
 					var p1 = _pnt[i + 1][j + 0];
 					var p2 = _pnt[i + 0][j + 1];
 					var p3 = _pnt[i + 1][j + 1];
 				
-					var p0u = (j + 0) / (_sub - 1), p0v = (i + 0) / (_amo - 1);
-					var p1u = (j + 0) / (_sub - 1), p1v = (i + 1) / (_amo - 1);
-					var p2u = (j + 1) / (_sub - 1), p2v = (i + 0) / (_amo - 1);
-					var p3u = (j + 1) / (_sub - 1), p3v = (i + 1) / (_amo - 1);
+					var p0u = (j + 0) / (_sub - 1), p0v = (i + 0) / (_lines - 1);
+					var p1u = (j + 0) / (_sub - 1), p1v = (i + 1) / (_lines - 1);
+					var p2u = (j + 1) / (_sub - 1), p2v = (i + 0) / (_lines - 1);
+					var p3u = (j + 1) / (_sub - 1), p3v = (i + 1) / (_lines - 1);
 				
 					draw_vertex_texture(p0[0], p0[1], p0u, p0v);
 					draw_vertex_texture(p1[0], p1[1], p1u, p1v);

@@ -2663,8 +2663,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(attributes.show_preview) {
-			if(preview_draw)   drawPreview(xx, yy, _s);
-			if(node_draw_icon) draw_sprite_bbox_uniform(node_database.getSpr(), 0, draw_bbox);
+			if(preview_draw)   
+				drawPreview(xx, yy, _s);
+				
+			if(node_draw_icon && node_database) 
+				draw_sprite_bbox_uniform(node_database.getSpr(), 0, draw_bbox);
 			
 			if(onDrawNode) {
 				try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }

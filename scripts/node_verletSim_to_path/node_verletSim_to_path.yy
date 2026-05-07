@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_verletSim_to_path",
   "parent":{
-    "name":"verletSim",
-    "path":"folders/nodes/data/simulation/verletSim.yy",
+    "name":"system",
+    "path":"folders/nodes/data/simulation/verletSim/system.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

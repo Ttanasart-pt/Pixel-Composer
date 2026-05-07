@@ -16,10 +16,10 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	static register    = function(p=noone) /*=>*/ { tb_value.register(p); }
 	static isHovering  = function() /*=>*/ {return hoverRot || tb_value.hovering};
 	
-	static setParam  = function(params) /*=>*/ { tb_value.setParam(params); }
-	static drawParam = function(params) /*=>*/ { 
+	static drawParam  = function(params) /*=>*/ { 
 		setParam(params);
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
+		tb_value.setParam(params);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m); 
 	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m, draw_tb = true) {
