@@ -34,7 +34,7 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var mesh = getInputData(0);
 		if(is(mesh, __verlet_Mesh)) {
 			draw_set_color(COLORS._main_icon);
-			mesh.draw(_x, _y, _s);
+			mesh.drawRendered(_x, _y, _s);
 		}
 		
 		return w_hovering;

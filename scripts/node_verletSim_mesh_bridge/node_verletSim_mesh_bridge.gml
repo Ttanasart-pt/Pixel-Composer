@@ -8,21 +8,29 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 	setDimension(96, 48);
 	
 	////- =Mesh
-	newInput( 0, nodeValue_Area(   "Area", DEF_AREA_REF )).setUnitSimple();
-	newInput( 1, nodeValue_IVec2(  "Subdivision", [4,4] ));
-	newInput( 4, nodeValue_Bool(   "Quad",        false ));
+	newInput( 0, nodeValue_IVec2(  "Subdivision", [4,4] ));
+	newInput( 1, nodeValue_Bool(   "Quad",        false ));
 	
 	////- =Verlet
 	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
 	newInput( 3, nodeValue_Slider( "Drag",         0    ));
-	// input 5
+	
+	////- =Paths
+	// input 4
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 
-		[ "Mesh",   false ],  0,  1,  4, 
+		[ "Mesh",   false ],  0,  1,
 		[ "Verlet", false ],  2,  3,  
+		[ "Path",   false ],  
 	];
+	
+	function createNewInput(index = array_length(inputs)) {
+		newInput(index, nodeValue_PathNode( "Path" )).setVisible(true, true);
+		array_push(input_display_list, index);
+		return inputs[index];
+	} setDynamicInput(1);
 	
 	////- Nodes
 	
@@ -46,95 +54,120 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(!IS_FIRST_FRAME) return;
 		
 		#region data
-			var _area = getInputData(0);
-			var _subd = getInputData(1);
-			var _quad = getInputData(4);
+			var _subd = getInputData(0);
+			var _quad = getInputData(1);
 			
 			var _ten  = getInputData(2), _tens = 1 - _ten;
 			var _drag = getInputData(3);
 		#endregion
 		
+		var _pathData = [];
+		var _lamo = 0;
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+			var _path = getInputData(i);
+			if(!is_path(_path)) continue;
+			
+			var _la = _path.getLineCount();
+			_lamo += _la;
+			for( var j = 0; j < _la; j++ )
+				array_push(_pathData, [_path, j]);
+		}
+		
+		if(_lamo <= 1) return;
+		
+		var _pPoint = array_create(_lamo);
+		var _pSamp  = _subd[0];
+		var _pStep  = 1 / (_pSamp - 1);
+		var _p = new __vec2P();
+		
+		for( var i = 0; i < _lamo; i++ ) {
+			var _pathD = _pathData[i];
+			var _ps    = array_create(_pSamp + 1);
+			_pPoint[i] = _ps;
+			
+			for( var j = 0; j <= _pSamp; j++ ) {
+				var _rat = j * _pStep;
+				_p = _pathD[0].getPointRatio(clamp(_rat, 0, 0.999), _pathD[1], _p);
+				_ps[j] = [_p.x, _p.y];
+			}
+		}
+		
 		var mesh = new __verlet_Mesh();
 		
-		var x0 = _area[0] - _area[2];
-		var x1 = _area[0] + _area[2];
-		var y0 = _area[1] - _area[3];
-		var y1 = _area[1] + _area[3];
-		
-		var gw = max(1, _subd[0]);
-		var gh = max(1, _subd[1]);
+		var gw = _subd[0];
+		var gh = _subd[1];
 		var sx = 1 / gw;
 		var sy = 1 / gh;
+		var sv = 1 / gh / (_lamo - 1);
 		
-		var _i = 0;
-		var points = array_create((gw + 1) * (gh + 1));
+		var _i = 0, _e = 0, _t = 0;
+		var points = [];
 		
-		for( var j = 0; j <= gh; j++ )
-		for( var i = 0; i <= gw; i++ ) {
-			var _u  = i * sx;
-			var _v  = j * sy;
-			
-			var _x0 = lerp(x0, x1, _u);
-			var _y0 = lerp(y0, y1, _v);
-			
-			var _ind     = j*(gw+1)+i;
-			points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind);
-		}
-		
-		var edges  = array_create(gh * (gw + 1) + (gh + 1) * gw);
-		var vedges = array_create(gh * (gw + 1) + (gh + 1) * gw);
+		var edges  = [];
+		var vedges = [];
 		var _emap  = {};
 		
-		_i = 0;
-		for( var j = 0; j <  gh; j++ )
-		for( var i = 0; i <= gw; i++ ) {
-			var i0 = (j    ) * (gw+1) + (i), p0 = points[i0];
-			var i1 = (j + 1) * (gw+1) + (i), p1 = points[i1];
-			
-			edges[_i]  = [ i0, i1 ];
-			vedges[_i] = new __verlet_edge(p0, p1, _tens).setMap(_emap); 
-			_i++;
-		}
+		var tris   = [];
+		var vtris  = [];
 		
-		for( var j = 0; j <= gh; j++ )
- 		for( var i = 0; i <  gw; i++ ) {
-			var i0 = (j) * (gw+1) + (i),     p0 = points[i0];
-			var i1 = (j) * (gw+1) + (i + 1), p1 = points[i1];
+		for( var p = 0; p < _lamo - 1; p++ ) {
+			var _st = p * (gw+1) * (gh);
 			
-			edges[_i]  = [ i0, i1 ];
-			vedges[_i] = new __verlet_edge(p0, p1, _tens).setMap(_emap); 
-			_i++;
-		}
-		
-		var tris   = array_create(gw * gh);
-		var vtris  = array_create(gw * gh);
-		
-		_i = 0;
-		for( var j = 0; j < gh; j++ )
-		for( var i = 0; i < gw; i++ ) {
-			var i0 = (j    ) * (gw+1) + (i    ), p0 = points[i0];
-			var i1 = (j    ) * (gw+1) + (i + 1), p1 = points[i1];
-			var i2 = (j + 1) * (gw+1) + (i    ), p2 = points[i2];
-			var i3 = (j + 1) * (gw+1) + (i + 1), p3 = points[i3];
+			var _point0 = _pPoint[p+0];
+			var _point1 = _pPoint[p+1];
+			var _pv = p / (_lamo - 1);
 			
-			tris[_i]  = [ i0, i1, i2 ];
-			vtris[_i] = new __verlet_triangle(p0, p1, p2).getEdge(_emap);
-			_i++;
+			for( var i = 0; i <= gw; i++ ) {
+				var _p0 = _point0[i];
+				var _p1 = _point1[i];
+				var _u  = i * sx;
+				
+				for( var j = bool(p); j <= gh; j++ ) {
+					var _v = _pv + j * sv;
+					
+					var _x0 = lerp(_p0[0], _p1[0], j * sy);
+					var _y0 = lerp(_p0[1], _p1[1], j * sy);
+					
+					var _ind     = _st + j*(gw+1) + i;
+					points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind);
+				}
+			}
 			
-			tris[_i]  = [ i2, i1, i3 ];
-			vtris[_i] = new __verlet_triangle(p2, p1, p3).getEdge(_emap);
-			_i++;
-		}
-		
-		_i = 0;
-		if(_quad) {
-			var _qamo = gw * gh;
-			var _q = array_create(_qamo);
+			for( var j = bool(p); j <  gh; j++ )
+			for( var i = 0;       i <= gw; i++ ) {
+				var i0 = _st + (j  ) * (gw+1) + (i);
+				var i1 = _st + (j+1) * (gw+1) + (i);
+				
+				edges[_e]  = [ i0, i1 ];
+				vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+				_e++;
+			}
 			
-			for( var i = 0; i < _qamo; i++ )
-				_q[i] = [i*2, i*2+1];
+			for( var j = bool(p); j <= gh; j++ )
+	 		for( var i = 0;       i <  gw; i++ ) {
+				var i0 = _st + (j) * (gw+1) + (i  );
+				var i1 = _st + (j) * (gw+1) + (i+1);
+				
+				edges[_e]  = [ i0, i1 ];
+				vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+				_e++;
+			}
 			
-			mesh.quads = _q;
+			for( var j = 0; j < gh; j++ )
+			for( var i = 0; i < gw; i++ ) {
+				var i0 = _st + (j  ) * (gw+1) + (i  );
+				var i1 = _st + (j  ) * (gw+1) + (i+1);
+				var i2 = _st + (j+1) * (gw+1) + (i  );
+				var i3 = _st + (j+1) * (gw+1) + (i+1);
+				
+				tris[_t]  = [ i0, i1, i2 ];
+				vtris[_t] = new __verlet_triangle(points[i0], points[i1], points[i2]).getEdge(_emap);
+				_t++;
+				
+				tris[_t]  = [ i2, i1, i3 ];
+				vtris[_t] = new __verlet_triangle(points[i2], points[i1], points[i3]).getEdge(_emap);
+				_t++;
+			}
 		}
 		
 		mesh.points     = points;
@@ -142,9 +175,6 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		mesh.triangles  = tris;
 		mesh.vedges     = vedges;
 		mesh.vtriangles = vtris;
-		
-		mesh.center     = [_area[0], _area[1]];
-		mesh.bbox       = [x0, y0, x1, y1];
 		
 		mesh.calcCoM();
 		

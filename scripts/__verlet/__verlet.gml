@@ -111,6 +111,58 @@ function __verlet_Mesh() : Mesh() constructor {
 				var p0 = e.p0;
 				var p1 = e.p1;
 				
+				var x0 = _x + p0.sx * _s, y0 = _y + p0.sy * _s;
+				var x1 = _x + p1.sx * _s, y1 = _y + p1.sy * _s;
+				
+				draw_vertex(x0, y0); draw_vertex(x1, y1);
+				
+				if(++_vtx > 32) {
+					draw_primitive_end();
+					draw_primitive_begin(pr_linelist);
+				}
+			}
+			
+		} else {
+			for( var i = 0, n = array_length(vtriangles); i < n; i++ ) {
+				var t  = vtriangles[i];
+				
+				if(t.e0 != undefined && !t.e0.active) continue;
+				if(t.e1 != undefined && !t.e1.active) continue;
+				if(t.e2 != undefined && !t.e2.active) continue;
+				
+				var p0 = t.p0;
+				var p1 = t.p1;
+				var p2 = t.p2;
+				
+				var x0 = _x + p0.sx * _s, y0 = _y + p0.sy * _s;
+				var x1 = _x + p1.sx * _s, y1 = _y + p1.sy * _s;
+				var x2 = _x + p2.sx * _s, y2 = _y + p2.sy * _s;
+				
+				draw_vertex(x0, y0); draw_vertex(x1, y1);
+				draw_vertex(x1, y1); draw_vertex(x2, y2);
+				draw_vertex(x0, y0); draw_vertex(x2, y2);
+				
+				if(++_vtx > 16) {
+					draw_primitive_end();
+					draw_primitive_begin(pr_linelist);
+				}
+			}
+		}
+		draw_primitive_end();
+	}
+	
+	static drawRendered = function(_x, _y, _s) {
+		var _vtx = 0;
+		
+		draw_primitive_begin(pr_linelist);
+		if(array_empty(vtriangles)) {
+			for( var i = 0, n = array_length(vedges); i < n; i++ ) {
+				var e  = vedges[i];
+				if(e != undefined && !e.active) continue;
+				
+				var p0 = e.p0;
+				var p1 = e.p1;
+				
 				var x0 = _x + p0.x * _s, y0 = _y + p0.y * _s;
 				var x1 = _x + p1.x * _s, y1 = _y + p1.y * _s;
 				
@@ -158,8 +210,8 @@ function __verlet_Mesh() : Mesh() constructor {
 		for( var i = 0, n = array_length(points); i < n; i++ ) {
 			var p = points[i];
 			
-			var px = _x + p.x * _s - 1;
-			var py = _y + p.y * _s - 1;
+			var px = _x + p.sx * _s - 1;
+			var py = _y + p.sy * _s - 1;
 			
 			draw_set_color(p.pin? COLORS._main_accent : COLORS._main_icon);
 			draw_circle(px, py, ds, false);

@@ -358,6 +358,7 @@
             { "label": "/Create" },
             "Node_VerletSim_Mesh",
             "Node_VerletSim_Mesh_Grid",
+            "Node_VerletSim_Mesh_Bridge",
             { "label": "/Edit" },
             "Node_VerletSim_Mesh_Pin",
             "Node_VerletSim_Mesh_Tear",

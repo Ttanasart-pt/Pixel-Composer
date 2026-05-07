@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.0.2.004",
+    "changes": [
+      {
+        "date": "2026-05-07T00:55:19.476Z",
+        "node": "VerletSim",
+        "commit": "**VerletSim**: Mesh preview now show static mesh for non-rendering nodes."
+      }
+    ]
+  }
+]

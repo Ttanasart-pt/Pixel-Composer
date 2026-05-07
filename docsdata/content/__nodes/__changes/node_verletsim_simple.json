@@ -6,6 +6,11 @@
         "date": "2026-05-06T04:48:42.562Z",
         "node": "",
         "commit": "**Blue noise**: Add partial processing to reduce lag."
+      },
+      {
+        "date": "2026-05-07T00:11:06.367Z",
+        "node": "",
+        "commit": "**Bridge/ Map path**: Add support for multiple non-composite paths."
       }
     ]
   }
