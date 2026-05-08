@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_verletSim_mesh_disk",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_verletSim_mesh_disk",
+  "parent":{
+    "name":"mesh",
+    "path":"folders/nodes/data/simulation/verletSim/mesh.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -211,7 +211,6 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		if(_quad) {
 			var _q = [];
-			
 			for( var i = 0, n = array_length(vtris); i < n; i += 2 ) 
 				_q[i] = [i, i+1];
 			

@@ -11,6 +11,11 @@
         "date": "2026-05-08T00:12:45.944Z",
         "node": "",
         "commit": "**VerletSim**: Add stiffness (angular drag) control."
+      },
+      {
+        "date": "2026-05-08T02:48:38.191Z",
+        "node": "any",
+        "commit": "Introduced"
       }
     ]
   },

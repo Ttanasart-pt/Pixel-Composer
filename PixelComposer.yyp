@@ -2361,6 +2361,7 @@
     {"id":{"name":"node_verletSim_mesh_bridge","path":"scripts/node_verletSim_mesh_bridge/node_verletSim_mesh_bridge.yy",},},
     {"id":{"name":"node_verletSim_mesh_cache_lerp","path":"scripts/node_verletSim_mesh_cache_lerp/node_verletSim_mesh_cache_lerp.yy",},},
     {"id":{"name":"node_verletSim_mesh_cache","path":"scripts/node_verletSim_mesh_cache/node_verletSim_mesh_cache.yy",},},
+    {"id":{"name":"node_verletSim_mesh_disk","path":"scripts/node_verletSim_mesh_disk/node_verletSim_mesh_disk.yy",},},
     {"id":{"name":"node_verletSim_mesh_grid","path":"scripts/node_verletSim_mesh_grid/node_verletSim_mesh_grid.yy",},},
     {"id":{"name":"node_verletSim_mesh_pin","path":"scripts/node_verletSim_mesh_pin/node_verletSim_mesh_pin.yy",},},
     {"id":{"name":"node_verletSim_mesh_pleat","path":"scripts/node_verletSim_mesh_pleat/node_verletSim_mesh_pleat.yy",},},
