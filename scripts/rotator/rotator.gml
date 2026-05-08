@@ -118,9 +118,9 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			}
 		
 			shader_set(sh_widget_rotator);
-				shader_set_color("color", _kc);
-				shader_set_f("side",     _r);
-				shader_set_f("angle",    degtorad(_data));
+				shader_set_c("color", _kc );
+				shader_set_f("side",  _r  );
+				shader_set_f("angle", degtorad(_data));
 			
 				draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _r, _r);
 			shader_reset();

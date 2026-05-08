@@ -407,8 +407,6 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _len = array_length(_dist_data);
 			var _dep = array_get_depth(_dist_data);
 			if(_dep != 2) return;
-			
-			// _amo = _len;
 			_amo = min(_amo, _len);
 		}
 		
@@ -636,24 +634,19 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					break;
 			}
 			
+			__llife = _llife;
+			__exact = _exact;
+			__dimw  = _dim[0];
+			__dimh  = _dim[1];
+			
 			switch(_type) {
 				case PARTICLE_RENDER_TYPE.surface : 
 					shader_set_interpolation(_outSurf);
-					
-					for(var i = 0; i < attributes.part_amount; i++) {
-						if(!parts[i].active) continue;
-						
-						parts[i].render_type = _type;
-						parts[i].draw(_exact, _dim[0], _dim[1]);
-					}
+					array_foreach(parts, function(p,i) /*=>*/ { if(p.active) p.draw(__exact, __dimw, __dimh); });
 					break;
 					
 				case PARTICLE_RENDER_TYPE.line : 
-					for(var i = 0; i < attributes.part_amount; i++) {
-						parts[i].render_type = _type;
-						parts[i].line_draw   = _llife;
-						parts[i].drawLine(_exact, _dim[0], _dim[1]);
-					}
+					array_foreach(parts, function(p,i) /*=>*/ { p.line_draw = __llife; p.drawLine(__exact, __dimw, __dimh); });
 					break;
 			}
 			

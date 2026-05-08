@@ -492,9 +492,6 @@ function __part(_node) : __particleObject() constructor {
 			currColor = cola(cc, alp_draw);
 		#endregion
 		
-		var bw = node.curr_dimension[0];
-		var bh = node.curr_dimension[1];
-
 		var  _ox,  _nx,  _oy,  _ny;
 		var _osx, _nsx, _osy, _nsy;
 		var  _oc,  _nc,  _oa,  _na;
@@ -533,13 +530,13 @@ function __part(_node) : __particleObject() constructor {
 	}
 	
 	static draw = function(exact, surf_w = 1, surf_h = 1) {
-		var ss = surf;
 		var lifeRat = clamp(1 - life / life_total, 0, 1);
 		var scCurve = scT == noone? 1 : scT.getFast(lifeRat);
+		var ss = surf;
 		scx = drawsx * scCurve;
 		scy = drawsy * scCurve;
 		
-		if(arr_type == 2 && surf != noone && is_array(surf)) {
+		if(arr_type == 2 && ss != noone && is_array(ss)) {
 			var _life_prog = life_total - life;
 			var ind = anim_stre? _life_prog / life_total * anim_speed * (anim_len - 1) :
 			                     _life_prog * anim_speed;
@@ -572,18 +569,13 @@ function __part(_node) : __particleObject() constructor {
 		var _surf = node.surface_cache[$  ss];
 		var _srfw = node.surface_wcache[$ ss] ?? 1;
 		var _srfh = node.surface_hcache[$ ss] ?? 1;
-		var _useS = is_surface(_surf);
 		
 		var _xx = drawx ?? 0;
 		var _yy = drawy ?? 0;
-		var _rr = drawrot;
-		_rr = value_snap(_rr, rotSnap);
+		var _rr = value_snap(drawrot, rotSnap);
 		
-		var s_w = _srfw * scx;
-		var s_h = _srfh * scy;
-		
-		var px = -s_w/2;
-		var py = -s_h/2;
+		var px = -_srfw * scx / 2;
+		var py = -_srfh * scy / 2;
 		
 		var dc = dcos(-_rr);
 		var ds = dsin(-_rr);
@@ -596,36 +588,30 @@ function __part(_node) : __particleObject() constructor {
 			_yy = round(_yy);
 		}
 		
-		var x0 = _xx - s_w * 1.5;
-		var y0 = _yy - s_h * 1.5;
-		var x1 = _xx + s_w * 1.5;
-		var y1 = _yy + s_h * 1.5;
-		
-		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
-			return;
+		var x0 = _xx - _srfw * scx;
+		var x1 = _xx + _srfw * scx;
+		var y0 = _yy - _srfh * scy;
+		var y1 = _yy + _srfh * scy;
 		
 		#region color
 			var cc = (col == -1)? 0xFF000000 : col.evalFast(lifeRat);
-			    cc = colorMultiply(blend, cc);
+			    cc = colorMultiply256(blend, cc);
 			    
-			alp_draw  = alp * (alp_fade == noone? 1 : alp_fade.getFast(lifeRat)) * _color_get_alpha(cc);
+			alp_draw  = alp * (alp_fade == noone? 1 : alp_fade.getFast(lifeRat)) * color_get_alpha(cc) / 255;
 			currColor = cola(cc, alp_draw);
 		#endregion
-		
-		var bw = node.curr_dimension[0];
-		var bh = node.curr_dimension[1];
 		
 		if(surface_exists(_surf)) {
 			draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, _rr, currColor, alp_draw);
 			
 			if(wrap_x) {
-				if(x0 < 0)  draw_surface_ext_safe(_surf, _xx + bw, _yy, scx, scy, _rr, currColor, alp_draw);
-				if(x1 > bw) draw_surface_ext_safe(_surf, _xx - bw, _yy, scx, scy, _rr, currColor, alp_draw);
+				if(x0 < 0)      draw_surface_ext_safe(_surf, _xx + surf_w, _yy, scx, scy, _rr, currColor, alp_draw);
+				if(x1 > surf_w) draw_surface_ext_safe(_surf, _xx - surf_w, _yy, scx, scy, _rr, currColor, alp_draw);
 			}
 			
 			if(wrap_y) {
-				if(y0 < 0)  draw_surface_ext_safe(_surf, _xx, _yy + bh, scx, scy, _rr, currColor, alp_draw);
-				if(y1 > bh) draw_surface_ext_safe(_surf, _xx, _yy - bh, scx, scy, _rr, currColor, alp_draw);
+				if(y0 < 0)      draw_surface_ext_safe(_surf, _xx, _yy + surf_h, scx, scy, _rr, currColor, alp_draw);
+				if(y1 > surf_h) draw_surface_ext_safe(_surf, _xx, _yy - surf_h, scx, scy, _rr, currColor, alp_draw);
 			}
 			
 		} else {
@@ -654,13 +640,13 @@ function __part(_node) : __particleObject() constructor {
 					_surf.draw(_xx, _yy, ss, ss, drawrot, currColor, alp_draw);
 					
 					if(wrap_x) {
-						if(x0 < 0)  _surf.draw(_xx - bw, _yy, ss, ss, drawrot, currColor, alp_draw);
-						if(x1 > bw) _surf.draw(_xx + bw, _yy, ss, ss, drawrot, currColor, alp_draw);
+						if(x0 < 0)      _surf.draw(_xx - surf_w, _yy, ss, ss, drawrot, currColor, alp_draw);
+						if(x1 > surf_w) _surf.draw(_xx + surf_w, _yy, ss, ss, drawrot, currColor, alp_draw);
 					}
 					
 					if(wrap_y) {
-						if(y0 < 0)  _surf.draw(_xx, _yy - bh, ss, ss, drawrot, currColor, alp_draw);
-						if(y1 > bh) _surf.draw(_xx, _yy + bh, ss, ss, drawrot, currColor, alp_draw);
+						if(y0 < 0)      _surf.draw(_xx, _yy - surf_h, ss, ss, drawrot, currColor, alp_draw);
+						if(y1 > surf_h) _surf.draw(_xx, _yy + surf_h, ss, ss, drawrot, currColor, alp_draw);
 					}
 					
 				} else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, currColor, alp_draw);

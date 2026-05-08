@@ -77,8 +77,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static draw_ui_frame = function(_x, _y, _w, _h, _m, _hover) {  
 		var _hv = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && _hover;
-		draw_sprite_stretched_ext(THEME.ui_panel, 0, _x, _y, _w, _h, _hv? CDEF.main_black : CDEF.main_mdblack,  1);
-		draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, _h, CDEF.main_dkgrey, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel, 0, _x, _y, _w, _h, COLORS._main_icon_dark,  1);
+		draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, _h, _hv? COLORS._main_icon : CDEF.main_dkgrey, 1);
 		return _hv;
 	}
 	

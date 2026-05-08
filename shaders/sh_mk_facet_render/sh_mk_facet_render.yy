@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_facet_render",
+  "name":"sh_mk_facet_render",
+  "parent":{
+    "name":"mkfacet",
+    "path":"folders/nodes/data/MKFX/generator/mkfacet.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

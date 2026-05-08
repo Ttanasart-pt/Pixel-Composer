@@ -303,11 +303,22 @@
 	
 	function colorMultiply(c1, c2) {
 		INLINE 
-	
 	    return (((c1 >> 24 & 0xFF) * (c2 >> 24 & 0xFF) / 255) << 24) | 
 	           (((c1 >> 16 & 0xFF) * (c2 >> 16 & 0xFF) / 255) << 16) | 
 	           (((c1 >>  8 & 0xFF) * (c2 >>  8 & 0xFF) / 255) <<  8) | 
 	            ((c1       & 0xFF) * (c2       & 0xFF) / 255);
+	}
+	
+	function colorMultiply256(c1, c2) {
+	    INLINE
+	    var a = (c1 >> 24 & 0xFF) * (c2 >> 24 & 0xFF);
+	    var r = (c1 >> 16 & 0xFF) * (c2 >> 16 & 0xFF);
+	    var g = (c1 >>  8 & 0xFF) * (c2 >>  8 & 0xFF);
+	    var b = (c1       & 0xFF) * (c2       & 0xFF);
+	    return (((a + 1 + (a >> 8)) >> 8) << 24) |
+	           (((r + 1 + (r >> 8)) >> 8) << 16) |
+	           (((g + 1 + (g >> 8)) >> 8) <<  8) |
+	            ((b + 1 + (b >> 8)) >> 8);
 	}
 
 	function colorScreen(c1, c2) {

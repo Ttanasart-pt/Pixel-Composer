@@ -32,7 +32,7 @@ gml_pragma("UnityBuild", "true");
 	globalvar RUN_IDE; RUN_IDE  = GM_build_type == "run";
 	globalvar DEBUG; DEBUG    = false;
 	
-	globalvar LATEST_VERSION; LATEST_VERSION = 1_20_00_0;
+	globalvar LATEST_VERSION; LATEST_VERSION = 1_21_00_0;
 	globalvar VERSION; VERSION        = 1_21_00_2;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_00_0;
 	globalvar VERSION_STRING; VERSION_STRING = "1.21.0.2.006";

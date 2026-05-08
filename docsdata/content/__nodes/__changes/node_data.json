@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.2.006",
+    "changes": [
+      {
+        "date": "2026-05-08T10:56:30.281Z",
+        "node": "any",
+        "commit": "Introduced"
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {
