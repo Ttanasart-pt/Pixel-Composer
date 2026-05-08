@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_verletSim_bloat",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_verletSim_bloat",
+  "parent":{
+    "name":"modify",
+    "path":"folders/nodes/data/simulation/verletSim/modify.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

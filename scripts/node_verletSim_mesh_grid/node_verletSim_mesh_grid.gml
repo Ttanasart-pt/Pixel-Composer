@@ -8,7 +8,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDimension(96, 48);
 	
 	////- =Mesh
-	newInput( 0, nodeValue_Area(   "Area", DEF_AREA_REF )).setUnitSimple();
+	newInput( 0, nodeValue_Area(   "Area", DEF_AREA_REF, false )).setUnitSimple();
 	newInput( 1, nodeValue_IVec2(  "Subdivision", [4,4] ));
 	newInput( 4, nodeValue_Bool(   "Quad",        false ));
 	

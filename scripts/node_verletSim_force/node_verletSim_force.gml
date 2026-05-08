@@ -7,6 +7,8 @@ function Node_VerletSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	setDimension(96, 48);
 	
 	newActiveInput(6);
+	
+	////- =Mesh
 	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Target
@@ -21,9 +23,10 @@ function Node_VerletSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
-	input_display_list = [ 6, 0, 
-		[ "Target", false ], 1, 2, 4, 
-		[ "Force",  false ], 5, 3, 
+	input_display_list = [  6, 
+		[ "Mesh",   false ],  0, 
+		[ "Target", false ],  1,  2,  4, 
+		[ "Force",  false ],  5,  3, 
 	];
 	
 	////- Nodes

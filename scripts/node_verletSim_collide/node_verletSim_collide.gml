@@ -7,6 +7,8 @@ function Node_VerletSim_Collide(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	setDimension(96, 48);
 	
 	newActiveInput(1);
+	
+	////- =Mesh
 	newInput( 0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Collider
@@ -16,7 +18,8 @@ function Node_VerletSim_Collide(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
-	input_display_list = [ 1, 0, 
+	input_display_list = [ 1, 
+		[ "Mesh",     false ], 0, 
 		[ "Collider", false ], 2, 3, 
 	];
 	
@@ -29,7 +32,7 @@ function Node_VerletSim_Collide(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _area = getInputData(2);
 		var _shap = getInputData(3);
 		
-		if(is(_mesh, Mesh)) {
+		if(is(_mesh, __verlet_Mesh)) {
 			draw_set_color(COLORS._main_icon);
 			_mesh.draw(_x, _y, _s);
 		}

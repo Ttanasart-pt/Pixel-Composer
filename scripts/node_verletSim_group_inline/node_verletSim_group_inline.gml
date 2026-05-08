@@ -50,15 +50,17 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	
 	////- Verlet
 	
-	function verletPropagate(_mesh, _substep) {
+	function verletPropagate(_mesh, _substep, _inv = false) {
 		var _points = _mesh.points;
 		
 		var grav_x = verlet_gravity[0] / _substep / 10;
 		var grav_y = verlet_gravity[1] / _substep / 10;
-	 	var amo = array_length(_points), i = 0;
+	 	var amo = array_length(_points);
+	 	var i = _inv? amo - 1 : 0;
+	 	var s = _inv? -1 : 1;
 	 	
 		repeat(amo) {
-			var p = _points[i++];
+			var p = _points[i]; i += s;
 			if(!is(p, __verlet_vec2) || p.rest || p.pin) continue;
 			
 			var _vx = p.x - p.px;
@@ -81,7 +83,7 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		}
 	}
 	
-	function verletCollide(_mesh, _substep) {
+	function verletCollide(_mesh, _substep, _inv = false) {
 		var _points = _mesh.points;
 	 	var amo = array_length(_points), i = 0;
 	 	
@@ -169,12 +171,14 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	 	}
 	}
 	
-	function verletConstrainEdge(_mesh, _substep) {
+	function verletConstrainEdge(_mesh, _substep, _inv = false) {
 		var _edges  = _mesh.vedges;
-		var amo = array_length(_edges), i = 0;
+		var amo = array_length(_edges);
+	 	var i = _inv? amo - 1 : 0;
+	 	var s = _inv? -1 : 1;
 	 	
 		repeat(amo) {
-			var e = _edges[i++];
+			var e = _edges[i]; i += s;
 			if(!e.active) continue;
 			
 			var p0 = e.p0;
@@ -231,10 +235,13 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	}
 	
 	function verletStep(_mesh, _substep = verlet_substep) {
+		var inv = true;
+		
 		repeat(_substep) {
-			verletPropagate(_mesh, _substep);
-			verletCollide(_mesh, _substep);
-			verletConstrainEdge(_mesh, _substep);
+			verletPropagate(     _mesh, _substep, inv );
+			verletCollide(       _mesh, _substep, inv );
+			verletConstrainEdge( _mesh, _substep, inv );
+			// inv = !inv;
 		}
 		
 	}

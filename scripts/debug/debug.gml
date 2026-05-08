@@ -11,9 +11,9 @@
 function printDebug(t) { show_debug_message(t); __log("", t); }
 
 function print(str) { 
-	var _s = "";
-	for(var i = 0; i < argument_count; i++)
-		_s += (i? ", " : "") + string(argument[i]);
+	var _s = str;
+	for(var i = 1; i < argument_count; i++)
+		_s += ", " + string(argument[i]);
 	
 	noti_status(_s); 
 }

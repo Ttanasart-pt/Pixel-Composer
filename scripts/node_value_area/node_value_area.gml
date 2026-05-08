@@ -241,7 +241,8 @@ function area_get_point_influence(_area, _fall, _fallCurve, _x, _y) {
 		
 	var str = bool(_in);
 	var inf = _in? 0.5 + _dst / _fall : 0.5 - _dst / _fall;
-	str = eval_curve_x(_fallCurve, clamp(inf, 0., 1.));
+	inf = clamp(inf, 0, 1);
+	str = is(_fallCurve, curveMap)? _fallCurve.get(inf) : eval_curve_x(_fallCurve, inf);
 	
 	return str;
 }

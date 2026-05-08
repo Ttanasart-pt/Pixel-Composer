@@ -7,6 +7,8 @@ function Node_VerletSim_Drag(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDimension(96, 48);
 	
 	newActiveInput(1);
+	
+	////- =Mesh
 	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Anchor
@@ -20,9 +22,10 @@ function Node_VerletSim_Drag(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
-	input_display_list = [ 1, 0, 
-		[ "Anchor",    false ], 3, 4, 
-		[ "Transform", false ], 2, 5, 
+	input_display_list = [ 1, 
+		[ "Mesh",      false ],  0, 
+		[ "Anchor",    false ],  3,  4, 
+		[ "Transform", false ],  2,  5, 
 	];
 	
 	move_x = 0; move_y = 0;

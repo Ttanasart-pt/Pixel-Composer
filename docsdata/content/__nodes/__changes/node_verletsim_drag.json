@@ -6,6 +6,11 @@
         "date": "2026-05-07T23:58:42.930Z",
         "node": "",
         "commit": "**VerletSim**: Add domain wall property."
+      },
+      {
+        "date": "2026-05-08T02:18:13.628Z",
+        "node": "",
+        "commit": "Introduced"
       }
     ]
   },

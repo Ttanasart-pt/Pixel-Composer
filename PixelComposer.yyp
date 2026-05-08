@@ -2353,6 +2353,7 @@
     {"id":{"name":"node_vector2","path":"scripts/node_vector2/node_vector2.yy",},},
     {"id":{"name":"node_vector3","path":"scripts/node_vector3/node_vector3.yy",},},
     {"id":{"name":"node_vector4","path":"scripts/node_vector4/node_vector4.yy",},},
+    {"id":{"name":"node_verletSim_bloat","path":"scripts/node_verletSim_bloat/node_verletSim_bloat.yy",},},
     {"id":{"name":"node_verletSim_collide","path":"scripts/node_verletSim_collide/node_verletSim_collide.yy",},},
     {"id":{"name":"node_verletSim_drag","path":"scripts/node_verletSim_drag/node_verletSim_drag.yy",},},
     {"id":{"name":"node_verletSim_force","path":"scripts/node_verletSim_force/node_verletSim_force.yy",},},
