@@ -15,13 +15,14 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 	////- =Verlet
 	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
 	newInput( 3, nodeValue_Slider( "Drag",         0    ));
-	// input 5
+	newInput( 5, nodeValue_Slider( "Stiffness",    0    ));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 
 		[ "Mesh",   false ],  0,  1,  4, 
-		[ "Verlet", false ],  2,  3,  
+		[ "Verlet", false ],  2,  3,  5, 
 	];
 	
 	////- Nodes
@@ -52,6 +53,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			var _ten  = getInputData(2), _tens = 1 - _ten;
 			var _drag = getInputData(3);
+			var _adrg = getInputData(5);
 		#endregion
 		
 		var mesh = new __verlet_Mesh();
@@ -93,7 +95,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var i1 = (j+1) * (gw+1) + (i);
 				
 				edges[_i]  = [ i0, i1 ];
-				vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+				vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens, _adrg).setMap(_emap); 
 				
 				if(_pEdge) {
 					_pEdge.setNEdge(vedges[_i]);
@@ -112,7 +114,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var i1 = (j) * (gw+1) + (i+1);
 				
 				edges[_i]  = [ i0, i1 ];
-				vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+				vedges[_i] = new __verlet_edge(points[i0], points[i1], _tens, _adrg).setMap(_emap); 
 				
 				if(_pEdge) {
 					_pEdge.setNEdge(vedges[_i]);

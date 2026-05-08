@@ -8,11 +8,11 @@ function __verlet_vec2(_x = 0, _y = 0, _u = 0, _v = 0, _index = 0) : __vec2(_x, 
 	active = true;
 	rest   = false;
 	
-	dx = undefined; 
-	dy = undefined;
-	
 	drag = 0;
 	pin  = false;
+	
+	dx = undefined; 
+	dy = undefined;
 	
 	blend = c_white;
 	
@@ -27,13 +27,16 @@ function __verlet_vec2(_x = 0, _y = 0, _u = 0, _v = 0, _index = 0) : __vec2(_x, 
 }
 
 function __verlet_edge_index(i0, i1) { return $"{i0 + i1}_{i0 * i1}" }
-function __verlet_edge(_p0, _p1, _k) constructor {
+function __verlet_edge(_p0, _p1, _k = 0, _drag = 0) constructor {
 	p0 = _p0;
 	p1 = _p1;
 	k  = _k;
+	angularDrag = _drag;
 	
-	active   = true;
-	distance = point_distance(p0.x, p0.y, p1.x, p1.y);
+	active      = true;
+	
+	distance  = point_distance(p0.x, p0.y, p1.x, p1.y);
+	direction = point_direction(p0.x, p0.y, p1.x, p1.y);
 	
 	prevEdge = undefined; static setPEdge = function(e) /*=>*/ { prevEdge = e; return self; }
 	nextEdge = undefined; static setNEdge = function(e) /*=>*/ { nextEdge = e; return self; }

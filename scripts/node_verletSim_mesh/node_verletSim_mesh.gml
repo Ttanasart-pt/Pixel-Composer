@@ -8,15 +8,16 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDimension(96, 48);
 	
 	////- =Mesh
-	newInput(0, nodeValue_Mesh(   "Mesh" )).setVisible(true, true);
+	newInput( 0, nodeValue_Mesh(   "Mesh" )).setVisible(true, true);
 	
 	////- =Verlet
-	newInput(1, nodeValue_Slider( "Tension",  .5 ));
-	newInput(4, nodeValue_Slider( "Drag",      0 ));
+	newInput( 1, nodeValue_Slider( "Tension",  .5 ));
+	newInput( 4, nodeValue_Slider( "Drag",      0 ));
+	newInput( 5, nodeValue_Slider( "Stiffness", 0 ));
 	
 	////- =UV
-	newInput(2, nodeValue_Bool( "Remap",  false  ));
-	newInput(3, nodeValue_Area( "UV Map", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
+	newInput( 2, nodeValue_Bool( "Remap",  false  ));
+	newInput( 3, nodeValue_Area( "UV Map", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
 	// input 5
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
@@ -53,6 +54,7 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _msh  = getInputData(0);
 			var _ten  = getInputData(1), _tens = 1 - _ten;
 			var _drag = getInputData(4);
+			var _adrg = getInputData(5);
 			
 			var _uv   = getInputData(2);
 			var _uva  = getInputData(3);
@@ -101,7 +103,7 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var p0 = mesh.points[e[0]];
 			var p1 = mesh.points[e[1]];
 			
-			mesh.vedges[i] = new __verlet_edge(p0, p1, _tens); 
+			mesh.vedges[i] = new __verlet_edge(p0, p1, _tens, _adrg); 
 			_emap[$ mesh.vedges[i].toString()] = mesh.vedges[i];
 		}
 		

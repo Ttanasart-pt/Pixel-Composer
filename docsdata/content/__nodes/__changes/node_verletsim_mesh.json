@@ -6,6 +6,11 @@
         "date": "2026-05-07T23:58:42.939Z",
         "node": "",
         "commit": "**VerletSim**: Add domain wall property."
+      },
+      {
+        "date": "2026-05-08T00:12:45.943Z",
+        "node": "",
+        "commit": "**VerletSim**: Add stiffness (angular drag) control."
       }
     ]
   },

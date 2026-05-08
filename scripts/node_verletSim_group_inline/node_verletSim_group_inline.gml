@@ -78,7 +78,6 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			}
 			
 		}
-		
 	}
 	
 	function verletCollide(_mesh, _substep) {
@@ -153,17 +152,18 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			var ndist = point_distance(p0.x, p0.y, p1.x, p1.y);
 			var sdist = lerp(odist, ndist, e.k);
 			var dirr  = point_direction(p0.x, p0.y, p1.x, p1.y);
+			e.direction += angle_difference(dirr, e.direction) * (1 - e.angularDrag);
 			
 			if(p0.pin) {
 				p0.x = p0.px; 
 				p0.y = p0.py;
 
-				p1.x = p0.x + lengthdir_x(sdist, dirr);
-				p1.y = p0.y + lengthdir_y(sdist, dirr);
+				p1.x = p0.x + lengthdir_x(sdist, e.direction);
+				p1.y = p0.y + lengthdir_y(sdist, e.direction);
 				
 			} else if(p1.pin) {
-				p0.x = p1.x - lengthdir_x(sdist, dirr);
-				p0.y = p1.y - lengthdir_y(sdist, dirr);
+				p0.x = p1.x - lengthdir_x(sdist, e.direction);
+				p0.y = p1.y - lengthdir_y(sdist, e.direction);
 				
 				p1.x = p1.px; 
 				p1.y = p1.py;
@@ -172,13 +172,14 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 				var cx = (p0.x + p1.x) / 2;
 				var cy = (p0.y + p1.y) / 2;
 				
-				p0.x = cx - lengthdir_x(sdist / 2, dirr);
-				p0.y = cy - lengthdir_y(sdist / 2, dirr);
+				p0.x = cx - lengthdir_x(sdist / 2, e.direction);
+				p0.y = cy - lengthdir_y(sdist / 2, e.direction);
 				
-				p1.x = cx + lengthdir_x(sdist / 2, dirr);
-				p1.y = cy + lengthdir_y(sdist / 2, dirr);
+				p1.x = cx + lengthdir_x(sdist / 2, e.direction);
+				p1.y = cy + lengthdir_y(sdist / 2, e.direction);
 				
 			}
+			
 		}
 	}
 	

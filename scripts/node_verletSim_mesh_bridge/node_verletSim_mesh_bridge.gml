@@ -14,6 +14,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 	////- =Verlet
 	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
 	newInput( 3, nodeValue_Slider( "Drag",         0    ));
+	newInput( 7, nodeValue_Slider( "Stiffness",    0    ));
 	
 	////- =Paths
 	newInput( 4, nodeValue_Bool(   "Loop",      false ));
@@ -62,6 +63,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			
 			var _ten  = getInputData(2), _tens = 1 - _ten;
 			var _drag = getInputData(3);
+			var _adrg = getInputData(7);
 			
 			var _loop = getInputData(4);
 			var _pshf = getInputData(5);
@@ -159,7 +161,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 					var i1 = _st + (j+1) * (gw+1) + (i) % _pLoop;
 					
 					edges[_e]  = [ i0, i1 ];
-					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens, _adrg).setMap(_emap); 
 					
 					if(_pEdge) {
 						_pEdge.setNEdge(vedges[_e]);
@@ -178,7 +180,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 					var i1 = _st + (j) * (gw+1) + (i+1) % _pLoop;
 					
 					edges[_e]  = [ i0, i1 ];
-					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens).setMap(_emap); 
+					vedges[_e] = new __verlet_edge(points[i0], points[i1], _tens, _adrg).setMap(_emap); 
 					
 					if(_pEdge) {
 						_pEdge.setNEdge(vedges[_e]);
