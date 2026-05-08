@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.2.006",
+    "changes": [
+      {
+        "date": "2026-05-08T06:11:48.641Z",
+        "node": "",
+        "commit": "**Particle**: Improve performance."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {

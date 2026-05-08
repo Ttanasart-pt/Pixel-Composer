@@ -224,6 +224,7 @@ function ThemeValue() constructor {
     panel_menu_padding            = 6;
     panel_menu_action_spacing     = 4;
     panel_menu_user_padding       = 10;
+    panel_toolbar_size            = 32;
     panel_notification_padding    = 0;
     panel_tab_padding             = 2;
 	panel_animation_padding       = 6;

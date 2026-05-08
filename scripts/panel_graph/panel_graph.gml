@@ -666,6 +666,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     #region // ---- topbar ----
     	topbar_height  = ui(32);
+    	topbar_padding = ui(4);
+    	
         top_scroll     = 0;
 		top_scroll_to  = 0;
 		top_scroll_max = 0;
@@ -2314,7 +2316,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			        	if(n.group != __context) return;
 			        	
 			        	var _hov = n.drawConnections(connection_param, connection_draw_update);
-			        	if(_hov == undefined) return;
+			        	if(!is_array(_hov)) return;
 			        	
 			            __hov      = _hov[0];
 			            __hovPoint = _hov[1];
@@ -3120,7 +3122,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	topbar_widget_dim.setFocusHover(pFOCUS, pHOVER);
 	    	topbar_widget_dim.drawParam(new widgetParam(wdx, wdy, wdw, wdh, val, undefined, _m, x, y).setFont(f_p3));
 	    	
-	    	var pad = ui(4);
+	    	var pad = topbar_padding;
 	    	var wdy = pad;
 	    	var bs  = th - pad * 2 + ui(1);
 	    	
@@ -3148,7 +3150,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	gpu_set_scissor(tx, ty, tw, th);
     	
     	var _side_m = menuItems_gen("graph_topbar_menu");
-    	var _pad = ui(4);
+    	var _pad = topbar_padding;
 		var _mus = th - _pad * 2;
 		var _mux = top_scroll + _pad;
 		var _muy = ty + _pad;

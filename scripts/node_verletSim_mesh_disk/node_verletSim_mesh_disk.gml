@@ -16,13 +16,17 @@ function Node_VerletSim_Mesh_Disk(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
 	newInput( 3, nodeValue_Slider( "Drag",         0    ));
 	newInput( 5, nodeValue_Slider( "Stiffness",    0    ));
-	// input 6
+	
+	////- =UV
+	newInput( 6, nodeValue_Bool( "Cartesian", false ));
+	// input 7
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 
 		[ "Mesh",   false ],  0,  1,  4, 
 		[ "Verlet", false ],  2,  3,  5, 
+		[ "UV",     false ],  6, 
 	];
 	
 	////- Nodes
@@ -47,13 +51,15 @@ function Node_VerletSim_Mesh_Disk(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(!IS_FIRST_FRAME) return;
 		
 		#region data
-			var _area = getInputData(0);
-			var _subd = getInputData(1);
-			var _quad = getInputData(4);
+			var _area = getInputData( 0);
+			var _subd = getInputData( 1);
+			var _quad = getInputData( 4);
 			
-			var _ten  = getInputData(2), _tens = 1 - _ten;
-			var _drag = getInputData(3);
-			var _adrg = getInputData(5);
+			var _ten  = getInputData( 2), _tens = 1 - _ten;
+			var _drag = getInputData( 3);
+			var _adrg = getInputData( 5);
+			
+			var _cart = getInputData( 6);
 		#endregion
 		
 		var mesh = new __verlet_Mesh();
@@ -71,19 +77,21 @@ function Node_VerletSim_Mesh_Disk(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _i = 0;
 		var points = array_create(1 + gw * (gh + 1));
 		
-		points[0] = new __verlet_vec2(cx, cy, 0, 0, 0).setDrag(_drag);
+		points[0] = new __verlet_vec2(cx, cy, _cart? .5 : 0, _cart? .5 : 0, 0).setDrag(_drag);
 		
 		for( var j = 0; j <= gh; j++ )
 		for( var i = 0; i <  gw; i++ ) {
-			var _u  = i * sx;
-			var _v  = j * sy;
-			
-			var _rw = cw * (j + 1) / (gh + 1);
-			var _rh = ch * (j + 1) / (gh + 1);
+			var _rr = (j + 1) / (gh + 1);
 			var _ra = i / gw * 360;
 			
-			var _x0 = cx + lengthdir_x(_rw, _ra);
-			var _y0 = cy + lengthdir_y(_rh, _ra);
+			var _dx = lengthdir_x(_rr, _ra);
+			var _dy = lengthdir_y(_rr, _ra);
+			
+			var _x0 = cx + _dx * cw;
+			var _y0 = cy + _dy * ch;
+			
+			var _u  = _cart? .5 + _dx * .5 : i * sx;
+			var _v  = _cart? .5 + _dy * .5 : j * sy;
 			
 			var _ind     = 1 + j * gw + i;
 			points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind).setDrag(_drag);

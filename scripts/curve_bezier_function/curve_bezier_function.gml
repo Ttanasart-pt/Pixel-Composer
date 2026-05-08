@@ -341,9 +341,10 @@ function curveMap(_bz = undefined, _prec = 32, _tolr = 0.00001) constructor {
 	tolr = _tolr;
 	map  = array_create(prec + 1);
 	
+	static getFast = function(i) { return map[i * prec]; }
+	
 	static get = function(i) {
 		if(is_nan(i)) return 0;
-		INLINE
 		
 		var _ind  = clamp(i, 0, 1) * prec;
 		var _indL = floor(_ind);

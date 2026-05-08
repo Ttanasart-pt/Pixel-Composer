@@ -123,16 +123,15 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	static drawDimension = undefined
 	
 	static drawConnections = function(params = {}, _draw = true) {
-		var hovering = noone;
+		var hovering = undefined;
 		
 		params.dashed = true; params.loop   = true;
 		if(junc_out && junc_in) drawJuncConnection(junc_out, junc_in, params);
 		params.dashed = false; params.loop   = false;
 		
 		var jun  = inputs[0];
-		var _hov = jun.drawConnections(params, _draw); if(_hov) hovering = _hov;
-		
-		return hovering;
+		var _hov = jun.drawConnections(params, _draw); 
+		return _hov? [_hov, undefined] : undefined;
 	}
 	
 	////- Action

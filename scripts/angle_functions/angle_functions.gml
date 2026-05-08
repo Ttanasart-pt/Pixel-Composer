@@ -25,7 +25,6 @@ function rotation_random_eval(range, seed = random_get_seed()) {
 }
 
 function rotation_random_eval_fast(range, seed = random_get_seed()) {
-	
 	switch(range[0]) {
 		case 0 : return        random_range_seed(range[1], range[2], seed);
 		case 1 : return        random_range_seed(range[1] - range[2], range[1] + range[2], seed);

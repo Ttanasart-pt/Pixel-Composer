@@ -12,15 +12,20 @@ function area_get_bbox(area) {
 	return [ area[0] - area[2], area[1] - area[3], area[0] + area[2], area[1] + area[3] ];
 }
 
-function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter = AREA_SCATTER.random, index = 0, total = 1, seed = undefined) {
-	if(total == 0) return [0, 0];
+function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter = AREA_SCATTER.random, 
+	index = 0, total = 1, seed = undefined, p = [0,0]) {
+	if(total == 0) {
+		p[0] = 0;
+		p[1] = 0;
+		return p;
+	}
 	
 	var _sed    = seed ?? random_get_seed();
-	var _area_x = array_safe_get_fast(area, 0);
-	var _area_y = array_safe_get_fast(area, 1);
-	var _area_w = array_safe_get_fast(area, 2);
-	var _area_h = array_safe_get_fast(area, 3);
-	var _area_t = array_safe_get_fast(area, 4);
+	var _area_x = area[@ 0] ?? 0;
+	var _area_y = area[@ 1] ?? 0;
+	var _area_w = area[@ 2] ?? 0;
+	var _area_h = area[@ 3] ?? 0;
+	var _area_t = area[@ 4] ?? 0;
 	var xx = 0, yy = 0;
 	
 	index = safe_mod(index, total);
@@ -145,7 +150,9 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 			break;
 	}
 	
-	return [xx, yy];
+	p[0] = xx;
+	p[1] = yy;
+	return p;
 }
 
 function area_get_random_point_poisson(_area, _distance, _seed) {

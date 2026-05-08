@@ -432,7 +432,6 @@ function Panel_Preview() : PanelContent() constructor {
         
         tool_current   = noone;
         toolbar_width  = ui(40);
-        toolbar_height = ui(40);
         
          tool_hovering      = noone;
         _tool_hovering      = noone;

@@ -224,14 +224,19 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		parts_runner    = 0;
 		seed            = 0;
-		spawn_index_raw = 0;
+		spawn_total     = 0;
 		spawn_index     = 0;
 		scatter_index   = 0;
 		def_surface     = -1;
+		
 		surface_cache   = {};
+		surface_wcache  = {};
+		surface_hcache  = {};
 		
 		curr_dimension   = [0,0];
 		render_frame     = 0;
+		
+		__p = [0,0];
 	#endregion
 	
 	#region Cached wiggle, curves, parameter, sampler
@@ -284,6 +289,43 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	////- VFX
 	
+	static getSurfaceCache = function() {
+		var surfs = inputs_data[0];
+		
+		if(array_empty(surfs)) return;
+		if(!is_array(surfs)) surfs = [ surfs ];
+		surfs = array_spread(surfs);
+		
+		for( var i = 0, n = array_length(surfs); i < n; i++ ) {
+			var _s = surfs[i];
+			
+			if(is(_s, dynaSurf)) {
+				surface_cache[$  surfs[i]] = _s;
+				surface_wcache[$ surfs[i]] = surface_get_width_safe(_s);
+				surface_hcache[$ surfs[i]] = surface_get_height_safe(_s);
+				continue;
+			}
+			
+			if(is(_s, SurfaceAtlas))
+				_s = _s.surface.get();
+			
+			if(!surface_exists(_s)) continue;
+			
+			var sw = surface_get_width_safe(_s);
+			var sh = surface_get_height_safe(_s);
+			surface_wcache[$ surfs[i]] = sw;
+			surface_hcache[$ surfs[i]] = sh;
+			surface_cache[$  surfs[i]] = surface_verify(surface_cache[$  surfs[i]], sw, sh);
+			
+			surface_set_target(surface_cache[$  surfs[i]]);
+				DRAW_CLEAR
+				BLEND_OVERRIDE
+				draw_surface(_s, 0, 0);
+				BLEND_NORMAL
+			surface_reset_target();
+		}
+	}
+	
 	static spawn = function(_time = NODE_CURRENT_FRAME, _pos = -1) {
 		#region data
 			var _inSurf     	= inputs_data[ 0];
@@ -320,9 +362,9 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _scale      	= inputs_data[10];
 			var _size       	= inputs_data[17];
 			
-			var _color      	= inputs_data[12];
 			var _blend      	= inputs_data[28];
 			var _color_idx   	= inputs_data[50], _color_idx_len  = array_length(_color_idx), _color_idx_typ = inputs[50].attributes.array_select;
+			var _color      	= inputs_data[12]; _color.cache();
 			var _alpha      	= inputs_data[13];
 		
 		//////////////////////////////////////////////////////////////////////////////
@@ -387,7 +429,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						_spr = _inSurf[_index];
 						break;
 						
-					case 2 : case 3 : 
+					case 2 : 
+					case 3 : 
 						_spr = _inSurf;
 						break;
 				}
@@ -404,9 +447,9 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						part.atlas = _spr;
 						
 					} else if(_distrib < 2) {
-						var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period);
-						xx = sp[0];
-						yy = sp[1];
+						area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period, undefined, __p);
+						xx = __p[0];
+						yy = __p[1];
 						
 					} else if(_distrib == 2) {
 						var sp = array_safe_get_fast(_posDist, i);
@@ -425,7 +468,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						yy = _p.y;
 						
 					} else if(_distrib == 4) {
-						var _i = _scatter == 0? safe_mod(spawn_index_raw, _len) : irandom(_len - 1);
+						var _i = _scatter == 0? safe_mod(spawn_total, _len) : irandom(_len - 1);
 						var _p = _dist_data[_i];
 						
 						xx = _p[0]; 
@@ -445,21 +488,21 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			part.params = custom_parameter_map;
 			
 			#region Rotation
-				var _rot = rotation_random_eval(is_array(_rotation[0])? _rotation[i] : _rotation);
+				var _rot = rotation_random_eval_fast(is_array(_rotation[0])? _rotation[i] : _rotation);
 				
 				switch(_rotation_type) {
 					case 0 : 
-						var _rot_spd  = rotation_random_eval(_rotation_speed);
+						var _rot_spd  = rotation_random_eval_fast(_rotation_speed);
 						part.setRotation(  _rot, _rot_spd, curve_rotate, _rotation_snap, _follow ); 
 						break;
 					
 					case 1 : 
-						var _rot_tar = rotation_random_eval(_rotation_targ);
+						var _rot_tar = rotation_random_eval_fast(_rotation_targ);
 						part.setRotationTarget( _rot, _rot + _rot_tar, curve_rotateF, _rotation_snap ); 
 						break;
 						
 					case 2 : 
-						var _rot_tar = rotation_random_eval(_rotation_targ);
+						var _rot_tar = rotation_random_eval_fast(_rotation_targ);
 						part.setRotationTarget( _rot, _rot_tar, curve_rotateF, _rotation_snap ); 
 						break;
 				}
@@ -502,7 +545,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			#region Physics
 				var _dirs = is_array(_direction[0])? _direction[i] : _direction;
-				var _dirr = _directionType == 0? rotation_random_eval(_dirs) : rotation_random_eval_uniform(_dirs, i / (_amo - 1));
+				var _dirr = _directionType == 0? rotation_random_eval_fast(_dirs) : rotation_random_eval_uniform(_dirs, i / (_amo - 1));
 				if(_directCenter) {
 					var _pointDir = point_direction(_spawn_area[0], _spawn_area[1], xx, yy);
 					    _pointDir = lerp(_directRange[0], _directRange[1], _pointDir / 360);
@@ -532,36 +575,92 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			spawn_index  = safe_mod(spawn_index + 1, attributes.part_amount);
 			parts_runner = safe_mod(parts_runner + 1, attributes.part_amount);
-			spawn_index_raw++;
+			spawn_total++;
 		}
 	}
 	
-	static getSurfaceCache = function() {
-		var surfs = inputs_data[0];
+	static runVFX = function(_time = NODE_CURRENT_FRAME) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ )
+			if(inputs[i].isAnimated()) inputs_data[i] = inputs[i].getValue(_time);
 		
-		if(array_empty(surfs)) return;
-		if(!is_array(surfs)) surfs = [ surfs ];
-		surfs = array_spread(surfs);
+		var _spawn_delay    = inputs_data[ 1];
+		var _spawn_type     = inputs_data[16];
+		var _spawn_active   = inputs_data[27];
+		var _spawn_trig     = inputs_data[44];
+		var _spawn_duration = inputs_data[51];
 		
-		for( var i = 0, n = array_length(surfs); i < n; i++ ) {
-			var _s = surfs[i];
-			
-			if(is(_s, dynaSurf)) {
-				surface_cache[$ surfs[i]] = _s;
-				continue;
+		getSurfaceCache();
+		
+		if(_spawn_active) {
+			var _doSpawn = false;
+			switch(_spawn_type) {
+				case 0 : _doSpawn = safe_mod(_time, _spawn_delay) == 0;                                 break;
+				case 1 : _doSpawn = _time >= _spawn_delay && _time < _spawn_delay + _spawn_duration;    break;
+				case 2 : _doSpawn = _spawn_trig;                                                        break;
 			}
 			
-			if(surface_exists(surface_cache[$ _s])) 
-				continue;
-				
-			if(is(_s, SurfaceAtlas))
-				_s = _s.surface.get();
-				
-			if(!is_surface(_s)) 
-				continue;
-			
-			surface_cache[$ surfs[i]] = surface_clone(_s);
+			if(_doSpawn) spawn(_time);
 		}
+		
+		__time = _time;
+		array_foreach(parts, function(p,i) /*=>*/ { 
+			if(p.active) p.step(__time); 
+			p.trailLife++; 
+		});
+	}
+	
+	function render(_time = CURRENT_FRAME) {
+		var _dim   = inputs[71].getValue(_time);
+		var _exact = inputs[72].getValue(_time);
+		var _blend = inputs[73].getValue(_time);
+		var _bg    = inputs[74].getValue(_time);
+		
+		var _type  = inputs[75].getValue(_time);
+		var _llife = inputs[76].getValue(_time);
+		
+		if(is_surface(_bg)) _dim = surface_get_dimension(_bg);
+		var _outSurf = surface_create(_dim[0], _dim[1], attrDepth());
+		
+		surface_set_shader(_outSurf, _type == PARTICLE_RENDER_TYPE.surface? sh_sample : noone);
+			draw_surface_safe(_bg);
+			
+			switch(_blend) {
+				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL break;
+				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA  break;
+				case PARTICLE_BLEND_MODE.additive: BLEND_ADD    break;
+				case PARTICLE_BLEND_MODE.maximum:  BLEND_MAX    break;
+				case PARTICLE_BLEND_MODE.minimum:  
+					draw_clear_alpha(c_white, 0.);
+					draw_surface_safe(_bg);
+					BLEND_MIN   
+					break;
+			}
+			
+			switch(_type) {
+				case PARTICLE_RENDER_TYPE.surface : 
+					shader_set_interpolation(_outSurf);
+					
+					for(var i = 0; i < attributes.part_amount; i++) {
+						if(!parts[i].active) continue;
+						
+						parts[i].render_type = _type;
+						parts[i].draw(_exact, _dim[0], _dim[1]);
+					}
+					break;
+					
+				case PARTICLE_RENDER_TYPE.line : 
+					for(var i = 0; i < attributes.part_amount; i++) {
+						parts[i].render_type = _type;
+						parts[i].line_draw   = _llife;
+						parts[i].drawLine(_exact, _dim[0], _dim[1]);
+					}
+					break;
+			}
+			
+		surface_reset_shader();	
+		
+		outputs[0].setValue(_outSurf);
+		if(attributes.cache) cacheCurrentFrame(_outSurf, _time);
 	}
 	
 	function reset() {
@@ -570,12 +669,14 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var keys = variable_struct_get_names(surface_cache);
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			surface_free_safe(surface_cache[$ keys[i]]);
-		surface_cache = {};
+		surface_cache  = {};
+		surface_wcache = {};
+		surface_hcache = {};
 		getSurfaceCache();
 		
-		spawn_index_raw = 0;
-		spawn_index     = 0;
-		scatter_index   = 0;
+		spawn_total   = 0;
+		spawn_index   = 0;
+		scatter_index = 0;
 		
 		for(var i = 0; i < array_length(parts); i++) {
 			if(!parts[i].active) continue;
@@ -620,102 +721,9 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		#endregion
 	}
 	
-	function checkPartPool() {
-		var _part_amo = attributes.part_amount;
-		var _curr_amo = array_length(parts);
-		
-		if(_part_amo > _curr_amo) {
-			repeat(_part_amo - _curr_amo)
-				array_push(parts, new __part(self));
-		} else if(_part_amo < _curr_amo) {
-			array_resize(parts, _part_amo);
-		}
-	}
+	////- Update
 	
-	static runVFX = function(_time = NODE_CURRENT_FRAME) {
-		for( var i = 0, n = array_length(inputs); i < n; i++ )
-			if(inputs[i].isAnimated()) inputs_data[i] = inputs[i].getValue(_time);
-		
-		var _spawn_delay    = inputs_data[ 1];
-		var _spawn_type     = inputs_data[16];
-		var _spawn_active   = inputs_data[27];
-		var _spawn_trig     = inputs_data[44];
-		var _spawn_duration = inputs_data[51];
-		
-		getSurfaceCache();
-		
-		if(_spawn_active) {
-			var _doSpawn = false;
-			switch(_spawn_type) {
-				case 0 : _doSpawn = safe_mod(_time, _spawn_delay) == 0;                                 break;
-				case 1 : _doSpawn = _time >= _spawn_delay && _time < _spawn_delay + _spawn_duration;    break;
-				case 2 : _doSpawn = _spawn_trig;                                                        break;
-			}
-			
-			if(_doSpawn) spawn(_time);
-		}
-		
-		__time = _time;
-		array_foreach(parts, function(p) /*=>*/ {return p.step(__time)});
-	}
-	
-	////- Render
-	
-	function render(_time = CURRENT_FRAME) {
-		var _dim   = inputs[71].getValue(_time);
-		var _exact = inputs[72].getValue(_time);
-		var _blend = inputs[73].getValue(_time);
-		var _bg    = inputs[74].getValue(_time);
-		
-		var _type  = inputs[75].getValue(_time);
-		var _llife = inputs[76].getValue(_time);
-		
-		if(is_surface(_bg)) _dim = surface_get_dimension(_bg);
-		var _outSurf = surface_create(_dim[0], _dim[1], attrDepth());
-		
-		surface_set_shader(_outSurf, _type == PARTICLE_RENDER_TYPE.surface? sh_sample : noone);
-			draw_surface_safe(_bg);
-			
-			switch(_blend) {
-				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL break;
-				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA  break;
-				case PARTICLE_BLEND_MODE.additive: BLEND_ADD    break;
-				case PARTICLE_BLEND_MODE.maximum:  BLEND_MAX    break;
-				case PARTICLE_BLEND_MODE.minimum:  
-					draw_clear_alpha(c_white, 0.);
-					draw_surface_safe(_bg);
-					BLEND_MIN   
-					break;
-			}
-			
-			if(_type == PARTICLE_RENDER_TYPE.surface)
-				shader_set_interpolation(_outSurf);
-			
-			for(var i = 0; i < attributes.part_amount; i++) {
-				parts[i].render_type = _type;
-				parts[i].line_draw   = _llife;
-				
-				if(parts[i].active || _type) parts[i].draw(_exact, _dim[0], _dim[1]);
-			}
-		surface_reset_shader();	
-		
-		outputs[0].setValue(_outSurf);
-		if(attributes.cache) cacheCurrentFrame(_outSurf, _time);
-	}
-	
-	static preUpdate = function() /*=>*/ { // Clear cache on dimension change
-		var _dim = inputs[71].getValue();
-		
-		if(curr_dimension[0] != _dim[0] || curr_dimension[1] != _dim[1]) {
-			clearCache();
-			curr_dimension[0] = _dim[0];
-			curr_dimension[1] = _dim[1];
-		}
-	} // Clear cache on dimension change
-	
-	static onClearCache = function() {
-		render_frame = 0;
-	}
+	static onClearCache = function() { render_frame = 0; }
 	
 	static update = function(frame = NODE_CURRENT_FRAME) {
 		if(attributes.cache) {
@@ -804,10 +812,16 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				}
 			} else 
 				custom_parameter_names = [];
-		
-			var _resetSeed = getInputData(48);
-			if(_resetSeed) seed = getInputData(32);
-			checkPartPool();
+			
+			var _part_amo = attributes.part_amount;
+			var _curr_amo = array_length(parts);
+			
+			if(_part_amo > _curr_amo) {
+				repeat(_part_amo - _curr_amo)
+					array_push(parts, new __part(self));
+					
+			} else if(_part_amo < _curr_amo)
+				array_resize(parts, _part_amo);
 		#endregion
 		
 		#region Render

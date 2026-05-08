@@ -21,6 +21,11 @@
         "date": "2026-05-08T02:18:13.636Z",
         "node": "",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-05-08T06:11:48.649Z",
+        "node": "",
+        "commit": "**Particle**: Improve performance."
       }
     ]
   },

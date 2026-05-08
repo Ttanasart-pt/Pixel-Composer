@@ -189,16 +189,11 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 				continue;
 			}
 			
-			if(p0.pin && p1.pin) {
+			if((p0.pin || p0.rest) && (p1.pin || p1.rest)) {
 				p0.x = p0.px; p0.y = p0.py;
 				p1.x = p1.px; p1.y = p1.py;
 				continue;
 			}
-			
-			// if(p0.rest || p1.rest) { 
-			// 	p0.rest = true;
-			// 	p1.rest = true;
-			// }
 			
 			var odist = e.distance;
 			var ndist = point_distance(p0.x, p0.y, p1.x, p1.y);
@@ -206,14 +201,14 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			var dirr  = point_direction(p0.x, p0.y, p1.x, p1.y);
 			e.direction += angle_difference(dirr, e.direction) * (1 - e.angularDrag);
 			
-			if(p0.pin) {
+			if(p0.pin || p0.rest) {
 				p0.x = p0.px; 
 				p0.y = p0.py;
 
 				p1.x = p0.x + lengthdir_x(sdist, e.direction);
 				p1.y = p0.y + lengthdir_y(sdist, e.direction);
 				
-			} else if(p1.pin) {
+			} else if(p1.pin || p1.rest) {
 				p0.x = p1.x - lengthdir_x(sdist, e.direction);
 				p0.y = p1.y - lengthdir_y(sdist, e.direction);
 				
@@ -235,13 +230,14 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	}
 	
 	function verletStep(_mesh, _substep = verlet_substep) {
-		var inv = true;
+		var inv = false;
 		
 		repeat(_substep) {
 			verletPropagate(     _mesh, _substep, inv );
 			verletCollide(       _mesh, _substep, inv );
 			verletConstrainEdge( _mesh, _substep, inv );
-			// inv = !inv;
+			verletCollide(       _mesh, _substep, inv );
+			inv = !inv;
 		}
 		
 	}

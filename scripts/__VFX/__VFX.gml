@@ -83,7 +83,8 @@ function __part(_node) : __particleObject() constructor {
 	
 	frict   = 0;
 	accel   = 0;
-	spVec   = [ 0, 0 ];
+	spVec   = [0,0];
+	_pp     = [0,0];
 	
 	grav    = 0;
 	gravDir = -90;
@@ -118,8 +119,6 @@ function __part(_node) : __particleObject() constructor {
 	pathDiv   = noone;
 	
 	////- Render
-	
-	render_type = PARTICLE_RENDER_TYPE.surface;
 	
 	arr_type = 0;
 	
@@ -340,15 +339,10 @@ function __part(_node) : __particleObject() constructor {
 	}
 	
 	static step = function(_frame = 0) {
-		trailLife++;
-		
-		if(!active) return;
-		
-		var lifeRat  = 1 - life / life_total;
-		var spdCurve = speedT == noone? 1 : speedT.get(lifeRat);
+		var lifeRat  = clamp(1 - life / life_total, 0, 1);
+		var spdCurve = speedT == noone? 1 : speedT.getFast(lifeRat);
 		
 		frame = _frame;
-		
 		random_set_seed(seed + life);
 		
 		#region apply position
@@ -377,42 +371,38 @@ function __part(_node) : __particleObject() constructor {
 		#endregion
 		
 		#region physics
-			var dirr = point_direction(0, 0, speedx, speedy);
-			var diss = point_distance(0, 0, speedx, speedy);
-			
-			if(use_phy) diss = max(0, diss + accel) * (1 - frict);
-			
-			if(speedx != 0 || speedy != 0) {
-				if(use_wig) dirr += wig_dir.get(seed + life);
-				
-				if(use_phy && turning != 0) {
-					var trn = turning;
-					
-					     if(turnSpd > 0) trn = turning * diss * turnSpd;
-					else if(turnSpd < 0) trn = turning / diss * turnSpd;
-					
-					dirr += trn
-				}
-			}
-			
-			speedx = lengthdir_x(diss, dirr);
-			speedy = lengthdir_y(diss, dirr);
-			
 			if(use_phy) {
-				speedx += gravX;
-				speedy += gravY;
+				var dirr = point_direction(0, 0, speedx, speedy);
+				var diss = point_distance(0, 0, speedx, speedy);
+				    diss = max(0, diss + accel) * (1 - frict);
+				
+				if(speedx != 0 || speedy != 0) {
+					if(use_wig) dirr += wig_dir.get(seed + life);
+					
+					if(turning != 0) {
+						var trn = turning;
+						
+						     if(turnSpd > 0) trn = turning * diss * turnSpd;
+						else if(turnSpd < 0) trn = turning / diss * turnSpd;
+						
+						dirr += trn
+					}
+				}
+				
+				speedx = lengthdir_x(diss, dirr) + gravX;
+				speedy = lengthdir_y(diss, dirr) + gravY;
 			}
 		#endregion
 		
 		#region rotation
 			if(rotType == 0) {
-				rotBase  += rotSpeed * (rotCurve == noone? 1 : rotCurve.get(lifeRat));
+				rotBase  += rotSpeed * (rotCurve == noone? 1 : rotCurve.getFast(lifeRat));
 				if(follow)  rot = spVec[1] + rotBase;
 				else        rot = rotBase;
 				
 			} else if(rotType == 1) {
-				var _rLerp = rotTargetCurve == noone? lifeRat : rotTargetCurve.get(lifeRat);
-				rot = lerp_angle_direct(rotBase, rotTarget, _rLerp);
+				var _rLerp = rotTargetCurve == noone? lifeRat : rotTargetCurve.getFast(lifeRat);
+				rot = rotBase + angle_difference(rotTarget, rotBase) * _rLerp;
 			}
 		#endregion
 		
@@ -450,25 +440,12 @@ function __part(_node) : __particleObject() constructor {
 		
 		if(path != noone) {
 			var _pathPrg = clamp(lerp(pathRange[0], pathRange[1], lifeRat), 0., 1.);
-			var _pathDiv = pathDiv.get(_pathPrg);
+			var _pathDiv = pathDiv.getFast(_pathPrg);
 			
 			pathPos = path.getPointRatio(clamp(_pathPrg, 0, 0.99), pathIndex, pathPos);
 			drawx   = pathPos.x + drawx * _pathDiv;
 			drawy   = pathPos.y + drawy * _pathDiv;
 		}
-	
-		#region color
-			var cc = (col == -1)? c_white : col.eval(lifeRat);
-			if(blend != c_white) cc = colorMultiply(blend, cc);
-			alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat)) * _color_get_alpha(cc);
-			
-			if(life_incr) {
-				blend_history[life_incr - 1] = cc;
-				alp_history[life_incr - 1]   = alp_draw;
-			}
-			
-			currColor = cola(cc, alp_draw);
-		#endregion
 	}
 	
 	////- Draw
@@ -481,21 +458,84 @@ function __part(_node) : __particleObject() constructor {
 		drawsy  = sc_sy;
 	}
 	
-	static draw = function(exact, surf_w = 1, surf_h = 1) {
-		INLINE
+	static drawLine = function(exact, surf_w = 1, surf_h = 1) {
+		var _trail_ed  = min(life_incr, life_total);
+		var _trail_st  = max(0, trailLife - line_draw);
+		var _trail_len = _trail_ed - _trail_st;
+		if(_trail_len <= 0) return;
 		
-		if(render_type == PARTICLE_RENDER_TYPE.line) {
-			var _trail_ed  = min(life_incr, life_total);
-			var _trail_st  = max(0, trailLife - line_draw);
-			var _trail_len = _trail_ed - _trail_st;
-				
-			if(_trail_len <= 0) return;
+		var lifeRat = clamp(1 - life / life_total, 0, 1);
+		var scCurve = scT == noone? 1 : scT.getFast(lifeRat);
+		scx = drawsx * scCurve;
+		scy = drawsy * scCurve;
+		
+		var _xx = drawx ?? 0;
+		var _yy = drawy ?? 0;
+		var _rr = drawrot;
+		_rr = value_snap(_rr, rotSnap);
+		
+		if(exact) {
+			_xx = round(_xx);
+			_yy = round(_yy);
 		}
 		
-		var ss = surf;
+		#region color
+			var cc = (col == -1)? 0xFF000000 : col.evalFast(lifeRat);
+			    cc = colorMultiply(blend, cc);
+			alp_draw = alp * (alp_fade == noone? 1 : alp_fade.getFast(lifeRat)) * _color_get_alpha(cc);
+			
+			if(life_incr) {
+				blend_history[life_incr - 1] = cc;
+				alp_history[life_incr - 1]   = alp_draw;
+			}
+			
+			currColor = cola(cc, alp_draw);
+		#endregion
 		
-		var lifeRat = 1 - life / life_total;
-		var scCurve = scT == noone? 1 : scT.get(lifeRat);
+		var bw = node.curr_dimension[0];
+		var bh = node.curr_dimension[1];
+
+		var  _ox,  _nx,  _oy,  _ny;
+		var _osx, _nsx, _osy, _nsy;
+		var  _oc,  _nc,  _oa,  _na;
+		
+		if(life_incr) {
+			scx_history[life_incr - 1] = scx;
+			scy_history[life_incr - 1] = scy;
+		}
+		
+		for( var j = 0; j < _trail_len; j++ ) {
+			var _index = _trail_st + j;
+			
+			_nx  = x_history[    _index];
+			_ny  = y_history[    _index];
+			_nsx = scx_history[  _index];
+			_nsy = scy_history[  _index];
+			_nc  = blend_history[_index];
+			_na  = alp_history[  _index];
+			
+			if(j) {
+				draw_set_color(_nc);
+				draw_set_alpha(_na);
+				if(_osx == 1 && _nsx == 1) draw_line(_ox, _oy, _nx, _ny);
+				else if(_osx == _nsx)      draw_line_width(_ox, _oy, _nx, _ny, _osx);
+				else                       draw_line_width2(_ox, _oy, _nx, _ny, _osx, _nsx, false);
+				draw_set_alpha(1);
+			}
+			
+			_ox  = _nx ;
+			_oy  = _ny ;
+			_osx = _nsx;
+			_osy = _nsy;
+			_oc  = _nc ;
+			_oa  = _na ;
+		}
+	}
+	
+	static draw = function(exact, surf_w = 1, surf_h = 1) {
+		var ss = surf;
+		var lifeRat = clamp(1 - life / life_total, 0, 1);
+		var scCurve = scT == noone? 1 : scT.getFast(lifeRat);
 		scx = drawsx * scCurve;
 		scy = drawsy * scCurve;
 		
@@ -517,38 +557,39 @@ function __part(_node) : __particleObject() constructor {
 					
 				case ANIM_END_ACTION.destroy:
 					if(ind >= anim_len) { kill(); return; }
-					
 					ss = surf[ind];
 					break;
 			}
+			
 		} else if(arr_type == 3) {
 			var _sca = round(min(scx, scy));
 			ss = array_safe_get_fast(surf, clamp(_sca, 0, array_length(surf) - 1));
-		}
-		
-		var _surf = node.surface_cache[$ ss];
-		var _useS = is_surface(_surf);
-		
-		if(arr_type == 3) {
+			
 			scx = 1;
 			scy = 1;
 		}
 		
-		if(life_incr) {
-			scx_history[life_incr - 1] = scx;
-			scy_history[life_incr - 1] = scy;
-		}
+		var _surf = node.surface_cache[$  ss];
+		var _srfw = node.surface_wcache[$ ss] ?? 1;
+		var _srfh = node.surface_hcache[$ ss] ?? 1;
+		var _useS = is_surface(_surf);
 		
-		var _xx = drawx;
-		var _yy = drawy;
+		var _xx = drawx ?? 0;
+		var _yy = drawy ?? 0;
 		var _rr = drawrot;
 		_rr = value_snap(_rr, rotSnap);
 		
-		var s_w = (_useS? surface_get_width_safe(_surf)  : 1) * scx;
-		var s_h = (_useS? surface_get_height_safe(_surf) : 1) * scy;
-		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, _rr);
-		_xx += _pp[0];
-		_yy += _pp[1];
+		var s_w = _srfw * scx;
+		var s_h = _srfh * scy;
+		
+		var px = -s_w/2;
+		var py = -s_h/2;
+		
+		var dc = dcos(-_rr);
+		var ds = dsin(-_rr);
+		
+		_xx += px * dc - py * ds;
+		_yy += px * ds + py * dc;
 		
 		if(exact) {
 			_xx = round(_xx);
@@ -563,97 +604,67 @@ function __part(_node) : __particleObject() constructor {
 		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
 			return;
 		
+		#region color
+			var cc = (col == -1)? 0xFF000000 : col.evalFast(lifeRat);
+			    cc = colorMultiply(blend, cc);
+			    
+			alp_draw  = alp * (alp_fade == noone? 1 : alp_fade.getFast(lifeRat)) * _color_get_alpha(cc);
+			currColor = cola(cc, alp_draw);
+		#endregion
+		
 		var bw = node.curr_dimension[0];
 		var bh = node.curr_dimension[1];
 		
-		switch(render_type) {
-			case PARTICLE_RENDER_TYPE.surface : 
-				if(surface_exists(_surf)) {
-					draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, _rr, currColor, alp_draw);
+		if(surface_exists(_surf)) {
+			draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, _rr, currColor, alp_draw);
+			
+			if(wrap_x) {
+				if(x0 < 0)  draw_surface_ext_safe(_surf, _xx + bw, _yy, scx, scy, _rr, currColor, alp_draw);
+				if(x1 > bw) draw_surface_ext_safe(_surf, _xx - bw, _yy, scx, scy, _rr, currColor, alp_draw);
+			}
+			
+			if(wrap_y) {
+				if(y0 < 0)  draw_surface_ext_safe(_surf, _xx, _yy + bh, scx, scy, _rr, currColor, alp_draw);
+				if(y1 > bh) draw_surface_ext_safe(_surf, _xx, _yy - bh, scx, scy, _rr, currColor, alp_draw);
+			}
+			
+		} else {
+			var ss = round(min(scx, scy));
+			if(round(ss) == 0) return;
+			
+			_xx = drawx;
+			_yy = drawy;
+			
+			if(exact) { 
+				_xx = round(_xx); 
+				_yy = round(_yy);
+			}
+			
+			var _s = shader_current();
+			shader_reset();
+				if(is(_surf, dynaSurf)) {
+					for( var i = 0, n = array_length(_surf.parameters); i < n; i++ ) {
+						var _param = _surf.parameters[i]
+						var _parcv = params[$ _param];
+						if(_parcv == undefined) continue;
+						
+						_surf.params[$ _param] = _parcv.getFast(lifeRat) * _surf[$ _param];
+					}
+					
+					_surf.draw(_xx, _yy, ss, ss, drawrot, currColor, alp_draw);
 					
 					if(wrap_x) {
-						if(x0 < 0)  draw_surface_ext_safe(_surf, _xx + bw, _yy, scx, scy, _rr, currColor, alp_draw);
-						if(x1 > bw) draw_surface_ext_safe(_surf, _xx - bw, _yy, scx, scy, _rr, currColor, alp_draw);
+						if(x0 < 0)  _surf.draw(_xx - bw, _yy, ss, ss, drawrot, currColor, alp_draw);
+						if(x1 > bw) _surf.draw(_xx + bw, _yy, ss, ss, drawrot, currColor, alp_draw);
 					}
 					
 					if(wrap_y) {
-						if(y0 < 0)  draw_surface_ext_safe(_surf, _xx, _yy + bh, scx, scy, _rr, currColor, alp_draw);
-						if(y1 > bh) draw_surface_ext_safe(_surf, _xx, _yy - bh, scx, scy, _rr, currColor, alp_draw);
+						if(y0 < 0)  _surf.draw(_xx, _yy - bh, ss, ss, drawrot, currColor, alp_draw);
+						if(y1 > bh) _surf.draw(_xx, _yy + bh, ss, ss, drawrot, currColor, alp_draw);
 					}
 					
-				} else {
-					var ss = round(min(scx, scy));
-					if(round(ss) == 0) return;
-					
-					_xx = drawx
-					_yy = drawy;
-					
-					if(exact) { 
-						_xx = round(_xx); 
-						_yy = round(_yy);
-					}
-					
-					var _s = shader_current();
-					shader_reset();
-						if(is(_surf, dynaSurf)) {
-							for( var i = 0, n = array_length(_surf.parameters); i < n; i++ ) {
-								var _param = _surf.parameters[i]
-								var _parcv = params[$ _param];
-								if(_parcv == undefined) continue;
-								
-								_surf.params[$ _param] = _parcv.get(lifeRat) * _surf[$ _param];
-							}
-							
-							_surf.draw(_xx, _yy, ss, ss, drawrot, currColor, alp_draw);
-							
-							if(wrap_x) {
-								if(x0 < 0)  _surf.draw(_xx - bw, _yy, ss, ss, drawrot, currColor, alp_draw);
-								if(x1 > bw) _surf.draw(_xx + bw, _yy, ss, ss, drawrot, currColor, alp_draw);
-							}
-							
-							if(wrap_y) {
-								if(y0 < 0)  _surf.draw(_xx, _yy - bh, ss, ss, drawrot, currColor, alp_draw);
-								if(y1 > bh) _surf.draw(_xx, _yy + bh, ss, ss, drawrot, currColor, alp_draw);
-							}
-							
-						} else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, currColor, alp_draw);
-					shader_set(_s);
-				}
-				break;
-				
-			case PARTICLE_RENDER_TYPE.line : 
-				var  _ox,  _nx,  _oy,  _ny;
-				var _osx, _nsx, _osy, _nsy;
-				var  _oc,  _nc,  _oa,  _na;
-				
-				for( var j = 0; j < _trail_len; j++ ) {
-					var _index = _trail_st + j;
-					
-					_nx  = x_history[    _index];
-					_ny  = y_history[    _index];
-					_nsx = scx_history[  _index];
-					_nsy = scy_history[  _index];
-					_nc  = blend_history[_index];
-					_na  = alp_history[  _index];
-					
-					if(j) {
-						draw_set_color(_nc);
-						draw_set_alpha(_na);
-						if(_osx == 1 && _nsx == 1) draw_line(_ox, _oy, _nx, _ny);
-						else if(_osx == _nsx)      draw_line_width(_ox, _oy, _nx, _ny, _osx);
-						else                       draw_line_width2(_ox, _oy, _nx, _ny, _osx, _nsx, false);
-						draw_set_alpha(1);
-					}
-					
-					_ox  = _nx ;
-					_oy  = _ny ;
-					_osx = _nsx;
-					_osy = _nsy;
-					_oc  = _nc ;
-					_oa  = _na ;
-				}
-				
-				break;
+				} else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, currColor, alp_draw);
+			shader_set(_s);
 		}
 	}
 	

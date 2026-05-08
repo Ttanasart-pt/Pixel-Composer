@@ -418,10 +418,10 @@
 
 #region ==================================== GET =====================================
 
-	function surface_get_width_safe(s, crop = true) {
+	function surface_get_width_safe(s, crop = true, check = true) {
 		INLINE
 	
-		if(!is_surface(s)) return 1;
+		if(check && !is_surface(s)) return 1;
 		if(is_struct(s)) {
 			if(is(s, dynaSurf)) return s.getWidth();
 			else if(is(s, SurfaceAtlas)) return crop? surface_get_width(s.getSurface()) : s.oriSurf_w;
@@ -431,10 +431,10 @@
 		return surface_get_width(s);
 	}
 
-	function surface_get_height_safe(s, crop = true) {
+	function surface_get_height_safe(s, crop = true, check = true) {
 		INLINE
 	
-		if(!is_surface(s)) return 1;
+		if(check && !is_surface(s)) return 1;
 		if(is_struct(s)) {
 			if(is(s, dynaSurf)) return s.getHeight();
 			else if(is(s, SurfaceAtlas)) return crop? surface_get_height(s.getSurface()) : s.oriSurf_h;
@@ -444,10 +444,10 @@
 		return surface_get_height(s);
 	}
 
-	function surface_get_format_safe(s, crop = true) {
+	function surface_get_format_safe(s, crop = true, check = true) {
 		INLINE
 	
-		if(!is_surface(s)) return surface_rgba8unorm;
+		if(check && !is_surface(s)) return surface_rgba8unorm;
 		if(is_struct(s)) {
 			if(is(s, dynaSurf)) return s.getFormat();
 			else if(is(s, SurfaceAtlas)) return surface_get_format(s.getSurface());
