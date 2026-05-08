@@ -34,6 +34,7 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	verlet_gravity   = [0,0];
 	verlet_dimension = [1,1];
 	verlet_wall      = 0b0000;
+	colliders        = [];
 	
 	if(NODE_NEW_MANUAL) {
 		var _mesh   = nodeBuild(Node_VerletSim_Mesh_Grid, x,       y, self);
@@ -58,10 +59,13 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	 	
 		repeat(amo) {
 			var p = _points[i++];
-			if(!is(p, __verlet_vec2) || p.rest) continue;
+			if(!is(p, __verlet_vec2) || p.rest || p.pin) continue;
 			
 			var _vx = p.x - p.px;
 			var _vy = p.y - p.py;
+			
+			p.ppx = p.px;
+			p.ppy = p.py;
 			
 			p.px = p.x;
 			p.py = p.y;
@@ -69,20 +73,20 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			_vx += grav_x;
 			_vy += grav_y;
 			
-			if(!p.pin) {
-				p.x += _vx;
-				p.y += _vy;
-				
-				p.x = lerp(p.px, p.x, 1 - power(p.drag, 4));
-				p.y = lerp(p.py, p.y, 1 - power(p.drag, 4));
-			}
+			p.x += _vx;
+			p.y += _vy;
 			
+			p.x = lerp(p.px, p.x, 1 - power(p.drag, 4));
+			p.y = lerp(p.py, p.y, 1 - power(p.drag, 4));
 		}
 	}
 	
 	function verletCollide(_mesh, _substep) {
 		var _points = _mesh.points;
 	 	var amo = array_length(_points), i = 0;
+	 	
+	 	var vw = verlet_dimension[0];
+	 	var vh = verlet_dimension[1];
 	 	
 	 	if(verlet_wall & 0b0001) repeat(amo) { // T
 			var p = _points[i++];
@@ -96,9 +100,9 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	 	if(verlet_wall & 0b0010) repeat(amo) { // B
 			var p = _points[i++];
 			if(!is(p, __verlet_vec2) || p.rest) continue;
-			if(p.y > verlet_dimension[1]) {
+			if(p.y > vh) {
 				p.rest = true;
-				p.y = verlet_dimension[1];
+				p.y = vh;
 			}
 	 	}
 	 	
@@ -114,10 +118,54 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	 	if(verlet_wall & 0b1000) repeat(amo) { // R
 			var p = _points[i++];
 			if(!is(p, __verlet_vec2) || p.rest) continue;
-			if(p.x > verlet_dimension[0]) {
+			if(p.x > vw) {
 				p.rest = true;
-				p.x = verlet_dimension[0];
+				p.x = vw;
 			}
+	 	}
+	 	
+	 	for( var i = 0, n = array_length(colliders); i < n; i++ ) {
+	 		var _col  = colliders[i];
+	 		var shape = _col.shape;
+	 		var area  = _col.area;
+	 		
+	 		switch(shape) {
+	 			case 0 : // rectangle
+					var x0 = area[0] - area[2];
+					var y0 = area[1] - area[3];
+					var x1 = area[0] + area[2];
+					var y1 = area[1] + area[3];
+	 				
+	 				repeat(amo) {
+						var p = _points[i++];
+						if(!is(p, __verlet_vec2) || p.rest) continue;
+						
+						if(point_in_rectangle(p.x, p.y, x0, y0, x1, y1)) {
+							p.x = p.ppx;
+							p.y = p.ppy;
+						}
+	 				}
+	 				break;
+	 			
+	 			case 1 : // ellipse
+	 				var cx = area[0];
+	 				var cy = area[1];
+	 				var cw = area[2];
+	 				var ch = area[3];
+	 				
+	 				repeat(amo) {
+						var p = _points[i++];
+						if(!is(p, __verlet_vec2) || p.rest) continue;
+						
+						if(point_in_ellipse(p.x, p.y, cx, cy, cw, ch)) {
+							p.x = p.ppx;
+							p.y = p.ppy;
+						}
+	 				}
+	 				break;
+	 				
+	 			
+	 		}
 	 	}
 	}
 	
@@ -179,7 +227,6 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 				p1.y = cy + lengthdir_y(sdist / 2, e.direction);
 				
 			}
-			
 		}
 	}
 	
@@ -200,6 +247,8 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		
 		verlet_substep   = inputs[0].getValue();
 		verlet_gravity   = inputs[1].getValue();
+		
+		colliders        = [];
 	}
 	
 }

@@ -372,6 +372,7 @@
             "Node_VerletSim_Wind",
             { "label": "/Direct" },
             "Node_VerletSim_Drag",
+            "Node_VerletSim_Collide",
 
             { "label": "Render" },
             { "label": "/Render" },

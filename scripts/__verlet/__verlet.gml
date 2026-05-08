@@ -1,8 +1,9 @@
 function __verlet_vec2(_x = 0, _y = 0, _u = 0, _v = 0, _index = 0) : __vec2(_x, _y) constructor {
-	px = x; py = y;
-	sx = x; sy = y;
-	vx = x; vy = y;
-	u = _u; v = _v;
+	px  = x; py  = y;
+	ppx = x; ppy = y;
+	sx  = x; sy  = y;
+	vx  = x; vy  = y;
+	u  = _u; v  = _v;
 	
 	index  = _index;
 	active = true;

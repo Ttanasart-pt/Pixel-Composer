@@ -89,3 +89,9 @@ function point_in_polygon(px, py, polygon) {
 
 	return numIntersections % 2 == 1;
 }
+
+function point_in_ellipse(px, py, centerX, centerY, radiusX, radiusY) {
+    var dx = px - centerX;
+    var dy = py - centerY;
+    return (dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY) <= 1;
+}

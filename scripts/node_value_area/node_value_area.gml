@@ -29,6 +29,7 @@
 
 function nodeValue_Area(_name, _value = DEF_AREA, _data = {}) { return new __NodeValue_Area(_name, self, _value, _data); }
 function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
+	if(is_bool(_data)) _data = { useShape : _data };
 	setDisplay(VALUE_DISPLAY.area, _data);
 	preview_hotkey_spr = THEME.bone_tool_move;
 	def_length = AREA_ARRAY_LENGTH;
