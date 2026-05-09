@@ -6,9 +6,9 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput( 1, nodeValue_Surface(  "UV Map"           ));
-	newInput( 2, nodeValue_Slider(   "UV Mix", 1        ));
-	newInput( 3, nodeValue_Surface(  "Mask"             ));
+	newInput( 1, nodeValue_Surface(  "UV Map"    ));
+	newInput( 2, nodeValue_Slider(   "UV Mix", 1 ));
+	newInput( 3, nodeValue_Surface(  "Mask"      ));
 	
 	////- =Fur
 	newInput( 5, nodeValue_Float(    "Density",    32   ));
@@ -25,22 +25,26 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(16, nodeValue_Rotation("Rotation",  0      ));
 	newInput(17, nodeValue_Vec3(    "Scale",    [1,1]   ));
 	
+	////- =Shape
+	newInput( 9, nodeValue_Slider(   "Thickness", .7        )).setCurvable(20, CURVE_DEF_01, "Curve");
+	
 	////- =Render
 	newInput(18, nodeValue_Color(    "BG Color",  ca_black  ));
-	newInput( 9, nodeValue_Slider(   "Thickness", .7        ));
 	newInput(10, nodeValue_Color(    "Color",     ca_white  ));
 	newInput(11, nodeValue_Surface(  "Texture"              ));
 	newInput(12, nodeValue_Slider(   "Shadow",    1         ));
-	// 19
+	newInput(19, nodeValue_Slider(   "Edge",      0         ));
+	// 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		[ "Output",     true ],  0,  1,  2,  3, 
-		[ "Fur",       false ],  5,  6,  7, 
+		[ "Fur",       false ],  5,  7, 
 		[ "Direction", false ],  8, 14, 13, 
 		[ "Transform", false ], 15, 16, 17, 
-		[ "Render",    false ], 18,  9, 10, 11, 12, 
+		[ "Shape",     false ],  9, 20, 
+		[ "Render",    false ], 18, 10, 11, 12, 19, 
 	];
 	
 	////- Nodes
@@ -78,11 +82,14 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			var _rot   = _data[16];
 			var _sca   = _data[17];
 			
-			var _bgcol = _data[18];
 			var _thk   = _data[ 9];
+			var _thkC  = _data[20];
+			
+			var _bgcol = _data[18];
 			var _col   = _data[10];
 			var _csamp = _data[11];
 			var _sha   = _data[12];
+			var _edge  = _data[19];
 		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -103,6 +110,10 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			
 			shader_set_2( "dimension",      _dim   );
 			
+			shader_set_2( "position",       _pos   );
+			shader_set_f( "rotation",       _rot   );
+			shader_set_2( "scale",          _sca   );
+			
 			shader_set_f( "density",        _dens  );
 			shader_set_i( "furDens",        _subd  );
 			shader_set_2( "furLengthRange", _len   );
@@ -113,15 +124,14 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			shader_set_f( "furAngleRange",  _wigg    );
 			
 			shader_set_f( "thickness",      _thk   );
+			shader_set_curve( "thickC",     _thkC  );
+			
 			shader_set_c( "bgcolor",        _bgcol );
 			shader_set_c( "color",          _col   );
 			shader_set_i( "usecolorSample", is_surface(_csamp) );
 			shader_set_s( "colorSample",    _csamp );
 			shader_set_f( "shadow",         _sha   );
-			
-			shader_set_2( "position",       _pos   );
-			shader_set_f( "rotation",       _rot   );
-			shader_set_2( "scale",          _sca   );
+			shader_set_f( "edgeBlend",      _edge  );
 			
 			draw_empty();
 		surface_reset_shader();
