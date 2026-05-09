@@ -28,3 +28,9 @@ os.system("python docsdata/gen/gen.py")
 # shutil.rmtree("docsdata/pregen")
 endtime = time.time()
 print(f"> Generating docs complete in {endtime - starttime:.2f} s")
+
+# Commit and push to GitHub
+print("> Committing and pushing to GitHub...")
+os.system("git add .")
+os.system('git commit -m "Update docs"')
+os.system("git push")
