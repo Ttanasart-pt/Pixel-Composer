@@ -3,22 +3,22 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	shader = sh_water_caustic;
 	
 	////- =Output
-	newInput(8, nodeValue_Surface( "UV Map"     ));
-	newInput(9, nodeValue_Slider(  "UV Mix", 1  ));
-	newInput(7, nodeValue_Surface( "Mask"       ));
+	newInput( 8, nodeValue_Surface( "UV Map"     ));
+	newInput( 9, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 7, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(3, nodeValueSeed()).setShaderProp("seed");
-	newInput(6, nodeValue_Slider( "Intensity", 1, [0,4,.01] )).setShaderProp("intensity").setMappable(10);
-	newInput(4, nodeValue_Float(  "Progress",  0            )).setShaderProp("progress" ).setMappable(11);
-	newInput(5, nodeValue_Int(    "Detail",    1            )).setShaderProp("detail"   );
+	newInput( 3, nodeValueSeed()).setShaderProp("seed");
+	newInput( 6, nodeValue_Slider( "Intensity", 1, [0,4,.01] )).setShaderProp("intensity").setMappable(10);
+	newInput( 4, nodeValue_Float(  "Progress",  0            )).setShaderProp("progress" ).setMappable(11);
+	newInput( 5, nodeValue_Int(    "Detail",    1            )).setShaderProp("detail"   );
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(   "Position", [0,0]   )).setHotkey("G").setShaderProp("position").setUnitSimple();
-	newInput(2, nodeValue_Vec2(   "Scale",    [.5,.5] )).setHotkey("S").setShaderProp("scale").setUnitSimple();
+	newInput( 1, nodeValue_Vec2(   "Position", [0,0]   )).setHotkey("G").setShaderProp("position").setUnitSimple();
+	newInput( 2, nodeValue_Vec2(   "Scale",    [.5,.5] )).setHotkey("S").setShaderProp("scale").setUnitSimple();
 	// 12
 	
-	input_display_list = [
+	input_display_list = [ 3, 
 		[ "Output",     true ],  0,  8,  9,  7, 
 		[ "Noise",     false ],  6, 10,  4, 11,  5, 
 		[ "Transform", false ],  1,  2, 

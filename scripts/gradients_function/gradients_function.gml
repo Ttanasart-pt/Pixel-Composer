@@ -33,8 +33,12 @@ function gradientKey(_time, _value) constructor {
 function gradientObject(color = ca_black) constructor {
 	static GRADIENT_LIMIT = 128;
 	
-	if(is_array(color)) keys = [ new gradientKey(0, cola(color[0])), new gradientKey(1, cola(color[1])) ];
-	else				keys = [ new gradientKey(0, cola(color)) ];
+	if(is_array(color)) {
+		keys = [];
+		for( var i = 0, n = array_length(color); i < n; i++ ) 
+			keys[i] = new gradientKey(i / max(1,n-1), cola(color[i]));
+	} else keys = [ new gradientKey(0, cola(color)) ];
+	
 	type  = GRADIENT_INTER.smooth;
 	
 	cacheRes  = 128;

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_fur",
+  "name":"sh_fur",
+  "parent":{
+    "name":"fur",
+    "path":"folders/nodes/data/generator/pattern/fur.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

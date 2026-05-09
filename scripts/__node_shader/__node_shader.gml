@@ -53,7 +53,10 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 				case "__NodeValue_Color":        shader_set_c(_key, _val);       break;
 				case "__NodeValue_Gradient":     shader_set_gradient(_val);      break;
-				case "__NodeValue_Surface":      shader_set_surface(_key, _val); break;
+				case "__NodeValue_Surface":      
+					shader_set_i("use"+_key, is_surface(_val)); 
+					shader_set_surface(_key, _val); 
+					break;
 				
 				default : 
 					if(is(_inp, NodeValue))

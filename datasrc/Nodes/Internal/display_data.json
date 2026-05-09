@@ -929,6 +929,7 @@
             "Node_Maze_Pattern",
             "Node_Weave",
             "Node_Hilbert",
+            "Node_Fur",
             
             { "label": "Populate" },
             { "label": "/Repeat" },

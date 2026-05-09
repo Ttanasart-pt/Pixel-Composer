@@ -71,7 +71,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(37, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));
 	
 		////- =/Color
-	newInput(17, nodeValue_Gradient( "Color", gra_black_white ));
+	newInput(17, nodeValue_Gradient( "Color", new gradientObject([cola(c_red), cola(c_yellow), cola(c_white)]) ));
 	newInput(18, nodeValue_Range(    "Level", [0,1]  ));
 	
 		////- =/Perspective
