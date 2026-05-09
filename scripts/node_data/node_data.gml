@@ -784,11 +784,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static deleteDynamicInput = function(index) {
 		var _ind = input_fix_len + index * data_length;
-		
-		for( var i = 0; i < data_length; i++ ) {
-			var _i = _ind + i;
-			array_remove(inputMappable, inputs[_i]);
-		}
+		for( var i = 0; i < data_length; i++ )
+			array_remove(inputMappable, inputs[_ind + i]);
 		
 		array_delete(inputs, _ind, data_length);
 		dynamic_input_inspecting = min(dynamic_input_inspecting, getInputAmount() - 1);

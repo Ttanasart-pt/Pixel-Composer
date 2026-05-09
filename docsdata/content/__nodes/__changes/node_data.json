@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.2.007",
+    "changes": [
+      {
+        "date": "2026-05-09T04:17:39.849Z",
+        "node": "",
+        "commit": "**Pin**: Fix selection drawn as solid circle."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.006",
     "changes": [
       {
