@@ -59,7 +59,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	input_display_list = [  9, 10, 13, 
 		[ "Surfaces",  true ],  0,  7,  8, 11, 12, 
 		[ "Pattern",  false ],  2,  3, 18, 16, 17, 
-		[ "Dither",   false ],  6,  4,  5, 
+		[ "Dither",   false ],  4,  5, 
 		[ "Colors",   false ], 14, 15, 19, 20, 21,  1,
 	];
 	
@@ -113,7 +113,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			inputs[21].setName(_cmode == 2? "B Steps" : "V Steps");
 		#endregion
 		
-		surface_set_shader(_outSurf, _mode? sh_alpha_hash : sh_dither);
+		surface_set_shader(_outSurf, sh_dither);
 			shader_set_f("dimension", surface_get_dimension(_data[0]));
 			
 			shader_set_i("type", _typ );

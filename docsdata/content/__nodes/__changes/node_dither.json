@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.0.2.007",
+    "changes": [
+      {
+        "date": "2026-05-09T03:20:05.904Z",
+        "node": "Flood Fill",
+        "commit": "**Flood Fill**: Add iteration control and different fill patterns."
+      }
+    ]
+  },
+  {
     "version": "1.20.9.012",
     "changes": [
       {
