@@ -6,6 +6,11 @@
         "date": "2026-05-10T01:19:10.597Z",
         "node": "",
         "commit": "**Preview Panel**: Fix error when previewing array of rotation range."
+      },
+      {
+        "date": "2026-05-10T02:15:27.850Z",
+        "node": "",
+        "commit": "**Shadow**: Add oversample setting."
       }
     ]
   },

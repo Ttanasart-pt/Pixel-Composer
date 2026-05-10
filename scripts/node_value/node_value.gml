@@ -808,7 +808,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.visible != vis) {
-					inp.setVisible(vis);
+					inp.setVisible(vis, vis);
 					node.toRefreshNodeDisplay = true;
 				}
 				
@@ -817,7 +817,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.visible != vis) {
-					inp.setVisible(vis);
+					inp.setVisible(vis, vis);
 					node.toRefreshNodeDisplay = true;
 				}
 				

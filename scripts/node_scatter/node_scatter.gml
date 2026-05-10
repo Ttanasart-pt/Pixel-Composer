@@ -21,9 +21,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(10, nodeValueSeed());
 	
+	////- =Output
+	newInput( 1, nodeValue_Dimension());
+	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
-	newInput( 1, nodeValue_Dimension());
 	newInput(15, nodeValue_EScroll( "Array", 0, [ "Spread output", "Index", "Random", "Data", "Texture" ]))
 		.setTooltip(@"What to do when input array of surface.
 - Spread: Create Array of output each scattering single surface.
@@ -63,35 +65,36 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Position
 	newInput(40, nodeValue_Anchor());
-	newInput(33, nodeValue_Vec2_Range( "Random Position", [0,0,0,0] ));
-	newInput(36, nodeValue_Vec2(       "Shift Position",  [0,0]     ));
-	newInput(37, nodeValue_Bool(       "Exact",           false     ))
-	newInput(39, nodeValue_Range(      "Shift Radial",    [0,0]     ));
+	newInput(33, nodeValue_Range2( "Random Position", [0,0,0,0] ));
+	newInput(36, nodeValue_Vec2(   "Shift Position",  [0,0]     )).setMappableConst(49);
+	newInput(50, nodeValue_Range2( "Offset Position", [0,0,0,0] )).setMappableConst(51);
+	newInput(37, nodeValue_Bool(   "Exact",           false     ));
+	newInput(39, nodeValue_Range(  "Shift Radial",    [0,0]     ));
 	
 	////- =Rotation
-	newInput( 7, nodeValue_Bool(       "Point at Center",    false, "Rotate each copy to face the spawn center."));
-	newInput( 4, nodeValue_RotRand(    "Angle",             [0,0,0,0,0] ));
-	newInput(32, nodeValue_Rotation(   "Rotate per Radius",  0          ));
+	newInput(48, nodeValue_Rotation( "Rotation",           0          ));
+	newInput( 7, nodeValue_Bool(     "Point at Center",    false, "Rotate each copy to face the spawn center."));
+	newInput( 4, nodeValue_RotRand(  "Random Angle",      [0,0,0,0,0] ));
+	newInput(32, nodeValue_Rotation( "Rotate per Radius",  0          ));
 	
 	////- =Scale
-	newInput( 3, nodeValue_Vec2_Range( "Scale",             [1,1,1,1], { linked : true } ));
-	newInput( 8, nodeValue_Bool(       "Uniform Scaling",    true ));
-	newInput(34, nodeValue_Vec2(       "Scale per Radius",  [0,0] ));
-	newInput(43, nodeValue_Surface(    "Scale Surface"            ));
+	newInput( 3, nodeValue_Range2(  "Scale",             [1,1,1,1], { linked : true } ));
+	newInput( 8, nodeValue_Bool(    "Uniform Scaling",    true ));
+	newInput(34, nodeValue_Vec2(    "Scale per Radius",  [0,0] ));
+	newInput(43, nodeValue_Surface( "Scale Surface"            ));
 	
 	////- =Color
-	newInput(11, nodeValue_Gradient(     "Random Blend",    gra_white )).setHotkeyAuto("C").setMappable(28);
-	newInput(12, nodeValue_Slider_Range( "Alpha",           [1,1]     ));
-	newInput(16, nodeValue_Bool(         "Multiply Alpha",   true     ));
-	newInput(41, nodeValue_Surface(      "Sample Surface"             ));
-	newInput(47, nodeValue_Anchor(       "Sample Anchor"              ));
-	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle",   [0,0,0,0] ));
+	newInput(11, nodeValue_Gradient( "Random Blend",    gra_white )).setHotkeyAuto("C").setMappable(28);
+	newInput(12, nodeValue_SliRange( "Alpha",           [1,1]     ));
+	newInput(16, nodeValue_Bool(     "Multiply Alpha",   true     ));
+	newInput(41, nodeValue_Surface(  "Sample Surface"             ));
+	newInput(47, nodeValue_Anchor(   "Sample Anchor"              ));
+	newInput(42, nodeValue_Range2(   "Sample Wiggle",   [0,0,0,0] ));
 	
 	////- =Render
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
-	
-	// inputs: 48
+	// 52
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -99,11 +102,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
 	
 	input_display_list = [ 10, 
-		[ "Surfaces",  true ],  0,  1, 15, 24, 25, 26, 27, 
+		[ "Output",   false ],  1, 
+		[ "Surfaces",  true ],  0, 15, 24, 25, 26, 27, 
 		[ "Scatter",  false ],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
 		[ "Path",     false ], 19, 38, 20, 45, 21, 22, 
-		[ "Position", false ], 40, 33, 36, 37, 39, 
-		[ "Rotation", false ],  7,  4, 32, 
+		[ "Position", false ], 40, 33, 36, 49, 50, 51, 37, 39, 
+		[ "Rotation", false ], 48,  7,  4, 32, 
 		[ "Scale",    false ],  3,  8, 34, 43, 
 		[ "Color",    false ], 11, 28, 12, 16, 41, 47, 42, 
 		[ "Render",   false ], 18, 23, 
@@ -123,6 +127,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_maps = 0;
 	scatter_mapp = [];
 	
+	posShiftSamp = new Surface_sampler();
+	posOffSamp   = new Surface_sampler();
 	surfSamp = new Surface_sampler();
 	scalSamp = new Surface_sampler();
 	
@@ -187,9 +193,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var anchor     = _data[40];
 			var posWig     = _data[33];
 			var posShf     = _data[36];
+			var posShfMap  = _data[49]; posShiftSamp.setSurface(posShfMap);
+			var posOff     = _data[50];
+			var posOffMap  = _data[51]; posOffSamp.setSurface(posOffMap);
 			var posExt     = _data[37];
 			var shfRad     = _data[39];
 			
+			var _rotation  = _data[48];
 			var _pint      = _data[ 7];
 			var _rota      = _data[ 4];
 			var uniRot     = _data[32];
@@ -562,9 +572,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(_wigX) _x += random_range_seed(posWig[0], posWig[1], _csed++);
 				if(_wigY) _y += random_range_seed(posWig[2], posWig[3], _csed++);
 			
-				_x += posShf[0] * i;
-				_y += posShf[1] * i;
-			
+				var v = posShiftSamp.active? colorBrightness(posShiftSamp.getPixel(_x, _y)) : 1;
+				_x += posShf[0] * i * v;
+				_y += posShf[1] * i * v;
+				
+				var v  = posOffSamp.active? colorBrightness(posOffSamp.getPixel(_x, _y)) : 1;
+				var of = random_seed(1, _csed++);
+				_x += lerp(posOff[0], posOff[1], of) * v;
+				_y += lerp(posOff[2], posOff[3], of) * v;
+				
 				var shrRad = random_range_seed(shfRad[0], shfRad[1], _csed++);
 				var shrAng = point_direction(_x, _y, _area[0], _area[1]);
 				
@@ -582,8 +598,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scy *= vSca;
 				}
 				
-				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + rotation_random_eval_fast(_rota, _csed++);
-				
+				var _r  = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + rotation_random_eval_fast(_rota, _csed++);
+				    _r += _rotation;
+				    
 				if(iRot > 1 && _v != noone)
 					_r += array_safe_get_fast(_v, iRot, 0);
 					

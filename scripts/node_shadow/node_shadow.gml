@@ -42,6 +42,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	surface_blur_init();
 	attribute_surface_depth();
+	attribute_oversample();
 		
 	temp_surface = [ noone ];
 	
@@ -108,6 +109,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		if(_border > 0) {
 			surface_set_shader(_outShad, sh_outline_only, true, BLEND.over);
+				shader_set_interpolation(_surf);
 				shader_set_f("dimension",   _dim);
 				shader_set_f("borderSize",  _border);
 				shader_set_f("borderColor", [ 1., 1., 1., 1. ]);
@@ -123,7 +125,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var _blurSurf = noone;
 		
-		var args = new blur_gauss_args(_outShad, _size + 1, 3).setBG(false, _colr).setOver(_colr);
+		var args = new blur_gauss_args(_outShad, _size + 1, getAttribute("oversample")).setBG(false, _colr).setOver(_colr);
 		if(inputs[2].attributes.curved) args.setSizeCurve(_data[13]);
 		_blurSurf = surface_apply_gaussian(args);
 		
