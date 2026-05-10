@@ -80,6 +80,8 @@
 	uniform float fov;
 	uniform float orthoScale;
 	uniform vec2  viewRange;
+
+	uniform vec2  depthRange;
 	uniform float depthInt;
 
 	uniform vec4  background;
@@ -610,6 +612,9 @@
 			el = opElongate(p, elongate[index]);
 			p  = el.xyz;
 		}
+
+		// float voxelSize = 0.02;
+		// p = floor(p / voxelSize) * voxelSize;
 		
 		int shp = shape[index];
 		
@@ -637,12 +642,12 @@
 		else if(shp == 400) d = sdOctahedron(      p, sizeUni[index]);
 		else if(shp == 401) d = sdPyramid(         p, sizeUni[index]);
 		
-		if(elongate[index] != vec3(0.)) {
+		if(elongate[index] != vec3(0.))
 			d += el.w;
-		}
 		
 		d -= rounded[index];
 		d *= sca;
+		// d  = floor(d / voxelSize) * voxelSize;
 		
 		return d;
 	}
@@ -734,12 +739,11 @@
 	}
 
 	vec3 normal(vec3 p) {
-		
 		vec2 e = vec2(1.0, -1.0) * 0.0001;
 		return normalize( e.xyy * operateSceneSDF( p + e.xyy ) + 
-						e.yyx * operateSceneSDF( p + e.yyx ) + 
-						e.yxy * operateSceneSDF( p + e.yxy ) + 
-						e.xxx * operateSceneSDF( p + e.xxx ) );
+		   				  e.yyx * operateSceneSDF( p + e.yyx ) + 
+						  e.yxy * operateSceneSDF( p + e.yxy ) + 
+						  e.xxx * operateSceneSDF( p + e.xxx ) );
 		
 	}
 
@@ -829,7 +833,7 @@
 		return bg;
 	}
 
-	vec4 scene(vec2 tx, vec3 camRotation, float camScale, float camRatio, vec3 objectRotation, out float outDepth) {
+	vec4 scene(vec2 tx, vec3 camRotation, float camScale, float camRatio, vec3 objectRotation, float objectScale, out float outDepth) {
 		mat3 rx = rotateX(camRotation.x);
 		mat3 ry = rotateY(camRotation.y);
 		mat3 rz = rotateZ(camRotation.z);
@@ -867,7 +871,7 @@
 
 		eye  = camIrotMatrix * eye;
 		eye  = objIrotMatrix * eye;
-		eye /= camScale;
+		eye /= camScale * objectScale;
 
 		if(volumetric[0] == 1) { 
 			float _dens = clamp(marchDensity(eye, dir), 0., 1.);
@@ -962,9 +966,7 @@
 
 		///////////////////////////////////////////////////////////
 		
-		float distNorm = (depth - viewRange.x) / (viewRange.y - viewRange.x);
-		distNorm = 1. - distNorm;
-		distNorm = smoothstep(.0, .3, distNorm);
+		float distNorm = 1. - (depth - depthRange.x) / (depthRange.y - depthRange.x);
 		c = mix(c * bgClr, c, mix(1., distNorm, depthInt));
 		
 		///////////////////////////////////////////////////////////

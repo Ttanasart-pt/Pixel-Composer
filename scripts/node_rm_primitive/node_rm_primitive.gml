@@ -100,6 +100,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	newInput(14, nodeValue_Float(    "Ortho Scale",      1                   ))
 	newInput( 5, nodeValue_Slider(   "FOV",              30, [0,90,1]        ));
 	newInput( 6, nodeValue_Vec2(     "View Range",      [3,6]                ));
+	
+	////- =/Depth
+	newInput(54, nodeValue_Vec2(     "Depth Range",      [1,10]    ));
 	newInput( 7, nodeValue_Slider(   "Depth",             0        ));
 	
 	////- =Render
@@ -120,10 +123,10 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	////- =Volumetric
 	newInput(32, nodeValue_Bool(     "Volumetric",        false    ));
 	newInput(33, nodeValue_Slider(   "Density",          .3        ));
-	// 54
+	// 55
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput( 1, nodeValue_Output( "Shape Data",  VALUE_TYPE.sdf,     noone ));
+	newOutput( 1, nodeValue_Output( "SDF Object",  VALUE_TYPE.sdf,     noone ));
 	
 	input_display_list = [ 0,
 		[ "Primitive",   false     ],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 
@@ -136,7 +139,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			[ "/Shader",  true     ], 51, 35, 
 			[ "/Texture", true     ], 50, 38, 37, 
 			
-		[ "Camera",      false     ], 42, 43, 13, 14,  5,  6,  7, 
+		[ "Camera",      false     ], 42, 43, 13, 14,  5,  6, 
+			[ "/Depth",  false     ], 54,  7, 
+			
 		[ "Render",      false, 44 ], 
 			[ "/Background", false ], 31, 30, 34, 49, 10, 
 			[ "/Light",      false ],  8, 53, 52, 
@@ -426,8 +431,10 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			var _bgc  = _data[30];
 			var bgEnv = _data[34];
 			var _eint = _data[49];
-			var _dpi  = _data[ 7];
 			var _ambI = _data[10];
+			
+			var _depR = _data[54];
+			var _dpi  = _data[ 7];
 			
 			var _lPos = _data[ 8];
 			var _lInt = _data[53];
@@ -598,6 +605,8 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			environ.fov        = _fov;
 			environ.orthoScale = _ortS;
 			environ.viewRange  = _rng;
+			
+			environ.depthRange = _depR;
 			environ.depthInt   = _dpi;
 			
 			environ.bgColor    = _bgc;

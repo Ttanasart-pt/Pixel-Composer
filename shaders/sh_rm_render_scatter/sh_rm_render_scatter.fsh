@@ -1,6 +1,6 @@
 #pragma use(d3d_sdf)
 
-#region -- d3d_sdf -- [1778392501.3094451]
+#region -- d3d_sdf -- [1778402482.9220033]
 
 	#ifdef _YY_HLSL11_
 		#extension GL_OES_standard_derivatives : enable
@@ -83,6 +83,8 @@
 	uniform float fov;
 	uniform float orthoScale;
 	uniform vec2  viewRange;
+
+	uniform vec2  depthRange;
 	uniform float depthInt;
 
 	uniform vec4  background;
@@ -613,6 +615,9 @@
 			el = opElongate(p, elongate[index]);
 			p  = el.xyz;
 		}
+
+		// float voxelSize = 0.02;
+		// p = floor(p / voxelSize) * voxelSize;
 		
 		int shp = shape[index];
 		
@@ -640,12 +645,12 @@
 		else if(shp == 400) d = sdOctahedron(      p, sizeUni[index]);
 		else if(shp == 401) d = sdPyramid(         p, sizeUni[index]);
 		
-		if(elongate[index] != vec3(0.)) {
+		if(elongate[index] != vec3(0.))
 			d += el.w;
-		}
 		
 		d -= rounded[index];
 		d *= sca;
+		// d  = floor(d / voxelSize) * voxelSize;
 		
 		return d;
 	}
@@ -737,12 +742,11 @@
 	}
 
 	vec3 normal(vec3 p) {
-		
 		vec2 e = vec2(1.0, -1.0) * 0.0001;
 		return normalize( e.xyy * operateSceneSDF( p + e.xyy ) + 
-						e.yyx * operateSceneSDF( p + e.yyx ) + 
-						e.yxy * operateSceneSDF( p + e.yxy ) + 
-						e.xxx * operateSceneSDF( p + e.xxx ) );
+		   				  e.yyx * operateSceneSDF( p + e.yyx ) + 
+						  e.yxy * operateSceneSDF( p + e.yxy ) + 
+						  e.xxx * operateSceneSDF( p + e.xxx ) );
 		
 	}
 
@@ -832,7 +836,7 @@
 		return bg;
 	}
 
-	vec4 scene(vec2 tx, vec3 camRotation, float camScale, float camRatio, vec3 objectRotation, out float outDepth) {
+	vec4 scene(vec2 tx, vec3 camRotation, float camScale, float camRatio, vec3 objectRotation, float objectScale, out float outDepth) {
 		mat3 rx = rotateX(camRotation.x);
 		mat3 ry = rotateY(camRotation.y);
 		mat3 rz = rotateZ(camRotation.z);
@@ -870,7 +874,7 @@
 
 		eye  = camIrotMatrix * eye;
 		eye  = objIrotMatrix * eye;
-		eye /= camScale;
+		eye /= camScale * objectScale;
 
 		if(volumetric[0] == 1) { 
 			float _dens = clamp(marchDensity(eye, dir), 0., 1.);
@@ -965,9 +969,7 @@
 
 		///////////////////////////////////////////////////////////
 		
-		float distNorm = (depth - viewRange.x) / (viewRange.y - viewRange.x);
-		distNorm = 1. - distNorm;
-		distNorm = smoothstep(.0, .3, distNorm);
+		float distNorm = 1. - (depth - depthRange.x) / (depthRange.y - depthRange.x);
 		c = mix(c * bgClr, c, mix(1., distNorm, depthInt));
 		
 		///////////////////////////////////////////////////////////
@@ -1007,19 +1009,20 @@ uniform vec2  grid;
 uniform vec2  positionOffset;
 uniform vec3  rotationMin;
 uniform vec3  rotationMax;
+uniform vec2  objScale;
 
 uniform vec3  camRotation;
-uniform vec2  camScale;
+uniform float camScale;
 uniform float camRatio;
 
 uniform int   drawBg;
 
-float random (in vec2 st, in float seed ) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + seed)); }
-vec2 random2( in vec2 p,  in float seed ) { return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * (43758.5453 + seed)); }
+float random (in vec2 st, in float seed ) { return fract(sin(dot(st.xy + 253.6897, vec2(12.9898, 78.233))) * (43758.5453123 + seed)); }
+vec2 random2( in vec2 p,  in float seed ) { return fract(sin(vec2(dot(p - 146.4654, vec2(127.1, 311.7)), dot(p - 986.4785, vec2(269.5, 183.3)))) * (43758.5453 + seed)); }
 
-vec4 sampleGrid(in vec2 tx, out float depth) {
+vec4 sampleGrid(in vec2 tx, in vec2 off, out float depth) {
 	vec2 frx = floor(tx * grid) / grid;
-	vec2 vtx = (v_vTexcoord - frx) * grid;
+	vec2 vtx = (tx - off - frx) * grid;
 
 	vec2 poffset = vec2(
 		mix(positionOffset.x, -positionOffset.x, random(frx, seed + 39.654)),
@@ -1033,12 +1036,13 @@ vec4 sampleGrid(in vec2 tx, out float depth) {
 		mix(rotationMin.z, rotationMax.z, random(frx, seed + 45.164))
 	);
 
+	float oscale = mix(objScale.x, objScale.y, random(frx, seed + 64.123));
+
+	vec4  sdfResult = scene(vtx, camRotation, camScale, camRatio, objRotation, oscale, depth);
 	vec4  result;
-	float cscale = mix(camScale.x, camScale.y, random(frx, seed + 64.123));
-	vec4  sdfResult = scene(vtx, camRotation, cscale, camRatio, objRotation, depth);
 
 	if(drawBg == 1) {
-		vec4 bg = sampleBackground(vtx, camRotation, cscale, camRatio);
+		vec4 bg = sampleBackground(vtx, camRotation, camScale * oscale, camRatio);
 		result = blend(bg, sdfResult);
 	} else 
 		result = sdfResult;
@@ -1053,7 +1057,7 @@ void main() {
 	for(int i = -1; i <= 1; i++) 
 	for(int j = -1; j <= 1; j++) {
 		vec2 offset = vec2(float(i), float(j)) / grid;
-		vec4 col = sampleGrid(fract(v_vTexcoord + offset), depth);
+		vec4 col = sampleGrid(fract(v_vTexcoord + offset), offset, depth);
 
 		if(depth < minDepth) {
 			minDepth = depth;

@@ -35,7 +35,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	// 21
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput( 1, nodeValue_Output( "Shape Data",  VALUE_TYPE.sdf,     noone ));
+	newOutput( 1, nodeValue_Output( "SDF Object",  VALUE_TYPE.sdf,     noone ));
 	
 	input_display_list = [ 0,
 		[ "Combine",     false     ], 15, 16, 13, 14, 

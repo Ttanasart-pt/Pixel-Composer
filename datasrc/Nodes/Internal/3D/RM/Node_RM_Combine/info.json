@@ -1,0 +1,9 @@
+{
+    "name":          "RM Combine",
+    "tooltip":       "Combine 2 SDF objects using boolean operation.",
+    "spr":           "s_node_rm_combine",
+    "baseNode":      "Node_RM_Combine",
+    "pxc_version":    11740,
+    "alias":          ["ray marching","rm boolean","sdf boolean","sdf combine"],
+    "io":             ["surface"],
+}

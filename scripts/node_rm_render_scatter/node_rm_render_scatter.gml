@@ -4,22 +4,26 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 	newInput( 0, nodeValue_Dimension());
 	newInput(18, nodeValueSeed());
 	
-	////- Object
+	////- =Object
 	newInput(13, nodeValue_SDF( "SDF Object" )).setVisible(true, true);
 	
-	////- Scatter
+	////- =Scatter
 	newInput(17, nodeValue_Vec2(    "Grid",         [4,4]   ));
 	newInput(19, nodeValue_Vec2(    "Offset",       [0,0]   ));
 	newInput(11, nodeValue_Vec3(    "Rotation Min", [0,0,0] ));
 	newInput(20, nodeValue_Vec3(    "Rotation Max", [0,0,0] ));
 	newInput(12, nodeValue_Range(   "Scale",        [1,1]   ));
 	
-	////- Camera
+	////- =Camera
 	newInput(21, nodeValue_Vec3(    "Camera Rotation", [30,45,0]      ));
+	newInput(23, nodeValue_Slider(  "Camera Scale",     1, [0,4,0.01] ));
 	newInput( 1, nodeValue_EButton( "Projection",       0, [ "Perspective", "Orthographic" ] ));
 	newInput( 2, nodeValue_Slider(  "FOV",              30, [0,90,1]  ));
 	newInput( 3, nodeValue_Float(   "Ortho Scale",      5             ))
-	newInput( 4, nodeValue_Vec2(    "View Range",       [3,6]         ));
+	newInput( 4, nodeValue_Vec2(    "View Range",       [1,10]        ));
+	
+	////- =/Depth
+	newInput(22, nodeValue_Vec2(    "Depth Range",      [1,10]        ));
 	newInput( 5, nodeValue_Slider(  "Depth",            0             ));
 	
 	////- =Background
@@ -33,19 +37,46 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 	newInput( 9, nodeValue_Vec3(    "Position",         [-.4,-.5,1]  ));
 	newInput(16, nodeValue_Float(   "Intensity",         1           ));
 	newInput(15, nodeValue_Color(   "Color",             ca_white    ));
-	// 22
-		
+	// 24
+	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  0, 18, 
 		[ "Object",     false ], 13, 
 		[ "Scatter",    false ], 17, 19, 11, 20, 12, 
-		[ "Camera",     false ], 21,  1,  2,  3,  4,  5, 
+		[ "Camera",     false ], 21, 23,  1,  2,  3,  4, 
+			[ "/Depth", false ], 22,  5, 
 		[ "Background", false ],  6,  7, 10, 14,  8, 
 		[ "Light",      false ],  9, 16, 15, 
 	];
 	
 	////- Node
+	
+	static drawOverlay3D = function(active, _mx, _my, _params) {
+		var _panel = _params[$ "panel"] ?? noone;
+		
+		#region draw result
+			var _outSurf = outputs[0].getValue();
+			if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, 0);
+			if(!is_surface(_outSurf)) return;
+			
+			var _w = _panel.w;
+			var _h = _panel.h - _panel.toolbar_height;
+			var _pw = surface_get_width_safe(_outSurf);
+			var _ph = surface_get_height_safe(_outSurf);
+			var _ps = ui(128) / max(_ph, _pw);
+			
+			var _pws = _pw * _ps;
+			var _phs = _ph * _ps;
+			
+			var _px = _w - ui(8) - _pws;
+			var _py = _h - ui(8) - _phs;
+			
+			draw_surface_ext_safe(_outSurf, _px, _py, _ps, _ps);
+			draw_set_color(COLORS._main_icon);
+			draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
+		#endregion
+	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		#region data
@@ -58,13 +89,16 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 			var _pos  = _data[19];
 			var _rotn = _data[11];
 			var _rotx = _data[20];
-			var _csal = _data[12];
+			var _scal = _data[12];
 			
 			var _crot = _data[21];
+			var _csal = _data[23];
 			var _pro  = _data[ 1];
 			var _fov  = _data[ 2];
 			var _ort  = _data[ 3];
 			var _vrn  = _data[ 4];
+			
+			var _depR = _data[22];
 			var _dep  = _data[ 5];
 			
 			var _bgd  = _data[ 6];
@@ -107,6 +141,8 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 			environ.fov        = _fov;
 			environ.orthoScale = _ort;
 			environ.viewRange  = _vrn;
+			
+			environ.depthRange = _depR;
 			environ.depthInt   = _dep;
 			
 			environ.bgColor    = _enc;
@@ -127,9 +163,10 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 			shader_set_2( "positionOffset", _pos  );
 			shader_set_3( "rotationMin",    _rotn );
 			shader_set_3( "rotationMax",    _rotx );
+			shader_set_2( "objScale",       _scal );
 			
 			shader_set_3( "camRotation",    _crot );
-			shader_set_2( "camScale",       _csal  );
+			shader_set_f( "camScale",       _csal  );
 			shader_set_f( "camRatio",       _dim[0] / _dim[1] );
 			
 			environ.apply();

@@ -1,0 +1,9 @@
+{
+    "name":          "RM Render",
+    "tooltip":       "Render SDF object.",
+    "spr":           "s_node_rm_render",
+    "baseNode":      "Node_RM_Render",
+    "pxc_version":    11740,
+    "alias":          ["ray marching","sdf render"],
+    "io":             ["surface"],
+}

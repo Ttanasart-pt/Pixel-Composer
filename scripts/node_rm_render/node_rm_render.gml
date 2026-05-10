@@ -13,6 +13,9 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	newInput( 2, nodeValue_Slider(  "FOV",              30, [0,90,1]  ));
 	newInput( 3, nodeValue_Float(   "Ortho Scale",      5             ))
 	newInput( 4, nodeValue_Vec2(    "View Range",       [3,6]         ));
+	
+	////- =/Depth
+	newInput(17, nodeValue_Vec2(    "Depth Range",      [1,10]        ));
 	newInput( 5, nodeValue_Slider(  "Depth",            0             ));
 	
 	////- =Background
@@ -26,18 +29,45 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	newInput( 9, nodeValue_Vec3(    "Position",         [-.4,-.5,1]  ));
 	newInput(16, nodeValue_Float(   "Intensity",         1           ));
 	newInput(15, nodeValue_Color(   "Color",             ca_white    ));
-	// 17
+	// 18
 		
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0, 
 		[ "Object",     false ], 13, 
-		[ "Camera",     false ], 11, 12,  1,  2,  3,  4,  5, 
+		[ "Camera",     false ], 11, 12,  1,  2,  3,  4,  
+			[ "/Depth", false ], 17,  5, 
 		[ "Background", false ],  6,  7, 10, 14,  8, 
 		[ "Light",      false ],  9, 16, 15, 
 	];
 	
 	////- Node
+	
+	static drawOverlay3D = function(active, _mx, _my, _params) {
+		var _panel = _params[$ "panel"] ?? noone;
+		
+		#region draw result
+			var _outSurf = outputs[0].getValue();
+			if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, 0);
+			if(!is_surface(_outSurf)) return;
+			
+			var _w = _panel.w;
+			var _h = _panel.h - _panel.toolbar_height;
+			var _pw = surface_get_width_safe(_outSurf);
+			var _ph = surface_get_height_safe(_outSurf);
+			var _ps = ui(128) / max(_ph, _pw);
+			
+			var _pws = _pw * _ps;
+			var _phs = _ph * _ps;
+			
+			var _px = _w - ui(8) - _pws;
+			var _py = _h - ui(8) - _phs;
+			
+			draw_surface_ext_safe(_outSurf, _px, _py, _ps, _ps);
+			draw_set_color(COLORS._main_icon);
+			draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
+		#endregion
+	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		#region data
@@ -51,6 +81,8 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 			var _fov  = _data[ 2];
 			var _ort  = _data[ 3];
 			var _vrn  = _data[ 4];
+			
+			var _depR = _data[17];
 			var _dep  = _data[ 5];
 			
 			var _bgd  = _data[ 6];
@@ -93,6 +125,8 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 			environ.fov        = _fov;
 			environ.orthoScale = _ort;
 			environ.viewRange  = _vrn;
+			
+			environ.depthRange = _depR;
 			environ.depthInt   = _dep;
 			
 			environ.bgColor    = _enc;

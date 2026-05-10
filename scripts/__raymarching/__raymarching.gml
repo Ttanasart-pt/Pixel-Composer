@@ -232,7 +232,8 @@ function RM_Environment() constructor {
 	projection = 0;
 	fov        = 0;
 	orthoScale = 1;
-	viewRange  = [ 0, 1 ];
+	viewRange  = [0,1];
+	depthRange = [0,1];
 	depthInt   = 0;
 	
 	bgColor    = c_black;
@@ -251,7 +252,9 @@ function RM_Environment() constructor {
 		shader_set_i( "ortho",      projection );
 		shader_set_f( "fov",        fov        );
 		shader_set_f( "orthoScale", orthoScale );
-		shader_set_f( "viewRange",  viewRange  );
+		shader_set_2( "viewRange",  viewRange  );
+		
+		shader_set_2( "depthRange", depthRange );
 		shader_set_f( "depthInt",   depthInt   );
 		
 		shader_set_i( "drawBg",        bgDraw     );

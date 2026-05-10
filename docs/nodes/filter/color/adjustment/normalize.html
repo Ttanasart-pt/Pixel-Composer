@@ -1422,26 +1422,48 @@
                 <a href="\nodes\3d\ray_marching\index.html" class="sidebar-dir">Ray Marching</a>
             </div>
             <ul class="submenu">
+<li id="object"><div class="sidebar-menu">
+                <div class="sidebar-icon sidebar-dir"></div>
+                <a href="\nodes\3d\ray_marching\object\index.html" class="sidebar-dir">Object</a>
+            </div>
+            <ul class="submenu">
 <li id="rm_cloud"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
-                <a href="\nodes\3d\ray_marching\rm_cloud.html" class="sidebar-file">Rm Cloud</a>
-            </div>
-</li><li id="rm_combine"><div class="sidebar-menu sidebar-file">
-                <div class="sidebar-icon"></div>
-                <a href="\nodes\3d\ray_marching\rm_combine.html" class="sidebar-file">Rm Combine</a>
+                <a href="\nodes\3d\ray_marching\object\rm_cloud.html" class="sidebar-file">Rm Cloud</a>
             </div>
 </li><li id="rm_primitive"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
-                <a href="\nodes\3d\ray_marching\rm_primitive.html" class="sidebar-file">Rm Primitive</a>
-            </div>
-</li><li id="rm_render"><div class="sidebar-menu sidebar-file">
-                <div class="sidebar-icon"></div>
-                <a href="\nodes\3d\ray_marching\rm_render.html" class="sidebar-file">Rm Render</a>
+                <a href="\nodes\3d\ray_marching\object\rm_primitive.html" class="sidebar-file">Rm Primitive</a>
             </div>
 </li><li id="rm_terrain"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
-                <a href="\nodes\3d\ray_marching\rm_terrain.html" class="sidebar-file">Rm Terrain</a>
+                <a href="\nodes\3d\ray_marching\object\rm_terrain.html" class="sidebar-file">Rm Terrain</a>
             </div>
+</li></ul>
+</li><li id="modify"><div class="sidebar-menu">
+                <div class="sidebar-icon sidebar-dir"></div>
+                <a href="\nodes\3d\ray_marching\modify\index.html" class="sidebar-dir">Modify</a>
+            </div>
+            <ul class="submenu">
+<li id="rm_combine"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\3d\ray_marching\modify\rm_combine.html" class="sidebar-file">Rm Combine</a>
+            </div>
+</li></ul>
+</li><li id="render"><div class="sidebar-menu">
+                <div class="sidebar-icon sidebar-dir"></div>
+                <a href="\nodes\3d\ray_marching\render\index.html" class="sidebar-dir">Render</a>
+            </div>
+            <ul class="submenu">
+<li id="rm_render"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\3d\ray_marching\render\rm_render.html" class="sidebar-file">Rm Render</a>
+            </div>
+</li><li id="rm_render_scatter"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\3d\ray_marching\render\rm_render_scatter.html" class="sidebar-file">Rm Render Scatter</a>
+            </div>
+</li></ul>
 </li></ul>
 </li></ul>
 </li><li id="generate"><div class="sidebar-menu">
@@ -5911,11 +5933,12 @@
 <li class="search-result" style="display: none;"><a href="\nodes\3d\point/point_3d_camera.html">Point 3D Camera</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\point/scatter_point_lattice_3d.html">Scatter Point Lattice 3D</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\point/scatter_points_3d.html">Scatter Points 3D</a></li>
-<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching/rm_cloud.html">Rm Cloud</a></li>
-<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching/rm_combine.html">Rm Combine</a></li>
-<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching/rm_primitive.html">Rm Primitive</a></li>
-<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching/rm_render.html">Rm Render</a></li>
-<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching/rm_terrain.html">Rm Terrain</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching\object/rm_cloud.html">Rm Cloud</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching\object/rm_primitive.html">Rm Primitive</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching\object/rm_terrain.html">Rm Terrain</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching\modify/rm_combine.html">Rm Combine</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching\render/rm_render.html">Rm Render</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\ray_marching\render/rm_render_scatter.html">Rm Render Scatter</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\simple/solid.html">Solid</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient.html">Gradient</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_cos.html">Gradient Cos</a></li>
@@ -6662,7 +6685,7 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_normalize/node_normalize-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-400,\"y\":-16,\"inputs\":[{\"linked\":true},{\"r\":{\"d\":\"{\\"keys\\":[{\\"value\\":4286545791.0,\\"time\\":0.0},{\\"value\\":4294967295.0,\\"time\\":1.0}],\\"type\\":0}\"},\"m\":1},{},{},{},{},{\"unit\":1},{},{},{},{\"v\":0},{\"v\":0},{\"v\":0},{\"v\":0},{},{\"v\":0},{},{},{},{},{},{},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8CAI25564821xe7ZPS5uE5rwHhRpAJ\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Gradient\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Gradient57693\",\"type\":\"Node_Gradient\"},{\"x\":-224,\"y\":-16,\"inputs\":[{\"from_node\":\"gA8CAI25564821xe7ZPS5uE5rwHhRpAJ\",\"from_index\":0},{},{},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8CAe2578000rnrr9MSmppiupMUxzKd\",\"version\":120076,\"attriTool\":{},\"name\":\"Normalize\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Normalize44063\",\"type\":\"Node_Normalize\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_normalize/node_normalize.gml">/scripts/node_normalize/node_normalize.gml</a></li><li><span>Shader [sh_normalize_local]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_normalize_local/sh_normalize_local.fsh">/shaders/sh_normalize_local/sh_normalize_local.fsh</a></li><li><span>Shader [sh_normalize]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_normalize/sh_normalize.fsh">/shaders/sh_normalize/sh_normalize.fsh</a></li></ul>
+</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_normalize/node_normalize.gml">/scripts/node_normalize/node_normalize.gml</a></li><li><span>Shader [sh_normalize]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_normalize/sh_normalize.fsh">/shaders/sh_normalize/sh_normalize.fsh</a></li><li><span>Shader [sh_normalize_local]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_normalize_local/sh_normalize_local.fsh">/shaders/sh_normalize_local/sh_normalize_local.fsh</a></li></ul>
         </div>
     </div>
 
