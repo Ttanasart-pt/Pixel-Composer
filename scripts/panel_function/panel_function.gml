@@ -132,9 +132,9 @@
 	function checkPanelValid() {
 		var val  = true;
 		var _mst = "";
-		if(!is_instanceof(PANEL_GRAPH.panel, Panel))     { val = false; _mst += "Graph, "     };
-		if(!is_instanceof(PANEL_PREVIEW.panel, Panel))   { val = false; _mst += "Preview, "   };
-		if(!is_instanceof(PANEL_INSPECTOR.panel, Panel)) { val = false; _mst += "Inspector, " };
+		if(!is(PANEL_GRAPH.panel, Panel))     { val = false; _mst += "Graph, "     };
+		if(!is(PANEL_PREVIEW.panel, Panel))   { val = false; _mst += "Preview, "   };
+		if(!is(PANEL_INSPECTOR.panel, Panel)) { val = false; _mst += "Inspector, " };
 		
 		if(!val) {
 			noti_warning($"Invalid Panel Layout, missing {_mst} panel(s). Reset to the default layout and restart recommened.");
@@ -237,7 +237,7 @@
 	}
 	
 	function _findPanels(_type, _pane, _arr = []) {
-		if(!is_instanceof(_pane, Panel))
+		if(!is(_pane, Panel))
 			return _arr;
 		
 		for( var i = 0, n = array_length(_pane.content); i < n; i++ ) {

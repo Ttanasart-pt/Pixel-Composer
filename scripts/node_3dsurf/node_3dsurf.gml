@@ -22,7 +22,7 @@ function Node_3DSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _obj = array_safe_get_fast(cached_object, index, noone);
 		if(_obj == noone) {
 			_obj = new class();
-		} else if(!is_instanceof(_obj, class)) {
+		} else if(!is(_obj, class)) {
 			_obj.destroy();
 			_obj = new class();
 		}

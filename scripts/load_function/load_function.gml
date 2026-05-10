@@ -70,7 +70,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	
 	for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) {
 		var _p = array_safe_get_fast(PROJECTS, i);
-		if(!is_instanceof(_p, Project)) continue;
+		if(!is(_p, Project)) continue;
 		
 		if(_p.path == path) {
 			_rep = true;

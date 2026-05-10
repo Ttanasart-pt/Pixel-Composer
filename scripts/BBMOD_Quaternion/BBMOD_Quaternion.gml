@@ -464,7 +464,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor {
 	static Rotate = function (_v) {
 		INLINE
 		
-		var _tovec = is_instanceof(_v, __vec3);
+		var _tovec = is(_v, __vec3);
 		if(_tovec) _v = new BBMOD_Vec3(_v.x, _v.y, _v.z);
 		
 		var _q = Normalize();

@@ -98,9 +98,9 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		for (var i = 0, n = array_length(nodes); i < n; i++) {
 			var _node = nodes[i];
 			
-			if(is_instanceof(_node, Node_Canvas))
+			if(is(_node, Node_Canvas))
 				array_push(canvases, _node);
-			else if(is_instanceof(_node, Node_Composite))
+			else if(is(_node, Node_Composite))
 				composite = _node;
 		}
 		
@@ -122,7 +122,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			var _lay = _can.node;
 			var _modStack = [ _nod ];
 			
-			while(!is_instanceof(_nod, Node_Canvas)) {
+			while(!is(_nod, Node_Canvas)) {
 				if(_nod.inputs[0].type != VALUE_TYPE.surface) 
 					break;
 				if(_nod.inputs[0].value_from == noone) 
@@ -132,7 +132,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 				array_push(_modStack, _nod);
 			}
 			
-			if(!is_instanceof(_nod, Node_Canvas)) continue;
+			if(!is(_nod, Node_Canvas)) continue;
 			array_pop(_modStack);
 			
 			layers[$ _lay.node_id] = {
@@ -145,12 +145,12 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	}
 	
 	static onAdd = function(node) {
-	    if(is_instanceof(node, Node_Canvas))    {
+	    if(is(node, Node_Canvas))    {
      		array_push(canvases, node);
      		node.timeline_item.removeSelf();
 			timeline_item_group.addItem(node.timeline_item);
 		
-		} else if(is_instanceof(node, Node_Composite)) {
+		} else if(is(node, Node_Composite)) {
 			composite = node;
 			composite.canvas_group = self;
 		}

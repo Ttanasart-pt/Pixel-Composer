@@ -21,8 +21,8 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _gr
 		var _trg = _data[in_mesh + 2];
 		var _nrm = _data[in_mesh + 3];
 		
-		if(!is_instanceof(_obj, __3dObject))    return noone;
-		if(!is_instanceof(_tex, __d3dMaterial)) return noone;
+		if(!is(_obj, __3dObject))    return noone;
+		if(!is(_tex, __d3dMaterial)) return noone;
 		
 		var _tsc  = _tex.texScale;
 		var _tif  = _tex.texShift;

@@ -9,7 +9,7 @@ function Node_Iterator_Index(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newOutput(0, nodeValue_Output("Loop index", VALUE_TYPE.integer, 0));
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		var gr = is_instanceof(group, Node_Iterator)? group : noone;
+		var gr = is(group, Node_Iterator)? group : noone;
 		if(inline_context != noone) gr = inline_context;
 		
 		if(gr == noone) return;

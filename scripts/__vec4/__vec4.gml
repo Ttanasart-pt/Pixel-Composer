@@ -1,12 +1,12 @@
 function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     static set = function(_x = 0, _y = _x, _z = _x, _w = _x) {
         if (is_struct(_x)) {
-			if(is_instanceof(_x, __vec4)) {
+			if(is(_x, __vec4)) {
 	            x = _x.x;
 	            y = _x.y;
 	            z = _x.z;
 	            w = _x.w;
-			} else if(is_instanceof(_x, __vec3)) {
+			} else if(is(_x, __vec3)) {
 	            x = _x.x;
 	            y = _x.y;
 	            z = _x.z;

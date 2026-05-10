@@ -54,7 +54,7 @@ function materialBox(_onModify) : widget() constructor {
 			var _arrInd  = is_array(_surface)? safe_mod(round(current_time / 250), array_length(_surface)) : 0;
 			    _surface = is_array(_surface)? _surface[_arrInd] : _surface;
 			
-			currMat  = is_instanceof(_surface, __d3dMaterial)? _surface : defMat;
+			currMat  = is(_surface, __d3dMaterial)? _surface : defMat;
 			_surface = struct_try_get(currMat, "surface");
 			
 			if(is_surface(_surface)) { 

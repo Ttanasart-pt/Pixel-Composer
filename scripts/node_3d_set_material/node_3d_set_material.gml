@@ -16,7 +16,7 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 		var _obj = _data[0];
 		var _mat = _data[in_mesh + 0];
 		
-		if(!is_instanceof(_obj, __3dObject)) return noone;
+		if(!is(_obj, __3dObject)) return noone;
 		if(!is_array(_mat)) _mat = [ _mat ];
 		
 		var _res = _obj.clone(false);

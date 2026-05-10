@@ -36,7 +36,7 @@ function NodeModule(parent) constructor {
 	
 	static resetCache = function() {
 		for( var i = 0; i < array_length(inputs); i++ ) {
-			if(!is_instanceof(inputs[i], NodeValue)) continue;
+			if(!is(inputs[i], NodeValue)) continue;
 			inputs[i].resetCache();
 		}
 	}

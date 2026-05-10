@@ -54,9 +54,9 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var _n = nodes[i];
 			
-			if(!is_instanceof(_n, Node_DynaSurf_Out) && 
-			   !is_instanceof(_n, Node_DynaSurf_Out_Width) &&
-			   !is_instanceof(_n, Node_DynaSurf_Out_Height))
+			if(!is(_n, Node_DynaSurf_Out) && 
+			   !is(_n, Node_DynaSurf_Out_Width) &&
+			   !is(_n, Node_DynaSurf_Out_Height))
 				continue;
 				
 			if(_n.rendered) continue;
@@ -76,11 +76,11 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var _n = nodes[i];
 			
-			if(is_instanceof(_n, Node_DynaSurf_Out))
+			if(is(_n, Node_DynaSurf_Out))
 				_dyna.drawFn   = _n.outputs[0].getValue();
-			if(is_instanceof(_n, Node_DynaSurf_Out_Width))
+			if(is(_n, Node_DynaSurf_Out_Width))
 				_dyna.widthFn  = _n.outputs[0].getValue();
-			if(is_instanceof(_n, Node_DynaSurf_Out_Height))
+			if(is(_n, Node_DynaSurf_Out_Height))
 				_dyna.heightFn = _n.outputs[0].getValue();
 		}
 		
@@ -91,7 +91,7 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 }
 
 function dynaSurf_output_getNextNode() { #region
-	if(!is_instanceof(group, Node_DynaSurf)) return [];
+	if(!is(group, Node_DynaSurf)) return [];
 		
 	var junc  = group.outputs[0];
 	var nodes = [];

@@ -1,29 +1,29 @@
-#region
+#region global
 	FN_NODE_TOOL_INVOKE {
 		hotkeyCustom("Node_RM_Primitive", "Transform", "T");
 	});
-#endregion
-
-global.node_rm_primitive_keys = [ 
-	"plane", "box", "box frame", "box round", "cube", 
-	"sphere", "ellipse", "cut sphere", "cut hollow sphere", "torus", "capped torus",
-	"cylinder", "prism", "capsule", "cone", "capped cone", "round cone", "3d arc", "pie", 
-	"octahedron", "pyramid", 
-];
-
-function Node_create_RM_Primitive(_x, _y, _group = noone, _param = {}) {
-	var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
-	var node  = new Node_RM_Primitive(_x, _y, _group);
-	node.skipDefault();
 	
-	switch(query) {
-		case "cube" : ind = array_find_string(node.shape_types, "box");	break;
-		default     : ind = array_find_string(node.shape_types, query);
+	global.node_rm_primitive_keys = [ 
+		"plane",      "box",     "box frame",  "box round",         "cube", 
+		"sphere",     "ellipse", "cut sphere", "cut hollow sphere", "torus",       "capped torus",
+		"cylinder",   "prism",   "capsule",    "cone",              "capped cone", "round cone",    "3d arc", "pie", 
+		"octahedron", "pyramid", 
+	];
+	
+	function Node_create_RM_Primitive(_x, _y, _group = noone, _param = {}) {
+		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
+		var node  = new Node_RM_Primitive(_x, _y, _group);
+		node.skipDefault();
+		
+		switch(query) {
+			case "cube" : ind = array_find_string(node.shape_types, "box");	break;
+			default     : ind = array_find_string(node.shape_types, query);
+		}
+		
+		if(ind >= 0) node.inputs[1].skipDefault().setValue(ind);
+		return node;
 	}
-	
-	if(ind >= 0) node.inputs[1].skipDefault().setValue(ind);
-	return node;
-}
+#endregion
 
 function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constructor {
 	name  = "RM Primitive";
@@ -56,11 +56,11 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	newInput(40, nodeValue_Vec2(     "2D Size",      [.5,.5]                 ));
 	newInput(41, nodeValue_Int(      "Side",          3                      ));
 	
-	////- =Modify
+		////- =/Modify
 	newInput(12, nodeValue_Slider(   "Rounded",       0                      ));
 	newInput(11, nodeValue_Vec3(     "Elongate",     [0,0,0]                 ));
 	
-	////- =Deform
+		////- =/Deform
 	newInput(15, nodeValue_Vec3(     "Wave Amplitude", [4,4,4]               ));
 	newInput(16, nodeValue_Vec3(     "Wave Intensity", [0,0,0]               ));
 	newInput(17, nodeValue_Vec3(     "Wave Phase",     [0,0,0]               ));
@@ -82,11 +82,16 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	////- =Material
 	newInput( 9, nodeValue_Color(    "Base Color",      ca_white             ));
-	newInput(36, nodeValue_Surface(  "Texture" ));
-	newInput(50, nodeValue_Bool(     "Texture Interpolation", false          ));
+	newInput(36, nodeValue_Surface(  "Texture"                               ));
+	
+		////- =/Shader
+	newInput(51, nodeValue_Slider(   "Specular",              0              ));
 	newInput(35, nodeValue_Slider(   "Reflective",            0              ));
-	newInput(37, nodeValue_Slider(   "Triplanar Smoothing",   1, [0,10,.1]   ));
+	
+		////- =/Texture
+	newInput(50, nodeValue_Bool(     "Texture Interpolation", false          ));
 	newInput(38, nodeValue_Float(    "Texture Scale",         1              ));
+	newInput(37, nodeValue_Slider(   "Triplanar Smoothing",   1, [0,10,.1]   ));
 	
 	////- =Camera
 	newInput(42, nodeValue_Vec3(     "Camera Rotation", [30,45,0]            ));
@@ -95,47 +100,56 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	newInput(14, nodeValue_Float(    "Ortho Scale",      1                   ))
 	newInput( 5, nodeValue_Slider(   "FOV",              30, [0,90,1]        ));
 	newInput( 6, nodeValue_Vec2(     "View Range",      [3,6]                ));
+	newInput( 7, nodeValue_Slider(   "Depth",             0        ));
 	
 	////- =Render
-	newInput(44, nodeValue_Bool(     "Render",           true                ));
-	newInput(31, nodeValue_Bool(     "Draw BG",          false               ));
-	newInput(30, nodeValue_Color(    "Background",       ca_black            ));
-	newInput(34, nodeValue_Surface(  "Environment" ));
-	newInput(49, nodeValue_Bool(     "Env Interpolation", false              ));
-	newInput(10, nodeValue_Slider(   "Ambient Level",    .2                  ));
-	newInput( 7, nodeValue_Slider(   "Depth",             0                  ));
-	newInput( 8, nodeValue_Vec3(     "Light Position", [-.4,-.5,1]           ));
+	newInput(44, nodeValue_Bool(     "Render",           true      ));
+	
+		////- =/Background
+	newInput(31, nodeValue_Bool(     "Draw BG",          false     ));
+	newInput(30, nodeValue_Color(    "Background",       ca_black  ));
+	newInput(34, nodeValue_Surface(  "Environment"                 ));
+	newInput(49, nodeValue_Bool(     "Env Interpolation", false    ));
+	newInput(10, nodeValue_Slider(   "Ambient Level",    .2        ));
+	
+		////- =/Light
+	newInput( 8, nodeValue_Vec3(     "Position",       [-.4,-.5,1] ));
+	newInput(53, nodeValue_Float(    "Intensity",         1        ));
+	newInput(52, nodeValue_Color(    "Color",          ca_white    ));
 	
 	////- =Volumetric
-	newInput(32, nodeValue_Bool(     "Volumetric",        false              ));
-	newInput(33, nodeValue_Slider(   "Density",          .3                  ));
-	// 51
+	newInput(32, nodeValue_Bool(     "Volumetric",        false    ));
+	newInput(33, nodeValue_Slider(   "Density",          .3        ));
+	// 54
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Shape Data",  VALUE_TYPE.sdf,     noone ));
 	
 	input_display_list = [ 0,
-		[ "Primitive",  false     ],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 
-		[ "Modify",     false     ], 12, 11, 
-		[ "Deform",      true     ], 15, 16, 17, 18, 19, 
-		[ "Transform",  false     ],  2,  3,  4, 
-		[ "Tile",       false, 45 ], 20, 29, /*46, 47, 48,*/
-		[ "Material",   false     ],  9, 36, 50, 35, 37, 38, 
-		
-		[ "Camera",     false     ], 42, 43, 13, 14,  5,  6, 
-		[ "Render",     false, 44 ], 31, 30, 34, 49, 10,  7,  8, 
-		[ "Volumetric",  true, 32 ], 33, 
+		[ "Primitive",   false     ],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 
+			[ "/Modify", false     ], 12, 11, 
+			[ "/Deform",  true     ], 15, 16, 17, 18, 19, 
+			
+		[ "Transform",   false     ],  2,  3,  4, 
+		[ "Tile",         true, 45 ], 20, 29, /*46, 47, 48,*/
+		[ "Material",    false     ],  9, 36, 
+			[ "/Shader",  true     ], 51, 35, 
+			[ "/Texture", true     ], 50, 38, 37, 
+			
+		[ "Camera",      false     ], 42, 43, 13, 14,  5,  6,  7, 
+		[ "Render",      false, 44 ], 
+			[ "/Background", false ], 31, 30, 34, 49, 10, 
+			[ "/Light",      false ],  8, 53, 52, 
+			
+		[ "Volumetric",   true, 32 ], 33, 
 	];
 	
 	////- Node
 	
-	temp_surface = [ noone, noone ];
-	environ = new RM_Environment();
-	object  = new RM_Shape();
-	
 	tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform, "Node_3D_Object" );
+	tools    = [ tool_pos ];
 	
-	tools = [ tool_pos ];
+	object = new RM_Shape();
 	
 	#region ---- overlay ----
 		drag_axis  = noone;
@@ -393,7 +407,10 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			var _amb  = _data[ 9];
 			var _tex  = _data[36];
 			var _texF = _data[50];
+			
+			var _spec = _data[51];
 			var _refl = _data[35];
+			
 			var _triS = _data[37];
 			var _texs = _data[38];
 			
@@ -409,9 +426,12 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			var _bgc  = _data[30];
 			var bgEnv = _data[34];
 			var _eint = _data[49];
-			var _ambI = _data[10];
 			var _dpi  = _data[ 7];
+			var _ambI = _data[10];
+			
 			var _lPos = _data[ 8];
+			var _lInt = _data[53];
+			var _lCol = _data[52];
 			
 			var _vol  = _data[32];
 			var _vden = _data[33];
@@ -475,16 +495,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		
-		for (var i = 0, n = array_length(temp_surface); i < n; i++)
-			temp_surface[i] = surface_verify(temp_surface[i], 8192, 8192);
-		
-		var tx = 1024;
-		surface_set_shader(temp_surface[0]);
-			gpu_set_tex_filter(_eint);
-			draw_surface_stretched_safe(bgEnv, tx * 0, tx * 0, tx, tx);
-			gpu_set_tex_filter(false);
-		surface_reset_shader();
+		temp_surface[1] = surface_verify(temp_surface[1], 8192, 8192);
 		
 		var _shape = shape_types[_shp];
 		var _shpI  = 0;
@@ -553,6 +564,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			object.tileSca       = _tileSca;
 			
 			object.diffuseColor  = colorToArray(_amb, true);
+			object.specular      = _spec;
 			object.reflective    = _refl;
 			    
 			object.volumetric    = _vol;
@@ -565,10 +577,22 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			object.triplanar     = _triS;
 				
 			object.setTexture(temp_surface[1]);
+		#endregion
+		
+		#region environment
+			var txs = attributes.texture_size;
+			temp_surface[0] = surface_verify(temp_surface[0], txs, txs);
 			
-			environ.surface   = temp_surface[0];
-			environ.bgEnv     = bgEnv;
-			environ.envFilter = _eint;
+			var tx = 1024;
+			surface_set_shader(temp_surface[0]);
+				gpu_set_tex_filter(_eint);
+				draw_surface_stretched_safe(bgEnv, tx * 0, tx * 0, tx, tx);
+				gpu_set_tex_filter(false);
+			surface_reset_shader();
+			
+			environ.surface    = temp_surface[0];
+			environ.bgEnv      = bgEnv;
+			environ.envFilter  = _eint;
 			
 			environ.projection = _ort;
 			environ.fov        = _fov;
@@ -579,24 +603,32 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			environ.bgColor    = _bgc;
 			environ.bgDraw     = _bgd;
 			environ.ambInten   = _ambI;
+			
 			environ.light      = _lPos;
+			environ.lightInten = _lInt;
+			environ.lightColor = _lCol;
 		#endregion
-		
+			
 		if(_ren) {
-			gpu_set_texfilter(true);
 			surface_set_shader(_outSurf, sh_rm_primitive);
-				
-				shader_set_f("camRotation", _crt);
-				shader_set_f("camScale",    _csa);
-				shader_set_f("camRatio",    _dim[0] / _dim[1]);
+			gpu_set_texfilter(getAttribute("interpolate") > 1);
+				shader_set_f( "camRotation", _crt );
+				shader_set_f( "camScale",    _csa );
+				shader_set_f( "camRatio",    _dim[0] / _dim[1] );
 				
 				environ.apply();
 				object.apply();
 				
-				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
+				draw_empty();
 			surface_reset_shader();
-			gpu_set_texfilter(false);
 		}
+		
+		var _shapeItem = array_safe_get(shape_types_str, _shp);
+		if(_ren) {
+			node_draw_icon = undefined; 
+			always_pad     = false; 
+		} else if(is(_shapeItem, scrollItem))
+			setDrawIcon(s_node_shape_sdf, true, _shapeItem.spr_ind);
 		
 		return [ _outSurf, object ]; 
 	}

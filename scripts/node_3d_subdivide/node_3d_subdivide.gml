@@ -15,7 +15,7 @@ function Node_3D_Subdivide(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _g
 		var _trg = _data[in_mesh + 0];
 		var _sub = _data[in_mesh + 1];
 		
-		if(!is_instanceof(_obj, __3dObject)) return noone;
+		if(!is(_obj, __3dObject)) return noone;
 		
 		var _res = _obj.clone();
 		

@@ -61,12 +61,12 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outParent.setValue(_outSurf);
 		
-		if(previewing && is_instanceof(group, Node_VFX_Group)) 
+		if(previewing && is(group, Node_VFX_Group)) 
 			group.preview_node = self;
 	}
 	
 	static update = function(_time = CURRENT_FRAME) {
-		if(!is_instanceof(outParent, NodeValue)) return noone;
+		if(!is(outParent, NodeValue)) return noone;
 		if(!IS_PLAYING) {
 			recoverCache();
 			return;
@@ -119,7 +119,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	}
 		
 	static recoverCache = function(frame = CURRENT_FRAME) {
-		if(!is_instanceof(outParent, NodeValue)) return false;
+		if(!is(outParent, NodeValue)) return false;
 		if(!cacheExist(frame)) return false;
 		
 		var _s = cached_output[CURRENT_FRAME];
@@ -129,12 +129,12 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	}
 	
 	static getGraphPreviewSurface = function() {
-		if(!is_instanceof(outParent, NodeValue)) return noone;
+		if(!is(outParent, NodeValue)) return noone;
 		return outParent.getValue();
 	}
 	
 	static getPreviewValues = function() {
-		if(!is_instanceof(outParent, NodeValue)) return noone;
+		if(!is(outParent, NodeValue)) return noone;
 		return outParent.getValue();
 	}
 		

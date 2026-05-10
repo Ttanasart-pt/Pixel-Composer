@@ -198,7 +198,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		slicesAmo  = getInputData(3);
 		
 		if(_mesh == noone) return;
-		if(!is_instanceof(_mesh, __3dObject)) return;
+		if(!is(_mesh, __3dObject)) return;
 		
 		var _surfs = outputs[0].getValue();
 		    _surfs = array_verify(_surfs, slicesAmo);

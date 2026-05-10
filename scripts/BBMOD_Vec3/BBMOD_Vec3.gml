@@ -27,11 +27,11 @@
 /// @see BBMOD_Vec2
 /// @see BBMOD_Vec4
 function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor {
-	if(is_instanceof(_x, __vec3)) {
+	if(is(_x, __vec3)) {
 		X = _x.x;
 		Y = _x.y;
 		Z = _x.z;
-	} else if(is_instanceof(_x, BBMOD_Vec3)) {
+	} else if(is(_x, BBMOD_Vec3)) {
 		X = _x.X;
 		Y = _x.Y;
 		Z = _x.Z;

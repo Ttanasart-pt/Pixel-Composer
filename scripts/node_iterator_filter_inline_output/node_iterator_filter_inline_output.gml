@@ -27,7 +27,7 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		if(!is_instanceof(loop, Node_Iterate_Filter_Inline)) return;
+		if(!is(loop, Node_Iterate_Filter_Inline)) return;
 		
 		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		inputs[0].setType(_typ);

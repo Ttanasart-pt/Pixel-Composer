@@ -109,8 +109,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Scatter",  false ],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
 		[ "Path",     false ], 19, 38, 20, 45, 21, 22, 
 		[ "Position", false ], 40, 33, 36, 49, 50, 51, 37, 39, 
-		[ "Rotation", false ], 48,  7,  4, 32, 
-		[ "Scale",    false ],  3,  8, 34, 43, 
+		[ "Rotation", false ], 48,  7,  4, 52, 53, 32, 
+		[ "Scale",    false ],  3, 54, 55,  8, 34, 43, 
 		[ "Color",    false ], 11, 28, 12, 16, 41, 47, 42, 
 		[ "Render",   false ], 18, 23, 
 	];

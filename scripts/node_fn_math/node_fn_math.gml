@@ -35,11 +35,11 @@ function Node_Fn_Math(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 		var _v1 = getInputSingle(inl + 2);
 		
 		var _f0 = inputs[inl + 1].value_from;
-		if(_f0 != noone && is_instanceof(_f0.node, Node_Fn)) 
+		if(_f0 != noone && is(_f0.node, Node_Fn)) 
 			_v0 = _f0.node.getDisplayX(i);
 		
 		var _f1 = inputs[inl + 2].value_from;
-		if(_f1 != noone && is_instanceof(_f1.node, Node_Fn)) 
+		if(_f1 != noone && is(_f1.node, Node_Fn)) 
 			_v1 = _f1.node.getDisplayX(i);
 			
 		return [ _v0, _v1 ]; 

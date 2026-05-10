@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_rm_render",
   "parent":{
-    "name":"raymarching",
-    "path":"folders/nodes/data/3D/raymarching.yy",
+    "name":"render",
+    "path":"folders/nodes/data/3D/raymarching/render.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

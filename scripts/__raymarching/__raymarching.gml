@@ -36,6 +36,7 @@ function RM_Object() constructor {
 	tileSca       = [];
 	
 	diffuseColor  = [];
+	specular      = [];
 	reflective    = [];
 	
 	volumetric    = [];
@@ -50,14 +51,16 @@ function RM_Object() constructor {
 	opmap = -1;
 	oparg = -1;
 	
-	uniformKeys   = [ "shape", "size", "radius", "thickness", "crop", "angle", "height", "radRange", "sizeUni", "elongate", "rounded", "corner", "size2D", "sides", 
-					  "waveAmp", "waveInt", "waveShift", 
-					  "twistAxis", "twistAmount", 
-					  "position", "rotation", "objectScale", 
-					  "tileActive", "tileAmount", "tileSpace", "tilePos", "tileRot", "tileSca", 
-					  "diffuseColor", "reflective", 
-					  "volumetric", "volumeDensity", 
-					  "texture", "textureFilter", "useTexture", "textureScale", "triplanar" 
+	uniformKeys   = [ "shape",    "size",    "radius", "thickness", "crop", "angle", "height", "radRange", "sizeUni", 
+					  "elongate", "rounded", "corner", "size2D",    "sides", 
+	
+					  "waveAmp",      "waveInt",       "waveShift", 
+					  "twistAxis",    "twistAmount",   
+					  "position",     "rotation",      "objectScale", 
+					  "tileActive",   "tileAmount",    "tileSpace",   "tilePos", "tileRot", "tileSca", 
+					  "diffuseColor", "specular",      "reflective", 
+					  "volumetric",   "volumeDensity", 
+					  "texture",      "textureFilter", "useTexture",  "textureScale", "triplanar" 
 					];
 	textureAtl    = noone;
 	
@@ -73,14 +76,10 @@ function RM_Object() constructor {
 				gpu_set_tex_filter(false);
 			}
 		surface_reset_shader();
-		
-		
 		textureAtl = textureAtlas;
 	}
 	
 	static apply = function() {
-		// print(self);
-		
 		shader_set_i("shapeAmount",      shapeAmount);
 		if(shapeAmount <= 0) return;
 		
@@ -122,6 +121,7 @@ function RM_Object() constructor {
 		// shader_set_f("tileShiftSca",     tileSca);
 		
 		shader_set_f("diffuseColor",     diffuseColor); 
+		shader_set_f("specular",         specular);
 		shader_set_f("reflective",       reflective);
 		
 		shader_set_i("volumetric",       volumetric);
@@ -140,12 +140,11 @@ function RM_Object() constructor {
 	static deserialize = function() { };
 }
 
-function RM_Operation(type, left, right) : RM_Object() constructor {
-	
-	self.type  = type;
-	self.left  = left;
-	self.right = right;
-	merge = 0;
+function RM_Operation(_type, _left, _right, _merge = 0) : RM_Object() constructor {
+	type  = _type;
+	left  = _left;
+	right = _right;
+	merge = _merge;
 	
 	static reset = function() {
 		
@@ -160,7 +159,7 @@ function RM_Operation(type, left, right) : RM_Object() constructor {
 	}
 	
 	static __flatten = function(node) {
-		if(is_instanceof(node, RM_Shape)) 
+		if(is(node, RM_Shape)) 
 			return node;
 		
 		var _op = node.type;
@@ -239,28 +238,33 @@ function RM_Environment() constructor {
 	bgColor    = c_black;
 	bgDraw     = false;
 	ambInten   = 0;
+	
 	light      = [ 1, 0.5, 0 ];
+	lightInten = 1;
+	lightColor = ca_white;
 	
 	static apply = function() {
-		
 		shader_set_surface($"texture0", surface);
 		
-		shader_set_i("MAX_MARCHING_STEPS", 512);
+		shader_set_i( "MAX_MARCHING_STEPS", 512);
 		
-		shader_set_i("ortho",       projection);
-		shader_set_f("fov",         fov);
-		shader_set_f("orthoScale",  orthoScale);
-		shader_set_f("viewRange",   viewRange);
-		shader_set_f("depthInt",    depthInt);
+		shader_set_i( "ortho",      projection );
+		shader_set_f( "fov",        fov        );
+		shader_set_f( "orthoScale", orthoScale );
+		shader_set_f( "viewRange",  viewRange  );
+		shader_set_f( "depthInt",   depthInt   );
 		
-		shader_set_i("drawBg",  	   bgDraw);
-		shader_set_color("background", bgColor);
-		shader_set_f("ambientIntns",   ambInten);
-		shader_set_f("lightPosition",  light);
+		shader_set_i( "drawBg",        bgDraw     );
+		shader_set_c( "background",    bgColor    );
+		shader_set_f( "ambientIntns",  ambInten   );
 		
-		shader_set_i("envFilter",   envFilter);
-		shader_set_i("useEnv",      is_surface(bgEnv));
-		shader_set_i("drawGrid",  	false);
+		shader_set_f( "lightPosition", light      );
+		shader_set_f( "lightInten",    lightInten );
+		shader_set_c( "lightColor",    lightColor );
+		
+		shader_set_i( "useEnv",      is_surface(bgEnv) );
+		shader_set_i( "envFilter",   envFilter         );
+		shader_set_i( "drawGrid",  	 false             );
 		
 	}
 }

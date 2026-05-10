@@ -837,11 +837,14 @@
             "Node_3D_Point_Affector",
             
             { "label": "Ray Marching" },
+            { "label": "/Object" },
             "Node_RM_Primitive",
-            "Node_RM_Combine",
-            "Node_RM_Render",
             "Node_RM_Terrain",
             "Node_RM_Cloud"
+            { "label": "/Modify" },
+            "Node_RM_Combine",
+            { "label": "/Render" },
+            "Node_RM_Render",
         ]
     }, //3D
     {

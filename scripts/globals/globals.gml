@@ -89,8 +89,7 @@ gml_pragma("UnityBuild", "true");
 	#macro DELTA_TIME delta_time / 1_000_000
 	
 	#macro INLINE gml_pragma("forceinline");
-	#macro is __is_instanceof
-	function  __is_instanceof(a,b) { return is_struct(a) && is_instanceof(a,b) };
+	function is(a,b) { return is_struct(a) && is_instanceof(a,b) };
 	
 	#macro super static_get(static_get(self))
 	

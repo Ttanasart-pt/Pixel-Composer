@@ -42,12 +42,12 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	} if(!LOADING && !APPENDING) createOutput();
 	
 	static step = function() {
-		if(!is_instanceof(outParent, NodeValue)) return noone;
+		if(!is(outParent, NodeValue)) return noone;
 		outParent.name = display_name;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		if(!is_instanceof(outParent, NodeValue)) return noone;
+		if(!is(outParent, NodeValue)) return noone;
 		
 		var _dim = getInputData(1);
 		var _outSurf = outParent.getValue();
@@ -79,7 +79,7 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	}
 	
 	static recoverCache = function(frame = CURRENT_FRAME) {
-		if(!is_instanceof(outParent, NodeValue)) return false;
+		if(!is(outParent, NodeValue)) return false;
 		if(!cacheExist(frame)) return false;
 		
 		var _s = cached_output[CURRENT_FRAME];
@@ -89,12 +89,12 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	}
 	
 	static getGraphPreviewSurface = function() {
-		if(!is_instanceof(outParent, NodeValue)) return noone;
+		if(!is(outParent, NodeValue)) return noone;
 		return outParent.getValue();
 	}
 	
 	static getPreviewValues = function() {
-		if(!is_instanceof(outParent, NodeValue)) return noone;
+		if(!is(outParent, NodeValue)) return noone;
 		return outParent.getValue();
 	}
 }

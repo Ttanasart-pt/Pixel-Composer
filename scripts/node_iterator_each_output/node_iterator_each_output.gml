@@ -31,7 +31,7 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		var is_surf	 = inputs[0].value_from.type == VALUE_TYPE.surface;
 		var _new_val = [];
 		
-		if(!is_instanceof(inputs[0].value_from.node, Node_Iterator_Each_Input)) 
+		if(!is(inputs[0].value_from.node, Node_Iterator_Each_Input)) 
 			surface_array_free(_prev_val);
 			
 		if(is_surf)	_new_val = surface_array_clone(_val);

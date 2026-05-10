@@ -114,8 +114,8 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	}
 	
 	static modify = function(_object, _data, _matrix = new BBMOD_Matrix()) {
-		if(is_instanceof(_object, __3dObject)) return modify_object(_object, _data, _matrix);
-		if(is_instanceof(_object, __3dGroup))  return modify_group(_object, _data, _matrix);
+		if(is(_object, __3dObject)) return modify_object(_object, _data, _matrix);
+		if(is(_object, __3dGroup))  return modify_group(_object, _data, _matrix);
 		
 		return noone;
 	}

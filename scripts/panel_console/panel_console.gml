@@ -33,11 +33,11 @@ function Panel_Console() : PanelContent() constructor {
 		for( var i = array_length(CMD) - 1 - scroll_y; i >= 0; i-- ) {
 			var his = CMD[i];
 			
-			if(is_instanceof(his, __cmdLine)) {
+			if(is(his, __cmdLine)) {
 				var txt = his.txt;
 				draw_set_color(his.color);
 				
-				if(is_instanceof(his, __cmdLineIn)) {
+				if(is(his, __cmdLineIn)) {
 					draw_sprite_ui(THEME.icon_cmd_enter, 0, _x + ui(8), _y - line_get_height() / 2, 1, 1, 0, his.color, 1);
 					draw_text_line(_x + ui(20), _y, txt, -1, _w);
 				} else 
@@ -45,7 +45,7 @@ function Panel_Console() : PanelContent() constructor {
 				
 				_y -= string_height_ext(txt, -1, _w);
 			
-			} else if(is_instanceof(his, notification)) {
+			} else if(is(his, notification)) {
 				var txt = his.txt;
 				
 				draw_set_color(his.txtclr);
@@ -137,13 +137,13 @@ function Panel_Console() : PanelContent() constructor {
 			cmd_index = max(0, cmd_index - 1); 
 			
 			var his = array_safe_get_fast(CMDIN, cmd_index, "");
-			setCommand(is_instanceof(his, __cmdLine)? his.txt : his);
+			setCommand(is(his, __cmdLine)? his.txt : his);
 		
 		} else if(KEYBOARD_PRESSED == vk_down) {
 			cmd_index = min(cmd_index + 1, array_length(CMDIN)); 
 		
 			var his = array_safe_get_fast(CMDIN, cmd_index, "");
-			setCommand(is_instanceof(his, __cmdLine)? his.txt : his);
+			setCommand(is(his, __cmdLine)? his.txt : his);
 		
 		} else if(keyboard_check_pressed(vk_escape)) {
 			if(CMDPRG) CMDPRG = noone;

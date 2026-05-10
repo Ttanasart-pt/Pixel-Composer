@@ -27,7 +27,7 @@ function Node_Fn_SmoothStep(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) co
 	
 	static refreshDisplayX = function(i) { 
 		var _fr = inputs[inl + 0].value_from;
-		if(_fr != noone && is_instanceof(_fr.node, Node_Fn)) 
+		if(_fr != noone && is(_fr.node, Node_Fn)) 
 			return _fr.node.getDisplayX(i);
 		return i / graph_res; 
 	}

@@ -1702,7 +1702,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return quarternionFromEuler(_value[0], _value[1], _value[2]);
 		
 		if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { // color compatibility [ color, palette, gradient ]
-			if(is_instanceof(_value, gradientObject)) return _value;
+			if(is(_value, gradientObject)) return _value;
 				
 			if(is_array(_value)) {
 				var amo  = array_length(_value);

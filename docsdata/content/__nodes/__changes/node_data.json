@@ -6,6 +6,11 @@
         "date": "2026-05-09T04:17:39.849Z",
         "node": "",
         "commit": "**Pin**: Fix selection drawn as solid circle."
+      },
+      {
+        "date": "2026-05-10T04:50:25.454Z",
+        "node": "",
+        "commit": "**RM Primitive] Add specular property. - [RM Render**: Add light color, intensity properties."
       }
     ]
   },

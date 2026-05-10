@@ -24,7 +24,7 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 		input_node.loop  = self;
 		output_node.loop = self;
 		
-		if(CLONING && is_instanceof(CLONING_GROUP, Node_Iterate_Filter_Inline)) {
+		if(CLONING && is(CLONING_GROUP, Node_Iterate_Filter_Inline)) {
 			APPEND_MAP[? CLONING_GROUP.input_node.node_id]  = input.node_id;
 			APPEND_MAP[? CLONING_GROUP.output_node.node_id] = output.node_id;
 			
@@ -69,12 +69,12 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 			_node.inline_context = self;
 			array_push(nodes, _node);
 			
-			if(is_instanceof(_node, Node_Iterator_Filter_Inline_Input)) {
+			if(is(_node, Node_Iterator_Filter_Inline_Input)) {
 				input_node = _node;
 				input_node.loop = self;
 			}
 			
-			if(is_instanceof(_node, Node_Iterator_Filter_Inline_Output)) {
+			if(is(_node, Node_Iterator_Filter_Inline_Output)) {
 				output_node = _node;
 				output_node.loop = self;
 			}

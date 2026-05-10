@@ -53,7 +53,7 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _surf = getInputSingle(0);
 		var _type = getInputSingle(1);
 		
-		var _atlas = is_instanceof(_surf, SurfaceAtlas);
+		var _atlas = is(_surf, SurfaceAtlas);
 		inputs[4].setVisible(_atlas);
 		inputs[5].setVisible(_type == 2);
 		inputs[6].setVisible(_type == 2);
@@ -71,8 +71,8 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var sc = 2, sw, sh;
 		var shader;
 		
-		var isAtlas = is_instanceof(_data[0], SurfaceAtlas);
-		if(isAtlas && !is_instanceof(_outSurf, SurfaceAtlas))
+		var isAtlas = is(_data[0], SurfaceAtlas);
+		if(isAtlas && !is(_outSurf, SurfaceAtlas))
 			_outSurf = _data[0].clone(true);
 			
 		var _surf = isAtlas? _outSurf.getSurface() : _outSurf;

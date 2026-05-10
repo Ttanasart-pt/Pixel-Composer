@@ -44,7 +44,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		inputs[2].display_data.side_button.tooltip.index = inputs[2].attributes.unit; 
 		
 		var _aud = getInputData(0);
-		if(!is_instanceof(_aud, audioObject)) return;
+		if(!is(_aud, audioObject)) return;
 		
 		var _wid  = getInputData(1);
 		var _loc  = getInputData(2);
@@ -99,7 +99,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var _aud = getInputData(0);
-		if(!is_instanceof(_aud, audioObject)) return;
+		if(!is(_aud, audioObject)) return;
 		
 		var bbox = draw_bbox;
 		var surf = _aud.checkPreview(320, 128);

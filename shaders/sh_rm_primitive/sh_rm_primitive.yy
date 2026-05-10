@@ -3,8 +3,8 @@
   "%Name":"sh_rm_primitive",
   "name":"sh_rm_primitive",
   "parent":{
-    "name":"raymarching",
-    "path":"folders/nodes/data/3D/raymarching.yy",
+    "name":"object",
+    "path":"folders/nodes/data/3D/raymarching/object.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
