@@ -829,17 +829,25 @@
 		return bg;
 	}
 
-	vec4 scene(vec2 tx, vec3 camRotation, float camScale, float camRatio) {
+	vec4 scene(vec2 tx, vec3 camRotation, float camScale, float camRatio, vec3 objectRotation, out float outDepth) {
 		mat3 rx = rotateX(camRotation.x);
 		mat3 ry = rotateY(camRotation.y);
 		mat3 rz = rotateZ(camRotation.z);
+
 		mat3 camRotMatrix  = rx * ry * rz;
 		mat3 camIrotMatrix = inverse(camRotMatrix);
 		
+		mat3 orx = rotateX(objectRotation.x);
+		mat3 ory = rotateY(objectRotation.y);
+		mat3 orz = rotateZ(objectRotation.z);
+
+		mat3 objRotMatrix  = orx * ory * orz;
+		mat3 objIrotMatrix = inverse(objRotMatrix);
+
 		vec3 dir, eye;
 		
-		vec2  cps = (tx - .5) * 2.;
-			cps.x *= camRatio;
+		vec2 cps = (tx - .5) * 2.;
+			 cps.x *= camRatio;
 				
 		if(ortho == 0) {
 			float dz  = 1. / tan(radians(fov) / 2.);
@@ -853,19 +861,26 @@
 			eye = vec3(cps * orthoScale, 5.);
 		}
 		
-		dir  = normalize(camIrotMatrix * dir);
+		dir  = camIrotMatrix * dir;
+		dir  = objIrotMatrix * dir;
+		dir  = normalize(dir);
+
 		eye  = camIrotMatrix * eye;
+		eye  = objIrotMatrix * eye;
 		eye /= camScale;
-		
+
 		if(volumetric[0] == 1) { 
 			float _dens = clamp(marchDensity(eye, dir), 0., 1.);
 			return diffuseColor[0] * _dens;
 		}
 		
 		float depth = march(eye, dir);
+		outDepth = depth;
 		
 		vec3 coll  = eye + dir * depth;
 		vec3 norm  = normal(coll);
+		norm = objRotMatrix * norm;
+
 		vec4 grid  = vec4(0.);
 		
 		if(drawGrid == 1 && (shapeAmount == 0 || sign(eye.y) != sign(coll.y))) {

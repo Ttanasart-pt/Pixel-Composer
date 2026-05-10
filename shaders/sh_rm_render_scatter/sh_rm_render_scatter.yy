@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_rm_render_scatter",
+  "name":"sh_rm_render_scatter",
+  "parent":{
+    "name":"render",
+    "path":"folders/nodes/data/3D/raymarching/render.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

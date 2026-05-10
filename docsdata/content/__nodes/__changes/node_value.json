@@ -11,6 +11,11 @@
         "date": "2026-05-10T02:15:27.850Z",
         "node": "",
         "commit": "**Shadow**: Add oversample setting."
+      },
+      {
+        "date": "2026-05-10T04:50:25.522Z",
+        "node": "",
+        "commit": "**RM Primitive] Add specular property. - [RM Render**: Add light color, intensity properties."
       }
     ]
   },

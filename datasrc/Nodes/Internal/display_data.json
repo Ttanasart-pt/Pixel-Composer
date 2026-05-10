@@ -840,11 +840,12 @@
             { "label": "/Object" },
             "Node_RM_Primitive",
             "Node_RM_Terrain",
-            "Node_RM_Cloud"
+            "Node_RM_Cloud",
             { "label": "/Modify" },
             "Node_RM_Combine",
             { "label": "/Render" },
             "Node_RM_Render",
+            "Node_RM_Render_Scatter",
         ]
     }, //3D
     {

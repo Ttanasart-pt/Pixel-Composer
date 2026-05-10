@@ -11,6 +11,11 @@
         "date": "2026-05-10T04:50:25.505Z",
         "node": "",
         "commit": "**RM Primitive] Add specular property. - [RM Render**: Add light color, intensity properties."
+      },
+      {
+        "date": "2026-05-10T06:23:11.096Z",
+        "node": "",
+        "commit": "Introduced"
       }
     ]
   }

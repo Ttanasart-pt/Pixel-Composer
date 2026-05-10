@@ -2,6 +2,8 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	name  = "RM Render";
 	
 	newInput( 0, nodeValue_Dimension());
+	
+	////- Object
 	newInput(13, nodeValue_SDF( "SDF Object" )).setVisible(true, true);
 	
 	////- Camera
@@ -28,7 +30,8 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 		
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
-	input_display_list = [ 0, 13, 
+	input_display_list = [ 0, 
+		[ "Object",     false ], 13, 
 		[ "Camera",     false ], 11, 12,  1,  2,  3,  4,  5, 
 		[ "Background", false ],  6,  7, 10, 14,  8, 
 		[ "Light",      false ],  9, 16, 15, 
@@ -39,6 +42,7 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		#region data
 			var _dim  = _data[ 0];
+			
 			var _shp  = _data[13];
 			
 			var _crt  = _data[11];

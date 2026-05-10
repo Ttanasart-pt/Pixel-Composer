@@ -83,6 +83,8 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		#region data
 			var _seed  = _data[13];
 			
+			var _surf  = _data[ 0];
+			
 			var _typ   = _data[ 2];
 			var _map   = _data[ 3];
 			var _mat   = _data[18];
@@ -113,10 +115,11 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			inputs[21].setName(_cmode == 2? "B Steps" : "V Steps");
 		#endregion
 		
+		var _dim = surface_get_dimension(_surf);
+		
 		surface_set_shader(_outSurf, sh_dither);
-			shader_set_f("dimension", surface_get_dimension(_data[0]));
-			
-			shader_set_i("type", _typ );
+			shader_set_2("dimension", _dim );
+			shader_set_i("type",      _typ );
 			
 			switch(_typ) {
 				case 0 :
@@ -173,12 +176,12 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				shader_set_2("scale",     _sca   );
 			}
 			
-			draw_surface_safe(_data[0]);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[7], _data[8]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[10]);
 		
 		return _outSurf; 
 	}

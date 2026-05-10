@@ -2959,7 +2959,7 @@ function Panel_Preview() : PanelContent() constructor {
 	            var _ovy = cy;
 	            var _ovs = canvas_s;
 	            
-	            if(d3_active == NODE_3D.polygon) {
+	            if(d3_active != NODE_3D.none) {
 	            	var _node_prev = _node.getPreviewValues();
 	            	var _node_pw   = surface_get_width_safe(_node_prev);
 	            	var _node_ph   = surface_get_height_safe(_node_prev);

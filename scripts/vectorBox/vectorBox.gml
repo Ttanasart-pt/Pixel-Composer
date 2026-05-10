@@ -175,7 +175,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 					
 				if(tg) {
 					linked = !linked;
-					_display_data.linked = linked;
+					if(is_struct(_display_data))
+						_display_data.linked = linked;
 				
 					if(linked) 
 					for( var i = 0; i < _sz; i++ )

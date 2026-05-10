@@ -98,8 +98,12 @@ void main() {
 		con = mix(contrast.x, contrast.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2 dimScale = scale / dimension;
-	vec2  pos = floor(v_vTexcoord / dimScale) * dimScale;
+	vec2 pos = v_vTexcoord;
+	if(scale.x != 1. || scale.y != 1.) {
+		vec2 dimScale = scale / dimension;
+		pos = floor(v_vTexcoord / dimScale) * dimScale;
+	}
+	
 	vec4 _col = texture2D( gm_BaseTexture, pos );
 	
 	bool exactColor = false;
@@ -186,9 +190,6 @@ void main() {
 	} else {
 		float d1 = colorDifferent(_col, col1);
 		float d2 = colorDifferent(_col, col2);
-		
-		// float d1 = max3(abs(_col.x - col1.x), abs(_col.y - col1.y), abs(_col.z - col1.z));
-		// float d2 = max3(abs(_col.x - col2.x), abs(_col.y - col2.y), abs(_col.z - col2.z));
 		
 		float rat = d1 / (d1 + d2);
 		
