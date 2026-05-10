@@ -159,7 +159,10 @@ uniform sampler2D mask;
 
 uniform float density;
 uniform int   furDens;
-uniform vec2  furLengthRange;
+
+uniform vec2      furLengthRange;
+uniform int       usefurLengthMap;
+uniform sampler2D furLengthMap;
 
 uniform float     furAngle;
 uniform float     furAngleRange;
@@ -217,8 +220,11 @@ void main() {
             if(msk.r * msk.a < 0.5) continue;
         }
 
-        float furLength = mix(furLengthRange.x, furLengthRange.y, random(frootLoop, seed + 645.485)) / density;
-        float furAngle  = radians(furAngle + furAngleRange * (random(frootLoop, seed + 9874.54) * 2. - 1.));
+		float furSize    = usefurLengthMap == 1? texture2D(furLengthMap, froot).r : 1.;
+        float furLength  = mix(furLengthRange.x, furLengthRange.y, random(frootLoop, seed + 645.485)) / density;
+              furLength *= furSize;
+        
+        float furAngle   = radians(furAngle + furAngleRange * (random(frootLoop, seed + 9874.54) * 2. - 1.));
         if(usefurAngleMap == 1) furAngle += texture2D(furAngleMap, froot).r * PI * 2.;
 
         vec2  furTip    = froot + vec2(cos(furAngle), -sin(furAngle)) * furLength;
@@ -226,7 +232,7 @@ void main() {
         if(prog < 0. || prog > 1.) continue;
 
 		float tcc = curveEval(thickC_curve, thickC_amount, 1. - prog);
-        float thk = thickness / density * tcc;
+        float thk = thickness / density * tcc * furSize;
         float furRen = step(furDist, thk);
         if(furRen == 0.) continue;
 

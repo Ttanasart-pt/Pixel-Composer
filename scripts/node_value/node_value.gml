@@ -705,8 +705,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setMappableConst = function(_index, _suf = "Map") {
-		attributes.mapped    = false;
-		parameters.mapped    = true;
+		attributes.mapped = false;
+		parameters.mapped = true;
 		mapped_type = 2;
 		array_push(node.inputMappable, self);
 		
@@ -720,8 +720,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var mapButton = button(function() /*=>*/ { toggleAttribute("mapped"); node.triggerRender(); })
 			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], function() /*=>*/ {return attributes.mapped? c_white : COLORS._main_icon} )
-			.iconPad()
-			.setTooltip("Toggle Map");
+			.iconPad().setTooltip("Toggle Map");
 		
 		setSideButton(mapButton);
 		return self;

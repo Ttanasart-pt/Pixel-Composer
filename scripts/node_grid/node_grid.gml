@@ -7,6 +7,8 @@
 function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid";
 	
+	newInput(11, nodeValueSeed());
+	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	newInput(37, nodeValue_Surface( "UV Map"     ));
@@ -37,7 +39,6 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(10, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
-	newInput(11, nodeValueSeed());
 	newInput( 5, nodeValue_Gradient( "Tile Color",            gra_white )).setMappable(20);
 	newInput( 6, nodeValue_Color(    "Gap Color",             ca_black  ));
 	newInput( 7, nodeValue_Surface(  "Texture"                          ));
@@ -45,7 +46,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(12, nodeValue_Bool(     "Anti-aliasing",         false     ));
 	newInput(24, nodeValue_SliRange( "Level",                 [0,1]     ));
 	
-	////- =Texture Transform
+	////- =/Texture Transform
 	newInput(17, nodeValue_Bool(       "Truchet",         false           ));
 	newInput(18, nodeValueSeedFloat(   "Texture Seed"                     ));
 	newInput(39, nodeValue_Vec2_Range( "Random Position", [0,0,0,0]       ));
@@ -53,15 +54,16 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(40, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(19, nodeValue_Slider(     "Flip Horizontal", .5              ));
 	newInput(22, nodeValue_Slider(     "Flip Vertical",   .5              ));
-	// input 41
+	// 41
 	
-	input_display_list = [
+	input_display_list = [ 11, 
 		[ "Output",  false ],  0, 37, 38, 35, 
 		[ "Pattern", false ],  1,  4, 15, 36,  2, 13, 28,  3, 26, 27, 14, 
 		[ "Shift",   false ],  9,  8, 16, 31, 32, 30, 
 		[ "Scale",   false ], 33, 34, 29, 
-		[ "Render",  false ], 10, 11,  5, 20,  6,  7, 25, 12, 24, 
-		[ "Texture Transform", true, 17 ],18, 39, 23, 40, 19, 22, 
+		
+		[ "Render",  false ], 10,  5, 20,  6,  7, 25, 12, 24, 
+			[ "/Texture Transform", true, 17 ], 18, 39, 23, 40, 19, 22, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -118,7 +120,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[27].setVisible(_mode == 1);
 			
 			inputs[ 7].setVisible(_tex_mode, _tex_mode);
-			inputs[25].setVisible(_tex_mode, _tex_mode);
+			inputs[25].setVisible(_tex_mode);
 		#endregion
 		
 		surface_set_shader(_outSurf, sh_grid);

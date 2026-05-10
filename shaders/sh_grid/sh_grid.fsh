@@ -337,11 +337,9 @@ void main() {
 		else if(shiftAxis == 1) { rat = sca.x / sca.y; }
 	}
 	
-	vec2 sqSt  = floor(_pos * sca) / sca;
-	vec2 sqStW = fract(fract(sqSt) + 1.);
-	
+	vec2  sqSt = floor(_pos * sca) / sca;
 	vec2 _dist = _pos - sqSt;
-	vec2  nPos = abs(_dist * sca - vec2(0.5)) * 2.; //distance in x, y axis
+	vec2  nPos = abs(_dist * sca - vec2(.5)) * 2.; // distance in x, y axis
 	float dist = 1. - max((nPos.x - 1.) * rat + 1., nPos.y);
 	
 		 if(shiftAxis == 0) { dist = 1. - max((nPos.x - 1.) * rat + 1., nPos.y); }
@@ -356,7 +354,7 @@ void main() {
 	vec4 colr;
 	
 	if(mode == 0) {
-		colr = gradientEval(random(sqStW));
+		colr = gradientEval(random(fract(fract(sqSt) + 1.)));
 		
 	} else if(mode == 3) {
 		vec2 uv = fract(_pos * sca);

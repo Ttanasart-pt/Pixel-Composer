@@ -13,11 +13,10 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	////- =Fur
 	newInput( 5, nodeValue_Float(    "Density",    32   ));
 	newInput( 6, nodeValue_Int(      "Fur Amount", 2    ));
-	newInput( 7, nodeValue_Range(    "Length",    [2,4] ));
+	newInput( 7, nodeValue_Range(    "Length",    [2,4] )).setMappableConst(21);
 	
 	////- =Direction
-	newInput( 8, nodeValue_Rotation( "Direction", -90   ));
-	newInput(14, nodeValue_Surface(  "Direction Map"    ));
+	newInput( 8, nodeValue_Rotation( "Direction", -90   )).setMappableConst(14);
 	newInput(13, nodeValue_Float(    "Wiggle",    10    ));
 	
 	////- =Transform
@@ -26,7 +25,7 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(17, nodeValue_Vec3(    "Scale",    [1,1]   ));
 	
 	////- =Shape
-	newInput( 9, nodeValue_Slider(   "Thickness", .7        )).setCurvable(20, CURVE_DEF_01, "Curve");
+	newInput( 9, nodeValue_Slider(   "Thickness", .7    )).setCurvable(20, CURVE_DEF_01, "Curve");
 	
 	////- =Render
 	newInput(18, nodeValue_Color(    "BG Color",  ca_black  ));
@@ -34,13 +33,13 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(11, nodeValue_Surface(  "Texture"              ));
 	newInput(12, nodeValue_Slider(   "Shadow",    1         ));
 	newInput(19, nodeValue_Slider(   "Edge",      0         ));
-	// 21
+	// 22
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		[ "Output",     true ],  0,  1,  2,  3, 
-		[ "Fur",       false ],  5,  7, 
+		[ "Fur",       false ],  5,  7, 21, 
 		[ "Direction", false ],  8, 14, 13, 
 		[ "Transform", false ], 15, 16, 17, 
 		[ "Shape",     false ],  9, 20, 
@@ -72,9 +71,10 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			
 			var _dens  = _data[ 5];
 			var _subd  = _data[ 6];
-			var _len   = _data[ 7];
+			var _len   = _data[ 7], _lenUseMap = inputs[ 7].attributes.mapped;
+			var _lenm  = _data[21];
 			
-			var _ang   = _data[ 8];
+			var _ang   = _data[ 8], _angUseMap = inputs[ 8].attributes.mapped;
 			var _angm  = _data[14];
 			var _wigg  = _data[13];
 			
@@ -90,12 +90,16 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			var _csamp = _data[11];
 			var _sha   = _data[12];
 			var _edge  = _data[19];
+			
+			inputs[21].setVisible(_lenUseMap, _lenUseMap);
+			inputs[14].setVisible(_angUseMap, _angUseMap);
 		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 		
-		var _useAmap = is_surface(_angm);
+		var _useLmap = _lenUseMap && is_surface(_lenm);
+		var _useAmap = _angUseMap && is_surface(_angm);
 		if(_useAmap) {
 			surface_set_shader(temp_surface[0], sh_fur_direction_map);
 				shader_set_2( "dimension", _dim );
@@ -114,9 +118,11 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			shader_set_f( "rotation",       _rot   );
 			shader_set_2( "scale",          _sca   );
 			
-			shader_set_f( "density",        _dens  );
-			shader_set_i( "furDens",        _subd  );
-			shader_set_2( "furLengthRange", _len   );
+			shader_set_f( "density",         _dens    );
+			shader_set_i( "furDens",         _subd    );
+			shader_set_2( "furLengthRange",  _len     );
+			shader_set_s( "furLengthMap",    _lenm    );
+			shader_set_i( "usefurLengthMap", _useLmap );
 			
 			shader_set_f( "furAngle",       _ang     );
 			shader_set_s( "furAngleMap",    temp_surface[0] );

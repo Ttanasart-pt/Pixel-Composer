@@ -105,6 +105,8 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _rad, 
 
 function preview_overlay_rotation_range(interact, active, _x, _y, _s, _mx, _my, _rad, _type = 0) {
 	var _val  = getValue();
+	if(array_get_depth(_val) > 1) return -1;
+	
 	var hover = -1;
 	
 	////- Draw
