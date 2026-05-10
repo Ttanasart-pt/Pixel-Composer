@@ -6,6 +6,11 @@
         "date": "2026-05-10T02:15:27.838Z",
         "node": "Shadow",
         "commit": "**Shadow**: Add oversample setting."
+      },
+      {
+        "date": "2026-05-10T02:26:14.973Z",
+        "node": "Scatter",
+        "commit": "**Scatter**: Add offset transformation properties."
       }
     ]
   },
