@@ -83,7 +83,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			[ "/Phase",      false ], 20, 21, 22, 
 			
 		[ "Thickness",       false ],  5,  6, 
-		[ "Rendering",   false, 23 ], 24, 
+		[ "Rendering",   false, 23 ], 24,  
 			[ "/Base Color", false ], 25, 26, 27, 28, 
 			[ "/Edge Color", false ], 29, 30, 31, 
 			[ "/Texture",    false ], 32, 
