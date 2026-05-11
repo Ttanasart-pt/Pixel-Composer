@@ -101,7 +101,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	// 56
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+	 
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
 	
