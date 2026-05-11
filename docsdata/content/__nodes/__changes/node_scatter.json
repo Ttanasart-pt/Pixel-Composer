@@ -11,6 +11,11 @@
         "date": "2026-05-11T08:16:14.783Z",
         "node": "Scatter",
         "commit": "**Scatter**: Fix value map doesn't work."
+      },
+      {
+        "date": "2026-05-11T08:29:51.472Z",
+        "node": "Scatter",
+        "commit": "**Scatter**: Add tiling option for all scatter source type."
       }
     ]
   },

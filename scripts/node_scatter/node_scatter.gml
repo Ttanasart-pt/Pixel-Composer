@@ -42,7 +42,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, PROJ_SURF)}; 
 	
-	newInput( 6, nodeValue_EScroll(  "Distribution",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image + Tile" ] ));
+	newInput( 6, nodeValue_EScroll(  "Source",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image + Tile" ] ));
 	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
 	newInput(13, nodeValue_Surface(  "Distribution Map"      ));
 	newInput(14, nodeValue_Vector(   "Distribution Data", [] )).setArrayDepth(1);
@@ -50,7 +50,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setTooltip("Apply the third and later values in each data point (if exist) on given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index", "Depth" ] });
 		
-	newInput( 9, nodeValue_EButton(  "Scatter",         1, [ "Uniform", "Random", "Poisson" ] ));
+	newInput( 9, nodeValue_EButton(  "Distribution",    1, [ "Uniform", "Random", "Poisson" ] ));
 	newInput(31, nodeValue_Bool(     "Auto Amount",     false  ));
 	newInput( 2, nodeValue_Int(      "Amount",          8      )).setValidator(VV_min(0));
 	newInput(30, nodeValue_IVec2(    "Uniform Amount", [4,4]   ));
@@ -98,7 +98,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Render
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
-	// 56
+	newInput(56, nodeValue_Bool(    "Tile",       false ));
+	// 57
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 
@@ -114,7 +115,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Rotation", false ], 48,  7,  4, 52, 53, 32, 
 		[ "Scale",    false ],  3, 43, 54, 55,  8, 34, 
 		[ "Color",    false ], 11, 28, 12, 16, 41, 47, 42, 
-		[ "Render",   false ], 18, 23, 
+		[ "Render",   false ], 18, 23, 56, 
 	];
 	
 	////- Nodes
@@ -231,6 +232,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var blend      = _data[18];
 			var sortY      = _data[23];
+			var _tile      = _data[56];
 		#endregion
 		
 		#region visible
@@ -291,6 +293,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var iAlp = 2 + array_get_index(useV, "Alpha");
 		var iArr = 2 + array_get_index(useV, "Array Index");
 		var iDef = 2 + array_get_index(useV, "Depth");
+		
+		var _drawTile = _tile || _dist == NODE_SCATTER_DIST.tile
 		
 		var _dyna     = false;
 		var surfArray = is_array(_inSurf);
@@ -764,7 +768,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(_dyna) surf.draw(_x, _y, _scx, _scy, _r, clr, alp);
 				else      draw_surface_ext(surf, _x, _y, _scx, _scy, _r, clr, alp);
 				
-				if(_dist == NODE_SCATTER_DIST.tile) {
+				if(_drawTile) {
 					var _sw = _atl.w * _scx;
 					var _sh = _atl.h * _scy;
 					
