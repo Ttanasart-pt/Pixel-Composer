@@ -83,9 +83,9 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			[ "/Phase",      false ], 20, 21, 22, 
 			
 		[ "Thickness",       false ],  5,  6, 
-		[ "Rendering",       false ], 23, 24, 
+		[ "Rendering",   false, 23 ], 24, 
 			[ "/Base Color", false ], 25, 26, 27, 28, 
-			// [ "/Edge Color", false ], 29, 30, 31, 
+			[ "/Edge Color", false ], 29, 30, 31, 
 			[ "/Texture",    false ], 32, 
 			
 	];
@@ -279,6 +279,9 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 						var _th = random_range(_thk[0], _thk[1]) * (curve_thick? curve_thick.get(_prg) : 1);
 						
 						var _cc = _colBase;
+						var _cl = _colBase;
+						var _cr = _colBase;
+						
 						switch(_lenc) {
 							case 0 : _cc = _colBase;                                           break;
 							case 1 : _cc = _lencGrad.evalFast(_prg);                           break;
@@ -286,7 +289,21 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 							case 3 : _cc = colorScreen(   _lencGrad.evalFast(_prg), _colBase); break;
 						}
 						
-						array_push(_points, [ _x, _y, _th, _cc ]);
+						switch(_edge) {
+							case 0 : _cl = _cc;                                                break;
+							case 1 : _cl = _edgeLGrd.evalFast(random(1));                      break;
+							case 2 : _cl = colorMultiply( _edgeLGrd.evalFast(random(1)), _cc); break;
+							case 3 : _cl = colorScreen(   _edgeLGrd.evalFast(random(1)), _cc); break;
+						}
+						
+						switch(_edge) {
+							case 0 : _cr = _cc;                                                break;
+							case 1 : _cr = _edgeRGrd.evalFast(random(1));                      break;
+							case 2 : _cr = colorMultiply( _edgeRGrd.evalFast(random(1)), _cc); break;
+							case 3 : _cr = colorScreen(   _edgeRGrd.evalFast(random(1)), _cc); break;
+						}
+						
+						array_push(_points, [ _x, _y, _th, _cc, _cl, _cr ]);
 						_prg += _gst;
 					}
 					

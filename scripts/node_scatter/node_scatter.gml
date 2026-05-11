@@ -82,11 +82,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(32, nodeValue_Rotation( "Rotate per Radius",  0          ));
 	
 	////- =Scale
-	newInput( 3, nodeValue_Range2(  "Scale",             [1,1,1,1], { linked : true } ));
-	newInput(54, nodeValue_Range2(  "Offset Position",   [0,0,0,0] )).setMappableConst(55);
+	newInput( 3, nodeValue_Range2(  "Scale",             [1,1,1,1], { linked : true } )).setMappableConst(43);
+	newInput(54, nodeValue_Range2(  "Offset Scale",      [0,0,0,0] )).setMappableConst(55);
 	newInput( 8, nodeValue_Bool(    "Uniform Scaling",    true     ));
 	newInput(34, nodeValue_Vec2(    "Scale per Radius",  [0,0]     ));
-	newInput(43, nodeValue_Surface( "Scale Surface"                ));
 	
 	////- =Color
 	newInput(11, nodeValue_Gradient( "Random Blend",    gra_white )).setHotkeyAuto("C").setMappable(28);
@@ -113,7 +112,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Path",     false ], 19, 38, 20, 45, 21, 22, 
 		[ "Position", false ], 40, 33, 36, 49, 50, 51, 39, 37, 
 		[ "Rotation", false ], 48,  7,  4, 52, 53, 32, 
-		[ "Scale",    false ],  3, 54, 55,  8, 34, 43, 
+		[ "Scale",    false ],  3, 43, 54, 55,  8, 34, 
 		[ "Color",    false ], 11, 28, 12, 16, 41, 47, 42, 
 		[ "Render",   false ], 18, 23, 
 	];

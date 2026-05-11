@@ -2098,8 +2098,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         
                         if(DOUBLE_CLICK) {
                         	var _ctx = getCurrentContext();
+                        	PANEL_INSPECTOR.setInspecting(_ctx); 
                         	
-                        	if(!PANEL_INSPECTOR.locked) PANEL_INSPECTOR.inspecting = _ctx; 
                         	if(_ctx || !array_empty(project.globalLayer_nodes)) PANEL_PREVIEW.setNodePreview(_ctx);
                         }
                     	
@@ -2140,7 +2140,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     }
                     
                     if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
-                    if(array_valid(nodes_selecting)) array_foreach(nodes_selecting, function(n) /*=>*/ { bringNodeToFront(n) });
+                    if(array_valid(nodes_selecting)) array_foreach(nodes_selecting, function(n) /*=>*/ {return bringNodeToFront(n)});
                 }
                 
                 if(key_mod_press(ALT) && node_hover_type == 0 && !array_empty(nodes_selecting)) { // Alt copy

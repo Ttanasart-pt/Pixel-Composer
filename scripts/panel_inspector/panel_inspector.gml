@@ -493,6 +493,7 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     function setInspecting(_inspecting, _lock = false, _focus = true, _record = true) {
+    	
         if(locked) return;
         if(inspecting == _inspecting) return;
         if(_inspecting == noone) {

@@ -39,8 +39,8 @@ function __MK_Tree_Segment(_x, _y, _t) constructor {
 	thickness = _t;
 	
 	color      = c_white;
-	colorEdgeL = c_white;
-	colorEdgeR = c_white;
+	colorEdgeL = undefined;
+	colorEdgeR = undefined;
 }
 
 function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
@@ -335,6 +335,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 		totalLength    = 0;
 		
 		var ox, oy, nx, ny, t;
+		var c, cl, cr;
+		
 		for( var i = 0; i < amount; i++ ) {
 			var p = _points[i];
 			
@@ -342,9 +344,13 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 			ny = p[1];
 			t  = p[2];
 			c  = p[3];
+			cl = p[4];
+			cr = p[5];
 			
 			segments[i] = new __MK_Tree_Segment(nx, ny, t);
-			segments[i].color = c;
+			segments[i].color      = c;
+			segments[i].colorEdgeL = cl;
+			segments[i].colorEdgeR = cr;
 			
 			if(i) {
 				var l = point_distance(ox, oy, nx, ny)
@@ -448,8 +454,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 			ny  = _seg.y;
 			nt  = _seg.thickness;
 			nc  = _seg.color;
-			ncl = _seg.colorEdgeL;
-			ncr = _seg.colorEdgeR;
+			ncl = _seg.colorEdgeL ?? c_white;
+			ncr = _seg.colorEdgeR ?? c_white;
 			aa  = 1;
 			
 			na  = ang[i];

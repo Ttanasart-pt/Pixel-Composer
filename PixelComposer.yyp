@@ -573,6 +573,7 @@
     {"id":{"name":"ac_smoothstep","path":"animcurves/ac_smoothstep/ac_smoothstep.yy",},},
     {"id":{"name":"Apollo","path":"extensions/Apollo/Apollo.yy",},},
     {"id":{"name":"clipboard","path":"extensions/clipboard/clipboard.yy",},},
+    {"id":{"name":"devtools","path":"extensions/devtools/devtools.yy",},},
     {"id":{"name":"discordBridge","path":"extensions/discordBridge/discordBridge.yy",},},
     {"id":{"name":"display_measure","path":"extensions/display_measure/display_measure.yy",},},
     {"id":{"name":"display_screenshot","path":"extensions/display_screenshot/display_screenshot.yy",},},
