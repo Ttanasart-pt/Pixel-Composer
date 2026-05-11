@@ -4251,6 +4251,7 @@
     {"id":{"name":"s_node_xml_file_read","path":"sprites/s_node_xml_file_read/s_node_xml_file_read.yy",},},
     {"id":{"name":"s_node_xml_file_write","path":"sprites/s_node_xml_file_write/s_node_xml_file_write.yy",},},
     {"id":{"name":"s_node_zigzag","path":"sprites/s_node_zigzag/s_node_zigzag.yy",},},
+    {"id":{"name":"s_node","path":"sprites/s_node/s_node.yy",},},
     {"id":{"name":"s_patreon_banner","path":"sprites/s_patreon_banner/s_patreon_banner.yy",},},
     {"id":{"name":"s_preview_black","path":"sprites/s_preview_black/s_preview_black.yy",},},
     {"id":{"name":"s_preview_transparent","path":"sprites/s_preview_transparent/s_preview_transparent.yy",},},

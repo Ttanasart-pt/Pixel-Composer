@@ -62,10 +62,11 @@ function Surface_sampler(s = noone) constructor {
     static free = function() /*=>*/ { buffer_delete_safe(buffer); }
 }
 
-function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
+function Surface_Sampler_Grey(s = noone, _rng = undefined) constructor {
     active  = false;
     buffer  = noone;
-    range   = _rng;
+    rangeMin = _rng != undefined? _rng[0] : 0;
+    rangeMax = _rng != undefined? _rng[1] : 1;
     
     surface     = undefined;
     surfaceBase = undefined;
@@ -105,11 +106,17 @@ function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
     static getPixelDirectClamp = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, (clamp(_y, 0, sh-1) * sw + clamp(_x, 0, sw-1)) * 2, buffer_f16); }
     
     static getPixel = function(_u,_v) /*=>*/ {
-        if(!active) return range[0];
+        if(!active) return rangeMin;
         var _x = round(clamp(_u, 0, 1) * (sw - 1));
         var _y = round(clamp(_v, 0, 1) * (sh - 1));
-        
-        return lerp(range[0], range[1], buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16));
+        return lerp(rangeMin, rangeMax, buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16));
+    }
+    
+    static getPixelNorm = function(_u,_v) /*=>*/ {
+        if(!active) return 0;
+        var _x = round(clamp(_u, 0, 1) * (sw - 1));
+        var _y = round(clamp(_v, 0, 1) * (sh - 1));
+        return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16);
     }
     
     static free = function() /*=>*/ { 

@@ -3704,6 +3704,7 @@
     {"name":"s_node_xml_file_read","order":37,"path":"sprites/s_node_xml_file_read/s_node_xml_file_read.yy",},
     {"name":"s_node_xml_file_write","order":36,"path":"sprites/s_node_xml_file_write/s_node_xml_file_write.yy",},
     {"name":"s_node_zigzag","order":18,"path":"sprites/s_node_zigzag/s_node_zigzag.yy",},
+    {"name":"s_node","order":1,"path":"sprites/s_node/s_node.yy",},
     {"name":"s_patreon_banner","order":4,"path":"sprites/s_patreon_banner/s_patreon_banner.yy",},
     {"name":"s_preview_black","order":2,"path":"sprites/s_preview_black/s_preview_black.yy",},
     {"name":"s_preview_white","order":1,"path":"sprites/s_preview_white/s_preview_white.yy",},

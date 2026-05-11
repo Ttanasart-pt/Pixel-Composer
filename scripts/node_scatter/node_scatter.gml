@@ -26,15 +26,18 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
-	newInput(15, nodeValue_EScroll( "Array", 0, [ "Spread output", "Index", "Random", "Data", "Texture" ]))
-		.setTooltip(@"What to do when input array of surface.
-- Spread: Create Array of output each scattering single surface.
-- Mixed: Create single output scattering multiple images.");
+	newInput(15, nodeValue_EScroll( "Array", 0, [ 
+		new scrollItem("Spread output").setTooltip("Create multiple surfaces for each surface separately."), 
+		new scrollItem("Index").setTooltip("Mix all input surfaces using spawn index as array index."), 
+		new scrollItem("Random").setTooltip("Mix all input surfaces with random array index."), 
+		new scrollItem("Data").setTooltip("Using third value (if exists) to determine array index."), 
+		new scrollItem("Texture").setTooltip("Use external surface to select array index.") 
+	]));
 		
 	newInput(24, nodeValue_IArray(  "Array Indices" )).setArrayDepth(1);
 	newInput(25, nodeValue_Surface( "Array Texture" ));
-	newInput(26, nodeValue_Range(   "Animated Array",    [0,0], { linked : true } ));
-	newInput(27, nodeValue_EScroll( "Animated Array End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
+	newInput(26, nodeValue_Range(   "Animated",    [0,0], { linked : true } ));
+	newInput(27, nodeValue_EScroll( "Animated End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
 	
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, PROJ_SURF)}; 
@@ -68,8 +71,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(33, nodeValue_Range2( "Random Position", [0,0,0,0] ));
 	newInput(36, nodeValue_Vec2(   "Shift Position",  [0,0]     )).setMappableConst(49);
 	newInput(50, nodeValue_Range2( "Offset Position", [0,0,0,0] )).setMappableConst(51);
-	newInput(37, nodeValue_Bool(   "Exact",           false     ));
 	newInput(39, nodeValue_Range(  "Shift Radial",    [0,0]     ));
+	newInput(37, nodeValue_Bool(   "Exact",           false     ));
 	
 	////- =Rotation
 	newInput(48, nodeValue_Rotation( "Rotation",           0          ));
@@ -108,7 +111,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Surfaces",  true ],  0, 15, 24, 25, 26, 27, 
 		[ "Scatter",  false ],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
 		[ "Path",     false ], 19, 38, 20, 45, 21, 22, 
-		[ "Position", false ], 40, 33, 36, 49, 50, 51, 37, 39, 
+		[ "Position", false ], 40, 33, 36, 49, 50, 51, 39, 37, 
 		[ "Rotation", false ], 48,  7,  4, 52, 53, 32, 
 		[ "Scale",    false ],  3, 54, 55,  8, 34, 43, 
 		[ "Color",    false ], 11, 28, 12, 16, 41, 47, 42, 
@@ -129,12 +132,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_maps = 0;
 	scatter_mapp = [];
 	
-	posShiftSamp = new Surface_sampler();
-	posOffSamp   = new Surface_sampler();
-	rotOffSamp   = new Surface_sampler();
-	scaOffSamp   = new Surface_sampler();
+	posShiftSamp = new Surface_Sampler_Grey();
+	posOffSamp   = new Surface_Sampler_Grey();
+	rotOffSamp   = new Surface_Sampler_Grey();
+	scalSamp     = new Surface_Sampler_Grey();
+	scaOffSamp   = new Surface_Sampler_Grey();
+	
 	surfSamp     = new Surface_sampler();
-	scalSamp     = new Surface_sampler();
 	
 	static getDimension = function() { return getInputData(1, PROJ_SURF); }
 	
@@ -427,30 +431,28 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _wa = _ww / uniAmoX;
 			var _ha = _hh / uniAmoY;
 			
-			var sp, _x, _y, _v;
+			var sp = [0,0];
 			var pp = new __vec2P();
+			var _atl, _csed;
+			var _x, _y, _v;
+			
+			var scaleX = _scaUniX? _scale[0] : undefined;
+			var scaleY = _scaUniY? _scale[2] : undefined;
 			
 			repeat(_amount) {
 				i++;
+				_csed = _sed + i * 100 * pi;
+				random_set_seed(_csed);
 				
-				var _atl = _sct_len >= _datLen? 0 : scatter_data[_sct_len];
-				sp = noone;
 				_v = noone;
 				_x = 0;
 				_y = 0;
 				
-				if(is_struct(_atl)) {
-					_x = _atl.x;
-					_y = _atl.y;
-				}
+				var _scx = scaleX ?? random_range_seed(_scale[0], _scale[1], _csed++);
+				var _scy = scaleY ?? random_range_seed(_scale[2], _scale[3], _csed++);
 				
-				var _csed = _sed + i * 100 * pi;
-				random_set_seed(_csed);
-				
-				var _scx = _scaUniX? _scale[0] : random_range_seed(_scale[0], _scale[1], _csed++);
-				var _scy = _scaUniY? _scale[2] : random_range_seed(_scale[2], _scale[3], _csed++);
-				
-				switch(_dist) { // position
+				////- =Position
+				switch(_dist) { // Distribute
 					case NODE_SCATTER_DIST.area : 
 						if(_scat == 2) {
 							var _p = _points[i];
@@ -476,7 +478,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								
 							} else if(_area[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
 								if(uniAut) {
-									sp = area_get_random_point(_area, _dist, _scat, i, _amount);
+									sp = area_get_random_point(_area, _dist, _scat, i, _amount, _csed++, sp);
 									_x = sp[0];
 									_y = sp[1];
 									
@@ -493,33 +495,33 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								}
 							}
 						} else {
-							sp = area_get_random_point(_area, _dist, _scat, i, _amount, _csed);
+							sp = area_get_random_point(_area, _dist, _scat, i, _amount, _csed++, sp);
 							_x = sp[0];
 							_y = sp[1];
 						}
 						break;
 						
 					case NODE_SCATTER_DIST.border : 
-						sp = area_get_random_point(_area, _dist, _scat, i, _amount);
+						sp = area_get_random_point(_area, _dist, _scat, i, _amount, _csed++, sp);
 						_x = sp[0];
 						_y = sp[1];
 						break;
 						
 					case NODE_SCATTER_DIST.map : 
-						sp = array_safe_get_fast(_posDist, i);
-						if(array_invalid(sp) || sp[0] == undefined) continue;
+						var mapdat = array_safe_get_fast(_posDist, i);
+						if(array_invalid(mapdat) || mapdat[0] == undefined) continue;
 						
-						_x = _area[0] + _area[2] * (sp[0] * 2 - 1.);
-						_y = _area[1] + _area[3] * (sp[1] * 2 - 1.);
+						_x = _area[0] + _area[2] * (mapdat[0] * 2 - 1.);
+						_y = _area[1] + _area[3] * (mapdat[1] * 2 - 1.);
 						break;
 						
 					case NODE_SCATTER_DIST.data : 
-						sp = array_safe_get_fast(_distData, i);
-						if(!is_array(sp)) continue;
-						_v = sp;
+						var mapdat = array_safe_get_fast(_distData, i);
+						if(!is_array(mapdat)) continue;
+						_v = mapdat;
 						
-						_x = array_safe_get_fast(sp, 0);
-						_y = array_safe_get_fast(sp, 1);
+						_x = array_safe_get_fast(mapdat, 0);
+						_y = array_safe_get_fast(mapdat, 1);
 						break;
 						
 					case NODE_SCATTER_DIST.path : 
@@ -575,32 +577,26 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							_y = _p[1];
 						}
 						break;
-				}
+				} // Distribute
 				
 				if(_wigX) _x += random_range_seed(posWig[0], posWig[1], _csed++);
 				if(_wigY) _y += random_range_seed(posWig[2], posWig[3], _csed++);
 			
-				var v = posShiftSamp.active? colorBrightness(posShiftSamp.getPixel(_x, _y)) : 1;
+				var v = posShiftSamp.active? posShiftSamp.getPixelNorm(_x, _y) : 1;
 				_x += posShf[0] * i * v;
 				_y += posShf[1] * i * v;
 				
-				var v  = posOffSamp.active? colorBrightness(posOffSamp.getPixel(_x, _y)) : 1;
+				var v  = posOffSamp.active? posOffSamp.getPixelNorm(_x, _y) : 1;
 				var of = random_seed(1, _csed++);
 				_x += lerp(posOff[0], posOff[1], of) * v;
 				_y += lerp(posOff[2], posOff[3], of) * v;
 				
 				var shrRad = random_range_seed(shfRad[0], shfRad[1], _csed++);
 				var shrAng = point_direction(_x, _y, _area[0], _area[1]);
-				
 				_x -= lengthdir_x(shrRad, shrAng);
 				_y -= lengthdir_y(shrRad, shrAng);
 				
-				if(iSca > 1 && _v != noone) {
-					var vSca = array_safe_get_fast(_v, iSca, 1);
-					_scx *= vSca;
-					_scy *= vSca;
-				}
-				
+				////- =Rotation
 				var _r  = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + rotation_random_eval_fast(_rota, _csed++);
 				    _r += _rotation;
 				    
@@ -618,9 +614,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_r += dirr;
 				}
 				
-				var v = rotOffSamp.active? colorBrightness(rotOffSamp.getPixel(_x, _y)) : 1;
+				var v = rotOffSamp.active? rotOffSamp.getPixelNorm(_x, _y) : 1;
 				_r   += rotation_random_eval_fast(rotOff, _csed++) * v;
 				
+				////- =Scale
+				if(iSca > 1 && _v != noone) {
+					var vSca = array_safe_get_fast(_v, iSca, 1);
+					_scx *= vSca;
+					_scy *= vSca;
+				}
+				
+				////- =Surface
 				var surf = _inSurf;
 				var ind  = 0;
 				
@@ -661,13 +665,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var sh  = dim[1];
 				
 				if(scalSamp.active) {
-					var _samC = scalSamp.getPixel(_x, _y);
-					var _samB = colorBrightness(_samC);
-					_scx *= _samB;
-					_scy *= _samB;
+					var _samC = scalSamp.getPixelNorm(_x, _y);
+					_scx *= _samC;
+					_scy *= _samC;
 				}
 				
-				var v  = scaOffSamp.active? colorBrightness(scaOffSamp.getPixel(_x, _y)) : 1;
+				var v  = scaOffSamp.active? scaOffSamp.getPixelNorm(_x, _y) : 1;
 				var of = random_seed(1, _csed++);
 				_scx  += lerp(scaOff[0], scaOff[1], of) * v;
 				_scy  += lerp(scaOff[2], scaOff[3], of) * v;
@@ -720,6 +723,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_y = round(_y); 
 				}
 				
+				_atl = _sct_len >= _datLen? 0 : scatter_data[_sct_len];
 				if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
 				else						     _atl.set(surf, _x, _y, _r, _scx, _scy, clr, alp);
 				

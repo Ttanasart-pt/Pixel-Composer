@@ -11,6 +11,7 @@ function Panel_Test() : PanelContent() constructor {
 	title       = "Tester";
 	auto_pin    = true;
 	content_w   = ui(320);
+	padding     = ui(6);
 	
 	test_dir    = "";
 	tb_test_dir = textBox_Text(   function(t) /*=>*/ { setTestDir(t);            });
@@ -47,9 +48,7 @@ function Panel_Test() : PanelContent() constructor {
 	
 	////- Panels
 	
-	function onResize() { sc_content.resize(content_w, h - padding * 2 - ui(8 * 2) - ui(24)); }
-	
-	sc_content = new scrollPane(content_w, h - padding * 2 - ui(8 * 2) - ui(24), function(_y, _m) {
+	sc_content = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var ww = sc_content.surface_w;
 		var hh = sc_content.surface_h;
@@ -111,7 +110,7 @@ function Panel_Test() : PanelContent() constructor {
 		return _h;
 	});
 	
-	sc_log = new scrollPane(content_w, h - padding * 2 - ui(8 * 2), function(_y, _m) {
+	sc_log = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _h   = 0;
 		var yy   = _y;
@@ -327,7 +326,6 @@ function Panel_Test() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		// Lists
-		
 		var _pd = padding;
 		var ndx = _pd;
 		var ndy = _pd + ui(24);
@@ -339,6 +337,7 @@ function Panel_Test() : PanelContent() constructor {
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_add(ndx + ui(8), ui(8), $"{test_amount} / {array_length(test_files)} Files");
 		
+		sc_content.verify(content_w, h - padding * 2 - ui(8 * 2) - ui(24));
 		sc_content.setFocusHover(pFOCUS, pHOVER);
 		sc_content.draw(ndx + ui(8), ndy + ui(8), mx - ndx - ui(8), my - ndy - ui(8));
 		
@@ -388,8 +387,7 @@ function Panel_Test() : PanelContent() constructor {
 		var log_w = ndw - ui(16);
 		var log_h = ndh - ui(16);
 		
-		if(sc_log.w != log_w || sc_log.h != log_h) sc_log.resize(log_w, log_h);
-		
+		sc_log.verify(log_w, log_h);
 		sc_log.setFocusHover(pFOCUS, pHOVER);
 		sc_log.draw(ndx + ui(8), ndy + ui(8), mx - ndx - ui(8), my - ndy - ui(8));
 		

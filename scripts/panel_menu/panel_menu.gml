@@ -412,7 +412,7 @@ function Panel_Menu() : PanelContent() constructor {
         
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         var hori = w > h;
-        var font = f_p2;
+        var font = f_p3;
         var xx   = ui(40);
         var yy   = ui(8);
         var m    = [mx, my];
@@ -576,7 +576,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 draw_sprite_ui(THEME.loading_s, 0, nx0 + nh/2, ny0, .65, .65, current_time / 2, COLORS._main_icon, .8);
                 
-                draw_set_text(f_p3, fa_left, fa_center, COLORS._main_value_positive);
+                draw_set_text(font, fa_left, fa_center, COLORS._main_value_positive);
                 draw_text_add(nx0 + nh, ny0 - ui(1), __txt("Rendering") + "...");
                 
             } else {
@@ -826,7 +826,7 @@ function Panel_Menu() : PanelContent() constructor {
                 }
                 
                 if(!hori) { // draw name
-                    draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+                    draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
                     draw_text_add(_stx + _sts + ui(6), _sty + _sts / 2, STEAM_USERNAME);
                 }
                 
@@ -843,11 +843,10 @@ function Panel_Menu() : PanelContent() constructor {
             version_name_copy = lerp_float(version_name_copy, 0, 10);
             var tc  = merge_color(COLORS._main_text_sub, COLORS._main_value_positive, min(1, version_name_copy));
             var sc  = merge_color(c_white, COLORS._main_value_positive, min(1, version_name_copy));
-            var fnt = f_p2;
             
             if(hori) {
                 if(w > 1500) {
-                    draw_set_text(fnt, fa_right, fa_center, tc);
+                    draw_set_text(font, fa_right, fa_center, tc);
                     var  ww = string_width(txt) + ui(12) + ui(20) * NIGHTLY + ui(20) * STEAM_ENABLED;
                     var  hh = nh;
                     var _x0 = _xx1 - ww;
@@ -883,7 +882,7 @@ function Panel_Menu() : PanelContent() constructor {
                 var _xx1 = ui(40);
                 var y1 = h - ui(20);
                 
-                draw_set_text(fnt, fa_left, fa_center, tc);
+                draw_set_text(v, fa_left, fa_center, tc);
                 var ww = string_width(txt) + ui(12);
                 
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
@@ -939,7 +938,8 @@ function Panel_Menu() : PanelContent() constructor {
             
             maxW = abs(tx0 - tx1);
             
-            draw_set_font(f_p0b);
+            var tfont = f_p1b;
+            draw_set_font(tfont);
             var full_name = string_width(txt + ".pxc") < maxW;
             var tc = string_cut(txt, maxW);
             var tw = string_width(tc) + ui(16);
@@ -982,13 +982,13 @@ function Panel_Menu() : PanelContent() constructor {
                 }
             }
             
-            draw_set_font(f_p0b);
+            draw_set_font(tfont);
             var _tcw = string_width(tc);
             
             if(hori) {
                 var _tyc = (ty0 + ty1) / 2;
                 
-                draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
+                draw_set_text(tfont, fa_left, fa_center, COLORS._main_text);
                 draw_text_int(tcx - _tcw / 2, _tyc, tc);
                 
                 if(full_name) {
@@ -1000,7 +1000,7 @@ function Panel_Menu() : PanelContent() constructor {
                         var _rd_ly = _tyc;
                         var _rd_t  = "Read only";
                         
-                        draw_set_font(f_p3);
+                        draw_set_font(font);
                         var _rd_w = string_width(_rd_t)  + ui(8);
                         var _rd_h = string_height(_rd_t) + ui(4);
                         
@@ -1012,13 +1012,13 @@ function Panel_Menu() : PanelContent() constructor {
                         
                         draw_sprite_stretched_ext(THEME.box_r2, 0, _rd_x0, _rd_y0, _rd_w, _rd_h, COLORS._main_icon);
                         
-                        draw_set_text(f_p3, fa_center, fa_center, COLORS._main_icon_dark);
+                        draw_set_text(font, fa_center, fa_center, COLORS._main_icon_dark);
                         draw_text(_rd_x0 + _rd_w / 2, _rd_y0 + _rd_h / 2, _rd_t);
                     }
                 }
                 
             } else {
-                draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
+                draw_set_text(tfont, fa_left, fa_center, COLORS._main_text);
                 draw_text_int(tx0 + ui(8), tby0 + th / 2, tc);
                 
                 if(full_name) {
@@ -1028,7 +1028,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
             }
             
-            draw_set_font(f_p0b);
+            draw_set_font(tfont);
             
             var _tw = string_width(tc);
             var _th = string_height(tc);

@@ -159,44 +159,44 @@ function value_color(i) {
 	INLINE
 	
 	static JUNCTION_COLORS = [ 
-		#ff9166, //int 
-		#ffe478, //float
-		#8c3f5d, //bool
-		#8fde5d, //color
-		#ff6b97, //surface
-		#eb004b, //path
-		#c2c2d1, //curve
-		#66ffe3, //text
-		#ffb5b5, //object
-		#4da6ff, //node
-		#c1007c, //3D
-		#808080, //any
-		#ffb5b5, //path
-		#8fde5d, //particle
-		#88ffe9, //rigid
-		#6d6e71, //sdomain
-		#8c3f5d, //struct
-		#ff9166, //strand
-		#c2c2d1, //mesh
-		#8fde5d, //trigger
-		#ff6b97, //atlas
-		#c1007c, //d3vertex
-		#8fde5d, //gradient
-		#ff9166, //armature
-		#808080, //buffer
-		#ff6b97, //pbBox
-		#4da6ff, //d3Mesh	
-		#4da6ff, //d3Light	
-		#4da6ff, //d3Camera
-		#4da6ff, //d3Scene	
-		#ff6b97, //d3Material
-		#ff6b97, //dynaSurf
-		#c2c2d1, //PCX
-		#8fde5d, //audiobit
-		#4da6ff, //flipfluid
-		#c1007c, //3D SDF
-		#ff6b97, //tileset
-		#eb004b, //font
+		#ff9166, // int 
+		#ffe478, // float
+		#8c3f5d, // bool
+		#8fde5d, // color
+		#ff6b97, // surface
+		#eb004b, // path
+		#c2c2d1, // curve
+		#66ffe3, // text
+		#ffb5b5, // object
+		#4da6ff, // node
+		#c1007c, // 3D
+		#808080, // any
+		#ffb5b5, // path
+		#8fde5d, // particle
+		#88ffe9, // rigid
+		#6d6e71, // sdomain
+		#8c3f5d, // struct
+		#ff9166, // strand
+		#c2c2d1, // mesh
+		#8fde5d, // trigger
+		#ff6b97, // atlas
+		#c1007c, // d3vertex
+		#8fde5d, // gradient
+		#ff9166, // armature
+		#808080, // buffer
+		#ff6b97, // pbBox
+		#4da6ff, // d3Mesh	
+		#4da6ff, // d3Light	
+		#4da6ff, // d3Camera
+		#4da6ff, // d3Scene	
+		#ff6b97, // d3Material
+		#ff6b97, // dynaSurf
+		#c2c2d1, // PCX
+		#8fde5d, // audiobit
+		#4da6ff, // flipfluid
+		#c1007c, // 3D SDF
+		#ff6b97, // tileset
+		#eb004b, // font
 	];
 	static JUNCTION_COLORS_LENGTH = array_length(JUNCTION_COLORS);
 	
