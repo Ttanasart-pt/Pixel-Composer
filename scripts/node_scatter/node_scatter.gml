@@ -42,7 +42,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, PROJ_SURF)}; 
 	
-	newInput( 6, nodeValue_EScroll(  "Source",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image + Tile" ] ));
+	newInput( 6, nodeValue_EScroll(  "Source",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image" ] ));
 	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
 	newInput(13, nodeValue_Surface(  "Distribution Map"      ));
 	newInput(14, nodeValue_Vector(   "Distribution Data", [] )).setArrayDepth(1);
@@ -69,8 +69,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Position
 	newInput(40, nodeValue_Anchor());
 	newInput(33, nodeValue_Range2( "Random Position", [0,0,0,0] ));
-	newInput(36, nodeValue_Vec2(   "Shift Position",  [0,0]     )).setMappableConst(49);
 	newInput(50, nodeValue_Range2( "Offset Position", [0,0,0,0] )).setMappableConst(51);
+	newInput(36, nodeValue_Vec2(   "Shift Position",  [0,0]     )).setMappableConst(49);
 	newInput(39, nodeValue_Range(  "Shift Radial",    [0,0]     ));
 	newInput(37, nodeValue_Bool(   "Exact",           false     ));
 	
@@ -91,6 +91,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(11, nodeValue_Gradient( "Random Blend",    gra_white )).setHotkeyAuto("C").setMappable(28);
 	newInput(12, nodeValue_SliRange( "Alpha",           [1,1]     ));
 	newInput(16, nodeValue_Bool(     "Multiply Alpha",   true     ));
+	
+		////- =/Sample Color
 	newInput(41, nodeValue_Surface(  "Sample Surface"             ));
 	newInput(47, nodeValue_Anchor(   "Sample Anchor"              ));
 	newInput(42, nodeValue_Range2(   "Sample Wiggle",   [0,0,0,0] ));
@@ -98,7 +100,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Render
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
-	newInput(56, nodeValue_Bool(    "Tile",       false ));
+	newInput(56, nodeValue_Bool(    "Tile",       true  ));
 	// 57
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,15 +109,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
 	
 	input_display_list = [ 10, 
-		[ "Output",   false ],  1, 
-		[ "Surfaces",  true ],  0, 15, 24, 25, 26, 27, 
-		[ "Scatter",  false ],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
-		[ "Path",     false ], 19, 38, 20, 45, 21, 22, 
-		[ "Position", false ], 40, 33, 36, 49, 50, 51, 39, 37, 
-		[ "Rotation", false ], 48,  7,  4, 52, 53, 32, 
-		[ "Scale",    false ],  3, 43, 54, 55,  8, 34, 
-		[ "Color",    false ], 11, 28, 12, 16, 41, 47, 42, 
-		[ "Render",   false ], 18, 23, 56, 
+		[ "Output",       false ],  1, 
+		[ "Surfaces",      true ],  0, 15, 24, 25, 26, 27, 
+		[ "Scatter",      false ],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
+		[ "Path",          true ], 19, 38, 20, 45, 21, 22, 
+		[ "Position",     false ], 40, 33, 50, 51, 36, 49,  39, 37, 
+		[ "Rotation",     false ], 48,  7,  4, 52, 53, 32, 
+		[ "Scale",        false ],  3, 43, 54, 55,  8, 34, 
+		[ "Color",        false ], 11, 28, 12, 16, 
+			[ "/Sampler",  true ], 41, 47, 42, 
+		[ "Render",       false ], 18, 23, 56, 
 	];
 	
 	////- Nodes
@@ -293,8 +296,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var iAlp = 2 + array_get_index(useV, "Alpha");
 		var iArr = 2 + array_get_index(useV, "Array Index");
 		var iDef = 2 + array_get_index(useV, "Depth");
-		
-		var _drawTile = _tile || _dist == NODE_SCATTER_DIST.tile
 		
 		var _dyna     = false;
 		var surfArray = is_array(_inSurf);
@@ -627,6 +628,22 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scy *= vSca;
 				}
 				
+				if(scalSamp.active) {
+					var _samC = scalSamp.getPixelNorm(_x, _y);
+					_scx *= _samC;
+					_scy *= _samC;
+				}
+				
+				var v  = scaOffSamp.active? scaOffSamp.getPixelNorm(_x, _y) : 1;
+				var of = random_seed(1, _csed++);
+				_scx  += lerp(scaOff[0], scaOff[1], of) * v;
+				_scy  += lerp(scaOff[2], scaOff[3], of) * v;
+				
+				if(_unis) {
+					_scy = max(_scx, _scy);
+					_scx = _scy;
+				}
+				
 				////- =Surface
 				var surf = _inSurf;
 				var ind  = 0;
@@ -667,22 +684,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var sw  = dim[0];
 				var sh  = dim[1];
 				
-				if(scalSamp.active) {
-					var _samC = scalSamp.getPixelNorm(_x, _y);
-					_scx *= _samC;
-					_scy *= _samC;
-				}
-				
-				var v  = scaOffSamp.active? scaOffSamp.getPixelNorm(_x, _y) : 1;
-				var of = random_seed(1, _csed++);
-				_scx  += lerp(scaOff[0], scaOff[1], of) * v;
-				_scy  += lerp(scaOff[2], scaOff[3], of) * v;
-				
-				if(_unis) {
-					_scy = max(_scx, _scy);
-					_scx = _scy;
-				}
-				
+				////- =Position
 				var _shf_x = sw * _scx * anchor[0];
 				var _shf_y = sh * _scy * anchor[1];
 				
@@ -696,6 +698,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_y = _p[1];
 				}
 				
+				if(posExt) { 
+					_x = round(_x); 
+					_y = round(_y); 
+				}
+				
+				////- =Color
 				var grSamp = random_seed(1, _sed++);
 				
 				var clr = _clrSin;
@@ -721,11 +729,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(iAlp > 1 && _v != noone) 
 					alp += array_safe_get_fast(_v, iAlp, 0);
 					
-				if(posExt) { 
-					_x = round(_x); 
-					_y = round(_y); 
-				}
-				
+				////- =Atlas
 				_atl = _sct_len >= _datLen? 0 : scatter_data[_sct_len];
 				if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
 				else						     _atl.set(surf, _x, _y, _r, _scx, _scy, clr, alp);
@@ -738,13 +742,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(_dist == NODE_SCATTER_DIST.path)
 					path_line_index = floor(i / _pre_amount);
-					
 				
 				_atl.depth = _atl.y;
-				if(iDef > 1 && _v != noone) {
-					var vDep   = array_safe_get_fast(_v, iSca, 1);
-					_atl.depth = vDep;
-				}
+				if(iDef > 1 && _v != noone)
+					_atl.depth = array_safe_get_fast(_v, iSca, 1);
 				
 			}
 			
@@ -768,28 +769,28 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(_dyna) surf.draw(_x, _y, _scx, _scy, _r, clr, alp);
 				else      draw_surface_ext(surf, _x, _y, _scx, _scy, _r, clr, alp);
 				
-				if(_drawTile) {
-					var _sw = _atl.w * _scx;
-					var _sh = _atl.h * _scy;
+				if(!_tile) continue;
+				
+				var _sw = _atl.w * _scx;
+				var _sh = _atl.h * _scy;
+				
+				if(_dyna) {
+					if(_x < _sw)				         surf.draw(_x + _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(_y < _sh)				         surf.draw(      _x, _y + _hh, _scx, _scy, _r, clr, alp);
+					if(_x < _sw && _y < _sh)	         surf.draw(_x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
 					
-					if(_dyna) {
-						if(_x < _sw)				         surf.draw(_x + _ww, _y,       _scx, _scy, _r, clr, alp);
-						if(_y < _sh)				         surf.draw(      _x, _y + _hh, _scx, _scy, _r, clr, alp);
-						if(_x < _sw && _y < _sh)	         surf.draw(_x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
-						
-						if(_x > _ww - _sw)					 surf.draw(_x - _ww, _y,       _scx, _scy, _r, clr, alp);
-						if(_y > _hh - _sh)					 surf.draw(_x,       _y - _hh, _scx, _scy, _r, clr, alp);
-						if(_x > _ww - _sw || _y > _hh - _sh) surf.draw(_x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
-						
-					} else {
-						if(_x < _sw)				         draw_surface_ext(surf, _x + _ww, _y,       _scx, _scy, _r, clr, alp);
-						if(_y < _sh)				         draw_surface_ext(surf,       _x, _y + _hh, _scx, _scy, _r, clr, alp);
-						if(_x < _sw && _y < _sh)	         draw_surface_ext(surf, _x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
-						
-						if(_x > _ww - _sw)					 draw_surface_ext(surf, _x - _ww, _y,       _scx, _scy, _r, clr, alp);
-						if(_y > _hh - _sh)					 draw_surface_ext(surf, _x,       _y - _hh, _scx, _scy, _r, clr, alp);
-						if(_x > _ww - _sw || _y > _hh - _sh) draw_surface_ext(surf, _x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
-					}
+					if(_x > _ww - _sw)					 surf.draw(_x - _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(_y > _hh - _sh)					 surf.draw(_x,       _y - _hh, _scx, _scy, _r, clr, alp);
+					if(_x > _ww - _sw || _y > _hh - _sh) surf.draw(_x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
+					
+				} else {
+					if(_x < _sw)				         draw_surface_ext(surf, _x + _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(_y < _sh)				         draw_surface_ext(surf,       _x, _y + _hh, _scx, _scy, _r, clr, alp);
+					if(_x < _sw && _y < _sh)	         draw_surface_ext(surf, _x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
+					
+					if(_x > _ww - _sw)					 draw_surface_ext(surf, _x - _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(_y > _hh - _sh)					 draw_surface_ext(surf, _x,       _y - _hh, _scx, _scy, _r, clr, alp);
+					if(_x > _ww - _sw || _y > _hh - _sh) draw_surface_ext(surf, _x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
 				}
 			}
 			

@@ -1,3 +1,4 @@
-cd /D %~dp0
-py "%~dp0releases/noteGetter.py"
-py "%~dp0docsdata/gen/main.py"
+set mainDir=D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/
+cd /D "%mainDir%"
+py "%mainDir%/releases/noteGetter.py"
+py "%mainDir%/docsdata/gen/main.py"
