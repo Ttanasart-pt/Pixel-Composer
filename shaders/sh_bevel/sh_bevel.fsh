@@ -236,7 +236,7 @@ void main() {
 			vec2 shf = vec2( cos(ang),  sin(ang)) * (floor(i + .5) * added_distance) / scale;
 			vec2 pxs = v_vTexcoord + shf * tx;
 			
-			col1 = sampleTexture( gm_BaseTexture, fract(pxs) );
+			col1 = sampleTexture( gm_BaseTexture, pxs );
 			float _b1  = bright(col1);
 			
 			if(_b1 < b1) {
