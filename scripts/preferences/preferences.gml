@@ -541,13 +541,18 @@
 		
 		_=PREFERENCES.use_legacy_exception? resetException() : setException();
 		
+		var dw = display_get_width();
+		var dh = display_get_height();
+		
 		var ww = PREFERENCES.window_fix? PREFERENCES.window_fix_width  : PREFERENCES.window_width;
 		var hh = PREFERENCES.window_fix? PREFERENCES.window_fix_height : PREFERENCES.window_height;
 		
-		window_minimize_size = [ ww, hh ];
+		ww = min(ww, dw);
+		hh = min(hh, dh);
 		
-		var cx = display_get_width()  / 2;
-		var cy = display_get_height() / 2;
+		window_minimize_size = [ ww, hh ];
+		var cx = dw / 2;
+		var cy = dh / 2;
 		
 		if(OS == os_windows) {
 			var _monitors = display_measure_all();
