@@ -1,3 +1,48 @@
+#pragma use(sampler_simple)
+#region -- sampler_simple -- [1765194569.6586206]
+    uniform int  sampleMode;
+    
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+    vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+			 if(sampleMode <= 1) return vec4(0.);
+		else if(sampleMode == 2) return vec4(0.,0.,0., 1.);
+		else if(sampleMode == 3) return texture2D(texture, clamp(pos, 0., 1.));
+		else if(sampleMode == 4) return texture2D(texture, fract(pos));
+        // 5
+		else if(sampleMode == 6) { vec2 sp = vec2(fract(pos.x), pos.y); return (sp.y < 0. || sp.y > 1.) ? vec4(0.) : texture2D(texture, sp); } 
+		else if(sampleMode == 7) { vec2 sp = vec2(fract(pos.x), pos.y); return (sp.y < 0. || sp.y > 1.) ? vec4(0.,0.,0.,1.) : texture2D(texture, sp); } 
+		else if(sampleMode == 8) return texture2D(texture, vec2(fract(pos.x), clamp(pos.y, 0., 1.)));
+		// 9
+		else if(sampleMode == 10) { vec2 sp = vec2(pos.x, fract(pos.y)); return (sp.x < 0. || sp.x > 1.) ? vec4(0.) : texture2D(texture, sp); } 
+		else if(sampleMode == 11) { vec2 sp = vec2(pos.x, fract(pos.y)); return (sp.x < 0. || sp.x > 1.) ? vec4(0.,0.,0.,1.) : texture2D(texture, sp); } 
+		else if(sampleMode == 12) return texture2D(texture, vec2(clamp(pos.x, 0., 1.), fract(pos.y)));
+		
+        return vec4(0.);
+    }
+    vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -41,10 +86,10 @@ void main() {
     float cc = bright(c);
     if(ig && (cc == 0. || cc == 1.)) { gl_FragColor = vec4(.5, .5, 1., c.a); return; }
     
-    float h0 = bright(texture2D(gm_BaseTexture, v_vTexcoord + tx * vec2(-1.,  0.) * siz));
-    float h1 = bright(texture2D(gm_BaseTexture, v_vTexcoord + tx * vec2( 1.,  0.) * siz));
-    float v0 = bright(texture2D(gm_BaseTexture, v_vTexcoord + tx * vec2( 0., -1.) * siz));
-    float v1 = bright(texture2D(gm_BaseTexture, v_vTexcoord + tx * vec2( 0.,  1.) * siz));
+    float h0 = bright(sampleTexture(gm_BaseTexture, v_vTexcoord + tx * vec2(-1.,  0.) * siz));
+    float h1 = bright(sampleTexture(gm_BaseTexture, v_vTexcoord + tx * vec2( 1.,  0.) * siz));
+    float v0 = bright(sampleTexture(gm_BaseTexture, v_vTexcoord + tx * vec2( 0., -1.) * siz));
+    float v1 = bright(sampleTexture(gm_BaseTexture, v_vTexcoord + tx * vec2( 0.,  1.) * siz));
     
     vec2 _n = vec2(0.);
 	vec2  w = vec2(0.);
@@ -55,10 +100,10 @@ void main() {
 	/*if(!(ig && (v0 == 0. || v0 == 1.))) { */_n += vec2(0., cc - v0); w.y += .5; /*}*/
 	
 	if(smt > 0.) {
-		float d0  = bright(texture2D(gm_BaseTexture, v_vTexcoord + tx * vec2( 1., -1.) * siz));
-	    float d1  = bright(texture2D(gm_BaseTexture, v_vTexcoord + tx * vec2(-1., -1.) * siz));
-	    float d2  = bright(texture2D(gm_BaseTexture, v_vTexcoord + tx * vec2(-1.,  1.) * siz));
-	    float d3  = bright(texture2D(gm_BaseTexture, v_vTexcoord + tx * vec2( 1.,  1.) * siz));
+		float d0  = bright(sampleTexture(gm_BaseTexture, v_vTexcoord + tx * vec2( 1., -1.) * siz));
+	    float d1  = bright(sampleTexture(gm_BaseTexture, v_vTexcoord + tx * vec2(-1., -1.) * siz));
+	    float d2  = bright(sampleTexture(gm_BaseTexture, v_vTexcoord + tx * vec2(-1.,  1.) * siz));
+	    float d3  = bright(sampleTexture(gm_BaseTexture, v_vTexcoord + tx * vec2( 1.,  1.) * siz));
     
 	   	/*if(!(ig && (d0 == 0. || d0 == 1.))) { */_n += vec2(d0 - cc, cc - d0) / s2; w += .5 * s2; /*}*/
 		/*if(!(ig && (d1 == 0. || d1 == 1.))) { */_n += vec2(cc - d1, cc - d1) / s2; w += .5 * s2; /*}*/

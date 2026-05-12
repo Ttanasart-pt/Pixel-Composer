@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.002",
+    "changes": [
+      {
+        "date": "2026-05-12T05:08:48.928Z",
+        "node": "Normal",
+        "commit": "**Normal**: Add oversample setting."
+      }
+    ]
+  }
+]

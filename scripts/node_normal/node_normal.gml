@@ -34,6 +34,7 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- Node
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -63,6 +64,7 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		surface_set_shader(_outSurf, sh_normal);
 			gpu_set_texfilter(true);
+			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_f("dimension", surface_get_dimension(_surf));
 			
 			shader_set_f_map("height",  _hei, _data[6], inputs[1]);

@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1771561909.403563]
 
     #ifdef _YY_HLSL11_ 
@@ -126,8 +125,8 @@
     }
 
 #endregion -- curve --
-#pragma use(sampler_simple)
 
+#pragma use(sampler_simple)
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
