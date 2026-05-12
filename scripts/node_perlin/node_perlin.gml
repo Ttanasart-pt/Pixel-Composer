@@ -32,10 +32,10 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(15, nodeValue_Slider(  "Amplitude",   .5 )).setMappable(19);
 	
 	////- =Render
-	newInput( 6, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
-	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1] ));
-	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1] ));
-	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1] ));
+	newInput( 6, nodeValue_EButton(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput( 7, nodeValue_SliRange( "Color R Range", [0,1] ));
+	newInput( 8, nodeValue_SliRange( "Color G Range", [0,1] ));
+	newInput( 9, nodeValue_SliRange( "Color B Range", [0,1] ));
 	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.002",
+    "changes": [
+      {
+        "date": "2026-05-12T08:41:17.026Z",
+        "node": "Add Node",
+        "commit": "**Add Node**: Fix \"values\" preset data shows up as search result."
+      }
+    ]
+  }
+]

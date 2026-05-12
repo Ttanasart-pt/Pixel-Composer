@@ -1186,6 +1186,7 @@ event_inherited();
 						
 						for( var k = 0, p = array_length(keys); k < p; k++ ) {
 							if(keys[k] == "_default") continue;
+							if(keys[k] == "values")   continue;
 							var _fname = $"{_name} {keys[k]}"
 							
 							var mat = string_partial_match_res(_fname, search_lower);
