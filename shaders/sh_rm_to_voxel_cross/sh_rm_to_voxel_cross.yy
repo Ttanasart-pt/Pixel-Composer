@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_rm_to_voxel_cross",
+  "name":"sh_rm_to_voxel_cross",
+  "parent":{
+    "name":"rm_to_voxel",
+    "path":"folders/nodes/data/3D/raymarching/render/rm_to_voxel.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -2,19 +2,22 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	name  = "UV Remap";
 	gizmo = new __3dGizmoPlane();
 	
+	////- =Transform
 	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh" ));
 	newInput(in_d3d + 1, nodeValue_Int("Target subobject", -1)).setArrayDepth(1);
 	
 	newInput(in_d3d + 2, nodeValue_Int("Bake UV", 0));
-	b_bake_uv = button(function() /*=>*/ { toggleAttribute("bakedUV"); }).setText("Bake UV");
+	b_bake_uv = button(function() /*=>*/ { toggleAttribute("bakedUV"); triggerRender(); }).setText("Bake UV");
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	
 	input_display_list = [ 
-		["Transform", false], 0, 1, 2,
-		["UV",		  false], in_d3d + 0, in_d3d + 1,
-		["Bake",	  false], b_bake_uv,
+		[ "Transform", false ], 0, 1, 2,
+		[ "UV",        false ], in_d3d + 0, in_d3d + 1,
+		[ "Bake",      false ], b_bake_uv,
 	];
+	
+	////- Node
 	
 	remap_position = [ 0, 0, 0 ];
 	remap_normal   = [ 0, 0, 0 ];
@@ -26,6 +29,8 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	attributes.bakedUVdata = [];
 	
 	modify_object_index = 0;
+	
+	////- =Modify
 	
 	static modify_object = function(_object, _data, _matrix) {
 		if(_object.VF != global.VF_POS_NORM_TEX_COL) return _object;
@@ -76,6 +81,7 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 				
 				if(attributes.bakedUV) {
 					_posOnMap = _baked_vertex[_vertex_index];
+					
 				} else {
 					var _posOnMap = d3d_point_project_plane_uv(remap_position, remap_normal, [_vt.X, _vt.Y, _vt.Z], remap_normal_x, remap_normal_y);
 					_posOnMap[0] = _posOnMap[0] / remap_scale[0] + 0.5;
@@ -120,6 +126,8 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		return noone;
 	}
 	
+	////- =Process
+	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		b_bake_uv.text = attributes.bakedUV? "Unbake UV" : "Bake UV";
 		setTransform(gizmo, _data);
@@ -136,6 +144,8 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		modify_object_index = 0;
 		return modify(_data[in_d3d + 0], _data);
 	}
+	
+	////- =Preview
 	
 	static getPreviewObjects       = function() { return [ getPreviewObject(), gizmo ]; } 
 	static getPreviewObjectOutline = function() { return [ gizmo ]; } 

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__3dRmVoxel",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__3dRmVoxel",
+  "parent":{
+    "name":"rm_to_voxel",
+    "path":"folders/nodes/data/3D/raymarching/render/rm_to_voxel.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

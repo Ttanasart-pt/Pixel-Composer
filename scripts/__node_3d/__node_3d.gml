@@ -1024,8 +1024,6 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	is_3D = NODE_3D.polygon;
 	dimension_index = -1;
 	
-	mesh_prev_surface = noone;
-	
 	static drawOverlay3D = function(active, _mx, _my, _params) {}
 	
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
@@ -1054,6 +1052,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static getPreviewObjects       = function() /*=>*/ {return [ getPreviewObject() ]};
 	static getPreviewObjectOutline = function() /*=>*/ {return getPreviewObjects()};
 	
+	mesh_prev_surface = noone;
 	static refreshPreview = function() { 
 		var _prev_obj = getPreviewObjects();
 		
@@ -1082,8 +1081,6 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	}
 	
 	static getGraphPreviewSurface = function() { return mesh_prev_surface; }
-	
-	////- 
 	
 	static postProcess = function() /*=>*/ { if(!IS_PLAYING) refreshPreview(); }
 	
