@@ -846,6 +846,7 @@
             { "label": "/Render" },
             "Node_RM_Render",
             "Node_RM_Render_Scatter",
+            "Node_RM_Render_Cross",
         ]
     }, //3D
     {

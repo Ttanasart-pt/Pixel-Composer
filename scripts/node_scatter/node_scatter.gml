@@ -69,9 +69,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Position
 	newInput(40, nodeValue_Anchor());
 	newInput(33, nodeValue_Range2( "Random Position", [0,0,0,0] ));
-	newInput(50, nodeValue_Range2( "Offset Position", [0,0,0,0] )).setMappableConst(51);
-	newInput(36, nodeValue_Vec2(   "Shift Position",  [0,0]     )).setMappableConst(49);
-	newInput(39, nodeValue_Range(  "Shift Radial",    [0,0]     ));
+	newInput(50, nodeValue_Range2( "Offset Position", [0,0,0,0] )).setMappableConst(51).setTooltip("Move surface randomly.");
+	newInput(36, nodeValue_Vec2(   "Shift Position",  [0,0]     )).setMappableConst(49).setTooltip("Move surface with fixed amount increase per copy.");
+	newInput(39, nodeValue_Range(  "Shift Radial",    [0,0]     )).setTooltip("Move surface based on its rotation.");
 	newInput(37, nodeValue_Bool(   "Exact",           false     ));
 	
 	////- =Rotation

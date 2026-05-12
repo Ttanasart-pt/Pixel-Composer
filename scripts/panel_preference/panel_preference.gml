@@ -251,7 +251,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("Video title"),
     			"video_title",
-    			textBox_Text(function(txt) /*=>*/ {return prefSet("video_title", txt)})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("video_title", txt)}).setEmpty()
     		));
     		
 		}

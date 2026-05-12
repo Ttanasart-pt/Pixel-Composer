@@ -5,7 +5,7 @@ function Node_RM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	temp_surface = [ noone, noone ];
 	environ = new RM_Environment();
 	object  = noone;
-
+	
 	attribute_interpolation(true);
 		
 	attributes.texture_size = 1024;

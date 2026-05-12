@@ -1,6 +1,5 @@
 #pragma use(d3d_sdf)
-
-#region -- d3d_sdf -- [1778402482.9220033]
+#region -- d3d_sdf -- [1778544363.3362846]
 
 	#ifdef _YY_HLSL11_
 		#extension GL_OES_standard_derivatives : enable
@@ -8,9 +7,7 @@
 
 	#define MAX_SHAPES 16
 	#define MAX_OP     32
-
-	const float EPSILON = 1e-5;
-	const float PI = 3.14159265358979323846;
+	#define PI 3.14159265358979323846
 
 	const float SUBTEXTURE_SIZE = 1024.;
 	const float TEXTURE_N  = 8192. / SUBTEXTURE_SIZE;
@@ -23,7 +20,6 @@
 	uniform sampler2D texture2;
 	uniform sampler2D texture3;
 
-	uniform int   MAX_MARCHING_STEPS;
 	uniform int   operations[MAX_OP];
 	uniform float opArgument[MAX_OP];
 	uniform int   opLength;
@@ -77,31 +73,9 @@
 	uniform int   volumetric[MAX_SHAPES];
 	uniform float volumeDensity[MAX_SHAPES];
 
-	///////////////////////////////////////////////////////////////////
-
-	uniform int   ortho;
-	uniform float fov;
-	uniform float orthoScale;
-	uniform vec2  viewRange;
-
-	uniform vec2  depthRange;
-	uniform float depthInt;
-
-	uniform vec4  background;
-	uniform float ambientIntns;
-
-	uniform vec3  lightPosition;
-	uniform float lightInten;
-	uniform vec4  lightColor;
-
-	uniform int   useEnv;
-	uniform int   envFilter;
-	uniform int   drawGrid;
-	uniform float gridStep;
-	uniform float gridScale;
-	uniform float axisBlend;
-
 	float influences[MAX_OP]; 
+
+	///////////////////////////////////////////////////////////////////
 
 	#region ////========== Transform ============
 		mat3 rotateX(float dg) {
@@ -526,26 +500,6 @@
 			return (x * w.x + y * w.y + z * w.z) / (w.x + w.y + w.z);
 		}
 		
-		
-		vec4 viewGrid(vec2 pos, float scale) {
-			vec2 coord      = pos * scale; // use the scale variable to set the distance between the lines
-			vec2 derivative = fwidth(coord);
-			vec2 grid       = abs(fract(coord - 0.5) - 0.5) / derivative;
-			float line      = min(grid.x, grid.y);
-			float minimumy  = min(derivative.y, 1.);
-			float minimumx  = min(derivative.x, 1.);
-			vec4 color = vec4(.3, .3, .3, 1. - min(line, 1.));
-			
-			// y axis
-			if(pos.x > -1. * minimumx / scale && pos.x < 1. * minimumx / scale)
-				color.y = 0.3 + axisBlend * 0.7;
-			// x axis
-			
-			if(pos.y > -1. * minimumy / scale && pos.y < 1. * minimumy / scale)
-				color.x = 0.3 + axisBlend * 0.7;
-			return color;
-		}
-		
 		vec3 getDiffuseColor(in int index, in vec3 coll, in vec3 norm) {
 			mat3 rx = rotateX(rotation[index].x);
 			mat3 ry = rotateY(rotation[index].y);
@@ -749,6 +703,59 @@
 						  e.xxx * operateSceneSDF( p + e.xxx ) );
 		
 	}
+
+#endregion -- d3d_sdf --
+
+#pragma use(d3d_sdf_scene)
+#region -- d3d_sdf_scene -- [1778544374.4844818]
+	#define EPSILON 1e-5
+	
+	uniform int   MAX_MARCHING_STEPS;
+
+	uniform int   ortho;
+	uniform float fov;
+	uniform float orthoScale;
+	uniform vec2  viewRange;
+
+	uniform vec2  depthRange;
+	uniform float depthInt;
+
+	uniform vec4  background;
+	uniform float ambientIntns;
+
+	uniform vec3  lightPosition;
+	uniform float lightInten;
+	uniform vec4  lightColor;
+
+	uniform int   useEnv;
+	uniform int   envFilter;
+	uniform int   drawGrid;
+	uniform float gridStep;
+	uniform float gridScale;
+	uniform float axisBlend;
+
+	////========= Util ==========
+
+		vec4 viewGrid(vec2 pos, float scale) {
+			vec2 coord      = pos * scale; // use the scale variable to set the distance between the lines
+			vec2 derivative = fwidth(coord);
+			vec2 grid       = abs(fract(coord - 0.5) - 0.5) / derivative;
+			float line      = min(grid.x, grid.y);
+			float minimumy  = min(derivative.y, 1.);
+			float minimumx  = min(derivative.x, 1.);
+			vec4 color = vec4(.3, .3, .3, 1. - min(line, 1.));
+			
+			// y axis
+			if(pos.x > -1. * minimumx / scale && pos.x < 1. * minimumx / scale)
+				color.y = 0.3 + axisBlend * 0.7;
+			// x axis
+			
+			if(pos.y > -1. * minimumy / scale && pos.y < 1. * minimumy / scale)
+				color.x = 0.3 + axisBlend * 0.7;
+			return color;
+		}
+		
+	////========= Ray Marching ==========
 
 	float march(vec3 camera, vec3 direction) {
 		if(shapeAmount == 0) return viewRange.y;
@@ -997,7 +1004,7 @@
 		
 		return res;
 	}
-#endregion -- d3d_sdf --
+#endregion -- d3d_sdf_scene --
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
