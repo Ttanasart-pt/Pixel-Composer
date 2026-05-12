@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.002",
+    "changes": [
+      {
+        "date": "2026-05-12T05:22:01.037Z",
+        "node": "Array Processor",
+        "commit": "**Array Processor**: Fix error when procesing array with animation."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc13",
     "changes": [
       {

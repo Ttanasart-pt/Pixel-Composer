@@ -8,13 +8,14 @@ enum ARRAY_PROCESS {
 #macro PROCESSOR_OVERLAY_CHECK if(array_length(current_data) != array_length(inputs)) return 0;
 
 function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	current_data	= [];
-	inputs_is_array = [];
-	inputs_index    = [];
+	current_data	 = [];
+	inputs_is_array  = [];
+	inputs_index     = [];
+	inputs_index_raw = [];
 	
-	process_amount	= 0;
-	process_length  = [];
-	process_running = [];
+	process_amount	 = 0;
+	process_length   = [];
+	process_running  = [];
 	
 	manage_atlas = true;
 	atlas_index  = 0;
@@ -98,29 +99,37 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _len = array_length(inputs);
 		__frame  = frame;
 		
-		process_amount	= 1;
-		inputs_data		= array_verify(inputs_data,		_len);
-		inputs_is_array	= array_verify(inputs_is_array, _len);
-		inputs_index    = array_verify(inputs_index,	_len);
-		process_length  = array_verify(process_length,	_len);
-		process_running = array_verify(process_running,	_len);
+		process_amount	 = 1;
+		inputs_data      = array_verify(inputs_data,      _len);
+		inputs_is_array	 = array_verify(inputs_is_array,  _len);
+		inputs_index     = array_verify(inputs_index,     _len);
+		inputs_index_raw = array_verify(inputs_index_raw, _len);
+		process_length   = array_verify(process_length,   _len);
+		process_running  = array_verify(process_running,  _len);
 		
+		var raw, amo, val;
 		array_foreach(inputs, function(_in, i) /*=>*/ {
-			if(!_in.isDynamic()) return;
-			
-			var raw = _in.getValue(__frame);
-			var amo = _in.arrayLength(raw);
-			var val = raw;
-			
-			if(_in.bypass_use) _in.getBypassJunc().setValue(val);
-			
-				 if(amo == 0) val = noone;		// empty array
-			else if(amo == 1) val = raw[0];		// spread single array
-			amo = max(1, amo);
-			
-			inputs_is_array[i] = amo > 1;
-			input_value_map[$ _in.internalName] = val;
-			inputs_data[i] = val;
+			if(_in.isDynamic()) {
+				raw = _in.getValue(__frame);
+				amo = _in.arrayLength(raw);
+				val = raw;
+				
+				if(_in.bypass_use) _in.getBypassJunc().setValue(val);
+				
+					 if(amo == 0) val = noone;		// empty array
+				else if(amo == 1) val = raw[0];		// spread single array
+				amo = max(1, amo);
+				
+				input_value_map[$ _in.internalName] = val;
+				inputs_is_array[i]  = amo > 1;
+				inputs_index_raw[i] = raw;
+				inputs_data[i]      = val;
+				
+			} else {
+				raw = inputs_index_raw[i];
+				amo = process_length[i];
+				val = raw;
+			}
 			
 			if(!_in.ign_array)
 			switch(attributes.array_process) {
