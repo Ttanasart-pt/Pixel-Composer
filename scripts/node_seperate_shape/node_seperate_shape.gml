@@ -57,19 +57,19 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		#region region indexing
 			surface_set_shader(temp_surface[1], sh_seperate_shape_index);
-				shader_set_i("mode",      _mode);
-				shader_set_i("ignore",    _ignore);
-				shader_set_f("dimension", ww, hh);
+				shader_set_i( "mode",      _mode   );
+				shader_set_i( "ignore",    _ignore );
+				shader_set_f( "dimension", ww, hh  );
 				
 				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, ww, hh);
 			surface_reset_shader();
 			
 			shader_set(sh_seperate_shape_ite);
-				shader_set_i("mode",      _mode);
-				shader_set_i("ignore",    _ignore);
-				shader_set_f("dimension", ww, hh);
-				shader_set_f("threshold", _thres);
-				shader_set_surface("map", _inSurf);
+				shader_set_i( "mode",      _mode   );
+				shader_set_i( "ignore",    _ignore );
+				shader_set_f( "dimension", ww, hh  );
+				shader_set_f( "threshold", _thres  );
+				shader_set_s( "map",       _inSurf );
 			shader_reset();
 		
 			var res_index = 0, iteration = ww + hh;
@@ -89,21 +89,22 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var i = 0, pxc = ww * hh;
 			var reg = ds_map_create();
 			
-			var b = buffer_create(pxc * 16, buffer_fixed, 1);
-			buffer_get_surface(b, temp_surface[res_index], 0);
-			buffer_seek(b, buffer_seek_start, 0);
+			var buff = buffer_create(pxc * 16, buffer_fixed, 1);
+			buffer_get_surface(buff, temp_surface[res_index], 0);
+			buffer_seek(buff, buffer_seek_start, 0);
 			
 			repeat(pxc) {
-				var _r = buffer_read(b, buffer_f32);
-				var _g = buffer_read(b, buffer_f32);
-				var _b = buffer_read(b, buffer_f32);
-				var _a = buffer_read(b, buffer_f32);
+				var _r = buffer_read(buff, buffer_f32);
+				var _g = buffer_read(buff, buffer_f32);
+				var _b = buffer_read(buff, buffer_f32);
+				var _a = buffer_read(buff, buffer_f32);
 				
 				if(_r == 0 && _g == 0 && _b == 0 && _a == 0) continue;
 				
 				reg[? _g * ww + _r] = [ _r, _g, _b, _a ];
 			}
 			
+			buffer_delete(buff);
 			var px = ds_map_size(reg);
 			if(px == 0) return;
 		#endregion

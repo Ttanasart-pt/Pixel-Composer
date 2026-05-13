@@ -1,0 +1,6 @@
+{
+    "name":          "MK Jigsaw",
+    "spr":           "s_node_mk_jigsaw",
+    "baseNode":      "Node_MK_Jigsaw",
+    "pxc_version":    121010,
+}

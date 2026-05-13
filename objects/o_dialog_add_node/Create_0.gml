@@ -1095,6 +1095,21 @@ event_inherited();
 		var search_map	 = ds_map_create();
 		
 		#region Nodes
+			if(has(ALL_NODES, search_string)) {
+				var _node = ALL_NODES[$ search_string];
+				var searchData = { 
+					search : true, 
+					name   : _node.name, 
+					node   : _node, 
+					param  : undefined, 
+					match  : [99999,noone], 
+					weight : 99999, 
+					path   : undefined, 
+				};
+				
+				ds_priority_add(pr_list, searchData, 99999);
+			}
+			
 			var curr_group    = "";
 			var curr_groupi   = 0;
 			var curr_subgroup = "";
@@ -1185,8 +1200,7 @@ event_inherited();
 						var keys = struct_get_names(pres);
 						
 						for( var k = 0, p = array_length(keys); k < p; k++ ) {
-							if(keys[k] == "_default") continue;
-							if(keys[k] == "values")   continue;
+							if(keys[k] == "_default" || keys[k] == "values") continue;
 							var _fname = $"{_name} {keys[k]}"
 							
 							var mat = string_partial_match_res(_fname, search_lower);

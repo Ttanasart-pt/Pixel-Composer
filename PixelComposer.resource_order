@@ -1568,6 +1568,7 @@
     {"name":"node_mk_gridballs","order":1,"path":"scripts/node_mk_gridballs/node_mk_gridballs.yy",},
     {"name":"node_mk_gridflip","order":3,"path":"scripts/node_mk_gridflip/node_mk_gridflip.yy",},
     {"name":"node_mk_isoextrude","order":1,"path":"scripts/node_mk_isoextrude/node_mk_isoextrude.yy",},
+    {"name":"node_mk_jigsaw","order":13,"path":"scripts/node_mk_jigsaw/node_mk_jigsaw.yy",},
     {"name":"node_mk_panels","order":6,"path":"scripts/node_mk_panels/node_mk_panels.yy",},
     {"name":"node_mk_parallax","order":2,"path":"scripts/node_mk_parallax/node_mk_parallax.yy",},
     {"name":"node_mk_smoke","order":10,"path":"scripts/node_mk_smoke/node_mk_smoke.yy",},

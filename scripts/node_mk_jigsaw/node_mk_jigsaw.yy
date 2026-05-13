@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_mk_jigsaw",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mk_jigsaw",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

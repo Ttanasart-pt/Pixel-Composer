@@ -257,14 +257,16 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			
 			_qstr = string_title(_qstr);
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			if(_range == 0) draw_text_add(tx, ty, _qstr);
-			else            draw_text_match_range(tx, ty, _qstr, _range);
+			if(is_array(_range)) 
+				 draw_text_match_range(tx, ty, _qstr, _range);
+			else draw_text_add(tx, ty, _qstr);
 			tx += string_width(_qstr);
 			
 		} else {
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			if(_range == 0) draw_text_add(tx, ty, _txt);
-			else            draw_text_match_range(tx, ty, _txt, _range);
+			if(is_array(_range)) 
+				 draw_text_match_range(tx, ty, _txt, _range);
+			else draw_text_add(tx, ty, _txt);
 			tx += string_width(_txt);
 		}
 		

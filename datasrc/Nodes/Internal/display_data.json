@@ -1006,6 +1006,7 @@
             "Node_MK_Isoextrude", 
             "Node_MK_WireFrame", 
             "Node_MK_Blast_Inline", 
+            "Node_MK_Jigsaw", 
         ]
     }, //Generate
     {
@@ -1400,6 +1401,7 @@
             "Node_MK_Dialog", 
             "Node_MK_Facet",
             "Node_MK_Tree_Inline",
+            // "Node_MK_Jigsaw",
             
             { "label": "Simulation" },
             "Node_MK_Brownian",
