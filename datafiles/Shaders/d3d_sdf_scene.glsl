@@ -13,6 +13,7 @@
 	uniform vec4  background;
 	uniform float ambientIntns;
 
+	uniform int   useLight;
 	uniform vec3  lightPosition;
 	uniform float lightInten;
 	uniform vec4  lightColor;
@@ -266,6 +267,12 @@
 
 		///////////////////////////////////////////////////////////
 		
+		float depthMin = depthRange.x;
+		float depthMax = depthRange.y;
+		float depthC   = (depthMin + depthMax) / 2.;
+		float depthR   = (depthMax - depthMin) / 2.;
+		vec2  depthRangeScaled = vec2( depthC - depthR / objectScale, depthC + depthR / objectScale );
+
 		float distNorm = 1. - (depth - depthRange.x) / (depthRange.y - depthRange.x);
 		c = mix(c * bgClr, c, mix(1., distNorm, depthInt));
 		
@@ -278,12 +285,14 @@
 		
 		///////////////////////////////////////////////////////////
 		
-		vec3 light = normalize(lightPosition);
-		float lamo = min(1., max(0., dot(norm, light)) + ambientIntns) * lightInten;
-		c = mix(c * bgClr, c * lightColor.rgb, lamo);
-		
-		float specInt = pow(max(dot(ref, light), 0.0), 2.) * spec;
-		c += vec3(specInt);
+		if(useLight == 1) {
+			vec3 light = normalize(lightPosition);
+			float lamo = min(1., max(0., dot(norm, light)) + ambientIntns) * lightInten;
+			c = mix(c * bgClr, c * lightColor.rgb, lamo);
+			
+			float specInt = pow(max(dot(ref, light), 0.0), 2.) * spec;
+			c += vec3(specInt);
+		}
 		
 		///////////////////////////////////////////////////////////
 		

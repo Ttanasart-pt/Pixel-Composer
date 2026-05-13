@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.003",
+    "changes": [
+      {
+        "date": "2026-05-13T07:09:08.105Z",
+        "node": "RM Render/ Render Scatter",
+        "commit": "**RM Render/ Render Scatter**: Add option to disable light."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.007",
     "changes": [
       {

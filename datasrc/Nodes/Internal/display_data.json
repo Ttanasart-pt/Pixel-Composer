@@ -1400,8 +1400,8 @@
             "Node_MK_WireFrame", 
             "Node_MK_Dialog", 
             "Node_MK_Facet",
-            "Node_MK_Tree_Inline",
             "Node_MK_Jigsaw",
+            "Node_MK_Tree_Inline",
             
             { "label": "Simulation" },
             "Node_MK_Brownian",

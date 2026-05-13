@@ -240,6 +240,7 @@ function RM_Environment() constructor {
 	bgDraw     = false;
 	ambInten   = 0;
 	
+	useLight   = true;
 	light      = [ 1, 0.5, 0 ];
 	lightInten = 1;
 	lightColor = ca_white;
@@ -261,6 +262,7 @@ function RM_Environment() constructor {
 		shader_set_c( "background",    bgColor    );
 		shader_set_f( "ambientIntns",  ambInten   );
 		
+		shader_set_i( "useLight",      useLight   );
 		shader_set_f( "lightPosition", light      );
 		shader_set_f( "lightInten",    lightInten );
 		shader_set_c( "lightColor",    lightColor );

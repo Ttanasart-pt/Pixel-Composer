@@ -34,10 +34,11 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 	newInput( 8, nodeValue_Slider(  "Ambient Level",    .2           ));
 	
 	////- =Light
+	newInput(24, nodeValue_Bool(    "Use Light",         true        ));
 	newInput( 9, nodeValue_Vec3(    "Position",         [-.4,-.5,1]  ));
 	newInput(16, nodeValue_Float(   "Intensity",         1           ));
 	newInput(15, nodeValue_Color(   "Color",             ca_white    ));
-	// 24
+	// 25
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
@@ -47,7 +48,7 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 		[ "Camera",     false ], 21, 23,  1,  2,  3,  4, 
 			[ "/Depth", false ], 22,  5, 
 		[ "Background", false ],  6,  7, 10, 14,  8, 
-		[ "Light",      false ],  9, 16, 15, 
+		[ "Light",  false, 24 ],  9, 16, 15, 
 	];
 	
 	////- Node
@@ -107,6 +108,7 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 			var _eint = _data[14];
 			var _amb  = _data[ 8];
 			
+			var _luse = _data[24];
 			var _lig  = _data[ 9];
 			var _lInt = _data[16];
 			var _lCol = _data[15];
@@ -149,6 +151,7 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 			environ.bgDraw     = _bgd;
 			environ.ambInten   = _amb;
 			
+			environ.useLight   = _luse;
 			environ.light      = _lig;
 			environ.lightInten = _lInt;
 			environ.lightColor = _lCol;
