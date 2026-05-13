@@ -707,7 +707,7 @@
 #endregion -- d3d_sdf --
 
 #pragma use(d3d_sdf_scene)
-#region -- d3d_sdf_scene -- [1778655963.2657192]
+#region -- d3d_sdf_scene -- [1778656908.072409]
 	#define EPSILON 1e-5
 	
 	uniform int   MAX_MARCHING_STEPS;
@@ -981,9 +981,10 @@
 		float depthMax = depthRange.y;
 		float depthC   = (depthMin + depthMax) / 2.;
 		float depthR   = (depthMax - depthMin) / 2.;
-		vec2  depthRangeScaled = vec2( depthC - depthR / objectScale, depthC + depthR / objectScale );
+		float depthS   = objectScale * camScale;
+		vec2  depthRangeScaled = vec2( depthC - depthR * depthS, depthC + depthR * depthS );
 
-		float distNorm = 1. - (depth - depthRange.x) / (depthRange.y - depthRange.x);
+		float distNorm = 1. - (depth * depthS - depthRange.x) / (depthRange.y - depthRange.x);
 		c = mix(c * bgClr, c, mix(1., distNorm, depthInt));
 		
 		///////////////////////////////////////////////////////////

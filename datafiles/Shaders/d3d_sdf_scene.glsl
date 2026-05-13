@@ -271,9 +271,10 @@
 		float depthMax = depthRange.y;
 		float depthC   = (depthMin + depthMax) / 2.;
 		float depthR   = (depthMax - depthMin) / 2.;
-		vec2  depthRangeScaled = vec2( depthC - depthR / objectScale, depthC + depthR / objectScale );
+		float depthS   = objectScale * camScale;
+		vec2  depthRangeScaled = vec2( depthC - depthR * depthS, depthC + depthR * depthS );
 
-		float distNorm = 1. - (depth - depthRange.x) / (depthRange.y - depthRange.x);
+		float distNorm = 1. - (depth * depthS - depthRange.x) / (depthRange.y - depthRange.x);
 		c = mix(c * bgClr, c, mix(1., distNorm, depthInt));
 		
 		///////////////////////////////////////////////////////////
