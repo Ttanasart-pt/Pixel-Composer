@@ -10,23 +10,24 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Separate Shape";
 	
 	////- =Shape
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(5, nodeValue_EButton( "Mode",          0, [ "Greyscale", "Alpha" ] ))
-	newInput(1, nodeValue_Slider(  "Tolerance",    .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release }));
-	newInput(4, nodeValue_Bool(    "Ignore blank", true, "Skip empty shapes."));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 5, nodeValue_EButton( "Mode",          0, [ "Greyscale", "Alpha" ] ))
+	newInput( 1, nodeValue_Slider(  "Tolerance",    .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release }));
+	newInput( 4, nodeValue_Bool(    "Ignore blank", true, "Skip empty shapes."));
+	newInput( 7, nodeValue_Bool(    "Diagonal",     true ));
 	
 	////- =Output
-	newInput(2, nodeValue_Bool(  "Override color", false    ));
-	newInput(3, nodeValue_Color( "Color",          ca_white ));
-	newInput(6, nodeValue_Bool(  "Crop",           true     ))
-	// inputs 7
+	newInput( 2, nodeValue_Bool(  "Override color", false    ));
+	newInput( 3, nodeValue_Color( "Color",          ca_white ));
+	newInput( 6, nodeValue_Bool(  "Crop",           true     ))
+	// inputs 8
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Atlas", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [
-		[ "Shape",  false ], 0, 5, 1, 4,
-		[ "Output", false ], 2, 3, 6, 
+		[ "Shape",  false ],  0,  5,  1,  4,  7, 
+		[ "Output", false ],  2,  3,  6, 
 	]
 	
 	////- Node
@@ -42,6 +43,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _mode   = _data[5];
 			var _thres  = _data[1];
 			var _ignore = _data[4];
+			var _diag   = _data[7];
 			
 			var _ovr    = _data[2];
 			var _ovrclr = _data[3];
@@ -69,6 +71,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				shader_set_i( "ignore",    _ignore );
 				shader_set_f( "dimension", ww, hh  );
 				shader_set_f( "threshold", _thres  );
+				shader_set_i( "diagonal",  _diag   );
 				shader_set_s( "map",       _inSurf );
 			shader_reset();
 		

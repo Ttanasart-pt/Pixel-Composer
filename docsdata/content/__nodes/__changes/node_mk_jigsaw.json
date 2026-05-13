@@ -3,13 +3,8 @@
     "version": "1.21.1.003",
     "changes": [
       {
-        "date": "2026-05-13T03:47:40.621Z",
-        "node": "",
-        "commit": "--j"
-      },
-      {
         "date": "2026-05-13T04:21:04.271Z",
-        "node": "",
+        "node": "Separate Shape",
         "commit": "**Separate Shape**: Add diagonal setting."
       }
     ]

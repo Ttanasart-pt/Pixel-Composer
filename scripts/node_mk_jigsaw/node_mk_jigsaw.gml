@@ -37,6 +37,58 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	}
 	
+	static cutSegment = function(x0, y0, x1, y1, cw, ch) {
+		var c = choose(-1, 1);
+		if(c == 0) { draw_line_width(x0, y0, x1, y1, _gapp); return; }
+		
+		var g = _gapp;
+		
+		var _dirr = point_direction(x0, y0, x1, y1);
+		var dx = lengthdir_x(1, _dirr);
+		var dy = lengthdir_y(1, _dirr);
+		var px = lengthdir_x(1, _dirr + 90);
+		var py = lengthdir_y(1, _dirr + 90);
+		
+		var xc = (x0 + x1) / 2;
+		var yc = (y0 + y1) / 2;
+		
+		var lx0 = xc - dx * cw/2;
+		var ly0 = yc - dy * cw/2;
+		var lx1 = xc + dx * cw/2;
+		var ly1 = yc + dy * cw/2;
+		
+		draw_line_width(x0, y0, lx0, ly0, g);
+		draw_line_width(lx1, ly1, x1, y1, g);
+		
+		if(_conn == 0) {
+			var nx, ny;
+			var an = _dirr;
+			var ox = xc + lengthdir_x(cw/2, an) * c;
+			var oy = yc + lengthdir_y(cw/2, an) * c;
+			
+			var sp = 8;
+			var st = 180 / sp;
+			
+			repeat(sp) {
+				an += st;
+				nx = xc + lengthdir_x(cw/2, an) * c;
+				ny = yc + lengthdir_y(cw/2, an) * c;
+				
+				if(g > 1) draw_line_round(ox, oy, nx, ny, g);
+				else      draw_line(ox, oy, nx, ny);
+				
+				ox = nx;
+				oy = ny;
+			}
+			
+		} else if(_conn == 1) {
+			draw_line_width(lx0 + px*ch*c, ly0 + py*ch*c, lx1 + px*ch*c, ly1 + py*ch*c, g);
+			draw_line_width(lx0 - px*g/2*c, ly0 - py*g/2*c, lx0 + px*ch*c + px*g/2*c, ly0 + py*ch*c + py*g/2*c, g);
+			draw_line_width(lx1 - px*g/2*c, ly1 - py*g/2*c, lx1 + px*ch*c + px*g/2*c, ly1 + py*ch*c + py*g/2*c, g);
+		}
+					
+	}
+	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 			var _seed = _data[ 3];
@@ -45,10 +97,10 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _patt = _data[ 1];
 			var _subd = _data[ 2];
 			
-			var _gapp = _data[ 4];
+			    _gapp = _data[ 4];
 			
-			var _conn = _data[ 5];
-			var _csiz = _data[ 6];
+			    _conn = _data[ 5];
+			    _csiz = _data[ 6];
 			
 			var _outSurf  = _outData[0];
 			var _outPiece = _outData[1];
@@ -64,7 +116,7 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var row = _subd[1];
 		var pw = sw / col;
 		var ph = sh / row;
-		var hgap = _gapp / 2;
+		hgap = _gapp / 2;
 		
 		temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
 		temp_surface[1] = surface_verify(temp_surface[1], sw, sh, surface_rgba32float);
@@ -89,27 +141,7 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				for( var j = 0; j < col; j++ ) {
 					var lx0 = j * pw - 1;
 					var lx1 = lx0 + pw + 2;
-					var lxc = (lx0 + lx1) / 2;
-					
-					var c = choose(-1, 1);
-					if(c == 0) { draw_line_width(lx0, ly, lx1, ly, _gapp); continue; }
-					
-					var lcx0 = lxc - cnw / 2;
-					var lcx1 = lxc + cnw / 2;
-					var lcy  = ly + cnh * c;
-					
-					draw_line_width(lx0, ly, lcx0, ly, _gapp);
-					draw_line_width(lx1, ly, lcx1, ly, _gapp);
-					
-					if(_conn == 0) {
-						
-						
-					} else if(_conn == 1) {
-						draw_line_width(lcx0, lcy, lcx1, lcy, _gapp);
-						draw_line_width(lcx0, ly - hgap * c,  lcx0, lcy + hgap * c, _gapp);
-						draw_line_width(lcx1, ly - hgap * c,  lcx1, lcy + hgap * c, _gapp);
-					}
-					
+					cutSegment(lx0, ly, lx1, ly, cnw, cnh);
 				}
 			}
 			
@@ -119,26 +151,7 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				for( var j = 0; j < col; j++ ) {
 					var ly0 = j * ph - 1;
 					var ly1 = ly0 + ph + 2;
-					var lyc = (ly0 + ly1) / 2;
-					
-					var c = choose(-1, 1);
-					if(c == 0) { draw_line_width(lx, ly0, lx, ly1, _gapp); continue; }
-					
-					var lcy0 = lyc - cnw / 2;
-					var lcy1 = lyc + cnw / 2;
-					var lcx  = lx + cnh * c;
-					
-					draw_line_width(lx, ly0, lx, lcy0, _gapp);
-					draw_line_width(lx, ly1, lx, lcy1, _gapp);
-					
-					if(_conn == 0) {
-						
-						
-					} else if(_conn == 1) {
-						draw_line_width(lcx, lcy0, lcx, lcy1, _gapp);
-						draw_line_width(lx - hgap * c,  lcy0, lcx + hgap * c, lcy0, _gapp);
-						draw_line_width(lx - hgap * c,  lcy1, lcx + hgap * c, lcy1, _gapp);
-					}
+					cutSegment(lx, ly0, lx, ly1, cnw, cnh);
 				}
 			}
 			BLEND_NORMAL
@@ -161,10 +174,11 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_reset_shader();
 			
 			shader_set(sh_seperate_shape_ite);
-				shader_set_i( "mode",      1               );
-				shader_set_i( "ignore",    1               );
-				shader_set_f( "dimension", sw, sh          );
-				shader_set_f( "threshold", 0               );
+				shader_set_i( "mode",      1      );
+				shader_set_i( "ignore",    1      );
+				shader_set_f( "dimension", sw, sh );
+				shader_set_f( "threshold", 0      );
+				shader_set_i( "diagonal",  0      );
 				shader_set_s( "map",       temp_surface[0] );
 			shader_reset();
 		

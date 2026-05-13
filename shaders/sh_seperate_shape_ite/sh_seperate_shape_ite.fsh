@@ -5,6 +5,7 @@ uniform vec2  dimension;
 uniform float threshold;
 uniform int   ignore;
 uniform int   mode;
+uniform int   diagonal;
 uniform sampler2D map;
 
 vec4 sampVal(vec4 col) { return mode == 1? vec4(col.a) : col; }
@@ -24,6 +25,8 @@ void main() {
 	
 	for(float i = -1.; i <= 1.; i++)
 	for(float j = -1.; j <= 1.; j++) {
+		if(diagonal == 0 && abs(i) + abs(j) > 1.) continue;
+		
 		vec2 pos   = clamp(v_vTexcoord + vec2(i, j) * tx, 0., 1.);
 		vec4 samCl = sampVal(texture2D( map, pos ));
 		
