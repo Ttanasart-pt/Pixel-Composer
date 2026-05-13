@@ -5,28 +5,31 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_EScroll( "Pattern",    0, [ "Grid" ] ));
-	newInput( 2, nodeValue_IVec2(   "Subdivide", [4,4]          ));
+	newInput( 1, nodeValue_EScroll( "Pattern",    0, [ "Grid", "Polar" ] ));
+	newInput( 2, nodeValue_IVec2(   "Subdivide", [4,4] ));
 	
 	////- =Pieces
 	newInput( 4, nodeValue_Float(   "Gap",    2 ));
 	
-	////- =Connection
-	newInput( 5, nodeValue_EScroll( "Shape",  0, [ "Circular", "Rectangle" ] ));
-	newInput( 6, nodeValue_Vec2(    "Size",   [.33,.25] ));
+	////- =Tabs
+	newInput( 5, nodeValue_EScroll( "Shape",   0, [ "Circular", "Rectangle" ] ));
+	newInput( 6, nodeValue_Vec2(    "Size",    [.33,.25] ));
+	newInput( 7, nodeValue_Float(   "Recess",  .5 ));
+	newInput( 8, nodeValue_Float(   "Extends",  0 ));
 	
-	////- =Render
-	
-	// 7
+	////- =Output
+	newInput( 9, nodeValue_Bool(    "Separate", false ));
+	// 10
 	
 	newOutput( 0, nodeValue_Output( "Combined", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Pieces",   VALUE_TYPE.surface, []    ));
 	newOutput( 2, nodeValue_Output( "Atlas",    VALUE_TYPE.surface, []    ));
 	
 	input_display_list = [  3,  0, 
-		[ "Pattern",    false ],  1,  2, 
-		[ "Pieces",     false ],  4, 
-		[ "Connection", false ],  5,  6, 
+		[ "Pattern", false ],  1,  2, 
+		[ "Pieces",  false ],  4, 
+		[ "Tabs",    false ],  5,  6,  7,  8, 
+		[ "Output",  false ],  9, 
 	];
 	
 	////- Nodes
@@ -37,42 +40,58 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	}
 	
-	static cutSegment = function(x0, y0, x1, y1, cw, ch) {
+	static cutSegment = function(x0, y0, x1, y1) {
 		var c = choose(-1, 1);
-		if(c == 0) { draw_line_width(x0, y0, x1, y1, _gapp); return; }
+		if(c == 0) { draw_line_width(x0, y0, x1, y1, gapp); return; }
 		
-		var g = _gapp;
+		var g  = gapp;
+		var g2 = g / 2;
 		
 		var _dirr = point_direction(x0, y0, x1, y1);
+		var _diss = point_distance(x0, y0, x1, y1);
+		
 		var dx = lengthdir_x(1, _dirr);
 		var dy = lengthdir_y(1, _dirr);
-		var px = lengthdir_x(1, _dirr + 90);
-		var py = lengthdir_y(1, _dirr + 90);
+		var px = lengthdir_x(1, _dirr + 90 * c);
+		var py = lengthdir_y(1, _dirr + 90 * c);
+		var cw = csiz[0] * _diss;
+		var ch = csiz[1] * _diss;
 		
-		var xc = (x0 + x1) / 2;
-		var yc = (y0 + y1) / 2;
+		var xc = (x0 + x1) / 2 - px * tres;
+		var yc = (y0 + y1) / 2 - py * tres;
 		
-		var lx0 = xc - dx * cw/2;
-		var ly0 = yc - dy * cw/2;
-		var lx1 = xc + dx * cw/2;
-		var ly1 = yc + dy * cw/2;
+		var lx0 = xc - dx * (cw/2) * (1+extn);
+		var ly0 = yc - dy * (cw/2) * (1+extn);
+		var lx1 = xc + dx * (cw/2) * (1+extn);
+		var ly1 = yc + dy * (cw/2) * (1+extn);
 		
 		draw_line_width(x0, y0, lx0, ly0, g);
 		draw_line_width(lx1, ly1, x1, y1, g);
 		
-		if(_conn == 0) {
+		if(conn == 0) {
 			var nx, ny;
-			var an = _dirr;
-			var ox = xc + lengthdir_x(cw/2, an) * c;
-			var oy = yc + lengthdir_y(cw/2, an) * c;
+			var an  = _dirr;
+			var tcx = xc + px * ch;
+			var tcy = yc + py * ch;
+			
+			var ox = tcx + lengthdir_x(cw/2, an) * c;
+			var oy = tcy + lengthdir_y(cw/2, an) * c;
+			
+			if(c) {
+				if(g > 1) draw_line_round(ox, oy, lx1, ly1, g);
+				else      draw_line(ox, oy, lx1, ly1);
+			} else {
+				if(g > 1) draw_line_round(ox, oy, lx0, ly0, g);
+				else      draw_line(ox, oy, lx0, ly0);
+			}
 			
 			var sp = 8;
 			var st = 180 / sp;
 			
 			repeat(sp) {
 				an += st;
-				nx = xc + lengthdir_x(cw/2, an) * c;
-				ny = yc + lengthdir_y(cw/2, an) * c;
+				nx = tcx + lengthdir_x(cw/2, an) * c;
+				ny = tcy + lengthdir_y(cw/2, an) * c;
 				
 				if(g > 1) draw_line_round(ox, oy, nx, ny, g);
 				else      draw_line(ox, oy, nx, ny);
@@ -81,10 +100,18 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				oy = ny;
 			}
 			
+			if(c) {
+				if(g > 1) draw_line_round(ox, oy, lx0, ly0, g);
+				else      draw_line(ox, oy, lx0, ly0);
+			} else {
+				if(g > 1) draw_line_round(ox, oy, lx1, ly1, g);
+				else      draw_line(ox, oy, lx1, ly1);
+			}
+			
 		} else if(_conn == 1) {
-			draw_line_width(lx0 + px*ch*c, ly0 + py*ch*c, lx1 + px*ch*c, ly1 + py*ch*c, g);
-			draw_line_width(lx0 - px*g/2*c, ly0 - py*g/2*c, lx0 + px*ch*c + px*g/2*c, ly0 + py*ch*c + py*g/2*c, g);
-			draw_line_width(lx1 - px*g/2*c, ly1 - py*g/2*c, lx1 + px*ch*c + px*g/2*c, ly1 + py*ch*c + py*g/2*c, g);
+			draw_line_width(lx0 + px*ch, ly0 + py*ch, lx1 + px*ch,         ly1 + py*ch,         g);
+			draw_line_width(lx0 - px*g2, ly0 - py*g2, lx0 + px*ch + px*g2, ly0 + py*ch + py*g2, g);
+			draw_line_width(lx1 - px*g2, ly1 - py*g2, lx1 + px*ch + px*g2, ly1 + py*ch + py*g2, g);
 		}
 					
 	}
@@ -97,10 +124,14 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _patt = _data[ 1];
 			var _subd = _data[ 2];
 			
-			    _gapp = _data[ 4];
+			var _gapp = _data[ 4]; gapp = _gapp;
 			
-			    _conn = _data[ 5];
-			    _csiz = _data[ 6];
+			var _conn = _data[ 5]; conn = _conn;
+			var _csiz = _data[ 6]; csiz = _csiz;
+			var _tres = _data[ 7]; tres = _tres;
+			var _extn = _data[ 8]; extn = _extn;
+			
+			var _sepp = _data[ 9];
 			
 			var _outSurf  = _outData[0];
 			var _outPiece = _outData[1];
@@ -124,36 +155,82 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		random_set_seed(_seed);
 		
-		surface_set_target(temp_surface[0]);
-			draw_clear(c_white);
-			
+		var _segs = [];
+		
+		if(_patt == 0) {
 			var cw = (sw - (_gapp * (col - 1))) / col;
 			var ch = (sh - (_gapp * (row - 1))) / row;
 			
 			var cnw = _csiz[0] * cw;
 			var cnh = _csiz[1] * ch;
 			
-			draw_set_color(c_white);
-			BLEND_SUBTRACT
 			for( var i = 1; i < row; i++ ) {
 				var ly = (ch + _gapp) * i - _gapp / 2;
-				
 				for( var j = 0; j < col; j++ ) {
 					var lx0 = j * pw - 1;
 					var lx1 = lx0 + pw + 2;
-					cutSegment(lx0, ly, lx1, ly, cnw, cnh);
+					array_push(_segs, [lx0, ly, lx1, ly]);
 				}
 			}
 			
 			for( var i = 1; i < col; i++ ) {
 				var lx = (cw + _gapp) * i - _gapp / 2;
-				
-				for( var j = 0; j < col; j++ ) {
+				for( var j = 0; j < row; j++ ) {
 					var ly0 = j * ph - 1;
 					var ly1 = ly0 + ph + 2;
-					cutSegment(lx, ly0, lx, ly1, cnw, cnh);
+					array_push(_segs, [lx, ly0, lx, ly1]);
 				}
 			}
+			
+		} else if(_patt == 1) {
+			var rad = min(sw, sh) / 2;
+			var ox, oy, nx, ny;
+			
+			var rcol = rad / (col - 1);
+			
+			for( var i = 0; i < row; i++ ) {
+				var a  = i / row * 360;
+				var dx = lengthdir_x(1, a);
+				var dy = lengthdir_y(1, a);
+				
+				for( var j = 0; j < col; j++ ) {
+					var l = j * rcol;
+					
+					nx = sw/2 + dx * l;
+					ny = sh/2 + dy * l;
+					
+					if(j) array_push(_segs, [ox, oy, nx, ny]);
+					
+					ox = nx;
+					oy = ny;
+				}
+			}
+			
+			for( var i = 0; i < col; i++ ) {
+				var l = i * rcol;
+				
+				for( var j = 0; j <= row; j++ ) {
+					var a  = j / row * 360;
+					
+					nx = sw/2 + lengthdir_x(l, a);
+					ny = sh/2 + lengthdir_y(l, a);
+					
+					if(j) array_push(_segs, [ox, oy, nx, ny]);
+					
+					ox = nx;
+					oy = ny;
+				}
+			}
+			
+		}
+		
+		surface_set_target(temp_surface[0]);
+			draw_clear(c_white);
+			
+			draw_set_color(c_white);
+			BLEND_SUBTRACT
+			for( var i = 0, n = array_length(_segs); i < n; i++ ) 
+				cutSegment(_segs[i][0], _segs[i][1], _segs[i][2], _segs[i][3]);
 			BLEND_NORMAL
 		surface_reset_target();
 		
@@ -164,6 +241,10 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface(_surf, 0, 0);
 			BLEND_NORMAL
 		surface_reset_target();
+		
+		_outData[0] = _outSurf;
+		
+		if(!_sepp) return _outData;
 		
 		#region region indexing
 			surface_set_shader(temp_surface[2], sh_seperate_shape_index);
@@ -260,7 +341,6 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			ds_map_destroy(reg);
 		#endregion
 		
-		_outData[0] = _outSurf;
 		_outData[1] = _outPiece;
 		_outData[2] = _outAtlas;
 		

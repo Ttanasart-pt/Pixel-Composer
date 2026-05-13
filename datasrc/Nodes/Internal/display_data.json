@@ -1401,7 +1401,7 @@
             "Node_MK_Dialog", 
             "Node_MK_Facet",
             "Node_MK_Tree_Inline",
-            // "Node_MK_Jigsaw",
+            "Node_MK_Jigsaw",
             
             { "label": "Simulation" },
             "Node_MK_Brownian",
