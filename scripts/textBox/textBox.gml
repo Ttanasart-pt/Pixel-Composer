@@ -243,10 +243,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
-			} else if(cursor_select != -1)
-				cursor_select = -1;
+			}
 			
-			move_cursor(-1);
+			if(cursor_select == -1)
+				move_cursor(-1);
+			else {
+				cursor = min(cursor, cursor_select);
+				cursor_select = -1;
+			}
+			
 			if(key_mod_press(CTRL)) {
 				while(cursor > 0) {
 					var ch = string_char_at(_input_text, cursor);
@@ -260,10 +265,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
-			} else if(cursor_select != -1)
-				cursor_select = -1;
+			}
 			
-			move_cursor(1);
+			if(cursor_select == -1)
+				move_cursor(1);
+			else {
+				cursor = max(cursor, cursor_select);
+				cursor_select = -1;
+			}
+			
 			if(key_mod_press(CTRL)) {
 				while(cursor < string_length(_input_text)) {
 					var ch = string_char_at(_input_text, cursor);
@@ -311,6 +321,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	}
 	
 	static editText = function() {
+		if(cursor == cursor_select) cursor_select = -1;
 		var minc     = min(cursor, cursor_select);
 		var maxc     = max(cursor, cursor_select);
 		var modified = false;
@@ -422,6 +433,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						
 						_input_text		= str_before + ch + str_after;
 						move_cursor(string_length(ch));
+						
 					} else {
 						var str_before	= string_copy(_input_text, 1, minc);
 						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
@@ -485,6 +497,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		} else if(auto_update && (modified || keyboard_check_pressed(vk_anykey))) {
 			apply();
 		}
+		
 	}
 	
 	////- Draw
@@ -577,7 +590,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 				
 				if(_mm > sx + _chw)
-					target = i + 1;
+					target = min(i + 1, n);
 				
 				sx += _chw;
 			}
