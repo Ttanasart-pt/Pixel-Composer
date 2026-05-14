@@ -23,23 +23,24 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- Smear
-	newInput(11, nodeValue_Enum_Button( "Mode",       0, [ "Greyscale", "Alpha" ] ));
-	newInput(14, nodeValue_Bool(        "Invert",     false          ));
-	newInput( 1, nodeValue_Slider(      "Strength",  .2, [0,.5,.001] )).setHotkey("S").setMappable( 9).setCurvable(20);
-	newInput( 2, nodeValue_Rotation(    "Direction",  0              )).setHotkey("R").setMappable(10).hideLabel();
-	newInput(13, nodeValue_Slider(      "Spread",     0, [0,30,1 ]   ));
-	newInput(12, nodeValue_Enum_Button( "Modulate strength", 0, [ "Distance", "Color", "None" ] ));
+	newInput(11, nodeValue_EButton(  "Mode",       0, [ "Greyscale", "Alpha" ] ));
+	newInput(14, nodeValue_Bool(     "Invert",     false          ));
+	newInput( 1, nodeValue_Slider(   "Strength",  .2, [0,.5,.001] )).setHotkey("S").setMappable( 9).setCurvable(20);
+	newInput( 2, nodeValue_Rotation( "Direction",  0              )).setHotkey("R").setMappable(10).hideLabel();
+	newInput(13, nodeValue_Slider(   "Spread",     0, [0,30,1 ]   ));
+	newInput(12, nodeValue_EButton(  "Modulate strength", 0, [ "Distance", "Color", "None" ] ));
 	
 	////- Render
-	newInput(16, nodeValue_Enum_Scroll( "Render Mode", 0, [ "Distance", "Distance Normalized", "Base Color" ] ));
-	newInput(15, nodeValue_Enum_Scroll( "Blend Mode",  0, [ "Maximum", "Additive" ]));
-	newInput(17, nodeValue_Color(       "Blend Side",  ca_white));
-	//// Inputs 21
+	newInput(16, nodeValue_EScroll(  "Render Mode", 0, [ "Distance", "Distance Normalized", "Base Color", "Texture" ] ));
+	newInput(15, nodeValue_EScroll(  "Blend Mode",  0, [ "Maximum", "Additive" ] ));
+	newInput(17, nodeValue_Color(    "Blend Side",  ca_white ));
+	newInput(21, nodeValue_Surface(  "Texture" ));
+	//// 22
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],  0, 18, 19,  3,  4,  7,  8, 
 		["Smear",	false], 11, 14,  1,  9, 20,  2, 10, 13, 12, 
-		["Render",  false], 16, 15, 17, 
+		["Render",  false], 16, 15, 17, 21, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -67,25 +68,44 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _dim  = surface_get_dimension(_surf);
+		#region data
+			var _surf = _data[ 0];
+			
+			var _mode = _data[11];
+			var _invt = _data[14];
+			var _strn = _data[ 1];
+			var _dirr = _data[ 2];
+			var _sprd = _data[13];
+			var _mods = _data[12];
+			
+			var _rend = _data[16];
+			var _blnd = _data[15];
+			var _bsid = _data[17];
+			var _text = _data[21], _useText = is_surface(_text);
+			
+			var _dim  = surface_get_dimension(_surf);
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_smear);
+			shader_set_i("sampleMode",	  getAttribute("oversample"));
 			shader_set_uv(_data[18], _data[19]);
 			
 			shader_set_f("dimension",     _dim);
 			shader_set_f("size",          max(_dim[0], _dim[1]));
 			
-			shader_set_f_map("strength",  _data[ 1], _data[ 9], inputs[ 1], _data[20]);
-			shader_set_f_map("direction", _data[ 2], _data[10], inputs[ 2]);
-			shader_set_i("sampleMode",	  getAttribute("oversample"));
-			shader_set_i("alpha",	      _data[11]);
-			shader_set_i("inv",	    	  _data[14]);
-			shader_set_i("blend",    	  _data[15]);
-			shader_set_i("modulateStr",   _data[12]);
-			shader_set_f("spread",        _data[13]);
-			shader_set_i("rMode",         _data[16]);
-			shader_set_c("blendSide",     _data[17]);
+			shader_set_i("alpha",	      _mode );
+			shader_set_i("inv",	    	  _invt );
+			shader_set_f_map("strength",  _strn, _data[ 9], inputs[ 1], _data[20]);
+			shader_set_f_map("direction", _dirr, _data[10], inputs[ 2]);
+			shader_set_f("spread",        _sprd );
+			shader_set_i("modulateStr",   _mods );
+			
+			shader_set_i("rMode",         _rend );
+			shader_set_i("blend",    	  _blnd );
+			shader_set_c("blendSide",     _bsid );
+			
+			shader_set_i("useTexture",    _useText );
+			shader_set_s("texture",       _text    );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

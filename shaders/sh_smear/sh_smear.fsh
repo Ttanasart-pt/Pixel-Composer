@@ -197,7 +197,10 @@ uniform int	 blend;
 uniform int	 rMode;
 uniform vec4 blendSide;
 
-vec4 smear(vec2 shift) {
+uniform int  useTexture;
+uniform sampler2D texture;
+
+vec4 smear(vec2 shift, out vec2 basePosition) {
 	float delta  = 1. / size;
 	
 	vec4  base = sampleTexture( gm_BaseTexture, v_vTexcoord );
@@ -205,11 +208,14 @@ vec4 smear(vec2 shift) {
     vec4  res, col, rcol;
 	float bright, rbright, dist = 0.;
 	
+	vec2 sampPos;
+	
 	if(inv == 0) {
 		res  = base;
 		
 		for(float i = 0.; i <= 1.0; i += delta) {
-			col = sampleTexture( gm_BaseTexture, v_vTexcoord - shift * i, i);
+			sampPos = v_vTexcoord - shift * i;
+			col = sampleTexture( gm_BaseTexture, sampPos, i);
 			
 			if(modulateStr != 2) {
 				float mm = 1. - i;
@@ -222,6 +228,7 @@ vec4 smear(vec2 shift) {
 			bright = (col.r + col.g + col.b) / 3. * col.a;
 			
 			if(bright > mBri) {
+				basePosition = sampPos;
 				mBri = bright;
 				res  = col;
 			}
@@ -235,7 +242,8 @@ vec4 smear(vec2 shift) {
 		res  = base;
 		
 		for(float i = 0.; i <= 1.; i += delta) {
-			col    = sampleTexture( gm_BaseTexture, v_vTexcoord + shift * i, i);
+			sampPos = v_vTexcoord + shift * i;
+			col    = sampleTexture( gm_BaseTexture, sampPos, i);
 			bright = (col.r + col.g + col.b) / 3. * col.a;
 			
 			if(bright == 0.) continue;
@@ -249,6 +257,9 @@ vec4 smear(vec2 shift) {
 			if(rMode == 2) {
 				if(strength_curve_use == 1) col *= curveEval(strength_curve, strength_amount, i);
 				res = col;
+			
+			} else if(rMode == 3) {
+				res = vec4(1.);
 				
 			} else {
 				float _i = 0.;
@@ -260,6 +271,7 @@ vec4 smear(vec2 shift) {
 			}
 			
 			if(abs(i - bright) >= delta) res *= blendSide;
+			basePosition = sampPos;
 		}
 	}
 	
@@ -280,14 +292,20 @@ void main() {
 	}
 	
 	vec4 col = vec4(0.);
+	vec2 basePos;
 	
 	for(float i = -spread; i <= spread; i++) {
 		float r    = radians(dir + 90. + i);
 		vec2  dirr = vec2(sin(r), cos(r)) * str;
-		vec4  smr  = smear(dirr);
+		vec4  smr  = smear(dirr, basePos);
 		
 			 if(blend == 0) col  = max(col, smr);
 		else if(blend == 1) col += smr;
+	}
+	
+	if(useTexture == 1) {
+		vec4 btex = sampleTexture(texture, basePos);
+		col *= btex;
 	}
 	
     gl_FragColor = col;

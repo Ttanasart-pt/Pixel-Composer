@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.004",
+    "changes": [
+      {
+        "date": "2026-05-14T08:39:20.053Z",
+        "node": "Smear",
+        "commit": "**Smear**: Add texture input."
+      }
+    ]
+  }
+]
