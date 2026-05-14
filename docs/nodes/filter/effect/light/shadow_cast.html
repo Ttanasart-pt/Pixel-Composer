@@ -2072,6 +2072,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\mk_effect\mk_isoextrude.html" class="sidebar-file">Mk Isoextrude</a>
             </div>
+</li><li id="mk_jigsaw"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\mk_effect\mk_jigsaw.html" class="sidebar-file">Mk Jigsaw</a>
+            </div>
 </li><li id="mk_panels"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\mk_effect\mk_panels.html" class="sidebar-file">Mk Panels</a>
@@ -3615,6 +3619,10 @@
 </li><li id="mk_flare"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\mkfx\generator\mk_flare.html" class="sidebar-file">Mk Flare</a>
+            </div>
+</li><li id="mk_jigsaw"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\mkfx\generator\mk_jigsaw.html" class="sidebar-file">Mk Jigsaw</a>
             </div>
 </li><li id="mk_panels"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
@@ -6054,6 +6062,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_gridflip.html">Mk Gridflip</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_isocube.html">Mk Isocube</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_isoextrude.html">Mk Isoextrude</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_jigsaw.html">Mk Jigsaw</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_panels.html">Mk Panels</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_parallax.html">Mk Parallax</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_pile.html">Mk Pile</a></li>
@@ -6335,6 +6344,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_dialog.html">Mk Dialog</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_facet.html">Mk Facet</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_flare.html">Mk Flare</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_jigsaw.html">Mk Jigsaw</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_panels.html">Mk Panels</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_saber.html">Mk Saber</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_sparkle.html">Mk Sparkle</a></li>
@@ -6679,6 +6689,12 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Render Solid</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Algorithm</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
+                <td><p>Iteration</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
+                <td><p>Substep</p></td>
             </tr><tr><td colspan="2"><table class="summary-table dynamic" style="margin-top: 8px;"><tr>
                 <th colspan="2" class="summary-topic">
                     <p style="margin: -0.85rem auto -4px auto;width: fit-content;padding: 0px 8px;">Dynamic Inputs</p>
@@ -6693,7 +6709,7 @@
                     <td class="summary-topic junction-type"><p style="color: #ffe478" >float</p></td>
                     <td><p>Radius</p></td>
                 </tr><tr>
-                    <td class="summary-topic junction-type"><p style="color: #ffe478" >slider</p></td>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >float</p></td>
                     <td><p>Intensity</p></td>
                 </tr><tr>
                     <td class="summary-topic junction-type"><p style="color: #8fde5d" >color</p></td>
@@ -6734,6 +6750,9 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Light Mask</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
+                <td><p>Solid Sdf</p></td>
             </tr>
 
 <tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
@@ -6791,7 +6810,9 @@ shadow caster.</p><br>
 <h3><a id="Ambient Occlusion" class="anchor"></a><span class="junction">Ambient Occlusion</span></h3><br>
 <p>Size of the AO effects.</p><br>
 <h3><a id="Ambient Occlusion Strength" class="anchor"></a><span class="junction">Ambient Occlusion Strength</span></h3><br>
-<p>Intensity, darkness of the effect.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_shadow_cast/node_shadow_cast.gml">/scripts/node_shadow_cast/node_shadow_cast.gml</a></li><li><span>Shader [sh_shadow_cast_bg_convert]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_convert/sh_shadow_cast_bg_convert.fsh">/shaders/sh_shadow_cast_bg_convert/sh_shadow_cast_bg_convert.fsh</a></li><li><span>Shader [sh_shadow_cast_bg_extract]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh">/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh</a></li><li><span>Shader [sh_shadow_cast]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast/sh_shadow_cast.fsh">/shaders/sh_shadow_cast/sh_shadow_cast.fsh</a></li></ul>
+<p>Intensity, darkness of the effect.</p><br>
+<br><h2 class="nosidebar">Commit History</h2><br>
+<table class="change-table"><tr><th>1.21.1.004</th></tr><tr><td>**Cast Shadow**: Improve shadow quality. Add quality control.</td></tr><tr><td>**Cast Shadow**: Solid now render with removed background.</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_shadow_cast/node_shadow_cast.gml">/scripts/node_shadow_cast/node_shadow_cast.gml</a></li><li><span>Shader [sh_sdf_tex]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf_tex/sh_sdf_tex.fsh">/shaders/sh_sdf_tex/sh_sdf_tex.fsh</a></li><li><span>Shader [sh_sdf_dist]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf_dist/sh_sdf_dist.fsh">/shaders/sh_sdf_dist/sh_sdf_dist.fsh</a></li><li><span>Shader [sh_shadow_cast]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast/sh_shadow_cast.fsh">/shaders/sh_shadow_cast/sh_shadow_cast.fsh</a></li><li><span>Shader [sh_sdf]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf/sh_sdf.fsh">/shaders/sh_sdf/sh_sdf.fsh</a></li><li><span>Shader [sh_shadow_cast_bg_extract]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh">/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh</a></li><li><span>Shader [sh_shadow_cast_remove_solid]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_remove_solid/sh_shadow_cast_remove_solid.fsh">/shaders/sh_shadow_cast_remove_solid/sh_shadow_cast_remove_solid.fsh</a></li></ul>
         </div>
     </div>
 

@@ -2072,6 +2072,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\mk_effect\mk_isoextrude.html" class="sidebar-file">Mk Isoextrude</a>
             </div>
+</li><li id="mk_jigsaw"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\mk_effect\mk_jigsaw.html" class="sidebar-file">Mk Jigsaw</a>
+            </div>
 </li><li id="mk_panels"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\mk_effect\mk_panels.html" class="sidebar-file">Mk Panels</a>
@@ -3615,6 +3619,10 @@
 </li><li id="mk_flare"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\mkfx\generator\mk_flare.html" class="sidebar-file">Mk Flare</a>
+            </div>
+</li><li id="mk_jigsaw"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\mkfx\generator\mk_jigsaw.html" class="sidebar-file">Mk Jigsaw</a>
             </div>
 </li><li id="mk_panels"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
@@ -6054,6 +6062,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_gridflip.html">Mk Gridflip</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_isocube.html">Mk Isocube</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_isoextrude.html">Mk Isoextrude</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_jigsaw.html">Mk Jigsaw</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_panels.html">Mk Panels</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_parallax.html">Mk Parallax</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_pile.html">Mk Pile</a></li>
@@ -6335,6 +6344,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_dialog.html">Mk Dialog</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_facet.html">Mk Facet</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_flare.html">Mk Flare</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_jigsaw.html">Mk Jigsaw</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_panels.html">Mk Panels</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_saber.html">Mk Saber</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\mkfx\generator/mk_sparkle.html">Mk Sparkle</a></li>
@@ -6709,6 +6719,9 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">color</p></td>
                 <td><p>Blend Side</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
+                <td><p>Texture</p></td>
             </tr>
 <tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
@@ -6739,7 +6752,9 @@
 <h3><a id="Spread" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Spread</span></h3><br>
 <p>Make the smear expands over length.</p><br>
 <h3><a id="Modulate Strength" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Modulate Strength</span></h3><br>
-<p>Whether to make the length of the smearing multiply by the brightness of the alpha value.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_smear/node_smear.gml">/scripts/node_smear/node_smear.gml</a></li><li><span>Shader [sh_smear]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_smear/sh_smear.fsh">/shaders/sh_smear/sh_smear.fsh</a></li></ul>
+<p>Whether to make the length of the smearing multiply by the brightness of the alpha value.</p><br>
+<br><h2 class="nosidebar">Commit History</h2><br>
+<table class="change-table"><tr><th>1.21.1.004</th></tr><tr><td>**Smear**: Add texture input.</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_smear/node_smear.gml">/scripts/node_smear/node_smear.gml</a></li><li><span>Shader [sh_smear]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_smear/sh_smear.fsh">/shaders/sh_smear/sh_smear.fsh</a></li></ul>
         </div>
     </div>
 
