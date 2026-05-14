@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -44,6 +43,8 @@
     vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
 
+#define PI 3.14159265358979323846
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -57,20 +58,41 @@ uniform float rotation;
 uniform int   shiftAxis;
 uniform float shiftAlt;
 
+uniform int   pattern;
+
 void main() {
 	vec2 tx  = getUV(v_vTexcoord) * dimension;
 	     tx -= position;
 	     tx *= mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
 	
 	vec2 repeatSize = surfDimension + spacing;
-	vec2 tileId = floor(tx / repeatSize);
+	vec2 tileId     = floor(tx / repeatSize);
 	
 	     if(shiftAxis == 0) { if(mod(tileId.y, 2.) >= 1.) tx.x += surfDimension * shiftAlt; } 
 	else if(shiftAxis == 1) { if(mod(tileId.x, 2.) >= 1.) tx.y += surfDimension * shiftAlt; }
 	
 	vec2 tilePx = tx - floor(tx / repeatSize) * repeatSize;
 	vec2 tileTx = tilePx / surfDimension;
+	
+	if(pattern == 1) {
+		if(mod(tileId.x, 2.) >= 1.) tileTx.x = 1. - tileTx.x;
+		if(mod(tileId.y, 2.) >= 1.) tileTx.y = 1. - tileTx.y;
+		
+	} else if(pattern == 2) {
+		float hPI = PI / 2.;
+		float ang = 0.;
+		
+		if(mod(tileId.y, 2.) >= 1.)
+			ang = PI + hPI - hPI * tileId.x;
+		else
+			ang = hPI * tileId.x;
+		
+		mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+		tileTx = .5 + (tileTx - .5) * rot;
+	}
+	
 	if(tileTx.x < 0. || tileTx.y < 0. || tileTx.x > 1. || tileTx.y > 1.)
 		 gl_FragColor = vec4(0.);
+		 
 	else gl_FragColor = texture2D(gm_BaseTexture, tileTx);
 }

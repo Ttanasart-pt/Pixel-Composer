@@ -6,7 +6,7 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(10, nodeValue_Slider(  "UV Mix", 1  ));
 	
 	////- =Output
-	newInput( 1, nodeValue_Enum_Scroll( "Scaling Type", 0, [ "Fix Dimension", "Relative To Input" ] ));
+	newInput( 1, nodeValue_EScroll( "Scaling Type", 0, [ "Fix Dimension", "Relative To Input" ] ));
 	newInput( 2, nodeValue_Dimension());
 	newInput( 3, nodeValue_Vec2( "Amount", [2,2] ));
 	
@@ -18,7 +18,10 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 6, nodeValue_EButton(  "Shift Axis", 0, ["X", "Y"] ));
 	newInput( 7, nodeValue_Slider(   "Shift",      0   ));
 	newInput( 8, nodeValue_Rotation( "Rotation",   0   ));
-	// input 11
+	
+	////- =Pattern
+	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "Noone", "Flip Grid", "90 Polar Rotation" ] ));
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	 
@@ -27,6 +30,7 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Output",    false ],  1,  2,  3, 
 		[ "Tiling",    false ],  5,
 		[ "Transform", false ],  4,  6,  7,  8, 
+		[ "Pattern",   false ], 11,
 	];
 	
 	////- Node
@@ -71,6 +75,8 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _shf  = _data[ 7];
 			var _rot  = _data[ 8];
 			
+			var _patt = _data[11];
+			
 			inputs[2].setVisible(_type == 0);
 			inputs[3].setVisible(_type == 1);
 		#endregion
@@ -98,6 +104,8 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("rotation",  degtorad(_rot));
 			shader_set_i("shiftAxis", _shfA );
 			shader_set_f("shiftAlt",  _shf  );
+			
+			shader_set_i("pattern",   _patt );
 			
 			draw_surface_stretched(_surf, 0, 0, _sw, _sh);
 		surface_reset_shader();

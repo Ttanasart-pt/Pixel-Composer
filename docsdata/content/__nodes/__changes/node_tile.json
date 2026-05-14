@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.004",
+    "changes": [
+      {
+        "date": "2026-05-14T07:03:07.980Z",
+        "node": "Tile",
+        "commit": "**Tile**: Add basic rotation pattern."
+      }
+    ]
+  }
+]
