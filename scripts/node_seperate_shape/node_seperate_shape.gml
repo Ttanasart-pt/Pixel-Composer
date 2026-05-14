@@ -11,22 +11,23 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	////- =Shape
 	newInput( 0, nodeValue_Surface( "Surface In" ));
-	newInput( 5, nodeValue_EButton( "Mode",          0, [ "Greyscale", "Alpha" ] ))
-	newInput( 1, nodeValue_Slider(  "Tolerance",    .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release }));
-	newInput( 4, nodeValue_Bool(    "Ignore blank", true, "Skip empty shapes."));
-	newInput( 7, nodeValue_Bool(    "Diagonal",     true ));
+	newInput( 5, nodeValue_EButton( "Mode",        0, [ "Greyscale", "Alpha" ] ))
+	newInput( 1, nodeValue_Slider(  "Tolerance",  .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release }));
+	newInput( 4, nodeValue_EButton( "Blank",       0, [ "Include", "Ignore" ] ));
+	newInput( 8, nodeValue_Int(     "Expansion",   8   ));
+	newInput( 7, nodeValue_Bool(    "Diagonal",   true ));
 	
 	////- =Output
 	newInput( 2, nodeValue_Bool(  "Override color", false    ));
 	newInput( 3, nodeValue_Color( "Color",          ca_white ));
 	newInput( 6, nodeValue_Bool(  "Crop",           true     ))
-	// inputs 8
+	// inputs 9
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Atlas", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [
-		[ "Shape",  false ],  0,  5,  1,  4,  7, 
+		[ "Shape",  false ],  0,  5,  1,  4,  8,  7, 
 		[ "Output", false ],  2,  3,  6, 
 	]
 	
@@ -39,15 +40,18 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-			var _inSurf = _data[0];
-			var _mode   = _data[5];
-			var _thres  = _data[1];
-			var _ignore = _data[4];
-			var _diag   = _data[7];
+			var _inSurf = _data[ 0];
+			var _mode   = _data[ 5];
+			var _thres  = _data[ 1];
+			var _ignore = _data[ 4];
+			var _expan  = _data[ 8];
+			var _diag   = _data[ 7];
 			
-			var _ovr    = _data[2];
-			var _ovrclr = _data[3];
-			var _crop   = _data[6];
+			var _ovr    = _data[ 2];
+			var _ovrclr = _data[ 3];
+			var _crop   = _data[ 6];
+			
+			inputs[8].setVisible(_ignore == 2);
 			
 			if(!is_surface(_inSurf)) return _outData;
 		#endregion
@@ -55,18 +59,18 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var ww = surface_get_width_safe(_inSurf);
 		var hh = surface_get_height_safe(_inSurf);
 		
-		for(var i = 0; i < 2; i++) temp_surface[i] = surface_verify(temp_surface[i], ww, hh, surface_rgba32float);
+		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, surface_rgba32float);
+		temp_surface[1] = surface_verify(temp_surface[1], ww, hh, surface_rgba32float);
 		
 		#region region indexing
 			surface_set_shader(temp_surface[1], sh_seperate_shape_index);
 				shader_set_i( "mode",      _mode   );
 				shader_set_i( "ignore",    _ignore );
 				shader_set_f( "dimension", ww, hh  );
-				
-				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, ww, hh);
+				draw_empty();
 			surface_reset_shader();
 			
-			shader_set(sh_seperate_shape_ite);
+			shader_set( sh_seperate_shape_ite );
 				shader_set_i( "mode",      _mode   );
 				shader_set_i( "ignore",    _ignore );
 				shader_set_f( "dimension", ww, hh  );
@@ -80,10 +84,10 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				var bg = i % 2;
 				var fg = !bg;
 				
-				surface_set_shader(temp_surface[bg], sh_seperate_shape_ite,, BLEND.over);
+				surface_set_shader(temp_surface[bg], sh_seperate_shape_ite, true, BLEND.over);
 					draw_surface_safe(temp_surface[fg]);
 				surface_reset_shader();
-			
+				
 				res_index = bg;
 			}
 		#endregion
@@ -109,7 +113,11 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			buffer_delete(buff);
 			var px = ds_map_size(reg);
-			if(px == 0) return;
+			
+			if(px == 0) { 
+				ds_map_destroy(reg);
+				return;
+			}
 		#endregion
 		
 		#region extract region

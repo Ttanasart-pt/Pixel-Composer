@@ -2692,6 +2692,7 @@
     {"name":"sh_separate_color","order":61,"path":"shaders/sh_separate_color/sh_separate_color.yy",},
     {"name":"sh_separate_preview_outline","order":1,"path":"shaders/sh_separate_preview_outline/sh_separate_preview_outline.yy",},
     {"name":"sh_seperate_shape_counter","order":1,"path":"shaders/sh_seperate_shape_counter/sh_seperate_shape_counter.yy",},
+    {"name":"sh_seperate_shape_expands","order":4,"path":"shaders/sh_seperate_shape_expands/sh_seperate_shape_expands.yy",},
     {"name":"sh_seperate_shape_ite","order":2,"path":"shaders/sh_seperate_shape_ite/sh_seperate_shape_ite.yy",},
     {"name":"sh_seperate_shape_sep","order":3,"path":"shaders/sh_seperate_shape_sep/sh_seperate_shape_sep.yy",},
     {"name":"sh_shadow_cast_add","order":4,"path":"shaders/sh_shadow_cast_add/sh_shadow_cast_add.yy",},

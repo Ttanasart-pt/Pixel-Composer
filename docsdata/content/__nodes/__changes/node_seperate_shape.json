@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.004",
+    "changes": [
+      {
+        "date": "2026-05-14T00:47:48.572Z",
+        "node": "SDF",
+        "commit": "**SDF**: Inverted mode now set whole surface to white when inputting empty surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.003",
     "changes": [
       {
@@ -11,6 +21,11 @@
         "date": "2026-05-13T04:21:04.271Z",
         "node": "",
         "commit": "**Separate Shape**: Add diagonal setting."
+      },
+      {
+        "date": "2026-05-13T10:26:20.697Z",
+        "node": "Separate Shape",
+        "commit": "**Separate Shape**: Fix \"Ignore Blank\" in Grayscale mode not ignore black pixel."
       }
     ]
   }

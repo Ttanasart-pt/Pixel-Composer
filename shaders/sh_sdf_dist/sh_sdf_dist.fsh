@@ -25,7 +25,7 @@ void main() {
 	float aa = alpha == 1? texture2D( original, v_vTexcoord ).a : 1.;
 	
 	if(col.xy == vec2(0.)) {
-		gl_FragColor = vec4(vec3(0.), aa);
+		gl_FragColor = vec4(vec3(float(invert)), aa);
 		return;
 	}
 	

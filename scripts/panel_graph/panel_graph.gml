@@ -4839,13 +4839,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
     }
     
-    function hideDisconnected() {
+    function hideDisconnected(_terminal = true) {
         var _list = array_empty(nodes_selecting)? nodes_list : nodes_selecting;
         
         for (var i = 0, n = array_length(_list); i < n; i++) {
             var _node = _list[i];
             
-            for(var j = 0; j < array_length(_node.inputs); j++) {
+            var _hideIn = _terminal || array_any(_node.inputs, function(n,i) /*=>*/ {return n.value_from != noone});
+            if(_hideIn) for(var j = 0; j < array_length(_node.inputs); j++) {
                 var _jun = _node.inputs[j];
                 if(!_jun.isVisible()) continue;
                 
@@ -4853,7 +4854,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     _jun.setVisibleManual(-1);
             }
             
-            for(var j = 0; j < array_length(_node.outputs); j++) {
+            var _hideOut = _terminal || array_any(_node.outputs, function(n,i) /*=>*/ {return !array_empty(n.getJunctionTo())});
+            if(_hideOut) for(var j = 0; j < array_length(_node.outputs); j++) {
                 var _jun = _node.outputs[j];
                 if(!_jun.isVisible()) continue;
                 

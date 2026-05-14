@@ -131,6 +131,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
+uniform int  useSDF;
 uniform sampler2D solid;
 
 uniform int   lightType;
@@ -159,8 +160,8 @@ uniform float aoStrength;
 
 void main() {
 	vec4 bg = texture2D( gm_BaseTexture, v_vTexcoord );
-	vec4 sl = texture2D( solid, v_vTexcoord );
 	
+	vec4 sl = texture2D( solid, v_vTexcoord );
 	if(sl.r == 1.) { gl_FragColor = vec4(vec3(0.), bg.a); return; }
 	
 	float bright = 1.;
@@ -170,17 +171,19 @@ void main() {
 	vec2  pxPos      = v_vTexcoord * dimension;
 	vec2  lightPosTx = lightPos * tx;
 	vec2  ang, lang;
-	float dst;
+	float dst, dstTx;
 	
 	if(lightType == 0) {
-		ang  = normalize(lightPos - pxPos) * tx;
-		lang = vec2(ang.y, -ang.x) * lightRadius * dimension;
-		dst  = length(lightPos - pxPos);
+		ang   = normalize(lightPos - pxPos) * tx;
+		lang  = vec2(ang.y, -ang.x) * lightRadius * dimension;
+		dst   = length(lightPos - pxPos);
+		dstTx = length(lightPosTx - v_vTexcoord);
 		
 	} else if(lightType == 1) {
-		ang = normalize(lightPosTx - vec2(.5)) * tx;
-		lang = vec2(ang.y, -ang.x) * lightRadius;
-		dst = length(dimension);
+		ang   = normalize(lightPosTx - vec2(.5)) * tx;
+		lang  = vec2(ang.y, -ang.x) * lightRadius;
+		dst   = length(dimension);
+		dstTx = 1.;
 	}
 	
 	float softlight    = 0.;
@@ -204,19 +207,47 @@ void main() {
 			_ang = normalize(_lightPos - vec2(.5)) * tx;
 		}
 		
-		for(float i = 1.; i < dst; i++) {
-			vec2 _pos   = v_vTexcoord + _ang * i;
-			vec2 _posPx = _pos * dimension;
+		if(useSDF == 1) {
+			float currDist = 0.;
+			float maxItr   = 1.;
 			
-			if(lightType == 0 && floor(abs(lightPos.x - _posPx.x)) + floor(abs(lightPos.y - _posPx.y)) < 1.)
-				continue;
+			for(float i = 0.; i < maxItr; i++) {
+				vec2 _pos   = v_vTexcoord + _ang * currDist;
+				vec2 _posPx = _pos * dimension;
+				
+				// if(lightType == 0 && floor(abs(lightPos.x - _posPx.x)) + floor(abs(lightPos.y - _posPx.y)) < 1.)
+				// 	break;
+				
+				if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.)
+					continue;
+				
+				vec4 sdf = texture2D( solid, _pos );
+				if(sdf.a == 0. || sdf.r < tx.x) { 
+					lightCatched--;
+					break;
+				}
+				
+				currDist += sdf.r;
+				if(currDist >= dstTx) break;
+			}
 			
-			if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.)
-				continue;
+			gl_FragColor = vec4(currDist, currDist, lightCatched / lightAmo, 1.); return;
 			
-			if(texture2D( solid, _pos ).r == 1.) {
-				lightCatched--;
-				break;
+		} else {
+			for(float i = 1.; i < dst; i++) {
+				vec2 _pos   = v_vTexcoord + _ang * i;
+				vec2 _posPx = _pos * dimension;
+				
+				if(lightType == 0 && floor(abs(lightPos.x - _posPx.x)) + floor(abs(lightPos.y - _posPx.y)) < 1.)
+					break;
+				
+				if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.)
+					continue;
+				
+				if(texture2D( solid, _pos ).r == 1.) {
+					lightCatched--;
+					break;
+				}
 			}
 		}
 	}

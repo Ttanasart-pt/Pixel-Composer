@@ -47,8 +47,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return inputs[index];
 	} 
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output( "Light mask",  VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 1, nodeValue_Output( "Light mask",  VALUE_TYPE.surface, noone));
+	newOutput( 2, nodeValue_Output( "Solid SDF",   VALUE_TYPE.surface, noone));
 	
 	lights_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(array_length(current_data) != array_length(inputs)) return 0;
@@ -104,8 +105,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			}
 		}
 		
-		if(del_light > -1) 
-			deleteDynamicInput(del_light);
+		if(del_light > -1) deleteDynamicInput(del_light);
 		
 		return ui(32) + _h;
 	});
@@ -131,7 +131,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	
-	temp_surface = [ noone ];
+	temp_surface = [ noone, noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -202,14 +202,67 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		if(!is_surface(_bg)) return _outData;
 		
 		var _dim = surface_get_dimension(_bg);
-		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r8unorm);
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba16float);
+		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_rgba16float);
 		_outData[0]     = surface_verify(_outData[0],     _dim[0], _dim[1]);
 		_outData[1]     = surface_verify(_outData[1],     _dim[0], _dim[1], surface_rgba16float);
+		_outData[2]     = surface_verify(_outData[2],     _dim[0], _dim[1], surface_rgba16float);
+		
+		var _solidSurf = _solid;
 		
 		if(_solidUse) {
-			surface_set_shader(temp_surface[0], sh_shadow_cast_bg_convert);
-				draw_surface(_solid, 0, 0);
+			var sw	   = surface_get_width(_solid);
+			var sh	   = surface_get_height(_solid);
+			var _n	   = max(sw, sh);
+		
+			var _step    = ceil(log2(_n));
+			var stepSize = power(2, _step);
+			var bg       = 0;
+			
+			surface_set_shader(temp_surface[0], sh_sdf_tex);
+				draw_surface(_solid,0,0);
 			surface_reset_shader();
+			
+			repeat(_step) {
+				stepSize /= 2;
+				bg = !bg;
+				
+				surface_set_shader(temp_surface[bg], sh_sdf);
+					shader_set_i("sampleMode", 0);
+					shader_set_f("dimension", _n, _n);
+					shader_set_f("stepSize",  stepSize);
+					shader_set_i("side",      2);
+					
+					draw_surface_safe(temp_surface[!bg]);
+				surface_reset_shader();
+			}
+			
+			surface_set_shader(temp_surface[!bg], sh_sdf_dist);
+				shader_set_s( "original",      _solid );
+				shader_set_f( "max_distance",       1 );
+				shader_set_i( "max_distanceUseSurf",0 );
+				
+				shader_set_i( "side",   2 );
+				shader_set_i( "alpha",  0 );
+				shader_set_i( "invert", 1 );
+				shader_set_i( "angle",  0 );
+				
+				draw_surface_safe(temp_surface[bg]);
+			surface_reset_shader();
+			
+			_solidSurf = temp_surface[!bg];
+			surface_set_target(_solidSurf);
+				BLEND_SUBTRACT
+				gpu_set_colorwriteenable(0,0,0,1);
+				draw_surface(_solid,0,0);
+				gpu_set_colorwriteenable(1,1,1,1);
+				BLEND_NORMAL
+			surface_reset_target();
+			
+			surface_set_target(_outData[2]);
+				DRAW_CLEAR
+				draw_surface(_solidSurf,0,0);
+			surface_reset_target();
 		}
 		
 		for( var i = 0; i < getInputAmount(); i++ ) {
@@ -248,13 +301,16 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					
 					draw_surface(_bg, 0, 0);
 				surface_reset_shader();
+				
+				_solidSurf = temp_surface[0];
 			}
 			
 			surface_set_shader(_outData[1], sh_shadow_cast, i == 0);
 				BLEND_ADD
 				
-				shader_set_2("dimension", _dim            );
-				shader_set_s("solid",     temp_surface[0] );
+				shader_set_2("dimension",        _dim       );
+				shader_set_s("solid",            _solidSurf );
+				shader_set_i("useSDF",           _solidUse  );
 				
 				shader_set_i("lightType",        _type    );
 				shader_set_c("lightClr",         _lclr    );

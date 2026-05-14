@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.004",
+    "changes": [
+      {
+        "date": "2026-05-14T00:47:48.579Z",
+        "node": "",
+        "commit": "**SDF**: Inverted mode now set whole surface to white when inputting empty surface."
+      }
+    ]
+  }
+]
