@@ -15,7 +15,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 4, nodeValue_Bool(  "Render Solid",  true         ));
 		
 	////- =Algorithm
-	newInput( 5, nodeValue_Int(   "Iteration",     8 ));
+	newInput( 5, nodeValue_Int(   "Iteration",    10 ));
 	newInput( 6, nodeValue_Int(   "Substep",      16 ));
 	// 7
 	
@@ -213,6 +213,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _dim = surface_get_dimension(_bg);
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba16float);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_rgba16float);
+		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1]);
 		_outData[0]     = surface_verify(_outData[0],     _dim[0], _dim[1]);
 		_outData[1]     = surface_verify(_outData[1],     _dim[0], _dim[1], surface_rgba16float);
 		_outData[2]     = surface_verify(_outData[2],     _dim[0], _dim[1], surface_rgba16float);
@@ -228,8 +229,12 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var stepSize = power(2, _step);
 			var bg       = 0;
 			
-			surface_set_shader(temp_surface[0], sh_sdf_tex);
+			surface_set_shader(temp_surface[2], sh_shadow_cast_remove_solid);
 				draw_surface(_solid,0,0);
+			surface_reset_shader();
+			
+			surface_set_shader(temp_surface[0], sh_sdf_tex);
+				draw_surface(temp_surface[2],0,0);
 			surface_reset_shader();
 			
 			repeat(_step) {
@@ -247,7 +252,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			}
 			
 			surface_set_shader(temp_surface[!bg], sh_sdf_dist);
-				shader_set_s( "original",      _solid );
+				shader_set_s( "original",      temp_surface[2] );
 				shader_set_f( "max_distance",       1 );
 				shader_set_i( "max_distanceUseSurf",0 );
 				
@@ -263,7 +268,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			surface_set_target(_solidSurf);
 				BLEND_SUBTRACT
 				gpu_set_colorwriteenable(0,0,0,1);
-				draw_surface(_solid,0,0);
+				draw_surface(temp_surface[2],0,0);
 				gpu_set_colorwriteenable(1,1,1,1);
 				BLEND_NORMAL
 			surface_reset_target();
@@ -357,7 +362,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				BLEND_NORMAL
 			shader_reset();
 			
-			if(_solRen && _solidUse) draw_surface(_solid, 0, 0);
+			if(_solRen && _solidUse) draw_surface(temp_surface[2], 0, 0);
 		surface_reset_shader();
 			
 		return _outData;

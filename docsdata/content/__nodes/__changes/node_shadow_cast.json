@@ -11,6 +11,11 @@
         "date": "2026-05-14T02:20:23.436Z",
         "node": "Cast Shadow",
         "commit": "**Cast Shadow**: Improve shadow quality. Add quality control."
+      },
+      {
+        "date": "2026-05-14T02:30:52.450Z",
+        "node": "Cast Shadow",
+        "commit": "**Cast Shadow**: Solid now render with removed background."
       }
     ]
   }
