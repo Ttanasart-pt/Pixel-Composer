@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.004",
+    "changes": [
+      {
+        "date": "2026-05-14T08:23:38.813Z",
+        "node": "Recursive Subdivision",
+        "commit": "**Recursive Subdivision**: Add Gap thickness curve."
+      }
+    ]
+  }
+]

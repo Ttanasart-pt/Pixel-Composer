@@ -7,33 +7,34 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(1, nodeValue_Dimension());
 	
 	////- =Pattern
-	newInput( 2, nodeValue_Rotation(     "Phase", 0));
-	newInput( 3, nodeValue_Int(          "Iteration", 2));
-	newInput(13, nodeValue_Slider_Range( "SubD Range", [ .1, .9 ]));
+	newInput( 2, nodeValue_Rotation( "Phase",        0     ));
+	newInput( 3, nodeValue_Int(      "Iteration",    2     ));
+	newInput(13, nodeValue_SliRange( "SubD Range", [.1,.9] ));
 	
 	////- =Render
-	newInput(4, nodeValue_Enum_Button(  "Color Source", 0, [ "Palette", "Random HSV" ]));
+	newInput(4, nodeValue_EButton(  "Color Source", 0, [ "Palette", "Random HSV" ]));
 	newInput(9, nodeValueSeed(VALUE_TYPE.integer, "Color Seed"));
-	newInput(5, nodeValue_Palette(      "Palette" ));
-	newInput(6, nodeValue_Slider_Range( "H Range", [0, 255], [ 0, 255, 1 ]));
-	newInput(7, nodeValue_Slider_Range( "S Range", [0, 255], [ 0, 255, 1 ]));
-	newInput(8, nodeValue_Slider_Range( "V Range", [0, 255], [ 0, 255, 1 ]));
+	newInput(5, nodeValue_Palette(  "Palette"  ));
+	newInput(6, nodeValue_SliRange( "H Range", [0, 255], [ 0, 255, 1 ] ));
+	newInput(7, nodeValue_SliRange( "S Range", [0, 255], [ 0, 255, 1 ] ));
+	newInput(8, nodeValue_SliRange( "V Range", [0, 255], [ 0, 255, 1 ] ));
 	
 	////- =Gap
-	newInput(10, nodeValue_Bool(  "Render Gap", true));
-	newInput(11, nodeValue_Color( "Gap Color", ca_black));
-	newInput(12, nodeValue_Int(   "Gap Thickness", 1));
-	
-	/// inputs 14
+	newInput(10, nodeValue_Bool(  "Render Gap",    true     ));
+	newInput(11, nodeValue_Color( "Gap Color",     ca_black ));
+	newInput(12, nodeValue_Int(   "Gap Thickness", 1        )).setCurvable(14, CURVE_DEF_11, "Over Iteration");
+	/// 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		["Output",  false], 1, 
-		["Pattern", false], 2, 3, 13, 
-		["Render",  false], 4, 9, 5, 6, 7, 8, 
-		["Gap",     false, 10], 11, 12, 
+		[ "Output",  false     ],  1, 
+		[ "Pattern", false     ],  2,  3, 13, 
+		[ "Render",  false     ],  4,  9,  5,  6,  7,  8, 
+		[ "Gap",     false, 10 ], 11, 12, 14, 
 	];
+	
+	////- Node
 	
 	phase    = 0;
 	subRange = [ 0, 1 ];
@@ -42,7 +43,7 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	static step = function() {}
 	
-	static subD = function(_box) {
+	static subD = function(_box, _itr) {
 		var _l0 = lerp(subRange[0], subRange[1], dsin(phase + random(360)) / 2 + .5);
 		var _l1 = lerp(subRange[0], subRange[1], dsin(phase + random(360)) / 2 + .5);
 		var _l2 = lerp(subRange[0], subRange[1], dsin(phase + random(360)) / 2 + .5);
@@ -67,9 +68,9 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 					[ xx + _w, yy + _h1, _iw, _ih1 ], 
 				], 
 				[
-					[ xx + _w, yy - 1,   xx + _w, yy +  hh ],
-					[ xx - 1,  yy + _h0, xx + _w, yy + _h0 ],
-					[ xx + _w, yy + _h1, xx + ww, yy + _h1 ],
+					[ xx + _w, yy - 1,   xx + _w, yy +  hh, _itr ],
+					[ xx - 1,  yy + _h0, xx + _w, yy + _h0, _itr ],
+					[ xx + _w, yy + _h1, xx + ww, yy + _h1, _itr ],
 				]
 			];
 			
@@ -86,55 +87,60 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 					[ xx + _w1, yy + _h, _iw1, _ih ], 
 				], 
 				[
-					[ xx - 1,   yy + _h, xx +  ww, yy + _h ],
-					[ xx + _w0, yy - 1,  xx + _w0, yy + _h ],
-					[ xx + _w1, yy + _h, xx + _w1, yy + hh ],
+					[ xx - 1,   yy + _h, xx +  ww, yy + _h, _itr ],
+					[ xx + _w0, yy - 1,  xx + _w0, yy + _h, _itr ],
+					[ xx + _w1, yy + _h, xx + _w1, yy + hh, _itr ],
 				]
 			];
 		} 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
-		var _sed = _data[0];
+		#region data
+			var _sed = _data[ 0];
+			
+			var _dim = _data[ 1];
+			
+			var _pha = _data[ 2]; phase = _pha;
+			var _itr = _data[ 3]; _itr = clamp(_itr, 1, 5);
+			var subR = _data[13]; subRange = subR;
+			
+			var _csrc = _data[ 4];
+			var _csed = _data[ 9];
+			var _palt = _data[ 5];
+			var _rngH = _data[ 6];
+			var _rngS = _data[ 7];
+			var _rngV = _data[ 8];
+			
+			var _gapU  = _data[10];
+			var _gapC  = _data[11];
+			var _gapT  = _data[12];
+			var _gapTc = _data[14], thickMap = inputs[12].attributes.curved? new curveMap(_gapTc) : undefined;
 		
-		var _dim = _data[1];
-		
-		phase    = _data[ 2];
-		var _itr = _data[ 3]; _itr = clamp(_itr, 1, 5);
-		subRange = _data[13];
-		
-		var _csrc = _data[4];
-		var _csed = _data[9];
-		var _palt = _data[5];
-		var _rngH = _data[6];
-		var _rngS = _data[7];
-		var _rngV = _data[8];
-		
-		var _gapU = _data[10];
-		var _gapC = _data[11];
-		var _gapT = _data[12];
-		
-		inputs[5].setVisible(_csrc == 0);
-		inputs[6].setVisible(_csrc == 1);
-		inputs[7].setVisible(_csrc == 1);
-		inputs[8].setVisible(_csrc == 1);
+			inputs[5].setVisible(_csrc == 0);
+			inputs[6].setVisible(_csrc == 1);
+			inputs[7].setVisible(_csrc == 1);
+			inputs[8].setVisible(_csrc == 1);
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1])
 		random_set_seed(_sed);
 		
 		var _boxes = [[ 0, 0, _dim[0], _dim[1]]];
 		var _lines = [];
+		var _t = 0;
 		
 		repeat(_itr) {
 			var _newBoxes = [];
 			
 			for( var i = 0, n = array_length(_boxes); i < n; i++ ) {
-				var _subBoxes = subD(_boxes[i])
+				var _subBoxes = subD(_boxes[i], _t);
 				array_append(_newBoxes, _subBoxes[0]);
 				array_append(_lines,    _subBoxes[1]);
 			}
 			
 			_boxes = _newBoxes;
+			_t++;
 		}
 		
 		surface_set_shader(_outSurf, noone);
@@ -163,9 +169,13 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			if(_gapU)
 			for( var i = 0, n = array_length(_lines); i < n; i++ ) {
 				var _l = _lines[i];
+				var _t = _l[4];
+				
+				var _thk = _gapT;
+				if(thickMap) _thk *= thickMap.get(_t / (_itr - 1));
 				
 				draw_set_color(_gapC);
-				draw_line_width(_l[0], _l[1], _l[2], _l[3], _gapT);
+				draw_line_width(_l[0], _l[1], _l[2], _l[3], _thk);
 			}
 		surface_reset_shader();
 		
