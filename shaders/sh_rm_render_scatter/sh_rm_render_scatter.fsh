@@ -1017,9 +1017,14 @@ uniform float seed;
 uniform vec2  dimension;
 
 uniform vec2  grid;
+
+uniform vec2  positionOrigin;
 uniform vec2  positionOffset;
+
+uniform vec3  rotationOrigin;
 uniform vec3  rotationMin;
 uniform vec3  rotationMax;
+
 uniform vec2  objScale;
 
 uniform vec3  camRotation;
@@ -1031,7 +1036,7 @@ uniform int   drawBg;
 float random (in vec2 st, in float seed ) { return fract(sin(dot(st.xy + 253.6897, vec2(12.9898, 78.233))) * (43758.5453123 + seed)); }
 vec2 random2( in vec2 p,  in float seed ) { return fract(sin(vec2(dot(p - 146.4654, vec2(127.1, 311.7)), dot(p - 986.4785, vec2(269.5, 183.3)))) * (43758.5453 + seed)); }
 
-vec4 sampleGrid(in vec2 tx, in vec2 off, out float depth) {
+vec4 sampleGrid(in vec2 tx, in vec2 off, in float seed, out float depth) {
 	vec2 frx = floor(tx * grid) / grid;
 	vec2 vtx = (tx - off - frx) * grid;
 
@@ -1046,6 +1051,8 @@ vec4 sampleGrid(in vec2 tx, in vec2 off, out float depth) {
 		mix(rotationMin.y, rotationMax.y, random(frx, seed + 78.233)),
 		mix(rotationMin.z, rotationMax.z, random(frx, seed + 45.164))
 	);
+	
+	objRotation += rotationOrigin;
 
 	float oscale = mix(objScale.x, objScale.y, random(frx, seed + 64.123));
 
@@ -1064,18 +1071,21 @@ vec4 sampleGrid(in vec2 tx, in vec2 off, out float depth) {
 void main() {
 	float depth    = 999.;
 	float minDepth = 999.;
+	float _seed    = seed;
 	vec4  result = vec4(0.);
+	
+	vec2 off = positionOrigin / dimension;
 
 	for(int i = -1; i <= 1; i++) 
 	for(int j = -1; j <= 1; j++) {
 		vec2 offset = vec2(float(i), float(j)) / grid;
-		vec4 col = sampleGrid(fract(v_vTexcoord + offset), offset, depth);
+		vec4 col = sampleGrid(fract(v_vTexcoord + offset - off), offset, _seed, depth);
 
 		if(depth < minDepth) {
 			minDepth = depth;
 			result   = col;
 		}
 	}
-
+	
     gl_FragColor = result;
 }

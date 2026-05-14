@@ -9,22 +9,30 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 	
 	////- =Scatter
 	newInput(17, nodeValue_Vec2(    "Grid",         [4,4]   ));
-	newInput(19, nodeValue_Vec2(    "Offset",       [0,0]   ));
-	newInput(11, nodeValue_Vec3(    "Rotation Min", [0,0,0] ));
-	newInput(20, nodeValue_Vec3(    "Rotation Max", [0,0,0] ));
-	newInput(12, nodeValue_Range(   "Scale",        [1,1]   ));
+	
+	////- =Position
+	newInput(25, nodeValue_Vec2(    "Position",       [0,0] )).setUnitSimple();
+	newInput(19, nodeValue_Vec2(    "Random Offset",  [0,0] )).setUnitSimple();
+	
+	////- =Rotation
+	newInput(26, nodeValue_Vec3(    "Rotation",        [0,0,0] ));
+	newInput(11, nodeValue_Vec3(    "Rot. Random Min", [0,0,0] ));
+	newInput(20, nodeValue_Vec3(    "Rot. Random Max", [0,0,0] ));
+	
+	////- =Scale
+	newInput(12, nodeValue_Range(   "Scale Range",  [1,1] ));
 	
 	////- =Camera
-	newInput(21, nodeValue_Vec3(    "Camera Rotation", [30,45,0]      ));
-	newInput(23, nodeValue_Slider(  "Camera Scale",     1, [0,4,0.01] ));
+	newInput(21, nodeValue_Vec3(    "Camera Rotation", [30,45,0]     ));
+	newInput(23, nodeValue_Slider(  "Camera Scale",     1, [0,4,.01] ));
 	newInput( 1, nodeValue_EButton( "Projection",       0, [ "Perspective", "Orthographic" ] ));
-	newInput( 2, nodeValue_Slider(  "FOV",              30, [0,90,1]  ));
-	newInput( 3, nodeValue_Float(   "Ortho Scale",      5             ))
-	newInput( 4, nodeValue_Vec2(    "View Range",       [1,10]        ));
+	newInput( 2, nodeValue_Slider(  "FOV",              30, [0,90,1] ));
+	newInput( 3, nodeValue_Float(   "Ortho Scale",      5            ))
+	newInput( 4, nodeValue_Vec2(    "View Range",       [1,10]       ));
 	
-	////- =/Depth
-	newInput(22, nodeValue_Vec2(    "Depth Range",      [1,10]        ));
-	newInput( 5, nodeValue_Slider(  "Depth",            0             ));
+		////- =/Depth
+	newInput(22, nodeValue_Vec2(    "Depth Range",      [1,10]       ));
+	newInput( 5, nodeValue_Slider(  "Depth",            0            ));
 	
 	////- =Background
 	newInput( 6, nodeValue_Bool(    "Draw BG",          false        ));
@@ -38,13 +46,16 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 	newInput( 9, nodeValue_Vec3(    "Position",         [-.4,-.5,1]  ));
 	newInput(16, nodeValue_Float(   "Intensity",         1           ));
 	newInput(15, nodeValue_Color(   "Color",             ca_white    ));
-	// 25
+	// 27
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  0, 18, 
 		[ "Object",     false ], 13, 
-		[ "Scatter",    false ], 17, 19, 11, 20, 12, 
+		[ "Scatter",    false ], 17, 
+		[ "Position",   false ], 25, 19, 
+		[ "Rotation",   false ], 26, 11, 20, 
+		[ "Scale",      false ], 12, 
 		[ "Camera",     false ], 21, 23,  1,  2,  3,  4, 
 			[ "/Depth", false ], 22,  5, 
 		[ "Background", false ],  6,  7, 10, 14,  8, 
@@ -87,9 +98,14 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 			var _shp  = _data[13];
 			
 			var _grid = _data[17];
-			var _pos  = _data[19];
+			
+			var _pos  = _data[25];
+			var _posR = _data[19];
+			
+			var _rot  = _data[26];
 			var _rotn = _data[11];
 			var _rotx = _data[20];
+			
 			var _scal = _data[12];
 			
 			var _crot = _data[21];
@@ -163,9 +179,14 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 			shader_set_2( "dimension",      _dim  );
 			
 			shader_set_2( "grid",           _grid );
-			shader_set_2( "positionOffset", _pos  );
+			
+			shader_set_2( "positionOrigin", _pos  );
+			shader_set_2( "positionOffset", _posR );
+			
+			shader_set_3( "rotationOrigin", _rot  );
 			shader_set_3( "rotationMin",    _rotn );
 			shader_set_3( "rotationMax",    _rotx );
+			
 			shader_set_2( "objScale",       _scal );
 			
 			shader_set_3( "camRotation",    _crot );

@@ -44,9 +44,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput( 6, nodeValue_EScroll(  "Source",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image" ] ));
 	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
-	newInput(13, nodeValue_Surface(  "Distribution Map"      ));
-	newInput(14, nodeValue_Vector(   "Distribution Data", [] )).setArrayDepth(1);
-	newInput(17, nodeValue_Text(     "Extra Value",       [] ))
+	newInput(13, nodeValue_Surface(  "Distribution Map" ));
+	newInput(14, nodeValue_Vector(   "Points Array",    [] )).setAnimable(false).setArrayDepth(1);
+	newInput(17, nodeValue_Text(     "Extra Value",     [] ))
 		.setTooltip("Apply the third and later values in each data point (if exist) on given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index", "Depth" ] });
 		
@@ -58,7 +58,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(44, nodeValue_Float(    "Distance",        8      )).setValidator(VV_min(0));
 	newInput(46, nodeValue_Int(      "Attempt",         8      ));
 	
-	////- =Path
+		////- =/Path
 	newInput(19, nodeValue_PathNode( "Path" ));
 	newInput(38, nodeValue_EButton(  "Spacing",           0, [ "After", "Between", "Around" ] ));
 	newInput(20, nodeValue_Bool(     "Rotate Along Path", true ));
@@ -112,7 +112,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Output",       false ],  1, 
 		[ "Surfaces",      true ],  0, 15, 24, 25, 26, 27, 
 		[ "Scatter",      false ],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
-		[ "Path",          true ], 19, 38, 20, 45, 21, 22, 
+			[ "/Path",     true ], 19, 38, 20, 45, 21, 22, 
 		[ "Position",     false ], 40, 33, 50, 51, 36, 49,  39, 37, 
 		[ "Rotation",     false ], 48,  7,  4, 52, 53, 32, 
 		[ "Scale",        false ],  3, 43, 54, 55,  8, 34, 
@@ -225,6 +225,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					p = _points[point_editing];
 					p[0] = point_editing_sx + dx;
 					p[1] = point_editing_sy + dy;
+					if(key_mod_press(CTRL)) {
+						p[0] = round(p[0]);
+						p[1] = round(p[1]);
+					}
+					
 					if(MOUSE_MOVED) triggerRender();
 					
 					if(mouse_lrelease()) {
