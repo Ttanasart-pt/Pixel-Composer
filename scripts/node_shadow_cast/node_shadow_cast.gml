@@ -13,6 +13,11 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Rendering
 	newInput( 3, nodeValue_Color( "Ambient Color", cola(c_grey) ));
 	newInput( 4, nodeValue_Bool(  "Render Solid",  true         ));
+		
+	////- =Algorithm
+	newInput( 5, nodeValue_Int(   "Iteration",     8 ));
+	newInput( 6, nodeValue_Int(   "Substep",      16 ));
+	// 7
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -111,8 +116,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	});
 	
 	input_display_list = [ 
-		[ "Surfaces",   true ], 0, 1, 2, 
-		[ "Rendering", false ], 3, 4, 
+		[ "Surfaces",   true ],  0,  1,  2, 
+		[ "Rendering", false ],  3,  4, 
+		[ "Algorithm",  true ],  5,  6, 
 		new Inspector_Spacer(ui(4), true, false), lights_renderer, 
 	];
 	
@@ -197,6 +203,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			var _lamb   = _data[ 3];
 			var _solRen = _data[ 4];
+			
+			var _mitr   = _data[ 5];
+			var _subs   = _data[ 6];
 		#endregion
 		
 		if(!is_surface(_bg)) return _outData;
@@ -329,6 +338,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				shader_set_i("ao",               _ao      );
 				shader_set_f("aoRadius",         _ao_rad  );
 				shader_set_f("aoStrength",       _ao_str  );
+				
+				shader_set_f("maxItr",           _mitr    );
+				shader_set_f("subStep",          _subs    );
 					
 				draw_surface_safe(_bg);
 			surface_reset_shader();

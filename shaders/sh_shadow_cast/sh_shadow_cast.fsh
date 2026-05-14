@@ -156,13 +156,17 @@ uniform int   ao;
 uniform float aoRadius;
 uniform float aoStrength;
 
+uniform float maxItr;
+uniform float subStep;
+
 #define TAU 6.283185307179586
 
 void main() {
 	vec4 bg = texture2D( gm_BaseTexture, v_vTexcoord );
-	
 	vec4 sl = texture2D( solid, v_vTexcoord );
-	if(sl.r == 1.) { gl_FragColor = vec4(vec3(0.), bg.a); return; }
+	
+	if(useSDF == 0 && sl.r == 1.) { gl_FragColor = vec4(vec3(0.), bg.a); return; }
+	if(useSDF == 1 && sl.a == 0.) { gl_FragColor = vec4(vec3(0.), bg.a); return; }
 	
 	float bright = 1.;
 	vec2 tx		 = 1. / dimension;
@@ -200,49 +204,44 @@ void main() {
 	for(int j = 0; j < int(lightAmo); j++) {
 		if(lightType == 0) {
 			_lightPos = lightPos + lang * (float(j) - softlight);
-			_ang = normalize(_lightPos - pxPos) * tx;
+			_ang = normalize(_lightPos - pxPos);
 			
 		} else if(lightType == 1) {
 			_lightPos = vec2(.5) + ang * dimension + lang * (float(j) - softlight);
-			_ang = normalize(_lightPos - vec2(.5)) * tx;
+			_ang = normalize(_lightPos - vec2(.5));
 		}
 		
 		if(useSDF == 1) {
-			float currDist = 0.;
-			float maxItr   = 1.;
+			bool lightBlocked = false;
 			
-			for(float i = 0.; i < maxItr; i++) {
-				vec2 _pos   = v_vTexcoord + _ang * currDist;
-				vec2 _posPx = _pos * dimension;
-				
-				// if(lightType == 0 && floor(abs(lightPos.x - _posPx.x)) + floor(abs(lightPos.y - _posPx.y)) < 1.)
-				// 	break;
-				
-				if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.)
-					continue;
+			float currDist = min(dstTx, sl.r);
+			vec2 _pos;
+			
+			for(float i = 0.; i < maxItr * subStep; i++) {
+				if(currDist > dstTx) break;
+				_pos = v_vTexcoord + _ang * min(currDist, dstTx);
+				if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.) break;
 				
 				vec4 sdf = texture2D( solid, _pos );
-				if(sdf.a == 0. || sdf.r < tx.x) { 
-					lightCatched--;
-					break;
-				}
+				currDist += sdf.r / subStep;
 				
-				currDist += sdf.r;
-				if(currDist >= dstTx) break;
+				if(sdf.a == 0. || sdf.r <= 0.) { lightBlocked = true; break; }
 			}
 			
-			gl_FragColor = vec4(currDist, currDist, lightCatched / lightAmo, 1.); return;
+			if(lightBlocked) lightCatched--;
+			// gl_FragColor = vec4(currDist / dstTx, currDist >= dstTx? 1. : 0., lightCatched, 1.); return;
 			
 		} else {
+			_ang *= tx;
+			
 			for(float i = 1.; i < dst; i++) {
 				vec2 _pos   = v_vTexcoord + _ang * i;
-				vec2 _posPx = _pos * dimension;
 				
+				vec2 _posPx = _pos * dimension;
 				if(lightType == 0 && floor(abs(lightPos.x - _posPx.x)) + floor(abs(lightPos.y - _posPx.y)) < 1.)
 					break;
 				
-				if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.)
-					continue;
+				if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.) continue;
 				
 				if(texture2D( solid, _pos ).r == 1.) {
 					lightCatched--;
