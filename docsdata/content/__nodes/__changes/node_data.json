@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.004",
+    "changes": [
+      {
+        "date": "2026-05-14T03:31:03.371Z",
+        "node": "",
+        "commit": "**Scatter**: Add point editing tool in points array mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.007",
     "changes": [
       {

@@ -15,8 +15,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 4, nodeValue_Bool(  "Render Solid",  true         ));
 		
 	////- =Algorithm
-	newInput( 5, nodeValue_Int(   "Iteration",    10 ));
-	newInput( 6, nodeValue_Int(   "Substep",      16 ));
+	newInput( 5, nodeValue_Int(   "Iteration",    32 ));
+	newInput( 6, nodeValue_Int(   "Substep",       8 ));
 	// 7
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -29,7 +29,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		newInput(index+ 4, nodeValue_Float(   "Radius",    .5            )).setUnitSimple().hideLabel();
 		
 		////- =Light
-		newInput(index+ 2, nodeValue_Slider(  "Intensity",  1, [0,2,.01] ));
+		newInput(index+ 2, nodeValue_Float(   "Intensity",  1            ));
 		newInput(index+ 1, nodeValue_Color(   "Color",      ca_white     ));
 		
 		////- =Attenuation
@@ -280,28 +280,28 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		}
 		
 		for( var i = 0; i < getInputAmount(); i++ ) {
-			var _ind = input_fix_len + i * data_length;
+			var index = input_fix_len + i * data_length;
 			
-			var _type   = _data[_ind +  0];
-			var _lclr   = _data[_ind +  1];
-			var _int    = _data[_ind +  2];
-			var _pos    = _data[_ind +  3];
-			var _lrad   = _data[_ind +  4];
+			var _type   = _data[index+  0];
+			var _lclr   = _data[index+  1];
+			var _int    = _data[index+  2];
+			var _pos    = _data[index+  3];
+			var _lrad   = _data[index+  4];
 			
-			var _attn   = _data[_ind +  5];
-			var _attC   = _data[_ind + 13];
-			var _band   = _data[_ind +  6];
+			var _attn   = _data[index+  5];
+			var _attC   = _data[index+ 13];
+			var _band   = _data[index+  6];
 			
-			var _soft   = _data[_ind +  7];
-			var _den    = _data[_ind +  8];
-			var _rad    = _data[_ind +  9];
+			var _soft   = _data[index+  7];
+			var _den    = _data[index+  8];
+			var _rad    = _data[index+  9];
 			
-			var _ao     = _data[_ind + 10];
-			var _ao_rad = _data[_ind + 11];
-			var _ao_str = _data[_ind + 12];
+			var _ao     = _data[index+ 10];
+			var _ao_rad = _data[index+ 11];
+			var _ao_str = _data[index+ 12];
 			
-			inputs[_ind +  4].setVisible(_type == 0);
-			inputs[_ind + 13].setVisible(_attn == 3);
+			inputs[index+  4].setVisible(_type == 0);
+			inputs[index+ 13].setVisible(_attn == 3);
 			
 			if(!_solidUse) {
 				var _refColor = surface_getpixel_ext(_bg, 

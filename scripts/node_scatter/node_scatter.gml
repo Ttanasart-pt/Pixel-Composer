@@ -126,32 +126,118 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	surface_size_map  = {};
-	surface_valid_map = {};
+	#region data
+		surface_size_map  = {};
+		surface_valid_map = {};
+		
+		scatter_data = [];
+		scatter_map  = noone;
+		scatter_mapa = 0;
+		scatter_maps = 0;
+		scatter_mapp = [];
+		
+		posShiftSamp = new Surface_Sampler_Grey();
+		posOffSamp   = new Surface_Sampler_Grey();
+		rotOffSamp   = new Surface_Sampler_Grey();
+		scalSamp     = new Surface_Sampler_Grey();
+		scaOffSamp   = new Surface_Sampler_Grey();
+		
+		surfSamp     = new Surface_sampler();
+	#endregion
 	
-	scatter_data = [];
-	scatter_map  = noone;
-	scatter_mapa = 0;
-	scatter_maps = 0;
-	scatter_mapp = [];
-	
-	posShiftSamp = new Surface_Sampler_Grey();
-	posOffSamp   = new Surface_Sampler_Grey();
-	rotOffSamp   = new Surface_Sampler_Grey();
-	scalSamp     = new Surface_Sampler_Grey();
-	scaOffSamp   = new Surface_Sampler_Grey();
-	
-	surfSamp     = new Surface_sampler();
+	#region tools
+		tool_addP    = new NodeTool( "Add Point", THEME.control_add );
+		tool_subP    = new NodeTool( "Remove Point", THEME.control_subtract );
+		tools = [];
+		
+		point_editing    = undefined;
+		point_editing_sx = 0;
+		point_editing_sy = 0;
+		point_editing_mx = 0;
+		point_editing_my = 0;
+	#endregion
 	
 	static getDimension = function() { return getInputData(1, PROJ_SURF); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
+		tools = [];
 		var _distType = current_data[6];
+		var msx = (_mx - _x) / _s;
+		var msy = (_my - _y) / _s;
 		
-		if(_distType <  3) InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		if(_distType == 4) InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
+		switch(_distType) {
+			case 0 : case 1 : case 2 :
+				InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				break;
+				
+			case 3 : 
+				tools = [ tool_addP, tool_subP ];
+				
+				if(inputs[14].value_from != noone) return w_hovering;
+				var _points = current_data[14];
+				
+				var hv = undefined;
+				for( var i = 0, n = array_length(_points); i < n; i++ ) {
+					var p  = _points[i];
+					var px = _x + p[0] * _s;
+					var py = _y + p[1] * _s;
+					
+					var hov = hover && point_in_circle(_mx, _my, px, py, ui(8));
+					draw_anchor(hov, px, py);
+					if(hov) {
+						w_hovering = true;
+						hv = i;
+					}
+				}
+				
+				var t = PANEL_PREVIEW.tool_current;
+				if(t == tool_addP) {
+					if(mouse_lpress(active)) {
+						array_push(_points, [msx, msy]);
+						triggerRender();
+					}
+					
+				} else if(t == tool_subP) {
+					if(hv != undefined && mouse_lpress(active)) {
+						array_delete(_points, hv, 1);
+						triggerRender();
+					}
+					
+				} else {
+					if(hv != undefined && mouse_lpress(active)) {
+						var p  = _points[hv];
+						
+						point_editing    = hv;
+						point_editing_sx = p[0];
+						point_editing_sy = p[1];
+						point_editing_mx = _mx;
+						point_editing_my = _my;
+					}
+					
+				}
+				
+				if(point_editing != undefined) {
+					var dx = (_mx - point_editing_mx) / _s;
+					var dy = (_my - point_editing_my) / _s;
+					
+					p = _points[point_editing];
+					p[0] = point_editing_sx + dx;
+					p[1] = point_editing_sy + dy;
+					if(MOUSE_MOVED) triggerRender();
+					
+					if(mouse_lrelease()) {
+						UNDO_HOLDING  = false;
+						point_editing = undefined;
+					}
+				}
+				break;
+			
+			case 4 : 
+				InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
+				break;
+		}
 		
 		InputDrawOverlay(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[1]));
 		

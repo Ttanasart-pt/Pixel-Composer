@@ -10,6 +10,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 2, nodeValue_Float(    "Distance", .5             )).setUnitSimple();
 	newInput( 8, nodeValue_Slider(   "Shift",     0, [-1,1,.01] )).setUnitSimple();
 	newInput( 7, nodeValue_Bool(     "Wrap",      false         ));
+	
+		////- =/Path
 	newInput(15, nodeValue_PathNode( "Path"                     ));
 	newInput(16, nodeValue_Int(      "Path Resolution", 32      ));
 	
@@ -34,7 +36,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	input_display_list = [
 	    [ "Surface",   false    ],  0,  9, 
-	    [ "Extrude",   false    ],  1,  2,  8,  7, 15, 16, 
+	    [ "Extrude",   false    ],  1,  2,  8,  7, 
+	    	[ "/Path", false    ], 15, 16, 
 		[ "Transform", false    ], 11, 12, 13, 
 	    [ "Render",    false    ],  3,  4, 10, 
 	    [ "Highlight", false, 5 ], 14,  6, 

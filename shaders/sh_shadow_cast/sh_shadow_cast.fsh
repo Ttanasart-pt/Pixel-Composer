@@ -223,7 +223,7 @@ void main() {
 				if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.) break;
 				
 				vec4 sdf = texture2D( solid, _pos );
-				currDist += sdf.r / subStep;
+				currDist += max(tx.x, sdf.r) / subStep;
 				
 				if(sdf.a == 0. || sdf.r <= 0.) { lightBlocked = true; break; }
 			}

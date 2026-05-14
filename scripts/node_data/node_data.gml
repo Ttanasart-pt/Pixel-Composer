@@ -2894,6 +2894,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 		if(is_string(i) && t.getName(t.selecting) != i) 
 			return false;
+			
+		if(is(i,NodeTool) && i != t) 
+			return false;
 		
 		return subt == noone || t.selecting == subt;
 	}
