@@ -42,7 +42,6 @@ event_inherited();
 	}
 	
 	function setMenu(_menu, _align = fa_left) {
-		if(!sHOVER) init_rclick = mouse_rclick();
 		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
 		
 		title    = menu_id;
@@ -124,6 +123,7 @@ event_inherited();
 		}
 		
 		mouse_init_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
+		init_rclick = !mouse_init_inside && mouse_rclick();
 		ready = true;
 		
 	}
