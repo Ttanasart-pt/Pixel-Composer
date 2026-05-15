@@ -8,16 +8,16 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Spawn
-	newInput(28, nodeValue_EScroll(  "Type",       0, [ "Area", "Path", "Map" ] ));
-	newInput( 1, nodeValue_Int(      "Amount",     0                 ));
-	newInput( 7, nodeValue_Area(     "Area",    DEF_AREA_REF, false )).setUnitSimple();
+	newInput(28, nodeValue_EScroll(  "Type",      0, [ "Area", "Path", "Map" ] ));
+	newInput( 1, nodeValue_Int(      "Amount",    1                  ));
+	newInput( 7, nodeValue_Area(     "Area",     [0,.5,0,0,AREA_SHAPE.rectangle,AREA_MODE.area], false )).setUnitSimple();
 	newInput(29, nodeValue_PathNode( "Path"                          ));
 	newInput(33, nodeValue_Bool(     "Loop"                          ));
 	newInput(30, nodeValue_Surface(  "Map"                           ));
-	newInput(31, nodeValue_Int(      "Attempt",    0                 ));
+	newInput(31, nodeValue_Int(      "Attempt",   0                  ));
 	
 		////- =/Initial State
-	newInput( 2, nodeValue_Range(    "Lifespan",   [32,32], true     ));
+	newInput( 2, nodeValue_Range(    "Lifespan",   [64,64], true     ));
 	newInput( 3, nodeValue_RotRand(  "Direction",  [0,0,0,0,0]       ));
 	
 		////- =/Scaling
@@ -25,27 +25,27 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(34, nodeValue_SliRange( "Speed Scale", [1,1] ));
 	
 	////- =Wave
-	newInput(12, nodeValue_SliRange( "Life Range", [0,1]             ));
+	newInput(12, nodeValue_SliRange( "Life Range", [0,.6]            ));
 	newInput( 4, nodeValue_Curve(    "Wave",       CURVE_DEF_10      ));
 	newInput(11, nodeValue_Range(    "Phase",      [0,0], true       ));
 	newInput( 8, nodeValue_Range(    "Frequency",  [4,4], true       ));
 	newInput( 9, nodeValue_Range(    "Amplitude",  [2,2], true       ));
 	
 	////- =Spiral
-	newInput(13, nodeValue_SliRange( "Life Range", [0,1]             ));
+	newInput(13, nodeValue_SliRange( "Life Range", [.3,1]            ));
 	newInput( 5, nodeValue_Curve(    "Spiral",     CURVE_DEF_01      ));
-	newInput(10, nodeValue_Range(    "Velocity",   [8,8], true       ));
+	newInput(10, nodeValue_Range(    "Velocity",   [20,20], true     ));
 	newInput(14, nodeValue_EScroll(  "Flip",        0, [ "None", "Random", "Ordered" ]  ));
 	
 	////- =Offset
 	newInput(25, nodeValue_Range2(   "Offset",      [0,0,0,0]   )).setCurvable(26);
 	
 	////- =Render
-	newInput(15, nodeValue_Range(   "Thickness",  [1,1], true  ))
+	newInput(15, nodeValue_Range(   "Thickness",  [2,2], true  ))
 		.setCurvable(18, CURVE_DEF_11, "Over Path", "curved"      )
 		.setCurvable(23, CURVE_DEF_11, "Over Life", "curved_life" )
-	newInput(22, nodeValue_Bool(    "Use Total Range",  false  ));
-	newInput(27, nodeValue_Bool(    "Draw SDF",         false  ));
+	newInput(22, nodeValue_EScroll( "Curve Range", 0, [ "Total", "Trim", "Trim + Clamp" ]  ));
+	newInput(27, nodeValue_Bool(    "Draw SDF",    false  ));
 	
 		////- =/Color
 	newInput(16, nodeValue_Gradient( "Base Color",      gra_white ));
@@ -231,6 +231,11 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var _dSt   = _dCen - _aRang / 2;
 				var _dEd   = _dCen + _aRang / 2;
 				
+				if(_dRang == 2) {
+					_dSt = max(_dSt, 0);
+					_dEd = min(_dEd, 1);
+				}
+				
 				repeat(_life) {
 					nx = ox;
 					ny = oy;
@@ -249,7 +254,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					var _dProg = (_prog - _dSt) / (_dEd - _dSt);
 					
 					if(!_anim || (_dProg > 0 && _dProg < 1)) {
-						var _cProg = (_anim && !_dRang)? _dProg : _prog;
+						var _cProg = (_anim && _dRang)? _dProg : _prog;
 						
 						var _cLife = _gLife.evalFast(random(_cProg));
 						var cc = colorMultiply(_cBase, _cLife);
