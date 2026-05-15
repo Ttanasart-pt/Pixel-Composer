@@ -746,8 +746,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setCurvable = function(_index, _val = CURVE_DEF_11, _suf = "Curve", _key = "curved", _icon = THEME.curvable) {
-		attributes[$ _key] = false;
-		parameters[$ _key] = true;
+		attributes[$ _key]     = false;
+		parameters.curved      = true;
 		parameters.curve_array = false;
 		
 		with(node) { newInput(_index, nodeValue_Curve( $"{other.name} {_suf}", _val )).setVisible(false, false); }

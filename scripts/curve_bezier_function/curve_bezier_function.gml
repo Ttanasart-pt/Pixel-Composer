@@ -356,13 +356,14 @@ function curveMap(_bz = undefined, _prec = 32, _tolr = 0.00001) constructor {
 	}
 	
 	static set = function(_bz) {
-		if(_bz == undefined)      return;
-		if(array_equals(bz, _bz)) return;
+		if(_bz == undefined)      return self;
+		if(array_equals(bz, _bz)) return self;
 		
 		bz = array_clone(_bz, 1);
 		for( var i = 0; i < prec + 1; i++ ) 
 			map[i] = eval_curve_x(bz, i * size, tolr);
 		
+		return self;
 	}
 	
 	set(_bz);

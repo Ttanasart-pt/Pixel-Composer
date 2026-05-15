@@ -1000,7 +1000,7 @@
             "Node_MK_Pile", 
             "Node_MK_Circuit", 
             "Node_MK_Facet", 
-            // "Node_MK_Smoke", 
+            "Node_MK_Smoke", 
             "Node_MK_Panels", 
             "Node_MK_IsoCube", 
             "Node_MK_Isoextrude", 
@@ -1401,6 +1401,7 @@
             "Node_MK_Dialog", 
             "Node_MK_Facet",
             "Node_MK_Jigsaw",
+            "Node_MK_Smoke",
             "Node_MK_Tree_Inline",
             
             { "label": "Simulation" },
