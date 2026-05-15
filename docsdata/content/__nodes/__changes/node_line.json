@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.005",
+    "changes": [
+      {
+        "date": "2026-05-15T08:43:28.407Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Add compound path width blend mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.003",
     "changes": [
       {

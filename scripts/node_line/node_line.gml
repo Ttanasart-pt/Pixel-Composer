@@ -27,6 +27,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(30, nodeValue_Bool(    "Use Path Bounding Box", false    ));
 	newInput(31, nodeValue_IPadding("Padding",              [0,0,0,0] ))
 	newInput(16, nodeValue_Bool(    "Width Pass",            false    ));
+	newInput(58, nodeValue_EScroll( "Width Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	
 	////- =Background
 	newInput( 1, nodeValue_EButton( "Background",    0, [ "None", "Solid", "Surface" ] ));
@@ -97,10 +98,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 58
+	// Inputs 59
 	
 	input_display_list = [ 39, 
-		[ "Output",         true     ],  0, 30, 31, 16, 
+		[ "Output",         true     ],  0, 30, 31, 16, 58, 
 		[ "Background",     true     ],  1, 48, 49, 50, 
 		[ "Line Data",     false     ], 27,  6,  7, 28, 32, 33, 35, 19,  2, 20, 
 		[ "Width",         false     ], 17,  3, 11, 12, 36, 
@@ -172,6 +173,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _pbbox    = _data[30];
 			var _ppadd    = _data[31];
 			var _colW     = _data[16];
+			var _colWBld  = _data[58];
 			
 			var _dtype    = _data[27];
 			var _ang      = _data[ 6];
@@ -245,6 +247,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			inputs[15].setVisible(!_utex);
 			inputs[16].setVisible(!_utex);
+			inputs[58].setVisible(_colW);
 			
 			inputs[ 2].setVisible(!_fixL);
 			inputs[20].setVisible( _fixL);
@@ -947,6 +950,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_bg) draw_clear_alpha(0, 1);
 				else	DRAW_CLEAR
 				
+				switch(_colWBld) {
+					case 0 : BLEND_NORMAL; break;
+					case 1 : BLEND_ADD;    break;
+					case 2 : BLEND_MAX;    break;
+				}
+				
 				for( var i = 0, n = array_length(lines); i < n; i++ ) {
 					if(array_length(lines[i]) < 2) continue;
 					var points = lines[i];
@@ -1025,6 +1034,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 				}
 				
+				BLEND_NORMAL
 			surface_reset_target();
 			
 		}
