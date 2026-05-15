@@ -163,10 +163,10 @@
 		
         registerFunction(g, "Select All",            "A", c, panel_graph_select_all          ).setMenu("graph_select_all")
         registerFunction(g, "Select None",     vk_escape, n, panel_graph_select_none         ).setMenu("graph_select_none")
-        registerFunction(g, "Select Previous",       "[", s, panel_graph_select_prev         ).setMenu("graph_select_prev")
-        registerFunction(g, "Select Next",           "]", s, panel_graph_select_next         ).setMenu("graph_select_next")
-        registerFunction(g, "Select All Previous",   "[", c|s,panel_graph_select_prev_all    ).setMenu("graph_select_prev_all")
-        registerFunction(g, "Select All Next",       "]", c|s,panel_graph_select_next_all    ).setMenu("graph_select_next_all")
+        registerFunction(g, "Select Previous",       "[", n, panel_graph_select_prev         ).setMenu("graph_select_prev")
+        registerFunction(g, "Select Next",           "]", n, panel_graph_select_next         ).setMenu("graph_select_next")
+        registerFunction(g, "Select All Previous",   "[", s, panel_graph_select_prev_all     ).setMenu("graph_select_prev_all")
+        registerFunction(g, "Select All Next",       "]", s, panel_graph_select_next_all     ).setMenu("graph_select_next_all")
         
         registerFunction(g, "Toggle Grid",           "G", n, panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
         registerFunction(g, "Toggle Meta View",      "",  n, panel_graph_toggle_meta_view    ).setMenu("graph_toggle_meta_view")

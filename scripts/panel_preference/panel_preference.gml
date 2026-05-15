@@ -1434,8 +1434,6 @@ function Panel_Preference() : PanelContent() constructor {
 			    	continue;
 			    }
 			    
-	    		array_push(hotkeyArray, _title);
-	    		
 	    		var _lst = [];
 	    		var ll   = HOTKEYS[$ ctx];
 	    		for( var j = 0, m = array_length(ll); j < m; j++ ) 
@@ -1443,6 +1441,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    		
 	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
 	    		array_push(hotkeyContext, { context: ctx, list: _lst });
+	    		array_push(hotkeyArray, _title);
 	    		
 	    		if(_title == "Graph") {
 	    			array_push(hotkeyContext, { list: GRAPH_ADD_NODE_KEYS });
@@ -1659,12 +1658,12 @@ function Panel_Preference() : PanelContent() constructor {
     			    if(_filtered) continue;
 				}
     			
+    			if(hotkey_focus == hotkey) sp_hotkey.scroll_y_to = -hh;
+    			hh += lh;
+    			
     			var _yy   = yy + j * lh;
     			if(_yy < -lh * 2)      continue;
     			if(_yy > _hh + lh * 2) continue;
-    			
-    			if(hotkey_focus == hotkey) sp_hotkey.scroll_y_to = -hh;
-    			hh += lh;
     			
     			var bgY = _yy - pd;
     			var bgH =  lh;
