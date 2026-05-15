@@ -1776,12 +1776,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_set_shader(output_surface[0], sh_canvas_apply_canvas, true, BLEND.over);
 					shader_set_2( "dimension",  _dim                 );
 					
-					shader_set_i( "bgUse",      _bgr                 );
-					shader_set_i( "bgType",     _bgTyp               );
-					shader_set_c( "bgColor",    cola(_bgCol, _bgAlp) );
-					shader_set_s( "bgSurface",  _bgSrf               );
+					shader_set_s( "bgSurface",  _bgSrf );
+					shader_set_i( "bgUse",      _bgr   );
+					shader_set_i( "bgType",     _bgTyp );
+					shader_set_c( "bgColor",    _bgCol );
+					shader_set_f( "bgAlpha",    _bgAlp );
 					
-					shader_set_s( "canvas",     _canvas_surface      );
+					shader_set_s( "canvas",     _canvas_surface );
 					
 					draw_empty();
 				surface_reset_shader();
@@ -1796,12 +1797,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					surface_set_shader(output_surface[i], sh_canvas_apply_canvas, true, BLEND.over);
 						shader_set_2( "dimension",  _dim                 );
 						
-						shader_set_i( "bgUse",      _bgr                 );
-						shader_set_i( "bgType",     _bgTyp               );
-						shader_set_c( "bgColor",    cola(_bgCol, _bgAlp) );
-						shader_set_s( "bgSurface",  _bgSrf               );
+						shader_set_i( "bgUse",      _bgr   );
+						shader_set_s( "bgSurface",  _bgSrf );
+						shader_set_i( "bgType",     _bgTyp );
+						shader_set_c( "bgColor",    _bgCol );
+						shader_set_f( "bgAlpha",    _bgAlp );
 						
-						shader_set_s( "canvas",     _canvas_surface      );
+						shader_set_s( "canvas",     _canvas_surface );
 						
 						draw_empty();
 					surface_reset_shader();
