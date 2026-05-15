@@ -724,7 +724,7 @@ function Panel_Inspector() : PanelContent() constructor {
             
             if(workshop_uploading) {
             	var _by = ui(12) + (workshop_uploading - 1) * ui(36);
-                draw_sprite_ui_uniform(THEME.loading_s, 0, bx + ui(16), _by + ui(16), 1, current_time / 5, COLORS._main_icon);
+                draw_sprite_ui_uniform(THEME.loading_s, 0, bx + ui(16), _by + ui(16), 1, COLORS._main_icon, 1, current_time / 5);
                 if(STEAM_UGC_UPLOADING == false)
                     workshop_uploading = 0;
             }

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.005",
+    "changes": [
+      {
+        "date": "2026-05-15T02:59:17.990Z",
+        "node": "Vignette",
+        "commit": "**Vignette**: Add mask inputs."
+      }
+    ]
+  }
+]

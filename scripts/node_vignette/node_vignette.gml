@@ -4,25 +4,30 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newActiveInput(1);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(11, nodeValue_Surface( "Mask"       ));
+	newInput(12, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(11, 13); // inputs 13, 14
 	
 	////- =Vignette
-	newInput(5, nodeValue_Slider( "Roundness",  0  )).setHotkey("R").setMappable(7);
-	newInput(2, nodeValue_Float(  "Exposure",   15 )).setHotkey("E").setMappable(8);
-	newInput(3, nodeValue_Slider( "Strength",   1, [ 0, 2, 0.01 ] )).setHotkey("S").setMappable(9).setCurvable(10, CURVE_DEF_01);
-	newInput(4, nodeValue_Slider( "Exponent",  .25 ));
+	newInput( 5, nodeValue_Slider( "Roundness",  0  )).setHotkey("R").setMappable(7);
+	newInput( 2, nodeValue_Float(  "Exposure",   15 )).setHotkey("E").setMappable(8);
+	newInput( 3, nodeValue_Slider( "Strength",   1, [ 0, 2, 0.01 ] )).setHotkey("S").setMappable(9).setCurvable(10, CURVE_DEF_01);
+	newInput( 4, nodeValue_Slider( "Exponent",  .25 ));
 	
 	////- =Render
-	newInput(6, nodeValue_Bool( "Lighten", false ));
-	// input 11
+	newInput( 6, nodeValue_Bool( "Lighten", false ));
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		[ "Surfaces", false ], 0, 
-		[ "Vignette", false ], 5, 7, 2, 8, 3, 9, 10, 
-		[ "Render",   false ], 6, 
+		[ "Surfaces", false ],  0, 11, 12, 13, 14, 
+		[ "Vignette", false ],  5,  7,  2,  8,  3,  9, 10, 
+		[ "Render",   false ],  6, 
 	]
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -41,13 +46,15 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		
-		var _smot = _data[5];
-		var _expo = _data[2];
-		var _strn = _data[3];
-		
-		var _ligh = _data[6];
+		#region data
+			var _surf = _data[0];
+			
+			var _smot = _data[5];
+			var _expo = _data[2];
+			var _strn = _data[3];
+			
+			var _ligh = _data[6];
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_vignette);
 			shader_set_f_map("smoothness", _smot, _data[7], inputs[5] );
@@ -58,6 +65,9 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
+		
+		__process_mask_modifier(_data);
+		_outSurf = mask_apply(_surf, _outSurf, _data[11], _data[12]);
 		
 		return _outSurf;
 	}
