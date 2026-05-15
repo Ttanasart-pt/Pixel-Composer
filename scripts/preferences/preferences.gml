@@ -310,6 +310,8 @@
 			PREFERENCES.video_mode   = false;
 			PREFERENCES.video_title  = "";
 			PREFERENCES.video_topics = [];
+			
+			PREFERENCES.annotation   = false;
 		#endregion
 			
 		PREFERENCES_DEF = variable_clone(PREFERENCES);

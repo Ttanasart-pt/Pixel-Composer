@@ -669,6 +669,13 @@ function Panel_Preview() : PanelContent() constructor {
         	"preview_view_settings",
         	"preview_popup", 
     	];
+    	
+    	if(TESTING) {
+    		array_push(global.menuItems_preview_actions, new MenuItem("Annotate", function() /*=>*/ {
+    			PREFERENCES.annotation = !PREFERENCES.annotation;
+    			PREF_SAVE();
+    		}, THEME.annotate).setColorGet(function() /*=>*/ {return PREFERENCES.annotation? COLORS._main_accent : COLORS._main_icon}));
+    	}
         
         global.menuItems_preview_context_menu = [
         	"preview_add_node", 

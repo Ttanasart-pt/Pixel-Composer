@@ -34,7 +34,7 @@ var contact = bool(f & 0x4);
 var bt1     = bool(f & 0x10); // POINTER_FLAG_FIRSTBUTTON
 var bt2     = bool(f & 0x20); // POINTER_FLAG_SECONDBUTTON
 	
-if(PREFERENCES.video_mode) {
+if(PREFERENCES.annotation) {
 	VIDEO_PEN         = contact;
 	VIDEO_RIGHT_CLICK = bt2;
 	

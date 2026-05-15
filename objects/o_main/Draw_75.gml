@@ -195,8 +195,10 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 	if(PREFERENCES.video_mode) {
 		zoom_area_draw();
 		zoom_area_draw_gui();
-		video_pen_overlay();
 	}
+	
+	if(PREFERENCES.annotation)
+		video_pen_overlay();
 #endregion
 
 #region system debug

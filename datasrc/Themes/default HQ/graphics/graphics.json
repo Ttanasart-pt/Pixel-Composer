@@ -17,6 +17,7 @@
     "ac_constant":                        { "path": "./icon/s_ac_constant.png",                             "s": 4, "x":  9, "y":  9 },
     "ac_function":                        { "path": "./icon/s_ac_function.png",                             "s": 1, "x":  9, "y":  9 },
     "ac_node":                            { "path": "./icon/s_ac_node.png",                                 "s": 2, "x":  9, "y":  9 },
+    "annotate":                           { "path": "./icon/s_annotate.png",                                "s": 1, "x": 12, "y": 12 },
     "accept_16":                          { "path": "./icon/s_icon_accept_16.png",                          "s": 1, "x":  8, "y":  8 },
     "accept":                             { "path": "./icon/s_icon_accept_24.png",                          "s": 1, "x": 12, "y": 12 },
     "accept_32":                          { "path": "./icon/s_icon_accept_32.png",                          "s": 1, "x": 16, "y": 16 },
