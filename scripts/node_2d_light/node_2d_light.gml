@@ -25,48 +25,52 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	typeList    = __enum_array_gen(typeListStr, s_node_2d_light_shape);
 	attnList    = __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Curtom" ], s_node_curve_type);
 	
-	function createNewInput(index = array_length(inputs)) {
+	function createNewInput(_ind = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		dynamic_input_inspecting = getInputAmount();
 			
-		newInput(index + 14, nodeValue_Active());
+		newInput(_ind + 14, nodeValue_Active());
 		
 		////- =Shape
-		newInput(index +  0, nodeValue_Enum_Scroll("Light shape", 0, typeList));
-		inputs[index].options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
+		newInput(_ind +  0, nodeValue_Enum_Scroll("Light shape", 0, typeList));
+		inputs[_ind].options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
 		
-		newInput(index +  1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple().hideLabel();
-		newInput(index +  2, nodeValue_Float(    "Range",        16     )).hideLabel();
-		newInput(index +  5, nodeValue_Vec2(     "Start",       [16,16] )).hideLabel();
-		newInput(index +  6, nodeValue_Vec2(     "Finish",      [32,16] )).hideLabel();
-		newInput(index +  7, nodeValue_ISlider(  "Sweep",        15, [-80, 80, 0.1] )).hideLabel();
-		newInput(index +  8, nodeValue_ISlider(  "Sweep End",    0,  [-80, 80, 0.1] )).hideLabel();
-		newInput(index + 22, nodeValue_Int(      "Sweep Soft",   1      )).hideLabel();
-		newInput(index + 23, nodeValue_Float(    "Sweep Spread", 1      )).hideLabel();
-		newInput(index + 15, nodeValue_Float(    "Radius x",     16     )).hideLabel();
-		newInput(index + 16, nodeValue_Float(    "Radius y",     16     )).hideLabel();
-		newInput(index + 17, nodeValue_Rotation( "Rotation",     0      )).hideLabel();
-		newInput(index + 20, nodeValue_Bool(     "Two Sides",    false  )).hideLabel();
-		newInput(index + 21, nodeValue_Float(    "Thickness",    2      )).hideLabel();
+		newInput(_ind +  1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple().hideLabel();
+		newInput(_ind +  2, nodeValue_Float(    "Radius",       .5     )).setUnitSimple().hideLabel();
+		newInput(_ind +  5, nodeValue_Vec2(     "Start",       [.25,.5])).setUnitSimple().hideLabel();
+		newInput(_ind +  6, nodeValue_Vec2(     "Finish",      [.75,.5])).setUnitSimple().hideLabel();
+		newInput(_ind +  7, nodeValue_ISlider(  "Sweep",        15, [-80, 80, 0.1] )).hideLabel();
+		newInput(_ind +  8, nodeValue_ISlider(  "Sweep End",    0,  [-80, 80, 0.1] )).hideLabel();
+		newInput(_ind + 22, nodeValue_Int(      "Sweep Soft",   1      )).hideLabel();
+		newInput(_ind + 23, nodeValue_Float(    "Sweep Spread", 1      )).hideLabel();
+		newInput(_ind + 15, nodeValue_Float(    "Radius x",    .5      )).setUnitSimple().hideLabel();
+		newInput(_ind + 16, nodeValue_Float(    "Radius y",    .5      )).setUnitSimple().hideLabel();
+		newInput(_ind + 17, nodeValue_Rotation( "Rotation",     0      )).hideLabel();
+		newInput(_ind + 20, nodeValue_Bool(     "Two Sides",    false  )).hideLabel();
+		newInput(_ind + 21, nodeValue_Float(    "Thickness",    2      )).hideLabel();
 		
 		////- =Light
-		newInput(index +  3, nodeValue_Slider(   "Intensity",         1, [ 0, 4, 0.01 ] ));
-		newInput(index +  4, nodeValue_Color(    "Color",             ca_white          ));
-		newInput(index + 11, nodeValue_ISlider(  "Radial Banding",    0, [0, 16, 0.1]   ));
-		newInput(index + 12, nodeValue_Rotation( "Radial Start",      0                 ));
-		newInput(index + 13, nodeValue_Slider(   "Radial Band Ratio", 0.5               ));
+		newInput(_ind +  3, nodeValue_Slider(   "Intensity",         1, [ 0, 4, 0.01 ] ));
+		newInput(_ind +  4, nodeValue_Color(    "Color",             ca_white          ));
 		
+			////- =/Attenuation
+		newInput(_ind + 10, nodeValue_EScroll( "Attenuation",   0, attnList       )).setTooltip("Control how light fade out over distance.");
+		newInput(_ind + 24, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01      ));
+			
+			////- =/Banding
+		newInput(_ind + 11, nodeValue_ISlider(  "Radial Banding",    0, [0, 16, 0.1]   ));
+		newInput(_ind + 12, nodeValue_Rotation( "Radial Start",      0                 ));
+		newInput(_ind + 13, nodeValue_Slider(   "Radial Band Ratio", 0.5               ));
+		newInput(_ind +  9, nodeValue_ISlider(  "Banding",       0,  [0, 16, 0.1]  ));
+			
 		////- =Render
-		newInput(index + 10, nodeValue_EScroll( "Attenuation",   0, attnList       )).setTooltip("Control how light fade out over distance.");
-		newInput(index + 24, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01      ));
-		newInput(index +  9, nodeValue_ISlider( "Banding",       0,  [0, 16, 0.1]  ));
-		newInput(index + 18, nodeValue_Float(   "Exponent",      2                 ));
-		newInput(index + 19, nodeValue_Bool(    "Anti Aliasing", false             ));
+		newInput(_ind + 18, nodeValue_Float(   "Exponent",      2                 ));
+		newInput(_ind + 19, nodeValue_Bool(    "Anti Aliasing", false             ));
 		// input 25
 		
 		refreshDynamicDisplay();
-		return inputs[index];
+		return inputs[_ind];
 	} 
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
@@ -133,9 +137,11 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	});
 	
 	input_display_dynamic = [ // 14, 
-		["Shape",	false],  0,  1,  2,  5,  6,  7,  8, 22, 23, 15, 16, 17, 20, 21,
-		["Light",	false],  3,  4, 11, 12, 13,
-		["Render",	false], 10, 24,  9, 18, 19, 
+		[ "Shape",             false ],  0,  1,  2,  5,  6,  7,  8, 22, 23, 15, 16, 17, 20, 21,
+		[ "Light",             false ],  3,  4, 
+			[ "/Attenuation",  false ], 10, 24, 
+			[ "/Banding",      false ], 11, 12, 13,  9, 
+		[ "Render",            false ], 18, 19, 
 	];
 	
 	input_display_list = [ 0, 1, new Inspector_Spacer(ui(4), true, false), lights_renderer ];
@@ -281,6 +287,26 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var px = _pos[0] + _offset[0];
 		var py = _pos[1] + _offset[1];
 		
+		shader_set(sh_2d_light_ext);
+			shader_set_2( "dimension",  _dim    );
+						
+			shader_set_i( "lightType",  _shape  );
+			shader_set_2( "lightPos",   [px,py] );
+			shader_set_2( "startPoint", _start  );
+			shader_set_2( "endPoint",   _finis  );
+			shader_set_f( "sweep",      _sweep  );
+			
+			shader_set_f( "thickness",  _thick  );
+			shader_set_f( "radius",     _range  );
+			
+			shader_set_f( "radialBandAmo",    _rbnd   );
+			shader_set_f( "radialBandStart",  _rbns   );
+			shader_set_f( "radialBandRatio",  _rbnr   );
+			
+			shader_set_2( "ellipseLightRadii", [_rngx, _rngy]  );
+			shader_set_f( "ellipseLightAngle",  _anng          );
+		shader_reset();
+		
 		surface_set_shader(temp_surface[0], noone);
 			draw_clear(c_black);
 			BLEND_ADD
@@ -289,40 +315,15 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			switch(_shape) {
 				case LIGHT_SHAPE_2D.point :
-					if(_rbnd < 2) {
-						draw_circle_color(px, py, _range, c_white, c_black,  0);
-					} else {
-						_rbnd *= 2;
-						var bnd_amo = ceil(64 / _rbnd); //band radial per step
-						var step = bnd_amo * _rbnd;
-						var astp = 360 / step;
-						var ox, oy, nx, ny;
-						
-						draw_primitive_begin(pr_trianglelist);
-						
-						for( var i = 0; i <= step; i++ ) {
-							var dir = _rbns + i * astp;
-							nx = px + lengthdir_x(_range, dir);
-							ny = py + lengthdir_y(_range, dir);
-							
-							if(safe_mod(i, bnd_amo) / bnd_amo < _rbnr && i) {
-								draw_vertex_color(px, py, c_white, 1);
-								draw_vertex_color(ox, oy, c_black, 1);
-								draw_vertex_color(nx, ny, c_black, 1);
-							}
-							
-							ox = nx;
-							oy = ny;
-						}
-						
-						draw_primitive_end();
-					}
+				case LIGHT_SHAPE_2D.ellipse :
+				case LIGHT_SHAPE_2D.saber :
+				case LIGHT_SHAPE_2D.spot :
+				case LIGHT_SHAPE_2D.flame :
+					shader_set(sh_2d_light_ext);
+						draw_empty();
+					shader_reset();
 					break;
 				
-				case LIGHT_SHAPE_2D.ellipse :
-					draw_ellipse_angle_color(px, py, _rngx, _rngy, _anng, c_white, c_black);
-					break;
-					
 				case LIGHT_SHAPE_2D.line :
 				case LIGHT_SHAPE_2D.line_asym :
 					var dir = point_direction(_start[0], _start[1], _finis[0], _finis[1]) + 90;
@@ -368,132 +369,43 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					}
 					break;	
 				
-				case LIGHT_SHAPE_2D.saber :
-					draw_set_color(c_white);
-					draw_line_round(_start[0], _start[1], _finis[0], _finis[1], _thick * 2, true, true, 64);
-					
-					var _r  = _range + _thick;
-					var dir = point_direction(_start[0], _start[1], _finis[0], _finis[1]) + 90;
-					
-					draw_primitive_begin(pr_trianglestrip);
-					draw_vertex_color(_start[0],                        _start[1],                        c_white, 1);
-					draw_vertex_color(_finis[0],                        _finis[1],                        c_white, 1);
-					draw_vertex_color(_start[0] + lengthdir_x(_r, dir), _start[1] + lengthdir_y(_r, dir), c_black, 1);
-					draw_vertex_color(_finis[0] + lengthdir_x(_r, dir), _finis[1] + lengthdir_y(_r, dir), c_black, 1);
-					draw_primitive_end();
-					
-					draw_primitive_begin(pr_trianglelist);
-					var ox, oy, nx, ny;
-					for( var i = 0; i <= 90; i++ ) {
-						var _d = dir + i * 2;
-						nx = _start[0] + lengthdir_x(_r, _d);
-						ny = _start[1] + lengthdir_y(_r, _d);
-						
-						if(i) {
-							draw_vertex_color(_start[0], _start[1], c_white, 1);
-							draw_vertex_color(ox, oy, c_black, 1);
-							draw_vertex_color(nx, ny, c_black, 1);
-						}
-						
-						ox = nx;
-						oy = ny;
-					}
-					draw_primitive_end();
-					
-					dir += 180;
-					draw_primitive_begin(pr_trianglestrip);
-					draw_vertex_color(_start[0],                        _start[1],                        c_white, 1);
-					draw_vertex_color(_finis[0],                        _finis[1],                        c_white, 1);
-					draw_vertex_color(_start[0] + lengthdir_x(_r, dir), _start[1] + lengthdir_y(_r, dir), c_black, 1);
-					draw_vertex_color(_finis[0] + lengthdir_x(_r, dir), _finis[1] + lengthdir_y(_r, dir), c_black, 1);
-					draw_primitive_end();
-					
-					draw_primitive_begin(pr_trianglelist);
-					var ox, oy, nx, ny;
-					for( var i = 0; i <= 90; i++ ) {
-						var _d = dir + i * 2;
-						nx = _finis[0] + lengthdir_x(_r, _d);
-						ny = _finis[1] + lengthdir_y(_r, _d);
-						
-						if(i) {
-							draw_vertex_color(_finis[0], _finis[1], c_white, 1);
-							draw_vertex_color(ox, oy, c_black, 1);
-							draw_vertex_color(nx, ny, c_black, 1);
-						}
-						
-						ox = nx;
-						oy = ny;
-					}
-					draw_primitive_end();
-					
-					break;	
-					
-				case LIGHT_SHAPE_2D.spot :
-				case LIGHT_SHAPE_2D.flame :
-					var dir  = point_direction(_start[0], _start[1], _finis[0], _finis[1]);
-					var astr = dir - _sweep;
-					var aend = dir + _sweep;
-					var stp  = 2;
-					var amo  = ceil(_sweep * 2 / stp);
-					var ran  = point_distance(_start[0], _start[1], _finis[0], _finis[1]);
-					var cc;
-					
-					draw_primitive_begin(pr_trianglelist);
-						for( var i = 0; i < amo; i++ )  {
-							var a0 = clamp(astr + (i    ) * stp, astr, aend);
-							var a1 = clamp(astr + (i + 1) * stp, astr, aend);
-							
-							if(_shape == LIGHT_SHAPE_2D.spot)
-								cc = c_white;
-							else {
-								var aa = amo > 2? 1. - abs(i / (amo - 1) - .5) * 2 : 1;
-								    cc = _make_color_rgb(aa, aa, aa);
-							}
-							
-							draw_vertex_color(_start[0],                        _start[1],                        cc,      1);
-							draw_vertex_color(_start[0] + lengthdir_x(ran, a0), _start[1] + lengthdir_y(ran, a0), c_black, 1);
-							draw_vertex_color(_start[0] + lengthdir_x(ran, a1), _start[1] + lengthdir_y(ran, a1), c_black, 1);
-						}
-					draw_primitive_end();
-					break;	
+				
 			}
 			
 		surface_reset_shader(); 
-		
 		var _ls = temp_surface[0];
 		
 		surface_set_shader(temp_surface[1], sh_2d_light);
 			draw_clear(c_black);
 			
-			shader_set_color("color",      _color);
-			shader_set_f("intensity",      _inten * _color_get_alpha(_color));
-			shader_set_f("band",           _band);
-			shader_set_i("atten",          _attn);
-			shader_set_curve("attenCurve", _attC);
-			shader_set_f("exponent",       _expo);
+			shader_set_c("color",          _color );
+			shader_set_f("intensity",      _inten );
+			shader_set_f("band",           _band  );
+			shader_set_i("atten",          _attn  );
+			shader_set_curve("attenCurve", _attC  );
+			shader_set_f("exponent",       _expo  );
 			
-			BLEND_OVERRIDE draw_surface_safe(_ls);
+			draw_surface(_ls,0,0);
 		surface_reset_shader();
-		
 		_ls = temp_surface[1];
 		
 		if(_aa) {
 			surface_set_shader(temp_surface[2], sh_FXAA);
-			gpu_set_texfilter(true);
-			shader_set_2("dimension",  _dim);
-			shader_set_f("cornerDis",  0.5);
-			shader_set_f("mixAmo",     1);
-			
-			BLEND_OVERRIDE draw_surface_safe(_ls);
-			gpu_set_texfilter(false);
+				gpu_set_texfilter(true);
+				shader_set_2("dimension",  _dim);
+				shader_set_f("cornerDis",  0.5);
+				shader_set_f("mixAmo",     1);
+				
+				draw_surface(_ls,0,0);
+				gpu_set_texfilter(false);
 			surface_reset_shader();
-			
 			_ls = temp_surface[2];
+			
 		}
 		
 		surface_set_target(_lightSurf);
 			BLEND_ADD
-			draw_surface_safe(_ls);
+			draw_surface(_ls,0,0);
 			BLEND_NORMAL
 		surface_reset_target(); 
 	}
@@ -586,7 +498,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var sw = _dim[0];
 		var sh = _dim[1];
 		
-		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba32float);
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r32float);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
 		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1]);
 		
@@ -596,7 +508,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		for( var i = 0; i < getInputAmount(); i++ ) {
 			var _ind = input_fix_len + i * data_length;
-			applyLight(_data, _ind, _lightSurf, [0,0]);
+			applyLight(_data, _ind, _lightSurf);
 			
 			if(_tile) {
 				applyLight(_data, _ind, _lightSurf, [-sw,0]);
@@ -613,8 +525,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		surface_set_shader(_outSurf, sh_2d_light_apply, true, BLEND.over);
-			shader_set_surface("base",  _surf);
-			shader_set_surface("light", _lightSurf);
+			shader_set_s( "base",  _surf      );
+			shader_set_s( "light", _lightSurf );
 			
 			draw_empty();
 		surface_reset_shader(); 

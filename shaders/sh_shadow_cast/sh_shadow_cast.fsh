@@ -286,8 +286,8 @@ void main() {
 		shadow *= prg * prg;
 	}
 	
-	     if(lightAttn == 0) shadow = shadow * shadow;
-	else if(lightAttn == 1) shadow = 1. - (shadow - 1.) * (shadow - 1.);
+	     if(lightAttn == 0) shadow = pow(shadow, 2.);
+	else if(lightAttn == 1) shadow = 1. - pow(shadow - 1., 2.);
 	else if(lightAttn == 2) shadow = shadow;
 	else if(lightAttn == 3) shadow = curveEval(attenCurve_curve, attenCurve_amount, shadow);
 	

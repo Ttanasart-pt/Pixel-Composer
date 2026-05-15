@@ -32,12 +32,14 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		newInput(index+ 2, nodeValue_Float(   "Intensity",  1            ));
 		newInput(index+ 1, nodeValue_Color(   "Color",      ca_white     ));
 		
-		////- =Attenuation
+			////- =/Attenuation
 		newInput(index+ 5, nodeValue_EScroll( "Attenuation",0, __atype   )).setTooltip("Control how light fade out over distance.");
 		newInput(index+13, nodeValue_Curve(   "Att. Curve", CURVE_DEF_01 ));
+		
+			////- =/Banding
 		newInput(index+ 6, nodeValue_ISlider( "Banding",    0, [0,16,.1] ));
 			
-		////- =Soft Light
+			////- =/Soft Light
 		newInput(index+ 7, nodeValue_Bool(    "Use Soft Light",    false        ));
 		newInput(index+ 8, nodeValue_ISlider( "Density",           1, [1,16,.1] ));
 		newInput(index+ 9, nodeValue_Slider(  "Soft Light Radius", 1, [0,2,.01] ));
@@ -123,10 +125,11 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	];
 	
 	input_display_dynamic = [ 
-		[ "Shape",             false     ],  0,  3, 4, 
+		[ "Shape",             false     ],  0,  3,  4, 
 		[ "Light",             false     ],  2,  1, 
-		[ "Attenuation",       false     ],  5, 13, 6, 
-		[ "Soft Light",        false, 7  ],  8,  9, 
+			[ "/Attenuation",  false     ],  5, 13, 
+			[ "/Banding",      false     ],  6, 
+			[ "/Soft Light",   false,    ],  7,  8,  9, 
 		[ "Ambient Occlusion", false, 10 ], 11, 12, 
 	];
 	
@@ -186,8 +189,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var rr = rad * _s;
 			
 			draw_set_color(COLORS._main_accent);
-			draw_circle_dash(px, py, rr/2);
-			InputDrawOverlay(inputs[_ind+4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 0, 1/2, 1));
+			draw_circle_dash(px, py, rr);
+			InputDrawOverlay(inputs[_ind+4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 0, 1, 1));
 		}
 		
 		if(hvAny) w_hoverable = false;
@@ -338,7 +341,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				shader_set_i("lightSoft",        _soft    );
 				shader_set_f("lightDensity",     _den     );
-				shader_set_f("lightRadius",      _rad     );
+				shader_set_f("lightRadius",      _rad     ); 
 				
 				shader_set_i("ao",               _ao      );
 				shader_set_f("aoRadius",         _ao_rad  );

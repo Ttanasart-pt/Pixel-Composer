@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.005",
+    "changes": [
+      {
+        "date": "2026-05-15T01:25:15.457Z",
+        "node": "",
+        "commit": "**2D Light**: Light now use the same algorithm as Cast shadow node."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.004",
     "changes": [
       {
