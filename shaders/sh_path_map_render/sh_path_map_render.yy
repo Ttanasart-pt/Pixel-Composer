@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_path_map_render",
+  "name":"sh_path_map_render",
+  "parent":{
+    "name":"path",
+    "path":"folders/nodes/data/value/path.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
