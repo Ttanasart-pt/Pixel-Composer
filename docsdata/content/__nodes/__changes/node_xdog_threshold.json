@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.006",
+    "changes": [
+      {
+        "date": "2026-05-16T04:08:49.114Z",
+        "node": "XDoG",
+        "commit": "**XDoG**: Add oversample setting."
+      }
+    ]
+  }
+]

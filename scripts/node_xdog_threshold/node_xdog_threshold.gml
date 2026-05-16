@@ -33,6 +33,7 @@ function Node_XDoG_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- Nodes
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	surface_blur_init();
 	
 	temp_surface = [ noone, noone, noone ];
@@ -57,12 +58,14 @@ function Node_XDoG_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 		
 		var args = new blur_gauss_args(_surf, _size).setBG(true, c_black);
+		    args.sampleMode = getAttribute("oversample");
 		var g1   = surface_apply_gaussian(args);
 		surface_set_shader(temp_surface[0]); 
 			draw_surface(g1, 0, 0);
 		surface_reset_shader();
 		
 		var args = new blur_gauss_args(_surf, _size * k).setBG(true, c_black);
+		    args.sampleMode = getAttribute("oversample");
 		var g2   = surface_apply_gaussian(args);
 		surface_set_shader(temp_surface[1]); 
 			draw_surface(g2, 0, 0);
