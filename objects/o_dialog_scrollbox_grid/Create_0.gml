@@ -127,7 +127,7 @@ event_inherited();
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], _xx, _yy, _xx + gw, _yy + gh)) {
 					sc_content.hover_content = true;
 					selecting = i;
-					hov       = searchIndex == undefined? i : searchIndex[i];
+					hov       = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);
 				}
 			
 				if(selecting == i) {

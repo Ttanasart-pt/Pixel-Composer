@@ -256,7 +256,7 @@ event_inherited();
 					sc_content.hover_content = true;
 					_hov      = true;
 					selecting = i;
-					hovering  = searchIndex == undefined? i : searchIndex[i];
+					hovering  = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);
 					
 					if(_tol) TOOLTIP = _val.tooltip;
 				}
