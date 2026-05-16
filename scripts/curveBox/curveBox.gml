@@ -105,6 +105,8 @@ function curveBox(_onModify) : widget() constructor {
 		       tb_scale.isHovering();
 	}
 	
+	////- Draw
+	
 	static fetchHeight = function(params) { return h; }
 	static drawParam   = function(params) {
 		rx = params.rx;
@@ -868,6 +870,8 @@ function curveBox(_onModify) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Action
 	
 	static clone = function() /*=>*/ {return new curveBox(onModify)};
 

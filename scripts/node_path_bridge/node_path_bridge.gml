@@ -10,16 +10,22 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 1, nodeValue_Int(     "Amount", 4     ));
 	newInput( 2, nodeValue_Bool(    "Smooth", false ));
 	
+	////- =Path
+	newInput( 7, nodeValue_Bool(    "Loop",  false  ));
+	newInput( 6, nodeValue_SliRange("Range", [0,1]  ));
+	newInput( 5, nodeValue_Slider(  "Offset", 0     ));
+	
 	////- =Paths
 	newInput( 0, nodeValue_PathNode( "Path" ));
-	// inputs 5
+	// inputs 8
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
-	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
+	array_foreach(inputs, function(i,_) /*=>*/ {return i.rejectArray()});
 	
 	input_display_list = [  4, 
 		[ "Bridge", false ],  3,  1,  2, 
+		[ "Path",   false ],  7,  6,  5,  
 		[ "Paths",  false ],  0,
 	];
 	
@@ -33,9 +39,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	cached_pos  = {};
 	curr_path   = noone;
-	curr_amount = noone;
 	curr_smooth = noone;
-	curr_type   = 0;
 	
 	#region ---- path ----
 		anchors		= [];
@@ -160,9 +164,13 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		#region data
 			var seed    = getInputData(4);
 			
-			curr_type   = getInputData(3);
-			curr_amount = getInputData(1);
+			var _type   = getInputData(3);
+			var _amou   = getInputData(1);
 			curr_smooth = getInputData(2);
+			
+			var _loop   = getInputData(7);
+			var _rang   = getInputData(6);
+			var _offs   = getInputData(5);
 			
 			curr_path   = getInputData(0);
 			cached_pos  = {};
@@ -189,21 +197,24 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _rat, _a;
 		var _p = new __vec2P();
 		
-		anchors    = array_create(curr_amount);
-		lengths    = array_create(curr_amount);
-		lengthAccs = array_create(curr_amount);
+		anchors    = array_create(_amou);
+		lengths    = array_create(_amou);
+		lengthAccs = array_create(_amou);
 				
 		random_set_seed(seed);
 		var _index  = 0;
 		
-		for( var i = 0; i < curr_amount; i++ ) {
+		for( var i = 0; i < _amou; i++ ) {
 			_a = array_create(_lines);
 			
-			switch(curr_type) {
-				case 0  : _rat = curr_amount == 1? 0.5 : i / (curr_amount - 1); break;
+			switch(_type) {
+				case 0  : _rat = _amou == 1? 0.5 : i / (_amou - !_loop); break;
 				case 1  : _rat = random(1); break;
 				default : _rat = 0;
 			}
+			
+			_rat = lerp(_rang[0], _rang[1], _rat);
+			if(_loop) _rat = frac(frac(_rat + _offs) + 1);
 			
 			for( var j = 0; j < _lines; j++ ) {
 				var _pathD = _pathData[j];

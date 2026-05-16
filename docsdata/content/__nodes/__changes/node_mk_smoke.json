@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.006",
+    "changes": [
+      {
+        "date": "2026-05-16T02:10:00.620Z",
+        "node": "",
+        "commit": "**Bridge Path**: Add path controls."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.005",
     "changes": [
       {

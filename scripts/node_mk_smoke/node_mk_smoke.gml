@@ -27,6 +27,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Wave
 	newInput(12, nodeValue_SliRange( "Life Range", [0,.6]            ));
 	newInput( 4, nodeValue_Curve(    "Wave",       CURVE_DEF_10      ));
+	newInput(35, nodeValue_EScroll(  "Shape",       0, [ "Sine", "Wave", "Zigzag" ] ));
 	newInput(11, nodeValue_Range(    "Phase",      [0,0], true       ));
 	newInput( 8, nodeValue_Range(    "Frequency",  [4,4], true       ));
 	newInput( 9, nodeValue_Range(    "Amplitude",  [2,2], true       ));
@@ -53,10 +54,11 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Animation
 	newInput(21, nodeValue_Bool(    "Anim",        false        ));
+	newInput(36, nodeValue_SliRange("Animation",   [0,1]        ));
 	newInput(19, nodeValue_Range(   "Anim Range",  [1,1], true  ));
  	newInput(20, nodeValue_Range(   "Anim Speed",  [1,1], true  ));
 	newInput(24, nodeValue_Range(   "Anim Shift",  [0,0], true  ));
-	// 35
+	// 37
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
@@ -66,14 +68,14 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			[ "/Initial State", false ],  2,  3,  
 			[ "/Scaling",       false ], 32, 34,  
 		
-		[ "Wave",        false     ], 12,  4, 11,  8,  9, 
+		[ "Wave",        false     ], 12,  4, 35, 11,  8,  9, 
 		[ "Spiral",      false     ], 13,  5, 10, 14, 
 		[ "Forces",      false     ], 25, 26, 
 			
 		[ "Render",      false     ], 15, 18, 23, 22, 27, 
 			[ "/Color",  false     ], 16, 17, 
 			
-		[ "Animation",   false, 21 ], 19, 20, 24, 
+		[ "Animation",   false, 21 ], 36, 19, 20, 24, 
 	];
 	
 	////- Nodes
@@ -94,7 +96,6 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			case 0 : InputDrawOverlay(inputs[ 7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 			case 1 : InputDrawOverlay(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 		}
-		
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
@@ -119,6 +120,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _wLifs = _data[12];
 			var _waveD = _data[ 4], _waveC = wave_curve.set(_waveD);
+			var _waveP = _data[35];
 			var _wPhss = _data[11];
 			var _wFrqs = _data[ 8];
 			var _wAmps = _data[ 9];
@@ -141,6 +143,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _gLife = _data[17]; _gLife.cache();
 			
 			var _anim  = _data[21];
+			var _animR = _data[36];
 			var _nRang = _data[19];
 			var _nSped = _data[20];
 			var _nShft = _data[24];
@@ -153,8 +156,8 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		#endregion
 		
 		update_on_frame = _anim;
-		random_set_seed(_seed);
 		
+		random_set_seed(_seed);
 		var _spawnPoints = [];
 		switch(_type) {
 			case 0 :
@@ -171,7 +174,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				__pth = _path;
 				__p   = new __vec2P();
-				__st  = 1 / (_amo - !_pathL);
+				__st  = 1 / max(1, _amo - !_pathL);
 				
 				_spawnPoints = array_create_ext(_amo, function(i) /*=>*/ {
 					__pth.getPointRatio(i*__st, 0, __p);
@@ -193,11 +196,14 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			else      { BLEND_NORMAL }
 			
 			for( var i = 0, n = array_length(_spawnPoints); i < n; i++ ) {
-				var _prog = 0;
+				random_set_seed(_seed + i * 1000);
+				
+				var _prog = 0, _fprog = 0;
 				var _dirr = rotation_random_eval_fast(_dirrs);
 				
 				var ox = _spawnPoints[i][0], nx;
 				var oy = _spawnPoints[i][1], ny;
+				var _nwwg, ow, nw;
 				
 				var lscale = random_range(_lifeS[0], _lifeS[1]);
 				var mscale = random_range(_moveS[0], _moveS[1]);
@@ -227,6 +233,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var _foffY = random_range(_fofft[2], _fofft[3]);
 					
 				var _dAnim = ((CURRENT_FRAME - _aShft) / TOTAL_FRAMES) * _aSped;
+				    _dAnim = clamp(_dAnim, _animR[0], _animR[1]);
 				var _dCen  = _dAnim * (1 + _aRang) - _aRang / 2;
 				var _dSt   = _dCen - _aRang / 2;
 				var _dEd   = _dCen + _aRang / 2;
@@ -241,8 +248,22 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					ny = oy;
 					
 					var _wave = _waveC.get((_prog - _wLifs[0]) / (_wLifs[1] - _wLifs[0]));
-					nx += lengthdir_x(mscale * dcos(_wPhs + _prog * 360 * _wFrq) * _wAmp, _dirr + 90) * _wave;
-					ny += lengthdir_y(mscale * dcos(_wPhs + _prog * 360 * _wFrq) * _wAmp, _dirr + 90) * _wave;
+					switch(_waveP) {
+						case 0 : _nwwg = dcos(_wPhs + _prog * 360 * _wFrq); break;
+						
+						case 1 : _nwwg = frac(_wPhs + _prog * _wFrq);    
+						         _nwwg = frac(_nwwg + 1);
+						         _nwwg = _nwwg * 2 - 1;
+						         break;
+						         
+						case 2 : _nwwg = frac(_wPhs + _prog * _wFrq); 
+						         _nwwg = frac(_nwwg + 1);
+						         _nwwg = sign(_nwwg - .5);
+						         break;
+					}
+					nw  = mscale * _nwwg * _wAmp * _wave;
+					nx += lengthdir_x(nw, _dirr + 90);
+					ny += lengthdir_y(nw, _dirr + 90);
 					
 					var _spir = _spirC.get((_prog - _sLifs[0]) / (_sLifs[1] - _sLifs[0]));
 					_dirr += _sAmp * _spir / lscale;
@@ -250,6 +271,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					nx += lengthdir_x(mscale, _dirr);
 					ny += lengthdir_y(mscale, _dirr);
 					
+					_fprog++;
 					_prog += ilife;
 					var _dProg = (_prog - _dSt) / (_dEd - _dSt);
 					
@@ -267,8 +289,9 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						var dy = ny;
 						
 						if(_anim) {
-							dx += _foffX * (_foffC == undefined? 1 : _foffC.get(_dAnim)) * mscale;
-							dy += _foffY * (_foffC == undefined? 1 : _foffC.get(_dAnim)) * mscale;
+							var _offAmp = (_foffC == undefined? 1 : _foffC.get(_dAnim)) * mscale;
+							dx += _foffX * _offAmp;
+							dy += _foffY * _offAmp;
 						}
 						
 						draw_set_color(cc);
