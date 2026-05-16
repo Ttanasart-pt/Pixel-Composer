@@ -371,7 +371,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							
 							var wgAmp = _wigA * (curve_wigA? curve_wigA.get(pgr) : 1);
 							var wgFre = _wigF * (curve_wigF? curve_wigF.get(pgr) : 1);
-							var wgLen = randomFractal(_sed, pgc + _wigP, wgFre, _wigI) * wgAmp;
+							var wgLen = randomFractal(_sed, pgc + _wigP * pi * 2 / wgFre, wgFre, _wigI) * wgAmp;
 							_nx += lengthdir_x(wgLen, _d + 90); 
 							_ny += lengthdir_y(wgLen, _d + 90);
 						}
@@ -502,7 +502,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								
 								var wgAmp = _wigA * (curve_wigA? curve_wigA.get(pgc) : 1);
 								var wgFre = _wigF * (curve_wigF? curve_wigF.get(pgc) : 1);
-								var wgDis = randomFractal(_seed, pgr + _wigP, wgFre, _wigI) * wgAmp;
+								var wgDis = randomFractal(_seed, pgr + _wigP * pi * 2 / wgFre, wgFre, _wigI) * wgAmp;
 								var wgDir = p.dirr + 90; 
 								
 								p.x += lengthdir_x(wgDis, wgDir);

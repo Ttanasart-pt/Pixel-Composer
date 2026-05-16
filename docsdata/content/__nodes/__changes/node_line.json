@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.006",
+    "changes": [
+      {
+        "date": "2026-05-16T06:17:08.481Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Wiggle phase now normalized."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.005",
     "changes": [
       {
