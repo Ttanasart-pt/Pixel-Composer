@@ -42,7 +42,7 @@
         "_main_text_sub_inner": "main_white",
         "_main_icon": "icon",
         "_main_icon_on_inner": "icon",
-        "_main_icon_light": "icon",
+        "_main_icon_light": "white",
         "_main_icon_dark": "main_mdblack",
         "_main_value_positive": "lime",
         "_main_value_negative": "red",

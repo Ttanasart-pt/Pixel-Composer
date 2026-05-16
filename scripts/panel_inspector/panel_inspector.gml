@@ -493,7 +493,6 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     function setInspecting(_inspecting, _lock = false, _focus = true, _record = true) {
-    	
         if(locked) return;
         if(inspecting == _inspecting) return;
         if(_inspecting == noone) {
@@ -825,7 +824,9 @@ function Panel_Inspector() : PanelContent() constructor {
                 
         for( var i = 0, n = array_length(_inspecting.inputs); i < n; i++ ) 
         	_inspecting.inputs[i].visible_in_inspector = false;
-        	
+        
+        ////- =Draw Properties
+        
         for(var i = 0; i < amo; i++) {
             var yy    = _y + hh;
             var _draw = yy + ui(8) < con_h && yy > -ui(8);

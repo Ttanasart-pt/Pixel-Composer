@@ -164,6 +164,7 @@
 			PREFERENCES.alt_picker						= true;
 			
 			PREFERENCES.curvebox_default_height         = 200;
+			PREFERENCES.curvebox_full_width             = true;
 		
 		#endregion
 		

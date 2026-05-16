@@ -1,5 +1,5 @@
 function curveBox(_onModify) : widget() constructor {
-	always_break_line  = true;
+	always_break_line = PREFERENCES.curvebox_full_width;
 	h = ui(PREFERENCES.curvebox_default_height);
 	
 	#region curve
@@ -416,8 +416,8 @@ function curveBox(_onModify) : widget() constructor {
 			
 			var bx  = _x + w - bs;
 			var by  = _y;
-			var zy0 = by + bs / 2 + (byH - bs) * (1 - (miny - zminy) / (zmaxy - zminy));
-			var zy1 = by + bs / 2 + (byH - bs) * (1 - (maxy - zminy) / (zmaxy - zminy));
+			var zy0 = by + bs/2 + (byH - bs) * (1 - (miny - zminy) / (zmaxy - zminy));
+			var zy1 = by + bs/2 + (byH - bs) * (1 - (maxy - zminy) / (zmaxy - zminy));
 				
 			if(dragging) {
 				var _mdy = (drag_m[1] - _m[1]) / (byH - bs) * 2;
@@ -437,15 +437,19 @@ function curveBox(_onModify) : widget() constructor {
 				}
 			} 
 			
-				 if(point_in_rectangle(_m[0], _m[1], bx, zy0 - bs / 2, bx + bs, zy0 + bs / 2)) hov = 1;
-			else if(point_in_rectangle(_m[0], _m[1], bx, zy1 - bs / 2, bx + bs, zy1 + bs / 2)) hov = 2;
-			else if(point_in_rectangle(_m[0], _m[1], bx, zy1 - bs / 2, bx + bs, zy0 + bs / 2)) hov = 3;
-				
-			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, by, bs, byH, CDEF.main_black, 1);
-			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy1, bs, zy0 - zy1, drag_h == 3? merge_color(CDEF.main_dkgrey, CDEF.main_grey, 0.4) : CDEF.main_dkgrey, 1);
+				 if(point_in_rectangle(_m[0], _m[1], bx, zy0 - bs/2, bx + bs, zy0 + bs/2)) hov = 1;
+			else if(point_in_rectangle(_m[0], _m[1], bx, zy1 - bs/2, bx + bs, zy1 + bs/2)) hov = 2;
+			else if(point_in_rectangle(_m[0], _m[1], bx, zy1 - bs/2, bx + bs, zy0 + bs/2)) hov = 3;
 			
-			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy0 - bs / 2, bs, bs, drag_h == 1? COLORS._main_icon_light : COLORS._main_icon, 1);
-			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy1 - bs / 2, bs, bs, drag_h == 2? COLORS._main_icon_light : COLORS._main_icon, 1);
+			var cc = drag_h == 3? merge_color(CDEF.main_dkgrey, CDEF.main_grey, 0.4) : CDEF.main_dkgrey;
+			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, by, bs, byH, CDEF.main_black, 1);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy1, bs, zy0 - zy1, cc);
+			
+			var hlg1 = drag_h == 1 || dragging == 1 || ((drag_h == 2 || dragging == 2) && key_mod_press(CTRL));
+			var hlg2 = drag_h == 2 || dragging == 2 || ((drag_h == 1 || dragging == 1) && key_mod_press(CTRL));
+			
+			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy0 - bs/2, bs, bs, hlg1? COLORS._main_icon_light : COLORS._main_icon);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy1 - bs/2, bs, bs, hlg2? COLORS._main_icon_light : COLORS._main_icon);
 			
 			////- =Width
 			
@@ -456,8 +460,8 @@ function curveBox(_onModify) : widget() constructor {
 			var bx  = _x;
 			var by  = _y + hh - bs - (tbh + ui(4)) * (1 + show_x_control);
 			
-			var zx0 = bx + bs / 2 + (bxW - bs) * (minx - zminx) / (zmaxx - zminx);
-			var zx1 = bx + bs / 2 + (bxW - bs) * (maxx - zminx) / (zmaxx - zminx);
+			var zx0 = bx + bs/2 + (bxW - bs) * (minx - zminx) / (zmaxx - zminx);
+			var zx1 = bx + bs/2 + (bxW - bs) * (maxx - zminx) / (zmaxx - zminx);
 			
 			if(dragging) {
 				var _mdx = (_m[0] - drag_m[0]) / (bxW - bs);
@@ -477,15 +481,19 @@ function curveBox(_onModify) : widget() constructor {
 				}
 			} 
 			
-				 if(point_in_rectangle(_m[0], _m[1], zx0 - bs / 2, by, zx0 + bs / 2, by + bs)) hov = 4;
-			else if(point_in_rectangle(_m[0], _m[1], zx1 - bs / 2, by, zx1 + bs / 2, by + bs)) hov = 5;
-			else if(point_in_rectangle(_m[0], _m[1], zx0 - bs / 2, by, zx1 + bs / 2, by + bs)) hov = 6;
-				
-			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, by, bxW, bs, CDEF.main_black, 1);
-			draw_sprite_stretched_ext(THEME.box_r2, 0, zx0, by, zx1 - zx0, bs, drag_h == 6? merge_color(CDEF.main_dkgrey, CDEF.main_grey, 0.4) : CDEF.main_dkgrey, 1);
+				 if(point_in_rectangle(_m[0], _m[1], zx0 - bs/2, by, zx0 + bs/2, by + bs)) hov = 4;
+			else if(point_in_rectangle(_m[0], _m[1], zx1 - bs/2, by, zx1 + bs/2, by + bs)) hov = 5;
+			else if(point_in_rectangle(_m[0], _m[1], zx0 - bs/2, by, zx1 + bs/2, by + bs)) hov = 6;
 			
-			draw_sprite_stretched_ext(THEME.box_r2, 0, zx0 - bs / 2, by, bs, bs, drag_h == 4? COLORS._main_icon_light : COLORS._main_icon, 1);
-			draw_sprite_stretched_ext(THEME.box_r2, 0, zx1 - bs / 2, by, bs, bs, drag_h == 5? COLORS._main_icon_light : COLORS._main_icon, 1);
+			var cc = drag_h == 6? merge_color(CDEF.main_dkgrey, CDEF.main_grey, 0.4) : CDEF.main_dkgrey;
+			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, by, bxW, bs, CDEF.main_black, 1);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, zx0, by, zx1 - zx0, bs, cc, 1);
+			
+			var hlg4 = drag_h == 4 || dragging == 4 || ((drag_h == 5 || dragging == 5) && key_mod_press(CTRL));
+			var hlg5 = drag_h == 5 || dragging == 5 || ((drag_h == 4 || dragging == 4) && key_mod_press(CTRL));
+			
+			draw_sprite_stretched_ext(THEME.box_r2, 0, zx0 - bs/2, by, bs, bs, hlg4? COLORS._main_icon_light : COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, zx1 - bs/2, by, bs, bs, hlg5? COLORS._main_icon_light : COLORS._main_icon, 1);
 			
 			////- =Pan
 			
