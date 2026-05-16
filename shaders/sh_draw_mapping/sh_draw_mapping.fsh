@@ -139,7 +139,6 @@ void main() {
 	pos.x = cpos.x * cos(rotation) - cpos.y * sin(rotation);
 	pos.y = cpos.x * sin(rotation) + cpos.y * cos(rotation);
 	pos = pos * scale + vec2(0.5) - position;
-	pos = fract(pos);
 	
-    gl_FragColor = v_vColour * texture2Dintp( gm_BaseTexture, pos );
+    gl_FragColor = v_vColour * sampleTexture( gm_BaseTexture, pos );
 }

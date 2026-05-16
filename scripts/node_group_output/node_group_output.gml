@@ -1,7 +1,6 @@
 function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Group Output";
-	color		= COLORS.node_blend_collection;
-	// is_group_io = true;
+	name  = "Group Output";
+	color = COLORS.node_blend_collection;
 	destroy_when_upgroup = true;
 	
 	skipDefault();
@@ -109,7 +108,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _dis = _in0.value_from == noone? VALUE_DISPLAY._default : _in0.value_from.display_type;
 		
 		_in0.setType(_typ);
-		_in0.display_type = _dis;
+		_in0.setDisplay(_dis);
 		if(!is(outParent, NodeValue)) return;
 		
 		var ww = _typ == VALUE_TYPE.surface? 128 : 96;
@@ -124,7 +123,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(group && _pty != _typ) group.setHeight();
 		
-		outParent.setValue(inputs[0].getValue());
+		var _val = inputs[0].getValue();
+		print(_val);
+		outParent.setValue(_val);
 	}
 	
 	static forwardPassiveDynamic = function() {

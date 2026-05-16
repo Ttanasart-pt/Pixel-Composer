@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.006",
+    "changes": [
+      {
+        "date": "2026-05-16T08:05:57.995Z",
+        "node": "Group Output",
+        "commit": "**Group Output**: Fix palette input datatype got converted into 2d color arrays."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc5",
     "changes": [
       {
