@@ -6,6 +6,11 @@
         "date": "2026-05-16T06:17:08.481Z",
         "node": "Draw Line",
         "commit": "**Draw Line**: Wiggle phase now normalized."
+      },
+      {
+        "date": "2026-05-16T06:43:21.726Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Add oversample mode."
       }
     ]
   },

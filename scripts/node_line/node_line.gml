@@ -54,7 +54,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(36, nodeValue_Bool(  "Apply Weight",         true       ));
 	
 	////- =Line settings
-	newInput( 8, nodeValue_Slider_Range( "Range",    [0,1]  )).setTooltip("Range of the path to draw.");
+	newInput( 8, nodeValue_SliRange( "Range",         [0,1]  )).setTooltip("Range of the path to draw.");
 	newInput(25, nodeValue_Bool(     "Invert",        false ));
 	newInput( 9, nodeValue_Float(    "Shift",         0     ));
 	newInput(26, nodeValue_Bool(     "Clamp Range",   false ));
@@ -70,7 +70,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Wiggle
 	newInput(47, nodeValue_Bool(    "Use Wiggle",     false            ));
 	newInput( 5, nodeValueSeed(,    "Wiggle Seed"                      ));
-	newInput( 4, nodeValue_Float(   "Wig. Amplitude", 4                )).setCurvable(53, CURVE_DEF_11);
+	newInput( 4, nodeValue_Range(   "Wig. Amplitude", [4,4], true      )).setCurvable(53, CURVE_DEF_11);
 	newInput(51, nodeValue_Slider(  "Wig. Frequency", 8, [0, 32, 0.01] )).setCurvable(54, CURVE_DEF_11);
 	newInput(52, nodeValue_ISlider( "Wig. Detail",    4, [0,  8, 1]    ));
 	newInput(55, nodeValue_Float(   "Wig. Phase",     0                ));
@@ -126,6 +126,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	attribute_surface_depth();
 	attribute_interpolation();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		draw_set_color(COLORS._main_icon);
@@ -353,6 +354,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					lines     = [ points ];
 					line_data = [ { length: 1 } ];
 					
+					var _wigPl = random(1);
+					var _wigAl = random_range(_wigA[0], _wigA[1]);
+					
 					while(_total > 0) {
 						
 						if(_prog_prev != undefined) {
@@ -369,9 +373,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							var pgr = _wigTrmR? _prog_total / _rtEnd : _prog_curr;
 							var pgc = _wigTrmC? _prog_total / _rtEnd : _prog_curr;
 							
-							var wgAmp = _wigA * (curve_wigA? curve_wigA.get(pgr) : 1);
+							var wgAmp = _wigAl * (curve_wigA? curve_wigA.get(pgr) : 1);
 							var wgFre = _wigF * (curve_wigF? curve_wigF.get(pgr) : 1);
-							var wgLen = randomFractal(_sed, pgc + _wigP * pi * 2 / wgFre, wgFre, _wigI) * wgAmp;
+							var wgLen = randomFractal(_sed, pgc + (_wigP + _wigPl) * pi * 2 / wgFre, wgFre, _wigI) * wgAmp;
 							_nx += lengthdir_x(wgLen, _d + 90); 
 							_ny += lengthdir_y(wgLen, _d + 90);
 						}
@@ -485,28 +489,32 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							
 							points = pointCrop;
 						} // trim
+							
+						var _wigPl = random_seed(1, _seed + i);
+						var _wigAl = random_range(_wigA[0], _wigA[1]);
 						
 						if(_wigUse) { // wiggle
 							for( var j = 0, m = array_length(points); j < m; j++ ) {
-								var p0 = points[clamp(j-1, 0, m-1)];
-								var p  = points[j];
-								var p1 = points[clamp(j+1, 0, m-1)];
+								var _p0 = points[clamp(j-1, 0, m-1)];
+								var _p  = points[j];
+								var _p1 = points[clamp(j+1, 0, m-1)];
 								
-								p.dirr = point_direction(p0.x, p0.y, p1.x, p1.y); 
+								_p.dirr = point_direction(_p0.x, _p0.y, _p1.x, _p1.y); 
 							}
 							
 							for( var j = 0, m = array_length(points); j < m; j++ ) {
-								var p   = points[j];
-								var pgr = _wigTrmR? p.progCrop : p.prog;
-								var pgc = _wigTrmC? p.progCrop : p.prog;
+								var _p  = points[j];
+								var pgr = _wigTrmR? _p.progCrop : _p.prog;
+								var pgc = _wigTrmC? _p.progCrop : _p.prog;
 								
-								var wgAmp = _wigA * (curve_wigA? curve_wigA.get(pgc) : 1);
-								var wgFre = _wigF * (curve_wigF? curve_wigF.get(pgc) : 1);
-								var wgDis = randomFractal(_seed, pgr + _wigP * pi * 2 / wgFre, wgFre, _wigI) * wgAmp;
-								var wgDir = p.dirr + 90; 
+								var wgAmp = _wigAl * (curve_wigA? curve_wigA.get(pgc) : 1);
+								var wgFre = _wigF  * (curve_wigF? curve_wigF.get(pgc) : 1);
+								var wgPhs = pgr + (_wigP + _wigPl * bool(j)) * pi * 2 / wgFre;
+								var wgDis = randomFractal(_seed, wgPhs, wgFre, _wigI) * wgAmp;
+								var wgDir = _p.dirr + 90; 
 								
-								p.x += lengthdir_x(wgDis, wgDir);
-								p.y += lengthdir_y(wgDis, wgDir);
+								_p.x += lengthdir_x(wgDis, wgDir);
+								_p.y += lengthdir_y(wgDis, wgDir);
 							}
 						} // wiggle
 						
@@ -739,8 +747,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				if(_useTex) {
 					var tex = surface_get_texture(_tex);
-				
 					shader_set(sh_draw_mapping);
+					shader_set_i("sampleMode", getAttribute("oversample"));
+				
 					shader_set_2("position", _texPos);
 					shader_set_f("rotation", _texRot);
 					shader_set_2("scale",    _texSca);

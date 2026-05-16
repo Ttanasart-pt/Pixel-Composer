@@ -84,6 +84,8 @@ function rangeBox(_onModify) : widget() constructor {
 		w = _w;
 		h = _h;
 		
+		if(array_invalid(_data)) return h;
+		
 		linked = _display_data[$ "linked"] ?? linked;
 		tooltip.index = linked;
 		
