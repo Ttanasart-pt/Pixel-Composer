@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.006",
+    "changes": [
+      {
+        "date": "2026-05-16T06:03:59.576Z",
+        "node": "SDF",
+        "commit": "**SDF**: Add channel, mask inputs."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc12",
     "changes": [
       {

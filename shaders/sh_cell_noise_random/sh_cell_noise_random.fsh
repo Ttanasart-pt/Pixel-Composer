@@ -58,7 +58,7 @@ vec3 colorNoise(in vec2 st) {
 	return vec3(randR, randG, randB);
 }
 
-vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
+vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _seed) {
 	vec2 st   = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
     vec2 i_st = floor(st);
     vec2 f_st = fract(st);
@@ -71,7 +71,7 @@ vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
 	        for (int x = -1; x <= 1; x++) {
 	            vec2 neighbor = vec2(float(x), float(y));
 	            vec2 point    = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
-				vec2 pointSam = 0.5 + 0.5 * sin(seed + TAU * (point + phase));
+				vec2 pointSam = 0.5 + 0.5 * sin(_seed + TAU * (point + phase));
 			
 	            vec2 _diff = neighbor + pointSam - f_st;
 	            float dist = length(_diff);
@@ -86,7 +86,7 @@ vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
 		for (int j = 0; j <= int(sca / 2.); j++) {
 			int _amo = int(sca) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {
-				float ang  = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + seed;
+				float ang  = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + _seed;
 				float rad  = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
 				vec2 point = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad) + pos;
 				
@@ -125,11 +125,12 @@ void main() {
 	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 pos = position / dimension;
 	
+    float _seed = seed;
 	float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
     vec3  md  = vec3(.0);
     
 	for(int i = 0; i < iteration; i++) {
-		vec2 _f = cellNoise(ntx, pos, sca, scaMax, ang);
+		vec2 _f = cellNoise(ntx, pos, sca, scaMax, ang, _seed);
 		vec3 _noise;
 		
 		if(colored == 0) {
@@ -145,6 +146,7 @@ void main() {
 		else if(blendMode == 1) md  = max(md, _noise);
 		else if(blendMode == 2) md  = max(md, 1. - _noise);
 		
+		_seed += 1.753;
 		amp *= iterAmpli;
 		pos *= iterScale;
 		pos += TAU;

@@ -10,26 +10,30 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	name = "SDF";
 	
 	newActiveInput(1);
+	newInput( 8, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surface
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In"));
+	newInput( 9, nodeValue_Surface( "Mask"       ));
+	newInput(10, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(9, 11); // inputs 11, 12
 	
 	////- =SDF
-	newInput(2, nodeValue_EButton( "Side",         2, [ "Inside", "Outside", "Both" ]));
-	newInput(3, nodeValue_Slider(  "Max Distance", 1, [ 0, 2, 0.01 ])).setMappable(7);
-	newInput(6, nodeValue_Bool(    "Angle",        false));
+	newInput( 2, nodeValue_EButton( "Side",         2, [ "Inside", "Outside", "Both" ]));
+	newInput( 3, nodeValue_Slider(  "Max Distance", 1, [ 0, 2, 0.01 ])).setMappable(7);
+	newInput( 6, nodeValue_Bool(    "Angle",        false));
 	
 	////- =Render
-	newInput(4, nodeValue_Bool( "Keep Alpha", false));
-	newInput(5, nodeValue_Bool( "Invert",     false));
-	// input 7
+	newInput( 4, nodeValue_Bool( "Keep Alpha", false));
+	newInput( 5, nodeValue_Bool( "Invert",     false));
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 1,
-		[ "Surfaces", false ], 0, 
-		[ "SDF",      false ], 2, 3, 7, 6,
-		[ "Render",	  false ], 4, 5, 
+	input_display_list = [  1,  8, 
+		[ "Surfaces", false ],  0,  9, 10, 11, 12, 
+		[ "SDF",      false ],  2,  3,  7,  6,
+		[ "Render",	  false ],  4,  5, 
 	]
 	
 	////- Nodes
@@ -102,6 +106,9 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			
 			draw_surface_safe(temp_surface[bg]);
 		surface_reset_shader();
+		
+		_outSurf = mask_apply(inSurf, _outSurf, _data[9], _data[10]);
+		_outSurf = channel_apply(inSurf, _outSurf, _data[8]);
 		
 		return _outSurf;
 	}

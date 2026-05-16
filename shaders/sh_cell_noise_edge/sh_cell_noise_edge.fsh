@@ -50,7 +50,7 @@ vec2 random2( vec2 p ) { return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p
 
 float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
 
-float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
+float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _seed) {
 	vec2 st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	
     float md = 8.;
@@ -64,7 +64,7 @@ float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
 	    for (int x = -1; x <= 1; x++) {
 	        vec2 neighbor = vec2(float(x), float(y));
 	        vec2 point = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
-			point = 0.5 + 0.5 * sin(seed + TAU * fract(point + phase));
+			point = 0.5 + 0.5 * sin(_seed + TAU * fract(point + phase));
 			
 	        vec2 _diff = neighbor + point - f_st;
 	        float dist = length(_diff);
@@ -81,7 +81,7 @@ float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
 		for(int x = -2; x <= 2; x++) {
 			vec2 g = mg + vec2(float(x), float(y));
 			vec2 point = random2(mod(i_st + g, scaMax));
-			point = 0.5 + 0.5 * sin(seed + TAU * fract(point + phase));
+			point = 0.5 + 0.5 * sin(_seed + TAU * fract(point + phase));
 		
 			vec2 r = g + point - f_st;
 			if(dot(mr - r, mr - r) > .000001)
@@ -92,7 +92,7 @@ float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
 		for (int j = 0; j <= int(sca / 2.); j++) {
 			int _amo = int(sca) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {
-				float ang = TAU / float(_amo) * float(i) + float(j) + seed;
+				float ang = TAU / float(_amo) * float(i) + float(j) + _seed;
 				float rad = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
 				vec2 neighbor = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad);
 				vec2 point = neighbor + pos;
@@ -112,7 +112,7 @@ float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
 		for (int j = 0; j <= int(sca / 2.); j++) {
 			int _amo = int(sca) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {
-				float ang = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + seed;
+				float ang = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + _seed;
 				float rad = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
 				vec2 neighbor = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad);
 				vec2 point = neighbor + pos;
@@ -148,16 +148,18 @@ void main() {
 	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 pos = position / dimension;
     
+    float _seed = seed;
     float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
     float md  = .0;
     
 	for(int i = 0; i < iteration; i++) {
-		float _noise = cellNoise(ntx, pos, sca, scaMax, ang);
+		float _noise = cellNoise(ntx, pos, sca, scaMax, ang, _seed);
 		
 		     if(blendMode == 0) md += _noise * amp;
 		else if(blendMode == 1) md  = max(md, _noise);
 		else if(blendMode == 2) md  = max(md, 1. - _noise);
 		
+		_seed += 1.753;
 		amp *= iterAmpli;
 		pos *= iterScale;
 		pos += TAU;
