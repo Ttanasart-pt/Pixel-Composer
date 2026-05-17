@@ -60,7 +60,7 @@ function Node_Vector_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(4, nodeValue_Bool( "Scalar B",     true ));
 	// inputs 5
 		
-	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0)).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 
 		[ "Values",   false ], 5, 1, 2, 
@@ -120,8 +120,6 @@ function Node_Vector_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var b   = inputs[2].getValue();
 			
 			var sb  = inputs[4].getValue();
-			
-			
 			var _vis2 = true;
 			
 			switch(use_mod) {
@@ -133,7 +131,7 @@ function Node_Vector_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var da = array_get_depth(a);
 		     if(da == 0) a = [array_create(l, a)];
-		else if(da == 1) a = [a];
+		else if(da == 1) a = [array_clone(a)];
 		
 		var db = array_get_depth(b);
 		     if(db == 0) b = [array_create(l, b)];
@@ -141,10 +139,10 @@ function Node_Vector_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(sb) {
 				var _b = array_create(array_length(b));
 				for( var i = 0, n = array_length(b); i < n; i++ )
-					_b[i] = array_create(l, b[i]);
+					_b[i] = array_create(l, array_clone(b[i]));
 				b = _b;
 				
-			} else b = [b];
+			} else b = [array_clone(b)];
 		}
 		
 		var al = array_length(a);
