@@ -5,18 +5,20 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- =Palette
 	newInput( 3, nodeValueSeed());
 	newInput( 0, nodeValue_Palette( "Palette in" )).setVisible(true, true);
+	newInput( 2, nodeValue_Int(     "Amount",      4 ));
 	
 	////- =Algorithm
-	newInput( 1, nodeValue_EButton( "Algorithm",   1, [ "Histogram", "K-mean" ] )).rejectArray();
 	newInput( 4, nodeValue_EButton( "Color Space", 0, [ "RGB", "HSV" ] ))
-	newInput( 2, nodeValue_Int(     "Amount",      4 ));
-	// 5
+	newInput( 1, nodeValue_EButton( "Algorithm",   1, [ "Histogram", "K-mean" ] )).rejectArray();
+	newInput( 5, nodeValue_EScroll( "Sample Type", 0, [ "Uniform", "Random" ] ));
+	newInput( 6, nodeValue_Int(     "Shift",       0 ));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [
-        [ "Palette",   false ],  0, 
-        [ "Algorithm", false ],  4,  1,  2, 
+        [ "Palette",   false ],  3,  0,  2, 
+        [ "Algorithm", false ],  4,  1,  5,  6,  
 	];
 	
 	////- Node
@@ -25,13 +27,19 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		setDimension(96, process_length[0] * 32);
 	}
 	
-	function kmean(_pal) {
-		_size  = max(1, getInputData(2));
-		_space = getInputData(4);
+	function kmean(_pal, _data) {
+		var _seed  = _data[ 3];
+		
+		var _space = _data[ 4];
+		var _size  = _data[ 2]; _size = max(1, _size);
+		var _samp  = _data[ 5];
+		var _shift = _data[ 6];
+		
+		var _cc, col = 0, colors = [];
+		random_set_seed(_seed);
 		
 		_min = [ 1, 1, 1 ];
 		_max = [ 0, 0, 0 ];
-		var _cc, col = 0, colors = [];
 		
 		for( var i = 0, n = array_length(_pal); i < n; i++ ) {
 			_cc = _pal[i];
@@ -48,11 +56,33 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_min[2] = min(_min[2], col[2]); _max[2] = max(_max[2], col[2]);
 		}
 			
-		var cnt = array_create_ext(_size, function(i) /*=>*/ {return [ lerp(_min[0], _max[0], i / (_size - 1)), 
-		                                           lerp(_min[1], _max[1], i / (_size - 1)), 
-		                                           lerp(_min[2], _max[2], i / (_size - 1)), 0 ]});
+		var itr = 10, cnt = array_create(_size);
+		for(var i = 0; i < _size; i++) {
+			   
+			if(_samp == 0) {
+				if(_shift == 0) {
+					cnt[i] = [ lerp(_min[0], _max[0], i / (_size - 1)), 
+		                       lerp(_min[1], _max[1], i / (_size - 1)), 
+		                       lerp(_min[2], _max[2], i / (_size - 1)), 0 ];
+            		
+				} else {
+					cnt[i] = [ lerp(_min[0], _max[0], frac(i / _size + _shift)), 
+		                       lerp(_min[1], _max[1], frac(i / _size + _shift)), 
+		                       lerp(_min[2], _max[2], frac(i / _size + _shift)), 0 ];
+            		
+				}
+				
+			} else if(_samp == 1) {
+				var _r = random(1);
+				cnt[i] = [ lerp(_min[0], _max[0], _r), 
+	                       lerp(_min[1], _max[1], _r), 
+	                       lerp(_min[2], _max[2], _r), 0 ];
+        		
+			}
+			
+		}
 		
-		repeat(8) {
+		repeat(itr) {
 			for( var i = 0, n = array_length(colors); i < n; i++ ) {
 				var ind  = 0;
 				var dist = 999;
@@ -93,9 +123,7 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 		}
 		
-		var palette = [];
-		var index   = [];
-		
+		var index = [];
 		for( var i = 0; i < _size; i++ ) {
 			var closet = 0;
 			var dist   = 999;
@@ -117,19 +145,22 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		if(array_empty(index)) return [];
 		
 		array_sort(index, true);
+		index = array_unique(index);
+		
+		var palette = [];
 		for( var i = 0, n = array_length(index); i < n; i++ ) 
 			array_push(palette, _pal[index[i]]);
 		
 		return palette;
 	}
 	
-	function histogram(_pal) {
-		var _size  = max(1, getInputData(2));
-		var _space = getInputData(4);
-		
-		var _min = [ 1, 1, 1 ];
-		var _max = [ 0, 0, 0 ];
+	function histogram(_pal, _data) {
+		var _size  = max(1, _data[2]);
+		var _space = _data[4];
 		var _cc, col, colors = [];
+		
+		_min = [ 1, 1, 1 ];
+		_max = [ 0, 0, 0 ];
 		
 		for( var i = 0, n = array_length(_pal); i < n; i++ ) {
 			_cc = _pal[i];
@@ -167,10 +198,16 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _pal = _data[0];
+			var _pal = _data[ 0];
+			var _amo = _data[ 2];
 			
-			var _alg = _data[1];
-			var _amo = _data[2];
+			var _alg = _data[ 1];
+			var _sam = _data[ 5];
+			
+			inputs[ 3].setVisible(_alg == 1 && _sam == 1);
+			
+			inputs[ 5].setVisible(_alg == 1);
+			inputs[ 6].setVisible(_alg == 1 && _sam == 0);
 			
 			if(!is_array(_pal)) return;
 		#endregion
@@ -178,8 +215,8 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		if(array_length(_pal) <= _amo) return _pal;
 		
 		switch(_alg) {
-		    case 0 : return histogram(_pal); 
-		    case 1 : return kmean(_pal); 
+		    case 0 : return histogram(_pal, _data); 
+		    case 1 : return kmean(_pal, _data); 
 		}
 		
 		return _pal;

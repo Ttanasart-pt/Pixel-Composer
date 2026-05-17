@@ -6,6 +6,11 @@
         "date": "2026-05-17T09:24:16.003Z",
         "node": "Shrink Palette",
         "commit": "**Shrink Palette**: Output palette now use the same order as the input palette."
+      },
+      {
+        "date": "2026-05-17T10:02:50.454Z",
+        "node": "",
+        "commit": "--palette"
       }
     ]
   }
