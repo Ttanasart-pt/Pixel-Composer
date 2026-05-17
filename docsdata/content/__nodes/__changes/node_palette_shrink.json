@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.007",
+    "changes": [
+      {
+        "date": "2026-05-17T09:24:16.003Z",
+        "node": "Shrink Palette",
+        "commit": "**Shrink Palette**: Output palette now use the same order as the input palette."
+      }
+    ]
+  }
+]

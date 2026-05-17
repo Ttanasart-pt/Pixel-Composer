@@ -2,24 +2,24 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Shrink Palette";	
 	setDimension(96);
 	
-	newInput(0, nodeValue_Palette("Palette in" ))
-		.setVisible(true, true);
+	////- =Palette
+	newInput( 3, nodeValueSeed());
+	newInput( 0, nodeValue_Palette( "Palette in" )).setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Button("Algorithm",  1, [ "Histogram", "K-mean" ]))
-		.rejectArray();
+	////- =Algorithm
+	newInput( 1, nodeValue_EButton( "Algorithm",   1, [ "Histogram", "K-mean" ] )).rejectArray();
+	newInput( 4, nodeValue_EButton( "Color Space", 0, [ "RGB", "HSV" ] ))
+	newInput( 2, nodeValue_Int(     "Amount",      4 ));
+	// 5
 	
-	newInput(2, nodeValue_Int("Amount", 4));
-	
-	newInput(3, nodeValueSeed());
-	
-	newInput(4, nodeValue_Enum_Button("Color Space", 0, [ "RGB", "HSV" ]))
-	
-	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, []))
-		.setDisplay(VALUE_DISPLAY.palette);
+	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [
-        0, 4, 1, 2, 
+        [ "Palette",   false ],  0, 
+        [ "Algorithm", false ],  4,  1,  2, 
 	];
+	
+	////- Node
 	
 	static processData_prebatch = function() {
 		setDimension(96, process_length[0] * 32);
@@ -48,13 +48,11 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_min[2] = min(_min[2], col[2]); _max[2] = max(_max[2], col[2]);
 		}
 			
-// 		random_set_seed(_seed);
-// 		var cnt = array_create_ext(_size, () => [ random_range(_min[0], _max[0]), random_range(_min[1], _max[1]), random_range(_min[2], _max[2]), 0 ]);
-		var cnt = array_create_ext(_size, function(i) /*=>*/ {return [ lerp(_min[0], _max[0], i / (_size - 1)), lerp(_min[1], _max[1], i / (_size - 1)), lerp(_min[2], _max[2], i / (_size - 1)), 0 ]});
+		var cnt = array_create_ext(_size, function(i) /*=>*/ {return [ lerp(_min[0], _max[0], i / (_size - 1)), 
+		                                           lerp(_min[1], _max[1], i / (_size - 1)), 
+		                                           lerp(_min[2], _max[2], i / (_size - 1)), 0 ]});
 		
 		repeat(8) {
-			// var _cnt = array_create_ext(_size, (i) => [ cnt[i][0], cnt[i][1], cnt[i][2], 0 ]);
-			
 			for( var i = 0, n = array_length(colors); i < n; i++ ) {
 				var ind  = 0;
 				var dist = 999;
@@ -93,12 +91,10 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				cnt[i][2] = _cc[3]? _cc[2] / _cc[3] : 0;
 			}
 			
-			// var del = array_reduce(cnt, (prev, cur, i) => max(prev, point_distance_3d(cnt[i][0], cnt[i][1], cnt[i][2], cur[0], cur[1], cur[2])), 0);
-			// if(del < 0.001) break;
 		}
 		
 		var palette = [];
-		var clr; 
+		var index   = [];
 		
 		for( var i = 0; i < _size; i++ ) {
 			var closet = 0;
@@ -115,15 +111,14 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				}
 			}
 			
-			var _cc = colors[closet];
-			
-			switch(_space) {
-				case 0 : clr = make_color_rgba(_cc[0] * 255, _cc[1] * 255, _cc[2] * 255, 255); break;
-				case 1 : clr = make_color_hsva(_cc[0] * 255, _cc[1] * 255, _cc[2] * 255, 255); break;
-			}
-			
-			array_push_unique(palette, clr);
+			array_push(index, closet);
 		}
+		
+		if(array_empty(index)) return [];
+		
+		array_sort(index, true);
+		for( var i = 0, n = array_length(index); i < n; i++ ) 
+			array_push(palette, _pal[index[i]]);
 		
 		return palette;
 	}
@@ -171,9 +166,16 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _pal = _data[0];
-		var _alg = _data[1];
-		if(!is_array(_pal)) return;
+		#region data
+			var _pal = _data[0];
+			
+			var _alg = _data[1];
+			var _amo = _data[2];
+			
+			if(!is_array(_pal)) return;
+		#endregion
+		
+		if(array_length(_pal) <= _amo) return _pal;
 		
 		switch(_alg) {
 		    case 0 : return histogram(_pal); 
