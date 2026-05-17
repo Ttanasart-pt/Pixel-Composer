@@ -258,11 +258,9 @@ event_inherited();
 
 #region pie
 	function onInit() {
-		var pie = pieMenuCallGen("pie_add_node", dialog_x, dialog_y - ui(24));
-		if(pie) {
-			pie.onActivate = function() /*=>*/ {return instance_destroy(_p_dialog)};
-			pie.selectable = false;
-			pie.setHalf();
+		if(!key_mod_press(ALT) && mouse_rclick()) {
+			var pie = pieMenuCallGen("pie_add_node", dialog_x, dialog_y - ui(24));
+			if(pie) pie.setHalf();
 		}
 	}
 #endregion

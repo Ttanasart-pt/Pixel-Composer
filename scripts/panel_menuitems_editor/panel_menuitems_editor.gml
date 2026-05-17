@@ -159,7 +159,8 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			_spr  = _spr[0];
 		}
 		
-		if(_spr) {
+		if(is_callable(_spr)) _spr = _spr();
+		if(sprite_exists(_spr)) {
 			var _ss = min((hh - ui(4)) / sprite_get_width(_spr), (hh - ui(4)) / sprite_get_height(_spr));
 			gpu_set_texfilter(true);
 			draw_sprite_ext(_spr, _spri, xx + ui(12), yy + hh / 2, _ss, _ss, 0, COLORS._main_icon);

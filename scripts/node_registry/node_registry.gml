@@ -62,18 +62,20 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	author  = "";
 	license = "";
 	
-	buildFn = registerLFunction("_", nodeName, "", 0, function(n) /*=>*/ { 
-		var _node = PANEL_GRAPH.doNewNode(n); 
-		if(!is(_node, Node)) return;
-		
-		if(PREFERENCES.node_add_select)
-			PANEL_GRAPH.selectDragNode(_node, true);
-		
-	}, nodeName).setMenuName($"graph_add_{nodeName}", getName(), spr)
-				.setCommandName(getName());
-	buildFn.nodeName = nodeName;
+	buildFn = undefined;
+	if(node != -1) { 
+		buildFn = registerLFunction("_", nodeName, "", 0, function(n) /*=>*/ { 
+			var _node = PANEL_GRAPH.doNewNode(n); 
+			if(!is(_node, Node)) return;
+			
+			if(PREFERENCES.node_add_select)
+				PANEL_GRAPH.selectDragNode(_node, true);
+			
+		}, nodeName).setMenuName($"graph_add_{nodeName}", getName(), spr).setCommandName(getName());
+		buildFn.nodeName = nodeName;
+	}
 	
-	static setSpr     = function(_s) /*=>*/ { spr = _s; buildFn.setSpr(_s);                       return self; }
+	static setSpr     = function(_s) /*=>*/ { spr = _s; if(buildFn) buildFn.setSpr(_s);           return self; }
 	static setTags    = function(_t) /*=>*/ { array_append(tags, _t);                             return self; }
 	static setTooltip = function(_t) /*=>*/ { tooltip     = _t;                                   return self; }
 	static setParam   = function(_p) /*=>*/ { createParam = _p;                                   return self; }

@@ -6,24 +6,26 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 #region anim
 	anim_prog = lerp_float(anim_prog, active, 2);
 	if(anim_prog == 0 && !active) instance_destroy();
+	
+	var disSel = mdis > pie_width * 2/3 && mdis < name_width + pie_width * 2;
+	if(pie_half) selectable = disSel && mouse_my <= y + hght / 2;
+	else         selectable = disSel;
 #endregion
 
 #region mouse focus 
 	draw_set_color(selecting? COLORS._main_icon_light : COLORS._main_icon);
 	if(selectable) {
-		var fx = x + lengthdir_x(ui(4), mdir);
-		var fy = y + lengthdir_y(ui(4), mdir);
+		var tdir = point_direction(x, y, mouse_tx, mouse_ty);
+		var fx = x + lengthdir_x(ui(4), tdir);
+		var fy = y + lengthdir_y(ui(4), tdir);
 		var tx = lerp(x, mouse_tx, anim_prog);
 		var ty = lerp(y, mouse_ty, anim_prog);
-		draw_line_round(fx, fy, tx, ty, 1);
+		draw_line(fx, fy, tx, ty);
 	}
 	
 	draw_set_alpha(.5 + selectable * .5);
 	draw_circle(x, y, ui(4), true);
 	draw_set_alpha(1);
-	
-	if(pie_half) selectable = mouse_my <= y + hght / 2;
-	else         selectable = mdis > pie_width * 2/3 && mdis < pie_width * 2;
 #endregion
 
 #region draw
@@ -35,6 +37,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	mouse_tx  = mx;
 	mouse_ty  = my;
 	selecting = false;
+	var edit  = false;
 	
 	var mouse_rel = global_mouse_right_is_released() || mouse_lpress();
 	var _bx0, _bx1, _by0, _by1;
@@ -55,6 +58,8 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			itemSelecting = i;
 	}
 	
+	var scis = gpu_get_scissor();
+	
 	for( var i = 0; i < amo; i++ ) {
 		var _menuItem = menus[i];
 		
@@ -72,9 +77,9 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		var _val = fa_center;
 		
 		draw_set_font(font);
-		var _sph = hght;
+		var _sph = hght * anim_prog;
 		var _spw = string_width(label) + pd * 2 + (_spr != noone) * (_sph + ui(4));
-			_spw = max(8, _spw * anim_prog);
+			_spw = _spw * anim_prog;
 		
 		switch(_hal) { 
 			case fa_left   : _bx0 = _bx;            break;
@@ -119,8 +124,10 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 					params  : _menuItem.params,
 				};
 				
-				var _res = _menuItem.func(_dat);
+				instance_destroy(_p_dialog);
 				if(onActivate != -1) onActivate();
+				
+				var _res = _menuItem.func(_dat);
 			}
 		}
 		
@@ -129,12 +136,11 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			
 			if(sHov) {
 				selectable = false;
-				if(mouse_rel) {
-					if(onActivate != -1) onActivate();
-					menuItemEdit(menu_id, true);
-				}
+				if(mouse_rel) edit = true;
 			}
 		}
+		
+		gpu_set_scissor(_bx0, _by0, _spw, _sph);
 		
 		if(_spr != noone) {
 			var spr = is_array(_spr)? _spr[0] : _spr;
@@ -158,8 +164,18 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		draw_set_text(font, fa_left, fa_center, _hov? COLORS._main_text_accent : COLORS._main_text, aa * anim_prog);
 		draw_text(tx, _by0 + _sph / 2, label);
 		draw_set_alpha(1);
-		
+			
+		gpu_set_scissor(scis);
 		draw_sprite_stretched(THEME.dialog_menu, 1, _bx0, _by0, _spw, _sph);
+	}
+	
+	gpu_set_scissor(scis);
+	
+	if(edit) {
+		instance_destroy(_p_dialog);
+		if(onActivate != -1) onActivate();
+		menuItemEdit(menu_id, true);
+		active = false;
 	}
 	
 	if(mouse_rel) {

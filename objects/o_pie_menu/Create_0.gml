@@ -1,5 +1,5 @@
 /// @description Insert description here
-// You can write your code in this editor
+with(o_pie_menu) { if(self != other) instance_destroy(); }
 
 #region data
 	depth   = -9999;
@@ -7,6 +7,7 @@
 	menu_id = "";
 	menus   = [];
 	
+	name_width = ui(32);
 	pie_width  = ui(32);
 	pie_height = ui(32);
 	pie_half   = false;
@@ -35,12 +36,20 @@
 #endregion
 
 function setMenu(menu) {
-	menus = [];
+	draw_set_font(font);
+	
+	name_width = 0;
+	menus      = [];
+	
 	for( var i = 0, n = array_length(menu); i < n; i++ ) {
 		var m = menu[i];
-		if(is(m, MenuItem)) array_push(menus, m);
+		if(!is(m, MenuItem)) continue;
+		
+		array_push(menus, m);
+		name_width = max(name_width, string_width(m.name));
 	}
 	
+	name_width += ui(16 + 4) + hght;
 	if(array_empty(menus)) menus = [ menuItem(__txt("Create pie menu..."), function() /*=>*/ {return menuItemEdit(menu_id,true)}) ];
 	
 	refreshAngles();
@@ -61,16 +70,19 @@ function refreshAngles() {
 		pie_width  = max(ui(32), len / 2 * hght);
 		pie_height = max(ui(32), len / 2 * hght);
 		
-		var phg = (pie_height + hght / 2) / ((len - 1) / 2);
-		var cen = (len - 1) / 2;
-		
-		for( var i = 0; i < len; i++ ) {
-			var prg = cen - abs(i - cen);
-			var hhg = prg * phg;
+		     if(len == 1) angles = [ 90 ];
+		else {
+			var phg = (pie_height + hght / 2) / ((len - 1) / 2);
+			var cen = (len - 1) / 2;
 			
-			var ang = darcsin(clamp(hhg / pie_height, 0, 1));
-			if(i >= cen) ang = 180 - ang;
-			angles[i] = ang;
+			for( var i = 0; i < len; i++ ) {
+				var prg = cen - abs(i - cen);
+				var hhg = prg * phg;
+				
+				var ang = darcsin(clamp(hhg / pie_height, 0, 1));
+				if(i >= cen) ang = 180 - ang;
+				angles[i] = ang;
+			}
 		}
 		
 	} else {

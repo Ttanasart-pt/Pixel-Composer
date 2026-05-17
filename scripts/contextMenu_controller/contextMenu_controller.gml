@@ -172,32 +172,28 @@ function menuItems_gen(strs) {
 
 	////- Actions
 
-function menuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { 
-	if(key_mod_press(ALT)) {
-		menu_id = "pie" + menu_id;
-		var _menus = menuItems_gen(menu_id);
-		if(array_empty(_menus))
-			return menuCall("", [ menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(menu_id) ], _x, _y, fa_left); 
-		return pieMenuCall(menu_id, _menus, _x, _y);
-	}
-	
-	return menuCall(menu_id, menuItems_gen(menu_id), _x, _y, align); 
-}
-
+function menuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { return menuCall(menu_id, menuItems_gen(menu_id), _x, _y, align); }
 function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
-	if(menu_id != "" && key_mod_press(ALT)) {
-		menu_id = "pie" + menu_id;
-		var _menus = menuItems_gen(menu_id);
-		if(array_empty(_menus))
-			return menuCall("", [ menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(menu_id) ], _x, _y, fa_left); 
-		return pieMenuCall(menu_id, _menus, _x, _y);
+	_x = _x == 0? mouse_mx + ui(4) : _x;
+	_y = _y == 0? mouse_my + ui(4) : _y;
+	
+	if(menu_id != "") {
+		var pie_id = "pie" + menu_id;
+		var _piemenus = menuItems_gen(pie_id);
+		
+		if(key_mod_press(ALT)) {
+			if(array_empty(_piemenus))
+				return menuCall("", [ menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id) ], _x, _y, fa_left); 
+			return pieMenuCall(pie_id, _piemenus, _x, _y);
+			
+		} else {
+			var _pie = pieMenuCall(pie_id, _piemenus, _x, _y - ui(24));
+			if(_pie) _pie.setHalf();
+		}
 	}
 	
 	if(array_empty(menu)) return noone;
 	FOCUS_BEFORE = FOCUS;
-	
-	_x = _x == 0? mouse_mx + ui(4) : _x;
-	_y = _y == 0? mouse_my + ui(4) : _y;
 	
 	var dia = dialogCall(o_dialog_menubox, _x, _y);
 	
@@ -216,7 +212,7 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
 
 function pieMenuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { return pieMenuCall(menu_id, menuItems_gen(menu_id), _x, _y); }
 function pieMenuCall(menu_id = "", menu = [], _x = 0, _y = 0) {
-	if(array_empty(menu)) return noone;
+	// if(array_empty(menu)) return noone;
 	
 	_x = _x == 0? mouse_mx : _x;
 	_y = _y == 0? mouse_my : _y;
