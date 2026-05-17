@@ -241,7 +241,7 @@
         registerFunction(g, "Hide Disconnected",     "",  n, panel_graph_hide_disconnected   ).setMenu("graph_hide_disconnected")
         registerFunction(g, "Hide Junction",         "",  n, panel_graph_hide_selecting      ).setMenu("graph_hide_selecting",  THEME.junc_visible)
         registerFunction(g, "Disconnect All",        "",  n, panel_graph_disconnect_all      ).setMenu("graph_disconnect_all",  THEME.cross)
-        registerFunction(g, "Set BG",                "",  n, panel_graph_setBG               ).setMenu("graph_setBG")
+        registerFunction(g, "Use as Graph BG",       "",  n, panel_graph_setBG               ).setMenu("graph_setBG")
         
         registerFunction(g, "Enter Group",           "",  n, panel_graph_enter_group         ).setMenu("graph_enter_group",     THEME.group)
         registerFunction(g, "Exit Group",           192,  n, panel_graph_exit_group          ).setMenu("graph_exit_group",      THEME.group)
@@ -2224,7 +2224,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    var dia = callAddDialog(ctx);
 	                    
 	                    if(dia) {
-		                    menuCallGen("graph_empty", dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right );
+		                    menuCallGen("graph_empty", dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right, false );
 		                    setFocus(dia, "Dialog");
 	                    }
 	                    

@@ -488,6 +488,12 @@ function Panel_Preference() : PanelContent() constructor {
     				.setFont(f_p2).setEmpty()
     		));
     		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_ui_hotkey_use_pie", "Use pie menu for hotkey conflict."),
+    			"hotkey_use_pie",
+    			new checkBox(function() /*=>*/ {return prefToggle("hotkey_use_pie")})
+    		));
+    		
     		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_ui_native_file_selector", "Use native file selector"),

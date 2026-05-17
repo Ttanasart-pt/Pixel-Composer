@@ -73,6 +73,8 @@
 		#endregion
 		
 		#region DIALOG
+			PREFERENCES.hotkey_use_pie              = true;
+			
 			PREFERENCES.node_recents_amount         = 100;
 				
 			PREFERENCES.show_splash                 = true;

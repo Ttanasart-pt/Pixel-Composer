@@ -59,7 +59,18 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 					HOTKEY_ACT = true;
 					
 				} else if(_l > 1) {
-					menuCall($"hotkey.multi", array_map(_toAct, function(h) /*=>*/ {return new MenuItem(h.name, function(h) /*=>*/ {return h.action()}).setParam(h)}));
+					var currK = key_get_name(KEYBOARD_PRESSED, HOTKEY_MOD);
+					var menus = array_map(_toAct, function(act,i) /*=>*/ {
+						return new MenuItem(act.name, function(h) /*=>*/ {return h.params.action()} ).setParam(act);
+					});
+					
+					if(PREFERENCES.hotkey_use_pie) {
+						var pie = pieMenuCall($"hotkey.multi_{currK}", menus);
+						if(pie) pie.activate_key_release = true;
+						
+					} else
+						menuCall($"hotkey.multi_{currK}", menus);
+					
 					HOTKEY_ACT = true;
 				}
 			}

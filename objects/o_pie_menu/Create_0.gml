@@ -26,6 +26,8 @@ with(o_pie_menu) { if(self != other) instance_destroy(); }
 	mouse_tx = mouse_mx;
 	mouse_ty = mouse_my;
 	
+	activate_key_release = false;
+	
 	onActivate = -1;
 	onDestroy  = -1;
 	
@@ -44,6 +46,15 @@ function setMenu(menu) {
 	for( var i = 0, n = array_length(menu); i < n; i++ ) {
 		var m = menu[i];
 		if(!is(m, MenuItem)) continue;
+		
+		var _txt  = m.name;
+		var _key  = string_trim_start(_txt, [">"]);
+		var _node = struct_try_get(ALL_NODES, _key, noone);
+		
+		if(_node) {
+			m.name = _node.getName();
+			m.spr  = _node.getSpr();
+		}
 		
 		array_push(menus, m);
 		name_width = max(name_width, string_width(m.name));
@@ -91,6 +102,7 @@ function refreshAngles() {
 		
 		     if(len == 1) angles = [ 90 ];
 		else if(len == 2) angles = [ 90, 270 ];
+		else if(len == 3) angles = [ 90, 210, 330 ];
 		else {
 			var lamo = floor((len - 2) / 2);
 			var ramo = len - 2 - lamo;

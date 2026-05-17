@@ -7,12 +7,19 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	anim_prog = lerp_float(anim_prog, active, 2);
 	if(anim_prog == 0 && !active) instance_destroy();
 	
-	var disSel = mdis > pie_width * 2/3 && mdis < name_width + pie_width * 2;
+	var disSel = mdis > pie_width * 2/3 && mdis < name_width + pie_width + ui(64);
 	if(pie_half) selectable = disSel && mouse_my <= y + hght / 2;
 	else         selectable = disSel;
 #endregion
 
 #region mouse focus 
+	draw_set_circle_precision(32);
+	draw_set_color(COLORS._main_icon);
+	
+	// draw_set_alpha(.1);
+	// draw_circle(x, y, name_width + pie_width + ui(64), true);
+	// draw_set_alpha(1);
+	
 	draw_set_color(selecting? COLORS._main_icon_light : COLORS._main_icon);
 	if(selectable) {
 		var tdir = point_direction(x, y, mouse_tx, mouse_ty);
@@ -40,13 +47,30 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	var edit  = false;
 	
 	var mouse_rel = global_mouse_right_is_released() || mouse_lpress();
+	if(activate_key_release) mouse_rel |= keyboard_check_released(vk_anykey);
 	var _bx0, _bx1, _by0, _by1;
 	
 	var _itemSelecting = itemSelecting;
 	itemSelecting = -1;
 	
 	var asel = undefined;
-	for( var i = 0; i < amo; i++ ) {
+	if(amo == 1) {
+		if(mdir > 0 && mdir < 180)
+			itemSelecting = 0;
+			
+	} else if(amo == 2) {
+		if(pie_half) {
+			if(abs(angle_difference(0, mdir)) < 90)
+				 itemSelecting = 0;
+			else itemSelecting = 1;
+			
+		} else {
+			if(mdir > 0 && mdir < 180)
+				 itemSelecting = 0;
+			else itemSelecting = 1;
+		}
+		
+	} else for( var i = 0; i < amo; i++ ) {
 		var a0 = angles[(i-1+amo)%amo];
 		var a1 = angles[(i  +amo)%amo];
 		var a2 = angles[(i+1+amo)%amo];
@@ -127,7 +151,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 				instance_destroy(_p_dialog);
 				if(onActivate != -1) onActivate();
 				
-				var _res = _menuItem.func(_dat);
+				var _res = _menuItem.toggleFunction(_dat);
 			}
 		}
 		
@@ -161,7 +185,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		var tx = _bx0 + pd + (_spr != noone) * (_sph + ui(4));
 		var aa = _menuItem.active * 0.75 + 0.25;
 		
-		draw_set_text(font, fa_left, fa_center, _hov? COLORS._main_text_accent : COLORS._main_text, aa * anim_prog);
+		draw_set_text(font, fa_left, fa_center, _hov && !sHov? COLORS._main_text_accent : COLORS._main_text, aa * anim_prog);
 		draw_text(tx, _by0 + _sph / 2, label);
 		draw_set_alpha(1);
 			

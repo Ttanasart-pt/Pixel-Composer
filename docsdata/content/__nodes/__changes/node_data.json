@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.007",
+    "changes": [
+      {
+        "date": "2026-05-17T07:02:33.637Z",
+        "node": "",
+        "commit": "Hotkey that assigns to multiple action now create pie menu (can be disable in preference)."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.006",
     "changes": [
       {

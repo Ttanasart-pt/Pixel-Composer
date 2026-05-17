@@ -2999,7 +2999,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static onClearCache = undefined;
-	static clearCache = function(_force = false) {
+	static clearCache   = function(_force = false) {
 		clearInputCache();
 		if(onClearCache) onClearCache();
 		

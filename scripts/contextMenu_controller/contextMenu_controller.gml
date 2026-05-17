@@ -172,13 +172,16 @@ function menuItems_gen(strs) {
 
 	////- Actions
 
-function menuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { return menuCall(menu_id, menuItems_gen(menu_id), _x, _y, align); }
-function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
+function menuCallGen(menu_id, _x = 0, _y = 0, align = fa_left, _pie = true) { 
+	return menuCall(menu_id, menuItems_gen(menu_id), _x, _y, align, _pie); 
+}
+
+function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie = true) {
 	_x = _x == 0? mouse_mx + ui(4) : _x;
 	_y = _y == 0? mouse_my + ui(4) : _y;
 	
-	if(menu_id != "") {
-		var pie_id = "pie" + menu_id;
+	if(_pie && menu_id != "") {
+		var pie_id = "pie_" + menu_id;
 		var _piemenus = menuItems_gen(pie_id);
 		
 		if(key_mod_press(ALT)) {
@@ -186,9 +189,9 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
 				return menuCall("", [ menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id) ], _x, _y, fa_left); 
 			return pieMenuCall(pie_id, _piemenus, _x, _y);
 			
-		} else {
-			var _pie = pieMenuCall(pie_id, _piemenus, _x, _y - ui(24));
-			if(_pie) _pie.setHalf();
+		} else if(!array_empty(_piemenus)) {
+			var _pieMenu = pieMenuCall(pie_id, _piemenus, _x, _y - ui(24));
+			if(_pieMenu) _pieMenu.setHalf();
 		}
 	}
 	
@@ -203,6 +206,9 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
 		for( var i = 0, n = array_length(callbacks); i < n; i++ ) 
 			array_append(menu, callbacks[i].populate());
 	}
+	
+	if(_pie && menu_id != "" && array_empty(_piemenus)) 
+		array_push(menu, -1, menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id));
 	
 	dia.context  = self;
 	dia.menu_id  = menu_id;
