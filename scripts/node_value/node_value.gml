@@ -53,7 +53,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Connection ----
-		connect_type      = _connect;
+		connect_type         = _connect;
+		connect_type_bitmask = undefined; static setTypeBitmask = function(b) /*=>*/ { connect_type_bitmask = b; return self; }
+	
 		value_from        = noone;
 		value_from_loop   = noone;
 		
@@ -2243,7 +2245,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static isConnectable = function(_valueFrom, checkRecur = true, _log = false) { 
-		
 		if(!is(_valueFrom, NodeValue)) {
 			if(_log) noti_warning($"LOAD: Cannot set node connection from {_valueFrom} to {name} of node {node.name}.",, node);
 			return -1;
@@ -2268,6 +2269,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(typeIncompatible(_valueFrom, self)) {
+			if(_log) noti_warning("Connection error: Incompatible type",, node);
+			return -5;
+		}
+		
+		if(connect_type_bitmask != undefined && ((1 << _valueFrom.type) & connect_type_bitmask) == 0) {
 			if(_log) noti_warning("Connection error: Incompatible type",, node);
 			return -5;
 		}

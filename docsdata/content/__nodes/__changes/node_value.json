@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.007",
+    "changes": [
+      {
+        "date": "2026-05-17T10:23:49.498Z",
+        "node": "",
+        "commit": "**Sort Array**: Input will now reject connection to unsortable type."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.005",
     "changes": [
       {
