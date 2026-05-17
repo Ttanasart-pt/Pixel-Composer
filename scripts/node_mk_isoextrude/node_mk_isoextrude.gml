@@ -28,7 +28,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(16, nodeValue_Curve(   "Profile",     CURVE_DEF_11 ));
 	
 	////- =Rendering
-	newInput( 2, nodeValue_Color( "Blending", ca_white ));
+	newInput( 2, nodeValue_Gradient( "Blending", gra_white ));
 	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -50,7 +50,6 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _dim = getDimension();
-		
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
@@ -80,7 +79,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _pUse    = _data[15]; 
 			var _profile = _data[16], _pCurve = undefined; 
 			
-			var _colr    = _data[ 2]; 
+			var _colr    = _data[ 2]; _colr.cache(); 
 			
 			inputs[10].setVisible(_hUse, _hUse);
 			inputs[11].setVisible(_hUse, _hUse);
@@ -230,9 +229,11 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var ii = 0;
 			repeat(_dept) {
+				var _rat = ii / (_dept - 1);
+				
 				shader_set_f("curDepth", ii);
-				shader_set_f("scale",    _pUse? _pCurve.get(ii / (_dept - 1)) : 1);
-				draw_surface_ext(temp_surface[0], xx, yy, 1, 1, 0, _colr, 1);
+				shader_set_f("scale",    _pUse? _pCurve.get(_rat) : 1);
+				draw_surface_ext(temp_surface[0], xx, yy, 1, 1, 0, _colr.evalFast(_rat), 1);
 				
 				xx += dx;
 				yy += dy;

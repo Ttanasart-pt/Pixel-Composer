@@ -16,10 +16,6 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	draw_set_circle_precision(32);
 	draw_set_color(COLORS._main_icon);
 	
-	// draw_set_alpha(.1);
-	// draw_circle(x, y, name_width + pie_width + ui(64), true);
-	// draw_set_alpha(1);
-	
 	draw_set_color(selecting? COLORS._main_icon_light : COLORS._main_icon);
 	if(selectable) {
 		var tdir = point_direction(x, y, mouse_tx, mouse_ty);

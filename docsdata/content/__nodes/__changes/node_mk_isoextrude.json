@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.007",
+    "changes": [
+      {
+        "date": "2026-05-17T07:33:03.029Z",
+        "node": "MK Isoextrude",
+        "commit": "**MK Isoextrude**: Color blending now use gradient to vary color per depth."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.003",
     "changes": [
       {
