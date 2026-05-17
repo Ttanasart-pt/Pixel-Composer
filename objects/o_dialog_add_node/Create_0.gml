@@ -22,9 +22,6 @@ event_inherited();
 	node_selecting    =  0;
 	node_focusing     = -1;
 	
-	pie_menus = PREFERENCES.dialog_add_node_pie;
-	pie_open  = false;
-	
 	recent_nodes = [];
 	var _context = context ?? PANEL_GRAPH.getCurrentContext();
 	if(is_array(global.RECENT_NODES))
@@ -256,6 +253,17 @@ event_inherited();
 	function setSubgroup(_subg) {
 		subgroup_index   = _subg;
 		ADD_NODE_SUBPAGE = _subg;
+	}
+#endregion
+
+#region pie
+	function onInit() {
+		var pie = pieMenuCallGen("pie_add_node", dialog_x, dialog_y - ui(24));
+		if(pie) {
+			pie.onActivate = function() /*=>*/ {return instance_destroy(_p_dialog)};
+			pie.selectable = false;
+			pie.setHalf();
+		}
 	}
 #endregion
 

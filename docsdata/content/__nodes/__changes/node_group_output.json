@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.007",
+    "changes": [
+      {
+        "date": "2026-05-17T03:48:46.052Z",
+        "node": "",
+        "commit": "Alt+Right click where context menu can appear now create modifiable pie menu."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.006",
     "changes": [
       {

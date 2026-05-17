@@ -124,7 +124,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(group && _pty != _typ) group.setHeight();
 		
 		var _val = inputs[0].getValue();
-		print(_val);
 		outParent.setValue(_val);
 	}
 	

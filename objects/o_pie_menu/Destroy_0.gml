@@ -1,0 +1,1 @@
+if(onDestroy != -1) onDestroy();

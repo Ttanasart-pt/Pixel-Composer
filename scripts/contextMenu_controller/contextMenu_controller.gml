@@ -102,6 +102,7 @@ function MenuItemGroup(_name, _group, _hotkey = noone) constructor {
 	hotkey  = _hotkey;
 	params	= {};
 	spr     = noone;
+	toggle  = noone;
 	
 	hoykeyObject = noone;
 	spacing      = ui(32);
@@ -139,7 +140,7 @@ function MenuItem_Sort(_name, _func, _spr = noone, _hotkey = noone, _toggle = no
 	////- Generators
 	
 function menuItems_get(_id) { 
-	if(struct_has(PREFERENCES_MENUITEMS, _id))     return PREFERENCES_MENUITEMS[$ _id];
+	if(has(PREFERENCES_MENUITEMS, _id))            return PREFERENCES_MENUITEMS[$ _id];
 	if(variable_global_exists($"menuItems_{_id}")) return variable_global_get($"menuItems_{_id}");
 	return []; 
 }
@@ -153,8 +154,8 @@ function menuItems_gen(strs) {
 		
 		if(_s == -1)      { array_push(_menu, _s); continue; }
 		if(is_string(_s)) { 
-			if(struct_has(MENU_ITEMS, _s)) array_push(_menu, struct_get(MENU_ITEMS, _s)); 
-			else if(struct_has(self, _s))  array_push(_menu, struct_get(self, _s)); 
+			if(has(MENU_ITEMS, _s)) array_push(_menu, struct_get(MENU_ITEMS, _s)); 
+			else if(has(self, _s))  array_push(_menu, struct_get(self, _s)); 
 			continue; 
 		}
 		
@@ -171,8 +172,27 @@ function menuItems_gen(strs) {
 
 	////- Actions
 
-function menuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { return menuCall(menu_id, menuItems_gen(menu_id), _x, _y, align); }
+function menuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { 
+	if(key_mod_press(ALT)) {
+		menu_id = "pie" + menu_id;
+		var _menus = menuItems_gen(menu_id);
+		if(array_empty(_menus))
+			return menuCall("", [ menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(menu_id) ], _x, _y, fa_left); 
+		return pieMenuCall(menu_id, _menus, _x, _y);
+	}
+	
+	return menuCall(menu_id, menuItems_gen(menu_id), _x, _y, align); 
+}
+
 function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
+	if(menu_id != "" && key_mod_press(ALT)) {
+		menu_id = "pie" + menu_id;
+		var _menus = menuItems_gen(menu_id);
+		if(array_empty(_menus))
+			return menuCall("", [ menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(menu_id) ], _x, _y, fa_left); 
+		return pieMenuCall(menu_id, _menus, _x, _y);
+	}
+	
 	if(array_empty(menu)) return noone;
 	FOCUS_BEFORE = FOCUS;
 	
@@ -194,7 +214,13 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
 	return dia;
 }
 
-function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = []) {
+function pieMenuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { return pieMenuCall(menu_id, menuItems_gen(menu_id), _x, _y); }
+function pieMenuCall(menu_id = "", menu = [], _x = 0, _y = 0) {
+	if(array_empty(menu)) return noone;
+	
+	_x = _x == 0? mouse_mx : _x;
+	_y = _y == 0? mouse_my : _y;
+	
 	var dia = instance_create(_x, _y, o_pie_menu);
 	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];

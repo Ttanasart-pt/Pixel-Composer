@@ -289,8 +289,6 @@
 		registerFunction(g, "Edit Graph Toolbar...", "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_general")}  ).setMenu("graph_edit_toolbar"                          );
 		registerFunction(g, "Reset Graph Toolbar",   "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_general")} ).setMenu("graph_reset_toolbar",       THEME.refresh_20 );
 		
-		registerFunction(g, "Edit Node Pie menu...", "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Addnode_Pie_Editor())} ).setMenu("addnode_edit_pie");
-		
         __fnGroupInit_Graph();
         
         for( var i = 0, n = array_length(global.__FN_NODE_CONTEXT); i < n; i++ ) 
@@ -2163,13 +2161,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 
                 nodes_select_anchor = _anc;
             
-	            if(mouse_rpress(_focus) && !key_mod_press_any()) {
+	            if(mouse_rpress(_focus) && !key_mod_press(CTRL) && !key_mod_press(SHIFT)) {
 	                node_hover = node_hovering;    
 	                __junction_hovering = noone;
 	                
 	                if(value_focus) {
-	                    // print($"Right click value focus {value_focus}");
-	                    
 	                    __junction_hovering = value_focus;
 	                    
 	                    var menu = menuItems_gen("graph_junction_select");
@@ -2221,15 +2217,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    menuCall("graph_junction_select", menu);
 	                    
 	                } else if(node_hover && node_hover.draggable) {
-	                    menuCall("graph_node_select", menuItems_gen("graph_node_select"));
+	                	menuCallGen("graph_node_select");
 	                    
 	                } else if(node_hover == noone && junction_hovering == noone) {
 	                    var ctx = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
 	                    var dia = callAddDialog(ctx);
 	                    
 	                    if(dia) {
-		                	var menu = menuItems_gen("graph_empty");
-		                    menuCall("graph_empty", menu, dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right );
+		                    menuCallGen("graph_empty", dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right );
 		                    setFocus(dia, "Dialog");
 	                    }
 	                    

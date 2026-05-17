@@ -643,10 +643,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				__menu_file_selecting = file_selectings[0];
 				
 				if(path_is_image(__menu_file_selecting.path))
-					pieMenuCall("",,, menu_file_image);
+					pieMenuCall("", menu_file_image);
 					
 				else if(path_is_project(__menu_file_selecting.path))
-					pieMenuCall("",,, menu_file_project);
+					pieMenuCall("", menu_file_project);
 				
 				file_dragging = false;	
 				path_dragging = -1;

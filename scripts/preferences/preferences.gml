@@ -316,6 +316,11 @@
 		#endregion
 			
 		PREFERENCES_DEF = variable_clone(PREFERENCES);
+		
+		global.menuItems_pie_add_node = [
+			"graph_add_Node_Shape", 
+			"graph_add_Node_Canvas"
+		];
 	}
 	
 #endregion

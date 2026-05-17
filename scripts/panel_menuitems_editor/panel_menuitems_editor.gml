@@ -1,10 +1,11 @@
-function menuItemEdit(_mid)  { dialogPanelCall(new Panel_MenuItems_Editor(_mid)); }
+function menuItemEdit(_mid, _pie = false) { dialogPanelCall(new Panel_MenuItems_Editor(_mid, _pie)); }
 function menuItemReset(_mid) { variable_struct_remove(PREFERENCES_MENUITEMS, _mid); PREF_SAVE(); }
 
-function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
+function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() constructor {
 	title  = __txt("Editing") + ": " + _menuId;
 	menuId = _menuId;
 	menu   = variable_clone(menuItems_get(menuId));
+	pie    = _pie;
 	auto_pin = true;
 	
 	w      = min(WIN_W - ui(100), ui(1000));
@@ -74,6 +75,7 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 			} else 
 				all_menu = struct_get_names(MENUITEM_CONDITIONS);
 				
+			if(pie) all_menu = array_filter(all_menu, function(m,i) /*=>*/ { var it = MENU_ITEMS[$ m]; return is(it, MenuItem); });
 			if(s == "") { array_sort(all_menu, true); return; }
 			
 			var _filt = [];
@@ -352,7 +354,6 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(all_menu); i < n; i++ ) {
 			var _menu = all_menu[i];
-			
 			var yy = _y + i * (hg + ui(4));
 			
 			if(yy + hg + ui(4) < 0) continue;

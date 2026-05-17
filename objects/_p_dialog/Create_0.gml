@@ -234,10 +234,12 @@
 		
 	}
 	
+	function onInit()       {}
 	function onFocusBegin() {}
 	function onFocusEnd()   {}
 	
-	function resetPosition() {
+	function onResetPosition() {}
+	function resetPosition()   {
 		if(!active) return;
 		
 		if(anchor == ANCHOR.none) {
@@ -253,6 +255,7 @@
 		
 		dialog_x = round(clamp(dialog_x, 2, WIN_SW - dialog_w - 2));
 		dialog_y = round(clamp(dialog_y, 2, WIN_SH - dialog_h - 2));
+		onResetPosition();
 	}
 	
 	function isTop() {
@@ -279,7 +282,7 @@
 	
 	function checkClosable() { return true; }
 		
-	function onDestroy() { }
+	function onDestroy() {}
 #endregion
 
 #region children
