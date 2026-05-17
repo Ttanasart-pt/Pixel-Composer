@@ -207,7 +207,7 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 			array_append(menu, callbacks[i].populate());
 	}
 	
-	if(_pie && menu_id != "" && array_empty(_piemenus)) 
+	if(_pie && menu_id != "") 
 		array_push(menu, -1, menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id));
 	
 	dia.context  = self;
