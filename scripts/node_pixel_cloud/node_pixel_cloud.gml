@@ -8,8 +8,8 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(1, nodeValueSeed());
 	
 	////- =Movement
-	newInput(5, nodeValue_Float(   "Distance",  1 ));
-	newInput(2, nodeValue_Slider(  "Strength", .1, [ 0, 2, 0.01] )).setHotkey("S");
+	newInput(5, nodeValue_Float(   "Distance",  1 )).setPieMenu();
+	newInput(2, nodeValue_Slider(  "Strength", .1, [ 0, 2, 0.01] )).setHotkey("S").setPieMenu();
 	newInput(3, nodeValue_Surface( "Strength map" ));
 	
 	////- =Color

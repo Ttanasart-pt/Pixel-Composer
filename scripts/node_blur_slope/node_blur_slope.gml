@@ -20,8 +20,8 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Blur
 	newInput( 2, nodeValue_Surface( "Slope Map" ));
-	newInput( 1, nodeValue_Slider(  "Strength",   4, [1, 32, 0.1 ] )).setHotkey("S").setMappable(9).setCurvable(14);
-	newInput(10, nodeValue_Slider(  "Step",      .1, [0,  1, 0.01] ));
+	newInput( 1, nodeValue_Slider(  "Strength",   4, [1, 32, 0.1 ] )).setHotkey("S").setMappable(9).setCurvable(14).setPieMenu();
+	newInput(10, nodeValue_Slider(  "Step",      .1, [0,  1, 0.01] )).setPieMenu();
 	newInput(11, nodeValue_Bool(    "Gamma Correction", false ));
 	// input 15
 	

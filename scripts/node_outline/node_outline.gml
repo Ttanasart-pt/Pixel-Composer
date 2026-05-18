@@ -29,16 +29,16 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	__init_mask_modifier(9, 13);
 	
 	////- =Outline
-	newInput( 5, nodeValue_EButton( "Position",    1, ["Inside", "Outside"] ));
+	newInput( 5, nodeValue_EButton( "Position",    1, ["Inside", "Outside"] )).setPieMenu();
 	newInput(18, nodeValue_EScroll( "Profile",     0, [ "Circle", "Square", "Diamond" ] ));
 	newInput( 1, nodeValue_Float(   "Width",       0 )).setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
-		.setHotkey("S").setMappable(15).setValidator(VV_min(0)).setUnitSimple(false);
-	newInput( 8, nodeValue_Int(     "Start",       0, "Shift outline inside, outside the shape." )).setMappable(17);
+		.setHotkey("S").setMappable(15).setValidator(VV_min(0)).setUnitSimple(false).setPieMenu();
+	newInput( 8, nodeValue_Int(     "Start",       0, "Shift outline inside, outside the shape." )).setMappable(17).setPieMenu();
 	newInput(12, nodeValue_Bool(    "Crop border", false ));
 	newInput(19, nodeValue_Slider(  "Threshold",   1     ));
 	
 	////- =Render
-	newInput( 2, nodeValue_Color( "Color",         ca_white )).setHotkeyAuto("C");
+	newInput( 2, nodeValue_Color( "Color",         ca_white )).setHotkeyAuto("C").setPieMenu();
 	newInput( 6, nodeValue_Bool(  "Anti-aliasing", 0        ));
 	newInput(20, nodeValue_Bool(  "High res",      0        ));
 	

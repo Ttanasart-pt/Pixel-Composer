@@ -15,10 +15,10 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Refract
 	newInput( 7, nodeValue_Surface( "Normal Map" ));
 	newInput( 8, nodeValue_Surface( "Depth Map"  ));
-	newInput( 9, nodeValue_Float(   "Height",      4   )).setMappable(12);
-	newInput(10, nodeValue_Float(   "Distance",    4   )).setMappable(13);
-	newInput(11, nodeValue_Float(   "IOR",         1.3 )).setMappable(14);
-	newInput(15, nodeValue_Float(   "Perspective", 0   ))
+	newInput( 9, nodeValue_Float(   "Height",      4   )).setMappable(12).setPieMenu();
+	newInput(10, nodeValue_Float(   "Distance",    4   )).setMappable(13).setPieMenu();
+	newInput(11, nodeValue_Float(   "IOR",         1.3 )).setMappable(14).setPieMenu();
+	newInput(15, nodeValue_Float(   "Perspective", 0   )).setPieMenu();
 	// input 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

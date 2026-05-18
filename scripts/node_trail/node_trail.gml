@@ -20,7 +20,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(2, nodeValue_Bool( "Loop", false));
 	
 	////- =Tracking
-	newInput(3, nodeValue_Int(  "Max Distance", -1, "Maximum distance to search for movement, set to -1 to search the entire image."));
+	newInput(3, nodeValue_Int(  "Max Distance", -1, "Maximum distance to search for movement, set to -1 to search the entire image.")).setPieMenu();
 	newInput(4, nodeValue_Bool( "Match Color", true, "Make trail track pixels of the same color, instead of the closet pixels."));
 	newInput(5, nodeValue_Bool( "Blend Color", true, "Blend color between two pixel smoothly."));
 	

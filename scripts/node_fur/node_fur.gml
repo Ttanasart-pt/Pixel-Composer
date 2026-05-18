@@ -11,13 +11,13 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput( 3, nodeValue_Surface(  "Mask"      ));
 	
 	////- =Fur
-	newInput( 5, nodeValue_Float(    "Density",    32   ));
-	newInput( 6, nodeValue_Int(      "Fur Amount", 2    ));
-	newInput( 7, nodeValue_Range(    "Length",    [2,4] )).setMappableConst(21);
+	newInput( 5, nodeValue_Float(    "Density",    32   )).setPieMenu();
+	newInput( 6, nodeValue_Int(      "Fur Amount", 2    )).setPieMenu();
+	newInput( 7, nodeValue_Range(    "Length",    [2,4] )).setMappableConst(21).setPieMenu();
 	
 	////- =Direction
-	newInput( 8, nodeValue_Rotation( "Direction", -90   )).setMappableConst(14);
-	newInput(13, nodeValue_Float(    "Wiggle",    10    ));
+	newInput( 8, nodeValue_Rotation( "Direction", -90   )).setMappableConst(14).setPieMenu();
+	newInput(13, nodeValue_Float(    "Wiggle",    10    )).setPieMenu();
 	
 	////- =Transform
 	newInput(15, nodeValue_Vec2(    "Position", [0,0]   )).setUnitSimple();

@@ -6,12 +6,12 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 7, nodeValue_IPadding( "Padding", [0,0,0,0] ));
 	
 	////- =Shape
-	newInput( 0, nodeValue_Vec2( "Base",           [8,8]     ));
+	newInput( 0, nodeValue_Vec2( "Base",           [8,8]     )).setPieMenu();
 	newInput( 8, nodeValue_Vec4( "Base Offset",    [0,0,0,0] ));
 	newInput(19, nodeValue_Bool( "Base Expand",    true      ));
 	
 	////- =Depth
-	newInput( 1, nodeValue_Int(  "Depth",           6        ));
+	newInput( 1, nodeValue_Int(  "Depth",           6        )).setPieMenu();
 	newInput( 2, nodeValue_Vec4( "Depth Offsets",  [0,0,0,0] ));
 	newInput( 3, nodeValue_Int(  "Depth Ref.",      0        ));
 	

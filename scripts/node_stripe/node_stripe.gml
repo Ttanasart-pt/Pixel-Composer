@@ -19,12 +19,12 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(20, nodeValue_Surface( "Mask"       ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Slider(   "Amount",       .25    )).setHotkey("S").setUnitSimple().setMappable(11);
-	newInput(10, nodeValue_Slider(   "Strip Ratio",  .5     )).setMappable(14);
-	newInput( 2, nodeValue_Rotation( "Angle",         0     )).setHotkey("R").setMappable(12);
+	newInput( 1, nodeValue_Slider(   "Amount",       .25    )).setHotkey("S").setUnitSimple().setMappable(11).setPieMenu();
+	newInput(10, nodeValue_Slider(   "Strip Ratio",  .5     )).setMappable(14).setPieMenu();
+	newInput( 2, nodeValue_Rotation( "Angle",         0     )).setHotkey("R").setMappable(12).setPieMenu();
 	newInput( 4, nodeValue_Vec2(     "Position",    [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 5, nodeValue_Slider(   "Random",        0     )).setMappable(13);
-	newInput(17, nodeValue_Slider(   "Progress",     .5     ));
+	newInput(17, nodeValue_Slider(   "Progress",     .5     )).setPieMenu();
 	
 	////- =Render
 	newInput( 3, nodeValue_Enum_Button( "Type",      0, [ "Solid", "Smooth", "AA" ] ));

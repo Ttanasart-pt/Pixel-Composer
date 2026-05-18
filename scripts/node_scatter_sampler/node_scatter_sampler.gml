@@ -13,10 +13,10 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(12, nodeValue_Curve(   "Intensity", CURVE_DEF_01 ));
 	
 	////- =Transform
-	newInput( 4, nodeValue_Float( "Scale", 4 )).setMappable(14);
+	newInput( 4, nodeValue_Float( "Scale", 4 )).setMappable(14).setPieMenu();
 	
 	////- =Iteration
-	newInput( 6, nodeValue_Int(     "Iteration",       4 ));
+	newInput( 6, nodeValue_Int(     "Iteration",       4 )).setPieMenu();
 	newInput( 7, nodeValue_Float(   "Itr. Scale",      2 )).setMappable(15);
 	newInput( 8, nodeValue_Float(   "Itr. Amplitude", .5 )).setMappable(16);
 	newInput(10, nodeValue_EScroll( "Blend Mode", 0, [ "Add", "Max" ] ));

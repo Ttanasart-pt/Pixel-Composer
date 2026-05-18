@@ -10,13 +10,13 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(17, nodeValue_Surface( "Side Map"     )).setDrawGroup(1).setBW();
 	
 	////- =Isoextrude
-	newInput( 4, nodeValue_EButton( "Side",      0, [ "Top", "Left", "Right" ] ));
-	newInput( 1, nodeValue_Float(   "Depth",    .5 )).setUnitSimple();
+	newInput( 4, nodeValue_EButton( "Side",      0, [ "Top", "Left", "Right" ] )).setPieMenu();
+	newInput( 1, nodeValue_Float(   "Depth",    .5 )).setUnitSimple().setPieMenu();
 	newInput( 9, nodeValue_Float(   "Depth Ref", 0 )).setUnitSimple();
 	
 	////- =Transform
-	newInput( 7, nodeValue_Rotation( "Rotation",  0    ));
-	newInput( 8, nodeValue_Vec2(     "Scale",    [1,1] ));
+	newInput( 7, nodeValue_Rotation( "Rotation",  0    )).setPieMenu();
+	newInput( 8, nodeValue_Vec2(     "Scale",    [1,1] )).setPieMenu();
 	
 	////- =Hole
 	newInput(13, nodeValue_Bool(    "Use Hole",  false ));
@@ -236,7 +236,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_i("useHole2",     _surfO2u    );
 			
 			shader_set_f("maxDepth",     _dept - 1   );
-			shader_set_f("rotation",     _rota / 360 );
+			shader_set_f("rotation",     _rota       );
 			
 			var ii = 0;
 			repeat(_dept) {

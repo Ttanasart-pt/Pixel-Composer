@@ -11,10 +11,10 @@ function Node_Deblur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	////- =Effect
-	newInput(10, nodeValue_EScroll( "Method", 0, [ "Unsharp Mask", "Edge Enhancement", "Wiener Filter" ] ));
-	newInput( 7, nodeValue_Float( "Radius",   8 ));
-	newInput( 8, nodeValue_Float( "Strength", 1 ));
-	newInput( 9, nodeValue_Float( "Denoise",  1 ));
+	newInput(10, nodeValue_EScroll( "Method", 0, [ "Unsharp Mask", "Edge Enhancement", "Wiener Filter" ] )).setPieMenu();
+	newInput( 7, nodeValue_Float( "Radius",   8 )).setPieMenu();
+	newInput( 8, nodeValue_Float( "Strength", 1 )).setPieMenu();
+	newInput( 9, nodeValue_Float( "Denoise",  1 )).setPieMenu();
 	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

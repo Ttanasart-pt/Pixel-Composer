@@ -122,18 +122,27 @@ function refreshAngles() {
 			var odd = len % 2;
 			var amo = floor(len / 2);
 			
-			var langles = [];
-			for( var i = 1; i <= amo; i++ ) {
-				var hhg = 1 - i / (amo + 1) * 2;
-				var ang = 180 - darcsin(hhg);
-				langles[i-1] = ang;
+			if(odd) {
+				var st = -1 +  .5/amo;
+				var ed =  1 - 1.5/amo;
+				
+			} else {
+				var st = -1 + .5/amo;
+				var ed =  1 - .5/amo;
 			}
 			
-			var rangles = [];
-			for( var i = 1; i <= amo; i++ ) {
-				var hhg = -1 + i / (amo + 1) * 2;
+			var langles = array_create(amo);
+			for( var i = 0; i < amo; i++ ) {
+				var hhg = lerp(st, ed, i / (amo-1));
+				var ang = 180 - darcsin(hhg);
+				langles[amo-i-1] = ang;
+			}
+			
+			var rangles = array_create(amo);
+			for( var i = 0; i < amo; i++ ) {
+				var hhg = lerp(st, ed, i / (amo-1));
 				var ang = darcsin(hhg);
-				rangles[i-1] = ang;
+				rangles[amo-i-1] = ang;
 			}
 			
 			angles = odd? [90] : [];

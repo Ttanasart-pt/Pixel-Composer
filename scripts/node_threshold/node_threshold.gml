@@ -18,19 +18,19 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__init_mask_modifier(4, 11); // inputs 11, 12
 	
 	////- =Brightness
-	newInput( 1, nodeValue_Bool(        "Brightness",       false ));
+	newInput( 1, nodeValue_Bool(        "Brightness",       false )).setPieMenu();
 	newInput(15, nodeValue_Enum_Scroll( "Algorithm",        0, [ "Simple", "Adaptive mean" ] ));
-	newInput( 2, nodeValue_Slider(      "Threshold",       .5     )).setHotkey("B").setInternalName("Brightness Threshold").setMappable(13);
-	newInput( 3, nodeValue_Slider(      "Smoothness",       0     )).setInternalName("Brightness Smoothness").setCurvable(21);
+	newInput( 2, nodeValue_Slider(      "Threshold",       .5     )).setHotkey("B").setInternalName("Brightness Threshold").setMappable(13).setPieMenu();
+	newInput( 3, nodeValue_Slider(      "Smoothness",       0     )).setInternalName("Brightness Smoothness").setCurvable(21).setPieMenu();
 	newInput(16, nodeValue_Int(         "Adaptive Radius",  4     ));
 	newInput(17, nodeValue_Bool(        "Invert",           false )).setInternalName("Brightness Invert");
 	newInput(20, nodeValue_Bool(        "Multiply",         false ));
 	newInput(19, nodeValue_Bool(        "Apply to Alpha",   false ));
 	
 	////- =Alpha
-	newInput( 7, nodeValue_Bool(   "Alpha",       false ));
-	newInput( 8, nodeValue_Slider( "Threshold",  .5     )).setHotkey("A").setInternalName("Alpha Threshold").setMappable(14);
-	newInput( 9, nodeValue_Slider( "Smoothness",  0     )).setInternalName("Alpha Smoothness").setCurvable(22);
+	newInput( 7, nodeValue_Bool(   "Alpha",       false )).setPieMenu();
+	newInput( 8, nodeValue_Slider( "Threshold",  .5     )).setHotkey("A").setInternalName("Alpha Threshold").setMappable(14).setPieMenu();
+	newInput( 9, nodeValue_Slider( "Smoothness",  0     )).setInternalName("Alpha Smoothness").setCurvable(22).setPieMenu();
 	newInput(18, nodeValue_Bool(   "Invert",      false )).setInternalName("Alpha Invert");
 	// input 23
 	

@@ -17,8 +17,8 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(2, 6); // inputs 6, 7
 	
 	////- =Corner
-	newInput(1, nodeValue_ISlider( "Radius",     2, [1, 16, 0.1] )).setMappable(9);
-	newInput(8, nodeValue_Slider(  "Threshold", .5 )).setHotkey("T").setMappable(10);
+	newInput(1, nodeValue_ISlider( "Radius",     2, [1, 16, 0.1] )).setMappable(9).setPieMenu();
+	newInput(8, nodeValue_Slider(  "Threshold", .5 )).setHotkey("T").setMappable(10).setPieMenu();
 	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

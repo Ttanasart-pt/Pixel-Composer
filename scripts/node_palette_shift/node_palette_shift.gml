@@ -11,8 +11,8 @@ function Node_Palette_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Palette
-	newInput(1, nodeValue_Palette( "Palette" ));
-	newInput(2, nodeValue_Slider(  "Shift",   0, [-1, 1, 0.1] )).setHotkey("S");
+	newInput(1, nodeValue_Palette( "Palette" )).setPieMenu();
+	newInput(2, nodeValue_Slider(  "Shift",   0, [-1, 1, 0.1] )).setHotkey("S").setPieMenu();
 	// input 9
 	
 	input_display_list = [ 5, 6, 

@@ -20,10 +20,10 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Glow
 	newInput(10, nodeValue_EButton( "Mode",  0,  [ "Greyscale", "Alpha" ] ));
-	newInput(12, nodeValue_EButton( "Side",  0,  [ "Outer", "Inner" ] ));
-	newInput( 1, nodeValue_Slider( "Border",     0,  [0,  4, .1 ] )).setHotkey("B");
-	newInput( 2, nodeValue_Slider( "Size",       3,  [1, 16, .1 ] )).setHotkey("S").setMappable(16);
-	newInput( 3, nodeValue_Slider( "Strength",   1,  [0,  4, .01] )).setHotkey("T").setMappable(17).setCurvable(15);
+	newInput(12, nodeValue_EButton( "Side",  0,  [ "Outer", "Inner" ] )).setPieMenu();
+	newInput( 1, nodeValue_Slider( "Border",     0,  [0,  4, .1 ] )).setHotkey("B").setPieMenu();
+	newInput( 2, nodeValue_Slider( "Size",       3,  [1, 16, .1 ] )).setHotkey("S").setMappable(16).setPieMenu();
+	newInput( 3, nodeValue_Slider( "Strength",   1,  [0,  4, .01] )).setHotkey("T").setMappable(17).setCurvable(15).setPieMenu();
 	newInput(14, nodeValue_Bool(   "Pixel Distance", true     ));
 	
 	////- =Render

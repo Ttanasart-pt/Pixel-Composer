@@ -12,8 +12,8 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(1, 5); // inputs 5, 6
 	
 	////- =Brightness
-	newInput(22, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen", "Overlay" ]))
-	newInput( 7, nodeValue_Slider(      "Brightness", 0, [-1,1,.01] )).setHotkey("B").setMappable(8).setCurvable(25);
+	newInput(22, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen", "Overlay" ])).setPieMenu();
+	newInput( 7, nodeValue_Slider(      "Brightness", 0, [-1,1,.01] )).setHotkey("B").setMappable(8).setCurvable(25).setPieMenu();
 	
 	////- =RGB
 	newInput(23, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))

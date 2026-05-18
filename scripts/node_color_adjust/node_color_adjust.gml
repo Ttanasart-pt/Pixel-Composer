@@ -14,14 +14,14 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(17, nodeValue_Slider(  "Mask feather", 1, [ 1, 16, 0.1 ]        ));
 	
 	////- =Brightness
-	newInput( 1, nodeValue_Slider(  "Brightness",  0, [ -1, 1, 0.01 ] )).setHotkey("B").setMappable(18);
-	newInput( 2, nodeValue_Slider(  "Contrast",   .5                  )).setHotkey("C").setMappable(19);
-	newInput(10, nodeValue_Slider(  "Exposure",    1, [ 0, 4, 0.01 ]  )).setHotkey("E").setMappable(25);
+	newInput( 1, nodeValue_Slider(  "Brightness",  0, [ -1, 1, 0.01 ] )).setHotkey("B").setMappable(18).setPieMenu();
+	newInput( 2, nodeValue_Slider(  "Contrast",   .5                  )).setHotkey("C").setMappable(19).setPieMenu();
+	newInput(10, nodeValue_Slider(  "Exposure",    1, [ 0, 4, 0.01 ]  )).setHotkey("E").setMappable(25).setPieMenu();
 	
 	////- =HSV
-	newInput( 3, nodeValue_Slider(  "Hue",        0, [ -1, 1, 0.01 ]  )).setMappable(20);
-	newInput( 4, nodeValue_Slider(  "Saturation", 0, [ -1, 1, 0.01 ]  )).setMappable(21);
-	newInput( 5, nodeValue_Slider(  "Value",      0, [ -1, 1, 0.01 ]  )).setMappable(22);
+	newInput( 3, nodeValue_Slider(  "Hue",        0, [ -1, 1, 0.01 ]  )).setMappable(20).setPieMenu();
+	newInput( 4, nodeValue_Slider(  "Saturation", 0, [ -1, 1, 0.01 ]  )).setMappable(21).setPieMenu();
+	newInput( 5, nodeValue_Slider(  "Value",      0, [ -1, 1, 0.01 ]  )).setMappable(22).setPieMenu();
 	
 	////- =Color
 	newInput( 6, nodeValue_Color(   "Blend",        ca_white       ));

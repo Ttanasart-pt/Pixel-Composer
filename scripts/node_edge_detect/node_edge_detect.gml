@@ -18,7 +18,7 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(2, nodeValue_Enum_Scroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 		
 	////- =Edge
-	newInput(1, nodeValue_Enum_Scroll( "Algorithm", 0, ["Sobel", "Prewitt", "Laplacian", "Neighbor max diff"] ));
+	newInput(1, nodeValue_Enum_Scroll( "Algorithm", 0, ["Sobel", "Prewitt", "Laplacian", "Neighbor max diff"] )).setPieMenu();
 	// inputs 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

@@ -11,8 +11,8 @@ function Node_BW(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	__init_mask_modifier(3, 7); // inputs 7, 8 
 	
 	////- =BW
-	newInput(1, nodeValue_Slider( "Brightness", 0, [ -1, 1, 0.01] )).setHotkey("B").setMappable(9);
-	newInput(2, nodeValue_Slider( "Contrast",   1, [ -1, 4, 0.01] )).setHotkey("C").setMappable(10);
+	newInput(1, nodeValue_Slider( "Brightness", 0, [ -1, 1, 0.01] )).setHotkey("B").setMappable(9).setPieMenu();
+	newInput(2, nodeValue_Slider( "Contrast",   1, [ -1, 4, 0.01] )).setHotkey("C").setMappable(10).setPieMenu();
 	
 	// input 11
 	

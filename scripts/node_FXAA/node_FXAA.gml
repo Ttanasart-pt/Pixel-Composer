@@ -22,8 +22,8 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	__init_mask_modifier(5, 7); // inputs 7, 8, 
 	
 	////- =Effect
-	newInput(2, nodeValue_Slider( "Distance", .5 )).setMappable(9).setHotkey("S");
-	newInput(3, nodeValue_Slider( "Mix",       1 ));
+	newInput(2, nodeValue_Slider( "Distance", .5 )).setMappable(9).setHotkey("S").setPieMenu();
+	newInput(3, nodeValue_Slider( "Mix",       1 )).setPieMenu();
 	// input 10
 	
 	input_display_list = [ 1, 4, 

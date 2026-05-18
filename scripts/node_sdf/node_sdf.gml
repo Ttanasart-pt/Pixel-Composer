@@ -19,8 +19,8 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	__init_mask_modifier(9, 11); // inputs 11, 12
 	
 	////- =SDF
-	newInput( 2, nodeValue_EButton( "Side",         2, [ "Inside", "Outside", "Both" ]));
-	newInput( 3, nodeValue_Slider(  "Max Distance", 1, [ 0, 2, 0.01 ])).setMappable(7);
+	newInput( 2, nodeValue_EButton( "Side",         2, [ "Inside", "Outside", "Both" ])).setPieMenu();
+	newInput( 3, nodeValue_Slider(  "Max Distance", 1, [ 0, 2, 0.01 ])).setMappable(7).setPieMenu();
 	newInput( 6, nodeValue_Bool(    "Angle",        false));
 	
 	////- =Render

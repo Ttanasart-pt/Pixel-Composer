@@ -18,15 +18,15 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Shadow
 	newInput(14, nodeValue_EButton( "Side",      0, [ "Outside", "Inside" ] ));
-	newInput( 1, nodeValue_Color(   "Color",     ca_black        )).setHotkeyAuto("C");
-	newInput( 2, nodeValue_Slider(  "Strength", .5, [0, 2, 0.01] )).setCurvable(13).setHotkey("S").hideLabel();
-	newInput( 4, nodeValue_ISlider( "Grow",      3, [0, 16, 0.1] ));
-	newInput( 5, nodeValue_ISlider( "Blur",      3, [0, 16, 0.1] ));
+	newInput( 1, nodeValue_Color(   "Color",     ca_black        )).setHotkeyAuto("C").setPieMenu();
+	newInput( 2, nodeValue_Slider(  "Strength", .5, [0, 2, 0.01] )).setCurvable(13).setHotkey("S").hideLabel().setPieMenu();
+	newInput( 4, nodeValue_ISlider( "Grow",      3, [0, 16, 0.1] )).setPieMenu();
+	newInput( 5, nodeValue_ISlider( "Blur",      3, [0, 16, 0.1] )).setPieMenu();
 	
 	////- =Position
 	newInput(11, nodeValue_EButton( "Positioning",     0, [ "Shift", "Light" ] ));
-	newInput( 3, nodeValue_Vec2(    "Shift",          [0,0] )).setUnitSimple(false).hideLabel();
-	newInput(12, nodeValue_Vec2(    "Light Position", [0,0] )).setUnitSimple().hideLabel();
+	newInput( 3, nodeValue_Vec2(    "Shift",          [0,0] )).setUnitSimple(false).hideLabel().setPieMenu();
+	newInput(12, nodeValue_Vec2(    "Light Position", [0,0] )).setUnitSimple().hideLabel().setPieMenu();
 	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

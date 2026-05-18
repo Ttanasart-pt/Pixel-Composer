@@ -10,13 +10,13 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(11, 13); // inputs 13, 14
 	
 	////- =Vignette
-	newInput( 5, nodeValue_Slider( "Roundness",  0  )).setHotkey("R").setMappable(7);
-	newInput( 2, nodeValue_Float(  "Exposure",   15 )).setHotkey("E").setMappable(8);
-	newInput( 3, nodeValue_Slider( "Strength",   1, [ 0, 2, 0.01 ] )).setHotkey("S").setMappable(9).setCurvable(10, CURVE_DEF_01);
-	newInput( 4, nodeValue_Slider( "Exponent",  .25 ));
+	newInput( 5, nodeValue_Slider( "Roundness",  0  )).setHotkey("R").setMappable(7).setPieMenu();
+	newInput( 2, nodeValue_Float(  "Exposure",   15 )).setHotkey("E").setMappable(8).setPieMenu();
+	newInput( 3, nodeValue_Slider( "Strength",   1, [ 0, 2, 0.01 ] )).setHotkey("S").setMappable(9).setCurvable(10, CURVE_DEF_01).setPieMenu();
+	newInput( 4, nodeValue_Slider( "Exponent",  .25 )).setPieMenu();
 	
 	////- =Render
-	newInput( 6, nodeValue_Bool( "Lighten", false ));
+	newInput( 6, nodeValue_Bool( "Lighten", false )).setPieMenu();
 	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

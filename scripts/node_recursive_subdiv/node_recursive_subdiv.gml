@@ -7,8 +7,8 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(1, nodeValue_Dimension());
 	
 	////- =Pattern
-	newInput( 2, nodeValue_Rotation( "Phase",        0     ));
-	newInput( 3, nodeValue_Int(      "Iteration",    2     ));
+	newInput( 2, nodeValue_Rotation( "Phase",        0     )).setPieMenu();
+	newInput( 3, nodeValue_Int(      "Iteration",    2     )).setPieMenu();
 	newInput(13, nodeValue_SliRange( "SubD Range", [.1,.9] ));
 	
 	////- =Render

@@ -19,7 +19,7 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(2, 6); // inputs 6, 7
 	
 	////- =Blur
-	newInput( 1, nodeValue_Float( "Strength",     .2   )).setHotkey("S").setMappable(8).setCurvable(21);
+	newInput( 1, nodeValue_Float( "Strength",     .2   )).setHotkey("S").setMappable(8).setCurvable(21).setPieMenu();
 	newInput( 9, nodeValue_Int(   "Iteration",     512 ));
 	
 	////- =Colorize

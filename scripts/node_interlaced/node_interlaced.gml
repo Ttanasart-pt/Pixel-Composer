@@ -24,8 +24,8 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(2, 5); // inputs 5, 6
 	
 	////- =Frame
-	newInput(10, nodeValue_Int(  "Delay",  1     ));
-	newInput(11, nodeValue_Bool( "Loop",   false ));
+	newInput(10, nodeValue_Int(  "Delay",  1     )).setPieMenu();
+	newInput(11, nodeValue_Bool( "Loop",   false )).setPieMenu();
 	
 	////- =Pattern
 	newInput(7, nodeValue_Enum_Button( "Axis", 0, [ "X", "Y" ] ));

@@ -11,9 +11,9 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	__init_mask_modifier(3, 7); // inputs 7, 8, 
 	
 	////- =Level
-	newInput( 1, nodeValue_Slider( "Midpoint",    0 )).setHotkey("M").setMappable(9);
-	newInput( 2, nodeValue_Slider( "Range",      .1 )).setHotkey("R").setMappable(10);
-	newInput(12, nodeValue_Slider( "Smoothness",  0 ));
+	newInput( 1, nodeValue_Slider( "Midpoint",    0 )).setHotkey("M").setMappable(9).setPieMenu();
+	newInput( 2, nodeValue_Slider( "Range",      .1 )).setHotkey("R").setMappable(10).setPieMenu();
+	newInput(12, nodeValue_Slider( "Smoothness",  0 )).setPieMenu();
 	
 	////- =Output
 	newInput(11, nodeValue_Bool( "Keep Original", false ));

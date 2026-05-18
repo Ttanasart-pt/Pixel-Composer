@@ -17,8 +17,8 @@ function Node_High_Pass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	////- =Effect
-	newInput(7, nodeValue_Int(   "Radius",    1 )).setMappable(10);
-	newInput(8, nodeValue_Float( "Intensity", 1 )).setMappable(11);
+	newInput(7, nodeValue_Int(   "Radius",    1 )).setMappable(10).setPieMenu();
+	newInput(8, nodeValue_Float( "Intensity", 1 )).setMappable(11).setPieMenu();
 	
 	////- =Render
 	newInput(9, nodeValue_Bool( "Blend Original", true ));

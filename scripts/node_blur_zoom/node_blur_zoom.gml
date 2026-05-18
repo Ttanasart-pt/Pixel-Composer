@@ -20,9 +20,9 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 5, nodeValue_Surface("Blur mask"));
 	
 	////- =Blur
-	newInput(15, nodeValue_EButton( "Mode",         0, [ "Blur", "Step" ] ));
+	newInput(15, nodeValue_EButton( "Mode",         0, [ "Blur", "Step" ] )).setPieMenu();
 	newInput( 4, nodeValue_EScroll( "Zoom origin",  1, [ "Start", "Middle", "End" ] ));
-	newInput( 1, nodeValue_Float(   "Strength",     8     )).setHotkey("S").setMappable(12).setCurvable(19);
+	newInput( 1, nodeValue_Float(   "Strength",     8     )).setHotkey("S").setMappable(12).setCurvable(19).setPieMenu();
 	newInput( 2, nodeValue_Vec2(    "Center",     [.5,.5] )).setHotkey("G").setUnitSimple();
 	
 	////- =Colorize

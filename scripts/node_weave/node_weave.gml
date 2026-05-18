@@ -10,9 +10,9 @@ function Node_Weave(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _gro
 	newInput( 3, nodeValue_Surface( "Mask"       ));
 	
 	////- =Transform
-	newInput( 4, nodeValue_Vec2(     "Position", [.5,.5]   )).setHotkey("G").setShaderProp("position").setUnitSimple();
-	newInput( 6, nodeValue_Rotation( "Angle",    0         )).setShaderProp("rotation");
-	newInput( 5, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setShaderProp("scale").setUnitSimple();
+	newInput( 4, nodeValue_Vec2(     "Position", [.5,.5]   )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput( 6, nodeValue_Rotation( "Angle",    0         )).setShaderProp("rotation").setPieMenu();
+	newInput( 5, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setShaderProp("scale").setUnitSimple().setPieMenu();
 	
 	////- =Weave
 	newInput(18, nodeValue_EScroll( "Weave Pattern", 0, [ "Random", "Checker", "Map" ] )).setShaderProp("wtype");

@@ -4,11 +4,11 @@ function Node_Hilbert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Hilbert
-	newInput( 1, nodeValue_Int(     "Iteration",   2 ));
-	newInput( 2, nodeValue_EButton( "Orientation", 1, [ "L", "T", "R", "B" ] ));
+	newInput( 1, nodeValue_Int(     "Iteration",   2 )).setPieMenu();
+	newInput( 2, nodeValue_EButton( "Orientation", 1, [ "L", "T", "R", "B" ] )).setPieMenu();
 	
 	////- =Rendering
-	newInput( 5, nodeValue_Float(    "Thickness",  2               ));
+	newInput( 5, nodeValue_Float(    "Thickness",  2               )).setPieMenu();
 	newInput( 3, nodeValue_Color(    "BG Color",   ca_black        ));
 	newInput( 4, nodeValue_Gradient( "Path Color", gra_white       ));
 	newInput( 6, nodeValue_Slider(   "Path Shift", 0, [-1, 1, .01] ));

@@ -14,11 +14,11 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(22, nodeValue_Surface( "Mask"       ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5]   )).setHotkey("G").setUnitSimple();
-	newInput( 3, nodeValue_Rotation( "Rotation",   0        )).setHotkey("R").setMappable(12);
-	newInput( 2, nodeValue_Vec2(     "Scale",     [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(11);
+	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5]   )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 3, nodeValue_Rotation( "Rotation",   0        )).setHotkey("R").setMappable(12).setPieMenu();
+	newInput( 2, nodeValue_Vec2(     "Scale",     [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(11).setPieMenu();
 	newInput(17, nodeValue_Rotation( "Phase",      90       ));
-	newInput( 4, nodeValue_Slider(   "Gap",       .25, [0, 0.5, 0.001] )).setMappable(13);
+	newInput( 4, nodeValue_Slider(   "Gap",       .25, [0, 0.5, 0.001] )).setMappable(13).setPieMenu();
 	
 	////- =Render
 	newInput( 7, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));

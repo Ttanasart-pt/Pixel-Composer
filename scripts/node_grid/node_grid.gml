@@ -17,13 +17,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Pattern
 	newInput( 1, nodeValue_Vec2(     "Position",      [0,0]     )).setHotkey("G").setUnitSimple();
-	newInput( 4, nodeValue_Rotation( "Angle",          0        )).setHotkey("R").setMappable(15);
+	newInput( 4, nodeValue_Rotation( "Angle",          0        )).setHotkey("R").setMappable(15).setPieMenu();
 	newInput(36, nodeValue_Bool(     "Invert Size",    false    ));
-	newInput( 2, nodeValue_Vec2(     "Grid Size",     [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(13);
+	newInput( 2, nodeValue_Vec2(     "Grid Size",     [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(13).setPieMenu();
 	newInput(28, nodeValue_Bool(     "Uniform Gap",    true     ));
 	newInput(26, nodeValue_Float(    "Gap Width",      1        ));
-	newInput(27, nodeValue_Bool(     "Diagonal",       false    ));
-	newInput( 3, nodeValue_Slider(   "Gap",           .2, [0, 0.5, 0.001] )).setMappable(14);
+	newInput(27, nodeValue_Bool(     "Diagonal",       false    )).setPieMenu();
+	newInput( 3, nodeValue_Slider(   "Gap",           .2, [0, 0.5, 0.001] )).setMappable(14).setPieMenu();
 	
 	////- =Shift
 	newInput( 9, nodeValue_EButton(  "Shift Axis",      0, ["X", "Y"]        ));

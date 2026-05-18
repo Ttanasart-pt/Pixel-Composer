@@ -6,9 +6,9 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 9, nodeValue_Surface(  "Mask"       ));
 	
 	////- =Extrude
-	newInput( 1, nodeValue_Rotation( "Angle",     0             ));
-	newInput( 2, nodeValue_Float(    "Distance", .5             )).setUnitSimple();
-	newInput( 8, nodeValue_Slider(   "Shift",     0, [-1,1,.01] )).setUnitSimple();
+	newInput( 1, nodeValue_Rotation( "Angle",     0             )).setPieMenu();
+	newInput( 2, nodeValue_Float(    "Distance", .5             )).setUnitSimple().setPieMenu();
+	newInput( 8, nodeValue_Slider(   "Shift",     0, [-1,1,.01] )).setUnitSimple().setPieMenu();
 	newInput( 7, nodeValue_Bool(     "Wrap",      false         ));
 	
 		////- =/Path
@@ -21,7 +21,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(13, nodeValue_Curve(    "Scale Modulate",    CURVE_DEF_11 ));
 	
 	////- =Render
-	newInput( 3, nodeValue_Gradient( "Color",        gra_white )).setHotkeyAuto("C");
+	newInput( 3, nodeValue_Gradient( "Color",        gra_white )).setHotkeyAuto("C").setPieMenu();
 	newInput( 4, nodeValue_EScroll(  "Clone Color",  0, [ "None", "Multiply", "Additive" ] ));
 	newInput(10, nodeValue_Range(    "Depth Range", [0,1]      ));
 	

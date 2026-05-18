@@ -16,10 +16,10 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(10, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 9, nodeValue_Bool(     "Diagonal",  false  ));
-	newInput( 1, nodeValue_Float(    "Amount",   .5      )).setMappable(6).setUnitSimple();
+	newInput( 9, nodeValue_Bool(     "Diagonal",  false  )).setPieMenu();
+	newInput( 1, nodeValue_Float(    "Amount",   .5      )).setMappable(6).setUnitSimple().setPieMenu();
 	newInput(13, nodeValue_Float(    "Aspect",    1      ));
-	newInput( 2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").setMappable(7);
+	newInput( 2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").setMappable(7).setPieMenu();
 	newInput( 3, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	
 	////- =Render

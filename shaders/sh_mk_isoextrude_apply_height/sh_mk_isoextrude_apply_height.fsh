@@ -87,26 +87,30 @@ void main() {
 	}
 	
 	if(useSide == 1) {
-		vec2 sdUV = vec2(fract(fract(tx.x - rotation) + 1.), 1. - rh);
+		vec2 sdUV = vec2(fract(fract(tx.x - rotation / 360.) + 1.), 1. - rh);
 		vec4 sCol = texture2D(sideTexture, sdUV) * v_vColour;
 		gl_FragData[0].rgb = sCol.rgb;
 		gl_FragData[0].a  *= sCol.a;
 	}
 	
 	if(useSideH == 1) {
-		vec2 sideLUV = vec2(cord.x, rh);
+		float ang = radians(rotation);
+		mat2  rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+		vec2  cordRot = .5 + (cord.xy - .5) * rot;
+		
+		vec2 sideLUV = vec2(cordRot.x, 1. - rh);
 		float lCol = sampMisc(0, sideLUV).r;
 		
-		if(lCol < cord.y || 1. - lCol > cord.y) { 
+		if(lCol < cordRot.y || 1. - lCol > cordRot.y) { 
 			gl_FragData[0].a = 0.; 
 			gl_FragData[1].a = 0.; 
 			return; 
 		}
 		
-		vec2 sideRUV = vec2(cord.y, rh);
+		vec2 sideRUV = vec2(cordRot.y, 1. - rh);
 		float rCol = sampMisc(0, sideRUV).r;
 		
-		if(rCol < cord.x || 1. - rCol > cord.x) { 
+		if(rCol < cordRot.x || 1. - rCol > cordRot.x) { 
 			gl_FragData[0].a = 0.; 
 			gl_FragData[1].a = 0.; 
 			return; 

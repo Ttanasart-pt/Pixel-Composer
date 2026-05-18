@@ -13,12 +13,12 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(5, nodeValue_Surface( "Mask"       ));
 	
 	////- =Axis
-	newInput(1, nodeValue_Enum_Button( "Axis", 0 , [ "X", "Y" ] ));
-	newInput(2, nodeValue_Slider(  "Position", 0 )).setHotkey("G");
+	newInput(1, nodeValue_Enum_Button( "Axis", 0 , [ "X", "Y" ] )).setPieMenu();
+	newInput(2, nodeValue_Slider(  "Position", 0 )).setHotkey("G").setPieMenu();
 	
 	////- =Output
-	newInput(4, nodeValue_Enum_Button( "Mode",  0 , [ "BW", "Colored" ] ));
-	newInput(3, nodeValue_Bool("Anti-aliasing", false ));
+	newInput(4, nodeValue_Enum_Button( "Mode",  0 , [ "BW", "Colored" ] )).setPieMenu();
+	newInput(3, nodeValue_Bool("Anti-aliasing", false )).setPieMenu();
 	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));

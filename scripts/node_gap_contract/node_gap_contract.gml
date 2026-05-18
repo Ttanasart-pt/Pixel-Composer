@@ -8,10 +8,10 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(2, nodeValue_Surface( "Mask"       ));
 	newInput(3, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(2, 4); // inputs 4, 5, 
-	newInput(7, nodeValue_Bool( "Invert", false ));
+	newInput(7, nodeValue_Bool( "Invert", false )).setPieMenu();
 	
 	////- =Gap
-	newInput(6, nodeValue_Int(  "Max Width", 8 )).setHotkey("S");
+	newInput(6, nodeValue_Int(  "Max Width", 8 )).setHotkey("S").setPieMenu();
 	/// inputs 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

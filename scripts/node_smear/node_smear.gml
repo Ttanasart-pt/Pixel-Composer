@@ -24,10 +24,10 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Smear
 	newInput(11, nodeValue_EButton(  "Mode",       0, [ "Greyscale", "Alpha" ] ));
-	newInput(14, nodeValue_Bool(     "Invert",     false          ));
-	newInput( 1, nodeValue_Slider(   "Strength",  .2, [0,.5,.001] )).setHotkey("S").setMappable( 9).setCurvable(20);
-	newInput( 2, nodeValue_Rotation( "Direction",  0              )).setHotkey("R").setMappable(10).hideLabel();
-	newInput(13, nodeValue_Slider(   "Spread",     0, [0,30,1 ]   ));
+	newInput(14, nodeValue_Bool(     "Invert",     false          )).setPieMenu();
+	newInput( 1, nodeValue_Slider(   "Strength",  .2, [0,.5,.001] )).setHotkey("S").setMappable( 9).setCurvable(20).setPieMenu();
+	newInput( 2, nodeValue_Rotation( "Direction",  0              )).setHotkey("R").setMappable(10).hideLabel().setPieMenu();
+	newInput(13, nodeValue_Slider(   "Spread",     0, [0,30,1 ]   )).setPieMenu();
 	newInput(12, nodeValue_EButton(  "Modulate strength", 0, [ "Distance", "Color", "None" ] ));
 	
 	////- Render

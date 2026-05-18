@@ -18,9 +18,9 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Remove
 	newInput(11, nodeValue_EButton( "Color Space", 0, [ "RGB", "LAB" ] ));
-	newInput( 1, nodeValue_Palette( "Colors",    [ ca_black ] ));
-	newInput( 2, nodeValue_Slider(  "Threshold", .1 )).setMappable(10);
-	newInput( 6, nodeValue_Bool(    "Invert",    false, "Keep the selected colors and remove the rest."));
+	newInput( 1, nodeValue_Palette( "Colors",    [ ca_black ] )).setPieMenu();
+	newInput( 2, nodeValue_Slider(  "Threshold", .1 )).setMappable(10).setPieMenu();
+	newInput( 6, nodeValue_Bool(    "Invert",    false, "Keep the selected colors and remove the rest.")).setPieMenu();
 	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

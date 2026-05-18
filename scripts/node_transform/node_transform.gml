@@ -297,7 +297,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 7, nodeValue_Enum_Button( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
 	
 	////- =Position
-	newInput( 2, nodeValue_Vec2( "Position", [.5,.5] )).setUnitSimple()
+	newInput( 2, nodeValue_Vec2( "Position", [.5,.5] )).setUnitSimple().setPieMenu()
 		.setAnimPreset([
 			[ "Left",  [ [ 0, [ 1.5, 0.5] ], [ 1, [-0.5, 0.5] ]], THEME.apreset_left  ], 
 			[ "Right", [ [ 0, [-0.5, 0.5] ], [ 1, [ 1.5, 0.5] ]], THEME.apreset_right ], 
@@ -309,14 +309,14 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Rotation
 	newInput(4, nodeValue_Bool(     "Relative Anchor",    true ));
-	newInput(5, nodeValue_Rotation( "Rotation",           0    ));
+	newInput(5, nodeValue_Rotation( "Rotation",           0    )).setPieMenu();
 	newInput(8, nodeValue_Slider(   "Rotate by Velocity", 0    )).setTooltip("Make the surface rotates to follow its movement.");
 	
 	////- =Scale
-	newInput(6, nodeValue_Vec2( "Scale", [1,1], { linked: true} ));
+	newInput(6, nodeValue_Vec2( "Scale", [1,1], { linked: true} )).setPieMenu();
 	
 	////- =Render
-	newInput(14, nodeValue_Slider( "Alpha", 1 ));
+	newInput(14, nodeValue_Slider( "Alpha", 1 )).setPieMenu();
 	
 	////- =Stretch
 	newInput(17, nodeValue_Bool(  "Stretch",           false ));

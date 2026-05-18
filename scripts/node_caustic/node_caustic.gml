@@ -9,13 +9,13 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	
 	////- =Noise
 	newInput( 3, nodeValueSeed()).setShaderProp("seed");
-	newInput( 6, nodeValue_Slider( "Intensity", 1, [0,4,.01] )).setShaderProp("intensity").setMappable(10);
-	newInput( 4, nodeValue_Float(  "Progress",  0            )).setShaderProp("progress" ).setMappable(11);
-	newInput( 5, nodeValue_Int(    "Detail",    1            )).setShaderProp("detail"   );
+	newInput( 6, nodeValue_Slider( "Intensity", 1, [0,4,.01] )).setShaderProp("intensity").setMappable(10).setPieMenu();
+	newInput( 4, nodeValue_Float(  "Progress",  0            )).setShaderProp("progress" ).setMappable(11).setPieMenu();
+	newInput( 5, nodeValue_Int(    "Detail",    1            )).setShaderProp("detail"   ).setPieMenu();
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(   "Position", [0,0]   )).setHotkey("G").setShaderProp("position").setUnitSimple();
-	newInput( 2, nodeValue_Vec2(   "Scale",    [.5,.5] )).setHotkey("S").setShaderProp("scale").setUnitSimple();
+	newInput( 1, nodeValue_Vec2(   "Position", [0,0]   )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput( 2, nodeValue_Vec2(   "Scale",    [.5,.5] )).setHotkey("S").setShaderProp("scale").setUnitSimple().setPieMenu();
 	// 12
 	
 	input_display_list = [ 3, 

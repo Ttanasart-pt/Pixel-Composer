@@ -14,9 +14,9 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	////- =Effect
 	newInput( 5, nodeValue_EButton( "Type",       0, [ "Scale", "Continuous", "Gradient" ] ));
 	newInput(21, nodeValue_Gradient("Gradient",   gra_black_white ));
-	newInput( 1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitSimple();
-	newInput( 2, nodeValue_Slider(  "Strength",   1, [-16, 16, .01] )).setHotkey("S").setMappable(4).setCurvable(19);
-	newInput( 6, nodeValue_Slider(  "Intensity",  1, [  0,  4, .01] )).setHotkey("I").setMappable(7);
+	newInput( 1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 2, nodeValue_Slider(  "Strength",   1, [-16, 16, .01] )).setHotkey("S").setMappable(4).setCurvable(19).setPieMenu();
+	newInput( 6, nodeValue_Slider(  "Intensity",  1, [  0,  4, .01] )).setHotkey("I").setMappable(7).setPieMenu();
 	newInput(15, nodeValue_Slider(  "Shift",      0, [ -1,  1, .01] )).setMappable(16);
 	newInput(17, nodeValue_Slider(  "Scale",      1, [  0, 16, .01] )).setMappable(18);
 	

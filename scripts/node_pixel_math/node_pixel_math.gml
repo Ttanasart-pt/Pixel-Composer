@@ -37,7 +37,7 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	_scroll = array_clone(global.node_math_scroll, 1);
 	array_append(_scroll, ["Less than", "Less than equal", "Greater than", "Greater than equal"]);
 	
-	newInput( 7, nodeValue_EScroll( "Operator",     0, _scroll ));
+	newInput( 7, nodeValue_EScroll( "Operator",     0, _scroll )).setPieMenu();
 	newInput(10, nodeValue_EButton( "Operand Type", 0, [ "Vec4", "Surface" ]));
 	newInput( 8, nodeValue_Vec4(    "Operand",     [0,0,0,0]   ));
 	newInput( 9, nodeValue_Vec2(    "Range",       [0,0]       ));

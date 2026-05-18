@@ -5,7 +5,7 @@ function Node_Multiply_Alpha(_x, _y, _group = noone) : Node_Shader_Processor(_x,
 	var i = shader_index;
 	
 	////- =Preprocess
-	newInput(i+0, nodeValue_Slider("Threshold", 0)).setShaderProp("threshold");
+	newInput(i+0, nodeValue_Slider("Threshold", 0)).setShaderProp("threshold").setPieMenu();
 	
 	////- =Multiply
 	newInput(i+1, nodeValue_Color("BG Color", ca_white)).setShaderProp("bgColor");

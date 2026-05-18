@@ -35,15 +35,15 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(7, 11); // inputs 11, 12, 
 	
 	////- =Pattern
-	newInput( 2, nodeValue_EScroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom", "Matrix" ]));
+	newInput( 2, nodeValue_EScroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom", "Matrix" ])).setPieMenu();
 	newInput( 3, nodeValue_Surface( "Dither map"                   )).setVisible(false);
 	newInput(18, nodeValue_Matrix(  "Dither Matrix", new Matrix(2).setArray([0,2,3,1]) ));
 	newInput(16, nodeValue_Vec2(    "Dither Scale", [1,1], true    ));
-	newInput(17, nodeValue_Bool(    "Invert",       false          ));
+	newInput(17, nodeValue_Bool(    "Invert",       false          )).setPieMenu();
 	
 	////- =Dither
 	newInput( 6, nodeValue_EButton( "Mode",     0, [ "Color", "Alpha" ] ));
-	newInput( 4, nodeValue_Slider(  "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C");
+	newInput( 4, nodeValue_Slider(  "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C").setPieMenu();
 	
 	////- =Colors
 	newInput(14, nodeValue_EScroll( "Color Type",  1, [ "Greyscale", "Palette", "RGB", "HSV" ]  ));

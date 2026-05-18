@@ -13,12 +13,12 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Fluff
 	newInput(16, nodeValue_EScroll(  "Shape",  0, [ "Circle", "Diamond", "Square", "Surface" ] ));
 	newInput(26, nodeValue_Surface(  "Surface" ));
-	newInput( 6, nodeValue_Slider(   "Size",   1, [0, 2, .01] )).setUnitSimple();
-	newInput( 9, nodeValue_Slider(   "Radius", 1, [0, 2, .01] )).setMappable(15);
-	newInput( 8, nodeValue_Rotation( "Phase",  0              ));
+	newInput( 6, nodeValue_Slider(   "Size",   1, [0, 2, .01] )).setUnitSimple().setPieMenu();
+	newInput( 9, nodeValue_Slider(   "Radius", 1, [0, 2, .01] )).setMappable(15).setPieMenu();
+	newInput( 8, nodeValue_Rotation( "Phase",  0              )).setPieMenu();
 	
 	////- =Iteration
-	newInput(10, nodeValue_Float(    "Iteration",     10             ));
+	newInput(10, nodeValue_Float(    "Iteration",     10             )).setPieMenu();
 	newInput(11, nodeValue_Slider(   "Size Modify",   1, [0, 2, .01] ));
 	newInput(12, nodeValue_Slider(   "Span Modify",   1, [0, 2, .01] ));
 	newInput(20, nodeValue_Vec2(     "Offset",       [0,0]           ));

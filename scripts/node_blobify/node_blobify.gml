@@ -11,8 +11,8 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	__init_mask_modifier(5, 7); // inputs 7, 8
 	
 	////- =Blobify
-	newInput(2, nodeValue_Int(    "Radius",     3 )).setMappable(4).setValidator(VV_min(0));
-	newInput(3, nodeValue_Slider( "Threshold", .5 ));
+	newInput(2, nodeValue_Int(    "Radius",     3 )).setMappable(4).setValidator(VV_min(0)).setPieMenu();
+	newInput(3, nodeValue_Slider( "Threshold", .5 )).setPieMenu();
 	// input 10
 	
 	input_display_list = [ 1, 9, 

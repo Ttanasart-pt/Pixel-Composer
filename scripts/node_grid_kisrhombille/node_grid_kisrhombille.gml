@@ -10,9 +10,9 @@ function Node_Kisrhombille(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 3, nodeValue_Surface( "Mask"       ));
 	
 	////- =Transform
-	newInput( 4, nodeValue_Vec2(     "Position", [.5,.5]     )).setHotkey("G").setShaderProp("position").setUnitSimple();
-	newInput( 6, nodeValue_Rotation( "Angle",    0           )).setShaderProp("rotation");
-	newInput( 5, nodeValue_Vec2(     "Scale",    [.125,.125] )).setHotkey("S").setShaderProp("scale").setUnitSimple();
+	newInput( 4, nodeValue_Vec2(     "Position", [.5,.5]     )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput( 6, nodeValue_Rotation( "Angle",    0           )).setShaderProp("rotation").setPieMenu();
+	newInput( 5, nodeValue_Vec2(     "Scale",    [.125,.125] )).setHotkey("S").setShaderProp("scale").setUnitSimple().setPieMenu();
 	
 	////- =Render
 	newInput(10, nodeValue_EScroll(  "Grouping",     0, [ "None", "3-6 Deltoidal", "Rhombile", "Triakis Triangular" ])).setShaderProp("group");

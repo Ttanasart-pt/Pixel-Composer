@@ -18,9 +18,9 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(4, 8); // inputs 8, 9
 	
 	////- =Pixel Sort
-	newInput(1, nodeValue_Int(    "Iteration",  2 ));
-	newInput(2, nodeValue_Slider( "Threshold", .1 ));
-	newInput(3, nodeValue_Int(    "Direction",  0 )).setDisplay(VALUE_DISPLAY.rotation, { step: 90 });
+	newInput(1, nodeValue_Int(    "Iteration",  2 )).setPieMenu();
+	newInput(2, nodeValue_Slider( "Threshold", .1 )).setPieMenu();
+	newInput(3, nodeValue_Int(    "Direction",  0 )).setDisplay(VALUE_DISPLAY.rotation, { step: 90 }).setPieMenu();
 	// 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

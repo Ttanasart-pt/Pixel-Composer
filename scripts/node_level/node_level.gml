@@ -11,8 +11,8 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(6, 10); // inputs 10, 11
 	
 	////- =Brightness
-	newInput( 1, nodeValue_Slider_Range( "White in",  [0,1] ));
-	newInput(12, nodeValue_Slider_Range( "White out", [0,1] ));
+	newInput( 1, nodeValue_Slider_Range( "White in",  [0,1] )).setPieMenu();
+	newInput(12, nodeValue_Slider_Range( "White out", [0,1] )).setPieMenu();
 	
 	////- =Red
 	newInput( 2, nodeValue_Slider_Range( "Red in",    [0,1] ));

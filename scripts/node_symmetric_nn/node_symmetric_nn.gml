@@ -5,8 +5,8 @@ function Node_Symmetric_NN(_x, _y, _group = noone) : Node_Shader_Processor(_x, _
 	var i = shader_index;
 	
 	////- =Effect
-	newInput(i+0, nodeValue_Float( "Radius",    4 )).setShaderProp("radius").setMappable(i+2);
-	newInput(i+1, nodeValue_Float( "Intensity", 1 )).setShaderProp("intensity").setMappable(i+3);
+	newInput(i+0, nodeValue_Float( "Radius",    4 )).setShaderProp("radius").setMappable(i+2).setPieMenu();
+	newInput(i+1, nodeValue_Float( "Intensity", 1 )).setShaderProp("intensity").setMappable(i+3).setPieMenu();
 	
 	////- =Stylize
 	// newInput(i+2, nodeValue_Bool( "Absolute", false )).setShaderProp("absolute");

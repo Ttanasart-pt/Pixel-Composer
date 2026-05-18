@@ -20,9 +20,9 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(2, nodeValue_Vec2( "Scale",  [1,1] ));
 	
 	////- =Sky
-	newInput(3, nodeValue_EScroll( "Model",     0, [ "Preetham", "Basic scattering", "Hosek" ]));
-	newInput(4, nodeValue_Float(   "Turbidity", 2 )).setMappable(13);
-	newInput(8, nodeValue_Float(   "Albedo",    1 ));
+	newInput(3, nodeValue_EScroll( "Model",     0, [ "Preetham", "Basic scattering", "Hosek" ])).setPieMenu();
+	newInput(4, nodeValue_Float(   "Turbidity", 2 )).setMappable(13).setPieMenu();
+	newInput(8, nodeValue_Float(   "Albedo",    1 )).setPieMenu();
 	
 	////- =Sun
 	newInput(5, nodeValue_Vec2(    "Sun",          [.2,.2] )).setHotkey("G").setUnitSimple();

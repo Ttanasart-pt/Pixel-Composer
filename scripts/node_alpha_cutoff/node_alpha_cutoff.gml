@@ -17,7 +17,7 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Cutoff
 	newInput(1, nodeValue_Slider(  "Minimum", 0.2 )).setHotkey("S")
-		.setTooltip("Any pixel with less alpha (more transparent) than this will be removed.");
+		.setTooltip("Any pixel with less alpha (more transparent) than this will be removed.").setPieMenu();
 	// input 7
 	
 	input_display_list = [ 4, 

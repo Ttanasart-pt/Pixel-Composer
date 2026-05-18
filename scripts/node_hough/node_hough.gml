@@ -11,11 +11,11 @@ function Node_Hough_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	__init_mask_modifier(1, 3); // inputs 3, 4
 	
 	////- =Hough
-	newInput(12, nodeValue_EScroll( "Shape",      0, [ "Linear", "Circle" ]  ));
-	newInput(13, nodeValue_Slider(  "Radius",    .5   ));
-	newInput( 8, nodeValue_Float(   "Intensity",  256 ));
-	newInput( 7, nodeValue_Slider(  "Threshold", .25  ));
-	newInput(18, nodeValue_Float(   "Epsilon",   .01  ));
+	newInput(12, nodeValue_EScroll( "Shape",      0, [ "Linear", "Circle" ]  )).setPieMenu();
+	newInput(13, nodeValue_Slider(  "Radius",    .5   )).setPieMenu();
+	newInput( 8, nodeValue_Float(   "Intensity",  256 )).setPieMenu();
+	newInput( 7, nodeValue_Slider(  "Threshold", .25  )).setPieMenu();
+	newInput(18, nodeValue_Float(   "Epsilon",   .01  )).setPieMenu();
 	newInput(15, nodeValue_Float(   "Max Range", .5   )).setUnitSimple();
 	newInput(17, nodeValue_Float(   "Snap Angle", 0   ));
 	

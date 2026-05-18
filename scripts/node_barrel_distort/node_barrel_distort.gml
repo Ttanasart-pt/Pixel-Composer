@@ -5,9 +5,9 @@ function Node_Barrel_Distort(_x, _y, _group = noone) : Node_Shader_Processor(_x,
 	var i = shader_index;
 	
 	////- =Distort
-	newInput(i+1, nodeValue_Vec2(    "Center",    [.5,.5] )).setUnitSimple().setShaderProp("center");
-	newInput(i+0, nodeValue_Float(   "Intensity",   1.5   )).setMappable(i+4).setShaderProp("intensity");
-	newInput(i+2, nodeValue_Vec2(    "Scale",      [1,1]  )).setShaderProp("scale");
+	newInput(i+1, nodeValue_Vec2(    "Center",    [.5,.5] )).setUnitSimple().setShaderProp("center").setPieMenu();
+	newInput(i+0, nodeValue_Float(   "Intensity",   1.5   )).setMappable(i+4).setShaderProp("intensity").setPieMenu();
+	newInput(i+2, nodeValue_Vec2(    "Scale",      [1,1]  )).setShaderProp("scale").setPieMenu();
 	
 	////- =Advance
 	newInput(i+3, nodeValue_EScroll( "Distance Methods", 0, [ "Cartesian", "Taxicap", "Max", "Min" ] )).setShaderProp("distanceMethod");

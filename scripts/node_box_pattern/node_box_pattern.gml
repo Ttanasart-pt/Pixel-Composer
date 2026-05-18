@@ -16,10 +16,10 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Pattern
 	newInput(11, nodeValue_Enum_Button( "Pattern",    0, [ "Cross", "Xor" ]));
-	newInput( 3, nodeValue_Vec2(        "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
-	newInput( 2, nodeValue_Rotation(    "Angle",      0     )).setHotkey("R").setMappable(7);
-	newInput( 1, nodeValue_Slider(      "Scale",     .5     )).setHotkey("S").setMappable(6).setUnitSimple();
-	newInput( 9, nodeValue_Slider(      "Width",      0.25  )).setMappable(10);
+	newInput( 3, nodeValue_Vec2(        "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 2, nodeValue_Rotation(    "Angle",      0     )).setHotkey("R").setMappable(7).setPieMenu();
+	newInput( 1, nodeValue_Slider(      "Scale",     .5     )).setHotkey("S").setMappable(6).setUnitSimple().setPieMenu();
+	newInput( 9, nodeValue_Slider(      "Width",      0.25  )).setMappable(10).setPieMenu();
 	newInput(12, nodeValue_Int(         "Iteration",  4     ))
 	
 	////- =Render

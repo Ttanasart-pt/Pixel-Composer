@@ -14,11 +14,11 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Shape
-	newInput(2, nodeValue_Enum_Scroll("Shape",  0, [ new scrollItem("Circle",  s_node_shape_circle, 0), 
-												     new scrollItem("Polygon", s_node_shape_misc,   1), ] ));
-	newInput(5, nodeValue_Int(      "Sides", 4 ));
-	newInput(6, nodeValue_Slider(   "Scale", 1, [ 0, 2, 0.01 ] ));
-	newInput(7, nodeValue_Rotation( "Angle", 0 ));
+	newInput(2, nodeValue_EScroll(  "Shape",  0, [ new scrollItem("Circle",  s_node_shape_circle, 0), 
+												   new scrollItem("Polygon", s_node_shape_misc,   1), ] )).setPieMenu();
+	newInput(5, nodeValue_Int(      "Sides", 4 )).setPieMenu();
+	newInput(6, nodeValue_Slider(   "Scale", 1, [ 0, 2, 0.01 ] )).setPieMenu();
+	newInput(7, nodeValue_Rotation( "Angle", 0 )).setPieMenu();
 	
 	////- =Mapping
 	newInput(3, nodeValue_Vec2(  "Map Scale", [ 4, 1 ] ));

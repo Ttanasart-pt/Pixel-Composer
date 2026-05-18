@@ -19,10 +19,10 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Blur
-	newInput( 1, nodeValue_Float(    "Strength",         8     )).setUnitSimple(false).setHotkey("S").setMappable(9).setCurvable(16);
-	newInput( 2, nodeValue_Rotation( "Direction",        0     )).setHotkey("R").setMappable(10);
-	newInput(11, nodeValue_Bool(     "Single Direction", false ));
-	newInput(13, nodeValue_Bool(     "Fade Distance",    false ));
+	newInput( 1, nodeValue_Float(    "Strength",         8     )).setUnitSimple(false).setHotkey("S").setMappable(9).setCurvable(16).setPieMenu();
+	newInput( 2, nodeValue_Rotation( "Direction",        0     )).setHotkey("R").setMappable(10).setPieMenu();
+	newInput(11, nodeValue_Bool(     "Single Direction", false )).setPieMenu();
+	newInput(13, nodeValue_Bool(     "Fade Distance",    false )).setPieMenu();
 	newInput(23, nodeValue_Slider(   "Smooth Blur",      0     ));
 	
 	////- =Colorize

@@ -12,10 +12,10 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Effect
 	newInput(3, nodeValueSeed());
-	newInput(2, nodeValue_Int(    "Iteration",    10 )).setHotkey("I").setValidator(VV_min(1));
-	newInput(4, nodeValue_Float(  "Length",       10 )).setMappable(12).setHotkey("L");
-	newInput(5, nodeValue_Slider( "Attenuation", .99 )).setMappable(13).setCurvable(15);
-	newInput(6, nodeValue_Slider( "Circulation", .8  )).setMappable(14);
+	newInput(2, nodeValue_Int(    "Iteration",    10 )).setHotkey("I").setValidator(VV_min(1)).setPieMenu();
+	newInput(4, nodeValue_Float(  "Length",       10 )).setMappable(12).setHotkey("L").setPieMenu();
+	newInput(5, nodeValue_Slider( "Attenuation", .99 )).setMappable(13).setCurvable(15).setPieMenu();
+	newInput(6, nodeValue_Slider( "Circulation", .8  )).setMappable(14).setPieMenu();
 	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

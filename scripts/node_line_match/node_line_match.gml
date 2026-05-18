@@ -5,13 +5,13 @@ function Node_Line_Match(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 	var i = shader_index;
 	
 	////- =Matching
-	newInput(i+0, nodeValue_Int(   "Radius",   4     )).setShaderProp("iradius");
+	newInput(i+0, nodeValue_Int(   "Radius",   4     )).setShaderProp("iradius").setPieMenu();
 	newInput(i+3, nodeValue_Bool(  "Fade",     false )).setShaderProp("fade");
 	newInput(i+4, nodeValue_Bool(  "One Side", false )).setShaderProp("oneSide");
 	
 	////- =Rendering
-	newInput(i+1, nodeValue_Float( "Intensity", 1        )).setShaderProp("intensity");
-	newInput(i+2, nodeValue_Color( "Blending",  ca_white )).setShaderProp("color");
+	newInput(i+1, nodeValue_Float( "Intensity", 1        )).setShaderProp("intensity").setPieMenu();
+	newInput(i+2, nodeValue_Color( "Blending",  ca_white )).setShaderProp("color").setPieMenu();
 	
 	array_append(input_display_list, [ 
 		[ "Matching",  false ], i+0, i+3, i+4, 
