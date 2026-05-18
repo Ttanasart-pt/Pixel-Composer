@@ -8,15 +8,15 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(3, nodeValueSeed()).setShaderProp("seed");
-	newInput(5, nodeValue_Enum_Scroll( "Mode",         0, [ "Block", "Triangle" ])).setShaderProp("mode");
+	newInput(3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput(5, nodeValue_Enum_Scroll( "Mode",         0, [ "Block", "Triangle" ])).setShaderProp("mode").setPieMenu();
 	newInput(4, nodeValue_Float(       "Progress",     0 )).setShaderProp("progress");
 	newInput(6, nodeValue_Slider(      "Parameter A",  0, [ -1, 1, 0.01 ])).setShaderProp("paramA");
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
-	newInput(7, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setShaderProp("rotation");
-	newInput(2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale");
+	newInput(1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput(7, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setShaderProp("rotation").setPieMenu();
+	newInput(2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale").setPieMenu();
 	// input 9
 	
 	input_display_list = [

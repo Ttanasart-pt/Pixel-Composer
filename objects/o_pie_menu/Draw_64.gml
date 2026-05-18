@@ -239,7 +239,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		instance_destroy(_p_dialog);
 		if(onActivate != -1) onActivate();
 		menuItemEdit(menu_id, true);
-		active = false;
+		deactivate();
 	}
 	
 	if(widg && keyboard_check_released(vk_anykey)) {
@@ -249,12 +249,9 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		keyboard_string         = "";
 		
 		if(itemSelecting == -1)
-			active = false;
+			deactivate();
 	}
 		
-	if(mouse_rel) {
-		HOVER  = noone;
-		FOCUS  = noone;
-		active = false;
-	}
+	if(mouse_rel) 
+		deactivate();
 #endregion 

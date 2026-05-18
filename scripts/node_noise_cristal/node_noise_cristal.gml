@@ -8,13 +8,13 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(3, nodeValueSeed()).setShaderProp("seed");
-	newInput(7, nodeValue_Rotation( "Phase",     0  )).setShaderProp("phase");
-	newInput(4, nodeValue_Int(      "Iteration", 15 )).setShaderProp("iteration");
+	newInput(3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput(7, nodeValue_Rotation( "Phase",     0  )).setShaderProp("phase").setPieMenu();
+	newInput(4, nodeValue_Int(      "Iteration", 15 )).setShaderProp("iteration").setPieMenu();
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2( "Position", [0,0] )).setHotkey("G").setShaderProp("position");
-	newInput(2, nodeValue_Vec2( "Scale",    [1,1] )).setHotkey("S").setShaderProp("scale");
+	newInput(1, nodeValue_Vec2( "Position", [0,0] )).setHotkey("G").setShaderProp("position").setPieMenu();
+	newInput(2, nodeValue_Vec2( "Scale",    [1,1] )).setHotkey("S").setShaderProp("scale").setPieMenu();
 	
 	////- =Render
 	newInput(5, nodeValue_Color(  "Color", ca_white          )).setShaderProp("color");

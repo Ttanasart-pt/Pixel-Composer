@@ -6,11 +6,11 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 2, nodeValue_Surface("Mask"));
 	
 	////- =Noise
-	newInput( 1, nodeValueSeed());
-	newInput( 6, nodeValue_Slider( "Threshold",  .1 ));
-	newInput( 3, nodeValue_Int(    "Iteration",  32 ));
-	newInput( 4, nodeValue_Float(  "Radius",    .25 )).setUnitSimple();
-	newInput( 5, nodeValue_Float(  "Sigma",     1.9 ));
+	newInput( 1, nodeValueSeed()).setPieMenu();
+	newInput( 6, nodeValue_Slider( "Threshold",  .1 )).setPieMenu();
+	newInput( 3, nodeValue_Int(    "Iteration",  32 )).setPieMenu();
+	newInput( 4, nodeValue_Float(  "Radius",    .25 )).setUnitSimple().setPieMenu();
+	newInput( 5, nodeValue_Float(  "Sigma",     1.9 )).setPieMenu();
 	
 	////- =Performance
 	newInput( 7, nodeValue_Int(    "Patch Size", 32 ));

@@ -16,15 +16,15 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(12, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 5, nodeValueSeed());
-	newInput(13, nodeValue_Rotation( "Phase",     0    ));
-	newInput( 3, nodeValue_Int(      "Iteration", 4    ));
-	newInput( 4, nodeValue_Bool(     "Tile",      true ));
+	newInput( 5, nodeValueSeed()).setPieMenu();
+	newInput(13, nodeValue_Rotation( "Phase",     0    )).setPieMenu();
+	newInput( 3, nodeValue_Int(      "Iteration", 4    )).setPieMenu();
+	newInput( 4, nodeValue_Bool(     "Tile",      true )).setPieMenu();
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position",  [0,0]  )).setHotkey("G").setUnitSimple();
-	newInput(11, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
-	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4], {linked : true} )).setHotkey("S").setMappable(10);
+	newInput( 1, nodeValue_Vec2(     "Position",  [0,0]  )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput(11, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R").setPieMenu();
+	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4], {linked : true} )).setHotkey("S").setMappable(10).setPieMenu();
 	
 	////- =Iteration
 	newInput(20, nodeValue_EScroll( "Blend Method", 0, [ "Add", "Max" ] ));

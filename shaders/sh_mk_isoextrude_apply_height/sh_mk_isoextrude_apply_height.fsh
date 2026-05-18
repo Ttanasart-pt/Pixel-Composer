@@ -21,7 +21,8 @@ uniform sampler2D sideTexture;
 
 uniform sampler2D miscTexture1; 
 
-uniform int useSideH;
+uniform int useSideL;
+uniform int useSideR;
 
 uniform int holeType;
 uniform int useHole1;
@@ -34,6 +35,7 @@ vec4 sampMisc(int index, vec2 tx) {
 	if(index == 0) return texture2D(miscTexture1, ttx);
 	if(index == 1) return texture2D(miscTexture1, vec2(.5,0.) + ttx);
 	if(index == 2) return texture2D(miscTexture1, vec2(0.,.5) + ttx);
+	if(index == 3) return texture2D(miscTexture1, vec2(.5,.5) + ttx);
 	return vec4(0.);
 }
 
@@ -93,11 +95,11 @@ void main() {
 		gl_FragData[0].a  *= sCol.a;
 	}
 	
-	if(useSideH == 1) {
-		float ang = radians(rotation);
-		mat2  rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
-		vec2  cordRot = .5 + (cord.xy - .5) * rot;
+	float ang = radians(rotation);
+	mat2  rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	vec2  cordRot = .5 + (cord.xy - .5) * rot;
 		
+	if(useSideL == 1) {
 		vec2 sideLUV = vec2(cordRot.x, 1. - rh);
 		float lCol = sampMisc(0, sideLUV).r;
 		
@@ -106,9 +108,11 @@ void main() {
 			gl_FragData[1].a = 0.; 
 			return; 
 		}
-		
+	}
+	
+	if(useSideR == 1) {	
 		vec2 sideRUV = vec2(cordRot.y, 1. - rh);
-		float rCol = sampMisc(0, sideRUV).r;
+		float rCol = sampMisc(1, sideRUV).r;
 		
 		if(rCol < cordRot.x || 1. - rCol > cordRot.x) { 
 			gl_FragData[0].a = 0.; 
@@ -125,12 +129,12 @@ void main() {
 	bool h2 = false;
 	
 	if(useHole1 == 1) {
-		vec4 h = sampMisc(1, vec2(cord.x, 1. - rh));
+		vec4 h = sampMisc(2, vec2(cord.x, 1. - rh));
 		h1 = h.a == 0.;
 	}
 	
 	if(useHole2 == 1) {
-		vec4 h = sampMisc(2, vec2(cord.y, 1. - rh));
+		vec4 h = sampMisc(3, vec2(cord.y, 1. - rh));
 		h2 = h.a == 0.;
 	}
 	

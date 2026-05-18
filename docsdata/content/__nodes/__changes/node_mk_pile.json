@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.007",
+    "changes": [
+      {
+        "date": "2026-05-18T06:36:00.509Z",
+        "node": "",
+        "commit": "Add quick action pie menu to some nodes."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.003",
     "changes": [
       {

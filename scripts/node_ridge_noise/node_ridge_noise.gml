@@ -17,26 +17,26 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 7, nodeValue_Surface(  "Mask"       ));
 	
 	////- =Noise
-	newInput( 5, nodeValueSeed());
+	newInput( 5, nodeValueSeed()).setPieMenu();
 	newInput(10, nodeValue_Surface(  "Heightmap"         ));
 	newInput( 4, nodeValue_EButton(  "Mode",           0, [ "Sine", "Sharp" ]));
-	newInput(13, nodeValue_Float(    "Cell Scale",     4  ));
-	newInput(12, nodeValue_Float(    "Blending",       4  ));
+	newInput(13, nodeValue_Float(    "Cell Scale",     4  )).setPieMenu();
+	newInput(12, nodeValue_Float(    "Blending",       4  )).setPieMenu();
 	
 	////- =Ridge
-	newInput(11, nodeValue_Float(    "Ridge Scale",      32    ));
+	newInput(11, nodeValue_Float(    "Ridge Scale",      32    )).setPieMenu();
 	newInput(15, nodeValue_Rotation( "Ridge Rotation",   0     ));
 	newInput(16, nodeValue_Slider(   "Ridge Contrast",  .5     ));
 	newInput(18, nodeValue_Bool(     "Ridge Multiply",   false ));
 	newInput(19, nodeValue_Float(    "Ridge Multiplier", 16    ));
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitSimple();
-	newInput( 3, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R");
-	newInput( 2, nodeValue_Vec2(     "Scale",     [2,2] )).setHotkey("S");
+	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 3, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setPieMenu();
+	newInput( 2, nodeValue_Vec2(     "Scale",     [2,2] )).setHotkey("S").setPieMenu();
 	
 	////- =Transform
-	newInput( 6, nodeValue_Int(     "Iteration",   1   ));
+	newInput( 6, nodeValue_Int(     "Iteration",   1   )).setPieMenu();
 	newInput(14, nodeValue_Float(   "Itr. Factor", 1.5 ));
 	newInput(17, nodeValue_EButton( "Blend Mode",  0, [ "Mix", "Overlay" ]));
 	// input 20

@@ -10,8 +10,8 @@ function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(4, 6); // inputs 6, 7
 	
 	////- Offset
-	newInput(1, nodeValue_Slider(  "X Offset", .5 ));
-	newInput(2, nodeValue_Slider(  "Y Offset", .5 ));
+	newInput(1, nodeValue_Slider(  "X Offset", .5 )).setPieMenu();
+	newInput(2, nodeValue_Slider(  "Y Offset", .5 )).setPieMenu();
 	// 8
 		
 	input_display_list = [ 3, 

@@ -15,10 +15,10 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 9, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 1, nodeValueSeed());
-	newInput( 2, nodeValue_Vec2( "Position", [ 0, 0 ] ));
-	newInput( 3, nodeValue_Vec2( "Scale",    [ 4, 4 ] ));
-	newInput( 4, nodeValue_Int(  "Iteration",  4      ));
+	newInput( 1, nodeValueSeed()).setPieMenu();
+	newInput( 2, nodeValue_Vec2( "Position", [ 0, 0 ] )).setPieMenu();
+	newInput( 3, nodeValue_Vec2( "Scale",    [ 4, 4 ] )).setPieMenu();
+	newInput( 4, nodeValue_Int(  "Iteration",  4      )).setPieMenu();
 	
 	////- =Color
 	newInput( 5, nodeValue_Enum_Button(  "Color Mode",      0, [ "Greyscale", "RGB", "HSV" ] ));

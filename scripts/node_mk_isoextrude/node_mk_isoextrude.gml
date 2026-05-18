@@ -5,9 +5,12 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 0, nodeValue_Surface( "Surface Base" )).setDrawGroup(0);
 	newInput( 6, nodeValue_Surface( "Surface Side" )).setDrawGroup(0);
 	newInput( 3, nodeValue_Surface( "Surface Top"  )).setDrawGroup(0);
+	
+	////- =Map
 	newInput( 5, nodeValue_Surface( "Height Map"   )).setDrawGroup(1).setBW();
 	newInput(14, nodeValue_Surface( "Bottom Map"   )).setDrawGroup(1).setBW();
-	newInput(17, nodeValue_Surface( "Side Map"     )).setDrawGroup(1).setBW();
+	newInput(17, nodeValue_Surface( "L Side Map"   )).setDrawGroup(1).setBW();
+	newInput(18, nodeValue_Surface( "R Side Map"   )).setDrawGroup(1).setBW();
 	
 	////- =Isoextrude
 	newInput( 4, nodeValue_EButton( "Side",      0, [ "Top", "Left", "Right" ] )).setPieMenu();
@@ -37,7 +40,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	input_display_list = [ s_MKFX, 
 		[ "Surfaces",    false     ],  0,  6,  3, 
-		[ "Height Maps", false     ],  5, 14, 17, 
+		[ "Height Maps", false     ],  5, 14, 17, 18, 
 		[ "Depth",       false     ],  4,  1,  9, 
 		[ "Transform",   false     ],  7,  8, 
 		[ "Hole",         true, 13 ], 12, 10, 11, 
@@ -64,7 +67,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _surfT   = _data[ 3], _surfTu  = is_surface(_surfT);
 			var _surfH   = _data[ 5], _surfHu  = is_surface(_surfH);
 			var _surfB   = _data[14], _surfBu  = is_surface(_surfB);
-			var _surfSH  = _data[17], _surfSHu = is_surface(_surfSH);
+			var _surfSL  = _data[17], _surfSLu = is_surface(_surfSL);
+			var _surfSR  = _data[18], _surfSRu = is_surface(_surfSR);
 			
 			var _side    = _data[ 4]; 
 			var _dept    = _data[ 1]; 
@@ -204,9 +208,10 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_set_target(temp_surface[5]);
 			DRAW_CLEAR
 			
-			draw_surface_stretched_safe(_surfSH,   0,   0, 512, 512);
-			draw_surface_stretched_safe(_surfO1, 512,   0, 512, 512);
-			draw_surface_stretched_safe(_surfO2,   0, 512, 512, 512);
+			draw_surface_stretched_safe(_surfSL,   0,   0, 512, 512);
+			draw_surface_stretched_safe(_surfSR, 512,   0, 512, 512);
+			draw_surface_stretched_safe(_surfO1,   0, 512, 512, 512);
+			draw_surface_stretched_safe(_surfO2, 512, 512, 512, 512);
 		surface_reset_target();
 		
 		_outData[0] = surface_verify(_outData[0], sw, sh); surface_clear(_outData[0]);
@@ -229,7 +234,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			shader_set_s("miscTexture1", temp_surface[5] );
 			
-			shader_set_i("useSideH",     _surfSHu    );
+			shader_set_i("useSideL",     _surfSLu    );
+			shader_set_i("useSideR",     _surfSRu    );
 			
 			shader_set_i("holeType",     _hType      );
 			shader_set_i("useHole1",     _surfO1u    );

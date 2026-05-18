@@ -15,11 +15,11 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(11, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 2, nodeValueSeed());
-	newInput( 1, nodeValue_Float(    "X Amount",  2     )).setMappable(6);
-	newInput( 5, nodeValue_Float(    "Y Amount",  16    )).setMappable(7);
-	newInput( 3, nodeValue_Vec2(     "Position", [0,0]  )).setHotkey("G").setUnitSimple();
-	newInput( 4, nodeValue_Rotation( "Rotation",  0     )).setHotkey("R").setMappable(8);
+	newInput( 2, nodeValueSeed()).setPieMenu();
+	newInput( 1, nodeValue_Float(    "X Amount",  2     )).setMappable(6).setPieMenu();
+	newInput( 5, nodeValue_Float(    "Y Amount",  16    )).setMappable(7).setPieMenu();
+	newInput( 3, nodeValue_Vec2(     "Position", [0,0]  )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 4, nodeValue_Rotation( "Rotation",  0     )).setHotkey("R").setMappable(8).setPieMenu();
 	newInput(12, nodeValue_Bool(     "Tile",      false ));
 	
 	////- =Render

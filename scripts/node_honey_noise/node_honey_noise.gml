@@ -14,14 +14,14 @@
 	newInput( 7, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(5, nodeValueSeed()).setShaderProp("seed");
-	newInput(4, nodeValue_Enum_Button( "Mode",       0, [ "Hexagon", "Star" ])).setShaderProp("mode");
-	newInput(6, nodeValue_Int(         "Iteration",  1)).setShaderProp("iteration");
+	newInput(5, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput(4, nodeValue_Enum_Button( "Mode",       0, [ "Hexagon", "Star" ])).setShaderProp("mode").setPieMenu();
+	newInput(6, nodeValue_Int(         "Iteration",  1)).setShaderProp("iteration").setPieMenu();
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(        "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
-	newInput(3, nodeValue_Rotation(    "Rotation",   0    )).setHotkey("R").setShaderProp("rotation");
-	newInput(2, nodeValue_Vec2(        "Scale",     [2,2] )).setHotkey("S").setShaderProp("scale");
+	newInput(1, nodeValue_Vec2(        "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput(3, nodeValue_Rotation(    "Rotation",   0    )).setHotkey("R").setShaderProp("rotation").setPieMenu();
+	newInput(2, nodeValue_Vec2(        "Scale",     [2,2] )).setHotkey("S").setShaderProp("scale").setPieMenu();
 	// input 8
 	
 	input_display_list = [ 

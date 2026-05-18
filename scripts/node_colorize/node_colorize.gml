@@ -5,16 +5,14 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(3, nodeValue_Surface( "Mask"       ));
 	newInput(4, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(3, 8); // inputs 8, 9
 	
 	////- =Coloize
-	
-	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white)).setHotkeyAuto("C").setMappable(11);
-	newInput( 2, nodeValue_Slider(   "Gradient Shift", 0, [ -1, 1, .01 ] )).setMappable(10);
+	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white)).setHotkeyAuto("C").setMappable(11).setPieMenu();
+	newInput( 2, nodeValue_Slider(   "Gradient Shift", 0, [ -1, 1, .01 ] )).setMappable(10).setPieMenu();
 	newInput( 6, nodeValue_Bool(     "Multiply Alpha", true ));
 	newInput(13, nodeValue_Bool(     "Keep Alpha",     true ));
 	

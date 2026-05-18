@@ -8,14 +8,14 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput(10, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 3, nodeValueSeed()).setShaderProp("seed");
-	newInput( 4, nodeValue_Float(  "Progress",   0 )).setShaderProp("progress").setMappable(7);
-	newInput( 5, nodeValue_Slider( "Detail",     1.24, [ 0, 2, 0.01 ])).setShaderProp("detail").setMappable(8);
+	newInput( 3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 4, nodeValue_Float(  "Progress",   0 )).setShaderProp("progress").setMappable(7).setPieMenu();
+	newInput( 5, nodeValue_Slider( "Detail",     1.24, [ 0, 2, 0.01 ])).setShaderProp("detail").setMappable(8).setPieMenu();
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2("Position",      [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
-	newInput( 9, nodeValue_Rotation("Rotation",   0    )).setHotkey("R").setShaderProp("rotation");
-	newInput( 2, nodeValue_Vec2("Scale",         [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(6);
+	newInput( 1, nodeValue_Vec2("Position",      [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput( 9, nodeValue_Rotation("Rotation",   0    )).setHotkey("R").setShaderProp("rotation").setPieMenu();
+	newInput( 2, nodeValue_Vec2("Scale",         [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(6).setPieMenu();
 	// input 11
 	
 	input_display_list = [

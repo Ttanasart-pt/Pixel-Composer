@@ -6,6 +6,11 @@
         "date": "2026-05-18T05:15:40.332Z",
         "node": "MK Isoextrude",
         "commit": "**MK Isoextrude**: New Side extrusion property."
+      },
+      {
+        "date": "2026-05-18T06:36:00.481Z",
+        "node": "",
+        "commit": "Add quick action pie menu to some nodes."
       }
     ]
   },

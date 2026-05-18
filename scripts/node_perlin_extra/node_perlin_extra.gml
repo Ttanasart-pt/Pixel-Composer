@@ -15,17 +15,17 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(17, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 5, nodeValueSeed()).setShaderProp("seed");
-	newInput(10, nodeValue_Enum_Scroll( "Noise Type",       0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ])).setShaderProp("type");
-	newInput( 3, nodeValue_Int(         "Iteration",        2    )).setShaderProp("iteration");
-	newInput( 4, nodeValue_Bool(        "Tile",             true )).setShaderProp("tile");
+	newInput( 5, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput(10, nodeValue_Enum_Scroll( "Noise Type",       0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ])).setShaderProp("type").setPieMenu();
+	newInput( 3, nodeValue_Int(         "Iteration",        2    )).setShaderProp("iteration").setPieMenu();
+	newInput( 4, nodeValue_Bool(        "Tile",             true )).setShaderProp("tile").setPieMenu();
 	newInput(11, nodeValue_Slider(      "Parameter A",      0    )).setShaderProp("paramA").setMappable(14);
 	newInput(12, nodeValue_Float(       "Parameter B",      1    )).setShaderProp("paramB").setMappable(15);
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position",    [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
-	newInput(16, nodeValue_Rotation( "Rotation",     0    )).setHotkey("R").setShaderProp("rotation");
-	newInput( 2, nodeValue_Vec2(     "Scale",       [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(13);
+	newInput( 1, nodeValue_Vec2(     "Position",    [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput(16, nodeValue_Rotation( "Rotation",     0    )).setHotkey("R").setShaderProp("rotation").setPieMenu();
+	newInput( 2, nodeValue_Vec2(     "Scale",       [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(13).setPieMenu();
 	
 	////- =Render
 	newInput( 6, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ] )).setShaderProp("colored");

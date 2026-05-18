@@ -15,11 +15,11 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(11, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 3, nodeValueSeed());
-	newInput( 1, nodeValue_Vec2(        "Position",   [0,0] )).setHotkey("G").setUnitSimple();
-	newInput( 2, nodeValue_Vec2(        "Scale",      [8,8] )).setHotkey("S");
-	newInput( 6, nodeValue_Enum_Button( "Shift Axis",  0, ["X", "Y"]        ));
-	newInput( 4, nodeValue_Slider(      "Shift",       0, [-0.5, 0.5, 0.01] ));
+	newInput( 3, nodeValueSeed()).setPieMenu();
+	newInput( 1, nodeValue_Vec2(        "Position",   [0,0] )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 2, nodeValue_Vec2(        "Scale",      [8,8] )).setHotkey("S").setPieMenu();
+	newInput( 6, nodeValue_Enum_Button( "Shift Axis",  0, ["X", "Y"]        )).setPieMenu();
+	newInput( 4, nodeValue_Slider(      "Shift",       0, [-0.5, 0.5, 0.01] )).setPieMenu();
 	
 	////- =Render
 	newInput( 5, nodeValue_Surface(      "Texture Sample" ));

@@ -5046,7 +5046,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		
     	}
     	
-    	var pie = pieMenuCall("", _pmenu);
+    	if(!array_empty(_pmenu))
+    		pieMenuCall($"node_action_{instanceof(node_hovering)}", _pmenu);
     }
     
     ////- Serialize

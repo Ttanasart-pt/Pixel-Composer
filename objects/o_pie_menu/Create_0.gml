@@ -37,8 +37,8 @@ with(o_pie_menu) { if(self != other) active = false; }
 	
 	itemSelecting = -1;
 	
-	HOVER = self;
-	FOCUS = self;
+	preHover = HOVER;
+	preFocus = FOCUS;
 #endregion
 
 function setMenu(menu) {
@@ -149,4 +149,9 @@ function refreshAngles() {
 			angles = array_merge(angles, langles, rangles);
 		}
 	}
+}
+
+function deactivate() {
+	active = false;
+	if(preFocus) setFocus(preFocus)
 }
