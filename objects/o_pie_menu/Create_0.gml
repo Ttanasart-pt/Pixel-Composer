@@ -1,5 +1,5 @@
 /// @description Insert description here
-with(o_pie_menu) { if(self != other) instance_destroy(); }
+with(o_pie_menu) { if(self != other) active = false; }
 
 #region data
 	depth   = -9999;
@@ -8,10 +8,14 @@ with(o_pie_menu) { if(self != other) instance_destroy(); }
 	menus   = [];
 	
 	name_width = ui(32);
+	pie_size   = 0;
 	pie_width  = ui(32);
 	pie_height = ui(32);
 	pie_half   = false;
 	angles     = [];
+	
+	widget_width  = ui(160);
+	widget_height = ui( 44)
 	
 	font     = f_p3;
 	hght     = line_get_height(font, 8);
@@ -41,23 +45,34 @@ function setMenu(menu) {
 	draw_set_font(font);
 	
 	name_width = 0;
+	pie_size   = 0;
 	menus      = [];
 	
 	for( var i = 0, n = array_length(menu); i < n; i++ ) {
 		var m = menu[i];
-		if(!is(m, MenuItem)) continue;
-		
-		var _txt  = m.name;
-		var _key  = string_trim_start(_txt, [">"]);
-		var _node = struct_try_get(ALL_NODES, _key, noone);
-		
-		if(_node) {
-			m.name = _node.getName();
-			m.spr  = _node.getSpr();
+		if(is(m, MenuItem)) {
+			var _txt  = m.name;
+			var _key  = string_trim_start(_txt, [">"]);
+			var _node = struct_try_get(ALL_NODES, _key, noone);
+			
+			if(_node) {
+				m.name = _node.getName();
+				m.spr  = _node.getSpr();
+			}
+			
+			pie_size += hght;
+			
+			array_push(menus, m);
+			name_width = max(name_width, string_width(m.name));
+			
+		} else if(is(m, MenuWidget)) {
+			KEYBOARD_BLOCK = true;
+			pie_size += ui(48);
+			
+			array_push(menus, m);
+			name_width = max(name_width, string_width(m.name), ui(200));
 		}
 		
-		array_push(menus, m);
-		name_width = max(name_width, string_width(m.name));
 	}
 	
 	name_width += ui(16 + 4) + hght;
@@ -78,8 +93,8 @@ function refreshAngles() {
 	var len = array_length(menus);
 	
 	if(pie_half) {
-		pie_width  = max(ui(32), len / 2 * hght);
-		pie_height = max(ui(32), len / 2 * hght);
+		pie_width  = max(ui(32), pie_size / 2);
+		pie_height = max(ui(32), pie_size / 2);
 		
 		     if(len == 1) angles = [ 90 ];
 		else {
@@ -97,8 +112,8 @@ function refreshAngles() {
 		}
 		
 	} else {
-		pie_width  = max(ui(32), len / 3 * hght);
-		pie_height = max(ui(32), len / 3 * hght);
+		pie_width  = max(ui(32), pie_size / 3);
+		pie_height = max(ui(32), pie_size / 3);
 		
 		     if(len == 1) angles = [ 90 ];
 		else if(len == 2) angles = [ 90, 270 ];

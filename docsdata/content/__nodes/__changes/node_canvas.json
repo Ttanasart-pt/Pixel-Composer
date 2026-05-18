@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.007",
+    "changes": [
+      {
+        "date": "2026-05-18T03:39:01.433Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Add vertical toolbar mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.005",
     "changes": [
       {

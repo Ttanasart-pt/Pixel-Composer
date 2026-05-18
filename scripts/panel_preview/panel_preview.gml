@@ -1039,19 +1039,24 @@ function Panel_Preview() : PanelContent() constructor {
             _h = DEF_SURF_H;
         }
         
-        var tl = tool_side_draw_l * ui(40);
-        var tr = tool_side_draw_r * ui(40);
+        var hori = PREFERENCES.panel_preview_toolbar_horizontal;
         
-        if(PROJECT.previewSetting.show_ruler && !d3_active) {
-        	tl += ruler_width;
-        	tr += ruler_width;
-        }
+        var tw  = 0;
+            tw += !hori * tool_side_draw_l * ui(40);
+            tw += !hori * tool_side_draw_r * ui(40);
         
-        var ss = scale == 0? min((w - ui(32) - tl - tr) / _w, (h - ui(32) - toolbar_height * 2) / _h) : scale;
+        if(PROJECT.previewSetting.show_ruler && !d3_active)
+        	tw += ruler_width;
+        
+        var th  = 0;
+            th += hori * tool_side_draw_l * ui(40);
+            th += hori * tool_side_draw_r * ui(40);
+        
+        var ss = scale == 0? min((w - ui(32) - tw) / _w, (h - ui(32) - toolbar_height * 2 - th) / _h) : scale;
         
         canvas_s = ss;
-        canvas_x = w / 2 - _w * canvas_s / 2 - _x * canvas_s + (tl - tr) / 2;
-        canvas_y = h / 2 - _h * canvas_s / 2 - _y * canvas_s;
+        canvas_x = w / 2 - _w * canvas_s / 2 - _x * canvas_s + tw / 2;
+        canvas_y = h / 2 - _h * canvas_s / 2 - _y * canvas_s + th / 2;
     }
     
     static fullViewNoTool = function(scale = 0) {
@@ -1158,6 +1163,7 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawToolsLeft = function(_node) {
+    	var hori  = PREFERENCES.panel_preview_toolbar_horizontal;
     	var toolH = _tool_hovering;
         var ts    = ui(32);
         var ts2   = ts / 2;
@@ -1166,14 +1172,25 @@ function Panel_Preview() : PanelContent() constructor {
         tool_clearable = true;
         
         if(!PROJECT.previewSetting.tool_always_l && !_node.showTool()) { tool_current = noone; return; } 
-        var aa = d3_active? 0.8 : 1;
-        draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
+        
+        var aa  = d3_active? 0.8 : 1;
+        var txx = 0;
+        var tyy = topbar_height;
+        
+        if(hori) {
+	        var tww = w;
+	        var thh = toolbar_width;
+        } else {
+        	var tww = toolbar_width;
+	        var thh = h;
+        }
+        
+        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 0, txx, tyy, tww, thh, c_white, aa);
         
         tool_y_max = 0; 
         tool_y   = lerp_float(tool_y, tool_y_to, 5);
-        var xx   = ui(1)  + toolbar_width / 2;
-        var yy   = ui(34) + ts2 + tool_y;
-        var thov = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, toolbar_width, h - toolbar_height);
+        
+        var thov = pHOVER && point_in_rectangle(mx, my, txx, tyy, txx + tww, tyy + thh);
         if(thov) {
         	canvas_hover = false;
         	mouse_on_preview = 0;
@@ -1183,17 +1200,36 @@ function Panel_Preview() : PanelContent() constructor {
         if(pFOCUS && key_mod_double(ALT)) tool_show_key = !tool_show_key;
         var __tool_show_key = tool_show_key || hk_editing != noone || key_mod_press(ALT);
         
-        ////- Left tools
+        if(hori) {
+        	var xx = txx + tool_y;
+        	var yy = tyy + toolbar_width / 2;
+        	
+        } else {
+	        var xx = txx + toolbar_width / 2;
+	        var yy = tyy + tool_y;	
+        }
+        
+        ////- Toolbar Lock
         
         var bs = ui(16);
-        var bx = toolbar_width / 2 - bs / 2;
-        var by = yy - ui(12);
+        if(hori) {
+        	var bx = xx + ui(8);
+	        var by = yy - bs / 2;
+	        
+        } else {
+	        var bx = xx - bs / 2;
+	        var by = yy + ui(8);
+        }
+        
         var bi = PROJECT.previewSetting.tool_always_l;
         var bc = bi? COLORS._main_accent : COLORS._main_icon;
         if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !bi, bc) == 2)
         	PROJECT.previewSetting.tool_always_l = !PROJECT.previewSetting.tool_always_l;
-        yy         += bs + ui(8);
-        tool_y_max += bs + ui(8);
+        if(hori) xx += bs + ui(10) + ts2;
+        else     yy += bs + ui(10) + ts2;
+        tool_y_max  += bs + ui(10) + ts2;
+        
+        ////- Left tools
         
         var _draw_sep = true;
     	var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
@@ -1212,34 +1248,47 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(tool == -1) {
                 draw_set_color(COLORS.panel_separator);
-                if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
-                else       draw_line(0, _y0 + ui(3), toolbar_width, _y0 + ui(3));
+                if(hori) {
+                	if(_spFrm) draw_line_width(_x0 + ui(3), tyy, _x0 + ui(3), tyy + thh, 2);
+	                else       draw_line(_x0 + ui(3), tyy, _x0 + ui(3), tyy + thh);
+	                
+                } else {
+	                if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+	                else       draw_line(txx, _y0 + ui(3), txx + tww, _y0 + ui(3));
+                }
                 
-                yy          += ui(8);
+                if(hori) xx += ui(8);
+                else     yy += ui(8);
                 tool_y_max  += ui(8);
                 continue;
             }
             
-            if(thov && point_in_rectangle(mx, my, _x0, _y0 + 1, _x1, _y1 - 1))
+            if(thov && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1))
                 tool_hovering = tool;
             
             if(tool.subtools > 0 && toolH == tool) { // hovering subtools
-                var s_ww = ts * tool.subtools;
+                var s_ww = ts;
                 var s_hh = ts;
+                if(hori) s_hh *= tool.subtools;
+                else     s_ww *= tool.subtools;
+                
                 draw_sprite_stretched(THEME.box_r2_clr, 0, _x0 - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
                     
                 var stool = tool.spr;
                         
                 for( var j = 0; j < array_length(stool); j++ ) {
-                    var _sxx = xx + j * ts;
+                    var _sxx = xx;
                     var _syy = yy;
-                            
+                    
+                    if(hori) _syy += j * ts;
+                	else     _sxx += j * ts;
+                
                     var _sx0  = _sxx - ts2;
                     var _sy0  = _syy - ts2;
                     var _sx1  = _sxx + ts2;
                     var _sy1  = _syy + ts2;
                     
-                    if(point_in_rectangle(mx, my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
+                    if(point_in_rectangle(mx, my, _sx0, _sy0, _sx1, _sy1)) {
                         TOOLTIP = tool.getDisplayName(j);
                         draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, ts - pd * 2, ts - pd * 2);
                             
@@ -1255,7 +1304,7 @@ function Panel_Preview() : PanelContent() constructor {
                     draw_sprite_colored(stool[j], 0, _sxx, _syy);
                 }
                     
-                if(point_in_rectangle(mx, my, _x0, _y0 + 1, _x0 + s_ww, _y1 - 1)) {
+                if(point_in_rectangle(mx, my, _x0, _y0, _x0 + s_ww, _y0 + s_hh)) {
                      tool_hovering    = tool;
                     _mouse_on_preview = false;
                 }
@@ -1288,13 +1337,15 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 var _hkstr = _key.getKeyName();
                 if(_hkstr != "" && __tool_show_key) {
-                	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
-                	var _hks  = string_width(_hkstr) + ui(8);
-                	var _hkx0 = _x1 - _hks;
-                	var _hky0 = _y1 - ui(16);
-                	
-                	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
-                	draw_text_add(_hkx0 + _hks - ui(4), _hky0 + ui(16) / 2, _hkstr);
+                	draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text);
+	            	var hkw = string_width(_hkstr)  + ui(4);
+	            	var hkh = string_height(_hkstr) + ui(4);
+	            	
+	            	var _hkx0 = _x1 + ui(2) - hkw;
+	            	var _hky0 = _y1 + ui(2) - hkh;
+	            	
+	            	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, hkw, hkh, COLORS.panel_bg_clear_inner);
+	            	draw_text_add(_hkx0 + hkw - ui(2), _hky0 + hkh - ui(2), _hkstr);
                 }
             }
             
@@ -1307,8 +1358,9 @@ function Panel_Preview() : PanelContent() constructor {
 				if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
             }
             
-            yy         += ts;
-            tool_y_max += ts;
+            if(hori) xx += ts + 1;
+            else     yy += ts + 1;
+            tool_y_max  += ts + 1;
             
             _draw_sep = false;
         }
@@ -1325,13 +1377,24 @@ function Panel_Preview() : PanelContent() constructor {
         	if(!_in.show_in_inspector)          continue;
         	if(_in.preview_hotkey == undefined) continue;
         	
+            var _x0  = xx - ts2;
+            var _y0  = yy - ts2;
+            var _x1  = xx + ts2;
+            var _y1  = yy + ts2;
+            
         	if(_draw_sep == false) {
-            	var _y0  = yy - ts2;
         		draw_set_color(COLORS.panel_separator);
-        		if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
-        		else       draw_line(0, _y0 + ui(3), toolbar_width, _y0 + ui(3));
+        		if(hori) {
+                	if(_spFrm) draw_line_width(_x0 + ui(3), tyy, _x0 + ui(3), tyy + thh, 2);
+	                else       draw_line(_x0 + ui(3), tyy, _x0 + ui(3), tyy + thh);
+	                
+                } else {
+	                if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+	                else       draw_line(txx, _y0 + ui(3), txx + tww, _y0 + ui(3));
+                }
                 
-                yy          += ui(8);
+                if(hori) xx += ui(8);
+                else     yy += ui(8);
                 tool_y_max  += ui(8);
         		_draw_sep    = true;
         	}
@@ -1340,7 +1403,7 @@ function Panel_Preview() : PanelContent() constructor {
             var _y0  = yy - ts2;
             var _x1  = xx + ts2;
             var _y1  = yy + ts2;
-                
+            
             var _bx = _x0 + pd;
             var _by = _y0 + pd;
             var _bs = ts - pd * 2;
@@ -1348,7 +1411,7 @@ function Panel_Preview() : PanelContent() constructor {
         	var _key = _in.preview_hotkey;
         	var _spr = _in.preview_hotkey_spr;
         	var _act = _in.value_from == noone;
-        	var _hov = _act && thov && point_in_rectangle(mx, my, _x0, _y0 + 1, _x1, _y1 - 1);
+        	var _hov = _act && thov && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1);
         	
         	if(_hov) {
         		TOOLTIP = new tooltipKey($"Set {_in.name}", _key.toString());
@@ -1368,47 +1431,81 @@ function Panel_Preview() : PanelContent() constructor {
         	
             var _hkstr = _key.toString();
         	if(_act && _hkstr != "") {
-            	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
-            	var _hks  = string_width(_hkstr) + ui(8);
-            	var _hkx0 = _x1 - _hks;
-            	var _hky0 = _y1 - ui(16);
+            	draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text);
+            	var hkw = string_width(_hkstr)  + ui(4);
+            	var hkh = string_height(_hkstr) + ui(4);
             	
-            	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
-            	draw_text_add(_hkx0 + _hks - ui(4), _hky0 + ui(16) / 2, _hkstr);
+            	var _hkx0 = _x1 + ui(2) - hkw;
+            	var _hky0 = _y1 + ui(2) - hkh;
+            	
+            	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, hkw, hkh, COLORS.panel_bg_clear_inner);
+            	draw_text_add(_hkx0 + hkw - ui(2), _hky0 + hkh - ui(2), _hkstr);
             }
         	
-            yy         += ts;
-            tool_y_max += ts;
+        	if(hori) xx += ts + 1;
+        	else     yy += ts + 1;
+            tool_y_max  += ts + 1;
         }
         
-        var _h = _node.drawTools == noone? 0 : _node.drawTools(mx, my, xx, yy - ts2, ts, thov, pFOCUS, self);
-        yy         += _h;
-        tool_y_max += _h;
+        if(_node.drawPreviewToolbar != noone) {
+        	draw_set_color(COLORS.panel_separator);
+    		if(hori) {
+    			xx += ui(4);
+    			var x0 = xx - ts2;
+            	if(_spFrm) draw_line_width(x0, tyy, x0, tyy + thh - 1, 2);
+                else       draw_line(x0, tyy, x0, tyy + thh - 1);
+    			xx += ui(4);
+                
+            } else {
+    			yy += ui(4);
+    			var y0 = yy - ts2;
+                if(_spFrm) draw_line_width(txx, y0, txx + tww - 1, y0, 2);
+                else       draw_line(txx, y0, txx + tww - 1, y0);
+    			yy += ui(4);
+            }
+            
+        	_h = _node.drawPreviewToolbar(mx, my, xx, yy, ts, thov, pFOCUS, self);
+	        if(hori) xx += _h;
+	        else     yy += _h;
+	        tool_y_max  += _h;
+        }
         
-        tool_y_max = max(0, tool_y_max - h + toolbar_height * 2);            
+        if(hori) tool_y_max = max(0, tool_y_max - w + toolbar_height * 2);
+        else     tool_y_max = max(0, tool_y_max - h + toolbar_height * 2);
         if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
             tool_y_to += ui(64) * MOUSE_WHEEL;
         tool_y_to = clamp(tool_y_to, -tool_y_max, 0);
     }
     
     static drawToolsRight = function(_node) {
+    	var hori  = PREFERENCES.panel_preview_toolbar_horizontal;
         var toolH = _tool_hovering;
     	var ts    = ui(32);
         var ts2   = ts / 2;
         var pd    = 2;
         
         if(!PROJECT.previewSetting.tool_always_r && _node.rightTools == -1) return;
-        var aa = d3_active? 0.8 : 1;
-        draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
         
-        right_menu_x = w - toolbar_width - ui(8);
+        var aa  = d3_active? 0.8 : 1;
+        if(hori) {
+        	var txx = 0;
+	        var tyy = h - topbar_height - toolbar_width;
+	        var tww = w;
+	        var thh = toolbar_width;
+	        
+        } else {
+	        var txx = w + 1 - toolbar_width;
+	        var tyy = topbar_height;
+	        var tww = toolbar_width;
+	        var thh = h;
+        }
+        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 1, txx, tyy, tww, thh, c_white, aa);
+        
+        if(!hori) right_menu_x = w - toolbar_width - ui(8);
         tool_ry_max  = 0; 
         tool_ry      = lerp_float(tool_ry, tool_ry_to, 5);
         
-        var tbx  = w - toolbar_width;
-        var xx   = tbx + toolbar_width / 2;
-        var yy   = ui(34) + ts  / 2 + tool_ry;
-        var thov = pHOVER && point_in_rectangle(mx, my, tbx, toolbar_height, w, h - toolbar_height);
+        var thov = pHOVER && point_in_rectangle(mx, my, txx, tyy, txx + tww, tyy + thh);
         if(thov) {
         	canvas_hover = false;
         	mouse_on_preview = 0;
@@ -1417,17 +1514,36 @@ function Panel_Preview() : PanelContent() constructor {
         
         var __tool_show_key = tool_show_key || hk_editing != noone || key_mod_press(ALT);
         
-        ////- Right tools
+        if(hori) {
+        	var xx = txx + tool_ry;
+        	var yy = tyy + toolbar_width / 2;
+        	
+        } else {
+	        var xx = txx + toolbar_width / 2;
+	        var yy = tyy + tool_ry;	
+        }
+        
+        ////- Toolbar Lock
         
         var bs = ui(16);
-        var bx = w + 1 - toolbar_width / 2 - bs / 2;
-        var by = yy - ui(12);
+        if(hori) {
+        	var bx = xx + ui(8);
+	        var by = yy - bs / 2;
+	        
+        } else {
+	        var bx = xx - bs / 2;
+	        var by = yy + ui(8);
+        }
+        
         var bi = PROJECT.previewSetting.tool_always_r;
         var bc = bi? COLORS._main_accent : COLORS._main_icon;
         if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !bi, bc) == 2)
         	PROJECT.previewSetting.tool_always_r = !PROJECT.previewSetting.tool_always_r;
-        yy          += bs + ui(8);
-        tool_ry_max += bs + ui(8);
+        if(hori) xx += bs + ui(10) + ts2;
+        else     yy += bs + ui(10) + ts2;
+        tool_ry_max += bs + ui(10) + ts2;
+        
+        ////- Right tools
         
         var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
         
@@ -1445,37 +1561,56 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(tool == -1) {
                 draw_set_color(COLORS.panel_separator);
-                if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
-                else       draw_line(w - toolbar_width, _y0 + ui(3), w, _y0 + ui(3));
+                if(hori) {
+                	if(_spFrm) draw_line_width(_x0 + ui(3), tyy, _x0 + ui(3), tyy + thh, 2);
+	                else       draw_line(_x0 + ui(3), tyy, _x0 + ui(3), tyy + thh);
+	                
+                } else {
+	                if(_spFrm) draw_line_width(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+	                else       draw_line(txx, _y0 + ui(3), txx + tww, _y0 + ui(3));
+                }
                 
-                yy          += ui(8);
+                if(hori) xx += ui(8);
+                else     yy += ui(8);
                 tool_ry_max += ui(8);
                 continue;
             }
             
-            if(thov && point_in_rectangle(mx, my, _x0, _y0 + 1, _x1, _y1 - 1))
+            if(thov && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1))
                 tool_hovering = tool;
         	
             if(tool.subtools > 0 && toolH == tool) { // hovering subtools
                 var stool = tool.spr;
-                var s_ww  = ts * tool.subtools;
+                var s_ww  = ts;
                 var s_hh  = ts;
-                var tx    = _x0 - s_ww + ts;
-                draw_sprite_stretched(THEME.box_r2_clr, 0, tx - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
+                
+                if(hori) s_hh *= tool.subtools;
+                else     s_ww *= tool.subtools;
+                
+                var tx = _x0;
+                var ty = _y0;
+                
+                if(hori) ty -= s_hh - ts;
+                else     tx -= s_ww - ts;
+                
+                draw_sprite_stretched(THEME.box_r2_clr, 0, tx - pd, ty - pd, s_ww + pd * 2, s_hh + pd * 2);
                 
                 var _am = array_length(stool);
                 
                 for( var j = 0; j < _am; j++ ) {
                     var _sind = _am - 1 - j;
-                    var _sxx = tx + j * ts + ts2;
-                    var _syy = yy;
-                        
+                    var _sxx = tx + ts2;
+                    var _syy = ty + ts2;
+                    
+                    if(hori) _syy += j * ts;
+                    else     _sxx += j * ts;
+                       
                     var _sx0  = _sxx - ts2;
                     var _sy0  = _syy - ts2;
                     var _sx1  = _sxx + ts2;
                     var _sy1  = _syy + ts2;
                     
-                    if(point_in_rectangle(mx, my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
+                    if(point_in_rectangle(mx, my, _sx0, _sy0, _sx1, _sy1)) {
                         TOOLTIP = tool.getDisplayName(_sind);
                         draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, ts - pd * 2, ts - pd * 2);
                         
@@ -1492,7 +1627,7 @@ function Panel_Preview() : PanelContent() constructor {
                     
                 }
                 
-                if(point_in_rectangle(mx, my, tx, _y0 + 1, tx + s_ww, _y1 - 1)) {
+                if(point_in_rectangle(mx, my, tx, _y0, tx + s_ww, _y1)) {
                      tool_hovering    = tool;
                     _mouse_on_preview = false;
                 }
@@ -1526,13 +1661,15 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 var _hkstr = _key.getKeyName();
                 if(_hkstr != "" && __tool_show_key) {
-                	draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
-                	var _hks  = string_width(_hkstr) + ui(8);
-                	var _hkx0 = _x0;
-                	var _hky0 = _y1 - ui(16);
-                	
-                	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
-                	draw_text_add(_hkx0 + ui(4), _hky0 + ui(16) / 2, _hkstr);
+                	draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text);
+	            	var hkw = string_width(_hkstr)  + ui(4);
+	            	var hkh = string_height(_hkstr) + ui(4);
+	            	
+	            	var _hkx0 = _x1 + ui(2) - hkw;
+	            	var _hky0 = _y1 + ui(2) - hkh;
+	            	
+	            	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, hkw, hkh, COLORS.panel_bg_clear_inner);
+	            	draw_text_add(_hkx0 + hkw - ui(2), _hky0 + hkh - ui(2), _hkstr);
                 }
             }
             
@@ -1545,11 +1682,13 @@ function Panel_Preview() : PanelContent() constructor {
 				if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
             }
             
-            yy          += ts;
-            tool_ry_max += ts;
+            if(hori) xx += ts + 1;
+            else     yy += ts + 1;
+            tool_ry_max += ts + 1;
         } 
         
-        tool_ry_max = max(0, tool_ry_max - h + toolbar_height * 2);            
+        if(hori) tool_ry_max = max(0, tool_ry_max - w);
+        else     tool_ry_max = max(0, tool_ry_max - h + toolbar_height * 2);
         if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
             tool_ry_to += ui(64) * MOUSE_WHEEL;
         tool_ry_to = clamp(tool_ry_to, -tool_ry_max, 0);
@@ -2354,6 +2493,9 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(PROJECT.previewSetting.show_ruler && !d3_active)
         	right_menu_y += ruler_width;
+        	
+        if(tool_side_draw_l && PREFERENCES.panel_preview_toolbar_horizontal)
+        	right_menu_y += toolbar_width;
         	
         toolbar_draw = false;
         var _node = getNodePreview();
@@ -3532,11 +3674,13 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawRuler = function() {
-    	var x0 =     tool_side_draw_l * toolbar_width;
-        var x1 = w - tool_side_draw_r * toolbar_width;
+    	var hori  = PREFERENCES.panel_preview_toolbar_horizontal;
+    	
+    	var x0 =     (tool_side_draw_l && !hori) * toolbar_width;
+        var x1 = w - (tool_side_draw_r && !hori) * toolbar_width;
         
-        var y0 =     topbar_height;
-        var y1 = h - toolbar_height;
+        var y0 =     topbar_height  + (tool_side_draw_l &&  hori) * toolbar_width;
+        var y1 = h - toolbar_height - (tool_side_draw_r &&  hori) * toolbar_width;
         
 		var prevSurf = is_surface(preview_surfaces[0]);
         var sw = prevSurf? surface_get_width( preview_surfaces[0]) : DEF_SURF_W;
@@ -3881,6 +4025,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         drawViewController();
         drawDataArray();
+        drawInfo();
         
         canvas_mx = (mx - canvas_x) / canvas_s;
         canvas_my = (my - canvas_y) / canvas_s;
@@ -3892,18 +4037,33 @@ function Panel_Preview() : PanelContent() constructor {
         tool_side_draw_l = PROJECT.previewSetting.tool_always_l;
         tool_side_draw_r = PROJECT.previewSetting.tool_always_r;
         
+    	var hori = PREFERENCES.panel_preview_toolbar_horizontal;
+    	
         if(PROJECT.previewSetting.tool_always_l) {
-        	var tw = toolbar_width;
-        	var th = h - toolbar_height - ui(32);
-        	var aa = d3_active? .8 : 1;
-        	draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), tw, th, c_white, aa);
+        	var txx  = 0;
+	        var tyy  = ui(32);
+	        var tww  = hori? w : toolbar_width;
+	        var thh  = hori? toolbar_width : h;
+        	var aa   = d3_active? .8 : 1;
+        	
+	        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 0, txx, tyy, tww, thh, c_white, aa);
         }
         
         if(PROJECT.previewSetting.tool_always_r) {
-        	var tw = toolbar_width;
-        	var th = h - toolbar_height - ui(32);
-        	var aa = d3_active? .8 : 1;
-        	draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), tw, th, c_white, aa);
+        	if(hori) {
+	        	var txx = 0;
+		        var tyy = h - topbar_height - toolbar_width;
+		        var tww = w;
+		        var thh = toolbar_width;
+		        
+	        } else {
+		        var txx = w + 1 - toolbar_width;
+		        var tyy = topbar_height;
+		        var tww = toolbar_width;
+		        var thh = h;
+	        }
+	        
+	        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 1, txx, tyy, tww, thh, c_white, aa);
         }
         	
         if(PANEL_PREVIEW == self) { // Draw Overlay
@@ -3948,7 +4108,6 @@ function Panel_Preview() : PanelContent() constructor {
 			if(key_press(vk_escape)) hk_editing = noone;
 		}
 		
-        drawInfo();
         drawMinimap();
         drawActionTooltip();
         

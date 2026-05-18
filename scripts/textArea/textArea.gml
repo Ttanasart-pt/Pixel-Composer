@@ -358,6 +358,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	}
 	
 	static editText = function() {
+		if(KEYBOARD_BLOCK) return;
+		
 		var _input_text_pre = _input_text;
 		var modified = false;
 		var undoing  = false;

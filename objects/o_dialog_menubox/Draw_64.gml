@@ -36,7 +36,8 @@ DIALOG_WINCLEAR1
 		if(is(_menuItem, MenuWidget)) {
 			var _txt = _menuItem.name;
 			var _edt = _menuItem.editWidget;
-			var _val = _menuItem.getter();
+			var _par = _menuItem.param;
+			var _val = _menuItem.getter(_par);
 			var _whg = ui(32);
 			
 			var _wx = dialog_x + ui(4 + 64);

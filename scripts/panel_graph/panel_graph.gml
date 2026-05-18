@@ -105,8 +105,8 @@
 	function panel_graph_view_control_show()       { PANEL_GRAPH.view_control_show();   }
 	function panel_graph_view_control_hide()       { PANEL_GRAPH.view_control_hide();   }
 	
-	function panel_graph_slideShow_next()       { PANEL_GRAPH.slideShow_next();   }
-	function panel_graph_slideShow_prev()       { PANEL_GRAPH.slideShow_prev();   }
+	function panel_graph_slideShow_next()          { PANEL_GRAPH.slideShow_next();   }
+	function panel_graph_slideShow_prev()          { PANEL_GRAPH.slideShow_prev();   }
 	
     function panel_graph_set_node_display_mini() { 
     	var nodes = PANEL_GRAPH.nodes_selecting; 
@@ -206,6 +206,7 @@
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
         registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); } ).setMenu("graph_node_selector", THEME.node_selector);
+        registerFunction(g, "Node Action Pie",       "Q", n, function() /*=>*/ {return PANEL_GRAPH.nodeQuickPie()}).setMenu("graph_node_action_pie");
         	
         registerFunction(g, "Node Multiplier...",    "",  n, function() /*=>*/ { 
         	if(array_empty(PANEL_GRAPH.nodes_selecting)) return;
@@ -5024,6 +5025,25 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	else project.graphBGIndexData = [ n, i ]
 		
 		RENDER_ALL
+    }
+    
+    function nodeQuickPie() {
+    	if(!is(node_hovering, Node)) return;
+    	
+    	var _pInp = node_hovering.pie_junctions;
+    	if(array_empty(_pInp)) return;
+    	
+    	var _pmenu = [];
+    	for( var i = 0, n = array_length(_pInp); i < n; i++ ) {
+    		var _inp = _pInp[i];
+    		if(!_inp.show_in_inspector) continue;
+    		
+    		var _wid = _inp.getPieWidget();
+    		
+    		array_push(_pmenu, menuWidget(_inp.getName(), _wid, function(_inp) /*=>*/ {return _inp.showValue()}, _inp));
+    	}
+    	
+    	var pie = pieMenuCall("", _pmenu);
     }
     
     ////- Serialize

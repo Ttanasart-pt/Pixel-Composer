@@ -1,4 +1,6 @@
 /// @description 
+if(KEYBOARD_BLOCK) exit;
+
 kb_hkey = vk_nokey;
 if(kb_hkey < 0 && keyboard_key     > 0) kb_hkey = keyboard_key;
 if(kb_hkey < 0 && keyboard_lastkey > 0) kb_hkey = keyboard_lastkey;

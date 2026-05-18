@@ -90,16 +90,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 3, nodeValue_Area(     "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitSimple();
 	newInput(16, nodeValue_Vec2(     "Center",            [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(17, nodeValue_Vec2(     "Half Size",         [.5,.5] )).setHotkey("S").setUnitSimple();
-	newInput(19, nodeValue_Rotation( "Shape Rotation",      0     )).setHotkey("R");
-	newInput(28, nodeValue_Slider(   "Shape Scale",         1     )).hideLabel();
+	newInput(19, nodeValue_Rotation( "Shape Rotation",      0     )).setHotkey("R").setPieMenu();
+	newInput(28, nodeValue_Slider(   "Shape Scale",         1     )).hideLabel().setPieMenu();
 	
 	////- =Shape
-	
-	// newInput( 2, nodeValue_EScroll(  "Shape",  0, { data: shape_types_str, horizontal: 1, text_pad: ui(16) }))
-	// 	.setHistory([ shape_types, 
-	// 		{ cond: () => LOADING_VERSION < 1_18_00_0, list: global.node_shape_keys_18 }, 
-	// 		{ cond: () => LOADING_VERSION < 1_20_01_0, list: global.node_shape_keys_20 }, 
-	// 	]);
 	
 	newInput( 2, nodeValue_EString(  "Shape",  "Rectangle", { 
 			data       : global.node_shape_types, 
@@ -146,7 +140,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(42, nodeValue_Vec2(     "Shear",           [0,0]           ))
 	
 	////- =Render
-	newInput(10, nodeValue_Color(    "Shape Color",      ca_white       )).setHotkeyAuto("C");
+	newInput(10, nodeValue_Color(    "Shape Color",      ca_white       )).setHotkeyAuto("C").setPieMenu();
 	newInput(18, nodeValue_Bool(     "Tile",             false          ));
 	
 	////- =Height

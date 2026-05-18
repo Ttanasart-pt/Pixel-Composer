@@ -28,6 +28,9 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	
 	draw_set_alpha(.5 + selectable * .5);
 	draw_circle(x, y, ui(4), true);
+	
+	draw_set_color(COLORS._main_icon_dark);
+	draw_circle(x, y, ui(4)-2, true);
 	draw_set_alpha(1);
 #endregion
 
@@ -37,10 +40,14 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	var pd = ui(8);
 	var bs = ui(24);
 	
-	mouse_tx  = mx;
-	mouse_ty  = my;
+	if(!MOUSE_WRAPPING && !MOUSE_BLOCK && CURSOR_LOCK_X == 0 && CURSOR_LOCK_Y == 0) {
+		mouse_tx = mx;
+		mouse_ty = my;
+	}
+	
 	selecting = false;
 	var edit  = false;
+	var widg  = false;
 	
 	var mouse_rel = global_mouse_right_is_released() || mouse_lpress();
 	if(activate_key_release) mouse_rel |= keyboard_check_released(vk_anykey);
@@ -78,13 +85,14 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			itemSelecting = i;
 	}
 	
+	if(itemSelecting > -1 && is(menus[itemSelecting], MenuWidget))
+		itemSelecting = -1;
+	
 	var scis = gpu_get_scissor();
+	var _spw, _sph;
 	
 	for( var i = 0; i < amo; i++ ) {
 		var _menuItem = menus[i];
-		
-		var label = _menuItem.name;
-		var _spr  = _menuItem.spr;
 		
 		var _ba  = angles[i];
 		var _bx  = x + lengthdir_x(anim_prog * pie_width,  _ba);
@@ -94,12 +102,21 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		if(abs(angle_difference(  0, _ba)) < 80) _hal = fa_left;
 		if(abs(angle_difference(180, _ba)) < 80) _hal = fa_right;
 		
-		var _val = fa_center;
+		var _val  = fa_center;
+		var label = _menuItem.name;
 		
-		draw_set_font(font);
-		var _sph = hght * anim_prog;
-		var _spw = string_width(label) + pd * 2 + (_spr != noone) * (_sph + ui(4));
-			_spw = _spw * anim_prog;
+		if(is(_menuItem, MenuItem)) {
+			var _spr  = _menuItem.spr;
+			
+			draw_set_font(font);
+			_sph  = hght * anim_prog;
+			_spw  = string_width(label) + pd * 2 + (_spr != noone) * (_sph + ui(4));
+			_spw *= anim_prog;
+				
+		} else if(is(_menuItem, MenuWidget)) {
+			_spw = widget_width  * anim_prog;
+			_sph = widget_height * anim_prog;
+		}
 		
 		switch(_hal) { 
 			case fa_left   : _bx0 = _bx;            break;
@@ -132,7 +149,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			selecting = true;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, _bx0, _by0, _spw, _sph, COLORS.dialog_menubox_highlight);
-			if(mouse_rel) {
+			if(is(_menuItem, MenuItem) && mouse_rel) {
 				var _dat = {
 					_x      : _bx0,
 					x       : _bx1,
@@ -160,32 +177,59 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			}
 		}
 		
-		gpu_set_scissor(_bx0, _by0, _spw, _sph);
-		
-		if(_spr != noone) {
-			var spr = is_array(_spr)? _spr[0] : _spr;
-			var ind = is_array(_spr)? _spr[1] : 0;
-			var aa  = _menuItem.active * 0.5 + 0.25;
+		if(is(_menuItem, MenuItem)) {
+			gpu_set_scissor(_bx0, _by0, _spw, _sph);
+			if(_spr != noone) {
+				var spr = is_array(_spr)? _spr[0] : _spr;
+				var ind = is_array(_spr)? _spr[1] : 0;
+				var aa  = _menuItem.active * 0.5 + 0.25;
+				
+				if(sprite_exists(spr)) {
+					var ss = (_sph - ui(8)) / sprite_get_height(spr);
+					draw_sprite_ext(spr, ind, _bx0 + pd + _sph/2, _by0 + _sph/2, ss, ss, 0, COLORS._main_icon_light, aa * anim_prog);
+				}
+			}
+				
+			if(_menuItem.toggle != noone) {
+				var tog = _menuItem.toggle(_menuItem);
+				if(tog) draw_sprite_ui(THEME.icon_toggle, 0, _bx0 + pd + _sph/2, _by0 + _sph/2, 1, 1, 0, COLORS._main_icon_light);
+			}
 			
-			if(sprite_exists(spr)) {
-				var ss = (_sph - ui(8)) / sprite_get_height(spr);
-				draw_sprite_ext(spr, ind, _bx0 + pd + _sph/2, _by0 + _sph/2, ss, ss, 0, COLORS._main_icon_light, aa * anim_prog);
+			var tx = _bx0 + pd + (_spr != noone) * (_sph + ui(4));
+			var aa = _menuItem.active * 0.75 + 0.25;
+			
+			draw_set_text(font, fa_left, fa_center, _hov && !sHov? COLORS._main_text_accent : COLORS._main_text, aa * anim_prog);
+			draw_text(tx, _by0 + _sph / 2, label);
+			draw_set_alpha(1);
+			gpu_set_scissor(scis);
+			
+		} else if(is(_menuItem, MenuWidget)) {
+			var _txt = _menuItem.name;
+			var _edt = _menuItem.editWidget;
+			var _par = _menuItem.param;
+			var _val = _menuItem.getter(_par);
+			
+			widg = true;
+			
+			draw_set_text(f_p4, fa_center, fa_top, _hov && !sHov? COLORS._main_text_accent : COLORS._main_text);
+			draw_text(_bx0 + _spw / 2, _by0 + ui(2), _txt);
+			
+			var _wx = _bx0 + ui(4);
+			var _wy = _by0 + ui(2 + 16);
+			var _ww = widget_width  - ui(8);
+			var _wh = widget_height - ui(4 + 2 + 16);
+			
+			var _param = new widgetParam(_wx, _wy, _ww, _wh, _val).setFont(f_p3);
+			_edt.setFocusHover(true, true);
+			_edt.drawParam(_param);
+			
+			if(_hov) {
+				mouse_rel = false;
+				HOVER = noone;
+				FOCUS = noone;
 			}
 		}
-			
-		if(_menuItem.toggle != noone) {
-			var tog = _menuItem.toggle(_menuItem);
-			if(tog) draw_sprite_ui(THEME.icon_toggle, 0, _bx0 + pd + _sph/2, _by0 + _sph/2, 1, 1, 0, COLORS._main_icon_light);
-		}
 		
-		var tx = _bx0 + pd + (_spr != noone) * (_sph + ui(4));
-		var aa = _menuItem.active * 0.75 + 0.25;
-		
-		draw_set_text(font, fa_left, fa_center, _hov && !sHov? COLORS._main_text_accent : COLORS._main_text, aa * anim_prog);
-		draw_text(tx, _by0 + _sph / 2, label);
-		draw_set_alpha(1);
-			
-		gpu_set_scissor(scis);
 		draw_sprite_stretched(THEME.dialog_menu, 1, _bx0, _by0, _spw, _sph);
 	}
 	
@@ -198,6 +242,16 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		active = false;
 	}
 	
+	if(widg && keyboard_check_released(vk_anykey)) {
+		KEYBOARD_BLOCK          = false;
+		KEYBOARD_PRESSED_STRING = "";
+		KEYBOARD_STRING         = "";
+		keyboard_string         = "";
+		
+		if(itemSelecting == -1)
+			active = false;
+	}
+		
 	if(mouse_rel) {
 		HOVER  = noone;
 		FOCUS  = noone;

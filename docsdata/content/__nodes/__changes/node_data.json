@@ -6,6 +6,11 @@
         "date": "2026-05-17T07:02:33.637Z",
         "node": "",
         "commit": "Hotkey that assigns to multiple action now create pie menu (can be disable in preference)."
+      },
+      {
+        "date": "2026-05-18T03:39:01.444Z",
+        "node": "",
+        "commit": "**Preview Panel**: Add vertical toolbar mode."
       }
     ]
   },

@@ -47,6 +47,16 @@ function Panel_Preview_View_Setting(_panel) : Panel_Linear_Setting() constructor
 		),
 		
 		new __Panel_Linear_Setting_Item(
+			__txt("Toolbar Direction"),
+			new buttonGroup(__txts([ "Vertical", "Horizontal" ]), function(val) /*=>*/ { PREFERENCES.panel_preview_toolbar_horizontal = val; }),
+			function()    /*=>*/   {return PREFERENCES.panel_preview_toolbar_horizontal},
+			function(val) /*=>*/ { PREFERENCES.panel_preview_toolbar_horizontal = val; },
+			PREFERENCES.panel_preview_toolbar_horizontal,
+			noone,
+			"panel_preview_toolbar_horizontal",
+		),
+		
+		new __Panel_Linear_Setting_Item(
 			__txt("View Control"),
 			new buttonGroup(__txts([ "None", "Left", "Right" ]), function(val) /*=>*/ { previewPanel.show_view_control = val; }),
 			function()    /*=>*/   {return previewPanel.show_view_control},

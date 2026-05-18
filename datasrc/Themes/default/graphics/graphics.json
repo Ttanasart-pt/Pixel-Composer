@@ -413,7 +413,7 @@
     "dialog":                             { "path": "./panel/s_dialog.png",                                 "s": 2, "x":  0, "y":  0, "slice": 15 },
     "dialog_menu":                        { "path": "./panel/s_dialog_menu.png",                            "s": 2, "x":  0, "y":  0, "slice":  7 },
     "panel_tab_align":                    { "path": "./panel/s_panel_tab_align.png",                        "s": 4, "x":  8, "y":  8 },
-    "tool_side":                          { "path": "./panel/s_tool_side.png",                              "s": 2, "x":  0, "y":  0, "slice":  4 },
+    "tool_side":                          { "path": "./panel/s_tool_side.png",                              "s": 4, "x":  0, "y":  0, "slice":  4 },
     "toolbar":                            { "path": "./panel/s_toolbar.png",                                "s": 2, "x":  0, "y":  0, "slice":  4 },
     "ui_panel":                           { "path": "./panel/s_ui_panel.png",                               "s": 3, "x":  0, "y":  0, "slice":  4 },
     "ui_panel_bg":                        { "path": "./panel/s_ui_panel_bg.png",                            "s": 5, "x":  0, "y":  0, "slice":  6 },

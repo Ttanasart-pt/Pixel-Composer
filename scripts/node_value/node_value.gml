@@ -34,6 +34,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dummy_redo     = -1;
 		
 		instanceBase   = undefined;
+		
+		pieWidget = undefined;
 	#endregion
 	
 	#region ---- Tooltip ----
@@ -1112,6 +1114,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return editWidget;
 	}
 	
+	static getPieWidget = function() {
+		if(pieWidget != undefined) return pieWidget;
+		
+		var wid = getEditWidget();
+		pieWidget = wid.clone();
+		return pieWidget;
+	}
+	
 	static resetDisplay = function() {
 		editWidget    = noone;
 		editWidgetMap = {};
@@ -1623,6 +1633,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			wid.always_break_line = true; 
 		return self; 
 	} 
+	
+	static setPieMenu = function() { array_push(node.pie_junctions, self); return self; }
 	
 	////- RENDER
 	

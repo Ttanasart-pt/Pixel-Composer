@@ -6,6 +6,11 @@
         "date": "2026-05-17T10:23:49.498Z",
         "node": "",
         "commit": "**Sort Array**: Input will now reject connection to unsortable type."
+      },
+      {
+        "date": "2026-05-18T03:39:01.455Z",
+        "node": "",
+        "commit": "**Preview Panel**: Add vertical toolbar mode."
       }
     ]
   },

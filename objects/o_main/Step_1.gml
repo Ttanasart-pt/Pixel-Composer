@@ -122,6 +122,11 @@ _FILE_DROPPED       = false;
 	
 	with(_p_dialog) doResize();
 	with(_p_dialog) doDrag();
+	
+	if(instance_exists(o_pie_menu)) {
+		HOVER = noone;
+		FOCUS = noone;
+	}
 #endregion
 
 #region auto save

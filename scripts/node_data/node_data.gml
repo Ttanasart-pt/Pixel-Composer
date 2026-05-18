@@ -192,6 +192,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				.setIndex(1).setTags(VALUE_TAG.matadata),
 		];
 		
+		pie_junctions = [];
 	#endregion
 	
 	#region ---- Attributes ----
@@ -2904,7 +2905,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getToolNode     = undefined;
 	static getToolSettings = function() /*=>*/ {return tool_settings};
 	static showTool        = function() /*=>*/ {return tools != -1 || toolShow};
-	static drawTools       = noone;
+	static drawPreviewToolbar = noone;
 	
 	static selectAll   = undefined;
 	static selectClear = undefined;

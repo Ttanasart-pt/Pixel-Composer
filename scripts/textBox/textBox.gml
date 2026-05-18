@@ -321,6 +321,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	}
 	
 	static editText = function() {
+		if(KEYBOARD_BLOCK) return;
+		
 		if(cursor == cursor_select) cursor_select = -1;
 		var minc     = min(cursor, cursor_select);
 		var maxc     = max(cursor, cursor_select);

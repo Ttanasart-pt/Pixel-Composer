@@ -1,6 +1,7 @@
 /// @description 
-var trigger = false;
+if(KEYBOARD_BLOCK) exit;
 
+var trigger = false;
 KEYBOARD_PRESSED = vk_nokey;
 kb_time += DELTA_TIME;
 
