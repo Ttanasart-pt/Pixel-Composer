@@ -7,6 +7,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 3, nodeValue_Surface( "Surface Top"  )).setDrawGroup(0);
 	newInput( 5, nodeValue_Surface( "Height Map"   )).setDrawGroup(1).setBW();
 	newInput(14, nodeValue_Surface( "Bottom Map"   )).setDrawGroup(1).setBW();
+	newInput(17, nodeValue_Surface( "Side Map"     )).setDrawGroup(1).setBW();
 	
 	////- =Isoextrude
 	newInput( 4, nodeValue_EButton( "Side",      0, [ "Top", "Left", "Right" ] ));
@@ -29,14 +30,14 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Rendering
 	newInput( 2, nodeValue_Gradient( "Blending", gra_white ));
-	// input 17
+	// input 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 
 		[ "Surfaces",    false     ],  0,  6,  3, 
-		[ "Height Maps", false     ],  5, 14, 
+		[ "Height Maps", false     ],  5, 14, 17, 
 		[ "Depth",       false     ],  4,  1,  9, 
 		[ "Transform",   false     ],  7,  8, 
 		[ "Hole",         true, 13 ], 12, 10, 11, 
@@ -46,7 +47,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- Nodes
 	
-	temp_surface = [ noone, noone, noone, noone, noone ];
+	temp_surface = [ noone, noone, noone, noone, noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _dim = getDimension();
@@ -59,10 +60,11 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 			var _surf    = _data[ 0]; 
-			var _surfS   = _data[ 6], _surfSu = is_surface(_surfS);
-			var _surfT   = _data[ 3], _surfTu = is_surface(_surfT);
-			var _surfH   = _data[ 5], _surfHu = is_surface(_surfH);
-			var _surfB   = _data[14], _surfBu = is_surface(_surfB);
+			var _surfS   = _data[ 6], _surfSu  = is_surface(_surfS);
+			var _surfT   = _data[ 3], _surfTu  = is_surface(_surfT);
+			var _surfH   = _data[ 5], _surfHu  = is_surface(_surfH);
+			var _surfB   = _data[14], _surfBu  = is_surface(_surfB);
+			var _surfSH  = _data[17], _surfSHu = is_surface(_surfSH);
 			
 			var _side    = _data[ 4]; 
 			var _dept    = _data[ 1]; 
@@ -91,8 +93,9 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var sw = surface_get_width_safe(  _surf );
 		var sh = surface_get_height_safe( _surf );
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
+		for( var i = 0; i < 5; i++ )
 			temp_surface[i] = surface_verify(temp_surface[i], sw, sh);
+		temp_surface[5] = surface_verify(temp_surface[5], 1024, 1024);
 		
 		#region geometry
 			var cx = sw / 2;
@@ -198,6 +201,14 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_rectangle_pr_surf(x0, y0, x1, y1, x2, y2, x3, y3, _surf);
 		surface_reset_shader();
 		
+		surface_set_target(temp_surface[5]);
+			DRAW_CLEAR
+			
+			draw_surface_stretched_safe(_surfSH,   0,   0, 512, 512);
+			draw_surface_stretched_safe(_surfO1, 512,   0, 512, 512);
+			draw_surface_stretched_safe(_surfO2,   0, 512, 512, 512);
+		surface_reset_target();
+		
 		_outData[0] = surface_verify(_outData[0], sw, sh); surface_clear(_outData[0]);
 		_outData[1] = surface_verify(_outData[1], sw, sh); surface_clear(_outData[1], c_white, 1);
 		
@@ -216,13 +227,13 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_i("useSide",      _surfSu     );
 			shader_set_s("sideTexture",  _surfS      );
 			
+			shader_set_s("miscTexture1", temp_surface[5] );
+			
+			shader_set_i("useSideH",     _surfSHu    );
+			
 			shader_set_i("holeType",     _hType      );
-			
 			shader_set_i("useHole1",     _surfO1u    );
-			shader_set_s("holeTexture1", _surfO1     );
-			
 			shader_set_i("useHole2",     _surfO2u    );
-			shader_set_s("holeTexture2", _surfO2     );
 			
 			shader_set_f("maxDepth",     _dept - 1   );
 			shader_set_f("rotation",     _rota / 360 );

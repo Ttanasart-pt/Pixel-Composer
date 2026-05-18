@@ -19,12 +19,23 @@ uniform sampler2D coordMap;
 uniform int useSide;
 uniform sampler2D sideTexture;
 
+uniform sampler2D miscTexture1; 
+
+uniform int useSideH;
+
 uniform int holeType;
 uniform int useHole1;
-uniform sampler2D holeTexture1;
-
 uniform int useHole2;
-uniform sampler2D holeTexture2;
+
+vec4 sampMisc(int index, vec2 tx) {
+	vec2 px  = floor(tx * 511.) / 512.;
+	vec2 ttx = clamp(px / 2., 0., 1.);
+	
+	if(index == 0) return texture2D(miscTexture1, ttx);
+	if(index == 1) return texture2D(miscTexture1, vec2(.5,0.) + ttx);
+	if(index == 2) return texture2D(miscTexture1, vec2(0.,.5) + ttx);
+	return vec4(0.);
+}
 
 void main() {
 	if(scale == 0.) { 
@@ -36,7 +47,7 @@ void main() {
 	vec2 tx   = .5 + (v_vTexcoord - .5) / scale;
 	
 	vec4 base = texture2D(gm_BaseTexture, tx) * v_vColour;
-	vec4 cord = texture2D(coordMap, tx) - .5;
+	vec4 cord = texture2D(coordMap, tx);
 	float rh  = curDepth / maxDepth;
 	float hh  = 1.;
 	
@@ -82,6 +93,27 @@ void main() {
 		gl_FragData[0].a  *= sCol.a;
 	}
 	
+	if(useSideH == 1) {
+		vec2 sideLUV = vec2(cord.x, rh);
+		float lCol = sampMisc(0, sideLUV).r;
+		
+		if(lCol < cord.y || 1. - lCol > cord.y) { 
+			gl_FragData[0].a = 0.; 
+			gl_FragData[1].a = 0.; 
+			return; 
+		}
+		
+		vec2 sideRUV = vec2(cord.y, rh);
+		float rCol = sampMisc(0, sideRUV).r;
+		
+		if(rCol < cord.x || 1. - rCol > cord.x) { 
+			gl_FragData[0].a = 0.; 
+			gl_FragData[1].a = 0.; 
+			return; 
+		}
+		
+	} 
+	
 	float nh  = (curDepth + 1.) / maxDepth;
 	if(nh > hh) gl_FragData[0] = texture2D(topmap, tx);
 	
@@ -89,12 +121,12 @@ void main() {
 	bool h2 = false;
 	
 	if(useHole1 == 1) {
-		vec4 h = texture2D(holeTexture1, vec2(cord.x, 1. - rh));
+		vec4 h = sampMisc(1, vec2(cord.x, 1. - rh));
 		h1 = h.a == 0.;
 	}
 	
 	if(useHole2 == 1) {
-		vec4 h = texture2D(holeTexture2, vec2(cord.y, 1. - rh));
+		vec4 h = sampMisc(2, vec2(cord.y, 1. - rh));
 		h2 = h.a == 0.;
 	}
 	

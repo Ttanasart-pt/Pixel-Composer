@@ -5036,11 +5036,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var _pmenu = [];
     	for( var i = 0, n = array_length(_pInp); i < n; i++ ) {
     		var _inp = _pInp[i];
-    		if(!_inp.show_in_inspector) continue;
     		
-    		var _wid = _inp.getPieWidget();
+    		if(is(_inp, MenuItem)) array_push(_pmenu, _inp);
+    		if(is(_inp, NodeValue)) {
+	    		if(!_inp.show_in_inspector) continue;
+	    		var _wid = _inp.getPieWidget();
+	    		array_push(_pmenu, menuWidget(_inp.getName(), _wid, function(_inp) /*=>*/ {return _inp.showValue()}, _inp));
+    		}
     		
-    		array_push(_pmenu, menuWidget(_inp.getName(), _wid, function(_inp) /*=>*/ {return _inp.showValue()}, _inp));
     	}
     	
     	var pie = pieMenuCall("", _pmenu);

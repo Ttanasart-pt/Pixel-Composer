@@ -119,26 +119,25 @@ function refreshAngles() {
 		else if(len == 2) angles = [ 90, 270 ];
 		else if(len == 3) angles = [ 90, 210, 330 ];
 		else {
-			var lamo = floor((len - 2) / 2);
-			var ramo = len - 2 - lamo;
+			var odd = len % 2;
+			var amo = floor(len / 2);
 			
 			var langles = [];
-			if(lamo == 1) langles = [ 180 ];
-			else for( var i = 1; i <= lamo; i++ ) {
-				var hhg = 1 - i / (lamo + 1) * 2;
+			for( var i = 1; i <= amo; i++ ) {
+				var hhg = 1 - i / (amo + 1) * 2;
 				var ang = 180 - darcsin(hhg);
 				langles[i-1] = ang;
 			}
 			
 			var rangles = [];
-			if(ramo == 1) rangles = [ 180 ];
-			else for( var i = 1; i <= ramo; i++ ) {
-				var hhg = -1 + i / (ramo + 1) * 2;
+			for( var i = 1; i <= amo; i++ ) {
+				var hhg = -1 + i / (amo + 1) * 2;
 				var ang = darcsin(hhg);
 				rangles[i-1] = ang;
 			}
 			
-			angles = array_merge([90], langles, [270], rangles);
+			angles = odd? [90] : [];
+			angles = array_merge(angles, langles, rangles);
 		}
 	}
 }

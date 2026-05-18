@@ -6,6 +6,11 @@
         "date": "2026-05-17T07:33:03.029Z",
         "node": "MK Isoextrude",
         "commit": "**MK Isoextrude**: Color blending now use gradient to vary color per depth."
+      },
+      {
+        "date": "2026-05-18T05:15:40.338Z",
+        "node": "",
+        "commit": "**MK Isoextrude**: New Side extrusion property."
       }
     ]
   },
