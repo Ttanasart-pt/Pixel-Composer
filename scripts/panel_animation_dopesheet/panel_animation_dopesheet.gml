@@ -2157,29 +2157,29 @@ function Panel_Animation_Dopesheet() {
         var wh = ui(18);
         
         #region editWidget
-        	var _edt = prop.getTimelineWidget();
-        	var _wdw = wl * .5;
-    		var _wh  = undefined;
-        	
-        	if(is(_edt, widget) && _wdw > ui(96)) {
-	        	var _wdh = ui(15);
-	        	var _wdx = tx - _wdw;
-	        	var _wdy = ty - _wdh / 2 - ui(1);
-	        	var _wrx = mouse_mx - msx;
-	        	var _wry = mouse_my - msy;
-	        	
-	        	var _par = new widgetParam(_wdx, _wdy, _wdw, _wdh, prop.showValue(), prop.display_data, m, _wrx, _wry)
-	        		.setFont(f_p4).setHide(1)
-	        		
-        		if(drw) {
-		        	_edt.setFocusHover(foc, hov);
-		        	_wh = _edt.drawParam(_par);
-		        	
-        		} else
-        			_wh = _edt.fetchHeight(_par);
-        		
-	        	if(_wh) wh = max(wh, _wh + ui(2));
-        	}
+        //	var _edt = prop.getTimelineWidget();
+        //	var _wdw = wl * .5;
+    	//	var _wh  = undefined;
+        //	
+        //	if(is(_edt, widget) && _wdw > ui(96)) {
+	    //    	var _wdh = ui(15);
+	    //    	var _wdx = tx - _wdw;
+	    //    	var _wdy = ty - _wdh / 2 - ui(1);
+	    //    	var _wrx = mouse_mx - msx;
+	    //    	var _wry = mouse_my - msy;
+	    //    	
+	    //    	var _par = new widgetParam(_wdx, _wdy, _wdw, _wdh, prop.showValue(), prop.display_data, m, _wrx, _wry)
+	    //    		.setFont(f_p4).setHide(1)
+	    //    		
+        //		if(drw) {
+		//        	_edt.setFocusHover(foc, hov);
+		//        	_wh = _edt.drawParam(_par);
+		//        	
+        //		} else
+        //			_wh = _edt.fetchHeight(_par);
+        //		
+	    //    	if(_wh) wh = max(wh, _wh + ui(2));
+        //	}
         #endregion
         
         animator.h = wh;

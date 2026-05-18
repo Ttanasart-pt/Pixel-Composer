@@ -53,6 +53,10 @@ void main() {
 	float rh  = curDepth / maxDepth;
 	float hh  = 1.;
 	
+	float ang = radians(rotation);
+	mat2  rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	vec2  cordRot = .5 + (cord.xy - .5) * rot;
+		
 	gl_FragData[0] = base;
 	gl_FragData[1] = vec4(0.);
 	
@@ -91,14 +95,11 @@ void main() {
 	if(useSide == 1) {
 		vec2 sdUV = vec2(fract(fract(tx.x - rotation / 360.) + 1.), 1. - rh);
 		vec4 sCol = texture2D(sideTexture, sdUV) * v_vColour;
+		
 		gl_FragData[0].rgb = sCol.rgb;
 		gl_FragData[0].a  *= sCol.a;
 	}
 	
-	float ang = radians(rotation);
-	mat2  rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
-	vec2  cordRot = .5 + (cord.xy - .5) * rot;
-		
 	if(useSideL == 1) {
 		vec2 sideLUV = vec2(cordRot.x, 1. - rh);
 		float lCol = sampMisc(0, sideLUV).r;

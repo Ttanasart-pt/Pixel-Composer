@@ -1964,6 +1964,7 @@
     {"id":{"name":"node_path_fill","path":"scripts/node_path_fill/node_path_fill.yy",},},
     {"id":{"name":"node_path_flattern","path":"scripts/node_path_flattern/node_path_flattern.yy",},},
     {"id":{"name":"node_path_from_mask","path":"scripts/node_path_from_mask/node_path_from_mask.yy",},},
+    {"id":{"name":"node_path_join","path":"scripts/node_path_join/node_path_join.yy",},},
     {"id":{"name":"node_path_l_system","path":"scripts/node_path_l_system/node_path_l_system.yy",},},
     {"id":{"name":"node_path_length","path":"scripts/node_path_length/node_path_length.yy",},},
     {"id":{"name":"node_path_map_area","path":"scripts/node_path_map_area/node_path_map_area.yy",},},

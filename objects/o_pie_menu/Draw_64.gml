@@ -114,8 +114,8 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			_spw *= anim_prog;
 				
 		} else if(is(_menuItem, MenuWidget)) {
-			_spw = widget_width  * anim_prog;
-			_sph = widget_height * anim_prog;
+			_spw = widget_width;
+			_sph = widget_height;
 		}
 		
 		switch(_hal) { 
@@ -216,8 +216,8 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			
 			var _wx = _bx0 + ui(4);
 			var _wy = _by0 + ui(2 + 16);
-			var _ww = widget_width  - ui(8);
-			var _wh = widget_height - ui(4 + 2 + 16);
+			var _ww = _spw - ui(8);
+			var _wh = _sph - ui(4 + 2 + 16);
 			
 			var _param = new widgetParam(_wx, _wy, _ww, _wh, _val).setFont(f_p3);
 			_edt.setFocusHover(true, true);

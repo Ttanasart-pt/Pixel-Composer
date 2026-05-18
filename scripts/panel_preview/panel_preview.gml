@@ -1048,8 +1048,6 @@ function Panel_Preview() : PanelContent() constructor {
         	tw += ruler_width;
         
         var th  = 0;
-            th += hori * tool_side_draw_l * ui(40);
-            th += hori * tool_side_draw_r * ui(40);
         
         var ss = scale == 0? min((w - ui(32) - tw) / _w, (h - ui(32) - toolbar_height * 2 - th) / _h) : scale;
         
