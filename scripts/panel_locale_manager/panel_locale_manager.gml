@@ -136,18 +136,29 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 			
 		} setLocal(PREFERENCES.local);
 		
-		static exportMissing = function(_file) {
+		static exportMissing = function(_file, _dup = false) {
 			switch(_file) {
 				case "words" :
 					var _path = get_save_filename_compat("JSON|*.json", "words_missing.json");
 					if(_path == "") return;
 					
 					var _missings = {};
-					for( var i = 0, n = text_total; i < n; i++ ) {
-						var _base_key = base_text_key[i];
-						if(_base_key == "" || has(data_text, _base_key)) continue;
+					if(_dup) {
+						for( var i = 0, n = text_total; i < n; i++ ) {
+							var _base_key = base_text_key[i];
+							if(_base_key == "") continue;
+							
+							if(!has(data_text, _base_key) || data_text[$ _base_key] == base_text[$ _base_key])
+								_missings[$ _base_key] = base_text[$ _base_key];
+						}
 						
-						_missings[$ _base_key] = base_text[$ _base_key];
+					} else {
+						for( var i = 0, n = text_total; i < n; i++ ) {
+							var _base_key = base_text_key[i];
+							if(_base_key == "" || has(data_text, _base_key)) continue;
+							
+							_missings[$ _base_key] = base_text[$ _base_key];
+						}
 					}
 					
 					json_save_struct(_path, _missings, true);
@@ -417,13 +428,20 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 					draw_set_text(f_p3, fa_right, fa_bottom, _prg >= 1? COLORS._main_value_positive : COLORS._main_text_sub);
 					draw_text(fx + fw - ui(8), fy + ui(24), $"{_prg * 100}%");
 					
-					var bw = fw / 2;
+					var bw = fw / (2 + (_page == "words"));
 					var bx = fx;
 					var by = fy + ui(48);
 					
 					var bt = __txt("Export Missing Text");
 					if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, pHOVER, pFOCUS, bt, THEME.dFile_save) == 2) 
-						exportMissing(_page);
+						exportMissing(_page, false);
+					
+					if(_page == "words") {
+						bx += bw + 1;
+						var bt = __txt("Export Missing and Untranslated Text");
+						if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, pHOVER, pFOCUS, bt, THEME.dFile_save) == 2) 
+							exportMissing(_page, true);
+					}
 					
 					bx += bw + 1;
 					var bt = __txt("Import Missing Text");
