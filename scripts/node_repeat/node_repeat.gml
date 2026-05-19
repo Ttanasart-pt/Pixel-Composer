@@ -907,6 +907,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					 _atlas_arr[i] = new Atlas(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
 				else _atlas_arr[i].set(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
 				
+				// _x = round(_x);
+				// _y = round(_y);
+				
 				draw_surface_ext(_surf, _x, _y, _sx, _sy, _rot, _col, _alp);
 			}
 			

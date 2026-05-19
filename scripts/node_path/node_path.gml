@@ -1214,13 +1214,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							var _p = point_to_line(_mx, _my, _ox, _oy, _nx, _ny);
 							var _d = point_distance(_mx, _my, _p[0], _p[1]);
 							
-							if(_d < 16 && (_closet_dist == undefined || _d < _closet_dist)) {
+							if(_d < ui(16) && (_closet_dist == undefined || _d < _closet_dist)) {
 								_closet_dist = _d;
 								_point_hover = _p;
 								_point_ratio = _rat;
 							}
 							
-							if(_d < 4) _line_hover = i;
+							if(_d < ui(4)) _line_hover = i;
 						}
 						
 						if(draw_w) {
@@ -1297,17 +1297,17 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				if(drag_point == i) {
 					_anHov = 1;
 					
-				} else if(hover && point_in_circle(_mx, _my, xx, yy, 8)) {
+				} else if(hover && point_in_circle(_mx, _my, xx, yy, ui(8))) {
 					_anHov       = 1;
 					anchor_hover = i;
 					hover_type   = 0;
 					
-				} else if(cont && hover && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
+				} else if(cont && hover && point_in_circle(_mx, _my, _ax0, _ay0, ui(8))) {
 					draw_circle(_ax0, _ay0, ui(4), false);
 					anchor_hover = i;
 					hover_type   = 1;
 					
-				} else if(cont && hover && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+				} else if(cont && hover && point_in_circle(_mx, _my, _ax1, _ay1, ui(8))) {
 					draw_circle(_ax1, _ay1, ui(4), false);
 					anchor_hover =  i;
 					hover_type   = -1;
@@ -1319,7 +1319,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(_tooln == "Weight edit") {
 				var _w  = attributes.weight;
-				var _wd = 12;
+				var _wd = ui(12);
 				
 				for( var i = 0, n = array_length(_w); i < n; i++ ) {
 					var _wg   = _w[i];
@@ -1337,7 +1337,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 					var _sel = weight_hover == i || weight_drag == i;
 					draw_set_color(_sel? COLORS._main_accent : COLORS._main_icon_light);
-					draw_circle(_wx, _wy, _sel? 5 : 3, false);
+					draw_circle(_wx, _wy, ui(_sel? 5 : 3), false);
 					
 				}
 				
