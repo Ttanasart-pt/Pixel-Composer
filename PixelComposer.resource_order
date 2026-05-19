@@ -1636,6 +1636,7 @@
     {"name":"node_path_blend","order":8,"path":"scripts/node_path_blend/node_path_blend.yy",},
     {"name":"node_path_bridge","order":24,"path":"scripts/node_path_bridge/node_path_bridge.yy",},
     {"name":"node_path_builder","order":16,"path":"scripts/node_path_builder/node_path_builder.yy",},
+    {"name":"node_path_extends","order":40,"path":"scripts/node_path_extends/node_path_extends.yy",},
     {"name":"node_path_fill","order":9,"path":"scripts/node_path_fill/node_path_fill.yy",},
     {"name":"node_path_flattern","order":36,"path":"scripts/node_path_flattern/node_path_flattern.yy",},
     {"name":"node_path_from_mask","order":21,"path":"scripts/node_path_from_mask/node_path_from_mask.yy",},

@@ -40,9 +40,9 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDimension(96, 48);
 	
     ////- =Transform
-	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
-	newInput( 2, nodeValue_Rotation( "Rotation",    0     )).setHotkey("R");
-	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitSimple();
+	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitSimple().setHotkey("G").setPieMenu();
+	newInput( 2, nodeValue_Rotation( "Rotation",    0     ))                .setHotkey("R");
+	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitSimple().setHotkey("S").setPieMenu();
 	
     ////- =Shape
 	newInput( 3, nodeValue_EString(  "Shape", "Rectangle", { 
@@ -54,7 +54,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		})).setHistory([ global.node_path_shape_types, 
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_19_06_0}, list: global.node_path_shape_keys_195 },
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_04_1}, list: global.node_path_shape_keys_204 },
-		]);
+		]).setPieMenu();
 		
 	newInput( 4, nodeValue_Slider(   "Skew",          .5, [-1,1,.01] ));
 	newInput( 5, nodeValue_RotRange( "Angle Range",   [0,90]         ));

@@ -1250,6 +1250,7 @@
             "Node_Path_Weight_Adjust",
             "Node_Path_Offset",
             "Node_Path_Smoothen",
+            "Node_Path_Extends",
             { "label": "/Combine" },
             "Node_Path_Array",
             "Node_Path_Repeat",
