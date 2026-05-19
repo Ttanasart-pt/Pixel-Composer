@@ -112,21 +112,18 @@ _FILE_DROPPED       = false;
 	if(mouse_release(mb_any)) DIALOG_CLICK = true;
 	
 	HOVER = noone;
-	with(_p_dialog) checkMouse();
+	with(_p_dialog)  checkMouse();
 	if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
 	
 	DIALOG_DEPTH_HOVER = 0;
 	
-	with(_p_dialog) checkFocus();
-	with(_p_dialog) checkDepth();
+	with(o_pie_menu) checkFocus();
+	with(_p_dialog)  checkFocus();
+	with(_p_dialog)  checkDepth();
 	
 	with(_p_dialog) doResize();
 	with(_p_dialog) doDrag();
 	
-	if(instance_exists(o_pie_menu)) {
-		HOVER = noone;
-		FOCUS = noone;
-	}
 #endregion
 
 #region auto save

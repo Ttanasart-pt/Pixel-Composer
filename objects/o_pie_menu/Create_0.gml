@@ -39,6 +39,7 @@ with(o_pie_menu) { if(self != other) active = false; }
 	
 	preHover = HOVER;
 	preFocus = FOCUS;
+	setFocus(self.id);
 #endregion
 
 function setMenu(menu) {
@@ -49,28 +50,37 @@ function setMenu(menu) {
 	menus      = [];
 	
 	for( var i = 0, n = array_length(menu); i < n; i++ ) {
-		var m = menu[i];
-		if(is(m, MenuItem)) {
-			var _txt  = m.name;
+		var _menuItem = menu[i];
+		if(is(_menuItem, MenuItem)) {
+			var _txt  = _menuItem.name;
 			var _key  = string_trim_start(_txt, [">"]);
 			var _node = struct_try_get(ALL_NODES, _key, noone);
 			
 			if(_node) {
-				m.name = _node.getName();
-				m.spr  = _node.getSpr();
+				_menuItem.name = _node.getName();
+				_menuItem.spr  = _node.getSpr();
 			}
 			
 			pie_size += hght;
 			
-			array_push(menus, m);
-			name_width = max(name_width, string_width(m.name));
+			array_push(menus, _menuItem);
+			name_width = max(name_width, string_width(_menuItem.name));
 			
-		} else if(is(m, MenuWidget)) {
+		} else if(is(_menuItem, MenuItemGroup)) {
+			var amo = array_length(_menuItem.group);
+			var mww = ui(16) + amo * (_menuItem.spacing + ui(4));
+			_menuItem.width = max(string_width(_menuItem.name), mww)
+			pie_size += ui(48);
+			
+			array_push(menus, _menuItem);
+			name_width = max(name_width, _menuItem.width);
+			
+		} else if(is(_menuItem, MenuWidget)) {
 			KEYBOARD_BLOCK = true;
 			pie_size += ui(48);
 			
-			array_push(menus, m);
-			name_width = max(name_width, string_width(m.name), ui(200));
+			array_push(menus, _menuItem);
+			name_width = max(name_width, string_width(_menuItem.name), ui(200));
 		}
 		
 	}
@@ -83,6 +93,8 @@ function setMenu(menu) {
 }
 
 function setHalf() {
+	y -= ui(24);
+	
 	pie_half = true;
 	refreshAngles();
 	return self;
@@ -93,7 +105,7 @@ function refreshAngles() {
 	var len = array_length(menus);
 	
 	if(pie_half) {
-		pie_width  = max(ui(32), pie_size / 2);
+		pie_width  = max(ui(32), pie_size / 4);
 		pie_height = max(ui(32), pie_size / 2);
 		
 		     if(len == 1) angles = [ 90 ];
@@ -112,7 +124,7 @@ function refreshAngles() {
 		}
 		
 	} else {
-		pie_width  = max(ui(32), pie_size / 3);
+		pie_width  = max(ui(32), pie_size / 5);
 		pie_height = max(ui(32), pie_size / 3);
 		
 		     if(len == 1) angles = [ 90 ];
@@ -153,5 +165,13 @@ function refreshAngles() {
 
 function deactivate() {
 	active = false;
-	if(preFocus) setFocus(preFocus)
+	if(preFocus) setFocus(preFocus);
+}
+
+function checkFocus() {
+	if(depth <= DIALOG_DEPTH_HOVER) {
+		DIALOG_DEPTH_HOVER = depth;
+		HOVER = self.id;
+		FOCUS = self.id;
+	}
 }

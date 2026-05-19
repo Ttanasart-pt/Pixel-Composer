@@ -2509,7 +2509,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getNodeDimension = function() {
 		if(!preview_is_surface) {
-			var otp = array_safe_get_fast(outputs, preview_channel);
+			var otp = array_safe_get_fast(outputs, max(0, preview_channel));
 			if(!is(otp, NodeValue)) return "";
 			
 			var txt = "";
@@ -2841,7 +2841,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- PREVIEW
 	
 	static getPreviewValues = function() {
-		if(preview_channel < 0 || preview_channel >= array_length(outputs)) return noone;
+		if(preview_channel < 0) return array_safe_get(temp_surface, -preview_channel-1, noone);
+		if(preview_channel >= array_length(outputs)) return noone;
 		
 		var _type = outputs[preview_channel].type;
 		if(_type != VALUE_TYPE.surface && _type != VALUE_TYPE.dynaSurface)
@@ -2866,7 +2867,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getPreviewBoundingBoxExpanded = function() /*=>*/ {return __preview_bbox};
 	
 	static getGraphPreviewSurface = function() { 
-		var _node = array_safe_get(outputs, preview_channel_temp ?? preview_channel);
+		var _node = array_safe_get(outputs, max(0, preview_channel_temp ?? preview_channel));
 		if(!is(_node, NodeValue)) return noone;
 		
 		switch(_node.type) {

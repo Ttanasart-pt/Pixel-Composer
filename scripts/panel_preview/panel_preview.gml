@@ -450,12 +450,12 @@ function Panel_Preview() : PanelContent() constructor {
         
         sbChannel = new scrollBox([], function(i) /*=>*/ {
             var node = __getNodePreview();
-            if(node == noone)  return;
+            if(!is(node, Node) || !node.active) return;
+            
             if(!is_numeric(i)) return;
+            if(i < 0 || i >= array_length(sbChannelIndex)) return;
             
-            var _ind = array_safe_get(sbChannelIndex, i, -1);
-            if(_ind == -1) return;
-            
+            var _ind = sbChannelIndex[i];
             node.preview_channel = _ind; 
             node.setHeight();
         });
@@ -742,8 +742,10 @@ function Panel_Preview() : PanelContent() constructor {
     	preview_junction = noone;
     	
         var _prevNode = preview_node[0];
-        if(is(_prevNode, Node) && _prevNode.active)
-	        preview_junction = array_safe_get(_prevNode.outputs, _prevNode.preview_channel, noone);
+        if(is(_prevNode, Node) && _prevNode.active) {
+        	var _ch = _prevNode.preview_channel;
+        	preview_junction = array_safe_get(_prevNode.outputs, _ch, noone);
+        }
         
         preview_data     = [ noone, noone ];
         preview_surfaces = [ noone, noone ];
@@ -788,15 +790,13 @@ function Panel_Preview() : PanelContent() constructor {
         
         var _chanCurr = node.preview_channel;
         var _chanList = sbChannelIndex;
-        var _chanInfd = array_find(_chanList, _chanCurr);
         if(array_empty(_chanList)) return;
         
-        if(_chanInfd < 0 ) {
-        	node.preview_channel = _chanList[0];
-        	return;
-        }
+        var _chanInfd = array_find(_chanList, _chanCurr);
+        var _chanAmo  = _node.getOutputChannelAmount();
         
-        _chanInfd = (_chanInfd + (_forward? 1 : -1) + array_length(_chanList)) % array_length(_chanList);
+        if(_chanInfd < 0 ) { node.preview_channel = _chanList[0]; return; }
+        _chanInfd = (_chanInfd + (_forward? 1 : -1) + _chanAmo) % _chanAmo;
         node.preview_channel = _chanList[_chanInfd];
     }
     
@@ -1064,11 +1064,9 @@ function Panel_Preview() : PanelContent() constructor {
     static drawNodeChannel = function(_node, _x, _y) {
     	var _chAmo = _node.getOutputChannelAmount();
     	_node.preview_channel = min(_node.preview_channel, _chAmo - 1);
-    	if(_chAmo <= 1) return 0;
-        
+    	
         sbChannelIndex = [];
         var chName     = [];
-        var currName   = _node.getOutputChannelName(_node.preview_channel);
         
         draw_set_text(sbChannel.font, fa_center, fa_center);
         var ww  = 0;
@@ -1085,7 +1083,27 @@ function Panel_Preview() : PanelContent() constructor {
             ww = max(ww, string_width(_name) + ui(40));
         }
         
+        if(TESTING && is_array(_node.temp_surface)) {
+            array_push(sbChannelIndex, -1);
+            array_push(chName, -1);
+            
+	        for( var i = 0, n = array_length(_node.temp_surface); i < n; i++ ) {
+	        	var _outi = -1 - i;
+	        	var _name = $"Temp surface {i}";
+	        	
+	            array_push(sbChannelIndex, _outi);
+	            array_push(chName, _name);
+	            
+	            ww = max(ww, string_width(_name) + ui(40));
+	        }
+        }
+        
+        if(array_length(sbChannelIndex) <= 1) return 0;
+        
         if(!array_empty(chName)) {
+        	var currName = _node.preview_channel >= 0? _node.getOutputChannelName(_node.preview_channel) : 
+        	                                           $"Temp surface {-_node.preview_channel - 1}";
+        	
             sbChannel.data_list = chName;
             sbChannel.setFocusHover(pFOCUS, pHOVER);
             sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
@@ -2693,9 +2711,15 @@ function Panel_Preview() : PanelContent() constructor {
             		rx  = right_menu_x;
 	            	ry += lh + ui(2);
 	            	
-	            	var _junc  = array_safe_get(_node.outputs, _node.preview_channel);
-	            	var _jval  = is(_junc, NodeValue);
-	            	var _jname = _jval? _junc.name : __txt("no output");
+	            	if(_node.preview_channel >= 0) {
+		            	var _junc  = array_safe_get(_node.outputs, _node.preview_channel);
+		            	var _jval  = is(_junc, NodeValue);
+		            	var _jname = _jval? _junc.name : __txt("no output");
+		            	
+	            	} else {
+	            		var _jval  = false;
+		            	var _jname = $"Temp surface {-_node.preview_channel-1}";
+	            	}
 	            	
 	            	var tw = string_width(_jname) + ui(8);
 	                draw_sprite_stretched_ext(ls, 0, rx-tw+ui(4), ry, tw, lh, lc, .8);
@@ -4163,6 +4187,7 @@ function Panel_Preview() : PanelContent() constructor {
     	var node  = getNodePreview();
     	var surf  = getNodePreviewSurface();
     	if(!node || !is_just_surface(surf)) return;
+    	if(node.preview_channel < 0) return;
     	
     	var sel_x = selection_x0;
     	var sel_y = selection_y0;

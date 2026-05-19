@@ -50,7 +50,9 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	var widg  = false;
 	
 	var mouse_rel = global_mouse_right_is_released() || mouse_lpress();
-	if(activate_key_release) mouse_rel |= keyboard_check_released(vk_anykey);
+	    mouse_rel |= activate_key_release && keyboard_check_released(vk_anykey);
+	    mouse_rel &= sHOVER;
+	
 	var _bx0, _bx1, _by0, _by1;
 	
 	var _itemSelecting = itemSelecting;
@@ -90,13 +92,14 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	
 	var scis = gpu_get_scissor();
 	var _spw, _sph;
+	var _ba, _bx, _by;
 	
 	for( var i = 0; i < amo; i++ ) {
 		var _menuItem = menus[i];
+		_ba = angles[i];
 		
-		var _ba  = angles[i];
-		var _bx  = x + lengthdir_x(anim_prog * pie_width,  _ba);
-		var _by  = y + lengthdir_y(anim_prog * pie_height, _ba);
+		_bx = x + lengthdir_x(anim_prog * pie_width,  _ba);
+		_by = y + lengthdir_y(anim_prog * pie_height, _ba);
 		
 		var _hal = fa_center;
 		if(abs(angle_difference(  0, _ba)) < 80) _hal = fa_left;
@@ -113,6 +116,10 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			_spw  = string_width(label) + pd * 2 + (_spr != noone) * (_sph + ui(4));
 			_spw *= anim_prog;
 				
+		} else if(is(_menuItem, MenuItemGroup)) {
+			_spw = _menuItem.width;
+			_sph = ui(2 + 16) + _menuItem.spacing + ui(4);			
+			
 		} else if(is(_menuItem, MenuWidget)) {
 			_spw = widget_width;
 			_sph = widget_height;
@@ -163,7 +170,6 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 				
 				instance_destroy(_p_dialog);
 				if(onActivate != -1) onActivate();
-				
 				var _res = _menuItem.toggleFunction(_dat);
 			}
 		}
@@ -203,6 +209,55 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			draw_set_alpha(1);
 			gpu_set_scissor(scis);
 			
+		} else if(is(_menuItem, MenuItemGroup)) {
+			var _txt = _menuItem.name;
+			var _gro = _menuItem.group;
+			var _its = _menuItem.spacing;
+			var _amo = array_length(_gro);
+			
+			draw_set_text(f_p4, fa_center, fa_top, _hov && !sHov? COLORS._main_text_accent : COLORS._main_text);
+			draw_text(_bx0 + _spw / 2, _by0 + ui(2), _txt);
+			
+			var _iw = _amo * (_its + ui(4)) - ui(4);
+			var _ix = _bx0 + _spw / 2 - _iw / 2;
+			var _iy = _by0 + ui(2 + 16);
+			
+			for( var j = 0; j < _amo; j++ ) {
+				var ixx = _ix + j * (_its + ui(4));
+				var iyy = _iy;
+				
+				var ixc = ixx + _its / 2;
+				var iyc = iyy + _its / 2;
+				
+				var _submenu = _gro[j];
+				var _sprs = _submenu[0];
+				var _spr  = noone;
+				var _ind  = 0;
+				
+				var _tlp  = array_safe_get_fast(_submenu, 2, "");
+				var _dat  = array_safe_get_fast(_submenu, 3, {});
+				var _clr  = c_white;
+				
+				var _sw = _menuItem.spacing;
+				var _sh = _menuItem.spacing;
+				
+				if(is_array(_sprs)) {
+					_spr = _sprs[0];
+					_ind = _sprs[1];
+					_clr = array_safe_get_fast(_sprs, 2, c_white);
+				} else _spr = _sprs;
+				
+				var hovRec = point_in_rectangle(mouse_mx, mouse_my, ixc - _sw/2, iyc - _sh/2, ixc + _sw/2, iyc + _sh/2);
+				if(sHOVER && _hov && !sHov && hovRec) {
+					if(_tlp != "") TOOLTIP = _tlp;
+					draw_sprite_stretched_ext(THEME.textbox, 3, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 1, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
+					if(mouse_rel) _submenu[1](_dat);
+				}
+				
+				if(_spr != noone) draw_sprite_ui_uniform(_spr, _ind, ixc, iyc, 1, _clr);
+			}
+			
 		} else if(is(_menuItem, MenuWidget)) {
 			var _txt = _menuItem.name;
 			var _edt = _menuItem.editWidget;
@@ -223,11 +278,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			_edt.setFocusHover(true, true);
 			_edt.drawParam(_param);
 			
-			if(_hov) {
-				mouse_rel = false;
-				HOVER = noone;
-				FOCUS = noone;
-			}
+			if(_hov) mouse_rel = false;
 		}
 		
 		draw_sprite_stretched(THEME.dialog_menu, 1, _bx0, _by0, _spw, _sph);
@@ -252,6 +303,5 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			deactivate();
 	}
 		
-	if(mouse_rel) 
-		deactivate();
+	if(mouse_rel) deactivate();
 #endregion 

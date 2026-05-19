@@ -1725,9 +1725,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            node_dragging.attributes.resizeManual     = true;
 	            node_dragging.setHeight();
 	            
-	            if(mouse_lrelease()) {
+	            if(mouse_lrelease())
 	            	node_dragging   = noone;
-	            }
     			break;
     	}
         
@@ -2218,7 +2217,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    menuCall("graph_junction_select", menu);
 	                    
 	                } else if(node_hover && node_hover.draggable) {
-	                	menuCallGen("graph_node_select");
+	                	menuCallGen("graph_node_select", 0, 0, fa_left, false);
+	                	var pie = nodeQuickPie();
+	                	if(pie) pie.setHalf();
 	                    
 	                } else if(node_hover == noone && junction_hovering == noone) {
 	                    var ctx = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
@@ -5037,7 +5038,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	for( var i = 0, n = array_length(_pInp); i < n; i++ ) {
     		var _inp = _pInp[i];
     		
-    		if(is(_inp, MenuItem)) array_push(_pmenu, _inp);
+    		if(is(_inp, MenuItem))      array_push(_pmenu, _inp);
+    		if(is(_inp, MenuItemGroup)) array_push(_pmenu, _inp);
+    		if(is(_inp, MenuWidget))    array_push(_pmenu, _inp);
+    		
     		if(is(_inp, NodeValue)) {
 	    		if(!_inp.show_in_inspector) continue;
 	    		var _wid = _inp.getPieWidget();
@@ -5047,7 +5051,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	}
     	
     	if(!array_empty(_pmenu))
-    		pieMenuCall($"node_action_{instanceof(node_hovering)}", _pmenu);
+    		return pieMenuCall($"node_action_{instanceof(node_hovering)}", _pmenu);
+    	return noone;
     }
     
     ////- Serialize

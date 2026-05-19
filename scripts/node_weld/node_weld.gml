@@ -12,8 +12,8 @@ function Node_Weld(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	__init_mask_modifier(7, 5); // inputs 5, 6, 
 	
 	////- =Weld
-	newInput( 8, nodeValue_Float(  "Radius",  8 )).setMappable(9).setUnitSimple(false);
-	newInput(10, nodeValue_Float(  "Factor",  2 ));
+	newInput( 8, nodeValue_Float(  "Radius",  8 )).setMappable(9).setUnitSimple(false).setPieMenu();
+	newInput(10, nodeValue_Float(  "Factor",  2 )).setPieMenu();
 	
 	////- =Rendering
 	newInput(11, nodeValue_EButton( "Weld Color",  0, [ "Blended", "Closest" ]  ));

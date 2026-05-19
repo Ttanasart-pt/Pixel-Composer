@@ -2,38 +2,39 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Replace Image";
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface("Base Image"));
-	newInput(1, nodeValue_Surface("Target Image")).setArrayDepth(1);
-	newInput(2, nodeValue_Surface("Replacement Image")).setArrayDepth(1);
-	newInput(7, nodeValue_Enum_Scroll("Array mode",  0, { data: [ "Match index", "Randomized" ], update_hover: false }));
-	newInput(8, nodeValueSeed());
+	newInput( 0, nodeValue_Surface( "Base Image"        ));
+	newInput( 1, nodeValue_Surface( "Target Image"      )).setArrayDepth(1);
+	newInput( 2, nodeValue_Surface( "Replacement Image" )).setArrayDepth(1);
+	newInput( 7, nodeValue_EScroll( "Array mode",  0, { data: [ "Match index", "Randomized" ], update_hover: false }));
+	newInput( 8, nodeValueSeed());
 	
 	////- =Searching
-	newInput(5, nodeValue_Bool("Fast Mode", true ));
-	newInput(3, nodeValue_Slider("Color Threshold", 0.1)).setTooltip("How similiar the color need to be in order to be count as matched." );
-	newInput(6, nodeValue_Slider("Pixel Threshold", 0.1)).setTooltip("How many pixel need to me matched to replace with replacement image." );
+	newInput( 5, nodeValue_Bool(   "Fast Mode",       true )).setTooltip("Fast mode will only match origin point, while non-fast mode will try to match the entire surface.");
+	newInput( 3, nodeValue_Slider( "Color Threshold", .1   )).setTooltip("How similiar the color need to be in order to be count as matched." );
+	newInput( 6, nodeValue_Slider( "Pixel Threshold", .1   )).setTooltip("How many pixel need to me matched to replace with replacement image." );
 	
 	////- =Render
-	newInput(4, nodeValue_Bool("Draw Base Image", true ));
-	newInput(9, nodeValue_Bool("Replace Empty", false))
+	newInput( 4, nodeValue_Bool( "Draw Base Image", true  ));
+	newInput( 9, nodeValue_Bool( "Replace Empty",   false ))
 	// input 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Surfaces",   true], 0, 1, 2, 7, 8, 
-		["Searching", false], 5, 3, 6, 
-		["Render",    false], 4, 9, 
+		[ "Surfaces",   true ],  0,  1,  2,  7,  8, 
+		[ "Searching", false ],  5,  3,  6, 
+		[ "Render",    false ],  4,  9, 
 	];
+	
+	////- Node
 	
 	temp_surface = [ noone, noone, noone ];
 	
 	static matchTemplate = function(_index, _surf, _base, _target, _cthr, _pthr, _fst) {
-		
 		surface_set_shader(_surf, _fst? sh_surface_replace_fast_find : sh_surface_replace_find, false);
 			shader_set_f("dimension", surface_get_width_safe(_base), surface_get_height_safe(_base));
 			
-			shader_set_surface("target", _target);
+			shader_set_s("target", _target);
 			shader_set_f("targetDimension", surface_get_width_safe(_target), surface_get_height_safe(_target));
 			
 			shader_set_f("colorThreshold", _cthr);
@@ -53,38 +54,38 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	}
 	
 	static replaceTemplate = function(_index, _base, _res, _replace, _fst) {
-		
 		shader_set(_fst? sh_surface_replace_fast_replace : sh_surface_replace_replace);
 		surface_set_target_ext(0, temp_surface[1]);
 		surface_set_target_ext(1, temp_surface[2]);
 		
 			shader_set_f("dimension",  surface_get_width_safe(_base), surface_get_height_safe(_base));
 			
-			shader_set_surface("replace", _replace);
+			shader_set_s("replace", _replace);
 			shader_set_f("replace_dim", surface_get_width_safe(_replace), surface_get_height_safe(_replace));
 			
-			shader_set_surface("findRes", _res);
+			shader_set_s("findRes", _res);
 			shader_set_f("index", _index);
 			
 			draw_surface_safe(_base);
 		surface_reset_shader();
 	}
 	
-	static step = function() {
-		var _mode = getInputData(7);
-		inputs[8].setVisible(_mode == 1);
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _bas = _data[0];
-		var _tar = _data[1];
-		var _rep = _data[2];
-		var _drw = _data[4];
-		var _fst = _data[5];
-		
-		var _cthr = _data[3];
-		var _pthr = _data[6];
-		var _oalp = _data[9];
+		#region data
+			var _bas  = _data[ 0];
+			var _tar  = _data[ 1];
+			var _rep  = _data[ 2];
+			var _amod = _data[ 7];
+			
+			var _fst  = _data[ 5];
+			var _cthr = _data[ 3];
+			var _pthr = _data[ 6];
+			
+			var _drw  = _data[ 4];
+			var _oalp = _data[ 9];
+			
+			inputs[8].setVisible(_amod == 1);
+		#endregion
 		
 		if(!is_array(_tar)) _tar = [ _tar ]; 
 		if(!is_array(_rep)) _rep = [ _rep ];
@@ -101,7 +102,6 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var ramo = array_length(_rep);
 		
 		for( var i = 0; i < tamo; i++ ) matchTemplate(i / tamo, temp_surface[0], _bas, _tar[i], _cthr, _pthr, _fst);
-		// return temp_surface[0];
 		
 		var amo = max(tamo, ramo);
 		for( var i = 0; i < amo; i++ ) {

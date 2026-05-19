@@ -105,7 +105,7 @@ function MenuItemGroup(_name, _group, _hotkey = noone) constructor {
 	toggle  = noone;
 	
 	hoykeyObject = noone;
-	spacing      = ui(32);
+	spacing      = ui(24);
 	
 	static setSpacing = function(_spacing) { spacing = _spacing; return self; }
 }
@@ -192,7 +192,7 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 			return pieMenuCall(pie_id, _piemenus, _x, _y);
 			
 		} else if(!array_empty(_piemenus)) {
-			var _pieMenu = pieMenuCall(pie_id, _piemenus, _x, _y - ui(24));
+			var _pieMenu = pieMenuCall(pie_id, _piemenus, _x, _y);
 			if(_pieMenu) _pieMenu.setHalf();
 		}
 	}

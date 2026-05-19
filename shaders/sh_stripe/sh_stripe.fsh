@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1770002023.9166503]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -17,7 +16,6 @@
 #endregion -- uv --
 
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -170,6 +168,9 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform int   blend;
 uniform float progress;
+
+uniform int   tiled;
+uniform float tiledAmo;
 
 uniform vec2      amount;
 uniform int       amountUseSurf;

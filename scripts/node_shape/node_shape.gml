@@ -106,6 +106,12 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_04_1}, list: global.node_shape_keys_204 }, 
 		]).setTopbar();
 		
+	array_push(pie_junctions, menuItemGroup(__txt("Shape"), [
+		[ [s_node_shape_type,  0], function() /*=>*/ {return inputs[2].setValue("Rectangle")}       ],
+		[ [s_node_shape_type,  5], function() /*=>*/ {return inputs[2].setValue("Ellipse")}         ],
+		[ [s_node_shape_type, 13], function() /*=>*/ {return inputs[2].setValue("Regular Polygon")} ],
+	]));
+		
 	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitSimple();
 	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]   )).setUnitSimple();
 	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]   )).setUnitSimple();

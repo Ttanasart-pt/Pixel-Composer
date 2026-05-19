@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.009",
+    "changes": [
+      {
+        "date": "2026-05-19T03:43:49.312Z",
+        "node": "",
+        "commit": "**Replace Image**: Add alpha culling."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

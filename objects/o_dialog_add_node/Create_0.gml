@@ -259,7 +259,7 @@ event_inherited();
 #region pie
 	function onInit() {
 		if(!key_mod_press(ALT) && mouse_rclick()) {
-			var pie = pieMenuCallGen("pie_add_node", dialog_x, dialog_y - ui(24));
+			var pie = pieMenuCallGen("pie_add_node", dialog_x, dialog_y);
 			if(pie) pie.setHalf();
 		}
 	}

@@ -84,6 +84,9 @@ event_inherited();
 		var _ly  = _y;
 		var hov  = undefined;
 		
+		var _hover  = sc_content.hover;
+		var _active = sc_content.active;
+		
 		if(MOUSE_MOVED) selecting = noone;
 		
 		for(var i = 0; i < array_length(data); i++) {
@@ -125,7 +128,7 @@ event_inherited();
 			var _yy  = _ly + hght / 2;
 			
 			if(_act && !_sub) {
-				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
+				if(_hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
 					hov       = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);
@@ -133,8 +136,8 @@ event_inherited();
 			
 				if(selecting == i) {
 					draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
-				
-					if(sc_content.active && (mouse_lpress() || KEYBOARD_ENTER)) {
+					
+					if(_active && (mouse_lpress() || KEYBOARD_ENTER)) {
 						initVal = i;
 						instance_destroy();
 					}
