@@ -14,26 +14,23 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		}
 		file_find_close();
 		
-		sc_local_selector = new scrollBox(locals, function(_idx) /*=>*/ { 
-			setLocal(array_safe_get(locals, _idx, "en"));
-		}).setUpdateHover(false);
-		
+		sc_local_selector = new scrollBox(locals, function(_idx) /*=>*/ { setLocal(array_safe_get(locals, _idx, "en")); }).setUpdateHover(false);
 	#endregion
 	
 	#region base local
-		var _word   = json_load_struct($"{DIRECTORY}Locale/en/words.json");
-		var _ui     = json_load_struct($"{DIRECTORY}Locale/en/UI.json");
-		base_text  = struct_append(_word, _ui);
+		var _word     = json_load_struct($"{DIRECTORY}Locale/en/words.json");
+		var _ui       = json_load_struct($"{DIRECTORY}Locale/en/UI.json");
+		base_text     = struct_append(_word, _ui);
 		
-		base_node   = json_load_struct($"{DIRECTORY}Locale/en/nodes.json");
-		base_config = json_load_struct($"{DIRECTORY}Locale/en/config.json");
-		base_notes  = directory_listdir($"{DIRECTORY}Locale/en/notes", fa_none);
+		base_node     = json_load_struct($"{DIRECTORY}Locale/en/nodes.json");
+		base_config   = json_load_struct($"{DIRECTORY}Locale/en/config.json");
+		base_notes    = directory_listdir($"{DIRECTORY}Locale/en/notes", fa_none);
 		
 		base_text_key = struct_get_names(base_text);
 		base_node_key = struct_get_names(base_node);
 		
-		text_total = array_length(base_text_key);
-		node_total = 0;
+		text_total    = array_length(base_text_key);
+		node_total    = 0;
 		
 		for( var i = 0, n = array_length(base_node_key); i < n; i++ ) {
 			var _node = base_node[$ base_node_key[i]];
@@ -57,7 +54,8 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		};
 		
 		current_fonts = [];
-		fonts_data = undefined;
+		fonts_data    = undefined;
+		font_preview  = undefined;
 		
 		static setLocal = function(_l) {
 			if(current_local == _l) return;
@@ -74,15 +72,16 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 				data_notes  = base_notes;
 				
 				current_fonts = [];
-				fonts_data = undefined;
+				fonts_data    = undefined;
+				font_preview  = undefined;
 				return;
 			}
 			
 			var dirr = $"{DIRECTORY}Locale/{_l}";
 			
-			var _word   = json_load_struct($"{dirr}/words.json");
-			var _ui     = json_load_struct($"{dirr}/UI.json");
-			data_text   = struct_append(_word, _ui);
+			var _word     = json_load_struct($"{dirr}/words.json");
+			var _ui       = json_load_struct($"{dirr}/UI.json");
+			data_text     = struct_append(_word, _ui);
 			
 			data_node     = json_load_struct($"{dirr}/nodes.json");
 			data_config   = json_load_struct($"{dirr}/config.json");
@@ -99,6 +98,18 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 					fonts_data = json_load_struct(_font);
 					break;
 				}
+			}
+			
+			font_preview = undefined;
+			if(has(fonts_data, "p3")) {
+				var _font  = fonts_data.p3;
+				var _size  = _font[$ "size"] ?? 9;
+					_size *= PREFERENCES.display_scaling * PREFERENCES.text_scaling;
+					
+				var _path  = string_replace(_font[$ "path"] ?? "", "./", $"{dirr}/fonts/");
+				
+				if(file_exists_empty(_path)) 
+					font_preview = font_add(_path, _size, 0, 0, 0, 0);
 			}
 			
 			var _text_translated = 0;
@@ -221,7 +232,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 						_node_translated += array_length(_data.outputs);
 					}
 					
-					current_progress.notes = _node_translated / node_total;
+					current_progress.nodes = _node_translated / node_total;
 					break;
 				
 			}
@@ -255,7 +266,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 					_hh += _sh + ui(4);
 					
 				} else if(_draw) {
-					draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
+					draw_set_text(font_preview ?? f_p3, fa_left, fa_top, COLORS._main_text);
 					draw_text(cx, _y, _valC);
 				}
 			}

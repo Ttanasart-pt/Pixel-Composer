@@ -532,7 +532,7 @@ function Panel_Menu() : PanelContent() constructor {
                         var _mny   = hori? y + y1 : y + y0;
                         var _mcont = is_string(_cont)? menuItems_gen(_cont) : _cont;
                         
-                        menuCall(_mname, _mcont, _mnx, _mny);
+                        menuCall(_mname, _mcont, _mnx, _mny, fa_left, false);
                     }
                 }
             
@@ -805,7 +805,7 @@ function Panel_Menu() : PanelContent() constructor {
                                 menuItem(__txt("PXC Login"), function() /*=>*/ {return dialogPanelCall(new Panel_Account_Sign_In())} )
                             );
                             
-                            menuCall("pxc_logout", _menu);
+                            menuCall("pxc_logout", _menu, 0, 0, fa_left, false);
                         }
                         
                     } else {
@@ -820,7 +820,7 @@ function Panel_Menu() : PanelContent() constructor {
                                 menuItem(__txt("PXC Logout"), function() /*=>*/ {return PXC_Logout()}, THEME.cross_12)
                             );
                             
-                            menuCall("pxc_user", _menu);
+                            menuCall("pxc_user", _menu, 0, 0, fa_left, false);
                         }
                     }
                 }
@@ -978,7 +978,7 @@ function Panel_Menu() : PanelContent() constructor {
                     var dx  = hori? x + tcx : x + w;
                     var dy  = hori? y + h : y + tby0;
                     var da  = hori? fa_center : fa_left;
-                    var dia = menuCall("title_recent_menu", arr, dx, dy, da).setTooltip(tip);
+                    var dia = menuCall("title_recent_menu", arr, dx, dy, da, false).setTooltip(tip);
                 }
             }
             

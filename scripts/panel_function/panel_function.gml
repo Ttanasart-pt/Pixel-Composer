@@ -520,6 +520,7 @@
 	function call_panel_Console()           { panelAdd("Panel_Console",			    true);      }
 	function call_panel_Globalvar()         { panelAdd("Panel_Globalvar",		    true);      }
 	function call_panel_File_Explorer()     { panelAdd("Panel_File_Explorer",	    true);      }
+	function call_panel_Locale_Manager()    { panelAdd("Panel_Locale_Manager",	    true);      }
 	
 	function call_panel_Steam_Workshop()    { dialogPanelCall(new Panel_Steam_Workshop());      }
 	function call_panel_Collection_Runner() { dialogPanelCall(new Panel_Collection_Runner());   }
@@ -553,9 +554,10 @@
         registerFunction("", "Palettes Mixer Panel",      "", MOD_KEY.none, call_panel_Palette_Mixer          ).setMenuAlt("Palettes Mixer", "palettes_mixer_panel")
         registerFunction("", "Gradients Panel",           "", MOD_KEY.none, call_panel_Gradient               ).setMenuAlt("Gradients",      "gradients_panel")
         
-        registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenuAlt("Console",      "console_panel")
-        registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenuAlt("Globalvar",    "globalvar_panel")
-        registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenuAlt("File",         "file_explorer_panel")
+        registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenuAlt("Console",        "console_panel")
+        registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenuAlt("Globalvar",      "globalvar_panel")
+        registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenuAlt("File",           "file_explorer_panel")
+        registerFunction("", "Locale Manager",            "", MOD_KEY.none, call_panel_Locale_Manager         ).setMenuAlt("Locale Manager", "locale_manager_panel")
         
         registerFunction("", "Steam Workshop Panel",      "", MOD_KEY.none, call_panel_Steam_Workshop         ).setMenuAlt("Steam Workshop", "steam_workshop_panel")
         registerFunction("", "Collection Runner Panel",   "", MOD_KEY.none, call_panel_Collection_Runner      ).setMenuAlt("Runner",         "collection_runner_panel")
