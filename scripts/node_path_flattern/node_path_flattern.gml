@@ -9,7 +9,16 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newOutput(0, nodeValue_Output(  "Path", VALUE_TYPE.pathnode, noone));
 	
-	input_display_list = [ 0, 1, 2 ];
+	input_display_list = [  
+		[ "Flatten", false ],  1,  2, 
+		[ "Paths",   false ],  0, 
+	];
+	
+	function createNewInput(index = array_length(inputs)) {
+		newInput(index, nodeValue_PathNode( "Path" )).setVisible(true, true);
+		array_push(input_display_list, index);
+		return inputs[index];
+	} setDynamicInput(1);
 	
 	////- Nodes
 	
@@ -26,15 +35,26 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			lengthTotal = 0;
 			boundary    = new BoundingBox();
 			
-			var _lines  = curr_path.getLineCount();
+			lengthPath  = [];
 			
-			for( var i = 0; i < _lines; i++ ) {
-				var _len = curr_path.getLength();
+			var _lines  = 0;
+			
+			for( var i = 0, n = array_length(curr_path); i < n; i++ ) {
+				var _pth = curr_path[i];
+				var lamo = _pth.getLineCount();
+				_lines += lamo;
 				
-				lengths[i]    = _len;
-				lengthTotal  += _len;
-				lengthAccs[i] = lengthTotal;
-				segments     += curr_path.getSegmentCount();
+				for( var j = 0; j < lamo; j++ ) {
+					var _len = _pth.getLength();
+					
+					array_push(lengths,    _len);
+					array_push(lengthPath, _pth);
+					
+					lengthTotal += _len;
+					array_push(lengthAccs, lengthTotal);
+					
+					segments += _pth.getSegmentCount();
+				}
 			}
 			
 		#endregion
@@ -42,9 +62,12 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 			var hovering = false;
 			
-			if(has(curr_path, "drawOverlay")) {
-				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
-				hovering = hovering || hv;
+			for( var i = 0, n = array_length(curr_path); i < n; i++ ) {
+				var _path = curr_path[i];
+				if(has(_path, "drawOverlay")) {
+					var hv = _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
+					hovering = hovering || hv;
+				}
 			}
 			
 			return hovering;
@@ -60,7 +83,6 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
-			if(!is_path(curr_path)) return out;
 			
 			var _cKey  = _dist;
 			if(struct_has(cached_pos, _cKey)) {
@@ -80,7 +102,8 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(_l >= _dst) {
 					if(_rev) _dst = _l - _dst;
 					
-					curr_path.getPointDistance(_dst, i, out);
+					var _pth = lengthPath[i];
+					_pth.getPointDistance(_dst, i, out);
 					_res = true;
 					break;
 				}
@@ -89,7 +112,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(pingpong) _rev  = !_rev;
 			}
 			
-			if(!_res) curr_path.getPointDistance(getLength(), 0, out);
+			if(!_res) array_last(curr_path).getPointDistance(getLength(), 0, out);
 			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
 			
 			return out;
@@ -102,10 +125,19 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var path = getInputData(0); 
-		if(!is_path(path)) return;
+		#region data
+			var path = getInputData(0); 
+			if(!is_path(path)) return;
+			
+		#endregion
 		
-		var flat = new _flatternPath(path, self);
+		var _paths = [ path ];
+		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
+			var pth = getInputData(i); 
+			if(is_path(pth)) array_push(_paths, pth);
+		}
+		
+		var flat = new _flatternPath(_paths, self);
 		flat.reverse  = getInputData(1); 
 		flat.pingpong = getInputData(2); 
 		
