@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.009",
+    "changes": [
+      {
+        "date": "2026-05-19T06:13:47.197Z",
+        "node": "",
+        "commit": "**Fill Path**: Fix alpha not applying."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

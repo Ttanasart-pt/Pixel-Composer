@@ -6,6 +6,11 @@
         "date": "2026-05-19T03:43:49.306Z",
         "node": "Replace Image",
         "commit": "**Replace Image**: Add alpha culling."
+      },
+      {
+        "date": "2026-05-19T06:13:47.193Z",
+        "node": "Fill Path",
+        "commit": "**Fill Path**: Fix alpha not applying."
       }
     ]
   },

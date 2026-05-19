@@ -67,6 +67,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
         	}
 	        
 	        draw_set_color(_invt? c_white : _colr);
+			draw_set_alpha(_color_get_a(_colr));
 			
 			array_map_ext(path_points, function(p, i) /*=>*/ {return __tpath.getPointRatio(i * __step, 0, p)});
 			var _ts = polygon_triangulate(path_points, 0)[0];
@@ -83,6 +84,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_vertex(p2.x * _sca[0], p2.y * _sca[1]);
 			}
 			draw_primitive_end();
+			draw_set_alpha(1);
 			
 			BLEND_NORMAL
 		surface_reset_target();
