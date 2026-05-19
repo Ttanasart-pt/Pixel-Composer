@@ -59,14 +59,12 @@ function loadLocale() {
 	var _word     = json_load_struct(__locale_file("/words.json"));
 	var _ui       = json_load_struct(__locale_file("/UI.json"));
 	LOCALE.texts  = struct_append(_word, _ui);
-	print(__locale_file("/words.json"), json_stringify(_word, true));
 	
 	LOCALE.node   = json_load_struct(__locale_file("/nodes.json"));
 	LOCALE.config = json_load_struct(__locale_file("/config.json"));
 	
 	var fontDir = $"{DIRECTORY}Locale/{PREFERENCES.local}/fonts/";
 	LOCALE.fontDir = directory_exists(fontDir)? fontDir : noone;
-	
 }
 
 function __txtLoc(  txt, def = txt ) { return LOCALE.texts[$ string_replace_all(string_lower(txt), " ", "_")] ?? def; }
@@ -100,7 +98,7 @@ function __txt_node_name(node, def = "") {
 	}
 	
 	if(!has(LOCALE.node, node)) return def;
-	return LOCALE.node[$ node][$ name] ?? def;
+	return LOCALE.node[$ node][$ "name"] ?? def;
 }
 
 function __txt_node_tooltip(node, def = "") {
