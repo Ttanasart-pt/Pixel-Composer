@@ -10,20 +10,21 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newActiveInput(3);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Mirror
-	newInput(1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
-	newInput(2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").hideLabel().setPieMenu();
-	newInput(4, nodeValue_Bool(     "Both Side", false  )).setPieMenu();
-	// input 5
+	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").hideLabel().setPieMenu();
+	newInput( 4, nodeValue_Bool(     "Both Side", false  )).setPieMenu();
+	newInput( 5, nodeValue_Bool(     "Flip",      false  ));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Mirror mask", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
-		["Surfaces", false], 0, 
-		["Mirror",	 false], 1, 2, 4, 
+		[ "Surfaces", false ],  0, 
+		[ "Mirror",   false ],  1,  2,  4,  5, 
 	];
 	
 	////- Node
@@ -58,32 +59,31 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var _suf = _data[0];
-		var _pos = _data[1];
-		var _ang = _data[2];
-		var _bth = _data[4];
+		#region data
+			var _suf = _data[0];
+			
+			var _pos = _data[1];
+			var _ang = _data[2];
+			var _bth = _data[4];
+			var _inv = _data[5];
+			
+			if(!is_surface(_suf)) return _outData;
+		#endregion
 		
 		var _dim = surface_get_dimension(_suf);
-		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1]);
-		var _outMask = surface_verify(_outData[1], _dim[0], _dim[1]);
+		_outData[0] = surface_verify(_outData[0], _dim[0], _dim[1]);
+		_outData[1] = surface_verify(_outData[1], _dim[0], _dim[1]);
 		
-		shader_set(sh_mirror);
-		surface_set_target_ext(0, _outSurf);
-		surface_set_target_ext(1, _outMask);
-		DRAW_CLEAR
-		BLEND_OVERRIDE
-			
-			shader_set_f("dimension", _dim);
-			shader_set_2("position",  _pos);
+		surface_set_shader(_outData, sh_mirror);
+			shader_set_f("dimension", _dim );
+			shader_set_2("position",  _pos );
 			shader_set_f("angle",     degtorad(_ang));
-			shader_set_i("bothSide",  _bth);
+			shader_set_i("bothSide",  _bth );
+			shader_set_i("invert",    _inv );
 			
 			draw_surface_safe(_suf);
+		surface_reset_shader();
 		
-		BLEND_NORMAL
-		shader_reset();
-		surface_reset_target();
-		
-		return [ _outSurf, _outMask ];
+		return _outData;
 	}
 }

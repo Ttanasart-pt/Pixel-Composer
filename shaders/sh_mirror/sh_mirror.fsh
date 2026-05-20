@@ -7,25 +7,28 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform vec2  position;
 uniform float angle;
+
+uniform int   invert;
 uniform int   bothSide;
 
 void main() {
 	vec2  ps = v_vTexcoord;
 	vec2  px = v_vTexcoord * dimension - position;
-	float _angle;
+	float fangle = angle + float(invert) * PI;
+	float pangle;
 	
-	_angle = atan(px.y, px.x) + angle;
-	_angle = TAU - (_angle - floor(_angle / TAU) * TAU); 
+	pangle = atan(px.y, px.x) + fangle;
+	pangle = TAU - (pangle - floor(pangle / TAU) * TAU); 
 	
-	if(bothSide == 1 || _angle < PI) {
-		float _alpha    = (angle + PI) - (_angle + angle);
-		float inv_angle = (angle + PI) + _alpha;
+	if(bothSide == 1 || pangle < PI) {
+		float _alpha    = (fangle + PI) - (pangle + fangle);
+		float inv_angle = (fangle + PI) + _alpha;
 		float dist      = length(px);
 		
 		ps = (position + vec2(cos(inv_angle) * dist, -sin(inv_angle) * dist )) / dimension;
 	} 
 	
-	gl_FragData[1] = vec4(vec3(_angle < PI? 1. : 0.), 1.);
+	gl_FragData[1] = vec4(vec3(pangle < PI? 1. : 0.), 1.);
 	
 	
 	vec4 cc = vec4(0.);
