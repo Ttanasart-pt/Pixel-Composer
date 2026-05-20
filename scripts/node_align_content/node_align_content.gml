@@ -5,10 +5,10 @@ function Node_Align_Content(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Surfaces
 	newInput(0, nodeValue_Surface(  "Surface In" )).setArrayDepth(1);
-	newInput(2, nodeValue_Color(    "Background", cola(c_black, 0) ));
+	newInput(2, nodeValue_Color(    "Background", cola(c_black, 0) )).setPieMenu();
 	
 	////- =Alignment
-	newInput(3, nodeValue_Anchor(   "Align Anchor" ));
+	newInput(3, nodeValue_Anchor(   "Align Anchor" )).setPieMenu();
 	newInput(4, nodeValue_IPadding( "Pad Content", [0,0,0,0] ));
 	// 5
 	

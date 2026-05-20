@@ -13,8 +13,13 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _rad, 
 		preview_hotkey_mx = _mx;
 		preview_hotkey_my = _my;
 		
-		var _vx = _val + angle_difference(_d1, _d0);
+		preview_hotkey_s1 += angle_difference(_d1, _d0);
+		var _vx = preview_hotkey_s + preview_hotkey_s1;
 		if(KEYBOARD_NUMBER != undefined) _vx = preview_hotkey_s + KEYBOARD_NUMBER;
+		else {
+			if(key_mod_press(CTRL))  _vx = round(_vx);
+			if(key_mod_press(SHIFT)) _vx = value_snap(_vx, 15);
+		}
 		
 		if(setValue(_vx)) UNDO_HOLDING = true;
 		
@@ -32,6 +37,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _rad, 
 		preview_hotkey_active = true;
 		
 		preview_hotkey_s  = _val;
+		preview_hotkey_s1 = 0;
 		preview_hotkey_mx = _mx;
 		preview_hotkey_my = _my;
 		

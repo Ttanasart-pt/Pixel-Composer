@@ -7,7 +7,8 @@ uniform float angle;
 void main() {
     float ang = radians(angle);
     mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-    vec2  tx  = fract(v_vTexcoord + offset * rot);
+    float sca = 1.0 / max(abs(rot[0][0]), abs(rot[0][1]));
+    vec2  tx  = fract(v_vTexcoord + offset * sca * rot);
     
     gl_FragColor = texture2D( gm_BaseTexture, tx );
 }

@@ -8,15 +8,5 @@
         "commit": "**Preview Panel > Rotator**: Add angel snapping."
       }
     ]
-  },
-  {
-    "version": "1.21.rc6",
-    "changes": [
-      {
-        "date": "2026-04-17T05:47:47.720Z",
-        "node": "Inline Group",
-        "commit": "**Inline Group**: Add dragging support."
-      }
-    ]
   }
 ]

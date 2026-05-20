@@ -13,19 +13,20 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Mirror
-	newInput(1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
-	newInput(2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").hideLabel();
-	newInput(4, nodeValue_Bool(     "Both Side", false  ));
+	newInput(1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput(2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").hideLabel().setPieMenu();
+	newInput(4, nodeValue_Bool(     "Both Side", false  )).setPieMenu();
 	// input 5
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
 	newOutput(1, nodeValue_Output("Mirror mask", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 
 		["Mirror",	 false], 1, 2, 4, 
-	]
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.010",
+    "changes": [
+      {
+        "date": "2026-05-20T03:13:44.376Z",
+        "node": "",
+        "commit": "**Preview Panel > Rotator**: Add angel snapping."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

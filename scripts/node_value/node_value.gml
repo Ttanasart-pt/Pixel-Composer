@@ -362,6 +362,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		preview_hotkey_step   = 0;
 		
 		preview_hotkey_s  = 0;
+		preview_hotkey_s1 = 0;
 		preview_hotkey_mx = 0;
 		preview_hotkey_my = 0;
 		

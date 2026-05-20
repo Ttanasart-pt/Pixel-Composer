@@ -9,7 +9,7 @@ function Node_Flip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newActiveInput(2);
 	newInput( 0, nodeValue_Surface( "Surface In" ));
-	newInput( 1, nodeValue_Toggle(  "Axis",  1, [ "X", "Y" ] ));
+	newInput( 1, nodeValue_Toggle(  "Axis",  1, [ "X", "Y" ] )).setPieMenu();
 	// 3
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
