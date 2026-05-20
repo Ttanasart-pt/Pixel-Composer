@@ -60,7 +60,6 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-
 		PROCESSOR_OVERLAY_CHECK
 		
 		var  dim = getInputSingle(0);
@@ -101,7 +100,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[ 4].setVisible(_typ == 1);
 			
 			inputs[14].setVisible(_typ);
-			inputs[17].setVisible(_typ == 1);
+			inputs[17].setVisible(_typ == 1 || _typ == 3);
 		#endregion
 		
 		var _sw = toNumber(_dim[0]);
