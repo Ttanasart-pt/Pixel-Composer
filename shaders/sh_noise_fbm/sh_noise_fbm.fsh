@@ -29,6 +29,7 @@ uniform float scale;
 uniform float seed;
 uniform int   iteration;
 
+uniform vec2 level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
@@ -70,6 +71,7 @@ float fbm (in vec2 st) {
         amplitude *= .5;
     }
 	
+	value = applyLevel(value);
     return value;
 }
 

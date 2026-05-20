@@ -20,49 +20,49 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 3, nodeValue_Vec2( "Scale",    [ 4, 4 ] )).setPieMenu();
 	newInput( 4, nodeValue_Int(  "Iteration",  4      )).setPieMenu();
 	
-	////- =Color
-	newInput( 5, nodeValue_Enum_Button(  "Color Mode",      0, [ "Greyscale", "RGB", "HSV" ] ));
-	newInput( 6, nodeValue_Slider_Range( "Color R Range", [ 0, 1 ] ));
-	newInput( 7, nodeValue_Slider_Range( "Color G Range", [ 0, 1 ] ));
-	newInput( 8, nodeValue_Slider_Range( "Color B Range", [ 0, 1 ] ));
-	// input 10
+	////- =Rendering
+	newInput(12, nodeValue_SliRange( "Level",         [0,1] ));
+	newInput( 5, nodeValue_EButton(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ] ));
+	newInput( 6, nodeValue_SliRange( "Color R Range", [0,1] ));
+	newInput( 7, nodeValue_SliRange( "Color G Range", [0,1] ));
+	newInput( 8, nodeValue_SliRange( "Color B Range", [0,1] ));
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",	false], 0, 10, 11, 9, 
-		["Noise",	false], 1, 2, 3, 4, 
-		["Color",	false], 5, 6, 7, 8, 
+		[ "Output",    false ],  0, 10, 11, 9, 
+		[ "Noise",     false ],  1,  2,  3,  4, 
+		[ "Rendering", false ], 12,  5,  6,  7,  8, 
 	];
 	
 	////- Node
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		var _col = getInputData(5);
-		
-		inputs[6].setVisible(_col != 0);
-		inputs[7].setVisible(_col != 0);
-		inputs[8].setVisible(_col != 0);
-		
-		inputs[6].name = _col == 1? "Color R range" : "Color H range";
-		inputs[7].name = _col == 1? "Color G range" : "Color S range";
-		inputs[8].name = _col == 1? "Color B range" : "Color V range";
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim = _data[0];
-		var _sed = _data[1];
-		var _pos = _data[2];
-		var _sca = _data[3];
-		var _itr = _data[4];
-		
-		var _col = _data[5];
-		var _clr = _data[6];
-		var _clg = _data[7];
-		var _clb = _data[8];
-		
+		#region data
+			var _dim = _data[ 0];
+			var _sed = _data[ 1];
+			var _pos = _data[ 2];
+			var _sca = _data[ 3];
+			var _itr = _data[ 4];
+			
+			var _lvl = _data[12];
+			var _col = _data[ 5];
+			var _clr = _data[ 6];
+			var _clg = _data[ 7];
+			var _clb = _data[ 8];
+			
+			inputs[6].setVisible(_col != 0);
+			inputs[7].setVisible(_col != 0);
+			inputs[8].setVisible(_col != 0);
+			
+			inputs[6].name = _col == 1? "Color R range" : "Color H range";
+			inputs[7].name = _col == 1? "Color G range" : "Color S range";
+			inputs[8].name = _col == 1? "Color B range" : "Color V range";
+		#endregion
+			
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_noise_fbm);
@@ -73,6 +73,7 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_f("seed",      _sed);
 			shader_set_i("iteration", _itr);
 			
+			shader_set_2("level",     _lvl);
 			shader_set_i("colored",   _col);
 			shader_set_2("colorRanR", _clr);
 			shader_set_2("colorRanG", _clg);

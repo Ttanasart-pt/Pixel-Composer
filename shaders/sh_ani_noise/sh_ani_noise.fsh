@@ -38,6 +38,8 @@ uniform vec2      angle;
 uniform int       angleUseSurf;
 uniform sampler2D angleSurf;
 
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+
 float random1D (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed + 453.456, 100.) * 12.588) * 43758.5453123); }
 float random   (in vec2 st, float _seed) { return mix(random1D(st, floor(_seed)), random1D(st, floor(_seed) + 1.), fract(_seed)); }
 
@@ -75,6 +77,7 @@ void main() {
 	float x0   = floor(xx);
 	float x1   = floor(xx) + 1.;
 	float prog = xx - x0;
+	      prog = applyLevel(prog);
 	
 	if(mode == 0) {
 		float noise0 = random(vec2(x0, yy), colrSeed);  // point before
@@ -82,7 +85,6 @@ void main() {
 		
 	    gl_FragColor = vec4(vec3(mix(noise0, noise1, prog)), 1.);
 	    
-	} else if(mode == 1) {
+	} else if(mode == 1)
 		gl_FragColor = vec4(vec3(prog), 1.);
-	}
 }

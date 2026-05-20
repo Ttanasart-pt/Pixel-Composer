@@ -22,17 +22,18 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 4, nodeValue_Rotation( "Rotation",  0     )).setHotkey("R").setMappable(8).setPieMenu();
 	newInput(12, nodeValue_Bool(     "Tile",      false ));
 	
-	////- =Render
-	newInput( 9, nodeValue_Enum_Scroll( "Render Mode", 0, [ "Blend", "Waterfall" ] ));
+	////- =Rendering
+	newInput(15, nodeValue_SliRange( "Level",         [0,1] ));
+	newInput( 9, nodeValue_EScroll( "Render Mode", 0, [ "Blend", "Waterfall" ] ));
 	newInput(10, nodeValueSeed());
-	// input 15
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		[ "Output", false ],  0, 13, 14, 11, 
-		[ "Noise",  false ],  2,  1,  6,  5,  7,  3,  4,  8, 12, 
-		[ "Render", false ],  9, 10, 
+		[ "Output",    false ],  0, 13, 14, 11, 
+		[ "Noise",     false ],  2,  1,  6,  5,  7,  3,  4,  8, 12, 
+		[ "Rendering", false ], 15,  9, 10, 
 	];
 	
 	////- Node
@@ -51,11 +52,15 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim = _data[0];
-		var _pos = _data[3];
-		var _mod = _data[9];
+		#region data
+			var _dim = _data[ 0];
+			var _pos = _data[ 3];
+			
+			var _lvl = _data[15];
+			var _mod = _data[ 9];
 		
-		inputs[10].setVisible(_mod == 0);
+			inputs[10].setVisible(_mod == 0);
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -68,6 +73,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f("colrSeed",	_data[10]);
 			shader_set_i("tile",	    _data[12]);
 			
+			shader_set_2("level",       _lvl);
 			shader_set_f_map("noiseX",  _data[1], _data[6], inputs[1]);
 			shader_set_f_map("noiseY",  _data[5], _data[7], inputs[5]);
 			shader_set_f_map("angle",	_data[4], _data[8], inputs[4]);

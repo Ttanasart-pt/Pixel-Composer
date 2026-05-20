@@ -45,6 +45,7 @@ uniform int       paramBUseSurf;
 uniform sampler2D paramBSurf;
         float     B;
 
+uniform vec2 level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
@@ -192,7 +193,10 @@ float perlin(in vec2 st) {
 		return abs(p1 - p3) + abs(p2 - p4);
 	}
 	
-	return _perlin(st);
+	float res = _perlin(st);
+	      res = applyLevel(res);
+	
+	return res;
 }
 
 void main() {

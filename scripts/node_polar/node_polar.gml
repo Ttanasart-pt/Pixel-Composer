@@ -19,14 +19,14 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Polar
 	newInput(18, nodeValue_Vec2(     "Center", [.5,.5] )).setUnitSimple();
-	newInput(16, nodeValue_Rotation( "Angle",        0 )).setMappable(17);
-	newInput( 5, nodeValue_Bool(     "Invert",       0 ))
-	newInput(10, nodeValue_Bool(     "Swap Axis",    0 ));
-	newInput( 6, nodeValue_Slider(   "Blend",        1 )).setMappable(11);
+	newInput(16, nodeValue_Rotation( "Angle",        0 )).setMappable(17).setPieMenu();
+	newInput( 5, nodeValue_Bool(     "Invert",       0 )).setPieMenu();
+	newInput(10, nodeValue_Bool(     "Swap Axis",    0 )).setPieMenu();
+	newInput( 6, nodeValue_Slider(   "Blend",        1 )).setMappable(11).setPieMenu();
 	newInput( 9, nodeValue_EScroll(  "Radius Mode",  0, [ new scrollItem("Linear",         s_node_curve_type, 2), 
                                                           new scrollItem("Inverse Square", s_node_curve_type, 1), 
                                                           new scrollItem("Logarithm",      s_node_curve_type, 3), ]));
-	newInput(13, nodeValue_RotRange( "Range", [0,360] ));
+	newInput(13, nodeValue_RotRange( "Range",  [0,360] ));
 	
 	////- =Twist
 	newInput(14, nodeValue_Float( "Twist", 0 )).setMappable(15);

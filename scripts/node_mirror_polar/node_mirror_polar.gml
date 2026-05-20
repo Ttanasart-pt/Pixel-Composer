@@ -12,21 +12,21 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newActiveInput(3);
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface(     "Surface In" ));
-	newInput( 7, nodeValue_Enum_Scroll( "Output Dimension",     0, [ "Same as input", "Relative", "Constant" ] ));
-	newInput( 8, nodeValue_Vec2(        "Relative Dimension",  [1,1]    ));
-	newInput( 9, nodeValue_Vec2(        "Constant Dimension",  PROJ_SURF ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 7, nodeValue_EScroll( "Output Dimension",     0, [ "Same as input", "Relative", "Constant" ] ));
+	newInput( 8, nodeValue_Vec2(    "Relative Dimension",  [1,1]    ));
+	newInput( 9, nodeValue_Vec2(    "Constant Dimension",  PROJ_SURF ));
 	
 	////- =Mirror
-	newInput( 1, nodeValue_Vec2(        "Position",    [.5,.5] )).setHotkey("G").setUnitSimple();
-	newInput( 2, nodeValue_Rotation(    "Angle",         0     )).setHotkey("R");
-	newInput( 6, nodeValue_Vec2(        "Scale",        [1,1]  ));
-	newInput(10, nodeValue_Enum_Scroll( "Radial Scale",  0, [ "Linear", "Exponential" ] ));
-	newInput(13, nodeValue_Float(       "Trim Radius",   0 ));
+	newInput( 1, nodeValue_Vec2(     "Position",    [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 2, nodeValue_Rotation( "Angle",         0     )).setHotkey("R").setPieMenu();
+	newInput( 6, nodeValue_Vec2(     "Scale",        [1,1]  )).setPieMenu();
+	newInput(10, nodeValue_EScroll(  "Radial Scale",  0, [ "Linear", "Exponential" ] ));
+	newInput(13, nodeValue_Float(    "Trim Radius",   0 ));
 	
 	////- =Spokes
-	newInput( 4, nodeValue_Float( "Spokes",     4     )).setMappable(11).setCurvable(12);
-	newInput( 5, nodeValue_Bool(  "Reflective", false ));
+	newInput( 4, nodeValue_Float( "Spokes",     4     )).setMappable(11).setCurvable(12).setPieMenu();
+	newInput( 5, nodeValue_Bool(  "Reflective", false )).setPieMenu();
 	// 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

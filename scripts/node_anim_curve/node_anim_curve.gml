@@ -7,12 +7,12 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(0, nodeValue_Curve("Curve", CURVE_DEF_01));
 	////- =X
-	newInput(4, nodeValue_Bool("Animated", false));
-	newInput(1, nodeValue_Slider("Progress", 0));
+	newInput(4, nodeValue_Bool(   "Animated", false )).setPieMenu();
+	newInput(1, nodeValue_Slider( "Progress", 0     )).setPieMenu();
 	
 	////- =Y
-	newInput(2, nodeValue_Float("Minimum", 0));
-	newInput(3, nodeValue_Float("Maximum", 1));
+	newInput(2, nodeValue_Float( "Minimum",   0     ));
+	newInput(3, nodeValue_Float( "Maximum",   1     ));
 	
 	////- =Display
 	newInput(5, nodeValue_Enum_Scroll("Display Type", 0, { data: [ "Number", "Curve" ], update_hover: false }));

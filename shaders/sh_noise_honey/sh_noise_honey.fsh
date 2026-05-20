@@ -31,6 +31,8 @@ uniform float seed;
 uniform int   mode;
 uniform int   iteration;
 
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+
 float hash(float x) { return fract(fract(x * (0.3183098861 + seed / 100000.)) * fract(x * (0.15915494309 + seed / 100000.)) * 265871.1723); }
 vec3  hash(vec3 x)  { return fract(fract(x * (0.3183098861 + seed / 100000.)) * fract(x * (0.15915494309 + seed / 100000.)) * 265871.1723); }
 
@@ -106,7 +108,7 @@ vec3 iterateNoise ( vec2 pos, int iteration ) {
 		pos *= 2.;
 	}
 	
-	return vec3(n, n, n);
+	return vec3(applyLevel(n));
 }
 
 void main() {

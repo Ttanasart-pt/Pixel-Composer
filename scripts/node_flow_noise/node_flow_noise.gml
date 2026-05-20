@@ -7,19 +7,23 @@ function Node_Flow_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput( 6, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(3, nodeValue_Float(        "Progress",    0    )).setShaderProp("progress").setPieMenu();
-	newInput(4, nodeValue_Slider_Range( "Detail",     [1,8], [ 1, 16, 0.1 ])).setShaderProp("detail").setPieMenu();
+	newInput( 3, nodeValue_Float(    "Progress",    0    )).setShaderProp("progress").setPieMenu();
+	newInput( 4, nodeValue_SliRange( "Detail",     [1,8], [ 1, 16, 0.1 ])).setShaderProp("detail").setPieMenu();
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(         "Position",   [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
-	newInput(5, nodeValue_Rotation(     "Rotation",    0    )).setHotkey("R").setShaderProp("rotation").setPieMenu();
-	newInput(2, nodeValue_Vec2(         "Scale",      [2,2] )).setHotkey("S").setShaderProp("scale").setPieMenu();
-	// input 7
+	newInput( 1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput( 5, nodeValue_Rotation( "Rotation",    0    )).setHotkey("R").setShaderProp("rotation").setPieMenu();
+	newInput( 2, nodeValue_Vec2(     "Scale",      [2,2] )).setHotkey("S").setShaderProp("scale").setPieMenu();
+	
+	////- =Rendering
+	newInput( 9, nodeValue_SliRange( "Level",      [0,1] )).setShaderProp("level");
+	// input 10
 	
 	input_display_list = [
-		["Output",     true], 0, 7, 8, 6, 
-		["Noise",     false], 3, 4, 
-		["Transform", false], 1, 5, 2, 
+		[ "Output",     true ],  0,  7,  8,  6, 
+		[ "Noise",     false ],  3,  4, 
+		[ "Transform", false ],  1,  5,  2, 
+		[ "Rendering", false ],  9, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

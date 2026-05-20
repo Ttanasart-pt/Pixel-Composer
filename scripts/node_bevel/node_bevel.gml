@@ -12,9 +12,9 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Bevel
 	var __slope = __enum_array_gen(["Linear","Smooth","Circular"], s_node_curve_type,, [2,4,5]);
-	newInput( 4, nodeValue_EScroll( "Slope",   0, __slope )).setCurvable(13);
-	newInput( 1, nodeValue_Int(     "Height",  4          )).setMappable(11);
-	newInput(12, nodeValue_Bool(    "Highres", false      ));
+	newInput( 4, nodeValue_EScroll( "Slope",   0, __slope )).setCurvable(13).setPieMenu();
+	newInput( 1, nodeValue_Int(     "Height",  4          )).setMappable(11).setPieMenu();
+	newInput(12, nodeValue_Bool(    "Highres", false      )).setPieMenu();
 	
 	////- =Transform
 	newInput( 2, nodeValue_Vec2( "Shift", [ 0, 0 ] )).hideLabel().setUnitSimple();

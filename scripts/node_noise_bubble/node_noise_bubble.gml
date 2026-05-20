@@ -15,20 +15,21 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(2, nodeValueSeed()).setShaderProp("seed").setPieMenu();
-	newInput(1, nodeValue_Slider(       "Density",   .5     )).setShaderProp("density").setPieMenu();
-	newInput(3, nodeValue_Slider_Range( "Scale",    [.5,.8] )).setShaderProp("scale").setPieMenu();
+	newInput( 2, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 1, nodeValue_Slider(   "Density",   .5     )).setShaderProp("density").setPieMenu();
+	newInput( 3, nodeValue_SliRange( "Scale",    [.5,.8] )).setShaderProp("scale").setPieMenu();
 	
-	////- =Render
-	newInput(5, nodeValue_Enum_Button(  "Mode",        0, [ "Line", "Fill" ] )).setShaderProp("mode").setPieMenu();
-	newInput(4, nodeValue_Slider(       "Thickness",   0                     )).setShaderProp("thickness").setPieMenu();
-	newInput(6, nodeValue_Slider_Range( "Opacity",    [0,1]                  )).setShaderProp("alpha").setPieMenu();
-	newInput(7, nodeValue_Enum_Scroll(  "Blend Mode",  0, [ "Max", "Add" ]   )).setShaderProp("render");
-	// input 9
+	////- =Rendering
+	newInput(11, nodeValue_SliRange( "Level",      [0,1] )).setShaderProp("level");
+	newInput( 5, nodeValue_EButton(  "Mode",        0, [ "Line", "Fill" ] )).setShaderProp("mode").setPieMenu();
+	newInput( 4, nodeValue_Slider(   "Thickness",   0                     )).setShaderProp("thickness").setPieMenu();
+	newInput( 6, nodeValue_SliRange( "Opacity",    [0,1]                  )).setShaderProp("alpha").setPieMenu();
+	newInput( 7, nodeValue_EScroll(  "Blend Mode",  0, [ "Max", "Add" ]   )).setShaderProp("render");
+	// input 12
 	
 	input_display_list = [ 
-		["Output", 	 true],	0, 9, 10, 8, 
-		["Noise",	false],	2, 1, 3, 
-		["Render",	false], 5, 4, 6, 7, 
+		[ "Output",     true ],  0,  9, 10,  8, 
+		[ "Noise",     false ],  2,  1,  3, 
+		[ "Rendering", false ], 11,  5,  4,  6,  7, 
 	];
 }

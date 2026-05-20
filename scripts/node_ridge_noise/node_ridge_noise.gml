@@ -35,20 +35,24 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 3, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setPieMenu();
 	newInput( 2, nodeValue_Vec2(     "Scale",     [2,2] )).setHotkey("S").setPieMenu();
 	
-	////- =Transform
+	////- =Iteration
 	newInput( 6, nodeValue_Int(     "Iteration",   1   )).setPieMenu();
 	newInput(14, nodeValue_Float(   "Itr. Factor", 1.5 ));
-	newInput(17, nodeValue_EButton( "Blend Mode",  0, [ "Mix", "Overlay" ]));
-	// input 20
+	newInput(17, nodeValue_EButton( "Blend Mode",  0, [ "Mix", "Overlay" ] ));
+	
+	////- =Rendering
+	newInput(20, nodeValue_SliRange( "Level",      [0,1] ));
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Output",     true ],  0,   8,  9,  7, 
-		[ "Noise",     false ],  5,  10,  4, 13, 12, 
-		[ "Ridge",     false ],  11, 15, 16, 18, 19, 
-		[ "Transform", false ],  1,   3,  2, 
-		[ "Iteration", false ],  6,  14, 17, 
+		[ "Output",     true ],  0,  8,  9,  7, 
+		[ "Noise",     false ],  5, 10,  4, 13, 12, 
+		[ "Ridge",     false ], 11, 15, 16, 18, 19, 
+		[ "Transform", false ],  1,  3,  2, 
+		[ "Iteration", false ],  6, 14, 17, 
+		[ "Rendering", false ], 20, 
 	];
 	
 	////- Nodes
@@ -94,6 +98,8 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _itr   = _data[ 6];
 			var _ifac  = _data[14];
 			var _bmod  = _data[17];
+			
+			var _lvl   = _data[20];
 			
 			var _dep = attrDepth();
 			var _ovr = getAttribute("oversample");
@@ -154,6 +160,7 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				shader_set_i("ridgeMultiply",  _rdmul );
 				shader_set_f("ridgeMulFactor", _rdmfc );
 				
+				shader_set_2("level",      _lvl   );
 				shader_set_f("cellScale",  celSca );
 				
 				draw_surface(temp_surface[!bg], 0, 0);

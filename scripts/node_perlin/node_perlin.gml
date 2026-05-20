@@ -31,12 +31,13 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(14, nodeValue_Float(   "Scaling",      2 )).setMappable(18);
 	newInput(15, nodeValue_Slider(  "Amplitude",   .5 )).setMappable(19);
 	
-	////- =Render
+	////- =Rendering
+	newInput(21, nodeValue_SliRange( "Level",         [0,1] ));
 	newInput( 6, nodeValue_EButton(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
 	newInput( 7, nodeValue_SliRange( "Color R Range", [0,1] ));
 	newInput( 8, nodeValue_SliRange( "Color G Range", [0,1] ));
 	newInput( 9, nodeValue_SliRange( "Color B Range", [0,1] ));
-	// input 21
+	// input 22
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -45,7 +46,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Noise",     false ],  5, 13,  3,  4, 
 		[ "Transform", false ],  1, 11,  2, 10, 
 		[ "Iteration",  true ], 20, 14, 18, 15, 19, 
-		[ "Render",    false ],  6,  7,  8,  9, 
+		[ "Rendering", false ], 21,  6,  7,  8,  9, 
 	];
 	
 	////- Nodes
@@ -82,6 +83,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _adv_scale  = _data[14];
 			var _adv_amplit = _data[15];
 			
+			var _lvl = _data[21];
 			var _col = _data[ 6];
 			var _clr = _data[ 7];
 			var _clg = _data[ 8];
@@ -122,6 +124,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_f_map("itrAmplitude", _adv_amplit, _data[19], inputs[15] );
 			shader_set_i("itrBlendMode", _itr_blend );
 		
+			shader_set_2("level",      _lvl );
 			shader_set_i("colored",    _col );
 			shader_set_2("colorRanR",  _clr );
 			shader_set_2("colorRanG",  _clg );

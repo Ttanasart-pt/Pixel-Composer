@@ -6,12 +6,12 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	setDimension(96, 48);
 	
 	////- =Settings
-	newInput(2, nodeValue_Enum_Scroll( "Mode",  0, ["Frame count", "Animation progress"])).rejectArray()
+	newInput(2, nodeValue_Enum_Scroll( "Mode",  0, ["Frame count", "Animation progress"])).rejectArray().setPieMenu()
 		.setTooltip(@"Counting mode
 - Frame count: Count value up/down per frame.
 - Animation progress: Count from 0 (first frame) to 1 (last frame).");
-	newInput(0, nodeValue_Float( "Start", 1 ));
-	newInput(1, nodeValue_Float( "Speed", 1 ));
+	newInput(0, nodeValue_Float( "Start", 1 )).setPieMenu();
+	newInput(1, nodeValue_Float( "Speed", 1 )).setPieMenu();
 	
 	////- =Async
 	newInput(3, nodeValue_Bool(    "Async", false ));

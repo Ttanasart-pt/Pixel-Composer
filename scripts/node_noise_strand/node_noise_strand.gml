@@ -16,30 +16,31 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	
 	////- =Noise
 	newInput( 3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
-	newInput( 9, nodeValue_Enum_Button( "Axis",     0, [ "X", "Y" ] )).setShaderProp("axis").setPieMenu();
-	newInput( 2, nodeValue_Slider(      "Density", .5 )).setShaderProp("density").setPieMenu();
-	newInput( 4, nodeValue_Slider(      "Slope",   .5 )).setShaderProp("slope").setPieMenu();
+	newInput( 9, nodeValue_EButton(  "Axis",     0, [ "X", "Y" ] )).setShaderProp("axis").setPieMenu();
+	newInput( 2, nodeValue_Slider(   "Density", .5 )).setShaderProp("density").setPieMenu();
+	newInput( 4, nodeValue_Slider(   "Slope",   .5 )).setShaderProp("slope").setPieMenu();
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2( "Position", [ 0, 0 ] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput( 1, nodeValue_Vec2(     "Position", [ 0, 0 ] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
 	
 	////- =Curve
-	newInput( 5, nodeValue_Slider_Range( "Curve",       [0,0], [ 0, 4, 0.01 ] )).setShaderProp("curve");
-	newInput( 6, nodeValue_Float(        "Curve scale",  1 )).setShaderProp("curveDetail");
-	newInput( 8, nodeValue_Float(        "Curve shift",  0 )).setShaderProp("curveShift");
+	newInput( 5, nodeValue_SliRange( "Curve",       [0,0], [ 0, 4, 0.01 ] )).setShaderProp("curve");
+	newInput( 6, nodeValue_Float(    "Curve scale",  1 )).setShaderProp("curveDetail");
+	newInput( 8, nodeValue_Float(    "Curve shift",  0 )).setShaderProp("curveShift");
 	
-	////- =Render
-	newInput(10, nodeValue_Enum_Button(  "Mode",         0 , [ "Line", "Band", "Area" ] )).setShaderProp("mode");
-	newInput( 7, nodeValue_Slider(       "Thickness",    0    )).setShaderProp("thickness");
-	newInput(11, nodeValue_Slider_Range( "Opacity",     [0,1] )).setShaderProp("alpha");
-	// input 13
+	////- =Rendering
+	newInput(15, nodeValue_SliRange( "Level",       [0,1] )).setShaderProp("level");
+	newInput(10, nodeValue_EButton(  "Mode",         0, [ "Line", "Band", "Area" ] )).setShaderProp("mode");
+	newInput( 7, nodeValue_Slider(   "Thickness",    0    )).setShaderProp("thickness");
+	newInput(11, nodeValue_SliRange( "Opacity",     [0,1] )).setShaderProp("alpha");
+	// input 16
 	
 	input_display_list = [ 
-		["Output",      true], 0, 13, 14, 12, 
-		["Noise",      false], 3, 9, 2, 4, 
-		["Transform",  false], 1, 
-		["Curve",      false], 5, 6, 8, 
-		["Render",     false], 10, 7, 11, 
+		[ "Output",      true ],  0, 13, 14, 12, 
+		[ "Noise",      false ],  3,  9,  2,  4, 
+		[ "Transform",  false ],  1, 
+		[ "Curve",      false ],  5,  6,  8, 
+		[ "Rendering",  false ], 15, 10,  7, 11, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

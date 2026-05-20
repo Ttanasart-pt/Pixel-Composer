@@ -35,6 +35,8 @@ uniform float rotation;
 uniform vec2  scale;
 uniform int   mode;
 
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+
 float PI = 3.14159265359;
 float s3 = sin(PI / 3.);
 
@@ -237,15 +239,12 @@ void main() {
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale / 4.;
+    float v = 0.;
     
-	if(mode == 0) {
-		gl_FragColor = vec4(vec3(.1 + blockVoronoi(pos * vec2(1., -1.))), 1.0);
-		
-	} else if(mode == 1) {
-		vec3 v = vec3(triangleVoronoi(pos * 2.));
-		gl_FragColor = vec4(vec3(v.r), 1.0);
-		
-	} else if(mode == 2) {
-		gl_FragColor = vec4(vec3(squareVoronoi(pos * 4.).r), 1.0);
-	} 
+	     if(mode == 0) v = .1 + blockVoronoi(pos * vec2(1., -1.));
+	else if(mode == 1) v = triangleVoronoi(pos * 2.).r;
+	else if(mode == 2) v = squareVoronoi(pos * 4.).r;
+	
+	v = applyLevel(v);
+	gl_FragColor = vec4(vec3(v), 1.0);
 }

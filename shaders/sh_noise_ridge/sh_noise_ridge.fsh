@@ -33,8 +33,8 @@ uniform float ridgeContrast;
 
 uniform int   ridgeMultiply;
 uniform float ridgeMulFactor;
-
 uniform float cellScale;
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 
 uniform int   mode;
 uniform int   blendMode;
@@ -101,9 +101,9 @@ void main() {
 	
 	float str = max(0., strip(pos, ori, dir, ridgeScale));
 	if(ridgeMultiply == 1) str *= dis;
+	str = applyLevel(str);
 	
 	float hgh = (pow(2. * height - 1., 3.) + 1.) / 2.;
-	// float hgh = height;
 	
 	if(blendMode == 0) {
 		float rid = str * hgh * amplitude;

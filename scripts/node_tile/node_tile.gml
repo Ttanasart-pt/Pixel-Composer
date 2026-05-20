@@ -7,20 +7,20 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Output
 	newInput( 1, nodeValue_EScroll( "Scaling Type", 0, [ "Fix Dimension", "Relative To Input" ] ));
-	newInput( 2, nodeValue_Dimension());
-	newInput( 3, nodeValue_Vec2( "Amount", [2,2] ));
+	newInput( 2, nodeValue_Dimension()).setPieMenu();
+	newInput( 3, nodeValue_Vec2( "Amount", [2,2] )).setPieMenu();
 	
 	////- =Tiling
-	newInput( 5, nodeValue_Vec2(     "Spacing", [0,0] )).setUnitSimple();
+	newInput( 5, nodeValue_Vec2(     "Spacing", [0,0] )).setUnitSimple().setPieMenu();
 	
 	////- =Transform
-	newInput( 4, nodeValue_Vec2(     "Posiiton", [0,0] )).setUnitSimple();
+	newInput( 4, nodeValue_Vec2(     "Posiiton", [0,0] )).setUnitSimple().setPieMenu();
 	newInput( 6, nodeValue_EButton(  "Shift Axis", 0, ["X", "Y"] ));
 	newInput( 7, nodeValue_Slider(   "Shift",      0   ));
 	newInput( 8, nodeValue_Rotation( "Rotation",   0   ));
 	
 	////- =Pattern
-	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "Noone", "Flip Grid", "90 Polar Rotation" ] ));
+	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "Noone", "Flip Grid", "90 Polar Rotation" ] )).setPieMenu();
 	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

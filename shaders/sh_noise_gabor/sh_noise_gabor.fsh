@@ -49,13 +49,14 @@ uniform vec2  position;
 uniform float trRotation;
 
 uniform vec2  augment;
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 
 vec2 hash(vec2 p) { return fract(sin(vec2(
 										dot(p, vec2(127.1324, 311.7874)) * (152.6178612 + seed / 10000.), 
 										dot(p, vec2(269.8355, 183.3961)) * (437.5453123 + seed / 10000.)
 									)) * 43758.5453); }
 
-vec3 gabor_wave(in vec2 p) { #region
+vec3 gabor_wave(in vec2 p) {
     vec2  ip = floor(p);
     vec2  fp = fract(p);
     
@@ -84,7 +85,7 @@ vec3 gabor_wave(in vec2 p) { #region
 	}
   
     return vec3( av.x, av.yz - av.x * at.yz / at.x  ) / at.x;
-} #endregion
+}
 
 void main() {
 	#region params
@@ -120,8 +121,9 @@ void main() {
 	     pos.x *= (dimension.x / dimension.y);
          pos    = (pos - position / dimension) * mat2(cos(r), -sin(r), sin(r), cos(r)) * scale;
     
-	vec3 f   = gabor_wave(pos);
-	vec3 col = vec3(0.5 + 0.5 * f.x);
+	float f  = gabor_wave(pos).x;
+	      f  = applyLevel(f);
+	vec3 col = vec3(0.5 + 0.5 * f);
 	
     gl_FragColor = vec4( col, 1.0 );
 }

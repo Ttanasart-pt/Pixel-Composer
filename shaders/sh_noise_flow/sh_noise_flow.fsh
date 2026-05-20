@@ -27,6 +27,8 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform vec2  scale;
 
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+
 void main() {
 	vec2  vtx = getUV(v_vTexcoord);
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
@@ -39,5 +41,7 @@ void main() {
     }
     
     float a = .5 + .5 * sin(uv.x);
+          a = applyLevel(a);
+          
     gl_FragColor = vec4(vec3(a), 1.);
 }

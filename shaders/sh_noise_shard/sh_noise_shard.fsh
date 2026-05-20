@@ -42,6 +42,8 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform float rotation;
 
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+
 #define tau 6.283185307179586
 
 vec3 hash(vec3 p) { return fract(sin(vec3(
@@ -100,8 +102,10 @@ void main() {
 	float ang = radians(rotation);
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / 16.;
     
-	prog      /= 100.;
-    vec3 uv    = vec3( pos + prog, prog * .5 );
-    
-    gl_FragColor = vec4( vec3(shard_noise(16.0 * uv, pow(sharp, 2.) * 20.)), 1. );
+	prog   /= 100.;
+    vec3 uv = vec3( pos + prog, prog * .5 );
+    float w = shard_noise(16.0 * uv, pow(sharp, 2.) * 20.);
+          w = applyLevel(w);
+	
+    gl_FragColor = vec4(vec3(w), 1.);
 }

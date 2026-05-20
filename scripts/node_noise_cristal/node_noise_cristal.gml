@@ -8,24 +8,25 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
-	newInput(7, nodeValue_Rotation( "Phase",     0  )).setShaderProp("phase").setPieMenu();
-	newInput(4, nodeValue_Int(      "Iteration", 15 )).setShaderProp("iteration").setPieMenu();
+	newInput( 3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 7, nodeValue_Rotation( "Phase",     0  )).setShaderProp("phase").setPieMenu();
+	newInput( 4, nodeValue_Int(      "Iteration", 15 )).setShaderProp("iteration").setPieMenu();
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2( "Position", [0,0] )).setHotkey("G").setShaderProp("position").setPieMenu();
-	newInput(2, nodeValue_Vec2( "Scale",    [1,1] )).setHotkey("S").setShaderProp("scale").setPieMenu();
+	newInput( 1, nodeValue_Vec2( "Position", [0,0] )).setHotkey("G").setShaderProp("position").setPieMenu();
+	newInput( 2, nodeValue_Vec2( "Scale",    [1,1] )).setHotkey("S").setShaderProp("scale").setPieMenu();
 	
 	////- =Render
-	newInput(5, nodeValue_Color(  "Color", ca_white          )).setShaderProp("color");
-	newInput(6, nodeValue_Slider( "Gamma", 1, [ 0, 2, 0.01 ] )).setShaderProp("gamma");
-	// input 9
+	newInput(11, nodeValue_SliRange( "Level", [0,1]             )).setShaderProp("level");
+	newInput( 5, nodeValue_Color(    "Color", ca_white          )).setShaderProp("color");
+	newInput( 6, nodeValue_Slider(   "Gamma", 1, [ 0, 2, 0.01 ] )).setShaderProp("gamma");
+	// input 12
 	
 	input_display_list = [ 
-		["Output",     true], 0, 9, 10, 8, 
-		["Noise",     false], 3, 7, 4, 
-		["Transform", false], 1, 2, 
-		["Render",    false], 5, 6, 
+		[ "Output",     true ],  0,  9, 10,  8, 
+		[ "Noise",     false ],  3,  7,  4, 
+		[ "Transform", false ],  1,  2, 
+		[ "Render",    false ], 11,  5,  6, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

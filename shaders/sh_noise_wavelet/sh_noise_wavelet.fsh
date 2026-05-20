@@ -45,6 +45,8 @@ uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
 
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+
 float WaveletNoise(vec2 p, float z, float k) {
     float d = 0., s = 1., m = 0., a;
 	
@@ -89,8 +91,8 @@ void main() {
 	float ang = radians(rotation);
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / 16.;
     
-    vec3 col  = vec3(0.);
-	     col += WaveletNoise(pos * 5., (2.9864 + prog), detl) * .5 + .5; 
-	
-    gl_FragColor = vec4(col, 1.0);
+	float w  = WaveletNoise(pos * 5., (2.9864 + prog), detl) * .5 + .5; 
+	      w  = applyLevel(w);
+    
+    gl_FragColor = vec4(vec3(w), 1.0);
 }

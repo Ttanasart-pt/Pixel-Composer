@@ -22,6 +22,7 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform float seed;
 
+uniform vec2 level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
@@ -38,7 +39,10 @@ float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000
 float frandom (in vec2 st) {
     float n0 = random(st, floor(seed) / 5000.);
 	float n1 = random(st, (floor(seed) + 1.) / 5000.);
-	return mix(n0, n1, fract(seed));
+	float res = mix(n0, n1, fract(seed));
+	res = applyLevel(res);
+	
+	return res;
 }
 
 void main() {

@@ -14,11 +14,11 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Surfaces
-	newInput(2, nodeValue_EScroll( "Type",   0, __enum_array_gen(["Arc", "Wave"], s_node_bend_type) ));
-	newInput(3, nodeValue_EButton( "Axis",   0, [ "X", "Y" ]     ));
-	newInput(4, nodeValue_Slider(  "Amount", 0.25, [-1, 1, 0.01] ));
-	newInput(5, nodeValue_Float(   "Scale",  1 ));
-	newInput(6, nodeValue_Float(   "Shift",  0 ));
+	newInput(2, nodeValue_EScroll( "Type",   0, __enum_array_gen(["Arc", "Wave"], s_node_bend_type) )).setPieMenu();
+	newInput(3, nodeValue_EButton( "Axis",   0, [ "X", "Y" ]     )).setPieMenu();
+	newInput(4, nodeValue_Slider(  "Amount", 0.25, [-1, 1, 0.01] )).setPieMenu();
+	newInput(5, nodeValue_Float(   "Scale",  1 )).setPieMenu();
+	newInput(6, nodeValue_Float(   "Shift",  0 )).setPieMenu();
 	// 7
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

@@ -8,18 +8,22 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 6, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setUnitSimple().setPieMenu();
-	newInput(5, nodeValue_Rotation( "Rotation",    0    )).setHotkey("R").setPieMenu();
-	newInput(2, nodeValue_Vec2(     "Scale",      [4,6] )).setHotkey("S").setPieMenu();
-	newInput(3, nodeValue_Int(      "Iteration",   3    )).setPieMenu();
-	newInput(4, nodeValue_Slider(   "Brightness", .5    )).setPieMenu();
-	// input 7
+	newInput( 1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 5, nodeValue_Rotation( "Rotation",    0    )).setHotkey("R").setPieMenu();
+	newInput( 2, nodeValue_Vec2(     "Scale",      [4,6] )).setHotkey("S").setPieMenu();
+	newInput( 3, nodeValue_Int(      "Iteration",   3    )).setPieMenu();
+	newInput( 4, nodeValue_Slider(   "Brightness", .5    )).setPieMenu();
+	
+	////- =Rendering
+	newInput( 9, nodeValue_SliRange( "Level",      [0,1] ));
+	// input 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output", false], 0, 7, 8, 6, 
-		["Noise",  false], 1, 5, 2, 3, 4,
+		[ "Output",    false ],  0,  7,  8,  6, 
+		[ "Noise",     false ],  1,  5,  2,  3,  4,
+		[ "Rendering", false ],  9, 
 	];
 	
 	////- Nodes
@@ -39,12 +43,16 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim = _data[0];
-		var _pos = _data[1];
-		var _sca = _data[2];
-		var _ite = _data[3];
-		var _bri = _data[4];
-		var _rot = _data[5];
+		#region data
+			var _dim = _data[ 0];
+			var _pos = _data[ 1];
+			var _sca = _data[ 2];
+			var _ite = _data[ 3];
+			var _bri = _data[ 4];
+			var _rot = _data[ 5];
+			
+			var _lvl = _data[ 9];
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -58,7 +66,9 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_i("iteration", _ite);
 			shader_set_f("rotation",  degtorad(_rot));
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+			shader_set_2("level",     _lvl);
+			
+			draw_empty();
 		surface_reset_shader();
 		
 		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);

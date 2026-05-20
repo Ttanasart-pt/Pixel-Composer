@@ -5,12 +5,12 @@ function Node_Optical_Flow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 0, nodeValue_Surface("Surface In"));
 	
 	////- =Optical Flow
-	newInput( 1, nodeValue_Float(  "Radius",    4 ));
-	newInput( 2, nodeValue_Slider( "Threshold", 1 ));
+	newInput( 1, nodeValue_Float(  "Radius",    4 )).setPieMenu();
+	newInput( 2, nodeValue_Slider( "Threshold", 1 )).setPieMenu();
 	
 	////- =Output
 	newInput( 3, nodeValue_EScroll( "Color Format", 0, [ "8-bit unorm", "32-bit float" ] ));
-	newInput( 4, nodeValue_Float(   "Intensity",    4 ));
+	newInput( 4, nodeValue_Float(   "Intensity",    4 )).setPieMenu();
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

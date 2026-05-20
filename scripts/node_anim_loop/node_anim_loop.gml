@@ -1,28 +1,28 @@
 function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Frame Loop";
-	
 	is_simulation = true;
 	
-	newInput(0, nodeValue_Surface("Surface"));
+	newInput( 0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Int("Loop Start", 1));
+	////- =Loop
+	newInput( 1, nodeValue_Int(  "Loop Start",  1    )).setPieMenu();
+	newInput( 2, nodeValue_Int(  "Loop Range",  4    )).setPieMenu();
+	newInput( 3, nodeValue_Bool( "Infinite",    true )).setPieMenu();
+	newInput( 4, nodeValue_Int(  "Loop Amount", 1    )).setPieMenu();
 	
-	newInput(2, nodeValue_Int("Loop Range", 4));
-	
-	newInput(3, nodeValue_Bool("Infinite", true));
-	
-	newInput(4, nodeValue_Int("Loop Amount", 1));
-	
-	newInput(5, nodeValue_Enum_Scroll("Pre Loop", 0, [ "Passthrough", "Empty" ]));
-	
-	newInput(6, nodeValue_Enum_Scroll("Post Loop", 1, [ "Passthrough", "Empty" ]));
+	////- =Overflow
+	newInput( 5, nodeValue_EScroll( "Pre Loop",  0, [ "Passthrough", "Empty" ]));
+	newInput( 6, nodeValue_EScroll( "Post Loop", 1, [ "Passthrough", "Empty" ]));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		["Loop",     false], 1, 2, 3, 4, 
-		["Overflow", false], 5, 6, 
+		[ "Loop",     false ], 1, 2, 3, 4, 
+		[ "Overflow", false ], 5, 6, 
 	];
+	
+	////- Node
 	
 	surf_indexes = [];
 	curr_frame   = 0;

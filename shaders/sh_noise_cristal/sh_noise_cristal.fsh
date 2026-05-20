@@ -32,6 +32,7 @@ uniform vec2  position;
 uniform int   iteration;
 uniform float seed;
 
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 uniform vec4  color;
 uniform float gamma;
 uniform float phase;
@@ -72,6 +73,7 @@ vec3 Oilnoise(in vec2 pos, in vec3 RGB) {
     }
     
     result = pow(result, 4.504);
+    result = applyLevel(result);
     
     return clamp( RGB / abs1d(dot(q, vec2(-0.240, 0.))) * .5 / result, vec3(0.), vec3(1.));
 }

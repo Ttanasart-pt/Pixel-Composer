@@ -1,13 +1,15 @@
 function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normal Light";
 	
-	newInput(0, nodeValue_Surface( "Surface In"           ));
-	newInput(1, nodeValue_Surface( "Normal map"           ));
-	newInput(3, nodeValue_Color(   "Ambient",    ca_black ));
-	newInput(5, nodeValue_Bool(    "Keep Alpha", true     ));
+	////- =Input
+	newInput( 0, nodeValue_Surface( "Surface In"           ));
+	newInput( 1, nodeValue_Surface( "Normal map"           ));
+	newInput( 3, nodeValue_Color(   "Ambient",    ca_black ));
+	newInput( 5, nodeValue_Bool(    "Keep Alpha", true     ));
 	
-	newInput(2, nodeValue_Float(   "Height", 1  ));
-	newInput(4, nodeValue_Surface( "Height map" ));
+	////- =Input
+	newInput( 2, nodeValue_Float(   "Height", 1  ));
+	newInput( 4, nodeValue_Surface( "Height map" ));
 	// input 6
 	
 	typeListStr = ["Point", "Sun", "Line", "Spot"];
@@ -17,16 +19,16 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(index+0, nodeValue_Enum_Scroll("Type", 0, typeList ));
-		newInput(index+1, nodeValue_Vec2(  "Position",     [0,0]    )).setUnitSimple();
-		newInput(index+7, nodeValue_Float( "Distance",      0       ));
-		newInput(index+5, nodeValue_Vec2(  "End Position", [0,0]    )).setUnitSimple();
-		newInput(index+8, nodeValue_Float( "End Distance",  0       ));
-		newInput(index+2, nodeValue_Float( "Range",         16      ));
+		newInput(index+0, nodeValue_EScroll( "Type", 0, typeList ));
+		newInput(index+1, nodeValue_Vec2(    "Position",     [0,0]    )).setUnitSimple();
+		newInput(index+7, nodeValue_Float(   "Distance",      0       ));
+		newInput(index+5, nodeValue_Vec2(    "End Position", [0,0]    )).setUnitSimple();
+		newInput(index+8, nodeValue_Float(   "End Distance",  0       ));
+		newInput(index+2, nodeValue_Float(   "Range",         16      ));
 		
-		newInput(index+3, nodeValue_Float( "Intensity", 4        ));
-		newInput(index+4, nodeValue_Color( "Color",     ca_white ));
-		newInput(index+6, nodeValue_Color( "End Color", ca_white ));
+		newInput(index+3, nodeValue_Float(   "Intensity", 4        ));
+		newInput(index+4, nodeValue_Color(   "Color",     ca_white ));
+		newInput(index+6, nodeValue_Color(   "End Color", ca_white ));
 		// input 9
 		
 		inputs[index + 2].overlay_text_valign = fa_bottom;

@@ -27,6 +27,8 @@ uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
 uniform int   iteration;
+
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 uniform float bright;
 
 float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
@@ -81,6 +83,7 @@ void main() {
 		pos *= 2.;
 	}
 	
-
+	n = applyLevel(n);
+	
     gl_FragColor = vec4(vec3(n), 1.0);
 }

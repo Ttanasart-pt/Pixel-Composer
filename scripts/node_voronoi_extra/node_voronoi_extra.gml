@@ -8,21 +8,25 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
-	newInput(5, nodeValue_Enum_Scroll( "Mode",         0, [ "Block", "Triangle" ])).setShaderProp("mode").setPieMenu();
-	newInput(4, nodeValue_Float(       "Progress",     0 )).setShaderProp("progress");
-	newInput(6, nodeValue_Slider(      "Parameter A",  0, [ -1, 1, 0.01 ])).setShaderProp("paramA");
+	newInput( 3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 5, nodeValue_EScroll( "Mode",         0, [ "Block", "Triangle" ])).setShaderProp("mode").setPieMenu();
+	newInput( 4, nodeValue_Float(   "Progress",     0 )).setShaderProp("progress");
+	newInput( 6, nodeValue_Slider(  "Parameter A",  0, [ -1, 1, 0.01 ])).setShaderProp("paramA");
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
-	newInput(7, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setShaderProp("rotation").setPieMenu();
-	newInput(2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale").setPieMenu();
-	// input 9
+	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
+	newInput( 7, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setShaderProp("rotation").setPieMenu();
+	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale").setPieMenu();
+	
+	////- =Rendering
+	newInput(11, nodeValue_SliRange( "Level",     [0,1] )).setShaderProp("level");
+	// input 12
 	
 	input_display_list = [
-		["Output",      true], 0, 9, 10, 8, 
-		["Noise",      false], 3, 5, 4, 6, 
-		["Transform",  false], 1, 7, 2,
+		[ "Output",      true ],  0,  9, 10,  8, 
+		[ "Noise",      false ],  3,  5,  4,  6, 
+		[ "Transform",  false ],  1,  7,  2,
+		[ "Rendering",  false ], 11, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

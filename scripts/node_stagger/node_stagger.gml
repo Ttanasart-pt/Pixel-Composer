@@ -1,21 +1,22 @@
 function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stagger";
 	
-	newInput(0, nodeValue_Surface("Surface"));
+	newInput( 0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Float("Delay Step", 1));
-	
-	newInput(2, nodeValue_Float("Delay Amount", 1));
-	
-	newInput(3, nodeValue_Curve("Stagger Curve", CURVE_DEF_01));
-	
-	newInput(4, nodeValue_Enum_Button("Overflow",  0, [ "Hide", "Clamp" ]));
+	////- =Stagger
+	newInput( 3, nodeValue_Curve(   "Stagger Curve", CURVE_DEF_01 ));
+	newInput( 1, nodeValue_Float(   "Delay Step",   1 )).setPieMenu();
+	newInput( 2, nodeValue_Float(   "Delay Amount", 1 )).setPieMenu();
+	newInput( 4, nodeValue_EButton( "Overflow",     0, [ "Hide", "Clamp" ])).setPieMenu();
+	// 5
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		["Stagger",  false], 3, 1, 2, 4, 
+		[ "Stagger", false ], 3, 1, 2, 4, 
 	];
+	
+	////- Node
 	
 	surf_indexes = [];
 	

@@ -10,20 +10,21 @@ function Node_Delay_Value(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	is_simulation = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone))
-	    .setVisible(true, true);
+	newInput( 0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone)).setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Frames", 1));
-	
-	newInput(2, nodeValue_Enum_Scroll("Overflow", 0, [ "Hold", "Loop", "Value" ]));
-	
-	newInput(3, nodeValue("Default", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone));
+	////- =Delay
+	newInput( 1, nodeValue_Int(     "Frames",   1 )).setPieMenu();
+	newInput( 2, nodeValue_EScroll( "Overflow", 0, [ "Hold", "Loop", "Value" ])).setPieMenu();
+	newInput( 3, nodeValue(         "Default", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, noone));
 	
 	input_display_list = [ 0, 
 		["Delay",  false], 1, 2, 3, 
 	];
+	
+	////- Node
 	
 	data_indexes = [];
 	curr_frame   = 0;

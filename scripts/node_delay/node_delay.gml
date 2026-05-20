@@ -6,20 +6,22 @@
 
 function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Delay";
-	
 	is_simulation = true;
 	
-	newInput(0, nodeValue_Surface("Surface"));
+	newInput( 0, nodeValue_Surface( "Surface"));
 	
-	newInput(1, nodeValue_Int("Frames", 1));
-	
-	newInput(2, nodeValue_Enum_Scroll("Overflow", 0, [ "Hold", "Loop", "Clear" ]));
+	////- =Delay
+	newInput( 1, nodeValue_Int(     "Frames",   1 )).setPieMenu();
+	newInput( 2, nodeValue_EScroll( "Overflow", 0, [ "Hold", "Loop", "Clear" ])).setPieMenu();
+	// 3
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		["Delay",  false], 1, 2, 
+		[ "Delay", false ], 1, 2, 
 	];
+	
+	////- Node
 	
 	surf_indexes = [];
 	curr_frame   = 0;

@@ -28,18 +28,19 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(12, nodeValue_Slider( "Amplitude", .5));
 	
 	////- =Render
-	newInput( 4, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
-	newInput( 5, nodeValue_Slider_Range( "Color R Range", [0,1] ));
-	newInput( 6, nodeValue_Slider_Range( "Color G Range", [0,1] ));
-	newInput( 7, nodeValue_Slider_Range( "Color B Range", [0,1] ));
-	// input 18
+	newInput(18, nodeValue_SliRange( "Level",         [0,1] ));
+	newInput( 4, nodeValue_EButton(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput( 5, nodeValue_SliRange( "Color R Range", [0,1] ));
+	newInput( 6, nodeValue_SliRange( "Color G Range", [0,1] ));
+	newInput( 7, nodeValue_SliRange( "Color B Range", [0,1] ));
+	// 19
 	
 	input_display_list = [
-		["Output",      true],  0, 15, 16, 13, 
-		["Noise",      false], 14,  3,  9, 17, 
-		["Transform",  false],  1, 10,  2,  8, 
-		["Iteration",   true], 11, 12, 
-		["Render",     false],  4,  5,  6,  7, 
+		[ "Output",     true ],  0, 15, 16, 13, 
+		[ "Noise",     false ], 14,  3,  9, 17, 
+		[ "Transform", false ],  1, 10,  2,  8, 
+		[ "Iteration",  true ], 11, 12, 
+		[ "Render",    false ], 18,  4,  5,  6,  7, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -66,12 +67,14 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _pos  = _data[ 1];
 			var _tile = _data[17];
 			
-			var _col = _data[4];
-			var _clr = _data[5];
-			var _clg = _data[6];
-			var _clb = _data[7];
-			var _ang = _data[10];
-			var _sed = _data[14];
+			var _col  = _data[ 4];
+			var _clr  = _data[ 5];
+			var _clg  = _data[ 6];
+			var _clb  = _data[ 7];
+			var _ang  = _data[10];
+			var _sed  = _data[14];
+			
+			var _lvl  = _data[18];
 			
 			var _adv_scale  = _data[11];
 			var _adv_amplit = _data[12];
@@ -101,6 +104,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_f("itrScaling",   _adv_scale);
 			shader_set_i("tiled",        _tile);
 		
+			shader_set_2("level",     _lvl);
 			shader_set_i("colored",   _col);
 			shader_set_2("colorRanR", _clr);
 			shader_set_2("colorRanG", _clg);

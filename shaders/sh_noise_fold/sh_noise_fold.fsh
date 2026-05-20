@@ -31,6 +31,7 @@ uniform float stretch;
 uniform float amplitude;
 
 uniform int   mode;
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 
 void main() {
 	vec2  vtx = getUV(v_vTexcoord);
@@ -44,6 +45,9 @@ void main() {
         pos += sin( pos.yx      + vec2(stretch, 0.0)) / 2.;
         pos *= amplitude;
     }
+    
+    pos.x = applyLevel(pos.x);
+    pos.y = applyLevel(pos.y);
     
 	if(mode == 0) col += length(mod(pos, 2.) - 1.);
 	else          col.xy += abs(mod(pos, 2.) - 1.);

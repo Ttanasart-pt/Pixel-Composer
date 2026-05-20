@@ -38,19 +38,20 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(17, nodeValue_EScroll( "Blend Mode",      0, [ "Additive", "Maximum", "Minimum" ] ));
 	
 	////- =Rendering
-	newInput(15, nodeValue_Bool(   "Inverted",  false ))
-	newInput( 5, nodeValue_Slider( "Contrast",  1, [0, 4, 0.01] ));
-	newInput( 7, nodeValue_Slider( "Middle",   .5, [0, 1, 0.01] ));
-	newInput(10, nodeValue_Bool(   "Colored",   false ))
-	// input 22
+	newInput(22, nodeValue_SliRange( "Level",     [0,1] ));
+	newInput(15, nodeValue_Bool(     "Inverted",  false ))
+	newInput( 5, nodeValue_Slider(   "Contrast",  1, [0, 4, 0.01] ));
+	newInput( 7, nodeValue_Slider(   "Middle",   .5, [0, 1, 0.01] ));
+	newInput(10, nodeValue_Bool(     "Colored",   false ))
+	// input 23
 	
 	input_display_list = [
-		["Output",    false],  0, 20, 21, 13, 
-		["Noise",     false],  4,  6,  3, 14, 
-		["Iteration", false], 16, 18, 19, 17, 
-		["Transform", false],  1, 12,  2, 11, 
-		["Radial",    false],  8,  9,
-		["Rendering", false], 15,  5,  7, 10, 
+		[ "Output",    false ],  0, 20, 21, 13, 
+		[ "Noise",     false ],  4,  6,  3, 14, 
+		[ "Iteration", false ], 16, 18, 19, 17, 
+		[ "Transform", false ],  1, 12,  2, 11, 
+		[ "Radial",    false ],  8,  9,
+		[ "Rendering", false ], 22, 15,  5,  7, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -74,25 +75,28 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var _dim    = _data[ 0];
-			var _pos    = _data[ 1];
-			var _tim    = _data[ 3];
+			
 			var _type   = _data[ 4];
-			var _con    = _data[ 5];
 			var _pat    = _data[ 6];
-			var _mid    = _data[ 7];
+			var _tim    = _data[ 3];
+			var _phs    = _data[14];
+			
+			var _pos    = _data[ 1];
+			var _rot    = _data[12];
 			
 			var _rad    = _data[ 8];
 			var _sht    = _data[ 9];
-			var _col    = _data[10];
-			var _rot    = _data[12];
 			
 			var _itr    = _data[16];
 			var _iscale = _data[18];
 			var _iampli = _data[19];
 			var _iblend = _data[17];
 			
-			var _phs    = _data[14];
+			var _lvl    = _data[22];
 			var _inv    = _data[15];
+			var _con    = _data[ 5];
+			var _mid    = _data[ 7];
+			var _col    = _data[10];
 			
 			inputs[ 8].setVisible(_pat  == 2);
 			inputs[ 9].setVisible(_pat  == 2);
@@ -129,6 +133,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f( "iterAmpli",     _iampli );
 			shader_set_i( "blendMode",     _iblend );
 			
+			shader_set_2( "level",         _lvl );
 			shader_set_i( "inverted",      _inv );
 			shader_set_i( "colored",       _col );
 			shader_set_f( "rotation",      degtorad(_rot) );

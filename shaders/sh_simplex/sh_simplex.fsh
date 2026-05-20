@@ -48,6 +48,7 @@ uniform float itrScaling;
 uniform float itrAmplitude;
 uniform int   tiled;
 
+uniform vec2 level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
@@ -201,7 +202,10 @@ float simplexTiled(vec2 pos, float ang, vec2 sca, vec2 ntx) { // That's... not h
 	vec2  st11 = (ptx + vec2(1., 1.)) * rot * sca;
 	float s11  = simplex(st11);
 	
-	return mix(mix(s00, s10, 1. - ntx.x), mix(s01, s11, 1. - ntx.x), 1. - ntx.y);
+	float res  = mix(mix(s00, s10, 1. - ntx.x), mix(s01, s11, 1. - ntx.x), 1. - ntx.y);
+	      res  = applyLevel(res);
+	
+	return res;
 }
 
 void main() {

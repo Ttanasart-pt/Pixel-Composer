@@ -30,6 +30,7 @@ uniform int   mode;
 uniform int   render;
 
 uniform float thickness;
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 
 float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + seed / 100.)); }
 
@@ -63,6 +64,8 @@ void main() {
 		     if(render == 0) w  = max(w, st);
 		else if(render == 1) w += st;
     }
+    
+    w = applyLevel(w);
     
     gl_FragColor = vec4(vec3(w), 1.);
 }

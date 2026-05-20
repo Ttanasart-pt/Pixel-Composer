@@ -42,6 +42,7 @@ uniform sampler2D itrAmplitudeSurf;
 
 uniform int  itrBlendMode;
 
+uniform vec2 level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
@@ -113,6 +114,7 @@ float perlin(in vec2 st) {
 	}
 	
 	if(itrBlendMode == 0) n /= ampt;
+	n = applyLevel(n);
 	
 	return n;
 }

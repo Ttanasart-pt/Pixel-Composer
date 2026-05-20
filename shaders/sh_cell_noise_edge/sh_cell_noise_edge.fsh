@@ -39,6 +39,7 @@ uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
 
+uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 uniform int   inverted;
 uniform float contrast;
 uniform float middle;
@@ -167,6 +168,7 @@ void main() {
 	
 	if(blendMode == 2) md = 1. - md;
 	float c = middle + (md - middle) * contrast;
+	      c = applyLevel(c);
 	if(inverted == 1) c = 1. - c;
 	
     gl_FragColor = vec4(vec3(c), 1.0);
