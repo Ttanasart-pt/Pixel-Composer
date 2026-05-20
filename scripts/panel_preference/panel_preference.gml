@@ -488,24 +488,11 @@ function Panel_Preference() : PanelContent() constructor {
     				.setFont(f_p2).setEmpty()
     		));
     		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_ui_hotkey_use_pie", "Use pie menu for hotkey conflict."),
-    			"hotkey_use_pie",
-    			new checkBox(function() /*=>*/ {return prefToggle("hotkey_use_pie")})
-    		));
-    		
     		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_ui_native_file_selector", "Use native file selector"),
     			"use_native_file_browser",
     			new checkBox(function() /*=>*/ {return prefToggle("use_native_file_browser")})
-    		));
-    		
-    		if(TESTING)
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_ui_window_shadow", "Shadow"),
-    			"window_shadow",
-    			new checkBox(function() /*=>*/ {return prefToggle("window_shadow", true)})
     		));
     		
     		if(IS_PATREON)
@@ -515,6 +502,20 @@ function Panel_Preference() : PanelContent() constructor {
     			new checkBox(function() /*=>*/ {return prefToggle("show_supporter_icon")})
     		));
     	
+    	ds_list_add(pref_appr, __txt("Menu")); // Menu
+    	
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_ui_use_pie", "Use pie menu"),
+    			"menu_use_pie",
+    			new checkBox(function() /*=>*/ {return prefToggle("menu_use_pie")})
+    		));
+    		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_ui_hotkey_use_pie", "Use pie menu for hotkey conflict."),
+    			"hotkey_use_pie",
+    			new checkBox(function() /*=>*/ {return prefToggle("hotkey_use_pie")})
+    		));
+    		
     	ds_list_add(pref_appr, __txt("Window")); // Window
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(

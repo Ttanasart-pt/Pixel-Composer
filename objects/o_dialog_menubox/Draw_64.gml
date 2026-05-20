@@ -237,7 +237,7 @@ DIALOG_WINCLEAR1
 				if(_hv) {
 					if(_tlp != "") TOOLTIP = _tlp;
 					draw_sprite_stretched_ext(THEME.textbox, 3, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
-					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 2, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					
 					if(mouse_lpress(sFOCUS)) {
 						DIALOG_POSTDRAW

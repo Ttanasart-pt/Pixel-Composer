@@ -206,7 +206,8 @@
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
         registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); } ).setMenu("graph_node_selector", THEME.node_selector);
-        registerFunction(g, "Node Action Pie",       "Q", n, function() /*=>*/ {return PANEL_GRAPH.nodeQuickPie()}).setMenu("graph_node_action_pie");
+        registerFunction(g, "Node Action Pie",       "Q", n, function() /*=>*/ {return PANEL_GRAPH.nodeQuickPie()}  ).setMenu("graph_node_action_pie");
+        registerFunction(g, "Node Preset Pie",       "P", a, function() /*=>*/ {return PANEL_GRAPH.nodePresetPie()} ).setMenu("graph_node_preset_pie");
         	
         registerFunction(g, "Node Multiplier...",    "",  n, function() /*=>*/ { 
         	if(array_empty(PANEL_GRAPH.nodes_selecting)) return;
@@ -753,11 +754,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	continue;
             }
             
+            var nodeH = _node.h + _node.showMeta() * 16;
+            
             minx = min(minx, _node.x - 32);
             maxx = max(maxx, _node.x + _node.w + 32);
                 
             miny = min(miny, _node.y - 32);
-            maxy = max(maxy, _node.y + _node.h + 32);
+            maxy = max(maxy, _node.y + nodeH + 32);
             vali = true;
         }
         
@@ -5050,9 +5053,43 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		
     	}
     	
-    	if(!array_empty(_pmenu))
-    		return pieMenuCall($"node_action_{instanceof(node_hovering)}", _pmenu);
-    	return noone;
+		return array_empty(_pmenu)? noone : pieMenuCall($"node_action_{instanceof(node_hovering)}", _pmenu);
+    }
+    
+    function nodePresetPie() {
+    	if(!is(node_hovering, Node)) return;
+    	
+    	var nodeType = instanceof(node_hovering);
+    	if(!has(PRESETS_MAP, nodeType)) return;
+    	
+    	var pres = PRESETS_MAP[$ nodeType];
+    	var keys = struct_get_names(pres);
+		var amo  = array_length(keys);
+		if(amo == 0) return;
+		
+    	var _pmenu = [
+    		menuItem(__txt("Default"), function(_data) /*=>*/ { var p = _data.params; p.node.setPreset(p.preset); })
+    			.setParam({ node: node_hovering, preset: "_default" })
+		];
+    	
+    	for( var i = 0; i < amo; i++ ) {
+    		var key = keys[i];
+    		var men = menuItem(key, function(_data) /*=>*/ { var p = _data.params; p.node.setPreset(p.preset); })
+    			.setParam({ node: node_hovering, preset: key });
+    		
+    		var preset = pres[$ key];
+    		
+			if(preset.content == undefined) {
+				preset.content        = json_load_struct(preset.path);
+				preset.thumbnail_data = struct_try_get(preset.content, "thumbnail", -1);
+			}
+			
+    		var _thm   = preset.getThumbnail();
+    		if(is_surface(_thm)) men.setSurface(_thm);
+    		array_push(_pmenu, men);
+    	}
+    	
+		return pieMenuCall($"node_preset_{instanceof(node_hovering)}", _pmenu);
     }
     
     ////- Serialize

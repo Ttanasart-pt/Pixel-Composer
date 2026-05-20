@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.1.010",
+    "changes": [
+      {
+        "date": "2026-05-20T01:55:37.606Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Fix full view doesn't take compact metadata area into account."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.009",
     "changes": [
       {

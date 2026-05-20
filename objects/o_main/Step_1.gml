@@ -119,6 +119,8 @@ _FILE_DROPPED       = false;
 	
 	with(o_pie_menu) checkFocus();
 	with(_p_dialog)  checkFocus();
+	
+	with(o_pie_menu) checkDepth();
 	with(_p_dialog)  checkDepth();
 	
 	with(_p_dialog) doResize();

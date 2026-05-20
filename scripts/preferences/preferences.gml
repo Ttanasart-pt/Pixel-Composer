@@ -8,7 +8,6 @@
 	
 	function PREF_INIT() {
 		#region GENERAL UI
-			
 			PREFERENCES.display_scaling					= 1;
 			PREFERENCES.text_scaling					= 1;
 			PREFERENCES.window_width					= 1600;
@@ -73,6 +72,7 @@
 		#endregion
 		
 		#region DIALOG
+			PREFERENCES.menu_use_pie                = true;
 			PREFERENCES.hotkey_use_pie              = true;
 			
 			PREFERENCES.node_recents_amount         = 100;
@@ -105,7 +105,6 @@
 		#endregion
 		
 		#region PANEL
-		
 			PREFERENCES.panel_layout_file                 = "Vertical";
 			
 			PREFERENCES.panel_graph_dragging              = MOD_KEY.alt;

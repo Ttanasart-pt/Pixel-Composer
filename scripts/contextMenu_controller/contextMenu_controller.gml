@@ -18,6 +18,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	name	= _name;
 	func	= _func;
 	spr		= _spr;
+	surface = noone;
 	hotkey	= _hotkey;
 	toggle	= _toggle;
 	params	= _params;
@@ -55,6 +56,8 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
     static setTooltip   = function(_t)         /*=>*/ { tooltip    = _t; scrollable = true; return self; }
     static setContext   = function(_c)         /*=>*/ { contextMenu = _c;        return self; }
     static setScroll    = function()           /*=>*/ { scrollable = true;       return self; }
+	
+	static setSurface   = function(_c)         /*=>*/ { surface = _c;            return self; }
 	
 	static getSpr       = function() /*=>*/ {return is_callable(spr)? spr() : spr};
 	static getSprInd    = function() /*=>*/ {return 0};
@@ -220,7 +223,7 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 
 function pieMenuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { return pieMenuCall(menu_id, menuItems_gen(menu_id), _x, _y); }
 function pieMenuCall(menu_id = "", menu = [], _x = 0, _y = 0) {
-	// if(array_empty(menu)) return noone;
+	if(!PREFERENCES.menu_use_pie) return noone;
 	
 	_x = _x == 0? mouse_mx : _x;
 	_y = _y == 0? mouse_my : _y;

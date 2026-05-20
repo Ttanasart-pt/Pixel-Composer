@@ -31,10 +31,10 @@ with(o_pie_menu) { if(self != other) active = false; }
 	mouse_ty = mouse_my;
 	
 	activate_key_release = false;
+	deactivate_key       = keyboard_check(vk_anykey)? keyboard_lastkey : undefined;
+	deactivate_keyable   = false;
 	
-	onActivate = -1;
-	onDestroy  = -1;
-	
+	onDestroy     = -1;
 	itemSelecting = -1;
 	
 	preHover = HOVER;
@@ -61,10 +61,13 @@ function setMenu(menu) {
 				_menuItem.spr  = _node.getSpr();
 			}
 			
-			pie_size += hght;
+			var _tww  = string_width(_menuItem.name)
+				+ (_menuItem.spr != noone) * (hght + ui(4)) 
+				+ (_menuItem.surface != noone) * (hght + ui(4));
 			
+			pie_size += hght;
 			array_push(menus, _menuItem);
-			name_width = max(name_width, string_width(_menuItem.name));
+			name_width = max(name_width, _tww);
 			
 		} else if(is(_menuItem, MenuItemGroup)) {
 			var amo = array_length(_menuItem.group);
@@ -157,10 +160,11 @@ function refreshAngles() {
 				rangles[amo-i-1] = ang;
 			}
 			
-			angles = odd? [90] : [];
-			angles = array_merge(angles, langles, rangles);
+			angles = array_merge(odd? [90] : [], langles, rangles);
+			array_sort(angles, true); 
 		}
 	}
+	
 }
 
 function deactivate() {
@@ -168,10 +172,17 @@ function deactivate() {
 	if(preFocus) setFocus(preFocus);
 }
 
+function onActivate() {
+	// instance_destroy(o_dialog_menubox);
+}
+
 function checkFocus() {
 	if(depth <= DIALOG_DEPTH_HOVER) {
 		DIALOG_DEPTH_HOVER = depth;
 		HOVER = self.id;
-		FOCUS = self.id;
 	}
+}
+
+function checkDepth() {
+	if(depth == DIALOG_DEPTH_HOVER) FOCUS = self.id;
 }

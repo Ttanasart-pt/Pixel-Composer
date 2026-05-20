@@ -826,7 +826,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputJunctionAmount  = function( ) /*=>*/ {return (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list)};
 	static getInputJunctionIndex   = function(i) /*=>*/ { 
 		if(input_display_list == -1 || !use_display_list) return i;
-		
 		var _junci = input_display_list[i];
 		return is_numeric(_junci)? _junci : noone;
 	}

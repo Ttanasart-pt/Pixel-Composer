@@ -40,7 +40,8 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	var pd = ui(8);
 	var bs = ui(24);
 	
-	if(!MOUSE_WRAPPING && !MOUSE_BLOCK && CURSOR_LOCK_X == 0 && CURSOR_LOCK_Y == 0) {
+	var mouse_free = !MOUSE_WRAPPING && !MOUSE_BLOCK && CURSOR_LOCK_X == 0 && CURSOR_LOCK_Y == 0;
+	if(mouse_free) {
 		mouse_tx = mx;
 		mouse_ty = my;
 	}
@@ -110,10 +111,14 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		
 		if(is(_menuItem, MenuItem)) {
 			var _spr  = _menuItem.spr;
+			var _surf = _menuItem.surface;
 			
 			draw_set_font(font);
 			_sph  = hght * anim_prog;
-			_spw  = string_width(label) + pd * 2 + (_spr != noone) * (_sph + ui(4));
+			_spw  = string_width(label) + pd * 2;
+			_spw += (_spr  != noone) * (_sph + ui(4));
+			_spw += (_surf != noone) * (_sph + ui(4));
+			
 			_spw *= anim_prog;
 				
 		} else if(is(_menuItem, MenuItemGroup)) {
@@ -168,15 +173,13 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 					params  : _menuItem.params,
 				};
 				
-				instance_destroy(_p_dialog);
-				if(onActivate != -1) onActivate();
+				onActivate();
 				var _res = _menuItem.toggleFunction(_dat);
 			}
 		}
 		
 		if(_hovL && menu_id != "") {
 			draw_sprite_ui(THEME.gear_16, 0, sx, sy, 1, 1, 0, sHov? COLORS._main_icon_light : COLORS._main_icon, .5 + sHov * .5);
-			
 			if(sHov) {
 				selectable = false;
 				if(mouse_rel) edit = true;
@@ -195,13 +198,26 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 					draw_sprite_ext(spr, ind, _bx0 + pd + _sph/2, _by0 + _sph/2, ss, ss, 0, COLORS._main_icon_light, aa * anim_prog);
 				}
 			}
+			
+			if(_surf != noone && is_surface(_surf)) {
+				var _srfw = surface_get_width(_surf);
+				var _srfh = surface_get_height(_surf);
+				var ss = (_sph - ui(8)) / max(_srfw, _srfh);
+				
+				var _srfx = _bx0 + ui(4) + _sph/2 - _srfw*ss/2;
+				var _srfy = _by0         + _sph/2 - _srfh*ss/2;
+				
+				draw_surface_ext(_surf, _srfx, _srfy, ss, ss, 0, COLORS._main_icon_light, aa * anim_prog);
+			}
 				
 			if(_menuItem.toggle != noone) {
 				var tog = _menuItem.toggle(_menuItem);
 				if(tog) draw_sprite_ui(THEME.icon_toggle, 0, _bx0 + pd + _sph/2, _by0 + _sph/2, 1, 1, 0, COLORS._main_icon_light);
 			}
 			
-			var tx = _bx0 + pd + (_spr != noone) * (_sph + ui(4));
+			var tx = _bx0 + pd
+				+ (_spr  != noone) * (_sph + ui(4))
+				+ (_surf != noone) * (_sph + ui(4));
 			var aa = _menuItem.active * 0.75 + 0.25;
 			
 			draw_set_text(font, fa_left, fa_center, _hov && !sHov? COLORS._main_text_accent : COLORS._main_text, aa * anim_prog);
@@ -251,8 +267,11 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 				if(sHOVER && _hov && !sHov && hovRec) {
 					if(_tlp != "") TOOLTIP = _tlp;
 					draw_sprite_stretched_ext(THEME.textbox, 3, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
-					draw_sprite_stretched_ext(THEME.textbox, 1, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
-					if(mouse_rel) _submenu[1](_dat);
+					draw_sprite_stretched_ext(THEME.textbox, 2, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
+					if(mouse_rel) {
+						onActivate();
+						_submenu[1](_dat);
+					}
 				}
 				
 				if(_spr != noone) draw_sprite_ui_uniform(_spr, _ind, ixc, iyc, 1, _clr);
@@ -288,7 +307,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	
 	if(edit) {
 		instance_destroy(_p_dialog);
-		if(onActivate != -1) onActivate();
+		onActivate();
 		menuItemEdit(menu_id, true);
 		deactivate();
 	}
@@ -304,4 +323,12 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	}
 		
 	if(mouse_rel) deactivate();
+	
+	if(deactivate_key != undefined) {
+		if(deactivate_keyable && keyboard_check_pressed(deactivate_key) && WIDGET_CURRENT == undefined && mouse_free)
+			deactivate();
+			
+		if(!deactivate_keyable && keyboard_check_released(deactivate_key))
+			deactivate_keyable = true;
+	}
 #endregion 
