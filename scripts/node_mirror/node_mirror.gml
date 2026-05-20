@@ -15,8 +15,8 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Mirror
 	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").hideLabel().setPieMenu();
+	newInput( 5, nodeValue_Bool(     "Flip",      false  )).setPieMenu();
 	newInput( 4, nodeValue_Bool(     "Both Side", false  )).setPieMenu();
-	newInput( 5, nodeValue_Bool(     "Flip",      false  ));
 	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -24,7 +24,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	input_display_list = [ 3,
 		[ "Surfaces", false ],  0, 
-		[ "Mirror",   false ],  1,  2,  4,  5, 
+		[ "Mirror",   false ],  1,  2,  5,  4, 
 	];
 	
 	////- Node
@@ -60,12 +60,12 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _suf = _data[0];
+			var _suf = _data[ 0];
 			
-			var _pos = _data[1];
-			var _ang = _data[2];
-			var _bth = _data[4];
-			var _inv = _data[5];
+			var _pos = _data[ 1];
+			var _ang = _data[ 2];
+			var _inv = _data[ 5];
+			var _bth = _data[ 4];
 			
 			if(!is_surface(_suf)) return _outData;
 		#endregion
@@ -75,11 +75,11 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outData[1] = surface_verify(_outData[1], _dim[0], _dim[1]);
 		
 		surface_set_shader(_outData, sh_mirror);
-			shader_set_f("dimension", _dim );
-			shader_set_2("position",  _pos );
-			shader_set_f("angle",     degtorad(_ang));
-			shader_set_i("bothSide",  _bth );
-			shader_set_i("invert",    _inv );
+			shader_set_f( "dimension", _dim );
+			shader_set_2( "position",  _pos );
+			shader_set_f( "angle",     _ang );
+			shader_set_i( "bothSide",  _bth );
+			shader_set_i( "invert",    _inv );
 			
 			draw_surface_safe(_suf);
 		surface_reset_shader();

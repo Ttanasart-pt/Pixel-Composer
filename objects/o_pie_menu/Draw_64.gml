@@ -50,9 +50,9 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	var edit  = false;
 	var widg  = false;
 	
-	var mouse_rel = global_mouse_right_is_released() || mouse_lpress();
+	var mouse_rel  = global_mouse_right_is_released() || mouse_lpress();
 	    mouse_rel |= activate_key_release && keyboard_check_released(vk_anykey);
-	    mouse_rel &= sHOVER;
+	    mouse_rel &= sHOVER && WIDGET_CURRENT == undefined;
 	
 	var _bx0, _bx1, _by0, _by1;
 	
@@ -312,20 +312,17 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		deactivate();
 	}
 	
-	if(widg && keyboard_check_released(vk_anykey)) {
+	if(widg && WIDGET_CURRENT == undefined && keyboard_check_released(vk_anykey)) {
 		KEYBOARD_BLOCK          = false;
 		KEYBOARD_PRESSED_STRING = "";
 		KEYBOARD_STRING         = "";
 		keyboard_string         = "";
-		
-		if(itemSelecting == -1)
-			deactivate();
 	}
-		
+	
 	if(mouse_rel) deactivate();
 	
 	if(deactivate_key != undefined) {
-		if(deactivate_keyable && keyboard_check_pressed(deactivate_key) && WIDGET_CURRENT == undefined && mouse_free)
+		if(deactivate_keyable && keyboard_check_pressed(deactivate_key) && WIDGET_CURRENT == undefined)
 			deactivate();
 			
 		if(!deactivate_keyable && keyboard_check_released(deactivate_key))

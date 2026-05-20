@@ -14,7 +14,7 @@ uniform int   bothSide;
 void main() {
 	vec2  ps = v_vTexcoord;
 	vec2  px = v_vTexcoord * dimension - position;
-	float fangle = angle + float(invert) * PI;
+	float fangle = radians(angle) + float(invert) * PI;
 	float pangle;
 	
 	pangle = atan(px.y, px.x) + fangle;

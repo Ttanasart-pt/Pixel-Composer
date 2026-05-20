@@ -817,10 +817,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		if(sliding > 0) { 
-			slide_delta += PEN_USE? PEN_X_DELTA + PEN_Y_DELTA : window_mouse_get_delta_x() + window_mouse_get_delta_y();
+			slide_delta   += PEN_USE? PEN_X_DELTA + PEN_Y_DELTA : window_mouse_get_delta_x() + window_mouse_get_delta_y();
 			
 			if(sliding == 1 && abs(slide_delta) > 8) {
 				deactivate();
+				WIDGET_CURRENT = self;
+				
 				var _defval = toNumber(_current_text);
 				slider_def_val = _defval;
 				slider_cur_val = _defval;
