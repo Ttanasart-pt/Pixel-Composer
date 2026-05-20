@@ -23,26 +23,27 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Scale Algorithm";
 	manage_atlas = false;
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Enum_Scroll("Algorithm",  0, [ "Scale2x", "Scale3x", "CleanEdge" ]));
-		
-	newInput(2, nodeValue_Slider("Tolerance", 0));
-	
 	newActiveInput(3);
-		
-	newInput(4, nodeValue_Bool("Scale Atlas Position", true));
 	
-	newInput(5, nodeValue_Float("Scale", 4));
-		
-	newInput(6, nodeValue_Rotation("Rotation", 0));
+	////- =Surfaces
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	
+	////- =Scale
+	newInput( 1, nodeValue_EScroll(  "Algorithm",  0, [ "Scale2x", "Scale3x", "CleanEdge" ])).setPieMenu();
+	newInput( 2, nodeValue_Slider(   "Tolerance",  0 )).setPieMenu();
+	newInput( 4, nodeValue_Bool(     "Scale Atlas Position", true ));
+	newInput( 5, nodeValue_Float(    "Scale",      4 )).setPieMenu();
+	newInput( 6, nodeValue_Rotation( "Rotation",   0 )).setPieMenu();
+	// 7
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
-		["Surfaces", false], 0, 
-		["Scale",	 false], 1, 2, 4, 5, 6, 
-	]
+		[ "Surfaces", false ], 0, 
+		[ "Scale",    false ], 1, 2, 4, 5, 6, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	

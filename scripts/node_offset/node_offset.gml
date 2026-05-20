@@ -4,19 +4,20 @@ function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newActiveInput(3);
 	
 	////- Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(4, nodeValue_Surface( "Mask"       ));
-	newInput(5, nodeValue_Slider(  "Mix", 1     ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 4, nodeValue_Surface( "Mask"       ));
+	newInput( 5, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(4, 6); // inputs 6, 7
 	
 	////- Offset
-	newInput(1, nodeValue_Slider(  "X Offset", .5 )).setPieMenu();
-	newInput(2, nodeValue_Slider(  "Y Offset", .5 )).setPieMenu();
-	// 8
+	newInput( 1, nodeValue_Slider(   "X Offset", .5 )).setPieMenu();
+	newInput( 2, nodeValue_Slider(   "Y Offset", .5 )).setPieMenu();
+	newInput( 8, nodeValue_Rotation( "Angle",     0 )).setPieMenu();
+	// 9
 		
 	input_display_list = [ 3, 
-		["Surfaces", true],	0, 4, 5, 6, 7, 
-		["Offset",	false],	1, 2, 
+		[ "Surfaces", true ], 0, 4, 5, 6, 7, 
+		[ "Offset",  false ], 1, 2, 8, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -80,7 +81,8 @@ function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _surf = _data[0];
 		
 		surface_set_shader(_outSurf, sh_offset);
-			shader_set_f("offset", -_data[1], -_data[2]);
+			shader_set_f("offset", -_data[1], -_data[2] );
+			shader_set_f("angle",   _data[8] );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

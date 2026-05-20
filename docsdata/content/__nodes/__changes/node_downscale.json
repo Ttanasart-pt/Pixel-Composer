@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.1.010",
+    "changes": [
+      {
+        "date": "2026-05-20T02:57:10.648Z",
+        "node": "",
+        "commit": "**Offset**: Add offset angle control."
+      }
+    ]
+  }
+]

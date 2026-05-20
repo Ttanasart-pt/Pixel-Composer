@@ -741,7 +741,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             if(!is(_node, Node)) continue;
             if(!_node.active)    continue;
             
-            if(is(_node, Node_Feedback_Inline))    continue;
+            if(is(_node, Node_Feedback_Inline)) continue;
             
             if(is(_node, Node_Collection_Inline)) {
             	var _bbox = _node.bbox;
@@ -4044,13 +4044,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(_conn && array_length(nodes_selecting) == 1) {
         	var sNode = nodes_selecting[0];
         	var _jOut = sNode.getOutput();
-        	var _jIn  = node.getInput();
         	
-        	if(_jOut != noone && _jIn != noone && _jIn.setFrom(_jOut)) {
-        		node.x = sNode.x + sNode.w + 64;
-        		node.y = sNode.y;
-        		_drag  = false;
+        	if(_jOut != noone)
+        	for( var i = 0, n = array_length(node.inputDisplayList); i < n; i++ ) {
+        		var _inp = node.inputDisplayList[i];
+        		if(_inp.setFrom(_jOut)) {
+	        		node.x = sNode.x + sNode.w + 64;
+	        		node.y = sNode.y;
+	        		_drag  = false;
+	        		break;
+	        	}
         	}
+        	
         }
         
         if(_preset != "") {
@@ -4348,18 +4353,28 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        if(value_dragging.connect_type == CONNECT_TYPE.output) {
 	            if(node.input_display_list != -1) {
 	                for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
-	                    if(!is_real(node.input_display_list[i])) continue;
-	                    if(node.inputs[node.input_display_list[i]].setFrom(value_dragging)) break;
+	                	var ind = node.input_display_list[i];
+	                    if(!is_real(ind)) continue;
+	                    
+	                    var inp = node.inputs[ind];
+	                    if(!inp.isConnectableStrict(value_dragging)) continue;
+	                    if(inp.setFrom(value_dragging)) break;
 	                }
 	                    
 	            } else {
-	                for (var i = 0, n = array_length(node.inputs); i < n; i++)
-	                    if(node.inputs[i].setFrom(value_dragging)) break;
+	                for (var i = 0, n = array_length(node.inputs); i < n; i++) {
+	                    var inp = node.inputs[i];
+	                    if(!inp.isConnectableStrict(value_dragging)) continue;
+	                    if(inp.setFrom(value_dragging)) break;
+	                }
 	            }
 	            
 	        } else if(value_dragging.connect_type == CONNECT_TYPE.input) {
-	            for (var i = 0, n = array_length(node.outputs); i < n; i++)
-	                if(value_dragging.setFrom(node.outputs[i])) break;
+	            for (var i = 0, n = array_length(node.outputs); i < n; i++) {
+	            	var _outp = node.outputs[i];
+	            	if(!value_dragging.isConnectableStrict(_outp)) continue;
+	                if(value_dragging.setFrom(_outp)) break;
+	            }
 	                
 	        }
 	        

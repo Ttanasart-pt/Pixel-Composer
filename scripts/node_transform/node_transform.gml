@@ -304,8 +304,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			[ "Up",    [ [ 0, [ 0.5, 1.5] ], [ 1, [ 0.5,-0.5] ]], THEME.apreset_up    ], 
 			[ "Down",  [ [ 0, [ 0.5,-0.5] ], [ 1, [ 0.5, 1.5] ]], THEME.apreset_down  ], 
 		]);
-	newInput(10, nodeValue_Bool( "Round Position",  false, "Round position to the nearest integer value to avoid jittering."));
 	newInput( 3, nodeValue_Anchor());
+	newInput(10, nodeValue_Bool( "Round Position",  false, "Round position to the nearest integer value to avoid jittering."));
 	
 	////- =Rotation
 	newInput(4, nodeValue_Bool(     "Relative Anchor",    true ));
@@ -337,10 +337,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newOutput(5, nodeValue_Output( "Speed",       VALUE_TYPE.float,    0    )).setVisible(false);
 	
 	input_display_list = [ 11, 0,  
-		[ "Output",   true     ], 9, 1, 15, 7,
-		[ "Position", false    ], 2, 10, 3, 
-		[ "Rotation", false    ], 5, 8, 
-		[ "Scale",    false    ], 6, 
+		[ "Output",   true     ],  9,  1, 15,  7,
+		[ "Position", false    ],  2,  3, 10, 
+		[ "Rotation", false    ],  5,  8, 
+		[ "Scale",    false    ],  6, 
 		[ "Render",   false    ], 14, 
 		[ "Stretch",  true, 17 ], 18, 19, 
 		[ "Echo",     true, 12 ], 16, 13, 

@@ -2306,16 +2306,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var jun;
-		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
-			jun = inputDisplayList[i];
-			jun.drawJunction(_s, _mx, _my);
-		}
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++)
+			inputDisplayList[i].drawJunction(_s, _mx, _my);
 		
 		preview_channel_temp = undefined;
-		for(var i = 0, n = array_length(outputDisplayList); i < n; i++) {
-			jun = outputDisplayList[i];
-			jun.drawJunction(_s, _mx, _my);
-		}
+		for(var i = 0, n = array_length(outputDisplayList); i < n; i++)
+			outputDisplayList[i].drawJunction(_s, _mx, _my);
 		
 		var a = key_mod_press(ALT);
 		if(insp1button && insp1button.visible) {
