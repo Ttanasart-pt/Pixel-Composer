@@ -4,9 +4,10 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	icon    = THEME.loop;
 	icon_24 = THEME.loop_24;
 	is_root = false;
-	
 	managedRenderOrder = true;
-	loop_active        = true;
+	
+	loop_active = true;
+	loop_valid  = true;
 	
 	newInput(0, nodeValue_Int(  "Repeat", 1    )).uncache();
 	newInput(1, nodeValue_Bool( "Active", true ));
@@ -107,6 +108,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	}
 	
 	static update = function() {
+		loop_valid  = true;
 		loop_active = inputs[1].getValue();
 		var _itc    = inputs[0].getValue();
 		if(!loop_active) _itc = 0;
@@ -116,6 +118,9 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		iteration_count = _itc;
 		iterated        = 0;
 		value_buffer    = undefined;
+		
+		if(junc_in  == noone || !junc_in.node.active)  loop_valid = false;
+		if(junc_out == noone || !junc_out.node.active) loop_valid = false;
 	}
 	
 	////- Draw
@@ -123,6 +128,8 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	static drawDimension = undefined
 	
 	static drawConnections = function(params = {}, _draw = true) {
+		if(!loop_valid) return undefined;
+		
 		var hovering = undefined;
 		
 		params.dashed = true; params.loop   = true;

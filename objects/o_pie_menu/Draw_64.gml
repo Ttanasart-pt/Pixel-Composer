@@ -314,7 +314,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		deactivate();
 	}
 	
-	if(widg && WIDGET_CURRENT == undefined && keyboard_check_released(vk_anykey)) {
+	if(widg && KEYBOARD_BLOCK && WIDGET_CURRENT == undefined && keyboard_check_released(vk_anykey)) {
 		KEYBOARD_BLOCK          = false;
 		KEYBOARD_PRESSED_STRING = "";
 		KEYBOARD_STRING         = "";
