@@ -67,6 +67,18 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static update = function() {
+		var _fr = inputs[0].value_from;
+		
+		if(_fr != noone) {
+			inputs[0].draw_bg        = _fr.draw_bg;
+			inputs[0].draw_fg        = _fr.draw_fg;
+			inputs[0].color_display  = _fr.color_display;
+			
+			outputs[0].draw_bg       = _fr.draw_bg;
+			outputs[0].draw_fg       = _fr.draw_fg;
+			outputs[0].color_display = _fr.color_display;
+		}
+		
 		outputs[0].setValue(inputs[0].getValue());
 	}
 	

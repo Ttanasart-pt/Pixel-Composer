@@ -1,18 +1,21 @@
 function Node_Blend_Height(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend Height";
 	
-	newInput(0, nodeValue_Surface( "Background" ));
-	newInput(1, nodeValue_Surface( "Foreground" ));
+	////- =Surfaces
+	newInput( 0, nodeValue_Surface( "Background" ));
+	newInput( 1, nodeValue_Surface( "Foreground" ));
 	
-	newInput(4, nodeValue_Enum_Scroll( "Mode",    0, [ "Union", "Intersect" ]  ));
-	newInput(3, nodeValue_Enum_Scroll( "Type",    1, [ "Exponent", "Root", "Sigmoid", "Quadratic", "Cubic", "Circular" ]  ));
-	newInput(2, nodeValue_Slider(      "Factor", .5  ));
+	////- =Blend
+	newInput( 4, nodeValue_EScroll( "Mode",    0, [ "Union", "Intersect" ]  )).setPieMenu();
+	newInput( 3, nodeValue_EScroll( "Type",    1, [ "Exponent", "Root", "Sigmoid", "Quadratic", "Cubic", "Circular" ]  )).setPieMenu();
+	newInput( 2, nodeValue_Slider(  "Factor", .5  )).setPieMenu();
+	// 5
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		["Surfaces", false], 0, 1,
-		["Blend",    false], 4, 3, 2,  
+		[ "Surfaces", false ], 0, 1,
+		[ "Blend",    false ], 4, 3, 2,  
 	];
 	
 	////- Nodes

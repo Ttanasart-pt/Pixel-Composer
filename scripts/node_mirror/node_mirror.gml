@@ -34,8 +34,11 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _pos  = current_data[1];
-		var _ang  = current_data[2];
+		var _pos  = current_data[ 1];
+		var _ang  = current_data[ 2];
+		var _flp  = current_data[ 5];
+		    _ang += _flp * 180;
+		
 		var _posx = _pos[0] * _s + _x;
 		var _posy = _pos[1] * _s + _y;
 		

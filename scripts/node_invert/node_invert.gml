@@ -3,7 +3,7 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newActiveInput(3);
 	newInput(4, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	newInput(7, nodeValue_Bool(   "Include Alpha", false));
+	newInput(7, nodeValue_Bool(   "Include Alpha", false )).setPieMenu();
 	
 	////- =Surfaces
 	newInput(0, nodeValue_Surface( "Surface In" ));
