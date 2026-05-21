@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.001",
+    "changes": [
+      {
+        "date": "2026-05-21T04:47:12.289Z",
+        "node": "Path Scatter",
+        "commit": "**Path Scatter**: Fix error popup when created."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {

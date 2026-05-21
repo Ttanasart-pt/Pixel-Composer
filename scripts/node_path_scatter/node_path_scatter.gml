@@ -137,7 +137,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _sca_wid  = _data[ 6];
 		#endregion
 		
-		if(!is(_outData, "Path_Scatter"))
+		if(!is(_outData, Path_Scatter))
 			_outData = new Path_Scatter(self);
 			
 		if(!is_path(path_base) || !is_path(path_scat)) return _outData;
