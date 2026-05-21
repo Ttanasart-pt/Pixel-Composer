@@ -1651,6 +1651,7 @@
     {"name":"node_path_profile","order":19,"path":"scripts/node_path_profile/node_path_profile.yy",},
     {"name":"node_path_repeat","order":31,"path":"scripts/node_path_repeat/node_path_repeat.yy",},
     {"name":"node_path_reverse","order":15,"path":"scripts/node_path_reverse/node_path_reverse.yy",},
+    {"name":"node_path_revolve","order":41,"path":"scripts/node_path_revolve/node_path_revolve.yy",},
     {"name":"node_path_sample","order":10,"path":"scripts/node_path_sample/node_path_sample.yy",},
     {"name":"node_path_scatter","order":30,"path":"scripts/node_path_scatter/node_path_scatter.yy",},
     {"name":"node_path_sdf","order":32,"path":"scripts/node_path_sdf/node_path_sdf.yy",},

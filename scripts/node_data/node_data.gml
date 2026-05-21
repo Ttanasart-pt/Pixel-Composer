@@ -3648,15 +3648,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static postBuild  = function() {}
 	
-	static isTerminal = function() {
-		for( var i = 0; i < array_length(outputs); i++ ) {
-			var _to = outputs[i].getJunctionTo();
-			if(array_length(_to)) return false;
-		}
-		
-		return true;
-	}
-	
 	nextn = [];
 	static generateNodeRenderReport = function(_queue) {
 		var _report = {};

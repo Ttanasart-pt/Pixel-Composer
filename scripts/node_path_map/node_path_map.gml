@@ -1,11 +1,16 @@
 function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Map Path";
 	
-	////- =Mapping
+	////- =Output
 	newInput( 1, nodeValue_Dimension());
-	newInput( 2, nodeValue_Surface( "Texture" ));
+	
+	////- =Mapping
 	newInput( 3, nodeValue_Int(     "Subdivision", 16 )).setValidator(VV_min(2)).rejectArray();
-	newInput( 6, nodeValue_Vec2(    "UV Range", [1,1] ));
+	
+	////- =Rendering
+	newInput( 2, nodeValue_Surface( "Texture" ));
+	newInput( 7, nodeValue_Vec2(    "UV Position", [0,0] ));
+	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1] ));
 	
 	////- =Paths
 	newInput( 4, nodeValue_Slider(   "Shift",  0     ));
@@ -16,8 +21,10 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Mapping", false ],  1,  2,  3,  6, 
-		[ "Paths",   false ],  4,  5,  0,
+		[ "Output",    false ],  1, 
+		[ "Mapping",   false ],  3,  
+		[ "Rendering", false ],  2,  6, 
+		[ "Paths",     false ],  4,  5,  0,
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -41,13 +48,16 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _path = getInputData(0);
 			if(_path == noone) return;
 			
-			var _dim  = getInputData(1);
-			var _surf = getInputData(2);
-			var _sub  = getInputData(3);
-			var _uv   = getInputData(6);
+			var _dim  = getInputData( 1);
 			
-			var _sft  = getInputData(4);
-			var _inv  = getInputData(5);
+			var _sub  = getInputData( 3);
+			
+			var _surf = getInputData( 2);
+			var _uvP  = getInputData( 7);
+			var _uvS  = getInputData( 6);
+			
+			var _sft  = getInputData( 4);
+			var _inv  = getInputData( 5);
 		#endregion
 		
 		var _pathData = [];
@@ -102,7 +112,8 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		surface_set_shader(_out, sh_path_map_render);
 			draw_set_color(c_white);
-			shader_set_2("uv", _uv);
+			shader_set_2("uvP", _uvP);
+			shader_set_2("uvS", _uvS);
 			
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
 				for( var j = 0; j < _sub   - 1; j++ )

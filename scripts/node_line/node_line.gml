@@ -243,6 +243,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[ 3].setVisible(!_1px);
 			inputs[12].setVisible(!_1px);
 			inputs[13].setVisible(!_1px && !_utex);
+			inputs[43].setVisible(!_1px && !_utex);
 			inputs[14].setVisible(!_1px);
 			inputs[18].setVisible(!_1px);
 			

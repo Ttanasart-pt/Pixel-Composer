@@ -1266,6 +1266,7 @@
             "Node_Path_Fill",
             "Node_Path_Map",
             "Node_Path_Morph",
+            "Node_Path_Revolve",
             "Node_Path_SDF",
             { "label": "/Segment" },
             "Node_Segment_Filter",

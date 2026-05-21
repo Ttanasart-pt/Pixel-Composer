@@ -7,8 +7,8 @@ function Node_Path_Extends(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 0, nodeValue_PathNode( "Path" ));
 	
 	////- =Extends
-	newInput( 1, nodeValue_EButton( "Side",   0, [ "Start", "End" ] ));
-	newInput( 2, nodeValue_Float(   "Length", 0 ));
+	newInput( 1, nodeValue_EButton( "Side",    0, [ "Start", "End" ] ));
+	newInput( 2, nodeValue_Float(   "Length", 16 ));
 	// 3
 	
 	newOutput(0, nodeValue_Output(  "Path", VALUE_TYPE.pathnode, noone));
@@ -42,10 +42,10 @@ function Node_Path_Extends(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 		lengthAccs  = acc;
 		
-		startPos    = curr_path.getPointRatio(0.0000);
-		startPos1   = curr_path.getPointRatio(0.0001);
-		endPos      = curr_path.getPointRatio(0.9999);
-		endPos1     = curr_path.getPointRatio(0.9998);
+		startPos    = curr_path.getPointRatio(0.000);
+		startPos1   = curr_path.getPointRatio(0.001);
+		endPos      = curr_path.getPointRatio(0.999);
+		endPos1     = curr_path.getPointRatio(0.998);
 		
 		startDir    = point_direction(startPos1.x, startPos1.y, startPos.x, startPos.y);
 		endDir      = point_direction(endPos1.x,   endPos1.y,   endPos.x,   endPos.y);

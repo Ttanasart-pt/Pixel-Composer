@@ -16,6 +16,11 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	link_inactive_color = noone;
 	
+	scaleDrag = false;
+	scaleDrag_mx = 0;
+	scaleDrag_my = 0;
+	scaleDrag_ss = 0;
+	
 	tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
 	
 	onModifyIndex = function(val, index) { 
@@ -191,12 +196,26 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		var ww = per_line? _w : _w / _sz;
 		
 		if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);
+		
+		var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
+		var tbHover = bxHover;
+		
+		if(!per_line && _sz == 2) {
+			var ps = _h / 2;
+			var px = _x + ww;
+			var py = _y + _h / 2;
 			
+			if(bxHover && w > ui(80)) {
+				var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+				if(pHover) tbHover = false;
+			}
+		}
+		
 		for(var i = 0; i < _sz; i++) {
 			var bx = per_line? _x : _x + ww * i;
 			var by = per_line? _y + (_h + ui(4)) * i : _y;
 			
-			tb[i].setFocusHover(active, hover);
+			tb[i].setFocusHover(active, tbHover);
 			tb[i].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
 			tb[i].hide       = !per_line;
 			tb[i].setLabel(axis[i]);
@@ -204,8 +223,46 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			tb[i].draw(bx, by, ww - 1, _h, _data[i], _m);
 		}
 		
-		resetFocus();
+		if(!per_line && _sz == 2) {
+			if(scaleDrag) {
+				hover = false;
+				
+				var _dt = (_m[0] - scaleDrag_mx) / w;
+				var _sc = power(2, _dt);
+				
+				var _vx = scaleDrag_ss[0] * _sc;
+				var _vy = scaleDrag_ss[1] * _sc;
+				
+				if(key_mod_press(CTRL)) {
+					_vx = round(_vx);
+					_vy = round(_vy);
+				}
+				
+				var u0 = onModify(_vx, 0); 
+				var u1 = onModify(_vy, 1); 
+				if(u0 || u1) UNDO_HOLDING = true;
+				
+				if(mouse_lrelease()) {
+					UNDO_HOLDING = false;
+					scaleDrag    = false;
+				}
+			}
+			
+			if(scaleDrag) {
+				draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+				
+			} else if(bxHover && w > ui(80)) {
+				draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+				if(pHover && mouse_lpress(active)) {
+					scaleDrag = true;
+					scaleDrag_mx = _m[0];
+					scaleDrag_my = _m[1];
+					scaleDrag_ss = [_data[0], _data[1]];
+				}
+			}
+		}
 		
+		resetFocus();
 		return h;
 	}
 	
