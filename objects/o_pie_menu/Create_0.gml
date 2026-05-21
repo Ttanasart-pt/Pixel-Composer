@@ -177,7 +177,7 @@ function onActivate() {
 }
 
 function checkFocus() {
-	if(depth <= DIALOG_DEPTH_HOVER) {
+	if(selectable && depth <= DIALOG_DEPTH_HOVER) {
 		DIALOG_DEPTH_HOVER = depth;
 		HOVER = self.id;
 	}

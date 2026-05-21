@@ -38,7 +38,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	detail = new Inspector_Label("Mp4 file");
 	
 	////- =Output
-	newInput( 2, nodeValue_Bool( "Output as Array",    false ));
+	newInput( 2, nodeValue_Bool( "Output as Array",   false ));
 	
 	////- =Animation
 	newInput( 1, nodeValue_Trigger("Match Animation Length" ));
@@ -53,8 +53,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 9, nodeValue_Bool(    "Draw Before Start", true ));
 	
 	////- =Custom Order
-	newInput( 5, nodeValue_Bool( "Custom frame order", false ));
-	newInput( 6, nodeValue_Int(  "Frame",              0     ));
+	newInput( 5, nodeValue_Bool( "Custom frame order",  false ));
+	newInput( 6, nodeValue_Int(  "Frame",               0     ));
 	// input 10
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
@@ -75,22 +75,19 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	ffmpeg       = filepath_resolve(PREFERENCES.ffmpeg_path) + "bin/ffmpeg.exe";
 	spr			 = noone;
 	path_current = "";
-	loading		 = 0;
-	load_start_t = 0;
 	surfaces	 = [];
 	
-	shell_cmd = undefined;
-	shell_pid = undefined;
-
+	shell_cmd    = undefined;
+	shell_pid    = undefined;
+	
+	file_reading = false;
+	file_hash    = "";
+	
 	edit_time = 0;
 	attributes.file_checker = true;
 	array_push(attributeEditors, Node_Attribute("File Watcher", function() /*=>*/ {return attributes.file_checker}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")})}));
 	
-	on_drop_file = function(path) {
-		inputs[0].setValue(path);
-		if(updatePaths(path)) { doUpdate(); return true; }
-		return false;
-	}
+	on_drop_file = function(path) /*=>*/ { inputs[0].setValue(path); if(!updatePaths(path)) return false; doUpdate(); return true; }
 	
 	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
@@ -109,40 +106,54 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!renamedManual) setDisplayName(_name, false, false);
 		outputs[1].setValue(path);
 		
-		// READ 
+		return true;
+	}
+	
+	static mp4init = function() {
 		var _filemod = file_get_modify_s(path);
-		var _hash    = md5_string_unicode($"{path}{_filemod}");
-		var targ_dir = $"{DIRECTORY}Cache/{_hash}";
+		
+		file_reading = true;
+		file_hash    = md5_string_unicode($"{path}{_filemod}");
+		var targ_dir = $"{DIRECTORY}Cache/{file_hash}";
+		
 		if(!directory_exists(targ_dir)) {
 			directory_verify(targ_dir);
 			
 			shell_cmd = $"-hide_banner -loglevel quiet -i \"{path}\" -pix_fmt rgba \"{targ_dir}/frame%04d.png\"";
 			shell_execute(ffmpeg, shell_cmd);
 		}
+	}
+	
+	static mp4step = function() {
+		var targ_dir  = $"{DIRECTORY}Cache/{file_hash}";
+		var timeStart = get_timer();
 		
 		var _frames = directory_listdir(targ_dir, fa_none);
-		if(array_empty(_frames)) return true;
+		if(array_empty(_frames)) { file_reading = false; return; }
 		
 		_frames = array_filter(_frames, function(f,i) /*=>*/ {return filename_ext(f) == ".png"});
-		if(array_empty(_frames)) return true;
+		if(array_empty(_frames)) { file_reading = false; return; }
 		
 		array_sort(_frames, true);
 		sprite_delete_safe(spr);
 		
 		spr = sprite_add(_frames[0]);
-		
 		for( var i = 1, n = array_length(_frames); i < n; i++ ) {
 			var fr = sprite_add(_frames[i])
 			if(!fr || !sprite_exists(fr)) continue;
 			
 			sprite_merge(spr, fr);
 			sprite_delete_safe(fr);
+			if(get_timer() - timeStart > 1_000_000 / 60) return;
 		}
 		
-		return true;
+		file_reading = false;
+		triggerRender();
 	}
 	
 	static step = function() {
+		if(file_reading) mp4step();
+		
 		if(attributes.file_checker && file_exists_empty(path_current)) {
 			var _modi = file_get_modify_s(path_current);
 			
@@ -154,6 +165,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		if(file_reading) return;
+		
 		#region data
 			var path = path_get(getInputData(0));
 			if(path_current != path) updatePaths(path);
@@ -253,12 +266,10 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		if(loading) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
+		if(file_reading) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 	}
 	
-	static onDestroy = function() {
-		if(sprite_exists(spr)) sprite_flush(spr);
-	}
+	static onDestroy = function() { if(sprite_exists(spr)) sprite_flush(spr); }
 	
 	static dropPath = function(path) {
 		if(is_array(path)) path = array_safe_get(path, 0);
@@ -313,7 +324,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
     	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
     	
     	draw_sprite_ui(THEME.gif_loop_type, _loop, _ex1 + ui(12), _y + ui(10), .7, .7, 0, COLORS._main_icon, .75);
-    		
+    	
     	if(_hov && mouse_lpress(_panel.pFOCUS)) {
 			timeline_content_dragging = true;
 			
