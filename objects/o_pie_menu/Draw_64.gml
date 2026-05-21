@@ -52,7 +52,9 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	
 	var mouse_rel  = global_mouse_right_is_released() || mouse_lpress();
 	    mouse_rel |= activate_key_release && keyboard_check_released(vk_anykey);
-	    mouse_rel &= sHOVER && WIDGET_CURRENT == undefined;
+	    mouse_rel &= WIDGET_CURRENT == undefined;
+	
+	var mouse_sel = sHOVER && mouse_rel;
 	
 	var _bx0, _bx1, _by0, _by1;
 	
@@ -161,7 +163,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			selecting = true;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, _bx0, _by0, _spw, _sph, COLORS.dialog_menubox_highlight);
-			if(is(_menuItem, MenuItem) && mouse_rel) {
+			if(is(_menuItem, MenuItem) && mouse_sel) {
 				var _dat = {
 					_x      : _bx0,
 					x       : _bx1,
@@ -268,7 +270,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 					if(_tlp != "") TOOLTIP = _tlp;
 					draw_sprite_stretched_ext(THEME.textbox, 3, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					draw_sprite_stretched_ext(THEME.textbox, 2, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
-					if(mouse_rel) {
+					if(mouse_sel) {
 						onActivate();
 						_submenu[1](_dat);
 					}

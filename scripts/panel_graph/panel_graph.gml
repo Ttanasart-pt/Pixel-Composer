@@ -5049,6 +5049,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function nodeQuickPie() {
     	if(!is(node_hovering, Node)) return;
     	
+    	if(instance_exists(o_pie_menu) && o_pie_menu.active) {
+    		o_pie_menu.deactivate();
+    		return;
+    	}
+    	
     	var _pInp = node_hovering.pie_junctions;
     	if(array_empty(_pInp)) return;
     	
@@ -5073,6 +5078,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function nodePresetPie() {
     	if(!is(node_hovering, Node)) return;
+    	
+    	if(instance_exists(o_pie_menu) && o_pie_menu.active) {
+    		o_pie_menu.deactivate();
+    		return;
+    	}
     	
     	var nodeType = instanceof(node_hovering);
     	if(!has(PRESETS_MAP, nodeType)) return;

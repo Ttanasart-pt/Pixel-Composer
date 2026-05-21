@@ -15,6 +15,9 @@ function curveBox(_onModify) : widget() constructor {
 		node_drag_typ   = -1;
 		node_drag_break = false;
 		
+		edit_miny = -1;
+		edit_maxy = -1;
+		
 		height_drag     = false;
 		height_my       = 0;
 		height_ss       = 0;
@@ -166,13 +169,15 @@ function curveBox(_onModify) : widget() constructor {
 			_data = array_clone(_data);
 			
 			if(node_drag_typ == 0) { //anchor
-				
 				var _mx = (_m[0] - _x) / cw;
 					_mx = clamp(_mx * (maxx - minx) + minx, 0, 1);
 						
 				var _my = 1 - (_m[1] - _y) / ch;
-					_my = clamp(_my * (maxy - miny) + miny, 0, 1);
+					_my = clamp(_my * (edit_maxy - edit_miny) + edit_miny, 0, 1);
 					
+				miny = min(miny, _my);
+				maxy = max(maxy, _my);
+				
 				var node_point = (node_dragging - CURVE_PADD - 2) / 6;
 				if(node_point > 0 && node_point < points - 1) {
 					
@@ -193,9 +198,8 @@ function curveBox(_onModify) : widget() constructor {
 				display_pos_y = _data[node_dragging + 1];
 				display_sel   = 1;
 				
-				if(onModify(_data))
-					UNDO_HOLDING = true;
-					
+				if(onModify(_data)) UNDO_HOLDING = true;
+				
 			} else { //control
 			
 				var _px = _data[node_dragging + 0];
@@ -205,7 +209,10 @@ function curveBox(_onModify) : widget() constructor {
 					_mx = clamp(lerp(minx, maxx, _mx), 0, 1);
 					
 				var _my = 1 - (_m[1] - _y) / ch;
-					_my = lerp(miny, maxy, _my);
+					_my = lerp(edit_miny, edit_maxy, _my);
+				
+				miny = min(miny, _my);
+				maxy = max(maxy, _my);
 				
 				if(key_mod_press(CTRL) || grid_snap) _mx = value_snap(_mx, grid_step);
 				if(key_mod_press(CTRL) || grid_snap) _my = value_snap(_my, grid_step);
@@ -615,10 +622,16 @@ function curveBox(_onModify) : widget() constructor {
 					node_dragging = _ind + 2;
 					node_drag_typ = 0;
 					
+					edit_miny = miny;
+					edit_maxy = maxy;
+					
 				} else {
 					node_dragging = node_hovering;
 					node_drag_typ = node_hover_typ;
 						
+					edit_miny = miny;
+					edit_maxy = maxy;
+					
 					if(node_hover_typ != 0) {
 						var _cax = _data[node_dragging - 2];
 						var _cay = _data[node_dragging - 1];
