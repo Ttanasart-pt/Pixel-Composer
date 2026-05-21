@@ -1,6 +1,7 @@
 function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Random";
 	color = COLORS.node_blend_number;
+	always_pad = true;
 	setDimension(96, 48);
 	
 	inputs   = array_create(22);
@@ -40,9 +41,9 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 
-		["Random",  false   ], 0, 9, 10, 1, 2, 11, 12, 13, 14, 22, 
-		["Shuffle", false, 3], 4, 5, 6, 7, 8, 20, 21, 
-		["Smooth",  false   ], 15, 16, 17, 18, 19, 
+		[ "Random",  false    ],  0,  9, 10,  1,  2, 11, 12, 13, 14, 22, 
+		[ "Shuffle", false, 3 ],  4,  5,  6,  7,  8, 20, 21, 
+		[ "Smooth",  false    ], 15, 16, 17, 18, 19, 
 	];
 	
 	////- Nodes
@@ -236,10 +237,8 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var str = outputs[0].getValue();
-		
 		var bbox = draw_bbox;
-		var ss	= string_scale(str, bbox.w, bbox.h);
-		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
+		var str  = outputs[0].getValue();
+		draw_text_bbox(bbox, str);
 	}
 }
