@@ -3265,6 +3265,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\values\path\to_surface\path_morph.html" class="sidebar-file">Path Morph</a>
             </div>
+</li><li id="path_revolve"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\values\path\to_surface\path_revolve.html" class="sidebar-file">Path Revolve</a>
+            </div>
 </li><li id="path_sdf"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\values\path\to_surface\path_sdf.html" class="sidebar-file">Path Sdf</a>
@@ -6299,6 +6303,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\to_surface/path_fill.html">Path Fill</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\to_surface/path_map.html">Path Map</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\to_surface/path_morph.html">Path Morph</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\values\path\to_surface/path_revolve.html">Path Revolve</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\to_surface/path_sdf.html">Path Sdf</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\segment/points_triangulate.html">Points Triangulate</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\segment/segment_filter.html">Segment Filter</a></li>
@@ -6827,7 +6832,7 @@ shadow caster.</p><br>
 <h3><a id="Ambient Occlusion Strength" class="anchor"></a><span class="junction">Ambient Occlusion Strength</span></h3><br>
 <p>Intensity, darkness of the effect.</p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
-<table class="change-table"><tr><th>1.21.1.004</th></tr><tr><td>**Cast Shadow**: Improve shadow quality. Add quality control.</td></tr><tr><td>**Cast Shadow**: Solid now render with removed background.</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_shadow_cast/node_shadow_cast.gml">/scripts/node_shadow_cast/node_shadow_cast.gml</a></li><li><span>Shader [sh_sdf_tex]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf_tex/sh_sdf_tex.fsh">/shaders/sh_sdf_tex/sh_sdf_tex.fsh</a></li><li><span>Shader [sh_shadow_cast_bg_extract]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh">/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh</a></li><li><span>Shader [sh_shadow_cast]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast/sh_shadow_cast.fsh">/shaders/sh_shadow_cast/sh_shadow_cast.fsh</a></li><li><span>Shader [sh_shadow_cast_remove_solid]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_remove_solid/sh_shadow_cast_remove_solid.fsh">/shaders/sh_shadow_cast_remove_solid/sh_shadow_cast_remove_solid.fsh</a></li><li><span>Shader [sh_sdf_dist]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf_dist/sh_sdf_dist.fsh">/shaders/sh_sdf_dist/sh_sdf_dist.fsh</a></li><li><span>Shader [sh_sdf]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf/sh_sdf.fsh">/shaders/sh_sdf/sh_sdf.fsh</a></li></ul>
+<table class="change-table"><tr><th>1.21.1.004</th></tr><tr><td>**Cast Shadow**: Improve shadow quality. Add quality control.</td></tr><tr><td>**Cast Shadow**: Solid now render with removed background.</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_shadow_cast/node_shadow_cast.gml">/scripts/node_shadow_cast/node_shadow_cast.gml</a></li><li><span>Shader [sh_shadow_cast]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast/sh_shadow_cast.fsh">/shaders/sh_shadow_cast/sh_shadow_cast.fsh</a></li><li><span>Shader [sh_shadow_cast_remove_solid]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_remove_solid/sh_shadow_cast_remove_solid.fsh">/shaders/sh_shadow_cast_remove_solid/sh_shadow_cast_remove_solid.fsh</a></li><li><span>Shader [sh_shadow_cast_bg_extract]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh">/shaders/sh_shadow_cast_bg_extract/sh_shadow_cast_bg_extract.fsh</a></li><li><span>Shader [sh_sdf_dist]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf_dist/sh_sdf_dist.fsh">/shaders/sh_sdf_dist/sh_sdf_dist.fsh</a></li><li><span>Shader [sh_sdf_tex]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf_tex/sh_sdf_tex.fsh">/shaders/sh_sdf_tex/sh_sdf_tex.fsh</a></li><li><span>Shader [sh_sdf]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sdf/sh_sdf.fsh">/shaders/sh_sdf/sh_sdf.fsh</a></li></ul>
         </div>
     </div>
 
