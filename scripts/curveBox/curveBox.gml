@@ -164,6 +164,9 @@ function curveBox(_onModify) : widget() constructor {
 		
 		curve_surface = surface_verify(curve_surface, cw, ch);
 		
+		var zminy = 0 - 1;
+		var zmaxy = 1 + 1;
+		
 		if(node_dragging != -1) { // editing
 			show_coord = true;
 			_data = array_clone(_data);
@@ -175,9 +178,6 @@ function curveBox(_onModify) : widget() constructor {
 				var _my = 1 - (_m[1] - _y) / ch;
 					_my = clamp(_my * (edit_maxy - edit_miny) + edit_miny, 0, 1);
 					
-				miny = min(miny, _my);
-				maxy = max(maxy, _my);
-				
 				var node_point = (node_dragging - CURVE_PADD - 2) / 6;
 				if(node_point > 0 && node_point < points - 1) {
 					
@@ -198,6 +198,9 @@ function curveBox(_onModify) : widget() constructor {
 				display_pos_y = _data[node_dragging + 1];
 				display_sel   = 1;
 				
+				miny = clamp(min(miny, _my), zminy, zmaxy);
+				maxy = clamp(max(maxy, _my), zminy, zmaxy);
+				
 				if(onModify(_data)) UNDO_HOLDING = true;
 				
 			} else { //control
@@ -210,9 +213,6 @@ function curveBox(_onModify) : widget() constructor {
 					
 				var _my = 1 - (_m[1] - _y) / ch;
 					_my = lerp(edit_miny, edit_maxy, _my);
-				
-				miny = min(miny, _my);
-				maxy = max(maxy, _my);
 				
 				if(key_mod_press(CTRL) || grid_snap) _mx = value_snap(_mx, grid_step);
 				if(key_mod_press(CTRL) || grid_snap) _my = value_snap(_my, grid_step);
@@ -239,6 +239,9 @@ function curveBox(_onModify) : widget() constructor {
 				display_pos_x = node_drag_typ? _data[node_dragging - 2] : _data[node_dragging + 2];
 				display_pos_y = node_drag_typ? _data[node_dragging - 1] : _data[node_dragging + 3];
 				display_sel   = 2;
+				
+				miny = clamp(min(miny, _my), zminy, zmaxy);
+				maxy = clamp(max(maxy, _my), zminy, zmaxy);
 				
 				if(onModify(_data))
 					UNDO_HOLDING = true;

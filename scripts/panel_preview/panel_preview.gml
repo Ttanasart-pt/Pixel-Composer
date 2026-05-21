@@ -3664,7 +3664,7 @@ function Panel_Preview() : PanelContent() constructor {
 	    	selection_y1 = _py1;
 	    	
 	    	var _dragDist = point_distance(selection_sx, selection_sy, selection_mx, selection_my);
-        	if(_dragDist > canvas_s) selection_selecting = max(selection_selecting, 2);
+        	if(_dragDist > ui(16)) selection_selecting = max(selection_selecting, 2);
         	
     		if(selection_selecting > 1)
     			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
