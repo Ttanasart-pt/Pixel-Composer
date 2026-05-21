@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.001",
+    "changes": [
+      {
+        "date": "2026-05-21T04:41:13.636Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Fix line cap in width pass render incorrectly."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.006",
     "changes": [
       {

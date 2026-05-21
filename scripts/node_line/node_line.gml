@@ -803,8 +803,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(_cappS == 0) {
 						_cappS  = 1;
-						_capSta = [ [_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0, _capP],
-							        [_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0, _capP] ];
+						_capSta = [ [_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0],
+							        [_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0] ];
 						
 					} else if(_cappS == 1) {
 						_d = _dir + 180;
@@ -814,8 +814,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 					_d = _dir;
-					_capEnd = [ [_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP],
-						        [_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP] ];
+					_capEnd = [ [_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d],
+						        [_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90] ];
 					
 					if(j)
 					if(_1px) { 
@@ -887,13 +887,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				draw_primitive_end();
 				
 				if(_capS && _capSta != undefined) {
-					var c = _capSta[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
-					var c = _capSta[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
+					var c = _capSta[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP );
+					var c = _capSta[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP );
 				}
 				
 				if(_capE && _capEnd != undefined) {
-					var c = _capEnd[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
-					var c = _capEnd[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7] );
+					var c = _capEnd[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP );
+					var c = _capEnd[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP );
 				}
 				
 				if(_useTex) shader_reset();
@@ -1032,13 +1032,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_primitive_end();
 					
 					if(_capS && _capSta != undefined) {
-						var c = _capSta[0]; drawCaps( c[0], c_grey, c[2], c[3], c[4], c[5], c[6], true );
-						var c = _capSta[1]; drawCaps( c[0], c_grey, c[2], c[3], c[4], c[5], c[6], true );
+						var c = _capSta[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP, true );
+						var c = _capSta[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP, true );
 					}
 					
 					if(_capE && _capEnd != undefined) {
-						var c = _capEnd[0]; drawCaps( c[0], c_grey, c[2], c[3], c[4], c[5], c[6], true );
-						var c = _capEnd[1]; drawCaps( c[0], c_grey, c[2], c[3], c[4], c[5], c[6], true );
+						var c = _capEnd[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP, true );
+						var c = _capEnd[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP, true );
 					}
 					
 				}
