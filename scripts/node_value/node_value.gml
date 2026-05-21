@@ -2420,9 +2420,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static removeFromLoop = function(_remove_list = true) {
-		if(value_from_loop != noone)
-			value_from_loop.destroy();
-		
+		if(value_from_loop != noone) value_from_loop.destroy();
 		node.project.setModified();
 	}
 	

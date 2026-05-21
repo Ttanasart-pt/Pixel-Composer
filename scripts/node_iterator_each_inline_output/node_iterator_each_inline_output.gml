@@ -10,7 +10,6 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	
 	parameters.inline_draw_output = true;
 	inline_output        = false;
-	inline_parent_object = "Node_Iterate_Each_Inline";
 	manual_ungroupable	 = false;
 	
 	newInput(0, nodeValue("Value out", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ))

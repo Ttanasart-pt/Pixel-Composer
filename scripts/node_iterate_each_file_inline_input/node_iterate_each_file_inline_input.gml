@@ -9,7 +9,6 @@ function Node_Iterate_Each_File_Inline_Input(_x, _y, _group = noone) : Node(_x, 
 	clonable = false;
 	
 	inline_input         = false;
-	inline_parent_object = "Node_Iterate_Each_File_Inline";
 	manual_ungroupable	 = false;
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone ));

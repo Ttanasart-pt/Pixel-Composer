@@ -153,7 +153,17 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	}
 	
 	static onDestroy = function() {
-		if(junc_in)  junc_in.value_from_loop = noone;
-		if(junc_out) array_remove(junc_out.value_to_loop, self);
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			nodes[i].value_from_loop = noone;
+		
+		if(junc_in)  {
+			junc_in.node.inline_context = noone;
+			junc_in.value_from_loop     = noone;
+		}
+		
+		if(junc_out) {
+			junc_out.node.inline_context = noone;
+			array_remove(junc_out.value_to_loop, self);
+		}
 	}
 }

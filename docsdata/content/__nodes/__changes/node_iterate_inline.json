@@ -6,6 +6,11 @@
         "date": "2026-05-21T02:47:59.150Z",
         "node": "",
         "commit": "**Loop**: Fix broken connection when deleting input/output node."
+      },
+      {
+        "date": "2026-05-21T04:31:50.492Z",
+        "node": "",
+        "commit": "**Animation Panel**: Fix dragging whole animation not update the node."
       }
     ]
   },

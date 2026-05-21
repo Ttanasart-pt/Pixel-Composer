@@ -8,7 +8,6 @@ function Node_Iterator_Sort_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	clonable = false;
 	
 	inline_output        = false;
-	inline_parent_object = "Node_Iterate_Sort_Inline";
 	manual_ungroupable	 = false;
 	
 	newInput(0, nodeValue_Bool("Swap", false ))

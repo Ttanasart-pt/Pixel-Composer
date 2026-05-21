@@ -2834,12 +2834,14 @@ function Panel_Animation_Dopesheet() {
 	            	}
 	                
 	            	timeline_content_drag_dx -= _delta;
+	            	
+	            	for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+                    	_anims[j].updateKeyMap();
+                    	_anims[j].node.triggerRender();
+	            	}
             	}
             	
             	if(mouse_lrelease()) {
-            		for( var j = 0, m = array_length(_anims); j < m; j++ )
-                    	_anims[j].updateKeyMap();
-                    	
             		timeline_content_dragging = undefined;
             	}
             }

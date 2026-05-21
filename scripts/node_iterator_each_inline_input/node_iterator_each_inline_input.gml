@@ -10,7 +10,6 @@ function Node_Iterator_Each_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 	
 	parameters.inline_draw_input = true;
 	inline_input         = false;
-	inline_parent_object = "Node_Iterate_Each_Inline";
 	manual_ungroupable	 = false;
 	
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] )).setVisible(true, true);

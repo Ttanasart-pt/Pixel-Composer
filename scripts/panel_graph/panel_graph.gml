@@ -790,112 +790,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function initSize() { toCenterNode(); }
     
-    #region // ++++ toolbars ++++
-	    function subDialogCall(_dia) {
-	    	var _type = instanceof(_dia);
-    		var _dupe = false;
-        	with(o_dialog_panel) {
-        		if(instanceof(content) != _type) continue;
-    			instance_destroy();
-    			_dupe = true;
-        	}
-        	if(_dupe) return;
-        	
-        	dialogPanelCall(_dia, x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
-	    }
-	    
-        hk_editing = noone;
-        
-        global.menuItems_graph_toolbars_general_context = ["graph_edit_toolbar", "graph_reset_toolbar"];
-        global.menuItems_graph_toolbars_general = [
-        	"graph_export_image", 
-        	"graph_search",
-        	"graph_focus_content",
-        	"graph_toggle_minimap",
-        	"graph_connection_settings",
-        	"graph_grid_settings",
-        	"graph_view_settings",
-        	"graph_node_selector",
-        	{ cond : "graph_select_multiple", items : [ 
-        		-1, 
-        		"graph_halign_right",
-	            "graph_halign_center",
-	            "graph_halign_left",
-	            -1, 
-	            "graph_valign_bottom",
-	            "graph_valign_middle",
-	            "graph_valign_top",
-	            -1, 
-	            "graph_hdistribute",
-	            "graph_vdistribute",
-	            -1, 
-	            "graph_auto_align",
-	            "graph_auto_organize"
-            ] },
-    	];
-    	
-    	if(TESTING) array_insert(global.menuItems_graph_toolbars_general, 0, new MenuItem("Export Doc", function() /*=>*/ {
-    		var _n = array_safe_get_fast(nodes_selecting, 0, noone);
-    		if(_n == noone) return;
-    		
-    		var nodeBase = string_lower(instanceof(_n));
-    		var dir = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
-    		directory_verify(dir);
-    		
-    		var surface  = graph_export_image(nodes_list, nodes_list, new graph_export_settings());
-    		surface_save(surface, $"{dir}/{nodeBase}-graph.png");
-    		surface_free(surface);
-    		
-    		LOADING_VERSION = SAVE_VERSION;
-	    	SERIALIZE_STRIP = true;
-	    	
-	        var _map = { version: SAVE_VERSION, nodes: [] };
-	        for( var i = 0, n = array_length(nodes_list); i < n; i++ )
-	            SAVE_NODE(_map.nodes, nodes_list[i], 0, 0, false, getCurrentContext());
-	        
-	        SERIALIZE_STRIP = false;
-	        json_save_struct($"{dir}/{nodeBase}-sample.txt", _map);
-    		
-    	}, THEME.icon_preview_export)
-    		.setColorGet(function() /*=>*/ {return array_safe_get_fast(nodes_selecting, 0, noone) == noone? COLORS._main_icon : COLORS._main_accent}));
-    	
-        function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
-		function topbar_show()   { project.graphDisplay.show_topbar =  true; }
-		function topbar_hide()   { project.graphDisplay.show_topbar = false; }
-		
-		function view_control_toggle() { project.graphDisplay.show_view_control = !project.graphDisplay.show_view_control; }
-		function view_control_show()   { project.graphDisplay.show_view_control =  true; }
-		function view_control_hide()   { project.graphDisplay.show_view_control = false; }
-		
-	    global.menuItems_graph_topbar_context_menu = [
-	    	"graph_topbar_hide", 
-	    	"graph_topbar_edit", 
-	    	"graph_topbar_reset", 
-		];
-		
-        global.menuItems_graph_topbar_menu = [	
-			"graph_auto_organize_all",
-			-1,
-			"graph_add_Node_Number",
-			"graph_add_Node_Counter",
-	    	"graph_add_Node_Path",
-			-1,
-			"graph_add_Node_Shape",
-	    	"graph_add_Node_Text",
-	    	"graph_add_Node_Line", 
-	    	"graph_add_Node_Solid",
-	    	"graph_add_Node_Gradient",
-	    	-1, 
-	    	"graph_add_Node_Level",
-	    	"graph_add_Node_Color_adjust",
-	    	"graph_add_Node_Colorize",
-	    	"graph_add_Node_Posterize",
-	    	"graph_add_Node_Dither", 
-	    	{ cond : "graph_context_group",    items : [ -1, "graph_add_Node_Group_Input", "graph_add_Node_Group_Output" ] },
-	    	{ cond : "graph_context_group_pb", items : [ "graph_add_Node_PB_Output", -1, "graph_add_Node_PB_Box" ] },
-		];
-    #endregion
-    
     ////- Get
     
     function setCurrentPreview(_node = getFocusingNode()) {
@@ -1039,6 +933,112 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     ////- Menus
+    
+    #region +++++++++++++++ Toolbars +++++++++++++++
+	    function subDialogCall(_dia) {
+	    	var _type = instanceof(_dia);
+    		var _dupe = false;
+        	with(o_dialog_panel) {
+        		if(instanceof(content) != _type) continue;
+    			instance_destroy();
+    			_dupe = true;
+        	}
+        	if(_dupe) return;
+        	
+        	dialogPanelCall(_dia, x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
+	    }
+	    
+        hk_editing = noone;
+        
+        global.menuItems_graph_toolbars_general_context = ["graph_edit_toolbar", "graph_reset_toolbar"];
+        global.menuItems_graph_toolbars_general = [
+        	"graph_export_image", 
+        	"graph_search",
+        	"graph_focus_content",
+        	"graph_toggle_minimap",
+        	"graph_connection_settings",
+        	"graph_grid_settings",
+        	"graph_view_settings",
+        	"graph_node_selector",
+        	{ cond : "graph_select_multiple", items : [ 
+        		-1, 
+        		"graph_halign_right",
+	            "graph_halign_center",
+	            "graph_halign_left",
+	            -1, 
+	            "graph_valign_bottom",
+	            "graph_valign_middle",
+	            "graph_valign_top",
+	            -1, 
+	            "graph_hdistribute",
+	            "graph_vdistribute",
+	            -1, 
+	            "graph_auto_align",
+	            "graph_auto_organize"
+            ] },
+    	];
+    	
+    	if(TESTING) array_insert(global.menuItems_graph_toolbars_general, 0, new MenuItem("Export Doc", function() /*=>*/ {
+    		var _n = array_safe_get_fast(nodes_selecting, 0, noone);
+    		if(_n == noone) return;
+    		
+    		var nodeBase = string_lower(instanceof(_n));
+    		var dir = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
+    		directory_verify(dir);
+    		
+    		var surface  = graph_export_image(nodes_list, nodes_list, new graph_export_settings());
+    		surface_save(surface, $"{dir}/{nodeBase}-graph.png");
+    		surface_free(surface);
+    		
+    		LOADING_VERSION = SAVE_VERSION;
+	    	SERIALIZE_STRIP = true;
+	    	
+	        var _map = { version: SAVE_VERSION, nodes: [] };
+	        for( var i = 0, n = array_length(nodes_list); i < n; i++ )
+	            SAVE_NODE(_map.nodes, nodes_list[i], 0, 0, false, getCurrentContext());
+	        
+	        SERIALIZE_STRIP = false;
+	        json_save_struct($"{dir}/{nodeBase}-sample.txt", _map);
+    		
+    	}, THEME.icon_preview_export)
+    		.setColorGet(function() /*=>*/ {return array_safe_get_fast(nodes_selecting, 0, noone) == noone? COLORS._main_icon : COLORS._main_accent}));
+    	
+        function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
+		function topbar_show()   { project.graphDisplay.show_topbar =  true; }
+		function topbar_hide()   { project.graphDisplay.show_topbar = false; }
+		
+		function view_control_toggle() { project.graphDisplay.show_view_control = !project.graphDisplay.show_view_control; }
+		function view_control_show()   { project.graphDisplay.show_view_control =  true; }
+		function view_control_hide()   { project.graphDisplay.show_view_control = false; }
+		
+	    global.menuItems_graph_topbar_context_menu = [
+	    	"graph_topbar_hide", 
+	    	"graph_topbar_edit", 
+	    	"graph_topbar_reset", 
+		];
+		
+        global.menuItems_graph_topbar_menu = [	
+			"graph_auto_organize_all",
+			-1,
+			"graph_add_Node_Number",
+			"graph_add_Node_Counter",
+	    	"graph_add_Node_Path",
+			-1,
+			"graph_add_Node_Shape",
+	    	"graph_add_Node_Text",
+	    	"graph_add_Node_Line", 
+	    	"graph_add_Node_Solid",
+	    	"graph_add_Node_Gradient",
+	    	-1, 
+	    	"graph_add_Node_Level",
+	    	"graph_add_Node_Color_adjust",
+	    	"graph_add_Node_Colorize",
+	    	"graph_add_Node_Posterize",
+	    	"graph_add_Node_Dither", 
+	    	{ cond : "graph_context_group",    items : [ -1, "graph_add_Node_Group_Input", "graph_add_Node_Group_Output" ] },
+	    	{ cond : "graph_context_group_pb", items : [ "graph_add_Node_PB_Output", -1, "graph_add_Node_PB_Box" ] },
+		];
+    #endregion
     
     #region ++++++++++++++++ Actions +++++++++++++++
         function send_to_preview()    { setCurrentPreview(node_hover); }
@@ -2180,7 +2180,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 						
 	                    if(value_focus.connect_type == CONNECT_TYPE.output) {
 	                        var sep = false;
-	                        
 	                        for( var i = 0, n = array_length(value_focus.value_to); i < n; i++ ) {
 	                            if(!sep) { array_push(menu, -1); sep = true; }
 	                            
@@ -2194,12 +2193,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                            
 	                            var _to = value_focus.value_to_loop[i];
 	                            var _lb = $"[{_to.junc_in.node.display_name}] {_to.junc_in.getName()}";
-	                            array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.juncTo.destroy(); }, _to.icon_24, noone, noone, { juncTo: _to }));
+	                            var mit = menuItem(_lb, function(data) /*=>*/ {return data.node.destroy()}, _to.icon_24)
+	                            	.setParam({ node: _to })
+	                            	.setColor(_to.color);
+	                            array_push(menu, mit);
 	                        }
 	                        
 	                    } else {
 	                        var sep = false;
-	                            
 	                        if(value_focus.value_from) {
 	                            if(!sep) { array_push(menu, -1); sep = true; }
 	                            
@@ -2211,9 +2212,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                        if(value_focus.value_from_loop) {
 	                            if(!sep) { array_push(menu, -1); sep = true; }
 	                            
-	                            var _jun = value_focus.value_from_loop.junc_out;
+	                            var frm  = value_focus.value_from_loop;
+	                            var _jun = frm.junc_out;
 	                            var _lb  = $"[{_jun.node.display_name}] {_jun.getName()}";
-	                            array_push(menu, menuItem(_lb, function() /*=>*/ { __junction_hovering.removeFromLoop(); }, value_focus.value_from_loop.icon_24));
+	                            var mit  = menuItem(_lb, function() /*=>*/ {return __junction_hovering.removeFromLoop()}, frm.icon_24)
+	                            	.setColor(frm.color);
+	                            array_push(menu, mit);
 	                        }
 	                    }
 	                    

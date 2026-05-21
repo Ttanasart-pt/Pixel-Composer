@@ -40,7 +40,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inline_input         = true;
 		inline_output        = true;
 		inline_context       = noone;
-		inline_parent_object = "";
 		
 		search_match  = -9999;
 		onDoubleClick = -1;
@@ -3497,16 +3496,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 						recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
 							var ictx = data.inlineCtx;
 							var jout = ictx.junc_in;
-							var jatt = [
-								ictx.attributes.junc_in[0],
-								ictx.attributes.junc_in[1],
-							];
+							var jatt = [ ictx.attributes.junc_in[0], ictx.attributes.junc_in[1] ];
 							
 							ictx.junc_in            = data.inlineCtx_juncout;
-							ictx.attributes.junc_in = [
-								data.inlineCtx_attrout[0],
-								data.inlineCtx_attrout[1],
-							];
+							ictx.attributes.junc_in = [ data.inlineCtx_attrout[0], data.inlineCtx_attrout[1] ];
 							
 							data.inlineCtx_juncout = jout;
 							data.inlineCtx_attrout = jatt;
@@ -3514,12 +3507,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 						}, { 
 							inlineCtx: inline_context, 
 							inlineCtx_juncout: inline_context.junc_in, 
-							inlineCtx_attrout: [
-								inline_context.attributes.junc_in[0],
-								inline_context.attributes.junc_in[1],
-							], 
+							inlineCtx_attrout: [ inline_context.attributes.junc_in[0], inline_context.attributes.junc_in[1] ], 
 						});
-						
 					}
 					
 					inline_context.junc_in            = val_to_conn;
@@ -3553,16 +3542,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 						recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
 							var ictx = data.inlineCtx;
 							var jout = ictx.junc_out;
-							var jatt = [
-								ictx.attributes.junc_out[0],
-								ictx.attributes.junc_out[1],
-							];
+							var jatt = [ ictx.attributes.junc_out[0], ictx.attributes.junc_out[1] ];
 							
 							ictx.junc_out            = data.inlineCtx_juncout;
-							ictx.attributes.junc_out = [
-								data.inlineCtx_attrout[0],
-								data.inlineCtx_attrout[1],
-							];
+							ictx.attributes.junc_out = [ data.inlineCtx_attrout[0], data.inlineCtx_attrout[1] ];
 							
 							data.inlineCtx_juncout = jout;
 							data.inlineCtx_attrout = jatt;
@@ -3570,12 +3553,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 						}, { 
 							inlineCtx: inline_context, 
 							inlineCtx_juncout: inline_context.junc_out, 
-							inlineCtx_attrout: [
-								inline_context.attributes.junc_out[0],
-								inline_context.attributes.junc_out[1],
-							], 
+							inlineCtx_attrout: [ inline_context.attributes.junc_out[0], inline_context.attributes.junc_out[1] ], 
 						});
-						
 					}
 					
 					inline_context.junc_out            = val_from_conn;
