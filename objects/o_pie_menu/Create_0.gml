@@ -181,7 +181,7 @@ function checkFocus() {
 		DIALOG_DEPTH_HOVER = depth;
 		HOVER = self.id;
 	}
-}
+} 
 
 function checkDepth() {
 	if(depth == DIALOG_DEPTH_HOVER) FOCUS = self.id;

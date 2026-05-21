@@ -300,7 +300,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _ex0 = _x   + _strt * _s;
     	var _ex1 = _ex0 + _plen * _s;
     	var _ey0 = _y + ui(10) - ui(8);
-    	var _ey1 = _y + ui(10) + ui(8);
+    	var _ey1 = _y + ui(10) + ui(8); 
     	
     	timeline_content_snap.points = [ _strt, _strt + _plen ];
     	
