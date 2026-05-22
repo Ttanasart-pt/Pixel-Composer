@@ -42,10 +42,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- =Animation
 	newInput( 1, nodeValue_Trigger("Match Animation Length" ));
-	b_match_len = button(function() /*=>*/ { 
-		if(!spr || !sprite_exists(spr)) return;
-		TOTAL_FRAMES = sprite_get_number(spr);
-	}).setText("Match Length");
+	b_match_len = button(function() /*=>*/ { TOTAL_FRAMES = max(1, array_length(sprs)); }).setText("Match Length");
 	
 	newInput( 3, nodeValue_EScroll( "Loop Mode",         0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
 	newInput( 4, nodeValue_Int(     "Start Frame",       1    ));
@@ -73,15 +70,20 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	attribute_surface_depth();
 	
 	ffmpeg       = filepath_resolve(PREFERENCES.ffmpeg_path) + "bin/ffmpeg.exe";
-	spr			 = noone;
 	path_current = "";
+	sprs         = [];
 	surfaces	 = [];
 	
 	shell_cmd    = undefined;
 	shell_pid    = undefined;
 	
-	file_reading = false;
-	file_hash    = "";
+	video_width  = 1;
+	video_height = 1;
+	
+	file_reading     = false;
+	file_hash        = "";
+	file_reader_pid  = 0;
+	file_read_cursor = 0;
 	
 	edit_time = 0;
 	attributes.file_checker = true;
@@ -106,53 +108,74 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!renamedManual) setDisplayName(_name, false, false);
 		outputs[1].setValue(path);
 		
+		mp4init();
+		
 		return true;
 	}
 	
 	static mp4init = function() {
-		var _filemod = file_get_modify_s(path);
+		if(file_reading) return;
 		
-		file_reading = true;
-		file_hash    = md5_string_unicode($"{path}{_filemod}");
+		var _filemod = file_get_modify_s(path_current);
+		
+		file_reading     = true;
+		file_hash        = md5_string_unicode($"{path_current}{_filemod}");
+		file_read_cursor = 1;
 		var targ_dir = $"{DIRECTORY}Cache/{file_hash}";
 		
 		if(!directory_exists(targ_dir)) {
 			directory_verify(targ_dir);
 			
-			shell_cmd = $"-hide_banner -loglevel quiet -i \"{path}\" -pix_fmt rgba \"{targ_dir}/frame%04d.png\"";
-			shell_execute(ffmpeg, shell_cmd);
+			shell_cmd = $"-hide_banner -loglevel quiet -i \"{path_current}\" -pix_fmt rgba \"{targ_dir}/frame%04d.png\"";
+			file_reader_pid = shell_execute_async(ffmpeg, shell_cmd);
 		}
+		
+		for( var i = 0, n = array_length(sprs); i < n; i++ ) 
+			sprite_delete_safe(sprs[i]);
+		sprs = [];
 	}
 	
 	static mp4step = function() {
 		var targ_dir  = $"{DIRECTORY}Cache/{file_hash}";
 		var timeStart = get_timer();
+		var loadAll   = !ProcIdExists(file_reader_pid);
 		
-		var _frames = directory_listdir(targ_dir, fa_none);
-		if(array_empty(_frames)) { file_reading = false; return; }
-		
-		_frames = array_filter(_frames, function(f,i) /*=>*/ {return filename_ext(f) == ".png"});
-		if(array_empty(_frames)) { file_reading = false; return; }
-		
-		array_sort(_frames, true);
-		sprite_delete_safe(spr);
-		
-		spr = sprite_add(_frames[0]);
-		for( var i = 1, n = array_length(_frames); i < n; i++ ) {
-			var fr = sprite_add(_frames[i])
-			if(!fr || !sprite_exists(fr)) continue;
+		while(true) {
+			var fpath = $"{targ_dir}/frame{string_lead_zero(file_read_cursor,4)}.png";
+			if(!file_exists(fpath)) return loadAll;
 			
-			sprite_merge(spr, fr);
-			sprite_delete_safe(fr);
-			if(get_timer() - timeStart > 1_000_000 / 60) return;
+			if(file_read_cursor == 1) {
+				var fSpr = sprite_add(fpath);
+				sprs[file_read_cursor - 1] = fSpr;
+				video_width  = sprite_get_width(fSpr);
+				video_height = sprite_get_height(fSpr);
+				
+			} else {
+				asyncCallGroup("image", sprite_add_ext(fpath, 1, 0, 0, true), function(_callBack, _load) /*=>*/ {
+					var _sid = _load[?"id"];
+					if(!sprite_exists(_sid)) return;
+					
+					sprs[_callBack.index] = _sid;
+					return _sid;
+				}, { index: file_read_cursor - 1 });
+			}
+			
+			file_read_cursor++;
+			
+			if(get_timer() - timeStart > 1_000_000 / 60) return false;
 		}
 		
-		file_reading = false;
-		triggerRender();
+		return loadAll;
 	}
 	
 	static step = function() {
-		if(file_reading) mp4step();
+		if(file_reading) {
+			var readall = mp4step();
+			if(readall && !ProcIdExists(file_reader_pid)) {
+				file_reading = false;
+				triggerRender();
+			}
+		}
 		
 		if(attributes.file_checker && file_exists_empty(path_current)) {
 			var _modi = file_get_modify_s(path_current);
@@ -193,15 +216,15 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			attributes.timeline_override = _edit;
 		#endregion
 		
-		if(!spr || !sprite_exists(spr)) return;
+		if(array_empty(sprs)) return;
 		
-		var ww = sprite_get_width(spr);
-		var hh = sprite_get_height(spr);
+		var ww = video_width;
+		var hh = video_height;
 		
 		var _outsurf = outputs[0].getValue();
 		
 		if(_arr) {
-			var amo = sprite_get_number(spr);
+			var amo = array_length(sprs);
 			if(array_length(surfaces) == amo && is_surface(surfaces[0])) {
 				outputs[0].setValue(surfaces);
 				return;
@@ -211,10 +234,12 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			surfaces = array_create(amo);
 			
 			for( var i = 0; i < amo; i++ ) {
+				if(!sprs[i]) continue;
+				
 				surfaces[i] = surface_create_valid(ww, hh, attrDepth());
 				
 				surface_set_shader(surfaces[i]);
-					draw_sprite(spr, i, 0, 0);
+					draw_sprite(sprs[i], 0, 0, 0);
 				surface_reset_shader();
 			}
 			
@@ -222,7 +247,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return;
 		}
 		
-		var _len = sprite_get_number(spr);
+		var _len = array_length(sprs);
 		var _drw = true;
 		var _frm = _cust? _cfrm : CURRENT_FRAME * _spd - (_strt - 1);
 		
@@ -261,15 +286,13 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[2].setValue([ww, hh]);
 		
 		surface_set_shader(_outsurf);
-			if(_drw) draw_sprite(spr, _frm, 0, 0);
+			if(sprs[_frm] && _drw) draw_sprite(sprs[_frm], 0, 0, 0);
 		surface_reset_shader();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(file_reading) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 	}
-	
-	static onDestroy = function() { if(sprite_exists(spr)) sprite_flush(spr); }
 	
 	static dropPath = function(path) {
 		if(is_array(path)) path = array_safe_get(path, 0);
@@ -279,13 +302,18 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	}
 	
+	static onCleanUp = function() {
+		for( var i = 0, n = array_length(sprs); i < n; i++ ) 
+			sprite_delete_safe(sprs[i]);
+	}
+	
 	timeline_content_dragging  = false;
 	timeline_content_drag_type = 0;
 	timeline_content_drag_sx   = 0;
 	timeline_content_drag_mx   = 0;
 	
 	static drawTimeline = function(_x, _y, _s, _mx, _my, _panel) {
-		if(!spr || !sprite_exists(spr)) return false;
+		if(array_empty(sprs)) return false;
 		
 		var _cust = getInputData( 5);
 		if(_cust) return false;
@@ -294,7 +322,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _strt = getInputData( 4);
 		var _spd  = getInputData( 7);
 		
-		var _slen = sprite_get_number(spr);
+		var _slen = array_length(sprs);
 		var _plen = _slen / _spd;
 		
 		var _ex0 = _x   + _strt * _s;
@@ -385,26 +413,27 @@ function timelineItemNode_Image_mp4(_node) : timelineItemNode(_node) constructor
 		if(!node.attributes.show_timeline) return;
 		return;
 		
-		var _spr = node.spr;
-		if(!sprite_exists(_spr)) return;
+		var _sprs = node.sprs;
+		if(!array_empty(_sprs)) return;
 		
 		var _rx, _ry;
-		var _sw = sprite_get_width(_spr);
-		var _sh = sprite_get_height(_spr);
+		var _sw = sprite_get_width(_sprs[0]);
+		var _sh = sprite_get_height(_sprs[0]);
 		var _ss = h / max(_sw, _sh);
 		
 		var _hw = _sw * _ss / 2;
 		var _hh = _sh * _ss / 2;
 		var _aa;
 		
-		for (var i = 0, n = sprite_get_number(_spr); i < n; i++) {
+		for (var i = 0, n = array_length(_sprs); i < n; i++) {
 			if(i >= NODE_TOTAL_FRAMES) break;
+			if(!_sprs[i]) continue;
 			
 			_rx = _x + (i + 1) * _s;
 			_ry = h / 2 + _y;
 			
 			_aa = .5 + .5 * (i == NODE_CURRENT_FRAME);
-			draw_sprite_ext(_spr, i, _rx - _hw, _ry - _hh, _ss, _ss, 0, c_white, _aa);
+			draw_sprite_ext(_sprs[i], 0, _rx - _hw, _ry - _hh, _ss, _ss, 0, c_white, _aa);
 		}
 	}
 	

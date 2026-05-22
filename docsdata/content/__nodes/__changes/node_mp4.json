@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.002",
+    "changes": [
+      {
+        "date": "2026-05-22T01:05:56.648Z",
+        "node": "MP4",
+        "commit": "**MP4**: Improve importing performance."
+      }
+    ]
+  },
+  {
     "version": "1.21.2",
     "changes": [
       {
