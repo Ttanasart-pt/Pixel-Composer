@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.002",
+    "changes": [
+      {
+        "date": "2026-05-22T08:34:11.507Z",
+        "node": "Array Zip",
+        "commit": "**Array Zip**: Fix freeze when duplicating node."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {

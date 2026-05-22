@@ -6,6 +6,11 @@
         "date": "2026-05-22T08:27:27.169Z",
         "node": "Mesh Warp",
         "commit": "**Mesh Warp**: Fix control points gizmo not displaying."
+      },
+      {
+        "date": "2026-05-22T08:34:11.508Z",
+        "node": "",
+        "commit": "**Array Zip**: Fix freeze when duplicating node."
       }
     ]
   }

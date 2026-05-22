@@ -3,7 +3,8 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Bool("Spread Content", false));
+	newInput( 0, nodeValue_Bool( "Spread Content", false ));
+	// 1
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.integer, 0));
 	
@@ -51,7 +52,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			len = min(len, array_length(val[i]));
 		}
 		
-		if(len == 0) return;
+		if(len == 0 || len == infinity) return;
 		var _out = array_create(len);
 		
 		if(_spr) {

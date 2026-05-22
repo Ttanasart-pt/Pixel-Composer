@@ -2495,9 +2495,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(mappedJunc.attributes.mapped)
 							return preview_overlay_gradient_range(hover, active, _x, _y, _s, _mx, _my, _dim);
 						break;
-								
-					case VALUE_DISPLAY.puppet_control :
-						return preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my);
 				}
 				break;
 				
