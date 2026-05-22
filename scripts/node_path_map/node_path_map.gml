@@ -35,6 +35,9 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	////- Node
 	
+	attribute_surface_depth();
+	attribute_interpolation();
+	
 	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -106,11 +109,13 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		}
 		
 		var _out = outputs[0].getValue();
-		    _out = surface_verify(_out, _dim[0], _dim[1])
+		    _out = surface_verify(_out, _dim[0], _dim[1], attrDepth());
 		
 		var _ind = 0;
 		
 		surface_set_shader(_out, sh_path_map_render);
+			shader_set_interpolation(_surf);
+			
 			draw_set_color(c_white);
 			shader_set_2("uvP", _uvP);
 			shader_set_2("uvS", _uvS);
@@ -131,7 +136,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					draw_vertex_texture(p0[0], p0[1], p0u, p0v);
 					draw_vertex_texture(p1[0], p1[1], p1u, p1v);
 					draw_vertex_texture(p2[0], p2[1], p2u, p2v);
-				
+					
 					draw_vertex_texture(p1[0], p1[1], p1u, p1v);
 					draw_vertex_texture(p2[0], p2[1], p2u, p2v);
 					draw_vertex_texture(p3[0], p3[1], p3u, p3v);

@@ -14,6 +14,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 8, nodeValue_Vec2(     "Center",    [.5,.5] )).setUnitSimple();
 	newInput( 9, nodeValue_Rotation( "Direction",   90    ));
 	newInput(11, nodeValue_RotRange( "Revolve Range", [0,360] ));
+	newInput(13, nodeValue_Rotation( "Revolve Offset", 0  ));
 	newInput(10, nodeValue_Slider(   "Ratio",      .5     ));
 	
 	newInput( 3, nodeValue_Int(      "Subdivision", 16    )).setValidator(VV_min(2)).rejectArray();
@@ -22,18 +23,21 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 2, nodeValue_Surface( "Texture" ));
 	newInput(12, nodeValue_Vec2(    "UV Position", [0,0] ));
 	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1] ));
-	// input 13
+	// input 14
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Output",    false ],  1, 
 		[ "Paths",     false ],  0,  4,  5,  7, 
-		[ "Revolve",   false ],  8,  9, 11, 10,  3, 
+		[ "Revolve",   false ],  8,  9, 11, 13, 10,  3, 
 		[ "Rendering", false ],  2, 12,  6, 
 	];
 	
 	////- Node
+	
+	attribute_surface_depth();
+	attribute_interpolation();
 	
 	temp_surface = [ noone ];
 	
@@ -70,6 +74,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _cen  = getInputData( 8);
 			var _dir  = getInputData( 9);
 			var _rev  = getInputData(11);
+			var _shf  = getInputData(13);
 			var _rat  = getInputData(10);
 			var _sub  = getInputData( 3);
 			
@@ -126,17 +131,19 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		var _outSurf = outputs[0].getValue();
-		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1])
+		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		var _ind = 0;
 		
-		surface_set_shader(_outSurf, sh_path_map_render);
+		surface_set_shader(_outSurf, sh_path_map_render, true, BLEND.normal);
+			shader_set_interpolation(_surf);
+			
 			draw_set_color(c_white);
 			shader_set_2("uvP", _uvP);
 			shader_set_2("uvS", _uvS);
 			
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
-				var ast = _dir + 90 + _rev[0];
-				var aed = _dir + 90 + _rev[1];
+				var ast = _dir + 90 + _shf + _rev[0];
+				var aed = _dir + 90 + _shf + _rev[1];
 				var stp = 1 / _sub;
 			
 				for( var j = 0; j < _sub; j++ ) {

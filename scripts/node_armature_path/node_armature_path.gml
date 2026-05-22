@@ -2,15 +2,22 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Armature Path";
 	setDimension(96, 96);
 	
-	newInput(0, nodeValue_Armature())
-		.setVisible(true, true)
-		.rejectArray();
+	newInput( 0, nodeValue_Armature() ).setVisible(true, true).rejectArray();
+	newInput( 1, nodeValue_Bool( "Flatten", false ));
+	//
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
-	lines = [];
+	////- Node
 	
-	current_length  = 0;
+	flatten      = false;
+	lines        = [];
+	line_count   = 1;
+	
+	lengths      = [];
+	length_accu  = [];
+	length_total = 0;
+	
 	boundary  = new BoundingBox();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
 	
@@ -24,14 +31,34 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static getBoundary     = function() /*=>*/ {return boundary};
-	static getLineCount    = function() /*=>*/ {return array_length(lines)};
+	static getLineCount    = function() /*=>*/ {return line_count};
 	static getSegmentCount = function() /*=>*/ {return 1};
-	static getLength       = function() /*=>*/ {return current_length};
-	static getAccuLength   = function() /*=>*/ {return [ 0, current_length ]};
+	static getLength       = function() /*=>*/ {return length_total};
+	static getAccuLength   = function() /*=>*/ {return length_accu};
 	
-	static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
+	static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / length_total, _ind, out); }
+	static getPointRatio    = function(_rat, _ind = 0, out = undefined) {}
 	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
+	static getPointRatioFlat = function(_rat, _ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		
+		var dis = _rat * length_total;
+		var ind = array_search_min_bin(length_accu, dis);
+		
+		var mdist = ind > 0? length_accu[ind] : 0;
+		var cdist = dis - mdist;
+		var srat  = cdist / lengths[ind];
+		
+		var _p0 = lines[ind][0];
+		var _p1 = lines[ind][1];
+		
+		out.x = lerp(_p0[0], _p1[0], srat);
+		out.y = lerp(_p0[1], _p1[1], srat);
+		
+		return out;
+	}
+	
+	static getPointRatioSegment = function(_rat, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _p0 = lines[_ind][0];
@@ -47,11 +74,17 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static update = function() {
-		var _bone = getInputData(0);
-		if(!is(_bone, __Bone)) return;
+		#region data
+			var _bone = getInputData(0);
+			var _flat = getInputData(1);
+			if(!is(_bone, __Bone)) return;
+		#endregion
 		
-		lines = [];
-		current_length = 0;
+		flatten      = _flat;
+		lines        = [];
+		lengths      = [];
+		length_total = 0;
+		var _lacc    = [];
 		
 		var _bst = ds_stack_create();
 		ds_stack_push(_bst, _bone);
@@ -69,7 +102,10 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					[_p1.x, _p1.y, 1], 
 				]);
 				
-				current_length += point_distance(_p0.x, _p0.y, _p1.x, _p1.y);
+				var _len = point_distance(_p0.x, _p0.y, _p1.x, _p1.y);
+				array_push(lengths, _len);
+				array_push(_lacc,   length_total);
+				length_total += _len;
 			}
 			
 			for( var i = 0, n = array_length(bone.childs); i < n; i++ ) {
@@ -78,7 +114,19 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 		}
 		
+		array_push(_lacc, length_total);
 		ds_stack_destroy(_bst);
+		
+		if(_flat) {
+			line_count    = 1;
+			length_accu   = _lacc;
+			getPointRatio = getPointRatioFlat;
+			
+		} else {
+			line_count    = array_length(lines);
+			length_accu   = [ 0, length_total ];
+			getPointRatio = getPointRatioSegment;
+		}
 		
 		bone_bbox = _bone.bbox();
 		outputs[0].setValue(self);
