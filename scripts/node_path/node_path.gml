@@ -1289,11 +1289,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var _anHov = 0;
 				draw_set_color(COLORS._main_accent);
 				
-				if(attributes.display_name) {
-					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
-					draw_text(xx + ui(4), yy - ui(4), inputs[input_fix_len + i].name);
-				}
-				
 				if(drag_point == i) {
 					_anHov = 1;
 					
@@ -1315,6 +1310,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				var _type = anchor_focus == i? 2 : 1;
 				draw_anchor(_anHov, xx, yy, ui(8), _type);
+				
+				if(attributes.display_name || _anHov) {
+					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
+					draw_text(xx + ui(4), yy - ui(4), inputs[input_fix_len + i].name);
+				}
+				
 			}
 			
 			if(_tooln == "Weight edit") {

@@ -379,11 +379,9 @@ function __part(_node) : __particleObject() constructor {
 			
 				if(turning != 0 && (speedx != 0 || speedy != 0)) {
 					var trn = turning;
-					
 					     if(turnSpd > 0) trn = turning * diss * turnSpd;
 					else if(turnSpd < 0) trn = turning / diss * turnSpd;
-					
-					dirr += trn
+					dirr += trn;
 				}
 			}
 			

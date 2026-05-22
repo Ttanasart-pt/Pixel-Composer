@@ -113,7 +113,6 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	////- Draw
 	
 	static draw = function(attributes, edit=false, _x=0, _y=0, _s=1, _mx=0, _my=0, _hover=noone, _select=noone, _blend=c_white, _alpha=1) {
-		
 		for( var i = 0, n = array_length(constrains); i < n; i++ ) constrains[i].drawBone(self, _x, _y, _s);
 		
 		setControl(_x, _y, _s);
@@ -776,8 +775,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static toPoints = function(_pose = false) {
-		var barr = toArray();
-		var rarr = [];
+		var barr   = toArray();
+		var rarr   = [];
 		var points = {};
 		
 		for( var i = 0, n = array_length(barr); i < n; i++ ) {
