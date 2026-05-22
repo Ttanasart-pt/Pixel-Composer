@@ -6,6 +6,11 @@
         "date": "2026-05-22T01:05:56.648Z",
         "node": "MP4",
         "commit": "**MP4**: Improve importing performance."
+      },
+      {
+        "date": "2026-05-22T01:56:28.394Z",
+        "node": "",
+        "commit": "**Graph Panel**: Fix adding node from pie menu does not trigger node chord."
       }
     ]
   },

@@ -154,9 +154,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				asyncCallGroup("image", sprite_add_ext(fpath, 1, 0, 0, true), function(_callBack, _load) /*=>*/ {
 					var _sid = _load[?"id"];
 					if(!sprite_exists(_sid)) return;
-					
 					sprs[_callBack.index] = _sid;
-					return _sid;
 				}, { index: file_read_cursor - 1 });
 			}
 			

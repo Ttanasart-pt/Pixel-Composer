@@ -3941,6 +3941,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_drag_oy = -1;
         
         node_drag_add = _add;
+        
+        FOCUS_STR = instanceof(_node);
     }
     
     function selectPrevious() {

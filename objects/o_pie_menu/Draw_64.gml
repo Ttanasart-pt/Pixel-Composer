@@ -52,7 +52,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	
 	var mouse_rel  = global_mouse_right_is_released() || mouse_lpress();
 	    mouse_rel |= activate_key_release && keyboard_check_released(vk_anykey);
-	    mouse_rel &= WIDGET_CURRENT == undefined;
+	    // mouse_rel &= WIDGET_CURRENT == undefined;
 	
 	var mouse_sel = sHOVER && mouse_rel;
 	

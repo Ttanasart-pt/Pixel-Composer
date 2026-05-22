@@ -260,7 +260,10 @@ event_inherited();
 	function onInit() {
 		if(!key_mod_press(ALT) && mouse_rclick()) {
 			var pie = pieMenuCallGen("pie_add_node", dialog_x, dialog_y);
-			if(pie) pie.setHalf();
+			if(pie) {
+				pie.setHalf();
+				pie.onActivate = function() /*=>*/ { instance_destroy(); instance_destroy(o_dialog_menubox); }
+			}
 		}
 	}
 #endregion
@@ -378,11 +381,8 @@ event_inherited();
 			
 			if(PANEL_GRAPH && PANEL_GRAPH.panel == prefocus) {
 				if(PREFERENCES.node_add_select && node_replace == noone) {
-					run_in(1, function(_n, _j) /*=>*/ {return PANEL_GRAPH.selectDragNode(_n, _j)}, [_new_node, junction_called == noone]);
-					
-					// PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
-					var _ins = instanceof(_new_node);
-					if(has(HOTKEYS, _ins)) FOCUS_STR = _ins;
+					run_in(1, function(_n, _j) /*=>*/ {return PANEL_GRAPH.selectDragNode(_n, _j)},
+						[_new_node, junction_called == noone]);
 				}
 			}
 			

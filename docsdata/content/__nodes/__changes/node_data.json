@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.002",
+    "changes": [
+      {
+        "date": "2026-05-22T01:56:28.393Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Fix adding node from pie menu does not trigger node chord."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.001",
     "changes": [
       {

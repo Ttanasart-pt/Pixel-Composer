@@ -3597,7 +3597,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return false;
 	}
 	
-	on_drop_file = undefined;
+	on_drop_file  = undefined;
 	static onDrop = function(dragObj) {
 		if(dragObj.type == "Asset" && is_callable(on_drop_file)) {
 			on_drop_file(dragObj.data.path);
@@ -3613,9 +3613,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static dropPath = noone;  
-	 
-	static onClone = undefined
-	static clone   = function(_group = PANEL_GRAPH.getCurrentContext()) {
+	
+	static onClone  = undefined
+	static clone    = function(_group = PANEL_GRAPH.getCurrentContext()) {
 		LOADING_VERSION = SAVE_VERSION;
 		
 		CLONING = true;
