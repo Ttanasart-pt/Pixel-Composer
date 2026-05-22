@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.002",
+    "changes": [
+      {
+        "date": "2026-05-22T04:45:10.537Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Fix mouse inactive when hovering on vertical toolbar area even when toolbar direction is set to horizontal."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

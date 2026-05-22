@@ -437,8 +437,12 @@ function Panel_Preview() : PanelContent() constructor {
         
          tool_hovering      = noone;
         _tool_hovering      = noone;
+        
         tool_side_draw_l    = false;
         tool_side_draw_r    = false;
+        tool_side_draw_t    = false;
+        tool_side_draw_b    = false;
+        
         overlay_hovering    = false;
         view_hovering       = false;
         
@@ -1041,8 +1045,8 @@ function Panel_Preview() : PanelContent() constructor {
         var hori = PREFERENCES.panel_preview_toolbar_horizontal;
         
         var tw  = 0;
-            tw += !hori * tool_side_draw_l * ui(40);
-            tw += !hori * tool_side_draw_r * ui(40);
+            tw += tool_side_draw_l * ui(40);
+            tw += tool_side_draw_r * ui(40);
         
         if(PROJECT.previewSetting.show_ruler && !d3_active)
         	tw += ruler_width;
@@ -2517,7 +2521,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(PROJECT.previewSetting.show_ruler && !d3_active)
         	right_menu_y += ruler_width;
         	
-        if(tool_side_draw_l && PREFERENCES.panel_preview_toolbar_horizontal)
+        if(tool_side_draw_t)
         	right_menu_y += toolbar_width;
         	
         toolbar_draw = false;
@@ -2849,12 +2853,12 @@ function Panel_Preview() : PanelContent() constructor {
         if(pseql <= 1) return;
         
         var siz = array_preview_size;
-        var _xx = tool_side_draw_l * ui(40);
+        var _xx = tool_side_draw_l * (toolbar_width + ui(8));
         if(PROJECT.previewSetting.show_ruler && !d3_active)
         	_xx += ruler_width;
         
         var sx  = _xx + preview_x + ui(8);
-        var yy  = h - toolbar_height - siz - ui(8);
+        var yy  = h - toolbar_height - siz - ui(8) - tool_side_draw_b * (toolbar_width + ui(8));
     	
         if(my > yy - 8) mouse_on_preview = 0;
         var hoverable = pHOVER && point_in_rectangle(mx, my, _xx, ui(32), w, h - toolbar_height);
@@ -2914,7 +2918,7 @@ function Panel_Preview() : PanelContent() constructor {
         var _view_x = _left? tool_side_draw_l * toolbar_width + ui(8) : 
                          w - tool_side_draw_r * toolbar_width - ui(8);
             
-        var _view_y = topbar_height + ui(8);
+        var _view_y = topbar_height + ui(8) + tool_side_draw_t * toolbar_width;
         var _hab    = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
         view_hovering = false;
         
@@ -3070,7 +3074,13 @@ function Panel_Preview() : PanelContent() constructor {
         overHover = overHover && !view_hovering;
         overHover = overHover && tool_hovering == noone && !overlay_hovering;
         overHover = overHover && !canvas_dragging && !canvas_zooming;
-        overHover = overHover && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
+        overHover = overHover && point_in_rectangle(mx, my, 
+        	tool_side_draw_l * toolbar_width, 
+        	toolbar_height + tool_side_draw_t * toolbar_width, 
+        	w - tool_side_draw_r * toolbar_width, 
+        	h - toolbar_height - tool_side_draw_b * toolbar_width
+    	);
+        
         overHover = overHover && !key_mod_press(CTRL);
         
         var overActive = active && overHover && !graph_nav;
@@ -3102,16 +3112,15 @@ function Panel_Preview() : PanelContent() constructor {
         var cy = canvas_y + _node.preview_y * canvas_s;
         var _snx = 0, _sny = 0;
         
-        tool_side_draw_l = PROJECT.previewSetting.tool_always_l || _node.showTool();
-        tool_side_draw_r = PROJECT.previewSetting.tool_always_r || _node.rightTools != -1;
-        
-        if(_node.showTool() && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h))
-            overHover = false;
-        
         overHover = overHover && !view_hovering;
         overHover = overHover && tool_hovering == noone && !overlay_hovering;
         overHover = overHover && !canvas_dragging && !canvas_zooming;
-        overHover = overHover && point_in_rectangle(mx, my, (_node.showTool()) * toolbar_width, toolbar_height, w, h - toolbar_height);
+        overHover = overHover && point_in_rectangle(mx, my, 
+        	tool_side_draw_l * toolbar_width, 
+        	toolbar_height + tool_side_draw_t * toolbar_width, 
+        	w - tool_side_draw_r * toolbar_width, 
+        	h - toolbar_height - tool_side_draw_b * toolbar_width
+    	);
         
         overActive = active && overHover && !graph_nav;
         overHover  = overHover && !key_mod_press(CTRL);
@@ -3708,11 +3717,11 @@ function Panel_Preview() : PanelContent() constructor {
     static drawRuler = function() {
     	var hori  = PREFERENCES.panel_preview_toolbar_horizontal;
     	
-    	var x0 =     (tool_side_draw_l && !hori) * toolbar_width;
-        var x1 = w - (tool_side_draw_r && !hori) * toolbar_width;
+    	var x0 =     tool_side_draw_l * toolbar_width;
+        var x1 = w - tool_side_draw_r * toolbar_width;
         
-        var y0 =     topbar_height  + (tool_side_draw_l &&  hori) * toolbar_width;
-        var y1 = h - toolbar_height - (tool_side_draw_r &&  hori) * toolbar_width;
+        var y0 =     topbar_height  + tool_side_draw_t * toolbar_width;
+        var y1 = h - toolbar_height - tool_side_draw_b * toolbar_width;
         
 		var prevSurf = is_surface(preview_surfaces[0]);
         var sw = prevSurf? surface_get_width( preview_surfaces[0]) : DEF_SURF_W;
@@ -4053,7 +4062,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         var inspect_node = PANEL_INSPECTOR.getInspecting();
-        var toolNode = noone;
+        var toolNode     = (inspect_node && inspect_node.getToolNode)? inspect_node.getToolNode() : inspect_node; 
         
         drawViewController();
         drawDataArray();
@@ -4066,11 +4075,18 @@ function Panel_Preview() : PanelContent() constructor {
         	if(PROJECT.previewSetting.show_ruler) drawRuler();
         }
         
-        tool_side_draw_l = PROJECT.previewSetting.tool_always_l;
-        tool_side_draw_r = PROJECT.previewSetting.tool_always_r;
-        
     	var hori = PREFERENCES.panel_preview_toolbar_horizontal;
     	
+    	if(hori) {
+    		tool_side_draw_t = PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool());
+	        tool_side_draw_b = PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1);
+	        
+    	} else {
+	        tool_side_draw_l = PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool());
+	        tool_side_draw_r = PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1);
+	        
+    	}
+        
         if(PROJECT.previewSetting.tool_always_l) {
         	var txx  = 0;
 	        var tyy  = ui(32);
@@ -4097,21 +4113,17 @@ function Panel_Preview() : PanelContent() constructor {
 	        
 	        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 1, txx, tyy, tww, thh, c_white, aa);
         }
-        	
+        
         if(PANEL_PREVIEW == self) { // Draw Overlay
-            if(inspect_node) {
-                toolNode = inspect_node; 
-                if(inspect_node.getToolNode) toolNode = inspect_node.getToolNode();
-                if(toolNode) {
-                	drawNodeActions(pFOCUS, toolNode);
-                	
-                	_tool_hovering = tool_hovering;
-                	tool_hovering  = noone;
-                	
-			        drawToolsLeft(toolNode);
-			        drawToolsRight(toolNode);
-                }
-                
+            if(toolNode) {
+            	drawNodeActions(pFOCUS, toolNode);
+            	
+            	_tool_hovering = tool_hovering;
+            	tool_hovering  = noone;
+            	
+		        drawToolsLeft(toolNode);
+		        drawToolsRight(toolNode);
+		        
             } else {
             	hoveringContent = true;
             	if(tool_current != noone) {

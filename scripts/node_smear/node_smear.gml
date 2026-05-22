@@ -87,25 +87,25 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		#endregion
 		
 		surface_set_shader(_outSurf, sh_smear);
-			shader_set_i("sampleMode",	  getAttribute("oversample"));
+			shader_set_i( "sampleMode",	  getAttribute("oversample"));
 			shader_set_uv(_data[18], _data[19]);
 			
-			shader_set_f("dimension",     _dim);
-			shader_set_f("size",          max(_dim[0], _dim[1]));
+			shader_set_f( "dimension",   _dim     );
+			shader_set_f( "size",        max(_dim[0], _dim[1]) );
 			
-			shader_set_i("alpha",	      _mode );
-			shader_set_i("inv",	    	  _invt );
-			shader_set_f_map("strength",  _strn, _data[ 9], inputs[ 1], _data[20]);
-			shader_set_f_map("direction", _dirr, _data[10], inputs[ 2]);
-			shader_set_f("spread",        _sprd );
-			shader_set_i("modulateStr",   _mods );
+			shader_set_i( "alpha",       _mode    );
+			shader_set_i( "inv",         _invt    );
+			shader_set_m( "strength",    _strn, _data[ 9], inputs[ 1], _data[20] );
+			shader_set_m( "direction",   _dirr, _data[10], inputs[ 2] );
+			shader_set_f( "spread",      _sprd    );
+			shader_set_i( "modulateStr", _mods    );
 			
-			shader_set_i("rMode",         _rend );
-			shader_set_i("blend",    	  _blnd );
-			shader_set_c("blendSide",     _bsid );
+			shader_set_i( "rMode",       _rend    );
+			shader_set_i( "blend",       _blnd    );
+			shader_set_c( "blendSide",   _bsid    );
 			
-			shader_set_i("useTexture",    _useText );
-			shader_set_s("texture",       _text    );
+			shader_set_i( "useTexture",  _useText );
+			shader_set_s( "texture",     _text    );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

@@ -120,6 +120,7 @@
 		}
 	}
 	
+	#macro shader_set_m shader_set_f_map
 	function shader_set_f_map(uniform, value, surface = noone, junc = noone, _curve = undefined) {
 		shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
 		
