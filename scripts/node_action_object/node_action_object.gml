@@ -21,6 +21,7 @@ function NodeAction() constructor {
 	sprPath  = "";
 	
 	static getName       = function() /*=>*/ {return name};
+	static getSpr        = function() /*=>*/ {return spr};
 	static getTooltip    = function() /*=>*/ {return tooltip};
 	static getTooltipSpr = function() /*=>*/ {return tooltip_spr};
 	

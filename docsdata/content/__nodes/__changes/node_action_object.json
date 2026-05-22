@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.002",
+    "changes": [
+      {
+        "date": "2026-05-22T08:12:45.706Z",
+        "node": "Add Node Dialog",
+        "commit": "**Add Node Dialog**: Fix crash when displaying action item."
+      }
+    ]
+  }
+]
