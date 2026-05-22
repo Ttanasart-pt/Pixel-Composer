@@ -10,9 +10,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
-		
 		newInput(index, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 )).setVisible(true, true);
-							
 		return inputs[index];
 	} setDynamicInput(1);
 	

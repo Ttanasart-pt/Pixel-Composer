@@ -6,6 +6,11 @@
         "date": "2026-05-22T08:34:11.507Z",
         "node": "Array Zip",
         "commit": "**Array Zip**: Fix freeze when duplicating node."
+      },
+      {
+        "date": "2026-05-22T08:44:18.378Z",
+        "node": "Particle",
+        "commit": "**Particle**: Direction wiggle now won't requires physics to work."
       }
     ]
   },

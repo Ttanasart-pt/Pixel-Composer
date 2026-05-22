@@ -162,7 +162,7 @@ function __part(_node) : __particleObject() constructor {
 	////- Wiggles
 	
 	use_wig = false;
-	wig_psx = noone;
+	wig_psx = noone; 
 	wig_psy = noone;
 	wig_rot = noone;
 	wig_scx = noone;
@@ -371,26 +371,31 @@ function __part(_node) : __particleObject() constructor {
 		#endregion
 		
 		#region physics
+			var dirr = point_direction(0, 0, speedx, speedy);
+			var diss = point_distance(0, 0, speedx, speedy);
+			
 			if(use_phy) {
-				var dirr = point_direction(0, 0, speedx, speedy);
-				var diss = point_distance(0, 0, speedx, speedy);
-				    diss = max(0, diss + accel) * (1 - frict);
-				
-				if(speedx != 0 || speedy != 0) {
-					if(use_wig) dirr += wig_dir.get(seed + life);
+			    diss = max(0, diss + accel) * (1 - frict);
+			
+				if(turning != 0 && (speedx != 0 || speedy != 0)) {
+					var trn = turning;
 					
-					if(turning != 0) {
-						var trn = turning;
-						
-						     if(turnSpd > 0) trn = turning * diss * turnSpd;
-						else if(turnSpd < 0) trn = turning / diss * turnSpd;
-						
-						dirr += trn
-					}
+					     if(turnSpd > 0) trn = turning * diss * turnSpd;
+					else if(turnSpd < 0) trn = turning / diss * turnSpd;
+					
+					dirr += trn
 				}
-				
-				speedx = lengthdir_x(diss, dirr) + gravX;
-				speedy = lengthdir_y(diss, dirr) + gravY;
+			}
+			
+			if(use_wig && (speedx != 0 || speedy != 0))
+				dirr += wig_dir.get(seed + life);
+			
+			speedx = lengthdir_x(diss, dirr);
+			speedy = lengthdir_y(diss, dirr);
+			
+			if(use_phy) {
+				speedx += gravX;
+				speedy += gravY;
 			}
 		#endregion
 		
