@@ -1972,6 +1972,7 @@
     {"name":"node_value_path","order":10,"path":"scripts/node_value_path/node_value_path.yy",},
     {"name":"node_value_pathnode","order":6,"path":"scripts/node_value_pathnode/node_value_pathnode.yy",},
     {"name":"node_value_pbbox","order":11,"path":"scripts/node_value_pbbox/node_value_pbbox.yy",},
+    {"name":"node_value_puppet_control","order":30,"path":"scripts/node_value_puppet_control/node_value_puppet_control.yy",},
     {"name":"node_value_quarterion","order":23,"path":"scripts/node_value_quarterion/node_value_quarterion.yy",},
     {"name":"node_value_range","order":5,"path":"scripts/node_value_range/node_value_range.yy",},
     {"name":"node_value_rotation_random","order":16,"path":"scripts/node_value_rotation_random/node_value_rotation_random.yy",},

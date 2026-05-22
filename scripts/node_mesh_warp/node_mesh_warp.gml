@@ -194,6 +194,48 @@ function MeshedTriangle(_p0, _p1, _p2) constructor {
 function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mesh Warp";
 	
+	newActiveInput(5);
+	newInput(9, nodeValueSeed());
+	
+	////- =Mesh
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 8, nodeValue_EButton( "Mesh Type",   0, [ "Grid", "Custom" ] ));
+	newInput( 1, nodeValue_ISlider( "Sample",      8, [ 2, 32, 0.1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.");
+	newInput( 7, nodeValue_Bool(    "Full Mesh",   false ));
+	newInput(10, nodeValue_Slider(  "Randomness", .5     ));
+	newInput( 3, nodeValue_Trigger( "Mesh" ));
+	
+	////- =Link
+	newInput(2, nodeValue_Slider( "Spring Force",  .5     ));
+	newInput(4, nodeValue_Bool(   "Diagonal Link",  false )).setTooltip("Include diagonal link to prevent drastic grid deformation.");
+	newInput(6, nodeValue_Slider ("Link Strength",  0     )).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
+		
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output( "Mesh data", VALUE_TYPE.mesh, new Mesh()));
+	
+	b_gen = button(function() /*=>*/ {return Mesh_build()}).setText("Generate Mesh")
+	
+	input_display_list = [ 5, 9, 
+		[ "Mesh",           false ],  0,  8,  1,  7, 10, b_gen, 
+		[ "Link",           false ],  4,  6,
+		[ "Control Points", false ], 
+	];
+	
+	function createControl() {
+		var index = array_length(inputs);
+		newInput(index, nodeValue_Puppet("Control point", [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ]));
+		
+		array_push(input_display_list, index);
+		
+		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"Create control point {index}" ]);
+		recordAction(ACTION_TYPE.array_insert, input_display_list, [ array_last(input_display_list), array_length(input_display_list) - 1 ]);
+		return inputs[index];
+	}
+	
+	////- Node
+	
 	attributes.mesh_bound  = [];
 	
 	points      = [];
@@ -207,48 +249,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	newActiveInput(5);
-	newInput(9, nodeValueSeed());
-	
-	////- =Mesh
-	newInput( 0, nodeValue_Surface(     "Surface In" ));
-	newInput( 8, nodeValue_Enum_Button( "Mesh Type",   0, [ "Grid", "Custom" ] ));
-	newInput( 1, nodeValue_ISlider(     "Sample",      8, [ 2, 32, 0.1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.");
-	newInput( 7, nodeValue_Bool(        "Full Mesh",   false ));
-	newInput(10, nodeValue_Slider(      "Randomness", .5     ));
-	newInput( 3, nodeValue_Trigger(     "Mesh" ));
-	b_gen = button(function() /*=>*/ {return Mesh_build()}).setText("Generate Mesh")
-		// .setIcon(THEME.verletSim, 0, COLORS._main_value_positive).iconPad();
-	
-	////- =Link
-	newInput(2, nodeValue_Slider( "Spring Force",  .5     ));
-	newInput(4, nodeValue_Bool(   "Diagonal Link",  false )).setTooltip("Include diagonal link to prevent drastic grid deformation.");
-	newInput(6, nodeValue_Slider ("Link Strength",  0     )).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
-		
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output( "Mesh data", VALUE_TYPE.mesh, new Mesh()));
-	
-	input_display_list = [ 5, 9, 
-		["Mesh", false, noone], 0, 8, 1, 7, 10, b_gen, 
-		["Link", false], 4, 6,
-		["Control points", false], 
-	];
-	
 	control_index = array_length(inputs);
-	
-	function createControl() {
-		var index = array_length(inputs);
-		newInput(index, nodeValue_Float("Control point", [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ]))
-			.setDisplay(VALUE_DISPLAY.puppet_control);
-		
-		array_push(input_display_list, index);
-		
-		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"Create control point {index}" ]);
-		recordAction(ACTION_TYPE.array_insert, input_display_list, [ array_last(input_display_list), array_length(input_display_list) - 1 ]);
-		return inputs[index];
-	}
 	
 	attribute_surface_depth();
 	attribute_interpolation();
