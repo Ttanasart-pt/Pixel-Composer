@@ -444,7 +444,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
-	input_display_list = [ 0 ]
+	input_display_list = [ 0, 
+		[ "Pose", false ], 
+	];
 	
 	function createNewInput(index = array_length(inputs), bone = noone) {
 		var inAmo = array_length(inputs);
@@ -538,6 +540,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _bhov = anchor_selecting;
 		var panel = _params[$ "panel"] ?? noone;
 		var hovering = false;
+		
+		attributes.hovering = hover;
+		attributes.focusing = active;
 		
 		for( var i = 0, n = array_length(bonePose.constrains); i < n; i++ ) bonePose.constrains[i].drawBone(bonePose, _x, _y, _s);
 		

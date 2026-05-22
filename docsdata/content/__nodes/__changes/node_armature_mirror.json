@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.002",
+    "changes": [
+      {
+        "date": "2026-05-22T10:33:21.369Z",
+        "node": "",
+        "commit": "**Armature Pose**: Fix IK calculate incorrectly."
+      }
+    ]
+  }
+]

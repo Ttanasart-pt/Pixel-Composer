@@ -26,6 +26,9 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _b = getInputData(0);
 		if(!is(_b, __Bone)) return;
 		
+		attributes.hovering = hover;
+		attributes.focusing = active;
+		
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 	}
 	

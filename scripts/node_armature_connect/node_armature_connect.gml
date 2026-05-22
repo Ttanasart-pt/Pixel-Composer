@@ -40,10 +40,13 @@ function Node_Armature_Connect(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _con  = getInputData(8);
 		var _typ  = getInputData(1);
 		
+		attributes.hovering = hover;
+		attributes.focusing = active;
+		
 		if(bone_targeting) {
 			if(!is(_arma, __Bone)) return true;
 			
-			var _hv = _arma.draw(attributes, hover * BONE_EDIT.body, _x, _y, _s, _mx, _my, anchor_selecting, _tar);
+			var _hv = _arma.draw(attributes, BONE_EDIT.body, _x, _y, _s, _mx, _my, anchor_selecting, _tar);
 			anchor_selecting = _hv;
 			
 			if(mouse_lpress(active)) {

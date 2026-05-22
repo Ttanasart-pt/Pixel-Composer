@@ -285,8 +285,11 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var smx = PANEL_PREVIEW.snapX(mx);
 		var smy = PANEL_PREVIEW.snapY(my);
 		
+		attributes.hovering = hover;
+		attributes.focusing = active;
+		
 		if(isUsingTool("Pose")) {
-			anchor_selecting = bone_posed.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
+			anchor_selecting = bone_posed.draw(attributes, 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
 			_hovering = _hovering || anchor_selecting != noone;
 			
 			if(posing_bone) {

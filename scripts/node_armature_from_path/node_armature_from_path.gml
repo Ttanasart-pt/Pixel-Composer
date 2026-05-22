@@ -27,6 +27,9 @@ function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		var hovering = false;
 		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		
+		attributes.hovering = hover;
+		attributes.focusing = active;
+		
 		var _bone = outputs[0].getValue();
 		if(is(_bone, __Bone)) _bone.draw(attributes, false, _x, _y, _s, _mx, _my);
 		

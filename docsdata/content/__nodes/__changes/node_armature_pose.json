@@ -3,11 +3,6 @@
     "version": "1.21.2.002",
     "changes": [
       {
-        "date": "2026-05-22T03:50:29.086Z",
-        "node": "Armature Path",
-        "commit": "**Armature Path**: Add flatten option."
-      },
-      {
         "date": "2026-05-22T10:33:21.375Z",
         "node": "",
         "commit": "**Armature Pose**: Fix IK calculate incorrectly."

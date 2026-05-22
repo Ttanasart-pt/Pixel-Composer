@@ -42,7 +42,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	control_x1 = 0; control_y1 = 0; control_i1 = 0;
 	
 	static addChild   = function(bone) { array_push(childs, bone); bone.parent = self; return self; }
-	static childCount = function()     { return array_reduce(childs, function(amo, ch) /*=>*/ { return amo + ch.childCount(); }, array_length(childs)); }
+	static childCount = function()     { return array_reduce(childs, function(amo,ch,i) /*=>*/ {return amo + ch.childCount()}, array_length(childs)); }
 	
 	////- Find
 	
@@ -112,7 +112,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	
 	////- Draw
 	
-	static draw = function(attributes, edit=false, _x=0, _y=0, _s=1, _mx=0, _my=0, _hover=noone, _select=noone, _blend=c_white, _alpha=1) {
+	static draw       = function(attributes, edit=false, _x=0, _y=0, _s=1, _mx=0, _my=0, _hover=noone, _select=noone, _blend=c_white, _alpha=1) {
 		for( var i = 0, n = array_length(constrains); i < n; i++ ) constrains[i].drawBone(self, _x, _y, _s);
 		
 		setControl(_x, _y, _s);
@@ -134,8 +134,10 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		return hover;
 	}
-	
-	static drawBone = function(attributes, edit=false, _x=0, _y=0, _s=1, _mx=0, _my=0, _hover=noone, _select=noone, _blend=c_white, _alpha=1) {
+	static drawBone   = function(attributes, edit=false, _x=0, _y=0, _s=1, _mx=0, _my=0, _hover=noone, _select=noone, _blend=c_white, _alpha=1) {
+		var hovering = attributes.hovering;
+		var focusing = attributes.focusing;
+		
 		var hover = noone;
 		
 		var p0x = _x + bone_head_pose.x * _s;
@@ -215,13 +217,13 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 					draw_vertex(_ppx - _prx, _ppy - _pry);
 				draw_primitive_end();
 				
-				if((edit & BONE_EDIT.body) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 12) //drag bone
+				if(hovering && (edit & BONE_EDIT.body) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 12) //drag bone
 					hover = [ self, 2, bone_head_pose ];
 					
 			} else if(attributes.display_bone == 1) {
 				draw_line_width(p0x, p0y, p1x, p1y, 3);
 				
-				if((edit & BONE_EDIT.body) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 6) //drag bone
+				if(hovering && (edit & BONE_EDIT.body) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 6) //drag bone
 					hover = [ self, 2, bone_head_pose ];
 			} 
 			
@@ -244,19 +246,18 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			if(!parent_anchor) {
 				control_i0 = (_hover != noone && _hover[0] == self && _hover[1] == 0)? 1 : 0;
 				
-				if((edit & BONE_EDIT.head) && point_in_circle(_mx, _my, p0x, p0y, ui(16))) //drag head
+				if(hovering && (edit & BONE_EDIT.head) && point_in_circle(_mx, _my, p0x, p0y, ui(16))) //drag head
 					hover = [ self, 0, bone_head_pose ];
 			}
 		
 			control_i1 = (_hover != noone && _hover[0] == self && _hover[1] == 1)? 1 : 0;
 			
-			if((edit & BONE_EDIT.tail) && point_in_circle(_mx, _my, p1x, p1y, ui(16))) //drag tail
+			if(hovering && (edit & BONE_EDIT.tail) && point_in_circle(_mx, _my, p1x, p1y, ui(16))) //drag tail
 				hover = [ self, 1, bone_tail_pose ];
 		}
 		
 		return hover;
 	}
-	
 	static drawSimple = function(attributes, _x=0, _y=0, _s=1, _mx=0, _my=0, _blend=c_white, _alpha=1) {
 		var p0x = _x + bone_head_pose.x * _s;
 		var p0y = _y + bone_head_pose.y * _s;
@@ -421,12 +422,9 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		bone_tail_init = getPoint(1, false);
 		bone_tail_pose = getPoint(1, true);
 	}
-	static setPosition = function() {
+	static   setPosition = function() {
 		__setPosition();
-		
-		for( var i = 0, n = array_length(childs); i < n; i++ )
-			childs[i].setPosition();
-		
+		array_foreach(childs, function(c,i) /*=>*/ {return c.setPosition()});
 		return self;
 	}
 	
@@ -434,12 +432,15 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		__c_bone = self;
 		
 		setPosition();
-			array_foreach(constrains, function(c) /*=>*/ {return c.preConstrain(__c_bone)});
+			array_foreach(constrains, function(c,i) /*=>*/ {return c.preConstrain(__c_bone)});
 			
 			setPoseTransform();
-			if(_ik) { setPosition(); setIKconstrain(); }
+			if(_ik) { 
+				setPosition(); 
+				setIKconstrain(); 
+			}
 			
-			array_foreach(constrains, function(c) /*=>*/ {return c.constrain(__c_bone)});
+			array_foreach(constrains, function(c,i) /*=>*/ {return c.constrain(__c_bone)});
 		setPosition();
 		
 		return self;
@@ -471,12 +472,11 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		pose_length    = length * pose_apply_scale;
 		
 	}
-	static setPoseTransform = function() {
-		if(is_main) { array_foreach(childs, function(c) /*=>*/ {return c.setPoseTransform()}); return; }
+	static   setPoseTransform = function() {
+		if(is_main) { array_foreach(childs, function(c,i) /*=>*/ {return c.setPoseTransform()}); return; }
 		
 		__setPoseTransform();
-		
-		array_foreach(childs, function(c) /*=>*/ {return c.setPoseTransform()});
+		array_foreach(childs, function(c,i) /*=>*/ {return c.setPoseTransform()});
 	}
 	
 	////- IK
@@ -486,18 +486,23 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			var points  = array_create(IKlength + 1);
 			var lengths = array_create(IKlength);
 			var bones   = array_create(IKlength);
-			var bn      = IKTarget;
+			var bn      = IKTarget, _p;
 			
 			for( var i = IKlength; i > 0; i-- ) {
-				var _p = bn.getTail();
-				bones[i - 1] = bn;
+				bones[i-1] = bn;
+				
+				_p = bn.getTail();
 				points[i] = { x: _p.x, y: _p.y };
+				
+				if(i == 1) {
+					_p = bn.getHead();
+					points[i-1] = { x: _p.x, y: _p.y };
+				}
+				
 				bn = bn.parent;
 			}
 			
 			if(bn == noone) return;
-			_p = bn.getTail();
-			points[0] = { x: _p.x, y: _p.y };
 			
 			for( var i = 0; i < IKlength; i++ ) {
 				var p0 = points[i];
@@ -518,8 +523,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	FABRIK_result = [];
-	static FABRIK = function(bones, points, lengths, dx, dy) {
-		
+	static FABRIK = function(bones, points, lengths, tx, ty) {
 		var threshold = 0.01;
 		var _bo = array_create(array_length(points));
 		for( var i = 0, n = array_length(points); i < n; i++ )
@@ -530,8 +534,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		var itr = 0;
 		
 		do {
-			FABRIK_backward(bones, points, lengths, dx, dy);
-			FABRIK_forward(bones, points, lengths, sx, sy);
+			FABRIK_backward( bones, points, lengths, tx, ty );
+			FABRIK_forward(  bones, points, lengths, sx, sy );
 			
 			var delta = 0;
 			var _bn = array_create(array_length(points));
@@ -552,8 +556,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			var dir  = point_direction(p0.x, p0.y, p1.x, p1.y);
 			var dis  = point_distance( p0.x, p0.y, p1.x, p1.y);
 			
-			_b.pose_angle = dir;
-		
+			_b.pose_angle    = dir;
 			FABRIK_result[i] = p0;
 		}
 		
@@ -803,7 +806,6 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static fromPoints = function(rarr, _pose = noone, _param = {}) {
-		
 		for( var i = 0, n = array_length(rarr); i < n; i += 3 ) {
 			var bone = rarr[i + 0];
 			var _h   = rarr[i + 1];

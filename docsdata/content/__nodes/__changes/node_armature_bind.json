@@ -3,13 +3,8 @@
     "version": "1.21.2.002",
     "changes": [
       {
-        "date": "2026-05-22T09:28:33.143Z",
-        "node": "Path",
-        "commit": "**Path**: Anchor point name now shows up on hover."
-      },
-      {
         "date": "2026-05-22T10:33:21.361Z",
-        "node": "Armature Pose",
+        "node": "",
         "commit": "**Armature Pose**: Fix IK calculate incorrectly."
       }
     ]

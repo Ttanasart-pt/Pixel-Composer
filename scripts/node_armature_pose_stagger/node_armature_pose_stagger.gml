@@ -64,6 +64,9 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _b = inputs[0].getValue();
 		if(!is(bonePose, __Bone)) return;
 		
+		attributes.hovering = hover;
+		attributes.focusing = active;
+		
 		if(!bone_targeting) {
 			var _tar = getInputData(1);
 			bonePose.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
@@ -73,7 +76,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _b = getInputData(0);
 		if(!is(_b, __Bone)) return;
 		
-		var _hv = _b.draw(attributes, hover * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
+		var _hv = _b.draw(attributes, 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 		anchor_selecting = _hv;
 		
 		if(mouse_lpress(active)) {
