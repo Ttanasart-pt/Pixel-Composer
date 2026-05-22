@@ -661,26 +661,26 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1); 
 				
 			} else if(posing_type == 3) { //scale
-				var ps = val[TRANSFORM.sca_x];
-				var ss = point_distance(posing_mx, posing_my, smx, smy) / posing_sx;
-				var ds = ss / ps;
-				val[TRANSFORM.sca_x] = ss;
+				// var ps = val[TRANSFORM.sca_x];
+				// var ss = point_distance(posing_mx, posing_my, smx, smy) / posing_sx;
+				// var ds = ss / ps;
+				// val[TRANSFORM.sca_x] = ss;
 				
-				if(pose_child_lock && ds != 1 && ds != 0)
-				for( var i = 0, n = array_length(posing_bone.childs); i < n; i++ ) {
-					var _child = posing_bone.childs[i];
-					if(!_child.apply_scale) continue;
+				// if(pose_child_lock && ds != 1 && ds != 0)
+				// for( var i = 0, n = array_length(posing_bone.childs); i < n; i++ ) {
+				// 	var _child = posing_bone.childs[i];
+				// 	if(!_child.apply_scale) continue;
 					
-					var _input = boneMap[$ _child.ID];
-					var _val   = array_clone(_input.getValue());
-					    _val[TRANSFORM.sca_x] /= ds;
-					_input.setValue(_val);
-				}
+				// 	var _input = boneMap[$ _child.ID];
+				// 	var _val   = array_clone(_input.getValue());
+				// 	    _val[TRANSFORM.sca_x] /= ds;
+				// 	_input.setValue(_val);
+				// }
 				
-				orig = posing_bone.getPoint(0.8);
-				var _rx = _x + _s * orig.x;
-				var _ry = _y + _s * orig.y;
-				draw_sprite_ui(THEME.bone_scale,  0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1);
+				// orig = posing_bone.getPoint(0.8);
+				// var _rx = _x + _s * orig.x;
+				// var _ry = _y + _s * orig.y;
+				// draw_sprite_ui(THEME.bone_scale,  0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1);
 			} 
 			
 			gpu_set_texfilter(false);
@@ -723,13 +723,16 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _rx = _x + _s * orig.x;
 				var _ry = _y + _s * orig.y;
 				
-				var scal = _bne.getPoint(0.8);
-				var _sx = _x + _s * scal.x;
-				var _sy = _y + _s * scal.y;
+				// var scal = _bne.getPoint(0.8);
+				// var _sx = _x + _s * scal.x;
+				// var _sy = _y + _s * scal.y;
 				
-				_typ = point_in_circle(_mx, _my, _sx, _sy, ui(12))? 3 : 2;
+				_typ = 2;
+				// if(point_in_circle(_mx, _my, _sx, _sy, ui(12)))
+				// 	_typ = 3;
+				
 				draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, _typ == 2? COLORS._main_accent : COLORS._main_icon, 1);
-				draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, _typ == 3? COLORS._main_accent : COLORS._main_icon, 1);
+				// draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, _typ == 3? COLORS._main_accent : COLORS._main_icon, 1);
 			}
 			
 			if(_lck) {
@@ -751,6 +754,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			gpu_set_texfilter(false);
 				
 			if(mouse_lpress(active)) {
+				var _bind = array_find(bone_points, _bne);
+				if(_bind > -1) {
+					bone_select   = [ _bind, _bind + 1, _bind + 2 ];
+					bone_selected = true;
+				}
+				
 				posing_bone     = _bne;
 				posing_type     = _typ;
 				pose_child_lock = _lck;
@@ -851,8 +860,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				}
 				
 			} else {
-				bone_select   = [];
-				bone_selected = false;
+				// bone_select   = [];
+				// bone_selected = false;
 			}
 		#endregion
 		

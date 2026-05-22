@@ -492,11 +492,11 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				bones[i-1] = bn;
 				
 				_p = bn.getTail();
-				points[i] = { x: _p.x, y: _p.y };
+				points[i] = [_p.x, _p.y];
 				
 				if(i == 1) {
 					_p = bn.getHead();
-					points[i-1] = { x: _p.x, y: _p.y };
+					points[0] = [_p.x, _p.y];
 				}
 				
 				bn = bn.parent;
@@ -508,7 +508,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				var p0 = points[i];
 				var p1 = points[i + 1];
 				
-				lengths[i] = point_distance(p0.x, p0.y, p1.x, p1.y);
+				lengths[i] = point_distance(p0[0], p0[1], p1[0], p1[1]);
 			}
 			
 			var p  = parent.getHead();
@@ -527,10 +527,10 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		var threshold = 0.01;
 		var _bo = array_create(array_length(points));
 		for( var i = 0, n = array_length(points); i < n; i++ )
-			_bo[i] = { x: points[i].x, y: points[i].y };
+			_bo[i] = [points[i][0], points[i][1]];
 			
-		var sx = points[0].x;
-		var sy = points[0].y;
+		var sx = points[0][0];
+		var sy = points[0][1];
 		var itr = 0;
 		
 		do {
@@ -540,8 +540,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			var delta = 0;
 			var _bn = array_create(array_length(points));
 			for( var i = 0, n = array_length(points); i < n; i++ ) {
-				_bn[i] = { x: points[i].x, y: points[i].y };
-				delta += point_distance(_bo[i].x, _bo[i].y, _bn[i].x, _bn[i].y);
+				_bn[i] = [points[i][0], points[i][1]];
+				delta += point_distance(_bo[i][0], _bo[i][1], _bn[i][0], _bn[i][1]);
 			}
 			
 			_bo = _bn;
@@ -553,8 +553,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			var p0 = points[i];
 			var p1 = points[i + 1];
 			
-			var dir  = point_direction(p0.x, p0.y, p1.x, p1.y);
-			var dis  = point_distance( p0.x, p0.y, p1.x, p1.y);
+			var dir  = point_direction(p0[0], p0[1], p1[0], p1[1]);
+			var dis  = point_distance( p0[0], p0[1], p1[0], p1[1]);
 			
 			_b.pose_angle    = dir;
 			FABRIK_result[i] = p0;
@@ -570,18 +570,18 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		for( var i = array_length(points) - 1; i > 0; i-- ) {
 			var p1  = points[i];
-			var p0  = points[i - 1];
-			var len = lengths[i - 1];
-			var dir = point_direction(tx, ty, p0.x, p0.y);
+			var p0  = points[i-1];
+			var len = lengths[i-1];
+			var dir = point_direction(tx, ty, p0[0], p0[1]);
 			
-			p1.x = tx;
-			p1.y = ty;
+			p1[0] = tx;
+			p1[1] = ty;
 			
-			p0.x = p1.x + lengthdir_x(len, dir);
-			p0.y = p1.y + lengthdir_y(len, dir);
+			p0[0] = p1[0] + lengthdir_x(len, dir);
+			p0[1] = p1[1] + lengthdir_y(len, dir);
 			
-			tx = p0.x;
-			ty = p0.y;
+			tx = p0[0];
+			ty = p0[1];
 		}
 	}
 	
@@ -594,16 +594,16 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			var p0  = points[i];
 			var p1  = points[i + 1];
 			var len = lengths[i];
-			var dir = point_direction(tx, ty, p1.x, p1.y);
+			var dir = point_direction(tx, ty, p1[0], p1[1]);
 			
-			p0.x = tx;
-			p0.y = ty;
+			p0[0] = tx;
+			p0[1] = ty;
 			
-			p1.x = p0.x + lengthdir_x(len, dir);
-			p1.y = p0.y + lengthdir_y(len, dir);
+			p1[0] = p0[0] + lengthdir_x(len, dir);
+			p1[1] = p0[1] + lengthdir_y(len, dir);
 			
-			tx = p1.x;
-			ty = p1.y;
+			tx = p1[0];
+			ty = p1[1];
 		}
 	}
 	
