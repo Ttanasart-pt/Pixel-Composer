@@ -354,7 +354,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			inputs[27].setVisible(_arr);
 			
 			inputs[ 5].setVisible(_dist <  3);
-			inputs[ 2].setVisible(_dist != 3 && _scat != 2);
+			inputs[ 2].setVisible(
+				(_dist == 2) || 
+				(_dist == 4) || 
+				(_dist != 3 && _scat != 2)
+			);
+			
 			inputs[30].setVisible(false);
 			inputs[31].setVisible(false);
 			inputs[32].setVisible(false);
