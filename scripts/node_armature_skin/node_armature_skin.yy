@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_armature_skin",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_armature_skin",
+  "parent":{
+    "name":"armature",
+    "path":"folders/nodes/data/armature.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

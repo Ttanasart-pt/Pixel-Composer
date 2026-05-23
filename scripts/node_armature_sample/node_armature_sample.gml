@@ -3,7 +3,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	setDimension(96, 72);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Armature()).setVisible(true, true).rejectArray();
+	newInput(0, nodeValue_Armature()).rejectArray();
 	newInput(1, nodeValue_Bone( "Bone", function() /*=>*/ {return toggleBoneTarget()} ));
 	newInput(2, nodeValue_Slider("Sample point", 0));
 	

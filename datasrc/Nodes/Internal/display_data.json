@@ -1048,6 +1048,8 @@
             "Node_Armature_From_Path", 
             "Node_Armature_Path",
             "Node_Armature_Sample",
+            { "label": "/Renderer" },
+            "Node_Armature_Skin", 
             
             { "label": "Export" },
             "Node_Export", 

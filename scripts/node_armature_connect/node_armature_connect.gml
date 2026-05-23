@@ -4,13 +4,13 @@ function Node_Armature_Connect(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	draw_padding = 8;
 	
 	////- =Base Armature
-	newInput(0, nodeValue_Armature( "Base Armature"   )).setVisible(true, true);
+	newInput(0, nodeValue_Armature( "Base Armature"   ));
 	newInput(2, nodeValue_Bone(     "Base Parent",  function() /*=>*/ {return toggleBoneTarget()} ));
 	newInput(3, nodeValue_Bool(     "Connect",  true  ));
 	newInput(4, nodeValue_Vec2(     "Offset",   [0,0] )).setUnitSimple();
 	
 	////- =Sub Armature
-	newInput(1, nodeValue_Armature( "Sub Armature" )).setVisible(true, true);
+	newInput(1, nodeValue_Armature( "Sub Armature" ));
 	newInput(5, nodeValue_Text(     "Suffix"       )).setDisplay(VALUE_DISPLAY.text_box);
 	// input 6
 	

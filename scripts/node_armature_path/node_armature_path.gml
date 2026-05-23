@@ -2,7 +2,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Armature Path";
 	setDimension(96, 96);
 	
-	newInput( 0, nodeValue_Armature() ).setVisible(true, true).rejectArray();
+	newInput( 0, nodeValue_Armature() ).rejectArray();
 	newInput( 1, nodeValue_Bool( "Flatten", false ));
 	//
 	

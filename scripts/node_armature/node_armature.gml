@@ -398,6 +398,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
+	////- Bone
+	
 	#region ++++ attributes ++++
 		bones         = new __Bone(,,,,, self);
 		bones.name    = "Main";
@@ -407,47 +409,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		__node_bone_attributes();
 	#endregion
 		
-	#region ---- tool ----
-		tools = [
-			new NodeTool( "Transform",    THEME.bone_tool_move   ),
-			new NodeTool( [ "Add Bone", "Add Control Bone"], [ THEME.bone_tool_add, THEME.bone_tool_add_control ]),
-			new NodeTool( "Remove Bone",  THEME.bone_tool_remove ),
-			new NodeTool( "Mirror Bones", THEME.bone_tool_mirror ),
-			new NodeTool( "Detach Bone",  THEME.bone_tool_detach ),
-			new NodeTool( "IK",           THEME.bone_tool_IK     ),
-			-1, 
-			new NodeTool( "Move Selection",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new armature_tool_move(self)),
-			new NodeTool( "Rotate Selection", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new armature_tool_rotate(self)),
-			new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new armature_tool_scale(self)),
-		];
-		
-		anchor_selecting = noone;
-		builder_bone = noone;
-		builder_type = 0;
-		builder_sv   = 0;
-		builder_sx   = 0;
-		builder_sy   = 0;
-		builder_mx   = 0;
-		builder_my   = 0;
-		
-		bone_dragging = noone;
-		ik_dragging   = noone;
-		
-		moving  = false;
-		scaling = false;
-		
-		bone_point_maps = [];
-		bone_point_mape = [];
-		
-		bone_bbox = undefined;
-		bone_transform_bbox = -1;
-		bone_transform_type = -1;
-		
-		mirroring_bone = noone;
-	#endregion
-	
-	////- Bone
-	
 	bone_array    = [];
 	bone_points   = [];
 	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
@@ -461,10 +422,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, bh, COLORS.node_composite_bg_blend, 1);
 		ty += ui(8);
 		
-		var hovering = noone;
-		var _bst = ds_stack_create();
-		ds_stack_push(_bst, [ _b, _x, _w ]);
-		
+		var hovering         = noone;
 		var bone_remove      = noone;
 		var bone_constrained = {};
 		for( var i = 0, n = array_length(bones.constrains); i < n; i++ ) {
@@ -473,30 +431,25 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			bone_constrained[$ _con.bone_id] = 1;
 		}
 		
-		while(!ds_stack_empty(_bst)) {
-			var _st  = ds_stack_pop(_bst);
-			var bone = _st[0];
-			var __x  = _st[1];
-			var __w  = _st[2];
-			
-			for( var i = 0, n = array_length(bone.childs); i < n; i++ )
-				ds_stack_push(_bst, [ bone.childs[i], __x + ui(16), __w - ui(16) ]);
-				
+		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+			var bone = bone_array[i];
+			var bnx  = _x + bone.arrayDepth * ui(16);
+			var bnw  = _w - bone.arrayDepth * ui(16);
 			if(bone.is_main) continue;
 			
 			var bne_c = COLORS._main_icon;
-			if(_hover && point_in_circle(_m[0], _m[1], __x + ui(12), ty + ui(12), ui(12))) {
+			if(_hover && point_in_circle(_m[0], _m[1], bnx + ui(12), ty + ui(12), ui(12))) {
 				bne_c = COLORS._main_icon_light;
 				if(mouse_lpress(_focus))
 					bone_dragging = bone;
 			}
 			
-			draw_sprite_ui(THEME.bone, bone.getSpriteIndex(), __x + ui(12), ty + ui(14),,,, bne_c);
+			draw_sprite_ui(THEME.bone, bone.getSpriteIndex(), bnx + ui(12), ty + ui(14), 1, 1, 0, bne_c);
 				
-			if(point_in_rectangle(_m[0], _m[1], __x + ui(24), ty + ui(3), __x + __w, ty + _hh - ui(3)))
+			if(point_in_rectangle(_m[0], _m[1], bnx + ui(24), ty + ui(3), bnx + bnw, ty + _hh - ui(3)))
 				anchor_selecting = [ bone, 2 ];
 			
-			var bx = __x + __w - ui(24);
+			var bx = bnx + bnw - ui(24);
 			var by = ty + _hh / 2;
 			
 			if(point_in_circle(_m[0], _m[1], bx, by, ui(16))) {
@@ -511,7 +464,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var ww = string_width(bone.name);
 			
 			bone.tb_name.setFocusHover(_focus, _hover);
-			bone.tb_name.draw(__x + ui(24), ty + ui(3), ww + ui(16), _hh - ui(6), bone.name, _m);
+			bone.tb_name.draw(bnx + ui(24), ty + ui(3), ww + ui(16), _hh - ui(6), bone.name, _m);
 			
 			var _x0 = bx - ui(24);
 			var _y0 = by;
@@ -550,29 +503,19 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .5);
 			
 			ty += _hh;
-				
-			if(!ds_stack_empty(_bst)) {
-				draw_set_color(COLORS.node_composite_separator);
-				draw_line(_x + ui(16), ty, _x + _w - ui(16), ty);
-			}
 		}
-		
-		ds_stack_destroy(_bst);
 		
 		if(bone_dragging && mouse_lrelease())
 			bone_dragging = noone;
 			
 		if(bone_remove != noone) {
 			var _par = bone_remove.parent;
-			recordAction(ACTION_TYPE.struct_modify, bones)
-				.setName($"Remove bone [{bone_remove.name}]")
-				.setRef(self);
+			recordAction(ACTION_TYPE.struct_modify, bones).setName($"Remove bone [{bone_remove.name}]").setRef(self);
 			array_remove(_par.childs, bone_remove);
 				
 			for( var i = 0, n = array_length(bone_remove.childs); i < n; i++ ) {
 				var _ch = bone_remove.childs[i];
 				_par.addChild(_ch);
-						
 				_ch.parent_anchor = bone_remove.parent_anchor;
 			}
 		}
@@ -602,6 +545,47 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		return bone;
 	} 
+	
+	////- Tool
+	
+	#region ---- tool ----
+		tools = [
+			new NodeTool( "Transform",    THEME.bone_tool_move   ),
+			new NodeTool( [ "Add Bone", "Add Control Bone"], [ THEME.bone_tool_add, THEME.bone_tool_add_control ]),
+			new NodeTool( "Remove Bone",  THEME.bone_tool_remove ),
+			new NodeTool( "Mirror Bones", THEME.bone_tool_mirror ),
+			new NodeTool( "Detach Bone",  THEME.bone_tool_detach ),
+			new NodeTool( "IK",           THEME.bone_tool_IK     ),
+			-1, 
+			new NodeTool( "Move Selection",   THEME.bone_trans_move   ).setVisible(false).setToolObject(new armature_tool_move(self)),
+			new NodeTool( "Rotate Selection", THEME.bone_trans_rotate ).setVisible(false).setToolObject(new armature_tool_rotate(self)),
+			new NodeTool( "Scale Selection",  THEME.bone_trans_scale  ).setVisible(false).setToolObject(new armature_tool_scale(self)),
+		];
+		
+		anchor_selecting = noone;
+		builder_bone  = noone;
+		builder_type  = 0;
+		builder_sv    = 0;
+		builder_sx    = 0;
+		builder_sy    = 0;
+		builder_mx    = 0;
+		builder_my    = 0;
+		
+		bone_dragging = noone;
+		ik_dragging   = noone;
+		
+		moving  = false;
+		scaling = false;
+		
+		bone_point_maps = [];
+		bone_point_mape = [];
+		
+		bone_bbox = undefined;
+		bone_transform_bbox = -1;
+		bone_transform_type = -1;
+		
+		mirroring_bone = noone;
+	#endregion
 	
 	////- Constrain
 	
@@ -721,12 +705,12 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	////- Draw
 	
 	input_display_list = [
-		["Bones",      false], bone_renderer,
+		["Armature",   false], bone_renderer,
 		["Constrains", false], constrain_renderer, 
 	];
 	
-	static selectClear = function() { bone_select = []; }
-	static selectAll   = function() { bone_select = array_create_ext(array_length(bone_points), function(i) /*=>*/ {return i}); }
+	static selectClear = function() /*=>*/ { bone_select = []; }
+	static selectAll   = function() /*=>*/ { bone_select = array_create_ext(array_length(bone_points), function(i) /*=>*/ {return i}); }
 	
 	static drawOverlay_Transform = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var mx = (_mx - _x) / _s;
@@ -1427,7 +1411,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	////- Action
 	
 	static update = function(frame = CURRENT_FRAME) { 
-		array_foreach(bones.constrains, function(c) /*=>*/ { c.bone = bones; c.init(); });
+		array_foreach(bones.constrains, function(c,i) /*=>*/ { c.bone = bones; c.init(); });
 		
 		bones.resetPose().setPosition();
 		outputs[0].setValue(bones);

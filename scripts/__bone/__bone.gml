@@ -381,7 +381,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 	static drawControl = function(attributes) {
 		if(parent != noone && !control) {
-			if(!parent_anchor) 
+			if(!parent_anchor)
 				draw_anchor(control_i0 * .5, control_x0, control_y0, ui(8), 1); 
 			draw_anchor(control_i1 * .5, control_x1, control_y1, ui(8), 1); 
 		}
@@ -753,10 +753,13 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	
 	static toString = function() { return $"Bone {name} [{ID}] : [{direction}, {distance}] / [{angle}, {length}]"; }
 	
-	static toArray = function(arr = []) {
+	arrayDepth = 0;
+	static toArray = function(arr = [], _depth = 0) {
+		arrayDepth = _depth;
 		if(!is_main) array_push(arr, self);
+		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
-			childs[i].toArray(arr);
+			childs[i].toArray(arr, _depth + 1);
 			
 		return arr;
 	}

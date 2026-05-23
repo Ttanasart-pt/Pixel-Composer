@@ -18,10 +18,9 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(12, nodeValue_EButton(      "buttonGroup",     0, [ "Choice 1", "Choice 2" ] ));
 	newInput(13, nodeValue_Quaternion(   "quarternionBox", [0,0,0,0]                      ));
 	newInput(14, nodeValue_Matrix(       "matrixGrid"                                     ));
-	newInput(15, nodeValue_Puppet(       "controlPointBox", [0,0,0,0,0,0,0]               ))
+	newInput(15, nodeValue_Puppet(       "controlPointBox", [0,0,0,0,0,0,0]               ));
+	newInput(16, nodeValue_Transform(    "transformBox",    [0,0,0,0,0]                   ));
 	
-	newInput(16, nodeValue_Float("transformBox",    [0,0,0,0,0])     ).setDisplay(VALUE_DISPLAY.transform)
-
 	newInput(17, nodeValue_Bool("checkBox", false))
 
 	newInput(18, nodeValue_Color("buttonColor",   0 )            ).setDisplay(VALUE_DISPLAY._default)

@@ -3,7 +3,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 96);
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Armature()).setVisible(true, true);
+	newInput(0, nodeValue_Armature());
 	
 	////- =IK
 	newInput(3, nodeValue_Text( "Name", "IK handle" )).setDisplay(VALUE_DISPLAY.text_box);

@@ -277,7 +277,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Armature Bind";
 	preview_select_surface = false;
 	
-	newInput(1, nodeValue_Armature()).setVisible(true, true).rejectArray();
+	newInput(1, nodeValue_Armature()).rejectArray();
 	newInput(2, nodeValue_Struct("Bind data", noone)).setVisible(true, true).shortenDisplay().setArrayDepth(1); 
 	
 	////- =Output
@@ -664,7 +664,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(!LOADING && !APPENDING) boneIDMap = array_verify(boneIDMap, max(array_length(boneIDMap), _s + 1));
 		
 		newInput(index + 0, nodeValue_Surface( "Surface" ));
-		newInput(index + 1, nodeValue_Float(   "Transform",     [0,0,0,1,1] )).setDisplay(VALUE_DISPLAY.transform);
+		newInput(index + 1, nodeValue_Transform("Transform",    [0,0,0,1,1] ));
 		newInput(index + 2, nodeValue_Bool(    "Inherit Rotation",    true  ));
 		newInput(index + 3, nodeValue_Bool(    "Apply Bone Rotation", false ));
 		newInput(index + 4, nodeValue_Bool(    "Inherit Scale",       false ));
@@ -701,9 +701,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		tools = [
 			new NodeTool( "Pose", THEME.bone_tool_pose ), 
 			-1,
-			new NodeTool( "Move Selection",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new armature_bind_tool_move(self)),
-			new NodeTool( "Rotate Selection", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new armature_bind_tool_rotate(self)),
-			new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new armature_bind_tool_scale(self)),
+			new NodeTool( "Move Selection",   THEME.bone_trans_move   ).setVisible(false).setToolObject(new armature_bind_tool_move(self)),
+			new NodeTool( "Rotate Selection", THEME.bone_trans_rotate ).setVisible(false).setToolObject(new armature_bind_tool_rotate(self)),
+			new NodeTool( "Scale Selection",  THEME.bone_trans_scale  ).setVisible(false).setToolObject(new armature_bind_tool_scale(self)),
 		]
 		
 		temp_surface = [ noone, noone, noone ];

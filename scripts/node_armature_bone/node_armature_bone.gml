@@ -5,24 +5,24 @@ function Node_Armature_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	dimension_index = -1;
 	
 	////- =Parent
-	newInput(5, nodeValue_Armature()).setVisible(true, true);
-	newInput(7, nodeValue_Bone( "Parent",  function() /*=>*/ {return toggleBoneTarget()} ));
-	newInput(8, nodeValue_Bool( "Connect", true ));
+	newInput( 5, nodeValue_Armature());
+	newInput( 7, nodeValue_Bone( "Parent",  function() /*=>*/ {return toggleBoneTarget()} ));
+	newInput( 8, nodeValue_Bool( "Connect", true ));
 	
 	////- =Bone
-	newInput(6, nodeValue_Text(     "Name",      "Bone" )).setDisplay(VALUE_DISPLAY.text_box);
-	newInput(0, nodeValue_Vec2(     "Origin",    [0,0]  )).setUnitSimple();
-	newInput(1, nodeValue_EButton(  "Type",       0, [ "Polar", "Two Points" ] ));
-	newInput(2, nodeValue_Float(    "Length",     4     ));
-	newInput(3, nodeValue_Rotation( "Direction",  0     ));
-	newInput(4, nodeValue_Vec2(     "Tail",      [0,0]  )).setUnitSimple();
+	newInput( 6, nodeValue_Text(     "Name",      "Bone" )).setDisplay(VALUE_DISPLAY.text_box);
+	newInput( 0, nodeValue_Vec2(     "Origin",    [0,0]  )).setUnitSimple();
+	newInput( 1, nodeValue_EButton(  "Type",       0, [ "Polar", "Two Points" ] ));
+	newInput( 2, nodeValue_Float(    "Length",     4     ));
+	newInput( 3, nodeValue_Rotation( "Direction",  0     ));
+	newInput( 4, nodeValue_Vec2(     "Tail",      [0,0]  )).setUnitSimple();
 	// input 9
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	input_display_list = [ 
-		[ "Parent", false ], 5, 7, 8, 
-		[ "Bone",   false ], 6, 0, 1, 2, 3, 4, 
+		[ "Parent",   false ],  5,  7,  8, 
+		[ "Armature", false ],  6,  0,  1,  2,  3,  4, 
 	];
 	
 	__node_bone_attributes();

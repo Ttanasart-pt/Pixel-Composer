@@ -431,7 +431,6 @@
 			
 		}
 	}
-	
 #endregion
 
 function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -440,19 +439,21 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	preview_select_surface = false;
 	setDimension(96, 96);
 	
-	newInput(0, nodeValue_Armature()).setVisible(true, true);
+	newInput(0, nodeValue_Armature());
+	// 1
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
-	input_display_list = [ 0, 
-		[ "Pose", false ], 
+	input_display_list = [ 
+		[ "Armature", false ], 0, 
+		[ "Pose",     false ], 
 	];
 	
 	function createNewInput(index = array_length(inputs), bone = noone) {
 		var inAmo = array_length(inputs);
 		var _name = bone != noone? bone.name : "bone";
 		
-		newInput(index, nodeValue(_name, self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )).setDisplay(VALUE_DISPLAY.transform);
+		newInput(index, nodeValue_Transform(_name));
 		inputs[index].attributes.bone_id = bone != noone? bone.ID : noone;
 		
 		if(bone != noone) boneMap[$ bone.ID] = inputs[index];
@@ -460,7 +461,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		array_push(input_display_list, inAmo);
 		return inputs[index];
 	} 
-	
 	setDynamicInput(1, false);
 	
 	////- Bone
@@ -499,7 +499,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			array_push(_input_display_list, _idx);
 			
-			if(struct_exists(boneMap, bone.ID)) {
+			if(has(boneMap, bone.ID)) {
 				_inp = boneMap[$ bone.ID];
 				_inp.index = _idx;
 				
@@ -513,10 +513,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		input_display_list = _input_display_list;
 	}
 	
+	////- Tools
+	
 	tools = [
-		new NodeTool( "Move Selection",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new armature_pose_tool_move(self)),
-		new NodeTool( "Rotate Selection", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new armature_pose_tool_rotate(self)),
-		new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new armature_pose_tool_scale(self)),
+		new NodeTool( "Move Selection",   THEME.bone_trans_move   ).setVisible(false).setToolObject(new armature_pose_tool_move(self)),
+		new NodeTool( "Rotate Selection", THEME.bone_trans_rotate ).setVisible(false).setToolObject(new armature_pose_tool_rotate(self)),
+		new NodeTool( "Scale Selection",  THEME.bone_trans_scale  ).setVisible(false).setToolObject(new armature_pose_tool_scale(self)),
 	];
 	
 	anchor_selecting = noone;
