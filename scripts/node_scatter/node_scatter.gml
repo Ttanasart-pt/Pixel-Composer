@@ -37,7 +37,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(24, nodeValue_IArray(  "Array Indices" )).setArrayDepth(1);
 	newInput(25, nodeValue_Surface( "Array Texture" ));
 	newInput(26, nodeValue_Range(   "Animated",    [0,0], { linked : true } ));
-	newInput(27, nodeValue_EScroll( "Animated End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
+	newInput(27, nodeValue_EScroll( "Animated End", 0, [ "Loop", "Ping Pong", "Hide", "Stop" ] ));
 	
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, PROJ_SURF)}; 
@@ -360,13 +360,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				(_dist != 3 && _scat != 2)
 			);
 			
+			inputs[44].setVisible((_dist == 0 || _dist == 1 || _dist == 5) && (_scat == 2));
+			
 			inputs[30].setVisible(false);
 			inputs[31].setVisible(false);
 			inputs[32].setVisible(false);
 			inputs[34].setVisible(false);
 			inputs[35].setVisible(false);
-			
-			inputs[44].setVisible(_scat == 2);
 			
 			if(_dist == 0 && _scat == 0) {
 				if(_area[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
@@ -771,6 +771,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								break;
 								
 							case 2 : ind = _animInd; break;
+							case 3 : ind = clamp(_animInd, 0, _arrLen - 1); break;
 						}
 					}
 					

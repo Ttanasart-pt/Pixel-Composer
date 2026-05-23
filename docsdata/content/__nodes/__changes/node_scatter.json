@@ -11,6 +11,11 @@
         "date": "2026-05-23T06:45:42.001Z",
         "node": "Scatter",
         "commit": "**Scatter**: Fix amount input disappear when setting source to map while setting distribution to poisson."
+      },
+      {
+        "date": "2026-05-23T06:54:52.333Z",
+        "node": "Scatter",
+        "commit": "**Scatter**: Add \"Stop\" option for ended animation."
       }
     ]
   },
