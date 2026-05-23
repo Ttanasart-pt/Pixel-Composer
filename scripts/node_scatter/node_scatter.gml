@@ -84,6 +84,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Scale
 	newInput( 3, nodeValue_Range2(  "Scale",             [1,1,1,1], { linked : true } )).setMappableConst(43);
 	newInput(54, nodeValue_Range2(  "Offset Scale",      [0,0,0,0] )).setMappableConst(55);
+	newInput(57, nodeValue_Range(   "Scale Random",      [1,1]     )).setTooltip("Random scale while maintaining aspect ratio.");
 	newInput( 8, nodeValue_Bool(    "Uniform Scaling",    true     ));
 	newInput(34, nodeValue_Vec2(    "Scale per Radius",  [0,0]     ));
 	
@@ -101,7 +102,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	newInput(56, nodeValue_Bool(    "Tile",       true  ));
-	// 57
+	// 58
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 
@@ -115,7 +116,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			[ "/Path",     true ], 19, 38, 20, 45, 21, 22, 
 		[ "Position",     false ], 40, 33, 50, 51, 36, 49,  39, 37, 
 		[ "Rotation",     false ], 48,  7,  4, 52, 53, 32, 
-		[ "Scale",        false ],  3, 43, 54, 55,  8, 34, 
+		[ "Scale",        false ],  3, 43, 54, 57, 55,  8, 34, 
 		[ "Color",        false ], 11, 28, 12, 16, 
 			[ "/Sampler",  true ], 41, 47, 42, 
 		[ "Render",       false ], 18, 23, 56, 
@@ -311,6 +312,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _scale     = _data[ 3];
 			var scaOff     = _data[54];
 			var scaOffMap  = _data[55]; scaOffSamp.setSurface(scaOffMap);
+			var scaRan     = _data[57];
 			var _unis      = _data[ 8];
 			var uniSca     = _data[34];
 			var scalSam    = _data[43]; scalSamp.setSurface(scalSam);
@@ -730,6 +732,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_scx  += lerp(scaOff[0], scaOff[1], of) * v;
 				_scy  += lerp(scaOff[2], scaOff[3], of) * v;
 				
+				var _scalRand = random_range(scaRan[0], scaRan[1]);
+				_scx *= _scalRand;
+				_scy *= _scalRand;
+				
 				if(_unis) {
 					_scy = max(_scx, _scy);
 					_scx = _scy;
@@ -841,7 +847,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 			
 			array_resize(_sct, _sct_len);
-			if(sortY) array_sort(_sct, function(a1, a2) /*=>*/ {return a1.depth - a2.depth});
+			if(sortY) array_sort(_sct, function(a1, a2) /*=>*/ {return sign(a1.depth - a2.depth)});
 			
 			var i = 0;
 			

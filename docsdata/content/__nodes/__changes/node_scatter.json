@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.003",
+    "changes": [
+      {
+        "date": "2026-05-23T05:39:53.747Z",
+        "node": "",
+        "commit": "**Scatter**: Add Scale Random option."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.004",
     "changes": [
       {

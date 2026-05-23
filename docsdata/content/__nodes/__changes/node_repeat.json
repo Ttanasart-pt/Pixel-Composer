@@ -6,6 +6,11 @@
         "date": "2026-05-23T04:47:38.881Z",
         "node": "Repeat",
         "commit": "**Repeat**: Add Y sort option."
+      },
+      {
+        "date": "2026-05-23T05:39:53.735Z",
+        "node": "Scatter",
+        "commit": "**Scatter**: Add Scale Random option."
       }
     ]
   },

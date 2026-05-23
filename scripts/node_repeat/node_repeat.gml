@@ -910,7 +910,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 			}
 				
-			if(_sortY)  array_sort(_atlas_arr, function(a1, a2) /*=>*/ {return a1.y - a2.y});
+			if(_sortY)  array_sort(_atlas_arr, function(a1, a2) /*=>*/ {return sign(a1.y - a2.y)});
 			if(_invers) _atlas_arr = array_reverse(_atlas_arr);
 			
 			for( var i = 0, n = array_length(_atlas_arr); i < n; i++ ) {
