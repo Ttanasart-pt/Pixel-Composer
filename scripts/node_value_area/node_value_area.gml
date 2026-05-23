@@ -37,7 +37,7 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	////- GET
 	
 	static valueProcess = function(val, nodeFrom, applyUnit = true, arrIndex = 0) {
-		val = array_verify(val, AREA_ARRAY_LENGTH);
+		val = _array_verify(val, AREA_ARRAY_LENGTH);
 		
 		if(!is_undefined(nodeFrom) && struct_has(nodeFrom.display_data, "onSurfaceSize")) {
 			var surf     = nodeFrom.display_data.onSurfaceSize();

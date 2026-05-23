@@ -117,8 +117,8 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 			__arrIndex  = arrIndex;
 			
 			if(_d == 0) return [ val, val ];
-			if(_d == 1) return array_verify(val, 2);
-			if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return array_verify(v, 2)});
+			if(_d == 1) return _array_verify(val, 2);
+			if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return _array_verify(v, 2)});
 			
 			return val;
 		}

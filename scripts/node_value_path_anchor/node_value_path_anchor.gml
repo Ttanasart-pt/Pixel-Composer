@@ -25,8 +25,8 @@ function __NodeValue_Path_Anchor(_name, _node, _value, _tooltip = "") : NodeValu
 		
 		switch(_d) {
 			case 0: return valueProcess(array_create(def_length, val), nod, applyUnit, arrIndex);
-			case 1: return valueProcess(array_verify(val, def_length), nod, applyUnit, arrIndex);
-			case 2: return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify_new(v, def_length), __nod, __applyUnit, __arrIndex)}); 
+			case 1: return valueProcess(_array_verify(val, def_length), nod, applyUnit, arrIndex);
+			case 2: return array_map(val, function(v, i) /*=>*/ {return valueProcess(_array_verify(v, def_length), __nod, __applyUnit, __arrIndex)}); 
 		}
 		
 		return val;

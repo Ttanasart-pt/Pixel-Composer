@@ -8,15 +8,5 @@
         "commit": "Fix fixed-length array input resize the original array connected to it."
       }
     ]
-  },
-  {
-    "version": "1.21.rc8",
-    "changes": [
-      {
-        "date": "2026-04-20T08:49:10.548Z",
-        "node": "",
-        "commit": "Empty array now returns depth of 1."
-      }
-    ]
   }
 ]

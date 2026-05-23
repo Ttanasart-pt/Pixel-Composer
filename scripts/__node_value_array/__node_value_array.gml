@@ -22,8 +22,8 @@ function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : N
 		var _d = array_get_depth(val);
 		switch(_d) {
 			case 0: return array_create(def_length, val);
-			case 1: return array_verify(val, def_length);
-			case 2: return array_map(val, function(v, i) /*=>*/ {return array_verify(v, def_length)});
+			case 1: return _array_verify(val, def_length);
+			case 2: return array_map(val, function(v, i) /*=>*/ {return _array_verify(v, def_length)});
 		}
 		
 		return val;

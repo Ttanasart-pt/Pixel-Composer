@@ -24,8 +24,8 @@ function __NodeValue_Corner(_name, _node, _value, _tooltip = "") : __NodeValue_A
 		__arrIndex  = arrIndex;
 		
 		if(_d == 0) return valueProcess([val,val,val,val], nod, applyUnit, arrIndex);
-		if(_d == 1) return valueProcess(array_verify(val, 4), nod, applyUnit, arrIndex);
-		if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify(v, 4), __nod, __applyUnit, __arrIndex)});
+		if(_d == 1) return valueProcess(_array_verify(val, 4), nod, applyUnit, arrIndex);
+		if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return valueProcess(_array_verify(v, 4), __nod, __applyUnit, __arrIndex)});
 		
 		return val;
 	}

@@ -20,7 +20,7 @@ function __NodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") : __No
 		if(is_array(val[0]))       return val;
 		if(array_length(val) == 2) return [ 0, val[0], val[1], 0, 0 ];
 		
-		return array_verify(val, 5);
+		return _array_verify(val, 5);
 	}
 }
 

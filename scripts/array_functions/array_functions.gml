@@ -35,9 +35,7 @@
 	function array_valid(arr)   { INLINE return  is_array(arr) && array_length(arr) > 0;  }
 	function array_invalid(arr) { INLINE return !is_array(arr) || array_length(arr) == 0; }
 	
-	function array_verify_new(arr, length) {
-		INLINE
-		
+	function array_verify_new(arr, length) { INLINE
 		if(!is_array(arr)) return array_create(length);
 		if(array_length(arr) == length) return arr;
 		
@@ -46,9 +44,7 @@
 		return arr;
 	}
 	
-	function array_verify_min(arr, length) {
-		INLINE
-		
+	function array_verify_min(arr, length) { INLINE
 		if(!is_array(arr)) return array_create(length);
 		if(array_length(arr) >= length) return arr;
 		
@@ -60,7 +56,8 @@
 		if(!is_array(arr)) return array_create(length);
 		if(array_length(arr) == length) return arr;
 		
-		array_resize(array_clone(arr), length);
+		arr = array_clone(arr, 1);
+		array_resize(arr, length);
 		return arr;
 	}
 		
