@@ -82,6 +82,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Render
 	newInput(43, nodeValue_Bool(     "Inverse Draw Order", false  ));
+	newInput(45, nodeValue_Bool(     "Sort Y",             false  ));
 	newInput(34, nodeValue_EScroll(  "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput(14, nodeValue_Gradient( "Color Over Copy",   gra_white           )).setMappable(30);
 	newInput(23, nodeValue_Gradient( "Random Color",      gra_white           ));
@@ -91,7 +92,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	/* deprecated */ newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]             ));
 	/* deprecated */ newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10      ));
 	/* deprecated */ newInput(27, nodeValue_Color(    "Animator blend",     ca_white          ));
-	// input 45
+	// input 46
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
@@ -205,7 +206,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Position", false ],  4, 38, 26, 19, 39, 15, 44, 
 		[ "Rotation", false ], 33,  5, 20, 
 		[ "Scale",    false ], 29,  6, 10, 41, 42, 21, 
-		[ "Render",   false ], 43, 34, 14, 30, 23, 
+		[ "Render",   false ], 43, 45, 34, 14, 30, 23, 
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
 		animator_renderer, 28, 
@@ -435,9 +436,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _arr    = _data[16];
 			var _sed    = _data[17];
 			
+			var _invers = _data[43];
+			var _sortY  = _data[45];
 			var _col    = _data[18];
 			var _cls    = _data[19];
-			var _invers = _data[43];
 			var _bld_md = _data[34];
 			
 			var _ani_wr = _data[28];
@@ -875,8 +877,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_interpolation(_baseSurface);
 			
 			for( var i = 0; i < atlas_i; i++ ) {
-				var _ind = _invers? atlas_i - i - 1 : i;
-				var _i   = _ind * ATLAS_ARRAY.length;
+				var _i   = i * ATLAS_ARRAY.length;
 				
 				var _x  = atlases[_i + ATLAS_ARRAY.x ] + _offset_x;
 				var _y  = atlases[_i + ATLAS_ARRAY.y ] + _offset_y;
@@ -907,10 +908,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					 _atlas_arr[i] = new Atlas(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
 				else _atlas_arr[i].set(_surf, _x, _y, _rot, _sx, _sy, _col, _alp);
 				
-				// _x = round(_x);
-				// _y = round(_y);
+			}
 				
-				draw_surface_ext(_surf, _x, _y, _sx, _sy, _rot, _col, _alp);
+			if(_sortY)  array_sort(_atlas_arr, function(a1, a2) /*=>*/ {return a1.y - a2.y});
+			if(_invers) _atlas_arr = array_reverse(_atlas_arr);
+			
+			for( var i = 0, n = array_length(_atlas_arr); i < n; i++ ) {
+				var _atl = _atlas_arr[i];
+				draw_surface_ext(_atl.surface, _atl.x, _atl.y, _atl.sx, _atl.sy, _atl.rotation, _atl.blend, _atl.alpha);
 			}
 			
 			BLEND_NORMAL
