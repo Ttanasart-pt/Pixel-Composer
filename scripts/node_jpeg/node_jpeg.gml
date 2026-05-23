@@ -11,13 +11,13 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	__init_mask_modifier(5, 8); // inputs 8, 9
 	
 	////- =Effect
-	newInput( 2, nodeValue_Int(         "Patch Size",       8     )).setValidator(VV_min(1)).setPieMenu();
-	newInput( 3, nodeValue_Float(       "Compression",      32    )).setPieMenu();
-	newInput( 4, nodeValue_Int(         "Reconstruction",   8     )).setValidator(VV_min(0)).setPieMenu();
-	newInput(10, nodeValue_Enum_Scroll( "Transformation",   0,    [ "Cosine", "Zigzag", "Smooth Zigzag", "Step" ]));
-	newInput(11, nodeValue_Rotation(    "Phase",            0     ));
-	newInput(12, nodeValue_Bool(        "Deconstruct Only", false ))
-	newInput(13, nodeValue_Bool(        "Reconstruct All",  false ))
+	newInput( 2, nodeValue_Int(      "Patch Size",       8     )).setValidator(VV_min(1)).setPieMenu();
+	newInput( 3, nodeValue_Float(    "Compression",      32    )).setPieMenu();
+	newInput( 4, nodeValue_Int(      "Reconstruction",   8     )).setValidator(VV_min(0)).setPieMenu();
+	newInput(10, nodeValue_EScroll(  "Transformation",   0,    [ "Cosine", "Zigzag", "Smooth Zigzag", "Step" ]));
+	newInput(11, nodeValue_Rotation( "Phase",            0     ));
+	newInput(12, nodeValue_Bool(     "Deconstruct Only", false ))
+	newInput(13, nodeValue_Bool(     "Reconstruct All",  false ))
 	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -27,24 +27,26 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Effects", false], 2, 3, 13, 4, 10, 11, 12, 
 	];
 	
+	////- Node
+	
 	temp_surface = array_create(2);
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		var _reall = getInputSingle(13);
-		inputs[4].setVisible(!_reall);
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf  = _data[0];
-		var _patc  = _data[2];
-		var _comp  = _data[3];
-		var _recn  = _data[4];
-		var _tran  = _data[10];
-		var _phas  = _data[11];
-		var _recon = _data[12];
-		var _reall = _data[13];
+		#region data
+			var _surf  = _data[ 0];
+			
+			var _patc  = _data[ 2];
+			var _comp  = _data[ 3];
+			var _recn  = _data[ 4];
+			var _tran  = _data[10];
+			var _phas  = _data[11];
+			var _recon = _data[12];
+			var _reall = _data[13];
+			
+			inputs[4].setVisible(!_reall);
+		#endregion
 		
 		var _dim  = surface_get_dimension(_surf);
 		

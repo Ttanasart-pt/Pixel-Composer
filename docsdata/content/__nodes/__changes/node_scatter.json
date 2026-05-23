@@ -16,6 +16,11 @@
         "date": "2026-05-23T06:54:52.333Z",
         "node": "Scatter",
         "commit": "**Scatter**: Add \"Stop\" option for ended animation."
+      },
+      {
+        "date": "2026-05-23T08:19:55.880Z",
+        "node": "",
+        "commit": "**UV Nodes**: UV inputs now apply alpha."
       }
     ]
   },

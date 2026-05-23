@@ -15,9 +15,9 @@ function Node_UV_Cartesian(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(11, nodeValue_EScroll(  "Repeat",      1, ["Empty", "Tile", "Clamp", "Ping Pong"]  )).setShaderProp("repeat");
 	
 	////- =Channels
-	newInput( 7, nodeValue_Slider_Range( "X",   [0,1] )).setShaderProp("xRange");
-	newInput( 8, nodeValue_Slider_Range( "Y",   [1,0] )).setShaderProp("yRange");
-	newInput( 9, nodeValue_Slider(     "Blue",   0    )).setShaderProp("blue");
+	newInput( 7, nodeValue_SliRange( "X",   [0,1] )).setShaderProp("xRange");
+	newInput( 8, nodeValue_SliRange( "Y",   [1,0] )).setShaderProp("yRange");
+	newInput( 9, nodeValue_Slider(   "Blue", 0    )).setShaderProp("blue");
 	// 12
 	
 	input_display_list = [

@@ -737,7 +737,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_scx  += lerp(scaOff[0], scaOff[1], of) * v;
 				_scy  += lerp(scaOff[2], scaOff[3], of) * v;
 				
-				var _scalRand = random_range(scaRan[0], scaRan[1]);
+				var _scalRand = random_range_seed(scaRan[0], scaRan[1], _csed++);
 				_scx *= _scalRand;
 				_scy *= _scalRand;
 				
@@ -751,6 +751,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var ind  = 0;
 				
 				if(surfArray) {
+					random_set_seed(_csed++);
+					
 					switch(_arr) { 
 						case 1 : ind  = safe_mod(i, _arrLen);             break;
 						case 2 : ind  = irandom(_arrLen - 1);             break;
@@ -759,7 +761,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					}
 					
 					if(arrAnim[0] != 0 || arrAnim[1] != 0) {
-						var _arrAnim_spd = random_range(arrAnim[0], arrAnim[1]);
+						var _arrAnim_spd = random_range_seed(arrAnim[0], arrAnim[1], _csed++);
 						var _animInd     = ind + CURRENT_FRAME * _arrAnim_spd;
 						
 						switch(arrAnimEnd) {
@@ -811,7 +813,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				var clr = _clrSin;
 				     if( _clrMap) clr = evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
-				else if(!_clrUni) clr = color.evalFast(random(1));
+				else if(!_clrUni) clr = color.evalFast(random_seed(1, _csed++));
 				
 				var alp = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _csed++);
 				

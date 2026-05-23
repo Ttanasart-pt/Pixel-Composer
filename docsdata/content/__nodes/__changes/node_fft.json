@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.003",
+    "changes": [
+      {
+        "date": "2026-05-23T08:19:55.873Z",
+        "node": "UV Nodes",
+        "commit": "**UV Nodes**: UV inputs now apply alpha."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {

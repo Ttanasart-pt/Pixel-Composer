@@ -55,6 +55,8 @@ uniform vec2  spacing;
 
 uniform vec2  position;
 uniform float rotation;
+uniform vec2  scale;
+
 uniform int   shiftAxis;
 uniform float shiftAlt;
 
@@ -63,6 +65,7 @@ uniform int   pattern;
 void main() {
 	vec2 tx  = getUV(v_vTexcoord) * dimension;
 	     tx -= position;
+	     tx /= scale;
 	     tx *= mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
 	
 	vec2 repeatSize = surfDimension + spacing;
