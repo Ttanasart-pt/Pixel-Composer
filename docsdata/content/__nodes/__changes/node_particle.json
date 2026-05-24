@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.004",
+    "changes": [
+      {
+        "date": "2026-05-24T00:57:52.719Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Add the ability to override Steam workshop item in case of missing file ID."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.006",
     "changes": [
       {

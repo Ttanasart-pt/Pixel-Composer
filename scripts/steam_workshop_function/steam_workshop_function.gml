@@ -184,7 +184,7 @@ function Patreon_project_item(_file) constructor {
 		
 	}
 	
-	static drawThumbnail = function(_rx, _ry, _x, _y, _w, _h, _i) {
+	static drawThumbnail = function(_x, _y, _w, _h) {
 		var _spr = getPreviewSprite();
 		if(!sprite_exists(_spr)) return;
 		
@@ -220,7 +220,7 @@ function Patreon_project_item(_file) constructor {
 			draw_sprite_ui(THEME.loading, 0, _xc, _yc, 1, 1, current_time / 2, COLORS._main_icon, 1);
 			
 		} else 
-			drawThumbnail(_rx, _ry, _x0, _y0, _cw, _ch, 0);
+			drawThumbnail(_x0, _y0, _cw, _ch);
 			
 		if(_hov) draw_sprite_stretched_add(THEME.box_r5, 1, _x0, _y0, _cw, _ch, c_white, .5);
 		
@@ -437,7 +437,7 @@ function Steam_workshop_item() constructor {
 			return preview_sprite;
 		}
 		
-		static drawThumbnail = function(_rx, _ry, _x, _y, _w, _h, _i) {
+		static drawThumbnail = function(_x, _y, _w, _h) {
 			var _spr = getPreviewSprite();
 			
 			if(!sprite_exists(_spr)) return;
@@ -522,6 +522,75 @@ function Steam_workshop_item() constructor {
 	
 	////- Draw
 	
+	static drawStatic = function(_x0, _y0, _cw, _ch) {
+		var _th = line_get_height(f_p2b) + ui(4) + line_get_height(f_p4);
+		var _x1 = _x0 + _cw;
+		var _y1 = _y0 + _ch;
+		
+		var _fid  = file_id;
+		var _spr  = getPreviewSprite();
+		var _own  = struct_has(STEAM_SUBS_IDS, _fid);
+		var _addi = struct_has(STEAM_SUBSCRIBING, _fid);
+		
+		var _xc = (_x0 + _x1) / 2;
+		var _yc = (_y0 + _y1) / 2;
+		
+		if(_spr == -1) {
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y0, _cw, _ch, c_white, 1);
+			draw_sprite_ui(THEME.loading, 0, _xc, _yc, 1, 1, current_time / 2, COLORS._main_icon, 1);
+			
+		} else 
+			drawThumbnail(_x0, _y0, _cw, _ch);
+	
+		var _vote_up   = getVotesUp();
+		var _vote_down = getVotesDown();
+		var _vote_totl = _vote_up + _vote_down;
+		
+		var _vy = _y1 + ui(4);
+		var _vx = _x0;
+		var _vw = _cw;
+		var _vh = ui(2);
+		
+		if(_vote_totl == 0) {
+			draw_set_color(COLORS._main_icon);
+			draw_set_alpha(.5);
+			draw_rectangle(_vx, _vy, _vx + _vw, _vy + _vh, false);
+			draw_set_alpha(1);
+			
+		} else {
+			var _vote_rat = _vote_up / _vote_totl;
+			
+			draw_set_color(COLORS._main_value_negative);
+			draw_rectangle(_vx, _vy, _vx + _vw, _vy + _vh, false);
+			
+			draw_set_color(COLORS._main_value_positive);
+			draw_rectangle(_vx, _vy, _vx + _vw * _vote_rat, _vy + _vh, false);
+		}
+		
+		var _ty = _vy + ui(6);
+		
+		var _scis = gpu_get_scissor();
+		gpu_set_scissor(_x0, _ty, _cw, _th);
+		draw_set_color(COLORS.panel_bg_clear_inner);
+		draw_rectangle(_x0, _ty, _x1, _ty + _th, false);
+		
+		draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_text);
+		draw_text_add(_x0, _ty, title);
+		_ty += line_get_height(f_p2b);
+		
+		var _author = author.getName();
+		draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text_sub);
+		draw_text_add(_x0, _ty, _author);
+		gpu_set_scissor(_scis);
+		
+		if(author.getPatreon()) {
+			var _tx1 = _x0 + string_width(_author) + ui(4);
+			draw_sprite_ui(THEME.patreon_supporter, 0, _tx1, _ty + _ui(8), .65, .65, 0, COLORS._main_icon_dark, 1);
+            draw_sprite_ui(THEME.patreon_supporter, 1, _tx1, _ty + _ui(8), .65, .65, 0, COLORS._main_accent, 1);
+		}
+		
+	}
+	
 	static draw = function(_panel, _rx, _ry, _x0, _y0, _x1, _y1, _m, _hover, _focus, _title = true) {
 		var _th = line_get_height(f_p2b) + ui(4) + line_get_height(f_p4);
 		var _cw = _x1 - _x0;
@@ -541,7 +610,7 @@ function Steam_workshop_item() constructor {
 			draw_sprite_ui(THEME.loading, 0, _xc, _yc, 1, 1, current_time / 2, COLORS._main_icon, 1);
 			
 		} else 
-			drawThumbnail(_rx, _ry, _x0, _y0, _cw, _ch, 0);
+			drawThumbnail(_x0, _y0, _cw, _ch);
 		if(_hov) draw_sprite_stretched_add(THEME.box_r5, 1, _x0, _y0, _cw, _ch, c_white, .5);
 		
 		#region badges

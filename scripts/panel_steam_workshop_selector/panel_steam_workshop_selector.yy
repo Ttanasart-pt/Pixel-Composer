@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_steam_workshop_selector",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_steam_workshop_selector",
+  "parent":{
+    "name":"workshop",
+    "path":"folders/panels/_others/workshop.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

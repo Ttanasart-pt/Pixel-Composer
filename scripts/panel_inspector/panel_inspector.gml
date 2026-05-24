@@ -702,9 +702,30 @@ function Panel_Inspector() : PanelContent() constructor {
                     	
                     } else {
 	                	var _txt = __txt("panel_inspector_workshop_upload", "Upload to Steam Workshop");
-	                    if(buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_upload, 0, c_white) == 2) {
+	                	var b = buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_upload, 0, c_white);
+	                    if(b == 2) {
                             steam_ugc_create_project();
                             workshop_uploading = 2;
+                            
+                    	} else if(b == 3) {
+                    		menuCall("", [
+                    			menuItem("Upload to Steam Workshop",   function() /*=>*/ { 
+                    				steam_ugc_create_project(); 
+                    				workshop_uploading = 2; 
+                    			}),
+                    				
+                    			menuItem("Override Steam Workshop...", function() /*=>*/ { 
+                    				dialogPanelCall(new Panel_Steam_Workshop_Selector(function(_f) /*=>*/ {
+                    					workshop_uploading = 2; 
+                    					
+                    					var _fid = _f.file_id;
+                    					PROJECT.meta.file_id         = _fid;
+                    					PROJECT.meta.author_steam_id = STEAM_USER_ID;
+                    					
+                    					steam_ugc_update_project(false, "Overrided");
+                    				}));
+                				}),
+                			]);
                     	}
                     }
                     

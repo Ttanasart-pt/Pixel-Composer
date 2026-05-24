@@ -617,7 +617,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _llife = inputs[76].getValue(_time);
 		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg);
-		var _outSurf = surface_create(_dim[0], _dim[1], attrDepth());
+		var _outSurf = surface_create_valid(_dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, _type == PARTICLE_RENDER_TYPE.surface? sh_sample : noone);
 			draw_surface_safe(_bg);

@@ -158,6 +158,8 @@
 			PREFERENCES.widget_draw_order                 = [ "Reset", "Set Default" ];
 			PREFERENCES.widget_draw_reset                 = true;
 			PREFERENCES.widget_draw_default               = true;
+			
+			PREFERENCES.workshop_run_profile_graph        = false;
 		#endregion
 		
 		#region WIDGET

@@ -194,6 +194,11 @@ function Steam_workshop_profile(_sid) constructor {
 		var _ava = getAvatar();
 		if(!sprite_exists(_ava)) return undefined;
 		
+		if(!PREFERENCES.workshop_run_profile_graph) {
+			drawProfileSimple(_px, _py, _ps); 
+			return undefined;
+		}
+		
 		if(!is_struct(profile_graph_str)) {
 			drawProfileSimple(_px, _py, _ps);
 			return undefined;
@@ -219,7 +224,6 @@ function Steam_workshop_profile(_sid) constructor {
 		}
 		
 		if(!surface_exists(profile_graph_surfaces[1]) || _update) {
-			
 			var _animm = profile_graph_runner.project.animator;
 			var _anLen = _animm.frames_total;
 			var _anSpd = _animm.framerate;

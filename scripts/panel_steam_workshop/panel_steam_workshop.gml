@@ -1073,8 +1073,8 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			var _amo = _lam;
 			if(_myPage) _amo++;
 			
-			var _ls  = ui(32);
-			var _col = _ps / _ls;
+			var _ls  = ui(30);
+			var _col = floor(_ps / _ls);
 			var _row = ceil(_amo / _col);
 			
 			var _ly = _py + _ps + ui(8);
@@ -1094,6 +1094,8 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 					var _xx = _cx + j * _ls;
 					
 					var _indx = i * _col + j;
+					if(_indx > _lam) break;
+					
 					var _bspr = THEME.link;
 					var _btxt = "";
 					
@@ -1202,7 +1204,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				}
 				
 				_aamo -= _col;
-				_ly += _ls;
+				_ly   += _ls;
 			}
 			
 			if(link_dragging != undefined) {
@@ -1432,16 +1434,19 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			var _authorLen = array_length(_author.pageContent);
 			var _action    = undefined;
 			
+			var _xc = _w / 2;
+			
 			for( var c = 0; c < _authorLen; c++ ) {
 				var _cont = _author.pageContent[c];
 					
 				var _ty = _y + ui(8);
 				var _yc = _ty + _th / 2;
 				
-				var _title  = "";
-				var _target = undefined;
-				var _tspr   = THEME.workshop_sort;
-				var _tind   = 0;
+				var _title   = "";
+				var _target  = undefined;
+				var _tspr    = THEME.workshop_sort;
+				var _tind    = 0;
+				var _fileAmo = 0;
 				
 				switch(_cont.type) {
 					case "Popular":
@@ -1452,6 +1457,9 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 						_tind = 0;
 						
 						_y += _th + ui(20);
+						
+						_fileAmo = array_length(authorPopular);
+						if(_fileAmo == 0) break;
 						
 						var _hix = ui(8);
 						var _hiy = _y;
@@ -1488,6 +1496,9 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 						
 						_y += _th + ui(20);
 						
+						_fileAmo = array_length(authorRecents);
+						if(_fileAmo == 0) break;
+						
 						for( var i = 0, n = min(_maxCol, array_length(authorRecents)); i < n; i++ ) {
 							var _fx = _pd + i * (_fs + _pd);
 							var _fy = _y;
@@ -1519,6 +1530,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 							var _file = authorRecents[i];
 							if(!array_exists(_file.tags, _tag)) continue;
 							
+							_fileAmo++;
 							var _fx = _pd + _ind * (_fs + _pd);
 							var _fy = _y;
 							
@@ -1531,6 +1543,12 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				}
 				
 				if(has(_cont, "title")) _title = _cont.title;
+				
+				if(_fileAmo == 0) {
+					draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+					draw_text_add(_xc, _y + ui(8), __txt("No data"));
+					_y += ui(24);
+				}
 				
 				var _tx = ui(44);
 				draw_set_text(f_h5, fa_left, fa_center, COLORS._main_text_accent);
@@ -2078,7 +2096,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			var _thx = ui(16);
 			var _thy = _yy;
 		
-			item_viewing.drawThumbnail(_rx, _ry, _thx, _thy, _ths, _ths, 1);
+			item_viewing.drawThumbnail(_thx, _thy, _ths, _ths);
 		#endregion
 		
 		#region actions
