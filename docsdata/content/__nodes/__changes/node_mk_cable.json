@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.004",
+    "changes": [
+      {
+        "date": "2026-05-24T07:32:39.009Z",
+        "node": "",
+        "commit": "**MK Cables**: Add areas source type."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.003",
     "changes": [
       {

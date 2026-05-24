@@ -531,7 +531,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		insp1button = button(function(fr) /*=>*/ {return convertTo3D()}).setTooltip(__txt("Convert to 3D"))
 			.setIcon(s_node_path_3d).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
-		
 	#endregion
 	
 	////- Anchor
@@ -1268,7 +1267,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var cont = false;
 				var _ax0 = 0, _ay0 = 0;
 				var _ax1 = 0, _ay1 = 0;
-		
+				var _inp = inputs[input_fix_len + i];
+				
 				if(array_length(_a) < 6) continue;
 				
 				if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
@@ -1289,6 +1289,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var _anHov = 0;
 				draw_set_color(COLORS._main_accent);
 				
+				if(PANEL_INSPECTOR.prop_hover == _inp)
+					_anHov = 1;
+					
 				if(drag_point == i) {
 					_anHov = 1;
 					
@@ -1309,11 +1312,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 				
 				var _type = anchor_focus == i? 2 : 1;
+				
 				draw_anchor(_anHov, xx, yy, ui(8), _type);
 				
 				if(attributes.display_name || _anHov) {
 					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
-					draw_text(xx + ui(4), yy - ui(4), inputs[input_fix_len + i].name);
+					draw_text(xx + ui(4), yy - ui(4), _inp.name);
 				}
 				
 			}

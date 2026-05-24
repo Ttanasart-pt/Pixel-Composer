@@ -6,6 +6,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Paths
 	newInput( 0, nodeValue_PathNode( "Path" )).rejectArray();
+	newInput(14, nodeValue_Range(    "Range",     [0,1]  ));
 	newInput( 4, nodeValue_Slider(   "Shift",      0     ));
 	newInput( 5, nodeValue_Bool(     "Invert",     false ));
 	newInput( 7, nodeValue_Int(      "Resolution", 16    )).setValidator(VV_min(2)).rejectArray();
@@ -16,6 +17,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(11, nodeValue_RotRange( "Revolve Range", [0,360] ));
 	newInput(13, nodeValue_Rotation( "Revolve Offset", 0  ));
 	newInput(10, nodeValue_Slider(   "Ratio",      .5     ));
+	newInput(15, nodeValue_Slider(   "Scale",       1     )).setCurvable(16, CURVE_DEF_11);
 	
 	newInput( 3, nodeValue_Int(      "Subdivision", 16    )).setValidator(VV_min(2)).rejectArray();
 	
@@ -23,14 +25,14 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 2, nodeValue_Surface( "Texture" ));
 	newInput(12, nodeValue_Vec2(    "UV Position", [0,0] ));
 	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1] ));
-	// input 14
+	// input 17
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Output",    false ],  1, 
-		[ "Paths",     false ],  0,  4,  5,  7, 
-		[ "Revolve",   false ],  8,  9, 11, 13, 10,  3, 
+		[ "Paths",     false ],  0, 14,  4,  5,  7, 
+		[ "Revolve",   false ],  8,  9, 11, 13, 10, 15, 16,  3, 
 		[ "Rendering", false ],  2, 12,  6, 
 	];
 	
@@ -67,6 +69,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _dim  = getInputData( 1);
 			
 			var _path = getInputData( 0);
+			var _prng = getInputData(14);
 			var _sft  = getInputData( 4);
 			var _inv  = getInputData( 5);
 			var _pres = getInputData( 7);
@@ -76,6 +79,9 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _rev  = getInputData(11);
 			var _shf  = getInputData(13);
 			var _rat  = getInputData(10);
+			var _sca  = getInputData(15);
+			var _scaC = getInputData(16), _scaleCurve = inputs[15].attributes.curved? new curveMap(_scaC) : undefined;
+			
 			var _sub  = getInputData( 3);
 			
 			var _surf = getInputData( 2);
@@ -112,7 +118,8 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _prog = clamp(frac(i * _isb + _sft), 0., 0.9999);
 			if(_inv) _prog = 1 - _prog;
 			
-			_path.getPointRatio(_prog, 0, _pp);
+			var _samp = lerp(_prng[0], _prng[1], _prog);
+			_path.getPointRatio(_samp, 0, _pp);
 			
 			var _x = _pp.x;
 			var _y = _pp.y;
@@ -150,30 +157,33 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var a0 = lerp(ast, aed, (j+0) * stp);
 					var a1 = lerp(ast, aed, (j+1) * stp);
 					
+					var sc0 = _sca * (_scaleCurve? _scaleCurve.getFast((j+0) * stp) : 1);
+					var sc1 = _sca * (_scaleCurve? _scaleCurve.getFast((j+1) * stp) : 1);
+					
 					for( var i = 0; i < _pres - 1; i++ ) {
 						var p0 = _pnt[i+0];
 						var p1 = _pnt[i+1];
 						
-						var p0dx = lengthdir_x(p0[4], a0);
-						var p0dy = lengthdir_y(p0[4], a0);
+						var p0dx = lengthdir_x(p0[4], a0) * sc0;
+						var p0dy = lengthdir_y(p0[4], a0) * sc0;
 						
 						var p0x = p0[2] + p0dx * rax + p0dy * rbx;
 						var p0y = p0[3] + p0dx * ray + p0dy * rby;
 						
-						var p1dx = lengthdir_x(p1[4], a0);
-						var p1dy = lengthdir_y(p1[4], a0);
+						var p1dx = lengthdir_x(p1[4], a0) * sc0;
+						var p1dy = lengthdir_y(p1[4], a0) * sc0;
 						
 						var p1x = p1[2] + p1dx * rax + p1dy * rbx;
 						var p1y = p1[3] + p1dx * ray + p1dy * rby;
 						
-						var p2dx = lengthdir_x(p0[4], a1);
-						var p2dy = lengthdir_y(p0[4], a1);
+						var p2dx = lengthdir_x(p0[4], a1) * sc1;
+						var p2dy = lengthdir_y(p0[4], a1) * sc1;
 						
 						var p2x = p0[2] + p2dx * rax + p2dy * rbx;
 						var p2y = p0[3] + p2dx * ray + p2dy * rby;
 						
-						var p3dx = lengthdir_x(p1[4], a1);
-						var p3dy = lengthdir_y(p1[4], a1);
+						var p3dx = lengthdir_x(p1[4], a1) * sc1;
+						var p3dy = lengthdir_y(p1[4], a1) * sc1;
 						
 						var p3x = p1[2] + p3dx * rax + p3dy * rbx;
 						var p3y = p1[3] + p3dx * ray + p3dy * rby;

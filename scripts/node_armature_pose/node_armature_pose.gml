@@ -553,7 +553,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _sel = false;
 			var  cc  = c_white;
 			
-			if(struct_has(boneMap, _bne.ID)) {
+			if(has(boneMap, _bne.ID)) {
 				var _inp = boneMap[$ _bne.ID];
 				_sel = _inp.value_from == noone || is(_inp.value_from.node, Node_Vector4);
 				
