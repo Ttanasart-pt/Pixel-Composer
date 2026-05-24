@@ -17,28 +17,32 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- Nodes
 	
+	lua_state_current = lua_state;
 	is_beginning = false;
 	
-	static getState = function() /*=>*/ {return inputs[3].getValue()};
+	static getState = function() /*=>*/ {return lua_state_current};
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _code = getInputData(0);
+		var _stat = getInputData(2);
 		var _type = getInputData(1);
-		update_on_frame = _type;
 		
-		var stat = getState();
-		if(!lua_state_exists(stat)) 
-			stat = lua_state;
+		update_on_frame   = _type;
+		
+		var _stat = getState();
+		if(!lua_state_exists(_stat)) 
+			_stat = lua_state;
+		lua_state_current = _stat;
 			
-		if(!lua_state_exists(stat)) {
+		if(!lua_state_exists(_stat)) {
 			noti_warning("Lua state error");
 			return;
 		}
 		
-		lua_projectData(stat);
-		outputs[0].setValue(stat);
+		lua_projectData(_stat);
+		outputs[0].setValue(_stat);
 		
-		try		 { lua_add_code(stat, _code);         }
+		try		 { lua_add_code(_stat, _code);         }
 		catch(e) { noti_warning(exception_print(e), noone, self); }
 	}
 	

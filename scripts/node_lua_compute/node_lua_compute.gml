@@ -29,9 +29,6 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		[ "Inputs",     true ], 
 	];
 
-	argument_name = [];
-	argument_val  = [];
-	
 	lua_dtype = [ "Number", "String", "Surface", "Struct" ];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -53,7 +50,11 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Nodes
 	
-	static getState = function() /*=>*/ {return inputs[3].getValue()};
+	lua_state_current = lua_state;
+	argument_name = [];
+	argument_val  = [];
+	
+	static getState = function() /*=>*/ {return lua_state_current};
 	
 	static refreshDynamicInput = function() {
 		var _in = [];
@@ -129,16 +130,19 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		var _stat = getInputData(3);
+		var _exec = getInputData(4);
+		
 		var _func = getInputData(0);
 		var _dimm = getInputData(1);
-		var _exec = getInputData(4);
-		update_on_frame = _exec;
 		
-		var stat = getState();
-		if(!lua_state_exists(stat)) 
-			stat = lua_state;
+		update_on_frame   = _exec;
+		
+		if(!lua_state_exists(_stat)) 
+			_stat = lua_state;
+		lua_state_current = _stat;
 			
-		if(!lua_state_exists(stat)) {
+		if(!lua_state_exists(_stat)) {
 			noti_warning("Lua state error");
 			return;
 		}
@@ -147,14 +151,14 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length )
 			array_push(argument_val, getInputData(i + 2));
 		
-		lua_projectData(stat);
+		lua_projectData(_stat);
 		addCode();
 		
 		var res = 0;
-		try	     { res = lua_call_w(stat, _func, argument_val);   } 
+		try	     { res = lua_call_w(_stat, _func, argument_val);   } 
 		catch(e) { noti_warning(exception_print(e), noone, self); }
 		
-		outputs[0].setValue(stat);
+		outputs[0].setValue(_stat);
 		outputs[1].setValue(res);
 	}
 	

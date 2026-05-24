@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.004",
+    "changes": [
+      {
+        "date": "2026-05-24T01:31:11.901Z",
+        "node": "Lua",
+        "commit": "**Lua**: Fix state error when loading project."
+      }
+    ]
+  }
+]

@@ -55,7 +55,9 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Nodes
 	
-	static getState = function() /*=>*/ {return inputs[3].getValue()};
+	lua_state_current = lua_state;
+	
+	static getState = function() /*=>*/ {return lua_state_current};
 	
 	static refreshDynamicInput = function() {
 		var _in = [];
@@ -125,16 +127,19 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		var _stat = getInputData(3);
+		var _exec = getInputData(4);
+		
 		var _func = getInputData(0);
 		var _dimm = getInputData(1);
-		var _exec = getInputData(4);
-		update_on_frame = _exec;
 		
-		var stat = getState();
-		if(!lua_state_exists(stat)) 
-			stat = lua_state;
+		update_on_frame   = _exec;
+		
+		if(!lua_state_exists(_stat)) 
+			_stat = lua_state;
+		lua_state_current = _stat;
 			
-		if(!lua_state_exists(stat)) {
+		if(!lua_state_exists(_stat)) {
 			noti_warning("Lua state error");
 			return;
 		}
@@ -143,18 +148,18 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length )
 			array_push(argument_val, getInputData(i + 2));
 		
-		lua_projectData(stat);
+		lua_projectData(_stat);
 		addCode();
 		
 		var _outSurf = outputs[1].getValue();
 		_outSurf = surface_verify(_outSurf, _dimm[0], _dimm[1], attrDepth());
 		
 		surface_set_target(_outSurf);
-			try      { lua_call_w(stat, _func, argument_val); }
+			try      { lua_call_w(_stat, _func, argument_val); }
 			catch(e) { noti_warning(exception_print(e), noone, self);     }
 		surface_reset_target();
 		
-		outputs[0].setValue(stat);
+		outputs[0].setValue(_stat);
 		outputs[1].setValue(_outSurf);
 	}
 	
