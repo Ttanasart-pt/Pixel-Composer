@@ -37,11 +37,11 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 3, 
-		[ "Output",  false     ], 0, 19, 
-		[ "Anchors", false     ], 15, 1, 2, 9, 10, 16, 17, 18, 22, 23, 
-		[ "Cable",   false     ], 5, 14, 4, 8, 
+		[ "Output",  false     ],  0, 19, 
+		[ "Anchors", false     ], 15,  1,  2,  9, 10, 16, 17, 18, 22, 23, 
+		[ "Cable",   false     ],  5, 14,  4,  8, 
 		[ "Swing",   false, 11 ], 12, 13, 
-		[ "Render",  false     ], 6, 20, 7, 21, 
+		[ "Render",  false     ],  6, 20,  7, 21, 
 	];
 	
 	////- Nodes
