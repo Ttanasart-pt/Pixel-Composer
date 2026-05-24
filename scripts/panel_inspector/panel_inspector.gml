@@ -2145,8 +2145,24 @@ function Panel_Inspector() : PanelContent() constructor {
                         }
                         
                         if(uploading_thumbnail)
-                        	draw_sprite_ui(THEME.loading_s, 0, _wdx + _wdw - ui(16), yy + wh - ui(16), 
-                        		1, 1, current_time / 2, COLORS._main_icon);
+                        	draw_sprite_ui(THEME.loading_s, 0, _wdx + _wdw - ui(16), yy + wh - ui(16), 1, 1, current_time / 2, COLORS._main_icon);
+                        
+                        if(PROJECT.path != "") {
+	                        var brx = _wdx + ui(4);
+	                        var bry = yy + ui(4);
+	                        var brs = ui(20);
+	                        var _bt = __txt("Refresh");
+	                        
+	                        var b = buttonInstant_Pad(THEME.button_hide, brx, bry, brs, brs, _m, _hover, _focus, _bt, THEME.refresh_icon);
+	                        if(b) hv = false;
+	                        if(b == 2) {
+	                        	sprite_delete_safe(PROJECT.thumbnailSpr);
+	                        	file_delete_safe(PROJECT.thumbnailPath);
+	                        	
+	                        	PROJECT.thumbnailPath = "";
+	                        	PROJECT.thumbnailSpr  = undefined;
+	                        }
+                        }
                         
                         if(hv) {
                         	TOOLTIP = __txt("Change Thumbnail") + "...";
