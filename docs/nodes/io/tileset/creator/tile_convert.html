@@ -1983,6 +1983,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\uv\create\uv_height.html" class="sidebar-file">Uv Height</a>
             </div>
+</li><li id="uv_isometric"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\uv\create\uv_isometric.html" class="sidebar-file">Uv Isometric</a>
+            </div>
 </li><li id="uv_polar"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\uv\create\uv_polar.html" class="sidebar-file">Uv Polar</a>
@@ -2534,6 +2538,10 @@
 </li><li id="point_sdf"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\values\number\point\point_sdf.html" class="sidebar-file">Point Sdf</a>
+            </div>
+</li><li id="points_remap"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\values\number\point\points_remap.html" class="sidebar-file">Points Remap</a>
             </div>
 </li><li id="scatter_point_lattice"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
@@ -3176,6 +3184,10 @@
 </li><li id="path_offset"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\values\path\modifier\path_offset.html" class="sidebar-file">Path Offset</a>
+            </div>
+</li><li id="path_remap"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\values\path\modifier\path_remap.html" class="sidebar-file">Path Remap</a>
             </div>
 </li><li id="path_reverse"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
@@ -6073,6 +6085,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_area.html">Uv Area</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_cartesian.html">Uv Cartesian</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_height.html">Uv Height</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_isometric.html">Uv Isometric</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_polar.html">Uv Polar</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\modify/uv_blend.html">Uv Blend</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_blast_inline.html">Mk Blast Inline</a></li>
@@ -6178,6 +6191,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\values\number\point/point_3d_camera.html">Point 3D Camera</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\number\point/point_in_area.html">Point In Area</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\number\point/point_sdf.html">Point Sdf</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\values\number\point/points_remap.html">Points Remap</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\number\point/scatter_point_lattice.html">Scatter Point Lattice</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\number\point/scatter_point_lattice_3d.html">Scatter Point Lattice 3D</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\number\point/scatter_points.html">Scatter Points</a></li>
@@ -6298,6 +6312,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\modifier/path_extends.html">Path Extends</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\modifier/path_map_area.html">Path Map Area</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\modifier/path_offset.html">Path Offset</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\values\path\modifier/path_remap.html">Path Remap</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\modifier/path_reverse.html">Path Reverse</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\modifier/path_shift.html">Path Shift</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\values\path\modifier/path_skew.html">Path Skew</a></li>
@@ -6736,7 +6751,7 @@
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
     }
-</script><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_tile_convert/node_tile_convert.gml">/scripts/node_tile_convert/node_tile_convert.gml</a></li><li><span>Shader [sh_tiler_convert]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_tiler_convert/sh_tiler_convert.fsh">/shaders/sh_tiler_convert/sh_tiler_convert.fsh</a></li><li><span>Shader [sh_tiler_convert_mask]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_tiler_convert_mask/sh_tiler_convert_mask.fsh">/shaders/sh_tiler_convert_mask/sh_tiler_convert_mask.fsh</a></li><li><span>Shader [sh_draw_tile_map]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_draw_tile_map/sh_draw_tile_map.fsh">/shaders/sh_draw_tile_map/sh_draw_tile_map.fsh</a></li><li><span>Shader [sh_sample]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sample/sh_sample.fsh">/shaders/sh_sample/sh_sample.fsh</a></li></ul>
+</script><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_tile_convert/node_tile_convert.gml">/scripts/node_tile_convert/node_tile_convert.gml</a></li><li><span>Shader [sh_sample]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sample/sh_sample.fsh">/shaders/sh_sample/sh_sample.fsh</a></li><li><span>Shader [sh_tiler_convert_mask]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_tiler_convert_mask/sh_tiler_convert_mask.fsh">/shaders/sh_tiler_convert_mask/sh_tiler_convert_mask.fsh</a></li><li><span>Shader [sh_tiler_convert]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_tiler_convert/sh_tiler_convert.fsh">/shaders/sh_tiler_convert/sh_tiler_convert.fsh</a></li><li><span>Shader [sh_draw_tile_map]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_draw_tile_map/sh_draw_tile_map.fsh">/shaders/sh_draw_tile_map/sh_draw_tile_map.fsh</a></li></ul>
         </div>
     </div>
 
