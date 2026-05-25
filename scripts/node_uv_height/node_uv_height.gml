@@ -17,6 +17,8 @@ function Node_UV_Height(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, 
 	newInput( 6, nodeValue_Slider( "Blue", 0 )).setShaderProp("blue");
 	// 8
 	
+	outputs[0].setCustomData(global.SURFACE_UV_JUNC);
+	
 	input_display_list = [
 		[ "Output",      true ],  0,  1,  2,  3, 
 		[ "Height Map", false ],  4,  5,  7,  

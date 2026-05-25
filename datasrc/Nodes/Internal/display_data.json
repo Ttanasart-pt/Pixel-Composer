@@ -973,6 +973,7 @@
             "Node_UV_Cartesian", 
             "Node_UV_Polar", 
             "Node_UV_Area", 
+            "Node_UV_Isometric", 
             "Node_UV_Height", 
             { "label": "/Modify" },
             "Node_UV_Blend", 

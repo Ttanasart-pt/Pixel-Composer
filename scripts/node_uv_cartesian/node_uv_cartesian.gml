@@ -20,6 +20,8 @@ function Node_UV_Cartesian(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 9, nodeValue_Slider(   "Blue", 0    )).setShaderProp("blue");
 	// 12
 	
+	outputs[0].setCustomData(global.SURFACE_UV_JUNC);
+	
 	input_display_list = [
 		[ "Output",    true ],  0,  1,  2,  3, 
 		[ "UV",       false ],  4, 10,  5,  6, 11, 

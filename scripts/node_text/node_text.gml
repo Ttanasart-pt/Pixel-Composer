@@ -339,7 +339,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _waveS = _data[20];
 			var _waveP = _data[21];
 			
-			var _type  = _data[23];
+			var _trim  = _data[23];
 			var _trimC = _data[25];
 			var _trimR = _data[24];
 			var _trimF = _data[26];
@@ -399,7 +399,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(str == "") {
 			_outData[0] = surface_verify(_outData[0], 1, 1);
 			surface_clear(_outData[0]);
-			
 			return _outData;
 		}
 		
@@ -414,7 +413,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 			
 		#region trim
-			if(_type) {
+			if(_trim) {
 				var _typAmo = 0;
 				var _typSpa = [];
 				

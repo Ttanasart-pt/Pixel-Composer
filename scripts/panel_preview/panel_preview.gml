@@ -1361,13 +1361,13 @@ function Panel_Preview() : PanelContent() constructor {
                 if(_hkstr != "" && __tool_show_key) {
                 	draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text);
 	            	var hkw = string_width(_hkstr)  + ui(4);
-	            	var hkh = string_height(_hkstr) + ui(4);
+	            	var hkh = string_height(_hkstr) + ui(0);
 	            	
-	            	var _hkx0 = _x1 + ui(2) - hkw;
-	            	var _hky0 = _y1 + ui(2) - hkh;
+	            	var _hkx0 = _x1 - hkw;
+	            	var _hky0 = _y1 - hkh;
 	            	
 	            	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, hkw, hkh, COLORS.panel_bg_clear_inner);
-	            	draw_text_add(_hkx0 + hkw - ui(2), _hky0 + hkh - ui(2), _hkstr);
+	            	draw_text_add(_hkx0 + hkw - ui(2), _hky0 + hkh - ui(0), _hkstr);
                 }
             }
             
@@ -1457,13 +1457,13 @@ function Panel_Preview() : PanelContent() constructor {
         	if(_act && _hkstr != "") {
             	draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text);
             	var hkw = string_width(_hkstr)  + ui(4);
-            	var hkh = string_height(_hkstr) + ui(4);
+            	var hkh = string_height(_hkstr) + ui(0);
             	
-            	var _hkx0 = _x1 + ui(2) - hkw;
-            	var _hky0 = _y1 + ui(2) - hkh;
+            	var _hkx0 = _x1 - hkw;
+            	var _hky0 = _y1 - hkh;
             	
             	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, hkw, hkh, COLORS.panel_bg_clear_inner);
-            	draw_text_add(_hkx0 + hkw - ui(2), _hky0 + hkh - ui(2), _hkstr);
+            	draw_text_add(_hkx0 + hkw - ui(2), _hky0 + hkh - ui(0), _hkstr);
             }
         	
         	if(hori) xx += ts + 1;

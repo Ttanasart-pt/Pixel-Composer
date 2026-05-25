@@ -67,36 +67,36 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return w_hovering;
 	}
 	
-	static step = function() {}
-	
-	static processData = function(_outSurf, _data, _array_index = 0) { 
-		var _seed = _data[ 7];
-		
-		var _surf = _data[ 0];
-		var _detl = _data[ 6];
-		var _phas = _data[ 8];
-		var _size = _data[ 9];
-		
-		var _shap = _data[16];
-		var _itr  = _data[10]; _itr  = max(0.01, _itr);
-		var _idet = _data[11]; _idet = power(_idet, 1 / _itr);
-		var _isiz = _data[12]; _isiz = power(_isiz, 1 / _itr);
-		var _offs = _data[20];
-		
-		var _blnd = _data[13];
-		var _subs = _data[21];
-		var _bori = _data[22];
-		var _fItr = _data[14];
-		var _skpf = _data[17];
-		
-		var _iBlnd = _data[18], _palLen = array_length(_iBlnd);
-		var _palSt = _data[23];
-		var _pBlnd = _data[19]; _pBlnd = max(_pBlnd, 1);
-		
-		var _decorn      = _data[24];
-		var _decornThres = _data[25];
-		
-		inputs[19].setVisible(!_palSt);
+	static processData = function(_outSurf, _data, _array_index = 0) {
+		#region data
+			var _seed = _data[ 7];
+			
+			var _surf = _data[ 0];
+			var _detl = _data[ 6];
+			var _phas = _data[ 8];
+			var _size = _data[ 9];
+			
+			var _shap = _data[16];
+			var _itr  = _data[10]; _itr  = max(0.01, _itr);
+			var _idet = _data[11]; _idet = power(_idet, 1 / _itr);
+			var _isiz = _data[12]; _isiz = power(_isiz, 1 / _itr);
+			var _offs = _data[20];
+			
+			var _blnd = _data[13];
+			var _subs = _data[21];
+			var _bori = _data[22];
+			var _fItr = _data[14];
+			var _skpf = _data[17];
+			
+			var _iBlnd = _data[18], _palLen = array_length(_iBlnd);
+			var _palSt = _data[23];
+			var _pBlnd = _data[19]; _pBlnd = max(_pBlnd, 1);
+			
+			var _decorn      = _data[24];
+			var _decornThres = _data[25];
+			
+			inputs[19].setVisible(!_palSt);
+		#endregion
 		
 		var _dim  = surface_get_dimension(_surf);
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {

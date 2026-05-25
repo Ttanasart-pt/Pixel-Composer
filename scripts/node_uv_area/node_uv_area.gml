@@ -20,6 +20,8 @@ function Node_UV_Area(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	newInput(10, nodeValue_Slider(     "Blue",   0    )).setShaderProp("blue");
 	// 12
 	
+	outputs[0].setCustomData(global.SURFACE_UV_JUNC);
+	
 	input_display_list = [
 		[ "Output",    true ],  0,  1,  2,  3, 
 		[ "UV",       false ],  4,  5,  6,  7, 11, 

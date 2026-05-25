@@ -16,6 +16,8 @@ function Node_UV_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Blending", false ], 2, 
 	];
 	
+	outputs[0].setCustomData(global.SURFACE_UV_JUNC);
+	
 	////- Nodes
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
