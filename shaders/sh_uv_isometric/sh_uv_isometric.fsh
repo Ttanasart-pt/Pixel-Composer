@@ -37,10 +37,12 @@ uniform int   side;
 
 uniform vec2  dimension;
 uniform vec2  position;
+uniform vec2  offset;
 uniform vec2  anchor;
 uniform float rotation;
 uniform vec2  tile;
 uniform int   repeat;
+uniform int   invert;
 
 uniform vec2  xRange;
 uniform vec2  yRange;
@@ -73,12 +75,13 @@ void main() {
 	}
 	
     mat2 isoAxis  = mat2(newX.x, newY.x, newX.y, newY.y);
-    vtx = .5 + (vtx - .5) * inverse(isoAxis);
-		
+    
+    vtx -= offset / dimension;
+    vtx  = (vtx - anchor) * (invert == 1? isoAxis : inverse(isoAxis));
     vtx -= position / dimension;
     vtx *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
     vtx *= tile;
-    vtx -= anchor;
+    vtx += anchor;
 		 
 	if(repeat == 0) { if(vtx.x < 0. || vtx.y < 0. || vtx.x >= 1. || vtx.y >= 1.) discard; }
 	else if(repeat == 1) vtx  = fract(fract(vtx) + 1.);

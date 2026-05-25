@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.005",
+    "changes": [
+      {
+        "date": "2026-05-25T06:53:45.453Z",
+        "node": "",
+        "commit": "--New Points Remap, Path Remap nodes."
+      }
+    ]
+  }
+]
