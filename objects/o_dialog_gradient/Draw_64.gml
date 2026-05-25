@@ -155,7 +155,7 @@ draggable = true;
 	draw_text(_ttx + ui(8), _tty + _tth / 2, __txt("Ctrl+Drag"));
 	
 	draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
-	draw_text(_ttx + ui(8 + 64), _tty + _tth / 2, __txt("Partial Gradient"));
+	draw_text(_ttx + ui(8 + 64), _tty + _tth / 2, __txt("Gradient Sweep"));
 #endregion
 
 #region gradient tools

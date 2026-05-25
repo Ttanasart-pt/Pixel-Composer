@@ -6,6 +6,11 @@
         "date": "2026-05-25T01:36:58.658Z",
         "node": "Repeat",
         "commit": "**Repeat**: Fix sort Y override global rotation property."
+      },
+      {
+        "date": "2026-05-25T03:02:05.621Z",
+        "node": "Palette Selector",
+        "commit": "**Palette Selector**: Add recents section."
       }
     ]
   },

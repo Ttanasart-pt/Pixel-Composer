@@ -159,6 +159,9 @@ function __PaletteColor(_color = c_black) constructor {
 			var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, "Set Palette", THEME.node_goto_16,,, .85);
 			if(b) { select = false; isHover = false; };
 			if(b == 2) {
+				array_insert(PALETTES_REC_DIR.content, 0, p);
+				PALETTES_REC_DIR.content = array_unique(PALETTES_REC_DIR.content);
+				
 				setPalette(array_clone(_palt)); 
 				onModify(palette);
 			}
@@ -188,7 +191,13 @@ function __PaletteColor(_color = c_black) constructor {
 		
 		if(isHover && mouse_rpress(_foc)) {
 			menuCall("palette_window_preset_menu", [
-				menuItem(__txt("Set Palette"), function(p) /*=>*/ { setPalette(array_clone(p)); onModify(palette); }).setParam(_palt),
+				menuItem(__txt("Set Palette"), function(p) /*=>*/ { 
+					array_insert(PALETTES_REC_DIR.content, 0, p.file);
+					PALETTES_REC_DIR.content = array_unique(PALETTES_REC_DIR.content);
+					
+					setPalette(array_clone(p.palette)); 
+					onModify(palette);
+				}).setParam({ file: p, palette: _palt }),
 				menuItem(__txt("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
 				menuItem(__txt("palette_editor_delete", "Delete palette"),      function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
 			]);
@@ -222,7 +231,8 @@ function __PaletteColor(_color = c_black) constructor {
 				var bx = _x + ww - ui(2) - bs;
 				var by = _y + ui(2);
 				
-				if(!_favFol) {
+				var addable = !_favFol && _sub != PALETTES_REC_DIR;
+				if(addable) {
 					var bt = __txt("Add preset to folder") + "...";
 					var bc = [COLORS._main_icon, COLORS._main_value_positive];
 					var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, bt, THEME.add, 0, bc, .85);
@@ -248,8 +258,13 @@ function __PaletteColor(_color = c_black) constructor {
 			
 			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + lbh/2, .8, COLORS._main_icon);
 			var _tx = _x + ui(24);
+			
 			if(_favFol) {
 				draw_sprite_ui_uniform(THEME.favorite, 1, _tx + ui(4), _y + lbh/2, .5, CDEF.yellow, 1);
+				_tx += ui(12);
+				
+			} else if(_sub == PALETTES_REC_DIR) {
+				draw_sprite_ui_uniform(THEME.recent_16, 1, _tx + ui(4), _y + lbh/2, .75, COLORS._main_icon, 1);
 				_tx += ui(12);
 			}
 			

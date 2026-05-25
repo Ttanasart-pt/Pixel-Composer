@@ -42,6 +42,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, PROJ_SURF)}; 
 	
+		////- =/Source
 	newInput( 6, nodeValue_EScroll(  "Source",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image" ] ));
 	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
 	newInput(13, nodeValue_Surface(  "Distribution Map" ));
@@ -51,10 +52,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index", "Depth" ] });
 		
 	newInput( 9, nodeValue_EButton(  "Distribution",    1, [ "Uniform", "Random", "Poisson" ] ));
+	newInput(35, nodeValue_RotRange( "Angle Range",    [0,360] ));
+	
+		////- =/Amount
 	newInput(31, nodeValue_Bool(     "Auto Amount",     false  ));
 	newInput( 2, nodeValue_Int(      "Amount",          8      )).setValidator(VV_min(0));
 	newInput(30, nodeValue_IVec2(    "Uniform Amount", [4,4]   ));
-	newInput(35, nodeValue_RotRange( "Angle Range",    [0,360] ));
 	newInput(44, nodeValue_Float(    "Distance",        8      )).setValidator(VV_min(0));
 	newInput(46, nodeValue_Int(      "Attempt",         8      ));
 	
@@ -112,7 +115,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_list = [ 10, 
 		[ "Output",       false ],  1, 
 		[ "Surfaces",      true ],  0, 15, 24, 25, 26, 27, 
-		[ "Scatter",      false ],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 46, 
+		[ "Scatter",      false ],  6,  5, 13, 14, 17,  9, 35,
+			[ "/Amount",  false ], 31,  2, 30, 44, 46, 
 			[ "/Path",     true ], 19, 38, 20, 45, 21, 22, 
 		[ "Position",     false ], 40, 33, 50, 51, 36, 49,  39, 37, 
 		[ "Rotation",     false ], 48,  7,  4, 52, 53, 32, 

@@ -34,7 +34,8 @@
 
 #region palette
 	globalvar PALETTES_FOLDER;
-	globalvar PALETTES_FAV, PALETTES_FAV_DIR;
+	globalvar PALETTES_FAV_DIR, PALETTES_FAV;
+	globalvar PALETTES_REC_DIR;
 	
 	function __initPalette() {
 		var root = DIRECTORY + "Palettes/";
@@ -69,6 +70,9 @@
 		
 		PALETTES_FOLDER.sort(function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)});
 		array_insert(PALETTES_FOLDER.subDir, 0, PALETTES_FAV_DIR);
+		
+		PALETTES_REC_DIR = new DirectoryObject("Recents");
+		array_insert(PALETTES_FOLDER.subDir, 1, PALETTES_REC_DIR);
 	}
 	
 	function __togglePaletteFav(_file) {

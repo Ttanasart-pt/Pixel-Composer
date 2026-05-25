@@ -542,7 +542,12 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			if(_sub.path == "Favorites") {
 				draw_sprite_ui_uniform(THEME.favorite, 1, _tx + ui(4), _y + lbh/2, .5, CDEF.yellow, 1);
 				_tx += ui(12);
+				
+			} else if(_sub == PALETTES_REC_DIR) {
+				draw_sprite_ui_uniform(THEME.recent_16, 1, _tx + ui(4), _y + lbh/2, .75, COLORS._main_icon, 1);
+				_tx += ui(12);
 			}
+			
 			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(_tx, _y + lbh/2, _sub.name);
 			
