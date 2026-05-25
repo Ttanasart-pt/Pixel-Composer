@@ -39,9 +39,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	
 	static toggleFunction = function(_dat = undefined) /*=>*/ {
 		if(!is_undefined(_dat)) return func(_dat);
-		if(params != noone)     return func(params);
-			
-		return func();
+		return params == noone? func() : func(params);
 	}
 	
     static deactivate   = function() /*=>*/ { active = false; return self; }
@@ -157,7 +155,11 @@ function menuItems_gen(strs) {
 	for( var i = 0, n = array_length(strs); i < n; i++ ) {
 		var _s = strs[i];
 		
-		if(_s == -1)      { array_push(_menu, _s); continue; }
+		if(_s == -1) { 
+			array_push(_menu, _s); 
+			continue; 
+		}
+		
 		if(is_string(_s)) { 
 			if(has(MENU_ITEMS, _s)) array_push(_menu, struct_get(MENU_ITEMS, _s)); 
 			else if(has(self, _s))  array_push(_menu, struct_get(self, _s)); 
@@ -165,11 +167,33 @@ function menuItems_gen(strs) {
 		}
 		
 		if(is(_s, MenuItem)) { array_append(_menu, _s); continue; }
-		if(!is_struct(_s) || !has(MENUITEM_CONDITIONS, _s.cond)) continue;
+		if(!is_struct(_s)) continue;
 		
-		var _res = MENUITEM_CONDITIONS[$ _s.cond]();
-		if(_res) array_append(_menu, menuItems_gen(_s.items));
-		else if(has(_s, "items_inv")) array_append(_menu, menuItems_gen(_s.items_inv));
+		if(has(_s, "cond")) {
+			if(!has(MENUITEM_CONDITIONS, _s.cond)) continue;
+			
+			var _res = MENUITEM_CONDITIONS[$ _s.cond]();
+			if(_res) array_append(_menu, menuItems_gen(_s.items));
+			else if(has(_s, "items_inv")) array_append(_menu, menuItems_gen(_s.items_inv));
+			continue;
+		}
+		
+		if(has(_s, "name")) {
+			var smenu = menuItems_gen(_s.items);
+			var spr   = noone;
+			for( var j = 0, m = array_length(smenu); j < m; j++ ) {
+				var sm = smenu[j];
+				var sp = sm.getSpr();
+				if(sprite_exists(sp)) {
+					spr = sp;
+					break;
+				}
+			}
+			
+			var _itm = menuItemShelf(_s.name, function(sDat) /*=>*/ {return submenuCall(undefined, sDat)}, spr).setParam(smenu);
+			array_append(_menu, _itm);
+			continue;
+		}
 	}
     
 	return _menu;

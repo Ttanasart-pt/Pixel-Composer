@@ -170,7 +170,8 @@ function gradientObject(color = ca_black) constructor {
 		return keys[_len - 1].value; //after last color
 	}
 	
-	static evalFast = function(position) { return caches[position * cacheRes]; }
+	static evalFast     = function(p) /*=>*/ {return caches[p * cacheRes]};
+	static evalLoopFast = function(p) /*=>*/ {return caches[(p * cacheRes) % (cacheRes + 1)]};
 	
 	////- Draw
 	

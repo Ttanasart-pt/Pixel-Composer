@@ -1022,7 +1022,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			-1,
 			"graph_add_Node_Number",
 			"graph_add_Node_Counter",
-	    	"graph_add_Node_Path",
+			{ name  : "Paths", items : [ "graph_add_Node_Path", "graph_add_Node_Path_Shape", ] },
 			-1,
 			"graph_add_Node_Shape",
 	    	"graph_add_Node_Text",

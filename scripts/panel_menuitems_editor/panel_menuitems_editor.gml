@@ -10,6 +10,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 	
 	w      = min(WIN_W - ui(100), ui(1000));
 	h      = ui(480);
+	hg     = ui(22);
 	list_w = (w - padding * 2) / 2;
 	list_h = h - padding * 2;
 	
@@ -60,10 +61,17 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 	#endregion
 	
 	#region all list
-		search_string = "";
-		tb_search = textBox_Text(function(s) /*=>*/ { setSearch(s); }).setFont(f_p3).setEmpty().setAutoupdate();
+		item_renaming = undefined;
+		tb_rename     = textBox_Text(function(s) /*=>*/ { 
+			if(item_renaming == undefined) return;
+			item_renaming.name = s;
+			item_renaming      = undefined;
+		}).setFont(f_p3).setEmpty();
 		
 		show_type = 0;
+		
+		search_string = "";
+		tb_search = textBox_Text(function(s) /*=>*/ { setSearch(s); }).setFont(f_p3).setEmpty().setAutoupdate();
 		
 		static setSearch = function(s = search_string) {
 			search_string = s;
@@ -102,21 +110,54 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		
 	#endregion
 	
-	function drawCondition(hover, focus, _menu, xx, yy, ww, hh, _m) {
-		var _cond = is_string(_menu)? _menu : _menu.cond;
-		var _hov  = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hh + ui(2) - 1));
+	function drawGroup(hover, focus, _menu, xx, yy, ww, _m, _cont = false) {
+		if(has(_menu, "name")) return drawSubmenu(   hover, focus, _menu, xx, yy, ww, _m, _cont );
+		if(has(_menu, "cond")) return drawCondition( hover, focus, _menu, xx, yy, ww, _m, _cont );
+		return false;
+	}
+	
+	function drawSubmenu(hover, focus, _menu, xx, yy, ww, _m, _cont = false) {
+		var _item  = _menu.items;
+		var _cat_h = (array_length(_item) + 1) * (hg + ui(4));
 		
-		var _cc = COLORS._main_accent;
-		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hh, _cc, 1);
+		var _name = _menu.name;
+		var _hov  = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hg + ui(2) - 1));
+		
+		var _cc = CDEF.cyan;
+		if(_cont) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, _cat_h, _cc, 1);
+		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hg, _cc, 1);
 		draw_set_text(f_p3, fa_left, fa_center, _cc);
-		draw_text_add(xx + ui(8), yy + hh / 2, _cond);
+		if(item_renaming == _menu) {
+			tb_rename.setFocusHover(pFOCUS, pHOVER);
+			tb_rename.drawParam(new widgetParam(xx, yy, ww, hg, _name, undefined, _m));
+			
+		} else 
+			draw_text_add(xx + ui(8), yy + hg / 2, _name);
 		
-		if(_hov) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, ww, hh, _cc, .5);
+		if(_hov) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, ww, hg, _cc, .5);
 		
 		return _hov;
 	}
 	
-	function drawMenu(hover, focus, _menu, xx, yy, ww, hh, _m) {
+	function drawCondition(hover, focus, _menu, xx, yy, ww, _m, _cont = false) {
+		var _item  = _menu.items;
+		var _cat_h = (array_length(_item) + 1) * (hg + ui(4));
+		
+		var _cond = is_string(_menu)? _menu : _menu.cond;
+		var _hov  = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hg + ui(2) - 1));
+		
+		var _cc = COLORS._main_accent;
+		if(_cont) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, _cat_h, _cc, 1);
+		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hg, _cc, 1);
+		draw_set_text(f_p3, fa_left, fa_center, _cc);
+		draw_text_add(xx + ui(8), yy + hg / 2, _cond);
+		
+		if(_hov) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, ww, hg, _cc, .5);
+		
+		return _hov;
+	}
+	
+	function drawMenu(hover, focus, _menu, xx, yy, ww, _m) {
 		var _txt  = _menu;
 		var _tc   = COLORS._main_text;
 		var _spr  = noone;
@@ -134,25 +175,25 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			_spr = _mObj.spr;
 		}
 		
-		var _hov = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hh + ui(2) - 1));
+		var _hov = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hg + ui(2) - 1));
 		
 		if(_hov) {
-			draw_sprite_stretched(THEME.box_r2_clr, 0, xx, yy, ww, hh);
-			draw_sprite_stretched(THEME.box_r2_clr, 1, xx, yy, ww, hh);
+			draw_sprite_stretched(THEME.box_r2_clr, 0, xx, yy, ww, hg);
+			draw_sprite_stretched(THEME.box_r2_clr, 1, xx, yy, ww, hg);
 			
 		} else {
-			draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hh, c_white, .3);
+			draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hg, c_white, .3);
 			
 		}
 		
 		var tx = xx + ui(24 + 4);
 		
 		draw_set_text(f_p3, fa_left, fa_center, _tc);
-		draw_text_add(tx, yy + hh / 2, _txt); 
+		draw_text_add(tx, yy + hg / 2, _txt); 
 		tx += string_width(_txt) + ui(8);
 		
 		draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
-		draw_text_add(tx, yy + hh / 2, _menu);
+		draw_text_add(tx, yy + hg / 2, _menu);
 		
 		if(is_array(_spr)) {
 			_spri = _spr[1];
@@ -161,9 +202,9 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		
 		if(is_callable(_spr)) _spr = _spr();
 		if(sprite_exists(_spr)) {
-			var _ss = min((hh - ui(4)) / sprite_get_width(_spr), (hh - ui(4)) / sprite_get_height(_spr));
+			var _ss = min((hg - ui(4)) / sprite_get_width(_spr), (hg - ui(4)) / sprite_get_height(_spr));
 			gpu_set_texfilter(true);
-			draw_sprite_ext(_spr, _spri, xx + ui(12), yy + hh / 2, _ss, _ss, 0, COLORS._main_icon);
+			draw_sprite_ext(_spr, _spri, xx + ui(12), yy + hg / 2, _ss, _ss, 0, COLORS._main_icon);
 			gpu_set_texfilter(false);
 		}
 		
@@ -174,7 +215,6 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var sw  = sp_current_list.surface_w;
 		var hh  = ui(4);
-		var hg  = ui(22);
 		
 		var xx = 0;
 		var yy = _y + ui(4);
@@ -197,7 +237,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			var _menu = menu[i];
 			
 			if(!is_struct(_menu)) { // string
-				var _hov = drawMenu(hover, focus, _menu, xx, yy, sw, hg, _m);
+				var _hov = drawMenu(hover, focus, _menu, xx, yy, sw, _m);
 				if(_hov) {
 					hoverC = noone;
 					hoverI = _m[1] > yy + hg / 2? i + 1 : i;
@@ -221,9 +261,8 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			var _item  = _menu.items;
 			var _cat_h = (array_length(_item) + 1) * (hg + ui(4));
 			
-			var _cc = COLORS._main_accent;
-			draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, sw, _cat_h, _cc, 1);
-			var _hov   = drawCondition(hover, focus, _menu, xx, yy, sw, hg, _m);
+			var _cc = COLORS._main_accent, _hov;
+			_hov = drawGroup(hover, focus, _menu, xx, yy, sw, _m, true);
 			
 			if(drag_type == 1 && hover && point_in_rectangle(_m[0], _m[1], xx, yy + hg / 2, xx + sw, yy + _cat_h + ui(2) - 1)) {
 				hoverC = noone;
@@ -257,12 +296,23 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 				}
 			}
 			
-			var bx = sw - hg;
+			var bs = ui(18);
+			var bx = sw - bs - ui(2);
 			var by = yy;
-			if(buttonInstant(noone, bx, by, hg, hg, _m, hover, focus, "", THEME.cross_12, 0, COLORS._main_value_negative, .5) == 2) {
+			if(buttonInstant(noone, bx, by, bs, hg, _m, hover, focus, "", THEME.cross_12, 0, COLORS._main_value_negative, .75) == 2) {
 				hoverC = noone;
 				delI   = i;
-			} 
+			} bx -= bs+1;
+			
+			if(has(_menu, "name")) {
+				if(buttonInstant(noone, bx, by, bs, hg, _m, hover, focus, "", THEME.rename, 0, COLORS._main_icon_light, .75, .5) == 2) {
+					hoverC = noone;
+					item_renaming = _menu;
+					tb_rename.activate(_menu.name);
+					
+				} bx -= bs+1;
+					
+			}
 			
 			yy += hg + ui(4);
 			hh += hg + ui(4);
@@ -273,7 +323,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			for( var j = 0, m = array_length(_item); j < m; j++ ) {
 				var _subMenu = _item[j];
 				
-				var _hov = drawMenu(hover, focus, _subMenu, _sx, yy, _sw, hg, _m);
+				var _hov = drawMenu(hover, focus, _subMenu, _sx, yy, _sw, _m);
 				
 				if(_hov) {
 					if(drag_type == 0) {
@@ -321,8 +371,12 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 						else array_insert(hoverC.items, hoverI, dragging);
 						
 					} else {
-						     if(is_struct(dragging)) array_insert(menu, hoverI, dragging);
-						else if(is_string(dragging)) array_insert(menu, hoverI, { cond: dragging, items: [] });
+						     if(is_struct(dragging))   array_insert(menu, hoverI, dragging);
+						else if(is_string(dragging)) {
+							if(dragging == "submenu") 
+								 array_insert(menu, hoverI, { name: "submenu", items: [] });
+							else array_insert(menu, hoverI, { cond: dragging,  items: [] });
+						}
 					}
 				}
 			}
@@ -344,7 +398,6 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		var sw = sp_all_list.surface_w;
 		var sh = sp_all_list.surface_h;
 		
-		var hg = ui(22);
 		var hh = array_length(all_menu) * (hg + ui(4)) + ui(16);
 		
 		var xx = 0;
@@ -362,11 +415,9 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			
 			var _hov = false;
 			
-			if(show_type == 0)
-				var _hov = drawMenu(hover, focus, _menu, xx, yy, sw, hg, _m);
-			else {
-				var _hov = drawCondition(hover, focus, _menu, xx, yy, sw, hg, _m);
-			}
+			if(show_type == 0) 
+			     _hov = drawMenu(  hover, focus, _menu, xx, yy, sw, _m );
+			else _hov = drawGroup( hover, focus, _menu, xx, yy, sw, _m );
 			
 			if(_hov && mouse_lpress(focus)) {
 				dragging  = _menu;
@@ -421,6 +472,13 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			setShowType(!show_type);
 		tx += th + ui(4); tw -= th + ui(4);
 		
+		var bc = COLORS._main_icon;
+		if(buttonInstant(THEME.button_hide, tx, ty, th, th, [mx,my], pHOVER, pFOCUS, "Submenu", THEME.view_group, 2, bc, 1, .8) == 2) {
+			dragging  = "submenu";
+			drag_type = 1;
+		}
+		tx += th + ui(4); tw -= th + ui(4);
+		
 		var bx = tx + tw - th;
 		var bc = CARRAY.button_negative;
 		if(buttonInstant(THEME.button_hide, bx, ty, th, th, [mx,my], pHOVER, pFOCUS, "Reset", THEME.refresh_16, 0, bc) == 2) 
@@ -437,13 +495,12 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.draw(tx, ty, tw, th, search_string, [mx,my]);
 		
-		
 	}
 	
 	function drawGUI() {
 		if(dragging != "") {
-			     if(drag_type == 0) drawMenu(      false, false, dragging, mouse_mx, mouse_my, sp_current_list.surface_w, ui(22), infinity );
-			else if(drag_type == 1) drawCondition( false, false, dragging, mouse_mx, mouse_my, sp_current_list.surface_w, ui(22), infinity );
+			     if(drag_type == 0) drawMenu(  false, false, dragging, mouse_mx, mouse_my, sp_current_list.surface_w, infinity );
+			else if(drag_type == 1) drawGroup( false, false, dragging, mouse_mx, mouse_my, sp_current_list.surface_w, infinity );
 		}
 	}
 	

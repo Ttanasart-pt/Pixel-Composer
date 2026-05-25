@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.005",
+    "changes": [
+      {
+        "date": "2026-05-25T01:36:58.670Z",
+        "node": "",
+        "commit": "**Repeat**: Fix sort Y override global rotation property."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {

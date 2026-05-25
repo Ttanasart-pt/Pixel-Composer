@@ -46,14 +46,18 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Pattern
 	newInput( 3, nodeValue_EScroll(  "Pattern",          0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
+	
+		////- =/Pattern
 	newInput( 9, nodeValue_Vec2(     "Start Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(32, nodeValue_Rotation( "Start Rotation",   0      )).setHotkey("R");
 	newInput(22, nodeValue_Anchor(   "Global Anchor",   [ 0, 0] ));
-	newInput(45, nodeValue_Rotation( "Global Rotation",  0      ))
-	newInput( 2, nodeValue_Int(      "Amount",           4      ));
-	newInput(18, nodeValue_Int(      "Column",           4      ));
+	newInput(45, nodeValue_Rotation( "Global Rotation",  0      ));
 	newInput( 7, nodeValue_RotRange( "Angle Range",     [0,360] ));
 	newInput( 8, nodeValue_Float(    "Radius",          .25     )).setUnitSimple();
+	
+		////- =/Repeat
+	newInput( 2, nodeValue_Int(      "Amount",           4      ));
+	newInput(18, nodeValue_Int(      "Column",           4      ));
 	
 	////- =Path
 	newInput(11, nodeValue_PathNode( "Path",            noone   )).setTooltip("Make each copy follow along path.");
@@ -62,12 +66,12 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(40, nodeValue_Bool(     "Rotate Along Path", false ));
 	
 	////- =Position
-	newInput( 4, nodeValue_Vec2(       "Shift Position",  [.5,0]     )).setUnitSimple().setCurvable(38, CURVE_DEF_11, "Over Copy");
-	newInput(26, nodeValue_EButton(    "Stack",             0,       )).setChoices([ "None", "X", "Y" ]).setTooltip("Place each copy next to each other, taking surface dimension into account.");
-	newInput(19, nodeValue_Vec2(       "Shift Column",     [0,.5]    )).setUnitSimple();
-	newInput(39, nodeValue_Anchor(     "Anchor"                      ));
-	newInput(15, nodeValue_Vec2_Range( "Random Position", [0,0,0,0]  ));
-	newInput(44, nodeValue_Bool(      "Use Shift as Endpoint", false ));
+	newInput( 4, nodeValue_Vec2(     "Shift Position",  [.5,0]     )).setUnitSimple().setCurvable(38, CURVE_DEF_11, "Over Copy");
+	newInput(26, nodeValue_EButton(  "Stack",             0,       )).setChoices([ "None", "X", "Y" ]).setTooltip("Place each copy next to each other, taking surface dimension into account.");
+	newInput(19, nodeValue_Vec2(     "Shift Column",     [0,.5]    )).setUnitSimple();
+	newInput(39, nodeValue_Anchor(   "Anchor"                      ));
+	newInput(15, nodeValue_Range2(   "Random Position", [0,0,0,0]  ));
+	newInput(44, nodeValue_Bool(     "Use Shift as Endpoint",false ));
 	
 	////- =Rotation
 	newInput(33, nodeValue_Rotation( "Base Rotation",     0          ));
@@ -75,24 +79,27 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(20, nodeValue_RotRand(  "Random Rotation",  [0,0,0,0,0] ));
 	
 	////- =Scale
-	newInput(29, nodeValue_Bool(       "Uniform Scale",  true     ))
-	newInput( 6, nodeValue_Float(      "Scale X",        1,       )).setCurvable(10, CURVE_DEF_11, "Over Copy")
-	newInput(41, nodeValue_Float(      "Scale Y",        1,       )).setCurvable(42, CURVE_DEF_11, "Over Copy")
-	newInput(21, nodeValue_Vec2_Range( "Random Scale",  [1,1,1,1] ));
+	newInput(29, nodeValue_Bool(   "Uniform Scale",  true     ));
+	newInput( 6, nodeValue_Float(  "Scale X",        1,       )).setCurvable(10, CURVE_DEF_11, "Over Copy");
+	newInput(41, nodeValue_Float(  "Scale Y",        1,       )).setCurvable(42, CURVE_DEF_11, "Over Copy");
+	newInput(21, nodeValue_Range2( "Random Scale",  [1,1,1,1] ));
 	
 	////- =Render
 	newInput(43, nodeValue_Bool(     "Inverse Draw Order", false  ));
-	newInput(45, nodeValue_Bool(     "Sort Y",             false  ));
-	newInput(34, nodeValue_EScroll(  "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
-	newInput(14, nodeValue_Gradient( "Color Over Copy",   gra_white           )).setMappable(30);
-	newInput(23, nodeValue_Gradient( "Random Color",      gra_white           ));
+	newInput(46, nodeValue_Bool(     "Sort Y",             false  ));
+	newInput(34, nodeValue_EScroll(  "Blend Mode",         0, [ "Normal", "Additive", "Maximum" ] ));
+	
+		////- =/Color
+	newInput(14, nodeValue_Gradient( "Color Over Copy",    gra_white )).setMappable(30);
+	newInput(47, nodeValue_Float(    "Color Copy Scale",   1         ));
+	newInput(23, nodeValue_Gradient( "Random Color",       gra_white ));
 	
 	////- =Deprecated
 	newInput(28, nodeValue_Bool(     "Wrap Index", true ));
-	/* deprecated */ newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]             ));
-	/* deprecated */ newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10      ));
-	/* deprecated */ newInput(27, nodeValue_Color(    "Animator blend",     ca_white          ));
-	// input 46
+	newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]        ));
+	newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10 ));
+	newInput(27, nodeValue_Color(    "Animator blend",     ca_white     ));
+	// input 48
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
@@ -200,13 +207,17 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	b_gridFill = button(function() /*=>*/ {return gridFill()}).setIcon(THEME.fill, 0, COLORS._main_icon).setTooltip("Fill");
 	
 	input_display_list = [
-		[ "Surfaces",  true ],  0, 35, 36, 37,  1, 16, 17,
-		[ "Pattern",  false ],  3,  9, 32, 22, 45,  2, 18,  7,  8, 
-		[ "Path",      true ], 11, 12, 13, 40, 
-		[ "Position", false ],  4, 38, 26, 19, 39, 15, 44, 
-		[ "Rotation", false ], 33,  5, 20, 
-		[ "Scale",    false ], 29,  6, 10, 41, 42, 21, 
-		[ "Render",   false ], 43, 45, 34, 14, 30, 23, 
+		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 17,
+		[ "Pattern",      false ],  3, 
+			[ "/Pattern", false ],  9, 32, 22, 45,  7,  8, 
+			[ "/Repeat",  false ],  2, 18,
+		[ "Path",          true ], 11, 12, 13, 40, 
+		[ "Position",     false ],  4, 38, 26, 19, 39, 15, 44, 
+		[ "Rotation",     false ], 33,  5, 20, 
+		[ "Scale",        false ], 29,  6, 10, 41, 42, 21, 
+		[ "Render",       false ], 43, 46, 34, 
+			[ "/Color",   false ], 14, 30, 47, 23, 
+			
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
 		animator_renderer, 28, 
@@ -429,15 +440,15 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _grad         = _data[14];
 			var _grad_map     = _data[30];
-			var _grad_range   = _data[31];
-			var _grad_use_map = inputs[14].attributes.mapped && is_surface(_grad_map)
+			var _grad_range   = _data[31], _grad_use_map = inputs[14].attributes.mapped && is_surface(_grad_map)
+			var _grad_scal    = _data[47];
 			var _cran         = _data[23];
 			
 			var _arr    = _data[16];
 			var _sed    = _data[17];
 			
 			var _invers = _data[43];
-			var _sortY  = _data[45];
+			var _sortY  = _data[46];
 			var _col    = _data[18];
 			var _cls    = _data[19];
 			var _bld_md = _data[34];
@@ -651,7 +662,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					
 				cc = grad_sampler.getPixel(_grad_sx, _grad_sy);
 			} else 
-				cc = _grad.evalFast(_prg);
+				cc = _grad.evalLoopFast(_prg * _grad_scal);
+				
 			cc = colorMultiply(cc, _cran.evalFast(random(1)));
 			
 			minx = min(minx, posx);
