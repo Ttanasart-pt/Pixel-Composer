@@ -885,6 +885,8 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             if(is_handle(jun)) {
+            	if((filtering && filter_text != "") || filter_animation) continue;
+                
             	if(_flag == INSPECTOR_FLAG.input_only) continue;
             	
             	var _type = asset_get_type(jun);
@@ -895,6 +897,8 @@ function Panel_Inspector() : PanelContent() constructor {
             	}
             	
             } else if(is(jun, Inspector_Spacer)) {                    // SPACER
+            	if((filtering && filter_text != "") || filter_animation) continue;
+                
             	if(!jun.active) continue;
                 var _hh = ui(jun.h);
                 var _yy = yy + _hh / 2 - jun.lshf;
@@ -908,6 +912,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is(jun, Inspector_Label)) {            // TEXT
+            	if((filtering && filter_text != "") || filter_animation) continue;
+                
                 var _txt = jun.text;
                 if(_txt == "") continue;
                 
@@ -920,6 +926,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is(jun, Inspector_Custom_Renderer)) {
+                if((filtering && filter_text != "") || filter_animation) continue;
+                
                 if(jun.popupPanel != noone) {
         			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon, .5);
         			draw_text_add(con_w / 2, yy + ui(24) / 2 - ui(2), __txt("Pop-up content"));
@@ -942,6 +950,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is(jun, widget)) {
+            	if((filtering && filter_text != "") || filter_animation) continue;
             	if(!jun.visible) continue;
             	
                 var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, undefined, _m, x, y)
@@ -953,6 +962,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is_array(jun)) { // Section
+                if((filtering && filter_text != "") || filter_animation) continue;
                 
                 var _key = array_safe_get_fast(jun, 0, "");
                 var subk = string_starts_with(_key, "/");
@@ -1136,7 +1146,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
         	
         	if(is(jun, attribute_property)) {
-        		if(filter_animation) continue;
+        		if(filtering && filter_text != "" || filter_animation) continue;
         		if(filtering && filter_text != "" && !string_match_lower(filter_text, jun.name)) continue;
         		
         		var _name = jun.name;

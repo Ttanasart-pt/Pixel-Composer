@@ -339,6 +339,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspector_collapse = {};
 		inspector_edited   = {};
 		inspector_animated = {};
+		inspector_count    = {};
 		
 		reactive_on_hover  = false;
 		

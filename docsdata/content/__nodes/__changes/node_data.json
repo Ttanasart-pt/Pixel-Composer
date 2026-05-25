@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.005",
+    "changes": [
+      {
+        "date": "2026-05-25T02:06:09.272Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Sections and custom widgets will be hidden when using filter."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.002",
     "changes": [
       {
