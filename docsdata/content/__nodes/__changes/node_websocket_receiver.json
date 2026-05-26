@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.006",
+    "changes": [
+      {
+        "date": "2026-05-26T02:37:51.186Z",
+        "node": "",
+        "commit": "- New Remote Terminal addon. - Terminal command now support calling any global functions in the software."
+      }
+    ]
+  }
+]

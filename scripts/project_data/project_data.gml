@@ -802,7 +802,7 @@ function Project() constructor {
 		
 		if(has(_map, "addon")) {
 			addons = _map.addon;
-			struct_foreach(addons, function(_name, _value) /*=>*/ { addonLoad(_name, false); });
+			struct_foreach(addons, function(_name, _value) /*=>*/ { loadAddon(_name, false); });
 		}
 		
 		if(has(_map, "cPanels")) {

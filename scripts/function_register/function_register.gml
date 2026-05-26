@@ -168,23 +168,26 @@ function call(fn, args = undefined) {
 	if(args == undefined) return fn();
 	if(!is_array(args))   return fn(args);
 	
-	switch(array_length(args)) {
-		case  0 : fn();																																						break;
-		case  1 : fn(args[0]);																																				break;
-		case  2 : fn(args[0], args[1]);																																		break;
-		case  3 : fn(args[0], args[1], args[2]);																															break;
-		case  4 : fn(args[0], args[1], args[2], args[3]);																													break;
-		case  5 : fn(args[0], args[1], args[2], args[3], args[4]);																											break;
-		case  6 : fn(args[0], args[1], args[2], args[3], args[4], args[5]);																									break;
-		case  7 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);																						break;
-		case  8 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);																				break;
-		case  9 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);																		break;
-		case 10 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);																break;
-		case 11 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]);													break;
-		case 12 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11]);											break;
-		case 13 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12]);								break;
-		case 14 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13]);						break;
-		case 15 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14]);			break;
-		case 16 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15]);	break;
+	var a = args;
+	switch(array_length(a)) {
+		case  0 : return fn();
+		case  1 : return fn(a[0]);
+		case  2 : return fn(a[0], a[1]);
+		case  3 : return fn(a[0], a[1], a[2]);
+		case  4 : return fn(a[0], a[1], a[2], a[3]);
+		case  5 : return fn(a[0], a[1], a[2], a[3], a[4]);
+		case  6 : return fn(a[0], a[1], a[2], a[3], a[4], a[5]);
+		case  7 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
+		case  8 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
+		case  9 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
+		case 10 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
+		case 11 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10]);
+		case 12 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11]);
+		case 13 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12]);
+		case 14 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13]);
+		case 15 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14]);
+		case 16 : return fn(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15]);
 	}
+	
+	return undefined;
 }

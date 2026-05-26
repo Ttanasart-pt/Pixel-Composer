@@ -175,13 +175,13 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.prefKey    != noone) _wdw -= ui(24) + ui(4);
 				if(_prop.getDefault != noone) _wdw -= ui(24) + ui(4);
 				
-				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, undefined, [ mx, my ], x, y).setFont(font);
+				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, undefined, _mm, x, y).setFont(font);
 				var wdgh   = _widg.drawParam(params) + padd; 
 				
 				if(_prop.action != noone) {
 					var _key = _prop.action.hotkey;
 					
-					if(_whover && !_widg.inBBOX([ mx, my ]) && mouse_rpress()) {
+					if(_whover && !_widg.inBBOX(_mm) && mouse_rpress()) {
 						selecting_key = _key;
 						
 						var context_menu_settings = [

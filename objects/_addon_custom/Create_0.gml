@@ -29,16 +29,17 @@ event_inherited();
 			if(struct_has(meta, "panels")) {
 				panels = meta.panels;
 				
-				if(_openDialog) {
-					var arr = variable_struct_get_names(panels);
-					for( var i = 0, n = array_length(arr); i < n; i++ ) {
-						var _key = arr[i];
-						var pane = panels[$ _key];
+				var arr = variable_struct_get_names(panels);
+				for( var i = 0, n = array_length(arr); i < n; i++ ) {
+					var _key = arr[i];
+					var pane = panels[$ _key];
 					
-						if(struct_has(pane, "main") && pane.main)
-							dialogPanelCall(new addonPanel(self, pane));
-					}
+					if(pane[$ "main"])
+						panelMain = pane;
 				}
+				
+				if(_openDialog && panelMain)
+					dialogPanelCall(new addonPanel(self, panelMain));
 			}
 			
 			if(struct_has(meta, "context_menu_callbacks")) {

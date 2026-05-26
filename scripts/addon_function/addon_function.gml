@@ -51,32 +51,14 @@ function addonContextSubMenu(_name, _content) constructor {
 	menu_item = menuItem(name, function(_dat) { return submenuCall(_dat, content); }).setIsShelf();
 }
 
-function addonTrigger(_addon, _openDialog = true) {
-	if(addonActivated(_addon))	addonUnload(_addon);
-	else						addonLoad(_addon, _openDialog);
+function getAddon(_addonName) { return ADDON_MAP[$ _addonName]; }
+
+function loadAddon(_addonName, _openDialog = true) { 
+	var _addon = getAddon(_addonName);
+	if(_addon) _addon.activate(_openDialog);
 }
 
-function addonActivated(_addon) {
-	var _name = filename_name_only(_addon);
-	with(_addon_custom) if(name == _name) return true;
-	return false;
-}
-
-function addonLoad(_addon, _openDialog = true) {
-	var _name = filename_name_only(_addon);
-	var addonPath = DIRECTORY + "Addons/" + _name;
-	if(!directory_exists(addonPath)) return;
-	
-	with(_addon_custom) if(name == _name) return;
-	
-	with(instance_create(0, 0, _addon_custom))
-		init(addonPath, _openDialog);
-}
-
-function addonUnload(_addon) {
-	var _name = filename_name_only(_addon);
-	var addonPath = DIRECTORY + "Addons/" + _name;
-	if(!directory_exists(addonPath)) return;
-	
-	with(_addon_custom) if(name == _name) instance_destroy();
+function unloadAddon(_addonName, _openDialog = true) { 
+	var _addon = getAddon(_addonName);
+	if(_addon) _addon.deactivate(_openDialog);
 }

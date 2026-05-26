@@ -1,26 +1,24 @@
 function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Websocket Sender";
 	
-	newInput(0, nodeValue_Int("Port", 22800));
+	////- =Connection
+	newInput( 5, nodeValue_Text( "Target", "127.0.0.1" ));
+	newInput( 0, nodeValue_Int(  "Port",   22800       ));
 	
-	newInput(1, nodeValue_Enum_Scroll("Data type",  0, [ "Struct", "Surface", "File", "Buffer" ]));
-	
-	newInput(2, nodeValue_Struct("Struct"));
-	
-	newInput(3, nodeValue_Surface("Surface"));
-	
-	newInput(4, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load)
-		.nonValidate();
-	
-	newInput(5, nodeValue_Text("Target", "127.0.0.1"));
-	
-	newInput(6, nodeValue_Buffer());
+	////- =Data
+	newInput( 1, nodeValue_EScroll( "Data type",  0, [ "Struct", "Surface", "File", "Buffer" ] ));
+	newInput( 2, nodeValue_Struct(  "Struct"  ));
+	newInput( 3, nodeValue_Surface( "Surface" ));
+	newInput( 4, nodeValue_Path(    "Path"    )).setDisplay(VALUE_DISPLAY.path_load).nonValidate();
+	newInput( 6, nodeValue_Buffer());
+	// 7
 	
 	input_display_list = [ 
 		["Connection", false], 5, 0, 
 		["Data",       false], 1, 2, 3, 4, 6 
 	];
+	
+	////- Node
 	
 	port        = 0;
 	url         = "";

@@ -1,5 +1,8 @@
 /// @description 
 #region load
-	name = "";
-	menu = [];
+	name   = "";
+	menu   = [];
+	
+	panels    = {};
+	panelMain = undefined;
 #endregion

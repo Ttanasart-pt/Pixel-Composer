@@ -88,14 +88,10 @@
         registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,           global_theme_reload        ).setMenu("reload_theme")
         
         registerFunction("", "Addons",              "",     MOD_KEY.none, function(_dat) /*=>*/ {
-            var arr = [
-                MENU_ITEMS.addons,
-                menuItem(__txt("panel_menu_addons_key", "Key displayer"), function() /*=>*/ {return instance_toggle(addon_key_displayer)}),
-                -1
-            ];
+            var arr = [ MENU_ITEMS.addons, -1 ];
             
             for( var i = 0, n = array_length(ADDONS); i < n; i++ )
-                array_push(arr, menuItem(ADDONS[i].name, function(d) /*=>*/ {return addonTrigger(d.name)}).setParam(ADDONS[i]));
+                array_push(arr, menuItem(ADDONS[i].name, function(d) /*=>*/ {return d.trigger()}).setParam(ADDONS[i]));
             
             return submenuCall(_dat, arr);
         }).setMenu("addon_menu", THEME.addon_icon, true)

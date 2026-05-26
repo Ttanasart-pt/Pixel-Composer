@@ -18,7 +18,7 @@ function cmd_error_param(command) {
 }
 
 function cmd_submit(command) {
-	if(command == "") return noone;
+	if(command == "") return undefined;
 	array_push(CMD, cmdLineIn(command));
 	array_push(CMDIN, command);
 	
@@ -47,7 +47,7 @@ function cmd_submit(command) {
 			var _txt = $"Toggled debug flag: {flg} = {global.FLAG[$ flg]? "True" : "False"}";
 			array_push(CMD, cmdLine(_txt, COLORS._main_value_positive) );
 			log_console(_txt, true);
-			break;
+			return _txt;
 		
 		case "set":
 			if(array_length(cmd) < 3) { cmd_error_param(cmd_type); break; }
@@ -77,7 +77,7 @@ function cmd_submit(command) {
 			var _txt = $"Set global variable: {key} = {val}";
 			array_push(CMD, cmdLine(_txt, COLORS._main_value_positive) );
 			log_console(_txt, true);
-			break;
+			return _txt;
 		
 		case "render":
 			PROGRAM_ARGUMENTS._rendering = 1;
@@ -91,25 +91,30 @@ function cmd_submit(command) {
 		case "print":
 			if(array_length(cmd) < 2) { cmd_error_param(cmd_type); break; }
 			print(cmd[1]);
-			break;
+			return cmd[1];
 		
 		case "netlog":
+			var res = "";
+		
 			if(array_length(cmd) == 1) {
 				for( var i = 0, n = array_length(NETWORK_LOG); i < n; i++ ) {
 					var _log = NETWORK_LOG[i];
-					print($"{_log.time} - {_log.txt}");
+					res += $"{_log.time} - {_log.txt}\n";
 				}
 				
 			} else if(array_length(cmd) == 2) {
 				var _key = cmd[1];
-				if(!struct_has(NETWORK_LOG_DATA, _key)) {
+				if(!has(NETWORK_LOG_DATA, _key)) {
 					array_push(CMD, cmdLine($"[Error] netdat `{_key}` not found", COLORS._main_value_negative) );
 					break;
 				}
 				
-				print(NETWORK_LOG_DATA[$ _key]);
+				res += NETWORK_LOG_DATA[$ _key] + "\n"; 
 			}
-			break;
+			
+			res = string_trim_end(res);
+			print(res);
+			return res;
 			
 		case "patreon":
 			if(array_length(cmd) < 2) { cmd_error_param(cmd_type); break; }
@@ -118,7 +123,7 @@ function cmd_submit(command) {
 			break;
 		
 		default: 
-			if(struct_has(CMD_FUNCTIONS, cmd[0])) {
+			if(has(CMD_FUNCTIONS, cmd[0])) {
 				var _f    = CMD_FUNCTIONS[$ cmd[0]];
 				var _vars = string_splice(array_safe_get_fast(cmd, 1, ""), ",");
 				var _args = [];
@@ -136,16 +141,29 @@ function cmd_submit(command) {
 				
 				callFunction(cmd[0], _args);
 				cli_wait();
-				break;
+				return $"Calling {cmd[0]} with arguments {_args}";
 			}
+			
+			var _scr = asset_get_index(cmd[0]);
+			if(_scr) {
+				var _args = [];
+				for( var i = 1, n = array_length(cmd); i < n; i++ ) {
+					var _val = cmd[i];
+					if(is_numeric(_val)) _val = toNumber(_val);
+					array_push(_args, _val);
+				}
+				
+				var ret = call(_scr, _args);
+				return ret;
+			} 
 			
 			var _txt = $"[Error] \"{cmd_type}\" command not found.";
 			array_push(CMD, cmdLine(_txt, COLORS._main_value_negative) );
 			log_console(_txt, true);
-			break;
+			return _txt;
 	}
 	
-	return noone;
+	return undefined;
 }
 
 function cmp_path_simplematch(key, path) {
