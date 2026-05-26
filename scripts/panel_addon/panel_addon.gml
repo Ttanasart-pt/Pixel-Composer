@@ -58,7 +58,6 @@ function Panel_Addon() : PanelContent() constructor {
 				var hh   = hg;
 				
 				var _act    = _addon.isActivated();
-				var _addObj = _addon.activatedInstance;
 				
 				var _meta     = _addon.meta;
 				var _meta_aut = _meta[$ "author"]      ?? "-";
@@ -66,8 +65,10 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				if(_addon.open) {
 					draw_set_font(font_content);
-					hh += max(lh, string_height(_meta_aut))                      + ui(8);
-					hh += max(lh, string_height_ext(_meta_des, -1, ww - ui(16))) + ui(8);
+					hh += ui(8);
+					hh += max(lh, string_height(_meta_aut))                      + ui(4);
+					hh += max(lh, string_height_ext(_meta_des, -1, ww - ui(16))) + ui(4);
+					hh += ui(4);
 				}
 				
 				var hover = _hover && point_in_rectangle(_m[0], _m[1], 0, by, ww, by + hh);
@@ -79,7 +80,7 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, by, ww, hg, cc, 1);
 				draw_set_text(font_title, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(ui(44), by + hg / 2, _addon.name);
+				draw_text_add(bpd + bs + ui(8), by + hg / 2, _addon.name);
 				
 				var chx0 = bpd;
 				var chy0 = by + bpd;
@@ -128,6 +129,7 @@ function Panel_Addon() : PanelContent() constructor {
 				}
 				
 				_bx -= bs + ui(4);
+				var _addObj = _addon.activatedInstance;
 				if(_act && _addObj && _addObj.panelMain) {
 					var bt = __txt("Addon settings");
 					

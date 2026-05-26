@@ -23,6 +23,8 @@ function addonWrapper(_name) constructor {
 		switch(type) {
 			case 0 :
 				activatedInstance = instance_create(0, 0, object);
+				if(_openDialog && activatedInstance.panelMain)
+					dialogPanelCall(new activatedInstance.panelMain(activatedInstance));
 				activated = true;
 				return true;
 				
@@ -64,8 +66,12 @@ function __initAddon() {
 	var dirPath = $"{DIRECTORY}Addons";
 	ADDON_MAP = {};
 	ADDONS    = [
-		new addonWrapper("Key Display").setObject(addon_key_displayer),
-		new addonWrapper("Remote Terminal").setObject(addon_remote_terminal),
+		new addonWrapper("Key Display").setObject(addon_key_displayer).setMeta({
+			author: "MakhamDev", description: "Display pressing keys on screen for screen sharing and debugging."
+		}),
+		new addonWrapper("Remote Terminal").setObject(addon_remote_terminal).setMeta({
+			author: "MakhamDev", description: "Open webSocket port for receiving and executing terminal commands."
+		}),
 	];
 	
 	ADDONS_ON_START = [];

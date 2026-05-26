@@ -1,5 +1,5 @@
 function Remote_Terminal_Settings(_addon) : PanelContent() constructor {
-	title = __txt("Remote Terminal Settings");
+	title = __txt("Remote Terminal");
 	addonInst = _addon;
 	auto_pin  = true;
 	
@@ -9,7 +9,7 @@ function Remote_Terminal_Settings(_addon) : PanelContent() constructor {
 	settings = [
 		new __Panel_Linear_Setting_Item(
 			__txt("Active"),
-			new checkBox(function() /*=>*/ { addonInst.active = !addonInst.active; }),
+			new checkBox(function() /*=>*/ { if(addonInst.active) addonInst.deactivate(); else addonInst.activate(); }),
 			function()    /*=>*/   {return addonInst.active},
 			function(val) /*=>*/ { addonInst.active = val; },
 		),
@@ -39,7 +39,6 @@ function Remote_Terminal_Settings(_addon) : PanelContent() constructor {
 		var hh = 0;
 		
 		draw_set_text(f_code, fa_left, fa_bottom, COLORS._main_text);
-		var hg = line_get_height();
 		
 		var _text = addonInst.outputLog;
 		var _tamo = array_length(_text);
@@ -63,6 +62,11 @@ function Remote_Terminal_Settings(_addon) : PanelContent() constructor {
 	});
 	
 	function drawContent() { 
+		if(!instance_exists(addonInst)) {
+			close();
+			return;
+		}
+		
 		var pd = padding;
 		var px = pd;
 		var py = pd;

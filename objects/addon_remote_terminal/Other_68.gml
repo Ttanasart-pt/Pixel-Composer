@@ -13,8 +13,6 @@ switch(type) {
 		var _buffer = async_load[? "buffer"];
 		var data    = buffer_get_string(_buffer);
 		
-		log($"> {data}");
-		var res = cmd_submit(data);
-		if(is_string(res) && res != "") log(res);
+		submitCommand(data);
 		break;
 }

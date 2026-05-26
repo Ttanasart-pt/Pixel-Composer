@@ -1,1 +1,1 @@
-destroyClient();
+destroyServer();

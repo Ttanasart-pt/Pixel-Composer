@@ -11,6 +11,17 @@ CMD_COLOR = {
     BOLD    : "\033[1m",
 }
 
+function cmd_program() constructor {
+	title   = "cmd";
+	color   = CDEF.main_dkgrey;
+	
+	static close = function() { CMDPRG = noone; }
+	
+	static submit = function(arg) { return 0; }
+}
+
+	////- Commands
+	
 function cmd_error_param(command) {
 	var _txt = $"[Error] `{command}` not enough argument."; 
 	array_push(CMD, cmdLine(_txt, COLORS._main_value_negative) ); 
@@ -141,7 +152,8 @@ function cmd_submit(command) {
 				
 				callFunction(cmd[0], _args);
 				cli_wait();
-				return $"Calling {cmd[0]} with arguments {_args}";
+				print($"Calling {cmd[0]} with arguments {_args}");
+				return "";
 			}
 			
 			var _scr = asset_get_index(cmd[0]);
@@ -149,11 +161,12 @@ function cmd_submit(command) {
 				var _args = [];
 				for( var i = 1, n = array_length(cmd); i < n; i++ ) {
 					var _val = cmd[i];
-					if(is_numeric(_val)) _val = toNumber(_val);
+					if(isNumber(_val)) _val = toNumber(_val);
 					array_push(_args, _val);
 				}
 				
 				var ret = call(_scr, _args);
+				print($"Calling {cmd[0]} with arguments {_args}");
 				return ret;
 			} 
 			
@@ -164,6 +177,25 @@ function cmd_submit(command) {
 	}
 	
 	return undefined;
+}
+
+function getVar(_str) {
+	var _strs = string_split(_str, ".");
+	var _pnt  = undefined;
+	
+	for( var i = 0, n = array_length(_strs); i < n; i++ ) {
+		var _s = _strs[i];
+		
+		if(_pnt == undefined) 
+			_pnt = variable_global_get(_s);
+		else if(is_struct(_pnt))
+			_pnt = variable_struct_get(_pnt, _s);
+			
+		if(_pnt == undefined) 
+			return undefined;
+	}
+	
+	return _pnt;
 }
 
 function cmp_path_simplematch(key, path) {
@@ -205,13 +237,4 @@ function cmd_path(path) {
 	}
 	
 	return array_length(paths) == 1? paths[0] : paths;
-}
-
-function cmd_program() constructor {
-	title   = "cmd";
-	color   = CDEF.main_dkgrey;
-	
-	static close = function() { CMDPRG = noone; }
-	
-	static submit = function(arg) { return 0; }
 }
