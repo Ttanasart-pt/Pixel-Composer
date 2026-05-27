@@ -36,6 +36,10 @@ varying vec4 v_vColour;
 uniform int   side;
 uniform vec2  camPerspect;
 
+uniform vec2      camDistance;
+uniform int       camDistanceUseSurf;
+uniform sampler2D camDistanceSurf;
+
 uniform vec2  dimension;
 uniform vec2  position;
 uniform vec2  offset;
@@ -55,6 +59,12 @@ mat2 inverse(mat2 m) {
 }
 
 void main() {
+	float cDis = camDistance.x;
+	if(camDistanceUseSurf == 1) {
+		vec4 _vMap = texture2D( camDistanceSurf, v_vTexcoord );
+		cDis = mix(camDistance.x, camDistance.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	float ang = radians(rotation);
 	float uva;
 	
@@ -67,19 +77,19 @@ void main() {
     vtx *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
     
     if(side == 0) {
-	    camDist = vtx.y;
+	    camDist = vtx.y * cDis;
 	    camAnch = vec2(.5, 0.);
 	    
     } else if(side == 1) {
-	    camDist = vtx.x;
+	    camDist = vtx.x * cDis;
 	    camAnch = vec2(0., .5);
 	    
     } else if(side == 2) {
-	    camDist = 1. - vtx.y;
+	    camDist = 1. - vtx.y * cDis;
 	    camAnch = vec2(.5, 0.);
 	    
     } else if(side == 3) {
-	    camDist = 1. - vtx.x;
+	    camDist = 1. - vtx.x * cDis;
 	    camAnch = vec2(0., .5);
     }
 	

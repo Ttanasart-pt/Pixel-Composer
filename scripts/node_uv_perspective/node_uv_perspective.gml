@@ -10,6 +10,7 @@ function Node_UV_Perspective(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	////- =Perspective
 	newInput(12, nodeValue_EButton(  "Direction",   0, ["Top", "Left", "Bottom", "Right"]  )).setShaderProp("side");
 	newInput(14, nodeValue_Vec2(     "Perspective", [1,1] )).setShaderProp("camPerspect");
+	newInput(15, nodeValue_Float(    "Distance",     1    )).setMappable(16).setShaderProp("camDistance");
 	
 	////- =UV
 	newInput( 4, nodeValue_Vec2(     "Position",   [0,0] )).setUnitSimple().setShaderProp("position");
@@ -23,13 +24,13 @@ function Node_UV_Perspective(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	newInput( 7, nodeValue_SliRange( "X",   [0,1] )).setShaderProp("xRange");
 	newInput( 8, nodeValue_SliRange( "Y",   [1,0] )).setShaderProp("yRange");
 	newInput( 9, nodeValue_Slider(   "Blue", 0    )).setShaderProp("blue");
-	// 14
+	// 17
 	
 	outputs[0].setCustomData(global.SURFACE_UV_JUNC);
 	
 	input_display_list = [
 		[ "Output",       true ],  0,  1,  2,  3, 
-		[ "Perspective", false ], 12, 14, 
+		[ "Perspective", false ], 12, 14, 15, 16, 
 		[ "UV",          false ],  4, 13, 10,  5,  6, 11, 
 		[ "Channels",    false ],  7,  8,  9, 
 	];

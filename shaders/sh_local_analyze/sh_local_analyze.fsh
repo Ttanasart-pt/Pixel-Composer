@@ -60,7 +60,10 @@ void main() {
 	vec4 maxx    = vec4(0.), minn = vec4(1.);
 	float weight = 0., _w;
 	vec4 col     = sampleTexture( gm_BaseTexture, v_vTexcoord );
-	
+
+	int sampColors[255];
+	int count = 0;
+
 	for(float i = -size; i <= size; i++)
 	for(float j = -size; j <= size; j++) {
 		if(shape == 1 && i * i + j * j > size * size) 
@@ -68,29 +71,58 @@ void main() {
 		if(shape == 2 && abs(i) + abs(j) > size) 
 			continue;
 		
-		if(shape == 0)
-			_w = min(size - abs(i), size - abs(j));
-		else if(shape == 1)
-			_w = size - length(vec2(i, j));
-		else if(shape == 2)
-			_w = size - (abs(i) + abs(j));
+		     if(shape == 0) _w = min(size - abs(i), size - abs(j));
+		else if(shape == 1) _w = size - length(vec2(i, j));
+		else if(shape == 2) _w = size - (abs(i) + abs(j));
 		
 		vec4 col = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(i, j) * tex );
-		
+		int idx  = int(clamp(floor(bright(col) * 255.), 0., 255.));
+		sampColors[idx] = sampColors[idx] + 1;
+		count++;
+
 		if(algorithm == 0) {
 			acc += col;	
 			weight++;
+			
 		} else if(algorithm == 1) {
 			maxx = max(maxx, col);
+			
 		} else if(algorithm == 2) {
 			minn = min(minn, col);
+	
 		}
 	}
 	
 	if(algorithm == 0)
 		gl_FragColor = acc / weight;
+		
 	else if(algorithm == 1)
 		gl_FragColor = maxx;
+		
 	else if(algorithm == 2)
 		gl_FragColor = minn;
+	
+	else if(algorithm == 3) { // This is 100% the worst way to do median filter.
+		if(mod(float(count), 2.) == 1.) {
+			int mid = count / 2;
+			int acc = 0, i = 0;
+			for(; i < 255; i++) {
+				acc += sampColors[i];
+				if(acc > mid) break;
+			}
+			
+			gl_FragColor = vec4(vec3(float(i) / 255.), 1.);
+			
+		} else {
+			int mid1 = count / 2 - 1, mid2 = count / 2;
+			int acc = 0, i = 0, val1 = 0, val2 = 0;
+			for(; i < 255; i++) {
+				acc += sampColors[i];
+				if(acc > mid1 && val1 == 0) val1 = i;
+				if(acc > mid2) { val2 = i; break; }
+			}
+			gl_FragColor = vec4(vec3(float(val1 + val2) / (255. * 2.)), 1.);
+		}
+		
+	}
 }

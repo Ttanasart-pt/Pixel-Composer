@@ -19,7 +19,7 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Effect
-	newInput(1, nodeValue_EScroll( "Algorithm",  0, [ "Average (Blur)", "Maximum", "Minimum" ] )).setPieMenu();
+	newInput(1, nodeValue_EScroll( "Algorithm",  0, [ "Average (Blur)", "Maximum", "Minimum", "Median" ] )).setPieMenu();
 	newInput(2, nodeValue_Slider(  "Size",       1, [ 1, 16, 0.1] )).setPieMenu();
 	/* UNUSED */ newInput(3, nodeValue_EScroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ])).setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	newInput(4, nodeValue_EScroll( "Shape",  0,  [ new scrollItem("Square",  s_node_shape_rectangle, 0), 

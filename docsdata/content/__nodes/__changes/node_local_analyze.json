@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.006",
+    "changes": [
+      {
+        "date": "2026-05-27T03:22:38.671Z",
+        "node": "Local Analyze",
+        "commit": "**Local Analyze**: Add median filter."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {
