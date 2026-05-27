@@ -2,28 +2,27 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Morph Path";
 	dimension_index = 2;
 	
-	newInput(0, nodeValue_PathNode("Path 1")).rejectArray();
+	newInput( 0, nodeValue_PathNode(  "Path 1")).rejectArray();
+	newInput( 1, nodeValue_PathNode(  "Path 2")).rejectArray();
 	
-	newInput(1, nodeValue_PathNode("Path 2")).rejectArray();
-		
-	newInput(2, nodeValue_Dimension());
+	////- =Morphing
+	newInput( 2, nodeValue_Dimension());
+	newInput( 3, nodeValue_Int(   "Subdivision", 64    )).setValidator(VV_min(2)).rejectArray();
+	newInput( 6, nodeValue_Bool(  "Match index", false ))
 	
-	newInput(3, nodeValue_Int("Subdivision", 64))
-		.setValidator(VV_min(2))
-		.rejectArray();
-		
-	newInput(4, nodeValue_Bool("Clip In-Out", false))
-		
-	newInput(5, nodeValue_Curve("Curve", CURVE_DEF_01));
-	
-	newInput(6, nodeValue_Bool("Match index", false))
+	////- =Rendering
+	newInput( 5, nodeValue_Curve( "Curve",       CURVE_DEF_01 ));
+	newInput( 4, nodeValue_Bool(  "Clip In-Out", false        ))
+	// 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 1, 
-		["Morphing",  false], 2, 3, 6, 
-		["Rendering", false], 5, 4, 
-	]
+	input_display_list = [  0,  1, 
+		[ "Morphing",  false ],  2,  3,  6, 
+		[ "Rendering", false ],  5,  4, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -37,15 +36,18 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _path1 = _data[0];
-		var _path2 = _data[1];
-		if(_path1 == noone || _path2 == noone) return _outSurf;
-		
-		var _dim = _data[2];
-		var _sub = _data[3] + 1;
-		var _clp = _data[4];
-		var _cur = _data[5];
-		var _mid = _data[6];
+		#region data
+			var _path1 = _data[0];
+			var _path2 = _data[1];
+			if(_path1 == noone || _path2 == noone) return _outSurf;
+			
+			var _dim = _data[2];
+			var _sub = _data[3] + 1;
+			var _mid = _data[6];
+			
+			var _cur = _data[5];
+			var _clp = _data[4];
+		#endregion
 		
 		var _isb = 1 / (_sub - 1);
 		var _pp  = new __vec2P();
@@ -110,6 +112,7 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		surface_set_shader(_outSurf, sh_path_morph);
 			shader_set_2("dimension",   _dim);
+			
 			shader_set_i("subdivision", _sub);
 			shader_set_i("clip",        _clp);
 			shader_set_i("matchIndex",  _mid);

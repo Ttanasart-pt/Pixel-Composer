@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_path_join",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"combine",
+    "path":"folders/nodes/data/value/path/combine.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

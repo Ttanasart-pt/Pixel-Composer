@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.006",
+    "changes": [
+      {
+        "date": "2026-05-27T01:14:10.206Z",
+        "node": "",
+        "commit": "**Path Fill / Map / Revolve / SDF**: Add transform, path range properties."
+      }
+    ]
+  }
+]

@@ -3,11 +3,9 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Float("Point array", []))
-		.setVisible(true, true)
-		.setArrayDepth(2);
-	
-	newInput(1, nodeValue_Bool("Loop", false));
+	newInput( 0, nodeValue_Float( "Point array", [] )).setVisible(true, true).setArrayDepth(2);
+	newInput( 1, nodeValue_Bool(  "Loop",     false ));
+	// 2
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	

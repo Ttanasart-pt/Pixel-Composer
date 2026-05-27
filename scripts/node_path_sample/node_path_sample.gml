@@ -3,18 +3,22 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValue_PathNode( "Path"     ));
+	////- =Path
+	newInput( 0, nodeValue_PathNode( "Path" ));
+	
+	////- =Sample
 	newInput( 2, nodeValue_EScroll(  "Type",  0, [ "Loop", "Ping pong", "Clamp" ] ));
 	newInput( 1, nodeValue_Float(    "Ratio", 0 ));
 	// 3
 	
-	newOutput( 0, nodeValue_Output( "Position",  VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput( 1, nodeValue_Output( "Direction", VALUE_TYPE.float, 0 ));
-	newOutput( 2, nodeValue_Output( "Weight",    VALUE_TYPE.float, 0 ));
+	newOutput( 0, nodeValue_Output( "Position",  VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput( 1, nodeValue_Output( "Direction", VALUE_TYPE.float,  0    ));
+	newOutput( 2, nodeValue_Output( "Weight",    VALUE_TYPE.float,  0    ));
 	
 	input_display_list = [
-		0, 2, 1, 
-	]
+		[ "Path",   false ], 0, 
+		[ "Sample", false ], 2, 1, 
+	];
 	
 	////- Node
 	
@@ -46,7 +50,6 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			var _mod  = _data[2];
 			var _rat  = _data[1];
-			
 		#endregion
 		
 		if(!is_path(_path)) return _output;

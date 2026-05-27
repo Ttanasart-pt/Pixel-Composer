@@ -21,11 +21,18 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput( 3, nodeValue_Int(      "Subdivision", 16    )).setValidator(VV_min(2)).rejectArray();
 	
+	////- =Transform
+	newInput(18, nodeValue_Vec2(     "Position",  [0,0]   )).setUnitSimple();
+	newInput(19, nodeValue_Anchor(   "Anchor",    [.5,.5] ));
+	newInput(20, nodeValue_Rot(      "Rotation",   0      ));
+	newInput(21, nodeValue_Vec2(     "Scale",     [1,1]   ));
+	
 	////- =Rendering
+	newInput(17, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput( 2, nodeValue_Surface( "Texture" ));
 	newInput(12, nodeValue_Vec2(    "UV Position", [0,0] ));
 	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1] ));
-	// input 17
+	// input 22
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
@@ -33,7 +40,8 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Output",    false ],  1, 
 		[ "Paths",     false ],  0, 14,  4,  5,  7, 
 		[ "Revolve",   false ],  8,  9, 11, 13, 10, 15, 16,  3, 
-		[ "Rendering", false ],  2, 12,  6, 
+		[ "Transform", false ], 18, 19, 20, 21, 
+		[ "Rendering", false ], 17,  2, 12,  6, 
 	];
 	
 	////- Node
@@ -79,11 +87,17 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _rev  = getInputData(11);
 			var _shf  = getInputData(13);
 			var _rat  = getInputData(10);
-			var _sca  = getInputData(15);
+			var _scal = getInputData(15);
 			var _scaC = getInputData(16), _scaleCurve = inputs[15].attributes.curved? new curveMap(_scaC) : undefined;
 			
 			var _sub  = getInputData( 3);
 			
+		    var _pos  = getInputData(18);
+		    var _anc  = getInputData(19);
+		    var _rot  = getInputData(20);
+		    var _sca  = getInputData(21);
+		    
+			var _blnd = getInputData(17);
 			var _surf = getInputData( 2);
 			var _uvP  = getInputData(12);
 			var _uvS  = getInputData( 6);
@@ -144,9 +158,25 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		surface_set_shader(_outSurf, sh_path_map_render, true, BLEND.normal);
 			shader_set_interpolation(_surf);
 			
+			switch(_blnd) {
+				case 0 : BLEND_NORMAL; break;
+				case 1 : BLEND_ADD;    break;
+				case 2 : BLEND_MAX;    break;
+			}
+			
 			draw_set_color(c_white);
 			shader_set_2("uvP", _uvP);
 			shader_set_2("uvS", _uvS);
+			
+			var ancx = _anc[0] * _dim[0];
+			var ancy = _anc[1] * _dim[1];
+			
+			var trans = matrix_compose(
+				matrix_transform_2d(-ancx, -ancy),
+				matrix_transform_2d(_pos[0], _pos[1], _rot, _sca[0], _sca[1]),
+				matrix_transform_2d(ancx, ancy),
+			);
+			matrix_set(matrix_world, trans);
 			
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
 				var ast = _dir + 90 + _shf + _rev[0];
@@ -157,8 +187,8 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var a0 = lerp(ast, aed, (j+0) * stp);
 					var a1 = lerp(ast, aed, (j+1) * stp);
 					
-					var sc0 = _sca * (_scaleCurve? _scaleCurve.getFast((j+0) * stp) : 1);
-					var sc1 = _sca * (_scaleCurve? _scaleCurve.getFast((j+1) * stp) : 1);
+					var sc0 = _scal * (_scaleCurve? _scaleCurve.getFast((j+0) * stp) : 1);
+					var sc1 = _scal * (_scaleCurve? _scaleCurve.getFast((j+1) * stp) : 1);
 					
 					for( var i = 0; i < _pres - 1; i++ ) {
 						var p0 = _pnt[i+0];
@@ -209,6 +239,9 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					}
 				}
 			draw_primitive_end();
+			
+			matrix_set(matrix_world, MATRIX_IDENTITY);
+			
 		surface_reset_shader();
 		
 		outputs[0].setValue(_outSurf);

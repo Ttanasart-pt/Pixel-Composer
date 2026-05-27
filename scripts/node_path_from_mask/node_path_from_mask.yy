@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_path_from_mask",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"creator",
+    "path":"folders/nodes/data/value/path/creator.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

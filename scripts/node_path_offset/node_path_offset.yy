@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_path_offset",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"modifier",
+    "path":"folders/nodes/data/value/path/modifier.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

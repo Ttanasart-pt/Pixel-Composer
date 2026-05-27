@@ -8,6 +8,11 @@ uniform int   inverted;
 
 uniform vec2 points[1024];
 
+uniform vec2  position;
+uniform vec2  anchor;
+uniform float rotation;
+uniform vec2  scale;
+
 vec2 pointToLine(in vec2 p, in vec2 l0, in vec2 l1) {
 	float l2 = pow(l0.x - l1.x, 2.) + pow(l0.y - l1.y, 2.);
 	if (l2 == 0.) return l0;
@@ -19,18 +24,29 @@ vec2 pointToLine(in vec2 p, in vec2 l0, in vec2 l1) {
 }
 
 void main() {
-	vec2 px = v_vTexcoord * dimension;
+	vec2 px  = v_vTexcoord * dimension;
+	vec2 anc = anchor * dimension;
 	
 	float minDist = 9999.;
-	vec2 ox = points[0], nx;
+	vec2 ox, nx;
 	vec2 p;
 	
-	for(int i = 1; i < subdivision; i++) {
+	float ang = radians(rotation);
+	mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	
+	for(int i = 0; i < subdivision; i++) {
 		nx = points[i];
-		p  = pointToLine(px, ox, nx);
 		
-		float dist = distance(px, p);
-		minDist = min(minDist, dist);
+		nx -= anc;
+		nx  = (nx * rot) * scale + position;
+		nx += anc;
+		
+		if(i > 0) {
+			p  = pointToLine(px, ox, nx);
+			
+			float dist = distance(px, p);
+			minDist = min(minDist, dist);
+		}
 		
 		ox = nx;
 	}

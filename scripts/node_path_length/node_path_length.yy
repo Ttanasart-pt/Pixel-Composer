@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_path_length",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"number",
+    "path":"folders/nodes/data/value/path/number.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

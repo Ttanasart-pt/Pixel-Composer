@@ -3,8 +3,8 @@
   "%Name":"sh_image_trace",
   "name":"sh_image_trace",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"creator",
+    "path":"folders/nodes/data/value/path/creator.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

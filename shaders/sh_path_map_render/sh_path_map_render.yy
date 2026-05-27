@@ -3,8 +3,8 @@
   "%Name":"sh_path_map_render",
   "name":"sh_path_map_render",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"surface",
+    "path":"folders/nodes/data/value/path/surface.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

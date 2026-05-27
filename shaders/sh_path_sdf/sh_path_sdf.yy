@@ -3,8 +3,8 @@
   "%Name":"sh_path_sdf",
   "name":"sh_path_sdf",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"surface",
+    "path":"folders/nodes/data/value/path/surface.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

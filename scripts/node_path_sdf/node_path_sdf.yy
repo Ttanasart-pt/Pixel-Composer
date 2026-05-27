@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_path_sdf",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"surface",
+    "path":"folders/nodes/data/value/path/surface.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

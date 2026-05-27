@@ -7,24 +7,32 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	////- =Mapping
 	newInput( 3, nodeValue_Int(     "Subdivision", 16 )).setValidator(VV_min(2)).rejectArray();
 	
+	////- =Transform
+	newInput( 8, nodeValue_Vec2(     "Position",  [0,0]   )).setUnitSimple();
+	newInput( 9, nodeValue_Anchor(   "Anchor",    [.5,.5] ));
+	newInput(10, nodeValue_Rot(      "Rotation",   0      ));
+	newInput(11, nodeValue_Vec2(     "Scale",     [1,1]   ));
+	
 	////- =Rendering
 	newInput( 2, nodeValue_Surface( "Texture" ));
 	newInput( 7, nodeValue_Vec2(    "UV Position", [0,0] ));
 	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1] ));
 	
 	////- =Paths
+	newInput(12, nodeValue_Range(    "Range", [0,1] ));
 	newInput( 4, nodeValue_Slider(   "Shift",  0     ));
 	newInput( 5, nodeValue_Bool(     "Invert", false ));
 	newInput( 0, nodeValue_PathNode( "Path" )).rejectArray();
-	// input 7
+	// input 13
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Output",    false ],  1, 
 		[ "Mapping",   false ],  3,  
+		[ "Transform", false ],  8,  9, 10, 11, 
 		[ "Rendering", false ],  2,  6, 
-		[ "Paths",     false ],  4,  5,  0,
+		[ "Paths",     false ], 12,  4,  5,  0,
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -55,10 +63,16 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			var _sub  = getInputData( 3);
 			
+		    var _pos  = getInputData( 8);
+		    var _anc  = getInputData( 9);
+		    var _rot  = getInputData(10);
+		    var _sca  = getInputData(11);
+		    
 			var _surf = getInputData( 2);
 			var _uvP  = getInputData( 7);
 			var _uvS  = getInputData( 6);
 			
+			var _rng  = getInputData(12);
 			var _sft  = getInputData( 4);
 			var _inv  = getInputData( 5);
 		#endregion
@@ -98,7 +112,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _ind = 0;
 			
 			for( var j = 0; j <= _sub; j++ ) {
-				var _prog = clamp(frac(j * _isb + _sft), 0., 0.9999);
+				var _prog = clamp(frac(lerp(_rng[0], _rng[1], j * _isb) + _sft), 0., 0.9999);
 				if(_inv) _prog = 1 - _prog;
 				
 				_pp = _pathD[0].getPointRatio(_prog, _pathD[1], _pp);
@@ -119,6 +133,16 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			draw_set_color(c_white);
 			shader_set_2("uvP", _uvP);
 			shader_set_2("uvS", _uvS);
+			
+			var ancx = _anc[0] * _dim[0];
+			var ancy = _anc[1] * _dim[1];
+			
+			var trans = matrix_compose(
+				matrix_transform_2d(-ancx, -ancy),
+				matrix_transform_2d(_pos[0], _pos[1], _rot, _sca[0], _sca[1]),
+				matrix_transform_2d(ancx, ancy),
+			);
+			matrix_set(matrix_world, trans);
 			
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
 				for( var j = 0; j < _sub   - 1; j++ )
@@ -148,6 +172,9 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					}
 				}
 			draw_primitive_end();
+			
+			matrix_set(matrix_world, MATRIX_IDENTITY);
+			
 		surface_reset_shader();
 		
 		outputs[0].setValue(_out);

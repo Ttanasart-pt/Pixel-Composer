@@ -48,10 +48,10 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			return hovering;
 		}
 		
-		static getLineCount 	= function()    /*=>*/ { return struct_has(path, "getLineCount")?      path.getLineCount()     : 1;  }
-		static getSegmentCount	= function(i=0) /*=>*/ { return struct_has(path, "getSegmentCount")?   path.getSegmentCount(i) : 0;  }
-		static getLength		= function(i=0) /*=>*/ { return struct_has(path, "getLength")?		   path.getLength(i)       : 0;  }
-		static getAccuLength	= function(i=0) /*=>*/ { return struct_has(path, "getAccuLength")?	   path.getAccuLength(i)   : []; }
+		static getLineCount 	= function()    /*=>*/ {return has(path, "getLineCount")?    path.getLineCount()     : 1};
+		static getSegmentCount	= function(i=0) /*=>*/ {return has(path, "getSegmentCount")? path.getSegmentCount(i) : 0};
+		static getLength		= function(i=0) /*=>*/ {return has(path, "getLength")?		 path.getLength(i)       : 0};
+		static getAccuLength	= function(i=0) /*=>*/ {return has(path, "getAccuLength")?	 path.getAccuLength(i)   : []};
 		
 		static getBoundary = function(ind = 0) {
 			if(!struct_has(path, "getBoundary"))

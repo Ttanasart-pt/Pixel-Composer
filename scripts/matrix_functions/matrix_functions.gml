@@ -59,3 +59,16 @@ function __matrix_transpose(matrix, size2) {
     
     return transpose;
 }
+
+function matrix_transform_2d(px = 0, py = 0, rot = 0, sx = 1, sy = 1) {
+	var rc = dcos(rot);
+	var rs = dsin(rot);
+    return [ sx*rc, -rs, 0, 0, /**/ rs, sy* rc, 0, 0, /**/ 0, 0, 1, 0, px, py, 0, 1 ];
+}
+
+function matrix_compose(matrices) {
+    var mat = matrices;
+    for( var i = 1; i < argument_count; i++ ) 
+        mat = matrix_multiply(mat, argument[i]);
+    return mat;
+}
