@@ -595,7 +595,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputMappable[i].mappableStep();
 	}
 	
-	static step = undefined
+	static step = undefined;
 	
 	////- DYNAMIC IO
 	

@@ -1,16 +1,10 @@
-globalvar BLEND_TYPES;
-BLEND_TYPES = [ 
-	"Normal", "Replace", 
-	-1,
-	"Multiply", "Color Burn", "Linear Burn", "Minimum", 
-	-1, 
-	"Add", "Screen", "Color Dodge", "Maximum", 
-	-1,
-	"Overlay", "Soft Light", "Hard Light", "Vivid Light", "Linear Light", "Pin Light", 
-	-1,
-	"Difference", "Exclusion", "Subtract", "Divide", 
-	-1,
-	"Hue", "Saturation", "Luminosity", 
+globalvar BLEND_TYPES; BLEND_TYPES = [ 
+	    "Normal", "Replace", 
+	-1, "Multiply", "Color Burn", "Linear Burn", "Minimum", 
+	-1, "Add", "Screen", "Color Dodge", "Maximum", 
+	-1, "Overlay", "Soft Light", "Hard Light", "Vivid Light", "Linear Light", "Pin Light", 
+	-1, "Difference", "Exclusion", "Subtract", "Divide", 
+	-1, "Hue", "Saturation", "Luminosity", 
 ];
 
 enum BLEND_MODE {

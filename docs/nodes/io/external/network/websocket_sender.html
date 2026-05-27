@@ -1987,6 +1987,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\uv\create\uv_isometric.html" class="sidebar-file">Uv Isometric</a>
             </div>
+</li><li id="uv_perspective"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\uv\create\uv_perspective.html" class="sidebar-file">Uv Perspective</a>
+            </div>
 </li><li id="uv_polar"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\uv\create\uv_polar.html" class="sidebar-file">Uv Polar</a>
@@ -6086,6 +6090,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_cartesian.html">Uv Cartesian</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_height.html">Uv Height</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_isometric.html">Uv Isometric</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_perspective.html">Uv Perspective</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\create/uv_polar.html">Uv Polar</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\uv\modify/uv_blend.html">Uv Blend</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\mk_effect/mk_blast_inline.html">Mk Blast Inline</a></li>
@@ -6725,10 +6730,13 @@
 <table class = "summary-table">
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_websocket_sender.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Websocket Sender</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Websocket_Sender</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="#">Node_Websocket_Sender</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
-<tr>
+<tr><th colspan="2" class="summary-topic junction-separator"><p>Connection</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #66ffe3">text</p></td>
+                <td><p>Target</p></td>
+            </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
                 <td><p>Port</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Data</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Data Type</p></td>
             </tr><tr>
@@ -6740,9 +6748,6 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #eb004b">path</p></td>
                 <td><p>Path</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #66ffe3">text</p></td>
-                <td><p>Target</p></td>
             </tr>
 <tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>

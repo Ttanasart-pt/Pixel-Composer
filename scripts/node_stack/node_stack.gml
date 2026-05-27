@@ -20,7 +20,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- =Render
 	newInput(4, nodeValue_Enum_Scroll( "Blend Mode", 0, BLEND_TYPES ));
-	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
+	array_foreach(inputs, function(i,_) /*=>*/ {return i.rejectArray()});
 	// 5
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
