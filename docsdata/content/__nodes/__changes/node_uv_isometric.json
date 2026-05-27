@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.006",
+    "changes": [
+      {
+        "date": "2026-05-27T02:09:34.617Z",
+        "node": "",
+        "commit": "--New UV Perspective node."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.005",
     "changes": [
       {
