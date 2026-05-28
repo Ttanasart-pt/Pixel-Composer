@@ -3071,6 +3071,8 @@ function Panel_Preview() : PanelContent() constructor {
             _sny = PROJECT.previewGrid.size[1];
         }
             
+		var _hovering = false;
+            
         overHover = overHover && !view_hovering;
         overHover = overHover && tool_hovering == noone && !overlay_hovering;
         overHover = overHover && !canvas_dragging && !canvas_zooming;
@@ -3097,10 +3099,13 @@ function Panel_Preview() : PanelContent() constructor {
         	var _h = _n.doDrawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, params);
         	
         	if(_h == true) {
+        		_hovering  = true;
         		overHover  = false;
         		overActive = false;
         	}
         }
+        
+        hoveringGizmo = _hovering;
     }
     
     static drawNodeActions = function(active, _node) {

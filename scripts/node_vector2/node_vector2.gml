@@ -9,20 +9,18 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 1, nodeValue_Float( "y", 0 )).setVisible(true, true);
 	newInput( 2, nodeValue_Bool(  "Integer", false ));
 	
-	////- =Unit
-	newInput(11, nodeValue_Bool(  "Relative Unit", false ));
-	
 	////- =Display
-	newInput( 3, nodeValue_Enum_Scroll( "Display Type",  0, [ "Number", "Coordinate" ]));
+	newInput( 3, nodeValue_EScroll( "Display Type",  0, [ "Number", "Coordinate" ]));
 	
 	////- =Gizmo
-	newInput( 4, nodeValue_Bool(        "Show on global",  false, "Whether to show overlay gizmo when not selecting any nodes."));
-	newInput( 5, nodeValue_Vec2(        "Gizmo offset",   [0,0] ));
-	newInput( 6, nodeValue_Float(       "Gizmo scale",     1    ));
-	newInput( 7, nodeValue_Enum_Scroll( "Gizmo style",     0, [ "Default", "Shapes", "Sprite" ]));
-	newInput( 8, nodeValue_Enum_Scroll( "Gizmo shape",     0, [ "Rectangle", "Ellipse" ]));
-	newInput( 9, nodeValue_Surface(     "Gizmo sprite"));
-	newInput(10, nodeValue_Vec2(        "Gizmo size",    [32,32]));
+	newInput( 4, nodeValue_Bool(    "Show on global",  false, "Whether to show overlay gizmo when not selecting any nodes."));
+	newInput( 5, nodeValue_Vec2(    "Gizmo offset",   [0,0] ));
+	newInput( 6, nodeValue_Float(   "Gizmo scale",     1    ));
+	newInput( 7, nodeValue_EScroll( "Gizmo style",     0, [ "Default", "Shapes", "Sprite" ]));
+	newInput( 8, nodeValue_EScroll( "Gizmo shape",     0, [ "Rectangle", "Ellipse" ]));
+	newInput( 9, nodeValue_Surface( "Gizmo sprite"));
+	newInput(10, nodeValue_Vec2(    "Gizmo size",    [32,32]));
+	newInput(11, nodeValue_Bool(    "Relative Unit", false ));
 	// input 12
 	
 	newOutput(0, nodeValue_Output("Vector", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
@@ -30,9 +28,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newOutput(2, nodeValue_Output("y", VALUE_TYPE.float, 0))
 		
 	input_display_list = [ 0, 1, 2, 
-		[ "Unit",    false ], 11, 
 		[ "Display", false ],  3, 
-		[ "Gizmo",   false ],  4,  5,  6,  7,  8,  9, 10, 
+		[ "Gizmo",   false ],  4,  5,  6,  7,  8,  9, 10, 11, 
 	];
 	
 	////- Node
@@ -65,6 +62,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	gz_sprite = 0;
 	gz_pos    = [ 0, 0 ];
 	gz_size   = [ 0, 0 ];
+	gz_factor = [ 1, 1 ];
 	gz_scale  = 1;
 	
 	gz_dragging = false;
@@ -81,14 +79,14 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _gx  = _x + gz_pos[0] * _s;
 		var _gy  = _y + gz_pos[1] * _s;
 		
-		var _ax = _gx + current_data[0] * _s;
-		var _ay = _gy + current_data[1] * _s;
+		var _ax = _gx + current_data[0] * gz_factor[0] * _s;
+		var _ay = _gy + current_data[1] * gz_factor[1] * _s;
 		var _vx, _vy;
 		var _nx, _ny;
 				
 		if(gz_dragging) {
-			_nx = PANEL_PREVIEW.snapX(gz_drag_sx + (_mx - gz_drag_mx) / _s);
-			_ny = PANEL_PREVIEW.snapY(gz_drag_sy + (_my - gz_drag_my) / _s);
+			_nx = PANEL_PREVIEW.snapX(gz_drag_sx + (_mx - gz_drag_mx) / gz_factor[0] / _s);
+			_ny = PANEL_PREVIEW.snapY(gz_drag_sy + (_my - gz_drag_my) / gz_factor[1] / _s);
 			_vx = key_mod_press(CTRL)? round(_nx) : _nx;
 			_vy = key_mod_press(CTRL)? round(_ny) : _ny;
 			
@@ -160,6 +158,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			gz_shape      = _data[ 8];
 			gz_sprite     = _data[ 9];
 			gz_size       = _data[10];
+			gz_factor     = _unt? getDimension() : [1,1];
 			
 			inputs[ 8].setVisible(gz_style == 1);
 			inputs[ 9].setVisible(gz_style == 2, gz_style == 2);
@@ -171,12 +170,6 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			outputs[0].setType(_type);
 		#endregion
-		
-		if(_unt) {
-			var _dim = getDimension();
-			_x *= _dim[0];
-			_y *= _dim[1];
-		}
 		
 		_outData[0][0] = _int? round(_x) : _x;
 		_outData[0][1] = _int? round(_y) : _y;

@@ -6,6 +6,11 @@
         "date": "2026-05-28T04:58:25.427Z",
         "node": "",
         "commit": "**Vec2**: Add relative unit."
+      },
+      {
+        "date": "2026-05-28T05:19:37.972Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Fix selection box trigger when editing gizmo in global view."
       }
     ]
   }
