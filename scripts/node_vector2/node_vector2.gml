@@ -9,6 +9,9 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 1, nodeValue_Float( "y", 0 )).setVisible(true, true);
 	newInput( 2, nodeValue_Bool(  "Integer", false ));
 	
+	////- =Unit
+	newInput(11, nodeValue_Bool(  "Relative Unit", false ));
+	
 	////- =Display
 	newInput( 3, nodeValue_Enum_Scroll( "Display Type",  0, [ "Number", "Coordinate" ]));
 	
@@ -20,18 +23,16 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 8, nodeValue_Enum_Scroll( "Gizmo shape",     0, [ "Rectangle", "Ellipse" ]));
 	newInput( 9, nodeValue_Surface(     "Gizmo sprite"));
 	newInput(10, nodeValue_Vec2(        "Gizmo size",    [32,32]));
-	
-	// input 11
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Vector", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
 	newOutput(1, nodeValue_Output("x", VALUE_TYPE.float, 0))
 	newOutput(2, nodeValue_Output("y", VALUE_TYPE.float, 0))
 		
 	input_display_list = [ 0, 1, 2, 
-		["Display", false], 3, 
-		["Gizmo",   false], 4, 5, 6, 7, 8, 9, 10, 
+		[ "Unit",    false ], 11, 
+		[ "Display", false ],  3, 
+		[ "Gizmo",   false ],  4,  5,  6,  7,  8,  9, 10, 
 	];
 	
 	////- Node
@@ -145,17 +146,19 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-			var _x   = _data[0];
-			var _y   = _data[1];
-			var _int = _data[2];
-			var _dsp = _data[3];
+			var _x   = _data[ 0];
+			var _y   = _data[ 1];
+			var _int = _data[ 2];
+			var _dsp = _data[ 3];
 			
-			isGizmoGlobal = _data[4];
-			gz_pos        = _data[5];
-			gz_scale      = _data[6];
-			gz_style      = _data[7];
-			gz_shape      = _data[8];
-			gz_sprite     = _data[9];
+			var _unt = _data[11];
+			
+			isGizmoGlobal = _data[ 4];
+			gz_pos        = _data[ 5];
+			gz_scale      = _data[ 6];
+			gz_style      = _data[ 7];
+			gz_shape      = _data[ 8];
+			gz_sprite     = _data[ 9];
 			gz_size       = _data[10];
 			
 			inputs[ 8].setVisible(gz_style == 1);
@@ -168,6 +171,12 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			outputs[0].setType(_type);
 		#endregion
+		
+		if(_unt) {
+			var _dim = getDimension();
+			_x *= _dim[0];
+			_y *= _dim[1];
+		}
 		
 		_outData[0][0] = _int? round(_x) : _x;
 		_outData[0][1] = _int? round(_y) : _y;

@@ -464,24 +464,30 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	dis = 0;
 	
 	static flareElementRandomize = function() {
-		var _type = irandom(FLARE_TYPE.size - 1);
+		var _type = choose(
+			FLARE_TYPE.circle, FLARE_TYPE.circle, FLARE_TYPE.circle,
+			FLARE_TYPE.ring,   FLARE_TYPE.ring,
+			FLARE_TYPE.star,
+			FLARE_TYPE.line,
+		);
 		var _pos  = irandom_range(0,20) / 10;
-		var _size = random_range(.25,16);
+		var _size = lerp(.25, 16, sqr(random(1)));
 		var _alph = random_range(.25,1);
 		var _seg  = round(lerp(2, 10, sqr(random(1))) * 4);
 		
-		var _angle = choose(0,0,0,0,0,90);
+		var _sx = random_range(0,.5);
+		var _sy = random_range(_sx,1);
 		
 		var _part = new __FlarePart( _type, _pos, _size, _alph, _seg,
 			false,
 			c_white,
-			[ random_range(0,.5), random_range(.5,1) ],
-			1,  
+			[_sx, _sy],
+			irandom_range(1,4),  
 			irandom_range(1,2), 
-			[ random_range(.5,1), random_range(0,.5) ],
+			[ random_range(.5,1), random_range(0,5) ],
 		);
 		
-		_part.angle = _angle;
+		_part.angle = choose(0,0,0,0,0,90);
 		
 		return _part;
 	}
@@ -854,17 +860,17 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_interpolation(flareSurf);
 				shader_set_uv(noone);
 				
-				shader_set_2("dimension",     [_sw,_sh] );
-				shader_set_f("resolution",    64        );
-				shader_set_i("iteration",     1         );
-				shader_set_i("s_curve_use",   0         );
+				shader_set_2( "dimension",  [_sw,_sh] );
+				shader_set_f( "resolution",  64       );
+				shader_set_i( "iteration",   1        );
+				shader_set_i( "s_curve_use", 0        );
 				
-				shader_set_i("type",          1         );
-				shader_set_2("center",        _focus    );
-				shader_set_f_map("strength",  _abbrS    );
-				shader_set_f_map("intensity", _abbrI    );
-				shader_set_f_map("chromaShf", _abbrShf  );
-				shader_set_f_map("chromaSca", _abbrSca  );
+				shader_set_i( "type",        1        );
+				shader_set_2( "center",      _focus   );
+				shader_set_m( "strength",    _abbrS   );
+				shader_set_m( "intensity",   _abbrI   );
+				shader_set_m( "chromaShf",   _abbrShf );
+				shader_set_m( "chromaSca",   _abbrSca );
 				
 				draw_surface_safe(flareSurf);
 				gpu_set_tex_filter(false);

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-28T04:58:25.427Z",
+        "node": "",
+        "commit": "**Vec2**: Add relative unit."
+      }
+    ]
+  }
+]
