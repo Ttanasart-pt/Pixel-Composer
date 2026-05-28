@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-28T07:53:51.720Z",
+        "node": "Animation Panel",
+        "commit": "**Animation Panel**: Add easing hotkey (E)."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.006",
     "changes": [
       {

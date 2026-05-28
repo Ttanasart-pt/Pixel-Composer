@@ -4,20 +4,22 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDimension(96, 48);
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_PathNode( "Path"         ));
+	newInput( 3, nodeValue_SliRange( "Range", [0,1] ));
+	newInput( 4, nodeValue_Slider(   "Shift",  0    ));
 	
 	////- =Sample
 	newInput( 2, nodeValue_EScroll(  "Type",  0, [ "Loop", "Ping pong", "Clamp" ] ));
 	newInput( 1, nodeValue_Float(    "Ratio", 0 ));
-	// 3
+	// 5
 	
 	newOutput( 0, nodeValue_Output( "Position",  VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	newOutput( 1, nodeValue_Output( "Direction", VALUE_TYPE.float,  0    ));
 	newOutput( 2, nodeValue_Output( "Weight",    VALUE_TYPE.float,  0    ));
 	
 	input_display_list = [
-		[ "Path",   false ], 0, 
-		[ "Sample", false ], 2, 1, 
+		[ "Path",   false ],  0,  3,  4, 
+		[ "Sample", false ],  2,  1, 
 	];
 	
 	////- Node
@@ -46,19 +48,22 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
-			var _path = _data[0];
+			var _path = _data[ 0];
+			var _rng  = _data[ 3];
+			var _shft = _data[ 4];
 			
-			var _mod  = _data[2];
-			var _rat  = _data[1];
+			var _mod  = _data[ 2];
+			var _rat  = _data[ 1];
 		#endregion
 		
-		if(!is_path(_path)) return _output;
-		if(!is_real(_rat))  return _output;
+		if(!is_path(_path) || !is_real(_rat))  return _output;
 		var inv = false;
+		
+		_rat = lerp(_rng[0], _rng[1], _rat + frac(_shft));
 		
 		switch(_mod) {
 			case 0 : _rat = frac(_rat); break;
-				
+			
 			case 1 : 
 				var fl = floor(_rat);
 				var fr = frac(_rat);

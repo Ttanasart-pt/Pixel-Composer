@@ -12,10 +12,128 @@
 		envelope,
 		randomize,
 	}
+	
+    function panel_animation_delete_key()              { CALL("animation_delete_key");              PANEL_ANIMATION.deleteKeys();                                                                        }
+    function panel_animation_duplicate()               { CALL("animation_duplicate");               PANEL_ANIMATION.doDuplicate();                                                                       }
+    function panel_animation_copy()                    { CALL("animation_copy");                    PANEL_ANIMATION.doCopy();                                                                            }
+    function panel_animation_paste()                   { CALL("animation_paste");     if(PANEL_ANIMATION.value_focusing != noone) PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing.prop);          }
+    function panel_animation_show_nodes()              { CALL("animation_toggle_nodes");            PANEL_ANIMATION.show_nodes  = !PANEL_ANIMATION.show_nodes;                                           }
+    function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
+    function panel_animation_show_hidden()             { CALL("animation_toggle_hidden");           PANEL_ANIMATION.show_hidden = !PANEL_ANIMATION.show_hidden;                                          }
+    function panel_animation_quantize()                { CALL("animation_quantize");                PANEL_ANIMATION.doQuantize();                                                                        }
+    
+    function panel_animation_select_all()              { CALL("animation_select_all");              PANEL_ANIMATION.selectAllKeys();         }
+    function panel_animation_edit_keyframe_value()     { CALL("animation_edit_keyframe_value");     PANEL_ANIMATION.edit_keyframe_value();   }
+    function panel_animation_edit_keyframe_lock_y()    { CALL("animation_edit_lock_keyframe_y");    PANEL_ANIMATION.edit_keyframe_lock_y();  }
+    function panel_animation_edit_keyframe_stagger()   { CALL("animation_stagger");                 PANEL_ANIMATION.edit_keyframe_stagger(); }
+    function panel_animation_keyframe_driver()         { CALL("animation_driver");                  PANEL_ANIMATION.edit_keyframe_driver();  }
+    
+    function panel_animation_keyframe_align_left()     { CALL("animation_align_left");              PANEL_ANIMATION.alignKeys(fa_left);   }
+    function panel_animation_keyframe_align_center()   { CALL("animation_align_center");            PANEL_ANIMATION.alignKeys(fa_center); }
+    function panel_animation_keyframe_align_right()    { CALL("animation_align_right");             PANEL_ANIMATION.alignKeys(fa_right);  }
+    function panel_animation_keyframe_repeat()         { CALL("animation_repeat");                  PANEL_ANIMATION.repeatKeys();         }
+    function panel_animation_keyframe_distribute()     { CALL("animation_distribute");              PANEL_ANIMATION.distributeKeys();     }
+    function panel_animation_keyframe_reverse()        { CALL("animation_reverse");                 PANEL_ANIMATION.reverseKeys();        }
+    function panel_animation_keyframe_envelope()       { CALL("animation_envelope");                PANEL_ANIMATION.modulateKeys(KEYFRAME_MODULATE.envelope);  }
+    function panel_animation_keyframe_randomize()      { CALL("animation_randomize");               PANEL_ANIMATION.modulateKeys(KEYFRAME_MODULATE.randomize); }
+    
+    function panel_animation_group_rename()            { CALL("animation_rename_group");            PANEL_ANIMATION.group_rename();          }
+    function panel_animation_group_remove()            { CALL("animation_remove_group");            PANEL_ANIMATION.group_remove();          }
+    function panel_animation_toggle_axis()             { CALL("animation_toggle_axis");             PANEL_ANIMATION.toggle_axis();           }
+    function panel_animation_separate_axis()           { CALL("animation_separate_axis");           PANEL_ANIMATION.separate_axis();         }
+    function panel_animation_combine_axis()            { CALL("animation_combine_axis");            PANEL_ANIMATION.combine_axis();          }
+    
+    function panel_animation_dopesheet_folder()        { CALL("animation_new_folder");              PANEL_ANIMATION.dopesheet_new_folder();        }
+    function panel_animation_dopesheet_folder_select() { CALL("animation_new_folder_select");       PANEL_ANIMATION.dopesheet_new_folder_select(); }
+    function panel_animation_dopesheet_expand()        { CALL("animation_dopesheet_expand");        PANEL_ANIMATION.dopesheet_expand();            }
+    function panel_animation_dopesheet_collapse()      { CALL("animation_dopesheet_collapse");      PANEL_ANIMATION.dopesheet_collapse();          }
+    
+    function panel_animation_new_folder()              { CALL("animation_new_folder");              PANEL_ANIMATION.newFolder();              }
+    function panel_animation_toggle_NodeNameType(d=1)  { CALL("animation_toggle_NodeNameType");     PANEL_ANIMATION.toggleNodeNameType(d);    }
+    function panel_animation_toggle_NodeLabel()        { CALL("animation_toggle_NodeLabel");        PANEL_ANIMATION.toggleNodeLabel();        }
+    function panel_animation_toggle_KeyframeOverride() { CALL("animation_toggle_KeyframeOverride"); PANEL_ANIMATION.toggleKeyframeOverride(); }
+    function panel_animation_toggle_OnionSkin()        { CALL("animation_toggle_OnionSkin");        PANEL_ANIMATION.toggleOnionSkin();        }
+    
+    function panel_animation_keys_move()               { CALL("animation_keys_move");               PANEL_ANIMATION.transformKeys_Move();     }
+    function panel_animation_keys_scale()              { CALL("animation_keys_scale");              PANEL_ANIMATION.transformKeys_Scale();    }
+    function panel_animation_keys_ease_both()          { CALL("animation_keys_ease_both");          PANEL_ANIMATION.transformKeys_Ease(0b11); }
+    function panel_animation_keys_ease_start()         { CALL("animation_keys_ease_start");         PANEL_ANIMATION.transformKeys_Ease(0b10); }
+    function panel_animation_keys_ease_end()           { CALL("animation_keys_ease_end");           PANEL_ANIMATION.transformKeys_Ease(0b01); }
+    
+    function panel_animation_transfer_ease()           { CALL("animation_transfer_ease");           PANEL_ANIMATION.transferEase(); }
+    
+	function __fnInit_Dopesheet() {
+		var an = "Animation";
+		var n  = MOD_KEY.none;
+		var c  = MOD_KEY.ctrl;
+		var s  = MOD_KEY.shift;
+		var a  = MOD_KEY.alt;
+		
+		registerFunction(an, "Delete keys",        vk_delete,  n,  panel_animation_delete_key     ).setMenu("animation_delete_keys")
+        registerFunction(an, "Duplicate",          "D",        c,  panel_animation_duplicate      ).setMenu("animation_duplicate", THEME.duplicate)
+        registerFunction(an, "Copy",               "C",        c,  panel_animation_copy           ).setMenu("animation_copy",      THEME.copy)
+        registerFunction(an, "Paste",              "V",        c,  panel_animation_paste          ).setMenu("animation_paste",     THEME.paste)
+        registerFunction(an, "Collapse Toggle",    "C",        n,  panel_animation_collapseToggle ).setMenu("animation_collapse_toggle")
+        registerFunction(an, "Toggle Nodes",       "H",        n,  panel_animation_show_nodes     ).setMenu("animation_toggle_nodes")
+        
+        registerFunction(an, "Select All Keys",    "A", c, panel_animation_select_all             ).setMenu("animation_select_all",          )
+        registerFunction(an, "Edit Keyframe Value","",  n, panel_animation_edit_keyframe_value    ).setMenu("animation_edit_keyframe_value", )
+        registerFunction(an, "Toggle Keyframe Y",  "",  n, panel_animation_edit_keyframe_lock_y   ).setMenu("animation_lock_keyframe_y",     )
+        registerFunction(an, "Driver...",          "",  n, panel_animation_keyframe_driver        ).setMenu("animation_driver",              )
+        
+        registerFunction(an, "Align Left",         "A", n, panel_animation_keyframe_align_left    ).setMenu("animation_align_left"   )
+        registerFunction(an, "Align Center",       "",  n, panel_animation_keyframe_align_center  ).setMenu("animation_align_center" )
+        registerFunction(an, "Align Right",        "",  n, panel_animation_keyframe_align_right   ).setMenu("animation_align_right"  )
+        
+        registerFunction(an, "Quantize Keys",      "Q", n, panel_animation_quantize               ).setMenu("animation_quantize")
+        registerFunction(an, "Stagger Keys",       "",  n, panel_animation_edit_keyframe_stagger  ).setMenu("animation_stagger",     )
+        registerFunction(an, "Repeat Keys",        "R", n, panel_animation_keyframe_repeat        ).setMenu("animation_repeat"       )
+        registerFunction(an, "Distribute Keys",    "D", n, panel_animation_keyframe_distribute    ).setMenu("animation_distribute"   )
+        registerFunction(an, "Reverse Keys",       "I", n, panel_animation_keyframe_reverse       ).setMenu("animation_reverse"      )
+        registerFunction(an, "Envelope Keys",      "",  n, panel_animation_keyframe_envelope      ).setMenu("animation_envelope"     )
+        registerFunction(an, "Randomize Keys",     "",  n, panel_animation_keyframe_randomize     ).setMenu("animation_randomize"    )
+        
+        registerFunction(an, "Rename Group",          "", n, panel_animation_group_rename         ).setMenu("animation_rename_group",        )
+        registerFunction(an, "Remove Group",          "", n, panel_animation_group_remove         ).setMenu("animation_remove_group",        THEME.cross)
+        registerFunction(an, "Separate/Combine Axis", "", n, panel_animation_toggle_axis          ).setMenu("animation_toggle_axis",         )
+        registerFunction(an, "Separate Axis",         "", n, panel_animation_separate_axis        ).setMenu("animation_separate_axis",       )
+        registerFunction(an, "Combine Axis",          "", n, panel_animation_combine_axis         ).setMenu("animation_combine_axis",        )
+        
+        registerFunction(an, "New Folder",                "", n, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",        THEME.folder     )
+        registerFunction(an, "New Folder From Selection", "", n, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select", THEME.folder_sel )
+        registerFunction(an, "Dopesheet Expand",          "", n, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand"   )
+        registerFunction(an, "Dopesheet Collapse",        "", n, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse" )
+        
+        registerFunction(an, "Move Keys",            "G", n, panel_animation_keys_move            ).setMenu("animation_keys_move"  )
+        registerFunction(an, "Scale Keys",           "S", n, panel_animation_keys_scale           ).setMenu("animation_keys_scale" )
+        registerFunction(an, "Ease Keys",            "E", n, panel_animation_keys_ease_both       ).setMenu("animation_keys_ease" )
+        registerFunction(an, "Transfer Easing",       "", n, panel_animation_transfer_ease        ).setMenu("animation_transfer_ease" )
+        
+        registerFunction(an, "Toggle Hidden",      "S", s,  panel_animation_show_hidden    )
+        	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
+        	.setColorFn(function() /*=>*/ {return PANEL_ANIMATION.show_hidden? COLORS._main_icon : COLORS._main_accent} )
+        
+        registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType      )
+        	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.node_name_type} )
+        	.setTooltip(new tooltipSelector("Name Display", [
+	            __txt("panel_animation_name_full", "Full name"),
+	            __txt("panel_animation_name_type", "Node type"),
+	            __txt("panel_animation_name_only", "Node name"),
+	        ])).setScroll()
+	        
+        registerFunction(an, "Show Node Name",    "", n, panel_animation_toggle_NodeLabel       )
+        	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_nodes}     )
+        	
+        registerFunction(an, "Override Keyframe", "", n, panel_animation_toggle_KeyframeOverride)
+        	.setMenu("animation_toggle_KeyframeOverride", THEME.keyframe_override ).setSpriteInd(function() /*=>*/ {return PREFERENCES.panel_animation_key_override} )
+        	
+        registerFunction(an, "Onion Skin",        "", n, panel_animation_toggle_OnionSkin       )
+        	.setMenu("animation_toggle_OnionSkin",        THEME.onion_skin        ).setSpriteInd(function() /*=>*/ {return PROJECT.onion_skin.enabled}     )
+        
+	}
 #endregion
 
 function Panel_Animation_Dopesheet() {
-	
 	#region ---- Dimension ----
 		tool_width_drag  = false;
 	    tool_width_start = 0;
@@ -186,6 +304,7 @@ function Panel_Animation_Dopesheet() {
 	    modulate_drag_mx = 0;
 	    
 	    transform_modes    = noone;
+	    transform_mode_mod = 0;
 	    transform_anim     = [];
 	    transform_keys     = [];
 	    transform_key_time = [];
@@ -686,8 +805,9 @@ function Panel_Animation_Dopesheet() {
     	transform_mouse_x  = mx;
     	
     	for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
-    		transform_key_time[i] = transform_keys[i].time;
-    		array_push(transform_anim, transform_keys[i].anim)
+    		var k = transform_keys[i];
+    		array_push(transform_anim, k.anim)
+    		transform_key_time[i] = k.time;
     	}
     	
     	array_unique_ext(transform_anim);
@@ -705,13 +825,33 @@ function Panel_Animation_Dopesheet() {
     	transform_start_x  = 0;
     	
     	for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
-    		transform_key_time[i] = transform_keys[i].time;
-    		array_push(transform_anim, transform_keys[i].anim)
-    		
-    		transform_start_x += transform_keys[i].time;
+    		var k = transform_keys[i];
+    		array_push(transform_anim, k.anim)
+    		transform_key_time[i] = k.time;
+    		transform_start_x += k.time;
     	}
     	
     	transform_start_x /= n;
+    	array_unique_ext(transform_anim);
+    	KEYBOARD_RESET
+    }
+    
+    function transformKeys_Ease(_side = 0b11, _reset = false) {
+    	if(transform_modes != noone || array_empty(keyframe_selecting)) return;
+    	
+    	transform_modes    = "ease";
+    	transform_mode_mod = _side;
+    	transform_keys     = array_clone(keyframe_selecting, 1);
+    	transform_anim     = [];
+    	transform_key_time = [];
+    	transform_mouse_x  = mx;
+    	
+    	for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
+    		var k = transform_keys[i];
+    		array_push(transform_anim, k.anim)
+    		transform_key_time[i] = _reset? [0,0] : [k.ease_in[0],k.ease_out[0]];
+    	}
+    	
     	array_unique_ext(transform_anim);
     	KEYBOARD_RESET
     }
@@ -748,6 +888,29 @@ function Panel_Animation_Dopesheet() {
 		    	}
     			break;
     			
+    		case "ease":
+    			var dx = (mx - transform_mouse_x) / timeline_scale / 2;
+    			
+    			for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
+    				var k = transform_keys[i];
+    				
+				    if(transform_mode_mod & 0b10) {
+    					var e = transform_key_time[i][0] + dx;
+    					    e = clamp(e, 0, 2);
+    					    
+			    		k.ease_in[0]   = e;
+			    		k.ease_in_type = e == 0? CURVE_TYPE.linear : CURVE_TYPE.bezier;
+				    }
+				    
+				    if(transform_mode_mod & 0b01) {
+    					var e = transform_key_time[i][1] + dx;
+    					    e = clamp(e, 0, 2);
+    					    
+			    		k.ease_out[0]   = e;
+						k.ease_out_type = e == 0? CURVE_TYPE.linear : CURVE_TYPE.bezier;
+				    }
+		    	}
+    			break;
     	}
     	
     	if(mouse_press(mb_any) || key_press(vk_enter)) {
@@ -2889,19 +3052,20 @@ function Panel_Animation_Dopesheet() {
 		            
 	                if(_toSel != undefined)  keyframe_selecting = _toSel;
 	                else if(key_hover == noone) {
-		                if(!stagger_mode && keyframe_boxable) {
-	                		if(!key_mod_press(SHIFT))
-	                			keyframe_selecting = [];
-		                    
-		                    keyframe_box_sel = array_clone(keyframe_selecting, 1);
-		                    keyframe_boxing  = true;
-		                    keyframe_box_sx  = msx;
-		                    keyframe_box_sy  = msy;
-		                    
-		                } else if(transform_modes == noone) {
-		                	keyframe_selecting = [];
-		                }
-		                
+	                	if(transform_modes == noone) {
+			                if(!stagger_mode && keyframe_boxable) {
+		                		if(!key_mod_press(SHIFT))
+		                			keyframe_selecting = [];
+			                    
+			                    keyframe_box_sel = array_clone(keyframe_selecting, 1);
+			                    keyframe_boxing  = true;
+			                    keyframe_box_sx  = msx;
+			                    keyframe_box_sy  = msy;
+			                    
+			                } else 
+			                	keyframe_selecting = [];
+	                	}
+	                	
 	                } else if(key_mod_press(SHIFT)) {
 	                	array_toggle(keyframe_selecting, key_hover);
 	                	
