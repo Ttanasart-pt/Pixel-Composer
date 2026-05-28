@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_draw_line_width",
+  "name":"sh_draw_line_width",
+  "parent":{
+    "name":"drawer",
+    "path":"folders/nodes/data/generator/drawer.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

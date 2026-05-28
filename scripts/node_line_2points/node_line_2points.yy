@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_line_2points",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_line_2points",
+  "parent":{
+    "name":"drawer",
+    "path":"folders/nodes/data/generator/drawer.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

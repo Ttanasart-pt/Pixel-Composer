@@ -206,8 +206,9 @@
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
         registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); } ).setMenu("graph_node_selector", THEME.node_selector);
-        registerFunction(g, "Node Action Pie",       "Q", n, function() /*=>*/ {return PANEL_GRAPH.nodeQuickPie()}  ).setMenu("graph_node_action_pie");
-        registerFunction(g, "Node Preset Pie",       "P", a, function() /*=>*/ {return PANEL_GRAPH.nodePresetPie()} ).setMenu("graph_node_preset_pie");
+        registerFunction(g, "Node Action Pie",       "Q", n, function() /*=>*/ {return PANEL_GRAPH.nodeQuickPie()}     ).setMenu("graph_node_action_pie");
+        registerFunction(g, "Node Preset Pie",       "P", a, function() /*=>*/ {return PANEL_GRAPH.nodePresetPie()}    ).setMenu("graph_node_preset_pie");
+        registerFunction(g, "Node Attribute Pie",    "A", a, function() /*=>*/ {return PANEL_GRAPH.nodeAttributePie()} ).setMenu("graph_node_attribute_pie");
         	
         registerFunction(g, "Node Multiplier...",    "",  n, function() /*=>*/ { 
         	if(array_empty(PANEL_GRAPH.nodes_selecting)) return;
@@ -3997,7 +3998,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	selectNodes(array_unique(_sel));
     }
     
-    ////- Action
+    ////- Add Node
     
     function createNodeHotkey(_node, _select = true, _connect = false) {
     	var _nodeType = _node;
@@ -4391,6 +4392,65 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         return node;
 	}
 	
+    function createTunnel() {
+        if(__junction_hovering == noone) return;
+        if(__junction_hovering.value_from == noone) return;
+        
+        var _jo = __junction_hovering.value_from;
+        var _ji = __junction_hovering;
+        
+        var _key = $"{__junction_hovering.name} {seed_random(3)}";
+        
+        var _ti = nodeBuild("Node_Tunnel_In",  _jo.rx + 32, _jo.ry - 8); 
+            _ti.skipDefault();
+            
+        var _to = nodeBuild("Node_Tunnel_Out", _ji.rx - 32, _ji.ry - 8); 
+            _to.skipDefault();
+        
+        _to.inputs[0].setValue(_key);
+        _ti.inputs[0].setValue(_key);
+        
+        _ti.inputs[1].setFrom(_jo);
+        _ji.setFrom(_to.outputs[0]);
+        
+        _to.inputs[0].updateColor();
+        _ti.inputs[1].updateColor();
+        
+        run_in(1, function() /*=>*/ { RENDER_ALL_REORDER });
+    }
+    
+    ////- Group
+    
+    function doGroup() { //
+        if(array_empty(nodes_selecting)) return;
+        groupNodes(nodes_selecting);
+    } 
+	
+    function doUngroup() { //
+        var _node = getFocusingNode();
+        if(_node == noone) return;
+        if(!is(_node, Node_Collection) || !_node.ungroupable) return;
+    
+        upgroupNode(_node);
+    } 
+	
+	function doGroupRemoveInstance() {
+		var _node = getFocusingNode();
+        if(!is(_node, Node_Collection)) return;
+        
+        _node.resetInstance();
+	}
+	
+	function doGroupUpdate() {
+		var _node = getFocusingNode();
+        if(is(!_node, Node_Collection)) return;
+        if(_node.collPath == "")        return;
+        
+        saveCollection(_node, _node.collPath, false, _node.metadata);
+	}
+	
+    ////- Action
+    
     function getFocusNode() {
     	var _n = array_safe_get(nodes_selecting, 0);
     	return instanceof(_n) == FOCUS_STR? _n : noone;
@@ -4562,34 +4622,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
     } 
 
-    function doGroup() { //
-        if(array_empty(nodes_selecting)) return;
-        groupNodes(nodes_selecting);
-    } 
-
-    function doUngroup() { //
-        var _node = getFocusingNode();
-        if(_node == noone) return;
-        if(!is(_node, Node_Collection) || !_node.ungroupable) return;
-    
-        upgroupNode(_node);
-    } 
-	
-	function doGroupRemoveInstance() {
-		var _node = getFocusingNode();
-        if(!is(_node, Node_Collection)) return;
-        
-        _node.resetInstance();
-	}
-	
-	function doGroupUpdate() {
-		var _node = getFocusingNode();
-        if(is(!_node, Node_Collection)) return;
-        if(_node.collPath == "")        return;
-        
-        saveCollection(_node, _node.collPath, false, _node.metadata);
-	}
-	
     function doDelete(_merge = false) { //
         __temp_merge = _merge;
         
@@ -4906,33 +4938,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	}
     }
     
-    function createTunnel() {
-        if(__junction_hovering == noone) return;
-        if(__junction_hovering.value_from == noone) return;
-        
-        var _jo = __junction_hovering.value_from;
-        var _ji = __junction_hovering;
-        
-        var _key = $"{__junction_hovering.name} {seed_random(3)}";
-        
-        var _ti = nodeBuild("Node_Tunnel_In",  _jo.rx + 32, _jo.ry - 8); 
-            _ti.skipDefault();
-            
-        var _to = nodeBuild("Node_Tunnel_Out", _ji.rx - 32, _ji.ry - 8); 
-            _to.skipDefault();
-        
-        _to.inputs[0].setValue(_key);
-        _ti.inputs[0].setValue(_key);
-        
-        _ti.inputs[1].setFrom(_jo);
-        _ji.setFrom(_to.outputs[0]);
-        
-        _to.inputs[0].updateColor();
-        _ti.inputs[1].updateColor();
-        
-        run_in(1, function() /*=>*/ { RENDER_ALL_REORDER });
-    }
-    
     function createAction() {
         if(array_empty(nodes_selecting)) return;
         
@@ -5052,6 +5057,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		RENDER_ALL
     }
     
+    ////- Pie Menu
+    
     function nodeQuickPie() {
     	if(!is(node_hovering, Node)) return;
     	
@@ -5121,6 +5128,24 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	}
     	
 		return pieMenuCall($"node_preset_{instanceof(node_hovering)}", _pmenu);
+    }
+    
+    function nodeAttributePie() {
+    	if(!is(node_hovering, Node)) return;
+    	
+    	if(instance_exists(o_pie_menu) && o_pie_menu.active) {
+    		o_pie_menu.deactivate();
+    		return;
+    	}
+    	
+    	var _node  = node_hovering;
+    	var _pmenu = [];
+    	
+    	if(has(_node, "color_depth_editor")) array_push(_pmenu, new MenuWidget(_node.color_depth_editor[0], _node.color_depth_editor[2].clone(), _node.color_depth_editor[1] ))
+    	if(has(_node, "interpolate_editor")) array_push(_pmenu, new MenuWidget(_node.interpolate_editor[0], _node.interpolate_editor[2].clone(), _node.interpolate_editor[1] ))
+    	if(has(_node, "oversample_editor"))  array_push(_pmenu, new MenuWidget(_node.oversample_editor[0],  _node.oversample_editor[2].clone(),  _node.oversample_editor[1]  ))
+    	
+		return array_empty(_pmenu)? noone : pieMenuCall($"node_attribute_{instanceof(node_hovering)}", _pmenu);
     }
     
     ////- Serialize

@@ -1,5 +1,6 @@
 function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Builder";
+	preview_select_surface = false;
 	setDimension(96, 48);
 	setDrawIcon();
 	
@@ -92,12 +93,12 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 	}
 	
-	static getLineCount		= function()        { return path_amount;                }
-	static getSegmentCount	= function(ind = 0) { return array_length(lengths[ind]); }
-	static getBoundary		= function(ind = 0) { return boundary[ind];              }
+	static getLineCount		= function()    /*=>*/ {return path_amount};
+	static getSegmentCount	= function(i=0) /*=>*/ {return array_length(lengths[i])};
+	static getBoundary		= function(i=0) /*=>*/ {return boundary[i]};
 	
-	static getLength		= function(ind = 0) { return lengthTotal[ind];           }
-	static getAccuLength	= function(ind = 0) { return lengthAccs[ind];            }
+	static getLength		= function(i=0) /*=>*/ {return lengthTotal[i]};
+	static getAccuLength	= function(i=0) /*=>*/ {return lengthAccs[i]};
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }

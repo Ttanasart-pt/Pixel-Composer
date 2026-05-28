@@ -25,6 +25,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	newInput(30, nodeValue_Bool(    "Use Path Bounding Box", false    ));
+	newInput(59, nodeValue_Bool(    "Combine Array",         false    ));
 	newInput(31, nodeValue_IPadding("Padding",              [0,0,0,0] ))
 	newInput(16, nodeValue_Bool(    "Width Pass",            false    ));
 	newInput(58, nodeValue_EScroll( "Width Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
@@ -98,7 +99,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 59
+	// Inputs 60
 	
 	input_display_list = [ 39, 
 		[ "Output",         true     ],  0, 30, 31, 16, 58, 
@@ -172,6 +173,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _dim      = _data[ 0];
 			var _pbbox    = _data[30];
+			var _comArr   = _data[59];
 			var _ppadd    = _data[31];
 			var _colW     = _data[16];
 			var _colWBld  = _data[58];

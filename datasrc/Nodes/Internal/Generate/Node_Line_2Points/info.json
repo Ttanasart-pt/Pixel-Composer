@@ -1,0 +1,6 @@
+{
+    "name":          "Draw Line 2 Points",
+    "spr":           "s_node_line_2points",
+    "baseNode":      "Node_Line_2Points",
+    "pxc_version":    121020,
+}
