@@ -70,11 +70,13 @@ function rangeBox(_onModify) : widget() constructor {
 	
 	////- Draw
 	
-	static drawParam = function(params) { 
-		setParam(params);
+	static onSetParam  = function(params) {
 		tb[0].setParam(params);
 		tb[1].setParam(params);
-		
+	}
+	
+	static drawParam = function(params) { 
+		setParam(params);
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	} 
 	

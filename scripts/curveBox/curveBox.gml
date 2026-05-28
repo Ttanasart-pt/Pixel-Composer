@@ -40,7 +40,6 @@ function curveBox(_onModify) : widget() constructor {
 		
 		range_display_data = {};
 		show_x_control     = false;
-		
 	#endregion
 	
 	#region modify
@@ -111,14 +110,14 @@ function curveBox(_onModify) : widget() constructor {
 	////- Draw
 	
 	static fetchHeight = function(params) { return h; }
-	static drawParam   = function(params) {
-		rx = params.rx;
-		ry = params.ry;
-		
+	static onSetParam  = function(params) {
 		tb_range.setParam(params);
 		tb_shift.setParam(params);
 		tb_scale.setParam(params);
-		
+	}
+	
+	static drawParam   = function(params) {
+		setParam(params);
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
