@@ -491,8 +491,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _bx = _x + _w - ui(24);
 			var aa  = (ind != layer_dragging || layer_dragging == noone)? 1 : 0.5;
-			var vis = array_safe_get_fast(_vis, ind);
-			var sel = array_safe_get_fast(_sel, ind);
+			var vis = array_safe_get_fast(_vis, ind) ?? true; _vis[ind] = vis;
+			var sel = array_safe_get_fast(_sel, ind) ?? true; _sel[ind] = sel;
 			
 			var _exp = properties_expand[i] ?? 0;
 			var _lh  = lh + ui(4) + _exp * eh;

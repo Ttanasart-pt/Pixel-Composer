@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-28T05:29:00.083Z",
+        "node": "Composite",
+        "commit": "**Composite**: Fix error when trying to insert surface in-between."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc10",
     "changes": [
       {
