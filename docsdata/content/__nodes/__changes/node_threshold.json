@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-28T00:43:04.140Z",
+        "node": "Threshold",
+        "commit": "**Threshold**: \"Apply to Alpha\" option now an enum with new solid BW with alpha output."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

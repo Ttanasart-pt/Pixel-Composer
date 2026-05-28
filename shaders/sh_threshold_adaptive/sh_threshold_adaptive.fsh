@@ -57,8 +57,9 @@ void main() {
 		float _res = brightSmooth == 0.? _step(bNeight, cbright) : smoothstep(bNeight - brightSmooth, bNeight + brightSmooth, cbright);
 		if(brightInvert == 1) _res = 1. - _res;
 		
-		if(brightAlpha == 0) col.rgb = vec3(_res);
-		else                 col     = vec4(col.rgb, _res);
+		     if(brightAlpha == 0) col.rgb = vec3(_res);
+		else if(brightAlpha == 1) col     = vec4(col.rgb,  _res);
+		else if(brightAlpha == 2) col     = vec4(_res);
 		
 		if(brightMulp   == 1) col *= base;
 	}

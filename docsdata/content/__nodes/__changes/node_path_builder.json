@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-28T00:58:08.869Z",
+        "node": "Path Builder",
+        "commit": "**Path Builder**: Add points editor."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.006",
     "changes": [
       {

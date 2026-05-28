@@ -179,8 +179,9 @@ void main() {
 			
 		if(brightInvert == 1) vBright = 1. - vBright;
 		
-		if(brightAlpha == 0) col.rgb = vec3(vBright);
-		else                 col     = vec4(col.rgb, vBright);
+		     if(brightAlpha == 0) col.rgb = vec3(vBright);
+		else if(brightAlpha == 1) col     = vec4(col.rgb,  vBright);
+		else if(brightAlpha == 2) col     = vec4(vBright);
 		
 		if(brightMulp   == 1) col *= base;
 	}

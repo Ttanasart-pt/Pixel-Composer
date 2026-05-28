@@ -18,14 +18,14 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__init_mask_modifier(4, 11); // inputs 11, 12
 	
 	////- =Brightness
-	newInput( 1, nodeValue_Bool(        "Brightness",       false )).setPieMenu();
-	newInput(15, nodeValue_Enum_Scroll( "Algorithm",        0, [ "Simple", "Adaptive mean" ] ));
-	newInput( 2, nodeValue_Slider(      "Threshold",       .5     )).setHotkey("B").setInternalName("Brightness Threshold").setMappable(13).setPieMenu();
-	newInput( 3, nodeValue_Slider(      "Smoothness",       0     )).setInternalName("Brightness Smoothness").setCurvable(21).setPieMenu();
-	newInput(16, nodeValue_Int(         "Adaptive Radius",  4     ));
-	newInput(17, nodeValue_Bool(        "Invert",           false )).setInternalName("Brightness Invert");
-	newInput(20, nodeValue_Bool(        "Multiply",         false ));
-	newInput(19, nodeValue_Bool(        "Apply to Alpha",   false ));
+	newInput( 1, nodeValue_Bool(    "Brightness",       false )).setPieMenu();
+	newInput(15, nodeValue_EScroll( "Algorithm",        0, [ "Simple", "Adaptive mean" ] ));
+	newInput( 2, nodeValue_Slider(  "Threshold",       .5     )).setHotkey("B").setInternalName("Brightness Threshold").setMappable(13).setPieMenu();
+	newInput( 3, nodeValue_Slider(  "Smoothness",       0     )).setInternalName("Brightness Smoothness").setCurvable(21).setPieMenu();
+	newInput(16, nodeValue_Int(     "Adaptive Radius",  4     ));
+	newInput(17, nodeValue_Bool(    "Invert",           false )).setInternalName("Brightness Invert");
+	newInput(20, nodeValue_Bool(    "Multiply",         false ));
+	newInput(19, nodeValue_EScroll( "Apply to Alpha",   0, [ "None", "Base RGB", "BW" ] ));
 	
 	////- =Alpha
 	newInput( 7, nodeValue_Bool(   "Alpha",       false )).setPieMenu();
@@ -87,28 +87,26 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			inputs[16].setVisible(_algo == 1);
 		#endregion
 		
-		var _shader = sh_threshold;
-		if(_algo == 1) _shader = sh_threshold_adaptive;
-		
+		var _shader = _algo == 1? sh_threshold_adaptive : sh_threshold;
 		surface_set_shader(_outSurf, _shader);
 			shader_set_dim(, _surf);
 			
-			shader_set_i("bright",			    _bright);
-			shader_set_i("brightInvert",        _brightInv);
-			shader_set_f_map("brightThreshold", _brightThr, _data[13], inputs[2]);
-			shader_set_f("brightSmooth",	    _brightSmt);
-			shader_set_curve("brightSmooth",	_brightCrv, inputs[3]);
+			shader_set_i("bright",           _bright                           );
+			shader_set_i("brightInvert",     _brightInv                        );
+			shader_set_m("brightThreshold",  _brightThr, _data[13], inputs[2]  );
+			shader_set_f("brightSmooth",     _brightSmt                        );
+			shader_set_curve("brightSmooth", _brightCrv, inputs[3]             );
 			
-			shader_set_f("adaptiveRadius",	    _adap_size);
-			shader_set_f("gaussianCoeff",	    __gaussian_get_kernel(_adap_size));
-			shader_set_i("brightAlpha",		    _brightAlp);
-			shader_set_i("brightMulp",		    _brightMulp);
+			shader_set_f("adaptiveRadius",   _adap_size                        );
+			shader_set_f("gaussianCoeff",    __gaussian_get_kernel(_adap_size) );
+			shader_set_i("brightAlpha",      _brightAlp                        );
+			shader_set_i("brightMulp",       _brightMulp                       );
 			
-			shader_set_i("alpha",			    _alph);
-			shader_set_i("alphaInvert",			_alhpaInv);
-			shader_set_f_map("alphaThreshold",  _alphThr, _data[14], inputs[8]);
-			shader_set_f("alphaSmooth",		    _alphSmt);
-			shader_set_curve("alphaSmooth",	    _alphCrv, inputs[9]);
+			shader_set_i("alpha",            _alph                             );
+			shader_set_i("alphaInvert",      _alhpaInv                         );
+			shader_set_m("alphaThreshold",   _alphThr, _data[14], inputs[8]    );
+			shader_set_f("alphaSmooth",      _alphSmt                          );
+			shader_set_curve("alphaSmooth",  _alphCrv, inputs[9]               );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
