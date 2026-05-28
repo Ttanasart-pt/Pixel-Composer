@@ -58,6 +58,8 @@ function AnimationManager() constructor {
 	play_direction  = 1;
 	is_simulating   = false;
 	
+	region_selecting = undefined;
+	
 	__debug_animator_counter = 0;
 	
 	playback  = ANIMATOR_END.loop;
@@ -76,8 +78,23 @@ function AnimationManager() constructor {
 		}
 	}
 	
-	static getFirstFrame = function(r=true) /*=>*/ {return r && frame_range_start? frame_range_start - 1 : 0};
-	static getLastFrame  = function(r=true) /*=>*/ {return r && frame_range_end?   frame_range_end   - 1 : frames_total - 1};
+	static getFirstFrame = function(r=true) /*=>*/ {
+		if(r) {
+			if(frame_range_start != undefined) return frame_range_start - 1;
+			if(region_selecting  != undefined) return region_selecting.frameStart - 1;
+		}
+		
+		return 0;
+	}
+	
+	static getLastFrame  = function(r=true) /*=>*/ {
+		if(r) {
+			if(frame_range_end  != undefined) return frame_range_end - 1;
+			if(region_selecting != undefined) return region_selecting.frameEnd - 1;
+		}
+		
+		return frames_total - 1;
+	}
 	
 	static firstFrame    = function(r=true) /*=>*/ {return setFrame(getFirstFrame(r))};
 	static lastFrame     = function(r=true) /*=>*/ {return setFrame(getLastFrame(r))};
@@ -167,19 +184,17 @@ function AnimationManager() constructor {
 		setFrame(real_frame + play_direction);
 		last_time = dt;
 		
-		var _maxFrame = frame_range_end ?? frames_total;
-		
-		if(current_frame >= _maxFrame) {
-			// firstFrame();
+		var _lastFrame = getLastFrame();
+		if(current_frame >= _lastFrame + 1) {
 			
 			if(playback == ANIMATOR_END.stop || is_rendering) {
-				setFrame(max(0, frames_total - 1));
+				setFrame(max(0, _lastFrame));
 				is_playing   = false;
 				is_rendering = false;
 				last_time    = 0;
 				
 			} else if(playback == ANIMATOR_END.pingpong) {
-				setFrame(max(0, frames_total - 2));
+				setFrame(max(0, _lastFrame - 1));
 				play_direction = -1;
 				
 			} else {

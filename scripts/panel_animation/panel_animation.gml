@@ -617,6 +617,35 @@ function Panel_Animation() : PanelContent() constructor {
             draw_set_alpha(1);
         }
     	
+        #region Regions
+        	var _regions = PROJECT.animationRegionDisplay;
+            var _regLine = array_length(_regions);
+            var _reg_h   = ui(2);
+            var _reg_y   = bar_h - ui(1) - _regLine * _reg_h;
+            
+        	for( var i = 0, n = _regLine; i < n; i++ ) {
+        		var _line = _regions[i];
+        		var by    = _reg_y + i * _reg_h;
+        		
+        		for( var j = 0, m = array_length(_line); j < m; j++ ) {
+	        		var _reg = _line[j];
+	        		var _col = _reg.color;
+	        		var _fst = _reg.frameStart;
+	        		var _fed = _reg.frameEnd;
+	        		
+	        		var bx0 = _fst * timeline_scale + timeline_shift + ui(2);
+	        		var bx1 = _fed * timeline_scale + timeline_shift - ui(2);
+	        		
+	        		var sel = PROJECT.animator.region_selecting == _reg;
+	        		
+	        		draw_set_color(_col);
+	        		draw_set_alpha(.5 + .5 * sel);
+	        		draw_line_width(bx0, by, bx1, by, ui(1));
+	        		draw_set_alpha(1);
+        		}
+        	}
+        #endregion
+	        
     	#region Line
             var _stW = timeline_separate * timeline_scale;
             var _st  = ceil(-timeline_shift / _stW);

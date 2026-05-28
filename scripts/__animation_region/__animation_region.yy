@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__animation_region",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__animation_region",
+  "parent":{
+    "name":"animation",
+    "path":"folders/panels/animation.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

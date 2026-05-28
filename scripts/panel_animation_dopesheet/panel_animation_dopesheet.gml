@@ -62,6 +62,8 @@
     
     function panel_animation_transfer_ease()           { CALL("animation_transfer_ease");           PANEL_ANIMATION.transferEase(); }
     
+    function panel_animation_region_create()           { CALL("animation_region_create");           PANEL_ANIMATION.region_create();         }
+    
 	function __fnInit_Dopesheet() {
 		var an = "Animation";
 		var n  = MOD_KEY.none;
@@ -104,10 +106,14 @@
         registerFunction(an, "Dopesheet Expand",          "", n, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand"   )
         registerFunction(an, "Dopesheet Collapse",        "", n, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse" )
         
-        registerFunction(an, "Move Keys",            "G", n, panel_animation_keys_move            ).setMenu("animation_keys_move"  )
-        registerFunction(an, "Scale Keys",           "S", n, panel_animation_keys_scale           ).setMenu("animation_keys_scale" )
-        registerFunction(an, "Ease Keys",            "E", n, panel_animation_keys_ease_both       ).setMenu("animation_keys_ease" )
-        registerFunction(an, "Transfer Easing",       "", n, panel_animation_transfer_ease        ).setMenu("animation_transfer_ease" )
+        registerFunction(an, "Move Keys",            "G", n, panel_animation_keys_move            ).setMenu("animation_keys_move"       )
+        registerFunction(an, "Scale Keys",           "S", n, panel_animation_keys_scale           ).setMenu("animation_keys_scale"      )
+        registerFunction(an, "Ease Keys",            "E", n, panel_animation_keys_ease_both       ).setMenu("animation_keys_ease"       )
+        registerFunction(an, "Ease Keys Start",      "[", n, panel_animation_keys_ease_start      ).setMenu("animation_keys_ease_start" )
+        registerFunction(an, "Ease Keys End",        "]", n, panel_animation_keys_ease_end        ).setMenu("animation_keys_ease_end"   )
+        registerFunction(an, "Transfer Easing",      "",  n, panel_animation_transfer_ease        ).setMenu("animation_transfer_ease"   )
+        
+        registerFunction(an, "Create Region",        "",  n, panel_animation_region_create        ).setMenu("animation_region_create"   )
         
         registerFunction(an, "Toggle Hidden",      "S", s,  panel_animation_show_hidden    )
         	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
@@ -246,6 +252,10 @@ function Panel_Animation_Dopesheet() {
         show_value = false;
         
         region_hovering = noone;
+        region_resize   = undefined;
+        region_resize_s = 0;
+        region_resize_v = 0;
+        region_resize_x = 0;
     #endregion
     
     #region ---- Display ---- 
@@ -333,6 +343,10 @@ function Panel_Animation_Dopesheet() {
         bar_total_shift = 1;
         
         top_frame_height = ui(20);
+        region_height    = ui(12);
+        topbar_height    = top_frame_height;
+        
+        anim_region_hovering  = undefined;
 	#endregion
 
     #region ---- Actions ----
@@ -394,32 +408,6 @@ function Panel_Animation_Dopesheet() {
         function separate_axis() { context_selecting_prop.separateAxis();         }
         function combine_axis()  { context_selecting_prop.combineAxis();          }
         
-        function range_reset()     { 
-        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
-        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
-        	PROJECT.animator.frame_range_start = undefined; 
-        	PROJECT.animator.frame_range_end   = undefined;
-        }
-        
-        function range_set_start(_frame = PROJECT.animator.current_frame + 1) { 
-        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
-        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
-        	PROJECT.animator.frame_range_start = _frame; 
-        	PROJECT.animator.frame_range_end   = PROJECT.animator.frame_range_end ?? PROJECT.animator.frames_total;
-        }
-        function range_set_end(_frame = PROJECT.animator.current_frame + 1)   { 
-        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
-        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
-        	PROJECT.animator.frame_range_start = PROJECT.animator.frame_range_start ?? 0; 
-        	PROJECT.animator.frame_range_end   = _frame; 
-        }
-        
-        function range_set_start_current()  { range_set_start();                  }
-        function range_set_start_selected() { range_set_start(__selecting_frame); }
-        
-        function range_set_end_current()    { range_set_end();                    }
-        function range_set_end_selected()   { range_set_end(__selecting_frame);   }
-        
 	    context_selecting_item = noone;
 	    context_selecting_prop = noone;
 	    
@@ -470,6 +458,8 @@ function Panel_Animation_Dopesheet() {
 			"animation_marker_add",
 			"animation_marker_remove",
 			"animation_marker_clear",
+			-1,
+			"animation_region_create",
 	    ];
 	    
 	    // global.menuItems_animation_region = [
@@ -791,12 +781,12 @@ function Panel_Animation_Dopesheet() {
     }
     
     function deleteKeys() {
-    	array_foreach(keyframe_selecting, function(k) /*=>*/ { k.anim.removeKey(k); });
+    	array_foreach(keyframe_selecting, function(k,i) /*=>*/ {return k.anim.removeKey(k)});
         keyframe_selecting = [];
     }
     
     function transformKeys_Move() {
-    	if(transform_modes != noone || array_empty(keyframe_selecting)) return;
+    	if(transform_modes != noone || array_empty(keyframe_selecting)) { transform_modes = noone; return; }
     	
     	transform_modes    = "move";
     	transform_keys     = array_clone(keyframe_selecting, 1);
@@ -815,7 +805,7 @@ function Panel_Animation_Dopesheet() {
     }
     
     function transformKeys_Scale() {
-    	if(transform_modes != noone || array_empty(keyframe_selecting)) return;
+    	if(transform_modes != noone || array_empty(keyframe_selecting)) { transform_modes = noone; return; }
     	
     	transform_modes    = "scale";
     	transform_keys     = array_clone(keyframe_selecting, 1);
@@ -837,7 +827,7 @@ function Panel_Animation_Dopesheet() {
     }
     
     function transformKeys_Ease(_side = 0b11, _reset = false) {
-    	if(transform_modes != noone || array_empty(keyframe_selecting)) return;
+    	if(transform_modes != noone || array_empty(keyframe_selecting)) { transform_modes = noone; return; }
     	
     	transform_modes    = "ease";
     	transform_mode_mod = _side;
@@ -890,6 +880,7 @@ function Panel_Animation_Dopesheet() {
     			
     		case "ease":
     			var dx = (mx - transform_mouse_x) / timeline_scale / 2;
+    			if(transform_mode_mod == 0b10) dx = -dx;
     			
     			for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
     				var k = transform_keys[i];
@@ -897,7 +888,7 @@ function Panel_Animation_Dopesheet() {
 				    if(transform_mode_mod & 0b10) {
     					var e = transform_key_time[i][0] + dx;
     					    e = clamp(e, 0, 2);
-    					    
+					    
 			    		k.ease_in[0]   = e;
 			    		k.ease_in_type = e == 0? CURVE_TYPE.linear : CURVE_TYPE.bezier;
 				    }
@@ -905,7 +896,7 @@ function Panel_Animation_Dopesheet() {
 				    if(transform_mode_mod & 0b01) {
     					var e = transform_key_time[i][1] + dx;
     					    e = clamp(e, 0, 2);
-    					    
+					    
 			    		k.ease_out[0]   = e;
 						k.ease_out_type = e == 0? CURVE_TYPE.linear : CURVE_TYPE.bezier;
 				    }
@@ -937,7 +928,7 @@ function Panel_Animation_Dopesheet() {
         dopesheet_surface      = surface_verify(dopesheet_surface, dopesheet_w, dopesheet_h);
         
         dopesheet_name_mask    = surface_verify(dopesheet_name_mask,    tool_width, dopesheet_h);
-        dopesheet_name_surface = surface_verify(dopesheet_name_surface, tool_width, dopesheet_h - ui(20));
+        dopesheet_name_surface = surface_verify(dopesheet_name_surface, tool_width, dopesheet_h - topbar_height);
         
         BLEND_SUBTRACT
         
@@ -2131,7 +2122,7 @@ function Panel_Animation_Dopesheet() {
         var prop = animator.prop;
         var aa   = _node.group == PANEL_GRAPH.getCurrentContext()? 1 : 0.9;
         var tx   = tool_width;
-        var ty   = animator.y - 1 - top_frame_height;
+        var ty   = animator.y - 1 - topbar_height;
         var ty0  = ty - ui(8);
         var ty1  = ty0 + animator.h;
         var m    = [msx, msy];
@@ -2299,7 +2290,7 @@ function Panel_Animation_Dopesheet() {
         #region graph settings
         	var _graph_show = prop.sep_axis? prop.attributes.show_graphs[animator.index] : prop.attributes.show_graph;
         	var tx = tool_width - ui(16);
-        	var ty = animator.y - 1 - top_frame_height + th + ui(2);
+        	var ty = animator.y - 1 - topbar_height + th + ui(2);
         	
 	        if(_graph_show) {
 	        	var bt  = __txt("Auto Range");
@@ -2377,10 +2368,10 @@ function Panel_Animation_Dopesheet() {
     function drawDopesheet_Label() { 
     	var pad = ui(6);
     	var xx = pad;
-    	var yy = pad + top_frame_height;
+    	var yy = pad + topbar_height;
     	var ww = pad + tool_width;
-    	var hh = pad + dopesheet_h - top_frame_height;
-    	var oy = top_frame_height;
+    	var hh = pad + dopesheet_h - topbar_height;
+    	var oy = topbar_height;
     	
         surface_set_target(dopesheet_name_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
@@ -2535,11 +2526,11 @@ function Panel_Animation_Dopesheet() {
     	var xx = pad;
     	var yy = pad;
     	var ww = pad + tool_width;
-    	var hh = top_frame_height;
+    	var hh = topbar_height;
     	var mm = [mx, my];
     	
     	var bb = THEME.button_hide_fill;
-    	var bs = hh - ui(4);
+    	var bs = top_frame_height - ui(4);
     	var bx = xx + ui(2);
     	var by = yy + ui(2);
     	
@@ -2659,8 +2650,12 @@ function Panel_Animation_Dopesheet() {
         bar_total_shift = bar_total_w + timeline_shift;
         if(pFOCUS && key_mod_double(ALT)) show_value = !show_value;
         
-        mouse_on_timeline = pHOVER && point_in_rectangle(mx, my, bar_x,         pad + top_frame_height, 
+        mouse_on_timeline = pHOVER && point_in_rectangle(mx, my, bar_x,         pad + topbar_height, 
                                                                  bar_x + bar_w, pad + dopesheet_h );
+        
+        var _regions = PROJECT.animationRegionDisplay;
+        var _regLine = array_length(_regions);
+        topbar_height = top_frame_height + _regLine * region_height + bool(_regLine) * ui(2);
         
         #region Scroll
             dopesheet_y    = lerp_float(dopesheet_y, dopesheet_y_to, 4);
@@ -2724,7 +2719,7 @@ function Panel_Animation_Dopesheet() {
             draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, bar_w, dopesheet_h, COLORS.panel_animation_timeline_blend, 1);
             
             dopesheet_y_max = 0;
-            var key_y = ui(22) + dopesheet_y;
+            var key_y = ui(2) + topbar_height + dopesheet_y;
             var c0, c1;
             
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
@@ -2868,7 +2863,7 @@ function Panel_Animation_Dopesheet() {
 				        }
 	                }
 	                
-	                if(_keyFirst != infinity && _keyFirst != _keyLast) {
+	                if(_keyFirst != infinity && _keyFirst != _keyLast) { // Animation Area
 	                	var _ex0 = _keyFirst;
 	                	var _ex1 = _keyLast;
 	                	var _ey0 = _cont.y + ui(10) - ui(8);
@@ -3013,7 +3008,9 @@ function Panel_Animation_Dopesheet() {
         	keyframe_selecting_l = _keyframe_selecting_l;
             
         	////- =Selection & Stagger
-	        if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dopesheet_w, dopesheet_h) && timeline_stretch == 0) { 
+        	var hoverContent = pHOVER && point_in_rectangle(msx, msy, 0, topbar_height, dopesheet_w, dopesheet_h);
+        	
+	        if(hoverContent && timeline_stretch == 0) { 
 	            if(mouse_rpress(pFOCUS) && key_hover == noone)
 	                keyframe_selecting = [];
 	                
@@ -3089,7 +3086,7 @@ function Panel_Animation_Dopesheet() {
 	                } 
 	            }
 	            
-	            keyframe_boxable = true;
+	            keyframe_boxable = true; 
 	            
 	            if(stagger_mode == 2) {
 	                var ts = keyframe_selecting[stagger_index].time;
@@ -3234,15 +3231,10 @@ function Panel_Animation_Dopesheet() {
         #endregion
         
         #region Overlay 
-            var hh = ui(20);
-            
-            var bar_line_x = (GLOBAL_CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
-            
             var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
             var aa = (GLOBAL_CURRENT_FRAME >= 0 && GLOBAL_CURRENT_FRAME < GLOBAL_TOTAL_FRAMES) * .5 + .5;
-            drawFrameLine(GLOBAL_CURRENT_FRAME + 1, PANEL_PAD, dopesheet_h, cc, aa);
             
-            var _phover = pHOVER && msy > hh;
+            var _phover = pHOVER && msy > topbar_height;
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
                 var _cont = timeline_contents[i];
                 if(!_cont.show && show_nodes) continue;
@@ -3253,7 +3245,99 @@ function Panel_Animation_Dopesheet() {
             }
             
             draw_set_color(COLORS.panel_animation_timeline_top);
-            draw_rectangle(0, 0, bar_w, hh, false);
+            draw_rectangle(0, 0, bar_w, topbar_height, false);
+	        
+	        #region Regions
+	        	var regHover = undefined;
+	        	var hanHover = false;
+	        	
+	        	gpu_set_tex_filter(true);
+	        	for( var i = 0, n = array_length(_regions); i < n; i++ ) {
+	        		var _line = _regions[i];
+	        		var by    = top_frame_height + (i + 1) * region_height;
+	        		
+	        		for( var j = 0, m = array_length(_line); j < m; j++ ) {
+		        		var _reg = _line[j];
+		        		var _lab = _reg.label;
+		        		var _col = _reg.color;
+		        		var _fst = _reg.frameStart;
+		        		var _fed = _reg.frameEnd;
+		        		
+		        		var bx0 = _fst * timeline_scale + timeline_shift;
+		        		var bx1 = _fed * timeline_scale + timeline_shift;
+		        		
+		        		var _hov = anim_region_hovering == _reg;
+	        			var _sel = PROJECT.animator.region_selecting == _reg;
+	        		
+		        		var _hoving = pHOVER && point_in_rectangle(msx, msy, bx0, by - region_height, bx1, by + ui(1));
+		        		if(_hoving) regHover = _reg;
+		        		
+		        		bx0 += ui(2);
+		        		bx1 -= ui(2);
+		        		
+		        		draw_set_color(_col);
+		        		draw_set_alpha(.5 + .25 * _hov + .5 * _sel);
+		        		draw_line_width(bx0, by, bx1, by, ui(1.5 + .5 * _hov));
+		        		draw_set_alpha(1);
+		        		
+		        		draw_set_text(f_p4, fa_left, fa_bottom, _col);
+		        		draw_text_add(bx0, by - ui(1), _lab, .8);
+		        		
+		        		if(_sel) {
+		        			var h0 = pHOVER && point_in_circle(msx, msy, bx0, by, ui(4));
+		        			var h1 = pHOVER && point_in_circle(msx, msy, bx1, by, ui(4));
+		        			
+		        			h0 |= region_resize == _reg && region_resize_s == 0;
+		        			h1 |= region_resize == _reg && region_resize_s == 1;
+		        			
+		        			draw_set_color(_col);
+		        			if(h0) draw_circle(bx0, by, ui(3), false);
+			        		if(h1) draw_circle(bx1, by, ui(3), false);
+			        		
+			        		if(h0 || h1) {
+			        			hanHover = true;
+			        			if(mouse_lpress(pFOCUS)) {
+				        			region_resize   = _reg;
+							        region_resize_s = h0? 0 : 1;
+							        region_resize_v = h0? _fst : _fed;
+							        region_resize_x = msx;
+			        			}
+			        		}
+		        		}
+	        		}
+	        	}
+	        	gpu_set_tex_filter(false);
+	        	
+	        	if(hanHover) {
+	        		keyframe_boxable = false;
+	        		regHover = undefined;
+	        	}
+	        	
+	        	anim_region_hovering = regHover;
+	        	
+	        	if(anim_region_hovering != undefined) {
+	        		if(mouse_lpress(pFOCUS)) {
+	        			PROJECT.animator.region_selecting = PROJECT.animator.region_selecting == anim_region_hovering? undefined : 
+	        				anim_region_hovering;
+	        		}
+	        	}
+	        	
+	        	if(region_resize != undefined) {
+	        		var dx = round((msx - region_resize_x) / timeline_scale);
+	        		var vv = region_resize_v + dx;
+	        		
+	        		if(region_resize_s == 0) region_resize.frameStart = vv;
+	        		if(region_resize_s == 1) region_resize.frameEnd   = vv;
+	        		
+	        		if(mouse_lrelease()) {
+	        			if(region_resize.frameStart - region_resize.frameEnd == 0)
+	        				array_remove(_regions, region_resize);
+	        				
+	        			PROJECT.regionUpdate();
+	        			region_resize = undefined;
+	        		}
+	        	}
+	        #endregion
 	        
 			#region Frame number
 	            var _stW = timeline_separate * timeline_scale;
@@ -3296,7 +3380,7 @@ function Panel_Animation_Dopesheet() {
                 var sx = (fr + rang[0]) * timeline_scale + timeline_shift;
                 var ex = (fr + rang[1]) * timeline_scale + timeline_shift;
                 var y0 = PANEL_PAD;
-                var y1 = hh;
+                var y1 = top_frame_height;
                 var yc = (y0 + y1) / 2;
             
                 draw_sprite_stretched_ext(THEME.timeline_onion_skin, 0, sx, y0, tx - sx, y1 - y0, colr[0], 1);
@@ -3348,9 +3432,12 @@ function Panel_Animation_Dopesheet() {
             
             #region Current frame cursor
 	            draw_set_font(f_p2);
+	            var bar_line_x = (GLOBAL_CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
+	            drawFrameLine(GLOBAL_CURRENT_FRAME + 1, top_frame_height, dopesheet_h, cc, aa);
+	            
 	            var cf = string(GLOBAL_CURRENT_FRAME + 1);
 	            var tw = string_width(cf) + ui(4);
-	            var th = hh - 2;
+	            var th = top_frame_height - 2;
 	            var tx = bar_line_x - tw / 2;
 	            var ty = 2;
 	            
@@ -3457,8 +3544,8 @@ function Panel_Animation_Dopesheet() {
         var pd = pad;
         
         draw_sprite_stretched_ext( THEME.ui_panel_bg,        1, pd, pd, tool_width, dopesheet_h);
-        draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, pd, pd, tool_width, top_frame_height, COLORS._main_icon );
-        draw_surface_safe(dopesheet_name_surface, pd, pd + top_frame_height);
+        draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, pd, pd, tool_width, topbar_height, COLORS._main_icon );
+        draw_surface_safe(dopesheet_name_surface, pd, pd + topbar_height);
         // draw_sprite_stretched_ext( THEME.ui_panel,           1, pd, pd, tool_width, dopesheet_h,      COLORS.panel_frame_inner );
         
         draw_sprite_stretched(     THEME.ui_panel_bg, 1, bar_x, pd, bar_w, dopesheet_h );
@@ -3476,13 +3563,23 @@ function Panel_Animation_Dopesheet() {
         	__selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, GLOBAL_TOTAL_FRAMES - 1);
         	
             if(point_in_rectangle(mx, my, bar_x, pd, bar_x + dopesheet_w, pd + dopesheet_h)) {
-                if(array_empty(keyframe_selecting)) menuCallGen("animation_keyframe_empty");
-                else                                menuCallGen("animation_keyframe");
+            	if(anim_region_hovering != undefined)    menuCall("animation_region", [
+            		menuItem(__txt("Edit Region"),   function(r) /*=>*/ { dialogPanelCall(new Panel_Animation_Region_Settings(r)) })
+            			.setParam(anim_region_hovering),
+            			
+            		menuItem(__txt("Remove Region"), function(r) /*=>*/ { 
+            			array_remove(PROJECT.animationRegions, r);
+            			if(r == PROJECT.animator.region_selecting) PROJECT.animator.region_selecting = undefined;
+            			PROJECT.regionUpdate();
+        			}, THEME.cross).setParam(anim_region_hovering),
+    	     	]);
+                else if(array_empty(keyframe_selecting)) menuCallGen("animation_keyframe_empty");
+                else                                     menuCallGen("animation_keyframe");
                 
                 if(array_length(keyframe_selecting) > 1)
                 	__selecting_key_highlight = key_hover;
                 
-            } else if(point_in_rectangle(mx, my, pd, pd + top_frame_height, pd + tool_width, pd + dopesheet_h)) {
+            } else if(point_in_rectangle(mx, my, pd, pd + topbar_height, pd + tool_width, pd + dopesheet_h)) {
                 if(context_selecting_prop != noone) {
                     if(context_selecting_prop.sepable) menuCallGen("animation_name_prop_axis");
                     else                               menuCallGen("animation_name_empty");
@@ -3526,6 +3623,50 @@ function Panel_Animation_Dopesheet() {
 		draw_set_alpha(1);
     }
     
+    ////- Range
+    
+    function range_reset()     { 
+    	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+    	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+    	PROJECT.animator.frame_range_start = undefined; 
+    	PROJECT.animator.frame_range_end   = undefined;
+    }
+    
+    function range_set_start(_frame = PROJECT.animator.current_frame + 1) { 
+    	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+    	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+    	PROJECT.animator.frame_range_start = _frame; 
+    	PROJECT.animator.frame_range_end   = PROJECT.animator.frame_range_end ?? PROJECT.animator.frames_total;
+    }
+    function range_set_end(_frame = PROJECT.animator.current_frame + 1)   { 
+    	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+    	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+    	PROJECT.animator.frame_range_start = PROJECT.animator.frame_range_start ?? 0; 
+    	PROJECT.animator.frame_range_end   = _frame; 
+    }
+    
+    function range_set_start_current()  { range_set_start();                  }
+    function range_set_start_selected() { range_set_start(__selecting_frame); }
+    
+    function range_set_end_current()    { range_set_end();                    }
+    function range_set_end_selected()   { range_set_end(__selecting_frame);   }
+    
+    ////- Regions
+    	
+    function region_create() {
+    	var _regions = PROJECT.animationRegions;
+    	var _region  = new animationRegion();
+    	
+    	_region.label      = "Region";
+		_region.color      = c_white;
+		_region.frameStart = GLOBAL_CURRENT_FRAME + 1;
+		_region.frameEnd   = TOTAL_FRAMES;
+		
+		dialogPanelCall(new Panel_Animation_Region_Settings(_region));
+    	array_push(_regions, _region);
+    	PROJECT.regionUpdate();
+    }
+    	
     ////- Actions
     	
     function doDuplicate() {

@@ -112,11 +112,14 @@ function Project() constructor {
 	randomizer = new Project_Randomizer();
 	notes      = [];
 	
-	favoritedValues = [];
-	customPanels    = [];
+	favoritedValues        = [];
+	customPanels           = [];
 	
-	timelineMarkers      = [];
-	timelineMarkersArray = [];
+	timelineMarkers        = [];
+	timelineMarkersArray   = [];
+	
+	animationRegions       = [];
+	animationRegionDisplay = [];
 	
 	#region ===================== TUNNEL ====================
 		tunnels_in  = {};
@@ -624,6 +627,51 @@ function Project() constructor {
 			timelineMarkersArray[i] = timelineMarkers[i].frame;
 	}
 	
+	static regionUpdate = function() {
+		for( var i = 0, n = array_length(animationRegions); i < n; i++ ) {
+			var _r = animationRegions[i];
+			var _min = min(_r.frameStart, _r.frameEnd);
+			var _max = max(_r.frameStart, _r.frameEnd);
+			
+			_r.frameStart = _min;
+			_r.frameEnd   = _max;
+		}
+		
+		array_sort(animationRegions, function(a,b) /*=>*/ {return sign(a.frameStart - b.frameStart)});
+		
+		animationRegionDisplay = [];
+		var _rmao = array_length(animationRegions);
+		var _reg  = array_clone(animationRegions, 1);
+		var _coll = array_create(_rmao, 0);
+		
+		var _line  = [];
+		var _cur   = 0;
+		var _total = 0;
+		
+		while(_total < _rmao) {
+			_line = [];
+			_cur  = 0;
+				
+			for( var i = 0, n = _rmao; i < n; i++ ) {
+				var r = _reg[i];
+				if(_coll[i] == 1) continue;
+				
+				if(r.frameStart >= _cur) {
+					_coll[i] = 1;
+					_total++;
+					
+					array_push(_line, r);
+					_cur = r.frameEnd;
+					
+				} 
+			}
+			
+			if(!array_empty(_line))
+				array_push(animationRegionDisplay, _line);
+		}
+		
+	}
+	
 	////- Migration
 	
 	migrationError = [];
@@ -710,8 +758,9 @@ function Project() constructor {
 			array_push(_map.favVal, [_fa.node.node_id, _fa.index]);
 		}
 		
-		_map.cPanels = array_map(customPanels,    function(p) /*=>*/ {return p.serialize()});
-		_map.tMarks  = array_map(timelineMarkers, function(p) /*=>*/ {return p.serialize()});
+		_map.cPanels = array_map(customPanels,     function(p) /*=>*/ {return p.serialize()});
+		_map.tMarks  = array_map(timelineMarkers,  function(p) /*=>*/ {return p.serialize()});
+		_map.aRegion = array_map(animationRegions, function(p) /*=>*/ {return p.serialize()});
 		
 		__node_list = [];
 		array_foreach(allNodes, function(node) /*=>*/ { if(node.active) array_push(__node_list, node.serialize()); })
@@ -816,6 +865,13 @@ function Project() constructor {
 			for( var i = 0, n = array_length(_map.tMarks); i < n; i++ )
 				timelineMarkers[i] = new timelineMarker().deserialize(_map.tMarks[i]);
 			markerUpdate();
+		}
+		
+		if(has(_map, "aRegion")) {
+			animationRegions = array_create(array_length(_map.aRegion));
+			for( var i = 0, n = array_length(_map.aRegion); i < n; i++ )
+				animationRegions[i] = new animationRegion().deserialize(_map.aRegion[i]);
+			regionUpdate();
 		}
 		
 		bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);
