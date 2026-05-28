@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-28T03:46:38.992Z",
+        "node": "",
+        "commit": "**MK Flare**: Add randomize flare button."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.006",
     "changes": [
       {

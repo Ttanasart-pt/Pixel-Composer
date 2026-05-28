@@ -21,6 +21,7 @@ function __FlarePart(_type = FLARE_TYPE.circle, _t = 0, _r = 4, _a = 0.5, _seg =
 	th    = _th;
 	
 	t2    = 0;
+	angle = 0;
 	
 	disp_h = undefined;
 }
@@ -146,6 +147,12 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				w    : ui(56),
 				spr  : THEME.prop_radius_inner, 
 				key  : "th", 
+			},
+			{
+				name : "Angle",
+				w    : ui(32),
+				spr  : THEME.prop_radius_inner, 
+				key  : "angle", 
 			}
 		]);
 		
@@ -235,6 +242,10 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						_flare.ir = flare_editing_sx + (_m[0] - flare_editing_mx) / 64;
 						if(abs(_flare.ir - round(_flare.ir)) < 0.2) 
 							_flare.ir = round(_flare.ir);
+						break;
+						
+					case "angle" :     
+						_flare.angle = value_snap(flare_editing_sx + (_m[0] - flare_editing_mx), 15);
 						break;
 						
 				}
@@ -426,16 +437,20 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		});
 	#endregion
 		
+	b_random = button(function() /*=>*/ {return flareRandomize()}).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad().setTooltip(__txt("Randomize"));
+	
 	input_display_list = [ s_MKFX, 7, 
 		[ "Surfaces",   false ], 0, 2, 
 		[ "Positions",  false ], 1, 6, 
-		[ "Flare",      false ], flare_builder,
+		[ "Flare",      false, noone, b_random ], flare_builder,
 		[ "Blending",   false ], 3, 9, 4, 
 		[ "FXAA",        true,  8 ], 10, 
 		[ "Aberration",  true, 11 ], 12, 13, 14, 15, 
 	]
 	
 	////- Nodes
+	
+	attribute_oversample();
 	
 	temp_surface = [ noone, noone, noone ];
 	
@@ -447,7 +462,37 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	alp = 1;
 	dir = 0;
 	dis = 0;
+	
+	static flareElementRandomize = function() {
+		var _type = irandom(FLARE_TYPE.size - 1);
+		var _pos  = irandom_range(0,20) / 10;
+		var _size = random_range(.25,16);
+		var _alph = random_range(.25,1);
+		var _seg  = round(lerp(2, 10, sqr(random(1))) * 4);
 		
+		var _angle = choose(0,0,0,0,0,90);
+		
+		var _part = new __FlarePart( _type, _pos, _size, _alph, _seg,
+			false,
+			c_white,
+			[ random_range(0,.5), random_range(.5,1) ],
+			1, 
+			irandom_range(1,2), 
+			[ random_range(.5,1), random_range(0,.5) ],
+		);
+		
+		_part.angle = _angle;
+		
+		return _part;
+	}
+	
+	static flareRandomize = function() {
+		randomize();
+		var _size  = irandom_range(4, 16);
+		var _flare = array_create_ext(_size, function(i) /*=>*/ {return flareElementRandomize()});
+		inputs[5].setValue(_flare);
+	}
+	
 	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _flares = getInputSingle(5);
 		var _sca    = getInputSingle(3);
@@ -678,6 +723,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _x  = lerp(ox, cx, _t);
 		var _y  = lerp(oy, cy, _t);
 		
+		var _ang = dir + _flare.angle;
+		
 		temp_surface[0] = surface_verify(temp_surface[0], _r * 2, _r * 2);
 		
 		surface_set_shader(temp_surface[0], sh_draw_grey_alpha);
@@ -685,14 +732,14 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			draw_primitive_begin(pr_trianglelist);
 			
-			var x0 = _r + lengthdir_x(_r,  dir);
-			var y0 = _r + lengthdir_y(_r,  dir);
-			var x1 = _r + lengthdir_x(_th, dir +  90);
-			var y1 = _r + lengthdir_y(_th, dir +  90);
-			var x2 = _r + lengthdir_x(_th, dir + 270);
-			var y2 = _r + lengthdir_y(_th, dir + 270);
-			var x3 = _r + lengthdir_x(_r,  dir + 180);
-			var y3 = _r + lengthdir_y(_r,  dir + 180);
+			var x0 = _r + lengthdir_x( _r,  _ang       );
+			var y0 = _r + lengthdir_y( _r,  _ang       );
+			var x1 = _r + lengthdir_x( _th, _ang +  90 );
+			var y1 = _r + lengthdir_y( _th, _ang +  90 );
+			var x2 = _r + lengthdir_x( _th, _ang + 270 );
+			var y2 = _r + lengthdir_y( _th, _ang + 270 );
+			var x3 = _r + lengthdir_x( _r,  _ang + 180 );
+			var y3 = _r + lengthdir_y( _r,  _ang + 180 );
 			
 			draw_vertex_color(_r, _r, c_white, 1);
 			draw_vertex_color(x0, y0, c_black, 1);
@@ -801,6 +848,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			temp_surface[2] = surface_verify(temp_surface[2], _sw, _sh);
 			
 			surface_set_shader(temp_surface[2], sh_chromatic_aberration);
+				shader_set_i( "sampleMode", getAttribute("oversample"));
+				
 				gpu_set_tex_filter(true);
 				shader_set_interpolation(flareSurf);
 				shader_set_uv(noone);

@@ -278,7 +278,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			return surface_rgba8unorm;
 		}
-	
+		
 		static getAttribute = function(_key) {
 			if(instanceBase) return instanceBase.getAttribute(_key);
 			
@@ -296,7 +296,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			return _val;
 		}
-		
 	#endregion
 	
 	#region ---- Preview ----
