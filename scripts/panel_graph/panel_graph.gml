@@ -2255,7 +2255,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                        	function(j) /*=>*/ { j.removeFrom(); }, THEME.cross).setParam(__junction_hovering));
 		                    }
 		                    
-		                    menuCall("graph_connection_select", menu, dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right );
+		                    menuCall("graph_connection_select", menu, dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right, false );
 		                    setFocus(dia, "Dialog");
 	                    }
 	                }

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-28T00:35:00.503Z",
+        "node": "MK Tree Leaf Hull",
+        "commit": "**MK Tree Leaf Hull**: Fix leaf output cannot be rendered independently."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.003",
     "changes": [
       {

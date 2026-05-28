@@ -43,7 +43,7 @@ function __MK_Tree_Segment(_x, _y, _t) constructor {
 	colorEdgeR = undefined;
 }
 
-function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
+function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Element(_root) constructor {
 	root = _root ?? self;
 	seed = _seed;
 	
@@ -68,6 +68,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 	
 	doDraw    = true;
 	texture   = noone;
+	drawStep  = 1;
 	drawLine  = false;
 	drawn     = false;
 	
@@ -405,7 +406,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 		
 		var len = array_length(segments);
 		
-		for( var i = 0; i < len; i++ ) {
+		for( var i = 0; i < len; i += drawStep ) {
 			var _seg = segments[i];
 			
 			nx  = _seg.x;
@@ -436,7 +437,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 		draw_primitive_begin_texture(pr_trianglelist, tid);
 		
 		var ang = array_create(len);
-		for( var i = 1; i < len; i++ ) {
+		for( var i = 1; i < len; i += drawStep ) {
 			var _s0 = segments[i - 1];
 			var _s1 = segments[i];
 			
@@ -447,7 +448,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) constructor {
 		if(rootDirection != undefined)
 			ang[0] = rootDirection + (angle_difference(rootDirection, ang[1] + 90) > 0) * 180;
 		
-		for( var i = 0; i < len; i++ ) {
+		for( var i = 0; i < len; i += drawStep ) {
 			var _seg = segments[i];
 			
 			nx  = _seg.x;

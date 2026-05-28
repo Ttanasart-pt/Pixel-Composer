@@ -36,14 +36,18 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}
 	
 	static drawTree = function(_t) {
-		if(is(_t, __MK_Tree_Leaf)) { _t.draw(); return; }
+		if(!is(_t, __MK_Tree_Element)) return;
 			
 		if(is(_t, __MK_Tree)) { 
 			var _drawT = drawRoot? _t.root : _t;
 			if(_drawT.drawn) return;
+			
 			_drawT.drawn = true;
 			_drawT.draw();
+			return;
 		}
+		
+		_t.draw();
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
