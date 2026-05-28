@@ -476,7 +476,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			false,
 			c_white,
 			[ random_range(0,.5), random_range(.5,1) ],
-			1, 
+			1,  
 			irandom_range(1,2), 
 			[ random_range(.5,1), random_range(0,.5) ],
 		);

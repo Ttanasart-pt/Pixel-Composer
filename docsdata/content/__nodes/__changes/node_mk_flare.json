@@ -6,6 +6,11 @@
         "date": "2026-05-28T03:46:38.992Z",
         "node": "",
         "commit": "**MK Flare**: Add randomize flare button."
+      },
+      {
+        "date": "2026-05-28T03:49:21.124Z",
+        "node": "MK Flare",
+        "commit": "**MK Flare**: Add Oversample settings for Chromatic abbr.."
       }
     ]
   },
