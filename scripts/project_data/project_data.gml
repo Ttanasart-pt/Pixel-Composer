@@ -118,9 +118,6 @@ function Project() constructor {
 	timelineMarkers        = [];
 	timelineMarkersArray   = [];
 	
-	animationRegions       = [];
-	animationRegionDisplay = [];
-	
 	#region ===================== TUNNEL ====================
 		tunnels_in  = {};
 		tunnels_out = {};
@@ -627,6 +624,11 @@ function Project() constructor {
 			timelineMarkersArray[i] = timelineMarkers[i].frame;
 	}
 	
+	////- Region
+	
+	animationRegions       = [];
+	animationRegionDisplay = [];
+	
 	static regionUpdate = function() {
 		for( var i = 0, n = array_length(animationRegions); i < n; i++ ) {
 			var _r = animationRegions[i];
@@ -637,7 +639,8 @@ function Project() constructor {
 			_r.frameEnd   = _max;
 		}
 		
-		array_sort(animationRegions, function(a,b) /*=>*/ {return sign(a.frameStart - b.frameStart)});
+		array_sort(animationRegions, function(a,b) /*=>*/ {return a.frameStart == b.frameStart? sign(a.frameEnd - b.frameEnd) : 
+		                                                                    sign(a.frameStart - b.frameStart)});
 		
 		animationRegionDisplay = [];
 		var _rmao = array_length(animationRegions);
@@ -670,6 +673,22 @@ function Project() constructor {
 				array_push(animationRegionDisplay, _line);
 		}
 		
+	}
+	
+	static getRegion = function(_name) {
+		for( var i = 0, n = array_length(animationRegions); i < n; i++ ) {
+			var _reg = animationRegions[i];
+			if(_reg.label == _name) return _reg;
+		}
+		
+		return undefined;
+	}
+	
+	static setRegion = function(_name) {
+		var _reg = getRegion(_name);
+		if(_reg != undefined) 
+			animator.region_selecting = _reg;
+		return _reg;
 	}
 	
 	////- Migration

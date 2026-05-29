@@ -173,6 +173,8 @@ function setArrayBox(_arrayBox) {
 	dialog_w = arrayBox.w;
 	
 	data     = arrayBox.data;
+	if(is_callable(data)) data = data();
+	
 	arraySet = arrayBox.arraySet;
 	onModify = arrayBox.onModify;
 	addable  = arrayBox.addable;

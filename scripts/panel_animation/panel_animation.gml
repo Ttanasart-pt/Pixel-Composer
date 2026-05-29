@@ -620,7 +620,7 @@ function Panel_Animation() : PanelContent() constructor {
         #region Regions
         	var _regions = PROJECT.animationRegionDisplay;
             var _regLine = array_length(_regions);
-            var _reg_h   = ui(2);
+            var _reg_h   = ui(3);
             var _reg_y   = bar_h - ui(1) - _regLine * _reg_h;
             
         	for( var i = 0, n = _regLine; i < n; i++ ) {
@@ -640,7 +640,7 @@ function Panel_Animation() : PanelContent() constructor {
 	        		
 	        		draw_set_color(_col);
 	        		draw_set_alpha(.5 + .5 * sel);
-	        		draw_line_width(bx0, by, bx1, by, ui(1));
+	        		draw_line_width(bx0, by, bx1, by, ui(2));
 	        		draw_set_alpha(1);
         		}
         	}

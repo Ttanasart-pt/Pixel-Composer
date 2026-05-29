@@ -343,7 +343,7 @@ function Panel_Animation_Dopesheet() {
         bar_total_shift = 1;
         
         top_frame_height = ui(20);
-        region_height    = ui(12);
+        region_height    = ui(16);
         topbar_height    = top_frame_height;
         
         anim_region_hovering  = undefined;
@@ -2655,7 +2655,7 @@ function Panel_Animation_Dopesheet() {
         
         var _regions = PROJECT.animationRegionDisplay;
         var _regLine = array_length(_regions);
-        topbar_height = top_frame_height + _regLine * region_height + bool(_regLine) * ui(2);
+        topbar_height = top_frame_height + _regLine * region_height + ui(1) * _regLine + bool(_regLine) * ui(1);
         
         #region Scroll
             dopesheet_y    = lerp_float(dopesheet_y, dopesheet_y_to, 4);
@@ -2714,7 +2714,7 @@ function Panel_Animation_Dopesheet() {
     	
         surface_set_target(dopesheet_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
-                
+        
         #region BG & set X, Y for Node and Prop
             draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, bar_w, dopesheet_h, COLORS.panel_animation_timeline_blend, 1);
             
@@ -3244,17 +3244,24 @@ function Panel_Animation_Dopesheet() {
                 if(_hov) keyframe_boxable = false;
             }
             
-            draw_set_color(COLORS.panel_animation_timeline_top);
-            draw_rectangle(0, 0, bar_w, topbar_height, false);
+	        draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, 0, 0, bar_w, topbar_height, CDEF.main_mdwhite );
 	        
 	        #region Regions
 	        	var regHover = undefined;
 	        	var hanHover = false;
+	        	var _dsFrame = THEME_VALUE.panel_separation_type == "frame";
 	        	
+	        	var region_resize_hovering  = false;
+	        	var region_resize_hover_col = c_white;
+	        	var region_resize_hover_x   = 0;
+	        	var region_resize_hover_y   = 0;
+	        	
+	        	draw_set_circle_precision(16);
 	        	gpu_set_tex_filter(true);
 	        	for( var i = 0, n = array_length(_regions); i < n; i++ ) {
 	        		var _line = _regions[i];
-	        		var by    = top_frame_height + (i + 1) * region_height;
+	        		var  by0  = top_frame_height + i * (region_height + ui(1));
+	        		var  by1  = by0 + region_height;
 	        		
 	        		for( var j = 0, m = array_length(_line); j < m; j++ ) {
 		        		var _reg = _line[j];
@@ -3266,33 +3273,54 @@ function Panel_Animation_Dopesheet() {
 		        		var bx0 = _fst * timeline_scale + timeline_shift;
 		        		var bx1 = _fed * timeline_scale + timeline_shift;
 		        		
+		        		var hany = _dsFrame? (by0 + by1) / 2 : by1;
+		        		
 		        		var _hov = anim_region_hovering == _reg;
 	        			var _sel = PROJECT.animator.region_selecting == _reg;
 	        		
-		        		var _hoving = pHOVER && point_in_rectangle(msx, msy, bx0, by - region_height, bx1, by + ui(1));
+		        		var _hoving = pHOVER && point_in_rectangle(msx, msy, bx0, by0, bx1, by1 + ui(1));
 		        		if(_hoving) regHover = _reg;
 		        		
-		        		bx0 += ui(2);
-		        		bx1 -= ui(2);
+		        		bx0 += ui(1);
+		        		bx1 -= ui(1);
 		        		
-		        		draw_set_color(_col);
-		        		draw_set_alpha(.5 + .25 * _hov + .5 * _sel);
-		        		draw_line_width(bx0, by, bx1, by, ui(1.5 + .5 * _hov));
-		        		draw_set_alpha(1);
+		        		var tc = _col;
 		        		
-		        		draw_set_text(f_p4, fa_left, fa_bottom, _col);
-		        		draw_text_add(bx0, by - ui(1), _lab, .8);
+		        		if(_dsFrame) {
+			        		draw_sprite_stretched_ext(THEME.box_r2, 0, bx0, by0 + 1, bx1 - bx0, region_height - 1, _col, .3 + _sel * .7);
+			        		if(_hov) draw_sprite_stretched_add(THEME.box_r2, 1, bx0, by0 + 1, bx1 - bx0, region_height - 1, _col, .5);
+			        		
+			        		tc = _sel? (_color_get_light(_col) > .4? CDEF.main_dkblack : CDEF.main_white) : _col;
+		        			
+		        		} else {
+			        		draw_set_color(_col);
+			        		draw_set_alpha(.5 + .25 * _hov + .5 * _sel);
+			        		draw_line_width(bx0, by1, bx1, by1, ui(1.5 + .5 * _hov));
+			        		draw_set_alpha(1);
+			        		
+		        		}
+		        		
+		        		draw_set_text(f_p4, fa_left, fa_bottom, tc);
+		        		draw_text_add(bx0 + ui(4), by1, _lab);
 		        		
 		        		if(_sel) {
-		        			var h0 = pHOVER && point_in_circle(msx, msy, bx0, by, ui(4));
-		        			var h1 = pHOVER && point_in_circle(msx, msy, bx1, by, ui(4));
+		        			var h0 = pHOVER && point_in_circle(msx, msy, bx0, hany, ui(5));
+		        			var h1 = pHOVER && point_in_circle(msx, msy, bx1, hany, ui(5));
 		        			
 		        			h0 |= region_resize == _reg && region_resize_s == 0;
 		        			h1 |= region_resize == _reg && region_resize_s == 1;
 		        			
-		        			draw_set_color(_col);
-		        			if(h0) draw_circle(bx0, by, ui(3), false);
-			        		if(h1) draw_circle(bx1, by, ui(3), false);
+		        			if(h0) { 
+		        				region_resize_hover_col = _col;
+								region_resize_hover_x   = bx0;
+								region_resize_hover_y   = hany;
+		        			}
+		        			
+			        		if(h1) { 
+		        				region_resize_hover_col = _col;
+								region_resize_hover_x   = bx1;
+								region_resize_hover_y   = hany;
+			        		}
 			        		
 			        		if(h0 || h1) {
 			        			hanHover = true;
@@ -3309,6 +3337,9 @@ function Panel_Animation_Dopesheet() {
 	        	gpu_set_tex_filter(false);
 	        	
 	        	if(hanHover) {
+    				draw_set_color(CDEF.main_dkblack);       draw_circle(region_resize_hover_x, region_resize_hover_y, ui(7), false); 
+    				draw_set_color(region_resize_hover_col); draw_circle(region_resize_hover_x, region_resize_hover_y, ui(4), false); 
+    				
 	        		keyframe_boxable = false;
 	        		regHover = undefined;
 	        	}
@@ -3544,7 +3575,7 @@ function Panel_Animation_Dopesheet() {
         var pd = pad;
         
         draw_sprite_stretched_ext( THEME.ui_panel_bg,        1, pd, pd, tool_width, dopesheet_h);
-        draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, pd, pd, tool_width, topbar_height, COLORS._main_icon );
+        draw_sprite_stretched_ext( THEME.ui_panel_bg_header, 0, pd, pd, tool_width, topbar_height, CDEF.main_mdwhite );
         draw_surface_safe(dopesheet_name_surface, pd, pd + topbar_height);
         // draw_sprite_stretched_ext( THEME.ui_panel,           1, pd, pd, tool_width, dopesheet_h,      COLORS.panel_frame_inner );
         
@@ -3564,8 +3595,9 @@ function Panel_Animation_Dopesheet() {
         	
             if(point_in_rectangle(mx, my, bar_x, pd, bar_x + dopesheet_w, pd + dopesheet_h)) {
             	if(anim_region_hovering != undefined)    menuCall("animation_region", [
-            		menuItem(__txt("Edit Region"),   function(r) /*=>*/ { dialogPanelCall(new Panel_Animation_Region_Settings(r)) })
-            			.setParam(anim_region_hovering),
+            		menuItem(__txt("Edit Region"),   function(r) /*=>*/ { 
+            			dialogPanelCall(new Panel_Animation_Region_Settings(r), mouse_mx + ui(8), mouse_my + ui(8)) 
+            		}).setParam(anim_region_hovering),
             			
             		menuItem(__txt("Remove Region"), function(r) /*=>*/ { 
             			array_remove(PROJECT.animationRegions, r);

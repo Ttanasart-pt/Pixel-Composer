@@ -9,8 +9,7 @@
         for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
             var node = PROJECT.allNodes[i];
             if(!node.active || !is(node, Node_Export)) continue;
-            
-            node.doInspectorAction();
+            node.doExport();
         }
     }
     function global_clear_cache_all()   {

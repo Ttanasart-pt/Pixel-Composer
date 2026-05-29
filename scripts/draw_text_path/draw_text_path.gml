@@ -31,6 +31,8 @@ function draw_text_path(_x, _y, _text) {
 				case "i" : draw_set_color(COLORS.widget_text_dec_i); cmd = ch; break;
 				case "s" : draw_set_color(COLORS.widget_text_dec_i); cmd = ch; break;
 				
+				case "r" : draw_set_color(COLORS.widget_text_dec_i); cmd = ch; break;
+				
 				case "{" : eli++; break;
 				case "}" : eli--; break;
 			}
@@ -44,6 +46,8 @@ function draw_text_path(_x, _y, _text) {
 				case "f" :	
 				case "i" : 
 				case "s" : 
+				
+				case "r" : 
 					draw_text_add(_x0, _y, str);
 					_x0  += string_width(str);
 					_comm = false; 

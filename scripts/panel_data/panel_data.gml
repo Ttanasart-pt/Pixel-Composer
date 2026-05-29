@@ -1,16 +1,20 @@
-enum ANCHOR {
-	none    = 0,
-	top     = 1,
-	bottom  = 2,
-	left    = 4,
-	right   = 8
-}
+#region global
+	#macro PANEL_PAD ui(THEME_VALUE.panel_padding)
+	
+	enum ANCHOR {
+		none    = 0,
+		top     = 1,
+		bottom  = 2,
+		left    = 4,
+		right   = 8
+	}
+#endregion
 
 function Panel(_parent, _x, _y, _w, _h) constructor {
 	parent = _parent;
 	if(parent) array_push(parent.childs, self);
 	
-	padding = THEME_VALUE.panel_margin;
+	padding = ui(THEME_VALUE.panel_margin);
 	content = [];
 	childs  = [];
 	anchor  = ANCHOR.none;

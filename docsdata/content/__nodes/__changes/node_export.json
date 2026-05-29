@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-29T01:55:59.074Z",
+        "node": "Export",
+        "commit": "**Export**: Add animation region support."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.0",
     "changes": [
       {

@@ -143,7 +143,7 @@
         "panel_animation_end_line": "main_ltgrey",
         "panel_animation_preview_frame": "main_dkgrey",
         "panel_animation_timeline_blend": "main_ltgrey",
-        "panel_animation_timeline_top": ["black", "main_dkblack", 0.5],
+        "panel_animation_timeline_top": ["black", "main_dkblack", 0.8],
         "panel_animation_range": "lime",
         "panel_animation_range_sim": "cyan",
         "panel_animation_dopesheet_frame_number": "white",

@@ -21,4 +21,6 @@ function animationRegion() constructor {
 		frameEnd   = _map.fe;
 		return self;
 	}
+	
+	static toString = function() /*=>*/ {return $"[animRegion]: {label}"};
 }

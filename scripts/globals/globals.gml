@@ -158,7 +158,6 @@ gml_pragma("UnityBuild", "true");
 	#endregion
 	
 	#macro RETURN_ON_REST if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
-	#macro PANEL_PAD THEME_VALUE.panel_padding
 	
 	#macro INIT_BASE_CLASS base = static_get(static_get(self));
 	
