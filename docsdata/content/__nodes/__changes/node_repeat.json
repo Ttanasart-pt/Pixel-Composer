@@ -6,6 +6,11 @@
         "date": "2026-05-29T04:31:16.781Z",
         "node": "",
         "commit": "**Repeat**: Add Palette per Index for more precise color blending."
+      },
+      {
+        "date": "2026-05-29T04:37:05.369Z",
+        "node": "",
+        "commit": "**Shape Path**: Arc shape now use direct lerp."
       }
     ]
   },

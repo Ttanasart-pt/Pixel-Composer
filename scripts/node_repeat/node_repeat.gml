@@ -96,7 +96,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(23, nodeValue_Gradient( "Random Color",       gra_white ));
 	
 	////- =Deprecated
-	newInput(28, nodeValue_Bool(     "Wrap Index", true ));
+	newInput(28, nodeValue_Bool(     "Wrap Index",         true         ));
 	newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]        ));
 	newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10 ));
 	newInput(27, nodeValue_Color(    "Animator blend",     ca_white     ));

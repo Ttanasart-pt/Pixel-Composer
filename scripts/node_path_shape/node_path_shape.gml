@@ -434,7 +434,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 _pth.points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
-                    var a = lerp_angle_direct(_aran[0], _aran[1], i * _as);
+                    var a = lerp(_aran[0], _aran[1], i * _as);
                     nx = _pos[0] + lengthdir_x(_sca[0], a);
                     ny = _pos[1] + lengthdir_y(_sca[1], a);
                     _pth.points[i] = [ nx, ny ];
