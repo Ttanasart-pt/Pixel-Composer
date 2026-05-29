@@ -885,7 +885,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				notify(_txt, true, p);
 		}
 		
-		print($"    >> export frame {CURRENT_FRAME}");
+		// print($"    >> export frame {CURRENT_FRAME}");
 	}
 	
 	static doExport = function(_resetRegion = true) {
@@ -927,7 +927,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			} 
 		}
 			
-		print($"==== Start Export region {region_index}: {region_current} ====")
+		// print($"==== Start Export region {region_index}: {region_current} ====")
 		
 		update_on_frame = true;
 		playing			= true;

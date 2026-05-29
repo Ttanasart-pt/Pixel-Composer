@@ -633,8 +633,8 @@ function Panel_Animation() : PanelContent() constructor {
 	        		var _fst = _reg.frameStart;
 	        		var _fed = _reg.frameEnd;
 	        		
-	        		var bx0 = _fst * timeline_scale + timeline_shift + ui(2);
-	        		var bx1 = _fed * timeline_scale + timeline_shift - ui(2);
+	        		var bx0 = _fst * timeline_scale + timeline_shift - timeline_scale / 2 + ui(2);
+	        		var bx1 = _fed * timeline_scale + timeline_shift + timeline_scale / 2 - ui(2);
 	        		
 	        		var sel = PROJECT.animator.region_selecting == _reg;
 	        		

@@ -60,9 +60,10 @@
     function panel_animation_keys_ease_start()         { CALL("animation_keys_ease_start");         PANEL_ANIMATION.transformKeys_Ease(0b10); }
     function panel_animation_keys_ease_end()           { CALL("animation_keys_ease_end");           PANEL_ANIMATION.transformKeys_Ease(0b01); }
     
-    function panel_animation_transfer_ease()           { CALL("animation_transfer_ease");           PANEL_ANIMATION.transferEase(); }
+    function panel_animation_transfer_ease()           { CALL("animation_transfer_ease");           PANEL_ANIMATION.transferEase();  }
     
-    function panel_animation_region_create()           { CALL("animation_region_create");           PANEL_ANIMATION.region_create();         }
+    function panel_animation_region_create()           { CALL("animation_region_create");           PANEL_ANIMATION.region_create(); }
+    function panel_animation_region_clear()            { CALL("animation_region_clear");            PANEL_ANIMATION.region_clear();  }
     
 	function __fnInit_Dopesheet() {
 		var an = "Animation";
@@ -460,6 +461,7 @@ function Panel_Animation_Dopesheet() {
 			"animation_marker_clear",
 			-1,
 			"animation_region_create",
+			"animation_region_clear",
 	    ];
 	    
 	    // global.menuItems_animation_region = [
@@ -3270,8 +3272,8 @@ function Panel_Animation_Dopesheet() {
 		        		var _fst = _reg.frameStart;
 		        		var _fed = _reg.frameEnd;
 		        		
-		        		var bx0 = _fst * timeline_scale + timeline_shift;
-		        		var bx1 = _fed * timeline_scale + timeline_shift;
+		        		var bx0 = _fst * timeline_scale + timeline_shift - timeline_scale / 2;
+		        		var bx1 = _fed * timeline_scale + timeline_shift + timeline_scale / 2;
 		        		
 		        		var hany = _dsFrame? (by0 + by1) / 2 : by1;
 		        		
@@ -3604,6 +3606,9 @@ function Panel_Animation_Dopesheet() {
             			if(r == PROJECT.animator.region_selecting) PROJECT.animator.region_selecting = undefined;
             			PROJECT.regionUpdate();
         			}, THEME.cross).setParam(anim_region_hovering),
+        				
+            		menuItem(__txt("Remove All Regions"), function() /*=>*/ {return region_clear()}, THEME.cross).setParam(),
+        			
     	     	]);
                 else if(array_empty(keyframe_selecting)) menuCallGen("animation_keyframe_empty");
                 else                                     menuCallGen("animation_keyframe");
@@ -3686,7 +3691,6 @@ function Panel_Animation_Dopesheet() {
     ////- Regions
     	
     function region_create() {
-    	var _regions = PROJECT.animationRegions;
     	var _region  = new animationRegion();
     	
     	_region.label      = "Region";
@@ -3695,8 +3699,13 @@ function Panel_Animation_Dopesheet() {
 		_region.frameEnd   = TOTAL_FRAMES;
 		
 		dialogPanelCall(new Panel_Animation_Region_Settings(_region));
-    	array_push(_regions, _region);
-    	PROJECT.regionUpdate();
+    	PROJECT.addRegion(_region);
+    }
+    	
+    function region_clear() {
+		PROJECT.animationRegions = [];
+		PROJECT.animator.region_selecting = undefined;
+		PROJECT.regionUpdate();
     }
     	
     ////- Actions

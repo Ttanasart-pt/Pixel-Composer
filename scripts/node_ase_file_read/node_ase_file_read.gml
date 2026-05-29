@@ -49,8 +49,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput( 7, nodeValue_Output( "Frame Amount", VALUE_TYPE.integer, 1     )).setVisible(false);
 	// outputs 9
 	
-	b_set_frame = button(function() /*=>*/ {return setFrames()}).setText("Match Animation Length")
-	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setIcon(THEME.generate_layers).iconPad().setTooltip("Generate Layers");
+	b_set_frame  = button(function() /*=>*/ {return setFrames()}).setText("Match Animation Length")
+	b_gen_layer  = button(function() /*=>*/ {return refreshLayers()}).setIcon(THEME.generate_layers).iconPad().setTooltip("Generate Layers");
+	b_tag_import = button(function() /*=>*/ {return importTags()}).setIcon(THEME.tag_24).iconPad().setTooltip("Import Tags as Regions");
 	
 	hold_visibility = true;
 	hold_loop       = true;
@@ -294,9 +295,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}); 
 	
 	input_display_list = [ 0, b_set_frame, 
-		[ "Layers",   false, noone, b_gen_layer ], 3, layer_renderer, 
-		[ "Tags",     false                     ], 2, tag_renderer,
-		[ "Tilesets", false                     ], tile_renderer, 
+		[ "Layers",   false, noone, b_gen_layer  ], 3, layer_renderer, 
+		[ "Tags",     false, noone, b_tag_import ], 2, tag_renderer,
+		[ "Tilesets", false                      ], tile_renderer, 
 	];
 	
 	output_display_list = [ 0, 1, 2, 3, 4, 5, 8, 6, 7 ];
@@ -379,6 +380,21 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _frm = content[$ "Frame amount"];
 		TOTAL_FRAMES = _frm;
 		triggerRender();
+	}
+	
+	function importTags() {
+		for( var i = 0, n = array_length(tags); i < n; i++ ) {
+			var _t = tags[i];
+			
+			var _region  = new animationRegion();
+    	
+	    	_region.label      =  _t[$ "Name"]  ?? "region";
+			_region.color      =  _t[$ "Color"] ?? c_white;
+			_region.frameStart = (_t[$ "Frame start"] ?? 0) + 1;
+			_region.frameEnd   = (_t[$ "Frame end"]   ?? 0) + 1;
+			
+	    	PROJECT.addRegion(_region);
+		}
 	}
 	
 	function updatePaths(path = path_current) { 

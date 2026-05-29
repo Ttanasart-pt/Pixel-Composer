@@ -629,6 +629,11 @@ function Project() constructor {
 	animationRegions       = [];
 	animationRegionDisplay = [];
 	
+	static addRegion = function(_reg) {
+		array_push(animationRegions, _reg);
+    	regionUpdate();
+	}
+	
 	static regionUpdate = function() {
 		for( var i = 0, n = array_length(animationRegions); i < n; i++ ) {
 			var _r = animationRegions[i];
@@ -659,7 +664,7 @@ function Project() constructor {
 				var r = _reg[i];
 				if(_coll[i] == 1) continue;
 				
-				if(r.frameStart >= _cur) {
+				if(r.frameStart > _cur) {
 					_coll[i] = 1;
 					_total++;
 					

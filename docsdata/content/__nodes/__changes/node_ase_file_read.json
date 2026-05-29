@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.007",
+    "changes": [
+      {
+        "date": "2026-05-29T02:15:44.429Z",
+        "node": "Ase file in",
+        "commit": "**Ase file in**: Add button to import tags as animation regions."
+      }
+    ]
+  }
+]
