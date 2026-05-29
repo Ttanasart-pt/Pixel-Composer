@@ -707,7 +707,7 @@
 #endregion -- d3d_sdf --
 
 #pragma use(d3d_sdf_scene)
-#region -- d3d_sdf_scene -- [1778657668.528136]
+#region -- d3d_sdf_scene -- [1780036665.6440408]
 	#define EPSILON 1e-5
 	
 	uniform int   MAX_MARCHING_STEPS;
@@ -733,6 +733,8 @@
 	uniform int   drawGrid;
 	uniform float gridStep;
 	uniform float gridScale;
+	uniform float gridOpacity;
+	uniform vec4  gridColor;
 	uniform float axisBlend;
 
 	////========= Util ==========
@@ -744,15 +746,17 @@
 			float line      = min(grid.x, grid.y);
 			float minimumy  = min(derivative.y, 1.);
 			float minimumx  = min(derivative.x, 1.);
-			vec4 color = vec4(.3, .3, .3, 1. - min(line, 1.));
+			vec4 color = vec4(gridColor.rgb, 1. - min(line, 1.));
 			
+			// x axis
+			if(pos.y > -1. * minimumy / scale && pos.y < 1. * minimumy / scale)
+				color.rgb = vec3(0.3 + axisBlend * 0.7, 0., 0.);
+
 			// y axis
 			if(pos.x > -1. * minimumx / scale && pos.x < 1. * minimumx / scale)
-				color.y = 0.3 + axisBlend * 0.7;
-			// x axis
+				color.rgb = vec3(0., 0.3 + axisBlend * 0.7, 0.);
 			
-			if(pos.y > -1. * minimumy / scale && pos.y < 1. * minimumy / scale)
-				color.x = 0.3 + axisBlend * 0.7;
+			color.a *= gridOpacity;
 			return color;
 		}
 		

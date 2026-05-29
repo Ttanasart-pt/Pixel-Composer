@@ -198,14 +198,17 @@
 	        	.setMenu("preview_grid_settings",  THEME.icon_grid_setting )
 	        	.setSpriteInd( function() /*=>*/ {return PROJECT.previewGrid.show} )
 	        	.setColorFn(   function() /*=>*/ {return PROJECT.previewGrid.show? COLORS._main_accent : COLORS._main_icon} )
+	        	
 	        registerFunction(p, "Onion Skin Settings...",   "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Onion_Setting()) })
 	        	.setMenu("preview_onion_settings", THEME.onion_skin )
 	        	.setSpriteInd( function() /*=>*/ {return PROJECT.onion_skin.enabled}     )
 	        	.setColorFn(   function() /*=>*/ {return PROJECT.onion_skin.enabled? c_white : COLORS._main_icon} )
-	        registerFunction(p, "3D View Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))     }).setMenu("preview_3D_settings",    THEME.d3d_preview_settings )
-	        registerFunction(p, "3D SDF View Settings...",  "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_SDF_settings",THEME.d3d_preview_settings )
-	        registerFunction(p, "3D Snap Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))   }).setMenu("preview_snap_settings",  THEME.d3d_snap_settings )
-	        registerFunction(p, "View Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings",  THEME.icon_visible_setting )
+	        	
+	        registerFunction(p, "3D View Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))      }).setMenu("preview_3D_settings",      THEME.d3d_preview_settings )
+	        registerFunction(p, "3D SDF View Settings...",  "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW))  }).setMenu("preview_3D_SDF_settings",  THEME.d3d_preview_settings )
+	        registerFunction(p, "3D Grid Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Grid_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_grid_settings", THEME.icon_grid_setting    )
+	        registerFunction(p, "3D Snap Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))    }).setMenu("preview_snap_settings",    THEME.d3d_snap_settings    )
+	        registerFunction(p, "View Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))    }).setMenu("preview_view_settings",    THEME.icon_visible_setting )
 	        
 			registerFunction(p, "Toggle View Control",      "", n, panel_preview_view_control_toggle  ).setMenu("preview_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.previewSetting.show_view_control});
 			registerFunction(p, "Show View Control",        "", n, panel_preview_view_control_show    ).setMenu("preview_view_control_show");
@@ -651,6 +654,7 @@ function Panel_Preview() : PanelContent() constructor {
     		{ cond : "preview_3d_is_unlock", items : [ "preview_set_3d_object" ] },
         	-1, 
     		"preview_3D_settings",
+    		"preview_3D_grid_settings",
     		"preview_snap_settings",
 		];
         
@@ -659,6 +663,7 @@ function Panel_Preview() : PanelContent() constructor {
     		"preview_toggle_mode",
         	-1, 
     		"preview_3D_SDF_settings",
+    		"preview_3D_grid_settings",
     		"preview_snap_settings",
 		];
         
@@ -2304,28 +2309,34 @@ function Panel_Preview() : PanelContent() constructor {
             d3_camera_preview.setMatrix();
             d3_camera_preview.applyCamera();
             
-            gpu_set_ztestenable(true);
-            gpu_set_zwriteenable(false);
-            gpu_set_cullmode(cull_noculling); 
-            
-            shader_set(sh_d3d_grid_view);
-                var _dist = round(d3_camera_preview.focus.distance(d3_camera_preview.position));
-                var _tx   = round(d3_camera_preview.focus.x);
-                var _ty   = round(d3_camera_preview.focus.y);
-            
-                var _scale = _dist * 8;
-                while(_scale > 64) _scale /= 4;
-                
-                var _fade = max(.5, 1 - power(_scale / 64, 2));
-                
-                shader_set_f( "axisBlend", _blend );
-                shader_set_f( "scale",     _scale );
-                shader_set_f( "fade",      _fade  );
-                shader_set_f( "shift",     _tx / _dist / 2, _ty / _dist / 2 );
-                draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
-            shader_reset();
-            
-            gpu_set_zwriteenable(true);
+            if(PROJECT.previewGrid.d3_show) {
+	            gpu_set_ztestenable(true);
+	            gpu_set_zwriteenable(false);
+	            gpu_set_cullmode(cull_noculling); 
+	            
+	            shader_set(sh_d3d_grid_view);
+	                var _dist = round(d3_camera_preview.focus.distance(d3_camera_preview.position));
+	                var _tx   = round(d3_camera_preview.focus.x);
+	                var _ty   = round(d3_camera_preview.focus.y);
+	            
+	                var _scale = _dist * PROJECT.previewGrid.d3_scale;
+	                while(_scale > 64) _scale /= 4;
+	                
+	                var _fade = max(.5, 1 - power(_scale / 64, 2));
+	                
+	                shader_set_f( "axisBlend", _blend );
+	                shader_set_f( "scale",     _scale );
+	                shader_set_f( "fade",      _fade  );
+	                shader_set_f( "shift",     _tx / _dist / 2, _ty / _dist / 2 );
+	                
+	                shader_set_f( "opacity",   PROJECT.previewGrid.d3_opacity );
+	                shader_set_c( "color",     PROJECT.previewGrid.d3_color   );
+	                
+	                draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
+	            shader_reset();
+	            
+	            gpu_set_zwriteenable(true);
+            }
             
             d3_scene_preview.reset();
             d3_camera_preview.view_near = vn;
@@ -2483,18 +2494,21 @@ function Panel_Preview() : PanelContent() constructor {
             shader_set_i("drawBg",      d3_drawBG);
             shader_set_f("depthInt",    0);
             
-            var _scale = zm / 2;
+            var _scale = zm * PROJECT.previewGrid.d3_scale / 16;
             var _step  = 1;
             while(_scale > 32) {
                 _scale /= 2;
                 _step  /= 2;
             }
             
-            shader_set_i("drawGrid",    true);
-            shader_set_f("gridStep",    _step);
-            shader_set_f("gridScale",   zm / 2);
-            shader_set_f("axisBlend",   1);
-            shader_set_f("viewRange",   [ d3_camera.view_near, d3_camera.view_far ]);
+            shader_set_i( "drawGrid",    PROJECT.previewGrid.d3_show );
+            shader_set_f( "gridStep",    _step);
+            shader_set_f( "gridScale",   zm / 2);
+            shader_set_f( "axisBlend",   1);
+            shader_set_f( "viewRange",   [ d3_camera.view_near, d3_camera.view_far ]);
+            
+            shader_set_f( "gridOpacity", PROJECT.previewGrid.d3_opacity );
+            shader_set_c( "gridColor",   PROJECT.previewGrid.d3_color   );
             
             draw_sprite_stretched(s_fx_pixel, 0, 0, 0, w, h);
         shader_reset();

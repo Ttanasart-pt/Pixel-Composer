@@ -83,6 +83,8 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		var _mm  = [ mx, my ];
 		var padd = ui(THEME_VALUE.panel_inspector_prop_paddding + 2);
 		
+		var lbh = ui(22);
+		
 		var _hov = false;
 		if(bg_y) draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), bg_y, w - ui(8), th, COLORS._main_accent);
 		
@@ -106,18 +108,18 @@ function Panel_Linear_Setting() : PanelContent() constructor {
                 
                 var lbx = ui(4);
                 var lby = ui(0);
-                var lbh = th - ui(4);
                 var lbw =  w - ui(8);
                 
-                if(pHOVER && point_in_rectangle(mx, my, lbx, yy, lbx + lbw, yy + lbh)) {
-                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.section_hover, 1);
-                	if(mouse_lpress(pFOCUS)) _prop[@ 1] = !coll;
-                	
-                } else
-                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
+                var hov = pHOVER && point_in_rectangle(mx, my, lbx, yy, lbx + lbw, yy + lbh);
+                if(hov && mouse_lpress(pFOCUS)) _prop[@ 1] = !coll;
             	
-                draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS.section_bg, 1);
-                draw_set_text(font, fa_left, fa_center, COLORS.section_bg, 1);
+            	var scc = hov? COLORS.section_hover : COLORS.section_bg;
+                          draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, lbw, lbh, scc);
+                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, lbw, lbh, COLORS.section_selected);
+                if(hov)   draw_sprite_stretched_ext(THEME.section_separator, 1, lbx, yy, lbw, lbh, COLORS.section_hover);
+                
+                draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS._main_icon, 1);
+                draw_set_text(font, fa_left, fa_center, COLORS._main_text, 1);
                 draw_text_add(lbx + ui(32), yy + lbh / 2, txt);
                 draw_set_alpha(1);
                 
@@ -141,7 +143,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				var _colr = _prop.color;
 				
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(4), yy + ui(2), w - ui(8), th - ui(4), _colr, 1);
-				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy + th / 2);
+				draw_sprite_ui_uniform(_spr, _ind, ui(4) + th / 2, yy + th / 2, .75);
 				
 				draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(4) + th, yy + th / 2, _text);

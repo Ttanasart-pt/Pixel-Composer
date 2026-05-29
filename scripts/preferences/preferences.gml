@@ -245,6 +245,11 @@
 				opacity : 0.5,
 				color   : cola(#6d6d81),
 				pixel   : false,
+				
+				d3_show    : true, 
+				d3_opacity : .75, 
+				d3_scale   : 8, 
+				d3_color   : c_white, 
 			}
 			
 			PREFERENCES.project_previewSetting = {

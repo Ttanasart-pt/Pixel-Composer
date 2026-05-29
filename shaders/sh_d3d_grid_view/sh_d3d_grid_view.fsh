@@ -10,7 +10,9 @@ varying vec3 v_worldPosition;
 
 uniform float scale;
 uniform float fade;
+uniform float opacity;
 uniform vec2  shift;
+uniform vec4  color;
 
 uniform float axisBlend;
 
@@ -30,18 +32,18 @@ void main() {
     float alpha = length(cen) * 2.;
           alpha = 1. - alpha * alpha;
 	
-    float g = .8;
     float a = linea * fade;
     
          if(mod(abs(pos.x) * scale, 4.) < minx) { a += .4; }
     else if(mod(abs(pos.y) * scale, 4.) < miny) { a += .4; }
     
-    vec4 color  = vec4(g, g, g, a * alpha);
+    vec4 gridC = vec4(color.rgb, a * alpha);
 	
 	thick = 1.2;
 	linea = thick - min(line, thick);
-    if(abs(pos.x) * scale < minx) color = vec4(0., 1., 0., linea * axisBlend * min(1., alpha * 2.));
-    if(abs(pos.y) * scale < miny) color = vec4(1., 0., 0., linea * axisBlend * min(1., alpha * 2.));
+    if(abs(pos.x) * scale < minx) gridC = vec4(0., 1., 0., linea * axisBlend * min(1., alpha * 2.));
+    if(abs(pos.y) * scale < miny) gridC = vec4(1., 0., 0., linea * axisBlend * min(1., alpha * 2.));
 	
-    gl_FragColor = color;
+	gridC.a *= opacity;
+    gl_FragColor = gridC;
 }
