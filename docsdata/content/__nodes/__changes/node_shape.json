@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.008",
+    "changes": [
+      {
+        "date": "2026-05-29T06:05:52.540Z",
+        "node": "",
+        "commit": "**Palette/Gradient Selector] Focused dialog now suppress global hotkey. - [Palette/Gradient Selector**: Add keyboard shortcut for switching between color/ gradient key."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.009",
     "changes": [
       {

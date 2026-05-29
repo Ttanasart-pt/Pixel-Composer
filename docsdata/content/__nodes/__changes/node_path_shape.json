@@ -6,6 +6,11 @@
         "date": "2026-05-29T04:37:05.369Z",
         "node": "Shape Path",
         "commit": "**Shape Path**: Arc shape now use direct lerp."
+      },
+      {
+        "date": "2026-05-29T06:05:52.528Z",
+        "node": "Palette/Gradient Selector] Focused dialog now suppress global hotkey. - [Palette/Gradient Selector",
+        "commit": "**Palette/Gradient Selector] Focused dialog now suppress global hotkey. - [Palette/Gradient Selector**: Add keyboard shortcut for switching between color/ gradient key."
       }
     ]
   },

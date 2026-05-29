@@ -391,8 +391,14 @@ function __PaletteColor(_color = c_black) constructor {
 		refreshPaletteObject();
 		
 		if(!_reset_select) return;
-		index_selecting = [ 0, 0 ];
-		if(!array_empty(palette)) selector.setColor(palette[0]);
+		
+		if(!array_empty(palette)) {
+			index_selecting = [ 0, 1 ];
+			selector.setColor(palette[0]);
+			
+		} else 
+			index_selecting = [ 0, 0 ];
+			
 		mixer = noone;
 	}
 	

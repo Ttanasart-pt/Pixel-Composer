@@ -121,7 +121,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	                break;
 	                
 	            case "Arc" : 
-	                var a = lerp_angle_direct(pa2x, pa2y, _rat);
+	                var a = lerp(pa2x, pa2y, _rat);
 	                out.x = posx + lengthdir_x(scax, a);
 	                out.y = posy + lengthdir_y(scay, a);
 	                break;

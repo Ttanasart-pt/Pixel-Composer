@@ -2,6 +2,31 @@
 if !ready exit;
 draggable = true;
 
+#region hotkeys
+	if(sFOCUS) {
+		HOTKEY_BLOCK = true;
+		
+		if(key_press(vk_left)) {
+			if(key_selecting == noone) key_selecting = gradient.keys[0];
+			else {
+				var _kamo = array_length(gradient.keys);
+				var _kidx = array_find(gradient.keys, key_selecting);
+				key_selecting = gradient.keys[(_kidx - 1 + _kamo) % _kamo];
+			}
+		}
+		
+		if(key_press(vk_right)) {
+			if(key_selecting == noone) key_selecting = gradient.keys[0];
+			else {
+				var _kamo = array_length(gradient.keys);
+				var _kidx = array_find(gradient.keys, key_selecting);
+				key_selecting = gradient.keys[(_kidx + 1) % _kamo];
+			}
+		}
+		
+	}
+#endregion
+
 #region dropper
 	selector.interactable = interactable;
 	if(selector.dropper_active) {

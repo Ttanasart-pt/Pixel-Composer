@@ -2,6 +2,12 @@
 if !ready exit;
 draggable = true;
 
+#region hotkeys
+	if(sFOCUS) {
+		HOTKEY_BLOCK = true;
+	}
+#endregion
+	
 #region dropper
 	selector.interactable = interactable;
 	if(selector.dropper_active) { selector.drawDropper(self); exit; }

@@ -3,6 +3,27 @@ if !ready exit;
 if palette == 0 exit;
 draggable = true;
 
+#region hotkeys
+	if(sFOCUS) {
+		HOTKEY_BLOCK = true;
+		
+		if(key_press(vk_left)) {
+			var _kamo = array_length(palette);
+			index_selecting[0] = (index_selecting[0] - 1 + _kamo) % _kamo;
+			index_selecting[1] = 1;
+			selector.setColor(palette[index_selecting[0]]);
+		}
+		
+		if(key_press(vk_right)) {
+			var _kamo = array_length(palette);
+			index_selecting[0] = (index_selecting[0] + 1) % _kamo;
+			index_selecting[1] = 1;
+			selector.setColor(palette[index_selecting[0]]);
+		}
+		
+	}
+#endregion
+	
 #region dropper
 	selector.interactable = interactable;
 	if(selector.dropper_active) { selector.drawDropper(self); exit; }
@@ -198,11 +219,11 @@ draggable = true;
 	var pd   = ui(0);
 	var _len = array_length(palette);
 	
-	var min_col = 8;
-	var col  = min(_len, min_col);
+	var maxCol = 16;
+	var col  = min(_len, maxCol);
 	var row  = ceil(_len / col);
 	if(row > 8) {
-		col = 16;
+		col = maxCol * 2;
 		row = ceil(_len / col);
 	}
 	
@@ -303,9 +324,9 @@ draggable = true;
 	surface_reset_target();
 	
 	shader_set(sh_dialog_palette_selector);
-		shader_set_f("dimension",     pl_sw, pl_sh);
-		shader_set_i("edge",          (_hedge && !mouse_lclick()) || index_dragging != noone);
-		shader_set_color("edgeColor", COLORS._main_accent);
+		shader_set_f("dimension", pl_sw, pl_sh);
+		shader_set_i("edge",      (_hedge && !mouse_lclick()) || index_dragging != noone);
+		shader_set_c("edgeColor", COLORS._main_accent);
 		
 		draw_surface(selection_surface, pl_sx, pl_sy);
 	shader_reset();
@@ -366,9 +387,7 @@ draggable = true;
 			index_drag_h = 0;
 		
 			if(hover > -1) {
-				
 				if(mouse_lpress(sFOCUS)) {
-					
 					if(interactable) {
 						if(_hedge) index_dragging = hover;
 						else {
@@ -385,7 +404,6 @@ draggable = true;
 					index_sel_start = hover;
 					
 				} else if(mouse_lclick(sFOCUS) && mouse_interact) {
-					
 					if(hover > index_sel_start) {
 						index_selecting[0] = index_sel_start;
 						index_selecting[1] = hover - index_sel_start + 1;
