@@ -299,6 +299,8 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			_edt.setFocusHover(true, true);
 			_edt.drawParam(_param);
 			
+			if((is(_edt, scrollBox) || is(_edt, scrollBoxFn)) && _edt.open) selectable = false;
+			
 			if(_hov) mouse_rel = false;
 		}
 		

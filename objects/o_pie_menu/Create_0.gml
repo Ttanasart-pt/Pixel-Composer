@@ -169,7 +169,7 @@ function refreshAngles() {
 
 function deactivate() {
 	active = false;
-	if(preFocus) setFocus(preFocus);
+	if(sFOCUS && preFocus) setFocus(preFocus);
 }
 
 function onActivate() {
