@@ -32,19 +32,12 @@ varying vec4 v_vColour;
 //if only using for rotation, CLEANUP has negligable effect and should be disabled for speed
 #define CLEANUP
 
-uniform vec2  dimension;
-uniform float scale;
-uniform float rotation;
+uniform vec2  sampleDimension;
 
 //the color with the highest priority.
 // other colors will be tested based on distance to this
 // color to determine which colors take priority for overlaps.
 /* uniform */ vec3 highestColor = vec3(1.,1.,1.);
-
-//how close two colors should be to be considered "similar".
-// can group shapes of visually similar colors, but creates
-// some artifacting and should be kept as low as possible.
-uniform float similarThreshold;
 
 /* uniform */ float lineWidth = 1.0;
 
@@ -61,7 +54,7 @@ vec3 yuv(vec3 col){
 }
 
 bool similar(vec4 col1, vec4 col2){
-	return (col1.a == 0. && col2.a == 0.) || distance(col1, col2) <= similarThreshold;
+	return (col1.a == 0. && col2.a == 0.) || distance(col1, col2) <= 0.;
 }
 
 //multiple versions because godot doesn't support function overloading
@@ -292,49 +285,44 @@ vec4 sliceDist(vec2 point, vec2 mainDir, vec2 pointDir, vec4 u, vec4 uf, vec4 uf
 	return vec4(-1.0);
 }
 
-float round(float val) { return fract(val) > 0.5? ceil(val) : floor(val); }
-vec2  round(vec2 vec)  { return vec2(round(vec.x), round(vec.y)); }
-
-void main() {
-	float ang  = rotation;
-    vec2 size  = dimension + 0.0001;
-    vec2 px    = (v_vTexcoord - .5) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) + .5;
-	     px    = px * size / scale;
+vec4 texture2Dclean( sampler2D texture, vec2 uv ) {
+	vec2 size  = sampleDimension + 0.0001;
+    vec2 px    = uv * size;
 	     
 	vec2 local = fract(px);
 	px = ceil(px);
 	
-	vec2 pointDir = round(local) * 2.0 - 1.0;
+	vec2 pointDir = floor(local + .5) * 2.0 - 1.0;
 	
 	// neighbor pixels
 	// Up, Down, Forward, and Back
 	// relative to quadrant of current location within pixel
 	
-	vec4 uub = texture2D( gm_BaseTexture, (px + vec2(-1.0, -2.0) * pointDir) / size * scale);
-	vec4 uu  = texture2D( gm_BaseTexture, (px + vec2( 0.0, -2.0) * pointDir) / size * scale);
-	vec4 uuf = texture2D( gm_BaseTexture, (px + vec2( 1.0, -2.0) * pointDir) / size * scale);
+	vec4 uub = texture2D( texture, (px + vec2(-1.0, -2.0) * pointDir) / size);
+	vec4 uu  = texture2D( texture, (px + vec2( 0.0, -2.0) * pointDir) / size);
+	vec4 uuf = texture2D( texture, (px + vec2( 1.0, -2.0) * pointDir) / size);
 	
-	vec4 ubb = texture2D( gm_BaseTexture, (px + vec2(-2.0, -2.0) * pointDir) / size * scale);
-	vec4 ub  = texture2D( gm_BaseTexture, (px + vec2(-1.0, -1.0) * pointDir) / size * scale);
-	vec4 u   = texture2D( gm_BaseTexture, (px + vec2( 0.0, -1.0) * pointDir) / size * scale);
-	vec4 uf  = texture2D( gm_BaseTexture, (px + vec2( 1.0, -1.0) * pointDir) / size * scale);
-	vec4 uff = texture2D( gm_BaseTexture, (px + vec2( 2.0, -1.0) * pointDir) / size * scale);
+	vec4 ubb = texture2D( texture, (px + vec2(-2.0, -2.0) * pointDir) / size);
+	vec4 ub  = texture2D( texture, (px + vec2(-1.0, -1.0) * pointDir) / size);
+	vec4 u   = texture2D( texture, (px + vec2( 0.0, -1.0) * pointDir) / size);
+	vec4 uf  = texture2D( texture, (px + vec2( 1.0, -1.0) * pointDir) / size);
+	vec4 uff = texture2D( texture, (px + vec2( 2.0, -1.0) * pointDir) / size);
 	
-	vec4 bb  = texture2D( gm_BaseTexture, (px + vec2(-2.0,  0.0) * pointDir) / size * scale);
-	vec4 b   = texture2D( gm_BaseTexture, (px + vec2(-1.0,  0.0) * pointDir) / size * scale);
-	vec4 c   = texture2D( gm_BaseTexture, (px + vec2( 0.0,  0.0) * pointDir) / size * scale);
-	vec4 f   = texture2D( gm_BaseTexture, (px + vec2( 1.0,  0.0) * pointDir) / size * scale);
-	vec4 ff  = texture2D( gm_BaseTexture, (px + vec2( 2.0,  0.0) * pointDir) / size * scale);
+	vec4 bb  = texture2D( texture, (px + vec2(-2.0,  0.0) * pointDir) / size);
+	vec4 b   = texture2D( texture, (px + vec2(-1.0,  0.0) * pointDir) / size);
+	vec4 c   = texture2D( texture, (px + vec2( 0.0,  0.0) * pointDir) / size);
+	vec4 f   = texture2D( texture, (px + vec2( 1.0,  0.0) * pointDir) / size);
+	vec4 ff  = texture2D( texture, (px + vec2( 2.0,  0.0) * pointDir) / size);
 	
-	vec4 dbb = texture2D( gm_BaseTexture, (px + vec2(-2.0,  1.0) * pointDir) / size * scale);
-	vec4 db  = texture2D( gm_BaseTexture, (px + vec2(-1.0,  1.0) * pointDir) / size * scale);
-	vec4 d   = texture2D( gm_BaseTexture, (px + vec2( 0.0,  1.0) * pointDir) / size * scale);
-	vec4 df  = texture2D( gm_BaseTexture, (px + vec2( 1.0,  1.0) * pointDir) / size * scale);
-	vec4 dff = texture2D( gm_BaseTexture, (px + vec2( 2.0,  1.0) * pointDir) / size * scale);
+	vec4 dbb = texture2D( texture, (px + vec2(-2.0,  1.0) * pointDir) / size);
+	vec4 db  = texture2D( texture, (px + vec2(-1.0,  1.0) * pointDir) / size);
+	vec4 d   = texture2D( texture, (px + vec2( 0.0,  1.0) * pointDir) / size);
+	vec4 df  = texture2D( texture, (px + vec2( 1.0,  1.0) * pointDir) / size);
+	vec4 dff = texture2D( texture, (px + vec2( 2.0,  1.0) * pointDir) / size);
 	
-	vec4 ddb = texture2D( gm_BaseTexture, (px + vec2(-1.0,  2.0) * pointDir) / size * scale);
-	vec4 dd  = texture2D( gm_BaseTexture, (px + vec2( 0.0,  2.0) * pointDir) / size * scale);
-	vec4 ddf = texture2D( gm_BaseTexture, (px + vec2( 1.0,  2.0) * pointDir) / size * scale);
+	vec4 ddb = texture2D( texture, (px + vec2(-1.0,  2.0) * pointDir) / size);
+	vec4 dd  = texture2D( texture, (px + vec2( 0.0,  2.0) * pointDir) / size);
+	vec4 ddf = texture2D( texture, (px + vec2( 1.0,  2.0) * pointDir) / size);
 	
 	vec4 col = c;
 	
@@ -348,5 +336,9 @@ void main() {
 	if(b_col.r >= 0.0) col = b_col;
 	if(u_col.r >= 0.0) col = u_col;
 	
-    gl_FragColor = col;
+    return col;
+}
+
+void main() {
+    gl_FragColor = texture2Dclean(gm_BaseTexture, v_vTexcoord);
 }

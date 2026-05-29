@@ -82,7 +82,7 @@
 			 if(interpolation <= 2)	return texture2D(          texture, uv );
 		else if(interpolation == 3)	return texture2D_bicubic(  texture, uv );
 		else if(interpolation == 4)	return texture2D_lanczos3( texture, uv );
-		
+
 		return texture2D( texture, uv );
 	}
 

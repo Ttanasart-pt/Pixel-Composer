@@ -257,7 +257,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	static gridFill = function(index = preview_index) {
 		var _iSrf = getInputData(0);
@@ -888,7 +888,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			else if(_bld_md == 1) { BLEND_ADD        }
 			else if(_bld_md == 2) { BLEND_MAX        }
 			
-			shader_set_interpolation(_baseSurface);
+			shader_set_interpolation(_baseSurface, _dim);
 			
 			for( var i = 0; i < atlas_i; i++ ) {
 				var _i   = i * ATLAS_ARRAY.length;

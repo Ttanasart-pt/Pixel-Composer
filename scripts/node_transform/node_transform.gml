@@ -362,7 +362,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Draw
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	transformData = noone;
 	
@@ -932,7 +932,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		} 
 		
 		// Normal or wrap
-		surface_set_shader(_outSurf, noone, true, BLEND.normal);
+		surface_set_shader(_outSurf, sh_sample, true, BLEND.normal);
 			shader_set_interpolation(surf);
 			BLEND_OVERRIDE
 			

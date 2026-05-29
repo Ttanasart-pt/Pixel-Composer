@@ -1,6 +1,3 @@
-#pragma use(sampler_ext)
-
-#region -- sampler_ext -- [1780048887.588048]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
@@ -358,11 +355,3 @@
 		return vec4(0.);
 	}
 	vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
-#endregion -- sampler_ext --
-
-varying vec2 v_vTexcoord;
-varying vec4 v_vColour;
-
-void main() {
-    gl_FragColor = sampleTexture( gm_BaseTexture, v_vTexcoord ) * v_vColour;
-}

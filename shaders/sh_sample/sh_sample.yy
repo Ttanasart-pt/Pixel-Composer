@@ -3,8 +3,8 @@
   "%Name":"sh_sample",
   "name":"sh_sample",
   "parent":{
-    "name":"_helper",
-    "path":"folders/shader/_helper.yy",
+    "name":"main",
+    "path":"folders/shader/main.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

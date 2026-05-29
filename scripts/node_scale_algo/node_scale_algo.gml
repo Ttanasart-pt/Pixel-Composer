@@ -50,22 +50,22 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
 	
-	static step = function() {
-		var _surf = getInputSingle(0);
-		var _type = getInputSingle(1);
-		
-		var _atlas = is(_surf, SurfaceAtlas);
-		inputs[4].setVisible(_atlas);
-		inputs[5].setVisible(_type == 2);
-		inputs[6].setVisible(_type == 2);
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
-		var inSurf = _data[0];
-		var algo   = _data[1];
-		var _atlS  = _data[4];
-		var _scal  = _data[5];
-		var _rota  = _data[6];
+		#region data
+			var inSurf = _data[0];
+			
+			var _type  = _data[1];
+			var _atlS  = _data[4];
+			var _scal  = _data[5];
+			var _rota  = _data[6];
+			
+			var _atlas = is(inSurf, SurfaceAtlas);
+			
+			inputs[4].setVisible(_atlas);
+			inputs[5].setVisible(_type == 2);
+			inputs[6].setVisible(_type == 2);	
+		#endregion
+			
 		var ww     = surface_get_width_safe(inSurf);
 		var hh     = surface_get_height_safe(inSurf);
 		var cDep   = attrDepth();
@@ -78,7 +78,7 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 		var _surf = isAtlas? _outSurf.getSurface() : _outSurf;
 		
-		switch(algo) {
+		switch(_type) {
 			case 0 :
 				shader = sh_scale2x;
 				sc = 2;

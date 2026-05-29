@@ -3,8 +3,8 @@
   "%Name":"sh_sample_tile",
   "name":"sh_sample_tile",
   "parent":{
-    "name":"_helper",
-    "path":"folders/shader/_helper.yy",
+    "name":"main",
+    "path":"folders/shader/main.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

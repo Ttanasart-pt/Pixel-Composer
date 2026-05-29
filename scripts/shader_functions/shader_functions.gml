@@ -217,6 +217,14 @@
 		shader_set_i(amo_uni, _amo);
 		shader_set_f(pal_uni, _pal);
 	}
+	
+	function shader_set_clean(_surf, _rot = 0, _sca = 1) {
+		shader_set_f("dimension", surface_get_dimension(_surf));
+		shader_set_f("scale",     _sca);
+		shader_set_f("rotation",  degtorad(_rot));
+		
+		shader_set_f("similarThreshold", 0);
+	}
 #endregion
 
 #region prebuild
@@ -246,10 +254,10 @@
 		if(is(surface, Atlas)) surface = surface.getSurface();
 		var intp = getAttribute("interpolate");
 		
-		__gpu_set_tex_filter(intp > 1);
-		shader_set_i("interpolation",	intp);
-		shader_set_f("sampleDimension", _dim == noone? surface_get_dimension(surface) : _dim);
-		shader_set_i("sampleMode",		getAttribute("oversample"));
+		__gpu_set_tex_filter(intp != 1 && intp != 6);
+		shader_set_i( "interpolation",	intp);
+		shader_set_f( "sampleDimension", _dim == noone? surface_get_dimension(surface) : _dim);
+		shader_set_i( "sampleMode",		getAttribute("oversample"));
 	}
 	
 	function surface_set_shader(surface, shader = sh_sample, clear = true, blend = BLEND.alpha) {

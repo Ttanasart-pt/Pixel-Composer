@@ -209,7 +209,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	////- Nodes
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	#region Attributes
 		attributes.cache = true;
@@ -620,6 +620,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _outSurf = surface_create_valid(_dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, _type == PARTICLE_RENDER_TYPE.surface? sh_sample : noone);
+			shader_set_interpolation(noone, _dim);
 			draw_surface_safe(_bg);
 			
 			switch(_blend) {

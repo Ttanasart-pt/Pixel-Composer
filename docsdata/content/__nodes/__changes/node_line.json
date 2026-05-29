@@ -6,6 +6,11 @@
         "date": "2026-05-29T08:22:57.864Z",
         "node": "Draw Line",
         "commit": "**Draw Line**: Add line caps angle and offset property."
+      },
+      {
+        "date": "2026-05-29T10:04:43.570Z",
+        "node": "",
+        "commit": "**Transform, Repeat, Scatter, Particle**: Add Clean Edge interpolation algorithm."
       }
     ]
   },

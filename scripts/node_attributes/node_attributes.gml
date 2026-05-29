@@ -26,6 +26,16 @@
 		new scrollItem("Lanczos3"),
 	];
 	
+	global.SURFACE_INTERPOLATION_EXT = [
+		new scrollItem("Inherited").setTooltip("Inherit from parent (global if the node is not in any group)."), 
+		new scrollItem("Pixel"),
+		new scrollItem("Bilinear"),
+		new scrollItem("Bicubic"),
+		new scrollItem("Lanczos3"),
+		-1,
+		new scrollItem("CleanEdge"),
+	];
+	
 	global.SURFACE_OVERSAMPLE = [
 		new scrollItem("Inherited").setTooltip("Inherit from parent (global if the node is not in any group)."), 
 		new scrollItem("Empty"), 
@@ -134,11 +144,11 @@
 		array_push(attributes_properties, new attribute_property(color_depth_editor));
 	}
 	
-	function attribute_interpolation(label = false) {
+	function attribute_interpolation(label = false, _ext = false) {
 		attributes.interpolate = PREFERENCES.node_def_interpolation;
 		attributes.oversample  = PREFERENCES.node_def_oversample;
 		
-		attr_interpolate_array = variable_clone(global.SURFACE_INTERPOLATION);
+		attr_interpolate_array = variable_clone(_ext? global.SURFACE_INTERPOLATION_EXT : global.SURFACE_INTERPOLATION);
 		
 		interpolate_selector   = new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false)
 			.setFrontButton(button(function() /*=>*/ {

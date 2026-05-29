@@ -271,7 +271,7 @@
 #endregion -- curve --
 #pragma use(sampler)
 
-#region -- sampler -- [1765244104.78094]
+#region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
@@ -356,7 +356,7 @@
 			 if(interpolation <= 2)	return texture2D(          texture, uv );
 		else if(interpolation == 3)	return texture2D_bicubic(  texture, uv );
 		else if(interpolation == 4)	return texture2D_lanczos3( texture, uv );
-		
+
 		return texture2D( texture, uv );
 	}
 

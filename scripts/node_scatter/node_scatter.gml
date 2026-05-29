@@ -129,7 +129,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- Nodes
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	#region data
 		surface_size_map  = {};
@@ -503,8 +503,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _outSurf = _outData[0];
 		
-		surface_set_target(_outSurf);
-			gpu_set_tex_filter(getAttribute("interpolate") > 1);
+		surface_set_shader(_outSurf);
+			shader_set_interpolation(_inSurf, _dim);
 			DRAW_CLEAR
 			
 			switch(blend) {
@@ -906,7 +906,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			BLEND_NORMAL
 			gpu_set_blendequation(bm_eq_add);
 			gpu_set_tex_filter(false);
-		surface_reset_target(); 
+		surface_reset_shader(); 
 		
 		scatter_data = _sct;
 		

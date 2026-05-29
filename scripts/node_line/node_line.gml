@@ -131,7 +131,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	widthMap     = ds_map_create();
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -909,6 +909,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				if(!array_empty(points)) {
 					var _pp = [ 0, 0 ];
+					shader_set(sh_sample);
+					BLEND_ALPHA_MULP
 					
 					if(is_surface(_cap_st)) {
 						var _cap_st_s = _aa;
@@ -922,6 +924,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _cap_st_x = (_stx + _pp[0]) * _aa + lengthdir_x(_cap_off[0], _sta + 180);
 						var _cap_st_y = (_sty + _pp[1]) * _aa + lengthdir_y(_cap_off[0], _sta + 180);
 						
+						shader_set_interpolation(_cap_st);
 						draw_surface_ext(_cap_st, _cap_st_x, _cap_st_y, _cap_st_s, _cap_st_s, _rr, c_white, 1);
 					}
 					
@@ -937,8 +940,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _cap_ed_x = (_edx + _pp[0]) * _aa + lengthdir_x(_cap_off[1], _sta);
 						var _cap_ed_y = (_edy + _pp[1]) * _aa + lengthdir_y(_cap_off[1], _sta);
 						
+						shader_set_interpolation(_cap_ed);
 						draw_surface_ext(_cap_ed, _cap_ed_x, _cap_ed_y, _cap_ed_s, _cap_ed_s, _rr, c_white, 1);
 					}
+					
+					BLEND_NORMAL
+					shader_reset();
 				}
 				
 			}

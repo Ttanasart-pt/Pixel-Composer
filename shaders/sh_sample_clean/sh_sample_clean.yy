@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_BGR",
-  "name":"sh_BGR",
+  "%Name":"sh_sample_clean",
+  "name":"sh_sample_clean",
   "parent":{
     "name":"main",
     "path":"folders/shader/main.yy",

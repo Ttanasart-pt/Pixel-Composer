@@ -11,6 +11,11 @@
         "date": "2026-05-29T04:37:05.369Z",
         "node": "",
         "commit": "**Shape Path**: Arc shape now use direct lerp."
+      },
+      {
+        "date": "2026-05-29T10:04:43.582Z",
+        "node": "",
+        "commit": "**Transform, Repeat, Scatter, Particle**: Add Clean Edge interpolation algorithm."
       }
     ]
   },
