@@ -6,6 +6,11 @@
         "date": "2026-05-29T03:33:25.704Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Node alignment now use anchoring node."
+      },
+      {
+        "date": "2026-05-29T03:40:04.353Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Node alignment/Auto organize now use anchoring node."
       }
     ]
   },

@@ -418,11 +418,16 @@ function __node_bbox_recal(node, param) {
 	return node;
 }
 
-function node_auto_organize(nodeList, anchor = noone, param = new node_auto_organize_parameter()) {
+function node_auto_organize(nodeList, param = new node_auto_organize_parameter(), anchor = noone) {
 	if(array_empty(nodeList)) return;
 	
 	var _frameList = array_filter(nodeList, function(n,i) /*=>*/  {return is(n, Node_Frame)});
 	var _nodeList  = array_filter(nodeList, function(n,i) /*=>*/ {return !is(n, Node_Frame)});
+	
+	if(anchor != noone) {
+		var ax = anchor.x;
+		var ay = anchor.y;
+	}
 	
 	var cx = 0, cy = 0;
 	var root = { node: noone, children: [], w: 0, h: 0, depth: 0 };
@@ -476,6 +481,16 @@ function node_auto_organize(nodeList, anchor = noone, param = new node_auto_orga
 		var _n   = _nodeList[i];
 		_n.x = _n.x - dx;
 		_n.y = _n.y - dy;
+	}
+	
+	if(anchor != noone) {
+		var dx = anchor.x - ax;
+		var dy = anchor.y - ay;
+		
+		for( var i = 0, n = array_length(_nodeList); i < n; i++ ) {
+			_nodeList[i].x -= dx;
+			_nodeList[i].y -= dy;
+		}
 	}
 	
 	array_foreach(_frameList, function(f,i) /*=>*/ { f.reFrame(); });
