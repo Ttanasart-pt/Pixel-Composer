@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.008",
+    "changes": [
+      {
+        "date": "2026-05-29T07:47:30.285Z",
+        "node": "",
+        "commit": "**Preview Panel] Add toolbar button for disabling 2D preview overlay in 3D mode. - [Preview Panel**: 2D preview overlay can now be resize."
+      }
+    ]
+  }
+]

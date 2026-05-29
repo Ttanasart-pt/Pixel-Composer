@@ -44,32 +44,6 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	
 	////- Node
 	
-	static drawOverlay3D = function(active, _mx, _my, _params) {
-		var _panel = _params[$ "panel"] ?? noone;
-		
-		#region draw result
-			var _outSurf = outputs[0].getValue();
-			if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, 0);
-			if(!is_surface(_outSurf)) return;
-			
-			var _w = _panel.w;
-			var _h = _panel.h - _panel.toolbar_height;
-			var _pw = surface_get_width_safe(_outSurf);
-			var _ph = surface_get_height_safe(_outSurf);
-			var _ps = ui(128) / max(_ph, _pw);
-			
-			var _pws = _pw * _ps;
-			var _phs = _ph * _ps;
-			
-			var _px = _w - ui(8) - _pws;
-			var _py = _h - ui(8) - _phs;
-			
-			draw_surface_ext_safe(_outSurf, _px, _py, _ps, _ps);
-			draw_set_color(COLORS._main_icon);
-			draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
-		#endregion
-	}
-	
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		#region data
 			var _dim  = _data[ 0];

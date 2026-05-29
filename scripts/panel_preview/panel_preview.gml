@@ -70,6 +70,8 @@
 		
 		function panel_preview_tool_l_toggle()        { PROJECT.previewSetting.tool_always_l = !PROJECT.previewSetting.tool_always_l; }
 		function panel_preview_tool_r_toggle()        { PROJECT.previewSetting.tool_always_r = !PROJECT.previewSetting.tool_always_r; }
+		
+		function panel_preview_overlay_2d_toggle()    { PANEL_PREVIEW.render_2d_overlay = !PANEL_PREVIEW.render_2d_overlay; }
 		                                                         
 	    function __fnInit_Preview() {
 	    	var p = "Preview";
@@ -192,6 +194,7 @@
 	        registerFunction(p, "Toggle Gizmo",             "", n, panel_preview_toggle_gizmo              ).setMenu("preview_toggle_gizmo",  THEME.icon_gizmo   ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.gizmo_show}   )
 	        registerFunction(p, "Toggle Left Panel",        "[",n, panel_preview_tool_l_toggle             ).setMenu("preview_toggle_left_tool"  )
 	        registerFunction(p, "Toggle Right Panel",       "]",n, panel_preview_tool_r_toggle             ).setMenu("preview_toggle_right_tool" )
+	        registerFunction(p, "Toggle 2D Overlay",        "", n, panel_preview_overlay_2d_toggle         ).setMenu("preview_toggle_2d_overlay", THEME.splash_thumbnail ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.render_2d_overlay} )
 	        
 	        registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());         }).setMenu("preview_popup",          THEME.node_goto_thin    )
 	        registerFunction(p, "Grid Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Grid_Setting())  })
@@ -205,7 +208,6 @@
 	        	.setColorFn(   function() /*=>*/ {return PROJECT.onion_skin.enabled? c_white : COLORS._main_icon} )
 	        	
 	        registerFunction(p, "3D View Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))        }).setMenu("preview_3D_settings",        THEME.d3d_preview_settings )
-	        registerFunction(p, "3D Output Settings...",    "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Output_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_output_settings", THEME.d3d_preview_settings )
 	        registerFunction(p, "3D SDF View Settings...",  "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW))    }).setMenu("preview_3D_SDF_settings",    THEME.d3d_preview_settings )
 	        registerFunction(p, "3D Grid Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Grid_Setting(PANEL_PREVIEW))   }).setMenu("preview_3D_grid_settings",   THEME.icon_grid_setting    )
 	        registerFunction(p, "3D Snap Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))      }).setMenu("preview_snap_settings",      THEME.d3d_snap_settings    )
@@ -493,6 +495,12 @@ function Panel_Preview() : PanelContent() constructor {
         d3_mousey = undefined;
         d3_mousez = undefined;
         
+        render_2d_overlay          = true;
+    	render_2d_overlay_size     = ui(128);
+    	render_2d_overlay_resizing = false;
+    	render_2d_overlay_s        = 0;
+		render_2d_overlay_m        = 0;
+
         global.SKY_SPHERE    = new __3dUVSphere(.5, 16, 8, true);
         
         #region camera
@@ -652,9 +660,10 @@ function Panel_Preview() : PanelContent() constructor {
     		{ cond : "preview_3d_is_unlock", items : [ "preview_set_3d_object" ] },
         	-1, 
     		"preview_3D_settings",
-    		// "preview_3D_output_settings",
     		"preview_3D_grid_settings",
     		"preview_snap_settings",
+    		-1,
+    		"preview_toggle_2d_overlay",
 		];
         
         global.menuItems_preview_toolbar_3d_sdf_context = [ "preview_edit_toolbar_3d_sdf", "preview_edit_preview_actions" ];
@@ -664,6 +673,8 @@ function Panel_Preview() : PanelContent() constructor {
     		"preview_3D_SDF_settings",
     		"preview_3D_grid_settings",
     		"preview_snap_settings",
+    		-1,
+    		"preview_toggle_2d_overlay",
 		];
         
         global.menuItems_preview_actions_context = [ "preview_edit_preview_actions" ];
@@ -3123,8 +3134,6 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawNodeActions = function(active, _node) {
-        var _mx = mx;
-        var _my = my;
         var overHover = pHOVER && mouse_on_preview == 1, overActive;
         
         var cx = canvas_x + _node.preview_x * canvas_s;
@@ -3149,88 +3158,121 @@ function Panel_Preview() : PanelContent() constructor {
             _params.panel = self;
             _params.scene = d3_scene;
         
-        hoveringGizmo = false;
-        if(gizmo_show) {
-	        if(_node.is_3D == NODE_3D.none) {
-	            if(key_mod_press(CTRL)) {
-	                _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
-	                _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
-	                
-	            } else if(PROJECT.previewGrid.snap) {
-	                _snx = PROJECT.previewGrid.size[0];
-	                _sny = PROJECT.previewGrid.size[1];
-	            }
-	            
-	            var _ovx = cx;
-	            var _ovy = cy;
-	            var _ovs = canvas_s;
-	            
-	            if(d3_active != NODE_3D.none) {
-	            	var _node_prev = _node.getPreviewValues();
-	            	var _node_pw   = surface_get_width_safe(_node_prev);
-	            	var _node_ph   = surface_get_height_safe(_node_prev);
-	            	
-					_ovs = ui(128) / max(_node_pw, _node_ph);
-	            	_ovx = w - tool_side_draw_r * toolbar_width - ui(8) - _node_pw * _ovs;
-					_ovy = h - toolbar_height                   - ui(8) - _node_ph * _ovs;
-	            	
-	            	draw_surface_ext_safe(_node_prev, _ovx, _ovy, _ovs, _ovs);
-					draw_set_color(COLORS.panel_preview_surface_outline);
-					draw_rectangle(_ovx, _ovy, _ovx + _node_pw * _ovs - 1, _ovy + _node_ph * _ovs - 1, true);
-					
-	            } else {
-		            var _prevNode = getNodePreview();
-		            if(_prevNode != _node && is(_prevNode, Node)) {
-		            	var _trans = _prevNode.drawOverlayChainTransform(_node);
-		            	_ovx += _trans[0] * _ovs;
-						_ovy += _trans[1] * _ovs;
-						_ovs *= _trans[2];
-		            }
-	            }
-	            
-	            hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _params);
-		    	
-	        } else {
-	            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
-	                _snx = PROJECT.previewSetting.d3_tool_snap_position;
-	                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
-	            }
-	            
-	            hoveringGizmo = _node.drawOverlay3D(overActive, _mx, _my, _params) ?? true;
-	        }
-        }
-        
         overlay_hovering = false;
+        hoveringGizmo    = false;
         
-        if(_node.drawPreviewToolOverlay != undefined) {
-        	var _param = { x, y, w, h, toolbar_height, 
-	            x0: _node.showTool() * ui(40),
-	            x1: w,
-	            y0: toolbar_height - ui(8), 
-	            y1: h - toolbar_height 
-	        };
-        	
-	        if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, _mx, _my, _param)) {
-	            canvas_hover     = false;
-	            overlay_hovering = true;
-	        }
+        if(!gizmo_show) return;
+    
+    	if(_node.is_3D != NODE_3D.none) {
+            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
+                _snx = PROJECT.previewSetting.d3_tool_snap_position;
+                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
+            }
+            
+            hoveringGizmo = _node.drawOverlay3D(overActive, mx, my, _params) ?? true;
         }
         
-        if(_node.preview_hotkeys != undefined) {
-        	__hotkeyMap = HOTKEYS_CUSTOM[$ instanceof(_node)];
-        	
-        	if(__hotkeyMap != undefined)
-	    	array_foreach(_node.preview_hotkeys, function(h, i) /*=>*/ {
-	    		var _hname = h[0];
-	    		var _hact  = h[1];
-	    		var _hotk  = __hotkeyMap[$ _hname];
-	    		
-				if(_hotk && _hotk.isPressing()) {
-					setActionTooltip(_hname);
-					_hact(); 
+        if(key_mod_press(CTRL)) {
+            _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
+            _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
+            
+        } else if(PROJECT.previewGrid.snap) {
+            _snx = PROJECT.previewGrid.size[0];
+            _sny = PROJECT.previewGrid.size[1];
+        }
+        
+        var _ovx = cx;
+        var _ovy = cy;
+        var _ovs = canvas_s;
+		var _node_prev = _node.getPreviewValues();
+        
+        if(d3_active == NODE_3D.none) {
+            var _prevNode = getNodePreview();
+            if(_prevNode != _node && is(_prevNode, Node)) {
+            	var _trans = _prevNode.drawOverlayChainTransform(_node);
+            	_ovx += _trans[0] * _ovs;
+				_ovy += _trans[1] * _ovs;
+				_ovs *= _trans[2];
+            }
+        
+        } else if(render_2d_overlay && is_surface(_node_prev)) {
+			var _node_pw = surface_get_width_safe(_node_prev);
+			var _node_ph = surface_get_height_safe(_node_prev);
+			
+			_ovs = render_2d_overlay_size / max(_node_pw, _node_ph);
+			_ovx = w - tool_side_draw_r * toolbar_width - ui(8) - _node_pw * _ovs;
+			_ovy = h - toolbar_height                   - ui(8) - _node_ph * _ovs;
+			
+			var area_w = _node_pw * _ovs;
+			var area_h = _node_ph * _ovs;
+			var _hov   = pHOVER && point_in_rectangle(mx, my, _ovx, _ovy, _ovx + area_w, _ovy + area_h);
+			var _hovRs = pHOVER && point_in_rectangle(mx, my, _ovx - ui(8), _ovy - ui(8), _ovx + ui(8), _ovy + ui(8));
+			
+			draw_surface_ext_safe(_node_prev, _ovx, _ovy, _ovs, _ovs);
+			draw_set_color(COLORS.panel_preview_surface_outline);
+			draw_set_alpha(.75 + .25 * (_hov || _hovRs));
+			draw_rectangle(_ovx, _ovy, _ovx + area_w - 1, _ovy + area_h - 1, true);
+			draw_set_alpha(1);
+			
+			if(_hov || _hovRs) overHover = false;
+			
+			if(render_2d_overlay_resizing) {
+				draw_sprite_ui(THEME.node_resize_corner, 1, _ovx - ui(4), _ovy - ui(4), .65, .65, 180, COLORS._main_accent);
+				
+			} else if(_hov || _hovRs) {
+				var hc = _hovRs? COLORS._main_icon_light : COLORS._main_icon;
+				draw_sprite_ui(THEME.node_resize_corner, 1, _ovx - ui(4), _ovy - ui(4), .65, .65, 180, hc);
+				
+				if(_hovRs && mouse_lpress(pFOCUS)) {
+					render_2d_overlay_resizing = true;
+					render_2d_overlay_s = render_2d_overlay_size;
+					render_2d_overlay_m = mx;
 				}
-			});
+			}
+    	}
+    	
+    	if(render_2d_overlay_resizing) {
+    		var vv = render_2d_overlay_s - (mx - render_2d_overlay_m);
+    		render_2d_overlay_size = clamp(vv, ui(32), w * .75);
+    		
+    		if(mouse_lrelease()) {
+    			render_2d_overlay_resizing = false;
+    		}
+    	}
+        
+        hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, mx, my, _params);
+    }
+    
+    static drawNodeToolOverlay = function(_node) {
+        if(_node.drawPreviewToolOverlay == undefined) return;
+    	var _param = { x, y, w, h, toolbar_height, 
+            x0: _node.showTool() * ui(40),
+            x1: w,
+            y0: toolbar_height - ui(8), 
+            y1: h - toolbar_height 
+        };
+    	
+        if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, mx, my, _param)) {
+            canvas_hover     = false;
+            overlay_hovering = true;
         }
+    }
+    
+    static drawNodeHotkey = function(_node) {
+        if(_node.preview_hotkeys == undefined) return;
+    	__hotkeyMap = HOTKEYS_CUSTOM[$ instanceof(_node)];
+    	
+    	if(__hotkeyMap != undefined)
+    	array_foreach(_node.preview_hotkeys, function(h, i) /*=>*/ {
+    		var _hname = h[0];
+    		var _hact  = h[1];
+    		var _hotk  = __hotkeyMap[$ _hname];
+    		
+			if(_hotk && _hotk.isPressing()) {
+				setActionTooltip(_hname);
+				_hact(); 
+			}
+		});
     }
     
     static drawTopbar = function(_node) {
@@ -4094,60 +4136,64 @@ function Panel_Preview() : PanelContent() constructor {
         	if(PROJECT.previewSetting.show_ruler) drawRuler();
         }
         
-    	var hori = PREFERENCES.panel_preview_toolbar_horizontal;
-    	
-    	if(hori) {
-    		tool_side_draw_t = PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool());
-	        tool_side_draw_b = PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1);
-	        
-    	} else {
-	        tool_side_draw_l = PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool());
-	        tool_side_draw_r = PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1);
-	        
-    	}
-        
-        if(PROJECT.previewSetting.tool_always_l) {
-        	var txx  = 0;
-	        var tyy  = ui(32);
-	        var tww  = hori? w : toolbar_width;
-	        var thh  = hori? toolbar_width : h;
-        	var aa   = d3_active? .8 : 1;
-        	
-	        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 0, txx, tyy, tww, thh, c_white, aa);
-        }
-        
-        if(PROJECT.previewSetting.tool_always_r) {
-        	if(hori) {
-	        	var txx = 0;
-		        var tyy = h - topbar_height - toolbar_width;
-		        var tww = w;
-		        var thh = toolbar_width;
+        #region Toolbar overlay
+	    	var hori = PREFERENCES.panel_preview_toolbar_horizontal;
+	    	
+	    	if(hori) {
+	    		tool_side_draw_t = PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool());
+		        tool_side_draw_b = PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1);
 		        
-	        } else {
-		        var txx = w + 1 - toolbar_width;
-		        var tyy = topbar_height;
-		        var tww = toolbar_width;
-		        var thh = h;
+	    	} else {
+		        tool_side_draw_l = PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool());
+		        tool_side_draw_r = PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1);
+		        
+	    	}
+	        
+	        if(PROJECT.previewSetting.tool_always_l) {
+	        	var txx  = 0;
+		        var tyy  = ui(32);
+		        var tww  = hori? w : toolbar_width;
+		        var thh  = hori? toolbar_width : h;
+	        	var aa   = d3_active? .8 : 1;
+	        	
+		        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 0, txx, tyy, tww, thh, c_white, aa);
 	        }
 	        
-	        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 1, txx, tyy, tww, thh, c_white, aa);
-        }
+	        if(PROJECT.previewSetting.tool_always_r) {
+	        	if(hori) {
+		        	var txx = 0;
+			        var tyy = h - topbar_height - toolbar_width;
+			        var tww = w;
+			        var thh = toolbar_width;
+			        
+		        } else {
+			        var txx = w + 1 - toolbar_width;
+			        var tyy = topbar_height;
+			        var tww = toolbar_width;
+			        var thh = h;
+		        }
+		        
+		        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 1, txx, tyy, tww, thh, c_white, aa);
+	        }
+        #endregion
         
         if(PANEL_PREVIEW == self) { // Draw Overlay
             if(toolNode) {
-            	drawNodeActions(pFOCUS, toolNode);
-            	
-            	_tool_hovering = tool_hovering;
-            	tool_hovering  = noone;
-            	
-		        drawToolsLeft(toolNode);
-		        drawToolsRight(toolNode);
-		        
+				drawNodeActions(pFOCUS, toolNode);
+				drawNodeToolOverlay(toolNode);
+				drawNodeHotkey(toolNode);
+
+				_tool_hovering = tool_hovering;
+				 tool_hovering = noone;
+				
+				drawToolsLeft(toolNode);
+				drawToolsRight(toolNode);
+				
             } else {
             	hoveringContent = true;
             	if(tool_current != noone) {
 	                var _tobj = tool_current.getToolObject();
-	        		if(struct_has(_tobj, "disable")) _tobj.disable();
+	        		if(has(_tobj, "disable")) _tobj.disable();
 	                tool_current = noone;
             	}
 	        	
@@ -4157,11 +4203,9 @@ function Panel_Preview() : PanelContent() constructor {
             }
         } // Draw Overlay
         
-        if(!struct_try_get(_prev_node, "bypass_grid", false)) drawNodeGrid();
+        if(!(_prev_node[$ "bypass_grid"] ?? false)) drawNodeGrid();
         
-        if(d3_active == NODE_3D.none)
-        	drawSplitView();
-        
+        if(d3_active == NODE_3D.none) drawSplitView();
         drawTopbar(toolNode);
         drawToolBar(toolNode);
         
