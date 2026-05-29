@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.008",
+    "changes": [
+      {
+        "date": "2026-05-29T03:33:25.704Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Node alignment now use anchoring node."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.0",
     "changes": [
       {

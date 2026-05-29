@@ -15,15 +15,15 @@ function Panel_Node_Align() : PanelContent() constructor {
 		/////////////////////////////
 		
 		if(buttonInstant(bb, xx, yy, bs, bs, m, pHOVER, pFOCUS, "", THEME.object_halign, 0, c_white, 1, .75) == 2)
-			node_halign(PANEL_GRAPH.nodes_selecting, fa_left);
+			node_halign(PANEL_GRAPH.nodes_selecting, fa_left,   PANEL_GRAPH.nodes_select_anchor);
 		xx += bs + ui(2);
 		
 		if(buttonInstant(bb, xx, yy, bs, bs, m, pHOVER, pFOCUS, "", THEME.object_halign, 1, c_white, 1, .75) == 2)
-			node_halign(PANEL_GRAPH.nodes_selecting, fa_center);
+			node_halign(PANEL_GRAPH.nodes_selecting, fa_center, PANEL_GRAPH.nodes_select_anchor);
 		xx += bs + ui(2);
 			
 		if(buttonInstant(bb, xx, yy, bs, bs, m, pHOVER, pFOCUS, "", THEME.object_halign, 2, c_white, 1, .75) == 2)
-			node_halign(PANEL_GRAPH.nodes_selecting, fa_right);
+			node_halign(PANEL_GRAPH.nodes_selecting, fa_right,  PANEL_GRAPH.nodes_select_anchor);
 		xx += bs + ui(2);
 		
 		xx += ui(2);

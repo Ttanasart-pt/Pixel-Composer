@@ -5,7 +5,7 @@ function Panel_Graph_Auto_Organize(_nodes) : Panel_Linear_Setting() constructor 
 	
 	static node_organize = function() {
 	    param.snap_size = PANEL_GRAPH.project.graphGrid.size;
-	    node_auto_organize(nodes, param);
+	    node_auto_organize(nodes, noone, param);
 	} node_organize();
 	
 	properties = [

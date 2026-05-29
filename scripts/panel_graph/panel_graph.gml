@@ -48,13 +48,13 @@
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                }
     function panel_graph_mass_connect()            { CALL("graph_mass_connect");        PANEL_GRAPH.doMassConnect();          }
     
-	function panel_graph_halign_right()            { CALL("graph_halign_right");        node_halign(PANEL_GRAPH.nodes_selecting, fa_right);  }
-	function panel_graph_halign_center()           { CALL("graph_halign_center");       node_halign(PANEL_GRAPH.nodes_selecting, fa_center); }
-	function panel_graph_halign_left()             { CALL("graph_halign_left");         node_halign(PANEL_GRAPH.nodes_selecting, fa_left);   }
+	function panel_graph_halign_right()            { CALL("graph_halign_right");        node_halign(PANEL_GRAPH.nodes_selecting, fa_right,  PANEL_GRAPH.nodes_select_anchor); }
+	function panel_graph_halign_center()           { CALL("graph_halign_center");       node_halign(PANEL_GRAPH.nodes_selecting, fa_center, PANEL_GRAPH.nodes_select_anchor); }
+	function panel_graph_halign_left()             { CALL("graph_halign_left");         node_halign(PANEL_GRAPH.nodes_selecting, fa_left,   PANEL_GRAPH.nodes_select_anchor); }
 	                                    
-	function panel_graph_valign_bottom()           { CALL("graph_valign_bottom");       node_valign(PANEL_GRAPH.nodes_selecting, fa_bottom); }
-	function panel_graph_valign_middle()           { CALL("graph_valign_middle");       node_valign(PANEL_GRAPH.nodes_selecting, fa_middle); }
-	function panel_graph_valign_top()              { CALL("graph_valign_top");          node_valign(PANEL_GRAPH.nodes_selecting, fa_top);    }
+	function panel_graph_valign_bottom()           { CALL("graph_valign_bottom");       node_valign(PANEL_GRAPH.nodes_selecting, fa_bottom, PANEL_GRAPH.nodes_select_anchor); }
+	function panel_graph_valign_middle()           { CALL("graph_valign_middle");       node_valign(PANEL_GRAPH.nodes_selecting, fa_middle, PANEL_GRAPH.nodes_select_anchor); }
+	function panel_graph_valign_top()              { CALL("graph_valign_top");          node_valign(PANEL_GRAPH.nodes_selecting, fa_top,    PANEL_GRAPH.nodes_select_anchor); }
 	
 	function panel_graph_hdistribute()             { CALL("graph_hdistribute");         node_hdistribute(PANEL_GRAPH.nodes_selecting);       }
 	function panel_graph_vdistribute()             { CALL("graph_vdistribute");         node_vdistribute(PANEL_GRAPH.nodes_selecting);       }
@@ -339,9 +339,9 @@
     function __fnGroupInit_Graph() {
         
         MENU_ITEMS.graph_group_align = menuItemGroup(__txt("panel_graph_align_nodes", "Align"), [
-                [ [THEME.inspector_surface_halign, 0], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_left)}   ],
-                [ [THEME.inspector_surface_halign, 1], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_center)} ],
-                [ [THEME.inspector_surface_halign, 2], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_right)}  ],
+                [ [THEME.inspector_surface_halign, 0], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_left,   PANEL_GRAPH.nodes_select_anchor)}   ],
+                [ [THEME.inspector_surface_halign, 1], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_center, PANEL_GRAPH.nodes_select_anchor)} ],
+                [ [THEME.inspector_surface_halign, 2], function() /*=>*/ {return node_halign(PANEL_GRAPH.nodes_selecting, fa_right,  PANEL_GRAPH.nodes_select_anchor)}  ],
                 
                 [ [THEME.inspector_surface_valign, 0], function() /*=>*/ {return node_valign(PANEL_GRAPH.nodes_selecting, fa_top)}    ],
                 [ [THEME.inspector_surface_valign, 1], function() /*=>*/ {return node_valign(PANEL_GRAPH.nodes_selecting, fa_middle)} ],

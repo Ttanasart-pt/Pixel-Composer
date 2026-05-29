@@ -197,9 +197,6 @@ enum RENDER_TYPE {
 		renderQueue = [];
 		
 		static init = function() {
-			// node_auto_organize(_project.nodes);
-			// print($"======================== RENDER {GLOBAL_CURRENT_FRAME} ========================")
-			
 			LOG_END
 			
 			LOG_BLOCK_START

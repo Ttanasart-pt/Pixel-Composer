@@ -1,4 +1,4 @@
-function node_halign(nodeList, alignment = fa_center) {
+function node_halign(nodeList, alignment = fa_center, anchor = noone) {
 	var amo = array_length(nodeList);
 	
 	for( var i = 0; i < amo; i++ ) {
@@ -8,36 +8,45 @@ function node_halign(nodeList, alignment = fa_center) {
 	
 	switch(alignment) {
 		case fa_left: 
-			var x0 = 999999;
-			for( var i = 0; i < amo; i++ )
-				x0 = min(x0, nodeList[i].x);
+			if(anchor == noone) {
+				var x0 = infinity;
+				for( var i = 0; i < amo; i++ )
+					x0 = min(x0, nodeList[i].x);
+			} else 
+				x0 = anchor.x;
 				
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].x = x0;
 			break;
 			
 		case fa_center: 
-			var xc = 0;
-			for( var i = 0; i < amo; i++ )
-				xc += nodeList[i].x + nodeList[i].w / 2;
-			xc /= amo;
+			if(anchor == noone) {
+				var xc = 0;
+				for( var i = 0; i < amo; i++ )
+					xc += nodeList[i].x + nodeList[i].w / 2;
+				xc /= amo;
+			} else 
+				xc = anchor.x + anchor.w / 2;
 			
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].x = xc - nodeList[i].w / 2;
 			break;
 			
 		case fa_right: 
-			var x0 = -999999;
-			for( var i = 0; i < amo; i++ )
-				x0 = max(x0, nodeList[i].x + nodeList[i].w);
-				
+			if(anchor == noone) {
+				var x0 = -infinity;
+				for( var i = 0; i < amo; i++ )
+					x0 = max(x0, nodeList[i].x + nodeList[i].w);
+			} else 
+				x0 = anchor.x + anchor.w;
+			
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].x = x0 - nodeList[i].w;
 			break;
 	}
 }
 
-function node_valign(nodeList, alignment = fa_middle) {
+function node_valign(nodeList, alignment = fa_middle, anchor = noone) {
 	var amo = array_length(nodeList);
 	
 	for( var i = 0; i < amo; i++ ) {
@@ -47,28 +56,37 @@ function node_valign(nodeList, alignment = fa_middle) {
 	
 	switch(alignment) {
 		case fa_top: 
-			var y0 = 999999;
-			for( var i = 0; i < amo; i++ )
-				y0 = min(y0, nodeList[i].y);
+			if(anchor == noone) {
+				var y0 = infinity;
+				for( var i = 0; i < amo; i++ )
+					y0 = min(y0, nodeList[i].y);
+			} else 
+				y0 = anchor.y;
 				
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].y = y0;
 			break;
 			
 		case fa_middle: 
-			var yc = 0;
-			for( var i = 0; i < amo; i++ )
-				yc += nodeList[i].y + nodeList[i].h / 2;
-			yc /= amo;
+			if(anchor == noone) {
+				var yc = 0;
+				for( var i = 0; i < amo; i++ )
+					yc += nodeList[i].y + nodeList[i].h / 2;
+				yc /= amo;
+			} else 
+				yc = anchor.y + anchor.h / 2;
 			
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].y = yc - nodeList[i].h / 2;
 			break;
 			
 		case fa_bottom: 
-			var y0 = -999999;
-			for( var i = 0; i < amo; i++ )
-				y0 = max(y0, nodeList[i].y + nodeList[i].h);
+			if(anchor == noone) {
+				var y0 = -infinity;
+				for( var i = 0; i < amo; i++ )
+					y0 = max(y0, nodeList[i].y + nodeList[i].h);
+			} else 
+				y0 = anchor.y + anchor.h;
 				
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].y = y0 - nodeList[i].h;
@@ -400,7 +418,7 @@ function __node_bbox_recal(node, param) {
 	return node;
 }
 
-function node_auto_organize(nodeList, param = new node_auto_organize_parameter()) {
+function node_auto_organize(nodeList, anchor = noone, param = new node_auto_organize_parameter()) {
 	if(array_empty(nodeList)) return;
 	
 	var _frameList = array_filter(nodeList, function(n,i) /*=>*/  {return is(n, Node_Frame)});
