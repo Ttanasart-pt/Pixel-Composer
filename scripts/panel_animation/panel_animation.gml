@@ -602,6 +602,21 @@ function Panel_Animation() : PanelContent() constructor {
         
         draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, bar_h);
         draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, bar_w, bar_h, COLORS.panel_animation_timeline_blend, 1);
+        
+		BLEND_ADD draw_set_alpha(.15);
+        for( var i = 0, n = array_length(PROJECT.animationRegions); i < n; i++ ) {
+        	var _reg = PROJECT.animationRegions[i]; 
+        	var _col = _reg.color;
+    		var _fst = _reg.frameStart;
+    		var _fed = _reg.frameEnd;
+    		
+    		var bx0 = _fst * timeline_scale + timeline_shift - timeline_scale / 2;
+    		var bx1 = _fed * timeline_scale + timeline_shift + timeline_scale / 2;
+    		
+    		draw_rectangle_color(bx0, 0, bx1, bar_h, _col, c_black, c_black, _col, false);
+        }
+		BLEND_NORMAL draw_set_alpha(1);
+        
         if(IS_RENDERING) {
         	var _prg = CURRENT_FRAME / TOTAL_FRAMES;
         	draw_sprite_stretched_add(THEME.ui_panel_bg, 4, 0, 0, bar_w * _prg, bar_h, COLORS._main_value_positive, .35);

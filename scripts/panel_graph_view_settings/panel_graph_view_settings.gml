@@ -108,6 +108,8 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 			new checkBox(function() /*=>*/ { FILTER_ANIMATION = !FILTER_ANIMATION; GraphRefresh(); }),
 			function()    /*=>*/   {return FILTER_ANIMATION},
 			function(val) /*=>*/ { FILTER_ANIMATION = val; },
+			false,
+			[ "", "Filter Animation" ]
 		),
 	];
 	

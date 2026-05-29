@@ -2799,6 +2799,20 @@ function Panel_Animation_Dopesheet() {
             
             dopesheet_y_max = max(0, dopesheet_y_max - dopesheet_h + ui(48));
             
+    		BLEND_ADD draw_set_alpha(.15);
+            for( var i = 0, n = array_length(PROJECT.animationRegions); i < n; i++ ) {
+            	var _reg = PROJECT.animationRegions[i]; 
+            	var _col = _reg.color;
+        		var _fst = _reg.frameStart;
+        		var _fed = _reg.frameEnd;
+        		
+        		var bx0 = _fst * timeline_scale + timeline_shift - timeline_scale / 2;
+        		var bx1 = _fed * timeline_scale + timeline_shift + timeline_scale / 2;
+        		
+        		draw_rectangle_color(bx0, 0, bx1, dopesheet_h, _col, c_black, c_black, _col, false);
+            }
+    		BLEND_NORMAL draw_set_alpha(1);
+            
             var _stW = timeline_separate * timeline_scale;
             var _st  = ceil(-timeline_shift / _stW);
             var _fr  = _st + ceil(bar_w / _stW);

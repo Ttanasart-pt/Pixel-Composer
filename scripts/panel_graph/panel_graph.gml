@@ -1215,10 +1215,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         fullView();
     } 
     
-    fullView_zoom = false;
+    fullView_selecting = true;
     function fullView() { 
-    	toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting); 
-    	fullView_zoom = !fullView_zoom;
+    	toCenterNode(fullView_selecting && !array_empty(nodes_selecting)? nodes_selecting : nodes_list); 
+    	fullView_selecting = !fullView_selecting;
     }
     
     function toggleDragKey() {

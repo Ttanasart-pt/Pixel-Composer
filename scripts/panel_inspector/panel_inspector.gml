@@ -1,4 +1,5 @@
 #region ___function calls
+    function global_filter_anim() { CALL("global_filter_anim"); FILTER_ANIMATION = !FILTER_ANIMATION; GraphRefresh(); }
     
     function panel_inspector_copy_prop()                 { CALL("inspector_copy_property");          PANEL_INSPECTOR.propSelectCopy();                 }
     function panel_inspector_paste_prop()                { CALL("inspector_paste_property");         PANEL_INSPECTOR.propSelectPaste();                }
@@ -19,8 +20,6 @@
     function panel_inspector_visible_toggle()            { CALL("inspector_junc_visible");           PANEL_INSPECTOR.junction_visible_toggle();        }
     function panel_inspector_mini_timeline_toggle()      { CALL("inspector_mini_timeline");          PANEL_INSPECTOR.junction_mini_timeline_toggle();  }
     
-    function panel_inspector_filter_anim()               { CALL("inspector_filter_anim");            FILTER_ANIMATION = !FILTER_ANIMATION; GraphRefresh(); }
-    
     function panel_inspector_trigger_1()                 { CALL("inspector_trigger_1");              PANEL_INSPECTOR.triggerInspectingNode(1);        }
     function panel_inspector_trigger_2()                 { CALL("inspector_trigger_2");              PANEL_INSPECTOR.triggerInspectingNode(2);        }
     function panel_inspector_trigger_cache()             { CALL("inspector_trigger_cache");          PANEL_INSPECTOR.triggerInspectingNode(3);        }
@@ -40,7 +39,8 @@
     	var a = MOD_KEY.alt;
     	var s = MOD_KEY.shift;
     	
-        registerFunction("", "Color Picker",         "",  a, panel_inspector_color_pick             ).setMenu("color_picker")
+        registerFunction("", "Filter Animation",     "F", a, global_filter_anim                     ).setMenu("global_filter_anim");
+        registerFunction("", "Color Picker",         "",  a, panel_inspector_color_pick             ).setMenu("color_picker");
         
         registerFunction(i, "Copy Value",            "C", c, panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
         registerFunction(i, "Paste Value",           "V", c, panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
@@ -58,7 +58,6 @@
         registerFunction(i, "Toggle Bypass",         "",  n, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"       ).setToggle(function() /*=>*/ { INSP_JUNCTION j.bypass_use;         });
         registerFunction(i, "Toggle Visible",        "",  n, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.visible_manual;     });
         registerFunction(i, "Toggle Mini Timeline",  "",  n, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle").setToggle(function() /*=>*/ { INSP_JUNCTION j.inspector_timeline; });
-        registerFunction(i, "Filter Animation",     "F",  n, panel_inspector_filter_anim            ).setMenu("inspector_filter_anim"   );
         registerFunction(i, "Extract to Globalvar",  "",  n, panel_inspector_extract_global         ).setMenu("inspector_extract_global")
         registerFunction(i, "Extract Value",         "",  n, panel_inspector_extract_single         ).setMenu("inspector_extract_value" )
         registerFunction("", "Primary Action",    vk_f2,  n, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1"     )
