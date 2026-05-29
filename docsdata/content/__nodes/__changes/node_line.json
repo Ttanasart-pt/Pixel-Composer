@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.008",
+    "changes": [
+      {
+        "date": "2026-05-29T08:22:57.864Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Add line caps angle and offset property."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.007",
     "changes": [
       {

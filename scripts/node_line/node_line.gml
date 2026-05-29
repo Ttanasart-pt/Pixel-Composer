@@ -59,9 +59,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(25, nodeValue_Bool(     "Invert",        false ));
 	newInput( 9, nodeValue_Float(    "Shift",         0     ));
 	newInput(26, nodeValue_Bool(     "Clamp Range",   false ));
-	newInput(13, nodeValue_EButton(  "Start Cap",     0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
-	newInput(43, nodeValue_EButton(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
-	newInput(14, nodeValue_ISlider(  "Round Segment", 8, [2, 32, 0.1] ));
 	
 	////- =Dash Line
 	newInput(46, nodeValue_Bool(  "Dash",       false ));
@@ -78,6 +75,18 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(56, nodeValue_Bool(    "Wig. Trim Range",      false      ));
 	newInput(57, nodeValue_Bool(    "Wig. Trim Curve",      false      ));
 	
+	////- =Line Caps
+	newInput(13, nodeValue_EButton( "Start Cap",     0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
+	newInput(43, nodeValue_EButton( "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
+	newInput(14, nodeValue_ISlider( "Round Segment", 8, [2, 32, 0.1] ));
+	
+		////- =/Textured
+	newInput(40, nodeValue_Surface(  "Start Cap" )).setDrawGroup(0);
+	newInput(41, nodeValue_Surface(  "End Cap"   )).setDrawGroup(0);
+	newInput(42, nodeValue_Bool(     "Rotate Cap", true  ));
+	newInput(60, nodeValue_RotRange( "Angles",     [0,0] ));
+	newInput(61, nodeValue_Range(    "Offset",     [0,0] ));
+	
 	////- =Color
 	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white ));
 	newInput(24, nodeValue_Gradient( "Random Blend",         gra_white ));
@@ -92,26 +101,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(23, nodeValue_Vec2(     "Texture Scale",          [1,1] ));
 	newInput(29, nodeValue_Bool(     "Scale Texture to Length", true ));
 	
-	////- =Line Cap
-	newInput(40, nodeValue_Surface( "Start Cap" ));
-	newInput(41, nodeValue_Surface( "End Cap"   ));
-	newInput(42, nodeValue_Bool(    "Rotate Cap", true ));
-	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 60
+	// Inputs 62
 	
 	input_display_list = [ 39, 
 		[ "Output",         true     ],  0, 30, 31, 16, 58, 
 		[ "Background",     true     ],  1, 48, 49, 50, 
 		[ "Line Data",     false     ], 27,  6,  7, 28, 32, 33, 35, 19,  2, 20, 
 		[ "Width",         false     ], 17,  3, 11, 12, 36, 
-		[ "Line Settings", false     ],  8, 25,  9, 26, 13, 43, 14, 
-		[ "Dash",          false, 46 ], 44, 45, 
-		[ "Wiggle",        false, 47 ],  5,  4, 53, 51, 54, 52, 55, 56, 57, 
+		[ "Line Settings", false     ],  8, 25,  9, 26, 
+		[ "Dash",           true, 46 ], 44, 45, 
+		[ "Wiggle",         true, 47 ],  5,  4, 53, 51, 54, 52, 55, 56, 57, 
+		[ "Line Cap",      false     ], 13, 43, 14, 
+			[ "/Textured", false     ], 40, 41, 42, 60, 61, 
 		[ "Color",         false     ], 10, 24, 15, 37, 38, 
 		[ "Texture",       false     ], 18, 21, 22, 23, 29, 
-		[ "Textured Cap",  false     ], 40, 41, 42, 
 		[ "Render",         true     ], 34, 
 	];
 	
@@ -235,6 +240,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _cap_st   = _data[40];
 			var _cap_ed   = _data[41];
 			var _cap_rt   = _data[42];
+			var _cap_ang  = _data[60];
+			var _cap_off  = _data[61];
 			
 			var _aa       = power(2, _data[34]);
 		#endregion
@@ -598,7 +605,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					
 			}
-			
 		#endregion
 			
 		#region dash
@@ -908,11 +914,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _cap_st_s = _aa;
 						var _cap_st_w = surface_get_width_safe(_cap_st);
 						var _cap_st_h = surface_get_height_safe(_cap_st);
-						var _rr = _cap_rt? _sta : 0;
+						var _rr  = _cap_rt? _sta + 180 : 0;
+						    _rr += _cap_ang[0];
+						    
 						_pp = point_rotate_origin(-_cap_st_w / 2, -_cap_st_h / 2, _rr, _pp);
 						
-						var _cap_st_x = (_stx + _pp[0]) * _aa;
-						var _cap_st_y = (_sty + _pp[1]) * _aa;
+						var _cap_st_x = (_stx + _pp[0]) * _aa + lengthdir_x(_cap_off[0], _sta + 180);
+						var _cap_st_y = (_sty + _pp[1]) * _aa + lengthdir_y(_cap_off[0], _sta + 180);
 						
 						draw_surface_ext(_cap_st, _cap_st_x, _cap_st_y, _cap_st_s, _cap_st_s, _rr, c_white, 1);
 					}
@@ -921,11 +929,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _cap_ed_s = _aa;
 						var _cap_ed_w = surface_get_width_safe(_cap_ed);
 						var _cap_ed_h = surface_get_height_safe(_cap_ed);
-						var _rr = _cap_rt? _eda : 0;
+						var _rr  = _cap_rt? _eda : 0;
+						    _rr += _cap_ang[1];
+						    
 						_pp = point_rotate_origin(-_cap_ed_w / 2, -_cap_ed_h / 2, _rr, _pp);
 						
-						var _cap_ed_x = (_edx + _pp[0]) * _aa;
-						var _cap_ed_y = (_edy + _pp[1]) * _aa;
+						var _cap_ed_x = (_edx + _pp[0]) * _aa + lengthdir_x(_cap_off[1], _sta);
+						var _cap_ed_y = (_edy + _pp[1]) * _aa + lengthdir_y(_cap_off[1], _sta);
 						
 						draw_surface_ext(_cap_ed, _cap_ed_x, _cap_ed_y, _cap_ed_s, _cap_ed_s, _rr, c_white, 1);
 					}

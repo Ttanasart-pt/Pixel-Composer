@@ -3206,7 +3206,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var area_w = _node_pw * _ovs;
 			var area_h = _node_ph * _ovs;
 			var _hov   = pHOVER && point_in_rectangle(mx, my, _ovx, _ovy, _ovx + area_w, _ovy + area_h);
-			var _hovRs = pHOVER && point_in_rectangle(mx, my, _ovx - ui(8), _ovy - ui(8), _ovx + ui(8), _ovy + ui(8));
+			var _hovRs = pHOVER && point_in_rectangle(mx, my, _ovx - ui(8), _ovy - ui(8), _ovx, _ovy);
 			
 			draw_surface_ext_safe(_node_prev, _ovx, _ovy, _ovs, _ovs);
 			draw_set_color(COLORS.panel_preview_surface_outline);
@@ -3214,7 +3214,7 @@ function Panel_Preview() : PanelContent() constructor {
 			draw_rectangle(_ovx, _ovy, _ovx + area_w - 1, _ovy + area_h - 1, true);
 			draw_set_alpha(1);
 			
-			if(_hov || _hovRs) overHover = false;
+			if(_hovRs) overHover = false;
 			
 			if(render_2d_overlay_resizing) {
 				draw_sprite_ui(THEME.node_resize_corner, 1, _ovx - ui(4), _ovy - ui(4), .65, .65, 180, COLORS._main_accent);
