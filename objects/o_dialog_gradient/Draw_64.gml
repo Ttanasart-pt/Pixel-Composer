@@ -12,6 +12,7 @@ draggable = true;
 				var _kamo = array_length(gradient.keys);
 				var _kidx = array_find(gradient.keys, key_selecting);
 				key_selecting = gradient.keys[(_kidx - 1 + _kamo) % _kamo];
+				selector.setColor(key_selecting.value, false);
 			}
 		}
 		
@@ -21,6 +22,7 @@ draggable = true;
 				var _kamo = array_length(gradient.keys);
 				var _kidx = array_find(gradient.keys, key_selecting);
 				key_selecting = gradient.keys[(_kidx + 1) % _kamo];
+				selector.setColor(key_selecting.value, false);
 			}
 		}
 		

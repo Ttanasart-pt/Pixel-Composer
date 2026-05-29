@@ -558,6 +558,7 @@
     {"$GMIncludedFile":"","%Name":"d3d_sdf_scene.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"d3d_sdf_scene.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"d3d_sdf.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"d3d_sdf.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"gradient.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"gradient.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"sampler_ext.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"sampler_ext.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sampler_simple.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"sampler_simple.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sampler.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"sampler.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"shader_replace.py","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"shader_replace.py","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
