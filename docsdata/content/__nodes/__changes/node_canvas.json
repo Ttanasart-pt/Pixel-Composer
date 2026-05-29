@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.008",
+    "changes": [
+      {
+        "date": "2026-05-29T07:04:22.178Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Fix solid color background not rendering without background surface connected."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.006",
     "changes": [
       {

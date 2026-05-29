@@ -23,6 +23,7 @@
 	uniform int   drawGrid;
 	uniform float gridStep;
 	uniform float gridScale;
+	uniform float gridDrawScale;
 	uniform float gridOpacity;
 	uniform vec4  gridColor;
 	uniform float axisBlend;
@@ -30,7 +31,7 @@
 	////========= Util ==========
 
 		vec4 viewGrid(vec2 pos, float scale) {
-			vec2 coord      = pos * scale; // use the scale variable to set the distance between the lines
+			vec2 coord      = pos * scale * gridDrawScale; // use the scale variable to set the distance between the lines
 			vec2 derivative = fwidth(coord);
 			vec2 grid       = abs(fract(coord - 0.5) - 0.5) / derivative;
 			float line      = min(grid.x, grid.y);

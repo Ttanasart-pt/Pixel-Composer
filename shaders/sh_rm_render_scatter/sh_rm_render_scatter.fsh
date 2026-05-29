@@ -707,7 +707,7 @@
 #endregion -- d3d_sdf --
 
 #pragma use(d3d_sdf_scene)
-#region -- d3d_sdf_scene -- [1780036665.6440408]
+#region -- d3d_sdf_scene -- [1780037428.9762523]
 	#define EPSILON 1e-5
 	
 	uniform int   MAX_MARCHING_STEPS;
@@ -733,6 +733,7 @@
 	uniform int   drawGrid;
 	uniform float gridStep;
 	uniform float gridScale;
+	uniform float gridDrawScale;
 	uniform float gridOpacity;
 	uniform vec4  gridColor;
 	uniform float axisBlend;
@@ -740,7 +741,7 @@
 	////========= Util ==========
 
 		vec4 viewGrid(vec2 pos, float scale) {
-			vec2 coord      = pos * scale; // use the scale variable to set the distance between the lines
+			vec2 coord      = pos * scale * gridDrawScale; // use the scale variable to set the distance between the lines
 			vec2 derivative = fwidth(coord);
 			vec2 grid       = abs(fract(coord - 0.5) - 0.5) / derivative;
 			float line      = min(grid.x, grid.y);
@@ -750,11 +751,11 @@
 			
 			// x axis
 			if(pos.y > -1. * minimumy / scale && pos.y < 1. * minimumy / scale)
-				color.rgb = vec3(0.3 + axisBlend * 0.7, 0., 0.);
+				color.rgb = vec3(1., 0., 0.);
 
 			// y axis
 			if(pos.x > -1. * minimumx / scale && pos.x < 1. * minimumx / scale)
-				color.rgb = vec3(0., 0.3 + axisBlend * 0.7, 0.);
+				color.rgb = vec3(0., 1., 0.);
 			
 			color.a *= gridOpacity;
 			return color;

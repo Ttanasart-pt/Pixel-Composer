@@ -204,11 +204,12 @@
 	        	.setSpriteInd( function() /*=>*/ {return PROJECT.onion_skin.enabled}     )
 	        	.setColorFn(   function() /*=>*/ {return PROJECT.onion_skin.enabled? c_white : COLORS._main_icon} )
 	        	
-	        registerFunction(p, "3D View Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))      }).setMenu("preview_3D_settings",      THEME.d3d_preview_settings )
-	        registerFunction(p, "3D SDF View Settings...",  "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW))  }).setMenu("preview_3D_SDF_settings",  THEME.d3d_preview_settings )
-	        registerFunction(p, "3D Grid Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Grid_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_grid_settings", THEME.icon_grid_setting    )
-	        registerFunction(p, "3D Snap Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))    }).setMenu("preview_snap_settings",    THEME.d3d_snap_settings    )
-	        registerFunction(p, "View Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))    }).setMenu("preview_view_settings",    THEME.icon_visible_setting )
+	        registerFunction(p, "3D View Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))        }).setMenu("preview_3D_settings",        THEME.d3d_preview_settings )
+	        registerFunction(p, "3D Output Settings...",    "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Output_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_output_settings", THEME.d3d_preview_settings )
+	        registerFunction(p, "3D SDF View Settings...",  "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW))    }).setMenu("preview_3D_SDF_settings",    THEME.d3d_preview_settings )
+	        registerFunction(p, "3D Grid Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Grid_Setting(PANEL_PREVIEW))   }).setMenu("preview_3D_grid_settings",   THEME.icon_grid_setting    )
+	        registerFunction(p, "3D Snap Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))      }).setMenu("preview_snap_settings",      THEME.d3d_snap_settings    )
+	        registerFunction(p, "View Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))      }).setMenu("preview_view_settings",      THEME.icon_visible_setting )
 	        
 			registerFunction(p, "Toggle View Control",      "", n, panel_preview_view_control_toggle  ).setMenu("preview_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.previewSetting.show_view_control});
 			registerFunction(p, "Show View Control",        "", n, panel_preview_view_control_show    ).setMenu("preview_view_control_show");
@@ -257,10 +258,7 @@
 	    }
 	#endregion
 
-	enum PREV_MODE {
-		D2,
-		D3
-	}
+	enum PREV_MODE { D2, D3 }
 #endregion
 
 function Panel_Preview() : PanelContent() constructor {
@@ -654,6 +652,7 @@ function Panel_Preview() : PanelContent() constructor {
     		{ cond : "preview_3d_is_unlock", items : [ "preview_set_3d_object" ] },
         	-1, 
     		"preview_3D_settings",
+    		// "preview_3D_output_settings",
     		"preview_3D_grid_settings",
     		"preview_snap_settings",
 		];
@@ -2483,18 +2482,18 @@ function Panel_Preview() : PanelContent() constructor {
         shader_set(sh_rm_primitive);
             var zm = 4 / d3_camera.focus_dist;
             
-            shader_set_f("camRotation", [ d3_camera.focus_angle_y, -d3_camera.focus_angle_x, 0 ]);
-            shader_set_f("camScale",    zm);
-            shader_set_f("camRatio",    w / h);
-            shader_set_i("shapeAmount", 0);
+            shader_set_f( "camRotation", [ d3_camera.focus_angle_y, -d3_camera.focus_angle_x, 0 ] );
+            shader_set_f( "camScale",    zm  );
+            shader_set_f( "camRatio",    w/h );
+            shader_set_i( "shapeAmount", 0   );
             
             _env.apply();
             if(_obj) _obj.apply();
             
-            shader_set_i("drawBg",      d3_drawBG);
-            shader_set_f("depthInt",    0);
+            shader_set_i( "drawBg",      d3_drawBG );
+            shader_set_f( "depthInt",    0 );
             
-            var _scale = zm * PROJECT.previewGrid.d3_scale / 16;
+            var _scale = zm / 2;
             var _step  = 1;
             while(_scale > 32) {
                 _scale /= 2;
@@ -2502,13 +2501,14 @@ function Panel_Preview() : PanelContent() constructor {
             }
             
             shader_set_i( "drawGrid",    PROJECT.previewGrid.d3_show );
-            shader_set_f( "gridStep",    _step);
-            shader_set_f( "gridScale",   zm / 2);
-            shader_set_f( "axisBlend",   1);
-            shader_set_f( "viewRange",   [ d3_camera.view_near, d3_camera.view_far ]);
+            shader_set_f( "gridStep",    _step );
+            shader_set_f( "gridScale",   zm/2  );
+            shader_set_f( "axisBlend",   1     );
+            shader_set_f( "viewRange",   [d3_camera.view_near,d3_camera.view_far] );
             
-            shader_set_f( "gridOpacity", PROJECT.previewGrid.d3_opacity );
-            shader_set_c( "gridColor",   PROJECT.previewGrid.d3_color   );
+            shader_set_f( "gridDrawScale", PROJECT.previewGrid.d3_scale / 2 );
+            shader_set_f( "gridOpacity",   PROJECT.previewGrid.d3_opacity   );
+            shader_set_c( "gridColor",     PROJECT.previewGrid.d3_color     );
             
             draw_sprite_stretched(s_fx_pixel, 0, 0, 0, w, h);
         shader_reset();
@@ -3400,7 +3400,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         gpu_set_scissor(scs);
         
-        var _lx = max(toolbar_left - ui(4), tbx + bs - ui(2));
+        var _lx = max(toolbar_left, tbx + bs - ui(2));
         var _ly = tby;
         var _lh = toolbar_height / 2 - ui(8);
         

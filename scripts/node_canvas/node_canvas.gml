@@ -1684,7 +1684,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[ 8].setVisible(_bgTyp == 0);
 			inputs[14].setVisible(_bgTyp == 0);
 			
-			_bgr = _bgr && is_surface(_bgSrf);
+			useBackground = _bgr && ((_bgTyp == 0 && is_surface(_bgSrf)) || _bgTyp == 1);
 		#endregion
 		
 		#region brush
@@ -1777,10 +1777,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				output_surface[0] = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
 				
 				surface_set_shader(output_surface[0], sh_canvas_apply_canvas, true, BLEND.over);
-					shader_set_2( "dimension",  _dim                 );
+					shader_set_2( "dimension",  _dim );
 					
+					shader_set_i( "bgUse",      useBackground );
 					shader_set_s( "bgSurface",  _bgSrf );
-					shader_set_i( "bgUse",      _bgr   );
 					shader_set_i( "bgType",     _bgTyp );
 					shader_set_c( "bgColor",    _bgCol );
 					shader_set_f( "bgAlpha",    _bgAlp );
@@ -1798,9 +1798,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var _bgArray = is_array(_bgSrf)? array_safe_get_fast(_bgSrf, i, 0) : _bgSrf;
 					
 					surface_set_shader(output_surface[i], sh_canvas_apply_canvas, true, BLEND.over);
-						shader_set_2( "dimension",  _dim                 );
+						shader_set_2( "dimension",  _dim );
 						
-						shader_set_i( "bgUse",      _bgr   );
+						shader_set_i( "bgUse",      useBackground );
 						shader_set_s( "bgSurface",  _bgSrf );
 						shader_set_i( "bgType",     _bgTyp );
 						shader_set_c( "bgColor",    _bgCol );
