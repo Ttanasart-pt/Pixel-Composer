@@ -268,7 +268,7 @@
 	            tool_always_l : false,
 	            tool_always_r : false,
 	            
-	            quick_nav : true, 
+	            quick_nav : false, 
 			}
 			
 			PREFERENCES.project_graphGrid = {

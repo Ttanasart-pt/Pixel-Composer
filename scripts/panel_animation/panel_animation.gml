@@ -30,7 +30,7 @@
     function panel_animation_range_set_end_s()         { CALL("animation_range_set_end_sel");       PANEL_ANIMATION.range_set_end_selected();   }
     function panel_animation_range_reset()             { CALL("animation_range_reset");             PANEL_ANIMATION.range_reset();              }
     
-    function panel_animation_reset_view()              { CALL("animation_view_reset");              PANEL_ANIMATION.resetView();             }
+    function panel_animation_reset_view()              { CALL("animation_view_reset");              PANEL_ANIMATION.resetView();    }
     
     function panel_animation_marker_add()              { CALL("animation_marker_add");              PANEL_ANIMATION.addMarker();    }
     function panel_animation_marker_remove()           { CALL("animation_marker_remove");           PANEL_ANIMATION.removeMarker(); }

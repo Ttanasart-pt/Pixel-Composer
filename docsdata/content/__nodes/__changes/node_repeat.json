@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.008",
+    "changes": [
+      {
+        "date": "2026-05-29T04:31:16.781Z",
+        "node": "",
+        "commit": "**Repeat**: Add Palette per Index for more precise color blending."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.005",
     "changes": [
       {

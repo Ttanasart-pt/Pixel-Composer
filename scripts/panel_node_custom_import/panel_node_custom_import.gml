@@ -14,13 +14,16 @@ function NodeFileObject(_path) : FileObject(_path) constructor {
     static updateInfo = function() {
     	var _str = "{\n";
     	
-    	_str += $"    \"name\":          \"{info.name}\",\n";
+    	_str += $"    \"name\":          \"{info[$ "name"]       ?? ""}\",\n";
     	
     	if(has(info, "tooltip"))
-		_str += $"    \"tooltip\":       \"{info.tooltip}\",\n";
+		_str += $"    \"tooltip\":       \"{info[$ "tooltip"]    ?? ""}\",\n";
     		
-    	_str += $"    \"spr\":           \"{info.spr}\",\n";
-    	_str += $"    \"baseNode\":      \"{info.baseNode}\",\n";
+    	if(has(info, "spr"))
+    	_str += $"    \"spr\":           \"{info[$ "spr"]        ?? ""}\",\n";
+    	
+    	if(has(info, "baseNode"))
+    	_str += $"    \"baseNode\":      \"{info[$ "baseNode"]   ?? ""}\",\n";
     	
     	if(has(info, "pxc_version"))
 		_str += $"    \"pxc_version\":    {info.pxc_version},\n";

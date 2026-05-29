@@ -179,8 +179,10 @@ switch(load_process) {
     if(!array_empty(PROJECT.migrationError)) dialogPanelCall(new Panel_Migration_Error(PROJECT), WIN_W / 2, WIN_H * 2/3);
     
     run_in(2, function() /*=>*/ { 
-    	if(PANEL_PREVIEW) PANEL_PREVIEW.fullView();
+    	if(PANEL_PREVIEW)   PANEL_PREVIEW.fullView();
+    	if(PANEL_ANIMATION) PANEL_ANIMATION.resetView();
     	GraphRefresh(); 
+    	
     	RENDER_ALL_REORDER
     });
 }

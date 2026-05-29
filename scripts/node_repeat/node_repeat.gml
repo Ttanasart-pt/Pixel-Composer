@@ -90,8 +90,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(34, nodeValue_EScroll(  "Blend Mode",         0, [ "Normal", "Additive", "Maximum" ] ));
 	
 		////- =/Color
-	newInput(14, nodeValue_Gradient( "Color Over Copy",    gra_white )).setMappable(30);
-	newInput(47, nodeValue_Float(    "Color Copy Scale",   1         ));
+	newInput(48, nodeValue_Palette(  "Color per Index",   [ca_white] ));
+	newInput(14, nodeValue_Gradient( "Gradient Over Copy", gra_white )).setMappable(30);
+	newInput(47, nodeValue_Float(    "Gradient Scale",     1         ));
 	newInput(23, nodeValue_Gradient( "Random Color",       gra_white ));
 	
 	////- =Deprecated
@@ -99,7 +100,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]        ));
 	newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10 ));
 	newInput(27, nodeValue_Color(    "Animator blend",     ca_white     ));
-	// input 48
+	// input 49
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
@@ -215,7 +216,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Rotation",     false ], 33,  5, 20, 
 		[ "Scale",        false ], 29,  6, 10, 41, 42, 21, 
 		[ "Render",       false ], 43, 46, 34, 
-			[ "/Color",   false ], 14, 30, 47, 23, 
+			[ "/Color",   false ], 48, 14, 30,  47, 23, 
 			
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
@@ -437,6 +438,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _prsh = _data[13];
 			var _pfol = _data[40];
 			
+			var _palCopy      = _data[48], _palCopyLen = array_length(_palCopy);
 			var _grad         = _data[14];
 			var _grad_map     = _data[30];
 			var _grad_range   = _data[31], _grad_use_map = inputs[14].attributes.mapped && is_surface(_grad_map)
@@ -662,7 +664,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				cc = grad_sampler.getPixel(_grad_sx, _grad_sy);
 			} else 
 				cc = _grad.evalLoopFast(_prg * _grad_scal);
-				
+			
+			cc = colorMultiply(cc, _palCopy[i % _palCopyLen]);
 			cc = colorMultiply(cc, _cran.evalFast(random(1)));
 			
 			minx = min(minx, posx);

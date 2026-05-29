@@ -11,6 +11,8 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		selectDir  = noone;
 		selectNode = noone; 
 		
+		loadall_comfirm = false;
+		
 		static update = function() /*=>*/ {return selectNode.updateInfo()};
 	#endregion
 		
@@ -254,10 +256,14 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		var bx = w - edit_w - _pd;
 		var by = ndy;
 		
-		if(buttonInstant(THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS) == 2)
-			__test_load_all_nodes();
+		var b = buttonInstant(THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS);
+		if(b == 0) loadall_comfirm = false;
+		if(b == 2) {
+			if(loadall_comfirm) __test_load_all_nodes();
+			else loadall_comfirm = true;
+		}
 		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
-		draw_text_add(bx + bw / 2, by + bh / 2, "Load All Nodes");
+		draw_text_add(bx + bw / 2, by + bh / 2, loadall_comfirm? "Comfirm Load All Nodes" : "Load All Nodes");
 		by += bh + ui(4);
 		
 		if(selectDir != noone) {

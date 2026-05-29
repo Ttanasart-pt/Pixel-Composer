@@ -1060,6 +1060,7 @@
             { "label": "Decompose" },
             "Node_Separate", 
             "Node_Seperate_Shape", 
+            "Node_Color_Separate",
         ]
     }, //Compose
     {

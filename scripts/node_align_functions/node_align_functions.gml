@@ -295,13 +295,16 @@ function node_auto_organize_parameter() constructor {
 	snap_size = 16;
 }
 
-function __node_auto_organize_graph(node) {
+function __node_auto_organize_graph(_nodeMap, node) {
 	var children = [];
 	var froms    = node.getNodeFrom(true);
 	node.__organize_sorted = false;
 	
-	for( var i = 0, n = array_length(froms); i < n; i++ )
-		children[i] = __node_auto_organize_graph(froms[i]);
+	for( var i = 0, n = array_length(froms); i < n; i++ ) {
+		var fr = froms[i];
+		if(!has(_nodeMap, fr.node_id)) continue;
+		children[i] = __node_auto_organize_graph(_nodeMap, fr);
+	}
 	
 	return { node, children, w: 0, h: 0, depth: 0 };
 }
@@ -421,6 +424,13 @@ function __node_bbox_recal(node, param) {
 function node_auto_organize(nodeList, param = new node_auto_organize_parameter(), anchor = noone) {
 	if(array_empty(nodeList)) return;
 	
+	var _nodeMap = {};
+	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
+		_nodeMap[$ nodeList[i].node_id] = 1;
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
+	
 	var _frameList = array_filter(nodeList, function(n,i) /*=>*/  {return is(n, Node_Frame)});
 	var _nodeList  = array_filter(nodeList, function(n,i) /*=>*/ {return !is(n, Node_Frame)});
 	
@@ -440,7 +450,7 @@ function node_auto_organize(nodeList, param = new node_auto_organize_parameter()
 		cy += _n.y + _n.h / 2;
 		
 		var _isRoot = array_empty(_nto) || array_empty(array_union(_nto, _nodeList));
-		if(_isRoot) array_push(root.children, __node_auto_organize_graph(_n));
+		if(_isRoot) array_push(root.children, __node_auto_organize_graph(_nodeMap, _n));
 	}
 	
 	cx /= n; cy /= n;
@@ -478,7 +488,8 @@ function node_auto_organize(nodeList, param = new node_auto_organize_parameter()
 	}
 	
 	for( var i = 0, n = array_length(_nodeList); i < n; i++ ) {
-		var _n   = _nodeList[i];
+		var _n = _nodeList[i];
+		_n.project.setModified();
 		_n.x = _n.x - dx;
 		_n.y = _n.y - dy;
 	}
@@ -494,6 +505,5 @@ function node_auto_organize(nodeList, param = new node_auto_organize_parameter()
 	}
 	
 	array_foreach(_frameList, function(f,i) /*=>*/ { f.reFrame(); });
-	
 	GraphRefresh();
 }

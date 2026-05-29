@@ -11,6 +11,11 @@
         "date": "2026-05-29T03:40:04.353Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Node alignment/Auto organize now use anchoring node."
+      },
+      {
+        "date": "2026-05-29T04:31:16.769Z",
+        "node": "Repeat",
+        "commit": "**Repeat**: Add Palette per Index for more precise color blending."
       }
     ]
   },
