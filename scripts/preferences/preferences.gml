@@ -6,6 +6,8 @@
 	globalvar HOTKEYS_DATA; HOTKEYS_DATA = {};
 	globalvar PREFERENCES_MENUITEMS; PREFERENCES_MENUITEMS = {};
 	
+	globalvar FILTER_ANIMATION; FILTER_ANIMATION = false;
+	
 	function PREF_INIT() {
 		#region GENERAL UI
 			PREFERENCES.display_scaling					= 1;
@@ -280,19 +282,20 @@
 			}
 			
 			PREFERENCES.project_graphDisplay = {
-				show_grid	    : true,
+				show_grid         : true,
 				show_view_control : 1,
 				
-				show_dimension  : true,
-				show_compute    : true,
-				node_meta_view  : 1, 
+				show_dimension    : true,
+				show_compute      : true,
+				node_meta_view    : 1, 
 				
-				avoid_label     : false,
-				preview_scale   : 100,
-				highlight       : false,
+				avoid_label       : false,
+				preview_scale     : 100,
 				
-				show_tooltip    : true,
-				show_topbar     : true, 
+				highlight         : false,
+				
+				show_tooltip      : true,
+				show_topbar       : true, 
 			}
 			
 			PREFERENCES.project_graphConnection = {

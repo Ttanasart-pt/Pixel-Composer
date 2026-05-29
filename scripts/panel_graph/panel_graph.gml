@@ -2384,7 +2384,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        gpu_set_texfilter(false);
 	        
 	        BLEND_ALPHA_MULP
-	        	draw_surface_safe(connection_surface_aa);
+	        	if(FILTER_ANIMATION)
+	        	     draw_surface_ext(connection_surface_aa, 0, 0, 1, 1, 0, c_white, .25);
+	        	else draw_surface(connection_surface_aa, 0, 0);
 	        BLEND_NORMAL
 	        
 	        junction_hovering    = __hov;

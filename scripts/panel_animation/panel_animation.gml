@@ -190,7 +190,9 @@ function Panel_Animation() : PanelContent() constructor {
         timeline_keys       = [];
         
         node_name_type      = 0;
+        
         do_resetView        = true;
+        resetView_region    = false;
     
     	timeline_frame      = true;
     	
@@ -1048,13 +1050,22 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
 	function resetView() {
-		var _sca = timeline_w / (GLOBAL_TOTAL_FRAMES + 3);
+		var _firstFrame = 0;
+		var _range      = GLOBAL_TOTAL_FRAMES - _firstFrame;
+		
+		if(resetView_region && PROJECT.animator.region_selecting) {
+			_firstFrame = -PROJECT.animator.region_selecting.frameStart;
+			_range = PROJECT.animator.region_selecting.frameEnd + _firstFrame;
+		}
+		
+		var _sca = timeline_w / (_range + 3);
 		    _sca = clamp(_sca, timeline_scale_min, timeline_scale_max);
-		var _shf = _sca;
+		var _shf = _sca * (_firstFrame + 1);
 		
 		timeline_scale    = _sca;
 		timeline_shift    = _shf;
 		timeline_shift_to = _shf;
+		resetView_region  = !resetView_region;
 	}
 	
     function focusTimeline() {

@@ -2651,31 +2651,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return hover_in_graph;
 	}
 	
-	static drawJunctionFast = function(_s, _mx, _my) { 
-		draw_set_color(custom_color ?? draw_fg);
-		if(index == -1) draw_rectangle( x - _s * 4.0, y - _s * 1.5, x + _s * 4.0, y + _s * 1.5, false);
-		else            draw_rectangle( x - _s * 1.5, y - _s * 4.0, x + _s * 1.5, y + _s * 4.0, false);
-		return;
-	}
-	
-	static drawJunction = function(_s, _mx, _my) { 
+	static drawJunction = function(_s, _mx, _my, _aa = 1) { 
 		var _hov = hover_in_graph;
 		_s /= 2 * THEME_SCALE;
 		
 		if(custom_icon != undefined) {
-			__draw_sprite_ext(custom_icon, _hov, x, y, _s, _s, 0, c_white, 1 - is_dummy * .3);
+			__draw_sprite_ext(custom_icon, _hov, x, y, _s, _s, 0, c_white, _aa * (1 - is_dummy * .3));
 			
 		} else if(is_dummy) {
-			if(ghost_hover == noone) __draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, .5 + .5 * _hov);
+			if(ghost_hover == noone) __draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, _aa * (.5 + .5 * _hov));
 			else {
-				__draw_sprite_ext(THEME.node_junctions_bg,      ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_bg, 1);
-				__draw_sprite_ext(THEME.node_junctions_outline, ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_fg, 1);
+				__draw_sprite_ext(THEME.node_junctions_bg,      ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_bg, _aa);
+				__draw_sprite_ext(THEME.node_junctions_outline, ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_fg, _aa);
 			}
 			
 			ghost_hover = noone;
 			
 		} else if(type == VALUE_TYPE.action) {
-			__draw_sprite_ext(THEME.node_junction_inspector, _hov, x, y, _s, _s, 0, c_white, 1);
+			__draw_sprite_ext(THEME.node_junction_inspector, _hov, x, y, _s, _s, 0, c_white, _aa);
 			
 		} else {
 			var _cbg = draw_bg;
@@ -2691,14 +2684,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			if(graph_selecting) {
 				var ss = _s * THEME_SCALE;
-				__draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, ss, ss, 0, _cfg, .8);
+				__draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, ss, ss, 0, _cfg, _aa * .8);
 				graph_selecting = false;
 			}
 			
-			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, 1);
+			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, _aa);
 			
 			gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one);
-			__draw_sprite_ext(_fgS, draw_junction_index, x, y, _s, _s, 0, _cfg, 1);
+			__draw_sprite_ext(_fgS, draw_junction_index, x, y, _s, _s, 0, _cfg, _aa);
 			gpu_set_blendmode(bm_normal);
 		}
 		
@@ -2714,8 +2707,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var ty = y;
 				
 				draw_set_halign(fa_right);
-				draw_sprite_stretched_ext(THEME.textbox, 3, tx - tw - 8, ty - th / 2, tw, th);
-				draw_sprite_stretched(THEME.textbox, 1, tx - tw - 8, ty - th / 2, tw, th);
+				draw_sprite_stretched_ext(THEME.textbox, 3, tx - tw - 8, ty - th / 2, tw, th, c_white, _aa);
+				draw_sprite_stretched(    THEME.textbox, 1, tx - tw - 8, ty - th / 2, tw, th, c_white, _aa);
 				draw_text_add(tx, ty, _val);
 				
 			} else {
@@ -2723,8 +2716,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var ty = y;
 				
 				draw_set_halign(fa_left);
-				draw_sprite_stretched_ext(THEME.textbox, 3, tx - 8, ty - th / 2, tw, th);
-				draw_sprite_stretched(THEME.textbox, 1, tx - 8, ty - th / 2, tw, th);
+				draw_sprite_stretched_ext(THEME.textbox, 3, tx - 8, ty - th / 2, tw, th, c_white, _aa);
+				draw_sprite_stretched(    THEME.textbox, 1, tx - 8, ty - th / 2, tw, th, c_white, _aa);
 				draw_text_add(tx, ty, _val);
 					
 			}

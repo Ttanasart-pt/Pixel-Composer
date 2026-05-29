@@ -19,7 +19,7 @@
     function panel_inspector_visible_toggle()            { CALL("inspector_junc_visible");           PANEL_INSPECTOR.junction_visible_toggle();        }
     function panel_inspector_mini_timeline_toggle()      { CALL("inspector_mini_timeline");          PANEL_INSPECTOR.junction_mini_timeline_toggle();  }
     
-    function panel_inspector_filter_anim()               { CALL("inspector_filter_anim");            PANEL_INSPECTOR.filter_animation = !PANEL_INSPECTOR.filter_animation  }
+    function panel_inspector_filter_anim()               { CALL("inspector_filter_anim");            FILTER_ANIMATION = !FILTER_ANIMATION; GraphRefresh(); }
     
     function panel_inspector_trigger_1()                 { CALL("inspector_trigger_1");              PANEL_INSPECTOR.triggerInspectingNode(1);        }
     function panel_inspector_trigger_2()                 { CALL("inspector_trigger_2");              PANEL_INSPECTOR.triggerInspectingNode(2);        }
@@ -276,7 +276,6 @@ function Panel_Inspector() : PanelContent() constructor {
         
         filter_text      = "";
         filtering        = false;
-        filter_animation = false;
         
         tb_prop_filter = textBox_Text(function(txt) /*=>*/ { filter_text = txt; }).setEmpty(false).setAutoUpdate()
                              .setFont(f_p2).setAlign(fa_center);
@@ -836,7 +835,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var rrx     = x + contentPane.x;
         var rry     = y + contentPane.y;
         
-        var showAll = filtering || filter_animation;
+        var showAll = filtering || FILTER_ANIMATION;
         var showHig = false;
         
         var secFnt = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p3;
@@ -885,7 +884,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             if(is_handle(jun)) {
-            	if((filtering && filter_text != "") || filter_animation) continue;
+            	if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 
             	if(_flag == INSPECTOR_FLAG.input_only) continue;
             	
@@ -897,7 +896,7 @@ function Panel_Inspector() : PanelContent() constructor {
             	}
             	
             } else if(is(jun, Inspector_Spacer)) {                    // SPACER
-            	if((filtering && filter_text != "") || filter_animation) continue;
+            	if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 
             	if(!jun.active) continue;
                 var _hh = ui(jun.h);
@@ -912,7 +911,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is(jun, Inspector_Label)) {            // TEXT
-            	if((filtering && filter_text != "") || filter_animation) continue;
+            	if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 
                 var _txt = jun.text;
                 if(_txt == "") continue;
@@ -926,7 +925,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is(jun, Inspector_Custom_Renderer)) {
-                if((filtering && filter_text != "") || filter_animation) continue;
+                if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 
                 if(jun.popupPanel != noone) {
         			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon, .5);
@@ -950,7 +949,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is(jun, widget)) {
-            	if((filtering && filter_text != "") || filter_animation) continue;
+            	if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
             	if(!jun.visible) continue;
             	
                 var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, undefined, _m, x, y)
@@ -962,7 +961,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is_array(jun)) { // Section
-                if((filtering && filter_text != "") || filter_animation) continue;
+                if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 
                 var _key = array_safe_get_fast(jun, 0, "");
                 var subk = string_starts_with(_key, "/");
@@ -1146,7 +1145,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
         	
         	if(is(jun, attribute_property)) {
-        		if(filtering && filter_text != "" || filter_animation) continue;
+        		if(filtering && filter_text != "" || FILTER_ANIMATION) continue;
         		if(filtering && filter_text != "" && !string_match_lower(filter_text, jun.name)) continue;
         		
         		var _name = jun.name;
@@ -1185,7 +1184,7 @@ function Panel_Inspector() : PanelContent() constructor {
             	_aniMap[$ currSec] |= jun.is_anim;
             }
             
-            if(filter_animation && !jun.isAnimated()) continue;
+            if(FILTER_ANIMATION && !jun.isAnimated()) continue;
             if(filtering && filter_text != "" && !string_match_lower(filter_text, jun.getName())) continue;
             
             #region ++++ Draw Widget ++++
@@ -1610,11 +1609,13 @@ function Panel_Inspector() : PanelContent() constructor {
     	
     	if(bx > ui(4)) {
     		var bspr = THEME.filter_animation;
-    		var bi   = filter_animation;
-    		var bc   = filter_animation? COLORS._main_value_positive : COLORS._main_icon;
+    		var bi   = FILTER_ANIMATION;
+    		var bc   = FILTER_ANIMATION? COLORS._main_value_positive : COLORS._main_icon;
     		
-	    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, tFilteranim, bspr, bi, bc, 1, ui(8)) == 2)
-	    		filter_animation = !filter_animation;
+	    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, tFilteranim, bspr, bi, bc, 1, ui(8)) == 2) {
+	    		FILTER_ANIMATION = !FILTER_ANIMATION;
+	    		GraphRefresh();
+	    	}
 	    	bx -= bs + 1;
     	}
     	

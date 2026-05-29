@@ -1970,6 +1970,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var aa = .75 * (.25 + .75 * isHighlightingInGraph());
 		var hh = h + showMeta() * 16;
 		
+		if(FILTER_ANIMATION && !isAnimated())
+			aa = .25;
+		
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, hh * _s, cc, aa); 
 	}
 	
@@ -2033,7 +2036,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(_panel && _panel.is_searching && _panel.search_string != "" && search_match == -9999)
 			aa *= .15;
-				
+		
+		if(FILTER_ANIMATION && !isAnimated()) 
+			aa = .25;
+		
 		if(icon) {
 			var _icx = tx + 6 * _s;
 			var _ics = _s / THEME_SCALE * .8;
@@ -2043,7 +2049,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			BLEND_ALPHA_MULP
 			gpu_set_texfilter(true);
-			draw_sprite_ext(icon, 0, _icx, ty, _ics, _ics, 0, _icc, .75);
+			draw_sprite_ext(icon, 0, _icx, ty, _ics, _ics, 0, _icc, .75 * aa);
 			if(sprite_get_number(icon) > 1) draw_sprite_ext(icon, 1, _icx, ty, _ics, _ics, 0, c_white, .8);
 			BLEND_NORMAL
 			gpu_set_texfilter(false);
@@ -2252,6 +2258,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var s1 = _s * 1.5, s4 = _s * 4.0;
 		var jun;
 		
+		var aa = (FILTER_ANIMATION && !isAnimated())? .5 : 1; 
+		draw_set_alpha(aa);
+		
 		var i = 0, n = array_length(inputDisplayList);
 		repeat(n) {
 			jun = inputDisplayList[i++];
@@ -2301,16 +2310,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
 			}
 		}
+		
+		draw_set_alpha(1);
 	}
 		
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		var aa = (FILTER_ANIMATION && !isAnimated())? .5 : 1; 
+		
 		var jun;
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++)
-			inputDisplayList[i].drawJunction(_s, _mx, _my);
+			inputDisplayList[i].drawJunction(_s, _mx, _my, aa);
 		
 		preview_channel_temp = undefined;
 		for(var i = 0, n = array_length(outputDisplayList); i < n; i++)
-			outputDisplayList[i].drawJunction(_s, _mx, _my);
+			outputDisplayList[i].drawJunction(_s, _mx, _my, aa);
 		
 		var a = key_mod_press(ALT);
 		if(insp1button && insp1button.visible) {
@@ -2344,8 +2357,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(attributes.show_update_trigger) {
-			updatedInTrigger.drawJunction(_s, _mx, _my);
-			updatedOutTrigger.drawJunction(_s, _mx, _my);
+			updatedInTrigger.drawJunction(_s, _mx, _my, aa);
+			updatedOutTrigger.drawJunction(_s, _mx, _my, aa);
 		}
 		
 		if(attributes.outp_meta)
@@ -2353,7 +2366,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun = junc_meta[i];
 			if(!jun.isVisible()) continue;
 			
-			jun.drawJunction(_s, _mx, _my);
+			jun.drawJunction(_s, _mx, _my, aa);
 		}
 		
 	}
@@ -2498,7 +2511,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _sw = __preview_sw;
 		var _sh = __preview_sh;
 		var _ss = min(bbox.w / _sw, bbox.h / _sh);
-		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
+		var  aa = 1;
+		if(FILTER_ANIMATION && !isAnimated()) aa = .5;
+		
+		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, aa);
 	}
 	
 	static getNodeDimension = function() {

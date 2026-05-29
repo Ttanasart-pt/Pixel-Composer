@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.008",
+    "changes": [
+      {
+        "date": "2026-05-29T02:55:09.938Z",
+        "node": "Inspector/Graph Panel",
+        "commit": "**Inspector/Graph Panel**: Filter animation now also highlight all animating node in graph panel."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.007",
     "changes": [
       {
