@@ -9,51 +9,53 @@
 function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Region Fill";
 	
-	newInput(4, nodeValueSeed());
+	newInput( 4, nodeValueSeed());
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(1, nodeValue_Surface( "Mask"       ));
+	newInput( 0, nodeValue_Surface(   "Surface In" ));
+	newInput( 1, nodeValue_Surface(   "Mask"       ));
 	
 	////- =Filter
-	newInput(11, nodeValue_Bool(  "Color Filter", false    ));
-	newInput( 5, nodeValue_Color( "Target Color", ca_white ));
-	newInput( 6, nodeValue_Bool(  "Inner Only",   false    )).setTooltip("Only fill regions with surrounding pixels.");
-	newInput(14, nodeValue_Bool(  "Expands",      true     )).setTooltip("Expands filled area to filtered pixels.");
+	newInput(11, nodeValue_Bool(     "Color Filter", false    ));
+	newInput( 5, nodeValue_Color(    "Target Color", ca_white ));
+	newInput( 6, nodeValue_Bool(     "Inner Only",   false    )).setTooltip("Only fill regions with surrounding pixels.");
+	newInput(14, nodeValue_Bool(     "Expands",      true     )).setTooltip("Expands filled area to filtered pixels.");
 	
 	////- =Fill
-	newInput(13, nodeValue_Slider(         "Threshold",      .1 ));
-	newInput( 8, nodeValue_Enum_Scroll(    "Fill Type",       0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
-	newInput(15, nodeValue_Enum_Button(    "Source",          0, [ "Palette", "Gradient" ]));
-	newInput( 2, nodeValue_Palette(        "Fill Palette" ));
-	newInput(16, nodeValue_Gradient(       "Fill Gradient",  gra_black_white ));
+	newInput(13, nodeValue_Slider(   "Threshold",      .1 ));
 	
-	newInput( 9, nodeValue_Surface(        "Color Map"              ));
-	newInput( 3, nodeValue_Bool(           "Fill",            true  ));
-	newInput(10, nodeValue_Surface(        "Texture Map"            ));
-	newInput(12, nodeValue_Rotation_Range( "Random Rotation", [0,0] ));
+	enum REGION_FILL_TYPE { Random, Color_map, Texture_map, Texture_Coord, Texture_Index };
+	newInput( 8, nodeValue_EScroll(  "Fill Type",       0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ] ));
+	newInput(15, nodeValue_EButton(  "Source",          0, [ "Palette", "Gradient" ] ));
+	newInput( 2, nodeValue_Palette(  "Fill Palette"                    ));
+	newInput(16, nodeValue_Gradient( "Fill Gradient",  gra_black_white ));
+	
+	newInput( 9, nodeValue_Surface(  "Color Map"              ));
+	newInput( 3, nodeValue_Bool(     "Fill",            true  ));
+	newInput(10, nodeValue_Surface(  "Texture Map"            ));
+	newInput(12, nodeValue_RotRange( "Random Rotation", [0,0] ));
 	
 	////- =Render
-	newInput(7, nodeValue_Enum_Scroll("Draw Original",  0, [ "None", "Above", "Behind" ]));
-	
-	// Inputs 17
+	newInput( 7, nodeValue_Enum_Scroll("Draw Original",  0, [ "None", "Above", "Behind" ]));
+	newInput(17, nodeValue_Bool(     "Output Index",   false           ));
+	// Inputs 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
-		["Surfaces", false], 0, 1, 
-		["Filter",   false, 11], 5, 6, 14, 
-		["Fill",	 false], 13, 8, 15, 2, 16, 9, 10, 12, 
-		["Render",	 false], 7, 
+		[ "Surfaces", false     ],  0,  1, 
+		[ "Filter",   false, 11 ],  5,  6, 14, 
+		[ "Fill",     false     ], 13,  8, 15,  2, 16,  9, 10, 12, 
+		[ "Render",   false     ],  7, 17, 
 	];
 	
 	temp_surface = array_create(3);
 		
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _seed = _data[4];
-			var _surf = _data[0];
-			var _mask = _data[1];
+			var _seed = _data[ 4];
+			var _surf = _data[ 0];
+			var _mask = _data[ 1];
 			
 			var _fclr = _data[11];
 			var _targ = _data[ 5];
@@ -70,14 +72,16 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _tmap = _data[10];
 			var _trot = _data[12]; 
 			
-			var _rnbg = _data[7];
+			var _rnbg = _data[ 7];
+			var _outI = _data[17];
 			
-			inputs[15].setVisible(_filt == 0);
-			inputs[ 2].setVisible(_filt == 0 && _fsrc == 0);
-			inputs[16].setVisible(_filt == 0 && _fsrc == 1);
-			inputs[ 9].setVisible(_filt == 1,   _filt == 1);
-			inputs[10].setVisible(_filt == 2,   _filt == 2);
-			inputs[12].setVisible(_filt == 2 || _filt == 3);
+			inputs[15].setVisible( _filt == REGION_FILL_TYPE.Random        );
+			inputs[17].setVisible( _filt == REGION_FILL_TYPE.Texture_Coord );
+			inputs[ 2].setVisible( _filt == REGION_FILL_TYPE.Random    &&   _fsrc == REGION_FILL_TYPE.Random        );
+			inputs[16].setVisible( _filt == REGION_FILL_TYPE.Random    &&   _fsrc == REGION_FILL_TYPE.Color_map     );
+			inputs[ 9].setVisible( _filt == REGION_FILL_TYPE.Color_map,     _filt == REGION_FILL_TYPE.Color_map     );
+			inputs[10].setVisible( _filt == REGION_FILL_TYPE.Texture_map,   _filt == REGION_FILL_TYPE.Texture_map   );
+			inputs[12].setVisible( _filt == REGION_FILL_TYPE.Texture_map || _filt == REGION_FILL_TYPE.Texture_Coord );
 			
 			inputs[ 5].setVisible(true);
 			inputs[ 6].setVisible(true);
@@ -139,7 +143,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				repeat(amo) {
 					surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
 						shader_set_f("dimension",   _sw, _sh);
-						shader_set_surface("base",	temp_surface[2]);
+						shader_set_s("base",	temp_surface[2]);
 						
 						draw_surface_safe(temp_surface[!base]);
 					surface_reset_shader();
@@ -150,7 +154,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				if(_expn) {
 					surface_set_shader(temp_surface[base], sh_region_fill_border);
 						shader_set_f("dimension",       _sw, _sh);
-						shader_set_surface("original",	_surf);
+						shader_set_s("original",	_surf);
 					
 						draw_surface_safe(temp_surface[!base]);
 					surface_reset_shader();
@@ -173,7 +177,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all);
 					shader_set_f("dimension",   _sw, _sh);
 					shader_set_f("threshold",   _thr);
-					shader_set_surface("base",	_surf);
+					shader_set_s("base",	_surf);
 					
 					draw_surface_safe(temp_surface[!base]);
 				surface_reset_shader();
@@ -190,58 +194,59 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			if(_rnbg == 2) draw_surface_safe(_surf); // render original
 			
 			switch(_filt) {
-				case 0 :  // Random colors
+				case REGION_FILL_TYPE.Random :  // Random colors
 					
 					shader_set(sh_region_fill_color);
-						shader_set_i("useMask", is_surface(_mask));
-						shader_set_surface("mask", _mask);
+						shader_set_i( "useMask", is_surface(_mask) );
+						shader_set_s( "mask",    _mask );
 						shader_set_palette(_palt, "colors", "colorAmount");
 						_grad.shader_submit();
 						
-						shader_set_i("type", _fsrc);
-						shader_set_f("seed", _seed);
+						shader_set_i( "type", _fsrc );
+						shader_set_f( "seed", _seed );
 						
 						draw_surface_safe(cmap);
 					shader_reset();
 					break;
 						
-				case 1 : // Color Map
+				case REGION_FILL_TYPE.Color_map : // Color Map
 					shader_set(sh_region_fill_map);
-						shader_set_i("useMask", is_surface(_mask));
-						shader_set_surface("mask", _mask);
-						shader_set_surface("colorMap",	_cmap);
+						shader_set_i( "useMask",  is_surface(_mask) );
+						shader_set_s( "mask",     _mask );
+						shader_set_s( "colorMap", _cmap );
 						
 						draw_surface_safe(cmap);
 					shader_reset();
 					break;
 						
-				case 2 : // Texture Map
+				case REGION_FILL_TYPE.Texture_map : // Texture Map
 					shader_set(sh_region_fill_rg_map);
-						shader_set_i("useMask", is_surface(_mask));
-						shader_set_surface("mask", _mask);
-						shader_set_surface("textureMap", _tmap);
-						shader_set_2("rotationRandom", [degtorad(_trot[0]), degtorad(_trot[1])]);
-						shader_set_f("seed", _seed)
+						shader_set_i( "useMask",        is_surface(_mask) );
+						shader_set_s( "mask",           _mask );
+						shader_set_s( "textureMap",     _tmap );
+						shader_set_f( "seed",           _seed );
+						shader_set_2( "rotationRandom", [degtorad(_trot[0]), degtorad(_trot[1])] );
 						
 						draw_surface_safe(cmap);
 					shader_reset();
 					break;
 				
-				case 3 : // Texture Map
+				case REGION_FILL_TYPE.Texture_Coord : // Texture Coord
 					shader_set(sh_region_fill_rg_coord);
-						shader_set_i("useMask", is_surface(_mask));
-						shader_set_surface("mask", _mask);
-						shader_set_2("rotationRandom", [degtorad(_trot[0]), degtorad(_trot[1])]);
-						shader_set_f("seed", _seed)
+						shader_set_i( "useMask",        is_surface(_mask) );
+						shader_set_s( "mask",           _mask );
+						shader_set_2( "rotationRandom", [degtorad(_trot[0]), degtorad(_trot[1])] );
+						shader_set_f( "seed",           _seed );
+						shader_set_i( "outIndex",       _outI );
 						
 						draw_surface_safe(cmap);
 					shader_reset();
 					break;
 					
-				case 4 : // Texture Index
+				case REGION_FILL_TYPE.Texture_Index : // Texture Index
 					shader_set(sh_region_fill_rg_index);
-						shader_set_i("useMask", is_surface(_mask));
-						shader_set_surface("mask", _mask);
+						shader_set_i( "useMask", is_surface(_mask) );
+						shader_set_s( "mask",    _mask );
 						
 						draw_surface_safe(cmap);
 					shader_reset();

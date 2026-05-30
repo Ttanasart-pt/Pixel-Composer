@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.009",
+    "changes": [
+      {
+        "date": "2026-05-30T06:48:02.460Z",
+        "node": "Region Fill",
+        "commit": "**Region Fill**: Add option to output region index to the blur channel."
+      }
+    ]
+  }
+]

@@ -6,6 +6,7 @@ uniform sampler2D mask;
 
 uniform vec2  rotationRandom;
 uniform float seed;
+uniform int   outIndex;
 
 float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
 
@@ -28,5 +29,11 @@ void main() {
 	float r = mix(rotationRandom.x, rotationRandom.y, random(c.xy, seed));
 	t = (t - .5) * mat2(cos(r), -sin(r), sin(r), cos(r)) + .5;
 	
-	gl_FragColor = vec4( t, 0., 1. );
+	float b = 0.;
+	if(outIndex == 1) {
+		vec2 cn = (c.xy + c.zw) / 2.;
+		b = (cn.y * 255. + cn.x) / 256.;
+	}
+	
+	gl_FragColor = vec4( t, b, 1. );
 }
