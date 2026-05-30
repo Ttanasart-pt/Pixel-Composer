@@ -1,9 +1,3 @@
-#region
-	FN_NODE_CONTEXT_INVOKE {
-		
-	});
-#endregion
-
 function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Lattice Point";
 	color = COLORS.node_blend_number;

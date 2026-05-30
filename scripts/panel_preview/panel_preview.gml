@@ -3206,7 +3206,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var area_w = _node_pw * _ovs;
 			var area_h = _node_ph * _ovs;
 			var _hov   = pHOVER && point_in_rectangle(mx, my, _ovx, _ovy, _ovx + area_w, _ovy + area_h);
-			var _hovRs = pHOVER && point_in_rectangle(mx, my, _ovx - ui(8), _ovy - ui(8), _ovx, _ovy);
+			var _hovRs = pHOVER && point_in_rectangle(mx, my, _ovx - ui(8), _ovy - ui(8), _ovx + ui(8), _ovy + ui(8));
 			
 			draw_surface_ext_safe(_node_prev, _ovx, _ovy, _ovs, _ovs);
 			draw_set_color(COLORS.panel_preview_surface_outline);

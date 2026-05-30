@@ -1095,6 +1095,7 @@
             { "label": "/Point" },
             "Node_Scatter_Points",
             "Node_Scatter_Point_Lattice",
+            "Node_Scatter_Point_Fibonacci",
             "Node_Scatter_Points_3D",
             "Node_Scatter_Point_Lattice_3D",
             "Node_Move_Point",

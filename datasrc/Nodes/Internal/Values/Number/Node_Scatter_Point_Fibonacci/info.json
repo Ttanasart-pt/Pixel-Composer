@@ -1,0 +1,6 @@
+{
+    "name":          "Fibonacci Points",
+    "spr":           "s_node_scatter_point_fibonacci",
+    "baseNode":      "Node_Scatter_Point_Fibonacci",
+    "pxc_version":    121020,
+}
