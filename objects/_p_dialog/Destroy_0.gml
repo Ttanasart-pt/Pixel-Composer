@@ -1,7 +1,6 @@
 /// @description init
 if(sHOVER)  HOVER = noone;
-if(sFOCUS)  setFocus(noone);
-if(refocus) setFocus(prefocus);
+if(sFOCUS)  setFocus(refocus? preFocus : noone);
 
 widget_reset();
 ds_list_remove(DIALOGS, self);

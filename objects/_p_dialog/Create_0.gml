@@ -21,7 +21,7 @@
 	
 	ds_list_add(DIALOGS, self);
 	
-	prefocus  = FOCUS;
+	preFocus  = FOCUS;
 	refocus   = false; function doRefocus() { refocus = true; return self; }
 	
 	active    = true;
@@ -225,8 +225,7 @@
 		
 		
 		if(mouse_press(mb_any, true, true)) {
-			setFocus(self.id, context_str);
-			
+			setFocus(self.id);
 			with(_p_dialog) other.depth = min(other.depth, depth - 1);
 		}
 		

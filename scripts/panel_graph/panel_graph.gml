@@ -2235,7 +2235,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    
 	                    if(dia) {
 		                    menuCallGen("graph_empty", dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right, false );
-		                    setFocus(dia, "Dialog");
+		                    setFocus(dia);
 	                    }
 	                    
 	                } else if(node_hover == noone) {
@@ -2257,7 +2257,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                    }
 		                    
 		                    menuCall("graph_connection_select", menu, dia.dialog_x - ui(8), dia.dialog_y + ui(4), fa_right, false );
-		                    setFocus(dia, "Dialog");
+		                    setFocus(dia);
 	                    }
 	                }
 	            } 
@@ -2860,7 +2860,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(dia == undefined) return undefined;
         
         dia.resetPosition();
-        setFocus(dia.id, dia.context_str);
+        setFocus(dia.id);
         
         connect_related = noone;
         
@@ -2914,7 +2914,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        		o_dialog_add_node.dialog_x - ui(8), 
 		        		o_dialog_add_node.dialog_y + ui(4), fa_right );
 	        	
-	            setFocus(dia, "Dialog");
+	            setFocus(dia);
 	        }
 	        
         }
@@ -3583,7 +3583,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
 			if(pHOVER) {
 				if(key_press(vk_space) || key_press(vk_enter) || key_press(vk_escape)) 
-					setFocus(panel, context_str);
+					setFocus(panel);
 			}
     	}
 		

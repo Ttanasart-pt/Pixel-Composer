@@ -379,7 +379,7 @@ event_inherited();
 		if(_new_node) { // Select
 			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
 			
-			if(PANEL_GRAPH && PANEL_GRAPH.panel == prefocus) {
+			if(PANEL_GRAPH && PANEL_GRAPH.panel == preFocus) {
 				if(PREFERENCES.node_add_select && node_replace == noone) {
 					run_in(1, function(_n, _j) /*=>*/ {return PANEL_GRAPH.selectDragNode(_n, _j)},
 						[_new_node, junction_called == noone]);

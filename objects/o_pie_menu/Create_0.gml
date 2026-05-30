@@ -2,7 +2,8 @@
 with(o_pie_menu) { if(self != other) active = false; }
 
 #region data
-	depth   = -9999;
+	depth       = -9999;
+	context_str = "Pie";
 	
 	menu_id = "";
 	menus   = [];
@@ -37,7 +38,6 @@ with(o_pie_menu) { if(self != other) active = false; }
 	onDestroy     = -1;
 	itemSelecting = -1;
 	
-	preHover = HOVER;
 	preFocus = FOCUS;
 	setFocus(self.id);
 #endregion
@@ -177,12 +177,13 @@ function onActivate() {
 }
 
 function checkFocus() {
-	if(selectable && depth <= DIALOG_DEPTH_HOVER) {
+	if(itemSelecting != -1 && depth <= DIALOG_DEPTH_HOVER) {
 		DIALOG_DEPTH_HOVER = depth;
 		HOVER = self.id;
 	}
 } 
 
 function checkDepth() {
-	if(depth == DIALOG_DEPTH_HOVER) FOCUS = self.id;
+	if(active && depth == DIALOG_DEPTH_HOVER) 
+		setFocus(self.id);
 }

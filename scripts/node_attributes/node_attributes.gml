@@ -106,20 +106,15 @@
 		editWidget = _editor[2];
 	}
 	
-	function __attribute_set(node, key, value) {
-		node.attributes[$ key] = value;
-		node.triggerRender();
-	}
-	
 	function attribute_set(key, value) {
 		if(PANEL_INSPECTOR == noone) return;
 		
 		if(PANEL_INSPECTOR.inspecting)
-			__attribute_set(PANEL_INSPECTOR.inspecting, key, value);
+			PANEL_INSPECTOR.inspecting.setAttribute(key, value, true);
 		
 		if(PANEL_INSPECTOR.inspectGroup == 1)
 		for( var i = 0, n = array_length(PANEL_INSPECTOR.inspectings); i < n; i++ ) 
-			__attribute_set(PANEL_INSPECTOR.inspectings[i], key, value);
+			PANEL_INSPECTOR.inspectings[i].setAttribute(key, value, true);
 	}
 	
 	function attribute_surface_depth(label = true) {

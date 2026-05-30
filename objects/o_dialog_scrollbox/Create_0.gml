@@ -1,5 +1,6 @@
 /// @description init
 event_inherited();
+doRefocus();
 
 #region data
 	max_h  = 640;
@@ -19,6 +20,8 @@ event_inherited();
 	initVal		  = 0;
 	update_hover  = true;
 
+	if(preFocus && typeof(preFocus) == "ref" && instance_exists(preFocus) && preFocus.object_index == o_pie_menu)
+		preFocus = preFocus.preFocus;
 #endregion
 
 #region search

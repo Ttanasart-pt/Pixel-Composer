@@ -210,11 +210,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.annotation_size   = .4;
 		attributes.annotation_color  = COLORS._main_text_sub;
 		
+		onSetAttribute  = undefined;
 		setAttribute    = function(k, v, r = false) /*=>*/ { 
 			recordAction_variable_change(attributes, k, attributes[$ k], "Modify Attribute");
 			
 			attributes[$ k] = v;
 			if(r) triggerRender(); 
+			if(onSetAttribute) onSetAttribute(k,v);
 			project.modified = true; 
 			return self;
 		}

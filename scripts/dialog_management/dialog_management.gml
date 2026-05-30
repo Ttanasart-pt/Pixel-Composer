@@ -16,7 +16,7 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	for( var i = 0, n = array_length(args); i < n; i++ )
 		variable_instance_set(dia, args[i], variable_struct_get(param, args[i]));
 	
-	setFocus(dia.id, dia.context_str);
+	setFocus(dia.id);
 	return dia;
 }
 
@@ -56,7 +56,7 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = undefined) {
 	dia.resetPosition();
 	
 	if(params != undefined && (params[$ "focus"] ?? true))
-		setFocus(dia.id, _panel.context_str);
+		setFocus(dia.id);
 	return dia;
 }
 

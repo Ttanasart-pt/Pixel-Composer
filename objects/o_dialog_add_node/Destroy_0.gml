@@ -2,5 +2,5 @@
 event_inherited();
 
 widget_reset();
-if(prefocus != noone) FOCUS = prefocus;
+if(preFocus != noone) setFocus(preFocus);
 instance_destroy(o_pie_menu);

@@ -26,6 +26,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	h  = _h; th = _h;
 	split = "";
 	
+	hovering = false;
+	focusing = false;
+	
 	tab_align   = 0;
 	tab_width   = 0;
 	tab_size  = ui(24);
@@ -401,6 +404,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(o_main.panel_dragging != noone) dragging = -1;
 		
+		hovering = false;
+		focusing = false;
+		
 		if(dragging == 1) {
 			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
 			var dw  = round(_mx - drag_sm);
@@ -488,17 +494,23 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			var  x1 = x + w - ui(4);
 			var  y1 = y + h - ui(4);
 			
+			focusing = FOCUS == con;
+			
 			if(con && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-				HOVER = self;
+				HOVER    = con;
+				hovering = true;
 				
 				if(mouse_press(mb_any))
-					setFocus(self, con.context_str);
+					setFocus(con);
 				
 			} else {
 				for(var i = 0; i < array_length(childs); i++)
 					childs[i].stepBegin();
 			}
+			
 		}
+		
+		// if(con == PANEL_GRAPH) print("GRAPH PANEL: ", focusing, typeof(FOCUS), instanceof(FOCUS), FOCUS == PANEL_GRAPH);
 	}
 	
 	static step = function() {
@@ -600,8 +612,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var msx   = mouse_x - tsx;
 		var msy   = mouse_y - tsy;
 		
-		var hover = HOVER == self;
-		var focus = FOCUS == self;
+		var hover = hovering;
+		var focus = focusing;
 		
 		var _len  = array_length(content);
 		var ppad  = ui(THEME_VALUE.panel_tab_padding);
@@ -792,8 +804,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var msx   = mouse_x - tsx;
 		var msy   = mouse_y - tsy;
 		
-		var hover = HOVER == self;
-		var focus = FOCUS == self;
+		var hover = hovering;
+		var focus = focusing;
 		
 		var _len  = array_length(content);
 		var ppad  = ui(THEME_VALUE.panel_tab_padding);
@@ -1062,12 +1074,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(THEME_VALUE.panel_separation_type == "frame")
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS.panel_frame);
 		
-		if(FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
+		if(focusing || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);
 		}
 		
-		if(FOCUS == self && parent != noone && !m_in && m_ot) {
+		if(focusing && parent != noone && !m_in && m_ot) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, c_white, .4);
 			
 			if(DOUBLE_CLICK) {
@@ -1113,7 +1125,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		setTab(0);
 		
 		HOVER = noone;
-		FOCUS = noone;
+		setFocus(noone);
 		
 		if(!array_empty(content)) return;
 		var ind = !array_find(parent.childs, self); // index of the sibling
@@ -1325,8 +1337,8 @@ function PanelContent() constructor {
 		panel = _panel;
 		
 		if(o_main.panel_dragging == noone) {
-			pFOCUS = FOCUS == panel/* && panel.mouse_active*/;
-			pHOVER = !CURSOR_IS_LOCK && HOVER == panel && panel.mouse_active;
+			pFOCUS = FOCUS == self;
+			pHOVER = !CURSOR_IS_LOCK && HOVER == self && panel.mouse_active;
 			if(pFOCUS) FOCUS_CONTENT = self;
 		}
 		
@@ -1352,16 +1364,18 @@ function PanelContent() constructor {
 	static deserialize   = function(data) { return self; }
 }
 
-function setFocus(target, fstring = noone) {
+function setFocus(target) {
+	if(FOCUS == target) return;
+	
 	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusEnd")) || struct_has(FOCUS, "onFocusEnd")) 
 		FOCUS.onFocusEnd();
 	
-	FOCUS = target;
-	if(fstring != noone) FOCUS_STR = fstring;
+	// print("SET: ", typeof(target), instanceof(target), target == PANEL_GRAPH);
+	FOCUS     = target;
+	FOCUS_STR = target == noone? "" : (target[$ "context_str"] ?? "");
 	
 	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusBegin")) || struct_has(FOCUS, "onFocusBegin")) 
 		FOCUS.onFocusBegin();
-		
 }
 
 function getFocusContent() {
