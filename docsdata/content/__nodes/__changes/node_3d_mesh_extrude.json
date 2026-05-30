@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.2.009",
+    "changes": [
+      {
+        "date": "2026-05-30T04:52:35.560Z",
+        "node": "Surface Extrude",
+        "commit": "**Surface Extrude**: Fix incorrect side extrusion in voxel mode."
+      }
+    ]
+  }
+]

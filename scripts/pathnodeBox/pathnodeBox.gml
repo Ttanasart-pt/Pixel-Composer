@@ -7,6 +7,7 @@ function pathnodeBox(_junction) : widget() constructor {
     	
     	var b = nodeBuild(_ext, junction.node.x - 128, junction.ry - 32);
     	junction.setFrom(b.outputs[1]);
+    	
 	}).setText(__txt("New path")).setIcon(THEME.add_16, 0, COLORS._main_value_positive, .75);
 	
     b_newPathMenu = button(function() /*=>*/ { 

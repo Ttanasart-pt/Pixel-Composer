@@ -180,6 +180,82 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			j0  *= sy; j1   *= sy;
 			dep *= sz; depb *= sz;
 			
+			var k0 = depb;
+			var k1 = dep;
+			
+			// -Z
+			__vertex_buffer_add_pntc(_bB, i1, j0, k0, 0, 0, -1, tx1, ty0,,, 255, 0, 0);
+			__vertex_buffer_add_pntc(_bB, i0, j0, k0, 0, 0, -1, tx0, ty0,,, 0, 255, 0);
+			__vertex_buffer_add_pntc(_bB, i1, j1, k0, 0, 0, -1, tx1, ty1,,, 0, 0, 255);
+			
+			__vertex_buffer_add_pntc(_bB, i1, j1, k0, 0, 0, -1, tx1, ty1,,, 255, 0, 0);
+			__vertex_buffer_add_pntc(_bB, i0, j0, k0, 0, 0, -1, tx0, ty0,,, 0, 255, 0);
+			__vertex_buffer_add_pntc(_bB, i0, j1, k0, 0, 0, -1, tx0, ty1,,, 0, 0, 255);
+			
+			// +Z				  	  
+			__vertex_buffer_add_pntc(_bF, i1, j0, k1, 0, 0,  1, tx1, ty0,,, 255, 0, 0);
+			__vertex_buffer_add_pntc(_bF, i1, j1, k1, 0, 0,  1, tx1, ty1,,, 0, 255, 0);
+			__vertex_buffer_add_pntc(_bF, i0, j0, k1, 0, 0,  1, tx0, ty0,,, 0, 0, 255);
+			
+			__vertex_buffer_add_pntc(_bF, i1, j1, k1, 0, 0,  1, tx1, ty1,,, 255, 0, 0);
+			__vertex_buffer_add_pntc(_bF, i0, j1, k1, 0, 0,  1, tx0, ty1,,, 0, 255, 0);
+			__vertex_buffer_add_pntc(_bF, i0, j0, k1, 0, 0,  1, tx0, ty0,,, 0, 0, 255);
+			
+			edges[eid++] = new __3dObject_Edge([i0, j0, k0], [i0, j1, k0]);
+			edges[eid++] = new __3dObject_Edge([i0, j1, k0], [i1, j1, k0]);
+			edges[eid++] = new __3dObject_Edge([i1, j1, k0], [i1, j0, k0]);
+			edges[eid++] = new __3dObject_Edge([i1, j0, k0], [i0, j0, k0]);
+			
+			edges[eid++] = new __3dObject_Edge([i0, j0, k1], [i0, j1, k1]);
+			edges[eid++] = new __3dObject_Edge([i0, j1, k1], [i1, j1, k1]);
+			edges[eid++] = new __3dObject_Edge([i1, j1, k1], [i1, j0, k1]);
+			edges[eid++] = new __3dObject_Edge([i1, j0, k1], [i0, j0, k1]);
+			
+			edges[eid++] = new __3dObject_Edge([i0, j0, k0], [i0, j0, k1]);
+			edges[eid++] = new __3dObject_Edge([i0, j1, k0], [i0, j1, k1]);
+			edges[eid++] = new __3dObject_Edge([i1, j0, k0], [i1, j0, k1]);
+			edges[eid++] = new __3dObject_Edge([i1, j1, k0], [i1, j1, k1]);
+			
+			if(voxel_use) {
+				// -X
+				__vertex_buffer_add_pntc(_bS, i0, j0, k1, -1, 0, 0, tx1, ty0,,, 255, 0, 0);
+				__vertex_buffer_add_pntc(_bS, i0, j1, k1, -1, 0, 0, tx1, ty1,,, 0, 0, 255);
+				__vertex_buffer_add_pntc(_bS, i0, j0, k0, -1, 0, 0, tx0, ty0,,, 0, 255, 0);
+				
+				__vertex_buffer_add_pntc(_bS, i0, j0, k0, -1, 0, 0, tx0, ty0,,, 0, 255, 0);
+				__vertex_buffer_add_pntc(_bS, i0, j1, k1, -1, 0, 0, tx1, ty1,,, 255, 0, 0);
+				__vertex_buffer_add_pntc(_bS, i0, j1, k0, -1, 0, 0, tx0, ty1,,, 0, 0, 255);
+				
+				// +X
+				__vertex_buffer_add_pntc(_bF, i1, j0, k1,  1, 0, 0, tx1, ty0,,, 255, 0, 0);
+				__vertex_buffer_add_pntc(_bF, i1, j0, k0,  1, 0, 0, tx0, ty0,,, 0, 0, 255);
+				__vertex_buffer_add_pntc(_bF, i1, j1, k1,  1, 0, 0, tx1, ty1,,, 0, 255, 0);
+				
+				__vertex_buffer_add_pntc(_bF, i1, j1, k0,  1, 0, 0, tx0, ty1,,, 0, 255, 0);
+				__vertex_buffer_add_pntc(_bF, i1, j1, k1,  1, 0, 0, tx1, ty1,,, 255, 0, 0);
+				__vertex_buffer_add_pntc(_bF, i1, j0, k0,  1, 0, 0, tx0, ty0,,, 0, 0, 255);
+				
+				// -Y
+				__vertex_buffer_add_pntc(_bS, i0, j0, k1, 0, -1, 0, tx1, ty0,,, 255, 0, 0);
+				__vertex_buffer_add_pntc(_bS, i0, j0, k0, 0, -1, 0, tx0, ty0,,, 0, 255, 0);
+				__vertex_buffer_add_pntc(_bS, i1, j0, k1, 0, -1, 0, tx1, ty1,,, 0, 0, 255);
+				
+				__vertex_buffer_add_pntc(_bS, i1, j0, k1, 0, -1, 0, tx1, ty1,,, 255, 0, 0);
+				__vertex_buffer_add_pntc(_bS, i0, j0, k0, 0, -1, 0, tx0, ty0,,, 0, 255, 0);
+				__vertex_buffer_add_pntc(_bS, i1, j0, k0, 0, -1, 0, tx0, ty1,,, 0, 0, 255);
+				
+				// +Y
+				__vertex_buffer_add_pntc(_bF, i0, j1, k1, 0,  1, 0, tx1, ty0,,, 255, 0, 0);
+				__vertex_buffer_add_pntc(_bF, i1, j1, k1, 0,  1, 0, tx1, ty1,,, 0, 255, 0);
+				__vertex_buffer_add_pntc(_bF, i0, j1, k0, 0,  1, 0, tx0, ty0,,, 0, 0, 255);
+				
+				__vertex_buffer_add_pntc(_bF, i1, j1, k1, 0,  1, 0, tx1, ty1,,, 255, 0, 0);
+				__vertex_buffer_add_pntc(_bF, i1, j1, k0, 0,  1, 0, tx0, ty1,,, 0, 255, 0);
+				__vertex_buffer_add_pntc(_bF, i0, j1, k0, 0,  1, 0, tx0, ty0,,, 0, 0, 255);
+				continue;
+			}
+			
+			// Old "Accurate" height
 			__vertex_buffer_add_pntc(_bB, i1, j0, depb, 0, 0, -1, tx1, ty0,,, 255, 0, 0);
 			__vertex_buffer_add_pntc(_bB, i0, j0, depb, 0, 0, -1, tx0, ty0,,, 0, 255, 0);
 			__vertex_buffer_add_pntc(_bB, i1, j1, depb, 0, 0, -1, tx1, ty1,,, 0, 0, 255);
@@ -196,23 +272,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			__vertex_buffer_add_pntc(_bF, i0, j1,  dep, 0, 0, 1, tx0, ty1,,, 0, 255, 0);
 			__vertex_buffer_add_pntc(_bF, i0, j0,  dep, 0, 0, 1, tx0, ty0,,, 0, 0, 255);
 			
-			edges[eid++] = new __3dObject_Edge([i0, j0, depb], [i0, j1, depb]);
-			edges[eid++] = new __3dObject_Edge([i0, j1, depb], [i1, j1, depb]);
-			edges[eid++] = new __3dObject_Edge([i1, j1, depb], [i1, j0, depb]);
-			edges[eid++] = new __3dObject_Edge([i1, j0, depb], [i0, j0, depb]);
-			
-			edges[eid++] = new __3dObject_Edge([i0, j0, dep], [i0, j1, dep]);
-			edges[eid++] = new __3dObject_Edge([i0, j1, dep], [i1, j1, dep]);
-			edges[eid++] = new __3dObject_Edge([i1, j1, dep], [i1, j0, dep]);
-			edges[eid++] = new __3dObject_Edge([i1, j0, dep], [i0, j0, dep]);
-			
-			edges[eid++] = new __3dObject_Edge([i0, j0, depb], [i0, j0, dep]);
-			edges[eid++] = new __3dObject_Edge([i0, j1, depb], [i0, j1, dep]);
-			edges[eid++] = new __3dObject_Edge([i1, j0, depb], [i1, j0, dep]);
-			edges[eid++] = new __3dObject_Edge([i1, j1, depb], [i1, j1, dep]);
-			
 			if(back) {
-				
 				if((useH && dep * 2 > buffer_read_at(h_buff, (round(i * hgtW) + max(0, round((j - 1) * hgtH)) * hg_ww) * 2, buffer_u16) / 65536)
 					|| (j == 0 || buffer_read_at(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
 						

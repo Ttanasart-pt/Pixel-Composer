@@ -1372,14 +1372,15 @@ function PanelContent() constructor {
 	static deserialize   = function(data) { return self; }
 }
 
+function setFocusString(_str) { FOCUS_STR = _str; }
 function setFocus(target) {
+	setFocusString(target == noone? "" : (target[$ "context_str"] ?? ""));
 	if(FOCUS == target) return;
 	
 	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusEnd")) || struct_has(FOCUS, "onFocusEnd")) 
 		FOCUS.onFocusEnd();
 	
-	FOCUS     = target;
-	FOCUS_STR = target == noone? "" : (target[$ "context_str"] ?? "");
+	FOCUS = target;
 	if(is(target, PanelContent))
 		FOCUS_PANEL = target;
 	

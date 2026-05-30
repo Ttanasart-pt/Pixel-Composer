@@ -558,6 +558,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         dropper_active   = false;
 		dropper_callback = undefined;
+		
+		node_focus_context = undefined;
     #endregion
     
     #region // ---- nodes ----
@@ -1506,6 +1508,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     ////- Step
     
     function stepBegin() { //
+    	if(node_focus_context != undefined) {
+    		setFocusString(node_focus_context);
+    		if(mouse_lpress()) node_focus_context = undefined;
+    	}
+    
         var gr_x = graph_x * graph_s;
         var gr_y = graph_y * graph_s;
         var m_x  = (mx - gr_x) / graph_s;
@@ -3945,7 +3952,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         node_drag_add = _add;
         
-        FOCUS_STR = instanceof(_node);
+        node_focus_context = instanceof(_node);
     }
     
     function selectPrevious() {
@@ -4073,8 +4080,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         if(_select) {
-        	nodes_selecting = [node];
-        	if(pFOCUS) FOCUS_STR = instanceof(node);
+        	nodes_selecting    = [node];
+        	node_focus_context = instanceof(node);
         }
         
         if(_connect && is(connect_related, NodeValue) && connect_related.node.group == getCurrentContext()) {
@@ -4161,8 +4168,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         		
         }
     	
-        nodes_selecting = [ _blend ];
-        FOCUS_STR = instanceof(_blend);
+        nodes_selecting    = [ _blend ];
+        node_focus_context = instanceof(_blend);
         
         return _blend;
     } 

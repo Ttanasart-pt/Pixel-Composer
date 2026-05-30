@@ -40,7 +40,7 @@ function widget() constructor {
 	lua_thread     = noone;
 	lua_thread_key = "";
 	
-	font     = f_p1;
+	font     = f_p2;
 	sep_axis = false;
 	unit     = noone;
 	

@@ -99,7 +99,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	
 	for( var i = 0; i < amo; i++ ) {
 		var _menuItem = menus[i];
-		var aa = _menuItem.active * 0.75 + 0.25;
+		
 		_ba = angles[i];
 		
 		_bx = x + lengthdir_x(anim_prog * pie_width,  _ba);
@@ -203,6 +203,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			}
 			
 			if(_surf != noone && is_surface(_surf)) {
+				var aa = _menuItem.active * 0.75 + 0.25;
 				var _srfw = surface_get_width(_surf);
 				var _srfh = surface_get_height(_surf);
 				var ss = (_sph - ui(8)) / max(_srfw, _srfh);
@@ -222,6 +223,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 				+ (_spr  != noone) * (_sph + ui(4))
 				+ (_surf != noone) * (_sph + ui(4));
 			
+			var aa = _menuItem.active * 0.75 + 0.25;
 			draw_set_text(font, fa_left, fa_center, _hov && !sHov? COLORS._main_text_accent : COLORS._main_text, aa * anim_prog);
 			if(_menuItem[$ "isNode"] && _menuItem[$ "preset"]) {
 				var ttx = tx;
