@@ -6,6 +6,11 @@
         "date": "2026-05-30T06:48:02.460Z",
         "node": "",
         "commit": "**Region Fill**: Add option to output region index to the blur channel."
+      },
+      {
+        "date": "2026-05-30T07:08:19.598Z",
+        "node": "Region Fill",
+        "commit": "**Region Fill**: Add sampling position control foe color map mode."
       }
     ]
   }

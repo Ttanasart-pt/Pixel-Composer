@@ -30,23 +30,27 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 2, nodeValue_Palette(  "Fill Palette"                    ));
 	newInput(16, nodeValue_Gradient( "Fill Gradient",  gra_black_white ));
 	
-	newInput( 9, nodeValue_Surface(  "Color Map"              ));
-	newInput( 3, nodeValue_Bool(     "Fill",            true  ));
-	newInput(10, nodeValue_Surface(  "Texture Map"            ));
+	newInput( 9, nodeValue_Surface(  "Color Map"                ));
+	newInput(18, nodeValue_Anchor(   "Sample Position", [.5,.5] ));
+	newInput( 3, nodeValue_Bool(     "Fill",            true    ));
+	newInput(10, nodeValue_Surface(  "Texture Map"              ));
+	
+		////- =/Transform
 	newInput(12, nodeValue_RotRange( "Random Rotation", [0,0] ));
 	
 	////- =Render
 	newInput( 7, nodeValue_Enum_Scroll("Draw Original",  0, [ "None", "Above", "Behind" ]));
 	newInput(17, nodeValue_Bool(     "Output Index",   false           ));
-	// Inputs 18
+	// Inputs 19
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
-		[ "Surfaces", false     ],  0,  1, 
-		[ "Filter",   false, 11 ],  5,  6, 14, 
-		[ "Fill",     false     ], 13,  8, 15,  2, 16,  9, 10, 12, 
-		[ "Render",   false     ],  7, 17, 
+		[ "Surfaces",       false     ],  0,  1, 
+		[ "Filter",         false, 11 ],  5,  6, 14, 
+		[ "Fill",           false     ], 13,  8, 15,  2, 16,  9, 18, 10, 
+			[ "/Transform", false     ], 12, 
+		[ "Render",         false     ],  7, 17, 
 	];
 	
 	temp_surface = array_create(3);
@@ -69,6 +73,8 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _grad = _data[16];
 			
 			var _cmap = _data[ 9];
+			var _canc = _data[18];
+			
 			var _tmap = _data[10];
 			var _trot = _data[12]; 
 			
@@ -76,12 +82,15 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _outI = _data[17];
 			
 			inputs[15].setVisible( _filt == REGION_FILL_TYPE.Random        );
-			inputs[17].setVisible( _filt == REGION_FILL_TYPE.Texture_Coord );
 			inputs[ 2].setVisible( _filt == REGION_FILL_TYPE.Random    &&   _fsrc == REGION_FILL_TYPE.Random        );
 			inputs[16].setVisible( _filt == REGION_FILL_TYPE.Random    &&   _fsrc == REGION_FILL_TYPE.Color_map     );
+			
 			inputs[ 9].setVisible( _filt == REGION_FILL_TYPE.Color_map,     _filt == REGION_FILL_TYPE.Color_map     );
+			inputs[18].setVisible( _filt == REGION_FILL_TYPE.Color_map                                              );
+			
 			inputs[10].setVisible( _filt == REGION_FILL_TYPE.Texture_map,   _filt == REGION_FILL_TYPE.Texture_map   );
 			inputs[12].setVisible( _filt == REGION_FILL_TYPE.Texture_map || _filt == REGION_FILL_TYPE.Texture_Coord );
+			inputs[17].setVisible( _filt == REGION_FILL_TYPE.Texture_Coord );
 			
 			inputs[ 5].setVisible(true);
 			inputs[ 6].setVisible(true);
@@ -195,7 +204,6 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			switch(_filt) {
 				case REGION_FILL_TYPE.Random :  // Random colors
-					
 					shader_set(sh_region_fill_color);
 						shader_set_i( "useMask", is_surface(_mask) );
 						shader_set_s( "mask",    _mask );
@@ -214,6 +222,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 						shader_set_i( "useMask",  is_surface(_mask) );
 						shader_set_s( "mask",     _mask );
 						shader_set_s( "colorMap", _cmap );
+						shader_set_2( "anchor",   _canc );
 						
 						draw_surface_safe(cmap);
 					shader_reset();

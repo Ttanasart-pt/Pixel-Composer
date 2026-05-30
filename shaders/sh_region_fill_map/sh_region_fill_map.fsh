@@ -3,12 +3,13 @@ varying vec4 v_vColour;
 
 uniform int    useMask;
 uniform sampler2D mask;
-
 uniform sampler2D colorMap;
+
+uniform vec2   anchor;
 
 void main() {
     vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );
-    vec2 p = (c.xy + c.zw) / 2.;
+    vec2 p = mix(c.xy, c.zw, anchor);
     
 	gl_FragColor = c;
 	
@@ -20,5 +21,5 @@ void main() {
 		if(sel == 0.) { gl_FragColor = vec4(0.); return; }
 	}
 		
-	gl_FragColor = texture2D( colorMap, c.xy );
+	gl_FragColor = texture2D( colorMap, p );
 }
