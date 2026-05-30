@@ -20,6 +20,6 @@ void main() {
 		float sel = (m.r + m.g + m.b) / 3. * m.a;
 		if(sel == 0.) { gl_FragColor = vec4(0.); return; }
 	}
-		
+	
 	gl_FragColor = texture2D( colorMap, p );
 }

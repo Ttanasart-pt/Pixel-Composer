@@ -12,7 +12,7 @@ void main() {
 	vec4 o  = texture2D( original,       v_vTexcoord );
 	
 	gl_FragColor = c;
-	if(c.a == 1.) return;
+	if(c.a > 0.) return;
 	
 	float minD = ITERATION;
 	

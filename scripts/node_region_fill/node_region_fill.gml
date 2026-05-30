@@ -19,7 +19,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(11, nodeValue_Bool(     "Color Filter", false    ));
 	newInput( 5, nodeValue_Color(    "Target Color", ca_white ));
 	newInput( 6, nodeValue_Bool(     "Inner Only",   false    )).setTooltip("Only fill regions with surrounding pixels.");
-	newInput(14, nodeValue_Bool(     "Expands",      true     )).setTooltip("Expands filled area to filtered pixels.");
+	newInput(14, nodeValue_Int(      "Expands",      0        )).setTooltip("Expands filled area to filtered pixels.");
 	
 	////- =Fill
 	newInput(13, nodeValue_Slider(   "Threshold",      .1 ));
@@ -160,10 +160,10 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					base = !base;
 				}
 				
-				if(_expn) {
+				repeat(_expn) {
 					surface_set_shader(temp_surface[base], sh_region_fill_border);
-						shader_set_f("dimension",       _sw, _sh);
-						shader_set_s("original",	_surf);
+						shader_set_f("dimension", _sw, _sh);
+						shader_set_s("original",  _surf);
 					
 						draw_surface_safe(temp_surface[!base]);
 					surface_reset_shader();
