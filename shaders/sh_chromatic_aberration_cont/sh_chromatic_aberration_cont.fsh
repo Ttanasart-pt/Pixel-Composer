@@ -1,6 +1,6 @@
 #pragma use(curve)
 
-#region -- curve -- [1771561909.403563]
+#region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -9,7 +9,7 @@
     #endif
 
     uniform int   curve_offset;
-	
+
     float eval_curve_segment_t(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float prog) {
         float p = prog;
         float i = 1. - p;
@@ -59,7 +59,10 @@
         _x = _x / _scale - _shift;
         _x = clamp(_x, 0., 1.);
         
-        if(_type == 0.) {
+        if(_x <= curve[curve_offset + 2]) return curve[curve_offset + 3];
+        if(_x >= curve[curve_offset + _segs * 6 + 2]) return curve[curve_offset + _segs * 6 + 3];
+
+        if(_type == 0.) { // interpolated
             for( int i = 0; i < _segs; i++ ) {
                 int ind    = curve_offset + i * 6;
                 float _x0  = curve[ind + 2];
@@ -96,7 +99,7 @@
                 return eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, t);
             }
 
-        } else if(_type == 1.) {
+        } else if(_type == 1.) { // step
             float y0 = curve[curve_offset + 3];
 
             for( int i = 0; i < _segs; i++ ) {
