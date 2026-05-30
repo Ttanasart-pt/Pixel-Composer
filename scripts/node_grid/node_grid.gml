@@ -26,16 +26,17 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 3, nodeValue_Slider(   "Gap",           .2, [0, 0.5, 0.001] )).setMappable(14).setPieMenu();
 	
 	////- =Shift
-	newInput( 9, nodeValue_EButton(  "Shift Axis",      0, ["X", "Y"]        ));
-	newInput( 8, nodeValue_Slider(   "Shift",           0, [-0.5, 0.5, 0.01] )).setMappable(16);
-	newInput(31, nodeValue_Slider(   "Random Shift",    0 ));
-	newInput(32, nodeValueSeedFloat( "Shift Seed"         ));
-	newInput(30, nodeValue_Slider(   "Secondary Shift", 0 ));
+	newInput( 9, nodeValue_EButton(  "Shift Axis",       0, ["X", "Y"]        ));
+	newInput( 8, nodeValue_Slider(   "Shift",            0, [-0.5, 0.5, 0.01] )).setMappable(16);
+	newInput(31, nodeValue_Slider(   "Random Shift",     0 ));
+	newInput(32, nodeValueSeedFloat( "Shift Seed"          ));
+	newInput(30, nodeValue_Slider(   "Secondary Shift",  0 ));
 	
 	////- =Scale
-	newInput(33, nodeValue_Slider(   "Random Scale",    0 ));
-	newInput(34, nodeValueSeedFloat( "Scale Seed"         ));
-	newInput(29, nodeValue_Float(    "Secondary Scale", 0 ));
+	newInput(34, nodeValueSeedFloat( "Scale Seed"          ));
+	newInput(33, nodeValue_Slider(   "Random Scale",     0 ));
+	newInput(29, nodeValue_Float(    "Secondary Scale",  0 ));
+	newInput(41, nodeValue_Slider(   "Secondary Ratio", .5 ));
 	
 	////- =Render
 	newInput(10, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
@@ -54,13 +55,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(40, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(19, nodeValue_Slider(     "Flip Horizontal", .5              ));
 	newInput(22, nodeValue_Slider(     "Flip Vertical",   .5              ));
-	// 41
+	// 42
 	
 	input_display_list = [ 11, 
 		[ "Output",  false ],  0, 37, 38, 35, 
 		[ "Pattern", false ],  1,  4, 15, 36,  2, 13, 28,  3, 26, 27, 14, 
 		[ "Shift",   false ],  9,  8, 16, 31, 32, 30, 
-		[ "Scale",   false ], 33, 34, 29, 
+		[ "Scale",   false ], 34, 33, 29, 
 		
 		[ "Render",  false ], 10,  5, 20,  6,  7, 25, 12, 24, 
 			[ "/Texture Transform", true, 17 ], 18, 39, 23, 40, 19, 22, 
@@ -81,8 +82,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 1, [1,1], rot ));
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my                    ));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 1, [1,1], rot     ));
 		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my                    ));
 		InputDrawOverlay(inputs[21].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, getInputSingle(0) ));
 		
@@ -129,31 +130,32 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		    
 			shader_set_f("dimension", _dim[0], _dim[1]);
 			
-			shader_set_f("position",          _data[ 1] );
-			shader_set_f_map("angle",         _data[ 4], _data[15], inputs[4]);
-			shader_set_f_map("scale",         _data[ 2], _data[13], inputs[2]);
-			shader_set_i( "scaleMode",        _data[36] );
-			shader_set_i( "uniformSize",      _data[28] );
-			shader_set_f( "gapAcc",           _data[26] );
-			shader_set_i( "diagonal",         _data[27] );
-			shader_set_f_map("gap",           _data[ 3], _data[14], inputs[3]);
+			shader_set_f( "position",      _data[ 1] );
+			shader_set_m( "angle",         _data[ 4], _data[15], inputs[4]);
+			shader_set_m( "scale",         _data[ 2], _data[13], inputs[2]);
+			shader_set_i( "scaleMode",     _data[36] );
+			shader_set_i( "uniformSize",   _data[28] );
+			shader_set_f( "gapAcc",        _data[26] );
+			shader_set_i( "diagonal",      _data[27] );
+			shader_set_m( "gap",           _data[ 3], _data[14], inputs[3]);
 			
-			shader_set_i( "shiftAxis",        _data[ 9] );
-			shader_set_f_map("shift",         _data[ 8], _data[16], inputs[8]);
-			shader_set_f( "randShift",        _data[31] );
-			shader_set_f( "randShiftSeed",    _data[32] );
-			shader_set_f( "secShift",         _data[30] );
+			shader_set_i( "shiftAxis",     _data[ 9] );
+			shader_set_m( "shift",         _data[ 8], _data[16], inputs[8]);
+			shader_set_f( "randShift",     _data[31] );
+			shader_set_f( "randShiftSeed", _data[32] );
+			shader_set_f( "secShift",      _data[30] );
 			
-			shader_set_f( "randScale",        _data[33] );
-			shader_set_f( "randScaleSeed",    _data[34] );
-			shader_set_f( "secScale",         _data[29] );
+			shader_set_f( "randScale",     _data[33] );
+			shader_set_f( "randScaleSeed", _data[34] );
+			shader_set_f( "secScale",      _data[29] );
+			shader_set_f( "secRatio",      _data[41] );
 			
-			shader_set_i( "mode",             _mode     );
-			shader_set_f( "seed",             _data[11] );
-			shader_set_gradient(              _data[ 5], _data[20], _data[21], inputs[5]);
-			shader_set_c("gapCol",            _data[ 6] );
-			shader_set_i( "aa",               _data[12] );
-			shader_set_2( "level",            _data[24] );
+			shader_set_i( "mode",          _mode     );
+			shader_set_f( "seed",          _data[11] );
+			shader_set_gradient(           _data[ 5], _data[20], _data[21], inputs[5]);
+			shader_set_c("gapCol",         _data[ 6] );
+			shader_set_i( "aa",            _data[12] );
+			shader_set_2( "level",         _data[24] );
 			
 			shader_set_i( "textureTransform", _data[17] );
 			shader_set_f( "textureSeed",      _data[18] );

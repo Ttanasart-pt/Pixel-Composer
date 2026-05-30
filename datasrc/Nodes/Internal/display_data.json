@@ -1272,6 +1272,7 @@
             "Node_Path_Sample",
             "Node_Path_Bake",
             "Node_Path_Length",
+            "Node_Path_to_Curve",
             { "label": "/To Surface" },
             "Node_Path_Fill",
             "Node_Path_Map",

@@ -1993,6 +1993,7 @@
     {"id":{"name":"node_path_smooth","path":"scripts/node_path_smooth/node_path_smooth.yy",},},
     {"id":{"name":"node_path_smoothen","path":"scripts/node_path_smoothen/node_path_smoothen.yy",},},
     {"id":{"name":"node_path_spiral","path":"scripts/node_path_spiral/node_path_spiral.yy",},},
+    {"id":{"name":"node_path_to_curve","path":"scripts/node_path_to_curve/node_path_to_curve.yy",},},
     {"id":{"name":"node_path_transform","path":"scripts/node_path_transform/node_path_transform.yy",},},
     {"id":{"name":"node_path_trim","path":"scripts/node_path_trim/node_path_trim.yy",},},
     {"id":{"name":"node_path_wave","path":"scripts/node_path_wave/node_path_wave.yy",},},

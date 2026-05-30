@@ -1672,6 +1672,7 @@
     {"name":"node_path_smooth","order":1,"path":"scripts/node_path_smooth/node_path_smooth.yy",},
     {"name":"node_path_smoothen","order":9,"path":"scripts/node_path_smoothen/node_path_smoothen.yy",},
     {"name":"node_path_spiral","order":5,"path":"scripts/node_path_spiral/node_path_spiral.yy",},
+    {"name":"node_path_to_curve","order":3,"path":"scripts/node_path_to_curve/node_path_to_curve.yy",},
     {"name":"node_path_trim","order":3,"path":"scripts/node_path_trim/node_path_trim.yy",},
     {"name":"node_path_wave","order":4,"path":"scripts/node_path_wave/node_path_wave.yy",},
     {"name":"node_path_weight_adjust","order":7,"path":"scripts/node_path_weight_adjust/node_path_weight_adjust.yy",},
