@@ -54,17 +54,43 @@ function setMenu(menu) {
 		if(is(_menuItem, MenuItem)) {
 			var _txt  = _menuItem.name;
 			var _key  = string_trim_start(_txt, [">"]);
-			var _node = struct_try_get(ALL_NODES, _key, noone);
 			
-			if(_node) {
-				_menuItem.name = _node.getName();
-				_menuItem.spr  = _node.getSpr();
+			var _hasSub = string_pos(">", _txt);
+			if(_hasSub) {
+				var _sep = string_split(_txt, ">");
+				_key = _sep[0];
 			}
 			
-			var _tww  = string_width(_menuItem.name)
-				+ (_menuItem.spr != noone) * (hght + ui(4)) 
-				+ (_menuItem.surface != noone) * (hght + ui(4));
+			var _node = struct_try_get(ALL_NODES, _key, noone);
+			var _labW = string_width(_menuItem.name);
 			
+			if(_node) {
+				_menuItem.isNode = true;
+				_menuItem.preset = _hasSub;
+				
+				if(_hasSub) {
+					_menuItem.name       = _txt + "   ";
+					_menuItem.nodeName   = _node.getName();
+					_menuItem.presetName = _sep[1];
+					
+					var presNode = PRESETS_MAP[$ _key]; 
+					var presObj  = presNode? presNode[$ _menuItem.presetName] : undefined
+					if(presObj) _menuItem.surface = presObj.getThumbnail();
+					if(!is_surface(_menuItem.surface))
+						_menuItem.spr = _node.getSpr();
+						
+				} else {
+					_menuItem.name   = _node.getName();
+					_menuItem.spr    = _node.getSpr();
+				}
+				
+				_labW = string_width(_menuItem.name);
+			}
+			
+			var _tww  = _labW + (_menuItem.spr     != noone) * (hght + ui(4)) 
+				              + (_menuItem.surface != noone) * (hght + ui(4));
+			
+			_menuItem.displayWidth = _tww;
 			pie_size += hght;
 			array_push(menus, _menuItem);
 			name_width = max(name_width, _tww);

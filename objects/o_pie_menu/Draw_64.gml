@@ -99,6 +99,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	
 	for( var i = 0; i < amo; i++ ) {
 		var _menuItem = menus[i];
+		var aa = _menuItem.active * 0.75 + 0.25;
 		_ba = angles[i];
 		
 		_bx = x + lengthdir_x(anim_prog * pie_width,  _ba);
@@ -220,10 +221,17 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			var tx = _bx0 + pd
 				+ (_spr  != noone) * (_sph + ui(4))
 				+ (_surf != noone) * (_sph + ui(4));
-			var aa = _menuItem.active * 0.75 + 0.25;
 			
 			draw_set_text(font, fa_left, fa_center, _hov && !sHov? COLORS._main_text_accent : COLORS._main_text, aa * anim_prog);
-			draw_text(tx, _by0 + _sph / 2, label);
+			if(_menuItem[$ "isNode"] && _menuItem[$ "preset"]) {
+				var ttx = tx;
+				var tty = _by0 + _sph / 2;
+				
+				draw_text(ttx, tty, _menuItem.nodeName);   ttx += string_width(_menuItem.nodeName) + ui(20);
+				draw_sprite_ui_uniform(THEME.arrow, 0, ttx - ui(10), tty, 1, COLORS._main_icon);
+				draw_text(ttx, tty, _menuItem.presetName);
+				
+			} else draw_text(tx, _by0 + _sph / 2, label);
 			draw_set_alpha(1);
 			gpu_set_scissor(scis);
 			
