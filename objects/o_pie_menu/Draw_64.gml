@@ -301,6 +301,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			
 			if((is(_edt, scrollBox) || is(_edt, scrollBoxFn)) && _edt.open) selectable = false;
 			
+			if(_edt == WIDGET_CURRENT) itemSelecting = i;
 			if(_hov) mouse_rel = false;
 		}
 		

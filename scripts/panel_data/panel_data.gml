@@ -26,8 +26,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	h  = _h; th = _h;
 	split = "";
 	
-	hovering = false;
-	focusing = false;
+	hovering    = false;
+	focusing    = false;
+	prefocusing = false;
 	
 	tab_align   = 0;
 	tab_width   = 0;
@@ -403,9 +404,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			content[i].panelStepBegin(self);
 		
 		if(o_main.panel_dragging != noone) dragging = -1;
-		
 		hovering = false;
-		focusing = false;
 		
 		if(dragging == 1) {
 			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
@@ -447,7 +446,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				dragging = -1;
 			}
 			
-		} else if(dragging == 2) {
+			return;
+		} 
+		
+		if(dragging == 2) {
 			var _my = clamp(mouse_my, ui(16), WIN_H - ui(16));
 			var dh  = round(_my - drag_sm);
 			var res = true;
@@ -486,31 +488,37 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				dragging = -1;
 			}
 			
-		} else {
-			var _mx = mouse_mxs;
-			var _my = mouse_mys;
-			var  x0 = x + ui(2);
-			var  y0 = y + ui(2);
-			var  x1 = x + w - ui(4);
-			var  y1 = y + h - ui(4);
-			
-			focusing = FOCUS == con;
-			
-			if(con && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-				HOVER    = con;
-				hovering = true;
-				
-				if(mouse_press(mb_any))
-					setFocus(con);
-				
-			} else {
-				for(var i = 0; i < array_length(childs); i++)
-					childs[i].stepBegin();
-			}
-			
+			return;
 		}
 		
-		// if(con == PANEL_GRAPH) print("GRAPH PANEL: ", focusing, typeof(FOCUS), instanceof(FOCUS), FOCUS == PANEL_GRAPH);
+		var _mx = mouse_mxs;
+		var _my = mouse_mys;
+		var  x0 = x + ui(2);
+		var  y0 = y + ui(2);
+		var  x1 = x + w - ui(4);
+		var  y1 = y + h - ui(4);
+		
+		if(con && point_in_rectangle(_mx, _my, x0, y0, x1, y1))
+			HOVER = con;
+			
+		for(var i = 0; i < array_length(childs); i++)
+			childs[i].stepBegin();
+	}
+	
+	function checkFocus() {
+		var con = getContent();
+		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
+		
+		if(HOVER == con) {
+			hovering = true;
+			if(mouse_press(mb_any)) setFocus(con);
+		}
+		
+		focusing    = FOCUS       == con;
+		prefocusing = FOCUS_PANEL == con;
+		
+		for(var i = 0; i < array_length(childs); i++)
+			childs[i].checkFocus();
 	}
 	
 	static step = function() {
@@ -1074,7 +1082,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(THEME_VALUE.panel_separation_type == "frame")
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS.panel_frame);
 		
-		if(focusing || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
+		if(focusing || prefocusing || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);
 		}
@@ -1370,9 +1378,10 @@ function setFocus(target) {
 	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusEnd")) || struct_has(FOCUS, "onFocusEnd")) 
 		FOCUS.onFocusEnd();
 	
-	// print("SET: ", typeof(target), instanceof(target), target == PANEL_GRAPH);
 	FOCUS     = target;
 	FOCUS_STR = target == noone? "" : (target[$ "context_str"] ?? "");
+	if(is(target, PanelContent))
+		FOCUS_PANEL = target;
 	
 	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusBegin")) || struct_has(FOCUS, "onFocusBegin")) 
 		FOCUS.onFocusBegin();

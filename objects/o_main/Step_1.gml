@@ -112,13 +112,14 @@ _FILE_DROPPED       = false;
 	if(mouse_release(mb_any)) DIALOG_CLICK = true;
 	
 	HOVER = noone;
-	with(_p_dialog)  checkMouse();
-	if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
+	with(_p_dialog) checkMouse();
+	if(PANEL_MAIN) PANEL_MAIN.stepBegin();
 	
 	DIALOG_DEPTH_HOVER = 0;
 	
 	with(o_pie_menu) checkFocus();
 	with(_p_dialog)  checkFocus();
+	if(PANEL_MAIN) PANEL_MAIN.checkFocus();
 	
 	with(o_pie_menu) checkDepth();
 	with(_p_dialog)  checkDepth();
