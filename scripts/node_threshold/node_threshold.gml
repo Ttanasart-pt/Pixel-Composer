@@ -45,6 +45,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Nodes
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -89,6 +90,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _shader = _algo == 1? sh_threshold_adaptive : sh_threshold;
 		surface_set_shader(_outSurf, _shader);
+			shader_set_i( "sampleMode", getAttribute("oversample"));
 			shader_set_dim(, _surf);
 			
 			shader_set_i("bright",           _bright                           );
