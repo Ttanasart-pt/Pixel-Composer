@@ -1979,7 +1979,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
-	static isArray = function(val) { return __array_get_depth(val) > array_depth + type_array; }
+	static isArray = function(val) { return array_get_depth(val) > array_depth + type_array; }
 	
 	__is_array     = false;
 	__array_length = -1;

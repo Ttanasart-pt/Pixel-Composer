@@ -10,8 +10,9 @@ function profile_message(_level, _text, _desc = "") constructor {
 	type  = "message";
 	level = _level; 
 	text  = _text;
-	node  = undefined;           static setNode = function(n) /*=>*/ { node = n; return self; }
-	icon  = THEME.noti_icon_log; static setIcon = function(i) /*=>*/ { icon = i; return self; }
+	node  = undefined; static setNode  = function(n) /*=>*/ { node  = n; return self; }
+	icon  = undefined; static setIcon  = function(i) /*=>*/ { icon  = i; return self; }
+	color = undefined; static setColor = function(i) /*=>*/ { color = i; return self; }
 	
 	desc  = _desc;
 }
@@ -30,6 +31,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		detail_w   = w - list_w - padding * 2 - ui(8);
 		content_h  = h - ui(40) - padding;
 		io_label_y = 0;
+		
+		width_resize   = false;
+		width_resize_m = 0;
+		width_resize_s = 0;
 	#endregion
 	
 	#region ---- render ----
@@ -233,8 +238,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        
 		        if(_draw) {
 		        	var _text = _report.text;
+			        var _icon = _report.icon? _report.icon : THEME.filter_log_level;
+			        var _icid = _report.icon? 0 : _report.level;
 			        
-		        	draw_sprite_ui(_report.icon, 0, ui(16), _cy, .75, .75, 0, COLORS._main_icon, 1);
+		        	draw_sprite_ui(_icon, _icid, ui(16), _cy, .75, .75, 0, COLORS._main_icon, 1);
 			        draw_set_text(f_p3, fa_left, fa_center, _sel? COLORS._main_text_accent : COLORS._main_text);
 			        draw_text_add(ui(32), _cy, _text);
 		        }
@@ -727,7 +734,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _by = _pd;
 		
 		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, $"Log level {show_log_level}", 
-			s_filter_log_level, show_log_level, COLORS._main_icon, 1, UI_SCALE) == 2)
+			THEME.filter_log_level, show_log_level, COLORS._main_icon, 1, .75) == 2)
 		    show_log_level = (show_log_level + 1) % 5;
 		_bx -= _bs + ui(4);
 		
@@ -746,7 +753,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		_bx -= _bs + ui(4);
 		
 		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render Print Flag", 
-			s_filter_log_level, 0, global.FLAG.render? COLORS._main_accent : COLORS._main_icon, 1, UI_SCALE) == 2)
+			THEME.filter_log_level, 0, global.FLAG.render? COLORS._main_accent : COLORS._main_icon, 1, .75) == 2)
 		    global.FLAG.render = !global.FLAG.render;
 		
 		_bx -= ui(4);
@@ -877,6 +884,29 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		sc_profile_detail.verify(detail_w - ui(8), content_h - ui(8)); 
 		sc_profile_detail.setFocusHover(pFOCUS, pHOVER);
 		sc_profile_detail.drawOffset(ndx + ui(4), ndy + ui(4), mx, my);
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		var resx = _pd + list_w + ui(4);
+		var resy = ui(44) + content_h / 2;
+		var resh = pHOVER && point_in_rectangle(mx, my, resx - ui(4), resy - ui(32), resx + ui(4), resy + ui(32));
+		
+		draw_set_color(resh? COLORS._main_icon_light : COLORS._main_icon);
+		draw_line(resx, resy - ui(16), resx, resy + ui(16));
+		
+		if(width_resize) {
+			var v = width_resize_s + (mx - width_resize_m);
+			list_w = clamp(round(v), ui(200), w * .8);
+			if(mouse_lrelease()) width_resize = false;
+			
+		} else {
+			if(resh && mouse_lpress(pFOCUS)) {
+				width_resize   = true;
+				width_resize_m = mx;
+				width_resize_s = list_w;
+			}
+			
+		}
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		

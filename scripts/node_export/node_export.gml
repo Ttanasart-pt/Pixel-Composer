@@ -846,10 +846,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			var _txt = $"Export {array_length(surf)} images complete.";
-			logNode(_txt);
 			
-			if(exportLog && form != NODE_EXPORT_FORMAT.animation)
+			if(exportLog && form != NODE_EXPORT_FORMAT.animation) {
 				notify(_txt, true, p);
+				logNode(_txt); 
+			}
 			
 		} else if(is_surface(surf)) {
 			var _pathDir = array_safe_get_fast(path, 0, path);
@@ -879,10 +880,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			var _txt = $"Export image at {p}";
-			logNode(_txt);
 			
-			if(exportLog && form != NODE_EXPORT_FORMAT.animation) 
+			if(exportLog && form != NODE_EXPORT_FORMAT.animation) {
 				notify(_txt, true, p);
+				logNode(_txt);
+			}
 		}
 		
 		// print($"    >> export frame {CURRENT_FRAME}");

@@ -3671,9 +3671,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _report = {};
 		
 		_report.search_res = true;
-		_report.type = "render";
-		_report.node = self;
-		_report.inputs  = array_create(array_length(inputs));
+		_report.type       = "render";
+		_report.node       = self;
+		_report.inputs     = array_create(array_length(inputs));
+		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _j = inputs[i];
 			_report.inputs[i] = _j.getValue();

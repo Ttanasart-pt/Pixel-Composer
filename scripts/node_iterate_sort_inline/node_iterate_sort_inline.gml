@@ -35,13 +35,10 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	static isActiveDynamic = function(frame = CURRENT_FRAME) {
 		for( var i = 0, n = array_length(nodes); i < n; i++ )
 			if(nodes[i].isActiveDynamic(frame)) return true;
-		
 		return false;
 	}
 	
-	static getNextNodes = function(checkLoop = false) {
-		return output_node.getNextNodes();
-	}
+	// static getNextNodes = function(checkLoop = false) { return output_node.getNextNodes(); }
 	
 	static refreshMember = function() {
 		nodes = [];
@@ -99,14 +96,16 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	}
 	
 	static compareValue = function(val1, val2) {
-		input_node.outputs[0].setValue(val1,,, false);
-		input_node.outputs[1].setValue(val2,,, false);
+		input_node.outputs[0].setValue(val1);
+		input_node.outputs[1].setValue(val2);
 		
 		resetRender(true);
-		RenderList(topoList);
+		// RenderList(topoList);
+		for( var i = 0, n = array_length(topoList); i < n; i++ ) 
+			topoList[i].doUpdate();
 		
 		var res = output_node.inputs[0].getValue();
-		//print($"Comparing value {val1}, {val2} > [{res}]");
+		// print($"Comparing value {val1}, {val2} > [{res}]");
 		
 		return res;
 	}
@@ -156,6 +155,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		arrOut = array_clone(arrIn);
 		
 		quickSort(arrOut, 0, array_length(arrOut) - 1);
+		
 		output_node.outputs[0].setValue(arrOut);
 	}
 	

@@ -4,11 +4,9 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDrawIcon();
 	
 	newInput( 0, nodeValue( "Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] )).setTypeBitmask(
-		1 << VALUE_TYPE.float   |
-		1 << VALUE_TYPE.integer |
-		1 << VALUE_TYPE.color
+		1 << VALUE_TYPE.float   | 1 << VALUE_TYPE.integer | 1 << VALUE_TYPE.color
 	).setVisible(true, true);
-	newInput( 1, nodeValue_EButton( "Order",  0, [ "Ascending", "Descending" ]       )).rejectArray();
+	newInput( 1, nodeValue_EButton( "Order",  0, [ "Ascending", "Descending" ] )).rejectArray();
 	// 2
 	
 	newOutput(0, nodeValue_Output("Sorted array", VALUE_TYPE.any,     [] ));
@@ -16,17 +14,14 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- Node
 	
-	sortable_types = [
-		VALUE_TYPE.float,
-		VALUE_TYPE.integer,
-		VALUE_TYPE.color,
-	]
+	sortable_types = [ VALUE_TYPE.float, VALUE_TYPE.integer, VALUE_TYPE.color, ]
 	
 	static sortAcs = function(v1, v2) { return v2.val - v1.val; }
 	static sortDes = function(v1, v2) { return v1.val - v2.val; }
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+		if(type == VALUE_TYPE.any) return;
 		if(!array_exists(sortable_types, type)) {
 			noti_warning($"Cannot sort {value_type_to_string(type)} data");
 			return;

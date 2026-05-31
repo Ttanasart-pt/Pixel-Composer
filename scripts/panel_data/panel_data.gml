@@ -963,7 +963,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					_tby += ui(20);
 				}
 				
-				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, fa_center, COLORS.panel_tab_text);
+				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, COLORS.panel_tab_text);
 				draw_text_transform_add(tc, _tby + ui(8), txt, 1, _left? 90 : -90);
 				
 				if(tab_hold_state == 0) {

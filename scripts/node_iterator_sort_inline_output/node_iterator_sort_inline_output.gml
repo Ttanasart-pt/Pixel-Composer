@@ -10,8 +10,10 @@ function Node_Iterator_Sort_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	inline_output        = false;
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue_Bool("Swap", false ))
-		.setVisible(true, true);
-		
+	newInput(0, nodeValue_Bool("Swap", false )).setVisible(true, true);
+	
 	newOutput(0, nodeValue_Output("Array out", VALUE_TYPE.any, [] ));
+	
+	static isRenderable = function() /*=>*/ {return true}; // Always true because the only way this function will be call is through [Node_Iterator_Sort_Inline_Input] getNextNodes. 
+	
 }

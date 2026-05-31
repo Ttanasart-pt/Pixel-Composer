@@ -11,16 +11,17 @@ function Node_Iterator_Sort_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 	inline_input         = false;
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] ))
-		.setVisible(true, true);
+	newInput( 0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] )).setVisible(true, true);
+	// 1
 	
-	newOutput(0, nodeValue_Output("Value 1", VALUE_TYPE.any, 0 ));
-	
-	newOutput(1, nodeValue_Output("Value 2", VALUE_TYPE.any, 0 ));
+	newOutput( 0, nodeValue_Output("Value 1", VALUE_TYPE.any, 0 ));
+	newOutput( 1, nodeValue_Output("Value 2", VALUE_TYPE.any, 0 ));
 	
 	startSort = false;
 	
 	static onGetPreviousNodes = function(arr) /*=>*/ { array_push(arr, loop); }
+	
+	static getNextNodes = function(checkLoop = false) { return [ loop.output_node ]; }
 	
 	static update = function() {
 		if(startSort) {

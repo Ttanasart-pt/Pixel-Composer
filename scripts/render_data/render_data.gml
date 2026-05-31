@@ -290,7 +290,7 @@ enum RENDER_TYPE {
 					if(renderable) {
 						var render_pt = get_timer();
 						
-						// if(rendering.name == "Export") print($" >>> Rendering: {rendering.name}");
+						// print($" >>> Rendering: {rendering.name}");
 						
 						rendering.doUpdate(); 
 						render_time += get_timer() - render_pt;
@@ -298,13 +298,14 @@ enum RENDER_TYPE {
 						
 						var nextNodes = rendering.getNextNodes();
 						
+						// print($"     > nextNodes: {nextNodes}");
+						
 						for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
 							var nextNode = nextNodes[i];
+							// print($"→→ Push {nextNode.internalName} to queue [{nextNode.isRenderable()}].");
 							if(!is(nextNode, __Node_Base) || !nextNode.isRenderable()) continue;
 							
-							// print($"→→ Push {nextNode.internalName} to queue.");
 							array_push(renderQueue, nextNode);
-							
 							if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
 						}
 						
@@ -442,10 +443,8 @@ enum RENDER_TYPE {
 			__renderListReset(arr);
 			
 			// get leaf node
-			for( var i = 0, n = array_length(arr); i < n; i++ ) {
-				var _node = arr[i];
-				_node.passiveDynamic = false;
-			}
+			for( var i = 0, n = array_length(arr); i < n; i++ )
+				arr[i].passiveDynamic = false;
 			
 			for( var i = 0, n = array_length(arr); i < n; i++ ) {
 				var _node = arr[i];
