@@ -90,12 +90,12 @@
             var arr = [ MENU_ITEMS.addons, -1 ];
             
             for( var i = 0, n = array_length(ADDONS); i < n; i++ )
-                array_push(arr, menuItem(ADDONS[i].name, function(d) /*=>*/ {return d.trigger()}).setParam(ADDONS[i]));
+                array_push(arr, menuItem(ADDONS[i].name, function(d) /*=>*/ {return d.trigger(true)}).setParam(ADDONS[i]));
             
             return submenuCall(_dat, arr);
         }).setMenu("addon_menu", THEME.addon_icon, true)
         
-        registerFunction("", "Toggle Recording",   "R", MOD_KEY.shift | MOD_KEY.alt, toggleRecording          ).setMenu("toggle_recording")
+        registerFunction("", "Toggle Recording",   "R", MOD_KEY.shift | MOD_KEY.alt, toggleRecording ).setMenu("toggle_recording")
     }
 #endregion
 

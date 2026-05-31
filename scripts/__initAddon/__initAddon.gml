@@ -48,9 +48,9 @@ function addonWrapper(_name) constructor {
 		return true;
 	}
 	
-	static trigger = function() /*=>*/ {
+	static trigger = function(_openDialog = false) /*=>*/ {
 		if(isActivated()) deactivate();
-		else activate();
+		else activate(_openDialog);
 		return self;
 	}
 }

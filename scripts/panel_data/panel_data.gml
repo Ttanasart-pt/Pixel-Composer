@@ -1375,7 +1375,7 @@ function PanelContent() constructor {
 function setFocusString(_str) { FOCUS_STR = _str; }
 function setFocus(target) {
 	setFocusString(target == noone? "" : (target[$ "context_str"] ?? ""));
-	if(FOCUS == target) return;
+	// if(FOCUS == target) return;
 	
 	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusEnd")) || struct_has(FOCUS, "onFocusEnd")) 
 		FOCUS.onFocusEnd();

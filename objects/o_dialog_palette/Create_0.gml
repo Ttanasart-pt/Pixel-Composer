@@ -147,7 +147,7 @@ function __PaletteColor(_color = c_black) constructor {
 			var bx = _x + ww - ui(2) - bs;
 			var by = _y + ui(2);
 			
-			if(p != projectPal) {
+			if(p != projectPal && has(p, "fav")) {
 				var fv = p[$ "fav"] ?? false;
 				var bt = __txt("Favorite");
 				var bc = fv? CDEF.yellow : COLORS._main_icon;
