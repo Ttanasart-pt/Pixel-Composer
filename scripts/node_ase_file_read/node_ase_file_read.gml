@@ -51,7 +51,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	b_set_frame  = button(function() /*=>*/ {return setFrames()}).setText("Match Animation Length")
 	b_gen_layer  = button(function() /*=>*/ {return refreshLayers()}).setIcon(THEME.generate_layers).iconPad().setTooltip("Generate Layers");
-	b_tag_import = button(function() /*=>*/ {return importTags()}).setIcon(THEME.tag_24).iconPad().setTooltip("Import Tags as Regions");
+	b_tag_import = button(function() /*=>*/ {return importTags(!key_mod_press(SHIFT))}).setIcon(THEME.tag_24).iconPad()
+		.setTooltip(function() /*=>*/ {return key_mod_press(SHIFT)? "Import Tags as new Regions" : "Import Tags as Regions (match name)"});
 	
 	hold_visibility = true;
 	hold_loop       = true;
@@ -382,19 +383,30 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		triggerRender();
 	}
 	
-	function importTags() {
+	function importTags(_matchName = false) {
+		var _reg = PROJECT.animationRegions;
+		
 		for( var i = 0, n = array_length(tags); i < n; i++ ) {
 			var _t = tags[i];
+			var _region = undefined;
+			var tName   = _t[$ "Name"] ?? "region";
 			
-			var _region  = new animationRegion();
-    	
-	    	_region.label      =  _t[$ "Name"]  ?? "region";
+			if(_matchName)
+			for( var j = 0, m = array_length(_reg); j < m; j++ )
+				if(_reg[j].label == tName) _region = _reg[j];
+    		
+    		if(_region == undefined) {
+    			_region = new animationRegion();
+    			PROJECT.addRegion(_region, false);
+    		}
+    		
+	    	_region.label      = tName;
 			_region.color      =  _t[$ "Color"] ?? c_white;
 			_region.frameStart = (_t[$ "Frame start"] ?? 0) + 1;
 			_region.frameEnd   = (_t[$ "Frame end"]   ?? 0) + 1;
-			
-	    	PROJECT.addRegion(_region);
 		}
+		
+		PROJECT.regionUpdate();
 	}
 	
 	function updatePaths(path = path_current) { 

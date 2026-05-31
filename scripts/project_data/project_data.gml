@@ -629,9 +629,9 @@ function Project() constructor {
 	animationRegions       = [];
 	animationRegionDisplay = [];
 	
-	static addRegion = function(_reg) {
+	static addRegion = function(_reg, _update = true) {
 		array_push(animationRegions, _reg);
-    	regionUpdate();
+    	if(_update) regionUpdate();
 	}
 	
 	static regionUpdate = function() {

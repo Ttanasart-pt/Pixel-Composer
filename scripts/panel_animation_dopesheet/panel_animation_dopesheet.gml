@@ -2799,7 +2799,7 @@ function Panel_Animation_Dopesheet() {
             
             dopesheet_y_max = max(0, dopesheet_y_max - dopesheet_h + ui(48));
             
-    		BLEND_ADD draw_set_alpha(.15);
+    		BLEND_ADD draw_set_alpha(.08);
             for( var i = 0, n = array_length(PROJECT.animationRegions); i < n; i++ ) {
             	var _reg = PROJECT.animationRegions[i]; 
             	var _col = _reg.color;

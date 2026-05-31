@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3",
+    "changes": [
+      {
+        "date": "2026-05-31T06:09:34.245Z",
+        "node": "ASE File In",
+        "commit": "**ASE File In**: Tag import now match name to already existed regions."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.007",
     "changes": [
       {
