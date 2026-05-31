@@ -115,6 +115,7 @@
         registerFunction(an, "Transfer Easing",      "",  n, panel_animation_transfer_ease        ).setMenu("animation_transfer_ease"   )
         
         registerFunction(an, "Create Region",        "",  n, panel_animation_region_create        ).setMenu("animation_region_create"   )
+        registerFunction(an, "Remove All Regions",   "",  n, panel_animation_region_clear         ).setMenu("animation_region_clear"   )
         
         registerFunction(an, "Toggle Hidden",      "S", s,  panel_animation_show_hidden    )
         	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
@@ -2799,7 +2800,7 @@ function Panel_Animation_Dopesheet() {
             
             dopesheet_y_max = max(0, dopesheet_y_max - dopesheet_h + ui(48));
             
-    		BLEND_ADD draw_set_alpha(.08);
+    		BLEND_ADD draw_set_alpha(.05);
             for( var i = 0, n = array_length(PROJECT.animationRegions); i < n; i++ ) {
             	var _reg = PROJECT.animationRegions[i]; 
             	var _col = _reg.color;
@@ -2824,8 +2825,9 @@ function Panel_Animation_Dopesheet() {
                 drawFrameLine(bar_frame, ui(16), dopesheet_h, COLORS.panel_animation_frame_divider, _aa);
             }
             
-            drawFrameLine(GLOBAL_TOTAL_FRAMES, ui(16), dopesheet_h, COLORS.panel_animation_end_line, .5);
-            drawFrameLine(0,            ui(16), dopesheet_h, COLORS.panel_animation_end_line, .5);
+            var _total = GLOBAL_TOTAL_FRAMES;
+            drawFrameLine(_total, ui(16), dopesheet_h, COLORS.panel_animation_end_line, .5);
+            drawFrameLine(0,      ui(16), dopesheet_h, COLORS.panel_animation_end_line, .5);
         #endregion
         
         var key_hover = drawDopesheet_Graph();

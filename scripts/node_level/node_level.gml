@@ -11,29 +11,27 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(6, 10); // inputs 10, 11
 	
 	////- =Brightness
-	newInput( 1, nodeValue_Slider_Range( "White in",  [0,1] )).setPieMenu();
-	newInput(12, nodeValue_Slider_Range( "White out", [0,1] )).setPieMenu();
+	newInput( 1, nodeValue_SliRange( "White in",  [0,1] )).setPieMenu();
+	newInput(12, nodeValue_SliRange( "White out", [0,1] )).setPieMenu();
 	
 	////- =Red
-	newInput( 2, nodeValue_Slider_Range( "Red in",    [0,1] ));
-	newInput(13, nodeValue_Slider_Range( "Red out",   [0,1] ));
+	newInput( 2, nodeValue_SliRange( "Red in",    [0,1] ));
+	newInput(13, nodeValue_SliRange( "Red out",   [0,1] ));
 	
 	////- =Green
-	newInput( 3, nodeValue_Slider_Range( "Green in",  [0,1] ));
-	newInput(14, nodeValue_Slider_Range( "Green out", [0,1] ));
+	newInput( 3, nodeValue_SliRange( "Green in",  [0,1] ));
+	newInput(14, nodeValue_SliRange( "Green out", [0,1] ));
 	
 	////- =Blue
-	newInput( 4, nodeValue_Slider_Range( "Blue in",   [0,1] ));
-	newInput(15, nodeValue_Slider_Range( "Blue out",  [0,1] ));
+	newInput( 4, nodeValue_SliRange( "Blue in",   [0,1] ));
+	newInput(15, nodeValue_SliRange( "Blue out",  [0,1] ));
 	
 	////- =Alpha
-	newInput( 5, nodeValue_Slider_Range( "Alpha in",  [0,1] ));
-	newInput(16, nodeValue_Slider_Range( "Alpha out", [0,1] ));
+	newInput( 5, nodeValue_SliRange( "Alpha in",  [0,1] ));
+	newInput(16, nodeValue_SliRange( "Alpha out", [0,1] ));
 	// inputs 17
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	attribute_surface_depth();
 	
 	b_auto_l = button(function() /*=>*/ {return normalize()}).setText("Auto Brightness");
 	
@@ -55,28 +53,25 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		draw_rectangle(x0, y0, x0 + max(0, _wmin) * _w, y1, false);
 		draw_rectangle(x0 + min(1, _wmax) * _w, y0, x1, y1, false);
 		
-		for( var i = 0; i < 4; i++ ) {
-			var _bx = x1 - 20 - i * 24;
-			var _by = y0;
-			
-			if(buttonInstant(THEME.button_hide_fill, _bx, _by, 20, 20, _m, _hover, _focus) == 2) 
-				histShow[i] = !histShow[i];
-				
-			draw_sprite_ui_uniform(THEME.circle, 0, _bx + 10, _by + 10, 1, COLORS.histogram[i], 0.5 + histShow[i] * 0.5);
-		}
-		
-		if(histMax > 0)
-			histogramDraw(x0, y1, _w, _h);
-
+		if(histMax > 0) histogramDraw(x0, y1, _w, _h);
 		draw_set_color(COLORS.node_level_outline);
 		draw_rectangle(x0, y0, x1, y1, true);
+		
+		for( var i = 0; i < 4; i++ ) {
+			var _bx = x1 - ui(20) - i * ui(24);
+			var _by = y0;
+			
+			if(buttonInstant(THEME.button_hide_fill, _bx, _by, ui(20), ui(20), _m, _hover, _focus) == 2) 
+				histShow[i] = !histShow[i];
+			draw_sprite_ui_uniform(THEME.circle, 0, _bx + ui(10), _by + ui(10), 1, COLORS.histogram[i], 0.5 + histShow[i] * 0.5);
+		}
 		
 		var _x0 = x0 + _wh[0] * _w;
 		var _x1 = x0 + _wh[1] * _w;
 		
 		var _hv = noone;
-		if(_hover && abs(_m[0] - _x0) < ui(4)) _hv = 0;
-		if(_hover && abs(_m[0] - _x1) < ui(4)) _hv = 1;
+		if(_hover && _m[1] >= y0 && _m[1] <= y1 && abs(_m[0] - _x0) < ui(4)) _hv = 0;
+		if(_hover && _m[1] >= y0 && _m[1] <= y1 && abs(_m[0] - _x1) < ui(4)) _hv = 1;
 		
 		if(level_dragging != noone) {
 			var _v   = [_wh[0], _wh[1]];
@@ -89,16 +84,10 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				level_dragging = noone;
 				UNDO_HOLDING   = false;
 			}
-			
-			draw_set_color(COLORS._main_accent);
-			if(level_dragging == 0) draw_line_width(_x0, y0, _x0, y1, 2);
-			if(level_dragging == 1) draw_line_width(_x1, y0, _x1, y1, 2);
-			
-		} else {
-			draw_set_color(COLORS._main_icon);
-			if(_hv == 0) draw_line_width(_x0, y0, _x0, y1, 2);
-			if(_hv == 1) draw_line_width(_x1, y0, _x1, y1, 2);
 		}
+		
+		draw_set_color(level_dragging == 0? COLORS._main_accent : COLORS._main_icon); draw_line_width(_x0, y0, _x0, y1, 1 + (_hv == 0 || level_dragging == 0));
+		draw_set_color(level_dragging == 1? COLORS._main_accent : COLORS._main_icon); draw_line_width(_x1, y0, _x1, y1, 1 + (_hv == 1 || level_dragging == 1));
 		
 		if(_hv != noone) {
 			if(mouse_lpress(_focus)) {
@@ -116,10 +105,10 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		level_renderer, 
 		["Surfaces",    true ], 0, 6, 7, 10, 11,
 		["Brightness", false ], 1, 12, b_auto_l, 
-		["Red",        false ], 2, 13, 
-		["Green",      false ], 3, 14,  
-		["Blue",       false ], 4, 15, 
-		["Alpha",      false ], 5, 16, 
+		["Red",         true ], 2, 13, 
+		["Green",       true ], 3, 14,  
+		["Blue",        true ], 4, 15, 
+		["Alpha",       true ], 5, 16, 
 	];
 	
 	histogramInit();
@@ -135,6 +124,8 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	}
 	
 	////- Nodes
+	
+	attribute_surface_depth();
 	
 	static onInspect = function() {
 		if(array_length(current_data) > 0)

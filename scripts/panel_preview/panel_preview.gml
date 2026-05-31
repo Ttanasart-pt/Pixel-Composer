@@ -418,6 +418,9 @@ function Panel_Preview() : PanelContent() constructor {
         zoom_slide = false;
         zoom_mx    = 0;
         zoom_sx    = 0;
+        
+        preview_action_y     = 0;
+        preview_action_y_to  = 0;
     #endregion
     
     #region ---- tool ----
@@ -3417,29 +3420,38 @@ function Panel_Preview() : PanelContent() constructor {
         if(toolbar_right < toolbar_left) return;
         
         tbx = toolbar_right - bs;
-        gpu_set_scissor(toolbar_left, ty, w - toolbar_left, toolbar_height);
-        var hov = pHOVER && point_in_rectangle(mx, my, toolbar_left, ty, w, h);
+        gpu_set_scissor(toolbar_left, ty, toolbar_right - toolbar_left, toolbar_height);
+        var hov = pHOVER && point_in_rectangle(mx, my, toolbar_left, ty, toolbar_right, h);
+        
+        var bx = tbx + preview_action_y;
+        var by = tby - bs / 2;
+        var actW = 0;
         
         var _action_b = menuItems_gen("preview_actions");
         for( var i = 0, n = array_length(_action_b); i < n; i++ ) {
         	var _menu = _action_b[i];
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
-				var lx = tbx - ui(4);
+				var lx = bx - ui(4);
 				if(_spFrm) draw_line_width( lx, ty + ui(4), lx, h - ui(4), 2);
 				else       draw_line(       lx, ty,         lx, h - 1);
 				
-				tbx -= ui(8);
+				actW += ui(8);
+				bx   -= ui(8);
 				continue;
 			} 
 			
-			var bx = tbx;
-            var by = tby - bs / 2;
-            
 			_menu.draw(bx, by, bs, bs, _m, hov, foc, _toolbars);
-			tbx -= bs + ui(2);
+			actW += bs + ui(2);
+			bx   -= bs + ui(2);
         }
         
+        tbx -= actW;
+        
+        var actMax = max(0, toolbar_left - tbx);
+        if(hov) preview_action_y_to += MOUSE_WHEEL * (bs + ui(2));
+        preview_action_y_to = clamp(preview_action_y_to, 0, actMax);
+        preview_action_y    = lerp_float(preview_action_y, preview_action_y_to, 5);
         gpu_set_scissor(scs);
         
         var _lx = max(toolbar_left, tbx + bs - ui(2));
@@ -3734,7 +3746,7 @@ function Panel_Preview() : PanelContent() constructor {
 	    	selection_y1 = _py1;
 	    	
 	    	var _dragDist = point_distance(selection_sx, selection_sy, selection_mx, selection_my);
-        	if(_dragDist > ui(16)) selection_selecting = max(selection_selecting, 2);
+        	if(_dragDist > ui(32)) selection_selecting = max(selection_selecting, 2);
         	
     		if(selection_selecting > 1)
     			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
