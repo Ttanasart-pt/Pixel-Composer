@@ -972,10 +972,17 @@ function Panel_Inspector() : PanelContent() constructor {
                 var togl = array_safe_get_fast(jun, 2, noone);
                 var righ = array_safe_get_fast(jun, 3, noone);
                 
-                var lbw = con_w - (subk * ui(2)) - (togl != noone) * (segHei + segPad) - (righ != noone) * ui(32);
-                var lbx = _x    + (subk * ui(2)) + (togl != noone) * (segHei + segPad);
-                var lbh = segHei - subk * ui(6);
-                
+                if(subk) {
+                	var lbw = con_w  - ui(2) - (togl != noone) * (segHei - ui(8)) - (righ != noone) * ui(24);
+	                var lbx = _x     + ui(2) + (togl != noone) * (segHei - ui(8));
+	                var lbh = segHei - ui(6);
+	                
+                } else {
+                	var lbw = con_w - (togl != noone) * (segHei + segPad) - (righ != noone) * ui(32);
+	                var lbx = _x    + (togl != noone) * (segHei + segPad);
+	                var lbh = segHei;
+                }
+	                
                 #region Draw Base 
 	                var hov = _hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh);
                 	var scw = con_w - lbx;
@@ -1052,23 +1059,28 @@ function Panel_Inspector() : PanelContent() constructor {
 		                var toging = togl != noone? _inspecting.getInputData(togl) : false;
 		                if(is_array(toging)) toging = false;
 	                
-	                	var jun = _inspecting.inputs[togl];
-	                	var hov = _hover && point_in_rectangle(_m[0], _m[1], _x, yy, lbh, yy + lbh);
+	                	var tgx = _x + subk * ui(6);
+	                	var tgy = yy;
+	                	var tgp = subk? ui(3) : ui(4);
+	                
+	                	var jun   = _inspecting.inputs[togl];
+	                	var tgHov = _hover && point_in_rectangle(_m[0], _m[1], tgx, tgy, tgx + lbh, tgy + lbh);
 	                	
-	                    draw_sprite_stretched_ext(THEME.section_separator, 0, _x, yy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
-	                    if(hov) {
-	                        draw_sprite_stretched_ext(THEME.section_separator, 1, _x, yy, lbh, lbh, COLORS.section_hover);
+	                    draw_sprite_stretched_ext(THEME.section_separator, 0, tgx, tgy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
+	                    if(tgHov) {
+	                        draw_sprite_stretched_ext(THEME.section_separator, 1, tgx, tgy, lbh, lbh, COLORS.section_hover);
 	                        contentPane.hover_content = true;
+	                    	hov = false;
 	                        
-	                        if(mouse_lpress( pFOCUS)) jun.setValue(!toging);
+	                        if(mouse_lpress(pFOCUS)) jun.setValue(!toging);
 	                        if(mouse_rpress(pFOCUS)) propRightClick(jun);
 	                    }
 	                    
 	                    cc = toging? COLORS._main_accent : COLORS.section_bg;
 	                    aa = 0.5 + toging * 0.5;
 	                    
-	                               draw_sprite_stretched_ext(THEME.box_r2, 1, _x + ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
-	                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, _x + ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
+	                               draw_sprite_stretched_ext(THEME.box_r2, 1, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
+	                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
 	                }
 	            #endregion
 	            

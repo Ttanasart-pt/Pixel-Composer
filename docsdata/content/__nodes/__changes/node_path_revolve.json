@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.2.010",
+    "changes": [
+      {
+        "date": "2026-05-31T02:12:35.393Z",
+        "node": "Palette Selector",
+        "commit": "**Palette Selector**: Fix crash when opening recents folder."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.006",
     "changes": [
       {

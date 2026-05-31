@@ -48,7 +48,11 @@ varying vec2 v_vTexcoord;
 
 uniform vec2 uvP;
 uniform vec2 uvS;
+uniform vec2 trimRange;
 
 void main() {
-	gl_FragColor = sampleTexture(gm_BaseTexture, fract((v_vTexcoord - uvP) * uvS));
+	vec2 tex = fract((v_vTexcoord - uvP) * uvS);
+	tex.y = mix(trimRange.x, trimRange.y, tex.y);
+	
+	gl_FragColor = sampleTexture(gm_BaseTexture, tex);
 }

@@ -3673,7 +3673,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        } else {
 	        	var hv = pHOVER && point_in_rectangle(mx, my, _zmx - _zmw, _zmy, _zmx, _zmy + _zmh);
     			if(hv) mouse_on_graph = false;
-	        			
+    			
 	        	draw_sprite_stretched_ext(ls, hv, _zmx - _zmw, _zmy, _zmw, _zmh, hv? CDEF.main_mdwhite : lc, .8 + hv * .2);
 	        	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text_inner);
 		        draw_text_add(_zmx - ui(4), _zmy + _zmh/2, _zms);
@@ -3698,6 +3698,26 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        if(zoom_slide && mouse_lrelease())
         		zoom_slide = 0;
+        	_zmx -= _zmw + ui(2);
+        		
+        	if(FILTER_ANIMATION) {
+        		draw_set_text(f_p4, fa_right, fa_center);
+        		var _txt = __txt("Filtering Animaion");
+        		var _zmw = string_width(_txt) + ui(8);
+        		
+        		var hv = pHOVER && point_in_rectangle(mx, my, _zmx - _zmw, _zmy, _zmx, _zmy + _zmh);
+    			
+	        	draw_sprite_stretched_ext(ls, 0, _zmx - _zmw, _zmy, _zmw, _zmh, hv? CDEF.main_mdwhite : lc, .8 + hv * .2);
+        		draw_sprite_stretched_ext(THEME.box_r5, 1, _zmx - _zmw, _zmy, _zmw, _zmh, COLORS._main_value_positive, .75 + .25 * hv);
+    			if(hv) mouse_on_graph = false;
+	        	
+	        	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_value_positive);
+		        draw_text_add(_zmx - ui(4), _zmy + _zmh/2, _txt);
+		        
+		        if(hv && mouse_lpress(pFOCUS)) FILTER_ANIMATION = false;
+		        _zmx -= _zmw + ui(2);
+        		
+        	}
         }
         
         

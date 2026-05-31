@@ -29,19 +29,37 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Rendering
 	newInput(17, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
-	newInput( 2, nodeValue_Surface( "Texture" ));
-	newInput(12, nodeValue_Vec2(    "UV Position", [0,0] ));
-	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1] ));
-	// input 22
+	newInput( 2, nodeValue_Surface( "Texture"             ));
+	newInput(12, nodeValue_Vec2(    "UV Position", [0,0]  ));
+	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1]  ));
+	newInput(30, nodeValue_Bool(    "Scale to Path Range", false ));
+	
+	////- =Caps
+	
+		////- =/Start Caps
+	newInput(22, nodeValue_Bool(    "Start Cap",  false                                  ));
+	newInput(26, nodeValue_EButton( "Draw Order", 1, [ "Front", "Back" ]                 ));
+	newInput(23, nodeValue_Surface( "Texture"                                            ));
+	newInput(28, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
+	
+		////- =/End Caps
+	newInput(25, nodeValue_Bool(    "End Cap",    false                                  ));
+	newInput(27, nodeValue_EButton( "Draw Order", 0, [ "Front", "Back" ]                 ));
+	newInput(24, nodeValue_Surface( "Texture"                                            ));
+	newInput(29, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
+	// input 31
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Output",    false ],  1, 
-		[ "Paths",     false ],  0, 14,  4,  5,  7, 
-		[ "Revolve",   false ],  8,  9, 11, 13, 10, 15, 16,  3, 
-		[ "Transform", false ], 18, 19, 20, 21, 
-		[ "Rendering", false ], 17,  2, 12,  6, 
+		[ "Output",          false ],  1, 
+		[ "Paths",           false ],  0, 14,  4,  5,  7, 
+		[ "Revolve",         false ],  8,  9, 11, 13, 10, 15, 16,  3, 
+		[ "Transform",       false ], 18, 19, 20, 21, 
+		[ "Rendering",       false ], 17,  2, 12,  6, 30, 
+		[ "Caps",             true ], 
+			[ "/Start Caps", false, 22 ], 26, 23, 28, 
+			[ "/End Caps",   false, 25 ], 27, 24, 29, 
 	];
 	
 	////- Node
@@ -101,6 +119,20 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _surf = getInputData( 2);
 			var _uvP  = getInputData(12);
 			var _uvS  = getInputData( 6);
+			var _uvSP = getInputData(30);
+			
+			var _caps = getInputData(22);
+			var _scOr = getInputData(26);
+			var _scTx = getInputData(23);
+			var _scBl = getInputData(28);
+			
+			var _cape = getInputData(25);
+			var _ecOr = getInputData(27);
+			var _ecTx = getInputData(24);
+			var _ecBl = getInputData(29);
+			
+			inputs[23].setVisible(true, _caps);
+			inputs[24].setVisible(true, _cape);
 			
 			if(!is_path(_path)) return;
 		#endregion
@@ -157,16 +189,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		surface_set_shader(_outSurf, sh_path_map_render, true, BLEND.normal);
 			shader_set_interpolation(_surf);
-			
-			switch(_blnd) {
-				case 0 : BLEND_NORMAL; break;
-				case 1 : BLEND_ADD;    break;
-				case 2 : BLEND_MAX;    break;
-			}
-			
 			draw_set_color(c_white);
-			shader_set_2("uvP", _uvP);
-			shader_set_2("uvS", _uvS);
 			
 			var ancx = _anc[0] * _dim[0];
 			var ancy = _anc[1] * _dim[1];
@@ -178,11 +201,96 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			);
 			matrix_set(matrix_world, trans);
 			
-			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
-				var ast = _dir + 90 + _shf + _rev[0];
-				var aed = _dir + 90 + _shf + _rev[1];
-				var stp = 1 / _sub;
+			var ast = _dir + 90 + _shf + _rev[0];
+			var aed = _dir + 90 + _shf + _rev[1];
+			var stp = 1 / _sub;
+		
+			shader_set_2("uvP",       [1,1]);
+			shader_set_2("uvS",       [1,1]);
+			shader_set_2("trimRange", [0,1]);
 			
+			if(_caps && _scOr == 1) { // start cap
+				switch(_scBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+				draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_scTx));
+				for( var j = 0; j < _sub; j++ ) {
+					var a0 = lerp(ast, aed, (j+0) * stp);
+					var a1 = lerp(ast, aed, (j+1) * stp);
+					
+					var sc0 = _scal * (_scaleCurve? _scaleCurve.getFast((j+0) * stp) : 1);
+					var sc1 = _scal * (_scaleCurve? _scaleCurve.getFast((j+1) * stp) : 1);
+					
+					var p0 = _pnt[0];
+					
+					var p0dx = lengthdir_x(p0[4], a0) * sc0;
+					var p0dy = lengthdir_y(p0[4], a0) * sc0;
+					
+					var p0x = p0[2] + p0dx * rax + p0dy * rbx;
+					var p0y = p0[3] + p0dx * ray + p0dy * rby;
+					
+					var p1dx = lengthdir_x(p0[4], a1) * sc1;
+					var p1dy = lengthdir_y(p0[4], a1) * sc1;
+					
+					var p1x = p0[2] + p1dx * rax + p1dy * rbx;
+					var p1y = p0[3] + p1dx * ray + p1dy * rby;
+					
+					var p0u = .5 + lengthdir_x(.5, a0);
+					var p0v = .5 + lengthdir_y(.5, a0);
+					var p1u = .5 + lengthdir_x(.5, a1);
+					var p1v = .5 + lengthdir_y(.5, a1);
+					
+					draw_vertex_texture(p0x,   p0y,   p0u, p0v);
+					draw_vertex_texture(p0[2], p0[3], .5,  .5 );
+					draw_vertex_texture(p1x,   p1y,   p1u, p1v);
+				
+				}
+				draw_primitive_end();
+				BLEND_NORMAL
+			}
+			
+			if(_cape && _ecOr == 1) { // end cap
+				switch(_ecBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+				draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_ecTx));
+				for( var j = 0; j < _sub; j++ ) {
+					var a0 = lerp(ast, aed, (j+0) * stp);
+					var a1 = lerp(ast, aed, (j+1) * stp);
+					
+					var sc0 = _scal * (_scaleCurve? _scaleCurve.getFast((j+0) * stp) : 1);
+					var sc1 = _scal * (_scaleCurve? _scaleCurve.getFast((j+1) * stp) : 1);
+					
+					var p0 = _pnt[_pres - 1];
+					
+					var p0dx = lengthdir_x(p0[4], a0) * sc0;
+					var p0dy = lengthdir_y(p0[4], a0) * sc0;
+					
+					var p0x = p0[2] + p0dx * rax + p0dy * rbx;
+					var p0y = p0[3] + p0dx * ray + p0dy * rby;
+					
+					var p1dx = lengthdir_x(p0[4], a1) * sc1;
+					var p1dy = lengthdir_y(p0[4], a1) * sc1;
+					
+					var p1x = p0[2] + p1dx * rax + p1dy * rbx;
+					var p1y = p0[3] + p1dx * ray + p1dy * rby;
+					
+					var p0u = .5 + lengthdir_x(.5, a0);
+					var p0v = .5 + lengthdir_y(.5, a0);
+					var p1u = .5 + lengthdir_x(.5, a1);
+					var p1v = .5 + lengthdir_y(.5, a1);
+					
+					draw_vertex_texture(p0x,   p0y,   p0u, p0v);
+					draw_vertex_texture(p0[2], p0[3], .5,  .5 );
+					draw_vertex_texture(p1x,   p1y,   p1u, p1v);
+				
+				}
+				draw_primitive_end();
+				BLEND_NORMAL
+			}
+			
+			shader_set_2("uvP",       _uvP);
+			shader_set_2("uvS",       _uvS);
+			shader_set_2("trimRange", _uvSP? _prng : [0,1]);
+			
+			switch(_blnd) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
 				for( var j = 0; j < _sub; j++ ) {
 					var a0 = lerp(ast, aed, (j+0) * stp);
 					var a1 = lerp(ast, aed, (j+1) * stp);
@@ -239,6 +347,87 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					}
 				}
 			draw_primitive_end();
+			BLEND_NORMAL
+			
+			shader_set_2("uvP",       [1,1]);
+			shader_set_2("uvS",       [1,1]);
+			shader_set_2("trimRange", [0,1]);
+			
+			if(_caps && _scOr == 0) { // start cap
+				switch(_scBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+				draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_scTx));
+				for( var j = 0; j < _sub; j++ ) {
+					var a0 = lerp(ast, aed, (j+0) * stp);
+					var a1 = lerp(ast, aed, (j+1) * stp);
+					
+					var sc0 = _scal * (_scaleCurve? _scaleCurve.getFast((j+0) * stp) : 1);
+					var sc1 = _scal * (_scaleCurve? _scaleCurve.getFast((j+1) * stp) : 1);
+					
+					var p0 = _pnt[0];
+					
+					var p0dx = lengthdir_x(p0[4], a0) * sc0;
+					var p0dy = lengthdir_y(p0[4], a0) * sc0;
+					
+					var p0x = p0[2] + p0dx * rax + p0dy * rbx;
+					var p0y = p0[3] + p0dx * ray + p0dy * rby;
+					
+					var p1dx = lengthdir_x(p0[4], a1) * sc1;
+					var p1dy = lengthdir_y(p0[4], a1) * sc1;
+					
+					var p1x = p0[2] + p1dx * rax + p1dy * rbx;
+					var p1y = p0[3] + p1dx * ray + p1dy * rby;
+					
+					var p0u = .5 + lengthdir_x(.5, a0);
+					var p0v = .5 + lengthdir_y(.5, a0);
+					var p1u = .5 + lengthdir_x(.5, a1);
+					var p1v = .5 + lengthdir_y(.5, a1);
+					
+					draw_vertex_texture(p0x,   p0y,   p0u, p0v);
+					draw_vertex_texture(p0[2], p0[3], .5,  .5 );
+					draw_vertex_texture(p1x,   p1y,   p1u, p1v);
+				
+				}
+				draw_primitive_end();
+				BLEND_NORMAL
+			}
+			
+			if(_cape && _ecOr == 0) { // end cap
+				switch(_ecBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+				draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_ecTx));
+				for( var j = 0; j < _sub; j++ ) {
+					var a0 = lerp(ast, aed, (j+0) * stp);
+					var a1 = lerp(ast, aed, (j+1) * stp);
+					
+					var sc0 = _scal * (_scaleCurve? _scaleCurve.getFast((j+0) * stp) : 1);
+					var sc1 = _scal * (_scaleCurve? _scaleCurve.getFast((j+1) * stp) : 1);
+					
+					var p0 = _pnt[_pres - 1];
+					
+					var p0dx = lengthdir_x(p0[4], a0) * sc0;
+					var p0dy = lengthdir_y(p0[4], a0) * sc0;
+					
+					var p0x = p0[2] + p0dx * rax + p0dy * rbx;
+					var p0y = p0[3] + p0dx * ray + p0dy * rby;
+					
+					var p1dx = lengthdir_x(p0[4], a1) * sc1;
+					var p1dy = lengthdir_y(p0[4], a1) * sc1;
+					
+					var p1x = p0[2] + p1dx * rax + p1dy * rbx;
+					var p1y = p0[3] + p1dx * ray + p1dy * rby;
+					
+					var p0u = .5 + lengthdir_x(.5, a0);
+					var p0v = .5 + lengthdir_y(.5, a0);
+					var p1u = .5 + lengthdir_x(.5, a1);
+					var p1v = .5 + lengthdir_y(.5, a1);
+					
+					draw_vertex_texture(p0x,   p0y,   p0u, p0v);
+					draw_vertex_texture(p0[2], p0[3], .5,  .5 );
+					draw_vertex_texture(p1x,   p1y,   p1u, p1v);
+				
+				}
+				draw_primitive_end();
+				BLEND_NORMAL
+			}
 			
 			matrix_set(matrix_world, MATRIX_IDENTITY);
 			
