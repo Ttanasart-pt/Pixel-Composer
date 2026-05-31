@@ -3358,6 +3358,7 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawToolBar = function(_node) {
+    	var _spFrm = THEME_VALUE.panel_separation_type == "frame";
         var ty = h - toolbar_height;
         var aa = d3_active? 0.8 : 1;
         
@@ -3370,7 +3371,15 @@ function Panel_Preview() : PanelContent() constructor {
         var _m  = [ mx, my ];
         
         var _nodeRaw = __getNodePreview();
-        if(_nodeRaw) tbx -= drawNodeChannel(_nodeRaw, tbx, tby);
+        if(_nodeRaw) {
+        	tbx -= drawNodeChannel(_nodeRaw, tbx, tby);
+        	
+        	draw_set_color(COLORS.panel_separator);
+        	if(_spFrm) draw_line_width(tbx, ty + ui(4), tbx, h - ui(4), 2);
+        	else       draw_line(      tbx, ty,         tbx, h - 1);
+        	
+        	tbx -= ui(2);
+        }
         toolbar_right = tbx;
         
         if(toolbar_right < ui(6)) return;
@@ -3392,8 +3401,6 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(mouse_rpress(hov && foc)) menuCallGen($"{_toolbars}_context");
     	var _tool_b = menuItems_gen(_toolbars);
-    	var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
-    	
         for( var i = 0, n = array_length(_tool_b); i < n; i++ ) {
 			var _menu = _tool_b[i];
 			if(_menu == -1) {

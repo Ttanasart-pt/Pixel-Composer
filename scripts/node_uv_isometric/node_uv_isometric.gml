@@ -9,13 +9,13 @@ function Node_UV_Isometric(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	
 	////- =UV
 	newInput(12, nodeValue_EButton(  "Direction",   0, ["Top", "Left", "Right"]  )).setShaderProp("side");
-	newInput( 4, nodeValue_Vec2(     "Position",   [0,0] )).setUnitSimple().setShaderProp("position");
-	newInput(13, nodeValue_Vec2(     "Offset",     [0,0] )).setUnitSimple().setShaderProp("offset");
-	newInput(10, nodeValue_Anchor(   "Anchor",     [0,0] )).setShaderProp("anchor");
-	newInput( 5, nodeValue_Rotation( "Rotation",    0    )).setShaderProp("rotation");
-	newInput( 6, nodeValue_Vec2(     "Scale",      [1,1] )).setShaderProp("tile");
+	newInput( 4, nodeValue_Vec2(     "Position",   [0,0]   )).setUnitSimple().setShaderProp("position");
+	newInput(13, nodeValue_Vec2(     "Offset",     [0,0]   )).setUnitSimple().setShaderProp("offset");
+	newInput(10, nodeValue_Anchor(   "Anchor",     [.5,.5] )).setShaderProp("anchor");
+	newInput( 5, nodeValue_Rotation( "Rotation",    0      )).setShaderProp("rotation");
+	newInput( 6, nodeValue_Vec2(     "Scale",      [1,1]   )).setShaderProp("tile");
 	newInput(11, nodeValue_EScroll(  "Repeat",      1, ["Empty", "Tile", "Clamp", "Ping Pong"]  )).setShaderProp("repeat");
-	newInput(14, nodeValue_Bool(     "Inverted",    false )).setShaderProp("invert");
+	newInput(14, nodeValue_Bool(     "Inverted",    false  )).setShaderProp("invert");
 	
 	////- =Channels
 	newInput( 7, nodeValue_SliRange( "X",   [0,1] )).setShaderProp("xRange");
