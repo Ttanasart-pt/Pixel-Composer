@@ -13,27 +13,32 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput( 8, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
 	newInput( 9, nodeValue_Surface( "Mask"       ));
 	newInput(10, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(9, 11); // inputs 11, 12
 	
 	////- =SDF
 	newInput( 2, nodeValue_EButton( "Side",         2, [ "Inside", "Outside", "Both" ])).setPieMenu();
-	newInput( 3, nodeValue_Slider(  "Max Distance", 1, [ 0, 2, 0.01 ])).setMappable(7).setPieMenu();
+	newInput( 3, nodeValue_Slider(  "Max Distance", 1, [ 0, 2, .01 ] )).setMappable(7).setPieMenu();
 	newInput( 6, nodeValue_Bool(    "Angle",        false));
 	
 	////- =Render
 	newInput( 4, nodeValue_Bool( "Keep Alpha", false));
 	newInput( 5, nodeValue_Bool( "Invert",     false));
-	// input 13
+	
+		////- =/Fill Others
+	newInput(13, nodeValue_Bool(  "Fill Others", false    ));
+	newInput(14, nodeValue_Color( "Fill Color",  ca_white ));
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  1,  8, 
-		[ "Surfaces", false ],  0,  9, 10, 11, 12, 
-		[ "SDF",      false ],  2,  3,  7,  6,
-		[ "Render",	  false ],  4,  5, 
+		[ "Surfaces",  false     ],  0,  9, 10, 11, 12, 
+		[ "SDF",       false     ],  2,  3,  7,  6,
+		[ "Render",	   false     ],  4,  5, 
+			[ "/Fill", false, 13 ], 14,
 	]
 	
 	////- Nodes
@@ -55,14 +60,17 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var inSurf = _data[0];
+			var inSurf = _data[ 0];
 			
-			var _side  = _data[2];
-			var _dist  = _data[3];
-			var _angl  = _data[6];
+			var _side  = _data[ 2];
+			var _dist  = _data[ 3];
+			var _angl  = _data[ 6];
 			
-			var _alph  = _data[4];
-			var _invt  = _data[5];
+			var _alph  = _data[ 4];
+			var _invt  = _data[ 5];
+			
+			var _fill  = _data[13];
+			var _filC  = _data[14];
 		#endregion
 		
 		var sw	   = surface_get_width_safe(inSurf);
@@ -97,12 +105,15 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		}
 		
 		surface_set_shader(_outSurf, sh_sdf_dist);
-			shader_set_surface("original", inSurf);
-			shader_set_f_map("max_distance", _dist, _data[7], inputs[3]);
-			shader_set_i("side",         _side);
-			shader_set_i("alpha",        _alph);
-			shader_set_i("invert",       _invt);
-			shader_set_i("angle",        _angl);
+			shader_set_s( "original",     inSurf);
+			shader_set_m( "max_distance", _dist, _data[7], inputs[3]);
+			shader_set_i( "side",         _side);
+			shader_set_i( "alpha",        _alph);
+			shader_set_i( "invert",       _invt);
+			shader_set_i( "angle",        _angl);
+			
+			shader_set_i( "doFill",       _fill);
+			shader_set_c( "fillColor",    _filC);
 			
 			draw_surface_safe(temp_surface[bg]);
 		surface_reset_shader();

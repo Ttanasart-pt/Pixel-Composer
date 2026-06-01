@@ -52,9 +52,11 @@ uniform float stepSize;
 uniform int   side;
 
 void main() {
-	float c = sampleTexture( gm_BaseTexture, v_vTexcoord ).z;
+	vec4  samp = sampleTexture( gm_BaseTexture, v_vTexcoord );
+	float c    = samp.z;
+	
 	if((side == 0 && c == 0.) || (side == 1 && c == 1.)) {
-		gl_FragColor = sampleTexture( gm_BaseTexture, v_vTexcoord );
+		gl_FragColor = samp;
 		return;
 	}
 	

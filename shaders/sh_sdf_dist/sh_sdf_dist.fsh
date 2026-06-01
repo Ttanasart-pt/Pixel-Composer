@@ -8,6 +8,9 @@ uniform int alpha;
 uniform int invert;
 uniform int angle;
 
+uniform int  doFill;
+uniform vec4 fillColor;
+
 uniform vec2      max_distance;
 uniform int       max_distanceUseSurf;
 uniform sampler2D max_distanceSurf;
@@ -25,7 +28,9 @@ void main() {
 	float aa = alpha == 1? texture2D( original, v_vTexcoord ).a : 1.;
 	
 	if(col.xy == vec2(0.)) {
-		gl_FragColor = vec4(vec3(float(invert)), aa);
+		if(doFill == 0) 
+		     gl_FragColor = vec4(vec3(float(invert)), aa);
+		else gl_FragColor = fillColor;
 		return;
 	}
 	
