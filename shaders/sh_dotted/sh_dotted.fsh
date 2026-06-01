@@ -299,7 +299,6 @@ void main() {
 	vec4 dott = vec4(0.);
 	
 	if(pattern == 0) {
-		
 		vec2 _box = floor(pos * amoVec);
 		vec2 _frc = pos * amoVec - _box;
 		vec2 _cen = _box / amoVec;
@@ -341,7 +340,7 @@ void main() {
 	}
 	
 	if(colorMode == 0)
-		gl_FragColor = mix(cbg, color1, dott.a);
+		gl_FragColor = cbg + color1 * dott.a;
 	else
 		gl_FragColor = cbg + dott;
 }
