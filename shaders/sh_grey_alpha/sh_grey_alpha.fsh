@@ -136,6 +136,7 @@ varying vec4 v_vColour;
 uniform int replace;
 uniform vec4 color;
 
+uniform int   invert;
 uniform float modulate_curve[CURVE_MAX];
 uniform int   modulate_curve_use;
 uniform int   modulate_amount;
@@ -149,6 +150,7 @@ void main() {
     float b  = bright(col);
     
     if(modulate_curve_use == 1) b = curveEval(modulate_curve, modulate_amount, b);
+    if(invert == 1) b = 1. - b;
     
 	if(replace == 0) gl_FragColor = vec4(col.rgb, b);
 	else			 gl_FragColor = vec4(color.rgb, b * color.a);

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.002",
+    "changes": [
+      {
+        "date": "2026-06-01T09:08:21.988Z",
+        "node": "",
+        "commit": "**Grey to Alpha, Alpha to Grey**: Add invert option."
+      }
+    ]
+  }
+]
