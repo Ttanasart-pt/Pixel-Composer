@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_simplex_cube",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_simplex_cube",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -2,24 +2,31 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 #define EPSILON 1e-5
-
-uniform int   MAX_MARCHING_STEPS;
-
-uniform vec2  dimension;
-
-uniform int   axis;
-uniform vec3  camRotation;
-uniform float orthoScale;
-
 #ifdef _YY_HLSL11_ 
 	#define PALETTE_LIMIT 1024 
 #else 
 	#define PALETTE_LIMIT 256 
 #endif
-uniform vec4  palette[PALETTE_LIMIT];
-uniform int   paletteAmount;
 
-#region ////========== Transform ============
+uniform vec2  dimension;
+uniform float seed;
+
+uniform int   axis;
+
+uniform int   crossAxis;
+uniform float crossPosition;
+
+uniform sampler2D surface1;
+uniform sampler2D surface2;
+
+#region ////========== RM ============
+	uniform vec3  camRotation;
+	uniform float orthoScale;
+	
+	uniform int   shape;
+	uniform vec3  shapeRotation;
+	uniform vec3  shapeScale;
+
 	mat3 rotateX(float dg) {
 		float c = cos(radians(dg));
 		float s = sin(radians(dg));
@@ -65,81 +72,81 @@ uniform int   paletteAmount;
 				    b11, ( a22 * a00 - a02 * a20), (-a12 * a00 + a02 * a10),
 				    b21, (-a21 * a00 + a01 * a20), ( a11 * a00 - a01 * a10)) / det;
 	}
-#endregion
 
-float SDF(vec3 p) {
-	vec3 q = abs(p) - .5;
-	return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
-}
-
-float march(vec3 camera, vec3 direction) {
-	float depth = 0.;
-	
-	for (int i = 0; i < 100; i++) {
-		float dist = SDF(camera + depth * direction);
-		if (dist < EPSILON)  
-			return depth;
+	float march(vec3 camera, vec3 direction) {
+		float depth = 0.;
 		
-		depth += dist;
-		if (depth >= 10.)
-			return 10.;
+		for (int i = 0; i < 256; i++) {
+			vec3  p = camera + depth * direction;
+			float dist = 0.;
+			
+			if(shape == 0) {
+				vec3 q = abs(p) - .5;
+				dist = length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+			}
+			
+			if(shape == 1) dist = length(p) - .5;
+			
+			if (dist < EPSILON) return depth;
+			
+			depth += dist;
+			if (depth >= 10.) return 10.;
+		}
+		
+		return 10.;  
 	}
 	
-	return 10.;  
-}
-
-vec3 scene(vec2 tx, vec3 camRotation, out float outDepth) {
-	mat3 rx = rotateX(camRotation.x);
-	mat3 ry = rotateY(camRotation.y);
-	mat3 rz = rotateZ(camRotation.z);
-
-	mat3 camRotMatrix  = rx * ry * rz;
-	mat3 camIrotMatrix = inverse(camRotMatrix);
+	vec3 scene(vec2 tx, vec3 camRotation, out float outDepth) {
+		mat3 rx = rotateX(camRotation.x);
+		mat3 ry = rotateY(camRotation.y);
+		mat3 rz = rotateZ(camRotation.z);
+		
+		mat3 camRotMatrix  = rx * ry * rz;
+		mat3 camIrotMatrix = inverse(camRotMatrix);
+		
+		vec3 dir = vec3(0., 0., -1.);
+		vec3 eye = vec3((tx - .5) * 2. * orthoScale, 5.);
+		
+		dir  = camIrotMatrix * dir;
+		eye  = camIrotMatrix * eye;
 	
-	vec3 dir = vec3(0., 0., -1.);
-	vec3 eye = vec3((tx - .5) * 2. * orthoScale, 5.);
-	
-	dir  = camIrotMatrix * dir;
-	eye  = camIrotMatrix * eye;
+		outDepth = march(eye, dir);
+		
+		vec3 hitPos = eye + dir * outDepth;
+		
+		return hitPos;
+	}
+#endregion
 
-	outDepth = march(eye, dir);
-	vec3 hitPos = eye + dir * outDepth;
-	
-	return hitPos;
+vec4 sample3D(vec3 pos) {
+	vec4 sam1 = texture2D( surface1, pos.xy );
+	vec4 sam2 = texture2D( surface2, pos.xy );
+	return mix(sam1, sam2, pos.z);
 }
 	
 void main() {
+	mat3 rx = rotateX(shapeRotation.x);
+	mat3 ry = rotateY(shapeRotation.y);
+	mat3 rz = rotateZ(shapeRotation.z);
+	mat3 objRotMatrix = rx * ry * rz;
+
 	float depth;
 	vec3  hitPos = scene(v_vTexcoord, camRotation, depth) + .5;
 	bool  hit    = depth < 10.;
-	float amo    = float(paletteAmount);
-	
-	vec4 c000 = palette[int(mod(0., amo))];
-	vec4 c001 = palette[int(mod(1., amo))];
-	
-	vec4 c010 = palette[int(mod(2., amo))];
-	vec4 c011 = palette[int(mod(3., amo))];
-	
-	vec4 c100 = palette[int(mod(4., amo))];
-	vec4 c101 = palette[int(mod(5., amo))];
-
-	vec4 c110 = palette[int(mod(6., amo))];
-	vec4 c111 = palette[int(mod(7., amo))];
 	
 	if(axis == 0) hitPos.xyz = hitPos.xyz;
 	if(axis == 1) hitPos.xyz = hitPos.yzx;
 	if(axis == 2) hitPos.xyz = hitPos.zxy;
+	hitPos = objRotMatrix * hitPos * shapeScale;
 	
-	vec4 c00 = mix(c000, c001, hitPos.z);
-	vec4 c01 = mix(c010, c011, hitPos.z);
-
-	vec4 c10 = mix(c100, c101, hitPos.z);
-	vec4 c11 = mix(c110, c111, hitPos.z);
-
-	vec4 c0 = mix(c00, c01, hitPos.y);
-	vec4 c1 = mix(c10, c11, hitPos.y);
-
-	vec4 c = mix(c0, c1, hitPos.x);
+	gl_FragData[0] = vec4(sample3D(hitPos).rgb, hit? 1. : 0.);
 	
-	gl_FragColor = vec4(c.rgb,  hit? 1. : 0.);
+	vec3 crossPos = vec3(0.);
+	if(crossAxis == 0) crossPos = vec3(crossPosition, v_vTexcoord.x, v_vTexcoord.y);
+	if(crossAxis == 1) crossPos = vec3(v_vTexcoord.x, crossPosition, v_vTexcoord.y);
+	if(crossAxis == 2) crossPos = vec3(v_vTexcoord.x, v_vTexcoord.y, crossPosition);
+	crossPos = objRotMatrix * crossPos * shapeScale;
+	
+	gl_FragData[1] = sample3D(crossPos);
+	
 }

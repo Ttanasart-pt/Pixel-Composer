@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.002",
+    "changes": [
+      {
+        "date": "2026-06-01T06:42:09.854Z",
+        "node": "",
+        "commit": "**Draw Shape**: Fix deform properties not working."
+      }
+    ]
+  }
+]

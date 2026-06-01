@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_simplex_cube",
+  "name":"sh_simplex_cube",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -563,6 +563,11 @@ void main() {
 	if(shape == 0) coord = coordUni * ratio;
 	if(tile  == 1) coord = mod(coord + 1., 2.) - 1.;
 	
+	float dist = length(coord);
+	coord   *= rot(twist * dist * TAU);
+	coord.x += coord.y * shear.x;
+	coord.y += coord.x * shear.y;
+	
 		 if(shape ==  0) { d = sdBox(           coord, scale * ratio, corner4);                                                          }  
 	else if(shape ==  1) { d = sdCircle(        coord);                                                                                  } 
 	else if(shape ==  2) { d = sdRegularPolygon(coord, 0.9 - corner, sides, angle ) - corner;                                            } 

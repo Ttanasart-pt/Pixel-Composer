@@ -74,7 +74,7 @@ uniform float crossPosition;
 	float march(vec3 camera, vec3 direction) {
 		float depth = 0.;
 		
-		for (int i = 0; i < 32; i++) {
+		for (int i = 0; i < 256; i++) {
 			vec3  p = camera + depth * direction;
 			float dist = 0.;
 			

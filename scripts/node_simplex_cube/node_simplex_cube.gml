@@ -1,6 +1,6 @@
-function Node_Perlin_Cube(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
-	name = "Perlin Cube";
-	shader = sh_perlin_cube;
+function Node_Simplex_Cube(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
+	name = "Simplex Cube";
+	shader = sh_simplex_cube;
 	
 	newInput( 7, nodeValueSeed()).setShaderProp("seed");
 	
@@ -19,7 +19,7 @@ function Node_Perlin_Cube(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput(11, nodeValue_Int(   "Iteration",   4 )).setShaderProp("perlinIteration");
 	
 	////- =Rendering
-	newInput(13, nodeValue_SliRange( "Level", [0,1] )).setShaderProp("renderLevel");
+	newInput(13, nodeValue_SliRange( "Level",         [0,1] )).setShaderProp("renderLevel");
 	
 	////- =Cross Section
 	newInput( 4, nodeValue_EButton( "Axis",      0, [ "X", "Y", "Z" ] )).setShaderProp("crossAxis");
