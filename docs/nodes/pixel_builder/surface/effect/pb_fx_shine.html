@@ -1507,6 +1507,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\color\gradient\gradient_cos.html" class="sidebar-file">Gradient Cos</a>
             </div>
+</li><li id="gradient_cube"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\color\gradient\gradient_cube.html" class="sidebar-file">Gradient Cube</a>
+            </div>
 </li><li id="gradient_grid"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\color\gradient\gradient_grid.html" class="sidebar-file">Gradient Grid</a>
@@ -1672,6 +1676,28 @@
 </li><li id="voronoi_extra"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\noise\basic\voronoi_extra.html" class="sidebar-file">Voronoi Extra</a>
+            </div>
+</li></ul>
+</li><li id="3d"><div class="sidebar-menu">
+                <div class="sidebar-icon sidebar-dir"></div>
+                <a href="\nodes\generate\noise\3d\index.html" class="sidebar-dir">3D</a>
+            </div>
+            <ul class="submenu">
+<li id="cellular_cube"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\noise\3d\cellular_cube.html" class="sidebar-file">Cellular Cube</a>
+            </div>
+</li><li id="perlin_cube"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\noise\3d\perlin_cube.html" class="sidebar-file">Perlin Cube</a>
+            </div>
+</li><li id="simplex_cube"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\noise\3d\simplex_cube.html" class="sidebar-file">Simplex Cube</a>
+            </div>
+</li><li id="surface_cube"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\noise\3d\surface_cube.html" class="sidebar-file">Surface Cube</a>
             </div>
 </li></ul>
 </li><li id="artistic"><div class="sidebar-menu">
@@ -6022,6 +6048,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\simple/solid.html">Solid</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient.html">Gradient</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_cos.html">Gradient Cos</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_cube.html">Gradient Cube</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_grid.html">Gradient Grid</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_points.html">Gradient Points</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_points_n.html">Gradient Points N</a></li>
@@ -6050,6 +6077,10 @@
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/perlin.html">Perlin</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/perlin_extra.html">Perlin Extra</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/voronoi_extra.html">Voronoi Extra</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\noise\3d/cellular_cube.html">Cellular Cube</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\noise\3d/perlin_cube.html">Perlin Cube</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\noise\3d/simplex_cube.html">Simplex Cube</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\noise\3d/surface_cube.html">Surface Cube</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\artistic/caustic.html">Caustic</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\artistic/flow_noise.html">Flow Noise</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\artistic/fold_noise.html">Fold Noise</a></li>
@@ -6757,6 +6788,9 @@
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Mask</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Shine</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
+                <td><p>Axis</p></td>
+            </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Progress</p></td>
             </tr><tr>
@@ -6770,13 +6804,13 @@
                 <td><p>Slope</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
-                <td><p>Invert Direction</p></td>
+                <td><p>Flip</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Render</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8fde5d">palette</p></td>
+                <td><p>Colors</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
-                <td><p>Axis</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Render</p></th></tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #8fde5d">color</p></td>
-                <td><p>Colors</p></td>
+                <td><p>Blend Mode</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Intensity</p></td>
