@@ -1110,6 +1110,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		var _vals = _pres[$ "_values"];
+		print(_vals);
 		if(_vals != undefined) {
 			if(_vals.content == undefined) _vals.content = json_load_struct(_vals.path);
 			

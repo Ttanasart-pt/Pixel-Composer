@@ -13,7 +13,7 @@
         {
             "name": "Color",
             "type": "color",
-            "value": 0,
+            "value": 0xFF00000,
 
             "uniform": "uColor"
         },
