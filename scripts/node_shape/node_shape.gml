@@ -69,12 +69,13 @@
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "Draw Shape";
-	inputs = array_create(50);
+	inputs = array_create(51);
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(0, PROJ_SURF)};
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
+	newInput(50, nodeValue_Surface( "Mask"       ));
 	newInput(44, nodeValue_Surface( "UV Map"     ));
 	newInput(45, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput( 6, nodeValue_Bool(    "Anti-Aliasing", false ));
@@ -83,7 +84,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 1, nodeValue_EButton( "Background",    0, [ "None", "Solid", "Surface" ] ));
 	newInput(11, nodeValue_Color(   "BG Color",      ca_black ));
 	newInput(46, nodeValue_Surface( "BG Surface"              ));
-	newInput(47, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max" ] ));
+	newInput(47, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max", "Additive", "Multiply" ] ));
 	
 	////- =Transform
 	newInput(15, nodeValue_EScroll(  "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
@@ -154,7 +155,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(29, nodeValue_Curve(    "Curve",            CURVE_DEF_01   ));
 	newInput(20, nodeValue_SliRange( "Level",            [0,1]          ));
 	newInput(37, nodeValue_Bool(     "Opacity",          false          ));
-	// 50
+	// 51
 	
 	/////////////////////////////////////////////
 	
@@ -165,7 +166,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	b_replace_fast = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Shape_Fast", x, y, group), true); }).setText("Switch to Fast version");
 	
 	input_display_list = [ 
-		[ "Output",     false     ],  0, 44, 45, 6, 
+		[ "Output",     false     ],  0, 50, 44, 45, 6, 
 		[ "Background", false     ],  1, 11, 46, 47, 
 		[ "Transform",  false     ], 15,  3, 16, 17, 19, 28, 
 		[ "Shape",	    false     ],  2, 32, 33, 35, 40, 34, 49, 48,  9,  4, 13, 5,  7,  8, 
@@ -243,6 +244,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var _dim	= _data[ 0];
+			var _mask	= _data[50];
+			
 			var _shape	= _data[ 2];
 			var _aa		= _data[ 6];
 			var _corner = _data[ 9]; _corner = clamp(_corner, 0, .9);
@@ -609,6 +612,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 			
 			shader_set_f("dimension",   _dim    );
+			
+			shader_set_s("maskSurface",  _mask             );
+			shader_set_i("useMask",      is_surface(_mask) );
 			
 			shader_set_i("drawBG",      _bg     );
 			shader_set_i("bgBlend",     _bgBlnd );

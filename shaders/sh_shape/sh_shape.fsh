@@ -172,6 +172,9 @@ uniform int aa;
 uniform int sides;
 uniform int tile;
 
+uniform sampler2D maskSurface;
+uniform int       useMask;
+
 uniform int       drawBG;
 uniform sampler2D bgSurf;
 uniform vec4      bgColor;
@@ -611,11 +614,19 @@ void main() {
 	vec4 bgPixel   = drawBG == 2? texture2D(bgSurf, v_vTexcoord) : bgColor;
 	vec4 fgPixel   = drawDF == 1? gl_FragData[2] : baseColor;
 	     
-	     if(drawBG  == 0) gl_FragData[0] = vec4(fgPixel.rgb, fgPixel.a * cc);
-	else if(bgBlend == 0) gl_FragData[0] = mix(bgPixel, fgPixel,  cc);
-	else if(bgBlend == 1) gl_FragData[0] = max(bgPixel, fgPixel * cc);
+	if(useMask == 1) {
+		vec4  mask = texture2D(maskSurface, v_vTexcoord);
+		float alph = (mask.r + mask.g + mask.b) / 3. * mask.a;
+		fgPixel *= alph;
+	}
+	
+	if(drawBG == 0) gl_FragData[0] = vec4(fgPixel.rgb, fgPixel.a * cc);
+	else {
+		     if(bgBlend == 0) gl_FragData[0] = mix(bgPixel, fgPixel,  cc);
+		else if(bgBlend == 1) gl_FragData[0] = max(bgPixel, fgPixel * cc);
+		else if(bgBlend == 2) gl_FragData[0] = bgPixel + fgPixel * cc;
+		else if(bgBlend == 3) gl_FragData[0] = bgPixel * fgPixel * cc;
+	}
 	
 	gl_FragData[1] = vec4(cc, cc, cc, 1.);
-	
-	if(bgBlend == 2) gl_FragData[0] = bgPixel;
 }

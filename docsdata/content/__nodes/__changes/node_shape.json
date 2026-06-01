@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.002",
+    "changes": [
+      {
+        "date": "2026-06-01T08:56:06.510Z",
+        "node": "Draw Shape",
+        "commit": "**Draw Shape**: Add mask input, more BG blend modes."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.008",
     "changes": [
       {

@@ -2688,7 +2688,7 @@ function Panel_Animation_Dopesheet() {
                     dopesheet_y_to = scroll_sy - (my - scroll_my) / (scr_s - scr_scale_s) * dopesheet_y_max;
                     dopesheet_y_to = clamp(dopesheet_y_to, -dopesheet_y_max, 0);
                 }
-                    
+                
                 if(mouse_lrelease()) is_scrolling = false;
             }
                 
