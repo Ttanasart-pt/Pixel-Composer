@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.002",
+    "changes": [
+      {
+        "date": "2026-06-01T08:39:32.573Z",
+        "node": "Shine",
+        "commit": "**Shine**: Add Blend mode control, color per strip."
+      }
+    ]
+  }
+]

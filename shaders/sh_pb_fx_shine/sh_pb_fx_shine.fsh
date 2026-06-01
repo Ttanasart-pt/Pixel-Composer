@@ -1,21 +1,32 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
+
 uniform vec2  dimension;
 uniform int   useMask;
 uniform sampler2D mask;
 
+uniform int   invAxis;
 uniform float progress;
 uniform int   side;
-uniform int   invAxis;
+
 uniform float shines[64];
 uniform int   shineAmount; 
 uniform float shinesWidth; 
-uniform vec4  shineColor;
 
-uniform int   straight; 
-uniform float slope; 
 uniform float scale; 
+uniform float slope; 
+uniform int   straight; 
+
+uniform vec4  shineColor[PALETTE_LIMIT];
+uniform int   shineColorAmo;
+
+uniform int   blendMode; 
 uniform float intensity; 
 
 void main() {
@@ -49,14 +60,21 @@ void main() {
 	}
 	
 	float os = ns;
-	bool  fill = true;
+	float filIndex = 0.;
+	float filTotal = float(shineColorAmo);
+	bool  fill     = true;
 	
 	for(int i = 0; i < shineAmount; i++) {
 		float _shine = shines[i];
 		ns += _shine * scale;
 		
+		if(fill) filIndex++;
 		if(fill && px.x > os && px.x <= ns) {
-			cc = mix(cc, shineColor, intensity);
+			vec4 colr = shineColor[int(filTotal - mod(filIndex, filTotal) - 1.)];
+			
+			     if(blendMode == 0) cc = mix(cc,      colr, intensity);
+			else if(blendMode == 1) cc = mix(cc, cc + colr, intensity);
+			else if(blendMode == 2) cc = mix(cc, cc * colr, intensity);
 			break;
 		}
 		

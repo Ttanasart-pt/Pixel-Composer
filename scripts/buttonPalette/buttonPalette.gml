@@ -59,6 +59,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 		var _pw = _w - ui(4);
 		var _ph = _h - ui(4);
 		
+		if(!is_array(_color) && is_numeric(_color)) _color = [_color];
 		current_palette = _color;
 		
 		if(array_length(_color) > 0 && is_array(_color[0])) {
