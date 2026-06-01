@@ -487,79 +487,49 @@
 #endregion
 
 #region hotkey
-	function call_dialog_preference() 	    { dialogPanelCall(new Panel_Preference());		    }
-	function call_dialog_splash()     	    { dialogCall(o_dialog_splash);					   	}
-	function call_dialog_release_note()	    { dialogCall(o_dialog_release_note);			   	}
-	function call_dialog_command_palette()  { dialogCall(o_dialog_command_palette);			   	}
-	function open_autosave_folder() 	    { shellOpenExplorer(DIRECTORY + "autosave");		}
-	
-	function call_panel_addon() 		    { dialogPanelCall(new Panel_Addon());			   	}
-	function call_panel_history()		    { dialogPanelCall(new Panel_History()); 		    }
-	
-	function call_panel_Notification()      { panelAdd("Panel_Notification",	    true);      }
-	function call_panel_Collection()        { panelAdd("Panel_Collection",		    true);      }
-	function call_panel_Graph()             { panelAdd("Panel_Graph", 			    true);      }
-	
-	function call_panel_Preview()       	{ panelAdd("Panel_Preview",				true);      }
-	function call_panel_Preview_Histogram() { panelAdd("Panel_Preview_Histogram",	true);		}
-	
-	function call_panel_Inspector()         { panelAdd("Panel_Inspector", 		    true);      }
-	function call_panel_Workspace()         { panelAdd("Panel_Workspace", 		    true);      }
-	function call_panel_Animation()         { panelAdd("Panel_Animation", 		    true);      }
-	
-	function call_panel_Randomizer()        { panelAdd("Panel_Randomizer",		    true);      }
-	function call_panel_Node_Align()        { panelAdd("Panel_Node_Align",		    true);      }
-	function call_panel_Nodes()             { panelAdd("Panel_Nodes", 			    true);      }
-	function call_panel_Tunnels()           { panelAdd("Panel_Tunnels",			    true);      }
-	
-	function call_panel_Color()             { panelAdd("Panel_Color", 			    true);      }
-	function call_panel_Palette()           { panelAdd("Panel_Palette",			    true);      }
-	function call_panel_Palette_Mixer()     { panelAdd("Panel_Palette_Mixer",	    true);      }
-	function call_panel_Gradient()          { panelAdd("Panel_Gradient",		    true);      }
-	
-	function call_panel_Console()           { panelAdd("Panel_Console",			    true);      }
-	function call_panel_Globalvar()         { panelAdd("Panel_Globalvar",		    true);      }
-	function call_panel_File_Explorer()     { panelAdd("Panel_File_Explorer",	    true);      }
-	function call_panel_Locale_Manager()    { panelAdd("Panel_Locale_Manager",	    true);      }
-	
-	function call_panel_Steam_Workshop()    { dialogPanelCall(new Panel_Steam_Workshop());      }
-	function call_panel_Collection_Runner() { dialogPanelCall(new Panel_Collection_Runner());   }
-	
 	function __fnInit_Panels() {
-        registerFunction("", "Preferences",               "", MOD_KEY.none, call_dialog_preference            ).setMenu("preference",      THEME.gear)
-        registerFunction("", "Splash screen",             "", MOD_KEY.none, call_dialog_splash                ).setMenu("splash_screen")
-        registerFunction("", "Release note",              "", MOD_KEY.none, call_dialog_release_note          ).setMenu("release_note")
-        registerFunction("", "Command Palette",     vk_space, MOD_KEY.ctrl, call_dialog_command_palette       ).setMenu("command_palette")
-        registerFunction("", "Open Autosave Folder",      "", MOD_KEY.none, open_autosave_folder              ).setMenu("autosave_folder", THEME.save_auto)
+		var n = MOD_KEY.none;
+		var c = MOD_KEY.ctrl;
+		var s = MOD_KEY.shift;
+		var a = MOD_KEY.alt;
+		
+        registerFunction("", "Preferences",               "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Preference())}        ).setMenu("preference",      THEME.gear)
+        registerFunction("", "Splash screen",             "", n, function() /*=>*/ {return dialogCall(o_dialog_splash)}                    ).setMenu("splash_screen")
+        registerFunction("", "Release note",              "", n, function() /*=>*/ {return dialogCall(o_dialog_release_note)}              ).setMenu("release_note")
+        registerFunction("", "Command Palette",     vk_space, c, function() /*=>*/ {return dialogCall(o_dialog_command_palette)}           ).setMenu("command_palette")
+        registerFunction("", "Open Autosave Folder",      "", n, function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave")}      ).setMenu("autosave_folder", THEME.save_auto)
         
-        registerFunction("", "Addons",                    "", MOD_KEY.none, call_panel_addon                  ).setMenu("addons")
-        registerFunction("", "History",   "Z", MOD_KEY.ctrl | MOD_KEY.alt,  call_panel_history                ).setMenu("history")
+        registerFunction("", "Addons",                 "",  n,   function() /*=>*/ {return dialogPanelCall(new Panel_Addon())}             ).setMenu("addons")
+        registerFunction("", "History",                "Z", c|a, function() /*=>*/ {return dialogPanelCall(new Panel_History())}           ).setMenu("history")
         
-        registerFunction("", "Notification Panel",    vk_f12, MOD_KEY.none, call_panel_Notification           ).setMenuAlt("Notification", "notification_panel")
-        registerFunction("", "Collections Panel",         "", MOD_KEY.none, call_panel_Collection             ).setMenuAlt("Collections",  "collections_panel")
-        registerFunction("", "Graph Panel",               "", MOD_KEY.none, call_panel_Graph                  ).setMenuAlt("Graph",        "graph_panel")
-        registerFunction("", "Preview Panel",             "", MOD_KEY.none, call_panel_Preview                ).setMenuAlt("Preview",      "preview_panel")
-        registerFunction("", "Preview Histogram",         "", MOD_KEY.none, call_panel_Preview_Histogram      ).setMenuAlt("Histogram",      "preview_histogram")
-        registerFunction("", "Inspector Panel",           "", MOD_KEY.none, call_panel_Inspector              ).setMenuAlt("Inspector",    "inspector_panel")
-        registerFunction("", "Workspace Panel",           "", MOD_KEY.none, call_panel_Workspace              ).setMenuAlt("Workspace",    "workspace_panel")
-        registerFunction("", "Animation Panel",           "", MOD_KEY.none, call_panel_Animation              ).setMenuAlt("Animation",    "animation_panel")
+        registerFunction("", "Notification Panel",    vk_f12, n, function() /*=>*/ {return dialogPanelCall(new Panel_Notification())}      ).setMenuAlt("Notification",   "notification_panel")
+        registerFunction("", "Collections Panel",         "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Collection())}        ).setMenuAlt("Collections",    "collections_panel")
+        registerFunction("", "Graph Panel",               "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Graph())}             ).setMenuAlt("Graph",          "graph_panel")
         
-        registerFunction("", "Randomizer Panel",          "", MOD_KEY.none, call_panel_Randomizer             ).setMenuAlt("Randomizer",   "randomizer_panel")
-        registerFunction("", "Align Panel",               "", MOD_KEY.none, call_panel_Node_Align             ).setMenuAlt("Align",        "align_panel")
-        registerFunction("", "Nodes Panel",               "", MOD_KEY.none, call_panel_Nodes                  ).setMenuAlt("Nodes",        "nodes_panel")
-        registerFunction("", "Tunnels Panel",             "", MOD_KEY.none, call_panel_Tunnels                ).setMenuAlt("Tunnels",      "tunnels_panel")
+        registerFunction("", "Preview Panel",             "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Preview())}           ).setMenuAlt("Preview",        "preview_panel")
+        registerFunction("", "Preview Histogram",         "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Preview_Histogram())} ).setMenuAlt("Histogram",      "preview_histogram")
         
-        registerFunction("", "Color Panel",               "", MOD_KEY.none, call_panel_Color                  ).setMenuAlt("Color",          "color_panel")
-        registerFunction("", "Palettes Panel",            "", MOD_KEY.none, call_panel_Palette                ).setMenuAlt("Palettes",       "palettes_panel")
-        registerFunction("", "Palettes Mixer Panel",      "", MOD_KEY.none, call_panel_Palette_Mixer          ).setMenuAlt("Palettes Mixer", "palettes_mixer_panel")
-        registerFunction("", "Gradients Panel",           "", MOD_KEY.none, call_panel_Gradient               ).setMenuAlt("Gradients",      "gradients_panel")
+        registerFunction("", "Inspector Panel",           "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Inspector())}         ).setMenuAlt("Inspector",      "inspector_panel")
+        registerFunction("", "Workspace Panel",           "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Workspace())}         ).setMenuAlt("Workspace",      "workspace_panel")
+        registerFunction("", "Animation Panel",           "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Animation())}         ).setMenuAlt("Animation",      "animation_panel")
         
-        registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenuAlt("Console",        "console_panel")
-        registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenuAlt("Globalvar",      "globalvar_panel")
-        registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenuAlt("File",           "file_explorer_panel")
-        registerFunction("", "Locale Manager",            "", MOD_KEY.none, call_panel_Locale_Manager         ).setMenuAlt("Locale Manager", "locale_manager_panel")
+        registerFunction("", "Randomizer Panel",          "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Randomizer())}        ).setMenuAlt("Randomizer",     "randomizer_panel")
+        registerFunction("", "Align Panel",               "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Node_Align())}        ).setMenuAlt("Align",          "align_panel")
+        registerFunction("", "Nodes Panel",               "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Nodes())}             ).setMenuAlt("Nodes",          "nodes_panel")
+        registerFunction("", "Tunnels Panel",             "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Tunnels())}           ).setMenuAlt("Tunnels",        "tunnels_panel")
         
-        registerFunction("", "Steam Workshop Panel",      "", MOD_KEY.none, call_panel_Steam_Workshop         ).setMenuAlt("Steam Workshop", "steam_workshop_panel")
-        registerFunction("", "Collection Runner Panel",   "", MOD_KEY.none, call_panel_Collection_Runner      ).setMenuAlt("Runner",         "collection_runner_panel")
+        registerFunction("", "Color Panel",               "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Color())}             ).setMenuAlt("Color",          "color_panel")
+        registerFunction("", "Palettes Panel",            "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Palette())}           ).setMenuAlt("Palettes",       "palettes_panel")
+        registerFunction("", "Palettes Mixer Panel",      "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Palette_Mixer())}     ).setMenuAlt("Palettes Mixer", "palettes_mixer_panel")
+        registerFunction("", "Gradients Panel",           "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Gradient())}          ).setMenuAlt("Gradients",      "gradients_panel")
+        
+        registerFunction("", "Console Panel",             "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Console())}           ).setMenuAlt("Console",        "console_panel")
+        registerFunction("", "Globalvar Panel",           "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Globalvar())}         ).setMenuAlt("Globalvar",      "globalvar_panel")
+        registerFunction("", "File Explorer Panel",       "", n, function() /*=>*/ {return dialogPanelCall(new Panel_File_Explorer())}     ).setMenuAlt("File",           "file_explorer_panel")
+        registerFunction("", "Locale Manager",            "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Locale_Manager())}    ).setMenuAlt("Locale Manager", "locale_manager_panel")
+        
+        registerFunction("", "Steam Workshop Panel",      "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Steam_Workshop())}    ).setMenuAlt("Steam Workshop", "steam_workshop_panel")
+        registerFunction("", "Collection Runner Panel",   "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Runner())} ).setMenuAlt("Runner",         "collection_runner_panel")
+        registerFunction("", "Node Manager Panel",        "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}     ).setMenuAlt("Node Manager",   "node_manager_panel")
 	}
 #endregion

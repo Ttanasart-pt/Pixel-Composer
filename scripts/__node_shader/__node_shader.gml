@@ -32,26 +32,28 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			switch(instanceof(_inp)) {
 				case "__NodeValue_Float": 
 				case "__NodeValue_Slider": 
-				case "__NodeValue_Rotation":     shader_set_f(_key, _val); break;
+				case "__NodeValue_Rotation":     shader_set_f(_key, _val);       break;
 				
 				case "__NodeValue_Int":
 				case "__NodeValue_ISlider":
 				case "__NodeValue_Bool":
 				case "__NodeValue_Enum_Button":
-				case "__NodeValue_Enum_Scroll":  shader_set_i(_key, _val); break;
+				case "__NodeValue_Enum_Scroll":  shader_set_i(_key, _val);       break;
 				
 				case "__NodeValue_Vec2":
 				case "__NodeValue_IVec2":
 				case "__NodeValue_Range":
 				case "__NodeValue_Dimension":
-				case "__NodeValue_Slider_Range": shader_set_2(_key, _val); break;
+				case "__NodeValue_Slider_Range": shader_set_2(_key, _val);       break;
 				
-				case "__NodeValue_Vec3":         shader_set_3(_key, _val); break;
-				case "__NodeValue_Vec4":         shader_set_4(_key, _val); break;
+				case "__NodeValue_Vec3":         shader_set_3(_key, _val);       break;
+				case "__NodeValue_Vec4":         shader_set_4(_key, _val);       break;
 				
-				case "__NodeValue_Curve":        shader_set_curve(_key, _val); break;
+				case "__NodeValue_Curve":        shader_set_curve(_key, _val);   break;
 				
 				case "__NodeValue_Color":        shader_set_c(_key, _val);       break;
+				case "__NodeValue_Palette":      shader_set_palette(_val, _key); break;
+				
 				case "__NodeValue_Gradient":     shader_set_gradient(_val);      break;
 				case "__NodeValue_Surface":      
 					shader_set_i("use"+_key, is_surface(_val)); 

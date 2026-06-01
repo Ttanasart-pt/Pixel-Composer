@@ -3392,7 +3392,7 @@ function Panel_Preview() : PanelContent() constructor {
     	var hov = pHOVER && point_in_rectangle(mx, my, 0, ty, toolbar_right - ui(4), h);
     	var foc = pFOCUS;
     	
-    	var _toolbars    = "preview_toolbar";
+    	var _toolbars = "preview_toolbar";
         switch(d3_active) {
             case NODE_3D.none :     _toolbars = "preview_toolbar";        break;
             case NODE_3D.polygon :  _toolbars = "preview_toolbar_3d";     break;

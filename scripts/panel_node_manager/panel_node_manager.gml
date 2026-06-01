@@ -271,29 +271,32 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 				fileNameCall("", function(txt) /*=>*/ {
 					if(txt == "") return;
 					var _inode = string_trim(txt, ["/"])
+					var _lnode = string_lower(_inode);
+					
+					var _srcFile = $"{sourceDir}/{_lnode}/{_lnode}.gml";
+					if(!file_exists(_srcFile)) {
+						noti_warning($"Source file {_srcFile} not found.");
+						return;
+					}
 					
 					var _dirpath = $"{selectDir.path}/{_inode}";
 					directory_create(_dirpath);
 					
 					var _name = "";
-					var _lnode = string_lower(_inode);
 					
-					var _srcFile = $"{sourceDir}/{_lnode}/{_lnode}.gml";
-					if(file_exists(_srcFile)) {
-						var _ff = file_text_open_read(_srcFile);
-						while(!file_text_eof(_ff)) {
-							var _l = file_text_readln(_ff);
-							    _l = string_trim(_l);
-							    
-							if(string_starts_with(_l, "name") && string_pos("=", _l)) {
-								var _spr = string_splice(_l, "=");
-								var _nam = string_trim(_spr[1], [" ", ";", "\""]);
-								_name = _nam;
-								break;
-							}
+					var _ff = file_text_open_read(_srcFile);
+					while(!file_text_eof(_ff)) {
+						var _l = file_text_readln(_ff);
+						    _l = string_trim(_l);
+						    
+						if(string_starts_with(_l, "name") && string_pos("=", _l)) {
+							var _spr = string_splice(_l, "=");
+							var _nam = string_trim(_spr[1], [" ", ";", "\""]);
+							_name = _nam;
+							break;
 						}
-						file_text_close(_ff);
 					}
+					file_text_close(_ff);
 					
 					var _infpath = $"{_dirpath}/info.json";
 					var _newNode = {

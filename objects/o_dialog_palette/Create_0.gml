@@ -9,7 +9,9 @@ function __PaletteColor(_color = c_black) constructor {
 }
 
 #region data
-	dialog_w     = ui(812);
+	preset_w     = ui(240);
+	
+	dialog_w     = ui(572) + preset_w;
 	dialog_h     = ui(440);
 	title_height = 52;
 	destroy_on_click_out = true;
@@ -36,7 +38,7 @@ function __PaletteColor(_color = c_black) constructor {
 	index_drag_h = 0; index_drag_h_to = 0;
 	
 	setApply = function(a) /*=>*/ { onModify = a; selector.onModify = a; return self; }
-	setDrop  = function(d) /*=>*/ { drop_target = d;                   return self; }
+	setDrop  = function(d) /*=>*/ { drop_target = d;                     return self; }
 	setColor = function(c) /*=>*/ {
 		if(index_selecting[1] != 1 || palette == 0) return self;
 		
@@ -85,7 +87,7 @@ function __PaletteColor(_color = c_black) constructor {
 	preset_expands   = {};
 	
 	pal_padding = ui(9);
-	sp_preset_w = ui(240) - pal_padding * 2 - ui(8);
+	
 	palCollAll  = 0;
 	projectPal  = {
 		name    : "Project",
@@ -293,7 +295,7 @@ function __PaletteColor(_color = c_black) constructor {
 		return hh;
 	}
 	
-	sp_presets  = new scrollPane(sp_preset_w, dialog_h - ui(48 + 8 + 40) - pal_padding, function(_y, _m) {
+	sp_presets  = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		__fav = undefined;
 		var hh = 0;

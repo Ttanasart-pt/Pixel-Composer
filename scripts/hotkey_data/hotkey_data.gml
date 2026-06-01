@@ -17,15 +17,15 @@ function __initHotKey() {
 	////- Classes
 
 function KeyCombination(_key = "", _modi = MOD_KEY.none) constructor {
-	_K = key_get_index(_key);
-	_M = _modi;
+	_K  = key_get_index(_key);
+	_M  = _modi;
 	
-	static isPressing = function(hold = false) /*=>*/ {return _K > 0 || _M != MOD_KEY.none? key_press(_K, _M, hold) : false};
+	static isPressing = function(hold = false) /*=>*/ {return hasKey()? key_press(_K, _M, hold) : false};
 	static toString   = function() /*=>*/ {return key_get_name(_K, _M)};
 	
 	static set     = function(k,m) /*=>*/ { _K = k;    _M = m;    return self; }
 	static setKey  = function(k)   /*=>*/ { _K = k._K; _M = k._M; return self; }
-	static hasKey  = function()    /*=>*/ {return _K > 0 || _M > 0};
+	static hasKey  = function()    /*=>*/ {return _K > 0 || _M != MOD_KEY.none};
 	static isEqual = function(k)   /*=>*/ {return _K == k._K && _M == k._M};
 	
 	static modify = function()     /*=>*/ { keyboard_lastchar = _K; return self; }

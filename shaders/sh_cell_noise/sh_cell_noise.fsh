@@ -73,7 +73,6 @@ float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _s
 		
 	    for (int y = -1; y <= 1; y++)
 	    for (int x = -1; x <= 1; x++) {
-			
 	        vec2 neighbor = vec2(float(x),float(y));
 	        vec2 point    = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
 			

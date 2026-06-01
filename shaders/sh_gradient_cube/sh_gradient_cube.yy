@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_gradient_cube",
+  "name":"sh_gradient_cube",
+  "parent":{
+    "name":"gradient",
+    "path":"folders/nodes/data/value/gradient.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

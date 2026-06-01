@@ -861,6 +861,7 @@
             "Node_Gradient_Points",
             "Node_Gradient_Points_N",
             "Node_Gradient_Grid",
+            "Node_Gradient_Cube",
             { "label": "/Texture" },
             "Node_Sky",
             
@@ -897,6 +898,9 @@
             "Node_Noise_Aniso",
             "Node_Perlin_Extra",
             "Node_Voronoi_Extra",
+            { "label": "/3D" },
+            "Node_Perlin_Cube",
+            "Node_Cellular_Cube",
             { "label": "/Artistic" },
             "Node_Fold_Noise",
             "Node_Noise_Strand",

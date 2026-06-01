@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_cellular_cube",
+  "name":"sh_cellular_cube",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

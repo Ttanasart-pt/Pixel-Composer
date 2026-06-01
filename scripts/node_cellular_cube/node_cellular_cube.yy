@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_cellular_cube",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_cellular_cube",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

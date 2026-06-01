@@ -1,0 +1,6 @@
+{
+    "name":          "Cellular Cube",
+    "spr":           "s_node_cellular_cube",
+    "baseNode":      "Node_Cellular_Cube",
+    "pxc_version":    121030,
+}

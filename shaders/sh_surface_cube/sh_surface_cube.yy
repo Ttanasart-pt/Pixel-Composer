@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_surface_cube",
+  "name":"sh_surface_cube",
+  "parent":{
+    "name":"surface",
+    "path":"folders/nodes/data/value/surface.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

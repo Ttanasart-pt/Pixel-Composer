@@ -1,4 +1,4 @@
-// Cheap BLuenoise by FabriceNeyret2 
+// Cheap Bluenoise by FabriceNeyret2 
 // https://www.shadertoy.com/view/tllcR2
 // Don't use in production due to license
 

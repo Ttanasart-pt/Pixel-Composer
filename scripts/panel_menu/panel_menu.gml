@@ -300,8 +300,9 @@ function Panel_Menu() : PanelContent() constructor {
             menuItemShelf(__txt("Color"), function(_dat) /*=>*/ {return submenuCall(_dat, [
                 MENU_ITEMS.color_panel,
                 MENU_ITEMS.palettes_panel,
-                MENU_ITEMS.palettes_mixer_panel,
                 MENU_ITEMS.gradients_panel,
+                -1,
+                MENU_ITEMS.palettes_mixer_panel,
             ])}),
             
             -1, 

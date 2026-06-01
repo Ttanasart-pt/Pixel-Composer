@@ -110,19 +110,15 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 	}
 #endregion
 
-#region notification
-	if(!ds_list_empty(WARNING)) {
-		for( var i = ds_list_size(WARNING) - 1; i >= 0; i-- ) {
-			var w = WARNING[| i];
-			if(--w.life <= 0) ds_list_delete(WARNING, i);	
-		}
-	}
+#region notification lifespan
+	for( var i = ds_list_size(WARNING) - 1; i >= 0; i-- )
+		if(--WARNING[| i].life <= 0) ds_list_delete(WARNING, i);	
 #endregion
 
 #region steam
-	steam_update();
-	
 	if(STEAM_ENABLED) {
+		steam_update();
+		
 		if (steam_is_screenshot_requested()) {
 		    var file = $"PixelComposer_{seed_random(6)}.png";
 		    screen_save(file);
@@ -146,5 +142,4 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 		    buffer_delete(_l_cols);
 		}
 	}
-	
 #endregion
