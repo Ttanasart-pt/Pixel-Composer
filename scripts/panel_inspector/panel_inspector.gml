@@ -1767,8 +1767,16 @@ function Panel_Inspector() : PanelContent() constructor {
                 locked = !locked;
             
             by += bs + ui(2);
-            if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Presets"), THEME.preset, 1,,, ui(8)) == 2)
+            var _over = inspecting.overwrited_default;
+            var _txt  = _over? __txt("Presets (Default Overwited)") : __txt("Presets");
+            if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, _txt, THEME.preset, 0,,, ui(8)) == 2)
                 dialogPanelCall(new Panel_Presets(inspecting), x + bx, y + by + ui(36));
+            if(_over) {
+            	BLEND_SUBTRACT
+            	draw_sprite_ui(THEME.circle, 0, bx + bs - ui(6), by + bs - ui(6), 1, 1, 0, COLORS._main_accent);
+            	BLEND_NORMAL
+            	draw_sprite_ui(THEME.circle, 0, bx + bs - ui(6), by + bs - ui(6), .75, .75, 0, COLORS._main_accent);
+            }
                 
         } else {
             draw_sprite_ui_uniform(THEME.preset, 1, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon_dark);
