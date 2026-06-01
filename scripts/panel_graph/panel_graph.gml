@@ -1261,7 +1261,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             if(!MOUSE_WRAPPING) {
                 var dx = mx - graph_drag_mx; 
                 var dy = my - graph_drag_my;
-            
+            	
                 graph_x += dx / graph_s;
                 graph_y += dy / graph_s;
             }

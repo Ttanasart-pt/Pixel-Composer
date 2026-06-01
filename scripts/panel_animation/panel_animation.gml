@@ -398,9 +398,18 @@ function Panel_Animation() : PanelContent() constructor {
         }
     
     	if(timeline_dragging) {
-            timeline_shift_to = timeline_drag_sx + mx - timeline_drag_mx;
-            timeline_shift    = timeline_shift_to;
-            dopesheet_y_to   = clamp(timeline_drag_sy + my - timeline_drag_my, -dopesheet_y_max, 0);
+    		if(!MOUSE_WRAPPING) {
+    			var dx = mx - timeline_drag_mx;
+    			var dy = my - timeline_drag_my;
+    			
+	            timeline_shift_to += dx;
+	            timeline_shift     = timeline_shift_to;
+	            dopesheet_y_to     = clamp(dopesheet_y_to + dy, -dopesheet_y_max, 0);
+    		}
+			
+			timeline_drag_mx = mx;
+			timeline_drag_my = my;
+			setMouseWrap();
                 
             if(mouse_release(mb_middle))
                 timeline_dragging = false;
