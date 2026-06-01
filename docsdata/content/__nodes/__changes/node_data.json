@@ -6,6 +6,11 @@
         "date": "2026-06-01T09:56:02.171Z",
         "node": "",
         "commit": "Remove ShaderToy nodes from custom node folder. (For old user, the custom folder is located at $AppData%\\Local\\PixelComposer\\Nodes\\Custom)"
+      },
+      {
+        "date": "2026-06-01T10:01:33.332Z",
+        "node": "",
+        "commit": "Overwrite default now won't overwrite custom preset."
       }
     ]
   },

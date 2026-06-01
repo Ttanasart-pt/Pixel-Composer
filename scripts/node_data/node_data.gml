@@ -1079,7 +1079,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- PRESETS
 	
-	set_default = true;
+	set_default        = true;
+	overwrited_default = false;
+	
 	static skipDefault = function() /*=>*/ { set_default = false; return self; }
 	
 	static resetDefault = function() {
@@ -1110,8 +1112,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		var _vals = _pres[$ "_values"];
-		print(_vals);
-		if(_vals != undefined) {
+		if(pName == "_default" && _vals != undefined) {
+			overwrited_default = true;
 			if(_vals.content == undefined) _vals.content = json_load_struct(_vals.path);
 			
 			var _cont = _vals.content;
