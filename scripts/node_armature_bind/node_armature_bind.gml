@@ -295,7 +295,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newOutput(2, nodeValue_Output( "Bind data",   VALUE_TYPE.struct,  []    )).shortenDisplay().setArrayDepth(1);
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	////- Layers
 	

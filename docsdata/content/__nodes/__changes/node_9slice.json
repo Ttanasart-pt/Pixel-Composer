@@ -11,6 +11,11 @@
         "date": "2026-06-02T08:40:54.980Z",
         "node": "",
         "commit": "Add Clean Edge interpolation to blend nodes (blend, composite)."
+      },
+      {
+        "date": "2026-06-02T08:49:03.024Z",
+        "node": "Draw Shape",
+        "commit": "**Draw Shape**: Fix Draw Area tool create undo point per frame."
       }
     ]
   }

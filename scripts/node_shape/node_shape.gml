@@ -195,7 +195,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _msx = (_mx - _x) / _s;
 		var _msy = (_my - _y) / _s;
 		
-		if(isUsingTool(0)) {
+		if(isUsingTool("Draw area")) {
 			switch(tool_draw_mode) {
 				case 0 :
 					if(mouse_lpress(active)) {
@@ -222,9 +222,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					var _hh = (_y1 - _y0) / 2;
 					
 					var _area = [ _xc, _yc, _hw, _hh, AREA_SHAPE.rectangle, AREA_MODE.area ];
-					inputs[3].setValue(_area);
+					if(inputs[3].setValue(_area))
+						UNDO_HOLDING = true;
 					
 					if(mouse_lrelease()) {
+						UNDO_HOLDING   = false;
 						tool_draw_mode = 0;
 						PANEL_PREVIEW.resetTool();
 					}

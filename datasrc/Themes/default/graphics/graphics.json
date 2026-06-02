@@ -605,6 +605,7 @@
     "tools_3d_side":                      { "path": "./tool/s_3d_tool_side.png",                            "s": 2, "x":  9, "y":  9 },
     "tools_3d_transform_object":          { "path": "./tool/s_3d_tool_transform_object.png",                "s": 2, "x":  9, "y":  9 },
     "tools_3d_transform":                 { "path": "./tool/s_3d_tool_transform.png",                       "s": 2, "x":  9, "y":  9 },
+    "tools_image":                        { "path": "./tool/s_image_tool.png",                              "s": 2, "x":  9, "y":  9 },
     "tools_canvas_channel":               { "path": "./tool/s_canvas_channel.png",                          "s": 4, "x":  8, "y":  8 },
 
     "button_def":                         { "path": "./widget/s_button.png",                                "s": 4, "x":  0, "y":  0, "slice":  7 },

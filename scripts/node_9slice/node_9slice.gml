@@ -44,7 +44,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	drag_dim_mx = 0;
 	drag_dim_my = 0;
 	
-	tools = [ new NodeTool( "Preview Original", THEME.bone_tool_scale ) ];
+	tools = [ new NodeTool( "Preview Original", THEME.tools_image ) ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK

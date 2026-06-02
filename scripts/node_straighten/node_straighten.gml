@@ -22,7 +22,7 @@ function Node_Straighten(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 	attribute_interpolation(false, true);
 	attribute_oversample();
 	
-	tools = [ new NodeTool( "Preview Original", THEME.bone_tool_scale ) ];
+	tools = [ new NodeTool( "Preview Original", THEME.tools_image ) ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var i = shader_index;

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.003",
+    "changes": [
+      {
+        "date": "2026-06-02T08:49:03.030Z",
+        "node": "",
+        "commit": "**Draw Shape**: Fix Draw Area tool create undo point per frame."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.003",
     "changes": [
       {
