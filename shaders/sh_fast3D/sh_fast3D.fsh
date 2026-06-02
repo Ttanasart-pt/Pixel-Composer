@@ -341,8 +341,12 @@ varying vec3 v_viewNormal;
 uniform vec4 color;
 uniform vec2 viewRange;
 
+uniform vec2 uvPosition;
+uniform vec2 uvScale;
+
 void main() {
-	vec4  base = sampleTexture(gm_BaseTexture, v_vTexcoord);
+	vec2  uv   = v_vTexcoord * uvScale + uvPosition;
+	vec4  base = sampleTexture(gm_BaseTexture, uv);
 	float rim  = abs(v_viewNormal.z);
 	float dep  = v_viewPosition.z;
 	

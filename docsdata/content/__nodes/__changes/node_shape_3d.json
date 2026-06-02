@@ -6,6 +6,11 @@
         "date": "2026-06-02T00:23:53.597Z",
         "node": "",
         "commit": "**Draw Shape 3D**: Add Color Depth, Interpolation attributes."
+      },
+      {
+        "date": "2026-06-02T00:27:53.479Z",
+        "node": "Draw Shape 3D",
+        "commit": "**Draw Shape 3D**: Add UV Position, Scale properties."
       }
     ]
   }

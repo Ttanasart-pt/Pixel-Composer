@@ -66,13 +66,17 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Texturing
 	newInput( 5, nodeValue_Palette( "Colors", [ ca_white ] ));
-	newInput( 6, nodeValue_Surface( "Texture"              ));
 	newInput(10, nodeValue_Float(   "Side Scale", 2        ));
 	newInput(11, nodeValue_Bool(    "Smooth",     0        ));
 	
+		////- =/UV
+	newInput( 6, nodeValue_Surface( "Texture"              ));
+	newInput(17, nodeValue_Vec2(    "UV Position", [0,0]   ));
+	newInput(18, nodeValue_Vec2(    "UV Scale",    [1,1]   ));
+	
 	////- =Rendering
 	newInput( 4, nodeValue_Range( "Depth Range", [.0,.25] ));
-	// 17
+	// 19
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
@@ -82,7 +86,8 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Output",    false ],  0, 16, 
 		[ "Transform", false ],  1,  2,  3, 
 		[ "Shape",     false ],  7,  8,  9, 13, 12, 14, 15, 
-		[ "Texturing", false ],  5,  6, 10, 11, 
+		[ "Texturing", false ],  5, 10, 11, 
+			[ "/UV",   false ],  6, 17, 18, 
 		[ "Rendering", false ],  4,
 	];
 	
@@ -123,9 +128,12 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _heigh = _data[15];
 			
 			var _color = _data[ 5];
-			var _textr = _data[ 6];
 			var _uvsca = _data[10];
 			var _smt   = _data[11];
+			
+			var _textr = _data[ 6];
+			var _uvPos = _data[17];
+			var _uvSca = _data[18];
 			
 			var _depth = _data[ 4];
 			
@@ -309,6 +317,9 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			matrix_set(matrix_world, matrix_stack_top());
 			
 			shader_set_2("viewRange", _depth);
+			
+			shader_set_2("`uvPosition`", _uvPos);
+			shader_set_2("uvScale",    _uvSca);
 			
 			var _clen = array_length(_color);
 			var _ttex = is_surface(_textr)? surface_get_texture(_textr) : -1;
