@@ -5093,6 +5093,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	if(instance_exists(o_pie_menu) && o_pie_menu.active) {
     		o_pie_menu.deactivate();
+    		node_focus_context = undefined;
     		return;
     	}
     	

@@ -218,7 +218,7 @@ void main() {
 			bool lightBlocked = false;
 			
 			float currDist = min(dstTx, sl.r);
-			vec2 _pos;
+			vec2 _pos = v_vTexcoord;
 			
 			for(float i = 0.; i < maxItr * subStep; i++) {
 				if(currDist > dstTx) break;
