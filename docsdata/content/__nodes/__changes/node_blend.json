@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.003",
+    "changes": [
+      {
+        "date": "2026-06-02T08:40:54.986Z",
+        "node": "",
+        "commit": "Add Clean Edge interpolation to blend nodes (blend, composite)."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

@@ -428,7 +428,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Attributes
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
+	
 	attributes.layer_visible    = [];
 	attributes.layer_selectable = [];
 	attributes.layer_order      = [];

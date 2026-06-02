@@ -102,6 +102,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_simple();
 	attribute_surface_depth();
+	attribute_interpolation(false, true);
 	
 	temp_surface	   = [ noone, noone ];
 	blend_temp_surface = temp_surface[1];
@@ -296,7 +297,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 			
 		} else if(_fill == NODE_BLEND_FILL.stretch) {
-			surface_set_shader(_foreDraw, noone,, BLEND.over);
+			surface_set_shader(_foreDraw, sh_sample,, BLEND.over);
+				shader_set_interpolation(_fore)
 				draw_surface_stretched_safe(_fore, 0, 0, ww, hh);
 			surface_reset_shader();
 			

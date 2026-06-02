@@ -221,10 +221,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return _outData;
 	}
 	
-	static getPreviewValues = function() { 
-		if(isUsingTool("Preview Original")) return inputs[0].getValue();
-		return outputs[0].getValue(); 
-	}
+	static getPreviewValues = function() { return isUsingTool("Preview Original")? inputs[0].getValue() : outputs[0].getValue(); }
 	
 	////- Clean Up
 	

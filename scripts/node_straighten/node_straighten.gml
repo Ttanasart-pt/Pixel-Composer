@@ -5,7 +5,7 @@ function Node_Straighten(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 	var i = shader_index;
 	
 	////- =Straighten
-	newInput(i+ 0, nodeValue_EScroll( "Mode",    0, [ "2D", "Perspective" ] )).setShaderProp("mode");
+	newInput(i+ 0, nodeValue_EScroll( "Mode", 0, [ "2D", "Perspective" ] )).setShaderProp("mode");
 	
 	newInput(i+ 1, nodeValue_Vec2( "Point Start", [0,.5] )).setUnitSimple().setShaderProp("points1");
 	newInput(i+ 2, nodeValue_Vec2( "Point End",   [1,.5] )).setUnitSimple().setShaderProp("points2");
@@ -21,6 +21,8 @@ function Node_Straighten(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 	
 	attribute_interpolation(false, true);
 	attribute_oversample();
+	
+	tools = [ new NodeTool( "Preview Original", THEME.bone_tool_scale ) ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var i = shader_index;
@@ -89,5 +91,7 @@ function Node_Straighten(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 		inputs[i+ 5].setVisible(_mode == 1);
 		inputs[i+ 6].setVisible(_mode == 1);
 	}
+	
+	static getPreviewValues = function() { return isUsingTool("Preview Original")? inputs[0].getValue() : outputs[0].getValue(); }
 	
 }
