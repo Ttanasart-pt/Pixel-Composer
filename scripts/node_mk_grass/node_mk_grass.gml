@@ -7,45 +7,47 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Source
 	onSurfaceSize = function() /*=>*/ {return getDimension()};
 	
-	newInput(2, nodeValue_Enum_Scroll("Source", 0, [ "Area", "Mask", "Region", "Color Picker" ]));
-	newInput(3, nodeValue_Area(       "Area",  DEF_AREA_REF, { onSurfaceSize })).setUnitSimple();
-	newInput(4, nodeValue_Surface(    "Mask" ));
-	newInput(5, nodeValue_Vec2(       "Picker", [ 0, 0 ] )).setUnitSimple();
-	newInput(6, nodeValue_Slider(     "Picker Threshold", .1 ));
+	newInput( 2, nodeValue_EScroll(  "Source", 0, [ "Area", "Mask", "Region", "Color Picker", "Color Sample" ]));
+	newInput( 3, nodeValue_Area(     "Area",  DEF_AREA_REF, { onSurfaceSize })).setUnitSimple();
+	newInput( 4, nodeValue_Surface(  "Mask" ));
+	newInput( 5, nodeValue_Vec2(     "Picker", [0,0] )).setUnitSimple();
+	newInput( 6, nodeValue_Slider(   "Picker Threshold",   .1 ));
+	newInput(24, nodeValue_Color(    "Sample Color", ca_white ));
+	newInput(25, nodeValue_Slider(   "Sample Threshold",   .1 ));
 	
 	////- =Shape
 	shape_types = __enum_array_gen([ "Dense Bush", "V", "Hash", "Line", "W" ], s_node_mk_grass_type, c_white);
-	newInput( 7, nodeValue_Enum_Scroll( "Shape",    0, { data: shape_types, horizontal: 2, text_pad: ui(16) } )).getEditWidget().setFilter(false);
-	newInput(22, nodeValue_Slider(      "Ratio",   .5     ));
-	newInput( 8, nodeValue_Range(       "Size",    [4,4], { linked: true }));
-	newInput(17, nodeValue_Slider(      "Spread",   0     ));
-	newInput(20, nodeValue_Float(       "Extra",    0     ));
-	newInput(21, nodeValue_Range(       "Sway X",  [-4,4] ));
+	newInput( 7, nodeValue_EScroll( "Shape",    0, { data: shape_types, horizontal: 2, text_pad: ui(16) } )).getEditWidget().setFilter(false);
+	newInput(22, nodeValue_Slider(  "Ratio",   .5     ));
+	newInput( 8, nodeValue_Range(   "Size",    [4,4], { linked: true }));
+	newInput(17, nodeValue_Slider(  "Spread",   0     ));
+	newInput(20, nodeValue_Float(   "Extra",    0     ));
+	newInput(21, nodeValue_Range(   "Sway X",  [-4,4] ));
 	
 	////- =Scatter
-	newInput( 9, nodeValue_Slider( "Distribution", .5 ));
-	newInput(10, nodeValue_Int(    "Level",         1 ));
-	newInput(11, nodeValue_Slider( "Sharpness",    .5 ));
-	newInput(14, nodeValue_Float(  "Noise Scale",   1 ));
-	newInput(15, nodeValue_Int(    "Noise Detail",  1 ));
+	newInput( 9, nodeValue_Slider(  "Distribution", .5 ));
+	newInput(10, nodeValue_Int(     "Level",         1 ));
+	newInput(11, nodeValue_Slider(  "Sharpness",    .5 ));
+	newInput(14, nodeValue_Float(   "Noise Scale",   1 ));
+	newInput(15, nodeValue_Int(     "Noise Detail",  1 ));
 	
 	////- =Render
-	newInput(23, nodeValue_Bool(        "Draw Original", true ));
-	newInput(12, nodeValue_Enum_Scroll( "Render Type",    0, [ "Gradient", "Sample Multiply", "Sample Add" ] ));
-	newInput(13, nodeValue_Gradient(    "Colors",         gra_black_white ));
-	newInput(16, nodeValue_Slider(      "Color Variance", 0 ));
+	newInput(23, nodeValue_Bool(    "Draw Original",  true ));
+	newInput(12, nodeValue_EScroll( "Render Type",    0, [ "Gradient", "Sample Multiply", "Sample Add" ] ));
+	newInput(13, nodeValue_Gradient("Colors",         gra_black_white ));
+	newInput(16, nodeValue_Slider(  "Color Variance", 0 ));
 	
 	////- =Ground
 	newInput(18, nodeValue_Bool(  "Fill Ground", false));
 	newInput(19, nodeValue_Color( "Ground",      ca_black));
-	// input 24
+	// input 26
 	
 	input_display_list = [ s_MKFX, 1, 0, 
-		["Source",  false    ],  2,  3,  4,  5,  6, 
-		["Shape",   false    ],  7, 22,  8, 17, 20, 21, 
-		["Scatter", false    ],  9, 11, 14, 15,
-		["Render",  false    ], 23, 12, 13, 16, 
-		["Ground",  false, 18], 19, 
+		[ "Source",  false     ],  2,  3,  4,  5,  6, 24, 25, 
+		[ "Shape",   false     ],  7, 22,  8, 17, 20, 21, 
+		[ "Scatter", false     ],  9, 11, 14, 15,
+		[ "Render",  false     ], 23, 12, 13, 16, 
+		[ "Ground",  false, 18 ], 19, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -73,14 +75,16 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _seed     = _data[1];
-			var _surf     = _data[0];
+			var _seed     = _data[ 1];
+			var _surf     = _data[ 0];
 			
-			var _src      = _data[2];
-			var _area     = _data[3];
-			var _mask     = _data[4];
-			var _pick     = _data[5];
-			var _pick_thr = _data[6];
+			var _src      = _data[ 2];
+			var _area     = _data[ 3];
+			var _mask     = _data[ 4];
+			var _pick     = _data[ 5];
+			var _pick_thr = _data[ 6];
+			var _sam_colr = _data[24];
+			var _sam_thrs = _data[25];
 			
 			var _shape    = _data[ 7];
 			var _dist     = _data[22];
@@ -109,10 +113,12 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[20].setVisible(_shape == 0);
 			inputs[21].setVisible(_shape == 3 || _shape == 4);
 			
-			inputs[3].setVisible(_src == 0);
-			inputs[4].setVisible(_src == 1,   _src == 1);
-			inputs[5].setVisible(_src == 2 || _src == 3);
-			inputs[6].setVisible(_src == 2 || _src == 3);
+			inputs[ 3].setVisible(_src == 0);
+			inputs[ 4].setVisible(_src == 1,   _src == 1);
+			inputs[ 5].setVisible(_src == 2 || _src == 3);
+			inputs[ 6].setVisible(_src == 2 || _src == 3);
+			inputs[24].setVisible(_src == 4);
+			inputs[25].setVisible(_src == 4);
 			
 			if(!is_surface(_surf)) return _outSurf;
 		#endregion
@@ -164,11 +170,11 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				repeat(_itr) {
 					surface_set_shader(temp_surface[_bg], sh_mk_grass_floodfill);
-						shader_set_surface("baseSurface", _surf);
-						shader_set_2("dimension", _dim);
-						shader_set_c("baseColor", _baseColor);
-						shader_set_f("threshold", _pick_thr);
-						shader_set_i("region",    _src == 2);
+						shader_set_s( "baseSurface", _surf      );
+						shader_set_2( "dimension",   _dim       );
+						shader_set_c( "baseColor",   _baseColor );
+						shader_set_f( "threshold",   _pick_thr  );
+						shader_set_i( "region",      _src == 2  );
 						
 						draw_surface_safe(temp_surface[!_bg]);
 					surface_reset_shader();
@@ -176,6 +182,16 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				}
 				
 				_gMaskIndex = !_bg;
+				break;
+				
+			case 4 : 
+				surface_set_shader(temp_surface[0], sh_mk_grass_filter);
+					shader_set_c( "sampleColor", _sam_colr );
+					shader_set_f( "threshold",   _sam_thrs );
+					
+					draw_surface_safe(_surf); 
+				surface_reset_shader();
+				
 				break;
 		} // Generate Mask
 		
