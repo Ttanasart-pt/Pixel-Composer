@@ -484,7 +484,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txt("pref_ui_font", "Overwrite UI font") + "*",
     			"font_overwrite",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("font_overwrite", txt, true)})
-    				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_compat("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
+    				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_compat("Font Files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty()
     		));
     		
@@ -2122,7 +2122,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    	bx += bw + ui(4);
 	    	
 	    	if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, [mx,my], pHOVER, pFOCUS, "", "Load") == 2) {
-	    		var _path = get_open_filename_compat("zip file|.zip", "Preference-backup");
+	    		var _path = get_open_filename_compat("Zip File (.zip)|.zip", "Preference-backup");
 	    		if(_path != "") {
 	    			directory_clear($"{DIRECTORY}Preferences");
 	    			zip_unzip(_path, $"{DIRECTORY}Preferences");

@@ -43,7 +43,7 @@ function LOAD_SAFE() { LOAD(true); }
 function LOAD(safe = false) {
 	if(DEMO) return false;
 	
-	var path = get_open_filename_compat("Pixel Composer project (.pxc)|*.pxc;*.cpxc", "");
+	var path = get_open_filename_compat("Pixel Composer Project (.pxc)|*.pxc;*.cpxc", "");
 	key_release();
 	if(path == "") return;
 	
@@ -168,7 +168,7 @@ function LOAD_METADATA(path) {
 
 function __EXPORT_ZIP()	{ exportPortable(PROJECT); }
 function __IMPORT_ZIP() {
-	var _path = get_open_filename_compat("Pixel Composer portable project (.zip)|*.zip", "");
+	var _path = get_open_filename_compat("Pixel Composer Portable Project (.zip)|*.zip", "");
 	if(!file_exists_empty(_path)) return;
 	
 	var _fname = filename_name_only(_path);

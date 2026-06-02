@@ -1,7 +1,7 @@
 function Node_create_CSV_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("comma separated value|*.csv", "");
+		path = get_open_filename_compat("Comma Separated Value (.csv)|*.csv", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -31,7 +31,7 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w     = 128;
 	
 	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV file|*.csv" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV File (.csv)|*.csv" })
 		.rejectArray();
 		
 	newInput(1, nodeValue_Bool("Convert to Number", false))

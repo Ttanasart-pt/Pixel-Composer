@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.003",
+    "changes": [
+      {
+        "date": "2026-06-02T00:13:26.701Z",
+        "node": "",
+        "commit": "**Text File Read**: Add Any file type in native file selector."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.002",
     "changes": [
       {

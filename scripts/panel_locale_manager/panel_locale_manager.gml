@@ -204,7 +204,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		static importMissing = function(_file) {
 			switch(_file) {
 				case "words" :
-					var _path = get_open_filename_compat("JSON|*.json", "words_missing.json");
+					var _path = get_open_filename_compat("JSON (.json)|*.json", "words_missing.json");
 					if(_path == "") return;
 					
 					var _str = json_load_struct(_path);
@@ -223,7 +223,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 					break;
 				
 				case "nodes" :
-					var _path = get_open_filename_compat("JSON|*.json", "nodes_missing.json");
+					var _path = get_open_filename_compat("JSON (.json)|*.json", "nodes_missing.json");
 					if(_path == "") return;
 					
 					var _str = json_load_struct(_path);

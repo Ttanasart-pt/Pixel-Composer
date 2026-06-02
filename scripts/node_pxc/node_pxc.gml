@@ -1,7 +1,7 @@
 function Node_create_PXC(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("Pixel Composer project(.pxc)|*.pxc", "");
+		path = get_open_filename_compat("Pixel Composer Project (.pxc)|*.pxc", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -32,7 +32,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setCacheManual();
 	
 	////- Project
-	newInput( 0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Pixel Composer project(.pxc)|*.pxc" }).rejectArray();
+	newInput( 0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Pixel Composer Project (.pxc)|*.pxc" }).rejectArray();
 	
 	////- Animation
 	newInput( 1, nodeValue_Bool(    "Animated",          true  ));

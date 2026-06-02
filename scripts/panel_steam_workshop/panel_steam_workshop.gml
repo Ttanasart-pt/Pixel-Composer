@@ -376,7 +376,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 		menu_profile_edit = [
 			__txt("Profile image uses data from Steam."), 
 			menuItem(__txt("Set Profile Graph"), function() /*=>*/ {
-				var _path = get_open_filename_compat("Pixel Composer collection (.pxcc)|*.pxcc", "", "Open", DIRECTORY + "Collections");
+				var _path = get_open_filename_compat("Pixel Composer Collection (.pxcc)|*.pxcc", "", "Open", DIRECTORY + "Collections");
 				if(!file_exists_empty(_path)) return;
 				
 				var _str = file_read_all(_path);

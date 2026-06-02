@@ -1,7 +1,7 @@
 function Node_create_Text_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("text file|*.txt", "");
+		path = get_open_filename_compat("Text File (.txt)|*.txt|All Files|*", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -32,12 +32,11 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	w = 128;
 	
 	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "any file|*" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Text File (.txt)|*.txt|All Files|*" })
 		.rejectArray();
 	
 	newOutput(0, nodeValue_Output("Content", VALUE_TYPE.text, ""));
-	newOutput(1, nodeValue_Output("Path", VALUE_TYPE.path, ""))
-		.setVisible(true, true);
+	newOutput(1, nodeValue_Output("Path",    VALUE_TYPE.path, "")).setVisible(true, true);
 	
 	content      = "";
 	path_current = "";

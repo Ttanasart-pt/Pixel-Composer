@@ -1,7 +1,7 @@
 function Node_create_XML_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("xml|*.xml", "");
+		path = get_open_filename_compat("XML (.xml)|*.xml", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -32,7 +32,7 @@ function Node_XML_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w = 128;
 	
 	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "XML file|*.xml" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "XML File (.xml)|*.xml" })
 		.rejectArray();
 		
 	newOutput(0, nodeValue_Output("Content", VALUE_TYPE.struct, {}));

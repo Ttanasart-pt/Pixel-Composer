@@ -5099,6 +5099,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var _pInp = node_hovering.pie_junctions;
     	if(array_empty(_pInp)) return;
     	
+    	node_focus_context = instanceof(node_hovering);
     	var _pmenu = [];
     	for( var i = 0, n = array_length(_pInp); i < n; i++ ) {
     		var _inp = _pInp[i];

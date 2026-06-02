@@ -1,7 +1,7 @@
 function Node_create_Krita_File_Read(_x, _y, _group = noone) { 
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("Krita file (*.kra)|*.kra", "");
+		path = get_open_filename_compat("Krita File (*.kra)|*.kra", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -30,7 +30,7 @@ function Node_Krita_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	w    = 128;
 	update_on_frame = false;
 	
-	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
+	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite File (.ase, .aseprite)|*.ase;*.aseprite" });
 	
 	/////////////////////////////////
 	

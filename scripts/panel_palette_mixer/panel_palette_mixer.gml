@@ -515,7 +515,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 								if(_path != "") save_palette_mixer(palette_data, _path);
 							}, THEME.save),
 							menuItem("Load mixed...", function() { 
-								var _path = get_open_filename_compat("JSON|*.json", "");
+								var _path = get_open_filename_compat("JSON (.json)|*.json", "");
 								if(_path != "") palette_data = load_palette_mixer(_path);
 							}, THEME.noti_icon_file_load),
 							-1,

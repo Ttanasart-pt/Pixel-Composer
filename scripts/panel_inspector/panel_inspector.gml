@@ -2199,7 +2199,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         	draw_sprite_stretched(THEME.textbox, 1, _wdx, yy, _wdw, wh);
                         	
                         	if(mouse_lpress(pFOCUS)) {
-                        		var _path = get_open_filename_compat("Image|.png;.gif", "thumbnail")
+                        		var _path = get_open_filename_compat("Image (.png, .gif)|.png;.gif", "thumbnail")
                         		if(_path != "") steam_ugc_update_project_preview(_path, "Update Thumbnail");
                         	}
                         }

@@ -1,7 +1,7 @@
 function Node_create_ASE_File_Read(_x, _y, _group = noone) { 
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("Aseprite file (*.aseprite, *.ase)|*.aseprite;*.ase", "");
+		path = get_open_filename_compat("Aseprite File (*.aseprite, *.ase)|*.aseprite;*.ase", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -30,7 +30,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w    = 128;
 	update_on_frame = false;
 	
-	newInput(0, nodeValue_Path(    "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
+	newInput(0, nodeValue_Path(    "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite File (.ase, .aseprite)|*.ase;*.aseprite" });
 	/*UNUSED*/ newInput(1, nodeValue_Trigger( "Generate layers" ));
 	
 	newInput(2, nodeValue_Text(    "Current tag"     ));

@@ -167,7 +167,7 @@ draggable = true;
 		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, interactable && foc, _txt, THEME.dFile_load);
 		if(b) { mouse_draggable = false; draggable = false; }
 		if(b == 2) {
-			var path = get_open_filename_compat("HEX palette|*.hex", "");
+			var path = get_open_filename_compat("HEX Palette (.hex)|*.hex", "");
 			key_release();
 			
 			if(isPaletteFile(path)) {

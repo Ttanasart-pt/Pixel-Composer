@@ -4,7 +4,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Path("DLL File"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Dynamic-link library (.dll)|*.dll" })
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Dynamic-link Library (.dll)|*.dll" })
 		.setVisible(true, false);
 	
 	newInput(1, nodeValue_Text("Function name"));

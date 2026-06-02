@@ -8,15 +8,5 @@
         "commit": "**Text File Read**: Add Any file type in native file selector."
       }
     ]
-  },
-  {
-    "version": "1.21.rc6",
-    "changes": [
-      {
-        "date": "2026-04-16T02:45:52.920Z",
-        "node": "",
-        "commit": "**Locale**: Remove comments and duplicated entries in words.json"
-      }
-    ]
   }
 ]

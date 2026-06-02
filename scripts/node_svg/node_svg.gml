@@ -12,7 +12,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "SVG";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path(    "Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics|*.svg" });
+	newInput(0, nodeValue_Path(    "Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics (.svg)|*.svg" });
 	newInput(2, nodeValue_EButton( "Type",      0, [ "Scale", "Constant" ] ));
 	newInput(1, nodeValue_Float(   "Scale",     1        ));
 	newInput(3, nodeValue_Dimension());

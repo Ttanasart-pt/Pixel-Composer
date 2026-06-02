@@ -142,7 +142,7 @@ function Node_LUT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	__init_mask_modifier(1, 3); // inputs 3, 4
 	
 	////- =LUT
-	newInput( 7, nodeValue_Path(   "LUT File"    )).setDisplay(VALUE_DISPLAY.path_load, { filter: "CUBE file|*.cube" });
+	newInput( 7, nodeValue_Path(   "LUT File"    )).setDisplay(VALUE_DISPLAY.path_load, { filter: "CUBE LUT File (.cube)|*.cube" });
 	newInput( 8, nodeValue_Slider( "Strength", 1 ));
 	// 9
 	

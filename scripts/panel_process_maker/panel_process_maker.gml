@@ -1270,7 +1270,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			var b  = buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Set Audio", THEME.play_sound, ii, cc, 1, .75)
 			if(b == 3) PROJECT.trackAnim.audio_loop = "";
 			if(b == 2) {
-				var _path  = get_open_filename_compat("Audio Files|*.wav;*.ogg;*.mp3", "");
+				var _path  = get_open_filename_compat("Audio Files (.wav, .ogg, .mp3)|*.wav;*.ogg;*.mp3", "");
 				if(_path != "") PROJECT.trackAnim.audio_loop = _path;
 			} bx += bs + ui(2);
 			

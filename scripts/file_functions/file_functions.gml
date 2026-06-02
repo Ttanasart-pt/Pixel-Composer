@@ -1,5 +1,5 @@
 #region global
-	#macro FILE_SEL_IMAGE "image|*.png;*.jpg;*.bmp;*.webp"
+	#macro FILE_SEL_IMAGE "Image (.png, .jpg, .bmp, .webp)|*.png;*.jpg;*.bmp;*.webp"
 	#macro FILE_EXT_IMAGE ".png;.jpg;.jpeg;.bmp;.webp"
 #endregion
 

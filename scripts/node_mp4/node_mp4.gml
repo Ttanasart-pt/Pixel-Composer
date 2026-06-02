@@ -1,7 +1,7 @@
 function Node_create_Image_mp4(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("mp4|*.mp4", "");
+		path = get_open_filename_compat("MP4 (.mp4)|*.mp4", "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -34,7 +34,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 8, nodeValue_Bool( "Edit in Timeline",   true  ));
 	
 	////- =Image
-	newInput( 0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "mp4|*.mp4" });
+	newInput( 0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "MP4 (.mp4)|*.mp4" });
 	detail = new Inspector_Label("Mp4 file");
 	
 	////- =Output
