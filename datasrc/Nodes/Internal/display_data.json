@@ -609,6 +609,7 @@
             "Node_Polar",
             "Node_Wrap_Area",
             "Node_Stretch",
+            "Node_Straighten",
             
             { "label": "Other" },
             "Node_Composite",
@@ -711,6 +712,7 @@
             "Node_Curvature",
             "Node_Hough_Transform",
             "Node_Line_Match",
+            "Node_Linearize",
             
             { "label": "Color" },
             { "label": "/Replacement" },

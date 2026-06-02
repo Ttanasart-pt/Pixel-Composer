@@ -29,7 +29,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	attribute_surface_depth();
 	attribute_oversample();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	static centerAnchor = function() {
 		if(!is_surface(current_data[0])) return;

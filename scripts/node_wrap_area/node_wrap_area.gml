@@ -18,7 +18,7 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Nodes
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
@@ -42,8 +42,8 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var hh = ch / surface_get_height_safe(_inSurf) * 2;
 		
 		surface_set_shader(_outSurf);
-		shader_set_interpolation(_inSurf);
-		draw_surface_ext_safe(_inSurf, cx - cw, cy - ch, ww, hh, 0, c_white, 1);
+			shader_set_interpolation(_inSurf);
+			draw_surface_ext_safe(_inSurf, cx - cw, cy - ch, ww, hh, 0, c_white, 1);
 		surface_reset_shader();
 		
 		return _outSurf;

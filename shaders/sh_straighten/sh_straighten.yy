@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_straighten",
+  "name":"sh_straighten",
+  "parent":{
+    "name":"fixes",
+    "path":"folders/nodes/data/filter/fixes.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

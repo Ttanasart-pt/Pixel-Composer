@@ -46,7 +46,10 @@ function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		return _outSurf;
 	}
 	
+	static onProcessData = function(_outSurf, _data, _array_index) {}
+	
 	static processData = function(_outSurf, _data, _array_index) {
+		onProcessData(_outSurf, _data, _array_index);
 		return processShader(_outSurf, _data);
 	}
 }

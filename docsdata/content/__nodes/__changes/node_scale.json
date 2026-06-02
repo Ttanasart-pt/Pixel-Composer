@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.003",
+    "changes": [
+      {
+        "date": "2026-06-02T08:25:05.428Z",
+        "node": "",
+        "commit": "Add Clean Edge interpolation to warp related nodes (warp, polar, mirror polar, scale, skew, bend, stretch)"
+      }
+    ]
+  },
+  {
     "version": "1.21.1.010",
     "changes": [
       {

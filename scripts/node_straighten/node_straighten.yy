@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_straighten",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_straighten",
+  "parent":{
+    "name":"fixes",
+    "path":"folders/nodes/data/filter/fixes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

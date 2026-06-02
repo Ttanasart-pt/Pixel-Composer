@@ -333,103 +333,45 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+#define TAU 6.28318530718
+
 uniform vec2 dimension;
-uniform vec2 surfaceSize;
 
-uniform vec2 p0;
-uniform vec2 p1;
-uniform vec2 p2;
-uniform vec2 p3;
-uniform int  tile;
-uniform int  flip;
+uniform int  mode;
 
-float unmix( float st, float ed, float val) { return (val - st) / (ed - st); }
+uniform vec2 points1;
+uniform vec2 points2;
 
-// 2 1
-// 3 0
+uniform vec2 persPoints1;
+uniform vec2 persPoints2;
+uniform vec2 persPoints3;
+uniform vec2 persPoints4;
 
 void main() {
-	float px = v_vTexcoord.x;
-	float py = v_vTexcoord.y;
-	float u, v;
-	vec2 uv, _p;
+	vec2 tx = 1. / dimension;
+	vec2 uv = v_vTexcoord;
 	
-	vec2 _p0 = p0 / surfaceSize;
-	vec2 _p1 = p1 / surfaceSize;
-	vec2 _p2 = p2 / surfaceSize;
-	vec2 _p3 = p3 / surfaceSize;
-	
-	bool aliX = abs(p2.x - p3.x) < 1. && abs(p1.x - p0.x) < 1.;
-	bool aliY = abs(p3.y - p0.y) < 1. && abs(p2.y - p1.y) < 1.;
-	gl_FragColor = vec4(0.);
-	
-	if(aliX && aliY) {
-		float tx = (px - _p2.x) / (_p1.x - _p2.x);
-		float ty = (py - _p2.y) / (_p3.y - _p2.y);
+	if(mode == 0) { // 2D
+		float angle = atan(points2.y - points1.y, points2.x - points1.x);
+		float ang   = -angle;
+		mat2  rot   = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+		uv = uv * rot;
 		
-		uv = vec2(tx, ty);
-	
-	} else if(aliX) { // trapezoid edge case
-		float t  = (px - _p2.x) / (_p1.x - _p2.x);
+	} else if(mode == 1) { // 3D perspective straighten
+		// For each output UV (i,j), compute the corresponding sample position
+		// in the distorted input via forward bilinear evaluation of the quad.
+		// p1=top-left, p2=top-right, p3=bottom-left, p4=bottom-right (i,j in [0,1])
+		vec2 p1 = persPoints1 / dimension;
+		vec2 p2 = persPoints2 / dimension;
+		vec2 p3 = persPoints3 / dimension;
+		vec2 p4 = persPoints4 / dimension;
 		
-		float y0 = mix(_p1.y, _p2.y, 1. - t);
-		float y1 = mix(_p0.y, _p3.y, 1. - t);
+		float i = uv.x;
+		float j = uv.y;
 		
-		u = t;
-		v = unmix(y0, y1, py);
-		uv = vec2(u, v);
-		
-		int side = y0 > y1? 1 : 0;
-		// if(flip != side) return;
-		if(side == 1) discard;
-	
-	} else if (aliY) { // trapezoid edge case
-		float t = (py - _p2.y) / (_p3.y - _p2.y);
-		
-		float x0 = mix(_p3.x, _p2.x, 1. - t);
-		float x1 = mix(_p0.x, _p1.x, 1. - t);
-		
-		u = unmix(x0, x1, px);
-		v = t;
-		uv = vec2(u, v);
-		
-		int side = x0 > x1? 1 : 0;
-		if(flip != side) discard;
-	
-	} else {
-		vec2 p = v_vTexcoord;
-		vec2 A = (_p3 - _p0) - (_p2 - _p1);
-	    vec2 B = (_p0 - _p1);
-	    vec2 C = (_p2 - _p1);
-	    vec2 D =  _p1;
-	
-		float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
-	    float c2 = (B.y * D.x) - (B.x * D.y);
-	
-		float _A = (A.y * C.x) - (A.x * C.y);
-		float _B = (A.x * p.y) + c1 - (A.y * p.x);
-		float _C = (B.x * p.y) + c2 - (B.y * p.x);
-		
-		float u = 0., v = 0.;
-		
-		if(abs(_A) > .00001)
-			 u = (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
-		else u = -_C / _B;
-		
-		if((u * A.x + B.x) != 0.)
-			v = (p.x - (u * C.x) - D.x) / (u * A.x + B.x);
-		
-		uv =  vec2(u, v);
-		uv = vec2(1. - uv.x, uv.y);
+		// sample = p1 + (p2-p1)*i + (p3-p1)*j + (p4-p3-p2+p1)*i*j
+		uv = p1 + (p2 - p1) * i + (p3 - p1) * j + (p4 - p3 - p2 + p1) * i * j;
 	}
 	
-	bool tileX = tile == 1 || tile == 3;
-	bool tileY = tile == 2 || tile == 3;
-	
-	if(tileX) uv.x = fract(1. + fract(uv.x));
-	if(tileY) uv.y = fract(1. + fract(uv.y));
-	
-	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
-		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );
-	else discard;
+	gl_FragColor = sampleTexture(gm_BaseTexture, uv);
 }

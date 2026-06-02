@@ -31,7 +31,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- Node
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	drag_side = -1;
 	drag_mx   = 0;

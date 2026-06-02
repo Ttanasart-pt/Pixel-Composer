@@ -31,7 +31,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- Nodes
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	vb       = undefined;
 	vb_minx  = 0;
@@ -252,9 +252,9 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _hh = vb_maxy - vb_miny;
 			_outSurf = surface_verify(_outSurf, _ww, _hh);
 		
-			surface_set_shader(_outSurf, noone);
+			surface_set_shader(_outSurf, sh_sample);
 			draw_set_color_alpha(c_white, 1);
-			gpu_set_texfilter(getAttribute("interpolate") > 1);
+			shader_set_interpolation(_outSurf);
 			
 			matrix_stack_clear();
 			matrix_stack_push([

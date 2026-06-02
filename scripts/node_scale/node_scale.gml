@@ -33,7 +33,7 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- Node
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }

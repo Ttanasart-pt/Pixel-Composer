@@ -43,7 +43,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- Node
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
