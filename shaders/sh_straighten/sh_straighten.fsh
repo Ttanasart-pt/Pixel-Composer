@@ -358,9 +358,6 @@ void main() {
 		uv = uv * rot;
 		
 	} else if(mode == 1) { // 3D perspective straighten
-		// For each output UV (i,j), compute the corresponding sample position
-		// in the distorted input via forward bilinear evaluation of the quad.
-		// p1=top-left, p2=top-right, p3=bottom-left, p4=bottom-right (i,j in [0,1])
 		vec2 p1 = persPoints1 / dimension;
 		vec2 p2 = persPoints2 / dimension;
 		vec2 p3 = persPoints3 / dimension;
