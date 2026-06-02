@@ -18,4 +18,6 @@ function Node_Line_Match(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 		[ "Rendering", false ], i+1, i+2, 
 	]);
 	
+	attribute_oversample();
+	
 }

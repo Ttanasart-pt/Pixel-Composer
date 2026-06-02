@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.003",
+    "changes": [
+      {
+        "date": "2026-06-02T04:44:38.970Z",
+        "node": "Line Match",
+        "commit": "**Line Match**: Add oversample attribute."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {
