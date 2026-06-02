@@ -97,6 +97,10 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- Nodes
 	
+	attribute_surface_depth();
+	attribute_oversample();
+	attribute_interpolation(false, true);
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
@@ -287,12 +291,13 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		if(!d) {
 			for( var i = 0, n = array_length(_outData); i < n; i++ ) {
 				surface_free(_outData[i]);
-				_outData[i] = surface_create(_dim[0], _dim[1]);
+				_outData[i] = surface_create(_dim[0], _dim[1], attrDepth());
 			}
 		}
 		
 		surface_set_shader(_outData, sh_fast3D);
-
+			shader_set_interpolation(_outData[0]);
+			
 			camera_set_view_mat(d3dCamera, viewMat);
 			camera_set_proj_mat(d3dCamera, projMat);
 			camera_apply(d3dCamera);

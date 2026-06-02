@@ -6,6 +6,11 @@
         "date": "2026-06-02T00:13:26.694Z",
         "node": "",
         "commit": "**Text File Read**: Add Any file type in native file selector."
+      },
+      {
+        "date": "2026-06-02T00:23:53.597Z",
+        "node": "Draw Shape 3D",
+        "commit": "**Draw Shape 3D**: Add Color Depth, Interpolation attributes."
       }
     ]
   },

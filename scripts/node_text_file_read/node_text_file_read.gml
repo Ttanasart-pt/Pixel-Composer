@@ -35,8 +35,8 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Text File (.txt)|*.txt|All Files|*" })
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Content", VALUE_TYPE.text, ""));
-	newOutput(1, nodeValue_Output("Path",    VALUE_TYPE.path, "")).setVisible(true, true);
+	newOutput(0, nodeValue_Output( "Content", VALUE_TYPE.text, "" ));
+	newOutput(1, nodeValue_Output( "Path",    VALUE_TYPE.path, "" )).setVisible(true, true);
 	
 	content      = "";
 	path_current = "";

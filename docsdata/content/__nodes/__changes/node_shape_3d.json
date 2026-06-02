@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.003",
+    "changes": [
+      {
+        "date": "2026-06-02T00:23:53.597Z",
+        "node": "",
+        "commit": "**Draw Shape 3D**: Add Color Depth, Interpolation attributes."
+      }
+    ]
+  }
+]

@@ -81,6 +81,8 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	var _resPath = filepath_resolve(PREFERENCES.temp_path) + "fs_selected.txt"
 	file_delete_safe(_resPath);
 	
+	_ftype = string_replace(_ftype, "All Files|*", ""); // Remove All files because file selector already have all file selection.
+	
 	var _arg = {};
 	_arg[$ "--out"]   = _resPath;
 	_arg[$ "--pref"]  = $"{DIRECTORY}Preferences\\fs.json";
