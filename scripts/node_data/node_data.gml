@@ -3512,8 +3512,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				var val_to_conn = val_to_map[$ _i.type];
 				var val_to_node = val_to_conn.node;
 				
-				if(val_to_node != self && val_to_node.inline_context == inline_context) {
+				if(val_to_node != self && inline_context && val_to_node.inline_context == inline_context) {
 					if(record) {
+						
 						recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
 							var ictx = data.inlineCtx;
 							var jout = ictx.junc_in;
@@ -3557,7 +3558,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				var val_from_conn = val_from_map[$ jun.type];
 				var val_from_node = val_from_conn.node;
 				
-				if(val_from_node != self && val_from_node.inline_context == inline_context)
+				if(val_from_node != self && inline_context && val_from_node.inline_context == inline_context)
 				for( var j = 0, m = array_length(jun.value_to_loop); j < m; j++ ) {
 					if(record) {
 						recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 

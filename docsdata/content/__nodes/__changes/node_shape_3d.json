@@ -11,6 +11,11 @@
         "date": "2026-06-02T00:27:53.479Z",
         "node": "Draw Shape 3D",
         "commit": "**Draw Shape 3D**: Add UV Position, Scale properties."
+      },
+      {
+        "date": "2026-06-02T03:04:48.060Z",
+        "node": "",
+        "commit": "Fix crash when deleting node with feedback loop to itself."
       }
     ]
   }

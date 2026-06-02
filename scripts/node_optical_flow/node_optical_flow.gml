@@ -51,23 +51,35 @@ function Node_Optical_Flow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba32float);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_rgba32float);
 		
-		surface_set_shader(temp_surface[0], sh_optical_flow_hash);
-			shader_set_2( "dimension", _dim );
-			shader_set_f( "radius",   _radi );
-			
-			draw_surface(_pref, 0, 0);
-		surface_reset_shader();
+		// shader_set(sh_optical_flow_hash);
+		// 	shader_set_2( "dimension", _dim );
+		// 	shader_set_f( "radius",   _radi );
+		// shader_reset();
 		
-		surface_set_shader(temp_surface[1], sh_optical_flow_hash);
-			shader_set_2( "dimension", _dim );
-			shader_set_f( "radius",   _radi );
-			
-			draw_surface(_surf, 0, 0);
-		surface_reset_shader();
+		// surface_set_shader(temp_surface[0], sh_optical_flow_hash);
+		// 	draw_surface(_pref, 0, 0);
+		// surface_reset_shader();
 		
-		surface_set_shader(_outSurf, sh_optical_flow_search);
-			shader_set_s( "prevHash",  temp_surface[0] );
-			shader_set_s( "currHash",  temp_surface[1] );
+		// surface_set_shader(temp_surface[1], sh_optical_flow_hash);
+		// 	draw_surface(_surf, 0, 0);
+		// surface_reset_shader();
+		
+		// surface_set_shader(_outSurf, sh_optical_flow_search);
+		// 	shader_set_s( "prevHash",  temp_surface[0] );
+		// 	shader_set_s( "currHash",  temp_surface[1] );
+		// 	shader_set_2( "dimension", _dim  );
+		// 	shader_set_f( "radius",    _radi );
+			
+		// 	shader_set_f( "threshold", _thrs );
+			
+		// 	shader_set_i( "cformat",   _form );
+		// 	shader_set_f( "intensity", _ints );
+			
+		// 	draw_surface(_surf, 0, 0);
+		// surface_reset_shader();
+		
+		surface_set_shader(_outSurf, sh_optical_flow_full);
+			shader_set_s( "prevSurf",  _pref );
 			shader_set_2( "dimension", _dim  );
 			shader_set_f( "radius",    _radi );
 			

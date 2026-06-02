@@ -74,9 +74,11 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(17, nodeValue_Vec2(    "UV Position", [0,0]   ));
 	newInput(18, nodeValue_Vec2(    "UV Scale",    [1,1]   ));
 	
-	////- =Rendering
-	newInput( 4, nodeValue_Range( "Depth Range", [.0,.25] ));
-	// 19
+	////- =Depth
+	newInput( 4, nodeValue_Range(   "View Range", [.0,.25]      ));
+	newInput(19, nodeValue_Surface( "Displacement Map"          ));
+	newInput(20, nodeValue_Range(   "Displacement Range", [0,1] ));
+	// 21
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
@@ -88,7 +90,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Shape",     false ],  7,  8,  9, 13, 12, 14, 15, 
 		[ "Texturing", false ],  5, 10, 11, 
 			[ "/UV",   false ],  6, 17, 18, 
-		[ "Rendering", false ],  4,
+		[ "Depth",     false ],  4, 
 	];
 	
 	////- Model
@@ -104,7 +106,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	attribute_oversample();
-	attribute_interpolation(false, true);
+	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
@@ -135,7 +137,9 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _uvPos = _data[17];
 			var _uvSca = _data[18];
 			
-			var _depth = _data[ 4];
+			var _viewR = _data[ 4];
+			var _dpMap = _data[19];
+			var _dpRng = _data[20];
 			
 			inputs[ 8].setVisible(false);
 			inputs[ 9].setVisible(false);
@@ -316,10 +320,13 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        
 			matrix_set(matrix_world, matrix_stack_top());
 			
-			shader_set_2("viewRange", _depth);
+			shader_set_3("cameraPosition",  [0,0,1] );
+			shader_set_3("cameraDirection", [0,1,0] );
 			
-			shader_set_2("`uvPosition`", _uvPos);
-			shader_set_2("uvScale",    _uvSca);
+			shader_set_2("viewRange",  _viewR );
+			
+			shader_set_2("uvPosition", _uvPos );
+			shader_set_2("uvScale",    _uvSca );
 			
 			var _clen = array_length(_color);
 			var _ttex = is_surface(_textr)? surface_get_texture(_textr) : -1;

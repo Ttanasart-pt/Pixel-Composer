@@ -2645,6 +2645,7 @@
     {"name":"sh_normal_light","order":1,"path":"shaders/sh_normal_light/sh_normal_light.yy",},
     {"name":"sh_normalize_local","order":1,"path":"shaders/sh_normalize_local/sh_normalize_local.yy",},
     {"name":"sh_offset","order":38,"path":"shaders/sh_offset/sh_offset.yy",},
+    {"name":"sh_optical_flow_full","order":2,"path":"shaders/sh_optical_flow_full/sh_optical_flow_full.yy",},
     {"name":"sh_optical_flow_search","order":1,"path":"shaders/sh_optical_flow_search/sh_optical_flow_search.yy",},
     {"name":"sh_outline_only","order":1,"path":"shaders/sh_outline_only/sh_outline_only.yy",},
     {"name":"sh_override_channel","order":7,"path":"shaders/sh_override_channel/sh_override_channel.yy",},

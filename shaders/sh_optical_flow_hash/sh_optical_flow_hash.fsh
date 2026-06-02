@@ -6,15 +6,18 @@ uniform float radius;
 
 void main() {
 	vec2 tx = 1. / dimension;
-	vec4 val = vec4(0.);
+	float val = 0.;
 	
 	for(float i = -radius; i <= radius; i++)
 	for(float j = -radius; j <= radius; j++) {
 		vec4  sam = texture2D(gm_BaseTexture, clamp(v_vTexcoord + vec2(i,j) * tx, 0., 1.));
-		float ind = (i + radius) * radius * 2. + j + radius;
+		float brg = (sam.r + sam.g + sam.b) / 3. * sam.a;
 		
-		val += ind + sam * sam.a;
+		float ind  = (i + radius) * radius * 2. + j + radius;
+		float dist = 1. - length(vec2(i,j)) / radius;
+		
+		val += pow(2., ind) * brg;// * dist * dist;
 	}
 	
-	gl_FragColor = val;
+	gl_FragColor = vec4(val, 0., 0., 1.);
 }
