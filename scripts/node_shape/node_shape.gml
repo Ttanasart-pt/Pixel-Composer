@@ -691,7 +691,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params) {
 	var _shape   = current_data[ 2];
 	var _posMode = current_data[15];
 	var _rot     = current_data[19];
-	var _shaSca  = current_data[28]; if(!is_numeric(_shaSca) || _shaSca <= 0) return;
+	var _shaSca  = current_data[28]; if(!is_numeric(_shaSca)) return;
 	var _pos     = [ 0, 0 ];
 	var _sca     = [ 1, 1 ];
 	

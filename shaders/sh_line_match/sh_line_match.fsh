@@ -61,7 +61,7 @@ void main() {
 	vec2 tx = 1. / dimension;
 	
 	float radius = float(iradius);
-	float aCount = 64.;
+	float aCount = 256.;
 	float aStep  = TAU / aCount;
 
 	float maxAngle = 0.;
@@ -77,7 +77,7 @@ void main() {
 			offset /= 2.;
 		}
 		
-		for(float r = -radius; r <= radius; r++) {
+		for(float r = -radius; r <= radius; r += .5) {
 			vec4  sam = sampleTexture(gm_BaseTexture, posStr + offset * r);
 			float wgh = sam.r * sam.a;
 			weigh += wgh;

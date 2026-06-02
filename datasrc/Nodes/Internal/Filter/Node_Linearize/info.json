@@ -1,0 +1,7 @@
+{
+    "name":          "Hough Extrude",
+    "spr":           "s_node_linearize",
+    "baseNode":      "Node_Linearize",
+    "pxc_version":    121030,
+    "deprecated":     false,
+}
