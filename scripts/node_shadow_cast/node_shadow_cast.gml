@@ -11,8 +11,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 2, nodeValue_Slider(  "BG Threshold", .1 ));
 		
 	////- =Rendering
-	newInput( 3, nodeValue_Color( "Ambient Color", cola(c_grey) ));
-	newInput( 4, nodeValue_Bool(  "Render Solid",  true         ));
+	newInput( 3, nodeValue_Color( "Ambient Color", ca_white ));
+	newInput( 4, nodeValue_Bool(  "Render Solid",  true     ));
 		
 	////- =Algorithm
 	newInput( 5, nodeValue_Int(   "Iteration",    32 ));

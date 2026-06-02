@@ -18,8 +18,13 @@
 function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "2D Light";
 	
+	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In"  ));
 	newInput( 1, nodeValue_Bool(    "Tile", false ));
+	
+	////- =Rendering
+	newInput( 2, nodeValue_Color(   "Ambient", ca_white ));
+	// 3
 	
 	typeListStr = [ "Point", "Ellipse", "Line", "Line asymmetric", "Saber", "Spot", "Flame" ];
 	typeList    = __enum_array_gen(typeListStr, s_node_2d_light_shape);
@@ -141,10 +146,15 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Light",             false ],  3,  4, 
 			[ "/Attenuation",  false ], 10, 24, 
 			[ "/Banding",      false ], 11, 12, 13,  9, 
-		[ "Render",            false ], 18, 19, 
+		[ "Rendering",         false ], 18, 19, 
 	];
 	
-	input_display_list = [ 0, 1, new Inspector_Spacer(ui(4), true, false), lights_renderer ];
+	input_display_list = [ 
+		[ "Surfaces",  false ],  0,  1, 
+		[ "Rendering", false ],  2,  
+		new Inspector_Spacer(ui(4), true, false), 
+		lights_renderer
+	];
 	
 	setDynamicInput(25, false);
 	if(!LOADING && !APPENDING) createNewInput();
@@ -412,8 +422,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _surf = _data[0];
-			var _tile = _data[1];
+			var _surf    = _data[ 0];
+			var _tile    = _data[ 1];
+			var _ambient = _data[ 2];
 		#endregion
 		
 		if(getInputAmount() == 0) return;
@@ -525,8 +536,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		surface_set_shader(_outSurf, sh_2d_light_apply, true, BLEND.over);
-			shader_set_s( "base",  _surf      );
-			shader_set_s( "light", _lightSurf );
+			shader_set_s( "base",    _surf      );
+			shader_set_s( "light",   _lightSurf );
+			shader_set_c( "ambient", _ambient   );
 			
 			draw_empty();
 		surface_reset_shader(); 
