@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_cubemarch_guide",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_cubemarch_guide",
+  "parent":{
+    "name":"debug",
+    "path":"folders/panels/_others/debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

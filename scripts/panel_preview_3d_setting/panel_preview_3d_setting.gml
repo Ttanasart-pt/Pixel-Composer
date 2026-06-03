@@ -123,6 +123,11 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 			function(val) /*=>*/ { scene.cull_mode = val; },
 			2,
 		),
+		new __Panel_Linear_Setting_Item( __txt("Backface Color"),
+			new buttonColor(function(val) /*=>*/ { scene.backface_blending = val; }),
+			function(   ) /*=>*/   {return scene.backface_blending},
+			function(val) /*=>*/ { scene.backface_blending = val; },
+		),
 		
 		["Passes", false],
 		new __Panel_Linear_Setting_Item( __txt("Preview Pass"),
