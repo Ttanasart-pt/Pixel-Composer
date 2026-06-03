@@ -207,6 +207,8 @@ vec4 smear(vec2 shift, out vec2 basePosition) {
 	float delta  = 1. / size;
 	
 	vec4  base = sampleTexture( gm_BaseTexture, v_vTexcoord );
+	      base.rgb *= base.a;
+	
 	float mBri = (base.r + base.g + base.b) / 3. * base.a;
     vec4  res, col, rcol;
 	float bright, rbright, dist = 0.;
@@ -219,6 +221,7 @@ vec4 smear(vec2 shift, out vec2 basePosition) {
 		for(float i = 0.; i <= 1.0; i += delta) {
 			sampPos = v_vTexcoord - shift * i;
 			col = sampleTexture( gm_BaseTexture, sampPos, i);
+			col.rgb *= col.a;
 			
 			if(modulateStr != 2) {
 				float mm = 1. - i;
@@ -306,10 +309,8 @@ void main() {
 		else if(blend == 1) col += smr;
 	}
 	
-	if(useTexture == 1) {
-		vec4 btex = sampleTexture(texture, basePos);
-		col *= btex;
-	}
+	if(useTexture == 1)
+		col *= sampleTexture(texture, basePos);
 	
     gl_FragColor = col;
 }

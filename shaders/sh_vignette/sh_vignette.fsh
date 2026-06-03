@@ -135,6 +135,9 @@ varying vec4 v_vColour;
 
 uniform int   light;
 
+uniform vec2      dimension;
+uniform vec2      center;
+
 uniform vec2      exposure;
 uniform int       exposureUseSurf;
 uniform sampler2D exposureSurf;
@@ -169,22 +172,21 @@ void main() {
 			vec4 _vMap = texture2D( smoothnessSurf, v_vTexcoord );
 			smo = mix(smoothness.x, smoothness.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
-		
 	#endregion
 	
 	vec2 uv  = v_vTexcoord;
 	
-	vec2  _uv  = v_vTexcoord - 0.5;
+	vec2  cent = center / dimension;
+	vec2  _uv  = v_vTexcoord - .5;
 	float dist = dot(_uv, _uv);
 	float ang  = atan(_uv.y, _uv.x);
-	vec2  _sp  = 0.5 + vec2(cos(ang), sin(ang)) * dist;
+	vec2  _sp  = cent + vec2(cos(ang), sin(ang)) * dist;
 	
 	float smt = smo / 2.;
-	uv = mix(uv, _sp, smt);
-	
-	uv *= 1.0 - uv.yx;
-    float vig = uv.x * uv.y * epo;
+	uv  = mix(uv, _sp, smt);
+	uv *= 1. - uv.yx;
     
+    float vig = uv.x * uv.y * epo;
     vig = pow(vig, 0.25 + smt);
 	vig = clamp(vig, 0., 1.);
 	
