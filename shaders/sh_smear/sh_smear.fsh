@@ -179,7 +179,11 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float size;
+
 uniform float spread;
+uniform float spread_curve[CURVE_MAX];
+uniform int   spread_amount;
+uniform int   spread_curve_use;
 
 uniform vec2      direction;
 uniform int       directionUseSurf;
@@ -236,7 +240,7 @@ vec4 smear(vec2 shift, out vec2 basePosition) {
 			if(bright > mBri) {
 				basePosition = sampPos;
 				mBri = bright;
-				res  = col;
+				res  = i == 0.? col : col * blendSide;
 			}
 		}
 		
@@ -301,7 +305,11 @@ void main() {
 	vec2 basePos;
 	
 	for(float i = -spread; i <= spread; i++) {
-		float r    = radians(dir + 90. + i);
+		float spAng = i;
+		if(spread_curve_use == 1)
+			spAng *= curveEval(spread_curve, spread_amount, abs(i/spread));
+		
+		float r    = radians(dir + 90. + spAng);
 		vec2  dirr = vec2(sin(r), cos(r)) * str;
 		vec4  smr  = smear(dirr, basePos);
 		

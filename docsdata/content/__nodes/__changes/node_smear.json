@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.004",
+    "changes": [
+      {
+        "date": "2026-06-03T09:41:18.476Z",
+        "node": "Smear",
+        "commit": "**Smear**: Fix blend side not working for non-inverted mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.002",
     "changes": [
       {

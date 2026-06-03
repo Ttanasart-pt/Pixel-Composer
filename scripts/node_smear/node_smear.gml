@@ -27,7 +27,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(14, nodeValue_Bool(     "Invert",     false          )).setPieMenu();
 	newInput( 1, nodeValue_Slider(   "Strength",  .2, [0,.5,.001] )).setHotkey("S").setMappable( 9).setCurvable(20).setPieMenu();
 	newInput( 2, nodeValue_Rotation( "Direction",  0              )).setHotkey("R").setMappable(10).hideLabel().setPieMenu();
-	newInput(13, nodeValue_Slider(   "Spread",     0, [0,30,1 ]   )).setPieMenu();
+	newInput(13, nodeValue_Slider(   "Spread",     0, [0,30,1 ]   )).setCurvable(22).setPieMenu();
 	newInput(12, nodeValue_EButton(  "Modulate strength", 0, [ "Distance", "Color", "None" ] ));
 	
 	////- Render
@@ -35,11 +35,11 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(15, nodeValue_EScroll(  "Blend Mode",  0, [ "Maximum", "Additive" ] ));
 	newInput(17, nodeValue_Color(    "Blend Side",  ca_white ));
 	newInput(21, nodeValue_Surface(  "Texture" ));
-	//// 22
+	// 23
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],  0, 18, 19,  3,  4,  7,  8, 
-		["Smear",	false], 11, 14,  1,  9, 20,  2, 10, 13, 12, 
+		["Smear",	false], 11, 14,  1,  9, 20,  2, 10, 13, 22, 12, 
 		["Render",  false], 16, 15, 17, 21, 
 	]
 	
@@ -75,7 +75,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _invt = _data[14];
 			var _strn = _data[ 1];
 			var _dirr = _data[ 2];
-			var _sprd = _data[13];
+			var _sprd = _data[13], _sprdCurv = _data[22];
 			var _mods = _data[12];
 			
 			var _rend = _data[16];
@@ -97,7 +97,10 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_i( "inv",         _invt    );
 			shader_set_m( "strength",    _strn, _data[ 9], inputs[ 1], _data[20] );
 			shader_set_m( "direction",   _dirr, _data[10], inputs[ 2] );
+			
 			shader_set_f( "spread",      _sprd    );
+			shader_set_curve( "spread",  _sprdCurv, inputs[13] );
+			
 			shader_set_i( "modulateStr", _mods    );
 			
 			shader_set_i( "rMode",       _rend    );
