@@ -53,6 +53,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 0, nodeValue_Surface( "Background" ));
 	newInput( 1, nodeValue_Surface( "Foreground" ));
 	newInput( 4, nodeValue_Surface( "Mask"       ));
+	newInput(15, nodeValue_Bool(    "Swap",               false        ));
 	newInput(12, nodeValue_Bool(    "Invert mask",        false        ));
 	newInput(13, nodeValue_Slider(  "Mask feather",       1, [1,16,.1] ));
 	newInput( 6, nodeValue_EScroll( "Output dimension",   0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])).rejectArray();
@@ -69,12 +70,12 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(14, nodeValue_Vec2(    "Position",        [.5,.5] )).setUnitSimple();
 	newInput(10, nodeValue_EButton( "Horizontal Align",  0, array_create(3, THEME.inspector_surface_halign) ));
 	newInput(11, nodeValue_EButton( "Vertical Align",    0, array_create(3, THEME.inspector_surface_valign) ));
-	// inputs 15
+	// inputs 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 
-		[ "Surfaces",   true ],  0,  1,  4, 12, 13,  6,  7,
+		[ "Surfaces",   true ],  0,  1,  4, 15, 12, 13,  6,  7,
 		[ "Blend",     false ],  2,  3,  9,
 		[ "Transform", false ],  5, 14, 
 	]
@@ -195,9 +196,11 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _back	 = _data[ 0];
-			var _fore	 = _data[ 1];
+			var _swap    = _data[15];
+			var _back	 = _swap? _data[ 1] : _data[ 0];
+			var _fore	 = _swap? _data[ 0] : _data[ 1];
 			var _mask	 = _data[ 4];
+			
 			var _mskInv  = _data[12];
 			var _mskFea  = _data[13];
 			var _outp	 = _data[ 6];

@@ -13,7 +13,6 @@
 #endregion
 
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
-	INIT_BASE_CLASS
 	
 	#region ---- Main & Active ----
 		project      = PROJECT;

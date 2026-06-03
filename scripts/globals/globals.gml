@@ -160,8 +160,6 @@ gml_pragma("UnityBuild", "true");
 	
 	#macro RETURN_ON_REST if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 	
-	#macro INIT_BASE_CLASS base = static_get(static_get(self));
-	
 	//!#mfunc returnNull {"args":["v"," a"],"order":[0,1,0,0]}
 #macro returnNull_mf0  var 
 #macro returnNull_mf1  = 
