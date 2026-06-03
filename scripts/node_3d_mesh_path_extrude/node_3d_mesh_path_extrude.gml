@@ -1,5 +1,5 @@
 function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
-	name = "Path Extrude";
+	name = "Path Extrude 3D";
 	object_class = __3dPathExtrude;
 	
 	var i = in_mesh;

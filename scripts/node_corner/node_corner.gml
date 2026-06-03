@@ -8,24 +8,28 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Round Corner";
 	
 	newActiveInput(4);
-	newInput(5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput( 5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(2, nodeValue_Surface( "Mask"       ));
-	newInput(3, nodeValue_Slider(  "Mix",     1 ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 2, nodeValue_Surface( "Mask"       ));
+	newInput( 3, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(2, 6); // inputs 6, 7
 	
 	////- =Corner
-	newInput(1, nodeValue_ISlider( "Radius",     2, [1, 16, 0.1] )).setMappable(9).setPieMenu();
-	newInput(8, nodeValue_Slider(  "Threshold", .5 )).setHotkey("T").setMappable(10).setPieMenu();
-	// 11
+	newInput( 1, nodeValue_ISlider( "Radius",     2, [1, 16, 0.1] )).setMappable(9).setPieMenu();
+	newInput( 8, nodeValue_Slider(  "Threshold", .5 )).setHotkey("T").setMappable(10).setPieMenu();
+	
+	////- =Render
+	newInput(11, nodeValue_Bool(  "Transparent", false ));
+	// 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 4, 5, 
-		[ "Surfaces", true ], 0, 2, 3, 6, 7, 
-		[ "Corner",	 false ], 1, 9, 8, 10, 
+	input_display_list = [  4,  5, 
+		[ "Surfaces", true ],  0,  2,  3,  6,  7, 
+		[ "Corner",	 false ],  1,  9,  8, 10, 
+		[ "Render",	 false ], 11, 
 	]
 	
 	////- Nodes
@@ -49,9 +53,13 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _rad  = _data[1];
-		var _thr  = _data[8];
+		#region data
+			var _surf = _data[ 0];
+			var _rad  = _data[ 1];
+			var _thr  = _data[ 8];
+			
+			var _alph = _data[11];
+		#endregion
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
@@ -80,11 +88,12 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _sam = getAttribute("oversample");
 		
 		surface_set_shader(_outSurf, sh_corner_apply);
-			shader_set_2(     "dimension",  _dim );
-			shader_set_f_map( "radius",     _rad, _data[ 9], inputs[1] );
-			shader_set_f_map( "threshold",  _thr, _data[10], inputs[8] );
-			shader_set_s(     "original",   _surf);
-			shader_set_i(     "sampleMode", _sam );
+			shader_set_2( "dimension",    _dim  );
+			shader_set_m( "radius",       _rad, _data[ 9], inputs[1] );
+			shader_set_m( "threshold",    _thr, _data[10], inputs[8] );
+			shader_set_s( "original",     _surf );
+			shader_set_i( "sampleMode",   _sam  );
+			shader_set_i( "transparent",  _alph );
 			
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();

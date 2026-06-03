@@ -49,6 +49,7 @@ varying vec4 v_vColour;
 
 uniform vec2      dimension;
 uniform sampler2D original;
+uniform int       transparent;
 
 uniform vec2      radius;
 uniform int       radiusUseSurf;
@@ -71,7 +72,7 @@ void main() {
 		thr = mix(threshold.x, threshold.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	gl_FragColor = vec4(0., 0., 0., 1.);
+	gl_FragColor = vec4(0., 0., 0., transparent == 1? 0. : 1.);
 	
 	vec4 cc = texture2D(gm_BaseTexture, v_vTexcoord);
 	if(cc.a == 0.) return;

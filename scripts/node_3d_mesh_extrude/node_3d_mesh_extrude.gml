@@ -1,5 +1,5 @@
 function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
-	name = "Surface Extrude";
+	name = "Surface Extrude 3D";
 	object_class = __3dSurfaceExtrude;
 	var i = in_mesh;
 	

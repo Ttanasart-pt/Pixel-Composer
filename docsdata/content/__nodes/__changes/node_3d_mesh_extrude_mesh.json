@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.004",
+    "changes": [
+      {
+        "date": "2026-06-03T10:35:46.394Z",
+        "node": "",
+        "commit": "**Round Corner**: Add option for transparent output background."
+      }
+    ]
+  }
+]
