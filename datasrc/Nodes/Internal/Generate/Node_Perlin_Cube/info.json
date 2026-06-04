@@ -1,1 +1,6 @@
-{"pxc_version":121030,"spr":"s_node_perlin_cube","baseNode":"Node_Perlin_Cube","name":"Perlin Cube"}
+{
+    "name":          "Perlin Noise Cube",
+    "spr":           "s_node_perlin_cube",
+    "baseNode":      "Node_Perlin_Cube",
+    "pxc_version":    121030,
+}

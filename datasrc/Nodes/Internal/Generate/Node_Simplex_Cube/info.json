@@ -1,1 +1,6 @@
-{"spr":"s_node_simplex_cube","pxc_version":121030,"name":"Simplex Cube","baseNode":"Node_Simplex_Cube"}
+{
+    "name":          "Simplex Noise Cube",
+    "spr":           "s_node_simplex_cube",
+    "baseNode":      "Node_Simplex_Cube",
+    "pxc_version":    121030,
+}

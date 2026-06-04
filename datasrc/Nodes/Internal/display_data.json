@@ -843,6 +843,7 @@
             "Node_RM_Primitive",
             "Node_RM_Terrain",
             "Node_RM_Cloud",
+            "Node_RM_Project",
             { "label": "/Modify" },
             "Node_RM_Combine",
             { "label": "/Render" },

@@ -11,6 +11,11 @@
         "date": "2026-06-04T03:46:44.743Z",
         "node": "Armature Pose",
         "commit": "**Armature Pose**: Add node setting to highlight bones with keyframe in the current frame."
+      },
+      {
+        "date": "2026-06-04T07:11:05.416Z",
+        "node": "any",
+        "commit": "Introduced"
       }
     ]
   },

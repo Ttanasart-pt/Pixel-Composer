@@ -552,24 +552,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		for( var i = 0, n = array_length(bonePose.constrains); i < n; i++ ) bonePose.constrains[i].drawBone(bonePose, _x, _y, _s);
 		
-		// draw_set_color(COLORS._main_icon);
-		// for( var i = 1, n = array_length(bone_path); i < n; i++ ) {
-		// 	var p0 = bone_path[i-1];
-		// 	var p1 = bone_path[i  ];
-		// 	if(!is_array(p0) || !is_array(p1)) continue;
-			
-		// 	for( var j = 0, m = array_length(p0); j < m; j++ ) {
-		// 		var p0p = p0[j];
-		// 		var p1p = p1[j];
-		// 		if(!is_array(p0p) || !is_array(p1p)) continue;
-				
-		// 		draw_line(
-		// 			_x + p0p[0] * _s, _y + p0p[1] * _s,
-		// 			_x + p1p[0] * _s, _y + p1p[1] * _s,
-		// 		);
-		// 	}
-		// }
-		
 		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
 			var _bne = bone_array[i];
 			var _sel = false;
@@ -941,16 +923,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		bonePose.setPose();
 		bone_bbox   = bonePose.bbox();
 		bone_points = bonePose.toPoints(true);
-		
-		// var _pth = [];
-		// for( var i = 0, n = array_length(bone_points); i < n; i += 3 ) {
-		// 	var px = bone_points[i + 2].x;
-		// 	var py = bone_points[i + 2].y;
-		// 	array_push(_pth, [px,py]);
-		// }
-		
-		// bone_path   = array_verify(bone_path, TOTAL_FRAMES);
-		// bone_path[frame] = _pth;
 	}
 	
 	////- Draw
