@@ -4,7 +4,7 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 
 // based on IQ voxel shader
-// the axis is actually wrong, but I'm too lazy so just input offseted surface
+// the axis is actually wrong, but I'm too lazy so just use offseted surface
 
 uniform sampler2D surTop;    // Front
 uniform sampler2D surFront;  // Side
@@ -72,14 +72,6 @@ uniform vec3 angle;
     }
 #endregion
 
-float rayFaceDistance(vec3 rayOrigin, vec3 rayDir, vec3 planeNormal, vec3 planePoint) {
-    float denom = dot(planeNormal, rayDir);
-    if (abs(denom) < 0.0001) return 99999.;
-    
-    float t = dot(planePoint - rayOrigin, planeNormal) / denom;
-    return t >= 0.0 ? t : 99999.;
-}
-
 void main() {
 	mat3 rx = rotateX(angle.x);
     mat3 ry = rotateY(angle.y);
@@ -122,6 +114,10 @@ void main() {
         vec3 sc = wc * .5 + .5;
         
         if (sc.x >= 0. && sc.x < 1. && sc.y >= 0. && sc.y < 1. && sc.z >= 0. && sc.z < 1.) {
+            // samTop   = surTopB_use   == 1 && pos.z < 0.? texture2D(surTopB,   sc.xy) : texture2D(surTop,   sc.xy);
+            // samFront = surFrontB_use == 1 && pos.x < 0.? texture2D(surFrontB, sc.zy) : texture2D(surFront, sc.zy);
+            // samSide  = surSideB_use  == 1 && pos.y < 0.? texture2D(surSideB,  sc.xz) : texture2D(surSide,  sc.xz);
+            
             samTop   = texture2D(surTop,   sc.xy);
             samFront = texture2D(surFront, sc.zy);
             samSide  = texture2D(surSide,  sc.xz);

@@ -1135,6 +1135,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\3d\2d_operation\simple_3d\shape_3d.html" class="sidebar-file">Shape 3D</a>
             </div>
+</li><li id="surface_project_3d"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\3d\2d_operation\simple_3d\surface_project_3d.html" class="sidebar-file">Surface Project 3D</a>
+            </div>
 </li></ul>
 </li><li id="filter"><div class="sidebar-menu">
                 <div class="sidebar-icon sidebar-dir"></div>
@@ -1672,6 +1676,10 @@
 </li><li id="noise_blue"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\noise\basic\noise_blue.html" class="sidebar-file">Noise Blue</a>
+            </div>
+</li><li id="noise_gaussian"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\noise\basic\noise_gaussian.html" class="sidebar-file">Noise Gaussian</a>
             </div>
 </li><li id="noise_simplex"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
@@ -6003,6 +6011,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\filter\fix/gap_contract.html">Gap Contract</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\simple_3d/3d_transform_image.html">3D Transform Image</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\simple_3d/shape_3d.html">Shape 3D</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\simple_3d/surface_project_3d.html">Surface Project 3D</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/ambient_occlusion.html">Ambient Occlusion</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/bevel.html">Bevel</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/normal.html">Normal</a></li>
@@ -6088,6 +6097,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/noise.html">Noise</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/noise_aniso.html">Noise Aniso</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/noise_blue.html">Noise Blue</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/noise_gaussian.html">Noise Gaussian</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/noise_simplex.html">Noise Simplex</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/perlin.html">Perlin</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\noise\basic/perlin_extra.html">Perlin Extra</a></li>
@@ -6814,15 +6824,16 @@
 </div><h5 class="node-group-title">Pixel Builder</h5><div class="node-group"><div class="node-card"><a href="/nodes/_index/node_pixel_builder.html"><img class="node-content" src="/src/nodeIcons/s_node_pixel_builder.png">Pixel Builder</a></div>
 </div></div><div class="node-category"><h3 class="node-group-title">Noise</h3><h5 class="node-group-title">Basic</h5><div class="node-group"><div class="node-card"><a href="/nodes/_index/node_noise.html"><img class="node-content" src="/src/nodeIcons/s_node_noise.png">Noise</a></div>
 <div class="node-card"><a href="/nodes/_index/node_noise_blue.html"><img class="node-content" src="/src/nodeIcons/s_node_noise_blue.png">Blue Noise</a></div>
+<div class="node-card"><a href="/nodes/_index/node_noise_gaussian.html"><img class="node-content" src="/src/nodeIcons/s_node_noise_gaussian.png">Gaussian Noise</a></div>
 <div class="node-card"><a href="/nodes/_index/node_perlin.html"><img class="node-content" src="/src/nodeIcons/s_node_perlin.png">Perlin Noise</a></div>
 <div class="node-card"><a href="/nodes/_index/node_noise_simplex.html"><img class="node-content" src="/src/nodeIcons/s_node_noise_simplex.png">Simplex Noise</a></div>
 <div class="node-card"><a href="/nodes/_index/node_cellular.html"><img class="node-content" src="/src/nodeIcons/s_node_cellular.png">Cellular Noise</a></div>
 <div class="node-card"><a href="/nodes/_index/node_noise_aniso.html"><img class="node-content" src="/src/nodeIcons/s_node_noise_aniso.png">Anisotropic Noise</a></div>
 <div class="node-card"><a href="/nodes/_index/node_perlin_extra.html"><img class="node-content" src="/src/nodeIcons/s_node_perlin_extra.png">Extra Perlins</a></div>
 <div class="node-card"><a href="/nodes/_index/node_voronoi_extra.html"><img class="node-content" src="/src/nodeIcons/s_node_voronoi_extra.png">Extra Voronoi</a></div>
-</div><h5 class="node-group-title">3D</h5><div class="node-group"><div class="node-card"><a href="/nodes/_index/node_perlin_cube.html"><img class="node-content" src="/src/nodeIcons/s_node_perlin_cube.png">Perlin Cube</a></div>
-<div class="node-card"><a href="/nodes/_index/node_simplex_cube.html"><img class="node-content" src="/src/nodeIcons/s_node_simplex_cube.png">Simplex Cube</a></div>
-<div class="node-card"><a href="/nodes/_index/node_cellular_cube.html"><img class="node-content" src="/src/nodeIcons/s_node_cellular_cube.png">Cellular Cube</a></div>
+</div><h5 class="node-group-title">3D</h5><div class="node-group"><div class="node-card"><a href="/nodes/_index/node_perlin_cube.html"><img class="node-content" src="/src/nodeIcons/s_node_perlin_cube.png">Perlin Noise Cube</a></div>
+<div class="node-card"><a href="/nodes/_index/node_simplex_cube.html"><img class="node-content" src="/src/nodeIcons/s_node_simplex_cube.png">Simplex Noise Cube</a></div>
+<div class="node-card"><a href="/nodes/_index/node_cellular_cube.html"><img class="node-content" src="/src/nodeIcons/s_node_cellular_cube.png">Cellular Noise Cube</a></div>
 <div class="node-card"><a href="/nodes/_index/node_surface_cube.html"><img class="node-content" src="/src/nodeIcons/s_node_surface_cube.png">Surface Cube</a></div>
 </div><h5 class="node-group-title">Artistic</h5><div class="node-group"><div class="node-card"><a href="/nodes/_index/node_fold_noise.html"><img class="node-content" src="/src/nodeIcons/s_node_fold_noise.png">Fold Noise</a></div>
 <div class="node-card"><a href="/nodes/_index/node_noise_strand.html"><img class="node-content" src="/src/nodeIcons/s_node_noise_strand.png">Strand Noise</a></div>

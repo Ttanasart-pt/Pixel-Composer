@@ -56,13 +56,13 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			shader_set_s("surFront",  _sSid  );
 			shader_set_s("surSide",   _sTop  );
 			
-			shader_set_s("surTopB",   _sTopb );
-			shader_set_s("surFrontB", _sFrnb );
-			shader_set_s("surSideB",  _sSidb );
+			shader_set_s("surTopB",   _sFrnb );
+			shader_set_s("surFrontB", _sSidb );
+			shader_set_s("surSideB",  _sTopb );
 			
-			shader_set_i("surTopB_use",   is_surface(_sTopb) );
-			shader_set_i("surFrontB_use", is_surface(_sFrnb) );
-			shader_set_i("surSideB_use",  is_surface(_sSidb) );
+			shader_set_i("surTopB_use",   is_surface(_sFrnb) );
+			shader_set_i("surFrontB_use", is_surface(_sSidb) );
+			shader_set_i("surSideB_use",  is_surface(_sTopb) );
 			
 			shader_set_3("angle",     _ang   );
 			shader_set_f("scale",     _sca   );
