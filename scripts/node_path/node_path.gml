@@ -1289,7 +1289,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var _anHov = 0;
 				draw_set_color(COLORS._main_accent);
 				
-				if(PANEL_INSPECTOR.prop_hover == _inp)
+				if(PANEL_INSPECTOR.prop_hover == _inp || PANEL_ANIMATION.value_hovering == _inp)
 					_anHov = 1;
 					
 				if(drag_point == i) {

@@ -16,7 +16,7 @@
     function panel_animation_delete_key()              { CALL("animation_delete_key");              PANEL_ANIMATION.deleteKeys();                                                                        }
     function panel_animation_duplicate()               { CALL("animation_duplicate");               PANEL_ANIMATION.doDuplicate();                                                                       }
     function panel_animation_copy()                    { CALL("animation_copy");                    PANEL_ANIMATION.doCopy();                                                                            }
-    function panel_animation_paste()                   { CALL("animation_paste");     if(PANEL_ANIMATION.value_focusing != noone) PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing.prop);          }
+    function panel_animation_paste()                   { CALL("animation_paste");     if(PANEL_ANIMATION.animator_focusing != noone) PANEL_ANIMATION.doPaste(PANEL_ANIMATION.animator_focusing.prop);          }
     function panel_animation_show_nodes()              { CALL("animation_toggle_nodes");            PANEL_ANIMATION.show_nodes  = !PANEL_ANIMATION.show_nodes;                                           }
     function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
     function panel_animation_show_hidden()             { CALL("animation_toggle_hidden");           PANEL_ANIMATION.show_hidden = !PANEL_ANIMATION.show_hidden;                                          }
@@ -247,9 +247,11 @@ function Panel_Animation_Dopesheet() {
         graph_key_my = 0;
         graph_key_sx = 0;
         graph_key_sy = 0;
-    
-        value_hovering = noone;
-        value_focusing = noone;
+    	
+    	value_hovering = noone;
+    	
+        animator_hovering = noone;
+        animator_focusing = noone;
         
         show_value = false;
         
@@ -2131,7 +2133,7 @@ function Panel_Animation_Dopesheet() {
         var m    = [msx, msy];
         
         var drw  = ty0 < dopesheet_h + ui(16) && ty1 > -ui(16);
-        var hov  = item_dragging == noone && point_in_rectangle(msx, msy, 0, ty0, w - side_width, ty1);
+        var hov  = item_dragging == noone && point_in_rectangle(msx, msy, 0, ty0, w - side_width, ty1 - 1);
         var foc  = pFOCUS;
         
         ////- =Draw Name
@@ -2180,9 +2182,9 @@ function Panel_Animation_Dopesheet() {
         }
         
         if(hov) {
-            value_hovering = animator;
+            animator_hovering = animator;
             if(mouse_lclick(pFOCUS))
-                value_focusing = animator;
+                animator_focusing = animator;
                 
             if(mouse_rpress(pFOCUS)) {
                 context_selecting_prop = prop;
@@ -2383,9 +2385,9 @@ function Panel_Animation_Dopesheet() {
         
         draw_set_text(f_p2, fa_left, fa_center);
         
-        value_hovering = noone;
+        animator_hovering = noone;
         if(mouse_lclick(pFOCUS))
-            value_focusing = noone;
+            animator_focusing = noone;
             
         if(mouse_rpress(pFOCUS)) {
             context_selecting_item = noone;
@@ -2771,8 +2773,8 @@ function Panel_Animation_Dopesheet() {
                             draw_set_color(c0);
                             draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(10), false);
                             
-                            var _vFocus = value_focusing != noone && _prop == value_focusing.prop;
-                            var _vHover = value_hovering != noone && _prop == value_hovering.prop;
+                            var _vFocus = animator_focusing != noone && _prop == animator_focusing.prop;
+                            var _vHover = animator_hovering != noone && _prop == animator_hovering.prop;
                             
                         	     if(_vFocus) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, key_y - ui(8), bar_total_shift, ui(16), c1);
                             else if(_vHover) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, key_y - ui(8), bar_total_shift, ui(16), c1, .9);
@@ -2836,6 +2838,7 @@ function Panel_Animation_Dopesheet() {
         	_keyframe_selecting_f = noone;
         	_keyframe_selecting_l = noone;
         	region_hovering       = noone;
+        	value_hovering        = animator_hovering? animator_hovering.prop : noone;
         	
         	var _len   = array_length(timeline_contents);
         	
@@ -3037,30 +3040,30 @@ function Panel_Animation_Dopesheet() {
 	            if(_ctrl) {
 	                var _fr = round((mx - bar_x - timeline_shift) / timeline_scale) - 1;
 	                
-	            	if(value_hovering != noone && key_hover == noone) {
+	            	if(animator_hovering != noone && key_hover == noone) {
 		                var _kx = (_fr + 1) * timeline_scale + timeline_shift;
-		                var _ky = value_hovering.y;
+		                var _ky = animator_hovering.y;
 		                draw_sprite_ui_uniform(THEME.add, 0, _kx, _ky, .5, COLORS._main_value_positive, 1);
 		                
 		                if(mouse_lpress(pFOCUS)) {
-		                	var _nk  = new valueKey(_fr, variable_clone(value_hovering.getValue(_fr)), value_hovering);
+		                	var _nk  = new valueKey(_fr, variable_clone(animator_hovering.getValue(_fr)), animator_hovering);
 		                	var _add = false;
 		                	
-		                	for(var k = 0; k < array_length(value_hovering.values); k++) {
-			                    var _key = value_hovering.values[k];
+		                	for(var k = 0; k < array_length(animator_hovering.values); k++) {
+			                    var _key = animator_hovering.values[k];
 			                    if(_key.time <= _fr) continue;
 			                    
-		                        array_insert(value_hovering.values, k, _nk);
+		                        array_insert(animator_hovering.values, k, _nk);
 		                        _add = true;
 		                        break;
 			                }
 		                	
-		                	if(!_add) array_push(value_hovering.values, _nk);
-		                	value_hovering.updateKeyMap();
+		                	if(!_add) array_push(animator_hovering.values, _nk);
+		                	animator_hovering.updateKeyMap();
 		                }
             		}
 	            	
-	            	if(value_hovering == noone && mouse_lclick(pFOCUS)) PROJECT.animator.setFrame(_fr);
+	            	if(animator_hovering == noone && mouse_lclick(pFOCUS)) PROJECT.animator.setFrame(_fr);
 	            } 
 	            
 	            if(!_ctrl && mouse_lpress(pFOCUS)) {

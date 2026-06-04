@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.005",
+    "changes": [
+      {
+        "date": "2026-06-04T02:40:49.062Z",
+        "node": "Armature Pose, Skin",
+        "commit": "**Armature Pose, Skin**: Hovering on a bone in the animation dopesheet now highlight bone in preview panel."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.004",
     "changes": [
       {

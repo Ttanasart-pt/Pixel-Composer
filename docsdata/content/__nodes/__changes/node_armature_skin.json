@@ -6,6 +6,11 @@
         "date": "2026-06-04T02:23:38.038Z",
         "node": "Armature Skin",
         "commit": "**Armature Skin**: Fix node use unposed bone."
+      },
+      {
+        "date": "2026-06-04T02:40:49.062Z",
+        "node": "",
+        "commit": "**Armature Pose, Skin**: Hovering on a bone in the animation dopesheet now highlight bone in preview panel."
       }
     ]
   }

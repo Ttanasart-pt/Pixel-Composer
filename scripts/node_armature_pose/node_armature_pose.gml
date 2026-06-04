@@ -557,7 +557,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _inp = boneMap[$ _bne.ID];
 				_sel = _inp.value_from == noone || is(_inp.value_from.node, Node_Vector4);
 				
-				if(_bhov == noone && PANEL_INSPECTOR.prop_hover == _inp)
+				if(_bhov == noone && (PANEL_INSPECTOR.prop_hover == _inp || PANEL_ANIMATION.value_hovering == _inp))
 					_bhov = [ _bne, 2 ];
 			}
 			
