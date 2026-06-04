@@ -61,6 +61,8 @@ function Project() constructor {
 	is_nightly  = NIGHTLY;
 	freeze      = false;
 	
+	usage_timer = 0;
+	
 	modified    = false;
 	readonly    = false;
 	safeMode    = false;
@@ -432,8 +434,9 @@ function Project() constructor {
 	}
 	
 	static step = function() {
+		usage_timer += DELTA_TIME;
 		slideShowPreStep();
-		
+			
 		animator.step();
 		globalNode.step();
 		
@@ -717,6 +720,7 @@ function Project() constructor {
 		_map.is_nightly = NIGHTLY;
 		_map.readonly   = _readonly;
 		_map.freeze     = freeze;
+		_map.usage_timer= usage_timer;
 		
 		var _anim_map = {};
 		_anim_map.frames_total = animator.frames_total;
@@ -828,7 +832,8 @@ function Project() constructor {
 			
 		}
 		
-		readonly = _map[$ "readonly"] ?? readonly;
+		readonly    = _map[$ "readonly"]    ?? readonly;
+		usage_timer = _map[$ "usage_timer"] ?? usage_timer;
 		
 		if(has(_map, "onion_skin"))      struct_override(onion_skin,      _map.onion_skin);
 		if(has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);

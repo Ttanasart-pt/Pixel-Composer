@@ -20,3 +20,16 @@ function string_byte_format(bytes) {
 	
 	return $"{_neg? "-":""}{amo} {suffix[lv]}"
 }
+
+function string_time_format(seconds) {
+	seconds = round(seconds);
+
+	var _neg = seconds < 0;
+	seconds = abs(seconds);
+	
+	var hr = floor(seconds / 3600);
+	var mn = floor((seconds - hr * 3600) / 60);
+	var sc = floor(seconds - hr * 3600 - mn * 60);
+	
+	return $"{_neg? "-":""}{string_lead_zero(hr, 2)}:{string_lead_zero(mn, 2)}:{string_lead_zero(sc, 2)}";
+}

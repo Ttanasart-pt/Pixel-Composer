@@ -339,9 +339,16 @@ function Panel_Inspector() : PanelContent() constructor {
         
         GM_Explore_draw_init();
         
-        variables_buttons = [ button(function() /*=>*/ {return dialogPanelCall(new Panel_Project_Var())})
-        	.setIcon(THEME.gear_16, 0, COLORS._main_icon_light)
-        	.setTooltip(__txt("Project Variables")) ];
+        variables_buttons = [ 
+        	button(function() /*=>*/ {return dialogPanelCall(new Panel_Project_Info())})
+        		.setIcon(THEME.info, 0, COLORS._main_icon_light, .75)
+        		.setTooltip(__txt("Project Info")),
+        	
+        	button(function() /*=>*/ {return dialogPanelCall(new Panel_Project_Var())})
+        		.setIcon(THEME.gear_16, 0, COLORS._main_icon_light)
+        		.setTooltip(__txt("Project Variables")),
+        		
+    	];
         
         metadata_buttons = [ button(function() /*=>*/ { json_save_struct(DIRECTORY + "meta.json", PROJECT.meta.serialize()); })
         	.setIcon(THEME.save,  0, COLORS._main_icon_light, .75)

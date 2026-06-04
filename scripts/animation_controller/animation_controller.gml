@@ -107,6 +107,8 @@ function AnimationManager() constructor {
 	
 	static animationStart = function() /*=>*/ {return array_foreach(PROJECT.allNodes, function(n) /*=>*/ {return n.onAnimationStart()})};
 	
+	static useRange = function() /*=>*/ {return frame_range_start != undefined && frame_range_end != undefined};
+	
 	static toggle = function() {
 		is_playing     = !is_playing;
 		frame_progress = true;
