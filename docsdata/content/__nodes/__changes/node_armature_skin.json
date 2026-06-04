@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.005",
+    "changes": [
+      {
+        "date": "2026-06-04T02:23:38.038Z",
+        "node": "Armature Skin",
+        "commit": "**Armature Skin**: Fix node use unposed bone."
+      }
+    ]
+  }
+]

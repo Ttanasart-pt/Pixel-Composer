@@ -424,19 +424,29 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 				
 				if(RANDOMIZER_ACTIVE) {
-					var _rand = PROJECT.randomizer;
-					var _ran  = _rand.hasValue(jun);
-					
-					var bt = _ran? __txt("Remove Randomizer") : __txt("Add to Randomizer");
-					var bc = _ran? COLORS._main_accent : COLORS._main_icon;
-					
-					bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.icon_random, 0, bc, 1, ui(2)); bx -= ui(4);
-					cHov = cHov || b;
-					
-					if(b == 2) {
-						if(_ran) _rand.removeValue(jun);
-						else     _rand.addTrack(new Project_Randomizer_Value(jun));
+					bx  -= bs; 
+					switch(jun.type) {
+						case VALUE_TYPE.float : 
+						case VALUE_TYPE.integer : 
+						
+						case VALUE_TYPE.color : 
+							var _rand = PROJECT.randomizer;
+							var _ran  = _rand.hasValue(jun);
+							
+							var bt = _ran? __txt("Remove Randomizer") : __txt("Add to Randomizer");
+							var bc = _ran? COLORS._main_accent : COLORS._main_icon;
+							
+							b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.icon_random, 0, bc, 1, ui(2)); 
+							cHov = cHov || b;
+							
+							if(b == 2) {
+								if(_ran) _rand.removeValue(jun);
+								else     _rand.addTrack(new Project_Randomizer_Value(jun));
+							}
+							break;
 					}
+					
+					bx -= ui(4);
 				}
 			}
 			

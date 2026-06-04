@@ -1,6 +1,5 @@
 function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Skin";
-	setDimension(96, 96);
 	
 	////- =Output
 	newInput( 1, nodeValue_Dimension());
@@ -66,6 +65,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			array_push(_input_display_list, [ bone.name, false ]);
 			for( var j = 0, m = array_length(_inp); j < m; j++ ) {
+				
 				_inp[j].attributes.bone_id = bone.ID;
 				array_push(_input_display_list, array_length(_inputs));
 				array_push(_inputs, _inp[j]);
@@ -132,6 +132,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		#endregion
 		
 		setBone();
+		_bone.setPose();
 		
 		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
 			var _bone = bone_array[i];
