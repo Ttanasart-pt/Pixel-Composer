@@ -59,7 +59,7 @@ function draw_sprite_bbox(spr, ind, _bbox) {
 }
 
 function draw_sprite_bbox_uniform(spr, ind, _bbox, _col = c_white, _alp = 1, filter = false) {
-	if(_bbox == noone) return;
+	if(_bbox == noone || spr == noone) return;
 	var _sw = sprite_get_width(spr);
     var _sh = sprite_get_height(spr);
     var _ox = sprite_get_xoffset(spr);

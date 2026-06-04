@@ -14,6 +14,21 @@
 
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
+	#region ---- MetaData ----
+		node_database = undefined;
+		
+		static getMeta = function() /*=>*/ {
+			if(node_database) return node_database;
+			node_database = ALL_NODES[$ instanceof(self)];
+			return node_database;
+		}
+		
+		static getMetaSpr = function() /*=>*/ {
+			var _meta = getMeta();
+			return _meta? _meta.getSpr() : noone;
+		}
+	#endregion
+	
 	#region ---- Main & Active ----
 		project      = PROJECT;
 		itype        = noone;
@@ -30,9 +45,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		manual_ungroupable	 = true;
 		destroy_when_upgroup = false;
 		
-		node_database        = undefined;
-		run_in(1, function() /*=>*/ { node_database = ALL_NODES[$ instanceof(self)]; onValueRefresh(); });
-		
+		// run_in(1, () => onValueRefresh());
 		if(NOT_LOAD) array_push(_group == noone? project.nodes : _group.getNodeList(), self);
 		array_push(project.allNodes, self);
 		
@@ -2682,8 +2695,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				drawPreview(xx, yy, _s);
 			
 			if(node_draw_icon != undefined) {
-				if(node_draw_icon == -1 && node_database)
-					draw_sprite_bbox_uniform(node_database.getSpr(), 0, draw_bbox);
+				if(node_draw_icon == -1)
+					draw_sprite_bbox_uniform(getMetaSpr(), 0, draw_bbox);
 				
 				if(node_draw_icon != -1)
 					draw_sprite_bbox_uniform(node_draw_icon, node_draw_icon_index, draw_bbox);

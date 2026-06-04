@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.005",
+    "changes": [
+      {
+        "date": "2026-06-04T01:35:48.695Z",
+        "node": "Randomizer",
+        "commit": "**Randomizer**: While opening the dialog, a new \"Add to Randomizer\" button will shows up in the Inspector panel for faster workflow."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.004",
     "changes": [
       {

@@ -197,9 +197,8 @@ function Panel_Nodes() : PanelContent() constructor {
 			}
 		}
 		
-		var _n = node.node_database;
-		if(!_draw && _n != undefined) {
-			var spr = _n.getSpr();
+		var spr = node.getMetaSpr();
+		if(!_draw && spr) {
 			var _ss = (hg - ui(8)) / sprite_get_height(spr);
 			gpu_set_tex_filter(true);
 			draw_sprite_ext(spr, 1, dx, dy, _ss, _ss, 0, c_white, 1);
