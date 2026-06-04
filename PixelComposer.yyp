@@ -488,7 +488,11 @@
     {"link":"io.gamemaker.sdfshaders-1.0.0","name":"io.gamemaker.sdfshaders-1.0.0","path":"io.gamemaker.sdfshaders-1.0.0.yyp",},
   ],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"0",
+        },
+      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dlltest1.dll","CopyToMask":-1,"filePath":"datafiles","name":"dlltest1.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/Downloader","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"libfilesystem.dll","CopyToMask":-1,"filePath":"datafiles/Downloader","name":"libfilesystem.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -533,7 +537,11 @@
     {"$GMIncludedFile":"","%Name":"nodes.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"nodes.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"themes.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"themes.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"welcome_files.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"welcome_files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{"Itch":{"CopyToMask":"2",},},"CopyToMask":2,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"2",
+        },
+      },"CopyToMask":2,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -2169,7 +2177,7 @@
     {"id":{"name":"node_rm_cloud","path":"scripts/node_rm_cloud/node_rm_cloud.yy",},},
     {"id":{"name":"node_rm_combine","path":"scripts/node_rm_combine/node_rm_combine.yy",},},
     {"id":{"name":"node_rm_primitive","path":"scripts/node_rm_primitive/node_rm_primitive.yy",},},
-    {"id":{"name":"node_rm_project","path":"scripts/node_rm_project/node_rm_project.yy",},},
+    {"id":{"name":"node_rm_project_mesh","path":"scripts/node_rm_project_mesh/node_rm_project_mesh.yy",},},
     {"id":{"name":"node_rm_render_cross","path":"scripts/node_rm_render_cross/node_rm_render_cross.yy",},},
     {"id":{"name":"node_rm_render_scatter","path":"scripts/node_rm_render_scatter/node_rm_render_scatter.yy",},},
     {"id":{"name":"node_rm_render","path":"scripts/node_rm_render/node_rm_render.yy",},},
@@ -2273,6 +2281,7 @@
     {"id":{"name":"node_surface_from_buffer","path":"scripts/node_surface_from_buffer/node_surface_from_buffer.yy",},},
     {"id":{"name":"node_surface_from_color","path":"scripts/node_surface_from_color/node_surface_from_color.yy",},},
     {"id":{"name":"node_surface_is_empty","path":"scripts/node_surface_is_empty/node_surface_is_empty.yy",},},
+    {"id":{"name":"node_surface_project_3d","path":"scripts/node_surface_project_3d/node_surface_project_3d.yy",},},
     {"id":{"name":"node_surface_replace","path":"scripts/node_surface_replace/node_surface_replace.yy",},},
     {"id":{"name":"node_surface_tag","path":"scripts/node_surface_tag/node_surface_tag.yy",},},
     {"id":{"name":"node_surface_to_buffer","path":"scripts/node_surface_to_buffer/node_surface_to_buffer.yy",},},
@@ -3193,7 +3202,6 @@
     {"id":{"name":"sh_rim","path":"shaders/sh_rim/sh_rim.yy",},},
     {"id":{"name":"sh_rm_cloud","path":"shaders/sh_rm_cloud/sh_rm_cloud.yy",},},
     {"id":{"name":"sh_rm_primitive","path":"shaders/sh_rm_primitive/sh_rm_primitive.yy",},},
-    {"id":{"name":"sh_rm_project","path":"shaders/sh_rm_project/sh_rm_project.yy",},},
     {"id":{"name":"sh_rm_render_cross","path":"shaders/sh_rm_render_cross/sh_rm_render_cross.yy",},},
     {"id":{"name":"sh_rm_render_scatter","path":"shaders/sh_rm_render_scatter/sh_rm_render_scatter.yy",},},
     {"id":{"name":"sh_rm_terrain","path":"shaders/sh_rm_terrain/sh_rm_terrain.yy",},},
@@ -3252,6 +3260,7 @@
     {"id":{"name":"sh_stretch","path":"shaders/sh_stretch/sh_stretch.yy",},},
     {"id":{"name":"sh_stripe","path":"shaders/sh_stripe/sh_stripe.yy",},},
     {"id":{"name":"sh_surface_cube","path":"shaders/sh_surface_cube/sh_surface_cube.yy",},},
+    {"id":{"name":"sh_surface_project_3d","path":"shaders/sh_surface_project_3d/sh_surface_project_3d.yy",},},
     {"id":{"name":"sh_surface_replace_fast_find","path":"shaders/sh_surface_replace_fast_find/sh_surface_replace_fast_find.yy",},},
     {"id":{"name":"sh_surface_replace_fast_replace","path":"shaders/sh_surface_replace_fast_replace/sh_surface_replace_fast_replace.yy",},},
     {"id":{"name":"sh_surface_replace_find","path":"shaders/sh_surface_replace_find/sh_surface_replace_find.yy",},},
@@ -4368,9 +4377,33 @@
   ],
   "templateType":null,
   "TextureGroups":[
-    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{"Steam":{"compressFormat":"bz2","groupParent":"null","loadType":"default",},},"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
-    {"$GMTextureGroup":"","%Name":"nodeIcon","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{"Steam":{"compressFormat":"bz2","groupParent":"null","loadType":"default",},},"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"nodeIcon","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
-    {"$GMTextureGroup":"","%Name":"workshop","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{"Steam":{"compressFormat":"bz2","groupParent":"null","loadType":"default",},},"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"workshop","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
-    {"$GMTextureGroup":"","%Name":"profileBadge","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{"Steam":{"compressFormat":"bz2","groupParent":"null","loadType":"default",},},"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"profileBadge","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "compressFormat":"bz2",
+          "groupParent":"null",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"nodeIcon","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "compressFormat":"bz2",
+          "groupParent":"null",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"nodeIcon","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"workshop","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "compressFormat":"bz2",
+          "groupParent":"null",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"workshop","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"profileBadge","autocrop":true,"border":2,"compressFormat":"bz2","ConfigValues":{
+        "Steam":{
+          "compressFormat":"bz2",
+          "groupParent":"null",
+          "loadType":"default",
+        },
+      },"customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"profileBadge","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
   ],
 }
