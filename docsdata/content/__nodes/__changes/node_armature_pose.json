@@ -6,6 +6,11 @@
         "date": "2026-06-04T02:40:49.062Z",
         "node": "Armature Pose, Skin",
         "commit": "**Armature Pose, Skin**: Hovering on a bone in the animation dopesheet now highlight bone in preview panel."
+      },
+      {
+        "date": "2026-06-04T03:46:44.743Z",
+        "node": "Armature Pose",
+        "commit": "**Armature Pose**: Add node setting to highlight bones with keyframe in the current frame."
       }
     ]
   },

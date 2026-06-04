@@ -471,12 +471,16 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	boneMap     = {};
 	bone_array  = [];
 	bone_points = [];
+	bone_path   = [];
 	
 	bone_selected = false;
 	bone_freeze   = 0;
 	bone_select   = [];
 	
 	__node_bone_attributes();
+	
+	attributes.highlight_animation = false;
+	array_push(attributeEditors, Node_Attribute("Highlight Animation", function() /*=>*/ {return attributes.highlight_animation}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("highlight_animation")})}));
 	
 	static setBone = function() {
 		var _b = getInputData(0);
@@ -548,22 +552,47 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		for( var i = 0, n = array_length(bonePose.constrains); i < n; i++ ) bonePose.constrains[i].drawBone(bonePose, _x, _y, _s);
 		
+		// draw_set_color(COLORS._main_icon);
+		// for( var i = 1, n = array_length(bone_path); i < n; i++ ) {
+		// 	var p0 = bone_path[i-1];
+		// 	var p1 = bone_path[i  ];
+		// 	if(!is_array(p0) || !is_array(p1)) continue;
+			
+		// 	for( var j = 0, m = array_length(p0); j < m; j++ ) {
+		// 		var p0p = p0[j];
+		// 		var p1p = p1[j];
+		// 		if(!is_array(p0p) || !is_array(p1p)) continue;
+				
+		// 		draw_line(
+		// 			_x + p0p[0] * _s, _y + p0p[1] * _s,
+		// 			_x + p1p[0] * _s, _y + p1p[1] * _s,
+		// 		);
+		// 	}
+		// }
+		
 		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
 			var _bne = bone_array[i];
 			var _sel = false;
 			var  cc  = c_white;
+			var _hig = true;
 			
 			if(has(boneMap, _bne.ID)) {
 				var _inp = boneMap[$ _bne.ID];
 				_sel = _inp.value_from == noone || is(_inp.value_from.node, Node_Vector4);
+				
+				var kf = _inp.animationCurrentKey();
+				_hig = kf != undefined;
 				
 				if(_bhov == noone && (PANEL_INSPECTOR.prop_hover == _inp || PANEL_ANIMATION.value_hovering == _inp))
 					_bhov = [ _bne, 2 ];
 			}
 			
 			var _selectMask = isNotUsingTool()? _sel * active * 0b111 : false;
+			var aa  = .50 + .50 * _sel;
+			if(attributes.highlight_animation) 
+				aa *= .20 + .80 * _hig;
 			
-			var hh = _bne.drawBone(attributes, _selectMask, _x, _y, _s, _mx, _my, _bhov, posing_bone, cc, .5 + .5 * _sel);
+			var hh = _bne.drawBone(attributes, _selectMask, _x, _y, _s, _mx, _my, _bhov, posing_bone, cc, aa);
 			if(hh != noone && (_hov == noone || _bne.control)) _hov = hh;
 		}
 		
@@ -906,11 +935,22 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			bPose.pose_posit[1] = bRaw.pose_posit[1] + _trn[TRANSFORM.pos_y];
 			bPose.pose_rotate   = bRaw.pose_rotate   + _trn[TRANSFORM.rot];
 			bPose.pose_scale    = bRaw.pose_scale    * _trn[TRANSFORM.sca_x];
+			
 		}
 		
 		bonePose.setPose();
 		bone_bbox   = bonePose.bbox();
 		bone_points = bonePose.toPoints(true);
+		
+		// var _pth = [];
+		// for( var i = 0, n = array_length(bone_points); i < n; i += 3 ) {
+		// 	var px = bone_points[i + 2].x;
+		// 	var py = bone_points[i + 2].y;
+		// 	array_push(_pth, [px,py]);
+		// }
+		
+		// bone_path   = array_verify(bone_path, TOTAL_FRAMES);
+		// bone_path[frame] = _pth;
 	}
 	
 	////- Draw

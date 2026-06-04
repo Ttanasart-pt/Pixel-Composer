@@ -145,6 +145,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		var p1x = _x + bone_tail_pose.x * _s;
 		var p1y = _y + bone_tail_pose.y * _s;
 		var _selecting = false;
+		var _outline   = undefined;
 		
 		if(is(_select, __Bone))     _selecting = _select.ID == self.ID; 
 		else if(is_string(_select)) _selecting = _select    == name; 
@@ -152,10 +153,12 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		if(_selecting) {
 			draw_set_color(COLORS._main_value_positive);
 			draw_set_alpha(1 * _alpha);
+			_outline = c_white;
 			
 		} else if(_hover != noone && _hover[0].ID == self.ID && _hover[1] == 2) {
-			draw_set_color(c_white);
+			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(1 * _alpha);
+			_outline = c_white;
 			
 		} else {
 			draw_set_color(COLORS._main_accent);
@@ -216,6 +219,24 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 					draw_vertex(_ppx, _ppy);
 					draw_vertex(_ppx - _prx, _ppy - _pry);
 				draw_primitive_end();
+				
+				if(_outline != undefined) {
+					draw_set_color(_outline)
+					draw_primitive_begin(pr_linelist);
+						draw_vertex(p0x, p0y);
+						draw_vertex(_ppx + _prx, _ppy + _pry);
+						
+						draw_vertex(p0x, p0y);
+						draw_vertex(_ppx - _prx, _ppy - _pry);
+						
+						draw_vertex(p1x, p1y);
+						draw_vertex(_ppx + _prx, _ppy + _pry);
+						
+						draw_vertex(p1x, p1y);
+						draw_vertex(_ppx - _prx, _ppy - _pry);
+					draw_primitive_end();
+						
+				}
 				
 				if(hovering && (edit & BONE_EDIT.body) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 12) //drag bone
 					hover = [ self, 2, bone_head_pose ];
