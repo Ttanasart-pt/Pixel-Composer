@@ -92,6 +92,21 @@
     	var s  = THEME.timeline_ease;
         var t  = "panel_animation_ease";
         
+        var _clrs = COLORS.labels;
+        var _item = array_create(array_length(_clrs));
+
+        for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
+            _item[i] = [ 
+                [ THEME.timeline_color, i > 0, _clrs[i] ], 
+                function(_data) /*=>*/ {  PANEL_ANIMATION.setSelectingKeyColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
+            ];
+        }
+		
+        array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { colorSelectorCall(c_white, PANEL_ANIMATION.setSelectingKeyColor); }]);
+		
+        MENU_ITEMS.animation_keyframe_color = menuItemGroup(__txt("Color"),  _item);
+        registerFunction(an, "Keyframe Color",  "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_keyframe_color ]); });
+        
         MENU_ITEMS.animation_group_ease_in = menuItemGroup(__txt($"{t}_in", "Ease in"),  [ 
 			[ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.linear; k.ease_in = [0, 1]; }) }, __txt($"{t}_linear",    "Linear")    ],
 			[ [s,1], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 1]; }) }, __txt($"{t}_smooth",    "Smooth")    ],
@@ -777,10 +792,9 @@ function Panel_Animation() : PanelContent() constructor {
         
         var ky = ui(12) + (bar_h - ui(12)) / 2;
         var ks = THEME.timeline_keyframe;
-        var kc = COLORS.panel_animation_keyframe_hide;
         
         for( var i = 0, n = array_length(timeline_keys); i < n; i++ )
-        	draw_sprite_ui_uniform(ks, 0, timeline_keys[i].dopesheet_x, ky, 1, kc);
+        	draw_sprite_ui_uniform(ks, 0, timeline_keys[i].dopesheet_x, ky, 1, timeline_keys[i].color, .75);
         	
         BLEND_MULTIPLY
         draw_sprite_stretched(THEME.ui_panel, 0, 0, 0, timeline_w, timeline_h);
@@ -1061,7 +1075,12 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
     ////- Actions
-    
+
+    function setSelectingKeyColor(c) { 
+        __temp_color = c;
+        array_foreach(keyframe_selecting, function(k,i) /*=>*/ {return k.setColor(__temp_color)});
+    }
+        
     function toggleDopesheet() {
     	if(in_dialog) {
     		

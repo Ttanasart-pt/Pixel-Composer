@@ -363,11 +363,11 @@
                 function(_data) /*=>*/ {  PANEL_GRAPH.setSelectingNodeColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
             ];
         }
-
+		
         array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { 
         	colorSelectorCall(PANEL_GRAPH.node_hover? PANEL_GRAPH.node_hover.attributes.color : c_white, PANEL_GRAPH.setSelectingNodeColor); 
         }]);
-        
+		        
         MENU_ITEMS.graph_group_node_color = menuItemGroup(__txt("Node Color"), _item, ["Graph", "Set Node Color"]).setSpacing(ui(24));
         registerFunction("Graph", "Set Node Color", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_node_color ]); });
         

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.005",
+    "changes": [
+      {
+        "date": "2026-06-04T03:06:49.148Z",
+        "node": "",
+        "commit": "**Animation Dopesheet**: Add the ability to set keyframe color."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc14",
     "changes": [
       {

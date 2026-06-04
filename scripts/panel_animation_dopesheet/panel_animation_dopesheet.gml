@@ -438,6 +438,8 @@ function Panel_Animation_Dopesheet() {
     
     #region ++++ Context Menu ++++
 	    global.menuItems_animation_keyframe = [
+	    	"animation_keyframe_color",
+	    	-1,
 	        "animation_edit_keyframe_value",
 	        "animation_group_ease_in",
 	        "animation_group_ease_out",
@@ -1994,7 +1996,13 @@ function Panel_Animation_Dopesheet() {
         		}
         	} // in-between keys
             
-            var cc = COLORS.panel_animation_keyframe_unselected;
+            var aa = 1;
+            var cc = c_white;
+            
+            if(keyframe.colorUnselect == undefined) 
+            	keyframe.colorUnselect = colorMultiply(keyframe.color, COLORS.panel_animation_keyframe_unselected);
+            cc = keyframe.colorUnselect;
+            
             if(on_end_dragging_anim == animator.prop && msx < t && anim_set) {
                 animator.prop.loop_range = k == 0? -1 : valAmo - k;
                 anim_set = false;
@@ -2004,7 +2012,10 @@ function Panel_Animation_Dopesheet() {
             var sca_back = keyframe == keyframe_selecting_f;
             
             if(key_hov) {
-                cc = COLORS.panel_animation_keyframe_selected;
+	            if(keyframe.colorSelect == undefined) 
+	            	keyframe.colorSelect = colorMultiply(keyframe.color, COLORS.panel_animation_keyframe_selected);
+	            cc = keyframe.colorSelect;
+	            
                 key_hover = keyframe;
                 if(!instance_exists(o_dialog_menubox))
                     TOOLTIP = [ keyframe, animator.prop.type ];
@@ -2076,7 +2087,7 @@ function Panel_Animation_Dopesheet() {
             			break;
             	}
             	
-            } else draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
+            } else draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc, aa);
             
             if(_select) {
             	if(_keyframe_selecting_f == noone) _keyframe_selecting_f = keyframe;

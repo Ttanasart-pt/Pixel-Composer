@@ -11,6 +11,11 @@
         "date": "2026-06-04T02:40:49.062Z",
         "node": "",
         "commit": "**Armature Pose, Skin**: Hovering on a bone in the animation dopesheet now highlight bone in preview panel."
+      },
+      {
+        "date": "2026-06-04T03:06:49.142Z",
+        "node": "Animation Dopesheet",
+        "commit": "**Animation Dopesheet**: Add the ability to set keyframe color."
       }
     ]
   }

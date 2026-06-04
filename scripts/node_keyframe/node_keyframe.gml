@@ -41,6 +41,10 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		anim  = _anim;
 		ratio = 0;
 		
+		color         = c_white;
+		colorUnselect = undefined;
+		colorSelect   = undefined;
+		
 		ease_y_lock = true;
 		ease_in	    = [_in, 1];
 		ease_out    = [_ot, 0];
@@ -57,10 +61,18 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	static calcRatio = function( ) /*=>*/ { ratio = time / (anim.node.project.animator.frames_total - 1); return self; }
 	static setTime   = function(t) /*=>*/ { time  = t; return self; }
 	
+	static setColor  = function(c) /*=>*/ {
+		color = c;
+		colorUnselect = undefined;
+		colorSelect   = undefined;
+		return self;
+	}
+	
 	static clone = function(target = noone) {
 		var val = has(value, "clone")? value.clone() : value;
 		var key = new valueKey(time, val, target);
 		key.type          = type;
+		key.color         = color;
 		key.ease_in       = [ ease_in[0],  ease_in[1]  ];
 		key.ease_out      = [ ease_out[0], ease_out[1] ];
 		key.ease_in_type  = ease_in_type;
@@ -621,6 +633,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_value_list[5] = _v.ease_out_type;
 			_value_list[6] = _v.ease_y_lock;
 			_value_list[7] = _v.driverObject? _v.driverObject.serialize() : 0;
+			_value_list[8] = _v.color;
 			
 			if(_v.driverObject != undefined)    _comp = false;
 			if(prop.type == VALUE_TYPE.trigger) _comp = false;
@@ -681,6 +694,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var ease_out_type = _klen > 5? _keyframe[5] :  0;
 			var ease_y_lock   = _klen > 6? _keyframe[6] :  1;
 			var driver        = _klen > 7? _keyframe[7] :  0;
+			var color         = _klen > 8? _keyframe[8] :  c_white;
 			
 			if(is_array(timeData)) {
 				_type = timeData[0];
@@ -766,6 +780,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			// print($"Deserialize {node.name}:{prop.name} = {_val} ");
 			var vk = new valueKey(_time, _val, self);
 			vk.type          = _type;
+			vk.color         = color;
 			vk.ease_in[0]    = ease_in[0];
 			vk.ease_in[1]    = ease_in[1];
 			vk.ease_out[0]   = ease_out[0];

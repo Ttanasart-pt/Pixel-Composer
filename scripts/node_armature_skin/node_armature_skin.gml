@@ -102,7 +102,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(has(boneMap, _bne.ID)) {
 				var _inps  = boneMap[$ _bne.ID];
-				var _inHov = array_any(_inps, function(inp,i) /*=>*/ {return (PANEL_INSPECTOR.prop_hover == _inp || PANEL_ANIMATION.value_hovering == _inp)});
+				var _inHov = array_any(_inps, function(inp,i) /*=>*/ {return (PANEL_INSPECTOR.prop_hover == inp || PANEL_ANIMATION.value_hovering == inp)});
 				if(_inHov) _bhov = [ _bne, 2 ];
 				
 				var _par = _bne.parent;
