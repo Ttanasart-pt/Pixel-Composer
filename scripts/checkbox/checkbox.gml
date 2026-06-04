@@ -80,7 +80,7 @@ function checkBox(_onClick) : widget() constructor {
 					draw_text(round(x + w - w2 + w2/2), round(y + h/2), __txt("True"));
 					
 				} else {
-					draw_set_color(COLORS._main_text_sub);
+					draw_set_color(COLORS._main_text);
 					draw_text_add(x + w2/2, y + h/2, __txt("False"));
 				}
 			}

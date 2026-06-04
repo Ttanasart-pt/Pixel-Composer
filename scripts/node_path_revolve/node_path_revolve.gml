@@ -12,14 +12,14 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 7, nodeValue_Int(      "Resolution", 16    )).setValidator(VV_min(2)).rejectArray();
 	
 	////- =Revolve
-	newInput( 8, nodeValue_Vec2(     "Center",    [.5,.5] )).setUnitSimple();
-	newInput( 9, nodeValue_Rotation( "Direction",   90    ));
+	newInput( 8, nodeValue_Vec2(     "Center",        [.5,.5] )).setUnitSimple();
+	newInput( 9, nodeValue_Rotation( "Direction",      90     ));
 	newInput(11, nodeValue_RotRange( "Revolve Range", [0,360] ));
-	newInput(13, nodeValue_Rotation( "Revolve Offset", 0  ));
-	newInput(10, nodeValue_Slider(   "Ratio",      .5     ));
-	newInput(15, nodeValue_Slider(   "Scale",       1     )).setCurvable(16, CURVE_DEF_11);
+	newInput(13, nodeValue_Rotation( "Revolve Offset", 0      ));
+	newInput(10, nodeValue_Slider(   "Ratio",         .5      ));
+	newInput(15, nodeValue_Slider(   "Scale",          1      )).setCurvable(16, CURVE_DEF_11);
 	
-	newInput( 3, nodeValue_Int(      "Subdivision", 16    )).setValidator(VV_min(2)).rejectArray();
+	newInput( 3, nodeValue_Int(      "Subdivision",    16     )).setValidator(VV_min(2)).rejectArray();
 	
 	////- =Transform
 	newInput(18, nodeValue_Vec2(     "Position",  [0,0]   )).setUnitSimple();
@@ -39,15 +39,17 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		////- =/Start Caps
 	newInput(22, nodeValue_Bool(    "Start Cap",  false                                  ));
 	newInput(26, nodeValue_EButton( "Draw Order", 1, [ "Front", "Back" ]                 ));
-	newInput(23, nodeValue_Surface( "Texture"                                            ));
+	newInput(23, nodeValue_Surface( "Start Cap Texture"                                  ));
 	newInput(28, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
+	newInput(31, nodeValue_EButton( "Mapping",    1, [ "None", "Cartesian", "Polar" ]    ));
 	
 		////- =/End Caps
 	newInput(25, nodeValue_Bool(    "End Cap",    false                                  ));
 	newInput(27, nodeValue_EButton( "Draw Order", 0, [ "Front", "Back" ]                 ));
-	newInput(24, nodeValue_Surface( "Texture"                                            ));
+	newInput(24, nodeValue_Surface( "End Cap Texture"                                    ));
 	newInput(29, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
-	// input 31
+	newInput(32, nodeValue_EButton( "Mapping",    1, [ "None", "Cartesian", "Polar" ]    ));
+	// input 33
 		
 	newOutput( 0, nodeValue_Output("Rendered",  VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Start Cap", VALUE_TYPE.surface, noone));
@@ -60,8 +62,8 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Transform",       false ], 18, 19, 20, 21, 
 		[ "Rendering",       false ], 17,  2, 12,  6, 30, 
 		[ "Caps",             true ], 
-			[ "/Start Caps", false, 22 ], 26, 23, 28, 
-			[ "/End Caps",   false, 25 ], 27, 24, 29, 
+			[ "/Start Caps", false, 22 ], 26, 23, 28, 31, 
+			[ "/End Caps",   false, 25 ], 27, 24, 29, 32, 
 	];
 	
 	////- Node
@@ -127,11 +129,13 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _scOr = getInputData(26);
 			var _scTx = getInputData(23);
 			var _scBl = getInputData(28);
+			var _scMp = getInputData(31);
 			
 			var _cape = getInputData(25);
 			var _ecOr = getInputData(27);
 			var _ecTx = getInputData(24);
 			var _ecBl = getInputData(29);
+			var _ecMp = getInputData(32);
 			
 			inputs[23].setVisible(true, _caps);
 			inputs[24].setVisible(true, _cape);
@@ -188,7 +192,6 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_pnt[i] = [ _x, _y, lx, ly, distL ];
 		}
 		
-		
 		var ancx = _anc[0] * _dim[0];
 		var ancy = _anc[1] * _dim[1];
 		var trans = matrix_compose(
@@ -196,7 +199,6 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			matrix_transform_2d(_pos[0], _pos[1], _rot, _sca[0], _sca[1]),
 			matrix_transform_2d(ancx, ancy),
 		);
-		
 		
 		var ast = _dir + 90 + _shf + _rev[0];
 		var aed = _dir + 90 + _shf + _rev[1];
@@ -237,14 +239,39 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var p1x = p0[2] + p1dx * rax + p1dy * rbx;
 					var p1y = p0[3] + p1dx * ray + p1dy * rby;
 					
-					var p0u = .5 + lengthdir_x(.5, a0);
-					var p0v = .5 + lengthdir_y(.5, a0);
-					var p1u = .5 + lengthdir_x(.5, a1);
-					var p1v = .5 + lengthdir_y(.5, a1);
+					switch(_scMp) {
+						case 0 : 
+							var pcu = p0[2] / _dim[0];
+							var pcv = p0[3] / _dim[1];
+							var p0u = p0x   / _dim[0];
+							var p0v = p0y   / _dim[1];
+							var p1u = p1x   / _dim[0];
+							var p1v = p1y   / _dim[1];
+							break;
+						
+						case 1 : 
+							var pcu = .5;
+							var pcv = .5;
+							var p0u = .5 + lengthdir_x(.5, a0);
+							var p0v = .5 + lengthdir_y(.5, a0);
+							var p1u = .5 + lengthdir_x(.5, a1);
+							var p1v = .5 + lengthdir_y(.5, a1);
+							break;
+							
+						case 2 : 
+							var pcu = .0;
+							var pcv = .0;
+							var p0u = a0 / 360;
+							var p0v = 1;
+							var p1u = a1 / 360;
+							var p1v = 1;
+							break;
+							
+					}
 					
-					draw_vertex_texture(p0x,   p0y,   p0u, p0v);
-					draw_vertex_texture(p0[2], p0[3], .5,  .5 );
-					draw_vertex_texture(p1x,   p1y,   p1u, p1v);
+					draw_vertex_texture( p0x,   p0y,   p0u, p0v );
+					draw_vertex_texture( p0[2], p0[3], pcu, pcv );
+					draw_vertex_texture( p1x,   p1y,   p1u, p1v );
 				
 				}
 				draw_primitive_end();
@@ -291,14 +318,39 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var p1x = p0[2] + p1dx * rax + p1dy * rbx;
 					var p1y = p0[3] + p1dx * ray + p1dy * rby;
 					
-					var p0u = .5 + lengthdir_x(.5, a0);
-					var p0v = .5 + lengthdir_y(.5, a0);
-					var p1u = .5 + lengthdir_x(.5, a1);
-					var p1v = .5 + lengthdir_y(.5, a1);
+					switch(_ecMp) {
+						case 0 :
+							var pcu = p0[2] / _dim[0];
+							var pcv = p0[3] / _dim[1];
+							var p0u = p0x   / _dim[0];
+							var p0v = p0y   / _dim[1];
+							var p1u = p1x   / _dim[0];
+							var p1v = p1y   / _dim[1];
+							break;
+						
+						case 1 : 
+							var pcu = .5;
+							var pcv = .5;
+							var p0u = .5 + lengthdir_x(.5, a0);
+							var p0v = .5 + lengthdir_y(.5, a0);
+							var p1u = .5 + lengthdir_x(.5, a1);
+							var p1v = .5 + lengthdir_y(.5, a1);
+							break;
+							
+						case 2 : 
+							var pcu = .0;
+							var pcv = .0;
+							var p0u = a0 / 360;
+							var p0v = 1;
+							var p1u = a1 / 360;
+							var p1v = 1;
+							break;
+							
+					}
 					
-					draw_vertex_texture(p0x,   p0y,   p0u, p0v);
-					draw_vertex_texture(p0[2], p0[3], .5,  .5 );
-					draw_vertex_texture(p1x,   p1y,   p1u, p1v);
+					draw_vertex_texture( p0x,   p0y,   p0u, p0v );
+					draw_vertex_texture( p0[2], p0[3], pcu, pcv );
+					draw_vertex_texture( p1x,   p1y,   p1u, p1v );
 				
 				}
 				draw_primitive_end();

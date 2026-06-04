@@ -42,7 +42,7 @@ function Panel_Capture_Project() : PanelContent() constructor {
 			var _p, _s;
 			var _sx = gif_d;
 			var _sy = gif_d;
-			var _pd = THEME_VALUE.panel_margin;
+			var _pd = ui(THEME_VALUE.panel_margin);
 			
 			surface_set_target(gif_s);
 				draw_clear(COLORS.bg);

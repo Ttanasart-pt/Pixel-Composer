@@ -4,8 +4,8 @@
     "selection_corner_radius": 6,
     
     "panel_separation_type": "frame",
-    "panel_padding": 1,
-    "panel_margin": 1,
+    "panel_padding": 2,
+    "panel_margin": 1.5,
     "panel_corner_radius": 8,
 
     "panel_menu_padding": 6,
