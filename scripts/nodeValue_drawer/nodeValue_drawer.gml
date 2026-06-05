@@ -248,14 +248,16 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var ty  = lb_y;
 			var aa  = .75;
 			
+			var tips = _tip;
+			if(jun.tooltipData != undefined)
+				tips = jun.tooltipData.title + "...";
+			
 			if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
+				if(is_string(tips)) TOOLTIP = tips;
 				cHov = true;
 				aa   = 1;
 				
-			    if(is_string(_tip)) {
-			    	TOOLTIP = _tip;
-			    	
-				} else if(mouse_lpress(_focus)) {
+			    if(mouse_lpress(_focus)) {
 					if(is_callable(_tip)) _tip();
 					else dialogCall(_tip);
 				}

@@ -31,9 +31,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(7, nodeValueSeed());
 		
 	////- =3D
-	newInput( 8, nodeValue_Bool(        "3D",       false ));
-	newInput( 9, nodeValue_Enum_Button( "Forward",  1, [ "X", "Y", "Z" ] ));
-	newInput(11, nodeValue_Rotation(    "Subangle", 45    ));
+	newInput( 8, nodeValue_Bool(     "3D",       false ));
+	newInput( 9, nodeValue_EButton(  "Forward",  1, [ "X", "Y", "Z" ] ));
+	newInput(11, nodeValue_Rotation( "Subangle", 45    ));
 	
 	////- =Rules
 	newInput( 3, nodeValue_Int(  "Iteration",    4 ));
@@ -264,6 +264,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 			if(out == undefined) out = path_3d? new __vec3() : new __vec2P(); 
 			else { out.x = 0; out.y = 0; if(path_3d) out.z = 0; }
+			
+			if(_ind >= array_length(lines)) return out;
 			
 			var _p0 = lines[_ind][0];
 			var _p1 = lines[_ind][1];

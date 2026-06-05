@@ -138,6 +138,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			
 			var toDel = undefined;
 			var bs = min(_h, ui(24));
+			var bc = [COLORS._main_icon, COLORS._main_value_negative];
 			
 			array_hovering = noone;
 			if(mouse_lpress(active)) 
@@ -182,7 +183,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				
 				var bx = _x + _w - bs;
 				var by = _yy;
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, hover, active, "Delete", THEME.minus, 0, COLORS._main_value_negative, 1, .5) == 2)
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, hover, active, "Delete", THEME.minus, 0, bc, 1, .5) == 2)
 					toDel = i;
 			}
 			

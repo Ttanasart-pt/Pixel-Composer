@@ -40,15 +40,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	#region ---- Tooltip ----
 		tooltip     = _tooltip;
-		tooltipData = {};
+		tooltipData = undefined;
 		
 		var _inode = instanceof(node);
 		if(has(LOCALE_NOTE_JUNC, _inode) && has(LOCALE_NOTE_JUNC[$ _inode], _initName)) {
 			var _dat = LOCALE_NOTE_JUNC[$ _inode][$ _initName];
 			
 			if(has(LOCALE_NOTE_DATA, _dat.note)) {
-				tooltipData.title   = filename_name_only(_dat.note);
-				tooltipData.content = LOCALE_NOTE_DATA[$ _dat.note];
+				tooltipData = {
+					title   : filename_name_only(_dat.note),
+					content : LOCALE_NOTE_DATA[$ _dat.note],
+				}
 				tooltip = function() /*=>*/ {return dialogPanelCall(new Panel_Note_Md(tooltipData))};
 			}
 		}

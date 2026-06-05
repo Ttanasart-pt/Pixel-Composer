@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.006",
+    "changes": [
+      {
+        "date": "2026-06-05T01:27:14.945Z",
+        "node": "L system",
+        "commit": "**L system**: Fix crash when trying to preview empty path output."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.006",
     "changes": [
       {
