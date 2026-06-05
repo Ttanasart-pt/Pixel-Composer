@@ -1,0 +1,6 @@
+{
+    "name":          "Normal to Height",
+    "spr":           "s_node_normal_to_height",
+    "baseNode":      "Node_Normal_to_Height",
+    "pxc_version":    121030,
+}

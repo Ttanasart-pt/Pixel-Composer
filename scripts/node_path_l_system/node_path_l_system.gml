@@ -256,10 +256,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		boundary       = new BoundingBox();
 		path_3d        = false;
 		
-		static getLineCount		= function() /*=>*/ {return array_length(lines)};
-		static getSegmentCount	= function() /*=>*/ {return 1};
-		static getLength		= function() /*=>*/ {return current_length};
-		static getAccuLength	= function() /*=>*/ {return [ 0, current_length ]};
+		static getLineCount    = function() /*=>*/ {return array_length(lines)};
+		static getSegmentCount = function() /*=>*/ {return 1};
+		static getLength       = function() /*=>*/ {return current_length};
+		static getAccuLength   = function() /*=>*/ {return [ 0, current_length ]};
+		static getBoundary     = function() /*=>*/ {return boundary};
 		
 		static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 			if(out == undefined) out = path_3d? new __vec3() : new __vec2P(); 
@@ -283,7 +284,6 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
 		
-		static getBoundary	= function() { return boundary; }
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
