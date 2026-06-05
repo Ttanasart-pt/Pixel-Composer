@@ -6,8 +6,10 @@ uniform sampler2D histogram;
 uniform vec2  dimension;
 uniform int   iAxis, oAxis;
 uniform float position;
+
 uniform int   aa;
 uniform int   mode;
+uniform int   alpha;
 
 void main() {
     vec2 tx = 1. / dimension;
@@ -23,4 +25,5 @@ void main() {
          if(mode == 0) gl_FragColor = vec4(vec3(res), 1.);
     else if(mode == 1) gl_FragColor = cc;
         
+    if(alpha == 1) gl_FragColor.a = res;
 }

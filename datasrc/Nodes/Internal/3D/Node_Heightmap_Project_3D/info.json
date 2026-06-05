@@ -1,0 +1,6 @@
+{
+    "name":          "Heightmap Project 3D",
+    "spr":           "s_node_heightmap_project_3d",
+    "baseNode":      "Node_Heightmap_Project_3D",
+    "pxc_version":    121030,
+}

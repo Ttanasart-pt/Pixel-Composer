@@ -19,6 +19,8 @@ uniform int surFrontB_use;
 uniform int surSideB_use;
 
 uniform vec3  angle;
+uniform vec3  position;
+
 uniform int   projection;
 uniform float fov;
 uniform float distant;
@@ -93,6 +95,8 @@ void main() {
 		dir = vec3(0., 0., -1.);
     	eye = vec3(uv * scale, sqrt(3.));
 	}
+	
+	eye -= position;
 	
 	dir = irotMatrix * dir;
 	dir = normalize(dir);

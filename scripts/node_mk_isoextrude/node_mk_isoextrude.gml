@@ -2,6 +2,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "MK Isoextrude";
 	
 	////- =Surface
+	newInput(19, nodeValue_Dimension());
 	newInput( 0, nodeValue_Surface( "Surface Base" )).setDrawGroup(0);
 	newInput( 6, nodeValue_Surface( "Surface Side" )).setDrawGroup(0);
 	newInput( 3, nodeValue_Surface( "Surface Top"  )).setDrawGroup(0);
@@ -33,13 +34,13 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Rendering
 	newInput( 2, nodeValue_Gradient( "Blending", gra_white ));
-	// input 18
+	// input 20
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 
-		[ "Surfaces",    false     ],  0,  6,  3, 
+		[ "Surfaces",    false     ], 19,  0,  6,  3, 
 		[ "Height Maps", false     ],  5, 14, 17, 18, 
 		[ "Depth",       false     ],  4,  1,  9, 
 		[ "Transform",   false     ],  7,  8, 
@@ -62,6 +63,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
+			var _dim     = _data[19]; 
+			
 			var _surf    = _data[ 0]; 
 			var _surfS   = _data[ 6], _surfSu  = is_surface(_surfS);
 			var _surfT   = _data[ 3], _surfTu  = is_surface(_surfT);
@@ -95,8 +98,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
-		var sw = surface_get_width_safe(  _surf );
-		var sh = surface_get_height_safe( _surf );
+		var sw = _dim[0];
+		var sh = _dim[1];
 		for( var i = 0; i < 5; i++ )
 			temp_surface[i] = surface_verify(temp_surface[i], sw, sh);
 		temp_surface[5] = surface_verify(temp_surface[5], 1024, 1024);

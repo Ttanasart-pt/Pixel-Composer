@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_heightmap_project_3d",
+  "name":"sh_heightmap_project_3d",
+  "parent":{
+    "name":"2d_effects",
+    "path":"folders/nodes/data/3D/2d_effects.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

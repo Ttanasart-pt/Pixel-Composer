@@ -9,24 +9,25 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Draw Cross Section";
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(5, nodeValue_Surface( "Mask"       ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 5, nodeValue_Surface( "Mask"       ));
 	
 	////- =Axis
-	newInput(1, nodeValue_Enum_Button( "Axis", 0 , [ "X", "Y" ] )).setPieMenu();
-	newInput(2, nodeValue_Slider(  "Position", 0 )).setHotkey("G").setPieMenu();
+	newInput( 1, nodeValue_EButton( "Axis", 0 , [ "X", "Y" ] )).setPieMenu();
+	newInput( 2, nodeValue_Slider(  "Position", 0 )).setHotkey("G").setPieMenu();
 	
 	////- =Output
-	newInput(4, nodeValue_Enum_Button( "Mode",  0 , [ "BW", "Colored" ] )).setPieMenu();
-	newInput(3, nodeValue_Bool("Anti-aliasing", false )).setPieMenu();
-	// input 6
+	newInput( 4, nodeValue_EButton( "Mode",  0 , [ "BW", "Colored" ] )).setPieMenu();
+	newInput( 3, nodeValue_Bool(    "Anti-aliasing", false )).setPieMenu();
+	newInput( 6, nodeValue_Bool(    "To Alpha",      false )).setPieMenu();
+	// input 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
-		["Surfaces", false], 0, 5, 
-		["Axis",	 false], 1, 2, 
-		["Output",	 false], 4, 3, 
+		[ "Surfaces", false ],  0,  5, 
+		[ "Axis",     false ],  1,  2, 
+		[ "Output",   false ],  4,  3,  6, 
 	];
 	
 	////- Node
@@ -66,11 +67,14 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _surf = _data[0];
-			var _iaxs = _data[1];
-			var _posi = _data[2];
-			var _aa   = _data[3];
-			var _mode = _data[4];
+			var _surf = _data[ 0];
+			
+			var _iaxs = _data[ 1];
+			var _posi = _data[ 2];
+			
+			var _aa   = _data[ 3];
+			var _mode = _data[ 4];
+			var _alph = _data[ 6];
 		#endregion
 		
 		var _dim  = surface_get_dimension(_surf);
@@ -78,11 +82,14 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		surface_set_shader(_outSurf, sh_cross_section);
 			gpu_set_tex_filter(_aa);
-			shader_set_f("dimension", _dim);
-			shader_set_i("iAxis",	  _iaxs);
-			shader_set_f("position",  _posi);
-			shader_set_i("aa",		  _aa);
-			shader_set_i("mode",	  _mode);
+			shader_set_f( "dimension", _dim  );
+			
+			shader_set_i( "iAxis",     _iaxs );
+			shader_set_f( "position",  _posi );
+			
+			shader_set_i( "aa",        _aa   );
+			shader_set_i( "mode",      _mode );
+			shader_set_i( "alpha",     _alph );
 			
 			draw_surface_safe(_surf);
 			gpu_set_tex_filter(false);
