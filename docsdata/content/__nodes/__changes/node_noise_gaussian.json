@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.006",
+    "changes": [
+      {
+        "date": "2026-06-05T01:08:30.370Z",
+        "node": "VectorBox] Add support for vector array creation by setting one element into an array. - [VectorBox",
+        "commit": "**VectorBox] Add support for vector array creation by setting one element into an array. - [VectorBox**: Add support for vector array modification."
+      }
+    ]
+  }
+]

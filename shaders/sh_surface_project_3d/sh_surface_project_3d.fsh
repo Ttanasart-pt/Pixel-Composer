@@ -18,11 +18,12 @@ uniform int surTopB_use;
 uniform int surFrontB_use;
 uniform int surSideB_use;
 
-uniform int blend;
-
+uniform vec3  angle;
+uniform int   projection;
+uniform float fov;
+uniform float distant;
 uniform float scale;
 
-uniform vec3 angle;
 
 #region ////========== Transform ============
     mat3 rotateX(float dg) {
@@ -79,9 +80,19 @@ void main() {
     mat3 rotMatrix  = rx * ry * rz;
     mat3 irotMatrix = inverse(rotMatrix);
 	
-	vec2 uv  = (v_vTexcoord - .5) * scale; 
-	vec3 dir = vec3(0., 0., -1.);
-    vec3 eye = vec3(uv, sqrt(3.));
+	vec2 uv = v_vTexcoord - .5;
+	vec3 dir, eye;
+	
+	if(projection == 0) {
+		float dz  = 1. / tan(radians(fov) / 2.);
+		
+		dir = vec3(uv * 2., -dz);
+		eye = vec3(0., 0., sqrt(3.) * distant);
+			
+	} else if(projection == 1) {
+		dir = vec3(0., 0., -1.);
+    	eye = vec3(uv * scale, sqrt(3.));
+	}
 	
 	dir = irotMatrix * dir;
 	dir = normalize(dir);
@@ -108,22 +119,18 @@ void main() {
 	bool hit = false;
 
 	float maxVoxels = sqrt(3.) * size * 2.;
+	if(projection == 0) maxVoxels *= distant;
 	
     for (float i = 0.; i < maxVoxels; i++) {
         vec3 wc = (pos + 0.5) * voxSize;
         vec3 sc = wc * .5 + .5;
         
         if (sc.x >= 0. && sc.x < 1. && sc.y >= 0. && sc.y < 1. && sc.z >= 0. && sc.z < 1.) {
-            // samTop   = surTopB_use   == 1 && pos.z < 0.? texture2D(surTopB,   sc.xy) : texture2D(surTop,   sc.xy);
-            // samFront = surFrontB_use == 1 && pos.x < 0.? texture2D(surFrontB, sc.zy) : texture2D(surFront, sc.zy);
-            // samSide  = surSideB_use  == 1 && pos.y < 0.? texture2D(surSideB,  sc.xz) : texture2D(surSide,  sc.xz);
+            samTop   = texture2D(surTop,   vec2(   sc.x, sc.y));
+            samFront = texture2D(surFront, vec2(1.-sc.z, sc.y));
+            samSide  = texture2D(surSide,  vec2(   sc.x, sc.z));
             
-            samTop   = texture2D(surTop,   sc.xy);
-            samFront = texture2D(surFront, sc.zy);
-            samSide  = texture2D(surSide,  sc.xz);
-            
-            if (blend == 0 && (samTop.a > 0. && samFront.a > 0. && samSide.a > 0.)) { hit = true; break; }
-            if (blend == 1 && (samTop.a > 0. || samFront.a > 0. || samSide.a > 0.)) { hit = true; break; }
+            if (samTop.a > 0. && samFront.a > 0. && samSide.a > 0.) { hit = true; break; }
         }
         
         mm   = step(dis.xyz, dis.yzx) * step(dis.xyz, dis.zxy);
@@ -138,7 +145,7 @@ void main() {
     vec3 hitPos = (ro + rd * ft) * voxSize;
     vec3 samPos = hitPos * .5 + .5;
     
-         if (mm.z > 0.5) gl_FragColor = surTopB_use   == 1 && rs.z >= 0.? texture2D(surTopB,   samPos.xy) : texture2D(surTop,   samPos.xy);
-    else if (mm.x > 0.5) gl_FragColor = surFrontB_use == 1 && rs.x >= 0.? texture2D(surFrontB, samPos.zy) : texture2D(surFront, samPos.zy);
-    else                 gl_FragColor = surSideB_use  == 1 && rs.y >= 0.? texture2D(surSideB,  samPos.xz) : texture2D(surSide,  samPos.xz);
+         if (mm.z > 0.5) gl_FragColor = surTopB_use   == 1 && rs.z >= 0.? texture2D(surTopB,   vec2(   samPos.x, samPos.y)) : texture2D(surTop,   vec2(   samPos.x, samPos.y));
+    else if (mm.x > 0.5) gl_FragColor = surFrontB_use == 1 && rs.x >= 0.? texture2D(surFrontB, vec2(1.-samPos.z, samPos.y)) : texture2D(surFront, vec2(1.-samPos.z, samPos.y));
+    else                 gl_FragColor = surSideB_use  == 1 && rs.y >= 0.? texture2D(surSideB,  vec2(   samPos.x, samPos.z)) : texture2D(surSide,  vec2(   samPos.x, samPos.z));
 }

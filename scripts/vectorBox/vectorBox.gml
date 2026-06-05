@@ -21,23 +21,33 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	scaleDrag_my = 0;
 	scaleDrag_ss = 0;
 	
+	array_display_max = 32;
+	array_editing  = false;
+	array_focusing = undefined;
+	array_hovering = undefined;
+	
 	tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
 	
 	onModifyIndex = function(val, index) { 
-		var v = toNumber(val);
+		if(!is_callable(onModify)) return false;
+		var v = val;
+		
+		if(array_editing) {
+			current_value[array_focusing][index] = val;
+			return onModify(current_value, setValueForceUpdate);
+		}
 		
 		if(linked) {
 			var modi = false;
 			for( var i = 0; i < size; i++ ) {
 				tb[i]._input_text = v;
-				
-				if(is_callable(onModify)) modi = onModify(v, i) || modi;
+				modi = onModify(v, i) || modi;
 			}
-			
 			return modi;
+			
 		}
 		
-		return is_callable(onModify)? onModify(v, index) : noone;
+		return onModify(v, index);
 	}
 	
 	axis = [ "x", "y", "z", "w" ];
@@ -97,7 +107,12 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			tb[i].setParam(params);
 	}
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { 
+		var d = array_get_depth(params.data);
+		return d == 2? (params.h + ui(2)) * min(array_display_max, array_length(params.data)) - ui(2) : params.h;
+	}
+	
+	static drawParam   = function(params) {
 		setParam(params);
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
@@ -108,7 +123,79 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		w = _w;
 		h = per_line? (_h + ui(4)) * size - ui(4) : _h;
 		
-		if(array_invalid(_data) || is_array(_data[0])) {
+		if(has(_display_data, "linked"))      linked      = _display_data.linked;
+		if(has(_display_data, "side_button")) side_button = _display_data.side_button;
+		tooltip.index = linked;
+		current_value = _data;
+		array_editing = false;
+		
+		var d = array_get_depth(_data);
+		
+		if(d == 2) {
+			array_editing = true;
+			var _len = min(array_display_max, array_length(_data));
+			h = _len * (_h + ui(2)) - ui(2);
+			
+			var toDel = undefined;
+			var bs = min(_h, ui(24));
+			
+			array_hovering = noone;
+			if(mouse_lpress(active)) 
+				array_focusing = undefined;
+			
+			for( var i = 0; i < _len; i++ ) {
+				var _vect = _data[i];
+				var _sz   = min(size, array_length(_vect));
+				
+				var _yy = _y + i * (_h + ui(2));
+				var  ww = (_w - bs - ui(4)) / _sz;
+				
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _yy, _w, _h, boxColor, 1);
+				
+				var hv = hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _h);
+				if(hv) {
+					array_hovering = i;
+					if(mouse_lpress(active)) 
+						array_focusing = i;
+				}
+				
+				for(var j = 0; j < _sz; j++) {
+					var bx = _x + ww * j;
+					var by = _yy;
+					
+					if(array_focusing == i) {
+						tb[j].setFocusHover(active, hover);
+						tb[j].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
+						tb[j].hide       = !per_line;
+						tb[j].setLabel(axis[j]);
+						
+						tb[j].draw(bx, by, ww - 1, _h, _vect[j], _m);
+						
+					} else {
+						draw_set_text(font, fa_center, fa_center, COLORS._main_text);
+						draw_text_add(bx + ww / 2, by + _h / 2, _vect[j]);
+					}
+				}
+				
+				if(hide == 0 && (array_focusing != i || hv)) 
+					draw_sprite_stretched_ext(THEME.textbox, 0, _x, _yy, _w, _h, boxColor, .5 + .5 * interactable);
+				
+				var bx = _x + _w - bs;
+				var by = _yy;
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, hover, active, "Delete", THEME.minus, 0, COLORS._main_value_negative, 1, .5) == 2)
+					toDel = i;
+			}
+			
+			if(toDel != undefined) {
+				array_delete(_data, toDel, 1);
+				if(array_length(_data) == 1) 
+					_data = _data[0];
+				onModify(_data, setValueForceUpdate);
+			}
+			
+			return h;
+			
+		} else if(d < 1 || d > 2) {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
 			
@@ -120,11 +207,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			gpu_set_scissor(_scis);
 			return _h;
 		}
-		
-		if(struct_has(_display_data, "linked"))	     linked	     = _display_data.linked;
-		if(struct_has(_display_data, "side_button")) side_button = _display_data.side_button;
-		tooltip.index = linked;
-		current_value = _data;
 		
 		var bs = min(_h, ui(32));
 		var bx = _x + _w - bs;
@@ -195,7 +277,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		var ww = per_line? _w : _w / _sz;
 		
-		if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);
+		if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
 		
 		var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
 		var tbHover = bxHover;

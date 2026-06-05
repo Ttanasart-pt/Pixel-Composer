@@ -78,8 +78,6 @@ function widget() constructor {
 		
 		static setColor      = function(v) /*=>*/ { color    = v; return self; }
 		static setBoxColor   = function(v) /*=>*/ { boxColor = v; return self; }
-		
-		static setInteract = function(i=noone) /*=>*/ { interactable = i; return self; }
 	#endregion
 	
 	static register = function(_p = noone) {
@@ -145,6 +143,7 @@ function widget() constructor {
 		WIDGET_CURRENT_SCROLL = undefined;
 	}
 	
+	static setInteract   = function(i=noone) /*=>*/ { interactable = i; return self; }
 	static setFocusHover = function(_active = false, _hover = false) {
 		active  = interactable && _active;
 		hover   = interactable && _hover;

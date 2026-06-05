@@ -2148,6 +2148,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		} else
 			res = setValueDirect(_val, _index, true, time);
+			
 		if(onSetValue != undefined) onSetValue(_val);
 		
 		return res;
@@ -2161,6 +2162,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self; 
 	}
 	
+	#macro setValueForceUpdate -9
 	static onSetValueDirect = undefined;
 	static setValueDirect = function(val = 0, _index = noone, record = true, time = NODE_CURRENT_FRAME, _render = true) {
 		is_modified = true;
@@ -2168,16 +2170,61 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _val = val;
 		var _rec = record && record_value;
 		
-		if(sep_axis) {
+		if(_index == setValueForceUpdate) _upd = true;
+		
+		if(is_array(val) && _index >= 0) { // create vector array when setting 1 element to array.
+			if(sep_axis) {} // TODO: implement vector array in separate axis mode.
+			else {
+				_val = animator.getValue(time);
+				var _dep = array_get_depth(_val);
+				
+				// val = [1,2,3], index = 0;
+				var _nlen = array_length(val);
+				
+				if(_dep == 0) { // scalar? already incorrect value
+				    _val = array_create(_nlen);
+				    for( var i = 0; i < _nlen; i++ ) {
+				    	_val[i] = array_create(def_length, _val);
+				    	_val[i][_index] = val[i];
+				    }
+				    
+			    } else if(_dep == 1) { // create vector array
+					var _nval = array_create(_nlen);
+					
+				    for( var i = 0; i < _nlen; i++ ) {
+				    	_nval[i] = array_clone(_val);
+				    	_nval[i][_index] = val[i];
+				    }
+				    
+				    _val = _nval;
+					
+				} else if(_dep == 2) { // modify vector array
+					var _olen = array_length(_val); // old length
+					var _nval = array_create(max(_olen, _nlen));
+					
+					for( var i = 0; i < max(_olen, _nlen); i++ ) {
+						var _oval = array_clone(_val[i % _olen]);
+						_oval[_index] = val[i % _nlen];
+						_nval[i] = _oval;
+					}
+					
+					_val = _nval;
+					
+				} // else {} // too many dimension, just ignore
+				
+				_upd = animator.setValue(_val, _rec, time) || _upd;
+			}
+			
+		} else if(sep_axis) {
 			var _anims = getAnimators();
-			if(_index == noone) {
+			if(_index < 0) {
 				for( var i = 0, n = animVector; i < n; i++ )
 					_upd = _anims[i].setValue(val[i], _rec, time) || _upd; 
 			} else
 				_upd = _anims[_index].setValue(val, _rec, time) || _upd;
 				
 		} else {
-			if(_index != noone) {
+			if(_index >= 0) {
 				_val = animator.getValue(time);
 				_val = variable_clone(_val); 
 				_val[_index] = val;
