@@ -23,6 +23,8 @@ function Node_Normal_to_Height(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	////- Nodes
 	
+	attribute_surface_depth();
+	
 	// TODO: Make it runs in O(log(n))
 	
 	temp_surface = [ noone, noone ];

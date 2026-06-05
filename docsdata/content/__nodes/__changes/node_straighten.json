@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.006",
+    "changes": [
+      {
+        "date": "2026-06-05T05:28:47.444Z",
+        "node": "",
+        "commit": "**straighten**: fix incorrect output for non-square surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.003",
     "changes": [
       {

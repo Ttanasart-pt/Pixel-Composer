@@ -349,13 +349,14 @@ uniform vec2 persPoints4;
 
 void main() {
 	vec2 tx = 1. / dimension;
+	vec2 as = dimension / dimension.y;
 	vec2 uv = v_vTexcoord;
 	
 	if(mode == 0) { // 2D
 		float angle = atan(points2.y - points1.y, points2.x - points1.x);
-		float ang   = -angle;
+		float ang   = angle;
 		mat2  rot   = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
-		uv = uv * rot;
+		uv = .5 + (uv - .5) * as * rot / as;
 		
 	} else if(mode == 1) { // 3D perspective straighten
 		vec2 p1 = persPoints1 / dimension;

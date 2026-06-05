@@ -20,31 +20,45 @@ void main() {
 	vec2 tx = 1. / dimension;
 	vec2 px = floor(v_vTexcoord * dimension);
 	float h0 = sample(v_vTexcoord).r;
-	
-	float nl = texture2D(normal, v_vTexcoord - vec2( tx.x, 0.) * stepSize).x - .5;
-	float hl = sample(v_vTexcoord - vec2( tx.x, 0.) * stepSize).r;
-	float h0l = hl - nl / intensity;
-	
-	float nr = texture2D(normal, v_vTexcoord + vec2( tx.x, 0.) * stepSize).x - .5;
-	float hr = sample(v_vTexcoord + vec2( tx.x, 0.) * stepSize).r;
-	float h0r = hr + nr / intensity;
-	
-	float nt = texture2D(normal, v_vTexcoord + vec2( 0., tx.y) * stepSize).y - .5;
-	float ht = sample(v_vTexcoord + vec2( 0., tx.y) * stepSize).r;
-	float h0t = ht - nt / intensity;
-	
-	vec2  pb = vec2(v_vTexcoord.x, v_vTexcoord.y - tx.y * stepSize);
-	float nb = texture2D(normal, pb).y - .5;
-	float hb = sample(pb).r;
-	float h0b = hb + nb / intensity;
-	
+		
 	float height = 0.;
 	float hdiv   = 0.;
 	
-	if(sweepT == 1) { height += h0t; hdiv += 1.; }
-	if(sweepL == 1) { height += h0l; hdiv += 1.; }
-	if(sweepB == 1) { height += h0b; hdiv += 1.; }
-	if(sweepR == 1) { height += h0r; hdiv += 1.; }
+	if(sweepT == 1) { 
+		vec2  pt  = v_vTexcoord + vec2( 0., tx.y) * stepSize;
+		float nt  = texture2D(normal, pt).y - .5;
+		float h0t = sample(pt).r - nt / intensity;
+		
+		height += h0t; 
+		hdiv += 1.; 
+	}
+		
+	if(sweepL == 1) { 
+		vec2  pl  = v_vTexcoord - vec2( tx.x, 0.) * stepSize;
+		float nl  = texture2D(normal, pl).x - .5;
+		float h0l = sample(pl).r - nl / intensity;
+		
+		height += h0l; 
+		hdiv += 1.; 
+	}
+		
+	if(sweepB == 1) { 
+		vec2  pb  = vec2(v_vTexcoord.x, v_vTexcoord.y - tx.y * stepSize);
+		float nb  = texture2D(normal, pb).y - .5;
+		float h0b = sample(pb).r + nb / intensity;
+		
+		height += h0b; 
+		hdiv += 1.; 
+	}
+		
+	if(sweepR == 1) { 
+		vec2  pr  = v_vTexcoord + vec2( tx.x, 0.) * stepSize;
+		float nr  = texture2D(normal, pr).x - .5;
+		float h0r = sample(pr).r + nr / intensity;
+		
+		height += h0r; 
+		hdiv += 1.; 
+	}
 	
 	if(hdiv > 0.) height /= hdiv;
 	

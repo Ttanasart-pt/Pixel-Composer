@@ -19,6 +19,8 @@ function Node_Straighten(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 		[ "Straighten", false ], i+0, i+1, i+2, i+3, i+4, i+5, i+6, 
 	]);
 	
+	////- Node
+	
 	attribute_interpolation(false, true);
 	attribute_oversample();
 	

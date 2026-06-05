@@ -11,45 +11,46 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newActiveInput(1);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Shape
-	newInput(2, nodeValue_EScroll(  "Shape",  0, [ new scrollItem("Circle",  s_node_shape_circle, 0), 
-												   new scrollItem("Polygon", s_node_shape_misc,   1), ] )).setPieMenu();
-	newInput(5, nodeValue_Int(      "Sides", 4 )).setPieMenu();
-	newInput(6, nodeValue_Slider(   "Scale", 1, [ 0, 2, 0.01 ] )).setPieMenu();
-	newInput(7, nodeValue_Rotation( "Angle", 0 )).setPieMenu();
+	newInput( 2, nodeValue_EScroll(  "Shape",  0, [ new scrollItem("Circle",  s_node_shape_circle, 0), 
+	                                                new scrollItem("Polygon", s_node_shape_misc,   1), ] )).setPieMenu();
+	newInput( 5, nodeValue_Int(      "Sides", 4 )).setPieMenu();
+	newInput( 6, nodeValue_Slider(   "Scale", 1, [ 0, 2, 0.01 ] )).setPieMenu();
+	newInput( 7, nodeValue_Rotation( "Angle", 0 )).setPieMenu();
 	
 	////- =Mapping
-	newInput(3, nodeValue_Vec2(  "Map Scale", [ 4, 1 ] ));
-	newInput(4, nodeValue_Float( "Radius",     .5      ));
+	newInput( 3, nodeValue_Vec2(  "Map Scale", [ 4, 1 ] ));
+	newInput( 4, nodeValue_Float( "Radius",     .5      ));
 	// input 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		["Surfaces",  true], 0,
-		["Shape",    false], 2, 5, 6, 7, 
-		["Mapping",  false], 3, 
+		[ "Surfaces",  true ],  0,
+		[ "Shape",    false ],  2,  5,  6,  7, 
+		[ "Mapping",  false ],  3, 
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
-	static step = function() { #region
-		var _shape = getInputData(2);
+	static processData = function(_outSurf, _data, _array_index) {	
+		#region data
+			var _shape  = _data[ 2];
+			var _sides  = _data[ 5];
+			var _sca    = _data[ 6];
+			var _rot    = _data[ 7];
+			
+			var _scale  = _data[ 3];
+			var _radius = _data[ 4];
+		#endregion
 		
 		inputs[5].setVisible(_shape == 1);
-	} #endregion
-	
-	static processData = function(_outSurf, _data, _array_index) { #region	
-		var _shape  = _data[2];
-		var _scale  = _data[3];
-		var _radius = _data[4];
-		var _sides  = _data[5];
-		var _sca    = _data[6];
-		var _rot    = _data[7];
 		
 		var _dim = surface_get_dimension(_data[0]);
 		
@@ -76,5 +77,5 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		return _outSurf;
-	} #endregion
+	}
 }
