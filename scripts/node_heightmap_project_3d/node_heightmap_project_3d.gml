@@ -16,22 +16,24 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 	newInput( 5, nodeValue_Slider(  "FOV",          60, [1,90,1] ));
 	newInput( 6, nodeValue_Float(   "Distance",     1            ));
 	newInput( 7, nodeValue_Float(   "Scale",        3.46         ));
+	newInput(12, nodeValue_Float(   "Height Scale", 1            ));
 	
 	////- =Rendering
 	newInput( 9, nodeValue_Gradient( "Height Color", gra_white   ));
-	// 12
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0,
 		[ "Surfaces",  false ],  1,  2, 10, 11, 
-		[ "Camera",    false ],  3,  8,  4,  5,  6,  7, 
+		[ "Camera",    false ],  3,  8,  4,  5,  6,  7, 12, 
 		[ "Rendering", false ],  9, 
 	];
 	
 	////- Node
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		#region data
@@ -49,6 +51,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			var _fov   = _data[ 5];
 			var _dist  = _data[ 6];
 			var _sca   = _data[ 7];
+			var _hsca  = _data[12];
 			
 			var _hgCol = _data[ 9];
 			
@@ -62,6 +65,8 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_heightmap_project_3d);
+			shader_set_interpolation(_higm);
+			
 			shader_set_2( "dimension", _dim   );
 			shader_set_s( "heightmap", _higm  );
 			shader_set_s( "texture",   is_surface(_text)? _text : _higm );
@@ -78,7 +83,9 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_i( "projection", _proj  );
 			shader_set_f( "fov",        _fov   );
 			shader_set_f( "distant",    _dist  );
+			
 			shader_set_f( "scale",      _sca   );
+			shader_set_f( "heightScale",_hsca  );
 			
 			shader_set_gradient(_hgCol);
 			

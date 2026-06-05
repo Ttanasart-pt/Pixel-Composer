@@ -33,6 +33,7 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 	////- Node
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		#region data
@@ -61,6 +62,8 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_surface_project_3d);
+			shader_set_interpolation(_sTop);
+			
 			shader_set_2( "dimension", _dim   );
 			shader_set_s( "surTop",    _sFrn  );
 			shader_set_s( "surFront",  _sSid  );

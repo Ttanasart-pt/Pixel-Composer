@@ -1135,9 +1135,23 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\3d\2d_operation\simple_3d\shape_3d.html" class="sidebar-file">Shape 3D</a>
             </div>
+</li></ul>
+</li><li id="project"><div class="sidebar-menu">
+                <div class="sidebar-icon sidebar-dir"></div>
+                <a href="\nodes\3d\2d_operation\project\index.html" class="sidebar-dir">Project</a>
+            </div>
+            <ul class="submenu">
+<li id="heightmap_project_3d"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\3d\2d_operation\project\heightmap_project_3d.html" class="sidebar-file">Heightmap Project 3D</a>
+            </div>
 </li><li id="surface_project_3d"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
-                <a href="\nodes\3d\2d_operation\simple_3d\surface_project_3d.html" class="sidebar-file">Surface Project 3D</a>
+                <a href="\nodes\3d\2d_operation\project\surface_project_3d.html" class="sidebar-file">Surface Project 3D</a>
+            </div>
+</li><li id="surface_project_volume_3d"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\3d\2d_operation\project\surface_project_volume_3d.html" class="sidebar-file">Surface Project Volume 3D</a>
             </div>
 </li></ul>
 </li><li id="filter"><div class="sidebar-menu">
@@ -1160,6 +1174,10 @@
 </li><li id="normal_light"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\3d\2d_operation\filter\normal_light.html" class="sidebar-file">Normal Light</a>
+            </div>
+</li><li id="normal_to_height"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\3d\2d_operation\filter\normal_to_height.html" class="sidebar-file">Normal To Height</a>
             </div>
 </li><li id="pb_fx_bevel"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
@@ -6011,11 +6029,14 @@
 <li class="search-result" style="display: none;"><a href="\nodes\filter\fix/gap_contract.html">Gap Contract</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\simple_3d/3d_transform_image.html">3D Transform Image</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\simple_3d/shape_3d.html">Shape 3D</a></li>
-<li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\simple_3d/surface_project_3d.html">Surface Project 3D</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\project/heightmap_project_3d.html">Heightmap Project 3D</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\project/surface_project_3d.html">Surface Project 3D</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\project/surface_project_volume_3d.html">Surface Project Volume 3D</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/ambient_occlusion.html">Ambient Occlusion</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/bevel.html">Bevel</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/normal.html">Normal</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/normal_light.html">Normal Light</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/normal_to_height.html">Normal To Height</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/pb_fx_bevel.html">Pb Fx Bevel</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/sprite_stack.html">Sprite Stack</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\scene\camera/3d_camera.html">3D Camera</a></li>
@@ -6845,7 +6866,7 @@
 This node will automatically crop the image to the smallest bounding box that contains all non-transparent pixels.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
 <h3><a id="Padding" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Padding</span></h3><br>
-<p>Add padding around the cropped image.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_crop_content/node_crop_content.gml">/scripts/node_crop_content/node_crop_content.gml</a></li><li><span>Shader [sh_crop_conent_downsample]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_crop_conent_downsample/sh_crop_conent_downsample.fsh">/shaders/sh_crop_conent_downsample/sh_crop_conent_downsample.fsh</a></li><li><span>Shader [sh_crop_content_replace_color]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_crop_content_replace_color/sh_crop_content_replace_color.fsh">/shaders/sh_crop_content_replace_color/sh_crop_content_replace_color.fsh</a></li></ul>
+<p>Add padding around the cropped image.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_crop_content/node_crop_content.gml">/scripts/node_crop_content/node_crop_content.gml</a></li><li><span>Shader [sh_crop_content_replace_color]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_crop_content_replace_color/sh_crop_content_replace_color.fsh">/shaders/sh_crop_content_replace_color/sh_crop_content_replace_color.fsh</a></li><li><span>Shader [sh_crop_conent_downsample]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_crop_conent_downsample/sh_crop_conent_downsample.fsh">/shaders/sh_crop_conent_downsample/sh_crop_conent_downsample.fsh</a></li></ul>
         </div>
     </div>
 
