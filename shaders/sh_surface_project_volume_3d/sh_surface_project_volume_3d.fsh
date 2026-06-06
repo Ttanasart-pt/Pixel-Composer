@@ -259,7 +259,7 @@ void main() {
 	vec3  impactPos = vec3(0.);
 	float impactDis = 0.;
 	
-	float normDensity = density / (size * size * size);
+	float normDensity = density;// / (size * size * size);
 	
 	float transmit  = 1.0;
 	float maxVoxels = sqrt(3.) * size * 2.;
@@ -274,22 +274,19 @@ void main() {
             samFront = texture2D(surFront, vec2(1.-sc.z, sc.y));
             samSide  = texture2D(surSide,  vec2(   sc.x, sc.z));
             
-            float dens = ( samTop.r   + samTop.g   + samTop.b   ) * 
-                         ( samFront.r + samFront.g + samFront.b ) * 
-                         ( samSide.r  + samSide.g  + samSide.b  ) * 
-                           samTop.a * samFront.a * samSide.a;
+            float dens = ( samTop.r   + samTop.g   + samTop.b   ) / 3. * samTop.a   * 
+                         ( samFront.r + samFront.g + samFront.b ) / 3. * samFront.a * 
+                         ( samSide.r  + samSide.g  + samSide.b  ) / 3. * samSide.a;
             
             dens = pow(dens, exponent) * normDensity;
-            
-            volume += dens;
-            vCol   += dens;
             
             vec3 faceColor = mm.z > 0.5 ? samTop.rgb
                            : mm.x > 0.5 ? samFront.rgb
                            :              samSide.rgb;
 	
-	        float stepAlpha = 1.0 - exp(-dens);
+	        float stepAlpha = 1. - exp(-dens);
 			
+	        volume   += dens + transmit * stepAlpha;
 	        vCol     += transmit * stepAlpha * faceColor;
 	        transmit *= (1.0 - stepAlpha);
 	
@@ -313,18 +310,12 @@ void main() {
     
     volume = (volume - level.x) / (level.y - level.x);
     
-    // vec3 vcol = vec3(1.);
-    //      if (mm.z > 0.5) vCol = vec3(1., 0., 0.);
-    // else if (mm.x > 0.5) vCol = vec3(0., 1., 0.);
-    // else                 vCol = vec3(0., 0., 1.);
-    
     vec4 colr = baseColor;
     
     if(texSide_use == 1)
     	colr *= texture2D(texSide, vec2( impactPos.x, impactPos.y));
     
-    gl_FragColor = vec4(vCol * impactDis, volume) * colr;
-    // gl_FragColor = vec4(impactPos, volume);
+    // vCol *= impactDis;
     
-    
+    gl_FragColor = vec4(vCol, volume) * colr;
 }

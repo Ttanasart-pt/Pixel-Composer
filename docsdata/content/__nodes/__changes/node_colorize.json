@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.007",
+    "changes": [
+      {
+        "date": "2026-06-06T03:03:01.820Z",
+        "node": "Colorize",
+        "commit": "**Colorize**: Add Color range control and clamping when working with non-8rgba surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

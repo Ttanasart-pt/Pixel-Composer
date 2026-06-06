@@ -113,7 +113,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Line Settings", false     ],  8, 25,  9, 26, 
 		[ "Dash",           true, 46 ], 44, 45, 
 		[ "Wiggle",         true, 47 ],  5,  4, 53, 51, 54, 52, 55, 56, 57, 
-		[ "Line Cap",      false     ], 13, 43, 14, 
+		[ "Line Cap",      false     ], 13, 43, 
 			[ "/Textured", false     ], 40, 41, 42, 60, 61, 
 		[ "Color",         false     ], 10, 24, 15, 37, 38, 
 		[ "Texture",       false     ], 18, 21, 22, 23, 29, 
@@ -206,7 +206,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _clamp    = _data[26];
 			var _capS     = _data[13];
 			var _capE     = _data[43];
-			var _capP     = _data[14];
+			// var _capP     = _data[14];
 			
 			var _dashUse  = _data[46];
 			var _dashPat  = _data[44];

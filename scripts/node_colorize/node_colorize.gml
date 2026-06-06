@@ -10,20 +10,25 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(4, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(3, 8); // inputs 8, 9
 	
+	////- =Input
+	newInput(14, nodeValue_Range(  "Color Range", [0,1] ));
+	
 	////- =Coloize
 	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white)).setHotkeyAuto("C").setMappable(11).setPieMenu();
 	newInput( 2, nodeValue_Slider(   "Gradient Shift", 0, [ -1, 1, .01 ] )).setMappable(10).setPieMenu();
 	newInput( 6, nodeValue_Bool(     "Multiply Alpha", true ));
 	newInput(13, nodeValue_Bool(     "Keep Alpha",     true ));
-	
-	// input 14
-	
-	input_display_list = [ 5, 7, 
-		["Surfaces",	 true], 0, 3, 4, 8, 9, 
-		["Colorize",	false], 1, 11, 2, 10, 6, 13, 
-	];
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	input_display_list = [  5,  7, 
+		[ "Surfaces",  true ],  0,  3,  4,  8,  9, 
+		[ "Input",    false ], 14, 
+		[ "Colorize", false ],  1, 11,  2, 10,  6, 13, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -35,22 +40,31 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _mlAlp = _data[ 6];
-		var _kpAlp = _data[13];
+		#region data
+			var _surf  = _data[ 0];
+			
+			var _range = _data[14];
+			
+			var _mlAlp = _data[ 6];
+			var _kpAlp = _data[13];
+			
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_colorize);
 			shader_set_gradient(_data[1], _data[11], _data[12], inputs[1]);
 			
-			shader_set_f_map("gradient_shift", _data[2], _data[10], inputs[2]);
-			shader_set_i("multiply_alpha", _mlAlp);
-			shader_set_i("keep_alpha",     _kpAlp);
+			shader_set_m( "gradient_shift", _data[2], _data[10], inputs[2]);
+			shader_set_2( "dynamic_range",  _range);
 			
-			draw_surface_safe(_data[0]);
+			shader_set_i( "multiply_alpha", _mlAlp);
+			shader_set_i( "keep_alpha",     _kpAlp);
+			
+			draw_surface_safe(_surf);
 		surface_reset_shader(); 
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[3], _data[4]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[7]);
 		
 		return _outSurf;
 	}
