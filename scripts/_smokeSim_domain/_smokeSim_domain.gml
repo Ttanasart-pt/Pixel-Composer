@@ -27,6 +27,7 @@ function smokeSim_Domain(_width, _height) constructor {
     acceleration_y    = 0;
     
     time_step         = 1;
+    render_time_step  = 1;
     
     initial_value_pressure     = 0.5;
     material_dissipation_type  = 0;
@@ -190,7 +191,8 @@ function smokeSim_Domain(_width, _height) constructor {
 	    resetTarget();
     }
     
-    static update = function() {
+    static update = function(_renderStep = 1) {
+    	render_time_step = _renderStep;
         updateVelocity();
 	    updateMaterial();
     }
@@ -203,6 +205,8 @@ function smokeSim_Domain(_width, _height) constructor {
 	    gpu_set_blendenable(false);
         verify();
     	
+    	var st = time_step * render_time_step;
+    	
         surface_set_target(sf_velocity_t);
             shader_set(sh_fd_advect_velocity);
             shader_set_s("texture_world",    sf_world);
@@ -211,7 +215,7 @@ function smokeSim_Domain(_width, _height) constructor {
             shader_set_i("mode",             acceleration_type);
             shader_set_i("repeat",           texture_repeat);
             shader_set_i("wall",             texture_wall);
-            shader_set_f("precalculated",    time_step * tx_width, time_step * tx_height, tx_width, tx_height);
+            shader_set_f("precalculated",    st * tx_width, st * tx_height, tx_width, tx_height);
             shader_set_f("precalculated_1",  velocity_dissipation_type, velocity_dissipation_value, velocity_maccormack_weight * 0.5);
             shader_set_f("acceleration",     acceleration_x, acceleration_y, acceleration_a, acceleration_b);
             shader_set_f("texel_size",       tx_width, tx_height);
@@ -283,6 +287,7 @@ function smokeSim_Domain(_width, _height) constructor {
         verify();
     	
     	var _scale = .5;
+    	var st = time_step * render_time_step;
     	
         surface_set_target(sf_material_t);
         shader_set(sh_fd_advect_material);
@@ -292,7 +297,7 @@ function smokeSim_Domain(_width, _height) constructor {
             shader_set_i("wall",             texture_wall);
             shader_set_f("max_force",        max_force);
             shader_set_f("texel_size",       tx_width, tx_height);
-            shader_set_f("precalculated",    time_step * tx_width, time_step * tx_height);
+            shader_set_f("precalculated",    st * tx_width, st * tx_height);
             shader_set_f("precalculated_1",  tx_width * _scale, tx_height * _scale, -tx_width * _scale, -tx_height * _scale);
             shader_set_f("precalculated_2",  material_dissipation_type, material_dissipation_value, material_maccormack_weight * 0.5);
             draw_surface_safe(sf_material);

@@ -20,14 +20,25 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 	newInput(10, nodeValue_Slider(  "FOV",          60, [1,90,1] ));
 	newInput(11, nodeValue_Float(   "Distance",     1            ));
 	newInput( 8, nodeValue_Float(   "Scale",        3.46         ));
-	// 13
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- =Geometry
+	newInput(13, nodeValue_Bool(    "Extrude Both Side", true ));
+	newInput(15, nodeValue_Vec3(    "Spiral",         [0,0,0] ));
+	
+	////- =Rendering
+	newInput(14, nodeValue_Range(   "Depth Range", [0,1] ));
+	// 16
+	
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone ));
+	newOutput( 2, nodeValue_Output("Normal Pass", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
 		[ "Surfaces",          false ],  1,  2,  3, 
 			[ "/Back Texture", false ],  5,  6,  7, 
 		[ "Camera",            false ],  4, 12,  9, 10, 11,  8,
+		[ "Geometry",          false ], 13, 15, 
+		[ "Rendering",         false ], 14, 
 	];
 	
 	////- Node
@@ -35,7 +46,9 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static processData = function(_outSurf, _data, _array_index = 0) {
+	temp_surface = [ noone ];
+	
+	static processData = function(_outData, _data, _array_index = 0) {
 		#region data
 			var _dim   = _data[ 0];
 			
@@ -54,24 +67,39 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			var _dist  = _data[11];
 			var _sca   = _data[ 8];
 			
+			var _bothS = _data[13];
+			var _spir  = _data[15];
+			
+			var _depth = _data[14];
+			
 			inputs[10].setVisible(_proj == 0);
 			inputs[11].setVisible(_proj == 0);
 			inputs[ 8].setVisible(_proj == 1);
 		#endregion
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		var _dimF = surface_get_dimension(_sFrn);
+		var _dimS = surface_get_dimension(_sSid);
+		var _dimT = surface_get_dimension(_sTop);
 		
-		surface_set_shader(_outSurf, sh_surface_project_3d);
+		var _dimMax = [ max(_dimF[0], _dimS[0], _dimT[0]), max(_dimF[1], _dimS[1], _dimT[1]) ];
+		
+		temp_surface[0] = surface_verify(temp_surface[0], _dimMax[0] * 3, _dimMax[1] * 3);
+		surface_set_shader(temp_surface[0]);
+			draw_surface_safe(_sFrn,  _dimMax[0] * 0, _dimMax[1] * 0);
+			draw_surface_safe(_sSid,  _dimMax[0] * 1, _dimMax[1] * 0);
+			draw_surface_safe(_sTop,  _dimMax[0] * 2, _dimMax[1] * 0);
+			
+			draw_surface_safe(_sFrnb, _dimMax[0] * 0, _dimMax[1] * 1);
+			draw_surface_safe(_sSidb, _dimMax[0] * 1, _dimMax[1] * 1);
+			draw_surface_safe(_sTopb, _dimMax[0] * 2, _dimMax[1] * 1);
+			
+		surface_reset_shader();
+		
+		surface_set_shader(_outData, sh_surface_project_3d);
 			shader_set_interpolation(_sTop);
 			
-			shader_set_2( "dimension", _dim   );
-			shader_set_s( "surTop",    _sFrn  );
-			shader_set_s( "surFront",  _sSid  );
-			shader_set_s( "surSide",   _sTop  );
-			
-			shader_set_s( "surTopB",   _sFrnb );
-			shader_set_s( "surFrontB", _sSidb );
-			shader_set_s( "surSideB",  _sTopb );
+			shader_set_2( "dimension",    _dim   );
+			shader_set_s( "axisSurfaces", temp_surface[0]  );
 			
 			shader_set_i( "surTopB_use",   is_surface(_sFrnb) );
 			shader_set_i( "surFrontB_use", is_surface(_sSidb) );
@@ -85,9 +113,14 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			shader_set_f( "distant",    _dist  );
 			shader_set_f( "scale",      _sca   );
 			
+			shader_set_3( "spiral",     _spir  );
+			
+			shader_set_i( "bothSide",   _bothS );
+			shader_set_2( "depthRange", _depth );
+			
 			draw_empty();
 		surface_reset_shader();
 		
-		return _outSurf; 
+		return _outData; 
 	}
 } 

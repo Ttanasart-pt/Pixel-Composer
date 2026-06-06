@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_surface_project_cylinder_3d",
+  "name":"sh_surface_project_cylinder_3d",
+  "parent":{
+    "name":"projectors",
+    "path":"folders/nodes/data/3D/projectors.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

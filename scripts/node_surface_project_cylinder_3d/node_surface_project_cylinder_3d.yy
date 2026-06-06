@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_surface_project_cylinder_3d",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_surface_project_cylinder_3d",
+  "parent":{
+    "name":"projectors",
+    "path":"folders/nodes/data/3D/projectors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

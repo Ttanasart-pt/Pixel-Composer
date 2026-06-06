@@ -815,7 +815,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(array_empty(_chanList)) return;
         
         var _chanInfd = array_find(_chanList, _chanCurr);
-        var _chanAmo  = _node.getOutputChannelAmount();
+        var _chanAmo  = node.getOutputChannelAmount();
         
         if(_chanInfd < 0 ) { node.preview_channel = _chanList[0]; return; }
         _chanInfd = (_chanInfd + (_forward? 1 : -1) + _chanAmo) % _chanAmo;

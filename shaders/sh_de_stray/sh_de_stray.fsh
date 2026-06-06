@@ -11,8 +11,10 @@ uniform sampler2D toleranceSurf;
 
 float tolr;
 
+#define r3 1.7320508076
+
 vec4  a4;
-float d(in vec4 c1, in vec4 c2)    { return length(c1 - c2) / sqrt(4.); }
+float d(in vec4 c1, in vec4 c2)    { return distance(c1.rgb * c1.a, c2.rgb * c2.a) / r3; }
 bool  s(in vec4 c1, in vec4 c2)    { return d(c1, c2) <= tolr; }
 
 #region select closet color

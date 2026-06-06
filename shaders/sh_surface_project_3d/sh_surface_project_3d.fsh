@@ -132,15 +132,11 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 
 // based on IQ voxel shader
-// the axis is actually wrong, but I'm too lazy so just use offseted surface
 
-uniform sampler2D surTop;    // Front
-uniform sampler2D surFront;  // Side
-uniform sampler2D surSide;   // Top
-
-uniform sampler2D surTopB;   // -Front
-uniform sampler2D surFrontB; // -Side
-uniform sampler2D surSideB;  // -Top
+// Packed Surface
+// 0: Top  1: Front  2: Right
+// 3: TopB 4: FrontB 5: RightB
+uniform sampler2D axisSurfaces;
 
 uniform int surTopB_use;
 uniform int surFrontB_use;
@@ -154,6 +150,10 @@ uniform float fov;
 uniform float distant;
 uniform float scale;
 
+uniform vec3  spiral;
+
+uniform int   bothSide;
+uniform vec2  depthRange;
 
 #region ////========== Transform ============
     mat3 rotateX(float dg) {
@@ -203,6 +203,31 @@ uniform float scale;
     }
 #endregion
 
+#define TAU 6.28318530718
+
+// 0: Top  1: Front  2: Right
+// 3: TopB 4: FrontB 5: RightB
+vec4 samplePackedTexture(int tIndex, vec2 tx) {
+	tx = clamp(tx, 0., 1.);
+	
+	if(tIndex == 0) return texture2D(axisSurfaces, (vec2(0.,0.) + tx) / 3.);
+	if(tIndex == 1) return texture2D(axisSurfaces, (vec2(1.,0.) + tx) / 3.);
+	if(tIndex == 2) return texture2D(axisSurfaces, (vec2(2.,0.) + tx) / 3.);
+	
+	if(tIndex == 3) return texture2D(axisSurfaces, (vec2(0.,1.) + tx) / 3.);
+	if(tIndex == 4) return texture2D(axisSurfaces, (vec2(1.,1.) + tx) / 3.);
+	if(tIndex == 5) return texture2D(axisSurfaces, (vec2(2.,1.) + tx) / 3.);
+	
+	return vec4(0.);
+}
+
+vec2 equirectangularUv(vec3 dir) {
+	vec3 n = normalize(dir);
+	return vec2((atan(n.x, n.y) / TAU) + 0.5, 1. - acos(n.z) / PI);
+}
+
+vec2 rot(vec2 p, float ang) { return p * mat2(cos(ang), - sin(ang), sin(ang), cos(ang)); }
+
 void main() {
 	mat3 rx = rotateX(angle.x);
     mat3 ry = rotateY(angle.y);
@@ -249,6 +274,10 @@ void main() {
 	vec4 samSide  = vec4(0.);
     vec3 mm  = vec3(0.);
 	bool hit = false;
+	
+	vec2 hitUVT;
+	vec2 hitUVF;
+	vec2 hitUVS;
 
 	float maxVoxels = sqrt(3.) * size * 2.;
 	if(projection == 0) maxVoxels *= distant;
@@ -258,11 +287,37 @@ void main() {
         vec3 sc = wc * .5 + .5;
         
         if (sc.x >= 0. && sc.x < 1. && sc.y >= 0. && sc.y < 1. && sc.z >= 0. && sc.z < 1.) {
-            samTop   = texture2D(surTop,   vec2(   sc.x, sc.y));
-            samFront = texture2D(surFront, vec2(1.-sc.z, sc.y));
-            samSide  = texture2D(surSide,  vec2(   sc.x, sc.z));
+        	vec2 txT = vec2(   sc.x, sc.y);
+        	vec2 txF = vec2(1.-sc.z, sc.y);
+        	vec2 txS = vec2(   sc.x, sc.z);
+        	
+        	txT = rot(txT - .5, TAU * sc.z * spiral.x) + .5;
+        	txF = rot(txF - .5, TAU * sc.x * spiral.y) + .5;
+        	txS = rot(txS - .5, TAU * sc.y * spiral.z) + .5;
+        	
+            samTop   = samplePackedTexture(0, txT);
+            samFront = samplePackedTexture(1, txF);
+            samSide  = samplePackedTexture(2, txS);
             
-            if (samTop.a > 0. && samFront.a > 0. && samSide.a > 0.) { hit = true; break; }
+            bool isHit = true;
+            
+            isHit = isHit && samTop.a   >    sc.z;
+            isHit = isHit && samFront.a >    sc.x;
+            isHit = isHit && samSide.a  > 1.-sc.y;
+            
+            if(bothSide == 1) {
+	            isHit = isHit && samTop.a   > 1.-sc.z;
+	            isHit = isHit && samFront.a > 1.-sc.x;
+	            isHit = isHit && samSide.a  >    sc.y;
+            }
+            
+            if (isHit) { 
+            	hit    = true; 
+            	hitUVT = txT;
+				hitUVF = txF;
+				hitUVS = txS;
+            	break; 
+            }
         }
         
         mm   = step(dis.xyz, dis.yzx) * step(dis.xyz, dis.zxy);
@@ -270,14 +325,26 @@ void main() {
         pos += mm * rs;
     }
 	
-	if (!hit) { gl_FragColor = vec4(0.); return; }
+	if (!hit) { 
+		gl_FragData[0] = vec4(0.); 
+		gl_FragData[1] = vec4(0.); 
+		gl_FragData[2] = vec4(0.); 
+		return; 
+	}
     
     vec3 fmini  = (pos - ro + 0.5 - 0.5 * vec3(rs)) * ri;
     float ft    = max(fmini.x, max(fmini.y, fmini.z));
     vec3 hitPos = (ro + rd * ft) * voxSize;
     vec3 samPos = hitPos * .5 + .5;
     
-         if (mm.z > 0.5) gl_FragColor = surTopB_use   == 1 && rs.z >= 0.? sampleTexture(surTopB,   vec2(   samPos.x, samPos.y)) : sampleTexture(surTop,   vec2(   samPos.x, samPos.y));
-    else if (mm.x > 0.5) gl_FragColor = surFrontB_use == 1 && rs.x >= 0.? sampleTexture(surFrontB, vec2(1.-samPos.z, samPos.y)) : sampleTexture(surFront, vec2(1.-samPos.z, samPos.y));
-    else                 gl_FragColor = surSideB_use  == 1 && rs.y >= 0.? sampleTexture(surSideB,  vec2(   samPos.x, samPos.z)) : sampleTexture(surSide,  vec2(   samPos.x, samPos.z));
+         if (mm.z > 0.5) gl_FragData[0] = samplePackedTexture(surTopB_use   == 1 && rs.z >= 0.? 3 : 0, hitUVT);
+    else if (mm.x > 0.5) gl_FragData[0] = samplePackedTexture(surFrontB_use == 1 && rs.x >= 0.? 4 : 1, hitUVF);
+    else                 gl_FragData[0] = samplePackedTexture(surSideB_use  == 1 && rs.y >= 0.? 5 : 2, hitUVS);
+    gl_FragData[0].a = 1.;
+    
+    float depth = distance(eye, hitPos) / scale;
+    depth = (depth - depthRange.x) / (depthRange.y - depthRange.x);
+    
+    gl_FragData[1] = vec4(depth, depth, depth, 1.);
+	gl_FragData[2] = vec4(mm, 1.);
 }

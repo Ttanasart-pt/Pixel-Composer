@@ -1,0 +1,6 @@
+{
+    "name":          "Surface Project Cylinder 3D",
+    "spr":           "s_node_surface_project_cylinder_3d",
+    "baseNode":      "Node_Surface_Project_Cylinder_3D",
+    "pxc_version":    121030,
+}

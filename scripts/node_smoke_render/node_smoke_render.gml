@@ -61,7 +61,9 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		var fSurf = _dom.sf_material;
 		if(!is_surface(fSurf)) return;
 		
-		if(_upd) { repeat(_ups) _dom.update(); }
+		if(_upd) { 
+			while(_ups > 0) { _dom.update(min(_ups, 1.)); _ups--; }
+		}
 		
 		outputs[1].setValue(_dom.sf_world);
 		

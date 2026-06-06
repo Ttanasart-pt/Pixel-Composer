@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.21.3.007",
+    "changes": [
+      {
+        "date": "2026-06-06T07:06:17.344Z",
+        "node": "",
+        "commit": "**Preview Panel**: Fix crash when switching preview channel with hotley."
+      },
+      {
+        "date": "2026-06-06T07:06:17.350Z",
+        "node": "",
+        "commit": "**Preview Panel**: Fix crash when switching preview channel with hotley."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.006",
     "changes": [
       {

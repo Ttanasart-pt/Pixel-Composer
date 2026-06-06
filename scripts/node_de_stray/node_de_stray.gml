@@ -60,11 +60,11 @@ function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		repeat(_itr) {
 			surface_set_shader(temp_surface[_bg], sh_de_stray);
-				shader_set_f("dimension", _sw, _sh);
-				shader_set_f_map("tolerance", _tol, _data[10], inputs[2]);
-				shader_set_i("strict",    _str);
-				shader_set_i("fill",      _fil);
-			
+				shader_set_f( "dimension", _sw, _sh );
+				shader_set_m( "tolerance", _tol, _data[10], inputs[2] );
+				shader_set_i( "strict",    _str );
+				shader_set_i( "fill",      _fil );
+				
 				draw_surface_safe(temp_surface[!_bg]);
 			surface_reset_shader();
 		
