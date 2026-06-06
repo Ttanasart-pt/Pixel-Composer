@@ -150,10 +150,19 @@ uniform float fov;
 uniform float distant;
 uniform float scale;
 
-uniform vec3  spiral;
-
+uniform int   blendType;
 uniform int   bothSide;
+uniform int   blendFaceEx;
 uniform vec2  depthRange;
+
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
+
+uniform vec4  palette[PALETTE_LIMIT];
+uniform int   paletteAmount;
 
 #region ////========== Transform ============
     mat3 rotateX(float dg) {
@@ -291,10 +300,6 @@ void main() {
         	vec2 txF = vec2(1.-sc.z, sc.y);
         	vec2 txS = vec2(   sc.x, sc.z);
         	
-        	txT = rot(txT - .5, TAU * sc.z * spiral.x) + .5;
-        	txF = rot(txF - .5, TAU * sc.x * spiral.y) + .5;
-        	txS = rot(txS - .5, TAU * sc.y * spiral.z) + .5;
-        	
             samTop   = samplePackedTexture(0, txT);
             samFront = samplePackedTexture(1, txF);
             samSide  = samplePackedTexture(2, txS);
@@ -336,11 +341,53 @@ void main() {
     float ft    = max(fmini.x, max(fmini.y, fmini.z));
     vec3 hitPos = (ro + rd * ft) * voxSize;
     vec3 samPos = hitPos * .5 + .5;
+    int blndIndex = 0;
     
-         if (mm.z > 0.5) gl_FragData[0] = samplePackedTexture(surTopB_use   == 1 && rs.z >= 0.? 3 : 0, hitUVT);
-    else if (mm.x > 0.5) gl_FragData[0] = samplePackedTexture(surFrontB_use == 1 && rs.x >= 0.? 4 : 1, hitUVF);
-    else                 gl_FragData[0] = samplePackedTexture(surSideB_use  == 1 && rs.y >= 0.? 5 : 2, hitUVS);
+    if(blendType == 0) { // face
+		if (mm.z > 0.5) {
+			gl_FragData[0] = samplePackedTexture(surTopB_use   == 1 && rs.z >= 0.? 3 : 0, hitUVT);
+			blndIndex = rs.z >= 0.? 0 : 3;
+			
+		} else if (mm.x > 0.5) {
+			gl_FragData[0] = samplePackedTexture(surFrontB_use == 1 && rs.x >= 0.? 4 : 1, hitUVF);
+			blndIndex = rs.x >= 0.? 1 : 4;
+			
+		} else {
+			gl_FragData[0] = samplePackedTexture(surSideB_use  == 1 && rs.y >= 0.? 5 : 2, hitUVS);
+			blndIndex = rs.y >= 0.? 2 : 5;
+			
+		}
+		
+    } else if(blendType == 1) {
+    	vec4 clrT = samplePackedTexture(surTopB_use   == 1 && rs.z >= 0.? 3 : 0, hitUVT);
+		vec4 clrF = samplePackedTexture(surFrontB_use == 1 && rs.x >= 0.? 4 : 1, hitUVF);
+		vec4 clrS = samplePackedTexture(surSideB_use  == 1 && rs.y >= 0.? 5 : 2, hitUVS);
+		
+		gl_FragData[0] = (clrT + clrF + clrS) / 3.;
+		
+    } else if(blendType == 2) {
+    	vec4 clrT = samplePackedTexture(surTopB_use   == 1 && rs.z >= 0.? 3 : 0, hitUVT);
+		vec4 clrF = samplePackedTexture(surFrontB_use == 1 && rs.x >= 0.? 4 : 1, hitUVF);
+		vec4 clrS = samplePackedTexture(surSideB_use  == 1 && rs.y >= 0.? 5 : 2, hitUVS);
+		
+    	if(blendFaceEx == 0) {
+    		if (mm.z > 0.5) gl_FragData[0] = clrT;
+    		else            gl_FragData[0] = (clrF + clrS) / 2.;
+    		
+    	} else if(blendFaceEx == 1) {
+    		if (mm.x > 0.5) gl_FragData[0] = clrF;
+    		else            gl_FragData[0] = (clrT + clrS) / 2.;
+    		
+    	} else if(blendFaceEx == 2) {
+    		if (mm.y > 0.5) gl_FragData[0] = clrS;
+    		else            gl_FragData[0] = (clrF + clrT) / 2.;
+    		
+    	}
+    	
+    }
+    
     gl_FragData[0].a = 1.;
+    gl_FragData[0].rgb *= palette[int(mod(float(blndIndex), float(paletteAmount)))].rgb;
     
     float depth = distance(eye, hitPos) / scale;
     depth = (depth - depthRange.x) / (depthRange.y - depthRange.x);

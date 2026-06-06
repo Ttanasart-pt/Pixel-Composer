@@ -18,16 +18,18 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 	newInput(12, nodeValue_Vec3(    "Position",    [ 0,  0, 0]   ));
 	newInput( 9, nodeValue_EButton( "Projection",   1 , [ "Perspective", "Orthographic" ] ));
 	newInput(10, nodeValue_Slider(  "FOV",          60, [1,90,1] ));
-	newInput(11, nodeValue_Float(   "Distance",     1            ));
+	newInput(11, nodeValue_Float(   "Distance",     2            ));
 	newInput( 8, nodeValue_Float(   "Scale",        3.46         ));
 	
 	////- =Geometry
 	newInput(13, nodeValue_Bool(    "Extrude Both Side", true ));
-	newInput(15, nodeValue_Vec3(    "Spiral",         [0,0,0] ));
 	
 	////- =Rendering
-	newInput(14, nodeValue_Range(   "Depth Range", [0,1] ));
-	// 16
+	newInput(16, nodeValue_EScroll( "Color Type",    0, [ "Face Normal", "Face Average All", "Face Average Except"  ] ));
+	newInput(15, nodeValue_Palette( "Face Blending", [ca_white]       ));
+	newInput(17, nodeValue_EButton( "Except",        0, ["X","Y","Z"] ));
+	newInput(14, nodeValue_Range(   "Depth Range",   [0,1]            ));
+	// 18
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone ));
@@ -37,8 +39,8 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 		[ "Surfaces",          false ],  1,  2,  3, 
 			[ "/Back Texture", false ],  5,  6,  7, 
 		[ "Camera",            false ],  4, 12,  9, 10, 11,  8,
-		[ "Geometry",          false ], 13, 15, 
-		[ "Rendering",         false ], 14, 
+		[ "Geometry",          false ], 13, 
+		[ "Rendering",         false ], 16, 15, 17, 14, 
 	];
 	
 	////- Node
@@ -68,14 +70,29 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			var _sca   = _data[ 8];
 			
 			var _bothS = _data[13];
-			var _spir  = _data[15];
 			
+			var _blndT = _data[16];
+			var _fblnd = _data[15];
+			var _blndX = _data[17];
 			var _depth = _data[14];
 			
-			inputs[10].setVisible(_proj == 0);
-			inputs[11].setVisible(_proj == 0);
-			inputs[ 8].setVisible(_proj == 1);
+			inputs[10].setVisible(_proj  == 0);
+			inputs[11].setVisible(_proj  == 0);
+			inputs[ 8].setVisible(_proj  == 1);
+			
+			inputs[15].setVisible(_blndT == 0);
+			inputs[17].setVisible(_blndT == 2);
+			
+			var isFrn = is_surface(_sFrn);
+			var isSid = is_surface(_sSid);
+			var isTop = is_surface(_sTop);
+			
+			if(!isFrn && !isSid && !isTop) return _outData;
 		#endregion
+		
+		if(!isFrn) _sFrn = isTop? _sTop : _sSid;
+		if(!isSid) _sSid = isFrn? _sFrn : _sTop;
+		if(!isTop) _sTop = isSid? _sSid : _sFrn;
 		
 		var _dimF = surface_get_dimension(_sFrn);
 		var _dimS = surface_get_dimension(_sSid);
@@ -113,9 +130,11 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			shader_set_f( "distant",    _dist  );
 			shader_set_f( "scale",      _sca   );
 			
-			shader_set_3( "spiral",     _spir  );
-			
 			shader_set_i( "bothSide",   _bothS );
+			
+			shader_set_i( "blendType",  _blndT );
+			shader_set_i( "blendFaceEx",_blndX );
+			shader_set_palette( _fblnd );
 			shader_set_2( "depthRange", _depth );
 			
 			draw_empty();

@@ -132,19 +132,9 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 
 // based on IQ voxel shader
-// the axis is actually wrong, but I'm too lazy so just use offseted surface
-
-uniform sampler2D surTop;    // Front
-uniform sampler2D surFront;  // Side
-uniform sampler2D surSide;   // Top
-
-uniform sampler2D surTopB;   // -Front
-uniform sampler2D surFrontB; // -Side
-uniform sampler2D surSideB;  // -Top
-
-uniform int surTopB_use;
-uniform int surFrontB_use;
-uniform int surSideB_use;
+uniform sampler2D sProfile;
+uniform sampler2D sTop;
+uniform int   sTop_use;
 
 uniform vec3  angle;
 uniform vec3  position;
@@ -153,6 +143,9 @@ uniform int   projection;
 uniform float fov;
 uniform float distant;
 uniform float scale;
+
+uniform vec2  angRange;
+uniform vec2  depthRange;
 
 #define TAU 6.283185307179586
 
@@ -214,6 +207,8 @@ void main() {
 	vec2 uv = v_vTexcoord - .5;
 	vec3 dir, eye;
 	
+	vec2 aRang = vec2( radians(angRange.x), radians(angRange.y) );
+	
 	if(projection == 0) {
 		float dz  = 1. / tan(radians(fov) / 2.);
 		
@@ -259,11 +254,12 @@ void main() {
         vec3 wc = (pos + 0.5) * voxSize;
         vec3 sc = wc * .5 + .5;
         
-        float ang = atan(sc.x - .5, sc.z - .5) / TAU;
+        float ang = (atan(sc.x - .5, sc.z - .5) + PI);
         float len = length(sc.xz - .5) * 2.;
-            
-        if (len >= 0. && len < 1. && sc.y >= 0. && sc.y < 1.) {
-            samTop = texture2D(surTop, vec2(len, sc.y));
+        
+        if(ang >= aRang.x && ang <= aRang.y) 
+        if(len >= 0. && len < 1. && sc.y >= 0. && sc.y < 1.) {
+            samTop = texture2D(sProfile, vec2(len, sc.y));
             if (samTop.a > 0.) { 
             	hit   = true; 
             	hitUV = vec2(len, sc.y);
@@ -276,12 +272,24 @@ void main() {
         pos += mm * rs;
     }
 	
-	if (!hit) { gl_FragColor = vec4(0.); return; }
+	if (!hit) { 
+		gl_FragData[0] = vec4(0.); 
+		gl_FragData[1] = vec4(0.); 
+		gl_FragData[2] = vec4(0.); 
+		return; 
+	}
     
     vec3 fmini  = (pos - ro + 0.5 - 0.5 * vec3(rs)) * ri;
     float ft    = max(fmini.x, max(fmini.y, fmini.z));
     vec3 hitPos = (ro + rd * ft) * voxSize;
     vec3 samPos = hitPos * .5 + .5;
     
-    gl_FragColor = sampleTexture(surTop, hitUV);
+    gl_FragData[0] = texture2D(sProfile, hitUV);
+    if(sTop_use == 1) gl_FragData[0] *= texture2D(sTop, samPos.xz);
+    
+    float depth = distance(eye, hitPos) / scale;
+    depth = (depth - depthRange.x) / (depthRange.y - depthRange.x);
+    
+    gl_FragData[1] = vec4(depth, depth, depth, 1.);
+	gl_FragData[2] = vec4(mm, 1.);
 }
