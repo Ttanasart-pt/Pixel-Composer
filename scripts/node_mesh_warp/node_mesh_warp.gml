@@ -755,24 +755,24 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			Mesh_build();
 	}
 	
-	static step = function() {
-		var _type = getInputData(8);
-		
-		inputs[ 2].setVisible(_type == 0);
-		inputs[ 4].setVisible(_type == 0);
-		inputs[ 7].setVisible(_type == 0);
-		inputs[10].setVisible(_type == 1);
-		
-			 if(_type == 0) tools = tools_edit;
-		else if(_type == 1) tools = tools_mesh;
-	}
-	
 	static processData = function(_outData, _data, _array_index) {
 		if(will_tri) { Mesh_build(false); will_tri = false; }
 		
-		var _outSurf = _outData[0];
-		var _inSurf  = _data[0];
-		_outData[1]  = mesh_data;
+		#region data
+			var _outSurf = _outData[0];
+			var _inSurf  = _data[0];
+			var _type    = _data[8];
+			
+			inputs[ 2].setVisible(_type == 0);
+			inputs[ 4].setVisible(_type == 0);
+			inputs[ 7].setVisible(_type == 0);
+			inputs[10].setVisible(_type == 1);
+			
+				 if(_type == 0) tools = tools_edit;
+			else if(_type == 1) tools = tools_mesh;
+			
+			_outData[1]  = mesh_data;
+		#endregion
 		
 		mesh_data.surface = inputs_data[0];
 		if(!is_surface(_inSurf)) return _outData;

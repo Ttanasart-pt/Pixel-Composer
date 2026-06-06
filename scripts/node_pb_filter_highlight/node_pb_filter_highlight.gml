@@ -14,11 +14,7 @@ function Node_PB_FX_Highlight(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	input_display_list = [ 0,
 	    ["Hightlight", false], 1, 2, 3, 4, 5, 
     ];
-	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
-	
-	static step = function() {}
-	
+
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 	    var _surf = _data[0];
 	    var _wd   = _data[1];

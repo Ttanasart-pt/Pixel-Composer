@@ -33,10 +33,6 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 	
 	coll_map = {};
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
-	
-	static step = function() {}
-	
 	static update = function() {
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
 		worldScale = struct_try_get(inline_context, "worldScale", 100);

@@ -18,10 +18,6 @@ function Node_Font_Bitmap(_x, _y, _group = noone) : Node(_x, _y, _group) constru
     spr  = noone;
 	font = noone;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
-	
-	static step = function() {}
-	
 	static update = function() {
 	    var _surf = getInputData(0);
 	    var _str  = getInputData(1);

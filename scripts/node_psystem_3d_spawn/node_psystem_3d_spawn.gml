@@ -97,8 +97,6 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	cache_grad = undefined;
 	point_dist_cache = [];
 	
-	static step = function() {}
-	
 	////- Tools
 	
 	tool_attribute.context = 0;

@@ -31,8 +31,6 @@ function Node_Deblur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
-	static step = function() {}
-	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
 			var _surf = _data[ 0];

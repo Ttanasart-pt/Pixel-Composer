@@ -113,8 +113,6 @@ function Node_VerletSim_Simple(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		return w_hovering;
 	}
 	
-	static step = function() {}
-	
 	static update = function() {
 		if(IS_FIRST_FRAME) {
 			var _msh = inputs[0].getValue();

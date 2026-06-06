@@ -153,17 +153,6 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	static onValueUpdate = function(index) { if(index == in_d3d + 4) PANEL_PREVIEW.tool_current = noone; }
 	
 	static step = function() {
-		inputs[in_d3d + 0].setVisible(curr_proj == 0);
-		inputs[in_d3d + 3].setVisible(curr_proj == 1);
-		
-		inputs[0].setVisible(curr_posm == 0 || curr_posm == 1);
-		inputs[1].setVisible(curr_posm == 0);
-		inputs[in_d3d + 5].setVisible(curr_posm == 1 || curr_posm == 2);
-		inputs[in_d3d + 6].setVisible(curr_posm == 1);
-		inputs[in_d3d + 7].setVisible(curr_posm == 2);
-		inputs[in_d3d + 8].setVisible(curr_posm == 2);
-		inputs[in_d3d + 9].setVisible(curr_posm == 2);
-		
 		switch(curr_posm) {
 			case 0 : 
 				tools = [ tool_pos, tool_rot ]; 
@@ -204,6 +193,17 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 			curr_scal = _data[in_d3d +10];
 			curr_weig = _data[in_d3d +11];
 			curr_dept = _data[in_d3d +12];
+			
+			inputs[in_d3d + 0].setVisible(curr_proj == 0);
+			inputs[in_d3d + 3].setVisible(curr_proj == 1);
+			
+			inputs[0].setVisible(curr_posm == 0 || curr_posm == 1);
+			inputs[1].setVisible(curr_posm == 0);
+			inputs[in_d3d + 5].setVisible(curr_posm == 1 || curr_posm == 2);
+			inputs[in_d3d + 6].setVisible(curr_posm == 1);
+			inputs[in_d3d + 7].setVisible(curr_posm == 2);
+			inputs[in_d3d + 8].setVisible(curr_posm == 2);
+			inputs[in_d3d + 9].setVisible(curr_posm == 2);
 		#endregion
 		
 		switch(curr_posm) { // ++++ camera positioning ++++

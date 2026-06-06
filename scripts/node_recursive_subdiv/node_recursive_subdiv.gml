@@ -39,10 +39,6 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	phase    = 0;
 	subRange = [ 0, 1 ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
-	
-	static step = function() {}
-	
 	static subD = function(_box, _itr) {
 		var _l0 = lerp(subRange[0], subRange[1], dsin(phase + random(360)) / 2 + .5);
 		var _l1 = lerp(subRange[0], subRange[1], dsin(phase + random(360)) / 2 + .5);

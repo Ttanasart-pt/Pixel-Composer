@@ -40,15 +40,13 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return w_hovering;
 	}
 	
-	static step = function() {
-		var _shp = getInputData(2);
+	static update = function() { 
+		var domain = getInputData(0);
+		var _shp   = getInputData(2);
 		
 		inputs[3].setVisible(_shp == 0);
 		inputs[4].setVisible(_shp == 1);
-	}
-	
-	static update = function() { 
-		var domain = getInputData(0);
+		
 		if(!instance_exists(domain)) return;
 		
 		outputs[0].setValue(domain);

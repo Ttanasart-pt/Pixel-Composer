@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.007",
+    "changes": [
+      {
+        "date": "2026-06-06T03:31:40.734Z",
+        "node": "",
+        "commit": "**Fluffify**: Fix maximum blend mode apply incorrectly."
+      }
+    ]
+  }
+]

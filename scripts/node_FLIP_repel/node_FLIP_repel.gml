@@ -42,10 +42,6 @@ function Node_FLIP_Repel(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return w_hovering;
 	}
 	
-	static step = function() {
-		
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;

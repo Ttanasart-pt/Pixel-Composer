@@ -40,11 +40,13 @@ void main() {
 	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
 	float bas = (base.r + base.g + base.b) / 3. * base.a;
 	float col = bas;
+	vec3 scol = base.rgb;
+	
 	if(skipFirst == 1 && iteration == 1.) col = 0.;
 	
 	float detl = detail / 10.;
-	vec2  tx = floor(v_vTexcoord * dimension) - offset / dimension;
-	vec2  st = floor(tx / detl) * detl;
+	vec2  tx   = floor(v_vTexcoord * dimension) - offset / dimension;
+	vec2  st   = floor(tx / detl) * detl;
 	
 	float min_dist = 99999.;
 	
@@ -70,11 +72,18 @@ void main() {
 			if(dist >= depth) continue;
 			
 			if(dist < min_dist) {
-				if(blend == 1) col = 0.;
+				if(blend == 1) {
+					col  = 0.;
+					scol = vec3(1.);
+				}
+				
 				min_dist = dist;
 			}
 			
-			if(blend == 0) col = 0.;	
+			if(blend == 0) {
+				col  = 0.;	
+				scol = vec3(1.);
+			}
 			continue;
 		}
 		
@@ -83,13 +92,18 @@ void main() {
 		
 		if(dist < min_dist) {
 			if(blend == 1) col = sam;
+			scol     = _sam.rgb;
 			min_dist = dist;
 		}
 		
-		if(blend == 0) col = max(col, sam);
+		if(blend == 0) {
+			col  = max(col, sam);
+			scol = max(scol, sam);
+		}
     }
     
     if(fadeIteration == 1) col = bas + (col - bas) * (1. - clamp(iteration / maxIteration, 0., 1.));
-	gl_FragColor = vec4(col, col, col, col == 0.? 0. : 1.);
+    
+	gl_FragColor = vec4(scol, col == 0.? 0. : 1.);
 	
 }

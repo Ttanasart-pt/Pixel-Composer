@@ -21,13 +21,7 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	input_display_list = [
 		0, 1, 3, 2, 
-	]
-	
-	static step = function() {
-		var _typ = getInputData(1);
-		
-		inputs[3].setVisible(_typ == 10);
-	}
+	];
 	
 	static processData_prebatch = function() {
 		setDimension(96, process_length[0] * 32);
@@ -62,11 +56,16 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _arr = _data[0];
-		var _ord = _data[1];
-		var _rev = _data[2];
-		sort_string = _data[3];
-		if(!is_array(_arr)) return;
+		#region data
+			var _arr = _data[0];
+			var _ord = _data[1];
+			var _rev = _data[2];
+			sort_string = _data[3];
+			
+			inputs[3].setVisible(_ord == 10);
+			
+			if(!is_array(_arr)) return;
+		#endregion
 		
 		var _pal = array_clone(_arr);
 		

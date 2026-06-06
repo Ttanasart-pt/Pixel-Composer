@@ -122,23 +122,23 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			bg = !bg;
 			
 			surface_set_shader(temp_surface[bg], sh_fluffify);
-				shader_set_2(   "dimension",    _dim             );
-				shader_set_f(   "seed",         _seed            );
+				shader_set_2( "dimension",     _dim                        );
+				shader_set_f( "seed",          _seed                       );
 				
-				shader_set_f(   "iteration",    _i + 1           );
-				shader_set_f(   "maxIteration", ceil(_maxItr)    );
+				shader_set_f( "iteration",     _i + 1                      );
+				shader_set_f( "maxIteration",  ceil(_maxItr)               );
 				
-				shader_set_i(     "shape",       _shap                                  );
-				shader_set_f(     "detail",      _detl                                  );
-				shader_set_f(     "phase",       degtorad(_phas)                        );
-				shader_set_2(     "offset",      [_ofs[0] / _maxItr, _ofs[1] / _maxItr] );
-				shader_set_f_map( "size",        _size, _data[15], inputs[9]            );
-				shader_set_f(     "sizeMultiply", _mulp * min(_itr, 1)                  );
+				shader_set_i( "shape",         _shap                       );
+				shader_set_f( "detail",        _detl                       );
+				shader_set_f( "phase",         degtorad(_phas)             );
+				shader_set_2( "offset",        _ofs                        );
+				shader_set_m( "size",          _size, _data[15], inputs[9] );
+				shader_set_f( "sizeMultiply",  _mulp * min(_itr, 1)        );
 				
-				shader_set_i(   "blend",         _blnd );
-				shader_set_f(   "substract",     _subs );
-				shader_set_i(   "fadeIteration", _fItr );
-				shader_set_i(   "skipFirst",     _skpf );
+				shader_set_i( "blend",         _blnd                       );
+				shader_set_f( "substract",     _subs                       );
+				shader_set_i( "fadeIteration", _fItr                       );
+				shader_set_i( "skipFirst",     _skpf                       );
 				
 				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();
@@ -162,6 +162,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var cindex = floor(_i / _pBlnd);
 			
 			surface_set_shader(temp_surface[2 + bg], noone);
+				if(_blnd == 0) BLEND_MAX
 				if(!_bori) shader_set(sh_fluffify_apply);
 				draw_surface_ext_safe(temp_surface[bg], 0, 0, 1, 1, 0, _iBlnd[cindex % _palLen]);
 				if(!_bori) shader_reset();
@@ -173,8 +174,8 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_mulp *= _isiz;
 			_seed += pi;
 			
-			_ofs[0] += _offs[0];
-			_ofs[1] += _offs[1];
+			_ofs[0] += _offs[0] / _maxItr;
+			_ofs[1] += _offs[1] / _maxItr;
 			
 			_itr--;
 			_i++;

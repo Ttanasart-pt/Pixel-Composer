@@ -81,24 +81,20 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		return w_hovering;
 	}
 	
-	static step = function() {
-		var _shp = getInputData(3);
-		
-		inputs[2].setVisible(_shp == 0);
-		inputs[4].setVisible(_shp == 1);
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
-		if(!instance_exists(domain)) return;
-		
-		outputs[0].setValue(domain);
 		
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _shp   = getInputData(3);
 		var _siz   = getInputData(4);
 		var _tex   = getInputData(5);
+		
+		inputs[2].setVisible(_shp == 0);
+		inputs[4].setVisible(_shp == 1);
+		
+		if(!instance_exists(domain)) return;
+		outputs[0].setValue(domain);
 		
 		obstracle.x       = _posit[0];
 		obstracle.y       = _posit[1];

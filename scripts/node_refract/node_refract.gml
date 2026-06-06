@@ -36,10 +36,6 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	attributes.oversample = 3;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
-	
-	static step = function() {}
-	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		
 		var _surf  = _data[ 0];

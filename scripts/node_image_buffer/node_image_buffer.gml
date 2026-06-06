@@ -10,8 +10,6 @@ function Node_Image_Buffer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
-	static step = function() {}
-	
 	static update = function() {
 		var _surf = outputs[0].getValue();
 		_surf = surface_verify(_surf, attributes.width, attributes.height);

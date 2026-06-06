@@ -27,19 +27,17 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		var _arr = getInputData(7);
-		
-		inputs[0].setVisible(!_arr, !_arr);
-		inputs[1].setVisible(!_arr, !_arr);
-		inputs[2].setVisible(!_arr, !_arr);
-		inputs[3].setVisible(!_arr, !_arr);
-		
-		inputs[8].setVisible(_arr, _arr);
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _arr  = _data[7];
+		#region data
+			var _arr  = _data[7];
+			
+			inputs[0].setVisible(!_arr, !_arr);
+			inputs[1].setVisible(!_arr, !_arr);
+			inputs[2].setVisible(!_arr, !_arr);
+			inputs[3].setVisible(!_arr, !_arr);
+			
+			inputs[8].setVisible( _arr,  _arr);
+		#endregion
 		
 		var _r    = _arr? array_safe_get_fast(_data[8], 0) : _data[0];
 		var _g    = _arr? array_safe_get_fast(_data[8], 1) : _data[1];

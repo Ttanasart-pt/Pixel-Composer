@@ -347,16 +347,6 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return 1;
 	}
 	
-	static step = function() {
-		var _asp = getInputData(3);
-		var _fit = getInputData(7);
-		
-		inputs[1].setVisible(_asp == 0);
-		inputs[4].setVisible(_asp == 1);
-		inputs[5].setVisible(_asp >  0 && _fit == 0);
-		inputs[6].setVisible(_asp >  0 && _fit == 0);
-	}
-	
 	static onValueUpdate = function(index) {
 		if(index != 3) return;
 			
@@ -383,6 +373,11 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _width 	= _data[6];
 			
 			_width = abs(_width);
+			
+			inputs[1].setVisible(_asp == 0);
+			inputs[4].setVisible(_asp == 1);
+			inputs[5].setVisible(_asp >  0 && _fit == 0);
+			inputs[6].setVisible(_asp >  0 && _fit == 0);
 			
 			if(!is_surface(_inSurf)) return _outSurf;
 		#endregion

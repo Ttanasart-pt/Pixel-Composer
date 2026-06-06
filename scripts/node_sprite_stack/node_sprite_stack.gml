@@ -138,19 +138,11 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static step = function() {
-		var _high = getInputData(9);
-		var _surf = getInputData(0);
-		var _arry = getInputData(12);
-		
-		inputs[ 2].setVisible(_arry == 0 || !is_array(_surf));
-		
-		inputs[10].setVisible(_high);
-		inputs[11].setVisible(_high);
-		
-		inputs[12].setVisible(is_array(_surf));
+		var _surf = getInputData( 0);
+		var _arr  = getInputData(12);
 		
 		// custom preview
-		preview_custom = preview_custom_index != noone && is_array(_surf) && _arry;
+		preview_custom = preview_custom_index != noone && is_array(_surf) && _arr;
 		if(preview_custom) drawPreviewCustom();
 	}
 	
@@ -226,6 +218,13 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			var _dimt = _data[13];
 			var _dims = _data[14];
+			
+			inputs[ 2].setVisible(_arr == 0 || !is_array(_surf));
+			
+			inputs[10].setVisible(_hig);
+			inputs[11].setVisible(_hig);
+			
+			inputs[12].setVisible(is_array(_surf));
 		#endregion
 		
 		#region dimension

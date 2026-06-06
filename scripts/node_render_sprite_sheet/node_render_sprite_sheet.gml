@@ -57,39 +57,37 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		var inpt = getInputData( 0);
-		var grup = getInputData( 1);
-		var pack = getInputData( 3);
-		
-		if(pack == 0)	inputs[5].getEditWidget().data = [ "Top", "Center", "Bottom" ];
-		else			inputs[5].getEditWidget().data = [ "Left", "Center", "Right" ];
-		
-		inputs[2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
-		inputs[4].setVisible(pack == SPRITE_STACK.grid);
-		inputs[5].setVisible(pack != SPRITE_STACK.grid);
-		inputs[6].setVisible(pack != SPRITE_STACK.grid);
-		inputs[9].setVisible(pack == SPRITE_STACK.grid);
-		
-		if(grup == SPRITE_ANIM_GROUP.animation) {
-			inputs[8].getEditWidget().slide_range[0] = FIRST_FRAME + 1;
-			inputs[8].getEditWidget().slide_range[1] = LAST_FRAME + 1;
-			
-		} else {
-			inputs[8].getEditWidget().slide_range[0] = 0;
-			inputs[8].getEditWidget().slide_range[1] = array_length(inpt);
-		}
-		
-		update_on_frame = grup == 0;
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		if(IS_FIRST_FRAME) initSurface(false);
 		
-		var inpt   = getInputData( 0);
-		var sprSet = getInputData( 1);
-		var user   = getInputData(11);
-		var anim   = sprSet == SPRITE_ANIM_GROUP.animation;
+		#region data
+			var inpt   = getInputData( 0);
+			var sprSet = getInputData( 1);
+			var user   = getInputData(11);
+			var anim   = sprSet == SPRITE_ANIM_GROUP.animation;
+			
+			var pack   = getInputData( 3);
+				
+			if(pack == 0)	inputs[5].getEditWidget().data = [ "Top", "Center", "Bottom" ];
+			else			inputs[5].getEditWidget().data = [ "Left", "Center", "Right" ];
+			
+			inputs[2].setVisible(sprSet == SPRITE_ANIM_GROUP.animation);
+			inputs[4].setVisible(pack == SPRITE_STACK.grid);
+			inputs[5].setVisible(pack != SPRITE_STACK.grid);
+			inputs[6].setVisible(pack != SPRITE_STACK.grid);
+			inputs[9].setVisible(pack == SPRITE_STACK.grid);
+			
+			if(sprSet == SPRITE_ANIM_GROUP.animation) {
+				inputs[8].getEditWidget().slide_range[0] = FIRST_FRAME + 1;
+				inputs[8].getEditWidget().slide_range[1] = LAST_FRAME + 1;
+				
+			} else {
+				inputs[8].getEditWidget().slide_range[0] = 0;
+				inputs[8].getEditWidget().slide_range[1] = array_length(inpt);
+			}
+			
+			update_on_frame = sprSet == 0;
+		#endregion
 		
 		if(!user) {
 			if(sprSet == SPRITE_ANIM_GROUP.animation) 

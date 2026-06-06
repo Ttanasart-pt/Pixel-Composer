@@ -20,16 +20,15 @@ function Node_Monitor_Capture(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	static step = function() {
 		LIVE_UPDATE = true;
-		var _mode = getInputData(0);
-		
-		inputs[1].setVisible(_mode == 0);
-		inputs[2].setVisible(_mode == 1);
 	}
 	
 	static update = function() {
 		var _mode = getInputData(0);
 		var _moni = getInputData(1);
 		var _regi = getInputData(2);
+		
+		inputs[1].setVisible(_mode == 0);
+		inputs[2].setVisible(_mode == 1);
 		
 		var _reg = _mode == 0? monitors[_moni] : _regi;
 		

@@ -60,12 +60,6 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	domain  = instance_create(0, 0, FLIP_Domain);
 	toReset = true;
 	
-	static step = function() {
-		var _col = getInputData(9);
-		
-		inputs[12].setVisible(_col);
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
 			var _dim = getInputData(0);
@@ -83,6 +77,8 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _fric = getInputData(11);
 			var _ela  = getInputData(12);
 			var _gdir = getInputData(13);
+			
+			inputs[12].setVisible(_col);
 			
 			var _ovr  = attributes.overrelax;
 			
