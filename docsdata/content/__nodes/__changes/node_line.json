@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.007",
+    "changes": [
+      {
+        "date": "2026-06-06T02:36:46.866Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Line caps and width pass now support texture."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.008",
     "changes": [
       {

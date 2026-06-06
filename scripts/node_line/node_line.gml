@@ -251,13 +251,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 			inputs[ 3].setVisible(!_1px);
 			inputs[12].setVisible(!_1px);
-			inputs[13].setVisible(!_1px && !_utex);
-			inputs[43].setVisible(!_1px && !_utex);
+			inputs[13].setVisible(!_1px);
+			inputs[43].setVisible(!_1px);
 			inputs[14].setVisible(!_1px);
 			inputs[18].setVisible(!_1px);
 			
 			inputs[15].setVisible(!_utex);
-			inputs[16].setVisible(!_utex);
+			// inputs[16].setVisible(!_utex);
 			inputs[58].setVisible(_colW);
 			
 			inputs[ 2].setVisible(!_fixL);
@@ -305,12 +305,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			}
 			
 			var _useTex = !_1px && is_surface(_tex);
-			
-			if(_useTex) { 
-				_capS = false; 
-				_capE = false; 
-				_1px  = false; 
-			}
+			if(_useTex) _1px = false; 
 			
 			if(_1px) {
 				_capS = false; 
@@ -738,6 +733,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _capSta  = undefined;
 		var _capEnd  = undefined;
 		
+		var _texId = _useTex? surface_get_texture(_tex) : -1;
+		
 		surface_set_target(_cPassAA);
 			DRAW_CLEAR
 			
@@ -754,22 +751,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _cappS = 0;
 				var _cappE = 0;
 				
-				if(_useTex) {
-					var tex = surface_get_texture(_tex);
-					shader_set(sh_draw_mapping);
-					shader_set_i("sampleMode", getAttribute("oversample"));
+				shader_set(sh_line_draw_map);
+				shader_set_i("sampleMode", getAttribute("oversample"));
 				
-					shader_set_2("position", _texPos);
-					shader_set_f("rotation", _texRot);
-					shader_set_2("scale",    _texSca);
-					shader_set_i("flipAxis", true);
-					
-					shader_set_interpolation(_tex);
-					if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
-					draw_primitive_begin_texture(pr_trianglelist, tex);
-					
-				} else 
-					draw_primitive_begin(pr_trianglelist);
+				shader_set_i("widthPass",  false   );
+				shader_set_2("position",   _texPos );
+				shader_set_f("rotation",   _texRot );
+				shader_set_2("scale",      _texSca );
+				shader_set_i("flipAxis",   true    );
+				shader_set_i("drawCap",    false   );
+				
+				shader_set_interpolation(_tex);
+				if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
+				
+				draw_primitive_begin_texture(pr_trianglelist, _texId);
 				
 				var _col_base = dat == noone? gradientEval(_colb, random(1)) : dat.color;
 				_ow = 1;
@@ -812,19 +807,39 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(_cappS == 0) {
 						_cappS  = 1;
-						_capSta = [ [_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0],
-							        [_capS, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, 0, 0] ];
+						_capSta = [ [_capS, _nc, _nx*_aa, _ny*_aa, _nw/2*_aa, 0, 0, [0,0], [1,1]],
+							        [_capS, _nc, _nx*_aa, _ny*_aa, _nw/2*_aa, 0, 0, [0,0], [1,1]] ];
 						
 					} else if(_cappS == 1) {
 						_d = _dir + 180;
 						_cappS = 2;
 						_capSta[0][5] = _d-90; _capSta[0][6] = _d;
 						_capSta[1][5] = _d;    _capSta[1][6] = _d+90;
+						
+						var _dist    = point_distance(_ox, _oy, _nx, _ny);
+						var _uvscale = (_np - _op) / _dist * _nw / 2 * _aa;
+						
+						_capSta[0][7][0] = 1 - _uvscale;
+						_capSta[1][7][0] = 1 - _uvscale;
+						
+						_capSta[0][8][0] = _uvscale;
+						_capSta[1][8][0] = _uvscale;
 					}
 					
 					_d = _dir;
-					_capEnd = [ [_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d],
-						        [_capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90] ];
+					_capEnd = [ [_capE, _nc, _nx*_aa, _ny*_aa, _nw/2*_aa, _d-90, _d, [0,0], [1,1]],
+						        [_capE, _nc, _nx*_aa, _ny*_aa, _nw/2*_aa, _d, _d+90, [0,0], [1,1]] ];
+						        
+					if(j) {
+						var _dist    = point_distance(_ox, _oy, _nx, _ny);
+						var _uvscale = (_np - _op) / _dist * _nw / 2 * _aa;
+						
+						_capEnd[0][7][0] = 0;
+						_capEnd[1][7][0] = 0;
+						
+						_capEnd[0][8][0] = _uvscale;
+						_capEnd[1][8][0] = _uvscale;
+					}
 					
 					if(j)
 					if(_1px) { 
@@ -888,24 +903,23 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(j % 120 == 0) {
 						draw_primitive_end();
-						if(_useTex) draw_primitive_begin_texture(pr_trianglelist, tex); 
-						else draw_primitive_begin(pr_trianglelist);
+						draw_primitive_begin_texture(pr_trianglelist, _texId);
 					}
 				}
 				
 				draw_primitive_end();
 				
 				if(_capS && _capSta != undefined) {
-					var c = _capSta[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP );
-					var c = _capSta[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP );
+					var c = _capSta[0]; drawCaps( 0, 0, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], false, _texId );
+					var c = _capSta[1]; drawCaps( 1, 0, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], false, _texId );
 				}
 				
 				if(_capE && _capEnd != undefined) {
-					var c = _capEnd[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP );
-					var c = _capEnd[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP );
+					var c = _capEnd[0]; drawCaps( 0, 1, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], false, _texId );
+					var c = _capEnd[1]; drawCaps( 1, 1, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], false, _texId );
 				}
 				
-				if(_useTex) shader_reset();
+				shader_reset();
 				
 				if(!array_empty(points)) {
 					var _pp = [ 0, 0 ];
@@ -985,6 +999,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					case 2 : BLEND_MAX;    break;
 				}
 				
+				shader_set(sh_line_draw_map);
+				shader_set_i("widthPass", true  );
+				shader_set_i("drawCap",   false );
+				
 				for( var i = 0, n = array_length(lines); i < n; i++ ) {
 					if(array_length(lines[i]) < 2) continue;
 					var points = lines[i];
@@ -1033,6 +1051,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								_nd = _nd0;
 							
 							draw_line_width2_angle_width(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, c_white, c_white);
+							
 						} else {
 							var p1   = points[j + 1];
 							_nd = point_direction(_nx, _ny, p1.x + _padx, p1.y + _pady);
@@ -1052,16 +1071,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_primitive_end();
 					
 					if(_capS && _capSta != undefined) {
-						var c = _capSta[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP, true );
-						var c = _capSta[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP, true );
+						var c = _capSta[0]; drawCaps( 0, 0, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], true );
+						var c = _capSta[1]; drawCaps( 1, 0, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], true );
 					}
 					
 					if(_capE && _capEnd != undefined) {
-						var c = _capEnd[0]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP, true );
-						var c = _capEnd[1]; drawCaps( c[0], c[1], c[2], c[3], c[4], c[5], c[6], _capP, true );
+						var c = _capEnd[0]; drawCaps( 0, 1, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], true );
+						var c = _capEnd[1]; drawCaps( 1, 1, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], true );
 					}
-					
 				}
+				
+				shader_reset();
 				
 				BLEND_NORMAL
 			surface_reset_target();
@@ -1071,44 +1091,44 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return [ _colorPass, _widthPass ];
 	}
 	
-	static drawCaps = function(_typ, _cpc, _cpx, _cpy, _cpr, _a0, _a1, _prec = 32, w = false) {
+	static drawCaps = function(_flip, _side, _typ, _cpc, _cpx, _cpy, _cpr, _a0, _a1, _uvp = [0,0], _uvs = [1,1], w = false, _texId = -1) {
 		var _0 = c_black;
 		var _1 = c_white;
 		var _c = _cpc;
+		var _a = draw_get_alpha();
 		draw_set_color(_c);
 		
-		switch(_typ) {
-			case 1 : 
-				if(w) draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec, _1, _0); 
-				else  draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec, _c, _c); 
-				break;
-				
-			case 2 : 
-				var _x0 = _cpx + lengthdir_x(_cpr, _a0) - 1;
-				var _y0 = _cpy + lengthdir_y(_cpr, _a0) - 1;
-				var _x2 = _cpx + lengthdir_x(_cpr, _a1) - 1;
-				var _y2 = _cpy + lengthdir_y(_cpr, _a1) - 1;
-				
-				if(w) draw_triangle_color(_cpx - 1, _cpy - 1, _x0, _y0, _x2, _y2, _1, _0, _0, false);
-				else  draw_triangle_color(_cpx - 1, _cpy - 1, _x0, _y0, _x2, _y2, _c, _c, _c, false);
-				break;
-				
-			case 3 : 
-				var _x0 = _cpx + lengthdir_x(_cpr, _a0) - 1;
-				var _y0 = _cpy + lengthdir_y(_cpr, _a0) - 1;
-				var _x1 = _cpx + lengthdir_x(_cpr * sqrt(2), lerp_angle_direct(_a0, _a1, .5)) - 1;
-				var _y1 = _cpy + lengthdir_y(_cpr * sqrt(2), lerp_angle_direct(_a0, _a1, .5)) - 1;
-				var _x2 = _cpx + lengthdir_x(_cpr, _a1) - 1;
-				var _y2 = _cpy + lengthdir_y(_cpr, _a1) - 1;
-				
-				if(w) {
-					draw_triangle_color(_cpx - 1, _cpy - 1, _x0, _y0, _x1, _y1, _1, _0, _0, false);
-					draw_triangle_color(_cpx - 1, _cpy - 1, _x1, _y1, _x2, _y2, _1, _0, _0, false);
-				} else {
-					draw_triangle_color(_cpx - 1, _cpy - 1, _x0, _y0, _x1, _y1, _c, _c, _c, false);
-					draw_triangle_color(_cpx - 1, _cpy - 1, _x1, _y1, _x2, _y2, _c, _c, _c, false);
-				}
-				break;
-		}
+		draw_primitive_begin_texture(pr_trianglelist, _texId);
+		
+		shader_set_i("drawCap",  true   );
+		shader_set_i("capType",  _typ   );
+		shader_set_i("capFlip",  _flip  );
+		shader_set_i("capSide",  _side  );
+		
+		shader_set_2("capUVpos", _uvp  );
+		shader_set_2("capUVsca", _uvs  );
+		
+		var _cx = _cpx;
+		var _cy = _cpy;
+		var _x0 = _cx + lengthdir_x(_cpr, _a0);
+		var _y0 = _cy + lengthdir_y(_cpr, _a0);
+		var _x1 = _cx + lengthdir_x(_cpr * sqrt(2), lerp_angle_direct(_a0, _a1, .5));
+		var _y1 = _cy + lengthdir_y(_cpr * sqrt(2), lerp_angle_direct(_a0, _a1, .5));
+		var _x2 = _cx + lengthdir_x(_cpr, _a1);
+		var _y2 = _cy + lengthdir_y(_cpr, _a1);
+		
+		var c0 = w? _1 : _c;
+		var c1 = w? _0 : _c;
+		var c2 = w? _0 : _c;
+		
+		draw_vertex_texture_color(_cx, _cy, 0, 0, c0, _a);
+		draw_vertex_texture_color(_x0, _y0, 0, 1, c1, _a);
+		draw_vertex_texture_color(_x1, _y1, 1, 1, c2, _a);
+		
+		draw_vertex_texture_color(_cx, _cy, 0, 0, c0, _a);
+		draw_vertex_texture_color(_x1, _y1, 1, 1, c2, _a);
+		draw_vertex_texture_color(_x2, _y2, 1, 0, c1, _a);
+		
+		draw_primitive_end();
 	}
 }

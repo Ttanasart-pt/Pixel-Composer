@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_line_draw_map",
+  "name":"sh_line_draw_map",
+  "parent":{
+    "name":"line",
+    "path":"folders/nodes/data/generator/drawer/line.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

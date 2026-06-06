@@ -129,19 +129,73 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform int   tranform;
+uniform int   widthPass;
 uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
 uniform int   flipAxis;
 
+uniform int   drawCap;
+uniform int   capType;
+uniform int   capFlip;
+uniform int   capSide;
+uniform vec2  capUVpos;
+uniform vec2  capUVsca;
+
 void main() {
-	vec2 cpos = (flipAxis == 1? v_vTexcoord.yx : v_vTexcoord.xy) - vec2(0.5), pos;
-	pos.x = cpos.x * cos(rotation) - cpos.y * sin(rotation);
-	pos.y = cpos.x * sin(rotation) + cpos.y * cos(rotation);
-	pos = pos * scale + vec2(0.5) - position;
+	vec2 cpos = flipAxis == 1? v_vTexcoord.yx : v_vTexcoord.xy;
+	vec2 pos  = cpos;
+	
+	if(drawCap == 0) {
+		if(widthPass == 1) {
+			gl_FragColor = v_vColour;
+			return;
+		}
+		
+	} else if(drawCap == 1) {
+		if(capFlip == 1) pos.xy = pos.yx;
+		float d;
+		
+		if(capType == 1) { // round
+			float ds = length(pos);
+			bool exc = length(pos) > 1.;
+			if(exc) discard;
+			
+			d = 1. - ds;
+			
+		} else if(capType == 2) { // triangle
+			bool exc = pos.x + pos.y > 1.;
+			if(exc) discard;
+			
+			d = 1. - (pos.x + pos.y);
+			
+		} else if(capType == 3) { // square
+			d = 1. - max(pos.x, pos.y);
+			
+		}
+		
+		if(widthPass == 1) {
+			gl_FragColor = vec4( d,d,d, 1. );
+			return;
+		}
+		
+		vec2 sampUV = pos;
+		
+		sampUV.x *= capFlip == 1? -.5 : .5;
+		sampUV.x += .5;
+		
+		sampUV.xy = 1. - sampUV.yx;
+		if(capSide == 1) sampUV.xy = 1. - sampUV.xy;
+		
+		pos = capUVpos + sampUV * capUVsca;
+		pos.x += capSide == 0? -1. : 1.;
+	} 
+	
+	pos -= .5;
+	pos.x = pos.x * cos(rotation) - pos.y * sin(rotation);
+	pos.y = pos.x * sin(rotation) + pos.y * cos(rotation);
+	pos = pos * scale + .5 - position;
 	
     gl_FragColor = v_vColour * sampleTexture( gm_BaseTexture, pos );
-    
-    gl_FragColor = vec4(pos, 0., 1.);
+    // gl_FragColor = vec4( pos, 0., 1. );
 }
