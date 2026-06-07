@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.008",
+    "changes": [
+      {
+        "date": "2026-06-07T01:12:08.523Z",
+        "node": "",
+        "commit": "--custom 3d node"
+      }
+    ]
+  },
+  {
     "version": "1.21.3.007",
     "changes": [
       {

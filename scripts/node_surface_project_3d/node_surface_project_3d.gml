@@ -1,5 +1,6 @@
 function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Surface Project 3D";
+	name  = "Surface Project 3D";
+	is_3D = NODE_3D.custom;
 	
 	newInput( 0, nodeValue_Dimension());
 	
@@ -49,6 +50,71 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 	attribute_interpolation();
 	
 	temp_surface = [ noone ];
+	preview_data = undefined;
+	
+	static submitScene = function(_data, _viewDim = undefined, _viewAng = undefined, _viewDis = undefined) {
+		#region data
+			var _dim   = _data[ 0]; _viewDim = _viewDim ?? _dim;
+			
+			var _sTop  = _data[ 1];
+			var _sFrn  = _data[ 2];
+			var _sSid  = _data[ 3];
+			
+			var _sTopb = _data[ 5];
+			var _sFrnb = _data[ 6];
+			var _sSidb = _data[ 7];
+			
+			var _ang   = _viewAng ?? _data[ 4];
+			var _pos   = _data[12];
+			var _proj  = _data[ 9];
+			var _fov   = _data[10];
+			var _dist  = _viewDis ?? _data[11]; 
+			var _sca   = _viewDis ?? _data[ 8]; 
+			
+			var _bothS = _data[13];
+			
+			var _blndT = _data[16];
+			var _fblnd = _data[15];
+			var _blndX = _data[17];
+			var _depth = _data[14];
+		#endregion
+		
+		shader_set(sh_surface_project_3d);
+			shader_set_interpolation(_sTop);
+			
+			shader_set_2( "dimension",     _dim             );
+			shader_set_2( "viewDimension", _viewDim         );
+			shader_set_s( "axisSurfaces",  temp_surface[0]  );
+			
+			shader_set_i( "surTopB_use",   is_surface(_sFrnb) );
+			shader_set_i( "surFrontB_use", is_surface(_sSidb) );
+			shader_set_i( "surSideB_use",  is_surface(_sTopb) );
+			
+			shader_set_3( "angle",      _ang   );
+			shader_set_3( "position",   _pos   );
+			
+			shader_set_i( "projection", _proj  );
+			shader_set_f( "fov",        _fov   );
+			shader_set_f( "distant",    _dist  );
+			shader_set_f( "scale",      _sca   );
+			
+			shader_set_i( "bothSide",   _bothS );
+			
+			shader_set_i( "blendType",  _blndT );
+			shader_set_i( "blendFaceEx",_blndX );
+			shader_set_palette( _fblnd );
+			shader_set_2( "depthRange", _depth );
+			
+			draw_empty();
+		shader_reset();
+	}
+	
+	static drawPreviewPanel = function(_panel) {
+		if(preview_data == undefined) return;
+		
+		var _camera = _panel.d3_camera;
+		submitScene(preview_data, [_panel.w, _panel.h], [ _camera.focus_angle_y, -_camera.focus_angle_x, 0 ], _camera.focus_dist);
+	}
 	
 	static processData = function(_outData, _data, _array_index = 0) {
 		#region data
@@ -83,6 +149,8 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			inputs[15].setVisible(_blndT == 0);
 			inputs[17].setVisible(_blndT == 2);
 			
+			preview_data = _data;
+			
 			var isFrn = is_surface(_sFrn);
 			var isSid = is_surface(_sSid);
 			var isTop = is_surface(_sTop);
@@ -112,33 +180,12 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			
 		surface_reset_shader();
 		
-		surface_set_shader(_outData, sh_surface_project_3d);
-			shader_set_interpolation(_sTop);
-			
-			shader_set_2( "dimension",    _dim   );
-			shader_set_s( "axisSurfaces", temp_surface[0]  );
-			
-			shader_set_i( "surTopB_use",   is_surface(_sFrnb) );
-			shader_set_i( "surFrontB_use", is_surface(_sSidb) );
-			shader_set_i( "surSideB_use",  is_surface(_sTopb) );
-			
-			shader_set_3( "angle",      _ang   );
-			shader_set_3( "position",   _pos   );
-			
-			shader_set_i( "projection", _proj  );
-			shader_set_f( "fov",        _fov   );
-			shader_set_f( "distant",    _dist  );
-			shader_set_f( "scale",      _sca   );
-			
-			shader_set_i( "bothSide",   _bothS );
-			
-			shader_set_i( "blendType",  _blndT );
-			shader_set_i( "blendFaceEx",_blndX );
-			shader_set_palette( _fblnd );
-			shader_set_2( "depthRange", _depth );
-			
-			draw_empty();
-		surface_reset_shader();
+		surface_set_target_ext(0, _outData[0]);
+		surface_set_target_ext(1, _outData[1]);
+		surface_set_target_ext(2, _outData[2]);
+			DRAW_CLEAR
+			submitScene(_data);
+		surface_reset_target();
 		
 		return _outData; 
 	}

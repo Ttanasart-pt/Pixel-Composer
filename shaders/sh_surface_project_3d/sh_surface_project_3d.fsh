@@ -130,6 +130,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
+uniform vec2 viewDimension;
 
 // based on IQ voxel shader
 
@@ -247,12 +248,15 @@ void main() {
 	vec2 uv = v_vTexcoord - .5;
 	vec3 dir, eye;
 	
+	float asp = viewDimension.x / viewDimension.y;
+	uv.y /= asp;
+	
 	if(projection == 0) {
 		float dz  = 1. / tan(radians(fov) / 2.);
 		
 		dir = vec3(uv * 2., -dz);
 		eye = vec3(0., 0., sqrt(3.) * distant);
-			
+		
 	} else if(projection == 1) {
 		dir = vec3(0., 0., -1.);
     	eye = vec3(uv * scale, sqrt(3.));

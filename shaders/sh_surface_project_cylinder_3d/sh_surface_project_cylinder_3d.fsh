@@ -130,6 +130,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
+uniform vec2 viewDimension;
 
 // based on IQ voxel shader
 uniform sampler2D sProfile;
@@ -206,6 +207,9 @@ void main() {
 	
 	vec2 uv = v_vTexcoord - .5;
 	vec3 dir, eye;
+	
+	float asp = viewDimension.x / viewDimension.y;
+	uv.y /= asp;
 	
 	vec2 aRang = vec2( radians(angRange.x), radians(angRange.y) );
 	

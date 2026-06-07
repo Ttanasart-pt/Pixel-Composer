@@ -1,5 +1,6 @@
 function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Heightmap Project 3D";
+	is_3D = NODE_3D.custom;
 	
 	newInput( 0, nodeValue_Dimension());
 	
@@ -35,39 +36,35 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static processData = function(_outSurf, _data, _array_index = 0) {
+	preview_data = undefined;
+	
+	static submitScene = function(_data, _viewDim = undefined, _viewAng = undefined, _viewDis = undefined) {
 		#region data
-			var _dim   = _data[ 0];
+			var _dim   = _data[ 0]; _viewDim = _viewDim ?? _dim;
 			
 			var _higm  = _data[ 1];
 			var _text  = _data[ 2];
 			var _textS = _data[10];
 			var _textF = _data[11];
 			
-			var _ang   = _data[ 3];
+			var _ang   = _viewAng ?? _data[ 3];
 			var _pos   = _data[ 8];
 			
 			var _proj  = _data[ 4];
 			var _fov   = _data[ 5];
-			var _dist  = _data[ 6];
-			var _sca   = _data[ 7];
+			var _dist  = _viewDis ?? _data[ 6];
+			var _sca   = _viewDis ?? _data[ 7];
 			var _hsca  = _data[12];
 			
 			var _hgCol = _data[ 9];
-			
-			inputs[ 5].setVisible(_proj == 0);
-			inputs[ 6].setVisible(_proj == 0);
-			inputs[ 7].setVisible(_proj == 1);
-			
-			if(!is_surface(_higm)) return _outSurf;
 		#endregion
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		
-		surface_set_shader(_outSurf, sh_heightmap_project_3d);
+		shader_set(sh_heightmap_project_3d);
 			shader_set_interpolation(_higm);
 			
-			shader_set_2( "dimension", _dim   );
+			shader_set_2( "dimension",     _dim     );
+			shader_set_2( "viewDimension", _viewDim );
+			
 			shader_set_s( "heightmap", _higm  );
 			shader_set_s( "texture",   is_surface(_text)? _text : _higm );
 			
@@ -90,7 +87,50 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_gradient(_hgCol);
 			
 			draw_empty();
-		surface_reset_shader();
+		shader_reset();
+		
+	}
+	
+	static drawPreviewPanel = function(_panel) {
+		if(preview_data == undefined) return;
+		
+		var _camera = _panel.d3_camera;
+		submitScene(preview_data, [_panel.w, _panel.h], [ _camera.focus_angle_y, -_camera.focus_angle_x, 0 ], _camera.focus_dist);
+	}
+	
+	static processData = function(_outSurf, _data, _array_index = 0) {
+		#region data
+			var _dim   = _data[ 0];
+			
+			var _higm  = _data[ 1];
+			var _text  = _data[ 2];
+			var _textS = _data[10];
+			var _textF = _data[11];
+			
+			var _ang   = _data[ 3];
+			var _pos   = _data[ 8];
+			
+			var _proj  = _data[ 4];
+			var _fov   = _data[ 5];
+			var _dist  = _data[ 6];
+			var _sca   = _data[ 7];
+			var _hsca  = _data[12];
+			
+			var _hgCol = _data[ 9];
+			
+			preview_data = _data;
+			
+			inputs[ 5].setVisible(_proj == 0);
+			inputs[ 6].setVisible(_proj == 0);
+			inputs[ 7].setVisible(_proj == 1);
+			
+			if(!is_surface(_higm)) return _outSurf;
+		#endregion
+		
+		surface_set_target(_outSurf);
+			DRAW_CLEAR
+			submitScene(_data);
+		surface_reset_target();
 		
 		return _outSurf; 
 	}

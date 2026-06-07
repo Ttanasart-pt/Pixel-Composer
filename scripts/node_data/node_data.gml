@@ -1,7 +1,7 @@
 #region global
 	#macro SHOW_PARAM (attributes.show_preview && attributes.show_parameter)
 	
-	enum NODE_3D   { none, polygon, sdf }
+	enum NODE_3D   { none, polygon, sdf, custom }
 	
 	enum DYNA_INPUT_COND {
 		none       = 0, 
@@ -2905,6 +2905,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		return noone;
 	}
+	
+	static drawPreviewPanel = function(_panel) {}
 	
 	////- TOOLS
 	

@@ -2529,6 +2529,56 @@ function Panel_Preview() : PanelContent() constructor {
         gpu_set_texfilter(false);
     }
     
+    static draw3DCustom = function(_node) {
+    	_node.previewing = 1;
+    	
+        #region view
+            var _pos, targ, _blend = 1;
+            
+            targ = d3_camTarget;
+            _pos = d3d_PolarToCart(targ.x, targ.y, targ.z, d3_camera.focus_angle_x, d3_camera.focus_angle_y, d3_camera.focus_dist);
+            
+            if(d3_active_transition == 1) {
+                var _up  = new __vec3(0, 0, -1);
+                
+                d3_camera.position._lerp_float(_pos, 5, 0.1);
+                d3_camera.focus._lerp_float(   targ, 5, 0.1);
+                d3_camera.up._lerp_float(       _up, 5, 0.1);
+                
+                if(d3_camera.position.equal(_pos) && d3_camera.focus.equal(targ))
+                    d3_active_transition = 0;
+                    
+            } else if(d3_active_transition == -1) {
+                var _pos = new __vec3(0, 0, 8);
+                var targ = new __vec3(0, 0, 0);
+                var _up  = new __vec3(0, 1, 0);
+                
+                d3_camera.position._lerp_float(_pos, 5, 0.1);
+                d3_camera.focus._lerp_float(   targ, 5, 0.1);
+                d3_camera.up._lerp_float(       _up, 5, 0.1);
+                
+                _blend = d3_camera.position.distance(_pos) / 2;
+                _blend = clamp(_blend, 0, 1);
+                
+                if(d3_camera.position.equal(_pos) && d3_camera.focus.equal(targ))
+                    d3_active_transition = 0;
+                    
+            } else {
+                d3_camera.position.set(_pos);
+                d3_camera.focus.set(targ);
+            }
+            
+            d3_camera.setViewSize(w, h);
+            d3_camera.setMatrix();
+        #endregion
+        
+        var cc = PROJECT.previewSetting.bg_color_3d;
+		if(cc == -1) cc = COLORS.panel_preview_bg_3d;
+        	
+        draw_clear(cc);
+    	_node.drawPreviewPanel(self);
+    }
+    
     static draw3D = function() {
         var _node = getNodePreview();
         if(_node == noone) return;
@@ -2536,6 +2586,7 @@ function Panel_Preview() : PanelContent() constructor {
         switch(d3_active) {
             case NODE_3D.polygon : draw3DPolygon(_node); break;
             case NODE_3D.sdf :     draw3DSdf(_node);     break;
+            case NODE_3D.custom :  draw3DCustom(_node);  break;
         }
     }
     
@@ -3166,13 +3217,16 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(!gizmo_show) return;
     
-    	if(_node.is_3D != NODE_3D.none) {
-            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
-                _snx = PROJECT.previewSetting.d3_tool_snap_position;
-                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
-            }
-            
-            hoveringGizmo = _node.drawOverlay3D(overActive, mx, my, _params) ?? true;
+    	switch(_node.is_3D) {
+    		case NODE_3D.polygon :
+    		case NODE_3D.sdf : 
+	            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
+	                _snx = PROJECT.previewSetting.d3_tool_snap_position;
+	                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
+	            }
+	            
+	            hoveringGizmo = _node.drawOverlay3D(overActive, mx, my, _params) ?? true;
+	            break;
         }
         
         if(key_mod_press(CTRL)) {

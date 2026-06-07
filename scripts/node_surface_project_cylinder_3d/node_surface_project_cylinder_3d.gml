@@ -1,5 +1,6 @@
 function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Surface Project Cylinder 3D";
+	is_3D = NODE_3D.custom;
 	
 	newInput( 0, nodeValue_Dimension());
 	
@@ -44,6 +45,60 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 	attribute_surface_depth();
 	attribute_interpolation();
 	
+	preview_data = undefined;
+	
+	static submitScene = function(_data, _viewDim = undefined, _viewAng = undefined, _viewDis = undefined) {
+		#region data
+			var _dim   = _data[ 0]; _viewDim = _viewDim ?? _dim;
+			
+			var _sCyl  = _data[ 1];
+			var _sTop  = _data[ 2];
+			
+			var _ang   = _viewAng ?? _data[ 4];
+			var _pos   = _data[12];
+			var _proj  = _data[ 9];
+			var _fov   = _data[10];
+			var _dist  = _viewDis ?? _data[11];
+			var _sca   = _viewDis ?? _data[ 8];
+			
+			var _arng  = _data[13];
+			
+			var _depth = _data[14];
+		#endregion
+		
+		shader_set(sh_surface_project_cylinder_3d);
+			shader_set_interpolation(_sCyl);
+			
+			shader_set_2( "dimension",     _dim     );
+			shader_set_2( "viewDimension", _viewDim );
+			shader_set_s( "sProfile",      _sCyl    );
+			shader_set_s( "sTop",          _sTop    );
+			shader_set_i( "sTop_use",      is_surface(_sTop)  );
+			
+			shader_set_3( "angle",      _ang   );
+			shader_set_3( "position",   _pos   );
+			
+			shader_set_i( "projection", _proj  );
+			shader_set_f( "fov",        _fov   );
+			shader_set_f( "distant",    _dist  );
+			shader_set_f( "scale",      _sca   );
+			
+			shader_set_2( "angRange",   _arng  );
+			
+			shader_set_2( "depthRange", _depth );
+			
+			draw_empty();
+		shader_reset();
+		
+	}
+	
+	static drawPreviewPanel = function(_panel) {
+		if(preview_data == undefined) return;
+		
+		var _camera = _panel.d3_camera;
+		submitScene(preview_data, [_panel.w, _panel.h], [ _camera.focus_angle_y, -_camera.focus_angle_x, 0 ], _camera.focus_dist);
+	}
+	
 	static processData = function(_outData, _data, _array_index = 0) {
 		#region data
 			var _dim   = _data[ 0];
@@ -62,33 +117,19 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 			
 			var _depth = _data[14];
 			
+			preview_data = _data;
+			
 			inputs[10].setVisible(_proj == 0);
 			inputs[11].setVisible(_proj == 0);
 			inputs[ 8].setVisible(_proj == 1);
 		#endregion
 		
-		surface_set_shader(_outData, sh_surface_project_cylinder_3d);
-			shader_set_interpolation(_sCyl);
-			
-			shader_set_2( "dimension",  _dim   );
-			shader_set_s( "sProfile",   _sCyl  );
-			shader_set_s( "sTop",       _sTop  );
-			shader_set_i( "sTop_use",   is_surface(_sTop)  );
-			
-			shader_set_3( "angle",      _ang   );
-			shader_set_3( "position",   _pos   );
-			
-			shader_set_i( "projection", _proj  );
-			shader_set_f( "fov",        _fov   );
-			shader_set_f( "distant",    _dist  );
-			shader_set_f( "scale",      _sca   );
-			
-			shader_set_2( "angRange",   _arng  );
-			
-			shader_set_2( "depthRange", _depth );
-			
-			draw_empty();
-		surface_reset_shader();
+		surface_set_target_ext(0, _outData[0]);
+		surface_set_target_ext(1, _outData[1]);
+		surface_set_target_ext(2, _outData[2]);
+			DRAW_CLEAR
+			submitScene(_data);
+		surface_reset_target();
 		
 		return _outData; 
 	}
