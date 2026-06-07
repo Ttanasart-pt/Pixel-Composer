@@ -3,9 +3,9 @@
   "%Name":"note_animation_control",
   "name":"note_animation_control",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"debug",
+    "path":"folders/nodes/data/misc/debug.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

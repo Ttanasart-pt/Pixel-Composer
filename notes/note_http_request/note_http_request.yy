@@ -3,9 +3,9 @@
   "%Name":"note_http_request",
   "name":"note_http_request",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"network",
+    "path":"folders/nodes/data/misc/network.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

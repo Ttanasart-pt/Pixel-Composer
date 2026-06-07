@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_widget_test",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"debug",
+    "path":"folders/nodes/data/misc/debug.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

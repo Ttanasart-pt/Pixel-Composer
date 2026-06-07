@@ -21,14 +21,17 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	////- =Rendering
 	newInput( 9, nodeValue_Gradient( "Height Color", gra_white   ));
-	// 13
+	newInput(13, nodeValue_Range(    "Depth Range",   [0,1]      ));
+	// 14
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone )).setDrawGroup(10);
+	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone )).setDrawGroup(10);
+	newOutput( 2, nodeValue_Output("Normal Pass", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
 		[ "Surfaces",  false ],  1,  2, 10, 11, 
 		[ "Camera",    false ],  3,  8,  4,  5,  6,  7, 12, 
-		[ "Rendering", false ],  9, 
+		[ "Rendering", false ],  9, 13, 
 	];
 	
 	////- Node
@@ -57,6 +60,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			var _hsca  = _data[12];
 			
 			var _hgCol = _data[ 9];
+			var _depth = _data[13];
 		#endregion
 		
 		shader_set(sh_heightmap_project_3d);
@@ -82,6 +86,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_f( "distant",    _dist  );
 			
 			shader_set_f( "scale",      _sca   );
+			shader_set_2( "depthRange", _depth );
 			shader_set_f( "heightScale",_hsca  );
 			
 			shader_set_gradient(_hgCol);
@@ -98,7 +103,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 		submitScene(preview_data, [_panel.w, _panel.h], [ _camera.focus_angle_y, -_camera.focus_angle_x, 0 ], _camera.focus_dist);
 	}
 	
-	static processData = function(_outSurf, _data, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		#region data
 			var _dim   = _data[ 0];
 			
@@ -124,14 +129,16 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			inputs[ 6].setVisible(_proj == 0);
 			inputs[ 7].setVisible(_proj == 1);
 			
-			if(!is_surface(_higm)) return _outSurf;
+			if(!is_surface(_higm)) return _outData;
 		#endregion
 		
-		surface_set_target(_outSurf);
+		surface_set_target_ext(0, _outData[0]);
+		surface_set_target_ext(1, _outData[1]);
+		surface_set_target_ext(2, _outData[2]);
 			DRAW_CLEAR
 			submitScene(_data);
 		surface_reset_target();
 		
-		return _outSurf; 
+		return _outData; 
 	}
 } 

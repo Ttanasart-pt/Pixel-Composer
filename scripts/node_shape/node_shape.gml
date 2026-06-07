@@ -84,7 +84,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 1, nodeValue_EButton( "Background",    0, [ "None", "Solid", "Surface" ] ));
 	newInput(11, nodeValue_Color(   "BG Color",      ca_black ));
 	newInput(46, nodeValue_Surface( "BG Surface"              ));
-	newInput(47, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max", "Additive", "Multiply" ] ));
+	newInput(47, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max", "Additive", "Multiply", "Substract" ] ));
 	
 	////- =Transform
 	newInput(15, nodeValue_EScroll(  "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))

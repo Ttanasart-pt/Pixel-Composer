@@ -3,9 +3,9 @@
   "%Name":"note_hlsl",
   "name":"note_hlsl",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"custom",
+    "path":"folders/nodes/data/misc/custom.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

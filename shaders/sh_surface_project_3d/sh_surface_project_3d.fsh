@@ -287,6 +287,8 @@ void main() {
 	vec4 samSide  = vec4(0.);
     vec3 mm  = vec3(0.);
 	bool hit = false;
+
+	int hitCount = 0;
 	
 	vec2 hitUVT;
 	vec2 hitUVF;
@@ -321,11 +323,11 @@ void main() {
             }
             
             if (isHit) { 
-            	hit    = true; 
-            	hitUVT = txT;
+				hit    = true; 
+				hitUVT = txT;
 				hitUVF = txF;
 				hitUVS = txS;
-            	break; 
+				break;
             }
         }
         

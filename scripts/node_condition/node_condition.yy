@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_condition",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"flow",
+    "path":"folders/nodes/data/misc/flow.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

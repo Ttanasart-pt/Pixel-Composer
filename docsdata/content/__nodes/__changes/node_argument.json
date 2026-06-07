@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.008",
+    "changes": [
+      {
+        "date": "2026-06-07T04:45:35.566Z",
+        "node": "",
+        "commit": "**Graph Panel] Add shift for selecting all junction in junction group. - [Graph Panel**: Improve junction group visibility."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.0",
     "changes": [
       {

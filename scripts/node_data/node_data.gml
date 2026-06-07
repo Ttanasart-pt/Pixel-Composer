@@ -1919,7 +1919,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 				if(_ind != _curr_index || _curr_group == noone) {
 					_curr_index = _ind;
-					_curr_group = [ jun.x, jun.y, undefined, 0 ];
+					_curr_group = [ jun.x, jun.y, undefined, 0, jun.custom_color ?? jun.draw_fg ];
 					
 				} else if(_curr_group[2] == undefined) {
 					_curr_group[2] = jun.y;
@@ -1932,7 +1932,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(jun.draw_group != undefined) {
 				if(jun.draw_group != _curr_index || _curr_group == noone) {
 					_curr_index = jun.draw_group;
-					_curr_group = [ jun.x, jun.y, undefined, 0 ];
+					_curr_group = [ jun.x, jun.y, undefined, 0, jun.custom_color ?? jun.draw_fg ];
 					
 				} else if(_curr_group[2] == undefined) {
 					_curr_group[2] = jun.y;
@@ -1940,6 +1940,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					
 				} else 
 					_curr_group[2] = max(_curr_group[2], jun.y);
+					
+				jun.draw_group_object = _curr_group;
 			}
 			
 			_riy += junction_draw_hei_y;
@@ -1954,7 +1956,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(jun.draw_group != undefined) {
 				if(jun.draw_group != _curr_index || _curr_group == noone) {
 					_curr_index = jun.draw_group;
-					_curr_group = [ jun.x, jun.y, undefined, 0 ];
+					_curr_group = [ jun.x, jun.y, undefined, 0, jun.custom_color ?? jun.draw_fg ];
 					
 				} else if(_curr_group[2] == undefined) {
 					_curr_group[2] = jun.y;
@@ -1962,6 +1964,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					
 				} else 
 					_curr_group[2] = max(_curr_group[2], jun.y);
+					
+				jun.draw_group_object = _curr_group;
 			}
 			
 			var __vis = jun.isVisible();
@@ -2241,12 +2245,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hover;
 	}
 	
-	static drawJunctionGroups = function(_x, _y, _mx, _my, _s) {
-		var _scs = gpu_get_scissor();
-		gpu_set_scissor(_x, _y, w * _s, h * _s);
+	static drawJunctionGroups = function(_x, _y, _mx, _my, _s, _active, _crop = false, _alpha = .75) {
+		if(_crop) {
+			var _scs = gpu_get_scissor();
+			gpu_set_scissor(_x, _y, w * _s, h * _s);
+		}
+		
 		draw_set_circle_precision(64);
 		
-		var _js = 14 * _s;
+		var bc = COLORS._main_icon_dark;
+		var fc = COLORS._main_icon;
+	
+		var _js = 16 * _s;
 		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
 			var _gr  = inputDisplayGroup[i];
 			
@@ -2257,16 +2267,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _gy0 = _gr[1] - 1 - _js/2;
 			var _gy1 = _gr[2] - 1 + _js/2;
 			
-			_gr[3] = key_mod_press(CTRL) && point_in_rectangle(_mx, _my, _gx0, _gy0, _gx1, _gy1);
-				
-			draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .75);
-			draw_roundrect_ext(_gx0, _gy0, _gx1, _gy1, _js, _js, false);
-			draw_set_alpha(1);
+			var _gh = _gy1 - _gy0;
 			
-			draw_set_color(_gr[3]? CDEF.main_grey : CDEF.main_dark);
-			draw_roundrect_ext(_gx0, _gy0, _gx1, _gy1, _js, _js, true);
+			if(_active) _gr[3] = key_mod_press(SHIFT) && point_in_rectangle(_mx, _my, _gx0, _gy0, _gx1, _gy1);
+			
+			draw_sprite_stretched_ext(THEME.node_junction_group, 0, _gx0, _gy0,       _js, _js,           bc, _alpha);
+			draw_sprite_stretched_ext(THEME.node_junction_group, 1, _gx0, _gy0 + _js, _js, _gh - _js * 2, bc, _alpha);
+			draw_sprite_stretched_ext(THEME.node_junction_group, 2, _gx0, _gy1 - _js, _js, _js,           bc, _alpha);
+			
+			var _gc = _gr[3]? _gr[4] : fc;
+			draw_sprite_stretched_ext(THEME.node_junction_group, 3, _gx0, _gy0,       _js, _js,           _gc, _alpha);
+			draw_sprite_stretched_ext(THEME.node_junction_group, 4, _gx0, _gy0 + _js, _js, _gh - _js * 2, _gc, _alpha);
+			draw_sprite_stretched_ext(THEME.node_junction_group, 5, _gx0, _gy1 - _js, _js, _js,           _gc, _alpha);
 		}
-		gpu_set_scissor(_scs);
+		
+		if(_crop) gpu_set_scissor(_scs);
 	}
 	
 	static drawJunctionsFast = function(_x, _y, _mx, _my, _s) {
@@ -2647,20 +2662,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		BLEND_NORMAL
-	}
-	
-	static drawInputGroup = function(_x, _y, _mx, _my, _s) { 
-		var _js = 16 * _s;
-		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
-			var _gr  = inputDisplayGroup[i];
-			var _gx  = _gr[0] - 1;
-			var _gy0 = _gr[1] - 1;
-			var _gy1 = _gr[2] - 1;
-			
-			draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .9);
-				draw_roundrect_ext(_gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2, _js, _js, false);
-			draw_set_alpha(1);
-		}
 	}
 	
 	static drawPreviewBackground = undefined; // static drawPreviewBackground = function(_x, _y, _mx, _my, _s) {}

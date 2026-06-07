@@ -4,7 +4,7 @@
   "name":"sh_lovify",
   "parent":{
     "name":"lovify",
-    "path":"folders/nodes/data/misc/lovify.yy",
+    "path":"folders/nodes/data/misc/custom/lovify.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

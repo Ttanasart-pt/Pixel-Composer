@@ -1,23 +1,27 @@
 #region function calls
-	function panel_nodes_add_node()        { if(PANEL_NODES == noone) return; PANEL_NODES.add_node();        }
-	function panel_nodes_delete_selected() { if(PANEL_NODES == noone) return; PANEL_NODES.delete_selected(); }
-	function panel_nodes_delete_hovering() { if(PANEL_NODES == noone) return; PANEL_NODES.delete_hovering(); }
+	function panel_nodes_add_node()        { if(PANEL_NODES) PANEL_NODES.add_node();        }
+	function panel_nodes_delete_selected() { if(PANEL_NODES) PANEL_NODES.delete_selected(); }
+	function panel_nodes_delete_hovering() { if(PANEL_NODES) PANEL_NODES.delete_hovering(); }
 	
-	function panel_nodes_toggle_sidebar()  { if(PANEL_NODES == noone) return; PANEL_NODES.toggle_sidebar();  }
-	function panel_nodes_toggle_preview()  { if(PANEL_NODES == noone) return; PANEL_NODES.toggle_preview();  }
-	function panel_nodes_edit_sidebar()    { if(PANEL_NODES == noone) return; PANEL_NODES.edit_sidebar();    }
+	function panel_nodes_toggle_sidebar()  { if(PANEL_NODES) PANEL_NODES.toggle_sidebar();  }
+	function panel_nodes_toggle_preview()  { if(PANEL_NODES) PANEL_NODES.toggle_preview();  }
+	function panel_nodes_toggle_invert()   { if(PANEL_NODES) PANEL_NODES.toggle_invert();   }
+	function panel_nodes_edit_sidebar()    { if(PANEL_NODES) PANEL_NODES.edit_sidebar();    }
 	
 	function __fnInit_Nodes() {
+		var ct = "Nodes";
 		var n = MOD_KEY.none;
 		var a = MOD_KEY.alt;
 		
-		registerFunction("Nodes", "Add Node",        "",        n, panel_nodes_add_node        ).setMenu("nodes_add", THEME.add_20);
-		registerFunction("Nodes", "Delete Selected", vk_delete, n, panel_nodes_delete_selected ).setMenu("nodes_delete_select");
-		registerFunction("Nodes", "Delete Hovering", "",        n, panel_nodes_delete_hovering ).setMenu("nodes_delete_hovering");
+		registerFunction(ct, "Add Node",        "",        n, panel_nodes_add_node        ).setMenu("nodes_add", THEME.add_20);
+		registerFunction(ct, "Delete Selected", vk_delete, n, panel_nodes_delete_selected ).setMenu("nodes_delete_select");
+		registerFunction(ct, "Delete Hovering", "",        n, panel_nodes_delete_hovering ).setMenu("nodes_delete_hovering");
 		
-		registerFunction("Nodes", "Toggle Preview",  "", n, panel_nodes_toggle_preview  ).setMenu("nodes_toggle_preview");
-		registerFunction("Nodes", "Toggle Sidebar",  "", n, panel_nodes_toggle_sidebar  ).setMenu("nodes_toggle_sidebar");
-		registerFunction("Nodes", "Edit Sidebar",    "", n, panel_nodes_edit_sidebar    ).setMenu("nodes_edit_sidebar");
+		registerFunction(ct, "Toggle Preview",  "", n, panel_nodes_toggle_preview  ).setMenu("nodes_toggle_preview");
+		registerFunction(ct, "Invert Order",    "", n, panel_nodes_toggle_invert   ).setMenu("nodes_toggle_invert");
+		
+		registerFunction(ct, "Toggle Sidebar",  "", n, panel_nodes_toggle_sidebar  ).setMenu("nodes_toggle_sidebar");
+		registerFunction(ct, "Edit Sidebar",    "", n, panel_nodes_edit_sidebar    ).setMenu("nodes_edit_sidebar");
 		
 		registerFunction("Add Node", "Toggle Search Favorite",   "F", a, function() /*=>*/ { if(instance_exists(o_dialog_add_node)) o_dialog_add_node.toggleSearchFav();   });
 		registerFunction("Add Node", "Toggle Search Type",       "T", a, function() /*=>*/ { if(instance_exists(o_dialog_add_node)) o_dialog_add_node.toggleSearchType();  });
@@ -33,31 +37,44 @@ function Panel_Nodes() : PanelContent() constructor {
 	w           = ui(320);
 	h           = ui(480);
 	
-	NodeTreeSort(PROJECT);
+	#region data
+		NodeTreeSort(PROJECT);
+		
+		search_string = "";
+		tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); })
+						.setFont(f_p3).setAlign(fa_left).setAutoupdate()
+						.setBoxColor(COLORS._main_icon_light);
+						
+		draw_overlay_surface   = undefined;
+		draw_overlay_surface_x = undefined;
+		draw_overlay_surface_y = undefined;
+		draw_overlay_surface_s = undefined;
+	#endregion
 	
-	search_string = "";
-	tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); })
-					.setFont(f_p3).setAlign(fa_left).setAutoupdate()
-					.setBoxColor(COLORS._main_icon_light);
+	#region nodes
+		 node_hovering  = noone;
+		_node_hovering  = noone;
+		 item_hovering  = noone;
+		_item_hovering  = noone;
+	#endregion
 	
-	 node_hovering  = noone;
-	_node_hovering  = noone;
-	 item_hovering  = noone;
-	_item_hovering  = noone;
-	
-	side_show       = true;
-	side_scroll     = 0;
-	side_scroll_to  = 0;
-	side_scroll_max = 0;
-	show_preview    = false;
-	
-	node_selecting  = noone;
-	item_height     = ui(20);
+	#region sidebar
+		side_show       = true;
+		side_scroll     = 0;
+		side_scroll_to  = 0;
+		side_scroll_max = 0;
+		
+		inverse_order   = false;
+		
+		node_selecting  = noone;
+		item_height     = ui(20);
+	#endregion
 	
     global.menuItems_node_context_menu = [
     	"nodes_add", 
     	"nodes_delete_select", 
     	-1, 
+    	"nodes_toggle_invert",
     	"nodes_toggle_preview",
     	"nodes_toggle_sidebar", 
 	];
@@ -67,6 +84,7 @@ function Panel_Nodes() : PanelContent() constructor {
     	"nodes_delete_hovering",
     	"nodes_delete_select", 
     	-1,
+    	"nodes_toggle_invert",
     	"nodes_toggle_preview",
     	"nodes_toggle_sidebar", 
 	];
@@ -160,13 +178,12 @@ function Panel_Nodes() : PanelContent() constructor {
 			}
 			
 		} else {
-			if(_item.parent != noone && _item.parent.hovering) {
+			if(_item.parent != noone && _item.parent.hovering)
 				draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.section_hover, .2);
 				
-			} else if(_node_hovering != noone && _node_hovering == node) {
+			else if(_node_hovering != noone && _node_hovering == node)
 				draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.section_hover, .4);
 				
-			}
 		}
 		
 		var bw = ui(24);
@@ -184,13 +201,14 @@ function Panel_Nodes() : PanelContent() constructor {
 		var dy = _y + hg / 2;
 		
 		var tx = _x0 + hg + ui(8);
+		var sz = hg - ui(6);
 		
-		if(show_preview) {
+		if(PREFERENCES.nodes_panel_show_preview) {
 			var _prev = node.getGraphPreviewSurface();
 			if(is_surface(_prev)) {
 				var _sw = surface_get_width(_prev);
 				var _sh = surface_get_height(_prev);
-				var _ss = (hg - ui(8)) / max(_sw, _sh);
+				var _ss = sz / max(_sw, _sh);
 				
 				draw_surface_ext(_prev, dx - _sw * _ss / 2, dy - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
 				_draw = true;
@@ -199,7 +217,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		
 		var spr = node.getMetaSpr();
 		if(!_draw && spr) {
-			var _ss = (hg - ui(8)) / sprite_get_height(spr);
+			var _ss = sz / sprite_get_height(spr);
 			gpu_set_tex_filter(true);
 			draw_sprite_ext(spr, 1, dx, dy, _ss, _ss, 0, c_white, 1);
 			gpu_set_tex_filter(false);
@@ -225,7 +243,8 @@ function Panel_Nodes() : PanelContent() constructor {
 			var _xx0 = _stk? _x0 : _x0 + ui(8);
 			
 			for( var i = 0; i < _len; i++ ) {
-				var _hhg = drawNodeTree(_item.children[i], _xx0, _x1, _y, _m, !_stk);
+				var _ind = inverse_order? _len - i - 1 : i;
+				var _hhg = drawNodeTree(_item.children[_ind], _xx0, _x1, _y, _m, !_stk);
 				
 				_y += _hhg;
 				_h += _hhg;
@@ -235,7 +254,8 @@ function Panel_Nodes() : PanelContent() constructor {
 				var cc = merge_color(COLORS._main_icon, COLORS._main_icon_dark, .25);
 				
 				for( var i = 0; i < _len; i++ ) {
-					var _chd = _item.children[i];
+					var _ind = inverse_order? _len - i - 1 : i;
+					var _chd = _item.children[_ind];
 					var _cx0 = _x0 + ui(4);
 					var _cy0 = _y0 + bhg;
 					var _cx1 = _chd.x;
@@ -269,7 +289,8 @@ function Panel_Nodes() : PanelContent() constructor {
 		var focus = sc_nodes.active;
 		
 		for( var i = 0, n = array_length(_ch); i < n; i++ ) {
-			var _hhg = drawNodeTree(_ch[i], 0, sc_nodes.surface_w, _y, _m);
+			var _ind = inverse_order? n - i - 1 : i;
+			var _hhg = drawNodeTree(_ch[_ind], 0, sc_nodes.surface_w, _y, _m);
 			_h += _hhg;
 			_y += _hhg;
 		}
@@ -278,8 +299,8 @@ function Panel_Nodes() : PanelContent() constructor {
 			if(mouse_lpress(focus) && node_hovering == noone)
 			PANEL_GRAPH.nodes_selecting = [];
 			
-			if(key_mod_press(CTRL)) item_height = clamp(item_height + MOUSE_WHEEL * ui(4), ui(16), ui(128));
-			if(key_mod_double(SHIFT)) show_preview = !show_preview;
+			if(key_mod_press(CTRL))   item_height = clamp(item_height + MOUSE_WHEEL * ui(4), ui(16), ui(128));
+			if(key_mod_double(SHIFT)) PREFERENCES.nodes_panel_show_preview = !PREFERENCES.nodes_panel_show_preview;
 		}
 		
 		return _h + ui(16);
@@ -287,6 +308,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_overlay_surface = undefined;
 		
 		var px = padding;
 		var py = padding;
@@ -343,6 +365,16 @@ function Panel_Nodes() : PanelContent() constructor {
 		sc_nodes.setFocusHover(pFOCUS, pHOVER);
 		sc_nodes.drawOffset(px, py, mx, my);
 		
+		if(draw_overlay_surface) {
+			var surf = draw_overlay_surface;
+			var sx = px + draw_overlay_surface_x;
+			var sy = py + draw_overlay_surface_y;
+			var ss = draw_overlay_surface_s;
+			
+			draw_surface_ext(surf, sx, sy, ss, ss, 0, c_white, 1);
+		}
+		
+		// context menu
 		if(pHOVER && point_in_rectangle(mx, my, px - ui(8), py - ui(8), px + pw + ui(8), py + ph + ui(8))) {
 			if(mouse_rclick(pFOCUS)) {
 				node_selecting = node_hovering;
@@ -392,5 +424,6 @@ function Panel_Nodes() : PanelContent() constructor {
 	function toggle_sidebar() { side_show    = !side_show; }
 	function edit_sidebar()   { dialogPanelCall(new Panel_MenuItems_Editor("node_side_menu")); }
 	
-	function toggle_preview() { show_preview = !show_preview; }
+	function toggle_preview() { PREFERENCES.nodes_panel_show_preview  = !PREFERENCES.nodes_panel_show_preview; PREF_SAVE(); }
+	function toggle_invert()  { inverse_order = !inverse_order; }
 }

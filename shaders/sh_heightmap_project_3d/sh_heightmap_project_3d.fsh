@@ -294,6 +294,8 @@ uniform float distant;
 uniform float scale;
 uniform float heightScale;
 
+uniform vec2  depthRange;
+
 #region ////========== Transform ============
     mat3 rotateX(float dg) {
         float c = cos(radians(dg));
@@ -408,21 +410,32 @@ void main() {
         pos += mm * rs;
     }
 	
-	if (!hit) { gl_FragColor = vec4(0.); return; }
+	if (!hit) { 
+		gl_FragData[0] = vec4(0.); 
+		gl_FragData[1] = vec4(0.); 
+		gl_FragData[2] = vec4(0.); 
+		return; 
+	}
     
     vec3 fmini  = (pos - ro + 0.5 - 0.5 * vec3(rs)) * ri;
     float ft    = max(fmini.x, max(fmini.y, fmini.z));
     vec3 hitPos = (ro + rd * ft) * voxSize;
     vec3 samPos = hitPos * .5 + .5;
     
-    gl_FragColor = sampleTexture(texture, vec2(samPos.x, samPos.z));
+    gl_FragData[0] = sampleTexture(texture, vec2(samPos.x, samPos.z));
     
 	if (textureSide_use  == 1 && mm.z > 0.5 && (samPos.z <= voxSize/2. || samPos.z >= 1. - voxSize/2.)) 
-		gl_FragColor = sampleTexture(textureSide,  vec2(   samPos.x, samPos.y));
+		gl_FragData[0] = sampleTexture(textureSide,  vec2(   samPos.x, samPos.y));
 		
 	else if (textureFront_use == 1 && mm.x > 0.5 && (samPos.x <= voxSize/2. || samPos.x >= 1. - voxSize/2.)) 
-		gl_FragColor = sampleTexture(textureFront, vec2(1.-samPos.z, samPos.y));
+		gl_FragData[0] = sampleTexture(textureFront, vec2(1.-samPos.z, samPos.y));
     
     vec4 heightColor = gradientEval(1. - samPos.y);
-    gl_FragColor *= heightColor;
+    gl_FragData[0] *= heightColor;
+    
+    float depth = distance(eye, hitPos) / scale;
+    depth = (depth - depthRange.x) / (depthRange.y - depthRange.x);
+    
+    gl_FragData[1] = vec4(depth, depth, depth, 1.);
+	gl_FragData[2] = vec4(mm, 1.);
 }

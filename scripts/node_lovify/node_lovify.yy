@@ -6,7 +6,7 @@
   "name":"node_lovify",
   "parent":{
     "name":"lovify",
-    "path":"folders/nodes/data/misc/lovify.yy",
+    "path":"folders/nodes/data/misc/custom/lovify.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

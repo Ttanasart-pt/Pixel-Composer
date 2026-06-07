@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_http_request",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"network",
+    "path":"folders/nodes/data/misc/network.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

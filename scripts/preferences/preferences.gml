@@ -162,6 +162,8 @@
 			PREFERENCES.widget_draw_default               = true;
 			
 			PREFERENCES.workshop_run_profile_graph        = false;
+			
+			PREFERENCES.nodes_panel_show_preview          = false;
 		#endregion
 		
 		#region WIDGET

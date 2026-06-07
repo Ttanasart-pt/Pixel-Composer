@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_hlsl",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"custom",
+    "path":"folders/nodes/data/misc/custom.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

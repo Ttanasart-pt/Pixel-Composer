@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_layer_output",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"project",
+    "path":"folders/nodes/data/misc/project.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

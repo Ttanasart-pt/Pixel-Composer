@@ -6,7 +6,7 @@
   "name":"node_tunnel_out",
   "parent":{
     "name":"tunnel",
-    "path":"folders/nodes/data/misc/tunnel.yy",
+    "path":"folders/nodes/data/misc/flow/tunnel.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

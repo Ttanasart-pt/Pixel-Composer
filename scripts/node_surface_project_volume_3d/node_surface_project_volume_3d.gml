@@ -24,7 +24,7 @@ function Node_Surface_Project_Volume_3D(_x, _y, _group = noone) : Node_Processor
 	////- =Rendering
 	newInput(12, nodeValue_Color(    "Base Color",    ca_white  ));
 	newInput(16, nodeValue_Gradient( "Density Color", gra_white ));
-	newInput(14, nodeValue_Surface(  "Texture Side"             )).setDrawGroup(1);
+	newInput(14, nodeValue_Surface(  "Texture Side"             ));
 	newInput(13, nodeValue_Range(    "Level",           [0,1]   ));
 	newInput(15, nodeValue_Slider(   "Color Threshold", .5      ));
 	// 17

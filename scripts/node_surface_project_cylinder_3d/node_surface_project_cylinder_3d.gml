@@ -29,8 +29,8 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 	newInput(14, nodeValue_Range(    "Depth Range",   [0,1] ));
 	// 15
 	
-	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone ));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone )).setDrawGroup(10);
+	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone )).setDrawGroup(10);
 	newOutput( 2, nodeValue_Output("Normal Pass", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,

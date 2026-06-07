@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_frame",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"preview",
+    "path":"folders/nodes/data/misc/preview.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

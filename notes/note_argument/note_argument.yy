@@ -3,9 +3,9 @@
   "%Name":"note_argument",
   "name":"note_argument",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"project",
+    "path":"folders/nodes/data/misc/project.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

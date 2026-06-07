@@ -3,9 +3,9 @@
   "%Name":"note_condition",
   "name":"note_condition",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"flow",
+    "path":"folders/nodes/data/misc/flow.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

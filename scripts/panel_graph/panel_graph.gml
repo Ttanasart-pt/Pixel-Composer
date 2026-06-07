@@ -2038,9 +2038,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	if(is(_n, Node_Frame)) return;
 	        	
 	        	_n.active_draw_index = -1;
-	        	if(array_length(_n.inputDisplayGroup))
-	        		_n.drawInputGroup(__gr_x, __gr_y, __mx, __my, __gr_s);
+            	var _xx = __gr_x + _n.x * __gr_s;
+                var _yy = __gr_y + _n.y * __gr_s;
 	        	
+	        	if(!array_empty(_n.inputDisplayGroup)) 
+            		_n.drawJunctionGroups(_xx, _yy, __mx, __my, __gr_s, true, false, .6);
+		                		
 	        	if(_n.drawNodeBG != undefined && _n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s)) 
 	        		frame_hovering = _n; 
 	        });
@@ -2109,7 +2112,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         	var _ctx = getCurrentContext();
                         	PANEL_INSPECTOR.setInspecting(_ctx); 
                         	
-                        	if(_ctx || !array_empty(project.globalLayer_nodes)) PANEL_PREVIEW.setNodePreview(_ctx);
+                        	if(_ctx || !array_empty(project.globalLayer_nodes)) 
+                        		PANEL_PREVIEW.setNodePreview(_ctx);
                         }
                     	
                     } else if(cache_group_edit != noone) { // Edit Cache Group
@@ -2172,6 +2176,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 
                 nodes_select_anchor = _anc;
             
+            	// Context Menu
 	            if(mouse_rpress(_focus) && !key_mod_press(CTRL) && !key_mod_press(SHIFT)) {
 	                node_hover = node_hovering;    
 	                __junction_hovering = noone;
@@ -2193,7 +2198,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                            
 	                            var _to = value_focus.value_to[i];
 	                            var _lb = $"[{_to.node.display_name}] {_to.getName()}";
-	                            array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.juncTo.removeFrom(); }, THEME.cross, noone, noone, { juncTo: _to }));
+	                            array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.juncTo.removeFrom(); }, 
+	                            	THEME.cross, noone, noone, { juncTo: _to }));
 	                        }
 	                        
 	                        for( var i = 0, n = array_length(value_focus.value_to_loop); i < n; i++ ) {
@@ -2344,7 +2350,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		    	draw_surface(connection_surface_cc, 0, 0);
 		        if(__hov) drawJuncConnection(__hov.value_from, __hov, connection_param, 1 + (node_drag_add && node_dragging));
 		        
-		        if(value_dragging && connection_draw_mouse != noone && !key_mod_press(SHIFT)) {
+		        var _drawMouse = value_dragging && connection_draw_mouse != noone;
+		        if(_drawMouse) {
 		            var _cmx = connection_draw_mouse[0];
 		            var _cmy = connection_draw_mouse[1];
 		            var _cmt = connection_draw_target;
@@ -2410,7 +2417,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        node_surface_update = node_surface_update
 	        	|| !surface_valid(node_surface, w, h)
-	        	|| (node_hovering != noone && (node_hovering.reactive_on_hover || node_hovering.attributes.show_parameter));
+	        	|| (node_hovering != noone && (node_hovering.reactive_on_hover || node_hovering.attributes.show_parameter))
+	        	|| key_mod_press(SHIFT) || key_mod_up(SHIFT)
+	        	
 	        node_surface = surface_verify(node_surface, w, h);
 	        
 	        if(pHOVER)
@@ -2448,7 +2457,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			                
 		                } else {
 		                	if(!array_empty(_n.inputDisplayGroup)) 
-		                		_n.drawJunctionGroups(_xx, _yy, __mx, __my, __gr_s);
+		                		_n.drawJunctionGroups(_xx, _yy, __mx, __my, __gr_s, false, true, .75);
 			                _n.drawJunctions(_xx, _yy, __mx, __my, __gr_s);
 		                }
 		                
@@ -2728,21 +2737,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
         	array_sort(value_draggings, function(a,b) /*=>*/ {return a.y-b.y});
         	
-        } else if(key_mod_press(SHIFT)) {
-            array_push_unique(value_draggings, value_dragging);
-            var _typ = value_dragging.connect_type;
-            
-            if(value_focus && value_focus.connect_type == _typ && !array_exists(value_draggings, value_focus)) {
-                array_push(value_draggings, value_focus);
-                array_sort(value_draggings, function(a,b) /*=>*/ {return a.y-b.y});
-            }
-            
-            if(mouse_lrelease()) {
-                value_dragging        = noone;
-                connection_draw_mouse = noone;
-            }
-            
         } else {
+        	if(key_mod_press(SHIFT)) {
+	            array_push_unique(value_draggings, value_dragging);
+	            var _typ = value_dragging.connect_type;
+	            
+	            if(value_focus && value_focus.connect_type == _typ && !array_exists(value_draggings, value_focus)) {
+	                array_push(value_draggings, value_focus);
+	                array_sort(value_draggings, function(a,b) /*=>*/ {return a.y-b.y});
+	            }
+	        }
+	        
             var xx     = value_dragging.x;
             var yy     = value_dragging.y;
             var _mx    = mx;
@@ -2804,8 +2809,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             value_draggings = [];
             value_drag_from = noone;
             
+            if(key_mod_press(SHIFT) && value_focus.draw_group != undefined) {
+            	value_draggings = [];
+            	var _inpt = value_dragging.connect_type == CONNECT_TYPE.input;
+            	var _list = _inpt? value_dragging.node.inputDisplayList : value_dragging.node.outputDisplayList;
+            	
+            	for( var i = 0, n = array_length(_list); i < n; i++ ) {
+            		if(_list[i].draw_group == value_focus.draw_group)
+            			array_push(value_draggings, _list[i]);
+            	}
+            }
+            
             if(value_dragging.connect_type == CONNECT_TYPE.output) {
-                if(key_mod_press(CTRL)) {
+                if(key_mod_press(CTRL)) { // detach output
                     var _to = value_dragging.getJunctionTo();
                     
                     if(array_length(_to)) {

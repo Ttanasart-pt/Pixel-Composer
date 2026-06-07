@@ -398,6 +398,7 @@
     "node_junction_selecting":            { "path": "./node/s_node_junction_selecting.png",                 "s":  1, "x": 24, "y": 24 },
     "node_display_type":                  { "path": "./node/s_node_display_type.png",                       "s":  3, "x": 12, "y": 12 },
 
+    "node_junction_group":                { "path": "./node/s_node_junction_group.png",                     "s": 6, "x":  0, "y":  0  },
     "node_junction_group_bg":             { "path": "./node/s_node_junction_group_bg.png",                  "s": 1, "x":  0, "y":  0, "slice": 15 },
     "node_bg":                            { "path": "./node/s_node.png",                                    "s": 3, "x":  0, "y":  0, "slice":  7 },
     "node_frame_bg":                      { "path": "./node/s_node_frame.png",                              "s": 3, "x":  0, "y":  0, "slice":  7 },

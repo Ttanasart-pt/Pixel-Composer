@@ -143,16 +143,6 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		refreshDynamicInput();
 	}
 	
-	static step = function() {
-		var _inp = inputs[1];
-		if(_inp.value_from != noone) _inp.setType(_inp.value_from.type);
-			
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			var _inp = inputs[i + 1];
-			if(_inp.value_from != noone) _inp.setType(_inp.value_from.type);
-		}
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
 			var _src = getInputData(2);
@@ -160,11 +150,13 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _res = getInputData(1);
 			
-			inputs[0].setVisible(_src == 0);
+			inputs[0].setVisible(_src == 0, _src == 0);
 		#endregion
 		
 		var _typ = inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any;
 		var _sel = 0;
+		
+		inputs[1].setType(_typ);
 		
 		switch(_src) {
 			case 0 : _sel = _num;  break;
@@ -173,15 +165,19 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		input_selecting = inputs[1];
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+			var _inp = inputs[i + 1];
+			if(_inp.value_from != noone) _inp.setType(_inp.value_from.type);
+			
 			var _thr = getInputData(i + 0);
 			var _val = getInputData(i + 1);
+			
+			_inp.setName($"{_thr} value");
 			if(_thr == "") continue;
 			
 			if(_sel > _thr) {
 				input_selecting = inputs[i + 1];
 				_res = _val;
 				_typ = inputs[i + 1].value_from? inputs[i + 1].value_from.type : inputs[i + 1].type;
-				// break;
 			}
 		}
 		
@@ -211,6 +207,8 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var selAble = inputs[0].value_from == noone;
 		
 		for( var i = 1; i < array_length(inputs); i += data_length ) {
+			if(!inputs[i].visible) continue;
+			
 			var val = i == 1? "" : getInputData(i - 1);
 			var str = i == 1? "default" : string(getInputData(i - 1, ""));
 			if(str == "") continue;

@@ -3,9 +3,9 @@
   "%Name":"note_display_image",
   "name":"note_display_image",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"preview",
+    "path":"folders/nodes/data/misc/preview.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }
