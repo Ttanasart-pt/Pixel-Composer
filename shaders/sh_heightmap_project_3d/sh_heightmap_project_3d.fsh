@@ -368,11 +368,11 @@ void main() {
     	eye = vec3(uv * scale, sqrt(3.));
 	}
 	
-	eye -= position;
+	dir  = irotMatrix * dir;
+	dir  = normalize(dir);
 	
-	dir = irotMatrix * dir;
-	dir = normalize(dir);
-	eye = irotMatrix * eye;
+	eye  = irotMatrix * eye;
+	eye -= position;
 	
 	float size    = max(dimension.x, dimension.y);
 	float voxSize = 2.0 / size;

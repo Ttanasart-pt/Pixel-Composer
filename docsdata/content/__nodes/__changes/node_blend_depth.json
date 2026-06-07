@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.3.008",
+    "changes": [
+      {
+        "date": "2026-06-07T05:44:12.307Z",
+        "node": "Blend Depth",
+        "commit": "**Blend Depth**: Fix incorrect depth output."
+      }
+    ]
+  }
+]
