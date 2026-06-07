@@ -3257,8 +3257,8 @@ function Panel_Preview() : PanelContent() constructor {
 			var _node_ph = surface_get_height_safe(_node_prev);
 			
 			_ovs = render_2d_overlay_size / max(_node_pw, _node_ph);
-			_ovx = w - tool_side_draw_r * toolbar_width - ui(8) - _node_pw * _ovs;
-			_ovy = h - toolbar_height                   - ui(8) - _node_ph * _ovs;
+			_ovx = w - tool_side_draw_r * toolbar_width -                  ui(8) - _node_pw * _ovs;
+			_ovy = h - tool_side_draw_b * toolbar_width - toolbar_height - ui(8) - _node_ph * _ovs;
 			
 			var area_w = _node_pw * _ovs;
 			var area_h = _node_ph * _ovs;
