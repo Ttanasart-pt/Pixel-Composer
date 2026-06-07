@@ -3,12 +3,7 @@
     "version": "1.21.3.008",
     "changes": [
       {
-        "date": "2026-06-07T01:12:08.528Z",
-        "node": "",
-        "commit": "--custom 3d node"
-      },
-      {
-        "date": "2026-06-07T04:45:35.634Z",
+        "date": "2026-06-07T04:45:35.654Z",
         "node": "",
         "commit": "**Graph Panel] Add shift for selecting all junction in junction group. - [Graph Panel**: Improve junction group visibility."
       }
