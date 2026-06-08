@@ -377,6 +377,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		loopable         = true;
 		renderAll        = false;
+		
+		treeItem         = undefined;
 	#endregion
 	
 	#region ---- Timeline ------
@@ -1037,7 +1039,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _to = outputs[i].value_to;
 			
 			for( var j = 0, m = array_length(_to); j < m; j++ )
-				array_push(_nodes, _to[j].node);
+				if(_to[j].node.active) array_push(_nodes, _to[j].node);
 		}
 		
 		return array_unique(_nodes);

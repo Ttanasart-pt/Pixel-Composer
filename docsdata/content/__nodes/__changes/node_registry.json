@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.008",
+    "changes": [
+      {
+        "date": "2026-06-08T02:34:34.197Z",
+        "node": "",
+        "commit": "**VectorBox**: Add button for adding new vector to an vector array"
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

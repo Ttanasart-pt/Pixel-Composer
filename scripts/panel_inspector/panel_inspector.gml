@@ -772,6 +772,8 @@ function Panel_Inspector() : PanelContent() constructor {
     
     ////- DRAW NODE
     
+    __chainItemConnect = undefined;
+    
     static drawNodeProperties = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all, _blend = c_white) { 
     	if(!is(_inspecting, Node)) return 0;
     	
@@ -779,6 +781,140 @@ function Panel_Inspector() : PanelContent() constructor {
         var _focus  = pFOCUS || PANEL_GRAPH.pFOCUS;
         
     	var hh = 0;
+    	
+		var _tre = _inspecting.treeItem;
+    	if(PREFERENCES.inspector_show_node_chain && _tre != undefined && _tre.nodeChain != undefined) {
+    		var _cha = _tre.nodeChain;
+    		
+    		var _lbh = ui(22);
+    		var _amo = array_length(_cha);
+    		var _thh = _lbh * _amo;
+    		
+    		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, _w, _thh, COLORS._main_icon_dark, 1);
+    		draw_sprite_stretched_add(THEME.box_r5,     1, _x, _y, _w, _thh, c_white, .1);
+    		
+			var toInspect        = undefined;
+			var toInspectPreview = false;
+    		
+    		for( var i = 0; i < _amo; i++ ) {
+    			var _cx = _x + ui(4);
+    			var _cy = _y + i * _lbh;
+    			
+    			var _chainItem = _cha[i];
+    			var _chainNode = _chainItem.node;
+    			var _curr = _chainNode == _inspecting;
+    			
+    			var _prx = _cx;
+    			var _pry = _cy  + ui(2);
+    			var _prs = _lbh - ui(4);
+    			
+    			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + _lbh);
+    			
+    			if(_hov) draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x, _cy, _w, _lbh, COLORS.section_hover, .5);
+    			
+    			var _prev = _chainNode.getGraphPreviewSurface();
+				if(is_surface(_prev)) {
+					var _sw = surface_get_width(_prev);
+					var _sh = surface_get_height(_prev);
+					var _ss = _prs / max(_sw, _sh);
+					
+					draw_surface_ext(_prev, _prx + _prs/2 - _sw*_ss/2, _pry + _prs/2 - _sh*_ss/2, _ss, _ss, 0, c_white, 1);
+				}
+				
+				var _name = _chainNode.getDisplayName();
+				var  tc   = _curr? COLORS._main_text_accent : (_hov? COLORS._main_text : COLORS._main_text_sub);
+				
+				draw_set_text(f_p4, fa_left, fa_center, tc);
+				draw_text_add(_cx + _prs + ui(4), _cy + _lbh / 2, _name);
+				
+				if(_chainNode.active_index > -1) {
+					var _as = _prs;
+					var _ax = _x + _w - ui(2) - _as;
+					var _ay = _cy + _lbh / 2 - _as / 2;
+					
+					var _asp = THEME.circle_toggle_8;
+					var _asi = _chainNode.active_value;
+					var b = buttonInstant(THEME.button_hide, _ax, _ay, _as, _as, _m, _hover, _focus, "", _asp, _asi,, .8);
+					if(b) _hov = false;
+					if(b == 2) _chainNode.inputs[_chainNode.active_index].setValue(!_asi);
+				}
+				
+				if(_hov) {
+					if(mouse_lpress(_focus)) {
+						toInspect = _chainNode;
+						toInspectPreview = DOUBLE_CLICK;
+					}
+					
+					if(mouse_rpress(_focus)) {
+						__chainItemConnect = _chainItem;
+						
+						var _menu = [
+							menuItem(__txt("Add Node..."), function(_insp) /*=>*/ {
+								var dx  = mouse_mx + 8;
+								var dy  = mouse_my + 8;
+								var dia = instance_create_depth(dx, dy, 0, o_dialog_add_node, { context: _insp.group });
+								
+								if(dia) dia.buildCallback = function(newNode) /*=>*/ {
+									var _node = __chainItemConnect.node;
+									if(!is(_node, Node)) return;
+									
+									newNode.x = _node.x + _node.w + 32;
+									newNode.y = _node.y;
+									
+									var _inp = newNode.getInput();
+									var _out = _node.outputs[0];
+									_inp.setFrom(_out);
+									
+									var _par = __chainItemConnect.parent;
+									if(_par != noone) {
+										var _pnode = _par.node;
+										var _otp   = newNode.getOutput();
+										
+										if(_otp)
+										for( var i = 0, n = array_length(_pnode.inputs); i < n; i++ ) {
+											var _inpp = _pnode.inputs[i];
+											if(_inpp.value_from != noone) {
+												_inpp.setFrom(_otp);
+												break;
+											}
+										}
+									}
+									
+									panelFocusNode(newNode, false);
+								}
+								
+							}).setParam(_inspecting), 
+							
+							menuItem(__txt("Delete Node"), function(_insp) /*=>*/ { 
+								var _node = __chainItemConnect.node;
+								if(!is(_node, Node)) return;
+								
+								_node.destroy(true); 
+								if(_node == _insp) {
+									var _newInsp = noone;
+									
+									if(_newInsp == noone && __chainItemConnect.parent != noone)
+										_newInsp = __chainItemConnect.parent.node;
+									
+									var _child = array_safe_get(__chainItemConnect.children, 0);
+									if(_newInsp == noone && is(_child, NodeTreeItem))
+										_newInsp = _child.node;
+									
+									if(_newInsp) panelFocusNode(_newInsp);
+								}
+								
+							}, THEME.cross).setParam(_inspecting),
+						];
+						
+						menuCall("inspector_node_chain_node", _menu);
+					}
+				}
+    		}
+    		
+    		if(toInspect) run_in(1, function(i,p) /*=>*/ {return panelFocusNode(i,p)}, [toInspect, toInspectPreview]);
+    		
+    		hh += _thh + ui(4);
+    	}
     	
     	if(is(_inspecting.inline_context, Node_Collection_Inline)) {
     		var _inl = _inspecting.inline_context;

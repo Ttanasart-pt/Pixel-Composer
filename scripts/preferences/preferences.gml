@@ -127,6 +127,7 @@
 		
 			PREFERENCES.inspector_focus_on_double_click   = true;
 			PREFERENCES.inspector_view_default            = INSP_VIEW_MODE.compact;
+			PREFERENCES.inspector_show_node_chain         = false;
 			
 			PREFERENCES.node_show_render_status           = false;
 			PREFERENCES.node_show_time                    = true;

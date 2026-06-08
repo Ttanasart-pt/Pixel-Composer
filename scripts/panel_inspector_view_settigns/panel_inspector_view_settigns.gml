@@ -15,6 +15,16 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 			"inspector_view_default",
 		),
 		
+		new __Panel_Linear_Setting_Item(
+			__txt("Node Chain"),
+			new checkBox(function() /*=>*/ { PREFERENCES.inspector_show_node_chain = !PREFERENCES.inspector_show_node_chain; }),
+			function( ) /*=>*/   {return PREFERENCES.inspector_show_node_chain},
+			function(v) /*=>*/ { PREFERENCES.inspector_show_node_chain = v; },
+			PREFERENCES.inspector_show_node_chain,
+			noone,
+			"inspector_show_node_chain",
+		),
+		
 		-1,
 		
 		new __Panel_Linear_Setting_Item(

@@ -22,9 +22,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	scaleDrag_ss = 0;
 	
 	array_display_max = 32;
-	array_editing  = false;
-	array_focusing = undefined;
-	array_hovering = undefined;
+	array_editing     = false;
+	array_focusing    = undefined;
+	array_hovering    = undefined;
+	array_adding      = false;
 	
 	tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
 	
@@ -109,7 +110,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	static fetchHeight = function(params) { 
 		var d = array_get_depth(params.data);
-		return d == 2? (params.h + ui(2)) * min(array_display_max, array_length(params.data)) - ui(2) : params.h;
+		return d == 2? (params.h + ui(2)) * (min(array_display_max, array_length(params.data)) + 1) - ui(2) : params.h;
 	}
 	
 	static drawParam   = function(params) {
@@ -134,7 +135,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		if(d == 2) {
 			array_editing = true;
 			var _len = min(array_display_max, array_length(_data));
-			h = _len * (_h + ui(2)) - ui(2);
+			h = (_len + 1) * (_h + ui(2)) - ui(2);
 			
 			var toDel = undefined;
 			var bs = min(_h, ui(24));
@@ -191,6 +192,21 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				array_delete(_data, toDel, 1);
 				if(array_length(_data) == 1) 
 					_data = _data[0];
+				onModify(_data, setValueForceUpdate);
+			}
+			
+			// array_adding
+			var _yy = _y + _len * (_h + ui(2));
+			var hv = hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _h);
+			
+			if(hv) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _yy, _w, _h, boxColor, .5 + .5 * interactable);
+			
+			draw_sprite_ui_uniform(THEME.add_16, 0, _x + _w - bs / 2, _yy + _h / 2, 1, COLORS._main_value_positive);
+			draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
+			draw_text_add(_x + _w - bs - ui(4), _yy + _h / 2, __txt("Add Vector"));
+			
+			if(hv && mouse_lpress(active)) {
+				array_push(_data, array_clone(array_last(_data)));
 				onModify(_data, setValueForceUpdate);
 			}
 			

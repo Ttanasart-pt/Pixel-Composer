@@ -2702,7 +2702,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static drawJunction = function(_s, _mx, _my, _aa = 1) { 
-		var _hov = hover_in_graph;
+		var _hov = hover_in_graph || (draw_group_object != undefined && draw_group_object[3]);
 		_s /= 2 * THEME_SCALE;
 		
 		if(custom_icon != undefined) {

@@ -6,6 +6,11 @@
         "date": "2026-06-07T04:45:35.660Z",
         "node": "",
         "commit": "**Graph Panel] Add shift for selecting all junction in junction group. - [Graph Panel**: Improve junction group visibility."
+      },
+      {
+        "date": "2026-06-08T02:34:34.203Z",
+        "node": "",
+        "commit": "**VectorBox**: Add button for adding new vector to an vector array"
       }
     ]
   },

@@ -499,9 +499,12 @@ enum RENDER_TYPE {
 		x = 0;
 		y = 0;
 		
-		node     = _node;
-		children = [];
-		parent   = noone;
+		node      = _node;
+		parent    = noone;
+		children  = [];
+		childAmo  = 0;
+		nodeChain = undefined;
+		
 		height   = 1;
 		
 		hovering = false;
@@ -509,24 +512,35 @@ enum RENDER_TYPE {
 		expanded = true;
 		
 		if(node != noone) {
+			node.treeItem = self;
 			var _fr = node.getNodeFrom();
 			for( var i = 0, n = array_length(_fr); i < n; i++ ) {
-				children[i] = new NodeTreeItem(_fr[i]);
-				children[i].parent = self;
+				if(!_fr[i].active) continue;
+				
+				var _tr = new NodeTreeItem(_fr[i]);
+				    _tr.parent = self;
+				    
+				array_push(children, _tr);
 			}
 		}
 		
 		static pokeHeight = function() { return array_length(children) == 1? children[0] : noone; }
 		
 		static setHeight = function() {
-			var _len = array_length(children);
-			if(_len == 0) return;
+			childAmo  = array_length(children);
+			nodeChain = undefined;
 			
-			if(_len == 1) {
+			if(childAmo == 0) return;
+			
+			if(childAmo == 1) {
 				var hh = 0;
 				var lh, ch = self;
+				nodeChain = [];
 				
 				do {
+					ch.nodeChain = nodeChain;
+					array_push(nodeChain, ch);
+					
 					lh = ch;
 					ch = ch.pokeHeight();
 					hh++;
@@ -552,13 +566,15 @@ enum RENDER_TYPE {
 		}
 	}
 	
-	function NodeTreeSort(_project = PROJECT, _nlist = _project.nodes) {
+	function NodeTreeSort(_project = PROJECT, _nlist = _project.nodes) { 
 		var roots = [];
 		var tree  = [];
 		
 		for( var i = 0, n = array_length(_nlist); i < n; i++ ) {
 			var _node = _nlist[i];
+			
 			if(is(_node, Node_Frame)) continue;
+			if(!_node.active)         continue;
 			
 			if(is(_node, Node_Collection)) 
 				_node.nodeTree = NodeTreeSort(_project, _node.nodes);
@@ -567,14 +583,14 @@ enum RENDER_TYPE {
 				array_push(tree, new NodeTreeItem(_node));
 		}
 		
-		array_foreach(tree, function(t) /*=>*/ {return t.setHeight()});
+		array_foreach(tree, function(t,i) /*=>*/ {return t.setHeight()});
 		
 		var _tree = new NodeTreeItem();
 		    _tree.children = tree;
 		   
 		if(_nlist == _project.nodes)
 			_project.nodeTree = _tree;
-			
+		
 		return _tree;
 	}
 #endregion

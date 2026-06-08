@@ -278,7 +278,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			}
 		}
 		
-		if(_bg) draw_sprite_stretched_add(THEME.box_r5,     1, _x0, _y0, _w, bhg, c_white, .1);
+		if(_bg) draw_sprite_stretched_add(THEME.box_r5, 1, _x0, _y0, _w, bhg, c_white, .1);
 		
 		return _h;
 	}

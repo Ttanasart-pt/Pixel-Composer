@@ -666,11 +666,12 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 
 function nodeDestroy(_node, _merge = false) { _node.destroy(_merge); }
 
-function panelFocusNode(_node = noone) {
+function panelFocusNode(_node = noone, _preview = true) {
 	PANEL_GRAPH.nodes_selecting = _node == noone? [] : [ _node ];
 	GraphRefresh();
 	
-	PANEL_PREVIEW.setNodePreview(_node);
+	if(_preview) 
+		PANEL_PREVIEW.setNodePreview(_node);
 	PANEL_INSPECTOR.setInspecting(_node);
 }
 
