@@ -273,17 +273,17 @@ void main() {
 		}
 		
 	} else {
-		vec4 blendBord   = mix(closetColor, borderColor, bld);
-		     blendBord.a = _aa;
-		     
 		if(side == 0) {
-			blendBord.a  *= baseColor.a;
-			baseColor.rgb = mix(baseColor.rgb, blendBord.rgb, blendBord.a);
-			
-			resultColor   = baseColor;
+			vec4 blendBord   = mix(baseColor, borderColor, bld);
+		         blendBord.a = baseColor.a;
+		    
+			resultColor   = blendBord;
 			resultOutline = blendBord;
 			
 		} else {
+			vec4 blendBord   = mix(closetColor, borderColor, bld);
+		         blendBord.a = _aa;
+		    
 			resultColor    = blendBord;
 			resultOutline  = blendBord;
 		}

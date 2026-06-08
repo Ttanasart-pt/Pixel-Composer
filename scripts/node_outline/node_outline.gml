@@ -99,22 +99,22 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var hh   = surface_get_height_safe(surf);
 		var samp = getAttribute("oversample");
 		
-		surface_set_shader(_outData, sh_outline);
-			shader_set_f("dimension",       ww, hh);
-			shader_set_f_map("borderSize",  _data[1], _data[15], inputs[1]);
-			shader_set_f_map("borderStart", _data[8], _data[17], inputs[8]);
-			shader_set_f_map("blend_alpha", _data[4], _data[16], inputs[4]);
-			shader_set_i("filter",          attributes.filter);
+		surface_set_shader(_outData, sh_outline );
+			shader_set_f( "dimension",   ww, hh );
+			shader_set_m( "borderSize",  _data[1], _data[15], inputs[1] );
+			shader_set_m( "borderStart", _data[8], _data[17], inputs[8] );
+			shader_set_m( "blend_alpha", _data[4], _data[16], inputs[4] );
+			shader_set_i( "filter",      attributes.filter );
 			
-			shader_set_i("highRes",         hres);
-			shader_set_c("borderColor",     colr);
-			shader_set_i("profile",         prof);
-			shader_set_i("side",            side);
-			shader_set_i("is_aa",           alis);
-			shader_set_i("is_blend",        blnd);
-			shader_set_i("sampleMode",      samp);
-			shader_set_i("crop_border",     crop);
-			shader_set_f("alphaThers",      thrs);
+			shader_set_i( "highRes",     hres );
+			shader_set_c( "borderColor", colr );
+			shader_set_i( "profile",     prof );
+			shader_set_i( "side",        side );
+			shader_set_i( "is_aa",       alis );
+			shader_set_i( "is_blend",    blnd );
+			shader_set_i( "sampleMode",  samp );
+			shader_set_i( "crop_border", crop );
+			shader_set_f( "alphaThers",  thrs );
 			
 			draw_surface_safe(surf);
 		surface_reset_shader();
