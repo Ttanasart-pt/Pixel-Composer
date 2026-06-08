@@ -6832,7 +6832,7 @@
 <table class = "summary-table">
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_blend_depth.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Blend Depth</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Blend_Depth</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="/nodes/array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><div class="vertical"></div><a href="#">Node_Blend_Depth</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
-<tr>
+<tr><th colspan="2" class="summary-topic junction-separator"><p>Surface 1</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Surface 1</p></td>
             </tr><tr>
@@ -6841,7 +6841,19 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Depth Range 1</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Transform</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
+                <td><p>Position 1</p></td>
             </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8fde5d">anchor</p></td>
+                <td><p>Anchor 1</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8fde5d">rot</p></td>
+                <td><p>Rotation 1</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
+                <td><p>Scale 1</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Surface 2</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Surface 2</p></td>
             </tr><tr>
@@ -6850,6 +6862,18 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Depth Range 2</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Transform</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
+                <td><p>Position 2</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8fde5d">anchor</p></td>
+                <td><p>Anchor 2</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8fde5d">rot</p></td>
+                <td><p>Rotation 2</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
+                <td><p>Scale 2</p></td>
             </tr>
 <tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
@@ -6869,7 +6893,9 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_blend_depth/node_blend_depth-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-64,\"y\":112,\"inputs\":[{\"linked\":true},{},{\"r\":{\"d\":\"Ellipse\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{\"r\":{\"d\":4284606462},\"m\":1},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"r\":{\"d\":0.24407581986066718},\"m\":1},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamedManual\":true,\"renamed\":true,\"id\":\"gA8DQn118627vqclEK55Os8nv2XQBkGR\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape43401\",\"type\":\"Node_Shape\"},{\"x\":96,\"y\":-64,\"inputs\":[{\"from_node\":\"gA8DPn058196WMgw8TOJfzAQh26eKJ81\",\"from_index\":1},{\"r\":{\"d\":270},\"m\":1},{\"unit\":1,\"r\":{\"d\":0.10125692647780288},\"m\":1},{\"r\":{\"d\":\"{\\"keys\\":[{\\"value\\":4282943806.0,\\"time\\":0.0}],\\"type\\":0}\"},\"m\":1},{},{},{},{},{\"unit\":1},{},{\"linked\":false},{},{},{},{},{\"v\":1},{}],\"outputs\":[{},{}],\"renamed\":true,\"id\":\"gA8DQJ088479YpwNAOpEzxQIi1dRYRHK\",\"version\":120076,\"attriTool\":{},\"name\":\"2D Extrude\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"2D_Extrude24554\",\"type\":\"Node_2D_Extrude\"},{\"x\":-64,\"y\":-64,\"inputs\":[{\"from_node\":\"gA8DPg051521a1vFnXPjFWWfh3OtZdi1\",\"from_index\":0},{\"r\":{\"d\":8},\"m\":1},{\"r\":{\"d\":4283287395},\"m\":1},{},{},{\"r\":{\"d\":0},\"m\":1},{},{},{},{},{},{},{},{},{},{\"v\":0},{\"v\":0},{\"v\":0},{},{},{}],\"outputs\":[{},{}],\"renamed\":true,\"id\":\"gA8DPn058196WMgw8TOJfzAQh26eKJ81\",\"version\":120076,\"attri\":{\"filter\":[1,1,1,1,1,1,1,1,1]},\"attriTool\":{},\"name\":\"Outline\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Outline54513\",\"type\":\"Node_Outline\"},{\"x\":-224,\"y\":-64,\"inputs\":[{\"linked\":true},{},{\"r\":{\"d\":\"Rectangle\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"r\":{\"d\":0.57582936141885555},\"m\":1},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamed\":true,\"id\":\"gA8DPg051521a1vFnXPjFWWfh3OtZdi1\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape43401\",\"type\":\"Node_Shape\"},{\"x\":96,\"y\":112,\"inputs\":[{\"from_node\":\"gA8DQn118627vqclEK55Os8nv2XQBkGR\",\"from_index\":0},{\"r\":{\"d\":270},\"m\":1},{\"unit\":1,\"r\":{\"d\":0.66925999999999997},\"m\":1},{\"r\":{\"d\":\"{\\"keys\\":[{\\"value\\":4281642750.0,\\"time\\":0.0}],\\"type\\":0.0}\"},\"m\":1},{},{},{},{},{\"unit\":1,\"r\":{\"d\":-0.48999999999999999},\"m\":1},{},{\"linked\":false},{},{},{},{},{\"v\":1},{}],\"outputs\":[{},{}],\"renamedManual\":true,\"renamed\":true,\"id\":\"gA8DQt1243516YAbC3PFP1tpuX33ggqz\",\"version\":120076,\"attriTool\":{},\"name\":\"2D Extrude\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"2D_Extrude24554\",\"type\":\"Node_2D_Extrude\"},{\"x\":272,\"y\":-16,\"inputs\":[{\"from_node\":\"gA8DQJ088479YpwNAOpEzxQIi1dRYRHK\",\"from_index\":0},{\"from_node\":\"gA8DQJ088479YpwNAOpEzxQIi1dRYRHK\",\"from_index\":1},{\"from_node\":\"gA8DQt1243516YAbC3PFP1tpuX33ggqz\",\"from_index\":0},{\"from_node\":\"gA8DQt1243516YAbC3PFP1tpuX33ggqz\",\"from_index\":1},{\"r\":{\"d\":[0,0.5]},\"m\":1,\"linked\":false},{\"r\":{\"d\":[-0.52400000000000002,1]},\"m\":1,\"linked\":false}],\"outputs\":[{},{}],\"renamed\":true,\"id\":\"gA8DQj1146262eX8RUVR4aXWBHbkpyTF\",\"version\":120076,\"attriTool\":{},\"name\":\"Blend Depth\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Blend_Depth56395\",\"type\":\"Node_Blend_Depth\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_blend_depth/node_blend_depth.gml">/scripts/node_blend_depth/node_blend_depth.gml</a></li><li><span>Shader [sh_blend_depth]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_blend_depth/sh_blend_depth.fsh">/shaders/sh_blend_depth/sh_blend_depth.fsh</a></li></ul>
+</button><br>
+<br><h2 class="nosidebar">Commit History</h2><br>
+<table class="change-table"><tr><th>1.21.3.008</th></tr><tr><td>**Blend Depth**: Fix incorrect depth output.</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_blend_depth/node_blend_depth.gml">/scripts/node_blend_depth/node_blend_depth.gml</a></li><li><span>Shader [sh_blend_depth]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_blend_depth/sh_blend_depth.fsh">/shaders/sh_blend_depth/sh_blend_depth.fsh</a></li></ul>
         </div>
     </div>
 
