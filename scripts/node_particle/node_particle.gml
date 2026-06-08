@@ -37,7 +37,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(30, nodeValue_Surface(  "Distribution Map"                ));
 	newInput(55, nodeValue_PathNode( "Spawn Path"                      ));
 	newInput(62, nodeValue_Vector(   "Spawn Data"                      )).setArrayDepth(1).setTooltip("Array of vec2 points to spawn particles at.");
-	newInput(24, nodeValue_EButton(  "Distribution",     1             )).setChoices([ "Uniform", "Random" ]);
+	newInput(24, nodeValue_EButton(  "Distribution",     1             )).setChoices([ "Uniform", "Random", "Poisson" ]);
+	newInput(79, nodeValue_Float(    "Distance",         8            )).setValidator(VV_min(0));
 	newInput(52, nodeValue_Float(    "Uniform Period",   4             ));
 	
 	////- =Movement
@@ -130,7 +131,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
-	//input 79
+	//input 80
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput( 1, nodeValue_Output( "Data",        VALUE_TYPE.particle, []    ));
@@ -179,7 +180,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		[ "Spawn",           true ], 
 			[ "/Spawning",  false ], 27, 16, 44,  1, 51,  2,
 			[ "/Lifespan",  false ],  5, 
-			[ "/Source",    false ],  4,  3, 30, 55, 62, 24, 52, 
+			[ "/Source",    false ],  4,  3, 30, 55, 62, 24, 79, 52, 
 			
 		[ "Movement",        true ], 18, 60, 
 			[ "/Direction", false ], 64,  6, 29, 53, 
@@ -257,6 +258,9 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		curve_alpha    = noone;
 		curve_path_div = noone;
 		dist_map_cache = [];
+		
+		poisson_cache      = [];
+		poisson_cache_amo  = 0;
 		
 		custom_parameter_names       = [];
 		custom_parameter_curves_view = {};
@@ -446,9 +450,16 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						part.atlas = _spr;
 						
 					} else if(_distrib < 2) {
-						area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period, undefined, __p);
-						xx = __p[0];
-						yy = __p[1];
+						if(_distrib == 0 && _scatter == 2 && poisson_cache_amo > 0) {
+							var _poiPos = poisson_cache[spawn_total % poisson_cache_amo];
+							xx = _poiPos[0];
+							yy = _poiPos[1];
+							
+						} else {
+							area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period, undefined, __p);
+							xx = __p[0];
+							yy = __p[1];
+						}
 						
 					} else if(_distrib == 2) {
 						var sp = array_safe_get_fast(_posDist, i);
@@ -648,11 +659,11 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			switch(_type) {
 				case PARTICLE_RENDER_TYPE.surface : 
 					shader_set_interpolation(_outSurf);
-					array_foreach(parts, function(p,i) /*=>*/ { if(p.active) p.draw(__exact, __dimw, __dimh); });
+					array_foreach(parts, function(p,i) /*=>*/ { if(p.active) p.draw(__exact, __dimw, __dimh); return true; });
 					break;
 					
 				case PARTICLE_RENDER_TYPE.line : 
-					array_foreach(parts, function(p,i) /*=>*/ { p.line_draw = __llife; p.drawLine(__exact, __dimw, __dimh); });
+					array_foreach(parts, function(p,i) /*=>*/ { p.line_draw = __llife; p.drawLine(__exact, __dimw, __dimh); return true; });
 					break;
 			}
 			
@@ -717,6 +728,15 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					custom_parameter_map[$ _n] = new curveMap(attributes.parameter_curves[$ _n], TOTAL_FRAMES);
 			}
 			
+			var _spawn_area = getInputData( 3);
+			var _scatt      = getInputData(24);
+			var poisDist    = getInputData(79);
+			if(_scatt == 2) {
+				poisson_cache = area_get_random_point_poisson_c(_spawn_area, poisDist, seed);
+				random_set_seed(seed);
+				poisson_cache = array_shuffle(poisson_cache);
+			}
+			poisson_cache_amo = array_length(poisson_cache);
 		#endregion
 	}
 	
@@ -767,6 +787,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			inputs[ 9].setVisible(_rotTyp == 0);
 			inputs[69].setVisible(_rotTyp != 0);
+			
+			inputs[79].setVisible(_scatt == 2);
 			
 			inputs[1].setVisible(_spwTyp < 2);
 			     if(_spwTyp == 0) inputs[1].name = "Spawn Delay";

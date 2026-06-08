@@ -6,6 +6,11 @@
         "date": "2026-06-08T05:43:34.800Z",
         "node": "Particle",
         "commit": "**Particle**: Add Sort Y option."
+      },
+      {
+        "date": "2026-06-08T05:59:45.739Z",
+        "node": "Particle",
+        "commit": "**Particle**: Add Poisson distribution for area inside spawn source."
       }
     ]
   },
