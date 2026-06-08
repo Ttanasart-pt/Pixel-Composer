@@ -434,7 +434,6 @@ void main() {
 	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.) {
 		vec2 suv = fract(uv * uvScale - uvPosition);
-		
 		gl_FragColor = texture2Dintp( gm_BaseTexture, suv );
 		
 	} else discard;

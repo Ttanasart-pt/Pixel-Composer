@@ -80,12 +80,13 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(56, nodeValue_Surface(   "Sample Surface" ));
 	
 	////- =Render
-	newInput(77, nodeValue_Bool(    "Render",         true ));
+	newInput(77, nodeValue_Bool(    "Render",         true  ));
 	newInput(75, nodeValue_EButton( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ] ));
-	newInput(76, nodeValue_Int(     "Line Life",      4 ));
-	newInput(21, nodeValue_Bool(    "Loop",           true ));
+	newInput(76, nodeValue_Int(     "Line Life",      4     ));
+	newInput(21, nodeValue_Bool(    "Loop",           true  ));
 	newInput(72, nodeValue_Bool(    "Round Position", true, "Round position to the closest integer value to avoid jittering." ));
 	newInput(73, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
+	newInput(78, nodeValue_Bool(    "Sort Y",         false ));
 	
 	////- =Path
 	newInput(45, nodeValue_Bool(       "Follow Path",        false                    ));
@@ -129,7 +130,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
-	//input 78
+	//input 79
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput( 1, nodeValue_Output( "Data",        VALUE_TYPE.particle, []    ));
@@ -192,7 +193,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		[ "Color",           true ], 28, 50, 12, 13, 14, 
 			[ "/Sampler",    true ], 56, 
 		
-		[ "Render",      true, 77 ], 75, 76, 21, 72, 73,
+		[ "Render",      true, 77 ], 75, 76, 21, 72, 73, 78, 
 		
 		__inspc(ui(6), true, false, ui(3)), 
 		
@@ -616,6 +617,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _type  = inputs[75].getValue(_time);
 		var _llife = inputs[76].getValue(_time);
 		
+		var _sortY = inputs[78].getValue(_time);
+		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg);
 		var _outSurf = surface_create_valid(_dim[0], _dim[1], attrDepth());
 		
@@ -639,6 +642,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			__exact = _exact;
 			__dimw  = _dim[0];
 			__dimh  = _dim[1];
+			
+			if(_sortY) array_sort(parts, function(a1, a2) /*=>*/ {return sign(a1.y - a2.y)});
 			
 			switch(_type) {
 				case PARTICLE_RENDER_TYPE.surface : 
