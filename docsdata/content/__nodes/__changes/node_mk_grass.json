@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.008",
+    "changes": [
+      {
+        "date": "2026-06-08T08:38:47.555Z",
+        "node": "",
+        "commit": "**3D Material**: Add CleanEdge interpolation."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.003",
     "changes": [
       {

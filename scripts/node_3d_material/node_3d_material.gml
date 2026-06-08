@@ -4,7 +4,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Texture
 	newInput( 0, nodeValue_Surface( "Texture"              )).setVisible(true, true);
-	newInput( 8, nodeValue_Bool(    "Anti Aliasing", false ));
+	newInput( 8, nodeValue_EScroll( "Interpolation", 0, [ "Pixel", "Bilinear", "CleanEdge" ] ));
 	newInput( 9, nodeValue_Vec2(    "Scale",         [1,1] ));
 	newInput(10, nodeValue_Vec2(    "Shift",         [0,0] ));
 	
@@ -28,9 +28,9 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(0, nodeValue_Output("Material", VALUE_TYPE.d3Material, noone));
 	
 	input_display_list = [ 
-		[ "Texture",    false ], 0, 8, 9, 10, 
-		[ "Properties", false ], 11, /**/ 1, 2, 3, 4, 15, /**/ 12, 13, 7, 14, 
-		[ "Normal",     false ], 5, 6,
+		[ "Texture",    false ],  0,  8,  9, 10, 
+		[ "Properties", false ], 11, /**/  1,  2,  3,  4, 15, /**/ 12, 13,  7, 14, 
+		[ "Normal",     false ],  5,  6,
 	];
 	
 	////- Nodes
@@ -39,23 +39,23 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
-			var _surf = _data[ 0];
-			var _aa   = _data[ 8];
-			var _scal = _data[ 9];
-			var _shft = _data[10];
+			var _surf   = _data[ 0];
+			var _filter = _data[ 8];
+			var _scal   = _data[ 9];
+			var _shft   = _data[10];
 			
-			var _shad = _data[11]; if(_shad == 0) _shad = project.attributes.shader; else _shad--;
-			var _diff = _data[ 1];
-			var _spec = _data[ 2];
-			var _shin = _data[ 3];
-			var _metl = _data[ 4];
-			var _refl = _data[15];
+			var _shad   = _data[11]; if(_shad == 0) _shad = project.attributes.shader; else _shad--;
+			var _diff   = _data[ 1];
+			var _spec   = _data[ 2];
+			var _shin   = _data[ 3];
+			var _metl   = _data[ 4];
+			var _refl   = _data[15];
 			
-			var _mett = _data[12];
-			var _roug = _data[ 7];
+			var _mett   = _data[12];
+			var _roug   = _data[ 7];
 			
-			var _nor  = _data[ 5];
-			var _norS = _data[ 6];
+			var _nor    = _data[ 5];
+			var _norS   = _data[ 6];
 			
 			inputs[ 1].setVisible(_shad == 0);
 			inputs[ 2].setVisible(_shad == 0);
@@ -75,7 +75,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _mat = new __d3dMaterial(_surf);
 		_mat.texScale   = _scal;
 		_mat.texShift   = _shft;
-		_mat.texFilter  = _aa;
+		_mat.texFilter  = _filter;
 		
 		_mat.diffuse    = _diff;
 		_mat.specular   = _spec;

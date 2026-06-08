@@ -3,7 +3,7 @@ function __d3dMaterial(s = noone) constructor {
 	
 	texScale  = [ 1, 1 ];
 	texShift  = [ 0, 0 ];
-	texFilter = false;
+	texFilter = 0;
 	
 	diffuse    = 1;
 	specular   = 0;
@@ -33,9 +33,11 @@ function __d3dMaterial(s = noone) constructor {
 	}
 	
 	static submitShader = function() {
-		shader_set_f("mat_texScale",   texScale   );
-		shader_set_f("mat_texShift",   texShift   );
-		gpu_set_tex_filter(texFilter);
+		shader_set_2("mat_texDimension",   surface_get_dimension(surface) );
+		shader_set_i("mat_texInterpolate", texFilter  );
+		shader_set_f("mat_texScale",       texScale   );
+		shader_set_f("mat_texShift",       texShift   );
+		gpu_set_tex_filter(texFilter == 1);
 		
 		//// =Phong
 		shader_set_f("mat_diffuse",    diffuse    );

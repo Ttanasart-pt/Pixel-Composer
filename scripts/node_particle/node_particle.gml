@@ -451,7 +451,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						
 					} else if(_distrib < 2) {
 						if(_distrib == 0 && _scatter == 2 && poisson_cache_amo > 0) {
-							var _poiPos = poisson_cache[spawn_total % poisson_cache_amo];
+							var _poiPos = poisson_cache[irandom(poisson_cache_amo - 1)];
 							xx = _poiPos[0];
 							yy = _poiPos[1];
 							
@@ -696,6 +696,16 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		#region ----- precomputes -----
 			seed = getInputData(32);
 			
+			var _spawn_area = getInputData( 3);
+			var _scatt      = getInputData(24);
+			var poisDist    = getInputData(79);
+			if(_scatt == 2) {
+				random_set_seed(seed);
+				poisson_cache     = area_get_random_point_poisson_c(_spawn_area, poisDist, seed);
+				// poisson_cache     = array_shuffle(poisson_cache);
+				poisson_cache_amo = array_length(poisson_cache);
+			}
+			
 			var _wigg_pos = getInputData(41);
 			var _wigg_rot = getInputData(42);
 			var _wigg_sca = getInputData(43);
@@ -728,15 +738,6 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					custom_parameter_map[$ _n] = new curveMap(attributes.parameter_curves[$ _n], TOTAL_FRAMES);
 			}
 			
-			var _spawn_area = getInputData( 3);
-			var _scatt      = getInputData(24);
-			var poisDist    = getInputData(79);
-			if(_scatt == 2) {
-				poisson_cache = area_get_random_point_poisson_c(_spawn_area, poisDist, seed);
-				random_set_seed(seed);
-				poisson_cache = array_shuffle(poisson_cache);
-			}
-			poisson_cache_amo = array_length(poisson_cache);
 		#endregion
 	}
 	

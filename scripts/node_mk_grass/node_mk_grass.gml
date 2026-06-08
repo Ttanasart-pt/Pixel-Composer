@@ -19,7 +19,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	shape_types = __enum_array_gen([ "Dense Bush", "V", "Hash", "Line", "W" ], s_node_mk_grass_type, c_white);
 	newInput( 7, nodeValue_EScroll( "Shape",    0, { data: shape_types, horizontal: 2, text_pad: ui(16) } )).getEditWidget().setFilter(false);
 	newInput(22, nodeValue_Slider(  "Ratio",   .5     ));
-	newInput( 8, nodeValue_Range(   "Size",    [4,4], { linked: true }));
+	newInput( 8, nodeValue_Range(   "Size",    [4,4], { linked: true })).setMappableConst(26);
 	newInput(17, nodeValue_Slider(  "Spread",   0     ));
 	newInput(20, nodeValue_Float(   "Extra",    0     ));
 	newInput(21, nodeValue_Range(   "Sway X",  [-4,4] ));
@@ -40,11 +40,11 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Ground
 	newInput(18, nodeValue_Bool(  "Fill Ground", false));
 	newInput(19, nodeValue_Color( "Ground",      ca_black));
-	// input 26
+	// input 27
 	
 	input_display_list = [ s_MKFX, 1, 0, 
 		[ "Source",  false     ],  2,  3,  4,  5,  6, 24, 25, 
-		[ "Shape",   false     ],  7, 22,  8, 17, 20, 21, 
+		[ "Shape",   false     ],  7, 22,  8, 26, 17, 20, 21, 
 		[ "Scatter", false     ],  9, 11, 14, 15,
 		[ "Render",  false     ], 23, 12, 13, 16, 
 		[ "Ground",  false, 18 ], 19, 
@@ -56,18 +56,16 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- Nodes
 	
+	sizeSampler = new Surface_Sampler_Grey();
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _src = getInputSingle(2);
 		
 		switch(_src) {
-			case 0 :
-				InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				break;
+			case 0 : InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 			
 			case 2 :
-			case 3 :
-				InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				break;
+			case 3 : InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 		}
 		
 		return w_hovering;
@@ -88,7 +86,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _shape    = _data[ 7];
 			var _dist     = _data[22];
-			var _size     = _data[ 8];
+			var _size     = _data[ 8], _sizeMapped = inputs[8].attributes.mapped;
+			var _sizeMap  = _data[26];
 			var _spread   = _data[17];
 			var _expand   = _data[20];
 			var _swayx    = _data[21];
@@ -121,6 +120,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[25].setVisible(_src == 4);
 			
 			if(!is_surface(_surf)) return _outSurf;
+			
+			sizeSampler.setSurface(_sizeMap);
 		#endregion
 			
 		random_set_seed(_seed);
@@ -263,13 +264,13 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var _args = buffer_create(1, buffer_grow, 1);
 				buffer_write(_args, buffer_u64, buffer_get_address(_sBuf));
 				buffer_write(_args, buffer_u64, buffer_get_address(_sOut));
-				buffer_write(_args, buffer_f64, _sw);
-				buffer_write(_args, buffer_f64, _sh);
-				buffer_write(_args, buffer_f64, _seed);
-				buffer_write(_args, buffer_f64, _size[0]);
-				buffer_write(_args, buffer_f64, _size[1]);
-				buffer_write(_args, buffer_f64, _swayx[0]);
-				buffer_write(_args, buffer_f64, _swayx[1]);
+				buffer_write(_args, buffer_f64, _sw       );
+				buffer_write(_args, buffer_f64, _sh       );
+				buffer_write(_args, buffer_f64, _seed     );
+				buffer_write(_args, buffer_f64, _size[0]  );
+				buffer_write(_args, buffer_f64, _size[1]  );
+				buffer_write(_args, buffer_f64, _swayx[0] );
+				buffer_write(_args, buffer_f64, _swayx[1] );
 				
 				var _amo  = mk_grass_get_data(buffer_get_address(_args));
 				buffer_delete(_sBuf);
@@ -279,31 +280,43 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				switch(_shape) {
 					case 3 : 
 						repeat(_amo) {
-							var px = buffer_read(_sOut, buffer_f64); var py = buffer_read(_sOut, buffer_f64);
-							var gx = buffer_read(_sOut, buffer_f64); var gy = buffer_read(_sOut, buffer_f64);
+							var px = buffer_read(_sOut, buffer_f64); 
+							var py = buffer_read(_sOut, buffer_f64);
+							var gx = buffer_read(_sOut, buffer_f64); 
+							var gy = buffer_read(_sOut, buffer_f64);
 							
-							var rr = buffer_read(_sOut, buffer_f64); var gg = buffer_read(_sOut, buffer_f64); var bb = buffer_read(_sOut, buffer_f64);
+							var rr = buffer_read(_sOut, buffer_f64); 
+							var gg = buffer_read(_sOut, buffer_f64); 
+							var bb = buffer_read(_sOut, buffer_f64);
 							
-							draw_line_color(px, py, px + gx, py - gy, #000000, #ff0000); 
+							var ss = _sizeMapped && sizeSampler.active? sizeSampler.getPixelDirectClamp(px, py) : 1;
+							
+							draw_line_color(px, py, px + gx * ss, py - gy * ss, #000000, #ff0000); 
 						}
 						break;
 						
 					case 4 : 
 						repeat(_amo) {
-							var px = buffer_read(_sOut, buffer_f64); var py = buffer_read(_sOut, buffer_f64);
-							var gx = buffer_read(_sOut, buffer_f64); var gy = buffer_read(_sOut, buffer_f64);
+							var px = buffer_read(_sOut, buffer_f64); 
+							var py = buffer_read(_sOut, buffer_f64);
+							var gx = buffer_read(_sOut, buffer_f64); 
+							var gy = buffer_read(_sOut, buffer_f64);
 							
-							var rr = buffer_read(_sOut, buffer_f64); var gg = buffer_read(_sOut, buffer_f64); var bb = buffer_read(_sOut, buffer_f64);
+							var rr = buffer_read(_sOut, buffer_f64); 
+							var gg = buffer_read(_sOut, buffer_f64); 
+							var bb = buffer_read(_sOut, buffer_f64);
 							
 							var dx = abs(gx);
 							var dy = gy * .7;
 							
+							var ss = _sizeMapped && sizeSampler.active? sizeSampler.getPixelDirectClamp(px, py) : 1;
+							
 							random_set_seed(py * _dim[0] + px);
 							draw_set_color(make_color_rgb(irandom(255), 0, 0));
 							
-							draw_line(px,   py, px,        py - gy); 
-							draw_line(px,   py, px   - dx, py - dy); 
-							draw_line(px-1, py, px-1 + dx, py - dy); 
+							draw_line(px,   py, px,           py - gy*ss); 
+							draw_line(px,   py, px   - dx*ss, py - dy*ss); 
+							draw_line(px-1, py, px-1 + dx*ss, py - dy*ss); 
 						}
 						break;
 						
@@ -314,20 +327,20 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				buffer_delete(_sOut);
 				
 				surface_set_shader(_outSurf, sh_mk_grass_grow_apply);
-					shader_set_surface("grassMask",    temp_surface[2]);
-					shader_set_surface("grassTexture", temp_surface[3]);
+					shader_set_s( "grassMask",     temp_surface[2] );
+					shader_set_s( "grassTexture",  temp_surface[3] );
 					
-					shader_set_f("seed",          _seed);
-					shader_set_2("dimension",     _dim);
-					shader_set_2("grassSize",     _size);
-					shader_set_f("colorVariance", _color_vr);
-					shader_set_f("density",       _dens);
-					shader_set_f("expand",        _expand);
+					shader_set_f( "seed",          _seed     );
+					shader_set_2( "dimension",     _dim      );
+					shader_set_2( "grassSize",     _size     );
+					shader_set_f( "colorVariance", _color_vr );
+					shader_set_f( "density",       _dens     );
+					shader_set_f( "expand",        _expand   );
 					
-					shader_set_i("renderType",    _rtype);
-					shader_set_i("drawBG",        _drawBg);
-					shader_set_i("groundFill",    _gnd_fil);
-					shader_set_c("groundColor",   _gnd_clr);
+					shader_set_i( "renderType",    _rtype    );
+					shader_set_i( "drawBG",        _drawBg   );
+					shader_set_i( "groundFill",    _gnd_fil  );
+					shader_set_c( "groundColor",   _gnd_clr  );
 				
 					_color.shader_submit();
 					

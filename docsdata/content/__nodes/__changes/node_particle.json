@@ -11,6 +11,11 @@
         "date": "2026-06-08T05:59:45.739Z",
         "node": "Particle",
         "commit": "**Particle**: Add Poisson distribution for area inside spawn source."
+      },
+      {
+        "date": "2026-06-08T08:38:47.555Z",
+        "node": "",
+        "commit": "**3D Material**: Add CleanEdge interpolation."
       }
     ]
   },
