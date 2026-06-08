@@ -23,15 +23,17 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 4, nodeValue_Vec2( "Bottom Right", [ 1, 1 ] )).hideLabel().setUnitSimple();
 	
 	////- =Render
-	newInput( 8, nodeValue_Toggle( "Tile", 0, [ "X", "Y" ] ));
-	// 11
+	newInput(12, nodeValue_Vec2(   "UV Position", [0,0] ));
+	newInput(11, nodeValue_Vec2(   "UV Scale",    [1,1] ));
+	newInput( 8, nodeValue_Toggle( "Tile",   0, [ "X", "Y" ] ));
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  5,
 		[ "Surfaces", false ],  0, 10,  6,  7,  9, 
 		[ "Warp",     false ],  1,  2,  3,  4, 
-		[ "Render",   false ],  8, 
+		[ "Render",   false ], 12, 11,  8, 
 	];
 	
 	pie_junctions = [ inputs[4], inputs[2], inputs[1], inputs[3] ];
@@ -348,10 +350,6 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f( "p2",  bl );
 			shader_set_f( "p3",  tl );
 			
-			// shader_set_f( "p0",  br );
-			// shader_set_f( "p1",  tr );
-			// shader_set_f( "p2",  tl );
-			// shader_set_f( "p3",  bl );
 			shader_set_i( "flip", 1 );
 			draw_surface_stretched(surfBack, 0, 0, sw, sh);
 			
@@ -369,18 +367,22 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var tl      = _data[1];
-			var tr      = _data[2];
-			var bl      = _data[3];
-			var br      = _data[4];
-			var tile    = _data[8];
 			
-			var _dimTyp = _data[6];
-			var _dim    = _data[7];
-			var _sdim   = _data[9];
+			var _dimTyp = _data[ 6];
+			var _dim    = _data[ 7];
+			var _sdim   = _data[ 9];
 			
 			var _surfF  = _data[ 0];
 			var _surfB  = is_surface(_data[10])? _data[10] : _surfF;
+			
+			var tl      = _data[ 1];
+			var tr      = _data[ 2];
+			var bl      = _data[ 3];
+			var br      = _data[ 4];
+			
+			var uvPos   = _data[12];
+			var uvSca   = _data[11];
+			var tile    = _data[ 8];
 			
 			inputs[7].setVisible(_dimTyp == 1);
 			inputs[8].setVisible(true);
@@ -388,6 +390,11 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			if(!is_surface(_surfF)) return _outSurf;
 		#endregion
+		
+		shader_set(sh_warp_4points);
+			shader_set_2( "uvPosition", uvPos );
+			shader_set_2( "uvScale",    uvSca );
+		shader_reset();
 		
 		var sw = 1;
 		var sh = 1;

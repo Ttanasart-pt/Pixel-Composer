@@ -783,15 +783,17 @@ function Panel_Inspector() : PanelContent() constructor {
     	var hh = 0;
     	
 		var _tre = _inspecting.treeItem;
-    	if(PREFERENCES.inspector_show_node_chain && _tre != undefined && _tre.nodeChain != undefined) {
+    	if(_flag == INSPECTOR_FLAG.show_all && PREFERENCES.inspector_show_node_chain && _tre != undefined && _tre.nodeChain != undefined) {
     		var _cha = _tre.nodeChain;
     		
     		var _lbh = ui(22);
     		var _amo = array_length(_cha);
     		var _thh = _lbh * _amo;
     		
-    		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, _w, _thh, COLORS._main_icon_dark, 1);
-    		draw_sprite_stretched_add(THEME.box_r5,     1, _x, _y, _w, _thh, c_white, .1);
+    		if(_amo > 0) {
+	    		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, _w, _thh, COLORS._main_icon_dark, 1);
+	    		draw_sprite_stretched_add(THEME.box_r5,     1, _x, _y, _w, _thh, c_white, .1);
+    		}
     		
 			var toInspect        = undefined;
 			var toInspectPreview = false;
@@ -803,6 +805,8 @@ function Panel_Inspector() : PanelContent() constructor {
     			var _chainItem = _cha[i];
     			var _chainNode = _chainItem.node;
     			var _curr = _chainNode == _inspecting;
+    			
+    			var _nodeActive = _chainNode.active_index == -1 || _chainNode.active_value;
     			
     			var _prx = _cx;
     			var _pry = _cy  + ui(2);
@@ -823,9 +827,12 @@ function Panel_Inspector() : PanelContent() constructor {
 				
 				var _name = _chainNode.getDisplayName();
 				var  tc   = _curr? COLORS._main_text_accent : (_hov? COLORS._main_text : COLORS._main_text_sub);
+				var  tx   = _cx + _prs + ui(4);
+				var  ty   = _cy + _lbh / 2;
 				
 				draw_set_text(f_p4, fa_left, fa_center, tc);
-				draw_text_add(_cx + _prs + ui(4), _cy + _lbh / 2, _name);
+				draw_text_add(tx, ty, _name);
+				if(!_nodeActive) draw_line(tx - ui(2), ty, tx + string_width(_name) + ui(2), ty)
 				
 				if(_chainNode.active_index > -1) {
 					var _as = _prs;
@@ -913,7 +920,8 @@ function Panel_Inspector() : PanelContent() constructor {
     		
     		if(toInspect) run_in(1, function(i,p) /*=>*/ {return panelFocusNode(i,p)}, [toInspect, toInspectPreview]);
     		
-    		hh += _thh + ui(4);
+    		if(_amo > 0) 
+    			hh += _thh + ui(4);
     	}
     	
     	if(is(_inspecting.inline_context, Node_Collection_Inline)) {

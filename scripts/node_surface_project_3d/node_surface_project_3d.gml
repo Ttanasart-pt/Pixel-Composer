@@ -25,12 +25,17 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 	////- =Geometry
 	newInput(13, nodeValue_Bool(    "Extrude Both Side", true ));
 	
+		////- =/Noise
+	newInput(18, nodeValue_Bool(   "Use Noise",  false ));
+	newInput(19, nodeValueSeed(,   "Noise Seed"        ));
+	newInput(20, nodeValue_Slider( "Threshold",  .5    ));
+	
 	////- =Rendering
 	newInput(16, nodeValue_EScroll( "Color Type",    0, [ "Face Normal", "Face Average All", "Face Average Except"  ] ));
 	newInput(15, nodeValue_Palette( "Face Blending", [ca_white]       ));
 	newInput(17, nodeValue_EButton( "Except",        0, ["X","Y","Z"] ));
 	newInput(14, nodeValue_Range(   "Depth Range",   [0,1]            ));
-	// 18
+	// 21
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone )).setDrawGroup(10);
 	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone )).setDrawGroup(10);
@@ -41,6 +46,7 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			[ "/Back Texture", false ],  5,  6,  7, 
 		[ "Camera",            false ],  4, 12,  9, 10, 11,  8,
 		[ "Geometry",          false ], 13, 
+			[ "/Noise",     true, 18 ], 19, 20, 
 		[ "Rendering",         false ], 16, 15, 17, 14, 
 	];
 	
@@ -73,6 +79,10 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			
 			var _bothS = _data[13];
 			
+			var _nsUse  = _data[18];
+			var _nsSeed = _data[19];
+			var _nsThr  = _data[20];
+			
 			var _blndT = _data[16];
 			var _fblnd = _data[15];
 			var _blndX = _data[17];
@@ -99,6 +109,10 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 			shader_set_f( "scale",      _sca   );
 			
 			shader_set_i( "bothSide",   _bothS );
+			
+			shader_set_i( "noiseUse",   _nsUse  );
+			shader_set_f( "noiseSeed",  _nsSeed );
+			shader_set_f( "noiseThres", _nsThr  );
 			
 			shader_set_i( "blendType",  _blndT );
 			shader_set_i( "blendFaceEx",_blndX );

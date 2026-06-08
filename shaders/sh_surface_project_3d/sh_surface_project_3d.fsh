@@ -156,6 +156,10 @@ uniform int   bothSide;
 uniform int   blendFaceEx;
 uniform vec2  depthRange;
 
+uniform int   noiseUse;
+uniform float noiseSeed;
+uniform float noiseThres;
+
 #ifdef _YY_HLSL11_ 
 	#define PALETTE_LIMIT 1024 
 #else 
@@ -214,6 +218,14 @@ uniform int   paletteAmount;
 #endregion
 
 #define TAU 6.28318530718
+
+float random  (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
+vec2  random2 (in vec2 st) { float a = random(st); return vec2(cos(a), sin(a)); }
+float random3 (in vec3 p, in float seed) {
+    p  = fract( p * (seed / 10000. + 0.3183099) + .1 );
+	p *= 17.0;
+    return fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
+}
 
 // 0: Top  1: Front  2: Right
 // 3: TopB 4: FrontB 5: RightB
@@ -320,6 +332,11 @@ void main() {
 	            isHit = isHit && samTop.a   > 1.-sc.z;
 	            isHit = isHit && samFront.a > 1.-sc.x;
 	            isHit = isHit && samSide.a  >    sc.y;
+            }
+            
+            if(noiseUse == 1) {
+	            float noise = random3(wc, noiseSeed);
+	            if(noise > noiseThres) isHit = false;
             }
             
             if (isHit) { 

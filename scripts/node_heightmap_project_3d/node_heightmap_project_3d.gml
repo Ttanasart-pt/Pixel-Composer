@@ -17,12 +17,13 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 	newInput( 5, nodeValue_Slider(  "FOV",          60, [1,90,1] ));
 	newInput( 6, nodeValue_Float(   "Distance",     1            ));
 	newInput( 7, nodeValue_Float(   "Scale",        3.46         ));
-	newInput(12, nodeValue_Float(   "Height Scale", 1            ));
+	newInput(12, nodeValue_Range(   "Height Range", [0,1]        ));
 	
 	////- =Rendering
+	newInput(14, nodeValue_Bool(     "Tiled",        false       ));
 	newInput( 9, nodeValue_Gradient( "Height Color", gra_white   ));
 	newInput(13, nodeValue_Range(    "Depth Range",   [0,1]      ));
-	// 14
+	// 15
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone )).setDrawGroup(10);
 	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone )).setDrawGroup(10);
@@ -31,7 +32,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 	input_display_list = [ 0,
 		[ "Surfaces",  false ],  1,  2, 10, 11, 
 		[ "Camera",    false ],  3,  8,  4,  5,  6,  7, 12, 
-		[ "Rendering", false ],  9, 13, 
+		[ "Rendering", false ], 14,  9, 13, 
 	];
 	
 	////- Node
@@ -59,6 +60,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			var _sca   = _viewDis ?? _data[ 7];
 			var _hsca  = _data[12];
 			
+			var _tile  = _data[14];
 			var _hgCol = _data[ 9];
 			var _depth = _data[13];
 		#endregion
@@ -69,8 +71,8 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_2( "dimension",     _dim     );
 			shader_set_2( "viewDimension", _viewDim );
 			
-			shader_set_s( "heightmap", _higm  );
-			shader_set_s( "texture",   is_surface(_text)? _text : _higm );
+			shader_set_s( "heightmap",     _higm    );
+			shader_set_s( "texture",       is_surface(_text)? _text : _higm );
 			
 			shader_set_s( "textureSide",      _textS  );
 			shader_set_s( "textureFront",     _textF  );
@@ -85,9 +87,10 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_f( "fov",        _fov   );
 			shader_set_f( "distant",    _dist  );
 			
+			shader_set_i( "tiled",      _tile  );
 			shader_set_f( "scale",      _sca   );
 			shader_set_2( "depthRange", _depth );
-			shader_set_f( "heightScale",_hsca  );
+			shader_set_2( "heightScale",_hsca  );
 			
 			shader_set_gradient(_hgCol);
 			

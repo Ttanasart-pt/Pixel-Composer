@@ -343,6 +343,9 @@ uniform vec2 p3;
 uniform int  tile;
 uniform int  flip;
 
+uniform vec2 uvPosition;
+uniform vec2 uvScale;
+
 float unmix( float st, float ed, float val) { return (val - st) / (ed - st); }
 
 // 2 1
@@ -429,7 +432,10 @@ void main() {
 	if(tileX) uv.x = fract(1. + fract(uv.x));
 	if(tileY) uv.y = fract(1. + fract(uv.y));
 	
-	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
-		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );
-	else discard;
+	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.) {
+		vec2 suv = fract(uv * uvScale - uvPosition);
+		
+		gl_FragColor = texture2Dintp( gm_BaseTexture, suv );
+		
+	} else discard;
 }

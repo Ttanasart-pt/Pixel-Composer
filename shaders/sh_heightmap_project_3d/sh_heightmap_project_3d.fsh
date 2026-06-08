@@ -289,10 +289,11 @@ uniform vec3  angle;
 uniform vec3  position;
 
 uniform int   projection;
+uniform int   tiled;
 uniform float fov;
 uniform float distant;
 uniform float scale;
-uniform float heightScale;
+uniform vec2  heightScale;
 
 uniform vec2  depthRange;
 
@@ -389,6 +390,7 @@ void main() {
     vec3 dis = (pos - ro + 0.5 + rs * 0.5) * ri;
     
 	vec4 samHei = vec4(0.);
+	float smHei = 0.;
     vec3 mm     = vec3(0.);
 	bool hit    = false;
 
@@ -399,10 +401,13 @@ void main() {
         vec3 wc = (pos + 0.5) * voxSize;
         vec3 sc = wc * .5 + .5;
         
+    	if(tiled == 1) sc.xz = fract(sc.xz);
+        
         if (sc.x >= 0. && sc.x < 1. && sc.y >= 0. && sc.y < 1. && sc.z >= 0. && sc.z < 1.) {
             samHei = texture2D(heightmap, vec2(sc.x, sc.z));
+            smHei  = ((1. - samHei.r) - heightScale.x) / (heightScale.y - heightScale.x);
             
-            if (sc.y > 1. - samHei.r * heightScale) { hit = true; break; }
+            if (sc.y > smHei) { hit = true; break; }
         }
         
         mm   = step(dis.xyz, dis.yzx) * step(dis.xyz, dis.zxy);

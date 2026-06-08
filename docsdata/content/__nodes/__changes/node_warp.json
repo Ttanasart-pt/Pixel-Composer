@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.008",
+    "changes": [
+      {
+        "date": "2026-06-08T04:19:53.385Z",
+        "node": "",
+        "commit": "**Warp**: Add UV scale, position properties."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.003",
     "changes": [
       {
