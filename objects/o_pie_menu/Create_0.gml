@@ -73,9 +73,13 @@ function setMenu(menu) {
 					_menuItem.nodeName   = _node.getName();
 					_menuItem.presetName = _sep[1];
 					
+					if(!has(PRESETS_MAP, _key)) continue;
+					
 					var presNode = PRESETS_MAP[$ _key]; 
-					var presObj  = presNode? presNode[$ _menuItem.presetName] : undefined
-					if(presObj) _menuItem.surface = presObj.getThumbnail();
+					if(!has(presNode, _menuItem.presetName)) continue;
+					
+					var presObj = presNode[$ _menuItem.presetName];
+					_menuItem.surface = presObj.getThumbnail();
 					if(!is_surface(_menuItem.surface))
 						_menuItem.spr = _node.getSpr();
 						

@@ -711,20 +711,14 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params) {
 	}
 	
 	switch(_posMode) {
-		case 0 :	
-			_pos = [ current_data[3][0], current_data[3][1] ];
-			_sca = [ current_data[3][2], current_data[3][3] ];
-			break;
+		case 0 : _pos = [ current_data[3][0], current_data[3][1] ];
+			     _sca = [ current_data[3][2], current_data[3][3] ]; break;
 			
-		case 1 : 
-			_pos = [ current_data[16][0], current_data[16][1] ];
-			_sca = [ current_data[17][0], current_data[17][1] ];
-			break;
+		case 1 : _pos = [ current_data[16][0], current_data[16][1] ];
+			     _sca = [ current_data[17][0], current_data[17][1] ]; break;
 			
-		case 2 : 
-			_pos = [ _dim[0] / 2, _dim[1] / 2 ];
-			_sca = [ _dim[0] / 2, _dim[1] / 2 ];
-			break;
+		case 2 : _pos = [ _dim[0] / 2, _dim[1] / 2 ];
+			     _sca = [ _dim[0] / 2, _dim[1] / 2 ]; break;
 	}
 	
 	var _rsca = [ _sca[0], _sca[1] ];
@@ -739,6 +733,11 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params) {
 	var _y0 = _py - _sca[1] * _s;
 	var _x1 = _px + _sca[0] * _s;
 	var _y1 = _py + _sca[1] * _s;
+	
+	if(_posMode == 1) {
+		draw_set_color(COLORS._main_accent);
+		draw_rectangle_dashed(_x0, _y0, _x1, _y1);
+	}
 	
 	switch(_shape) {
 		case "Arrow" :

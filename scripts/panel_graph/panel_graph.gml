@@ -301,7 +301,7 @@
     }
     
     function __fnGraph_BuildNode(_k, _key = "", _mod = MOD_KEY.none) {
-    	if(struct_has(GRAPH_ADD_NODE_MAPS, _k)) 
+    	if(has(GRAPH_ADD_NODE_MAPS, _k)) 
     		return GRAPH_ADD_NODE_MAPS[$ _k];
     	
     	var _h = new Hotkey("Add Node", _k, _key, _mod, function(k) /*=>*/ { PANEL_GRAPH.createNodeHotkey(k) }).setParam(_k);

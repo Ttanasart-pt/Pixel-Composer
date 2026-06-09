@@ -6,6 +6,11 @@
         "date": "2026-06-09T01:25:32.445Z",
         "node": "Draw Shape",
         "commit": "**Draw Shape**: Move gizmo to avoid overlapping"
+      },
+      {
+        "date": "2026-06-09T01:43:19.365Z",
+        "node": "Pie Menu",
+        "commit": "**Pie Menu**: Fix delete preset hotkey still appear with no way to remove it."
       }
     ]
   },
