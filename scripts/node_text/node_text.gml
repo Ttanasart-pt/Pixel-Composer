@@ -7,7 +7,8 @@
 		hotkeyCustom("Node_Text", "Edit Text", "T");
 	});
 	
-	globalvar NODE_FONT_CACHE; NODE_FONT_CACHE = {};
+	globalvar NODE_FONT_CACHE; NODE_FONT_CACHE    = {};
+	globalvar NODE_FONT_CACHE_UV; NODE_FONT_CACHE_UV = {};
 #endregion
 
 function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -43,12 +44,14 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(11, nodeValue_Float( "Letter Spacing",   0       ));
 	newInput(12, nodeValue_Float( "Line Height",      0       ));
 	newInput(36, nodeValue_Bool(  "Monospaced",       false   ));
-	
+	newInput(37, nodeValue_Bool(  "Use SDF",          false   ));
+		
 	////- =Rendering
 	newInput(28, nodeValue_Bool(     "Round Position",   true     ));
-	newInput( 5, nodeValue_Color(    "Color",            ca_white ));
 	newInput(29, nodeValue_EButton(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
+	newInput( 5, nodeValue_Color(    "Color",            ca_white ));
 	newInput(31, nodeValue_Palette(  "Color by Letter", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(38, nodeValue_Surface(  "Texture"                    ));
 	
 	////- =Background
 	newInput(16, nodeValue_Bool(     "Render Background", false    ));
@@ -66,17 +69,17 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(25, nodeValue_EButton(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
 	newInput(24, nodeValue_SliRange( "Range",             [0,1]  ));
 	newInput(26, nodeValue_Bool(     "Use Full Text Size", false ));
-	// inputs 37
+	// inputs 39
 		
 	input_display_list = [ 
-		["Text",	    false    ],  0, 32, 
-		["Output",		 true    ],	 9,  6, 34, 10, 33, 
-		["Alignment",	false    ], 13, 14, 27,  7,  8, 30, 
-		["Font",		false    ],  1, 35,  2, 15,  3, 11, 12, 36, 
-		["Rendering",	false    ],  5, 31, 
-		["Background",   true, 16], 17, 
-		["Wave",	     true, 18], 22, 19, 20, 21, 
-		["Trim",		 true, 23], 25, 24, 26, 
+		[ "Text",	    false     ],  0, 32, 
+		[ "Output",		 true     ],  9,  6, 34, 10, 33, 
+		[ "Alignment",	false     ], 13, 14, 27,  7,  8, 30, 
+		[ "Font",		false     ],  1, 35,  2, 15,  3, 11, 12, 36, 37, 
+		[ "Rendering",	false     ],  5, 31, 38, 
+		[ "Background",  true, 16 ], 17, 
+		[ "Wave",	     true, 18 ], 22, 19, 20, 21, 
+		[ "Trim",		 true, 23 ], 25, 24, 26, 
 	];
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
@@ -265,18 +268,50 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- Nodes
 	
 	attribute_surface_depth();
-	attribute_interpolation(false, true);
+	attribute_interpolation();
 	
-	static generateFont = function(_oldFont, _path, _size, _aa) {
+	static getFontData = function(_oldFont, _path, _size, _aa, _sdf) {
+		var _cKey = $"{_path}|{_size}|{_aa}|{_sdf}";
+		return NODE_FONT_CACHE_UV[$ _cKey];
+	}
+	
+	static generateFont = function(_oldFont, _path, _size, _aa, _sdf) {
 		if(PROJECT.animator.is_playing) return _oldFont;
 		if(!file_exists_empty(_path))   return _oldFont;
 		
-		var _cKey = $"{_path}|{_size}|{_aa}";
+		var _cKey = $"{_path}|{_size}|{_aa}|{_sdf}";
 		if(has(NODE_FONT_CACHE, _cKey)) return NODE_FONT_CACHE[$ _cKey];
 		
 		font_add_enable_aa(_aa);
 		var f = font_add(_path, _size, false, false, 0, 0);
+		font_enable_sdf(f, _sdf)
 		NODE_FONT_CACHE[$ _cKey] = f;
+		
+		var __info = font_get_info(f);
+		var __uvs  = {};
+		if(__info) {
+			var _gly    = __info.glyphs;
+			var _glyKey = struct_get_names(_gly);
+			
+			for( var i = 0, n = array_length(_glyKey); i < n; i++ ) {
+				var _k  = _glyKey[i];
+				var _glp = font_cache_glyph(f, ord(_k));
+				
+				var _g  = _gly[$ _k];
+				var _uv = [_glp.x, _glp.y, _g.w, _g.h];
+				__uvs[$ _k] = _uv;
+				
+				// print(_k, _g.shift, _g.offset, _g.yoffset)
+			}
+		}
+		
+		var _texID  = __info.texture;
+		
+		NODE_FONT_CACHE_UV[$ _cKey] = {
+			info   : __info,
+			texDim : [ texture_get_width(_texID), texture_get_height(_texID) ], 
+			uv     : __uvs,
+		}
 		
 		return f;
 	}
@@ -327,9 +362,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _trck  = _data[11];
 			var _line  = _data[12];
 			var _mono  = _data[36];
+			var _sdfU  = _data[37];
 			
 			var _col   = _data[ 5];
 			var _colLt = _data[31];
+			var _tex   = _data[38];
 			
 			var _ubg   = _data[16];
 			var _bgc   = _data[17];
@@ -357,26 +394,24 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 		
 		#region font
-			__f = font;
+			__f     = font;
+			__fData = undefined;
 			
 			inputs[2].setVisible(false);
 			inputs[3].setVisible(false);
-				
-			var fontChange = _size != _size_current || _aa != _aa_current;
 				
 			if(is_string(_font))   { 
 				inputs[2].setVisible(_font != "");
 				inputs[3].setVisible(_font != "");
 			 	
-			 	if(!font_exists(font) || _font != _font_current || fontChange)
-			 		font = generateFont(font, _font, _size, _aa); 
-				__f  = font; 
+			 	font    = generateFont(font, _font, _size, _aa, _sdfU); 
+				__fData = getFontData(font, _font, _size, _aa, _sdfU);
+				__f     = font; 
 				
 			} else if(font_exists(_font)) 
 				__f  = _font; 
 			
-			if(_font1 != _font1_current || fontChange) 
-				font1 = generateFont(font1, _font1, _size, _aa); 
+			font1 = generateFont(font1, _font1, _size, _aa, _sdfU); 
 			
 			_font_current  = _font;
 			_font1_current = _font1;
@@ -386,6 +421,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(str != "" && font_exists(font1)) { // fallback
 				fontData = font_get_info(font);
 				
+				__fData    = getFontData(font1, _font, _size, _aa, _sdfU);
 				__glpValid = true;
 				string_foreach(str, function(s, i) /*=>*/ { __glpValid = __glpValid && has(fontData.glyphs, s); });
 				if(!__glpValid) __f = font1; 
@@ -563,13 +599,21 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			__wave_shape =  _waveH;
 		#endregion
 		
-		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
+		surface_set_shader(_outSurf, sh_node_text_render, true, BLEND.alphamulp);
 			shader_set_interpolation(_outSurf);
+			
+			shader_set_i("useTexture", is_surface(_tex));
+			shader_set_s("texture",    _tex);
+			
+			var _texId = font_get_texture(__f);
+			if(_texId) shader_set_2("textureSize", [1. / texture_get_texel_width(_texId), 1. / texture_get_texel_height(_texId)]);
 			
 		if(_ubg) {
 			draw_clear(_bgc);
 			BLEND_ALPHA_MULP
 		}
+		
+		uniform_texelData = shader_get_uniform(sh_node_text_render, "texelData");
 		
 		__temp_pt   = _path;
 		__temp_ss   = _ss;
@@ -648,6 +692,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _c    = colorMultiply(__col, _clt);
 						draw_set_color(_c);
 						
+						if(__fData) shader_set_uniform_f_array(uniform_texelData, __fData.uv[$ _chr]);
+						
 						draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
 						__dwData[__dwDataI++] = [_tx, _ty, _chr, 1, 1, _nor];
 						
@@ -710,6 +756,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ty += __offy;
 						var chw = string_width(_chr);
 						if(__mono) _tx += (__monoW - chw) / 2;
+						
+						if(__fData) shader_set_uniform_f_array(uniform_texelData, __fData.uv[$ _chr]);
 						
 						draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 						__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];

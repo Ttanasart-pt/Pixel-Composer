@@ -3105,6 +3105,7 @@
     {"id":{"name":"sh_node_arc","path":"shaders/sh_node_arc/sh_node_arc.yy",},},
     {"id":{"name":"sh_node_circle_arc","path":"shaders/sh_node_circle_arc/sh_node_circle_arc.yy",},},
     {"id":{"name":"sh_node_circle","path":"shaders/sh_node_circle/sh_node_circle.yy",},},
+    {"id":{"name":"sh_node_text_render","path":"shaders/sh_node_text_render/sh_node_text_render.yy",},},
     {"id":{"name":"sh_node_widget_rotator","path":"shaders/sh_node_widget_rotator/sh_node_widget_rotator.yy",},},
     {"id":{"name":"sh_node_widget_scalar_cross","path":"shaders/sh_node_widget_scalar_cross/sh_node_widget_scalar_cross.yy",},},
     {"id":{"name":"sh_node_widget_scalar_line","path":"shaders/sh_node_widget_scalar_line/sh_node_widget_scalar_line.yy",},},

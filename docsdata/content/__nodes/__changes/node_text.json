@@ -6,6 +6,11 @@
         "date": "2026-06-09T05:02:07.239Z",
         "node": "Draw Text",
         "commit": "**Draw Text**: Add texture interpolation setting."
+      },
+      {
+        "date": "2026-06-09T06:53:27.360Z",
+        "node": "Draw Text",
+        "commit": "**Draw Text**: Add glyph texture property."
       }
     ]
   },
