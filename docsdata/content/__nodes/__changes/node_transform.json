@@ -6,6 +6,11 @@
         "date": "2026-06-09T04:15:28.315Z",
         "node": "",
         "commit": "**Bend**: Add UV position, scale properties."
+      },
+      {
+        "date": "2026-06-09T04:22:56.320Z",
+        "node": "Transform",
+        "commit": "**Transform**: Add echo blend modes."
       }
     ]
   },

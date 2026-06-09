@@ -324,10 +324,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(19, nodeValue_Float( "Inv Stretch",       0     )).setTooltip("Contract the other axis when stretching to preserve volume.");
 	
 	////- =Echo
-	newInput(12, nodeValue_Bool(    "Echo",        false ));
-	newInput(16, nodeValue_EButton( "Echo Type",   0, [ "Static", "Animated" ] ));
-	newInput(13, nodeValue_Int(     "Echo Amount", 8     ));
-	// input 20
+	newInput(12, nodeValue_Bool(    "Echo",            false ));
+	newInput(16, nodeValue_EButton( "Echo Type",       0, [ "Static", "Animated" ] ));
+	newInput(13, nodeValue_Int(     "Echo Amount",     8     ));
+	newInput(20, nodeValue_EButton( "Echo Blend Mode", 0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
+	// input 21
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(2, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
@@ -343,7 +344,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		[ "Scale",    false    ],  6, 
 		[ "Render",   false    ], 14, 
 		[ "Stretch",  true, 17 ], 18, 19, 
-		[ "Echo",     true, 12 ], 16, 13, 
+		[ "Echo",     true, 12 ], 16, 13, 20, 
 	];
 	
 	output_display_list = [ 0, 2, 1, 3, 4, 5 ];
@@ -826,6 +827,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var echo      = _data[12];
 			var echo_typ  = _data[16];
 			var echo_amo  = _data[13];
+			var echo_bld  = _data[20];
 			
 			var cDep = attrDepth();
 			
@@ -960,7 +962,14 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						// _py = pos_exact? round(_py) : _py;
 						
 						draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
-						BLEND_ALPHA_MAX
+						
+						switch(echo_bld) {
+							case 0 : BLEND_NORMAL;    break;
+							case 1 : BLEND_ALPHA_MAX; break;
+							case 2 : BLEND_ADD;       break;
+							case 3 : BLEND_MAX;       break;
+						}
+						
 					}
 					
 				} else if(echo_typ == 1 && array_safe_get(transformData, CURRENT_FRAME - 1, noone) != noone) {
