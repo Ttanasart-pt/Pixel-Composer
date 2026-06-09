@@ -938,7 +938,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(echo) {
 				if(echo_typ == 0) {
-					
 					for( var i = 0; i <= echo_amo; i++ ) {
 						var rat = i / echo_amo;
 						var _px = lerp(_ww/2, pos_raw[0], rat);

@@ -21,7 +21,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	scaleDrag_my = 0;
 	scaleDrag_ss = 0;
 	
-	array_display_max = 32;
+	array_display_max = 16;
 	array_editing     = false;
 	array_focusing    = undefined;
 	array_hovering    = undefined;

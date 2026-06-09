@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_bend_draw",
+  "name":"sh_bend_draw",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -169,7 +169,7 @@ void main() {
 		gl_FragColor = vec4(0.);
 		if(cc.a != 0.) { gl_FragColor = vec4(-1.); return; }
 		
-		for(float i = 1.; i <= dist; i++) {
+		for(float i = 1.; i <= dist; i += .5) {
 			vec2 px = vt - shf * i;
 			if(wrap == 1) px = fract(fract(px) + 1.);
 			

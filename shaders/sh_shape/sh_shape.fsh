@@ -571,6 +571,8 @@ void main() {
 	coord.x += coord.y * shear.x;
 	coord.y += coord.x * shear.y;
 	
+	// gl_FragData[0] = vec4(coord, 0., 1.); return;
+	
 		 if(shape ==  0) { d = sdBox(           coord, scale * ratio, corner4);                                                          }  
 	else if(shape ==  1) { d = sdCircle(        coord);                                                                                  } 
 	else if(shape ==  2) { d = sdRegularPolygon(coord, 0.9 - corner, sides, angle ) - corner;                                            } 

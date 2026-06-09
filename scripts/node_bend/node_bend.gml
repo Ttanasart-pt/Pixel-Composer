@@ -11,26 +11,32 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newActiveInput(1);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Surfaces
-	newInput(2, nodeValue_EScroll( "Type",   0, __enum_array_gen(["Arc", "Wave"], s_node_bend_type) )).setPieMenu();
-	newInput(3, nodeValue_EButton( "Axis",   0, [ "X", "Y" ]     )).setPieMenu();
-	newInput(4, nodeValue_Slider(  "Amount", 0.25, [-1, 1, 0.01] )).setPieMenu();
-	newInput(5, nodeValue_Float(   "Scale",  1 )).setPieMenu();
-	newInput(6, nodeValue_Float(   "Shift",  0 )).setPieMenu();
-	// 7
+	newInput( 2, nodeValue_EScroll( "Type",   0, __enum_array_gen(["Arc", "Wave"], s_node_bend_type) )).setPieMenu();
+	newInput( 3, nodeValue_EButton( "Axis",   0, [ "X", "Y" ]     )).setPieMenu();
+	newInput( 4, nodeValue_Slider(  "Amount", 0.25, [-1, 1, 0.01] )).setPieMenu();
+	newInput( 5, nodeValue_Float(   "Scale",  1 )).setPieMenu();
+	newInput( 6, nodeValue_Float(   "Shift",  0 )).setPieMenu();
+	
+	////- =Mapping
+	newInput( 7, nodeValue_Vec2(   "UV Shift", [0,0] ));
+	newInput( 8, nodeValue_Vec2(   "UV Scale", [1,1] ));
+	// 9
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		["Surfaces", false], 0, 
-		["Bend",     false], 2, 3, 4, 5, 6, 
+		[ "Surfaces", false ],  0, 
+		[ "Bend",     false ],  2,  3,  4,  5,  6, 
+		[ "Mapping",  false ],  7,  8,  
 	];
 	
 	////- Nodes
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	attribute_interpolation(false, true);
 	
 	vb       = undefined;
@@ -41,15 +47,21 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	vb_cache = "";
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _typ  = _data[2];
-		var _axs  = _data[3];
-		var _amo  = _data[4];
-		var _sca  = _data[5];
-		var _shf  = _data[6];
-		
-		inputs[5].setVisible(_typ == 1);
-		inputs[6].setVisible(_typ == 1);
+		#region data
+			var _surf = _data[ 0];
+			
+			var _typ  = _data[ 2];
+			var _axs  = _data[ 3];
+			var _amo  = _data[ 4];
+			var _sca  = _data[ 5];
+			var _shf  = _data[ 6];
+			
+			var _uvPos = _data[ 7];
+			var _uvSca = _data[ 8];
+			
+			inputs[5].setVisible(_typ == 1);
+			inputs[6].setVisible(_typ == 1);
+		#endregion
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
@@ -252,9 +264,12 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _hh = vb_maxy - vb_miny;
 			_outSurf = surface_verify(_outSurf, _ww, _hh);
 		
-			surface_set_shader(_outSurf, sh_sample);
+			surface_set_shader(_outSurf, sh_bend_draw);
 			draw_set_color_alpha(c_white, 1);
 			shader_set_interpolation(_outSurf);
+			
+			shader_set_2( "uvPosition", _uvPos );
+			shader_set_2( "uvScale",    _uvSca );
 			
 			matrix_stack_clear();
 			matrix_stack_push([

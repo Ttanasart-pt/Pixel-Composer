@@ -2239,7 +2239,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    
 	                } else if(node_hover && node_hover.draggable) {
 	                	menuCallGen("graph_node_select", 0, 0, fa_left, false);
-	                	var pie = nodeQuickPie();
+	                	var pie = nodeQuickPie(false);
 	                	if(pie) pie.setHalf();
 	                    
 	                } else if(node_hover == noone && junction_hovering == noone) {
@@ -5104,7 +5104,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     ////- Pie Menu
     
-    function nodeQuickPie() {
+    function nodeQuickPie(_context = true) {
     	if(!is(node_hovering, Node)) return;
     	
     	if(instance_exists(o_pie_menu) && o_pie_menu.active) {
@@ -5116,7 +5116,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var _pInp = node_hovering.pie_junctions;
     	if(array_empty(_pInp)) return;
     	
-    	node_focus_context = instanceof(node_hovering);
+    	if(_context) node_focus_context = instanceof(node_hovering);
     	var _pmenu = [];
     	for( var i = 0, n = array_length(_pInp); i < n; i++ ) {
     		var _inp = _pInp[i];

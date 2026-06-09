@@ -23,11 +23,12 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 	newInput( 8, nodeValue_Float(   "Scale",        3.46         ));
 	
 	////- =Geometry
+	newInput(15, nodeValue_Bool(     "From Center", false   ));
 	newInput(13, nodeValue_RotRange( "Angle Range", [0,360] ));
 	
 	////- =Rendering
 	newInput(14, nodeValue_Range(    "Depth Range",   [0,1] ));
-	// 15
+	// 16
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone )).setDrawGroup(10);
 	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone )).setDrawGroup(10);
@@ -36,7 +37,7 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 	input_display_list = [ 0,
 		[ "Surfaces",  false ],  1,  2, 
 		[ "Camera",    false ],  4, 12,  9, 10, 11,  8,
-		[ "Geometry",  false ], 13, 
+		[ "Geometry",  false ], 15, 13, 
 		[ "Rendering", false ], 14, 
 	];
 	
@@ -61,6 +62,7 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 			var _dist  = _viewDis ?? _data[11];
 			var _sca   = _viewDis ?? _data[ 8];
 			
+			var _fcen  = _data[15];
 			var _arng  = _data[13];
 			
 			var _depth = _data[14];
@@ -83,6 +85,7 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 			shader_set_f( "distant",    _dist  );
 			shader_set_f( "scale",      _sca   );
 			
+			shader_set_i( "fromCenter", _fcen  );
 			shader_set_2( "angRange",   _arng  );
 			
 			shader_set_2( "depthRange", _depth );

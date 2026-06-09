@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.009",
+    "changes": [
+      {
+        "date": "2026-06-09T04:15:28.310Z",
+        "node": "",
+        "commit": "**Bend**: Add UV position, scale properties."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.008",
     "changes": [
       {

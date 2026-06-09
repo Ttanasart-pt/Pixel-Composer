@@ -145,6 +145,7 @@ uniform float fov;
 uniform float distant;
 uniform float scale;
 
+uniform int   fromCenter;
 uniform vec2  angRange;
 uniform vec2  depthRange;
 
@@ -259,7 +260,9 @@ void main() {
         vec3 sc = wc * .5 + .5;
         
         float ang = (atan(sc.x - .5, sc.z - .5) + PI);
-        float len = length(sc.xz - .5) * 2.;
+        float len = length(sc.xz - .5);
+        if(fromCenter == 0) len = len * 2.;
+        else                len = len + .5;
         
         if(ang >= aRang.x && ang <= aRang.y) 
         if(len >= 0. && len < 1. && sc.y >= 0. && sc.y < 1.) {
