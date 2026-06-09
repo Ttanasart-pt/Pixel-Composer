@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.009",
+    "changes": [
+      {
+        "date": "2026-06-09T07:48:48.356Z",
+        "node": "Shape Path",
+        "commit": "**Shape Path**: Fix mod by zero error when using some shapes."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.008",
     "changes": [
       {

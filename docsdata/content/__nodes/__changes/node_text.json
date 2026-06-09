@@ -11,6 +11,11 @@
         "date": "2026-06-09T06:53:27.360Z",
         "node": "Draw Text",
         "commit": "**Draw Text**: Add glyph texture property."
+      },
+      {
+        "date": "2026-06-09T07:48:48.357Z",
+        "node": "",
+        "commit": "**Shape Path**: Fix mod by zero error when using some shapes."
       }
     ]
   },

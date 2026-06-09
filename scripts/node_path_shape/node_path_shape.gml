@@ -144,6 +144,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		    out ??= new __vec2P();
 		    
+		    if(lengthTotal == 0) return out;
 		    if(_dist < 0) _dist = lengthTotal + _dist % lengthTotal;
 		    _dist = loop? safe_mod(_dist, lengthTotal) : clamp(_dist, 0, lengthTotal - .1);
 		    

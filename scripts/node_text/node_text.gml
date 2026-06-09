@@ -270,6 +270,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	attribute_interpolation();
 	
+	attributes.debug_texture = false;
+	array_push(attributeEditors, Node_Attribute("Debug", function() /*=>*/ {return attributes.debug_texture}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("debug_texture")})}));
+	
 	static getFontData = function(_oldFont, _path, _size, _aa, _sdf) {
 		var _cKey = $"{_path}|{_size}|{_aa}|{_sdf}";
 		return NODE_FONT_CACHE_UV[$ _cKey];
@@ -295,13 +298,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			for( var i = 0, n = array_length(_glyKey); i < n; i++ ) {
 				var _k  = _glyKey[i];
-				var _glp = font_cache_glyph(f, ord(_k));
+				// var _glp = font_cache_glyph(f, ord(_k));
 				
 				var _g  = _gly[$ _k];
-				var _uv = [_glp.x, _glp.y, _g.w, _g.h];
+				var _uv = [-1, -1, _g.w, _g.h];
 				__uvs[$ _k] = _uv;
 				
-				// print(_k, _g.shift, _g.offset, _g.yoffset)
+				// print(_k, _uv, _g.shift, _g.offset, _g.yoffset)
 			}
 		}
 		
@@ -602,6 +605,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_set_shader(_outSurf, sh_node_text_render, true, BLEND.alphamulp);
 			shader_set_interpolation(_outSurf);
 			
+			shader_set_i("debug",      attributes.debug_texture);
 			shader_set_i("useTexture", is_surface(_tex));
 			shader_set_s("texture",    _tex);
 			
@@ -685,14 +689,23 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							case 2  : clti = irandom(__colLtLen - 1);               break;
 						}
 						
-						_tx += __offx;
-						_ty += __offy;
+						_tx += __offx; //_tx = round(_tx);
+						_ty += __offy; //_ty = round(_ty);
 						
 						var _clt  = __colLt[clti];
 						var _c    = colorMultiply(__col, _clt);
 						draw_set_color(_c);
 						
-						if(__fData) shader_set_uniform_f_array(uniform_texelData, __fData.uv[$ _chr]);
+						if(__fData) {
+							var _guv = __fData.uv[$ _chr]
+							// if(_guv[0] == -1 || _guv[1] == -1) {
+								var _glp = font_cache_glyph(__f, ord(_chr));
+								_guv[0] = _glp.x;
+								_guv[1] = _glp.y;
+							// }
+							
+							shader_set_uniform_f_array(uniform_texelData, _guv);
+						}
 						
 						draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
 						__dwData[__dwDataI++] = [_tx, _ty, _chr, 1, 1, _nor];
@@ -757,7 +770,16 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var chw = string_width(_chr);
 						if(__mono) _tx += (__monoW - chw) / 2;
 						
-						if(__fData) shader_set_uniform_f_array(uniform_texelData, __fData.uv[$ _chr]);
+						if(__fData) {
+							var _guv = __fData.uv[$ _chr]
+							// if(_guv[0] == -1 || _guv[1] == -1) {
+								var _glp = font_cache_glyph(__f, ord(_chr));
+								_guv[0] = _glp.x;
+								_guv[1] = _glp.y;
+							// }
+							
+							shader_set_uniform_f_array(uniform_texelData, _guv);
+						}
 						
 						draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 						__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];

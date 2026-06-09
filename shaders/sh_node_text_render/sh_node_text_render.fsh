@@ -135,11 +135,19 @@ uniform sampler2D texture;
 uniform vec2   textureSize;
 uniform vec4   texelData;
 
+uniform int    debug;
+
 void main() {
 	vec4 res = sampleTexture( gm_BaseTexture, v_vTexcoord );
 	if(useTexture == 1) {
 		vec2 txNorm = (v_vTexcoord * textureSize - texelData.xy) / texelData.zw;
 		res *= sampleTexture( texture, txNorm );
+		
+		if(debug == 1) {
+			gl_FragColor = vec4(txNorm, 0., 1.); 
+			gl_FragColor = vec4(v_vTexcoord * textureSize, 0., 1.); 
+			return;
+		}
 	}
 		
 	res *= v_vColour;
