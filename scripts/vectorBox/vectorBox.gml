@@ -21,6 +21,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	scaleDrag_my = 0;
 	scaleDrag_ss = 0;
 	
+	array_expanding   = true;
+	array_expand_h    = ui(16);
 	array_display_max = 16;
 	array_editing     = false;
 	array_focusing    = undefined;
@@ -110,7 +112,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	static fetchHeight = function(params) { 
 		var d = array_get_depth(params.data);
-		return d == 2? (params.h + ui(2)) * (min(array_display_max, array_length(params.data)) + 1) - ui(2) : params.h;
+		if(d == 2 && array_expanding)
+			return params.h + (params.h + ui(2)) * min(array_display_max, array_length(params.data)) - ui(2);
+		return params.h;
 	}
 	
 	static drawParam   = function(params) {
@@ -133,9 +137,37 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		var d = array_get_depth(_data);
 		
 		if(d == 2) {
+			h = _h;
+			
+			var _exh = _h - ui(2);
+			var _hov = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _exh);
+			draw_sprite_stretched_ext(THEME.button_def, _hov? 1 : 0, _x, _y, _w, _exh, boxColor, 1);
+			
+			draw_sprite_ui_uniform(THEME.arrow, array_expanding * 3, _x + ui(12), _y + _exh / 2, .75, COLORS._main_icon);
+			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text_add(_x + ui(24), _y + _exh / 2, __txt("Vector Array") + $" [{array_length(_data)}]")
+			
+			var abw = ui(24);
+			var abh = _exh;
+			var abx = _x + _w - abw;
+			var aby = _y;
+			var bc  = [COLORS._main_icon, COLORS._main_value_positive];
+			var bt  = __txt("Add Vector");
+			
+			var _b = buttonInstant(noone, abx, aby, abw, abh, _m, hover, active, bt, THEME.add_16, 0, bc, 1, .75);
+			if(_b) _hov = false;
+			if(_b == 2) {
+				array_push(_data, array_clone(array_last(_data)));
+				onModify(_data, setValueForceUpdate);
+			}
+			
+			if(_hov && mouse_lpress(active)) array_expanding = !array_expanding;
+			
+			if(!array_expanding) return h;
+			
 			array_editing = true;
 			var _len = min(array_display_max, array_length(_data));
-			h = (_len + 1) * (_h + ui(2)) - ui(2);
+			h = _h + _len * (_h + ui(2)) - ui(2);
 			
 			var toDel = undefined;
 			var bs = min(_h, ui(24));
@@ -149,7 +181,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				var _vect = _data[i];
 				var _sz   = min(size, array_length(_vect));
 				
-				var _yy = _y + i * (_h + ui(2));
+				var _yy = _y + _h + i * (_h + ui(2));
 				var  ww = (_w - bs - ui(4)) / _sz;
 				
 				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _yy, _w, _h, boxColor, 1);
@@ -192,21 +224,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				array_delete(_data, toDel, 1);
 				if(array_length(_data) == 1) 
 					_data = _data[0];
-				onModify(_data, setValueForceUpdate);
-			}
-			
-			// array_adding
-			var _yy = _y + _len * (_h + ui(2));
-			var hv = hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _h);
-			
-			if(hv) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _yy, _w, _h, boxColor, .5 + .5 * interactable);
-			
-			draw_sprite_ui_uniform(THEME.add_16, 0, _x + _w - bs / 2, _yy + _h / 2, 1, COLORS._main_value_positive);
-			draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
-			draw_text_add(_x + _w - bs - ui(4), _yy + _h / 2, __txt("Add Vector"));
-			
-			if(hv && mouse_lpress(active)) {
-				array_push(_data, array_clone(array_last(_data)));
 				onModify(_data, setValueForceUpdate);
 			}
 			

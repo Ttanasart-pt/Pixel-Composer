@@ -1948,10 +1948,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			_riy += junction_draw_hei_y;
 			_iy  += junction_draw_hei_y * __s;
+			
+			return true;
 		});
 		
-		array_foreach(outputs_draw_index, function(jun) /*=>*/ { 
-			jun = outputs[jun]; 
+		// array_foreach(outputs_draw_index, (jun, i) => { 
+		// 	jun = outputs[jun]; 
+		array_foreach(outputDisplayList, function(jun, i) /*=>*/ { 
 			jun.x = _ox; jun.rx = _rox; 
 			jun.y = _oy; jun.ry = _roy; 
 			
@@ -1973,12 +1976,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var __vis = jun.isVisible();
 			_roy += junction_outp_hei_y * __vis 
 			_oy  += junction_outp_hei_y * __vis * __s; 
+			
+			return true;
 		});
 		
-		array_foreach(inputs,    function(jun) /*=>*/ { if(!jun.bypass_use) return; jun = jun.getBypassJunc(); if(!jun.visible) return; 
+		array_foreach(inputs,    function(jun,i) /*=>*/ { if(!jun.bypass_use) return; jun = jun.getBypassJunc(); if(!jun.visible) return; 
 		                                    jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.visible * __s; });
-		                                    
-		array_foreach(junc_meta, function(jun) /*=>*/ { jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
+		
+		array_foreach(junc_meta, function(jun,i) /*=>*/ { jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
 		
 		if(SHOW_PARAM) h = h_param;
 		if(onPreDraw) onPreDraw(_x, _y, _s, _iy, _oy);
