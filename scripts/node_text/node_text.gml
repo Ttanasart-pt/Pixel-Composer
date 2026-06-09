@@ -265,6 +265,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- Nodes
 	
 	attribute_surface_depth();
+	attribute_interpolation(false, true);
 	
 	static generateFont = function(_oldFont, _path, _size, _aa) {
 		if(PROJECT.animator.is_playing) return _oldFont;
@@ -562,7 +563,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			__wave_shape =  _waveH;
 		#endregion
 		
-		surface_set_shader(_outSurf, noone, true, BLEND.alphamulp);
+		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
+			shader_set_interpolation(_outSurf);
+			
 		if(_ubg) {
 			draw_clear(_bgc);
 			BLEND_ALPHA_MULP

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.3.009",
+    "changes": [
+      {
+        "date": "2026-06-09T05:02:07.239Z",
+        "node": "Draw Text",
+        "commit": "**Draw Text**: Add texture interpolation setting."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.005",
     "changes": [
       {
