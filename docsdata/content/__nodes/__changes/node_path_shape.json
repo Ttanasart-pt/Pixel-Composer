@@ -6,6 +6,11 @@
         "date": "2026-06-09T07:48:48.356Z",
         "node": "Shape Path",
         "commit": "**Shape Path**: Fix mod by zero error when using some shapes."
+      },
+      {
+        "date": "2026-06-09T08:54:46.268Z",
+        "node": "Inspector/ Animation Panel",
+        "commit": "**Inspector/ Animation Panel**: Hovering on a property now highlight that property in both panel."
       }
     ]
   },

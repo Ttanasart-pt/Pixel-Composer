@@ -1414,12 +1414,13 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             // Mouse interaction
+            var wdx = _x + ui(4);
+            var wdy = yy;
+            var wdw = con_w - ui(8);
+            var wdh = widH;
+            
             if(_hover && point_in_rectangle(_m[0], _m[1], _x, yy, _x + con_w, yy + widH)) {
                 _HOVERING_ELEMENT = jun;
-                var wdx = _x + ui(4);
-                var wdy = yy;
-                var wdw = con_w - ui(8);
-                var wdh = widH;
                 
                 var hov = PANEL_GRAPH.value_dragging != noone 
                 	|| (NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun)
@@ -1450,6 +1451,12 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(mouse_rpress(pFOCUS && mbRight))
                     propRightClick(jun);
             } 
+            
+            if(PANEL_ANIMATION && PANEL_ANIMATION.value_hovering == jun) {
+            	showHig = true;
+            	prop_selecting_y_to = wdy - _y;
+            	prop_selecting_h_to = wdh;
+            }
             
             // Mini timeline
             if(jun.inspector_timeline) {
@@ -1576,21 +1583,20 @@ function Panel_Inspector() : PanelContent() constructor {
         
         _inspecting.inspector_draw_height = hh;
         
-        #region selection highlight
-        	if(prop_selecting_y_to != undefined) {
-		        prop_selecting_y = lerp_float(prop_selecting_y, prop_selecting_y_to, 2);
-		        prop_selecting_h = lerp_float(prop_selecting_h, prop_selecting_h_to, 2);
-		        
-		        var _px = _x + ui(4);
-		        var _py = _y + prop_selecting_y;
-		        var _pw = con_w - ui(8);
-		        var _ph = prop_selecting_h;
-		        if(pHOVER) draw_sprite_stretched_ext(THEME.prop_selecting, 0, _px, _py, _pw, _ph, COLORS._main_accent, 1);
-        	}
-        	
-        	prop_selecting_y_to = undefined;
-    	#endregion
-        
+    	if(showHig && prop_selecting_y_to != undefined) { // Selection highlight
+	        prop_selecting_y = lerp_float(prop_selecting_y, prop_selecting_y_to, 2);
+	        prop_selecting_h = lerp_float(prop_selecting_h, prop_selecting_h_to, 2);
+	        
+	        var _px = _x + ui(4);
+	        var _py = _y + prop_selecting_y;
+	        var _pw = con_w - ui(8);
+	        var _ph = prop_selecting_h;
+	        // if(pHOVER) 
+	        draw_sprite_stretched_ext(THEME.prop_selecting, 0, _px, _py, _pw, _ph, COLORS._main_accent, 1);
+    	}
+    	
+    	prop_selecting_y_to = undefined;
+    	
         return hh;
     }
     

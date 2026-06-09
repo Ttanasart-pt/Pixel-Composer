@@ -2145,12 +2145,13 @@ function Panel_Animation_Dopesheet() {
         
         var drw  = ty0 < dopesheet_h + ui(16) && ty1 > -ui(16);
         var hov  = item_dragging == noone && point_in_rectangle(msx, msy, 0, ty0, w - side_width, ty1 - 1);
+        var dhov = hov || (PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover == prop);
         var foc  = pFOCUS;
         
         ////- =Draw Name
         
         var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_sub;
-        if(hov) cc = COLORS._main_text_accent;
+        if(dhov) cc = COLORS._main_text_accent;
         
         // draw_set_color(CDEF.main_mdblack);
         // draw_rectangle(0, ty - ui(8), tool_width, ty + ui(8), false);
@@ -2205,7 +2206,7 @@ function Panel_Animation_Dopesheet() {
         
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
-        var _tool_a = .75 + hov * .25;
+        var _tool_a = .75 + dhov * .25;
         
         if(drw) {
 	        var _tool_x0 = tool_width - ui(20 + 16 * 4.5 + 12);

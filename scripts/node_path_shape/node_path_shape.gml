@@ -56,6 +56,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_04_1}, list: global.node_path_shape_keys_204 },
 		]).setPieMenu();
 		
+	newInput(16, nodeValue_EScroll(  "Curve Eq.",     0, [ "Trigonometry", "Circle" ]         ));
 	newInput( 4, nodeValue_Slider(   "Skew",          .5, [-1,1,.01] ));
 	newInput( 5, nodeValue_RotRange( "Angle Range",   [0,90]         ));
 	newInput( 6, nodeValue_Float(    "Factor",         4             ));
@@ -69,13 +70,13 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
     ////- =Detail
 	newInput(14, nodeValue_Int(      "Resolution",     64            ));
-	// input 16
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, noone ));
 		
 	input_display_list = [
 		[ "Transform", false ],  0,  2,  1, 
-		[ "Shape",     false ],  3,  4,  5,  6,  7,  8,  9, 12, 10, 15, 11, 13, 
+		[ "Shape",     false ],  3, 16,  4,  5,  6,  7,  8,  9, 12, 10, 15, 11, 13, 
 		[ "Detail",    false ], 14, 
 	];
 	
@@ -252,6 +253,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	        var _inn  = getInputData( 8);
 	        var _c    = getInputData( 9);
 	        var _rev  = getInputData(10);
+	        var _creq = getInputData(16);
 	        
 	        for( var i = 4, n = array_length(inputs); i < n; i++ ) 
 	        	inputs[i].setVisible(false);
@@ -596,7 +598,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             	break;
             	
             case "Curve":
-            	inputs[6].setVisible(true);
+            	inputs[ 6].setVisible(true);
+            	inputs[16].setVisible(true);
             	
             	_pth.loop = false;
             	
@@ -608,10 +611,15 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 
             	_pth.points = array_create(_st);
             	for( var i = 0; i < _st; i++ ) {
-            		_pth.points[i] = [ 
-            			lerp(_x0, _x1, i / (_st - 1)),
-            			_yy + dsin(i * _as) * _pa3,
-        			]
+            		var _prg = i / (_st - 1);
+            		
+            		var _pax = lerp(_x0, _x1, _prg), _pay;
+            		switch(_creq) {
+            			case 0 : _pay = _yy + dsin(i * _as) * _pa3;                  break;
+            			case 1 : _pay = _yy + sqrt(1 - sqr(2 * (_prg - .5))) * _pa3; break;
+            		}
+            		
+            		_pth.points[i] = [ _pax, _pay ];
             	}
             	break;
         
