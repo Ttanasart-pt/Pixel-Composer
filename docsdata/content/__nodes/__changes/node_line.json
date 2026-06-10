@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4",
+    "changes": [
+      {
+        "date": "2026-06-10T06:28:05.182Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Fix 1px mode line disappear."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.007",
     "changes": [
       {

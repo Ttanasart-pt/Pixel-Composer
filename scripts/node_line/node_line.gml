@@ -751,18 +751,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _cappS = 0;
 				var _cappE = 0;
 				
-				shader_set(sh_line_draw_map);
-				shader_set_i("sampleMode", getAttribute("oversample"));
-				
-				shader_set_i("widthPass",  false   );
-				shader_set_2("position",   _texPos );
-				shader_set_f("rotation",   _texRot );
-				shader_set_2("scale",      _texSca );
-				shader_set_i("flipAxis",   true    );
-				shader_set_i("drawCap",    false   );
-				
-				shader_set_interpolation(_tex);
-				if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
+				if(!_1px) {
+					shader_set(sh_line_draw_map);
+					shader_set_i("sampleMode", getAttribute("oversample"));
+					
+					shader_set_i("widthPass",  false   );
+					shader_set_2("position",   _texPos );
+					shader_set_f("rotation",   _texRot );
+					shader_set_2("scale",      _texSca );
+					shader_set_i("flipAxis",   true    );
+					shader_set_i("drawCap",    false   );
+					
+					shader_set_interpolation(_tex);
+					if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
+				}
 				
 				draw_primitive_begin_texture(pr_trianglelist, _texId);
 				
@@ -919,7 +921,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var c = _capEnd[1]; drawCaps( 1, 1, c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], false, _texId );
 				}
 				
-				shader_reset();
+				if(!_1px) shader_reset();
 				
 				if(!array_empty(points)) {
 					var _pp = [ 0, 0 ];
