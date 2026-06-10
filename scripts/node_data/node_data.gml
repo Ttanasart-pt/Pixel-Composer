@@ -68,8 +68,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		run_in(1, function() /*=>*/ { 
 			resetInternalName();
-			if(renamed || renamedManual) return;
+			onValueRefresh();
 			
+			if(renamed || renamedManual) return;
 			display_name = __txt_node_name(instanceof(self), name);
 			if(!LOCALE_DEF || TESTING) renamed = true;
 		});
@@ -944,7 +945,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_foreach(inputs,  function(jun) /*=>*/ { if(jun.bypass_use)  array_push(outputDisplayList, jun.getBypassJunc()); });
 		
 		if(attributes.outp_meta) array_foreach(junc_meta, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); });
-		
 	}
 	
 	static onValidate = function() {

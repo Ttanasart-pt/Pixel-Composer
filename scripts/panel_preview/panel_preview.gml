@@ -81,7 +81,7 @@
 	    	var a = MOD_KEY.alt;
 	    	var cs = MOD_KEY.ctrl | MOD_KEY.shift;
 	    	
-	    	registerFunction(p, "Add Node",                 "A",       n, panel_preview_add_node           ).setMenu("preview_add_node", THEME.add_20)
+	    	registerFunction(p, "Add Node",                 "A",       s, panel_preview_add_node           ).setMenu("preview_add_node", THEME.add_20)
 	        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         ).setMenu("preview_focus_content" );
 	        
 	        registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content",      THEME.icon_center_canvas)

@@ -68,6 +68,14 @@ function Node_Surface_Project_Volume_3D(_x, _y, _group = noone) : Node_Processor
 			var _tSid  = _data[14];
 			var _level = _data[13];
 			var _thrs  = _data[15];
+			
+			var isFrn = is_surface(_sFrn);
+			var isSid = is_surface(_sSid);
+			var isTop = is_surface(_sTop);
+			
+			if(!isFrn) _sFrn = isTop? _sTop : _sSid;
+			if(!isSid) _sSid = isFrn? _sFrn : _sTop;
+			if(!isTop) _sTop = isSid? _sSid : _sFrn;
 		#endregion
 		
 		shader_set(sh_surface_project_volume_3d);
@@ -139,6 +147,12 @@ function Node_Surface_Project_Volume_3D(_x, _y, _group = noone) : Node_Processor
 			inputs[ 7].setVisible(_proj == 0);
 			inputs[ 8].setVisible(_proj == 0);
 			inputs[ 9].setVisible(_proj == 1);
+			
+			var isFrn = is_surface(_sFrn);
+			var isSid = is_surface(_sSid);
+			var isTop = is_surface(_sTop);
+			
+			if(!isFrn && !isSid && !isTop) return _outSurf;
 		#endregion
 		
 		surface_set_target(_outSurf);
