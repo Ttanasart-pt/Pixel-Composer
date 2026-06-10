@@ -190,13 +190,16 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[22].setVisible(_type == 4);
 			inputs[23].setVisible(_type == 4);
 		
+		#endregion
+		
+		#region precalc
+			random_set_seed(_seed);
 			swing_precal = array_create_ext(_amo, function(i) /*=>*/ {return random(1)});
 			
 			gravx = lengthdir_x(1, _grav); gravsx = lengthdir_x(1, _grav + 90);
 			gravy = lengthdir_y(1, _grav); gravsy = lengthdir_y(1, _grav + 90);
 		#endregion
 		
-		random_set_seed(_seed);
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			BLEND_OVERRIDE
