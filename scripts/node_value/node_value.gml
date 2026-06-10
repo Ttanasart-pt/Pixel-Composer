@@ -1930,7 +1930,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
 	
-	show_val = [];
+	show_val      = [];
+	show_val_curr = undefined;
 	static showValue = function() {
 		var val = 0;
 		
@@ -1960,6 +1961,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} else 
 			val = array_empty(animator.values)? 0 : animator.values[0].value;
 		
+		show_val_curr = val;
 		return val;
 	}
 	

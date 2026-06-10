@@ -79,6 +79,17 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		return animator.getValue(_time);
 	}
 
+	static isAnimable = function() {
+		if(instanceBase != undefined) return instanceBase.isAnimable();
+		
+		if(type == VALUE_TYPE.PCXnode)				 return false;
+		if(display_type == VALUE_DISPLAY.text_array) return false;
+		
+		if(show_val_curr != undefined)
+			return array_get_depth(show_val_curr) == 1;
+		return true;
+	}
+	
 	////- DRAW
 	
 	path_point_drag = undefined;

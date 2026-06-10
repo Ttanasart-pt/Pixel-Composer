@@ -33,6 +33,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var _name     = jun.getName();
 		var dispName  = _name;
 		var wid       = jun.getEditWidget();
+		var _showVal  = jun.showValue();
 		
 		if(_ID != undefined) {
 			var _map = jun.editWidgetMap;
@@ -504,8 +505,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				wid.setInteract(false);
 			}
 			
-			var _show = jun.showValue();
-			var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.display_data, _m, rx, ry)
+			var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _showVal, jun.display_data, _m, rx, ry)
 				.setFont(_viewSpac? f_p2 : f_p3)
 				.setSepAxis(jun.sep_axis)
 			

@@ -169,13 +169,13 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			var _len = min(array_display_max, array_length(_data));
 			h = _h + _len * (_h + ui(2)) - ui(2);
 			
-			var toDel = undefined;
+			var toFocus = undefined;
+			var toDel   = undefined;
 			var bs = min(_h, ui(24));
 			var bc = [COLORS._main_icon, COLORS._main_value_negative];
 			
 			array_hovering = noone;
-			if(mouse_lpress(active)) 
-				array_focusing = undefined;
+			if(mouse_lpress(active)) toFocus = -1;
 			
 			for( var i = 0; i < _len; i++ ) {
 				var _vect = _data[i];
@@ -190,7 +190,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				if(hv) {
 					array_hovering = i;
 					if(mouse_lpress(active)) 
-						array_focusing = i;
+						toFocus = i;
 				}
 				
 				for(var j = 0; j < _sz; j++) {
@@ -200,7 +200,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 					if(array_focusing == i) {
 						tb[j].setFocusHover(active, hover);
 						tb[j].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
-						tb[j].hide       = !per_line;
+						tb[j].hide       = true;
 						tb[j].setLabel(axis[j]);
 						
 						tb[j].draw(bx, by, ww - 1, _h, _vect[j], _m);
@@ -211,14 +211,21 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 					}
 				}
 				
-				if(hide == 0 && (array_focusing != i || hv)) 
-					draw_sprite_stretched_ext(THEME.textbox, 0, _x, _yy, _w, _h, boxColor, .5 + .5 * interactable);
+				if(hide == 0 && array_focusing != i && hv) 
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _yy, _w, _h, boxColor, .5 + .5 * interactable);
 				
 				var bx = _x + _w - bs;
 				var by = _yy;
 				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, hover, active, "Delete", THEME.minus, 0, bc, 1, .5) == 2)
 					toDel = i;
 			}
+			
+			if(toFocus == -1) {
+				array_focusing = undefined;
+				if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
+				
+			} else if(toFocus >= 0) 
+				array_focusing = toFocus;
 			
 			if(toDel != undefined) {
 				array_delete(_data, toDel, 1);
