@@ -163,6 +163,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			surface_set_shader(temp_surface[2 + bg], noone);
 				if(_blnd == 0) BLEND_MAX
+				
 				if(!_bori) shader_set(sh_fluffify_apply);
 				draw_surface_ext_safe(temp_surface[bg], 0, 0, 1, 1, 0, _iBlnd[cindex % _palLen]);
 				if(!_bori) shader_reset();

@@ -125,6 +125,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        if(_swng) {
 	        	var _phs   = swing_precal[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
 	        	var _swamo = cos(_phs * 2 * pi) * _samp;
+	        	var _swamo = cos(_phs * 1 * pi) * _samp;
 	        	
 	        	nx += _swamo * _drop * gravsx;
 	        	ny += _swamo * _drop * gravsy;

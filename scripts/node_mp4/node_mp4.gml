@@ -120,13 +120,14 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		file_reading     = true;
 		file_hash        = md5_string_unicode($"{path_current}{_filemod}");
-		file_read_cursor = 1;
+		file_read_cursor =  1;
+		file_reader_pid  = -1;
 		var targ_dir = $"{DIRECTORY}Cache/{file_hash}";
 		
-		if(!directory_exists(targ_dir)) {
+		if(!directory_exists(targ_dir)) { // no cached frames
 			directory_verify(targ_dir);
 			
-			shell_cmd = $"-hide_banner -loglevel quiet -i \"{path_current}\" -pix_fmt rgba \"{targ_dir}/frame%04d.png\"";
+			shell_cmd       = $"-hide_banner -loglevel quiet -i \"{path_current}\" -pix_fmt rgba \"{targ_dir}/frame%04d.png\"";
 			file_reader_pid = shell_execute_async(ffmpeg, shell_cmd);
 		}
 		

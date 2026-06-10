@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4",
+    "changes": [
+      {
+        "date": "2026-06-10T23:47:39.110Z",
+        "node": "MP4",
+        "commit": "**MP4**: Fix loading cached video not stopping."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.007",
     "changes": [
       {
