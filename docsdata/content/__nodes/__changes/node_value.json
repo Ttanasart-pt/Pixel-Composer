@@ -6,6 +6,11 @@
         "date": "2026-06-10T00:13:44.365Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Animation button now disabled when inputting vector array."
+      },
+      {
+        "date": "2026-06-10T00:42:28.655Z",
+        "node": "",
+        "commit": "**Vector**: Fox extracting array of vector create incorrect node and values."
       }
     ]
   },

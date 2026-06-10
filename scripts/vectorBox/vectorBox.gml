@@ -147,7 +147,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
 			draw_text_add(_x + ui(24), _y + _exh / 2, __txt("Vector Array") + $" [{array_length(_data)}]")
 			
-			var abw = ui(24);
+			var bs  = min(_h, ui(24));
+			var abw = bs;
 			var abh = _exh;
 			var abx = _x + _w - abw;
 			var aby = _y;
@@ -171,7 +172,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			
 			var toFocus = undefined;
 			var toDel   = undefined;
-			var bs = min(_h, ui(24));
 			var bc = [COLORS._main_icon, COLORS._main_value_negative];
 			
 			array_hovering = noone;
@@ -216,8 +216,17 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				
 				var bx = _x + _w - bs;
 				var by = _yy;
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, hover, active, "Delete", THEME.minus, 0, bc, 1, .5) == 2)
+				if(buttonInstant(noone, bx, by, bs, bs, _m, hover, active, __txt("Delete"), THEME.minus, 0, bc, 1, .5) == 2)
 					toDel = i;
+			}
+			
+			if(toDel != undefined) {
+				array_delete(_data, toDel, 1);
+				if(array_length(_data) == 1) 
+					_data = _data[0];
+				onModify(_data, setValueForceUpdate);
+				
+				if(array_focusing == toDel) toFocus = undefined;
 			}
 			
 			if(toFocus == -1) {
@@ -226,13 +235,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				
 			} else if(toFocus >= 0) 
 				array_focusing = toFocus;
-			
-			if(toDel != undefined) {
-				array_delete(_data, toDel, 1);
-				if(array_length(_data) == 1) 
-					_data = _data[0];
-				onModify(_data, setValueForceUpdate);
-			}
 			
 			return h;
 			

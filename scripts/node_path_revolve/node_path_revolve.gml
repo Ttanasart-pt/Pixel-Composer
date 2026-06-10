@@ -1,4 +1,4 @@
-function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Revolve Path";
 	
 	////- =Output
@@ -73,6 +73,8 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	temp_surface = [ noone ];
 	
+	curve_scale = new curveMap();
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _cen = getInputData( 8);
 		var _dir = getInputData( 9);
@@ -93,49 +95,49 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		InputDrawOverlay(inputs[ 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 	}
-		
-	static update = function() {
+	
+	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-			var _dim  = getInputData( 1);
+			var _dim  = _data[ 1];
 			
-			var _path = getInputData( 0);
-			var _prng = getInputData(14);
-			var _sft  = getInputData( 4);
-			var _inv  = getInputData( 5);
-			var _pres = getInputData( 7);
+			var _path = _data[ 0];
+			var _prng = _data[14];
+			var _sft  = _data[ 4];
+			var _inv  = _data[ 5];
+			var _pres = _data[ 7];
 			
-			var _cen  = getInputData( 8);
-			var _dir  = getInputData( 9);
-			var _rev  = getInputData(11);
-			var _shf  = getInputData(13);
-			var _rat  = getInputData(10);
-			var _scal = getInputData(15);
-			var _scaC = getInputData(16), _scaleCurve = inputs[15].attributes.curved? new curveMap(_scaC) : undefined;
+			var _cen  = _data[ 8];
+			var _dir  = _data[ 9];
+			var _rev  = _data[11];
+			var _shf  = _data[13];
+			var _rat  = _data[10];
+			var _scal = _data[15];
+			var _scaC = _data[16], _scaleCurve = inputs[15].attributes.curved? curve_scale.set(_scaC) : undefined;
 			
-			var _sub  = getInputData( 3);
+			var _sub  = _data[ 3];
 			
-		    var _pos  = getInputData(18);
-		    var _anc  = getInputData(19);
-		    var _rot  = getInputData(20);
-		    var _sca  = getInputData(21);
+		    var _pos  = _data[18];
+		    var _anc  = _data[19];
+		    var _rot  = _data[20];
+		    var _sca  = _data[21];
 		    
-			var _blnd = getInputData(17);
-			var _surf = getInputData( 2);
-			var _uvP  = getInputData(12);
-			var _uvS  = getInputData( 6);
-			var _uvSP = getInputData(30);
+			var _blnd = _data[17];
+			var _surf = _data[ 2];
+			var _uvP  = _data[12];
+			var _uvS  = _data[ 6];
+			var _uvSP = _data[30];
 			
-			var _caps = getInputData(22);
-			var _scOr = getInputData(26);
-			var _scTx = getInputData(23);
-			var _scBl = getInputData(28);
-			var _scMp = getInputData(31);
+			var _caps = _data[22];
+			var _scOr = _data[26];
+			var _scTx = _data[23];
+			var _scBl = _data[28];
+			var _scMp = _data[31];
 			
-			var _cape = getInputData(25);
-			var _ecOr = getInputData(27);
-			var _ecTx = getInputData(24);
-			var _ecBl = getInputData(29);
-			var _ecMp = getInputData(32);
+			var _cape = _data[25];
+			var _ecOr = _data[27];
+			var _ecTx = _data[24];
+			var _ecBl = _data[29];
+			var _ecMp = _data[32];
 			
 			inputs[23].setVisible(true, _caps);
 			inputs[24].setVisible(true, _cape);
@@ -143,7 +145,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			outputs[1].setVisible(_caps);
 			outputs[2].setVisible(_cape);
 			
-			if(!is_path(_path)) return;
+			if(!is_path(_path)) return _outData;
 		#endregion
 		
 		if(!is_surface(_surf)) {
@@ -205,7 +207,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var stp = 1 / _sub;
 	
 		if(_caps) {
-			var _outCapS = surface_verify(outputs[1].getValue(), _dim[0], _dim[1], attrDepth());
+			var _outCapS = surface_verify(_outData[1], _dim[0], _dim[1], attrDepth());
 		
 			surface_set_shader(_outCapS, sh_path_map_render, true, BLEND.normal);
 				shader_set_interpolation(_surf);
@@ -279,12 +281,10 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 				matrix_set(matrix_world, MATRIX_IDENTITY);
 			surface_reset_shader();
-			
-			outputs[1].setValue(_outCapS);
 		}
 		
 		if(_cape) {
-			var _outCapE = surface_verify(outputs[2].getValue(), _dim[0], _dim[1], attrDepth());
+			var _outCapE = surface_verify(_outData[2], _dim[0], _dim[1], attrDepth());
 			
 			surface_set_shader(_outCapE, sh_path_map_render, true, BLEND.normal);
 				shader_set_interpolation(_surf);
@@ -358,11 +358,9 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				matrix_set(matrix_world, MATRIX_IDENTITY);
 			surface_reset_shader();
-			
-			outputs[2].setValue(_outCapE);
 		}
 		
-		var _outSurf = surface_verify(outputs[0].getValue(), _dim[0], _dim[1], attrDepth());
+		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
 		surface_set_shader(_outSurf, sh_path_map_render, true, BLEND.normal);
 			shader_set_interpolation(_surf);
 			draw_set_color(c_white);
@@ -468,6 +466,6 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 		surface_reset_shader();
 		
-		outputs[0].setValue(_outSurf);
+		return _outData;
 	}
 } 

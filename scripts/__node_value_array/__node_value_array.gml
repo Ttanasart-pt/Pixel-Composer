@@ -20,6 +20,7 @@ function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : N
 		if(array_depth != 0 || def_length == -1) return val;
 		
 		var _d = array_get_depth(val);
+		
 		switch(_d) {
 			case 0: return array_create(def_length, val);
 			case 1: return _array_verify(val, def_length);

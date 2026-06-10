@@ -6,6 +6,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	preview_hotkey_spr = THEME.tools_2d_move;
 	def_length         = 2;
 	
+	extract_node = [ "Node_Vector2", "Node_Path" ];
 	anim_presets = [
 		[ "0, 1",  [ [ 0, [ 0,   0  ] ], [ 1, [ 1,   1  ] ]], THEME.apreset_01 ], 
 		[ "1, 0",  [ [ 0, [ 1,   1  ] ], [ 1, [ 0,   0  ] ]], THEME.apreset_10 ], 

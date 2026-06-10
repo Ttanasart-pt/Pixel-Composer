@@ -3285,7 +3285,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setExtractNode = function(e) /*=>*/ { extract_node = e; return self; }
 	static extractNode = function(_type = extract_node, _x = undefined, _y = undefined) {
-		
 		if(is_array(_type)) _type = _type[0];
 		if(_type == "") return noone;
 		
@@ -3315,7 +3314,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					for( var j = 0; j < len; j++ ) {
 						var _in   = ext.inputs[j];
 						var _kf   = _arrVal.clone(_in.animator);
-						_kf.value = _kf.value[j];
+						
+						var _oval = _kf.value;
+						var _d    = array_get_depth(_oval);
+						
+						if(_d == 2) {
+							var _olen = array_length(_oval);
+							var _nval = array_create(_olen);
+							for( var k = 0; k < _olen; k++ ) 
+								_nval[k] = _oval[k][j];
+							
+							_kf.value = _nval;
+							
+						} else 
+							_kf.value = _oval[j];
 						
 						array_push(_in.animator.values, _kf);
 					}
