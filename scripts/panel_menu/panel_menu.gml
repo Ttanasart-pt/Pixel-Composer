@@ -876,9 +876,9 @@ function Panel_Menu() : PanelContent() constructor {
                 
             } else {
                 var _xx1 = ui(40);
-                var y1 = h - ui(20);
+                var  y1  = h - ui(20);
                 
-                draw_set_text(v, fa_left, fa_center, tc);
+                draw_set_text(font, fa_left, fa_center, tc);
                 var ww = string_width(txt) + ui(12);
                 
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
