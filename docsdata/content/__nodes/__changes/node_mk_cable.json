@@ -6,6 +6,16 @@
         "date": "2026-06-10T23:47:39.118Z",
         "node": "",
         "commit": "**MP4**: Fix loading cached video not stopping."
+      },
+      {
+        "date": "2026-06-11T00:11:28.455Z",
+        "node": "",
+        "commit": "**MK Cables**: Add endpoint swinging."
+      },
+      {
+        "date": "2026-06-11T01:08:34.481Z",
+        "node": "MK Cables",
+        "commit": "**MK Cables**: Add cable texture."
       }
     ]
   },

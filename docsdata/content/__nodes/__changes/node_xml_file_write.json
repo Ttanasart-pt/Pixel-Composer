@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.4",
+    "changes": [
+      {
+        "date": "2026-06-11T00:11:28.704Z",
+        "node": "",
+        "commit": "**MK Cables**: Add endpoint swinging."
+      }
+    ]
+  }
+]

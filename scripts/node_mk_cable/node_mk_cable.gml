@@ -2,7 +2,9 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "MK Cables";
 	
 	newInput( 3, nodeValueSeed());
-	newInput( 0, nodeValue_Surface("Surface In"));
+	
+	////- =Output
+	newInput( 0, nodeValue_Surface( "BG Surface" ));
 	newInput(19, nodeValue_Dimension());
 	
 	////- =Anchors
@@ -38,7 +40,12 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Render
 	newInput( 6, nodeValue_Range(    "Thickness", [1,1], true )).setCurvable(20, CURVE_DEF_11, "Over Cable");
 	newInput( 7, nodeValue_Gradient( "Colors",    gra_white   )).setGradable(21, gra_white,    "Over Cable");
-	// input 28
+	
+		////- =/Texture
+	newInput(28, nodeValue_Surface(  "Texture"                ));
+	newInput(29, nodeValue_Vec2(     "UV Position", [0,0]     ));
+	newInput(30, nodeValue_Vec2(     "UV Scale",    [1,1]     ));
+	// input 29
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -49,9 +56,14 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Swing",          false, 11 ], 12, 13, 
 			[ "/End Swing", false, 24 ], 27, 25, 26, 
 		[ "Render",         false     ],  6, 20,  7, 21, 
+			[ "/Texture",   false     ], 28, 29, 30, 
 	];
 	
 	////- Nodes
+	
+	attribute_surface_depth();
+	attribute_interpolation(false, true);
+	attribute_oversample();
 	
 	swing_precal = [];
 	thick_curve  = new curveMap();
@@ -110,6 +122,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _eswg_rat = _data[26];
 			
 			var _colrMap  = _data[21]; 
+			var _linTex   = _data[28]; 
 			
 			var _thk_curved = inputs[6].attributes.curved;
 			var _col_graded = inputs[7].attributes.graded;
@@ -144,24 +157,35 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	    }
 		#endregion
 		
-		var len  = point_distance(x0, y0, x1, y1);
+		var len  = point_distance( x0, y0, x1, y1);
+		var dir  = point_direction(x0, y0, x1, y1);
 	    var aa   = _ten * len / 2;
 	    var _isg = 1 / _segs;
-	    var ox, oy, ot, oc;
-	    var nx, ny, nt, nc;
+	    var ox, oy, ot, oc, oa, ol, ott;
+	    var nx, ny, nt, nc, na, nl, ntt;
 		var cc = draw_get_color();
 		
 	    var _samp = random_range(_swng_amp[0], _swng_amp[1]) * .1;
     	var _sfrq = round(random_range(_swng_frq[0], _swng_frq[1]));
 	    
+	    if(is_surface(_linTex))
+			 draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_linTex));
+		else draw_primitive_begin(pr_trianglelist);
+		
+		var _total_len = 0;
+		ol = 0;
+		
 	    for (var i = 0; i <= _segs; i++) {
 	        var t = i * _isg;
 	        var _drop = aa * sin(t * pi);
+	        
+	        ntt = t;
 	        
 	        nx = lerp(x0, x1, t) + _drop * gravx;
 	        ny = lerp(y0, y1, t) + _drop * gravy;
 	        nt = max(1, _thk * (_thk_curved? thick_curve.get(t) : 1));
 	        nc = _col_graded? colorMultiply(cc, _colrMap.evalFast(t)) : cc;
+	        na = i? point_direction(ox, oy, nx, ny) : dir;
 	        
 	        if(_swng) {
 	        	var _phs   = swing_precal[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
@@ -172,13 +196,27 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        	ny += _swamo * _drop * gravsy;
 	        }
 	        
-	        if(i) draw_line_width2(ox, oy, nx, ny, ot, nt, true, oc, nc);
+	        // if(i) draw_line_width2(ox, oy, nx, ny, ot, nt, true, oc, nc);
+	        if(i) {
+	        	_total_len += point_distance(ox, oy, nx, ny);
+	        	nl = _total_len;
+	        	draw_line_width2_angle(ox, oy, nx, ny, ot, nt, oa - 90, na - 90, oc, nc, [ol,nl,0,1]);
+	        	ol = nl;
+	        }
+	        
+			ott = ntt;
 			
 	        ox = nx;
 	        oy = ny;
 	        ot = nt;
 	        oc = nc;
+	        oa = na;
 	    }
+		
+		shader_set_f("lineThickness", _thk);
+		shader_set_f("lineLength",    _total_len);
+		
+	    draw_primitive_end();
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
@@ -203,13 +241,16 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _tens = _data[ 4];
 			var _segs = _data[ 8];
 			
-			var _thks    = _data[ 6];
-			var _colr    = _data[ 7]; _colr.cache();
-			var _colrMap = _data[21]; _colrMap.cache();
+			var _thks     = _data[ 6];
+			var _colr     = _data[ 7]; _colr.cache();
+			var _colrMap  = _data[21]; _colrMap.cache();
 			
 			var _swng     = _data[11];
 			var _swng_amp = _data[12];
 			var _swng_frq = _data[13];
+			
+			var _uvPos    = _data[29];
+			var _uvSca    = _data[30];
 			
 			thick_curve.set(_data[20]);
 			
@@ -242,11 +283,15 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			gravy = lengthdir_y(1, _grav); gravsy = lengthdir_y(1, _grav + 90);
 		#endregion
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
+		
+		surface_set_shader(_outSurf);
 			BLEND_OVERRIDE
 			draw_surface_safe(_surf);
 			BLEND_NORMAL
+			
+			shader_set(sh_mk_cable_draw);
+			shader_set_2( "uvPosition", _uvPos );
+			shader_set_2( "uvScale",    _uvSca );
 			
 			switch(_type) {
 				case 0 :
@@ -388,7 +433,8 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					break;
 			}
 			
-		surface_reset_target();
+			shader_reset();
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

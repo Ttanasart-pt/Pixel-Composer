@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_cable_draw",
+  "name":"sh_mk_cable_draw",
+  "parent":{
+    "name":"simulation",
+    "path":"folders/nodes/data/MKFX/simulation.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

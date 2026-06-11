@@ -6,6 +6,11 @@
         "date": "2026-06-10T06:28:05.182Z",
         "node": "Draw Line",
         "commit": "**Draw Line**: Fix 1px mode line disappear."
+      },
+      {
+        "date": "2026-06-11T00:11:28.434Z",
+        "node": "",
+        "commit": "**MK Cables**: Add endpoint swinging."
       }
     ]
   },
