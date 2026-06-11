@@ -29,6 +29,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(22, nodeValue_Bool(     "Blend Original",       false   ));
 	newInput(14, nodeValue_Bool(     "Fade by Iteration",    false   ));
 	newInput(17, nodeValue_Bool(     "Skip First Iteration", false   ));
+	newInput(27, nodeValue_Bool(     "Invert",               false   ));
 	
 	////- =Coloring
 	newInput(18, nodeValue_Palette(  "Iteration Blend", [ ca_white ] ));
@@ -38,7 +39,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Decorner
 	newInput(24, nodeValue_Bool(     "Use Decorner",   true ));
 	newInput(25, nodeValue_Slider(   "Tolerance",      0    ));
-	//input 27
+	//input 28
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -46,7 +47,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Surfaces",   true     ],  0,  1,  2,  3,  4,  
 		[ "Fluff",     false     ], 16, 26,  6,  9,  8, 15, 
 		[ "Iteration", false     ], 10, 11, 12, 20, 
-		[ "Rendering", false     ], 13, 21, 22, 14, 17, 
+		[ "Rendering", false     ], 13, 21, 22, 14, 17, 27, 
 		[ "Coloring",  false     ], 18, 23, 19, 
 		[ "Decorner",   true, 24 ], 25, 
 	];
@@ -87,6 +88,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _bori = _data[22];
 			var _fItr = _data[14];
 			var _skpf = _data[17];
+			var _invt = _data[27];
 			
 			var _iBlnd = _data[18], _palLen = array_length(_iBlnd);
 			var _palSt = _data[23];
@@ -112,7 +114,9 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		if(_palSt) _pBlnd = ceil(_maxItr) / _palLen;
 		
-		surface_set_shader(temp_surface[bg]);
+		surface_set_shader(temp_surface[bg], _invt? sh_invert : noone);
+			if(_invt) shader_set_i("alpha", false);
+		
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
@@ -182,7 +186,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_i++;
 		}
 			
-		surface_set_shader(_outSurf);
+		surface_set_shader(_outSurf, _invt? sh_invert : noone);
 			draw_surface_safe(temp_surface[2 + bg]);
 		surface_reset_shader();
 	

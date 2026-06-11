@@ -15,6 +15,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
+	newInput(12, nodeValue_Surface( "BG Surface" ));
 	
 	////- =Points
 	newInput( 2, nodeValue_Vec2( "Start Point",   [0,.5] )).setUnitSimple();
@@ -32,12 +33,12 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		////- =/Colors
 	newInput( 7, nodeValue_Gradient( "Base Color",        gra_white ));
 	newInput( 8, nodeValue_Gradient( "Color Over Length", gra_white ));
-	// 12
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  1,
-		[ "Output",      false ],  0, 
+		[ "Output",      false ],  0, 12, 
 		[ "Points",      false ],  2,  3,  
 		[ "Line",        false ],  4,  5,  6,  9, 11, 
 		[ "Rendering",   false ], 10, 
@@ -58,6 +59,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _seed  = getInputData( 1);
 			
 			var _dim   = getInputData( 0);
+			var _bgS   = getInputData(12);
 			
 			var _p0    = getInputData( 2);
 			var _p1    = getInputData( 3);
@@ -96,6 +98,8 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		surface_set_target(outSurf);
 			DRAW_CLEAR
+			draw_surface_safe(_bgS);
+			
 			switch(_blnd) {
 				case 0 : BLEND_NORMAL; break;
 				case 1 : BLEND_ADD;    break;

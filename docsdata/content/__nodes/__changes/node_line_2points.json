@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.4",
+    "changes": [
+      {
+        "date": "2026-06-11T01:49:31.014Z",
+        "node": "",
+        "commit": "**Fluffify**: Add invert option."
+      }
+    ]
+  }
+]
