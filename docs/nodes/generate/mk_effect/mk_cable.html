@@ -6832,9 +6832,9 @@
 <table class = "summary-table">
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_mk_cable.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>MK Cables</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_MK_Cable</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="/nodes/array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><div class="vertical"></div><a href="#">Node_MK_Cable</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
-<tr>
+<tr><th colspan="2" class="summary-topic junction-separator"><p>Output</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
-                <td><p>Surface In</p></td>
+                <td><p>Bg Surface</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">dimension</p></td>
                 <td><p>Dimension</p></td>
@@ -6857,7 +6857,7 @@
                 <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
                 <td><p>Points</p></td>
             </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffb5b5">pathnode</p></td>
+                <td class="summary-topic junction-type"><p style="color: #eb004b">path</p></td>
                 <td><p>Path</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
@@ -6889,12 +6889,33 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Frequency</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>End Swing</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
+                <td><p>End Swing</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
+                <td><p>Strength</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
+                <td><p>Speed</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
+                <td><p>Ratio</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Render</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Thickness</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">gradient</p></td>
                 <td><p>Colors</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Texture</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
+                <td><p>Texture</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
+                <td><p>Uv Position</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
+                <td><p>Uv Scale</p></td>
             </tr>
 <tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
@@ -6902,6 +6923,9 @@
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Surface Out</p></td>
             </tr>
+
+<tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
+<tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr><tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Interpolation">Interpolation</a></th></tr><tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Oversample">Oversample</a></th></tr>
 
 </table>
 
@@ -6913,7 +6937,7 @@
         Copy to Clipboard
 </button><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
-<table class="change-table"><tr><th>1.21.3.010</th></tr><tr><td>**MK Cables**: Fix swing re-calculate with different seed on export.</td></tr><tr><th>1.21.2.004</th></tr><tr><td>Introduced</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_mk_cable/node_mk_cable.gml">/scripts/node_mk_cable/node_mk_cable.gml</a></li></ul>
+<table class="change-table"><tr><th>1.21.4</th></tr><tr><td>**MK Cables**: Add cable texture.</td></tr><tr><th>1.21.3.010</th></tr><tr><td>**MK Cables**: Fix swing re-calculate with different seed on export.</td></tr><tr><th>1.21.2.004</th></tr><tr><td>Introduced</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_mk_cable/node_mk_cable.gml">/scripts/node_mk_cable/node_mk_cable.gml</a></li></ul>
         </div>
     </div>
 

@@ -31,7 +31,7 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 	newInput(20, nodeValue_Slider( "Threshold",  .5    ));
 	
 	////- =Rendering
-	newInput(16, nodeValue_EScroll( "Color Type",    0, [ "Face Normal", "Face Average All", "Face Average Except"  ] ));
+	newInput(16, nodeValue_EScroll( "Voxel Color",   0, [ "Face Normal", "Face Average All", "Face Average Except"  ] ));
 	newInput(15, nodeValue_Palette( "Face Blending", [ca_white]       ));
 	newInput(17, nodeValue_EButton( "Except",        0, ["X","Y","Z"] ));
 	newInput(14, nodeValue_Range(   "Depth Range",   [0,1]            ));

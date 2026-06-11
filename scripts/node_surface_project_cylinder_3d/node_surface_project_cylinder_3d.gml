@@ -27,8 +27,9 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 	newInput(13, nodeValue_RotRange( "Angle Range", [0,360] ));
 	
 	////- =Rendering
-	newInput(14, nodeValue_Range(    "Depth Range",   [0,1] ));
-	// 16
+	newInput(16, nodeValue_EScroll(  "Voxel Color",  0, [ "Face Normal", "Face Average All", "Face Average Except"  ] ));
+	newInput(14, nodeValue_Range(    "Depth Range", [0,1] ));
+	// 17
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone )).setDrawGroup(10);
 	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone )).setDrawGroup(10);
@@ -38,7 +39,7 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 		[ "Surfaces",  false ],  1,  2, 
 		[ "Camera",    false ],  4, 12,  9, 10, 11,  8,
 		[ "Geometry",  false ], 15, 13, 
-		[ "Rendering", false ], 14, 
+		[ "Rendering", false ], 16, 14, 
 	];
 	
 	////- Node

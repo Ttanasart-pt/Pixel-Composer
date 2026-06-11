@@ -274,7 +274,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[33].setVisible(_dtype == 3);
 			
 			inputs[48].setVisible(_bg == 1);
-			inputs[49].setVisible(_bg == 2);
+			inputs[49].setVisible(_bg == 2, _bg == 2);
 			inputs[50].setVisible(_bg == 2);
 			
 			outputs[1].setVisible(_colW);

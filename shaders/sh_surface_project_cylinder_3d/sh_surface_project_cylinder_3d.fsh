@@ -260,14 +260,23 @@ void main() {
         vec3 sc = wc * .5 + .5;
         
         float ang = (atan(sc.x - .5, sc.z - .5) + PI);
+        
         float len = length(sc.xz - .5);
         if(fromCenter == 0) len = len * 2.;
         else                len = len + .5;
         
         if(ang >= aRang.x && ang <= aRang.y) 
         if(len >= 0. && len < 1. && sc.y >= 0. && sc.y < 1.) {
+            bool sHit = true;
             samTop = texture2D(sProfile, vec2(len, sc.y));
-            if (samTop.a > 0.) { 
+            if (samTop.a == 0.) sHit = false;
+            
+            if(sTop_use == 1) {
+            	vec4 samT = texture2D(sTop, sc.xz);
+            	if (samT.a == 0.) sHit = false;
+            }
+            
+            if (sHit) { 
             	hit   = true; 
             	hitUV = vec2(len, sc.y);
             	break; 
@@ -291,8 +300,15 @@ void main() {
     vec3 hitPos = (ro + rd * ft) * voxSize;
     vec3 samPos = hitPos * .5 + .5;
     
-    gl_FragData[0] = texture2D(sProfile, hitUV);
-    if(sTop_use == 1) gl_FragData[0] *= texture2D(sTop, samPos.xz);
+    if(sTop_use == 0) gl_FragData[0] = texture2D(sProfile, hitUV);
+    else              gl_FragData[0] = texture2D(sTop, samPos.xz);
+    
+    gl_FragData[0].a = 1.;
+    // gl_FragData[0] = texture2D(sProfile, hitUV);
+    // if(sTop_use == 1) {
+    // 	vec4 samT = texture2D(sTop, samPos.xz);
+    // 	if(samT.a > 0.) gl_FragData[0] *= samT;
+    // }
     
     float depth = distance(eye, hitPos) / scale;
     depth = (depth - depthRange.x) / (depthRange.y - depthRange.x);
