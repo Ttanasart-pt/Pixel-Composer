@@ -3,7 +3,7 @@ function Node_Path_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_Path( "Path" ));
 	
 	////- =Mapping
 	newInput( 1, nodeValue_Surface( "UV Map"    ));

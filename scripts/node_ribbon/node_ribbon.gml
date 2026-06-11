@@ -8,7 +8,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(1, nodeValue_Dimension());
 	
 	////- =Path
-	newInput( 2, nodeValue_PathNode( "Path"          ));
+	newInput( 2, nodeValue_Path( "Path"          ));
 	newInput(11, nodeValue_Bool(     "Loop",   false ));
 	newInput( 3, nodeValue_Int(      "Sample", 64    ));
 	newInput(10, nodeValue_Bool(     "Invert", false ));

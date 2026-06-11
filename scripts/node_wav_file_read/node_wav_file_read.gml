@@ -29,7 +29,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "WAV File In";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path(    "Path"        )).setDisplay(VALUE_DISPLAY.path_load, { filter: "WAV Audio (.wav)|*.wav" }).rejectArray();
+	newInput(0, nodeValue_FPath(    "Path"        )).setDisplay(VALUE_DISPLAY.path_load, { filter: "WAV Audio (.wav)|*.wav" }).rejectArray();
 	newInput(1, nodeValue_Trigger( "Sync length" ));
 	newInput(2, nodeValue_Bool(    "Mono", false ));
 	// input 3

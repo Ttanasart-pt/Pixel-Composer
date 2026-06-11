@@ -11,7 +11,7 @@ function Node_Path_Join(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
-		newInput(index, nodeValue_PathNode("Path" ));
+		newInput(index, nodeValue_Path("Path" ));
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.pathnode);
 	

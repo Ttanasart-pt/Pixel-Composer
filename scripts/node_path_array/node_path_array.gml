@@ -12,7 +12,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_PathNode("Path" ));
+		newInput(index, nodeValue_Path("Path" ));
 		
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.pathnode);

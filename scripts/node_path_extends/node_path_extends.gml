@@ -4,7 +4,7 @@ function Node_Path_Extends(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	
 	////- =Paths
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_Path( "Path" ));
 	
 	////- =Extends
 	newInput( 1, nodeValue_EButton( "Side",    0, [ "Start", "End" ] ));

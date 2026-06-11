@@ -13,7 +13,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Path
-	newInput( 1, nodeValue_PathNode(     "Blur Path"       ));
+	newInput( 1, nodeValue_Path(     "Blur Path"       ));
 	newInput(12, nodeValue_Slider(       "Path Origin", 0  ));
 	newInput(11, nodeValue_Slider_Range( "Range", [ 0, 1 ] ));
 	

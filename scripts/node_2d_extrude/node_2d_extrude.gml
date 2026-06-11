@@ -12,7 +12,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 7, nodeValue_Bool(     "Wrap",      false         ));
 	
 		////- =/Path
-	newInput(15, nodeValue_PathNode( "Path"                     ));
+	newInput(15, nodeValue_Path( "Path"                     ));
 	newInput(16, nodeValue_Int(      "Path Resolution", 32      ));
 	
 	////- =Transform

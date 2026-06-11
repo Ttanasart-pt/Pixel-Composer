@@ -3,7 +3,7 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_PathNode("Path"));
+	newInput(0, nodeValue_Path("Path"));
 	
 	newInput(1, nodeValue_Enum_Scroll("Mode", 0, [ "Additive", "Multiplicative" ]));
 	

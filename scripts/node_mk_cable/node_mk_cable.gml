@@ -8,15 +8,15 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Anchors
 	newInput(15, nodeValue_EScroll( "Type", 0, [ "Fix Points", "Fix Point Array", "Path Anchor", "Path Sample", "Areas" ] ));
 	
-	newInput( 1, nodeValue_Vec2(     "Point 1",    [0,.5] )).setUnitSimple();
-	newInput( 2, nodeValue_Vec2(     "Point 2",    [1,.5] )).setUnitSimple();
-	newInput( 9, nodeValue_Float(    "Radius 1",    0     ));
-	newInput(10, nodeValue_Float(    "Radius 2",    0     ));
-	newInput(16, nodeValue_Vec2(     "Points",      []    )).setArrayDepth(1);
-	newInput(17, nodeValue_PathNode( "Path",        noone ));
-	newInput(18, nodeValue_Int(      "Path Points", 8     ));
-	newInput(22, nodeValue_Area(     "Area 1",      [.25,.5,.25,.25,0,0], false )).setUnitSimple();
-	newInput(23, nodeValue_Area(     "Area 2",      [.75,.5,.25,.25,0,0], false )).setUnitSimple();
+	newInput( 1, nodeValue_Vec2(  "Point 1",    [0,.5] )).setUnitSimple();
+	newInput( 2, nodeValue_Vec2(  "Point 2",    [1,.5] )).setUnitSimple();
+	newInput( 9, nodeValue_Float( "Radius 1",    0     ));
+	newInput(10, nodeValue_Float( "Radius 2",    0     ));
+	newInput(16, nodeValue_Vec2(  "Points",      []    )).setArrayDepth(1);
+	newInput(17, nodeValue_Path(  "Path",        noone ));
+	newInput(18, nodeValue_Int(   "Path Points", 8     ));
+	newInput(22, nodeValue_Area(  "Area 1",      [.25,.5,.25,.25,0,0], false )).setUnitSimple();
+	newInput(23, nodeValue_Area(  "Area 2",      [.75,.5,.25,.25,0,0], false )).setUnitSimple();
 	
 	////- =Cable
 	newInput( 5, nodeValue_Int(      "Amount",    1          ));
@@ -25,23 +25,30 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 8, nodeValue_Int(      "Segments",  16         ));
 	
 	////- =Swing
-	newInput(11, nodeValue_Bool(  "Swing",     false         ));
-	newInput(12, nodeValue_Range( "Amplitude", [.5,.5], true ));
-	newInput(13, nodeValue_Range( "Frequency", [1,1],   true ));
+	newInput(11, nodeValue_Bool(     "Swing",     false         ));
+	newInput(12, nodeValue_Range(    "Amplitude", [.5,.5], true ));
+	newInput(13, nodeValue_Range(    "Frequency", [1,1],   true ));
+	
+		////- =/End Swing
+	newInput(24, nodeValue_Bool(     "End Swing", false ));
+	newInput(27, nodeValue_Float(    "Strength",  1     ));
+	newInput(25, nodeValue_Int(      "Speed",     1     ));
+	newInput(26, nodeValue_Slider(   "Ratio",    .5     ));
 	
 	////- =Render
 	newInput( 6, nodeValue_Range(    "Thickness", [1,1], true )).setCurvable(20, CURVE_DEF_11, "Over Cable");
 	newInput( 7, nodeValue_Gradient( "Colors",    gra_white   )).setGradable(21, gra_white,    "Over Cable");
-	// input 24
+	// input 28
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 3, 
-		[ "Output",  false     ],  0, 19, 
-		[ "Anchors", false     ], 15,  1,  2,  9, 10, 16, 17, 18, 22, 23, 
-		[ "Cable",   false     ],  5, 14,  4,  8, 
-		[ "Swing",   false, 11 ], 12, 13, 
-		[ "Render",  false     ],  6, 20,  7, 21, 
+		[ "Output",         false     ],  0, 19, 
+		[ "Anchors",        false     ], 15,  1,  2,  9, 10, 16, 17, 18, 22, 23, 
+		[ "Cable",          false     ],  5, 14,  4,  8, 
+		[ "Swing",          false, 11 ], 12, 13, 
+			[ "/End Swing", false, 24 ], 27, 25, 26, 
+		[ "Render",         false     ],  6, 20,  7, 21, 
 	];
 	
 	////- Nodes
@@ -97,12 +104,46 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _swng_amp = _data[12];
 			var _swng_frq = _data[13];
 			
+			var _eswg     = _data[24];
+			var _eswg_str = _data[27];
+			var _eswg_spd = _data[25];
+			var _eswg_rat = _data[26];
+			
 			var _colrMap  = _data[21]; 
 			
 			var _thk_curved = inputs[6].attributes.curved;
 			var _col_graded = inputs[7].attributes.graded;
 		#endregion
 	    
+	    #region end Swing
+	    if(_eswg) {
+	    	var len  = point_distance( x0, y0, x1, y1);
+	    	var dir  = point_direction(x0, y0, x1, y1);
+	    	
+	    	var nx1 = x0 + lengthdir_x(len, dir - _grav);
+	    	var ny1 = y0 + lengthdir_y(len, dir - _grav);
+	    	
+			var cx  = nx1;
+			var cy  = y0;
+			var rd  = abs(ny1 - cy);
+			
+			var pha = random(1);
+			var rot = (pha + CURRENT_FRAME / TOTAL_FRAMES) * _eswg_spd * 360;
+			
+			var dx = lengthdir_x(rd, rot) * _eswg_str * _eswg_rat;
+			var dy = lengthdir_y(rd, rot) * _eswg_str;
+			
+			nx1 = cx + dx;
+			ny1 = cy + dy;
+			
+			var len  = point_distance( x0, y0, nx1, ny1);
+	    	var dir  = point_direction(x0, y0, nx1, ny1);
+	    	
+	    	x1 = x0 + lengthdir_x(len, dir + _grav);
+	    	y1 = y0 + lengthdir_y(len, dir + _grav);
+	    }
+		#endregion
+		
 		var len  = point_distance(x0, y0, x1, y1);
 	    var aa   = _ten * len / 2;
 	    var _isg = 1 / _segs;

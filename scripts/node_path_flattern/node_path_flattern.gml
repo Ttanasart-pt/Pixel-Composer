@@ -3,7 +3,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_PathNode( "Path" ));
+	newInput(0, nodeValue_Path( "Path" ));
 	newInput(1, nodeValue_Bool(     "Reverse",   false ));
 	newInput(2, nodeValue_Bool(     "Ping Pong", false ));
 	
@@ -15,7 +15,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
-		newInput(index, nodeValue_PathNode( "Path" )).setVisible(true, true);
+		newInput(index, nodeValue_Path( "Path" )).setVisible(true, true);
 		array_push(input_display_list, index);
 		return inputs[index];
 	} setDynamicInput(1);

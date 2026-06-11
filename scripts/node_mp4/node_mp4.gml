@@ -34,7 +34,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 8, nodeValue_Bool( "Edit in Timeline",   true  ));
 	
 	////- =Image
-	newInput( 0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "MP4 (.mp4)|*.mp4" });
+	newInput( 0, nodeValue_FPath("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "MP4 (.mp4)|*.mp4" });
 	detail = new Inspector_Label("Mp4 file");
 	
 	////- =Output

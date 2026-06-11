@@ -64,7 +64,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- =Export
 	newInput( 0, nodeValue_Surface( "Surface"   ));
-	newInput( 1, nodeValue_Path(    "Directory" )).setDisplay(VALUE_DISPLAY.path_save, { 
+	newInput( 1, nodeValue_FPath(    "Directory" )).setDisplay(VALUE_DISPLAY.path_save, { 
 		type        : "area", 
 		filter      : "dir", 
 		default_dir : function() /*=>*/ {return PROJECT.attributes.export_dir} 

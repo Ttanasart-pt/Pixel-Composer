@@ -30,7 +30,7 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	color = COLORS.node_blend_input;
 	w     = 128;
 	
-	newInput(0, nodeValue_Path("Path"))
+	newInput(0, nodeValue_FPath("Path"))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV File (.csv)|*.csv" })
 		.rejectArray();
 		

@@ -60,7 +60,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(18, nodeValue_Int(      "Column",           4      ));
 	
 	////- =Path
-	newInput(11, nodeValue_PathNode( "Path",            noone   )).setTooltip("Make each copy follow along path.");
+	newInput(11, nodeValue_Path( "Path",            noone   )).setTooltip("Make each copy follow along path.");
 	newInput(12, nodeValue_SliRange( "Path Range",      [0,1]   )).setTooltip("Range of the path to follow.");
 	newInput(13, nodeValue_Float(    "Path Shift",       0      ));
 	newInput(40, nodeValue_Bool(     "Rotate Along Path", false ));

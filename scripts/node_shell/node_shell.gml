@@ -3,7 +3,7 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Path( "Path"   ));
+	newInput(0, nodeValue_FPath( "Path"   ));
 	newInput(1, nodeValue_Text( "Script" ));
 	
 	trust_label = new Inspector_Label(PROGRAM_ARGUMENTS._trusted? "Trusted" : "Untrusted");

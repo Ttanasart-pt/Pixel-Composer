@@ -6,7 +6,7 @@ function Node_VerletSim_Path(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDrawIcon();
 	
 	////- =Path
-	newInput(0, nodeValue_PathNode( "Path"         )).setVisible(true, true);
+	newInput(0, nodeValue_Path( "Path"         )).setVisible(true, true);
 	newInput(1, nodeValue_Int(      "Samples",   8 ));
 	newInput(2, nodeValue_Slider(   "Tension",  .5 ));
 	newInput(3, nodeValue_Slider(   "Drag",      0 ));

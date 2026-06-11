@@ -3,7 +3,7 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
     
     newInput( 0, nodeValue_Surface("Tilemap"));
     
-    newInput( 1, nodeValue_Path("Path"))
+    newInput( 1, nodeValue_FPath("Path"))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "" })
 		.setVisible(true);
     
@@ -12,7 +12,7 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
     
     newInput( 3, nodeValue_Enum_Scroll("GM Export Type", 0, [ "Room" ]));
     
-    newInput( 4, nodeValue_Path("GM Room"))
+    newInput( 4, nodeValue_FPath("GM Room"))
     	.setDisplay(VALUE_DISPLAY.path_load, { filter: "GameMaker Room (.yy)|*.yy" })
     	.setVisible(false, false);
     
@@ -23,7 +23,7 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
     newInput( 7, nodeValue_Tileset())
     	.setVisible(true, true);
     
-    newInput( 8, nodeValue_Path("GD Scene"))
+    newInput( 8, nodeValue_FPath("GD Scene"))
     	.setDisplay(VALUE_DISPLAY.path_load, { filter: "Godot Scene (.tscn)|*.tscn" })
     	.setVisible(false, false);
     

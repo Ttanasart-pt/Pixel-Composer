@@ -59,7 +59,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		////- =/Shape
 	newInput(15, nodeValue_EScroll( "Shape", 0, [ "Circle", "Arrow", "Line", "Path" ] ));
 	newInput(31, nodeValue_Range(   "Arrow Offset", [0,0] ));
-	newInput(32, nodeValue_PathNode("Path"                ));
+	newInput(32, nodeValue_Path("Path"                ));
 	newInput(33, nodeValue_Int(     "Path Sample",   8    ));
 	newInput(34, nodeValue_Range(   "Thickness",    [2,2] ));
 	newInput(35, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));

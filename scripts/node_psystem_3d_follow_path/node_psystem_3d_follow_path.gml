@@ -14,7 +14,7 @@ function Node_pSystem_3D_Follow_Path(_x, _y, _group = noone) : Node_3D(_x, _y, _
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Path
-	newInput( 3, nodeValue_PathNode(   "Path"    ));
+	newInput( 3, nodeValue_Path(   "Path"    ));
 	newInput( 4, nodeValue_Vec2_Range( "Path Range",     [0,0,1,1]    ));
 	newInput( 5, nodeValue_Curve(      "Path Influence", CURVE_DEF_11 ));
 	

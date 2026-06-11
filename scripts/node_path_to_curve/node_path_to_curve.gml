@@ -4,7 +4,7 @@ function Node_Path_to_Curve(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDimension(96, 48);
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Path"           ));
+	newInput( 0, nodeValue_Path( "Path"           ));
 	newInput( 1, nodeValue_Int(      "Resolution", 16 ));
 	
 	////- =Curve 

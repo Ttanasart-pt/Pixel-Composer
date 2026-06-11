@@ -11,7 +11,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(28, nodeValue_EScroll(  "Type",      0, [ "Area", "Path", "Map" ] ));
 	newInput( 1, nodeValue_Int(      "Amount",    1                  ));
 	newInput( 7, nodeValue_Area(     "Area",     [0,.5,0,0,AREA_SHAPE.rectangle,AREA_MODE.area], false )).setUnitSimple();
-	newInput(29, nodeValue_PathNode( "Path"                          ));
+	newInput(29, nodeValue_Path( "Path"                          ));
 	newInput(33, nodeValue_Bool(     "Loop"                          ));
 	newInput(30, nodeValue_Surface(  "Map"                           ));
 	newInput(31, nodeValue_Int(      "Attempt",   0                  ));

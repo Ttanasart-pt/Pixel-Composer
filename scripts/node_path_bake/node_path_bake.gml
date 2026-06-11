@@ -4,7 +4,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	setDimension(96, 48);
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_Path( "Path" ));
 	newInput( 2, nodeValue_Bool(     "Spread Single Path", true ));
 	newInput( 5, nodeValue_Bool(     "Loop",               true ));
 	

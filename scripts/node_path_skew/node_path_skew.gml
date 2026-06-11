@@ -4,7 +4,7 @@ function Node_Path_Skew(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	setDimension(96, 48);
 	
 	////- =Paths
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_Path( "Path" ));
 	
 	////- =Skew
 	newInput( 1, nodeValue_EButton( "Axis",       0, ["X", "Y"]    )).setPieMenu();

@@ -32,7 +32,7 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setCacheManual();
 	
 	////- Project
-	newInput( 0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Pixel Composer Project (.pxc)|*.pxc" }).rejectArray();
+	newInput( 0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Pixel Composer Project (.pxc)|*.pxc" }).rejectArray();
 	
 	////- Animation
 	newInput( 1, nodeValue_Bool(    "Animated",          true  ));

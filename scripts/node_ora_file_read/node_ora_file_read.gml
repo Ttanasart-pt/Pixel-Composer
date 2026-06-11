@@ -32,7 +32,7 @@ function Node_ORA_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Inputs
 	
-	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite File (.ase, .aseprite)|*.ase;*.aseprite" });
+	newInput(0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite File (.ase, .aseprite)|*.ase;*.aseprite" });
 	
 	/////////////////////////////////
 	

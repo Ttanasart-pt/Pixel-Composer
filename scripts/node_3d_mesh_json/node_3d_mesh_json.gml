@@ -30,7 +30,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	newInput(i+4, nodeValue_Bool( "Reset Origin", true ));
 	
 	////- =Object
-	newInput(i+0, nodeValue_Path(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Json Object (.json)|*.json" });
+	newInput(i+0, nodeValue_FPath(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Json Object (.json)|*.json" });
 	newInput(i+2, nodeValue_Float(       "Import Scale", 1/16 ));
 	newInput(i+3, nodeValue_Enum_Scroll( "Axis",         1, [ "Z up", "Y up" ]));
 	

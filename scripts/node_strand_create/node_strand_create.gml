@@ -23,7 +23,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- =Generation
 	newInput( 0, nodeValue_EScroll(  "Source",       0, [ "Point", "Path", "Mesh" ]     ));
 	newInput( 1, nodeValue_Int(      "Strands",      8, "How many strands to generate." ));
-	newInput( 5, nodeValue_PathNode( "Path" ));
+	newInput( 5, nodeValue_Path( "Path" ));
 	newInput( 6, nodeValue_Vec2(     "Position",   [.5,.5] )).setUnitSimple();
 	newInput( 7, nodeValue_EButton(  "Side",         0, [ "Inner", "Outer", "Both" ]    ));
 	newInput(13, nodeValue_Mesh(     "Mesh" ));

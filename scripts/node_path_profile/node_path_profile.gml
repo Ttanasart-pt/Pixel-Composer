@@ -13,7 +13,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(0, nodeValue_Dimension());
 	
 	////- =Profile
-	newInput(1, nodeValue_PathNode( "Path" ));
+	newInput(1, nodeValue_Path( "Path" ));
 	newInput(2, nodeValue_Int( "Resolution", 64 ));
 	
 	////- =Render

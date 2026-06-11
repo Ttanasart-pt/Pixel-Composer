@@ -6,8 +6,8 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 5, nodeValueSeed());
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Base Path"      ));
-	newInput( 1, nodeValue_PathNode( "Scatter Path"   ));
+	newInput( 0, nodeValue_Path( "Base Path"      ));
+	newInput( 1, nodeValue_Path( "Scatter Path"   ));
 	newInput(10, nodeValue_Slider(   "Range",       1 ));
 	newInput( 9, nodeValue_Curve(    "Trim over Length", CURVE_DEF_11 ));
 	

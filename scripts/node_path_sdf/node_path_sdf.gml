@@ -5,7 +5,7 @@ function Node_Path_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 1, nodeValue_Dimension());
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Path" )).rejectArray();
+	newInput( 0, nodeValue_Path( "Path" )).rejectArray();
 	newInput( 9, nodeValue_Range(    "Path Range", [0,1] ));
 	newInput(10, nodeValue_Slider(   "Path Shift",  0    ));
 	newInput( 2, nodeValue_Int(      "Subdivision", 64   )).setValidator(VV_min(2)).rejectArray();

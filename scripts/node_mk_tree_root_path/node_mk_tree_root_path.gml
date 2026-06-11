@@ -9,7 +9,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 0, nodeValueSeed());
 	
 	////- =Path
-	newInput( 1, nodeValue_PathNode( "Path",   noone ));
+	newInput( 1, nodeValue_Path( "Path",   noone ));
 	newInput( 2, nodeValue_Int(      "Sample", 8     ));
 	
 	////- =Direction

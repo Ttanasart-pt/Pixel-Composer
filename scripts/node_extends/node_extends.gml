@@ -14,7 +14,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 7, nodeValue_EScroll(  "Type",        0, [ "Line", "Point", "Path" ] ));
 	newInput( 8, nodeValue_Vec2(     "Point 1",   [.5,0] )).setUnitSimple();
 	newInput( 9, nodeValue_Vec2(     "Point 2",   [.5,1] )).setUnitSimple();
-	newInput(13, nodeValue_PathNode( "Path"              ));
+	newInput(13, nodeValue_Path( "Path"              ));
 	newInput(14, nodeValue_Int(      "Path Sample", 16   ));
 	
 	////- =Extends
@@ -24,7 +24,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(11, nodeValue_Rotation( "Direction",   0    ));
 	newInput(12, nodeValue_Bool(     "Extends",    true  ));
 	newInput(16, nodeValue_Bool(     "Both Side",  false ));
-	newInput(21, nodeValue_PathNode( "Follow Path"       ));
+	newInput(21, nodeValue_Path( "Follow Path"       ));
 	newInput(22, nodeValue_Int(      "Follow Res", 32    ));
 	
 	////- =Repeat

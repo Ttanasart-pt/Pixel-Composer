@@ -65,7 +65,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		////- =/Shape
 	newInput(23, nodeValue_EScroll( "Shape", 0, [ "Circle", "Arrow", "Line", "Path" ] ));
 	newInput(35, nodeValue_Range(   "Arrow Offset", [0,0] ));
-	newInput(46, nodeValue_PathNode("Path"                ));
+	newInput(46, nodeValue_Path("Path"                ));
 	newInput(47, nodeValue_Int(     "Path Sample",   8    ));
 	newInput(36, nodeValue_Range(   "Thickness",    [2,2] )).setMappableRange(45, "Group Varience", THEME.mk_blast_group);
 	newInput(37, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));

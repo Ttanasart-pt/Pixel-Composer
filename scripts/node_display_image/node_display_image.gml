@@ -27,7 +27,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name		= "Display Image";
 	auto_height	= false;
 	
-	newInput(0, nodeValue_Path( "Path")).setVisible(false).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
+	newInput(0, nodeValue_FPath( "Path")).setVisible(false).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
 	newInput(1, nodeValue_Vec2( "Position", [x,y] )).rejectArray();
 	newInput(2, nodeValue_Vec2( "Scale",    [1,1] )).rejectArray();
 	newInput(3, nodeValue_Bool( "Smooth transform", true )).rejectArray();

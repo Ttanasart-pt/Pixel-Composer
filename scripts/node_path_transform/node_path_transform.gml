@@ -5,7 +5,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	setDrawIcon();
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_Path( "Path" ));
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitSimple();

@@ -62,7 +62,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(46, nodeValue_Int(      "Attempt",         8      ));
 	
 		////- =/Path
-	newInput(19, nodeValue_PathNode( "Path" ));
+	newInput(19, nodeValue_Path( "Path" ));
 	newInput(38, nodeValue_EButton(  "Spacing",           0, [ "After", "Between", "Around" ] ));
 	newInput(20, nodeValue_Bool(     "Rotate Along Path", true ));
 	newInput(45, nodeValue_Range(    "Path Range",       [0,1] ));

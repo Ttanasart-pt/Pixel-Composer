@@ -5,7 +5,7 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	var i = in_mesh;
 	
 	////- =Path
-	newInput(i+ 0, nodeValue_PathNode( "Path" ));
+	newInput(i+ 0, nodeValue_Path( "Path" ));
 	newInput(i+ 9, nodeValue_Float(    "Path Scale",    .25    ));
 	newInput(i+10, nodeValue_EButton(  "Project Normal", 2, [ "X", "Y", "Z" ]    ));
 	newInput(i+11, nodeValue_Bool(     "Invert Y",       false ));

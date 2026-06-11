@@ -27,7 +27,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	name = "3D Obj";
 	
 	////- =Object
-	newInput(in_mesh + 0, nodeValue_Path(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "3d Object (.obj)|*.obj" });
+	newInput(in_mesh + 0, nodeValue_FPath(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "3d Object (.obj)|*.obj" });
 	newInput(in_mesh + 2, nodeValue_Float(       "Import Scale", 1 ));
 	newInput(in_mesh + 3, nodeValue_Enum_Scroll( "Axis",         0, [ "XYZ", "XZ-Y", "X-ZY" ]));
 	

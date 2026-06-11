@@ -126,7 +126,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 5, nodeValue_Slider(   "Inner Radius",   .5       )).hideLabel().setVisible(false);
 	newInput( 7, nodeValue_Rotation( "Rotation",        0       )).hideLabel();
 	newInput( 8, nodeValue_RotRange( "Angle Range",    [0,180]  )).hideLabel();
-	newInput(14, nodeValue_PathNode( "Shape Path"               )).hideLabel();
+	newInput(14, nodeValue_Path( "Shape Path"               )).hideLabel();
 	newInput(21, nodeValue_SliRange( "Angles",         [.5, 1.] )).hideLabel();
 	newInput(38, nodeValue_Slider(   "Top Side",        .5      )).hideLabel();
 	newInput(39, nodeValue_Slider(   "Botton Side",      1      )).hideLabel();

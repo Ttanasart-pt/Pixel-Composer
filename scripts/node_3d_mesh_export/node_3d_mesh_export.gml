@@ -5,7 +5,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Export
 	
-	newInput(1, nodeValue_Path( "Paths" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "Obj (.obj)|*.obj" }).setVisible(true);
+	newInput(1, nodeValue_FPath( "Paths" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "Obj (.obj)|*.obj" }).setVisible(true);
 	newInput(2, nodeValue_Bool( "Export Texture", true ));
 	
 	////- =Mesh

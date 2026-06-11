@@ -50,7 +50,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		////- =Region
 		newInput(i+ 1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple();
 		newInput(i+ 2, nodeValue_Vec2(     "Position 2",  [ 1, 0] )).setUnitSimple();
-		newInput(i+ 8, nodeValue_PathNode( "Push path"            ))
+		newInput(i+ 8, nodeValue_Path( "Push path"            ))
 		newInput(i+ 9, nodeValue_Int(      "Push resolution",  16 ));
 		newInput(i+ 3, nodeValue_Float(    "Radius",            8 )).hideLabel();
 		newInput(i+10, nodeValue_Float(    "Radius 2",          8 ));

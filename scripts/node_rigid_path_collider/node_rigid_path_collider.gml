@@ -12,7 +12,7 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 	objects    = [];
 	
 	////- =Path
-	newInput(0, nodeValue_PathNode( "Path" ));
+	newInput(0, nodeValue_Path( "Path" ));
 	newInput(3, nodeValue_Int(      "Samples", 8 ));
 		
 	////- =Physics

@@ -2,7 +2,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name  = "JSON File Out";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path"))
+	newInput(0, nodeValue_FPath("Path"))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "json file|*.json" })
 		.rejectArray();
 		

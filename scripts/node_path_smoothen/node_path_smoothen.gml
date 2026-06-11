@@ -4,7 +4,7 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDrawIcon();
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_Path( "Path" ));
 	newInput( 1, nodeValue_Range(    "Range",       [0,1] ));
 	newInput( 2, nodeValue_Bool(     "Clamp Curve", false ));
 	

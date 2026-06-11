@@ -29,7 +29,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 4, nodeValue_EScroll(  "Spawn Source",     0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
 	newInput( 3, nodeValue_Area(     "Spawn Area",       DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
 	newInput(30, nodeValue_Surface(  "Distribution Map"                ));
-	newInput(55, nodeValue_PathNode( "Spawn Path"                      ));
+	newInput(55, nodeValue_Path( "Spawn Path"                      ));
 	newInput(62, nodeValue_Vector(   "Spawn Data"                      )).setArrayDepth(1).setTooltip("Array of vec2 points to spawn particles at.");
 	newInput(24, nodeValue_EButton(  "Distribution",     1             )).setChoices([ "Uniform", "Random" ]);
 	newInput(52, nodeValue_Float(    "Uniform Period",   4             ));
@@ -75,7 +75,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- =Path
 	newInput(45, nodeValue_Bool(       "Follow Path",        false                    ));
-	newInput(46, nodeValue_PathNode(   "Path"                                         ));
+	newInput(46, nodeValue_Path(   "Path"                                         ));
 	newInput(66, nodeValue_Vec2_Range( "Path Range",         [0,0,1,1]                ));
 	newInput(47, nodeValue_Curve(      "Path Deviation",     CURVE_DEF_11             ));
 	

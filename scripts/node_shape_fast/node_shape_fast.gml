@@ -41,7 +41,7 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 5, nodeValue_Slider(   "Inner radius",   .5       )).hideLabel().setVisible(false);
 	newInput( 7, nodeValue_Rotation( "Rotation",        0       )).hideLabel();
 	newInput( 8, nodeValue_RotRange( "Angle range",    [0,180]  )).hideLabel();
-	newInput(14, nodeValue_PathNode( "Shape path"               )).hideLabel();
+	newInput(14, nodeValue_Path( "Shape path"               )).hideLabel();
 	newInput(21, nodeValue_SliRange( "Angles",         [.5, 1.] )).hideLabel();
 	newInput(38, nodeValue_Slider(   "Top Side",        .5      )).hideLabel();
 	newInput(39, nodeValue_Slider(   "Botton Side",      1      )).hideLabel();

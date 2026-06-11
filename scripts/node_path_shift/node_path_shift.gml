@@ -4,7 +4,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDrawIcon();
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_Path( "Path" ));
 	newInput( 2, nodeValue_Range(    "Range", [0,1] ));
 	
 	////- =Shift

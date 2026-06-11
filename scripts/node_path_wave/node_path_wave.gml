@@ -12,7 +12,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(5, nodeValueSeed());
 	
 	////- =Path
-	newInput( 0, nodeValue_PathNode( "Path" ));
+	newInput( 0, nodeValue_Path( "Path" ));
 	newInput(11, nodeValue_Range(    "Range",       [0,1] ));
 	newInput(12, nodeValue_Bool(     "Clamp Curve", false ));
 	

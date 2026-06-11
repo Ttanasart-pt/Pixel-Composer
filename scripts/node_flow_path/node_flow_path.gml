@@ -12,7 +12,7 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__init_mask_modifier(1, 3); // inputs 3, 4
 	
 	////- =Path
-	newInput( 7, nodeValue_PathNode( "Path" ));
+	newInput( 7, nodeValue_Path( "Path" ));
 	newInput(10, nodeValue_Int(      "Sample",          16    )).setPieMenu();
 	newInput(13, nodeValue_Bool(     "Invert",          false )).setPieMenu();
 	newInput( 8, nodeValue_Float(    "Radius",          .25   )).setUnitSimple().setPieMenu();

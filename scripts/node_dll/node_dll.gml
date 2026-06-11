@@ -3,7 +3,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Path("DLL File"))
+	newInput(0, nodeValue_FPath("DLL File"))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Dynamic-link Library (.dll)|*.dll" })
 		.setVisible(true, false);
 	
