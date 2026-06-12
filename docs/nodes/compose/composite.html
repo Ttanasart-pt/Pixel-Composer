@@ -1175,6 +1175,10 @@
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\3d\2d_operation\filter\normal.html" class="sidebar-file">Normal</a>
             </div>
+</li><li id="normal_blend"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\3d\2d_operation\filter\normal_blend.html" class="sidebar-file">Normal Blend</a>
+            </div>
 </li><li id="normal_light"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\3d\2d_operation\filter\normal_light.html" class="sidebar-file">Normal Light</a>
@@ -1552,6 +1556,10 @@
 </li><li id="gradient_grid"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\generate\color\gradient\gradient_grid.html" class="sidebar-file">Gradient Grid</a>
+            </div>
+</li><li id="gradient_path"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\generate\color\gradient\gradient_path.html" class="sidebar-file">Gradient Path</a>
             </div>
 </li><li id="gradient_points"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
@@ -6040,6 +6048,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/ambient_occlusion.html">Ambient Occlusion</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/bevel.html">Bevel</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/normal.html">Normal</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/normal_blend.html">Normal Blend</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/normal_light.html">Normal Light</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/normal_to_height.html">Normal To Height</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\3d\2d_operation\filter/pb_fx_bevel.html">Pb Fx Bevel</a></li>
@@ -6100,6 +6109,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_cos.html">Gradient Cos</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_cube.html">Gradient Cube</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_grid.html">Gradient Grid</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_path.html">Gradient Path</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_points.html">Gradient Points</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\gradient/gradient_points_n.html">Gradient Points N</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\generate\color\texture/sky.html">Sky</a></li>
@@ -6832,7 +6842,7 @@
 <table class = "summary-table">
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_composite.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Composite</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Composite</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block current"><a href="#">Node_Composite</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
-<tr>
+<tr><th colspan="2" class="summary-topic junction-separator"><p>Output</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">ipadding</p></td>
                 <td><p>Padding</p></td>
             </tr><tr>
@@ -6841,6 +6851,9 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">dimension</p></td>
                 <td><p>Dimension</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Rendering</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
+                <td><p>Round Position</p></td>
             </tr><tr><td colspan="2"><table class="summary-table dynamic" style="margin-top: 8px;"><tr>
                 <th colspan="2" class="summary-topic">
                     <p style="margin: -0.85rem auto -4px auto;width: fit-content;padding: 0px 8px;">Dynamic Inputs</p>
