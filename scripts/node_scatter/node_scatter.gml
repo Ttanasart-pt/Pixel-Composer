@@ -104,7 +104,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Render
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
-	newInput(56, nodeValue_Bool(    "Tile",       true  ));
+	newInput(56, nodeValue_Toggle(  "Tile",       0, [ "X", "Y" ] ))
 	// 58
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -878,28 +878,32 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(_dyna) surf.draw(_x, _y, _scx, _scy, _r, clr, alp);
 				else      draw_surface_ext(surf, _x, _y, _scx, _scy, _r, clr, alp);
 				
-				if(!_tile) continue;
+				if(_tile == 0) continue;
+				
+				var tlx = _tile & 0b01;
+				var tly = _tile & 0b10;
+				var tla = _tile & 0b11;
 				
 				var _sw = _atl.w * _scx;
 				var _sh = _atl.h * _scy;
 				
 				if(_dyna) {
-					if(_x < _sw)				         surf.draw(_x + _ww, _y,       _scx, _scy, _r, clr, alp);
-					if(_y < _sh)				         surf.draw(      _x, _y + _hh, _scx, _scy, _r, clr, alp);
-					if(_x < _sw && _y < _sh)	         surf.draw(_x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
+					if(tlx && _x < _sw)                       surf.draw(_x + _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(tly && _y < _sh)                       surf.draw(      _x, _y + _hh, _scx, _scy, _r, clr, alp);
+					if(tla && _x < _sw && _y < _sh)           surf.draw(_x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
 					
-					if(_x > _ww - _sw)					 surf.draw(_x - _ww, _y,       _scx, _scy, _r, clr, alp);
-					if(_y > _hh - _sh)					 surf.draw(_x,       _y - _hh, _scx, _scy, _r, clr, alp);
-					if(_x > _ww - _sw || _y > _hh - _sh) surf.draw(_x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
+					if(tlx && _x > _ww-_sw)                   surf.draw(_x - _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(tly && _y > _hh-_sh)                   surf.draw(_x,       _y - _hh, _scx, _scy, _r, clr, alp);
+					if(tla && (_x > _ww-_sw || _y > _hh-_sh)) surf.draw(_x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
 					
 				} else {
-					if(_x < _sw)				         draw_surface_ext(surf, _x + _ww, _y,       _scx, _scy, _r, clr, alp);
-					if(_y < _sh)				         draw_surface_ext(surf,       _x, _y + _hh, _scx, _scy, _r, clr, alp);
-					if(_x < _sw && _y < _sh)	         draw_surface_ext(surf, _x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
+					if(tlx && _x < _sw)                       draw_surface_ext(surf, _x + _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(tly && _y < _sh)                       draw_surface_ext(surf,       _x, _y + _hh, _scx, _scy, _r, clr, alp);
+					if(tla && _x < _sw && _y < _sh)           draw_surface_ext(surf, _x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
 					
-					if(_x > _ww - _sw)					 draw_surface_ext(surf, _x - _ww, _y,       _scx, _scy, _r, clr, alp);
-					if(_y > _hh - _sh)					 draw_surface_ext(surf, _x,       _y - _hh, _scx, _scy, _r, clr, alp);
-					if(_x > _ww - _sw || _y > _hh - _sh) draw_surface_ext(surf, _x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
+					if(tlx && _x > _ww-_sw)                   draw_surface_ext(surf, _x - _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(tly && _y > _hh-_sh)                   draw_surface_ext(surf, _x,       _y - _hh, _scx, _scy, _r, clr, alp);
+					if(tla && (_x > _ww-_sw || _y > _hh-_sh)) draw_surface_ext(surf, _x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
 				}
 			}
 			
