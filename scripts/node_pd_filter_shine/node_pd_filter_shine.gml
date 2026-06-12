@@ -44,8 +44,12 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		    var _ints  = _data[ 7];
 	    #endregion
 	    
+	    var _useSurf = is_surface(_surf);
+	    var _dim     = _useSurf? surface_get_dimension(_surf) : getDimension();
+	    
 	    surface_set_shader(_outSurf, sh_pb_fx_shine);
-	        shader_set_dim("dimension", _surf);
+	        shader_set_2("dimension",   _dim);
+	        shader_set_i("useSurf",     _useSurf);
 	        
 	        shader_set_i("useMask",     is_surface(_mask));
 	        shader_set_s("mask",        _mask );
@@ -65,8 +69,9 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
             shader_set_palette( _color, "shineColor", "shineColorAmo" );
             shader_set_i("blendMode",   _blend );
             shader_set_f("intensity",   _ints  );
-
-	        draw_surface_safe(_surf);
+			
+			if(_useSurf) draw_surface_safe(_surf);
+			else draw_empty();
 	    surface_reset_shader();
 	    
 	    return _outSurf; 

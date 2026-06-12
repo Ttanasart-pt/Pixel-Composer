@@ -6,6 +6,11 @@
         "date": "2026-06-12T01:28:41.798Z",
         "node": "Scatter",
         "commit": "**Scatter**: Tiling option now separate X and Y axis."
+      },
+      {
+        "date": "2026-06-12T02:05:41.322Z",
+        "node": "",
+        "commit": "**PB Shine**: Node will now output to transparent bg when no surface is connected."
       }
     ]
   },

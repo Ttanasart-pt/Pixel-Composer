@@ -8,6 +8,8 @@ varying vec4 v_vColour;
 #endif
 
 uniform vec2  dimension;
+uniform int   useSurf;
+
 uniform int   useMask;
 uniform sampler2D mask;
 
@@ -30,10 +32,11 @@ uniform int   blendMode;
 uniform float intensity; 
 
 void main() {
-	vec4 cc = texture2D(gm_BaseTexture, v_vTexcoord);
+	vec4 cc = useSurf == 1? texture2D(gm_BaseTexture, v_vTexcoord) : vec4(0.);
 	gl_FragColor = cc;
 	
-	if(cc.a == 0.) return;
+	if(useSurf == 1 && cc.a == 0.) return;
+	
 	if(useMask == 1) {
 		vec4 mm = texture2D(mask, v_vTexcoord);
 		if((mm.r + mm.g + mm.b) * mm.a == 0.) return;

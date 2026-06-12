@@ -882,7 +882,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				var tlx = _tile & 0b01;
 				var tly = _tile & 0b10;
-				var tla = _tile & 0b11;
+				var tla = tlx && tly;
 				
 				var _sw = _atl.w * _scx;
 				var _sh = _atl.h * _scy;

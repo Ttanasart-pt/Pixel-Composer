@@ -503,7 +503,9 @@ enum RENDER_TYPE {
 		parent    = noone;
 		children  = [];
 		childAmo  = 0;
-		nodeChain = undefined;
+		
+		surfaceChild = undefined;
+		nodeChain    = undefined;
 		
 		height   = 1;
 		
@@ -513,48 +515,56 @@ enum RENDER_TYPE {
 		
 		if(node != noone) {
 			node.treeItem = self;
-			var _fr = node.getNodeFrom();
-			for( var i = 0, n = array_length(_fr); i < n; i++ ) {
-				if(!_fr[i].active) continue;
+			
+			var _frm = [];
+			for(var i = 0, n = array_length(node.inputDisplayList); i < n; i++) { //inputs
+				var jun = node.inputDisplayList[i];
+				var _fr = jun.getNodeFrom(false);
+				if(_fr == noone || !_fr.active) continue;
 				
-				var _tr = new NodeTreeItem(_fr[i]);
-				    _tr.parent = self;
-				    
-				array_push(children, _tr);
+				array_push(_frm, _fr);
+				if(surfaceChild == undefined && jun.type == VALUE_TYPE.surface)
+					surfaceChild = _fr;
 			}
+			
+			_frm = array_unique(_frm);
+			children = array_create(array_length(_frm));
+			for( var i = 0, n = array_length(_frm); i < n; i++ )
+				children[i] = new NodeTreeItem(_frm[i]).setParent(self);
 		}
 		
-		static pokeHeight = function() { return array_length(children) == 1? children[0] : noone; }
+		static setParent = function(p) /*=>*/ { parent = p; return self; }
+		static getChild  = function() /*=>*/ {return array_length(children) == 1? children[0] : noone};
 		
 		static setHeight = function() {
 			childAmo  = array_length(children);
-			nodeChain = undefined;
 			
 			if(childAmo == 0) return;
 			
 			if(childAmo == 1) {
 				var hh = 0;
 				var lh, ch = self;
-				nodeChain = [];
 				
 				do {
-					ch.nodeChain = nodeChain;
-					array_push(nodeChain, ch);
-					
 					lh = ch;
-					ch = ch.pokeHeight();
+					ch = ch.getChild();
 					hh++;
 				} until(ch == noone);
 				
 				height = hh;
 				
-				for( var i = 0, n = array_length(lh.children); i < n; i++ ) 
-					lh.children[i].setHeight();
+				if(!array_empty(lh.children))
+					array_foreach(lh.children, function(c,i) /*=>*/ {return c.setHeight()});
 				
-			} else {
-				for( var i = 0, n = array_length(children); i < n; i++ ) 
-					children[i].setHeight();
-			}
+			} else array_foreach(children, function(c,i) /*=>*/ {return c.setHeight()});
+		}
+		
+		static createChain = function() {
+			nodeChain = parent && parent.surfaceChild == node? parent.nodeChain : [];
+			array_push(nodeChain, self);
+			
+			for( var i = 0, n = array_length(children); i < n; i++ ) 
+				children[i].createChain();
 		}
 	
 		static toggleExpand = function(_exp) {
@@ -584,6 +594,7 @@ enum RENDER_TYPE {
 		}
 		
 		array_foreach(tree, function(t,i) /*=>*/ {return t.setHeight()});
+		// array_foreach(tree, (t,i) => t.createChain());
 		
 		var _tree = new NodeTreeItem();
 		    _tree.children = tree;
