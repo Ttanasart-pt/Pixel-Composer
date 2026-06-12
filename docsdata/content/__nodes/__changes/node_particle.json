@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.003",
+    "changes": [
+      {
+        "date": "2026-06-12T23:53:51.728Z",
+        "node": "",
+        "commit": "Fix crash when loading older project with addon data."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {

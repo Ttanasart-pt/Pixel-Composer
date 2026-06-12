@@ -72,30 +72,24 @@ event_inherited();
 		try { var runResult = lua_call(thread, "init"); }
 		catch(e) exception_print(e);
 		
-		array_push(ANIMATION_PRE,  animationPreStep);
-		array_push(ANIMATION_POST, animationPostStep);
+		array_push(ANIMATION_PRE,  function() /*=>*/ {return animationPreStep()});
+		array_push(ANIMATION_POST, function() /*=>*/ {return animationPostStep()});
 	}
 	
 	function animationPreStep() {
-		INLINE
-		if(!ready) return;
-				
+		if(!ready || thread == undefined) return;
 		try { var runResult = lua_call(thread, "animationPreStep"); }
 		catch(e) exception_print(e);
 	}
 	
 	function animationPostStep() {
-		INLINE
-		if(!ready) return;
-		
+		if(!ready || thread == undefined) return;
 		try { var runResult = lua_call(thread, "animationPostStep"); }
 		catch(e) exception_print(e);
 	}
 	
 	function callFunctions(fn) {
-		INLINE
-		if(!ready) return;
-		
+		if(!ready || thread == undefined) return;
 		try { lua_call(thread, fn); }
 		catch(e) exception_print(e);
 	}

@@ -65,11 +65,11 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(69, nodeValue_RotRand(  "Target Angle",         [0,0,0,0,0]        )).setCurvable(70, CURVE_DEF_01, "Over Lifespan");
 	
 		////- =/Snap
-	newInput(61, nodeValue_Float(    "Snap Rotation",         0                 ));
+	newInput(61, nodeValue_Float(     "Snap Rotation",         0                 ));
 	
 	////- =Scale
-	newInput(10, nodeValue_Vec2_Range( "Scale",        [1,1,1,1], { linked : true }   ));
-	newInput(17, nodeValue_Range(      "Size",         [1,1],     { linked : true }   )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
+	newInput(10, nodeValue_Range2(    "Scale",        [1,1,1,1], { linked : true }   ));
+	newInput(17, nodeValue_Range(     "Size",         [1,1],     { linked : true }   )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
 	
 	////- =Color
 	newInput(28, nodeValue_Gradient(  "Color on Spawn",      gra_white                ));
@@ -90,10 +90,10 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(78, nodeValue_Bool(    "Sort Y",         false ));
 	
 	////- =Path
-	newInput(45, nodeValue_Bool(       "Follow Path",        false                    ));
-	newInput(46, nodeValue_Path(   "Path"                                         ));
-	newInput(66, nodeValue_Vec2_Range( "Path Range",         [0,0,1,1]                ));
-	newInput(47, nodeValue_Curve(      "Path Deviation",     CURVE_DEF_11             ));
+	newInput(45, nodeValue_Bool(    "Follow Path",        false                    ));
+	newInput(46, nodeValue_Path(    "Path"                                         ));
+	newInput(66, nodeValue_Range2(  "Path Range",         [0,0,1,1]                ));
+	newInput(47, nodeValue_Curve(   "Path Deviation",     CURVE_DEF_11             ));
 	
 	////- =Physics
 	newInput(57, nodeValue_Bool(     "Use Physics",            false                     ));
@@ -881,7 +881,14 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	////- Serialize
 	
 	static postDeserialize = function() {
+		if(array_length(load_map.inputs) > 67) {
+			var _inp_wrap = load_map.inputs[67];
+			if(is_struct(_inp_wrap) && is_array(_inp_wrap.raw_value.d))
+				_inp_wrap.raw_value.d = 0;
+		}
+		
 		if(LOADING_VERSION >= 1_18_09_0) return;
+		
 		
 		var _attr_curv = attributes.parameter_curves;
 		var _keys = variable_struct_get_names(_attr_curv);
