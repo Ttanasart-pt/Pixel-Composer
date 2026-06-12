@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.002",
+    "changes": [
+      {
+        "date": "2026-06-12T06:16:37.536Z",
+        "node": "",
+        "commit": "**Draw Line 2 Points**: Line cap property now separate between start and end cap."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {

@@ -52,7 +52,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(17, nodeValue_Bool(  "1px Mode",             false      )).setTooltip("Render pixel perfect 1px line.");
 	newInput( 3, nodeValue_Range( "Width",               [2,2], true )).setCurvable(11, CURVE_DEF_11);
 	newInput(12, nodeValue_Bool(  "Span Width over Path", false      )).setTooltip("Apply the full 'Width Curve' to the trimmed path.");
+	
+		////- =/Weight
 	newInput(36, nodeValue_Bool(  "Apply Weight",         true       ));
+	newInput(62, nodeValue_Range( "Normalized Range",     [0,1]      ));
 	
 	////- =Line Settings
 	newInput( 8, nodeValue_SliRange( "Range",         [0,1]  )).setTooltip("Range of the path to draw.");
@@ -103,13 +106,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 62
+	// Inputs 63
 	
 	input_display_list = [ 39, 
 		[ "Output",         true     ],  0, 30, 31, 16, 58, 
 		[ "Background",    false     ],  1, 48, 49, 50, 
 		[ "Line Data",     false     ], 27,  6,  7, 28, 32, 33, 35, 19,  2, 20, 
-		[ "Width",         false     ], 17,  3, 11, 12, 36, 
+		[ "Width",         false     ], 17,  3, 11, 12, 
+			[ "/Weight",    true     ], 36, 62, 
 		[ "Line Settings", false     ],  8, 25,  9, 26, 
 		[ "Dash",           true, 46 ], 44, 45, 
 		[ "Wiggle",         true, 47 ],  5,  4, 53, 51, 54, 52, 55, 56, 57, 
@@ -198,7 +202,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _wid      = _data[ 3];
 			var _widc     = _data[11], _widcUse = inputs[3].attributes.curved;
 			var _widap    = _data[12];
+			
 			var _wg2wid   = _data[36];
+			var _wgRange  = _data[62];
 			
 			var _ratio    = _data[ 8];
 			var _ratInv   = _data[25];
@@ -799,7 +805,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					var _ww = lerp_invert(p0.weight, wmin, wmax);
 					if(is_nan(_ww)) _ww = 1;
-					if(_wg2wid) _nw *= _ww / 2;
+					if(_wg2wid)     _nw = _nw * lerp(_wgRange[0], _wgRange[1], _ww);
 					
 					_np = _colP? prog : prgc;
 					_nc = _col_base;
@@ -1036,7 +1042,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_nw *= widthMap[? widProg];
 						}
 						
-						if(_wg2wid) _nw *= _ww / 2;
+						if(_wg2wid) _nw = _nw * lerp(_wgRange[0], _wgRange[1], _ww);
 						
 						if(j) {
 							var _nd0 = _dir;

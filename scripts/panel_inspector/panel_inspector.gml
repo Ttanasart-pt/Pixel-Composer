@@ -2537,12 +2537,25 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     static drawContentMeta = function(_y, _m) {
-    	var _tab_width = min(contentPane.w - ui(32), ui(280));
+    	var _tab_width = min(contentPane.w - ui(128), ui(240));
     	var _tab_x     = (contentPane.w - ui(12)) / 2 - _tab_width / 2;
     	
         proj_prop_page_b.setFocusHover(pFOCUS, pHOVER);
         proj_prop_page_b.draw(_tab_x, _y + ui(4), _tab_width, ui(24), proj_prop_page, _m, x + contentPane.x, y + contentPane.y);
         
+    	var bs = ui(24);
+    	var bx = _tab_x - bs - ui(4);
+    	var by = _y + ui(4);
+    	
+		var bspr = THEME.filter_animation;
+		var bi   = FILTER_ANIMATION;
+		var bc   = FILTER_ANIMATION? COLORS._main_value_positive : COLORS._main_icon;
+		
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, tFilteranim, bspr, bi, bc, 1, ui(8)) == 2) {
+    		FILTER_ANIMATION = !FILTER_ANIMATION;
+    		GraphRefresh();
+    	}
+    	
         switch(proj_prop_page) {
         	case 0 : return drawContentMeta_PXC(_y, _m);
         	case 1 : return drawContentMeta_GM(_y, _m);

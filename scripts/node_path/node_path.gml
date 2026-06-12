@@ -998,10 +998,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _mmy = weight_drag_sy + (_my - weight_drag_my);
 			
 			var _dis = point_distance(weight_drag_sx, weight_drag_sy, _mmx, _mmy) / _s;
+			if(key_mod_press(CTRL)) _dis = round(_dis);
+			
 			attributes.weight[weight_drag][1] = _dis;
 			if(_pth.loop && weight_drag == 0) array_last(attributes.weight)[1] = _dis;
 			
-			TOOLTIP = $"Weight: {_dis}"
+			TOOLTIP = __txt("Weight") + $": {_dis}";
 			_pth.updateLength();
 			
 			if(mouse_lrelease()) {
@@ -1336,6 +1338,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var _pd = point_distance(_mx, _my, _wx, _wy);
 					
 					if(_pd < _wd) {
+						TOOLTIP = __txt("Weight") + $": {_wg[1]}";
+						
 						_weight_hover = i;
 						_wd = _pd;
 					}

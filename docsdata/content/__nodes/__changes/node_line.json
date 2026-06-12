@@ -6,6 +6,11 @@
         "date": "2026-06-12T01:20:23.279Z",
         "node": "",
         "commit": "**3D Projectors**: Now default to 2D view with the ability to switch to 3D view."
+      },
+      {
+        "date": "2026-06-12T06:16:37.521Z",
+        "node": "Draw Line 2 Points",
+        "commit": "**Draw Line 2 Points**: Line cap property now separate between start and end cap."
       }
     ]
   },
