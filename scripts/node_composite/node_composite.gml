@@ -1869,11 +1869,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _ww = surface_get_width_safe(_surf);
 			var _hh = surface_get_height_safe(_surf);
 			
-			var _sw = _ww * _sca[0];
-			var _sh = _hh * _sca[1];
-			
-			var _ax = _anc[0] * _sw;
-			var _ay = _anc[1] * _sh;
+			var _ax = _anc[0] * _ww * _sca[0];
+			var _ay = _anc[1] * _hh * _sca[1];
 			
 			var dc = dcos(-_rot);
 			var ds = dsin(-_rot);

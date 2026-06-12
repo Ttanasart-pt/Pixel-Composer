@@ -6,6 +6,11 @@
         "date": "2026-06-12T08:35:09.041Z",
         "node": "",
         "commit": "**Composite**: Add option to round position when drawing."
+      },
+      {
+        "date": "2026-06-12T08:48:39.565Z",
+        "node": "Normal",
+        "commit": "**Normal**: Add option to force solid color output."
       }
     ]
   },

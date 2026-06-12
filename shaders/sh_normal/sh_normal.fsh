@@ -51,6 +51,7 @@ uniform int   normal;
 uniform int   swapx;
 uniform int   swapy;
 uniform int   ignoreBlack;
+uniform int   solidBG;
 
 uniform vec2      height;
 uniform int       heightUseSurf;
@@ -82,6 +83,8 @@ void main() {
     
 	vec4  c   = texture2D(gm_BaseTexture, v_vTexcoord);
 	float siz = 1. + smt;
+	
+	if(solidBG == 1) c.a = 1.;
 	
     float cc = bright(c);
     if(ig && (cc == 0. || cc == 1.)) { gl_FragColor = vec4(.5, .5, 1., c.a); return; }

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.002",
+    "changes": [
+      {
+        "date": "2026-06-12T08:48:39.571Z",
+        "node": "",
+        "commit": "**Normal**: Add option to force solid color output."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.010",
     "changes": [
       {
