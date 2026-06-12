@@ -37,6 +37,7 @@
     "animate_clock":                      { "path": "./icon/s_animate_clock.png",                           "s": 3, "x":  8, "y":  8 },
     "animate_node_go":                    { "path": "./icon/s_animate_node_go.png",                         "s": 1, "x":  5, "y":  5 },
     "animate_prop_go":                    { "path": "./icon/s_animate_prop_go.png",                         "s": 1, "x":  4, "y":  4 },
+    "animation_context_global":           { "path": "./icon/s_animation_context_global.png",                "s": 2, "x": 12, "y": 12 },
     "animation_setting":                  { "path": "./icon/s_animation_setting.png",                       "s": 1, "x": 12, "y": 12 },
     "animation_stretch":                  { "path": "./icon/s_animation_stretch.png",                       "s": 2, "x": 10, "y":  6 },
     "animation_timing":                   { "path": "./icon/s_animation_timing.png",                        "s": 1, "x": 12, "y": 12 },

@@ -417,9 +417,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	dynamic_input_inspecting = noone;
 	preview_select_surface   = false;
 	
-	newInput(0, nodeValue_IPadding(    "Padding", [0,0,0,0] ));
-	newInput(1, nodeValue_Enum_Scroll( "Output dimension", COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
-	newInput(2, nodeValue_Dimension()).setVisible(false);
+	////- =Output
+	newInput( 0, nodeValue_IPadding( "Padding", [0,0,0,0] ));
+	newInput( 1, nodeValue_EScroll(  "Output dimension", COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
+	newInput( 2, nodeValue_Dimension()).setVisible(false);
+	
+	////- =Rendering
+	newInput( 3, nodeValue_Bool( "Round Position", false ));
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
@@ -893,8 +897,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	]; }
 	
 	input_display_list = [
-		[ "Output",  true ],  1,  2,  0, 
-		[ "Layers", false, noone, b_refresh ], layer_renderer,
+		[ "Output",     true ],  1,  2,  0, 
+		[ "Rendering", false ],  3, 
+		[ "Layers",    false, noone, b_refresh ], layer_renderer,
 	];
 	
 	setDynamicInput(8, true, VALUE_TYPE.surface);
@@ -1798,10 +1803,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var imageAmo  = getInputAmount();
 			if( imageAmo == 0) return _outData;
 			
-			var _pad  = _data[0];
-			var _dimt = _data[1];
-			var _dim  = _data[2];
-			var base  = _data[3];
+			var _pad  = _data[ 0];
+			var _dimt = _data[ 1];
+			var _dim  = _data[ 2];
+			
+			var _rond = _data[ 3];
+			
+			var base  = _data[ input_fix_len];
 			var cDep  = attrDepth();
 			
 			var _outSurf  = _outData[0];
@@ -1867,23 +1875,28 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _ax = _anc[0] * _sw;
 			var _ay = _anc[1] * _sh;
 			
-			var _cx = _pos[0];
-			var _cy = _pos[1];
+			var dc = dcos(-_rot);
+			var ds = dsin(-_rot);
 			
-			var _d0 = point_rotate(_cx - _ax, _cy - _ay, _cx, _cy, _rot);
-			// _d0[0] = round(_d0[0]); _d0[1] = round(_d0[1]);
+			var px = _pos[0] - _ax * dc + _ay * ds;
+			var py = _pos[1] - _ax * ds - _ay * dc;
 			
-			array_push(_atlas, new SurfaceAtlas(_surf, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
-			_trans[i] = [ _d0[0], _d0[1], _sca[0], _sca[1], _rot ];
+			if(_rond) {
+				px = round(px);
+				py = round(py);
+			}
+			
+			array_push(_atlas, new SurfaceAtlas(_surf, px, py, _rot, _sca[0], _sca[1]));
+			_trans[i] = [ px, py, _sca[0], _sca[1], _rot ];
 			
 			surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
-				try { draw_surface_blend_ext(temp_surface[!_bg], _surf, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, false); }
+				try { draw_surface_blend_ext(temp_surface[!_bg], _surf, px, py, _sca[0], _sca[1], _rot, c_white, _alp, _bld, false); }
 				catch(e) { noti_warning(e, noone, self); }
 			surface_reset_shader();
 			
 			surface_set_shader(selection_surf, sh_selection_mask, false, BLEND.maximum);
 				shader_set_f("index", i + 1);
-				draw_surface_ext_safe(_surf, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, 1);
+				draw_surface_ext_safe(_surf, px, py, _sca[0], _sca[1], _rot, c_white, 1);
 			surface_reset_shader();
 			
 			_bg = !_bg;

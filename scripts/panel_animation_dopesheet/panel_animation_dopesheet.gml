@@ -51,6 +51,7 @@
     function panel_animation_new_folder()              { CALL("animation_new_folder");              PANEL_ANIMATION.newFolder();              }
     function panel_animation_toggle_NodeNameType(d=1)  { CALL("animation_toggle_NodeNameType");     PANEL_ANIMATION.toggleNodeNameType(d);    }
     function panel_animation_toggle_NodeLabel()        { CALL("animation_toggle_NodeLabel");        PANEL_ANIMATION.toggleNodeLabel();        }
+    function panel_animation_toggle_ViewContext()      { CALL("animation_toggle_ViewContext");      PANEL_ANIMATION.toggleViewContext();      }
     function panel_animation_toggle_KeyframeOverride() { CALL("animation_toggle_KeyframeOverride"); PANEL_ANIMATION.toggleKeyframeOverride(); }
     function panel_animation_toggle_OnionSkin()        { CALL("animation_toggle_OnionSkin");        PANEL_ANIMATION.toggleOnionSkin();        }
     
@@ -121,7 +122,7 @@
         	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
         	.setColorFn(function() /*=>*/ {return PANEL_ANIMATION.show_hidden? COLORS._main_icon : COLORS._main_accent} )
         
-        registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType      )
+        registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType    )
         	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.node_name_type} )
         	.setTooltip(new tooltipSelector("Name Display", [
 	            __txt("panel_animation_name_full", "Full name"),
@@ -131,6 +132,13 @@
 	        
         registerFunction(an, "Show Node Name",    "", n, panel_animation_toggle_NodeLabel       )
         	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_nodes}     )
+        	
+        registerFunction(an, "Toggle View Context", "", n, panel_animation_toggle_ViewContext   )
+        	.setMenu("animation_toggle_ViewContext",      THEME.animation_context_global ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.context_global}  )
+        	.setTooltip(new tooltipSelector("View Context", [
+	            __txt("Current View"),
+	            __txt("Global"),
+	        ]))
         	
         registerFunction(an, "Override Keyframe", "", n, panel_animation_toggle_KeyframeOverride)
         	.setMenu("animation_toggle_KeyframeOverride", THEME.keyframe_override ).setSpriteInd(function() /*=>*/ {return PREFERENCES.panel_animation_key_override} )
@@ -263,8 +271,8 @@ function Panel_Animation_Dopesheet() {
     #endregion
     
     #region ---- Display ---- 
-        show_node_outside_context = true;
-        show_nodes = true;
+        show_nodes     = true;
+        context_global = true;
         
         tooltip_loop_prop = noone;
         tooltip_loop_type = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);

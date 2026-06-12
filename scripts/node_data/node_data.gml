@@ -3689,6 +3689,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _node;
 	}
 	
+	static isChildOf = function(ctx) {
+		if(ctx == noone) return true;
+		var _p = group;
+		while(_p != noone) {
+			if(_p == ctx) return true;
+			_p = _p.group;
+		}
+		
+		return false;
+	}
+	
 	////- MISC
 	
 	static postBuild  = function() {}

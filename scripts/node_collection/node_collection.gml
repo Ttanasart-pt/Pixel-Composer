@@ -644,7 +644,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return true;
 	}
 	
-	static panelSetContext = function(panel) {
+	static panelSetContext = function(panel = PANEL_GRAPH) {
 		var _targ = getNodeBase();
 		_targ.show_instance = _targ != self;
 		

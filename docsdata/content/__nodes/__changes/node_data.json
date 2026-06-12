@@ -11,6 +11,11 @@
         "date": "2026-06-12T02:12:00.222Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Fix \"Default Override\" tag appear too often."
+      },
+      {
+        "date": "2026-06-12T07:09:26.113Z",
+        "node": "Animation Panel",
+        "commit": "**Animation Panel**: Add \"View Context\" control for selecting whether to show all animations or only in the current context (group)."
       }
     ]
   },

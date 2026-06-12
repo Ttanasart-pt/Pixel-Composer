@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.002",
+    "changes": [
+      {
+        "date": "2026-06-12T08:35:09.041Z",
+        "node": "",
+        "commit": "**Composite**: Add option to round position when drawing."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.003",
     "changes": [
       {

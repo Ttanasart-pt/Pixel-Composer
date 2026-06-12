@@ -254,6 +254,7 @@ function Panel_Animation() : PanelContent() constructor {
     	
     	global.menuItems_animation_sidebar = [
     		{ cond: "graph_select_node",     items: [ "animation_new_folder_select" ], items_inv: [ "animation_new_folder" ] },
+			"animation_toggle_ViewContext",
 			"animation_toggle_NodeNameType",
 			"animation_toggle_NodeLabel",
 			"animation_toggle_KeyframeOverride",
@@ -507,6 +508,8 @@ function Panel_Animation() : PanelContent() constructor {
     
     function getTimelineContentFolder(folder, _context = [], _depth = 0, _show = true) {
         var _ind = 0;
+        var _ctx = PANEL_GRAPH.getCurrentContext();
+        
         for( var i = 0, n = array_length(folder.contents); i < n; i++ ) {
             var _cont = folder.contents[i];
             if(!_cont.active) continue;
@@ -527,6 +530,7 @@ function Panel_Animation() : PanelContent() constructor {
                 if(!is_struct(_node))                              continue;
                 if(_node.instanceBase != undefined)                continue;
                 if(!show_hidden && _node.attributes.timeline_hide) continue;
+                if(!context_global && !_node.isChildOf(_ctx))      continue;
                 
                 var _anim = [];
                 var _prop = [];
@@ -1126,7 +1130,8 @@ function Panel_Animation() : PanelContent() constructor {
     function newFolder() { PROJECT.timelines.addItem(new timelineItemGroup()); }
     
     function toggleNodeNameType(_d=1) { node_name_type = (node_name_type + _d + 3) % 3; }
-    function toggleNodeLabel()        { show_nodes = !show_nodes; }
+    function toggleNodeLabel()        { show_nodes     = !show_nodes;     }
+    function toggleViewContext()      { context_global = !context_global; }
     function toggleKeyframeOverride() { PREFERENCES.panel_animation_key_override = !PREFERENCES.panel_animation_key_override; }
     function toggleOnionSkin()        { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
 }

@@ -37,16 +37,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(50, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max" ] ));
 	
 	////- =Line data
-	newInput(27, nodeValue_EScroll(  "Data Type", 1, [ "Line", "Path", "Segments", "Two points" ]));
-	newInput( 6, nodeValue_Rotation( "Rotation",  0 ));
-	newInput( 7, nodeValue_Path( "Path"    ));
-	newInput(28, nodeValue_Vector(   "Segment" )).setArrayDepth(2);
+	newInput(27, nodeValue_EScroll(  "Data Type",      1, [ "Line", "Path", "Segments", "Two points" ]));
+	newInput( 6, nodeValue_Rotation( "Rotation",       0     ));
+	newInput( 7, nodeValue_Path(     "Path"                  ));
+	newInput(28, nodeValue_Vector(   "Segment"               )).setArrayDepth(2);
 	newInput(32, nodeValue_Vec2(     "Start Point",   [0,.5] )).setUnitSimple();
 	newInput(33, nodeValue_Vec2(     "End Point",     [1,.5] )).setUnitSimple();
 	newInput(35, nodeValue_Bool(     "Force Loop",     false ));
 	newInput(19, nodeValue_Bool(     "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
-	newInput( 2, nodeValue_ISlider(  "Segment",        8, [1, 32, 0.1] ));
-	newInput(20, nodeValue_Float(    "Segment Length", 8 ));
+	newInput( 2, nodeValue_ISlider(  "Segment",        8, [1,32,.1] ));
+	newInput(20, nodeValue_Float(    "Segment Length", 8            ));
 	
 	////- =Width
 	newInput(17, nodeValue_Bool(  "1px Mode",             false      )).setTooltip("Render pixel perfect 1px line.");
@@ -999,8 +999,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		if(_colW && !_1px) { // width pass
 			surface_set_target(_widthPass);
-				if(_bg) draw_clear_alpha(0, 1);
-				else	DRAW_CLEAR
+				DRAW_CLEAR
 				
 				switch(_colWBld) {
 					case 0 : BLEND_NORMAL; break;

@@ -161,17 +161,13 @@
 	        	.setMenu("preview_toggle_reset_view", THEME.icon_reset_when_preview).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.resetViewOnDoubleClick} )
 	        	.setTooltip(new tooltipSelector(__txt("panel_preview_on_preview", "On Preview Changed"), [ __txt("Center view"), __txt("Keep view") ]))
 	                                                               
-	        registerFunction(p, "Set Mode 2D",  "", n, panel_preview_set_mode_2d ).setMenu("preview_set_mode_2d")
-	        registerFunction(p, "Set Mode 3D",  "", n, panel_preview_set_mode_3d ).setMenu("preview_set_mode_3d")
-	        registerFunction(p, "Toggle Mode",  "", n, panel_preview_toggle_mode )
+	        registerFunction(p, "Set Mode 2D",  "", n,     panel_preview_set_mode_2d ).setMenu("preview_set_mode_2d")
+	        registerFunction(p, "Set Mode 3D",  "", n,     panel_preview_set_mode_3d ).setMenu("preview_set_mode_3d")
+	        registerFunction(p, "Toggle Mode",  vk_tab, s, panel_preview_toggle_mode )
 	        	.setMenu("preview_toggle_mode", THEME.icon_preview_mode)
 	        	.setSpriteInd(function() /*=>*/ {return PANEL_PREVIEW.preview_lock? 2 : bool(PANEL_PREVIEW.d3_active)} )
 	        	.setColorFn(function()   /*=>*/ {return PANEL_PREVIEW.previewing_node && PANEL_PREVIEW.previewing_node.is_3D? COLORS._main_accent : COLORS._main_icon} )
-	        	.setTooltip(new tooltipSelector(__txt("Mode"), [ 
-	        		__txt("2D"), 
-	        		__txt("3D"), 
-	        		__txt("3D Locked") 
-        		]))
+	        	.setTooltip(new tooltipSelector(__txt("Mode"), [ __txt("2D"), __txt("3D"), __txt("3D Locked") ]))
 	        
 	        registerFunction(p, "Set Preview Object", "", n, function(_dat) /*=>*/ { 
 	        	var _indx = PANEL_PREVIEW.d3_preview_objects;

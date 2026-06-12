@@ -16,6 +16,16 @@
         "date": "2026-06-12T06:22:02.837Z",
         "node": "Draw Line",
         "commit": "**Draw Line**: Add weight to width effect curve."
+      },
+      {
+        "date": "2026-06-12T07:09:26.113Z",
+        "node": "",
+        "commit": "**Animation Panel**: Add \"View Context\" control for selecting whether to show all animations or only in the current context (group)."
+      },
+      {
+        "date": "2026-06-12T08:35:09.042Z",
+        "node": "",
+        "commit": "**Composite**: Add option to round position when drawing."
       }
     ]
   },

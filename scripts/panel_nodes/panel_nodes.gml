@@ -197,15 +197,24 @@ function Panel_Nodes() : PanelContent() constructor {
 				
 		}
 		
-		var bw = ui(24);
-		var bh = hg;
-		var bx = _x1 - bw;
-		var by = _y;
-		var bt = __txt("panel_node_goto", "Go to node");
-		
-		if(buttonInstant(noone, bx, by, bw, bh, _m, hover, focus, bt, THEME.animate_prop_go, 0, COLORS._main_icon, 0.75) == 2)
-			graphFocusNode(node);
-		bx -= ui(32);
+		#region right button 
+			var bh = hg;
+			var bw = bh;
+			var bx = _x1 - bw;
+			var by = _y;
+			var bt = __txt("panel_node_goto", "Go to node");
+			
+			if(buttonInstant(noone, bx, by, bw, bh, _m, hover, focus, bt, THEME.animate_prop_go, 0, COLORS._main_icon, 0.75) == 2)
+				graphFocusNode(node);
+			bx -= bw + ui(1);
+			
+			if(is(node, Node_Collection)) {
+				var bt = __txt("Enter Group");
+				if(buttonInstant(noone, bx, by, bw, bh, _m, hover, focus, bt, THEME.group_s, 0, COLORS._main_icon, 0.7) == 2)
+					node.panelSetContext();
+				bx -= bw + ui(1);
+			}
+		#endregion
 		
 		var _draw = false;
 		var dx = _x0 + ui(4) + hg / 2;
