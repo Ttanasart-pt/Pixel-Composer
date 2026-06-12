@@ -11,6 +11,11 @@
         "date": "2026-06-12T06:16:37.521Z",
         "node": "Draw Line 2 Points",
         "commit": "**Draw Line 2 Points**: Line cap property now separate between start and end cap."
+      },
+      {
+        "date": "2026-06-12T06:22:02.837Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Add weight to width effect curve."
       }
     ]
   },

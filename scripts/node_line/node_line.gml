@@ -54,8 +54,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(12, nodeValue_Bool(  "Span Width over Path", false      )).setTooltip("Apply the full 'Width Curve' to the trimmed path.");
 	
 		////- =/Weight
-	newInput(36, nodeValue_Bool(  "Apply Weight",         true       ));
-	newInput(62, nodeValue_Range( "Normalized Range",     [0,1]      ));
+	newInput(36, nodeValue_Bool(  "Apply Weight",         false        ));
+	newInput(62, nodeValue_Range( "Normalized Range",     [0,1]        )).setCurvable(63, CURVE_DEF_01);
 	
 	////- =Line Settings
 	newInput( 8, nodeValue_SliRange( "Range",         [0,1]  )).setTooltip("Range of the path to draw.");
@@ -106,14 +106,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 63
+	// Inputs 64
 	
 	input_display_list = [ 39, 
 		[ "Output",         true     ],  0, 30, 31, 16, 58, 
 		[ "Background",    false     ],  1, 48, 49, 50, 
 		[ "Line Data",     false     ], 27,  6,  7, 28, 32, 33, 35, 19,  2, 20, 
 		[ "Width",         false     ], 17,  3, 11, 12, 
-			[ "/Weight",    true     ], 36, 62, 
+			[ "/Weight",    true     ], 36, 62, 63, 
 		[ "Line Settings", false     ],  8, 25,  9, 26, 
 		[ "Dash",           true, 46 ], 44, 45, 
 		[ "Wiggle",         true, 47 ],  5,  4, 53, 51, 54, 52, 55, 56, 57, 
@@ -205,6 +205,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _wg2wid   = _data[36];
 			var _wgRange  = _data[62];
+			var _wgCuvdat = _data[63], _wgCurve = inputs[62].attributes.curved? new curveMap(_wgCuvdat) : undefined;
 			
 			var _ratio    = _data[ 8];
 			var _ratInv   = _data[25];
@@ -805,7 +806,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					var _ww = lerp_invert(p0.weight, wmin, wmax);
 					if(is_nan(_ww)) _ww = 1;
-					if(_wg2wid)     _nw = _nw * lerp(_wgRange[0], _wgRange[1], _ww);
+					if(_wg2wid) _nw = _nw * lerp(_wgRange[0], _wgRange[1], _wgCurve? _wgCurve.get(_ww) : _ww);
 					
 					_np = _colP? prog : prgc;
 					_nc = _col_base;
@@ -1042,7 +1043,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_nw *= widthMap[? widProg];
 						}
 						
-						if(_wg2wid) _nw = _nw * lerp(_wgRange[0], _wgRange[1], _ww);
+						if(_wg2wid) _nw = _nw * lerp(_wgRange[0], _wgRange[1], _wgCurve? _wgCurve.get(_ww) : _ww);
 						
 						if(j) {
 							var _nd0 = _dir;
