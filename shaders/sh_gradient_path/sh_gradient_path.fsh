@@ -197,7 +197,6 @@ void main() {
 		if(dis < minDist) {
 			minDist = dis;
 			prog = (float(i) + h) / float(pathRes);
-			// prog = h;
 		}
 	}
 	

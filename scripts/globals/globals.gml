@@ -16,6 +16,8 @@ gml_pragma("UnityBuild", "true");
 	globalvar CONNECTION_CONFLICT; CONNECTION_CONFLICT = ds_queue_create();
 	
 	globalvar MESSAGE; MESSAGE         = noone;
+	
+	globalvar OS_PAUSED; OS_PAUSED       = false;
 	randomize();
 #endregion
 

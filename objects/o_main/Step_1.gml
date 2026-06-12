@@ -10,6 +10,8 @@ _HOVERING_ELEMENT   = noone;
 FILE_DROPPED        = _FILE_DROPPED;
 _FILE_DROPPED       = false;
 
+if(os_is_paused()) OS_PAUSED = true;
+
 #region keybord captures
 	if(PREFERENCES.keyboard_capture_raw) {
 		if(keyboard_string != "") {
@@ -45,7 +47,9 @@ _FILE_DROPPED       = false;
 #endregion
 	
 #region fps
-	var  foc     = window_has_focus();
+	var  foc = window_has_focus();
+	if(OS == os_linux) foc = !OS_PAUSED;
+	
 	var _fps_cur = game_get_speed(gamespeed_fps);
 	var _fps_tar = foc || GLOBAL_IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
 	if(_fps_tar == 0) _fps_tar = 999;
@@ -76,6 +80,8 @@ _FILE_DROPPED       = false;
 
 #region window & mouse
 	mouse_step();
+	
+	if(OS_PAUSED && mouse_press(mb_any)) OS_PAUSED = false;
 	
 	if(_cursor != CURSOR) {
 		window_set_cursor(CURSOR);
