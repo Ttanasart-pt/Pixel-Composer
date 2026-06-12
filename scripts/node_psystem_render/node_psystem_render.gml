@@ -18,7 +18,6 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 5, nodeValue_Range(    "Animation Speed",      [1,1], { linked : true } ));
 	newInput( 6, nodeValue_Bool(     "Stretch Animation",    false                    ));
 	newInput( 7, nodeValue_EButton(  "On Animation End",     ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
-	
 	// 4
 	
 	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
@@ -209,8 +208,10 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						_draw_y = round(_draw_y);
 						
 						draw_set_color_alpha(_cc, _draw_a);
-						draw_ellipse(_draw_x - _draw_sx, _draw_y - _draw_sy, 
-						             _draw_x + _draw_sx, _draw_y + _draw_sy, false);
+						if(_draw_sx == 1 && _draw_sy == 1) 
+							draw_point(_draw_x, _draw_y);
+						else draw_ellipse(_draw_x - _draw_sx/2, _draw_y - _draw_sy/2, 
+						                  _draw_x + _draw_sx/2, _draw_y + _draw_sy/2, false);
 						break;
 						
 					case 1 : 
