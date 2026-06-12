@@ -2626,10 +2626,10 @@ function Panel_Animation_Dopesheet() {
 				aa = 1;
 				
 	            tool_width = tool_width_start + (mx - tool_width_mx);
-	            tool_width = clamp(tool_width, ui(224), w - ui(128));
+	            tool_width = clamp(tool_width, tool_width_min, w - ui(128));
 	            
 	            if(mouse_lrelease()) {
-	            	if(tool_width > ui(224))
+	            	if(tool_width > tool_width_min)
 	            		tool_width_exp  = tool_width;
 	            	tool_width_drag = false;
 	            }
@@ -2644,7 +2644,7 @@ function Panel_Animation_Dopesheet() {
 	            aa = 1;
 	            
 	            if(DOUBLE_CLICK) {
-	            	tool_width = tool_width == ui(224)? tool_width_exp : ui(224);
+	            	tool_width = tool_width == tool_width_min? tool_width_exp : tool_width_min;
 	            	
 	            } else if(mouse_lpress(pFOCUS)) {
 	                tool_width_drag  = true;

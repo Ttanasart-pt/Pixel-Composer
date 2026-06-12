@@ -412,7 +412,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- 3D ----
-		is_3D = NODE_3D.none;
+		is_3D   = NODE_3D.none;
+		lock_3D = true;
 	#endregion
 	
 	#region ---- Log ----

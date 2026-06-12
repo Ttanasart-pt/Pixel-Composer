@@ -402,9 +402,11 @@ function Panel_Menu() : PanelContent() constructor {
     function onFocusBegin() { PANEL_MENU = self; }
     
     function drawContent(panel) {
+        var _sepFrame  = THEME_VALUE.panel_separation_type == "frame";
         var _right     = PREFERENCES.panel_menu_right_control// || OS != os_windows;
         var _action    = true//OS == os_windows;
         var _draggable = pHOVER && pFOCUS;
+        
         
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         var hori = w > h;
@@ -421,7 +423,7 @@ function Panel_Menu() : PanelContent() constructor {
                     xx = ui(140);
                     draw_set_color(COLORS._main_icon_dark);
                     
-                    if(THEME_VALUE.panel_separation_type == "frame")
+                    if(_sepFrame)
                     	draw_line_round(xx, ui(8), xx, h - ui(8), 3);
                 }
         
@@ -456,7 +458,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
             } else {
                 xx = ui(8);
-                yy = w < vertical_break? ui(72) : ui(40);
+                yy = w < vertical_break? ui(64) : ui(32);
             }
             
             var _menus = menus;
@@ -666,21 +668,31 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region actions
-            var bs = h - _padd * 2;
-            var x1 = _right? w - _padd : ui(_padd) + bs;
+        	var bamo = array_length(action_buttons);
+        	var aSpc = ui(THEME_VALUE.panel_menu_action_spacing);
+            var bRight = _right && (hori || w >= vertical_break);
+        	
+        	var bh = hori? h - _padd * 2 : ui(28);
+        	var bw = bh;
+        	if(!hori && w < vertical_break)
+        		bw = (w - _padd * 2 - aSpc * (bamo - 1)) / bamo;
+        	
+            var x1 = bRight? w - _padd : _padd + bw;
+            
             var bspr = THEME.button_hide_fill;
-            var aSpc = ui(THEME_VALUE.panel_menu_action_spacing);
             
             if(_action) {
                 for( var i = 0, n = array_length(action_buttons); i < n; i++ ) {
                     var action = action_buttons[i];
                     
-                    var bx = x1 - bs;
+                    var bx = x1 - bw;
                     var by = _padd;
                     
                     switch(action) {
                         case WINDOW_ACTION.Exit:
-                            var b = buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
+                        	var bp = THEME.window_exit_icon;
+                        	var bc = COLORS._main_accent;
+                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, 0, bc);
                             if(b) _draggable = false;
                             if(b == 2) window_close();
                             break;
@@ -689,8 +701,9 @@ function Panel_Menu() : PanelContent() constructor {
                             var win_max = window_is_maximized || window_is_fullscreen;
                             if(OS == os_macosx) win_max = __win_is_maximized;
                             
+                            var bp = THEME.window_maximize_icon;
                             var bc = [ COLORS._main_icon, CDEF.lime ];
-                            var b  = buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, true,, THEME.window_maximize_icon, win_max, bc);
+                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, win_max, bc);
                             if(b) _draggable = false;
                             if(b == 2) {
                                 if(OS == os_windows) {
@@ -715,16 +728,18 @@ function Panel_Menu() : PanelContent() constructor {
                             break;
                             
                         case WINDOW_ACTION.Minimize:
+                        	var bp = THEME.window_minimize_icon;
                             var bc = [ COLORS._main_icon, CDEF.yellow ];
-                            var b  = buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, true,, THEME.window_minimize_icon, 0, bc);
+                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, 0, bc);
                             if(b) _draggable = false;
                             if(b == -2) winMan_Minimize();
                             break;
                             
                         case WINDOW_ACTION.Fullscreen:
                             var win_full = window_is_fullscreen;
+                            var bp = THEME.window_fullscreen_icon;
                             var bc = [ COLORS._main_icon, CDEF.cyan ];
-                            var b  = buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, true,, THEME.window_fullscreen_icon, win_full, bc);
+                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, win_full, bc);
                             if(b) _draggable = false;
                             if(b == 2) {
                                 if(OS == os_windows)
@@ -741,17 +756,25 @@ function Panel_Menu() : PanelContent() constructor {
                             break;
                     }
                     
-                    if(_right) x1 -= bs + aSpc;
-                    else       x1 += bs + aSpc;
+                    if(bRight) x1 -= bw + aSpc;
+                    else       x1 += bw + aSpc;
                 }
-            
+            	
                 if(_right) {
                     draw_set_color(COLORS.panel_separator);
-                	if(THEME_VALUE.panel_separation_type == "frame")
-                    	 draw_line_width(x1, ui(8), x1, h - ui(8), 2);
-                    else draw_line_width(x1, 0, x1, h, 1);
-                    
-                    x1 -= ui(8);
+                    if(hori) {
+	                	if(_sepFrame)
+	                    	 draw_line_width(x1, ui(8), x1, h - ui(8), 2);
+	                    else draw_line_width(x1, 0, x1, h, 1);
+	                    x1 -= ui(8);
+	                    
+                    } else {
+                    	var ly = _padd + bh + aSpc;
+                    	
+                    	if(_sepFrame)
+	                    	 draw_line_width(ui(8), ly, w - ui(8), ly, 2);
+	                    else draw_line_width(0, ly, w, ly, 1);
+                    }
                 }
             }
         #endregion
@@ -770,9 +793,10 @@ function Panel_Menu() : PanelContent() constructor {
                     var _stx = ui(8);
                     var _sty = h - ui(32 + 6);
                     
-                    draw_set_color(COLORS._main_icon_dark);
-                    if(THEME_VALUE.panel_separation_type == "frame")
-	                    draw_line_round(ui(8), _sty, w - ui(8), _sty, 2);
+                    draw_set_color(COLORS.panel_separator);
+                    if(_sepFrame)
+	                     draw_line_round(ui(8), _sty, w - ui(8), _sty, 2);
+                    else draw_line_width(0, _sty, w, _sty, 1);
                     
                     _sty -= _sts + ui(6);
                 }
@@ -875,7 +899,7 @@ function Panel_Menu() : PanelContent() constructor {
                 }
                 
             } else {
-                var _xx1 = ui(40);
+                var _xx1 = ui(36);
                 var  y1  = h - ui(20);
                 
                 draw_set_text(font, fa_left, fa_center, tc);
@@ -883,7 +907,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
                     _draggable = false;
-                    draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(16), ww, ui(32), sc, 1);
+                    draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(12), ww, ui(24), sc, 1);
                     if(NEW_VERSION) TOOLTIP = __txt("New Version Available");
                     
                     if(mouse_lpress(pFOCUS))
@@ -917,26 +941,27 @@ function Panel_Menu() : PanelContent() constructor {
                 tx1 = _xx1;
                 ty0 = 0;
                 ty1 = h;
-                tcx  = (tx0 + tx1) / 2;
                 
             } else {
                 tx0 = ui(8);
                 tx1 = w < vertical_break? w - ui(16) : w - ui(144);
-                ty0 = w < vertical_break? ui(36) : ui(6);
+                
+                ty0 = w < vertical_break? (_padd + bh + aSpc) + ui(8) : (bh - nh) / 2;
                 ty1 = h;
                 
-                tcx = tx0;
                 if(!_right && w >= vertical_break) {
+            		var bs = hori? h - _padd * 2 : ui(24);
                     tx0 = x1 - bs;
                     tx1 = w - ui(16);
                 }
             }
             
+            tcx  = (tx0 + tx1) / 2;
             maxW = abs(tx0 - tx1);
             
             var tfont = f_p1b;
             draw_set_font(tfont);
-            var full_name = string_width(txt + ".pxc") < maxW;
+            var full_name = hori && string_width(txt + ".pxc") < maxW;
             var tc = string_cut(txt, maxW);
             var tw = string_width(tc) + ui(16);
             var th = nh;
@@ -946,7 +971,10 @@ function Panel_Menu() : PanelContent() constructor {
                 tby0 = ty1 / 2 - th / 2;
                 
             } else {
-                tbx0 = tx0;
+            	if(w < vertical_break)
+            		 tbx0 = tcx - tw / 2;
+            	else tbx0 = tx0;
+            	
                 tby0 = ty0;
             }
             
@@ -1014,14 +1042,24 @@ function Panel_Menu() : PanelContent() constructor {
                 }
                 
             } else {
-                draw_set_text(tfont, fa_left, fa_center, COLORS._main_text);
-                draw_text_int(tx0 + ui(8), tby0 + th / 2, tc);
-                
-                if(full_name) {
-                    draw_set_color(COLORS._main_text_sub);
-                    draw_text_int(tx0 + ui(8) + _tcw, tby0 + th / 2, ".pxc");
-                }
-                
+            	if(w < vertical_break) {
+            		draw_set_text(tfont, fa_center, fa_center, COLORS._main_text);
+	                draw_text_int(tcx, tby0 + th / 2, tc);
+	                
+	                if(full_name) {
+	                	draw_set_text(tfont, fa_left, fa_center, COLORS._main_text_sub);
+	                    draw_text_int(tcx + _tcw / 2, tby0 + th / 2, ".pxc");
+	                }
+	                
+            	} else {
+	                draw_set_text(tfont, fa_left, fa_center, COLORS._main_text);
+	                draw_text_int(tx0 + ui(8), tby0 + th / 2, tc);
+	                
+	                if(full_name) {
+	                    draw_set_color(COLORS._main_text_sub);
+	                    draw_text_int(tx0 + ui(8) + _tcw, tby0 + th / 2, ".pxc");
+	                }
+            	}
             }
             
             draw_set_font(tfont);
@@ -1035,7 +1073,10 @@ function Panel_Menu() : PanelContent() constructor {
                 _cy = (ty0 + ty1) / 2 - _th / 2;
                 
             } else {
-                _cx = tx0 + ui(8) + _tw;
+            	if(w < vertical_break)
+            		 _cx = tcx + ui(2) + _tw / 2;
+            	else _cx = tx0 + ui(8) + _tw;
+            	
                 _cy = tby0 + th / 2 - _th / 2;
             }
             
@@ -1074,10 +1115,12 @@ function Panel_Menu() : PanelContent() constructor {
             }
             
             if(PREFERENCES.video_mode) {
-                _cx = tcx - _tw / 2 - ui(16);
-                _cy = (ty0 + ty1) / 2;
-                
-                draw_sprite_ui(THEME.video, 0, _cx, _cy, .8, .8, 0, COLORS._main_icon);
+            	if(hori) {
+	                _cx = tcx - _tw / 2 - ui(16);
+	                _cy = (ty0 + ty1) / 2;
+	                
+	                draw_sprite_ui(THEME.video, 0, _cx, _cy, .8, .8, 0, COLORS._main_icon);
+            	}
             }
         #endregion
         

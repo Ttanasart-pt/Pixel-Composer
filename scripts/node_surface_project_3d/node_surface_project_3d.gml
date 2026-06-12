@@ -1,6 +1,7 @@
 function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name  = "Surface Project 3D";
-	is_3D = NODE_3D.custom;
+	name    = "Surface Project 3D";
+	is_3D   = NODE_3D.custom;
+	lock_3D = false;
 	
 	newInput( 0, nodeValue_Dimension());
 	

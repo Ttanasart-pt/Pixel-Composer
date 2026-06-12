@@ -164,8 +164,14 @@
 	        registerFunction(p, "Set Mode 2D",  "", n, panel_preview_set_mode_2d ).setMenu("preview_set_mode_2d")
 	        registerFunction(p, "Set Mode 3D",  "", n, panel_preview_set_mode_3d ).setMenu("preview_set_mode_3d")
 	        registerFunction(p, "Toggle Mode",  "", n, panel_preview_toggle_mode )
-	        	.setMenu("preview_toggle_mode", THEME.icon_preview_mode).setSpriteInd(function() /*=>*/ {return PANEL_PREVIEW.preview_lock? 2 : bool(PANEL_PREVIEW.d3_active)} )
-	        	.setTooltip(new tooltipSelector(__txt("Mode"), [ __txt("2D"), __txt("3D"), __txt("3D Locked") ]))
+	        	.setMenu("preview_toggle_mode", THEME.icon_preview_mode)
+	        	.setSpriteInd(function() /*=>*/ {return PANEL_PREVIEW.preview_lock? 2 : bool(PANEL_PREVIEW.d3_active)} )
+	        	.setColorFn(function()   /*=>*/ {return PANEL_PREVIEW.previewing_node && PANEL_PREVIEW.previewing_node.is_3D? COLORS._main_accent : COLORS._main_icon} )
+	        	.setTooltip(new tooltipSelector(__txt("Mode"), [ 
+	        		__txt("2D"), 
+	        		__txt("3D"), 
+	        		__txt("3D Locked") 
+        		]))
 	        
 	        registerFunction(p, "Set Preview Object", "", n, function(_dat) /*=>*/ { 
 	        	var _indx = PANEL_PREVIEW.d3_preview_objects;
@@ -340,6 +346,7 @@ function Panel_Preview() : PanelContent() constructor {
     	preview_lock        = false;
         locked              = false;
     	
+    	previewing_node     = noone;
         preview_node        = [ noone, noone ];
         preview_data        = [ noone, noone ];
         preview_surfaces    = [ 0, 0 ];
@@ -4137,10 +4144,10 @@ function Panel_Preview() : PanelContent() constructor {
         if(do_fullView) fullView();
         do_fullView = false;
         
-        var _prev_node = getNodePreview();
-        if(_prev_node && _prev_node.is_3D) {
-        	preview_lock = true;
-        	d3_active    = _prev_node.is_3D;
+        previewing_node = getNodePreview();
+        if(previewing_node && previewing_node.is_3D) {
+        	preview_lock = previewing_node.lock_3D;
+        	d3_active    = preview_mode? previewing_node.is_3D : NODE_3D.none;
         	
         } else {
         	preview_lock = false;
@@ -4177,7 +4184,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         ////- =Drawer
         
-        if(_prev_node) {  
+        if(previewing_node) {  
             if(d3_active) {
                 dragCanvas3D();
                 draw3D();
@@ -4276,7 +4283,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
         } // Draw Overlay
         
-        if(!(_prev_node[$ "bypass_grid"] ?? false)) drawNodeGrid();
+        if(!(previewing_node[$ "bypass_grid"] ?? false)) drawNodeGrid();
         
         if(d3_active == NODE_3D.none) drawSplitView();
         drawTopbar(toolNode);
