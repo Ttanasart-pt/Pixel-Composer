@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_blend_normal_map",
+  "name":"sh_blend_normal_map",
+  "parent":{
+    "name":"2d_effects",
+    "path":"folders/nodes/data/3D/2d_effects.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
