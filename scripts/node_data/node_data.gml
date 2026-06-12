@@ -1128,11 +1128,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var _vals = _pres[$ "_values"];
 		if(pName == "_default" && _vals != undefined) {
-			overwrited_default = true;
 			if(_vals.content == undefined) _vals.content = json_load_struct(_vals.path);
 			
 			var _cont = _vals.content;
 			var _keys = struct_get_names(_cont);
+			overwrited_default = !array_empty(_keys);
 			
 			for( var i = 0, n = array_length(_keys); i < n; i++ ) {
 				var _inptKey = _keys[i];

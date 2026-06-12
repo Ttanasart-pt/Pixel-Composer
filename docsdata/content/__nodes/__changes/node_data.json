@@ -6,6 +6,11 @@
         "date": "2026-06-12T01:20:23.268Z",
         "node": "3D Projectors",
         "commit": "**3D Projectors**: Now default to 2D view with the ability to switch to 3D view."
+      },
+      {
+        "date": "2026-06-12T02:12:00.222Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Fix \"Default Override\" tag appear too often."
       }
     ]
   },

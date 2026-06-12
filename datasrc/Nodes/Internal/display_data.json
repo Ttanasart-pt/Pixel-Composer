@@ -866,6 +866,7 @@
             "Node_Solid",
             { "label": "/Gradient" },
             "Node_Gradient",
+            "Node_Gradient_Path",
             "Node_Gradient_Cos",
             "Node_Gradient_Points",
             "Node_Gradient_Points_N",

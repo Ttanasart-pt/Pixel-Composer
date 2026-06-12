@@ -6,6 +6,11 @@
         "date": "2026-06-12T02:05:41.321Z",
         "node": "PB Shine",
         "commit": "**PB Shine**: Node will now output to transparent bg when no surface is connected."
+      },
+      {
+        "date": "2026-06-12T02:12:00.222Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Fix \"Default Override\" tag appear too often."
       }
     ]
   },

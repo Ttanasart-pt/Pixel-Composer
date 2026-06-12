@@ -111,22 +111,22 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_uv(_data[18], _data[19]);
 			shader_set_gradient(_data[1], _data[15], _data[16], inputs[1]);
 			
-			shader_set_2("dimension",  _dim);
+			shader_set_2(     "dimension",     _dim  );
 			
-			shader_set_curve("pCurve",  _crv);
-			shader_set_f("useAxis",     _inv);
-			shader_set_curve("iCurve",  _invC);
+			shader_set_curve( "pCurve",        _crv  );
+			shader_set_f(     "useAxis",       _inv  );
+			shader_set_curve( "iCurve",        _invC );
 			
-			shader_set_i("gradient_loop",  _lop);
-			shader_set_2("center",   _cnt);
-			shader_set_i("type",     _typ);
-			shader_set_i("uniAsp",   _uni);
-			shader_set_2("cirScale", _csca);
+			shader_set_i( "gradient_loop", _lop  );
+			shader_set_2( "center",        _cnt  );
+			shader_set_i( "type",          _typ  );
+			shader_set_i( "uniAsp",        _uni  );
+			shader_set_2( "cirScale",      _csca );
 			
-			shader_set_f_map("angle",  _data[3], _data[10], inputs[3]);
-			shader_set_f_map("radius", _data[4], _data[11], inputs[4]);
-			shader_set_f_map("shift",  _data[5], _data[12], inputs[5]);
-			shader_set_f_map("scale",  _data[9], _data[13], inputs[9]);
+			shader_set_m( "angle",  _data[3], _data[10], inputs[3] );
+			shader_set_m( "radius", _data[4], _data[11], inputs[4] );
+			shader_set_m( "shift",  _data[5], _data[12], inputs[5] );
+			shader_set_m( "scale",  _data[9], _data[13], inputs[9] );
 			
 			if(is_surface(_msk)) draw_surface_stretched_ext(_msk, 0, 0, _sw, _sh, c_white, 1);
 			else                 draw_empty();

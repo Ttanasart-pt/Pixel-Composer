@@ -1,0 +1,6 @@
+{
+    "name":          "Draw Gradient Path",
+    "spr":           "s_node_gradient_path",
+    "baseNode":      "Node_Gradient_Path",
+    "pxc_version":    121040,
+}
