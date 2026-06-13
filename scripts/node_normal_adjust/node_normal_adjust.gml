@@ -21,10 +21,7 @@ function Node_Normal_Adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		
-		return w_hovering;
-	}
+	attribute_surface_depth();
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data

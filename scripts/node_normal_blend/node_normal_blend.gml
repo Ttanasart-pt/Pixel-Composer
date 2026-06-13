@@ -45,6 +45,8 @@ function Node_Normal_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- Nodes
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _dim = getDimension();
 		var _pos = getInputData( 6);

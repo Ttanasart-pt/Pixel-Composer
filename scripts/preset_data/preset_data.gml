@@ -194,7 +194,7 @@
 	
 	function __initCurve() {
 		var path = $"{working_directory}pack/curves.zip";
-		var root = $"{DIRECTORY}Curves"
+		var root = $"{DIRECTORY}Curves/"
 		directory_verify(root);
 		
 		if(check_version($"{root}version") && file_exists_empty(path))

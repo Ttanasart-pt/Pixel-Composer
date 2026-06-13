@@ -471,11 +471,11 @@
 		PREFERENCES.add_node_page    = ADD_NODE_PAGE;
 		PREFERENCES.add_node_subpage = ADD_NODE_SUBPAGE;
 		
-		json_save_struct(PREFERENCES_DIR + "keys.json",             PREFERENCES           );
-		json_save_struct(PREFERENCES_DIR + "menu_items.json",       PREFERENCES_MENUITEMS );
-		json_save_struct(PREFERENCES_DIR + "default_project.json",  PROJECT_ATTRIBUTES    );
-		json_save_struct(DIRECTORY + "Nodes/fav.json",              NODE_FAV              );
-		json_save_struct(DIRECTORY + "Nodes/recent.json",           global.RECENT_NODES   );
+		json_save_struct(PREFERENCES_DIR + "keys.json",             PREFERENCES,           true );
+		json_save_struct(PREFERENCES_DIR + "menu_items.json",       PREFERENCES_MENUITEMS, true );
+		json_save_struct(PREFERENCES_DIR + "default_project.json",  PROJECT_ATTRIBUTES,    true );
+		json_save_struct(DIRECTORY + "Nodes/fav.json",              NODE_FAV,              true );
+		json_save_struct(DIRECTORY + "Nodes/recent.json",           global.RECENT_NODES,   true );
 		
 		hotkey_serialize();
 	}

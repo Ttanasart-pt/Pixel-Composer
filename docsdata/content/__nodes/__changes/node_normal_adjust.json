@@ -3,11 +3,6 @@
     "version": "1.21.4.003",
     "changes": [
       {
-        "date": "2026-06-13T02:15:08.434Z",
-        "node": "any",
-        "commit": "Introduced"
-      },
-      {
         "date": "2026-06-13T02:30:48.461Z",
         "node": "",
         "commit": "Fix curve data always unzip on start."
