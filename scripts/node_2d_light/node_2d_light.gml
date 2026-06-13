@@ -28,7 +28,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	typeListStr = [ "Point", "Ellipse", "Line", "Line asymmetric", "Saber", "Spot", "Flame" ];
 	typeList    = __enum_array_gen(typeListStr, s_node_2d_light_shape);
-	attnList    = __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Curtom" ], s_node_curve_type);
+	attnList    = __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Custom" ], s_node_curve_type);
 	
 	function createNewInput(_ind = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -277,12 +277,13 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _swepS = _data[_ind + 22];
 			var _swepA = _data[_ind + 23];
 			
-			var _band  = _data[_ind +  9];
 			var _attn  = _data[_ind + 10];
 			var _attC  = _data[_ind + 24];
+			
 			var _rbnd  = _data[_ind + 11];
 			var _rbns  = _data[_ind + 12];
 			var _rbnr  = _data[_ind + 13];
+			var _band  = _data[_ind +  9];
 			
 			var _rngx  = _data[_ind + 15];
 			var _rngy  = _data[_ind + 16];

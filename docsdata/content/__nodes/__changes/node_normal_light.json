@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.003",
+    "changes": [
+      {
+        "date": "2026-06-13T00:31:26.094Z",
+        "node": "",
+        "commit": "**Normal Light**: Add attenuation, banding property to match 2d light node."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.010",
     "changes": [
       {

@@ -14,27 +14,40 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	typeListStr = ["Point", "Sun", "Line", "Spot"];
 	typeList    = __enum_array_gen(typeListStr, s_node_normal_light_type);
+	attnList    = __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Custom" ], s_node_curve_type);
 	
-	function createNewInput(index = array_length(inputs)) {
+	function createNewInput(i = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(index+0, nodeValue_EScroll( "Type", 0, typeList ));
-		newInput(index+1, nodeValue_Vec2(    "Position",     [0,0]    )).setUnitSimple();
-		newInput(index+7, nodeValue_Float(   "Distance",      0       ));
-		newInput(index+5, nodeValue_Vec2(    "End Position", [0,0]    )).setUnitSimple();
-		newInput(index+8, nodeValue_Float(   "End Distance",  0       ));
-		newInput(index+2, nodeValue_Float(   "Range",         16      ));
+		////- =Shape
+		newInput(i+ 0, nodeValue_EScroll( "Type", 0, typeList ));
+		newInput(i+ 1, nodeValue_Vec2(    "Position",     [0,0]    )).setUnitSimple();
+		newInput(i+ 7, nodeValue_Float(   "Distance",      0       ));
+		newInput(i+ 5, nodeValue_Vec2(    "End Position", [0,0]    )).setUnitSimple();
+		newInput(i+ 8, nodeValue_Float(   "End Distance",  0       ));
+		newInput(i+ 2, nodeValue_Float(   "Range",         16      ));
 		
-		newInput(index+3, nodeValue_Float(   "Intensity", 4        ));
-		newInput(index+4, nodeValue_Color(   "Color",     ca_white ));
-		newInput(index+6, nodeValue_Color(   "End Color", ca_white ));
-		// input 9
+		////- =Light
+		newInput(i+ 3, nodeValue_Float(   "Intensity", 4        ));
+		newInput(i+ 4, nodeValue_Color(   "Color",     ca_white ));
+		newInput(i+ 6, nodeValue_Color(   "End Color", ca_white ));
 		
-		inputs[index + 2].overlay_text_valign = fa_bottom;
+			////- =/Attenuation
+		newInput(i+ 9, nodeValue_EScroll( "Attenuation",   0, attnList       )).setTooltip("Control how light fade out over distance.");
+		newInput(i+10, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01      ));
+			
+			////- =/Banding
+		newInput(i+11, nodeValue_ISlider(  "Radial Banding",     0, [0, 16, 0.1]   ));
+		newInput(i+12, nodeValue_Rotation( "Radial Start",       0                 ));
+		newInput(i+13, nodeValue_Slider(   "Radial Band Ratio", .5                 ));
+		newInput(i+14, nodeValue_ISlider(  "Banding",            0, [0, 16, 0.1]   ));
+		// input 15
+		
+		inputs[i + 2].overlay_text_valign = fa_bottom;
 		
 		refreshDynamicDisplay();
-		return inputs[index];
+		return inputs[i];
 	}
 	
 	lights_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -98,19 +111,21 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	});
 	
 	input_display_dynamic = [ // 14, 
-		0, 1, 7, 5, 8, 2, 
-		3, 4, 6, 
+		[ "Shape",            false ],  0,  1,  7,  5,  8,  2, 
+		[ "Light",            false ],  3,  4,  6, 
+			[ "/Attenuation", false ],  9, 10, 
+			[ "/Banding",     false ], 11, 12, 13, 14, 
 	];
 	
 	input_display_list = [ 
-		["Input",	false], 0, 1, 3, 5, 
+		[ "Input",  false ], 0, 1, 3, 5, 
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
 		lights_renderer, 
-		["Lights", false], 
+		[ "Lights", false ], 
 	];
 	
-	setDynamicInput(9, false);
+	setDynamicInput(15, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
@@ -173,26 +188,42 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _light_ps2 = _data[_ind + 5];
 		var _light_ds2 = _data[_ind + 8];
-		
 		var _light_ran = _data[_ind + 2];
+		
 		var _light_int = _data[_ind + 3];
 		var _light_col = _data[_ind + 4];
 		var _light_cl2 = _data[_ind + 6];
 		
+		var _light_attn = _data[_ind + 9];
+		var _light_attC = _data[_ind +10];
+		
+		var _light_rbnd = _data[_ind +11];
+		var _light_rbns = _data[_ind +12];
+		var _light_rbnr = _data[_ind +13];
+		var _light_band = _data[_ind +14];
+		
 		surface_set_shader(_ligSurf, sh_normal_light, false, BLEND.add);
-			shader_set_surface("normalMap", _map);
-			shader_set_surface("heightMap", _hmap);
-			shader_set_i("useHeightMap",    is_surface(_hmap));
-			shader_set_f("normalHeight",    _hei);
-			shader_set_f("dimension",       _dim);
+			shader_set_s( "normalMap",        _map              );
+			shader_set_s( "heightMap",        _hmap             );
+			shader_set_i( "useHeightMap",     is_surface(_hmap) );
+			shader_set_f( "normalHeight",     _hei              );
+			shader_set_f( "dimension",        _dim              );
 			
-			shader_set_i("lightType",      _light_typ);
-			shader_set_f("lightPosition",  _light_pos[0], _light_pos[1], -_light_dis / 100, _light_ran );
-			shader_set_f("lightPosition2", _light_ps2[0], _light_ps2[1], -_light_ds2 / 100, _light_ran );
+			shader_set_i( "lightType",        _light_typ        );
+			shader_set_f( "lightPosition",    _light_pos[0], _light_pos[1], -_light_dis / 100, _light_ran );
+			shader_set_f( "lightPosition2",   _light_ps2[0], _light_ps2[1], -_light_ds2 / 100, _light_ran );
 			
-			shader_set_f("lightIntensity",  _light_int);
-			shader_set_color("lightColor",  _light_col);
-			shader_set_color("lightColor2", _light_cl2);
+			shader_set_f( "lightIntensity",   _light_int        );
+			shader_set_c( "lightColor",       _light_col        );
+			shader_set_c( "lightColor2",      _light_cl2        );
+			
+			shader_set_i(     "atten",        _light_attn       );
+			shader_set_curve( "attenCurve",   _light_attC       );
+			
+			shader_set_f( "band",             _light_band       );
+			shader_set_f( "radialBandAmo",    _light_rbnd       );
+			shader_set_f( "radialBandStart",  _light_rbns       );
+			shader_set_f( "radialBandRatio",  _light_rbnr       );
 			
 			draw_empty();
 		surface_reset_shader();
@@ -200,21 +231,30 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var _surf = _data[0];
-		var _norm = _data[1];
-		var _amb  = _data[3];
-		var _alph = _data[5];
-		var _dim  = is_surface(_surf)? surface_get_dimension(_surf) : surface_get_dimension(_norm);
+		#region data
+			var _surf = _data[0];
+			var _norm = _data[1];
+			var _amb  = _data[3];
+			var _alph = _data[5];
+			var _dim  = is_surface(_surf)? surface_get_dimension(_surf) : surface_get_dimension(_norm);
+		#endregion
 		
 		if(getInputAmount()) {
 			dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 			var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 			
 			var _ltype = _data[_ind + 0];
+			var _lattn = _data[_ind + 9];
 			
 			inputs[_ind + 5].setVisible(_ltype == 2 || _ltype == 3);
 			inputs[_ind + 8].setVisible(_ltype == 2 || _ltype == 3);
 			inputs[_ind + 6].setVisible(_ltype == 2);
+			
+			inputs[_ind +10].setVisible(_lattn == 3);
+			
+			inputs[_ind +11].setVisible(_ltype == 0);
+			inputs[_ind +12].setVisible(_ltype == 0);
+			inputs[_ind +13].setVisible(_ltype == 0);
 		}
 		
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1]);
