@@ -6,6 +6,11 @@
         "date": "2026-06-12T23:53:51.728Z",
         "node": "",
         "commit": "Fix crash when loading older project with addon data."
+      },
+      {
+        "date": "2026-06-13T00:04:37.701Z",
+        "node": "",
+        "commit": "**Graph Panel**: Fix error when hovering on update triggers."
       }
     ]
   },

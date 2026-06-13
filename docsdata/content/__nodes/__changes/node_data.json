@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.003",
+    "changes": [
+      {
+        "date": "2026-06-13T00:04:37.700Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Fix error when hovering on update triggers."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.002",
     "changes": [
       {

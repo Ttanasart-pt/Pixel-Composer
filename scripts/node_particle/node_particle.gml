@@ -881,14 +881,21 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	////- Serialize
 	
 	static postDeserialize = function() {
-		if(array_length(load_map.inputs) > 67) {
+		var _len = array_length(load_map.inputs);
+		
+		if(_len > 67) {
 			var _inp_wrap = load_map.inputs[67];
 			if(is_struct(_inp_wrap) && is_array(_inp_wrap.raw_value.d))
 				_inp_wrap.raw_value.d = 0;
 		}
 		
-		if(LOADING_VERSION >= 1_18_09_0) return;
+		if(_len > 71) {
+			var _inp_dim = load_map.inputs[71];
+			if(is_struct(_inp_dim) && !is_array(_inp_dim.raw_value.d))
+				_inp_dim.raw_value.d = [1,1];
+		}
 		
+		if(LOADING_VERSION >= 1_18_09_0) return;
 		
 		var _attr_curv = attributes.parameter_curves;
 		var _keys = variable_struct_get_names(_attr_curv);

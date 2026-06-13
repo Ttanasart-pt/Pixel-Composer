@@ -2517,8 +2517,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.drawConnections(params, _draw))  hovering ??= updatedInTrigger;
-			if(updatedOutTrigger.drawConnections(params, _draw)) hovering ??= updatedOutTrigger;
+			_hov = updatedInTrigger.drawConnections(params, _draw);  hovering ??= _hov;
+			_hov = updatedOutTrigger.drawConnections(params, _draw); hovering ??= _hov;
 		}
 		
 		return hovering;
