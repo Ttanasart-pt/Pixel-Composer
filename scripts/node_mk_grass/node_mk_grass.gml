@@ -290,8 +290,10 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							var bb = buffer_read(_sOut, buffer_f64);
 							
 							var ss = _sizeMapped && sizeSampler.active? sizeSampler.getPixelDirectClamp(px, py) : 1;
+							var c0 = make_color_rgb(clamp(px/_dim[0],0,1) * 255, clamp(py/_dim[1],0,1) * 255,   0);
+							var c1 = make_color_rgb(clamp(px/_dim[0],0,1) * 255, clamp(py/_dim[1],0,1) * 255, 255);
 							
-							draw_line_color(px, py, px + gx * ss, py - gy * ss, #000000, #ff0000); 
+							draw_line_color(px, py, px + gx * ss, py - gy * ss, c0, c1); 
 						}
 						break;
 						
@@ -312,11 +314,12 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							var ss = _sizeMapped && sizeSampler.active? sizeSampler.getPixelDirectClamp(px, py) : 1;
 							
 							random_set_seed(py * _dim[0] + px);
-							draw_set_color(make_color_rgb(irandom(255), 0, 0));
+							var c0 = make_color_rgb(clamp(px/_dim[0],0,1) * 255, clamp(py/_dim[1],0,1) * 255,   0);
+							var c1 = make_color_rgb(clamp(px/_dim[0],0,1) * 255, clamp(py/_dim[1],0,1) * 255, 255);
 							
-							draw_line(px,   py, px,           py - gy*ss); 
-							draw_line(px,   py, px   - dx*ss, py - dy*ss); 
-							draw_line(px-1, py, px-1 + dx*ss, py - dy*ss); 
+							draw_line_color(px,   py, px,           py - gy*ss, c0, c1); 
+							draw_line_color(px,   py, px   - dx*ss, py - dy*ss, c0, c1); 
+							draw_line_color(px-1, py, px-1 + dx*ss, py - dy*ss, c0, c1); 
 						}
 						break;
 						

@@ -168,8 +168,18 @@ void main() {
 	vec4  grasCol   = texture2D(grassTexture,   v_vTexcoord);
 	
 	gl_FragColor = drawBG == 1? baseCol : vec4(0.);
-	if(groundFill == 1 && grassBase.r > 0.)
+	if(groundFill == 1 && grassBase.a == 0.)
 		gl_FragColor = groundColor;
 	
-	if(grasCol.a > 0.) gl_FragColor = gradientEval(grasCol.r);
+	if(grasCol.a == 0.) return;
+	
+	vec2 gPos = grasCol.xy;
+	vec4 gcol = gradientEval(grasCol.b);
+	
+	     if(renderType == 0) gl_FragColor = gcol;
+	else if(renderType == 1) gl_FragColor = gcol * texture2D(gm_BaseTexture, gPos);
+	else if(renderType == 2) gl_FragColor = gcol + texture2D(gm_BaseTexture, gPos);
+	
+	// gl_FragColor = vec4(gPos, 0., 1.);
+	
 }
