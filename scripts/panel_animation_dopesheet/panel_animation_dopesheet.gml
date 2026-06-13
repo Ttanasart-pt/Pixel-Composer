@@ -2598,7 +2598,7 @@ function Panel_Animation_Dopesheet() {
     	// Right
     	
     	bx = ww - bs - ui(2);
-    	var spr = THEME.timeline_hide;
+    	var spr = THEME.timeline_hide_24;
     	var sid = show_hidden;
     	var scc = show_hidden? COLORS._main_icon : COLORS._main_accent;
     	var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, tooltip_hidden, spr, sid, scc);

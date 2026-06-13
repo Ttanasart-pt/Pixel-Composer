@@ -161,8 +161,8 @@ function Panel_Animation() : PanelContent() constructor {
 	    expands_h  = ui(240);
 	    side_width = ui(44);
 	    
-	    tool_width     = ui(200);
 	    tool_width_min = ui(200);
+	    tool_width     = tool_width_min;
 	    
 	    timeline_w = w - tool_width - ui(68);
 	    timeline_h = ui(28);

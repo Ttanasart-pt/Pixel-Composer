@@ -5,6 +5,7 @@ uniform vec2 dimension;
 
 uniform int   blendMode;
 uniform float intensity;
+uniform int   renormalize;
 
 uniform sampler2D surface_1;
 uniform int  surface_1_use;
@@ -45,14 +46,15 @@ void main() {
 	vec3 n2 = s2.rgb - offs;
 	vec3 nr = n1;
 	
-	     if(blendMode == 0) nr = n1 + n2 * intensity;
-	else if(blendMode == 1) nr = mix(n1, max(n1, n2), intensity);
+	     if(blendMode == 0) nr = n1 + n2;
+	else if(blendMode == 1) nr = max(n1, n2);
 	// 2
-	else if(blendMode == 3) nr = n1 - n2 * intensity;
-	else if(blendMode == 4) nr = mix(n1, min(n1, n2), intensity);
+	else if(blendMode == 3) nr = n1 - n2;
+	else if(blendMode == 4) nr = min(n1, n2);
 	// 5
-	else if(blendMode == 6) nr = mix(n1, n2, intensity);
+	else if(blendMode == 6) nr = n2;
 	
+	nr = mix(n1, nr, intensity);
 	nr += offs;
 	
 	if(mask_use == 1) {
@@ -61,6 +63,6 @@ void main() {
 		nr = mix(n1, nr, mskA);
 	}
 	
-	nr = normalize(nr);
+	if(renormalize == 1) nr = normalize(nr);
 	gl_FragColor = vec4(nr, 1.);
 }

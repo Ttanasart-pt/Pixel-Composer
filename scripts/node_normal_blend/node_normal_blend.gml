@@ -7,7 +7,8 @@ function Node_Normal_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		-1, "Substract", "Minimum", 
 		-1, "Lerp"
 	] ));
-	newInput(11, nodeValue_Slider(  "Intensity",  1 ));
+	newInput(11, nodeValue_Slider(  "Intensity",  1    ));
+	newInput(13, nodeValue_Bool(    "Normalize",  true ));
 	
 	////- =Surface 1
 	newInput( 0, nodeValue_Surface( "Normal 1" ));
@@ -29,12 +30,12 @@ function Node_Normal_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Mask
 	newInput(12, nodeValue_Surface( "Mask" ));
-	// input 13
+	// input 14
 	 
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Blend",          false ], 10, 11, 
+		[ "Blend",          false ], 10, 11, 13, 
 		[ "Normal 1",       false ],  0, 
 			[ "/Transform",  true ],  2,  3,  4,  5, 
 		[ "Normal 2",       false ],  1, 
@@ -60,6 +61,7 @@ function Node_Normal_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		#region data
 			var _mode  = _data[10];
 			var _ints  = _data[11];
+			var _norm  = _data[13];
 			
 			var _surf1 = _data[ 0];
 			
@@ -88,6 +90,7 @@ function Node_Normal_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			shader_set_i( "blendMode",     _mode  );
 			shader_set_f( "intensity",     _ints  );
+			shader_set_i( "renormalize",   _norm  );
 			
 			shader_set_s( "surface_1",     _surf1 );
 			shader_set_i( "surface_1_use", _useS1 );
