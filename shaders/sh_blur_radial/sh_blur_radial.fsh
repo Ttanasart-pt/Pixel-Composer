@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -141,8 +140,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(curve)
 
+#pragma use(curve)
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 

@@ -335,19 +335,43 @@ varying vec4 v_vColour;
 
 #define TAU 6.283185307179586
 
+uniform float spokes;
+uniform float rotation;
+uniform float globalRotation;
+
+uniform int   blendMode;
+uniform vec4  mirrorColor;
+
 void main() {
 	vec2 tx  = v_vTexcoord - .5;
 	vec4 res = vec4(0.);
 	vec2 sx;
 	
-	for(float i = 0.; i < 6.; i++) {
-		float ang = TAU / 6. * i;
+	float ang = radians(globalRotation);
+	float rot = radians(rotation);
+	
+	tx *= mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	
+	for(float i = 0.; i < spokes; i++) {
+		float _rot = rot + TAU / spokes * i;
 		
-		sx = .5 + tx * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-		res += texture2Dclean(gm_BaseTexture, sx);
+		sx = .5 + tx * mat2(cos(_rot), - sin(_rot), sin(_rot), cos(_rot));
+		if(sx.x > 0. && sx.x < 1. && sx.y > 0. && sx.y < 1.) {
+			vec4 smp = texture2Dclean(gm_BaseTexture, sx);
+			
+			     if(blendMode == 0) res = res + smp;
+			else if(blendMode == 1) res = res + smp;
+			else if(blendMode == 2) res = max(res, smp);
+		}
 		
-		sx = .5 + (tx * vec2(-1., 1.)) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-		res += texture2Dclean(gm_BaseTexture, sx);
+		sx = .5 + (tx * vec2(-1., 1.)) * mat2(cos(_rot), - sin(_rot), sin(_rot), cos(_rot));
+		if(sx.x > 0. && sx.x < 1. && sx.y > 0. && sx.y < 1.){
+			vec4 smp = texture2Dclean(gm_BaseTexture, sx) * mirrorColor;
+			
+			     if(blendMode == 0) res = res + smp;
+			else if(blendMode == 1) res = res + smp;
+			else if(blendMode == 2) res = max(res, smp);
+		}
 		
 	}
 	
