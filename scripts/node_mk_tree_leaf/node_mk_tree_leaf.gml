@@ -296,7 +296,6 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) : __MK
 	static toString = function() /*=>*/ {return $"[MK Leaf]"};
 }
 
-
 function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Leaves";
 	color = COLORS.node_blend_mktree;
@@ -581,11 +580,13 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(random(1) > _chan) continue;
 			
 			random_set_seed(_seed + i * 100);
-			var _br = _tree[i];
+			var _br   = _tree[i];
+			var _type = _br.mode;
 			
 			var _amoR = random_range(_amou[0], _amou[1]);
 			if(_auni) _amoR = _br.totalLength / _amoR; // density
 			_amoR = round(_amoR);
+			
 			if(_amoR <= 0) continue;
 			
 			var _positions = array_create(_amoR);
@@ -601,11 +602,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			if(_dist == 0) array_sort(_positions, true);
 			
-			var _sg = _br.segments;
-			var _sn = array_length(_sg);
-			var  cc = _cBraM? _cBraSamp.getPixel(round(ox), round(oy)) : _cBra.eval(random(1));
-			
 			var _sprdB = random_range(_sprd[0], _sprd[1]);
+			var _sg = _br.segments;
+			var _sn = _type == MK_TREE_TYPE.segment? array_length(_sg) : _amoR;
+			var  cc = _cBraM? _cBraSamp.getPixel(round(ox), round(oy)) : _cBra.eval(random(1));
 			
 			var _refOrd = 0, _ref;
 			switch(_refo) {
@@ -615,27 +615,43 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 			for( var j = 1; j < _sn; j++ ) {
-				var _r0 = _br.segmentRatio[j - 1];
-				var _r1 = _br.segmentRatio[j    ];
+				if(_type == MK_TREE_TYPE.segment) {
+					var _r0 = _br.segmentRatio[j-1];
+					var _r1 = _br.segmentRatio[j  ];
+					
+					if(_r1 <= _r0) continue;
+					if(_r1 < _positions[_posCursor]) continue;
+						
+					ox = _sg[j-1].x;
+					oy = _sg[j-1].y;
+					
+					nx = _sg[j].x;
+					ny = _sg[j].y;
+					
+					var brnDir = point_direction(ox, oy, nx, ny);
+					
+				} else if(_type == MK_TREE_TYPE.points) {
+					if(_br.pointAmo == 0) break;
+					var _pnt;
+					
+						 if(_dist == 0) _pnt = _br.points[irandom(_br.pointAmo - 1)];
+					else if(_dist == 1) _pnt = _br.points[_posCursor % _br.pointAmo];
+					var brnDir = _br.rootDirection;
+				}
 				
-				if(_r1 <= _r0) continue;
-				if(_r1 < _positions[_posCursor]) continue;
-				
-				ox = _sg[j-1].x;
-				oy = _sg[j-1].y;
-				
-				nx = _sg[j].x;
-				ny = _sg[j].y;
-				
-				var brnDir = point_direction(ox, oy, nx, ny);
-				
-				while(_positions[_posCursor] <= _r1) {
+				while(_type == MK_TREE_TYPE.points || _positions[_posCursor] <= _r1) {
 					var _rPos = _positions[_posCursor];
 					var _cPos = _clam? (_prng == 0? 1 : (_rPos - __p0) / _prng) : _rPos;
 					
-					var _rr = (_rPos - _r0) / (_r1 - _r0);
-					var _lx = lerp(ox, nx, _rr); 
-					var _ly = lerp(oy, ny, _rr); 
+					if(_type == MK_TREE_TYPE.segment) {
+						var _rr = (_rPos - _r0) / (_r1 - _r0);
+						var _lx = lerp(ox, nx, _rr); 
+						var _ly = lerp(oy, ny, _rr); 
+						
+					} else if(_type == MK_TREE_TYPE.points) {
+						var _lx = _pnt[0]; 
+						var _ly = _pnt[1]; 
+					}
 					
 					var _sprD = 1;
 					switch(_refl) {
@@ -782,6 +798,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					_posCursor++;
 					if(_posCursor >= _amoR) break;
+					if(_type == MK_TREE_TYPE.points) break;
 				}
 				
 				if(_posCursor >= _amoR) break;

@@ -11,6 +11,11 @@
 		widg:  function() /*=>*/ {return new mktreeBox()},
 	}
 	
+	enum MK_TREE_TYPE {
+		segment,
+		points
+	}
+	
 	enum MKLEAF_TYPE {
 		Leaf, 
 		Complex_Leaf, 
@@ -50,6 +55,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 	x = _x;
 	y = _y;
 	
+	mode = MK_TREE_TYPE.segment;
+	
 	rootPosition   = 0;
 	rootDirection  = undefined;
 	curvPosition   = 0;
@@ -59,6 +66,9 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 	segmentLengths = [];
 	segmentRatio   = [];
 	totalLength    = 0;
+	
+	points    = [];
+	pointAmo  = 0;
 	
 	children  = [];
 	leaves    = [];
@@ -374,18 +384,31 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 	
 	static drawOverlay = function(_x, _y, _s) {
 		var ox, oy, nx, ny;
-		
 		draw_set_color(COLORS._main_icon)
-		for( var i = 0, n = array_length(segments); i < n; i++ ) {
-			var _seg = segments[i];
+		
+		if(mode == MK_TREE_TYPE.segment) {
+			for( var i = 0, n = array_length(segments); i < n; i++ ) {
+				var _seg = segments[i];
+				
+				nx = _x + _seg.x * _s;
+				ny = _y + _seg.y * _s;
+				
+				if(i) { draw_line(ox, oy, nx, ny); }
+				
+				ox = nx;
+				oy = ny;
+			}
 			
-			nx = _x + _seg.x * _s;
-			ny = _y + _seg.y * _s;
+		} else if(mode == MK_TREE_TYPE.points) {
+			for( var i = 0, n = array_length(points); i < n; i++ ) {
+				var _p = points[i];
+				
+				nx = _x + _p[0] * _s;
+				ny = _y + _p[1] * _s;
+				
+				draw_circle(nx, ny, 3, false);
+			}
 			
-			if(i) { draw_line(ox, oy, nx, ny); }
-			
-			ox = nx;
-			oy = ny;
 		}
 		
 		__x = _x;
@@ -393,8 +416,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 		__s = _s;
 		
 		draw_set_circle_precision(4);
-		array_foreach(leaves,   function(l) /*=>*/ {return l.drawOverlay(__x, __y, __s)});
-		array_foreach(children, function(c) /*=>*/ {return c.drawOverlay(__x, __y, __s)});
+		array_foreach(leaves,   function(l,i) /*=>*/ {return l.drawOverlay(__x, __y, __s)});
+		array_foreach(children, function(c,i) /*=>*/ {return c.drawOverlay(__x, __y, __s)});
 	}
 	
 	static drawBranchLine = function() {

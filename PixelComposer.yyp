@@ -1918,6 +1918,7 @@
     {"id":{"name":"node_mk_tree_branch_to_path","path":"scripts/node_mk_tree_branch_to_path/node_mk_tree_branch_to_path.yy",},},
     {"id":{"name":"node_mk_tree_branch_trim","path":"scripts/node_mk_tree_branch_trim/node_mk_tree_branch_trim.yy",},},
     {"id":{"name":"node_mk_tree_branch","path":"scripts/node_mk_tree_branch/node_mk_tree_branch.yy",},},
+    {"id":{"name":"node_mk_tree_bush","path":"scripts/node_mk_tree_bush/node_mk_tree_bush.yy",},},
     {"id":{"name":"node_mk_tree_grow","path":"scripts/node_mk_tree_grow/node_mk_tree_grow.yy",},},
     {"id":{"name":"node_mk_tree_inline","path":"scripts/node_mk_tree_inline/node_mk_tree_inline.yy",},},
     {"id":{"name":"node_mk_tree_leaf_hull","path":"scripts/node_mk_tree_leaf_hull/node_mk_tree_leaf_hull.yy",},},
