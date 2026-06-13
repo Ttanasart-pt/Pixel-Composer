@@ -468,13 +468,17 @@ varying vec4 v_vColour;
 #define PI  3.141592653589793
 
 uniform vec2  dimension;
+
 uniform vec2  position;
+uniform float rotation;
+
+uniform vec2  center;
 uniform vec2  scale;
 uniform float angle;
-uniform int   reflecc;
 uniform int   rscale;
 uniform float trim;
 
+uniform int       reflecc;
 uniform vec2      spokes;
 uniform int       spokesUseSurf;
 uniform sampler2D spokesSurf;
@@ -491,7 +495,11 @@ void main() {
 		spk = mix(spokes.x, spokes.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2  px = v_vTexcoord * dimension - position;
+	float ang = radians(rotation);
+	
+	vec2  px  = v_vTexcoord * dimension - position - center;
+	      px *= mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	
 	if(spokes_curve_use == 1) 
 		spk *= curveEval(spokes_curve, spokes_amount, length(px / dimension) / sqrt(2.) * 2.);
 	
@@ -499,7 +507,9 @@ void main() {
 	float a = TAU / spk;
 	if(reflecc == 1) a *= 2.;
 	
-	_angle = atan(px.y, px.x) + angle;
+	float angleR = radians(angle);
+	
+	_angle = atan(px.y, px.x) + angleR;
 	_angle = TAU - mod(_angle, TAU); 
 	_angle = mod(_angle, a);
 	
@@ -514,10 +524,10 @@ void main() {
 		return;
 	}
 	
-	float _alpha = (angle + PI) - (_angle + angle);
-	float iangle = (angle + PI) + _alpha * scale.x;
+	float _alpha = (angleR + PI) - (_angle + angleR);
+	float iangle = (angleR + PI) + _alpha * scale.x;
 	
-	vec2 ps = (position + vec2(cos(iangle) * dist, -sin(iangle) * dist )) / dimension;
+	vec2 ps = (center + vec2(cos(iangle) * dist, -sin(iangle) * dist )) / dimension;
 	     ps = fract(ps);
 	
 	if(mod(floor(ps.x), 2.) > 1.) ps.x = 1. - ps.x;

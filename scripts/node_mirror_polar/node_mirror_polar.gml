@@ -12,13 +12,17 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newActiveInput(3);
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" ));
-	newInput( 7, nodeValue_EScroll( "Output Dimension",     0, [ "Same as input", "Relative", "Constant" ] ));
-	newInput( 8, nodeValue_Vec2(    "Relative Dimension",  [1,1]    ));
-	newInput( 9, nodeValue_Vec2(    "Constant Dimension",  PROJ_SURF ));
+	newInput( 0, nodeValue_Surface(  "Surface In" ));
+	newInput( 7, nodeValue_EScroll(  "Output Dimension",     0, [ "Same as input", "Relative", "Constant" ] ));
+	newInput( 8, nodeValue_Vec2(     "Relative Dimension",  [1,1]    ));
+	newInput( 9, nodeValue_Vec2(     "Constant Dimension",  PROJ_SURF ));
+	
+	////- =Tranform
+	newInput(15, nodeValue_Vec2(     "Position",     [0,0]  )).setUnitSimple();
+	newInput(14, nodeValue_Rotation( "Rotation",      0     ));
 	
 	////- =Mirror
-	newInput( 1, nodeValue_Vec2(     "Position",    [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 1, nodeValue_Vec2(     "Center",      [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 2, nodeValue_Rotation( "Angle",         0     )).setHotkey("R").setPieMenu();
 	newInput( 6, nodeValue_Vec2(     "Scale",        [1,1]  )).setPieMenu();
 	newInput(10, nodeValue_EScroll(  "Radial Scale",  0, [ "Linear", "Exponential" ] ));
@@ -27,14 +31,15 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- =Spokes
 	newInput( 4, nodeValue_Float( "Spokes",     4     )).setMappable(11).setCurvable(12).setPieMenu();
 	newInput( 5, nodeValue_Bool(  "Reflective", false )).setPieMenu();
-	// 14
+	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
-		[ "Surfaces", false ],  0,  7,  8,  9, 
-		[ "Mirror",   false ],  1,  2,  6, 10, 13, 
-		[ "Spokes",   false ],  4, 11, 12,  5, 
+		[ "Surfaces",  false ],  0,  7,  8,  9, 
+		[ "Transform", false ], 15, 14, 
+		[ "Mirror",    false ],  1,  2,  6, 10, 13, 
+		[ "Spokes",    false ],  4, 11, 12,  5, 
 	];
 	
 	////- Node
@@ -86,19 +91,22 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _suf = _data[0];
-			var _pos = _data[1];
-			var _ang = _data[2];
-			var _spk = _data[4];
-			var _ref = _data[5];
-			var _sca = _data[6];
+			var _suf  = _data[ 0];
+			var _outt = _data[ 7];
+			var _relS = _data[ 8];
+			var _conS = _data[ 9];
 			
-			var _outt = _data[7];
-			var _relS = _data[8];
-			var _conS = _data[9];
+			var _pos  = _data[15];
+			var _rot  = _data[14];
 			
+			var _cen  = _data[ 1];
+			var _ang  = _data[ 2];
+			var _sca  = _data[ 6];
 			var _rsca = _data[10];
 			var _trim = _data[13];
+			
+			var _spk  = _data[ 4];
+			var _ref  = _data[ 5];
 			
 			inputs[8].setVisible(_outt == 1);
 			inputs[9].setVisible(_outt == 2);
@@ -108,14 +116,20 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		surface_set_shader(_outSurf, sh_mirror_polar);
 			shader_set_interpolation(_suf);
+			
 			shader_set_f( "dimension", _dim );
+			
 			shader_set_2( "position",  _pos );
-			shader_set_f( "angle",     degtorad(_ang));
-			shader_set_f_map( "spokes",_spk, _data[11], inputs[4], _data[12] );
-			shader_set_i( "reflecc",   _ref );
+			shader_set_f( "rotation",  _rot );
+			
+			shader_set_2( "center",    _cen );
+			shader_set_f( "angle",     _ang );
 			shader_set_2( "scale",     _sca );
 			shader_set_i( "rscale",   _rsca );
 			shader_set_f( "trim",     _trim );
+			
+			shader_set_m( "spokes",    _spk, _data[11], inputs[4], _data[12] );
+			shader_set_i( "reflecc",   _ref );
 			
 			draw_surface_stretched_safe(_suf, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
