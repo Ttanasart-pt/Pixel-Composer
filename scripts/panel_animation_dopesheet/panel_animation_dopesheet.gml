@@ -179,12 +179,12 @@ function Panel_Animation_Dopesheet() {
 	
 	#region ---- Timeline ----
 		tb_frame = textBox_Number(function(t) /*=>*/ {return PROJECT.animator.setFrame(round(t) -1)})
-			.setFont(f_p4).setAlign(fa_left).setBoxColor(CDEF.main_mdwhite)
+			.setFont(f_p3).setAlign(fa_left).setBoxColor(CDEF.main_mdwhite)
 			.setLabelAlign(fa_right).setLabelColor(CDEF.main_mdwhite)
 			.setTooltip(__txt("Frame"));
 		
 		tb_framerate = textBox_Number(function(t) /*=>*/ { PROJECT.animator.framerate = t; })
-			.setFont(f_p4).setBoxColor(CDEF.main_mdwhite)
+			.setFont(f_p3).setBoxColor(CDEF.main_mdwhite)
 			.setTooltip(__txt("Framerate"));
 		
 		timeline_stretch      = 0;
@@ -354,7 +354,7 @@ function Panel_Animation_Dopesheet() {
         bar_total_w     = 1;
         bar_total_shift = 1;
         
-        top_frame_height = ui(20);
+        top_frame_height = ui(24);
         region_height    = ui(16);
         topbar_height    = top_frame_height;
         

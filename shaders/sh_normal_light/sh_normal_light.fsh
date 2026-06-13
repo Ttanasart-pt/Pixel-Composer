@@ -222,6 +222,7 @@ void main() {
 		brightness = 1. - acos(dot(spotDir, lightDir)) / range;
 	}
 	
+	brightness = max(0., brightness);
 		 if(atten == 0) brightness = pow(brightness, 2.);
 	else if(atten == 1) brightness = 1. - pow(1. - brightness, 2.);
 	else if(atten == 2) brightness = brightness;

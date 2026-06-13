@@ -56,22 +56,22 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		newInput(_ind + 21, nodeValue_Float(    "Thickness",    2      )).hideLabel();
 		
 		////- =Light
-		newInput(_ind +  3, nodeValue_Slider(   "Intensity",         1, [ 0, 4, 0.01 ] ));
-		newInput(_ind +  4, nodeValue_Color(    "Color",             ca_white          ));
+		newInput(_ind +  3, nodeValue_Slider(   "Intensity",    1, [0,4,.01] ));
+		newInput(_ind +  4, nodeValue_Color(    "Color",        ca_white     ));
 		
 			////- =/Attenuation
-		newInput(_ind + 10, nodeValue_EScroll( "Attenuation",   0, attnList       )).setTooltip("Control how light fade out over distance.");
-		newInput(_ind + 24, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01      ));
+		newInput(_ind + 10, nodeValue_EScroll( "Attenuation",   0, attnList  )).setTooltip("Control how light fade out over distance.");
+		newInput(_ind + 24, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01 ));
 			
 			////- =/Banding
-		newInput(_ind + 11, nodeValue_ISlider(  "Radial Banding",    0, [0, 16, 0.1]   ));
-		newInput(_ind + 12, nodeValue_Rotation( "Radial Start",      0                 ));
-		newInput(_ind + 13, nodeValue_Slider(   "Radial Band Ratio", 0.5               ));
-		newInput(_ind +  9, nodeValue_ISlider(  "Banding",       0,  [0, 16, 0.1]  ));
+		newInput(_ind + 11, nodeValue_ISlider(  "Radial Banding",     0, [0,16,.1] ));
+		newInput(_ind + 12, nodeValue_Rotation( "Radial Start",       0            ));
+		newInput(_ind + 13, nodeValue_Slider(   "Radial Band Ratio", .5            ));
+		newInput(_ind +  9, nodeValue_ISlider(  "Banding",            0, [0,16,.1] ));
 			
 		////- =Render
-		newInput(_ind + 18, nodeValue_Float(   "Exponent",      2                 ));
-		newInput(_ind + 19, nodeValue_Bool(    "Anti Aliasing", false             ));
+		newInput(_ind + 18, nodeValue_Float(    "Exponent",      2     ));
+		newInput(_ind + 19, nodeValue_Bool(     "Anti Aliasing", false ));
 		// input 25
 		
 		refreshDynamicDisplay();

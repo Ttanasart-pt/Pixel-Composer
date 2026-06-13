@@ -6,6 +6,11 @@
         "date": "2026-06-13T00:31:26.088Z",
         "node": "Normal Light",
         "commit": "**Normal Light**: Add attenuation, banding property to match 2d light node."
+      },
+      {
+        "date": "2026-06-13T01:00:58.758Z",
+        "node": "Animation Panel",
+        "commit": "**Animation Panel**: Increase dopesheet header size."
       }
     ]
   },
