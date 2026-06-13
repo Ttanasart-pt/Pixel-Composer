@@ -754,7 +754,7 @@ function Project() constructor {
 		_map.data            = variable_clone(data);
 		
 		_map.timelines   = timelines.serialize();
-		_map.notes       = array_map(notes,  function(n) /*=>*/ {return n.serialize()} );
+		_map.notes       = array_map(notes,  function(n,i) /*=>*/ {return n.serialize()} );
 		_map.trackAnim   = trackAnim.serialize();
 		_map.randomizer  = randomizer.serialize();
 		
@@ -786,12 +786,12 @@ function Project() constructor {
 			array_push(_map.favVal, [_fa.node.node_id, _fa.index]);
 		}
 		
-		_map.cPanels = array_map(customPanels,     function(p) /*=>*/ {return p.serialize()});
-		_map.tMarks  = array_map(timelineMarkers,  function(p) /*=>*/ {return p.serialize()});
-		_map.aRegion = array_map(animationRegions, function(p) /*=>*/ {return p.serialize()});
+		_map.cPanels = array_map(customPanels,     function(p,i) /*=>*/ {return p.serialize()});
+		_map.tMarks  = array_map(timelineMarkers,  function(p,i) /*=>*/ {return p.serialize()});
+		_map.aRegion = array_map(animationRegions, function(p,i) /*=>*/ {return p.serialize()});
 		
 		__node_list = [];
-		array_foreach(allNodes, function(node) /*=>*/ { if(node.active) array_push(__node_list, node.serialize()); })
+		array_foreach(allNodes, function(node,i) /*=>*/ { if(node.active) array_push(__node_list, node.serialize()); return true; })
 		_map.nodes = __node_list;
 		
 		var prev = PANEL_PREVIEW.getNodePreviewSurface();

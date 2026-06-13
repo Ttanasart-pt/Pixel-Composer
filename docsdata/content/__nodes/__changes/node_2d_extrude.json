@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.003",
+    "changes": [
+      {
+        "date": "2026-06-13T02:50:51.108Z",
+        "node": "2D Extrude",
+        "commit": "**2D Extrude**: Add option to not draw original surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {

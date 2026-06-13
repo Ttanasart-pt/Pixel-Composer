@@ -13,7 +13,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 		////- =/Path
 	newInput(15, nodeValue_Path( "Path"                     ));
-	newInput(16, nodeValue_Int(      "Path Resolution", 32      ));
+	newInput(16, nodeValue_Int(  "Path Resolution", 32      ));
 	
 	////- =Transform
 	newInput(11, nodeValue_Anchor(   "Anchor"                          ));
@@ -21,25 +21,26 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(13, nodeValue_Curve(    "Scale Modulate",    CURVE_DEF_11 ));
 	
 	////- =Render
-	newInput( 3, nodeValue_Gradient( "Color",        gra_white )).setHotkeyAuto("C").setPieMenu();
-	newInput( 4, nodeValue_EScroll(  "Clone Color",  0, [ "None", "Multiply", "Additive" ] ));
-	newInput(10, nodeValue_Range(    "Depth Range", [0,1]      ));
+	newInput( 3, nodeValue_Gradient( "Color",         gra_white )).setHotkeyAuto("C").setPieMenu();
+	newInput( 4, nodeValue_EScroll(  "Clone Color",    0, [ "None", "Multiply", "Additive" ] ));
+	newInput(10, nodeValue_Range(    "Depth Range",   [0,1]      ));
+	newInput(17, nodeValue_Bool(     "Draw Original", true       ));
 	
 	////- =Highlight
 	newInput( 5, nodeValue_Bool(  "Highlight",       false    ));
 	newInput(14, nodeValue_Float( "Highlight Width", 1        ));
 	newInput( 6, nodeValue_Color( "Highlight Color", ca_white ));
-	// input 17
+	// input 18
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(0);
-	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone)).setDrawGroup(0);
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(0);
+	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	
 	input_display_list = [
 	    [ "Surface",   false    ],  0,  9, 
 	    [ "Extrude",   false    ],  1,  2,  8,  7, 
 	    	[ "/Path", false    ], 15, 16, 
 		[ "Transform", false    ], 11, 12, 13, 
-	    [ "Render",    false    ],  3,  4, 10, 
+	    [ "Render",    false    ],  3,  4, 10, 17, 
 	    [ "Highlight", false, 5 ], 14,  6, 
     ];
 	
@@ -128,6 +129,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		    var _grad = _data[ 3];
 		    var _clne = _data[ 4];
 		    var _deth = _data[10];
+		    var _draw = _data[17];
 		    
 		    var _high = _data[ 5];
 		    var _hgwd = _data[14];
@@ -186,6 +188,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    	shader_set_s(   "extrudeMap",   temp_surface[0] );
 	    	shader_set_s(   "mask",         _mask           );
 	        shader_set_i(   "useMask",      _use_mask       );
+	        shader_set_i(   "drawBase",     _draw           );
 	        
 	    	shader_set_2(   "depth",        _deth  );
 	    	shader_set_f(   "angle",        degtorad(_ang)  );

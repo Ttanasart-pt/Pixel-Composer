@@ -155,6 +155,7 @@ uniform float shift;
 
 uniform int   cloneColor;
 uniform int   wrap;
+uniform int   drawBase;
 
 uniform int   highlight;
 uniform float highlightWidth;
@@ -189,6 +190,11 @@ void main() {
 	float extrude   = extData.r;
 	
 	baseColor.a = baseColor.a > 0.? 1. : 0.;
+	
+	if(drawBase == 0) {
+		gl_FragData[0] = vec4(0.);
+		if(baseColor.a > 0.) return;
+	}
 	
 	gl_FragData[0]  = baseColor;
 	gl_FragData[1]  = vec4(vec3(extrude == -1.? 0. : 1.), 1.);
