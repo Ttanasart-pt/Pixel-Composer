@@ -276,7 +276,7 @@ function hotkey_serialize() {
 		_graph[$ _ky.name] = _ky.serialize();
 	}
 	
-	json_save_struct(PREFERENCES_DIR + "hotkeys.json", { context: _context, node: _node, graph: _graph });
+	json_save_struct(PREFERENCES_DIR + "hotkeys.json", { context: _context, node: _node, graph: _graph }, true);
 }
 
 function hotkey_deserialize() {
