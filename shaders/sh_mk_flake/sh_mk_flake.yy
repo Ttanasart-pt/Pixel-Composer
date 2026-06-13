@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_flake",
+  "name":"sh_mk_flake",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

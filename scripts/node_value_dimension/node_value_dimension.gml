@@ -191,7 +191,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 	}
 	
 	static postApplyDeserialize = function() {
-		if(LOADING_VERSION < 1_20_01_3 && attributes.use_project_dimension && is_modified) {
+		if(attributes.use_project_dimension && ((LOADING_VERSION < 1_20_01_3 && is_modified) || (LOADING_VERSION < 1_18_00))) {
 			for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
 				var v = animator.values[i];
 				v.value[0] /= NPROJ_SURF_W;

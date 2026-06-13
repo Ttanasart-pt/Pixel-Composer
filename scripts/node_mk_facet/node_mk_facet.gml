@@ -9,11 +9,11 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(11, nodeValue_EScroll( "Shape", 0, [ new scrollItem("Rectangle", s_node_shape_type, 0), 
 	                                              new scrollItem("Ellipse",   s_node_shape_type, 5),
 	                                              "Path" ] ));
-	newInput( 1, nodeValue_Area(     "Area", AREA_DEF_REF, false )).setUnitSimple();
-	newInput(12, nodeValue_Path( "Path"           ));
-	newInput(13, nodeValue_Int(      "Sample",  32    ));
-	newInput(14, nodeValue_Bool(     "Reverse", false ));
-	newInput( 5, nodeValue_Slider(   "Trim",    0     ));
+	newInput( 1, nodeValue_Area(   "Area", AREA_DEF_REF, false )).setUnitSimple();
+	newInput(12, nodeValue_Path(   "Path"           ));
+	newInput(13, nodeValue_Int(    "Sample",  32    ));
+	newInput(14, nodeValue_Bool(   "Reverse", false ));
+	newInput( 5, nodeValue_Slider( "Trim",    0     ));
 	
 	////- =Render
 	newInput( 4, nodeValue_Palette(  "Base Color",   [ca_white] ));

@@ -1030,6 +1030,7 @@
             "Node_MK_WireFrame", 
             "Node_MK_Blast_Inline", 
             "Node_MK_Jigsaw", 
+            "Node_MK_Flake", 
         ]
     }, //Generate
     {
@@ -1435,6 +1436,7 @@
             "Node_MK_Facet",
             "Node_MK_Jigsaw",
             "Node_MK_Smoke",
+            "Node_MK_Flake",
             "Node_MK_Tree_Inline",
             
             { "label": "Simulation" },
