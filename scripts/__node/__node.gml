@@ -74,7 +74,6 @@ function __Node_Base(_x, _y) constructor {
 	static valueUpdate   = function(index) {}
 	static triggerRender = function() {}
 	
-	static onValidate = function() {}
 	static onDestroy  = function() {}
 	
 	static clearCache = function() {}

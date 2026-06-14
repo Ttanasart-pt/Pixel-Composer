@@ -948,17 +948,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(attributes.outp_meta) array_foreach(junc_meta, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); });
 	}
 	
-	static onValidate = function() {
-		value_validation[VALIDATION.pass]	 = 0;
-		value_validation[VALIDATION.warning] = 0;
-		value_validation[VALIDATION.error]   = 0;
-		
-		array_foreach(inputs, function(jun) /*=>*/ { 
-			if(!is(jun, NodeValue)) return;
-			value_validation[jun.value_validation] += jun.value_validation; 
-		});
-	}
-	
 	static onIOValidate = function() {
 		var _inline_input = noone;
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {

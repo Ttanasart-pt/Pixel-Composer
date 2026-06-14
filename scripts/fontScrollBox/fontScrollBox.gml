@@ -37,7 +37,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 		open_ry = _ry;
 		
 		var _bs = min(_h, ui(32));
-		draw_sprite_stretched(THEME.textbox, 3, x, y, w, h);
+		draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor);
 		
 		if(_w - _bs > ui(100) && side_button != noone) {
 			var _bx = _x + _w - _bs;
@@ -59,12 +59,12 @@ function fontScrollBox(_onModify) : widget() constructor {
 		if(open) { resetFocus(); return h; }
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
-			draw_sprite_stretched(THEME.textbox, 1, x, y, w, h);
+			draw_sprite_stretched_ext(THEME.textbox, 1, x, y, w, h, boxColor);
 			if(mouse_lpress(active)) trigger();
 			if(mouse_lclick(active)) draw_sprite_stretched_ext(THEME.textbox, 2, x, y, w, h, COLORS._main_accent, 1);	
 			
 		} else {
-			draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, c_white, 0.5 + 0.5 * interactable);
+			draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);
 			if(mouse_lpress()) deactivate();
 		}
 		

@@ -508,6 +508,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _showVal, jun.display_data, _m, rx, ry)
 				.setFont(_viewSpac? f_p2 : f_p3)
 				.setSepAxis(jun.sep_axis)
+				.setBoxColor(jun.widgetBoxColor)
 			
 			if(_blend != c_white) param.setBoxColor(_blend);
 			

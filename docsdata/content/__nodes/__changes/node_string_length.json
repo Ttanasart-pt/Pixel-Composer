@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.4.004",
+    "changes": [
+      {
+        "date": "2026-06-14T00:38:13.618Z",
+        "node": "",
+        "commit": "**Draw Text**: Font box will highlighted when no font selected."
+      }
+    ]
+  }
+]

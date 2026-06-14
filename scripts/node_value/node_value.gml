@@ -26,6 +26,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidgetRaw      = noone;
 		editWidgetMap      = {};
 		editable           = true;
+		widgetBoxColor     = undefined;
 		
 		is_dummy       = false;
 		ghost_hover    = noone;
@@ -461,10 +462,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return optionButton;
 	}
 	
-	static nonValidate = function() {
-		validateValue = false;
-		return self;
-	}
+	static nonValidate = function() { validateValue = false; return self; }
 	
 	static nonForward = function() {
 		forward = false;
@@ -2053,64 +2051,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- SET
 	
-	static onValidate = function() {
-		if(!validateValue) return;
-		var _val = value_validation, str = "";
-		value_validation = VALIDATION.pass; 
-		
-		switch(type) {
-			case VALUE_TYPE.path:
-				switch(display_type) {
-					case VALUE_DISPLAY.path_load: 
-						var path = animator.getValue();
-						if(is_array(path)) path = path[0];
-						
-						if(!is_string(path) || path == "") {
-							str = $"Path invalid: {path}";
-							break;
-						}
-						
-						if(path_get(path) == -1) {
-							value_validation = VALIDATION.error;	
-							str = $"File not exist: {path}";
-						}
-						break;
-						
-					case VALUE_DISPLAY.path_array: 
-						var paths = animator.getValue();
-						if(is_array(paths)) {
-							for( var i = 0, n = array_length(paths); i < n; i++ ) {
-								if(path_get(paths[i]) != -1) continue;
-								value_validation = VALIDATION.error;	
-								str = $"File not exist: {paths[i]}";
-							} 
-						} else {
-							value_validation = VALIDATION.error;	
-							str = $"File not exist: {paths}";
-						}
-						break;
-				}
-				break;
-		}
-		
-		if(NOT_LOAD) node.onValidate();
-		
-		if(_val == value_validation) return self;
-		
-		#region notification
-			if(value_validation == VALIDATION.error && error_notification == noone) {
-				error_notification = noti_error(str);
-				error_notification.onClick = function() { PANEL_GRAPH.focusNode(node); };
-			}
-				
-			if(value_validation == VALIDATION.pass && error_notification != noone) {
-				noti_remove(error_notification);
-				error_notification = noone;
-			}
-		#endregion
-		
-		return self;
-	}
+	static onValidate = undefined;
 	
 	static onSetValue = undefined;
 	static setValue = function(val = 0, record = true, time = NODE_CURRENT_FRAME, _update = true) { //// Set value
@@ -2271,7 +2212,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!LOADING) node.project.setModified();
 		cache_value[0] = false;
-		onValidate();
+		
+		if(validateValue && onValidate != undefined) onValidate();
 		
 		return true;
 	}
@@ -3130,7 +3072,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		postApplyDeserialize();
 		attributeApply();
-		onValidate();
+		
+		if(validateValue && onValidate != undefined) onValidate();
 	}
 	
 	static postApplyDeserialize = function() {}

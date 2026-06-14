@@ -6,6 +6,11 @@
         "date": "2026-06-14T00:09:18.347Z",
         "node": "Draw Text",
         "commit": "**Draw Text**: Font value now default to the first font in the font folder."
+      },
+      {
+        "date": "2026-06-14T00:38:13.619Z",
+        "node": "",
+        "commit": "**Draw Text**: Font box will highlighted when no font selected."
       }
     ]
   },

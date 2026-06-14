@@ -50,7 +50,6 @@ function __NodeValue_Matrix(_name, _node, _value, _data = {}) : NodeValue(_name,
 		if(!LOADING) PROJECT.setModified();
 					
 		cache_value[0] = false;
-		onValidate();
 		
 		return true;
 	}

@@ -20,32 +20,38 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(32, nodeValue_EScroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
 	
 	////- =Output
-	newInput( 9, nodeValue_EScroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
+	newInput( 9, nodeValue_EScroll(  "Dimension",        1, [ "Fixed", "Dynamic" ]));
 	newInput( 6, nodeValue_Vec2(     "Fixed Dimension",  PROJ_SURF  )).setVisible(true, false);
 	newInput(34, nodeValue_Vec2(     "Offset",           [0,0]     ));
 	newInput(10, nodeValue_IPadding( "Padding",          [0,0,0,0] ));
 	newInput(33, nodeValue_Bool(     "Atlas",            false     ));
 	
-	////- =Alignment
-	newInput(13, nodeValue_Path(     "Path"                    ));
-	newInput(14, nodeValue_Float(    "Path Shift",        0    ));
-	newInput(27, nodeValue_Int(      "Max Line Width",    0    ));
-	newInput( 7, nodeValue_EButton(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
-	newInput( 8, nodeValue_EButton(  "V Align",           0, array_create(3, THEME.inspector_text_valign) ));
-	newInput(30, nodeValue_Bool(     "Rotate Along Path", true ));
-	
 	////- =Font
 	newInput( 1, nodeValue_Font(  "Font", array_safe_get(FONT_INTERNAL, 0, "") )).setVisible(true, false);
-	newInput(35, nodeValue_Font(  "Fallback Font"             )).setVisible(true, false);
-	newInput( 4, nodeValue_Vec2(  "Character Range", [32,128] ));
 	newInput( 2, nodeValue_Int(   "Size",             16      ));
 	newInput(15, nodeValue_Bool(  "Scale to Fit",     false   ));
+	
+		////- =/Font Settings
+	newInput(35, nodeValue_Font(  "Fallback Font"             )).setVisible(true, false);
+	newInput( 4, nodeValue_Vec2(  "Character Range", [32,128] ));
 	newInput( 3, nodeValue_Bool(  "Anti-aliasing ",   false   ));
+	newInput(37, nodeValue_Bool(  "Use SDF",          false   ));
+	
+		////- =/Letter Settings
 	newInput(11, nodeValue_Float( "Letter Spacing",   0       ));
 	newInput(12, nodeValue_Float( "Line Height",      0       ));
 	newInput(36, nodeValue_Bool(  "Monospaced",       false   ));
-	newInput(37, nodeValue_Bool(  "Use SDF",          false   ));
-		
+	
+	////- =Alignment
+	newInput(27, nodeValue_Int(      "Max Line Width",    0    ));
+	newInput( 7, nodeValue_EButton(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
+	newInput( 8, nodeValue_EButton(  "V Align",           0, array_create(3, THEME.inspector_text_valign) ));
+	
+	////- =Path
+	newInput(13, nodeValue_Path(     "Path"                    ));
+	newInput(14, nodeValue_Float(    "Path Shift",        0    ));
+	newInput(30, nodeValue_Bool(     "Rotate Along Path", true ));
+	
 	////- =Rendering
 	newInput(28, nodeValue_Bool(     "Round Position",   true     ));
 	newInput(29, nodeValue_EButton(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
@@ -74,8 +80,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	input_display_list = [ 
 		[ "Text",	    false     ],  0, 32, 
 		[ "Output",		 true     ],  9,  6, 34, 10, 33, 
-		[ "Alignment",	false     ], 13, 14, 27,  7,  8, 30, 
-		[ "Font",		false     ],  1, 35,  2, 15,  3, 11, 12, 36, 37, 
+		
+		[ "Font",		false     ],  1,  2, 15, 
+			[ "/Settings",   true ], 35,  3, 37, 
+			[ "/Lettering", false ], 11, 12, 36,
+		[ "Alignment",	false     ], 27,  7,  8, 
+		[ "Path",	     true     ], 13, 14, 30, 
+		
 		[ "Rendering",	false     ],  5, 31, 38, 
 		[ "Background",  true, 16 ], 17, 
 		[ "Wave",	     true, 18 ], 22, 19, 20, 21, 
@@ -389,24 +400,29 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			inputs[ 6].setVisible(_dimt == 0 || _lineW > 0 || _use_path);
 			inputs[34].setVisible(_dimt == 0 || _lineW > 0 || _use_path);
-			inputs[ 9].setVisible(!_use_path);
-			inputs[14].setVisible( _use_path);
-			inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
+			inputs[ 9].setVisible(!_use_path  );
+			
+			inputs[14].setVisible( _use_path  );
+			inputs[ 7].setVisible( _dimt == 0 );
+			inputs[ 8].setVisible( _dimt == 0 );
+			
+			inputs[15].setVisible( _dimt == 0 && !_use_path && _font != "");
 			
 			outputs[1].setVisible(_atls);
+			
+			var _has_font = _font != "";
+			
+			inputs[ 2].setVisible(_has_font);
+			inputs[ 3].setVisible(_has_font);
+			
+			inputs[ 1].widgetBoxColor = _has_font? undefined : COLORS._main_value_negative;
 		#endregion
 		
 		#region font
 			__f     = font;
 			__fData = undefined;
 			
-			inputs[2].setVisible(false);
-			inputs[3].setVisible(false);
-				
 			if(is_string(_font))   { 
-				inputs[2].setVisible(_font != "");
-				inputs[3].setVisible(_font != "");
-			 	
 			 	font    = generateFont(font, _font, _size, _aa, _sdfU); 
 				__fData = getFontData(font, _font, _size, _aa, _sdfU);
 				__f     = font; 
