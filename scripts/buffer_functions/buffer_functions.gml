@@ -200,6 +200,11 @@ function buffer_compress_all(buff) {
 	return buffer_base64_encode(comp, 0, buffer_get_size(comp));
 }
 
+function buffer_decompress_all(base64) {
+	var _buff = buffer_base64_decode(base64);
+	return buffer_decompress(_buff);
+}
+
 	////- Actions
 	
 function buffer_to_start(buff) { INLINE buffer_seek(buff, buffer_seek_start, 0); }

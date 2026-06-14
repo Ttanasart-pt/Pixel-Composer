@@ -71,7 +71,7 @@ function __NodeValue_FPath(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 		
 		if(value_validation == VALIDATION.error && error_notification == noone) {
 			error_notification = noti_error(str);
-			error_notification.onClick = function() { PANEL_GRAPH.focusNode(node); };
+			error_notification.onClick = function() /*=>*/{ PANEL_GRAPH.focusNode(node); };
 		}
 			
 		if(value_validation == VALIDATION.pass && error_notification != noone) {

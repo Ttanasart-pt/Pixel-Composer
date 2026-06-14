@@ -98,8 +98,13 @@ if(os_is_paused()) OS_PAUSED = true;
 	CURSOR_IS_LOCK = CURSOR_LOCK;
 	CURSOR_LOCK    = false;
 	
-	if(PEN_POOL <= 0) PEN_USE = false;
-	else              PEN_POOL--;
+	if(PEN_POOL <= 0) {
+		if(PEN_USE) {
+			MOUSE_EVENT.lrelease = true;
+			PEN_USE = false;
+		}
+		
+	} else PEN_POOL--;
 	
 	PEN_RELEASED      = false;
 	PEN_RIGHT_PRESS   = false;

@@ -1437,6 +1437,7 @@
             "Node_MK_Jigsaw",
             "Node_MK_Smoke",
             "Node_MK_Flake",
+            "Node_MK_Rock",
             "Node_MK_Tree_Inline",
             
             { "label": "Simulation" },

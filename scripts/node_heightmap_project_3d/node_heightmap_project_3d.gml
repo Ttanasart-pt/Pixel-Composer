@@ -21,10 +21,11 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 	newInput(12, nodeValue_Range(   "Height Range", [0,1]        ));
 	
 	////- =Rendering
-	newInput(14, nodeValue_Bool(     "Tiled",        false       ));
-	newInput( 9, nodeValue_Gradient( "Height Color", gra_white   ));
-	newInput(13, nodeValue_Range(    "Depth Range",   [0,1]      ));
-	// 15
+	newInput(14, nodeValue_Bool(     "Tiled",            false       ));
+	newInput( 9, nodeValue_Gradient( "Height Color",     gra_white   ));
+	newInput(15, nodeValue_Bool(     "Normalize Height", false       ));
+	newInput(13, nodeValue_Range(    "Depth Range",      [0,1]       ));
+	// 16
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone )).setDrawGroup(10);
 	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone )).setDrawGroup(10);
@@ -33,7 +34,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 	input_display_list = [ 0,
 		[ "Surfaces",  false ],  1,  2, 10, 11, 
 		[ "Camera",    false ],  3,  8,  4,  5,  6,  7, 12, 
-		[ "Rendering", false ], 14,  9, 13, 
+		[ "Rendering", false ], 14,  9, 15, 13, 
 	];
 	
 	////- Node
@@ -63,6 +64,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			
 			var _tile  = _data[14];
 			var _hgCol = _data[ 9];
+			var _hgNor = _data[15];
 			var _depth = _data[13];
 		#endregion
 		
@@ -94,6 +96,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_2( "heightScale",_hsca  );
 			
 			shader_set_gradient(_hgCol);
+			shader_set_i( "heightNorm", _hgNor );
 			
 			draw_empty();
 		shader_reset();

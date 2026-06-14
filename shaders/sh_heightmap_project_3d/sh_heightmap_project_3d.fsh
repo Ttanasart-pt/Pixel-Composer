@@ -294,6 +294,7 @@ uniform float fov;
 uniform float distant;
 uniform float scale;
 uniform vec2  heightScale;
+uniform int   heightNorm;
 
 uniform vec2  depthRange;
 
@@ -435,7 +436,7 @@ void main() {
 	else if (textureFront_use == 1 && mm.x > 0.5 && (samPos.x <= voxSize/2. || samPos.x >= 1. - voxSize/2.)) 
 		gl_FragData[0] = sampleTexture(textureFront, vec2(1.-samPos.z, samPos.y));
     
-    vec4 heightColor = gradientEval(1. - samPos.y);
+    vec4 heightColor = gradientEval(heightNorm == 1? (1. - samPos.y) / (1. - smHei) : 1. - samPos.y);
     gl_FragData[0] *= heightColor;
     
     float depth = distance(eye, hitPos) / scale;
