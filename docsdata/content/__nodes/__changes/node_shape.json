@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.004",
+    "changes": [
+      {
+        "date": "2026-06-14T02:48:49.016Z",
+        "node": "",
+        "commit": "**Draw Shape**: Fix heightmap output not react to opacity property."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.002",
     "changes": [
       {

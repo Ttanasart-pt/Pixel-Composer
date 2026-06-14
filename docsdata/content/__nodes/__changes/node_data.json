@@ -6,6 +6,11 @@
         "date": "2026-06-14T00:38:13.618Z",
         "node": "Draw Text",
         "commit": "**Draw Text**: Font box will highlighted when no font selected."
+      },
+      {
+        "date": "2026-06-14T02:48:49.003Z",
+        "node": "Draw Shape",
+        "commit": "**Draw Shape**: Fix heightmap output not react to opacity property."
       }
     ]
   },
