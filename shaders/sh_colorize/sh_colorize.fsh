@@ -148,6 +148,7 @@ varying vec4 v_vColour;
 uniform int   multiply_alpha;
 uniform int   keep_alpha;
 
+uniform int   overflow;
 uniform vec2  dynamic_range;
 
 uniform vec2      gradient_shift;
@@ -162,10 +163,12 @@ void main() {
 	}
 	
 	vec4 _col  = texture2D( gm_BaseTexture, v_vTexcoord );
-	float prog = abs(dot(_col.rgb, vec3(0.2126, 0.7152, 0.0722)) + shf);
+	float prog = dot(_col.rgb, vec3(0.2126, 0.7152, 0.0722)) + shf;
 	
 	prog = (prog - dynamic_range.x) / (dynamic_range.y - dynamic_range.x);
-	prog = clamp(prog, 0., 1.);
+	
+	     if(overflow == 0) prog = clamp(prog, 0., 1.);
+	else if(overflow == 1) prog = fract(prog);
 	
 	if(multiply_alpha == 1)
 		prog *= _col.a;

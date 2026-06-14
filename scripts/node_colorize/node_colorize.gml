@@ -13,19 +13,23 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Input
 	newInput(14, nodeValue_Range(  "Color Range", [0,1] ));
 	
-	////- =Coloize
+	////- =Colorize
 	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white)).setHotkeyAuto("C").setMappable(11).setPieMenu();
 	newInput( 2, nodeValue_Slider(   "Gradient Shift", 0, [ -1, 1, .01 ] )).setMappable(10).setPieMenu();
+	newInput(15, nodeValue_EScroll(  "Overflow",       0, [ "Clamp", "Loop" ] ));
+	
+	////- =Rendering
 	newInput( 6, nodeValue_Bool(     "Multiply Alpha", true ));
 	newInput(13, nodeValue_Bool(     "Keep Alpha",     true ));
-	// input 15
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  5,  7, 
-		[ "Surfaces",  true ],  0,  3,  4,  8,  9, 
-		[ "Input",    false ], 14, 
-		[ "Colorize", false ],  1, 11,  2, 10,  6, 13, 
+		[ "Surfaces",   true ],  0,  3,  4,  8,  9, 
+		[ "Input",     false ], 14, 
+		[ "Colorize",  false ],  1, 11,  2, 10, 15, 
+		[ "Rendering", false ],  6, 13, 
 	];
 	
 	////- Node
@@ -45,6 +49,8 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _range = _data[14];
 			
+			var _overf = _data[15];
+			
 			var _mlAlp = _data[ 6];
 			var _kpAlp = _data[13];
 			
@@ -55,6 +61,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			shader_set_m( "gradient_shift", _data[2], _data[10], inputs[2]);
 			shader_set_2( "dynamic_range",  _range);
+			shader_set_i( "overflow",       _overf);
 			
 			shader_set_i( "multiply_alpha", _mlAlp);
 			shader_set_i( "keep_alpha",     _kpAlp);
