@@ -114,7 +114,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_i( "highRes",     hres );
 			shader_set_c( "borderColor", colr );
 			shader_set_i( "profile",     prof );
-			shader_set_i( "side",        side );
+			shader_set_i( "side",        side ); 
 			shader_set_i( "is_aa",       alis );
 			shader_set_i( "is_blend",    blnd );
 			shader_set_i( "sampleMode",  samp );

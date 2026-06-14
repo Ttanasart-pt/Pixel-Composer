@@ -6,6 +6,11 @@
         "date": "2026-06-14T02:54:10.065Z",
         "node": "Draw Shape",
         "commit": "**Draw Shape**: Add Multiply Alpha option."
+      },
+      {
+        "date": "2026-06-14T02:54:45.228Z",
+        "node": "Outline",
+        "commit": "**Outline**: Add texture input."
       }
     ]
   },
