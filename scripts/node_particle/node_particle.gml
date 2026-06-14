@@ -11,38 +11,38 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(74, nodeValue_Surface( "Background" ));
 	
 	////- =Sprite
-	newInput( 0, nodeValue_Surface("Particle Sprite"));
+	newInput( 0, nodeValue_Surface( "Particle Sprite" ));
 	
-	newInput(22, nodeValue_EScroll(  "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]))
+	newInput(22, nodeValue_EScroll( "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.");
 	
-	newInput(23, nodeValue_Range(    "Animation Speed",   [1,1], { linked : true } ));
-	newInput(49, nodeValue_Bool(     "Stretch Animation", false                    ));
-	newInput(26, nodeValue_EButton(  "On Animation End",  ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
+	newInput(23, nodeValue_Range(   "Animation Speed",   [1,1], { linked : true } ));
+	newInput(49, nodeValue_Bool(    "Stretch Animation", false                    ));
+	newInput(26, nodeValue_EButton( "On Animation End",  ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
 	
 	////- =Spawn
-	newInput(27, nodeValue_Bool(     "Spawn",            true          ));
-	newInput(16, nodeValue_EButton(  "Spawn Type",       0             )).setChoices([ "Stream", "Burst", "Trigger" ]);
-	newInput(44, nodeValue_Trigger(  "Spawn"                           ));
-	newInput( 1, nodeValue_Int(      "Spawn Delay",      4             )).setTooltip("Frames delay between each particle spawn.");
-	newInput(51, nodeValue_Int(      "Burst Duration",   1             ));
-	newInput( 2, nodeValue_Range(    "Spawn Amount",    [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
+	newInput(27, nodeValue_Bool(    "Spawn",            true          ));
+	newInput(16, nodeValue_EButton( "Spawn Type",       0             )).setChoices([ "Stream", "Burst", "Trigger" ]);
+	newInput(44, nodeValue_Trigger( "Spawn"                           ));
+	newInput( 1, nodeValue_Int(     "Spawn Delay",      4             )).setTooltip("Frames delay between each particle spawn.");
+	newInput(51, nodeValue_Int(     "Burst Duration",   1             ));
+	newInput( 2, nodeValue_Range(   "Spawn Amount",    [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
 	
 		////- =/Lifespan
-	newInput( 5, nodeValue_Range(    "Lifespan",        [20,30]        ));
+	newInput( 5, nodeValue_Range(   "Lifespan",        [20,30]        ));
 	
 		////- =/Source
-	newInput( 4, nodeValue_EScroll(  "Spawn Source",     0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
-	newInput( 3, nodeValue_Area(     "Spawn Area",       DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
-	newInput(30, nodeValue_Surface(  "Distribution Map"                ));
-	newInput(55, nodeValue_Path( "Spawn Path"                      ));
-	newInput(62, nodeValue_Vector(   "Spawn Data"                      )).setArrayDepth(1).setTooltip("Array of vec2 points to spawn particles at.");
-	newInput(24, nodeValue_EButton(  "Distribution",     1             )).setChoices([ "Uniform", "Random", "Poisson" ]);
-	newInput(79, nodeValue_Float(    "Distance",         8            )).setValidator(VV_min(0));
-	newInput(52, nodeValue_Float(    "Uniform Period",   4             ));
+	newInput( 4, nodeValue_EScroll( "Spawn Source",     0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
+	newInput( 3, nodeValue_Area(    "Spawn Area",       DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
+	newInput(30, nodeValue_Surface( "Distribution Map"                ));
+	newInput(55, nodeValue_Path(    "Spawn Path"                      ));
+	newInput(62, nodeValue_Vector(  "Spawn Data"                      )).setArrayDepth(1).setTooltip("Array of vec2 points to spawn particles at.");
+	newInput(24, nodeValue_EButton( "Distribution",     1             )).setChoices([ "Uniform", "Random", "Poisson" ]);
+	newInput(79, nodeValue_Float(   "Distance",         8            )).setValidator(VV_min(0));
+	newInput(52, nodeValue_Float(   "Uniform Period",   4             ));
 	
 	////- =Movement
-	newInput(18, nodeValue_Range(    "Speed",                [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
+	newInput(18, nodeValue_Range(   "Speed",                [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
 	inputs[60].setTooltip("Speed Curve may conflict with physics-based properties.");
 	
 		////- =/Direction
@@ -89,16 +89,17 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(73, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
 	newInput(78, nodeValue_Bool(    "Sort Y",         false ));
 	
-	////- =Path
-	newInput(45, nodeValue_Bool(    "Follow Path",        false                    ));
-	newInput(46, nodeValue_Path(    "Path"                                         ));
-	newInput(66, nodeValue_Range2(  "Path Range",         [0,0,1,1]                ));
-	newInput(47, nodeValue_Curve(   "Path Deviation",     CURVE_DEF_11             ));
+	////- =Follow Path
+	newInput(45, nodeValue_Bool(    "Follow Path",   false        ));
+	newInput(46, nodeValue_Path(    "Path"                        ));
+	newInput(66, nodeValue_Range2(  "Range",         [0,0,1,1]    ));
+	newInput(80, nodeValue_Range(   "Range Shift",   [0,0]        ));
+	newInput(47, nodeValue_Curve(   "Deviation",     CURVE_DEF_11 ));
 	
 	////- =Physics
-	newInput(57, nodeValue_Bool(     "Use Physics",            false                     ));
-	newInput(54, nodeValue_Range(    "Friction",               [0,0], { linked : true }  ));
-	newInput( 7, nodeValue_Range(    "Acceleration",           [0,0], { linked : true }  ));
+	newInput(57, nodeValue_Bool(     "Use Physics",  false                     ));
+	newInput(54, nodeValue_Range(    "Friction",     [0,0], { linked : true }  ));
+	newInput( 7, nodeValue_Range(    "Acceleration", [0,0], { linked : true }  ));
 	
 		////- =/Gravity
 	newInput(19, nodeValue_Range(    "Gravity",                [0,0], { linked : true }  ));
@@ -131,7 +132,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
-	//input 80
+	//input 81
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput( 1, nodeValue_Output( "Data",        VALUE_TYPE.particle, []    ));
@@ -198,7 +199,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		__inspc(ui(6), true, false, ui(3)), 
 		
-		[ "Follow path",  true, 45 ], 46, 66, 47, 
+		[ "Follow Path",  true, 45 ], 46, 66, 80, 47, 
 		[ "Physics",      true, 57 ], 54,  7, 
 			[ "/Gravity", false    ], 19, 33, 
 			[ "/Turning", false    ], 34, 35, 36, 
@@ -376,6 +377,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 			var _path       	= inputs_data[46];
 			var _pathRange      = inputs_data[66];
+			var _pathRangeShf   = inputs_data[80];
 			
 			var _use_phy     	= inputs_data[57];
 			var _accel      	= inputs_data[ 7];
@@ -549,7 +551,12 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			#endregion
 			
 			#region Follow Path
-				var _path_range = [ random_range(_pathRange[0], _pathRange[1]), random_range(_pathRange[2], _pathRange[3]) ];
+				var _path_range_shift = random_range(_pathRangeShf[0], _pathRangeShf[1]);
+				var _path_range = [ 
+					random_range(_pathRange[0], _pathRange[1]) + _path_range_shift, 
+					random_range(_pathRange[2], _pathRange[3]) + _path_range_shift 
+				];
+				
 				part.setPath(   _path, _path_range, curve_path_div );
 			#endregion
 			
@@ -885,13 +892,13 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		if(_len > 67) {
 			var _inp_wrap = load_map.inputs[67];
-			if(is_struct(_inp_wrap) && is_array(_inp_wrap.raw_value.d))
+			if(has(_inp_wrap, "raw_value") && is_array(_inp_wrap.raw_value.d))
 				_inp_wrap.raw_value.d = 0;
 		}
 		
 		if(_len > 71) {
 			var _inp_dim = load_map.inputs[71];
-			if(is_struct(_inp_dim) && !is_array(_inp_dim.raw_value.d))
+			if(has(_inp_dim, "raw_value") && !is_array(_inp_dim.raw_value.d))
 				_inp_dim.raw_value.d = [1,1];
 		}
 		

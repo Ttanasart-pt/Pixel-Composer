@@ -188,11 +188,11 @@ void main() {
 	else if(filter == 2) res = vec4(hColor.rgb / 2., point.a);
 	else if(filter == 3) res = vec4(abs(hColor.rgb), point.a);
 	
-	float gey = bright(res);
-	      gey = (gey - level.x) / (level.y - level.x);
+	res = (res - level.x) / (level.y - level.x);
 	
-	if(colorMode == 1) res.rgb = vec3(gey);
-	if(colorMode == 2) res.rgb = vec3(step(.5, gey));
+	float gr = bright(res);
+	if(colorMode == 1) res.rgb = vec3(gr);
+	if(colorMode == 2) res.rgb = vec3(step(.5, gr));
 	
 	gl_FragColor = res;
 }

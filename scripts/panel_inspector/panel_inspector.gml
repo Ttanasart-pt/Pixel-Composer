@@ -2492,7 +2492,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     break;
                     	
 				case "favorites" :
-					var con_ww = con_w - ui(20);
+					var con_ww = contentPane.surface_w - ui(16);
 					var rrx    = x + contentPane.x;
     		        var rry    = y + contentPane.y;
 	                
@@ -2514,7 +2514,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var _fv = _favs[j];
 						if(!is(_fv, NodeValue) || !_fv.node.active) continue;
 						
-						var widg = drawWidget(0, yy, con_ww, _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
+						var widg = drawWidget(ui(8), yy, con_ww, _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
                 		var widH = widg[0];
                 		
 	                    yy += widH + padd;
