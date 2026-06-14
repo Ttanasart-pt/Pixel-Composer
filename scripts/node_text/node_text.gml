@@ -27,7 +27,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(33, nodeValue_Bool(     "Atlas",            false     ));
 	
 	////- =Alignment
-	newInput(13, nodeValue_Path( "Path"));
+	newInput(13, nodeValue_Path(     "Path"                    ));
 	newInput(14, nodeValue_Float(    "Path Shift",        0    ));
 	newInput(27, nodeValue_Int(      "Max Line Width",    0    ));
 	newInput( 7, nodeValue_EButton(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
@@ -35,7 +35,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(30, nodeValue_Bool(     "Rotate Along Path", true ));
 	
 	////- =Font
-	newInput( 1, nodeValue_Font(  "Font"                      )).setVisible(true, false);
+	newInput( 1, nodeValue_Font(  "Font", array_safe_get(FONT_INTERNAL, 0, "") )).setVisible(true, false);
 	newInput(35, nodeValue_Font(  "Fallback Font"             )).setVisible(true, false);
 	newInput( 4, nodeValue_Vec2(  "Character Range", [32,128] ));
 	newInput( 2, nodeValue_Int(   "Size",             16      ));
