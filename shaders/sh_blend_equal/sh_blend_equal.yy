@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_blend_equal",
+  "name":"sh_blend_equal",
+  "parent":{
+    "name":"blend",
+    "path":"folders/nodes/data/compose/blend.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

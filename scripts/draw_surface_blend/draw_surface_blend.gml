@@ -1,10 +1,11 @@
 globalvar BLEND_TYPES; BLEND_TYPES = [ 
-	    "Normal", "Replace", 
-	-1, "Multiply", "Color Burn", "Linear Burn", "Minimum", 
-	-1, "Add", "Screen", "Color Dodge", "Maximum", 
-	-1, "Overlay", "Soft Light", "Hard Light", "Vivid Light", "Linear Light", "Pin Light", 
-	-1, "Difference", "Exclusion", "Subtract", "Divide", 
-	-1, "Hue", "Saturation", "Luminosity", 
+	    "Normal",     "Replace", 
+	-1, "Multiply",   "Color Burn",  "Linear Burn",  "Minimum", 
+	-1, "Add",        "Screen",      "Color Dodge",  "Maximum", 
+	-1, "Overlay",    "Soft Light",  "Hard Light",   "Vivid Light", "Linear Light", "Pin Light", 
+	-1, "Difference", "Exclusion",   "Subtract",     "Divide", 
+	-1, "Hue",        "Saturation",  "Luminosity", 
+	-1, "Equal",      "Unequal", 
 ];
 
 enum BLEND_MODE {
@@ -36,6 +37,9 @@ enum BLEND_MODE {
 	hue          = 25,
 	saturation   = 26,
 	luminosity   = 27,
+	//             28
+	equals       = 29,
+	unequals     = 30,
 }
 
 global.node_blend_keys = array_create_ext(array_length(BLEND_TYPES), function(i) /*=>*/ {return string_lower(BLEND_TYPES[i])});
@@ -75,7 +79,10 @@ function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, a
 		case BLEND_MODE.saturation :   sh = sh_blend_sat;          break;
 		case BLEND_MODE.luminosity :   sh = sh_blend_luma;         break;
 		
-		default : throw ("Blend error: Invalid blend mode."); return;
+		case BLEND_MODE.equals :       sh = sh_blend_equal;        break;
+		case BLEND_MODE.unequals :     sh = sh_blend_unequal;      break;
+		
+		default : throw ("Blend error: Invalid blend mode.");      return;
 	}
 	
 	var surf	= surface_get_target();
