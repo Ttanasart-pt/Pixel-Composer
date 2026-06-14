@@ -22,25 +22,25 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Output
 	newInput( 9, nodeValue_EScroll(  "Dimension",        1, [ "Fixed", "Dynamic" ]));
 	newInput( 6, nodeValue_Vec2(     "Fixed Dimension",  PROJ_SURF  )).setVisible(true, false);
-	newInput(34, nodeValue_Vec2(     "Offset",           [0,0]     ));
-	newInput(10, nodeValue_IPadding( "Padding",          [0,0,0,0] ));
-	newInput(33, nodeValue_Bool(     "Atlas",            false     ));
+	newInput(34, nodeValue_Vec2(     "Offset",           [0,0]      ));
+	newInput(10, nodeValue_IPadding( "Padding",          [0,0,0,0]  ));
+	newInput(33, nodeValue_Bool(     "Atlas",            false      ));
 	
 	////- =Font
 	newInput( 1, nodeValue_Font(  "Font", array_safe_get(FONT_INTERNAL, 0, "") )).setVisible(true, false);
-	newInput( 2, nodeValue_Int(   "Size",             16      ));
-	newInput(15, nodeValue_Bool(  "Scale to Fit",     false   ));
+	newInput( 2, nodeValue_Int(   "Size",             16       ));
+	newInput(15, nodeValue_Bool(  "Scale to Fit",     false    ));
 	
 		////- =/Font Settings
-	newInput(35, nodeValue_Font(  "Fallback Font"             )).setVisible(true, false);
-	newInput( 4, nodeValue_Vec2(  "Character Range", [32,128] ));
-	newInput( 3, nodeValue_Bool(  "Anti-aliasing ",   false   ));
-	newInput(37, nodeValue_Bool(  "Use SDF",          false   ));
+	newInput(35, nodeValue_Font(  "Fallback Font"              )).setVisible(true, false);
+	newInput( 4, nodeValue_Vec2(  "Character Range", [32,128]  ));
+	newInput( 3, nodeValue_Bool(  "Anti-aliasing ",   false    ));
+	newInput(37, nodeValue_Bool(  "Use SDF",          false    ));
 	
 		////- =/Letter Settings
-	newInput(11, nodeValue_Float( "Letter Spacing",   0       ));
-	newInput(12, nodeValue_Float( "Line Height",      0       ));
-	newInput(36, nodeValue_Bool(  "Monospaced",       false   ));
+	newInput(11, nodeValue_Float( "Letter Spacing",   0        ));
+	newInput(12, nodeValue_Float( "Line Height",      0        ));
+	newInput(36, nodeValue_Bool(  "Monospaced",       false    ));
 	
 	////- =Alignment
 	newInput(27, nodeValue_Int(      "Max Line Width",    0    ));
@@ -53,22 +53,22 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(30, nodeValue_Bool(     "Rotate Along Path", true ));
 	
 	////- =Rendering
-	newInput(28, nodeValue_Bool(     "Round Position",   true     ));
+	newInput(28, nodeValue_Bool(     "Round Position",   true       ));
 	newInput(29, nodeValue_EButton(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
-	newInput( 5, nodeValue_Color(    "Color",            ca_white ));
-	newInput(31, nodeValue_Palette(  "Color by Letter", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(38, nodeValue_Surface(  "Texture"                    ));
+	newInput( 5, nodeValue_Color(    "Color",            ca_white   ));
+	newInput(31, nodeValue_Palette(  "Color by Letter", [ca_white]  )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(38, nodeValue_Surface(  "Texture"                      ));
 	
 	////- =Background
-	newInput(16, nodeValue_Bool(     "Render Background", false    ));
-	newInput(17, nodeValue_Color(    "BG Color",          ca_black ));
+	newInput(16, nodeValue_Bool(     "Render Background", false     ));
+	newInput(17, nodeValue_Color(    "BG Color",          ca_black  ));
 	
 	////- =Wave
-	newInput(18, nodeValue_Bool(     "Wave",           false ));
-	newInput(22, nodeValue_Slider(   "Wave Shape",     0, [ 0, 3, 0.01 ]));
-	newInput(19, nodeValue_Float(    "Wave Amplitude", 4     ));
-	newInput(20, nodeValue_Float(    "Wave Scale",     30    ));
-	newInput(21, nodeValue_Rotation( "Wave Phase",     0     ));
+	newInput(18, nodeValue_Bool(     "Wave",           false        ));
+	newInput(22, nodeValue_Slider(   "Wave Shape",     0, [0,3,.01] ));
+	newInput(19, nodeValue_Float(    "Wave Amplitude", 4            ));
+	newInput(20, nodeValue_Float(    "Wave Scale",     30           ));
+	newInput(21, nodeValue_Rotation( "Wave Phase",     0            ));
 	
 	////- =Trim
 	newInput(23, nodeValue_Bool(     "Trim",               false ));

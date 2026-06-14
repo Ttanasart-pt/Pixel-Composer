@@ -32,6 +32,7 @@ function __NodeValue_FPath(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 	static onValidate = function() {
 		var _val = value_validation, str = "";
 		value_validation = VALIDATION.pass; 
+		widgetBoxColor   = c_white;
 		
 		switch(display_type) {
 			case VALUE_DISPLAY.path_load: 
@@ -39,11 +40,13 @@ function __NodeValue_FPath(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 				if(is_array(path)) path = path[0];
 				
 				if(!is_string(path) || path == "") {
+					widgetBoxColor = COLORS._main_value_negative;
 					str = $"Path invalid: {path}";
 					break;
 				}
 				
-				if(path_get(path) == -1) {
+				if(!file_exists_empty(path_get(path))) {
+					widgetBoxColor   = COLORS._main_value_negative;
 					value_validation = VALIDATION.error;	
 					str = $"File not exist: {path}";
 				}
@@ -53,7 +56,7 @@ function __NodeValue_FPath(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 				var paths = animator.getValue();
 				if(is_array(paths)) {
 					for( var i = 0, n = array_length(paths); i < n; i++ ) {
-						if(path_get(paths[i]) != -1) continue;
+						if(file_exists_empty(path_get(paths[i]))) continue;
 						value_validation = VALIDATION.error;	
 						str = $"File not exist: {paths[i]}";
 					} 
