@@ -4143,7 +4143,7 @@ function Panel_Preview() : PanelContent() constructor {
         previewing_node = getNodePreview();
         if(previewing_node && previewing_node.is_3D) {
         	preview_lock = previewing_node.lock_3D;
-        	d3_active    = preview_mode? previewing_node.is_3D : NODE_3D.none;
+        	d3_active    = preview_mode || preview_lock? previewing_node.is_3D : NODE_3D.none;
         	
         } else {
         	preview_lock = false;
