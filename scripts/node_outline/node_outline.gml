@@ -24,6 +24,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(21, nodeValue_Surface( "Texture"    ));
 	newInput( 9, nodeValue_Surface( "Mask"       ));
 	newInput(10, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(9, 13);
@@ -46,13 +47,13 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 3, nodeValue_Bool(    "Blend",           false, "Blend outline color with the original color." ));
 	newInput( 4, nodeValue_Slider(  "Blend alpha",     1 )).setMappable(16);
 	newInput( 7, nodeValue_EScroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ] ));
-	//// inputs 21
+	// 22
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Outline",     VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 11, 
-		[ "Surfaces",  true    ],  0,  9, 10, 13, 14, 
+		[ "Surfaces",  true    ],  0, 21,  9, 10, 13, 14, 
 		[ "Outline",  false    ],  5, 18,  1, 15,  8, 17, 12, 19, 
 		[ "Render",   false    ],  2,  6, 20, 
 		[ "Blend",     true, 3 ],  4, 16,
@@ -78,6 +79,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var surf = _data[ 0];
+			var text = _data[21];
 			
 			var prof = _data[18];
 			var side = _data[ 5];
@@ -105,6 +107,9 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_m( "borderStart", _data[8], _data[17], inputs[8] );
 			shader_set_m( "blend_alpha", _data[4], _data[16], inputs[4] );
 			shader_set_i( "filter",      attributes.filter );
+			
+			shader_set_i( "useTexture",  is_surface(text) );
+			shader_set_s( "texture",     text );
 			
 			shader_set_i( "highRes",     hres );
 			shader_set_c( "borderColor", colr );

@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -72,6 +71,9 @@ uniform int	  filter[9];
 uniform vec2      blend_alpha;
 uniform int       blend_alphaUseSurf;
 uniform sampler2D blend_alphaSurf;
+
+uniform int       useTexture;
+uniform sampler2D texture;
 
 uniform int highRes;
 
@@ -287,6 +289,12 @@ void main() {
 			resultColor    = blendBord;
 			resultOutline  = blendBord;
 		}
+	}
+	
+	if(useTexture == 1) {
+		vec4 samp = texture2D( texture, v_vTexcoord );
+		resultColor   *= samp;
+		resultOutline *= samp;
 	}
 	
     gl_FragData[0] = resultColor;
