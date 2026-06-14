@@ -28,6 +28,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Repeat";
 	dimension_index = 1;
 	
+	newInput(17, nodeValueSeed());
+	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface(     "Surface In" ));
 	newInput(35, nodeValue_EScroll(     "Output Dimension Type", OUTPUT_SCALING.constant, [
@@ -42,7 +44,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 1, nodeValue_Dimension());
 	newInput(16, nodeValue_EButton(     "Array Select",        0 )).setChoices([ "Order", "Random", "Spread" ])
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
-	newInput(17, nodeValueSeed());
 	
 	////- =Pattern
 	
@@ -207,8 +208,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	b_gridFill = button(function() /*=>*/ {return gridFill()}).setIcon(THEME.fill, 0, COLORS._main_icon).setTooltip("Fill");
 	
-	input_display_list = [
-		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 17,
+	input_display_list = [ 17, 
+		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 
 		[ "Pattern",      false ],  3,  9, 32, 22, 45,  7,  8, 
 			[ "/Repeat",  false ],  2, 18,
 		[ "Path",          true ], 11, 12, 13, 40, 

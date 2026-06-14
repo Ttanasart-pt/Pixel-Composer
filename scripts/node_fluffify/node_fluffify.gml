@@ -16,6 +16,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 6, nodeValue_Slider(   "Size",   1, [0, 2, .01] )).setUnitSimple().setPieMenu();
 	newInput( 9, nodeValue_Slider(   "Radius", 1, [0, 2, .01] )).setMappable(15).setPieMenu();
 	newInput( 8, nodeValue_Rotation( "Phase",  0              )).setPieMenu();
+	newInput(28, nodeValue_Bool(     "Brightness effect Radius", true ));
 	
 	////- =Iteration
 	newInput(10, nodeValue_Float(    "Iteration",     10             )).setPieMenu();
@@ -45,7 +46,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	input_display_list = [ 5, 7, 
 		[ "Surfaces",   true     ],  0,  1,  2,  3,  4,  
-		[ "Fluff",     false     ], 16, 26,  6,  9,  8, 15, 
+		[ "Fluff",     false     ], 16, 26,  6,  9, 15,  8, 28, 
 		[ "Iteration", false     ], 10, 11, 12, 20, 
 		[ "Rendering", false     ], 13, 21, 22, 14, 17, 27, 
 		[ "Coloring",  false     ], 18, 23, 19, 
@@ -74,8 +75,9 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _surf = _data[ 0];
 			var _detl = _data[ 6];
-			var _phas = _data[ 8];
 			var _size = _data[ 9];
+			var _phas = _data[ 8];
+			var _mulb = _data[28];
 			
 			var _shap = _data[16];
 			var _itr  = _data[10]; _itr  = max(0.01, _itr);
@@ -143,6 +145,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_f( "substract",     _subs                       );
 				shader_set_i( "fadeIteration", _fItr                       );
 				shader_set_i( "skipFirst",     _skpf                       );
+				shader_set_i( "multiBright",   _mulb                       );
 				
 				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();

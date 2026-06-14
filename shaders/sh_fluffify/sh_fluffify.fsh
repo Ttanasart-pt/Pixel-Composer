@@ -21,6 +21,7 @@ uniform int   blend;
 uniform float substract;
 uniform int   skipFirst;
 uniform int   fadeIteration;
+uniform int   multiBright;
 
 #define PI 3.14159265359
 #define TAU 6.283185307179586
@@ -52,7 +53,6 @@ void main() {
 	
     for (int y = -2; y <= 2; y++)
     for (int x = -2; x <= 2; x++) {
-		
         vec2 neighbor = vec2(float(x),float(y));
         vec2 point    = st + detl * neighbor;
 		     point   += random2(point) * detl;
@@ -87,7 +87,7 @@ void main() {
 			continue;
 		}
 		
-		depth *= sam;
+		if(multiBright == 1) depth *= sam;
 		if(dist >= depth) continue;
 		
 		if(dist < min_dist) {

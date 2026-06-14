@@ -23,6 +23,7 @@ uniform vec2      externalForceDir;
 uniform int       externalForceDirUseSurf;
 uniform sampler2D externalForceDirSurf;
 
+uniform float iter;
 
 #region ///////////////////// PERLIN START /////////////////////
 
@@ -115,5 +116,5 @@ void main() {
 	if(externalForceType == 0) flow += extF * (v_vTexcoord - 0.5);
 	if(externalForceType == 1) flow += extF * vec2(cos(extR), sin(extR));
 	
-    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord - flow * flowR );
+    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord - flow * flowR / iter );
 }

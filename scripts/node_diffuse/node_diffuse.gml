@@ -5,7 +5,8 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput( 6, nodeValueSeed());
 	
 	////- =Diffuse
-	newInput( 1, nodeValue_Slider( "Dissipation", 0.05, [ -0.2, 0.2, 0.001] )).setMappable(12);
+	newInput( 1, nodeValue_Slider( "Dissipation", .05, [ -0.2, 0.2, 0.001] )).setMappable(12);
+	newInput(17, nodeValue_Int(    "Iteration",    1 ));
 	
 	////- =Flow
 	newInput( 2, nodeValue_Float(  "Scale",       1 )).setMappable(13);
@@ -21,16 +22,18 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	////- =Rendering
 	newInput( 5, nodeValue_Slider_Range( "Threshold", [.5,.7] ));
-	// input 17
+	// input 18
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 6, 
-		["Diffuse",		false], 1, 12, 
+		["Diffuse",		false], 1, 12, 17, 
 		["Flow",		false], 2, 13, 9, 3, 4, 14, 
 		["Forces",		false], 10, 8, 15, 11, 16, 
 		["Rendering",	false], 5, 
-	]
+	];
+	
+	////- Node
 	
 	temp_surface = [ noone, noone ];
 	
@@ -40,6 +43,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			var _seed = getInputData( 6);
 			
 			var _diss = getInputData( 1), _dissM = getInputData(12);
+			var _iitr = getInputData(17);
 			
 			var _scal = getInputData( 2), _scalM = getInputData(13);
 			var _detl = getInputData( 9);
@@ -63,36 +67,51 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _outSurf = outputs[0].getValue();
 		    _outSurf = surface_verify(_outSurf, _sw, _sh);
 		
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
-			temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh);
+		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh);
+		temp_surface[1] = surface_verify(temp_surface[1], _sw, _sh);
 		
-		surface_set_shader(temp_surface[0], sh_diffuse_dissipate);
-			shader_set_f("dimension",   _sw, _sh);
-			shader_set_f_map("dissipation", _diss, _dissM, inputs[1]);
-			
+		surface_set_shader(temp_surface[1]);
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
-		surface_set_shader(temp_surface[1], sh_diffuse_flow);
-			shader_set_f("dimension", _sw, _sh);
-			shader_set_f("seed",      _seed + CURRENT_FRAME * _rand / 100);
+		var bg = 0;
+		var it = 0;
+		
+		repeat(_iitr) {
+			surface_set_shader(temp_surface[bg], sh_diffuse_dissipate);
+				shader_set_f( "dimension",   _sw, _sh);
+				shader_set_m( "dissipation", _diss, _dissM, inputs[1]);
+				shader_set_f( "iteration",   _iitr);
+				
+				draw_surface_safe(temp_surface[!bg]);
+			surface_reset_shader();
+			bg = !bg;
 			
-			shader_set_i("iteration",         _detl);
-			shader_set_f_map("scale",         _scal, _scalM, inputs[13]);
-			shader_set_f_map("flowRate",      _flow, _flowM, inputs[14]);
+			surface_set_shader(temp_surface[bg], sh_diffuse_flow);
+				shader_set_f( "dimension", _sw, _sh);
+				shader_set_f( "seed",      _seed + CURRENT_FRAME * _rand / 100 + it * pi);
+				shader_set_f( "iter",      _iitr);
+				
+				shader_set_i( "iteration", _detl                     );
+				shader_set_m( "scale",     _scal, _scalM, inputs[13] );
+				shader_set_m( "flowRate",  _flow, _flowM, inputs[14] );
+				
+				shader_set_i( "externalForceType", _ftyp                     );
+				shader_set_m( "externalForce",     _fstr, _fstrM, inputs[15] );
+				shader_set_m( "externalForceDir",  _fdir, _fdirM, inputs[16] );
+				
+				draw_surface_safe(temp_surface[!bg]);
+			surface_reset_shader();
+			bg = !bg;
 			
-			shader_set_i(    "externalForceType", _ftyp);
-			shader_set_f_map("externalForce",     _fstr, _fstrM, inputs[15]);
-			shader_set_f_map("externalForceDir",  _fdir, _fdirM, inputs[16]);
-			
-			draw_surface_safe(temp_surface[0]);
-		surface_reset_shader();
+			it++;
+		}
 		
 		surface_set_shader(_outSurf, sh_diffuse_post);
-			shader_set_f("dimension", _sw, _sh);
-			shader_set_f("threshold", _thre);
+			shader_set_f( "dimension", _sw, _sh );
+			shader_set_f( "threshold", _thre    );
 			
-			draw_surface_safe(temp_surface[1]);
+			draw_surface_safe(temp_surface[!bg]);
 		surface_reset_shader();
 		
 		outputs[0].setValue(_outSurf);

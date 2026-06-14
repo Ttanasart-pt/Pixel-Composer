@@ -7,6 +7,8 @@ uniform vec2      dissipation;
 uniform int       dissipationUseSurf;
 uniform sampler2D dissipationSurf;
 
+uniform float iteration;
+
 void main() {
 	#region params
 		float dis = dissipation.x;
@@ -15,7 +17,7 @@ void main() {
 			dis = mix(dissipation.x, dissipation.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
 		
-		dis = 1. - dis;
+		dis = 1. - dis / iteration;
 	#endregion
 	
 	vec2 tx = 1. / dimension;

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.004",
+    "changes": [
+      {
+        "date": "2026-06-14T07:06:07.642Z",
+        "node": "",
+        "commit": "**Fluffify**: Add option to disable radius bright scaling."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {
