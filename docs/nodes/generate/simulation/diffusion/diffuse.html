@@ -6868,6 +6868,9 @@
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Diffuse</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Dissipation</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
+                <td><p>Iteration</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Flow</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
                 <td><p>Scale</p></td>
@@ -6880,18 +6883,27 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Flow Rate</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
+                <td><p>Flow Map</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Forces</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>External Type</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
-                <td><p>External</p></td>
+                <td><p>External Force</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
+                <td><p>Position</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
+                <td><p>Radius</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
-                <td><p>External Strength</p></td>
+                <td><p>Strength</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation</p></td>
-                <td><p>External Direction</p></td>
+                <td><p>Direction</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Rendering</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">range</p></td>
                 <td><p>Threshold</p></td>
@@ -6902,6 +6914,9 @@
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Result</p></td>
             </tr>
+
+<tr><th class="head" colspan="2"><p>Attributes</p></th></tr>
+<tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Color Depth">Color Depth</a></th></tr><tr><th colspan="2" class="summary-attribute"><a href="/nodes/attributes.html#Oversample">Oversample</a></th></tr>
 
 </table>
 
@@ -6928,11 +6943,11 @@ to work with the feedback system.</p><br>
 <h3><a id="Flow Rate" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Flow Rate</span></h3><br>
 <p>Flow intensity</p><br>
 <h2><a id="External Forces" class="anchor"></a>External Forces</h2><br>
-<h3><a id="External Strength" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">External Strength</span></h3><br>
+<h3><a id="External Strength" class="anchor"></a><span class="junction">External Strength</span></h3><br>
 <p>Apply external force in/out of the middle point.</p><br>
 <h2><a id="Rendering Properties" class="anchor"></a>Rendering Properties</h2><br>
 <h3><a id="Threshold" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Threshold</span></h3><br>
-<p>Apply threshold after each step.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_diffuse/node_diffuse.gml">/scripts/node_diffuse/node_diffuse.gml</a></li><li><span>Shader [sh_diffuse_dissipate]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_diffuse_dissipate/sh_diffuse_dissipate.fsh">/shaders/sh_diffuse_dissipate/sh_diffuse_dissipate.fsh</a></li><li><span>Shader [sh_diffuse_flow]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_diffuse_flow/sh_diffuse_flow.fsh">/shaders/sh_diffuse_flow/sh_diffuse_flow.fsh</a></li><li><span>Shader [sh_diffuse_post]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_diffuse_post/sh_diffuse_post.fsh">/shaders/sh_diffuse_post/sh_diffuse_post.fsh</a></li></ul>
+<p>Apply threshold after each step.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_diffuse/node_diffuse.gml">/scripts/node_diffuse/node_diffuse.gml</a></li><li><span>Shader [sh_diffuse_post]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_diffuse_post/sh_diffuse_post.fsh">/shaders/sh_diffuse_post/sh_diffuse_post.fsh</a></li><li><span>Shader [sh_diffuse_dissipate]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_diffuse_dissipate/sh_diffuse_dissipate.fsh">/shaders/sh_diffuse_dissipate/sh_diffuse_dissipate.fsh</a></li><li><span>Shader [sh_diffuse_flow]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_diffuse_flow/sh_diffuse_flow.fsh">/shaders/sh_diffuse_flow/sh_diffuse_flow.fsh</a></li></ul>
         </div>
     </div>
 
