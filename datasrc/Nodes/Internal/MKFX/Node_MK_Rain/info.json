@@ -1,10 +1,8 @@
 {
-  "tooltip":"Generate deterministic rain.",
-  "spr":"s_node_mk_rain",
-  "pxc_version":11600.0,
-  "baseNode":"Node_MK_Rain",
-  "io":[
-    "surface"
-  ],
-  "name":"MK Rain"
+    "name":          "MK Rain",
+    "tooltip":       "Generate deterministic rain.",
+    "spr":           "s_node_mk_rain",
+    "baseNode":      "Node_MK_Rain",
+    "pxc_version":    11600,
+    "io":             ["surface"],
 }

@@ -223,6 +223,8 @@ function readObj_buff() {
 		var V      = array_create(_vblen);
 		var edges  = [];
 		
+		var _nDef  = [0,0,0];
+		
 		for(var i = 0; i < _vblen; i++)  {
 			var VB = vertex_create_buffer();
 			vertex_begin(VB, global.VF_POS_NORM_TEX_COL);
@@ -245,14 +247,30 @@ function readObj_buff() {
 				var _pft  = array_create(_vlen);
 				var _pfn  = array_create(_vlen);
 				
-				for( var k = 0; k < _vlen; k++ ) {
-					_pf[k]  = v[_f[k]];
-					_pfn[k] = vn[_fn[k]];
-					_pft[k] = vt[_ft[k]];
+				if(use_normal) {
+					for( var k = 0; k < _vlen; k++ ) {
+						_pf[k]  = v[_f[k]];
+						_pfn[k] = vn[_fn[k]];
+						_pft[k] = vt[_ft[k]];
+					}
+					
+					var _pfn0 = _pfn[0];
+					var _pfn1 = _pfn[1];
+					var _pfn2 = _pfn[2];
+					
+				} else {
+					for( var k = 0; k < _vlen; k++ ) {
+						_pf[k]  = v[_f[k]];
+						_pft[k] = vt[_ft[k]];
+					}
+					
+					var _pfn0 = _nDef;
+					var _pfn1 = _nDef;
+					var _pfn2 = _nDef;
+					
 				}
 				
 				var _pf0  = _pf[0],  _pf1  = _pf[1],  _pf2  = _pf[2];
-				var _pfn0 = _pfn[0], _pfn1 = _pfn[1], _pfn2 = _pfn[2];
 				var _pft0 = _pft[0], _pft1 = _pft[1], _pft2 = _pft[2];
 				
 				vertex_add_pntcb(VB, _pf0, _pfn0, _pft0, c_white, 1, 255, 0, 0);
@@ -271,8 +289,8 @@ function readObj_buff() {
 				
 				if(_vlen == 4) {
 					var _pf3  = _pf[3];
-					var _pfn3 = _pfn[3];
 					var _pft3 = _pft[3];
+					var _pfn3 = use_normal? _pfn[3] : _nDef;
 					
 					vertex_add_pntcb(VB, _pf0, _pfn0, _pft0, c_white, 1, 255, 0, 0);
 					vertex_add_pntcb(VB, _pf3, _pfn3, _pft3, c_white, 1, 0, 255, 0);
