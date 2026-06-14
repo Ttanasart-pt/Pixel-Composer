@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.004",
+    "changes": [
+      {
+        "date": "2026-06-14T07:19:53.264Z",
+        "node": "Displace",
+        "commit": "**Displace**: Add gradient angle offset property."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.003",
     "changes": [
       {

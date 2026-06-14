@@ -40,9 +40,10 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
     - Angle: Use red as angle, green as distance.
     - Gradient: Displace down the brightness value defined by the Displace map.").setPieMenu();
     
-	newInput(16, nodeValue_Bool( "Separate Axis", false ));
-	newInput( 2, nodeValue_Vec2( "Position",      [1,0] )).setTooltip("Vector to displace the pixel by.").setUnitSimple();
-	newInput(26, nodeValue_Vec2( "Mid Point",   [.5,.5] )).setUnitSimple();
+	newInput(16, nodeValue_Bool( "Separate Axis", false   ));
+	newInput( 2, nodeValue_Vec2( "Position",      [1,0]   )).setTooltip("Vector to displace the pixel by.").setUnitSimple();
+	newInput(26, nodeValue_Vec2( "Mid Point",     [.5,.5] )).setUnitSimple();
+	newInput(28, nodeValue_Rot(  "Angle Offset",   0      ));
 	
 	////- =Iterate
 	newInput( 6, nodeValue_Bool(    "Iterate",       false ));
@@ -52,12 +53,12 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_Bool(    "Fade Distance", false ));
 	newInput(20, nodeValue_Bool(    "Reposition",    false ));
 	newInput(21, nodeValue_Int(     "Repeat",        1     ));
-	// inputs 28
+	// inputs 29
 	
 	input_display_list = [ 10, 12, 
 		[ "Surfaces",      true    ],  0, 22, 23,  8,  9, 13, 14, 
 		[ "Strength",     false    ],  1, 17,  3, 15, 25,  4, 24, 
-		[ "Displacement", false    ],  5, 16,  2, 26, 
+		[ "Displacement", false    ],  5, 16,  2, 26, 28, 
 		[ "Iterate",       true, 6 ], 11, 18, 27, 19, 20, 21, 
 	];
 	
@@ -101,6 +102,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _mode = _data[ 5];
 			var _sep  = _data[16];
 			var _midp = _data[26];
+			var _grot = _data[28];
 			
 			var _blend = _data[11];
 			
@@ -110,11 +112,12 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		#region visible
 			var _dsp2 = (_mode == 1 || _mode == 2) && _sep;
 			
-			inputs[ 2].setVisible(_mode == 0);
-			inputs[16].setVisible(_mode == 1 || _mode == 2);
+			inputs[ 2].setVisible(_mode  == 0);
+			inputs[16].setVisible(_mode  == 1 || _mode == 2);
 			inputs[17].setVisible(_dsp2, _dsp2);
-			inputs[26].setVisible(_mode == 5 || _mode == 6);
+			inputs[26].setVisible(_mode  == 5 || _mode == 6);
 			inputs[27].setVisible(_blend == 3);
+			inputs[28].setVisible(_mode  == 3);
 			
 			if(_mode == 1 && _sep) {
 				inputs[ 1].setName("Displace X");
@@ -157,21 +160,22 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_s( "map",  _map  );
 				shader_set_s( "map2", _map2 );
 				
-				shader_set_f("dimension",     [ww,hh]   );
-				shader_set_f("map_dimension", [mw,mh]   );
-				shader_set_f("displace",      _data[ 2] );
-				shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3], _data[25] );
-				shader_set_f_map("middle",    _data[ 4], _data[24], inputs[4]            );
-				shader_set_2("midPoint",      _midp     );
-				shader_set_i("mode",          _mode     );
-				shader_set_i("sepAxis",       _sep      );
+				shader_set_f( "dimension",     [ww,hh]   );
+				shader_set_f( "map_dimension", [mw,mh]   );
+				shader_set_f( "displace",      _data[ 2] );
+				shader_set_m( "strength",      _data[ 3], _data[15], inputs[3], _data[25] );
+				shader_set_m( "middle",        _data[ 4], _data[24], inputs[4]            );
+				shader_set_2( "midPoint",      _midp     );
+				shader_set_i( "mode",          _mode     );
+				shader_set_i( "sepAxis",       _sep      );
+				shader_set_f( "gradOffset",    _grot     );
 				
-				shader_set_i("iterate",       _data[ 6] );
-				shader_set_f("iteration",     _data[18] );
-				shader_set_i("blendMode",     _blend );
-				shader_set_f("mixAmount",     _data[27] );
-				shader_set_i("fadeDist",      _data[19] );
-				shader_set_i("reposition",    _data[20] );
+				shader_set_i( "iterate",       _data[ 6] );
+				shader_set_f( "iteration",     _data[18] );
+				shader_set_i( "blendMode",     _blend );
+				shader_set_f( "mixAmount",     _data[27] );
+				shader_set_i( "fadeDist",      _data[19] );
+				shader_set_i( "reposition",    _data[20] );
 				
 				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();

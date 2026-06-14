@@ -278,6 +278,7 @@ uniform float mixAmount;
 
 uniform int   fadeDist;
 uniform int   reposition;
+uniform float gradOffset;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
@@ -362,7 +363,11 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		vec4  d2 = texture2Dintp( map, pos - vec2( tx.x, 0.) ); float h2 = (d2.r + d2.g + d2.b) / 3.;
 		vec4  d3 = texture2Dintp( map, pos + vec2( 0., tx.y) ); float h3 = (d3.r + d3.g + d3.b) / 3.;
 		
-		vec2 grad = vec2( h0 - h2, h3 - h1 ) - mid;
+		float ang  = radians(gradOffset);
+		vec2 grad  = vec2( h0 - h2, h3 - h1 );
+		     grad *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+		     grad -= mid;
+		     
 		sam_pos = pos + grad * str;
 		
 	} else if(mode == 5) { // Radial
