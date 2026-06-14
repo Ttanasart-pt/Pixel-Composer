@@ -94,6 +94,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(46, nodeValue_Path(    "Path"                        ));
 	newInput(66, nodeValue_Range2(  "Range",         [0,0,1,1]    ));
 	newInput(80, nodeValue_Range(   "Range Shift",   [0,0]        ));
+	newInput(81, nodeValue_Curve(   "Path Speed",    CURVE_DEF_01 ));
 	newInput(47, nodeValue_Curve(   "Deviation",     CURVE_DEF_11 ));
 	
 	////- =Physics
@@ -132,7 +133,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
-	//input 81
+	//input 82
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput( 1, nodeValue_Output( "Data",        VALUE_TYPE.particle, []    ));
@@ -199,7 +200,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		__inspc(ui(6), true, false, ui(3)), 
 		
-		[ "Follow Path",  true, 45 ], 46, 66, 80, 47, 
+		[ "Follow Path",  true, 45 ], 46, 66, 80, 81, 47, 
 		[ "Physics",      true, 57 ], 54,  7, 
 			[ "/Gravity", false    ], 19, 33, 
 			[ "/Turning", false    ], 34, 35, 36, 
@@ -257,6 +258,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		curve_rotateF  = noone;
 		curve_scale    = noone;
 		curve_alpha    = noone;
+		curve_path_spd = noone;
 		curve_path_div = noone;
 		dist_map_cache = [];
 		
@@ -395,7 +397,6 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _ground_frict   = inputs_data[40];
 			
 			var _use_wig     	= inputs_data[58];
-			
 		#endregion
 		
 		if(array_empty(_inSurf)) return;
@@ -557,7 +558,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					random_range(_pathRange[2], _pathRange[3]) + _path_range_shift 
 				];
 				
-				part.setPath(   _path, _path_range, curve_path_div );
+				part.setPath( _path, _path_range, curve_path_spd, curve_path_div );
 			#endregion
 			
 			#region Physics
@@ -727,14 +728,20 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 			var _curve_sca = getInputData(11);
 			var _curve_alp = getInputData(14);
+			
+			var _curve_psp = getInputData(81);
 			var _curve_pth = getInputData(47);
+			
 			var _curve_rot = getInputData(59);
 			var _curve_rtF = getInputData(70);
 			var _curve_spd = getInputData(60);
 		
 			curve_scale    = new curveMap(_curve_sca, TOTAL_FRAMES);
 			curve_alpha    = new curveMap(_curve_alp, TOTAL_FRAMES);
+			
+			curve_path_spd = new curveMap(_curve_psp, TOTAL_FRAMES);
 			curve_path_div = new curveMap(_curve_pth, TOTAL_FRAMES);
+			
 			curve_rotate   = new curveMap(_curve_rot, TOTAL_FRAMES);
 			curve_rotateF  = new curveMap(_curve_rtF, TOTAL_FRAMES);
 			curve_speed    = new curveMap(_curve_spd, TOTAL_FRAMES);

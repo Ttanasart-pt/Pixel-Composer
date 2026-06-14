@@ -6,6 +6,11 @@
         "date": "2026-06-14T05:12:36.363Z",
         "node": "Particle",
         "commit": "**Particle**: Add path position shift."
+      },
+      {
+        "date": "2026-06-14T05:21:46.199Z",
+        "node": "Particle",
+        "commit": "**Particle**: Add path follow speed curve."
       }
     ]
   },

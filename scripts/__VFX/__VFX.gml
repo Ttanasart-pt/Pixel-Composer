@@ -116,6 +116,7 @@ function __part(_node) : __particleObject() constructor {
 	pathIndex =  0;
 	pathRange = [0,1];
 	pathPos   = new __vec2();
+	pathSpd   = noone;
 	pathDiv   = noone;
 	
 	////- Render
@@ -320,11 +321,12 @@ function __part(_node) : __particleObject() constructor {
 		return self;
 	}
 	
-	static setPath = function(_path, _pathRange, _pathDiv) {
+	static setPath = function(_path, _pathRange, _pathSpd, _pathDiv) {
 		INLINE
 		
 		path      = _path;
 		pathRange = _pathRange;
+		pathSpd   = _pathSpd;
 		pathDiv   = _pathDiv;
 		
 		return self;
@@ -442,7 +444,8 @@ function __part(_node) : __particleObject() constructor {
 		}
 		
 		if(path != noone) {
-			var _pathPrg = clamp(lerp(pathRange[0], pathRange[1], lifeRat), 0., 1.);
+			var _pathRat = pathSpd.getFast(lifeRat);
+			var _pathPrg = clamp(lerp(pathRange[0], pathRange[1], _pathRat), 0., 1.);
 			var _pathDiv = pathDiv.getFast(_pathPrg);
 			
 			pathPos = path.getPointRatio(clamp(_pathPrg, 0, 0.99), pathIndex, pathPos);
