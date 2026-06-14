@@ -2,13 +2,21 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	name = "Pixel Expand";
 	
 	newActiveInput(1);
-	newInput(0, nodeValue_Surface("Surface In"));
-	newInput(2, nodeValue_Enum_Scroll("Method", 0, [ "Radial", "Scan" ]));
-	// input 3
+	
+	////- =Surface
+	newInput( 0, nodeValue_Surface("Surface In"));
+	
+	////- =Expands
+	newInput( 2, nodeValue_EScroll( "Method",     0, [ "Radial", "Scan" ]));
+	newInput( 3, nodeValue_Int(     "Resolution", 32 ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 1, 0, 2 ];
+	input_display_list = [ 1, 
+		[ "Surface", false ], 0, 
+		[ "Expands", false ], 2, 3, 
+	];
 	
 	////- Node
 	
@@ -18,14 +26,17 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _surf = _data[0];
-			var _meth = _data[2];
+			var _surf = _data[ 0];
+			
+			var _meth = _data[ 2];
+			var _reso = _data[ 3];
 			
 			if(!is_surface(_surf)) return _outSurf;
 		#endregion
 		
 		var _dim = surface_get_dimension(_surf);
-		for( var i = 0; i < 2; i++ ) temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
 		
 		if(_meth == 0) {
 			var _bg  = 0;
@@ -37,7 +48,9 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 			repeat(_itr) {
 				surface_set_shader(temp_surface[_bg], sh_atlas);
-					shader_set_f("dimension", _dim);
+					shader_set_f("dimension",   _dim  );
+					shader_set_f("resolution",  _reso );
+					
 					draw_surface_safe(temp_surface[!_bg]);
 				surface_reset_shader();
 			

@@ -27,9 +27,9 @@ void main() {
 	}
 	
 	vec4 _col1 = texture2D( fore, fore_tex );
-	_col1 *= opacity * sampleMask();
+	float colr = opacity * sampleMask();
 	
-	vec4 res = vec4(_col0 == _col1? 0. : 1.);
+	vec4 res = vec4(_col0 == _col1? 0. : colr);
 	if(preserveAlpha == 1) res.a = _col0.a;
 	
     gl_FragColor = res;

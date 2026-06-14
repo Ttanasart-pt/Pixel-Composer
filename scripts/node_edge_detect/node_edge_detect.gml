@@ -11,21 +11,26 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface i" ));
-	newInput(3, nodeValue_Surface( "Mask"      ));
-	newInput(4, nodeValue_Slider(  "Mix",    1 ));
+	newInput( 0, nodeValue_Surface( "Surface i" ));
+	newInput( 3, nodeValue_Surface( "Mask"      ));
+	newInput( 4, nodeValue_Slider(  "Mix",    1 ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
-	newInput(2, nodeValue_Enum_Scroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput( 2, nodeValue_Enum_Scroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 		
 	////- =Edge
-	newInput(1, nodeValue_Enum_Scroll( "Algorithm", 0, ["Sobel", "Prewitt", "Laplacian", "Neighbor max diff"] )).setPieMenu();
-	// inputs 9
+	newInput( 1, nodeValue_Enum_Scroll( "Algorithm", 0, ["Sobel", "Prewitt", "Laplacian", "Neighbor max diff"] )).setPieMenu();
+	
+	////- =Rendering
+	newInput( 9, nodeValue_EScroll(  "Color", 0, [ "Color", "Greyscale", "BW" ] ));
+	newInput(10, nodeValue_Range(    "Level", [0,1] ));
+	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces",	 true],	0, 3, 4, 7, 8, 
-		["Edge detect",	false],	1, 
+		[ "Surfaces",     true ],  0,  3,  4,  7,  8, 
+		[ "Edge detect", false ],  1, 
+		[ "Rendering",   false ],  9, 10, 
 	];
 	
 	////- Nodes
@@ -38,25 +43,35 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	                      0, 0, 0 ];
 	filtering_vl      = false;
 	
-	filter_button = new buttonAnchor(noone, function(ind) {
+	filter_button = new buttonAnchor(noone, function(ind) /*=>*/ {
 		if(mouse_lpress()) filtering_vl = !attributes.filter[ind];
 		attributes.filter[ind] = filtering_vl;
 		triggerRender();
 	});
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var surf  = _data[0];
-		var filt  = _data[1];
-		var over  = getAttribute("oversample");
+		#region data
+			var surf  = _data[ 0];
+			var filt  = _data[ 1];
+			
+			var colr  = _data[ 9];
+			var levl  = _data[10];
+			
+			var over  = getAttribute("oversample");
+		#endregion
 		
 		inputs[1].getEditWidget().setFrontButton(filt == 3? filter_button : noone);
 		filter_button.index = attributes.filter;
 		
 		surface_set_shader(_outSurf, sh_edge_detect);
-			shader_set_dim("dimension", surf);
-			shader_set_i("filter",      filt);
-			shader_set_i("sampleMode",  over);
-			shader_set_i("sides",       attributes.filter);
+			shader_set_dim( "dimension",   surf );
+			shader_set_i(   "filter",      filt );
+			shader_set_i(   "sampleMode",  over );
+			
+			shader_set_i(   "colorMode",  colr );
+			shader_set_2(   "level",      levl );
+			
+			shader_set_i(   "sides",       attributes.filter );
 			
 			draw_surface_safe(surf);
 		surface_reset_shader();

@@ -51,6 +51,9 @@ uniform vec2 dimension;
 uniform int  filter;
 uniform int  sides[9];
 
+uniform int  colorMode;
+uniform vec2 level;
+
 #region matrices
 	const mat3 sobel     = mat3( -1., -2., -1., 
 							      0.,  0.,  0., 
@@ -178,8 +181,18 @@ void main() {
 		}
 	}
 	
-	     if(filter == 0) gl_FragColor = vec4(vec3(distance(hColor / 4., vColor / 4.)), point.a);
-	else if(filter == 1) gl_FragColor = vec4(vec3(distance(hColor / 3., vColor / 3.)), point.a);
-	else if(filter == 2) gl_FragColor = vec4(hColor.rgb / 2., point.a);
-	else if(filter == 3) gl_FragColor = vec4(abs(hColor.rgb), point.a);
+	vec4 res = point;
+	
+	     if(filter == 0) res = vec4(vec3(distance(hColor / 4., vColor / 4.)), point.a);
+	else if(filter == 1) res = vec4(vec3(distance(hColor / 3., vColor / 3.)), point.a);
+	else if(filter == 2) res = vec4(hColor.rgb / 2., point.a);
+	else if(filter == 3) res = vec4(abs(hColor.rgb), point.a);
+	
+	float gey = bright(res);
+	      gey = (gey - level.x) / (level.y - level.x);
+	
+	if(colorMode == 1) res.rgb = vec3(gey);
+	if(colorMode == 2) res.rgb = vec3(step(.5, gey));
+	
+	gl_FragColor = res;
 }

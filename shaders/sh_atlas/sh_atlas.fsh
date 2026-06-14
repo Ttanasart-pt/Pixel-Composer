@@ -2,6 +2,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
+uniform float resolution;
 
 #define TAU 6.283185307179586
 #define distance_sample 32.
@@ -16,7 +17,7 @@ void main() {
 		return;
 	
 	bool samp = false;
-	float angular_sample = distance_sample * TAU * 2.;
+	float angular_sample = resolution * TAU * 2.;
 	
 	for(float i = 1.; i <= distance_sample; i++) {
 		float base = 1.;

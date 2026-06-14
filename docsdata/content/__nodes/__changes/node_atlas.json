@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.4.004",
+    "changes": [
+      {
+        "date": "2026-06-14T03:44:41.815Z",
+        "node": "Edge Detect",
+        "commit": "**Edge Detect**: Add greyscale, level properties."
+      }
+    ]
+  }
+]
