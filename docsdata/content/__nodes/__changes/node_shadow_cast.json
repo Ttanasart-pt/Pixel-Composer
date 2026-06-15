@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.005",
+    "changes": [
+      {
+        "date": "2026-06-15T07:12:37.229Z",
+        "node": "Cast Shadow",
+        "commit": "**Cast Shadow**: Fix error when using non-8bit RGBA background with no solid input."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.003",
     "changes": [
       {

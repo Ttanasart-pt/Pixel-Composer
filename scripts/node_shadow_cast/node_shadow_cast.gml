@@ -313,7 +313,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				);
 				
 				surface_set_shader(temp_surface[0], sh_shadow_cast_bg_extract);
-					shader_set_c("refColor",  _refColor);
+					if(is_array(_refColor)) 
+					     shader_set_4("refColor",  _refColor);
+					else shader_set_c("refColor",  _refColor);
 					shader_set_f("threshold", _bg_thr);
 					
 					draw_surface(_bg, 0, 0);
