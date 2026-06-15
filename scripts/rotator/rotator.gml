@@ -9,7 +9,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	drag_sv  = 0;
 	halign   = fa_center;
 	
-	tb_value = textBox_Number(function(v) /*=>*/ {return onModify(v)}).setHide(1);
+	tb_value = textBox_Number(function(v) /*=>*/ {return onModify(v)});
 	tb_value.quickedit = 1;
 	
 	static setInteract = function(i=noone) /*=>*/ { interactable = i; tb_value.interactable = i; }
@@ -28,14 +28,13 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		w = _w;
 		h = _h;
 		
+		tb_value.setHide(1);
+		
 		if(!is_real(_data)) {
-			tb_value.setHide(0);
 			tb_value.setFocusHover(active, hover);
 			tb_value.draw(_x, _y, _w, _h, _data, _m);
 			return h;
 		}
-		
-		tb_value.setHide(1);
 		
 		var _r  = _h;
 		var _bs = min(_h, ui(32));
@@ -126,10 +125,14 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			shader_reset();
 		}
 		
-		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) 
+			draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);	
 		
 		tb_value.setFocusHover(active, hover);
 		tb_value.draw(_tx, _y, _tw, _h, _data, _m);
+		
+		if(!tb_value.hovering && hide == 0) 
+			draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);	
 		
 		resetFocus();
 		
