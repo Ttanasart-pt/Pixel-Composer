@@ -77,6 +77,8 @@ uniform sampler2D texture;
 
 uniform int highRes;
 
+int borderSide;
+
 vec4 blendColor(vec4 base, vec4 colr) {
 	vec4 bg = base;
 	vec4 fg = colr;
@@ -92,7 +94,7 @@ vec4 blendColor(vec4 base, vec4 colr) {
 }
 
 bool angleFiltered(float angle) {
-	float _dg = mod((degrees(angle) + 360. + ((side == 0)? 180. : 0.)), 360.);
+	float _dg = mod((degrees(angle) + 360. + ((borderSide == 0)? 180. : 0.)), 360.);
 	int  _ind = 0;
 	
 	     if(_dg ==   0.) _ind = 3;
@@ -115,11 +117,11 @@ float closetDistance  = 99999.;
 void checkPixel(vec2 px, vec2 p) {
 	vec2 txs = p / dimension;
 	vec2 pxs = floor(p) + 0.5;
-	if(side == 0 && crop_border == 1 && (txs.x < 0. || txs.x > 1. || txs.y < 0. || txs.y > 1.)) return;
+	if(borderSide == 0 && crop_border == 1 && (txs.x < 0. || txs.x > 1. || txs.y < 0. || txs.y > 1.)) return;
 	
 	vec4 sam = sampleTexture( gm_BaseTexture, txs );
-	if(side == 0 && sam.a > 1. - alphaThers) return; //inside border,  skip if current pixel is filled
-	if(side == 1 && sam.a <      alphaThers) return; //outside border, skip if current pixel is empty
+	if(borderSide == 0 && sam.a > 1. - alphaThers) return; //inside border,  skip if current pixel is filled
+	if(borderSide == 1 && sam.a <      alphaThers) return; //outside border, skip if current pixel is empty
 	
 	isOutline = true;
 	
@@ -163,13 +165,34 @@ void main() {
 	vec4 resultColor   = baseColor;
 	vec4 resultOutline = vec4(0.);
 	
+	borderSide = side;
+	if(side == 2) {
+		bool opa = baseColor.a > 1. - alphaThers;
+		if(opa) borderSide = 0;
+		else    borderSide = 1;
+		
+		float bStart = -bSiz / 2. + bStr;
+		float bEnd   =  bSiz / 2. + bStr;
+		
+		if(borderSide == 0) {
+			bSiz = min(-bStart, bSiz);
+			bStr = -bStart - bSiz;
+		}
+		
+		if(borderSide == 1) {
+			bSiz = min(bEnd, bSiz);
+			bStr = bEnd - bSiz;
+		}
+		
+	}
+	
 	gl_FragData[0] = resultColor;
 	gl_FragData[1] = resultOutline;
 	
 	#region filter out filled / empty pixel
 		bool isBorder = false;
-		     if(side == 0) isBorder = baseColor.a > 1. - alphaThers;
-		else if(side == 1) isBorder = baseColor.a <      alphaThers;
+		     if(borderSide == 0) isBorder = baseColor.a > 1. - alphaThers;
+		else if(borderSide == 1) isBorder = baseColor.a <      alphaThers;
 	
 		if(!isBorder) {
 			gl_FragData[0] = resultColor;
@@ -235,11 +258,11 @@ void main() {
 			if(angleFiltered(ang)) continue;
 			
 			vec2 pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) ) / dimension;
-			if(side == 0 && crop_border == 1 && (pxs.x < 0. || pxs.x > 1. || pxs.y < 0. || pxs.y > 1.)) continue;
+			if(borderSide == 0 && crop_border == 1 && (pxs.x < 0. || pxs.x > 1. || pxs.y < 0. || pxs.y > 1.)) continue;
 			
 			vec4 sam = sampleTexture( gm_BaseTexture, pxs );
 			
-			if((side == 0 && sam.a < alphaThers) || (side == 1 && sam.a >= alphaThers)) {
+			if((borderSide == 0 && sam.a < alphaThers) || (borderSide == 1 && sam.a >= alphaThers)) {
 				isOutline = true;
 				if(!closetCollected) {
 					closetCollected = true;
@@ -262,7 +285,7 @@ void main() {
 	if(is_blend == 0) {
 		vec4 bcol = vec4(borderColor.rgb, borderColor.a * _aa);
 		
-		if(side == 0) {
+		if(borderSide == 0) {
 			baseColor.rgb = mix(baseColor.rgb, borderColor.rgb, bcol.a);
 			bcol.a *= baseColor.a;
 			
@@ -275,7 +298,7 @@ void main() {
 		}
 		
 	} else {
-		if(side == 0) {
+		if(borderSide == 0) {
 			vec4 blendBord   = mix(baseColor, borderColor, bld);
 		         blendBord.a = baseColor.a;
 		    

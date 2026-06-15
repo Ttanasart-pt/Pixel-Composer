@@ -73,6 +73,7 @@ void main() {
 	vec2  tx = 1. / dimension;
 	vec4  cc = vec4(0.);
 	float dv = 0.;
+	float da = 0.;
 	
 	if(shape == 0) {
 		float aStep = TAU / 64.;
@@ -84,7 +85,8 @@ void main() {
 				vec4  c  = sampleTexture( gm_BaseTexture, sx );
 				float s  = fade == 1? 1. - i / rad : 1.;
 				
-				cc += c * s;
+				cc += c   * s;
+				da += c.a * s;
 				dv += s;
 			}
 		}
@@ -98,7 +100,8 @@ void main() {
 			vec4  c  = sampleTexture( gm_BaseTexture, sx );
 			float s  = fade == 1? 1. - max(abs(i), abs(j)) / rad : 1.;
 			
-			cc += c * s;
+			cc += c   * s;
+			da += c.a * s;
 			dv += s;
 		}
 		
@@ -111,13 +114,15 @@ void main() {
 			vec4  c  = sampleTexture( gm_BaseTexture, sx );
 			float s  = fade == 1? 1. - (abs(i) + abs(j)) / rad : 1.;
 			
-			cc += c * s;
+			cc += c   * s;
+			da += c.a * s;
 			dv += s;
 		}
 		
 	}
 	
 	cc /= dv;
+	// cc /= da;
 	
 	vec4 res = cc;
 	
