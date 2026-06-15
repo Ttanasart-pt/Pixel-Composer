@@ -254,6 +254,10 @@ function readObj_buff() {
 						_pft[k] = vt[_ft[k]];
 					}
 					
+					var _pf0  = _pf[0];
+					var _pf1  = _pf[1];
+					var _pf2  = _pf[2];
+					
 					var _pfn0 = _pfn[0];
 					var _pfn1 = _pfn[1];
 					var _pfn2 = _pfn[2];
@@ -264,13 +268,19 @@ function readObj_buff() {
 						_pft[k] = vt[_ft[k]];
 					}
 					
-					var _pfn0 = _nDef;
-					var _pfn1 = _nDef;
-					var _pfn2 = _nDef;
+					var _pf0  = _pf[0];
+					var _pf1  = _pf[1];
+					var _pf2  = _pf[2];
 					
+					var _p21 = [ _pf1[0] - _pf0[0], _pf1[1] - _pf0[1], _pf1[2] - _pf0[2] ];
+					var _p31 = [ _pf2[0] - _pf0[0], _pf2[1] - _pf0[1], _pf2[2] - _pf0[2] ];
+					var _nrm = d3_cross_product(_p21, _p31);
+					
+					var _pfn0 = _nrm;
+					var _pfn1 = _nrm;
+					var _pfn2 = _nrm;
 				}
 				
-				var _pf0  = _pf[0],  _pf1  = _pf[1],  _pf2  = _pf[2];
 				var _pft0 = _pft[0], _pft1 = _pft[1], _pft2 = _pft[2];
 				
 				vertex_add_pntcb(VB, _pf0, _pfn0, _pft0, c_white, 1, 255, 0, 0);
@@ -290,7 +300,7 @@ function readObj_buff() {
 				if(_vlen == 4) {
 					var _pf3  = _pf[3];
 					var _pft3 = _pft[3];
-					var _pfn3 = use_normal? _pfn[3] : _nDef;
+					var _pfn3 = use_normal? _pfn[3] : _nrm;
 					
 					vertex_add_pntcb(VB, _pf0, _pfn0, _pft0, c_white, 1, 255, 0, 0);
 					vertex_add_pntcb(VB, _pf3, _pfn3, _pft3, c_white, 1, 0, 255, 0);

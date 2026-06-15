@@ -27,9 +27,15 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	name = "3D Obj";
 	
 	////- =Object
-	newInput(in_mesh + 0, nodeValue_FPath(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "3d Object (.obj)|*.obj" });
-	newInput(in_mesh + 2, nodeValue_Float(       "Import Scale", 1 ));
-	newInput(in_mesh + 3, nodeValue_Enum_Scroll( "Axis",         0, [ "XYZ", "XZ-Y", "X-ZY" ]));
+	newInput(in_mesh + 0, nodeValue_FPath(   "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "3d Object (.obj)|*.obj" });
+	newInput(in_mesh + 2, nodeValue_Float(   "Import Scale", 1 ));
+	newInput(in_mesh + 3, nodeValue_EScroll( "Axis",         2, 
+		{ data: [ 
+			new scrollItem("XYZ").setTooltip("Default axis for Godot, Maya, Houdini"), 
+			new scrollItem("XZ-Y").setTooltip("Default axis for Unreal Engine"), 
+			new scrollItem("X-ZY").setTooltip("Default axis for Blender, 3DsMax, PicoCAD") 
+		], update_hover: false })
+	);
 	
 	////- =Material
 	newInput(in_mesh + 1, nodeValue_Bool( "Flip UV", true, "Flip UV axis, can be use to fix some texture mapping error."));
@@ -63,6 +69,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	obj_read_prog_tot = 3;
 	obj_read_time     = 0;
 	
+	curr_axis     = -1;
 	current_path  = "";
 	materials     = [];
 	materialNames = [];
@@ -109,10 +116,12 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	static updateObjStart = function(_path) {
 		if(!file_exists_empty(_path)) return;
-		current_path = _path;
 		
 		var _scale = inputs[in_mesh + 2].getValue();
 		var _axis  = inputs[in_mesh + 3].getValue();
+		
+		current_path = _path;
+		curr_axis    = _axis;
 		
 		readObj_init(_scale, _axis);
 		
@@ -201,14 +210,17 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 			return;
 		}
 		
-		var _path = getInputData(in_mesh + 0);
-		if(_path != current_path) updateObjStart(_path);
 	}
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		if(obj_reading) return noone;
 		
+		var _path = _data[in_mesh + 0];
 		var _flip = _data[in_mesh + 1];
+		var _axis = inputs[in_mesh + 3].getValue();
+		
+		if(curr_axis != _axis || current_path != _path) 
+			updateObjStart(_path);
 		
 		if(object_data == noone) return noone;
 		var _materials = [];

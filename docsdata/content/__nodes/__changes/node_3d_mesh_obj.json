@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.005",
+    "changes": [
+      {
+        "date": "2026-06-15T01:46:55.298Z",
+        "node": "Blobify",
+        "commit": "**Blobify**: Add smooth render setting, kernel shapes properties."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {
