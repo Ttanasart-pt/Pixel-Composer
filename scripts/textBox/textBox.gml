@@ -687,7 +687,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		if(input == TEXTBOX_INPUT.number && _drawInc) {
 			var bc = [COLORS._main_icon, COLORS._main_icon_light];
 			if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.add_16, 0, bc, 1, .75) == 2) {
-				var dx = slide_range == noone? 1 : (slide_range[1] - slide_range[0]) / 10;
+				var dx = slide_range == noone || slide_int? 1 : (slide_range[1] - slide_range[0]) / 10;
 				if(key_mod_press(CTRL)) dx *= 10;
 				if(key_mod_press(ALT))  dx /= 10;
 				
@@ -698,7 +698,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			_w  -= _bs;
 			
 			if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.minus_16, 0, bc, 1, .75) == 2) {
-				var dx = slide_range == noone? 1 : (slide_range[1] - slide_range[0]) / 10;
+				var dx = slide_range == noone || slide_int? 1 : (slide_range[1] - slide_range[0]) / 10;
 				if(key_mod_press(CTRL)) dx *= 10;
 				if(key_mod_press(ALT))  dx /= 10;
 				

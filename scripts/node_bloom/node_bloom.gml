@@ -49,6 +49,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	temp_surface = [ noone ];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	surface_blur_init();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -68,11 +69,11 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _surf  = _data[0];
-			var _size  = _data[1];
-			var _tole  = _data[2];
-			var _stre  = _data[3];
-			var _mask  = _data[4];
+			var _surf  = _data[ 0];
+			var _size  = _data[ 1];
+			var _tole  = _data[ 2];
+			var _stre  = _data[ 3];
+			var _mask  = _data[ 4];
 			
 			var _type  = _data[13];
 			var _ratio = _data[11];
@@ -109,6 +110,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			case 0 :
 				var args = new blur_gauss_args(temp_surface[0], [_size, _data[17], inputs[1]]).setBG(true, c_black)
 					.setRatio(_ratio).setAngle(_angle);
+					
+				args.sampleMode = getAttribute("oversample");
 				if(inputs[3].attributes.curved) args.setSizeCurve(_data[20]);
 				
 				pass1blur = surface_apply_gaussian(args);
@@ -116,6 +119,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				
 			case 1 :
 				var args = new blur_zoom_args(temp_surface[0], [_size, _data[17], inputs[1]], _zoom[0], _zoom[1], 2, 1);
+				
+				args.sampleMode = getAttribute("oversample");
 				if(inputs[3].attributes.curved) args.setSizeCurve(_data[20]);
 				
 				pass1blur = surface_apply_blur_zoom(__blur_pass[0], args);
@@ -123,6 +128,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				
 			case 2 :
 				var args = new blur_directional_args(temp_surface[0], [_size, _data[17], inputs[1]], _angle).setFadeDistance(true);
+				
+				args.sampleMode = getAttribute("oversample");
 				if(inputs[3].attributes.curved) args.setSizeCurve(_data[20]);
 				
 				pass1blur = surface_apply_blur_directional(__blur_pass[0], args);

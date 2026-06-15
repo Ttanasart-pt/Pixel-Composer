@@ -66,7 +66,7 @@ float random( in vec2 st ) { return fract(sin(dot(st, vec2(12.9898, 78.233))) * 
 
 float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _seed) {
 	vec2  st     = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
-	float m_dist = 1.;
+	float m_dist = 2.;
 	
 	if(pattern < 2) {
 		vec2 i_st = floor(st);

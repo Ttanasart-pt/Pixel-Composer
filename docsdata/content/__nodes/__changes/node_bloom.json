@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.005",
+    "changes": [
+      {
+        "date": "2026-06-15T06:47:52.170Z",
+        "node": "Bloom",
+        "commit": "**Bloom**: Add oversample settings."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {
