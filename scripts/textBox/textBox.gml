@@ -666,7 +666,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var sbw = _bs * (sb1 + sb2 + unt);
 		
 		if(input == TEXTBOX_INPUT.number) {
-			var _drawInc = _w - sbw > ui(80) + _bs * 2;
+			var _drawInc = PREFERENCES.textbox_incremental && _w - sbw > ui(80) + _bs * 2;
 			sbw += _drawInc * _bs * 2;
 		}
 		

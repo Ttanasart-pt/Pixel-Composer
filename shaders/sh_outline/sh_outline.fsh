@@ -171,8 +171,8 @@ void main() {
 		if(opa) borderSide = 0;
 		else    borderSide = 1;
 		
-		float bStart = -bSiz / 2. + bStr;
-		float bEnd   =  bSiz / 2. + bStr;
+		float bStart = -floor(bSiz / 2.) + bStr;
+		float bEnd   =  ceil( bSiz / 2.) + bStr;
 		
 		if(borderSide == 0) {
 			bSiz = min(-bStart, bSiz);

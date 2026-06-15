@@ -37,6 +37,7 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform float seed;
 uniform float phase;
+uniform float randomness;
 
 uniform int   iteration;
 uniform float iterScale;
@@ -86,7 +87,7 @@ vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _se
 	        for (int x = -1; x <= 1; x++) {
 	            vec2 neighbor = vec2(float(x), float(y));
 	            vec2 point    = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
-				vec2 pointSam = 0.5 + 0.5 * sin(_seed + TAU * (point + phase));
+				vec2 pointSam = 0.5 + 0.5 * sin(_seed + TAU * (point + phase)) * randomness;
 			
 	            vec2 _diff = neighbor + pointSam - f_st;
 	            float dist = length(_diff);
@@ -102,7 +103,7 @@ vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _se
 			int _amo = int(sca) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {
 				float ang  = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + _seed;
-				float rad  = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
+				float rad  = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1 * randomness;
 				vec2 point = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad) + pos;
 				
 			    vec2 _diff = point - ntx;
@@ -110,7 +111,7 @@ vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _se
 			    
 				if(dist < m_dist) {
 					m_dist = dist;
-					mp = point;
+					mp     = point;
 				}
 			}
 		}

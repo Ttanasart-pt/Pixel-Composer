@@ -169,6 +169,7 @@
 		
 		#region WIDGET
 		
+			PREFERENCES.textbox_incremental             = true;
 			PREFERENCES.widget_autocomplete_delay       = 500;
 			PREFERENCES.alt_picker						= true;
 			

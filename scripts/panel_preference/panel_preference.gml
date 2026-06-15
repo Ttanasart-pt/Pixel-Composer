@@ -624,6 +624,12 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Text Area")); // Text area
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_widget_incremental", "Incremental Buttons"),
+    			"textbox_incremental",
+    			new checkBox(function() /*=>*/ {return prefToggle("textbox_incremental")})
+    		));
+    	
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_widget_autocomplete_delay", "Code Autocomplete delay"),
     			"widget_autocomplete_delay",
     			textBox_Number(function(str) /*=>*/ {return prefSet("widget_autocomplete_delay", round(real(str)))})
@@ -647,7 +653,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Curve box")); // Curvebox
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_widget_curvebox_full", "Epands to full width"),
+    			__txt("pref_widget_curvebox_full", "Expands to full width"),
     			"curvebox_full_width",
     			new checkBox(function() /*=>*/ {return prefToggle("curvebox_full_width")})
     		));

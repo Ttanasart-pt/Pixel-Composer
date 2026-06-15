@@ -10,6 +10,8 @@
 function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cellular Noise";
 	
+	newInput( 3, nodeValueSeed()).setPieMenu();
+	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	newInput(20, nodeValue_Surface( "UV Map"     ));
@@ -17,10 +19,10 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(13, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 4, nodeValue_EScroll( "Type",    0, [ "Point", "Edge", "Cell", "Crystal" ] )).setPieMenu();
-	newInput( 6, nodeValue_EButton( "Pattern", 0, [ "Tiled", "Uniform", "Radial" ]       )).setPieMenu();
-	newInput( 3, nodeValueSeed()).setPieMenu();
-	newInput(14, nodeValue_Rotation("Phase",   0 ));
+	newInput( 4, nodeValue_EScroll(  "Type",       0, [ "Point", "Edge", "Cell", "Crystal" ] )).setPieMenu();
+	newInput( 6, nodeValue_EButton(  "Pattern",    0, [ "Tiled", "Uniform", "Radial" ]       )).setPieMenu();
+	newInput(14, nodeValue_Rotation( "Phase",      0  ));
+	newInput(23, nodeValue_Slider(   "Randomness", 1  ));
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
@@ -43,11 +45,11 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 5, nodeValue_Slider(   "Contrast",  1, [0, 4, 0.01] ));
 	newInput( 7, nodeValue_Slider(   "Middle",   .5, [0, 1, 0.01] ));
 	newInput(10, nodeValue_Bool(     "Colored",   false ))
-	// input 23
+	// input 24
 	
-	input_display_list = [
+	input_display_list = [  3,
 		[ "Output",    false ],  0, 20, 21, 13, 
-		[ "Noise",     false ],  4,  6,  3, 14, 
+		[ "Noise",     false ],  4,  6, 14, 23, 
 		[ "Iteration", false ], 16, 18, 19, 17, 
 		[ "Transform", false ],  1, 12,  2, 11, 
 		[ "Radial",    false ],  8,  9,
@@ -74,12 +76,14 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
+			var _seed   = _data[ 3];
+			
 			var _dim    = _data[ 0];
 			
 			var _type   = _data[ 4];
 			var _pat    = _data[ 6];
-			var _tim    = _data[ 3];
 			var _phs    = _data[14];
+			var _rand   = _data[23];
 			
 			var _pos    = _data[ 1];
 			var _rot    = _data[12];
@@ -116,12 +120,13 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_set_shader(_outSurf, shader);
 			shader_set_uv(_data[20], _data[21]);
 			
-			shader_set_f( "dimension",     _dim );
-			shader_set_f( "seed",          _tim );
+			shader_set_f( "dimension",     _dim  );
+			shader_set_f( "seed",          _seed );
+			shader_set_f( "randomness",    _rand );
 			shader_set_f( "phase",         _phs / 360 );
 			
 			shader_set_2( "position",      _pos );
-			shader_set_f_map( "scale",         _data[2], _data[11], inputs[2] );
+			shader_set_m( "scale",         _data[2], _data[11], inputs[2] );
 			shader_set_f( "contrast",      _con );
 			shader_set_f( "middle",        _mid );
 			shader_set_f( "radiusScale",   _rad );

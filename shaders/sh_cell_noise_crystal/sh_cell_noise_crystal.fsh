@@ -38,6 +38,7 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform float seed;
 uniform float phase;
+uniform float randomness;
 uniform float rotation;
 
 uniform int   iteration;
@@ -72,7 +73,7 @@ float voronoi3d(in vec3 x, in float sca) {
 		vec3 b  = vec3(float(i), float(j), float(k));
 		vec3 pb = mod(p + b, sca * 2.);
 		
-		vec3 r  = vec3(b) - f + hash(pb);
+		vec3 r  = vec3(b) - f + hash(pb) * randomness;
 		float d = dot(r, r);
 
 		float cond   = max(sign(res.x - d), 0.0);
