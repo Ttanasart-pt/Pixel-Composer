@@ -1766,7 +1766,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _pad  = getInputSingle(0, arr);
 		var _dimt = getInputSingle(1, arr);
 		var _dim  = getInputSingle(2, arr);
-		var base  = getInputSingle(3, arr);
+		var base  = getInputSingle(input_fix_len, arr);
 		
 		var ww = 0, hh = 0;
 		

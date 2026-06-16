@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.006",
+    "changes": [
+      {
+        "date": "2026-06-16T09:07:34.576Z",
+        "node": "Posterize",
+        "commit": "**Posterize**: Add button for trimming palette."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.002",
     "changes": [
       {

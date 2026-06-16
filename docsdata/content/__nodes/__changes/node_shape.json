@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.21.4.006",
+    "changes": [
+      {
+        "date": "2026-06-16T07:34:31.257Z",
+        "node": "",
+        "commit": "**Draw Shape**: Add Triangle shape."
+      },
+      {
+        "date": "2026-06-16T09:07:34.582Z",
+        "node": "",
+        "commit": "**Posterize**: Add button for trimming palette."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.004",
     "changes": [
       {

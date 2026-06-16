@@ -134,53 +134,53 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		]).setTopbar();
 		
 	array_push(pie_junctions, menuItemGroup(__txt("Shape"), [
-		[ [s_node_shape_rectangle,  0], function() /*=>*/ {return inputs[2].setValue("Rectangle")}       ],
-		[ [s_node_shape_circle, 0], function() /*=>*/ {return inputs[2].setValue("Ellipse")}         ],
-		[ [s_node_shape_hexagon, 0], function() /*=>*/ {return inputs[2].setValue("Regular Polygon")} ],
+		[ [s_node_shape_rectangle, 0], function() /*=>*/ {return inputs[2].setValue("Rectangle")}       ],
+		[ [s_node_shape_circle,    0], function() /*=>*/ {return inputs[2].setValue("Ellipse")}         ],
+		[ [s_node_shape_hexagon,   0], function() /*=>*/ {return inputs[2].setValue("Regular Polygon")} ],
 	]));
-		
-	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitSimple().hideLabel();
-	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]   )).setUnitSimple().hideLabel();
-	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]   )).setUnitSimple().hideLabel();
-	newInput(40, nodeValue_Vec2(     "Half Point",    [.5,.5]   )).setUnitSimple().hideLabel();
-	newInput(34, nodeValue_Slider(   "Thickness",      .1       )).hideLabel();
 	
-	newInput( 9, nodeValue_Slider(   "Corner Radius",   0, [0, 0.5, 0.001] )).hideLabel().setValidator(VV_clamp(0, .5));
-	newInput( 4, nodeValue_Int(      "Sides",           3       )).hideLabel().setVisible(false);
-	newInput(13, nodeValue_Slider(   "Start Radius",   .1       )).hideLabel().setVisible(false);
-	newInput( 5, nodeValue_Slider(   "Inner Radius",   .5       )).hideLabel().setVisible(false);
-	newInput( 7, nodeValue_Rotation( "Rotation",        0       )).hideLabel();
-	newInput( 8, nodeValue_RotRange( "Angle Range",    [0,180]  )).hideLabel();
-	newInput(14, nodeValue_Path( "Shape Path"               )).hideLabel();
-	newInput(21, nodeValue_SliRange( "Angles",         [.5, 1.] )).hideLabel();
-	newInput(38, nodeValue_Slider(   "Top Side",        .5      )).hideLabel();
-	newInput(39, nodeValue_Slider(   "Botton Side",      1      )).hideLabel();
-	newInput(22, nodeValue_Slider(   "Skew",            .5      )).hideLabel();
-	newInput(23, nodeValue_Float(    "Arrow Sizes",     .3      )).hideLabel();
-	newInput(24, nodeValue_Float(    "Arrow Head",       1      )).hideLabel();
-	newInput(25, nodeValue_Int(      "Teeth Amount",     6      )).hideLabel();
-	newInput(26, nodeValue_Vec2(     "Teeth Size",     [.2,.2] , { slideSpeed : 0.01 })).hideLabel();
-	newInput(27, nodeValue_Rotation( "Teeth Rotation",   0      )).hideLabel();
-	newInput(43, nodeValue_Slider(   "Teeth Taper",      0      ))
-	newInput(30, nodeValue_Bool(     "Caps",             false  )).hideLabel();
-	newInput(31, nodeValue_Float(    "Factor",           2.5    )).hideLabel();
+	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]                  )).setUnitSimple().hideLabel();
+	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]                  )).setUnitSimple().hideLabel();
+	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]                  )).setUnitSimple().hideLabel();
+	newInput(40, nodeValue_Vec2(     "Half Point",    [.5,.5]                  )).setUnitSimple().hideLabel();
+	newInput(34, nodeValue_Slider(   "Thickness",      .1                      )).hideLabel();
+	
+	newInput( 9, nodeValue_Slider(   "Corner Radius",   0, [0,.5,.001]         )).hideLabel().setValidator(VV_clamp(0, .5));
+	newInput( 4, nodeValue_Int(      "Sides",           3                      )).hideLabel().setVisible(false);
+	newInput(13, nodeValue_Slider(   "Start Radius",   .1                      )).hideLabel().setVisible(false);
+	newInput( 5, nodeValue_Slider(   "Inner Radius",   .5                      )).hideLabel().setVisible(false);
+	newInput( 7, nodeValue_Rotation( "Rotation",        0                      )).hideLabel();
+	newInput( 8, nodeValue_RotRange( "Angle Range",    [0,180]                 )).hideLabel();
+	newInput(14, nodeValue_Path(     "Shape Path"                              )).hideLabel();
+	newInput(21, nodeValue_SliRange( "Angles",         [.5, 1.]                )).hideLabel();
+	newInput(38, nodeValue_Slider(   "Top Side",        .5                     )).hideLabel();
+	newInput(39, nodeValue_Slider(   "Botton Side",      1                     )).hideLabel();
+	newInput(22, nodeValue_Slider(   "Skew",            .5                     )).hideLabel();
+	newInput(23, nodeValue_Float(    "Arrow Sizes",     .3                     )).hideLabel();
+	newInput(24, nodeValue_Float(    "Arrow Head",       1                     )).hideLabel();
+	newInput(25, nodeValue_Int(      "Teeth Amount",     6                     )).hideLabel();
+	newInput(26, nodeValue_Vec2(     "Teeth Size",     [.2,.2], { slideSpeed: .01 } )).hideLabel();
+	newInput(27, nodeValue_Rotation( "Teeth Rotation",   0                     )).hideLabel();
+	newInput(43, nodeValue_Slider(   "Teeth Taper",      0                     ));
+	newInput(30, nodeValue_Bool(     "Caps",             false                 )).hideLabel();
+	newInput(31, nodeValue_Float(    "Factor",           2.5                   )).hideLabel();
 	newInput(36, nodeValue_EButton(  "Corner Shape",     0, [ "Round", "Cut" ] ));
-	newInput(49, nodeValue_Bool(     "Uniform Corner",  true      ));
-	newInput(48, nodeValue_Vec4(     "Custom Corner",   [0,0,0,0] ));
+	newInput(49, nodeValue_Bool(     "Uniform Corner",  true                   ));
+	newInput(48, nodeValue_Vec4(     "Custom Corner",   [0,0,0,0]              ));
 	
 	////- =Deform
-	newInput(41, nodeValue_Slider(   "Twist",            0, [-1,1,.01 ] ))
-	newInput(42, nodeValue_Vec2(     "Shear",           [0,0]           ))
+	newInput(41, nodeValue_Slider(   "Twist",            0, [-1,1,.01 ]        ));
+	newInput(42, nodeValue_Vec2(     "Shear",           [0,0]                  ));
 	
 	////- =Render
-	newInput(10, nodeValue_Color(    "Shape Color",      ca_white       )).setHotkeyAuto("C").setPieMenu();
-	newInput(18, nodeValue_Bool(     "Tile",             false          ));
+	newInput(10, nodeValue_Color(    "Shape Color",      ca_white              )).setHotkeyAuto("C").setPieMenu();
+	newInput(18, nodeValue_Bool(     "Tile",             false                 ));
 	
 	////- =Height
-	newInput(12, nodeValue_Bool(     "Height",           false          ));
-	newInput(29, nodeValue_Curve(    "Curve",            CURVE_DEF_01   ));
-	newInput(20, nodeValue_SliRange( "Level",            [0,1]          ));
-	newInput(37, nodeValue_Bool(     "Opacity",          false          ));
+	newInput(12, nodeValue_Bool(     "Height",           false                 ));
+	newInput(29, nodeValue_Curve(    "Curve",            CURVE_DEF_01          ));
+	newInput(20, nodeValue_SliRange( "Level",            [0,1]                 ));
+	newInput(37, nodeValue_Bool(     "Opacity",          false                 ));
 	// 52
 	
 	/////////////////////////////////////////////

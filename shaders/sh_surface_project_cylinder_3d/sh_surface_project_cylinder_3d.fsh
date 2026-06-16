@@ -303,12 +303,12 @@ void main() {
     if(sTop_use == 0) gl_FragData[0] = texture2D(sProfile, hitUV);
     else              gl_FragData[0] = texture2D(sTop, samPos.xz);
     
-    gl_FragData[0].a = 1.;
-    // gl_FragData[0] = texture2D(sProfile, hitUV);
-    // if(sTop_use == 1) {
-    // 	vec4 samT = texture2D(sTop, samPos.xz);
-    // 	if(samT.a > 0.) gl_FragData[0] *= samT;
-    // }
+    // gl_FragData[0].a = 1.;
+    gl_FragData[0] = texture2D(sProfile, hitUV);
+    if(sTop_use == 1) {
+    	vec4 samT = texture2D(sTop, samPos.xz);
+    	if(samT.a > 0.) gl_FragData[0] *= samT;
+    }
     
     float depth = distance(eye, hitPos) / scale;
     depth = (depth - depthRange.x) / (depthRange.y - depthRange.x);
