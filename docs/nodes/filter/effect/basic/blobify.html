@@ -5538,7 +5538,11 @@
                 <a href="\nodes\simulation\flip_fluid\fluid\spawner\index.html" class="sidebar-dir">Spawner</a>
             </div>
             <ul class="submenu">
-<li id="flip_spawner"><div class="sidebar-menu sidebar-file">
+<li id="flip_fill"><div class="sidebar-menu sidebar-file">
+                <div class="sidebar-icon"></div>
+                <a href="\nodes\simulation\flip_fluid\fluid\spawner\flip_fill.html" class="sidebar-file">Flip Fill</a>
+            </div>
+</li><li id="flip_spawner"><div class="sidebar-menu sidebar-file">
                 <div class="sidebar-icon"></div>
                 <a href="\nodes\simulation\flip_fluid\fluid\spawner\flip_spawner.html" class="sidebar-file">Flip Spawner</a>
             </div>
@@ -6792,6 +6796,7 @@
 <li class="search-result" style="display: none;"><a href="\nodes\simulation\smokesim\render/smoke_render.html">Smoke Render</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\simulation\flip_fluid\domain/flip_domain.html">Flip Domain</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\simulation\flip_fluid\domain/flip_update.html">Flip Update</a></li>
+<li class="search-result" style="display: none;"><a href="\nodes\simulation\flip_fluid\fluid\spawner/flip_fill.html">Flip Fill</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\simulation\flip_fluid\fluid\spawner/flip_spawner.html">Flip Spawner</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\simulation\flip_fluid\fluid\destroy/flip_destroy.html">Flip Destroy</a></li>
 <li class="search-result" style="display: none;"><a href="\nodes\simulation\flip_fluid\fluid\affector/flip_apply_force.html">Flip Apply Force</a></li>
@@ -6886,6 +6891,9 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Distance</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
+                <td><p>Keep Alpha</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Rendering</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">slider</p></td>
                 <td><p>Smoothness</p></td>
@@ -6912,7 +6920,9 @@
 <p><img class="node-content" src="/src/images/etc/blobify.png"></p><br>
 <br><h2><a id="Algorithm" class="anchor"></a>Algorithm</h2><br>
 <p>The node first blur the image by the <span class="junction" style="border-color: #ff9166AA">Radius</span> amount, then apply threshold by 
-the <span class="junction" style="border-color: #ffe478AA">Threshold</span> value.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_blobify/node_blobify.gml">/scripts/node_blobify/node_blobify.gml</a></li><li><span>Shader [sh_blobify]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_blobify/sh_blobify.fsh">/shaders/sh_blobify/sh_blobify.fsh</a></li></ul>
+the <span class="junction" style="border-color: #ffe478AA">Threshold</span> value.</p><br>
+<br><h2 class="nosidebar">Commit History</h2><br>
+<table class="change-table"><tr><th>1.21.4.006</th></tr><tr><td>**Blobify**: Now keep original color.</td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_blobify/node_blobify.gml">/scripts/node_blobify/node_blobify.gml</a></li><li><span>Shader [sh_blobify]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_blobify/sh_blobify.fsh">/shaders/sh_blobify/sh_blobify.fsh</a></li></ul>
         </div>
     </div>
 
