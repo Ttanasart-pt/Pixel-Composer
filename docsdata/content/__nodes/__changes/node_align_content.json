@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.006",
+    "changes": [
+      {
+        "date": "2026-06-16T00:58:22.944Z",
+        "node": "Align Content",
+        "commit": "**Align Content**: Fix node does not process surface array."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.010",
     "changes": [
       {

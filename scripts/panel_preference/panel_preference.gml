@@ -1746,8 +1746,8 @@ function Panel_Preference() : PanelContent() constructor {
     			
     			if(hotkey_focus_highlight == hotkey) {
     				var bgC = COLORS._main_accent;
-    				var bgA = min(1, hotkey_focus_high_bg) * .5;
-    				draw_sprite_stretched_add(THEME.ui_panel, 0, 0, bgY, _ww, bgH, bgC, bgA);
+    				var bgA = min(1, hotkey_focus_high_bg);
+    				draw_sprite_stretched_ext(THEME.ui_panel, 2, 0, bgY, _ww, bgH, bgC, bgA);
     			}
     			
     			if(string_pos(">", name)) {
@@ -2460,7 +2460,7 @@ function Panel_Preference() : PanelContent() constructor {
         				if(_hov) TOOLTIP = new tooltipHotkey_assign(noone, key_get_name(_vk, _cmod));
         			}
         			
-        			if(struct_has(_keyUsing, _vk)) {
+        			if(has(_keyUsing, _vk)) {
         			    var _mkx = _kx + ui(6);
         			    var _mky = _ky + ui(6);
         			    

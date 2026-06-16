@@ -4,15 +4,15 @@ function Node_Align_Content(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newActiveInput(1);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface(  "Surface In" )).setArrayDepth(1);
-	newInput(2, nodeValue_Color(    "Background", cola(c_black, 0) )).setPieMenu();
+	newInput( 0, nodeValue_Surface(  "Surface In"             ));
+	newInput( 2, nodeValue_Color(    "Background", ca_black   )).setPieMenu();
 	
 	////- =Alignment
-	newInput(3, nodeValue_Anchor(   "Align Anchor" )).setPieMenu();
-	newInput(4, nodeValue_IPadding( "Pad Content", [0,0,0,0] ));
+	newInput( 3, nodeValue_Anchor(   "Align Anchor"           )).setPieMenu();
+	newInput( 4, nodeValue_IPadding( "Pad Content", [0,0,0,0] ));
 	// 5
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone )).setArrayDepth(1);
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 1,
 		[ "Surfaces",   false ], 0, 2, 
@@ -30,17 +30,19 @@ function Node_Align_Content(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
-			var _surf = _data[0];
-			var _bg   = _data[2];
+			var _surf = _data[ 0];
+			var _bg   = _data[ 2];
 			
-			var _anc  = _data[3];
-			var _pad  = _data[4];
+			var _anc  = _data[ 3];
+			var _pad  = _data[ 4];
 		#endregion
 		
 		var sw = surface_get_width_safe(_surf);
 		var sh = surface_get_height_safe(_surf);
 		
+		_outSurf        = surface_verify(_outSurf,        sw, sh, attrDepth());
 		temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
+		
 		var _sclr = temp_surface[0];
 		surface_set_shader(_sclr, sh_crop_content_replace_color);
 			shader_set_c("target", _bg);
