@@ -2515,11 +2515,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _x1 = _x + _sw;
 		var _y1 = _y + _sh;
 		
-		var _bbox = BBOX().fromPoints(_x0 + ui(32), _y0 + ui(32), _x1 - ui(32), _y1 - ui(32));
+		var _bbox = new BBOX().fromPoints(_x0 + ui(32), _y0 + ui(32), _x1 - ui(32), _y1 - ui(32));
 		if(_panel) {
 			var pw = _panel.w;
 			var ph = _panel.h;
-			_bbox = BBOX().fromPoints(ui(32), ui(32), pw - ui(32), ph - ui(32));
+			_bbox = new BBOX().fromPoints(ui(32), ui(32), pw - ui(32), ph - ui(32));
 		}
 		
 		var _tc   = COLORS._main_icon_light;
@@ -2545,7 +2545,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var yy0 = _bbox.y0 + i * _mh;
 						var yy1 = yy0 + _mh;
 						
-						draw_text_bbox(BBOX().fromPoints(xx0, yy0, xx1, yy1), _val);
+						draw_text_bbox(new BBOX().fromPoints(xx0, yy0, xx1, yy1), _val);
 					}
 					return;
 				}

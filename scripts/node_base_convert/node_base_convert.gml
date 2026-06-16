@@ -27,8 +27,8 @@ function Node_Base_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var baseTo   = array_safe_get_fast(current_data, 2);
 		
 		var bbox = draw_bbox;
-		var b1   = BBOX().fromPoints(bbox.x0, bbox.y0, bbox.xc - _s * 8, bbox.y1);
-		var b2   = BBOX().fromPoints(bbox.xc + _s * 8, bbox.y0, bbox.x1, bbox.y1);
+		var b1   = new BBOX().fromPoints(bbox.x0, bbox.y0, bbox.xc - _s * 8, bbox.y1);
+		var b2   = new BBOX().fromPoints(bbox.xc + _s * 8, bbox.y0, bbox.x1, bbox.y1);
 		
 		draw_sprite_ui(THEME.arrow, 0, bbox.xc, bbox.yc - 2 * _s, _s, _s, 0, COLORS._main_accent, 1);
 		draw_text_bbox(b1, baseFrom);

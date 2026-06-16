@@ -20,9 +20,9 @@ function Node_MK_Flake(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Caps
 	newInput(16, nodeValue_EScroll(  "Cap Shape",  0, [ "None", 
-		new scrollItem( "Diamond",   s_node_shape_type, 1 ), 
-		new scrollItem( "Rectangle", s_node_shape_type, 0 ), 
-		new scrollItem( "Circle",    s_node_shape_type, 5 ),
+		new scrollItem( "Diamond",   s_node_shape_diamond, 0 ), 
+		new scrollItem( "Rectangle", s_node_shape_rectangle, 0 ), 
+		new scrollItem( "Circle",    s_node_shape_circle, 0 ),
 		"Surface", 
 	] ));
 	newInput(18, nodeValue_Surface(  "Cap Texture"       ));

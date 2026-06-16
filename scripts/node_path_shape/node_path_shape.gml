@@ -772,7 +772,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getPreviewBoundingBox = function() { 
 		var _pth = outputs[0].getValue();
-		return is_path(_pth)? BBOX().fromBoundingBox(_pth.boundary) : BBOX().fromWH(0, 0, PROJ_SURF_W, PROJ_SURF_H); 
+		return is_path(_pth)? new BBOX().fromBoundingBox(_pth.boundary) : new BBOX().fromWH(0, 0, PROJ_SURF_W, PROJ_SURF_H); 
 	}
 }
 

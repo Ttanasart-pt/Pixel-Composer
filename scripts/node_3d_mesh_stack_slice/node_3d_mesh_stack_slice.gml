@@ -375,5 +375,5 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		draw_arc(bbox.xc, bbox.yc, rr, ast, ast + prg * 360, 4 * _s, 90);
 	}
 	
-	static getPreviewBoundingBox = function() { return BBOX().fromWH(0, 0, dimensions[0], dimensions[1]); }
+	static getPreviewBoundingBox = function() { return new BBOX().fromWH(0, 0, dimensions[0], dimensions[1]); }
 }

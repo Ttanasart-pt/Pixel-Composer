@@ -137,7 +137,7 @@ function Node_Armature_Connect(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Draw
 	
-	static getPreviewBoundingBox = function() /*=>*/ {return BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
+	static getPreviewBoundingBox = function() /*=>*/ {return new BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = draw_bbox;

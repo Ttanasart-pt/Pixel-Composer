@@ -1,6 +1,7 @@
 #region create
 	global.node_shape_types = [ 
 		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
+		-1, "Triangle", 
 		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", "Superellipse", 
 		-1, "Regular Polygon", "Star", "Cross", "Rounded Cross",  
 		-1, "Line", "Arrow", 
@@ -13,13 +14,36 @@
 		"triangle", "pentagon", "hexagon",
 	]);
 	
-	__ind = 0; 
 	global.node_shape_types_map = {};
-	for( var i = 0, n = array_length(global.node_shape_types); i < n; i++ ) {
-		var _s = global.node_shape_types[i];
-		if(_s == -1) continue;
-		global.node_shape_types_map[$ _s] = new scrollItem(_s, s_node_shape_type, __ind++);
-	}
+	global.node_shape_types_map[$ "Rectangle"]       = new scrollItem("Rectangle",       s_node_shape_rectangle    );
+	global.node_shape_types_map[$ "Diamond"]         = new scrollItem("Diamond",         s_node_shape_diamond      );
+	global.node_shape_types_map[$ "Trapezoid"]       = new scrollItem("Trapezoid",       s_node_shape_trapezoid    );
+	global.node_shape_types_map[$ "Parallelogram"]   = new scrollItem("Parallelogram",   s_node_shape_paral        );
+	global.node_shape_types_map[$ "Half"]            = new scrollItem("Half",            s_node_shape_half         );
+	
+	global.node_shape_types_map[$ "Triangle"]        = new scrollItem("Triangle",        s_node_shape_triangle     );
+	
+	global.node_shape_types_map[$ "Ellipse"]         = new scrollItem("Ellipse",         s_node_shape_circle       );
+	global.node_shape_types_map[$ "Arc"]             = new scrollItem("Arc",             s_node_shape_arc          );
+	global.node_shape_types_map[$ "Donut"]           = new scrollItem("Donut",           s_node_shape_donut        );
+	global.node_shape_types_map[$ "Crescent"]        = new scrollItem("Crescent",        s_node_shape_crescent     );
+	global.node_shape_types_map[$ "Disk Segment"]    = new scrollItem("Disk Segment",    s_node_shape_disk_segment );
+	global.node_shape_types_map[$ "Pie"]             = new scrollItem("Pie",             s_node_shape_pie          );
+	global.node_shape_types_map[$ "Squircle"]        = new scrollItem("Squircle",        s_node_shape_squircle     );
+	global.node_shape_types_map[$ "Superellipse"]    = new scrollItem("Superellipse",    s_node_shape_superelli    );
+	
+	global.node_shape_types_map[$ "Regular Polygon"] = new scrollItem("Regular Polygon", s_node_shape_hexagon      );
+	global.node_shape_types_map[$ "Star"]            = new scrollItem("Star",            s_node_shape_star         );
+	global.node_shape_types_map[$ "Cross"]           = new scrollItem("Cross",           s_node_shape_cross        );
+	global.node_shape_types_map[$ "Rounded Cross"]   = new scrollItem("Rounded Cross",   s_node_shape_cross_round  );
+	
+	global.node_shape_types_map[$ "Line"]            = new scrollItem("Line",            s_node_shape_line         );
+	global.node_shape_types_map[$ "Arrow"]           = new scrollItem("Arrow",           s_node_shape_arrow        );
+	
+	global.node_shape_types_map[$ "Teardrop"]        = new scrollItem("Teardrop",        s_node_shape_teardrop     );
+	global.node_shape_types_map[$ "Leaf"]            = new scrollItem("Leaf",            s_node_shape_leaf         );
+	global.node_shape_types_map[$ "Heart"]           = new scrollItem("Heart",           s_node_shape_heart        );
+	global.node_shape_types_map[$ "Gear"]            = new scrollItem("Gear",            s_node_shape_gear         );
 	
 	function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
@@ -110,14 +134,14 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		]).setTopbar();
 		
 	array_push(pie_junctions, menuItemGroup(__txt("Shape"), [
-		[ [s_node_shape_type,  0], function() /*=>*/ {return inputs[2].setValue("Rectangle")}       ],
-		[ [s_node_shape_type,  5], function() /*=>*/ {return inputs[2].setValue("Ellipse")}         ],
-		[ [s_node_shape_type, 13], function() /*=>*/ {return inputs[2].setValue("Regular Polygon")} ],
+		[ [s_node_shape_rectangle,  0], function() /*=>*/ {return inputs[2].setValue("Rectangle")}       ],
+		[ [s_node_shape_circle, 0], function() /*=>*/ {return inputs[2].setValue("Ellipse")}         ],
+		[ [s_node_shape_hexagon, 0], function() /*=>*/ {return inputs[2].setValue("Regular Polygon")} ],
 	]));
 		
-	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitSimple();
-	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]   )).setUnitSimple();
-	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]   )).setUnitSimple();
+	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitSimple().hideLabel();
+	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]   )).setUnitSimple().hideLabel();
+	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]   )).setUnitSimple().hideLabel();
 	newInput(40, nodeValue_Vec2(     "Half Point",    [.5,.5]   )).setUnitSimple().hideLabel();
 	newInput(34, nodeValue_Slider(   "Thickness",      .1       )).hideLabel();
 	
@@ -140,9 +164,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(43, nodeValue_Slider(   "Teeth Taper",      0      ))
 	newInput(30, nodeValue_Bool(     "Caps",             false  )).hideLabel();
 	newInput(31, nodeValue_Float(    "Factor",           2.5    )).hideLabel();
-	newInput(36, nodeValue_EButton(  "Corner Shape",     0, [ "Round", "Cut" ] ))
-	newInput(49, nodeValue_Bool(     "Uniform Corner",  true      ))
-	newInput(48, nodeValue_Vec4(     "Custom Corner",   [0,0,0,0] ))
+	newInput(36, nodeValue_EButton(  "Corner Shape",     0, [ "Round", "Cut" ] ));
+	newInput(49, nodeValue_Bool(     "Uniform Corner",  true      ));
+	newInput(48, nodeValue_Vec4(     "Custom Corner",   [0,0,0,0] ));
 	
 	////- =Deform
 	newInput(41, nodeValue_Slider(   "Twist",            0, [-1,1,.01 ] ))
@@ -171,7 +195,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		[ "Output",     false     ],  0, 50, 44, 45,  6, 51, 
 		[ "Background", false     ],  1, 11, 46, 47, 
 		[ "Transform",  false     ], 15,  3, 16, 17, 19, 28, 
-		[ "Shape",	    false     ],  2, 32, 33, 35, 40, 34, 49, 48,  9,  4, 13, 5,  7,  8, 
+		[ "Shape",	    false     ],  2, 32, 33, 35, 40, 34, 49, 48,  9,  4, 13,  5,  7,  8, 
 		                             38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
 		[ "Deform",	     true     ], 41, 42, 
 		[ "Render",	     true     ], 10, 18,
@@ -402,6 +426,21 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					
 					shader_set_i("shape", 21);
 					shader_set_2("point1",	 _data[40]);
+					break;
+				
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					
+				case "Triangle":
+					inputs[ 9].setVisible(true);
+					
+					inputs[32].setVisible(true);
+					inputs[33].setVisible(true);
+					inputs[35].setVisible(true);
+					
+					shader_set_i("shape", 23);
+					shader_set_2("triangle_p0", _data[32]); 
+					shader_set_2("triangle_p1", _data[33]);
+					shader_set_2("triangle_p2", _data[35]);
 					break;
 				
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -947,6 +986,31 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params) {
 			InputDrawOverlay(inputs[27].drawOverlay(w_hoverable, active, _px, _py, _s,                _mx, _my           ));
 			InputDrawOverlay(inputs[26].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my,  1       ));
 			break;
+			
+		case "Triangle" : 
+			var _p0 = current_data[32];
+			var _p1 = current_data[33];
+			var _p2 = current_data[35];
+			
+			var _p0x = _x + _p0[0] * _s;
+			var _p0y = _y + _p0[1] * _s;
+			
+			var _p1x = _x + _p1[0] * _s;
+			var _p1y = _y + _p1[1] * _s;
+			
+			var _p2x = _x + _p2[0] * _s;
+			var _p2y = _y + _p2[1] * _s;
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
+			draw_line_dashed(_p0x, _p0y, _p2x, _p2y);
+			draw_line_dashed(_p1x, _p1y, _p2x, _p2y);
+			
+			InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			InputDrawOverlay(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			InputDrawOverlay(inputs[35].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			break;
+			
 	}
 	
 	if(inputs[7].show_in_inspector) InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));

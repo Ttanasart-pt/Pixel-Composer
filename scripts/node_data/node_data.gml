@@ -117,7 +117,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		always_pad     = false;
 		draggable      = true;
 		
-		draw_bbox           = BBOX();
+		draw_bbox           = new BBOX();
 		draw_boundary       = [0,0,0,0];
 		draw_graph_culled   = false;
 		
@@ -2885,11 +2885,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(is_array(_surf)) 
 			_surf = array_safe_get_fast(_surf, preview_index, noone);
 		
-		if(!is_surface(_surf)) return BBOX().fromWH(0, 0, PROJ_SURF_W, PROJ_SURF_H);
-		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
+		if(!is_surface(_surf)) return new BBOX().fromWH(0, 0, PROJ_SURF_W, PROJ_SURF_H);
+		return new BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 	}
 	
-	__preview_bbox = BBOX();
+	__preview_bbox = new BBOX();
 	static getPreviewBoundingBoxExpanded = function() /*=>*/ {return __preview_bbox};
 	
 	static getGraphPreviewSurface = function() { 

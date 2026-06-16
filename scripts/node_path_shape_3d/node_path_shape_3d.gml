@@ -384,5 +384,5 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static getPreviewObject 		= function() /*=>*/ {return noone};
 	static getPreviewObjects		= function() /*=>*/ {return []};
 	static getPreviewObjectOutline  = function() /*=>*/ {return []};
-	static getPreviewBoundingBox    = function() /*=>*/ {return BBOX().fromBoundingBox(boundary)};
+	static getPreviewBoundingBox    = function() /*=>*/ {return new BBOX().fromBoundingBox(boundary)};
 }

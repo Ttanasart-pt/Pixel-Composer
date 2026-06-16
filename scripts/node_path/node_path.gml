@@ -2404,7 +2404,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static getPreviewBoundingBox = function() { 
 		var _pth = outputs[0].getValue();
-		return is(_pth, _pathObject)? BBOX().fromBoundingBox(boundary) : BBOX(); 
+		return is(_pth, _pathObject)? new BBOX().fromBoundingBox(boundary) : new BBOX(); 
 	}
 	
 	////- Serialize

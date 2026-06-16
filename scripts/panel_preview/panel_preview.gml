@@ -1040,7 +1040,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         var node = getNodePreview();
         if(node != noone) bbox = gizmo? node.getPreviewBoundingBoxExpanded() : node.getPreviewBoundingBox();
-        if(bbox == noone) bbox = BBOX().fromWH(0, 0, PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
+        if(bbox == noone) bbox = new BBOX().fromWH(0, 0, PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
         
         var _x = bbox.x0, _y = bbox.y0;
         var _w = bbox.w,  _h = bbox.h;

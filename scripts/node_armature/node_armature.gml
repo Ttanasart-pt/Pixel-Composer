@@ -1396,7 +1396,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		if(abs(maxx - minx) < 1) maxx = minx + 1;
 		if(abs(maxy - miny) < 1) maxy = miny + 1;
 		
-		return BBOX().fromPoints(minx, miny, maxx, maxy);
+		return new BBOX().fromPoints(minx, miny, maxx, maxy);
 	} 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 

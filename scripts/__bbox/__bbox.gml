@@ -66,8 +66,7 @@ function BoundingBox3D(minx = noone, miny = noone, minz = noone, maxx = noone, m
 	static clone = function() { return new BoundingBox3D(minx, miny, minz, maxx, maxy, maxz); }
 }
 
-function   BBOX() { return new __BBOX(); }
-function __BBOX() constructor {
+function BBOX() constructor {
 	x0 = 0; x1 = 0; 
 	y0 = 0; y1 = 0; 
 	
@@ -163,5 +162,5 @@ function __BBOX() constructor {
 		return self;
 	}
 	
-	static clone = function() { return BBOX().fromPoints(x0, y0, x1, y1); };
+	static clone = function() { return new BBOX().fromPoints(x0, y0, x1, y1); };
 }

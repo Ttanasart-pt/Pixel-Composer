@@ -6,8 +6,8 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 2, nodeValue_Surface( "Background" ));
 	
 	////- =Shape
-	newInput(11, nodeValue_EScroll( "Shape", 0, [ new scrollItem("Rectangle", s_node_shape_type, 0), 
-	                                              new scrollItem("Ellipse",   s_node_shape_type, 5),
+	newInput(11, nodeValue_EScroll( "Shape", 0, [ new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
+	                                              new scrollItem("Ellipse",   s_node_shape_circle, 0),
 	                                              "Path" ] ));
 	newInput( 1, nodeValue_Area(   "Area", AREA_DEF_REF, false )).setUnitSimple();
 	newInput(12, nodeValue_Path(   "Path"           ));
