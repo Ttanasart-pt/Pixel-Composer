@@ -1377,8 +1377,10 @@ function Panel_Preference() : PanelContent() constructor {
     	hk_editing    = noone;
     	hk_edit_key   = noone;
     	hk_modifiers  = MOD_KEY.none;
+    	
     	hotkeyContext = [];
     	hotkeyArray   = [];
+    	hotkeyNames   = [];
     	
     	hotkey_focus           = noone;
     	hotkey_focus_highlight = noone;
@@ -1438,9 +1440,17 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		hotkeyContext = [];
     		hotkeyArray   = [];
+    		hotkeyNames   = [];
     		
     		array_push(hotkeyContext, { context: -1, list: hk_general_list } );
     		array_push(hotkeyArray,   "Settings" );
+    		
+			var _names = [];
+    		for( var i = 0, n = array_length(hk_general_list); i < n; i++ ) {
+    			var _list = hk_general_list[i];
+    			_names[i] = string_lower(_list[0]);
+    		}
+			array_push(hotkeyNames, _names);
     		
 	    	for( var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++ ) {
 	    		var ctx  = HOTKEY_CONTEXT[i];
@@ -1519,6 +1529,22 @@ function Panel_Preference() : PanelContent() constructor {
 	    		array_push(hotkeyArray, _title);
 	    	}
 	    	
+	    	for( var i = 1, n = array_length(hotkeyContext); i < n; i++ ) {
+	    		var _ctx = hotkeyContext[i];
+	    		if(_ctx == -1) { hotkeyNames[i] = []; continue; }
+	    		
+	    		var _list  = _ctx.list;
+	    		var _names = [];
+	    		
+	    		for (var j = 0, m = array_length(_list); j < m; j++) {
+    				var _hk   = _list[j];
+    				var _name = __txt(_hk.name);
+    				_names[j] = _name;
+	    		}
+	    		
+				hotkeyNames[i] = _names;
+	    	}
+	    	
 	    	hk_page = 0;
     	}
     	
@@ -1536,6 +1562,9 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		var font = f_p3;
     		var hg = line_get_height(font, 4);
+    		
+    		var _search    = string_lower(search_text);
+    		var _searching = _search != "";
     		
     		for( var i = 0, n = array_length(hotkeyArray); i < n; i++ ) {
     			var _title = hotkeyArray[i];
@@ -1556,6 +1585,7 @@ function Panel_Preference() : PanelContent() constructor {
     			}
     			
     			var cc = hk_page == i? COLORS._main_text : COLORS._main_text_sub;
+    			var aa = 1;
     			var hv = hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - 1);
     			
     			if(hv) {
@@ -1566,8 +1596,22 @@ function Panel_Preference() : PanelContent() constructor {
     				}
     			}
     			
-    			draw_set_text(font, fa_left, fa_center, cc);
+    			if(_searching) {
+    				aa = .25;
+    				
+    				var _names = hotkeyNames[i];
+    				for( var j = 0, m = array_length(_names); j < m; j++ ) {
+    					var _contain = string_pos(_search, _names[j]);
+	    			    if(_contain) {
+	    			    	aa = 1;
+	    			    	break;
+	    			    }
+    				}
+    			}
+    			
+    			draw_set_text(font, fa_left, fa_center, cc, aa);
     			draw_text_add(ui(8), yy + hg / 2, _title);
+    			draw_set_alpha(1);
     			
     			yy += hg;
     			hh += hg;
@@ -1590,8 +1634,9 @@ function Panel_Preference() : PanelContent() constructor {
     		var yy = _y + ui(8);
     		var hh = 0;
     		var x1 = _ww - ui(32);
-    		
     		var hg = line_get_height(f_p2, 6);
+    		
+    		var _search = string_lower(search_text);
     		
     		for( var i = 0, n = array_length(hk_general_list); i < n; i++ ) {
     			var _l = hk_general_list[i];
@@ -1599,6 +1644,11 @@ function Panel_Preference() : PanelContent() constructor {
     			var _name = _l[0];
     			var _wdgt = _l[1];
     			var _gett = _l[2];
+    			
+    			if(_search != "") {
+                 	var _filtered = string_pos(_search, string_lower(_name)) == 0;
+    			    if(_filtered) continue;
+				}
     			
 				if(i % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - pd, _ww, hg + pd * 2, COLORS.dialog_preference_prop_bg, 1);
     			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
@@ -1650,6 +1700,7 @@ function Panel_Preference() : PanelContent() constructor {
     		var _addnode  = _list == GRAPH_ADD_NODE_KEYS;
     		var _hoverAny = false;
     		var _search   = string_lower(search_text);
+    		var _ind      = 0;
     		
     		for (var j = 0, m = array_length(_list); j < m; j++) {
     			var hotkey = _list[j];
@@ -1680,9 +1731,10 @@ function Panel_Preference() : PanelContent() constructor {
     			if(hotkey_focus == hotkey) sp_hotkey.scroll_y_to = -hh;
     			hh += lh;
     			
-    			var _yy   = yy + j * lh;
-    			if(_yy < -lh * 2)      continue;
-    			if(_yy > _hh + lh * 2) continue;
+    			var _yy = yy + _ind * lh;
+    			_ind++;
+    			
+    			if(_yy < -lh * 2 || _yy > _hh + lh * 2) continue;
     			
     			var bgY = _yy - pd;
     			var bgH =  lh;
@@ -2080,6 +2132,8 @@ function Panel_Preference() : PanelContent() constructor {
 	    var tbh = ui(24);
 	    
     	tb_search.setFocusHover(pFOCUS, pHOVER);
+    	tb_search.labelColor = search_text == ""? COLORS._main_text_sub : COLORS._main_value_positive;
+    	tb_search.labelAlpha = search_text == ""? .65 : 1;
     	tb_search.draw(tbx, tby, tbw, tbh, search_text, [ mx, my ]);
     	
     	#region page
