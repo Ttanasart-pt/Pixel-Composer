@@ -76,6 +76,8 @@ void main() {
 	float dv = 0.;
 	float da = 0.;
 	
+	vec4 base = sampleTexture( gm_BaseTexture, v_vTexcoord );
+	
 	if(shape == 0) {
 		float aStep = TAU / 64.;
 		for(float i = 0.; i < radMax; i++) {
@@ -129,10 +131,10 @@ void main() {
 	float bright = (cc.r + cc.g + cc.b) / 3. * cc.a; 
 	
 	if(smoothness == 0.) 
-    	 res = cc * step(threshold, bright);
-    else res = cc * smoothstep(threshold - smoothness/2., threshold + smoothness/2., bright);
+    	 res = base * step(threshold, bright);
+    else res = base * smoothstep(threshold - smoothness/2., threshold + smoothness/2., bright);
 	
-	if(keepAlpha == 1) res.a = cc.a;
+	if(keepAlpha == 1) res.a = base.a;
 	
 	gl_FragColor = res;
 }

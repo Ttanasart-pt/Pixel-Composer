@@ -136,6 +136,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		
 		var node  = _item.node;
 		var name  = node.getDisplayName();
+		var colr  = node.getColor();
 		var _len  = array_length(_item.children);
 		
 		var sel   = array_exists(PANEL_GRAPH.nodes_selecting, node);
@@ -248,6 +249,12 @@ function Panel_Nodes() : PanelContent() constructor {
 			draw_sprite_ui(THEME.arrow, coll? 0 : 3, tx + ui(1), dy, .75, .75, 0, hovEx? COLORS._main_icon_light : COLORS._main_icon);
 			gpu_set_tex_filter(false);
 			tx += ui(10);
+		}
+		
+		if(colr != c_white) {
+			draw_sprite_stretched_add(THEME.box_r2, 0, tx, _y + ui(3), ui(6), hg - ui(6), colr, .25);
+			draw_sprite_stretched_add(THEME.box_r2, 1, tx, _y + ui(3), ui(6), hg - ui(6), colr, .25);
+			tx += ui(6 + 4);
 		}
 		
 		var tc  = sel? COLORS._main_text_accent : COLORS._main_text;

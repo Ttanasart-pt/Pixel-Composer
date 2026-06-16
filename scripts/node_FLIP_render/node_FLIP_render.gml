@@ -8,15 +8,18 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inline_output      = false;
 	manual_ungroupable = false;
 	
-	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
-	newInput( 5, nodeValue_Surface( "Fluid particle" ));
+	newInput( 5, nodeValue_Surface(  "Fluid particle" ));
+	
+	////- =Domain
+	newInput( 0, nodeValue_Fdomain(  "Domain"         )).setVisible(true, true);
+	newInput(13, nodeValue_Int(      "Update Step", 1 ));
 	
 	////- =Rendering
-	newInput( 6, nodeValue_Enum_Scroll(  "Render type",  0, __enum_array_gen(["Particle", "Line"], s_node_flip_render_type) ));
-	newInput(10, nodeValue_Int(          "Segments",            1     ));
-	newInput( 3, nodeValue_Float(        "Particle expansion",  20    ));
-	newInput( 4, nodeValue_Bool(         "Draw obstracles",     true  ));
-	newInput( 9, nodeValue_Slider_Range( "Alpha",               [1,1] ));
+	newInput( 6, nodeValue_EScroll(  "Render type",  0, __enum_array_gen(["Particle", "Line"], s_node_flip_render_type) ));
+	newInput(10, nodeValue_Int(      "Segments",            1     ));
+	newInput( 3, nodeValue_Float(    "Particle expansion",  20    ));
+	newInput( 4, nodeValue_Bool(     "Draw obstracles",     true  ));
+	newInput( 9, nodeValue_SliRange( "Alpha",               [1,1] ));
 	
 	////- =Effect
 	newInput(11, nodeValue_Gradient( "Color Over Velocity", gra_white));
@@ -27,14 +30,15 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 8, nodeValue_Bool(   "Additive",        true ));
 	newInput( 7, nodeValue_Bool(   "Threshold",       true ));
 	newInput( 1, nodeValue_Slider( "Merge threshold", 0.75 ));
-	// input 13
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 5, 
-		["Rendering", false], 6, 10, 3, 4, 9, 
-		["Effect",    false], 11, 12, 2, 
-		["Post Processing", false], 8, 7, 1, 
+	input_display_list = [ 5, 
+		[ "Domain",          false ],  0, 13, 
+		[ "Rendering",       false ],  6, 10,  3,  4,  9, 
+		[ "Effect",          false ], 11, 12,  2, 
+		[ "Post Processing", false ],  8,  7,  1, 
 	];
 	
 	////- Nodes
@@ -47,7 +51,6 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	attributes.update    = true;
 	attributes.debugDraw = false;
 	
-	array_push(attributeEditors, Node_Attribute("Update domain",        function() /*=>*/ {return attributes.update},    function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("update", true)})}));
 	array_push(attributeEditors, Node_Attribute("Draw Fluid Particles", function() /*=>*/ {return attributes.debugDraw}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("debugDraw")})}));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -74,30 +77,42 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!instance_exists(domain)) return;
 		if(domain.domain == noone)   return;
 		
-		var _bln = getInputData(1);
-		var _vap = getInputData(2);
-		var _exp = getInputData(3);
-		var _obs = getInputData(4);
-		var _spr = getInputData(5);
-		var _typ = getInputData(6);
-		var _thr = getInputData(7);
-		var _add = getInputData(8);
-		var _alp = getInputData(9);
-		var _seg = getInputData(10);
-		var _cvl = getInputData(11);
-		var _vlr = getInputData(12);
-		
-		inputs[ 1].setVisible(_typ == 0 && _thr);
-		inputs[ 3].setVisible(_typ == 0);
-		inputs[ 5].setVisible(_typ == 0, _typ == 0);
-		inputs[10].setVisible(_typ == 1);
+		#region data
+			var _step = getInputData(13);
+			
+			var _spr  = getInputData( 5);
+			
+			var _typ  = getInputData( 6);
+			var _seg  = getInputData(10);
+			var _exp  = getInputData( 3);
+			var _obs  = getInputData( 4);
+			var _alp  = getInputData( 9);
+			
+			var _cvl  = getInputData(11);
+			var _vlr  = getInputData(12);
+			var _vap  = getInputData( 2);
+			
+			var _add  = getInputData( 8);
+			var _thr  = getInputData( 7);
+			var _bln  = getInputData( 1);
+			
+			inputs[ 1].setVisible(_typ == 0 && _thr);
+			inputs[ 3].setVisible(_typ == 0);
+			inputs[ 5].setVisible(_typ == 0, _typ == 0);
+			inputs[10].setVisible(_typ == 1);
+		#endregion
 		
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
-		if(attributes.update && IS_PLAYING) domain.step();
+		
+		if(_step > 0 && IS_PLAYING) {
+			repeat(_step) domain.step();
+		}
 		
 		var _outSurf = outputs[0].getValue();
+		var _psize   = domain.particleSize;
 		var _maxpart = domain.maxParticles;
-		var _padd    = domain.particleSize;
+		
+		var _padd    = _psize;
 		var _ww = domain.width  - _padd * 2;
 		var _hh = domain.height - _padd * 2;
 				  
@@ -107,7 +122,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		outputs[0].setValue(_outSurf);		
 		
 		var _x, _y, _px, _py, _r, _l, _a, _v, _sx, _sy;
-		var _rad = domain.particleRadius * _exp;
+		var _rad = _psize + domain.particleRadius * _exp;
 		var _mx  = min(array_length(domain.particlePos) / 2 - 1, domain.numParticles);
 		
 		var _useSpr = is_surface(_spr);
@@ -116,6 +131,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(_useSpr) {
 			_sprw = 0.5 * surface_get_width_safe(_spr);
 			_sprh = 0.5 * surface_get_height_safe(_spr);
+			
 		} else if(is_array(_spr) && array_length(_spr)) {
 			_useSpr = is_surface(_spr[0]);
 			_sprw = 0.5 * surface_get_width_safe(_spr[0]);

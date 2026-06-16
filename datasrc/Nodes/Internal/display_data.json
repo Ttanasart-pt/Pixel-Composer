@@ -310,6 +310,7 @@
             { "label": "Fluid" },
             { "label": "/Spawner" },
             "Node_FLIP_Spawner",
+            "Node_FLIP_Fill",
             { "label": "/Destroy" },
             "Node_FLIP_Destroy",
             { "label": "/Affector" },

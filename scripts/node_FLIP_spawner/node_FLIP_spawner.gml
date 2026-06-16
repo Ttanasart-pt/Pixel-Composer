@@ -138,6 +138,8 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		if(_samo == 0) return;
+		
+		var _psize = domain.particleSize;
 		domain.numParticles += _samo;
 		
 		var _buffP = buffer_create(_samo * 2 * 8, buffer_fixed, 8);
@@ -169,8 +171,8 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				_y = _posit[1] - _sh / 2 + _points[ind][1] * _sh;
 			}
 			
-			buffer_write(_buffP, buffer_f64, clamp(_x, 0, domain.width));
-			buffer_write(_buffP, buffer_f64, clamp(_y, 0, domain.height));
+			buffer_write(_buffP, buffer_f64, clamp(_x + _psize, 0, domain.width));
+			buffer_write(_buffP, buffer_f64, clamp(_y + _psize, 0, domain.height));
 			
 			var _vdis = random_range(_vel[0], _vel[1]);
 			var _vdir = rotation_random_eval(_dirr);
