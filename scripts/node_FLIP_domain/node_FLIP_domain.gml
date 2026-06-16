@@ -62,16 +62,16 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
-			var _dim = getInputData(0);
-			var _siz = getInputData(1); _siz = max(_siz, 1);
-			var _den = getInputData(2);
+			var _dim  = getInputData( 0);
+			var _siz  = getInputData( 1); _siz = max(_siz, 1);
+			var _den  = getInputData( 2);
 			
-			var _flp = getInputData(3);
+			var _flp  = getInputData( 3);
 			 
-			var _dmp = getInputData(6);
-			var _grv = getInputData(7);
-			var _dt  = getInputData(8);
-			var _col = getInputData(9);
+			var _dmp  = getInputData( 6);
+			var _grv  = getInputData( 7);
+			var _dt   = getInputData( 8);
+			var _col  = getInputData( 9);
 			
 			var _vis  = getInputData(10);
 			var _fric = getInputData(11);
@@ -109,7 +109,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 		domain.g                = _grv;
 		domain.gDirection       = _gdir;
-		domain.flipRatio        = _flp;
+		domain.flipRatio        = power(_flp, .1);
 		domain.overRelaxation   = _ovr;
 		domain.viscosity        = _vis;
 		domain.friction         = power(1 - _fric, 0.025);

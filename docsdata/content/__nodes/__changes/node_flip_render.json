@@ -11,6 +11,11 @@
         "date": "2026-06-16T05:00:20.518Z",
         "node": "",
         "commit": "**FLIP Render**: Add render step control."
+      },
+      {
+        "date": "2026-06-16T05:03:49.373Z",
+        "node": "",
+        "commit": "**FLIP Domain**: Adjust FLIP ratio curve."
       }
     ]
   },

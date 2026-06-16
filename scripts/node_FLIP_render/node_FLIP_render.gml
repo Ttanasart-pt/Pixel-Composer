@@ -142,6 +142,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _cc = _cvl.keys[0].value;
 		
 		random_set_seed(seed);
+		draw_set_circle_precision(32);
 		
 		surface_set_shader(temp_surface[0], _useSpr? noone : sh_FLIP_draw_droplet);
 			if(_add) BLEND_ADD
