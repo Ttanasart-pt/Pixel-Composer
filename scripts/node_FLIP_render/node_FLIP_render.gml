@@ -14,11 +14,12 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(13, nodeValue_Int(      "Update Step", 1 ));
 	
 	////- =Rendering
-	newInput( 6, nodeValue_EScroll(  "Render type",  0, __enum_array_gen(["Particle", "Line"], s_node_flip_render_type) ));
-	newInput(10, nodeValue_Int(      "Segments",            1     ));
-	newInput( 3, nodeValue_Float(    "Particle expansion",  20    ));
-	newInput( 4, nodeValue_Bool(     "Draw obstracles",     true  ));
-	newInput( 9, nodeValue_SliRange( "Alpha",               [1,1] ));
+	newInput( 6, nodeValue_EScroll(  "Render type",     0, __enum_array_gen(["Particle", "Line"], s_node_flip_render_type) ));
+	newInput( 3, nodeValue_Float(    "Particle Size",   20    ));
+	newInput(10, nodeValue_Int(      "Segments",        1     ));
+	newInput(14, nodeValue_Float(    "Thickness",       1     ));
+	newInput( 4, nodeValue_Bool(     "Draw Obstracles", true  ));
+	newInput( 9, nodeValue_SliRange( "Alpha",           [1,1] ));
 	
 	////- =Effect
 	newInput(11, nodeValue_Gradient( "Color Over Velocity", gra_white));
@@ -29,13 +30,13 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 8, nodeValue_Bool(   "Additive",        true ));
 	newInput( 7, nodeValue_Bool(   "Threshold",       true ));
 	newInput( 1, nodeValue_Slider( "Merge threshold", 0.75 ));
-	// input 14
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 
 		[ "Domain",          false ],  0, 13, 
-		[ "Rendering",       false ],  6, 10,  3,  4,  9, 
+		[ "Rendering",       false ],  6,  3, 10, 14,  4,  9, 
 		[ "Effect",          false ], 11, 12,  2, 
 		[ "Post Processing", false ],  8,  7,  1, 
 	];
@@ -82,8 +83,9 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _spr  = getInputData( 5);
 			
 			var _typ  = getInputData( 6);
-			var _seg  = getInputData(10);
 			var _exp  = getInputData( 3);
+			var _seg  = getInputData(10);
+			var _thk  = getInputData(14);
 			var _obs  = getInputData( 4);
 			var _alp  = getInputData( 9);
 			
@@ -95,10 +97,13 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _thr  = getInputData( 7);
 			var _bln  = getInputData( 1);
 			
-			inputs[ 1].setVisible(_typ == 0 && _thr);
-			inputs[ 3].setVisible(_typ == 0);
 			inputs[ 5].setVisible(_typ == 0, _typ == 0);
+			
 			inputs[10].setVisible(_typ == 1);
+			inputs[ 3].setVisible(_typ == 0);
+			inputs[14].setVisible(_typ == 1);
+			
+			inputs[ 1].setVisible(_typ == 0 && _thr);
 		#endregion
 		
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
@@ -148,7 +153,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(_add) BLEND_ADD
 			else     BLEND_ALPHA_MULP
 			
-			if(_typ == 0) {
+			if(_typ == 0) { // Particle
 				for( var i = 0; i < _mx; i++ ) {
 					_x  = domain.particlePos[i * 2 + 0];
 					_y  = domain.particlePos[i * 2 + 1];
@@ -183,7 +188,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						draw_circle_color_alpha(_x, _y, _rad, _cc, _cc, _a * _r, 0);
 					}
 				}
-			} else if(_typ == 1) {
+			} else if(_typ == 1) { // Line
 				var _segg = min(_seg, CURRENT_FRAME);
 				
 				var _ox, _oy, _nx, _ny;
@@ -224,7 +229,8 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						_ny -= _padd;
 						
 						draw_set_color(_cc);
-						draw_line(_ox, _oy, _nx, _ny);
+						if(_thk == 1) draw_line(_ox, _oy, _nx, _ny);
+						else          draw_line_width(_ox, _oy, _nx, _ny, _thk);
 						
 						_ox = _nx;
 						_oy = _ny;
