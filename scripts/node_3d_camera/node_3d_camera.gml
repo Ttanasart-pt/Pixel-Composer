@@ -48,6 +48,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+ 6, nodeValue_Bool(    "Show Background",       false                       ));
 	newInput(i+ 7, nodeValue_EButton( "Backface Culling",      2, [ "None", "CW", "CCW" ]  ));
 	newInput(i+15, nodeValue_Bool(    "Gamma Adjust",          false                       ));
+	newInput(i+34, nodeValue_Slider(  "Alpha Threshold",       0                           ));
 	newInput(i+22, nodeValue_EButton( "Blend mode",            0, [ "Normal", "Additive" ] ));
 	
 	////- =Wireframe
@@ -69,7 +70,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+21, nodeValue_Int(     "Round Normal",          0        )).setWindows();
 	newInput(i+29, nodeValue_Color(   "Backface Blending",     ca_white ));
 	newInput(i+30, nodeValue_Bool(    "Swap View Normal X",    false    ));
-	// inputs i+34
+	// inputs i+35
 	
 	in_cam = array_length(inputs);
 	
@@ -84,13 +85,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	// outputs 7
 	
 	input_display_list = [ i+4,
-		[ "Output",    false ], i+ 2,
-		[ "Transform", false ], i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, i+ 8, 
-		[ "Camera",     true ], i+ 3, i+33, i+ 0, i+ 1, 
-		[ "Render",     true ], i+32, i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
-		[ "Wireframe",  true ], i+23, i+24, i+25, i+26, i+27, i+28, 
-		[ "Ambient Occlusion",  true, i+17],i+20, i+18, i+19, i+31, 
-		[ "Effects",    true ], i+21, i+29, i+30, 
+		[ "Output",            false       ], i+ 2,
+		[ "Transform",         false       ], i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, i+ 8, 
+		[ "Camera",             true       ], i+ 3, i+33, i+ 0, i+ 1, 
+		[ "Render",             true       ], i+32, i+ 5, i+16, i+ 6, i+ 7, i+15, i+34, i+22, 
+		[ "Wireframe",          true       ], i+23, i+24, i+25, i+26, i+27, i+28, 
+		[ "Ambient Occlusion",  true, i+17 ], i+20, i+18, i+19, i+31, 
+		[ "Effects",            true       ], i+21, i+29, i+30, 
 	];
 	
 	output_display_list = [ 0, 5, 1, 6, 2, 3, 4 ];
@@ -188,6 +189,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _dbg    = _data[in_d3d +  6];
 			var _back   = _data[in_d3d +  7];
 			var _gamm   = _data[in_d3d + 15];
+			var _alThr  = _data[in_d3d + 34];
 			var _blend  = _data[in_d3d + 22];
 			
 			var _wire   = _data[in_d3d + 23];
@@ -301,6 +303,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			scene.shader		      = _shader;
 			scene.lightAmbient        = _ambt;
 			scene.gammaCorrection     = _gamm;
+			scene.alphaThreshold      = _alThr;
 			scene.enviroment_map      = _env;
 			scene.cull_mode		      = _back;
 			

@@ -58,6 +58,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	blend               = BLEND.normal;
 	enviroment_map      = noone;
 	gammaCorrection     = true;
+	alphaThreshold      = 0;
 	
 	defer_normal        = true;
 	defer_normal_radius = 0;
@@ -137,11 +138,11 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	
 	static renderBackground = function(surf) {
 		surface_set_shader(surf, sh_d3d_background);
-			shader_set_color("light_ambient",	lightAmbient);
-			shader_set_f("cameraPosition",		camera.position.toArray());
-			shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
-			shader_set_surface("env_map",		enviroment_map );
-			shader_set_dim("env_map_dimension",	enviroment_map );
+			shader_set_c(   "light_ambient",     lightAmbient               );
+			shader_set_f(   "cameraPosition",    camera.position.toArray()  );
+			shader_set_i(   "env_use_mapping",   is_surface(enviroment_map) );
+			shader_set_s(   "env_map",           enviroment_map             );
+			shader_set_dim( "env_map_dimension", enviroment_map             );
 				
 			camera.setMatrix();
 			camera.applyCamera();
@@ -175,9 +176,9 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		setRendering();
 		
 		shader_set(sh_d3d_geometry);
-		shader_set_f("planeNear", camera.view_near);
-		shader_set_f("planeFar",  camera.view_far);
-		shader_set_i("use_8bit",  OS == os_macosx);
+		shader_set_f( "planeNear", camera.view_near );
+		shader_set_f( "planeFar",  camera.view_far  );
+		shader_set_i( "use_8bit",  OS == os_macosx  );
 		shader_reset();
 		
 		submit(object, sh_d3d_geometry);
@@ -192,9 +193,9 @@ function __3dScene(_camera, _name = "New scene") constructor {
 			deferData.normalBlur = surface_verify(deferData.normalBlur, _sw, _sh, surface_rgba32float);
 			
 			surface_set_shader(deferData.normalBlur, sh_d3d_normal_blur);
-				shader_set_f("radius",      defer_normal_radius);
-				shader_set_i("use_8bit",    OS == os_macosx);
-				shader_set_dim("dimension", deferData.geometry_data[2]);
+				shader_set_f(   "radius",      defer_normal_radius        );
+				shader_set_i(   "use_8bit",    OS == os_macosx            );
+				shader_set_dim( "dimension",   deferData.geometry_data[2] );
 				
 				draw_surface(deferData.geometry_data[2], 0, 0);
 			surface_reset_shader();
@@ -211,13 +212,13 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		_deferData.ssaoTemp = surface_verify(_deferData.ssaoTemp, _sw, _sh);
 		
 		surface_set_shader(_deferData.ssaoTemp, sh_d3d_ssao);
-			shader_set_s("vPosition",       _deferData.geometry_data[0]);
-			shader_set_s("vNormal",         _deferData.geometry_data[2]);
-			shader_set_f("radius",          ssao_radius);
-			shader_set_f("bias",            ssao_bias);
-			shader_set_f("strength",        ssao_strength * 2);
-			shader_set_f("projMatrix",      camera.getCombinedMatrix());
-			shader_set_f("cameraPosition",  camera.position.toArray());
+			shader_set_s( "vPosition",       _deferData.geometry_data[0] );
+			shader_set_s( "vNormal",         _deferData.geometry_data[2] );
+			shader_set_f( "radius",          ssao_radius                 );
+			shader_set_f( "bias",            ssao_bias                   );
+			shader_set_f( "strength",        ssao_strength * 2           );
+			shader_set_f( "projMatrix",      camera.getCombinedMatrix()  );
+			shader_set_f( "cameraPosition",  camera.position.toArray()   );
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
 		surface_reset_shader();
@@ -225,9 +226,9 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		_deferData.ssao = surface_verify(_deferData.ssao, _sw, _sh);
 		
 		surface_set_shader(_deferData.ssao, sh_d3d_ssao_blur);
-			shader_set_f("dimension", _sw, _sh);
-			shader_set_f("radius",    ssao_blur_radius);
-			shader_set_s("vNormal",   _deferData.geometry_data[2]);
+			shader_set_f( "dimension", _sw, _sh                    );
+			shader_set_f( "radius",    ssao_blur_radius            );
+			shader_set_s( "vNormal",   _deferData.geometry_data[2] );
 			
 			draw_surface(_deferData.ssaoTemp, 0, 0);
 		surface_reset_shader();
@@ -238,72 +239,73 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		
 		shader_set(_shader);
 		shader_set_i("use_8bit",  OS == os_macosx );
-		shader_set_i("shader",    shader );
+		shader_set_i("shader",    shader          );
 			
 			#region ---- background ----
-				shader_set_color("light_ambient",	lightAmbient);
-				shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
-				shader_set_surface("env_map",		enviroment_map, false, true );
-				shader_set_dim("env_map_dimension",	enviroment_map );
+				shader_set_c(   "light_ambient",     lightAmbient                );
+				shader_set_i(   "env_use_mapping",   is_surface(enviroment_map)  );
+				shader_set_s(   "env_map",           enviroment_map, false, true );
+				shader_set_dim( "env_map_dimension", enviroment_map              );
 			#endregion
 			
 			shader_set_i("light_dir_count", lightDir_count);
 			if(lightDir_count) {
-				shader_set_f("light_dir_direction", 	lightDir_direction);
-				shader_set_f("light_dir_color",			lightDir_color);
-				shader_set_f("light_dir_intensity", 	lightDir_intensity);
-				shader_set_i("light_dir_shadow_active", lightDir_shadow);
+				shader_set_f( "light_dir_direction",     lightDir_direction  );
+				shader_set_f( "light_dir_color",         lightDir_color      );
+				shader_set_f( "light_dir_intensity",     lightDir_intensity  );
+				shader_set_i( "light_dir_shadow_active", lightDir_shadow     );
 				
 				for( var i = 0, n = array_length(lightDir_shadowMap); i < n; i++ )
 					var _sid = shader_set_surface($"light_dir_shadowmap_{i}", lightDir_shadowMap[i], true);
 				
-				shader_set_f("light_dir_view",			lightDir_viewMat);
-				shader_set_f("light_dir_proj",			lightDir_projMat);
-				shader_set_f("light_dir_shadow_bias",	lightDir_shadowBias);
+				shader_set_f( "light_dir_view",          lightDir_viewMat    );
+				shader_set_f( "light_dir_proj",          lightDir_projMat    );
+				shader_set_f( "light_dir_shadow_bias",   lightDir_shadowBias );
 			}
 			
 			shader_set_i("light_pnt_count", lightPnt_count);
 			if(lightPnt_count) {
-				shader_set_f("light_pnt_position",  	lightPnt_position);
-				shader_set_f("light_pnt_color",			lightPnt_color);
-				shader_set_f("light_pnt_intensity", 	lightPnt_intensity);
-				shader_set_f("light_pnt_radius",    	lightPnt_radius);
+				shader_set_f( "light_pnt_position",      lightPnt_position   );
+				shader_set_f( "light_pnt_color",         lightPnt_color      );
+				shader_set_f( "light_pnt_intensity",     lightPnt_intensity  );
+				shader_set_f( "light_pnt_radius",        lightPnt_radius     );
 				
-				shader_set_i("light_pnt_shadow_active", lightPnt_shadow);
+				shader_set_i("light_pnt_shadow_active",  lightPnt_shadow     );
 				
 				for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ )
 					var _sid = shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, false);
 				
-				shader_set_f("light_pnt_view",			lightPnt_viewMat);
-				shader_set_f("light_pnt_proj",			lightPnt_projMat);
-				shader_set_f("light_pnt_shadow_bias",	lightPnt_shadowBias);
+				shader_set_f( "light_pnt_view",          lightPnt_viewMat    );
+				shader_set_f( "light_pnt_proj",          lightPnt_projMat    );
+				shader_set_f( "light_pnt_shadow_bias",   lightPnt_shadowBias );
 			}
 			
 			if(OS == os_windows && defer_normal && _deferData != noone && array_length(_deferData.geometry_data) > 2) {
-				shader_set_i("mat_defer_normal", 1);
-				shader_set_surface("mat_normal_map", _deferData.geometry_data[2]);
+				shader_set_i( "mat_defer_normal", 1 );
+				shader_set_s( "mat_normal_map",   _deferData.geometry_data[2] );
 			} else 
-				shader_set_i("mat_defer_normal", 0);
+				shader_set_i( "mat_defer_normal", 0 );
 			
 			#region ---- camera ----
-				shader_set_f("cameraPosition",	camera.position.toArray());
-				shader_set_i("gammaCorrection",	gammaCorrection);
-				shader_set_f("planeNear",		camera.view_near);
-				shader_set_f("planeFar",		camera.view_far );
+				shader_set_f( "cameraPosition",  camera.position.toArray()  );
+				shader_set_i( "gammaCorrection", gammaCorrection            );
+				shader_set_f( "alphaThreshold",  alphaThreshold             );
+				shader_set_f( "planeNear",       camera.view_near           );
+				shader_set_f( "planeFar",        camera.view_far            );
 				
-				shader_set_f("viewProjMat",		camera.getCombinedMatrix() );
+				shader_set_f( "viewProjMat",     camera.getCombinedMatrix() );
 			#endregion
 			
 			#region ---- wireframe ----
-				shader_set_i("show_wireframe",      show_wireframe);
-				shader_set_i("wireframe_aa",        wireframe_aa);
-				shader_set_i("wireframe_shade",     wireframe_shade);
-				shader_set_i("wireframe_only",      wireframe_only);
-				shader_set_f("wireframe_width",     max(0, wireframe_width));
-				shader_set_color("wireframe_color", wireframe_color);
+				shader_set_i( "show_wireframe",  show_wireframe             );
+				shader_set_i( "wireframe_aa",    wireframe_aa               );
+				shader_set_i( "wireframe_shade", wireframe_shade            );
+				shader_set_i( "wireframe_only",  wireframe_only             );
+				shader_set_f( "wireframe_width", max(0, wireframe_width)    );
+				shader_set_c( "wireframe_color", wireframe_color            );
 			#endregion
 			
-			shader_set_color("backface_blending", backface_blending);
+			shader_set_c( "backface_blending", backface_blending );
 			
 		shader_reset();
 	}

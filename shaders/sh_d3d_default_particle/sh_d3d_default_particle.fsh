@@ -1,6 +1,6 @@
 #pragma use(d3d_default_fragment)
 
-#region -- d3d_default_fragment -- [1780907835.9019704]
+#region -- d3d_default_fragment -- [1781570476.0357]
 #ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
 #endif
@@ -20,7 +20,7 @@ varying float v_cameraDistance;
 
 uniform int use_8bit; 
 
-#region ---- light ----
+#region ---- Uniform Light ----
 	uniform vec4  light_ambient;
 	uniform float shadowBias;
 	
@@ -64,7 +64,7 @@ uniform int use_8bit;
 	//uniform sampler2D light_pnt_shadowmap_3;
 #endregion
 
-#region ---- material ----
+#region ---- Uniform Material ----
 	vec4 mat_baseColor;
 	
 	uniform int shader; // 0: Phong, 1: PBR
@@ -96,9 +96,10 @@ uniform int use_8bit;
 	uniform sampler2D mat_pbr_properties_map; // .r = metalic, .g = roughness
 #endregion
 
-#region ---- rendering ----
-	uniform vec3 cameraPosition;
-	uniform int  gammaCorrection;
+#region ---- Uniform Rendering ----
+	uniform vec3  cameraPosition;
+	uniform int   gammaCorrection;
+	uniform float alphaThreshold;
 	
 	uniform int       env_use_mapping;
 	uniform sampler2D env_map;
@@ -116,7 +117,7 @@ uniform int use_8bit;
 	uniform vec4  backface_blending;
 #endregion
 
-#region ++++ mapping ++++
+#region ++++ Fn Mapping ++++
 	vec2 equirectangularUv(vec3 dir) {
 		vec3 n = normalize(dir);
 		return vec2((atan(n.x, n.y) / TAU) + 0.5, 1. - acos(n.z) / PI);
@@ -128,7 +129,7 @@ uniform int use_8bit;
 	}
 #endregion
 
-#region ++++ matrix ++++
+#region ++++ Fn Matrix ++++
 	float matrixGet(mat4 matrix, int index) { 
 		if(index < 0 || index > 15) return 0.;
 		
@@ -147,7 +148,7 @@ uniform int use_8bit;
 	}
 #endregion
 
-#region ++++ shadow sampler ++++
+#region ++++ Fn Shadow Sampler ++++
 	float sampleDirShadowMap(int index, vec2 position) {
 		vec4 d;
 		
@@ -500,6 +501,8 @@ void main() {
 		uv_coord           = fract(uv_coord * mat_texScale + mat_texShift);
 		mat_baseColor      = mat_texInterpolate == 2? texture2Dclean( gm_BaseTexture, uv_coord ) : texture2D( gm_BaseTexture, uv_coord );
 		mat_baseColor     *= v_vColour;
+
+		if(mat_baseColor.a <= alphaThreshold) discard;
 		
 		vec4 final_color   = mat_baseColor;
 		float shadow       = 0.;
