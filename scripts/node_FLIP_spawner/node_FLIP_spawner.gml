@@ -2,6 +2,8 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Spawner";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	setDrawIcon();
+	setDimension(96, 48);
 	
 	manual_ungroupable = false;
 	
@@ -193,20 +195,6 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		prev_position[0] = _posit[0];
 		prev_position[1] = _posit[1];
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox   = draw_bbox;
-		var _shape = getInputData(1);
-		var _surf  = getInputData(7);
-		
-		var ss = max(0, min(bbox.w, bbox.h) / 2 - 16 * _s);
-		draw_set_color(c_white);
-		switch(_shape) {
-			case 0 : draw_circle_prec(bbox.xc, bbox.yc, ss, false); break;
-			case 1 : draw_rectangle(bbox.xc - ss, bbox.yc - ss, bbox.xc + ss, bbox.yc + ss, false); break;
-			case 2 : draw_surface_bbox(_surf, bbox); break;
-		}
 	}
 	
 	static getPreviewValues = function() { 

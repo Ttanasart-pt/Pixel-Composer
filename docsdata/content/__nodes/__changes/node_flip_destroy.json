@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.006",
+    "changes": [
+      {
+        "date": "2026-06-16T05:00:20.517Z",
+        "node": "",
+        "commit": "**FLIP Render**: Add render step control."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.007",
     "changes": [
       {

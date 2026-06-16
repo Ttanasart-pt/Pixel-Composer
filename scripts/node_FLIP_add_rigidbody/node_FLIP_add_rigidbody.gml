@@ -3,18 +3,15 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDrawIcon();
-	setDimension(96, 96);
+	setDimension(96, 48);
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain"))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue("Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, [] ))
-		.setVisible(true, true);
+	newInput( 0, nodeValue_Fdomain("Domain")).setVisible(true, true);
+	newInput( 1, nodeValue("Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, [] )).setVisible(true, true);
 	
 	input_display_list = [ 0, 
-		["Collider",	false], 1, 
+		[ "Collider", false ], 1, 
 	]
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));

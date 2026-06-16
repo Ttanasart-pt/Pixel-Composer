@@ -2,8 +2,8 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Destroy Fluid";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	setDimension(96, 96);
 	setDrawIcon();
+	setDimension(96, 48);
 	
 	manual_ungroupable = false;
 	

@@ -19,7 +19,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDrawIcon();
-	setDimension(96, 96);
+	setDimension(96, 48);
 	
 	manual_ungroupable = false;
 	

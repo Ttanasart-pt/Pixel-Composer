@@ -3,7 +3,6 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	parameters.inline_draw_output = true;
-	// setCacheAuto();
 	
 	inline_output      = false;
 	manual_ungroupable = false;
@@ -88,7 +87,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _obs  = getInputData( 4);
 			var _alp  = getInputData( 9);
 			
-			var _cvl  = getInputData(11);
+			var _cvl  = getInputData(11); _cvl.cache();
 			var _vlr  = getInputData(12);
 			var _vap  = getInputData( 2);
 			
@@ -173,7 +172,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						var _vel  = sqrt(_sx * _sx + _sy * _sy);
 						var _vmap = (_vel - _vlr[0]) / _vMapRange;
 						    _vmap = power(clamp(_vmap, 0, 1), 5);
-						_cc   = _cvl.eval(_vmap);
+						_cc   = _cvl.evalFast(_vmap);
 					}
 					
 					if(_useSpr) {
@@ -217,7 +216,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 							var _vel  = sqrt(_dx * _dx + _dy * _dy);
 							var _vmap = (_vel - _vlr[0]) / _vMapRange;
 							    _vmap = power(clamp(_vmap, 0, 1), 5);
-							_cc   = _cvl.eval(_vmap);
+							_cc   = _cvl.evalFast(_vmap);
 						}
 						
 						_nx -= _padd;

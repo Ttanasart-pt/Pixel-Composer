@@ -2,6 +2,8 @@ function Node_FLIP_Fill(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name  = "Fill";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	setDrawIcon();
+	setDimension(96, 48);
 	
 	manual_ungroupable = false;
 	
@@ -137,19 +139,6 @@ function Node_FLIP_Fill(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		buffer_delete_safe(_buffP);
 		buffer_delete_safe(_buffV);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox   = draw_bbox;
-		var _shape = getInputData(1);
-		var _surf  = getInputData(2);
-		
-		var ss = max(0, min(bbox.w, bbox.h) / 2 - 16 * _s);
-		draw_set_color(c_white);
-		switch(_shape) {
-			case 0 : draw_rectangle(bbox.xc - ss, bbox.yc - ss, bbox.xc + ss, bbox.yc + ss, false); break;
-			case 1 : draw_surface_bbox(_surf, bbox); break;
-		}
 	}
 	
 	static getPreviewValues = function() { 

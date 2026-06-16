@@ -2,8 +2,8 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "FLIP to VFX";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	setDimension(96, 96);
 	setDrawIcon();
+	setDimension(96, 48);
 	
 	manual_ungroupable = false;
 	
