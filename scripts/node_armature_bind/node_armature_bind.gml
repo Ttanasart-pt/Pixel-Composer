@@ -1,4 +1,4 @@
-#region
+#region global
 	FN_NODE_TOOL_INVOKE {
 		hotkeyCustom("Node_Armature_Bind", "Pose", "P");		
 		
@@ -260,7 +260,6 @@
 			
 		}
 	}
-	
 #endregion
 
 function __armature_bind_data(_surface, _bone = noone, _tran = 0, _aang = 0, _pang = 0, _asca = 0, _psca = 0) constructor {
@@ -643,9 +642,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 
 	});
 	
-	input_display_list = [ 1, 2, 
-		["Output",	  true], 0,
-		["Armature", false], 3, 4, layer_renderer,
+	input_display_list = [  1,  2, 
+		["Output",	  true],  0,
+		["Armature", false],  3,  4, layer_renderer,
 	];
 	
 	function deleteLayer(index) {
@@ -1281,13 +1280,16 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		atlas_data = [];
 		bind_data  = [];
 		
-		var _dim  = _data[0];
-		var _bone = _data[1];
-		var _bind = _data[2];
-		var _dpos = _data[3];
-		var _dsca = _data[4];
-		var cDep  = attrDepth();
-		var use_data  = _bind != noone;
+		#region data
+			var _dim  = _data[ 0];
+			var _bone = _data[ 1];
+			var _bind = _data[ 2];
+			var _dpos = _data[ 3];
+			var _dsca = _data[ 4];
+			var cDep  = attrDepth();
+			var use_data  = _bind != noone;
+			
+		#endregion
 		
 		setBone();
 		

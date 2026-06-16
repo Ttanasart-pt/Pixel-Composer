@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.006",
+    "changes": [
+      {
+        "date": "2026-06-16T05:53:47.836Z",
+        "node": "Render Sprite Sheet",
+        "commit": "**Render Sprite Sheet**: Add support for atlas input."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.003",
     "changes": [
       {

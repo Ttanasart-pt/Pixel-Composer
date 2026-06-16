@@ -112,15 +112,19 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	}
 	
 	static arrayRender = function() {
-		var inpt = getInputData(0);
-		var grup = getInputData(1);
-		var pack = getInputData(3);
-		var alig = getInputData(5);
-		var spac = getInputData(6);
-		var padd = getInputData(7);
-		var rang = getInputData(8);
-		var spc2 = getInputData(9);
-		var exemp = getInputData(12);
+		#region data
+			var inpt  = getInputData( 0);
+			var grup  = getInputData( 1);
+			var exemp = getInputData(12);
+			
+			var pack  = getInputData( 3);
+			var alig  = getInputData( 5);
+			var spac  = getInputData( 6);
+			var spc2  = getInputData( 9);
+			var padd  = getInputData( 7);
+			
+			var rang  = getInputData( 8);
+		#endregion
 		
 		var cDep = attrDepth();
 		
@@ -346,24 +350,24 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static animationInit = function(clear = false) {
 		if(anim_rendering) return;
 		
-		var inpt  = getInputData( 0);
-		var skip  = getInputData( 2);
-		var exemp = getInputData(12);
-		
-		var pack  = getInputData( 3);
-		var grid  = getInputData( 4);
-		var alig  = getInputData( 5);
-		var spac  = getInputData( 6);
-		var spc2  = getInputData( 9);
-		var padd  = getInputData( 7);
-		
-		var user  = getInputData(11);
-		var rang  = getInputData( 8);
-		
-		var _out = outputs[0].getValue();
-		var cDep = attrDepth();
-		
-		printIf(log, $"Init animation");
+		#region data
+			var inpt  = getInputData( 0);
+			var skip  = getInputData( 2);
+			var exemp = getInputData(12);
+			
+			var pack  = getInputData( 3);
+			var grid  = getInputData( 4);
+			var alig  = getInputData( 5);
+			var spac  = getInputData( 6);
+			var spc2  = getInputData( 9);
+			var padd  = getInputData( 7);
+			
+			var user  = getInputData(11);
+			var rang  = getInputData( 8);
+			
+			var _out = outputs[0].getValue();
+			var cDep = attrDepth();
+		#endregion
 		
 		var arr = is_array(inpt);
 		if(arr && array_length(inpt) == 0) return;
@@ -439,21 +443,23 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(IS_FIRST_FRAME && anim_rendering) return;
 		if(!IS_PLAYING) return;
 		
-		var inpt  = getInputData( 0);
-		var skip  = getInputData( 2);
-		var exemp = getInputData(12);
-		
-		var pack  = getInputData( 3);
-		var grid  = getInputData( 4);
-		var alig  = getInputData( 5);
-		var spac  = getInputData( 6);
-		var spc2  = getInputData( 9);
-		var padd  = getInputData( 7);
-		
-		var user  = getInputData(11);
-		var rang  = getInputData( 8);
-		
-		var cDep  = attrDepth();
+		#region data
+			var inpt  = getInputData( 0);
+			var skip  = getInputData( 2);
+			var exemp = getInputData(12);
+			
+			var pack  = getInputData( 3);
+			var grid  = getInputData( 4);
+			var alig  = getInputData( 5);
+			var spac  = getInputData( 6);
+			var spc2  = getInputData( 9);
+			var padd  = getInputData( 7);
+			
+			var user  = getInputData(11);
+			var rang  = getInputData( 8);
+			
+			var cDep  = attrDepth();
+		#endregion
 		
 		printIf(log, $"Rendering animation {name}/{CURRENT_FRAME} [{anim_array_length}]");
 		
@@ -504,13 +510,28 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _surfi = inpt[i];
 			var _out   = is_array(oupt)? oupt[i] : oupt;
 			
-			if(!is_surface(_out))                 { printIf(log, $"   > Skip output not surface");                    break; }
-			if(!is_surface(_surfi))               { printIf(log, $"   > Skip input not surface"); atlases[i] = noone; continue; } 
-			if(exemp && surface_is_empty(_surfi)) { printIf(log, $"   > Skip input empty");                           continue; } 
+			if(!is_surface(_out)) { 
+				printIf(log, $"   > Skip output not surface");
+				break; 
+			}
+			
+			if(is(_surfi, Atlas)) _surfi = _surfi.getSurface();
+			
+			if(!is_just_surface(_surfi)) { 
+				printIf(log, $"   > Skip input not surface"); 
+				atlases[i] = noone; 
+				continue; 
+			} 
+			
+			if(exemp && surface_is_empty(_surfi)) { 
+				printIf(log, $"   > Skip input empty");
+				continue;
+			} 
 			
 			var _frame = anim_frames[i]; 
 			var ww = surface_get_width(_out);
 			var hh = surface_get_height(_out);
+			
 			var sw = surface_get_width(_surfi);
 			var sh = surface_get_height(_surfi);
 			
