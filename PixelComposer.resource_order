@@ -3381,6 +3381,7 @@
     {"name":"s_node_offset","order":20,"path":"sprites/s_node_offset/s_node_offset.yy",},
     {"name":"s_node_optical_flow","order":108,"path":"sprites/s_node_optical_flow/s_node_optical_flow.yy",},
     {"name":"s_node_ora_file","order":43,"path":"sprites/s_node_ora_file/s_node_ora_file.yy",},
+    {"name":"s_node_outline_position","order":35,"path":"sprites/s_node_outline_position/s_node_outline_position.yy",},
     {"name":"s_node_outline","order":21,"path":"sprites/s_node_outline/s_node_outline.yy",},
     {"name":"s_node_output","order":7,"path":"sprites/s_node_output/s_node_output.yy",},
     {"name":"s_node_override_channel","order":51,"path":"sprites/s_node_override_channel/s_node_override_channel.yy",},

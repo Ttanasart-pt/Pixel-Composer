@@ -2914,14 +2914,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        			var _newNode = createNodeHotkey(n.node);
 	        			if(!is(_newNode, Node)) return;
 	        			
-	        			var j = n.junc;
-	        			if(j.connect_type == CONNECT_TYPE.input) {
-	        				var _targ = _newNode.getOutput();
-	        				if(_targ) j.setFrom(_targ);
+	        			var _junc = n.junc;
+	        			if(_junc.connect_type == CONNECT_TYPE.input) {
+	        				var _targ = _newNode.getOutput(0, _junc);
+	        				if(_targ) _junc.setFrom(_targ);
 	        				
-	        			} else if(j.connect_type == CONNECT_TYPE.output) {
-	        				var _targ = _newNode.getInput();
-	        				if(_targ) _targ.setFrom(j);
+	        			} else if(_junc.connect_type == CONNECT_TYPE.output) {
+	        				var _targ = _newNode.getInput(0, _junc);
+	        				if(_targ) _targ.setFrom(_junc);
 	        			}
 	        			
 	        		}, _orig.spr).setParam({

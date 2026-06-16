@@ -30,12 +30,18 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	__init_mask_modifier(9, 13);
 	
 	////- =Outline
-	newInput( 5, nodeValue_EButton( "Position",    1, [ "Inside", "Outside", "Middle" ] )).setPieMenu();
+	newInput( 5, nodeValue_EScroll( "Position",    1, [ 
+		new scrollItem("Inside",  s_node_outline_position, 0), 
+		new scrollItem("Outside", s_node_outline_position, 1), 
+		new scrollItem("Middle",  s_node_outline_position, 2) 
+	] )).setPieMenu();
+	
 	newInput(18, nodeValue_EScroll( "Profile",     0, [ 
-		new scrollItem("Circle",  s_node_shape_circle), 
-		new scrollItem("Square",  s_node_shape_rectangle),
-		new scrollItem("Diamond", s_node_shape_misc, 0), 
+		new scrollItem("Circle",  s_node_shape_circle,    0), 
+		new scrollItem("Square",  s_node_shape_rectangle, 0),
+		new scrollItem("Diamond", s_node_shape_misc,      0), 
 	]));
+	
 	newInput( 1, nodeValue_Float(   "Width",       0 )).setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
 		.setHotkey("S").setMappable(15).setValidator(VV_min(0)).setUnitSimple(false).setPieMenu();
 	newInput( 8, nodeValue_Int(     "Start",       0, "Shift outline inside, outside the shape." )).setMappable(17).setPieMenu();

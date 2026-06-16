@@ -125,9 +125,6 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			shader_reset();
 		}
 		
-		if(hide == 0) 
-			draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);	
-		
 		tb_value.setFocusHover(active, hover);
 		tb_value.draw(_tx, _y, _tw, _h, _data, _m);
 		
