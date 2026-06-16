@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.006",
+    "changes": [
+      {
+        "date": "2026-06-16T02:11:07.674Z",
+        "node": "Blobify",
+        "commit": "**Blobify**: Now keep original color."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.005",
     "changes": [
       {

@@ -56,6 +56,7 @@ uniform sampler2D radiusSurf;
 
 uniform int   shape;
 uniform int   fade;
+uniform int   keepAlpha;
 
 uniform float threshold;
 uniform float smoothness;
@@ -124,11 +125,14 @@ void main() {
 	cc /= dv;
 	// cc /= da;
 	
-	vec4 res = cc;
+	vec4  res    = cc;
+	float bright = (cc.r + cc.g + cc.b) / 3. * cc.a; 
 	
 	if(smoothness == 0.) 
-    	 res = step(threshold, cc);
-    else res = smoothstep(threshold - smoothness/2., threshold + smoothness/2., cc);
+    	 res = cc * step(threshold, bright);
+    else res = cc * smoothstep(threshold - smoothness/2., threshold + smoothness/2., bright);
+	
+	if(keepAlpha == 1) res.a = cc.a;
 	
 	gl_FragColor = res;
 }

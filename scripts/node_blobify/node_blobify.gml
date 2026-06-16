@@ -19,15 +19,16 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput( 2, nodeValue_Int(     "Radius",     3 )).setMappable(4).setValidator(VV_min(0)).setPieMenu();
 	newInput( 3, nodeValue_Slider(  "Threshold", .5 )).setPieMenu();
-	newInput(12, nodeValue_Bool(    "Distance",   0 ));
+	newInput(12, nodeValue_Bool(    "Distance",   false ));
+	newInput(13, nodeValue_Bool(    "Keep Alpha", false ));
 	
 	////- =Rendering
 	newInput(10, nodeValue_Slider( "Smoothness", 0 ));
-	// input 13
+	// input 14
 	
 	input_display_list = [ 1, 9, 
 		[ "Surface",   false ],  0,  5,  6,  7,  8, 
-		[ "Blobify",   false ], 11,  2,  4,  3, 12, 
+		[ "Blobify",   false ], 11,  2,  4,  3, 12, 13, 
 		[ "Rendering", false ], 10, 
 	]
 	
@@ -59,6 +60,7 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _rad  = _data[ 2];
 			var _thr  = _data[ 3];
 			var _fade = _data[12];
+			var _kepa = _data[13];
 			
 			var _smth = _data[10];
 		#endregion
@@ -72,6 +74,7 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_m( "radius",     _rad, _data[4], inputs[2] );
 			shader_set_i( "shape",      _shap );
 			shader_set_i( "fade",       _fade );
+			shader_set_i( "keepAlpha",  _kepa );
 			
 			shader_set_f( "threshold",  _thr  );
 			shader_set_f( "smoothness", _smth );
