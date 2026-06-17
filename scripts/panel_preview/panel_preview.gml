@@ -2199,7 +2199,7 @@ function Panel_Preview() : PanelContent() constructor {
         surface_depth_disable(false);
         
         _node.previewing = 1;
-        d3_scene.shader  = d3_shader == 0? _node.project.attributes.shader : d3_shader--;
+        d3_scene.shader  = d3_shader == 0? _node.project.attributes.shader : d3_shader - 1;
         d3_scene_preview = _node[$ "scene"] ?? d3_scene;
         d3_scene_preview.camera = d3_camera;
         
