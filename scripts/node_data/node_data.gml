@@ -2913,7 +2913,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static isNotUsingTool = function() { var t = PANEL_PREVIEW.tool_current; return t == noone || t.ctx != instanceof(self); }
 	static isUsingTool    = function(i = undefined, subt = noone) {
-		if(tools == -1) return false;
+		if(tools == -1)    return false;
 		
 		var t = PANEL_PREVIEW.tool_current;
 		if(t == noone)     return false; // not using any tool
@@ -3167,16 +3167,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_trigger[2] = updatedInTrigger.serialize(scale, preset);
 		_trigger[3] = updatedOutTrigger.serialize(scale, preset);
 		_trigger[4] = frameInput.serialize(scale, preset);
+		_map.inspectInputs = _trigger;
 		
 		var _outMeta = [];
 		for(var i = 0, n = array_length(junc_meta); i < n; i++)
 			_outData[i] = junc_meta[i].serialize(scale, preset);
 		
-		_map.inspectInputs = _trigger;
-		if(!array_empty(_outMeta)) _map.outputMeta = _outMeta;
-		if(renamed)       _map.renamed       = renamed;
-		if(renamedManual) _map.renamedManual = renamedManual;
-		if(instanceBase)  _map.instanceBase  = instanceBase.node_id;
+		if(!array_empty(_outMeta)) _map.outputMeta    = _outMeta;
+		if(renamed)                _map.renamed       = renamed;
+		if(renamedManual)          _map.renamedManual = renamedManual;
+		if(instanceBase)           _map.instanceBase  = instanceBase.node_id;
 		
 		doSerialize(_map);
 		processSerialize(_map);

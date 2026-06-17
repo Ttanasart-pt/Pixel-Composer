@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.007",
+    "changes": [
+      {
+        "date": "2026-06-17T00:29:17.709Z",
+        "node": "",
+        "commit": "Fix meta triggers not connecting on load."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.006",
     "changes": [
       {

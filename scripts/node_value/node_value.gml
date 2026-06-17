@@ -309,7 +309,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#region ---- Serialization ----
 		con_node  = -1;
 		con_index = -1;
-		con_tag   =  0;
+		con_tag   = VALUE_TAG.none;
 		
 		migrationVersion = undefined;
 		migrationNote    = undefined;
@@ -2916,7 +2916,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
 			_map.from_index = value_from.index;
-			if(value_from.tags != 0) _map.from_tag = value_from.tags;
+			_map.from_tag   = value_from.tags;
 		}
 		
 		if(expUse)           _map.global_use = expUse;
@@ -3027,7 +3027,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!preset) {
 			con_node  = _map[$ "from_node"]  ?? -1;
 			con_index = _map[$ "from_index"] ?? -1;
-			con_tag   = _map[$ "from_tag"]   ??  0;
+			con_tag   = _map[$ "from_tag"]   ?? VALUE_TAG.none;
 		}
 		
 		if(has(_map, "m"))           is_modified = bool(_map.m);
@@ -3084,7 +3084,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static connect = function(log = false, _nodeGroup = undefined) {
-		if(con_node == -1 || con_index == -1) return true;
+		if(con_node  == -1) return true;
+		if(con_index == -1 && con_tag == VALUE_TAG.none) return true;
 		
 		var _nodeid = con_node;
 		if(APPENDING) {
@@ -3128,7 +3129,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return false;
 		} 
 		
-		if(con_index >= 1000) { //connect bypass
+		if(con_index >= 1000) { // connect bypass
 			var _inp = array_safe_get_fast(_nd.inputs, con_index - 1000, noone);
 			if(_inp == noone) return false;
 			
