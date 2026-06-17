@@ -116,7 +116,7 @@ for title, path in pages:
         continue
 
     real_path = path.replace("docs\\", "\\")
-    search_list_str += f'<li class="search-result" style="display: none;"><a href="{real_path}">{title}</a></li>\n'
+    search_list_str += f'<li class="search-result" style="display: none;"><a href="{real_path}">{title}</a></li>'
 
 # %% multithreaded replace in file
 def replace_in_file(path, old_text, new_text):
