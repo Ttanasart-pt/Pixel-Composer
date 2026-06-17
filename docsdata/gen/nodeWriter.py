@@ -92,9 +92,10 @@ def writeChangeTable(metadata, changeData):
 <table class="change-table">'''
 
     addVersion = metadata["pxc_version"] if "pxc_version" in metadata else None
+    addString  = ""
+
     if addVersion:
         addVersion = math.floor(addVersion)
-        addString  = ""
         vMaj = 1
 
         if addVersion > 100_000:
@@ -138,7 +139,10 @@ def writeChangeTable(metadata, changeData):
                 continue
             if(commit.startswith("Fix")):
                 continue
-
+            
+            if commit == "Introduced" and addString != "":
+                continue
+            
             commit = commit.split(":")[1] if ":" in commit else commit
             commitMessage += f'<li>{commit}</li>'
             hasChanges = True
