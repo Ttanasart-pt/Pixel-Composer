@@ -299,7 +299,7 @@ void main() {
 		flow += extF * exFor * exDis;
 	}
 	
-	if(externalForceType == 1) flow += extF * vec2(cos(extR), sin(extR));
+	if(externalForceType == 1) flow -= extF * vec2(cos(extR), sin(extR));
 	
 	vec2 txpos = v_vTexcoord - flow * flowR / iter;
     gl_FragColor = sampleTexture( gm_BaseTexture, txpos);

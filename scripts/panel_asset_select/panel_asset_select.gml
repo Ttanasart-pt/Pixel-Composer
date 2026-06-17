@@ -139,14 +139,14 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 						var _txt = $"{sw}x{sh}";
 						if(sn) _txt = $"[{sn}] " + _txt;
 						
-						draw_set_text(_f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
-						var _tw = string_width(_txt) + ui(6);
-						var _th = 14;
+						draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
+						var _tw = string_width(_txt)  + ui(6);
+						var _th = string_height(_txt) + ui(1);
 						var _nx = xx + grid_size - 1 - _tw;
 						var _ny = yy + grid_size - _th;
 						
 						draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th - 1, COLORS.panel_bg_clear_inner, 0.85);
-						draw_text_add(xx + grid_size - ui(3), yy + grid_size - ui(2), _txt);
+						draw_text_add(xx + grid_size - ui(3), yy + grid_size - ui(1), _txt);
 						
 					} else if(spr == -1) {
 						var _rr = lerp(.075, .2, abs(dsin(current_time / 2)));
@@ -191,7 +191,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 		
 		var pad = ui(8);
 		
-		draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(f_p1b, fa_left, fa_center, COLORS._main_text);
 		draw_text(ui(16), pad + ui(16), __txt("Assets"));
 		
 		#region buttons
@@ -205,7 +205,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 			var iss = is_surface(target.current_data) && context != DYNADRAW_FOLDER;
 			
 			var cc = iss? COLORS._main_value_positive : COLORS._main_icon_dark;
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, iss && pHOVER, pFOCUS, "Add to Asset", THEME.add, 0, cc, 1, ui(6)) == 2) {
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, iss && pHOVER, pFOCUS, "Add to Asset", THEME.add, 0, cc, 1, ui(8)) == 2) {
 				fileNameCall(context.path, function(f) /*=>*/ {
 					if(f == "") return;
 					
@@ -217,7 +217,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 			} bx -= bs + ui(1);
 			
 			var cc = COLORS._main_icon;
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "New Folder", THEME.dFolder_add, 0, cc, 1, ui(2)) == 2) {
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "New Folder", THEME.dFolder_add, 0, cc, 1, ui(6)) == 2) {
 				fileNameCall(context.path, function(f) /*=>*/ {
 					if(f == "") return;
 					
@@ -228,7 +228,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 			} bx -= bs + ui(1);
 			
 			var cc = COLORS._main_icon;
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Open Explorer", THEME.dPath_open, 0, cc, 1, ui(2)) == 2) {
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Open Explorer", THEME.dPath_open, 0, cc, 1, ui(6)) == 2) {
 				shellOpenExplorer(context.path);
 			} bx -= bs + ui(1);
 		#endregion
@@ -255,10 +255,10 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 			}
 		}
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, _cnt_x, pad, content_w + pad - ui(6), h - pad * 2);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, _cnt_x, pad, content_w + pad, h - pad * 2);
 		
 		contentPane.setFocusHover(pFOCUS, pHOVER);
 		contentPane.verify(content_w, content_h - 2);
-		contentPane.drawOffset(_cnt_x, pad + 1, mx, my);
+		contentPane.drawOffset(_cnt_x, pad, mx, my);
 	}
 }
