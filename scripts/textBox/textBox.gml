@@ -112,26 +112,28 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	#region context menu
 		context_menu = [
-			menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text); }, THEME.copy),
-			menuItem("Paste", function() /*=>*/ { 
+			menuItem("Copy Text",  function() /*=>*/ { clipboard_set_text(_current_text); }, THEME.copy),
+			menuItem("Paste Text", function() /*=>*/ { 
 				var _text = clipboard_get_text();
 				if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
 				modifyValue(_text);
 			}, THEME.paste),
+			menuItem("Text Box settings...", function() /*=>*/ {return prefOpenKey("Text Area")}),
 		];
 		
 		context_menu_selecting = [
-			menuItem("Copy",  function() /*=>*/ { 
+			menuItem("Copy Text",  function() /*=>*/ { 
 				var minc = min(cursor, cursor_select);
 				var maxc = max(cursor, cursor_select);
 				clipboard_set_text(string_copy(cursor_select, minc + 1, maxc - minc));
 			}, THEME.copy),
 			
-			menuItem("Paste", function() /*=>*/ { 
+			menuItem("Paste Text", function() /*=>*/ { 
 				var _text = clipboard_get_text();
 				if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
 				modifyValue(_text);
 			}, THEME.paste),
+			menuItem("Text Box settings...", function() /*=>*/ {return prefOpenKey("Text Area")}),
 		];
 	#endregion
 	
@@ -1094,8 +1096,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 			if(mouse_lrelease()) mouse_lhold = false;
 			
-			if(mouse_rpress(hoverRect, active))
-				menuCall("textbox_context", context_menu_selecting);
+			if(mouse_rpress(hoverRect, active)) menuCall("textbox_context", context_menu_selecting, 0, 0, fa_left, false);
 			
 		} else {
 			if(hover && hoverRect) {
@@ -1118,8 +1119,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					} 
 				}
 				
-				if(mouse_rpress(active))
-					menuCall("textbox_context", context_menu);
+				if(mouse_rpress(active)) menuCall("textbox_context", context_menu, 0, 0, fa_left, false);
 			
 			} else if(!hide && base_index == 3)
 				draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);

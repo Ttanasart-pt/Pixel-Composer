@@ -1,6 +1,7 @@
 # %%
 import os
 import re
+import math
 import fileUtil
 
 import nodeParser
@@ -89,6 +90,15 @@ def writeChangeTable(metadata, changeData):
     changeText = '''
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table">'''
+
+    addVersion = metadata["pxc_version"] if "pxc_version" in metadata else None
+    if addVersion:
+        vMaj = 1
+        vMin = math.floor((addVersion % 100_000) / 1_000)
+        vBet = math.floor((addVersion %   1_000) /    10)
+        addVersion = f"{vMaj}.{vMin}.{vBet}"
+        changeText += f'<tr><th>{addVersion}</th><td><ul><li>Introduced</li></ul></td></tr>'
+        hasAnyChange = True
 
     for change in changeData:
         version = change["version"]

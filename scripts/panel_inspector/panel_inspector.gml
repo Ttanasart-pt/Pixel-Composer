@@ -550,13 +550,14 @@ function Panel_Inspector() : PanelContent() constructor {
     function propSelectCopy()  { if(prop_selecting) clipboard_set_text(prop_selecting.getString()); }
     function propSelectPaste() { if(prop_selecting) prop_selecting.setString(clipboard_get_text()); }
     
-    function propRightClick(jun) {
+    function propRightClick(jun, wdgt = false) {
     	if(!is(jun, NodeValue)) return noone;
     	
           prop_selecting  = jun;
         __dialog_junction = jun;
         
-        if(jun.connect_type == CONNECT_TYPE.output) return menuCall("inspector_value_output", menuItems_gen("inspector_value_output"));
+        if(jun.connect_type == CONNECT_TYPE.output) 
+        	return menuCall("inspector_value_output", menuItems_gen("inspector_value_output"));
         
         var _menuItem = menuItems_gen("inspector_value_input");
        
@@ -566,11 +567,11 @@ function Panel_Inspector() : PanelContent() constructor {
                 for( var i = 0, n = array_length(PROJECT.globalNode.inputs); i < n; i++ ) {
             		var _glInp = PROJECT.globalNode.inputs[i];
             		if(!typeCompatible(_glInp.type, __dialog_junction.type)) continue;
-            		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ { __dialog_junction.setExpression(d.name); }, noone, noone, noone, { name : _glInp.name }));
+            		
+            		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ { __dialog_junction.setExpression(d.name); })).setParam({ name : _glInp.name });
             	}
                 return submenuCall(_dat, arr);
             }));
-        	
         	array_push(_menuItem, MENU_ITEMS.inspector_extract_global);
         }
         
@@ -579,6 +580,14 @@ function Panel_Inspector() : PanelContent() constructor {
         if(!array_empty(jun.anim_presets)) {
         	array_push(_menuItem, -1);
         	array_push(_menuItem, MENU_ITEMS.inspector_quick_anim);
+        }
+        
+        if(wdgt) {
+        	var _widget = jun.getEditWidget();
+        	if(_widget && !array_empty(_widget.context_menu)) {
+        		array_push(  _menuItem, -1);
+        		array_append(_menuItem, _widget.context_menu);
+        	}
         }
         
         return menuCall("inspector_value_input", _menuItem);
@@ -1449,7 +1458,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     prop_selecting = jun;
                         
                 if(mouse_rpress(pFOCUS && mbRight))
-                    propRightClick(jun);
+                    propRightClick(jun, widHov);
             } 
             
             if(PANEL_ANIMATION && PANEL_ANIMATION.value_hovering == jun) {

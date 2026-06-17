@@ -624,7 +624,7 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_appr, __txt("Text Area")); // Text area
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_widget_incremental", "Incremental Buttons"),
+    			__txt("pref_widget_incremental", "Increment Buttons"),
     			"textbox_incremental",
     			new checkBox(function() /*=>*/ {return prefToggle("textbox_incremental")})
     		));
@@ -650,7 +650,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     	}
     	
-    	ds_list_add(pref_appr, __txt("Curve box")); // Curvebox
+    	ds_list_add(pref_appr, __txt("Curve Box")); // Curvebox
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_widget_curvebox_full", "Expands to full width"),
@@ -1941,6 +1941,11 @@ function Panel_Preference() : PanelContent() constructor {
     				array_push(sect, [ _pref, sp_pref, hh + ui(12), yy ]);
     				array_push(group_labels, { y: yy, text: _pref, key: _pref });
     				
+	    			if(goto_item == _pref) {
+	    				if(goto_item_highlight == 1) sp_pref.setScroll(-hh + sh/2);
+	    				if(goto_item_highlight == 0) goto_item = noone;
+	    			}
+	    				
     				if(yy >= 0 && section_current == "") section_current = psect;
     				psect = _pref;
     				
@@ -1965,11 +1970,10 @@ function Panel_Preference() : PanelContent() constructor {
     			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _bbx, _bby, _bbw, _bbh, COLORS.dialog_preference_prop_bg, .75);
     			
     			if(goto_item == _pref) {
-    				if(goto_item_highlight == 2) sp_pref.setScroll(-hh + sh/2);
+    				if(goto_item_highlight == 1) sp_pref.setScroll(-hh + sh/2);
     				if(goto_item_highlight == 0) goto_item = noone;
     				
-    				var _hga = sin(goto_item_highlight * pi * 8) * .5 + .5;
-    				
+    				var _hga = sin(goto_item_highlight * pi * 4) * .5 + .5;
     				draw_sprite_stretched_add( THEME.ui_panel_bg, 0, _bbx, _bby, _bbw, _bbh, COLORS._main_accent, _hga    );
     				draw_sprite_stretched_add( THEME.ui_panel,    1, _bbx, _bby, _bbw, _bbh, COLORS._main_accent, _hga*.5 );
     			}
@@ -2054,9 +2058,22 @@ function Panel_Preference() : PanelContent() constructor {
     				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
     				var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
     				
-            		draw_sprite_stretched_ext(THEME.section_separator, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.section_hover : COLORS.section_bg);
-                	if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, padx, _yy, ww - padx * 2, sectH, COLORS.section_selected);
-                	if(_hv)    draw_sprite_stretched_ext(THEME.section_separator, 1, padx, _yy, ww - padx * 2, sectH, COLORS.section_hover);
+    				var scx = padx;
+    				var scy = _yy;
+    				var scw = ww - padx * 2;
+    				var sch = sectH;
+    				
+            		draw_sprite_stretched_ext(THEME.section_separator, 0, scx, scy, scw, sch, _hv? COLORS.section_hover : COLORS.section_bg);
+    				
+    				if(goto_item == _name) {
+    					var _hga = sin(goto_item_highlight * pi * 4) * .5 + .5;
+    					draw_sprite_stretched_add( THEME.section_separator, 0, scx, scy, scw, sch, COLORS._main_accent, _hga*.5 );
+    					draw_sprite_stretched_add( THEME.section_separator, 1, scx, scy, scw, sch, COLORS._main_accent, _hga    );
+    					
+    				} else {
+	                	if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, scx, scy, scw, sch, COLORS.section_selected);
+	                	if(_hv)    draw_sprite_stretched_ext(THEME.section_separator, 1, scx, scy, scw, sch, COLORS.section_hover);
+    				}
                 	
     				if(_hv && pFOCUS) {
                     	if(DOUBLE_CLICK) {
@@ -2098,17 +2115,25 @@ function Panel_Preference() : PanelContent() constructor {
     	for (var j = 0, m = array_length(_pref_lists); j < m; j++) 
     	for (var i = 0, n = ds_list_size(_pref_lists[j]); i < n; i++) {
     		var _pr = _pref_lists[j][| i];
-    		if(!is(_pr, __Panel_Linear_Setting_Item_Preference)) continue;
     		
-    		contents[$ _pr.key] = { page: j, item: _pr };
+    		if(is_string(_pr))
+    			contents[$ _pr] = { page: j, item: _pr };
+    		
+    		if(is(_pr, __Panel_Linear_Setting_Item_Preference))
+    			contents[$ _pr.key] = { page: j, item: _pr };
     	}
     
     	function goto(_tag) {
-    		if(!has(contents, _tag)) return self;
+    		if(!has(contents, _tag)) {
+    			print($"Can't find preference key: {_tag}");
+    			return self;
+    		}
+    		
     		var _it = contents[$ _tag];
     		
     		if(page_current != _it.page)
     			page_current = _it.page;
+    			
     		goto_item = _it.item;
     		goto_item_highlight = 1;
     		

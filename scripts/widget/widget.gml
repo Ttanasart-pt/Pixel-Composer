@@ -47,6 +47,8 @@ function widget() constructor {
 	color    = c_white;
 	boxColor = c_white;
 	
+	context_menu = [];
+	
 	#region setters
 		static setLua = function(_lua_thread, _lua_key, _lua_func) {
 			lua_thread = _lua_thread;

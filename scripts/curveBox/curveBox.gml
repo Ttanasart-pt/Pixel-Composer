@@ -74,6 +74,12 @@ function curveBox(_onModify) : widget() constructor {
 		}).setFont(f_p3);
 	#endregion
 	
+	#region context menu
+		context_menu = [
+			menuItem("Curve Box settings...", function() /*=>*/ {return prefOpenKey("Curve Box")}),
+		];
+	#endregion
+	
 	static get_x = function(v) /*=>*/ {return cw * (    (v - minx) * irangex)};
 	static get_y = function(v) /*=>*/ {return ch * (1 - (v - miny) * irangey)};
 	
@@ -708,6 +714,9 @@ function curveBox(_onModify) : widget() constructor {
 							[ "10%", function() /*=>*/ { grid_step = 0.10; } ],
 							[ "25%", function() /*=>*/ { grid_step = 0.25; } ],
 						]),
+						
+						-1,
+						menuItem("Curve Box settings...", function() /*=>*/ {return prefOpenKey("Curve Box")}),
 					], rmx, rmy);
 					
 				} else {
