@@ -92,6 +92,7 @@ def writeChangeTable(metadata, changeData):
 <table class="change-table">'''
 
     addVersion = metadata["pxc_version"] if "pxc_version" in metadata else None
+    print(f"Writing change table for {nodeName} with version {addVersion}")
     if addVersion:
         vMaj = 1
         vMin = math.floor((addVersion % 100_000) / 1_000)
