@@ -190,14 +190,17 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) : __MK
 				var od = dir,         nd = od;
 				var ox = x0,          nx = ox;
 				var oy = y0,          ny = oy;
-				var oc = colorLeaf.evalFast(0), nc = oc;
-				var gg = geoGrav / _samp;
+				var oc = colorMultiply(color, colorLeaf.evalFast(0));
+				var nc = oc;
+				
+				var ismp = 1 / _samp;
+				var gg   = geoGrav * ismp;
 				
 				for( var i = 1; i < _samp; i++ ) {
 					nx = ox + lengthdir_x(ds, nd);
 					ny = oy + lengthdir_y(ds, nd);
 					nd = lerp_angle_direct(nd, gravity, gg);
-					nc = colorLeaf.evalFast(i/_samp);
+					nc = colorMultiply(color, colorLeaf.evalFast(i * ismp));
 					
 					draw_line_round_color(ox, oy, nx, ny, sy, oc, nc);
 					
