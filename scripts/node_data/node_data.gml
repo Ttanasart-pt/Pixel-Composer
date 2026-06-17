@@ -197,11 +197,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		current_data = [];
 		junc_meta    = [
-			nodeValue_Output( "Name",     VALUE_TYPE.text,  ""    )
-				.setIndex(0).setTags(VALUE_TAG.matadata),
-				
-			nodeValue_Output( "Position", VALUE_TYPE.float, [0,0] ).setDisplay(VALUE_DISPLAY.vector)
-				.setIndex(1).setTags(VALUE_TAG.matadata),
+			nodeValue_Output( "Name",     VALUE_TYPE.text,  ""    ).setIndex(0).setTags(VALUE_TAG.matadata),
+			nodeValue_Output( "Position", VALUE_TYPE.float, [0,0] ).setDisplay(VALUE_DISPLAY.vector).setIndex(1).setTags(VALUE_TAG.matadata),
 		];
 		
 		pie_junctions = [];

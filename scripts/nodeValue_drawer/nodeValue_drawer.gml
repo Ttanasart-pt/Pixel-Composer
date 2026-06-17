@@ -120,7 +120,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 			
 		} else { // Animation
-			draw_sprite_ui_uniform(THEME.animate_clock, 0, butx, lb_y, ics, COLORS._main_icon, .3);
+			var index = jun.hasJunctionFrom()? 2 : 0;
+			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, COLORS._main_icon, .3);
 		}
 		
 		lb_w += bs;
@@ -130,8 +131,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			lb_x += bs;
 			lb_w += bs;
 			var _visi = jun.isVisible();
+			var  aa   = _visi? 1 : .8;
+			var  cc   = _visi? jun.color_display : c_white;
 			
-			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, c_white, .8);
+			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, aa);
+			
 			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
 				mbRight = false;
 				cHov    = true;
@@ -141,7 +145,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					jun.node.refreshNodeDisplay();
 				}
 				
-				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics,, 1);
+				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, 1);
 				TOOLTIP = __txt("Visibility");
 				
 				if(mouse_lpress(_focus)) {

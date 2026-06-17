@@ -6,6 +6,11 @@
         "date": "2026-06-17T00:29:17.709Z",
         "node": "",
         "commit": "Fix meta triggers not connecting on load."
+      },
+      {
+        "date": "2026-06-17T04:12:11.408Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Fix connected un-animable value does not display connection status."
       }
     ]
   },

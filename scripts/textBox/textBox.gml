@@ -666,16 +666,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var sb2 = (_w - _bs > ui(32) || always_side_button) && side_button2;
 		var unt = unit != noone && unit.reference != noone;
 		var sbw = _bs * (sb1 + sb2 + unt);
+		var _drawInc = false;
 		
-		if(input == TEXTBOX_INPUT.number) {
-			var _drawInc = PREFERENCES.textbox_incremental && _w - sbw > ui(80) + _bs * 2;
-			sbw += _drawInc * _bs * 2;
+		if(interactable && input == TEXTBOX_INPUT.number)
+			_drawInc = PREFERENCES.textbox_incremental && _w - sbw > ui(80) + _bs * 2;
+		
+		if(hide <= 0) {
+			draw_sprite_stretched_ext(THEME.textbox, base_index, x, y, w, h, boxColor, 1);
+			if(sbw) draw_sprite_stretched_ext(THEME.textbox, 3, _x + _w - sbw, _y, sbw, _h, CDEF.main_mdwhite, 1);
 		}
-		
-		// if(hide <= 0) {
-		draw_sprite_stretched_ext(THEME.textbox, base_index, x, y, w, h, boxColor, 1);
-		if(sbw) draw_sprite_stretched_ext(THEME.textbox, 3, _x + _w - sbw, _y, sbw, _h, CDEF.main_mdwhite, 1);
-		// }
 		
 		if(_w - _bs > ui(32) && front_button) {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
@@ -684,31 +683,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			_x += _bs;
 			_w -= _bs;
-		}
-		
-		if(input == TEXTBOX_INPUT.number && _drawInc) {
-			var bc = [COLORS._main_icon, COLORS._main_icon_light];
-			if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.add_16, 0, bc, 1, .75) == 2) {
-				var dx = slide_range == noone || slide_int? 1 : (slide_range[1] - slide_range[0]) / 10;
-				if(key_mod_press(CTRL)) dx *= 10;
-				if(key_mod_press(ALT))  dx /= 10;
-				
-				_input_text = string_real(toNumber(_text) + dx);
-				apply();
-			}
-			_bx -= _bs;
-			_w  -= _bs;
-			
-			if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.minus_16, 0, bc, 1, .75) == 2) {
-				var dx = slide_range == noone || slide_int? 1 : (slide_range[1] - slide_range[0]) / 10;
-				if(key_mod_press(CTRL)) dx *= 10;
-				if(key_mod_press(ALT))  dx /= 10;
-				
-				_input_text = string_real(toNumber(_text) - dx);
-				apply();
-			}
-			_bx -= _bs;
-			_w  -= _bs;
 		}
 		
 		if(sb1) {
@@ -730,6 +704,31 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		if(unt) {
 			unit.triggerButton.setFocusHover(iactive, ihover);
 			unit.draw(_bx, _by, _bs, _bs, _m);
+			_bx -= _bs;
+			_w  -= _bs;
+		}
+		
+		if(input == TEXTBOX_INPUT.number && _drawInc) {
+			var bc = [COLORS._main_icon, COLORS._main_icon_light];
+			if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.add_16, 0, bc, .75, .75) == 2) {
+				var dx = slide_range == noone || slide_int? 1 : (slide_range[1] - slide_range[0]) / 10;
+				if(key_mod_press(CTRL)) dx *= 10;
+				if(key_mod_press(ALT))  dx /= 10;
+				
+				_input_text = string_real(toNumber(_text) + dx);
+				apply();
+			}
+			_bx -= _bs;
+			_w  -= _bs;
+			
+			if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.minus_16, 0, bc, .75, .75) == 2) {
+				var dx = slide_range == noone || slide_int? 1 : (slide_range[1] - slide_range[0]) / 10;
+				if(key_mod_press(CTRL)) dx *= 10;
+				if(key_mod_press(ALT))  dx /= 10;
+				
+				_input_text = string_real(toNumber(_text) - dx);
+				apply();
+			}
 			_bx -= _bs;
 			_w  -= _bs;
 		}

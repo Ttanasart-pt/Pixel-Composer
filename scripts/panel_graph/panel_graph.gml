@@ -447,6 +447,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     context_str = "Graph";
     icon        = THEME.panel_graph_icon;
     pause_when_rendering = true;
+    node_focus_context   = undefined;
     
     auto_pin = true;
     w = ui(800);
@@ -558,8 +559,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         dropper_active   = false;
 		dropper_callback = undefined;
-		
-		node_focus_context = undefined;
     #endregion
     
     #region // ---- nodes ----
@@ -4995,8 +4994,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function searchWiki() {
     	if(array_empty(nodes_selecting)) return;
     	
+    	var _node = nodes_selecting[0];
+    	var _type = string_replace(string_lower(instanceof(_node)), "node_", "");
+    	var _url  = $"https://docs.pixel-composer.com/nodes/_index/{_type}.html";
+    	
     	var dia = dialogCall(_p_dialog_modal)
-    		.setContent("Open URL", "Open documentation in browser?")
+    		.setContent("Open URL", $"Open documentation in browser?\n{_url}")
     		.setButtons([
 				[ __txt("Open"),   function() /*=>*/ {
 			    	var _node = nodes_selecting[0];
