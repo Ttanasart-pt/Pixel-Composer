@@ -81,16 +81,14 @@ def writeSidebar(sidebar, depth = 0):
 
     if contents != None and len(contents) > 0:
         if depth > 0:
-            sideContent += f'''<div class="sidebar-menu">
-                <div class="sidebar-icon sidebar-dir"></div>
-                <a href="{page}" class="sidebar-dir">{title}</a>
-            </div>
-            <ul class="submenu">\n'''
+            sideContent += f'<div class="sidebar-menu">' \
+                           f'<div class="sidebar-icon sidebar-dir"></div>' \
+                           f'<a href="{page}" class="sidebar-dir">{title}</a>' \
+                           f'</div><ul class="submenu">\n'
         else:
-            sideContent += f'''<div class="sidebar-menu">
-                <div class="sidebar-icon"></div>
-                <a href="/" class="sidebar-home">Home</a>
-            </div>\n'''
+            sideContent += f'<div class="sidebar-menu">' \
+                           f'<div class="sidebar-icon"></div>' \
+                           f'<a href="/" class="sidebar-home">Home</a></div>\n'
 
         for content in contents:
             sideContent += writeSidebar(content, depth + 1)
@@ -99,10 +97,9 @@ def writeSidebar(sidebar, depth = 0):
             sideContent += "</ul>\n"
 
     else:
-        sideContent += f'''<div class="sidebar-menu sidebar-file">
-                <div class="sidebar-icon"></div>
-                <a href="{page}" class="sidebar-file">{title}</a>
-            </div>\n'''
+        sideContent += f'<div class="sidebar-menu sidebar-file">' \
+                       f'<div class="sidebar-icon"></div>' \
+                       f'<a href="{page}" class="sidebar-file">{title}</a></div>\n'
         
     sideContent += "</li>"
     return sideContent
