@@ -92,12 +92,33 @@ def writeChangeTable(metadata, changeData):
 <table class="change-table">'''
 
     addVersion = metadata["pxc_version"] if "pxc_version" in metadata else None
-    print(f"Writing change table for {nodeName} with version {addVersion}")
     if addVersion:
+        addVersion = math.floor(addVersion)
         vMaj = 1
-        vMin = math.floor((addVersion % 100_000) / 1_000)
-        vBet = math.floor((addVersion %   1_000) /    10)
-        addVersion = f"{vMaj}.{vMin}.{vBet}"
+
+        if addVersion > 1_000_000:
+            vMin = math.floor((addVersion % 100_000) / 1_000)
+            vBet = math.floor((addVersion %   1_000) /    10)
+            addVersion = f"{vMaj}.{vMin}.{vBet}"
+
+            vPat = addVersion % 10
+            if vPat != 0:
+                addVersion = f"{addVersion}.{vPat}"
+
+        elif addVersion > 10_000:
+            vMin = math.floor((addVersion %  10_000) /   100)
+            vBet = math.floor((addVersion %     100) /    10)
+            addVersion = f"{vMaj}.{vMin}.{vBet}"
+            
+            vPat = addVersion % 10
+            if vPat != 0:
+                addVersion = f"{addVersion}.{vPat}"
+        else:
+            vMin = math.floor((addVersion %  1_000) /    10)
+            vBet = addVersion % 10
+            addVersion = f"{vMaj}.{vMin}.{vBet}"
+
+        print(f"Node {nodeName} was introduced in version {addVersion}.")
         changeText += f'<tr><th>{addVersion}</th><td><ul><li>Introduced</li></ul></td></tr>'
         hasAnyChange = True
 
