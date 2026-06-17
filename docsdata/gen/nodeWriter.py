@@ -94,32 +94,33 @@ def writeChangeTable(metadata, changeData):
     addVersion = metadata["pxc_version"] if "pxc_version" in metadata else None
     if addVersion:
         addVersion = math.floor(addVersion)
+        addString  = ""
         vMaj = 1
 
         if addVersion > 1_000_000:
             vMin = math.floor((addVersion % 100_000) / 1_000)
             vBet = math.floor((addVersion %   1_000) /    10)
-            addVersion = f"{vMaj}.{vMin}.{vBet}"
+            addString = f"{vMaj}.{vMin}.{vBet}"
 
             vPat = addVersion % 10
             if vPat != 0:
-                addVersion = f"{addVersion}.{vPat}"
+                addString = f"{addVersion}.{vPat}"
 
         elif addVersion > 10_000:
             vMin = math.floor((addVersion %  10_000) /   100)
             vBet = math.floor((addVersion %     100) /    10)
-            addVersion = f"{vMaj}.{vMin}.{vBet}"
+            addString = f"{vMaj}.{vMin}.{vBet}"
             
             vPat = addVersion % 10
             if vPat != 0:
-                addVersion = f"{addVersion}.{vPat}"
+                addString = f"{addVersion}.{vPat}"
         else:
             vMin = math.floor((addVersion %  1_000) /    10)
             vBet = addVersion % 10
-            addVersion = f"{vMaj}.{vMin}.{vBet}"
+            addString = f"{vMaj}.{vMin}.{vBet}"
 
-        print(f"Node {nodeName} was introduced in version {addVersion}.")
-        changeText += f'<tr><th>{addVersion}</th><td><ul><li>Introduced</li></ul></td></tr>'
+        print(f"Node {nodeName} was introduced in version {addString}.")
+        changeText += f'<tr><th>{addString}</th><td><ul><li>Introduced</li></ul></td></tr>'
         hasAnyChange = True
 
     for change in changeData:
