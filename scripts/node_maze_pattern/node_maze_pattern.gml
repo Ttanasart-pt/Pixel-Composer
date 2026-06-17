@@ -31,6 +31,8 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- Nodes
 	
+	// attribute_surface_depth();
+	
 	mask_samp = new Surface_Sampler_Grey();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

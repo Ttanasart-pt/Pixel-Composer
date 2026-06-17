@@ -268,7 +268,8 @@ void main() {
 		extR = radians(extR);
 	#endregion
 	
-	vec2  tx = 1. / dimension;
+	vec2 tx = 1. / dimension;
+	vec2 txpos = v_vTexcoord;
 	vec2 flow;
 	
 	if(flowmapUse == 0) {
@@ -289,6 +290,8 @@ void main() {
 		
 	}
 	
+	txpos -= flow * flowR / iter;
+	
 	if(externalForceType == 0) {
 		vec2  exPos = externalForcePos / dimension;
 		vec2  exFor = v_vTexcoord - exPos;
@@ -296,11 +299,10 @@ void main() {
 		float exDis = length(exFor) / externalForceRad;
 		      exDis = max(0., 1. - (exDis * 2.));
 		
-		flow += extF * exFor * exDis;
-	}
+		txpos -= extF * exFor * exDis / iter / 10.;
+		
+	} else if(externalForceType == 1)
+		txpos += extF * vec2(-cos(extR), sin(extR)) / iter / 10.;
 	
-	if(externalForceType == 1) flow -= extF * vec2(cos(extR), sin(extR));
-	
-	vec2 txpos = v_vTexcoord - flow * flowR / iter;
     gl_FragColor = sampleTexture( gm_BaseTexture, txpos);
 }
