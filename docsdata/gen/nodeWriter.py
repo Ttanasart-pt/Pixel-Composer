@@ -89,11 +89,14 @@ def writeChangeTable(metadata, changeData):
     changeText = '''
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table">'''
+
     for change in changeData:
         version = change["version"]
         changes = change["changes"]
-        changeTextV = f'<tr><th>{version}</th></tr>'
-        hasChanges  = False
+        
+        changeTextV   = f'<tr><th>{version}</th>'
+        commitMessage = "<ul>"
+        hasChanges    = False
 
         for c in changes:
             commit  = c["commit"]
@@ -103,8 +106,12 @@ def writeChangeTable(metadata, changeData):
             if(commit.startswith("Fix")):
                 continue
 
-            changeTextV += f'<tr><td>{commit}</td></tr>'
+            commit = commit.split(":")[0]
+            commitMessage += f'<li>{commit}</li>'
             hasChanges = True
+
+        commitMessage += "</ul>"
+        changeTextV   += f'<td>{commitMessage}</td></tr>'
 
         if hasChanges:
             changeText += changeTextV
