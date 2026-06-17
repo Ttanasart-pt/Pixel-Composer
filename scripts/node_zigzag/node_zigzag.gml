@@ -15,15 +15,15 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 9, nodeValue_Surface( "Mask"       ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Slider(   "Amount",      1     )).setUnitSimple().setMappable(6).setPieMenu();
+	newInput( 1, nodeValue_Slider(   "Size",        1     )).setUnitSimple().setMappable(6).setPieMenu();
 	newInput( 2, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 8, nodeValue_Rotation( "Angle",       0     )).setHotkey("R").setMappable(7).setPieMenu();
 	newInput(10, nodeValue_Slider(   "Threshold",  .5     )).setPieMenu();
 	
 	////- =Render
-	newInput( 5, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ]));
-	newInput( 3, nodeValue_Color(       "Color 1", ca_white));
-	newInput( 4, nodeValue_Color(       "Color 2", ca_black));
+	newInput( 5, nodeValue_EButton(  "Type",    0, [ "Solid", "Smooth", "AA" ]));
+	newInput( 3, nodeValue_Color(    "Color 1", ca_white));
+	newInput( 4, nodeValue_Color(    "Color 2", ca_black));
 	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

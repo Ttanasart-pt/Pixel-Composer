@@ -2,41 +2,41 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Color Adjust";
 	
 	newActiveInput(11);
-	newInput(12, nodeValue_EButton( "Input Type", 0, [ "Surface", "Color" ] ));
 	newInput(15, nodeValue_Toggle(  "Channel",    0b1111, { data: array_create(4, THEME.inspector_channel) } ));
 	newInput( 9, nodeValue_Slider(  "Alpha",      1 )).setMappable(24);
 	
 	////- =Input
-	newInput( 0, nodeValue_Surface( "Surface In" ));
-	newInput( 8, nodeValue_Surface( "Mask"       ));
-	newInput(16, nodeValue_Bool(    "Invert mask",  false ));
-	newInput(13, nodeValue_Palette( "Color" )).setVisible(true, true);
-	newInput(17, nodeValue_Slider(  "Mask feather", 1, [ 1, 16, 0.1 ]        ));
+	newInput(12, nodeValue_EButton( "Input Type",   0, [ "Surface", "Color" ] ));
+	newInput( 0, nodeValue_Surface( "Surface In"                   ));
+	newInput( 8, nodeValue_Surface( "Mask"                         ));
+	newInput(16, nodeValue_Bool(    "Invert mask",  false          ));
+	newInput(13, nodeValue_Palette( "Color"                        )).setVisible(true, true);
+	newInput(17, nodeValue_Slider(  "Mask feather", 1, [1,16,.1]   ));
 	
 	////- =Brightness
-	newInput( 1, nodeValue_Slider(  "Brightness",  0, [ -1, 1, 0.01 ] )).setHotkey("B").setMappable(18).setPieMenu();
-	newInput( 2, nodeValue_Slider(  "Contrast",   .5                  )).setHotkey("C").setMappable(19).setPieMenu();
-	newInput(10, nodeValue_Slider(  "Exposure",    1, [ 0, 4, 0.01 ]  )).setHotkey("E").setMappable(25).setPieMenu();
+	newInput( 1, nodeValue_Slider(  "Brightness",  0, [-1,1,.01]   )).setHotkey("B").setMappable(18).setPieMenu();
+	newInput( 2, nodeValue_Slider(  "Contrast",   .5               )).setHotkey("C").setMappable(19).setPieMenu();
+	newInput(10, nodeValue_Slider(  "Exposure",    1, [0,4,.01]    )).setHotkey("E").setMappable(25).setPieMenu();
 	
 	////- =HSV
-	newInput( 3, nodeValue_Slider(  "Hue",        0, [ -1, 1, 0.01 ]  )).setMappable(20).setPieMenu();
-	newInput( 4, nodeValue_Slider(  "Saturation", 0, [ -1, 1, 0.01 ]  )).setMappable(21).setPieMenu();
-	newInput( 5, nodeValue_Slider(  "Value",      0, [ -1, 1, 0.01 ]  )).setMappable(22).setPieMenu();
+	newInput( 3, nodeValue_Slider(  "Hue",        0, [-1,1,.01]    )).setMappable(20).setPieMenu();
+	newInput( 4, nodeValue_Slider(  "Saturation", 0, [-1,1,.01]    )).setMappable(21).setPieMenu();
+	newInput( 5, nodeValue_Slider(  "Value",      0, [-1,1,.01]    )).setMappable(22).setPieMenu();
 	
 	////- =Color
 	newInput( 6, nodeValue_Color(   "Blend",        ca_white       ));
 	newInput(14, nodeValue_EScroll( "Blend mode",   0, BLEND_TYPES ));
 	newInput( 7, nodeValue_Slider(  "Blend amount", 0              )).setMappable(23);
-	// inputs 26
+	// 26
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Color Out",   VALUE_TYPE.color,   []    )).setDisplay(VALUE_DISPLAY.palette);
 	
-	input_display_list = [ 11, 12, 15, 9, 24, 
-		["Input",		false], 0, 8, 16, 17, 13, 
-		["Brightness",	false], 1, 18, 10, 25, 2, 19, 
-		["HSV",			false], 3, 20, 4, 21, 5, 22, 
-		["Color blend", false], 6, 14, 7, 23, 
+	input_display_list = [ 11, 15,  9, 24, 
+		[ "Input",       false ], 12,  0,  8, 16, 17, 13, 
+		[ "Brightness",  false ],  1, 18, 10, 25,  2, 19, 
+		[ "HSV",         false ],  3, 20,  4, 21,  5, 22, 
+		[ "Color blend", false ],  6, 14,  7, 23, 
 	];
 	
 	////- Node

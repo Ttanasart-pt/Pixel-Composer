@@ -103,7 +103,7 @@ DIALOG_DRAW_BG
 	var expandAction = false;
 	var expand = PREFERENCES.splash_expand_recent;
 	
-	switch(pages[PREFERENCES.splash_page]) {
+	switch(array_safe_get(pages, PREFERENCES.splash_page)) {
 		case "Welcome Files" :
 		case "Workshop" :
 			var bx = x1;

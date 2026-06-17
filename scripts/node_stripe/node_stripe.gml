@@ -20,7 +20,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Pattern
 	newInput(23, nodeValue_Bool(     "Tiled"                ));
-	newInput( 1, nodeValue_Slider(   "Amount",       .25    )).setUnitSimple().setMappable(11).setHotkey("S").setPieMenu();
+	newInput( 1, nodeValue_Slider(   "Size",         .25    )).setUnitSimple().setMappable(11).setHotkey("S").setPieMenu();
 	newInput(24, nodeValue_Slider(   "Amount",       .25    ))                                                            ;
 	newInput(10, nodeValue_Slider(   "Strip Ratio",  .5     ))                .setMappable(14)               .setPieMenu();
 	newInput( 2, nodeValue_Rotation( "Angle",         0     ))                .setMappable(12).setHotkey("R").setPieMenu();
