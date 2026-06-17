@@ -93,7 +93,7 @@ def writeChangeTable(metadata, changeData):
     for change in changeData:
         version = change["version"]
         changes = change["changes"]
-        
+
         changeTextV   = f'<tr><th>{version}</th>'
         commitMessage = "<ul>"
         hasChanges    = False
@@ -106,7 +106,7 @@ def writeChangeTable(metadata, changeData):
             if(commit.startswith("Fix")):
                 continue
 
-            commit = commit.split(":")[0]
+            commit = commit.split(":")[1] if ":" in commit else commit
             commitMessage += f'<li>{commit}</li>'
             hasChanges = True
 
