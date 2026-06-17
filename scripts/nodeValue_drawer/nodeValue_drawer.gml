@@ -72,6 +72,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var lb_w = ds_w + padx + ui(4);
 		var fr   = _input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
 		
+		var conn = _input? jun.hasJunctionFrom() : jun.hasJunctionTo();
+		
 		if(fr) { // Feedback / Loop
 			var ss = fr.icon;
 			var cc = fr.color;
@@ -87,7 +89,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 			
 		} else if(_input && jun.isAnimable() && !jun.expUse) { // Animation
-			var index = jun.hasJunctionFrom()? 2 : jun.is_anim;
+			var index = conn? 2 : jun.is_anim;
 			
 			var cc = c_white;
 			if(jun.is_anim) cc = COLORS._main_value_positive;
@@ -104,7 +106,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					jun.setAnim(anim_hold, true);
 					
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
-				TOOLTIP = jun.hasJunctionFrom()? __txt("panel_inspector_remove_link", "Remove link") : __txt("panel_inspector_toggle_anim", "Toggle animation");
+				TOOLTIP = conn? __txt("panel_inspector_remove_link", "Remove Connection") : 
+				                __txt("panel_inspector_toggle_anim", "Toggle Animation");
 						
 				if(mouse_lpress(_focus)) {
 					if(jun.value_from != noone)
@@ -120,8 +123,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 			
 		} else { // Animation
-			var index = jun.hasJunctionFrom()? 2 : 0;
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, COLORS._main_icon, .3);
+			var index = conn * 2;
+			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : COLORS._main_icon, .3);
 		}
 		
 		lb_w += bs;
@@ -130,9 +133,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			butx += bs;
 			lb_x += bs;
 			lb_w += bs;
-			var _visi = jun.isVisible();
-			var  aa   = _visi? 1 : .8;
-			var  cc   = _visi? jun.color_display : c_white;
+			var _visi = conn? 2 : jun.isVisible();
+			
+			var  aa = _visi? 1 : .8;
+			var  cc = _visi? jun.color_display : c_white;
 			
 			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, aa);
 			
