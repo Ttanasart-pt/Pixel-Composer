@@ -10,6 +10,7 @@ uniform float position;
 uniform int   aa;
 uniform int   mode;
 uniform int   alpha;
+uniform vec2  level;
 
 void main() {
     vec2 tx = 1. / dimension;
@@ -17,8 +18,9 @@ void main() {
     
     vec4  cc = texture2D( gm_BaseTexture, sm );
     float br = 1. - dot(cc.rgb, vec3(0.2126, 0.7152, 0.0722)) * cc.a;
+          br = mix(level[0], level[1], br);
+    
     float bw = iAxis == 0? v_vTexcoord.y : 1. - v_vTexcoord.x;
-    float fa = iAxis == 0? tx.x : tx.y;
     
     float res = step(br, bw);
     

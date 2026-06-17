@@ -14,15 +14,15 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(11, nodeValue_Vec2(     "Scale",     [1,1]   ));
 	
 	////- =Rendering
-	newInput( 2, nodeValue_Surface( "Texture" ));
-	newInput( 7, nodeValue_Vec2(    "UV Position", [0,0] ));
-	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1] ));
+	newInput( 2, nodeValue_Surface( "Texture"             ));
+	newInput( 7, nodeValue_Vec2(    "UV Position", [0,0]  ));
+	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1]  ));
 	
 	////- =Paths
-	newInput(12, nodeValue_Range(    "Range", [0,1] ));
-	newInput( 4, nodeValue_Slider(   "Shift",  0     ));
-	newInput( 5, nodeValue_Bool(     "Invert", false ));
-	newInput( 0, nodeValue_Path( "Path" )).rejectArray();
+	newInput(12, nodeValue_Range(   "Range", [0,1]  ));
+	newInput( 4, nodeValue_Slider(  "Shift",  0     ));
+	newInput( 5, nodeValue_Bool(    "Invert", false ));
+	newInput( 0, nodeValue_Path(    "Path"          )).rejectArray();
 	// input 13
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
@@ -31,7 +31,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		[ "Output",    false ],  1, 
 		[ "Mapping",   false ],  3,  
 		[ "Transform", false ],  8,  9, 10, 11, 
-		[ "Rendering", false ],  2,  6, 
+		[ "Rendering", false ],  2,  7,  6, 
 		[ "Paths",     false ], 12,  4,  5,  0,
 	];
 	

@@ -17,17 +17,18 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 2, nodeValue_Slider(  "Position", 0 )).setHotkey("G").setPieMenu();
 	
 	////- =Output
-	newInput( 4, nodeValue_EButton( "Mode",  0 , [ "BW", "Colored" ] )).setPieMenu();
-	newInput( 3, nodeValue_Bool(    "Anti-aliasing", false )).setPieMenu();
-	newInput( 6, nodeValue_Bool(    "To Alpha",      false )).setPieMenu();
-	// input 7
+	newInput( 4, nodeValue_EButton(  "Mode",           0 , [ "BW", "Colored" ] )).setPieMenu();
+	newInput( 7, nodeValue_SliRange( "Level",         [0,1] ));
+	newInput( 3, nodeValue_Bool(     "Anti-aliasing", false )).setPieMenu();
+	newInput( 6, nodeValue_Bool(     "To Alpha",      false )).setPieMenu();
+	// 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
 		[ "Surfaces", false ],  0,  5, 
 		[ "Axis",     false ],  1,  2, 
-		[ "Output",   false ],  4,  3,  6, 
+		[ "Output",   false ],  4,  7,  3,  6, 
 	];
 	
 	////- Node
@@ -72,8 +73,9 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _iaxs = _data[ 1];
 			var _posi = _data[ 2];
 			
-			var _aa   = _data[ 3];
 			var _mode = _data[ 4];
+			var _levl = _data[ 7];
+			var _aa   = _data[ 3];
 			var _alph = _data[ 6];
 		#endregion
 		
@@ -90,6 +92,7 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_i( "aa",        _aa   );
 			shader_set_i( "mode",      _mode );
 			shader_set_i( "alpha",     _alph );
+			shader_set_2( "level",     _levl );
 			
 			draw_surface_safe(_surf);
 			gpu_set_tex_filter(false);
