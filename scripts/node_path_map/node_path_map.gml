@@ -131,8 +131,9 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			shader_set_interpolation(_surf);
 			
 			draw_set_color(c_white);
-			shader_set_2("uvP", _uvP);
-			shader_set_2("uvS", _uvS);
+			shader_set_2( "uvP",       _uvP  );
+			shader_set_2( "uvS",       _uvS  );
+			shader_set_2( "trimRange", [0,1] );
 			
 			var ancx = _anc[0] * _dim[0];
 			var ancy = _anc[1] * _dim[1];
@@ -156,7 +157,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var p1u = (j + 0) / (_sub - 1), p1v = (i + 1) / (_lines - 1);
 					var p2u = (j + 1) / (_sub - 1), p2v = (i + 0) / (_lines - 1);
 					var p3u = (j + 1) / (_sub - 1), p3v = (i + 1) / (_lines - 1);
-				
+					
 					draw_vertex_texture(p0[0], p0[1], p0u, p0v);
 					draw_vertex_texture(p1[0], p1[1], p1u, p1v);
 					draw_vertex_texture(p2[0], p2[1], p2u, p2v);

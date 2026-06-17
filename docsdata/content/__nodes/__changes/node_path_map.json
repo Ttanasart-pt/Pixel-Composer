@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.007",
+    "changes": [
+      {
+        "date": "2026-06-17T06:13:59.785Z",
+        "node": "Path Map",
+        "commit": "**Path Map**: Fix incorrect Y axis mapping."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {
