@@ -396,17 +396,18 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setDimension(96, 48);
 	
 	////- =Path
-	newInput(1, nodeValue_Bool( "Loop",         false )).rejectArray();
-	newInput(3, nodeValue_Bool( "Round anchor", false )).rejectArray();
+	newInput( 1, nodeValue_Bool( "Loop",         false )).rejectArray();
+	newInput( 3, nodeValue_Bool( "Round anchor", false )).rejectArray();
 	
 	////- =Sampling
-	newInput(0, nodeValue_Slider(  "Path progress", 0 )).setTooltip("Sample position from path.");
-	newInput(2, nodeValue_EScroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
+	newInput( 0, nodeValue_Slider(  "Path progress", 0 )).setTooltip("Sample position from path.");
+	newInput( 2, nodeValue_EScroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
 	// Inputs 4
 	
-	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, noone ));
-	newOutput(2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    []    )).setVisible(false).setArrayDepth(1);
+	newOutput( 0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
+	newOutput( 1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, noone ));
+	newOutput( 2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    []    )).setVisible(false).setArrayDepth(1);
+	newOutput( 3, nodeValue_Output( "Weights",      VALUE_TYPE.float,    []    )).setVisible(false).setArrayDepth(1);
 	
 	input_display_list  = [
 		[ "Path",     false ], 1, 3, 
@@ -414,7 +415,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		[ "Anchors",  false ], 
 	];
 	
-	output_display_list = [ 1, 0, 2 ];
+	output_display_list = [ 1, 0, 2, 3 ];
 	
 	setDynamicInput(1, false);
 	
@@ -504,6 +505,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		transform_mx = 0;   transform_my = 0;
 		
 		weight_drag    = noone;
+		weight_drag_v  = 0;
 		weight_drag_sx = 0;
 		weight_drag_sy = 0;
 		weight_drag_mx = 0;
@@ -993,17 +995,19 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 		} else if(weight_drag != noone) {
-			
 			var _mmx = weight_drag_sx + (_mx - weight_drag_mx);
 			var _mmy = weight_drag_sy + (_my - weight_drag_my);
 			
-			var _dis = point_distance(weight_drag_sx, weight_drag_sy, _mmx, _mmy) / _s;
-			if(key_mod_press(CTRL)) _dis = round(_dis);
+			var _wei = max(0, weight_drag_v + (_mx - weight_drag_mx) / _s);
+			if(key_mod_press(CTRL)) _wei = round(_wei);
 			
-			attributes.weight[weight_drag][1] = _dis;
-			if(_pth.loop && weight_drag == 0) array_last(attributes.weight)[1] = _dis;
+			// var _wei = point_distance(weight_drag_sx, weight_drag_sy, _mmx, _mmy) / _s;
+			// if(key_mod_press(CTRL)) _wei = round(_wei);
 			
-			TOOLTIP = __txt("Weight") + $": {_dis}";
+			attributes.weight[weight_drag][1] = _wei;
+			if(_pth.loop && weight_drag == 0) array_last(attributes.weight)[1] = _wei;
+			
+			TOOLTIP = __txt("Weight") + $": {_wei}";
 			_pth.updateLength();
 			
 			if(mouse_lrelease()) {
@@ -1898,10 +1902,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						draw_set_color(COLORS._main_accent);
 						draw_circle(_point_hover[0], _point_hover[1], 4, false);
 						
-					} else if(_weight_hover != -1 && key_mod_press(SHIFT)) {
+					} else if(key_mod_press(SHIFT)) {
 						CURSOR_SPRITE = THEME.cursor_remove;
 						
-						if(mouse_lpress(active)) {
+						if(_weight_hover != -1 && mouse_lpress(active)) {
 							if(_weight_hover == 0 || _weight_hover == array_length(attributes.weight) - 1) 
 								attributes.weight[_weight_hover][0] = 1;
 							else 
@@ -1909,7 +1913,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							triggerRender();
 						}
 						break;
-					}
+					} 
 					
 					if(mouse_lpress(active)) {
 						if(array_empty(attributes.weight)) attributes.weight = [ [ 0, 1 ], [ 100, 1 ] ];
@@ -1917,6 +1921,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						
 						if(_weight_hover != -1) {
 							weight_drag = _weight_hover;
+							
 						} else {
 							for( var i = 0, n = array_length(_w) - 1; i < n; i++ ) {
 								if(_point_ratio > _w[i + 1][0]) continue;
@@ -1927,12 +1932,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							}
 						}
 						
+						weight_drag_v  = attributes.weight[weight_drag][1];
 						weight_drag_sx = _point_hover[0];
 						weight_drag_sy = _point_hover[1];
 						weight_drag_mx = _mx;
 						weight_drag_my = _my;
-						
 					}
+					
 				}
 				break;
 				
@@ -2381,6 +2387,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		outputs[2].setValue(_a);
 		outputs[1].setValue(_pth);
+		outputs[3].setValue(attributes.weight);
 		
 		if(is_array(_rat)) {
 			var _out = array_create(array_length(_rat));

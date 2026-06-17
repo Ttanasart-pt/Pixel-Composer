@@ -3179,7 +3179,6 @@ function Panel_Preview() : PanelContent() constructor {
         	if(!_n.isGizmoGlobal) continue;
         	
         	var _h = _n.doDrawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, params);
-        	
         	if(_h == true) {
         		_hovering  = true;
         		overHover  = false;

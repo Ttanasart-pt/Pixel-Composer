@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.007",
+    "changes": [
+      {
+        "date": "2026-06-17T05:52:20.854Z",
+        "node": "Path] Weight editor now won't reset weight on click. - [Path",
+        "commit": "**Path] Weight editor now won't reset weight on click. - [Path**: Add weight output."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.006",
     "changes": [
       {
