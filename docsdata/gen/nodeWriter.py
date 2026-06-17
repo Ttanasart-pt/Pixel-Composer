@@ -97,14 +97,14 @@ def writeChangeTable(metadata, changeData):
         addString  = ""
         vMaj = 1
 
-        if addVersion > 1_000_000:
+        if addVersion > 100_000:
             vMin = math.floor((addVersion % 100_000) / 1_000)
             vBet = math.floor((addVersion %   1_000) /    10)
             addString = f"{vMaj}.{vMin}.{vBet}"
 
             vPat = addVersion % 10
             if vPat != 0:
-                addString = f"{addVersion}.{vPat}"
+                addString = f"{addString}.{vPat}"
 
         elif addVersion > 10_000:
             vMin = math.floor((addVersion %  10_000) /   100)
@@ -113,13 +113,13 @@ def writeChangeTable(metadata, changeData):
             
             vPat = addVersion % 10
             if vPat != 0:
-                addString = f"{addVersion}.{vPat}"
+                addString = f"{addString}.{vPat}"
         else:
             vMin = math.floor((addVersion %  1_000) /    10)
             vBet = addVersion % 10
             addString = f"{vMaj}.{vMin}.{vBet}"
 
-        print(f"Node {nodeName} was introduced in version {addString}.")
+        # print(f"Node {nodeName} was introduced in version {addString}/{addVersion}.")
         changeText += f'<tr><th>{addString}</th><td><ul><li>Introduced</li></ul></td></tr>'
         hasAnyChange = True
 
