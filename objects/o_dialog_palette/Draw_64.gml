@@ -458,7 +458,7 @@ draggable = true;
 	bx -= ui(32);
 	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, "", THEME.add_16) == 2) {
 		index_selecting = [ array_length(palette), 1 ];
-		palette[array_length(palette)] = ca_black;
+		palette[array_length(palette)] = selector.current_color;
 		
 		refreshPaletteObject();
 		onModify(palette);
