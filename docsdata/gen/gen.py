@@ -84,11 +84,11 @@ def writeSidebar(sidebar, depth = 0):
             sideContent += f'<div class="sidebar-menu">' \
                            f'<div class="sidebar-icon sidebar-dir"></div>' \
                            f'<a href="{page}" class="sidebar-dir">{title}</a>' \
-                           f'</div><ul class="submenu">\n'
+                           f'</div><ul class="submenu">'
         else:
             sideContent += f'<div class="sidebar-menu">' \
                            f'<div class="sidebar-icon"></div>' \
-                           f'<a href="/" class="sidebar-home">Home</a></div>\n'
+                           f'<a href="/" class="sidebar-home">Home</a></div>'
 
         for content in contents:
             sideContent += writeSidebar(content, depth + 1)
@@ -99,9 +99,9 @@ def writeSidebar(sidebar, depth = 0):
     else:
         sideContent += f'<div class="sidebar-menu sidebar-file">' \
                        f'<div class="sidebar-icon"></div>' \
-                       f'<a href="{page}" class="sidebar-file">{title}</a></div>\n'
+                       f'<a href="{page}" class="sidebar-file">{title}</a></div>'
         
-    sideContent += "</li>"
+    sideContent += "</li>\n"
     return sideContent
 
 sidebarContent = ''
