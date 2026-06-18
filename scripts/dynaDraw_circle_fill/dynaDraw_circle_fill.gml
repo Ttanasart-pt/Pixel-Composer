@@ -13,28 +13,20 @@ function dynaDraw_circle_fill() : dynaDraw() constructor {
 		
 		switch(round(_sx)) {
 			case 0 : 
-			case 1 : 
-				draw_point( _x, _y );
-				break;
+			case 1 : draw_point( _x, _y );     break;
 				
-			case 2 : 
-				draw_point( _x + 0, _y + 0 );
-				draw_point( _x + 1, _y + 0 );
-				draw_point( _x + 0, _y + 1 );
-				draw_point( _x + 1, _y + 1 );
-				break;
+			case 2 : draw_point( _x+0, _y+0 );
+				     draw_point( _x+1, _y+0 );
+				     draw_point( _x+0, _y+1 );
+				     draw_point( _x+1, _y+1 ); break;
 				
-			case 3 : 
-				draw_point( _x,     _y     );
-				draw_point( _x - 1, _y     );
-				draw_point( _x + 1, _y     );
-				draw_point( _x,     _y + 1 );
-				draw_point( _x,     _y - 1 );
-				break;
+			case 3 : draw_point( _x,   _y   );
+				     draw_point( _x-1, _y   );
+				     draw_point( _x+1, _y   );
+				     draw_point( _x,   _y+1 );
+				     draw_point( _x,   _y-1 ); break;
 				
-			default : 
-				draw_circle(_x, _y, _sx / 2 - 1, false);
-				break;
+			default : draw_circle(_x, _y, _sx/2, false); break;
 		}
 		
 		draw_set_alpha(1);

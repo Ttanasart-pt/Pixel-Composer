@@ -379,7 +379,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			var bx = _x + ww - ui(2) - bs;
 			var by = _y + ui(2);
 			
-			if(p != projectPal) {
+			if(p != projectPal && has(p, "fav")) {
 				var bt = __txt("Favorite");
 				var bc = p.fav? CDEF.yellow : COLORS._main_icon;
 				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.favorite, p.fav, bc, .85);
