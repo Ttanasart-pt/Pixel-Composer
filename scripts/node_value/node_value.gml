@@ -2078,12 +2078,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setValueInspector = function(_val = 0, _index = noone, time = NODE_CURRENT_FRAME) { // This should be in panel_inspector not here. 
 		INLINE
-		
 		var res = false;
 		
 		if(PANEL_INSPECTOR && PANEL_INSPECTOR.inspectGroup == 1) {
 			var ind = index;
-			
 			for( var i = 0, n = array_length(PANEL_INSPECTOR.inspectings); i < n; i++ ) {
 				var _node = PANEL_INSPECTOR.inspectings[i];
 				var _in = array_safe_get_fast(_node.inputs, ind);
@@ -2092,8 +2090,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var r = _in.setValueDirect(_val, _index, true, time);
 				if(_node == node) res = r;
 			}
-		} else
-			res = setValueDirect(_val, _index, true, time);
+			
+		} else {
+			var _time = time;
+			
+			// if(is_anim && keyboard_check(vk_enter) && key_mod_press(SHIFT)) {
+			// 	var _cKey = undefined;
+			// 	var _cDis = infinity;
+				
+			// 	for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
+			// 		var v = animator.values[i];
+			// 		var d = abs(v.time - _time);
+			// 		if(d < _cDis) {
+			// 			_cDis = d;
+			// 			_cKey = v;
+			// 		}
+			// 	}
+				
+			// 	if(_cKey) _time = _cKey.time;
+			// }
+			
+			res = setValueDirect(_val, _index, true, _time);
+		}
 			
 		if(onSetValue != undefined) onSetValue(_val);
 		

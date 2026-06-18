@@ -9,8 +9,9 @@ function drawWidgetInit() {
 	def_hold      = noone;
 	contentPane   = undefined;
 	
-	min_w = ui(160);
-	viewMode = PREFERENCES.inspector_view_default;
+	min_w     = ui(160);
+	viewMode  = PREFERENCES.inspector_view_default;
+	drawParam = new widgetParam(0,0,1,1,0);
 	
 	tooltip_loop_type = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
 }
@@ -34,6 +35,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var dispName  = _name;
 		var wid       = jun.getEditWidget();
 		var _showVal  = jun.showValue();
+		var _boxColr  = jun.widgetBoxColor;
 		
 		if(_ID != undefined) {
 			var _map = jun.editWidgetMap;
@@ -297,7 +299,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 				var kfCurr  = jun.animationCurrentKey();
 				var kfFocus = kfCurr != undefined;
-				var  cc  = kfFocus? COLORS._main_accent : COLORS._main_icon;
+				
+				_boxColr = kfFocus? COLORS._main_value_positive : (jun.widgetBoxColor ?? c_white);
+				var  cc  = kfFocus? COLORS._main_value_positive : COLORS._main_icon;
 				var _tlp = kfFocus? __txt("panel_inspector_remove_key", "Remove keyframe") : __txt("panel_inspector_add_key", "Add keyframe");
 				bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_keyframe, 1, cc); bx -= ui(4);
 				cHov = cHov || b;
@@ -513,10 +517,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				wid.setInteract(false);
 			}
 			
-			var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _showVal, jun.display_data, _m, rx, ry)
+			var param = drawParam;
+			param.set(editBoxX, editBoxY, editBoxW, editBoxH, _m).setR(rx,ry)
+				.setData(_showVal)
+				.setDisplay(jun.display_data ?? {})
 				.setFont(_viewSpac? f_p2 : f_p3)
 				.setSepAxis(jun.sep_axis)
-				.setBoxColor(jun.widgetBoxColor)
+				.setBoxColor(_boxColr)
 			
 			if(_blend != c_white) param.setBoxColor(_blend);
 			

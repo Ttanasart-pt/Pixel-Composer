@@ -169,28 +169,24 @@ function widget() constructor {
 	static free = function() {}
 }
 
-function widgetParam(x, y, w, h, data, display_data = undefined, m = mouse_ui, rx = 0, ry = 0) constructor {
+function widgetParam(_x, _y, _w, _h, _data, _display_data = undefined, _m = mouse_ui, _rx = 0, _ry = 0) constructor {
 	static EMPTYPARAM = {};
 	
-	self.x = x;
-	self.y = y;
+	x = _x; y = _y;
+	w = _w; h = _h;
+	m = _m;
 	
-	self.w			= w;
-	self.h			= h;
-	self.data		= data;
-	self.m			= m;
-	self.rx			= rx;
-	self.ry			= ry;
+	rx = _rx;
+	ry = _ry;
 	
-	self.halign		= fa_left;
-	self.valign		= fa_top;
+	data   = _data;
+	halign = fa_left;
+	valign = fa_top;
+	font   = f_p1;
 	
-	self.display_data = display_data ?? EMPTYPARAM;
+	display_data = _display_data ?? EMPTYPARAM;
 	
-	self.font       = f_p1;
-	
-	sep_axis = false;
-	
+	sep_axis   = false;
 	color      = undefined;
 	boxColor   = undefined;
 	hid        = undefined;
@@ -199,19 +195,30 @@ function widgetParam(x, y, w, h, data, display_data = undefined, m = mouse_ui, r
 	interact   = undefined;
 	scrollpane = undefined;
 	
-	static setHalign     = function(_a) /*=>*/ { halign = _a; return self; }
-	static setValign     = function(_a) /*=>*/ { valign = _a; return self; }
+	static set = function(_x,_y,_w,_h,_m=m) /*=>*/ { 
+		x = _x; y = _y;
+		w = _w; h = _h;
+		m = _m;
+		return self; 
+	}
 	
-	static setX          = function(_x) /*=>*/ { x     = _x;   return self; }
-	static setY          = function(_y) /*=>*/ { y     = _y;   return self; }
-	static setData       = function( d) /*=>*/ { data  = d;    return self; }
-	static setColor      = function( c) /*=>*/ { color = c;    return self; }
-	static setBoxColor   = function( c) /*=>*/ { boxColor = c; return self; }
+	static setHalign     = function(_a) /*=>*/ { halign = _a;         return self; }
+	static setValign     = function(_a) /*=>*/ { valign = _a;         return self; }
 	
-	static setFont       = function( f) /*=>*/ { font  = f;   return self; }
-	static setHide       = function( h) /*=>*/ { hide  = h;   return self; }
-	static setScrollpane = function( s) /*=>*/ { scrollpane = s; return self; }
-	static setSepAxis    = function( s) /*=>*/ { sep_axis   = s; return self; }
+	static setX          = function(_x) /*=>*/ { x     = _x;          return self; }
+	static setY          = function(_y) /*=>*/ { y     = _y;          return self; }
+	static setR          = function(_x,_y) /*=>*/ { rx = _x; ry = _y; return self; }
+	
+	static setData       = function( d) /*=>*/ { data         = d;    return self; }
+	static setDisplay    = function( d) /*=>*/ { display_data = d;    return self; }
+	
+	static setColor      = function( c) /*=>*/ { color = c;           return self; }
+	static setBoxColor   = function( c) /*=>*/ { boxColor = c;        return self; }
+	
+	static setFont       = function(_f) /*=>*/ { font  = _f;          return self; }
+	static setHide       = function(_h) /*=>*/ { hide  = _h;          return self; }
+	static setScrollpane = function(_s) /*=>*/ { scrollpane = _s;     return self; }
+	static setSepAxis    = function(_s) /*=>*/ { sep_axis   = _s;     return self; }
 	
 	static setFocusHover = function(f, h, i = undefined) { 
 		focus = f; 

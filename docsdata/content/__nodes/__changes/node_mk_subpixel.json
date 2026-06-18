@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.008",
+    "changes": [
+      {
+        "date": "2026-06-18T02:00:16.396Z",
+        "node": "",
+        "commit": "Add more quick anim presets."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.003",
     "changes": [
       {
