@@ -11,6 +11,11 @@
         "date": "2026-06-18T04:49:00.650Z",
         "node": "MK Flag",
         "commit": "**MK Flag**: Change position to area value."
+      },
+      {
+        "date": "2026-06-18T05:53:00.725Z",
+        "node": "Map Path",
+        "commit": "**Map Path**: Add wave option."
       }
     ]
   },

@@ -2,9 +2,9 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform sampler2D textureMap;
-uniform vec2 dimension;
-uniform vec2 oriPosition;
-uniform vec2 oriScale;
+uniform vec2  dimension;
+uniform vec2  oriPosition;
+uniform vec2  oriScale;
 uniform int   side;
 
 uniform int   shadowInv;

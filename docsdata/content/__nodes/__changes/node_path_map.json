@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.008",
+    "changes": [
+      {
+        "date": "2026-06-18T05:53:00.732Z",
+        "node": "",
+        "commit": "**Map Path**: Add wave option."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.007",
     "changes": [
       {

@@ -2,12 +2,16 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Flag";
 	update_on_frame = true;
 	
+	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Flag
-	newInput( 4, nodeValue_Int(     "Subdivision",  16   ));
-	newInput( 2, nodeValue_Area(    "Area",        AREA_DEF_REF )).setUnitSimple().setHotkey("G");
-	newInput( 3, nodeValue_EButton( "Pin side",     0, [ "Left", "Right", "Up", "Down" ] ));
+	newInput( 4, nodeValue_Int(     "Subdivision", 16                                   ));
+	newInput(13, nodeValue_EScroll( "Shape",       0, [ "Area", "Path" ]                ));
+	newInput( 2, nodeValue_Area(    "Area",        AREA_DEF_REF                         )).setUnitSimple().setHotkey("G");
+	newInput( 3, nodeValue_EButton( "Pin",         0, [ "Left", "Right", "Up", "Down" ] ));
+	newInput(14, nodeValue_Path(    "Path 1"                                            ));
+	newInput(15, nodeValue_Path(    "Path 2"                                            ));
 	
 	////- =Wave
 	newInput( 6, nodeValue_Slider(  "Wave width",        1, [0, 4, 0.1]     ));
@@ -21,7 +25,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(10, nodeValue_Slider(  "Shadow",           .2                  ));
 	newInput(11, nodeValue_Slider(  "Shadow threshold",  0, [-.1, .1, .001] ));
 	newInput(12, nodeValue_Bool(    "Invert shadow",     0                  ));
-	// input 13
+	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -184,74 +188,92 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var _dim    = _data[ 0];
-			var _tex    = _data[ 1];
+			
+			var _shap   = _data[13];
 			var _area   = _data[ 2];
 			var _pinn   = _data[ 3];
+			var _path1  = _data[14];
+			var _path2  = _data[15];
 			
 			var _shadow = _data[10];
 			var _shdThr = _data[11];
 			var _shdInv = _data[12];
+			
+			var _tex    = _data[ 1];
+			
+			inputs[ 2].setVisible(_shap == 0);
+			inputs[ 3].setVisible(_shap == 0);
+			inputs[14].setVisible(_shap == 1, _shap == 1);
+			inputs[15].setVisible(_shap == 1, _shap == 1);
 		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		if(!is_surface(_tex)) return _outSurf;
 		
-		var area_x0 = _area[0] - _area[2];
-		var area_y0 = _area[1] - _area[3];
-		var area_x1 = _area[0] + _area[2];
-		var area_y1 = _area[1] + _area[3];
-		
-		var _sx, _sy;
-		var _sw = area_x1 - area_x0;
-		var _sh = area_y1 - area_y0;
-		
-		switch(_pinn) {
-			case 0 : _sx = area_x0;       _sy = area_y0;       break;
-			case 1 : _sx = area_x0 - _sw; _sy = area_y0;       break;
-			case 2 : _sx = area_x0;       _sy = area_y0;       break;
-			case 3 : _sx = area_x0;       _sy = area_y0 - _sh; break;
-		}
-		
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
-			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
-		
-		surface_set_target_ext(0, temp_surface[0]);
-		surface_set_target_ext(1, temp_surface[1]);
-		shader_set(sh_mk_flag_mrt);
-			DRAW_CLEAR
-			draw_set_color(c_white);
+		var _sx=0, _sy=0, _sw=1, _sh=1;
 			
-			var _bat = 64;
-			var _amo = array_length(meshes);
+		if(_shap == 0) {
+			var area_x0 = _area[0] - _area[2];
+			var area_y0 = _area[1] - _area[3];
+			var area_x1 = _area[0] + _area[2];
+			var area_y1 = _area[1] + _area[3];
 			
-			for( var i = 0; i < _amo; i += _bat ) {
-				draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_tex));
-				for( var j = i; j < min(i + _bat, _amo); j++ ) {
-					var m  = meshes[j];
-					var p0 = m.p0;
-					var p1 = m.p1;
-					var p2 = m.p2;
-					
-					draw_vertex_texture(_sx + p0.x * _sw, _sy + p0.y * _sh, p0.u, p0.v);
-					draw_vertex_texture(_sx + p1.x * _sw, _sy + p1.y * _sh, p1.u, p1.v);
-					draw_vertex_texture(_sx + p2.x * _sw, _sy + p2.y * _sh, p2.u, p2.v);
-				}
-				draw_primitive_end();
+			_sw = area_x1 - area_x0;
+			_sh = area_y1 - area_y0;
+			
+			switch(_pinn) {
+				case 0 : _sx = area_x0;       _sy = area_y0;       break;
+				case 1 : _sx = area_x0 - _sw; _sy = area_y0;       break;
+				case 2 : _sx = area_x0;       _sy = area_y0;       break;
+				case 3 : _sx = area_x0;       _sy = area_y0 - _sh; break;
 			}
 			
-		shader_reset();
-		surface_reset_target();
+			for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+				temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
+			
+			surface_set_target_ext(0, temp_surface[0]);
+			surface_set_target_ext(1, temp_surface[1]);
+			shader_set(sh_mk_flag_mrt);
+				DRAW_CLEAR
+				draw_set_color(c_white);
+				
+				var _bat = 64;
+				var _amo = array_length(meshes);
+				
+				for( var i = 0; i < _amo; i += _bat ) {
+					draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_tex));
+					for( var j = i; j < min(i + _bat, _amo); j++ ) {
+						var m  = meshes[j];
+						var p0 = m.p0;
+						var p1 = m.p1;
+						var p2 = m.p2;
+						
+						draw_vertex_texture(_sx + p0.x * _sw, _sy + p0.y * _sh, p0.u, p0.v);
+						draw_vertex_texture(_sx + p1.x * _sw, _sy + p1.y * _sh, p1.u, p1.v);
+						draw_vertex_texture(_sx + p2.x * _sw, _sy + p2.y * _sh, p2.u, p2.v);
+					}
+					draw_primitive_end();
+				}
+				
+			shader_reset();
+			surface_reset_target();
+			
+		} else if(_shap == 1) {
+			if(!is_path(_path1) || !is_path(_path2)) return _outSurf;
+			
+			
+		}
 		
 		surface_set_shader(_outSurf, sh_mk_flag_shade);
-			shader_set_s( "textureMap",   temp_surface[1]    );
-			shader_set_f( "dimension",    _dim               );
+			shader_set_s( "textureMap",   temp_surface[1] );
+			shader_set_f( "dimension",    _dim            );
 			
-			shader_set_2( "oriPosition",  [area_x0, area_y0] );
-			shader_set_2( "oriScale",     [_sw, _sh]         );
-			shader_set_f( "shadow",       1 - _shadow        );
-			shader_set_f( "shadowThres",  _shdThr            );
-			shader_set_i( "shadowInv",    _shdInv            );
-			shader_set_i( "side",         _pinn > 1          );
+			shader_set_2( "oriPosition",  [_sx, _sy]  );
+			shader_set_2( "oriScale",     [_sw, _sh]  );
+			shader_set_f( "shadow",       1 - _shadow );
+			shader_set_f( "shadowThres",  _shdThr     );
+			shader_set_i( "shadowInv",    _shdInv     );
+			shader_set_i( "side",         _pinn > 1   );
 			
 			draw_surface_safe(temp_surface[0]);
 		surface_reset_shader();
