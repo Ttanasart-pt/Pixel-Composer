@@ -878,15 +878,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(_useTex) {
 							var _len = m - 1;
 							
-							var ox0 = _ox + lengthdir_x(_ow / 2, _od + 90);
-							var oy0 = _oy + lengthdir_y(_ow / 2, _od + 90);
-							var nx0 = _nx + lengthdir_x(_nw / 2, _nd + 90);
-							var ny0 = _ny + lengthdir_y(_nw / 2, _nd + 90);
+							var _d0x = lengthdir_x(_ow / 2, _od + 90);
+							var _d0y = lengthdir_y(_ow / 2, _od + 90);
+							var _d1x = lengthdir_x(_nw / 2, _nd + 90);
+							var _d1y = lengthdir_y(_nw / 2, _nd + 90);
 
-							var ox1 = _ox + lengthdir_x(_ow / 2, _od + 90 + 180);
-							var oy1 = _oy + lengthdir_y(_ow / 2, _od + 90 + 180);
-							var nx1 = _nx + lengthdir_x(_nw / 2, _nd + 90 + 180);
-							var ny1 = _ny + lengthdir_y(_nw / 2, _nd + 90 + 180);
+							var ox0 = _ox + _d0x;
+							var oy0 = _oy + _d0y;
+							var nx0 = _nx + _d1x;
+							var ny0 = _ny + _d1y;
+
+							var ox1 = _ox - _d0x;
+							var oy1 = _oy - _d0y;
+							var nx1 = _nx - _d1x;
+							var ny1 = _ny - _d1y;
 							
 							var _u0 = 0;
 							var _u1 = 1;
@@ -902,8 +907,45 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							draw_vertex_texture_color(nx1 * _aa, ny1 * _aa, _u1, _v1, _nc, 1);
 							
 						} else {
-							draw_line_width2_angle(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, 
-							                       _ow * _aa, _nw * _aa, _od +  90, _nd +  90, _oc, _nc);
+							var lx0 = _ox * _aa;
+							var ly0 = _oy * _aa;
+							var lx1 = _nx * _aa;
+							var ly1 = _ny * _aa;
+							var lw0 = _ow * _aa;
+							var lw1 = _nw * _aa;
+							var la0 = _od +  90;
+							var la1 = _nd +  90;
+							                       
+							var _d0x = lengthdir_x(lw0 / 2, la0);
+							var _d0y = lengthdir_y(lw0 / 2, la0);
+							var _d1x = lengthdir_x(lw1 / 2, la1);
+							var _d1y = lengthdir_y(lw1 / 2, la1);
+							
+							var _lx0 = lx0 + _d0x;
+							var _ly0 = ly0 + _d0y;
+							var _lx1 = lx1 + _d1x;
+							var _ly1 = ly1 + _d1y;
+							
+							draw_vertex_texture_color( lx0,  ly0, 0, .5, _oc, 1);
+							draw_vertex_texture_color( lx1,  ly1, 1, .5, _nc, 1);
+							draw_vertex_texture_color(_lx0, _ly0, 0,  0, _oc, 1);
+							
+							draw_vertex_texture_color( lx1,  ly1, 1, .5, _nc, 1);
+							draw_vertex_texture_color(_lx0, _ly0, 0,  0, _oc, 1);
+							draw_vertex_texture_color(_lx1, _ly1, 1,  0, _nc, 1);
+							
+							var _lx0 = lx0 - _d0x;
+							var _ly0 = ly0 - _d0y;
+							var _lx1 = lx1 - _d1x;
+							var _ly1 = ly1 - _d1y;
+							
+							draw_vertex_texture_color( lx0,  ly0, 0, .5, _oc, 1);
+							draw_vertex_texture_color( lx1,  ly1, 1, .5, _nc, 1);
+							draw_vertex_texture_color(_lx0, _ly0, 0,  1, _oc, 1);
+							
+							draw_vertex_texture_color( lx1,  ly1, 1, .5, _nc, 1);
+							draw_vertex_texture_color(_lx0, _ly0, 0,  1, _oc, 1);
+							draw_vertex_texture_color(_lx1, _ly1, 1,  1, _nc, 1);
 						}
 					}
 					

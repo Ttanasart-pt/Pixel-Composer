@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dynaDraw_cross_line",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dynaDraw_cross_line",
+  "parent":{
+    "name":"polygon",
+    "path":"folders/functions/surface/dynaDraw/polygon.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

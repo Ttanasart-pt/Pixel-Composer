@@ -81,9 +81,9 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		    
 		    var _wave  = getInputData(14);
 		    var _wFre  = getInputData(15);
-		    var _wFreC = getInputData(18), _wFreCurve = inputs[15].attributes.curved? new curveMap(_wFreC) : undefined;
+		    var _wFreC = getInputData(18), _wFreCurve = inputs[15].attributes.curved? new curveMap(_wFreC, _reso) : undefined;
 		    var _wAmp  = getInputData(16);
-		    var _wAmpC = getInputData(19), _wAmpCurve = inputs[16].attributes.curved? new curveMap(_wAmpC) : undefined;
+		    var _wAmpC = getInputData(19), _wAmpCurve = inputs[16].attributes.curved? new curveMap(_wAmpC, _reso) : undefined;
 		    var _wPha  = getInputData(17);
 		    
 		    var _wDir  = getInputData(20);

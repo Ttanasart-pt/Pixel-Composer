@@ -343,6 +343,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 				
 			} else {
+				_boxColr = jun.widgetBoxColor ?? c_white;
+				
 				for( var i = array_length(PREFERENCES.widget_draw_order) - 1; i >= 0; i--) {
 					var _widgetButton = PREFERENCES.widget_draw_order[i];
 					

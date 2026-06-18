@@ -1083,6 +1083,7 @@
     {"name":"dynaDraw_canvas","order":1,"path":"scripts/dynaDraw_canvas/dynaDraw_canvas.yy",},
     {"name":"dynaDraw_circle_fill_gradient","order":1,"path":"scripts/dynaDraw_circle_fill_gradient/dynaDraw_circle_fill_gradient.yy",},
     {"name":"dynaDraw_circle_outline","order":2,"path":"scripts/dynaDraw_circle_outline/dynaDraw_circle_outline.yy",},
+    {"name":"dynaDraw_cross_line","order":8,"path":"scripts/dynaDraw_cross_line/dynaDraw_cross_line.yy",},
     {"name":"dynaDraw_cross","order":2,"path":"scripts/dynaDraw_cross/dynaDraw_cross.yy",},
     {"name":"dynaDraw_cube_fill","order":6,"path":"scripts/dynaDraw_cube_fill/dynaDraw_cube_fill.yy",},
     {"name":"dynaDraw_cube_outline","order":7,"path":"scripts/dynaDraw_cube_outline/dynaDraw_cube_outline.yy",},

@@ -1343,6 +1343,7 @@
     {"id":{"name":"dynaDraw_circle_fill_gradient","path":"scripts/dynaDraw_circle_fill_gradient/dynaDraw_circle_fill_gradient.yy",},},
     {"id":{"name":"dynaDraw_circle_fill","path":"scripts/dynaDraw_circle_fill/dynaDraw_circle_fill.yy",},},
     {"id":{"name":"dynaDraw_circle_outline","path":"scripts/dynaDraw_circle_outline/dynaDraw_circle_outline.yy",},},
+    {"id":{"name":"dynaDraw_cross_line","path":"scripts/dynaDraw_cross_line/dynaDraw_cross_line.yy",},},
     {"id":{"name":"dynaDraw_cross","path":"scripts/dynaDraw_cross/dynaDraw_cross.yy",},},
     {"id":{"name":"dynaDraw_cube_fill","path":"scripts/dynaDraw_cube_fill/dynaDraw_cube_fill.yy",},},
     {"id":{"name":"dynaDraw_cube_outline","path":"scripts/dynaDraw_cube_outline/dynaDraw_cube_outline.yy",},},
