@@ -2027,7 +2027,7 @@ function Panel_Preview() : PanelContent() constructor {
                         surface_set_target(tile_surface);
                             DRAW_CLEAR
                             BLEND_OVERRIDE
-                            draw_surface_tiled_ext_safe(preview_surfaces[0], psx, 0, ss, ss, 0, c_white, 1); 
+                            draw_surface_tiled_ext_safe(preview_surfaces[0], psx, 0, ss, ss); 
                             BLEND_NORMAL
                         surface_reset_target();
                         
@@ -2041,7 +2041,7 @@ function Panel_Preview() : PanelContent() constructor {
                         surface_set_target(tile_surface);
                             DRAW_CLEAR
                             BLEND_OVERRIDE
-                            draw_surface_tiled_ext_safe(preview_surfaces[0], 0, psy, ss, ss, 0, c_white, 1); 
+                            draw_surface_tiled_ext_safe(preview_surfaces[0], 0, psy, ss, ss); 
                             BLEND_NORMAL
                         surface_reset_target();
                         
@@ -2055,12 +2055,12 @@ function Panel_Preview() : PanelContent() constructor {
                     	surface_set_target(tile_surface);
                             DRAW_CLEAR
                             BLEND_OVERRIDE
-                            draw_surface_tiled_ext_safe(preview_surfaces[0], 0, psy, ss, ss, 0, c_white, 1); 
+                            draw_surface_tiled_ext_safe(preview_surfaces[0], psx, psy, ss, ss); 
                             BLEND_NORMAL
                         surface_reset_target();
                         
                         if(_shader_prev) shader_set(_shader_prev);
-                        draw_surface_safe(tile_surface, psx, 0);
+                        draw_surface_safe(tile_surface, 0, 0);
 			    		if(_shader_prev) shader_reset();
                     	break;
                 }
@@ -2069,6 +2069,7 @@ function Panel_Preview() : PanelContent() constructor {
             switch(splitView) {
                 case 1 :
                     var sp = splitPosition * w;
+            		if(_shader_prev) shader_set(_shader_prev);
                 	
                     if(_ps0) {
                         preview_node[0].previewing = 2;
@@ -2088,10 +2089,12 @@ function Panel_Preview() : PanelContent() constructor {
                         if(sX >= 0 && sX < ssw)
                             draw_surface_part_ext_safe(preview_surfaces[1], sX, 0, ssw - sX, ssh, spx, ssy, ss, ss, 0, c_white, 1);
                     }
+                    if(_shader_prev) shader_reset();
                     break;
                     
                 case 2 :
                     var sp = splitPosition * h;
+            		if(_shader_prev) shader_set(_shader_prev);
                     
                     if(_ps0) {
                         preview_node[0].previewing = 4;
@@ -2111,9 +2114,10 @@ function Panel_Preview() : PanelContent() constructor {
                         if(sY >= 0 && sY < ssh) 
                             draw_surface_part_ext_safe(preview_surfaces[1], 0, sY, ssw, ssh - sY, ssx, spy, ss, ss, 0, c_white, 1);
                     }
+                    if(_shader_prev) shader_reset();
                     break;
             } 
-            
+    		
             if(preview_junction != noone) {
             	preview_junction.drawPreviewOverlay(canvas_x, canvas_y, canvas_s, self);
             	preview_junction.node.previewing = 1;

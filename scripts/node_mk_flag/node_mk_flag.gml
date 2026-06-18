@@ -5,31 +5,33 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Flag
-	newInput( 4, nodeValue_Int(         "Subdivision",  16   ));
-	newInput( 1, nodeValue_Surface(     "Texture"            ));
-	newInput( 2, nodeValue_Vec2(        "Position",    [0,0] )).setHotkey("G");
-	newInput( 3, nodeValue_EButton( "Pin side",     0    )).setChoices([ "Left", "Right", "Up", "Down" ]);
+	newInput( 4, nodeValue_Int(     "Subdivision",  16   ));
+	newInput( 2, nodeValue_Area(    "Area",        AREA_DEF_REF )).setUnitSimple().setHotkey("G");
+	newInput( 3, nodeValue_EButton( "Pin side",     0, [ "Left", "Right", "Up", "Down" ] ));
 	
 	////- =Wave
-	newInput( 6, nodeValue_Slider( "Wave width",        1, [0, 4, 0.1]     ));
-	newInput( 7, nodeValue_Slider( "Wave size",        .2                  ));
-	newInput( 5, nodeValue_Int(    "Wind speed",        2                  ));
-	newInput( 8, nodeValue_Slider( "Phase",            .1                  ));
-	newInput( 9, nodeValue_Slider( "Clip",             .2                  ));
+	newInput( 6, nodeValue_Slider(  "Wave width",        1, [0, 4, 0.1]     ));
+	newInput( 7, nodeValue_Slider(  "Wave size",        .2                  ));
+	newInput( 5, nodeValue_Int(     "Wind speed",        2                  ));
+	newInput( 8, nodeValue_Slider(  "Phase",            .1                  ));
+	newInput( 9, nodeValue_Slider(  "Clip",             .2                  ));
 	
 	////- =Rendering
-	newInput(10, nodeValue_Slider( "Shadow",           .2                  ));
-	newInput(11, nodeValue_Slider( "Shadow threshold",  0, [-.1, .1, .001] ));
-	newInput(12, nodeValue_Bool(   "Invert shadow",     0                  ));
+	newInput( 1, nodeValue_Surface( "Texture"            ));
+	newInput(10, nodeValue_Slider(  "Shadow",           .2                  ));
+	newInput(11, nodeValue_Slider(  "Shadow threshold",  0, [-.1, .1, .001] ));
+	newInput(12, nodeValue_Bool(    "Invert shadow",     0                  ));
 	// input 13
 	
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
 	input_display_list = [ s_MKFX, 0, 
-		["Flag",	    false], 4, 1, 2, 3, 
-		["Wave",	    false], 6, 7, 5, 8, 9, 
-		["Rendering",	false], 10, 11, 12, 
+		[ "Flag",      false ],  4,  2,  3, 
+		[ "Wave",      false ],  6,  7,  5,  8,  9, 
+		[ "Rendering", false ],  1, 10, 11, 12, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- Node
 	
 	attributes.iteration = 4;
 	array_push(attributeEditors, "Verlet solver");
@@ -180,27 +182,34 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim   = _data[0];
-		var _tex   = _data[1];
-		var _start = _data[2];
-		var _pinn  = _data[3];
-		
-		var _shadow = _data[10];
-		var _shdThr = _data[11];
-		var _shdInv = _data[12];
+		#region data
+			var _dim    = _data[ 0];
+			var _tex    = _data[ 1];
+			var _area   = _data[ 2];
+			var _pinn   = _data[ 3];
+			
+			var _shadow = _data[10];
+			var _shdThr = _data[11];
+			var _shdInv = _data[12];
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		if(!is_surface(_tex)) return _outSurf;
 		
+		var area_x0 = _area[0] - _area[2];
+		var area_y0 = _area[1] - _area[3];
+		var area_x1 = _area[0] + _area[2];
+		var area_y1 = _area[1] + _area[3];
+		
 		var _sx, _sy;
-		var _sw = surface_get_width_safe(_tex);
-		var _sh = surface_get_height_safe(_tex);
+		var _sw = area_x1 - area_x0;
+		var _sh = area_y1 - area_y0;
 		
 		switch(_pinn) {
-			case 0 : _sx = _start[0];       _sy = _start[1];       break;
-			case 1 : _sx = _start[0] - _sw; _sy = _start[1];       break;
-			case 2 : _sx = _start[0];       _sy = _start[1];       break;
-			case 3 : _sx = _start[0];       _sy = _start[1] - _sh; break;
+			case 0 : _sx = area_x0;       _sy = area_y0;       break;
+			case 1 : _sx = area_x0 - _sw; _sy = area_y0;       break;
+			case 2 : _sx = area_x0;       _sy = area_y0;       break;
+			case 3 : _sx = area_x0;       _sy = area_y0 - _sh; break;
 		}
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
@@ -234,14 +243,15 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_reset_target();
 		
 		surface_set_shader(_outSurf, sh_mk_flag_shade);
-			shader_set_surface("textureMap", temp_surface[1]);
-			shader_set_f("dimension",   _dim);
-			shader_set_f("oriPosition", _start);
-			shader_set_f("oriScale",    _sw, _sh);
-			shader_set_f("shadow",      1-_shadow);
-			shader_set_f("shadowThres", _shdThr);
-			shader_set_i("shadowInv",   _shdInv);
-			shader_set_i("side",        _pinn > 1);
+			shader_set_s( "textureMap",   temp_surface[1]    );
+			shader_set_f( "dimension",    _dim               );
+			
+			shader_set_2( "oriPosition",  [area_x0, area_y0] );
+			shader_set_2( "oriScale",     [_sw, _sh]         );
+			shader_set_f( "shadow",       1 - _shadow        );
+			shader_set_f( "shadowThres",  _shdThr            );
+			shader_set_i( "shadowInv",    _shdInv            );
+			shader_set_i( "side",         _pinn > 1          );
 			
 			draw_surface_safe(temp_surface[0]);
 		surface_reset_shader();

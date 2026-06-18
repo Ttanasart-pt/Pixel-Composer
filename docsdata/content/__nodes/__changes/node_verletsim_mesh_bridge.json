@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.008",
+    "changes": [
+      {
+        "date": "2026-06-18T04:49:00.662Z",
+        "node": "",
+        "commit": "**MK Flag**: Change position to area value."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {
