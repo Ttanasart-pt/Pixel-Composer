@@ -135,6 +135,8 @@ function Panel_Nodes() : PanelContent() constructor {
 		var _w    = _x1 - _x0;
 		
 		var node  = _item.node;
+		if(is(node, Node_Collection_Inline) || is(node, Node_Feedback_Inline)) return 0;
+		
 		var name  = node.getDisplayName();
 		var colr  = node.getColor();
 		var _len  = array_length(_item.children);

@@ -1998,6 +1998,7 @@ function Panel_Preview() : PanelContent() constructor {
     		if(_shader_prev) {
     			shader_set(_shader_prev);
     			shader_set_i("keepAlpha", preview_shader_alpha);
+    			shader_reset();
     		}
     	
 	        if(!_ps0 && !_ps1) {
@@ -2015,8 +2016,10 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 switch(tileMode) {
                     case 0 :
-                    	if(PROJECT.onion_skin.enabled) drawOnionSkin(_node, psx, psy, ss); 
-                        else draw_surface_ext(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
+                    	if(_shader_prev) shader_set(_shader_prev);
+						if(PROJECT.onion_skin.enabled) drawOnionSkin(_node, psx, psy, ss); 
+						else draw_surface_ext(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
+			    		if(_shader_prev) shader_reset();
                         break;
                         
                     case 1 : 
@@ -2027,7 +2030,10 @@ function Panel_Preview() : PanelContent() constructor {
                             draw_surface_tiled_ext_safe(preview_surfaces[0], psx, 0, ss, ss, 0, c_white, 1); 
                             BLEND_NORMAL
                         surface_reset_target();
+                        
+                        if(_shader_prev) shader_set(_shader_prev);
                         draw_surface_safe(tile_surface, 0, psy);
+			    		if(_shader_prev) shader_reset();
                         break;
                         
                     case 2 : 
@@ -2038,10 +2044,25 @@ function Panel_Preview() : PanelContent() constructor {
                             draw_surface_tiled_ext_safe(preview_surfaces[0], 0, psy, ss, ss, 0, c_white, 1); 
                             BLEND_NORMAL
                         surface_reset_target();
+                        
+                        if(_shader_prev) shader_set(_shader_prev);
                         draw_surface_safe(tile_surface, psx, 0);
+			    		if(_shader_prev) shader_reset();
                         break;
                         
-                    case 3 : draw_surface_tiled_ext_safe(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, 1); break;
+                    case 3 : 
+                    	tile_surface = surface_verify(tile_surface, w, h);
+                    	surface_set_target(tile_surface);
+                            DRAW_CLEAR
+                            BLEND_OVERRIDE
+                            draw_surface_tiled_ext_safe(preview_surfaces[0], 0, psy, ss, ss, 0, c_white, 1); 
+                            BLEND_NORMAL
+                        surface_reset_target();
+                        
+                        if(_shader_prev) shader_set(_shader_prev);
+                        draw_surface_safe(tile_surface, psx, 0);
+			    		if(_shader_prev) shader_reset();
+                    	break;
                 }
             }
             
@@ -2092,8 +2113,6 @@ function Panel_Preview() : PanelContent() constructor {
                     }
                     break;
             } 
-            
-            if(_shader_prev) shader_reset();
             
             if(preview_junction != noone) {
             	preview_junction.drawPreviewOverlay(canvas_x, canvas_y, canvas_s, self);
