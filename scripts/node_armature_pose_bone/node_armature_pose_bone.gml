@@ -9,13 +9,13 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput(1, nodeValue_Bone( "Bone", function() /*=>*/ {return toggleBoneTarget()} ));
 	
 	////- =Pose
-	newInput(5, nodeValue_Enum_Button( "Position Mode", 1, [ "Absolute", "Relative" ] ));
+	newInput(5, nodeValue_EButton( "Position Mode", 1, [ "Absolute", "Relative" ] ));
 	newInput(2, nodeValue_Vec2(        "Position",     [0,0] ));
 	
-	newInput(6, nodeValue_Enum_Button( "Position Mode", 1, [ "Absolute", "Relative" ] ));
+	newInput(6, nodeValue_EButton( "Position Mode", 1, [ "Absolute", "Relative" ] ));
 	newInput(3, nodeValue_Rotation(    "Rotation",      0 ));
 	
-	newInput(7, nodeValue_Enum_Button( "Position Mode", 1, [ "Absolute", "Relative" ] ));
+	newInput(7, nodeValue_EButton( "Position Mode", 1, [ "Absolute", "Relative" ] ));
 	newInput(4, nodeValue_Float(        "Scale",        1 ));
 	// inputs 8
 	

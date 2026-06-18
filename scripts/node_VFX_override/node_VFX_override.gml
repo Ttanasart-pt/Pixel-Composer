@@ -11,22 +11,22 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Bool(  "Set Positions", false ));
-	newInput(2, nodeValue_Enum_Button( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
+	newInput(2, nodeValue_EButton( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
 	newInput(3, nodeValue_Vec2(  "Positions", [0, 0] ));
 	
 	newInput(4, nodeValue_Bool(  "Set Rotations", false ));
-	newInput(5, nodeValue_Enum_Button( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
+	newInput(5, nodeValue_EButton( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
 	newInput(6, nodeValue_Float(  "Rotations", 0 ));
 	
 	newInput(7, nodeValue_Bool(  "Set Scales", false ));
-	newInput(8, nodeValue_Enum_Button( "Mode", 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Scale mode");
+	newInput(8, nodeValue_EButton( "Mode", 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Scale mode");
 	newInput(9, nodeValue_Vec2(  "Scales", [1, 1] ));
 	
 	newInput(10, nodeValue_Bool( "Set Blend", false ));
 	newInput(11, nodeValue_Color( "Blend", ca_black ));
 	
 	newInput(12, nodeValue_Bool(  "Set Alpha", false ));
-	newInput(13, nodeValue_Enum_Button( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");
+	newInput(13, nodeValue_EButton( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");
 	newInput(14, nodeValue_Float(  "Alpha", 0 ));
 	
 	newInput(15, nodeValue_Bool( "Set Surface", false ));

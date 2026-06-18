@@ -24,12 +24,12 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	
 	////- =Rotation
 	newInput(16, nodeValue_Bool(        "Do Rotate",  false ));
-	newInput(13, nodeValue_Enum_Scroll( "Mode",        0, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
+	newInput(13, nodeValue_EScroll( "Mode",        0, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
 	newInput( 5, nodeValue_Vec3_Range(  "Rotate",   [0,0,0,0,0,0] )).setCurvable(6, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Scale
 	newInput(17, nodeValue_Bool(       "Do Scae", false ));
-	newInput(12, nodeValue_Enum_Scroll( "Mode",   1, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
+	newInput(12, nodeValue_EScroll( "Mode",   1, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
 	newInput( 7, nodeValue_Vec3_Range(  "Scale", [1,1,1,1,1,1], true )).setCurvable(8, CURVE_DEF_11, "Over Lifespan"); 
 	// 19
 	

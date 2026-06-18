@@ -7,7 +7,7 @@ function Node_PB_Draw_Star(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 	
 	newInput(pbi+2, nodeValue_Slider("Inner Radius", .5));
 	
-	newInput(pbi+3, nodeValue_Enum_Button("Mode", 0, [ "Fill", "Lines" ]));
+	newInput(pbi+3, nodeValue_EButton("Mode", 0, [ "Fill", "Lines" ]));
 	
 	newInput(pbi+4, nodeValue_Float("Thickness", 1));
 	

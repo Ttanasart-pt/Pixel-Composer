@@ -6,7 +6,7 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	////- =Mesh
 	newInput(i+3, nodeValue_Int(          "Subdivision",   4 ));
-	newInput(i+1, nodeValue_Enum_Button(  "Input type",    0 , [ "Surface", "Array" ] ));
+	newInput(i+1, nodeValue_EButton(  "Input type",    0 , [ "Surface", "Array" ] ));
 	newInput(i+2, nodeValue_Surface(      "Height map" ));
 	newInput(i+4, nodeValue_Float(        "Height array",       []       )).setArrayDepth(2);
 	newInput(i+6, nodeValue_Slider_Range( "Front Height Level", [ 0, 1 ] ));

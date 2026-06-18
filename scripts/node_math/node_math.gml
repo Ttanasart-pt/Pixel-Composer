@@ -76,7 +76,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setDimension(96, 48);
 	__mode   = noone;
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", 0, global.node_math_scroll)).rejectArray();
+	newInput(0, nodeValue_EScroll("Type", 0, global.node_math_scroll)).rejectArray();
 	
 	////- =Values
 	newInput(1, nodeValue_Float( "a",      0    )).setVisible(true, true);

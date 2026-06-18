@@ -1,7 +1,7 @@
 function Node_PB_Draw_Curve(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Curve";
 	
-	newInput(pbi+0, nodeValue_Enum_Button("Type", 0, array_create(6, THEME.inspector_pb_line)));
+	newInput(pbi+0, nodeValue_EButton("Type", 0, array_create(6, THEME.inspector_pb_line)));
 	
 	newInput(pbi+1, nodeValue_Int("Thickness", 1));
 	

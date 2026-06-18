@@ -15,7 +15,7 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(3, nodeValue_Float( "Maximum",   1     ));
 	
 	////- =Display
-	newInput(5, nodeValue_Enum_Scroll("Display Type", 0, { data: [ "Number", "Curve" ], update_hover: false }));
+	newInput(5, nodeValue_EScroll("Display Type", 0, { data: [ "Number", "Curve" ], update_hover: false }));
 	
 	newOutput(0, nodeValue_Output("Curve", VALUE_TYPE.float, []));
 	

@@ -14,7 +14,7 @@ function Node_Rotation_Random_Data(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	////- Rotation
 	
-	newInput(0, nodeValue_Enum_Scroll( "Type",   0, types ));
+	newInput(0, nodeValue_EScroll( "Type",   0, types ));
 	
 	newInput(1, nodeValue_Rotation( "Range Start", 0 ));
 	newInput(2, nodeValue_Rotation( "Range End", 360 ));

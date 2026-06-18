@@ -2,7 +2,7 @@ function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "RGBA Extract";
 	
 	newInput(0, nodeValue_Surface(     "Surface In"));
-	newInput(1, nodeValue_Enum_Scroll( "Output Type", 0, [ "Channel value", "Greyscale" ]));
+	newInput(1, nodeValue_EScroll( "Output Type", 0, [ "Channel value", "Greyscale" ]));
 	newInput(2, nodeValue_Bool(        "Keep Alpha", false));
 	newInput(3, nodeValue_Bool(        "Output Array", false));
 	

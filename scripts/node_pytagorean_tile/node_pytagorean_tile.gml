@@ -21,7 +21,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput( 4, nodeValue_Slider(   "Gap",       .25, [0, 0.5, 0.001] )).setMappable(13).setPieMenu();
 	
 	////- =Render
-	newInput( 7, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
+	newInput( 7, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 	newInput( 8, nodeValueSeed());
 	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white)).setMappable(18);
 	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black));

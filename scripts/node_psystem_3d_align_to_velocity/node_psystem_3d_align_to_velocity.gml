@@ -14,7 +14,7 @@ function Node_pSystem_3D_Align_to_Velocity(_x, _y, _group = noone) : Node_3D(_x,
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Alignment
-	newInput( 3, nodeValue_Enum_Button( "Axis", 0, ["X", "Y", "Z"] ));
+	newInput( 3, nodeValue_EButton( "Axis", 0, ["X", "Y", "Z"] ));
 	// 4
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));

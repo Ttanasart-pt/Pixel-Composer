@@ -20,8 +20,8 @@ function Node_pSystem_3D_Mask(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	newInput(i+1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Mask
-	newInput(i+3, nodeValue_Enum_Scroll( "Type",   0, [ "Shape", /*"Mesh"*/ ] )); 
-	newInput(i+4, nodeValue_Enum_Scroll( "Shape",  0 )).setChoices([ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
+	newInput(i+3, nodeValue_EScroll( "Type",   0, [ "Shape", /*"Mesh"*/ ] )); 
+	newInput(i+4, nodeValue_EScroll( "Shape",  0 )).setChoices([ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
 	                                                                 new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]);
 	newInput(i+5, nodeValue_D3Mesh( "Mesh" ));
 	

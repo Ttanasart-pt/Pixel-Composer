@@ -14,9 +14,9 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 0, nodeValue_Vec2( "Output scale", [ 8, 8 ] ));
 	
 	////- =Equation
-	newInput( 1, nodeValue_Enum_Scroll( "Coordinate", 0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
+	newInput( 1, nodeValue_EScroll( "Coordinate", 0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
 	                                                       new scrollItem("Polar",     s_node_axis_type, 1) ]));
-	newInput( 2, nodeValue_Enum_Scroll(  "Equation type", 0, eq_type_car ));
+	newInput( 2, nodeValue_EScroll(  "Equation type", 0, eq_type_car ));
 	newInput( 3, nodeValue_Text(         "0 function" ));
 	newInput( 4, nodeValue_Text(         "1 function" ));
 	newInput( 6, nodeValue_Slider_Range( "Range", [ 0, 1 ], { range: [ -1, 1, 0.01 ] }));

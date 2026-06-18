@@ -12,17 +12,17 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(1, 5); // inputs 5, 6
 	
 	////- =Brightness
-	newInput(22, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen", "Overlay" ])).setPieMenu();
+	newInput(22, nodeValue_EScroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen", "Overlay" ])).setPieMenu();
 	newInput( 7, nodeValue_Slider(      "Brightness", 0, [-1,1,.01] )).setHotkey("B").setMappable(8).setCurvable(25).setPieMenu();
 	
 	////- =RGB
-	newInput(23, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
+	newInput(23, nodeValue_EScroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
 	newInput(10, nodeValue_Slider(      "Red",        0, [-1,1,.01] )).setMappable(11).setCurvable(26);
 	newInput(12, nodeValue_Slider(      "Green",      0, [-1,1,.01] )).setMappable(13).setCurvable(27);
 	newInput(14, nodeValue_Slider(      "Blue",       0, [-1,1,.01] )).setMappable(15).setCurvable(28);
 	
 	////- =HSV
-	newInput(24, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
+	newInput(24, nodeValue_EScroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
 	newInput(16, nodeValue_Slider(      "Hue",        0, [-1,1,.01] )).setMappable(17).setCurvable(29);
 	newInput(18, nodeValue_Slider(      "Saturation", 0, [-1,1,.01] )).setMappable(19).setCurvable(30);
 	newInput(20, nodeValue_Slider(      "Value",      0, [-1,1,.01] )).setMappable(21).setCurvable(31);

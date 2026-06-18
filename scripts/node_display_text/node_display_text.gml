@@ -6,7 +6,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 1, nodeValue_Text("Text", "Text"));
 	
 	////- =Styling
-	newInput( 2, nodeValue_Enum_Scroll( "Style", 2, [ "Header", "Sub header", "Normal" ]));
+	newInput( 2, nodeValue_EScroll( "Style", 2, [ "Header", "Sub header", "Normal" ]));
 	newInput( 0, nodeValue_Color(       "Color", ca_white ));
 	newInput( 3, nodeValue_Slider(      "Alpha", 0.75));
 	newInput( 4, nodeValue_Float(       "Line width", -1));

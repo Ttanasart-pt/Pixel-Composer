@@ -22,7 +22,7 @@ function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(0, nodeValue_Surface("Surface"));
 	newInput(1, nodeValue_Float("Layer", 1));
-	newInput(2, nodeValue_Enum_Button("Blend Mode", 0, [ "Normal", "Subtract" ]));
+	newInput(2, nodeValue_EButton("Blend Mode", 0, [ "Normal", "Subtract" ]));
 	
 	newActiveInput(3);
 	

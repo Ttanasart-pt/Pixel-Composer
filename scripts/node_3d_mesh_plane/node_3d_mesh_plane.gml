@@ -3,7 +3,7 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 	object_class = __3dPlane;
 	
 	////- =Mesh
-	newInput(in_mesh + 1, nodeValue_Enum_Button( "Normal",        2 , [ "X", "Y", "Z" ]));
+	newInput(in_mesh + 1, nodeValue_EButton( "Normal",        2 , [ "X", "Y", "Z" ]));
 	
 	////- =Material
 	newInput(in_mesh + 2, nodeValue_Bool(        "Both side",     false )).rejectArray();

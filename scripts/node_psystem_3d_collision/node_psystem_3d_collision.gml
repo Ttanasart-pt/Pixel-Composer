@@ -20,7 +20,7 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 	newInput(i+ 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Collider
-	newInput(i+ 3, nodeValue_Enum_Scroll( "Shape",       0, [ "Ground", "Ellipse" ] )); 
+	newInput(i+ 3, nodeValue_EScroll( "Shape",       0, [ "Ground", "Ellipse" ] )); 
 	newInput(i+ 4, nodeValue_Slider(      "Chance",      1     )); 
 	
 	////- =Physics

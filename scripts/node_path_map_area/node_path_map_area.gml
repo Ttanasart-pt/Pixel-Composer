@@ -6,12 +6,12 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 0, nodeValue_Path("Path"));
 	
 	////- =From
-	newInput( 2, nodeValue_Enum_Scroll( "Map From", 0, [ "Path Boundary", "Fix Dimension", "BBOX" ]));
+	newInput( 2, nodeValue_EScroll( "Map From", 0, [ "Path Boundary", "Fix Dimension", "BBOX" ]));
 	newInput( 3, nodeValue_Dimension(   "Dimension From"         ));
 	newInput( 6, nodeValue_Vec4(        "BBOX From",   [0,0,1,1] ));
 	
 	////- =To
-	newInput( 4, nodeValue_Enum_Scroll( "Map To",      0, [ "Area", "Fix Dimension", "BBOX" ]));
+	newInput( 4, nodeValue_EScroll( "Map To",      0, [ "Area", "Fix Dimension", "BBOX" ]));
 	newInput( 1, nodeValue_Area(        "Area",        DEF_AREA, { useShape : false })).setHotkey("A");
 	newInput( 5, nodeValue_Dimension(   "Dimension To"           ));
 	newInput( 7, nodeValue_Vec4(        "BBOX To",     [0,0,1,1] ));

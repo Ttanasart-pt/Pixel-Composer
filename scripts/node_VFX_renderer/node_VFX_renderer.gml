@@ -13,7 +13,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- =Rendering
 		
 	newInput(1, nodeValue_Bool(        "Round position", true, "Round position to the closest integer value to avoid jittering.")).rejectArray();
-	newInput(2, nodeValue_Enum_Button( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ])).rejectArray();
+	newInput(2, nodeValue_EButton( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ])).rejectArray();
 	newInput(3, nodeValue_Int(         "Line life",      4 )).rejectArray();
 	// input 4
 	
@@ -27,7 +27,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Enum_Scroll( "Blend mode",  0 , [ "Normal", "Alpha", "Additive" ] )).rejectArray();
+		newInput(index + 0, nodeValue_EScroll( "Blend mode",  0 , [ "Normal", "Alpha", "Additive" ] )).rejectArray();
 		newInput(index + 1, nodeValue_Particle()).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo + 0, inAmo + 1);

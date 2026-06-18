@@ -10,7 +10,7 @@ function Node_Fn_Math(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 	name       = "Fn Math";
 	time_based = false;
 	
-	newInput(inl + 0, nodeValue_Enum_Scroll("Operation", 2, [ "Add", "Minus", "Multiply" ] ));
+	newInput(inl + 0, nodeValue_EScroll("Operation", 2, [ "Add", "Minus", "Multiply" ] ));
 	newInput(inl + 1, nodeValue_Float("Value 1", 0 )).setVisible(true, true);
 	newInput(inl + 2, nodeValue_Float("Value 2", 0 )).setVisible(true, true);
 		

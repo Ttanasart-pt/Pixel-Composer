@@ -6,7 +6,7 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	setDimension(96, 48);
 	
 	////- =Settings
-	newInput(2, nodeValue_Enum_Scroll( "Mode",  0, ["Frame count", "Animation progress"])).rejectArray().setPieMenu()
+	newInput(2, nodeValue_EScroll( "Mode",  0, ["Frame count", "Animation progress"])).rejectArray().setPieMenu()
 		.setTooltip(@"Counting mode
 - Frame count: Count value up/down per frame.
 - Animation progress: Count from 0 (first frame) to 1 (last frame).");

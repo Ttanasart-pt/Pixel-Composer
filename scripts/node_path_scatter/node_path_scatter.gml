@@ -12,11 +12,11 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 9, nodeValue_Curve(    "Trim over Length", CURVE_DEF_11 ));
 	
 	////- =Scatter
-	newInput( 8, nodeValue_Enum_Scroll( "Distribution", 0, [ "Uniform", "Random" ]));
+	newInput( 8, nodeValue_EScroll( "Distribution", 0, [ "Uniform", "Random" ]));
 	newInput( 3, nodeValue_Int(         "Amount",       4 ));
 	
 	////- =Position
-	newInput(12, nodeValue_Enum_Scroll(  "Origin",      0 , [ "Individual", "First", "Zero" ]));
+	newInput(12, nodeValue_EScroll(  "Origin",      0 , [ "Individual", "First", "Zero" ]));
 	newInput( 2, nodeValue_Slider_Range( "Range",      [0,1] ));
 	
 	////- =Rotation

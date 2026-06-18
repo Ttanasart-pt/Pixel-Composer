@@ -5,7 +5,7 @@ function Node_Transform_Iso(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Isometric
 	
-	newInput(1, nodeValue_Enum_Button( "Side", [ "Top", "Left", "Right" ] ));
+	newInput(1, nodeValue_EButton( "Side", [ "Top", "Left", "Right" ] ));
 	
 	// input 2
 	

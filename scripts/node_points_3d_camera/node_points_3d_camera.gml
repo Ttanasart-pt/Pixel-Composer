@@ -24,7 +24,7 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	
 	////- =Transform
 	
-	newInput(i+ 4, nodeValue_Enum_Scroll( "Postioning Mode",  2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	newInput(i+ 4, nodeValue_EScroll( "Postioning Mode",  2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
 	newInput(i+ 5, nodeValue_Vec3(        "Lookat Position", [0,0,0]           ));
 	newInput(i+ 6, nodeValue_Rotation(    "Roll",             0                ));
 	newInput(i+ 7, nodeValue_Rotation(    "Horizontal Angle", 45               ));
@@ -33,7 +33,7 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	
 	////- =Camera
 	
-	newInput(i+ 1, nodeValue_Enum_Button( "Projection",          1 , [ "Perspective", "Orthographic" ]));
+	newInput(i+ 1, nodeValue_EButton( "Projection",          1 , [ "Perspective", "Orthographic" ]));
 	newInput(i+ 0, nodeValue_ISlider(     "FOV",                 60, [  10, 90, .1  ] ));
 	newInput(i+ 3, nodeValue_Slider(      "Orthographic Scale", .5,  [ .01,  4, .01 ] ));
 	

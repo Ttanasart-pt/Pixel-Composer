@@ -1,5 +1,9 @@
 function   nodeValue_Bool(_name, _value = false, _tooltip = "") { return new __NodeValue_Bool(_name, self, _value, _tooltip); }
 function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.boolean, _value, _tooltip) constructor {
+	anim_presets = [
+		[ "False till Now", [[ 0, false ], [ noone, true  ]] ], 
+		[ "True till Now",  [[ 0, true  ], [ noone, false ]] ], 
+	];
 	
 	////- GET
 	

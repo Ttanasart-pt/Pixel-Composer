@@ -14,7 +14,7 @@ function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _
 	
 	newInput(in_mesh + 3, nodeValue_Bool("Smooth Normal", false ));
 	
-	newInput(in_mesh + 4, nodeValue_Enum_Scroll("Projection", 0, [ "Lambert", "Equirectangular" ] ));
+	newInput(in_mesh + 4, nodeValue_EScroll("Projection", 0, [ "Lambert", "Equirectangular" ] ));
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 1, in_mesh + 4,  

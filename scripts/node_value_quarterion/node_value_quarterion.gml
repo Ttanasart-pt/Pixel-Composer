@@ -4,6 +4,12 @@ function __NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : __NodeVal
 	setDisplay(VALUE_DISPLAY.d3quarternion);
 	attributes.angle_display = QUARTERNION_DISPLAY.euler;
 	
+	anim_presets = [
+		[ "X 360", [ [0,[0,0,0,1]], [1,[360,0,0,1]] ] ], 
+		[ "Y 360", [ [0,[0,0,0,1]], [1,[0,360,0,1]] ] ], 
+		[ "Z 360", [ [0,[0,0,0,1]], [1,[0,0,360,1]] ] ], 
+	];
+	
 	/////============== GET =============
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 

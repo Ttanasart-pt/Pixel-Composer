@@ -7,7 +7,7 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(1, nodeValue_Bool("Normalize", true));
 	
-	// newInput(2, nodeValue_Enum_Scroll("Brightness Eq", 0, [ "Perceived", "" ]));
+	// newInput(2, nodeValue_EScroll("Brightness Eq", 0, [ "Perceived", "" ]));
 	
 	newOutput(0, nodeValue_Output("Red", VALUE_TYPE.float, 0));
 	newOutput(1, nodeValue_Output("Green", VALUE_TYPE.float, 0));

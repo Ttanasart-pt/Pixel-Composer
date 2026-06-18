@@ -8,9 +8,9 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
 		.setVisible(true);
     
     export_format = [ "CSV", "GameMaker" ];
-    newInput( 2, nodeValue_Enum_Scroll("Format", 0, export_format));
+    newInput( 2, nodeValue_EScroll("Format", 0, export_format));
     
-    newInput( 3, nodeValue_Enum_Scroll("GM Export Type", 0, [ "Room" ]));
+    newInput( 3, nodeValue_EScroll("GM Export Type", 0, [ "Room" ]));
     
     newInput( 4, nodeValue_FPath("GM Room"))
     	.setDisplay(VALUE_DISPLAY.path_load, { filter: "GameMaker Room (.yy)|*.yy" })

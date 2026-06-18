@@ -31,7 +31,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(17, nodeValue_Range( "Y Momentum",      [0,0],       { linked : true } ));
 	
 	////- =Leaf
-	newInput(22, nodeValue_Enum_Scroll(    "Shape",   0, [ new scrollItem("Leaf",   s_node_shape_leaf,   0), 
+	newInput(22, nodeValue_EScroll(    "Shape",   0, [ new scrollItem("Leaf",   s_node_shape_leaf,   0), 
 	                                                       new scrollItem("Circle", s_node_shape_circle, 0),
 	                                                       "Surface"] ));
 	newInput( 9, nodeValue_Vec2(           "Size",    [4,2] ));

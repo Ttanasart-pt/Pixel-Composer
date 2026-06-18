@@ -54,11 +54,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(12, nodeValue_Bool(  "Span Width over Path", false      )).setTooltip("Apply the full 'Width Curve' to the trimmed path.");
 	
 		////- =/Weight
-	newInput(36, nodeValue_Bool(  "Apply Weight",         false        ));
-	newInput(62, nodeValue_Range( "Normalized Range",     [0,1]        )).setCurvable(63, CURVE_DEF_01);
+	newInput(36, nodeValue_Bool(  "Apply Weight",     false ));
+	newInput(62, nodeValue_Range( "Normalized Range", [0,1] )).setCurvable(63, CURVE_DEF_01);
 	
 	////- =Line Settings
-	newInput( 8, nodeValue_SliRange( "Range",         [0,1]  )).setTooltip("Range of the path to draw.");
+	newInput( 8, nodeValue_SliRange( "Range",         [0,1] )).setTooltip("Range of the path to draw.");
 	newInput(25, nodeValue_Bool(     "Invert",        false ));
 	newInput( 9, nodeValue_Float(    "Shift",         0     ));
 	newInput(26, nodeValue_Bool(     "Clamp Range",   false ));
@@ -69,14 +69,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(45, nodeValue_Float( "Dash Shift",    0  ));
 	
 	////- =Wiggle
-	newInput(47, nodeValue_Bool(    "Use Wiggle",     false            ));
-	newInput( 5, nodeValueSeed(,    "Wiggle Seed"                      ));
-	newInput( 4, nodeValue_Range(   "Wig. Amplitude", [4,4], true      )).setCurvable(53, CURVE_DEF_11);
-	newInput(51, nodeValue_Slider(  "Wig. Frequency", 8, [0, 32, 0.01] )).setCurvable(54, CURVE_DEF_11);
-	newInput(52, nodeValue_ISlider( "Wig. Detail",    4, [0,  8, 1]    ));
-	newInput(55, nodeValue_Float(   "Wig. Phase",     0                ));
-	newInput(56, nodeValue_Bool(    "Wig. Trim Range",      false      ));
-	newInput(57, nodeValue_Bool(    "Wig. Trim Curve",      false      ));
+	newInput(47, nodeValue_Bool(    "Use Wiggle",  false         ));
+	newInput( 5, nodeValueSeed(,    "Wiggle Seed"                ));
+	newInput( 4, nodeValue_Range(   "Amplitude",   [4,4], true   )).setInternalName("wig_amplitude").setCurvable(53, CURVE_DEF_11);
+	newInput(51, nodeValue_Slider(  "Frequency",   8, [0,32,.01] )).setInternalName("wig_frequency").setCurvable(54, CURVE_DEF_11);
+	newInput(52, nodeValue_ISlider( "Detail",      4, [0,8,1]    )).setInternalName("wig_detail");
+	newInput(55, nodeValue_Float(   "Phase",       0             )).setInternalName("wig_phase");
+	newInput(56, nodeValue_Bool(    "Trim Range",  false         )).setInternalName("wig_trim_range");
+	newInput(57, nodeValue_Bool(    "Trim Curve",  false         )).setInternalName("wig_trim_curve");
 	
 	////- =Line Caps
 	newInput(13, nodeValue_EButton( "Start Cap",     0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
@@ -84,8 +84,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(14, nodeValue_ISlider( "Round Segment", 8, [2, 32, 0.1] ));
 	
 		////- =/Textured
-	newInput(40, nodeValue_Surface(  "Start Cap" )).setDrawGroup(0);
-	newInput(41, nodeValue_Surface(  "End Cap"   )).setDrawGroup(0);
+	newInput(40, nodeValue_Surface(  "Start Cap"         )).setDrawGroup(0);
+	newInput(41, nodeValue_Surface(  "End Cap"           )).setDrawGroup(0);
 	newInput(42, nodeValue_Bool(     "Rotate Cap", true  ));
 	newInput(60, nodeValue_RotRange( "Angles",     [0,0] ));
 	newInput(61, nodeValue_Range(    "Offset",     [0,0] ));
@@ -93,11 +93,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Color
 	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white ));
 	newInput(24, nodeValue_Gradient( "Random Blend",         gra_white ));
-	newInput(15, nodeValue_Bool(     "Span Color over Path", false )).setTooltip("Apply the full 'color over length' to the trimmed path.");
+	newInput(15, nodeValue_Bool(     "Span Color over Path", false     )).setTooltip("Apply the full 'color over length' to the trimmed path.");
 	newInput(37, nodeValue_Gradient( "Color Weight",         gra_white ));
-	newInput(38, nodeValue_Vec2(     "Color Range",          [0,1] ));
+	newInput(38, nodeValue_Vec2(     "Color Range",          [0,1]     ));
 	
-	////- =Texture
+		////- =/Texture
 	newInput(18, nodeValue_Surface(  "Texture" ));
 	newInput(21, nodeValue_Vec2(     "Texture Position",       [0,0] ));
 	newInput(22, nodeValue_Rotation( "Texture Rotation",        0    ));
@@ -112,15 +112,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Output",         true     ],  0, 30, 31, 16, 58, 
 		[ "Background",    false     ],  1, 48, 49, 50, 
 		[ "Line Data",     false     ], 27,  6,  7, 28, 32, 33, 35, 19,  2, 20, 
+		
 		[ "Width",         false     ], 17,  3, 11, 12, 
 			[ "/Weight",    true     ], 36, 62, 63, 
+			
 		[ "Line Settings", false     ],  8, 25,  9, 26, 
 		[ "Dash",           true, 46 ], 44, 45, 
 		[ "Wiggle",         true, 47 ],  5,  4, 53, 51, 54, 52, 55, 56, 57, 
+		
 		[ "Line Cap",      false     ], 13, 43, 
 			[ "/Textured", false     ], 40, 41, 42, 60, 61, 
+			
 		[ "Color",         false     ], 10, 24, 15, 37, 38, 
-		[ "Texture",       false     ], 18, 21, 22, 23, 29, 
+			[ "/Texture",   true     ], 18, 21, 22, 23, 29, 
+		
 		[ "Render",         true     ], 34, 
 	];
 	

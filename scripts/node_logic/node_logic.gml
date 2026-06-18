@@ -32,7 +32,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Type",  0, [ new scrollItem("And",   s_node_logic_type, 0), 
+	newInput(0, nodeValue_EScroll("Type",  0, [ new scrollItem("And",   s_node_logic_type, 0), 
 												          new scrollItem("Or",    s_node_logic_type, 1), 
 												          new scrollItem("Not",   s_node_logic_type, 2), 
 												          new scrollItem("Nand",  s_node_logic_type, 3), 

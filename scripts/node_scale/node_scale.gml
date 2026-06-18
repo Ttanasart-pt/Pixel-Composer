@@ -16,18 +16,19 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 0, nodeValue_Surface("Surface In"));
 	
 	////- =Scale
-	newInput( 2, nodeValue_EButton( "Mode",     0, [ "Upscale", "Scale to fit" ])).setPieMenu();
-	newInput( 6, nodeValue_EButton( "Fit Mode", 0, [ "Stretch", "Minimum", "Maximum" ]));
-	newInput( 1, nodeValue_Float(   "Scale",    1 )).setPieMenu();
-	newInput( 3, nodeValue_Vec2(    "Target Dimension", PROJ_SURF)).setPieMenu();
-	newInput( 5, nodeValue_Bool(    "Scale Atlas Position", true));
+	newInput( 2, nodeValue_EButton( "Mode",             0, [ "Upscale", "Scale to Fit" ] )).setPieMenu();
+	newInput( 1, nodeValue_Float(   "Scale",            1         )).setPieMenu();
+	newInput( 3, nodeValue_Vec2(    "Target Dimension", PROJ_SURF )).setUnitSimple(false).setPieMenu();
+	newInput( 6, nodeValue_EButton( "Fit Mode",         0, [ "Stretch", "Keep Aspect Minimum", "Keep Aspect Maximum" ] ));
+	
+	newInput( 5, nodeValue_Bool(    "Move Atlas",       true      ));
 	// inputs 6
 		
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
-		[ "Surfaces", true ], 0,
-		[ "Scale",   false ], 2, 6, 1, 3, 5, 
+		[ "Surfaces", true ],  0,
+		[ "Scale",   false ],  2,  1,  3,  6,  5, 
 	];
 	
 	////- Node
@@ -43,15 +44,17 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var surf  = _data[0]; 
 			
 			var mode  = _data[2];
-			var fmode = _data[6];
 			var scale = _data[1];
 			var targ  = _data[3];
+			var fmode = _data[6];
 			var _atlS = _data[5];
+			
 			var cDep  = attrDepth();
 			
 			inputs[1].setVisible(mode == 0);
 			inputs[3].setVisible(mode == 1);
 			inputs[5].setVisible(is(surf, SurfaceAtlas));
+			
 			inputs[6].setVisible(mode == 1);
 		#endregion
 		

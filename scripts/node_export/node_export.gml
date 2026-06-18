@@ -80,14 +80,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(22, nodeValue_Bool(    "Export on Update", false ));
 	
 	////- =Format
-	newInput( 3, nodeValue_Enum_Scroll( "Type",   0, { data: format_single, update_hover: false } )).rejectArray();
-	newInput( 9, nodeValue_Enum_Scroll( "Format", 0, { data: format_image,  update_hover: false } )).rejectArray();
+	newInput( 3, nodeValue_EScroll( "Type",   0, { data: format_single, update_hover: false } )).rejectArray();
+	newInput( 9, nodeValue_EScroll( "Format", 0, { data: format_image,  update_hover: false } )).rejectArray();
 	newInput(17, nodeValue_Bool(        "Use Built-in gif encoder", false      ))
 	newInput(18, nodeValue_Int(         "Quality",                  2, [0,3,1] )).rejectArray();
 	newInput( 6, nodeValue_Bool(        "Frame optimization",       false      )).setVisible(false).rejectArray();
 	newInput( 7, nodeValue_Slider(      "Color merge",             .02         )).setVisible(false).rejectArray();
 	newInput(10, nodeValue_Slider(      "Quality",                  23, [ 0, 100, 0.1 ] )).rejectArray();
-	newInput(13, nodeValue_Enum_Scroll( "Subformat",                 2, { data: png_format, update_hover: false }));
+	newInput(13, nodeValue_EScroll( "Subformat",                 2, { data: png_format, update_hover: false }));
 	newInput(23, nodeValue_Float(       "Bit Rate (mbps)",           2 )).rejectArray();
 	
 	////- =Post-Process

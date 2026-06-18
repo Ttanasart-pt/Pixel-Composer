@@ -8,7 +8,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 4, nodeValue_Int(         "Subdivision",  16   ));
 	newInput( 1, nodeValue_Surface(     "Texture"            ));
 	newInput( 2, nodeValue_Vec2(        "Position",    [0,0] )).setHotkey("G");
-	newInput( 3, nodeValue_Enum_Button( "Pin side",     0    )).setChoices([ "Left", "Right", "Up", "Down" ]);
+	newInput( 3, nodeValue_EButton( "Pin side",     0    )).setChoices([ "Left", "Right", "Up", "Down" ]);
 	
 	////- =Wave
 	newInput( 6, nodeValue_Slider( "Wave width",        1, [0, 4, 0.1]     ));

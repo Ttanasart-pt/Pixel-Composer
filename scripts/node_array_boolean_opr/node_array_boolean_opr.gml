@@ -3,7 +3,7 @@ function Node_Array_Boolean_Opr(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(2, nodeValue_Enum_Scroll("Operation", 0, [ "Union", "Subtract", "Intersect", "XOR" ]));
+	newInput(2, nodeValue_EScroll("Operation", 0, [ "Union", "Subtract", "Intersect", "XOR" ]));
 	newInput(0, nodeValue("Array 1", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setVisible(true, true);
 	newInput(1, nodeValue("Array 2", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setVisible(true, true);
 	

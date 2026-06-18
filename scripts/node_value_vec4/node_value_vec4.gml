@@ -5,8 +5,11 @@ function __NodeValue_Vec4(_name, _node, _value, _data = {}) : __NodeValue_Array(
 	
 	extract_node = "Node_Vector4";
 	anim_presets = [
-		[ "0, 1",  [ [ 0, [ 0, 0, 0, 0 ] ], [ 1, [ 1, 1, 1, 1 ] ]], THEME.apreset_01 ], 
-		[ "1, 0",  [ [ 0, [ 1, 1, 1, 1 ] ], [ 1, [ 0, 0, 0, 0 ] ]], THEME.apreset_10 ], 
+		[ "0, 1",  [ [0, [0,0,0,0]], [1, [1,1,1,1]] ], THEME.apreset_01 ], 
+		[ "1, 0",  [ [0, [1,1,1,1]], [1, [0,0,0,0]] ], THEME.apreset_10 ], 
+		-1, 
+		[ "Zero to Current", [[0,[0,0,0,0]], noone] ], 
+		[ "Current to One ", [noone, [1,[1,1,1,1]]] ], 
 	];
 	
 }

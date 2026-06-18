@@ -36,11 +36,11 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 		////- =/Base Color
 	newInput( 5, nodeValue_Gradient(    "Base Color",      gra_white ));
-	newInput(17, nodeValue_Enum_Button( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput(17, nodeValue_EButton( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(18, nodeValue_Gradient(    "Length Color",    gra_white ));
 	
 		////- =/Edge Color
-	newInput( 6, nodeValue_Enum_Button( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput( 6, nodeValue_EButton( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput( 7, nodeValue_Gradient(    "L Edge Color",    gra_white ));
 	newInput(19, nodeValue_Gradient(    "R Edge Color",    gra_white ));
 	

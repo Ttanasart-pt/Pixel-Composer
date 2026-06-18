@@ -16,7 +16,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		);
 	inputs[2].attributes.unit = 0;
 		
-	newInput(3, nodeValue_Enum_Button("Cursor location",  1, [ "Start", "Middle", "End" ]));
+	newInput(3, nodeValue_EButton("Cursor location",  1, [ "Start", "Middle", "End" ]));
 	
 	newInput(4, nodeValue_Int("Step", 16));
 	

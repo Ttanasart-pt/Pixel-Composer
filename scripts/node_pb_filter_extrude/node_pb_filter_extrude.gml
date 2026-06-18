@@ -6,7 +6,7 @@ function Node_PB_FX_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(10, nodeValue_Bool(        "Use PBBOX", true));
 	newInput( 8, nodeValue_Pbbox(       "Shape PBBOX" ));
 	newInput( 9, nodeValue_Pbbox(       "Target PBBOX" ));
-	newInput(11, nodeValue_Enum_Scroll( "PBBOX Mode", 0, [ "4 Directions", "Extends" ]));
+	newInput(11, nodeValue_EScroll( "PBBOX Mode", 0, [ "4 Directions", "Extends" ]));
 	
 	////- =Surface
 	

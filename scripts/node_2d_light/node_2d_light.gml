@@ -38,7 +38,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		newInput(_ind + 14, nodeValue_Active());
 		
 		////- =Shape
-		newInput(_ind +  0, nodeValue_Enum_Scroll("Light shape", 0, typeList));
+		newInput(_ind +  0, nodeValue_EScroll("Light shape", 0, typeList));
 		inputs[_ind].options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
 		
 		newInput(_ind +  1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple().hideLabel();

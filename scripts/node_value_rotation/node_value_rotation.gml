@@ -9,6 +9,12 @@ function __NodeValue_Rotation(_name, _node, _value, _tooltip = "") : NodeValue(_
 	anim_presets = [
 		[ "0, 360",  [[ 0, 0 ], [ 1, 360 ]], THEME.apreset_01 ], 
 		[ "360, 0",  [[ 0, 360 ], [ 1, 0 ]], THEME.apreset_10 ], 
+		-1, 
+		[ "Zero to Current", [[ 0, 0 ], noone] ], 
+		[ "Current to 360 ", [noone, [ 1,360]] ], 
+		-1, 
+		[ "Current + 360", [[ 0, function(v) /*=>*/ {return v} ], [ 1, function(v) /*=>*/ {return v+360} ]] ], 
+		[ "Current - 360", [[ 0, function(v) /*=>*/ {return v} ], [ 1, function(v) /*=>*/ {return v-360} ]] ], 
 	];
 	
 	////- GET

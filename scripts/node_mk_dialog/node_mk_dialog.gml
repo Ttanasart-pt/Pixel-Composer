@@ -12,17 +12,17 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- =Text
 	newInput( 1, nodeValue_Text("Dialogs", [] )).setArrayDepth(1).setVisible(true, true);
-	newInput( 4, nodeValue_Enum_Scroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
+	newInput( 4, nodeValue_EScroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
 	
 	////- =Output
-	newInput( 2, nodeValue_Enum_Scroll( "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
+	newInput( 2, nodeValue_EScroll( "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
 	newInput( 0, nodeValue_Dimension());
 	newInput( 3, nodeValue_Padding(     "Padding",          [0,0,0,0] ));
 	
 	////- =Alignment
 	newInput(16, nodeValue_Int(          "Max Line Width",   0     ));
-	newInput(17, nodeValue_Enum_Button(  "H Align",          0, array_create(3, THEME.inspector_text_halign)));
-	newInput(18, nodeValue_Enum_Button(  "V Align",          0, array_create(3, THEME.inspector_text_valign)));
+	newInput(17, nodeValue_EButton(  "H Align",          0, array_create(3, THEME.inspector_text_halign)));
+	newInput(18, nodeValue_EButton(  "V Align",          0, array_create(3, THEME.inspector_text_valign)));
 	newInput( 9, nodeValue_Float(        "Line Height",      0     ));
 	
 	////- =Font
@@ -33,7 +33,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- =Rendering
 	/* unused */ newInput(10, nodeValue_Bool(         "Round Position",   true      ));
-	newInput(11, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
+	newInput(11, nodeValue_EButton(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
 	newInput(12, nodeValue_Color(        "Color",            ca_white  ));
 	newInput(13, nodeValue_Palette(      "Color by Letter", [ca_white] ))
 		.setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
@@ -44,7 +44,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- =Timing
 	newInput(24, nodeValue_Float(       "Start Frame",        0  ));
-	newInput(19, nodeValue_Enum_Scroll( "Duration Type",      0, [ "Fixed", "Letter Count", "Word Count (space)" ] ));
+	newInput(19, nodeValue_EScroll( "Duration Type",      0, [ "Fixed", "Letter Count", "Word Count (space)" ] ));
 	newInput(20, nodeValue_Float(       "Fixed Duration",     10 ));
 	newInput(21, nodeValue_Float(       "Multiply Duration",  1  ));
 	newInput(25, nodeValue_Float(       "Dialog Spacing",     0  ));
@@ -155,19 +155,19 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		dynamic_input_inspecting = getInputAmount();
 		
 		////- =Selection
-		newInput(i+ 0, nodeValue_Enum_Scroll( "Track Position",    0, positionTypeList ));
-		newInput(i+ 1, nodeValue_Enum_Scroll( "Apply Group",       0, applyGroupList   ));
+		newInput(i+ 0, nodeValue_EScroll( "Track Position",    0, positionTypeList ));
+		newInput(i+ 1, nodeValue_EScroll( "Apply Group",       0, applyGroupList   ));
 		newInput(i+ 2, nodeValue_Slider(      "Origin",            0 ));
-		newInput(i+14, nodeValue_Enum_Scroll( "Duration Type",     1, [ "Frame", "Ratio" ] ));
+		newInput(i+14, nodeValue_EScroll( "Duration Type",     1, [ "Frame", "Ratio" ] ));
 		newInput(i+ 3, nodeValue_Float(       "Duration",         .2 ));
 		newInput(i+13, nodeValue_Slider(      "Range",            .1 ));
 		
 		////- =Effects
-		newInput(i+ 4, nodeValue_Enum_Scroll( "Animation",         0, animTypeList ));
+		newInput(i+ 4, nodeValue_EScroll( "Animation",         0, animTypeList ));
 		newInput(i+ 5, nodeValue_Vec2(        "Position",         [0,0]     ));
 		newInput(i+ 6, nodeValue_Rotation(    "Rotation",          0        ));
 		newInput(i+ 7, nodeValue_Vec2(        "Scale",            [0,0]     ));
-		newInput(i+ 8, nodeValue_Enum_Button( "Anchor type",       1, [ "Global", "Local" ]  ));
+		newInput(i+ 8, nodeValue_EButton( "Anchor type",       1, [ "Global", "Local" ]  ));
 		newInput(i+ 9, nodeValue_Anchor(      "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
 		newInput(i+10, nodeValue_Color(       "Color",             ca_white ));
 		newInput(i+11, nodeValue_Slider(      "Alpha",             1        ));

@@ -14,7 +14,7 @@ function Node_Color_OKLCH(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(3, nodeValue_Slider("Alpha", 1));
 	
-	newInput(4, nodeValue_Enum_Scroll("Gamut clipping", 0, [ "Chroma", "50% grey", "Adaptive grey", "RGB (Naive)" ]))
+	newInput(4, nodeValue_EScroll("Gamut clipping", 0, [ "Chroma", "50% grey", "Adaptive grey", "RGB (Naive)" ]))
 	
 	newOutput(0, nodeValue_Output("Color", VALUE_TYPE.color, c_white));
 	

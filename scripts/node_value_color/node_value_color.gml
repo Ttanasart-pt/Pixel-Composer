@@ -1,7 +1,12 @@
 function nodeValue_Color(_name, _value, _tooltip = "") { return new __NodeValue_Color(_name, self, _value, _tooltip); }
 
 function __NodeValue_Color(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.color, _value, _tooltip) constructor {
-	preview_hotkey_spr    = THEME.tool_color;
+	preview_hotkey_spr = THEME.tool_color;
+	extract_node       = [ "Node_Color", "Node_Gradient_Out" ];
+	anim_presets       = [
+		[ "Black to White",  [[ 0, ca_black ], [ 1, ca_white ]] ], 
+		[ "White to Black",  [[ 0, ca_white ], [ 1, ca_black ]] ], 
+	];
 	
 	////- GET
 	

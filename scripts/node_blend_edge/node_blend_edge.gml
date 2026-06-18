@@ -15,7 +15,7 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Blend
-	newInput(2, nodeValue_Enum_Button( "Types",       0, [ "Both", "Horizontal", "Vertical" ])).setPieMenu();
+	newInput(2, nodeValue_EButton( "Types",       0, [ "Both", "Horizontal", "Vertical" ])).setPieMenu();
 	newInput(1, nodeValue_Slider(      "Width",      .1 )).setHotkey("W").setMappable(5).setPieMenu();
 	newInput(6, nodeValue_Slider(      "Blending",    1 )).setHotkey("B").setMappable(8).setPieMenu();
 	newInput(7, nodeValue_Slider(      "Smoothness",  0 )).setHotkey("S").setMappable(9).setCurvable(10, CURVE_DEF_01).setPieMenu();

@@ -6,7 +6,7 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Fracture
 	newInput( 1, nodeValue_Vec2(        "Subdivision", [4,4] ));
 	newInput( 2, nodeValue_Slider(      "Progress",    .5 )).setMappable(3);
-	newInput(13, nodeValue_Enum_Button( "Brick Axis",   0, [ "X", "Y" ] ));
+	newInput(13, nodeValue_EButton( "Brick Axis",   0, [ "X", "Y" ] ));
 	newInput(11, nodeValue_Slider(      "Brick Shift",  0 ));
 	newInput(12, nodeValue_Slider(      "Skew",         0, [ -1, 1, 0.01 ] ));
 	

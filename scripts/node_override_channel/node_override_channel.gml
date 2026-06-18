@@ -8,7 +8,7 @@ function Node_Override_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(3, nodeValue_Surface("Blue"));
 	newInput(4, nodeValue_Surface("Alpha"));
 	
-	newInput(5, nodeValue_Enum_Scroll("Sampling type",  0, ["Brightness", "Channel value"]));
+	newInput(5, nodeValue_EScroll("Sampling type",  0, ["Brightness", "Channel value"]));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

@@ -10,7 +10,7 @@ function Node_Armature_Mirror(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput(1, nodeValue_Bone( "Origin", function() /*=>*/ {return toggleBoneTarget(1)} ));
 	
 	////- =Axis
-	newInput(4, nodeValue_Enum_Button( "Angle Mode", 0, [ "Bone", "Custom" ]   ));
+	newInput(4, nodeValue_EButton( "Angle Mode", 0, [ "Bone", "Custom" ]   ));
 	newInput(2, nodeValue_Bone(        "Axis",       function() /*=>*/ {return toggleBoneTarget(2)} ));
 	newInput(5, nodeValue_Rotation(    "Angle",      0 ));
 	// input 6

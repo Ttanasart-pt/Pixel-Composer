@@ -5,7 +5,7 @@ function Node_Fn_SmoothStep(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) co
 	newInput(inl + 0, nodeValue_Float("Value", 0 ))
 		.setVisible(true, true);
 	
-	newInput(inl + 1, nodeValue_Enum_Scroll("Type",  0 , [ "Cubic poly", "Quadratic rat", "Cubic rat", "Cosine" ] ));
+	newInput(inl + 1, nodeValue_EScroll("Type",  0 , [ "Cubic poly", "Quadratic rat", "Cubic rat", "Cosine" ] ));
 	
 	array_append(input_display_list, [
 		["Value",	false], inl + 1, inl + 0, 

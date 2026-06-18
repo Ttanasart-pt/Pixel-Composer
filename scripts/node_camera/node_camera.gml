@@ -232,9 +232,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(_s) array_push(input_display_list, new Inspector_Spacer(20, true));
 		
 		newInput(index + 0, nodeValue_Surface(     $"Element {_s}" ));
-		newInput(index + 1, nodeValue_Enum_Button( $"Positioning {_s}", false, [ "Space", "Camera" ]));
+		newInput(index + 1, nodeValue_EButton( $"Positioning {_s}", false, [ "Space", "Camera" ]));
 		newInput(index + 2, nodeValue_Vec2(        $"Position {_s}",    [0,0] )).setUnitSimple();
-		newInput(index + 3, nodeValue_Enum_Scroll( $"Oversample {_s}",   0, __enum_array_gen(["Empty ", "Repeat ", "Repeat X", "Repeat Y"], s_node_camera_repeat)));
+		newInput(index + 3, nodeValue_EScroll( $"Oversample {_s}",   0, __enum_array_gen(["Empty ", "Repeat ", "Repeat X", "Repeat Y"], s_node_camera_repeat)));
 		newInput(index + 4, nodeValue_Vec2(        $"Parallax {_s}",    [0,0] ));
 		newInput(index + 5, nodeValue_Float(       $"Depth {_s}",        0    ));
 		

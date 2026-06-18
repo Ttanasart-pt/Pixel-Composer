@@ -10,8 +10,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput( 5, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
 	
 	////- =Repeat
-	newInput( 1, nodeValue_Enum_Button( "Object Type",  0, [ "Single", "Array" ] )).rejectArray();
-	newInput(13, nodeValue_Enum_Scroll( "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
+	newInput( 1, nodeValue_EButton( "Object Type",  0, [ "Single", "Array" ] )).rejectArray();
+	newInput(13, nodeValue_EScroll( "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
 	newInput( 2, nodeValue_Int(         "Amount",       2       ));
 	newInput(14, nodeValue_IVec3(       "Grid",         [2,2,1] ));
 	newInput(17, nodeValue_Float(       "Radius",       1       ));

@@ -5,13 +5,13 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Path("Path"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Mode", 0, [ "Additive", "Multiplicative" ]));
+	newInput(1, nodeValue_EScroll("Mode", 0, [ "Additive", "Multiplicative" ]));
 	
 	newInput(2, nodeValue_Float("Value", 0));
 	
 	newInput(3, nodeValue_Curve("Curve", CURVE_DEF_11));
 	
-	newInput(4, nodeValue_Enum_Scroll("Type", 0, [ "Constant", "Curve" ]));
+	newInput(4, nodeValue_EScroll("Type", 0, [ "Constant", "Curve" ]));
 	
 	newInput(5, nodeValue_Vec2("Curve Range", [ 0, 1 ]));
 	

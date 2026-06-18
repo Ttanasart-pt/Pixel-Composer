@@ -5,6 +5,9 @@ function __NodeValue_Float(_name, _node, _value, _tooltip = "") : __NodeValue_Nu
 		[ "1, 0",  [[ 0, 1 ], [ 1, 0 ]], THEME.apreset_10 ], 
 		[ "-1, 1", [[ 0,-1 ], [ 1, 1 ]], THEME.apreset_01 ], 
 		[ "1, -1", [[ 0, 1 ], [ 1,-1 ]], THEME.apreset_10 ], 
+		-1, 
+		[ "Zero to Current", [[0,0], noone] ], 
+		[ "Current to One ", [noone, [1,1]] ], 
 	];
 	
 	////- GET
@@ -28,7 +31,7 @@ function __NodeValue_Float(_name, _node, _value, _tooltip = "") : __NodeValue_Nu
 		if(typ == VALUE_TYPE.surface) return surface_get_dimension(val);
 		if(typ == VALUE_TYPE.text) val = toNumber(val);
 		
-		if(is_struct(val) && struct_has(val, "to_real")) val = val.to_real();
+		if(is_struct(val) && has(val, "to_real")) val = val.to_real();
 		
 		return valueProcess(val, nod, applyUnit);
 	}

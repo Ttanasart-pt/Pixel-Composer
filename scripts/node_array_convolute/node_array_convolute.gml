@@ -11,7 +11,7 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newInput(2, nodeValue_Enum_Scroll("Boundary", 0, [ "Zero", "Wrap", "Skip" ]))
+	newInput(2, nodeValue_EScroll("Boundary", 0, [ "Zero", "Wrap", "Skip" ]))
 		.setArrayDepth(1);
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, 0))

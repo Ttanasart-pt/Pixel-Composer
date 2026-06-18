@@ -3338,14 +3338,26 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setQuickAnim = function(_qanim) {
+		var currValue = getValue();
+		
 		setAnim(true);
 		animator.values = [];
 		for( var i = 0, n = array_length(_qanim); i < n; i++ ) {
 			var a = _qanim[i];
-			animator.values[i] = new valueKey(a[0] * GLOBAL_TOTAL_FRAMES, a[1], animator);
+			var t,v;
+			
+			if(a == noone) a = [noone, noone];
+			
+			t = NODE_CURRENT_FRAME;
+			v = currValue;
+			
+			if(a[0] != noone) t = is_method(a[0])? a[0](t) : a[0] * (GLOBAL_TOTAL_FRAMES - 1);
+			if(a[1] != noone) v = is_method(a[1])? a[1](v) : a[1];
+			
+			animator.values[i] = new valueKey(t, v, animator);
 		}
 		
-		animator.updateKeyMap();
+		animator.recalculateKeys();
 		node.triggerRender();
 	}
 	

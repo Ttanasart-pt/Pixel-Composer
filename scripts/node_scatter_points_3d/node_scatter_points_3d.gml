@@ -17,7 +17,7 @@ function Node_Scatter_Points_3D(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	
 	////- =Scatter
 	
-	newInput(4, nodeValue_Enum_Scroll( "Amount",    0       )).setChoices([ "Cube", "Sphere" ]);
+	newInput(4, nodeValue_EScroll( "Amount",    0       )).setChoices([ "Cube", "Sphere" ]);
 	newInput(3, nodeValue_Int(         "Amount",    8       ));
 	newInput(1, nodeValue_Vec3(        "Center",    [0,0,0] ));
 	newInput(2, nodeValue_Vec3(        "Half-Size", [1,1,1] ));

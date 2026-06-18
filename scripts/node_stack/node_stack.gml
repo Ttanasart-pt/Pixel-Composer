@@ -19,7 +19,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(3, nodeValue_IPadding( "Padding", [0,0,0,0]                       ));
 	
 	////- =Render
-	newInput(4, nodeValue_Enum_Scroll( "Blend Mode", 0, BLEND_TYPES ));
+	newInput(4, nodeValue_EScroll( "Blend Mode", 0, BLEND_TYPES ));
 	array_foreach(inputs, function(i,_) /*=>*/ {return i.rejectArray()});
 	// 5
 	

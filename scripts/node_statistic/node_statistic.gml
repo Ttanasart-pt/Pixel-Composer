@@ -41,7 +41,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	_type_arr      = [ "Sum", "Mean", "Median", "Max", "Min" ];
 	_type_disp_arr = [ "Sum", "Avg",  "Med",    "Max", "Min" ];
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", 0, _type_arr )).rejectArray();
+	newInput(0, nodeValue_EScroll("Type", 0, _type_arr )).rejectArray();
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

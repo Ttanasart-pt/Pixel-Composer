@@ -21,7 +21,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Surfaces
-	newInput( 9, nodeValue_Enum_Scroll( "Types",  0, [ "Basic", "Anisotropics", "Generalized" ])).setPieMenu();
+	newInput( 9, nodeValue_EScroll( "Types",  0, [ "Basic", "Anisotropics", "Generalized" ])).setPieMenu();
 	newInput( 2, nodeValue_Int(         "Radius",         2  )).setMappable(16).setHotkey("R").setValidator(VV_min(1)).setPieMenu();
 	newInput(10, nodeValue_Slider(      "Alpha",          1  )).setPieMenu();
 	newInput(11, nodeValue_Slider(      "Zero crossing", .58 )).setPieMenu();

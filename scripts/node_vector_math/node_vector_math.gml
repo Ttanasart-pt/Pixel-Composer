@@ -48,7 +48,7 @@ function Node_Vector_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 48);
 	__mode   = noone;
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", 0, global.node_vmath_scroll)).rejectArray();
+	newInput(0, nodeValue_EScroll("Type", 0, global.node_vmath_scroll)).rejectArray();
 	
 	////- =Values
 	newInput(5, nodeValue_Int(   "Dimension", 2 ));

@@ -3,7 +3,7 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	newInput(0, nodeValue_Text("Address"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Format", 0, [ "Image" ]));
+	newInput(1, nodeValue_EScroll("Format", 0, [ "Image" ]));
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.surface, noone));
 	

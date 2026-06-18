@@ -24,7 +24,7 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	newInput(8, nodeValue_Slider("Diagonal", 0.2));
 		
-	newInput(9, nodeValue_Enum_Scroll("Loop", false, [ "None", "Loop", "Ping-pong" ]));
+	newInput(9, nodeValue_EScroll("Loop", false, [ "None", "Loop", "Ping-pong" ]));
 	
 	newInput(10, nodeValue_Int("Loop Length", 4));
 	

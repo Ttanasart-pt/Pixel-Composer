@@ -97,11 +97,13 @@
             var arr = [];
         	for( var i = 0, n = array_length(jun.anim_presets); i < n; i++ ) {
         		var _pres = jun.anim_presets[i];
+        		if(_pres == -1) { array_push(arr, -1); continue; }
+        		
         		var _name = _pres[0];
         		var _data = _pres[1];
         		var _spr  = array_safe_get_fast(_pres, 2, noone);
         		
-        		array_push(arr, menuItem(_name, method(jun, jun.setQuickAnim), _spr,,, _data));
+        		array_push(arr, menuItem(_name, method(jun, jun.setQuickAnim), _spr).setParam(_data));
         	}
             
 	        return array_empty(arr)? noone : submenuCall(_dat, arr);
@@ -577,7 +579,7 @@ function Panel_Inspector() : PanelContent() constructor {
         
         array_push(_menuItem, MENU_ITEMS.inspector_extract);
         
-        if(!array_empty(jun.anim_presets)) {
+        if(jun.isAnimable() && !array_empty(jun.anim_presets)) {
         	array_push(_menuItem, -1);
         	array_push(_menuItem, MENU_ITEMS.inspector_quick_anim);
         }

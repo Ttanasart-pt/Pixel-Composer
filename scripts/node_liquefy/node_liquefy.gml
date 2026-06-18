@@ -45,7 +45,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(i+ 0, nodeValue_Enum_Scroll( "Type", 0, typeList ));
+		newInput(i+ 0, nodeValue_EScroll( "Type", 0, typeList ));
 		
 		////- =Region
 		newInput(i+ 1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple();

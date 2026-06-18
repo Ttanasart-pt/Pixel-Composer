@@ -1,7 +1,7 @@
 function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constructor {
 	name = "Math";
 	
-	newInput(0, nodeValue_Enum_Scroll("Operator",  0, [ "Add",   "Subtract", "Multiply", "Divide", "Power",  "Modulo", "Absolute", -1, 
+	newInput(0, nodeValue_EScroll("Operator",  0, [ "Add",   "Subtract", "Multiply", "Divide", "Power",  "Modulo", "Absolute", -1, 
 												              "Round", "Floor",    "Ceil",      -1, 
 												              "Sin",   "Cos",      "Tan",      "Arcsin", "Arccos", "Arctan", -1, 
 												              "Min",   "Max",      "Clamp",    -1, 

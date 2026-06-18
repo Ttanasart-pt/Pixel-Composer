@@ -4,7 +4,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Sampling
 	
-	newInput(4, nodeValue_Enum_Scroll( "Sampling type",  0, ["Channel value", "Greyscale"]));
+	newInput(4, nodeValue_EScroll( "Sampling type",  0, ["Channel value", "Greyscale"]));
 	newInput(5, nodeValue_Slider(      "Base value",     0 )).setTooltip("Set value to the unconnected color channels.").setMappable(6);
 	
 	////- =Surfaces

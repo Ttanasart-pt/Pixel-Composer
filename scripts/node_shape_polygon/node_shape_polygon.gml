@@ -34,7 +34,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 7, nodeValue_Vec2(     "Scale",    [.5,.5])).setHotkey("S").setUnitSimple();
 	
 	////- =Shape
-	newInput( 4, nodeValue_Enum_Scroll("Shape",  0, { data: shapesArray, horizontal: 1, text_pad: ui(16) }))
+	newInput( 4, nodeValue_EScroll("Shape",  0, { data: shapesArray, horizontal: 1, text_pad: ui(16) }))
 		.setHistory([ shapesArray, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_09_0}, list: global.node_shape_polygon_keys_1809 }, 
 		                           //{ cond: () => LOADING_VERSION < 1_19_02_0, list: global.node_shape_polygon_keys_1902 },
                     ]);
@@ -62,7 +62,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(19, nodeValue_Color(    "Vertex Color 1",  ca_white));
 	newInput(20, nodeValue_Color(    "Vertex Color 2",  ca_white));
 	newInput(21, nodeValue_Color(    "Vertex Color 3",  ca_white));
-	newInput(24, nodeValue_Enum_Scroll("SSAA", 0, [ "None", "2x", "4x", "8x" ]));
+	newInput(24, nodeValue_EScroll("SSAA", 0, [ "None", "2x", "4x", "8x" ]));
 	
 	// inputs 30
 	

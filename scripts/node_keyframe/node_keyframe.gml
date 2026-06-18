@@ -525,6 +525,21 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	////- Modify Keys
 	
+	static recalculateKeys = function() {
+		if(!array_empty(values)) {
+			array_sort(values, function(a,b) /*=>*/ {return sign(a.time - b.time)});
+			
+			for(var i = array_length(values) - 1; i >= 1; i--) {
+				var a = values[i-1]; 
+				var b = values[i]; 
+				if(a.time == b.time) array_delete(values, i, 1);
+			}
+			
+		}
+		
+		updateKeyMap();
+	}
+	
 	static updateKeyMap = function() {
 		length = array_length(values);
 		

@@ -5,7 +5,7 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(0, nodeValue_Bool("Boolean", false));
 	
-	newInput(1, nodeValue_Enum_Scroll("Trigger condition",  0, [ new scrollItem("True frame",    s_node_trigger_cond, 0), 
+	newInput(1, nodeValue_EScroll("Trigger condition",  0, [ new scrollItem("True frame",    s_node_trigger_cond, 0), 
 												                       new scrollItem("False to True", s_node_trigger_cond, 1), 
 												                       new scrollItem("True to False", s_node_trigger_cond, 2), 
 												                       new scrollItem("Value changed", s_node_trigger_cond, 3), ]));

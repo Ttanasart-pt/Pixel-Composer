@@ -13,7 +13,7 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(3, 8); // inputs 8, 9, 
 	
 	////- =Blur
-	newInput( 7, nodeValue_Enum_Button( "Mode",  0, [ "Blur", "Max" ] ));
+	newInput( 7, nodeValue_EButton( "Mode",  0, [ "Blur", "Max" ] ));
 	newInput( 1, nodeValue_Surface(     "Blur Shape" ));
 	newInput( 2, nodeValue_Surface(     "Blur mask"  ));
 	newInput(10, nodeValue_Bool(        "Gamma Correction", false ));

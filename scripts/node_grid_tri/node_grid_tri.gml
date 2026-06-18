@@ -20,7 +20,7 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 3, nodeValue_Slider(   "Gap",      .1, [0, 0.5, 0.001] )).setMappable(12).setPieMenu();
 	
 	////- =Render
-	newInput( 8, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
+	newInput( 8, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
 	newInput( 9, nodeValueSeed());
 	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white )).setMappable(17);
 	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));

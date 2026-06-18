@@ -21,7 +21,6 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		toSelectNode = "";
 			
 		static setRootDir = function(d) /*=>*/ { 
-			// internalDir = new DirectoryObject(d).scanDir(true); 
 			internalDir = new DirectoryObject(d).scan(["NodeObject"]); 
 			rootDir     = d;
 		} 
@@ -69,6 +68,48 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		array_foreach(editWidgets, function(e) /*=>*/ {return e[1].setFont(f_p2)});
 	#endregion
 	
+	#region raw code data
+		script_name_exception = {
+			"Node_3D_Mesh_Vertex_Points":   "node_3d_vertex_points",
+			"Node_Fn_WaveTable":            "node_fn_wave_table",
+			"Node_Wiggler":                 "node_fn_wiggler",
+			"Node_Blend_Height":            "node_height_blend",
+			"Node_Color_Separate":          "node_separate_color",
+			"Node_Hough_Transform":         "node_hough",
+			"Node_Dotted":                  "node_dot_pattern",
+			"Node_Gradient_Points_N":       "node_gradient_point_n",
+			"Node_Hilbert":                 "node_hilbert_curve",
+			"Node_Honeycomb_Noise":         "node_honey_noise",
+			"Node_Kisrhombille":            "node_grid_kisrhombille",
+			"Node_GMRoom":                  "node_gm_room",
+			"Node_Image_mp4":               "node_mp4",
+			"Node_Tile_Convert":            "node_tiler_convert",
+			"Node_Tile_Drawer":             "node_tiler",
+			"Node_Tile_Render":             "node_tiler_render",
+			"Node_Tile_Rule":               "node_tiler_rule",
+			"Node_Tile_Tilemap_Export":     "node_tiler_export",
+			"Node_Tile_Tileset":            "node_tiler_tileset",
+			"Node_Iterator_Each_Length":    "node_iterator_each_size",
+			"Node_MK_Tree_Path_Root":       "node_mk_tree_root_path",
+			"Node_PB_Draw_Curve":           "node_pb_draw_line_curve",
+			"Node_PB_Draw_Quadrilateral":   "node_pb_draw_quadri",
+			"Node_PB_FX_Bevel":             "node_pb_filter_bevel",
+			"Node_PB_FX_Extrude":           "node_pb_filter_extrude",
+			"Node_PB_FX_Highlight":         "node_pb_filter_highlight",
+			"Node_PB_FX_Shine":             "node_pd_filter_shine",
+			"Node_Matrix_Set_Vector":       "node_matric_set_vector",
+			"Node_Matrix_Transpose":        "node_matrix_tranpose",
+			"Node_Point_3D_Camera":         "node_points_3d_camera",
+			"Node_Point_SDF":               "node_points_sdf",
+			"Node_Scatter_Point_Fibonacci": "node_scatter_point_fibo",
+			"Node_Atlas_Struct":            "node_atlas_to_struct",
+			"Node_Vector_Cart_To_Polar":    "node_vec2_cart_to_polar",
+			"Node_Vector_Polar_To_Cart":    "node_vec2_polar_to_cart",
+			"Node_VerletSim_Inline":        "node_verletSim_group_inline",
+			"Node_pSystem_3D_Trail":        "node_psystem_3d_trail_path",
+		}
+	#endregion
+	
 	#region search
 		searching    = false;
 		searchText   = "";
@@ -80,6 +121,8 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 			searchTextL = string_lower(_str);
 		}
 	#endregion
+	
+	////- Draw
 	
 	#region draw
 		function drawDirectory(_ind, _dir, yy, _m) {
@@ -250,24 +293,24 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		tb_search.draw(wx + wdw + ui(8), wy, sdw, wdh, searchText, m );
 		
 		// Editor
-		
 		var bw = edit_w;
 		var bh = TEXTBOX_HEIGHT;
 		var bx = w - edit_w - _pd;
 		var by = ndy;
 		
-		var b = buttonInstant(THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS);
+		draw_set_font(f_p2);
+		var bt = loadall_comfirm? "Comfirm Load All Nodes" : "Load All Nodes";
+		var b  = buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS, "", bt);
 		if(b == 0) loadall_comfirm = false;
 		if(b == 2) {
 			if(loadall_comfirm) __test_load_all_nodes();
 			else loadall_comfirm = true;
 		}
-		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
-		draw_text_add(bx + bw / 2, by + bh / 2, loadall_comfirm? "Comfirm Load All Nodes" : "Load All Nodes");
 		by += bh + ui(4);
 		
 		if(selectDir != noone) {
-			if(buttonInstant(THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS) == 2) {
+			draw_set_font(f_p2);
+			if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS, "", "Add Node") == 2) {
 				fileNameCall("", function(txt) /*=>*/ {
 					if(txt == "") return;
 					var _inode = string_trim(txt, ["/"])
@@ -313,8 +356,6 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 					
 				}).setName("BaseNode")
 			}
-			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
-			draw_text_add(bx + bw / 2, by + bh / 2, "Add Node");
 			by += bh + ui(4);
 		}
 		
@@ -353,11 +394,11 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 			}
 			
 			by += ui(4);
-			if(buttonInstant(THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS) == 2)
+			
+			draw_set_font(f_p2);
+			if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS, "", "Update") == 2)
 				update();
 			
-			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
-			draw_text_add(bx + bw / 2, by + bh / 2, "Update");
 			by += bh + ui(4);
 		}
 		
@@ -380,6 +421,56 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		sc_content.setFocusHover(pFOCUS, pHOVER);
 		sc_content.drawOffset(ndx + ui(8) + _fol_w + ui(12), ndy + ui(8), mx, my);
 		
+		// Misc tools
+		var bw = edit_w;
+		var bh = line_get_height(f_p2, 4);
+		var bx = w - edit_w - _pd;
+		var by = h - _pd - bh;
+		
+		draw_set_font(f_p3);
+		if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS, "", "Scan Enums") == 2)
+			scanEnum();
+		by -= bh + ui(4);
+		
 	}
 	
+	////- Actions
+	
+	static scanEnum = function(_dir = internalDir) {
+		for( var i = 0, n = array_length(_dir.content); i < n; i++ ) {
+			var _cont = _dir.content[i];
+			var _info = _cont.info;
+			var _base = _info.baseNode;
+			var _file = has(script_name_exception, _base)? script_name_exception[$ _base] : string_lower(_base);
+			
+			var _scrPath = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/scripts/{_file}/{_file}.gml";
+			if(!file_exists(_scrPath)) { print($"{_base}"); continue; }
+			
+			var _txt = $"==== Scanning: {_base} ====";
+			var _prt = false;
+			var f = file_text_open_read(_scrPath);
+			
+			while(!file_text_eof(f)) {
+				var l = file_text_readln(f);
+				if(string_starts_with(l, "newOutput")) break;
+				
+				if(string_pos("nodeValue_EButton", l)) {
+					_txt += $"\n{l}";
+					_prt  = true;
+				}
+				
+				if(string_pos("nodeValue_EScroll", l)) {
+					_txt += $"\n{l}";
+					_prt  = true;
+				}
+			}
+			
+			file_text_close(f);
+			if(_prt) print(_txt);
+			
+		}
+		
+		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ )
+			scanEnum(_dir.subDir[i]);
+	}
 }

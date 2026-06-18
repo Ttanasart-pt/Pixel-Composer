@@ -22,7 +22,7 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 		"Spawn Index", 
 	];
 	
-	newInput( 3, nodeValue_Enum_Scroll( "Data", 0, data_type_keys)); 
+	newInput( 3, nodeValue_EScroll( "Data", 0, data_type_keys)); 
 	
 	////- =Remap
 	newInput( 4, nodeValue_Range( "Remap From",     [0,1]        )); 

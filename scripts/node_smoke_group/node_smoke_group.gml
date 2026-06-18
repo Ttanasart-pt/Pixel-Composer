@@ -14,9 +14,9 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	
 	newInput( 0, nodeValue_Dimension());
 	newInput( 1, nodeValue_Surface("Collision"));
-	newInput( 2, nodeValue_Enum_Button("Material dissipation type",  1, [ "Multiply", "Subtract" ]));
+	newInput( 2, nodeValue_EButton("Material dissipation type",  1, [ "Multiply", "Subtract" ]));
 	newInput( 3, nodeValue_Slider("Material dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
-	newInput( 4, nodeValue_Enum_Button("Velocity dissipation type",  1, [ "Multiply", "Subtract" ]));
+	newInput( 4, nodeValue_EButton("Velocity dissipation type",  1, [ "Multiply", "Subtract" ]));
 	newInput( 5, nodeValue_Slider("Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
 	newInput( 6, nodeValue_Vec2("Acceleration", [ 0, 0 ]));
 	newInput( 7, nodeValue_Vec2("Material intertia", [ 1, -0.2 ]));

@@ -6,7 +6,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Button("Type",  0, [ "Index", "Value" ]))
+	newInput(1, nodeValue_EButton("Type",  0, [ "Index", "Value" ]))
 		.rejectArray();
 	
 	newInput(2, nodeValue_Int("Index", 0));

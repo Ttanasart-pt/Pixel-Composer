@@ -15,7 +15,7 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(13, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput(11, nodeValue_Enum_Button( "Pattern",    0, [ "Cross", "Xor" ]));
+	newInput(11, nodeValue_EButton( "Pattern",    0, [ "Cross", "Xor" ]));
 	newInput( 3, nodeValue_Vec2(        "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 2, nodeValue_Rotation(    "Angle",      0     )).setHotkey("R").setMappable(7).setPieMenu();
 	newInput( 1, nodeValue_Slider(      "Scale",     .5     )).setHotkey("S").setMappable(6).setUnitSimple().setPieMenu();
@@ -23,7 +23,7 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(12, nodeValue_Int(         "Iteration",  4     ))
 	
 	////- =Render
-	newInput( 8, nodeValue_Enum_Button( "Render Type", 0, [ "Solid", "Smooth", "AA" ] ));
+	newInput( 8, nodeValue_EButton( "Render Type", 0, [ "Solid", "Smooth", "AA" ] ));
 	newInput( 4, nodeValue_Color(       "Color 1", ca_white ));
 	newInput( 5, nodeValue_Color(       "Color 2", ca_black ));
 	// input 16

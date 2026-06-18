@@ -286,7 +286,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Output
-	newInput( 9, nodeValue_Enum_Scroll( "Output Dimension Type", OUTPUT_SCALING.same_as_input, [
+	newInput( 9, nodeValue_EScroll( "Output Dimension Type", OUTPUT_SCALING.same_as_input, [
 		new scrollItem("Same as input"),
 		new scrollItem("Constant"),
 		new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
@@ -294,7 +294,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	]));
 	newInput( 1, nodeValue_Dimension()).setVisible(false);
 	newInput(15, nodeValue_Vec2( "Dimension Scale", [1,1], { linked: true} ));
-	newInput( 7, nodeValue_Enum_Button( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
+	newInput( 7, nodeValue_EButton( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
 	
 	////- =Position
 	newInput( 2, nodeValue_Vec2( "Position", [.5,.5] )).setUnitSimple().setPieMenu()

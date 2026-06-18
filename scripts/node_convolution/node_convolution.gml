@@ -14,7 +14,7 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(10, nodeValue_Int(    "Size",      3             )).setValidator(VV_clamp(3, 16));
 	newInput( 1, nodeValue_Matrix( "Kernel",    new Matrix(3) ));
 	newInput( 9, nodeValue_Bool(   "Normalize", false         ));
-	/* UNUSED */ newInput( 2, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
+	/* UNUSED */ newInput( 2, nodeValue_EScroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

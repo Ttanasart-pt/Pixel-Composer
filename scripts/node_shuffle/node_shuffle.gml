@@ -12,9 +12,9 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(2, nodeValueSeed());
 	
 	////- =Shuffle
-	newInput(1, nodeValue_Enum_Scroll( "Type",         0, [ "Pixel", "Block" ]                 ));
+	newInput(1, nodeValue_EScroll( "Type",         0, [ "Pixel", "Block" ]                 ));
 	newInput(5, nodeValue_Slider(      "Randomness",   1                                       )).setHotkey("R");
-	newInput(3, nodeValue_Enum_Scroll( "Axis",         2, [ "Horizontal", "Vertical", "Both" ] ));
+	newInput(3, nodeValue_EScroll( "Axis",         2, [ "Horizontal", "Vertical", "Both" ] ));
 	newInput(4, nodeValue_IVec2(       "Block count", [4,4]                                    ));
 	
 	// input 6

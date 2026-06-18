@@ -28,7 +28,7 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(11, nodeValue_Bool( "Loop",   false )).setPieMenu();
 	
 	////- =Pattern
-	newInput(7, nodeValue_Enum_Button( "Axis", 0, [ "X", "Y" ] ));
+	newInput(7, nodeValue_EButton( "Axis", 0, [ "X", "Y" ] ));
 	newInput(8, nodeValue_Float( "Size",   1     )).setMappable(12).setHotkey("S");
 	newInput(9, nodeValue_Bool(  "Invert", false ));
 	//input 13

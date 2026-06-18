@@ -2,7 +2,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array";
 	setDimension(96, 32);
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })).rejectArray();
+	newInput(0, nodeValue_EScroll("Type", 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })).rejectArray();
 	newInput(1, nodeValue_Bool("Spread array", false, "Unpack array and push the contents into the output one by one." )).rejectArray();
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, []));

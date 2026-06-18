@@ -11,7 +11,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	/* UNUSED */ newInput( 4, nodeValue_Enum_Scroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
+	/* UNUSED */ newInput( 4, nodeValue_EScroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	newInput( 5, nodeValue_Surface( "Mask"       ));
 	newInput( 6, nodeValue_Slider(  "Mix", 1     ));

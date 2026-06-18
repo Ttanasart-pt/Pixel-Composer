@@ -9,7 +9,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(1, nodeValue_Text("Function name"));
 	
-	newInput(2, nodeValue_Enum_Button("Return type",  0, [ "Number", "Buffer" ]));
+	newInput(2, nodeValue_EButton("Return type",  0, [ "Number", "Buffer" ]));
 	
 	newOutput(0, nodeValue_Output("Return Value", VALUE_TYPE.float, 0));
 	
@@ -46,7 +46,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Enum_Button("Parameter type",  0, [ "Number", "Buffer" ]));
+		newInput(index + 0, nodeValue_EButton("Parameter type",  0, [ "Number", "Buffer" ]));
 		
 		newInput(index + 1, nodeValue_Float("Parameter value", 0 ))
 			.setVisible(true, true);

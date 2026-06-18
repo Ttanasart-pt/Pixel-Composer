@@ -3,7 +3,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Enum_Scroll("Type", 0, [ "Hex Disc", "Strip", "Linear Block", "Linear Block offset", "Chevron", "Square", "Square Non-Uniform" ]));
+	newInput(1, nodeValue_EScroll("Type", 0, [ "Hex Disc", "Strip", "Linear Block", "Linear Block offset", "Chevron", "Square", "Square Non-Uniform" ]));
 	
 	newInput(2, nodeValue_Int("Density", 8));
 	

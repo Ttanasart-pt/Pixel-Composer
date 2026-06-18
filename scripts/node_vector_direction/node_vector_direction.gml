@@ -5,7 +5,7 @@ function Node_Vector_Direction(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vec2(        "Vector", [ 0, 0 ])).setVisible(true, true);
-	newInput(1, nodeValue_Enum_Button( "Unit", 0, [ "Degree", "Radians" ]));
+	newInput(1, nodeValue_EButton( "Unit", 0, [ "Degree", "Radians" ]));
 	
 	newOutput(0, nodeValue_Output("Direction", VALUE_TYPE.float, 0));
 	

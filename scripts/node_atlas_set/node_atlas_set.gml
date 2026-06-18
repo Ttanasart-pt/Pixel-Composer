@@ -14,20 +14,20 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- =Position
 	
 	newInput(3, nodeValue_Bool(         "Set Position", false ));
-	newInput(4, nodeValue_Enum_Button(  "Mode",         0,    )).setChoices([ "Absolute", "Relative" ]).setInternalName("Position mode");
+	newInput(4, nodeValue_EButton(  "Mode",         0,    )).setChoices([ "Absolute", "Relative" ]).setInternalName("Position mode");
 	newInput(5, nodeValue_Vec2(         "Position",    [0,0]  ));
 	
 	////- =Rotation
 	
 	newInput(6, nodeValue_Bool(         "Set Rotation", false ));
-	newInput(7, nodeValue_Enum_Button(  "Mode",         0,    )).setChoices([ "Absolute", "Relative" ]).setInternalName("Rotation mode");
+	newInput(7, nodeValue_EButton(  "Mode",         0,    )).setChoices([ "Absolute", "Relative" ]).setInternalName("Rotation mode");
 	newInput(8, nodeValue_Rotation(     "Rotation",     0     ));
 	newInput(9, nodeValue_Bool(         "Recalculate Position", true ));
 	
 	////- =Scale
 	
 	newInput(10, nodeValue_Bool(        "Set Scale",  false  ));
-	newInput(11, nodeValue_Enum_Button( "Mode",       0,     )).setChoices([ "Absolute", "Additive", "Multiplicative" ]).setInternalName("Scale mode");
+	newInput(11, nodeValue_EButton( "Mode",       0,     )).setChoices([ "Absolute", "Additive", "Multiplicative" ]).setInternalName("Scale mode");
 	newInput(12, nodeValue_Vec2(        "Scale",     [1,1]   ));
 	newInput(19, nodeValue_Vec2(        "Anchor",    [.5,.5] ));
 		inputs[19].setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(inputs[19]) });
@@ -35,13 +35,13 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- =Blend
 		
 	newInput(13, nodeValue_Bool(        "Set Blending", false    ));
-	newInput(14, nodeValue_Enum_Button( "Mode",         0        )).setChoices([ "Absolute", "Multiplicative" ]).setInternalName("Blend mode");
+	newInput(14, nodeValue_EButton( "Mode",         0        )).setChoices([ "Absolute", "Multiplicative" ]).setInternalName("Blend mode");
 	newInput(15, nodeValue_Color(       "Blend",        ca_white ));
 	
 	////- =Alpha
 		
 	newInput(16, nodeValue_Bool(        "Set Alpha", false   ));
-	newInput(17, nodeValue_Enum_Button( "Mode",      0,      )).setChoices([ "Absolute", "Additive", "Multiplicative" ]).setInternalName("Alpha mode");
+	newInput(17, nodeValue_EButton( "Mode",      0,      )).setChoices([ "Absolute", "Additive", "Multiplicative" ]).setInternalName("Alpha mode");
 	newInput(18, nodeValue_Float(       "Alpha",     1       ));
 	
 	// input 19

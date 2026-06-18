@@ -10,7 +10,7 @@ function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(5, 7); // inputs 7, 8,
 	
 	////- =Effect
-	newInput(4, nodeValue_Enum_Button( "Strictness",  0, [ "Low", "High", "Stray-only" ] )).setPieMenu();
+	newInput(4, nodeValue_EButton( "Strictness",  0, [ "Low", "High", "Stray-only" ] )).setPieMenu();
 	newInput(1, nodeValue_Slider( "Tolerance",  0     )).setMappable(10).setPieMenu();
 	newInput(3, nodeValue_Int(    "Iteration",  2     )).setPieMenu();
 	newInput(9, nodeValue_Bool(   "Fill Empty", false )).setPieMenu();

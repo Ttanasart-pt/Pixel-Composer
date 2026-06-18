@@ -13,11 +13,11 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 	newInput(3, nodeValue_Float("Scale", []))
 		.setArrayDepth(2);
 		
-	newInput(4, nodeValue_Enum_Scroll("Positioning type", 0, [ "Additive", "Override" ]));
+	newInput(4, nodeValue_EScroll("Positioning type", 0, [ "Additive", "Override" ]));
 		
-	newInput(5, nodeValue_Enum_Scroll("Rotating type", 0, [ "Additive", "Override" ]));
+	newInput(5, nodeValue_EScroll("Rotating type", 0, [ "Additive", "Override" ]));
 	
-	newInput(6, nodeValue_Enum_Scroll("Scaling type", 0, [ "Additive", "Multiplicative", "Override" ]));
+	newInput(6, nodeValue_EScroll("Scaling type", 0, [ "Additive", "Multiplicative", "Override" ]));
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	

@@ -15,7 +15,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(2, nodeValue_Int("Sample", 44100));
 	
-	newInput(3, nodeValue_Enum_Scroll("Bit Depth",  0, [ "8 bit positive", "16 bit integer" ]));
+	newInput(3, nodeValue_EScroll("Bit Depth",  0, [ "8 bit positive", "16 bit integer" ]));
 		
 	newInput(4, nodeValue_Bool("Remap Data", false))
 	

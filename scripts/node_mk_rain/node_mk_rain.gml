@@ -6,7 +6,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(8, nodeValueSeed());
 	
 	////- =Shapes
-	newInput( 9, nodeValue_Enum_Scroll( "Shape",           0, __enum_array_gen([ "Rain", "Snow", "Texture" ], s_node_mk_rain_type)));
+	newInput( 9, nodeValue_EScroll( "Shape",           0, __enum_array_gen([ "Rain", "Snow", "Texture" ], s_node_mk_rain_type)));
 	newInput( 3, nodeValue_Range(       "Raindrop Width",  [1,1]  ));
 	newInput( 4, nodeValue_Range(       "Raindrop Length", [5,10] ));
 	newInput(10, nodeValue_Range(       "Snow Size",       [3,4]  ));

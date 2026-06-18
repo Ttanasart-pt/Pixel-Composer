@@ -14,7 +14,7 @@ function Node_MK_Tree_Repulse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput( 4, nodeValue_Curve(  "Falloff Curve", CURVE_DEF_01 ));
 	
 	////- =Effect
-	newInput( 6, nodeValue_Enum_Scroll( "Mode",  0, [ "Propagate", "Direct" ] ));
+	newInput( 6, nodeValue_EScroll( "Mode",  0, [ "Propagate", "Direct" ] ));
 	newInput( 5, nodeValue_Slider( "Strength",      .2 ));
 	// input 7
 	

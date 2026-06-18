@@ -24,7 +24,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	newInput(6, nodeValueSeed());
 	
 	////- =Spawn
-	newInput( 0, nodeValue_Enum_Scroll( "Spawn Type", 0, [ "Stream", "Burst", "Trigger" ] ));
+	newInput( 0, nodeValue_EScroll( "Spawn Type", 0, [ "Stream", "Burst", "Trigger" ] ));
 	newInput( 1, nodeValue_Trigger(     "Spawn Trigger",                ));
 	newInput( 2, nodeValue_Int(         "Spawn Delay",       4          )).setTooltip("Frames delay between each particle spawn.");
 	newInput( 3, nodeValue_Int(         "Burst Duration",    1          ));
@@ -32,8 +32,8 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	newInput( 5, nodeValue_Range(       "Lifespan",         [20,30]     ));
 	
 		////- =/Source
-	newInput( 7, nodeValue_Enum_Scroll( "Type",      0,         )).setChoices([ "Shape", "Path", "Mesh Vertices", "Direct Data" ]);
-	newInput( 8, nodeValue_Enum_Scroll( "Shape",     0,         )).setChoices(__enum_array_gen([ "Box", "Sphere", "Circle" ], s_node_particle_3d_spawn_shape));
+	newInput( 7, nodeValue_EScroll( "Type",      0,         )).setChoices([ "Shape", "Path", "Mesh Vertices", "Direct Data" ]);
+	newInput( 8, nodeValue_EScroll( "Shape",     0,         )).setChoices(__enum_array_gen([ "Box", "Sphere", "Circle" ], s_node_particle_3d_spawn_shape));
 	newInput( 9, nodeValue_Vec3(        "Origin",   [0,0,0]     ));
 	newInput(10, nodeValue_Vec3(        "Span",     [1,1,1]     ));
 	newInput(11, nodeValue_Quaternion(  "Rotation"   ));

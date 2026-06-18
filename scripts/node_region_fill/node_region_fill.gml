@@ -39,7 +39,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(12, nodeValue_RotRange( "Random Rotation", [0,0] ));
 	
 	////- =Render
-	newInput( 7, nodeValue_Enum_Scroll("Draw Original",  0, [ "None", "Above", "Behind" ]));
+	newInput( 7, nodeValue_EScroll("Draw Original",  0, [ "None", "Above", "Behind" ]));
 	newInput(17, nodeValue_Bool(     "Output Index",   false           ));
 	// Inputs 19
 	

@@ -2,7 +2,7 @@ function Node_3D_Bend(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group)
 	name = "Bend Mesh";
 	
 	var i = in_mesh;
-	newInput(i+0, nodeValue_Enum_Button("Axis", 0, [ "X", "Y", "Z"]));
+	newInput(i+0, nodeValue_EButton("Axis", 0, [ "X", "Y", "Z"]));
 	
 	newInput(i+1, nodeValue_Float("Radius", 1));
 	

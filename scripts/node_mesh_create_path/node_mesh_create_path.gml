@@ -5,7 +5,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Path(    "Path"         ));
 	newInput(1, nodeValue_Int(         "Sample",    8 ));
-	newInput(2, nodeValue_Enum_Scroll( "Algorithm", 0, [ "Ear Clipping", "Convex Fan", "Delaunay" ] ));
+	newInput(2, nodeValue_EScroll( "Algorithm", 0, [ "Ear Clipping", "Convex Fan", "Delaunay" ] ));
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
 	
