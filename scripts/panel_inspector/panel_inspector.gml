@@ -1445,8 +1445,17 @@ function Panel_Inspector() : PanelContent() constructor {
                         NODE_DROPPER_TARGET.expressionUpdate(); 
                     }
                     
-                    if(DRAGGING != noone && DRAGGING.type == "Globalvar" && mouse_lrelease())
-                    	jun.setExpression(DRAGGING.data);
+                    if(mouse_lrelease() && DRAGGING != noone) {
+                    	if(DRAGGING.type == "Globalvar")
+                    		jun.setExpression(DRAGGING.data);
+                    	else {
+	                    	var _from = DRAGGING[$ "from"];
+	                    	if(is(_from, NodeValue) && jun != _from) {
+	                    		var _exp = jun != _from? $"self.{_from.internalName}" : "value";
+	                    		jun.setExpression(jun.expression == ""? _exp : jun.expression + "\n" + _exp);
+	                    	}
+                    	}
+                    }
                     
                 } else {
                 	showHig = true;

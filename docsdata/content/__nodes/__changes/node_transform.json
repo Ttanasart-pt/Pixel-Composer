@@ -6,6 +6,11 @@
         "date": "2026-06-19T07:23:58.250Z",
         "node": "",
         "commit": "**Transform**: Add path input."
+      },
+      {
+        "date": "2026-06-19T07:39:24.615Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Dropping value to another value now create expression."
       }
     ]
   },

@@ -317,7 +317,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Path
 	newInput(21, nodeValue_Path(   "Path" ));
-	newInput(22, nodeValue_Slider( "Position",     0     ));
+	newInput(22, nodeValue_Slider( "Position",     0     )).setInternalName("path_position");
 	newInput(23, nodeValue_Bool(   "Rotate Along", false ));
 	
 	////- =Render
@@ -929,11 +929,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			pos[1] += py0;
 			
 			if(pathRot) {
-				var _p = path.getPointRatio(pathPos + 0.01);
-				var px1 = _p.x;
-				var py1 = _p.y;
-				
-				var dir = point_direction(px0, py0, px1, py1);
+				var _p0 = path.getPointRatio(clamp(pathPos - .01, 0, .99));
+				var _p1 = path.getPointRatio(clamp(pathPos + .01, 0, .99));
+				var dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y);
 				rot += dir;
 			}
 		}
