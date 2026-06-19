@@ -1290,6 +1290,7 @@
             "Node_Path_Bridge",
             "Node_Path_Blend",
             "Node_Path_Flattern",
+            "Node_Path_Join",
             { "label": "/To Number" },
             "Node_Path_Sample",
             "Node_Path_Bake",

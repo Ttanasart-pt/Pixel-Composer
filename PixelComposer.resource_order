@@ -2818,7 +2818,6 @@
     {"name":"sh_tiler_convert","order":11,"path":"shaders/sh_tiler_convert/sh_tiler_convert.yy",},
     {"name":"sh_time_remap","order":10,"path":"shaders/sh_time_remap/sh_time_remap.yy",},
     {"name":"sh_track_pixel_diff","order":1,"path":"shaders/sh_track_pixel_diff/sh_track_pixel_diff.yy",},
-    {"name":"sh_track_pixel_draw","order":0,"path":"shaders/sh_track_pixel_draw/sh_track_pixel_draw.yy",},
     {"name":"sh_trail_blend","order":3,"path":"shaders/sh_trail_blend/sh_trail_blend.yy",},
     {"name":"sh_trail_filler_pass1","order":1,"path":"shaders/sh_trail_filler_pass1/sh_trail_filler_pass1.yy",},
     {"name":"sh_trail_filler_pass2","order":2,"path":"shaders/sh_trail_filler_pass2/sh_trail_filler_pass2.yy",},

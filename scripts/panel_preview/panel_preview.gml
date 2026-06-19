@@ -4276,7 +4276,14 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
         if(PANEL_PREVIEW == self) { // Draw Overlay
-            if(toolNode) {
+        	var _drawAllSelect = false;
+        	
+        	if(_drawAllSelect) {
+		        var _selectingNodes = PANEL_GRAPH.nodes_selecting;
+		        for( var i = 0, n = array_length(_selectingNodes); i < n; i++ ) 
+		        	drawNodeActions(pFOCUS, _selectingNodes[i]);
+		        
+        	} else if(toolNode) {
 				drawNodeActions(pFOCUS, toolNode);
 				drawNodeToolOverlay(toolNode);
 				drawNodeHotkey(toolNode);

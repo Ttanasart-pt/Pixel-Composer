@@ -1,11 +1,11 @@
-function BoundingBox(minx = noone, miny = noone, maxx = noone, maxy = noone) constructor {
-	self.minx = minx;
-	self.miny = miny;
-	self.maxx = maxx;
-	self.maxy = maxy;
+function BoundingBox(_minx = noone, _miny = noone, _maxx = noone, _maxy = noone) constructor {
+	minx = _minx;
+	miny = _miny;
+	maxx = _maxx;
+	maxy = _maxy;
 	
-	self.width  = maxx - minx;
-	self.height = maxy - miny;
+	width  = maxx - minx;
+	height = maxy - miny;
 	
 	static addPoint = function(px, py) {
 		minx = minx == noone? px : min(minx, px);
@@ -15,6 +15,14 @@ function BoundingBox(minx = noone, miny = noone, maxx = noone, maxy = noone) con
 		
 		width  = maxx - minx;
 		height = maxy - miny;
+	}
+	
+	static addBBOX = function(_bbox) {
+		minx = min(minx, _bbox.minx);
+		miny = min(miny, _bbox.miny);
+		maxx = max(maxx, _bbox.maxx);
+		maxy = max(maxy, _bbox.maxy);
+		return self;
 	}
 	
 	static lerpTo = function(bbox, rat) {
@@ -158,7 +166,16 @@ function BBOX() constructor {
 		addPoint(_x0, _y1);
 		addPoint(_x1, _y0);
 		addPoint(_x1, _y1);
+		return self;
+	}
+	
+	static addBBOX = function(_bbox) {
+		x0 = min(x0, _bbox.x0);
+		x1 = max(x1, _bbox.x1);
+		y0 = min(y0, _bbox.y0);
+		y1 = max(y1, _bbox.y1);
 		
+		setValue();
 		return self;
 	}
 	
