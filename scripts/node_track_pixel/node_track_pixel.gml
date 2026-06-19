@@ -48,7 +48,7 @@ function Node_Track_Pixel(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	manual_edit_mx = 0;
 	manual_edit_my = 0;
 	
-	autoTrack_frame = undefined;
+	autoTrack_frame = 0;
 	
 	attributes.trackData = undefined;
 	attributes.trackStat = [];
@@ -343,6 +343,10 @@ function Node_Track_Pixel(_x, _y, _group = noone) : Node(_x, _y, _group) constru
             draw_rectangle(x0, 0, x1 - 1, _h, false);
         }
         draw_set_alpha(1);
+        
+        var ax = autoTrack_frame * _s + _shf;
+        draw_set_color(COLORS._main_value_positive);
+        draw_line(ax, 0, ax, _h);
 	}
 	
 }

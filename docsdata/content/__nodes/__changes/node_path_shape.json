@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.009",
+    "changes": [
+      {
+        "date": "2026-06-19T06:34:52.705Z",
+        "node": "Shape Path",
+        "commit": "**Shape Path**: Add custom curve shape."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.006",
     "changes": [
       {
