@@ -6,6 +6,11 @@
         "date": "2026-06-19T04:47:08.752Z",
         "node": "",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-06-19T05:15:21.790Z",
+        "node": "Path / Smooth Path",
+        "commit": "**Path / Smooth Path**: Add dynamic input dummy junction."
       }
     ]
   },

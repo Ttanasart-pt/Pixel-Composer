@@ -14,16 +14,17 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 2, nodeValue_Slider( "Smoothness",   3, [ 1, 5, 0.01 ] ));
 	
 	////- =Sampling
+	newInput( 5, nodeValue_Bool(    "Normalized Length", true )).rejectArray();
 	newInput( 3, nodeValue_Slider(  "Sample Path", 0 )).setTooltip("Sample position from path.");
 	newInput( 4, nodeValue_EScroll( "Sample Mode", 0, ["Entire line", "Segment"])).rejectArray();
-	// 5
+	// 6
 	
 	newOutput( 0, nodeValue_Output( "Path data", VALUE_TYPE.pathnode, self  ));
 	newOutput( 1, nodeValue_Output( "Position out", VALUE_TYPE.float, [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [
 		[ "Path",     false ],  0,  1,  2, 
-		[ "Sampling", false ],  3,  4, 
+		[ "Sampling", false ],  5,  3,  4, 
 		[ "Anchors",  false ], 
 	];
 	
@@ -44,7 +45,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lengthAccs	= [];
 		lengthTotal	= 0;
 		boundary    = new BoundingBox();
+		
 		loop        = false;
+		lengthNorm  = false;
 		
 		cached_pos  = ds_map_create();
 		 path_preview_surface = noone;
@@ -80,6 +83,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	////- Path
+	
+	
 	
 	static updateLength = function() {
 		segments    = [];
@@ -200,15 +205,46 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(anchorSize == 0) return out;
 		
-		for(var i = 0; i < anchorSize; i++) {
-			var _a0 = anchors[ (i + 0) % anchorSize];
-			var _a1 = anchors[ (i + 1) % anchorSize];
-			var _c0 = controls[(i + 0) % anchorSize];
-			var _c1 = controls[(i + 1) % anchorSize];
+		if(lengthNorm) {
+			for(var i = 0; i < anchorSize; i++) {
+				var _a0 = anchors[ (i + 0) % anchorSize];
+				var _a1 = anchors[ (i + 1) % anchorSize];
+				var _c0 = controls[(i + 0) % anchorSize];
+				var _c1 = controls[(i + 1) % anchorSize];
+				
+				if(_dist > lengths[i]) { _dist -= lengths[i]; continue; }
+				
+				var _t = _dist / lengths[i];
+				
+				if(_c0[2] == 0 && _c0[3] == 0 && _c1[0] == 0 && _c1[1] == 0) {
+					out.x = lerp(_a0[0], _a1[0], _t);
+					out.y = lerp(_a0[1], _a1[1], _t);
+					
+				} else {
+					out.x = eval_bezier_x(_t, _a0[0],          _a0[1], 
+					                          _a1[0],          _a1[1], 
+					                          _a0[0] + _c0[2], _a0[1] + _c0[3], 
+					                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
+					                          
+					out.y = eval_bezier_y(_t, _a0[0],          _a0[1], 
+					                          _a1[0],          _a1[1], 
+					                          _a0[0] + _c0[2], _a0[1] + _c0[3], 
+					                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				}
+				
+				cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
+				return out;
+			}
 			
-			if(_dist > lengths[i]) { _dist -= lengths[i]; continue; }
+		} else {
+			var samPos = _dist / lengthTotal * anchorSize;
+			var _i = floor(samPos);
+			var _t = frac(samPos);
 			
-			var _t = _dist / lengths[i];
+			var _a0 = anchors[ (_i + 0) % anchorSize];
+			var _a1 = anchors[ (_i + 1) % anchorSize];
+			var _c0 = controls[(_i + 0) % anchorSize];
+			var _c1 = controls[(_i + 1) % anchorSize];
 			
 			if(_c0[2] == 0 && _c0[3] == 0 && _c1[0] == 0 && _c1[1] == 0) {
 				out.x = lerp(_a0[0], _a1[0], _t);
@@ -226,8 +262,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
 			}
 			
-			cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
-			return out;
 		}
 		
 		return out;
@@ -310,6 +344,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var rond = getInputData( 1);
 			var smot = getInputData( 2);
 			
+			lengthNorm = getInputData( 5);
 			var samPos = getInputData( 3);
 			var samTyp = getInputData( 4);
 			

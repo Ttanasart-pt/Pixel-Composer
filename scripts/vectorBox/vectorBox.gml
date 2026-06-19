@@ -155,7 +155,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			var bc  = [COLORS._main_icon, COLORS._main_value_positive];
 			var bt  = __txt("Add Vector");
 			
-			var _b = buttonInstant(noone, abx, aby, abw, abh, _m, hover, active, bt, THEME.add_16, 0, bc, 1, .75);
+			var _b = buttonInstant(noone, abx, aby, abw, abh, _m, ihover, iactive, bt, THEME.add_16, 0, bc, 1, .75);
 			if(_b) _hov = false;
 			if(_b == 2) {
 				array_push(_data, array_clone(array_last(_data)));

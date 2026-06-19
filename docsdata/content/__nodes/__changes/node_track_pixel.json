@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.4.009",
+    "changes": [
+      {
+        "date": "2026-06-19T05:15:21.790Z",
+        "node": "",
+        "commit": "**Path / Smooth Path**: Add dynamic input dummy junction."
+      }
+    ]
+  }
+]

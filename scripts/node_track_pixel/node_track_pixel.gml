@@ -115,6 +115,10 @@ function Node_Track_Pixel(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		draw_rectangle_width(ox - _wind, oy - _wind, ox + _wind, oy + _wind, 2);
 		
+		var l = ui(4);
+		draw_set_color_alpha(c_black, .5);   draw_line_width(ox-l, oy, ox+l, oy, 4); draw_line_width(ox, oy-l, ox, oy+l, 4); draw_set_alpha(1);
+		draw_set_color(COLORS._main_accent); draw_line_width(ox-l, oy, ox+l, oy, 2); draw_line_width(ox, oy-l, ox, oy+l, 2);
+		
 		var hov = false;
 		if(track_manual && attributes.trackData != undefined) {
 			if(manual_editing) {
@@ -166,13 +170,10 @@ function Node_Track_Pixel(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return hov;
 	}
 	
-	static step = function() {
-		b_manual_track.setBaseColor(track_manual? COLORS._main_accent : c_white);
-		
-		insp2button.icon_blend    = track_manual? COLORS._main_accent : COLORS._main_icon;
-	}
-	
 	static update = function() {
+		b_manual_track.setBaseColor(track_manual? COLORS._main_accent : c_white);
+		insp2button.icon_blend    = track_manual? COLORS._main_accent : COLORS._main_icon;
+		
 		if(attributes.trackData != undefined)
 			outputs[1].setValue(attributes.trackData);
 		
