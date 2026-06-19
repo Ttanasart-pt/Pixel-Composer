@@ -11,6 +11,11 @@
         "date": "2026-06-19T05:15:21.790Z",
         "node": "Path / Smooth Path",
         "commit": "**Path / Smooth Path**: Add dynamic input dummy junction."
+      },
+      {
+        "date": "2026-06-19T06:58:44.676Z",
+        "node": "",
+        "commit": "**Shape Path > Spiral**: Add fixed pitch mode."
       }
     ]
   },

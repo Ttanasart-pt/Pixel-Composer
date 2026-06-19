@@ -6,6 +6,7 @@
 
 function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Smooth Path";
+	setDrawIcon();
 	setDimension(96, 48);
 	
 	////- =Path
@@ -50,8 +51,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lengthNorm  = false;
 		
 		cached_pos  = ds_map_create();
-		 path_preview_surface = noone;
-		_path_preview_surface = noone;
 	#endregion
 	
 	#region ---- editor ----
@@ -83,8 +82,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	////- Path
-	
-	
 	
 	static updateLength = function() {
 		segments    = [];
@@ -132,50 +129,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			lengthTotal  += l;
 			lengthAccs[i] = lengthTotal;
 		}
-		
-		// Surface generate
-		
-		var pad    = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
-		var minx   = boundary.minx - pad, miny = boundary.miny - pad;
-		var maxx   = boundary.maxx + pad, maxy = boundary.maxy + pad;
-		var rngx   = maxx - minx,   rngy = maxy - miny;
-		var prev_s = 128;
-		
-		_path_preview_surface = surface_verify(_path_preview_surface, prev_s, prev_s);
-		surface_set_target(_path_preview_surface);
-			DRAW_CLEAR
-			
-			var ox, oy, nx, ny;
-			draw_set_color(c_white);
-			for (var i = 0, n = array_length(segments); i < n; i++) {
-				var segment = segments[i];
-				
-				for (var j = 0, m = array_length(segment); j < m; j += 2) {
-					nx = (segment[j + 0] - minx) / rngx * prev_s;
-					ny = (segment[j + 1] - miny) / rngy * prev_s;
-					
-					if(j) draw_line_round(ox, oy, nx, ny, 4);
-					
-					ox = nx;
-					oy = ny;
-				}
-			}
-			
-			draw_set_color(COLORS._main_accent);
-			for (var i = 0, n = array_length(anchors); i < n; i++) {
-				var _a0 = anchors[i];
-				draw_circle((_a0[0] - minx) / rngx * prev_s, (_a0[1] - miny) / rngy * prev_s, 8, false);
-			}
-		surface_reset_target();
-		
-		path_preview_surface = surface_verify(path_preview_surface, prev_s, prev_s);
-		surface_set_shader(path_preview_surface, sh_FXAA);
-			shader_set_f("dimension",  prev_s, prev_s);
-			shader_set_f("cornerDis",  0.5);
-			shader_set_f("mixAmo",     1);
-			
-			draw_surface_safe(_path_preview_surface);
-		surface_reset_shader();
 		
 	}
 	
@@ -437,19 +390,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			outputs[1].setValue(out);
 		}
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		
-		gpu_set_tex_filter(true);
-		draw_surface_bbox(path_preview_surface, bbox);
-		gpu_set_tex_filter(false);
-	}
-	
-	static onCleanUp = function() {
-		surface_free(_path_preview_surface);
-		surface_free( path_preview_surface);
 	}
 	
 }

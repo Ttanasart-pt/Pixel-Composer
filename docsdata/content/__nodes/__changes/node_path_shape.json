@@ -6,6 +6,11 @@
         "date": "2026-06-19T06:34:52.705Z",
         "node": "Shape Path",
         "commit": "**Shape Path**: Add custom curve shape."
+      },
+      {
+        "date": "2026-06-19T06:58:44.675Z",
+        "node": "Shape Path > Spiral",
+        "commit": "**Shape Path > Spiral**: Add fixed pitch mode."
       }
     ]
   },
