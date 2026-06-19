@@ -16,6 +16,11 @@
         "date": "2026-06-19T06:58:44.676Z",
         "node": "",
         "commit": "**Shape Path > Spiral**: Add fixed pitch mode."
+      },
+      {
+        "date": "2026-06-19T07:23:58.243Z",
+        "node": "",
+        "commit": "**Transform**: Add path input."
       }
     ]
   },

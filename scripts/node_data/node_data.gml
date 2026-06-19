@@ -529,6 +529,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	insp2button = undefined;
 	static onInspect = undefined;
 	
+	static insp1show = function() /*=>*/ {return insp1button && insp1button.visible};
+	static insp2show = function() /*=>*/ {return insp2button && insp2button.visible};
+	
 	static triggerInsp = function(i) {
 		var b = undefined;
 		switch(i) {
@@ -542,18 +545,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static triggerCheck = function() {
-		if(insp1button && insp1button.visible) {
+		if(insp1show()) {
 			inspectInput1.name = insp1button.tooltip;
-			
 			if(inspectInput1.getStaticValue()) {
 				insp1button.onClick();
 				inspectInput1.setValue(false);
 			}
 		}
 		
-		if(insp2button && insp2button.visible) {
+		if(insp2show()) {
 			inspectInput2.name = insp2button.tooltip;
-			
 			if(inspectInput2.getStaticValue()) {
 				insp2button.onClick();
 				inspectInput2.setValue(false);
@@ -1282,8 +1283,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_foreach(outputs, function(in, i) /*=>*/ { in.updateColor(in.getValue());   });
 		}
 		
-		if(insp1button && insp1button.visible && inspectInput1.getValue()) insp1button.onClick(true);
-		if(insp2button && insp2button.visible && inspectInput2.getValue()) insp2button.onClick(true);
+		if(insp1show() && inspectInput1.getValue()) insp1button.onClick(true);
+		if(insp2show() && inspectInput2.getValue()) insp2button.onClick(true);
 		
 		updatedOutTrigger.setValue(true);
 		
@@ -1813,8 +1814,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var jun;
 		
-		var insp1 = insp1button && insp1button.visible;
-		var insp2 = insp2button && insp2button.visible;
+		var insp1 = insp1show();
+		var insp2 = insp2show();
 		var inspc = insp1 + insp2;
 		var ind   = 1;
 		
@@ -2204,13 +2205,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(jun.hover_in_graph) hover = jun;
 		}
 		
-		if(insp1button && insp1button.visible) {
+		if(insp1show()) {
 			jun = inspectInput1;
 			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
 			if(jun.hover_in_graph) hover = jun;
 		}
 		
-		if(insp2button && insp2button.visible) {
+		if(insp2show()) {
 			jun = inspectInput2;
 			jun.hover_in_graph = point_in_rectangle(_mx, _my, jun.x - _dx, jun.y - _dy, jun.x + _dx - 1, jun.y + _dy - 1);
 			if(jun.hover_in_graph) hover = jun;
@@ -2304,13 +2305,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
 		}
 		
-		if(insp1button && insp1button.visible) {
+		if(insp1show()) {
 			jun = inspectInput1;
 			draw_set_color(jun.draw_fg);
 			draw_rectangle(jun.x - s4, jun.y - s1, jun.x + s4, jun.y + s1, false);
 		}
 		
-		if(insp2button && insp2button.visible) {
+		if(insp2show()) {
 			jun = inspectInput2;
 			draw_set_color(jun.draw_fg);
 			draw_rectangle(jun.x - s4, jun.y - s1, jun.x + s4, jun.y + s1, false);
@@ -2352,7 +2353,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			outputDisplayList[i].drawJunction(_s, _mx, _my, aa);
 		
 		var a = key_mod_press(ALT);
-		if(insp1button && insp1button.visible) {
+		if(insp1show()) {
 			var _jh = inspectInput1.hover_in_graph;
 			var _jx = inspectInput1.x;
 			var _jy = inspectInput1.y;
@@ -2367,7 +2368,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				insp1button.onClick();
 		}
 		
-		if(insp2button && insp2button.visible) {
+		if(insp2show()) {
 			var _jh = inspectInput2.hover_in_graph;
 			var _jx = inspectInput2.x;
 			var _jy = inspectInput2.y;
@@ -2433,12 +2434,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_foreach(outputDisplayList, function(i) /*=>*/ { i.drawName(__s, __mx, __my); });
 		}
 		
-		if(insp1button && insp1button.visible && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10 * _s)) {
+		if(insp1show() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10 * _s)) {
 			inspectInput1.drawNameBG(_s);
 			inspectInput1.drawName(_s, _mx, _my);
 		}
 		
-		if(insp2button && insp2button.visible && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10 * _s)) {
+		if(insp2show() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10 * _s)) {
 			inspectInput2.drawNameBG(_s);
 			inspectInput2.drawName(_s, _mx, _my);
 		}
@@ -2491,8 +2492,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return undefined;
 		
 		var _hov, hovering = undefined;
-		if(insp1button && insp1button.visible) { _hov = inspectInput1.drawConnections(params, _draw); hovering ??= _hov; }
-		if(insp2button && insp2button.visible) { _hov = inspectInput2.drawConnections(params, _draw); hovering ??= _hov; }
+		if(insp1show()) { _hov = inspectInput1.drawConnections(params, _draw); hovering ??= _hov; }
+		if(insp2show()) { _hov = inspectInput2.drawConnections(params, _draw); hovering ??= _hov; }
 		
 		for( var i = 0; i < __draw_inputs_len; i++ ) {
 			var _jun = __draw_inputs[i];

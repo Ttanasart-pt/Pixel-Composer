@@ -6,6 +6,11 @@
         "date": "2026-06-19T04:47:08.747Z",
         "node": "",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-06-19T07:23:58.243Z",
+        "node": "",
+        "commit": "**Transform**: Add path input."
       }
     ]
   },

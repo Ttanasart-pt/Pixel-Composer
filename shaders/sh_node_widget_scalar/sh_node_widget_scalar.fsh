@@ -33,6 +33,11 @@ void main() {
 		
 		a = smoothstep(.35, .45, dist);
 		c = mix(c, border, a);
+		
+	} else if(type == 3) { 
+		a = smoothstep(.3, .4, dist);
+		c = mix(c, color, a);
+		
 	} 
 	
 	gl_FragColor = c;

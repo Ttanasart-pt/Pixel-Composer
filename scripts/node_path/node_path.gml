@@ -533,6 +533,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		insp1button = button(function(fr) /*=>*/ {return convertTo3D()}).setTooltip(__txt("Convert to 3D"))
 			.setIcon(s_node_path_3d).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		
+		static insp1show = function() /*=>*/ {return false};
 	#endregion
 	
 	////- Anchor
@@ -1319,7 +1321,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				var _type = anchor_focus == i? 2 : 1;
 				
-				draw_anchor(_anHov, xx, yy, ui(8), _type);
+				draw_anchor(_anHov, xx, yy, ui(PREVIEW_OVERLAY_RAD), _type);
 				
 				if(attributes.display_name || _anHov) {
 					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);

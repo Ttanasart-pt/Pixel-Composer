@@ -72,10 +72,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	function createNewInput(index = array_length(inputs), _x = 0, _y = 0) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Vec2("Anchor", [ _x, _y ]));
+		newInput(index, nodeValue_Vec2("Anchor", [ _x, _y ])).hideLabel();
 		
-		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, "add path anchor point" ])
-			.setRef(self);
+		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, "add path anchor point" ]).setRef(self);
 		resetDisplayList();
 		
 		return inputs[index];
@@ -256,7 +255,13 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _act = active && !isUsingTool(0);
 			
 			for(var i = input_fix_len; i < array_length(inputs); i++) {
-				var hv = InputDrawOverlay(inputs[i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my));
+				var _inp = inputs[i];
+				var  hv  = InputDrawOverlay(_inp.drawOverlay(hover, _act, _x, _y, _s, _mx, _my, 3));
+				
+				_inp.overlay_draw_text = hv;
+				if(PANEL_INSPECTOR.prop_hover == _inp || PANEL_ANIMATION.value_hovering == _inp)
+					_inp.overlay_draw_text = true;
+				
 				if(hv) _anchor_hover = i;
 			}
 		}

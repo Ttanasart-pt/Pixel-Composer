@@ -315,6 +315,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- =Scale
 	newInput(6, nodeValue_Vec2( "Scale", [1,1], { linked: true} )).setPieMenu();
 	
+	////- =Path
+	newInput(21, nodeValue_Path(   "Path" ));
+	newInput(22, nodeValue_Slider( "Position",     0     ));
+	newInput(23, nodeValue_Bool(   "Rotate Along", false ));
+	
 	////- =Render
 	newInput(14, nodeValue_Slider( "Alpha", 1 )).setPieMenu();
 	
@@ -328,7 +333,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(16, nodeValue_EButton( "Echo Type",       0, [ "Static", "Animated" ] ));
 	newInput(13, nodeValue_Int(     "Echo Amount",     8     ));
 	newInput(20, nodeValue_EButton( "Echo Blend Mode", 0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
-	// input 21
+	// input 24
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(2, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
@@ -338,10 +343,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newOutput(5, nodeValue_Output( "Speed",       VALUE_TYPE.float,    0    )).setVisible(false);
 	
 	input_display_list = [ 11, 0,  
-		[ "Output",   true     ],  9,  1, 15,  7,
+		[ "Output",    true    ],  9,  1, 15,  7,
 		[ "Position", false    ],  2,  3, 10, 
 		[ "Rotation", false    ],  5,  8, 
 		[ "Scale",    false    ],  6, 
+		[ "Path",      true    ], 21, 22, 23,  
 		[ "Render",   false    ], 14, 
 		[ "Stretch",  true, 17 ], 18, 19, 
 		[ "Echo",     true, 12 ], 16, 13, 20, 
@@ -818,6 +824,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var sca       = _data[ 6];
 			
+			var path      = _data[21];
+			var pathPos   = _data[22];
+			var pathRot   = _data[23];
+			
 			var alp       = _data[14];
 			
 			var strt      = _data[17];
@@ -905,10 +915,28 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		if(_ww < 1 || _hh < 1) return _outData;
-		_outData[1] = [ _ww, _hh ];
 		
 		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);
 		_outData[0] = _outSurf;
+		_outData[1] = [ _ww, _hh ];
+		
+		if(is_path(path)) {
+			var _p = path.getPointRatio(pathPos);
+			var px0 = _p.x;
+			var py0 = _p.y;
+			
+			pos[0] += px0;
+			pos[1] += py0;
+			
+			if(pathRot) {
+				var _p = path.getPointRatio(pathPos + 0.01);
+				var px1 = _p.x;
+				var py1 = _p.y;
+				
+				var dir = point_direction(px0, py0, px1, py1);
+				rot += dir;
+			}
+		}
 		
 		anc[0] *= ww * sca[0];
 		anc[1] *= hh * sca[1];
