@@ -936,7 +936,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		directory_clear(directory);
 		renderStarted();
-		PROJECT.animator.render();
+		project.animator.render();
 		
 		if(IS_CMD) array_push(PROGRAM_ARGUMENTS._exporting, node_id);
 	}

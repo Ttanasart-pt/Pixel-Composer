@@ -2,40 +2,43 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Find pixel";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
-	newInput(1, nodeValue_Color("Search color", ca_black)).setHotkeyAuto("C");
+	////- =Search
+	newInput( 1, nodeValue_Color(   "Search color", ca_black )).setHotkeyAuto("C");
+	newInput( 2, nodeValue_Slider(  "Tolerance",    0        ));
+	newInput( 3, nodeValue_Bool(    "Find all",     false    ));
 	
-	newInput(2, nodeValue_Slider("Tolerance", 0));
+	////- =Alpha
+	newInput( 4, nodeValue_Bool(    "Include alpha",   false ));
+	newInput( 5, nodeValue_Slider(  "Alpha tolerance", .2    ));
 	
-	newInput(3, nodeValue_Bool("Find all", false));
-	
-	newInput(4, nodeValue_Bool("Include alpha", false));
-	
-	newInput(5, nodeValue_Slider("Alpha tolerance", 0.2));
-	
-	newOutput(0, nodeValue_Output("Position", VALUE_TYPE.integer, [ 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output("Position", VALUE_TYPE.integer, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 
-		["Search", false], 1, 2, 3, 
-		["Alpha",   true, 4], 5, 
-	]
+		[ "Search", false    ],  1,  2,  3, 
+		[ "Alpha",   true, 4 ],  5, 
+	];
+	
+	////- Node
 	
 	temp_surface = [ noone ];
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
-		var _surf = _data[0];
-		var _col  = _data[1];
-		var _tol  = _data[2];
-		var _all  = _data[3];
+		#region data
+			var _surf = _data[ 0];
+			
+			var _col  = _data[ 1];
+			var _tol  = _data[ 2];
+			var _all  = _data[ 3];
+			
+			var _alp  = _data[ 4];
+			var _alpT = _data[ 5];
+		#endregion
 		
-		var _alp  = _data[4];
-		var _alpT = _data[5];
-		
-		if(!is_surface(_surf)) return [0, 0];
+		if(!is_surface(_surf)) return [0,0];
 		
 		var _buff = buffer_from_surface(_surf, false);
 		var _sw   = surface_get_width_safe(_surf);

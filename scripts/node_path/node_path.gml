@@ -400,8 +400,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput( 3, nodeValue_Bool( "Round anchor", false )).rejectArray();
 	
 	////- =Sampling
-	newInput( 0, nodeValue_Slider(  "Path progress", 0 )).setTooltip("Sample position from path.");
-	newInput( 2, nodeValue_EScroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
+	newInput( 0, nodeValue_Slider(  "Sample Path", 0 )).setTooltip("Sample position from path.");
+	newInput( 2, nodeValue_EScroll( "Sample Mode", 0, ["Entire line", "Segment"])).rejectArray();
 	// Inputs 4
 	
 	newOutput( 0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
@@ -417,7 +417,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	output_display_list = [ 1, 0, 2, 3 ];
 	
-	setDynamicInput(1, false);
+	setDynamicInput(1, true, VALUE_TYPE.float);
 	
 	////- Nodes
 	

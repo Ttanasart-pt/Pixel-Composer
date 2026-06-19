@@ -15,7 +15,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(2, nodeValue_Palette( "To"   ));
 	
 	////- =Comparison
-	newInput(13, nodeValue_EScroll( "Mode", 0, [ "Order", "Random", "Closet Color" ] ));
+	newInput(13, nodeValue_EScroll( "Mode", 0, [ "Order", "Random", "Closest Color" ] ));
 	newInput( 3, nodeValue_Slider( "Threshold",      .1   ));
 	newInput( 5, nodeValue_Bool(   "Multiply alpha", true ));
 	

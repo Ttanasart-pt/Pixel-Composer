@@ -13,7 +13,7 @@ function Node_pSystem_Render_Triangle(_x, _y, _group = noone) : Node(_x, _y, _gr
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Line
-	newInput( 5, nodeValue_EScroll(  "Type", 0, [ "Index Order", "Index Fixed", "Closet" ] ));
+	newInput( 5, nodeValue_EScroll(  "Type", 0, [ "Index Order", "Index Fixed", "Closest" ] ));
 	newInput( 3, nodeValue_Range(    "Length", [3,3], true )); 
 	newInput( 6, nodeValue_Vec2(     "Target", [.5,.5] )).setUnitSimple(); 
 	

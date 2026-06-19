@@ -5,9 +5,8 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	reloop = true;
 	
 	setDrawIcon();
-	manual_ungroupable = false;
-
 	setDimension(96, 48);
+	manual_ungroupable = false;
 	
 	newInput(0, nodeValue_Particle()).setVisible(true, true);
 	

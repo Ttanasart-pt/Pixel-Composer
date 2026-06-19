@@ -13,7 +13,7 @@ function Node_pSystem_Render_Line(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Line
-	newInput( 5, nodeValue_EScroll(  "Type", 0, [ "Index Order", "Index Fixed", "Closet", "To Point" ] ));
+	newInput( 5, nodeValue_EScroll(  "Type", 0, [ "Index Order", "Index Fixed", "Closest", "To Point" ] ));
 	newInput( 3, nodeValue_Range(    "Length", [4,4], true )); 
 	newInput( 6, nodeValue_Vec2(     "Target", [.5,.5] )).setUnitSimple(); 
 	

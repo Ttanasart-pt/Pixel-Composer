@@ -37,6 +37,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	static setBaseSprite    = function(_b) /*=>*/ { base_spr = _b;            return self; }
 	static setText          = function(_t) /*=>*/ { text     = _t;            return self; }
 	static setParam         = function(_p) /*=>*/ { params   = _p;            return self; }
+	static setBaseColor     = function(_c) /*=>*/ { blend    = _c;            return self; }
 	static setTooltip       = function(_t, _v = undefined) /*=>*/ { tooltip  = _t; tooltipIndexFn = _v; return self; }
 	
 	static setIcon = function(_icon, _index = 0, _blend = c_white, _size = 1) {

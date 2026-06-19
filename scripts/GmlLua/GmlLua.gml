@@ -142,13 +142,13 @@ function __initLua() {
 		new lua_function("abs",		abs, "abs(number)", "Calculate absolute value.", 
 			[["number", "number", "Number"]], "number"),
 			
-		new lua_function("round",	round, "round(number)", "Round decimal to the closet integer.", 
+		new lua_function("round",	round, "round(number)", "Round decimal to the closest integer.", 
 			[["number", "number", "Number"]], "number"),
 			
-		new lua_function("floor",	floor, "floor(number)", "Round decimal down to the closet integer.", 
+		new lua_function("floor",	floor, "floor(number)", "Round decimal down to the closest integer.", 
 			[["number", "number", "Number"]], "number"),
 			
-		new lua_function("ceil",	ceil, "ceil(number)", "Round decimal up to the closet integer.", 
+		new lua_function("ceil",	ceil, "ceil(number)", "Round decimal up to the closest integer.", 
 			[["number", "number", "Number"]], "number"),
 			
 		new lua_function("max",		max, "max(number0, number1)", "Return maximum value between 2 numbers.", 

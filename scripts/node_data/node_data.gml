@@ -1605,9 +1605,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _arr;
 	}
 	
-	static onAnimationStart = function() {
-		if(use_cache == CACHE_USE.auto && !isAllCached()) clearCache();
-	}
+	static onAnimationStart = function() { if(use_cache == CACHE_USE.auto && !isAllCached()) clearCache(); }
+	static onAnimationEnd   = undefined;
 	
 	static postRender = undefined;
 	

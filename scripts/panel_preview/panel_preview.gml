@@ -1967,7 +1967,7 @@ function Panel_Preview() : PanelContent() constructor {
         
 		var _ps0 = is_surface(preview_surfaces[0]);
         var _ps1 = is_surface(preview_surfaces[1]);
-    	
+        
         if(_ps0) {
             psx = canvas_x + preview_node[0].preview_x * ss;
             psy = canvas_y + preview_node[0].preview_y * ss;

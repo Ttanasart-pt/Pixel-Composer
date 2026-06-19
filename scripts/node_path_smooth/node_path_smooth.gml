@@ -12,16 +12,22 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 0, nodeValue_Bool(   "Loop",         false )).rejectArray();
 	newInput( 1, nodeValue_Bool(   "Round anchor", false )).rejectArray();
 	newInput( 2, nodeValue_Slider( "Smoothness",   3, [ 1, 5, 0.01 ] ));
-	// 3
 	
-	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
+	////- =Sampling
+	newInput( 3, nodeValue_Slider(  "Sample Path", 0 )).setTooltip("Sample position from path.");
+	newInput( 4, nodeValue_EScroll( "Sample Mode", 0, ["Entire line", "Segment"])).rejectArray();
+	// 5
+	
+	newOutput( 0, nodeValue_Output( "Path data", VALUE_TYPE.pathnode, self  ));
+	newOutput( 1, nodeValue_Output( "Position out", VALUE_TYPE.float, [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [
-		[ "Path",    false ], 0, 1, 2, 
-		[ "Anchors", false ], 
+		[ "Path",     false ],  0,  1,  2, 
+		[ "Sampling", false ],  3,  4, 
+		[ "Anchors",  false ], 
 	];
 	
-	setDynamicInput(1, false);
+	setDynamicInput(1, true, VALUE_TYPE.float);
 	
 	////- Data
 	
@@ -53,10 +59,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ])
 			.setRef(self);
 		
-		input_display_list = [
-			["Path",	false], 0, 1, 2, 
-			["Anchors",	false], 
-		];
+		input_display_list = array_clone(input_display_list_raw);
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
 			array_push(input_display_list, i);
@@ -178,6 +181,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getLength		= function() /*=>*/ {return lengthTotal};
 	static getAccuLength	= function() /*=>*/ {return lengthAccs};
 	
+	static getPointRatio    = function(_rat,  _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		if(array_empty(lengths)) return out;
@@ -192,6 +196,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
+		else     _dist = clamp(_dist, 0, lengthTotal);
 		
 		if(anchorSize == 0) return out;
 		
@@ -201,10 +206,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _c0 = controls[(i + 0) % anchorSize];
 			var _c1 = controls[(i + 1) % anchorSize];
 			
-			if(_dist > lengths[i]) {
-				_dist -= lengths[i];
-				continue;
-			}
+			if(_dist > lengths[i]) { _dist -= lengths[i]; continue; }
 			
 			var _t = _dist / lengths[i];
 			
@@ -229,10 +231,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		return out;
-	}
-	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-		return getPointDistance(frac(_rat) * lengthTotal, _ind, out);
 	}
 	
 	////- Node
@@ -307,11 +305,16 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		ds_map_clear(cached_pos);
-		
-		loop = getInputData(0);
-		var rond = getInputData(1);
-		var smot = getInputData(2);
+		#region data
+			    loop = getInputData( 0);
+			var rond = getInputData( 1);
+			var smot = getInputData( 2);
+			
+			var samPos = getInputData( 3);
+			var samTyp = getInputData( 4);
+			
+			ds_map_clear(cached_pos);
+		#endregion
 		
 		var _a = [];
 		for(var i = input_fix_len, n = array_length(inputs); i < n; i++) {
@@ -363,6 +366,42 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		updateLength();
+		
+		if(anchorSize <= 0) return;
+		
+		if(samTyp == 0) {
+			var p = getPointRatio(samPos);
+			outputs[1].setValue([p.x, p.y]);
+			
+		} else if(samTyp == 1) {
+			var _i = floor(samPos);
+			var _t = frac(samPos);
+			
+			var _a0 = anchors[ (_i + 0) % anchorSize];
+			var _a1 = anchors[ (_i + 1) % anchorSize];
+			var _c0 = controls[(_i + 0) % anchorSize];
+			var _c1 = controls[(_i + 1) % anchorSize];
+			
+			var out = [0,0];
+			
+			if(_c0[2] == 0 && _c0[3] == 0 && _c1[0] == 0 && _c1[1] == 0) {
+				out[0] = lerp(_a0[0], _a1[0], _t);
+				out[1] = lerp(_a0[1], _a1[1], _t);
+				
+			} else {
+				out[0] = eval_bezier_x(_t, _a0[0],          _a0[1], 
+				                          _a1[0],          _a1[1], 
+				                          _a0[0] + _c0[2], _a0[1] + _c0[3], 
+				                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				                          
+				out[1] = eval_bezier_y(_t, _a0[0],          _a0[1], 
+				                          _a1[0],          _a1[1], 
+				                          _a0[0] + _c0[2], _a0[1] + _c0[3], 
+				                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
+			}
+			
+			outputs[1].setValue(out);
+		}
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

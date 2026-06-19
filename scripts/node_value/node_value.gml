@@ -2546,7 +2546,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		switch(type) {
 			case VALUE_TYPE.integer : 
 			case VALUE_TYPE.float   : 
-				draw_clear(COLORS.panel_bg_clear_inner);
+				// draw_clear(COLORS.panel_bg_clear_inner);
 				if(display_type == VALUE_DISPLAY.matrix) {
 					if(!is(_raw, Matrix)) return;
 					var _siz = _raw.size;
@@ -2594,7 +2594,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			
 			case VALUE_TYPE.boolean:
-				draw_clear(COLORS.panel_bg_clear_inner);
+				// draw_clear(COLORS.panel_bg_clear_inner);
 				if(is_array(_raw)) {
 					_txt = [];
 					for( var i = 0, n = array_length(_raw); i < n; i++ ) 
@@ -2604,7 +2604,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 				
 			case VALUE_TYPE.color:
-				draw_clear(COLORS.panel_bg_clear_inner);
+				// draw_clear(COLORS.panel_bg_clear_inner);
 				if(is_array(_raw)) {
 					var _d = array_get_depth(_raw);
 					if(_d == 1) {
@@ -2630,7 +2630,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			
 			case VALUE_TYPE.gradient:	
-				draw_clear(COLORS.panel_bg_clear_inner);
+				// draw_clear(COLORS.panel_bg_clear_inner);
 				if(is_array(_raw))
 					return;
 				
@@ -2647,7 +2647,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return;
 				
 			case VALUE_TYPE.text: 
-				draw_clear(COLORS.panel_bg_clear_inner);
+				// draw_clear(COLORS.panel_bg_clear_inner);
 				break;
 				
 			default: return;

@@ -38,7 +38,9 @@
 	#macro IS_LAST_FRAME            project.animator.isLastFrame()
 #endregion
 
-function AnimationManager() constructor {
+function AnimationManager(_project = PROJECT) constructor {
+	project = _project;
+	
 	frames_total  = PREFERENCES.project_animation_duration;
 	current_frame = 0;
 	real_frame    = 0;
@@ -144,6 +146,7 @@ function AnimationManager() constructor {
 		frame_progress = true;
 		last_time      = 0;
 		real_time      = 0;
+		PROJECT.onRenderingStart();
 	}
 	
 	static resume = function() {
@@ -194,6 +197,7 @@ function AnimationManager() constructor {
 				is_playing   = false;
 				is_rendering = false;
 				last_time    = 0;
+				project.onRenderingEnd();
 				
 			} else if(playback == ANIMATOR_END.pingpong) {
 				setFrame(max(0, _lastFrame - 1));

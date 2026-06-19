@@ -80,7 +80,7 @@ function Project() constructor {
 	pathInputs  = [];
 	
 	composer        = noone;
-	animator	    = new AnimationManager();
+	animator	    = new AnimationManager(self);
 	globalNode	    = new Node_Global().setProject(self);
 	
 	load_layout     = false;
@@ -553,6 +553,11 @@ function Project() constructor {
 			}
 		}
 		
+	}
+
+	static onRenderingStart = function() {}
+	static onRenderingEnd   = function() {
+		array_foreach(allNodes, function(n) /*=>*/ { if(n.active && n.onAnimationEnd != undefined) n.onAnimationEnd(); });
 	}
 
 	////- Slideshow

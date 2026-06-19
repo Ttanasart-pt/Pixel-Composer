@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_track_pixel_draw",
+  "name":"sh_track_pixel_draw",
+  "parent":{
+    "name":"track_pixel",
+    "path":"folders/nodes/data/value/surface/track_pixel.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
