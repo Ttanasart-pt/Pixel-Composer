@@ -6,6 +6,11 @@
         "date": "2026-06-20T00:41:19.860Z",
         "node": "Path",
         "commit": "**Path**: Add separate snap control for control points and anchor point."
+      },
+      {
+        "date": "2026-06-20T02:05:01.998Z",
+        "node": "Palette Selector",
+        "commit": "**Palette Selector**: Add subpalette selector (auto grouped colors of the similar hue)."
       }
     ]
   },

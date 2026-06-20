@@ -4,8 +4,12 @@ PALETTES_FOLDER.forEach(function(f)  /*=>*/ { if(f.content == undefined) f.conte
 GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.content = loadGradient(f.path); }); // Load all presets
 
 #region data
-	dialog_w = ui(1068);
-	dialog_h = ui(468);
+	presets_w    = ui(240);
+	content_w    = ui(556);
+	palette_w    = ui(240);
+	
+	dialog_w     = presets_w + ui(16) + content_w + ui(16) + palette_w;
+	dialog_h     = ui(468);
 	title_height = 52;
 	
 	name = __txt("gradient_editor_title", "Gradient editor");

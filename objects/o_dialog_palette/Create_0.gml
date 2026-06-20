@@ -9,9 +9,11 @@ function __PaletteColor(_color = c_black) constructor {
 }
 
 #region data
-	preset_w     = ui(240);
+	presets_w    = ui(240);
+	content_w    = ui(556);
+	subpreset_w  = ui(240);
 	
-	dialog_w     = ui(572) + preset_w;
+	dialog_w     = presets_w + ui(16) + content_w + ui(16) + subpreset_w;
 	dialog_h     = ui(440);
 	title_height = 52;
 	destroy_on_click_out = true;
@@ -357,6 +359,73 @@ function __PaletteColor(_color = c_black) constructor {
 	];
 #endregion
 
+#region subpalettes
+	subPalettes = [];
+	
+	function setSubPalette(pal) {
+		subPalettes = [];
+		var currPal = [];
+		
+		var _ol, _nl;
+		var _os = 0;
+		var _ns = 0;
+		var  nl = false;
+		
+		for( var i = 0, n = array_length(pal); i < n; i++ ) {
+			_nl = _color_get_light(pal[i]);
+			if(i) _ns = sign(_nl - _ol);
+			
+			if(i > 1 && _ns != _os && !nl) {
+				if(!array_empty(currPal)) array_push(subPalettes, currPal);
+				currPal = [];
+				nl = true;
+			} else 
+				nl = false;
+			
+			array_push(currPal, pal[i]);
+			
+			_ol = _nl;
+			if(i) _os = _ns;
+		}
+		
+		if(!array_empty(currPal)) array_push(subPalettes, currPal);
+		return self;
+	}
+	
+	sp_subpresets = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		var hh = 0;
+		
+		var _hov = sp_subpresets.hover;
+		var _foc = sp_subpresets.active && interactable;
+		
+		var pd = ui(2);
+		var gw = sp_subpresets.surface_w;
+		var gh = ui(24);
+		
+		for( var i = 0, n = array_length(subPalettes); i < n; i++ ) {
+			var _palt = subPalettes[i];
+			
+			var isHover = _hov && point_in_rectangle(_m[0], _m[1], 0, _y, gw, _y + gh);
+			
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, _y, gw, gh);
+			drawPalette(_palt, pd, _y + pd, gw - pd*2, gh - pd*2);
+				
+			if(isHover) {
+				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _y, gw, gh, COLORS._main_accent, 1);
+				sp_subpresets.hover_content = true;
+				
+				if(mouse_lpress(_foc)) setPalette(_palt, true, false);
+			}
+			
+			hh += gh + pd;
+			_y += gh + pd;
+		}
+		
+		return hh;
+	});
+#endregion
+
 #region functions
 	function refreshPaletteObject() {
 		if(palette == 0) return;
@@ -389,10 +458,11 @@ function __PaletteColor(_color = c_black) constructor {
 	
 	function setDefault(pal) { setPalette(pal); previous_palette = array_clone(pal); return self; }
 	
-	function setPalette(pal, _reset_select = true) {
+	function setPalette(pal, _reset_select = true, _reset_sub = true) {
 		palette = pal;	
 		refreshPaletteObject();
 		
+		if(_reset_sub) setSubPalette(pal);
 		if(!_reset_select) return;
 		
 		if(!array_empty(palette)) {
@@ -401,7 +471,7 @@ function __PaletteColor(_color = c_black) constructor {
 			
 		} else 
 			index_selecting = [ 0, 0 ];
-			
+		
 		mixer = noone;
 	}
 	

@@ -1760,7 +1760,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         var pd = ui(4);
         
-        var tolx  = tool_x + ui(8);
+        var tolx  = tool_x + pd;
         var toly  = ui(5);
         var tolw  = ui(48);
         var tolh  = topbar_height - ui(10);
@@ -1829,23 +1829,25 @@ function Panel_Preview() : PanelContent() constructor {
             
             draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
             if(nme != "") {
-            	if(is_string(nme)) {
-            		tolx      += ui(4);
-                	tol_max_w += ui(4);
-                	
+	        	if(is_string(nme)) {
+	        		tolx      += ui(4);
+	            	tol_max_w += ui(4);
+	            	
 	                draw_text_add(tolx, topbar_height / 2, nme);
 	                tolx      += string_width(nme) + ui(8);
 	                tol_max_w += string_width(nme) + ui(8);
 	                
-            	} else if(sprite_exists(nme)) {
-            		draw_sprite_ui(nme, 0, tolx + ui(8), topbar_height / 2, 1, 1, 0, COLORS._main_icon_light);
-            		if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, 0, tolx + ui(20), topbar_height))
-            			TOOLTIP = ttip;
-            		
+	        	} else if(sprite_exists(nme)) {
+	        		var ss = (topbar_height - ui(16)) / sprite_get_height(nme);
+	        		draw_sprite_ext(nme, 0, tolx + ui(8), topbar_height / 2, ss, ss, 0, COLORS._main_icon);
+	        		
+	        		if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, 0, tolx + ui(20), topbar_height))
+	        			TOOLTIP = ttip;
+	        		
 	                tolx      += ui(20);
 	                tol_max_w += ui(20);
 	                
-            	}
+	        	}
             }
             
             wdg.register();

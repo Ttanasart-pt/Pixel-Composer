@@ -38,14 +38,9 @@ draggable = true;
 #endregion
 
 #region base UI
-	var presets_x  = dialog_x;
-	var presets_w  = ui(240);
-	
+	var presets_x = dialog_x;
 	var content_x = dialog_x + presets_w + ui(16);
-	var content_w = ui(556);
-	
-	var palette_x  = content_x + content_w + ui(16);
-	var palette_w  = ui(240);
+	var palette_x = content_x + content_w + ui(16);
 	
 	var p   = DIALOG_PAD;
 	var p2  = DIALOG_PAD * 2;

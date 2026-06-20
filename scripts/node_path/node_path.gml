@@ -451,9 +451,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		];
 		
 		tool_settings = [
-			toolSetting( THEME.node_path_snap,          new checkBox(function() /*=>*/ { attributes.snap_point  = !attributes.snap_point; }),  "snap_point",    attributes, "Snap" ),
-			toolSetting( THEME.node_path_control_snap,  new checkBox(function() /*=>*/ { attributes.snap_anchor = !attributes.snap_anchor; }), "snap_anchor",   attributes, "Snap Controls" ),
-			toolSetting( "Snap Distance", textBox_Number(function(v) /*=>*/ { attributes.snap_distance = max(1, v); }),                        "snap_distance", attributes ),
+			toolSetting( THEME.node_path_snap,          new checkBox(function() /*=>*/ { attributes.snap_point  = !attributes.snap_point; }),  
+				"snap_point",    attributes, "Snap" ),
+				
+			toolSetting( THEME.node_path_control_snap,  new checkBox(function() /*=>*/ { attributes.snap_anchor = !attributes.snap_anchor; }), 
+				"snap_anchor",   attributes, "Snap Controls" ),
+				
+			toolSetting( THEME.node_snap_distance,      textBox_Number(function(v) /*=>*/ { attributes.snap_distance = max(1, v); }),          
+				"snap_distance", attributes, "Snap Distance" ),
+				
 		];
 		
 		tool_arc_radius   = 0;
@@ -477,10 +483,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		array_push(attributeEditors, "Display");
 		array_push(attributeEditors, Node_Attribute("Display name", function() /*=>*/ {return attributes.display_name},  function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})}));
-		
-		array_push(attributeEditors, "Snap");
-		array_push(attributeEditors, Node_Attribute("Snap Enable",  function() /*=>*/ {return attributes.snap_point},    function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("snap_point")})}));
-		array_push(attributeEditors, Node_Attribute("Snap Distance",function() /*=>*/ {return attributes.snap_distance}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("snap_distance", v)})}));
 	#endregion
 	
 	#region ---- editor ----
@@ -514,6 +516,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		weight_drag_my = 0;
 		
 		anchor_freeze   = 0;
+		anchor_hovering = undefined;
 		anchor_focus    = undefined;
 		anchor_select   = [];
 		anchor_select_map = {};
@@ -1184,7 +1187,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _ow1x = 0, _ow1y = 0, _ow2x = 0, _ow2y = 0;
 			var _nw1x = 0, _nw1y = 0, _nw2x = 0, _nw2y = 0;
 			
-			for( var i = 0, n = array_length(_pth.segments); i < n; i++ ) { // draw path
+			// Draw Path
+			for( var i = 0, n = array_length(_pth.segments); i < n; i++ ) {
 				var _seg = _pth.segments[i];
 				var  p  = 0;
 				
@@ -1246,10 +1250,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 								draw_line(_nx, _ny, _nw2x, _nw2y);
 							}
 							
-						} else 
-							draw_line_width(_ox, _oy, _nx, _ny, 1 + (line_hover == i));
+						} else {
+							var lHov = line_hover == i || anchor_hovering == i || anchor_hovering == i+1;
+							draw_line_width(_ox, _oy, _nx, _ny, 1 + lHov * 2);
+						}
 					}
-				
+					
 					_ox = _nx;
 					_oy = _ny;
 					
@@ -1362,9 +1368,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		if(hover == -1) return false;
-		line_hover   = _line_hover;
-		weight_hover = _weight_hover;
-		anchor_focus = undefined;
+		anchor_hovering = anchor_hover;
+		line_hover      = _line_hover;
+		weight_hover    = _weight_hover;
+		anchor_focus    = undefined;
 		
 		/////////////////////////////////////////////////////// TOOLS ///////////////////////////////////////////////////////
 		

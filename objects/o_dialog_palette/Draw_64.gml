@@ -30,11 +30,9 @@ draggable = true;
 #endregion
 
 #region base UI
-	var presets_x  = dialog_x;
-	var presets_w  = preset_w;
-	
+	var presets_x = dialog_x;
 	var content_x = dialog_x + presets_w + ui(16);
-	var content_w = dialog_w - presets_w - ui(16);
+	var palette_x = content_x + content_w + ui(16);
 	
 	var p   = DIALOG_PAD;
 	var p2  = DIALOG_PAD * 2;
@@ -46,23 +44,31 @@ draggable = true;
 	draw_sprite_stretched(THEME.dialog, 0, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2);
 	if(foc) draw_sprite_stretched_ext(THEME.dialog, 1, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2, COLORS._main_accent, 1);
 	
+	draw_sprite_stretched(THEME.dialog, 0, palette_x - p, dialog_y - p, presets_w + p2, dialog_h + p2);
+	if(foc) draw_sprite_stretched_ext(THEME.dialog, 1, palette_x - p, dialog_y - p, presets_w + p2, dialog_h + p2, COLORS._main_accent, 1);
+	
 	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Presets"));
 	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
 	if(!interactable)
 		draw_sprite_ui(THEME.lock, 0, content_x + ui(24 + 12), dialog_y + ui(16 + 12),,,, COLORS._main_icon);
+	draw_text(palette_x + ui(24), dialog_y + ui(16), __txt("Sub-Palettes"));
 #endregion
 
 #region presets
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + pal_padding, dialog_y + ui(48), preset_w - pal_padding * 2, dialog_h - ui(48) - pal_padding);
+	var dgx = presets_x + pal_padding;
+	var dgy = dialog_y  + ui(48);
+	var dgw = presets_w - pal_padding * 2;
+	var dgh = dialog_h  - ui(48) - pal_padding;
 	
-	var _px = presets_x + pal_padding + ui(4);
-	var _py = dialog_y + ui(48 + 4);
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, dgx, dgy, dgw, dgh);
 	
+	var _px = dgx + ui(4);
+	var _py = dgy + ui(4);
 	var _th = ui(24);
 	
-	var _pw = preset_w - pal_padding * 2 - ui(8);
-	var _ph = dialog_h - ui(48 + 8 + 30) - pal_padding;
+	var _pw = dgw - ui(8);
+	var _ph = dgh - ui(8) - _th - ui(6);
 	
 	draw_sprite_stretched_ext(THEME.textbox, 1, _px, _py, _pw, _th, COLORS._main_icon);
 	tb_search.setFocusHover(sFOCUS, sHOVER);
@@ -103,6 +109,25 @@ draggable = true;
 	if(b == 2) shellOpenExplorer(DIRECTORY + "Palettes")
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
+#endregion
+
+#region sub-palette
+	var dgx = palette_x   + pal_padding;
+	var dgy = dialog_y    + ui(48);
+	var dgw = subpreset_w - pal_padding * 2;
+	var dgh = dialog_h    - ui(48) - pal_padding;
+	
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, dgx, dgy, dgw, dgh);
+	
+	var _px = dgx + ui(4);
+	var _py = dgy + ui(4);
+	
+	var _pw = dgw - ui(8);
+	var _ph = dgh - ui(8);
+	
+	sp_subpresets.setFocusHover(sFOCUS, sHOVER);
+	sp_subpresets.verify(_pw, _ph);
+	sp_subpresets.draw(_px, _py);
 #endregion
 
 #region palette
