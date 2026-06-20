@@ -199,6 +199,8 @@
     "node_name_type":                     { "path": "./icon/s_node_name_type.png",                          "s": 3, "x": 12, "y": 12 },
     "node_processor_icon":                { "path": "./icon/s_node_processor.png",                          "s": 1, "x":  8, "y":  8 },
     "node_pxc":                           { "path": "./icon/s_node_pxc.png",                                "s": 1, "x":  8, "y":  8 },
+    "node_path_snap":                     { "path": "./icon/s_node_path_snap.png",                          "s": 2, "x": 12, "y": 12 },
+    "node_path_control_snap":             { "path": "./icon/s_node_path_control_snap.png",                  "s": 2, "x": 12, "y": 12 },
     "node_resize":                        { "path": "./icon/s_node_resize.png",                             "s": 1, "x": 16, "y": 16 },
     "node_selector":                      { "path": "./icon/s_node_selector.png",                           "s": 1, "x": 12, "y": 12 },
     "node_sel_from":                      { "path": "./icon/s_node_sel_from.png",                           "s": 1, "x": 12, "y": 12 },

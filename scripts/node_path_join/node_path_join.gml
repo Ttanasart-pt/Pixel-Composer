@@ -9,18 +9,23 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		[ "Paths", false ], 
 	];
 	
-	function createNewInput(index = array_length(inputs)) {
-		var inAmo = array_length(inputs);
-		newInput(index, nodeValue_Path( "Path" ));
-		array_push(input_display_list, index);
-		return inputs[index];
-	} setDynamicInput(1, true, VALUE_TYPE.pathnode);
+	function createNewInput(i = array_length(inputs)) {
+		newInput(i+0, nodeValue_Path( "Path"           ));
+		newInput(i+1, nodeValue_Bool( "Reverse", false ));
+		
+		if(i > input_fix_len)
+			array_push(input_display_list, new Inspector_Spacer(ui(6), true));
+		array_push(input_display_list, i+0, i+1);
+		return inputs[i];
+	} 
+	
+	setDynamicInput( 2, true, VALUE_TYPE.pathnode);
 	
 	////- Path
 	
 	cached_pos    = ds_map_create();
 	curr_path_amo = 0;
-	curr_path     = [];
+	path_data     = [];
 	path_trans    = [];
 	path_lengths  = [];
 	
@@ -55,7 +60,11 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(_ind >= curr_path_amo) return out;
 		
-		out = curr_path[_ind].getPointDistance(_dist, ind, out);
+		var _path = path_data[_ind][0];
+		var _revr = path_data[_ind][1];
+		
+		if(_revr) _dist = path_lengths[_ind] - _dist;
+		out = _path.getPointDistance(_dist, ind, out);
 		
 		var _ptran = path_trans[_ind];
 		out.x += _ptran[0];
@@ -64,25 +73,18 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return out;
 	}
 	
-	static pathSpread = function(arr, p) {
-		if(is_path(p))  { array_push(arr, p); return; }
-		if(is_array(p)) {
-			for( var i = 0, n = array_length(p); i < n; i++ ) 
-				pathSpread(arr, p[i]);
-		}
-	}
-	
 	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		for( var i = 0; i < curr_path_amo; i++ ) {
-			if(!has(curr_path[i], "drawOverlay")) continue;
+			var _path = path_data[i][0];
+			if(!has(_path, "drawOverlay")) continue;
 			
 			var _ptran = path_trans[i];
 			var _px = _x + _ptran[0] * _s; 
 			var _py = _y + _ptran[1] * _s; 
 			
-			InputDrawOverlay(curr_path[i].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _params));
+			InputDrawOverlay(_path.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _params));
 		}
 		
 		return w_hovering;
@@ -92,11 +94,19 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		ds_map_clear(cached_pos);
 		outputs[0].setValue(self);
 		
-		curr_path  = [];
+		path_data = [];
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			var _path = getInputData(i);
-			pathSpread(curr_path, _path);
+			var _pth = getInputData(i+0);
+			var _rev = getInputData(i+1);
+			
+			if(is_path(_pth)) {
+				array_push(path_data, [_pth, _rev]);
+				
+			} else if(is_array(_pth)) {
+				for( var j = 0, m = array_length(_pth); j < m; j++ )
+					array_push(path_data, [_pth[j], _rev]);
+			}
 		}
 		
 		path_trans    = [];
@@ -110,12 +120,13 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _oriX = 0;
 		var _oriY = 0;
 		
-		curr_path_amo = array_length(curr_path);
-		for( var i = 0, n = array_length(curr_path); i < n; i++ ) {
-			var _path = curr_path[i];
+		curr_path_amo = array_length(path_data);
+		for( var i = 0, n = array_length(path_data); i < n; i++ ) {
+			var _path = path_data[i][0];
+			var _revr = path_data[i][1];
 			
 			if(i) {
-				var _stap = _path.getPointRatio(.000);
+				var _stap = _path.getPointRatio(_revr? .999 : 0);
 				_oriX -= _stap.x;
 				_oriY -= _stap.y;
 			}
@@ -131,7 +142,7 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			length_total  += _len;
 			array_append(length_accu, _path.getAccuLength());
 			
-			var _endp = _path.getPointRatio(.999);
+			var _endp = _path.getPointRatio(_revr? 0 : .999);
 			_oriX += _endp.x;
 			_oriY += _endp.y;
 			

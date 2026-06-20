@@ -451,8 +451,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		];
 		
 		tool_settings = [
-			toolSetting( "Snap",          new checkBox(function() /*=>*/ { attributes.snap_point = !attributes.snap_point; }), "snap_point", attributes ),
-			toolSetting( "Snap Distance", textBox_Number(function(v) /*=>*/ { attributes.snap_distance = max(1, v); }),     "snap_distance", attributes ),
+			toolSetting( THEME.node_path_snap,          new checkBox(function() /*=>*/ { attributes.snap_point  = !attributes.snap_point; }),  "snap_point",    attributes, "Snap" ),
+			toolSetting( THEME.node_path_control_snap,  new checkBox(function() /*=>*/ { attributes.snap_anchor = !attributes.snap_anchor; }), "snap_anchor",   attributes, "Snap Controls" ),
+			toolSetting( "Snap Distance", textBox_Number(function(v) /*=>*/ { attributes.snap_distance = max(1, v); }),                        "snap_distance", attributes ),
 		];
 		
 		tool_arc_radius   = 0;
@@ -470,6 +471,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	#region ---- attributes ----
 		attributes.display_name  = false;
 		attributes.snap_point    = true;
+		attributes.snap_anchor   = false;
 		attributes.snap_distance = 8;
 		attributes.weight        = [ [ 0, 1 ], [ 100, 1 ] ];
 		
@@ -770,7 +772,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var mmy = PANEL_PREVIEW.snapY(drag_point_sy + (_my - drag_point_my) / _s);
 				
 				draw_set_color(COLORS._main_icon);
-				if(attributes.snap_point)
+				if(attributes.snap_point && (drag_type == 0 || attributes.snap_anchor))
 				for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
 					if(drag_point == i && drag_type == 0) continue;
 					if(has(anchor_select_map, i)) continue;

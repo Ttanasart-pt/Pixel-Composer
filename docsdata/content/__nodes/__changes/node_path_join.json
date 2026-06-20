@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.010",
+    "changes": [
+      {
+        "date": "2026-06-20T00:41:19.866Z",
+        "node": "",
+        "commit": "**Path**: Add separate snap control for control points and anchor point."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.009",
     "changes": [
       {

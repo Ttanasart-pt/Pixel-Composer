@@ -1758,7 +1758,7 @@ function Panel_Preview() : PanelContent() constructor {
     	
         tool_x = lerp_float(tool_x, tool_x_to, 5);
         
-        var pd = ui(6);
+        var pd = ui(4);
         
         var tolx  = tool_x + ui(8);
         var toly  = ui(5);
@@ -1819,7 +1819,7 @@ function Panel_Preview() : PanelContent() constructor {
             	
             	var cc = _val? COLORS._main_accent : COLORS._main_icon_light;
             	var ss = (cbw - ui(8)) / max(sprite_get_width(nme), sprite_get_height(nme));
-            	draw_sprite_ext(nme, 0, tolx + cbw / 2, topbar_height / 2, ss, ss, 0, cc);
+            	draw_sprite_ext(nme, _val, tolx + cbw / 2, topbar_height / 2, ss, ss, 0, cc);
         		if(hov && ttip != "") TOOLTIP = ttip;
         		
 	            tolx      += cbw + pd;
