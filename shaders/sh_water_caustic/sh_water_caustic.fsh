@@ -50,7 +50,7 @@ uniform vec2  position;
 uniform vec2  scale;
 
 vec4 mod289(vec4 x) { return x - floor(x / 289.0) * 289.0; }
-vec4 permute(vec4 x) { return mod289((x * 34.0 + 1.0) * x); }
+vec4 permute(vec4 x) { return mod289(((x + seed / 10000.) * 34.0 + 1.0) * x); }
 
 vec4 snoise(vec3 v) {
     const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
