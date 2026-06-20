@@ -9,9 +9,9 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 	bind_action = new JuncLister(data, "Action", CONNECT_TYPE.input);
 	bind_output = new JuncLister(data, "Output", CONNECT_TYPE.output);
 	
-	bg_output    = new JuncLister(data, "Idle",   CONNECT_TYPE.output);
-	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output);
-	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output);
+	bg_output    = new JuncLister(data, "Idle",   CONNECT_TYPE.output, false, true);
+	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output, false, true);
+	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output, false, true);
 	
 	isSetValue = false;
 	setValue   = 0;
@@ -85,18 +85,24 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 		var hov = elementHover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
 		var pre = hov && mouse_lclick(focus);
 		
-		var _bg_junc  = bg_output.getJunction();
+		var _bg_junc = bg_output.getJunction();
 		
 		if(_bg_junc) {
+			var _ind = 0;
 			var _dat = undefined;
 			var _prs_junc = press_output.getJunction();
 			var _hov_junc = hover_output.getJunction();
+			var _targJunc = _bg_junc;
 			
-			     if(pre && _prs_junc) _dat = _prs_junc.showValue();
-			else if(hov && _hov_junc) _dat = _hov_junc.showValue();
-			else                      _dat = _bg_junc.showValue();
+			     if(pre && _prs_junc) _targJunc = _prs_junc;
+			else if(hov && _hov_junc) _targJunc = _hov_junc;
+			else                      _targJunc = _bg_junc;
 			
-			draw_surface_stretched_safe(_dat, x, y, w, h);	
+			if(hov) _ind = 1;
+			if(pre) _ind = 2;
+			
+			     if(is(_targJunc, NodeValue))           draw_surface_stretched_safe(_targJunc.showValue(),       x, y, w, h, color);	
+			else if(is(_targJunc, Panel_Custom_Sprite)) draw_sprite_stretched_ext_safe(_targJunc.getSpr(), _ind, x, y, w, h, color);	
 			
 		} else {
 			draw_sprite_stretched_ext(THEME.box_r2, 0, x, y, w, h, color, 1);

@@ -3,12 +3,12 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 	name = "Slider";
 	icon = THEME.panel_icon_element_slider;
 	
-	bind_input  = new JuncLister(data, "Input",   CONNECT_TYPE.input);
-	slot_output = new JuncLister(data, "Slot BG", CONNECT_TYPE.output);
+	bind_input   = new JuncLister(data, "Input",   CONNECT_TYPE.input);
 	
-	knob_output  = new JuncLister(data, "Knob BG", CONNECT_TYPE.output);
-	hover_output = new JuncLister(data, "Hover",   CONNECT_TYPE.output);
-	press_output = new JuncLister(data, "Press",   CONNECT_TYPE.output);
+	slot_output  = new JuncLister(data, "Slot BG", CONNECT_TYPE.output, false, true); slot_color  = c_white;
+	knob_output  = new JuncLister(data, "Knob BG", CONNECT_TYPE.output, false, true); knob_color  = c_white;
+	hover_output = new JuncLister(data, "Hover",   CONNECT_TYPE.output, false, true); 
+	press_output = new JuncLister(data, "Press",   CONNECT_TYPE.output, false, true); 
 	
 	slot_pbox = new __pbBox();
 	slot_pbox.anchor_x_type = PB_AXIS_ANCHOR.bounded;
@@ -48,11 +48,13 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 		Simple_Editor("Color", new buttonColor(function(c) /*=>*/ { color = c; } ).hideAlpha(), function() /*=>*/ {return color}, function(t) /*=>*/ { color = t; }), 
 		
 		[ "Slot", false ], 
-		Simple_Editor("Position", new pbBoxBox(), function() /*=>*/ {return slot_pbox}, function(v) /*=>*/ { slot_pbox = v; }), 
+		Simple_Editor("Position",   new pbBoxBox(), function() /*=>*/ {return slot_pbox}, function(v) /*=>*/ { slot_pbox = v; }), 
+		Simple_Editor("Slot Color", new buttonColor( function(c) /*=>*/ { slot_color = c; }).hideAlpha(), function() /*=>*/ {return slot_color}, function(c) /*=>*/ { slot_color = c; }), 
 		slot_output,
 		
 		[ "Knob", false ], 
-		Simple_Editor("Position", new pbBoxBox(), function() /*=>*/ {return knob_pbox}, function(v) /*=>*/ { knob_pbox = v; }), 
+		Simple_Editor("Position",   new pbBoxBox(), function() /*=>*/ {return knob_pbox}, function(v) /*=>*/ { knob_pbox = v; }), 
+		Simple_Editor("Knob Color", new buttonColor( function(c) /*=>*/ { knob_color = c; }).hideAlpha(), function() /*=>*/ {return knob_color}, function(c) /*=>*/ { knob_color = c; }), 
 		knob_output,
 		hover_output,
 		press_output,
@@ -98,8 +100,8 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 		} else {
 			var _slot_junc = slot_output.getJunction();
 			if(_slot_junc) {
-				var _dat = _slot_junc.showValue();
-				if(is_surface(_dat)) draw_surface_stretched_safe(_dat, sx0, sy0, sw, sh);
+				     if(is(_slot_junc, NodeValue))           draw_surface_stretched_safe(_slot_junc.showValue(),    sx0, sy0, sw, sh, slot_color);	
+				else if(is(_slot_junc, Panel_Custom_Sprite)) draw_sprite_stretched_ext_safe(_slot_junc.getSpr(), 0, sx0, sy0, sw, sh, slot_color);	
 				
 			} else
 				draw_sprite_stretched_ext(THEME.box_r2, 0, sx0, sy0, sw, sh, COLORS._main_icon_dark, 1);
@@ -137,15 +139,21 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 			
 			var _knob_junc = knob_output.getJunction();
 			if(_knob_junc) {
+				var _ind = 0;
 				var _dat = undefined;
 				var _prs_junc = press_output.getJunction();
 				var _hov_junc = hover_output.getJunction();
+				var _targJunc = _knob_junc;
 				
-				     if(pre && _prs_junc) _dat = _prs_junc.showValue();
-				else if(hov && _hov_junc) _dat = _hov_junc.showValue();
-				else                      _dat = _knob_junc.showValue();
+				     if(pre && _prs_junc) _targJunc = _prs_junc;
+				else if(hov && _hov_junc) _targJunc = _hov_junc;
+				else                      _targJunc = _knob_junc;
 				
-				if(is_surface(_dat)) draw_surface_stretched_safe(_dat, kx0, ky0, kw, kh);
+				if(hov) _ind = 1;
+				if(pre) _ind = 2;
+			
+				     if(is(_targJunc, NodeValue))           draw_surface_stretched_safe(_targJunc.showValue(),       kx0, ky0, kw, kh, knob_color);	
+				else if(is(_targJunc, Panel_Custom_Sprite)) draw_sprite_stretched_ext_safe(_targJunc.getSpr(), _ind, kx0, ky0, kw, kh, knob_color);	
 				
 			} else {
 				draw_sprite_stretched_ext(THEME.box_r2, 0, kx0, ky0, kw, kh, COLORS._main_icon, 1);
@@ -191,6 +199,9 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 		_m.vstep  = vstep;
 		_m.clampr = clamp_to_range;
 		
+		_m.slotc  = slot_color;
+		_m.knobc  = knob_color;
+		
 		_m.bind  = bind_input.serialize(_m);
 		_m.slot  = slot_output.serialize(_m);
 		_m.knob  = knob_output.serialize(_m);
@@ -209,6 +220,9 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 		range  = _m[$ "range"]  ?? range;
 		vstep  = _m[$ "vstep"]  ?? vstep;
 		clamp_to_range = _m[$ "clampr"] ?? clamp_to_range;
+		
+		slot_color = _m[$ "slotc"] ?? slot_color;
+		knob_color = _m[$ "knobc"] ?? knob_color;
 		
 		bind_input.deserialize(_m.bind);
 		if(has(_m, "slot"))  slot_output.deserialize(_m.slot);

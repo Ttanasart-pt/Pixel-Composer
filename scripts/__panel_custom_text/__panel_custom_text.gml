@@ -5,6 +5,8 @@ function Panel_Custom_Text(_data) : Panel_Custom_Element(_data) constructor {
 	
 	text   = "Text";
 	font   = 4;
+	scale  = 1;
+	
 	halign = fa_left;
 	valign = fa_top;
 	color  = ca_white;
@@ -21,11 +23,13 @@ function Panel_Custom_Text(_data) : Panel_Custom_Element(_data) constructor {
 			"Content 2b", 
 			"Content 3", 
 			"Content 4", 
+			"Pixel", 
 		], function(t) /*=>*/ { font = t; } ), function() /*=>*/ {return font}, function(t) /*=>*/ { font = t; }), 
 		
 		Simple_Editor("H Align", new buttonGroup( array_create(3, THEME.inspector_text_halign), function(c) /*=>*/ { halign = c; }), function() /*=>*/ {return halign}, function(c) /*=>*/ { halign = c; }), 
 		Simple_Editor("V Align", new buttonGroup( array_create(3, THEME.inspector_text_valign), function(c) /*=>*/ { valign = c; }), function() /*=>*/ {return valign}, function(c) /*=>*/ { valign = c; }), 
 		
+		Simple_Editor("Scale", textArea_Number( function(t) /*=>*/ { scale = t; } ), function() /*=>*/ {return scale}, function(t) /*=>*/ { scale = t; }), 
 		Simple_Editor("Color", new buttonColor( function(c) /*=>*/ { color = c; }), function() /*=>*/ {return color}, function(c) /*=>*/ { color = c; }), 
 	]);
 	
@@ -34,14 +38,15 @@ function Panel_Custom_Text(_data) : Panel_Custom_Element(_data) constructor {
 	static draw = function(panel, _m) {
 		var _font = f_p2;
 		switch(font) {
-			case 0 : _font = f_h1;  break;
-			case 1 : _font = f_h3;  break;
-			case 2 : _font = f_h5;  break;
-			case 3 : _font = f_p1;  break;
-			case 4 : _font = f_p2;  break;
-			case 5 : _font = f_p2b; break;
-			case 6 : _font = f_p3;  break;
-			case 7 : _font = f_p4;  break;
+			case 0 : _font = f_h1;     break;
+			case 1 : _font = f_h3;     break;
+			case 2 : _font = f_h5;     break;
+			case 3 : _font = f_p1;     break;
+			case 4 : _font = f_p2;     break;
+			case 5 : _font = f_p2b;    break;
+			case 6 : _font = f_p3;     break;
+			case 7 : _font = f_p4;     break;
+			case 8 : _font = f_pixel;  break;
 		}
 		
 		var tx = x;
@@ -59,7 +64,7 @@ function Panel_Custom_Text(_data) : Panel_Custom_Element(_data) constructor {
 		}
 		
 		draw_set_text(_font, halign, valign, color, _color_get_a(color));
-		draw_text(round(tx), round(ty), text);
+		draw_text_transformed(round(tx), round(ty), text, scale, scale, 0);
 		draw_set_alpha(1);
 	}
 	
@@ -68,6 +73,8 @@ function Panel_Custom_Text(_data) : Panel_Custom_Element(_data) constructor {
 	static doSerialize = function(_m) {
 		_m.text   = text;
 		_m.font   = font;
+		_m.scale  = scale;
+		
 		_m.color  = color;
 		_m.halign = halign;
 		_m.valign = valign;
@@ -76,9 +83,11 @@ function Panel_Custom_Text(_data) : Panel_Custom_Element(_data) constructor {
 	}
 	
 	static doDeserialize = function(_m) { 
-		text =   _m[$ "text"]   ?? text;
-		font =   _m[$ "font"]   ?? font;
-		color =  _m[$ "color"]  ?? color;
+		text   = _m[$ "text"]   ?? text;
+		font   = _m[$ "font"]   ?? font;
+		scale  = _m[$ "scale"]  ?? scale;
+		
+		color  = _m[$ "color"]  ?? color;
 		halign = _m[$ "halign"] ?? halign;
 		valign = _m[$ "valign"] ?? valign;
 		

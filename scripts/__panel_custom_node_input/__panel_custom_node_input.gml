@@ -51,6 +51,9 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 		var _dat   = _junc.showValue();
 		var _param = new widgetParam(x, y, w, h, _dat, _junc.display_data, _m, rx, ry).setFont(_font);
 		
+		if(is(_wdgt, curveBox))
+			_wdgt.h = h;
+		
 		_wdgt.setInteract(interactable);
 		_wdgt.setFocusHover(_focus, _hover);
 		

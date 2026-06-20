@@ -4,6 +4,8 @@ function Panel_Custom_Sprite(_name = "") constructor {
 	path  = "";
 	data  = "";
 	spr   = undefined;
+	scale = 1;
+	subimages = 1;
 	
 	visible = true;
 	
@@ -106,7 +108,7 @@ function Panel_Custom_Sprite(_name = "") constructor {
 		if(spr != undefined) return spr;
 		
 		if(data != "") {
-			spr = sprite_add(data);
+			spr = sprite_add(data, subimages);
 			updateSpr();
 			return spr;
 		}
@@ -121,8 +123,15 @@ function Panel_Custom_Sprite(_name = "") constructor {
 		var _base64_data = buffer_base64_encode(_buff, 0, buffer_get_size(_buff));
 		buffer_delete(_buff);
 		
+		subimages = 1;
+		if(string_pos("strip", path)) {
+			var _spl = string_split(path, "strip");
+			var _num = toNumber(array_safe_get(_spl, 1, ""));
+			if(_num) subimages = _num;
+		}
+		
 		data = $"data:image/png;base64,{_base64_data}";
-		spr  = sprite_add(data);
+		spr  = sprite_add(data, subimages);
 		updateSpr();
 		
 		return spr;
@@ -136,13 +145,14 @@ function Panel_Custom_Sprite(_name = "") constructor {
 	////- Serialize
 	
 	static serialize = function() {
-		return { path, data, slice };
+		return { path, data, subimages, slice };
 	}
 	
 	static deserialize = function(_m) { 
 		if(!is_struct(_m)) return self;
-		path  = _m.path;
-		data  = _m.data;
+		path      = _m[$ "path"]      ?? path;
+		data      = _m[$ "data"]      ?? data;
+		subimages = _m[$ "subimages"] ?? subimages;
 		
 		if(has(_m, "slice")) {
 			var sli = _m.slice;

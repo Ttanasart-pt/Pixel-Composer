@@ -1,9 +1,11 @@
-function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) constructor {
+function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _sprite = false) constructor {
 	ID = UUID_generate();
 	data = _data;
 	name = _name;
 	type = _type;
 	mode = "node";
+	
+	sprite = _sprite;
 	
 	visible = true;
 	
@@ -16,6 +18,15 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	
 	getWidget  = _widget;
 	editWidget = undefined;
+	
+	////- Sprite
+	
+	spriteMode = false;
+	spr = undefined;
+	
+	if(sprite) {
+		spr = new Panel_Custom_Sprite(name);
+	}
 	
 	////- Editors
 	
@@ -60,6 +71,21 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	currScrollItem = new scrollItem("", THEME.node_junctions_single, 0, c_white);
 
 	static draw = function(wdx, wdy, wdw, wdh, _m, foc, hov, rx, ry) {
+		if(sprite) {
+			var bs = wdh;
+			var bx = wdx - ui(4) - bs;
+			var by = wdy;
+			
+			var bt = __txt("Use Asset" + "...");
+			var bc = spriteMode? COLORS._main_accent : COLORS._main_icon;
+			var bspr = THEME.panel_icon_element_image;
+			
+			if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, _m, hov, foc, bt, bspr, 0, bc) == 2)
+				spriteMode = !spriteMode;
+			
+			if(spriteMode) return spr.draw(wdx, wdy, wdw, wdh, _m, foc, hov, rx, ry);
+		}
+		
 		if(mode == "node") {
 			getJunction();
 			var scw = wdw / 2 - ui(4);
@@ -254,6 +280,7 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	} 
 	
 	static getJunction = function(_depth = 0) {
+		if(spriteMode) return spr;
 		if(is(junction, NodeValue)) return junction;
 		
 		if(mode == "redir") {
@@ -279,10 +306,10 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	static serialize = function() {
 		var _m = {};
 		
-		var _junc    = getJunction();
-		_m.mode      = mode;
-		_m.globalkey = globalkey;
-		_m.node_id   = "";
+		var _junc     = getJunction();
+		_m.mode       = mode;
+		_m.globalkey  = globalkey;
+		_m.node_id    = "";
 		
 		if(is(node, Node)) {
 			_m.node_id = _junc? _junc.node.node_id : "";
@@ -292,6 +319,9 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 			_m.node_id = node.uuid;
 		}
 		
+		_m.spriteMode = spriteMode;
+		if(sprite) _m.spr = spr.serialize();
+		
 		return _m;
 	}
 	
@@ -300,6 +330,9 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 		node_id   = _m[$ "node_id"] ?? node_id;
 		junc_id   = _m[$ "junc_id"] ?? junc_id;
 		globalkey = _m[$ "globalkey"] ?? globalkey;
+		
+		spriteMode = _m[$ "spriteMode"] ?? spriteMode;
+		if(sprite) spr.deserialize(_m[$ "spr"]);
 		
 		if(APPENDING) node_id = GetAppendID(node_id);
 		
