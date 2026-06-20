@@ -89,6 +89,28 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	buttonCacheClear.onClick = function() /*=>*/ { array_foreach(nodes, function(n) /*=>*/ {return n.clearCache()} ); };
 	
+	////- PANEL
+	
+	array_push(attributeEditors, Node_Attribute("Edit Custom Panel...", function() /*=>*/ {return 0}, function() /*=>*/ {return button(function() /*=>*/ {return editPanel()})} ));
+	
+	static editPanel = function() /*=>*/ {
+		if(!is(panel_custom_data, Panel_Custom_Data)) {
+			var _pan = new Panel_Custom_Data(self);
+			panel_custom_data = _pan;
+			
+			var _sw = PANEL_INSPECTOR.contentPane.surface_w;
+			var _sh = PANEL_INSPECTOR.contentPane.surface_h;
+			
+			_pan.prew = _sw;
+			_pan.preh = _sh;
+			
+			_pan.w = _sw;
+			_pan.h = _sh;
+		}
+		
+		dialogPanelCall(new Panel_Custom_Editor(panel_custom_data));
+	}
+	
 	////- GROUP
 	
 	will_refresh = false;
@@ -618,6 +640,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(APPENDING) _toolNode = GetAppendID(_toolNode);
 			toolNode = project.nodeMap[? _toolNode];
 		}
+		
 	}
 	
 	////- ACTION

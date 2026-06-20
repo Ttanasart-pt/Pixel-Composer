@@ -251,6 +251,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		}
 	#endregion
 	
+	////- Panels
+	
 	sc_add_elements = new scrollPane(1,1, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _h = 0;
@@ -279,18 +281,16 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				}
 				
 				var _txt = ele[0];
+				var shov = hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + lbh);
 				
-				var cc = COLORS.section_bg;
-	            if(hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + lbh)) {
-	            	cc = COLORS.section_hover;
-	                
-	                if(foc) {
-	                    	 if(DOUBLE_CLICK) _cAll = ele[1]? -1 : 1;
-	                    else if(mouse_lpress()) ele[1] = !ele[1];
-	                }
+				         draw_sprite_stretched_ext(THEME.section_separator, 0, 0, yy, ww, lbh, shov? COLORS.section_hover : COLORS.section_bg);
+				if(shov) draw_sprite_stretched_ext(THEME.section_separator, 1, 0, yy, ww, lbh, COLORS.section_hover);
+				
+	            if(shov && foc) {
+                    	 if(DOUBLE_CLICK)   _cAll  =  ele[1]? -1 : 1;
+                    else if(mouse_lpress()) ele[1] = !ele[1];
 	            }
-	                
-	            draw_sprite_stretched_ext(THEME.box_r2_clr, 0, 0, yy, ww, lbh, cc, 1);
+	            
 	            draw_sprite_ui(THEME.arrow, ele[1]? 0 : 3, ui(12), yy + lbh / 2, .75, .75, 0, COLORS.section_bg, 1);    
 	            draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
 	            
@@ -462,18 +462,17 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				_y += ui(2);
 				_h += ui(2);
 				
-				var cc = COLORS.section_bg;
-				var lw = ww - (_but != 0) * ui(28);
+				var lw   = ww - (_but != 0) * ui(28);
+				var shov = hov && point_in_rectangle(_m[0], _m[1], 0, _y, lw, _y + lbh);
 				
-	            if(hov && point_in_rectangle(_m[0], _m[1], 0, _y, lw, _y + lbh)) {
-	            	cc = COLORS.section_hover;
-	                if(foc) {
-	                    	 if(DOUBLE_CLICK) _cAll = _edt[1]? -1 : 1;
-	                    else if(mouse_lpress()) _edt[1] = !_edt[1];
-	                }
+				         draw_sprite_stretched_ext(THEME.section_separator, 0, 0, _y, lw, lbh, shov? COLORS.section_hover : COLORS.section_bg);
+				if(shov) draw_sprite_stretched_ext(THEME.section_separator, 1, 0, _y, lw, lbh, COLORS.section_hover);
+				
+	            if(shov && foc) {
+                    	 if(DOUBLE_CLICK)   _cAll   =  _edt[1]? -1 : 1;
+                    else if(mouse_lpress()) _edt[1] = !_edt[1];
 	            }
-	                
-	            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y, lw, lbh, cc, 1);
+                
 	            draw_sprite_ui(THEME.arrow, _edt[1]? 0 : 3, ui(16), _y + lbh / 2, 1, 1, 0, COLORS.section_bg, 1);    
 	            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
 	            draw_text_add(ui(32), _y + lbh / 2, _txt);
@@ -661,6 +660,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		return _h;
 	});
+	
+	////- Draw
 	
 	function drawLeftPanel() {
 		var pd = padding;
@@ -871,7 +872,10 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var _color   = COLORS._main_value_negative;
 			
 			if(buttonInstant_Pad(bs, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2) {
-				array_remove(PROJECT.customPanels, data);
+				if(data.context == -1)
+					array_remove(PROJECT.customPanels, data);
+				else if(is(data.context, Node))
+					data.context.panel_custom_data = 0;
 				close();
 			}
 			
@@ -924,7 +928,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		preview_surface = surface_verify(preview_surface, dw, dh);
 		surface_set_target(preview_surface);
 			draw_clear_alpha(COLORS.panel_bg_clear, 0);
-			data.setSize(x, y, dw, dh);
+			data.setSize(0, 0, dw, dh, x, y);
 			
 			if(preview_mode) {
 				data.setFocusHover(pFOCUS, pHOVER);

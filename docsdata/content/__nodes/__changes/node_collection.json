@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.010",
+    "changes": [
+      {
+        "date": "2026-06-20T04:33:56.492Z",
+        "node": "Group",
+        "commit": "**Group**: Add custom panel as custom inspector"
+      }
+    ]
+  },
+  {
     "version": "1.21.4.002",
     "changes": [
       {

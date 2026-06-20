@@ -36,9 +36,8 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 		var _junc = input.getJunction();
 		if(!_junc) { draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, x, y, w, h); return; }
 		
-		var _inter = is(panel, Panel_Custom);
-		var _hover = _inter && elementHover;
-		var _focus = _inter && focus;
+		var _hover = elementHover;
+		var _focus = focus;
 		
 		if(full) { 
 			viewMode = full == 1? INSP_VIEW_MODE.compact : INSP_VIEW_MODE.spacious;
@@ -51,9 +50,10 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 		
 		var _dat   = _junc.showValue();
 		var _param = new widgetParam(x, y, w, h, _dat, _junc.display_data, _m, rx, ry).setFont(_font);
-		    
-		_wdgt.setInteract(_inter);
+		
+		_wdgt.setInteract(interactable);
 		_wdgt.setFocusHover(_focus, _hover);
+		
 		_wdgt.drawParam(_param);
 	}
 	

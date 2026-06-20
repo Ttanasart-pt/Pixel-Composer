@@ -281,10 +281,19 @@ function Panel_Inspector() : PanelContent() constructor {
         tb_prop_filter = textBox_Text(function(txt) /*=>*/ { filter_text = txt; }).setEmpty(false).setAutoUpdate()
                              .setFont(f_p2).setAlign(fa_center);
     	
-        prop_page   = 0;
-        prop_page_b = new buttonGroup(__txts([ "Properties", "Settings", THEME.message_16 ]), function(val) /*=>*/ { prop_page = val; })
-   							.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ]).iconPad(ui(8))
-   							.setFont(f_p2, COLORS._main_text_sub)
+        prop_page   = "Node";
+        
+        prop_page_a = [ "Properties", "Settings", THEME.message_16 ];
+        prop_page_p = [ "Node", "Settings", "Log" ];
+        prop_page_b = new buttonGroup(prop_page_a, function(val) /*=>*/ { prop_page = prop_page_p[val]; })
+   						.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ]).iconPad(ui(8))
+   						.setFont(f_p2, COLORS._main_text_sub)
+        
+        prop_page_panel_a = [ "Panel", "Properties", "Settings", THEME.message_16 ];
+        prop_page_panel_p = [ "Panel", "Properties", "Settings", "Log" ];
+        prop_page_panel_b = new buttonGroup(prop_page_panel_a, function(val) /*=>*/ { prop_page = prop_page_panel_p[val]; })
+   						.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ]).iconPad(ui(8))
+   						.setFont(f_p2, COLORS._main_text_sub)
         
         proj_prop_page   = 0;
         proj_prop_page_b = new buttonGroup([ "PXC", "GM" ], function(val) /*=>*/ { proj_prop_page = val; })
@@ -378,6 +387,10 @@ function Panel_Inspector() : PanelContent() constructor {
     		panel_rename.name = t;
     		panel_rename = undefined;
     	});
+    	
+		_hovering_frame   = undefined; hovering_frame   = undefined;
+		_hovering_scroll  = undefined; hovering_scroll  = undefined;
+		_hovering_element = undefined; hovering_element = undefined;
     #endregion
     
     #region ---- Workshop ----
@@ -1755,6 +1768,35 @@ function Panel_Inspector() : PanelContent() constructor {
         return hh;
     }
     
+    static drawNodePanel = function(_x, _y, _w, _m, _inspecting = inspecting) {
+    	if(!is(_inspecting, Node)) return 0;
+    	if(!is(_inspecting.panel_custom_data, Panel_Custom_Data)) return 0;
+    	
+        var _hover  = pHOVER && contentPane.hover;
+        var _focus  = pFOCUS || PANEL_GRAPH.pFOCUS;
+        
+    	var _pan = _inspecting.panel_custom_data;
+    	var _hh  = _pan.h;
+    	
+		_hovering_frame   = hovering_frame;
+		_hovering_scroll  = hovering_scroll;
+		_hovering_element = hovering_element;
+		
+		hovering_frame    = undefined;
+		hovering_scroll   = undefined;
+		hovering_element  = undefined;
+		
+		var _rx = x + contentPane.x;
+		var _ry = y + contentPane.y;
+		
+		_pan.setSize(_x, _y, _w, _hh, _rx, _ry);
+		_pan.setFocusHover(_focus, _hover, true);
+		_pan.root.checkMouse(self, _m);
+		_pan.draw(self, _m);
+    	
+    	return _hh;
+    }
+    
     static drawNodeData = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all) { 
     	_inspecting.inspecting       = true;
         _inspecting.inspector_scroll = contentPane.scroll_y_to;
@@ -1762,9 +1804,15 @@ function Panel_Inspector() : PanelContent() constructor {
         prop_hover  = noone;
         
     	switch(prop_page) {
-    		case 0 : return drawNodeProperties(_x, _y, _w, _m, _inspecting, _flag);
-    		case 1 : return drawNodeAttribute(_x, _y, _w, _m, _inspecting, _flag);
-    		case 2 : return drawNodeLog(_x, _y, _w, _m, _inspecting, _flag);
+    		case "Node": 
+    			if(is(_inspecting.panel_custom_data, Panel_Custom_Data)) 
+    				 return drawNodePanel(_x, _y, _w, _m, _inspecting, _flag);
+    			else return drawNodeProperties(_x, _y, _w, _m, _inspecting, _flag);
+    			
+    		case "Panel":      return drawNodePanel(_x, _y, _w, _m, _inspecting, _flag);
+    		case "Properties": return drawNodeProperties(_x, _y, _w, _m, _inspecting, _flag);
+    		case "Settings":   return drawNodeAttribute(_x, _y, _w, _m, _inspecting, _flag);
+    		case "Log":        return drawNodeLog(_x, _y, _w, _m, _inspecting, _flag);
     	}
     	return 0;
     }
@@ -1812,10 +1860,31 @@ function Panel_Inspector() : PanelContent() constructor {
 	        tb_prop_filter.setFocusHover(pHOVER, pFOCUS);
 	        tb_prop_filter.draw(tx, ty, tw, th, filter_text, _m);
 	        
+    	} else if(is(inspecting.panel_custom_data, Panel_Custom_Data))  {
+    		var ipage = 0;
+    		switch(prop_page) {
+    			case "Panel":      ipage = 0; break;
+    			case "Properties": ipage = 1; break;
+    			case "Settings":   ipage = 2; break;
+    			case "Log":        ipage = 3; break;
+    		}
+    		
+    		prop_page_panel_a[3] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
+	        prop_page_panel_b.setFocusHover(pFOCUS, pHOVER);
+	        prop_page_panel_b.draw(tx, ty, tw, th, ipage, _m, x + contentPane.x, y + contentPane.y);
+	        
     	} else {
-	        prop_page_b.data[2] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
+    		var ipage = 0;
+    		switch(prop_page) {
+    			case "Panel":      ipage = 0; prop_page = "Node"; break;
+    			case "Properties": ipage = 0; break;
+    			case "Settings":   ipage = 1; break;
+    			case "Log":        ipage = 2; break;
+    		}
+    		
+	        prop_page_a[2] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
 	        prop_page_b.setFocusHover(pFOCUS, pHOVER);
-	        prop_page_b.draw(tx, ty, tw, th, prop_page, _m, x + contentPane.x, y + contentPane.y);
+	        prop_page_b.draw(tx, ty, tw, th, ipage, _m, x + contentPane.x, y + contentPane.y);
     	}
     	
     	_hh += th + ui(16);
@@ -2406,8 +2475,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 		draw_sprite_ui(THEME.favorite, _p.open_start, ui(16), yy + _ph / 2, .75, .75, 0, fc, .75 + fhv*.25);
                 		if(fhv) {
                 			TOOLTIP = __txt("Open on Project load");
-                			if(mouse_lpress(_focus))
-                				_p.open_start = !_p.open_start;
+                			if(mouse_lpress(_focus)) _p.open_start = !_p.open_start;
                 		}
                 		
                 		draw_set_font(_font);

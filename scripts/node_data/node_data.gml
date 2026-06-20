@@ -220,6 +220,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.annotation_size   = .4;
 		attributes.annotation_color  = COLORS._main_text_sub;
 		
+		panel_custom_data = 0;
+		
 		onSetAttribute  = undefined;
 		setAttribute    = function(k, v, r = false) /*=>*/ { 
 			recordAction_variable_change(attributes, k, attributes[$ k], "Modify Attribute");
@@ -3101,6 +3103,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _attr = attributeSerialize();
 		var attri = struct_append(variable_clone(attributes), _attr); 
 		
+		if(is(panel_custom_data, Panel_Custom_Data))
+			_map.panel_custom_data = panel_custom_data.serialize();
+		
 		#region attribute stripping // TODO : make it an array
 			if(struct_try_get(attri, "color_depth")         == 3)     struct_remove(attri, "color_depth");
 			if(struct_try_get(attri, "interpolate")         == 1)     struct_remove(attri, "interpolate");
@@ -3247,6 +3252,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			attributeDeserialize(CLONING? variable_clone(_lattr) : _lattr);
 		}
+		
+		if(is_struct(load_map[$ "panel_custom_data"])) 
+			panel_custom_data = new Panel_Custom_Data(self).deserialize(load_map.panel_custom_data);
 		
 		if(has(load_map, "attriTool")) 
 			tool_attribute = struct_override(tool_attribute, load_map.attriTool);

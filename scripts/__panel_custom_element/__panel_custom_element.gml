@@ -38,6 +38,7 @@ function Panel_Custom_Element(_data) constructor {
 	parent       = undefined;
 	hover        = false;
 	focus        = false;
+	interactable = false;
 	elementHover = false;
 	
 	editors = [
@@ -130,11 +131,14 @@ function Panel_Custom_Element(_data) constructor {
 	
 	////- Draw
 	
-	static setFocusHover = function(_focus, _hover) {
-		focus = _focus;
-		hover = _hover;
+	static setFocusHover = function(_focus, _hover, _inter = false) {
+		focus        = _focus;
+		hover        = _hover;
+		interactable = _inter;
+		
 		for( var i = 0, n = array_length(contents); i < n; i++ ) 
-			contents[i].setFocusHover(_focus, _hover);
+			contents[i].setFocusHover(_focus, _hover, _inter);
+			
 		return self;
 	}
 	

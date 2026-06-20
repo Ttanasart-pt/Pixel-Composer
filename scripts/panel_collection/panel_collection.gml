@@ -875,10 +875,13 @@ function Panel_Collection() : PanelContent() constructor {
 	} 
 	
 	function refreshContext() { 
+		context.scanned = false;
+		
 		if(page == 0)		context.scan([ ".json", ".pxcc" ]);	
 		else if(page == 1)	context.scan([ ".png", ".jpg", ".gif" ]);	
 		
 		if(STEAM_ENABLED) steamUCGload();
+		setContent();
 	} 
 	
 	function drawContent(panel) { 

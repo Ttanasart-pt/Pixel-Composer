@@ -1,5 +1,6 @@
-function Panel_Custom_Data() constructor {
-	name = "New Panel"
+function Panel_Custom_Data(_ctx = -1) constructor {
+	name    = "New Panel"
+	context = _ctx;
 	
 	minw = ui(100);
 	minh = ui(100);
@@ -38,23 +39,23 @@ function Panel_Custom_Data() constructor {
 	
 	////- Draw
 	
-	static setSize = function(_x, _y, _w, _h) {
+	static setSize = function(_x, _y, _w, _h, _rx, _ry) {
 		w = _w;
 		h = _h;
 		
-		root.setSize([0,0,w,h], _x, _y);
+		root.setSize([_x, _y, w, h], _rx, _ry);
 		return self;
 	}
 	
-	static setFocusHover = function(_focus, _hover) {
+	static setFocusHover = function(_focus, _hover, _inter = false) {
 		focus = _focus;
 		hover = _hover;
-		root.setFocusHover(_focus, _hover);
+		root.setFocusHover(_focus, _hover, _inter);
+		
 		return self;
 	}
 	
 	static draw = function(panel, _m) {
-		root.setFocusHover(focus, hover);
 		root.doDraw(panel, _m);
 	}
 	
@@ -83,7 +84,7 @@ function Panel_Custom_Data() constructor {
 		}
 		
 		_m.root    = root.serialize();
-		_m.ioredir = array_map(io_redirect, function(i) /*=>*/ {return i.serialize()});
+		_m.ioredir = array_map(io_redirect, function(i,_) /*=>*/ {return i.serialize()});
 		
 		return _m;
 	}
@@ -98,7 +99,7 @@ function Panel_Custom_Data() constructor {
 		open_start = _m[$ "open_start"] ?? open_start;
 		
 		__self = self;
-		if(has(_m, "ioredir")) io_redirect = array_map(_m.ioredir, function(i) /*=>*/ {return new IO_Redirect(__self).deserialize(i)});
+		if(has(_m, "ioredir")) io_redirect = array_map(_m.ioredir, function(i,_) /*=>*/ {return new IO_Redirect(__self).deserialize(i)});
 		
 		rootData = _m.root;
 		initRoot();

@@ -116,10 +116,7 @@ function Panel_Custom_Node_Output(_data) : Panel_Custom_Element(_data) construct
 				
 			} else if(output.getEditWidget()) {
 				var _param = new widgetParam(x, y, w, h, _dat, _junc.display_data, _m, rx, ry)	
-					.setFont(_font)
-					.setHalign(halign)
-					.setValign(valign)
-					.setColor(color)
+					.setFont(_font).setHalign(halign).setValign(valign).setColor(color)
 					
 				output.getEditWidget().drawParam(_param);
 			}

@@ -2,24 +2,19 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Graph Preview";
 	preview_draw = true;
 	
-	newInput(0, nodeValue_Surface("Surface"))
-		.rejectArray();
+	newInput( 0, nodeValue_Surface( "Surface" )).rejectArray();
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.rejectArray();
+	////- =Display
+	newInput( 1, nodeValue_Vec2(   "Position", [0,0] )).rejectArray();
+	newInput( 2, nodeValue_Float(  "Scale",    1     )).rejectArray()
+	newInput( 3, nodeValue_Bool(   "Sticky",   true  )).rejectArray();
+	newInput( 4, nodeValue_Slider( "Alpha",    0.5   )).rejectArray();
 	
-	newInput(2, nodeValue_Float("Scale", 1))
-		.rejectArray();
-
-	newInput(3, nodeValue_Bool("Sticky", true))
-		.rejectArray();
-		
-	newInput(4, nodeValue_Slider("Alpha", 0.5))
-		.rejectArray();
-		
 	input_display_list = [ 0,
-		["Display", false], 1, 2, 4, 3, 
+		[ "Display", false ], 1, 2, 4, 3, 
 	];
+	
+	////- Node
 	
 	surf  = noone;
 	stick = true;
@@ -34,7 +29,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	drag_mx  = 0;
 	drag_my  = 0;
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _surf = getInputData(0);
 		var _posi = getInputData(1);
 		var _scal = getInputData(2);
@@ -47,9 +42,9 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		sca   = _scal;
 		stick = _stck;
 		alpha = _alph;
-	} #endregion
+	}
 	
-	static getGraphPreviewSurface = function() { return surf; }
+	static getGraphPreviewSurface = function() /*=>*/ {return surf};
 	
 	static drawPreviewBackground = function(_x, _y, _mx, _my, _s) {
 		if(!is_surface(surf)) return false;

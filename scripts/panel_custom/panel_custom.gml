@@ -44,8 +44,8 @@ function Panel_Custom(_data = undefined) : PanelContent() constructor {
 		hovering_element  = undefined;
 		
 		title = data.name;
-		data.setSize(x, y, w, h);
-		data.setFocusHover(pFOCUS, pHOVER);
+		data.setSize(0, 0, w, h, x, y);
+		data.setFocusHover(pFOCUS, pHOVER, true);
 		data.root.checkMouse(self, [mx, my]);
 		data.draw(self, [mx, my]);
 	}
