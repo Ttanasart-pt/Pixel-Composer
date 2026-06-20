@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__panel_custom_sprite",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__panel_custom_sprite",
+  "parent":{
+    "name":"custom",
+    "path":"folders/panels/custom.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

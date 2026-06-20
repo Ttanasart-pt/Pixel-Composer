@@ -12,7 +12,10 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 	cb_atlas_crop = new checkBox(function() /*=>*/ { display_data.atlas_crop = !display_data.atlas_crop; });
 	
 	static trigger = function() {
-		dialogPanelCall(new Panel_Asset_Selector(self, def_path), x + open_rx, y + open_ry);
+		var _assetBox = new Panel_Asset_Selector(function(v) /*=>*/ {return onModify(v)}, current_data, def_path);
+		    _assetBox.interactable = interactable;
+		
+		dialogPanelCall(_assetBox, x + open_rx, y + open_ry);
 	}
 	
 	static setInteract = function(_interactable) { 

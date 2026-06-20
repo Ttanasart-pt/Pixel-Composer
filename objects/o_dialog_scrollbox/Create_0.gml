@@ -141,7 +141,7 @@ doRefocus();
 					draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 					
 					if(_active && (mouse_lpress() || KEYBOARD_ENTER)) {
-						initVal = i;
+						initVal = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);
 						instance_destroy();
 					}
 				}

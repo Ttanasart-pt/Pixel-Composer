@@ -58,10 +58,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(62, nodeValue_Range( "Normalized Range", [0,1] )).setCurvable(63, CURVE_DEF_01);
 	
 	////- =Line Settings
-	newInput( 8, nodeValue_SliRange( "Range",         [0,1] )).setTooltip("Range of the path to draw.");
-	newInput(25, nodeValue_Bool(     "Invert",        false ));
-	newInput( 9, nodeValue_Float(    "Shift",         0     ));
-	newInput(26, nodeValue_Bool(     "Clamp Range",   false ));
+	newInput( 8, nodeValue_SliRange( "Range",         [0,1] )).setInternalName("path_range").setTooltip("Range of the path to draw.");
+	newInput(25, nodeValue_Bool(     "Invert",        false )).setInternalName("path_invert");
+	newInput( 9, nodeValue_Float(    "Shift",         0     )).setInternalName("path_shift");
+	newInput(26, nodeValue_Bool(     "Clamp Range",   false )).setInternalName("path_range_clamped");
 	
 	////- =Dash Line
 	newInput(46, nodeValue_Bool(  "Dash",       false ));

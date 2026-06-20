@@ -358,6 +358,8 @@ function __Simple_Editor(_name, _widget, _getter, _setter) constructor {
 	editWidget = _widget;
 	getter     = _getter;
 	setter     = _setter;
+	
+	visible    = true;
 }
 
 #region elements
@@ -386,6 +388,7 @@ function __Simple_Editor(_name, _widget, _getter, _setter) constructor {
 		{ name: "Slider",      key: "slider",     fn: Panel_Custom_Slider,      spr: function() /*=>*/ {return THEME.panel_icon_element_slider},      prevsize: [120, 32] }, 
 		{ name: "Text",        key: "text",       fn: Panel_Custom_Text,        spr: function() /*=>*/ {return THEME.panel_icon_element_text},        prevsize: [ 80, 32] }, 
 		{ name: "Textbox",     key: "textbox",    fn: Panel_Custom_Textbox,     spr: function() /*=>*/ {return THEME.panel_icon_element_textbox},     prevsize: [ 80, 32] }, 
+		{ name: "Image",       key: "image",      fn: Panel_Custom_Image,       spr: function() /*=>*/ {return THEME.panel_icon_element_image},       prevsize: [ 64, 64] }, 
 	];
 	
 	PANEL_ELEMENT_MAP = {};

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.010",
+    "changes": [
+      {
+        "date": "2026-06-20T07:03:15.890Z",
+        "node": "Scroll Items",
+        "commit": "**Scroll Items**: Fix selecting item while searching returns incorrect value."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {

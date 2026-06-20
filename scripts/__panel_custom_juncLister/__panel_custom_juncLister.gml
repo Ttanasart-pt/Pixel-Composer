@@ -5,6 +5,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false) c
 	type = _type;
 	mode = "node";
 	
+	visible = true;
+	
 	node_id   = undefined;
 	junc_id   = undefined;
 	globalkey = "";

@@ -3,6 +3,8 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 	name = "Button";
 	icon = THEME.panel_icon_element_button;
 	
+	software_action = "";
+	
 	bind_input  = new JuncLister(data, "Input",  CONNECT_TYPE.input);
 	bind_action = new JuncLister(data, "Action", CONNECT_TYPE.input);
 	bind_output = new JuncLister(data, "Output", CONNECT_TYPE.output);
@@ -15,7 +17,7 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 	setValue   = 0;
 	
 	color = COLORS._main_icon;
-	software_action    = "";
+	displayContent = false;
 	
 	#region functions
 		software_function_name = [];
@@ -52,19 +54,20 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 			function( ) /*=>*/   {return software_action}, 
 			function(t) /*=>*/ { software_action = t; }), 
 		
-		[ "Value Binding", false ], 
+		[ "Transfer Value", false ], 
+		bind_output,
 		bind_input,
 		
 		[ "Node Action", false ], 
 		bind_action,
-		bind_output,
 		
 		[ "Set Value", false ], 
 		Simple_Editor("Set Value", new checkBox( function() /*=>*/ { isSetValue = !isSetValue; } ), function() /*=>*/ {return isSetValue}, function(t) /*=>*/ { isSetValue = t; }), 
 		Simple_Editor("Value", textArea_Number( function(t) /*=>*/ { setValue = t; } ), function() /*=>*/ {return setValue}, function(t) /*=>*/ { setValue = t; }), 
 		
 		[ "Display", false ], 
-		Simple_Editor("Color", new buttonColor( function(c) /*=>*/ { color = c; }).hideAlpha(), function() /*=>*/ {return color}, function(c) /*=>*/ { color = c; }), 
+		Simple_Editor("Base Color",      new buttonColor( function(c) /*=>*/ { color = c; }).hideAlpha(), function() /*=>*/ {return color}, function(c) /*=>*/ { color = c; }), 
+		Simple_Editor("Display Content", new checkBox( function() /*=>*/ { displayContent = !displayContent; }), function() /*=>*/ {return displayContent}, function(c) /*=>*/ { displayContent = c; }), 
 		
 		[ "Textures", false ], 
 		bg_output,
@@ -101,6 +104,8 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 			draw_sprite_stretched_add(THEME.box_r2, 1, x, y, w, h, color, .2 + .3 * hov);
 		}
 		
+		var _outVal = output_junc? output_junc.getValue() : undefined;
+		
 		if(hov && mouse_lpress(focus)) {
 			if(software_action != "" && has(FUNCTIONS, software_action)) {
 				var fn = FUNCTIONS[$ software_action];
@@ -117,13 +122,26 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 				}
 				Render();
 				
-				var _res = output_junc.getValue();
-				input_junc.setValue(_res);
+				input_junc.setValue(_outVal);
 			}
 			
 			if(isSetValue) input_junc.setValue(setValue);
 		}
 		
+		if(displayContent && _outVal != undefined) {
+			var pd = ui(4);
+			var x0 = x + pd;
+			var y0 = y + pd;
+			var ww = w - pd * 2;
+			var hh = h - pd * 2;
+			
+			switch(output_junc.type) {
+				case VALUE_TYPE.surface  : draw_surface_stretched_safe(_outVal, x0, y0, ww, hh);         break;
+				case VALUE_TYPE.color    : drawPalette(_outVal, x0, y0, ww, hh);                         break;
+				case VALUE_TYPE.gradient : if(is(_outVal, gradientObject)) _outVal.draw(x0, y0, ww, hh); break;
+				
+			}
+		}
 	}
 	
 	////- Serialize
@@ -141,7 +159,9 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 		_m.isSetValue = isSetValue;
 		_m.setValue   = setValue;
 		
-		_m.color = color;
+		_m.color          = color;
+		_m.displayContent = displayContent;
+		
 		return _m;
 	}
 	
@@ -154,11 +174,13 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 		if(has(_m, "hover")) hover_output.deserialize(_m.hover);
 		if(has(_m, "press")) press_output.deserialize(_m.press);
 		
-		software_action  = _m[$ "saction"]  ?? software_action;
-		isSetValue = _m[$ "isSetValue"] ?? isSetValue;
-		setValue   = _m[$ "setValue"]   ?? setValue;
+		software_action  = _m[$ "saction"]        ?? software_action;
+		isSetValue       = _m[$ "isSetValue"]     ?? isSetValue;
+		setValue         = _m[$ "setValue"]       ?? setValue;
 		
-		color = _m[$ "color"] ?? color;
+		color            = _m[$ "color"]          ?? color;
+		displayContent   = _m[$ "displayContent"] ?? displayContent;
+		
 		return self;
 	}
 }

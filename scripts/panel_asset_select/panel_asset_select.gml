@@ -1,10 +1,13 @@
-function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
+function Panel_Asset_Selector(_onSet, _currData = undefined, _defPath = "") : PanelContent() constructor {
 	title = "Assets";
 	w = ui(632);
 	h = ui(360);
-		
-	target  = _target;
+	
+	onSet   = _onSet;
+	currVal = _currData;
 	context = global.ASSETS;
+	
+	interactable = true;
 	
 	function gotoDir(dirName) {
 		for(var i = 0; i < array_length(global.ASSETS.subDir); i++) {
@@ -154,18 +157,14 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 					}
 				}
 				
-				if(target.interactable && hov && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
+				if(interactable && hov && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
 					contentPane.hover_content = true;
 					TOOLTIP = [ spr, "sprite" ];
 					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					
 					if(mouse_lpress(foc)) {
-						if(is(content, dynaSurf)) 
-							target.onModify(content.clone());
-						else 
-							target.onModify(content.path);
-							
+						onSet(is(content, dynaSurf)? content.clone() : content.path);
 						close();
 					}
 				}
@@ -202,7 +201,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 			var bx = pad + folderW - bs - ui(12);
 			var by = pad + ui(18) - bs / 2;
 			
-			var iss = is_surface(target.current_data) && context != DYNADRAW_FOLDER;
+			var iss = is_surface(currVal) && context != DYNADRAW_FOLDER;
 			
 			var cc = iss? COLORS._main_value_positive : COLORS._main_icon_dark;
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, iss && pHOVER, pFOCUS, "Add to Asset", THEME.add, 0, cc, 1, ui(8)) == 2) {
@@ -210,7 +209,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 					if(f == "") return;
 					
 					f = filename_ext_verify(f, ".png");
-					surface_save_safe(target.current_data, f);
+					surface_save_safe(currVal, f);
 					context.scan([".png"]);
 				});
 				

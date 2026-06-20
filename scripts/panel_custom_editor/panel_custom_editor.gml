@@ -506,6 +506,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				continue;
 			}
 			
+			if(!_edt.visible) continue;
+			
 			var _name = _edt.name;
 			var _wpd  = ui(4);
 			var  tx   = ui(8);
@@ -513,7 +515,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(tx, _y + wdh / 2, _name);
 			
-			if(is(_edt, JuncLister)) {
+			if(has(_edt, "draw")) {
 				var wdx = ww - wdw;
 				var wdy = _y;
 				

@@ -18,6 +18,11 @@ function draw_sprite_stretched_ext_override(spr, ind, _x, _y, w = 1, h = 1, colo
 	__draw_sprite_stretched_ext(spr, ind, round(_x), round(_y), round(w), round(h), color, alpha);
 }
 
+function draw_sprite_stretched_ext_safe(spr, ind, _x, _y, w = 1, h = 1, color = c_white, alpha = 1) {
+	if(!sprite_exists(spr)) return;
+	__draw_sprite_stretched_ext(spr, ind, round(_x), round(_y), round(w), round(h), color, alpha);
+}
+
 function draw_sprite_stretched_add(spr, ind, _x, _y, w = 1, h = 1, color = c_white, alpha = 1) { 
 	BLEND_ADD __draw_sprite_stretched_ext(spr, ind, round(_x), round(_y), round(w), round(h), color, alpha); BLEND_NORMAL
 }
