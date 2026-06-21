@@ -21,30 +21,26 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(10, nodeValueSeed());
 	
 	////- =Generation
-	newInput( 0, nodeValue_EScroll(  "Source",       0, [ "Point", "Path", "Mesh" ]     ));
-	newInput( 1, nodeValue_Int(      "Strands",      8, "How many strands to generate." ));
-	newInput( 5, nodeValue_Path( "Path" ));
-	newInput( 6, nodeValue_Vec2(     "Position",   [.5,.5] )).setUnitSimple();
-	newInput( 7, nodeValue_EButton(  "Side",         0, [ "Inner", "Outer", "Both" ]    ));
-	newInput(13, nodeValue_Mesh(     "Mesh" ));
-	newInput(14, nodeValue_EScroll(  "Distribution", 0, [ "Uniform", "Random" ]         ));
-	newInput(15, nodeValue_Trigger(  "Bake hair", "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."));
+	newInput( 0, nodeValue_EScroll( "Source",       0, [ "Point", "Path", "Mesh" ]  ));
+	newInput( 1, nodeValue_Int(     "Strands",      8,                              )).setTooltip("How many strands to generate.");
+	newInput( 5, nodeValue_Path(    "Path"                                          ));
+	newInput( 6, nodeValue_Vec2(    "Position",   [.5,.5]                           )).setUnitSimple();
+	newInput( 7, nodeValue_EButton( "Side",         0, [ "Inner", "Outer", "Both" ] ));
+	newInput(13, nodeValue_Mesh(    "Mesh"                                          ));
+	newInput(14, nodeValue_EScroll( "Distribution", 0, [ "Uniform", "Random" ]      ));
+	newInput(15, nodeValue_Trigger( "Bake hair", "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."));
 	
-	b_bake = button(function() /*=>*/ { 
-		toggleAttribute("use_groom"); 
-		if(attributes.use_groom) groomed = strands.clone();
-		strandUpdate(true);
-	}).setText("Bake Strand");
+	b_bake = button(function() /*=>*/ {return toggleGroom()}).setText("Bake Strand");
 		
 	////- =Strand
-	newInput( 2, nodeValue_Vec2(    "Length",      [4,4], { linked: true } ));
-	newInput( 3, nodeValue_Int(     "Segment",      4        ));
+	newInput( 2, nodeValue_Range(   "Length",      [4,4], true     ));
+	newInput( 3, nodeValue_Int(     "Segment",      4              ));
 	newInput(18, nodeValue_RotRand( "Direction",   ROTATION_RANDOM_DEF_0_360 ));
-	newInput( 4, nodeValue_Slider(  "Elasticity",  .05       )).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
-	newInput( 8, nodeValue_Slider(  "Spring",      .8        ));
-	newInput( 9, nodeValue_Slider(  "Structure",   .2        )).setTooltip("The ability to keep its original shape.");
-	newInput(17, nodeValue_Vec2(    "Root Strength", [-1,-1] )).setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
-	newInput(19, nodeValue_Float(   "Restitution", .01       )).setTooltip("Minimum speed before the strand stops moving completely.");
+	newInput( 4, nodeValue_Slider(  "Elasticity",  .05             )).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
+	newInput( 8, nodeValue_Slider(  "Spring",      .8              ));
+	newInput( 9, nodeValue_Slider(  "Structure",   .2              )).setTooltip("The ability to keep its original shape.");
+	newInput(17, nodeValue_Range(   "Root Strength", [-1,-1], true )).setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
+	newInput(19, nodeValue_Float(   "Restitution", .01             )).setTooltip("Minimum speed before the strand stops moving completely.");
 	
 	////- =Curl
 	newInput(11, nodeValue_Float(  "Curl frequency", 0 ));
@@ -74,31 +70,33 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	array_push(attributeEditors, Node_Attribute( "Draw Strand", function() /*=>*/ {return attributes.show_strand}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_strand")})}));
 	
 	#region ---- tools ----
+		tool_groom = new NodeTool( "Bake Strand", THEME.strand_bake ).setToolFn(function() /*=>*/ {return toggleGroom()});
+		
 		tool_push = new NodeTool( "Push", THEME.strand_push )
-			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.radius   = v; }, "radius",   6)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.strength = v; }, "strength", 0.2)
-			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.fall     = v; }, "fall",     0.1)
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.radius   = v; }, "radius",    6 )
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.strength = v; }, "strength", .2 )
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.fall     = v; }, "fall",     .1 )
 			.addSetting("Fix length", VALUE_TYPE.boolean,	function( ) /*=>*/ { tool_push.attribute.fix      = !tool_push.attribute.fix; }, "fix", false)
 	
 		tool_comb = new NodeTool( "Comb", THEME.strand_comb )
-			.addSetting("Width",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.width    = v; }, "width",    8)
-			.addSetting("Thick",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.thick    = v; }, "thick",    4)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.strength = v; }, "strength", 0.75)
+			.addSetting("Width",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.width    = v; }, "width",     8 )
+			.addSetting("Thick",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.thick    = v; }, "thick",     4 )
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.strength = v; }, "strength", .3 )
 	
 		tool_stretch = new NodeTool( "Stretch", THEME.strand_stretch )
-			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.radius   = v; }, "radius",   6)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.strength = v; }, "strength", 0.5)
-			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.fall     = v; }, "fall",     0.1)
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.radius   = v; }, "radius",    6 )
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.strength = v; }, "strength", .5 )
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.fall     = v; }, "fall",     .1 )
 	
 		tool_cut = new NodeTool( "Shorten", THEME.strand_cut )
-			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.radius   = v; }, "radius",   6)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.strength = v; }, "strength", 0.5)
-			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.fall     = v; }, "fall",     0.1)
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.radius   = v; }, "radius",    6 )
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.strength = v; }, "strength", .5 )
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.fall     = v; }, "fall",     .1 )
 	
 		tool_grab = new NodeTool( "Grab", THEME.strand_grab )
-			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.radius   = v; }, "radius",   4)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.strength = v; }, "strength", 1)
-			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.fall     = v; }, "fall",     0.2)
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.radius   = v; }, "radius",    4 )
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.strength = v; }, "strength",  1 )
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.fall     = v; }, "fall",     .2 )
 	
 		groomTools = [
 			tool_push,
@@ -106,6 +104,10 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			tool_stretch,
 			tool_cut,
 			tool_grab,
+		];
+		
+		ungroomTools = [
+			tool_groom
 		];
 	
 		tool_dragging = noone;
@@ -134,7 +136,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!attributes.use_groom && attributes.show_strand) strands.draw(_x, _y, _s, _pre);
 		
 		var _currTool = PANEL_PREVIEW.tool_current;
-		tools = attributes.use_groom? groomTools : -1;
+		tools = attributes.use_groom? groomTools : ungroomTools;
 		
 		if(_typ == 0) {
 			if(tool_dragging == noone) InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
@@ -227,21 +229,23 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				if(tool_dmx != __mx || tool_dmy != __my)
 				for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
-					var h = groomed.hairs[i];
+					var _hair   = groomed.hairs[i];
+					var _struct = _hair.angularTension;
+					
 					var op, np;
 					
-					for( var j = 0; j < array_length(h.points); j++ ) {
-						np = h.points[j];
+					for( var j = 0, m = array_length(_hair.points); j < m; j++ ) {
+						np = _hair.points[j];
 						np.targetAngle = tool_dir_fix;
-						var dst = distance_to_line(np.x, np.y, p0x, p0y, p1x, p1y);
 						
 						if(j) {
+							var dst = distance_to_line(np.x, np.y, p0x, p0y, p1x, p1y);
 							var dir = np.storeAngle;
 							var dis = np.storeDistance;
 							var ang = dir;
 							
 							if(dst < thk) {
-								var _lerp = stn * (1 - (dst / thk));
+								var _lerp = stn * (1 - (dst / thk)) * (1 - _struct / j);
 								ang = lerp_angle_direct(dir, tool_dir_fix, _lerp);
 							}
 								
@@ -388,7 +392,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				if(tool_modding) {
 					draw_set_color(COLORS._main_icon);
-					tool_dir_fix = point_direction(tool_mod_mx, tool_mod_my, _mx, _my);
+					if(point_distance(tool_mod_mx, tool_mod_my, _mx, _my) > ui(4))
+						tool_dir_fix = point_direction(tool_mod_mx, tool_mod_my, _mx, _my);
 					
 					_px = tool_mod_mx;
 					_py = tool_mod_my;
@@ -508,6 +513,13 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return hovering;
 	}
 	
+	static toggleGroom = function() {
+		toggleAttribute("use_groom"); 
+		if(attributes.use_groom) 
+			groomed = strands.clone();
+		strandUpdate(true);
+	}
+	
 	////- Nodes
 	
 	static step = function() {
@@ -518,33 +530,35 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static strandUpdate = function(willReset = false) {
-		var _sed = getInputData(10);
-		
-		var _typ = getInputData( 0);
-		var _den = getInputData( 1);
-		var _pth = getInputData( 5);
-		var _pos = getInputData( 6);
-		var _sid = getInputData( 7);
-		var _msh = getInputData(13);
-		var _rnd = getInputData(14);
-		
-		var _length = getInputData( 2);
-		var _segmnt = getInputData( 3);
-		var _direct = getInputData(18);
-		var _tenson = getInputData( 4);
-		var _spring = getInputData( 8);
-		var _struct = getInputData( 9);
-		var _rotstr = getInputData(17);
-		var _restit = getInputData(19);
-		
-		var _crF = getInputData(11);
-		var _crS = getInputData(12);
-		var sx, sy, prog, dir;
-		
-		inputs[ 5].setVisible(_typ == 1, _typ == 1);
-		inputs[ 7].setVisible(_typ == 1);
-		inputs[13].setVisible(_typ == 2, _typ == 2);
-		inputs[14].setVisible(_typ != 2);
+		#region data
+			var _sed = getInputData(10);
+			
+			var _typ = getInputData( 0);
+			var _den = getInputData( 1);
+			var _pth = getInputData( 5);
+			var _pos = getInputData( 6);
+			var _sid = getInputData( 7);
+			var _msh = getInputData(13);
+			var _rnd = getInputData(14);
+			
+			var _length = getInputData( 2);
+			var _segmnt = getInputData( 3);
+			var _direct = getInputData(18);
+			var _tenson = getInputData( 4);
+			var _spring = getInputData( 8);
+			var _struct = getInputData( 9);
+			var _rotstr = getInputData(17);
+			var _restit = getInputData(19);
+			
+			var _crF = getInputData(11);
+			var _crS = getInputData(12);
+			var sx, sy, prog, dir;
+			
+			inputs[ 5].setVisible(_typ == 1, _typ == 1);
+			inputs[ 7].setVisible(_typ == 1);
+			inputs[13].setVisible(_typ == 2, _typ == 2);
+			inputs[14].setVisible(_typ != 2);
+		#endregion
 		
 		if(willReset) {
 			if(attributes.use_groom) {

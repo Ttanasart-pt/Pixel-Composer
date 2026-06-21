@@ -111,6 +111,11 @@ function Panel_Notification() : PanelContent() constructor {
 					draw_sprite_ui(noti.icon_end, 1, _w - ui(24), yy + _h / 2,,,, COLORS._main_icon);
 			
 				var ic = noti.icon;
+				if(is_method(noti.icon)) {
+					noti.icon = noti.icon();
+					ic = noti.icon;
+				}
+				
 				if(noti.icon == noone) {
 					switch(noti.type) {
 						case NOTI_TYPE.log :	 ic = THEME.noti_icon_log;     break;	
@@ -118,8 +123,11 @@ function Panel_Notification() : PanelContent() constructor {
 						case NOTI_TYPE.error :	 ic = THEME.noti_icon_error;   break;	
 					}
 				}
-			
-				draw_sprite_ui(ic, 1, ui(16), yy + _h / 2, .85, .85);
+				
+				if(sprite_exists(ic)) {
+					var ss = (_h - ui(12)) / sprite_get_height(ic);
+					draw_sprite_ext(ic, 1, ui(16), yy + _h / 2, ss, ss);
+				}
 				
 				var tx = ui(32);
 				

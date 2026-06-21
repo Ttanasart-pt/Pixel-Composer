@@ -91,7 +91,7 @@
 			array_push(global.SURFACE_FORMAT_SUPP, _supp);
 			
 			if(!_supp) {
-				log_message("WARNING", $"Surface format [{_scro.name}] not supported on this device.");
+				log_message("WARNING", $"Surface format [{_scro.name}] not supported on this device.", function() /*=>*/ {return THEME.noti_icon_warning});
 				_scro.setActive(false);
 				_scro.setTooltip(_scro.tooltip + " (Not supported on this device.)");
 			}

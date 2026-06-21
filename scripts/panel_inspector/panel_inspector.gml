@@ -1827,7 +1827,7 @@ function Panel_Inspector() : PanelContent() constructor {
     	var bs = th;
     	
         var ww = contentPane.surface_w;
-        var tw = min(ww - ui(48), ui(280));
+        var tw = clamp(ww * .75, ui(280), ww - ui(64));
         
     	var tx = contentPane.w / 2 - tw / 2 + th / 2;
     	var ty = _y + ui(4);

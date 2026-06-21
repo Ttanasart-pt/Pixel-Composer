@@ -321,7 +321,7 @@ function Strand(sx = 0, sy = 0, amount = 5, _length = 8, _direct = 0, curlFreq =
 			np = points[i];
 			
 			if(i) {
-				np.storeAngle = point_direction(op.x, op.y, np.x, np.y);
+				np.storeAngle    = point_direction(op.x, op.y, np.x, np.y);
 				np.storeDistance = point_distance(op.x, op.y, np.x, np.y);
 			}
 			
