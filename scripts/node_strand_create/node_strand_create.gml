@@ -240,6 +240,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				groomed.freeze(true);
 				tool_dragging = noone;
 			}
+			
 		} else if(tool_dragging == tool_stretch || tool_dragging == tool_cut) {
 			var rad  = tool_dragging.attribute.radius;
 			var fall = tool_dragging.attribute.fall;

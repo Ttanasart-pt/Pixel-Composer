@@ -416,7 +416,7 @@ function StrandMesh() constructor {
 	
 	static step = function(iteration = 4) {
 		__iteration = iteration;
-		array_foreach(hairs, function(h) /*=>*/ { h.step(__iteration); });
+		array_foreach(hairs, function(h,i) /*=>*/ {return h.step(__iteration)});
 	}
 	
 	static draw = function(_x, _y, _s, drawAngle = false, baked = false) {
@@ -426,14 +426,14 @@ function StrandMesh() constructor {
 		__d = drawAngle;
 		__b = baked;
 		
-		array_foreach(hairs, function(h) /*=>*/ { h.draw(__x, __y, __s, __d, __b); });
+		array_foreach(hairs, function(h,i) /*=>*/ {return h.draw(__x, __y, __s, __d, __b)});
 	}
 	
-	static store = function() { array_foreach(hairs, function(h) /*=>*/ { h.store(); }); }
+	static store = function() { array_foreach(hairs, function(h,i) /*=>*/ {return h.store()}); }
 	
 	static freeze = function(fixLength = false) {
 		__fixLength = fixLength;
-		array_foreach(hairs, function(h) /*=>*/ { h.freeze(fixLength); });
+		array_foreach(hairs, function(h,i) /*=>*/ {return h.freeze(__fixLength)});
 	}
 	
 	static getPointRatio = function(rat, ind = 0) {
@@ -451,7 +451,7 @@ function StrandMesh() constructor {
 	
 	static getLineCount = function() { return array_length(hairs); }
 	
-	static set = function() { array_foreach(hairs, function(h) /*=>*/ { h.set(); }); return self; }
+	static set = function() { array_foreach(hairs, function(h,i) /*=>*/ {return h.set()}); return self; }
 	
 	static clone = function() {
 		var s = new StrandMesh();

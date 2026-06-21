@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.4.010",
+    "changes": [
+      {
+        "date": "2026-06-21T00:17:37.597Z",
+        "node": "StrandSim",
+        "commit": "**StrandSim**: Fix error when modifying baked strand."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {
