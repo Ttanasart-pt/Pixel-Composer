@@ -116,7 +116,15 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tool_dir      = 0;
 		tool_dir_fix  = 0;
 		tool_dir_to   = 0;
+		tool_dir_force_fix = false;
+		
 		tool_grabbing = [];
+		
+		tool_modding  = false;
+		tool_mod_sx   = 0;
+		tool_mod_sy   = 0;
+		tool_mod_mx   = 0;
+		tool_mod_my   = 0;
 	#endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -125,6 +133,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var hovering = false;
 		if(!attributes.use_groom && attributes.show_strand) strands.draw(_x, _y, _s, _pre);
 		
+		var _currTool = PANEL_PREVIEW.tool_current;
 		tools = attributes.use_groom? groomTools : -1;
 		
 		if(_typ == 0) {
@@ -163,268 +172,335 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var __mx = (_mx - _x) / _s;
 		var __my = (_my - _y) / _s;
-		
-		if(tool_dmx != __mx || tool_dmy != __my) {
-			tool_dir_to = point_direction(tool_dmx, tool_dmy, __mx, __my);
-			tool_dir = lerp_angle(tool_dir, tool_dir_to, 10);
-		}
 				
-		if(tool_dragging == tool_push) {
-			var rad  = tool_push.attribute.radius;
-			var fall = tool_push.attribute.fall;
-			var fix  = tool_push.attribute.fix;
-			var stn  = tool_push.attribute.strength;
-			var dx   = __mx - tool_mx;
-			var dy   = __my - tool_my;
-			
-			if(dx != 0 || dy != 0)
-			for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
-				var h = groomed.hairs[i];
-				for( var j = 1; j < array_length(h.points); j++ ) {
-					var p = h.points[j];
-					
-					var d = point_distance(p.x, p.y, __mx, __my);
-					if(d > rad * (1 + fall)) continue;
-					
-					var fl = 1 - clamp((d - rad * (1 + fall)) / (rad * fall * 2), 0, 1);
-					
-					p.x += dx * stn * fl;
-					p.y += dy * stn * fl;
-				}
-			}
-			
-			tool_mx = __mx;
-			tool_my = __my;
-			
-			if(mouse_lrelease()) {
-				groomed.freeze(fix);
-				tool_dragging = noone;
-			}
-		} else if(tool_dragging == tool_comb) {
-			var wid = tool_comb.attribute.width;
-			var thk = tool_comb.attribute.thick;
-			var stn = tool_comb.attribute.strength;
-			stn = power(stn, 2);
-			
-			var p0x = __mx + lengthdir_x(wid, tool_dir_fix + 90);
-			var p0y = __my + lengthdir_y(wid, tool_dir_fix + 90);
-			var p1x = __mx + lengthdir_x(wid, tool_dir_fix - 90);
-			var p1y = __my + lengthdir_y(wid, tool_dir_fix - 90);
-			
-			if(tool_dmx != __mx || tool_dmy != __my)
-			for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
-				var h = groomed.hairs[i];
-				var op, np;
+		////- =Editing
+		switch(tool_dragging) {
+			case tool_push :
+				var rad  = tool_push.attribute.radius;
+				var fall = tool_push.attribute.fall;
+				var fix  = tool_push.attribute.fix;
+				var stn  = tool_push.attribute.strength;
+				var dx   = __mx - tool_mx;
+				var dy   = __my - tool_my;
 				
-				for( var j = 0; j < array_length(h.points); j++ ) {
-					np = h.points[j];
-					np.targetAngle = tool_dir_fix;
-					var dst = distance_to_line(np.x, np.y, p0x, p0y, p1x, p1y);
-					
-					if(j) {
-						var dir = np.storeAngle;
-						var dis = np.storeDistance;
-						
-						var ang = dst < thk? lerp_angle_direct(dir, tool_dir_fix, lerp(stn, 1, (1 - dst) / thk)) : dir;
-						np.storeAngle = ang;
-						
-						np.x = op.x + lengthdir_x(dis, np.storeAngle);
-						np.y = op.y + lengthdir_y(dis, np.storeAngle);
-					}
-					
-					op = np;
-				}
-			}
-			
-			if(mouse_lrelease()) {
-				groomed.freeze(true);
-				tool_dragging = noone;
-			}
-			
-		} else if(tool_dragging == tool_stretch || tool_dragging == tool_cut) {
-			var rad  = tool_dragging.attribute.radius;
-			var fall = tool_dragging.attribute.fall;
-			var stn  = tool_dragging.attribute.strength;
-			stn = tool_dragging == tool_stretch? stn / game_get_speed(gamespeed_fps) : stn / 10;
-			
-			for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
-				var h = groomed.hairs[i];
-				var op, np;
-				var amo = array_length(h.points);
-				var l = [];
-				
-				for( var j = 0; j < amo; j++ ) {
-					np = h.points[j];
-					if(j) l[j] = point_distance(op.x, op.y, np.x, np.y);
-					op = np;
-				}
-				
-				for( var j = 0; j < amo; j++ ) {
-					var ind = tool_dragging == tool_stretch? j : amo - 1 - j;
-					np = h.points[ind];
-					
-					if(j) {
-						var dir = point_direction(op.x, op.y, np.x, np.y);
-						var dis = l[ind];
-						var mds = point_distance(__mx, __my, (op.x + np.x) / 2, (op.y + np.y) / 2);
-						
-						if(mds < rad * (1 + fall)) {
-							var fl = clamp((rad * (1 + fall) - mds) / (rad * fall * 2), 0, 1);
-							var st = dis * (1 + fl * stn * (tool_dragging == tool_stretch? 1 : -1));
-							
-							if(tool_dragging == tool_stretch)
-								l[j] = st;
-							else 
-								l[amo - 1 - j] = st;
-							//print(string(st) + ": " + string(dis) + ", " + 
-							//	string(1 + fl * stn * (tool_dragging == 2? 1 : -1)));
-						}
-					}
-					
-					op = np;
-				}
-				
-				for( var j = 0; j < amo; j++ ) {
-					np = h.points[j];
-					if(j) {
-						var dr = point_direction(op.x, op.y, np.x, np.y);
-						np.x = op.x + lengthdir_x(l[j], dr);
-						np.y = op.y + lengthdir_y(l[j], dr);
-					}
-					op = np;
-				}
-				
-			}
-			
-			if(mouse_lrelease()) {
-				groomed.freeze(false);
-				tool_dragging = noone;
-			}
-		} else if(tool_dragging == tool_grab) {
-			var rad  = tool_grab.attribute.radius;
-			var stn  = tool_grab.attribute.strength;
-			var dx   = __mx - tool_mx;
-			var dy   = __my - tool_my;
-			
-			if(dx != 0 || dy != 0)
-			for( var i = 0, n = array_length(tool_grabbing); i < n; i++ ) {
-				var h   = tool_grabbing[i][0];
-				var p   = tool_grabbing[i][1];
-				var inf = tool_grabbing[i][2];
-				
-				p.ikx = p.x + dx * inf;
-				p.iky = p.y + dy * inf;
-				
-				h.FABRIK(4);
-			}
-			
-			tool_mx = __mx;
-			tool_my = __my;
-			
-			if(mouse_lrelease()) {
-				groomed.freeze(true);
-				tool_dragging = noone;
-			}
-		} 
-				
-		if(isUsingTool(0)) {
-			hovering = true;
-			var rad  = tool_push.attribute.radius;
-			var fall = tool_push.attribute.fall;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_circle_prec(_mx, _my, rad * _s, true);
-			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
-			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
-			
-			if(mouse_lpress(active)) {
-				tool_dragging = tool_push;
-				tool_mx = (_mx - _x) / _s;
-				tool_my = (_my - _y) / _s;
-			}
-		} else if(isUsingTool(1)) {
-			hovering = true;
-			if(tool_dragging == noone) tool_dir_fix = tool_dir;
-				
-			var wid = tool_comb.attribute.width;
-			var thk = tool_comb.attribute.thick;
-			
-			var p0x = _mx + lengthdir_x(wid * _s, tool_dir_fix + 90);
-			var p0y = _my + lengthdir_y(wid * _s, tool_dir_fix + 90);
-			var p1x = _mx + lengthdir_x(wid * _s, tool_dir_fix - 90);
-			var p1y = _my + lengthdir_y(wid * _s, tool_dir_fix - 90);
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line(p0x, p0y, p1x, p1y);
-			
-			var _p0x = p0x + lengthdir_x(thk * _s, tool_dir_fix);
-			var _p0y = p0y + lengthdir_y(thk * _s, tool_dir_fix);
-			var _p1x = p1x + lengthdir_x(thk * _s, tool_dir_fix);
-			var _p1y = p1y + lengthdir_y(thk * _s, tool_dir_fix);
-			
-			draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
-			
-			var __p0x = p0x - lengthdir_x(thk * _s, tool_dir_fix);
-			var __p0y = p0y - lengthdir_y(thk * _s, tool_dir_fix);
-			var __p1x = p1x - lengthdir_x(thk * _s, tool_dir_fix);
-			var __p1y = p1y - lengthdir_y(thk * _s, tool_dir_fix);
-			
-			draw_line_dashed(__p0x, __p0y, __p1x, __p1y);
-			
-			draw_line_dashed(_p0x, _p0y, __p0x, __p0y);
-			draw_line_dashed(_p1x, _p1y, __p1x, __p1y);
-			
-			if(mouse_lpress(active)) {
-				groomed.store();
-				tool_dragging = tool_comb;
-				tool_mx = (_mx - _x) / _s;
-				tool_my = (_my - _y) / _s;
-			}
-			
-		} else if(isUsingTool(2) || isUsingTool(3)) {
-			hovering = true;
-			var rad  = isUsingTool(2)? tool_stretch.attribute.radius : tool_cut.attribute.radius;
-			var fall = isUsingTool(2)? tool_stretch.attribute.fall   : tool_cut.attribute.fall;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_circle_prec(_mx, _my, rad * _s, true);
-			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
-			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
-			
-			if(mouse_lpress(active)) {
-				tool_dragging = isUsingTool(2)? tool_stretch : tool_cut;
-				tool_mx = (_mx - _x) / _s;
-				tool_my = (_my - _y) / _s;
-			}
-			
-		} else if(isUsingTool(4)) {
-			hovering = true;
-			var rad  = tool_grab.attribute.radius;
-			var fall = tool_grab.attribute.fall;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_circle_prec(_mx, _my, rad * _s, true);
-			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
-			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
-			
-			if(mouse_lpress(active)) {
-				tool_dragging = tool_grab;
-				tool_mx = (_mx - _x) / _s;
-				tool_my = (_my - _y) / _s;
-				
-				tool_grabbing = [];
+				if(dx != 0 || dy != 0)
 				for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
 					var h = groomed.hairs[i];
-					var p = array_last(h.points);
+					for( var j = 1; j < array_length(h.points); j++ ) {
+						var p = h.points[j];
 						
-					var d = point_distance(p.x, p.y, tool_mx, tool_my);
-					if(d > rad * (1 + fall)) continue;
-					var fl = clamp((rad * (1 + fall) - d) / (rad * fall * 2), 0, 1);
+						var d = point_distance(p.x, p.y, __mx, __my);
+						if(d > rad * (1 + fall)) continue;
 						
-					array_push(tool_grabbing, [ h, p, fl ]);
+						var fl = 1 - clamp((d - rad * (1 + fall)) / (rad * fall * 2), 0, 1);
+						
+						p.x += dx * stn * fl;
+						p.y += dy * stn * fl;
+					}
 				}
-			}
-		} 
+				
+				tool_mx = __mx;
+				tool_my = __my;
+				
+				if(mouse_lrelease()) {
+					groomed.freeze(fix);
+					tool_dragging = noone;
+				}
+				
+				break;
+				
+			case tool_comb:
+				var wid = tool_comb.attribute.width;
+				var thk = tool_comb.attribute.thick;
+				var stn = tool_comb.attribute.strength;
+				
+				var p0x = __mx + lengthdir_x(wid, tool_dir_fix + 90);
+				var p0y = __my + lengthdir_y(wid, tool_dir_fix + 90);
+				var p1x = __mx + lengthdir_x(wid, tool_dir_fix - 90);
+				var p1y = __my + lengthdir_y(wid, tool_dir_fix - 90);
+				
+				var dx = __mx - tool_dmx;
+				var dy = __my - tool_dmy;
+				var dd = point_distance(0, 0, dx, dy);
+				
+				stn = power(stn, 2) * dd;
+				
+				if(tool_dmx != __mx || tool_dmy != __my)
+				for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
+					var h = groomed.hairs[i];
+					var op, np;
+					
+					for( var j = 0; j < array_length(h.points); j++ ) {
+						np = h.points[j];
+						np.targetAngle = tool_dir_fix;
+						var dst = distance_to_line(np.x, np.y, p0x, p0y, p1x, p1y);
+						
+						if(j) {
+							var dir = np.storeAngle;
+							var dis = np.storeDistance;
+							var ang = dir;
+							
+							if(dst < thk) {
+								var _lerp = stn * (1 - (dst / thk));
+								ang = lerp_angle_direct(dir, tool_dir_fix, _lerp);
+							}
+								
+							np.storeAngle = ang;
+							
+							np.x = op.x + lengthdir_x(dis, np.storeAngle);
+							np.y = op.y + lengthdir_y(dis, np.storeAngle);
+						}
+						
+						op = np;
+					}
+				}
+				
+				if(mouse_lrelease()) {
+					groomed.freeze(true);
+					tool_dragging = noone;
+				}
+				
+				break;
+				
+			case tool_stretch : 
+			case tool_cut : 
+				var rad  = tool_dragging.attribute.radius;
+				var fall = tool_dragging.attribute.fall;
+				var stn  = tool_dragging.attribute.strength;
+				stn = tool_dragging == tool_stretch? stn / game_get_speed(gamespeed_fps) : stn / 10;
+				
+				for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
+					var h = groomed.hairs[i];
+					var op, np;
+					var amo = array_length(h.points);
+					var l = [];
+					
+					for( var j = 0; j < amo; j++ ) {
+						np = h.points[j];
+						if(j) l[j] = point_distance(op.x, op.y, np.x, np.y);
+						op = np;
+					}
+					
+					for( var j = 0; j < amo; j++ ) {
+						var ind = tool_dragging == tool_stretch? j : amo - 1 - j;
+						np = h.points[ind];
+						
+						if(j) {
+							var dir = point_direction(op.x, op.y, np.x, np.y);
+							var dis = l[ind];
+							var mds = point_distance(__mx, __my, (op.x + np.x) / 2, (op.y + np.y) / 2);
+							
+							if(mds < rad * (1 + fall)) {
+								var fl = clamp((rad * (1 + fall) - mds) / (rad * fall * 2), 0, 1);
+								var st = dis * (1 + fl * stn * (tool_dragging == tool_stretch? 1 : -1));
+								
+								if(tool_dragging == tool_stretch)
+									l[j] = st;
+								else 
+									l[amo - 1 - j] = st;
+								//print(string(st) + ": " + string(dis) + ", " + 
+								//	string(1 + fl * stn * (tool_dragging == 2? 1 : -1)));
+							}
+						}
+						
+						op = np;
+					}
+					
+					for( var j = 0; j < amo; j++ ) {
+						np = h.points[j];
+						if(j) {
+							var dr = point_direction(op.x, op.y, np.x, np.y);
+							np.x = op.x + lengthdir_x(l[j], dr);
+							np.y = op.y + lengthdir_y(l[j], dr);
+						}
+						op = np;
+					}
+					
+				}
+				
+				if(mouse_lrelease()) {
+					groomed.freeze(false);
+					tool_dragging = noone;
+				}
+				
+				break;
+				
+			case tool_grab :
+				var rad  = tool_grab.attribute.radius;
+				var stn  = tool_grab.attribute.strength;
+				var dx   = __mx - tool_mx;
+				var dy   = __my - tool_my;
+				
+				if(dx != 0 || dy != 0)
+				for( var i = 0, n = array_length(tool_grabbing); i < n; i++ ) {
+					var h   = tool_grabbing[i][0];
+					var p   = tool_grabbing[i][1];
+					var inf = tool_grabbing[i][2];
+					
+					p.ikx = p.x + dx * inf;
+					p.iky = p.y + dy * inf;
+					
+					h.FABRIK(4);
+				}
+				
+				tool_mx = __mx;
+				tool_my = __my;
+				
+				if(mouse_lrelease()) {
+					groomed.freeze(true);
+					tool_dragging = noone;
+				}
+			
+				break;
+		}
+				
+		////- =Display UI
+		switch(_currTool) {
+			case tool_push :
+				hovering = true;
+				var rad  = tool_push.attribute.radius;
+				var fall = tool_push.attribute.fall;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_circle_prec(_mx, _my, rad * _s, true);
+				draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
+				draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
+				
+				if(mouse_lpress(active)) {
+					tool_dragging = tool_push;
+					tool_mx = (_mx - _x) / _s;
+					tool_my = (_my - _y) / _s;
+				}
+				break;
+				
+			case tool_comb : 
+				hovering = true;
+				
+				var _px = _mx;
+				var _py = _my;
+				
+				draw_set_color(tool_dir_force_fix? COLORS._main_value_positive : COLORS._main_accent);
+				
+				if(tool_dmx != __mx || tool_dmy != __my) {
+					tool_dir_to = point_direction(tool_dmx, tool_dmy, __mx, __my);
+					tool_dir    = lerp_angle(tool_dir, tool_dir_to, 10);
+				}
+				
+				if(tool_modding) {
+					draw_set_color(COLORS._main_icon);
+					tool_dir_fix = point_direction(tool_mod_mx, tool_mod_my, _mx, _my);
+					
+					_px = tool_mod_mx;
+					_py = tool_mod_my;
+					
+					if(key_mod_release(SHIFT))
+						tool_modding  = false;
+				}
+				
+				if(key_mod_down(SHIFT)) {
+					tool_dir_force_fix = !tool_dir_force_fix;
+					if(tool_dir_force_fix) {
+						tool_modding  = true;
+						tool_mod_mx   = _mx;
+						tool_mod_my   = _my;
+					}
+				}
+				
+				if(tool_dragging == noone && !tool_dir_force_fix) tool_dir_fix = tool_dir;
+					
+				var wid = tool_comb.attribute.width;
+				var thk = tool_comb.attribute.thick;
+				
+				var dx0 = lengthdir_x(wid * _s, tool_dir_fix + 90);
+				var dy0 = lengthdir_y(wid * _s, tool_dir_fix + 90);
+				
+				var p0x = _px + dx0;
+				var p0y = _py + dy0;
+				var p1x = _px - dx0;
+				var p1y = _py - dy0;
+				
+				draw_line(p0x, p0y, p1x, p1y);
+				
+				var dx0 = lengthdir_x(thk * _s, tool_dir_fix);
+				var dy0 = lengthdir_y(thk * _s, tool_dir_fix);
+				
+				var _p0x = p0x + dx0;
+				var _p0y = p0y + dy0;
+				var _p1x = p1x + dx0;
+				var _p1y = p1y + dy0;
+				
+				draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
+				
+				var __p0x = p0x - dx0;
+				var __p0y = p0y - dy0;
+				var __p1x = p1x - dx0;
+				var __p1y = p1y - dy0;
+				
+				draw_line_dashed(__p0x, __p0y, __p1x, __p1y);
+				
+				draw_line_dashed(_p0x, _p0y, __p0x, __p0y);
+				draw_line_dashed(_p1x, _p1y, __p1x, __p1y);
+				
+				draw_arrow(_px, _py, _px + dx0 / 2, _py + dy0 / 2, ui(8));
+				
+				if(mouse_lpress(active)) {
+					groomed.store();
+					tool_dragging = tool_comb;
+					tool_mx = (_mx - _x) / _s;
+					tool_my = (_my - _y) / _s;
+				}
+				
+				break;
+				
+			case tool_stretch : 
+			case tool_cut : 
+				hovering = true;
+				var rad  = _currTool == tool_stretch? tool_stretch.attribute.radius : tool_cut.attribute.radius;
+				var fall = _currTool == tool_stretch? tool_stretch.attribute.fall   : tool_cut.attribute.fall;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_circle_prec(_mx, _my, rad * _s, true);
+				draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
+				draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
+				
+				if(mouse_lpress(active)) {
+					tool_dragging = _currTool == tool_stretch? tool_stretch : tool_cut;
+					tool_mx = (_mx - _x) / _s;
+					tool_my = (_my - _y) / _s;
+				}
+				
+				break;
+				
+			case tool_grab : 
+				hovering = true;
+				var rad  = tool_grab.attribute.radius;
+				var fall = tool_grab.attribute.fall;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_circle_prec(_mx, _my, rad * _s, true);
+				draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
+				draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
+				
+				if(mouse_lpress(active)) {
+					tool_dragging = tool_grab;
+					tool_mx = (_mx - _x) / _s;
+					tool_my = (_my - _y) / _s;
+					
+					tool_grabbing = [];
+					for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
+						var h = groomed.hairs[i];
+						var p = array_last(h.points);
+							
+						var d = point_distance(p.x, p.y, tool_mx, tool_my);
+						if(d > rad * (1 + fall)) continue;
+						var fl = clamp((rad * (1 + fall) - d) / (rad * fall * 2), 0, 1);
+							
+						array_push(tool_grabbing, [ h, p, fl ]);
+					}
+				}
+				
+				break;
+		}
 		
 		tool_dmx = __mx;
 		tool_dmy = __my;

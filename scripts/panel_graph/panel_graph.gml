@@ -1961,7 +1961,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		_upd = _upd || connection_cache[$ "frame"]     != GLOBAL_CURRENT_FRAME;
 				       connection_cache[$ "frame"]     =  GLOBAL_CURRENT_FRAME;
 				       
-    	_upd = _upd || key_mod_up(ALT) || key_mod_press(ALT);
+    	_upd = _upd || key_mod_release(ALT) || key_mod_press(ALT);
 		node_surface_update    = node_surface_update || _upd;
     }
     
@@ -2417,7 +2417,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        node_surface_update = node_surface_update
 	        	|| !surface_valid(node_surface, w, h)
 	        	|| (node_hovering != noone && (node_hovering.reactive_on_hover || node_hovering.attributes.show_parameter))
-	        	|| key_mod_press(SHIFT) || key_mod_up(SHIFT)
+	        	|| key_mod_press(SHIFT) || key_mod_release(SHIFT)
 	        	
 	        node_surface = surface_verify(node_surface, w, h);
 	        

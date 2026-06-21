@@ -6,6 +6,11 @@
         "date": "2026-06-21T00:17:37.597Z",
         "node": "StrandSim",
         "commit": "**StrandSim**: Fix error when modifying baked strand."
+      },
+      {
+        "date": "2026-06-21T00:50:41.119Z",
+        "node": "StrandSim Create] Comb tool now scale with tool speed. - [StrandSim Create",
+        "commit": "**StrandSim Create] Comb tool now scale with tool speed. - [StrandSim Create**: Pressing Shift in Comb tool will toggle fixed angle mode."
       }
     ]
   },
