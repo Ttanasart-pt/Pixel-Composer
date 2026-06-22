@@ -841,7 +841,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var cDep = attrDepth();
 			
-			transformData[CURRENT_FRAME] = noone;
+			array_safe_set(transformData, CURRENT_FRAME, noone);
 		#endregion
 		
 		#region frames data

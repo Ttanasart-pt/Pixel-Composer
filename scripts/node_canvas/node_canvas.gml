@@ -65,7 +65,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(17, nodeValue_RotRand( "Random Direction",    [0,0,0,0,0]              ));
 	newInput(16, nodeValue_Bool(    "Rotate by Direction", false                    ));
 	
-	////- =Animated Brush
+		////- =/Animated
 	newInput(23, nodeValue_Bool(    "Animated Brush",   false  ));
 	newInput(26, nodeValue_EButton( "Animation Type",   0, [ "Play", "Randomize" ] ));
 	newInput(11, nodeValue_Float(   "Base Speed",       1      ));
@@ -263,7 +263,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		[ "Output",        false,    ], 12,  5,  7, 13, 18, 
 		[ "Background",     true, 10 ],  4,  1,  8, 14,  9, 
 		[ "Brush",         false     ], 21,  6, sp_bsurface, 15, 17, 16, sp_bsurface, 22,  2,  3, 
-		[ "Animated Brush", true, 23 ], 26, 11, 24, 27, 25, 
+			[ "/Animated",  true, 23 ], 26, 11, 24, 27, 25, 
 		[ "Data Transfer",  true, noone, b_transferData ], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
 	];
 	

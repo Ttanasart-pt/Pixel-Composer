@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5",
+    "changes": [
+      {
+        "date": "2026-06-22T01:01:52.158Z",
+        "node": "Transform",
+        "commit": "**Transform**: Fix crash when setting animation frame to less than 1."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.008",
     "changes": [
       {
