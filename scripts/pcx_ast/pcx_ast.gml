@@ -461,19 +461,24 @@
                     } else
                         params[$ _v1_var] = res;
                 
-                    printIf(global.LOG_EXPRESSION, $"|{_v1_var}| = {v1}|{symbol}|{v2}| = {res}");
-                    printIf(global.LOG_EXPRESSION, $"symbol : {symbol}");
-                    printIf(global.LOG_EXPRESSION, $"l      : | {typeof(l)} |{l}|");
-                    printIf(global.LOG_EXPRESSION, $"r      : | {typeof(r)} |{r}|");
-                    printIf(global.LOG_EXPRESSION, "====================");
+                	if(global.LOG_EXPRESSION) {
+	                    print($"|{_v1_var}| = {v1}|{symbol}|{v2}| = {res}");
+	                    print($"symbol : {symbol}");
+	                    print($"l      : | {typeof(l)} |{l}|");
+	                    print($"r      : | {typeof(r)} |{r}|");
+	                    print("====================");
+                	}
                     break;
+                    
                 default:
-                    printIf(global.LOG_EXPRESSION, $"|{v1}|{symbol}|{v2}| = {res}");
-                    printIf(global.LOG_EXPRESSION, $"symbol : {symbol}");
-                    printIf(global.LOG_EXPRESSION, $"l      : | {typeof(l)} |{l}|");
-                    printIf(global.LOG_EXPRESSION, $"r      : | {typeof(r)} |{r}|");
-                    printIf(global.LOG_EXPRESSION, $"params : {params}");
-                    printIf(global.LOG_EXPRESSION, "====================");
+                	if(global.LOG_EXPRESSION) {
+	                    print($"|{v1}|{symbol}|{v2}| = {res}");
+	                    print($"symbol : {symbol}");
+	                    print($"l      : | {typeof(l)} |{l}|");
+	                    print($"r      : | {typeof(r)} |{r}|");
+	                    print($"params : {params}");
+	                    print("====================");
+                	}
                     break;
             }
             
@@ -528,9 +533,5 @@
         static toString = function() { return $"[PCX funcTree] \{ symbol: {symbol}, l: {l}, r: {r}\}"; }
     }
     
-    function evaluateFunction(fx, params = {}) {
-        if(isNumber(fx)) return toNumber(fx);
-        return evaluateFunctionList(fx).eval(params);
-    }
-    
+    function evaluateFunction(fx, params = {}) { return isNumber(fx)? toNumber(fx) : evaluateFunctionList(fx).eval(params); }
 #endregion

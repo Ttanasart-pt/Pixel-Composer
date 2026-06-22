@@ -180,7 +180,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var p1x = p1[0], p1y = p1[1];
 					var p2x = p2[0], p2y = p2[1];
 					var p3x = p3[0], p3y = p3[1];
-				
+					
 					var p0u = (j + 0) / (_sub - 1), p0v = (i + 0) / (_lines - 1);
 					var p1u = (j + 0) / (_sub - 1), p1v = (i + 1) / (_lines - 1);
 					var p2u = (j + 1) / (_sub - 1), p2v = (i + 0) / (_lines - 1);

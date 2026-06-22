@@ -286,11 +286,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	}
 	
 	static apply = function(release = false) {
-		var _val = _input_text;
+		var _val  = _input_text;
 		// disp_x_to = 0;
 		
-		if(input == TEXTBOX_INPUT.number)
+		if(input == TEXTBOX_INPUT.number) {
 			_val = evaluateFunction(_input_text);
+			if(is_string(_val)) _val = 0;
+		}
 		
 		if(no_empty && _val == "") 
 			_val = _last_text;
@@ -839,7 +841,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 			
 		var _dpx = disp_x;	
-		disp_x = lerp_float(disp_x, disp_x_to, 5);
+		disp_x_to = clamp(disp_x_to, disp_x_min, disp_x_max);
+		disp_x    = lerp_float(disp_x, disp_x_to, 5);
 		if(_dpx != disp_x) _update = true;
 		
 		////- Slide
@@ -1089,7 +1092,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				if(typing) typing--;
 			#endregion
 			
-			disp_x_to = clamp(disp_x_to, disp_x_min, disp_x_max);
 			if(!hoverRect && mouse_lpress() && !mouse_lhold) 
 				deactivate();
 				
