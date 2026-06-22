@@ -351,9 +351,6 @@ function Panel_Preview() : PanelContent() constructor {
         tile_surface        = noone;
         __temp_preview      = undefined;
         
-        preview_x           = 0;
-        preview_x_to        = 0;
-        preview_x_max       = 0;
         preview_sequence    = [ 0, 0 ];
         _preview_sequence   = preview_sequence;
         preview_rate        = 10;
@@ -424,6 +421,28 @@ function Panel_Preview() : PanelContent() constructor {
         
         preview_action_y     = 0;
         preview_action_y_to  = 0;
+    #endregion
+    
+    #region ---- array display ----
+    	tb_arrIndex = textBox_Number(function(i) /*=>*/ {
+    		var _node = getNodePreview();
+    		if(!is(_node, Node)) return;
+    		
+    		_node.preview_index = round(i);
+            if(resetViewOnDoubleClick) 
+            	do_fullView = true;
+            GraphRefresh();
+            
+    	}).setFont(f_p3).setAlign(fa_left).setLabelAlign(fa_right)
+    		.setBoxColor(CDEF.main_mdwhite).setColor(COLORS._main_accent).setLabelColor(COLORS._main_text)
+			.setTooltip(__txt("Index"))
+		
+        preview_array_surf  = undefined;
+        preview_x           = 0;
+        preview_x_to        = 0;
+        preview_x_max       = 0;
+        
+        array_display_offset = 0;
     #endregion
     
     #region ---- tool ----
@@ -1063,8 +1082,8 @@ function Panel_Preview() : PanelContent() constructor {
             _h = DEF_SURF_H;
         }
         
-    	var x0 = ui(32), x1 = w - ui(32);
-    	var y0 = ui(32), y1 = h - ui(32);
+    	var x0 = ui(16), x1 = w - ui(16);
+    	var y0 = ui(16), y1 = h - ui(16);
         
         x0 += tool_side_draw_l * (toolbar_width + ui(8));
         x1 -= tool_side_draw_r * (toolbar_width + ui(8));
@@ -2940,85 +2959,127 @@ function Panel_Preview() : PanelContent() constructor {
     
     static drawDataArray = function() {
         if(mouse_lrelease()) preview_selecting = false;
-        var _preview_x_max = preview_x_max;
-        preview_x_max = 0;
+        array_display_offset = false;
         
         var _node = getNodePreview();
         var  pseq = getNodePreviewSequence();
+        
+        var _preview_x_max = preview_x_max;
+             preview_x_max = 0;
+        
         if(_node == noone || pseq == noone) return;
         
+        var pseql = array_safe_length(pseq);
+        if(pseql <= 1) return;
+        
+        preview_x = lerp_float(preview_x, preview_x_to, 4);
         if(!array_equals(pseq, _preview_sequence)) {
             _preview_sequence = pseq;
             preview_x    = 0;
             preview_x_to = 0;
         }
+    	
+    	array_display_offset = true;
+        var prevS = array_preview_size;
+        var pd    = ui(4);
+        var arw   = ui(56);
         
-        preview_x = lerp_float(preview_x, preview_x_to, 4);
-            
-        if(pHOVER && my > h - toolbar_height - array_preview_size - ui(16) && my > toolbar_height) {
-            canvas_hover = false;
+        var x0 =     tool_side_draw_l * toolbar_width + (PROJECT.previewSetting.show_ruler && !d3_active) * ruler_width;
+        var x1 = w - tool_side_draw_r * toolbar_width;
+        var ww = x1 - x0;
+        
+        var hh = prevS + pd * 2;
+        var y1 = h - toolbar_height - tool_side_draw_b * toolbar_height;
+        var y0 = y1 - hh;
+        
+    	draw_sprite_stretched_ext(THEME.toolbar, 0, x0, y0, ww, hh+2, COLORS._main_icon);
+    	BLEND_MAX
+    	draw_sprite_stretched_ext(THEME.tool_side, 0, x0, y0, arw, hh+2, COLORS._main_icon_light);
+		BLEND_NORMAL
+    	
+        var hovering = pHOVER && point_in_rectangle(mx, my, x0, x1, y0, y1);
+        if(hovering) {
+        	mouse_on_preview = false;
+            canvas_hover     = false;
             
             if(MOUSE_WHEEL != 0 && !key_mod_press_any()) 
-            	preview_x_to = clamp(preview_x_to + array_preview_size * MOUSE_WHEEL, -_preview_x_max, 0);
+            	preview_x_to = clamp(preview_x_to + prevS * MOUSE_WHEEL, -_preview_x_max, 0);
         }
         
-        var pseql = array_length(pseq);
-        if(pseql <= 1) return;
-        
-        var siz = array_preview_size;
-        var _xx = tool_side_draw_l * (toolbar_width + ui(8));
-        if(PROJECT.previewSetting.show_ruler && !d3_active)
-        	_xx += ruler_width;
-        
-        var sx  = _xx + preview_x + ui(8);
-        var yy  = h - toolbar_height - siz - ui(8) - tool_side_draw_b * (toolbar_width + ui(8));
+    	preview_array_surf = surface_verify(preview_array_surf, ww - arw, hh);
+    	surface_set_target(preview_array_surf);
+    	DRAW_CLEAR
     	
-        if(my > yy - 8) mouse_on_preview = 0;
-        var hoverable = pHOVER && point_in_rectangle(mx, my, _xx, ui(32), w, h - toolbar_height);
+        var sx  = preview_x + pd;
+        var sy  = pd;
+        var msx = mx - x0 - arw;
+        var msy = my - y0;
+        var aHover = hovering && msx > 0;
     	
-        for( var i = 0, n = pseql; i < n; i++ ) {
+        for( var i = 0; i < pseql; i++ ) {
             var prev = pseq[i];
-        	var xx   = sx + (siz + ui(8)) * i;
+        	var xx   = sx + (prevS + pd) * i;
+        	var yy   = sy;
         	
-        	if(xx + siz < -ui(16)) continue;
-        	if(xx > w + ui(16)) break;
+        	if(xx + prevS < -pd * 2) continue;
+        	if(xx > w + pd)          break;
             
             if(is(prev, __3dObject))    prev = array_safe_get(prev.materials, 0);
             if(is(prev, __d3dMaterial)) prev = prev.surface;
             if(is(prev, Atlas))         prev = prev.getSurface();
         	
-        	draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS.panel_preview_surface_outline, .5);
-    		var hov = hoverable && point_in_rectangle(mx, my, xx, yy, xx + siz, yy + siz);
+        	draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, prevS, prevS, COLORS.panel_preview_surface_outline, .5);
+    		var hov = aHover && point_in_rectangle(msx, msy, xx, yy, xx + prevS, yy + prevS);
     		var sel = i == _node.preview_index;
     		
             if(is_surface(prev)) {
 	            var prev_w  = surface_get_width_safe(prev);
 	            var prev_h  = surface_get_height_safe(prev);
-	            var ss = siz / max(prev_w, prev_h);
+	            var ss = prevS / max(prev_w, prev_h);
 	            var pw = prev_w * ss;
 	            var ph = prev_h * ss;
 	            
-	            var ssx = xx + siz / 2 - pw / 2;
-	            var ssy = yy + siz / 2 - ph / 2;
+	            var ssx = xx + prevS / 2 - pw / 2;
+	            var ssy = yy + prevS / 2 - ph / 2;
 	            
-	            draw_sprite_stretched_ext(THEME.box_r2, 1, ssx, ssy, pw, ph, COLORS.panel_preview_surface_outline, 1.);
-	        	draw_surface_ext_safe(prev, ssx, ssy, ss, ss, 0, c_white, .5 + .5 * (sel || hov));
+	            draw_sprite_stretched_ext(THEME.box_r5, 0, ssx, ssy, pw, ph);
+	            BLEND_MULTIPLY
+	        	draw_surface_ext_safe(prev, ssx, ssy, ss, ss);
+	        	BLEND_NORMAL
 	        	
-	        	if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, ssx, ssy, pw, ph, COLORS._main_accent);
+	        	if(sel || hov) draw_sprite_stretched_ext(THEME.box_r5, 2, ssx, ssy, pw, ph, COLORS._main_icon_dark);
 	        	
-            } else if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS._main_accent);
+	        	draw_sprite_stretched_add(THEME.box_r5, 1, ssx, ssy, pw, ph, COLORS.panel_preview_surface_outline, .2);
+	        	if(sel) draw_sprite_stretched_ext(THEME.box_r5, 1, ssx, ssy, pw, ph, COLORS._main_accent);
+	        	if(hov) draw_sprite_stretched_add(THEME.box_r5, 1, ssx, ssy, pw, ph, c_white, .3);
+	        	
+            } else if(sel) draw_sprite_stretched_ext(THEME.box_r5, 1, xx, yy, prevS, prevS, COLORS._main_accent);
             
-            if((hov && mouse_lpress(pFOCUS)) || (preview_selecting && mx > xx && mx <= xx + siz)) {
+            if(hov && mouse_lpress(pFOCUS)) {
                 _node.preview_index = i;
-                _node.onValueUpdate(0);
-                if(resetViewOnDoubleClick) do_fullView = true;
+                if(resetViewOnDoubleClick) 
+                	do_fullView = true;
                 GraphRefresh();
-                
-                preview_selecting = true;
             }
         }
         
-        preview_x_max = max((siz + ui(8)) * pseql - ui(100), 0);
+        surface_reset_target();
+        
+        draw_surface(preview_array_surf, x0 + arw, y0);
+        
+        var bw = arw - ui(8);
+        var bh = ui(20);
+        
+        var bx = x0 + ui(4);
+        var by = y0 + ui(4);
+        
+        tb_arrIndex.rx = x;
+    	tb_arrIndex.ry = y;
+    	tb_arrIndex.setFocusHover(pFOCUS, pHOVER);
+    	tb_arrIndex.setLabel($"/{pseql-1}");
+    	tb_arrIndex.draw(bx, by, bw, bh, _node.preview_index, [mx,my]);
+    	
+        preview_x_max = max((prevS + pd) * pseql + ui(100) - ww, 0);
         preview_x_to  = clamp(preview_x_to, -preview_x_max, 0);
     }
     
@@ -3652,6 +3713,12 @@ function Panel_Preview() : PanelContent() constructor {
         
         var mx1 = w - ui(8);
         var my1 = h - toolbar_height - ui(8);
+        
+        mx1 -= tool_side_draw_r * toolbar_width;
+        
+        my1 -= tool_side_draw_b * toolbar_height;
+        my1 -= array_display_offset * array_preview_size;
+        
         var mx0 = mx1 - minimap_w;
         var my0 = my1 - minimap_h;
         
@@ -4232,7 +4299,6 @@ function Panel_Preview() : PanelContent() constructor {
         var toolNode     = (inspect_node && inspect_node.getToolNode)? inspect_node.getToolNode() : inspect_node; 
         
         drawViewController();
-        drawDataArray();
         drawInfo();
         
         canvas_mx = (mx - canvas_x) / canvas_s;
@@ -4245,15 +4311,11 @@ function Panel_Preview() : PanelContent() constructor {
         #region Toolbar overlay
 	    	var hori = PREFERENCES.panel_preview_toolbar_horizontal;
 	    	
-	    	if(hori) {
-	    		tool_side_draw_t = PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool());
-		        tool_side_draw_b = PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1);
-		        
-	    	} else {
-		        tool_side_draw_l = PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool());
-		        tool_side_draw_r = PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1);
-		        
-	    	}
+    		tool_side_draw_t = hori && (PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool()));
+	        tool_side_draw_b = hori && (PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1));
+	        
+	        tool_side_draw_l = !hori && (PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool()));
+	        tool_side_draw_r = !hori && (PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1));
 	        
 	        if(PROJECT.previewSetting.tool_always_l) {
 	        	var txx  = 0;
@@ -4319,6 +4381,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(!(previewing_node[$ "bypass_grid"] ?? false)) drawNodeGrid();
         
         if(d3_active == NODE_3D.none) drawSplitView();
+        drawDataArray();
         drawTopbar(toolNode);
         drawToolBar(toolNode);
         
