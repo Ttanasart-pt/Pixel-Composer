@@ -372,8 +372,6 @@ function Panel_Preview() : PanelContent() constructor {
         tileMode            = 0;
         bg_color_default    = COLORS.panel_preview_bg;
         
-        array_preview_size  = ui(48);
-        
         resetViewOnDoubleClick = true;
         
 	    tb_framerate  = textBox_Number(function(v) /*=>*/ { preview_rate = real(v); });
@@ -442,6 +440,7 @@ function Panel_Preview() : PanelContent() constructor {
         preview_x_to        = 0;
         preview_x_max       = 0;
         
+        array_preview_size   = ui(40);
         array_display_offset = 0;
     #endregion
     

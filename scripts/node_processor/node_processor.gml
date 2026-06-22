@@ -325,6 +325,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				outputs[i].setValue(_res[i]);
 		}
 		
+		if(processData_postbatch != undefined) processData_postbatch(frame);
+		if(postProcess           != undefined) postProcess(frame);
+		if(postPostProcess       != undefined) postPostProcess(frame);
 	}
 	
 	////- CACHE

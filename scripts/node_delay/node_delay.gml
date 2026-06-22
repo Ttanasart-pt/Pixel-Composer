@@ -67,6 +67,7 @@ function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return _output;
 	}
 	
+	////- Draw
 	
 	static drawAnimationTimeline = function(_shf, _w, _h, _s) {
 		draw_set_color(COLORS._main_value_positive);

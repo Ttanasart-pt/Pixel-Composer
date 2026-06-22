@@ -18,23 +18,35 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- Node
 	
-	surf_indexes = [];
+	 surf_cache   = [];
+	 target_frame = 0;
+	_target_frame = 0;
 	
 	static processData_prebatch  = function() {
-		surf_indexes = array_verify(surf_indexes, process_amount);
+		surf_cache = array_verify(surf_cache, process_amount);
 		for( var i = 0; i < process_amount; i++ ) 
-			surf_indexes[i] = array_verify(surf_indexes[i], TOTAL_FRAMES);
+			surf_cache[i] = array_verify(surf_cache[i], TOTAL_FRAMES);
 	}
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
-		var _surf = _data[0];
-		var _step = _data[1];
-		var _amnt = _data[2];
-		var _curv = _data[3];
-		var _ovfl = _data[4];
+	static postProcess = function() {
+		target_frame = _target_frame;
+	}
+	
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+		#region data
+			var _surf = _data[ 0];
+			
+			var _step = _data[ 1];
+			var _amnt = _data[ 2];
+			var _curv = _data[ 3];
+			var _ovfl = _data[ 4];
+		#endregion
 		
 		var _time = CURRENT_FRAME;
 		if(_time < 0) return _output;
+		
+		if(_frame != target_frame && !IS_FIRST_FRAME) return _output;
+		_target_frame = _frame + 1;
 		
 		var _aind = _array_index;
 		var _stps = floor(process_amount / _step);
@@ -46,21 +58,33 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
 		
-		surf_indexes[_array_index][_time] = surface_verify(surf_indexes[_array_index][_time], _sw, _sh);
-		surface_set_shader(surf_indexes[_array_index][_time]);
+		surf_cache[_array_index][_time] = surface_verify(surf_cache[_array_index][_time], _sw, _sh);
+		surface_set_shader(surf_cache[_array_index][_time]);
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		_output = surface_verify(_output, _sw, _sh);
 		surface_set_shader(_output);
 			if(0 <= _frtm && _frtm < TOTAL_FRAMES) {
-				draw_surface_safe(surf_indexes[_array_index][_frtm]);
+				draw_surface_safe(surf_cache[_array_index][_frtm]);
 				
-				surface_free(surf_indexes[_array_index][_frtm]);
-				surf_indexes[_array_index][_frtm] = 0;
+				surface_free(surf_cache[_array_index][_frtm]);
+				surf_cache[_array_index][_frtm] = 0;
 			}
 		surface_reset_shader();
 		
 		return _output;
 	}
+	
+	////- Draw
+	
+	static drawAnimationTimeline = function(_shf, _w, _h, _s) {
+		draw_set_color(COLORS._main_value_positive);
+		draw_set_alpha(1);
+		
+		var _x = _shf + target_frame * _s;
+		draw_line_width(_x, 0, _x, _h, 1);
+		draw_set_alpha(1);
+	}
+	
 }
