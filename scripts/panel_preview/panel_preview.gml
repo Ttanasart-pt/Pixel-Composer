@@ -8,7 +8,7 @@
 	    function panel_preview_saveCurrentFrameToFocus()    { CALL("preview_save_to_focused_file");      PANEL_PREVIEW.saveCurrentFrameToFocus(); }
 	    function panel_preview_saveCurrentFrameProject()    { CALL("preview_save_to_project");           PANEL_PREVIEW.saveCurrentFrameProject(); }
 	    function panel_preview_save_all_current_frame()     { CALL("preview_save_all_current_frame");    PANEL_PREVIEW.saveAllCurrentFrames();    }
-	    function panel_preview_preview_window()             { CALL("preview_preview_window");            PANEL_PREVIEW.create_preview_window(PANEL_PREVIEW.getNodePreview());     }
+	    function panel_preview_preview_window()             { CALL("preview_preview_window");            create_preview_window(PANEL_PREVIEW.getNodePreview());  }
 	    function panel_preview_cycle_channel()              { CALL("preview_cycle_channel");             PANEL_PREVIEW.cyclePreviewChannel();     }
 	    
 	    function panel_preview_pan()                  { CALL("preview_pan");                       PANEL_PREVIEW.canvas_dragging_key = true; }
@@ -721,7 +721,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         global.menuItems_preview_context_menu = [
         	"preview_add_node", 
-            "preview_new_preview_window", 
+            "preview_preview_window", 
+            // "preview_new_preview_window", 
             -1,
             "preview_focus_content",
             -1,
