@@ -2992,7 +2992,7 @@ function Panel_Preview() : PanelContent() constructor {
         var y1 = h - toolbar_height - tool_side_draw_b * toolbar_height;
         var y0 = y1 - hh;
         
-    	draw_sprite_stretched_ext(THEME.toolbar, 0, x0, y0, ww, hh+2, COLORS._main_icon);
+    	draw_sprite_stretched_ext(THEME.toolbar, 0, x0, y0, ww, hh+2, COLORS._main_icon, .5);
     	BLEND_MAX
     	draw_sprite_stretched_ext(THEME.tool_side, 0, x0, y0, arw, hh+2, COLORS._main_icon_light);
 		BLEND_NORMAL

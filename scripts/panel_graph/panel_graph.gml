@@ -4076,8 +4076,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	case "Node_Frame" :     node = doFrame();  return;
 	    	
 	    	case "Node_Transform" : 
-	    		if(sOut && (sOut.type == VALUE_TYPE.d3Mesh || sOut.type == VALUE_TYPE.d3Scene)) 
-    				_nodeType = "Node_3D_Transform";
+	    		if(sOut) switch(sOut.type) {
+    				case VALUE_TYPE.d3Mesh  : 
+    				case VALUE_TYPE.d3Scene : 
+						_nodeType = "Node_3D_Transform";
+						break;
+						
+    				case VALUE_TYPE.pathnode : 
+    					_nodeType = "Node_Path_Transform";
+						break;
+						
+    			}
 	    		
 	    		node  = doNewNode(_nodeType);
 	    		_conn = true;

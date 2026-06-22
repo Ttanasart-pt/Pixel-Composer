@@ -525,6 +525,15 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	////- Modify Keys
 	
+	static checkFreeze = function() {
+		for( var i = 0, n = array_length(values) - 1; i < n; i++ ) {
+			var _v0 = values[i  ].value;
+			var _v1 = values[i+1].value;
+			values[i].freeze = isEqual(_v0, _v1);
+		}
+		
+	}
+	
 	static recalculateKeys = function() {
 		if(!array_empty(values)) {
 			array_sort(values, function(a,b) /*=>*/ {return sign(a.time - b.time)});
@@ -546,11 +555,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(!prop.is_anim && !LOADING && !APPENDING) return;
 		if(array_empty(values)) { array_resize(key_map, NODE_TOTAL_FRAMES); return; }
 		
-		// for( var i = 0, n = array_length(values) - 1; i < n; i++ ) {
-		// 	var _v0 = values[i  ].value;
-		// 	var _v1 = values[i+1].value;
-		// 	values[i].freeze = isEqual(_v0, _v1);
-		// }
+		checkFreeze();
 		
 		var _len = max(NODE_TOTAL_FRAMES, array_last(values).time);
 		key_map_mode = prop.on_end;
