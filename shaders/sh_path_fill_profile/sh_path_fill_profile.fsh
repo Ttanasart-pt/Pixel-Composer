@@ -30,8 +30,11 @@ void main() {
 		px = px.yx;
 		dm = dm.yx;
 	}
+	
 	if(mirror == 1 && px.x < dm.x / 2.) px.x = dm.x - px.x;
-	if(side == 1 || side == 3) px.x = 1. - px.x;
+	if(mirror == 2 && px.x > dm.x / 2.) px.x = dm.x - px.x;
+	
+	if(side == 1 || side == 3)          px.x = 1. - px.x;
 	
 	for(int i = 1; i < MAXPATH; i++) {
 		if(i >= pathLength) break;
