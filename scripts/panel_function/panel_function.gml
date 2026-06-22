@@ -194,8 +194,13 @@
 		panelObjectInit();
 		
 		var file = $"{DIRECTORY}layouts/{PREFERENCES.panel_layout_file}.json"; 
-		if(!file_exists_empty(file))
-			file = DIRECTORY + "layouts/Horizontal.json"; 
+		
+		if(!file_exists_empty(file)) {
+			noti_warning($"Panel layout file not found: Reverted to default {PREFERENCES.panel_layout_file} layout.")
+			PREFERENCES.panel_layout_file = PREFERENCES_DEF.panel_layout_file;
+			file = $"{DIRECTORY}layouts/{PREFERENCES.panel_layout_file}.json"; 
+		}
+			
 		loadPanel(file);
 		
 		PANEL_MAIN.refresh();

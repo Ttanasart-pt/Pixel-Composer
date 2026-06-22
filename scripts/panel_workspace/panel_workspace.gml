@@ -107,11 +107,11 @@ function Panel_Workspace() : PanelContent() constructor {
 				
 				if(mouse_lpress(pFOCUS)) {
 					if(i == amo) {
-						fileNameCall(str, function(name) /*=>*/ { 
+						fileNameCall($"{DIRECTORY}layouts/", function(name) /*=>*/ { 
 							var cont = panelSerialize();
-							json_save_struct($"{DIRECTORY}layouts/{name}.json", cont);
+							json_save_struct($"{name}.json", cont);
 							
-							PREFERENCES.panel_layout_file = name;
+							PREFERENCES.panel_layout_file = filename_name_only(name);
 							PREF_SAVE();
 							refreshContent();
 						}).setName(PREFERENCES.panel_layout_file);
