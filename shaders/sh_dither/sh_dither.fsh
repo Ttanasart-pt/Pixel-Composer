@@ -28,11 +28,13 @@ uniform vec2  ditherSize;
 uniform float dither[64];
 uniform int   invert;
 
+uniform int   mapMode;
 uniform int   colorMode;
 uniform float steps;
 uniform float rsteps;
 uniform float gsteps;
 uniform float bsteps;
+
 uniform vec4  palette[PALETTE_LIMIT];
 uniform int   keys;
 
@@ -181,7 +183,6 @@ void main() {
 		col2.a = _col.a;
 		
 		exactColor = distance(_col, col1) < 0.05; 
-		
 	}
 	
 	if(exactColor) {
@@ -192,6 +193,7 @@ void main() {
 		float d2 = colorDifferent(_col, col2);
 		
 		float rat = d1 / (d1 + d2);
+		float ditherVal;
 		
 		if(useConMap == 0) {
 			rat = (rat - 0.5) * con + 0.5;
@@ -202,26 +204,34 @@ void main() {
 			rat = (rat - 0.5) * _cont + 0.5;
 		}
 		
-		vec2 px  = pos * dimension;
-		     //px += random2(pos * dimension, seed) / dimension * .5;
-		     px  = floor(px);
+		vec2 px = floor(pos * dimension);
 		
 		if(useMap == 0) {
-			float col = mod(px.x, ditherSize.x);
-			float row = mod(px.y, ditherSize.y);
+			if(mapMode == 0) {
+				float col = mod(px.x, ditherSize.x);
+				float row = mod(px.y, ditherSize.y);
+				
+				ditherVal = dither[int(row * ditherSize.x + col)] / (ditherSize.x * ditherSize.y - 1.);
+				
+			} else if(mapMode == 1)
+				ditherVal = dither[int(rat * ditherSize.x * ditherSize.y)];
 			
-			float ditherVal = dither[int(row * ditherSize.x + col)] / (ditherSize.x * ditherSize.y - 1.);
 			if(invert == 1) ditherVal = 1. - ditherVal;
 			
 			if(rat < ditherVal) gl_FragColor = col1;
 			else                gl_FragColor = col2;	
 				
 		} else if(useMap == 1) {
-			float col = mod(px.x, mapDimension.x);
-			float row = mod(px.y, mapDimension.y);
-			vec4 map_data = texture2D( map, vec2(col, row) / mapDimension );
+			if(mapMode == 0) {
+				float col = mod(px.x, mapDimension.x);
+				float row = mod(px.y, mapDimension.y);
+				vec4 map_data = texture2D( map, vec2(col, row) / mapDimension );
+				
+				ditherVal = dot(map_data.rgb, vec3(0.2126, 0.7152, 0.0722));
+				
+			} else if(mapMode == 1)
+				ditherVal = dither[int(rat * mapDimension.x * mapDimension.y)];
 			
-			float ditherVal = dot(map_data.rgb, vec3(0.2126, 0.7152, 0.0722));
 			if(invert == 1) ditherVal = 1. - ditherVal;
 			
 			if(rat < ditherVal) gl_FragColor = col1;
