@@ -134,10 +134,11 @@
         	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_nodes}     )
         	
         registerFunction(an, "Toggle View Context", "", n, panel_animation_toggle_ViewContext   )
-        	.setMenu("animation_toggle_ViewContext",      THEME.animation_context_global ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.context_global}  )
+        	.setMenu("animation_toggle_ViewContext",      THEME.animation_context_global ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.view_context}  )
         	.setTooltip(new tooltipSelector("View Context", [
-	            __txt("Current View"),
-	            __txt("Global"),
+	            __txt("All"),
+	            __txt("Current and Children"),
+	            __txt("Current Only"),
 	        ]))
         	
         registerFunction(an, "Override Keyframe", "", n, panel_animation_toggle_KeyframeOverride)
@@ -271,8 +272,7 @@ function Panel_Animation_Dopesheet() {
     #endregion
     
     #region ---- Display ---- 
-        show_nodes     = true;
-        context_global = true;
+        show_nodes = true;
         
         tooltip_loop_prop = noone;
         tooltip_loop_type = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);

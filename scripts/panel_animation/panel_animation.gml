@@ -180,17 +180,17 @@ function Panel_Animation() : PanelContent() constructor {
     Panel_Animation_Dopesheet();
     
     #region ---- Timeline ----
-    	timeline_surface  = noone;
+    	timeline_surface    = noone;
 	    
-        timeline_scubbing  = false;
-        timeline_scub_st   = 0;
-        timeline_scale     = 20;
-        timeline_scale_min = 1;
-        timeline_scale_max = 100;
+        timeline_scubbing   = false;
+        timeline_scub_st    = 0;
+        timeline_scale      = 20;
+        timeline_scale_min  = 1;
+        timeline_scale_max  = 100;
         
-        timeline_sep_base = 5;
-        timeline_separate = 5;
-        _scrub_frame      = -1;
+        timeline_sep_base   = 5;
+        timeline_separate   = 5;
+        _scrub_frame        = -1;
         
         timeline_shift      = 0;
         timeline_shift_to   = 0;
@@ -206,6 +206,7 @@ function Panel_Animation() : PanelContent() constructor {
         timeline_contents   = [];
         timeline_keys       = [];
         
+        view_context        = 0;
         node_name_type      = 0;
         
         do_resetView        = true;
@@ -530,7 +531,9 @@ function Panel_Animation() : PanelContent() constructor {
                 if(!is_struct(_node))                              continue;
                 if(_node.instanceBase != undefined)                continue;
                 if(!show_hidden && _node.attributes.timeline_hide) continue;
-                if(!context_global && !_node.isChildOf(_ctx))      continue;
+                
+                if(view_context == 1 && !_node.isChildOf(_ctx))    continue;
+                if(view_context == 2 && _node.group != _ctx)       continue;
                 
                 var _anim = [];
                 var _prop = [];
@@ -1131,7 +1134,7 @@ function Panel_Animation() : PanelContent() constructor {
     
     function toggleNodeNameType(_d=1) { node_name_type = (node_name_type + _d + 3) % 3; }
     function toggleNodeLabel()        { show_nodes     = !show_nodes;     }
-    function toggleViewContext()      { context_global = !context_global; }
+    function toggleViewContext()      { view_context   = (view_context + 1) % 3; }
     function toggleKeyframeOverride() { PREFERENCES.panel_animation_key_override = !PREFERENCES.panel_animation_key_override; }
     function toggleOnionSkin()        { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
 }

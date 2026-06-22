@@ -4047,7 +4047,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function createNodeHotkey(_node, _select = true, _connect = false) {
     	var _nodeType = _node;
     	var _preset   = "";
-    	_select = _select && PREFERENCES.node_add_select;
+    	    _select   = _select && PREFERENCES.node_add_select;
+    	
+    	var sNode = array_length(nodes_selecting) == 1? nodes_selecting[0] : noone;
+    	var sOut  = sNode? sNode.getOutput() : noone;
     	
     	if(string_pos(">", _node)) {
     		var _sp   = string_split(_node, ">");
@@ -4073,11 +4076,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	case "Node_Frame" :     node = doFrame();  return;
 	    	
 	    	case "Node_Transform" : 
-	    		if(!array_empty(nodes_selecting) && !array_empty(nodes_selecting[0].outputs)) {
-	    			var _outT = nodes_selecting[0].outputs[0].type;
-	    			if(_outT == VALUE_TYPE.d3Mesh || _outT == VALUE_TYPE.d3Scene) 
-	    				_nodeType = "Node_3D_Transform";
-	    		}
+	    		if(sOut && (sOut.type == VALUE_TYPE.d3Mesh || sOut.type == VALUE_TYPE.d3Scene)) 
+    				_nodeType = "Node_3D_Transform";
 	    		
 	    		node  = doNewNode(_nodeType);
 	    		_conn = true;
@@ -4092,21 +4092,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
         if(!is(node, Node)) return undefined;
         
-        if(_conn && array_length(nodes_selecting) == 1) {
-        	var sNode = nodes_selecting[0];
-        	var _jOut = sNode.getOutput();
-        	
-        	if(_jOut != noone)
-        	for( var i = 0, n = array_length(node.inputDisplayList); i < n; i++ ) {
-        		var _inp = node.inputDisplayList[i];
-        		if(_inp.setFrom(_jOut)) {
-	        		node.x = sNode.x + sNode.w + 64;
-	        		node.y = sNode.y;
-	        		_drag  = false;
-	        		break;
-	        	}
-        	}
-        	
+        if(_conn && sOut) {
+    		var _jIn = node.getInput(0, sOut);
+    		if(_jIn && _jIn.setFrom(sOut)) {
+    			node.x = sNode.x + sNode.w + 64;
+        		node.y = sNode.y;
+        		_drag  = false;
+    		}
         }
         
         if(_preset != "") {
