@@ -309,7 +309,7 @@ function Panel_Animation_Dopesheet() {
 	    on_end_dragging_anim = noone;
 	    onion_dragging       = noone;
 	    prev_cache           = array_create(GLOBAL_TOTAL_FRAMES);
-	    copy_clipboard       = ds_list_create();
+	    copy_clipboard       = [];
 	    
 	    __keyframe_editing   = noone;
 	    
@@ -1703,7 +1703,7 @@ function Panel_Animation_Dopesheet() {
 	            var key = key_list[k];
 	            _nx = key.dopesheet_x;
 	            
-	            if(k && _ok.freeze) draw_line_width(_ox, _cy, _nx, _cy, ui(6));
+	            if(k && _ok.freeze) draw_line_width(_ox, _cy, _nx, _cy, ui(12));
 	            
 	            _ok = key;
 	            _ox = _nx;
@@ -3770,49 +3770,48 @@ function Panel_Animation_Dopesheet() {
     }
     
     function doCopy() {
-        ds_list_clear(copy_clipboard);
+        copy_clipboard = [];
         for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ )
-            ds_list_add(copy_clipboard, keyframe_selecting[i]);
+            array_push(copy_clipboard, keyframe_selecting[i]);
     }
     
-    function doPaste(val = noone) {
-        if(ds_list_empty(copy_clipboard)) return;
+    function doPaste(targetValue = noone) {
+        if(array_empty(copy_clipboard)) return;
         
-        var shf  = 0;
-        var minx = GLOBAL_TOTAL_FRAMES + 2;
-        for( var i = 0; i < ds_list_size(copy_clipboard); i++ )
-            minx = min(minx, copy_clipboard[| i].time);
-        shf = GLOBAL_CURRENT_FRAME - minx;
+        var kLen = array_length(copy_clipboard);
+        var minx = array_reduce(copy_clipboard, function(t,k,i) /*=>*/ {return min(t, k.time)}, infinity);
+        var kShf = GLOBAL_CURRENT_FRAME - minx;
+        
         
         var multiVal = false;
-        var _val = noone;
+        var __curVal = copy_clipboard[0].anim;
+        for( var i = 1; i < kLen; i++ ) if(__curVal != copy_clipboard[i].anim) multiVal = true;
         
-        for( var i = 0; i < ds_list_size(copy_clipboard); i++ ) {
-            if(_val != noone && _val != copy_clipboard[| i].anim) {
-                multiVal = true;
-                break;
-            }
-            _val = copy_clipboard[| i].anim;
+        if(targetValue == noone) {
+        	for( var i = 0; i < kLen; i++ ) copy_clipboard[i].cloneAnimator(kShf, noone);
+        	return;
         }
         
-        if(multiVal && val != noone) {
-            var nodeTo = val.node;
-            for( var i = 0; i < ds_list_size(copy_clipboard); i++ ) {
-                var propFrom = copy_clipboard[| i].anim.prop;
-                var propTo   = noone;
-                
-                for( var j = 0; j < array_length(nodeTo.inputs); j++ ) {
-                    if(nodeTo.inputs[j].name == propFrom.name) {
-                        propTo = nodeTo.inputs[j].animator;
-                        copy_clipboard[| i].cloneAnimator(shf, propTo);
-                        break;
-                    }
+        if(!multiVal) {
+        	for( var i = 0; i < kLen; i++ ) copy_clipboard[i].cloneAnimator(kShf, targetValue.animator);
+        	return;
+        }
+        
+        // multival targeted
+        var nodeTo = targetValue.node;
+        for( var i = 0; i < kLen; i++ ) {
+            var propFrom = copy_clipboard[i].anim.prop;
+            var propTo   = noone;
+            
+            for( var j = 0; j < array_length(nodeTo.inputs); j++ ) {
+                if(nodeTo.inputs[j].name == propFrom.name) {
+                    propTo = nodeTo.inputs[j].animator;
+                    copy_clipboard[i].cloneAnimator(kShf, propTo);
+                    break;
                 }
             }
-        } else {
-            for( var i = 0; i < ds_list_size(copy_clipboard); i++ )
-                copy_clipboard[| i].cloneAnimator(shf, (multiVal || val == noone)? noone : val.animator);
         }
+        
     }
 	
 	function doQuantize() {

@@ -128,7 +128,7 @@ function gradientObject(color = ca_black) constructor {
 			var kt = target.keys[rat * (array_length(target.keys) - 1)];
 			
 			var time  = lerp(kf.time, kt.time, amount);
-			var value = merge_color(eval(time), target.eval(time), amount);
+			var value = merge_color_rgba(eval(time), target.eval(time), amount);
 			
 			grad.keys[i] = new gradientKey(time, value);
 		}
