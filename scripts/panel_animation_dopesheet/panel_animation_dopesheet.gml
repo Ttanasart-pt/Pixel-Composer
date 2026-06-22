@@ -274,8 +274,8 @@ function Panel_Animation_Dopesheet() {
     #region ---- Display ---- 
         show_nodes = true;
         
-        tooltip_loop_prop = noone;
-        tooltip_loop_type = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
+        tooltip_loop_prop   = noone;
+        tooltip_loop_type   = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
         
         tooltip_action      = "";
         tooltip_action_time = 0;
@@ -302,7 +302,18 @@ function Panel_Animation_Dopesheet() {
         hovering_order    = noone;
     #endregion
     
-    #region ---- Actions ----
+	#region ---- Draw ----
+        bar_total_w     = 1;
+        bar_total_shift = 1;
+        
+        top_frame_height = ui(24);
+        region_height    = ui(16);
+        topbar_height    = top_frame_height;
+        
+        anim_region_hovering  = undefined;
+	#endregion
+
+    #region ---- Mouse Actions ----
         stagger_mode  = 0;
         stagger_index = 0;
     
@@ -348,19 +359,9 @@ function Panel_Animation_Dopesheet() {
 	    tooltip_mark_togg = new tooltipHotkey(__txt( "Toggle Marker"        ), "Animation", "Toggle Marker"   );
 	    tooltip_mark_prev = new tooltipHotkey(__txt( "Goto Previous Marker" ), "",          "Previous Marker" );
 	    tooltip_mark_next = new tooltipHotkey(__txt( "Goto Next Marker"     ), "",          "Next Marker"     );
+	    
 	#endregion
 	
-	#region ---- Draw ----
-        bar_total_w     = 1;
-        bar_total_shift = 1;
-        
-        top_frame_height = ui(24);
-        region_height    = ui(16);
-        topbar_height    = top_frame_height;
-        
-        anim_region_hovering  = undefined;
-	#endregion
-
     #region ---- Actions ----
     	__selecting_key_highlight = noone;
     	
@@ -2304,6 +2305,9 @@ function Panel_Animation_Dopesheet() {
 	                            
 	            if(mouse_lrelease(pFOCUS)) prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
 	            if(mouse_lpress(pFOCUS)) on_end_dragging_anim = prop;
+	            
+	            if(on_end_dragging_anim != noone) 
+	            	prop.on_end = on_end_dragging_anim.on_end;
 	            
 	    		if(key_mod_press(SHIFT) && MOUSE_WHEEL != 0)
 	    			prop.on_end = (prop.on_end + sign(MOUSE_WHEEL) + sprite_get_number(THEME.prop_on_end)) % sprite_get_number(THEME.prop_on_end);
