@@ -1,9 +1,11 @@
-#macro CHECK_PANEL_PREVIEW_WINDOW if(!is_instanceof(FOCUS_CONTENT, Panel_Preview_Window)) return;
+globalvar PREVIEW_WINDOW_PANEL; PREVIEW_WINDOW_PANEL = noone;
 
-function panel_preview_window_reset()       { CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_reset");       FOCUS_CONTENT.resetView();      }
-function panel_preview_window_inspect()     { CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_inspect");     PANEL_GRAPH.nodes_selecting = [ FOCUS_CONTENT.node_target ]; }
-function panel_preview_window_preview()     { CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_preview");     PANEL_PREVIEW.setNodePreview(FOCUS_CONTENT.node_target);     }
-function panel_preview_window_lock_toggle() { CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_lock_toggle"); FOCUS_CONTENT.toggleNodeLock(); }
+#macro CHECK_PANEL_PREVIEW_WINDOW if(PREVIEW_WINDOW_PANEL == noone) return;
+
+function panel_preview_window_reset()       { CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_reset");       PREVIEW_WINDOW_PANEL.resetView();      }
+function panel_preview_window_inspect()     { CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_inspect");     PANEL_GRAPH.nodes_selecting = [ PREVIEW_WINDOW_PANEL.node_target ]; }
+function panel_preview_window_preview()     { CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_preview");     PANEL_PREVIEW.setNodePreview(PREVIEW_WINDOW_PANEL.node_target);     }
+function panel_preview_window_lock_toggle() { CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_lock_toggle"); PREVIEW_WINDOW_PANEL.toggleNodeLock(); }
 
 function __fnInit_Preview_Window() {
 	registerFunction("Preview Window", "Reset view", "F", MOD_KEY.none, panel_preview_window_reset   ).setMenu( "preview_window_reset_view" )
@@ -11,24 +13,28 @@ function __fnInit_Preview_Window() {
 	registerFunction("Preview Window", "Preview",    "",  MOD_KEY.none, panel_preview_window_preview ).setMenu( "preview_window_preview"    )
 	
 	registerFunction("Preview Window", "Lock",       "",  MOD_KEY.none, panel_preview_window_lock_toggle )
-		.setMenu( "preview_window_lock" ).setToggle(function() /*=>*/ {return is(FOCUS_CONTENT, Panel_Preview_Window)? FOCUS_CONTENT.node_lock : false});
+		.setMenu( "preview_window_lock" ).setToggle(function() /*=>*/ {return PREVIEW_WINDOW_PANEL? PREVIEW_WINDOW_PANEL.node_lock : false});
 }
 
 function Panel_Preview_Window() : PanelContent() constructor {
 	#region ---- Dimension ----
 		context_str = "Preview Window";
+		title = __txt("Preview window");
 		
 		min_w = ui(64);
 		min_h = ui(64);
 		
 		w = ui(200);
 		h = ui(200);
+		
+		static onFocusBegin = function() /*=>*/ { PREVIEW_WINDOW_PANEL = self; }
 	#endregion
 	
 	#region ---- Node ----
-		node_lock       = true;
+		node_lock       = false;
 		node_target     = noone;
 		preview_channel = 0;
+		content_surface = noone;
 		
 		function toggleNodeLock() { node_lock = !node_lock; return self; }
 		function setPreview(_node, _channel = 0) {
@@ -37,10 +43,10 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			return self;
 		}
 		
+		content_surface = noone;
 	#endregion
 	
 	#region ---- Preview ----
-		scale_levels = [ 1/32, 1/24, 1/16, 1/12, 1/8, 1/4, 1/3, 1/2, 2/3, 1, 1.5, 2, 3, 4, 6, 8, 12, 16, 24, 32, 64];
 		scale = 0;
 		panx  = 0;
 		pany  = 0;
@@ -84,16 +90,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		}
 	}
 	
-	content_surface = noone;
-	surfaceCheck();
-	
-	function drawContent(panel) {
-		if(!node_lock) {
-			var _node = PANEL_PREVIEW.getNodePreview();
-			if(_node != node_target) setPreview(_node);
-		}
-		
-		if(node_target == noone) return;
+	function drawSurface() {
 		title = node_target.getFullName();
 		surfaceCheck();
 	
@@ -113,13 +110,13 @@ function Panel_Preview_Window() : PanelContent() constructor {
 				var s  = surf[i];
 				var sw = surface_get_width_safe(s);
 				var sh = surface_get_height_safe(s);
-				if(scale == 0) scale = min((w - ui(16)) / sw, (h - ui(16)) / sh);
+				if(scale == 0) scale = min((w - ui(32)) / sw, (h - ui(32)) / sh);
 				var sx = dx + w / 2 - (sw * scale) / 2 + panx;
 				var sy = dy + h / 2 - (sh * scale) / 2 + pany;
 		
 				draw_surface_ext_safe(s, sx, sy, scale, scale, 0, c_white, 1);
-				draw_set_color(COLORS._main_icon);
-				draw_rectangle(sx, sy, sx + sw * scale, sy + sh * scale, true);
+				draw_set_color(COLORS.panel_preview_surface_outline);
+				draw_rectangle(sx, sy, sx + sw * scale - 1, sy + sh * scale - 1, true);
 			
 				if(++ind >= col) {
 					ind = 0;
@@ -148,32 +145,18 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		}
 		
 		if(pHOVER) {
-			var inc = 0.5;
-			if(scale > 64)			inc = 4;
-			else if(scale > 16)		inc = 2;
-			else if(scale > 8)		inc = 1;
-			else if(scale > 2)		inc = 0.5;
-			else if(scale > 0.25)	inc = 0.25;
-			else					inc = 0.05;
-			
 			var s = scale;
 			if(MOUSE_WHEEL != 0) {
-				if(MOUSE_WHEEL == -1) {
-					for( var i = 0, n = array_length(scale_levels) - 1; i < n; i++ ) {
-						if(s > scale_levels[i] && s <= scale_levels[i + 1]) {
-							scale = scale_levels[i];
-							break;
-						}
-					}
-				} else if(MOUSE_WHEEL == 1) {
-					for( var i = 0, n = array_length(scale_levels) - 1; i < n; i++ ) {
-						if(s >= scale_levels[i] && s < scale_levels[i + 1]) {
-							scale = scale_levels[i + 1];
-							break;
-						}
-					}
-				} else 
-					scale += MOUSE_WHEEL;
+				var inc = .1;
+	                 if(scale > 16) inc =  2;
+	            else if(scale >  8) inc =  1;
+	            else if(scale >  3) inc = .50;
+	            else if(scale >  1) inc = .25;
+	            
+	            if(!key_mod_press_any() && MOUSE_WHEEL != 0) {
+	            	if(frac(MOUSE_WHEEL) == 0) scale = clamp(value_snap(scale + MOUSE_WHEEL * inc, inc), 0.10, 1024);
+	            	else                       scale = clamp(scale + MOUSE_WHEEL * inc, 0.10, 1024);
+	            }
 			}
 			
 			var ds = scale - s;
@@ -196,4 +179,38 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			menuCall("preview_window", _menu, 0, 0, fa_left);
 		}
 	}
+	
+	surfaceCheck();
+	function drawContent(panel) {
+		if(!node_lock) {
+			var _node = PANEL_PREVIEW.getNodePreview();
+			if(_node != node_target) setPreview(_node);
+		}
+		
+		if(node_target == noone) { 
+			title = __txt("Preview window");
+			if(mouse_rclick(pFOCUS)) 
+				menuCallGen("preview_window");
+		} else 
+			drawSurface();
+		
+		var bs = ui(24);
+		var bx = w - ui(4) - bs;
+		var by = h - ui(4) - bs;
+		
+		if(buttonInstant_Pad(THEME.button_def, bx, by, bs, bs, [mx,my], pHOVER, pFOCUS, __txt("Lock"), THEME.lock, !node_lock) == 2)
+			node_lock = !node_lock;
+	}
+	
+    ////- Serialize
+    
+    static serialize   = function() { 
+        return { node_lock }; 
+    }
+    
+    static deserialize = function(data) { 
+        node_lock = data[$ "node_lock"] ?? node_lock;
+        return self; 
+    }
+    
 }

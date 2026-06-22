@@ -95,7 +95,7 @@
 		panel.tab_align     = str[$ "tab_align"]     ?? 0;
 		panel.content_index = str[$ "content_index"] ?? 0;
 			
-		if(variable_struct_exists(str, "split")) {
+		if(has(str, "split")) {
 			var pan = panel;
 			     if(str.split == "v") pan = panel.split_v(ui(str.width));
 			else if(str.split == "h") pan = panel.split_h(ui(str.width));

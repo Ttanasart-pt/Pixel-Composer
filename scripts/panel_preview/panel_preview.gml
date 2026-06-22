@@ -4665,7 +4665,7 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static deserialize = function(data) { 
-        if(struct_has(data, "preview_node"))
+        if(has(data, "preview_node"))
             preview_node = [ node_from_id(data.preview_node[0]), node_from_id(data.preview_node[1]) ];
         
         canvas_x = struct_try_get(data, "canvas_x", canvas_x);
