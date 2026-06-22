@@ -1063,22 +1063,28 @@ function Panel_Preview() : PanelContent() constructor {
             _h = DEF_SURF_H;
         }
         
-        var hori = PREFERENCES.panel_preview_toolbar_horizontal;
+    	var x0 = ui(32), x1 = w - ui(32);
+    	var y0 = ui(32), y1 = h - ui(32);
         
-        var tw  = 0;
-            tw += tool_side_draw_l * ui(40);
-            tw += tool_side_draw_r * ui(40);
+        x0 += tool_side_draw_l * (toolbar_width + ui(8));
+        x1 -= tool_side_draw_r * (toolbar_width + ui(8));
         
-        if(PROJECT.previewSetting.show_ruler && !d3_active)
-        	tw += ruler_width;
+        y0 += toolbar_height;
+        y1 -= toolbar_height;
         
-        var th  = 0;
+        y0 += tool_side_draw_t * (toolbar_height + ui(8));
+        y1 -= tool_side_draw_b * (toolbar_height + ui(8));
         
-        var ss = scale == 0? min((w - ui(32) - tw) / _w, (h - ui(32) - toolbar_height * 2 - th) / _h) : scale;
+        if(PROJECT.previewSetting.show_ruler && !d3_active) {
+        	x0 += ruler_width;
+        	y0 += ruler_width;
+        }
+        
+        var ss = scale? scale : min((x1-x0) / _w, (y1-y0) / _h);
         
         canvas_s = ss;
-        canvas_x = w / 2 - _w * canvas_s / 2 - _x * canvas_s + tw / 2;
-        canvas_y = h / 2 - _h * canvas_s / 2 - _y * canvas_s + th / 2;
+        canvas_x = (x0 + x1) / 2 - (_x + _w / 2) * canvas_s;
+        canvas_y = (y0 + y1) / 2 - (_y + _h / 2) * canvas_s;
     }
     
     static fullViewNoTool = function(scale = 0) {
