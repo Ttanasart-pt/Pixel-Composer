@@ -6,6 +6,11 @@
         "date": "2026-06-22T05:40:09.181Z",
         "node": "Draw Path Profile",
         "commit": "**Draw Path Profile**: Mirror setting now has option for inverse mirror."
+      },
+      {
+        "date": "2026-06-22T05:47:02.942Z",
+        "node": "Draw Path Profile",
+        "commit": "**Draw Path Profile**: Add transformation settings."
       }
     ]
   },

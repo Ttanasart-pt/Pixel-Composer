@@ -7,20 +7,33 @@ varying vec4 v_vColour;
 	#define MAXPATH 256
 #endif
 
-uniform vec4 color;
-uniform vec4 bgColor;
 uniform vec2 dimension;
-uniform vec2 path[MAXPATH];
-uniform int  pathLength;
-uniform int  side;
-uniform int  mirror;
-uniform int  aa;
-uniform int  bg;
-uniform int  mode;
+
+uniform vec2  path[MAXPATH];
+uniform int   pathLength;
+
+uniform int   mode;
+uniform int   side;
+uniform vec4  color;
+uniform int   mirror;
+uniform int   aa;
+
+uniform vec2  position;
+uniform vec2  anchor;
+uniform float rotation;
+uniform vec2  scale;
+
+uniform int   bg;
+uniform vec4  bgColor;
 
 void main() {
-	vec2  px = v_vTexcoord * dimension;
-	vec2  dm = dimension;
+	vec2  dm  = dimension;
+	vec2  px  = v_vTexcoord * dm;
+	vec2  ac  = anchor * dimension;
+	float ang = radians(rotation);
+	
+	px = ac + (px - ac) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang)) / scale;
+	
 	float it = 0.;
 	float ds = 999999.;
 	

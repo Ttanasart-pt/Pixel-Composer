@@ -23,16 +23,23 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 4, nodeValue_EScroll( "Mirror",        0, [ "None", "Right", "Left" ]    ));
 	newInput( 6, nodeValue_Bool(    "Anti-aliasing", false    ));
 	
+	////- =Transform
+	newInput(10, nodeValue_Vec2(     "Position", [.5,.5] )).setUnitSimple();
+	newInput(11, nodeValue_Anchor(   "Anchor",   [.5,.5] ));
+	newInput(12, nodeValue_Rotation( "Rotation", 0       ));
+	newInput(13, nodeValue_Vec2(     "Scale",    [1,1]   ));
+	
 	////- =Background
 	newInput( 7, nodeValue_Bool(  "Background",    false    ));
 	newInput( 8, nodeValue_Color( "BG Color",      ca_black ));
-	// input 10
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  0,
 		[ "Profile",    false    ],  1,  2, 
 		[ "Render",     false    ],  9,  3,  5,  4,  6, 
+		[ "Transform",  false    ], 10, 11, 12, 13, 
 		[ "Background", false, 7 ],  8, 
 	];
 	
@@ -76,6 +83,11 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _mirr = _data[ 4];
 			var _aa   = _data[ 6];
 			
+			var _pos  = _data[10];
+			var _anc  = _data[11];
+			var _rot  = _data[12];
+			var _sca  = _data[13];
+			
 			var _bg   = _data[ 7];
 			var _bgC  = _data[ 8];
 		#endregion
@@ -103,6 +115,11 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_c( "color",      _colr   );
 			shader_set_i( "mirror",     _mirr   );
 			shader_set_i( "aa",         _aa     );
+			
+			shader_set_2( "position",   _pos    );
+			shader_set_2( "anchor",     _anc    );
+			shader_set_f( "rotation",   _rot    );
+			shader_set_2( "scale",      _sca    );
 			
 			shader_set_i( "bg",         _bg     );
 			shader_set_c( "bgColor",    _bgC    );
