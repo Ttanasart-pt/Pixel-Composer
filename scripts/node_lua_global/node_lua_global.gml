@@ -44,6 +44,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		try		 { lua_add_code(_stat, _code);         }
 		catch(e) { noti_warning(exception_print(e), noone, self); }
+		draw_set_alpha(1);
 	}
 	
 	static onDestroy = function() /*=>*/ { lua_state_destroy(lua_state); }

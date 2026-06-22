@@ -29,7 +29,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(12, nodeValue_Rotation( "Rotation", 0       ));
 	newInput(13, nodeValue_Vec2(     "Scale",    [1,1]   ));
 	
-	////- =Background
+	////- =Rendering
 	newInput( 7, nodeValue_Bool(  "Background",    false    ));
 	newInput( 8, nodeValue_Color( "BG Color",      ca_black ));
 	// input 14
@@ -37,10 +37,10 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  0,
-		[ "Profile",    false    ],  1,  2, 
-		[ "Render",     false    ],  9,  3,  5,  4,  6, 
-		[ "Transform",  false    ], 10, 11, 12, 13, 
-		[ "Background", false, 7 ],  8, 
+		[ "Profile",    false ],  1,  2, 
+		[ "Render",     false ],  9,  3,  5,  4,  6, 
+		[ "Transform",  false ], 10, 11, 12, 13, 
+		[ "Rendering",  false ],  7,  8, 
 	];
 	
 	////- Node

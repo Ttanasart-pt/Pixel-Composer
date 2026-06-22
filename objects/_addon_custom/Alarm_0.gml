@@ -7,4 +7,6 @@
 	
 	try { lua_call(thread, "deserialize", _mp); }
 	catch(e) exception_print(e);
+	draw_set_alpha(1);
+		
 #endregion

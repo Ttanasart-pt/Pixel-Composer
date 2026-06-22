@@ -157,6 +157,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		surface_set_target(_outSurf);
 			try      { lua_call_w(_stat, _func, argument_val); }
 			catch(e) { noti_warning(exception_print(e), noone, self);     }
+			draw_set_alpha(1);
 		surface_reset_target();
 		
 		outputs[0].setValue(_stat);

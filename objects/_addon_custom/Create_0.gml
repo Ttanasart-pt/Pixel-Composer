@@ -71,6 +71,7 @@ event_inherited();
 		
 		try { var runResult = lua_call(thread, "init"); }
 		catch(e) exception_print(e);
+		draw_set_alpha(1);
 		
 		array_push(ANIMATION_PRE,  function() /*=>*/ {return animationPreStep()});
 		array_push(ANIMATION_POST, function() /*=>*/ {return animationPostStep()});
@@ -80,17 +81,23 @@ event_inherited();
 		if(!ready || thread == undefined) return;
 		try { var runResult = lua_call(thread, "animationPreStep"); }
 		catch(e) exception_print(e);
+		draw_set_alpha(1);
+		
 	}
 	
 	function animationPostStep() {
 		if(!ready || thread == undefined) return;
 		try { var runResult = lua_call(thread, "animationPostStep"); }
 		catch(e) exception_print(e);
+		draw_set_alpha(1);
+		
 	}
 	
 	function callFunctions(fn) {
 		if(!ready || thread == undefined) return;
 		try { lua_call(thread, fn); }
 		catch(e) exception_print(e);
+		draw_set_alpha(1);
+		
 	}
 #endregion

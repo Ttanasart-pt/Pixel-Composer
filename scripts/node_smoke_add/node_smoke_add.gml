@@ -154,6 +154,8 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			
 			temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
 			surface_set_shader(temp_surface[0], sh_fd_visualize);
+				// shader_set_i( "densityMap_use", false );
+				// shader_set_i( "transparent",    true  );
 				draw_surface_safe(_mat);
 			surface_reset_shader();
 		}

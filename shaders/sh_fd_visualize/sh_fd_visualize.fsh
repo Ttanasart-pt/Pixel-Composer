@@ -283,7 +283,9 @@ uniform int   densityMap_amount;
 uniform int   transparent;
 
 void main() {
-	float rawV = texture2D(gm_BaseTexture, v_vTexcoord).a;
+	vec4  rawS = texture2D(gm_BaseTexture, v_vTexcoord);
+	float rawV = rawS.a;
+	
 	float dens = curveEval(densityMap_curve, densityMap_amount, clamp(rawV, 0., 1.));
 	vec4  gradSample = gradientEval(dens);
 	

@@ -130,11 +130,11 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _stat = getInputData(3);
-		var _exec = getInputData(4);
+		var _stat = getInputData( 3);
+		var _exec = getInputData( 4);
 		
-		var _func = getInputData(0);
-		var _dimm = getInputData(1);
+		var _func = getInputData( 0);
+		var _dimm = getInputData( 1);
 		
 		update_on_frame   = _exec;
 		
@@ -157,6 +157,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var res = 0;
 		try	     { res = lua_call_w(_stat, _func, argument_val);   } 
 		catch(e) { noti_warning(exception_print(e), noone, self); }
+		draw_set_alpha(1);
 		
 		outputs[0].setValue(_stat);
 		outputs[1].setValue(res);

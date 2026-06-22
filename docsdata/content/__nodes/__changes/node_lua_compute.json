@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5",
+    "changes": [
+      {
+        "date": "2026-06-22T06:41:05.242Z",
+        "node": "Lua",
+        "commit": "**Lua**: Fix setting alpha state effect draw code outside the function."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.004",
     "changes": [
       {

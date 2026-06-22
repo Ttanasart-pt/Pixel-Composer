@@ -11,6 +11,11 @@
         "date": "2026-06-22T05:47:02.942Z",
         "node": "Draw Path Profile",
         "commit": "**Draw Path Profile**: Add transformation settings."
+      },
+      {
+        "date": "2026-06-22T06:41:05.253Z",
+        "node": "",
+        "commit": "**Lua**: Fix setting alpha state effect draw code outside the function."
       }
     ]
   },
