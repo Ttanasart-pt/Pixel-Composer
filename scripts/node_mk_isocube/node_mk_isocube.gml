@@ -3,12 +3,15 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	dimension_index = noone;
 	
 	////- =Output
-	newInput( 7, nodeValue_IPadding( "Padding", [0,0,0,0] ));
+	newInput(20, nodeValue_EScroll(   "Dimension Type", 1, [ "Fixed", "Dynamic" ] ));
+	newInput(21, nodeValue_Dimension( "Dimension"            ));
+	newInput( 7, nodeValue_IPadding(  "Padding",   [0,0,0,0] ));
 	
 	////- =Shape
-	newInput( 0, nodeValue_Vec2( "Base",           [8,8]     )).setPieMenu();
-	newInput( 8, nodeValue_Vec4( "Base Offset",    [0,0,0,0] ));
-	newInput(19, nodeValue_Bool( "Base Expand",    true      ));
+	newInput( 0, nodeValue_Vec2(   "Base",           [8,8]         )).setPieMenu();
+	newInput( 8, nodeValue_Vec4(   "Base Offset",    [0,0,0,0]     ));
+	newInput(19, nodeValue_Bool(   "Base Expand",    true          ));
+	newInput(22, nodeValue_Slider( "Base Rotation",  0, [-45,45,1] ));
 	
 	////- =Depth
 	newInput( 1, nodeValue_Int(  "Depth",           6        )).setPieMenu();
@@ -27,25 +30,34 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Outline
 	newInput(12, nodeValue_Bool(  "Outline",           false    ));
+	
+		////- =/Top
 	newInput(13, nodeValue_Int(   "Top Thickness",     1        ));
 	newInput(14, nodeValue_Color( "Top Color",         ca_white ));
+	
+		////- =/Front
 	newInput(15, nodeValue_Int(   "Front Thickness",   1        ));
 	newInput(16, nodeValue_Color( "Front Color",       ca_white ));
+	
+		////- =/Outside
 	newInput(17, nodeValue_Int(   "Outside Thickness", 0        ));
 	newInput(18, nodeValue_Color( "Outside Color",     ca_white ));
-	// inputs 20
+	// 23
 		
-	input_display_list = [ s_MKFX, 
-		[ "Output",  false ], 7, 
-		[ "Shape",   false ], 0, 8, 19, 
-		[ "Depth",   false ], 1, 2, 3, 
-		[ "Texture", false ], 6, 4, 5, 
-		[ "Colors",  false ], 9, 10, 11, 
-		[ "Outlines", true, 12 ], 13, 14, 15, 16, 17, 18, 
-	];
-	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
+	
+	input_display_list = [ s_MKFX, 
+		[ "Output",  false      ], 20, 21,  7, 
+		[ "Shape",   false      ],  0,  8, 19, 22, 
+		[ "Depth",   false      ],  1,  2,  3, 
+		[ "Texture", false      ],  6,  4,  5, 
+		[ "Colors",  false      ],  9, 10, 11, 
+		[ "Outlines", true,  12 ], 
+			[ "/Top",     false ], 13, 14, 
+			[ "/Front",   false ], 15, 16, 
+			[ "/Outside", false ], 17, 18, 
+	];
 	
 	////- Nodes
 	
@@ -53,6 +65,7 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	corner_drag_sv  = [];
 	corner_drag_my  = 0;
 	
+	view_offset  = [ 0, 0 ];
 	temp_surface = [ noone ];
 	
 	function X(_x) { return __x + _x * __s; }
@@ -61,17 +74,23 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		draw_set_color(COLORS._main_accent);
 		
-		var _base  = getInputSingle(0);
-		var _basOf = getInputSingle(8);
+		var _dimT  = getInputSingle(20);
+		var _dim2  = getInputSingle(21);
+		var _padd  = getInputSingle( 7);
 		
-		var _dept  = getInputSingle(1);
-		var _depOf = getInputSingle(2);
-		var _depRf = getInputSingle(3);
+		var _base  = getInputSingle( 0);
+		var _basOf = getInputSingle( 8);
+		var _basRt = getInputSingle(22);
 		
-		var _padd  = getInputSingle(7);
+		var _dept  = getInputSingle( 1);
+		var _depOf = getInputSingle( 2);
+		var _depRf = getInputSingle( 3);
 		
-		__x = _x + _padd[2] * _s; 
-		__y = _y + _padd[1] * _s; 
+		var pdx = view_offset[0];
+		var pdy = view_offset[1];
+		
+		__x = _x + pdx * _s; 
+		__y = _y + pdy * _s; 
 		__s = _s;
 		
 		var n  = _base[0];
@@ -95,6 +114,33 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		var b3x = n + m;
 		var b3y = m / 2 + h;
+		
+		var cx = (b0x + b1x + b2x + b3x) / 4;
+		var cy = (b0y + b1y + b2y + b3y) / 4;
+		
+		var bcy  = cy + (b0y - cy) * 2;
+		var dirr = point_direction(cx, cy, b0x, bcy);
+		var diss = point_distance( cx, cy, b0x, bcy);
+		b0x = cx + lengthdir_x(diss, dirr + _basRt);
+		b0y = cy + lengthdir_y(diss, dirr + _basRt) / 2;
+		
+		var bcy  = cy + (b1y - cy) * 2;
+		var dirr = point_direction(cx, cy, b1x, bcy);
+		var diss = point_distance( cx, cy, b1x, bcy);
+		b1x = cx + lengthdir_x(diss, dirr + _basRt);
+		b1y = cy + lengthdir_y(diss, dirr + _basRt) / 2;
+		
+		var bcy  = cy + (b2y - cy) * 2;
+		var dirr = point_direction(cx, cy, b2x, bcy);
+		var diss = point_distance( cx, cy, b2x, bcy);
+		b2x = cx + lengthdir_x(diss, dirr + _basRt);
+		b2y = cy + lengthdir_y(diss, dirr + _basRt) / 2;
+		
+		var bcy  = cy + (b3y - cy) * 2;
+		var dirr = point_direction(cx, cy, b3x, bcy);
+		var diss = point_distance( cx, cy, b3x, bcy);
+		b3x = cx + lengthdir_x(diss, dirr + _basRt);
+		b3y = cy + lengthdir_y(diss, dirr + _basRt) / 2;
 		
 		draw_line_dashed(X(b0x), Y(b0y), X(b1x), Y(b1y));
 		draw_line_dashed(X(b1x), Y(b1y), X(b3x), Y(b3y));
@@ -232,11 +278,14 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
+			var _dimT  = _data[20];
+			var _dim2  = _data[21];
 			var _padd  = _data[ 7];
 			
 			var _base  = _data[ 0];
 			var _basOf = _data[ 8];
 			var _basEx = _data[19];
+			var _basRt = _data[22];
 			
 			var _dept  = _data[ 1];
 			var _depOf = _data[ 2];
@@ -257,6 +306,9 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _outFC = _data[16]; 
 			var _outOT = _data[17]; 
 			var _outOC = _data[18]; 
+			
+			inputs[21].setVisible(_dimT == 0);
+			inputs[ 7].setVisible(_dimT == 1);
 			
 			if(!is_surface(_texR)) _texR = _texL;
 			
@@ -290,6 +342,33 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var b3x = n + m                   - b1   - b2   
 		var b3y = m / 2 + h               - b1/2 + b2/2 
 		
+		var cx = (b0x + b1x + b2x + b3x) / 4;
+		var cy = (b0y + b1y + b2y + b3y) / 4;
+		
+		var bcy  = cy + (b0y - cy) * 2;
+		var dirr = point_direction(cx, cy, b0x, bcy);
+		var diss = point_distance( cx, cy, b0x, bcy);
+		b0x = cx + lengthdir_x(diss, dirr + _basRt);
+		b0y = cy + lengthdir_y(diss, dirr + _basRt) / 2;
+		
+		var bcy  = cy + (b1y - cy) * 2;
+		var dirr = point_direction(cx, cy, b1x, bcy);
+		var diss = point_distance( cx, cy, b1x, bcy);
+		b1x = cx + lengthdir_x(diss, dirr + _basRt);
+		b1y = cy + lengthdir_y(diss, dirr + _basRt) / 2;
+		
+		var bcy  = cy + (b2y - cy) * 2;
+		var dirr = point_direction(cx, cy, b2x, bcy);
+		var diss = point_distance( cx, cy, b2x, bcy);
+		b2x = cx + lengthdir_x(diss, dirr + _basRt);
+		b2y = cy + lengthdir_y(diss, dirr + _basRt) / 2;
+		
+		var bcy  = cy + (b3y - cy) * 2;
+		var dirr = point_direction(cx, cy, b3x, bcy);
+		var diss = point_distance( cx, cy, b3x, bcy);
+		b3x = cx + lengthdir_x(diss, dirr + _basRt);
+		b3y = cy + lengthdir_y(diss, dirr + _basRt) / 2;
+		
 		var d0 = d + _depOf[0];
 		var d1 = d + _depOf[1];
 		var d2 = d + _depOf[2];
@@ -300,7 +379,7 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		var t1x = b1x;
 		var t1y = b1y - d1;
-
+		
 		var t2x = b2x;
 		var t2y = b2y - d2;
 		
@@ -309,15 +388,29 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		////////////////////////////
 		
-		var sw = n + m;
+		var sw =  n + m;
 		var sh = (n + m) / 2 + h;
 		
-		var ssw = sw + _padd[0] + _padd[2];
-		var ssh = sh + _padd[1] + _padd[3];
+		switch(_dimT) {
+			case 0 : 
+				var ssw = _dim2[0];
+				var ssh = _dim2[1];
+				
+				var ox = (ssw - sw) / 2;
+				var oy = (ssh - sh) / 2;
+				break;
+				
+			case 1 : 
+				var ssw = sw + _padd[0] + _padd[2];
+				var ssh = sh + _padd[1] + _padd[3];
+				
+				var ox = _padd[2];
+				var oy = _padd[1];
+				break;
+				
+		}
 		
-		var ox = _padd[2];
-		var oy = _padd[1];
-		
+		view_offset = [ox,oy];
 		_outData[0] = surface_verify(_outData[0], ssw, ssh);
 		_outData[1] = surface_verify(_outData[1], ssw, ssh);
 		

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5",
+    "changes": [
+      {
+        "date": "2026-06-22T08:06:12.824Z",
+        "node": "MK IsoCube",
+        "commit": "**MK IsoCube**: Add fix dimension, base rotation."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {
