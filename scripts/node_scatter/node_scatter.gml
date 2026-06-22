@@ -797,6 +797,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var _shf_x = sw * _scx * anchor[0];
 				var _shf_y = sh * _scy * anchor[1];
 				
+				var _rawx = _x - _shf_x;
+				var _rawy = _y - _shf_y;
+				
 				if(_r == 0) {
 					_x -= _shf_x;
 					_y -= _shf_y;
@@ -825,8 +828,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					clr = colorMultiply(clr, array_safe_get_fast(_v, iCol, cola(c_white, 1)));
 				
 				if(surfSamp.active) {
-					var _samx = _x + random_range_seed(sampWig[0], sampWig[1], _csed++);
-					var _samy = _y + random_range_seed(sampWig[2], sampWig[3], _csed++);
+					var _samx = _rawx + random_range_seed(sampWig[0], sampWig[1], _csed++);
+					var _samy = _rawy + random_range_seed(sampWig[2], sampWig[3], _csed++);
 					_samx += sampAnc[0] * _shf_x * 2;
 					_samy += sampAnc[1] * _shf_y * 2;
 					
