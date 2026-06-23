@@ -10,6 +10,10 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newActiveInput(1);
 	
+	////- =Output
+	newInput( 9, nodeValue_EScroll( "Dimension Type", 1, [ "Fixed", "Dynamic" ] ));
+	newInput(10, nodeValue_Dimension());
+	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
@@ -20,17 +24,22 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 5, nodeValue_Float(   "Scale",  1 )).setPieMenu();
 	newInput( 6, nodeValue_Float(   "Shift",  0 )).setPieMenu();
 	
+	////- =Transform
+	newInput(11, nodeValue_Vec2(   "Scale",    [1,1] ));
+	
 	////- =Mapping
 	newInput( 7, nodeValue_Vec2(   "UV Shift", [0,0] ));
 	newInput( 8, nodeValue_Vec2(   "UV Scale", [1,1] ));
-	// 9
+	// 12
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		[ "Surfaces", false ],  0, 
-		[ "Bend",     false ],  2,  3,  4,  5,  6, 
-		[ "Mapping",  false ],  7,  8,  
+		[ "Output",    false ],  9, 10, 
+		[ "Surfaces",  false ],  0, 
+		[ "Bend",      false ],  2,  3,  4,  5,  6, 
+		// [ "Transform", false ], 11, 
+		[ "Mapping",   false ],  7,  8,  
 	];
 	
 	////- Nodes
@@ -48,19 +57,26 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _surf = _data[ 0];
+			var _dimT  = _data[ 9];
+			var _dim   = _data[10];
 			
-			var _typ  = _data[ 2];
-			var _axs  = _data[ 3];
-			var _amo  = _data[ 4];
-			var _sca  = _data[ 5];
-			var _shf  = _data[ 6];
+			var _surf  = _data[ 0];
+			
+			var _typ   = _data[ 2];
+			var _axs   = _data[ 3];
+			var _amo   = _data[ 4];
+			var _sca   = _data[ 5];
+			var _shf   = _data[ 6];
+			
+			var _scal  = _data[11];
 			
 			var _uvPos = _data[ 7];
 			var _uvSca = _data[ 8];
 			
-			inputs[5].setVisible(_typ == 1);
-			inputs[6].setVisible(_typ == 1);
+			inputs[10].setVisible(_dimT == 0);
+			
+			inputs[ 5].setVisible(_typ == 1);
+			inputs[ 6].setVisible(_typ == 1);
 		#endregion
 		
 		var _sw = surface_get_width_safe(_surf);
@@ -260,8 +276,29 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		#region render
-			var _ww = vb_maxx - vb_minx;
-			var _hh = vb_maxy - vb_miny;
+			var _w  = vb_maxx - vb_minx, _ww;
+			var _h  = vb_maxy - vb_miny, _hh;
+			var _sx = 1;
+			var _sy = 1;
+			
+			switch(_dimT) {
+				case 0 : 
+					_ww = _dim[0];
+					_hh = _dim[1]; 
+					
+					_sx = _ww / _w;
+					_sy = _hh / _h;
+					break;
+					
+				case 1 : 
+					_ww = _w;
+					_hh = _h 
+					
+					_sx = 1;
+					_sy = 1;
+			    	break;
+			}
+			
 			_outSurf = surface_verify(_outSurf, _ww, _hh);
 		
 			surface_set_shader(_outSurf, sh_bend_draw);
@@ -271,20 +308,13 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_2( "uvPosition", _uvPos );
 			shader_set_2( "uvScale",    _uvSca );
 			
-			matrix_stack_clear();
-			matrix_stack_push([
-				 1, 0, 0, 0, 
-				 0, 1, 0, 0, 
-				 0, 0, 1, 0, 
-				-vb_minx - _ww/2, -vb_miny - _hh/2, 0, 1, 
-			]);
-			
-			camera_set_view_mat(camera_get_active(), matrix_stack_top());
-			camera_apply(camera_get_active());
+			var trans = matrix_compose(
+				matrix_transform_2d(-vb_minx, -vb_miny),
+				matrix_transform_2d(0, 0, 0, _sx, _sy),
+			)
+			matrix_set(matrix_world, trans);
 			vertex_submit(vb, pr_trianglelist, surface_get_texture(_surf));
-			
-			camera_set_view_mat(camera_get_active(), MATRIX_IDENTITY);
-			matrix_stack_clear();
+			matrix_set(matrix_world, MATRIX_IDENTITY);
 			
 			gpu_set_texfilter(false);
 			surface_reset_shader();

@@ -93,7 +93,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var ancx = _anc[0] * _dim[0];
 			var ancy = _anc[1] * _dim[1];
-			
+						
 			var trans = matrix_compose(
 				matrix_transform_2d(-ancx, -ancy),
 				matrix_transform_2d(_pos[0], _pos[1], _rot, _sca[0], _sca[1]),

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.002",
+    "changes": [
+      {
+        "date": "2026-06-23T09:36:34.116Z",
+        "node": "Bend] Add fixed dimension type.[Bend",
+        "commit": "**Bend] Add fixed dimension type.[Bend**: Add fixed dimension type."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.009",
     "changes": [
       {
