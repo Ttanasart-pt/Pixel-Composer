@@ -1,20 +1,19 @@
 function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _sprite = false) constructor {
-	ID = UUID_generate();
+	ID   = UUID_generate();
 	data = _data;
 	name = _name;
 	type = _type;
 	mode = "node";
 	
-	sprite = _sprite;
-	
+	sprite  = _sprite;
 	visible = true;
 	
-	node_id   = undefined;
-	junc_id   = undefined;
-	globalkey = "";
+	node_id    = undefined;
+	junc_id    = undefined;
+	globalkey  = "";
 	
-	node     = undefined;
-	junction = undefined;
+	node       = undefined;
+	junction   = undefined;
 	
 	getWidget  = _widget;
 	editWidget = undefined;
@@ -31,6 +30,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 	////- Editors
 	
 	node_scroll = Simple_Editor("Node", new scrollBoxFn(function() /*=>*/ {return getNodeList()}, function(i) /*=>*/ { 
+		print("Set node", i);
+		
 		node     = nodeList[i]; 
 		node_id  = undefined;
 		junction = undefined; 
@@ -48,25 +49,26 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 				
 		} else 
 			mode    = "node"
+			
 	} ).setUpdateHover(false), 
 		function( ) /*=>*/ {return node? node.getDisplayName() : ""}, 
 		function(n) /*=>*/ { node = n; });
 	
 	if(type == CONNECT_TYPE.input)
 		junc_selector = Simple_Editor("Input", new scrollBoxFn(function() /*=>*/ {return getInputs()}, 
-			function(i) /*=>*/ { setJunction(juncInList[i]); } ).setUpdateHover(false), 
+			function(i) /*=>*/ {return setJunction(juncInList[i])}).setUpdateHover(false), 
 			function( ) /*=>*/ {return junction? junction.name : ""}, 
-			function(n) /*=>*/ { setJunction(n); });
+			function(n) /*=>*/ {return setJunction(n)});
 	else 
 		junc_selector = Simple_Editor("Output", new scrollBoxFn(function() /*=>*/ {return getOutputs()}, 
-			function(i) /*=>*/ { setJunction(juncOutList[i]); } ).setUpdateHover(false), 
+			function(i) /*=>*/ {return setJunction(juncOutList[i])}).setUpdateHover(false), 
 			function( ) /*=>*/ {return junction? junction.name : ""}, 
-			function(n) /*=>*/ { setJunction(n); });
+			function(n) /*=>*/ {return setJunction(n)});
 	
 	glob_selector = Simple_Editor("Globalvar", new scrollBoxFn(function() /*=>*/ {return getGlobals()}, 
-		function(i) /*=>*/ { globalkey = globalList[i] } ).setUpdateHover(false), 
+		function(i) /*=>*/ {return setGlobalKey(globalList[i])}).setUpdateHover(false), 
 		function( ) /*=>*/ {return globalkey}, 
-		function(n) /*=>*/ { globalkey = n; });
+		function(n) /*=>*/ {return setGlobalKey(n)});
 
 	currScrollItem = new scrollItem("", THEME.node_junctions_single, 0, c_white);
 
@@ -247,6 +249,11 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 			
 		editWidget = _map[$ ID];
 		return editWidget;
+	}
+	
+	static setGlobalKey = function(_key) {
+		globalKey = _key;
+		return self;
 	}
 	
 	static setJunction = function(_junc) {

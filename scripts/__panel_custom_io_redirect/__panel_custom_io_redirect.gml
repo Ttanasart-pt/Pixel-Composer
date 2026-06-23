@@ -11,9 +11,10 @@ function IO_Redirect(_data) constructor {
 	input     = new JuncLister(data, "input", CONNECT_TYPE.output);
 	tb_rename = textBox_Text(function(t) /*=>*/ { name = t; });
 	
-	static getDisplayName = function() /*=>*/ {return name};
+	static setName = function(n) /*=>*/ { name = n; return self; }
 	
-	static getJunction = function(_depth = 0) {
+	static getDisplayName = function() /*=>*/ {return name};
+	static getJunction    = function(_depth = 0) /*=>*/ {
 		if(_depth > 16) {
 			noti_warning($"Too many redirect.")
 			return undefined;
@@ -48,7 +49,8 @@ function IO_Redirect(_data) constructor {
 		var bx = _x;
 		var by = _y;
 		var spr = type == CONNECT_TYPE.input? THEME.panel_icon_element_node_input : THEME.panel_icon_element_node_output;
-		if(buttonInstant_Pad(bs, bx, by, bw, bh, _m, _hov, _foc, "", spr, 0, c_white, 1, ui(6)) == 2) {
+		var tol = __txt("Switch input/output");
+		if(buttonInstant_Pad(bs, bx, by, bw, bh, _m, _hov, _foc, tol, spr, 0, c_white, 1, ui(6)) == 2) {
 			type = !type;
 			junctions = [];
 		}

@@ -57,11 +57,24 @@ doRefocus();
 #endregion
 
 #region content
-	function initScroll(scroll) {
-		scrollbox  = scroll;
-		dialog_w   = max(ui(200), scroll.w);
-		data       = scroll.data;
-		displayStr = scroll.displayStr;
+	function initScroll(_scroll, _initVal) {
+		print(instanceof(_scroll), _scroll)
+		
+		scrollbox    = _scroll;
+		dialog_w     = max(ui(200), _scroll.w);
+		
+		data         = _scroll.data;
+		displayStr   = _scroll.displayStr;
+		
+		font         = _scroll.font;
+		align        = _scroll.align;
+		text_pad     = _scroll.padding;
+		item_pad     = _scroll.item_pad;
+		update_hover = _scroll.update_hover;
+		minWidth     = _scroll.minWidth;
+		
+		initVal      = _initVal;
+		
 		setSize();
 	}
 	

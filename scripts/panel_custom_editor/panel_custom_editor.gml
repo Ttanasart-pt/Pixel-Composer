@@ -6,7 +6,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	h = min(WIN_H - ui(64), ui(800));
 	padding = ui(8);
 	
-	b_redir_new = button(function() /*=>*/ { array_push(data.io_redirect, new IO_Redirect(data)) })
+	b_redir_new = button(function() /*=>*/ { array_push(data.io_redirect, new IO_Redirect(data).setName($"Redir {array_length(data.io_redirect)}")) })
 		.setIcon(THEME.add_16, 0, COLORS._main_value_positive).iconPad();
 	
 	globalEditors = [

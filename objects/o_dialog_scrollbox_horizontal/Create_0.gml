@@ -32,10 +32,21 @@ event_inherited();
 					.setFont(f_p2).setAutoUpdate().setAlign(fa_left).activate();
 	searchIndex   = undefined;
 	
-	function initScroll(scroll) {
-		scrollbox	= scroll;
-		data		= scroll.data;
-		displayStr  = scroll.displayStr;
+	function initScroll(_scroll, _initVal) {
+		scrollbox    = _scroll;
+		
+		data         = _scroll.data;
+		displayStr   = _scroll.displayStr;
+		
+		font         = _scroll.font;
+		align        = _scroll.align;
+		text_pad     = _scroll.padding;
+		item_pad     = _scroll.item_pad;
+		update_hover = _scroll.update_hover;
+		minWidth     = _scroll.minWidth;
+		
+		initVal      = _initVal;
+		
 		setSize();
 	}
 	

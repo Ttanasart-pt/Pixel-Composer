@@ -37,20 +37,19 @@ function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main
 }
 
 function scrollBox(_data, _onModify, _update_hover = true) : widget() constructor {
-	update_hover = _update_hover;
+	update_hover   = _update_hover;
+	onModify       = _onModify;	
+	data_list      = _data;
+	data           = _data;
+	curr_val       = -1;
 	
-	onModify  = _onModify;	
-	data_list = _data;
-	data      = _data;
-	curr_val  = -1;
+	arrow_spr      = THEME.scroll_box_arrow;
+	arrow_ind      = 0;
 	
-	arrow_spr = THEME.scroll_box_arrow;
-	arrow_ind = 0;
-	
-	open      = false;
-	open_rx   = 0;
-	open_ry   = 0;
-	filter    = true;
+	open           = false;
+	open_rx        = 0;
+	open_ry        = 0;
+	filter         = true;
 	
 	align          = fa_center;
 	horizontal     = false;
@@ -61,12 +60,12 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	show_icon      = true;
 	icon_padding   = ui(4)
 	
-	minWidth = 0;
-	type     = 0;
-	hide     = 0;
-	displayStr = undefined;
+	minWidth       = 0;
+	type           = 0;
+	hide           = 0;
+	displayStr     = undefined;
 	
-	scrollDialog = noone;
+	scrollDialog   = noone;
 	
 	static setStruct        = function(l) /*=>*/ { displayStr     = l; return self; }
 	static setType          = function(l) /*=>*/ { type           = l; return self; }
@@ -98,7 +97,6 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		data = is_method(data_list)? data_list() : data_list;
 		
 		var ind = curr_val;
-		open    = true;
 		
 		FOCUS_BEFORE = FOCUS;
 		var _object;
@@ -110,16 +108,9 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		}
 		
 		scrollDialog = dialogCall(_object, x + open_rx, y + open_ry);
-		with(scrollDialog) {
-			initVal      = ind;
-			font         = other.font;
-			align        = other.align;
-			text_pad     = other.padding;
-			item_pad     = other.item_pad;
-			update_hover = other.update_hover;
-			minWidth     = other.minWidth;
-			
-			initScroll(other);
+		if(scrollDialog) {
+			scrollDialog.initScroll(self, ind);
+			open = true;
 		}
 	}
 	
@@ -317,6 +308,10 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 	open_ry   = 0;
 	filter    = true;
 	
+	align     = fa_center;
+	text_pad  = ui(8);
+	item_pad  = ui(8);
+
 	horizontal     = false;
 	padding        = ui(8);
 	padding_scroll = ui(8);
@@ -333,19 +328,12 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 	
 	static trigger = function() {
 		data = data_getter();
-		open = true;
-		
 		FOCUS_BEFORE = FOCUS;
-		with(dialogCall(o_dialog_scrollbox, x + open_rx, y + open_ry)) {
-			initVal      = -1;
-			font         = other.font;
-			update_hover = other.update_hover;
-			minWidth     = other.minWidth;
-			align        = fa_center;
-			text_pad     = ui(8);
-			item_pad     = ui(8);
-			
-			initScroll(other);
+		
+		scrollDialog = dialogCall(o_dialog_scrollbox, x + open_rx, y + open_ry);
+		if(scrollDialog) {
+			scrollDialog.initScroll(self, -1);
+			open = true;
 		}
 	}
 	
