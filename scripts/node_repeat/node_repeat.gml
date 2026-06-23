@@ -521,6 +521,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		#endregion
 			
 		var _surf, posx, posy, scax, scay, rot, _dim, 
+		var _dyna        = false;
 		var _dims        = [];
 		var _sdim        = [ 1, 1 ]
 		var _surf        = _iSrf;
@@ -535,14 +536,18 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(is_array(_surf)) {
 			for( var i = 0, n = array_length(_surf); i < n; i++ ) {
 				var _ddim = surface_get_dimension(_surf[i]);
+				
 				_baseSurface = _surf[i];
 				_sdim[0] = max(_sdim[0], _ddim[0]);
 				_sdim[1] = max(_sdim[1], _ddim[1]);
 				_dims[i] = _ddim;
+				_dyna    = is(_surf[i], dynaSurf);
 			}
 			
-		} else if(is_surface(_surf))
+		} else if(is_surface(_surf)) {
+			_dyna = is(_surf, dynaSurf);
 			_sdim = surface_get_dimension(_surf);
+		}
 		
 		if(!is_surface(_baseSurface)) return _outData;
 		
@@ -884,7 +889,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _atlas_arr = array_verify(_outData[1], atlas_i);
 		_outData[1] = _atlas_arr;
 		
-		surface_set_shader(_outSurf);
+		surface_set_shader(_outSurf, _dyna? sh_sample_shape : sh_sample);
 			     if(_bld_md == 0) { BLEND_ALPHA_MULP }
 			else if(_bld_md == 1) { BLEND_ADD        }
 			else if(_bld_md == 2) { BLEND_MAX        }
@@ -930,7 +935,18 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			for( var i = 0, n = array_length(_atlas_arr); i < n; i++ ) {
 				var _atl = _atlas_arr[i];
-				draw_surface_ext(_atl.surface, _atl.x, _atl.y, _atl.sx, _atl.sy, _atl.rotation, _atl.blend, _atl.alpha);
+				
+				var surf = _atl.surface;
+				var _x   = _atl.x;
+				var _y   = _atl.y;
+				var _scx = _atl.sx;
+				var _scy = _atl.sy;
+				var _r   = _atl.rotation;
+				var clr  = _atl.blend;
+				var alp  = _atl.alpha;
+				
+				if(_dyna) surf.draw(_x, _y, _scx, _scy, _r, clr, alp);
+				else      draw_surface_ext(surf, _x, _y, _scx, _scy, _r, clr, alp);
 			}
 			
 			BLEND_NORMAL
