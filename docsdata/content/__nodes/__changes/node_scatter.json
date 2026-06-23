@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.002",
+    "changes": [
+      {
+        "date": "2026-06-23T03:39:40.971Z",
+        "node": "Scatter",
+        "commit": "**Scatter**: Fix alpha not apply when using sampler surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.5",
     "changes": [
       {
