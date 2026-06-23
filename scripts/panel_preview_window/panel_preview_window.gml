@@ -20,6 +20,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	#region ---- Dimension ----
 		context_str = "Preview Window";
 		title = __txt("Preview window");
+		icon  = THEME.panel_preview_window_icon;
 		
 		min_w = ui(64);
 		min_h = ui(64);

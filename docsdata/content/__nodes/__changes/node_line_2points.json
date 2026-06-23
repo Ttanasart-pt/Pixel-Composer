@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.002",
+    "changes": [
+      {
+        "date": "2026-06-23T02:33:39.737Z",
+        "node": "Draw Line 2 Point",
+        "commit": "**Draw Line 2 Point**: Add different point modes."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.002",
     "changes": [
       {

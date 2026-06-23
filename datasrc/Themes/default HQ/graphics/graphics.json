@@ -228,6 +228,7 @@
     "panel_graph_icon":                   { "path": "./icon/s_panel_graph.png",                             "s": 1, "x":  8, "y":  8 },
     "panel_inspector_icon":               { "path": "./icon/s_panel_inspector.png",                         "s": 1, "x":  8, "y":  8 },
     "panel_preview_icon":                 { "path": "./icon/s_panel_preview.png",                           "s": 1, "x":  8, "y":  8 },
+    "panel_preview_window_icon":          { "path": "./icon/s_panel_preview_window.png",                    "s": 1, "x":  8, "y":  8 },
     "paste_20":                           { "path": "./icon/s_paste_20.png",                                "s": 1, "x": 10, "y": 10 },
     "paste":                              { "path": "./icon/s_paste.png",                                   "s": 1, "x": 12, "y": 12 },
     "path_open_20":                       { "path": "./icon/s_path_open_20.png",                            "s": 2, "x": 10, "y": 10 },

@@ -108,6 +108,8 @@ function Project_Randomizer_Value(_val = undefined) constructor {
 	} if(_val) setInput(_val);
 	
 	static Random = function() /*=>*/ {
+		randomize();
+		
 		var _v = getValue();
 		if(!is(_v, NodeValue)) return;
 		
@@ -125,7 +127,9 @@ function Project_Randomizer_Value(_val = undefined) constructor {
 				
 			default : 
 				if(is_numeric(min_val)) {
-					_val = random_range(min_val, max_val);
+					if(_v.type == VALUE_TYPE.integer)
+						 _val = irandom_range(min_val, max_val);
+					else _val =  random_range(min_val, max_val);
 					
 				} else if(is_array(min_val)) {
 					_val = array_create(array_length(min_val));
@@ -196,9 +200,7 @@ function Project_Randomizer() constructor {
 	
 	static serialize = function() {
 		var _m = {};
-		
-		_m.values = array_map(values, function(t) /*=>*/ {return t.serialize()} );
-		
+		_m.values = array_map(values, function(t,i) /*=>*/ {return t.serialize()} );
 		return _m;
 	}
 	
@@ -383,9 +385,10 @@ function Panel_Randomizer() : PanelContent() constructor {
 		var by = ui(8);
 		var bc;
 		
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Randomize All"), THEME.icon_random) == 2) {
+		var bt = __txt("Randomize All");
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.icon_random, 0, COLORS._main_accent) == 2)
 			_rnd.Random();
-		} bx += bs + ui(4);
+		bx += bs + ui(4);
 		
 		var n = PANEL_INSPECTOR.getInspecting();
 		

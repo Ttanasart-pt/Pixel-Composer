@@ -18,8 +18,12 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(12, nodeValue_Surface( "BG Surface" ));
 	
 	////- =Points
-	newInput( 2, nodeValue_Vec2( "Start Point",   [0,.5] )).setUnitSimple();
-	newInput( 3, nodeValue_Vec2( "End Point",     [1,.5] )).setUnitSimple();
+	newInput(16, nodeValue_EScroll( "Point Mode",   0, [ "2 Point", "Start + Offset", "Start + Polar" ] ));
+	newInput( 2, nodeValue_Vec2(    "Start Point", [0,.5] )).setUnitSimple();
+	newInput( 3, nodeValue_Vec2(    "End Point",   [1,.5] )).setUnitSimple();
+	newInput(17, nodeValue_Vec2(    "Offset",      [0, 1] )).setUnitSimple();
+	newInput(18, nodeValue_Rotation("Direction",    0     ));
+	newInput(19, nodeValue_Float(   "Distance",    .5     )).setUnitSimple();
 	
 	////- =Line
 	newInput( 4, nodeValue_Bool(    "1px Mode", false       )).setTooltip("Render pixel perfect 1px line.");
@@ -44,7 +48,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	input_display_list = [  1,
 		[ "Output",       false ],  0, 12, 
-		[ "Points",       false ],  2,  3,  
+		[ "Points",       false ], 16,  2,  3, 17, 18, 19, 
 		[ "Line",         false ],  4,  5,  6,  9, 11, 
 		[ "Rendering",    false ], 10, 
 			[ "/Colors",  false ],  7,  8, 
@@ -67,8 +71,12 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _dim   = getInputData( 0);
 			var _bgS   = getInputData(12);
 			
+			var _pMode = getInputData(16);
 			var _p0    = getInputData( 2);
-			var _p1    = getInputData( 3);
+			var _pEnd  = getInputData( 3);
+			var _off   = getInputData(17);
+			var _dirr  = getInputData(18);
+			var _diss  = getInputData(19);
 			
 			var _1px   = getInputData( 4);
 			var _wid   = getInputData( 5);
@@ -84,6 +92,11 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _tpos  = getInputData(14);
 			var _tsca  = getInputData(15);
 			
+			inputs[ 3].setVisible(_pMode == 0);
+			inputs[17].setVisible(_pMode == 1);
+			inputs[18].setVisible(_pMode == 2);
+			inputs[19].setVisible(_pMode == 2);
+			
 			inputs[ 5].setVisible(!_1px);
 		#endregion
 		
@@ -91,6 +104,14 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var outSurf = outputs[0].getValue();
 		    outSurf = surface_verify(outSurf, _dim[0], _dim[1], attrDepth());
+		
+		var _p1 = _pEnd;
+		
+		switch(_pMode) {
+			case 0 : _p1 = _pEnd; break;
+			case 1 : _p1 = [ _p0[0] + _off[0], _p0[1] + _off[1] ]; break;
+			case 2 : _p1 = [ _p0[0] + lengthdir_x(_diss, _dirr), _p0[1] + lengthdir_y(_diss, _dirr) ]; break;
+		}
 		
 		var d0 = array_get_depth(_p0);
 		var d1 = array_get_depth(_p1);
