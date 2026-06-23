@@ -309,13 +309,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			for( var i = 0, n = array_length(_glyKey); i < n; i++ ) {
 				var _k  = _glyKey[i];
-				// var _glp = font_cache_glyph(f, ord(_k));
-				
 				var _g  = _gly[$ _k];
-				var _uv = [-1, -1, _g.w, _g.h];
+				var _uv = [-1, -1, _g[$ "w"] ?? 0, _g[$ "h"] ?? 0];
 				__uvs[$ _k] = _uv;
-				
-				// print(_k, _uv, _g.shift, _g.offset, _g.yoffset)
 			}
 		}
 		

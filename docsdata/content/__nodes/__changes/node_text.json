@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.002",
+    "changes": [
+      {
+        "date": "2026-06-23T00:26:45.420Z",
+        "node": "Custom Panel Editor",
+        "commit": "**Custom Panel Editor**: Fix IO redirect can't remove the last item."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.004",
     "changes": [
       {

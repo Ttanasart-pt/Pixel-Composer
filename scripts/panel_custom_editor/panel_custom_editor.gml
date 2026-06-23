@@ -435,7 +435,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 					_h += hh + ui(4);
 				}
 				
-				if(toDel) array_delete(data.io_redirect, toDel, 1);
+				if(toDel != undefined) array_delete(data.io_redirect, toDel, 1);
 				
 				_y += ui(4);
 				_h += ui(4);
