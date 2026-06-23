@@ -139,7 +139,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 				
 			else if(mouse_lpress(focus)) {
 				if(key_mod_press(SHIFT)) array_toggle(PANEL_GRAPH.nodes_selecting, node);
-				else graphSelectNode(node, false);
+				else graphFocusNode(node, false);
 			}
 			
 			res = 1;

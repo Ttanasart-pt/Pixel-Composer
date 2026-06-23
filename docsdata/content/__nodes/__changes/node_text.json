@@ -6,6 +6,11 @@
         "date": "2026-06-23T00:26:45.420Z",
         "node": "Custom Panel Editor",
         "commit": "**Custom Panel Editor**: Fix IO redirect can't remove the last item."
+      },
+      {
+        "date": "2026-06-23T06:41:49.065Z",
+        "node": "Draw Text",
+        "commit": "**Draw Text**: Fix error when loading font with empty char glyph."
       }
     ]
   },

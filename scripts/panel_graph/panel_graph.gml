@@ -1217,7 +1217,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     } 
     
     fullView_selecting = true;
-    function fullView() { 
+    function fullView(_forceSelect = false) { 
+    	if(_forceSelect) fullView_selecting = true;
     	toCenterNode(fullView_selecting && !array_empty(nodes_selecting)? nodes_selecting : nodes_list); 
     	fullView_selecting = !fullView_selecting;
     }

@@ -1,28 +1,18 @@
 #region data
-	globalvar PANEL_MAIN; PANEL_MAIN       = undefined;
-	globalvar PANEL_MENU; PANEL_MENU       = undefined;
-	globalvar PANEL_PREVIEW; PANEL_PREVIEW    = undefined;
-	globalvar PANEL_INSPECTOR; PANEL_INSPECTOR  = undefined;
-	globalvar PANEL_GRAPH; PANEL_GRAPH      = undefined;
-	globalvar PANEL_ANIMATION; PANEL_ANIMATION  = undefined;
-	globalvar PANEL_COLLECTION; PANEL_COLLECTION = undefined;
-	globalvar PANEL_FILE; PANEL_FILE       = undefined;
-	globalvar PANEL_NODES; PANEL_NODES      = undefined;
+	globalvar PANEL_MAIN; PANEL_MAIN          = 0;
+	globalvar PANEL_MENU; PANEL_MENU          = 0;
+	globalvar PANEL_PREVIEW; PANEL_PREVIEW       = undefined;
+	globalvar PANEL_INSPECTOR; PANEL_INSPECTOR     = undefined;
+	globalvar PANEL_GRAPH; PANEL_GRAPH         = undefined;
+	globalvar PANEL_ANIMATION; PANEL_ANIMATION     = undefined;
+	globalvar PANEL_COLLECTION; PANEL_COLLECTION    = undefined;
+	globalvar PANEL_FILE; PANEL_FILE          = noone;
+	globalvar PANEL_NODES; PANEL_NODES         = noone;
 	
-	globalvar FULL_SCREEN_PANEL, FULL_SCREEN_CONTENT, FULL_SCREEN_PARENT;
-	
-	PANEL_MAIN = 0;
-	PANEL_MENU = 0;
-	
-	PANEL_FILE  = noone;
-	PANEL_NODES = noone;
-		
-	FULL_SCREEN_PANEL   = noone;
-	FULL_SCREEN_CONTENT = noone;
-	FULL_SCREEN_PARENT  = noone;
-#endregion
+	globalvar FULL_SCREEN_PANEL; FULL_SCREEN_PANEL   = noone;
+	globalvar FULL_SCREEN_CONTENT; FULL_SCREEN_CONTENT = noone;
+	globalvar FULL_SCREEN_PARENT; FULL_SCREEN_PARENT  = noone;
 
-#region panel class
 	enum PANEL_CONTENT {
 		empty,
 		splith,
@@ -34,12 +24,6 @@
 		graph,
 		collection
 	}
-	
-	#macro PANEL_PADDING padding      = in_dialog? ui(20) : ui(16); \
-						 title_height = in_dialog? ui(64) : ui(56);
-	
-	#macro PANEL_TITLE  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text); \
-					    draw_text_add(in_dialog? ui(56) : ui(24), title_height / 2 - (!in_dialog) * ui(4), title);
 #endregion
 
 #region functions 
@@ -130,23 +114,22 @@
 	}
 	
 	function checkPanelValid() {
-		var val  = true;
-		var _mst = "";
-		if(!is(PANEL_GRAPH.panel, Panel))     { val = false; _mst += "Graph, "     };
-		if(!is(PANEL_PREVIEW.panel, Panel))   { val = false; _mst += "Preview, "   };
-		if(!is(PANEL_INSPECTOR.panel, Panel)) { val = false; _mst += "Inspector, " };
+		var valid = true;
+		var missp = "";
 		
-		if(!val) {
-			noti_warning($"Invalid Panel Layout, missing {_mst} panel(s). Reset to the default layout and restart recommened.");
-			
+		if(!is(PANEL_GRAPH.panel,     Panel)) { valid = false; missp += "Graph, "     };
+		if(!is(PANEL_PREVIEW.panel,   Panel)) { valid = false; missp += "Preview, "   };
+		if(!is(PANEL_INSPECTOR.panel, Panel)) { valid = false; missp += "Inspector, " };
+		
+		if(!valid) {
+			noti_warning($"Invalid Panel Layout, missing {missp} panel(s). Reset to the default layout and restart recommened.");
 			PREFERENCES.panel_layout_file = "__default";
 			PREFERENCES._display_scaling  = 1;
 			PREFERENCES.display_scaling   = 0;
-			
 			resetScale(1);
 		}
 		
-		return val;
+		return valid;
 	}
 	
 	function panelAdd(panel, create = false, focus = true, _x = noone, _y = noone) {
