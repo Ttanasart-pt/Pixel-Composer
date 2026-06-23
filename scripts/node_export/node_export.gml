@@ -82,34 +82,36 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- =Format
 	newInput( 3, nodeValue_EScroll( "Type",   0, { data: format_single, update_hover: false } )).rejectArray();
 	newInput( 9, nodeValue_EScroll( "Format", 0, { data: format_image,  update_hover: false } )).rejectArray();
-	newInput(17, nodeValue_Bool(        "Use Built-in gif encoder", false      ))
-	newInput(18, nodeValue_Int(         "Quality",                  2, [0,3,1] )).rejectArray();
-	newInput( 6, nodeValue_Bool(        "Frame optimization",       false      )).setVisible(false).rejectArray();
-	newInput( 7, nodeValue_Slider(      "Color merge",             .02         )).setVisible(false).rejectArray();
-	newInput(10, nodeValue_Slider(      "Quality",                  23, [ 0, 100, 0.1 ] )).rejectArray();
+	newInput(17, nodeValue_Bool(    "Use Built-in gif encoder", false      ))
+	newInput(18, nodeValue_Int(     "Quality",                  2, [0,3,1] )).rejectArray();
+	newInput( 6, nodeValue_Bool(    "Frame optimization",       false      )).setVisible(false).rejectArray();
+	newInput( 7, nodeValue_Slider(  "Color merge",             .02         )).setVisible(false).rejectArray();
+	newInput(10, nodeValue_Slider(  "Quality",                  23, [ 0, 100, 0.1 ] )).rejectArray();
 	newInput(13, nodeValue_EScroll( "Subformat",                 2, { data: png_format, update_hover: false }));
-	newInput(23, nodeValue_Float(       "Bit Rate (mbps)",           2 )).rejectArray();
+	newInput(23, nodeValue_Float(   "Bit Rate (mbps)",           2 )).rejectArray();
 	
 	////- =Post-Process
 	newInput(19, nodeValue_Float( "Scale", 1 ));
 	
 	////- =Custom Range
-	newInput(15, nodeValue_Bool(         "Custom Range", false )).rejectArray();
-	newInput(12, nodeValue_Slider_Range( "Frame range", [0,-1], { range: [0, TOTAL_FRAMES, 0.1] }));
+	newInput(15, nodeValue_Bool(     "Custom Range", false )).rejectArray();
+	newInput(12, nodeValue_SliRange( "Frame range", [0,-1], { range: [0, TOTAL_FRAMES, 0.1] }));
 	
 	////- =Animation
-	newInput( 8, nodeValue_Float( "Framerate",         1 )).rejectArray();
-	newInput( 5, nodeValue_Bool(  "Loop",           true )).setVisible(false).rejectArray();
-	newInput(11, nodeValue_Int(   "Sequence begin",    0 ));
-	newInput(14, nodeValue_Int(   "Frame step",        1 ));
-	newInput(21, nodeValue_Int(   "Batch gif",         0 )).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
+	newInput(26, nodeValue_EButton( "Frame Timing",  0, [ "FPS", "Duration" ] )).rejectArray();
+	newInput( 8, nodeValue_Float(   "Framerate",         1 )).rejectArray();
+	newInput(27, nodeValue_Float(   "Frame time (ms)",  33 )).rejectArray();
+	newInput( 5, nodeValue_Bool(    "Loop",           true )).setVisible(false).rejectArray();
+	newInput(11, nodeValue_Int(     "Sequence begin",    0 ));
+	newInput(14, nodeValue_Int(     "Frame step",        1 ));
+	newInput(21, nodeValue_Int(     "Batch gif",         0 )).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
 	
 	////- =Regions
 	newInput(24, nodeValue_Bool(    "Render Region",  false ));
 	newInput(25, nodeValue_Text(    "Export Regions", []    ).setDisplay(VALUE_DISPLAY.text_array, { 
 		data: function() /*=>*/ {return array_create_ext(array_length(PROJECT.animationRegions), function(i) /*=>*/ {return PROJECT.animationRegions[i].label})}
 	}));
-	// inputs 26
+	// inputs 28
 	
 	newOutput(0, nodeValue_Output("Preview", VALUE_TYPE.surface, noone));
 	
@@ -209,7 +211,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		[ "Export",       false     ],  0,  1, 20,  2, export_template, 16, 22, 
 		[ "Format",       false     ],  3,  9, 17, 18,  6,  7, 10, 13, 23, 
 		[ "Post-Process", false     ], 19, export_scale_label, 
-		[ "Animation",    false     ],  8,  5, 11, 14, 21, 
+		[ "Animation",    false     ], 26,  8, 27,  5, 11, 14, 21, 
 		[ "Custom Range",  true, 15 ], 12, 
 		[ "Regions",       true, 24 ], 25, 
 	];
@@ -490,13 +492,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		    _path = file_find_next();
 		}
 		
-		var rate = getInputData(8);
-		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
-		rate = max(1, rate);
+		var fType = getInputData(26);
+		var framerate;
 		
-		var framerate = round(1 / rate * 1000);
+		if(fType == 0) {
+			var fRate = getInputData( 8);
+			if(inputs[8].attributes.unit == VALUE_UNIT.reference) 
+				fRate *= project.animator.framerate;
+			fRate = max(1, fRate);
+			framerate = round(1 / fRate * 1000);
+			
+		} else if(fType == 1) {
+			var fTime = getInputData(27);
+			framerate = fTime;
+		}
+		
 		var cmd = "";
-		
 		for( var i = 0, n = array_length(frames); i < n; i++ )
 			cmd += $"-frame {frames[i]} +{framerate}+0+0+1 ";
 		
@@ -512,17 +523,27 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var loop = getInputData( 5);
 		var opti = getInputData( 6);
 		var fuzz = getInputData( 7);
-		var rate = getInputData( 8);
 		var qual = getInputData(10);
 		var bsiz = getInputData(21);
 		
-		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
-		rate = max(1, rate);
+		var fType = getInputData(26);
+		var framerate;
+		
+		if(fType == 0) {
+			var fRate = getInputData( 8);
+			if(inputs[8].attributes.unit == VALUE_UNIT.reference) 
+				fRate *= project.animator.framerate;
+			fRate = max(1, fRate);
+			framerate = $"1x{fRate}";
+			
+		} else if(fType == 1) {
+			var fTime = getInputData(27);
+			framerate = ceil(fTime / 10);
+		}
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var framerate  = 100 / rate; framerate = $"1x{rate}";
 		var loop_str   = loop? 0 : 1;
 		var use_gifski = false;
 		
@@ -554,9 +575,23 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	 
 	static renderMp4 = function(temp_path, target_path) {
-		var rate = getInputData( 8);
 		var qual = getInputData(10); qual = clamp(qual, 0, 51);
 		
+		var fType = getInputData(26);
+		var framerate;
+		
+		if(fType == 0) {
+			var fRate = getInputData( 8);
+			if(inputs[8].attributes.unit == VALUE_UNIT.reference) 
+				fRate *= project.animator.framerate;
+			framerate = max(1, fRate);
+			
+		} else if(fType == 1) {
+			var fTime = getInputData(27);
+			framerate = ceil(1000 / fTime);
+		}
+		
+		var rate = getInputData( 8);
 		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
 		rate = max(1, rate);
 		
@@ -566,7 +601,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		temp_path   = string_trim(temp_path, ["*.png"]) + "%05d.png";
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -y -i \"{temp_path}\" -c:v libx264 -pix_fmt yuv420p -crf {qual} {string_quote(target_path)}";
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {framerate} -y -i \"{temp_path}\" -c:v libx264 -pix_fmt yuv420p -crf {qual} {string_quote(target_path)}";
 		
 		array_push(render_process_id, shell_execute_async(ffmpeg, shell_cmd, self));
 		render_type       = "mp4";
@@ -574,12 +609,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	 
 	static renderWebm = function(temp_path, target_path) {
-		var rate = getInputData( 8);
 		var qual = getInputData(10);
 		var bitr = getInputData(23);
 		
-		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
-		rate = max(1, rate);
+		var fType = getInputData(26);
+		var framerate;
+		
+		if(fType == 0) {
+			var fRate = getInputData( 8);
+			if(inputs[8].attributes.unit == VALUE_UNIT.reference) 
+				fRate *= project.animator.framerate;
+			framerate = max(1, fRate);
+			
+		} else if(fType == 1) {
+			var fTime = getInputData(27);
+			framerate = ceil(1000 / fTime);
+		}
 		
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
@@ -587,7 +632,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		temp_path   = string_trim(temp_path, ["*.png"]) + "%05d.png";
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -y -i \"{temp_path}\" -c:v libvpx-vp9 -pix_fmt yuva420p -b:v {bitr}M -crf {qual} -deadline good -auto-alt-ref 0 {string_quote(target_path)}";
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {framerate} -y -i \"{temp_path}\" -c:v libvpx-vp9 -pix_fmt yuva420p -b:v {bitr}M -crf {qual} -deadline good -auto-alt-ref 0 {string_quote(target_path)}";
 		
 		array_push(render_process_id, shell_execute_async(ffmpeg, shell_cmd, self));
 		render_type       = "webm";
@@ -595,9 +640,19 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	 
 	static renderApng = function(temp_path, target_path) {
-		var rate = getInputData( 8);
-		if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
-		rate = max(1, rate);
+		var fType = getInputData(26);
+		var framerate;
+		
+		if(fType == 0) {
+			var fRate = getInputData( 8);
+			if(inputs[8].attributes.unit == VALUE_UNIT.reference) 
+				fRate *= project.animator.framerate;
+			framerate = max(1, fRate);
+			
+		} else if(fType == 1) {
+			var fTime = getInputData(27);
+			framerate = ceil(1000 / fTime);
+		}
 		
 		if(file_exists_empty(target_path)) file_delete(target_path);
 		
@@ -605,7 +660,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		temp_path   = string_trim(temp_path, ["*.png"]) + "%05d.png";
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} -y -i \"{temp_path}\" -plays 0 {string_quote(target_path)}";
+		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {framerate} -y -i \"{temp_path}\" -plays 0 {string_quote(target_path)}";
 		
 		array_push(render_process_id, shell_execute_async(ffmpeg, shell_cmd, self));
 		render_type       = "apng";
@@ -787,12 +842,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		if(use_gif_encoder) {
-			var rate = getInputData( 8);
+			var fType = getInputData(26);
+			var framerate;
+			
+			if(fType == 0) {
+				var fRate = getInputData( 8);
+				if(inputs[8].attributes.unit == VALUE_UNIT.reference) 
+					fRate *= project.animator.framerate;
+				framerate = 100 / max(1, fRate);
+				
+			} else if(fType == 1) {
+				var fTime = getInputData(27);
+				framerate = ceil(fTime / 10);
+			}
+			
 			var quan = getInputData(18);
 			
-			if(inputs[8].attributes.unit == VALUE_UNIT.reference) rate *= project.animator.framerate;
-			rate = max(1, rate);
-		
 			if(!is_array(surf)) surf = [ surf ];
 			for( var i = 0, n = array_length(surf); i < n; i++ ) {
 				var _s = surf[i];
@@ -806,7 +871,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_s = temp_surface[0];
 				}
 				
-				gif_add_surface(gif_encoder[i], _s, 100 / rate, 0, 0, quan);
+				gif_add_surface(gif_encoder[i], _s, framerate, 0, 0, quan);
 			}
 			
 			return;
@@ -1037,7 +1102,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[12].getEditWidget().minn = FIRST_FRAME + 1;
 			inputs[12].getEditWidget().maxx = LAST_FRAME  + 1;
 			
+			inputs[26].setVisible(false);
 			inputs[ 8].setVisible(false);
+			inputs[27].setVisible(false);
 			inputs[ 5].setVisible(false);
 			inputs[21].setVisible(false);
 			inputs[11].setVisible(anim == 1);
@@ -1046,6 +1113,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(anim == NODE_EXPORT_FORMAT.animation) {
 				var _enc = getInputData(17);
 				var _fmt = array_safe_get_fast(format_animation, extn);
+						
+				var fType = getInputData(26);
 				
 				inputs[ 9].display_data.data         = format_animation;
 				inputs[ 9].getEditWidget().data_list = format_animation;
@@ -1055,7 +1124,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[ 7].setVisible(_fmt == ".gif" && !_enc);
 				inputs[23].setVisible(_fmt == ".webm");
 				
-				inputs[ 8].setVisible(true);
+				inputs[26].setVisible(true);
+				inputs[ 8].setVisible(fType == 0);
+				inputs[27].setVisible(fType == 1);
 				inputs[ 5].setVisible(_fmt == ".gif");
 				inputs[21].setVisible(true);
 				

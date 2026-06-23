@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.003",
+    "changes": [
+      {
+        "date": "2026-06-23T23:55:54.860Z",
+        "node": "Export",
+        "commit": "**Export**: Add \"Duration\" frame timing type (control how long each frame last in milliseconds instead of frames per sec.)"
+      }
+    ]
+  },
+  {
     "version": "1.21.4.009",
     "changes": [
       {
