@@ -11,14 +11,14 @@ function Panel_Custom_Node_Input(_data) : Panel_Custom_Element(_data) constructo
 	font = 1;
 	
 	array_append(editors, [
-		[ "Data", false ], 
+		[ "Binding", false ], 
 		input, 
 		
 		[ "Display", false ], 
-		Simple_Editor("Full", new scrollBox([ "Widget Only", "Full Compact", "Full Spacious" ], 
-			function(i) /*=>*/ { full = i; } ), function() /*=>*/ {return full}, function(t) /*=>*/ { full = t; }), 
-		Simple_Editor("Font", new scrollBox([ "Content 1", "Content 2", "Content 3", "Content 4" ], 
-			function(t) /*=>*/ { font = t; } ), function() /*=>*/ {return font}, function(t) /*=>*/ { font = t; }), 
+		Simple_Editor("Full", new scrollBox([ "Widget Only", "Full Compact", "Full Spacious" ],     function(i) /*=>*/ {full = i}), 
+			function() /*=>*/ {return full}, function(t) /*=>*/ {full = t}), 
+		Simple_Editor("Font", new scrollBox([ "Content 1", "Content 2", "Content 3", "Content 4" ], function(t) /*=>*/ {font = t}), 
+			function() /*=>*/ {return font}, function(t) /*=>*/ {font = t}), 
 		
 	]);
 	

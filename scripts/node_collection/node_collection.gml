@@ -70,8 +70,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	array_push(attributeEditors, Node_Attribute("Edit Input Display",  function() /*=>*/ {return 0}, function() /*=>*/ {return button(function() /*=>*/ {return editInput()})}  ));
 	array_push(attributeEditors, Node_Attribute("Edit Output Display", function() /*=>*/ {return 0}, function() /*=>*/ {return button(function() /*=>*/ {return editOutput()})} ));
 	
-	function editInput()  { var _self = self; dialogPanelCall(new Panel_Group_IO_Edit(_self, CONNECT_TYPE.input));  }
-	function editOutput() { var _self = self; dialogPanelCall(new Panel_Group_IO_Edit(_self, CONNECT_TYPE.output)); }
+	function editInput()  { dialogPanelCall(new Panel_Group_IO_Edit(self, CONNECT_TYPE.input));  }
+	function editOutput() { dialogPanelCall(new Panel_Group_IO_Edit(self, CONNECT_TYPE.output)); }
 	
 	////- INSPECTOR
 	
@@ -87,7 +87,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	// }).setTooltip(__txt("Sync"))
 	// 	.setIcon(THEME.refresh_icon, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	buttonCacheClear.onClick = function() /*=>*/ { array_foreach(nodes, function(n) /*=>*/ {return n.clearCache()} ); };
+	buttonCacheClear.onClick = function() /*=>*/ { array_foreach(nodes, function(n,i) /*=>*/ {return n.clearCache()} ); };
 	
 	////- PANEL
 	
@@ -512,7 +512,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- CACHE
 	
-	static clearCache = function() { array_foreach(getNodeList(), function(node) /*=>*/ { node.clearCache(); }); }
+	static clearCache = function() { array_foreach(getNodeList(), function(node,i) /*=>*/ {return node.clearCache()}); }
 	
 	////- SERIALIZATION
 	
@@ -524,16 +524,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _attr = {};
 		
 		_attr.custom_input_list = [];
-		for( var i = custom_input_index, n = array_length(inputs); i < n; i++ ) {
-			if(struct_has(inputs[i], "from"))
-				array_push(_attr.custom_input_list, inputs[i].from.node_id);
-		}
+		for( var i = custom_input_index, n = array_length(inputs); i < n; i++ )
+			if(has(inputs[i], "from")) array_push(_attr.custom_input_list, inputs[i].from.node_id);
 		
 		_attr.custom_output_list = [];
-		for( var i = custom_output_index, n = array_length(outputs); i < n; i++ ) {
-			if(struct_has(outputs[i], "from"))
-				array_push(_attr.custom_output_list , outputs[i].from.node_id);
-		}
+		for( var i = custom_output_index, n = array_length(outputs); i < n; i++ )
+			if(has(outputs[i], "from")) array_push(_attr.custom_output_list , outputs[i].from.node_id);
 		
 		_attr.path = collPath;
 		
@@ -631,9 +627,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		if(has(attr, "path")) collPath = attr.path;
+		
+		if(has(attr, "input_display_list")) {
+			for( var i = 0, n = array_length(attr.input_display_list); i < n; i++ ) {
+				var _inDisp = attr.input_display_list[i];
+				
+				if(has(_inDisp, "type") && _inDisp.type == "Inspector_Sprite") {
+					attr.input_display_list[i] = new Inspector_Sprite().deserialize(_inDisp);
+				}
+			}
+		}
 			
 	}
-	
 	static doDeserialize       = function(_map) {
 		var _toolNode = _map[$ "tool"] ?? -4;
 		if(_toolNode != -4) {

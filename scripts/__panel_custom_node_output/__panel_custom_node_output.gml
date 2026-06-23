@@ -14,29 +14,29 @@ function Panel_Custom_Node_Output(_data) : Panel_Custom_Element(_data) construct
 	surface_tile = 0;
 	
 	array_append(editors, [
-		[ "Data", false ], 
+		[ "Binding", false ], 
 		output, 
 		
-		Simple_Editor("Data Only", new checkBox( function() /*=>*/ { dataOnly = !dataOnly; } ), function() /*=>*/ {return dataOnly}, function(t) /*=>*/ { dataOnly = t; }), 
+		Simple_Editor("Data Only",   new checkBox( function() /*=>*/ { dataOnly = !dataOnly; } ), function() /*=>*/ {return dataOnly}, function(t) /*=>*/ { dataOnly = t; }), 
 		
 		[ "Text", false ], 	
-		Simple_Editor("Font", new scrollBox( [ 
+		Simple_Editor("Font",        new scrollBox( [ 
 			"Content 1", 
 			"Content 2", 
 			"Content 3", 
 			"Content 4", 
 		], function(t) /*=>*/ { font = t; } ), function() /*=>*/ {return font}, function(t) /*=>*/ { font = t; }), 
-		Simple_Editor("H Align", new buttonGroup( array_create(3, THEME.inspector_surface_halign), function(c) /*=>*/ { halign = c; }), function() /*=>*/ {return halign}, function(c) /*=>*/ { halign = c; }), 
-		Simple_Editor("V Align", new buttonGroup( array_create(3, THEME.inspector_surface_valign), function(c) /*=>*/ { valign = c; }), function() /*=>*/ {return valign}, function(c) /*=>*/ { valign = c; }), 
+		Simple_Editor("H Align",     new buttonGroup( array_create(3, THEME.inspector_surface_halign), function(c) /*=>*/ { halign = c; }), function() /*=>*/ {return halign}, function(c) /*=>*/ { halign = c; }), 
+		Simple_Editor("V Align",     new buttonGroup( array_create(3, THEME.inspector_surface_valign), function(c) /*=>*/ { valign = c; }), function() /*=>*/ {return valign}, function(c) /*=>*/ { valign = c; }), 
 		Simple_Editor("Surface Fit", new scrollBox( [ 
 			"Keep Ratio min", 
 			"Keep Ratio max", 
 			"Stretch", 
 		], function(t) /*=>*/ { surface_fit = t; } ), function() /*=>*/ {return surface_fit}, function(t) /*=>*/ { surface_fit = t; }), 
-		Simple_Editor("Tile", new checkBox( function() /*=>*/ { surface_tile = !surface_tile; } ), function() /*=>*/ {return surface_tile}, function(t) /*=>*/ { surface_tile = t; }), 
+		Simple_Editor("Tile",        new checkBox( function() /*=>*/ { surface_tile = !surface_tile; } ), function() /*=>*/ {return surface_tile}, function(t) /*=>*/ { surface_tile = t; }), 
 		
 		[ "Display", false ], 	
-		Simple_Editor("Color", new buttonColor( function(c) /*=>*/ { color = c; }), function() /*=>*/ {return color}, function(c) /*=>*/ { color = c; }), 
+		Simple_Editor("Color",       new buttonColor( function(c) /*=>*/ { color = c; }), function() /*=>*/ {return color}, function(c) /*=>*/ { color = c; }), 
 	]);
 	
 	////- Draw

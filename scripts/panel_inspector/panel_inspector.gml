@@ -208,6 +208,53 @@
 	    coll   = _coll;
 	    lshf   = _shf;
 	}
+	
+	function Inspector_Sprite() constructor {
+		type  = "Inspector_Sprite";
+		data  = "";
+		spr   = undefined;
+		subimages = 1;
+		
+		static setPath = function(p) /*=>*/ { 
+			if(spr != undefined && sprite_exists(spr)) 
+				sprite_delete(spr);
+			
+			var _buff = buffer_load(p);
+			var _base64_data = buffer_base64_encode(_buff, 0, buffer_get_size(_buff));
+			buffer_delete(_buff);
+			
+			subimages = 1;
+			if(string_pos("strip", p)) {
+				var _spl = string_split(p, "strip");
+				var _num = toNumber(array_safe_get(_spl, 1, ""));
+				if(_num) subimages = _num;
+			}
+			
+			data = $"data:image/png;base64,{_base64_data}";
+			spr  = sprite_add(data, subimages);
+			return self; 
+		}
+		
+		static getSpr = function() /*=>*/ {
+			if(spr != undefined) return spr;
+			if(data != "") spr = sprite_add(data, subimages);
+			return spr;
+		}
+		
+		////- Serialize
+	
+		static serialize = function() {
+			return { data, subimages };
+		}
+		
+		static deserialize = function(_m) { 
+			if(!is_struct(_m)) return self;
+			data      = _m[$ "data"]      ?? data;
+			subimages = _m[$ "subimages"] ?? subimages;
+			return self;
+		}
+
+	}
 #endregion
 
 enum INSPECTOR_FLAG { 
@@ -1121,7 +1168,18 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(_wdh > 0) _wdh += ui(8);
                 hh += _wdh;
                 continue;
-                
+              
+            } else if(is(jun, Inspector_Sprite)) {
+            	var _spr = jun.getSpr();
+            	if(!sprite_exists(_spr)) continue;
+            	
+            	var sprW = sprite_get_width(_spr);
+            	var sprH = sprite_get_height(_spr);
+            	
+            	draw_sprite(_spr, 0, xc - sprW / 2, yy);
+                hh += sprH + padd;
+                continue;	
+            	
             } else if(is(jun, widget)) {
             	if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
             	if(!jun.visible) continue;

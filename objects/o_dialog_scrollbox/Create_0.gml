@@ -58,8 +58,6 @@ doRefocus();
 
 #region content
 	function initScroll(_scroll, _initVal) {
-		print(instanceof(_scroll), _scroll)
-		
 		scrollbox    = _scroll;
 		dialog_w     = max(ui(200), _scroll.w);
 		

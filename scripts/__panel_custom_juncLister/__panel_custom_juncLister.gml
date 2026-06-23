@@ -30,11 +30,10 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 	////- Editors
 	
 	node_scroll = Simple_Editor("Node", new scrollBoxFn(function() /*=>*/ {return getNodeList()}, function(i) /*=>*/ { 
-		print("Set node", i);
-		
-		node     = nodeList[i]; 
+		mode     = "node";
+		node     = array_safe_get(nodeList, i);
 		node_id  = undefined;
-		junction = undefined; 
+		junction = undefined;
 		
 		if(is(node, Node)) {
 			mode    = "node";
@@ -44,11 +43,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 			mode    = "redir";
 			node_id = node.uuid;
 		
-		} else if(node == -2) {
+		} else if(node == -2)
 			mode    = "global";
-				
-		} else 
-			mode    = "node"
 			
 	} ).setUpdateHover(false), 
 		function( ) /*=>*/ {return node? node.getDisplayName() : ""}, 

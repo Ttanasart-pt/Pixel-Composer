@@ -928,20 +928,23 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		preview_x1      = dx1;
 		preview_y1      = dy1;
 		preview_surface = surface_verify(preview_surface, dw, dh);
+		
+		var _prevm = [mx - dx0, my - dy0];
+		
 		surface_set_target(preview_surface);
 			draw_clear_alpha(COLORS.panel_bg_clear, 0);
-			data.setSize(0, 0, dw, dh, x, y);
+			data.setSize(0, 0, dw, dh, preview_x0 + x, preview_y0 + y);
 			
 			if(preview_mode) {
-				data.setFocusHover(pFOCUS, pHOVER);
-				data.root.checkMouse(self, [mx - dx0, my - dy0]);
-				data.draw(self, [mx - dx0, my - dy0]);
+				data.setFocusHover(pFOCUS, pHOVER, true);
+				data.root.checkMouse(self, _prevm);
+				data.draw(self, _prevm);
 				
 			} else {
 				data.setFocusHover(false, pHOVER);
-				data.root.checkMouse(self, [mx - dx0, my - dy0]);
+				data.root.checkMouse(self, _prevm);
 				data.root.getSnapPoint(self);
-				data.draw(self, [mx - dx0, my - dy0]);
+				data.draw(self, _prevm);
 				data.root.drawBox(self);
 			}
 		surface_reset_target();

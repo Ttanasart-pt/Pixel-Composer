@@ -42,6 +42,15 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 		node.sortIO();
 	}
 	
+	function addImage() {
+		var _path = get_open_filename_compat("Image (.png)|.png", ""); key_release();
+		if(!file_exists_empty(_path)) return;
+		
+		var _image = new Inspector_Sprite().setPath(_path);
+		array_push(node.attributes.input_display_list, _image);
+		node.sortIO();
+	}
+	
 	sp_content = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(CDEF.main_mdblack, 1);
 		if(node == noone) return 0;
@@ -114,7 +123,20 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 						_del = i;
 				}
 				
-			} else {
+			} else if(is(disp, Inspector_Sprite)) {
+				var _spr = disp.getSpr();
+				
+				if(sprite_exists(_spr)) {
+					var sx = hg + ui(8);
+					var sy = _y + ui(4);
+					var ss = (hg - ui(8)) / min(sprite_get_width(_spr), sprite_get_height(_spr));
+					draw_sprite_ext(_spr, 0, sx, sy, ss, ss);
+				}
+				
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+				draw_text_add(hg + ui(8) + hg, _y + hg / 2 - 1, "Sprite");
+				
+			} else if(is_numeric(disp)) {
 				var ind = junction_list[disp];
 				draw_set_text(f_p2, fa_left, fa_center, ind.color_display);
 				draw_text_add(hg + ui(8), _y + hg / 2 - 1, ind.name);
@@ -155,19 +177,31 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg,   1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		sp_content.verify(pw, ph);
-		sp_content.setToolRect(type == CONNECT_TYPE.input? 1 : 0)
+		sp_content.setToolRect(type == CONNECT_TYPE.input? 2 : 0)
     	sp_content.setFocusHover(pFOCUS, pHOVER);
     	sp_content.drawOffset(px, py, mx, my);
     	
+    	var bb = THEME.button_hide_fill;
 		var bs = ui(24);
 		var bx = px + pw + ui(8) - bs;
 		var by = py - ui(8);
-		var bc = COLORS._main_value_positive;
+		
+		var mm = [mx,my];
 		
 		if(type == CONNECT_TYPE.input) { 
-			var _txt = __txt("dialog_group_order_add", "Add separator");
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, _txt, THEME.add, 1, bc, 1, .75) == 2)
+			var  bc  = COLORS._main_value_positive;
+			var  bss = THEME.add;
+			var _txt = __txt("Add separator");
+			if(buttonInstant(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, _txt, bss, 1, bc, 1, .75) == 2)
 				addSection();
+			
+			bx -= bs + ui(2);
+			var  bc  = COLORS._main_icon;
+			var  bss = THEME.image_20;
+			var _txt = __txt("Add Image");
+			if(buttonInstant(bb, bx, by, bs, bs, mm, pHOVER, pFOCUS, _txt, bss, 1, bc, 1, .75) == 2)
+				addImage();
+			
 		}
 	}
 }
