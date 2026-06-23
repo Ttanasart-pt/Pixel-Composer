@@ -61,6 +61,8 @@ function Panel_Workspace() : PanelContent() constructor {
 			f = file_find_next();
 		}
 		
+		array_sort(workspaces, true);
+		
 	} refreshContent();
 	
 	////- Draw
@@ -82,6 +84,7 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		draw_set_font(font);
 		var currT = PREFERENCES.panel_layout_file;
+		if(currT == "__default") currT = "Default";
 		if(PANEL_MODIFIED) currT += "*";
 		
 		draw_set_font(f_p2b);
@@ -93,6 +96,8 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		for( var i = 0; i <= amo; i++ ) {
 			var str = i == amo? "+" : workspaces[i];
+			if(str == "__default") continue;
+			
 			var tw  = string_width(str)  + ui(12);
 			var th  = string_height(str) + ui(8);
 			var sel = PREFERENCES.panel_layout_file == str;

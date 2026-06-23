@@ -107,7 +107,7 @@
 		#endregion
 		
 		#region PANEL
-			PREFERENCES.panel_layout_file                 = "Vertical";
+			PREFERENCES.panel_layout_file                 = "__default";
 			
 			PREFERENCES.panel_graph_dragging              = MOD_KEY.alt;
 			PREFERENCES.panel_graph_group_require_shift   = true;

@@ -139,7 +139,7 @@
 		if(!val) {
 			noti_warning($"Invalid Panel Layout, missing {_mst} panel(s). Reset to the default layout and restart recommened.");
 			
-			PREFERENCES.panel_layout_file = "Vertical";
+			PREFERENCES.panel_layout_file = "__default";
 			PREFERENCES._display_scaling  = 1;
 			PREFERENCES.display_scaling   = 0;
 			
