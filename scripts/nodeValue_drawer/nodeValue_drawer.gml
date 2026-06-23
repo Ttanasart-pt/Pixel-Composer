@@ -393,19 +393,44 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 								reset_hold = true;
 							}
 							break;
+						
+						case "Expression":
+							var ic_b = c_white;
+							var bt = __txt("panel_inspector_use_expression", "Use expression");
+							
+							bx  -= bs; 
+							b    = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_use_expression, jun.expUse, ic_b, .8, ics); 
+							bx  -= ui(4);
+							cHov = cHov || b;
+							
+							if(b == 2) {
+								jun.setUseExpression(!jun.expUse);
+								if(!jun.expUse) widget_reset();
+							}
+							break;
+							
+						case "Bypass" : 
+							var bypas = jun.getBypassJunc();
+							if(!bypas) break;
+							
+							var ic_b = jun.bypass_use? COLORS._main_accent : c_white;
+							var t  = __txt("Bypass");
+							var si = jun.bypass_use;
+							
+							bx  -= bs; 
+							b    = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, t, THEME.junction_bypass, si, ic_b, .8, ics); 
+							bx  -= ui(4);
+							cHov = cHov || b;
+							
+							if(b == 2) {
+								jun.setBypass(!jun.bypass_use); 
+								jun.node.refreshNodeDisplay();
+							}
+							break;
 					}
 				}
 				
 				if(!global_var && breakLine) {
-					var ic_b = c_white;
-					var bt = __txt("panel_inspector_use_expression", "Use expression");
-					bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_use_expression, jun.expUse, ic_b, .8, ics); bx -= ui(4);
-					cHov = cHov || b;
-					if(b == 2) {
-						jun.setUseExpression(!jun.expUse);
-						if(!jun.expUse) widget_reset();
-					}
-						
 					if(jun.expUse) {
 						var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : c_white;
 						var bt = __txt("panel_inspector_dropper", "Node Dropper");
@@ -426,18 +451,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 						}
 					}
 					
-					var bypas = jun.getBypassJunc();
-					if(bypas) {
-						var ic_b = jun.bypass_use? COLORS._main_accent : c_white;
-						var t  = __txt("Bypass");
-						var si = jun.bypass_use;
-						bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, t, THEME.junction_bypass, si, ic_b, .8, ics); bx -= ui(4);
-						cHov = cHov || b;
-						if(b == 2) {
-							jun.setBypass(!jun.bypass_use); 
-							jun.node.refreshNodeDisplay();
-						}
-					}
 				}
 				
 				if(RANDOMIZER_ACTIVE) {
