@@ -452,7 +452,7 @@ function Panel_Inspector() : PanelContent() constructor {
     
     #region ++++ Menus ++++
     	tSearch     = new tooltipHotkey(__txt("Search"), "Inspector", "Search Toggle");
-    	tFilteranim = new tooltipHotkey(__txt("Filter Animated"), "Inspector", "Filter Animation");
+    	tFilteranim = new tooltipHotkey(__txt("Filter Animated"), "", "Filter Animation");
     	
         static nodeExpandAll = function(node) {
             if(node.input_display_list == -1) return;

@@ -198,12 +198,36 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    
 	    if(_pth.loop) draw_line(ox, oy, x0, y0);
 	    
+	    var _siz = getInputData( 1);
+	    var _rot = getInputData( 2);
+	    
 	    var _px = _x + _pth.posx * _s;
 	    var _py = _y + _pth.posy * _s;
 	    
-	    InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-	    InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-	    InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+	    var p0 = point_rotate_origin( _siz[0] * _s, _siz[1] * _s, _rot);
+	    var p1 = point_rotate_origin(-_siz[0] * _s, _siz[1] * _s, _rot);
+	    
+	    var x0 = _px - p0[0];
+	    var y0 = _py - p0[1];
+	    
+	    var x1 = _px + p0[0];
+	    var y1 = _py + p0[1];
+	    
+	    var x2 = _px - p1[0];
+	    var y2 = _py - p1[1];
+	    
+	    var x3 = _px + p1[0];
+	    var y3 = _py + p1[1];
+	    
+	    draw_set_color(COLORS._main_accent);
+	    draw_line_dashed(x0, y0, x2, y2);
+	    draw_line_dashed(x2, y2, x1, y1);
+	    draw_line_dashed(x1, y1, x3, y3);
+	    draw_line_dashed(x3, y3, x0, y0);
+	    
+	    InputDrawOverlay(inputs[ 0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+	    InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+	    InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [1,1], _rot));
 	    
 	    return w_hovering;
 	}

@@ -163,6 +163,7 @@
 		
 		if(struct_has(KEY_STRING_MAP, _key)) 
 			dk += KEY_STRING_MAP[$ _key];
+			
 		else if(_key > 0) 
 			dk += ansi_char(_key);	
 		

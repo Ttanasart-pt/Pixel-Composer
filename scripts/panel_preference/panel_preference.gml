@@ -1397,14 +1397,15 @@ function Panel_Preference() : PanelContent() constructor {
 			[ __txt("Spacebar Action"), new buttonGroup( [ "Stop", "Resume", "Other" ], 
 				function(i) /*=>*/ {
 					switch(i) {
-						case 0 : hotkey_play.set(MOD_KEY.none, vk_space);
-							     hotkey_resume.set(MOD_KEY.shift, vk_space); break;
+						case 0 : hotkey_play.set(vk_space, MOD_KEY.none);
+							     hotkey_resume.set(vk_space, MOD_KEY.shift); break;
 						
-						case 1 : hotkey_play.set(MOD_KEY.shift, vk_space);
-							     hotkey_resume.set(MOD_KEY.none, vk_space);  break;
+						case 1 : hotkey_play.set(vk_space, MOD_KEY.shift);
+							     hotkey_resume.set(vk_space, MOD_KEY.none);  break;
 					}
 					
 					PREF_SAVE();
+					
 				} ), 
 				function( ) /*=>*/ {
 					if(hotkey_play.getKeyName()   == "Space") return 0;
