@@ -82,6 +82,16 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		),
 		
 		new __Panel_Linear_Setting_Item(
+			__txt("graph_simplify_level", "Simplify Scale"),
+			slider(0, 1, .01, function(val) /*=>*/ { PREFERENCES.graph_zoom_simplify = val; GraphRefresh(); }),
+			function()    /*=>*/   {return PREFERENCES.graph_zoom_simplify},
+			function(val) /*=>*/ { PREFERENCES.graph_zoom_simplify = val; },
+			PREFERENCES.graph_zoom_simplify,
+			noone,
+			"graph_zoom_simplify",
+		),
+		
+		new __Panel_Linear_Setting_Item(
 			__txt("View Control"),
 			new buttonGroup(__txts([ "None", "Left", "Right" ]), function(val) /*=>*/ { dparam.show_view_control = val; GraphRefresh(); }),
 			function()    /*=>*/   {return dparam.show_view_control},

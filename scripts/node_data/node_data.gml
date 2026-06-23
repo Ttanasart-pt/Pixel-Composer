@@ -2109,7 +2109,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var ry = _panel? _panel.y : 0;
 		
 		var extY = 0;
-		var drwT = _s > 0.5;
+		var drwT = _s > PREFERENCES.graph_zoom_simplify;
 		var outY = 24;
 		var _fnt = _s < 2? f_p4 : f_p3;
 		
