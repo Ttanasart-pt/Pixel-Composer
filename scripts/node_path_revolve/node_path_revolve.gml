@@ -213,9 +213,11 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				shader_set_interpolation(_surf);
 				draw_set_color(c_white);
 				
-				shader_set_2("uvP",       [1,1]);
-				shader_set_2("uvS",       [1,1]);
-				shader_set_2("trimRange", [0,1]);
+				shader_set_2( "uvP",        [1,1]    );
+				shader_set_2( "uvS",        [1,1]    );
+				shader_set_2( "trimRange",  [0,1]    );
+				shader_set_c( "blendColor", ca_white );
+				
 				matrix_set(matrix_world, trans);
 				
 				switch(_scBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
@@ -290,9 +292,11 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				shader_set_interpolation(_surf);
 				draw_set_color(c_white);
 				
-				shader_set_2("uvP",       [1,1]);
-				shader_set_2("uvS",       [1,1]);
-				shader_set_2("trimRange", [0,1]);
+				shader_set_2( "uvP",        [1,1]    );
+				shader_set_2( "uvS",        [1,1]    );
+				shader_set_2( "trimRange",  [0,1]    );
+				shader_set_c( "blendColor", ca_white );
+				
 				matrix_set(matrix_world, trans);
 				
 				switch(_ecBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
@@ -365,9 +369,10 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_interpolation(_surf);
 			draw_set_color(c_white);
 			
-			shader_set_2("uvP",       [1,1]);
-			shader_set_2("uvS",       [1,1]);
-			shader_set_2("trimRange", [0,1]);
+			shader_set_2( "uvP",        [1,1]    );
+			shader_set_2( "uvS",        [1,1]    );
+			shader_set_2( "trimRange",  [0,1]    );
+			shader_set_c( "blendColor", ca_white );
 			
 			if(_caps && _scOr == 1) { // start cap
 				switch(_scBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }

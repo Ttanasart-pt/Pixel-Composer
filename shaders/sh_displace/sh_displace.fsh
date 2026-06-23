@@ -279,6 +279,7 @@ uniform float mixAmount;
 uniform int   fadeDist;
 uniform int   reposition;
 uniform float gradOffset;
+uniform int   ignoreEmpty;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
@@ -435,10 +436,17 @@ void main() {
 		float str;
 		vec4  c;
 		
+		if(ignoreEmpty == 1 && ccol.a == 0.) {
+			gl_FragColor = vec4(0.);
+			return;
+		}
+		
 		for(float i = 0.; i < iteration; i++) {
 			str    = stren * (i + 1.) * _t;
 			samPos = shiftMap(reposition == 1? samPos : v_vTexcoord, str);
 			c      = sampleTexture( gm_BaseTexture, samPos );
+			
+			if(ignoreEmpty == 1 && c.a == 0.) break;
 			if(fadeDist == 1) c.rgb *= 1. - i * _t;
 			
 			ncol   = blend(ncol, c);

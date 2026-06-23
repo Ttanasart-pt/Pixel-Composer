@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.002",
+    "changes": [
+      {
+        "date": "2026-06-23T06:48:38.591Z",
+        "node": "Displace",
+        "commit": "**Displace**: Add \"Stop empty\" option to stop iteration when displaced pixel met empty pixel."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.002",
+    "changes": [
+      {
+        "date": "2026-06-23T07:24:55.429Z",
+        "node": "Map Path",
+        "commit": "**Map Path**: Add Blend modes."
+      }
+    ]
+  },
+  {
     "version": "1.21.5",
     "changes": [
       {

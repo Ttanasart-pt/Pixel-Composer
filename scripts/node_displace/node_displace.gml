@@ -53,13 +53,14 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_Bool(    "Fade Distance", false ));
 	newInput(20, nodeValue_Bool(    "Reposition",    false ));
 	newInput(21, nodeValue_Int(     "Repeat",        1     ));
-	// inputs 29
+	newInput(29, nodeValue_Bool(    "Stop Empty",    false ));
+	// 30
 	
 	input_display_list = [ 10, 12, 
 		[ "Surfaces",      true    ],  0, 22, 23,  8,  9, 13, 14, 
 		[ "Strength",     false    ],  1, 17,  3, 15, 25,  4, 24, 
 		[ "Displacement", false    ],  5, 16,  2, 26, 28, 
-		[ "Iterate",       true, 6 ], 11, 18, 27, 19, 20, 21, 
+		[ "Iterate",       true, 6 ], 11, 18, 27, 19, 20, 21, 29, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -107,6 +108,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _blend = _data[11];
 			
 			var _rept = _data[21]; _rept = max(1, _rept);
+			var _ignr = _data[29];
 		#endregion
 		
 		#region visible
@@ -176,6 +178,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_f( "mixAmount",     _data[27] );
 				shader_set_i( "fadeDist",      _data[19] );
 				shader_set_i( "reposition",    _data[20] );
+				shader_set_i( "ignoreEmpty",   _ignr     );
 				
 				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();

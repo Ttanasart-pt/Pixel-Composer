@@ -1,6 +1,10 @@
 
 	////- Utils 
 
+function triangle_is_ccw(ax, ay, bx, by, cx, cy) { 
+    return ((bx - ax) * (cy - ay) - (cx - ax) * (by - ay)) > 0;
+}
+
 function _triangle_is_ccw(triangle) {
 	var a = triangle[0], b = triangle[1], c = triangle[2];
     return ((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)) > 0;

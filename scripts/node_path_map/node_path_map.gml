@@ -23,6 +23,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(21, nodeValue_Rotation( "Gravity",    -90      ));
 	
 	////- =Rendering
+	newInput(22, nodeValue_EScroll(  "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput( 2, nodeValue_Surface(  "Texture"              ));
 	newInput( 7, nodeValue_Vec2(     "UV Position", [0,0]   ));
 	newInput( 6, nodeValue_Vec2(     "UV Range",    [1,1]   ));
@@ -32,17 +33,17 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput( 4, nodeValue_Slider(   "Shift",        0      ));
 	newInput( 5, nodeValue_Bool(     "Invert",       false  ));
 	newInput( 0, nodeValue_Path(     "Path"                 )).rejectArray();
-	// 22
+	// 23
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Output",    false ],  1, 
-		[ "Mapping",   false ],  3, 13, 
-		[ "Transform", false ],  8,  9, 10, 11, 
+		[ "Output",    false     ],  1, 
+		[ "Mapping",   false     ],  3, 13, 
+		[ "Transform", false     ],  8,  9, 10, 11, 
 		[ "Wave",       true, 14 ], 15, 18, 16, 19, 17, 20, 21, 
-		[ "Rendering", false ],  2,  7,  6, 
-		[ "Paths",     false ], 12,  4,  5,  0,
+		[ "Rendering", false     ], 22,  2,  7,  6, 
+		[ "Paths",     false     ], 12,  4,  5,  0,
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -66,18 +67,18 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 	static update = function() {
 		#region data
-			var _path = getInputData(0);
+			var _path  = getInputData(0);
 			if(_path == noone) return;
 			
-			var _dim  = getInputData( 1);
+			var _dim   = getInputData( 1);
 			
-			var _sub  = getInputData( 3);
-			var _reso = getInputData(13);
+			var _sub   = getInputData( 3);
+			var _reso  = getInputData(13);
 			
-		    var _pos  = getInputData( 8);
-		    var _anc  = getInputData( 9);
-		    var _rot  = getInputData(10);
-		    var _sca  = getInputData(11);
+		    var _pos   = getInputData( 8);
+		    var _anc   = getInputData( 9);
+		    var _rot   = getInputData(10);
+		    var _sca   = getInputData(11);
 		    
 		    var _wave  = getInputData(14);
 		    var _wFre  = getInputData(15);
@@ -89,13 +90,14 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		    var _wDir  = getInputData(20);
 		    var _wGra  = getInputData(21);
 		    
-			var _surf = getInputData( 2);
-			var _uvP  = getInputData( 7);
-			var _uvS  = getInputData( 6);
+		    var _blnd  = getInputData(22);
+			var _surf  = getInputData( 2);
+			var _uvP   = getInputData( 7);
+			var _uvS   = getInputData( 6);
 			
-			var _rng  = getInputData(12);
-			var _sft  = getInputData( 4);
-			var _inv  = getInputData( 5);
+			var _rng   = getInputData(12);
+			var _sft   = getInputData( 4);
+			var _inv   = getInputData( 5);
 		#endregion
 		
 		var _pathData = [];
@@ -152,9 +154,16 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			shader_set_interpolation(_surf);
 			
 			draw_set_color(c_white);
-			shader_set_2( "uvP",       _uvP  );
-			shader_set_2( "uvS",       _uvS  );
-			shader_set_2( "trimRange", [0,1] );
+			shader_set_2( "uvP",        _uvP     );
+			shader_set_2( "uvS",        _uvS     );
+			shader_set_2( "trimRange",  [0,1]    );
+			shader_set_c( "blendColor", ca_white );
+			
+			switch(_blnd) {
+				case 0 : BLEND_NORMAL; break;
+				case 1 : BLEND_ADD;    break;
+				case 2 : BLEND_MAX;    break;
+			}
 			
 			var ancx = _anc[0] * _dim[0];
 			var ancy = _anc[1] * _dim[1];

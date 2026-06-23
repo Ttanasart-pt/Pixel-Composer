@@ -50,9 +50,11 @@ uniform vec2 uvP;
 uniform vec2 uvS;
 uniform vec2 trimRange;
 
+uniform vec4 blendColor;
+
 void main() {
 	vec2 tex = fract((v_vTexcoord - uvP) * uvS);
 	tex.y = mix(trimRange.x, trimRange.y, tex.y);
 	
-	gl_FragColor = sampleTexture(gm_BaseTexture, tex);
+	gl_FragColor = sampleTexture(gm_BaseTexture, tex) * blendColor;
 }
