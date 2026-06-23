@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.002",
+    "changes": [
+      {
+        "date": "2026-06-23T00:10:54.141Z",
+        "node": "Draw line",
+        "commit": "**Draw line**: Fix higher segment rendering error."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.010",
     "changes": [
       {

@@ -957,7 +957,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_ow = _nw;
 					_op = _np;
 					
-					if(j % 120 == 0) {
+					if(j % 64 == 0) {
 						draw_primitive_end();
 						draw_primitive_begin_texture(pr_trianglelist, _texId);
 					}
