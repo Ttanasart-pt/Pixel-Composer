@@ -124,6 +124,12 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	
 	////- Draw
 	
+	function setNode(_node) {
+		selectNode = _node;
+		if(selectNode) selectNode.getInfo();
+		return self;
+	}
+	
 	#region draw
 		function drawDirectory(_ind, _dir, yy, _m) {
 			var _hover = sc_folder.hover;
@@ -157,7 +163,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		            
 		            if(mouse_lpress(_focus)) {
 		            	selectDir  = selectDir == dr? noone : dr;
-		            	selectNode = noone;
+		            	setNode(noone);
 		            }
 		        }
 		        
@@ -168,7 +174,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		        		
 		        		if(searchTextL == string_lower(_con.name)) {
 		        			if(selectDir != dr)    selectDir = dr;
-		        			if(selectNode != _con) selectNode = _con;
+		        			if(selectNode != _con) setNode(_con);
 		        		}
 		        		
 		        		if(string_pos(searchTextL, string_lower(_con.name)))  
@@ -247,13 +253,13 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		            cc = COLORS._main_text;
 		            
 		            if(mouse_lpress(_focus))
-		            	selectNode = selectNode == _con? noone : _con;
+		            	setNode(selectNode == _con? noone : _con);
 		        }
 		        
 		        if(searching && string_pos(searchTextL, string_lower(_con.name)))  
 		        	cc = COLORS._main_text;
 		        
-		        if(toSelectNode == _con.path) selectNode = _con;
+		        if(toSelectNode == _con.path) setNode(_con);
 		        if(selectNode == _con) cc = COLORS._main_accent;
 		        
 			    draw_set_text(font, fa_left, fa_center, cc);
@@ -361,7 +367,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		
 		if(selectNode != noone) {
 			by += ui(8);
-			var _info = selectNode.info;
+			var _info = selectNode.getInfo();
 			
 			for( var i = 0, n = array_length(editWidgets); i < n; i++ ) {
 				var _editw = editWidgets[i];
@@ -439,7 +445,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	static scanEnum = function(_dir = internalDir) {
 		for( var i = 0, n = array_length(_dir.content); i < n; i++ ) {
 			var _cont = _dir.content[i];
-			var _info = _cont.info;
+			var _info = _cont.getInfo();
 			var _base = _info.baseNode;
 			var _file = has(script_name_exception, _base)? script_name_exception[$ _base] : string_lower(_base);
 			

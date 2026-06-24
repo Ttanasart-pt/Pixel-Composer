@@ -9,9 +9,16 @@ function NodeFileObject(_path) : FileObject(_path) constructor {
     if(file_exists(iconPath)) icon = sprite_add(iconPath, 0, 0, 0, 0, 0);
     
     infoPath = _path + "/info.json";
-    info     = json_load_struct(infoPath);
+    info     = undefined;
+    
+    static getInfo = function() {
+    	if(info != undefined) return info;
+    	info = json_load_struct(infoPath);
+    	return info;
+    }
     
     static updateInfo = function() {
+    	getInfo();
     	var _str = "{\n";
     	
     	_str += $"    \"name\":          \"{info[$ "name"]       ?? ""}\",\n";

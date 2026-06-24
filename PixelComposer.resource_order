@@ -1366,6 +1366,7 @@
     {"name":"node_corner_data","order":16,"path":"scripts/node_corner_data/node_corner_data.yy",},
     {"name":"node_corner","order":15,"path":"scripts/node_corner/node_corner.yy",},
     {"name":"node_counter","order":3,"path":"scripts/node_counter/node_counter.yy",},
+    {"name":"node_crack_pattern","order":45,"path":"scripts/node_crack_pattern/node_crack_pattern.yy",},
     {"name":"node_crop_content","order":29,"path":"scripts/node_crop_content/node_crop_content.yy",},
     {"name":"node_crop","order":13,"path":"scripts/node_crop/node_crop.yy",},
     {"name":"node_cross_section","order":25,"path":"scripts/node_cross_section/node_cross_section.yy",},

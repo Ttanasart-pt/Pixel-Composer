@@ -958,6 +958,7 @@
             "Node_Weave",
             "Node_Hilbert",
             "Node_Fur",
+            "Node_Crack_Pattern",
             
             { "label": "Populate" },
             { "label": "/Repeat" },

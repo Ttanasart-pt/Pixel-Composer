@@ -1657,6 +1657,7 @@
     {"id":{"name":"node_corner_data","path":"scripts/node_corner_data/node_corner_data.yy",},},
     {"id":{"name":"node_corner","path":"scripts/node_corner/node_corner.yy",},},
     {"id":{"name":"node_counter","path":"scripts/node_counter/node_counter.yy",},},
+    {"id":{"name":"node_crack_pattern","path":"scripts/node_crack_pattern/node_crack_pattern.yy",},},
     {"id":{"name":"node_crop_content","path":"scripts/node_crop_content/node_crop_content.yy",},},
     {"id":{"name":"node_crop","path":"scripts/node_crop/node_crop.yy",},},
     {"id":{"name":"node_cross_section","path":"scripts/node_cross_section/node_cross_section.yy",},},
