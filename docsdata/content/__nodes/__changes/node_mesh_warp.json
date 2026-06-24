@@ -6,6 +6,11 @@
         "date": "2026-06-24T05:51:27.784Z",
         "node": "",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-06-24T07:53:06.693Z",
+        "node": "Mesh Warp] Fix new control points created at [0,0",
+        "commit": "**Mesh Warp] Fix new control points created at [0,0**: ."
       }
     ]
   },

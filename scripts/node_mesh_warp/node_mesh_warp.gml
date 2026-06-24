@@ -206,9 +206,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 3, nodeValue_Trigger( "Mesh" ));
 	
 	////- =Link
-	newInput(2, nodeValue_Slider( "Spring Force",  .5     ));
-	newInput(4, nodeValue_Bool(   "Diagonal Link",  false )).setTooltip("Include diagonal link to prevent drastic grid deformation.");
-	newInput(6, nodeValue_Slider ("Link Strength",  0     )).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
+	newInput( 2, nodeValue_Slider( "Spring Force",  .5     ));
+	newInput( 4, nodeValue_Bool(   "Diagonal Link",  false )).setTooltip("Include diagonal link to prevent drastic grid deformation.");
+	newInput( 6, nodeValue_Slider ("Link Strength",  0     )).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
 		
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -223,14 +223,11 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		[ "Control Points", false ], 
 	];
 	
-	function createControl() {
-		var index = array_length(inputs);
-		newInput(index, nodeValue_Puppet("Control point", [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ]));
-		
+	setDynamicInput(1, false, VALUE_TYPE.float);
+	
+	function createNewInput(index = array_length(inputs), _type = PUPPET_FORCE_MODE.move, _x = 16, _y = 16, _dx = 8, _dy = 0, _w = 8, _h = 8) {
+		newInput(index, nodeValue_Puppet("Control point", [ _type, _x, _y, _dx, _dy, _w, _h ]));
 		array_push(input_display_list, index);
-		
-		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"Create control point {index}" ]);
-		recordAction(ACTION_TYPE.array_insert, input_display_list, [ array_last(input_display_list), array_length(input_display_list) - 1 ]);
 		return inputs[index];
 	}
 	
@@ -248,8 +245,6 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_sy  = -1;
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
-	
-	control_index = array_length(inputs);
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -384,11 +379,11 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		array_foreach(mesh_data.links, function(m) /*=>*/ {return m.draw(__x, __y, __s)});
-		array_foreach(mesh_data.tris,  function(m) /*=>*/ {return m.drawPoints(__x, __y, __s)});
+		array_foreach(mesh_data.links, function(m,i) /*=>*/ {return m.draw(__x, __y, __s)});
+		array_foreach(mesh_data.tris,  function(m,i) /*=>*/ {return m.drawPoints(__x, __y, __s)});
 			
 		var _hover = -1;
-		for(var i = control_index; i < array_length(inputs); i++) {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
 			var hv = drawOverlayInput(inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 			if(hv) _hover = i;
 		}
@@ -396,28 +391,34 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(hover != -1) hovering = true;
 		
 		if(isUsingTool("Edit control point")) {
-			CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_remove : THEME.cursor_add;
+			if(hover) CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_remove : THEME.cursor_add;
 			
 			if(mouse_lpress(active)) {
 				if(_hover == -1) {
-					var i = createControl();
-					i.setValue( [ PUPPET_FORCE_MODE.move, PANEL_PREVIEW.snapX(_mx - _x) / _s, PANEL_PREVIEW.snapY(_my - _y) / _s, 0, 0, 8, 8 ] );
-					i.drag_type = 2;
-					i.drag_sx   = 0;
-					i.drag_sy   = 0;
-					i.drag_mx   = _mx;
-					i.drag_my   = _my;
+					var cx = PANEL_PREVIEW.snapX(mx);
+					var cy = PANEL_PREVIEW.snapY(my);
+					var i  = createNewInput(, PUPPET_FORCE_MODE.move, cx, cy, 0, 0, 8, 8);
+					
+					i.drag_value = array_clone(i.getValue());
+					i.drag_type  = 2;
+					i.drag_sx    = 0;
+					i.drag_sy    = 0;
+					i.drag_mx    = _mx;
+					i.drag_my    = _my;
+					
 				} else if(key_mod_press(SHIFT)) {
 					array_delete(inputs, _hover, 1);
-					array_delete(input_display_list, input_display_index + _hover - control_index, 1);
+					array_delete(input_display_list, input_display_index + _hover - input_fix_len, 1);
+					triggerRender();
 				}
 				
 				reset();
 				control(input_display_list);
 			}
+			
 		} else if(isUsingTool("Pin mesh")) {
 			hovering = true;
-			CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_remove : THEME.cursor_add;
+			if(hover) CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_remove : THEME.cursor_add;
 			
 			draw_set_color(COLORS._main_accent);
 			var rad = 16;
@@ -444,7 +445,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Mesh
 	
-	static reset = function() { array_foreach(mesh_data.tris, function(t) /*=>*/ {return t.reset(mesh_data)}); }
+	static reset = function() { array_foreach(mesh_data.tris, function(t,i) /*=>*/ {return t.reset(mesh_data)}); }
 	
 	static Mesh_build_RegularTri = function(surf) {
 		if(is_array(surf)) surf = array_safe_get_fast(surf, 0);
@@ -690,7 +691,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static control = function() {
 		var lStr = getInputData(6);
 		
-		for(var i = control_index, n = array_length(inputs); i < n; i++) {
+		for(var i = input_fix_len, n = array_length(inputs); i < n; i++) {
 			var c = getInputData(i);
 			
 			for( var j = 0, m = array_length(mesh_data.points); j < m; j++ ) {
@@ -778,7 +779,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(!is_surface(_inSurf)) return _outData;
 		
 		mesh_data.controls = [];
-		for(var i = control_index, n = array_length(inputs); i < n; i++) {
+		for(var i = input_fix_len, n = array_length(inputs); i < n; i++) {
 			var c = getInputData(i);
 			
 			if(c[0] == PUPPET_FORCE_MODE.puppet)
@@ -823,21 +824,12 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _tris = array_length(mesh_data.tris), _t;
 		mesh_data.triangles = array_verify(mesh_data.triangles, _tris);
-		array_foreach(mesh_data.tris, function(t, i) /*=>*/ { mesh_data.triangles[i] = [ t.p0.index, t.p1.index, t.p2.index ]; })
+		array_foreach(mesh_data.tris, function(t,i) /*=>*/ { mesh_data.triangles[i] = [ t.p0.index, t.p1.index, t.p2.index ]; })
 		
 		return _outData;
 	}
 	
 	////- Serialize
-	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
-		
-		for(var i = control_index; i < array_length(_inputs); i++) {
-			var inp = createControl();
-			inp.applyDeserialize(_inputs[i]);
-		}
-	}
 	
 	static attributeSerialize = function() {
 		var att = {};
