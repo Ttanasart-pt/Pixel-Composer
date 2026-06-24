@@ -37,9 +37,11 @@ void main() {
 	
 	if(useSurf == 1 && cc.a == 0.) return;
 	
+	float ints = intensity;
+	
 	if(useMask == 1) {
 		vec4 mm = texture2D(mask, v_vTexcoord);
-		if((mm.r + mm.g + mm.b) * mm.a == 0.) return;
+		ints *= (mm.r + mm.g + mm.b) / 3. * mm.a;
 	}
 	
 	vec2  px = floor(v_vTexcoord * dimension);
@@ -75,9 +77,9 @@ void main() {
 		if(fill && px.x > os && px.x <= ns) {
 			vec4 colr = shineColor[int(filTotal - mod(filIndex, filTotal) - 1.)];
 			
-			     if(blendMode == 0) cc = mix(cc,      colr, intensity);
-			else if(blendMode == 1) cc = mix(cc, cc + colr, intensity);
-			else if(blendMode == 2) cc = mix(cc, cc * colr, intensity);
+			     if(blendMode == 0) cc = mix(cc,      colr, ints);
+			else if(blendMode == 1) cc = mix(cc, cc + colr, ints);
+			else if(blendMode == 2) cc = mix(cc, cc * colr, ints);
 			break;
 		}
 		
