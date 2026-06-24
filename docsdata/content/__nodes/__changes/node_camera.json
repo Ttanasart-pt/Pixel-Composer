@@ -6,6 +6,11 @@
         "date": "2026-06-24T05:51:27.511Z",
         "node": "",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-06-24T08:32:51.387Z",
+        "node": "Camera",
+        "commit": "**Camera**: Focus center now use 'scene size' dimension instead of 'camera size' dimension."
       }
     ]
   },

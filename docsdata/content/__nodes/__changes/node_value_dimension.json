@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.003",
+    "changes": [
+      {
+        "date": "2026-06-24T08:32:51.399Z",
+        "node": "",
+        "commit": "**Camera**: Focus center now use 'scene size' dimension instead of 'camera size' dimension."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.003",
     "changes": [
       {

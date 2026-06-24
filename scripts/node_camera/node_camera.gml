@@ -3,7 +3,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	preview_alpha = 0.5;
 	
 	////- =Camera
-	newInput( 6, nodeValue_Dimension());
+	newInput( 7, nodeValue_Dimension( "Scene Size"  ));
+	newInput( 6, nodeValue_Dimension( "Camera Size" ));
 	newInput( 0, nodeValue_Vec2(   "Focus Center", [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 1, nodeValue_Slider( "Zoom",           1, [.01,4,.01] ));
 	
@@ -12,7 +13,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 3, nodeValue_Float( "Focal distance", 0     ));
 	newInput( 5, nodeValue_Float( "Focal range",    0     ));
 	newInput( 4, nodeValue_Float( "Defocus",        1     ));
-	// inputs 7
+	// 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -22,6 +23,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	hold_visibility = true;
 	hold_select		= true;
+	
+	dimension_index = 7;
 	
 	////- Layer
 	
@@ -249,9 +252,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	input_display_dynamic_full = function(j) /*=>*/ { return [ [ $"Surface {j}", false], 0, 3, __inspc(ui(4),1,1,ui(4)), 1, 2, 4, 5 ]; }
 	
 	input_display_list = [
-		["Camera",        false   ], 6, 0, 1, 
-		["Depth Of Field", true, 2], 3, 5, 4, 
-		["Elements",	  false   ], layer_renderer, 
+		[ "Camera",        false    ],  7,  6,  0,  1, 
+		[ "Depth Of Field", true, 2 ],  3,  5,  4, 
+		[ "Elements",      false    ], layer_renderer, 
 	];
 	
 	setDynamicInput(6, true, VALUE_TYPE.surface);
@@ -269,12 +272,12 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _out  = outputs[0].getValue();
 		if(is_array(_out)) _out = _out[preview_index];
 		
-		var _dim  = current_data[6];
+		var _siz  = current_data[6];
 		var _pos  = current_data[0];
 		var _zoom = current_data[1];
 		
-		var _cam_w = round(_dim[0]);
-		var _cam_h = round(_dim[1]);
+		var _cam_w = round(_siz[0]);
+		var _cam_h = round(_siz[1]);
 		
 		var _surf_w = round(surface_valid_size(_cam_w));
 		var _surf_h = round(surface_valid_size(_cam_h));
@@ -302,7 +305,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _dim  = _data[6];
+			var _siz  = _data[6];
 			var _pos  = _data[0];
 			var _zoom = _data[1];
 			
@@ -315,8 +318,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var  cDep  = attrDepth();
 		var _cam_x = round(_pos[0]);
 		var _cam_y = round(_pos[1]);
-		var _cam_w = round(_dim[0]);
-		var _cam_h = round(_dim[1]);
+		var _cam_w = round(_siz[0]);
+		var _cam_h = round(_siz[1]);
 		
 		var _surf_w = round(surface_valid_size(_cam_w));
 		var _surf_h = round(surface_valid_size(_cam_h));

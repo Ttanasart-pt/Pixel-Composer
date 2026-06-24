@@ -5,7 +5,7 @@ function nodeValue_Dimension(name = "Dimension") {
 	return new __NodeValue_Dimension(self, _val, name); 
 }
 
-function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_Vec2("Dimension", _node, value, { linked: true }) constructor {
+function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_Vec2(_name, _node, value, { linked: true }) constructor {
 	def_length = 2;
 	
 	use_mask    = false;
