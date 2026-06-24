@@ -4317,14 +4317,22 @@ function Panel_Preview() : PanelContent() constructor {
 	        tool_side_draw_l = !hori && (PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool()));
 	        tool_side_draw_r = !hori && (PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1));
 	        
-        	var aa   = d3_active? .8 : 1;
-        	
 	        if(PROJECT.previewSetting.tool_always_l) {
-	        	var txx  = 0;
-		        var tyy  = ui(32);
-		        var tww  = hori? w : toolbar_width;
-		        var thh  = hori? toolbar_width : h;
+	        	if(hori) {
+		        	var txx  = 0;
+			        var tyy  = ui(32);
+			        var tww  = w;
+			        var thh  = toolbar_width;
+			        
+	        	} else {
+	        		var txx  = 0;
+			        var tyy  = ui(32);
+			        var tww  = toolbar_width;
+			        var thh  = h;
+			        
+	        	}
 	        	
+	        	var aa = d3_active? .8 : 1;
 		        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 0, txx, tyy, tww, thh, c_white, aa);
 	        }
 	        
@@ -4342,6 +4350,7 @@ function Panel_Preview() : PanelContent() constructor {
 			        var thh = h;
 		        }
 		        
+		        var aa = d3_active? .8 : 1;
 		        draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 1, txx, tyy, tww, thh, c_white, aa);
 	        }
         #endregion

@@ -359,6 +359,6 @@ void main() {
 		// aa = .5;
 	}
 	
-	gl_FragColor = v_vColour * texture2D(gm_BaseTexture, tx);
+	gl_FragColor = v_vColour * sampleTexture(gm_BaseTexture, tx);
 	gl_FragColor.a *= aa;
 }

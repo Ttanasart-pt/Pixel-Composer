@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.004",
+    "changes": [
+      {
+        "date": "2026-06-24T23:56:04.128Z",
+        "node": "MK Cable",
+        "commit": "**MK Cable**: Fix oversampling/interpolation setting not applying"
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

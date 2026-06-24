@@ -252,6 +252,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _swng_amp = _data[12];
 			var _swng_frq = _data[13];
 			
+			var _linTex   = _data[28]; 
 			var _uvPos    = _data[29];
 			var _uvSca    = _data[30];
 			
@@ -291,6 +292,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			BLEND_NORMAL
 			
 			shader_set(sh_mk_cable_draw);
+			shader_set_interpolation(_linTex);
 			shader_set_2( "uvPosition", _uvPos );
 			shader_set_2( "uvScale",    _uvSca );
 			
