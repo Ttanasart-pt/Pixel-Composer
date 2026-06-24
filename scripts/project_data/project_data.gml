@@ -661,12 +661,12 @@ function Project() constructor {
 		var _coll = array_create(_rmao, 0);
 		
 		var _line  = [];
-		var _cur   = 0;
+		var _cur   = -infinity;
 		var _total = 0;
 		
 		while(_total < _rmao) {
 			_line = [];
-			_cur  = 0;
+			_cur  = -infinity;
 				
 			for( var i = 0, n = _rmao; i < n; i++ ) {
 				var r = _reg[i];

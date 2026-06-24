@@ -18,19 +18,21 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Surfaces
-	newInput( 2, nodeValue_EScroll( "Type",   0, __enum_array_gen(["Arc", "Wave"], s_node_bend_type) )).setPieMenu();
-	newInput( 3, nodeValue_EButton( "Axis",   0, [ "X", "Y" ]     )).setPieMenu();
-	newInput( 4, nodeValue_Slider(  "Amount", 0.25, [-1, 1, 0.01] )).setPieMenu();
-	newInput( 5, nodeValue_Float(   "Scale",  1 )).setPieMenu();
-	newInput( 6, nodeValue_Float(   "Shift",  0 )).setPieMenu();
+	var _types = __enum_array_gen([ "Arc", "Wave" ], s_node_bend_type);
+	newInput( 2, nodeValue_EScroll( "Type",    0, _types       )).setPieMenu();
+	newInput( 3, nodeValue_EButton( "Axis",    0, [ "X", "Y" ] )).setPieMenu();
+	newInput( 4, nodeValue_Slider(  "Amount", .25, [-1,1,.01]  )).setPieMenu();
+	newInput( 5, nodeValue_Float(   "Scale",   1               )).setPieMenu();
+	newInput( 6, nodeValue_Float(   "Shift",   0               )).setPieMenu();
 	
 	////- =Transform
-	newInput(11, nodeValue_Vec2(   "Scale",    [1,1] ));
+	newInput(12, nodeValue_Bool(   "Keep ratio",  true ));
+	newInput(11, nodeValue_Vec2(   "Scale",      [1,1] ));
 	
 	////- =Mapping
-	newInput( 7, nodeValue_Vec2(   "UV Shift", [0,0] ));
-	newInput( 8, nodeValue_Vec2(   "UV Scale", [1,1] ));
-	// 12
+	newInput( 7, nodeValue_Vec2(   "UV Shift",   [0,0] ));
+	newInput( 8, nodeValue_Vec2(   "UV Scale",   [1,1] ));
+	// 13
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -38,7 +40,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Output",    false ],  9, 10, 
 		[ "Surfaces",  false ],  0, 
 		[ "Bend",      false ],  2,  3,  4,  5,  6, 
-		// [ "Transform", false ], 11, 
+		[ "Transform", false ], 12, 11, 
 		[ "Mapping",   false ],  7,  8,  
 	];
 	
@@ -68,6 +70,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _sca   = _data[ 5];
 			var _shf   = _data[ 6];
 			
+			var _rato  = _data[12];
 			var _scal  = _data[11];
 			
 			var _uvPos = _data[ 7];
@@ -278,26 +281,35 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#region render
 			var _w  = vb_maxx - vb_minx, _ww;
 			var _h  = vb_maxy - vb_miny, _hh;
-			var _sx = 1;
-			var _sy = 1;
+			var sx  = 1, sy  = 1;
+			var scx = _scal[0];
+			var scy = _scal[1];
 			
 			switch(_dimT) {
 				case 0 : 
 					_ww = _dim[0];
 					_hh = _dim[1]; 
 					
-					_sx = _ww / _w;
-					_sy = _hh / _h;
+					sx = _ww / _w;
+					sy = _hh / _h;
+					
+					if(_rato) {
+						if(sx < sy) scy *= sx / sy;
+						else        scx *= sy / sx;
+					}
 					break;
 					
 				case 1 : 
 					_ww = _w;
 					_hh = _h 
 					
-					_sx = 1;
-					_sy = 1;
+					sx = 1;
+					sy = 1;
 			    	break;
 			}
+			
+			var ofx = _ww / 2 * (1 - scx);
+			var ofy = _hh / 2 * (1 - scy);
 			
 			_outSurf = surface_verify(_outSurf, _ww, _hh);
 		
@@ -310,7 +322,10 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var trans = matrix_compose(
 				matrix_transform_2d(-vb_minx, -vb_miny),
-				matrix_transform_2d(0, 0, 0, _sx, _sy),
+				matrix_transform_2d(0, 0, 0, sx, sy),
+				
+				matrix_transform_2d(0, 0, 0, scx, scy),
+				matrix_transform_2d(ofx, ofy),
 			)
 			matrix_set(matrix_world, trans);
 			vertex_submit(vb, pr_trianglelist, surface_get_texture(_surf));

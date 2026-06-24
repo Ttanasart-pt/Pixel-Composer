@@ -158,19 +158,6 @@
 		if(check) checkPanelValid();
 	}
 	
-	function __initPanel() {
-		var root = $"{DIRECTORY}layouts";
-		directory_verify(root);
-		
-		if(check_version($"{root}/version"))
-			zip_unzip($"{working_directory}pack/layouts.zip", root);
-		
-		setPanel();
-		panelDisplayInit();
-		
-		checkPanelValid();
-	}
-	
 	function setPanel() {
 		globalvar CURRENT_PANEL;
 		
@@ -188,6 +175,19 @@
 		
 		PANEL_MAIN.refresh();
 		PANEL_MAIN.refreshSize();
+	}
+	
+	function __initPanel() {
+		var root = $"{DIRECTORY}layouts";
+		directory_verify(root);
+		
+		if(check_version($"{root}/version"))
+			zip_unzip($"{working_directory}pack/layouts.zip", root);
+		
+		setPanel();
+		panelDisplayInit();
+		
+		checkPanelValid();
 	}
 	
 	function findPanel(_type, _pane = PANEL_MAIN) {

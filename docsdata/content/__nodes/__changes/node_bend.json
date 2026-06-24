@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.003",
+    "changes": [
+      {
+        "date": "2026-06-24T01:06:10.860Z",
+        "node": "Region",
+        "commit": "**Region**: Fix program freeze when setting region frame range to negative value."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.002",
     "changes": [
       {
