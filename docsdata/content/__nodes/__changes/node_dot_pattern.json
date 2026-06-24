@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.21.5.003",
+    "changes": [
+      {
+        "date": "2026-06-24T05:51:27.600Z",
+        "node": "",
+        "commit": "Introduced"
+      },
+      {
+        "date": "2026-06-24T06:37:31.515Z",
+        "node": "Dotted",
+        "commit": "**Dotted**: Fix error with small spacing."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {

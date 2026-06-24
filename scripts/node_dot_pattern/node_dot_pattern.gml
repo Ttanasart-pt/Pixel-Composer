@@ -20,15 +20,15 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 9, nodeValue_Slider(   "Dot Size", .5, [0,2,.01] )).setMappable(10).setPieMenu();
 	
 	////- =Render
-	newInput( 7, nodeValue_Color(    "BG Color",        ca_black ));
-	newInput( 6, nodeValue_EButton(  "Render Mode",     0, [ "Pixel", "AA", "Smooth" ] ));
-	newInput(16, nodeValue_EButton(  "Dot Color Mode",  0, [ "Solid", "Palette", "Random", "Texture" ] ));
-	newInput( 8, nodeValue_Color(    "Dot Color",       ca_white )).setHotkeyAuto("C");
-	newInput(17, nodeValue_Palette(  "Palette" ));
+	newInput( 7, nodeValue_Color(    "BG Color",        ca_black        ));
+	newInput( 6, nodeValue_EButton(  "Render Mode",     0, ["Pixel","AA","Smooth"]                ));
+	newInput(16, nodeValue_EButton(  "Dot Color Mode",  0, ["Solid","Palette","Random","Texture"] ));
+	newInput( 8, nodeValue_Color(    "Dot Color",       ca_white        )).setHotkeyAuto("C");
+	newInput(17, nodeValue_Palette(  "Palette"                          ));
 	newInput(18, nodeValue_Gradient( "Gradient",        gra_black_white ));
-	newInput(19, nodeValue_Surface(  "Texture" ));
-	newInput(12, nodeValue_Slider(   "Smoothness",     .1))
-	newInput(11, nodeValue_Slider(   "Intensity",       1))
+	newInput(19, nodeValue_Surface(  "Texture"                          ));
+	newInput(12, nodeValue_Slider(   "Smoothness",     .1               ));
+	newInput(11, nodeValue_Slider(   "Intensity",       1               ));
 	// input 22
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -60,55 +60,58 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim    = _data[ 0];
-		
-		var _pattn  = _data[13];
-		var _pposi  = _data[14];
-		var _space  = _data[15];
-		
-		var _color  = _data[ 6];
-		var _cbg    = _data[ 7];
-		var _aa     = _data[12];
-		var _ints   = _data[11];
-		
-		var _cmode  = _data[16];
-		var _cdot   = _data[ 8];
-		var _palt   = _data[17];
-		var _grad   = _data[18];
-		var _text   = _data[19];
-		var _seed   = _data[20];
-		
-		inputs[ 8].setVisible(_cmode == 0);
-		inputs[17].setVisible(_cmode == 1);
-		inputs[18].setVisible(_cmode == 2);
-		inputs[19].setVisible(_cmode == 3);
-		
-		inputs[12].setVisible(_color == 1);
+		#region data
+			var _dim    = _data[ 0];
+			
+			var _pattn  = _data[13];
+			var _pposi  = _data[14];
+			var _space  = _data[15];
+			
+			var _color  = _data[ 6];
+			var _cbg    = _data[ 7];
+			var _aa     = _data[12];
+			var _ints   = _data[11];
+			
+			var _cmode  = _data[16];
+			var _cdot   = _data[ 8];
+			var _palt   = _data[17];
+			var _grad   = _data[18];
+			var _text   = _data[19];
+			var _seed   = _data[20];
+			
+			inputs[ 8].setVisible(_cmode == 0);
+			inputs[17].setVisible(_cmode == 1);
+			inputs[18].setVisible(_cmode == 2);
+			inputs[19].setVisible(_cmode == 3);
+			
+			inputs[12].setVisible(_color == 1);
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_dotted);
 			shader_set_uv(_data[21], _data[22]);
 			
-			shader_set_f("seed",      _seed);
-			shader_set_2("dimension", _dim);
-			shader_set_2("position",  _pposi);
+			shader_set_f( "seed",      _seed   );
+			shader_set_2( "dimension", _dim    );
+			shader_set_2( "position",  _pposi  );
 			
-			shader_set_2("spacing",   _space);
-			shader_set_f_map("amount",_data[ 2], _data[ 3], inputs[ 2]);
-			shader_set_f_map("angle", _data[ 4], _data[ 5], inputs[ 4]);
-			shader_set_f_map("dothr", _data[ 9], _data[10], inputs[ 9]);
+			shader_set_2( "spacing",   _space  );
+			shader_set_m( "amount",    _data[ 2], _data[ 3], inputs[ 2] );
+			shader_set_m( "angle",     _data[ 4], _data[ 5], inputs[ 4] );
+			shader_set_m( "dothr",     _data[ 9], _data[10], inputs[ 9] );
 			
-			shader_set_i("pattern",   _pattn);
+			shader_set_i( "pattern",   _pattn  );
 			
-			shader_set_i("coloring",  _color);
-			shader_set_f("intensity", _ints);
-			shader_set_f("aa",        _aa);
+			shader_set_i( "coloring",  _color  );
+			shader_set_f( "intensity", _ints   );
+			shader_set_f( "aa",        _aa     );
 			
-			shader_set_i("colorMode",     _cmode);
-			shader_set_c("color0",        _cbg);
-			shader_set_c("color1",        _cdot);
-			shader_set_surface("texture", _text);
+			shader_set_i( "colorMode", _cmode  );
+			shader_set_c( "color0",    _cbg    );
+			shader_set_c( "color1",    _cdot   );
+			shader_set_s( "texture",   _text   );
+			
 			shader_set_palette(_palt);
 			_grad.shader_submit();
 			

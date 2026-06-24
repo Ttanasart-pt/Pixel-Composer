@@ -287,6 +287,7 @@ void main() {
 			amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
 		
+		vec2 amoMax = dimension / vec2(min(amount.x, amount.y)) / spacing;
 		amoVec = (dimension / vec2(amo)) / spacing;
 	#endregion
 	
@@ -298,22 +299,18 @@ void main() {
 	vec4 cbg  = color0;
 	vec4 dott = vec4(0.);
 	
+	vec2 span = ceil(amoMax / spacing);
+	span.x = min(span.x, 16.);
+	span.y = min(span.y, 16.);
+	
 	if(pattern == 0) {
 		vec2 _box = floor(pos * amoVec);
 		vec2 _frc = pos * amoVec - _box;
 		vec2 _cen = _box / amoVec;
 		
-		dott += getD(_cen, _frc, vec2(-1., -1.));
-		dott += getD(_cen, _frc, vec2( 0., -1.));
-		dott += getD(_cen, _frc, vec2( 1., -1.));
-		
-		dott += getD(_cen, _frc, vec2(-1.,  0.));
-		dott += getD(_cen, _frc, vec2( 0.,  0.));
-		dott += getD(_cen, _frc, vec2( 1.,  0.));
-		
-		dott += getD(_cen, _frc, vec2(-1.,  1.));
-		dott += getD(_cen, _frc, vec2( 0.,  1.));
-		dott += getD(_cen, _frc, vec2( 1.,  1.));
+		for(float i = -span.x; i <= span.x; i++)
+		for(float j = -span.y; j <= span.y; j++)
+			dott += getD(_cen, _frc, vec2(i,j));
 		
 	} else if(pattern == 1) {
 		vec2 s3 = vec2(1., sqrt(3.) / 2.);
@@ -327,15 +324,24 @@ void main() {
 		     _frc = .5 + (_frc - .5) * s3;
 		vec2 _cen = _box / amoVec;
 		
-		dott += getD(_cen, _frc, vec2(-.5, -1.) * s3);
-		dott += getD(_cen, _frc, vec2( .5, -1.) * s3);
+		for(float i = -span.x; i <= span.x; i++)
+		for(float j = -span.y; j <= span.y; j++) {
+			float ii = i;
+			if(mod(j,2.) == 1.)
+				ii += .5;
+			
+			dott += getD(_cen, _frc, vec2(ii,j) * s3);
+		}
 		
-		dott += getD(_cen, _frc, vec2(-1.,  0.) * s3);
-		dott += getD(_cen, _frc, vec2( 0.,  0.) * s3);
-		dott += getD(_cen, _frc, vec2( 1.,  0.) * s3);
+		// dott += getD(_cen, _frc, vec2(-.5, -1.) * s3);
+		// dott += getD(_cen, _frc, vec2( .5, -1.) * s3);
 		
-		dott += getD(_cen, _frc, vec2(-.5,  1.) * s3);
-		dott += getD(_cen, _frc, vec2( .5,  1.) * s3);
+		// dott += getD(_cen, _frc, vec2(-1.,  0.) * s3);
+		// dott += getD(_cen, _frc, vec2( 0.,  0.) * s3);
+		// dott += getD(_cen, _frc, vec2( 1.,  0.) * s3);
+		
+		// dott += getD(_cen, _frc, vec2(-.5,  1.) * s3);
+		// dott += getD(_cen, _frc, vec2( .5,  1.) * s3);
 		
 	}
 	
