@@ -333,16 +333,6 @@ void main() {
 			dott += getD(_cen, _frc, vec2(ii,j) * s3);
 		}
 		
-		// dott += getD(_cen, _frc, vec2(-.5, -1.) * s3);
-		// dott += getD(_cen, _frc, vec2( .5, -1.) * s3);
-		
-		// dott += getD(_cen, _frc, vec2(-1.,  0.) * s3);
-		// dott += getD(_cen, _frc, vec2( 0.,  0.) * s3);
-		// dott += getD(_cen, _frc, vec2( 1.,  0.) * s3);
-		
-		// dott += getD(_cen, _frc, vec2(-.5,  1.) * s3);
-		// dott += getD(_cen, _frc, vec2( .5,  1.) * s3);
-		
 	}
 	
 	if(colorMode == 0)
