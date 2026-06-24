@@ -29,6 +29,8 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		h = ui(200);
 		
 		static onFocusBegin = function() /*=>*/ { PREVIEW_WINDOW_PANEL = self; }
+		
+		node_name_type = 0;
 	#endregion
 	
 	#region ---- Node ----
@@ -92,7 +94,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	}
 	
 	function drawSurface() {
-		title = node_target.getFullName();
+		title = node_target.renamed? node_target.display_name : node_target.name;
 		surfaceCheck();
 	
 		surface_set_target(content_surface);
