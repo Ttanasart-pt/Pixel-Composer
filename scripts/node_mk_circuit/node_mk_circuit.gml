@@ -15,22 +15,23 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(18, nodeValue_Slider(  "Trim",           1       ));
 	
 	////- =Render
-	newInput( 4, nodeValue_Surface(  "Bg Surface"                ));
+	newInput( 4, nodeValue_Surface(  "Bg Surface"                 ));
 	newInput( 5, nodeValue_Color(    "Bg Color",        ca_black  ));
 	newInput( 6, nodeValue_Float(    "Wire Thickness",  1         ));
 	newInput( 7, nodeValue_Gradient( "Wire Color",      gra_white ));
 	newInput(17, nodeValue_Gradient( "Color Over Wire", gra_white ));
 	
 	////- =Connection
-	newInput( 9, nodeValue_Bool(    "Connection",   true  ));
-	newInput(11, nodeValue_EScroll( "Conn. Shape",  0, [ "Circle", "Square", "Surface" ] ));
-	newInput(10, nodeValue_Float(   "Conn. Radius", 4     ));
-	newInput(14, nodeValue_Bool(    "Conn. Filled", false ));
-	newInput(12, nodeValue_Surface( "Conn. Surface"       ));
+	newInput( 9, nodeValue_Bool(    "Connection",  true  ));
+	newInput(11, nodeValue_EScroll( "Shape",       0, [ "Circle", "Square", "Surface" ] )).setInternalName("conn_shape");
+	newInput(10, nodeValue_Float(   "Radius",      4     )).setInternalName("conn_radius");
+	newInput(14, nodeValue_Bool(    "Filled",      false )).setInternalName("conn_filled");
+	newInput(19, nodeValue_Float(   "Thickness",   1     ));
+	newInput(12, nodeValue_Surface( "Surface"            )).setInternalName("conn_surface");
 	
 	////- =Algorithm
 	newInput(13, nodeValue_Int( "Max Attempt",  8 ));
-	// 19
+	// 20
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -38,7 +39,7 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		[ "Output",     false    ],  0,  8, 
 		[ "Circuit",    false    ],  1,  3, 15, 16, 18, 
 		[ "Render",     false    ],  4,  5,  6,  7, 17, 
-		[ "Connection", false, 9 ], 11, 10, 14, 12, 
+		[ "Connection", false, 9 ], 11, 10, 14, 19, 12, 
 		[ "Algorithm",  false    ], 13, 
 	];
 	
@@ -70,11 +71,13 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _cShp  = _data[11];
 			var _cRad  = _data[10];
 			var _cFil  = _data[14];
+			var _cThk  = _data[19];
 			var _cSurf = _data[12], use_cSurf = is_surface(_cSurf);
 			
 			var _atmp  = _data[13];
 			
 			inputs[14].setVisible(_cShp != 2);
+			inputs[19].setVisible(_cShp != 2);
 			inputs[12].setVisible(_cShp == 2, _cShp == 2);
 		#endregion
 		
@@ -213,13 +216,29 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					    	draw_set_color(c_white);
 					    	draw_circle(_psx, _psy, _rad, 0);
 					    	draw_circle(_pex, _pey, _rad, 0);
-					    	
 					    	BLEND_NORMAL
-					    	draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
-					    	draw_circle(_psx, _psy, _rad, !_cFil);
 					    	
-					    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
-					    	draw_circle(_pex, _pey, _rad, !_cFil);
+					    	if(_cFil) {
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
+						    	draw_circle(_psx, _psy, _rad, false);
+						    	
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
+						    	draw_circle(_pex, _pey, _rad, false);
+					    		
+					    	} else if(_cThk == 1) {
+					    		draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
+						    	draw_circle(_psx, _psy, _rad, true);
+						    	
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
+						    	draw_circle(_pex, _pey, _rad, true);
+						    	
+					    	} else {
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
+						    	draw_circle_border(_psx, _psy, _rad, _cThk);
+						    	
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
+						    	draw_circle_border(_pex, _pey, _rad, _cThk);
+					    	}
 			    		break;
 			    		
 			    		case 1 :
@@ -227,13 +246,29 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					    	draw_set_color(c_white);
 					    	draw_rectangle(_psx - _rad, _psy - _rad, _psx + _rad, _psy + _rad, 0);
 					    	draw_rectangle(_pex - _rad, _pey - _rad, _pex + _rad, _pey + _rad, 0);
-					    	
 					    	BLEND_NORMAL
-					    	draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
-					    	draw_rectangle(_psx - _rad, _psy - _rad, _psx + _rad, _psy + _rad, !_cFil);
 					    	
-					    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
-					    	draw_rectangle(_pex - _rad, _pey - _rad, _pex + _rad, _pey + _rad, !_cFil);
+					    	if(_cFil) {
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
+						    	draw_rectangle(_psx - _rad, _psy - _rad, _psx + _rad, _psy + _rad, false);
+						    	
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
+						    	draw_rectangle(_pex - _rad, _pey - _rad, _pex + _rad, _pey + _rad, false);
+						    	
+					    	} else if(_cThk == 1) {
+					    		draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
+						    	draw_rectangle(_psx - _rad, _psy - _rad, _psx + _rad, _psy + _rad, true);
+						    	
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
+						    	draw_rectangle(_pex - _rad, _pey - _rad, _pex + _rad, _pey + _rad, true);
+						    	
+				    		} else {
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(0)));
+						    	draw_rectangle_border(_psx - _rad, _psy - _rad, _psx + _rad, _psy + _rad, _cThk);
+						    	
+						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
+						    	draw_rectangle_border(_pex - _rad, _pey - _rad, _pex + _rad, _pey + _rad, _cThk);
+					    	}
 			    		break;
 			    		
 			    		case 2: if(!use_cSurf) break;

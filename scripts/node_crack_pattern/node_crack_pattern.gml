@@ -12,6 +12,7 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 5, nodeValue_Vec2(     "Origin",       [.5,.5]  )).setUnitSimple();
 	newInput(16, nodeValue_Rotation( "Pattern Angle",  0      ));
 	newInput(21, nodeValue_RotRange( "Angle Range",   [0,360] ));
+	newInput(24, nodeValue_Bool(     "Both Side",     false   ));
 	
 	////- =Pattern
 	newInput( 4, nodeValue_Range(    "Segments",    [ 3, 6] ));
@@ -23,7 +24,7 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 7, nodeValue_Range(    "Width",   [ 4, 8] )).setCurvable(17, CURVE_DEF_10);
 	newInput( 8, nodeValue_Slider(   "Branch",  .25    ));
 	newInput(12, nodeValue_RotRange( "Angle",   [15,45] ));
-	newInput(22, nodeValue_Slider(   "Inter Crack", 0   )).setCurvable(23, CURVE_DEF_10);
+	newInput(22, nodeValue_Slider(   "Radial",   0   )).setCurvable(23, CURVE_DEF_10);
 	
 	////- =Trim
 	newInput(18, nodeValue_Slider(   "Trim",      0     ));
@@ -36,13 +37,13 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 9, nodeValue_Gradient( "Color",        gra_white      ));
 	newInput(13, nodeValue_Color(    "Branch Blend", cola(c_ltgray) ));
 	newInput(19, nodeValue_Surface(  "Texture"                      ));
-	// 24
+	// 25
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2, 
 		[ "Output",     true ],  0, 
-		[ "Origin",    false ],  1,  3,  5, 16, 21, 
+		[ "Origin",    false ],  1,  3,  5, 16, 21, 24, 
 		[ "Pattern",   false ],  4, 11,  6, 15, 
 		[ "Crack",     false ],  7, 17,  8, 12, 22, 23, 
 		[ "Trim",       true ], 18, 
@@ -136,14 +137,15 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_primitive_begin_texture(pr_trianglelist, texture);
 				draw_line_width2_angle(ox, oy, nx, ny, ot, nt, doa, dna, _clr, _clr);
 				draw_primitive_end();
-			}
-			
-			if(_depth == 0) {
-				var _intArr = array_safe_get(interConnect, i);
-				if(!is_array(_intArr)) _intArr = [];
 				
-				array_push(_intArr, [nx, ny, nt, _clr]);
-				interConnect[i] = _intArr;
+				if(_depth == 0) {
+					var _intArr = array_safe_get(interConnect, i);
+					if(!is_array(_intArr)) _intArr = [];
+					
+					array_push(_intArr, [nx, ny, nt, _clr]);
+					interConnect[i] = _intArr;
+				}
+				
 			}
 			
 			var _crkChan = _crkChn * (1 - prg);
@@ -185,6 +187,7 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _orig  = _data[ 5];
 			var _phas  = _data[16];
 			var _arng  = _data[21];
+			var _both  = _data[24];
 			
 			var _segs  = _data[ 4];
 			scaRange   = _data[11];
@@ -208,8 +211,8 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _surf  = _data[19];
 			
 			inputs[ 5].setVisible(_patt == 1);
-			inputs[16].setVisible(_patt == 1);
 			inputs[21].setVisible(_patt == 1);
+			inputs[24].setVisible(_patt == 0);
 			
 			texture = is_just_surface(_surf)? surface_get_texture(_surf) : -1;
 			widthCurve     = _widC;
@@ -230,10 +233,33 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 			
 			if(_patt == 0) {
+				var ww = _dim[0];
+				var hh = _dim[1];
+				var cx = ww / 2;
+				var cy = hh / 2;
+				var s0;
+				
 				for( var i = 0; i < _amou; i++ ) {
 					var ox   = 0;
 					var oy   = _dim[1] * i / (_amou - 1);
-					var ang  = 0;
+					
+					var _phs = _phas + _both * (i % 2 * 180);
+					var rayD = (_phs + 180 - 45) + 90 * i / (_amou - 1);
+					
+					var cx0  = cx + lengthdir_x(9999, rayD);
+					var cy0  = cy + lengthdir_y(9999, rayD);
+					
+					                s0 = segment_intersect(cx, cy, cx0, cy0,  0,  0, ww, 0);
+					if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0,  0,  0, 0, hh);
+					if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0, ww, hh, ww, 0);
+					if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0, ww, hh, 0, hh);
+					
+					if(s0 == false) continue;
+					
+					var ox = s0[0];
+					var oy = s0[1];
+					
+					var ang  = _phs;
 					
 					var len  = random_range(_lens[0], _lens[1]);
 					var thk  = random_range(_thck[0], _thck[1]);

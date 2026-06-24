@@ -6,6 +6,11 @@
         "date": "2026-06-24T05:51:27.547Z",
         "node": "",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-06-24T09:20:16.805Z",
+        "node": "MK Circuit",
+        "commit": "**MK Circuit**: Add connection thickness property."
       }
     ]
   }
