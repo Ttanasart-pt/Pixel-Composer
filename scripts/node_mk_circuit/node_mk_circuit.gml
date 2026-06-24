@@ -239,7 +239,7 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
 						    	draw_circle_border(_pex, _pey, _rad, _cThk);
 					    	}
-			    		break;
+			    			break;
 			    		
 			    		case 1 :
 					    	BLEND_SUBTRACT
@@ -269,16 +269,17 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 						    	draw_set_color(colorMultiply(cc, _lColl.evalFast(1)));
 						    	draw_rectangle_border(_pex - _rad, _pey - _rad, _pex + _rad, _pey + _rad, _cThk);
 					    	}
-			    		break;
+			    			break;
 			    		
-			    		case 2: if(!use_cSurf) break;
+			    		case 2: 
+			    			if(!use_cSurf) break;
 			    			
 					    	var c0 = colorMultiply(cc, _lColl.evalFast(0));
 			    			draw_surface_ext(_cSurf, _psx - _rad + 1, _psy - _rad + 1, _cSurfSW, _cSurfSH, 0, c0, 1);
 			    			
 					    	var c1 = colorMultiply(cc, _lColl.evalFast(1));
 			    			draw_surface_ext(_cSurf, _pex - _rad + 1, _pey - _rad + 1, _cSurfSW, _cSurfSH, 0, c1, 1);
-		    			break;
+		    				break;
 		    		}
 			    	
 			    	failed = 0;
